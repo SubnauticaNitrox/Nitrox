@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using NitroxModel.Logger;
 
 namespace NitroxServer_Subnautica
 {
@@ -21,35 +22,42 @@ namespace NitroxServer_Subnautica
         /// </summary>
         private const int EXTENDED_FLAGS = 128;
 
-        public const int STD_INPUT_HANDLE = -10;
+        private const int STD_INPUT_HANDLE = -10;
 
         [DllImport("Kernel32.dll", SetLastError = true)]
-        public static extern IntPtr GetStdHandle(int nStdHandle);
+        private static extern IntPtr GetStdHandle(int nStdHandle);
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern bool GetConsoleMode(IntPtr hConsoleHandle, out int lpMode);
+        private static extern bool GetConsoleMode(IntPtr hConsoleHandle, out int lpMode);
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern bool SetConsoleMode(IntPtr hConsoleHandle, int ioMode);
+        private static extern bool SetConsoleMode(IntPtr hConsoleHandle, int ioMode);
 
         public static void QuickEdit(bool enable)
         {
-            IntPtr conHandle = GetStdHandle(STD_INPUT_HANDLE);
-            int mode;
-            if (!GetConsoleMode(conHandle, out mode))
+            try
             {
-                return;
-            }
+                IntPtr conHandle = GetStdHandle(STD_INPUT_HANDLE);
+                int mode;
+                if (!GetConsoleMode(conHandle, out mode))
+                {
+                    return;
+                }
 
-            if (enable)
-            {
-                mode = mode | QUICK_EDIT_MODE | EXTENDED_FLAGS;
+                if (enable)
+                {
+                    mode = mode | QUICK_EDIT_MODE | EXTENDED_FLAGS;
+                }
+                else
+                {
+                    mode = mode & ~(QUICK_EDIT_MODE | EXTENDED_FLAGS);
+                }
+                SetConsoleMode(conHandle, mode);
             }
-            else
+            catch (EntryPointNotFoundException)
             {
-                mode = mode & ~(QUICK_EDIT_MODE | EXTENDED_FLAGS);
+                Log.Warn("Failed to load symbol(s) from kernel32, QuickEdit() not supported");
             }
-            SetConsoleMode(conHandle, mode);
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NitroxModel.DataStructures.GameLogic;
@@ -27,22 +26,30 @@ namespace NitroxTest.Serialization
         [TestMethod]
         public void Sanity()
         {
-            ServerProtobufSerializer server = new ServerProtobufSerializer();
+            IServerSerializer[] serializers = { new ServerProtoBufSerializer(), new ServerJsonSerializer() };
 
-            PDAStateData deserialized;
-            using (MemoryStream stream = new MemoryStream())
+            foreach (IServerSerializer serializer in serializers)
             {
-                server.Serialize(stream, state);
-                stream.Position = 0;
-                deserialized = server.Deserialize<PDAStateData>(stream);
-            }
+                PDAStateData deserialized;
+                byte[] buffer;
+                using (MemoryStream stream = new MemoryStream())
+                {
+                    serializer.Serialize(stream, state);
+                    buffer = stream.GetBuffer();
+                }
 
-            deserialized.PdaLog.Count.ShouldBeEquivalentTo(1);
-            deserialized.PdaLog[0].Key.ShouldBeEquivalentTo("Some key");
-            deserialized.EncyclopediaEntries.Count.ShouldBeEquivalentTo(3);
-            deserialized.EncyclopediaEntries[2].ShouldBeEquivalentTo("");
-            deserialized.PartiallyUnlockedByTechType.Count.ShouldBeEquivalentTo(1);
-            deserialized.PartiallyUnlockedByTechType[new NitroxTechType("Battery")].Progress.ShouldBeEquivalentTo(1f);
+                using (MemoryStream stream = new MemoryStream(buffer))
+                {
+                    deserialized = serializer.Deserialize<PDAStateData>(stream);
+                }
+
+                deserialized.PdaLog.Count.ShouldBeEquivalentTo(1);
+                deserialized.PdaLog[0].Key.ShouldBeEquivalentTo("Some key");
+                deserialized.EncyclopediaEntries.Count.ShouldBeEquivalentTo(3);
+                deserialized.EncyclopediaEntries[2].ShouldBeEquivalentTo("");
+                deserialized.PartiallyUnlockedByTechType.Count.ShouldBeEquivalentTo(1);
+                deserialized.PartiallyUnlockedByTechType[new NitroxTechType("Battery")].Progress.ShouldBeEquivalentTo(1f);
+            }
         }
     }
 }

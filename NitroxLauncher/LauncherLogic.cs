@@ -323,14 +323,8 @@ namespace NitroxLauncher
             return await Task.Run(async () =>
                 {
                     int waitTimeInMill = 1000;
-                    int maxStartingTimeSeconds = 10;
                     for (int i = 0; i < 1000; i++)
                     {
-                        // If wait more than ten seconds, mark game as not starting anymore.
-                        // This will not stop the thread. Just if someone closes the launcher before, it will work
-                        if (maxStartingTimeSeconds < i * waitTimeInMill)
-                        {
-                        }
                         Process[] processes = Process.GetProcessesByName("Subnautica");
                         if (processes.Length == 1)
                         {

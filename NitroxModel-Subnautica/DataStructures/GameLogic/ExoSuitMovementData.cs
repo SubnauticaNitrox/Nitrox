@@ -15,9 +15,9 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
         [ProtoMember(2)]
         public NitroxVector3 RightAimTarget { get; }
 
-        public ExosuitMovementData()
+        protected ExosuitMovementData()
         {
-            // For serialization purposes
+            // Constructor for serialization. Has to be "protected" for json serialization.
         }
 
         public ExosuitMovementData(NitroxTechType techType, NitroxId id, NitroxVector3 position, NitroxQuaternion rotation, NitroxVector3 velocity, NitroxVector3 angularVelocity, float steeringWheelYaw, float steeringWheelPitch, bool appliedThrottle, NitroxVector3 leftAimTarget, NitroxVector3 rightAimTarget, float health)

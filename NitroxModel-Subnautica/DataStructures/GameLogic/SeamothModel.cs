@@ -14,9 +14,9 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
         [ProtoMember(1)]
         public bool LightOn { get; set; }
 
-        public SeamothModel()
+        protected SeamothModel()
         {
-            //For serialization purposes
+            // Constructor for serialization. Has to be "protected" for json serialization.
         }
 
         public SeamothModel(NitroxTechType techType, NitroxId id, NitroxVector3 position, NitroxQuaternion rotation, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, NitroxVector3[] hsb, float health)

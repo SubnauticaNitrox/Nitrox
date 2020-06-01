@@ -43,10 +43,10 @@ namespace NitroxClient.GameLogic.InitialSync
             waitScreenItem.SetProgress(1f);
             yield return null;
         }
-        
+
         private void SetEncyclopediaEntry(List<string> entries)
         {
-            Log.Info("Received initial sync packet with " + entries.Count + " encyclopedia entries");
+            Log.Info($"Received initial sync packet with {entries.Count} encyclopedia entries");
 
             using (packetSender.Suppress<PDAEncyclopediaEntryAdd>())
             {
@@ -66,7 +66,7 @@ namespace NitroxClient.GameLogic.InitialSync
                 complete.Add(item.ToUnity());
             }
 
-            Log.Info("PDAEntryComplete Save:" + pdaEntryComplete.Count + " Read Partial Client Final Count:" + complete.Count);
+            Log.Info($"PDAEntryComplete: New added: {pdaEntryComplete.Count}, Total: {complete.Count}");
 
         }
 
@@ -79,12 +79,12 @@ namespace NitroxClient.GameLogic.InitialSync
                 partial.Add(new PDAScanner.Entry { progress = entry.Progress, techType = entry.TechType.ToUnity(), unlocked = entry.Unlocked });
             }
 
-            Log.Info("PDAEntryPartial Save :" + entries.Count + " Read Partial Client Final Count:" + partial.Count);
+            Log.Debug($"PDAEntryPartial: New added: {entries.Count}, Total: {partial.Count}");
         }
-        
+
         private void SetKnownTech(List<NitroxTechType> techTypes)
         {
-            Log.Info("Received initial sync packet with " + techTypes.Count + " known tech types");
+            Log.Info($"Received initial sync packet with {techTypes.Count} known tech types");
 
             using (packetSender.Suppress<KnownTechEntryAdd>())
             {
@@ -98,7 +98,7 @@ namespace NitroxClient.GameLogic.InitialSync
 
         private void SetPDALog(List<PDALogEntry> logEntries)
         {
-            Log.Info("Received initial sync packet with " + logEntries.Count + " pda log entries");
+            Log.Info($"Received initial sync packet with {logEntries.Count} pda log entries");
 
             using (packetSender.Suppress<PDALogEntryAdd>())
             {

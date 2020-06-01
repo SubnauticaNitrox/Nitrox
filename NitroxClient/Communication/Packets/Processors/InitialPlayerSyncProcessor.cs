@@ -36,7 +36,7 @@ namespace NitroxClient.Communication.Packets.Processors
             cumulativeProcessorsRan = 0;
             Multiplayer.Main.StartCoroutine(ProcessInitialSyncPacket(this, null));
         }
-        
+
         private IEnumerator ProcessInitialSyncPacket(object sender, EventArgs eventArgs)
         {
             // Some packets should not fire during game session join but only afterwards so that initialized/spawned game objects don't trigger packet sending again. 
@@ -46,7 +46,7 @@ namespace NitroxClient.Communication.Packets.Processors
                 do
                 {
                     yield return Multiplayer.Main.StartCoroutine(RunPendingProcessors());
-                
+
                     moreProcessorsToRun = alreadyRan.Count < processors.Count;
                     if (moreProcessorsToRun && processorsRanLastCycle == 0)
                     {
@@ -80,7 +80,7 @@ namespace NitroxClient.Communication.Packets.Processors
                 }
             }
         }
-        
+
         private bool HasDependenciesSatisfied(InitialSyncProcessor processor)
         {
             foreach (Type dependentType in processor.DependentProcessors)

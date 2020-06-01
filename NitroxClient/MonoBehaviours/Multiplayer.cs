@@ -77,10 +77,11 @@ namespace NitroxClient.MonoBehaviours
 
         public void Awake()
         {
+            Log.InGameLogger = new SubnauticaInGameLogger();
             Log.InGame("Multiplayer Client Loaded...");
+
             multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
             packetReceiver = NitroxServiceLocator.LocateService<PacketReceiver>();
-            Log.InGameLogger = new SubnauticaInGameLogger();
             NitroxModel.Helper.Map.Main = new SubnauticaMap();
             Main = this;
             DontDestroyOnLoad(gameObject);
@@ -111,7 +112,7 @@ namespace NitroxClient.MonoBehaviours
                 }
                 catch (Exception ex)
                 {
-                    Log.Error("Error processing packet: " + packet, ex);
+                    Log.Error(ex, $"Error processing packet {packet}");
                 }
             }
         }
@@ -169,7 +170,7 @@ namespace NitroxClient.MonoBehaviours
             items.Clear();
 
             PlayerManager remotePlayerManager = NitroxServiceLocator.LocateService<PlayerManager>();
-            
+
             LoadingScreenVersionText.DisableWarningText();
             DiscordRPController.Main.InitializeInGame(Main.multiplayerSession.AuthenticationContext.Username, remotePlayerManager.GetTotalPlayerCount(), Main.multiplayerSession.IpAddress + ":" + Main.multiplayerSession.ServerPort);
             PlayerChatManager.LoadChatKeyHint();
