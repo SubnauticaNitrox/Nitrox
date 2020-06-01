@@ -27,6 +27,24 @@ namespace NitroxClient.GameLogic.ChatUI
         private GameObject chatKeyHint;
         public Transform PlayerChaTransform => playerChat.transform;
 
+        private bool chatUsed
+        {
+            get
+            {
+                if (PlayerPrefs.HasKey("Nitrox.chatUsed"))
+                {
+                    return PlayerPrefs.GetInt("Nitrox.chatUsed") == 1;
+                }
+
+                return false;
+            }
+            set
+            {
+                PlayerPrefs.SetInt("Nitrox.chatUsed", value ? 1 : 0);
+                PlayerPrefs.Save();
+            }
+        }
+
         public void ShowChat() => Player.main.StartCoroutine(ShowChatAsync());
         private IEnumerator ShowChatAsync()
         {
@@ -49,7 +67,7 @@ namespace NitroxClient.GameLogic.ChatUI
             playerChat.Show();
             playerChat.Select();
 
-            if (chatKeyHint)
+            if (!chatUsed)
             {
                 DisableChatKeyHint();
             }
@@ -99,7 +117,7 @@ namespace NitroxClient.GameLogic.ChatUI
 
         public void LoadChatKeyHint()
         {
-            if (AssetBundleLoader.HasAsset(CHAT_KEY_HINT_ASSET))
+            if (!chatUsed)
             {
                 Player.main.StartCoroutine(AssetBundleLoader.LoadUIAsset(CHAT_KEY_HINT_ASSET, "ChatKeyCanvas", false, chatKeyHintGameObject =>
                 {
@@ -108,13 +126,12 @@ namespace NitroxClient.GameLogic.ChatUI
             }
         }
 
-        //TODO: Hacky way to make the chat hint key an one time thing. Has to be reworked if the config API for NitroxClient is finished.
+        //TODO: Has to be reworked if the config API for NitroxClient is finished.
         private void DisableChatKeyHint()
         {
             chatKeyHint.GetComponentInChildren<Text>().CrossFadeAlpha(0, 1, false);
             chatKeyHint.GetComponentInChildren<Image>().CrossFadeAlpha(0, 1, false);
-            AssetBundleLoader.DisableAsset(CHAT_KEY_HINT_ASSET);
-            chatKeyHint = null;
+            chatUsed = true;
         }
     }
 }

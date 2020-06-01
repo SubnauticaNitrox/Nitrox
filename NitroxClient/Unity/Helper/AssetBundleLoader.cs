@@ -44,20 +44,5 @@ namespace NitroxClient.Unity.Helper
 
             callback?.Invoke(assetRoot.gameObject);
         }
-
-        public static bool HasAsset(string name)
-        {
-            return File.Exists(Path.Combine(assetRootFolder, name));
-        }
-
-        public static void DisableAsset(string name)
-        {
-            string oldPath = Path.Combine(assetRootFolder, name);
-            if (File.Exists(oldPath))
-            {
-                File.Move(oldPath, oldPath + ".disabled");
-            }
-
-        }
     }
 }
