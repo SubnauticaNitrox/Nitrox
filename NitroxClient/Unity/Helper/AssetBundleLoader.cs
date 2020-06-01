@@ -42,10 +42,22 @@ namespace NitroxClient.Unity.Helper
             assetRoot.SetParent(uGUI.main.screenCanvas.transform, false);
             UnityEngine.Object.Destroy(assetCanvas);
 
-            if (callback != null)
+            callback?.Invoke(assetRoot.gameObject);
+        }
+
+        public static bool HasAsset(string name)
+        {
+            return File.Exists(Path.Combine(assetRootFolder, name));
+        }
+
+        public static void DisableAsset(string name)
+        {
+            string oldPath = Path.Combine(assetRootFolder, name);
+            if (File.Exists(oldPath))
             {
-                callback.Invoke(assetRoot.gameObject);
+                File.Move(oldPath, oldPath + ".disabled");
             }
+
         }
     }
 }
