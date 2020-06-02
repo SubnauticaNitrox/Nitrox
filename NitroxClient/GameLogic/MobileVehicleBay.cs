@@ -49,7 +49,7 @@ namespace NitroxClient.GameLogic
                 //We want to store the fallen position of the object to avoid flying object on reload 
                 if (monoBehaviour)
                 {
-                    monoBehaviour.StartCoroutine(vehicles.UpdateVehiclePositionAfterSpawn(vehicleModel.Id, constructedObject, duration + 10.0f));
+                    monoBehaviour.StartCoroutine(vehicles.UpdateVehiclePositionAfterSpawn(vehicleModel, constructedObject, duration + 10.0f));
                 }
             }
             else

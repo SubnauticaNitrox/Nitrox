@@ -31,7 +31,7 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
 
         public override string ToString()
         {
-            return $"[ExosuitModel : {base.ToString()}, LeftArmId: {LeftArmId}, RightArmId: {RightArmId}]";
+            return $"[ExosuitModel - {base.ToString()}, LeftArmId: {LeftArmId}, RightArmId: {RightArmId}]";
         }
     }
 }

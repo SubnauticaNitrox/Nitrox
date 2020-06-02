@@ -513,10 +513,14 @@ namespace NitroxClient.GameLogic
             movementSuppressor.Dispose();
         }
 
-        public IEnumerator UpdateVehiclePositionAfterSpawn(NitroxId id, GameObject gameObject, float duration)
+        public IEnumerator UpdateVehiclePositionAfterSpawn(VehicleModel vehicleModel, GameObject gameObject, float cooldown)
         {
-            yield return new WaitForSeconds(duration);
-            packetSender.Send(new VehiclePositionFix(id, gameObject.transform.position.ToDto()));
+            yield return new WaitForSeconds(cooldown);
+
+            VehicleMovementData vehicleMovementData = new VehicleMovementData(vehicleModel.TechType, vehicleModel.Id, gameObject.transform.position.ToDto(), gameObject.transform.rotation.ToDto(), vehicleModel.Health);
+            ushort playerId = multiplayerSession.Reservation.PlayerId;
+
+            packetSender.Send(new VehicleMovement(playerId, vehicleMovementData));
         }
 
         public void BroadcastOnPilotModeChanged(Vehicle vehicle, bool isPiloting)

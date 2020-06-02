@@ -201,7 +201,6 @@
     <Compile Include="Packets\TimeChange.cs" />
     <Compile Include="Packets\ToggleLights.cs" />
     <Compile Include="Packets\VehicleCreated.cs" />
-    <Compile Include="Packets\VehiclePositionFix.cs" />
     <Compile Include="Packets\VehicleSpawned.cs" />
     <Compile Include="Packets\VehicleUndocking.cs" />
     <Compile Include="Packets\VehicleDocking.cs" />

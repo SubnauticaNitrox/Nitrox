@@ -27,7 +27,7 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
 
         public override string ToString()
         {
-            return $"[SeamothModel : {base.ToString()}, LightOn: {LightOn}]";
+            return $"[SeamothModel - {base.ToString()}, LightOn: {LightOn}]";
         }
     }
 }
