@@ -98,8 +98,8 @@ namespace NitroxClient.GameLogic
 
                     if (oprocket.HasValue)
                     {
-                        name = oprocket.Value.subName?.GetName();
-                        hsb = oprocket.Value.subName?.GetColors().ToDto();
+                        name = oprocket.Value.subName.AliveOrNull()?.GetName();
+                        hsb = oprocket.Value.subName.AliveOrNull()?.GetColors().ToDto();
                     }
                     else
                     {
