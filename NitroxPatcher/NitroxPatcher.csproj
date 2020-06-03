@@ -53,6 +53,7 @@
     <Compile Include="Patches\Dynamic\BaseAddFaceGhost_UpdatePlacement_Patch.cs" />
     <Compile Include="Patches\Dynamic\BaseAddMapRoomGhost_UpdateRotation_Patch.cs" />
     <Compile Include="Patches\Dynamic\BaseAddModuleGhost_SetupGhost_Patch.cs" />
+    <Compile Include="Patches\Dynamic\BaseGhost_PlaceWithBoundsCast_Patch.cs" />
     <Compile Include="Patches\Dynamic\BaseHullStrength_OnPostRebuildGeometry_Patch.cs" />
     <Compile Include="Patches\Dynamic\Builder_CheckAsSubModule_Patch.cs" />
     <Compile Include="Patches\Dynamic\Builder_GetAimTransform_Patch.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="Patches\Dynamic\Builder_SetupRenderers_Patch.cs" />
     <Compile Include="Patches\Dynamic\Builder_Update_Patch.cs" />
     <Compile Include="Patches\Dynamic\Builder_TryPlace_Patch.cs" />
+    <Compile Include="Patches\Dynamic\Constructable_CheckFlags_Patch.cs" />
     <Compile Include="Patches\Persistent\SentrySdk_Start_Patch.cs" />
     <Compile Include="Modules\NitroxPatchesModule.cs" />
     <Compile Include="Patches\Dynamic\BaseDeconstructable_MakeCellDeconstructable_Patch.cs" />
@@ -202,7 +204,6 @@
     <Compile Include="Patches\Persistent\uGUI_FeedbackCollector_IsEnabled_Patch.cs" />
     <Compile Include="PatchLogic\Bases\Building.cs" />
     <Compile Include="PatchLogic\Bases\GeometryLayoutChangeHandler.cs" />
-    <Compile Include="PatchLogic\Bases\MultiplayerBuilder.cs" />
     <Compile Include="PatchLogic\Bases\Rotation\SubnauticaRotationMetadataFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TranspilerHelper.cs" />

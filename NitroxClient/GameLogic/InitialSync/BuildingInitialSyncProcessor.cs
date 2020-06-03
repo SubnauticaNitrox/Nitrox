@@ -164,7 +164,7 @@ namespace NitroxClient.GameLogic.InitialSync
                     // Rework or completely remove later, when figured out how to supress hull integrity calculation and update while InitialSync
                     foreach (BasePiece item2 in basePieces)
                     {
-                        if ((item2.TechType.Name.Contains("Reinforcement") || item2.TechType.Name.Contains("Bulkhead")) && item2.ConstructionCompleted && item.ItemPosition == item2.ItemPosition && !internalList.Contains(item2))
+                        if (item2.TechType.Name.Contains("Reinforcement") && item2.ConstructionCompleted && item.ItemPosition == item2.ItemPosition && !internalList.Contains(item2))
                         {
                             internalList.Add(item2);
                         }

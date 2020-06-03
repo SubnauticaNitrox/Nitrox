@@ -10,7 +10,7 @@ namespace NitroxPatcher.Patches.Dynamic
     public class Builder_GetAimTransform_Patch : NitroxPatch, IDynamicPatch
     {
         public static readonly Type TARGET_CLASS = typeof(Builder);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("GetAimTransform", BindingFlags.NonPublic | BindingFlags.Static);
+        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("GetAimTransform", BindingFlags.Public | BindingFlags.Static);
 
         public static void Postfix(ref Transform __result)
         {

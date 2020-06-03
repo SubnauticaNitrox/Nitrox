@@ -41,6 +41,7 @@ namespace NitroxPatcher.PatchLogic.Bases
         private Rotation.SubnauticaRotationMetadataFactory rotationMetadataFactory = new Rotation.SubnauticaRotationMetadataFactory();
 
         private BasePiece currentConstructedNewBasePiece = null;
+        private GameObject currentconstructedGameObject = null;
 
         #endregion
 
@@ -51,14 +52,13 @@ namespace NitroxPatcher.PatchLogic.Bases
         void IBuilding.ConstructNewBasePiece(BasePiece basePiece)
         {
 #if TRACE && BUILDING
-            NitroxModel.Logger.Log.Debug("Constructable_ConstructionBegin_Remote - id: " + basePiece.Id + " parentbaseId: " + basePiece.ParentId  + " techType: " + basePiece.TechType + " basePiece: " + basePiece);
+            NitroxModel.Logger.Log.Debug("Constructable_ConstructionBegin_Remote - id: " + basePiece.Id + " parentbaseId: " + basePiece.ParentId + " techType: " + basePiece.TechType + " basePiece: " + basePiece);
 #endif
 
             remoteEventActive = true;
             try
             {
                 currentConstructedNewBasePiece = basePiece;
-
 
 #if TRACE && BUILDING
                 NitroxModel.Logger.Log.Debug("Constructable_ConstructionBegin_Remote - techTypeEnum: " + basePiece.TechType.ToUnity());
@@ -70,26 +70,40 @@ namespace NitroxPatcher.PatchLogic.Bases
                 NitroxModel.Logger.Log.Debug("Constructable_ConstructionBegin_Remote - buildPrefab: " + buildPrefab);
 #endif
 
-                MultiplayerBuilder.overridePosition = basePiece.ItemPosition.ToUnity();
-                MultiplayerBuilder.overrideQuaternion = basePiece.Rotation.ToUnity();
-                MultiplayerBuilder.overrideTransform = new GameObject().transform;
-                MultiplayerBuilder.overrideTransform.position = basePiece.CameraPosition.ToUnity();
-                MultiplayerBuilder.overrideTransform.rotation = basePiece.CameraRotation.ToUnity();
-                MultiplayerBuilder.placePosition = basePiece.ItemPosition.ToUnity();
-                MultiplayerBuilder.placeRotation = basePiece.Rotation.ToUnity();
-                MultiplayerBuilder.rotationMetadata = basePiece.RotationMetadata;
-                MultiplayerBuilder.IsInitialSyncing = isInitialSyncing;
-
-                if (!MultiplayerBuilder.Begin(buildPrefab))
+                if (!Builder.Begin(buildPrefab))
                 {
-                    Log.Error("Initial or Remote construction of a new Object failed: " + buildPrefab + " id: " + basePiece.Id);
+                    Log.Error("Creating GhostModel Object failed: " + buildPrefab + " id: " + basePiece.Id);
 
-                    MultiplayerBuilder.End();
+                    Builder.End();
                     return;
                 }
 
-                GameObject parentBase = null;
+                if (!Builder.canPlace)
+                {
+                    Log.Error("Object can not be placed: " + buildPrefab + " id: " + basePiece.Id);
 
+                    Builder.End();
+                    return;
+                }
+
+                if (!Builder.TryPlace())
+                {
+                    Log.Error("Placing of Object failed: " + buildPrefab + " id: " + basePiece.Id);
+                    Builder.End();
+                    return;
+                }
+
+                Builder.End();
+
+                if (currentconstructedGameObject == null)
+                {
+                    Log.Error("ConstructedGameObject does not exist: " + buildPrefab + " id: " + basePiece.Id);
+                    return;
+                }
+
+                NitroxEntity.SetNewId(currentconstructedGameObject, basePiece.Id);
+
+                GameObject parentBase = null;
                 if (basePiece.ParentId.HasValue)
                 {
                     parentBase = NitroxEntity.GetObjectFrom(basePiece.ParentId.Value).OrElse(null);
@@ -99,54 +113,42 @@ namespace NitroxPatcher.PatchLogic.Bases
                     // assign the Id afterwards. 
                 }
 
-                Constructable constructable;
-                GameObject gameObject;
-
-                if (basePiece.IsFurniture)
+                if (!basePiece.IsFurniture)
                 {
-                    SubRoot subRoot = (parentBase != null) ? parentBase.GetComponent<SubRoot>() : null;
-                    gameObject = MultiplayerBuilder.TryPlaceFurniture(subRoot);
-                    constructable = gameObject.RequireComponentInParent<Constructable>();
-                    NitroxEntity.SetNewId(gameObject, basePiece.Id);
-                }
-                else
-                {
-                    // Clear the cache, in case, the last constructed object wasn't finished and a former id is still cached
-                    NitroxServiceLocator.LocateService<GeometryLayoutChangeHandler>().ClearPreservedIdForConstructing();
+                    Constructable constructable = currentconstructedGameObject.GetComponent<Constructable>();
 
-                    constructable = MultiplayerBuilder.TryPlaceBase(parentBase);
-                    gameObject = constructable.gameObject;
-                    NitroxEntity.SetNewId(gameObject, basePiece.Id);
-                    BaseGhost ghost = constructable.GetComponentInChildren<BaseGhost>();
+                    if (constructable != null)
+                    {
+                        BaseGhost ghost = constructable.GetComponentInChildren<BaseGhost>();
 
 #if TRACE && BUILDING
-                    NitroxModel.Logger.Log.Debug("Constructable_ConstructionBegin_Remote - ghost: " + ghost + " parentBaseID: " + basePiece.ParentId + " parentBase: " + parentBase);
-                    if(ghost!=null)
-                    {
-                        NitroxModel.Logger.Log.Debug("Constructable_ConstructionBegin_Remote - ghost.TargetBase: " + ghost.TargetBase + " ghost.GhostBase: " + ghost.GhostBase + " ghost.GhostBase.GameObject: " + ghost.GhostBase.gameObject);
-                    }
-#endif 
+                        NitroxModel.Logger.Log.Debug("Constructable_ConstructionBegin_Remote - ghost: " + ghost + " parentBaseID: " + basePiece.ParentId + " parentBase: " + parentBase);
+                        if (ghost != null)
+                        {
+                            NitroxModel.Logger.Log.Debug("Constructable_ConstructionBegin_Remote - ghost.TargetBase: " + ghost.TargetBase + " ghost.GhostBase: " + ghost.GhostBase + " ghost.GhostBase.GameObject: " + ghost.GhostBase.gameObject);
+                        }
+#endif
 
-                    if (parentBase == null && basePiece.ParentId.HasValue && ghost != null && ghost.GhostBase != null && ghost.TargetBase == null)
-                    {
-                        // A new Base is created, transfer the Id to the ghost. 
-                        // It will be reused to the finished base by the Base_CopyFrom_Patch.
+                        if (parentBase == null && basePiece.ParentId.HasValue && ghost != null && ghost.GhostBase != null && ghost.TargetBase == null)
+                        {
+                            // A new Base is created, transfer the Id to the ghost. 
+                            // It will be reused to the finished base by the Base_CopyFrom_Patch.
 
 #if TRACE && BUILDING
-                        NitroxModel.Logger.Log.Debug("Constructable_ConstructionBegin_Remote - setting new Base Id to ghostBase: " + ghost.GhostBase.gameObject + " parentBaseID: " + basePiece.ParentId.Value);
-#endif 
-                        baseGhostsIDCache[ghost.GhostBase.gameObject] = basePiece.ParentId.Value;
+                            NitroxModel.Logger.Log.Debug("Constructable_ConstructionBegin_Remote - setting new Base Id to ghostBase: " + ghost.GhostBase.gameObject + " parentBaseID: " + basePiece.ParentId.Value);
+#endif
+                            baseGhostsIDCache[ghost.GhostBase.gameObject] = basePiece.ParentId.Value;
+                        }
+
+                        System.Reflection.MethodInfo initResourceMap = typeof(Constructable).GetMethod("InitResourceMap", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                        Validate.NotNull(initResourceMap);
+                        initResourceMap.Invoke(constructable, new object[] { });
                     }
                 }
-
-                // Initialization of the ressourceMap of the constructable.
-                System.Reflection.MethodInfo initResourceMap = typeof(Constructable).GetMethod("InitResourceMap", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                Validate.NotNull(initResourceMap);
-                initResourceMap.Invoke(constructable, new object[] { });
             }
             finally
             {
-                currentConstructedNewBasePiece = null;
+
                 remoteEventActive = false;
             }
         }
@@ -319,7 +321,7 @@ namespace NitroxPatcher.PatchLogic.Bases
         {
 
 #if TRACE && BUILDING
-            NitroxId tempId = NitroxEntity.GetIdNullable(instance.gameObject);            
+            NitroxId tempId = NitroxEntity.GetIdNullable(instance.gameObject);
             NitroxModel.Logger.Log.Debug("Constructable_Construct_Post - instance: " + instance + " tempId: " + tempId + " construced: " + instance._constructed + " amount: " + instance.constructedAmount + " remoteEventActive: " + remoteEventActive);
 #endif
 
@@ -426,9 +428,14 @@ namespace NitroxPatcher.PatchLogic.Bases
                         NitroxId id = NitroxEntity.GetId(instance.gameObject);
                         NitroxId parentId = null;
                         SubRoot sub = Player.main.currentSub;
+                        RotationMetadata rotationMetadata = null;
                         if (sub != null)
                         {
                             parentId = NitroxEntity.GetId(sub.gameObject);
+                            if (sub.isCyclops)
+                            {
+                                rotationMetadata = new SubModuleRotationMetadata(sub.gameObject.transform.position.ToDto(), sub.gameObject.transform.rotation.ToDto());
+                            }
                         }
                         else
                         {
@@ -440,10 +447,10 @@ namespace NitroxPatcher.PatchLogic.Bases
                         }
 
                         Transform camera = Camera.main.transform;
-                        BasePiece basePiece = new BasePiece(id, instance.gameObject.transform.position.ToDto(), instance.gameObject.transform.rotation.ToDto(), camera.position.ToDto(), camera.rotation.ToDto(), instance.techType.ToDto(), Optional.OfNullable(parentId), true, Optional.Empty);
+                        BasePiece basePiece = new BasePiece(id, instance.gameObject.transform.position.ToDto(), instance.gameObject.transform.rotation.ToDto(), camera.position.ToDto(), camera.rotation.ToDto(), instance.techType.ToDto(), Optional.OfNullable(parentId), true, Optional.OfNullable(rotationMetadata));
 
 #if TRACE && BUILDING
-                        NitroxModel.Logger.Log.Debug("Constructable_NotifyConstructedChanged_Post - sending notify for self begin constructing object - basePiece: " + basePiece );
+                        NitroxModel.Logger.Log.Debug("Constructable_NotifyConstructedChanged_Post - sending notify for self begin constructing object - basePiece: " + basePiece);
 #endif
 
                         BaseConstructionBegin constructionBegin = new BaseConstructionBegin(basePiece);
@@ -670,7 +677,7 @@ namespace NitroxPatcher.PatchLogic.Bases
                     {
 
 #if TRACE && BUILDING
-                    NitroxModel.Logger.Log.Debug("Constructable_NotifyConstructedChanged_Post - sending notify for self begin deconstructing object - id: " + id);
+                        NitroxModel.Logger.Log.Debug("Constructable_NotifyConstructedChanged_Post - sending notify for self begin deconstructing object - id: " + id);
 #endif
 
                         BaseDeconstructionBegin deconstructionBegin = new BaseDeconstructionBegin(id);
@@ -793,7 +800,7 @@ namespace NitroxPatcher.PatchLogic.Bases
                 baseGhostsIDCache[targetBase.gameObject] = sourceBaseId;
 
 #if TRACE && BUILDING
-                NitroxModel.Logger.Log.Debug("Base_CopyFrom_Pre - caching Base Id from deconstructing object: " + sourceBaseId);
+                NitroxModel.Logger.Log.Debug("Base_CopyFrom_Pre - caching Base Id from targetBase: " + sourceBaseId);
 #endif
             }
         }
@@ -907,7 +914,7 @@ namespace NitroxPatcher.PatchLogic.Bases
         {
 
 #if TRACE && BUILDING
-                NitroxModel.Logger.Log.Debug("Builder_ShowRotationControlsHint_Pre - isInitialSyncing: " + IsInitialSyncing + " remoteEventActive: " + remoteEventActive);
+            NitroxModel.Logger.Log.Debug("Builder_ShowRotationControlsHint_Pre - isInitialSyncing: " + isInitialSyncing + " remoteEventActive: " + remoteEventActive);
 #endif
 
             if (remoteEventActive)
@@ -951,34 +958,58 @@ namespace NitroxPatcher.PatchLogic.Bases
         {
             if (remoteEventActive)
             {
-                typeof(Builder).GetMethod("Initialize", System.Reflection.BindingFlags.Static).Invoke(null, null);
-                typeof(Builder).ReflectionSet("canPlace", false, true, true);
-                if (typeof(Builder).ReflectionGet("prefab", false, true) == null)
+
+                typeof(Builder).GetMethod("Initialize", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).Invoke(null, null);
+#if TRACE && BUILDING
+                NitroxModel.Logger.Log.Debug("Builder_Update_Pre - initialized");
+#endif
+                typeof(Builder).GetProperty("canPlace").SetValue(null, false, null);
+#if TRACE && BUILDING
+                NitroxModel.Logger.Log.Debug("Builder_Update_Pre - canPlace: " + Builder.canPlace);
+#endif
+                if (typeof(Builder).GetField("prefab", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).GetValue(null) == null)
                 {
                     return false; // the returned false is for skipping the original method, as Builder.Update doesn't have a return value
                 }
-                if ((bool)typeof(Builder).GetMethod("CreateGhost", System.Reflection.BindingFlags.Static).Invoke(null, null))
+
+#if TRACE && BUILDING
+                NitroxModel.Logger.Log.Debug("Builder_Update_Pre - creating ghost");
+#endif
+
+                if ((bool)typeof(Builder).GetMethod("CreateGhost", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).Invoke(null, null))
                 {
                     // suppress original code
 
                     //Builder.inputHandler.canHandleInput = true;
                     //InputHandlerStack.main.Push(Builder.inputHandler);
+
+#if TRACE && BUILDING
+                    NitroxModel.Logger.Log.Debug("Builder_Update_Pre - created ghost");
+#endif
+
                 }
-                typeof(Builder).ReflectionSet("canPlace", (bool)typeof(Builder).GetMethod("UpdateAllowed", System.Reflection.BindingFlags.Static).Invoke(null, null), false, true);
+                bool canPlace = (bool)typeof(Builder).GetMethod("UpdateAllowed", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).Invoke(null, null);
+                typeof(Builder).GetProperty("canPlace").SetValue(null, canPlace, null);
 
-                //  ## TODO BUILDING ## maybe skip updating the visible ghostmodel because it is never shown
+#if TRACE && BUILDING
+                NitroxModel.Logger.Log.Debug("Builder_Update_Pre - canPlace: " + Builder.canPlace);
+#endif
 
-                Transform transform = ((GameObject)typeof(Builder).ReflectionGet("ghostModel", false, true)).transform;
-                transform.position = ((Vector3)typeof(Builder).ReflectionGet("placePosition", false, true)) + ((Quaternion)typeof(Builder).ReflectionGet("placeRotation", false, true)) * ((Vector3)typeof(Builder).ReflectionGet("ghostModelPosition", false, true));
-                transform.rotation = ((Quaternion)typeof(Builder).ReflectionGet("placeRotation", false, true)) * ((Quaternion)typeof(Builder).ReflectionGet("ghostModelRotation", false, true));
-                transform.localScale = ((Vector3)typeof(Builder).ReflectionGet("placeRotation", false, true));
-                Color value = Builder.canPlace ? ((Color)typeof(Builder).ReflectionGet("placeColorAllow", false, true)) : ((Color)typeof(Builder).ReflectionGet("placeColorDeny", false, true));
-                IBuilderGhostModel[] components = ((GameObject)typeof(Builder).ReflectionGet("ghostModel", false, true)).GetComponents<IBuilderGhostModel>();
+                
+                //  ## TODO BUILDING ##  Let this code stay to allow Issue analyze of provided save games to see where ghosts are tried to be placed
+                /*
+                Transform transform = ((GameObject)typeof(Builder).GetField("ghostModel", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).GetValue(null)).transform;
+                transform.position = ((Vector3)typeof(Builder).GetField("placePosition", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).GetValue( null)) + ((Quaternion)typeof(Builder).GetField("placeRotation", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).GetValue( null)) * ((Vector3)typeof(Builder).GetField("ghostModelPosition", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).GetValue( null));
+                transform.rotation = ((Quaternion)typeof(Builder).GetField("placeRotation", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).GetValue( null)) * ((Quaternion)typeof(Builder).GetField("ghostModelRotation", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).GetValue( null));
+                transform.localScale = ((Vector3)typeof(Builder).GetField("placeRotation", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).GetValue( null));
+                Color value = Builder.canPlace ? ((Color)typeof(Builder).GetField("placeColorAllow", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).GetValue( null)) : ((Color)typeof(Builder).GetField("placeColorDeny", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).GetValue( null));
+                IBuilderGhostModel[] components = ((GameObject)typeof(Builder).GetField("ghostModel", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).GetValue( null)).GetComponents<IBuilderGhostModel>();
                 for (int i = 0; i < components.Length; i++)
                 {
                     components[i].UpdateGhostModelColor(Builder.canPlace, ref value);
                 }
-                ((Material)typeof(Builder).ReflectionGet("ghostStructureMaterial", false, true)).SetColor(ShaderPropertyID._Tint, value);
+                ((Material)typeof(Builder).GetField("ghostStructureMaterial", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).GetValue( null)).SetColor(ShaderPropertyID._Tint, value);
+                */
 
                 return false; // return false to skip the original method 
             }
@@ -993,6 +1024,11 @@ namespace NitroxPatcher.PatchLogic.Bases
         {
             if (remoteEventActive && currentConstructedNewBasePiece != null)
             {
+
+#if TRACE && BUILDING
+                NitroxModel.Logger.Log.Debug("Builder_SetupRenderers_Pre");
+#endif
+
                 interior = false;
             }
             return true; // Let the original method execute with the changed inputparameter
@@ -1003,25 +1039,84 @@ namespace NitroxPatcher.PatchLogic.Bases
         {
             if (remoteEventActive && currentConstructedNewBasePiece != null)
             {
-                if (!Constructable.CheckFlags((bool)typeof(Builder).ReflectionGet("allowedInBase", false, true), (bool)typeof(Builder).ReflectionGet("allowedInSub", false, true), (bool)typeof(Builder).ReflectionGet("allowedOutside", false, true)))
+
+#if TRACE && BUILDING
+                NitroxModel.Logger.Log.Debug("Builder_CheckAsSubModule_Pre");
+#endif
+
+                if (!Constructable.CheckFlags((bool)typeof(Builder).GetField("allowedInBase", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).GetValue(null), (bool)typeof(Builder).GetField("allowedInSub", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).GetValue(null), (bool)typeof(Builder).GetField("allowedOutside", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).GetValue(null)))
                 {
                     _result = false;
                     return false;
                 }
                 Transform aimTransform = Builder.GetAimTransform();
-                typeof(Builder).ReflectionSet("placementTarget", null);
+                typeof(Builder).GetField("placementTarget", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).SetValue(null, null);
                 RaycastHit hit;
-                if (!Physics.Raycast(aimTransform.position, aimTransform.forward, out hit, (float) typeof(Builder).ReflectionGet("placeMaxDistance", false, true), ((LayerMask)typeof(Builder).ReflectionGet("placeLayerMask", false, true)).value, QueryTriggerInteraction.Ignore))
+
+
+                // ## TODO BUILDING ## Doesn't work, because cyclops Ids are not stable! Reactivate the outcommented lower part when Cyclops ID is fixed and remove the exit lines below
+                if (currentConstructedNewBasePiece.RotationMetadata.HasValue && currentConstructedNewBasePiece.RotationMetadata.Value is SubModuleRotationMetadata && currentConstructedNewBasePiece.ParentId.HasValue)
                 {
                     _result = false;
                     return false;
                 }
-                typeof(Builder).ReflectionSet("placementTarget", hit.collider.gameObject);
+                /*
+                if (currentConstructedNewBasePiece.RotationMetadata.HasValue && currentConstructedNewBasePiece.RotationMetadata.Value is SubModuleRotationMetadata && currentConstructedNewBasePiece.ParentId.HasValue)
+                {
+
+#if TRACE && BUILDING
+                    NitroxModel.Logger.Log.Debug("Builder_CheckAsSubModule_Pre - check as cyclops child");
+
+                    GameObject subRootGameObject = NitroxEntity.GetObjectFrom(currentConstructedNewBasePiece.ParentId.Value).OrElse(null);
+                    if(subRootGameObject != null)
+                    {
+                        Log.Error("Builder_CheckAsSubModule_Pre - No GameObject with id: " + subRootGameObject);
+                    }
+
+                    SubRoot cyclops = subRootGameObject.GetComponent<SubRoot>();
+
+                    NitroxModel.Logger.Log.Debug("Builder_CheckAsSubModule_Pre - subroot: " + cyclops );
+                    if (cyclops != null)
+                    {
+                        NitroxModel.Logger.Log.Debug("Builder_CheckAsSubModule_Pre - isCyclops: " + cyclops.isCyclops);
+                    }
+#endif
+
+                    if (subRootGameObject != null && subRootGameObject.GetComponent<SubRoot>()!= null && subRootGameObject.GetComponent<SubRoot>().isCyclops)
+                    {
+                        SubModuleRotationMetadata rotationMetadata = (SubModuleRotationMetadata)currentConstructedNewBasePiece.RotationMetadata.Value;
+                        Vector3 positionOffset = subRootGameObject.transform.position - rotationMetadata.ParentPosition.ToUnity();
+                        Quaternion rotationOffset = subRootGameObject.transform.rotation * Quaternion.Inverse(rotationMetadata.ParentRotation.ToUnity());
+
+                        Transform subAimTransform = new GameObject().transform;
+                        subAimTransform.position = aimTransform.position + positionOffset;
+                        subAimTransform.rotation = rotationOffset * aimTransform.rotation;
+
+#if TRACE && BUILDING
+                        NitroxModel.Logger.Log.Debug("Builder_CheckAsSubModule_Pre - cameraPosition: " + subAimTransform.position + " cameraRotation: " + subAimTransform.rotation);
+#endif
+
+                        if (Physics.Raycast(subAimTransform.position, subAimTransform.forward, out hit, (float)typeof(Builder).GetField("placeMaxDistance", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).GetValue(null), ((LayerMask)typeof(Builder).GetField("placeLayerMask", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).GetValue(null)).value, QueryTriggerInteraction.Ignore))
+                        {
+                            typeof(Builder).GetField("placementTarget", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).SetValue(null, hit.collider.gameObject);
+                            _result = true;
+                            return false;
+                        }
+                    }
+                }*/
+
+                if (!Physics.Raycast(aimTransform.position, aimTransform.forward, out hit, (float)typeof(Builder).GetField("placeMaxDistance", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).GetValue(null), ((LayerMask)typeof(Builder).GetField("placeLayerMask", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).GetValue(null)).value, QueryTriggerInteraction.Ignore))
+                {
+                    _result = false;
+                    return false;
+                }
+                typeof(Builder).GetField("placementTarget", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).SetValue(null, hit.collider.gameObject);
 
                 // skip the surface position calculation because it is already known
 
                 // skipt the rest of the checks
 
+                _result = true;
                 return false;
             }
             return true;
@@ -1029,30 +1124,47 @@ namespace NitroxPatcher.PatchLogic.Bases
 
         internal bool Builder_TryPlace_Pre(ref bool _result)
         {
-            if(remoteEventActive)
+            if (remoteEventActive)
             {
-                typeof(Builder).GetMethod("Initialize", System.Reflection.BindingFlags.Static).Invoke(null, null);
-                if (typeof(Builder).ReflectionGet("prefab", false, true) == null || !Builder.canPlace)
+
+#if TRACE && BUILDING
+                NitroxModel.Logger.Log.Debug("Builder_TryPlace_Pre");
+#endif
+
+                typeof(Builder).GetMethod("Initialize", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).Invoke(null, null);
+                if (typeof(Builder).GetField("prefab", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).GetValue(null) == null || !Builder.canPlace)
                 {
+                    _result = false;
                     return false;
                 }
 
                 //skip playing sound
-                
-                ConstructableBase componentInParent = ((GameObject)typeof(Builder).ReflectionGet("ghostModel", false, true)).GetComponentInParent<ConstructableBase>();
+
+                ConstructableBase componentInParent = ((GameObject)typeof(Builder).GetField("ghostModel", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).GetValue(null)).GetComponentInParent<ConstructableBase>();
                 if (componentInParent != null)
                 {
-                    BaseGhost component = ((GameObject)typeof(Builder).ReflectionGet("ghostModel", false, true)).GetComponent<BaseGhost>();
+                    BaseGhost component = ((GameObject)typeof(Builder).GetField("ghostModel", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).GetValue(null)).GetComponent<BaseGhost>();
                     component.Place();
                     if (component.TargetBase != null)
                     {
                         componentInParent.transform.SetParent(component.TargetBase.transform, true);
                     }
                     componentInParent.SetState(false, true);
+
+#if TRACE && BUILDING
+                    NitroxModel.Logger.Log.Debug("Builder_TryPlace_Pre - state set");
+
+                    if(component is BaseAddModuleGhost)
+                    {
+                        NitroxModel.Logger.Log.Debug("Builder_TryPlace_Pre - ModuleFace: " + ((BaseAddModuleGhost)component).anchoredFace);
+                    }
+#endif
+
+                    currentconstructedGameObject = componentInParent.gameObject;
                 }
                 else
                 {
-                    GameObject gameObject = UnityEngine.Object.Instantiate<GameObject>((GameObject)typeof(Builder).ReflectionGet("prefab", false, true));
+                    GameObject gameObject = UnityEngine.Object.Instantiate<GameObject>((GameObject)typeof(Builder).GetField("prefab", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).GetValue(null));
                     bool flag = false;
                     bool flag2 = false;
 
@@ -1063,42 +1175,46 @@ namespace NitroxPatcher.PatchLogic.Bases
                     GameObject rootObject = NitroxEntity.GetObjectFrom(currentConstructedNewBasePiece.ParentId.Value).OrElse(null);
 
                     // set the subroot only if it is an inside object, outside objects will find the transform parent by placementTarget
-                    if(rootObject != null && !((bool)typeof(Builder).ReflectionGet("allowedOutside", false, true)))
+                    if (rootObject != null && !(bool)typeof(Builder).GetField("allowedOutside", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).GetValue(null))
                     {
                         currentSub = rootObject.GetComponent<SubRoot>();
                     }
-                    
+
                     if (currentSub != null)
                     {
                         flag = currentSub.isBase;
                         flag2 = currentSub.isCyclops;
                         gameObject.transform.parent = currentSub.GetModulesRoot();
                     }
-                    else if (((GameObject)typeof(Builder).ReflectionGet("placementTarget", false, true)) != null && ((bool)typeof(Builder).ReflectionGet("allowedOutside", false, true)))
+                    else if (((GameObject)typeof(Builder).GetField("placementTarget", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).GetValue(null)) != null && ((bool)typeof(Builder).GetField("allowedOutside", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).GetValue(null)))
                     {
-                        SubRoot componentInParent2 = ((GameObject)typeof(Builder).ReflectionGet("placementTarget", false, true)).GetComponentInParent<SubRoot>();
+                        SubRoot componentInParent2 = ((GameObject)typeof(Builder).GetField("placementTarget", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).GetValue(null)).GetComponentInParent<SubRoot>();
                         if (componentInParent2 != null)
                         {
                             gameObject.transform.parent = componentInParent2.GetModulesRoot();
                         }
                     }
                     Transform transform = gameObject.transform;
-                    transform.position = (Vector3)typeof(Builder).ReflectionGet("placePosition", false, true);
-                    transform.rotation = (Quaternion)typeof(Builder).ReflectionGet("placeRotation", false, true);
+                    transform.position = (Vector3)typeof(Builder).GetField("placePosition", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).GetValue(null);
+                    transform.rotation = (Quaternion)typeof(Builder).GetField("placeRotation", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).GetValue(null);
                     Constructable componentInParent3 = gameObject.GetComponentInParent<Constructable>();
                     componentInParent3.SetState(false, true);
                     global::Utils.SetLayerRecursively(gameObject, LayerMask.NameToLayer(flag ? "Default" : "Interior"), true, -1);
-                    if (((GameObject)typeof(Builder).ReflectionGet("ghostModel", false, true)) != null)
+                    if (((GameObject)typeof(Builder).GetField("ghostModel", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).GetValue(null)) != null)
                     {
-                        UnityEngine.Object.Destroy(((GameObject)typeof(Builder).ReflectionGet("ghostModel", false, true)));
+                        UnityEngine.Object.Destroy(((GameObject)typeof(Builder).GetField("ghostModel", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).GetValue(null)));
                     }
                     componentInParent3.SetIsInside(flag || flag2);
                     SkyEnvironmentChanged.Send(gameObject, currentSub);
+
+                    currentconstructedGameObject = gameObject;
                 }
 
-                typeof(Builder).ReflectionSet("ghostModel", null);
-                typeof(Builder).ReflectionSet("prefab", null);
-                typeof(Builder).ReflectionSet("canPlace", false);
+                typeof(Builder).GetField("ghostModel", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).SetValue(null, null);
+                typeof(Builder).GetField("prefab", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).SetValue(null, null);
+                typeof(Builder).GetProperty("canPlace", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static).SetValue(null, false, null);
+
+
 
                 _result = true;
                 return false;
@@ -1115,6 +1231,11 @@ namespace NitroxPatcher.PatchLogic.Bases
         {
             if (remoteEventActive && currentConstructedNewBasePiece != null)
             {
+
+#if TRACE && BUILDING
+                NitroxModel.Logger.Log.Debug("Builder_SetDefaultPlaceTransform_Post");
+#endif
+
                 position = currentConstructedNewBasePiece.ItemPosition.ToUnity();
                 rotation = currentConstructedNewBasePiece.Rotation.ToUnity();
             }
@@ -1125,6 +1246,11 @@ namespace NitroxPatcher.PatchLogic.Bases
         {
             if (remoteEventActive && currentConstructedNewBasePiece != null)
             {
+
+#if TRACE && BUILDING
+                NitroxModel.Logger.Log.Debug("Builder_GetAimTransform_Post");
+#endif
+                result = new GameObject().transform;
                 result.position = currentConstructedNewBasePiece.CameraPosition.ToUnity();
                 result.rotation = currentConstructedNewBasePiece.CameraRotation.ToUnity();
             }
@@ -1135,6 +1261,11 @@ namespace NitroxPatcher.PatchLogic.Bases
         {
             if (remoteEventActive && currentConstructedNewBasePiece != null && currentConstructedNewBasePiece.RotationMetadata.HasValue)
             {
+
+#if TRACE && BUILDING
+                NitroxModel.Logger.Log.Debug("BaseAddCorridorGhost_UpdateRotation_Pre");
+#endif
+
                 // apply saved rotation data instead of BuilderTool input
                 instance.ReflectionSet("rotation", ((BaseCorridorRotationMetadata)currentConstructedNewBasePiece.RotationMetadata.Value).Rotation);
 
@@ -1153,12 +1284,17 @@ namespace NitroxPatcher.PatchLogic.Bases
         {
             if (remoteEventActive && currentConstructedNewBasePiece != null && currentConstructedNewBasePiece.RotationMetadata.HasValue)
             {
+
+#if TRACE && BUILDING
+                NitroxModel.Logger.Log.Debug("BaseAddMapRoomGhost_UpdateRotation_Pre");
+#endif
+
                 // apply saved rotation data instead of BuilderTool input
-                instance.ReflectionSet("cellType", ((BaseMapRoomRotationMetadata)currentConstructedNewBasePiece.RotationMetadata.Value).CellType);
+                instance.ReflectionSet("cellType", (Base.CellType)((BaseMapRoomRotationMetadata)currentConstructedNewBasePiece.RotationMetadata.Value).CellType);
                 instance.ReflectionSet("connectionMask", ((BaseMapRoomRotationMetadata)currentConstructedNewBasePiece.RotationMetadata.Value).ConnectionMask);
 
                 ((Base)instance.ReflectionGet("ghostBase")).SetCell(Int3.zero, (Base.CellType)instance.ReflectionGet("cellType"));
-                instance.ReflectionCall("RebuildGhostGeometry");
+                instance.ReflectionCall("RebuildGhostGeometry", null);
                 geometryChanged = true;
 
                 return false;
@@ -1171,6 +1307,11 @@ namespace NitroxPatcher.PatchLogic.Bases
         {
             if (remoteEventActive && currentConstructedNewBasePiece != null && currentConstructedNewBasePiece.RotationMetadata.HasValue)
             {
+
+#if TRACE && BUILDING
+                NitroxModel.Logger.Log.Debug("BaseAddModuleGhost_UpdatePlacement_Pre");
+#endif
+
                 positionFound = false;
                 geometryChanged = false;
 
@@ -1191,41 +1332,74 @@ namespace NitroxPatcher.PatchLogic.Bases
 
                 // skip face validation
 
+                ((Base)instance.ReflectionGet("targetBase")).transform.InverseTransformDirection(camera.forward);
+                Base.Face face = new Base.Face(((Base)instance.ReflectionGet("targetBase")).WorldToGrid(camera.position), (Base.Direction)instance.ReflectionGet("direction"));
+
+                Int3 u = ((Base)instance.ReflectionGet("targetBase")).NormalizeCell(face.cell);
+                face.cell = u + new Int3(1, 0, 1);
+
                 // apply anchored face
-                Base.Face moduleAnchoredFace = new Base.Face(((BaseModuleRotationMetadata)currentConstructedNewBasePiece.RotationMetadata.Value).AnchoredFaceCell.Global(), (Base.Direction)((BaseModuleRotationMetadata)currentConstructedNewBasePiece.RotationMetadata.Value).AnchoredFaceDirection);
-                Int3 baseAnchoredCell = moduleAnchoredFace.cell + ((Base)instance.ReflectionGet("targetBase")).GetAnchor();
-                Int3 @int = ((Base)instance.ReflectionGet("targetBase")).NormalizeCell(baseAnchoredCell);
+                Int3 @int = ((Base)instance.ReflectionGet("targetBase")).NormalizeCell(face.cell);
 
-                instance.anchoredFace = new Base.Face?(moduleAnchoredFace);
-                Base.CellType cell = ((Base)instance.ReflectionGet("targetBase")).GetCell(@int);
-                Int3 int2 = Base.CellSize[(int)cell];
-                geometryChanged = (bool)instance.ReflectionCall("UpdateSize", false, false, new object[] { int2 });
-                instance.GhostBase.CopyFrom(((Base)instance.ReflectionGet("targetBase")), new Int3.Bounds(@int, @int + int2 - 1), @int * -1);
-                Int3 cell2 = baseAnchoredCell - @int;
-                Base.Face face3 = new Base.Face(cell2, (Base.Direction)((BaseModuleRotationMetadata)currentConstructedNewBasePiece.RotationMetadata.Value).AnchoredFaceDirection);
+                Base.Face face2 = new Base.Face(face.cell - ((Base)instance.ReflectionGet("targetBase")).GetAnchor(), face.direction);
+                //Int3 baseAnchoredCell = moduleAnchoredFace.cell + ((Base)instance.ReflectionGet("targetBase")).GetAnchor();
 
-                instance.GhostBase.SetFace(face3, instance.faceType);
-                instance.GhostBase.ClearMasks();
-                instance.GhostBase.SetFaceMask(face3, true);
-                instance.ReflectionCall("RebuildGhostGeometry", null);
-                geometryChanged = true;
+                if (instance.anchoredFace == null || instance.anchoredFace.Value != face2)
+                {
+
+#if TRACE && BUILDING
+                    NitroxModel.Logger.Log.Debug("BaseAddModuleGhost_UpdatePlacement_Pre - anchoredFace: " + instance.anchoredFace);
+#endif
+
+                    instance.anchoredFace = new Base.Face?(face2);
+
+
+#if TRACE && BUILDING
+                    NitroxModel.Logger.Log.Debug("BaseAddModuleGhost_UpdatePlacement_Pre - anchoredFaceValue: " + instance.anchoredFace.Value);
+#endif
+
+
+                    Base.CellType cell = ((Base)instance.ReflectionGet("targetBase")).GetCell(@int);
+                    Int3 int2 = Base.CellSize[(int)cell];
+                    geometryChanged = (bool)instance.ReflectionCall("UpdateSize", false, false, new object[] { int2 });
+                    instance.GhostBase.CopyFrom(((Base)instance.ReflectionGet("targetBase")), new Int3.Bounds(@int, @int + int2 - 1), @int * -1);
+                    Int3 cell2 = face.cell - @int;
+                    Base.Face face3 = new Base.Face(cell2, face.direction);
+                    instance.GhostBase.SetFace(face3, instance.faceType);
+                    instance.GhostBase.ClearMasks();
+                    instance.GhostBase.SetFaceMask(face3, true);
+                    instance.ReflectionCall("RebuildGhostGeometry", null);
+
+                    instance.anchoredFace = new Base.Face?(face2);
+#if TRACE && BUILDING
+                    NitroxModel.Logger.Log.Debug("BaseAddModuleGhost_UpdatePlacement_Pre - anchoredFaceValue: " + instance.anchoredFace.Value);
+#endif
+
+                    geometryChanged = true;
+                }
 
                 ghostModelParentConstructableBase.transform.position = ((Base)instance.ReflectionGet("targetBase")).GridToWorld(@int);
                 ghostModelParentConstructableBase.transform.rotation = ((Base)instance.ReflectionGet("targetBase")).transform.rotation;
                 positionFound = true;
 
-                _result = !((Base)instance.ReflectionGet("targetBase")).IsCellUnderConstruction(baseAnchoredCell);
+                _result = !((Base)instance.ReflectionGet("targetBase")).IsCellUnderConstruction(face.cell);
 
                 return false;
             }
             return true;
         }
 
+
         // Apply Position and RotationMetaData to FaceGhosts
-        internal bool BaseAddFaceGhost_UpdatePlacement_Pre(BaseAddModuleGhost instance, ref bool _result, Transform camera, float placeMaxDistance, ref bool positionFound, ref bool geometryChanged, ConstructableBase ghostModelParentConstructableBase)
+        internal bool BaseAddFaceGhost_UpdatePlacement_Pre(BaseAddFaceGhost instance, ref bool _result, Transform camera, float placeMaxDistance, ref bool positionFound, ref bool geometryChanged, ConstructableBase ghostModelParentConstructableBase)
         {
             if (remoteEventActive && currentConstructedNewBasePiece != null && currentConstructedNewBasePiece.RotationMetadata.HasValue)
             {
+
+#if TRACE && BUILDING
+                NitroxModel.Logger.Log.Debug("BaseAddFaceGhost_UpdatePlacement_Pre");
+#endif
+
                 positionFound = false;
                 geometryChanged = false;
 
@@ -1251,15 +1425,27 @@ namespace NitroxPatcher.PatchLogic.Bases
                 Int3.Bounds bounds = Int3.Bounds.Union(a, b);
                 geometryChanged = (bool)instance.ReflectionCall("UpdateSize", false, false, new object[] { bounds.size });
 
+#if TRACE && BUILDING
+                NitroxModel.Logger.Log.Debug("BaseAddFaceGhost_UpdatePlacement_Pre - setting anchoredFace");
+#endif
                 instance.anchoredFace = new Base.Face?(moduleAnchoredFace);
-                instance.GhostBase.CopyFrom(((Base)instance.ReflectionGet("targetBase")), bounds, bounds.mins * -1);
+
+                instance.GhostBase.CopyFrom((Base)instance.ReflectionGet("targetBase"), bounds, bounds.mins * -1);
                 instance.GhostBase.ClearMasks();
                 Int3 cell2 = baseAnchoredCell - @int;
-                Base.Face face3 = new Base.Face(cell2, (Base.Direction)((BaseModuleRotationMetadata)currentConstructedNewBasePiece.RotationMetadata.Value).AnchoredFaceDirection);
+                Base.Face face3 = new Base.Face(cell2, (Base.Direction)((BaseFaceRotationMetadata)currentConstructedNewBasePiece.RotationMetadata.Value).AnchoredFaceDirection);
                 instance.GhostBase.SetFaceMask(face3, true);
                 instance.GhostBase.SetFace(face3, instance.faceType);
+
+#if TRACE && BUILDING
+                NitroxModel.Logger.Log.Debug("BaseAddFaceGhost_UpdatePlacement_Pre - rebuilding ghost geometry");
+#endif
                 instance.ReflectionCall("RebuildGhostGeometry", null);
                 geometryChanged = true;
+
+#if TRACE && BUILDING
+                NitroxModel.Logger.Log.Debug("BaseAddFaceGhost_UpdatePlacement_Pre - setting position and rotation");
+#endif
 
                 ghostModelParentConstructableBase.transform.position = ((Base)instance.ReflectionGet("targetBase")).GridToWorld(@int);
                 ghostModelParentConstructableBase.transform.rotation = ((Base)instance.ReflectionGet("targetBase")).transform.rotation;
@@ -1269,21 +1455,32 @@ namespace NitroxPatcher.PatchLogic.Bases
                 {
                     if (((Base)instance.ReflectionGet("targetBase")).IsCellUnderConstruction(cell3))
                     {
+
+#if TRACE && BUILDING
+                        NitroxModel.Logger.Log.Debug("BaseAddFaceGhost_UpdatePlacement_Pre - cell under construction");
+#endif
+
                         _result = false;
                         return false;
                     }
                 }
 
+                _result = true;
                 return false;
             }
             return true;
         }
 
         // Apply Position and RotationMetaData to Bulkheads
-        internal bool BaseAddBulkheadGhost_UpdatePlacement_Pre(BaseAddModuleGhost instance, ref bool _result, Transform camera, float placeMaxDistance, ref bool positionFound, ref bool geometryChanged, ConstructableBase ghostModelParentConstructableBase)
+        internal bool BaseAddBulkheadGhost_UpdatePlacement_Pre(BaseAddBulkheadGhost instance, ref bool _result, Transform camera, float placeMaxDistance, ref bool positionFound, ref bool geometryChanged, ConstructableBase ghostModelParentConstructableBase)
         {
-            if (remoteEventActive && currentConstructedNewBasePiece != null && currentConstructedNewBasePiece.RotationMetadata.HasValue)
+            if (remoteEventActive && currentConstructedNewBasePiece != null)
             {
+
+#if TRACE && BUILDING
+                NitroxModel.Logger.Log.Debug("BaseAddBulkheadGhost_UpdatePlacement_Pre");
+#endif
+
                 positionFound = false;
                 geometryChanged = false;
 
@@ -1315,7 +1512,7 @@ namespace NitroxPatcher.PatchLogic.Bases
                 instance.GhostBase.CopyFrom(((Base)instance.ReflectionGet("targetBase")), new Int3.Bounds(@int, @int + int2 - 1), @int * -1);
                 Int3 cell2 = adjacentFace.cell - @int;
                 Base.Face face = new Base.Face(cell2, adjacentFace.direction);
-                instance.GhostBase.SetFace(face, Base.FaceType.BulkheadClosed);
+                instance.GhostBase.SetFace(face, Base.FaceType.BulkheadOpened); //original is closed, let it open as long as doors are not synced
                 instance.GhostBase.ClearMasks();
                 instance.GhostBase.SetFaceMask(face, true);
                 instance.ReflectionCall("RebuildGhostGeometry", null);
@@ -1332,14 +1529,33 @@ namespace NitroxPatcher.PatchLogic.Bases
                     return false;
                 }
 
+                _result = true;
                 return false;
             }
             return true;
         }
 
-        
+        // At placing the first BasePiece use the fix saved position
+        internal void BaseGhost_PlaceWithBoundsCast_Post(BaseGhost instance, ref bool _result, ref Vector3 center)
+        {
+            if (remoteEventActive && currentConstructedNewBasePiece != null)
+            {
+                center = currentConstructedNewBasePiece.ItemPosition.ToUnity();
+                _result = true;
+            }
+        }
 
-
+        // Return true to skip any further checks which are only needed if the local player 
+        // creates a new object
+        internal bool Constructable_CheckFlags_Pre(ref bool _result)
+        {
+            if (remoteEventActive && currentConstructedNewBasePiece != null)
+            {
+                _result = true;
+                return false;
+            }
+            return true;
+        }
 
         #endregion
     }
