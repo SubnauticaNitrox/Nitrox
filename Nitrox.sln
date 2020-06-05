@@ -33,7 +33,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nitrox.Bootloader", "Nitrox
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Nitrox.Subnautica.Assets", "Nitrox.Subnautica.Assets\Nitrox.Subnautica.Assets.shproj", "{0763D551-B1A8-4960-B88A-98833F957936}"
 EndProject
-Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "NitroxElectron", "NitroxElectron\NitroxElectron.njsproj", "{F74484F8-E2D4-402B-9B71-9607EAB5C4B1}"
+Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "Nitrox.Launcher", "Nitrox.Launcher\Nitrox.Launcher.njsproj", "{F74484F8-E2D4-402B-9B71-9607EAB5C4B1}"
 	ProjectSection(ProjectDependencies) = postProject
 		{0A377218-6B36-4522-89A3-A39CFC999209} = {0A377218-6B36-4522-89A3-A39CFC999209}
 		{E4226522-9189-410B-93B2-792942FBD588} = {E4226522-9189-410B-93B2-792942FBD588}

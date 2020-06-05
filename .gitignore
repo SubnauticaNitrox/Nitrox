@@ -278,3 +278,4 @@ paket-files/
 /.sonarqube
 sonar.config.bat
 *.bak
+/Nitrox.Launcher/dist_electron

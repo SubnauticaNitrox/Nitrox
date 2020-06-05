@@ -2,7 +2,7 @@
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">14.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
-    <Name>NitroxElectron</Name>
+    <Name>Nitrox.Launcher</Name>
     <RootNamespace>NitroxElectron</RootNamespace>
     <SaveNodeJsSettingsInProjectFile>True</SaveNodeJsSettingsInProjectFile>
   </PropertyGroup>
@@ -11,7 +11,8 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>f74484f8-e2d4-402b-9b71-9607eab5c4b1</ProjectGuid>
-    <ProjectHome>.</ProjectHome>
+    <ProjectHome>
+    </ProjectHome>
     <StartupFile>
     </StartupFile>
     <StartWebBrowser>False</StartWebBrowser>
@@ -141,7 +142,6 @@
     <Folder Include="src\store\" />
     <Folder Include="src\views\" />
   </ItemGroup>
-  
   <ItemGroup>
     <NitroxLibs Include="$(SolutionDir)\Nitrox.Subnautica.Assets\**\*.dll" Visible="false" />
     <NitroxLibs Include="$(SolutionDir)\Nitrox.Subnautica.Assets\**\*." Visible="false" />
@@ -149,15 +149,12 @@
     <NitroxLibs Include="..\NitroxPatcher\bin\$(Configuration)\*" Visible="false" />
     <NitroxLibs Include="..\NitroxServer-Subnautica\bin\$(Configuration)\*" Visible="false" />
   </ItemGroup>
-  
   <ItemGroup>
   </ItemGroup>
-  
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />
   <Target Name="Build">
-    <MakeDir Directories="$(OutputPath)"/>
+    <MakeDir Directories="$(OutputPath)" />
     <Copy SourceFiles="@(NitroxLibs)" DestinationFolder="$(OutputPath)\%(RecursiveDir)" />
-    
-    <Exec Command="npm run-script electron:build"/>
+    <Exec Command="npm run-script electron:build" />
   </Target>
 </Project>
