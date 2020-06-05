@@ -1,0 +1,163 @@
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">14.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <Name>NitroxElectron</Name>
+    <RootNamespace>NitroxElectron</RootNamespace>
+    <SaveNodeJsSettingsInProjectFile>True</SaveNodeJsSettingsInProjectFile>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>f74484f8-e2d4-402b-9b71-9607eab5c4b1</ProjectGuid>
+    <ProjectHome>.</ProjectHome>
+    <StartupFile>
+    </StartupFile>
+    <StartWebBrowser>False</StartWebBrowser>
+    <SearchPath>
+    </SearchPath>
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.\public\bin</OutputPath>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <ProjectTypeGuids>{3AF33F2E-1136-4D97-BBB7-1795711AC8B8};{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}</ProjectTypeGuids>
+    <StartWebBrowser>False</StartWebBrowser>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>false</DebugSymbols>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="babel.config.js" />
+    <Content Include="package.json" />
+    <Content Include="public\css\bootstrap.min.css" />
+    <Content Include="public\css\nitroxLauncher.css" />
+    <Content Include="public\favicon.ico" />
+    <Content Include="public\fonts\ibm-plex-mono-v5-latin-regular.woff" />
+    <Content Include="public\fonts\ibm-plex-mono-v5-latin-regular.woff2" />
+    <Content Include="public\fonts\materialIcons.woff2" />
+    <Content Include="public\fonts\open-sans-v17-latin-600.woff" />
+    <Content Include="public\fonts\open-sans-v17-latin-600.woff2" />
+    <Content Include="public\fonts\open-sans-v17-latin-600italic.woff" />
+    <Content Include="public\fonts\open-sans-v17-latin-600italic.woff2" />
+    <Content Include="public\fonts\open-sans-v17-latin-700.woff" />
+    <Content Include="public\fonts\open-sans-v17-latin-700.woff2" />
+    <Content Include="public\fonts\open-sans-v17-latin-700italic.woff" />
+    <Content Include="public\fonts\open-sans-v17-latin-700italic.woff2" />
+    <Content Include="public\fonts\open-sans-v17-latin-italic.woff" />
+    <Content Include="public\fonts\open-sans-v17-latin-italic.woff2" />
+    <Content Include="public\fonts\open-sans-v17-latin-regular.woff" />
+    <Content Include="public\fonts\open-sans-v17-latin-regular.woff2" />
+    <Content Include="public\img\icons\close-k-10.png" />
+    <Content Include="public\img\icons\close-k-12.png" />
+    <Content Include="public\img\icons\close-k-15.png" />
+    <Content Include="public\img\icons\close-k-20.png" />
+    <Content Include="public\img\icons\close-k-24.png" />
+    <Content Include="public\img\icons\close-k-30.png" />
+    <Content Include="public\img\icons\close-w-10.png" />
+    <Content Include="public\img\icons\close-w-12.png" />
+    <Content Include="public\img\icons\close-w-15.png" />
+    <Content Include="public\img\icons\close-w-20.png" />
+    <Content Include="public\img\icons\close-w-24.png" />
+    <Content Include="public\img\icons\close-w-30.png" />
+    <Content Include="public\img\icons\max-k-10.png" />
+    <Content Include="public\img\icons\max-k-12.png" />
+    <Content Include="public\img\icons\max-k-15.png" />
+    <Content Include="public\img\icons\max-k-20.png" />
+    <Content Include="public\img\icons\max-k-24.png" />
+    <Content Include="public\img\icons\max-k-30.png" />
+    <Content Include="public\img\icons\max-w-10.png" />
+    <Content Include="public\img\icons\max-w-12.png" />
+    <Content Include="public\img\icons\max-w-15.png" />
+    <Content Include="public\img\icons\max-w-20.png" />
+    <Content Include="public\img\icons\max-w-24.png" />
+    <Content Include="public\img\icons\max-w-30.png" />
+    <Content Include="public\img\icons\min-k-10.png" />
+    <Content Include="public\img\icons\min-k-12.png" />
+    <Content Include="public\img\icons\min-k-15.png" />
+    <Content Include="public\img\icons\min-k-20.png" />
+    <Content Include="public\img\icons\min-k-24.png" />
+    <Content Include="public\img\icons\min-k-30.png" />
+    <Content Include="public\img\icons\min-w-10.png" />
+    <Content Include="public\img\icons\min-w-12.png" />
+    <Content Include="public\img\icons\min-w-15.png" />
+    <Content Include="public\img\icons\min-w-20.png" />
+    <Content Include="public\img\icons\min-w-24.png" />
+    <Content Include="public\img\icons\min-w-30.png" />
+    <Content Include="public\img\icons\restore-k-10.png" />
+    <Content Include="public\img\icons\restore-k-12.png" />
+    <Content Include="public\img\icons\restore-k-15.png" />
+    <Content Include="public\img\icons\restore-k-20.png" />
+    <Content Include="public\img\icons\restore-k-24.png" />
+    <Content Include="public\img\icons\restore-k-30.png" />
+    <Content Include="public\img\icons\restore-w-10.png" />
+    <Content Include="public\img\icons\restore-w-12.png" />
+    <Content Include="public\img\icons\restore-w-15.png" />
+    <Content Include="public\img\icons\restore-w-20.png" />
+    <Content Include="public\img\icons\restore-w-24.png" />
+    <Content Include="public\img\icons\restore-w-30.png" />
+    <Content Include="public\img\preview.jpg" />
+    <Content Include="public\index.html" />
+    <Content Include="public\loading.html" />
+    <Content Include="README.md" />
+    <Content Include="src\App.vue" />
+    <Content Include="src\assets\img\icon.png" />
+    <Content Include="src\assets\img\illustration\start-server.svg" />
+    <Content Include="src\assets\img\subnautica-icon.jpg" />
+    <Content Include="src\assets\img\subnauticaLogo.png" />
+    <Content Include="src\assets\img\svg\discord.svg" />
+    <Content Include="src\assets\img\svg\github.svg" />
+    <Content Include="src\assets\img\svg\reddit.svg" />
+    <Content Include="src\assets\img\svg\twitter.svg" />
+    <Content Include="src\assets\img\svg\website.svg" />
+    <Content Include="src\background.js" />
+    <Content Include="src\components\ConfirmationModal.vue" />
+    <Content Include="src\components\LaunchGameModal.vue" />
+    <Content Include="src\components\NewsPost.vue" />
+    <Content Include="src\components\SettingsModal.vue" />
+    <Content Include="src\components\TitleBar.vue" />
+    <Content Include="src\main.js" />
+    <Content Include="src\router\index.js" />
+    <Content Include="src\store\index.js" />
+    <Content Include="src\views\Home.vue" />
+    <Content Include="src\views\News.vue" />
+    <Content Include="src\views\Server.vue" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="public\" />
+    <Folder Include="public\css\" />
+    <Folder Include="public\fonts\" />
+    <Folder Include="public\img\" />
+    <Folder Include="public\img\icons\" />
+    <Folder Include="src\" />
+    <Folder Include="src\assets\" />
+    <Folder Include="src\assets\img\" />
+    <Folder Include="src\assets\img\illustration\" />
+    <Folder Include="src\assets\img\svg\" />
+    <Folder Include="src\components\" />
+    <Folder Include="src\router\" />
+    <Folder Include="src\store\" />
+    <Folder Include="src\views\" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <NitroxLibs Include="$(SolutionDir)\Nitrox.Subnautica.Assets\**\*.dll" Visible="false" />
+    <NitroxLibs Include="$(SolutionDir)\Nitrox.Subnautica.Assets\**\*." Visible="false" />
+    <NitroxLibs Include="..\Nitrox.Bootloader\bin\$(Configuration)\*" Visible="false" />
+    <NitroxLibs Include="..\NitroxPatcher\bin\$(Configuration)\*" Visible="false" />
+    <NitroxLibs Include="..\NitroxServer-Subnautica\bin\$(Configuration)\*" Visible="false" />
+  </ItemGroup>
+  
+  <ItemGroup>
+  </ItemGroup>
+  
+  <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />
+  <Target Name="Build">
+    <MakeDir Directories="$(OutputPath)"/>
+    <Copy SourceFiles="@(NitroxLibs)" DestinationFolder="$(OutputPath)\%(RecursiveDir)" />
+    
+    <Exec Command="npm run-script electron:build"/>
+  </Target>
+</Project>

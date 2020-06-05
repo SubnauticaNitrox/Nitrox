@@ -284,7 +284,7 @@
       <NitroxSubnauticaAssets Include="..\Nitrox.Subnautica.Assets\**\*." />
     </ItemGroup>
 
-    <Copy SourceFiles="@(NitroxSubnauticaAssets)" DestinationFolder="$(TargetDir)\%(RecursiveDir)" />
+    <Copy SourceFiles="@(NitroxSubnauticaAssets)" DestinationFolder="$(OutputPath)\%(RecursiveDir)" />
   </Target>
 
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" Condition="'$(OS)' == 'Windows_NT'" />

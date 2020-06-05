@@ -27,9 +27,8 @@ bld/
 [Oo]bj/
 [Ll]og/
 
-# Visual Studio cache/options directory
+# Visual Studio 2015 cache/options directory
 .vs/
-
 # Uncomment if you have tasks that create the project's static files in wwwroot
 #wwwroot/
 
@@ -279,10 +278,3 @@ paket-files/
 /.sonarqube
 sonar.config.bat
 *.bak
-
-# Unity3D: Generated meta files
-*.pidb.meta
-*.pdb.meta
-
-# Unity3D: Generated File On Crash Reports
-sysinfo.txt
