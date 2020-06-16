@@ -237,16 +237,28 @@ namespace NitroxClient.Debuggers
             using (new GUILayout.VerticalScope("Box"))
             {
                 GUILayout.Label("All scenes", "header");
-                for (int i = 0; i < SceneManager.sceneCountInBuildSettings; i++)
+                for (int i = 0; i < SceneManager.sceneCountInBuildSettings+1; i++)
                 {
-                    Scene currentScene = SceneManager.GetSceneByBuildIndex(i);
-                    string path = SceneUtility.GetScenePathByBuildIndex(i);
+                    Scene currentScene;
+                    string path = "";
+                    if (i == SceneManager.sceneCountInBuildSettings)
+                    {
+                        currentScene = NitroxBootstrapper.Instance.gameObject.scene; // bit of a hack
+                    }
+                    else
+                    {
+                        currentScene = SceneManager.GetSceneByBuildIndex(i);
+                        path = SceneUtility.GetScenePathByBuildIndex(i);
+                    }
+
+                    Log.Info($"Current Scene: {currentScene.name} current Index {i}");
+
                     bool isSelected = selectedScene.IsValid() && currentScene == selectedScene;
                     bool isLoaded = currentScene.isLoaded;
 
                     using (new GUILayout.HorizontalScope("Box"))
                     {
-                        if (GUILayout.Button($"{(isSelected ? ">> " : "")}{i}: {path.TruncateLeft(35)}", isLoaded ? "sceneLoaded" : "label"))
+                        if (GUILayout.Button($"{(isSelected ? ">> " : "")}{i}: {(currentScene.name == "DontDestroyOnLoad" ? currentScene.name : path.TruncateLeft(35))}", isLoaded ? "sceneLoaded" : "label"))
                         {
                             selectedScene = currentScene;
                             ActiveTab = GetTab("Hierarchy").Value;
@@ -254,14 +266,14 @@ namespace NitroxClient.Debuggers
 
                         if (isLoaded)
                         {
-                            if (GUILayout.Button("Load", "loadScene"))
+                            if (currentScene.name != "DontDestroyOnLoad" && GUILayout.Button("Load", "loadScene"))
                             {
                                 SceneManager.UnloadSceneAsync(i);
                             }
                         }
                         else
                         {
-                            if (GUILayout.Button("Unload", "loadScene"))
+                            if (currentScene.name != "DontDestroyOnLoad" && GUILayout.Button("Unload", "loadScene"))
                             {
                                 SceneManager.LoadSceneAsync(i);
                             }
