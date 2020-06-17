@@ -51,12 +51,12 @@ namespace NitroxClient.GameLogic.InitialSync
                     }
                     catch (Exception ex)
                     {
-                        Log.Error("Error deserializing item data " + itemdata.ItemId + " " + ex.Message);
+                        Log.Error(ex, $"Error deserializing item data. Id: {itemdata.ItemId}");
                         continue;
                     }
 
-                    Log.Info("Initial item data for " + item.name + " giving to container " + itemdata.ContainerId);
-                    
+                    Log.Debug($"Initial item data for {item.name} giving to container {itemdata.ContainerId}");
+
                     Pickupable pickupable = item.GetComponent<Pickupable>();
 
                     if (pickupable != null && itemdata.ContainerId == packet.PlayerGameObjectId)
@@ -79,8 +79,8 @@ namespace NitroxClient.GameLogic.InitialSync
                     yield return null;
                 }
             }
-            
-            Log.Info("Recieved initial sync with " + totalItemDataSynced + " inventory items");
+
+            Log.Info($"Received initial sync with {totalItemDataSynced} inventory items");
         }
     }
 }

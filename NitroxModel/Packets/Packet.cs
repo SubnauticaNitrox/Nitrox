@@ -17,19 +17,22 @@ namespace NitroxModel.Packets
         private static readonly SurrogateSelector surrogateSelector;
         private static readonly StreamingContext streamingContext;
         private static readonly BinaryFormatter serializer;
-        
+
+        private static readonly string[] blacklistedAssemblies = { "NLog" };
+
         static Packet()
         {
             surrogateSelector = new SurrogateSelector();
             streamingContext = new StreamingContext(StreamingContextStates.All); // Our surrogates can be safely used in every context.
             IEnumerable<Type> types = AppDomain.CurrentDomain.GetAssemblies()
-                                    .SelectMany(a => a.GetTypes()
-                                                      .Where(t =>
-                                                                 t.BaseType != null &&
-                                                                 t.BaseType.IsGenericType &&
-                                                                 t.BaseType.GetGenericTypeDefinition() == typeof(SerializationSurrogate<>) &&
-                                                                 t.IsClass &&
-                                                                 !t.IsAbstract));
+                                               .Where(assembly => !blacklistedAssemblies.Contains(assembly.GetName().Name))
+                                               .SelectMany(a => a.GetTypes()
+                                                                 .Where(t =>
+                                                                            t.BaseType != null &&
+                                                                            t.BaseType.IsGenericType &&
+                                                                            t.BaseType.GetGenericTypeDefinition() == typeof(SerializationSurrogate<>) &&
+                                                                            t.IsClass &&
+                                                                            !t.IsAbstract));
 
             foreach (Type type in types)
             {
@@ -37,7 +40,7 @@ namespace NitroxModel.Packets
                 Type surrogatedType = type.BaseType.GetGenericArguments()[0];
                 surrogateSelector.AddSurrogate(surrogatedType, streamingContext, surrogate);
 
-                Log.Debug("Added surrogate " + surrogate.GetType().Name + " for type " + surrogatedType);
+                Log.Debug($"Added surrogate {surrogate.GetType().Name} for type {surrogatedType}");
             }
 
             // For completeness, we could pass a StreamingContextStates.CrossComputer.
@@ -87,7 +90,7 @@ namespace NitroxModel.Packets
             ISurrogateSelector selector;
             return (serializer.SurrogateSelector.GetSurrogate(type, Packet.serializer.Context, out selector) != null);
         }
-        
+
         public WrapperPacket ToWrapperPacket()
         {
             return new WrapperPacket(Serialize());

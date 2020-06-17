@@ -18,7 +18,7 @@ namespace NitroxServer.GameLogic
         // Discrepancy value for player based time modifications
         private float correctionValue;
 
-        public DateTime ServerStartTime { get; set; } = DateTime.Now;
+        public DateTime ServerStartTime { get; set; } = DateTime.UtcNow;
 
         public void SetDay()
         {
@@ -56,7 +56,7 @@ namespace NitroxServer.GameLogic
         {
             get
             {
-                TimeSpan interval = DateTime.Now - ServerStartTime;
+                TimeSpan interval = DateTime.UtcNow - ServerStartTime;
                 return SUBNAUTICA_BEGIN_TIME_OFFSET + Convert.ToSingle(interval.TotalSeconds) + correctionValue;
             }
         }

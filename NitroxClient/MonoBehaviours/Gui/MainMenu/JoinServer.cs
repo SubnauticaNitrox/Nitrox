@@ -350,7 +350,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             }
             catch (ClientConnectionFailedException)
             {
-                Log.InGame($"Unable to contact the remote server at: {ServerIp}:{ServerPort}");
+                Log.InGameSensitive("Unable to contact the remote server at: {ip}:{port}", ServerIp, ServerPort);
 
                 if (ServerIp.Equals("127.0.0.1"))
                 {
@@ -361,9 +361,8 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                     else
                     {
                         Log.InGame("Seems like your firewall settings are interfering");
-                    } 
+                    }
                 }
-
                 OnCancelClick();
             }
         }
@@ -420,14 +419,12 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                     break;
                 case MultiplayerSessionConnectionStage.AWAITING_RESERVATION_CREDENTIALS:
                     Log.InGame("Waiting for User Input...");
-
                     RightSideMainMenu.OpenGroup("Join Server");
                     FocusPlayerNameTextbox();
-
                     break;
+
                 case MultiplayerSessionConnectionStage.SESSION_RESERVED:
                     Log.InGame("Launching game...");
-
                     multiplayerSession.ConnectionStateChanged -= SessionConnectionStateChangedHandler;
                     preferencesManager.Save();
 

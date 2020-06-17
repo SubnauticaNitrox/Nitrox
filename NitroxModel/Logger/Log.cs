@@ -1,103 +1,208 @@
 ﻿using System;
-using System.IO;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reflection;
-using log4net;
-using log4net.Appender;
-using log4net.Core;
-using log4net.Filter;
-using log4net.Layout;
-using log4net.Repository.Hierarchy;
-using NitroxModel.Discovery;
+using NLog;
+using NLog.Conditions;
+using NLog.Config;
+using NLog.Filters;
+using NLog.Fluent;
+using NLog.MessageTemplates;
+using NLog.Targets;
+using NLog.Targets.Wrappers;
+using NLog.Time;
 
 namespace NitroxModel.Logger
 {
-    public class Log
+    public static class Log
     {
-        private static bool inGameMessages;
-
-        private static readonly ILog log = LogManager.GetLogger(GetLoggerName());
-        public static InGameLogger InGameLogger { get; set; }
-
-        static Log()
+        /// <summary>
+        ///     Parameters that are being logged with these names should be excluded when a log was made through the sensitive
+        ///     method calls.
+        /// </summary>
+        private static readonly HashSet<string> sensitiveLogParameters = new HashSet<string>
         {
-            Setup();
-        }
+            "username",
+            "password",
+            "ip",
+            "hostname"
+        };
 
-        // Enable the in-game notifications
-        public static void EnableInGameMessages()
-        {
-            inGameMessages = true;
-        }
+        private static NLog.Logger logger;
 
-        // For in-game notifications
-        public static void InGame(string msg)
+        public static InGameLogger InGameLogger { private get; set; }
+
+        public static void Setup(bool performanceCritical = false)
         {
-            if (inGameMessages)
+            if (logger != null)
             {
-                InGameLogger?.Log(msg);
-                Info(msg);
+                throw new Exception($"{nameof(Log)} setup should only be executed once.");
+            }
+            logger = LogManager.GetCurrentClassLogger();
+
+            LoggingConfiguration config = new LoggingConfiguration();
+            string layout = $@"[${{date:format=HH\:mm\:ss}} {GetLoggerName()}${{event-properties:item={nameof(PlayerName)}}}][${{level:uppercase=true}}] ${{message}} ${{exception}}";
+
+            // Targets where to log to: File and Console
+            ColoredConsoleTarget logConsole = new ColoredConsoleTarget(nameof(logConsole))
+            {
+                Layout = layout,
+                DetectConsoleAvailable = true
+            };
+
+            logConsole.RowHighlightingRules.Add(new ConsoleRowHighlightingRule
+            {
+                Condition = ConditionParser.ParseExpression("level == LogLevel.Error"),
+                ForegroundColor = ConsoleOutputColor.Red
+            });
+            logConsole.RowHighlightingRules.Add(new ConsoleRowHighlightingRule
+            {
+                Condition = ConditionParser.ParseExpression("level == LogLevel.Warn"),
+                ForegroundColor = ConsoleOutputColor.Yellow
+            });
+            logConsole.RowHighlightingRules.Add(new ConsoleRowHighlightingRule
+            {
+                Condition = ConditionParser.ParseExpression("level == LogLevel.Debug"),
+                ForegroundColor = ConsoleOutputColor.DarkGray
+            });
+
+            FileTarget logFile = new FileTarget(nameof(logFile))
+            {
+                FileName = $"Nitrox Logs/Nitrox-{GetLoggerName()}.log",
+                ArchiveFileName = "Nitrox Logs/archives/Nitrox-{GetLoggerName()}.{#}.log",
+                ArchiveEvery = FileArchivePeriod.Day,
+                ArchiveNumbering = ArchiveNumberingMode.Date,
+                MaxArchiveFiles = 7,
+                Layout = layout,
+                EnableArchiveFileCompression = true,
+            };
+            AsyncTargetWrapper logFileAsync = new AsyncTargetWrapper(logFile, 1000, AsyncTargetWrapperOverflowAction.Grow);
+
+            // Rules for mapping loggers to targets
+            config.AddRule(LogLevel.Debug, LogLevel.Fatal, logConsole);
+            config.AddRule(LogLevel.Debug, LogLevel.Fatal, logFileAsync);
+            config.AddRuleForOneLevel(LogLevel.Info,
+                                      new MethodCallTarget("ingame",
+                                                           (evt, obj) =>
+                                                           {
+                                                               if (InGameLogger == null)
+                                                               {
+                                                                   return;
+                                                               }
+                                                               evt.Properties.TryGetValue("game", out object isGameLog);
+                                                               if (isGameLog != null && (bool)isGameLog)
+                                                               {
+                                                                   InGameLogger.Log(evt.FormattedMessage);
+                                                               }
+                                                           }));
+
+            AddSensitiveFilter(config, target => target is AsyncTargetWrapper || target is FileTarget);
+
+            // Apply config
+            LogManager.Configuration = config;
+            if (!performanceCritical)
+            {
+                TimeSource.Current = new AccurateLocalTimeSource();
             }
         }
 
-        public static void Error(string msg)
+        public static string PlayerName
         {
-            log.Error(msg);
-        }
-
-        public static void Error(string fmt, params object[] arg)
-        {
-            log.Error(Format(fmt, arg));
-        }
-
-        public static void Error(string msg, Exception ex)
-        {
-            log.Error(msg, ex);
-        }
-
-        public static void Warn(string msg)
-        {
-            log.Warn(msg);
-        }
-
-        public static void Warn(string fmt, params object[] arg)
-        {
-            log.Warn(Format(fmt, arg));
-        }
-
-        public static void Info(string msg)
-        {
-            log.Info(msg);
-        }
-
-        public static void Info(string fmt, params object[] arg)
-        {
-            log.Info(Format(fmt, arg));
-        }
-
-        public static void Info(object o)
-        {
-            string msg = o == null ? "null" : o.ToString();
-            Info(msg);
-        }
-
-        // Only for debug prints. Should not be displayed to general user.
-        // Should we print the calling method for this for more debug context?
-        public static void Debug(string fmt, params object[] arg)
-        {
-            if (arg == null || arg.Length < 1)
+            set
             {
-                log.Debug(fmt);
-            }
-            else
-            {
-                log.Debug(Format(fmt, arg));
+#if DEBUG //Player name in log file is just important with two instances => Developer
+                if (string.IsNullOrEmpty(value))
+                {
+                    return;
+                }
+
+                logger.Info($"Setting player name to {value}");
+                logger.SetProperty(nameof(PlayerName), $"-{value}");
+#endif
             }
         }
 
-        public static void Debug(object o)
+        [Conditional("DEBUG")]
+        public static void Debug(string message) => logger.Debug(message);
+        [Conditional("DEBUG")]
+        public static void Debug(object message) => Debug(message?.ToString());
+
+        public static void Info(string message) => logger.Info(message);
+        public static void Info(object message) => Info(message?.ToString());
+
+        public static void Warn(string message) => logger.Warn(message);
+        public static void Warn(object message) => Warn(message?.ToString());
+
+        public static void Error(Exception ex) => logger.Error(ex);
+        public static void Error(Exception ex, string message) => logger.Error(ex, message);
+        public static void Error(string message) => logger.Error(message);
+
+        public static void InGame(object message) => InGame(message?.ToString());
+        public static void InGame(string message)
         {
-            string msg = o == null ? "null" : o.ToString();
-            Debug(msg);
+            if (InGameLogger == null)
+            {
+                logger.Warn($"{nameof(InGameLogger)} has not been set.");
+                return;
+            }
+            logger
+                .WithProperty("game", true)
+                .Info()
+                .Message(message)
+                .Write();
+        }
+
+        [Conditional("DEBUG")]
+        public static void DebugSensitive(string message, params object[] args)
+        {
+            logger
+                .WithProperty("sensitive", true)
+                .Debug()
+                .Message(message, args)
+                .Write();
+        }
+
+        public static void InfoSensitive(string message, params object[] args)
+        {
+            logger
+                .WithProperty("sensitive", true)
+                .Info()
+                .Message(message, args)
+                .Write();
+        }
+
+        public static void ErrorSensitive(Exception ex, string message, params object[] args)
+        {
+            logger
+                .WithProperty("sensitive", true)
+                .Error()
+                .Exception(ex)
+                .Message(message, args)
+                .Write();
+        }
+
+        public static void ErrorSensitive(string message, params object[] args)
+        {
+            logger
+                .WithProperty("sensitive", true)
+                .Error()
+                .Message(message, args)
+                .Write();
+        }
+
+        public static void InGameSensitive(string message, params object[] args)
+        {
+            if (InGameLogger == null)
+            {
+                logger.Warn($"{nameof(InGameLogger)} has not been set.");
+                return;
+            }
+            logger
+                .WithProperty("sensitive", true)
+                .WithProperty("game", true)
+                .Info()
+                .Message(message, args)
+                .Write();
         }
 
         /// <summary>
@@ -110,46 +215,40 @@ namespace NitroxModel.Logger
             return name.IndexOf("server", StringComparison.InvariantCultureIgnoreCase) >= 0 ? "Server" : name;
         }
 
-        // Helping method for formatting string correctly with arguments
-        private static string Format(string fmt, params object[] arg)
+        /// <summary>
+        ///     Exclude sensitive logs parameters from being logged into (long-term) files
+        /// </summary>
+        /// <param name="config">The logger config to apply the filter to.</param>
+        /// <param name="applyDecider">Custom condition to decide whether to apply the sensitive log file to a log target.</param>
+        private static void AddSensitiveFilter(LoggingConfiguration config, Func<Target, bool> applyDecider)
         {
-            return string.Format(fmt, arg);
-        }
-
-        private static void Setup()
-        {
-            Hierarchy hierarchy = (Hierarchy)LogManager.GetRepository();
-
-            PatternLayout patternLayout = new PatternLayout();
-            patternLayout.ConversionPattern = "[%d{HH:mm:ss} %logger %level]: %m%n";
-            patternLayout.ActivateOptions();
-
-            LevelRangeFilter filter = new LevelRangeFilter();
-            filter.LevelMin = Level.Debug;
-            filter.LevelMax = Level.Fatal;
-
-            RollingFileAppender fileAppender = new RollingFileAppender();
-            string basePath = GameInstallationFinder.Instance.FindGame();
-            fileAppender.File = Path.Combine(basePath ?? "", "Nitrox Logs", "nitrox-.log"); // Attempt to create 'Nitrox Logs' dir where the game is.
-            fileAppender.AppendToFile = true;
-            fileAppender.RollingStyle = RollingFileAppender.RollingMode.Date;
-            fileAppender.MaxSizeRollBackups = 10;
-            fileAppender.DatePattern = "yyyy-MM-dd";
-            fileAppender.StaticLogFileName = false;
-            fileAppender.PreserveLogFileNameExtension = true;
-            fileAppender.LockingModel = new FileAppender.MinimalLock();
-            fileAppender.Layout = patternLayout;
-            fileAppender.ActivateOptions();
-            fileAppender.AddFilter(filter);
-
-            ConsoleAppender consoleAppender = new ConsoleAppender();
-            consoleAppender.Layout = patternLayout;
-            consoleAppender.AddFilter(filter);
-
-            hierarchy.Root.AddAppender(consoleAppender);
-            hierarchy.Root.AddAppender(fileAppender);
-
-            hierarchy.Configured = true;
+            WhenMethodFilter sensitiveLogFilter = new WhenMethodFilter(context =>
+            {
+                context.Properties.TryGetValue("sensitive", out object isSensitive);
+                if (isSensitive != null && (bool)isSensitive)
+                {
+                    for (int i = 0; i < context.MessageTemplateParameters.Count; i++)
+                    {
+                        MessageTemplateParameter template = context.MessageTemplateParameters[i];
+                        if (sensitiveLogParameters.Contains(template.Name))
+                        {
+                            context.Parameters.SetValue(new string('*', template.Value?.ToString().Length ?? 0), i);
+                        }
+                    }
+                    context.Parameters = context.Parameters; // Triggers NLog to format the message again
+                }
+                return FilterResult.Log;
+            });
+            foreach (LoggingRule rule in config.LoggingRules)
+            {
+                foreach (Target target in rule.Targets)
+                {
+                    if (applyDecider(target))
+                    {
+                        rule.Filters.Add(sensitiveLogFilter);
+                    }
+                }
+            }
         }
     }
 }

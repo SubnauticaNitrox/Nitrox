@@ -12,9 +12,9 @@ namespace NitroxModel.DataStructures.GameLogic
         public List<PDAEntry> PartiallyUnlockedTechTypes { get; set; }
         public List<PDALogEntry> PDALogEntries { get; set; }
 
-        public InitialPDAData()
+        protected InitialPDAData()
         {
-            // Constructor for serialization
+            //Constructor for serialization. Has to be "protected" for json serialization.
         }
 
         public InitialPDAData(List<NitroxTechType> unlockedTechTypes, List<NitroxTechType> knownTechTypes, List<string> encyclopediaEntries, List<PDAEntry> partiallyUnlockedTechTypes, List<PDALogEntry> pdaLogEntries)

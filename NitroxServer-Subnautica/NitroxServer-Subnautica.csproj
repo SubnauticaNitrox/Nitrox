@@ -102,7 +102,8 @@
     <Compile Include="Serialization\Resources\Processing\PrefabPlaceholderExtractor.cs" />
     <Compile Include="Serialization\Resources\ResourceAssets.cs" />
     <Compile Include="Serialization\Resources\ResourceAssetsParser.cs" />
-    <Compile Include="Serialization\SubnauticaServerProtobufSerializer.cs" />
+    <Compile Include="Serialization\SubnauticaServerJsonSerializer.cs" />
+    <Compile Include="Serialization\SubnauticaServerProtoBufSerializer.cs" />
     <Compile Include="SubnauticaServerAutoFacRegistrar.cs" />
   </ItemGroup>
   <ItemGroup>

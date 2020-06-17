@@ -14,12 +14,12 @@ namespace NitroxServer_Subnautica.Serialization.Resources
     public static class ResourceAssetsParser
     {
         private static Dictionary<AssetIdentifier, uint> assetIdentifierToClassId = new Dictionary<AssetIdentifier, uint>();
-        
+
         private static Dictionary<string, int> fileIdByResourcePath = new Dictionary<string, int>();
         private static HashSet<string> parsedManifests = new HashSet<string>();
 
         private static PrefabPlaceholderExtractor prefabPlaceholderExtractor = new PrefabPlaceholderExtractor();
-        
+
         // https://docs.huihoo.com/unity/4.3/Documentation/Manual/ClassIDReference.html
         private static Dictionary<uint, AssetParser> assetParsersByClassId = new Dictionary<uint, AssetParser>()
         {
@@ -55,7 +55,9 @@ namespace NitroxServer_Subnautica.Serialization.Resources
 
         private static void ParseAssetManifest(string basePath, string fileName, int fileId, ResourceAssets resourceAssets)
         {
-            if(parsedManifests.Contains(fileName))
+            fileName = fileName.Replace("resources/", "Resources/");
+
+            if (parsedManifests.Contains(fileName))
             {
                 return;
             }
@@ -69,19 +71,19 @@ namespace NitroxServer_Subnautica.Serialization.Resources
             {
                 AssetsFile file = new AssetsFile(reader);
                 AssetsFileTable resourcesFileTable = new AssetsFileTable(file);
-                
-                foreach (AssetsFileDependency dependency in file.dependencies.dependencies) 
+
+                foreach (AssetsFileDependency dependency in file.dependencies.dependencies)
                 {
                     int dependencyFileId = fileIdByResourcePath[dependency.assetPath];
                     ParseAssetManifest(basePath, dependency.assetPath, dependencyFileId, resourceAssets);
                 }
-                
+
                 foreach (AssetFileInfoEx assetFileInfo in resourcesFileTable.assetFileInfo)
                 {
                     reader.Position = assetFileInfo.absoluteFilePos;
 
                     AssetIdentifier identifier = new AssetIdentifier(fileId, assetFileInfo.index);
-                    
+
                     AssetParser assetParser;
 
                     if (assetParsersByClassId.TryGetValue(assetFileInfo.curFileType, out assetParser))
@@ -106,14 +108,14 @@ namespace NitroxServer_Subnautica.Serialization.Resources
             {
                 AssetsFile file = new AssetsFile(reader);
                 AssetsFileTable resourcesFileTable = new AssetsFileTable(file);
-                
+
                 int fileId = 1;
 
                 foreach (AssetsFileDependency dependency in file.dependencies.dependencies)
                 {
                     fileIdByResourcePath.Add(dependency.assetPath, fileId);
                     fileId++;
-                }                
+                }
             }
         }
 
@@ -125,7 +127,7 @@ namespace NitroxServer_Subnautica.Serialization.Resources
             {
                 throw new DirectoryNotFoundException($"Could not locate Subnautica installation directory:{Environment.NewLine}{string.Join(Environment.NewLine, errors)}");
             }
-            
+
             if (File.Exists(Path.Combine(subnauticaPath, "Subnautica_Data", "resources.assets")))
             {
                 return Path.Combine(subnauticaPath, "Subnautica_Data");

@@ -1,19 +1,20 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using NitroxModel.Logger;
 using ProtoBufNet;
 using ProtoBufNet.Meta;
 
 namespace NitroxServer.Serialization
 {
-    public class ServerProtobufSerializer
+    public class ServerProtoBufSerializer : IServerSerializer
     {
         private static readonly object[] emptyArray = { };
         protected RuntimeTypeModel Model { get; } = TypeModel.Create();
 
-        public ServerProtobufSerializer(params string[] assemblies)
+        public ServerProtoBufSerializer(params string[] assemblies)
         {
-            foreach(string assembly in assemblies)
+            foreach (string assembly in assemblies)
             {
                 RegisterAssemblyClasses(assembly);
             }
@@ -24,6 +25,14 @@ namespace NitroxServer.Serialization
             Model.SerializeWithLengthPrefix(stream, o, o.GetType(), PrefixStyle.Base128, 0);
         }
 
+        public void Serialize(string filePath, object o)
+        {
+            using (Stream stream = File.OpenWrite(filePath))
+            {
+                Serialize(stream, o);
+            }
+        }
+
         public T Deserialize<T>(Stream stream)
         {
             T t = (T)Activator.CreateInstance(typeof(T));
@@ -31,34 +40,56 @@ namespace NitroxServer.Serialization
             return t;
         }
 
+        public T Deserialize<T>(string filePath)
+        {
+            using (Stream stream = File.OpenRead(filePath))
+            {
+                return Deserialize<T>(stream);
+            }
+        }
+
         public void Deserialize(Stream stream, object o, Type t)
         {
             Model.DeserializeWithLengthPrefix(stream, o, t, PrefixStyle.Base128, 0);
         }
-        
+
         private void RegisterAssemblyClasses(string assemblyName)
         {
             foreach (Type type in Assembly.Load(assemblyName).GetTypes())
             {
-                bool hasNitroxProtobuf = type.GetCustomAttributes(typeof(ProtoContractAttribute), false).Length > 0;
-
-                if (hasNitroxProtobuf)
+                try
                 {
-                    // As of the latest protobuf update they will automatically register detected attributes.
-                    Model.Add(type, true);
+                    bool hasNitroxProtoBuf = type.GetCustomAttributes(typeof(ProtoContractAttribute), false).Length > 0;
+
+                    if (hasNitroxProtoBuf)
+                    {
+                        // As of the latest protobuf update they will automatically register detected attributes.
+                        Model.Add(type, true);
+                    }
+                    else if (HasUweProtoContract(type))
+                    {
+                        Model.Add(type, true);
+
+                        ManuallyRegisterUweProtoMembers(type.GetMembers(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance), type);
+                    }
                 }
-                else if(HasUweProtoContract(type))
+                catch (Exception ex)
                 {
-                    Model.Add(type, true);
-
-                    ManuallyRegisterUweProtoMembers(type.GetMembers(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance), type);
+                    if (type.FullName.Contains("Oculus.Platform.Models"))
+                    {
+                        Log.Debug($"ServerProtoBufSerializer has thrown an error registering the type: {type} from {assemblyName}. However it's probably caused from different Newtonsoft.Json versions of Oculus and Nitrox and can be ignored.");
+                    }
+                    else
+                    {
+                        Log.Error(ex, $"ServerProtoBufSerializer has thrown an error registering the type: {type} from {assemblyName}");
+                    }
                 }
             }
         }
 
         private bool HasUweProtoContract(Type type)
         {
-            foreach(object o in type.GetCustomAttributes(false))
+            foreach (object o in type.GetCustomAttributes(false))
             {
                 if (o.GetType().ToString().Contains("ProtoContractAttribute"))
                 {

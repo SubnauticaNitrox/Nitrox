@@ -4,7 +4,7 @@ using System;
 namespace NitroxModel.DataStructures.GameLogic
 {
     [Serializable]
-    [ProtoContract]    
+    [ProtoContract]
     public class VehicleMovementData
     {
         [ProtoMember(1)]
@@ -36,10 +36,10 @@ namespace NitroxModel.DataStructures.GameLogic
 
         [ProtoMember(10)]
         public float Health { get; }
-        
-        public VehicleMovementData()
+
+        protected VehicleMovementData()
         {
-            // For serialization purposes
+            // Constructor for serialization. Has to be "protected" for json serialization.
         }
 
         public VehicleMovementData(NitroxTechType techType, NitroxId id, NitroxVector3 position, NitroxQuaternion rotation, NitroxVector3 velocity, NitroxVector3 angularVelocity, float steeringWheelYaw, float steeringWheelPitch, bool appliedThrottle, float health)

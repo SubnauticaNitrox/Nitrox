@@ -45,7 +45,7 @@ namespace NitroxClient.GameLogic
             }
             catch (Exception ex)
             {
-                Log.Error($"Error while trying to spawn \"{techType}\" from devconsole", ex);
+                Log.Error(ex, $"Error while trying to spawn {techType} from devconsole");
             }
         }
 

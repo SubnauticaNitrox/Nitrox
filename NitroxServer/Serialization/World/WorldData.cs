@@ -13,7 +13,7 @@ namespace NitroxServer.Serialization.World
     [ProtoContract]
     public class WorldData
     {
-        public const long VERSION = 1;
+        public const short VERSION = 1;
 
         [ProtoMember(1)]
         public List<Int3> ParsedBatchCells { get; set; }
@@ -46,8 +46,7 @@ namespace NitroxServer.Serialization.World
                    (VehicleData != null) &&
                    (InventoryData != null) &&
                    (GameData != null) &&
-                   (EntityData != null) &&
-                   (EntityData.Entities.Count > 0) &&
+                   (EntityData?.Entities != null) &&
                    (EscapePodData != null) &&
                    (StoryTimingData != null);
         }
