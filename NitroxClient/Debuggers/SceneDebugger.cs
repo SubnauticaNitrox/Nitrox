@@ -255,10 +255,11 @@ namespace NitroxClient.Debuggers
 
                     bool isSelected = selectedScene.IsValid() && currentScene == selectedScene;
                     bool isLoaded = currentScene.isLoaded;
+                    bool isDDOLScene = currentScene.name == "DontDestroyOnLoad";
 
                     using (new GUILayout.HorizontalScope("Box"))
                     {
-                        if (GUILayout.Button($"{(isSelected ? ">> " : "")}{i}: {(currentScene.name == "DontDestroyOnLoad" ? currentScene.name : path.TruncateLeft(35))}", isLoaded ? "sceneLoaded" : "label"))
+                        if (GUILayout.Button($"{(isSelected ? ">> " : "")}{i}: {(isDDOLScene ? currentScene.name : path.TruncateLeft(35))}", isLoaded ? "sceneLoaded" : "label"))
                         {
                             selectedScene = currentScene;
                             ActiveTab = GetTab("Hierarchy").Value;
@@ -266,14 +267,14 @@ namespace NitroxClient.Debuggers
 
                         if (isLoaded)
                         {
-                            if (currentScene.name != "DontDestroyOnLoad" && GUILayout.Button("Load", "loadScene"))
+                            if (!isDDOLScene && GUILayout.Button("Load", "loadScene"))
                             {
                                 SceneManager.UnloadSceneAsync(i);
                             }
                         }
                         else
                         {
-                            if (currentScene.name != "DontDestroyOnLoad" && GUILayout.Button("Unload", "loadScene"))
+                            if (!isDDOLScene && GUILayout.Button("Unload", "loadScene"))
                             {
                                 SceneManager.LoadSceneAsync(i);
                             }
