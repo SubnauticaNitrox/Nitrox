@@ -6,8 +6,8 @@ namespace NitroxClient.MonoBehaviours
 {
     public class NitroxBootstrapper : MonoBehaviour
     {
-        public static NitroxBootstrapper Instance;
-        public void Awake()
+        internal static NitroxBootstrapper Instance;
+        private void Awake()
         {
             DontDestroyOnLoad(gameObject);
             Instance = this;
