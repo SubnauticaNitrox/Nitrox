@@ -23,6 +23,7 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests.ConnectionStat
 
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
             connectionContext.Client.Returns(serverClient);
+            connectionContext.ServerPort.Returns(TestConstants.TEST_SERVER_PORT);
 
             Disconnected connectionState = new Disconnected();
 
@@ -45,6 +46,7 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests.ConnectionStat
 
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
             connectionContext.Client.Returns(serverClient);
+            connectionContext.ServerPort.Returns(TestConstants.TEST_SERVER_PORT);
 
             Disconnected connectionState = new Disconnected();
 
@@ -67,6 +69,7 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests.ConnectionStat
 
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
             connectionContext.Client.Returns(serverClient);
+            connectionContext.ServerPort.Returns(TestConstants.TEST_SERVER_PORT);
 
             Disconnected connectionState = new Disconnected();
 
