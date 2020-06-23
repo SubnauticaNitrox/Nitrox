@@ -42,10 +42,7 @@ namespace NitroxClient.Unity.Helper
             assetRoot.SetParent(uGUI.main.screenCanvas.transform, false);
             UnityEngine.Object.Destroy(assetCanvas);
 
-            if (callback != null)
-            {
-                callback.Invoke(assetRoot.gameObject);
-            }
+            callback?.Invoke(assetRoot.gameObject);
         }
     }
 }
