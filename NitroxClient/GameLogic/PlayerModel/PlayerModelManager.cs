@@ -102,7 +102,7 @@ namespace NitroxClient.GameLogic.PlayerModel
             setColor.Invoke(pings,
                 new object[]
                 {
-                    ping.GetInstanceID(), player.PlayerSettings.PlayerColor
+                    ping.GetInstanceID(), player.PlayerSettings.PlayerColor.ToUnity()
                 });
         }
 
