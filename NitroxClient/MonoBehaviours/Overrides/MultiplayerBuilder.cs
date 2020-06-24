@@ -63,7 +63,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
 
             MultiplayerBuilder.prefab = modulePrefab;
             MultiplayerBuilder.Update();
-            return true;
+            return MultiplayerBuilder.canPlace;
         }
 
         // Token: 0x06002B99 RID: 11161 RVA: 0x00103D44 File Offset: 0x00101F44
@@ -164,7 +164,15 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 }
 
                 MultiplayerBuilder.renderers = MaterialExtensions.AssignMaterial(MultiplayerBuilder.ghostModel, MultiplayerBuilder.ghostStructureMaterial);
-                MultiplayerBuilder.SetupRenderers(MultiplayerBuilder.ghostModel, Player.main.IsInSub());
+                // Initialize as if Player is outside. Player subroot and renderers are updated on a later InitialSyncProcessor.
+                if (IsInitialSyncing)
+                {
+                    MultiplayerBuilder.SetupRenderers(MultiplayerBuilder.ghostModel, false);
+                }
+                else
+                {
+                    MultiplayerBuilder.SetupRenderers(MultiplayerBuilder.ghostModel, Player.main.IsInSub());
+                }
                 MultiplayerBuilder.CreatePowerPreview(MultiplayerBuilder.constructableTechType, MultiplayerBuilder.ghostModel);
                 MultiplayerBuilder.InitBounds(MultiplayerBuilder.prefab);
             }
@@ -184,12 +192,30 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 Transform transform = componentInParent.transform;
                 transform.position = MultiplayerBuilder.placePosition;
                 transform.rotation = MultiplayerBuilder.placeRotation;
+                BaseGhost component = ghostModel.GetComponent<BaseGhost>();
+
+                if (rotationMetadata.HasValue && component is BaseAddCorridorGhost)
+                {
+                    ApplyRotationMetadata(MultiplayerBuilder.ghostModel, rotationMetadata.Value);
+                }
 
                 flag2 = componentInParent.UpdateGhostModel(MultiplayerBuilder.GetAimTransform(), MultiplayerBuilder.ghostModel, default(RaycastHit), out flag, componentInParent);
 
-                if (rotationMetadata.HasValue)
+                if (rotationMetadata.HasValue && !(component is BaseAddCorridorGhost))
                 {
                     ApplyRotationMetadata(MultiplayerBuilder.ghostModel, rotationMetadata.Value);
+                }
+
+                if (!flag2)
+                {
+                    if (component.TargetBase != null)
+                    {
+                        Log.Error("MulitplayerBuilder - UpdateGhostModel failed - constructableBase: " + componentInParent);
+                    }
+                    else
+                    {
+                        flag2 = true;
+                    }
                 }
 
                 if (flag)
@@ -203,6 +229,15 @@ namespace NitroxClient.MonoBehaviours.Overrides
             {
                 List<GameObject> list = new List<GameObject>();
                 MultiplayerBuilder.GetObstacles(MultiplayerBuilder.placePosition, MultiplayerBuilder.placeRotation, MultiplayerBuilder.bounds, list);
+
+                if (list.Count > 0)
+                {
+                    foreach (var item in list)
+                    {
+                        Log.Error("MulitplayerBuilder - Obstacles detected - constructableBase: " + componentInParent + " obstacle : " + item);
+                    }
+                }
+
                 flag2 = list.Count == 0;
                 list.Clear();
             }
@@ -218,11 +253,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
             {
                 Log.Error("Was unable to apply rotation metadata - no BaseGhost found");
             }
-            else if (component.GetType() != rotationMetadata.GhostType)
-            {
-                Log.Error("Was unable to apply rotation metadata - " + component.GetType() + " did not match " + rotationMetadata.GhostType);
-            }
-            else if (component is BaseAddCorridorGhost)
+            else if (component is BaseAddCorridorGhost && rotationMetadata is CorridorRotationMetadata)
             {
                 Log.Info("Placing BaseAddCorridorGhost Rotation Metadata");
 
@@ -235,7 +266,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 ghostBase.SetCorridor(Int3.zero, corridorType, corridor.isGlass);
                 corridor.ReflectionCall("RebuildGhostGeometry");
             }
-            else if (component is BaseAddMapRoomGhost)
+            else if (component is BaseAddMapRoomGhost && rotationMetadata is MapRoomRotationMetadata)
             {
                 Log.Info("Placing MapRoomRotationMetadata Rotation Metadata");
 
@@ -245,17 +276,45 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 mapRoom.ReflectionSet("connectionMask", mapRoomRotationMetadata.ConnectionMask);
 
                 Base ghostBase = (Base)mapRoom.ReflectionGet("ghostBase");
-                
+
                 ghostBase.SetCell(Int3.zero, (Base.CellType)mapRoomRotationMetadata.CellType);
                 mapRoom.ReflectionCall("RebuildGhostGeometry");
             }
-            else if (component is BaseAddModuleGhost)
+            else if (component is BaseAddModuleGhost && rotationMetadata is BaseModuleRotationMetadata)
             {
                 BaseModuleRotationMetadata baseModuleRotationMetadata = (rotationMetadata as BaseModuleRotationMetadata);
                 BaseAddModuleGhost module = (component as BaseAddModuleGhost);
 
-                module.anchoredFace = new Base.Face(baseModuleRotationMetadata.Cell.Global(), (Base.Direction)baseModuleRotationMetadata.Direction);
+                //prepare the module itself
+                Base.Direction moduledirection = (Base.Direction)baseModuleRotationMetadata.ModuleDirection;
+                Base.Face face = new Base.Face(baseModuleRotationMetadata.AnchoredFaceCell.Global(), (Base.Direction)baseModuleRotationMetadata.AnchoredFaceDirection);
+                module.ReflectionSet("direction", moduledirection, false);
+                module.anchoredFace = face;
+
+                //prepare the ghostbase
+                Base ghostBase = (Base)module.ReflectionGet("ghostBase");
+                Base.FaceType faceType = (Base.FaceType)baseModuleRotationMetadata.AnchoredFaceType;
+                ghostBase.SetFace(face, faceType);
+
+                //rebuild layout
                 module.ReflectionCall("RebuildGhostGeometry");
+            }
+            else if (component is BaseAddFaceGhost && rotationMetadata is FaceRotationMetadata)
+            {
+                FaceRotationMetadata baseModuleRotationMetadata = (rotationMetadata as FaceRotationMetadata);
+                BaseAddFaceGhost faceGhost = (component as BaseAddFaceGhost);
+
+                //prepare the faceGhost itself
+                Base.Face face = new Base.Face(baseModuleRotationMetadata.AnchoredFaceCell.Global(), (Base.Direction)baseModuleRotationMetadata.AnchoredFaceDirection);
+                faceGhost.anchoredFace = face;
+
+                //prepare the ghostbase
+                Base ghostBase = (Base)faceGhost.ReflectionGet("ghostBase");
+                Base.FaceType faceType = (Base.FaceType)baseModuleRotationMetadata.AnchoredFaceType;
+                ghostBase.SetFace(face, faceType);
+
+                //rebuild layout
+                faceGhost.ReflectionCall("RebuildGhostGeometry");
             }
         }
 
@@ -383,8 +442,12 @@ namespace NitroxClient.MonoBehaviours.Overrides
             bool flag2 = false;
             if (currentSub != null)
             {
-                flag = currentSub.isBase;
-                flag2 = currentSub.isCyclops;
+                // Outside Modules (e.g. SolarPanel) need to be handled differently then normal Furniture. We need the subroot only for the transform assignment but not the flags.
+                if (!MultiplayerBuilder.allowedOutside)
+                {
+                    flag = currentSub.isBase;
+                    flag2 = currentSub.isCyclops;
+                }
                 gameObject.transform.parent = currentSub.GetModulesRoot();
             }
             else if (MultiplayerBuilder.placementTarget != null && MultiplayerBuilder.allowedOutside)
@@ -408,7 +471,17 @@ namespace NitroxClient.MonoBehaviours.Overrides
             }
 
             componentInParent3.SetIsInside(flag || flag2);
-            SkyEnvironmentChanged.Send(gameObject, currentSub);
+            // An outside module needs to be linked to the surrounding daylight and not the base interiourlight
+            if (!MultiplayerBuilder.allowedOutside)
+            {
+                SkyEnvironmentChanged.Send(gameObject, currentSub);
+            }
+            else
+            {
+                SubRoot dummyComp = null;
+                SkyEnvironmentChanged.Send(gameObject, dummyComp);
+            }
+
             gameObject.transform.position = overridePosition;
             gameObject.transform.rotation = overrideQuaternion;
 
@@ -971,6 +1044,8 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 }
             }
         }
+
+        public static bool IsInitialSyncing = false;
 
         public static Vector3 overridePosition;
 

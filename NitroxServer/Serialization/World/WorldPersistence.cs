@@ -47,7 +47,7 @@ namespace NitroxServer.Serialization.World
             {
                 PersistedWorldData persistedData = new PersistedWorldData
                 {
-                    BaseData = BaseData.From(world.BaseManager.GetPartiallyConstructedPieces(), world.BaseManager.GetCompletedBasePieceHistory()),
+                    BaseData = BaseData.From(world.BaseManager.GetAllBasePieces()),
                     PlayerData = PlayerData.From(world.PlayerManager.GetAllPlayers()),
                     WorldData =
                     {
@@ -127,8 +127,7 @@ namespace NitroxServer.Serialization.World
 
                 World world = CreateWorld(persistedData.WorldData.ServerStartTime.Value,
                                           persistedData.WorldData.EntityData.Entities,
-                                          persistedData.BaseData.PartiallyConstructedPieces,
-                                          persistedData.BaseData.CompletedBasePieceHistory,
+                                          persistedData.BaseData.BasePieces,
                                           persistedData.WorldData.VehicleData.Vehicles,
                                           persistedData.PlayerData.GetPlayers(),
                                           persistedData.WorldData.InventoryData.InventoryItems,
@@ -181,7 +180,7 @@ namespace NitroxServer.Serialization.World
         {
             return CreateWorld(
                 DateTime.Now,
-                new List<Entity>(), new List<BasePiece>(), new List<BasePiece>(),
+                new List<Entity>(), new List<BasePiece>(),
                 new List<VehicleModel>(), new List<Player>(), new List<ItemData>(),
                 new List<ItemData>(),
                 new GameData() { PDAState = new PDAStateData(), StoryGoals = new StoryGoalData() },
@@ -190,8 +189,7 @@ namespace NitroxServer.Serialization.World
 
         private World CreateWorld(DateTime serverStartTime,
                                   List<Entity> entities,
-                                  List<BasePiece> partiallyConstructedPieces,
-                                  List<BasePiece> completedBasePieceHistory,
+                                  List<BasePiece> basePieces,
                                   List<VehicleModel> vehicles,
                                   List<Player> players,
                                   List<ItemData> inventoryItems,
@@ -209,7 +207,7 @@ namespace NitroxServer.Serialization.World
             world.SimulationOwnershipData = new SimulationOwnershipData();
             world.PlayerManager = new PlayerManager(players, config);
             world.EventTriggerer = new EventTriggerer(world.PlayerManager, storyTimingData.ElapsedTime, storyTimingData.AuroraExplosionTime);
-            world.BaseManager = new BaseManager(partiallyConstructedPieces, completedBasePieceHistory);
+            world.BaseManager = new BaseManager(basePieces);
             world.InventoryManager = new InventoryManager(inventoryItems, storageSlotItems);
             world.VehicleManager = new VehicleManager(vehicles, world.InventoryManager);
             world.GameData = gameData;

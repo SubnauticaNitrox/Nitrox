@@ -48,6 +48,9 @@ namespace NitroxModel.DataStructures.GameLogic
             -a.Z);
         }
 
+        public static bool operator ==(NitroxVector3 a, NitroxVector3 b) => a.X == b.X && a.Y == b.Y && a.Z == b.Z;
+        public static bool operator !=(NitroxVector3 a, NitroxVector3 b) => a.X != b.X || a.Y != b.Y || a.Z != b.Z;
+
         public static NitroxVector3 operator /(NitroxVector3 lhs, float rhs)
         {
             return new NitroxVector3(lhs.X / rhs, lhs.Y / rhs, lhs.Z / rhs);

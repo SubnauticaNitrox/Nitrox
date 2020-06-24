@@ -60,6 +60,7 @@
     <Compile Include="Communication\Packets\Processors\ExosuitArmActionProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleSpawnedProcessor.cs" />
     <Compile Include="Debuggers\EntityDebugger.cs" />
+    <Compile Include="GameLogic\Bases\GeometryLayoutChangeHandler.cs" />
     <Compile Include="GameLogic\Bases\Spawning\BasePieceSpawnProcessor.cs" />
     <Compile Include="GameLogic\Bases\Spawning\BaseLadderSpawnProcessor.cs" />
     <Compile Include="GameLogic\Bases\Spawning\NoOpBasePieceSpawnProcessor.cs" />

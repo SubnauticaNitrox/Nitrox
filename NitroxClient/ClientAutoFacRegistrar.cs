@@ -87,6 +87,7 @@ namespace NitroxClient
             containerBuilder.RegisterType<PacketReceiver>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<AI>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Building>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<GeometryLayoutChangeHandler>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<PlayerChatManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Entities>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<MedkitFabricator>().InstancePerLifetimeScope();

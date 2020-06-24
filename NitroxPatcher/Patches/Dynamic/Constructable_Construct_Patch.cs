@@ -1,9 +1,14 @@
 ﻿using System;
 using System.Reflection;
 using Harmony;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Helper;
+using NitroxModel.Packets;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
@@ -15,28 +20,28 @@ namespace NitroxPatcher.Patches.Dynamic
         private static Base lastTargetBase;
         private static Int3 lastTargetBaseOffset;
 
-        public static bool Prefix(Constructable __instance)
+        public static bool Prefix(Constructable __instance, bool __result)
         {
-            if (!__instance._constructed && __instance.constructedAmount < 1.0f)
-            {
-                NitroxServiceLocator.LocateService<Building>().ChangeConstructionAmount(__instance.gameObject, __instance.constructedAmount);
-            }
-            
-            // If we are constructing a base piece then we'll want to store all of the BaseGhost information
-            // as it will not be available when the construction hits 100%
-            BaseGhost baseGhost = __instance.gameObject.GetComponentInChildren<BaseGhost>();
 
-            if (baseGhost != null && baseGhost.TargetBase)
+            if (NitroxServiceLocator.LocateService<Building>().remoteEventActive)
             {
-                lastTargetBase = baseGhost.TargetBase.GetComponent<Base>();
-                lastTargetBaseOffset = baseGhost.TargetOffset;
+                if (__instance.constructed)
+                {
+                    __result = false;
+                }
+                else
+                {
+                    System.Reflection.MethodInfo updateMaterial = typeof(Constructable).GetMethod("UpdateMaterial", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                    Validate.NotNull(updateMaterial);
+                    updateMaterial.Invoke(__instance, new object[] { });
+                    if (__instance.constructedAmount >= 1f)
+                    {
+                        __instance.SetState(true, true);
+                    }
+                    __result = true;
+                }
+                return false;
             }
-            else
-            {
-                lastTargetBase = null;
-                lastTargetBaseOffset = default(Int3);
-            }
-
             return true;
         }
 
@@ -44,7 +49,32 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             if (__result && __instance.constructedAmount >= 1.0f)
             {
-                NitroxServiceLocator.LocateService<Building>().ConstructionComplete(__instance.gameObject, Optional.OfNullable(lastTargetBase), lastTargetBaseOffset);
+
+                //Check if we raised the event by using our own BuilderTool or if it came as post Event of a Remote-Action or Init-Action
+                if (NitroxServiceLocator.LocateService<Building>().lastHoveredConstructable != null && NitroxServiceLocator.LocateService<Building>().lastHoveredConstructable == __instance && NitroxServiceLocator.LocateService<Building>().currentlyHandlingBuilderTool && !NitroxServiceLocator.LocateService<Building>().remoteEventActive)
+                {
+
+                    if (__result && __instance.constructedAmount < 1f)
+                    {
+                        NitroxId id = NitroxEntity.GetId(__instance.gameObject);
+
+#if TRACE && BUILDING
+                    NitroxModel.Logger.Log.Debug("Constructable_Construct_Post - sending notify for self constructing object - id: " + id + " amount: " + instance.constructedAmount);
+#endif
+                        ConstructionAmountChanged amountChanged = new ConstructionAmountChanged(id, __instance.constructedAmount);
+                        NitroxServiceLocator.LocateService<IPacketSender>().Send(amountChanged);
+                    }
+                }
+
+                if (__result && __instance.constructedAmount == 1f && NitroxServiceLocator.LocateService<Building>().remoteEventActive)
+                {
+
+#if TRACE && BUILDING
+                NitroxModel.Logger.Log.Debug("Constructable_Construct_Post - finished construct remote");
+#endif
+
+                }
+                
             }
         }
 
