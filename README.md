@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="https://s3.amazonaws.com/nitroxmod/Logo.png" alt="Nitrox" />
+    <img src="https://github.com/SubnauticaNitrox/Nitrox/blob/master/github_banner.png?raw=true" alt="Nitrox" />
 </p>
 
 # Subnautica Nitrox

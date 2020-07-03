@@ -173,7 +173,7 @@ namespace NitroxClient.MonoBehaviours
 
             LoadingScreenVersionText.DisableWarningText();
             DiscordRPController.Main.InitializeInGame(Main.multiplayerSession.AuthenticationContext.Username, remotePlayerManager.GetTotalPlayerCount(), Main.multiplayerSession.IpAddress + ":" + Main.multiplayerSession.ServerPort);
-            PlayerChatManager.LoadChatKeyHint();
+            NitroxServiceLocator.LocateService<PlayerChatManager>().LoadChatKeyHint();
         }
 
         private void OnConsoleCommand_execute(NotificationCenter.Notification n)

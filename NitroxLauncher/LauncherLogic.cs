@@ -83,6 +83,7 @@ namespace NitroxLauncher
             }
         }
 
+        [Conditional("RELEASE")]
         public async void CheckNitroxVersion()
         {
             await Task.Factory.StartNew(() =>
