@@ -15,7 +15,6 @@ namespace Nitrox.Bootloader
             {
                 return null;
             }
-
             string nitroxLauncherPathFile = Path.Combine(nitroxAppData, "launcherpath.txt");
             if (!File.Exists(nitroxLauncherPathFile))
             {
@@ -25,7 +24,6 @@ namespace Nitrox.Bootloader
             try
             {
                 string valueInFile = File.ReadAllText(nitroxLauncherPathFile).Trim();
-
                 Task.Factory.StartNew(() =>
                 {
                     try
@@ -44,10 +42,9 @@ namespace Nitrox.Bootloader
             {
                 // ignored
             }
-
             return null;
         });
-        
+
         public static void Execute()
         {
             string error = ValidateNitroxSetup();
@@ -64,7 +61,7 @@ namespace Nitrox.Bootloader
 
             BootstrapNitrox();
         }
-        
+
         private static void BootstrapNitrox()
         {
             Assembly core = Assembly.Load(new AssemblyName("NitroxPatcher"));
@@ -72,14 +69,13 @@ namespace Nitrox.Bootloader
             mainType.InvokeMember("Execute", BindingFlags.Public | BindingFlags.Static | BindingFlags.InvokeMethod, null, null, null);
         }
 
-        
+
         private static string ValidateNitroxSetup()
         {
             if (nitroxLauncherDir.Value == null)
             {
                 return "Nitrox launcher path not set in AppData. Nitrox will not start.";
             }
-
             if (AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.FullName.StartsWith("QMod", StringComparison.Ordinal)) != null)
             {
                 return "Nitrox will not start because QModManager is active.";
@@ -102,12 +98,11 @@ namespace Nitrox.Bootloader
             {
                 dllPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), dllFileName);
             }
-            
+
             if (!File.Exists(dllPath))
             {
                 Console.WriteLine($"Nitrox dll missing: {dllPath}");
             }
-
             return Assembly.LoadFile(dllPath);
         }
     }
