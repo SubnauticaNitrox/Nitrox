@@ -70,6 +70,7 @@
     <Compile Include="GameLogic\Spawning\ExistingGameObjectSpawner.cs" />
     <Compile Include="GameLogic\Spawning\Metadata\PrecursorDoorwayMetadataProcessor.cs" />
     <Compile Include="GameLogic\Spawning\Metadata\PrecursorKeyTerminalMetadataProcessor.cs" />
+    <Compile Include="GameLogic\Spawning\Metadata\PrecursorTeleporterActivationTerminalMetadataProcessor.cs" />
     <Compile Include="GameLogic\Spawning\Metadata\PrecursorTeleporterMetadataProcessor.cs" />
     <Compile Include="GameLogic\Spawning\Metadata\SealedDoorMetadataProcessor.cs" />
     <Compile Include="GameLogic\Spawning\Metadata\KeypadMetadataProcessor.cs" />
