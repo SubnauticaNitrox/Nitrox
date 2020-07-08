@@ -18,7 +18,6 @@ namespace NitroxPatcher.Patches.Dynamic
         public static void Prefix(Rocket __instance, out Rocket.RocketElevatorStates __state)
         {
             __state = __instance.elevatorState;
-            Log.InGame(__instance.elevatorPosition);
         }
 
         public static void Postfix(Rocket __instance, Rocket.RocketElevatorStates __state)
