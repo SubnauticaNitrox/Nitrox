@@ -1,0 +1,45 @@
+﻿using System.Reflection;
+using Harmony;
+using NitroxClient.Communication.Abstract;
+using NitroxClient.GameLogic;
+using NitroxClient.MonoBehaviours;
+using NitroxModel.Core;
+using NitroxModel.DataStructures;
+using NitroxModel.Logger;
+using NitroxModel_Subnautica.Packets;
+using UnityEngine;
+
+namespace NitroxPatcher.Patches.Dynamic
+{
+    public class Rocket_ElevatorControlButtonActivate_Patch : NitroxPatch, IDynamicPatch
+    {
+        public static readonly MethodInfo TARGET_METHOD = typeof(Rocket).GetMethod("ElevatorControlButtonActivate", BindingFlags.Public | BindingFlags.Instance);
+
+        public static void Prefix(Rocket __instance, out Rocket.RocketElevatorStates __state)
+        {
+            __state = __instance.elevatorState;
+            Log.InGame(__instance.elevatorPosition);
+        }
+
+        public static void Postfix(Rocket __instance, Rocket.RocketElevatorStates __state)
+        {
+            if (__state != __instance.elevatorState)
+            {
+                Rockets rocket = NitroxServiceLocator.LocateService<Rockets>();
+                GameObject gameObject = __instance.gameObject;
+                NitroxId id = NitroxEntity.GetId(gameObject);
+
+                using (NitroxServiceLocator.LocateService<IPacketSender>().Suppress<RocketElevatorCall>())
+                {
+                    rocket.CallElevatorControl(id, __instance.elevatorState);
+                }
+            }
+        }
+
+        public override void Patch(HarmonyInstance harmony)
+        {
+            PatchMultiple(harmony, TARGET_METHOD, true, true, false);
+        }
+    }
+}
+

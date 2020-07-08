@@ -15,6 +15,7 @@ namespace Nitrox.Bootloader
             {
                 return null;
             }
+
             string nitroxLauncherPathFile = Path.Combine(nitroxAppData, "launcherpath.txt");
             if (!File.Exists(nitroxLauncherPathFile))
             {
@@ -24,6 +25,7 @@ namespace Nitrox.Bootloader
             try
             {
                 string valueInFile = File.ReadAllText(nitroxLauncherPathFile).Trim();
+
                 Task.Factory.StartNew(() =>
                 {
                     try
@@ -42,6 +44,7 @@ namespace Nitrox.Bootloader
             {
                 // ignored
             }
+
             return null;
         });
         
@@ -76,6 +79,7 @@ namespace Nitrox.Bootloader
             {
                 return "Nitrox launcher path not set in AppData. Nitrox will not start.";
             }
+
             if (AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.FullName.StartsWith("QMod", StringComparison.Ordinal)) != null)
             {
                 return "Nitrox will not start because QModManager is active.";
@@ -103,6 +107,7 @@ namespace Nitrox.Bootloader
             {
                 Console.WriteLine($"Nitrox dll missing: {dllPath}");
             }
+
             return Assembly.LoadFile(dllPath);
         }
     }

@@ -1,13 +1,14 @@
-﻿using System.Reflection;
-using Harmony;
+﻿using Harmony;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel_Subnautica.DataStructures.GameLogic;
+using System.Reflection;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic
@@ -29,6 +30,14 @@ namespace NitroxPatcher.Patches.Dynamic
             }
 
             __instance.currentRocketStage = model.Value.CurrentStage;
+
+            if (__instance.currentRocketStage > 0)
+            {
+                __instance.elevatorState = model.Value.ElevatorUp ? Rocket.RocketElevatorStates.AtTop : Rocket.RocketElevatorStates.AtBottom;
+                __instance.elevatorPosition = model.Value.ElevatorUp ? 1f : 0f;
+
+                __instance.ReflectionCall("SetElevatorPosition", false, false);
+            }
 
             return true;
         }

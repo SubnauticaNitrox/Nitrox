@@ -47,7 +47,7 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             NitroxId rocketId = NitroxEntity.GetId(rocketInstanceAttachedToConstructor.gameObject);
             NitroxId constructorId = NitroxEntity.GetId(rocketConstructor.gameObject);
-            NitroxServiceLocator.LocateService<Rockets>().BroadCastRocketStateUpdate(rocketId, constructorId, currentStageTech, gameObjectToBuild);
+            NitroxServiceLocator.LocateService<Rockets>().BroadcastRocketStateUpdate(rocketId, constructorId, currentStageTech, gameObjectToBuild);
         }
 
         public override void Patch(HarmonyInstance harmony)

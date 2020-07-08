@@ -92,6 +92,8 @@
     <Compile Include="Packets\CyclopsToggleFloodLights.cs" />
     <Compile Include="Packets\CyclopsToggleInternalLighting.cs" />
     <Compile Include="Packets\ExosuitArmActionPacket.cs" />
+    <Compile Include="Packets\RocketElevatorCall.cs" />
+    <Compile Include="Packets\RocketElevatorControlCall.cs" />
     <Compile Include="Packets\RocketStageUpdate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
