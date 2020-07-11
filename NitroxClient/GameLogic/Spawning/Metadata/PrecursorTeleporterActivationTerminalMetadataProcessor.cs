@@ -13,7 +13,6 @@ namespace NitroxClient.GameLogic.Spawning.Metadata
             PrecursorTeleporterActivationTerminal precursorTeleporterActivationTerminal = gameObject.GetComponent<PrecursorTeleporterActivationTerminal>();
             if (precursorTeleporterActivationTerminal)
             {
-                Utils.PlayFMODAsset(precursorTeleporterActivationTerminal.useSound, precursorTeleporterActivationTerminal.transform, 20f);
                 precursorTeleporterActivationTerminal.unlocked = metadata.Unlocked;
             }
         }
