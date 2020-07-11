@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
+    <Compile Include="Patches\Dynamic\PrecursorKeyTerminal_OnHandClick_Patch.cs" />
     <Compile Include="Patches\Dynamic\PrecursorTeleporter_OnActivateTeleporter_Patch.cs" />
     <Compile Include="Patches\Persistent\ScreenshotManager_Initialise.Path.cs" />
     <Compile Include="Patches\Persistent\SentrySdk_Start_Patch.cs" />
