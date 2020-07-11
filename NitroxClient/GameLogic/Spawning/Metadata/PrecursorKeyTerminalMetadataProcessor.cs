@@ -13,7 +13,6 @@ namespace NitroxClient.GameLogic.Spawning.Metadata
             PrecursorKeyTerminal precursorKeyTerminal = gameObject.GetComponent<PrecursorKeyTerminal>();
             if (precursorKeyTerminal)
             {
-                Utils.PlayFMODAsset(precursorKeyTerminal.useSound, precursorKeyTerminal.transform, 20f);
                 precursorKeyTerminal.slotted = metadata.Slotted;
             }
         }
