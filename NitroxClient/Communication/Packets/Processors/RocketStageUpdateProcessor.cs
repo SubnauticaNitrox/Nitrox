@@ -3,6 +3,7 @@ using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Helper;
+using NitroxModel.Logger;
 using NitroxModel_Subnautica.Packets;
 using Story;
 using UnityEngine;
@@ -26,6 +27,10 @@ namespace NitroxClient.Communication.Packets.Processors
             {
                 GameObject gameObjectTobuild = SerializationHelper.GetGameObject(packet.SerializedGameObject);
                 rocketConstructor.ReflectionCall("SendBuildBots", false, false, new object[] { gameObjectTobuild });
+            }
+            else
+            {
+                Log.Error($"{nameof(RocketStageUpdateProcessor)}: Can't find attached rocketconstructor with id {packet.ConstructorId} for rocket with id {packet.Id}");
             }
         }
     }

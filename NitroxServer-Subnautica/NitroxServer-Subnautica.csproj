@@ -77,7 +77,6 @@
     <Compile Include="Communication\Packets\Processors\CyclopsToggleFloodlightsProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsToggleInternalLightingProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\RocketElevatorCallProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\RocketElevatorControlCallProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\RocketStageUpdateProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ToggleLightsProcessor.cs" />
     <Compile Include="ConsoleWindow.cs" />

@@ -21,15 +21,19 @@ namespace NitroxServer_Subnautica.Communication.Packets.Processors
 
         public override void Process(RocketStageUpdate packet, NitroxServer.Player player)
         {
-            Log.Info(packet);
             Optional<NeptuneRocketModel> opRocket = vehicleManager.GetVehicleModel<NeptuneRocketModel>(packet.Id);
 
             if (opRocket.HasValue)
             {
                 opRocket.Value.CurrentStage = packet.NewStage;
             }
+            else
+            {
+                Log.Error($"{nameof(RocketStageUpdateProcessor)}: Can't find server model for rocket with id {packet.Id}");
+            }
 
             playerManager.SendPacketToOtherPlayers(packet, player);
+            Log.Debug($"Received packet: {packet}");
         }
     }
 }

@@ -1,11 +1,9 @@
 ﻿using System.Reflection;
 using Harmony;
-using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
-using NitroxModel_Subnautica.Packets;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic
@@ -27,10 +25,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 GameObject gameObject = __instance.gameObject;
                 NitroxId id = NitroxEntity.GetId(gameObject);
 
-                using (NitroxServiceLocator.LocateService<IPacketSender>().Suppress<RocketElevatorControlCall>())
-                {
-                    rocket.CallElevator(id, up);
-                }
+                rocket.CallElevator(id, up);
             }
         }
 

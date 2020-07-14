@@ -35,7 +35,6 @@ namespace NitroxPatcher.Patches.Dynamic
             {
                 __instance.elevatorState = model.Value.ElevatorUp ? Rocket.RocketElevatorStates.AtTop : Rocket.RocketElevatorStates.AtBottom;
                 __instance.elevatorPosition = model.Value.ElevatorUp ? 1f : 0f;
-
                 __instance.ReflectionCall("SetElevatorPosition", false, false);
             }
 

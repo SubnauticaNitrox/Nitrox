@@ -11,9 +11,16 @@ namespace NitroxClient.Communication.Packets.Processors
         public override void Process(RocketElevatorCall packet)
         {
             GameObject gameObjectRocket = NitroxEntity.RequireObjectFrom(packet.Id);
-
             Rocket rocket = gameObjectRocket.RequireComponent<Rocket>();
-            rocket.CallElevator(packet.Up);
+
+            if (packet.Panel == RocketElevatorPanel.EXTERNAL_PANEL)
+            {
+                rocket.CallElevator(packet.Up);
+            }
+            else if (packet.Panel == RocketElevatorPanel.INTERNAL_PANEL)
+            {
+                rocket.ElevatorControlButtonActivate();
+            }
         }
     }
 }

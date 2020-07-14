@@ -1,25 +1,41 @@
 ﻿using System;
 using NitroxModel.Packets;
 using NitroxModel.DataStructures;
+using static Rocket;
 
 namespace NitroxModel_Subnautica.Packets
 {
     [Serializable]
     public class RocketElevatorCall : Packet
     {
-        public NitroxId Id { get; }
         public bool Up { get; }
+        public NitroxId Id { get; }
+        public RocketElevatorPanel Panel { get; }
 
-        public RocketElevatorCall(NitroxId id, bool up)
+        public RocketElevatorCall(NitroxId id, RocketElevatorPanel panel, bool up)
         {
+            Panel = panel;
             Id = id;
             Up = up;
         }
 
+        public RocketElevatorCall(NitroxId id, RocketElevatorPanel panel, RocketElevatorStates rocketElevatorStates)
+        {
+            Up = rocketElevatorStates == RocketElevatorStates.Up || rocketElevatorStates == RocketElevatorStates.AtTop;
+            Panel = panel;
+            Id = id;
+        }
+
         public override string ToString()
         {
-            return $"[RocketElevatorCall - RocketId: {Id}, Up: {Up}]";
+            return $"[RocketElevatorCall - RocketId: {Id}, Panel : {Panel}, Up: {Up}]";
         }
+    }
+
+    public enum RocketElevatorPanel
+    {
+        EXTERNAL_PANEL,
+        INTERNAL_PANEL
     }
 }
 
