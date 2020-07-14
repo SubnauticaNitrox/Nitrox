@@ -45,9 +45,9 @@ namespace NitroxClient.GameLogic
             Optional<NeptuneRocketModel> model = vehicles.TryGetVehicle<NeptuneRocketModel>(id);
             Validate.IsTrue(model.HasValue, $"{nameof(Rockets)}: Can't find model for rocket with id {id}");
 
-            RocketElevatorCall packet = new RocketElevatorCall(id, RocketElevatorPanel.INTERNAL_PANEL, elevatorState);
-            model.Value.ElevatorUp = packet.Up;
-            packetSender.Send(packet);
+            bool isGoingUp = elevatorState == RocketElevatorStates.Up || elevatorState == RocketElevatorStates.AtTop;
+            model.Value.ElevatorUp = isGoingUp;
+            packetSender.Send(new RocketElevatorCall(id, RocketElevatorPanel.INTERNAL_PANEL, isGoingUp));
         }
     }
 }

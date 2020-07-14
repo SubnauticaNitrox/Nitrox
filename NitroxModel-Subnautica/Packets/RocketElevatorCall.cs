@@ -1,7 +1,6 @@
 ﻿using System;
 using NitroxModel.Packets;
 using NitroxModel.DataStructures;
-using static Rocket;
 
 namespace NitroxModel_Subnautica.Packets
 {
@@ -17,13 +16,6 @@ namespace NitroxModel_Subnautica.Packets
             Panel = panel;
             Id = id;
             Up = up;
-        }
-
-        public RocketElevatorCall(NitroxId id, RocketElevatorPanel panel, RocketElevatorStates rocketElevatorStates)
-        {
-            Up = rocketElevatorStates == RocketElevatorStates.Up || rocketElevatorStates == RocketElevatorStates.AtTop;
-            Panel = panel;
-            Id = id;
         }
 
         public override string ToString()
