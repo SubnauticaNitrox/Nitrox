@@ -16,5 +16,10 @@ namespace NitroxModel_Subnautica.Packets
             Id = id;
             NewAction = newAction;
         }
+
+        public override string ToString()
+        {
+            return $"[CreatureActionChanged - Id: {Id}, NewAction: {NewAction}]";
+        }
     }
 }

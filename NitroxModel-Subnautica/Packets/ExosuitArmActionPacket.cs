@@ -1,18 +1,10 @@
 ﻿using System;
 using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using UnityEngine;
 
 namespace NitroxModel_Subnautica.Packets
 {
-    public enum ExosuitArmAction
-    {
-        START_USE_TOOL,
-        END_USE_TOOL,
-        ALT_HIT
-    }
-
     [Serializable]
     public class ExosuitArmActionPacket : Packet
     {
@@ -33,7 +25,14 @@ namespace NitroxModel_Subnautica.Packets
 
         public override string ToString()
         {
-            return "[ExosuitArmAction - TechType: " + TechType + " ArmId:" + ArmId + " ArmAction: " + ArmAction + "vector: " + OpVector + " rotation: " + OpRotation + "]";
+            return $"[ExosuitArmAction - TechType: {TechType}, ArmId:{ArmId}, ArmAction: {ArmAction}, Vector: {OpVector}, Rotation: {OpRotation}]";
         }
+    }
+
+    public enum ExosuitArmAction
+    {
+        START_USE_TOOL,
+        END_USE_TOOL,
+        ALT_HIT
     }
 }

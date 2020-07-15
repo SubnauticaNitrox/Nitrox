@@ -16,7 +16,7 @@ namespace NitroxModel_Subnautica.Packets
 
         public override string ToString()
         {
-            return "[CyclopsFireSuppressionSystem Id: " + Id + "]";
+            return $"[CyclopsFireSuppressionSystem - Id: {Id}]";
         }
     }
 }
