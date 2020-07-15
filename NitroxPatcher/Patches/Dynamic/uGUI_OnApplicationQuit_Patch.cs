@@ -8,8 +8,8 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     internal class uGUI_OnApplicationQuit_Patch : NitroxPatch, IDynamicPatch
     {
-        private readonly Type TYPE = typeof(uGUI);
-        private const string TARGET_METHOD = "OnApplicationQuit";
+        private readonly Type TARGET_TYPE = typeof(uGUI);
+        private readonly string TARGET_METHOD = TARGET_TYPE.GetMethod("OnApplicationQuit", BindingFlags.NonPublic | BindingFlags.Instance);
 
         public static void Prefix()
         {
@@ -19,7 +19,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public override void Patch(HarmonyInstance harmony)
         {
-            PatchPrefix(harmony, TYPE.GetMethod(TARGET_METHOD, BindingFlags.NonPublic | BindingFlags.Instance));
+            PatchPrefix(harmony, TARGET_METHOD);
         }
     }
 }
