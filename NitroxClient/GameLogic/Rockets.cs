@@ -2,10 +2,9 @@
 using NitroxClient.GameLogic.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper;
+using NitroxModel.Logger;
 using NitroxModel_Subnautica.DataStructures.GameLogic;
 using NitroxModel_Subnautica.Packets;
-using static Rocket;
 
 namespace NitroxClient.GameLogic
 {
@@ -23,31 +22,31 @@ namespace NitroxClient.GameLogic
         public void BroadcastRocketStateUpdate(NitroxId id, NitroxId constructorId, TechType currentStageTech, UnityEngine.GameObject builtGameObject)
         {
             Optional<NeptuneRocketModel> model = vehicles.TryGetVehicle<NeptuneRocketModel>(id);
-            Validate.IsTrue(model.HasValue, $"{nameof(Rockets)}: Can't find model for rocket with id {id} with constructor {constructorId} and currentStageTech {currentStageTech}");
 
-            model.Value.CurrentStage += 1;
-            packetSender.Send(new RocketStageUpdate(id, constructorId, model.Value.CurrentStage, currentStageTech, SerializationHelper.GetBytes(builtGameObject)));
+            if (model.HasValue)
+            {
+                model.Value.CurrentStage += 1;
+                packetSender.Send(new RocketStageUpdate(id, constructorId, model.Value.CurrentStage, currentStageTech, SerializationHelper.GetBytes(builtGameObject)));
+            }
+            else
+            {
+                Log.Error($"{nameof(Rockets)}: Can't find model for rocket with id {id} with constructor {constructorId} and currentStageTech {currentStageTech}");
+            }
         }
 
-        //Called from the external panel
-        public void CallElevator(NitroxId id, bool up)
+        public void CallElevator(NitroxId id, RocketElevatorPanel panel, bool up)
         {
             Optional<NeptuneRocketModel> model = vehicles.TryGetVehicle<NeptuneRocketModel>(id);
-            Validate.IsTrue(model.HasValue, $"{nameof(Rockets)}: Can't find model for rocket with id {id}");
 
-            model.Value.ElevatorUp = up;
-            packetSender.Send(new RocketElevatorCall(id, RocketElevatorPanel.EXTERNAL_PANEL, up));
-        }
-
-        //Called from the internal panel
-        public void CallElevatorControl(NitroxId id, RocketElevatorStates elevatorState)
-        {
-            Optional<NeptuneRocketModel> model = vehicles.TryGetVehicle<NeptuneRocketModel>(id);
-            Validate.IsTrue(model.HasValue, $"{nameof(Rockets)}: Can't find model for rocket with id {id}");
-
-            bool isGoingUp = elevatorState == RocketElevatorStates.Up || elevatorState == RocketElevatorStates.AtTop;
-            model.Value.ElevatorUp = isGoingUp;
-            packetSender.Send(new RocketElevatorCall(id, RocketElevatorPanel.INTERNAL_PANEL, isGoingUp));
+            if (model.HasValue)
+            {
+                model.Value.ElevatorUp = up;
+                packetSender.Send(new RocketElevatorCall(id, panel, up));
+            }
+            else
+            {
+                Log.Error($"{nameof(Rockets)}: Can't find model for rocket with id {id}");
+            }
         }
     }
 }

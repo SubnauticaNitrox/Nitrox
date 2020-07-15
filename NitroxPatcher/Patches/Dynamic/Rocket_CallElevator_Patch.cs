@@ -4,6 +4,7 @@ using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
+using NitroxModel_Subnautica.Packets;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic
@@ -25,7 +26,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 GameObject gameObject = __instance.gameObject;
                 NitroxId id = NitroxEntity.GetId(gameObject);
 
-                rocket.CallElevator(id, up);
+                rocket.CallElevator(id, RocketElevatorPanel.EXTERNAL_PANEL, up);
             }
         }
 
