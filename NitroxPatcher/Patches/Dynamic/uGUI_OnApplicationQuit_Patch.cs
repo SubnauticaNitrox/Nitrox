@@ -8,8 +8,8 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     internal class uGUI_OnApplicationQuit_Patch : NitroxPatch, IDynamicPatch
     {
-        private readonly Type TARGET_TYPE = typeof(uGUI);
-        private readonly string TARGET_METHOD = TARGET_TYPE.GetMethod("OnApplicationQuit", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly Type TARGET_TYPE = typeof(uGUI);
+        private static readonly MethodInfo TARGET_METHOD = TARGET_TYPE.GetMethod("OnApplicationQuit", BindingFlags.NonPublic | BindingFlags.Instance);
 
         public static void Prefix()
         {
