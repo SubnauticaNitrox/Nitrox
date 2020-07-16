@@ -69,7 +69,7 @@ namespace NitroxModel.Logger
             FileTarget logFile = new FileTarget(nameof(logFile))
             {
                 FileName = $"Nitrox Logs/Nitrox-{GetLoggerName()}.log",
-                ArchiveFileName = "Nitrox Logs/archives/Nitrox-{GetLoggerName()}.{#}.log",
+                ArchiveFileName = $"Nitrox Logs/archives/Nitrox-{GetLoggerName()}.{{#}}.log",
                 ArchiveEvery = FileArchivePeriod.Day,
                 ArchiveNumbering = ArchiveNumberingMode.Date,
                 MaxArchiveFiles = 7,
