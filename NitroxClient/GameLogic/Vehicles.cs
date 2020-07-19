@@ -192,12 +192,12 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        public void UpdateVehiclePosition(VehicleMovementData movementModel, Optional<RemotePlayer> player)
+        public void UpdateVehiclePosition(VehicleMovementData vehicleModel, Optional<RemotePlayer> player)
         {
             Vehicle vehicle = null;
             SubRoot subRoot = null;
 
-            Optional<GameObject> opGameObject = NitroxEntity.GetObjectFrom(movementModel.Id);
+            Optional<GameObject> opGameObject = NitroxEntity.GetObjectFrom(vehicleModel.Id);
 
             if (opGameObject.HasValue)
             {
@@ -212,7 +212,7 @@ namespace NitroxClient.GameLogic
                 if (subRoot)
                 {
                     mvc = subRoot.gameObject.EnsureComponent<MultiplayerCyclops>();
-                    subRoot.GetComponent<LiveMixin>().health = movementModel.Health;
+                    subRoot.GetComponent<LiveMixin>().health = vehicleModel.Health;
                 }
                 else if (vehicle)
                 {
@@ -227,9 +227,9 @@ namespace NitroxClient.GameLogic
                     {
                         mvc = exosuit.gameObject.EnsureComponent<MultiplayerExosuit>();
 
-                        if (movementModel is ExosuitMovementData)
+                        if (vehicleModel is ExosuitMovementData)
                         {
-                            ExosuitMovementData exoSuitMovement = (ExosuitMovementData)movementModel;
+                            ExosuitMovementData exoSuitMovement = (ExosuitMovementData)vehicleModel;
                             mvc.SetArmPositions(exoSuitMovement.LeftAimTarget.ToUnity(), exoSuitMovement.RightAimTarget.ToUnity());
                         }
                         else
@@ -238,24 +238,24 @@ namespace NitroxClient.GameLogic
                         }
                     }
 
-                    vehicle.GetComponent<LiveMixin>().health = movementModel.Health;
+                    vehicle.GetComponent<LiveMixin>().health = vehicleModel.Health;
                 }
                 else if (rocket)
                 {
-                    opGameObject.Value.transform.position = movementModel.Position.ToUnity();
-                    opGameObject.Value.transform.rotation = movementModel.Rotation.ToUnity();
+                    opGameObject.Value.transform.position = vehicleModel.Position.ToUnity();
+                    opGameObject.Value.transform.rotation = vehicleModel.Rotation.ToUnity();
                 }
 
                 if (mvc)
                 {
                     mvc.SetPositionVelocityRotation(
-                        movementModel.Position.ToUnity(),
-                        movementModel.Velocity.ToUnity(),
-                        movementModel.Rotation.ToUnity(),
-                        movementModel.AngularVelocity.ToUnity()
+                        vehicleModel.Position.ToUnity(),
+                        vehicleModel.Velocity.ToUnity(),
+                        vehicleModel.Rotation.ToUnity(),
+                        vehicleModel.AngularVelocity.ToUnity()
                     );
-                    mvc.SetThrottle(movementModel.AppliedThrottle);
-                    mvc.SetSteeringWheel(movementModel.SteeringWheelYaw, movementModel.SteeringWheelPitch);
+                    mvc.SetThrottle(vehicleModel.AppliedThrottle);
+                    mvc.SetSteeringWheel(vehicleModel.SteeringWheelYaw, vehicleModel.SteeringWheelPitch);
                 }
             }
 
