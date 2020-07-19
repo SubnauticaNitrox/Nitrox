@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
-using ProtoBufNet;
 using NitroxModel.DataStructures;
+using ProtoBufNet;
 
 namespace NitroxModel_Subnautica.DataStructures.GameLogic
 {
@@ -12,9 +12,12 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
     public class NeptuneRocketModel : VehicleModel
     {
         [ProtoMember(1)]
-        public int CurrentStage { get; set; }
+        public NitroxId ConstructorId { get; }
 
         [ProtoMember(2)]
+        public int CurrentStage { get; set; }
+
+        [ProtoMember(3)]
         public bool ElevatorUp { get; set; }
 
         protected NeptuneRocketModel()
@@ -27,11 +30,12 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
         {
             CurrentStage = 0;
             ElevatorUp = false;
+            ConstructorId = new NitroxId();
         }
 
         public override string ToString()
         {
-            return $"[NeptuneRocketModel - {base.ToString()}, CurrentStage: {CurrentStage}, ElevatorUp: {ElevatorUp}]";
+            return $"[NeptuneRocketModel - {base.ToString()}, ConstructorId: {ConstructorId}, CurrentStage: {CurrentStage}, ElevatorUp: {ElevatorUp}]";
         }
     }
 }

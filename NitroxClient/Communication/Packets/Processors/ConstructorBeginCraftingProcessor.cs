@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using NitroxClient.Communication.Packets.Processors.Abstract;
+﻿using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
@@ -9,7 +8,6 @@ using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
-using NitroxModel_Subnautica.Helper;
 using UnityEngine;
 using static NitroxClient.GameLogic.Helper.TransientLocalObjectManager;
 
@@ -18,6 +16,7 @@ namespace NitroxClient.Communication.Packets.Processors
     public class ConstructorBeginCraftingProcessor : ClientPacketProcessor<ConstructorBeginCrafting>
     {
         public static GameObject ConstructedObject;
+
         private readonly Vehicles vehicles;
 
         public ConstructorBeginCraftingProcessor(Vehicles vehicles)
@@ -29,22 +28,21 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             GameObject gameObject = NitroxEntity.RequireObjectFrom(packet.ConstructorId);
             Crafter crafter = gameObject.RequireComponentInChildren<Crafter>(true);
-            vehicles.AddVehicle(VehicleModelFactory.BuildFrom(packet));
-            MethodInfo onCraftingBegin = typeof(Crafter).GetMethod("OnCraftingBegin", BindingFlags.NonPublic | BindingFlags.Instance);
-            Validate.NotNull(onCraftingBegin);
-            onCraftingBegin.Invoke(crafter, new object[] { packet.TechType.ToUnity(), packet.Duration }); //TODO: take into account latency for duration   
+            crafter.ReflectionCall("OnCraftingBegin", false, false, new object[] { packet.VehicleModel.TechType.ToUnity(), packet.Duration });
+
+            vehicles.AddVehicle(packet.VehicleModel);
 
             Optional<object> opConstructedObject = Get(TransientObjectType.CONSTRUCTOR_INPUT_CRAFTED_GAMEOBJECT);
 
             if (opConstructedObject.HasValue)
             {
                 GameObject constructedObject = (GameObject)opConstructedObject.Value;
-                NitroxEntity.SetNewId(constructedObject, packet.ConstructedItemId);
-                VehicleChildObjectIdentifierHelper.SetInteractiveChildrenIds(constructedObject, packet.InteractiveChildIdentifiers);
+                NitroxEntity.SetNewId(constructedObject, packet.VehicleModel.Id);
+                VehicleChildObjectIdentifierHelper.SetInteractiveChildrenIds(constructedObject, packet.VehicleModel.InteractiveChildIdentifiers);
             }
             else
             {
-                Log.Error("Could not find constructed object!");
+                Log.Error($"Could not find constructed object {packet.VehicleModel.Id} from constructor {packet.ConstructorId}");
             }
         }
     }

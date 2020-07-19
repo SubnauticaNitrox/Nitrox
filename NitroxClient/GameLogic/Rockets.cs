@@ -5,6 +5,7 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxModel_Subnautica.DataStructures.GameLogic;
 using NitroxModel_Subnautica.Packets;
+using UnityEngine;
 
 namespace NitroxClient.GameLogic
 {
@@ -19,7 +20,7 @@ namespace NitroxClient.GameLogic
             this.vehicles = vehicles;
         }
 
-        public void BroadcastRocketStateUpdate(NitroxId id, NitroxId constructorId, TechType currentStageTech, UnityEngine.GameObject builtGameObject)
+        public void BroadcastRocketStateUpdate(NitroxId id, NitroxId constructorId, TechType currentStageTech, GameObject builtGameObject)
         {
             Optional<NeptuneRocketModel> model = vehicles.TryGetVehicle<NeptuneRocketModel>(id);
 

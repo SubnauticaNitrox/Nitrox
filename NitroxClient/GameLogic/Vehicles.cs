@@ -155,7 +155,6 @@ namespace NitroxClient.GameLogic
 
                     if (opEnergyMixin.HasValue)
                     {
-
                         EnergyMixin mixin = opEnergyMixin.Value;
                         mixin.ReflectionSet("allowedToPlaySounds", false);
                         mixin.SetBattery(mixin.defaultBattery, 1);
@@ -193,33 +192,29 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        public void UpdateVehiclePosition(VehicleMovementData vehicleModel, Optional<RemotePlayer> player)
+        public void UpdateVehiclePosition(VehicleMovementData movementModel, Optional<RemotePlayer> player)
         {
-            Vector3 remotePosition = vehicleModel.Position.ToUnity();
-            Vector3 remoteVelocity = vehicleModel.Velocity.ToUnity();
-            Quaternion remoteRotation = vehicleModel.Rotation.ToUnity();
-            Vector3 angularVelocity = vehicleModel.AngularVelocity.ToUnity();
-
             Vehicle vehicle = null;
             SubRoot subRoot = null;
 
-            Optional<GameObject> opGameObject = NitroxEntity.GetObjectFrom(vehicleModel.Id);
+            Optional<GameObject> opGameObject = NitroxEntity.GetObjectFrom(movementModel.Id);
 
             if (opGameObject.HasValue)
             {
                 GameObject gameObject = opGameObject.Value;
 
+                Rocket rocket = gameObject.GetComponent<Rocket>();
                 vehicle = gameObject.GetComponent<Vehicle>();
                 subRoot = gameObject.GetComponent<SubRoot>();
-
+                
                 MultiplayerVehicleControl mvc = null;
 
-                if (subRoot != null)
+                if (subRoot)
                 {
                     mvc = subRoot.gameObject.EnsureComponent<MultiplayerCyclops>();
-                    subRoot.GetComponent<LiveMixin>().health = vehicleModel.Health;
+                    subRoot.GetComponent<LiveMixin>().health = movementModel.Health;
                 }
-                else if (vehicle != null)
+                else if (vehicle)
                 {
                     SeaMoth seamoth = vehicle as SeaMoth;
                     Exosuit exosuit = vehicle as Exosuit;
@@ -231,9 +226,10 @@ namespace NitroxClient.GameLogic
                     else if (exosuit)
                     {
                         mvc = exosuit.gameObject.EnsureComponent<MultiplayerExosuit>();
-                        if (vehicleModel.GetType() == typeof(ExosuitMovementData))
+
+                        if (movementModel is ExosuitMovementData)
                         {
-                            ExosuitMovementData exoSuitMovement = (ExosuitMovementData)vehicleModel;
+                            ExosuitMovementData exoSuitMovement = (ExosuitMovementData)movementModel;
                             mvc.SetArmPositions(exoSuitMovement.LeftAimTarget.ToUnity(), exoSuitMovement.RightAimTarget.ToUnity());
                         }
                         else
@@ -242,14 +238,24 @@ namespace NitroxClient.GameLogic
                         }
                     }
 
-                    vehicle.GetComponent<LiveMixin>().health = vehicleModel.Health;
+                    vehicle.GetComponent<LiveMixin>().health = movementModel.Health;
+                }
+                else if (rocket)
+                {
+                    opGameObject.Value.transform.position = movementModel.Position.ToUnity();
+                    opGameObject.Value.transform.rotation = movementModel.Rotation.ToUnity();
                 }
 
-                if (mvc != null)
+                if (mvc)
                 {
-                    mvc.SetPositionVelocityRotation(remotePosition, remoteVelocity, remoteRotation, angularVelocity);
-                    mvc.SetThrottle(vehicleModel.AppliedThrottle);
-                    mvc.SetSteeringWheel(vehicleModel.SteeringWheelYaw, vehicleModel.SteeringWheelPitch);
+                    mvc.SetPositionVelocityRotation(
+                        movementModel.Position.ToUnity(),
+                        movementModel.Velocity.ToUnity(),
+                        movementModel.Rotation.ToUnity(),
+                        movementModel.AngularVelocity.ToUnity()
+                    );
+                    mvc.SetThrottle(movementModel.AppliedThrottle);
+                    mvc.SetSteeringWheel(movementModel.SteeringWheelYaw, movementModel.SteeringWheelPitch);
                 }
             }
 
@@ -518,7 +524,7 @@ namespace NitroxClient.GameLogic
             yield return new WaitForSeconds(cooldown);
 
             VehicleMovementData vehicleMovementData = new VehicleMovementData(vehicleModel.TechType, vehicleModel.Id, gameObject.transform.position.ToDto(), gameObject.transform.rotation.ToDto(), vehicleModel.Health);
-            ushort playerId = multiplayerSession.Reservation.PlayerId;
+            ushort playerId = ushort.MaxValue;
 
             packetSender.Send(new VehicleMovement(playerId, vehicleMovementData));
         }

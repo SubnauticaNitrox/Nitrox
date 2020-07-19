@@ -40,8 +40,7 @@ namespace NitroxClient.GameLogic
                 VehicleModel vehicleModel = vehicles.BuildVehicleModelFrom(constructedObject, techType);
                 vehicles.AddVehicle(vehicleModel);
 
-                ConstructorBeginCrafting beginCrafting = VehicleConstructionFactory.BuildFrom(vehicleModel, constructorId, duration);
-                packetSender.Send(beginCrafting);
+                packetSender.Send(new ConstructorBeginCrafting(vehicleModel, constructorId, duration));
 
                 vehicles.SpawnDefaultBatteries(constructedObject, childIdentifiers);
 

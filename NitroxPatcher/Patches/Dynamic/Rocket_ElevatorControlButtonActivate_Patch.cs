@@ -14,12 +14,12 @@ namespace NitroxPatcher.Patches.Dynamic
     {
         public static readonly MethodInfo TARGET_METHOD = typeof(Rocket).GetMethod("ElevatorControlButtonActivate", BindingFlags.Public | BindingFlags.Instance);
 
-        public static void Prefix(Rocket __instance, out Rocket.RocketElevatorStates __state)
+        public static void Prefix(Rocket __instance, out RocketElevatorStates __state)
         {
             __state = __instance.elevatorState;
         }
 
-        public static void Postfix(Rocket __instance, Rocket.RocketElevatorStates __state)
+        public static void Postfix(Rocket __instance, RocketElevatorStates __state)
         {
             if (__state != __instance.elevatorState)
             {

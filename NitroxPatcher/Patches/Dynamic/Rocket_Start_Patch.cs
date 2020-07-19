@@ -25,11 +25,22 @@ namespace NitroxPatcher.Patches.Dynamic
 
             if (!model.HasValue)
             {
-                Log.Error($"{nameof(Rocket_Start_Patch)}: Could not find {nameof(NeptuneRocketModel)} by Nitrox id {id}.\nGO containing wrong id: {__instance.GetHierarchyPath()}");
+                Log.Error($"{nameof(Rocket_Start_Patch)}: Could not find NeptuneRocketModel by Nitrox id {id}.\nGO containing wrong id: {__instance.GetHierarchyPath()}");
                 return false;
             }
 
             __instance.currentRocketStage = model.Value.CurrentStage;
+
+            RocketConstructor rocketConstructor = gameObject.GetComponentInChildren<RocketConstructor>(true);
+            if (rocketConstructor)
+            {
+                NitroxEntity.SetNewId(rocketConstructor.gameObject, model.Value.ConstructorId);
+            }
+            else
+            {
+                Log.InGame("Impossible de mettre à jour le RocketConstructor");
+                Log.Error("Impossible de mettre à jour le RocketConstructor");
+            }
 
             if (__instance.currentRocketStage > 0)
             {

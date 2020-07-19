@@ -22,11 +22,11 @@ namespace NitroxClient.Communication.Packets.Processors
 
             ItemGoalTracker.OnConstruct(packet.CurrentStageTech);
 
-            RocketConstructor rocketConstructor = gameObjectConstructor.GetComponent<RocketConstructor>();
+            RocketConstructor rocketConstructor = gameObjectConstructor.GetComponentInChildren<RocketConstructor>(true);
             if (rocketConstructor)
             {
                 GameObject gameObjectTobuild = SerializationHelper.GetGameObject(packet.SerializedGameObject);
-                rocketConstructor.ReflectionCall("SendBuildBots", false, false, new object[] { gameObjectTobuild });
+                rocketConstructor.ReflectionCall("SendBuildBots", false, false, gameObjectTobuild);
             }
             else
             {
