@@ -38,8 +38,7 @@ namespace NitroxPatcher.Patches.Dynamic
             }
             else
             {
-                Log.InGame("Impossible de mettre à jour le RocketConstructor");
-                Log.Error("Impossible de mettre à jour le RocketConstructor");
+                Log.Error($"{nameof(Rocket_Start_Patch)}: Could not find attached RocketConstructor to rocket with id {id}");
             }
 
             if (__instance.currentRocketStage > 0)
