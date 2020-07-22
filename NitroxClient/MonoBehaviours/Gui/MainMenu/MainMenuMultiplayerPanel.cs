@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
@@ -22,7 +23,8 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         private GameObject multiplayerButton;
         private Transform savedGameAreaContent;
         public GameObject SavedGamesRef;
-        public string SERVER_LIST_PATH = Path.Combine(".", "servers");
+        private static readonly Uri url = new Uri(System.Reflection.Assembly.GetAssembly(typeof(uGUI)).CodeBase);
+        public static readonly string SERVER_LIST_PATH = Path.Combine(Path.GetDirectoryName(url.LocalPath), "..", "..", "servers");
         private string serverHostInput;
         private string serverNameInput;
 
