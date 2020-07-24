@@ -203,12 +203,12 @@ namespace NitroxClient.GameLogic
 
                 MultiplayerVehicleControl mvc = null;
 
-                if (subRoot != null)
+                if (subRoot)
                 {
                     mvc = subRoot.gameObject.EnsureComponent<MultiplayerCyclops>();
                     subRoot.GetComponent<LiveMixin>().health = vehicleModel.Health;
                 }
-                else if (vehicle != null)
+                else if (vehicle)
                 {
                     SeaMoth seamoth = vehicle as SeaMoth;
                     Exosuit exosuit = vehicle as Exosuit;
@@ -234,7 +234,7 @@ namespace NitroxClient.GameLogic
                     vehicle.GetComponent<LiveMixin>().health = vehicleModel.Health;
                 }
 
-                if (mvc != null)
+                if (mvc)
                 {
                     mvc.SetPositionVelocityRotation(remotePosition, remoteVelocity, remoteRotation, angularVelocity);
                     mvc.SetThrottle(vehicleModel.AppliedThrottle);
@@ -365,7 +365,7 @@ namespace NitroxClient.GameLogic
                 }
 
                 //Destroy vehicle
-                if (vehicle.gameObject != null)
+                if (vehicle.gameObject)
                 {
                     if (vehicle.destructionEffect)
                     {
@@ -481,10 +481,10 @@ namespace NitroxClient.GameLogic
          player will think that the player is no longer in a vehicle.  Unfortunetly, the game calls
          the vehicle exit code before the animation completes so we need to suppress any side affects.
          Two thing we want to protect against:
-        
+
              1) If a movement packet is received when docking, the player might exit the vehicle early
                 and it will show them sitting outside the vehicle during the docking animation.
-         
+
              2) If a movement packet is received when undocking, the player game object will be stuck in
                 place until after the player exits the vehicle.  This causes the player body to strech to
                 the current cyclops position.
@@ -513,7 +513,7 @@ namespace NitroxClient.GameLogic
 
             GameObject gameObject = opVehicle.Value;
             Vehicle vehicle = gameObject.GetComponent<Vehicle>();
-            if (vehicle == null)
+            if (!vehicle)
             {
                 return;
             }

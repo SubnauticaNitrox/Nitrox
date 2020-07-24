@@ -86,7 +86,6 @@
     <Compile Include="DataStructures\GameLogic\PDALogEntry.cs" />
     <Compile Include="DataStructures\GameLogic\Perms.cs" />
     <Compile Include="DataStructures\GameLogic\PlayerStatsData.cs" />
-    <Compile Include="DataStructures\GameLogic\PowerType.cs" />
     <Compile Include="DataStructures\GameLogic\NitroxQuaternion.cs" />
     <Compile Include="DataStructures\GameLogic\NitroxVector3.cs" />
     <Compile Include="DataStructures\GameLogic\NitroxTechType.cs" />
@@ -114,6 +113,7 @@
     <Compile Include="Packets\EscapePodRepair.cs" />
     <Compile Include="Packets\IShortString.cs" />
     <Compile Include="Packets\GameModeChanged.cs" />
+    <Compile Include="Packets\EnergyMixinValueChanged.cs" />
     <Compile Include="Packets\PlayerPermaDeathEvent.cs" />
     <Compile Include="Packets\PingRenamed.cs" />
     <Compile Include="Packets\PlayerEquipmentAdded.cs" />
@@ -190,7 +190,6 @@
     <Compile Include="Packets\PlayerJoiningMultiplayerSession.cs" />
     <Compile Include="Packets\InitialPlayerSync.cs" />
     <Compile Include="Packets\PlayerStats.cs" />
-    <Compile Include="Packets\PowerLevelChanged.cs" />
     <Compile Include="Packets\Processors\Abstract\IProcessorContext.cs" />
     <Compile Include="Packets\Processors\Abstract\PacketProcessor.cs" />
     <Compile Include="Packets\SeamothModulesAction.cs" />

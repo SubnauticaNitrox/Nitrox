@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Reflection;
 using Harmony;
-using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
@@ -13,14 +12,15 @@ namespace NitroxPatcher.Patches.Dynamic
         public static bool Prefix(EnergyMixin __instance)
         {
             //Try to figure out if the default battery is spawned from a vehicle or cyclops
-            GameObject gameObject = __instance.gameObject;
-            if(gameObject.GetComponent<Vehicle>() != null)
+            if (__instance.gameObject.GetComponent<Vehicle>())
             {
                 return false;
-            } else if(gameObject.GetComponentInParent<Vehicle>() != null)
+            }
+            if (__instance.gameObject.GetComponentInParent<Vehicle>())
             {
                 return false;
-            } else if (gameObject.GetComponentInParent<SubRoot>() != null)
+            }
+            if (__instance.gameObject.GetComponentInParent<SubRoot>())
             {
                 return false;
             }
