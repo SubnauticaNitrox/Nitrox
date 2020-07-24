@@ -10,6 +10,17 @@ namespace Nitrox.Bootloader
     {
         private static readonly Lazy<string> nitroxLauncherDir = new Lazy<string>(() =>
         {
+            // Get path from command args.
+            string[] args = Environment.GetCommandLineArgs();
+            for (var i = 0; i < args.Length - 1; i++)
+            {
+                if (args[i].Equals("-nitrox", StringComparison.OrdinalIgnoreCase) && Directory.Exists(args[i + 1]))
+                {
+                    return Path.GetFullPath(args[i + 1]);
+                }
+            }
+
+            // Get path from AppData file.
             string nitroxAppData = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox");
             if (!Directory.Exists(nitroxAppData))
             {
@@ -44,7 +55,7 @@ namespace Nitrox.Bootloader
             }
             return null;
         });
-        
+
         public static void Execute()
         {
             string error = ValidateNitroxSetup();
@@ -61,7 +72,7 @@ namespace Nitrox.Bootloader
 
             BootstrapNitrox();
         }
-        
+
         private static void BootstrapNitrox()
         {
             Assembly core = Assembly.Load(new AssemblyName("NitroxPatcher"));
@@ -69,7 +80,6 @@ namespace Nitrox.Bootloader
             mainType.InvokeMember("Execute", BindingFlags.Public | BindingFlags.Static | BindingFlags.InvokeMethod, null, null, null);
         }
 
-        
         private static string ValidateNitroxSetup()
         {
             if (nitroxLauncherDir.Value == null)
@@ -98,7 +108,7 @@ namespace Nitrox.Bootloader
             {
                 dllPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), dllFileName);
             }
-            
+
             if (!File.Exists(dllPath))
             {
                 Console.WriteLine($"Nitrox dll missing: {dllPath}");
