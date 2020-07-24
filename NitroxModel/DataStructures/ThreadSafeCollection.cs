@@ -255,11 +255,11 @@ namespace NitroxModel.DataStructures
         {
             lock (locker)
             {
-                foreach (T item in collection)
+                for (int i = collection.Count - 1; i >= 0; i--)
                 {
-                    if (predicate(item))
+                    if (predicate(collection.ElementAt(i)))
                     {
-                        collection.Remove(item);
+                        RemoveAt(i);
                     }
                 }
             }
@@ -276,7 +276,7 @@ namespace NitroxModel.DataStructures
         public T Find(Func<T, bool> predicate)
         {
             Validate.NotNull(predicate);
-            
+
             lock (locker)
             {
                 foreach (T item in collection)

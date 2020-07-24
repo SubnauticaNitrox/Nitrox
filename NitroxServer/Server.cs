@@ -82,7 +82,16 @@ namespace NitroxServer
                 return false;
             }
 
+            Log.Info($"Using {serverConfig.SerializerModeEnum} as save file serializer");
+            Log.InfoSensitive("Server Password: {password}", string.IsNullOrEmpty(serverConfig.ServerPassword) ? "None. Public Server." : serverConfig.ServerPassword);
+            Log.InfoSensitive("Admin Password: {password}", serverConfig.AdminPassword);
+            Log.Info($"Autosave: {(serverConfig.DisableAutoSave ? "DISABLED" : $"ENABLED ({serverConfig.SaveInterval / 60000} min)")}");
+            Log.Info($"World GameMode: {serverConfig.GameModeEnum}");
+
+            Log.Info($"Loaded save\n{SaveSummary}");
+
             Log.Info("Nitrox Server Started");
+            Log.Info("To get help for commands, run help in console or /help in chatbox\n");
 
             if (!serverConfig.DisableAutoSave)
             {

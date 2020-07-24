@@ -66,7 +66,7 @@ namespace NitroxServer.GameLogic
             string playerName = authenticationContext.Username;
             Player player;
             allPlayersByName.TryGetValue(playerName, out player);
-            if ((player?.IsPermaDeath == true) && serverConfig.IsGameMode("Hardcore"))
+            if ((player?.IsPermaDeath == true) && serverConfig.IsHardcore)
             {
                 MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.HARDCORE_PLAYER_DEAD;
                 return new MultiplayerSessionReservation(correlationId, rejectedState);

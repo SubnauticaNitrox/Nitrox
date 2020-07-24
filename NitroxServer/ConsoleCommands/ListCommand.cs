@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.GameLogic;
@@ -16,15 +17,10 @@ namespace NitroxServer.ConsoleCommands
 
         protected override void Execute(CallArgs args)
         {
-            List<Player> players = playerManager.GetConnectedPlayers();
-            string playerList = "List of players : " + string.Join(", ", players);
+            IList<string> players = playerManager.GetConnectedPlayers().Select(player => player.Name).ToList();
+            string playerList = string.Join(", ", players);
 
-            if (players.Count == 0)
-            {
-                playerList += "No players online";
-            }
-
-            SendMessage(args.Sender, playerList);
+            SendMessage(args.Sender, $"List of players : {(players.Count == 0 ? "No players online" : playerList)}");
         }
     }
 }

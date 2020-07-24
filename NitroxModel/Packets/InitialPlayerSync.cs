@@ -4,6 +4,7 @@ using System.Linq;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Server;
 
 namespace NitroxModel.Packets
 {
@@ -27,7 +28,7 @@ namespace NitroxModel.Packets
         public PlayerStatsData PlayerStatsData { get; }
         public List<InitialRemotePlayerData> RemotePlayerData { get; }
         public List<Entity> GlobalRootEntities { get; }
-        public string GameMode { get; }
+        public ServerGameMode GameMode { get; }
         public Perms Permissions { get; }
 
         public InitialPlayerSync(NitroxId playerGameObjectId,
@@ -47,7 +48,7 @@ namespace NitroxModel.Packets
             PlayerStatsData playerStatsData,
             IEnumerable<InitialRemotePlayerData> remotePlayerData,
             IEnumerable<Entity> globalRootEntities,
-            string gameMode,
+            ServerGameMode gameMode,
             Perms perms)
         {
             EscapePodsData = escapePodsData.ToList();
@@ -73,15 +74,12 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return "[InitialPlayerSync - EquippedItems: " + EquippedItems + " BasePieces: " + BasePieces + " Vehicles: " + Vehicles + " InventoryItems: " + InventoryItems + " PDAData: " + PDAData + " StoryGoalData: " + StoryGoalData + "]";
+            return $"[InitialPlayerSync - GameMode: {GameMode}, EquippedItems: {EquippedItems} BasePieces: {BasePieces} Vehicles: {Vehicles} InventoryItems: {InventoryItems} PDAData: {PDAData} StoryGoalData: {StoryGoalData}]";
         }
 
         public string ToShortString()
         {
-            return $"Equipped items count: {EquippedItems.Count}\n" +
-                $"Base pieces count: {BasePieces.Count}\n" +
-                $"Vehicles count: {Vehicles.Count}\n" +
-                $"Inventory items count: {InventoryItems.Count}";
+            return $"Equipped items count: {EquippedItems.Count}\n, Base pieces count: {BasePieces.Count}\n, Vehicles count: {Vehicles.Count}\n, Inventory items count: {InventoryItems.Count}";
         }
     }
 }

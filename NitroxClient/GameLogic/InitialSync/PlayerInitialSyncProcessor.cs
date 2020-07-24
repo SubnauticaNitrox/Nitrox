@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxClient.MonoBehaviours;
@@ -7,6 +6,7 @@ using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
+using NitroxModel.Server;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.InitialSync
@@ -36,7 +36,7 @@ namespace NitroxClient.GameLogic.InitialSync
             waitScreenItem.SetProgress(0.75f);
             yield return null;
 
-            SetPlayerGameMode((GameModeOption)Enum.Parse(typeof(GameModeOption), packet.GameMode));
+            SetPlayerGameMode(packet.GameMode);
             waitScreenItem.SetProgress(1f);
             yield return null;
         }
@@ -44,7 +44,7 @@ namespace NitroxClient.GameLogic.InitialSync
         private void SetPlayerGameObjectId(NitroxId id)
         {
             NitroxEntity.SetNewId(Player.mainObject, id);
-            Log.Info("Received initial sync Player GameObject Id: " + id);
+            Log.Info($"Received initial sync player GameObject Id: {id}");
         }
 
         private void AddStartingItemsToPlayer(bool firstTimeConnecting)
@@ -81,10 +81,10 @@ namespace NitroxClient.GameLogic.InitialSync
             }
         }
         
-        private void SetPlayerGameMode(GameModeOption gameMode)
+        private void SetPlayerGameMode(ServerGameMode gameMode)
         {
-            Log.Info("Recieved initial sync packet with game mode " + gameMode);
-            GameModeUtils.SetGameMode(gameMode, GameModeOption.None);
+            Log.Info($"Received initial sync packet with gamemode {gameMode}");
+            GameModeUtils.SetGameMode((GameModeOption)(int)gameMode, GameModeOption.None);
         }
     }
 }

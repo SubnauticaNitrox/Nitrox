@@ -10,6 +10,17 @@ namespace Nitrox.Bootloader
     {
         private static readonly Lazy<string> nitroxLauncherDir = new Lazy<string>(() =>
         {
+            // Get path from command args.
+            string[] args = Environment.GetCommandLineArgs();
+            for (var i = 0; i < args.Length - 1; i++)
+            {
+                if (args[i].Equals("-nitrox", StringComparison.OrdinalIgnoreCase) && Directory.Exists(args[i + 1]))
+                {
+                    return Path.GetFullPath(args[i + 1]);
+                }
+            }
+
+            // Get path from AppData file.
             string nitroxAppData = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox");
             if (!Directory.Exists(nitroxAppData))
             {
@@ -68,7 +79,6 @@ namespace Nitrox.Bootloader
             Type mainType = core.GetType("NitroxPatcher.Main");
             mainType.InvokeMember("Execute", BindingFlags.Public | BindingFlags.Static | BindingFlags.InvokeMethod, null, null, null);
         }
-
 
         private static string ValidateNitroxSetup()
         {

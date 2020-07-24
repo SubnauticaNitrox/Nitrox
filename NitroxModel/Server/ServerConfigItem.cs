@@ -56,11 +56,10 @@ namespace NitroxModel.Server
                     return;
                 }
 
-                // Enum members are assumed to be Titlecased
+                // Enum members are assumed to be uppercased
                 if (typeof(T).IsEnum)
                 {
-                    text = text.ToLower();
-                    text = char.ToUpper(text[0]) + text.Substring(1);
+                    text = text.ToUpper();
                 }
 
                 value = (T)converter.ConvertFromString(text);

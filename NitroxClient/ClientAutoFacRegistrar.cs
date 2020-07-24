@@ -53,7 +53,7 @@ namespace NitroxClient
                             .As<BaseDebugger>()
                             .AsSelf()
                             .SingleInstance();
-            
+
             containerBuilder.Register(c => new NitroxProtobufSerializer($"{nameof(NitroxModel)}.dll"));
 
             containerBuilder.RegisterType<UnityPreferenceStateProvider>()
@@ -96,7 +96,6 @@ namespace NitroxClient
             containerBuilder.RegisterType<ItemContainers>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<StorageSlots>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Signs>().InstancePerLifetimeScope();
-            containerBuilder.RegisterType<Power>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<PDAManagerEntry>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<PDAEncyclopediaEntry>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<SimulationOwnership>().InstancePerLifetimeScope();

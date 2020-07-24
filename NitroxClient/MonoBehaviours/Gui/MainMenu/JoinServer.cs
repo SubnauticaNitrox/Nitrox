@@ -382,8 +382,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
             if (string.IsNullOrEmpty(playerName))
             {
-                NotifyUser("Survival is a systemic initiative, but even the lowliest of cogs needs a designation in order to effectively coordinate the collective effort towards a - desireable, outcome.\n\n" +
-                           "Please identify yourself so that your presence may be indexed with local Survivor PDA telemetry instruments...");
+                NotifyUser("Please enter a player name and colour before trying to join a server");
                 return;
             }
 

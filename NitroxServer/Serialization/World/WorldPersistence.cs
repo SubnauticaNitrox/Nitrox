@@ -36,7 +36,6 @@ namespace NitroxServer.Serialization.World
             this.protoBufSerializer = protoBufSerializer;
             this.config = config;
 
-            Log.Info($"Using {config.SerializerModeEnum} as save file serializer");
             saveDataSerializer = config.SerializerModeEnum == ServerSerializerMode.PROTOBUF ? (IServerSerializer)protoBufSerializer : jsonSerializer;
             fileEnding = config.SerializerModeEnum == ServerSerializerMode.PROTOBUF ? ".nitrox" : ".json";
         }
@@ -137,7 +136,7 @@ namespace NitroxServer.Serialization.World
                                           persistedData.WorldData.ParsedBatchCells,
                                           persistedData.WorldData.EscapePodData.EscapePods,
                                           persistedData.WorldData.StoryTimingData,
-                                          config.GameMode);
+                                          config.GameModeEnum);
 
                 return Optional.Of(world);
             }
@@ -185,7 +184,8 @@ namespace NitroxServer.Serialization.World
                 new List<VehicleModel>(), new List<Player>(), new List<ItemData>(),
                 new List<ItemData>(),
                 new GameData() { PDAState = new PDAStateData(), StoryGoals = new StoryGoalData() },
-                new List<Int3>(), new List<EscapePodModel>(), new StoryTimingData(), config.GameMode);
+                new List<Int3>(), new List<EscapePodModel>(), new StoryTimingData(), config.GameModeEnum
+                );
         }
 
         private World CreateWorld(DateTime serverStartTime,
@@ -200,7 +200,7 @@ namespace NitroxServer.Serialization.World
                                   List<Int3> parsedBatchCells,
                                   List<EscapePodModel> escapePods,
                                   StoryTimingData storyTimingData,
-                                  string gameMode)
+                                  ServerGameMode gameMode)
         {
             World world = new World();
             world.TimeKeeper = new TimeKeeper();
@@ -216,25 +216,20 @@ namespace NitroxServer.Serialization.World
             world.EscapePodManager = new EscapePodManager(escapePods);
             world.GameMode = gameMode;
 
-            world.BatchEntitySpawner = new BatchEntitySpawner(NitroxServiceLocator.LocateService<EntitySpawnPointFactory>(),
-                                                              NitroxServiceLocator.LocateService<UweWorldEntityFactory>(),
-                                                              NitroxServiceLocator.LocateService<UwePrefabFactory>(),
-                                                              parsedBatchCells,
-                                                              protoBufSerializer,
-                                                              NitroxServiceLocator.LocateService<Dictionary<NitroxTechType, IEntityBootstrapper>>(),
-                                                              NitroxServiceLocator.LocateService<Dictionary<string, PrefabPlaceholdersGroupAsset>>());
+            world.BatchEntitySpawner = new BatchEntitySpawner(
+                NitroxServiceLocator.LocateService<EntitySpawnPointFactory>(),
+                NitroxServiceLocator.LocateService<UweWorldEntityFactory>(),
+                NitroxServiceLocator.LocateService<UwePrefabFactory>(),
+                parsedBatchCells,
+                protoBufSerializer,
+                NitroxServiceLocator.LocateService<Dictionary<NitroxTechType, IEntityBootstrapper>>(),
+                NitroxServiceLocator.LocateService<Dictionary<string, PrefabPlaceholdersGroupAsset>>()
+            );
 
             world.EntityManager = new EntityManager(entities, world.BatchEntitySpawner);
 
             HashSet<NitroxTechType> serverSpawnedSimulationWhiteList = NitroxServiceLocator.LocateService<HashSet<NitroxTechType>>();
             world.EntitySimulation = new EntitySimulation(world.EntityManager, world.SimulationOwnershipData, world.PlayerManager, serverSpawnedSimulationWhiteList);
-
-            Log.Info($"World GameMode: {gameMode}");
-            Log.InfoSensitive("Server Password: {password}", string.IsNullOrEmpty(config.ServerPassword) ? "None. Public Server." : config.ServerPassword);
-            Log.InfoSensitive("Admin Password: {password}", config.AdminPassword);
-            Log.Info($"Autosave: {(config.DisableAutoSave ? "DISABLED" : $"ENABLED ({config.SaveInterval / 60000} min)")}");
-
-            Log.Info("To get help for commands, run help in console or /help in chatbox");
 
             return world;
         }

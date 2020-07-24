@@ -57,7 +57,7 @@ namespace NitroxServer_Subnautica
             try
             {
                 server = NitroxServiceLocator.LocateService<Server>();
-                Log.Info($"Loaded save\n{server.SaveSummary}");
+
                 if (!server.Start())
                 {
                     Log.Error("Unable to start server.");
