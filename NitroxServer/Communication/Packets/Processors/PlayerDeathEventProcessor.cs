@@ -30,7 +30,7 @@ namespace NitroxServer.Communication.Packets.Processors
 
             if (player.Permissions > Perms.MODERATOR)
             {
-                player.SendPacket(new ChatMessage(ChatMessage.SERVER_ID, "You can use /back to go back to your last location"));
+                player.SendPacket(new ChatMessage(ChatMessage.SERVER_ID, "You can use /back to go to your death location"));
             }
 
             playerManager.SendPacketToOtherPlayers(packet, player);
