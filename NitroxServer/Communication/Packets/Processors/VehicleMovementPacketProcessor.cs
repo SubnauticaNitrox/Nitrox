@@ -18,7 +18,7 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(VehicleMovement packet, Player player)
         {
-            vehicleManager.UpdateVehicle(packet.Vehicle);
+            vehicleManager.UpdateVehicle(packet.VehicleMovementData);
             playerManager.SendPacketToOtherPlayers(packet, player);
         }
     }

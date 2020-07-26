@@ -1,6 +1,4 @@
-﻿using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Packets;
-using NitroxModel_Subnautica.Helper;
+﻿using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Vehicles;
@@ -20,8 +18,7 @@ namespace NitroxServer_Subnautica.Communication.Packets.Processors
 
         public override void Process(ConstructorBeginCrafting packet, NitroxServer.Player player)
         {
-            VehicleModel vehicleModel = VehicleModelFactory.BuildFrom(packet);
-            vehicleManager.AddVehicle(vehicleModel);
+            vehicleManager.AddVehicle(packet.VehicleModel);
             playerManager.SendPacketToOtherPlayers(packet, player);
         }
     }

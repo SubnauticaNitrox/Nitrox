@@ -33,7 +33,7 @@ namespace NitroxServer.ConsoleCommands.Abstract
             public string GetTillEnd(int startIndex = 0)
             {
                 // TODO: Proper argument capture/parse instead of this argument join hack
-                if (Args?.Length > 0)
+                if (Args.Length > 0)
                 {
                     return string.Join(" ", Args.Skip(startIndex));
                 }

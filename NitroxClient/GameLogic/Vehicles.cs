@@ -22,7 +22,6 @@ namespace NitroxClient.GameLogic
 {
     public class Vehicles
     {
-        private Cyclops cyclops;
         private readonly IPacketSender packetSender;
         private readonly PlayerManager playerManager;
         private readonly IMultiplayerSession multiplayerSession;
@@ -37,7 +36,6 @@ namespace NitroxClient.GameLogic
             this.playerManager = playerManager;
             this.multiplayerSession = multiplayerSession;
             vehiclesById = new Dictionary<NitroxId, VehicleModel>();
-            cyclops = null;
         }
 
         //We need to get TechType from parameters because CraftData can't resolve TechType.Cyclops by himself
@@ -52,7 +50,6 @@ namespace NitroxClient.GameLogic
                 NitroxVector3[] hsb = VehicleHelper.GetPrimalDefaultColours();
                 string name = string.Empty;
                 float health = 200f;
-
 
                 if (opvehicle.HasValue)
                 { //Seamoth & Exosuit
@@ -72,7 +69,7 @@ namespace NitroxClient.GameLogic
 
                     hsb = opvehicle.Value.subName.AliveOrNull()?.GetColors().ToDto();
                 }
-                else
+                else if (techType == TechType.Cyclops)
                 { //Cyclops
                     try
                     {
@@ -93,6 +90,20 @@ namespace NitroxClient.GameLogic
                     catch (Exception ex)
                     {
                         Log.Error(ex, $"{nameof(Vehicles)}: Error while trying to spawn a cyclops. Id: {constructedObjectId}");
+                    }
+                }
+                else
+                { //Rocket
+                    Optional<Rocket> oprocket = Optional.OfNullable(gameObject.GetComponent<Rocket>());
+
+                    if (oprocket.HasValue)
+                    {
+                        name = oprocket.Value.subName.AliveOrNull()?.GetName();
+                        hsb = oprocket.Value.subName.AliveOrNull()?.GetColors().ToDto();
+                    }
+                    else
+                    {
+                        Log.Error($"{nameof(Vehicles)}: Error while trying to spawn a rocket (Received {techType})");
                     }
                 }
 
@@ -144,7 +155,6 @@ namespace NitroxClient.GameLogic
 
                     if (opEnergyMixin.HasValue)
                     {
-
                         EnergyMixin mixin = opEnergyMixin.Value;
                         mixin.ReflectionSet("allowedToPlaySounds", false);
                         mixin.SetBattery(mixin.defaultBattery, 1);
@@ -184,11 +194,6 @@ namespace NitroxClient.GameLogic
 
         public void UpdateVehiclePosition(VehicleMovementData vehicleModel, Optional<RemotePlayer> player)
         {
-            Vector3 remotePosition = vehicleModel.Position.ToUnity();
-            Vector3 remoteVelocity = vehicleModel.Velocity.ToUnity();
-            Quaternion remoteRotation = vehicleModel.Rotation.ToUnity();
-            Vector3 angularVelocity = vehicleModel.AngularVelocity.ToUnity();
-
             Vehicle vehicle = null;
             SubRoot subRoot = null;
 
@@ -198,9 +203,10 @@ namespace NitroxClient.GameLogic
             {
                 GameObject gameObject = opGameObject.Value;
 
+                Rocket rocket = gameObject.GetComponent<Rocket>();
                 vehicle = gameObject.GetComponent<Vehicle>();
                 subRoot = gameObject.GetComponent<SubRoot>();
-
+                
                 MultiplayerVehicleControl mvc = null;
 
                 if (subRoot)
@@ -220,7 +226,8 @@ namespace NitroxClient.GameLogic
                     else if (exosuit)
                     {
                         mvc = exosuit.gameObject.EnsureComponent<MultiplayerExosuit>();
-                        if (vehicleModel.GetType() == typeof(ExosuitMovementData))
+
+                        if (vehicleModel is ExosuitMovementData)
                         {
                             ExosuitMovementData exoSuitMovement = (ExosuitMovementData)vehicleModel;
                             mvc.SetArmPositions(exoSuitMovement.LeftAimTarget.ToUnity(), exoSuitMovement.RightAimTarget.ToUnity());
@@ -233,10 +240,20 @@ namespace NitroxClient.GameLogic
 
                     vehicle.GetComponent<LiveMixin>().health = vehicleModel.Health;
                 }
+                else if (rocket)
+                {
+                    opGameObject.Value.transform.position = vehicleModel.Position.ToUnity();
+                    opGameObject.Value.transform.rotation = vehicleModel.Rotation.ToUnity();
+                }
 
                 if (mvc)
                 {
-                    mvc.SetPositionVelocityRotation(remotePosition, remoteVelocity, remoteRotation, angularVelocity);
+                    mvc.SetPositionVelocityRotation(
+                        vehicleModel.Position.ToUnity(),
+                        vehicleModel.Velocity.ToUnity(),
+                        vehicleModel.Rotation.ToUnity(),
+                        vehicleModel.AngularVelocity.ToUnity()
+                    );
                     mvc.SetThrottle(vehicleModel.AppliedThrottle);
                     mvc.SetSteeringWheel(vehicleModel.SteeringWheelYaw, vehicleModel.SteeringWheelPitch);
                 }
@@ -263,6 +280,7 @@ namespace NitroxClient.GameLogic
             CrafterLogic.NotifyCraftEnd(gameObject, CraftData.GetTechType(gameObject));
             Rigidbody rigidBody = gameObject.RequireComponent<Rigidbody>();
             rigidBody.isKinematic = false;
+
             NitroxEntity.SetNewId(gameObject, id);
 
             // Updates names and colours with persisted data
@@ -307,8 +325,24 @@ namespace NitroxClient.GameLogic
 
                 target.GetComponent<LiveMixin>().health = health;
 
-                // Set internal and external lights
-                SetCyclopsModes(id);
+                // Set internal and external lights via runtime query to avoid circular dependencies
+                NitroxServiceLocator.LocateService<Cyclops>().SetAllModes(GetVehicles<CyclopsModel>(id));
+            }
+            else if (techType == TechType.RocketBase)
+            {
+                Rocket rocket = gameObject.RequireComponent<Rocket>();
+
+                if (!string.IsNullOrEmpty(name))
+                {
+                    rocket.rocketName = name;
+                    rocket.subName?.DeserializeName(name);
+                }
+
+                if (hsb != null)
+                {
+                    rocket.rocketColors = hsb;
+                    rocket.subName?.DeserializeColors(hsb);
+                }
             }
 
             VehicleChildObjectIdentifierHelper.SetInteractiveChildrenIds(gameObject, interactiveChildIdentifiers);
@@ -318,16 +352,6 @@ namespace NitroxClient.GameLogic
             {
                 VehicleCreated(gameObject);
             }
-        }
-
-        private void SetCyclopsModes(NitroxId id)
-        {
-            if (cyclops == null)
-            {
-                cyclops = NitroxServiceLocator.LocateService<Cyclops>();
-            }
-
-            cyclops.SetAllModes(GetVehicles<CyclopsModel>(id));
         }
 
         public void DestroyVehicle(NitroxId id, bool isPiloting)
@@ -489,10 +513,20 @@ namespace NitroxClient.GameLogic
                 place until after the player exits the vehicle.  This causes the player body to strech to
                 the current cyclops position.
         */
-        IEnumerator AllowMovementPacketsAfterDockingAnimation(PacketSuppressor<Movement> movementSuppressor)
+        public IEnumerator AllowMovementPacketsAfterDockingAnimation(PacketSuppressor<Movement> movementSuppressor)
         {
             yield return new WaitForSeconds(3.0f);
             movementSuppressor.Dispose();
+        }
+
+        public IEnumerator UpdateVehiclePositionAfterSpawn(VehicleModel vehicleModel, GameObject gameObject, float cooldown)
+        {
+            yield return new WaitForSeconds(cooldown);
+
+            VehicleMovementData vehicleMovementData = new VehicleMovementData(vehicleModel.TechType, vehicleModel.Id, gameObject.transform.position.ToDto(), gameObject.transform.rotation.ToDto(), vehicleModel.Health);
+            ushort playerId = ushort.MaxValue;
+
+            packetSender.Send(new VehicleMovement(playerId, vehicleMovementData));
         }
 
         public void BroadcastOnPilotModeChanged(Vehicle vehicle, bool isPiloting)

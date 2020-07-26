@@ -43,13 +43,7 @@ namespace NitroxModel_Subnautica.Packets
 
         public override string ToString()
         {
-            return "[CyclopsDamage Id: " + Id
-                + " SubHealth: " + SubHealth
-                + " DamageManagerHealth: " + DamageManagerHealth
-                + " SubFireHealth: " + SubFireHealth
-                + (DamagePointIndexes == null ? "" : " DamagePointIndexes: " + string.Join(", ", DamagePointIndexes.Select(x => x.ToString()).ToArray()))
-                + (RoomFires == null ? "" : " RoomFires: " + string.Join(", ", RoomFires.Select(x => x.ToString()).ToArray()))
-                + (DamageInfo == null ? "" : " DamageInfo: DealerId: " + DamageInfo?.DealerId ?? "null" + " Damage: " + DamageInfo?.OriginalDamage + "ModifiedDamage:" + DamageInfo?.Damage + "Pos:" + DamageInfo?.Position.ToString());
+            return $"[CyclopsDamage - Id: {Id}, SubHealth: {SubHealth}, DamageManagerHealth: {DamageManagerHealth}, SubFireHealth: {SubFireHealth}{(DamagePointIndexes == null ? "" : " DamagePointIndexes: " + string.Join(", ", DamagePointIndexes.Select(x => x.ToString()).ToArray()))}{(RoomFires == null ? "" : " RoomFires: " + string.Join(", ", RoomFires.Select(x => x.ToString()).ToArray()))}{(DamageInfo == null ? "" : " DamageInfo: DealerId: " + DamageInfo?.DealerId ?? "null" + " Damage: " + DamageInfo?.OriginalDamage + "ModifiedDamage:" + DamageInfo?.Damage + "Pos:" + DamageInfo?.Position.ToString())}";
         }
     }
 }

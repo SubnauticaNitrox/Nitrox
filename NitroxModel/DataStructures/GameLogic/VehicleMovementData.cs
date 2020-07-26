@@ -56,9 +56,23 @@ namespace NitroxModel.DataStructures.GameLogic
             Health = health;
         }
 
+        public VehicleMovementData(NitroxTechType techType, NitroxId id, NitroxVector3 position, NitroxQuaternion rotation, float health)
+        {
+            TechType = techType;
+            Id = id;
+            Position = position;
+            Rotation = rotation;
+            Velocity = NitroxVector3.Zero;
+            AngularVelocity = NitroxVector3.Zero;
+            SteeringWheelYaw = 0f;
+            SteeringWheelPitch = 0f;
+            AppliedThrottle = false;
+            Health = health;
+        }
+
         public override string ToString()
         {
-            return $"[TechType: {TechType}, Id: {Id}, Position: {Position}, Rotation: {Rotation}, Velocity: {Velocity}, AngularVelocity: {AngularVelocity}, SteeringWheelYaw: {SteeringWheelYaw}, SteeringWheelPitch: {SteeringWheelPitch}, AppliedThrottle: {AppliedThrottle}, Health: {Health}]";
+            return $"[VehicleMovementData - TechType: {TechType}, Id: {Id}, Position: {Position}, Rotation: {Rotation}, Velocity: {Velocity}, AngularVelocity: {AngularVelocity}, SteeringWheelYaw: {SteeringWheelYaw}, SteeringWheelPitch: {SteeringWheelPitch}, AppliedThrottle: {AppliedThrottle}, Health: {Health}]";
         }
     }
 }

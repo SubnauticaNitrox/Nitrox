@@ -51,11 +51,12 @@
     <Compile Include="Patches\Dynamic\PrecursorKeyTerminal_OnHandClick_Patch.cs" />
     <Compile Include="Patches\Dynamic\PrecursorTeleporterActivationTerminal_OnProxyHandClick_Patch.cs" />
     <Compile Include="Patches\Dynamic\PrecursorTeleporter_OnActivateTeleporter_Patch.cs" />
-    <Compile Include="Patches\Persistent\ScreenshotManager_Initialise.Path.cs" />
     <Compile Include="Patches\Dynamic\uGUI_OnApplicationQuit_Patch.cs" />
-    <Compile Include="Patches\Persistent\SentrySdk_Start_Patch.cs" />
-    <Compile Include="Modules\NitroxPatchesModule.cs" />
     <Compile Include="Patches\Dynamic\EnergyMixin_ModifyCharge_Patch.cs" />
+    <Compile Include="Patches\Dynamic\Rocket_CallElevator_Patch.cs" />
+    <Compile Include="Patches\Dynamic\Rocket_ElevatorControlButtonActivate_Patch.cs" />
+    <Compile Include="Patches\Dynamic\RocketConstructor_StartRocketConstruction_Patch.cs" />
+    <Compile Include="Patches\Dynamic\Rocket_Start_Patch.cs" />
     <Compile Include="Patches\Dynamic\KeypadDoorConsole_AcceptNumberField_Patch.cs" />
     <Compile Include="Patches\Dynamic\Player_OnKill_Patch.cs" />
     <Compile Include="Patches\Dynamic\PropulsionCannon_ReleaseGrabbedObject_Patch.cs" />
@@ -180,6 +181,9 @@
     <Compile Include="Patches\INitroxPatch.cs" />
     <Compile Include="Patches\IPersistentPatch.cs" />
     <Compile Include="Patches\NitroxPatch.cs" />
+    <Compile Include="Modules\NitroxPatchesModule.cs" />
+    <Compile Include="Patches\Persistent\SentrySdk_Start_Patch.cs" />
+    <Compile Include="Patches\Persistent\ScreenshotManager_Initialise.Path.cs" />
     <Compile Include="Patches\Persistent\PAXTerrainController_LoadAsync_Patch.cs" />
     <Compile Include="Patches\Persistent\ProtobufSerializer_Serialize_Patch.cs" />
     <Compile Include="Patches\Persistent\ProtobufSerializer_Deserialize_Patch.cs" />

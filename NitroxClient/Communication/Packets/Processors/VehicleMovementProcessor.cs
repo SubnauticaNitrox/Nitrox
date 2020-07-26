@@ -19,7 +19,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(VehicleMovement vehicleMovement)
         {
-            VehicleMovementData vehicleModel = vehicleMovement.Vehicle;
+            VehicleMovementData vehicleModel = vehicleMovement.VehicleMovementData;
             Optional<RemotePlayer> player = remotePlayerManager.Find(vehicleMovement.PlayerId);
             vehicles.UpdateVehiclePosition(vehicleModel, player);
         }

@@ -44,13 +44,7 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
 
         public override string ToString()
         {
-            return "[DamageInfoData - ReceiverId: " + ReceiverId
-                + " DealerId:" + DealerId
-                + " OriginalDamage: " + OriginalDamage
-                + " Damage: " + Damage
-                + " Position: " + Position
-                + " Type: " + Type
-                + "}]";
+            return $"[CyclopsDamageInfoData - ReceiverId: {ReceiverId} DealerId:{DealerId} OriginalDamage: {OriginalDamage} Damage: {Damage} Position: {Position} Type: {Type}}}]";
         }
     }
 }

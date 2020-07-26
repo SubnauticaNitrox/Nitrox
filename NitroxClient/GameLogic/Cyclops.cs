@@ -18,13 +18,11 @@ namespace NitroxClient.GameLogic
     public class Cyclops
     {
         private readonly IPacketSender packetSender;
-        private readonly SimulationOwnership simulationOwnershipManager;
         private readonly Vehicles vehicles;
 
-        public Cyclops(IPacketSender packetSender, SimulationOwnership simulationOwnershipManager, Vehicles vehicles)
+        public Cyclops(IPacketSender packetSender, Vehicles vehicles)
         {
             this.packetSender = packetSender;
-            this.simulationOwnershipManager = simulationOwnershipManager;
             this.vehicles = vehicles;
         }
 
