@@ -5,7 +5,7 @@ namespace NitroxServer.ConsoleCommands.Abstract
 {
     public abstract partial class Command
     {
-        public class CallArgs
+        public sealed class CallArgs
         {
             public Command Command { get; }
             public string[] Args { get; }
@@ -25,11 +25,6 @@ namespace NitroxServer.ConsoleCommands.Abstract
                 return index < Args.Length && index >= 0 && Args.Length != 0;
             }
 
-            public string Get(int index)
-            {
-                return Get<string>(index);
-            }
-
             public string GetTillEnd(int startIndex = 0)
             {
                 // TODO: Proper argument capture/parse instead of this argument join hack
@@ -39,6 +34,11 @@ namespace NitroxServer.ConsoleCommands.Abstract
                 }
 
                 return string.Empty;
+            }
+
+            public string Get(int index)
+            {
+                return Get<string>(index);
             }
 
             public T Get<T>(int index)

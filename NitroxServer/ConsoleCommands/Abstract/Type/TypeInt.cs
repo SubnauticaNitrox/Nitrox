@@ -8,16 +8,12 @@ namespace NitroxServer.ConsoleCommands.Abstract.Type
 
         public override bool IsValid(string arg)
         {
-            int value;
-            return int.TryParse(arg, out value);
+            return int.TryParse(arg, out int value);
         }
 
         public override int? Read(string arg)
         {
-            int value;
-
-            Validate.IsTrue(int.TryParse(arg, out value), "Invalid integer received");
-
+            Validate.IsTrue(int.TryParse(arg, out int value), "Invalid integer received");
             return value;
         }
 

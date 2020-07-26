@@ -1,6 +1,5 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
-using NitroxModel.Logger;
 using NitroxServer.ConsoleCommands.Abstract;
 
 namespace NitroxServer.ConsoleCommands
@@ -23,7 +22,7 @@ namespace NitroxServer.ConsoleCommands
             }
 
             player.Teleport(player.LastStoredPosition.Value);
-            SendMessage(args.Sender, $"Teleported back {player.LastStoredPosition.Value}");
+            SendMessage(args.Sender, $"Teleported back to {player.LastStoredPosition.Value}");
         }
     }
 }

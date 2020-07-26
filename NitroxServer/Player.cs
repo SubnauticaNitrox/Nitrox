@@ -130,11 +130,6 @@ namespace NitroxServer
             return equippedItems.ToList();
         }
 
-        public override string ToString()
-        {
-            return $"[Player {{{nameof(Id)}: {Id}}}, {{{nameof(Name)}: {Name}}}]";
-        }
-
         public bool CanSee(Entity entity)
         {
             return entity.ExistsInGlobalRoot || HasCellLoaded(entity.AbsoluteEntityCell);
@@ -152,6 +147,11 @@ namespace NitroxServer
             SendPacket(playerTeleported);
             Position = playerTeleported.DestinationTo;
             LastStoredPosition = playerTeleported.DestinationFrom;
+        }
+
+        public override string ToString()
+        {
+            return $"[Player - Id: {Id}, Name: {Name}, Perms: {Permissions}, Position: {Position}]";
         }
 
         protected bool Equals(Player other)
