@@ -13,8 +13,6 @@ namespace NitroxClient.GameLogic.Spawning.Metadata
             PrecursorTeleporter precursorTeleporter = gameObject.GetComponent<PrecursorTeleporter>();
             if (precursorTeleporter)
             {
-                precursorTeleporter.isOpen = metadata.IsOpen;
-
                 precursorTeleporter.ToggleDoor(metadata.IsOpen);
             }
         }

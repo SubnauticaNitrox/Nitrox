@@ -10,6 +10,7 @@ namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata
     [ProtoInclude(70, typeof(PrecursorDoorwayMetadata))]
     [ProtoInclude(80, typeof(PrecursorTeleporterMetadata))]
     [ProtoInclude(90, typeof(PrecursorKeyTerminalMetadata))]
+    [ProtoInclude(100, typeof(PrecursorTeleporterActivationTerminalMetadata))]
     public abstract class EntityMetadata
     {
     }
