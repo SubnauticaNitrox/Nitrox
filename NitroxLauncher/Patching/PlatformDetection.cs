@@ -22,5 +22,13 @@ namespace NitroxLauncher.Patching
             }
             return false;
         }
+		public static bool IsMstore(string subnauticaPath)
+        {
+            if (File.Exists(Path.Combine(subnauticaPath, "appxmanifest.xml")))
+            {
+              return true;
+            }
+          return false;
+        }
     }
 }

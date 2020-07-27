@@ -298,7 +298,10 @@ namespace NitroxLauncher
             {
                 startInfo.FileName = "steam://run/264710";
             }
-
+          else if (PlatformDetection.IsMstore(subnauticaPath))
+            {
+               startInfo.FileName = "ms-xbl-38616e6e:\\";
+            }
             return Process.Start(startInfo);
         }
 
