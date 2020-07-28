@@ -7,11 +7,8 @@ namespace NitroxServer.ConsoleCommands
 {
     internal class BroadcastCommand : Command
     {
-        private readonly PlayerManager playerManager;
-
-        public BroadcastCommand(PlayerManager playerManager) : base("broadcast", Perms.ADMIN, "Broadcasts a message on the server", true)
+        public BroadcastCommand() : base("broadcast", Perms.ADMIN, "Broadcasts a message on the server", true)
         {
-            this.playerManager = playerManager;
             AddAlias("say");
             AddParameter(new TypeString("message", true));
         }

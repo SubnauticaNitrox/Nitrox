@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using NitroxModel.Helper;
 
@@ -7,14 +6,14 @@ namespace NitroxServer.ConsoleCommands.Abstract.Type
 {
     public class TypeBoolean : Parameter<bool?>, IParameter<object>
     {
-        private static readonly IList<string> noValues = new List<string>
+        private static readonly string[] noValues = new string[]
         {
             bool.FalseString,
             "no",
             "off"
         };
 
-        private static readonly IList<string> yesValues = new List<string>
+        private static readonly string[] yesValues = new string[]
         {
             bool.TrueString,
             "yes",
@@ -31,7 +30,6 @@ namespace NitroxServer.ConsoleCommands.Abstract.Type
         public override bool? Read(string arg)
         {
             Validate.IsTrue(IsValid(arg), "Invalid boolean value received");
-
             return yesValues.Contains(arg, StringComparer.OrdinalIgnoreCase);
         }
 

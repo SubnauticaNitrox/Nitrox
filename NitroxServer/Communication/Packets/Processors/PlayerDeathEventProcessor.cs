@@ -1,4 +1,5 @@
-﻿using NitroxModel.Packets;
+﻿using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Packets;
 using NitroxModel.Server;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
@@ -26,6 +27,12 @@ namespace NitroxServer.Communication.Packets.Processors
             }
 
             player.LastStoredPosition = packet.DeathPosition;
+
+            if (player.Permissions > Perms.MODERATOR)
+            {
+                player.SendPacket(new ChatMessage(ChatMessage.SERVER_ID, "You can use /back to go to your death location"));
+            }
+
             playerManager.SendPacketToOtherPlayers(packet, player);
         }
     }

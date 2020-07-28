@@ -3,7 +3,7 @@ using NitroxModel.Helper;
 
 namespace NitroxServer.ConsoleCommands.Abstract.Type
 {
-    public class TypeEnum<T> : Parameter<object> where T : struct
+    public class TypeEnum<T> : Parameter<object> where T : struct, Enum
     {
         public TypeEnum(string name, bool required) : base(name, required)
         {
@@ -12,16 +12,12 @@ namespace NitroxServer.ConsoleCommands.Abstract.Type
 
         public override bool IsValid(string arg)
         {
-            T result;
-            return Enum.TryParse(arg, true, out result);
+            return Enum.TryParse(arg, true, out T result);
         }
 
         public override object Read(string arg)
         {
-            T value;
-
-            Validate.IsTrue(Enum.TryParse(arg, true, out value), "Unknown value received");
-
+            Validate.IsTrue(Enum.TryParse(arg, true, out T value), "Unknown value received");
             return value;
         }
     }

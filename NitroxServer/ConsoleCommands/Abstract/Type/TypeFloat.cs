@@ -8,16 +8,12 @@ namespace NitroxServer.ConsoleCommands.Abstract.Type
 
         public override bool IsValid(string arg)
         {
-            float value;
-            return float.TryParse(arg, out value);
+            return float.TryParse(arg, out float value);
         }
 
         public override float? Read(string arg)
         {
-            float value;
-
-            Validate.IsTrue(float.TryParse(arg, out value), "Invalid decimal number received");
-
+            Validate.IsTrue(float.TryParse(arg, out float value), "Invalid decimal number received");
             return value;
         }
 

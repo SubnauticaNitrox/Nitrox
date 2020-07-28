@@ -81,7 +81,7 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public override string ToString()
         {
-            return "[Vector3 - {" + X + ", " + Y + ", " + Z + "}]";
+            return $"[{X}, {Y}, {Z}]";
         }
     }
 }

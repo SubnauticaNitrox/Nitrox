@@ -15,14 +15,12 @@ namespace NitroxServer.ConsoleCommands.Abstract.Type
 
         public override bool IsValid(string arg)
         {
-            Player player;
-            return playerManager.TryGetPlayerByName(arg, out player);
+            return playerManager.TryGetPlayerByName(arg, out Player player);
         }
 
         public override Player Read(string arg)
         {
-            Player player;
-            Validate.IsTrue(playerManager.TryGetPlayerByName(arg, out player), "Player not found");
+            Validate.IsTrue(playerManager.TryGetPlayerByName(arg, out Player player), "Player not found");
             return player;
         }
     }
