@@ -1,5 +1,4 @@
 ﻿using System;
-using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxModel.Packets
@@ -19,5 +18,5 @@ namespace NitroxModel.Packets
         {
             return "[KnownTechEntryAdd - TechType: " + TechType + " Verbose: " + Verbose + "]";
         }
-    }    
+    }
 }

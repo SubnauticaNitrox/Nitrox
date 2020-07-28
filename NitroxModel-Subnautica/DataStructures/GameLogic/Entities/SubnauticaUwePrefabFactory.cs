@@ -17,25 +17,25 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic.Entities
             lootDistributionData = GetLootDistributionData(lootDistributionJson);
         }
 
-        public override List<UwePrefab> GetPossiblePrefabs(string biome)
+        public override List<UwePrefab> GetPossiblePrefabs(string biomeType)
         {
             List<UwePrefab> prefabs = new List<UwePrefab>();
-            
-            if (biome == null)
+
+            if (biomeType == null)
             {
                 return prefabs;
             }
 
             DstData dstData;
 
-            BiomeType biomeType = (BiomeType)Enum.Parse(typeof(BiomeType), biome);
+            BiomeType biome = (BiomeType)Enum.Parse(typeof(BiomeType), biomeType);
 
-            if (lootDistributionData.GetBiomeLoot(biomeType, out dstData))
+            if (lootDistributionData.GetBiomeLoot(biome, out dstData))
             {
-                foreach(PrefabData prefabData in dstData.prefabs)
+                foreach (PrefabData prefabData in dstData.prefabs)
                 {
-                   UwePrefab prefab = new UwePrefab(prefabData.classId, prefabData.probability, prefabData.count);
-                   prefabs.Add(prefab);
+                    UwePrefab prefab = new UwePrefab(prefabData.classId, prefabData.probability, prefabData.count);
+                    prefabs.Add(prefab);
                 }
             }
 
@@ -46,13 +46,13 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic.Entities
         {
             ForceCultureOverride();
             JsonMapper.RegisterImporter((double value) => Convert.ToSingle(value));
-            
-            Dictionary<string, LootDistributionData.SrcData> result = JsonMapper.ToObject<Dictionary<string, LootDistributionData.SrcData>>(lootDistributionJson);
 
-            LootDistributionData lootDistributionData = new LootDistributionData();
-            lootDistributionData.Initialize(result);
+            Dictionary<string, SrcData> result = JsonMapper.ToObject<Dictionary<string, SrcData>>(lootDistributionJson);
 
-            return lootDistributionData;
+            LootDistributionData _lootDistributionData = new LootDistributionData();
+            _lootDistributionData.Initialize(result);
+
+            return _lootDistributionData;
         }
 
         // LitJson uses the computers local CultureInfo when parsing the JSON files.  However,

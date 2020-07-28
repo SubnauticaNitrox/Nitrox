@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Runtime.Remoting.Messaging;
 using NitroxModel.DataStructures.GameLogic;
 using ProtoBufNet;
 
@@ -10,7 +13,7 @@ namespace NitroxModel.DataStructures
      */
     [Serializable]
     [ProtoContract]
-    public class Int3
+    public struct Int3 : IEquatable<Int3>, IEqualityComparer<Int3>, IComparable<Int3>
     {
         [ProtoMember(1)]
         public int X { get; set; }
@@ -20,11 +23,6 @@ namespace NitroxModel.DataStructures
 
         [ProtoMember(3)]
         public int Z { get; set; }
-
-        public Int3()
-        {
-            // For serialization purposes
-        }
 
         public Int3(int x, int y, int z)
         {
@@ -40,12 +38,30 @@ namespace NitroxModel.DataStructures
 
         public override bool Equals(object obj)
         {
-            Int3 int3 = obj as Int3;
+            if (obj.GetType() != typeof(Int3))
+            {
+                return false;
+            }
+                
+            Int3 int3 = (Int3)obj;
 
-            return !ReferenceEquals(int3, null) &&
-                   X == int3.X &&
-                   Y == int3.Y &&
-                   Z == int3.Z;
+            return Equals(int3);
+        }
+        public bool Equals(Int3 other)
+        {
+            return X == other.X &&
+                   Y == other.Y &&
+                   Z == other.Z;
+        }
+
+        public bool Equals(Int3 x, Int3 y)
+        {
+            return x.Equals(y);
+        }
+
+        public int GetHashCode(Int3 obj)
+        {
+            return obj.GetHashCode();
         }
 
         public override int GetHashCode()
@@ -61,7 +77,7 @@ namespace NitroxModel.DataStructures
         public static Int3 Floor(float x, float y, float z)
         {
             return new Int3(Convert.ToInt32(Math.Floor(x)),
-                            Convert.ToInt32(Math.Floor(y)), 
+                            Convert.ToInt32(Math.Floor(y)),
                             Convert.ToInt32(Math.Floor(z)));
         }
 
@@ -80,6 +96,11 @@ namespace NitroxModel.DataStructures
         public static Int3 Ceil(NitroxVector3 vector)
         {
             return Ceil(vector.X, vector.Y, vector.Z);
+        }
+
+        public int CompareTo(Int3 other)
+        {
+            return X.CompareTo(other.X) + Y.CompareTo(other.Y) + Z.CompareTo(other.Z);
         }
 
         public static Int3 operator <<(Int3 u, int s)
@@ -101,6 +122,23 @@ namespace NitroxModel.DataStructures
         {
             return !u.Equals(v);
         }
+        public static bool operator <(Int3 u, Int3 v)
+        {
+            return u.X < v.X && u.Y < v.Y && u.Z < v.Z;
+        }
+        public static bool operator >(Int3 u, Int3 v)
+        {
+            return u.X > v.X && u.Y > v.Y && u.Z > v.Z;
+        }
+        public static bool operator <=(Int3 u, Int3 v)
+        {
+            return u.X <= v.X && u.Y <= v.Y && u.Z <= v.Z;
+        }
+        public static bool operator >=(Int3 u, Int3 v)
+        {
+            return u.X >= v.X && u.Y >= v.Y && u.Z >= v.Z;
+        }
+
 
         public static Int3 operator +(Int3 u, Int3 v)
         {
@@ -116,7 +154,7 @@ namespace NitroxModel.DataStructures
         {
             return new NitroxVector3(u.X + v.X, u.Y + v.Y, u.Z + v.Z);
         }
-        
+
         public static implicit operator NitroxVector3(Int3 v)
         {
             return new NitroxVector3(v.X, v.Y, v.Z);

@@ -32,11 +32,48 @@ namespace NitroxModel.DataStructures.Util
         /// </summary>
         private static HasValueDelegate valueChecksForT = value =>
         {
+            GenerateValueChecks();
+
+            // Update check to just check has values directly for future calls (this is an optimization).
+            if (valueChecks != null)
+            {
+                valueChecksForT = GenerateValueChecks<T>();
+            }
+            else
+            {
+                valueChecksForT = val => !(val is null);
+            }
+
+            // Give initial result based on the updated check delegate
+            return valueChecksForT(value);
+        };
+
+        private static Optional<T>.HasValueDelegate GenerateValueChecks<T>() where T : class
+        {
+            return val =>
+            {
+                if (val is null)
+                {
+                    return false;
+                }
+                foreach (Func<object, bool> check in valueChecks)
+                {
+                    if (!check(val))
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            };
+        }
+
+        private static void GenerateValueChecks()
+        {
             // Generate new HasValue check based on global filters for types.
             Type type = typeof(T);
             bool isObj = type == typeof(object);
-            foreach (KeyValuePair<Type, Func<object, bool>> filter in Optional.ValueConditions)
-            { 
+            foreach (KeyValuePair<Type, Func<object, bool>> filter in Optional.valueConditions)
+            {
                 if (isObj || filter.Key.IsAssignableFrom(type))
                 {
                     // Only create the list in memory when required.
@@ -44,39 +81,12 @@ namespace NitroxModel.DataStructures.Util
                     {
                         valueChecks = new List<Func<object, bool>>();
                     }
-                    
+
                     // Exclude check for Optional<object> if the type doesn't match the type of the filter (because it'll always fail anyway be null for `o as T`) 
                     valueChecks.Add(isObj ? o => !filter.Key.IsInstanceOfType(o) || filter.Value(o) : filter.Value);
                 }
             }
-
-            // Update check to just check has values directly for future calls (this is an optimization).
-            if (valueChecks != null)
-            {
-                valueChecksForT = val =>
-                {
-                    if (ReferenceEquals(val, null))
-                    {
-                        return false;
-                    }
-                    foreach (Func<object, bool> check in valueChecks)
-                    {
-                        if (!check(val))
-                        {
-                            return false;
-                        }
-                    }
-                    return true;
-                };
-            }
-            else
-            {
-                valueChecksForT = val => !ReferenceEquals(val, null);
-            }
-
-            // Give initial result based on the updated check delegate
-            return valueChecksForT(value);
-        };
+        }
 
         [ProtoMember(1)]
         public T Value { get; private set; }
@@ -156,7 +166,7 @@ namespace NitroxModel.DataStructures.Util
 
     public static class Optional
     {
-        internal static Dictionary<Type, Func<object, bool>> ValueConditions = new Dictionary<Type, Func<object, bool>>();
+        internal readonly static Dictionary<Type, Func<object, bool>> valueConditions = new Dictionary<Type, Func<object, bool>>();
         public static OptionalEmpty Empty { get; } = new OptionalEmpty();
 
         public static Optional<T> Of<T>(T value) where T : class => Optional<T>.Of(value);
@@ -174,10 +184,11 @@ namespace NitroxModel.DataStructures.Util
         public static void ApplyHasValueCondition<T>(Func<T, bool> hasValueCondition) where T : class
         {
             // Add to global so that the Optional<T> can lazily evaluate which conditions it should add to its checks based on its type.
-            ValueConditions.Add(typeof(T), o => hasValueCondition(o as T));
+            valueConditions.Add(typeof(T), o => hasValueCondition(o as T));
         }
     }
 
+    [Serializable]
     public sealed class OptionalNullException<T> : Exception
     {
         public OptionalNullException() : base($"Optional <{nameof(T)}> is null!")
@@ -186,6 +197,16 @@ namespace NitroxModel.DataStructures.Util
 
         public OptionalNullException(string message) : base($"Optional <{nameof(T)}> is null:\n\t{message}")
         {
+        }
+
+        private OptionalNullException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+        }
+
+        [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
         }
     }
 
@@ -198,6 +219,16 @@ namespace NitroxModel.DataStructures.Util
 
         public OptionalEmptyException(string message) : base($"Optional <{nameof(T)}> is empty:\n\t{message}")
         {
+        }
+
+        private OptionalEmptyException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+        }
+
+        [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
         }
     }
 }

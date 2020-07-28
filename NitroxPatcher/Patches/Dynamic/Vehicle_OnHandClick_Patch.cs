@@ -25,12 +25,12 @@ namespace NitroxPatcher.Patches.Dynamic
             {
                 return true;
             }
-            
+
             vehicle = __instance;
             guiHand = hand;
 
             SimulationOwnership simulationOwnership = NitroxServiceLocator.LocateService<SimulationOwnership>();
-            
+
             NitroxId id = NitroxEntity.GetId(__instance.gameObject);
 
             if (simulationOwnership.HasExclusiveLock(id))

@@ -6,26 +6,26 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation
 {
     public class SubnauticaRotationMetadataFactory : RotationMetadataFactory
     {
-        public Optional<RotationMetadata> From(object baseGhost)
+        public Optional<RotationMetadata> From(object o)
         {
             RotationMetadata rotationMetadata = null;
 
-            if (baseGhost is BaseAddCorridorGhost)
+            if (o is BaseAddCorridorGhost)
             {
-                BaseAddCorridorGhost corridorGhost = baseGhost as BaseAddCorridorGhost;
+                BaseAddCorridorGhost corridorGhost = o as BaseAddCorridorGhost;
                 int rotation = (int)corridorGhost.ReflectionGet("rotation");
                 rotationMetadata = new CorridorRotationMetadata(rotation);
             }
-            else if (baseGhost is BaseAddMapRoomGhost)
+            else if (o is BaseAddMapRoomGhost)
             {
-                BaseAddMapRoomGhost mapRoomGhost = baseGhost as BaseAddMapRoomGhost;
+                BaseAddMapRoomGhost mapRoomGhost = o as BaseAddMapRoomGhost;
                 Base.CellType cellType = (Base.CellType)mapRoomGhost.ReflectionGet("cellType");
                 int connectionMask = (int)mapRoomGhost.ReflectionGet("connectionMask");
                 rotationMetadata = new MapRoomRotationMetadata((byte)cellType, connectionMask);
             }
-            else if (baseGhost is BaseAddModuleGhost)
+            else if (o is BaseAddModuleGhost)
             {
-                BaseAddModuleGhost module = baseGhost as BaseAddModuleGhost;
+                BaseAddModuleGhost module = o as BaseAddModuleGhost;
 
                 Int3 cell = module.anchoredFace.Value.cell;
                 int direction = (int)module.anchoredFace.Value.direction;

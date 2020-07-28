@@ -1,14 +1,13 @@
 ﻿using System.Collections.Generic;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
-using NitroxModel_Subnautica.Helper;
 using UWE;
 
 namespace NitroxModel_Subnautica.DataStructures.GameLogic.Entities
 {
     public class SubnauticaUweWorldEntityFactory : UweWorldEntityFactory
     {
-        private Dictionary<string, WorldEntityInfo> worldEntitiesByClassId;
+        private readonly Dictionary<string, WorldEntityInfo> worldEntitiesByClassId;
 
         public SubnauticaUweWorldEntityFactory(Dictionary<string, WorldEntityInfo> worldEntitiesByClassId)
         {

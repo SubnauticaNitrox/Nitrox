@@ -16,7 +16,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
             Optional<EntityMetadataProcessor> metadataProcessor = EntityMetadataProcessor.FromMetaData(update.NewValue);
             Validate.IsTrue(metadataProcessor.HasValue, $"No processor found for EntityMetadata of type {update.NewValue.GetType()}");
-            
+
             metadataProcessor.Value.ProcessMetadata(gameObject, update.NewValue);
         }
     }

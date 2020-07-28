@@ -81,42 +81,7 @@ namespace NitroxClient.Communication.Packets.Processors
             // generated in an ordered manner, we can match them without worrying about unordered items.
             if (damagePointIndexes != null && damagePointIndexes.Length > 0)
             {
-                int packetDamagePointsIndex = 0;
-
-                for (int damagePointsIndex = 0; damagePointsIndex < damageManager.damagePoints.Length; damagePointsIndex++)
-                {
-                    // Loop over all of the packet.DamagePointIndexes as long as there's more to match
-                    if (packetDamagePointsIndex < damagePointIndexes.Length
-                        && damagePointIndexes[packetDamagePointsIndex] == damagePointsIndex)
-                    {
-                        if (!damageManager.damagePoints[damagePointsIndex].gameObject.activeSelf)
-                        {
-                            // Copied from CyclopsExternalDamageManager.CreatePoint(), except without the random index pick.
-                            damageManager.damagePoints[damagePointsIndex].gameObject.SetActive(true);
-                            damageManager.damagePoints[damagePointsIndex].RestoreHealth();
-                            GameObject prefabGo = damageManager.fxPrefabs[UnityEngine.Random.Range(0, damageManager.fxPrefabs.Length - 1)];
-                            damageManager.damagePoints[damagePointsIndex].SpawnFx(prefabGo);
-                            unusedDamagePoints.Remove(damageManager.damagePoints[damagePointsIndex]);
-                        }
-
-                        packetDamagePointsIndex++;
-                    }
-                    else
-                    {
-                        // If it's active, but not in the list, it must have been repaired.
-                        if (damageManager.damagePoints[damagePointsIndex].gameObject.activeSelf)
-                        {
-                            RepairDamagePoint(cyclops, damagePointsIndex, 999);
-                        }
-                    }
-                }
-
-                // Looks like the list came in unordered. I've uttered "That shouldn't happen" enough to do sanity checks for what should be impossible.
-                if (packetDamagePointsIndex < damagePointIndexes.Length)
-                {
-                    Log.Error("[CyclopsDamageProcessor packet.DamagePointIds did not fully iterate! Id: " + damagePointIndexes[packetDamagePointsIndex].ToString()
-                        + " had no matching Id in damageManager.damagePoints, or the order is incorrect!]");
-                }
+                UpdateDamagePoints(cyclops, damageManager, unusedDamagePoints, damagePointIndexes);
             }
             else
             {
@@ -137,6 +102,46 @@ namespace NitroxClient.Communication.Packets.Processors
             damageManager.ReflectionCall("ToggleLeakPointsBasedOnDamage", false, false, null);
         }
 
+        private void UpdateDamagePoints(SubRoot cyclops, CyclopsExternalDamageManager damageManager, List<CyclopsDamagePoint> unusedDamagePoints, int[] damagePointIndexes)
+        {
+            int packetDamagePointsIndex = 0;
+
+            for (int damagePointsIndex = 0; damagePointsIndex < damageManager.damagePoints.Length; damagePointsIndex++)
+            {
+                // Loop over all of the packet.DamagePointIndexes as long as there's more to match
+                if (packetDamagePointsIndex < damagePointIndexes.Length
+                    && damagePointIndexes[packetDamagePointsIndex] == damagePointsIndex)
+                {
+                    if (!damageManager.damagePoints[damagePointsIndex].gameObject.activeSelf)
+                    {
+                        // Copied from CyclopsExternalDamageManager.CreatePoint(), except without the random index pick.
+                        damageManager.damagePoints[damagePointsIndex].gameObject.SetActive(true);
+                        damageManager.damagePoints[damagePointsIndex].RestoreHealth();
+                        GameObject prefabGo = damageManager.fxPrefabs[Random.Range(0, damageManager.fxPrefabs.Length - 1)];
+                        damageManager.damagePoints[damagePointsIndex].SpawnFx(prefabGo);
+                        unusedDamagePoints.Remove(damageManager.damagePoints[damagePointsIndex]);
+                    }
+
+                    packetDamagePointsIndex++;
+                }
+                else
+                {
+                    // If it's active, but not in the list, it must have been repaired.
+                    if (damageManager.damagePoints[damagePointsIndex].gameObject.activeSelf)
+                    {
+                        RepairDamagePoint(cyclops, damagePointsIndex, 999);
+                    }
+                }
+            }
+
+            // Looks like the list came in unordered. I've uttered "That shouldn't happen" enough to do sanity checks for what should be impossible.
+            if (packetDamagePointsIndex < damagePointIndexes.Length)
+            {
+                Log.Error("[CyclopsDamageProcessor packet.DamagePointIds did not fully iterate! Id: " + damagePointIndexes[packetDamagePointsIndex]
+                    + " had no matching Id in damageManager.damagePoints, or the order is incorrect!]");
+            }
+        }
+
         /// <summary>
         /// Add/remove fires until it matches the <paramref name="roomFires"/> array. Can trigger <see cref="FireDoused"/> packets
         /// </summary>
@@ -144,35 +149,11 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             SubFire subFire = subRoot.gameObject.RequireComponent<SubFire>();
             Dictionary<CyclopsRooms, SubFire.RoomFire> roomFiresDict = (Dictionary<CyclopsRooms, SubFire.RoomFire>)subFire.ReflectionGet("roomFires");
-            NitroxId subRootId = NitroxEntity.GetId(subRoot.gameObject);
-            CyclopsFireData fireNode = null;
+
 
             if (roomFires != null && roomFires.Length > 0)
             {
-                // Removing and adding fires will happen in the same loop
-                foreach (KeyValuePair<CyclopsRooms, SubFire.RoomFire> keyValuePair in roomFiresDict)
-                {
-                    for (int nodeIndex = 0; nodeIndex < keyValuePair.Value.spawnNodes.Length; nodeIndex++)
-                    {
-                        fireNode = roomFires.SingleOrDefault(x => x.Room == keyValuePair.Key && x.NodeIndex == nodeIndex);
-
-                        // If there's a matching node index, add a fire if there isn't one already. Otherwise remove a fire if there is one
-                        if (fireNode == null)
-                        {
-                            if (keyValuePair.Value.spawnNodes[nodeIndex].childCount > 0)
-                            {
-                                keyValuePair.Value.spawnNodes[nodeIndex].GetComponentInChildren<Fire>().Douse(10000);
-                            }
-                        }
-                        else
-                        {
-                            if (keyValuePair.Value.spawnNodes[nodeIndex].childCount < 1)
-                            {
-                                fires.Create(new CyclopsFireData(fireNode.FireId, subRootId, fireNode.Room, fireNode.NodeIndex));
-                            }
-                        }
-                    }
-                }
+                UpdateActiveRoomFires(subRoot, roomFiresDict, roomFires);
             }
             // Clear out the fires, there should be none active
             else
@@ -186,6 +167,40 @@ namespace NitroxClient.Communication.Packets.Processors
                             keyValuePair.Value.spawnNodes[nodeIndex].GetComponentInChildren<Fire>().Douse(10000);
                         }
                     }
+                }
+            }
+        }
+
+        private void UpdateActiveRoomFires(SubRoot subRoot, Dictionary<CyclopsRooms, SubFire.RoomFire> roomFiresDict, CyclopsFireData[] roomFires)
+        {
+            NitroxId subRootId = NitroxEntity.GetId(subRoot.gameObject);
+            // Removing and adding fires will happen in the same loop
+            foreach (KeyValuePair<CyclopsRooms, SubFire.RoomFire> keyValuePair in roomFiresDict)
+            {
+                for (int nodeIndex = 0; nodeIndex < keyValuePair.Value.spawnNodes.Length; nodeIndex++)
+                {
+                    CyclopsFireData fireNode = roomFires.SingleOrDefault(x => x.Room == keyValuePair.Key && x.NodeIndex == nodeIndex);
+
+                    AddOrRemoveFire(fireNode, keyValuePair, nodeIndex, subRootId);
+                }
+            }
+        }
+
+        private void AddOrRemoveFire(CyclopsFireData fireNode, KeyValuePair<CyclopsRooms, SubFire.RoomFire> keyValuePair, int nodeIndex, NitroxId subRootId)
+        {
+            // If there's a matching node index, add a fire if there isn't one already. Otherwise remove a fire if there is one
+            if (fireNode == null)
+            {
+                if (keyValuePair.Value.spawnNodes[nodeIndex].childCount > 0)
+                {
+                    keyValuePair.Value.spawnNodes[nodeIndex].GetComponentInChildren<Fire>().Douse(10000);
+                }
+            }
+            else
+            {
+                if (keyValuePair.Value.spawnNodes[nodeIndex].childCount < 1)
+                {
+                    fires.Create(new CyclopsFireData(fireNode.FireId, subRootId, fireNode.Room, fireNode.NodeIndex));
                 }
             }
         }

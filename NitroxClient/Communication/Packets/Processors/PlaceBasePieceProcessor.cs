@@ -1,12 +1,12 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxModel.Packets;
 using NitroxClient.GameLogic.Bases;
+using NitroxModel.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
     public class PlaceBasePieceProcessor : ClientPacketProcessor<PlaceBasePiece>
     {
-        private BuildThrottlingQueue buildEventQueue;
+        private readonly BuildThrottlingQueue buildEventQueue;
 
         public PlaceBasePieceProcessor(BuildThrottlingQueue buildEventQueue)
         {

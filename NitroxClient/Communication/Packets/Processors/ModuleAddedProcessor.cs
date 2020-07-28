@@ -23,14 +23,14 @@ namespace NitroxClient.Communication.Packets.Processors
             Optional<GameObject> opGameObject = NitroxEntity.GetObjectFrom(equippedItemData.ContainerId);
             if (!opGameObject.HasValue)
             {
-                throw new Exception("Could not find equipment container for " + gameObject.name);
+                throw new InvalidOperationException("Could not find equipment container for " + gameObject.name);
             }
             Pickupable pickupable = gameObject.RequireComponent<Pickupable>();
             GameObject owner = opGameObject.Value;
             Optional<Equipment> opEquipment = EquipmentHelper.FindEquipmentComponent(owner);
             if (!opEquipment.HasValue)
             {
-                throw new Exception("Could not find equipment type for " + gameObject.name);
+                throw new InvalidOperationException("Could not find equipment type for " + gameObject.name);
             }
 
             Equipment equipment = opEquipment.Value;

@@ -15,35 +15,35 @@ namespace NitroxClient.Debuggers
         public readonly bool HotkeyAltRequired;
         public readonly bool HotkeyControlRequired;
         public readonly bool HotkeyShiftRequired;
-        public readonly GUISkinCreationOptions SkinCreationOptions;
+        public readonly GUI_SkinCreationOptions SkinCreationOptions;
 
         /// <summary>
         /// Currently active tab. This is the index used with <see cref="tabs"/>.
         /// </summary>
-        public DebuggerTab ActiveTab;
+        protected DebuggerTab activeTab;
 
-        public bool CanDragWindow = true;
+        private readonly bool canDragWindow = true;
 
-        public bool Enabled;
+        public bool Enabled { get; set; }
 
-        public Rect WindowRect;
+        private Rect windowRect;
 
         /// <summary>
         /// Optional rendered tabs of the current debugger.
         /// </summary>
         /// <remarks>
-        /// <see cref="ActiveTab"/> gives the index of the currently selected tab.
+        /// <see cref="activeTab"/> gives the index of the currently selected tab.
         /// </remarks>
         private readonly Dictionary<string, DebuggerTab> tabs = new Dictionary<string, DebuggerTab>();
 
-        protected BaseDebugger(int desiredWidth, string debuggerName = null, KeyCode hotkey = KeyCode.None, bool control = false, bool shift = false, bool alt = false, GUISkinCreationOptions skinOptions = GUISkinCreationOptions.DEFAULT)
+        protected BaseDebugger(int desiredWidth, string debuggerName = null, KeyCode hotkey = KeyCode.None, bool control = false, bool shift = false, bool alt = false, GUI_SkinCreationOptions skinOptions = GUI_SkinCreationOptions.DEFAULT)
         {
             if (desiredWidth < 200)
             {
                 desiredWidth = 200;
             }
 
-            WindowRect = new Rect(Screen.width / 2 - (desiredWidth / 2), 100, desiredWidth, 0); // Default position in center of screen.
+            windowRect = new Rect(Screen.width / 2 - (desiredWidth / 2), 100, desiredWidth, 0); // Default position in center of screen.
             Hotkey = hotkey;
             HotkeyAltRequired = alt;
             HotkeyShiftRequired = shift;
@@ -61,7 +61,7 @@ namespace NitroxClient.Debuggers
             }
         }
 
-        public enum GUISkinCreationOptions
+        public enum GUI_SkinCreationOptions
         {
             /// <summary>
             /// Uses the NitroxDebug skin.
@@ -71,12 +71,12 @@ namespace NitroxClient.Debuggers
             /// <summary>
             /// Creates a copy of the default Unity IMGUI skin and sets the copied skin as render skin.
             /// </summary>
-            UNITYCOPY,
+            UNITY_COPY,
 
             /// <summary>
             /// Creates a copy based on the NitroxDebug skin and sets the copied skin as render skin.
             /// </summary>
-            DERIVEDCOPY
+            DERIVED_COPY
         }
 
         public DebuggerTab AddTab(DebuggerTab tab)
@@ -106,8 +106,7 @@ namespace NitroxClient.Debuggers
         {
             Validate.NotNull(name);
 
-            DebuggerTab tab;
-            tabs.TryGetValue(name, out tab);
+            tabs.TryGetValue(name, out DebuggerTab tab);
             return Optional.OfNullable(tab);
         }
 
@@ -129,7 +128,7 @@ namespace NitroxClient.Debuggers
             GUISkin skin = GetSkin();
             GUISkinUtils.RenderWithSkin(skin, () =>
             {
-                WindowRect = GUILayout.Window(GUIUtility.GetControlID(FocusType.Keyboard), WindowRect, RenderInternal, $"[DEBUGGER] {DebuggerName}", GUILayout.ExpandHeight(true), GUILayout.ExpandWidth(true));
+                windowRect = GUILayout.Window(GUIUtility.GetControlID(FocusType.Keyboard), windowRect, RenderInternal, $"[DEBUGGER] {DebuggerName}", GUILayout.ExpandHeight(true), GUILayout.ExpandWidth(true));
             });
         }
 
@@ -137,7 +136,7 @@ namespace NitroxClient.Debuggers
         /// Optionally adjust the skin that is used during render.
         /// </summary>
         /// <remarks>
-        /// Set <see cref="SkinCreationOptions"/> on <see cref="GUISkinCreationOptions.UNITYCOPY"/> or <see cref="GUISkinCreationOptions.DERIVEDCOPY"/> in constructor before using this method.
+        /// Set <see cref="SkinCreationOptions"/> on <see cref="GUI_SkinCreationOptions.UNITY_COPY"/> or <see cref="GUI_SkinCreationOptions.DERIVED_COPY"/> in constructor before using this method.
         /// </remarks>
         /// <param name="skin">Skin that is being used during <see cref="Render(int)"/>.</param>
         protected virtual void OnSetSkin(GUISkin skin)
@@ -149,11 +148,11 @@ namespace NitroxClient.Debuggers
         /// </summary>
         protected virtual void Render()
         {
-            ActiveTab?.Render();
+            activeTab.Render?.Invoke();
         }
 
         /// <summary>
-        /// Gets (a copy of) a skin specified by <see cref="GUISkinCreationOptions"/>.
+        /// Gets (a copy of) a skin specified by <see cref="GUI_SkinCreationOptions"/>.
         /// </summary>
         /// <returns>A reference to an existing or copied skin.</returns>
         private GUISkin GetSkin()
@@ -162,7 +161,7 @@ namespace NitroxClient.Debuggers
             string skinName = GetSkinName();
             switch (SkinCreationOptions)
             {
-                case GUISkinCreationOptions.DEFAULT:
+                case GUI_SkinCreationOptions.DEFAULT:
                     skin = GUISkinUtils.RegisterDerivedOnce("debuggers.default", s =>
                     {
                         SetBaseStyle(s);
@@ -170,11 +169,11 @@ namespace NitroxClient.Debuggers
                     });
                     break;
 
-                case GUISkinCreationOptions.UNITYCOPY:
+                case GUI_SkinCreationOptions.UNITY_COPY:
                     skin = GUISkinUtils.RegisterDerivedOnce(skinName, OnSetSkinImpl);
                     break;
 
-                case GUISkinCreationOptions.DERIVEDCOPY:
+                case GUI_SkinCreationOptions.DERIVED_COPY:
                     GUISkin baseSkin = GUISkinUtils.RegisterDerivedOnce("debuggers.default", SetBaseStyle);
                     skin = GUISkinUtils.RegisterDerivedOnce(skinName, OnSetSkinImpl, baseSkin);
                     break;
@@ -186,15 +185,15 @@ namespace NitroxClient.Debuggers
         private string GetSkinName()
         {
             string name = GetType().Name;
-            return $"debuggers.{name.Substring(0, name.IndexOf("Debugger")).ToLowerInvariant()}";
+            return $"debuggers.{name.Substring(0, name.IndexOf("Debugger", StringComparison.Ordinal)).ToLowerInvariant()}";
         }
 
         private void OnSetSkinImpl(GUISkin skin)
         {
-            if (SkinCreationOptions == GUISkinCreationOptions.DEFAULT)
+            if (SkinCreationOptions == GUI_SkinCreationOptions.DEFAULT)
             {
                 Enabled = false;
-                throw new NotSupportedException($"Cannot change {nameof(GUISkin)} for {GetType().FullName} when accessing the default skin. Change {nameof(SkinCreationOptions)} to something else than {nameof(GUISkinCreationOptions.DEFAULT)}.");
+                throw new NotSupportedException($"Cannot change {nameof(GUISkin)} for {GetType().FullName} when accessing the default skin. Change {nameof(SkinCreationOptions)} to something else than {nameof(GUI_SkinCreationOptions.DEFAULT)}.");
             }
 
             OnSetSkin(skin);
@@ -212,16 +211,16 @@ namespace NitroxClient.Debuggers
                 {
                     foreach (DebuggerTab tab in tabs.Values)
                     {
-                        if (GUILayout.Button(tab.Name, ActiveTab == tab ? "tabActive" : "tab"))
+                        if (GUILayout.Button(tab.Name, activeTab == tab ? "tabActive" : "tab"))
                         {
-                            ActiveTab = tab;
+                            activeTab = tab;
                         }
                     }
                 }
             }
 
             Render();
-            if (CanDragWindow)
+            if (canDragWindow)
             {
                 GUI.DragWindow();
             }
@@ -257,7 +256,7 @@ namespace NitroxClient.Debuggers
 
         public void ResetWindowPosition()
         {
-            WindowRect = new Rect(Screen.width / 2 - (WindowRect.width / 2), 100, WindowRect.width, WindowRect.height); //Reset postion of debuggers because SN sometimes throws the windows from planet 4546B
+            windowRect = new Rect(Screen.width / 2 - (windowRect.width / 2), 100, windowRect.width, windowRect.height); //Reset position of debuggers because SN sometimes throws the windows from planet 4546B
         }
 
         public class DebuggerTab
@@ -265,8 +264,7 @@ namespace NitroxClient.Debuggers
             public DebuggerTab(string name, Action render)
             {
                 Validate.NotNull(name, $"Expected a name for the {nameof(DebuggerTab)}");
-                Validate.NotNull(render, $"Expected an action for the {nameof(DebuggerTab)}");
-
+                
                 Name = name;
                 Render = render;
             }

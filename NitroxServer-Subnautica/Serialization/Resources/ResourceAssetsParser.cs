@@ -5,7 +5,6 @@ using AssetsTools.NET;
 using NitroxModel.Discovery;
 using NitroxServer_Subnautica.Serialization.Resources.Parsers;
 using NitroxServer_Subnautica.Serialization.Resources.Processing;
-using NitroxServer.Serialization.Resources.Datastructures;
 
 namespace NitroxServer_Subnautica.Serialization.Resources
 {

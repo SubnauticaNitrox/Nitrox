@@ -46,7 +46,7 @@ namespace NitroxServer_Subnautica
             containerBuilder.Register(c => prefabFactory).As<UwePrefabFactory>().SingleInstance();
             containerBuilder.Register(c => new Dictionary<NitroxTechType, IEntityBootstrapper>
             {
-                [TechType.CrashHome.ToDto()] = new CrashFishBootstrapper(), 
+                [TechType.CrashHome.ToDto()] = new CrashFishBootstrapper(),
                 [TechType.Reefback.ToDto()] = new ReefbackBootstrapper()
             }).SingleInstance();
         }

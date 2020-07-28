@@ -18,7 +18,7 @@ namespace NitroxServer.Communication.Packets.Processors
         public override void Process(SimulationOwnershipRequest ownershipRequest, Player player)
         {
             bool aquiredLock = simulationOwnershipData.TryToAcquire(ownershipRequest.Id, player, ownershipRequest.LockType);
-            
+
             if (aquiredLock)
             {
                 SimulationOwnershipChange simulationOwnershipChange = new SimulationOwnershipChange(ownershipRequest.Id, player.Id, ownershipRequest.LockType);

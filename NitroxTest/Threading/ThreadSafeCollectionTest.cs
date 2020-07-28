@@ -82,7 +82,7 @@ namespace NitroxTest.Threading
                     nums.Add(10);
                 }
             }
-            
+
             nums.Count.ShouldBeEquivalentTo(6);
             nums.Last().ShouldBeEquivalentTo(10);
         }
@@ -97,7 +97,7 @@ namespace NitroxTest.Threading
                     reader();
                     Thread.Yield();
                 }
-                
+
                 // Read one last time after writer finishes
                 reader();
             });

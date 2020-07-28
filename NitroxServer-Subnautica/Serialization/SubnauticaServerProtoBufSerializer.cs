@@ -29,7 +29,7 @@ namespace NitroxServer_Subnautica.Serialization
             Model.Add(typeof(NitroxQuaternion), false).SetSurrogate(typeof(QuaternionSurrogate));
             Model.Add(typeof(Transform), false).SetSurrogate(typeof(NitroxTransform));
             Model.Add(typeof(GameObject), false).SetSurrogate(typeof(NitroxServer.UnityStubs.GameObject));
-            
+
             MetaType vehicleModel = Model.Add(typeof(VehicleModel), false);
             vehicleModel.AddSubType(100, typeof(ExosuitModel));
             vehicleModel.AddSubType(200, typeof(SeamothModel));

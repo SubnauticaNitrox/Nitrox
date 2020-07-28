@@ -76,19 +76,19 @@ namespace NitroxLauncher.Patching
             {
                 try
                 {
-                    retries--;
                     action();
                     return null;
                 }
                 catch (Exception ex)
                 {
+                    retries--;
                     lastException = ex;
                     Task.Delay(interval).Wait();
                 }
             }
             return lastException;
         }
-        
+
         public void Remove()
         {
             string assemblyCSharp = Path.Combine(subnauticaManagedPath, GAME_ASSEMBLY_NAME);

@@ -28,7 +28,7 @@ namespace NitroxPatcher.Patches.Dynamic
             {
                 return true;
             }
-            
+
             dockedVehicle = __instance;
             guiHand = hand;
 

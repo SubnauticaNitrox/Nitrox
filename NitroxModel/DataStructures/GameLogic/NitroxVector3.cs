@@ -1,6 +1,6 @@
 ﻿using System;
-using ProtoBufNet;
 using NitroxModel.Helper;
+using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
@@ -52,7 +52,7 @@ namespace NitroxModel.DataStructures.GameLogic
         {
             return new NitroxVector3(lhs.X / rhs, lhs.Y / rhs, lhs.Z / rhs);
         }
-        
+
         public static NitroxVector3 operator *(NitroxVector3 lhs, float rhs)
         {
             return new NitroxVector3(lhs.X * rhs, lhs.Y * rhs, lhs.Z * rhs);

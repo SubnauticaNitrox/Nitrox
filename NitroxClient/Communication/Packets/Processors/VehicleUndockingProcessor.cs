@@ -1,12 +1,12 @@
-﻿using NitroxClient.Communication.Abstract;
+﻿using System.Collections;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
+using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
-using System.Collections;
 using UnityEngine;
-using NitroxClient.MonoBehaviours;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -28,24 +28,24 @@ namespace NitroxClient.Communication.Packets.Processors
 
             Vehicle vehicle = vehicleGo.RequireComponent<Vehicle>();
             VehicleDockingBay vehicleDockingBay = vehicleDockingBayGo.RequireComponentInChildren<VehicleDockingBay>();
-            
+
             using (packetSender.Suppress<VehicleUndocking>())
             {
                 vehicles.SetOnPilotMode(packet.VehicleId, packet.PlayerId, true);
                 vehicleDockingBay.subRoot.BroadcastMessage("OnLaunchBayOpening", SendMessageOptions.DontRequireReceiver);
                 SkyEnvironmentChanged.Broadcast(vehicleGo, (GameObject)null);
 
-                
+
 
                 vehicle.StartCoroutine(WaitBeforePushDown(vehicle, vehicleDockingBay));
-                
+
             }
         }
 
         IEnumerator WaitBeforePushDown(Vehicle vehicle, VehicleDockingBay vehicleDockingBay)
         {
             yield return new WaitForSeconds(6.0f);
-            
+
             vehicleDockingBay.SetVehicleUndocked();
             vehicleDockingBay.ReflectionSet("vehicle_docked_param", false);
             vehicleDockingBay.ReflectionSet("_dockedVehicle", null);

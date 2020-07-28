@@ -54,12 +54,12 @@ namespace NitroxClient.Debuggers
         private Vector3 selectedObjectScale;
         private MonoBehaviour selectedMonoBehaviour;
 
-        private Texture arrowTexture;
-        private Texture circleTexture;
+        private readonly Texture arrowTexture;
+        private readonly Texture circleTexture;
 
-        public SceneDebugger() : base(500, null, KeyCode.S, true, false, false, GUISkinCreationOptions.DERIVEDCOPY)
+        public SceneDebugger() : base(500, null, KeyCode.S, true, false, false, GUI_SkinCreationOptions.DERIVED_COPY)
         {
-            ActiveTab = AddTab("Scenes", RenderTabScenes);
+            activeTab = AddTab("Scenes", RenderTabScenes);
             AddTab("Hierarchy", RenderTabHierarchy);
             AddTab("GameObject", RenderTabGameObject);
             AddTab("MonoBehaviour", RenderTabMonoBehaviour);
@@ -169,7 +169,7 @@ namespace NitroxClient.Debuggers
                     {
                         gameObjectSearchResult.Add(hit.transform.gameObject);
                     }
-                    ActiveTab = GetTab("Hierarchy").Value;
+                    activeTab = GetTab("Hierarchy").Value;
                 }
             }
         }
@@ -249,22 +249,16 @@ namespace NitroxClient.Debuggers
                         if (GUILayout.Button($"{(isSelected ? ">> " : "")}{i}: {path.TruncateLeft(35)}", isLoaded ? "sceneLoaded" : "label"))
                         {
                             selectedScene = currentScene;
-                            ActiveTab = GetTab("Hierarchy").Value;
+                            activeTab = GetTab("Hierarchy").Value;
                         }
 
-                        if (isLoaded)
+                        if (isLoaded && GUILayout.Button("Load", "loadScene"))
                         {
-                            if (GUILayout.Button("Load", "loadScene"))
-                            {
-                                SceneManager.UnloadSceneAsync(i);
-                            }
+                            SceneManager.UnloadSceneAsync(i);
                         }
-                        else
+                        else if (GUILayout.Button("Unload", "loadScene"))
                         {
-                            if (GUILayout.Button("Unload", "loadScene"))
-                            {
-                                SceneManager.LoadSceneAsync(i);
-                            }
+                            SceneManager.LoadSceneAsync(i);
                         }
                     }
                 }
@@ -297,14 +291,14 @@ namespace NitroxClient.Debuggers
                         selectedObject = null;
                     }
 
-                    if (GUILayout.Button("<"))
+                    if (GUILayout.Button("<") && selectedObject && selectedObject.transform.parent)
                     {
-                        UpdateSelectedObject(selectedObject?.transform.parent?.gameObject);
+                        UpdateSelectedObject(selectedObject.transform.parent.gameObject);
                     }
                 }
             }
 
-            // GameObject search textbox.
+            // GameObject search text box.
             using (new GUILayout.HorizontalScope("Box"))
             {
                 gameObjectSearch = GUILayout.TextField(gameObjectSearch);
@@ -364,7 +358,7 @@ namespace NitroxClient.Debuggers
                         {
                             hierarchyScrollPos = scroll.scrollPosition;
                             List<GameObject> showObjects = new List<GameObject>();
-                            if (selectedObject == null)
+                            if (!selectedObject)
                             {
                                 showObjects = selectedScene.GetRootGameObjects().ToList();
                             }
@@ -518,7 +512,7 @@ namespace NitroxClient.Debuggers
                                 if (GUILayout.Button(behaviour.GetType().Name))
                                 {
                                     selectedMonoBehaviour = behaviour;
-                                    ActiveTab = GetTab("MonoBehaviour").Value;
+                                    activeTab = GetTab("MonoBehaviour").Value;
                                 }
                             }
                         }
@@ -560,8 +554,7 @@ namespace NitroxClient.Debuggers
 
         private void RenderAllMonoBehaviourFields(MonoBehaviour mono)
         {
-            FieldInfo[] fields = mono.GetType().GetFields(flags);
-            foreach (FieldInfo field in fields)
+            foreach (FieldInfo field in mono.GetType().GetFields(flags))
             {
                 using (new GUILayout.HorizontalScope("box"))
                 {
@@ -580,27 +573,18 @@ namespace NitroxClient.Debuggers
                             RegisterFieldChanges(field, selectedMonoBehaviour, !boolVal);
                         }
                     }
-                    else if (field.FieldType.BaseType == typeof(MonoBehaviour))
+                    else if (field.FieldType.BaseType == typeof(MonoBehaviour) && GUILayout.Button(field.Name))
                     {
-                        if (GUILayout.Button(field.Name))
-                        {
-                            selectedMonoBehaviour = (MonoBehaviour)field.GetValue(selectedMonoBehaviour);
-                        }
+                        selectedMonoBehaviour = (MonoBehaviour)field.GetValue(selectedMonoBehaviour);
                     }
-                    else if (field.FieldType == typeof(GameObject))
+                    else if (field.FieldType == typeof(GameObject) && GUILayout.Button(field.Name))
                     {
-                        if (GUILayout.Button(field.Name))
-                        {
-                            selectedObject = (GameObject)field.GetValue(selectedMonoBehaviour);
-                            ActiveTab = GetTab("GameObject").Value;
-                        }
+                        selectedObject = (GameObject)field.GetValue(selectedMonoBehaviour);
+                        activeTab = GetTab("GameObject").Value;
                     }
-                    else if (field.FieldType == typeof(Text))
+                    else if (field.FieldType == typeof(Text) && (GUILayout.Button(field.Name)))
                     {
-                        if (GUILayout.Button(field.Name))
-                        {
-                            selectedMonoBehaviour = (Text)field.GetValue(selectedMonoBehaviour);
-                        }
+                        selectedMonoBehaviour = (Text)field.GetValue(selectedMonoBehaviour);
                     }
                     else if (field.FieldType == typeof(Texture) || field.FieldType == typeof(RawImage) || field.FieldType == typeof(Image))
                     {
@@ -666,30 +650,28 @@ namespace NitroxClient.Debuggers
             foreach (MethodInfo method in methods)
             {
                 string methodeAssemblyName = method.DeclaringType.Assembly.GetName().Name;
-                if (!(!showSystemMethods && (methodeAssemblyName.Contains("System") || methodeAssemblyName.Contains("mscorlib"))) &&
-                    !(!showUnityMethods && methodeAssemblyName.Contains("UnityEngine")))
+                if (!showSystemMethods && (methodeAssemblyName.Contains("System") || methodeAssemblyName.Contains("mscorlib")) ||
+                    !showUnityMethods && methodeAssemblyName.Contains("UnityEngine"))
                 {
+                    continue;
+                }
 
-                    using (new GUILayout.VerticalScope("Box"))
+                using (new GUILayout.VerticalScope("Box"))
+                {
+                    GUILayout.Label(method.ToString());
+                    using (new GUILayout.HorizontalScope())
                     {
-                        GUILayout.Label(method.ToString());
-                        using (new GUILayout.HorizontalScope())
+                        // TODO: Allow methods with parameters to be called.
+                        if (!method.GetParameters().Any() && GUILayout.Button("Invoke", GUILayout.MaxWidth(150)))
                         {
-                            // TODO: Allow methods with parameters to be called.
-                            if (!method.GetParameters().Any())
+                            object result = method.Invoke(method.IsStatic ? null : mono, new object[0]);
+                            if (result != null)
                             {
-                                if (GUILayout.Button("Invoke", GUILayout.MaxWidth(150)))
-                                {
-                                    object result = method.Invoke(method.IsStatic ? null : mono, new object[0]);
-                                    if (result != null)
-                                    {
-                                        Log.InGame($"Invoked method {method.Name} which returned result: '{result}'.");
-                                    }
-                                    else
-                                    {
-                                        Log.InGame($"Invoked method {method.Name}. Return value was NULL.");
-                                    }
-                                }
+                                Log.InGame($"Invoked method {method.Name} which returned result: '{result}'.");
+                            }
+                            else
+                            {
+                                Log.InGame($"Invoked method {method.Name}. Return value was NULL.");
                             }
                         }
                     }
@@ -787,10 +769,11 @@ namespace NitroxClient.Debuggers
 
     public class DebuggerAction
     {
-        public Component Component;
-        public FieldInfo Field;
-        public object Obj;
-        public object Value;
+        private Component Component { get; }
+        private object Obj { get; }
+
+        public FieldInfo Field { get; }
+        public object Value { get; set; }
 
         public DebuggerAction(Component component, FieldInfo field, object obj, object value)
         {

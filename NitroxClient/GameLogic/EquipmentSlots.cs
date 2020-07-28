@@ -10,7 +10,6 @@ using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
-using NitroxModel_Subnautica.Helper;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic
@@ -86,8 +85,6 @@ namespace NitroxClient.GameLogic
 
         public void AddItems(List<EquippedItemData> equippedItems)
         {
-            ItemsContainer container = Inventory.Get().container;
-
             foreach (EquippedItemData equippedItem in equippedItems)
             {
                 GameObject gameObject = SerializationHelper.GetGameObject(equippedItem.SerializedData);

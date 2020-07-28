@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using NitroxModel.Helper;
-using UWE;
 using NitroxServer.Serialization.Resources.Datastructures;
+using UWE;
 
 namespace NitroxServer_Subnautica.Serialization.Resources
 {

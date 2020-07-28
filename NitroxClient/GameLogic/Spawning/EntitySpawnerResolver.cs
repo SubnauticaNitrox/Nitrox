@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel_Subnautica.DataStructures;
-using NitroxModel_Subnautica.Helper;
 
 namespace NitroxClient.GameLogic.Spawning
 {
@@ -11,11 +10,11 @@ namespace NitroxClient.GameLogic.Spawning
         private readonly SerializedEntitySpawner serializedEntitySpawner = new SerializedEntitySpawner();
         private readonly ExistingGameObjectSpawner existingGameObjectSpawner = new ExistingGameObjectSpawner();
         private readonly CellRootSpawner cellRootSpawner = new CellRootSpawner();
-        
+
         private readonly Dictionary<TechType, IEntitySpawner> customSpawnersByTechType = new Dictionary<TechType, IEntitySpawner>();
 
         public EntitySpawnerResolver()
-        {            
+        {
             customSpawnersByTechType[TechType.Crash] = new CrashEntitySpawner();
             customSpawnersByTechType[TechType.Reefback] = new ReefbackEntitySpawner(defaultEntitySpawner);
         }

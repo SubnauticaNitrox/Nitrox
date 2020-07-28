@@ -27,14 +27,14 @@ namespace NitroxClient.Communication.Packets.Processors
             {
                 if (multiplayerSession.Reservation.PlayerId == simulatedEntity.PlayerId)
                 {
-                    if(simulatedEntity.ChangesPosition)
+                    if (simulatedEntity.ChangesPosition)
                     {
                         StartBroadcastingEntityPosition(simulatedEntity.Id);
                     }
 
                     simulationOwnershipManager.SimulateEntity(simulatedEntity.Id, SimulationLockType.TRANSIENT);
                 }
-                else if(simulationOwnershipManager.HasAnyLockType(simulatedEntity.Id))
+                else if (simulationOwnershipManager.HasAnyLockType(simulatedEntity.Id))
                 {
                     // The server has forcibly removed this lock from the client.  This is generally fine for
                     // transient locks because it is only broadcasting position.  However, exclusive locks may
@@ -42,7 +42,7 @@ namespace NitroxClient.Communication.Packets.Processors
                     // We can later add a forcibly removed callback but as of right now we have no use-cases for
                     // forcibly removing an exclusive lock.  Just log it if it happens....
 
-                    if(simulationOwnershipManager.HasExclusiveLock(simulatedEntity.Id))
+                    if (simulationOwnershipManager.HasExclusiveLock(simulatedEntity.Id))
                     {
                         Log.Warn("The server has forcibly revoked an exlusive lock - this may cause undefined behaviour.  GUID: " + simulatedEntity.Id);
                     }

@@ -7,21 +7,15 @@ namespace NitroxClient.Debuggers
 {
     public class EntityDebugger : BaseDebugger
     {
-        private static Color labelBgColor = new Color(0.2f, 0.2f, 0.2f, 0.5f);
-        private static Color labelFgColor = Color.white;
-        private static float textXOffset = 20f;
+        private static readonly Color labelBgColor = new Color(0.2f, 0.2f, 0.2f, 0.5f);
+        private static readonly Color labelFgColor = Color.white;
+        private static readonly List<Rect> rects = new List<Rect>();
+        private const float TEXT_X_OFFSET = 20f;
         private static Texture2D lineTex;
 
-        private static List<Rect> rects;
-
-        public EntityDebugger() : base(200, null, KeyCode.E, true, false, false, GUISkinCreationOptions.DERIVEDCOPY)
+        public EntityDebugger() : base(200, null, KeyCode.E, true, false, false, GUI_SkinCreationOptions.DERIVED_COPY)
         {
-            ActiveTab = AddTab("EntityDebugger", RenderEntityDebugger);
-            rects = new List<Rect>();
-        }
-
-        private void RenderEntityDebugger()
-        {
+            activeTab = AddTab("EntityDebugger", null);
         }
 
         public override void OnGUI()
@@ -34,41 +28,36 @@ namespace NitroxClient.Debuggers
             rects.Clear();
             foreach (KeyValuePair<NitroxId, GameObject> gameObjectPairs in NitroxEntity.GetGameObjects())
             {
-                NitroxId id = gameObjectPairs.Key;
-                GameObject gameObject = gameObjectPairs.Value;
-                if (gameObject == null || gameObject == Player.mainObject)
+                if (gameObjectPairs.Value || gameObjectPairs.Value == Player.mainObject)
                 {
                     continue;
                 }
 
-                Vector3 screenPos = Player.main.viewModelCamera.WorldToScreenPoint(gameObject.transform.position);
+                Vector3 screenPos = Player.main.viewModelCamera.WorldToScreenPoint(gameObjectPairs.Value.transform.position);
                 if (screenPos.z > 0 && screenPos.z < 20 &&
                     screenPos.x >= 0 && screenPos.x < Screen.width &&
                     screenPos.y >= 0 && screenPos.y < Screen.height)
                 {
-                    GUIStyle style = GUI.skin.label;
-                    GUIContent textContent = new GUIContent("ID " + id.ToString() + "   NAME " + gameObject.name);
-                    Vector2 size = style.CalcSize(textContent);
+                    GUIContent textContent = new GUIContent($"ID {gameObjectPairs.Key}   NAME {gameObjectPairs.Value.name}");
+                    Vector2 size = GUI.skin.label.CalcSize(textContent);
                     size += new Vector2(10f, 0f); //for box edges
 
                     Vector2 pointLocation = new Vector2(screenPos.x, Screen.height - screenPos.y);
-                    Rect drawSize = new Rect(screenPos.x + textXOffset, Screen.height - screenPos.y, size.x, size.y);
-                    while (true)
+                    Rect drawSize = new Rect(screenPos.x + TEXT_X_OFFSET, Screen.height - screenPos.y, size.x, size.y);
+
+                    bool finished = true;
+                    while (finished)
                     {
-                        bool finished = true;
+                        finished = false;
                         foreach (Rect rect in rects)
                         {
                             if (rect.Overlaps(drawSize))
                             {
                                 drawSize.x = rect.x;
                                 drawSize.y = rect.y + rect.height;
-                                finished = false;
+                                finished = true;
                                 break;
                             }
-                        }
-                        if (finished)
-                        {
-                            break;
                         }
                     }
 
@@ -80,7 +69,7 @@ namespace NitroxClient.Debuggers
                     GUI.backgroundColor = labelBgColor;
                     GUI.color = labelFgColor;
                     GUI.Box(drawSize, textContent);
-                    
+
                     GUI.backgroundColor = oldBgColor;
                 }
             }

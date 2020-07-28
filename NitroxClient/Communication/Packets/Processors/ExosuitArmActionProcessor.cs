@@ -1,5 +1,4 @@
-﻿using NitroxClient.Communication.Abstract;
-using NitroxClient.Communication.Packets.Processors.Abstract;
+﻿using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.Util;
@@ -11,12 +10,10 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class ExosuitArmActionProcessor : ClientPacketProcessor<ExosuitArmActionPacket>
     {
-        private readonly IPacketSender packetSender;
         private readonly ExosuitModuleEvent exosuitModuleEvent;
 
-        public ExosuitArmActionProcessor(IPacketSender packetSender, ExosuitModuleEvent exosuitModuleEvent)
+        public ExosuitArmActionProcessor(ExosuitModuleEvent exosuitModuleEvent)
         {
-            this.packetSender = packetSender;
             this.exosuitModuleEvent = exosuitModuleEvent;
         }
 
@@ -41,14 +38,14 @@ namespace NitroxClient.Communication.Packets.Processors
                 case TechType.ExosuitGrapplingArmModule:
                     exosuitModuleEvent.UseGrappling(gameObject.GetComponent<ExosuitGrapplingArm>(), packet.ArmAction, packet.OpVector);
                     break;
-                case TechType.ExosuitTorpedoArmModule:                    
-                        exosuitModuleEvent.UseTorpedo(gameObject.GetComponent<ExosuitTorpedoArm>(), packet.ArmAction, packet.OpVector, packet.OpRotation);                    
+                case TechType.ExosuitTorpedoArmModule:
+                    exosuitModuleEvent.UseTorpedo(gameObject.GetComponent<ExosuitTorpedoArm>(), packet.ArmAction, packet.OpVector, packet.OpRotation);
                     break;
                 default:
                     Log.Error("Got an arm tech that is not handled: " + packet.TechType + " with action: " + packet.ArmAction + " for id " + packet.ArmId);
                     break;
             }
-            
+
         }
     }
 }

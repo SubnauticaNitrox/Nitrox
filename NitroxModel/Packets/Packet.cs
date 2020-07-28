@@ -1,29 +1,27 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using LZ4;
 using NitroxModel.DataStructures.Surrogates;
 using NitroxModel.Logger;
-using LZ4;
 using NitroxModel.Networking;
-using System.Collections.Generic;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public abstract class Packet
     {
-        private static readonly SurrogateSelector surrogateSelector;
-        private static readonly StreamingContext streamingContext;
+        private static readonly SurrogateSelector surrogateSelector = new SurrogateSelector();
+        private static readonly StreamingContext streamingContext = new StreamingContext(StreamingContextStates.All); // Our surrogates can be safely used in every context.
         private static readonly BinaryFormatter serializer;
 
         private static readonly string[] blacklistedAssemblies = { "NLog" };
 
         static Packet()
         {
-            surrogateSelector = new SurrogateSelector();
-            streamingContext = new StreamingContext(StreamingContextStates.All); // Our surrogates can be safely used in every context.
             IEnumerable<Type> types = AppDomain.CurrentDomain.GetAssemblies()
                                                .Where(assembly => !blacklistedAssemblies.Contains(assembly.GetName().Name))
                                                .SelectMany(a => a.GetTypes()

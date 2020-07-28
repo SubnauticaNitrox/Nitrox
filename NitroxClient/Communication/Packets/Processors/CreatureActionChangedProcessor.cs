@@ -10,7 +10,7 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class CreatureActionChangedProcessor : ClientPacketProcessor<CreatureActionChanged>
     {
-        public static readonly Dictionary<NitroxId, CreatureAction> ActionByCreatureId = new Dictionary<NitroxId, CreatureAction>();
+        private static readonly Dictionary<NitroxId, CreatureAction> actionByCreatureId = new Dictionary<NitroxId, CreatureAction>();
 
         public override void Process(CreatureActionChanged packet)
         {
@@ -18,7 +18,7 @@ namespace NitroxClient.Communication.Packets.Processors
             if (opGameObject.HasValue)
             {
                 CreatureAction action = packet.NewAction.GetCreatureAction(opGameObject.Value);
-                ActionByCreatureId[packet.Id] = action;
+                actionByCreatureId[packet.Id] = action;
             }
         }
     }

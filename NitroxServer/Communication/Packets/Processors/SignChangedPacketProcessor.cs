@@ -10,7 +10,7 @@ namespace NitroxServer.Communication.Packets.Processors
     {
         private readonly BaseManager baseManager;
         private readonly PlayerManager playerManager;
-        
+
         public SignChangedPacketProcessor(BaseManager baseManager, PlayerManager playerManager)
         {
             this.baseManager = baseManager;

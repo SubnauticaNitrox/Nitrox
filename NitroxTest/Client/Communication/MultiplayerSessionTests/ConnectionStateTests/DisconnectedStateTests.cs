@@ -18,7 +18,7 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests.ConnectionStat
             IClient serverClient = Substitute.For<IClient>();
             serverClient.IsConnected.Returns(false);
             serverClient
-                .When(client => client.Start(Arg.Any<string>(),TestConstants.TEST_SERVER_PORT))
+                .When(client => client.Start(Arg.Any<string>(), TestConstants.TEST_SERVER_PORT))
                 .Do(info => serverClient.IsConnected.Returns(true));
 
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
@@ -41,7 +41,7 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests.ConnectionStat
             IClient serverClient = Substitute.For<IClient>();
             serverClient.IsConnected.Returns(false);
             serverClient
-                .When(client => client.Start(Arg.Any<string>(),TestConstants.TEST_SERVER_PORT))
+                .When(client => client.Start(Arg.Any<string>(), TestConstants.TEST_SERVER_PORT))
                 .Do(info => serverClient.IsConnected.Returns(true));
 
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
@@ -64,7 +64,7 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests.ConnectionStat
             IClient serverClient = Substitute.For<IClient>();
             serverClient.IsConnected.Returns(false);
             serverClient
-                .When(client => client.Start(Arg.Any<string>(),TestConstants.TEST_SERVER_PORT))
+                .When(client => client.Start(Arg.Any<string>(), TestConstants.TEST_SERVER_PORT))
                 .Do(info => serverClient.IsConnected.Returns(true));
 
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();

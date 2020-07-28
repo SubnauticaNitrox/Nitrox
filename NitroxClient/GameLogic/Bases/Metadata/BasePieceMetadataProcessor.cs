@@ -26,7 +26,7 @@ namespace NitroxClient.GameLogic.Bases.Metadata
 
             foreach (BasePieceMetadataProcessor processor in processors)
             {
-                
+
                 Type metadataType = processor.GetType().BaseType.GetGenericArguments()[0];
                 processorsByType.Add(metadataType, processor);
             }

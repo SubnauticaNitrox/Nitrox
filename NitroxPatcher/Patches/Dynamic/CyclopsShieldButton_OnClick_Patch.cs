@@ -14,7 +14,7 @@ namespace NitroxPatcher.Patches.Dynamic
         public static readonly OpCode START_CUT_CODE = OpCodes.Ldsfld;
         public static readonly OpCode START_CUT_CODE_CALL = OpCodes.Callvirt;
         public static readonly FieldInfo PLAYER_MAIN_FIELD = typeof(Player).GetField("main", BindingFlags.Public | BindingFlags.Static);
-        public static readonly OpCode END_CUT_CODE = OpCodes.Ret;        
+        public static readonly OpCode END_CUT_CODE = OpCodes.Ret;
 
         public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
         {
@@ -39,7 +39,7 @@ namespace NitroxPatcher.Patches.Dynamic
                     endCut = i;
                 }
             }
-            instructionList.RemoveRange(startCut, endCut+1);
+            instructionList.RemoveRange(startCut, endCut + 1);
             if (startCut == 0)
             {
                 instructionList.Insert(0, new CodeInstruction(OpCodes.Nop));
@@ -49,7 +49,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public override void Patch(HarmonyInstance harmony)
         {
-            PatchTranspiler(harmony, TARGET_METHOD);          
-        }        
+            PatchTranspiler(harmony, TARGET_METHOD);
+        }
     }
-}   
+}

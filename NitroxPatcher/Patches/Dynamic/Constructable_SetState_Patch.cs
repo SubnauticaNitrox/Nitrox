@@ -68,7 +68,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 NitroxEntity.SetNewId(__instance.gameObject, id);
             }
         }
-        
+
         public override void Patch(HarmonyInstance harmony)
         {
             PatchMultiple(harmony, TARGET_METHOD, true, true, false);

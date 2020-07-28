@@ -18,7 +18,7 @@ namespace NitroxClient.GameLogic.InitialSync
         private readonly BuildThrottlingQueue buildEventQueue;
 
         private bool completed;
-        
+
         public BuildingInitialSyncProcessor(IPacketSender packetSender, BuildThrottlingQueue buildEventQueue)
         {
             this.packetSender = packetSender;

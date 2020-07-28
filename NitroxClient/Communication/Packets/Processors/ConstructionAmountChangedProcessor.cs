@@ -6,12 +6,12 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class ConstructionAmountChangedProcessor : ClientPacketProcessor<ConstructionAmountChanged>
     {
-        private BuildThrottlingQueue buildEventQueue;
+        private readonly BuildThrottlingQueue buildEventQueue;
 
         public ConstructionAmountChangedProcessor(BuildThrottlingQueue buildEventQueue)
         {
             this.buildEventQueue = buildEventQueue;
-        }        
+        }
 
         public override void Process(ConstructionAmountChanged amountChanged)
         {

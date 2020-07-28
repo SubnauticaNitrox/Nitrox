@@ -1,6 +1,5 @@
 ﻿using LiteNetLib;
 using LiteNetLib.Utils;
-using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel.Server;
 using NitroxServer.Communication.Packets;
@@ -36,7 +35,7 @@ namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
             {
                 return false;
             }
-            
+
             isStopped = false;
             return true;
         }

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 {
-    public class LoadingScreenVersionText
+    public static class LoadingScreenVersionText
     {
         private static string assemblyVersion => Assembly.GetAssembly(typeof(LoadingScreenVersionText)).GetName().Version.ToString();
         private static GameObject loadingTextGameObject => uGUI.main.loading.loadingText.gameObject;

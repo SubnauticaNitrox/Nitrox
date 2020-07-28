@@ -1,21 +1,15 @@
 ﻿using System.Linq;
 using System.Reflection;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using UnityEngine;
-using NitroxClient.Communication.Abstract;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
     class SceneDebuggerChangeProcessor : ClientPacketProcessor<SceneDebuggerChange>
     {
-        private readonly IPacketSender packetSender;
-
-        public SceneDebuggerChangeProcessor(IPacketSender packetSender)
-        {
-            this.packetSender = packetSender;
-        }
 
         public override void Process(SceneDebuggerChange sceneDebuggerChange)
         {

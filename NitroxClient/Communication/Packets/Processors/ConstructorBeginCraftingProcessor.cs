@@ -15,8 +15,6 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class ConstructorBeginCraftingProcessor : ClientPacketProcessor<ConstructorBeginCrafting>
     {
-        public static GameObject ConstructedObject;
-
         private readonly Vehicles vehicles;
 
         public ConstructorBeginCraftingProcessor(Vehicles vehicles)

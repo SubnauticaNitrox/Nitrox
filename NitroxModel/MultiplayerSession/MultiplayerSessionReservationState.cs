@@ -5,6 +5,8 @@ using System.Text;
 namespace NitroxModel.MultiplayerSession
 {
     [Flags]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Critical Code Smell", "S2346:Flags enumerations zero-value members should be named \"None\"", Justification = "<Pending>")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S4016:Enumeration members should not be named \"Reserved\"", Justification = "<Pending>")]
     public enum MultiplayerSessionReservationState
     {
         RESERVED = 0,

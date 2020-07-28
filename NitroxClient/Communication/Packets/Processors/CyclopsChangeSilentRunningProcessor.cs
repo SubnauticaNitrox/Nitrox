@@ -1,18 +1,15 @@
-﻿using NitroxClient.Communication.Abstract;
-using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxModel_Subnautica.Packets;
+﻿using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
+using NitroxModel_Subnautica.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
     public class CyclopsChangeSilentRunningProcessor : ClientPacketProcessor<CyclopsChangeSilentRunning>
     {
-        private readonly IPacketSender packetSender;
         private readonly Cyclops cyclops;
 
-        public CyclopsChangeSilentRunningProcessor(IPacketSender packetSender, Cyclops cyclops)
+        public CyclopsChangeSilentRunningProcessor(Cyclops cyclops)
         {
-            this.packetSender = packetSender;
             this.cyclops = cyclops;
         }
 

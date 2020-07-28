@@ -1,5 +1,4 @@
-﻿using NitroxClient.Communication.Abstract;
-using NitroxClient.Communication.Packets.Processors.Abstract;
+﻿using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Packets;
@@ -9,13 +8,6 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class FabricatorItemPickupProcessor : ClientPacketProcessor<FabricatorItemPickup>
     {
-        private readonly IPacketSender packetSender;
-
-        public FabricatorItemPickupProcessor(IPacketSender packetSender)
-        {
-            this.packetSender = packetSender;
-        }
-
         public override void Process(FabricatorItemPickup packet)
         {
             GameObject gameObject = NitroxEntity.RequireObjectFrom(packet.FabricatorId);

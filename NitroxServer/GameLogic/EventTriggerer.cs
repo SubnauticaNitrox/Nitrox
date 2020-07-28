@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Timers;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
-using NitroxServer.GameLogic.Bases;
 
 namespace NitroxServer.GameLogic
 {

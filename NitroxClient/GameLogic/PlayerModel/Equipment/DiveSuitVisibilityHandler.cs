@@ -9,8 +9,8 @@ namespace NitroxClient.GameLogic.PlayerModel.Equipment
         public override void UpdateEquipmentVisibility(GameObject playerModel, ReadOnlyCollection<TechType> currentEquipment)
         {
             bool headVisible = !currentEquipment.Contains(TechType.RadiationHelmet) && !currentEquipment.Contains(TechType.Rebreather);
-            bool bodyVisible = !currentEquipment.Contains(TechType.RadiationSuit) && 
-                               !currentEquipment.Contains(TechType.Stillsuit) && 
+            bool bodyVisible = !currentEquipment.Contains(TechType.RadiationSuit) &&
+                               !currentEquipment.Contains(TechType.Stillsuit) &&
                                !currentEquipment.Contains(TechType.ReinforcedDiveSuit);
             bool handsVisible = !currentEquipment.Contains(TechType.RadiationGloves) && !currentEquipment.Contains(TechType.ReinforcedGloves);
 

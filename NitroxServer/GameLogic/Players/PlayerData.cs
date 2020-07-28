@@ -1,8 +1,8 @@
-﻿using NitroxModel.DataStructures.GameLogic;
-using ProtoBufNet;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
+using ProtoBufNet;
 
 namespace NitroxServer.GameLogic.Players
 {

@@ -1,7 +1,7 @@
 ﻿using System;
-using NitroxModel.DataStructures.Util;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Util;
 
 namespace NitroxModel.Packets
 {
@@ -23,7 +23,7 @@ namespace NitroxModel.Packets
             ItemRotation = itemRotation;
             TechType = techType;
             Bytes = bytes;
-        }        
+        }
 
         public override string ToString()
         {

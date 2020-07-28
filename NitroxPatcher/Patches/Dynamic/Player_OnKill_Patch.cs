@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using Harmony;
-using NitroxClient.MonoBehaviours.Overrides;
-using NitroxModel.Helper;
-using NitroxModel.Logger;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
@@ -30,7 +26,7 @@ namespace NitroxPatcher.Patches.Dynamic
             for (int i = 0; i < instructionList.Count; i++)
             {
                 CodeInstruction instr = instructionList[i];
-                
+
                 if (instr.opcode == OpCodes.Call && instr.operand.Equals(SKIP_METHOD))
                 {
                     CodeInstruction newInstr = new CodeInstruction(OpCodes.Ldc_I4_0);

@@ -4,6 +4,6 @@ namespace NitroxLauncher
 {
     public abstract class PageBase : Page
     {
-        
+
     }
 }

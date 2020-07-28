@@ -1,4 +1,5 @@
-﻿using NitroxClient.MonoBehaviours.Gui.MainMenu;
+﻿using System;
+using NitroxClient.MonoBehaviours.Gui.MainMenu;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using UnityEngine;
@@ -8,13 +9,11 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
 {
     public class DiscordRPController : MonoBehaviour
     {
-        public DiscordRpc.RichPresence Presence = new DiscordRpc.RichPresence();
-        public bool ShowingWindow;
-
         private const string APPLICATION_ID = "405122994348752896";
-        private DiscordRpc.EventHandlers handlers;
-
         private static DiscordRPController main;
+        private bool showingWindow;
+        private DiscordRpc.RichPresence presence;
+
         public static DiscordRPController Main
         {
             get
@@ -22,6 +21,7 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
                 if (main == null)
                 {
                     main = new GameObject("DiscordController").AddComponent<DiscordRPController>();
+                    main.presence = new DiscordRpc.RichPresence();
                 }
                 return main;
             }
@@ -36,9 +36,9 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
         public void JoinCallback(string secret)
         {
             Log.Info("[Discord] Joining Server");
-            if (SceneManager.GetActiveScene().name == "StartScreen" && MainMenuMultiplayerPanel.Main != null)
+            if (SceneManager.GetActiveScene().name == "StartScreen")
             {
-                MainMenuMultiplayerPanel.Main.OpenJoinServerMenu(secret);
+                MainMenuMultiplayerPanel.OpenJoinServerMenu(secret);
             }
             else
             {
@@ -49,12 +49,12 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
 
         public void RequestCallback(ref DiscordRpc.DiscordUser request)
         {
-            if (!ShowingWindow)
+            if (!showingWindow)
             {
                 Log.Info($"[Discord] JoinRequest: Name:{request.username}#{request.discriminator} UserID:{request.userId}");
                 DiscordJoinRequestGui acceptRequest = gameObject.AddComponent<DiscordJoinRequestGui>();
                 acceptRequest.Request = request;
-                ShowingWindow = true;
+                showingWindow = true;
             }
             else
             {
@@ -69,13 +69,23 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
 
         private void Update()
         {
-            DiscordRpc.RunCallbacks();
+            if (DiscordRpc.IsInitialized)
+            {
+                try
+                {
+                    DiscordRpc.RunCallbacks();
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex, "Discord RPC Controller threw an exception");
+                }
+            }
         }
 
         private void OnEnable()
         {
             Log.Info("[Discord] Init");
-            handlers = new DiscordRpc.EventHandlers
+            DiscordRpc.EventHandlers handlers = new DiscordRpc.EventHandlers
             {
                 readyCallback = ReadyCallback
             };
@@ -94,39 +104,39 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
 
         public void InitializeInGame(string username, int playerCount, string ipAddressPort)
         {
-            Presence.state = "In game";
-            Presence.details = "Playing as " + username;
-            Presence.startTimestamp = 0;
-            Presence.partyId = "PartyID:" + CheckIP(ipAddressPort);
-            Presence.partySize = playerCount;
-            Presence.partyMax = 100;
-            Presence.joinSecret = CheckIP(ipAddressPort);
+            presence.state = "In game";
+            presence.details = "Playing as " + username;
+            presence.startTimestamp = 0;
+            presence.partyId = "PartyID:" + CheckIP(ipAddressPort);
+            presence.partySize = playerCount;
+            presence.partyMax = 100;
+            presence.joinSecret = CheckIP(ipAddressPort);
             SendRP();
         }
 
         public void InitializeMenu()
         {
-            Presence.state = "In menu";
+            presence.state = "In menu";
             SendRP();
         }
 
         public void UpdatePlayerCount(int playerCount)
         {
-            Presence.partySize = playerCount;
+            presence.partySize = playerCount;
             SendRP();
         }
 
         private void SendRP()
         {
-            Presence.largeImageKey = "icon";
-            Presence.instance = false;
-            DiscordRpc.UpdatePresence(Presence);
+            presence.largeImageKey = "icon";
+            presence.instance = false;
+            DiscordRpc.UpdatePresence(presence);
         }
 
         public void RespondJoinRequest(string userID, DiscordRpc.Reply reply)
         {
             Log.Info($"[Discord] Respond JoinRequest: {userID} responded with {reply:g}");
-            ShowingWindow = false;
+            showingWindow = false;
             DiscordRpc.Respond(userID, reply);
         }
 

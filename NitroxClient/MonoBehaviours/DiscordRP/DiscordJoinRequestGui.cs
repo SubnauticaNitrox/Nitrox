@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using NitroxClient.MonoBehaviours.DiscordRP;
 using NitroxClient.Unity.Helper;
-using NitroxModel.Helper;
 using NitroxModel_Subnautica.Helper;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -10,7 +9,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 {
     public class DiscordJoinRequestGui : MonoBehaviour
     {
-        public DiscordRpc.DiscordUser Request;
+        public DiscordRpc.DiscordUser Request { private get; set; }
 
         private const int EXPIRE_TIME = 30;
         private Rect windowRect = new Rect(Screen.width - 260, 10, 250, 125);

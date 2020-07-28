@@ -20,8 +20,6 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
         private CanvasGroup canvasGroup;
         private InputField inputField;
         private GameObject logEntryPrefab;
-
-        private PlayerChatManager playerChatManager;
         private bool transparent;
 
         public static bool IsReady { get; private set; }
@@ -34,7 +32,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
 
         public IEnumerator SetupChatComponents()
         {
-            playerChatManager = NitroxServiceLocator.LocateService<PlayerChatManager>();
+            PlayerChatManager playerChatManager = NitroxServiceLocator.LocateService<PlayerChatManager>();
 
             canvasGroup = GetComponent<CanvasGroup>();
 

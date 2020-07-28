@@ -53,18 +53,17 @@ namespace NitroxModel.Discovery.InstallationFinders
                 return null;
             }
 
-            StreamReader file = new StreamReader(libraryfolders);
-            string line;
-            while ((line = file.ReadLine()) != null)
+            using (StreamReader file = new StreamReader(libraryfolders))
             {
-                line = Regex.Unescape(line.Trim().Trim('\t'));
-                Match regMatch = Regex.Match(line, "\"(.*)\"\t*\"(.*)\"");
-                string key = regMatch.Groups[1].Value;
-                string value = regMatch.Groups[2].Value;
-                int number;
-                if (int.TryParse(key, out number))
+                string line;
+                while ((line = file.ReadLine()) != null)
                 {
-                    if (File.Exists(Path.Combine(value, $"steamapps/appmanifest_{appid}.acf")))
+                    line = Regex.Unescape(line.Trim().Trim('\t'));
+                    Match regMatch = Regex.Match(line, "\"(.*)\"\t*\"(.*)\"");
+                    string key = regMatch.Groups[1].Value;
+                    string value = regMatch.Groups[2].Value;
+                    int number;
+                    if (int.TryParse(key, out number) && File.Exists(Path.Combine(value, $"steamapps/appmanifest_{appid}.acf")))
                     {
                         return Path.Combine(value, "steamapps/common", gameName);
                     }

@@ -11,28 +11,28 @@ namespace NitroxModel_Subnautica.DataStructures.Surrogates
     {
         [ProtoMember(1)]
         public float X { get; private set; }
-        
+
         [ProtoMember(2)]
         public float Y { get; private set; }
-        
+
         [ProtoMember(3)]
         public float Z { get; private set; }
-        
-        protected override void GetObjectData(Vector3 vector3, SerializationInfo info)
+
+        protected override void GetObjectData(Vector3 obj, SerializationInfo info)
         {
-            info.AddValue("x", vector3.x);
-            info.AddValue("y", vector3.y);
-            info.AddValue("z", vector3.z);
+            info.AddValue("x", obj.x);
+            info.AddValue("y", obj.y);
+            info.AddValue("z", obj.z);
         }
 
-        protected override Vector3 SetObjectData(Vector3 vector3, SerializationInfo info)
+        protected override Vector3 SetObjectData(Vector3 obj, SerializationInfo info)
         {
-            vector3.x = info.GetSingle("x");
-            vector3.y = info.GetSingle("y");
-            vector3.z = info.GetSingle("z");
-            return vector3;
+            obj.x = info.GetSingle("x");
+            obj.y = info.GetSingle("y");
+            obj.z = info.GetSingle("z");
+            return obj;
         }
-        
+
         public static implicit operator Vector3Surrogate(NitroxVector3 v)
         {
             return new Vector3Surrogate
@@ -42,12 +42,12 @@ namespace NitroxModel_Subnautica.DataStructures.Surrogates
                 Z = v.Z
             };
         }
-        
+
         public static implicit operator NitroxVector3(Vector3Surrogate surrogate)
         {
             return new NitroxVector3(surrogate.X, surrogate.Y, surrogate.Z);
         }
-        
+
         public static implicit operator Vector3Surrogate(Vector3 v)
         {
             return new Vector3Surrogate
@@ -57,7 +57,7 @@ namespace NitroxModel_Subnautica.DataStructures.Surrogates
                 Z = v.z
             };
         }
-        
+
         public static implicit operator Vector3(Vector3Surrogate surrogate)
         {
             return new Vector3(surrogate.X, surrogate.Y, surrogate.Z);

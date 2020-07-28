@@ -6,7 +6,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
 {
     public class EstablishingSessionPolicy : ConnectionNegotiatingState
     {
-        private string policyRequestCorrelationId;
+        private readonly string policyRequestCorrelationId;
 
         public EstablishingSessionPolicy(string policyRequestCorrelationId)
         {

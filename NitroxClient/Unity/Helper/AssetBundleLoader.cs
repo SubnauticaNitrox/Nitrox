@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 
 namespace NitroxClient.Unity.Helper
 {
-    public class AssetBundleLoader
+    public static class AssetBundleLoader
     {
         private static readonly string assetRootFolder = NitroxAppData.Instance.AssetsPath;
 

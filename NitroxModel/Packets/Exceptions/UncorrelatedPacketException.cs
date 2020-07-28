@@ -3,6 +3,7 @@ using System.Runtime.Serialization;
 
 namespace NitroxModel.Packets.Exceptions
 {
+    [Serializable]
     public class UncorrelatedPacketException : Exception
     {
         public CorrelatedPacket InvalidPacket { get; }
@@ -26,10 +27,17 @@ namespace NitroxModel.Packets.Exceptions
             ExpectedCorrelationId = expectedCorrelationId;
         }
 
-        protected UncorrelatedPacketException(SerializationInfo info, StreamingContext context, CorrelatedPacket invalidPacket, string expectedCorrelationId) : base(info, context)
+        protected UncorrelatedPacketException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
-            InvalidPacket = invalidPacket;
-            ExpectedCorrelationId = expectedCorrelationId;
+            InvalidPacket = (CorrelatedPacket)info.GetValue("invalidPacket", typeof(CorrelatedPacket));
+            ExpectedCorrelationId = (string)info.GetValue("expectedCorrelationId", typeof(string));
+        }
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
+            info.AddValue("invalidPacket", InvalidPacket);
+            info.AddValue("expectedCorrelationId", ExpectedCorrelationId);
         }
     }
 }

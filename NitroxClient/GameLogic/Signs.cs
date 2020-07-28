@@ -18,7 +18,7 @@ namespace NitroxClient.GameLogic
 
         public void Changed(uGUI_SignInput sign)
         {
-            GameObject gameObject = sign.gameObject.FindAncestor<PrefabIdentifier>().gameObject;            
+            GameObject gameObject = sign.gameObject.FindAncestor<PrefabIdentifier>().gameObject;
             NitroxId id = NitroxEntity.GetId(gameObject);
 
             SignMetadata signMetadata = new SignMetadata(id, sign.text, sign.colorIndex, sign.scaleIndex, sign.elementsState, sign.IsBackground());

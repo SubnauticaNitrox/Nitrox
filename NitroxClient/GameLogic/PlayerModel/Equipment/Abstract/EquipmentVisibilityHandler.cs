@@ -6,7 +6,7 @@ namespace NitroxClient.GameLogic.PlayerModel.Equipment.Abstract
     public abstract class EquipmentVisibilityHandler : IEquipmentVisibilityHandler
     {
         private EquipmentVisibilityHandler successor;
-        
+
         public abstract void UpdateEquipmentVisibility(GameObject playerModel, ReadOnlyCollection<TechType> currentEquipment);
 
         public EquipmentVisibilityHandler WithPredecessorHandler(EquipmentVisibilityHandler predecessorHandler)

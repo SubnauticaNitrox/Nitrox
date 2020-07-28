@@ -1,24 +1,15 @@
 ﻿using System.Reflection;
-using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
-using NitroxModel_Subnautica.Helper;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
     public class FabricatorBeginCraftingProcessor : ClientPacketProcessor<FabricatorBeginCrafting>
     {
-        private readonly IPacketSender packetSender;
-
-        public FabricatorBeginCraftingProcessor(IPacketSender packetSender)
-        {
-            this.packetSender = packetSender;
-        }
-
         public override void Process(FabricatorBeginCrafting packet)
         {
             GameObject gameObject = NitroxEntity.RequireObjectFrom(packet.FabricatorId);

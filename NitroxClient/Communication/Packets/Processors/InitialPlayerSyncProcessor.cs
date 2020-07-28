@@ -1,12 +1,14 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxModel.Packets;
-using System.Collections.Generic;
-using NitroxClient.GameLogic.InitialSync.Base;
-using System;
-using NitroxModel.Logger;
-using NitroxClient.MonoBehaviours;
+﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using NitroxClient.Communication.Abstract;
+using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxClient.GameLogic.InitialSync.Base;
+using NitroxClient.MonoBehaviours;
+using NitroxModel.Logger;
+using NitroxModel.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -18,7 +20,6 @@ namespace NitroxClient.Communication.Packets.Processors
         private InitialPlayerSync packet;
 
         private WaitScreen.ManualWaitItem loadingMultiplayerWaitItem;
-        private WaitScreen.ManualWaitItem subWaitScreenItem;
 
         private int cumulativeProcessorsRan;
         private int processorsRanLastCycle;
@@ -34,10 +35,10 @@ namespace NitroxClient.Communication.Packets.Processors
             this.packet = packet;
             loadingMultiplayerWaitItem = WaitScreen.Add("Syncing Multiplayer World");
             cumulativeProcessorsRan = 0;
-            Multiplayer.Main.StartCoroutine(ProcessInitialSyncPacket(this, null));
+            Multiplayer.Main.StartCoroutine(ProcessInitialSyncPacket());
         }
 
-        private IEnumerator ProcessInitialSyncPacket(object sender, EventArgs eventArgs)
+        private IEnumerator ProcessInitialSyncPacket()
         {
             // Some packets should not fire during game session join but only afterwards so that initialized/spawned game objects don't trigger packet sending again. 
             using (packetSender.Suppress<PingRenamed>())
@@ -50,7 +51,7 @@ namespace NitroxClient.Communication.Packets.Processors
                     moreProcessorsToRun = alreadyRan.Count < processors.Count;
                     if (moreProcessorsToRun && processorsRanLastCycle == 0)
                     {
-                        throw new Exception("Detected circular dependencies in initial packet sync between: " + GetRemainingProcessorsText());
+                        throw new InvalidDataException("Detected circular dependencies in initial packet sync between: " + GetRemainingProcessorsText());
                     }
                 } while (moreProcessorsToRun);
             }
@@ -74,7 +75,7 @@ namespace NitroxClient.Communication.Packets.Processors
                     processorsRanLastCycle++;
                     cumulativeProcessorsRan++;
 
-                    subWaitScreenItem = WaitScreen.Add("Running " + processor.GetType().Name);
+                    WaitScreen.ManualWaitItem subWaitScreenItem = WaitScreen.Add("Running " + processor.GetType().Name);
                     yield return Multiplayer.Main.StartCoroutine(processor.Process(packet, subWaitScreenItem));
                     WaitScreen.Remove(subWaitScreenItem);
                 }
@@ -94,24 +95,22 @@ namespace NitroxClient.Communication.Packets.Processors
             return true;
         }
 
-        private bool IsWaitingToRun(Type processor)
-        {
-            return (alreadyRan.Contains(processor) == false);
-        }
+        private bool IsWaitingToRun(Type processor) => !alreadyRan.Contains(processor);
 
         private string GetRemainingProcessorsText()
         {
-            string remaining = "";
+            StringBuilder remaining = new StringBuilder("");
 
             foreach (InitialSyncProcessor processor in processors)
             {
                 if (IsWaitingToRun(processor.GetType()))
                 {
-                    remaining += " " + processor.GetType();
+                    remaining.Append(processor.GetType());
+                    remaining.Append(", ");
                 }
             }
 
-            return remaining;
+            return remaining.ToString();
         }
     }
 }

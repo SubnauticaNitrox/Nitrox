@@ -7,7 +7,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
 {
     public class AwaitingSessionReservation : ConnectionNegotiatingState
     {
-        private string reservationCorrelationId;
+        private readonly string reservationCorrelationId;
 
         public AwaitingSessionReservation(string reservationCorrelationId)
         {

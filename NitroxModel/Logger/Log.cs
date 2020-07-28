@@ -36,12 +36,12 @@ namespace NitroxModel.Logger
         {
             if (logger != null)
             {
-                throw new Exception($"{nameof(Log)} setup should only be executed once.");
+                throw new InvalidOperationException($"{nameof(Log)} setup should only be executed once.");
             }
             logger = LogManager.GetCurrentClassLogger();
 
             LoggingConfiguration config = new LoggingConfiguration();
-            string layout = $@"[${{date:format=HH\:mm\:ss}} {GetLoggerName()}${{event-properties:item={nameof(PlayerName)}}}][${{level:uppercase=true}}] ${{message}} ${{exception}}";
+            string layout = $@"[${{date:format=HH\:mm\:ss}} {GetLoggerName()}${{event-properties:item=PlayerName}}][${{level:uppercase=true}}] ${{message}} ${{exception}}";
 
             // Targets where to log to: File and Console
             ColoredConsoleTarget logConsole = new ColoredConsoleTarget(nameof(logConsole))
@@ -106,20 +106,15 @@ namespace NitroxModel.Logger
             }
         }
 
-        public static string PlayerName
+        public static void SetPlayerName(string playerName)
         {
-            set
-            {
 #if DEBUG //Player name in log file is just important with two instances => Developer
-                if (string.IsNullOrEmpty(value))
-                {
-                    return;
-                }
-
-                logger.Info($"Setting player name to {value}");
-                logger.SetProperty(nameof(PlayerName), $"-{value}");
-#endif
+            if (!string.IsNullOrEmpty(playerName))
+            {
+                logger.Info($"Setting player name to {playerName}");
+                logger.SetProperty("PlayerName", $"-{playerName}");
             }
+#endif
         }
 
         [Conditional("DEBUG")]

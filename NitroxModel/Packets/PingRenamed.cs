@@ -13,7 +13,7 @@ namespace NitroxModel.Packets
 
         [ProtoMember(2)]
         public string Name { get; }
-        
+
         [ProtoMember(3)]
         public byte[] BeaconGameObjectSerialized { get; }
 

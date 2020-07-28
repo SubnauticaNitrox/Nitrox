@@ -18,7 +18,7 @@ namespace NitroxClient.GameLogic.PlayerModel.Equipment
             bool tankVisible = tankEquipped && !currentEquipment.Contains(TechType.RadiationSuit);
             bool tubesVisible = (rebreatherVisible || radiationHelmetVisible) && tankVisible;
             bool rootVisible = rebreatherVisible || tankVisible;
-            
+
             playerModel.transform.Find(PlayerEquipmentConstants.REBREATHER_GAME_OBJECT_NAME).gameObject.SetActive(rebreatherVisible);
             playerModel.transform.Find(PlayerEquipmentConstants.SCUBA_TANK_GAME_OBJECT_NAME).gameObject.SetActive(tankVisible);
             playerModel.transform.Find(PlayerEquipmentConstants.SCUBA_TANK_TUBES_GAME_OBJECT_NAME).gameObject.SetActive(tubesVisible);

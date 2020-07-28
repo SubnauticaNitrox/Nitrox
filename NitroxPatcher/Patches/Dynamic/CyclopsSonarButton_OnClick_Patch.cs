@@ -17,13 +17,13 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             NitroxId id = NitroxEntity.GetId(__instance.subRoot.gameObject);
             bool activeSonar = Traverse.Create(__instance).Field("sonarActive").GetValue<bool>();
-            NitroxServiceLocator.LocateService<Cyclops>().BroadcastChangeSonarState(id,activeSonar);
-        }        
+            NitroxServiceLocator.LocateService<Cyclops>().BroadcastChangeSonarState(id, activeSonar);
+        }
 
         public override void Patch(HarmonyInstance harmony)
         {
             PatchPostfix(harmony, TARGET_METHOD);
         }
-        
+
     }
 }

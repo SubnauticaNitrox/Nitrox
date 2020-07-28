@@ -1,7 +1,6 @@
 ﻿using NitroxClient.Communication.Abstract;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
-using NitroxModel_Subnautica.Helper;
 
 namespace NitroxClient.GameLogic
 {
@@ -16,7 +15,7 @@ namespace NitroxClient.GameLogic
 
         public void Add(PDAScanner.Entry entry)
         {
-            PDAEntryAdd EntryChanged = new PDAEntryAdd(entry.techType.ToDto(), entry.progress,entry.unlocked);
+            PDAEntryAdd EntryChanged = new PDAEntryAdd(entry.techType.ToDto(), entry.progress, entry.unlocked);
             packetSender.Send(EntryChanged);
         }
 

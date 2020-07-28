@@ -23,7 +23,7 @@ namespace NitroxServer.ConsoleCommands
         {
             ServerGameMode sgm = args.Get<ServerGameMode>(0);
 
-            serverConfig.GameModeEnum = sgm;
+            serverConfig.SetGameModeEnum(sgm);
             playerManager.SendPacketToAllPlayers(new GameModeChanged(sgm));
 
             SendMessageToAllPlayers($"Server gamemode changed to \"{sgm}\" by {args.SenderName}");

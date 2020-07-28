@@ -19,13 +19,13 @@ namespace NitroxModel.Helper
             {
                 return;
             }
-            
+
             Optional<string> paramName = GetParameterName<T>();
             if (paramName.HasValue)
             {
                 throw new ArgumentNullException(paramName.Value);
             }
-            throw new ArgumentNullException();
+            throw new ArgumentNullException($"{nameof(T)} is null!");
         }
 
         public static void NotNull<T>(T o, string message)
@@ -35,7 +35,7 @@ namespace NitroxModel.Helper
             {
                 return;
             }
-            
+
             Optional<string> paramName = GetParameterName<T>();
             if (paramName.HasValue)
             {
@@ -48,7 +48,7 @@ namespace NitroxModel.Helper
         {
             if (!b)
             {
-                throw new ArgumentException();
+                throw new ArgumentException(nameof(b) + " is false!");
             }
         }
 
@@ -64,7 +64,7 @@ namespace NitroxModel.Helper
         {
             if (b)
             {
-                throw new ArgumentException();
+                throw new ArgumentException(nameof(b) + " is true!");
             }
         }
 

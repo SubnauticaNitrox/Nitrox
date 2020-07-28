@@ -20,7 +20,7 @@ namespace NitroxModel.Discovery
             new SteamGameRegistryFinder(),
             new EpicGamesInstallationFinder(),
         };
-        
+
         /// <summary>
         /// Thread safe backing field for Singleton instance.
         /// </summary>
@@ -40,7 +40,7 @@ namespace NitroxModel.Discovery
                 {
                     continue;
                 }
-                
+
                 errors?.Clear();
                 return Path.GetFullPath(path);
             }

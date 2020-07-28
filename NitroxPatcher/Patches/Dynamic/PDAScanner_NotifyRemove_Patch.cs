@@ -14,7 +14,7 @@ namespace NitroxPatcher.Patches.Dynamic
         public static void Prefix(PDAScanner.Entry entry)
         {
             if (entry != null)
-            { 
+            {
                 NitroxServiceLocator.LocateService<PDAManagerEntry>().Remove(entry);
             }
         }

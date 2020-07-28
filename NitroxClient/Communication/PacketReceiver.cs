@@ -38,6 +38,6 @@ namespace NitroxClient.Communication
             }
 
             return packets;
-        }        
+        }
     }
 }

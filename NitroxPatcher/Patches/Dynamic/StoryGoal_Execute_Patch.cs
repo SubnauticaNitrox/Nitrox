@@ -17,7 +17,7 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             if (!StoryGoalManager.main.completedGoals.Contains(key))
             {
-                StoryEventSend packet = new StoryEventSend((StoryEventType) goalType, key);
+                StoryEventSend packet = new StoryEventSend((StoryEventType)goalType, key);
                 NitroxServiceLocator.LocateService<IPacketSender>().Send(packet);
             }
         }

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession.ConnectionState;
-using NitroxClient.Debuggers;
 using NitroxClient.GameLogic;
 using NitroxModel;
 using NitroxModel.Helper;
@@ -126,7 +125,7 @@ namespace NitroxClient.Communication.MultiplayerSession
 
             if (sessionConnectionState.CurrentStage == MultiplayerSessionConnectionStage.SESSION_RESERVED)
             {
-                Log.PlayerName = username;
+                Log.SetPlayerName(username);
             }
         }
 

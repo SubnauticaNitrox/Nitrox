@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using NitroxModel.Helper;
 using ProtoBufNet;
 
@@ -6,7 +7,7 @@ namespace NitroxModel.DataStructures.GameLogic
 {
     [Serializable]
     [ProtoContract]
-    public class AbsoluteEntityCell
+    public sealed class AbsoluteEntityCell : IEquatable<AbsoluteEntityCell>, IEqualityComparer<AbsoluteEntityCell>
     {
         [ProtoMember(1)]
         public Int3 BatchId { get; }
@@ -52,16 +53,6 @@ namespace NitroxModel.DataStructures.GameLogic
             CellId = Int3.Floor(new NitroxVector3(cell.X + 0.0001f, cell.Y + 0.0001f, cell.Z + 0.0001f));
         }
 
-        public static bool operator ==(AbsoluteEntityCell left, AbsoluteEntityCell right)
-        {
-            return Equals(left, right);
-        }
-
-        public static bool operator !=(AbsoluteEntityCell left, AbsoluteEntityCell right)
-        {
-            return !Equals(left, right);
-        }
-
         public static Int3 GetCellSize(int level, Int3 blocksPerBatch)
         {
             // Our own implementation for BatchCells.GetCellSize, that works on the server and client.
@@ -79,41 +70,13 @@ namespace NitroxModel.DataStructures.GameLogic
                 case 3:
                     return 5;
                 default:
-                    throw new Exception($"Given level '{level}' does not have any defined cells.");
+                    throw new ArgumentOutOfRangeException($"Given level '{level}' does not have any defined cells.");
             }
         }
 
         public override string ToString()
         {
             return "[AbsoluteEntityCell Position: " + Position + " BatchId: " + BatchId + " CellId: " + CellId + " Level: " + Level + " ]";
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-            if (obj.GetType() != GetType())
-            {
-                return false;
-            }
-            return Equals((AbsoluteEntityCell)obj);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hash = BatchId != null ? BatchId.GetHashCode() : 0;
-                hash = (hash * 397) ^ (CellId != null ? CellId.GetHashCode() : 0);
-                hash = (hash * 397) ^ Level;
-                return hash;
-            }
         }
 
         public Int3 GetCellSize()
@@ -131,9 +94,27 @@ namespace NitroxModel.DataStructures.GameLogic
             return GetCellsPerBlock(Level);
         }
 
-        protected bool Equals(AbsoluteEntityCell other)
+        public bool Equals(AbsoluteEntityCell other)
         {
-            return Equals(BatchId, other.BatchId) && Equals(CellId, other.CellId) && Level == other.Level;
+            return Equals(this, other);
+        }
+
+        public bool Equals(AbsoluteEntityCell x, AbsoluteEntityCell y)
+        {
+
+            return
+            x.BatchId.Equals(y.BatchId) &&
+            x.CellId.Equals(y.CellId) &&
+            x.Level.Equals(y.Level);
+        }
+
+        public int GetHashCode(AbsoluteEntityCell obj)
+        {
+            int hashCode = 658330915;
+            hashCode = hashCode * -1521134295 + EqualityComparer<Int3>.Default.GetHashCode(obj.BatchId);
+            hashCode = hashCode * -1521134295 + EqualityComparer<Int3>.Default.GetHashCode(obj.CellId);
+            hashCode = hashCode * -1521134295 + obj.Level.GetHashCode();
+            return hashCode;
         }
     }
 }

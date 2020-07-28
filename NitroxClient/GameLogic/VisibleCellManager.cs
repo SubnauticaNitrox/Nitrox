@@ -1,16 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using NitroxClient.Communication;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.Map;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
-using NitroxClient.Communication.Abstract;
-using UnityEngine;
 using NitroxModel_Subnautica.Helper.Int3;
+using UnityEngine;
 
 namespace NitroxClient.GameLogic
 {
-    public class Terrain
+    public class VisibleCellManager
     {
         private readonly IMultiplayerSession multiplayerSession;
         private readonly IPacketSender packetSender;
@@ -23,7 +23,7 @@ namespace NitroxClient.GameLogic
         private List<AbsoluteEntityCell> added = new List<AbsoluteEntityCell>();
         private List<AbsoluteEntityCell> removed = new List<AbsoluteEntityCell>();
 
-        public Terrain(IMultiplayerSession multiplayerSession, IPacketSender packetSender, VisibleCells visibleCells, PacketReceiver packetReceiver)
+        public VisibleCellManager(IMultiplayerSession multiplayerSession, IPacketSender packetSender, VisibleCells visibleCells, PacketReceiver packetReceiver)
         {
             this.multiplayerSession = multiplayerSession;
             this.packetSender = packetSender;

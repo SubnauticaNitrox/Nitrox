@@ -1,12 +1,12 @@
-﻿using NitroxClient.Communication.Abstract;
+﻿using System.Collections;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
-using NitroxClient.Unity.Helper;
-using NitroxModel.Packets;
-using System.Collections;
-using UnityEngine;
-using NitroxModel.DataStructures;
 using NitroxClient.MonoBehaviours;
+using NitroxClient.Unity.Helper;
+using NitroxModel.DataStructures;
+using NitroxModel.Packets;
+using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -28,14 +28,14 @@ namespace NitroxClient.Communication.Packets.Processors
 
             Vehicle vehicle = vehicleGo.RequireComponent<Vehicle>();
             VehicleDockingBay vehicleDockingBay = vehicleDockingBayGo.RequireComponentInChildren<VehicleDockingBay>();
-            
+
             using (packetSender.Suppress<VehicleDocking>())
             {
                 vehicleDockingBay.SetVehicleDocked(vehicle);
             }
 
             vehicle.StartCoroutine(DisablePilotingAfterAnimation(packet.VehicleId, packet.PlayerId));
-        }        
+        }
 
         IEnumerator DisablePilotingAfterAnimation(NitroxId vehicleId, ushort playerId)
         {

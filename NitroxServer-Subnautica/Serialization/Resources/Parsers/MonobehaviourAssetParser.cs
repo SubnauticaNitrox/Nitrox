@@ -18,7 +18,7 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Parsers
             { "PrefabIdentifier", new PrefabIdentifierParser() },
             { "EntitySlot", new EntitySlotParser() }
         };
-        
+
         public override void Parse(AssetIdentifier identifier, AssetsFileReader reader, ResourceAssets resourceAssets)
         {
             MonobehaviourAsset monobehaviour = new MonobehaviourAsset();
@@ -33,7 +33,7 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Parsers
             // that we do not care about.  Monoscripts should be fully loaded before we actually parse anything
             // we do care about in resource.assets.  If this becomes a problem later, we can do two passes and
             // load monobeahviours in the second pass.
-            if(!MonoscriptAssetParser.MonoscriptsByAssetId.ContainsKey(monobehaviour.MonoscriptIdentifier))
+            if (!MonoscriptAssetParser.MonoscriptsByAssetId.ContainsKey(monobehaviour.MonoscriptIdentifier))
             {
                 return;
             }

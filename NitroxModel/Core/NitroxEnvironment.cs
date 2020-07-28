@@ -21,11 +21,22 @@ namespace NitroxModel.Helper
         {
             if (hasSet)
             {
-                throw new Exception("Enviroment type can only be set once.");
+                throw new NitroxEnvironmentException("Enviroment type can only be set once.");
             }
 
             Type = value;
             hasSet = true;
         }
+    }
+
+    [Serializable]
+    public class NitroxEnvironmentException : Exception
+    {
+        public NitroxEnvironmentException() { }
+        public NitroxEnvironmentException(string message) : base(message) { }
+        public NitroxEnvironmentException(string message, Exception inner) : base(message, inner) { }
+        protected NitroxEnvironmentException(
+          System.Runtime.Serialization.SerializationInfo info,
+          System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
     }
 }

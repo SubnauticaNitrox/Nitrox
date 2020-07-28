@@ -2,7 +2,7 @@
 
 namespace NitroxModel.Helper
 {
-    public class Mathf
+    public static class Mathf
     {
         public const float RAD2DEG = 57.29578f;
         public const float PI = 3.14159274f;

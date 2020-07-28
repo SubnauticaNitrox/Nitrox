@@ -6,7 +6,6 @@ using NitroxClient.GameLogic.HUD;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
-using NitroxModel.Helper;
 using NitroxModel.Logger;
 using UnityEngine;
 

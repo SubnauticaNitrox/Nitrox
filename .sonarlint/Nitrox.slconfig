@@ -1,0 +1,12 @@
+{
+  "ServerUri": "http://localhost:9000/",
+  "Organization": null,
+  "ProjectKey": "subnauticaNitrox",
+  "ProjectName": "subnauticaNitrox",
+  "Profiles": {
+    "CSharp": {
+      "ProfileKey": "AXLiozdd-EEC-oEC9emU",
+      "ProfileTimestamp": "2020-06-23T19:24:06Z"
+    }
+  }
+}

@@ -75,7 +75,7 @@ namespace NitroxClient.GameLogic.PlayerPreferences
 
             return Equals((PlayerPreference)obj);
         }
-        
+
         public override int GetHashCode()
         {
             unchecked
@@ -95,6 +95,6 @@ namespace NitroxClient.GameLogic.PlayerPreferences
         public static Color PreferredColor(this PlayerPreference playerPreference)
         {
             return new Color(playerPreference.RedAdditive, playerPreference.GreenAdditive, playerPreference.BlueAdditive);
-        } 
+        }
     }
 }

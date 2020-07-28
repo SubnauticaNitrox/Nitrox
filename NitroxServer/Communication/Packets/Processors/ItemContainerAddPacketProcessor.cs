@@ -19,7 +19,7 @@ namespace NitroxServer.Communication.Packets.Processors
         public override void Process(ItemContainerAdd packet, Player player)
         {
             inventoryManager.ItemAdded(packet.ItemData);
-            if (packet.ItemData.ContainerId != player.GameObjectId)
+            if (!packet.ItemData.ContainerId.Equals(player.GameObjectId))
             {
                 playerManager.SendPacketToOtherPlayers(packet, player);
             }

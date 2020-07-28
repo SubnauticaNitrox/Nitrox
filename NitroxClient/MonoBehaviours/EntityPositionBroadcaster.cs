@@ -39,7 +39,7 @@ namespace NitroxClient.MonoBehaviours
         public static void WatchEntity(NitroxId id, GameObject gameObject)
         {
             watchingEntitiesById[id] = gameObject;
-            
+
             RemotelyControlled remotelyControlled = gameObject.GetComponent<RemotelyControlled>();
             Object.Destroy(remotelyControlled);
         }

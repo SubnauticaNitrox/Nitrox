@@ -38,14 +38,14 @@ namespace NitroxPatcher.Patches.Dynamic
              */
             foreach (CodeInstruction instruction in instructions)
             {
-                if(GAMEMODEUTILS_ISPERMADEATH_METHOD.Equals(instruction.operand))
+                if (GAMEMODEUTILS_ISPERMADEATH_METHOD.Equals(instruction.operand))
                 {
                     yield return new CodeInstruction(OpCodes.Ret);
                     break;
                 }
 
                 yield return instruction;
-            } 
+            }
         }
 
         public override void Patch(HarmonyInstance harmony)

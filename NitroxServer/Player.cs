@@ -14,7 +14,7 @@ namespace NitroxServer
         private readonly ThreadSafeCollection<EquippedItemData> equippedItems;
         private readonly ThreadSafeCollection<EquippedItemData> modules;
         private readonly ThreadSafeCollection<AbsoluteEntityCell> visibleCells;
-        
+
         public NitroxConnection connection { get; set; }
         public PlayerSettings PlayerSettings => PlayerContext.PlayerSettings;
         public PlayerContext PlayerContext { get; set; }
@@ -107,7 +107,7 @@ namespace NitroxServer
 
         public void RemoveModule(NitroxId id)
         {
-            modules.RemoveAll(item => item.ItemId == id);
+            modules.RemoveAll(item => item.ItemId.Equals(id));
         }
 
         public List<EquippedItemData> GetModules()
@@ -122,7 +122,7 @@ namespace NitroxServer
 
         public void RemoveEquipment(NitroxId id)
         {
-            equippedItems.RemoveAll(item => item.ItemId == id);
+            equippedItems.RemoveAll(item => item.ItemId.Equals(id));
         }
 
         public List<EquippedItemData> GetEquipment()

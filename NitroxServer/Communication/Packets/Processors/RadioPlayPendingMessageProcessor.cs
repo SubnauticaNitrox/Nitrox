@@ -5,7 +5,7 @@ using NitroxServer.GameLogic.Unlockables;
 
 namespace NitroxServer
 {
-    public class RadioPlayPendingMessageProcessor :  AuthenticatedPacketProcessor<RadioPlayPendingMessage>
+    public class RadioPlayPendingMessageProcessor : AuthenticatedPacketProcessor<RadioPlayPendingMessage>
     {
         private readonly StoryGoalData storyGoalData;
         private readonly PlayerManager playerManager;
@@ -15,7 +15,7 @@ namespace NitroxServer
             this.storyGoalData = storyGoalData;
             this.playerManager = playerManager;
         }
-        
+
         public override void Process(RadioPlayPendingMessage packet, Player player)
         {
             storyGoalData.RemovedLatestRadioMessage();

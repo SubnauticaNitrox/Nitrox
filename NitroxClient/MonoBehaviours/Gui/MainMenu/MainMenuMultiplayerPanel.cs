@@ -14,9 +14,8 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 {
     public class MainMenuMultiplayerPanel : MonoBehaviour
     {
-        public static MainMenuMultiplayerPanel Main;
         private Rect addServerWindowRect = new Rect(Screen.width / 2 - 250, 200, 500, 200);
-        private GameObject joinServerGameObject;
+        private static GameObject joinServerGameObject;
         public GameObject LoadedMultiplayerRef;
 
         private GameObject multiplayerButton;
@@ -31,7 +30,6 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         public void Awake()
         {
-            Main = this;
             //This sucks, but the only way around it is to establish a Subnautica resources cache and reference it everywhere we need it.
             //Given recent push-back on elaborate designs, I've just crammed it here until we can all get on the same page as far as code-quality standars are concerned.
             JoinServer.SaveGameMenuPrototype = SavedGamesRef;
@@ -50,14 +48,13 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         public void CreateButton(string text, UnityAction clickEvent)
         {
-            GameObject multiplayerButtonInst = Instantiate(multiplayerButton);
+            GameObject multiplayerButtonInst = Instantiate(multiplayerButton, savedGameAreaContent, false);
             Transform txt = multiplayerButtonInst.RequireTransform("NewGameButton/Text");
             txt.GetComponent<Text>().text = text;
             Destroy(txt.GetComponent<TranslationLiveUpdate>());
             Button multiplayerButtonButton = multiplayerButtonInst.RequireTransform("NewGameButton").GetComponent<Button>();
             multiplayerButtonButton.onClick = new Button.ButtonClickedEvent();
             multiplayerButtonButton.onClick.AddListener(clickEvent);
-            multiplayerButtonInst.transform.SetParent(savedGameAreaContent, false);
         }
 
         public void CreateServerButton(string text, string joinIp)
@@ -76,7 +73,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 OpenJoinServerMenu(joinIp);
             });
 
-            GameObject delete = Instantiate(SavedGamesRef.GetComponent<MainMenuLoadPanel>().saveInstance.GetComponent<MainMenuLoadButton>().deleteButton);
+            GameObject delete = Instantiate(SavedGamesRef.GetComponent<MainMenuLoadPanel>().saveInstance.GetComponent<MainMenuLoadButton>().deleteButton, multiplayerButtonInst.transform, false);
             Button deleteButtonButton = delete.GetComponent<Button>();
             deleteButtonButton.onClick = new Button.ButtonClickedEvent();
             deleteButtonButton.onClick.AddListener(() =>
@@ -84,14 +81,13 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 RemoveServer(multiplayerButtonInst.transform.GetSiblingIndex() - 1);
                 Destroy(multiplayerButtonInst);
             });
-            delete.transform.SetParent(multiplayerButtonInst.transform, false);
         }
 
-        public void AddServer(string name, string ip)
+        public void AddServer(string serverName, string ip)
         {
             using (StreamWriter sw = new StreamWriter(SERVER_LIST_PATH, true))
             {
-                sw.WriteLine($"{name}|{ip}");
+                sw.WriteLine($"{serverName}|{ip}");
             }
         }
 
@@ -102,7 +98,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             File.WriteAllLines(SERVER_LIST_PATH, serverLines.ToArray());
         }
 
-        public void OpenJoinServerMenu(string serverIp)
+        public static void OpenJoinServerMenu(string serverIp)
         {
             IPEndPoint endpoint = ResolveIpv4(serverIp) ?? ResolveHostName(serverIp);
             if (endpoint == null)
@@ -113,7 +109,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
             NitroxServiceLocator.BeginNewLifetimeScope();
 
-            if (joinServerGameObject != null)
+            if (joinServerGameObject)
             {
                 Destroy(joinServerGameObject);
             }
@@ -163,7 +159,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             }
         }
 
-        private IPEndPoint ResolveIpv4(string serverIp)
+        private static IPEndPoint ResolveIpv4(string serverIp)
         {
             Match match = Regex.Match(serverIp, @"^((?:\d{1,3}\.){3}\d{1,3})\:?(\d{2,5})?$"); // Pattern test url: https://regex101.com/r/NZsD0l/1
             if (!match.Success)
@@ -176,7 +172,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             return new IPEndPoint(ip, port);
         }
 
-        private IPEndPoint ResolveHostName(string hostname)
+        private static IPEndPoint ResolveHostName(string hostname)
         {
             Match match = Regex.Match(hostname, @"^\s*([a-zA-Z\.]*)\:?(\d{2,5})?\s*$");
             if (!match.Success)
@@ -211,7 +207,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             HideAddServerWindow();
         }
 
-        private GUISkin GetGUISkin()
+        private static GUISkin GetGUISkin()
         {
             return GUISkinUtils.RegisterDerivedOnce("menus.server",
                 s =>

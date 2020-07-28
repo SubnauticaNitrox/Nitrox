@@ -6,15 +6,15 @@ namespace NitroxModel_Subnautica.DataStructures.Surrogates
 {
     public class TechTypeSurrogate : SerializationSurrogate<NitroxTechType>
     {
-        protected override void GetObjectData(NitroxTechType techType, SerializationInfo info)
+        protected override void GetObjectData(NitroxTechType obj, SerializationInfo info)
         {
-            info.AddValue("name", techType.Name);
+            info.AddValue("name", obj.Name);
         }
 
-        protected override NitroxTechType SetObjectData(NitroxTechType techType, SerializationInfo info)
+        protected override NitroxTechType SetObjectData(NitroxTechType obj, SerializationInfo info)
         {
-            techType.Name = info.GetString("name");
-            return techType;
+            obj.Name = info.GetString("name");
+            return obj;
         }
     }
 }

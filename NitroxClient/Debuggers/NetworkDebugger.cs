@@ -21,9 +21,9 @@ namespace NitroxClient.Debuggers
         private Vector2 scrollPosition;
         private int sentCount;
 
-        public NetworkDebugger() : base(600, null, KeyCode.N, true, false, false, GUISkinCreationOptions.DERIVEDCOPY)
+        public NetworkDebugger() : base(600, null, KeyCode.N, true, false, false, GUI_SkinCreationOptions.DERIVED_COPY)
         {
-            ActiveTab = AddTab("All", RenderTabPackets);
+            activeTab = AddTab("All", RenderTabPackets);
             AddTab("Sent", RenderTabSentPackets);
             AddTab("Received", RenderTabReceivedPackets);
             AddTab("Type Count", RenderTabTypeCount);
@@ -45,7 +45,7 @@ namespace NitroxClient.Debuggers
         protected override void OnSetSkin(GUISkin skin)
         {
             base.OnSetSkin(skin);
-            
+
             skin.SetCustomStyle("packet-type-down",
                                 skin.label,
                                 s =>
@@ -72,7 +72,7 @@ namespace NitroxClient.Debuggers
                 GUILayout.Label($"Sent: {sentCount} - Received: {receivedCount}");
 
                 scrollPosition = GUILayout.BeginScrollView(scrollPosition, GUILayout.Height(300));
-                RenderPacketList(ToRender.BOTH);
+                RenderPacketList(PacketType.BOTH);
                 GUILayout.EndScrollView();
             }
         }
@@ -84,7 +84,7 @@ namespace NitroxClient.Debuggers
                 GUILayout.Label($"Sent: {sentCount} - Received: {receivedCount}");
 
                 scrollPosition = GUILayout.BeginScrollView(scrollPosition, GUILayout.Height(300));
-                RenderPacketList(ToRender.SENT);
+                RenderPacketList(PacketType.SENT);
                 GUILayout.EndScrollView();
             }
         }
@@ -96,7 +96,7 @@ namespace NitroxClient.Debuggers
                 GUILayout.Label($"Sent: {sentCount} - Received: {receivedCount}");
 
                 scrollPosition = GUILayout.BeginScrollView(scrollPosition, GUILayout.Height(300));
-                RenderPacketList(ToRender.RECEIVED);
+                RenderPacketList(PacketType.RECEIVED);
                 GUILayout.EndScrollView();
             }
         }
@@ -144,20 +144,16 @@ namespace NitroxClient.Debuggers
             }
         }
 
-        private void RenderPacketList(ToRender toRender)
+        private void RenderPacketList(PacketType packetType)
         {
-            bool isSentList = toRender.HasFlag(ToRender.SENT);
-            bool isReceiveList = toRender.HasFlag(ToRender.RECEIVED);
+            bool isSentList = packetType.HasFlag(PacketType.SENT);
+            bool isReceiveList = packetType.HasFlag(PacketType.RECEIVED);
             PacketPrefixer prefixer = isSentList && isReceiveList ? (PacketPrefixer)PacketDirectionPrefixer : PacketNoopPrefixer;
-            
+
             for (int i = packets.Count - 1; i >= 0; i--)
             {
                 PacketDebugWrapper wrapper = packets[i];
-                if (wrapper.IsSent && !isSentList)
-                {
-                    continue;
-                }
-                if (!wrapper.IsSent && !isReceiveList)
+                if (wrapper.IsSent && !isSentList || !wrapper.IsSent && !isReceiveList)
                 {
                     continue;
                 }
@@ -174,8 +170,7 @@ namespace NitroxClient.Debuggers
 
                     if (wrapper.ShowDetails)
                     {
-                        IShortString hasShortString = wrapper.Packet as IShortString;
-                        GUILayout.Label(hasShortString != null ? hasShortString.ToShortString() : wrapper.Packet.ToString());
+                        GUILayout.Label(wrapper.Packet is IShortString hasShortString ? hasShortString.ToShortString() : wrapper.Packet.ToString());
                     }
                 }
             }
@@ -193,8 +188,7 @@ namespace NitroxClient.Debuggers
                 }
             }
 
-            int count;
-            if (countByType.TryGetValue(packetType, out count))
+            if (countByType.TryGetValue(packetType, out int count))
             {
                 countByType[packetType] = count + 1;
             }
@@ -204,9 +198,9 @@ namespace NitroxClient.Debuggers
             }
         }
 
-        private string PacketDirectionPrefixer(PacketDebugWrapper wrapper) => $"{(wrapper.IsSent ? "↑" : "↓")} - ";
+        private static string PacketDirectionPrefixer(PacketDebugWrapper wrapper) => $"{(wrapper.IsSent ? "↑" : "↓")} - ";
 
-        private string PacketNoopPrefixer(PacketDebugWrapper wraper) => "";
+        private static string PacketNoopPrefixer(PacketDebugWrapper wrapper) => "";
 
         private delegate string PacketPrefixer(PacketDebugWrapper wrapper);
 
@@ -226,7 +220,7 @@ namespace NitroxClient.Debuggers
         }
 
         [Flags]
-        private enum ToRender
+        private enum PacketType
         {
             SENT = 1,
             RECEIVED = 2,

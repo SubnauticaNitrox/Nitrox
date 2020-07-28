@@ -9,13 +9,6 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class StoryEventHandler : ClientPacketProcessor<StoryEventSend>
     {
-        private readonly IPacketSender packetSender;
-
-        public StoryEventHandler(IPacketSender packetSender)
-        {
-            this.packetSender = packetSender;
-        }
-
         public override void Process(StoryEventSend packet)
         {
             switch (packet.StoryEventType)

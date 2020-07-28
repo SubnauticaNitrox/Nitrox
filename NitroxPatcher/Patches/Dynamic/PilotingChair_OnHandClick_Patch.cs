@@ -26,7 +26,7 @@ namespace NitroxPatcher.Patches.Dynamic
             {
                 return true;
             }
-            
+
             pilotingChair = __instance;
             guiHand = hand;
 

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using NitroxModel.DataStructures.Util;
 
 namespace NitroxModel.Discovery.InstallationFinders
 {

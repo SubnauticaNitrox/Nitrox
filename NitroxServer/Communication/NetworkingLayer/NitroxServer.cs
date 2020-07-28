@@ -33,7 +33,7 @@ namespace NitroxServer.Communication.NetworkingLayer
         public abstract bool Start();
 
         public abstract void Stop();
-        
+
         protected void ClientDisconnected(NitroxConnection connection)
         {
             Player player = playerManager.GetPlayer(connection);
@@ -54,7 +54,7 @@ namespace NitroxServer.Communication.NetworkingLayer
                 }
             }
         }
-        
+
         protected void ProcessIncomingData(NitroxConnection connection, Packet packet)
         {
             try

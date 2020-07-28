@@ -29,7 +29,7 @@ namespace NitroxClient.GameLogic.InitialSync
                 position = Player.mainObject.transform.position;
             }
             Player.main.SetPosition(position);
-            
+
             // Player position is relative to a subroot if in a subroot
             Optional<NitroxId> subRootId = packet.PlayerSubRootId;
             if (!subRootId.HasValue)
@@ -48,7 +48,7 @@ namespace NitroxClient.GameLogic.InitialSync
                 Log.Error("Could not find subroot for player for subroot with id: " + subRootId.Value);
                 yield break;
             }
-            
+
             // If player is not swimming
             Player.main.SetCurrentSub(root);
             if (root.isBase)

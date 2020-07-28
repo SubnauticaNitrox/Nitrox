@@ -1,8 +1,8 @@
-﻿using ProtoBufNet;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
+using ProtoBufNet;
 
 namespace NitroxModel.Packets
 {
@@ -21,7 +21,7 @@ namespace NitroxModel.Packets
 
         }
 
-        public VehicleChildUpdate(NitroxId vehicleId,List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers)
+        public VehicleChildUpdate(NitroxId vehicleId, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers)
         {
             VehicleId = vehicleId;
             InteractiveChildIdentifiers = interactiveChildIdentifiers;

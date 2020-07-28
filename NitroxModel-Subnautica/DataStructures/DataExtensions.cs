@@ -30,12 +30,12 @@ namespace NitroxModel_Subnautica.DataStructures
         {
             return (TechType)Enum.Parse(typeof(TechType), v.Name);
         }
-        
+
         public static Quaternion ToUnity(this NitroxQuaternion v)
         {
             return new Quaternion(v.X, v.Y, v.Z, v.W);
         }
-        
+
         public static NitroxQuaternion ToDto(this Quaternion v)
         {
             return new NitroxQuaternion(v.x, v.y, v.z, v.w);
@@ -45,7 +45,7 @@ namespace NitroxModel_Subnautica.DataStructures
         {
             return new NitroxColor(v.r, v.g, v.b, v.a);
         }
-        
+
         public static Color ToUnity(this NitroxColor v)
         {
             return new Color(v.R, v.G, v.B, v.A);
@@ -67,7 +67,7 @@ namespace NitroxModel_Subnautica.DataStructures
             {
                 return new NitroxVector3[0];
             }
-            
+
             NitroxVector3[] result = new NitroxVector3[v.Length];
             for (int i = 0; i < v.Length; i++)
             {
@@ -75,14 +75,14 @@ namespace NitroxModel_Subnautica.DataStructures
             }
             return result;
         }
-        
+
         public static Vector3[] ToUnity(this NitroxVector3[] v)
         {
             if (v == null)
             {
                 return new Vector3[0];
             }
-            
+
             Vector3[] result = new Vector3[v.Length];
             for (int i = 0; i < v.Length; i++)
             {

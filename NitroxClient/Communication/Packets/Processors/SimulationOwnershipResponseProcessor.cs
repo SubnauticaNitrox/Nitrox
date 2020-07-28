@@ -11,12 +11,10 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class SimulationOwnershipResponseProcessor : ClientPacketProcessor<SimulationOwnershipResponse>
     {
-        private readonly IMultiplayerSession multiplayerSession;
         private readonly SimulationOwnership simulationOwnershipManager;
 
-        public SimulationOwnershipResponseProcessor(IMultiplayerSession multiplayerSession, SimulationOwnership simulationOwnershipManager)
+        public SimulationOwnershipResponseProcessor(SimulationOwnership simulationOwnershipManager)
         {
-            this.multiplayerSession = multiplayerSession;
             this.simulationOwnershipManager = simulationOwnershipManager;
         }
 

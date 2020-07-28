@@ -7,7 +7,7 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class ConstructionCompletedProcessor : ClientPacketProcessor<ConstructionCompleted>
     {
-        private BuildThrottlingQueue buildEventQueue;
+        private readonly BuildThrottlingQueue buildEventQueue;
 
         public ConstructionCompletedProcessor(BuildThrottlingQueue buildEventQueue)
         {

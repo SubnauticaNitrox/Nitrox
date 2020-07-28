@@ -19,8 +19,8 @@ namespace NitroxServer.Communication.Packets.Processors
         public override void Process(StorageSlotItemRemove packet, Player player)
         {
             // Only need to send to other players, if an synced item was really removed
-            if (inventoryManager.StorageItemRemoved(packet.OwnerId)) 
-            {                
+            if (inventoryManager.StorageItemRemoved(packet.OwnerId))
+            {
                 playerManager.SendPacketToOtherPlayers(packet, player);
             }
         }

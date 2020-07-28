@@ -44,12 +44,9 @@ namespace NitroxModel.Helper
             string steamDll = Path.Combine(subnauticaRoot, "steam_api64.dll");
 
             // Check for a modified steam dll
-            if (File.Exists(steamDll))
+            if (File.Exists(steamDll) && new FileInfo(steamDll).Length > 209000)
             {
-                if (new FileInfo(steamDll).Length > 209000)
-                {
-                    return true;
-                }
+                return true;
             }
             return false;
         }

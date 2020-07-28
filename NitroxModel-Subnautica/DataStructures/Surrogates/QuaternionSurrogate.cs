@@ -21,21 +21,21 @@ namespace NitroxModel_Subnautica.DataStructures.Surrogates
         [ProtoMember(4)]
         public float W { get; private set; }
 
-        protected override void GetObjectData(Quaternion quaternion, SerializationInfo info)
+        protected override void GetObjectData(Quaternion obj, SerializationInfo info)
         {
-            info.AddValue("w", quaternion.w);
-            info.AddValue("x", quaternion.x);
-            info.AddValue("y", quaternion.y);
-            info.AddValue("z", quaternion.z);
+            info.AddValue("w", obj.w);
+            info.AddValue("x", obj.x);
+            info.AddValue("y", obj.y);
+            info.AddValue("z", obj.z);
         }
 
-        protected override Quaternion SetObjectData(Quaternion quaternion, SerializationInfo info)
+        protected override Quaternion SetObjectData(Quaternion obj, SerializationInfo info)
         {
-            quaternion.w = info.GetSingle("w");
-            quaternion.x = info.GetSingle("x");
-            quaternion.y = info.GetSingle("y");
-            quaternion.z = info.GetSingle("z");
-            return quaternion;
+            obj.w = info.GetSingle("w");
+            obj.x = info.GetSingle("x");
+            obj.y = info.GetSingle("y");
+            obj.z = info.GetSingle("z");
+            return obj;
         }
 
         public static implicit operator QuaternionSurrogate(Quaternion v)

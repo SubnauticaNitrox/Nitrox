@@ -14,7 +14,7 @@ namespace NitroxPatcher.Patches.Dynamic
         public static readonly MethodInfo TARGET_METHOD_INTERFACE = typeof(IExosuitArm).GetMethod("OnUseUp");
 
         public static void Prefix(ExosuitDrillArm __instance)
-        {           
+        {
             NitroxServiceLocator.LocateService<ExosuitModuleEvent>().BroadcastArmAction(TechType.ExosuitDrillArmModule, __instance, ExosuitArmAction.END_USE_TOOL);
         }
 

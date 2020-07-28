@@ -1,7 +1,7 @@
-﻿using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Logger;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Logger;
 
 namespace NitroxClient.GameLogic.Bases
 {
@@ -13,13 +13,13 @@ namespace NitroxClient.GameLogic.Bases
      * to re-use logic for ConstructionCompleted packet and InitialPlayerSync build
      * packets - this class helps faciliate that.
      */
-    public class BuildThrottlingQueue : Queue<BuildEvent>
+    public class BuildThrottlingQueue : Queue<IBuildEvent>
     {
         public bool NextEventRequiresFreshFrame()
         {
-            if(Count > 0)
+            if (Count > 0)
             {
-                BuildEvent nextEvent = Peek();
+                IBuildEvent nextEvent = Peek();
                 return nextEvent.RequiresFreshFrame();
             }
 
@@ -28,7 +28,7 @@ namespace NitroxClient.GameLogic.Bases
 
         public void EnqueueBasePiecePlaced(BasePiece basePiece)
         {
-            Log.Info("Enqueuing base piece to be placed id: " + basePiece.Id + " parentId: " + basePiece.ParentId.OrElse(null));
+            Log.Info("Enqueuing base piece to be placed id: " + basePiece.Id + " parentId: " + basePiece.Transform.Parent);
             Enqueue(new BasePiecePlacedEvent(basePiece));
         }
 
@@ -57,7 +57,7 @@ namespace NitroxClient.GameLogic.Bases
         }
     }
 
-    public class BasePiecePlacedEvent : BuildEvent
+    public class BasePiecePlacedEvent : IBuildEvent
     {
         public BasePiece BasePiece { get; }
 
@@ -74,7 +74,7 @@ namespace NitroxClient.GameLogic.Bases
         }
     }
 
-    public class ConstructionAmountChangedEvent : BuildEvent
+    public class ConstructionAmountChangedEvent : IBuildEvent
     {
         public NitroxId Id { get; }
         public float Amount { get; }
@@ -94,7 +94,7 @@ namespace NitroxClient.GameLogic.Bases
         }
     }
 
-    public class ConstructionCompletedEvent : BuildEvent
+    public class ConstructionCompletedEvent : IBuildEvent
     {
         public NitroxId PieceId { get; }
         public NitroxId BaseId { get; }
@@ -113,7 +113,7 @@ namespace NitroxClient.GameLogic.Bases
         }
     }
 
-    public class DeconstructionBeginEvent : BuildEvent
+    public class DeconstructionBeginEvent : IBuildEvent
     {
         public NitroxId PieceId { get; }
 
@@ -131,7 +131,7 @@ namespace NitroxClient.GameLogic.Bases
         }
     }
 
-    public class DeconstructionCompletedEvent : BuildEvent
+    public class DeconstructionCompletedEvent : IBuildEvent
     {
         public NitroxId PieceId { get; }
 
@@ -148,7 +148,7 @@ namespace NitroxClient.GameLogic.Bases
         }
     }
 
-    public interface BuildEvent
+    public interface IBuildEvent
     {
         // Some build events should be processed exclusively in a single
         // frame.  This is usually the case when processing multiple events

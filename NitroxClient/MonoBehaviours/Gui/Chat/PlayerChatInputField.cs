@@ -12,8 +12,8 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
         private PlayerChatManager playerChatManager;
         private bool selected;
         private static float timeLeftUntilAutoClose;
-        public static bool FreezeTime;
-        public InputField InputField;
+        public static bool FreezeTime { get; set; }
+        public InputField InputField { get; set; }
 
         private void Awake()
         {
@@ -40,11 +40,6 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
 
         private void Update()
         {
-            if (FreezeTime)
-            {
-                return;
-            }
-
             if (selected && InputField.text != "")
             {
                 ResetTimer();
@@ -65,7 +60,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
                     }
                 }
             }
-            else
+            else if (!FreezeTime)
             {
                 timeLeftUntilAutoClose -= Time.unscaledDeltaTime;
                 if (timeLeftUntilAutoClose <= 0)
