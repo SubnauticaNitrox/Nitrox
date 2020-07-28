@@ -26,9 +26,9 @@ namespace NitroxLauncher.Patching
         {
             if (File.Exists(Path.Combine(subnauticaPath, "appxmanifest.xml")))
             {
-              return true;
+                return true;
             }
-          return false;
+            return false;
         }
     }
 }
