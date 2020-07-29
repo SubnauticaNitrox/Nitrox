@@ -7,19 +7,10 @@ namespace NitroxModel.DataStructures.GameLogic
 {
     [Serializable]
     [ProtoContract]
-    public class VehicleModel
+    public class VehicleModel : NitroxBehavior
     {
         [ProtoMember(1)]
         public NitroxTechType TechType { get; }
-
-        [ProtoMember(2)]
-        public NitroxId Id { get; set; }
-
-        [ProtoMember(3)]
-        public NitroxVector3 Position { get; set; }
-
-        [ProtoMember(4)]
-        public NitroxQuaternion Rotation { get; set; }
 
         [ProtoMember(5)]
         public ThreadSafeCollection<InteractiveChildObjectIdentifier> InteractiveChildIdentifiers { get; }
@@ -44,12 +35,9 @@ namespace NitroxModel.DataStructures.GameLogic
             Health = 200;
         }
 
-        public VehicleModel(NitroxTechType techType, NitroxId id, NitroxVector3 position, NitroxQuaternion rotation, IEnumerable<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, NitroxVector3[] hsb, float health)
+        public VehicleModel(NitroxTechType techType, IEnumerable<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, NitroxVector3[] hsb, float health)
         {
             TechType = techType;
-            Id = id;
-            Position = position;
-            Rotation = rotation;
             InteractiveChildIdentifiers = new ThreadSafeCollection<InteractiveChildObjectIdentifier>(interactiveChildIdentifiers);
             DockingBayId = dockingBayId;
             Name = name;

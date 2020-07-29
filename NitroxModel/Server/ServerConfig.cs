@@ -28,6 +28,11 @@ namespace NitroxModel.Server
         )
         { }
 
+        public void SetGameModeEnum(ServerGameMode sgm)
+        {
+            gameModeSetting.Value = sgm;
+        }
+
         public ServerConfig(int port, int saveinterval, int maxconnection, bool disableconsole, bool disableautosave, string savename, string serverpassword, string adminpassword, ServerGameMode gamemode, ServerSerializerMode serverserializermode)
         {
             portSetting = new ServerConfigItem<int>("Port", port);

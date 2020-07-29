@@ -1,10 +1,10 @@
-﻿using NitroxModel.DataStructures.GameLogic;
-using NitroxServer.GameLogic.Entities.Spawning;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
-using NitroxModel.DataStructures;
+using NitroxServer.GameLogic.Entities.Spawning;
 
 namespace NitroxServer.GameLogic.Entities
 {
@@ -17,7 +17,7 @@ namespace NitroxServer.GameLogic.Entities
 
         // Global root entities that are always visible.
         private readonly Dictionary<NitroxId, Entity> globalRootEntitiesById;
-        
+
         private readonly BatchEntitySpawner batchEntitySpawner;
 
         public EntityManager(List<Entity> entities, BatchEntitySpawner batchEntitySpawner)
@@ -42,8 +42,8 @@ namespace NitroxServer.GameLogic.Entities
 
             foreach (AbsoluteEntityCell cell in cells)
             {
-                List<Entity> cellEntities = GetEntities(cell);                
-                entities.AddRange(cellEntities.Where(entity => cell.Level <= entity.Level));                                
+                List<Entity> cellEntities = GetEntities(cell);
+                entities.AddRange(cellEntities.Where(entity => cell.Level <= entity.Level));
             }
 
             return entities;
@@ -75,7 +75,7 @@ namespace NitroxServer.GameLogic.Entities
             {
                 return new List<Entity>(globalRootEntitiesById.Values);
             }
-        }        
+        }
 
         public List<Entity> GetEntities(AbsoluteEntityCell absoluteEntityCell)
         {
@@ -96,9 +96,9 @@ namespace NitroxServer.GameLogic.Entities
         {
             lock (entitiesById)
             {
-                return entitiesById.Join(ids, 
-                                         entity => entity.Value.Id, 
-                                         id => id, 
+                return entitiesById.Join(ids,
+                                         entity => entity.Value.Id,
+                                         id => id,
                                          (entity, id) => entity.Value)
                                    .ToList();
             }
@@ -120,12 +120,12 @@ namespace NitroxServer.GameLogic.Entities
             entity.Transform.Rotation = rotation;
 
             AbsoluteEntityCell newCell = entity.AbsoluteEntityCell;
-            if (oldCell != newCell)
+            if (oldCell.Equals(newCell))
             {
                 EntitySwitchedCells(entity, oldCell, newCell);
             }
 
-            return Optional.Of(newCell);
+            return newCell;
         }
 
         public void RegisterNewEntity(Entity entity)
@@ -202,7 +202,7 @@ namespace NitroxServer.GameLogic.Entities
         {
             IEnumerable<Int3> distinctBatchIds = cells.Select(cell => cell.BatchId).Distinct();
 
-            foreach(Int3 batchId in distinctBatchIds)
+            foreach (Int3 batchId in distinctBatchIds)
             {
                 List<Entity> spawnedEntities = batchEntitySpawner.LoadUnspawnedEntities(batchId);
 
@@ -212,9 +212,9 @@ namespace NitroxServer.GameLogic.Entities
                     {
                         foreach (Entity entity in spawnedEntities)
                         {
-                            if (entity.ParentId != null)
+                            if (entity.Transform.Parent != null)
                             {
-                                Optional<Entity> opEnt = GetEntityById(entity.ParentId);
+                                Optional<Entity> opEnt = GetEntityById(entity.Transform.Parent.Id);
 
                                 if (opEnt.HasValue)
                                 {
@@ -222,7 +222,7 @@ namespace NitroxServer.GameLogic.Entities
                                 }
                                 else
                                 {
-                                    Log.Error("Parent not Found! Are you sure it exists? " + entity.ParentId);
+                                    Log.Error("Parent not Found! Are you sure it exists? " + entity.Transform.Parent.Id);
                                 }
                             }
 

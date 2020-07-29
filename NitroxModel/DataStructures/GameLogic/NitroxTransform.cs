@@ -1,22 +1,14 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
     [ProtoContract]
     [Serializable]
-    public class NitroxTransform
+    public sealed class NitroxTransform : NitroxBehavior
     {
-        [ProtoMember(1)]
-        public NitroxVector3 LocalPosition;
-
-        [ProtoMember(2)]
-        public NitroxQuaternion LocalRotation;
-        
-        [ProtoMember(3)]
-        public NitroxVector3 LocalScale;
-
-        public NitroxMatrix4x4 localToWorldMatrix 
+        public NitroxMatrix4x4 localToWorldMatrix
         {
             get
             {
@@ -25,11 +17,12 @@ namespace NitroxModel.DataStructures.GameLogic
             }
         }
 
-        public NitroxTransform Parent;
-        public Entity Entity;
+        [ProtoMember(4)]
+        private NitroxId ParentId;
+
         public NitroxVector3 Position
         {
-            get 
+            get
             {
                 NitroxMatrix4x4 matrix = Parent != null ? Parent.localToWorldMatrix : NitroxMatrix4x4.Identity;
                 return matrix.MultiplyPoint(LocalPosition);
@@ -59,35 +52,92 @@ namespace NitroxModel.DataStructures.GameLogic
             }
         }
 
+        [ProtoMember(1)]
+        public NitroxVector3 LocalPosition { get; set; }
+        [ProtoMember(2)]
+        public NitroxQuaternion LocalRotation { get; set; }
+        [ProtoMember(3)]
+        public NitroxVector3 LocalScale { get; set; }
+
+        public NitroxTransform Parent { get; private set; }
+
         public void SetParent(NitroxTransform parent)
         {
+            if (parent == null)
+            {
+                return;
+            }
+
+            if (Parent != null)
+            {
+                parent.NitroxObject.Children.Remove(NitroxObject);
+            }
+
             Parent = parent;
-            
-            
+            ParentId = parent.Id;
+
+            parent.NitroxObject.Children.Add(NitroxObject);
+
         }
 
         public void SetParent(NitroxTransform parent, bool worldPositionStays)
         {
-            throw new NotImplementedException("This is not Implementwaed yet. Added by killzoms");
+            NitroxVector3 curPos = Position;
+
+            SetParent(parent);
+
+            if (worldPositionStays)
+            {
+                Position = curPos;
+            }
         }
 
         private NitroxTransform()
         {}
 
         /// <summary>
-        /// NitroxTransform is always attached to an Entity
+        /// NitroxTransform is always attached to an Object
         /// </summary>
-        public NitroxTransform(NitroxVector3 localPosition, NitroxQuaternion localRotation, NitroxVector3 scale, Entity entity)
+        internal NitroxTransform(NitroxVector3 localPosition, NitroxQuaternion localRotation, NitroxVector3 scale)
         {
             LocalPosition = localPosition;
             LocalRotation = localRotation;
             LocalScale = scale;
-            Entity = entity;
+        }
+
+        private NitroxTransform(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+            ParentId = (NitroxId)info.GetValue("parent", typeof(NitroxId));
+            LocalPosition = (NitroxVector3)info.GetValue("localPosition", typeof(NitroxVector3));
+            LocalRotation = (NitroxQuaternion)info.GetValue("localRotation", typeof(NitroxQuaternion));
+            LocalScale = (NitroxVector3)info.GetValue("localScale", typeof(NitroxVector3));
+            if (ParentId != null)
+            {
+                SetParent(NitroxObject.GetObjectById(ParentId)?.Transform);
+            }
+        }
+
+        [ProtoAfterDeserialization]
+        private void AfterDeserialization()
+        {
+            if (ParentId != null)
+            {
+                SetParent(NitroxObject.GetObjectById(ParentId)?.Transform);
+            }
         }
 
         public override string ToString()
         {
             return string.Format("(Position: {0}, LocalPosition: {1}, Rotation: {2}, LocalRotation: {3}, LocalScale: {4})", Position, LocalPosition, Rotation, LocalRotation, LocalScale);
+        }
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
+            info.AddValue("parent", ParentId);
+            info.AddValue("localPosition", LocalPosition);
+            info.AddValue("localRotation", LocalRotation);
+            info.AddValue("localScale", LocalScale);
         }
     }
 }

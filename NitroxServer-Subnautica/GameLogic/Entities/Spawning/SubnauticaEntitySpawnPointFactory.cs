@@ -3,6 +3,7 @@ using System.Linq;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel_Subnautica.DataStructures;
 using NitroxServer.GameLogic.Entities.Spawning;
+using NitroxServer.Serialization.Resources.Datastructures;
 using NitroxServer.UnityStubs;
 
 namespace NitroxServer_Subnautica.GameLogic.Entities.Spawning
@@ -11,7 +12,7 @@ namespace NitroxServer_Subnautica.GameLogic.Entities.Spawning
     {
         private readonly Dictionary<string, EntitySpawnPoint> spawnPointsByUid = new Dictionary<string, EntitySpawnPoint>();
 
-        public override List<EntitySpawnPoint> From(AbsoluteEntityCell absoluteEntityCell, NitroxTransform transform, GameObject gameObject)
+        public override List<EntitySpawnPoint> From(AbsoluteEntityCell absoluteEntityCell, TransformAsset transform, GameObject gameObject)
         {
             List<EntitySpawnPoint> spawnPoints = new List<EntitySpawnPoint>();
             EntitySlotsPlaceholder entitySlotsPlaceholder = gameObject.GetComponent<EntitySlotsPlaceholder>();

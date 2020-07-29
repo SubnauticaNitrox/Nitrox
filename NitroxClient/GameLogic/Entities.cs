@@ -63,19 +63,23 @@ namespace NitroxClient.GameLogic
                 {
                     UpdatePosition(entity);
                 }
-                else if (entity.ParentId != null && !alreadySpawnedIds.Contains(entity.ParentId))
+                else if (entity.Transform.Parent != null && entity.Transform.Parent.Id != null && !alreadySpawnedIds.Contains(entity.Transform.Parent.Id))
                 {
                     AddPendingParentEntity(entity);
                 }
                 else
                 {
-                    Optional<GameObject> parent = NitroxEntity.GetObjectFrom(entity.ParentId);
+                    Optional<GameObject> parent = Optional.Empty;
+                    if (entity.Transform.Parent != null)
+                    {
+                        parent = NitroxEntity.GetObjectFrom(entity.Transform.Parent.Id);
+                    }
                     Spawn(entity, parent);
                     SpawnAnyPendingChildren(entity);
                 }
             }
         }
-        
+
         private EntityCell EnsureCell(Entity entity)
         {
             EntityCell entityCell;
@@ -98,7 +102,7 @@ namespace NitroxClient.GameLogic
             }
 
             entityCell.EnsureRoot();
-            
+
             return entityCell;
         }
 
@@ -116,16 +120,15 @@ namespace NitroxClient.GameLogic
             IEntitySpawner entitySpawner = entitySpawnerResolver.ResolveEntitySpawner(entity);
             Optional<GameObject> gameObject = entitySpawner.Spawn(entity, parent, cellRoot);
 
-            foreach (Entity childEntity in entity.ChildEntities)
+            if (!entitySpawner.SpawnsOwnChildren())
             {
-                if (!alreadySpawnedIds.Contains(childEntity.Id) && !entitySpawner.SpawnsOwnChildren())
+                foreach (NitroxObject entityObject in entity.NitroxObject.GetChildren())
                 {
-                    Spawn(childEntity, gameObject);
+                    Spawn(entityObject.GetBehavior<Entity>(), gameObject);
                 }
-
-                alreadySpawnedIds.Add(childEntity.Id);
             }
-		}
+                
+        }
 
         private void SpawnAnyPendingChildren(Entity entity)
         {
@@ -155,20 +158,20 @@ namespace NitroxClient.GameLogic
 #endif
                 return;
             }
-            
+
             opGameObject.Value.transform.position = entity.Transform.Position.ToUnity();
             opGameObject.Value.transform.rotation = entity.Transform.Rotation.ToUnity();
             opGameObject.Value.transform.localScale = entity.Transform.LocalScale.ToUnity();
         }
-        
+
         private void AddPendingParentEntity(Entity entity)
         {
             List<Entity> pendingEntities;
 
-            if (!pendingParentEntitiesByParentId.TryGetValue(entity.ParentId, out pendingEntities))
+            if (!pendingParentEntitiesByParentId.TryGetValue(entity.Transform.Parent.Id, out pendingEntities))
             {
                 pendingEntities = new List<Entity>();
-                pendingParentEntitiesByParentId[entity.ParentId] = pendingEntities;
+                pendingParentEntitiesByParentId[entity.Transform.Parent.Id] = pendingEntities;
             }
 
             pendingEntities.Add(entity);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Ionic.Zip;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
@@ -180,16 +181,16 @@ namespace NitroxServer.Serialization.World
         {
             return CreateWorld(
                 DateTime.Now,
-                new List<Entity>(), new List<BasePiece>(), new List<BasePiece>(),
+                new List<NitroxObject>(), new List<BasePiece>(), new List<BasePiece>(),
                 new List<VehicleModel>(), new List<Player>(), new List<ItemData>(),
                 new List<ItemData>(),
                 new GameData() { PDAState = new PDAStateData(), StoryGoals = new StoryGoalData() },
-                new List<Int3>(), new List<EscapePodModel>(), new StoryTimingData(), config.GameModeEnum
+                new List<Int3>(), new List<NitroxObject>(), new StoryTimingData(), config.GameModeEnum
                 );
         }
 
         private World CreateWorld(DateTime serverStartTime,
-                                  List<Entity> entities,
+                                  List<NitroxObject> entities,
                                   List<BasePiece> partiallyConstructedPieces,
                                   List<BasePiece> completedBasePieceHistory,
                                   List<VehicleModel> vehicles,
@@ -198,7 +199,7 @@ namespace NitroxServer.Serialization.World
                                   List<ItemData> storageSlotItems,
                                   GameData gameData,
                                   List<Int3> parsedBatchCells,
-                                  List<EscapePodModel> escapePods,
+                                  List<NitroxObject> escapePods,
                                   StoryTimingData storyTimingData,
                                   ServerGameMode gameMode)
         {
@@ -213,7 +214,7 @@ namespace NitroxServer.Serialization.World
             world.InventoryManager = new InventoryManager(inventoryItems, storageSlotItems);
             world.VehicleManager = new VehicleManager(vehicles, world.InventoryManager);
             world.GameData = gameData;
-            world.EscapePodManager = new EscapePodManager(escapePods);
+            world.EscapePodManager = new EscapePodManager(escapePods.Select(o => o.GetBehavior<EscapePodModel>()).ToList());
             world.GameMode = gameMode;
 
             world.BatchEntitySpawner = new BatchEntitySpawner(
@@ -226,7 +227,7 @@ namespace NitroxServer.Serialization.World
                 NitroxServiceLocator.LocateService<Dictionary<string, PrefabPlaceholdersGroupAsset>>()
             );
 
-            world.EntityManager = new EntityManager(entities, world.BatchEntitySpawner);
+            world.EntityManager = new EntityManager(entities.Select(n => n.GetBehavior<Entity>()).ToList(), world.BatchEntitySpawner);
 
             HashSet<NitroxTechType> serverSpawnedSimulationWhiteList = NitroxServiceLocator.LocateService<HashSet<NitroxTechType>>();
             world.EntitySimulation = new EntitySimulation(world.EntityManager, world.SimulationOwnershipData, world.PlayerManager, serverSpawnedSimulationWhiteList);

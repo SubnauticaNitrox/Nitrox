@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Runtime.Serialization;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using ProtoBufNet;
 
@@ -7,18 +7,12 @@ namespace NitroxModel.DataStructures.GameLogic
 {
     [Serializable]
     [ProtoContract]
-    public class Entity
+    public class Entity : NitroxBehavior
     {
         public AbsoluteEntityCell AbsoluteEntityCell => new AbsoluteEntityCell(Transform.Position, Level);
 
-        [ProtoMember(1)]
-        public NitroxTransform Transform { get; set; }
-
         [ProtoMember(2)]
         public NitroxTechType TechType { get; set; }
-
-        [ProtoMember(3)]
-        public NitroxId Id { get; set; }
 
         [ProtoMember(4)]
         public int Level { get; set; }
@@ -48,9 +42,6 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoMember(9)]
         public bool ExistsInGlobalRoot { get; set; }
 
-        [ProtoMember(10)]
-        public NitroxId ParentId { get; set; }
-
         [ProtoMember(11)]
         public EntityMetadata Metadata { get; set; }
 
@@ -59,18 +50,14 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoMember(12)]
         public int? ExistingGameObjectChildIndex { get; set; }
 
-        public List<Entity> ChildEntities { get; set; } = new List<Entity>();
-
         protected Entity()
         {
             // Constructor for serialization. Has to be "protected" for json serialization.
         }
 
-        public Entity(NitroxVector3 localPosition, NitroxQuaternion localRotation, NitroxVector3 scale, NitroxTechType techType, int level, string classId, bool spawnedByServer, NitroxId id, int? existingGameObjectChildIndex, Entity parentEntity = null)
+        public Entity(NitroxTechType techType, int level, string classId, bool spawnedByServer, int? existingGameObjectChildIndex)
         {
-            Transform = new NitroxTransform(localPosition, localRotation, scale, this);
             TechType = techType;
-            Id = id;
             Level = level;
             ClassId = classId;
             SpawnedByServer = spawnedByServer;
@@ -79,19 +66,11 @@ namespace NitroxModel.DataStructures.GameLogic
             Metadata = null;
             ExistsInGlobalRoot = false;
             ExistingGameObjectChildIndex = existingGameObjectChildIndex;
-
-            if (parentEntity != null)
-            {
-                ParentId = parentEntity.Id;
-                Transform.SetParent(parentEntity.Transform);
-            }
         }
 
-        public Entity(NitroxVector3 position, NitroxQuaternion rotation, NitroxVector3 scale, NitroxTechType techType, int level, string classId, bool spawnedByServer, NitroxId waterParkId, byte[] serializedGameObject, bool existsInGlobalRoot, NitroxId id)
+        public Entity(NitroxTechType techType, int level, string classId, bool spawnedByServer, NitroxId waterParkId, byte[] serializedGameObject, bool existsInGlobalRoot)
         {
-            Transform = new NitroxTransform(position, rotation, scale, this);
             TechType = techType;
-            Id = id;
             Level = level;
             ClassId = classId;
             SpawnedByServer = spawnedByServer;
@@ -101,15 +80,36 @@ namespace NitroxModel.DataStructures.GameLogic
             ExistingGameObjectChildIndex = null;
         }
 
-        public override string ToString()
+        protected Entity(SerializationInfo info, StreamingContext context) : base(info, context)
         {
-            return "[Entity Transform: " + Transform + " TechType: " + TechType + " Id: " + Id + " Level: " + Level + " classId: " + ClassId + " ChildEntities: " + string.Join(",\n ", ChildEntities) + " SpawnedByServer: " + SpawnedByServer + " ExistingGameObjectChildIndex: " + ExistingGameObjectChildIndex + "]";
+            TechType = (NitroxTechType)info.GetValue("techType", typeof(NitroxTechType));
+            Level = info.GetInt32("level");
+            ClassId = info.GetString("ClassId");
+            WaterParkId = (NitroxId)info.GetValue("WaterParkId", typeof(NitroxId));
+            SerializedGameObject = (byte[])info.GetValue("serializedGameObject", typeof(byte[]));
+            ExistsInGlobalRoot = info.GetBoolean("existsInGlobalRoot");
+            ExistingGameObjectChildIndex = (int?)info.GetValue("existingGameObjectChildIndex", typeof(int?));
+            Metadata = (EntityMetadata)info.GetValue("metaData", typeof(EntityMetadata));
+            SpawnedByServer = info.GetBoolean("spawnedByServer");
         }
 
-        [ProtoAfterDeserialization]
-        private void ProtoAfterDeserialization()
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            Transform.Entity = this;
+            base.GetObjectData(info, context);
+            info.AddValue("techType", TechType);
+            info.AddValue("level", Level);
+            info.AddValue("ClassId", ClassId);
+            info.AddValue("WaterParkId", WaterParkId);
+            info.AddValue("serializedGameObject", SerializedGameObject);
+            info.AddValue("existsInGlobalRoot", ExistsInGlobalRoot);
+            info.AddValue("existingGameObjectChildIndex", ExistingGameObjectChildIndex);
+            info.AddValue("metaData", Metadata);
+            info.AddValue("spawnedByServer", SpawnedByServer);
+        }
+
+        public override string ToString()
+        {
+            return "[Entity Transform: " + Transform + " TechType: " + TechType + " Id: " + Id + " Level: " + Level + " classId: " + ClassId + " SpawnedByServer: " + SpawnedByServer + " ExistingGameObjectChildIndex: " + ExistingGameObjectChildIndex + "]";
         }
     }
 }
