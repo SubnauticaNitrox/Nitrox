@@ -14,6 +14,8 @@ namespace NitroxClient.GameLogic.PlayerModel.ColorSwap
         private readonly TextureBlock beltTextureBlock;
         private readonly TextureBlock feetTextureBlock;
         private readonly TextureBlock legTextureBlock;
+        private static readonly int mainText = Shader.PropertyToID("_MainText");
+        private static readonly int specTex = Shader.PropertyToID("_SpecTex");
 
         public RadiationSuitColorSwapManager()
         {
@@ -81,10 +83,10 @@ namespace NitroxClient.GameLogic.PlayerModel.ColorSwap
             radiationSuitRenderer.material.UpdateMainTextureColors(beltPixels, beltTextureBlock);
             radiationSuitRenderer.materials[1].UpdateMainTextureColors(armSleevesPixels);
 
-            radiationSuitRenderer.material.SetTexture("_MainText", radiationSuitRenderer.material.mainTexture);
-            radiationSuitRenderer.material.SetTexture("_SpecTex", radiationSuitRenderer.material.mainTexture);
-            radiationSuitRenderer.materials[1].SetTexture("_MainText", radiationSuitRenderer.materials[1].mainTexture);
-            radiationSuitRenderer.materials[1].SetTexture("_SpecTex", radiationSuitRenderer.materials[1].mainTexture);
+            radiationSuitRenderer.material.SetTexture(mainText, radiationSuitRenderer.material.mainTexture);
+            radiationSuitRenderer.material.SetTexture(specTex, radiationSuitRenderer.material.mainTexture);
+            radiationSuitRenderer.materials[1].SetTexture(mainText, radiationSuitRenderer.materials[1].mainTexture);
+            radiationSuitRenderer.materials[1].SetTexture(specTex, radiationSuitRenderer.materials[1].mainTexture);
         }
     }
 }

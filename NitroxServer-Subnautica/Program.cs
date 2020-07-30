@@ -83,6 +83,12 @@ namespace NitroxServer_Subnautica
         private static Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)
         {
             string dllFileName = args.Name.Split(',')[0];
+
+            if (dllFileName.Contains(".resources"))
+            {
+                return null;
+            }
+
             if (!dllFileName.EndsWith(".dll", StringComparison.InvariantCultureIgnoreCase))
             {
                 dllFileName += ".dll";

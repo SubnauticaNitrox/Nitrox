@@ -11,12 +11,8 @@ namespace NitroxClient.GameLogic.PlayerModel.ColorSwap
 {
     public class ReinforcedSuitColorSwapManager : IColorSwapManager
     {
-        public void PrepareMaterials(GameObject playerModel)
-        {
-            SkinnedMeshRenderer reinforcedSuitRenderer = playerModel.GetRenderer(REINFORCED_SUIT_GAME_OBJECT_NAME);
-
-            SkinnedMeshRenderer reinforcedSuitGlovesRenderer = playerModel.GetRenderer(REINFORCED_GLOVES_GAME_OBJECT_NAME);
-        }
+        private static readonly int mainTex = Shader.PropertyToID("_MainTex");
+        private static readonly int specTex = Shader.PropertyToID("_SpecTex");
 
         public Action<ColorSwapAsyncOperation> CreateColorSwapTask(INitroxPlayer nitroxPlayer)
         {
@@ -58,17 +54,15 @@ namespace NitroxClient.GameLogic.PlayerModel.ColorSwap
             Color[] glovePixelIndexes = pixelIndex[REINFORCED_GLOVES_INDEX_KEY];
 
             GameObject playerModel = nitroxPlayer.PlayerModel;
-            Color playerColor = nitroxPlayer.PlayerSettings.PlayerColor.ToUnity();
-            IColorSwapStrategy colorSwapStrategy = new HueSwapper(playerColor);
 
             SkinnedMeshRenderer reinforcedSuitRenderer = playerModel.GetRenderer(REINFORCED_SUIT_GAME_OBJECT_NAME);
             reinforcedSuitRenderer.material.UpdateMainTextureColors(suitPixelIndexes);
-            reinforcedSuitRenderer.material.SetTexture("_MainTex", reinforcedSuitRenderer.material.mainTexture);
-            reinforcedSuitRenderer.material.SetTexture("_SpecTex", reinforcedSuitRenderer.material.mainTexture);
+            reinforcedSuitRenderer.material.SetTexture(mainTex, reinforcedSuitRenderer.material.mainTexture);
+            reinforcedSuitRenderer.material.SetTexture(specTex, reinforcedSuitRenderer.material.mainTexture);
 
             reinforcedSuitRenderer.materials[1].UpdateMainTextureColors(armsTexturePixels);
-            reinforcedSuitRenderer.materials[1].SetTexture("_MainTex", reinforcedSuitRenderer.materials[1].mainTexture);
-            reinforcedSuitRenderer.materials[1].SetTexture("_SpecTex", reinforcedSuitRenderer.materials[1].mainTexture);
+            reinforcedSuitRenderer.materials[1].SetTexture(mainTex, reinforcedSuitRenderer.materials[1].mainTexture);
+            reinforcedSuitRenderer.materials[1].SetTexture(specTex, reinforcedSuitRenderer.materials[1].mainTexture);
 
             SkinnedMeshRenderer reinforcedGlovesRenderer = playerModel.GetRenderer(REINFORCED_GLOVES_GAME_OBJECT_NAME);
             reinforcedGlovesRenderer.material.UpdateMainTextureColors(glovePixelIndexes);

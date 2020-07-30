@@ -35,7 +35,7 @@ namespace NitroxClient.GameLogic.PlayerModel
 
         public void BeginApplyPlayerColor(INitroxPlayer player)
         {
-            Multiplayer.Main.StartCoroutine(ApplyPlayerColor(player, colorSwapManagers));
+            Multiplayer.Instance.StartCoroutine(ApplyPlayerColor(player, colorSwapManagers));
         }
 
         public void UpdateEquipmentVisibility(GameObject playerModel, ReadOnlyCollection<TechType> currentEquipment)

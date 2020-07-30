@@ -89,7 +89,6 @@ namespace NitroxClient.GameLogic.InitialSync
             {
                 foreach (NitroxTechType techType in techTypes)
                 {
-                    HashSet<TechType> complete = (HashSet<TechType>)(typeof(PDAScanner).GetField("complete", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null));
                     KnownTech.Add(techType.ToUnity(), false);
                 }
             }
@@ -107,11 +106,8 @@ namespace NitroxClient.GameLogic.InitialSync
                 {
                     if (!entries.ContainsKey(logEntry.Key))
                     {
-                        PDALog.EntryData entryData;
-                        PDALog.GetEntryData(logEntry.Key, out entryData);
-                        PDALog.Entry entry = new PDALog.Entry();
-                        entry.data = entryData;
-                        entry.timestamp = logEntry.Timestamp;
+                        PDALog.GetEntryData(logEntry.Key, out PDALog.EntryData entryData);
+                        PDALog.Entry entry = new PDALog.Entry { data = entryData, timestamp = logEntry.Timestamp };
                         entries.Add(entryData.key, entry);
 
                         if (entryData.key == "Story_AuroraWarning4")

@@ -11,6 +11,9 @@ namespace NitroxClient.GameLogic.PlayerModel.ColorSwap
 {
     public class RadiationTankColorSwapManager : IColorSwapManager
     {
+        private static readonly int mainTex = Shader.PropertyToID("_MainTex");
+        private static readonly int specTex = Shader.PropertyToID("_SpecTex");
+
         public Action<ColorSwapAsyncOperation> CreateColorSwapTask(INitroxPlayer nitroxPlayer)
         {
             GameObject playerModel = nitroxPlayer.PlayerModel;
@@ -41,8 +44,8 @@ namespace NitroxClient.GameLogic.PlayerModel.ColorSwap
             SkinnedMeshRenderer radiationTankRenderer = playerModel.GetRenderer(RADIATION_TANK_GAME_OBJECT_NAME);
 
             radiationTankRenderer.material.UpdateMainTextureColors(tankPixels);
-            radiationTankRenderer.material.SetTexture("_MainTex", radiationTankRenderer.material.mainTexture);
-            radiationTankRenderer.material.SetTexture("_SpecTex", radiationTankRenderer.material.mainTexture);
+            radiationTankRenderer.material.SetTexture(mainTex, radiationTankRenderer.material.mainTexture);
+            radiationTankRenderer.material.SetTexture(specTex, radiationTankRenderer.material.mainTexture);
         }
     }
 }

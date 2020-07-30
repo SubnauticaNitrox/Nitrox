@@ -19,7 +19,7 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
         private static readonly Color FOOD_BAR_BORDER_COLOR = new Color(0.957f, 0.914f, 0.251f, 1.0f);
         private static readonly Color WATER_BAR_COLOR = new Color(0.212f, 0.663f, 0.855f, 1.0f);
         private static readonly Color WATER_BAR_BORDER_COLOR = new Color(0.227f, 0.949f, 0.969f, 1.0f);
-        private Canvas canvas;
+        private Canvas vitalCanvas;
         private Bar foodBar;
         private Bar healthBar;
         private Bar oxygenBar;
@@ -38,11 +38,11 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
             RemotePlayerVitals vitals = new GameObject().AddComponent<RemotePlayerVitals>();
             RemotePlayer remotePlayer = NitroxServiceLocator.LocateService<PlayerManager>().Find(playerId).Value;
 
-            vitals.canvas = vitals.CreateCanvas(remotePlayer.Body.transform);
+            vitals.vitalCanvas = vitals.CreateCanvas(remotePlayer.Body.transform);
 
             vitals.playerName = remotePlayer.PlayerName;
-            vitals.CreatePlayerName(vitals.canvas);
-            vitals.CreateStats(vitals.canvas);
+            vitals.CreatePlayerName(vitals.vitalCanvas);
+            vitals.CreateStats(vitals.vitalCanvas);
 
             return vitals;
         }
@@ -77,9 +77,9 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
 
             // Make canvas face camera.
             Camera camera = Camera.main;
-            if (canvas && camera)
+            if (vitalCanvas && camera)
             {
-                canvas.transform.forward = camera.transform.forward;
+                vitalCanvas.transform.forward = camera.transform.forward;
             }
         }
 
@@ -172,16 +172,14 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
 
         private void CreatePlayerName(Canvas canvas)
         {
-            GameObject name;
-            Text nameText;
-            RectTransform namePosition;
+            GameObject nameObject;
 
             // Text
-            name = new GameObject();
-            name.transform.parent = canvas.transform;
-            name.name = "RemotePlayerName";
+            nameObject = new GameObject();
+            nameObject.transform.parent = canvas.transform;
+            nameObject.name = "RemotePlayerName";
 
-            nameText = name.AddComponent<Text>();
+            Text nameText = nameObject.AddComponent<Text>();
             nameText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             nameText.text = playerName;
             Transform nameTransform = nameText.transform;
@@ -191,7 +189,7 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
             nameText.alignment = TextAnchor.MiddleCenter;
 
             // Text position
-            namePosition = name.GetComponent<RectTransform>();
+            RectTransform namePosition = nameObject.GetComponent<RectTransform>();
             namePosition.localPosition = new Vector3(0, 0.4f, 0);
             namePosition.sizeDelta = new Vector2(200, 100);
         }

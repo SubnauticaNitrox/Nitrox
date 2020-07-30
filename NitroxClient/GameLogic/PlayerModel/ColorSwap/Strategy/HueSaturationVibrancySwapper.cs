@@ -14,17 +14,6 @@ namespace NitroxClient.GameLogic.PlayerModel.ColorSwap.Strategy
             Color.RGBToHSV(playerColor, out replacementHue, out replacementSaturation, out replacementVibrancy);
         }
 
-        public Color SwapColor(Color originalColor)
-        {
-            float currentHue;
-            float currentSaturation;
-            float currentVibrancy;
-            float currentAlpha = originalColor.a;
-            Color.RGBToHSV(originalColor, out currentHue, out currentSaturation, out currentVibrancy);
-
-            return Color
-                .HSVToRGB(replacementHue, replacementSaturation, replacementVibrancy)
-                .WithAlpha(currentAlpha);
-        }
+        public Color SwapColor(Color originalColor) => Color.HSVToRGB(replacementHue, replacementSaturation, replacementVibrancy).WithAlpha(originalColor.a);
     }
 }

@@ -11,6 +11,9 @@ namespace NitroxClient.GameLogic.PlayerModel.ColorSwap
 {
     public class ScubaTankColorSwapManager : IColorSwapManager
     {
+        private static readonly int mainTex = Shader.PropertyToID("_MainTex");
+        private static readonly int specTex = Shader.PropertyToID("_SpecTex");
+
         public Action<ColorSwapAsyncOperation> CreateColorSwapTask(INitroxPlayer nitroxPlayer)
         {
             GameObject playerModel = nitroxPlayer.PlayerModel;
@@ -41,8 +44,8 @@ namespace NitroxClient.GameLogic.PlayerModel.ColorSwap
             SkinnedMeshRenderer scubaTankRenderer = playerModel.GetRenderer(SCUBA_TANK_GAME_OBJECT_NAME);
 
             scubaTankRenderer.material.UpdateMainTextureColors(scubaTankPixelIndexes);
-            scubaTankRenderer.material.SetTexture("_MainTex", scubaTankRenderer.material.mainTexture);
-            scubaTankRenderer.material.SetTexture("_SpecTex", scubaTankRenderer.material.mainTexture);
+            scubaTankRenderer.material.SetTexture(mainTex, scubaTankRenderer.material.mainTexture);
+            scubaTankRenderer.material.SetTexture(specTex, scubaTankRenderer.material.mainTexture);
         }
     }
 }

@@ -17,23 +17,23 @@ namespace NitroxClient.GameLogic
     {
         /*
          * When creating additional escape pods (multiple users with multiple pods)
-         * we want to supress the escape pod's awake method so it doesn't override
+         * we want to suppress the escape pod's awake method so it doesn't override
          * EscapePod.main to the new escape pod.
          */
-        public static bool SURPRESS_ESCAPE_POD_AWAKE_METHOD;
-        
+        private static readonly int lifepodDamage = Animator.StringToHash("lifepod_damage");
+
+        public static bool SuppressEscapePodAwakeMethod { get; private set; }
+
         private readonly IPacketSender packetSender;
-        private readonly IMultiplayerSession multiplayerSession;
 
         private readonly Vector3 playerSpawnRelativeToEscapePodPosition = new Vector3(0.9f, 2.1f, 0);
         private readonly Dictionary<NitroxId, GameObject> escapePodsById = new Dictionary<NitroxId, GameObject>();
 
-        public NitroxId MyEscapePodId;
+        private NitroxId myEscapePodId;
 
-        public EscapePodManager(IPacketSender packetSender, IMultiplayerSession multiplayerSession)
+        public EscapePodManager(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
-            this.multiplayerSession = multiplayerSession;
         }
 
         public void AssignPlayerToEscapePod(EscapePodModel escapePod)
@@ -44,7 +44,7 @@ namespace NitroxClient.GameLogic
             EscapePod.main.playerSpawn.position = escapePod.Location.ToUnity() + playerSpawnRelativeToEscapePodPosition; // This Might not correctly handle rotated EscapePods
 
             Rigidbody rigidbody = EscapePod.main.GetComponent<Rigidbody>();
-            if (rigidbody != null)
+            if (rigidbody)
             {
                 Log.Debug("Freezing escape pod rigidbody");
                 rigidbody.constraints = RigidbodyConstraints.FreezeAll;
@@ -59,7 +59,7 @@ namespace NitroxClient.GameLogic
 
             Player.main.escapePod.Update(true); // Tells the game to update various EscapePod features
 
-            MyEscapePodId = escapePod.Id;
+            myEscapePodId = escapePod.Id;
         }
 
         public void AddNewEscapePod(EscapePodModel escapePod)
@@ -81,20 +81,11 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        public GameObject CreateNewEscapePod(EscapePodModel model)
+        private GameObject CreateNewEscapePod(EscapePodModel model)
         {
-            SURPRESS_ESCAPE_POD_AWAKE_METHOD = true;
+            SuppressEscapePodAwakeMethod = true;
 
-            GameObject escapePod;
-
-            if (model.Id == MyEscapePodId)
-            {
-                escapePod = EscapePod.main.gameObject;
-            }
-            else
-            {
-                escapePod = Object.Instantiate(EscapePod.main.gameObject);
-            }
+            GameObject escapePod = model.Id.Equals(myEscapePodId) ? EscapePod.main.gameObject : Object.Instantiate(EscapePod.main.gameObject);
 
             escapePod.transform.position = model.Location.ToUnity();
 
@@ -118,12 +109,12 @@ namespace NitroxClient.GameLogic
 
             DamageEscapePod(model.Damaged, model.RadioDamaged);
 
-            SURPRESS_ESCAPE_POD_AWAKE_METHOD = false;
+            SuppressEscapePodAwakeMethod = false;
 
             return escapePod;
         }
 
-        public void DamageEscapePod(bool damage, bool radio)
+        private void DamageEscapePod(bool damage, bool radio)
         {
             if (damage)
             {
@@ -137,7 +128,7 @@ namespace NitroxClient.GameLogic
             else
             {
                 EscapePod.main.liveMixin.health = EscapePod.main.liveMixin.maxHealth;
-                EscapePod.main.animator.SetFloat("lifepod_damage", 1.0f);
+                EscapePod.main.animator.SetFloat(lifepodDamage, 1.0f);
             }
 
             if (radio)
@@ -152,7 +143,7 @@ namespace NitroxClient.GameLogic
             {
                 EscapePod pod = escapePodsById[id].GetComponent<EscapePod>();
                 pod.liveMixin.health = pod.liveMixin.maxHealth;
-                pod.animator.SetFloat("lifepod_damage", 1.0f);
+                pod.animator.SetFloat(lifepodDamage, 1.0f);
                 pod.fixPanelGoal.Trigger();
                 pod.fixPanelPowerUp.Play();
             } else

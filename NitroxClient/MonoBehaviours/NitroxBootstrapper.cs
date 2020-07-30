@@ -19,7 +19,7 @@ namespace NitroxClient.MonoBehaviours
             CreateDebugger();
         }
 
-        private void EnableDeveloperFeatures()
+        private static void EnableDeveloperFeatures()
         {
             Log.Info("Enabling developer console.");
             DevConsole.disableConsole = false;
@@ -29,8 +29,7 @@ namespace NitroxClient.MonoBehaviours
 
         private void CreateDebugger()
         {
-            GameObject debugger = new GameObject();
-            debugger.name = "Debug manager";
+            GameObject debugger = new GameObject { name = "Debug manager" };
             debugger.AddComponent<NitroxDebugManager>();
             debugger.transform.SetParent(transform);
         }

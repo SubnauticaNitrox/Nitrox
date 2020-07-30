@@ -14,13 +14,11 @@ namespace NitroxClient.GameLogic.InitialSync
     {
         private readonly IPacketSender packetSender;
         private readonly StorageSlots slots;
-        private readonly Vehicles vehicles;
 
-        public StorageSlotsInitialSyncProcessor(IPacketSender packetSender, StorageSlots slots, Vehicles vehicles)
+        public StorageSlotsInitialSyncProcessor(IPacketSender packetSender, StorageSlots slots)
         {
             this.packetSender = packetSender;
             this.slots = slots;
-            this.vehicles = vehicles;
 
             DependentProcessors.Add(typeof(VehicleInitialSyncProcessor));
             //Items with batteries can also have battery slots

@@ -22,7 +22,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
     public class JoinServer : MonoBehaviour
     {
         private static readonly GameObject colorPickerPanelPrototype = Resources.Load<GameObject>("WorldEntities/Tools/RocketBase")
-            .RequireGameObject("Base/BuildTerminal/GUIScreen/CustomizeScreen/Panel/");
+                                                                                .RequireGameObject("Base/BuildTerminal/GUIScreen/CustomizeScreen/Panel/");
 
         private PlayerPreference activePlayerPreference;
         private bool isSubscribed;
@@ -57,13 +57,9 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             //Initialize elements from preferences
             activePlayerPreference = preferencesManager.GetPreference(ServerIp);
 
-            float hue;
-            float saturation;
-            float vibrancy;
-
             Color playerColor = new Color(activePlayerPreference.RedAdditive, activePlayerPreference.GreenAdditive, activePlayerPreference.BlueAdditive);
 
-            Color.RGBToHSV(playerColor, out hue, out saturation, out vibrancy);
+            Color.RGBToHSV(playerColor, out float hue, out float _, out float vibrancy);
             uGUI_ColorPicker colorPicker = playerSettingsPanel.GetComponentInChildren<uGUI_ColorPicker>();
             colorPicker.SetHSB(new Vector3(hue, 1f, vibrancy));
 
@@ -78,7 +74,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         public void Update()
         {
             if (multiplayerSession.CurrentState.CurrentStage != MultiplayerSessionConnectionStage.AWAITING_RESERVATION_CREDENTIALS ||
-                gameObject.GetComponent<MainMenuNotification>() != null)
+                gameObject.GetComponent<MainMenuNotification>())
             {
                 return;
             }
@@ -107,9 +103,9 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             Destroy(joinServerMenu);
         }
 
-        private static GameObject CloneSaveGameMenuPrototype()
+        private void CloneSaveGameMenuPrototype()
         {
-            GameObject joinServerMenu = Instantiate(SaveGameMenuPrototype);
+            joinServerMenu = Instantiate(SaveGameMenuPrototype);
             Destroy(joinServerMenu.RequireGameObject("Header"));
             Destroy(joinServerMenu.RequireGameObject("Scroll View"));
             Destroy(joinServerMenu.GetComponent<LayoutGroup>());
@@ -118,14 +114,12 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
             //We cannot register click events on child transforms if they are being captured here.
             joinServerMenu.GetComponent<CanvasGroup>().blocksRaycasts = false;
-
-            return joinServerMenu;
         }
 
-        private static GameObject CloneColorPickerPanelPrototype()
+        private void CloneColorPickerPanelPrototype()
         {
             //Create a clone of the RocketBase color picker panel.
-            GameObject playerSettingsPanel = Instantiate(colorPickerPanelPrototype);
+            playerSettingsPanel = Instantiate(colorPickerPanelPrototype);
             GameObject baseTab = playerSettingsPanel.RequireGameObject("BaseTab");
             GameObject serverNameLabel = playerSettingsPanel.RequireGameObject("Name Label");
             GameObject stripe1Tab = playerSettingsPanel.RequireGameObject("Stripe1Tab");
@@ -155,8 +149,6 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             //Destruction of the actual overlay game object is done for good measure.
             Destroy(frontOverlay.GetComponent<Image>());
             Destroy(frontOverlay);
-
-            return playerSettingsPanel;
         }
 
         //This panel acts as the parent of all other UI elements on the menu. It is parented by the cloned "SaveGame" menu.
@@ -305,7 +297,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         private void UnsubscribeColorChanged()
         {
-            if (playerSettingsPanel == null || !isSubscribed)
+            if (!playerSettingsPanel || !isSubscribed)
             {
                 return;
             }
@@ -338,8 +330,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         {
             if (multiplayerClient == null)
             {
-                multiplayerClient = new GameObject();
-                multiplayerClient.name = "Multiplayer Client";
+                multiplayerClient = new GameObject { name = "Multiplayer Client" };
                 multiplayerClient.AddComponent<Multiplayer>();
                 multiplayerSession.ConnectionStateChanged += SessionConnectionStateChangedHandler;
             }
@@ -354,14 +345,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
                 if (ServerIp.Equals("127.0.0.1"))
                 {
-                    if (Process.GetProcessesByName("NitroxServer-Subnautica").Length == 0)
-                    {
-                        Log.InGame("Start your server first to join your self-hosted world");
-                    }
-                    else
-                    {
-                        Log.InGame("Seems like your firewall settings are interfering");
-                    }
+                    Log.InGame(Process.GetProcessesByName("NitroxServer-Subnautica").Length == 0 ? "Start your server first to join your self-hosted world" : "Seems like your firewall settings are interfering");
                 }
                 OnCancelClick();
             }
@@ -458,19 +442,19 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         private void NotifyUser(string notificationMessage, Action continuationAction = null)
         {
-            if (gameObject.GetComponent<MainMenuNotification>() != null)
+            if (gameObject.GetComponent<MainMenuNotification>())
             {
                 return;
             }
 
-            Action wrappedAction = () =>
+            void WrappedAction()
             {
                 continuationAction?.Invoke();
                 Destroy(gameObject.GetComponent<MainMenuNotification>(), 0.0001f);
-            };
+            }
 
             MainMenuNotification notificationDialog = gameObject.AddComponent<MainMenuNotification>();
-            notificationDialog.ShowNotification(notificationMessage, wrappedAction);
+            notificationDialog.ShowNotification(notificationMessage, WrappedAction);
         }
 
         private void StopMultiplayerClient()
@@ -480,7 +464,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 return;
             }
 
-            Multiplayer.Main.StopCurrentSession();
+            Multiplayer.Instance.StopCurrentSession();
             Destroy(multiplayerClient);
             multiplayerClient = null;
             if (multiplayerSession != null)
@@ -492,7 +476,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         //This method merges the cloned color picker element with the existing template for menus that appear in the "right side" region of Subnautica's main menu.
         private void InitializeJoinMenu()
         {
-            GameObject joinServerMenu = CloneSaveGameMenuPrototype();
+            CloneSaveGameMenuPrototype();
             joinServerMenu.name = "Join Server";
 
             joinServerMenu.transform.SetParent(RightSideMainMenu.transform, false);
@@ -507,14 +491,12 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             joinServerBackground.anchoredPosition = new Vector2(joinServerBackground.anchoredPosition.x, 5f);
 
             InitializePlayerSettingsPanel(joinServerBackground);
-
-            this.joinServerMenu = joinServerMenu;
         }
 
         //This configures and re-positions the elements on the default "ColorGrayscale" menu to suite our purposes now.
         private void InitializePlayerSettingsPanel(RectTransform joinServerBackground)
         {
-            GameObject playerSettingsPanel = CloneColorPickerPanelPrototype();
+            CloneColorPickerPanelPrototype();
 
             InitializePlayerSettingsPanelElement(joinServerBackground, playerSettingsPanel);
             InitializeBaseTabElement(joinServerBackground, playerSettingsPanel);
@@ -523,8 +505,6 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             InitializeColorPickerComponent(playerSettingsPanel);
             InitializeColorPickerElement(playerSettingsPanel);
             InitializeButtonElements(joinServerBackground, playerSettingsPanel);
-
-            this.playerSettingsPanel = playerSettingsPanel;
         }
 
         //Join and Cancel buttons

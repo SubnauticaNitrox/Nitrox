@@ -17,6 +17,7 @@ using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.DataStructures.GameLogic;
 using NitroxModel_Subnautica.Helper;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace NitroxClient.GameLogic
 {
@@ -44,7 +45,7 @@ namespace NitroxClient.GameLogic
             if (VehicleHelper.IsVehicle(techType))
             {
                 List<InteractiveChildObjectIdentifier> childIdentifiers = VehicleChildObjectIdentifierHelper.ExtractInteractiveChildren(gameObject);
-                Optional<Vehicle> opvehicle = Optional.OfNullable(gameObject.GetComponent<Vehicle>());
+                Optional<Vehicle> opVehicle = Optional.OfNullable(gameObject.GetComponent<Vehicle>());
 
                 NitroxId constructedObjectId = NitroxEntity.GetId(gameObject);
                 NitroxVector3[] hsb = VehicleHelper.GetPrimalDefaultColours();
@@ -53,21 +54,21 @@ namespace NitroxClient.GameLogic
 
                 if (opvehicle.HasValue)
                 { //Seamoth & Exosuit
-                    Optional<LiveMixin> livemixin = Optional.OfNullable(opvehicle.Value.GetComponent<LiveMixin>());
+                    Optional<LiveMixin> livemixin = Optional.OfNullable(opVehicle.Value.GetComponent<LiveMixin>());
 
                     if (livemixin.HasValue)
                     {
                         health = livemixin.Value.health;
                     }
 
-                    name = opvehicle.Value.GetName();
+                    name = opVehicle.Value.GetName();
 
                     if (techType == TechType.Exosuit)
                     {   //For odd reasons the default colors aren't set yet for exosuit so we force it
-                        opvehicle.Value.ReflectionCall("RegenerateRenderInfo", false, false);
+                        opVehicle.Value.ReflectionCall("RegenerateRenderInfo", false, false);
                     }
 
-                    hsb = opvehicle.Value.subName.AliveOrNull()?.GetColors().ToDto();
+                    hsb = opVehicle.Value.subName.AliveOrNull()?.GetColors().ToDto();
                 }
                 else if (techType == TechType.Cyclops)
                 { //Cyclops
@@ -119,10 +120,8 @@ namespace NitroxClient.GameLogic
                     health
                 );
             }
-            else
-            {
-                Log.Error($"{nameof(Vehicles)}: Impossible to build from a non-vehicle GameObject (Received {techType})");
-            }
+
+            Log.Error($"{nameof(Vehicles)}: Impossible to build from a non-vehicle GameObject (Received {techType})");
 
             return null;
         }
@@ -167,7 +166,7 @@ namespace NitroxClient.GameLogic
         public void CreateVehicle(VehicleModel vehicleModel)
         {
             AddVehicle(vehicleModel);
-            CreateVehicle(vehicleModel.TechType.ToUnity(), vehicleModel.Id, vehicleModel.Position.ToUnity(), vehicleModel.Rotation.ToUnity(), vehicleModel.InteractiveChildIdentifiers, vehicleModel.DockingBayId, vehicleModel.Name, vehicleModel.HSB.ToUnity(), vehicleModel.Health);
+            CreateVehicle(vehicleModel.TechType.ToUnity(), vehicleModel.Id, vehicleModel.Transform.Position.ToUnity(), vehicleModel.Transform.Rotation.ToUnity(), vehicleModel.InteractiveChildIdentifiers, vehicleModel.DockingBayId, vehicleModel.Name, vehicleModel.HSB.ToUnity(), vehicleModel.Health);
         }
 
         public void CreateVehicle(TechType techType, NitroxId id, Vector3 position, Quaternion rotation, IEnumerable<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, Vector3[] hsb, float health)
@@ -356,11 +355,10 @@ namespace NitroxClient.GameLogic
 
         public void DestroyVehicle(NitroxId id, bool isPiloting)
         {
-            Optional<GameObject> Object = NitroxEntity.GetObjectFrom(id);
-            if (Object.HasValue)
+            Optional<GameObject> gameObject = NitroxEntity.GetObjectFrom(id);
+            if (gameObject.HasValue)
             {
-                GameObject go = Object.Value;
-                Vehicle vehicle = go.RequireComponent<Vehicle>();
+                Vehicle vehicle = gameObject.Value.RequireComponent<Vehicle>();
 
                 if (isPiloting) //Check Remote Object Have Player inside
                 {
@@ -393,12 +391,12 @@ namespace NitroxClient.GameLogic
                 {
                     if (vehicle.destructionEffect)
                     {
-                        GameObject gameObject = UnityEngine.Object.Instantiate<GameObject>(vehicle.destructionEffect);
-                        gameObject.transform.position = vehicle.transform.position;
-                        gameObject.transform.rotation = vehicle.transform.rotation;
+                        GameObject vehicleGameObject = Object.Instantiate(vehicle.destructionEffect);
+                        vehicleGameObject.transform.position = vehicle.transform.position;
+                        vehicleGameObject.transform.rotation = vehicle.transform.rotation;
                     }
 
-                    UnityEngine.Object.Destroy(vehicle.gameObject);
+                    Object.Destroy(vehicle.gameObject);
                     RemoveVehicle(id);
                 }
             }
@@ -502,7 +500,7 @@ namespace NitroxClient.GameLogic
 
         /*
          A poorly timed movement packet will cause major problems when docking because the remote 
-         player will think that the player is no longer in a vehicle.  Unfortunetly, the game calls
+         player will think that the player is no longer in a vehicle.  Unfortunately, the game calls
          the vehicle exit code before the animation completes so we need to suppress any side affects.
          Two thing we want to protect against:
 
@@ -510,7 +508,7 @@ namespace NitroxClient.GameLogic
                 and it will show them sitting outside the vehicle during the docking animation.
 
              2) If a movement packet is received when undocking, the player game object will be stuck in
-                place until after the player exits the vehicle.  This causes the player body to strech to
+                place until after the player exits the vehicle.  This causes the player body to stretch to
                 the current cyclops position.
         */
         public IEnumerator AllowMovementPacketsAfterDockingAnimation(PacketSuppressor<Movement> movementSuppressor)
@@ -585,8 +583,7 @@ namespace NitroxClient.GameLogic
 
         public Optional<T> TryGetVehicle<T>(NitroxId vehicleId) where T : VehicleModel
         {
-            VehicleModel vehicle;
-            vehiclesById.TryGetValue(vehicleId, out vehicle);
+            vehiclesById.TryGetValue(vehicleId, out VehicleModel vehicle);
             return Optional.OfNullable((T)vehicle);
         }
     }

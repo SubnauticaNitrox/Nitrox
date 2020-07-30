@@ -35,7 +35,7 @@ namespace NitroxClient.Communication.Packets.Processors
             this.packet = packet;
             loadingMultiplayerWaitItem = WaitScreen.Add("Syncing Multiplayer World");
             cumulativeProcessorsRan = 0;
-            Multiplayer.Main.StartCoroutine(ProcessInitialSyncPacket());
+            Multiplayer.Instance.StartCoroutine(ProcessInitialSyncPacket());
         }
 
         private IEnumerator ProcessInitialSyncPacket()
@@ -46,7 +46,7 @@ namespace NitroxClient.Communication.Packets.Processors
                 bool moreProcessorsToRun;
                 do
                 {
-                    yield return Multiplayer.Main.StartCoroutine(RunPendingProcessors());
+                    yield return Multiplayer.Instance.StartCoroutine(RunPendingProcessors());
 
                     moreProcessorsToRun = alreadyRan.Count < processors.Count;
                     if (moreProcessorsToRun && processorsRanLastCycle == 0)
@@ -57,7 +57,7 @@ namespace NitroxClient.Communication.Packets.Processors
             }
 
             WaitScreen.Remove(loadingMultiplayerWaitItem);
-            Multiplayer.Main.InitialSyncCompleted = true;
+            Multiplayer.Instance.InitialSyncCompleted = true;
         }
 
         private IEnumerator RunPendingProcessors()
@@ -76,7 +76,7 @@ namespace NitroxClient.Communication.Packets.Processors
                     cumulativeProcessorsRan++;
 
                     WaitScreen.ManualWaitItem subWaitScreenItem = WaitScreen.Add("Running " + processor.GetType().Name);
-                    yield return Multiplayer.Main.StartCoroutine(processor.Process(packet, subWaitScreenItem));
+                    yield return Multiplayer.Instance.StartCoroutine(processor.Process(packet, subWaitScreenItem));
                     WaitScreen.Remove(subWaitScreenItem);
                 }
             }

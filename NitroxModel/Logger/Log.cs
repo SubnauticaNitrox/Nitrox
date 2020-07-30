@@ -128,8 +128,8 @@ namespace NitroxModel.Logger
         public static void Warn(string message) => logger.Warn(message);
         public static void Warn(object message) => Warn(message?.ToString());
 
-        public static void Error(Exception ex) => logger.Error(ex);
-        public static void Error(Exception ex, string message) => logger.Error(ex, message);
+        public static void Error(Exception ex) => logger.Error().Exception(ex).Write();
+        public static void Error(Exception ex, string message) => logger.Error().Exception(ex).Message(message).Write();
         public static void Error(string message) => logger.Error(message);
 
         public static void InGame(object message) => InGame(message?.ToString());
@@ -148,42 +148,10 @@ namespace NitroxModel.Logger
         }
 
         [Conditional("DEBUG")]
-        public static void DebugSensitive(string message, params object[] args)
-        {
-            logger
-                .WithProperty("sensitive", true)
-                .Debug()
-                .Message(message, args)
-                .Write();
-        }
-
-        public static void InfoSensitive(string message, params object[] args)
-        {
-            logger
-                .WithProperty("sensitive", true)
-                .Info()
-                .Message(message, args)
-                .Write();
-        }
-
-        public static void ErrorSensitive(Exception ex, string message, params object[] args)
-        {
-            logger
-                .WithProperty("sensitive", true)
-                .Error()
-                .Exception(ex)
-                .Message(message, args)
-                .Write();
-        }
-
-        public static void ErrorSensitive(string message, params object[] args)
-        {
-            logger
-                .WithProperty("sensitive", true)
-                .Error()
-                .Message(message, args)
-                .Write();
-        }
+        public static void DebugSensitive(string message, params object[] args) => logger.WithProperty("sensitive", true).Debug().Message(message, args).Write();
+        public static void InfoSensitive(string message, params object[] args) => logger.WithProperty("sensitive", true).Info().Message(message, args).Write();
+        public static void ErrorSensitive(Exception ex, string message, params object[] args) => logger.WithProperty("sensitive", true).Error().Exception(ex).Message(message, args).Write();
+        public static void ErrorSensitive(string message, params object[] args) => logger.WithProperty("sensitive", true).Error().Message(message, args).Write();
 
         public static void InGameSensitive(string message, params object[] args)
         {
@@ -203,11 +171,13 @@ namespace NitroxModel.Logger
         /// <summary>
         ///     Get log file friendly name of the application that is currently logging.
         /// </summary>
-        /// <returns>Friendly display name of the current application.</returns>
+        /// <returns>Friendly display name of the current application</returns>
         private static string GetLoggerName()
         {
-            string name = Assembly.GetEntryAssembly()?.GetName().Name ?? "Client"; // Unity Engine does not set Assembly name so lets default to 'Client'.
-            return name.IndexOf("server", StringComparison.InvariantCultureIgnoreCase) >= 0 ? "Server" : name;
+            string name = (Assembly.GetEntryAssembly()?.GetName().Name ?? "Client").Contains("Server") ? "Server" : "Client"; // Unity Engine does not set Assembly name so lets default to 'Client'.
+            string name2 = Assembly.GetEntryAssembly()?.GetName().Name.Contains("Server") ?? false ? "Server" : "Client"; // Unity Engine does not set Assembly name so lets default to 'Client'.
+            //return name.Contains("Server") ? "Server" : name;
+            return name2;
         }
 
         /// <summary>

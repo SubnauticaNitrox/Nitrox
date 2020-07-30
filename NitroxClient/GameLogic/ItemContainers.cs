@@ -87,16 +87,16 @@ namespace NitroxClient.GameLogic
 
         public NitroxId GetCyclopsLockerId(Transform ownerTransform)
         {
-            string LockerId = ownerTransform.gameObject.name.Substring(7, 1);
-            GameObject locker = ownerTransform.parent.gameObject.FindChild("submarine_locker_01_0" + LockerId);
+            string lockerId = ownerTransform.gameObject.name.Substring(7, 1);
+            GameObject locker = ownerTransform.parent.gameObject.FindChild("submarine_locker_01_0" + lockerId);
             if (!locker)
             {
-                throw new Exception("Could not find Locker Object: submarine_locker_01_0" + LockerId);
+                throw new IndexOutOfRangeException("Could not find Locker Object: submarine_locker_01_0" + lockerId);
             }
             StorageContainer storageContainer = locker.GetComponentInChildren<StorageContainer>();
             if (!storageContainer)
             {
-                throw new Exception($"Could not find {nameof(StorageContainer)} From Object: submarine_locker_01_0{LockerId}");
+                throw new NullReferenceException($"Could not find {nameof(StorageContainer)} From Object: submarine_locker_01_0{lockerId}");
             }
 
             return NitroxEntity.GetId(storageContainer.gameObject);
@@ -104,19 +104,17 @@ namespace NitroxClient.GameLogic
 
         public NitroxId GetEscapePodStorageId(Transform ownerTransform)
         {
-            StorageContainer SC = ownerTransform.parent.gameObject.RequireComponentInChildren<StorageContainer>();
-            return NitroxEntity.GetId(SC.gameObject);
+            StorageContainer sc = ownerTransform.parent.gameObject.RequireComponentInChildren<StorageContainer>();
+            return NitroxEntity.GetId(sc.gameObject);
         }
 
         private NitroxId GetOwner(Transform ownerTransform)
         {
-            bool isCyclopsLocker = Regex.IsMatch(ownerTransform.gameObject.name, @"Locker0([0-9])StorageRoot$", RegexOptions.IgnoreCase);
-            if (isCyclopsLocker)
+            if (Regex.IsMatch(ownerTransform.gameObject.name, @"Locker0([0-9])StorageRoot$", RegexOptions.IgnoreCase)) //Is cyclops locker
             {
                 return GetCyclopsLockerId(ownerTransform);
             }
-            bool isEscapePodStorage = ownerTransform.parent.name.StartsWith("EscapePod");
-            if (isEscapePodStorage)
+            if (ownerTransform.parent.name.StartsWith("EscapePod")) //Is escape pod locker
             {
                 return GetEscapePodStorageId(ownerTransform);
             }

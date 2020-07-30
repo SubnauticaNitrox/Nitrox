@@ -11,6 +11,9 @@ namespace NitroxClient.GameLogic.PlayerModel.ColorSwap
 {
     public class StillSuitColorSwapManager : IColorSwapManager
     {
+        private static readonly int mainTex = Shader.PropertyToID("_MainTex");
+        private static readonly int specTex = Shader.PropertyToID("_SpecTex");
+
         public Action<ColorSwapAsyncOperation> CreateColorSwapTask(INitroxPlayer nitroxPlayer)
         {
             GameObject playerModel = nitroxPlayer.PlayerModel;
@@ -46,12 +49,12 @@ namespace NitroxClient.GameLogic.PlayerModel.ColorSwap
 
             SkinnedMeshRenderer stillSuitRenderer = playerModel.GetRenderer(STILL_SUIT_GAME_OBJECT_NAME);
             stillSuitRenderer.material.UpdateMainTextureColors(bodyPixelIndexes);
-            stillSuitRenderer.material.SetTexture("_MainTex", stillSuitRenderer.material.mainTexture);
-            stillSuitRenderer.material.SetTexture("_SpecTex", stillSuitRenderer.material.mainTexture);
+            stillSuitRenderer.material.SetTexture(mainTex, stillSuitRenderer.material.mainTexture);
+            stillSuitRenderer.material.SetTexture(specTex, stillSuitRenderer.material.mainTexture);
 
             stillSuitRenderer.materials[1].UpdateMainTextureColors(armsPixelIndexes);
-            stillSuitRenderer.materials[1].SetTexture("_MainTex", stillSuitRenderer.materials[1].mainTexture);
-            stillSuitRenderer.materials[1].SetTexture("_SpecTex", stillSuitRenderer.materials[1].mainTexture);
+            stillSuitRenderer.materials[1].SetTexture(mainTex, stillSuitRenderer.materials[1].mainTexture);
+            stillSuitRenderer.materials[1].SetTexture(specTex, stillSuitRenderer.materials[1].mainTexture);
         }
     }
 }

@@ -10,18 +10,18 @@ namespace NitroxClient.MonoBehaviours
 {
     public class NitroxDebugManager : MonoBehaviour
     {
-        public readonly List<BaseDebugger> Debuggers;
-        public readonly KeyCode EnableDebuggerHotkey = KeyCode.F7;
+        private readonly List<BaseDebugger> debuggers;
+        private readonly KeyCode enableDebuggerHotkey = KeyCode.F7;
         private readonly HashSet<BaseDebugger> prevActiveDebuggers = new HashSet<BaseDebugger>();
         private bool isDebugging;
         private Rect windowRect;
 
         private NitroxDebugManager()
         {
-            Debuggers = NitroxServiceLocator.LocateServicePreLifetime<IEnumerable<BaseDebugger>>().ToList();
+            debuggers = NitroxServiceLocator.LocateServicePreLifetime<IEnumerable<BaseDebugger>>().ToList();
         }
 
-        public static void ToggleCursor()
+        private static void ToggleCursor()
         {
             UWE.Utils.lockCursor = !UWE.Utils.lockCursor;
         }
@@ -37,7 +37,7 @@ namespace NitroxClient.MonoBehaviours
             windowRect = GUILayout.Window(GUIUtility.GetControlID(FocusType.Keyboard), windowRect, DoWindow, "Nitrox debugging");
 
             // Render debugger windows if they are enabled.
-            foreach (BaseDebugger debugger in Debuggers)
+            foreach (BaseDebugger debugger in debuggers)
             {
                 debugger.OnGUI();
             }
@@ -45,7 +45,7 @@ namespace NitroxClient.MonoBehaviours
 
         public void Update()
         {
-            if (Input.GetKeyDown(EnableDebuggerHotkey))
+            if (Input.GetKeyDown(enableDebuggerHotkey))
             {
                 ToggleDebugging();
             }
@@ -59,7 +59,7 @@ namespace NitroxClient.MonoBehaviours
 
                 CheckDebuggerHotkeys();
 
-                foreach (BaseDebugger debugger in Debuggers)
+                foreach (BaseDebugger debugger in debuggers)
                 {
                     if (debugger.Enabled)
                     {
@@ -81,7 +81,7 @@ namespace NitroxClient.MonoBehaviours
             {
                 UWE.Utils.PopLockCursor();
                 HideDebuggers();
-                foreach (BaseDebugger baseDebugger in Debuggers)
+                foreach (BaseDebugger baseDebugger in debuggers)
                 {
                     baseDebugger.ResetWindowPosition();
                 }
@@ -97,7 +97,7 @@ namespace NitroxClient.MonoBehaviours
                     ToggleCursor();
                 }
 
-                foreach (BaseDebugger debugger in Debuggers)
+                foreach (BaseDebugger debugger in debuggers)
                 {
                     string hotkeyString = debugger.GetHotkeyString();
                     debugger.Enabled = GUILayout.Toggle(debugger.Enabled, $"{debugger.DebuggerName} debugger{(!string.IsNullOrEmpty(hotkeyString) ? $" ({hotkeyString})" : "")}");
@@ -107,7 +107,7 @@ namespace NitroxClient.MonoBehaviours
 
         private void CheckDebuggerHotkeys()
         {
-            foreach (BaseDebugger debugger in Debuggers)
+            foreach (BaseDebugger debugger in debuggers)
             {
                 if (Input.GetKeyDown(debugger.Hotkey) && Input.GetKey(KeyCode.LeftControl) == debugger.HotkeyControlRequired && Input.GetKey(KeyCode.LeftShift) == debugger.HotkeyShiftRequired && Input.GetKey(KeyCode.LeftAlt) == debugger.HotkeyAltRequired)
                 {

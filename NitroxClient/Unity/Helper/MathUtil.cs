@@ -2,7 +2,7 @@
 
 namespace NitroxClient.Unity.Helper
 {
-    public class MathUtil
+    public static class MathUtil
     {
         public static Vector3 ClampMagnitude(Vector3 v, float max, float min)
         {

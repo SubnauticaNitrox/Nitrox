@@ -3,17 +3,17 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic.Helper
 {
-    public class InventoryContainerHelper
+    public static class InventoryContainerHelper
     {
         public static Optional<ItemsContainer> GetBasedOnOwnersType(GameObject owner)
         {
             SeamothStorageContainer seamothStorageContainer = owner.GetComponent<SeamothStorageContainer>();
-            if (seamothStorageContainer != null)
+            if (seamothStorageContainer)
             {
                 return Optional.Of(seamothStorageContainer.container);
             }
             StorageContainer storageContainer = owner.GetComponentInChildren<StorageContainer>();
-            if (storageContainer != null)
+            if (storageContainer)
             {
                 return Optional.Of(storageContainer.container);
             }

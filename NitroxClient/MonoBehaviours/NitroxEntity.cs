@@ -40,14 +40,9 @@ namespace NitroxClient.MonoBehaviours
                 return Optional.Empty;
             }
 
-            GameObject gameObject;
-            if (!gameObjectsById.TryGetValue(id, out gameObject))
-            {
-                return Optional.Empty;
-            }
+            return !gameObjectsById.TryGetValue(id, out GameObject gameObject) ? Optional.Empty : Optional.OfNullable(gameObject);
 
             // Nullable incase game object is marked as destroyed
-            return Optional.OfNullable(gameObject);
         }
 
         public static void SetNewId(GameObject gameObject, NitroxId id)
@@ -56,7 +51,7 @@ namespace NitroxClient.MonoBehaviours
             Validate.NotNull(id);
 
             NitroxEntity entity = gameObject.GetComponent<NitroxEntity>();
-            if (entity != null)
+            if (entity)
             {
                 gameObjectsById.Remove(entity.Id);
             }
@@ -92,11 +87,11 @@ namespace NitroxClient.MonoBehaviours
             }
         }
 
-        public void OnProtoSerializeObjectTree(ProtobufSerializer _)
+        public void OnProtoSerializeObjectTree(ProtobufSerializer serializer)
         {
         }
 
-        public void OnProtoDeserializeObjectTree(ProtobufSerializer _)
+        public void OnProtoDeserializeObjectTree(ProtobufSerializer serializer)
         {
             gameObjectsById[Id] = gameObject;
         }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using NitroxModel.DataStructures.Util;
 
 namespace NitroxClient.GameLogic.Helper
@@ -22,7 +21,7 @@ namespace NitroxClient.GameLogic.Helper
             LATEST_DECONSTRUCTED_BASE_PIECE_GUID
         }
 
-        public static Dictionary<TransientObjectType, object> localObjectsById = new Dictionary<TransientObjectType, object>();
+        private static readonly Dictionary<TransientObjectType, object> localObjectsById = new Dictionary<TransientObjectType, object>();
 
         public static void Add(TransientObjectType key, object o)
         {
@@ -36,17 +35,15 @@ namespace NitroxClient.GameLogic.Helper
 
         public static Optional<object> Get(TransientObjectType key)
         {
-            object obj;
-            localObjectsById.TryGetValue(key, out obj);
+            localObjectsById.TryGetValue(key, out object obj);
             return Optional.OfNullable(obj);
         }
 
         public static T Require<T>(TransientObjectType key)
         {
-            object obj;
-            if (!localObjectsById.TryGetValue(key, out obj))
+            if (!localObjectsById.TryGetValue(key, out object obj))
             {
-                throw new Exception("Did not have an entry for key: " + key);
+                throw new KeyNotFoundException("Did not have an entry for key: " + key);
             }
 
             return (T)obj;

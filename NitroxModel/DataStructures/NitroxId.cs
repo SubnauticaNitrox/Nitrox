@@ -64,10 +64,7 @@ namespace NitroxModel.DataStructures
 
         public override bool Equals(object obj)
         {
-            NitroxId id = obj as NitroxId;
-
-            return id != null &&
-                   guid.Equals(id.guid);
+            return x is null && y is null || !(x is null) && x.Equals(y);
         }
 
         public int GetHashCode(NitroxId obj)

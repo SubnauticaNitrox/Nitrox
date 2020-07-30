@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Linq;
 using NitroxClient.GameLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerModel.Abstract;
 using NitroxClient.MonoBehaviours.DiscordRP;
@@ -25,8 +26,7 @@ namespace NitroxClient.GameLogic
 
         public Optional<RemotePlayer> Find(ushort playerId)
         {
-            RemotePlayer player;
-            playersById.TryGetValue(playerId, out player);
+            playersById.TryGetValue(playerId, out RemotePlayer player);
             return Optional.OfNullable(player);
         }
 
@@ -54,7 +54,7 @@ namespace NitroxClient.GameLogic
 
             if (playersById.ContainsKey(playerContext.PlayerId))
             {
-                throw new Exception("The playerId has already been used.");
+                throw new DuplicateKeyException("The playerId has already been used.");
             }
 
             GameObject remotePlayerBody = CloneLocalPlayerBodyPrototype();

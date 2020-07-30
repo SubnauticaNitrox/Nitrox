@@ -15,12 +15,10 @@ namespace NitroxClient.GameLogic
     public class StorageSlots
     {
         private readonly IPacketSender packetSender;
-        private readonly LocalPlayer localPlayer;
 
-        public StorageSlots(IPacketSender packetSender, LocalPlayer localPlayer)
+        public StorageSlots(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
-            this.localPlayer = localPlayer;
         }
 
         public void BroadcastItemAdd(InventoryItem item, GameObject gameObject)
@@ -49,7 +47,7 @@ namespace NitroxClient.GameLogic
 
             if (!owner.HasValue)
             {
-                Log.Error("Could not place " + item.name + " in storageSlot container with id " + containerId);
+                Log.Error($"Could not place {item.name} in storageSlot container with id {containerId}");
                 return;
             }
 
@@ -63,12 +61,12 @@ namespace NitroxClient.GameLogic
                 Pickupable pickupable = item.RequireComponent<Pickupable>();
 
                 // Suppress sound when silent is active
-                // Will be used to suppress swap sound at the initialisation of the game
+                // Will be used to suppress swap sound at the initialization of the game
                 bool allowedToPlaySounds = true;
                 if (silent)
                 {
                     allowedToPlaySounds = (bool)mixin.ReflectionGet("allowedToPlaySounds");
-                    mixin.ReflectionSet("allowedToPlaySounds", !silent);
+                    mixin.ReflectionSet("allowedToPlaySounds", false);
                 }
                 using (packetSender.Suppress<StorageSlotItemAdd>())
                 {
@@ -92,12 +90,12 @@ namespace NitroxClient.GameLogic
                 StorageSlot slot = (StorageSlot)mixin.ReflectionGet("batterySlot");
 
                 // Suppress sound when silent is active
-                // Will be used to suppress swap sound at the initialisation of the game
+                // Will be used to suppress swap sound at the initialization of the game
                 bool allowedToPlaySounds = true;
                 if (silent)
                 {
                     allowedToPlaySounds = (bool)mixin.ReflectionGet("allowedToPlaySounds");
-                    mixin.ReflectionSet("allowedToPlaySounds", !silent);
+                    mixin.ReflectionSet("allowedToPlaySounds", false);
                 }
                 using (packetSender.Suppress<StorageSlotItemRemove>())
                 {
@@ -110,7 +108,7 @@ namespace NitroxClient.GameLogic
             }
             else
             {
-                Log.Error("Removing storage slot item: Could not find storage slot field on object " + owner.name);
+                Log.Error($"Removing storage slot item: Could not find storage slot field on object {owner.name}");
             }
         }
 

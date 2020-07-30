@@ -11,6 +11,11 @@ namespace NitroxClient.GameLogic.PlayerModel.ColorSwap
 {
     public class RebreatherColorSwapManager : IColorSwapManager
     {
+        private static readonly int mainTex = Shader.PropertyToID("_MainTex");
+        private static readonly int specTex = Shader.PropertyToID("_SpecTex");
+        private static readonly int bumpMap = Shader.PropertyToID("_BumpMap");
+        private static readonly int playerMask01Normal = Shader.PropertyToID("player_mask_01_normal");
+
         public Action<ColorSwapAsyncOperation> CreateColorSwapTask(INitroxPlayer nitroxPlayer)
         {
             GameObject playerModel = nitroxPlayer.PlayerModel;
@@ -51,18 +56,16 @@ namespace NitroxClient.GameLogic.PlayerModel.ColorSwap
             rebreatherRenderer.material.shader = marmosetShader;
             rebreatherRenderer.material.SetOverrideTag("RenderType", "TransparentAdditive");
             rebreatherRenderer.material.SetOverrideTag("Queue", "Deferred");
-            rebreatherRenderer.material.shaderKeywords = new List<string>
-                {"MARMO_ALPHA", "MARMO_PREMULT_ALPHA", "MARMO_SIMPLE_GLASS", "UWE_DITHERALPHA", "MARMO_SPECMAP", "WBOIT", "_NORMALMAP", "_ZWRITE_ON"}.ToArray();
+            rebreatherRenderer.material.shaderKeywords = new[] { "MARMO_ALPHA", "MARMO_PREMULT_ALPHA", "MARMO_SIMPLE_GLASS", "UWE_DITHERALPHA", "MARMO_SPECMAP", "WBOIT", "_NORMALMAP", "_ZWRITE_ON" };
 
-            rebreatherRenderer.material.SetTexture("_MainTex", rebreatherRenderer.material.mainTexture);
-            rebreatherRenderer.material.SetTexture("_SpecTex", rebreatherRenderer.material.mainTexture);
-            rebreatherRenderer.material.SetTexture("_BumpMap", rebreatherRenderer.material.GetTexture("player_mask_01_normal"));
+            rebreatherRenderer.material.SetTexture(mainTex, rebreatherRenderer.material.mainTexture);
+            rebreatherRenderer.material.SetTexture(specTex, rebreatherRenderer.material.mainTexture);
+            rebreatherRenderer.material.SetTexture(bumpMap, rebreatherRenderer.material.GetTexture(playerMask01Normal));
 
             rebreatherRenderer.materials[2].shader = marmosetShader;
-            rebreatherRenderer.materials[2].shaderKeywords = new List<string>
-                {"MARMO_SPECMAP", "_ZWRITE_ON"}.ToArray();
-            rebreatherRenderer.materials[2].SetTexture("_MainTex", rebreatherRenderer.materials[2].mainTexture);
-            rebreatherRenderer.materials[2].SetTexture("_SpecTex", rebreatherRenderer.materials[2].mainTexture);
+            rebreatherRenderer.materials[2].shaderKeywords = new[] { "MARMO_SPECMAP", "_ZWRITE_ON" };
+            rebreatherRenderer.materials[2].SetTexture(mainTex, rebreatherRenderer.materials[2].mainTexture);
+            rebreatherRenderer.materials[2].SetTexture(specTex, rebreatherRenderer.materials[2].mainTexture);
         }
     }
 }

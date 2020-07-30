@@ -104,13 +104,13 @@ namespace NitroxServer.GameLogic.Entities
             }
         }
 
-        public Optional<AbsoluteEntityCell> UpdateEntityPosition(NitroxId id, NitroxVector3 position, NitroxQuaternion rotation)
+        public AbsoluteEntityCell? UpdateEntityPosition(NitroxId id, NitroxVector3 position, NitroxQuaternion rotation)
         {
             Optional<Entity> opEntity = GetEntityById(id);
             if (!opEntity.HasValue)
             {
                 Log.Debug("Could not update entity position because it was not found (maybe it was recently picked up)");
-                return Optional.Empty;
+                return new AbsoluteEntityCell?();
             }
 
             Entity entity = opEntity.Value;

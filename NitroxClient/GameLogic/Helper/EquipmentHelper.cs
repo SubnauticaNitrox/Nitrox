@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic.Helper
 {
-    public class EquipmentHelper
+    public static class EquipmentHelper
     {
         private static readonly List<Func<GameObject, Equipment>> equipmentFinders = new List<Func<GameObject, Equipment>>
         {

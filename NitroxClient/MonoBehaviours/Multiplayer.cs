@@ -27,7 +27,7 @@ namespace NitroxClient.MonoBehaviours
 {
     public class Multiplayer : MonoBehaviour
     {
-        public static Multiplayer Main;
+        public static Multiplayer Instance;
 
         private IMultiplayerSession multiplayerSession;
         private PacketReceiver packetReceiver;
@@ -36,7 +36,7 @@ namespace NitroxClient.MonoBehaviours
         /// <summary>
         ///     True if multiplayer is loaded and client is connected to a server.
         /// </summary>
-        public static bool Active => Main != null && Main.multiplayerSession.Client.IsConnected;
+        public static bool Active => Instance != null && Instance.multiplayerSession.Client.IsConnected;
 
         public static event Action OnBeforeMultiplayerStart;
         public static event Action OnAfterMultiplayerEnd;
@@ -45,8 +45,8 @@ namespace NitroxClient.MonoBehaviours
         {
             if (Active)
             {
-                Main.InitialSyncCompleted = false;
-                Main.StartCoroutine(LoadAsync());
+                Instance.InitialSyncCompleted = false;
+                Instance.StartCoroutine(LoadAsync());
             }
             else
             {
@@ -67,10 +67,10 @@ namespace NitroxClient.MonoBehaviours
             WaitScreen.Remove(worldSettleItem);
 
             WaitScreen.ManualWaitItem item = WaitScreen.Add("Joining Multiplayer Session");
-            yield return Main.StartCoroutine(Main.StartSession());
+            yield return Instance.StartCoroutine(Instance.StartSession());
             WaitScreen.Remove(item);
 
-            yield return new WaitUntil(() => Main.InitialSyncCompleted);
+            yield return new WaitUntil(() => Instance.InitialSyncCompleted);
 
             SetLoadingComplete();
         }
@@ -83,7 +83,7 @@ namespace NitroxClient.MonoBehaviours
             multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
             packetReceiver = NitroxServiceLocator.LocateService<PacketReceiver>();
             NitroxModel.Helper.Map.Main = new SubnauticaMap();
-            Main = this;
+            Instance = this;
             DontDestroyOnLoad(gameObject);
         }
 
@@ -112,7 +112,7 @@ namespace NitroxClient.MonoBehaviours
                 }
                 catch (Exception ex)
                 {
-                    Log.Error(ex, $"Error processing packet {packet}");
+                    Log.Error($"Error processing packet {packet}\n{ex.Message}\n{ex.StackTrace}");
                 }
             }
         }
@@ -172,7 +172,7 @@ namespace NitroxClient.MonoBehaviours
             PlayerManager remotePlayerManager = NitroxServiceLocator.LocateService<PlayerManager>();
 
             LoadingScreenVersionText.DisableWarningText();
-            DiscordRPController.Main.InitializeInGame(Main.multiplayerSession.AuthenticationContext.Username, remotePlayerManager.GetTotalPlayerCount(), Main.multiplayerSession.IpAddress + ":" + Main.multiplayerSession.ServerPort);
+            DiscordRPController.Main.InitializeInGame(Instance.multiplayerSession.AuthenticationContext.Username, remotePlayerManager.GetTotalPlayerCount(), Instance.multiplayerSession.IpAddress + ":" + Instance.multiplayerSession.ServerPort);
             NitroxServiceLocator.LocateService<PlayerChatManager>().LoadChatKeyHint();
         }
 

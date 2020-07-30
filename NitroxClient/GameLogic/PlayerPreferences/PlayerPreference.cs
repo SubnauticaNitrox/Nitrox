@@ -4,7 +4,7 @@ using UnityEngine;
 namespace NitroxClient.GameLogic.PlayerPreferences
 {
     [Serializable]
-    public class PlayerPreference : IEquatable<PlayerPreference>
+    public sealed class PlayerPreference : IEquatable<PlayerPreference>
     {
         public string PlayerName { get; private set; }
         public float RedAdditive { get; private set; }
@@ -30,6 +30,17 @@ namespace NitroxClient.GameLogic.PlayerPreferences
             BlueAdditive = playerColor.b;
         }
 
+        public PlayerPreference Clone()
+        {
+            return new PlayerPreference
+            {
+                PlayerName = PlayerName,
+                RedAdditive = RedAdditive,
+                GreenAdditive = GreenAdditive,
+                BlueAdditive = BlueAdditive
+            };
+        }
+
         public bool Equals(PlayerPreference other)
         {
             if (ReferenceEquals(null, other))
@@ -45,20 +56,9 @@ namespace NitroxClient.GameLogic.PlayerPreferences
             return string.Equals(PlayerName, other.PlayerName) && RedAdditive.Equals(other.RedAdditive) && GreenAdditive.Equals(other.GreenAdditive) && BlueAdditive.Equals(other.BlueAdditive);
         }
 
-        public PlayerPreference Clone()
-        {
-            return new PlayerPreference
-            {
-                PlayerName = PlayerName,
-                RedAdditive = RedAdditive,
-                GreenAdditive = GreenAdditive,
-                BlueAdditive = BlueAdditive
-            };
-        }
-
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj))
+            if (obj is null)
             {
                 return false;
             }
@@ -68,12 +68,7 @@ namespace NitroxClient.GameLogic.PlayerPreferences
                 return true;
             }
 
-            if (obj.GetType() != GetType())
-            {
-                return false;
-            }
-
-            return Equals((PlayerPreference)obj);
+            return obj.GetType() == GetType() && Equals((PlayerPreference)obj);
         }
 
         public override int GetHashCode()

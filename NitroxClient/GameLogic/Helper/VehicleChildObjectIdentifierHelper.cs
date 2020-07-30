@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic.Helper
 {
-    public class VehicleChildObjectIdentifierHelper
+    public static class VehicleChildObjectIdentifierHelper
     {
         private static readonly List<Type> interactiveChildTypes = new List<Type> // we must sync ids of these types when creating vehicles (mainly cyclops)
         {
@@ -62,7 +62,7 @@ namespace NitroxClient.GameLogic.Helper
             {
                 Transform transform = constructedObject.transform.Find(childIdentifier.GameObjectNamePath);
 
-                if (transform != null)
+                if (transform)
                 {
                     GameObject gameObject = transform.gameObject;
                     NitroxEntity.SetNewId(gameObject, childIdentifier.Id);

@@ -685,7 +685,7 @@ namespace NitroxClient.Debuggers
             {
                 GUILayout.Label(label, "bold", GUILayout.Height(25));
                 editMode = GUILayout.Toggle(editMode, "EditMode", GUILayout.Height(25));
-                sendToServer = Multiplayer.Main != null && GUILayout.Toggle(sendToServer, "Send to server");
+                sendToServer = Multiplayer.Instance != null && GUILayout.Toggle(sendToServer, "Send to server");
                 if (GUILayout.Button("Save", GUILayout.Height(20)))
                 {
                     SaveChanges();
@@ -789,7 +789,7 @@ namespace NitroxClient.Debuggers
 
         public static void SendValueChangeToServer(Component component, string fieldName, object value)
         {
-            if (Multiplayer.Main != null)
+            if (Multiplayer.Instance != null)
             {
                 Validate.NotNull(component);
                 Validate.NotNull(fieldName);
@@ -821,7 +821,7 @@ namespace NitroxClient.Debuggers
 
         public void SendValueChangeToServer()
         {
-            if (Multiplayer.Main != null)
+            if (Multiplayer.Instance != null)
             {
                 string path = GetGameObjectPath(Component.gameObject);
                 int objectNumber = Component.gameObject.transform.GetSiblingIndex();
