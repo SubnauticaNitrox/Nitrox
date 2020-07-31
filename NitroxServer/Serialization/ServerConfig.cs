@@ -88,6 +88,7 @@ namespace NitroxServer.Serialization
         public float DefaultInfectionValue { get; set; } = 0.1f;
 
         public bool IsHardcore => GameMode == ServerGameMode.HARDCORE;
+        public bool IsPasswordRequired => ServerPassword != "";
         public PlayerStatsData DefaultPlayerStats => new PlayerStatsData(DefaultOxygenValue, DefaultMaxOxygenValue, DefaultHealthValue, DefaultHungerValue, DefaultThirstValue, DefaultInfectionValue);
     }
 }

@@ -38,7 +38,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         private Rect serverPasswordWindowRect = new Rect(Screen.width / 2 - 250, 200, 500, 200);
         private bool shouldFocus;
         private bool showingPasswordWindow;
-        private bool passwordEntered = false;
+        private bool passwordEntered;
         public static GameObject SaveGameMenuPrototype { get; set; }
 
         private static MainMenuRightSide RightSideMainMenu => MainMenuRightSide.main;
@@ -433,10 +433,11 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                     break;
 
                 case MultiplayerSessionConnectionStage.AWAITING_RESERVATION_CREDENTIALS:
-                    if (passwordEntered)
+                    if (multiplayerSession.SessionPolicy.RequiresServerPassword)
                     {
-                        OnJoinClick();
-                        break;
+                        Log.InGame("Waiting for Server Password Input...");
+                        showingPasswordWindow = true;
+                        shouldFocus = true;
                     }
                     Log.InGame("Waiting for user input...");
                     RightSideMainMenu.OpenGroup("Join Server");
@@ -463,22 +464,13 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
                     string reservationRejectionNotification = reservationState.Describe();
 
-                    if (reservationState == (MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.AUTHENTICATION_FAILED))
-                    {
-                        Log.InGame("Waiting for Server Password Input...");
-                        showingPasswordWindow = true;
-                        shouldFocus = true;
-                    }
-                    else
-                    {
-                        NotifyUser(
-                            reservationRejectionNotification,
-                            () =>
-                            {
-                                multiplayerSession.Disconnect();
-                                multiplayerSession.Connect(ServerIp, ServerPort);
-                            });
-                    }
+                    NotifyUser(
+                        reservationRejectionNotification,
+                        () =>
+                        {
+                            multiplayerSession.Disconnect();
+                            multiplayerSession.Connect(ServerIp, ServerPort);
+                        });
                     break;
 
                 case MultiplayerSessionConnectionStage.DISCONNECTED:
@@ -688,8 +680,6 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         private void SubmitPassword()
         {
             passwordEntered = true;
-            multiplayerSession.Disconnect();
-            multiplayerSession.Connect(ServerIp, ServerPort);
         }
 
         private void OnCancelButtonClicked()
