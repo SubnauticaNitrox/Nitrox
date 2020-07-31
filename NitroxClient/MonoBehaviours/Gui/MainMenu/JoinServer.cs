@@ -34,7 +34,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         private PlayerPreferenceManager preferencesManager;
         public string ServerIp = "";
         public int ServerPort;
-        private string ServerPassword = "";
+        private string serverPassword = "";
         private Rect serverPasswordWindowRect = new Rect(Screen.width / 2 - 250, 200, 500, 200);
         private bool shouldFocus;
         private bool showingPasswordWindow;
@@ -400,13 +400,13 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
             PlayerSettings playerSettings = new PlayerSettings(playerColor.ToDto());
             AuthenticationContext authenticationContext;
-            if (!passwordEntered)
+            if (passwordEntered)
             {
-                authenticationContext = new AuthenticationContext(playerName);
+                authenticationContext = new AuthenticationContext(playerName, serverPassword);
             }
             else
             {
-                authenticationContext = new AuthenticationContext(playerName, ServerPassword);
+                authenticationContext = new AuthenticationContext(playerName);
             }
 
             multiplayerSession.RequestSessionReservation(playerSettings, authenticationContext);
@@ -655,7 +655,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                             GUILayout.Label("Password:");
                             GUI.SetNextControlName("serverPasswordField");
                             // 120 so users can't go too crazy.
-                            ServerPassword = GUILayout.TextField(ServerPassword);
+                            serverPassword = GUILayout.TextField(serverPassword);
                         }
 
                         if (GUILayout.Button("Submit Password"))
