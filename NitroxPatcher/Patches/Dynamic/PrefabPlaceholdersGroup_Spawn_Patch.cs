@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using Harmony;
+using HarmonyLib;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
@@ -12,7 +12,7 @@ namespace NitroxPatcher.Patches.Dynamic
             return false; // Disable spawning of PrefabPlaceholders(In other words large portion of objects)
         }
 
-        public override void Patch(HarmonyInstance harmony)
+        public override void Patch(Harmony harmony)
         {
             PatchPrefix(harmony, TARGET_METHOD);
         }

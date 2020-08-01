@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using Harmony;
+using HarmonyLib;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Helper;
 
@@ -62,7 +62,7 @@ namespace NitroxPatcher.Patches.Persistent
             }
         }
 
-        public override void Patch(HarmonyInstance harmony)
+        public override void Patch(Harmony harmony)
         {
             PatchTranspiler(harmony, GetMethod());
         }

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Reflection;
-using Harmony;
+using HarmonyLib;
 
 namespace NitroxPatcher.Patches.Persistent
 {
@@ -14,7 +14,7 @@ namespace NitroxPatcher.Patches.Persistent
             _savePath = "Nitrox Screenshots/";
         }
 
-        public override void Patch(HarmonyInstance harmony)
+        public override void Patch(Harmony harmony)
         {
             PatchPrefix(harmony, TARGET_METHOD);
         }
