@@ -32,13 +32,14 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         private IMultiplayerSession multiplayerSession;
         private GameObject playerSettingsPanel;
         private PlayerPreferenceManager preferencesManager;
-        public string ServerIp = "";
-        public int ServerPort;
-        private string serverPassword = "";
         private Rect serverPasswordWindowRect = new Rect(Screen.width / 2 - 250, 200, 500, 200);
         private bool shouldFocus;
         private bool showingPasswordWindow;
         private bool passwordEntered;
+        private string serverPassword = string.Empty;
+
+        public string ServerIp = string.Empty;
+        public int ServerPort;
         public static GameObject SaveGameMenuPrototype { get; set; }
 
         private static MainMenuRightSide RightSideMainMenu => MainMenuRightSide.main;
@@ -646,7 +647,6 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                         {
                             GUILayout.Label("Password:");
                             GUI.SetNextControlName("serverPasswordField");
-                            // 120 so users can't go too crazy.
                             serverPassword = GUILayout.TextField(serverPassword);
                         }
 
