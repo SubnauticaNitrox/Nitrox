@@ -71,10 +71,6 @@
                     <HintPath>$(SubnauticaManaged)\UnityEngine.DSPGraphModule.dll</HintPath>
                     <Private>$(TestLibrary)</Private>
                 </Reference>
-                <Reference Include="UnityEngine.FileSystemHttpModule">
-                    <HintPath>$(SubnauticaManaged)\UnityEngine.FileSystemHttpModule.dll</HintPath>
-                    <Private>$(TestLibrary)</Private>
-                </Reference>
                 <Reference Include="UnityEngine.GameCenterModule">
                     <HintPath>$(SubnauticaManaged)\UnityEngine.GameCenterModule.dll</HintPath>
                     <Private>$(TestLibrary)</Private>

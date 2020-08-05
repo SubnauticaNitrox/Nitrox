@@ -114,7 +114,8 @@ namespace NitroxClient.MonoBehaviours
         {
             Log.Info("BuildBasePiece " + basePiecePlacedBuildEvent.BasePiece.Id + " type: " + basePiecePlacedBuildEvent.BasePiece.TechType + " parentId: " + basePiecePlacedBuildEvent.BasePiece.ParentId.OrElse(null));
             BasePiece basePiece = basePiecePlacedBuildEvent.BasePiece;
-            GameObject buildPrefab = CraftData.GetBuildPrefab(basePiece.TechType.ToUnity());
+            CoroutineTask<GameObject> coroutineTask = CraftData.GetBuildPrefabAsync(basePiece.TechType.ToUnity());
+            GameObject buildPrefab = coroutineTask.GetResult();
             MultiplayerBuilder.overridePosition = basePiece.ItemPosition.ToUnity();
             MultiplayerBuilder.overrideQuaternion = basePiece.Rotation.ToUnity();
             MultiplayerBuilder.overrideTransform = new GameObject().transform;

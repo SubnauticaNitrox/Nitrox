@@ -943,7 +943,8 @@ namespace NitroxClient.MonoBehaviours.Overrides
             string poweredPrefabName = CraftData.GetPoweredPrefabName(constructableTechType);
             if (poweredPrefabName != string.Empty)
             {
-                gameObject = PrefabDatabase.GetPrefabForFilename(poweredPrefabName);
+                IPrefabRequest asdf = PrefabDatabase.GetPrefabForFilenameAsync(poweredPrefabName);
+                asdf.TryGetPrefab(out gameObject);
             }
 
             if (gameObject != null)

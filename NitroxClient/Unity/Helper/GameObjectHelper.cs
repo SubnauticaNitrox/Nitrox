@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using NitroxModel.Helper;
 using UnityEngine;
@@ -111,6 +112,23 @@ namespace NitroxClient.Unity.Helper
                 parent = parent.transform.parent;
             }
             return builder.ToString();
+        }
+
+        public static string GetFullName(this GameObject obj)
+        {
+            Stack<string> stack = new Stack<string>();
+            Transform transform = obj.transform;
+            while (transform != null)
+            {
+                stack.Push(transform.name);
+                transform = transform.parent;
+            }
+            StringBuilder stringBuilder = new StringBuilder();
+            while (stack.Count > 0)
+            {
+                stringBuilder.AppendFormat("/{0}", stack.Pop());
+            }
+            return stringBuilder.ToString();
         }
     }
 }

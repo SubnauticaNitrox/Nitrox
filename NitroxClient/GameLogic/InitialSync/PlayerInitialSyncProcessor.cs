@@ -53,9 +53,13 @@ namespace NitroxClient.GameLogic.InitialSync
             {
                 foreach (TechType techType in LootSpawner.main.GetEscapePodStorageTechTypes())
                 {
-                    GameObject gameObject = CraftData.InstantiateFromPrefab(techType, false);
+                    CoroutineTask<GameObject> prefabForTechType = CraftData.GetPrefabForTechTypeAsync(techType, false);
+                    GameObject prefab = prefabForTechType.GetResult();
+                    GameObject gameObject = CraftData.InstantiateFromPrefab(prefab, techType, false);
                     Pickupable pickupable = gameObject.GetComponent<Pickupable>();
-                    pickupable = pickupable.Initialize();
+                    TaskResult<Pickupable> result = new TaskResult<Pickupable>();
+                    pickupable.InitializeAsync(result);
+                    pickupable = result.Get();
                     itemContainers.AddItem(pickupable.gameObject, NitroxEntity.GetId(Player.main.transform.gameObject));
                     itemContainers.BroadcastItemAdd(pickupable, Inventory.main.container.tr);
                 }

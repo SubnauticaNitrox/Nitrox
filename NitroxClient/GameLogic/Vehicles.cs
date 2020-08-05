@@ -141,7 +141,8 @@ namespace NitroxClient.GameLogic
             {
                 EnergyMixin mixin = opEnergy.Value;
                 mixin.ReflectionSet("allowedToPlaySounds", false);
-                mixin.SetBattery(mixin.defaultBattery, 1);
+                TaskResult<InventoryItem> taskResult = new TaskResult<InventoryItem>();
+                mixin.SetBatteryAsync(mixin.defaultBattery, 1, taskResult);
                 mixin.ReflectionSet("allowedToPlaySounds", true);
             }
 
@@ -157,7 +158,8 @@ namespace NitroxClient.GameLogic
                     {
                         EnergyMixin mixin = opEnergyMixin.Value;
                         mixin.ReflectionSet("allowedToPlaySounds", false);
-                        mixin.SetBattery(mixin.defaultBattery, 1);
+                        TaskResult<InventoryItem> taskResult = new TaskResult<InventoryItem>();
+                        mixin.SetBatteryAsync(mixin.defaultBattery, 1, taskResult);
                         mixin.ReflectionSet("allowedToPlaySounds", true);
                     }
                 }
@@ -180,7 +182,8 @@ namespace NitroxClient.GameLogic
                 }
                 else
                 {
-                    GameObject techPrefab = CraftData.GetPrefabForTechType(techType, false);
+                    CoroutineTask<GameObject> prefabForTechType = CraftData.GetPrefabForTechTypeAsync(techType, false);
+                    GameObject techPrefab = prefabForTechType.GetResult();
                     Validate.NotNull(techPrefab, $"{nameof(Vehicles)}: No prefab for tech type: {techType}");
 
                     OnVehiclePrefabLoaded(techType, techPrefab, id, position, rotation, interactiveChildIdentifiers, dockingBayId, name, hsb, health);

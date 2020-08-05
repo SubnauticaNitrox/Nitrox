@@ -58,7 +58,8 @@ namespace NitroxClient.GameLogic.Spawning
             IPrefabRequest prefabRequest = PrefabDatabase.GetPrefabAsync(classId);
             if (!prefabRequest.TryGetPrefab(out prefab))
             {
-                prefab = CraftData.GetPrefabForTechType(techType, false);
+                CoroutineTask<GameObject> prefabForTechType = CraftData.GetPrefabForTechTypeAsync(techType, false);
+                prefab = prefabForTechType.GetResult();
 
                 if (prefab == null)
                 {

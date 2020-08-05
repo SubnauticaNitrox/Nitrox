@@ -119,7 +119,7 @@ namespace NitroxClient.GameLogic
                 }
             }
             roomFiresDict[fireData.Room].fireValue++;
-            PrefabSpawn component = transform2.GetComponent<PrefabSpawn>();
+            PrefabSpawnBase component = transform2.GetComponent<PrefabSpawnBase>();
             if (component == null)
             {
                 return;
@@ -133,13 +133,15 @@ namespace NitroxClient.GameLogic
                     + " NodeIndex: " + fireData.NodeIndex
                     + "]");
             }
-            GameObject gameObject = component.SpawnManual();
-            Fire componentInChildren = gameObject.GetComponentInChildren<Fire>();
-            if (componentInChildren)
+            component.SpawnManual(delegate(GameObject fireGO)
             {
-                componentInChildren.fireSubRoot = subFire.subRoot;
-                NitroxEntity.SetNewId(componentInChildren.gameObject, fireData.FireId);
-            }
+                Fire componentInChildren = fireGO.GetComponentInChildren<Fire>();
+                if (componentInChildren)
+                {
+                    componentInChildren.fireSubRoot = subFire.subRoot;
+                    NitroxEntity.SetNewId(componentInChildren.gameObject, fireData.FireId);
+                }
+            });
 
             subFire.ReflectionSet("roomFires", roomFiresDict);
             subFire.ReflectionSet("availableNodes", availableNodes);

@@ -30,7 +30,8 @@ namespace NitroxClient.GameLogic.Helper
 
             using (MemoryStream memoryStream = new MemoryStream(bytes))
             {
-                gameObject = Serializer.DeserializeObjectTree(memoryStream, 0);
+                CoroutineTask<GameObject> coroutineTask = Serializer.DeserializeObjectTreeAsync(memoryStream, false, 0);
+                gameObject = coroutineTask.GetResult();
             }
 
             BLOCK_HAND_PLACED_DESERIALIZATION = true;
