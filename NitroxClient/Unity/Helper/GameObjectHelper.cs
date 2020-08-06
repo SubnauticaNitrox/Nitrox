@@ -37,7 +37,7 @@ namespace NitroxClient.Unity.Helper
         {
             Transform child = tf.Find(name);
 
-            if (child == null)
+            if (!child)
             {
                 throw new ArgumentNullException(tf + " does not contain \"" + name + "\"");
             }
@@ -121,7 +121,7 @@ namespace NitroxClient.Unity.Helper
             Stack<string> stack = new Stack<string>();
             Transform transform = obj.transform;
 
-            while (transform != null)
+            while (transform)
             {
                 stack.Push(transform.name);
                 transform = transform.parent;
