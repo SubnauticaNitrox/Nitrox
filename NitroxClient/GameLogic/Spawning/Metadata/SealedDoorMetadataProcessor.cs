@@ -16,7 +16,6 @@ namespace NitroxClient.GameLogic.Spawning.Metadata
             door.openedAmount = metadata.OpenedAmount;
 
             LaserCutObject laseredObject = gameObject.GetComponent<LaserCutObject>();
-            laseredObject.isCutOpen = !door._sealed;
 
             if (laseredObject && door._sealed)
             {
