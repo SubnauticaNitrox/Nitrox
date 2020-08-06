@@ -12,7 +12,7 @@ namespace Nitrox.Bootloader
         {
             // Get path from command args.
             string[] args = Environment.GetCommandLineArgs();
-            for (var i = 0; i < args.Length - 1; i++)
+            for (int i = 0; i < args.Length - 1; i++)
             {
                 if (args[i].Equals("-nitrox", StringComparison.OrdinalIgnoreCase) && Directory.Exists(args[i + 1]))
                 {
