@@ -8,9 +8,10 @@ namespace NitroxModel.Server
     public class ServerConfig
     {
         private readonly ServerConfigItem<ServerGameMode> gameModeSetting;
+        private readonly ServerConfigItem<ServerSerializerMode> serverSerializerModeSetting;
         private readonly ServerConfigItem<bool> disableConsoleSetting, disableAutoSaveSetting;
         private readonly ServerConfigItem<int> portSetting, saveIntervalSetting, maxConnectionsSetting;
-        private readonly ServerConfigItem<string> saveNameSetting, serverPasswordSetting, adminPasswordSetting, serverSerializerMode;
+        private readonly ServerConfigItem<string> saveNameSetting, serverPasswordSetting, adminPasswordSetting;
         private readonly ServerConfigItem<float> oxygenSetting, maxOxygenSetting, healthSetting, foodSetting, waterSetting, infectionSetting;
 
         public ServerConfig() : this(
@@ -38,7 +39,7 @@ namespace NitroxModel.Server
             serverPasswordSetting = new ServerConfigItem<string>("ServerPassword", serverpassword);
             adminPasswordSetting = new ServerConfigItem<string>("AdminPassword", adminpassword);
             gameModeSetting = new ServerConfigItem<ServerGameMode>("GameMode", gamemode);
-            serverSerializerMode = new ServerConfigItem<string>("ServerSerializerMode", serverserializermode.ToString());
+            serverSerializerModeSetting = new ServerConfigItem<ServerSerializerMode>("SaveFileSerializer", serverserializermode);
 
             //We don't want to custom those values for now
             oxygenSetting = new ServerConfigItem<float>("StartOxygen", 45);
@@ -177,14 +178,12 @@ namespace NitroxModel.Server
         {
             get
             {
-                ServerSerializerMode mode;
-                Validate.IsTrue(Enum.TryParse(serverSerializerMode.Value, out mode), $"{serverSerializerMode.Value} is not a valid ServerSerializerMode");
-                return mode;
+                return serverSerializerModeSetting.Value;
             }
 
             set
             {
-                serverSerializerMode.Value = value.ToString();
+                serverSerializerModeSetting.Value = value;
             }
         }
 
