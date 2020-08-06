@@ -21,20 +21,23 @@ namespace NitroxServer.Serialization
      * This class consolidates the gameObject, entitySlot, and cellHeader data to
      * create EntitySpawnPoint objects.
      */
-    class BatchCellsParser
+    public class BatchCellsParser
     {
         private readonly EntitySpawnPointFactory entitySpawnPointFactory;
         private readonly ServerProtoBufSerializer serializer;
-        private readonly Dictionary<string, Type> surrogateTypes = new Dictionary<string, Type>();
+        private readonly Dictionary<string, Type> surrogateTypes;
 
         public BatchCellsParser(EntitySpawnPointFactory entitySpawnPointFactory, ServerProtoBufSerializer serializer)
         {
             this.entitySpawnPointFactory = entitySpawnPointFactory;
             this.serializer = serializer;
 
-            surrogateTypes.Add("UnityEngine.Transform", typeof(NitroxTransform));
-            surrogateTypes.Add("UnityEngine.Vector3", typeof(NitroxVector3));
-            surrogateTypes.Add("UnityEngine.Quaternion", typeof(NitroxQuaternion));
+            surrogateTypes = new Dictionary<string, Type>
+            {
+                { "UnityEngine.Transform", typeof(NitroxTransform) },
+                { "UnityEngine.Vector3", typeof(NitroxVector3) },
+                { "UnityEngine.Quaternion", typeof(NitroxQuaternion) }
+            };
         }
 
         public List<EntitySpawnPoint> ParseBatchData(Int3 batchId)
@@ -53,12 +56,12 @@ namespace NitroxServer.Serialization
 
             if (subnauticaPath == null)
             {
-                Log.Info($"Could not locate Subnautica installation directory: {Environment.NewLine}{string.Join(Environment.NewLine, errors)}");
+                Log.Error($"Could not locate Subnautica installation directory: {Environment.NewLine}{string.Join(Environment.NewLine, errors)}");
                 return;
             }
 
-            string path = Path.Combine(subnauticaPath, "SNUnmanagedData", "Build18");
-            string fileName = Path.Combine(path, pathPrefix, prefix + "batch-cells-" + batchId.X + "-" + batchId.Y + "-" + batchId.Z + suffix + ".bin");
+            string path = Path.Combine(subnauticaPath, "Subnautica_Data", "StreamingAssets", "SNUnmanagedData", "Build18");
+            string fileName = Path.Combine(path, pathPrefix, $"{prefix}batch-cells-{batchId.X}-{batchId.Y}-{batchId.Z}{suffix}.bin");
 
             if (!File.Exists(fileName))
             {
@@ -79,25 +82,25 @@ namespace NitroxServer.Serialization
             {
                 CellsFileHeader cellsFileHeader = serializer.Deserialize<CellsFileHeader>(stream);
 
-                for (int cellCounter = 0; cellCounter < cellsFileHeader.numCells; cellCounter++)
+                for (int cellCounter = 0; cellCounter < cellsFileHeader.NumCells; cellCounter++)
                 {
                     CellHeaderEx cellHeader = serializer.Deserialize<CellHeaderEx>(stream);
 
                     bool wasLegacy;
 
-                    byte[] serialData = new byte[cellHeader.dataLength];
-                    stream.Read(serialData, 0, cellHeader.dataLength);
-                    ParseGameObjectsWithHeader(serialData, batchId, cellHeader.cellId, cellHeader.level, spawnPoints, out wasLegacy);
+                    byte[] serialData = new byte[cellHeader.DataLength];
+                    stream.Read(serialData, 0, cellHeader.DataLength);
+                    ParseGameObjectsWithHeader(serialData, batchId, cellHeader.CellId, cellHeader.Level, spawnPoints, out wasLegacy);
 
                     if (!wasLegacy)
                     {
-                        byte[] legacyData = new byte[cellHeader.legacyDataLength];
-                        stream.Read(legacyData, 0, cellHeader.legacyDataLength);
-                        ParseGameObjectsWithHeader(legacyData, batchId, cellHeader.cellId, cellHeader.level, spawnPoints, out wasLegacy);
+                        byte[] legacyData = new byte[cellHeader.LegacyDataLength];
+                        stream.Read(legacyData, 0, cellHeader.LegacyDataLength);
+                        ParseGameObjectsWithHeader(legacyData, batchId, cellHeader.CellId, cellHeader.Level, spawnPoints, out wasLegacy);
 
-                        byte[] waiterData = new byte[cellHeader.waiterDataLength];
-                        stream.Read(waiterData, 0, cellHeader.waiterDataLength);
-                        ParseGameObjectsFromStream(new MemoryStream(waiterData), batchId, cellHeader.cellId, cellHeader.level, spawnPoints);
+                        byte[] waiterData = new byte[cellHeader.WaiterDataLength];
+                        stream.Read(waiterData, 0, cellHeader.WaiterDataLength);
+                        ParseGameObjectsFromStream(new MemoryStream(waiterData), batchId, cellHeader.CellId, cellHeader.Level, spawnPoints);
                     }
                 }
             }
@@ -164,9 +167,7 @@ namespace NitroxServer.Serialization
             {
                 ComponentHeader componentHeader = serializer.Deserialize<ComponentHeader>(stream);
 
-                Type type = null;
-
-                if (!surrogateTypes.TryGetValue(componentHeader.TypeName, out type))
+                if (!surrogateTypes.TryGetValue(componentHeader.TypeName, out Type type))
                 {
                     type = AppDomain.CurrentDomain.GetAssemblies()
                         .Select(a => a.GetType(componentHeader.TypeName))
@@ -188,14 +189,14 @@ namespace NitroxServer.Serialization
     {
         public override string ToString()
         {
-            return string.Format("(version={0}, numCells={1})", version, numCells);
+            return string.Format("(version={0}, numCells={1})", Version, NumCells);
         }
 
         [ProtoMember(1)]
-        public int version;
+        public int Version;
 
         [ProtoMember(2)]
-        public int numCells;
+        public int NumCells;
     }
 
     [ProtoContract]
@@ -203,14 +204,14 @@ namespace NitroxServer.Serialization
     {
         public override string ToString()
         {
-            return $"(cellId={cellId}, level={level})";
+            return $"(cellId={CellId}, level={Level})";
         }
 
         [ProtoMember(1)]
-        public Int3 cellId;
+        public Int3 CellId;
 
         [ProtoMember(2)]
-        public int level;
+        public int Level;
     }
 
     [ProtoContract]
@@ -220,28 +221,28 @@ namespace NitroxServer.Serialization
         {
             return string.Format("(cellId={0}, level={1}, dataLength={2}, legacyDataLength={3}, waiterDataLength={4})", new object[]
             {
-                cellId,
-                level,
-                dataLength,
-                legacyDataLength,
-                waiterDataLength
+                CellId,
+                Level,
+                DataLength,
+                LegacyDataLength,
+                WaiterDataLength
             });
         }
 
         [ProtoMember(1)]
-        public Int3 cellId;
+        public Int3 CellId;
 
         [ProtoMember(2)]
-        public int level;
+        public int Level;
 
         [ProtoMember(3)]
-        public int dataLength;
+        public int DataLength;
 
         [ProtoMember(4)]
-        public int legacyDataLength;
+        public int LegacyDataLength;
 
         [ProtoMember(5)]
-        public int waiterDataLength;
+        public int WaiterDataLength;
     }
 
     [ProtoContract]

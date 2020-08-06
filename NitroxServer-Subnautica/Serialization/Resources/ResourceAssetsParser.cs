@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using AssetsTools.NET;
-using NitroxModel.DataStructures.Util;
 using NitroxModel.Discovery;
-using NitroxModel.Logger;
 using NitroxServer_Subnautica.Serialization.Resources.Parsers;
 using NitroxServer_Subnautica.Serialization.Resources.Processing;
 using NitroxServer.Serialization.Resources.Datastructures;
@@ -13,15 +11,15 @@ namespace NitroxServer_Subnautica.Serialization.Resources
 {
     public static class ResourceAssetsParser
     {
-        private static Dictionary<AssetIdentifier, uint> assetIdentifierToClassId = new Dictionary<AssetIdentifier, uint>();
+        private static readonly Dictionary<AssetIdentifier, uint> assetIdentifierToClassId = new Dictionary<AssetIdentifier, uint>();
 
-        private static Dictionary<string, int> fileIdByResourcePath = new Dictionary<string, int>();
-        private static HashSet<string> parsedManifests = new HashSet<string>();
+        private static readonly Dictionary<string, int> fileIdByResourcePath = new Dictionary<string, int>();
+        private static readonly HashSet<string> parsedManifests = new HashSet<string>();
 
-        private static PrefabPlaceholderExtractor prefabPlaceholderExtractor = new PrefabPlaceholderExtractor();
+        private static readonly PrefabPlaceholderExtractor prefabPlaceholderExtractor = new PrefabPlaceholderExtractor();
 
         // https://docs.huihoo.com/unity/4.3/Documentation/Manual/ClassIDReference.html
-        private static Dictionary<uint, AssetParser> assetParsersByClassId = new Dictionary<uint, AssetParser>()
+        private static readonly Dictionary<uint, AssetParser> assetParsersByClassId = new Dictionary<uint, AssetParser>()
         {
             { 1, new GameObjectAssetParser()},
             { 4, new TransformAssetParser()},
