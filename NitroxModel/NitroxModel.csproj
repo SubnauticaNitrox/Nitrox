@@ -63,6 +63,7 @@
     <Compile Include="DataStructures\GameLogic\Entities\Metadata\KeypadMetadata.cs" />
     <Compile Include="DataStructures\GameLogic\Entities\Metadata\EntityMetadata.cs" />
     <Compile Include="DataStructures\GameLogic\Entities\Metadata\StarshipDoorMetadata.cs" />
+    <Compile Include="DataStructures\GameLogic\Entities\Metadata\WeldableWallPanelGenericMetadata.cs" />
     <Compile Include="DataStructures\GameLogic\Entities\UwePrefab.cs" />
     <Compile Include="DataStructures\GameLogic\Entities\UwePrefabFactory.cs" />
     <Compile Include="DataStructures\GameLogic\Entities\UweWorldEntity.cs" />
