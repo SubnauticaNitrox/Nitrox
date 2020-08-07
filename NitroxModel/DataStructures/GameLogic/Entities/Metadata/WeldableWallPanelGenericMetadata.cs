@@ -19,5 +19,10 @@ namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata
         {
             LiveMixInHealth = liveMixInHealth;
         }
+
+        public override string ToString()
+        {
+            return $"[WeldableWallPanelGenericMetadata LiveMixInHealth: {LiveMixInHealth}]";
+        }
     }
 }

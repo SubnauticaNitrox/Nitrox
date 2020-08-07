@@ -17,7 +17,7 @@ namespace NitroxPatcher.Patches.Dynamic
             if (__instance.doorLocked)
             {
                 NitroxId id = NitroxEntity.GetId(__instance.gameObject);
-                StarshipDoorMetadata starshipDoorMetadata = new StarshipDoorMetadata(!__instance.doorLocked);
+                StarshipDoorMetadata starshipDoorMetadata = new StarshipDoorMetadata(!__instance.doorLocked, __instance.doorOpen);
                 Entities entities = NitroxServiceLocator.LocateService<Entities>();
 
                 entities.BroadcastMetadataUpdate(id, starshipDoorMetadata);
