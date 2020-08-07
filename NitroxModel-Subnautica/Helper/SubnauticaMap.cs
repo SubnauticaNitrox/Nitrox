@@ -10,17 +10,20 @@ namespace NitroxModel_Subnautica.Helper
         private const int BATCH_SIZE = 160;
         private const int SKYBOX_METERS_ABOVE_WATER = 160;
 
-        public static readonly List<NitroxTechType> GLOBAL_ROOT_TECH_TYPES = new List<NitroxTechType>()
+        /// <summary>
+        ///     These types can't be statically typed because in RELEASE mode it cannot load the TechType type info.
+        /// </summary>
+        public static readonly List<NitroxTechType> GLOBAL_ROOT_TECH_TYPES = new List<NitroxTechType>
         {
-            new NitroxTechType(TechType.Pipe.ToString()),
-            new NitroxTechType(TechType.Constructor.ToString()),
-            new NitroxTechType(TechType.Flare.ToString()),
-            new NitroxTechType(TechType.Gravsphere.ToString()),
-            new NitroxTechType(TechType.PipeSurfaceFloater.ToString()),
-            new NitroxTechType(TechType.SmallStorage.ToString()),
-            new NitroxTechType(TechType.CyclopsDecoy.ToString()),
-            new NitroxTechType(TechType.LEDLight.ToString()),
-            new NitroxTechType(TechType.Beacon.ToString())
+            new NitroxTechType("Pipe"),
+            new NitroxTechType("Constructor"),
+            new NitroxTechType("Flare"),
+            new NitroxTechType("Gravsphere"),
+            new NitroxTechType("PipeSurfaceFloater"),
+            new NitroxTechType("SmallStorage"),
+            new NitroxTechType("CyclopsDecoy"),
+            new NitroxTechType("LEDLight"),
+            new NitroxTechType("Beacon")
         };
 
         public override int ItemLevelOfDetail => 3;
