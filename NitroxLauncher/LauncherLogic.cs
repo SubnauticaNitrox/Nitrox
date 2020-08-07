@@ -88,9 +88,10 @@ namespace NitroxLauncher
         {
             await Task.Factory.StartNew(() =>
             {
-                string latestVersion = WebHelper.GetNitroxLatestVersion();
+                Version latestVersion = WebHelper.GetNitroxLatestVersion();
+                Version currentVersion = new Version(Version);
 
-                if (!string.IsNullOrEmpty(latestVersion) && latestVersion != Version)
+                if (latestVersion > currentVersion)
                 {
                     MessageBox.Show($"A new version of the mod ({latestVersion}) is available !\n\nPlease check our website to download it",
                         "New version available",
@@ -99,6 +100,7 @@ namespace NitroxLauncher
                         MessageBoxResult.OK,
                         MessageBoxOptions.DefaultDesktopOnly);
                 }
+
             }, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
@@ -206,7 +208,7 @@ namespace NitroxLauncher
             string nitroxAppData = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox");
             Directory.CreateDirectory(nitroxAppData);
             File.WriteAllText(Path.Combine(nitroxAppData, "launcherpath.txt"), Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
-            
+
             // TODO: The launcher should override FileRead win32 API for the Subnautica process to give it the modified Assembly-CSharp from memory 
             string bootloaderName = "Nitrox.Bootloader.dll";
             try
@@ -217,7 +219,7 @@ namespace NitroxLauncher
             {
                 // ignored
             }
-            
+
             nitroxEntryPatch.Remove(); // Remove any previous instances first.
             nitroxEntryPatch.Apply();
 
