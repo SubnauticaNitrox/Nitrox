@@ -15,15 +15,15 @@ namespace NitroxModel_Subnautica.Helper
         /// </summary>
         public static readonly List<NitroxTechType> GLOBAL_ROOT_TECH_TYPES = new List<NitroxTechType>
         {
-            new NitroxTechType("Pipe"),
-            new NitroxTechType("Constructor"),
-            new NitroxTechType("Flare"),
-            new NitroxTechType("Gravsphere"),
-            new NitroxTechType("PipeSurfaceFloater"),
-            new NitroxTechType("SmallStorage"),
-            new NitroxTechType("CyclopsDecoy"),
-            new NitroxTechType("LEDLight"),
-            new NitroxTechType("Beacon")
+            new NitroxTechType(nameof(TechType.Pipe)),
+            new NitroxTechType(nameof(TechType.Constructor)),
+            new NitroxTechType(nameof(TechType.Flare)),
+            new NitroxTechType(nameof(TechType.Gravsphere)),
+            new NitroxTechType(nameof(TechType.PipeSurfaceFloater)),
+            new NitroxTechType(nameof(TechType.SmallStorage)),
+            new NitroxTechType(nameof(TechType.CyclopsDecoy)),
+            new NitroxTechType(nameof(TechType.LEDLight)),
+            new NitroxTechType(nameof(TechType.Beacon))
         };
 
         public override int ItemLevelOfDetail => 3;
