@@ -1,5 +1,4 @@
-﻿using NitroxModel.Logger;
-using NitroxModel.Packets;
+﻿using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Items;
@@ -21,7 +20,6 @@ namespace NitroxServer.Communication.Packets.Processors
         {
             if (!inventoryManager.GetAllStorageSlotItems().Contains(packet.BatteryData))
             {
-                Log.Debug(packet);
                 inventoryManager.StorageItemAdded(packet.BatteryData); // Updates the charge of the battery on the server
                 playerManager.SendPacketToOtherPlayers(packet, player);
             }
