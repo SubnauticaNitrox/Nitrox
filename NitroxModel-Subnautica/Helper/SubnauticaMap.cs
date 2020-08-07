@@ -11,7 +11,7 @@ namespace NitroxModel_Subnautica.Helper
         private const int SKYBOX_METERS_ABOVE_WATER = 160;
 
         /// <summary>
-        ///     These types can't be statically typed because in RELEASE mode it cannot load the TechType type info.
+        ///     TechType can't be introspected at runtime in RELEASE mode because its reflection info is elided.
         /// </summary>
         public static readonly List<NitroxTechType> GLOBAL_ROOT_TECH_TYPES = new List<NitroxTechType>
         {
