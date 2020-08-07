@@ -26,21 +26,19 @@ namespace NitroxModel.Helper
             req.Method = "GET";
             req.UserAgent = "Nitrox";
             req.ContentType = "application/json";
-            req.Timeout = 1000;
-
-            Version version = new Version();
+            req.Timeout = 5000;
 
             try
             {
                 using (StreamReader sr = new StreamReader(req.GetResponse().GetResponseStream()))
                 {
                     string json = sr.ReadToEnd();
-                    Regex rx = new Regex("\\\"name\\\":\\\"(([^\\\"])*)\\\"");
+                    Regex rx = new Regex(@"""name"":""([^""]*)""");
                     Match match = rx.Match(json);
 
                     if (match.Success)
                     {
-                        version = new Version(match.Groups[1].Value);
+                        return new Version(match.Groups[1].Value);
                     }
                 }
             }
@@ -49,7 +47,7 @@ namespace NitroxModel.Helper
                 Log.Error(ex, "WebHelper : Error while fetching nitrox latest version on GitHub");
             }
 
-            return version;
+            return new Version();
         }
     }
 }
