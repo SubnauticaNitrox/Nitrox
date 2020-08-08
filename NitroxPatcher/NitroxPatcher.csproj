@@ -51,6 +51,9 @@
     <Compile Include="Patches\Dynamic\PrecursorKeyTerminal_OnHandClick_Patch.cs" />
     <Compile Include="Patches\Dynamic\PrecursorTeleporterActivationTerminal_OnProxyHandClick_Patch.cs" />
     <Compile Include="Patches\Dynamic\PrecursorTeleporter_OnActivateTeleporter_Patch.cs" />
+    <Compile Include="Patches\Dynamic\StarshipDoor_LockDoor_Patch.cs" />
+    <Compile Include="Patches\Dynamic\StarshipDoor_OnDoorToggle_Patch.cs" />
+    <Compile Include="Patches\Dynamic\StarshipDoor_UnlockDoor_Patch.cs" />
     <Compile Include="Patches\Dynamic\uGUI_OnApplicationQuit_Patch.cs" />
     <Compile Include="Patches\Dynamic\EnergyMixin_ModifyCharge_Patch.cs" />
     <Compile Include="Patches\Dynamic\Rocket_CallElevator_Patch.cs" />
@@ -177,6 +180,7 @@
     <Compile Include="Patches\Dynamic\Vehicle_OnKill_Patch.cs" />
     <Compile Include="Patches\Dynamic\Vehicle_OnPilotModeBegin_Patch.cs" />
     <Compile Include="Patches\Dynamic\Vehicle_OnPilotModeEnd_Patch.cs" />
+    <Compile Include="Patches\Dynamic\WeldableWallPanelGeneric_UnlockDoor_Patch.cs" />
     <Compile Include="Patches\IDynamicPatch.cs" />
     <Compile Include="Patches\INitroxPatch.cs" />
     <Compile Include="Patches\IPersistentPatch.cs" />
