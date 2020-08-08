@@ -135,7 +135,7 @@ namespace NitroxModel.Server
         {
             get => gameModeSetting.Value;
 
-            set
+            private set
             {
                 gameModeSetting.Value = value;
             }
