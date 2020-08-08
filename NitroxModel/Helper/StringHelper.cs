@@ -11,10 +11,9 @@ namespace NitroxModel.Helper
         {
             StringBuilder builder = new StringBuilder();
 
-            char ch;
             for (int i = 0; i < size; i++)
             {
-                ch = Convert.ToChar(Convert.ToInt32(Math.Floor(26 * random.NextDouble() + 65)));
+                char ch = Convert.ToChar(Convert.ToInt32(Math.Floor(26 * random.NextDouble() + 65)));
                 builder.Append(ch);
             }
 

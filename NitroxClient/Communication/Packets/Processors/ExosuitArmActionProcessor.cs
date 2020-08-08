@@ -36,13 +36,13 @@ namespace NitroxClient.Communication.Packets.Processors
                     exosuitModuleEvent.UseDrill(gameObject.GetComponent<ExosuitDrillArm>(), packet.ArmAction);
                     break;
                 case TechType.ExosuitGrapplingArmModule:
-                    exosuitModuleEvent.UseGrappling(gameObject.GetComponent<ExosuitGrapplingArm>(), packet.ArmAction, packet.OpVector);
+                    exosuitModuleEvent.UseGrappling(gameObject.GetComponent<ExosuitGrapplingArm>(), packet.ArmAction, packet.Vector);
                     break;
                 case TechType.ExosuitTorpedoArmModule:
-                    exosuitModuleEvent.UseTorpedo(gameObject.GetComponent<ExosuitTorpedoArm>(), packet.ArmAction, packet.OpVector, packet.OpRotation);
+                    exosuitModuleEvent.UseTorpedo(gameObject.GetComponent<ExosuitTorpedoArm>(), packet.ArmAction, packet.Vector, packet.Rotation);
                     break;
                 default:
-                    Log.Error("Got an arm tech that is not handled: " + packet.TechType + " with action: " + packet.ArmAction + " for id " + packet.ArmId);
+                    Log.Error($"Got an arm tech that is not handled: {packet.TechType} with action: {packet.ArmAction} for id {packet.ArmId}");
                     break;
             }
 

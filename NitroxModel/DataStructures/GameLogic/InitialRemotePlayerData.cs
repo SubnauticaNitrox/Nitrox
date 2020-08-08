@@ -25,5 +25,10 @@ namespace NitroxModel.DataStructures.GameLogic
             SubRootId = subRootId;
             EquippedTechTypes = equippedTechTypes;
         }
+
+        public override string ToString()
+        {
+            return $"[InitialRemotePlayerData - PlayerContext: {PlayerContext} Position: {Position} SubRootId: {SubRootId} EquippedTechTypes: {string.Join(", ", EquippedTechTypes)}]";
+        }
     }
 }

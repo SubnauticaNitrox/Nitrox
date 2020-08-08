@@ -34,8 +34,7 @@ namespace NitroxModel.DataStructures
             {
                 lock (locker)
                 {
-                    IList<T> asList = collection as IList<T>;
-                    if (asList != null)
+                    if (collection is IList<T> asList)
                     {
                         asList[i] = value;
                         return;
@@ -134,8 +133,7 @@ namespace NitroxModel.DataStructures
         {
             lock (locker)
             {
-                IList<T> list = collection as IList<T>;
-                if (list != null)
+                if (collection is IList<T> list)
                 {
                     return list.IndexOf(item);
                 }
@@ -157,8 +155,7 @@ namespace NitroxModel.DataStructures
         {
             lock (locker)
             {
-                IList<T> list = collection as IList<T>;
-                if (list != null)
+                if (collection is IList<T> list)
                 {
                     list.Insert(index, item);
                     return;
@@ -184,14 +181,13 @@ namespace NitroxModel.DataStructures
         {
             lock (locker)
             {
-                IList<T> list = collection as IList<T>;
-                if (list != null)
+                if (collection is IList<T> list)
                 {
                     list.RemoveAt(index);
                     return true;
                 }
-                ISet<T> set = collection as ISet<T>;
-                if (set != null)
+
+                if (collection is ISet<T> set)
                 {
                     T elem = set.ElementAtOrDefault(index);
                     return elem != null && set.Remove(elem);
@@ -294,8 +290,7 @@ namespace NitroxModel.DataStructures
         {
             lock (locker)
             {
-                IList<T> asList = collection as IList<T>;
-                if (asList != null)
+                if (collection is IList<T> asList)
                 {
                     asList.RemoveAt(index);
                     return;

@@ -9,13 +9,13 @@ namespace NitroxModel.DataStructures.GameLogic
     public struct NitroxVector3
     {
         [ProtoMember(1)]
-        public float X;
+        public float X { get; set; }
 
         [ProtoMember(2)]
-        public float Y;
+        public float Y { get; set; }
 
         [ProtoMember(3)]
-        public float Z;
+        public float Z { get; set; }
 
         public static NitroxVector3 Zero { get; } = new NitroxVector3(0, 0, 0);
         public static NitroxVector3 One { get; } = new NitroxVector3(1, 1, 1);
@@ -81,7 +81,7 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public override string ToString()
         {
-            return $"[{X}, {Y}, {Z}]";
+            return $"[Vector3 - {X}, {Y}, {Z}]";
         }
     }
 }

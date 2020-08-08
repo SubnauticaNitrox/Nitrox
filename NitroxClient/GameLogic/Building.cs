@@ -22,11 +22,11 @@ namespace NitroxClient.GameLogic
         private const float CONSTRUCTION_CHANGE_EVENT_COOLDOWN_PERIOD_SECONDS = 0.10f;
 
         private readonly IPacketSender packetSender;
-        private readonly RotationMetadataFactory rotationMetadataFactory;
+        private readonly IRotationMetadataFactory rotationMetadataFactory;
 
         private float timeSinceLastConstructionChangeEvent;
-        
-        public Building(IPacketSender packetSender, RotationMetadataFactory rotationMetadataFactory)
+
+        public Building(IPacketSender packetSender, IRotationMetadataFactory rotationMetadataFactory)
         {
             this.packetSender = packetSender;
             this.rotationMetadataFactory = rotationMetadataFactory;

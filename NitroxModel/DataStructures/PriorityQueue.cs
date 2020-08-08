@@ -19,22 +19,7 @@ namespace NitroxModel.DataStructures
         // NOTE: not used
         // public int Count {get{return _count;}}
 
-        public int MaxPriority // NOTE: should be Priority
-        {
-            get
-            {
-                int count = priorityChains.Count;
-
-                if (count > 0)
-                {
-                    return priorityChains.Keys[count - 1];
-                }
-                else
-                {
-                    return int.MaxValue; // NOTE: should be Priority.Invalid;
-                }
-            }
-        }
+        public int MaxPriority => priorityChains.Count > 0 ? priorityChains.Keys[priorityChains.Count - 1] : int.MaxValue; // NOTE: should be Priority
 
         public int Count => priorityChains.Count;
 
@@ -60,34 +45,30 @@ namespace NitroxModel.DataStructures
         public T Dequeue()
         {
             // Get the max-priority chain.
-            int count = priorityChains.Count;
-            if (count > 0)
-            {
-                PriorityChain<T> chain = priorityChains.Values[count - 1];
-                Debug.Assert(chain != null, "PriorityQueue.Dequeue: a chain should exist.");
-
-                PriorityItem<T> item = chain.Head;
-                Debug.Assert(item != null, "PriorityQueue.Dequeue: a priority item should exist.");
-
-                RemoveItem(item);
-
-                return item.Data;
-            }
-            else
+            if (priorityChains.Count <= 0)
             {
                 throw new InvalidOperationException();
             }
+
+            PriorityChain<T> chain = priorityChains.Values[priorityChains.Count - 1];
+            Debug.Assert(chain != null, "PriorityQueue.Dequeue: a chain should exist.");
+
+            PriorityItem<T> item = chain.Head;
+            Debug.Assert(item != null, "PriorityQueue.Dequeue: a priority item should exist.");
+
+            RemoveItem(item);
+
+            return item.Data;
         }
 
         public T Peek()
         {
-            T data = default(T);
+            T data = default;
 
             // Get the max-priority chain.
-            int count = priorityChains.Count;
-            if (count > 0)
+            if (priorityChains.Count > 0)
             {
-                PriorityChain<T> chain = priorityChains.Values[count - 1];
+                PriorityChain<T> chain = priorityChains.Values[priorityChains.Count - 1];
                 Debug.Assert(chain != null, "PriorityQueue.Peek: a chain should exist.");
 
                 PriorityItem<T> item = chain.Head;
@@ -103,8 +84,6 @@ namespace NitroxModel.DataStructures
         {
             Debug.Assert(item != null, "PriorityQueue.RemoveItem: invalid item.");
             Debug.Assert(item.Chain != null, "PriorityQueue.RemoveItem: a chain should exist.");
-
-            PriorityChain<T> chain = item.Chain;
 
             // Step 1: Remove the item from its priority chain.
             RemoveItemFromPriorityChain(item);
@@ -135,21 +114,20 @@ namespace NitroxModel.DataStructures
         {
             PriorityChain<T> chain = null;
 
-            int count = priorityChains.Count;
-            if (count > 0)
+            if (priorityChains.Count > 0)
             {
-                if (priority == (int)priorityChains.Keys[0])
+                if (priority == priorityChains.Keys[0])
                 {
                     chain = priorityChains.Values[0];
                 }
-                else if (priority == (int)priorityChains.Keys[count - 1])
+                else if (priority == priorityChains.Keys[priorityChains.Count - 1])
                 {
-                    chain = priorityChains.Values[count - 1];
+                    chain = priorityChains.Values[priorityChains.Count - 1];
                 }
-                else if ((priority > (int)priorityChains.Keys[0]) &&
-                        (priority < (int)priorityChains.Keys[count - 1]))
+                else if ((priority > priorityChains.Keys[0]) &&
+                        (priority < priorityChains.Keys[priorityChains.Count - 1]))
                 {
-                    priorityChains.TryGetValue((int)priority, out chain);
+                    priorityChains.TryGetValue(priority, out chain);
                 }
             }
 
@@ -165,7 +143,7 @@ namespace NitroxModel.DataStructures
                     chain = new PriorityChain<T>(priority);
                 }
 
-                priorityChains.Add((int)priority, chain);
+                priorityChains.Add(priority, chain);
             }
 
             return chain;
@@ -186,7 +164,7 @@ namespace NitroxModel.DataStructures
             {
                 Debug.Assert(chain.Tail != null, "PriorityQueue.InsertItemInPriorityChain: both the head and the tail should not be null.");
 
-                PriorityItem<T> after = null;
+                PriorityItem<T> after;
 
                 // Search backwards along the sequential chain looking for an
                 // item already in this list.
@@ -287,13 +265,13 @@ namespace NitroxModel.DataStructures
             item.Chain.Count--;
             if (item.Chain.Count == 0)
             {
-                if (item.Chain.Priority == (int)priorityChains.Keys[priorityChains.Count - 1])
+                if (item.Chain.Priority == priorityChains.Keys[priorityChains.Count - 1])
                 {
                     priorityChains.RemoveAt(priorityChains.Count - 1);
                 }
                 else
                 {
-                    priorityChains.Remove((int)item.Chain.Priority);
+                    priorityChains.Remove(item.Chain.Priority);
                 }
 
                 if (cacheReusableChains.Count < 10)
@@ -388,8 +366,8 @@ namespace NitroxModel.DataStructures
         }
 
         // Priority chains...
-        private SortedList<int, PriorityChain<T>> priorityChains; // NOTE: should be Priority
-        private Stack<PriorityChain<T>> cacheReusableChains;
+        private readonly SortedList<int, PriorityChain<T>> priorityChains; // NOTE: should be Priority
+        private readonly Stack<PriorityChain<T>> cacheReusableChains;
 
         // Sequential chain...
         private PriorityItem<T> head;

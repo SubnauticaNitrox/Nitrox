@@ -52,7 +52,7 @@ namespace NitroxClient.Communication.Packets.Processors
                         {
                             float num2 = (float)entry.unlocked / (float)totalFragments;
                             float arg = (float)Mathf.RoundToInt(num2 * 100f);
-                            ErrorMessage.AddError(Language.main.GetFormat<string, float, int, int>("ScannerInstanceScanned", Language.main.Get(entry.techType.AsString(false)), arg, entry.unlocked, totalFragments));
+                            ErrorMessage.AddError(Language.main.GetFormat("ScannerInstanceScanned", Language.main.Get(entry.techType.AsString(false)), arg, entry.unlocked, totalFragments));
                         }
                     }
                 }

@@ -8,22 +8,19 @@ namespace NitroxModel.Server
 {
     public class ServerConfigItem<T>
     {
-        public readonly string Name;
+        private readonly string name;
         private T value;
 
         public T Value
         {
-            get
-            {
-                return value;
-            }
+            get => value;
 
             set
             {
                 try
                 {
                     Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-                    config.AppSettings.Settings[Name].Value = value?.ToString();
+                    config.AppSettings.Settings[name].Value = value?.ToString();
                     config.Save(ConfigurationSaveMode.Minimal);
 
                     this.value = value;
@@ -42,7 +39,7 @@ namespace NitroxModel.Server
         {
             Validate.NotNull(itemName);
 
-            Name = itemName;
+            name = itemName;
             value = defaultValue; //not Value, we don't want to rewrite the config to default value again and again
 
             try

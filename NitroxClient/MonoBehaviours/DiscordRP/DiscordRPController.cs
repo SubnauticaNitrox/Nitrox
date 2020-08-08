@@ -18,7 +18,7 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
         {
             get
             {
-                if (main == null)
+                if (!main)
                 {
                     main = new GameObject("DiscordController").AddComponent<DiscordRPController>();
                     main.presence = new DiscordRpc.RichPresence();

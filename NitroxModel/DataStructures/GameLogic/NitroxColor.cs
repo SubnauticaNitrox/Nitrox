@@ -30,5 +30,10 @@ namespace NitroxModel.DataStructures.GameLogic
             B = b;
             A = a;
         }
+
+        public override string ToString()
+        {
+            return $"[NitroxColor - RGBA: {R}, {G}, {B}, {A}]";
+        }
     }
 }

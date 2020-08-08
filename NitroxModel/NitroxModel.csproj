@@ -72,7 +72,7 @@
     <Compile Include="DataStructures\GameLogic\Buildings\Metadata\BasePieceMetadata.cs" />
     <Compile Include="DataStructures\GameLogic\Buildings\Metadata\SignMetadata.cs" />
     <Compile Include="DataStructures\GameLogic\Buildings\Rotation\RotationMetadata.cs" />
-    <Compile Include="DataStructures\GameLogic\Buildings\Rotation\RotationMetadataFactory.cs" />
+    <Compile Include="DataStructures\GameLogic\Buildings\Rotation\IRotationMetadataFactory.cs" />
     <Compile Include="DataStructures\GameLogic\Entities\UweWorldEntityFactory.cs" />
     <Compile Include="DataStructures\GameLogic\InitialPDAData.cs" />
     <Compile Include="DataStructures\GameLogic\InitialRemotePlayerData.cs" />
@@ -103,6 +103,7 @@
     <Compile Include="Discovery\InstallationFinders\GameInCurrentDirectoryFinder.cs" />
     <Compile Include="Discovery\InstallationFinders\SteamGameRegistryFinder.cs" />
     <Compile Include="Discovery\InstallationFinders\ConfigFileGameFinder.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Helper\Mathf.cs" />
     <Compile Include="Helper\NitroxAppData.cs" />
     <Compile Include="Helper\PirateDetection.cs" />

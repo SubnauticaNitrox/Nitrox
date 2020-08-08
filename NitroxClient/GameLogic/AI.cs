@@ -16,7 +16,7 @@ namespace NitroxClient.GameLogic
 
         public void CreatureActionChanged(NitroxId id, CreatureAction newAction)
         {
-            SerializableCreatureAction creatureAction = null;
+            ISerializableCreatureAction creatureAction = null;
 
             /*
             Example for next implementation:

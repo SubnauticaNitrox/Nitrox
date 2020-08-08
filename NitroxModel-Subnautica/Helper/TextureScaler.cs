@@ -14,9 +14,9 @@ namespace NitroxModel_Subnautica.Helper
             tex.Apply(true);
         }
 
-        internal static void GpuScale(Texture2D src, int width, int height, FilterMode fmode)
+        private static void GpuScale(Texture2D src, int width, int height, FilterMode filterMode)
         {
-            src.filterMode = fmode;
+            src.filterMode = filterMode;
             src.Apply(true);
 
             RenderTexture rtt = new RenderTexture(width, height, 32);

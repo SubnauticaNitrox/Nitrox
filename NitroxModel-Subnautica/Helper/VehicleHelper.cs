@@ -4,7 +4,7 @@ namespace NitroxModel_Subnautica.Helper
 {
     public static class VehicleHelper
     {
-        public static NitroxVector3[] GetDefaultColours(TechType techType)
+        public static NitroxVector3[] GetDefaultColors(TechType techType)
         {
             switch (techType)
             {
@@ -35,11 +35,11 @@ namespace NitroxModel_Subnautica.Helper
                     };
 
                 default:
-                    return GetPrimalDefaultColours();
+                    return GetPrimalDefaultColors();
             }
         }
 
-        public static NitroxVector3[] GetPrimalDefaultColours()
+        public static NitroxVector3[] GetPrimalDefaultColors()
         {
             return new[]
             {
@@ -47,9 +47,9 @@ namespace NitroxModel_Subnautica.Helper
             };
         }
 
-        public static bool IsVehicle(TechType techtype)
+        public static bool IsVehicle(TechType techType)
         {
-            switch (techtype)
+            switch (techType)
             {
                 case TechType.Seamoth:
                 case TechType.Exosuit:

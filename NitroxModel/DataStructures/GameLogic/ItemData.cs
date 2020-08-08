@@ -31,7 +31,7 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public override string ToString()
         {
-            return "[ItemData ContainerId: " + ContainerId + "Id: " + ItemId + "]";
+            return $"[ItemData - ContainerId: {ContainerId} Id: {ItemId}]";
         }
     }
 }

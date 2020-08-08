@@ -14,5 +14,10 @@ namespace NitroxModel.DataStructures.GameLogic.Buildings.Rotation
         {
             GhostType = ghostType;
         }
+
+        public override string ToString()
+        {
+            return $"[RotationMetadata - GhostType: {GhostType}]";
+        }
     }
 }

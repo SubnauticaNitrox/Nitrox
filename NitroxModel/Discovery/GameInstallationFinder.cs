@@ -41,7 +41,7 @@ namespace NitroxModel.Discovery
                     continue;
                 }
 
-                errors?.Clear();
+                errors.Clear();
                 return Path.GetFullPath(path);
             }
 

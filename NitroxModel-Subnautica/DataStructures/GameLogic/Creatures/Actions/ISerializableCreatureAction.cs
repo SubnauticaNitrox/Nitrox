@@ -2,7 +2,7 @@
 
 namespace NitroxModel_Subnautica.DataStructures.GameLogic.Creatures.Actions
 {
-    public interface SerializableCreatureAction
+    public interface ISerializableCreatureAction
     {
         CreatureAction GetCreatureAction(GameObject gameObject);
     }

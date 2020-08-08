@@ -74,7 +74,7 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public override string ToString()
         {
-            return "[BasePiece - ItemPosition: " + ItemPosition + " Id: " + Id + " Rotation: " + Rotation + " CameraPosition: " + CameraPosition + "CameraRotation: " + CameraRotation + " TechType: " + TechType + " ParentId: " + ParentId + " ConstructionAmount: " + ConstructionAmount + " IsFurniture: " + IsFurniture + " BaseId: " + BaseId + " RotationMetadata: " + RotationMetadata + "]";
+            return $"[BasePiece - Id: {Id} CameraPosition: {CameraPosition}CameraRotation: {CameraRotation} TechType: {TechType} ConstructionAmount: {ConstructionAmount} IsFurniture: {IsFurniture} BaseId: {BaseId} RotationMetadata: {RotationMetadata}]";
         }
     }
 }

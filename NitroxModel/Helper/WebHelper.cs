@@ -10,6 +10,7 @@ namespace NitroxModel.Helper
     {
         //"Hacky way" to get the public IP
         //Should definitely be reworked.
+
         public static string GetPublicIP()
         {
             WebRequest req = WebRequest.Create("http://checkip.dyndns.org");

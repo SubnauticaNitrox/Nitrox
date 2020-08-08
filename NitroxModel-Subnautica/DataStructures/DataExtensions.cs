@@ -6,34 +6,14 @@ namespace NitroxModel_Subnautica.DataStructures
 {
     public static class DataExtensions
     {
-        public static NitroxVector3 ToDto(this Vector3 v)
-        {
-            return new NitroxVector3(v.x, v.y, v.z);
-        }
-
-        public static Vector3 ToUnity(this NitroxVector3 v)
-        {
-            return new Vector3(v.X, v.Y, v.Z);
-        }
-
-        public static Vector3 AsVector3(this NitroxModel.DataStructures.Int3 v)
-        {
-            return new Vector3(v.X, v.Y, v.Z);
-        }
-
         public static NitroxTechType ToDto(this TechType v)
         {
             return new NitroxTechType(v.ToString());
         }
 
-        public static TechType ToUnity(this NitroxTechType v)
+        public static NitroxVector3 ToDto(this Vector3 v)
         {
-            return (TechType)Enum.Parse(typeof(TechType), v.Name);
-        }
-
-        public static Quaternion ToUnity(this NitroxQuaternion v)
-        {
-            return new Quaternion(v.X, v.Y, v.Z, v.W);
+            return new NitroxVector3(v.x, v.y, v.z);
         }
 
         public static NitroxQuaternion ToDto(this Quaternion v)
@@ -44,21 +24,6 @@ namespace NitroxModel_Subnautica.DataStructures
         public static NitroxColor ToDto(this Color v)
         {
             return new NitroxColor(v.r, v.g, v.b, v.a);
-        }
-
-        public static Color ToUnity(this NitroxColor v)
-        {
-            return new Color(v.R, v.G, v.B, v.A);
-        }
-
-        public static NitroxColor[] ToDto(this Color[] v)
-        {
-            NitroxColor[] result = new NitroxColor[v.Length];
-            for (int i = 0; i < v.Length; i++)
-            {
-                result[i] = v[i].ToDto();
-            }
-            return result;
         }
 
         public static NitroxVector3[] ToDto(this Vector3[] v)
@@ -76,6 +41,37 @@ namespace NitroxModel_Subnautica.DataStructures
             return result;
         }
 
+        public static NitroxColor[] ToDto(this Color[] v)
+        {
+            NitroxColor[] result = new NitroxColor[v.Length];
+            for (int i = 0; i < v.Length; i++)
+            {
+                result[i] = v[i].ToDto();
+            }
+            return result;
+        }
+
+
+        public static TechType ToUnity(this NitroxTechType v)
+        {
+            return (TechType)Enum.Parse(typeof(TechType), v.Name);
+        }
+
+        public static Vector3 ToUnity(this NitroxVector3 v)
+        {
+            return new Vector3(v.X, v.Y, v.Z);
+        }
+
+        public static Quaternion ToUnity(this NitroxQuaternion v)
+        {
+            return new Quaternion(v.X, v.Y, v.Z, v.W);
+        }
+
+        public static Color ToUnity(this NitroxColor v)
+        {
+            return new Color(v.R, v.G, v.B, v.A);
+        }
+
         public static Vector3[] ToUnity(this NitroxVector3[] v)
         {
             if (v == null)
@@ -89,6 +85,26 @@ namespace NitroxModel_Subnautica.DataStructures
                 result[i] = v[i].ToUnity();
             }
             return result;
+        }
+
+        public static Color[] ToUnity(this NitroxColor[] v)
+        {
+            if (v == null)
+            {
+                return new Color[0];
+            }
+
+            Color[] result = new Color[v.Length];
+            for (int i = 0; i < v.Length; i++)
+            {
+                result[i] = v[i].ToUnity();
+            }
+            return result;
+        }
+
+        public static Vector3 AsVector3(this NitroxModel.DataStructures.Int3 v)
+        {
+            return new Vector3(v.X, v.Y, v.Z);
         }
     }
 }

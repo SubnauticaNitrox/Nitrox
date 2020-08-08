@@ -8,10 +8,10 @@ namespace NitroxModel.DataStructures.GameLogic
     public class PDALogEntry
     {
         [ProtoMember(1)]
-        public string Key;
+        public string Key { get; set; }
 
         [ProtoMember(2)]
-        public float Timestamp;
+        public float Timestamp { get; set; }
 
         protected PDALogEntry()
         {
@@ -26,7 +26,7 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public override string ToString()
         {
-            return $"{nameof(Key)}: {Key}, {nameof(Timestamp)}: {Timestamp}";
+            return $"[PDALogEntry - Key: {Key} Timestamp: {Timestamp}]";
         }
     }
 }

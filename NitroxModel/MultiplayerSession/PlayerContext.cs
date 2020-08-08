@@ -17,5 +17,10 @@ namespace NitroxModel.MultiplayerSession
             WasBrandNewPlayer = wasBrandNewPlayer;
             PlayerSettings = playerSettings;
         }
+
+        public override string ToString()
+        {
+            return $"[PlayerContext - PlayerId: {PlayerId} PlayerName: {PlayerName} WasBrandNewPlayer: {WasBrandNewPlayer} PlayerSettings: {PlayerSettings}]";
+        }
     }
 }

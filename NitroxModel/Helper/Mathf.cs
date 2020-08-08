@@ -4,9 +4,9 @@ namespace NitroxModel.Helper
 {
     public static class Mathf
     {
-        public const float RAD2DEG = 57.29578f;
+        public const float RAD_TO_DEG = 57.29578f;
         public const float PI = 3.14159274f;
-        public const float DEG2RAD = 0.0174532924f;
+        public const float DEG_TO_RAD = 0.0174532924f;
 
         public static float Sqrt(float ls)
         {

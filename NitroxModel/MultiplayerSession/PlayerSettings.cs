@@ -12,5 +12,10 @@ namespace NitroxModel.MultiplayerSession
         {
             PlayerColor = playerColor;
         }
+
+        public override string ToString()
+        {
+            return $"[PlayerSettings - PlayerColor: {PlayerColor}]";
+        }
     }
 }

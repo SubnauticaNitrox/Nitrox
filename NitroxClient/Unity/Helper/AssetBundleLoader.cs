@@ -11,11 +11,9 @@ namespace NitroxClient.Unity.Helper
 {
     public static class AssetBundleLoader
     {
-        private static readonly string assetRootFolder = NitroxAppData.Instance.AssetsPath;
-
         public static IEnumerator LoadAsset(string name)
         {
-            AssetBundleCreateRequest assetRequest = AssetBundle.LoadFromFileAsync(Path.Combine(assetRootFolder, name));
+            AssetBundleCreateRequest assetRequest = AssetBundle.LoadFromFileAsync(Path.Combine(NitroxAppData.Instance.AssetsPath, name));
             if (assetRequest == null)
             {
                 Log.Error("Failed to load AssetBundle!");

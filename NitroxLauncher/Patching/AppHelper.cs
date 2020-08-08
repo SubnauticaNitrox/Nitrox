@@ -7,11 +7,11 @@ using NitroxModel.Logger;
 
 namespace NitroxLauncher
 {
-    public class AppHelper
+    public static class AppHelper
     {
-        public static string ProgramFileDirectory = Environment.ExpandEnvironmentVariables("%ProgramW6432%");
+        public static readonly string ProgramFileDirectory = Environment.ExpandEnvironmentVariables("%ProgramW6432%");
 
-        public static bool IsAppRunningInAdmin()
+        private static bool IsAppRunningInAdmin()
         {
             WindowsPrincipal wp = new WindowsPrincipal(WindowsIdentity.GetCurrent());
             return wp.IsInRole(WindowsBuiltInRole.Administrator);
@@ -35,19 +35,20 @@ namespace NitroxLauncher
                     try
                     {
                         // Setting up start info of the new process of the same application
-                        ProcessStartInfo processStartInfo = new ProcessStartInfo(Assembly.GetEntryAssembly().CodeBase);
-
                         // Using operating shell and setting the ProcessStartInfo.Verb to “runas” will let it run as admin
-                        processStartInfo.UseShellExecute = true;
-                        processStartInfo.Verb = "runas";
+                        ProcessStartInfo processStartInfo = new ProcessStartInfo(Assembly.GetEntryAssembly().CodeBase)
+                        {
+                            UseShellExecute = true,
+                            Verb = "runas"
+                        };
 
                         // Start the application as new process
                         Process.Start(processStartInfo);
                         Environment.Exit(1);
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
-                        Log.Error("Error while trying to instance an admin processus of the launcher, aborting");
+                        Log.Error(ex, "Error while trying to instance an admin process of the launcher, aborting");
                     }
                 }
 

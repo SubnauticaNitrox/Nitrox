@@ -166,7 +166,7 @@ namespace NitroxModel.DataStructures.Util
 
     public static class Optional
     {
-        internal readonly static Dictionary<Type, Func<object, bool>> valueConditions = new Dictionary<Type, Func<object, bool>>();
+        internal static readonly Dictionary<Type, Func<object, bool>> valueConditions = new Dictionary<Type, Func<object, bool>>();
         public static OptionalEmpty Empty { get; } = new OptionalEmpty();
 
         public static Optional<T> Of<T>(T value) where T : class => Optional<T>.Of(value);

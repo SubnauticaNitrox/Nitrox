@@ -16,9 +16,7 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic.Entities
 
         public override Optional<UweWorldEntity> From(string classId)
         {
-            WorldEntityInfo worldEntityInfo;
-
-            if (worldEntitiesByClassId.TryGetValue(classId, out worldEntityInfo))
+            if (worldEntitiesByClassId.TryGetValue(classId, out WorldEntityInfo worldEntityInfo))
             {
                 UweWorldEntity uweWorldEntity = new UweWorldEntity(worldEntityInfo.techType.ToDto(),
                                                                    worldEntityInfo.localScale.ToDto(),

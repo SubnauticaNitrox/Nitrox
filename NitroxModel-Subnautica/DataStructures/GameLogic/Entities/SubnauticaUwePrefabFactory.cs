@@ -26,11 +26,9 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic.Entities
                 return prefabs;
             }
 
-            DstData dstData;
-
             BiomeType biome = (BiomeType)Enum.Parse(typeof(BiomeType), biomeType);
 
-            if (lootDistributionData.GetBiomeLoot(biome, out dstData))
+            if (lootDistributionData.GetBiomeLoot(biome, out DstData dstData))
             {
                 foreach (PrefabData prefabData in dstData.prefabs)
                 {
@@ -49,22 +47,27 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic.Entities
 
             Dictionary<string, SrcData> result = JsonMapper.ToObject<Dictionary<string, SrcData>>(lootDistributionJson);
 
-            LootDistributionData _lootDistributionData = new LootDistributionData();
-            _lootDistributionData.Initialize(result);
+            LootDistributionData lootDistributionData = new LootDistributionData();
+            lootDistributionData.Initialize(result);
 
-            return _lootDistributionData;
+            return lootDistributionData;
         }
 
         // LitJson uses the computers local CultureInfo when parsing the JSON files.  However,
         // these json files were saved in en_US.  Ensure that this is done for the current thread.
-        private void ForceCultureOverride()
+        private static void ForceCultureOverride()
         {
-            CultureInfo cultureInfo = new CultureInfo("en-US");
+            CultureInfo cultureInfo = new CultureInfo("en-US")
+            {
+                NumberFormat =
+                {
+                    NumberDecimalSeparator = ".",
+                    NumberGroupSeparator = ","
+                }
+            };
 
             // Although we loaded the en-US cultureInfo, let's make sure to set these incase the 
             // default was overriden by the user.
-            cultureInfo.NumberFormat.NumberDecimalSeparator = ".";
-            cultureInfo.NumberFormat.NumberGroupSeparator = ",";
 
             Thread.CurrentThread.CurrentCulture = cultureInfo;
             Thread.CurrentThread.CurrentUICulture = cultureInfo;

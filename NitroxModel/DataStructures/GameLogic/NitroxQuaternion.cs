@@ -9,16 +9,16 @@ namespace NitroxModel.DataStructures.GameLogic
     public struct NitroxQuaternion
     {
         [ProtoMember(1)]
-        public float X;
+        public float X { get; set; }
 
         [ProtoMember(2)]
-        public float Y;
+        public float Y { get; set; }
 
         [ProtoMember(3)]
-        public float Z;
+        public float Z { get; set; }
 
         [ProtoMember(4)]
-        public float W;
+        public float W { get; set; }
 
         public NitroxQuaternion(float x, float y, float z, float w)
         {
@@ -30,7 +30,7 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public static NitroxQuaternion Normalize(NitroxQuaternion value)
         {
-            NitroxQuaternion ans;
+            NitroxQuaternion ans = new NitroxQuaternion();
 
             float ls = value.X * value.X + value.Y * value.Y + value.Z * value.Z + value.W * value.W;
 
@@ -61,7 +61,7 @@ namespace NitroxModel.DataStructures.GameLogic
 
 
             float num8 = (m00 + m11) + m22;
-            NitroxQuaternion quaternion;
+            NitroxQuaternion quaternion = new NitroxQuaternion();
             if (num8 > 0f)
             {
                 float num = Mathf.Sqrt(num8 + 1f);
@@ -103,7 +103,7 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public NitroxVector3 ToEuler()
         {
-            NitroxVector3 result;
+            NitroxVector3 result = new NitroxVector3();
 
             float test = X * Y + Z * W;
             // singularity at north pole
@@ -122,9 +122,9 @@ namespace NitroxModel.DataStructures.GameLogic
             }
             else
             {
-                result.X = Mathf.RAD2DEG * Mathf.Atan2(2 * X * W - 2 * Y * Z, 1 - 2 * X * X - 2 * Z * Z);
-                result.Y = Mathf.RAD2DEG * Mathf.Atan2(2 * Y * W - 2 * X * Z, 1 - 2 * Y * Y - 2 * Z * Z);
-                result.Z = Mathf.RAD2DEG * Mathf.Asin(2 * X * Y + 2 * Z * W);
+                result.X = Mathf.RAD_TO_DEG * Mathf.Atan2(2 * X * W - 2 * Y * Z, 1 - 2 * X * X - 2 * Z * Z);
+                result.Y = Mathf.RAD_TO_DEG * Mathf.Atan2(2 * Y * W - 2 * X * Z, 1 - 2 * Y * Y - 2 * Z * Z);
+                result.Z = Mathf.RAD_TO_DEG * Mathf.Asin(2 * X * Y + 2 * Z * W);
 
                 if (result.X < 0)
                 {

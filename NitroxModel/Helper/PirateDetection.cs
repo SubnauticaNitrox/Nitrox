@@ -23,10 +23,10 @@ namespace NitroxModel.Helper
                     value?.Invoke(null, EventArgs.Empty);
                 }
             }
-            remove { pirateDetected -= value; }
+            remove => pirateDetected -= value;
         }
 
-        public static bool Trigger()
+        private static bool Trigger()
         {
             OnPirateDetected();
             return true;
@@ -44,11 +44,7 @@ namespace NitroxModel.Helper
             string steamDll = Path.Combine(subnauticaRoot, "steam_api64.dll");
 
             // Check for a modified steam dll
-            if (File.Exists(steamDll) && new FileInfo(steamDll).Length > 209000)
-            {
-                return true;
-            }
-            return false;
+            return File.Exists(steamDll) && new FileInfo(steamDll).Length > 209000;
         }
 
         private static void OnPirateDetected()

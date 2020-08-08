@@ -174,10 +174,7 @@ namespace NitroxModel.Logger
         /// <returns>Friendly display name of the current application</returns>
         private static string GetLoggerName()
         {
-            string name = (Assembly.GetEntryAssembly()?.GetName().Name ?? "Client").Contains("Server") ? "Server" : "Client"; // Unity Engine does not set Assembly name so lets default to 'Client'.
-            string name2 = Assembly.GetEntryAssembly()?.GetName().Name.Contains("Server") ?? false ? "Server" : "Client"; // Unity Engine does not set Assembly name so lets default to 'Client'.
-            //return name.Contains("Server") ? "Server" : name;
-            return name2;
+            return Assembly.GetEntryAssembly()?.GetName().Name.Contains("Server") ?? false ? "Server" : "Client"; // Unity Engine does not set Assembly name so lets default to 'Client'.
         }
 
         /// <summary>

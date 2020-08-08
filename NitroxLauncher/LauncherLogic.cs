@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using NitroxLauncher.Events;
+using NitroxLauncher.Exceptions;
 using NitroxLauncher.Pages;
 using NitroxLauncher.Patching;
 using NitroxModel;
@@ -18,7 +19,7 @@ using NitroxModel.Logger;
 
 namespace NitroxLauncher
 {
-    public class LauncherLogic : IDisposable, INotifyPropertyChanged
+    public sealed class LauncherLogic : IDisposable, INotifyPropertyChanged
     {
         public static string Version => Assembly.GetAssembly(typeof(Extensions)).GetName().Version.ToString();
         public static LauncherLogic Instance { get; private set; }
@@ -178,7 +179,7 @@ namespace NitroxLauncher
                 .Any(file => Path.GetFileName(file)?.Equals("subnautica.exe", StringComparison.OrdinalIgnoreCase) ?? false);
         }
 
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
@@ -188,7 +189,7 @@ namespace NitroxLauncher
 #if RELEASE
             if (Process.GetProcessesByName("Subnautica").Length > 0)
             {
-                throw new Exception("An instance of Subnautica is already running");
+                throw new MultipleInstancesException("An instance of Subnautica is already running");
             }
 #endif
             nitroxEntryPatch.Remove();
@@ -200,7 +201,7 @@ namespace NitroxLauncher
 #if RELEASE
             if (Process.GetProcessesByName("Subnautica").Length > 0)
             {
-                throw new Exception("An instance of Subnautica is already running");
+                throw new MultipleInstancesException("An instance of Subnautica is already running");
             }
 #endif
             // Store path where launcher is in AppData for Nitrox bootstrapper to read
@@ -229,13 +230,12 @@ namespace NitroxLauncher
         {
             if (ServerRunning)
             {
-                throw new Exception("An instance of Nitrox Server is already running");
+                throw new MultipleInstancesException("An instance of Nitrox Server is already running");
             }
 
             string launcherDir = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
             string serverPath = Path.Combine(launcherDir, "NitroxServer-Subnautica.exe");
-            ProcessStartInfo startInfo = new ProcessStartInfo(serverPath);
-            startInfo.WorkingDirectory = launcherDir;
+            ProcessStartInfo startInfo = new ProcessStartInfo(serverPath) { WorkingDirectory = launcherDir };
 
             if (!standalone)
             {

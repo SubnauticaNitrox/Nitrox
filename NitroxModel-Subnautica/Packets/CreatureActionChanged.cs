@@ -9,9 +9,9 @@ namespace NitroxModel_Subnautica.Packets
     public class CreatureActionChanged : Packet
     {
         public NitroxId Id { get; }
-        public SerializableCreatureAction NewAction { get; }
+        public ISerializableCreatureAction NewAction { get; }
 
-        public CreatureActionChanged(NitroxId id, SerializableCreatureAction newAction)
+        public CreatureActionChanged(NitroxId id, ISerializableCreatureAction newAction)
         {
             Id = id;
             NewAction = newAction;

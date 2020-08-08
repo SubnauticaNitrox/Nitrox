@@ -154,10 +154,5 @@ namespace NitroxLauncher.Pages
                     break;
             }
         }
-
-        private void PART_VerticalScrollBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-
-        }
     }
 }

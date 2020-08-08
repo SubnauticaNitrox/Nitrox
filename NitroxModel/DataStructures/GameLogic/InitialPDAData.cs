@@ -25,5 +25,10 @@ namespace NitroxModel.DataStructures.GameLogic
             PartiallyUnlockedTechTypes = partiallyUnlockedTechTypes;
             PDALogEntries = pdaLogEntries;
         }
+
+        public override string ToString()
+        {
+            return $"[InitialPDAData - UnlockedTechTypes: {string.Join(", ", UnlockedTechTypes)} KnownTechTypes: {string.Join(", ", KnownTechTypes)} EncyclopediaEntries: {string.Join(", ", EncyclopediaEntries)} PartiallyUnlockedTechTypes: {string.Join(", ", PartiallyUnlockedTechTypes)} PDALogEntries: {string.Join(", ", PDALogEntries)}]";
+        }
     }
 }

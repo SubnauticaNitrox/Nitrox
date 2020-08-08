@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxServer.Serialization;
+using NitroxServer.Serialization.Resources.Datastructures;
 
 namespace NitroxServer.UnityStubs
 {
@@ -31,9 +32,9 @@ namespace NitroxServer.UnityStubs
         public override string ToString()
         {
             object transform = null;
-            components.TryGetValue(typeof(NitroxTransform), out transform); // Honestly this should never be null every gameObject has a Transform
+            components.TryGetValue(typeof(TransformAsset), out transform); // Honestly this should never be null every gameObject has a Transform
 
-            return string.Format("Id: {0}, Class Id: {1}, Transform: {2}", Id, ClassId, transform as NitroxTransform);
+            return string.Format("Id: {0}, Class Id: {1}, Transform: {2}", Id, ClassId, transform as TransformAsset);
         }
 
         public void AddComponent(object component, Type componentType)

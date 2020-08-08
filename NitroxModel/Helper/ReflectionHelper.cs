@@ -119,7 +119,7 @@ namespace NitroxModel.Helper
             {
                 throw new ArgumentException("Object can't be null when isStatic is false!");
             }
-            else if (o != null && isStatic)
+            if (o != null && isStatic)
             {
                 throw new ArgumentException("Object must be be null when isStatic is true!");
             }

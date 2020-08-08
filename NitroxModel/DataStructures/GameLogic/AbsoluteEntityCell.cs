@@ -40,7 +40,6 @@ namespace NitroxModel.DataStructures.GameLogic
         public AbsoluteEntityCell(NitroxVector3 worldSpace, int level)
         {
             Level = level;
-            CellId = null;
 
             NitroxVector3 localPosition = (worldSpace + Map.Main.BatchDimensionCenter) / Map.Main.BatchSize;
             BatchId = Int3.Floor(localPosition);
@@ -68,11 +67,6 @@ namespace NitroxModel.DataStructures.GameLogic
                 default:
                     throw new ArgumentOutOfRangeException($"Given level '{level}' does not have any defined cells.");
             }
-        }
-
-        public override string ToString()
-        {
-            return "[AbsoluteEntityCell Position: " + Position + " BatchId: " + BatchId + " CellId: " + CellId + " Level: " + Level + " ]";
         }
 
         public Int3 GetCellSize()
@@ -110,6 +104,11 @@ namespace NitroxModel.DataStructures.GameLogic
             hashCode = hashCode * -1521134295 + EqualityComparer<Int3>.Default.GetHashCode(obj.CellId);
             hashCode = hashCode * -1521134295 + obj.Level.GetHashCode();
             return hashCode;
+        }
+
+        public override string ToString()
+        {
+            return $"[AbsoluteEntityCell - Position: {Position} BatchId: {BatchId} CellId: {CellId} Level: {Level} ]";
         }
     }
 }

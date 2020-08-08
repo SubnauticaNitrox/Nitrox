@@ -33,7 +33,7 @@ namespace NitroxModel.DataStructures
 
         public override string ToString()
         {
-            return "[Int3 - {" + X + ", " + Y + ", " + Z + "}]";
+            return $"[Int3 - {X}, {Y}, {Z}]";
         }
 
         public override bool Equals(object obj)
@@ -42,7 +42,7 @@ namespace NitroxModel.DataStructures
             {
                 return false;
             }
-                
+
             Int3 int3 = (Int3)obj;
 
             return Equals(int3);

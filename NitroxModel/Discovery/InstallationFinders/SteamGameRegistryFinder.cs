@@ -7,8 +7,8 @@ namespace NitroxModel.Discovery.InstallationFinders
 {
     public class SteamGameRegistryFinder : IFindGameInstallation
     {
-        public const int SUBNAUTICA_APP_ID = 264710;
-        public const string SUBNAUTICA_GAME_NAME = "Subnautica";
+        private const int SUBNAUTICA_APP_ID = 264710;
+        private const string SUBNAUTICA_GAME_NAME = "Subnautica";
 
         public string FindGame(List<string> errors = null)
         {
@@ -42,18 +42,18 @@ namespace NitroxModel.Discovery.InstallationFinders
         ///     Finds game install directory by iterating through all the steam game libraries configured and finding the appid
         ///     that matches <see cref="SUBNAUTICA_APP_ID" />.
         /// </summary>
-        /// <param name="libraryfolders"></param>
+        /// <param name="libFolders"></param>
         /// <param name="appid"></param>
         /// <param name="gameName"></param>
         /// <returns></returns>
-        private static string SearchAllInstallations(string libraryfolders, int appid, string gameName)
+        private static string SearchAllInstallations(string libFolders, int appid, string gameName)
         {
-            if (!File.Exists(libraryfolders))
+            if (!File.Exists(libFolders))
             {
                 return null;
             }
 
-            using (StreamReader file = new StreamReader(libraryfolders))
+            using (StreamReader file = new StreamReader(libFolders))
             {
                 string line;
                 while ((line = file.ReadLine()) != null)
@@ -62,8 +62,7 @@ namespace NitroxModel.Discovery.InstallationFinders
                     Match regMatch = Regex.Match(line, "\"(.*)\"\t*\"(.*)\"");
                     string key = regMatch.Groups[1].Value;
                     string value = regMatch.Groups[2].Value;
-                    int number;
-                    if (int.TryParse(key, out number) && File.Exists(Path.Combine(value, $"steamapps/appmanifest_{appid}.acf")))
+                    if (int.TryParse(key, out int _) && File.Exists(Path.Combine(value, $"steamapps/appmanifest_{appid}.acf")))
                     {
                         return Path.Combine(value, "steamapps/common", gameName);
                     }
@@ -75,11 +74,11 @@ namespace NitroxModel.Discovery.InstallationFinders
 
         private static object ReadRegistrySafe(string path, string key)
         {
-            using (RegistryKey subkey = Registry.CurrentUser.OpenSubKey(path))
+            using (RegistryKey subKey = Registry.CurrentUser.OpenSubKey(path))
             {
-                if (subkey != null)
+                if (subKey != null)
                 {
-                    return subkey.GetValue(key);
+                    return subKey.GetValue(key);
                 }
             }
 

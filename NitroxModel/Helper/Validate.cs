@@ -11,7 +11,7 @@ namespace NitroxModel.Helper
     public static class Validate
     {
         public static void NotNull<T>(T o)
-            // Prevent non-nullable valuetypes from getting boxed to object.
+            // Prevent non-nullable value types from getting boxed to object.
             // In other words: Error when trying to assert non-null on something that can't be null in the first place.
             where T : class
         {
