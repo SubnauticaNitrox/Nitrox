@@ -8,8 +8,6 @@ namespace NitroxClient.GameLogic.Spawning.Metadata
     {
         public override void ProcessMetadata(GameObject gameObject, StarshipDoorMetadata metadata)
         {
-            Log.Info($"Received door metadata change for {gameObject.name} with data of {metadata}");
-
             StarshipDoor starshipDoor = gameObject.GetComponent<StarshipDoor>();
             starshipDoor.doorOpen = metadata.DoorOpen;
             starshipDoor.doorLocked = metadata.DoorLocked;
