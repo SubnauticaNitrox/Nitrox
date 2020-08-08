@@ -1,6 +1,8 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Net;
 using System.Text.RegularExpressions;
+using NitroxModel.Logger;
 
 namespace NitroxModel.Helper
 {
@@ -18,35 +20,34 @@ namespace NitroxModel.Helper
             }
         }
 
-        public static string GetNitroxLatestVersion()
+        public static Version GetNitroxLatestVersion()
         {
             HttpWebRequest req = WebRequest.Create("https://api.github.com/repos/SubnauticaNitrox/Nitrox/releases/latest") as HttpWebRequest;
             req.Method = "GET";
             req.UserAgent = "Nitrox";
             req.ContentType = "application/json";
-            req.Timeout = 1000;
-
-            string version = string.Empty;
+            req.Timeout = 5000;
 
             try
             {
                 using (StreamReader sr = new StreamReader(req.GetResponse().GetResponseStream()))
                 {
                     string json = sr.ReadToEnd();
-                    Regex rx = new Regex("\\\"name\\\":\\\"(([^\\\"])*)\\\"");
+                    Regex rx = new Regex(@"""name"":""([^""]*)""");
                     Match match = rx.Match(json);
 
                     if (match.Success)
                     {
-                        version = match.Groups[1].Value;
+                        return new Version(match.Groups[1].Value);
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                Log.Error(ex, "WebHelper : Error while fetching nitrox latest version on GitHub");
             }
 
-            return version;
+            return new Version();
         }
     }
 }
