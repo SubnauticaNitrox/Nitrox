@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -215,9 +214,9 @@ namespace NitroxLauncher
             {
                 File.Copy(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "lib", bootloaderName), Path.Combine(subnauticaPath, "Subnautica_Data", "Managed", bootloaderName), true);
             }
-            catch (IOException)
+            catch (IOException ex)
             {
-                // ignored
+                Log.Error(ex, "Unable to move bootloader dll to Managed folder. Still attempting to launch because it might exist from previous runs.");
             }
 
             nitroxEntryPatch.Remove(); // Remove any previous instances first.
