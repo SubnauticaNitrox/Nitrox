@@ -15,6 +15,9 @@ using NitroxModel.Packets;
 using System;
 using System.Reflection;
 using UnityEngine;
+using NitroxModel_Subnautica.DataStructures;
+using NitroxClient.GameLogic.Bases.Spawning;
+using NitroxModel.DataStructures;
 
 namespace NitroxClient.MonoBehaviours
 {
@@ -64,7 +67,7 @@ namespace NitroxClient.MonoBehaviours
 
             while (buildEvents.Count > 0 && !isNextEventFrameBlocked)
             {
-                BuildEvent nextEvent = buildEvents.Dequeue();
+                IBuildEvent nextEvent = buildEvents.Dequeue();
 
                 try
                 {
@@ -84,7 +87,7 @@ namespace NitroxClient.MonoBehaviours
             }
         }
 
-        private void ActionBuildEvent(BuildEvent buildEvent)
+        private void ActionBuildEvent(IBuildEvent buildEvent)
         {
             switch (buildEvent)
             {
@@ -108,7 +111,7 @@ namespace NitroxClient.MonoBehaviours
 
         private static void PlaceBasePiece(BasePiecePlacedEvent basePiecePlacedBuildEvent)
         {
-            Log.Info($"BuildBasePiece {basePiecePlacedBuildEvent.BasePiece.Id} type: {basePiecePlacedBuildEvent.BasePiece.TechType} parentId: {basePiecePlacedBuildEvent.BasePiece.Transform.Parent.Id}");
+            Log.Info($"BuildBasePiece {basePiecePlacedBuildEvent.BasePiece.Id} type: {basePiecePlacedBuildEvent.BasePiece.TechType} parentId: {basePiecePlacedBuildEvent.BasePiece.ParentId}");
             BasePiece basePiece = basePiecePlacedBuildEvent.BasePiece;
             GameObject buildPrefab = CraftData.GetBuildPrefab(basePiece.TechType.ToUnity());
             MultiplayerBuilder.overridePosition = basePiece.ItemPosition.ToUnity();

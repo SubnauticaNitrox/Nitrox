@@ -18,19 +18,19 @@ namespace NitroxModel_Subnautica.DataStructures.Surrogates
         [ProtoMember(3)]
         public float Z { get; private set; }
 
-        protected override void GetObjectData(Vector3 obj, SerializationInfo info)
+        protected override void GetObjectData(Vector3 vector3, SerializationInfo info)
         {
-            info.AddValue("x", obj.x);
-            info.AddValue("y", obj.y);
-            info.AddValue("z", obj.z);
+            info.AddValue("x", vector3.x);
+            info.AddValue("y", vector3.y);
+            info.AddValue("z", vector3.z);
         }
 
-        protected override Vector3 SetObjectData(Vector3 obj, SerializationInfo info)
+        protected override Vector3 SetObjectData(Vector3 vector3, SerializationInfo info)
         {
-            obj.x = info.GetSingle("x");
-            obj.y = info.GetSingle("y");
-            obj.z = info.GetSingle("z");
-            return obj;
+            vector3.x = info.GetSingle("x");
+            vector3.y = info.GetSingle("y");
+            vector3.z = info.GetSingle("z");
+            return vector3;
         }
 
         public static implicit operator Vector3Surrogate(NitroxVector3 v)

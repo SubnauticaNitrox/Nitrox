@@ -61,7 +61,7 @@ namespace NitroxClient.GameLogic
             VehicleSpawned vehicleSpawned = new VehicleSpawned(SerializationHelper.GetBytes(gameObject), vehicleModel);
             vehicles.AddVehicle(vehicleModel);
 
-            Log.Debug($"Spawning vehicle {vehicleModel.TechType} with id {vehicleModel.Id} at {vehicleModel.Transform.Position}");
+            Log.Debug($"Spawning vehicle {vehicleModel.TechType} with id {vehicleModel.Id} at {vehicleModel.Position}");
             packetSender.Send(vehicleSpawned);
 
             vehicles.SpawnDefaultBatteries(vehicleModel);

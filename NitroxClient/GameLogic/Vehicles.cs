@@ -54,11 +54,11 @@ namespace NitroxClient.GameLogic
 
                 if (opVehicle.HasValue)
                 { //Seamoth & Exosuit
-                    Optional<LiveMixin> livemixin = Optional.OfNullable(opVehicle.Value.GetComponent<LiveMixin>());
+                    Optional<LiveMixin> liveMixin = Optional.OfNullable(opVehicle.Value.GetComponent<LiveMixin>());
 
-                    if (livemixin.HasValue)
+                    if (liveMixin.HasValue)
                     {
-                        health = livemixin.Value.health;
+                        health = liveMixin.Value.health;
                     }
 
                     name = opVehicle.Value.GetName();
@@ -114,6 +114,7 @@ namespace NitroxClient.GameLogic
                     gameObject.transform.position.ToDto(),
                     gameObject.transform.rotation.ToDto(),
                     childIdentifiers,
+                    Optional.Empty,
                     name,
                     hsb ?? VehicleHelper.GetDefaultColors(techType), //Shouldn't be null now, but just in case
                     health
@@ -165,7 +166,7 @@ namespace NitroxClient.GameLogic
         public void CreateVehicle(VehicleModel vehicleModel)
         {
             AddVehicle(vehicleModel);
-            CreateVehicle(vehicleModel.TechType.ToUnity(), vehicleModel.Id, vehicleModel.Transform.Position.ToUnity(), vehicleModel.Transform.Rotation.ToUnity(), vehicleModel.InteractiveChildIdentifiers, vehicleModel.DockingBayId, vehicleModel.Name, vehicleModel.HSB.ToUnity(), vehicleModel.Health);
+            CreateVehicle(vehicleModel.TechType.ToUnity(), vehicleModel.Id, vehicleModel.Position.ToUnity(), vehicleModel.Rotation.ToUnity(), vehicleModel.InteractiveChildIdentifiers, vehicleModel.DockingBayId, vehicleModel.Name, vehicleModel.HSB.ToUnity(), vehicleModel.Health);
         }
 
         public void CreateVehicle(TechType techType, NitroxId id, Vector3 position, Quaternion rotation, IEnumerable<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, Vector3[] hsb, float health)
@@ -204,7 +205,7 @@ namespace NitroxClient.GameLogic
                 Rocket rocket = gameObject.GetComponent<Rocket>();
                 vehicle = gameObject.GetComponent<Vehicle>();
                 subRoot = gameObject.GetComponent<SubRoot>();
-                
+
                 MultiplayerVehicleControl mvc = null;
 
                 if (subRoot)

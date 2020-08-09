@@ -6,11 +6,11 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation
 {
     public class SubnauticaRotationMetadataFactory : IRotationMetadataFactory
     {
-        public Optional<RotationMetadata> From(object o)
+        public Optional<RotationMetadata> From(object ghost)
         {
             RotationMetadata rotationMetadata = null;
 
-            switch (o)
+            switch (ghost)
             {
                 case BaseAddCorridorGhost corridorGhost:
                     {

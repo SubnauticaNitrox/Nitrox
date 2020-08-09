@@ -222,7 +222,7 @@ namespace NitroxServer.GameLogic.Entities
                                 }
                                 else
                                 {
-                                    Log.Error("Parent not Found! Are you sure it exists? " + entity.ParentId);
+                                    Log.Error($"Parent not Found! Are you sure it exists? {entity.ParentId}");
                                 }
                             }
 

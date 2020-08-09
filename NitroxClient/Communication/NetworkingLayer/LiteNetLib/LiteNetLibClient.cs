@@ -17,14 +17,14 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
         private readonly NetPacketProcessor netPacketProcessor = new NetPacketProcessor();
         private readonly AutoResetEvent connectedEvent = new AutoResetEvent(false);
         private readonly PacketReceiver packetReceiver;
-        //private readonly NetworkDebugger networkDebugger;
+        private readonly NetworkDebugger networkDebugger;
 
         private NetManager client;
 
-        public LiteNetLibClient(PacketReceiver packetReceiver/*, NetworkDebugger networkDebugger*/)
+        public LiteNetLibClient(PacketReceiver packetReceiver, NetworkDebugger networkDebugger)
         {
             this.packetReceiver = packetReceiver;
-            //this.networkDebugger = networkDebugger;
+            this.networkDebugger = networkDebugger;
         }
 
         public void Start(string ipAddress, int serverPort)
@@ -40,9 +40,12 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
             listener.PeerDisconnectedEvent += Disconnected;
             listener.NetworkReceiveEvent += ReceivedNetworkData;
 
-            client = new NetManager(listener);
-            client.UpdateTime = 15;
-            client.UnsyncedEvents = true; //experimental feature, may need to replace with calls to client.PollEvents();
+            client = new NetManager(listener)
+            {
+                UpdateTime = 15,
+                UnsyncedEvents = true   //experimental feature, may need to replace with calls to client.PollEvents();
+            };
+
             client.Start();
             client.Connect(ipAddress, serverPort, "nitrox");
 
@@ -52,7 +55,7 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
 
         public void Send(Packet packet)
         {
-            //networkDebugger?.PacketSent(packet);
+            networkDebugger?.PacketSent(packet);
             client.SendToAll(netPacketProcessor.Write(packet.ToWrapperPacket()), NitroxDeliveryMethod.ToLiteNetLib(packet.DeliveryMethod));
             client.Flush();
         }

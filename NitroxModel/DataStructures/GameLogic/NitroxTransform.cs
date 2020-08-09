@@ -65,6 +65,7 @@ namespace NitroxModel.DataStructures.GameLogic
             {
                 return;
             }
+
             Parent = parent;
         }
 

@@ -91,7 +91,7 @@ namespace NitroxClient.GameLogic
             GameObject locker = ownerTransform.parent.gameObject.FindChild("submarine_locker_01_0" + lockerId);
             if (!locker)
             {
-                throw new IndexOutOfRangeException("Could not find Locker Object: submarine_locker_01_0" + lockerId);
+                throw new IndexOutOfRangeException($"Could not find Locker Object: submarine_locker_01_0{lockerId}");
             }
             StorageContainer storageContainer = locker.GetComponentInChildren<StorageContainer>();
             if (!storageContainer)

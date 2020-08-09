@@ -84,8 +84,16 @@ namespace NitroxClient.GameLogic
         private GameObject CreateNewEscapePod(EscapePodModel model)
         {
             SuppressEscapePodAwakeMethod = true;
+            GameObject escapePod;
 
-            GameObject escapePod = model.Id.Equals(myEscapePodId) ? EscapePod.main.gameObject : Object.Instantiate(EscapePod.main.gameObject);
+            if (model.Id.Equals(myEscapePodId))
+            {
+                escapePod = EscapePod.main.gameObject;
+            }
+            else
+            {
+                escapePod = Object.Instantiate(EscapePod.main.gameObject);
+            }
 
             escapePod.transform.position = model.Location.ToUnity();
 

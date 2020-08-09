@@ -43,14 +43,10 @@ namespace NitroxClient.GameLogic
             }
             catch (Exception ex)
             {
-#if DEBUG
-                Log.Error(ex, "Got error setting arm GameObjects. This is probably due to docking sync and can be ignored.");
-#else
                 Log.Warn($"Got error setting arm GameObjects. This is probably due to docking sync and can be ignored. {ex.Message}");
-#endif
             }
 
-            Log.Debug("Spawn exosuit arms for: " + id);
+            Log.Debug($"Spawn exosuit arms for: {id}");
         }
 
         public void BroadcastArmAction(TechType techType, IExosuitArm exosuitArm, ExosuitArmAction armAction, Vector3? opVector = null, Quaternion? opRotation = null)
@@ -108,7 +104,7 @@ namespace NitroxClient.GameLogic
                     drillArm.ReflectionCall("StopEffects");
                     break;
                 default:
-                    Log.Error("Drill arm got an arm action he should not get: " + armAction);
+                    Log.Error($"Drill arm got an arm action he should not get: {armAction}");
                     break;
             }
         }
@@ -136,7 +132,6 @@ namespace NitroxClient.GameLogic
                         hook.SetFlying(true);
                         Exosuit componentInParent = grapplingArm.GetComponentInParent<Exosuit>();
 
-
                         if (!opHitVector.HasValue)
                         {
                             Log.Error("No vector given that contains the hook direction");
@@ -149,7 +144,7 @@ namespace NitroxClient.GameLogic
                         break;
                     }
                 default:
-                    Log.Error("Grappling arm got an arm action he should not get: " + armAction);
+                    Log.Error($"Grappling arm got an arm action he should not get: {armAction}");
                     break;
             }
         }

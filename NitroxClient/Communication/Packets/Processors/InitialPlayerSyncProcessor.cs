@@ -51,7 +51,7 @@ namespace NitroxClient.Communication.Packets.Processors
                     moreProcessorsToRun = alreadyRan.Count < processors.Count;
                     if (moreProcessorsToRun && processorsRanLastCycle == 0)
                     {
-                        throw new InvalidDataException("Detected circular dependencies in initial packet sync between: " + GetRemainingProcessorsText());
+                        throw new InvalidDataException($"Detected circular dependencies in initial packet sync between: {GetRemainingProcessorsText()}");
                     }
                 } while (moreProcessorsToRun);
             }

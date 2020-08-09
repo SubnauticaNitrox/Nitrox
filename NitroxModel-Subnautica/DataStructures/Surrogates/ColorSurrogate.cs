@@ -6,21 +6,21 @@ namespace NitroxModel_Subnautica.DataStructures.Surrogates
 {
     public class ColorSurrogate : SerializationSurrogate<Color>
     {
-        protected override void GetObjectData(Color obj, SerializationInfo info)
+        protected override void GetObjectData(Color color, SerializationInfo info)
         {
-            info.AddValue("r", obj.r);
-            info.AddValue("g", obj.g);
-            info.AddValue("b", obj.b);
-            info.AddValue("a", obj.a);
+            info.AddValue("r", color.r);
+            info.AddValue("g", color.g);
+            info.AddValue("b", color.b);
+            info.AddValue("a", color.a);
         }
 
-        protected override Color SetObjectData(Color obj, SerializationInfo info)
+        protected override Color SetObjectData(Color color, SerializationInfo info)
         {
-            obj.r = info.GetSingle("r");
-            obj.g = info.GetSingle("g");
-            obj.b = info.GetSingle("b");
-            obj.a = info.GetSingle("a");
-            return obj;
+            color.r = info.GetSingle("r");
+            color.g = info.GetSingle("g");
+            color.b = info.GetSingle("b");
+            color.a = info.GetSingle("a");
+            return color;
         }
     }
 }

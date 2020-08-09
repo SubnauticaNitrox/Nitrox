@@ -13,7 +13,7 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     class ModuleRemovedProcessor : ClientPacketProcessor<ModuleRemoved>
     {
-        public const int UNEQUIP_EVENT_TYPE_ID = 1;
+        private const int UNEQUIP_EVENT_TYPE_ID = 1;
 
         public override void Process(ModuleRemoved packet)
         {
@@ -21,7 +21,7 @@ namespace NitroxClient.Communication.Packets.Processors
             Optional<Equipment> opEquipment = EquipmentHelper.FindEquipmentComponent(owner);
             if (!opEquipment.HasValue)
             {
-                Log.Error("Could not find equipment type for " + owner.name);
+                Log.Error($"Could not find equipment type for {owner.name}");
                 return;
             }
 

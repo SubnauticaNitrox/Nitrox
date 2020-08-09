@@ -83,11 +83,11 @@ namespace NitroxLauncher
             }
         }
 
-        [Conditional("RELEASE")]
-        public async void CheckNitroxVersion()
+        public static async Task CheckNitroxVersion()
         {
             await Task.Factory.StartNew(() =>
             {
+#if RELEASE
                 Version latestVersion = WebHelper.GetNitroxLatestVersion();
                 Version currentVersion = new Version(Version);
 
@@ -100,6 +100,7 @@ namespace NitroxLauncher
                         MessageBoxResult.OK,
                         MessageBoxOptions.DefaultDesktopOnly);
                 }
+#endif
 
             }, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
         }
