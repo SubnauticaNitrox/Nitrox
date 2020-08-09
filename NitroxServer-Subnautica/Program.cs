@@ -89,7 +89,7 @@ namespace NitroxServer_Subnautica
             }
 
             // Load DLLs where this program (exe) is located
-            string dllPath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), dllFileName);
+            string dllPath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "lib", dllFileName);
             if (!File.Exists(dllPath))
             {
                 // Try find game managed libraries
