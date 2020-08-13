@@ -8,8 +8,6 @@ namespace NitroxClient.GameLogic.Spawning.Metadata
     {
         public override void ProcessMetadata(GameObject gameObject, PrecursorKeyTerminalMetadata metadata)
         {
-            Log.Debug($"Received precursor key terminal metadata change for {gameObject.name} with data of {metadata}");
-
             PrecursorKeyTerminal precursorKeyTerminal = gameObject.GetComponent<PrecursorKeyTerminal>();
             if (precursorKeyTerminal)
             {

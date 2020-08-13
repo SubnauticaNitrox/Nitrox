@@ -9,8 +9,6 @@ namespace NitroxClient.GameLogic.Spawning.Metadata
     {
         public override void ProcessMetadata(GameObject gameObject, SealedDoorMetadata metadata)
         {
-            Log.Info($"Received door metadata change for {gameObject.name} with data of {metadata}");
-
             Sealed door = gameObject.GetComponent<Sealed>();
             door._sealed = metadata.Sealed;
             door.openedAmount = metadata.OpenedAmount;
