@@ -203,16 +203,27 @@ namespace NitroxLauncher
                 throw new Exception("An instance of Subnautica is already running");
             }
 #endif
-            // Store path where launcher is in AppData for Nitrox bootstrapper to read
-            string nitroxAppData = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox");
-            Directory.CreateDirectory(nitroxAppData);
-            File.WriteAllText(Path.Combine(nitroxAppData, "launcherpath.txt"), Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+            string launcherDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            try
+            {
+                // Store path where launcher is in AppData for Nitrox bootstrapper to read
+                string nitroxAppData = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox");
+                Directory.CreateDirectory(nitroxAppData);
+                File.WriteAllText(Path.Combine(nitroxAppData, "launcherpath.txt"), launcherDir);
+                Log.Debug($"Set {launcherDir} as path to launcher for Nitrox client.");
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Failed to set launcher path for Nitrox client.");
+                MessageBox.Show("Failed to set launcher path for Nitrox client.");
+                return;
+            }
 
             // TODO: The launcher should override FileRead win32 API for the Subnautica process to give it the modified Assembly-CSharp from memory 
             string bootloaderName = "Nitrox.Bootloader.dll";
             try
             {
-                File.Copy(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "lib", bootloaderName), Path.Combine(subnauticaPath, "Subnautica_Data", "Managed", bootloaderName), true);
+                File.Copy(Path.Combine(launcherDir, "lib", bootloaderName), Path.Combine(subnauticaPath, "Subnautica_Data", "Managed", bootloaderName), true);
             }
             catch (IOException ex)
             {
