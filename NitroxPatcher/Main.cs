@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Reflection;
 using Autofac;
 using Harmony;
@@ -11,6 +14,7 @@ using NitroxModel.Logger;
 using NitroxPatcher.Modules;
 using NitroxPatcher.Patches;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace NitroxPatcher
 {
@@ -28,16 +32,34 @@ namespace NitroxPatcher
         {
             Log.Setup(true);
             Optional.ApplyHasValueCondition<Object>(o => (bool)o);
+            Log.Info($"Using Nitrox version {Assembly.GetExecutingAssembly().GetName().Version} built on {File.GetCreationTimeUtc(Assembly.GetExecutingAssembly().Location)}");
 
             if (container != null)
             {
-                Log.Warn($"Patches have already been detected! Call {nameof(Apply)} or {nameof(Restore)} instead.");
+                Log.Error($"Patches have already been detected! Call {nameof(Apply)} or {nameof(Restore)} instead.");
                 return;
             }
 
             Log.Info("Registering dependencies");
             container = CreatePatchingContainer();
-            NitroxServiceLocator.InitializeDependencyContainer(new ClientAutoFacRegistrar());
+            try
+            {
+                NitroxServiceLocator.InitializeDependencyContainer(new ClientAutoFacRegistrar());
+            }
+            catch (ReflectionTypeLoadException ex)
+            {
+                Log.Error($"Failed to load one or more dependency types for Nitrox. Assembly: {ex.Types.FirstOrDefault()?.Assembly.FullName ?? "unknown"}");
+                foreach (Exception loaderEx in ex.LoaderExceptions)
+                {
+                    Log.Error(loaderEx);
+                }
+                throw;
+            }
+            catch (Exception)
+            {
+                Log.Error("Error initializing and loading dependencies.");
+                throw;
+            }
 
             InitPatches();
             ApplyNitroxBehaviours();
@@ -96,7 +118,7 @@ namespace NitroxPatcher
 
             Multiplayer.OnBeforeMultiplayerStart += Apply;
             Multiplayer.OnAfterMultiplayerEnd += Restore;
-            Log.Info($"Completed patching using {Assembly.GetExecutingAssembly().FullName}");
+            Log.Info($"Completed patching");
         }
 
         private static IContainer CreatePatchingContainer()
