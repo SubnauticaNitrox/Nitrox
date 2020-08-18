@@ -14,7 +14,6 @@ using NitroxModel.Logger;
 using NitroxPatcher.Modules;
 using NitroxPatcher.Patches;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace NitroxPatcher
 {
@@ -31,15 +30,13 @@ namespace NitroxPatcher
         public static void Execute()
         {
             Log.Setup(true);
-            Optional.ApplyHasValueCondition<Object>(o => (bool)o);
+            Optional.ApplyHasValueCondition<UnityEngine.Object>(o => (bool)o);
             Log.Info($"Using Nitrox version {Assembly.GetExecutingAssembly().GetName().Version} built on {File.GetCreationTimeUtc(Assembly.GetExecutingAssembly().Location)}");
 
             if (container != null)
             {
-                Log.Error($"Patches have already been detected! Call {nameof(Apply)} or {nameof(Restore)} instead.");
-                return;
+                throw new Exception($"Patches have already been detected! Call {nameof(Apply)} or {nameof(Restore)} instead.");
             }
-
             Log.Info("Registering dependencies");
             container = CreatePatchingContainer();
             try
@@ -55,9 +52,9 @@ namespace NitroxPatcher
                 }
                 throw;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                Log.Error("Error initializing and loading dependencies.");
+                Log.Error(ex,"Error while initializing and loading dependencies.");
                 throw;
             }
 
