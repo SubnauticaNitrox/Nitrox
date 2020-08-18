@@ -54,7 +54,7 @@ namespace NitroxPatcher
             }
             catch (Exception ex)
             {
-                Log.Error(ex,"Error while initializing and loading dependencies.");
+                Log.Error(ex, "Error while initializing and loading dependencies.");
                 throw;
             }
 
@@ -115,7 +115,7 @@ namespace NitroxPatcher
 
             Multiplayer.OnBeforeMultiplayerStart += Apply;
             Multiplayer.OnAfterMultiplayerEnd += Restore;
-            Log.Info($"Completed patching");
+            Log.Info("Completed patching");
         }
 
         private static IContainer CreatePatchingContainer()
