@@ -21,7 +21,7 @@ namespace NitroxPatcher.Patches.Dynamic
             OnGoalUnlock onGoalUnlock;
             if (goalUnlocks.TryGetValue(completedGoal, out onGoalUnlock))
             {
-                StoryEventSend packet = new StoryEventSend(StoryEventType.GoalUnlock, completedGoal);
+                StoryEventSend packet = new StoryEventSend(StoryEventType.GOAL_UNLOCK, completedGoal);
                 NitroxServiceLocator.LocateService<IPacketSender>().Send(packet);
             }
         }
