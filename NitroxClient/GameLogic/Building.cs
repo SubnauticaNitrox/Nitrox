@@ -74,6 +74,7 @@ namespace NitroxClient.GameLogic
             obj.Transform.SetParent(NitroxObject.GetObjectById(parentBaseId).Transform);
 
             BasePiece basePiece = new BasePiece(camera.position.ToDto(), camera.rotation.ToDto(), techType.ToDto(), false, rotationMetadata);
+            obj.AddBehavior(basePiece);
             PlaceBasePiece placedBasePiece = new PlaceBasePiece(basePiece);
             packetSender.Send(placedBasePiece);
         }
@@ -111,6 +112,7 @@ namespace NitroxClient.GameLogic
             obj.Transform.SetParent(NitroxObject.GetObjectById(parentId)?.Transform);
 
             BasePiece basePiece = new BasePiece(camera.position.ToDto(), camera.rotation.ToDto(), techType.ToDto(), true, Optional.Empty);
+            obj.AddBehavior(basePiece);
             PlaceBasePiece placedBasePiece = new PlaceBasePiece(basePiece);
             packetSender.Send(placedBasePiece);
         }
