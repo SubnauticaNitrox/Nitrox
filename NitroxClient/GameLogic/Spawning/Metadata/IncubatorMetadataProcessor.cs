@@ -14,7 +14,7 @@ namespace NitroxClient.GameLogic.Spawning.Metadata
 
             bool terminalActive = (bool)incubator.ReflectionGet("terminalActive");
             incubator.computerTerminal.SetActive(terminalActive);
-            incubator.ReflectionSet("emissiveIntensity", (float)(terminalActive ? 1 : 0));
+            incubator.ReflectionSet("emissiveIntensity", terminalActive ? 1f : 0f);
             incubator.ReflectionCall("UpdateMaterialsEmissive");
             incubator.terminalLight.intensity = (float)incubator.ReflectionGet("emissiveIntensity") * 1.85f;
         }
