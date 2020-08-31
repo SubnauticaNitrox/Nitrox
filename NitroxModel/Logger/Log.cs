@@ -47,7 +47,7 @@ namespace NitroxModel.Logger
             ColoredConsoleTarget logConsole = new ColoredConsoleTarget(nameof(logConsole))
             {
                 Layout = layout,
-                DetectConsoleAvailable = true
+                DetectConsoleAvailable = false
             };
 
             logConsole.RowHighlightingRules.Add(new ConsoleRowHighlightingRule

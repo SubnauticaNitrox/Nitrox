@@ -65,6 +65,7 @@ namespace NitroxLauncher
 
             gameProcess?.Dispose();
             serverProcess?.Dispose();
+            serverProcess = null; // Indicate the process is dead now.
         }
 
         public async Task WriteToServerAsync(string inputText)
