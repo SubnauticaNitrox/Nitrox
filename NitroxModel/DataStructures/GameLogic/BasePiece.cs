@@ -49,6 +49,9 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoMember(13, DynamicType = true)]
         public Optional<BasePieceMetadata> Metadata { get; set; }
 
+        [ProtoMember(14, DynamicType = true)]
+        public int BuildIndex { get; set; }
+
         protected BasePiece()
         {
             ParentId = Optional.Empty;
@@ -74,7 +77,7 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public override string ToString()
         {
-            return "[BasePiece - ItemPosition: " + ItemPosition + " Id: " + Id + " Rotation: " + Rotation + " CameraPosition: " + CameraPosition + "CameraRotation: " + CameraRotation + " TechType: " + TechType + " ParentId: " + ParentId + " ConstructionAmount: " + ConstructionAmount + " IsFurniture: " + IsFurniture + " BaseId: " + BaseId + " RotationMetadata: " + RotationMetadata + "]";
+            return "[BasePiece - ItemPosition: " + ItemPosition + " Id: " + Id + " Rotation: " + Rotation + " CameraPosition: " + CameraPosition + "CameraRotation: " + CameraRotation + " TechType: " + TechType + " ParentId: " + ParentId + " ConstructionAmount: " + ConstructionAmount + " IsFurniture: " + IsFurniture + " BaseId: " + BaseId + " RotationMetadata: " + RotationMetadata + " BuildIndex: " + BuildIndex + "]";
         }
     }
 }

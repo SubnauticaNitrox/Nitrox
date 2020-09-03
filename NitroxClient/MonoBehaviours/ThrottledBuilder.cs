@@ -148,6 +148,11 @@ namespace NitroxClient.MonoBehaviours
                 gameObject = constructable.gameObject;
             }
 
+            if (parentBase != null && basePiece.IsFurniture)
+            {
+                gameObject.transform.parent = parentBase.gameObject.transform;
+            }
+
             NitroxEntity.SetNewId(gameObject, basePiece.Id);
             
             /**

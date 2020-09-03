@@ -4,6 +4,7 @@ using NitroxModel.DataStructures.GameLogic.Buildings.Metadata;
 using NitroxModel.DataStructures;
 using System.Linq;
 using NitroxModel.DataStructures.Util;
+using System;
 
 namespace NitroxServer.GameLogic.Bases
 {
@@ -11,11 +12,17 @@ namespace NitroxServer.GameLogic.Bases
     {
         private Dictionary<NitroxId, BasePiece> partiallyConstructedPiecesById = new Dictionary<NitroxId, BasePiece>();
         private List<BasePiece> completedBasePieceHistory;
+        private int nextBuildIndex;
 
         public BaseManager(List<BasePiece> partiallyConstructedPieces, List<BasePiece> completedBasePieceHistory)
         {
             this.completedBasePieceHistory = completedBasePieceHistory;
             partiallyConstructedPiecesById = partiallyConstructedPieces.ToDictionary(piece => piece.Id);
+
+            int highestPartialIndex = partiallyConstructedPieces.Any() ? partiallyConstructedPieces.Max(piece => piece.BuildIndex) : 0;
+            int highestCompletedIndex = completedBasePieceHistory.Any() ? completedBasePieceHistory.DefaultIfEmpty().Max(piece => piece.BuildIndex) : 0;
+
+            nextBuildIndex = Math.Max(highestPartialIndex, highestCompletedIndex) + 1;
         }
 
         public List<BasePiece> GetCompletedBasePieceHistory()
@@ -38,6 +45,7 @@ namespace NitroxServer.GameLogic.Bases
         {
             lock (partiallyConstructedPiecesById)
             {
+                basePiece.BuildIndex = ++nextBuildIndex;
                 partiallyConstructedPiecesById.Add(basePiece.Id, basePiece);
             }
         }

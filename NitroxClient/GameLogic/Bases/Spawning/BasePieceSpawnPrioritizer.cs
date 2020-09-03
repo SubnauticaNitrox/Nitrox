@@ -7,54 +7,52 @@ namespace NitroxClient.GameLogic.Bases.Spawning
 {
     public class BasePieceSpawnPrioritizer
     {
-        public readonly List<TechType> PieceOrder = new List<TechType>()
+        public readonly Dictionary<TechType, int> PiecesToPriority = new Dictionary<TechType, int>()
         {
-            // Prioritize core foundation and basic rooms.
-            TechType.BaseFoundation,
-            TechType.BaseRoom,
-            TechType.BaseMapRoom,
-            TechType.BaseMoonpool,
-            TechType.BaseObservatory,
+            // Prioritize core foundations, basic rooms, and corridors
+            [TechType.BaseFoundation] = 1,
+            [TechType.BaseRoom] = 1,
+            [TechType.BaseMapRoom] = 1,
+            [TechType.BaseMoonpool] = 1,
+            [TechType.BaseObservatory] = 1,
+            [TechType.BaseCorridor] = 1,
+            [TechType.BaseCorridorGlass] = 1,
+            [TechType.BaseCorridorGlassI] = 1,
+            [TechType.BaseCorridorGlassL] = 1,
+            [TechType.BaseCorridorI] = 1,
+            [TechType.BaseCorridorL] = 1,
+            [TechType.BaseCorridorT] = 1,
+            [TechType.BaseCorridorX] = 1,
+            [TechType.BasePipeConnector] = 1,
 
-            // Corridors can then be used to connect the varios base pieces
-            TechType.BaseCorridor,
-            TechType.BaseCorridorGlass,
-            TechType.BaseCorridorGlassI,
-            TechType.BaseCorridorGlassL,
-            TechType.BaseCorridorI,
-            TechType.BaseCorridorL,
-            TechType.BaseCorridorT,
-            TechType.BaseCorridorX,
-            TechType.BasePipeConnector,
-            
-            TechType.BaseUpgradeConsole,
+            [TechType.BaseUpgradeConsole] = 1,
 
             // Reinforce fortifications to ensure good hull integrity
-            TechType.BaseReinforcement,
-            TechType.BaseBulkhead,
+            [TechType.BaseReinforcement] = 2,
+            [TechType.BaseBulkhead] = 2,
 
             // Water tanks are internal and need to go before hatches because hatches can be placed on them.
-            TechType.BaseWaterPark,
+            [TechType.BaseWaterPark] = 3,
 
             // Everything that needs a hatch should come before here.
-            TechType.BaseHatch,
+            [TechType.BaseHatch] = 4,
 
-            TechType.BaseWindow,
-            TechType.BaseLadder,
-            
+            [TechType.BaseWindow] = 5,
+            [TechType.BaseLadder] = 5,
+
             // Place energy producing before consuming
-            TechType.SolarPanel,
-            TechType.BaseNuclearReactor,
-            TechType.NuclearReactor,
-            TechType.BaseBioReactor,
-            TechType.Bioreactor,
-            TechType.ThermalPlant,
-            TechType.PowerTransmitter,
+            [TechType.SolarPanel] = 6,
+            [TechType.BaseNuclearReactor] = 6,
+            [TechType.NuclearReactor] = 6,
+            [TechType.BaseBioReactor] = 6,
+            [TechType.Bioreactor] = 6,
+            [TechType.ThermalPlant] = 6,
+            [TechType.PowerTransmitter] = 6,
 
             // Energy Consuming
-            TechType.BaseFiltrationMachine,
-            TechType.Fabricator,
-            TechType.BatteryCharger
+            [TechType.BaseFiltrationMachine] = 7,
+            [TechType.Fabricator] = 7,
+            [TechType.BatteryCharger] = 7
 
             // Anything not here will default to the end below.
 
@@ -66,20 +64,21 @@ namespace NitroxClient.GameLogic.Bases.Spawning
                               .ThenByDescending(piece => piece.ConstructionCompleted) // Ensure completed pieces are before pending pieces
                               .ThenBy(piece => piece.IsFurniture) // Ensure base building block go before furniture
                               .ThenBy(piece => ComputeBasePiecePriority(piece))    // Ensure remaining pieces are prioritized by above order. 
+                              .ThenBy(piece => piece.BuildIndex)
                               .ToList();                              
         }
 
         private int ComputeBasePiecePriority(BasePiece basePiece)
         {
             TechType techType = basePiece.TechType.ToUnity();
-            int position = PieceOrder.IndexOf(techType);
+            int position;
 
-            if (position == -1)
+            if (PiecesToPriority.TryGetValue(techType, out position))
             {
-                return int.MaxValue;
+                return position;
             }
 
-            return position;
+            return int.MaxValue;
         }
     }
 }

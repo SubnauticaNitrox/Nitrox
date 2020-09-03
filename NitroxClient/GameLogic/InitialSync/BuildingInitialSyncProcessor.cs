@@ -73,7 +73,6 @@ namespace NitroxClient.GameLogic.InitialSync
             }
         }
 
-
         private void FinishedCompletedBuildings(object sender, EventArgs eventArgs)
         {
             ThrottledBuilder.main.QueueDrained -= FinishedCompletedBuildings;

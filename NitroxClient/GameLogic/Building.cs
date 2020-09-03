@@ -186,7 +186,7 @@ namespace NitroxClient.GameLogic
                 BasePieceSpawnProcessor customSpawnProcessor = BasePieceSpawnProcessor.From(finishedPiece.GetComponent<BaseDeconstructable>());
                 customSpawnProcessor.SpawnPostProcess(latestBase, latestCell, finishedPiece);
             }
-
+            
             Log.Info("Construction Completed " + id + " in base " + baseId);
 
             ConstructionCompleted constructionCompleted = new ConstructionCompleted(id, baseId);
