@@ -22,7 +22,7 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoMember(4)]
         public NitroxTechType TechType { get; set; }
 
-        [ProtoMember(5)]
+        [ProtoMember(5, DynamicType = true)]
         public Optional<NitroxId> ParentId { get; set; }
 
         [ProtoMember(6)]

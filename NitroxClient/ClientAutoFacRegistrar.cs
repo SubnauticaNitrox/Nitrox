@@ -9,6 +9,7 @@ using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.Debuggers;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Bases;
+using NitroxClient.GameLogic.Bases.Spawning;
 using NitroxClient.GameLogic.ChatUI;
 using NitroxClient.GameLogic.HUD;
 using NitroxClient.GameLogic.InitialSync.Base;
@@ -107,6 +108,7 @@ namespace NitroxClient
             containerBuilder.RegisterType<NitroxConsole>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Terrain>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<BuildThrottlingQueue>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<BasePieceSpawnPrioritizer>().InstancePerLifetimeScope();            
             containerBuilder.RegisterType<KnownTechEntry>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<ExosuitModuleEvent>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<SeamothModulesEvent>().InstancePerLifetimeScope();

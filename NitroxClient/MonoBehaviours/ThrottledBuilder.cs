@@ -199,6 +199,8 @@ namespace NitroxClient.MonoBehaviours
 
                     latestBase.GetClosestCell(constructing.gameObject.transform.position, out latestCell, out worldPosition, out distance);
                     cellTransform = latestBase.GetCellObject(latestCell);
+
+                    Validate.NotNull(cellTransform, "Must have a cell transform, one not found near " + constructing.gameObject.transform.position + " for latestcell " + latestCell);
                 }
 
                 GameObject finishedPiece = null;
@@ -217,7 +219,7 @@ namespace NitroxClient.MonoBehaviours
                     }
                 }
                 
-                Validate.NotNull(finishedPiece, "Could not find finished piece in cell " + latestCell);
+                Validate.NotNull(finishedPiece, "Could not find finished piece in cell " + latestCell + " when constructing " + constructionCompleted.PieceId + " " + finishedPiece.name);
 
                 Log.Info("Construction completed on a base piece: " + constructionCompleted.PieceId + " " + finishedPiece.name);
 

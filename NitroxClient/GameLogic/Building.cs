@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using NitroxClient.Communication.Abstract;
+﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Bases.Spawning;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
@@ -11,7 +10,6 @@ using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
-using NitroxModel_Subnautica.Helper;
 using UnityEngine;
 using static NitroxClient.GameLogic.Helper.TransientLocalObjectManager;
 
@@ -38,31 +36,28 @@ namespace NitroxClient.GameLogic
             {
                 return;
             }
-
+            
             NitroxId id = NitroxEntity.GetId(constructableBase.gameObject);
             NitroxId parentBaseId = null;
-
-            if (targetBase != null)
+            
+            if (baseGhost != null)
             {
-                parentBaseId = NitroxEntity.GetId(targetBase.gameObject);
-            }
-            else if(constructableBase != null)
-            {
-                Base playerBase = constructableBase.gameObject.GetComponentInParent<Base>();
-
-                if(playerBase != null)
+                if (baseGhost.TargetBase != null)
                 {
-                    parentBaseId = NitroxEntity.GetId(playerBase.gameObject);
+                    parentBaseId = NitroxEntity.GetId(baseGhost.TargetBase.gameObject);
+                }
+                else if (baseGhost.GhostBase != null)
+                {
+                    parentBaseId = NitroxEntity.GetId(baseGhost.GhostBase.gameObject);
                 }
             }
-
+            
             if(parentBaseId == null)
             {
-                Base playerBase = baseGhost.gameObject.GetComponentInParent<Base>();
-
-                if (playerBase != null)
+                Base aBase = constructableBase.gameObject.GetComponentInParent<Base>();
+                if (aBase != null)
                 {
-                    parentBaseId = NitroxEntity.GetId(playerBase.gameObject);
+                    parentBaseId = NitroxEntity.GetId(aBase.gameObject);
                 }
             }
             
@@ -148,6 +143,7 @@ namespace NitroxClient.GameLogic
             {
                 Int3 latestCell = lastTargetBaseOffset;
                 Base latestBase = (lastTargetBase.HasValue) ? lastTargetBase.Value : ((GameObject)opConstructedBase.Value).GetComponent<Base>();
+                baseId = NitroxEntity.GetId(latestBase.gameObject);
 
                 Transform cellTransform = latestBase.GetCellObject(latestCell);
 
@@ -191,7 +187,7 @@ namespace NitroxClient.GameLogic
                 customSpawnProcessor.SpawnPostProcess(latestBase, latestCell, finishedPiece);
             }
 
-            Log.Info("Construction Completed " + id);
+            Log.Info("Construction Completed " + id + " in base " + baseId);
 
             ConstructionCompleted constructionCompleted = new ConstructionCompleted(id, baseId);
             packetSender.Send(constructionCompleted);
