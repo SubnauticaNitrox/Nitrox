@@ -12,7 +12,7 @@ namespace NitroxClient.MonoBehaviours
     [ProtoContract]
     public class NitroxEntity : MonoBehaviour, IProtoTreeEventListener
     {
-        private static Dictionary<NitroxId, GameObject> gameObjectsById = new Dictionary<NitroxId, GameObject>();
+        private static readonly Dictionary<NitroxId, GameObject> gameObjectsById = new Dictionary<NitroxId, GameObject>();
 
         [ProtoMember(1)]
         public NitroxId Id;

@@ -39,7 +39,7 @@ namespace NitroxClient.Unity.Helper
 
             if (!child)
             {
-                throw new ArgumentNullException(tf + " does not contain \"" + name + "\"");
+                throw new ArgumentNullException($"{tf} does not contain '{name}'");
             }
 
             return child;
@@ -55,7 +55,7 @@ namespace NitroxClient.Unity.Helper
         public static GameObject RequireGameObject(string name)
         {
             GameObject go = GameObject.Find(name);
-            Validate.NotNull(go, "No global GameObject found with " + name + "!");
+            Validate.NotNull(go, $"No global GameObject found with {name}");
 
             return go;
         }
@@ -114,6 +114,18 @@ namespace NitroxClient.Unity.Helper
             }
 
             return builder.ToString();
+        }
+
+        public static string GetAllComponents(this GameObject obj)
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+
+            foreach (Component component in obj.GetComponents<Component>())
+            {
+                stringBuilder.AppendLine($"/{component.GetType()} : {component.name}");
+            }
+
+            return stringBuilder.ToString();
         }
 
         public static string GetFullName(this GameObject obj)

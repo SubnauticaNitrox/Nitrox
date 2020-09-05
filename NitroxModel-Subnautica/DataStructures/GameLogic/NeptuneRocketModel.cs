@@ -20,6 +20,9 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
         [ProtoMember(3)]
         public bool ElevatorUp { get; set; }
 
+        [ProtoMember(4)]
+        public IList<PreflightCheck> PreflightChecks { get; set; }
+
         protected NeptuneRocketModel()
         {
             // Constructor for serialization. Has to be "protected" for json serialization.
@@ -31,11 +34,12 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
             CurrentStage = 0;
             ElevatorUp = false;
             ConstructorId = new NitroxId(); //The ID will be set forever and will be fetched once a rocket base platform starts (see Rocket_Start_Patch)
+            PreflightChecks = new List<PreflightCheck>();
         }
 
         public override string ToString()
         {
-            return $"[NeptuneRocketModel - {base.ToString()}, ConstructorId: {ConstructorId}, CurrentStage: {CurrentStage}, ElevatorUp: {ElevatorUp}]";
+            return $"[NeptuneRocketModel - {base.ToString()}, ConstructorId: {ConstructorId}, CurrentStage: {CurrentStage}, ElevatorUp: {ElevatorUp}, Preflights: {PreflightChecks?.Count}]";
         }
     }
 }
