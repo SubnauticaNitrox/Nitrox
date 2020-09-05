@@ -25,7 +25,16 @@ namespace NitroxServer_Subnautica.Communication.Packets.Processors
 
             if (opRocket.HasValue)
             {
-                opRocket.Value.CurrentStage = packet.NewStage;
+                /* Rocket building states :
+                 * 0 : Neptune Launch Platform
+                 * 1 : Neptune Gantry
+                 * 2 : Neptune Boosters
+                 * 3 : Neptune Fuel Reserve
+                 * 4 : Neptune Cockpit
+                 * 
+                 * A finished rocket will be in the state 5 which cannot be reached for the server (only) based on players events, so we do it by hand
+                 */
+                opRocket.Value.CurrentStage = packet.NewStage == 4 ? 5 : packet.NewStage; 
             }
             else
             {
@@ -33,7 +42,6 @@ namespace NitroxServer_Subnautica.Communication.Packets.Processors
             }
 
             playerManager.SendPacketToOtherPlayers(packet, player);
-            Log.Debug($"Received packet: {packet}");
         }
     }
 }

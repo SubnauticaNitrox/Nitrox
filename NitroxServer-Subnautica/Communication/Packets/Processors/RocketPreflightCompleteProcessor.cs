@@ -1,4 +1,5 @@
-﻿using NitroxModel.DataStructures.Util;
+﻿using System.Collections.Generic;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxModel_Subnautica.DataStructures.GameLogic;
 using NitroxModel_Subnautica.Packets;
@@ -25,7 +26,12 @@ namespace NitroxServer_Subnautica.Communication.Packets.Processors
 
             if (opRocket.HasValue)
             {
-                opRocket.Value.PreflightChecks.Add(packet.FlightCheck);
+                IList<PreflightCheck> checks = opRocket.Value.PreflightChecks;
+
+                if (!checks.Contains(packet.FlightCheck))
+                {
+                    checks.Add(packet.FlightCheck);
+                }
             }
             else
             {
@@ -33,7 +39,6 @@ namespace NitroxServer_Subnautica.Communication.Packets.Processors
             }
 
             playerManager.SendPacketToOtherPlayers(packet, player);
-            Log.Debug($"Received packet: {packet}");
         }
     }
 }
