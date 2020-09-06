@@ -2,7 +2,6 @@
 using NitroxClient.GameLogic.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel_Subnautica.DataStructures.GameLogic;
 using NitroxModel_Subnautica.Packets;
@@ -57,7 +56,6 @@ namespace NitroxClient.GameLogic
 
             if (model.HasValue)
             {
-                Validate.NotNull(model.Value.PreflightChecks, "Liste protobuf null");
                 model.Value.PreflightChecks?.Add(preflightCheck);
                 packetSender.Send(new RocketPreflightComplete(id, preflightCheck));
             }
