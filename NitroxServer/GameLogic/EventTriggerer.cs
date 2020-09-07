@@ -36,11 +36,11 @@ namespace NitroxServer.GameLogic
                 AuroraExplosionTime = RandomNumber(2.3d, 4d) * 1200d * 1000d; //Time.deltaTime returns seconds so we need to multiply 1000
             }
 
-            eventTimers.Add(CreateTimer(AuroraExplosionTime * 0.2d - ElapsedTime, StoryEventType.PDA, "Story_AuroraWarning1"));
-            eventTimers.Add(CreateTimer(AuroraExplosionTime * 0.5d - ElapsedTime, StoryEventType.PDA, "Story_AuroraWarning2"));
-            eventTimers.Add(CreateTimer(AuroraExplosionTime * 0.8d - ElapsedTime, StoryEventType.PDA, "Story_AuroraWarning3"));
-            eventTimers.Add(CreateTimer(AuroraExplosionTime - ElapsedTime, StoryEventType.PDA, "Story_AuroraWarning4"));
-            eventTimers.Add(CreateTimer(AuroraExplosionTime + 24000 - ElapsedTime, StoryEventType.EXTRA, "Story_AuroraExplosion"));
+            CreateTimer(AuroraExplosionTime * 0.2d - ElapsedTime, StoryEventType.PDA, "Story_AuroraWarning1");
+            CreateTimer(AuroraExplosionTime * 0.5d - ElapsedTime, StoryEventType.PDA, "Story_AuroraWarning2");
+            CreateTimer(AuroraExplosionTime * 0.8d - ElapsedTime, StoryEventType.PDA, "Story_AuroraWarning3");
+            CreateTimer(AuroraExplosionTime - ElapsedTime, StoryEventType.PDA, "Story_AuroraWarning4");
+            CreateTimer(AuroraExplosionTime + 24000 - ElapsedTime, StoryEventType.EXTRA, "Story_AuroraExplosion");
             //like the timers, except we can see how much time has passed
             stopWatch = new Stopwatch();
             stopWatch.Start();
@@ -63,6 +63,7 @@ namespace NitroxServer.GameLogic
             timer.Interval = time;
             timer.Enabled = true;
             timer.AutoReset = false;
+            eventTimers.Add(timer);
             return timer;
         }
 
