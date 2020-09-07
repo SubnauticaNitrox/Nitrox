@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Timers;
 using NitroxModel.Logger;
@@ -11,6 +12,7 @@ namespace NitroxServer.GameLogic
     {
         private PlayerManager playerManager;
         private Stopwatch stopWatch;
+        private List<Timer> eventTimers = new List<Timer>();
         public double ElapsedTime;
         public double AuroraExplosionTime;
         public EventTriggerer(PlayerManager playerManager, double elapsedTime, double? auroraExplosionTime)
@@ -34,11 +36,11 @@ namespace NitroxServer.GameLogic
                 AuroraExplosionTime = RandomNumber(2.3d, 4d) * 1200d * 1000d; //Time.deltaTime returns seconds so we need to multiply 1000
             }
 
-            CreateTimer(AuroraExplosionTime * 0.2d - ElapsedTime, StoryEventType.PDA, "Story_AuroraWarning1");
-            CreateTimer(AuroraExplosionTime * 0.5d - ElapsedTime, StoryEventType.PDA, "Story_AuroraWarning2");
-            CreateTimer(AuroraExplosionTime * 0.8d - ElapsedTime, StoryEventType.PDA, "Story_AuroraWarning3");
-            CreateTimer(AuroraExplosionTime - ElapsedTime, StoryEventType.PDA, "Story_AuroraWarning4");
-            CreateTimer(AuroraExplosionTime + 24000 - ElapsedTime, StoryEventType.EXTRA, "Story_AuroraExplosion");
+            eventTimers.Add(CreateTimer(AuroraExplosionTime * 0.2d - ElapsedTime, StoryEventType.PDA, "Story_AuroraWarning1"));
+            eventTimers.Add(CreateTimer(AuroraExplosionTime * 0.5d - ElapsedTime, StoryEventType.PDA, "Story_AuroraWarning2"));
+            eventTimers.Add(CreateTimer(AuroraExplosionTime * 0.8d - ElapsedTime, StoryEventType.PDA, "Story_AuroraWarning3"));
+            eventTimers.Add(CreateTimer(AuroraExplosionTime - ElapsedTime, StoryEventType.PDA, "Story_AuroraWarning4"));
+            eventTimers.Add(CreateTimer(AuroraExplosionTime + 24000 - ElapsedTime, StoryEventType.EXTRA, "Story_AuroraExplosion"));
             //like the timers, except we can see how much time has passed
             stopWatch = new Stopwatch();
             stopWatch.Start();
@@ -55,7 +57,7 @@ namespace NitroxServer.GameLogic
             Timer timer = new Timer();
             timer.Elapsed += delegate
             {
-                Log.Info("Triggering event type " + eventType.ToString() + " at time " + time.ToString() + " with param " + key.ToString());
+                Log.Info("Triggering event type " + eventType + " at time " + time + " with param " + key);
                 playerManager.SendPacketToAllPlayers(new StoryEventSend(eventType, key));
             };
             timer.Interval = time;
@@ -77,6 +79,32 @@ namespace NitroxServer.GameLogic
                 return ElapsedTime;
             }
             return stopWatch.ElapsedMilliseconds + ElapsedTime;
+        }
+
+        public void StartWorldTime()
+        {
+            stopWatch.Start();
+        }
+
+        public void PauseWorldTime()
+        {
+            stopWatch.Stop();
+        }
+
+        public void StartEventTimers()
+        {
+            foreach (Timer eventTimer in eventTimers)
+            {
+                eventTimer.Start();
+            }
+        }
+
+        public void PauseEventTimers()
+        {
+            foreach (Timer eventTimer in eventTimers)
+            {
+                eventTimer.Stop();
+            }
         }
     }
 }

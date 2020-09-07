@@ -36,7 +36,6 @@ namespace NitroxServer
 
             Instance = this;
 
-            // TODO: Save once after last player leaves then stop saving.
             saveTimer = new Timer();
             saveTimer.Interval = serverConfig.SaveInterval;
             saveTimer.AutoReset = true;
@@ -93,10 +92,7 @@ namespace NitroxServer
             Log.Info("Nitrox Server Started");
             Log.Info("To get help for commands, run help in console or /help in chatbox\n");
 
-            if (!serverConfig.DisableAutoSave)
-            {
-                EnablePeriodicSaving();
-            }
+            PauseServer();
 
             IsRunning = true;
 #if RELEASE
@@ -123,6 +119,25 @@ namespace NitroxServer
         public void DisablePeriodicSaving()
         {
             saveTimer.Stop();
+        }
+
+        public void PauseServer()
+        {
+            DisablePeriodicSaving();
+            world.EventTriggerer.PauseWorldTime();
+            world.EventTriggerer.PauseEventTimers();
+            Log.Info("Server has paused");
+        }
+
+        public void ResumeServer()
+        {
+            if (!serverConfig.DisableAutoSave)
+            {
+                EnablePeriodicSaving();
+            }
+            world.EventTriggerer.StartWorldTime();
+            world.EventTriggerer.StartEventTimers();
+            Log.Info("Server has resumed");
         }
     }
 }
