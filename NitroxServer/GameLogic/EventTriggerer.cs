@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Timers;
 using NitroxModel.Logger;
@@ -11,6 +12,7 @@ namespace NitroxServer.GameLogic
     {
         private PlayerManager playerManager;
         private Stopwatch stopWatch;
+        private Dictionary<String, Timer> eventTimers = new Dictionary<string, Timer>();
         public double ElapsedTime;
         public double AuroraExplosionTime;
         public EventTriggerer(PlayerManager playerManager, double elapsedTime, double? auroraExplosionTime)
@@ -55,12 +57,16 @@ namespace NitroxServer.GameLogic
             Timer timer = new Timer();
             timer.Elapsed += delegate
             {
-                Log.Info("Triggering event type " + eventType.ToString() + " at time " + time.ToString() + " with param " + key.ToString());
+                Log.Info($"Triggering event type {eventType} at time {time} with param {key}");
                 playerManager.SendPacketToAllPlayers(new StoryEventSend(eventType, key));
             };
             timer.Interval = time;
             timer.Enabled = true;
             timer.AutoReset = false;
+            if (!eventTimers.ContainsKey(key))
+            {
+                eventTimers.Add(key, timer);
+            }
             return timer;
         }
 
@@ -77,6 +83,32 @@ namespace NitroxServer.GameLogic
                 return ElapsedTime;
             }
             return stopWatch.ElapsedMilliseconds + ElapsedTime;
+        }
+
+        public void StartWorldTime()
+        {
+            stopWatch.Start();
+        }
+
+        public void PauseWorldTime()
+        {
+            stopWatch.Stop();
+        }
+
+        public void StartEventTimers()
+        {
+            foreach (Timer eventTimer in eventTimers.Values)
+            {
+                eventTimer.Start();
+            }
+        }
+
+        public void PauseEventTimers()
+        {
+            foreach (Timer eventTimer in eventTimers.Values)
+            {
+                eventTimer.Stop();
+            }
         }
     }
 }
