@@ -52,6 +52,7 @@
     <Compile Include="Patches\Dynamic\PrecursorKeyTerminal_OnHandClick_Patch.cs" />
     <Compile Include="Patches\Dynamic\PrecursorTeleporterActivationTerminal_OnProxyHandClick_Patch.cs" />
     <Compile Include="Patches\Dynamic\PrecursorTeleporter_OnActivateTeleporter_Patch.cs" />
+    <Compile Include="Patches\Dynamic\RocketLaunch_OnHandClick_Patch.cs" />
     <Compile Include="Patches\Dynamic\RocketPreflightCheckManager_CompletePreflightCheck_Patch.cs" />
     <Compile Include="Patches\Dynamic\StarshipDoor_LockDoor_Patch.cs" />
     <Compile Include="Patches\Dynamic\StarshipDoor_OnDoorToggle_Patch.cs" />

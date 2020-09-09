@@ -64,5 +64,20 @@ namespace NitroxClient.GameLogic
                 Log.Error($"{nameof(Rockets)}: Can't find model for rocket with id {id}");
             }
         }
+
+        public void LaunchRocket(NitroxId id)
+        {
+            Optional<NeptuneRocketModel> model = vehicles.TryGetVehicle<NeptuneRocketModel>(id);
+
+            if (model.HasValue)
+            {
+                Log.InGame("Hope you enjoyed the Nitrox experience :)");
+                packetSender.Send(new RocketEndLaunch(id));
+            }
+            else
+            {
+                Log.Error($"{nameof(Rockets)}: Can't find model for rocket with id {id}");
+            }
+        }
     }
 }

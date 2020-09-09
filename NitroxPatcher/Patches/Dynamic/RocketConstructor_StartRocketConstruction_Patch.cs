@@ -35,13 +35,13 @@ namespace NitroxPatcher.Patches.Dynamic
                     yield return new CodeInstruction(OpCodes.Ldfld, typeof(RocketConstructor).GetField("rocket", BindingFlags.Public | BindingFlags.Instance)); //this.rocket
                     yield return new CodeInstruction(OpCodes.Ldloc_0); //techtype
                     yield return new CodeInstruction(OpCodes.Ldloc_2); //toBuild GO
-                    yield return new CodeInstruction(OpCodes.Call, typeof(RocketConstructor_StartRocketConstruction_Patch).GetMethod("Callback", BindingFlags.Static | BindingFlags.Public));
+                    yield return new CodeInstruction(OpCodes.Call, typeof(RocketConstructor_StartRocketConstruction_Patch).GetMethod("Callback", BindingFlags.NonPublic | BindingFlags.Static));
                 }
 
             }
         }
 
-        public static void Callback(Rocket rocketAttached, TechType currentStageTech, GameObject gameObjectToBuild)
+        private static void Callback(Rocket rocketAttached, TechType currentStageTech, GameObject gameObjectToBuild)
         {
             NitroxId rocketId = NitroxEntity.GetId(rocketAttached.gameObject);
             NitroxServiceLocator.LocateService<Rockets>().BroadcastRocketStateUpdate(rocketId, currentStageTech, gameObjectToBuild);

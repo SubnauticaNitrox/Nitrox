@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using NitroxModel.DataStructures.Util;
+﻿using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxModel_Subnautica.DataStructures.GameLogic;
 using NitroxModel_Subnautica.Packets;
@@ -26,12 +25,7 @@ namespace NitroxServer_Subnautica.Communication.Packets.Processors
 
             if (opRocket.HasValue)
             {
-                IList<PreflightCheck> checks = opRocket.Value.PreflightChecks;
-
-                if (!checks.Contains(packet.FlightCheck))
-                {
-                    checks.Add(packet.FlightCheck);
-                }
+                opRocket.Value.PreflightChecks.Add(packet.FlightCheck);
             }
             else
             {

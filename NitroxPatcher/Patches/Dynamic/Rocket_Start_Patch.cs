@@ -44,7 +44,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 if (__instance.currentRocketStage > 3)
                 {
                     RocketPreflightCheckManager rocketPreflightCheckManager = gameObject.RequireComponent<RocketPreflightCheckManager>();
-                    rocketPreflightCheckManager.preflightChecks.AddRange(model.Value.PreflightChecks);
+                    rocketPreflightCheckManager.preflightChecks?.AddRange(model.Value.PreflightChecks);
                 }
             }
 

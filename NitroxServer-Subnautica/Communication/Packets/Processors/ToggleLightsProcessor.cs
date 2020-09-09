@@ -6,7 +6,7 @@ using NitroxServer.GameLogic.Vehicles;
 
 namespace NitroxServer_Subnautica.Communication.Packets.Processors
 {
-    class ToggleLightsProcessor : AuthenticatedPacketProcessor<NitroxModel.Packets.ToggleLights>
+    public class ToggleLightsProcessor : AuthenticatedPacketProcessor<NitroxModel.Packets.ToggleLights>
     {
         private readonly VehicleManager vehicleManager;
         private readonly PlayerManager playerManager;
@@ -15,13 +15,13 @@ namespace NitroxServer_Subnautica.Communication.Packets.Processors
         {
             this.vehicleManager = vehicleManager;
             this.playerManager = playerManager;
-        }        
+        }
 
         public override void Process(NitroxModel.Packets.ToggleLights packet, NitroxServer.Player player)
         {
             Optional<SeamothModel> opSeamoth = vehicleManager.GetVehicleModel<SeamothModel>(packet.Id);
 
-            if (opSeamoth.HasValue && opSeamoth.Value.GetType() == typeof(SeamothModel))
+            if (opSeamoth.HasValue && opSeamoth.Value is SeamothModel)
             {
                 opSeamoth.Value.LightOn = packet.IsOn;
             }
