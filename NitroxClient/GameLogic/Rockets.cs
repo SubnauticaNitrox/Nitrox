@@ -1,11 +1,9 @@
 ﻿using NitroxClient.Communication.Abstract;
-using NitroxClient.GameLogic.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxModel_Subnautica.DataStructures.GameLogic;
 using NitroxModel_Subnautica.Packets;
-using UnityEngine;
 
 namespace NitroxClient.GameLogic
 {
@@ -20,14 +18,14 @@ namespace NitroxClient.GameLogic
             this.vehicles = vehicles;
         }
 
-        public void BroadcastRocketStateUpdate(NitroxId id, TechType currentStageTech, GameObject builtGameObject)
+        public void BroadcastRocketStateUpdate(NitroxId id, TechType currentStageTech)
         {
             Optional<NeptuneRocketModel> model = vehicles.TryGetVehicle<NeptuneRocketModel>(id);
 
             if (model.HasValue)
             {
                 model.Value.CurrentStage += 1;
-                packetSender.Send(new RocketStageUpdate(id, model.Value.CurrentStage, currentStageTech, SerializationHelper.GetBytes(builtGameObject)));
+                packetSender.Send(new RocketStageUpdate(id, model.Value.CurrentStage, currentStageTech));
             }
             else
             {
