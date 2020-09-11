@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
@@ -13,18 +14,27 @@ namespace NitroxClient.Communication.Packets.Processors
     {
         public override void Process(RocketEndLaunch packet)
         {
-            GameObject gameObject = NitroxEntity.RequireObjectFrom(packet.Id);
-            LaunchRocket launchRocket = gameObject.RequireComponentInChildren<LaunchRocket>(true);
+            try
+            {
+                GameObject gameObject = NitroxEntity.RequireObjectFrom(packet.Id);
+                LaunchRocket launchRocket = gameObject.RequireComponentInChildren<LaunchRocket>(true);
 
-            Log.InGame("Hope you enjoyed the Nitrox experience :)");
+                Log.InGame("Hope you enjoyed the Nitrox experience :)");
 
-            launchRocket.ReflectionCall("SetLaunchStarted", false, true);
-            PlayerTimeCapsule.main.Submit(null);
+                launchRocket.ReflectionCall("SetLaunchStarted", false, true);
+                PlayerTimeCapsule.main.Submit(null);
 
-            IEnumerator endSequence = (IEnumerator)launchRocket.ReflectionCall("StartEndCinematic", false, false);
-            launchRocket.StartCoroutine(endSequence);
+                IEnumerator endSequence = (IEnumerator)launchRocket.ReflectionCall("StartEndCinematic", false, false);
+                launchRocket.StartCoroutine(endSequence);
 
-            HandReticle.main.RequestCrosshairHide();
+                HandReticle.main.RequestCrosshairHide();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "An error occured while processing RocketEndLaunch packet");
+                Log.InGame("Error while processing a rocket launch packet :(");
+                throw;
+            }
         }
     }
 }

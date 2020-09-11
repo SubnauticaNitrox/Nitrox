@@ -1,7 +1,9 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
+﻿using System;
+using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Helper;
+using NitroxModel.Logger;
 using NitroxModel_Subnautica.Packets;
 using UnityEngine;
 
@@ -11,51 +13,61 @@ namespace NitroxClient.Communication.Packets.Processors
     {
         public override void Process(RocketPreflightComplete packet)
         {
-            GameObject gameObjectRocket = NitroxEntity.RequireObjectFrom(packet.Id);
-
-            switch (packet.FlightCheck)
+            try
             {
-                case PreflightCheck.AuxiliaryPowerUnit:
-                case PreflightCheck.PrimaryComputer:
+                GameObject gameObjectRocket = NitroxEntity.RequireObjectFrom(packet.Id);
 
-                    CockpitSwitch[] cockpitSwitches = gameObjectRocket.GetComponentsInChildren<CockpitSwitch>(true);
+                switch (packet.FlightCheck)
+                {
+                    case PreflightCheck.AuxiliaryPowerUnit:
+                    case PreflightCheck.PrimaryComputer:
 
-                    foreach (CockpitSwitch cockpitSwitch in cockpitSwitches)
-                    {
-                        if (!cockpitSwitch.completed && cockpitSwitch.preflightCheck == packet.FlightCheck)
+                        CockpitSwitch[] cockpitSwitches = gameObjectRocket.GetComponentsInChildren<CockpitSwitch>(true);
+
+                        foreach (CockpitSwitch cockpitSwitch in cockpitSwitches)
                         {
-                            cockpitSwitch.animator.SetTrigger("Activate");
-                            cockpitSwitch.completed = true;
-
-                            if (cockpitSwitch.collision)
+                            if (!cockpitSwitch.completed && cockpitSwitch.preflightCheck == packet.FlightCheck)
                             {
-                                cockpitSwitch.collision.SetActive(false);
+                                cockpitSwitch.animator.SetTrigger("Activate");
+                                cockpitSwitch.completed = true;
+
+                                if (cockpitSwitch.collision)
+                                {
+                                    cockpitSwitch.collision.SetActive(false);
+                                }
+
+                                cockpitSwitch.ReflectionCall("SystemReady", false, false);
                             }
-
-                            cockpitSwitch.ReflectionCall("SystemReady", false, false);
                         }
-                    }
 
-                    break;
+                        break;
 
-                //CommunicationsArray, Hydraulics, LifeSupport
-                default:
+                    //CommunicationsArray, Hydraulics, LifeSupport
+                    default:
 
-                    ThrowSwitch[] throwSwitches = gameObjectRocket.GetComponentsInChildren<ThrowSwitch>(true);
+                        ThrowSwitch[] throwSwitches = gameObjectRocket.GetComponentsInChildren<ThrowSwitch>(true);
 
-                    foreach (ThrowSwitch throwSwitch in throwSwitches)
-                    {
-                        if (!throwSwitch.completed && throwSwitch.preflightCheck == packet.FlightCheck)
+                        foreach (ThrowSwitch throwSwitch in throwSwitches)
                         {
-                            throwSwitch.animator.SetTrigger("Throw");
-                            throwSwitch.completed = true;
-                            throwSwitch.lamp.GetComponent<SkinnedMeshRenderer>().material = throwSwitch.completeMat;
-                            throwSwitch.triggerCollider.enabled = false;
-                            throwSwitch.cinematicTrigger.showIconOnHandHover = false;
+                            if (!throwSwitch.completed && throwSwitch.preflightCheck == packet.FlightCheck)
+                            {
+                                throwSwitch.animator.SetTrigger("Throw");
+                                throwSwitch.completed = true;
+                                throwSwitch.lamp.GetComponent<SkinnedMeshRenderer>().material = throwSwitch.completeMat;
+                                throwSwitch.triggerCollider.enabled = false;
+                                throwSwitch.cinematicTrigger.showIconOnHandHover = false;
+                            }
                         }
-                    }
 
-                    break;
+                        break;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "An error occured while processing RocketPreflightComplete packet");
+                Log.InGame("Error while processing a preflight complete packet :(");
+                throw;
             }
         }
     }
