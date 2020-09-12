@@ -1,10 +1,10 @@
-###Version
+### Version
 <!-- The version of Nitrox you are using -->
 
-###Bug
+### Bug
 <!-- Explain the bug that you have encountered -->
 
-###Expected
+### Expected
 <!-- Explain the expected behavior of the bug you encountered -->
 
 ### Other details:
