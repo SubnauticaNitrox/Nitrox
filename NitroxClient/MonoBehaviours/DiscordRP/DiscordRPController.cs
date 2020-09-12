@@ -92,14 +92,14 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
             DiscordRpc.Shutdown();
         }
 
-        public void InitializeInGame(string username, int playerCount, string ipAddressPort)
+        public void InitializeInGame(string username, int playerCount, int maxConnections, string ipAddressPort)
         {
             Presence.state = "In game";
             Presence.details = "Playing as " + username;
             Presence.startTimestamp = 0;
             Presence.partyId = "PartyID:" + CheckIP(ipAddressPort);
             Presence.partySize = playerCount;
-            Presence.partyMax = 100;
+            Presence.partyMax = maxConnections;
             Presence.joinSecret = CheckIP(ipAddressPort);
             SendRP();
         }
