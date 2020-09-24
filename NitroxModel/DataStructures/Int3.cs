@@ -21,9 +21,9 @@ namespace NitroxModel.DataStructures
         [ProtoMember(3)]
         public int Z { get; set; }
 
-        public Int3()
+        protected Int3()
         {
-            // For serialization purposes
+            // Constructor for serialization. Has to be "protected" for json serialization.
         }
 
         public Int3(int x, int y, int z)
@@ -61,7 +61,7 @@ namespace NitroxModel.DataStructures
         public static Int3 Floor(float x, float y, float z)
         {
             return new Int3(Convert.ToInt32(Math.Floor(x)),
-                            Convert.ToInt32(Math.Floor(y)), 
+                            Convert.ToInt32(Math.Floor(y)),
                             Convert.ToInt32(Math.Floor(z)));
         }
 
@@ -116,7 +116,7 @@ namespace NitroxModel.DataStructures
         {
             return new NitroxVector3(u.X + v.X, u.Y + v.Y, u.Z + v.Z);
         }
-        
+
         public static implicit operator NitroxVector3(Int3 v)
         {
             return new NitroxVector3(v.X, v.Y, v.Z);
