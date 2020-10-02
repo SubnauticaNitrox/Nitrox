@@ -30,6 +30,19 @@ namespace NitroxPatcher
         public static void Execute()
         {
             Log.Setup(true);
+            Log.Info($"Using Nitrox version {Assembly.GetExecutingAssembly().GetName().Version} built on {File.GetCreationTimeUtc(Assembly.GetExecutingAssembly().Location)}");
+            try
+            {
+                Initialize();
+            }
+            catch (Exception ex)
+            { // Placeholder for popup gui
+                Log.Error($"Unhandled exception occurred while initializing Nitrox: ", ex);
+            }
+        }
+
+        private static void Initialize()
+        {
             Optional.ApplyHasValueCondition<UnityEngine.Object>(o => (bool)o);
             Log.Info($"Using Nitrox version {Assembly.GetExecutingAssembly().GetName().Version} built on {File.GetCreationTimeUtc(Assembly.GetExecutingAssembly().Location)}");
 
