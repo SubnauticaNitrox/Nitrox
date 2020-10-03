@@ -54,7 +54,7 @@ namespace NitroxClient.GameLogic
 
             if (model.HasValue)
             {
-                model.Value.PreflightChecks?.Add(preflightCheck);
+                model.Value.PreflightChecks.Add(preflightCheck);
                 packetSender.Send(new RocketPreflightComplete(id, preflightCheck));
             }
             else

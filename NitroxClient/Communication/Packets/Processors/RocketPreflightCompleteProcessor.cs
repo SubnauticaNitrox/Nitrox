@@ -1,8 +1,6 @@
 ﻿using System;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.MonoBehaviours;
-using NitroxClient.Unity.Helper;
-using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel_Subnautica.Packets;
 using UnityEngine;
@@ -26,17 +24,17 @@ namespace NitroxClient.Communication.Packets.Processors
 
                         foreach (CockpitSwitch cockpitSwitch in cockpitSwitches)
                         {
-                            if (!cockpitSwitch.completed && cockpitSwitch.preflightCheck == packet.FlightCheck)
+                            if (cockpitSwitch.preflightCheck == packet.FlightCheck && !cockpitSwitch.completed)
                             {
-                                cockpitSwitch.animator.SetTrigger("Activate");
+                                cockpitSwitch.animator?.SetTrigger("Completed");
                                 cockpitSwitch.completed = true;
+
+                                cockpitSwitch.preflightCheckSwitch?.CompletePreflightCheck();
 
                                 if (cockpitSwitch.collision)
                                 {
                                     cockpitSwitch.collision.SetActive(false);
                                 }
-
-                                cockpitSwitch.ReflectionCall("SystemReady", false, false);
                             }
                         }
 
@@ -49,13 +47,14 @@ namespace NitroxClient.Communication.Packets.Processors
 
                         foreach (ThrowSwitch throwSwitch in throwSwitches)
                         {
-                            if (!throwSwitch.completed && throwSwitch.preflightCheck == packet.FlightCheck)
+                            if (throwSwitch.preflightCheck == packet.FlightCheck && !throwSwitch.completed)
                             {
-                                throwSwitch.animator.SetTrigger("Throw");
+                                throwSwitch.animator?.SetTrigger("Throw");
                                 throwSwitch.completed = true;
-                                throwSwitch.lamp.GetComponent<SkinnedMeshRenderer>().material = throwSwitch.completeMat;
-                                throwSwitch.triggerCollider.enabled = false;
+                                throwSwitch.preflightCheckSwitch?.CompletePreflightCheck();
                                 throwSwitch.cinematicTrigger.showIconOnHandHover = false;
+                                throwSwitch.triggerCollider.enabled = false;
+                                throwSwitch.lamp.GetComponent<SkinnedMeshRenderer>().material = throwSwitch.completeMat;
                             }
                         }
 
@@ -67,9 +66,7 @@ namespace NitroxClient.Communication.Packets.Processors
             {
                 Log.Error(ex, "An error occured while processing RocketPreflightComplete packet");
                 Log.InGame("Error while processing a preflight complete packet :(");
-                throw;
             }
         }
     }
 }
-

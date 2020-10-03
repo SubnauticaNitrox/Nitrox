@@ -34,7 +34,7 @@ namespace NitroxServer_Subnautica.Communication.Packets.Processors
                  * 
                  * A finished rocket will be in the state 5 which cannot be reached for the server (only) based on players events, so we do it by hand
                  */
-                opRocket.Value.CurrentStage = packet.NewStage == 4 ? 5 : packet.NewStage;
+                opRocket.Value.CurrentStage = packet.NewStage > 3 ? 5 : packet.NewStage;
             }
             else
             {
