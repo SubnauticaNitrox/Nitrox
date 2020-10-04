@@ -9,8 +9,8 @@ using UnityEngine;
 using UWE;
 using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
 using NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation;
-using NitroxModel_Subnautica.Helper.Int3;
 using NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation.Metadata;
+using NitroxModel_Subnautica.DataStructures;
 
 namespace NitroxClient.MonoBehaviours.Overrides
 {
@@ -255,7 +255,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 BaseModuleRotationMetadata baseModuleRotationMetadata = (rotationMetadata as BaseModuleRotationMetadata);
                 BaseAddModuleGhost module = (component as BaseAddModuleGhost);
 
-                module.anchoredFace = new Base.Face(baseModuleRotationMetadata.Cell.Global(), (Base.Direction)baseModuleRotationMetadata.Direction);
+                module.anchoredFace = new Base.Face(baseModuleRotationMetadata.Cell.ToUnity(), (Base.Direction)baseModuleRotationMetadata.Direction);
                 module.ReflectionCall("RebuildGhostGeometry");
             }
             else if (component is BaseAddFaceGhost)
@@ -265,7 +265,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 Log.Info("Applying BaseAddFaceGhost " + baseModuleRotationMetadata);
 
 
-                Base.Face face = new Base.Face(baseModuleRotationMetadata.Cell.Global(), (Base.Direction)baseModuleRotationMetadata.Direction);
+                Base.Face face = new Base.Face(baseModuleRotationMetadata.Cell.ToUnity(), (Base.Direction)baseModuleRotationMetadata.Direction);
                 faceGhost.anchoredFace = face;
                 
                 Base ghostBase = (Base)faceGhost.ReflectionGet("ghostBase");

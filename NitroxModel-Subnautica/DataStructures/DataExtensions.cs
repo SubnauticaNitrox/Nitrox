@@ -1,4 +1,5 @@
 ﻿using System;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using UnityEngine;
 
@@ -16,7 +17,7 @@ namespace NitroxModel_Subnautica.DataStructures
             return new Vector3(v.X, v.Y, v.Z);
         }
 
-        public static Vector3 AsVector3(this NitroxModel.DataStructures.Int3 v)
+        public static Vector3 AsVector3(this NitroxInt3 v)
         {
             return new Vector3(v.X, v.Y, v.Z);
         }
@@ -49,6 +50,16 @@ namespace NitroxModel_Subnautica.DataStructures
         public static Color ToUnity(this NitroxColor v)
         {
             return new Color(v.R, v.G, v.B, v.A);
+        }
+
+        public static NitroxInt3 ToDto(this Int3 v)
+        {
+            return new NitroxInt3(v.x, v.y, v.z);
+        }
+
+        public static Int3 ToUnity(this NitroxInt3 v)
+        {
+            return new Int3(v.X, v.Y, v.Z);
         }
 
         public static NitroxColor[] ToDto(this Color[] v)

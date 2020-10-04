@@ -70,7 +70,6 @@
     <Compile Include="DataStructures\Surrogates\Vector3Surrogate.cs" />
     <Compile Include="Helper\TextureScaler.cs" />
     <Compile Include="Helper\SubnauticaMap.cs" />
-    <Compile Include="Helper\Int3Converter.cs" />
     <Compile Include="Helper\VehicleHelper.cs" />
     <Compile Include="Helper\VehicleModelComparer.cs" />
     <Compile Include="Helper\VehicleModelFactory.cs" />

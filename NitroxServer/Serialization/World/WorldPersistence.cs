@@ -184,7 +184,7 @@ namespace NitroxServer.Serialization.World
                 new List<VehicleModel>(), new List<Player>(), new List<ItemData>(),
                 new List<ItemData>(),
                 new GameData() { PDAState = new PDAStateData(), StoryGoals = new StoryGoalData() },
-                new List<Int3>(), new List<EscapePodModel>(), new StoryTimingData(), config.GameModeEnum
+                new List<NitroxInt3>(), new List<EscapePodModel>(), new StoryTimingData(), config.GameModeEnum
                 );
         }
 
@@ -197,7 +197,7 @@ namespace NitroxServer.Serialization.World
                                   List<ItemData> inventoryItems,
                                   List<ItemData> storageSlotItems,
                                   GameData gameData,
-                                  List<Int3> parsedBatchCells,
+                                  List<NitroxInt3> parsedBatchCells,
                                   List<EscapePodModel> escapePods,
                                   StoryTimingData storyTimingData,
                                   ServerGameMode gameMode)
