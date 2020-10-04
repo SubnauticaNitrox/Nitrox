@@ -80,7 +80,6 @@
     <Compile Include="DataStructures\GameLogic\NitroxColor.cs" />
     <Compile Include="DataStructures\GameLogic\NitroxMatrix4x4.cs" />
     <Compile Include="DataStructures\GameLogic\NitroxTransform.cs" />
-    <Compile Include="DataStructures\GameLogic\NitroxVector4.cs" />
     <Compile Include="DataStructures\GameLogic\PDAEntry.cs" />
     <Compile Include="DataStructures\GameLogic\ItemEquipment.cs" />
     <Compile Include="DataStructures\GameLogic\Entity.cs" />
