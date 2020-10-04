@@ -21,9 +21,9 @@ namespace NitroxModel.DataStructures
         [ProtoMember(3)]
         public int Z { get; set; }
 
-        public NitroxInt3()
+        protected NitroxInt3()
         {
-            // For serialization purposes
+            // Constructor for serialization. Has to be "protected" for json serialization.
         }
 
         public NitroxInt3(int x, int y, int z)
@@ -35,7 +35,7 @@ namespace NitroxModel.DataStructures
 
         public override string ToString()
         {
-            return "[Int3 - {" + X + ", " + Y + ", " + Z + "}]";
+            return $"[Int3 - {X}, {Y}, {Z}]";
         }
 
         public override bool Equals(object obj)
@@ -61,7 +61,7 @@ namespace NitroxModel.DataStructures
         public static NitroxInt3 Floor(float x, float y, float z)
         {
             return new NitroxInt3(Convert.ToInt32(Math.Floor(x)),
-                            Convert.ToInt32(Math.Floor(y)), 
+                            Convert.ToInt32(Math.Floor(y)),
                             Convert.ToInt32(Math.Floor(z)));
         }
 
@@ -116,7 +116,7 @@ namespace NitroxModel.DataStructures
         {
             return new NitroxVector3(u.X + v.X, u.Y + v.Y, u.Z + v.Z);
         }
-        
+
         public static implicit operator NitroxVector3(NitroxInt3 v)
         {
             return new NitroxVector3(v.X, v.Y, v.Z);
