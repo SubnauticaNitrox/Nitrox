@@ -523,7 +523,18 @@ namespace NitroxClient.GameLogic
         {
             yield return new WaitForSeconds(cooldown);
 
-            VehicleMovementData vehicleMovementData = new VehicleMovementData(vehicleModel.TechType, vehicleModel.Id, gameObject.transform.position.ToDto(), gameObject.transform.rotation.ToDto(), vehicleModel.Health);
+            VehicleMovementData vehicleMovementData = VehicleMovementFactory.GetVehicleMovementData(vehicleModel.TechType.ToUnity(),
+                                                                                                    vehicleModel.Id,
+                                                                                                    gameObject.transform.position,
+                                                                                                    gameObject.transform.rotation,
+                                                                                                    Vector3.zero,
+                                                                                                    Vector3.zero,
+                                                                                                    0f,
+                                                                                                    0f,
+                                                                                                    false,
+                                                                                                    Vector3.zero,
+                                                                                                    Vector3.zero,
+                                                                                                    vehicleModel.Health);
             ushort playerId = ushort.MaxValue;
 
             packetSender.Send(new VehicleMovement(playerId, vehicleMovementData));
