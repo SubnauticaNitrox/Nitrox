@@ -16,7 +16,7 @@ namespace NitroxServer.Serialization.World
 
         [ProtoMember(3)]
         public PlayerData PlayerData { get; set; }
-        
+
         public bool IsValid()
         {
             return (WorldData.IsValid()) &&

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using NitroxModel.Logger;
@@ -55,6 +56,8 @@ namespace NitroxServer.Serialization
 
         private void RegisterAssemblyClasses(string assemblyName)
         {
+            List<string> ignoredTypeErrors = new List<string>();
+
             foreach (Type type in Assembly.Load(assemblyName).GetTypes())
             {
                 try
@@ -77,13 +80,18 @@ namespace NitroxServer.Serialization
                 {
                     if (type.FullName.Contains("Oculus.Platform.Models"))
                     {
-                        Log.Debug($"ServerProtoBufSerializer has thrown an error registering the type: {type} from {assemblyName}. However it's probably caused from different Newtonsoft.Json versions of Oculus and Nitrox and can be ignored.");
+                        ignoredTypeErrors.Add(type.ToString());
                     }
                     else
                     {
                         Log.Error(ex, $"ServerProtoBufSerializer has thrown an error registering the type: {type} from {assemblyName}");
                     }
                 }
+            }
+
+            if (ignoredTypeErrors.Count > 0)
+            {
+                Log.Debug($"[ServerProtoBufSerializer] Has thrown an error registering: {string.Join(", ", ignoredTypeErrors)} from {assemblyName}. However it's probably caused from different Newtonsoft.Json versions of Oculus and Nitrox and can be ignored.");
             }
         }
 
