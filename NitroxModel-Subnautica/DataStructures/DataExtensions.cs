@@ -6,6 +6,16 @@ namespace NitroxModel_Subnautica.DataStructures
 {
     public static class DataExtensions
     {
+        public static Int3 ToUnity(this NitroxModel.DataStructures.Int3 v)
+        {
+            return new Int3(v.X, v.Y, v.Z);
+        }
+
+        public static NitroxModel.DataStructures.Int3 ToDto(this Int3 v)
+        {
+            return new NitroxModel.DataStructures.Int3(v.x, v.y, v.z);
+        }
+
         public static NitroxVector3 ToDto(this Vector3 v)
         {
             return new NitroxVector3(v.x, v.y, v.z);
