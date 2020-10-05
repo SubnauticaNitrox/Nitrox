@@ -15,7 +15,7 @@ namespace NitroxModel.Server
         private readonly ServerConfigItem<float> oxygenSetting, maxOxygenSetting, healthSetting, foodSetting, waterSetting, infectionSetting;
 
         public ServerConfig() : this(
-               port: 1100,
+               port: 11000,
                saveinterval: 120000,
                maxconnection: 100,
                disableconsole: false,

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using ProtoBufNet;
 
@@ -110,6 +111,12 @@ namespace NitroxModel.DataStructures.GameLogic
         private void ProtoAfterDeserialization()
         {
             Transform.Entity = this;
+        }
+
+        [OnDeserialized]
+        private void JsonAfterDeserialization(StreamingContext context)
+        {
+            ProtoAfterDeserialization();
         }
     }
 }

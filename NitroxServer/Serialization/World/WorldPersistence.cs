@@ -81,18 +81,16 @@ namespace NitroxServer.Serialization.World
 
         private Optional<World> LoadFromFile(string saveDir)
         {
+            if (!Directory.Exists(saveDir) || !File.Exists(Path.Combine(saveDir, "Version" + fileEnding)))
+            {
+                Log.Warn("No previous save file found - creating a new one.");
+                return Optional.Empty;
+            }
+
             try
             {
-                if (!Directory.Exists(saveDir))
-                {
-                    throw new DirectoryNotFoundException();
-                }
-
                 PersistedWorldData persistedData = new PersistedWorldData();
-                SaveFileVersions versions;
-
-
-                versions = saveDataSerializer.Deserialize<SaveFileVersions>(Path.Combine(saveDir, "Version" + fileEnding));
+                SaveFileVersions versions = saveDataSerializer.Deserialize<SaveFileVersions>(Path.Combine(saveDir, "Version" + fileEnding));
 
                 if (versions == null)
                 {
@@ -142,24 +140,18 @@ namespace NitroxServer.Serialization.World
             }
             catch (Exception ex)
             {
-                if (ex is DirectoryNotFoundException || ex is FileNotFoundException)
-                {
-                    Log.Warn("No previous save file found - creating a new one.");
-                }
-                else
-                {
-                    //Backup world if loading fails
-                    using (ZipFile zipFile = new ZipFile())
-                    {
-                        zipFile.AddFile(Path.Combine(saveDir, "Version" + fileEnding));
-                        zipFile.AddFile(Path.Combine(saveDir, "BaseData" + fileEnding));
-                        zipFile.AddFile(Path.Combine(saveDir, "PlayerData" + fileEnding));
-                        zipFile.AddFile(Path.Combine(saveDir, "WorldData" + fileEnding));
-                        zipFile.Save(Path.Combine(saveDir, "worldBackup.zip"));
-                    }
 
-                    Log.Error("Could not load world: " + ex + " creating a new one.");
+                //Backup world if loading fails
+                using (ZipFile zipFile = new ZipFile())
+                {
+                    zipFile.AddFile(Path.Combine(saveDir, "Version" + fileEnding));
+                    zipFile.AddFile(Path.Combine(saveDir, "BaseData" + fileEnding));
+                    zipFile.AddFile(Path.Combine(saveDir, "PlayerData" + fileEnding));
+                    zipFile.AddFile(Path.Combine(saveDir, "WorldData" + fileEnding));
+                    zipFile.Save(Path.Combine(saveDir, "worldBackup.zip"));
                 }
+
+                Log.Error($"Could not load world, creating a new one: {ex}");
             }
 
             return Optional.Empty;

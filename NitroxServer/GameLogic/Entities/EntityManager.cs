@@ -17,7 +17,7 @@ namespace NitroxServer.GameLogic.Entities
 
         // Global root entities that are always visible.
         private readonly Dictionary<NitroxId, Entity> globalRootEntitiesById;
-        
+
         private readonly BatchEntitySpawner batchEntitySpawner;
 
         public EntityManager(List<Entity> entities, BatchEntitySpawner batchEntitySpawner)
@@ -42,8 +42,8 @@ namespace NitroxServer.GameLogic.Entities
 
             foreach (AbsoluteEntityCell cell in cells)
             {
-                List<Entity> cellEntities = GetEntities(cell);                
-                entities.AddRange(cellEntities.Where(entity => cell.Level <= entity.Level));                                
+                List<Entity> cellEntities = GetEntities(cell);
+                entities.AddRange(cellEntities.Where(entity => cell.Level <= entity.Level));
             }
 
             return entities;
@@ -75,7 +75,7 @@ namespace NitroxServer.GameLogic.Entities
             {
                 return new List<Entity>(globalRootEntitiesById.Values);
             }
-        }        
+        }
 
         public List<Entity> GetEntities(AbsoluteEntityCell absoluteEntityCell)
         {
@@ -96,9 +96,9 @@ namespace NitroxServer.GameLogic.Entities
         {
             lock (entitiesById)
             {
-                return entitiesById.Join(ids, 
-                                         entity => entity.Value.Id, 
-                                         id => id, 
+                return entitiesById.Join(ids,
+                                         entity => entity.Value.Id,
+                                         id => id,
                                          (entity, id) => entity.Value)
                                    .ToList();
             }
@@ -202,7 +202,7 @@ namespace NitroxServer.GameLogic.Entities
         {
             IEnumerable<Int3> distinctBatchIds = cells.Select(cell => cell.BatchId).Distinct();
 
-            foreach(Int3 batchId in distinctBatchIds)
+            foreach (Int3 batchId in distinctBatchIds)
             {
                 List<Entity> spawnedEntities = batchEntitySpawner.LoadUnspawnedEntities(batchId);
 
@@ -240,8 +240,7 @@ namespace NitroxServer.GameLogic.Entities
         {
             if (entity.ExistsInGlobalRoot)
             {
-                // We don't care what cell a global root entity resides in.  Only phasing entities.
-                return;
+                return; // We don't care what cell a global root entity resides in.  Only phasing entities.
             }
 
             lock (phasingEntitiesByAbsoluteCell)

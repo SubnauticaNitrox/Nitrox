@@ -30,9 +30,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
     </Reference>
-    <Reference Include="Autofac.Configuration, Version=3.3.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <HintPath>..\packages\Autofac.Configuration.3.3.0\lib\net40\Autofac.Configuration.dll</HintPath>
-    </Reference>
     <Reference Include="LZ4">
       <HintPath>..\Nitrox.Subnautica.Assets\LZ4.dll</HintPath>
     </Reference>
@@ -48,6 +45,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
