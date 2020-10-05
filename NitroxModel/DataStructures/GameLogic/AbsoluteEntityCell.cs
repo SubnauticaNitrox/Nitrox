@@ -9,22 +9,22 @@ namespace NitroxModel.DataStructures.GameLogic
     public class AbsoluteEntityCell
     {
         [ProtoMember(1)]
-        public NitroxInt3 BatchId { get; }
+        public Int3 BatchId { get; }
 
         [ProtoMember(2)]
-        public NitroxInt3 CellId { get; }
+        public Int3 CellId { get; }
 
         [ProtoMember(3)]
         public int Level { get; }
 
-        private NitroxInt3 BatchPosition => BatchId * Map.Main.BatchSize - Map.Main.BatchDimensionCenter;
-        public NitroxInt3 Position => BatchPosition + CellId * GetCellSize();
+        private Int3 BatchPosition => BatchId * Map.Main.BatchSize - Map.Main.BatchDimensionCenter;
+        public Int3 Position => BatchPosition + CellId * GetCellSize();
 
-        public NitroxInt3 Center
+        public Int3 Center
         {
             get
             {
-                NitroxInt3 cellSize = GetCellSize();
+                Int3 cellSize = GetCellSize();
                 return BatchPosition + CellId * cellSize + (cellSize >> 1);
             }
         }
@@ -34,7 +34,7 @@ namespace NitroxModel.DataStructures.GameLogic
             // Constructor for serialization. Has to be "protected" for json serialization.
         }
 
-        public AbsoluteEntityCell(NitroxInt3 batchId, NitroxInt3 cellId, int level)
+        public AbsoluteEntityCell(Int3 batchId, Int3 cellId, int level)
         {
             BatchId = batchId;
             CellId = cellId;
@@ -46,10 +46,10 @@ namespace NitroxModel.DataStructures.GameLogic
             Level = level;
 
             NitroxVector3 localPosition = (worldSpace + Map.Main.BatchDimensionCenter) / Map.Main.BatchSize;
-            BatchId = NitroxInt3.Floor(localPosition);
+            BatchId = Int3.Floor(localPosition);
 
             NitroxVector3 cell = (localPosition - BatchId) * GetCellsPerBlock();
-            CellId = NitroxInt3.Floor(new NitroxVector3(cell.X + 0.0001f, cell.Y + 0.0001f, cell.Z + 0.0001f));
+            CellId = Int3.Floor(new NitroxVector3(cell.X + 0.0001f, cell.Y + 0.0001f, cell.Z + 0.0001f));
         }
 
         public static bool operator ==(AbsoluteEntityCell left, AbsoluteEntityCell right)
@@ -62,7 +62,7 @@ namespace NitroxModel.DataStructures.GameLogic
             return !Equals(left, right);
         }
 
-        public static NitroxInt3 GetCellSize(int level, NitroxInt3 blocksPerBatch)
+        public static Int3 GetCellSize(int level, Int3 blocksPerBatch)
         {
             // Our own implementation for BatchCells.GetCellSize, that works on the server and client.
             return blocksPerBatch / GetCellsPerBlock(level);
@@ -116,12 +116,12 @@ namespace NitroxModel.DataStructures.GameLogic
             }
         }
 
-        public NitroxInt3 GetCellSize()
+        public Int3 GetCellSize()
         {
             return GetCellSize(Map.Main.BatchDimensions);
         }
 
-        public NitroxInt3 GetCellSize(NitroxInt3 blocksPerBatch)
+        public Int3 GetCellSize(Int3 blocksPerBatch)
         {
             return GetCellSize(Level, blocksPerBatch);
         }

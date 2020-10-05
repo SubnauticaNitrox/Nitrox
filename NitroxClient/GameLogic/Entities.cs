@@ -53,7 +53,7 @@ namespace NitroxClient.GameLogic
         {
             foreach (Entity entity in entities)
             {
-                LargeWorldStreamer.main.cellManager.UnloadBatchCells(entity.AbsoluteEntityCell.CellId.ToUnity()); // Just in case
+                LargeWorldStreamer.main.cellManager.UnloadBatchCells(ToInt3(entity.AbsoluteEntityCell.CellId)); // Just in case
 
                 if (WasSpawnedByServer(entity.Id))
                 {
@@ -76,8 +76,8 @@ namespace NitroxClient.GameLogic
         {
             EntityCell entityCell;
 
-            Int3 batchId = entity.AbsoluteEntityCell.BatchId.ToUnity();
-            Int3 cellId = entity.AbsoluteEntityCell.CellId.ToUnity();
+            Int3 batchId = ToInt3(entity.AbsoluteEntityCell.BatchId);
+            Int3 cellId = ToInt3(entity.AbsoluteEntityCell.CellId);
 
             if (!batchCellsById.TryGetValue(batchId, out BatchCells batchCells))
             {
@@ -160,6 +160,8 @@ namespace NitroxClient.GameLogic
 
             pendingEntities.Add(entity);
         }
+
+        private Int3 ToInt3(NitroxModel.DataStructures.Int3 int3) => new Int3(int3.X, int3.Y, int3.Z);
 
         public bool WasSpawnedByServer(NitroxId id) => alreadySpawnedIds.Contains(id);
 
