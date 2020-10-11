@@ -7,7 +7,6 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
-using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
@@ -36,9 +35,7 @@ namespace NitroxClient.GameLogic
 
             foreach (KeyValuePair<NitroxId, GameObject> gameObjectWithId in gameObjectsById)
             {
-                GameObject go = gameObjectWithId.Value;
-
-                if (go)
+                if (gameObjectWithId.Value)
                 {
                     update.AddUpdate(gameObjectWithId.Key, gameObjectWithId.Value.transform.position.ToDto(), gameObjectWithId.Value.transform.rotation.ToDto());
                 }
@@ -49,21 +46,20 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastMetadataUpdate(NitroxId id, EntityMetadata metadata)
         {
-            EntityMetadataUpdate update = new EntityMetadataUpdate(id, metadata);
-            packetSender.Send(update);
+            packetSender.Send(new EntityMetadataUpdate(id, metadata));
         }
 
         public void Spawn(List<Entity> entities)
         {
             foreach (Entity entity in entities)
             {
-                LargeWorldStreamer.main.cellManager.UnloadBatchCells(ToInt3(entity.AbsoluteEntityCell.CellId)); // Just in case
+                LargeWorldStreamer.main.cellManager.UnloadBatchCells(entity.AbsoluteEntityCell.CellId.ToUnity()); // Just in case
 
-                if (alreadySpawnedIds.Contains(entity.Id))
+                if (WasSpawnedByServer(entity.Id))
                 {
                     UpdatePosition(entity);
                 }
-                else if (entity.ParentId != null && !alreadySpawnedIds.Contains(entity.ParentId))
+                else if (entity.ParentId != null && !WasSpawnedByServer(entity.ParentId))
                 {
                     AddPendingParentEntity(entity);
                 }
@@ -79,12 +75,11 @@ namespace NitroxClient.GameLogic
         private EntityCell EnsureCell(Entity entity)
         {
             EntityCell entityCell;
-            BatchCells batchCells;
 
-            Int3 batchId = ToInt3(entity.AbsoluteEntityCell.BatchId);
-            Int3 cellId = ToInt3(entity.AbsoluteEntityCell.CellId);
+            Int3 batchId = entity.AbsoluteEntityCell.BatchId.ToUnity();
+            Int3 cellId = entity.AbsoluteEntityCell.CellId.ToUnity();
 
-            if (!batchCellsById.TryGetValue(batchId, out batchCells))
+            if (!batchCellsById.TryGetValue(batchId, out BatchCells batchCells))
             {
                 batchCells = LargeWorldStreamer.main.cellManager.InitializeBatchCells(batchId);
             }
@@ -102,11 +97,6 @@ namespace NitroxClient.GameLogic
             return entityCell;
         }
 
-        private Int3 ToInt3(NitroxModel.DataStructures.Int3 int3)
-        {
-            return new Int3(int3.X, int3.Y, int3.Z);
-        }
-
         private void Spawn(Entity entity, Optional<GameObject> parent)
         {
             alreadySpawnedIds.Add(entity.Id);
@@ -116,28 +106,27 @@ namespace NitroxClient.GameLogic
             IEntitySpawner entitySpawner = entitySpawnerResolver.ResolveEntitySpawner(entity);
             Optional<GameObject> gameObject = entitySpawner.Spawn(entity, parent, cellRoot);
 
-            foreach (Entity childEntity in entity.ChildEntities)
+            if (!entitySpawner.SpawnsOwnChildren())
             {
-                if (!alreadySpawnedIds.Contains(childEntity.Id) && !entitySpawner.SpawnsOwnChildren())
+                foreach (Entity childEntity in entity.ChildEntities)
                 {
-                    Spawn(childEntity, gameObject);
+                    if (!WasSpawnedByServer(childEntity.Id))
+                    {
+                        Spawn(childEntity, gameObject);
+                    }
                 }
-
-                alreadySpawnedIds.Add(childEntity.Id);
             }
 		}
 
         private void SpawnAnyPendingChildren(Entity entity)
         {
-            List<Entity> pendingEntities;
-
-            if (pendingParentEntitiesByParentId.TryGetValue(entity.Id, out pendingEntities))
+            if (pendingParentEntitiesByParentId.TryGetValue(entity.Id, out List<Entity> pendingEntities))
             {
                 Optional<GameObject> parent = NitroxEntity.GetObjectFrom(entity.Id);
 
                 foreach (Entity child in pendingEntities)
                 {
-                    Spawn(entity, parent);
+                    Spawn(child, parent);
                 }
 
                 pendingParentEntitiesByParentId.Remove(entity.Id);
@@ -163,9 +152,7 @@ namespace NitroxClient.GameLogic
         
         private void AddPendingParentEntity(Entity entity)
         {
-            List<Entity> pendingEntities;
-
-            if (!pendingParentEntitiesByParentId.TryGetValue(entity.ParentId, out pendingEntities))
+            if (!pendingParentEntitiesByParentId.TryGetValue(entity.ParentId, out List<Entity> pendingEntities))
             {
                 pendingEntities = new List<Entity>();
                 pendingParentEntitiesByParentId[entity.ParentId] = pendingEntities;
@@ -174,15 +161,8 @@ namespace NitroxClient.GameLogic
             pendingEntities.Add(entity);
         }
 
-        public bool WasSpawnedByServer(NitroxId id)
-        {
-            return alreadySpawnedIds.Contains(id);
-        }
+        public bool WasSpawnedByServer(NitroxId id) => alreadySpawnedIds.Contains(id);
 
-        public bool RemoveEntity(NitroxId id)
-        {
-            return alreadySpawnedIds.Remove(id);
-        }
-
+        public bool RemoveEntity(NitroxId id) => alreadySpawnedIds.Remove(id);
     }
 }
