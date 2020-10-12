@@ -12,7 +12,7 @@ namespace NitroxTest.Model
         public void OptionalGet()
         {
             Optional<string> op = Optional.Of("test");
-            op.Value.ShouldBeEquivalentTo("test");
+            op.Value.Should().Be("test");
         }
 
         [TestMethod]
@@ -33,14 +33,14 @@ namespace NitroxTest.Model
         public void OptionalOrElseValidValue()
         {
             Optional<string> op = Optional.Of("test");
-            op.OrElse("test2").ShouldBeEquivalentTo("test");
+            op.OrElse("test2").Should().Be("test");
         }
 
         [TestMethod]
         public void OptionalOrElseNoValue()
         {
             Optional<string> op = Optional.Empty;
-            op.OrElse("test").ShouldBeEquivalentTo("test");
+            op.OrElse("test").Should().Be("test");
         }
 
         [TestMethod]
@@ -56,7 +56,7 @@ namespace NitroxTest.Model
             Optional<Random> op = Optional.Of(new Random());
             op.HasValue.Should().BeTrue();
             Action setNull = () => { op = null; };
-            setNull.ShouldThrow<ArgumentNullException>("Setting optional to null should not be allowed.");
+            setNull.Should().Throw<ArgumentNullException>("Setting optional to null should not be allowed.");
             op = Optional.Empty;
             op.HasValue.Should().BeFalse();
         }

@@ -26,22 +26,22 @@ namespace NitroxTest.DataStructures
         [TestMethod]
         public void IsSet()
         {
-            set.IsSet.ShouldBeEquivalentTo(true);
-            list.IsSet.ShouldBeEquivalentTo(false);
+            set.IsSet.Should().BeTrue();
+            list.IsSet.Should().BeFalse();
         }
 
         [TestMethod]
         public void Insert()
         {
             list.Insert(5, "derp");
-            list[5].ShouldBeEquivalentTo("derp");
+            list[5].Should().Be("derp");
             list[0] = "Hello world!";
-            list[0].ShouldBeEquivalentTo("Hello world!");
+            list[0].Should().Be("Hello world!");
 
             set.Insert(8, "wot");
-            set[8].ShouldBeEquivalentTo("wot");
+            set[8].Should().Be("wot");
             set[set.Count - 1] = "Hello world!";
-            set[set.Count - 1].ShouldBeEquivalentTo("Hello world!");
+            set[set.Count - 1].Should().Be("Hello world!");
         }
 
         [TestMethod]
@@ -64,20 +64,20 @@ namespace NitroxTest.DataStructures
         public void Remove()
         {
             list.Remove("test 0");
-            list[0].ShouldBeEquivalentTo("test 1");
+            list[0].Should().Be("test 1");
 
             set.Remove("test 0");
-            set[0].ShouldBeEquivalentTo("test 1");
+            set[0].Should().Be("test 1");
         }
 
         [TestMethod]
         public void Find()
         {
-            list.Find(s => s == "test 1").ShouldBeEquivalentTo("test 1");
+            list.Find(s => s == "test 1").Should().Be("test 1");
             list.Find(s => s == "tesT 1").Should().BeNull();
             list.Find(s => s == "test 1361").Should().BeNull();
             
-            set.Find(s => s == "test 7").ShouldBeEquivalentTo("test 7");
+            set.Find(s => s == "test 7").Should().Be("test 7");
             set.Find(s => s == "tesT 7").Should().BeNull();
             set.Find(s => s == "test 1361").Should().BeNull();
         }

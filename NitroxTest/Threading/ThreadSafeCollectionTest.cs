@@ -32,10 +32,10 @@ namespace NitroxTest.Threading
                 },
                 iterations);
 
-            addCount.ShouldBeEquivalentTo(iterations);
+            addCount.Should().Be(iterations);
             countsRead.Count.Should().BeGreaterThan(0);
-            countsRead.Last().ShouldBeEquivalentTo(iterations);
-            comeGetMe.Count.ShouldBeEquivalentTo(iterations);
+            countsRead.Last().Should().Be(iterations);
+            comeGetMe.Count.Should().Be(iterations);
         }
 
         [TestMethod]
@@ -63,7 +63,7 @@ namespace NitroxTest.Threading
                 },
                 iterations);
 
-            addCount.ShouldBeEquivalentTo(iterations);
+            addCount.Should().Be(iterations);
             iterationsReadMany.Should().BePositive();
         }
 
@@ -83,8 +83,8 @@ namespace NitroxTest.Threading
                 }
             }
             
-            nums.Count.ShouldBeEquivalentTo(6);
-            nums.Last().ShouldBeEquivalentTo(10);
+            nums.Count.Should().Be(6);
+            nums.Last().Should().Be(10);
         }
 
         private void DoReaderWriter(Action reader, Action<int> writer, int iterators)

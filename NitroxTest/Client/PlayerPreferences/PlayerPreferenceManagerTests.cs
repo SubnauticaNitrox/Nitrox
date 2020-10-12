@@ -85,7 +85,7 @@ namespace NitroxTest.Client.PlayerPreferences
             Action action = () => playerPreferenceManager.SetPreference(null, playerPreference);
 
             //Assert
-            action.ShouldThrow<ArgumentNullException>();
+            action.Should().Throw<ArgumentNullException>();
         }
 
         [TestMethod]
@@ -104,7 +104,7 @@ namespace NitroxTest.Client.PlayerPreferences
             Action action = () => playerPreferenceManager.SetPreference(TestConstants.TEST_IP_ADDRESS, null);
 
             //Assert
-            action.ShouldThrow<ArgumentNullException>();
+            action.Should().Throw<ArgumentNullException>();
         }
 
         [TestMethod]
@@ -181,7 +181,7 @@ namespace NitroxTest.Client.PlayerPreferences
             Action action = () => playerPreferenceManager.GetPreference(null);
 
             //Assert
-            action.ShouldThrow<ArgumentNullException>();
+            action.Should().Throw<ArgumentNullException>();
         }
     }
 }

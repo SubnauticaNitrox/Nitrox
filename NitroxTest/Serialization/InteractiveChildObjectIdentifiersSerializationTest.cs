@@ -45,9 +45,9 @@ namespace NitroxTest.Serialization
                 }
 
                 deserialized.Count.Should().BeGreaterThan(0);
-                deserialized[0].GameObjectNamePath.ShouldBeEquivalentTo("/BlablaScene/SomeBlablaContainer/BlaItem");
-                deserialized[1].GameObjectNamePath.ShouldBeEquivalentTo("");
-                deserialized[2].GameObjectNamePath.ShouldBeEquivalentTo(" herp ");
+                deserialized[0].GameObjectNamePath.Should().Be("/BlablaScene/SomeBlablaContainer/BlaItem");
+                deserialized[1].GameObjectNamePath.Should().Be("");
+                deserialized[2].GameObjectNamePath.Should().Be(" herp ");
 
                 int iterationCount = 0;
                 foreach (InteractiveChildObjectIdentifier id in deserialized)
@@ -57,7 +57,7 @@ namespace NitroxTest.Serialization
                     id.GameObjectNamePath.Should().NotBeNull();
                 }
 
-                iterationCount.ShouldBeEquivalentTo(3);
+                iterationCount.Should().Be(3);
             }
         }
     }
