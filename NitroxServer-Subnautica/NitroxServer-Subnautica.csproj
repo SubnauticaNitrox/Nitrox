@@ -32,7 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AssetsTools.NET, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\AssetsTools.NET.2.0.4\lib\net35\AssetsTools.NET.dll</HintPath>
+      <HintPath>..\packages\AssetsTools.NET.2.0.5\lib\net35\AssetsTools.NET.dll</HintPath>
     </Reference>
     <Reference Include="Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
