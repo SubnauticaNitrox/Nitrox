@@ -165,7 +165,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         private IPEndPoint ResolveIp(string serverIp)
         {
-            Match match = Regex.Match(serverIp, @"^((?:(?:[\da-f]+:??){8}|[\d\.]+|[^:]*)):?(\d+)?$"); // Pattern test url: https://regex101.com/r/WY4FWp/8
+            Match match = Regex.Match(serverIp, @"^((?:(?:[\da-f]+:??){8}|[\d\.]+|[^:\s]+)):?(\d+)?$"); // Pattern test url: https://regex101.com/r/WY4FWp/10
             if (!match.Success)
             {
                 return null;
