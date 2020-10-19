@@ -149,6 +149,5 @@ namespace NitroxModel.DataStructures
         {
             return new NitroxInt3(u.X / s, u.Y / s, u.Z / s);
         }
-
     }
 }
