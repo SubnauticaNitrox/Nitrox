@@ -29,7 +29,7 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation
 
         public override string ToString()
         {
-            return "[MapRoomRotationMetadata CellType: " + CellType + " ConnectionMask: " + ConnectionMask + " ]";
+            return $"[MapRoomRotationMetadata - CellType: {CellType}, ConnectionMask: {ConnectionMask}]";
         }
     }
 }

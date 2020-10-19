@@ -1,6 +1,6 @@
 ﻿using System;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
-using NitroxModel_Subnautica.Helper.Int3;
 using ProtoBufNet;
 
 namespace NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation.Metadata
@@ -10,7 +10,7 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation.Met
     public class AnchoredFaceRotationMetadata : RotationMetadata
     {
         [ProtoMember(1)]
-        public NitroxModel.DataStructures.Int3 Cell { get; set; }
+        public NitroxInt3 Cell { get; set; }
 
         [ProtoMember(2)]
         public int Direction { get; set; }
@@ -25,14 +25,14 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation.Met
 
         public AnchoredFaceRotationMetadata(Int3 cell, int facedirection, int facetype) : base(typeof(BaseAddFaceGhost))
         {
-            Cell = cell.Model();
+            Cell = cell.ToDto();
             Direction = facedirection;
             FaceType = facetype;
         }
 
         public override string ToString()
         {
-            return "[AnchoredFaceRotationMetadata Cell: " + Cell + " Direction: " + Direction + " FaceType: " + FaceType + "]";
+            return $"[AnchoredFaceRotationMetadata - Cell: {Cell}, Direction: {Direction}, FaceType: {FaceType}]";
         }
     }
 }

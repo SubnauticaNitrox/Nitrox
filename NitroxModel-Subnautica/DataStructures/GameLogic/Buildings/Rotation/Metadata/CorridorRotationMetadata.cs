@@ -25,7 +25,7 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation
 
         public override string ToString()
         {
-            return "[CorridorRotationMetadata Rotation: " + Rotation + " ]";
+            return $"[CorridorRotationMetadata - Rotation: {Rotation} ]";
         }
     }
 }

@@ -7,7 +7,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
     {
         private readonly Random random;
 
-        public DeterministicBatchGenerator(Int3 batchId)
+        public DeterministicBatchGenerator(NitroxInt3 batchId)
         {
             random = new Random(batchId.GetHashCode());
         }
