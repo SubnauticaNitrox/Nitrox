@@ -10,7 +10,7 @@ namespace NitroxModel.DataStructures
      */
     [Serializable]
     [ProtoContract]
-    public class NitroxInt3
+    public struct NitroxInt3 : IEquatable<NitroxInt3>
     {
         [ProtoMember(1)]
         public int X { get; set; }
@@ -20,11 +20,6 @@ namespace NitroxModel.DataStructures
 
         [ProtoMember(3)]
         public int Z { get; set; }
-
-        protected NitroxInt3()
-        {
-            // Constructor for serialization. Has to be "protected" for json serialization.
-        }
 
         public NitroxInt3(int x, int y, int z)
         {
@@ -38,12 +33,16 @@ namespace NitroxModel.DataStructures
             return $"[NitroxInt3 - {X}, {Y}, {Z}]";
         }
 
+        public bool Equals(NitroxInt3 other)
+        {
+            return X == other.X
+                && Y == other.Y
+                && Z == other.Z;
+        }
+
         public override bool Equals(object obj)
         {
-            return obj is NitroxInt3 int3
-                && X == int3.X
-                && Y == int3.Y
-                && Z == int3.Z;
+            return (obj is NitroxInt3 other) && Equals(other);
         }
 
         public override int GetHashCode()
@@ -80,6 +79,16 @@ namespace NitroxModel.DataStructures
             return Ceil(vector.X, vector.Y, vector.Z);
         }
 
+        public static bool operator ==(NitroxInt3 u, NitroxInt3 v)
+        {
+            return u.Equals(v);
+        }
+
+        public static bool operator !=(NitroxInt3 u, NitroxInt3 v)
+        {
+            return !u.Equals(v);
+        }
+
         public static NitroxInt3 operator <<(NitroxInt3 u, int s)
         {
             return new NitroxInt3(u.X << s, u.Y << s, u.Z << s);
@@ -90,14 +99,24 @@ namespace NitroxModel.DataStructures
             return new NitroxInt3(u.X >> s, u.Y >> s, u.Z >> s);
         }
 
-        public static bool operator ==(NitroxInt3 u, NitroxInt3 v)
+        public static bool operator <(NitroxInt3 u, NitroxInt3 v)
         {
-            return u.Equals(v);
+            return u.X < v.X && u.Y < v.Y && u.Z < v.Z;
         }
 
-        public static bool operator !=(NitroxInt3 u, NitroxInt3 v)
+        public static bool operator >(NitroxInt3 u, NitroxInt3 v)
         {
-            return !u.Equals(v);
+            return u.X > v.X && u.Y > v.Y && u.Z > v.Z;
+        }
+
+        public static bool operator <=(NitroxInt3 u, NitroxInt3 v)
+        {
+            return u.X <= v.X && u.Y <= v.Y && u.Z <= v.Z;
+        }
+
+        public static bool operator >=(NitroxInt3 u, NitroxInt3 v)
+        {
+            return u.X >= v.X && u.Y >= v.Y && u.Z >= v.Z;
         }
 
         public static NitroxInt3 operator +(NitroxInt3 u, NitroxInt3 v)
