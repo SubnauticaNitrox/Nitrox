@@ -16,7 +16,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
         private readonly BatchCellsParser batchCellsParser;
 
         private readonly Dictionary<NitroxTechType, IEntityBootstrapper> customBootstrappersByTechType;
-        private readonly HashSet<Int3> emptyBatches = new HashSet<Int3>();
+        private readonly HashSet<NitroxInt3> emptyBatches = new HashSet<NitroxInt3>();
         private readonly Dictionary<string, PrefabPlaceholdersGroupAsset> prefabPlaceholderGroupsbyClassId;
         private readonly UwePrefabFactory prefabFactory;
 
@@ -24,23 +24,23 @@ namespace NitroxServer.GameLogic.Entities.Spawning
 
         private readonly object parsedBatchesLock = new object();
         private readonly object emptyBatchesLock = new object();
-        private HashSet<Int3> parsedBatches;
+        private HashSet<NitroxInt3> parsedBatches;
 
-        public List<Int3> SerializableParsedBatches
+        public List<NitroxInt3> SerializableParsedBatches
         {
             get
             {
-                List<Int3> parsed;
-                List<Int3> empty;
+                List<NitroxInt3> parsed;
+                List<NitroxInt3> empty;
 
                 lock (parsedBatchesLock)
                 {
-                    parsed = new List<Int3>(parsedBatches);
+                    parsed = new List<NitroxInt3>(parsedBatches);
                 }
 
                 lock (emptyBatchesLock)
                 {
-                    empty = new List<Int3>(emptyBatches);
+                    empty = new List<NitroxInt3>(emptyBatches);
                 }
 
                 return parsed.Except(empty).ToList();
@@ -49,15 +49,15 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             {
                 lock (parsedBatchesLock)
                 {
-                    parsedBatches = new HashSet<Int3>(value);
+                    parsedBatches = new HashSet<NitroxInt3>(value);
                 }
             }
         }
 
-        public BatchEntitySpawner(EntitySpawnPointFactory entitySpawnPointFactory, UweWorldEntityFactory worldEntityFactory, UwePrefabFactory prefabFactory, List<Int3> loadedPreviousParsed, ServerProtoBufSerializer serializer,
+        public BatchEntitySpawner(EntitySpawnPointFactory entitySpawnPointFactory, UweWorldEntityFactory worldEntityFactory, UwePrefabFactory prefabFactory, List<NitroxInt3> loadedPreviousParsed, ServerProtoBufSerializer serializer,
                                   Dictionary<NitroxTechType, IEntityBootstrapper> customBootstrappersByTechType, Dictionary<string, PrefabPlaceholdersGroupAsset> prefabPlaceholderGroupsbyClassId)
         {
-            parsedBatches = new HashSet<Int3>(loadedPreviousParsed);
+            parsedBatches = new HashSet<NitroxInt3>(loadedPreviousParsed);
             this.worldEntityFactory = worldEntityFactory;
             this.prefabFactory = prefabFactory;
             this.customBootstrappersByTechType = customBootstrappersByTechType;
@@ -66,7 +66,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             batchCellsParser = new BatchCellsParser(entitySpawnPointFactory, serializer);
         }
 
-        public List<Entity> LoadUnspawnedEntities(Int3 batchId)
+        public List<Entity> LoadUnspawnedEntities(NitroxInt3 batchId)
         {
             lock (parsedBatches)
             {

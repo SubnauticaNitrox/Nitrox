@@ -200,9 +200,9 @@ namespace NitroxServer.GameLogic.Entities
 
         private void LoadUnspawnedEntities(AbsoluteEntityCell[] cells)
         {
-            IEnumerable<Int3> distinctBatchIds = cells.Select(cell => cell.BatchId).Distinct();
+            IEnumerable<NitroxInt3> distinctBatchIds = cells.Select(cell => cell.BatchId).Distinct();
 
-            foreach (Int3 batchId in distinctBatchIds)
+            foreach (NitroxInt3 batchId in distinctBatchIds)
             {
                 List<Entity> spawnedEntities = batchEntitySpawner.LoadUnspawnedEntities(batchId);
 

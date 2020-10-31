@@ -1,4 +1,5 @@
 ﻿using System;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using UnityEngine;
 
@@ -6,14 +7,14 @@ namespace NitroxModel_Subnautica.DataStructures
 {
     public static class DataExtensions
     {
-        public static Int3 ToUnity(this NitroxModel.DataStructures.Int3 v)
+        public static Int3 ToUnity(this NitroxInt3 v)
         {
             return new Int3(v.X, v.Y, v.Z);
         }
 
-        public static NitroxModel.DataStructures.Int3 ToDto(this Int3 v)
+        public static NitroxInt3 ToDto(this Int3 v)
         {
-            return new NitroxModel.DataStructures.Int3(v.x, v.y, v.z);
+            return new NitroxInt3(v.x, v.y, v.z);
         }
 
         public static NitroxVector3 ToDto(this Vector3 v)
@@ -22,11 +23,6 @@ namespace NitroxModel_Subnautica.DataStructures
         }
 
         public static Vector3 ToUnity(this NitroxVector3 v)
-        {
-            return new Vector3(v.X, v.Y, v.Z);
-        }
-
-        public static Vector3 AsVector3(this NitroxModel.DataStructures.Int3 v)
         {
             return new Vector3(v.X, v.Y, v.Z);
         }

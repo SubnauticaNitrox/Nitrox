@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
-using NitroxModel_Subnautica.Helper;
 using UWE;
 
 namespace NitroxModel_Subnautica.DataStructures.GameLogic.Entities
@@ -17,9 +16,8 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic.Entities
 
         public override Optional<UweWorldEntity> From(string classId)
         {
-            WorldEntityInfo worldEntityInfo;
 
-            if (worldEntitiesByClassId.TryGetValue(classId, out worldEntityInfo))
+            if (worldEntitiesByClassId.TryGetValue(classId, out WorldEntityInfo worldEntityInfo))
             {
                 UweWorldEntity uweWorldEntity = new UweWorldEntity(worldEntityInfo.techType.ToDto(),
                                                                    worldEntityInfo.localScale.ToDto(),

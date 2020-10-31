@@ -6,7 +6,7 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
 using NitroxClient.Communication.Abstract;
 using UnityEngine;
-using NitroxModel_Subnautica.Helper.Int3;
+using NitroxModel_Subnautica.DataStructures;
 
 namespace NitroxClient.GameLogic
 {
@@ -15,7 +15,6 @@ namespace NitroxClient.GameLogic
         private readonly IMultiplayerSession multiplayerSession;
         private readonly IPacketSender packetSender;
         private readonly VisibleCells visibleCells;
-        private readonly PacketReceiver packetReceiver;
 
         private bool cellsPendingSync;
         private float timeWhenCellsBecameOutOfSync;
@@ -23,12 +22,11 @@ namespace NitroxClient.GameLogic
         private List<AbsoluteEntityCell> added = new List<AbsoluteEntityCell>();
         private List<AbsoluteEntityCell> removed = new List<AbsoluteEntityCell>();
 
-        public Terrain(IMultiplayerSession multiplayerSession, IPacketSender packetSender, VisibleCells visibleCells, PacketReceiver packetReceiver)
+        public Terrain(IMultiplayerSession multiplayerSession, IPacketSender packetSender, VisibleCells visibleCells)
         {
             this.multiplayerSession = multiplayerSession;
             this.packetSender = packetSender;
             this.visibleCells = visibleCells;
-            this.packetReceiver = packetReceiver;
         }
 
         public void CellLoaded(Int3 batchId, Int3 cellId, int level)
@@ -41,7 +39,7 @@ namespace NitroxClient.GameLogic
         {
             yield return new WaitForSeconds(0.5f);
 
-            AbsoluteEntityCell cell = new AbsoluteEntityCell(batchId.Model(), cellId.Model(), level);
+            AbsoluteEntityCell cell = new AbsoluteEntityCell(batchId.ToDto(), cellId.ToDto(), level);
 
             if (!visibleCells.Contains(cell))
             {
@@ -52,7 +50,7 @@ namespace NitroxClient.GameLogic
 
         public void CellUnloaded(Int3 batchId, Int3 cellId, int level)
         {
-            AbsoluteEntityCell cell = new AbsoluteEntityCell(batchId.Model(), cellId.Model(), level);
+            AbsoluteEntityCell cell = new AbsoluteEntityCell(batchId.ToDto(), cellId.ToDto(), level);
 
             if (visibleCells.Contains(cell))
             {
