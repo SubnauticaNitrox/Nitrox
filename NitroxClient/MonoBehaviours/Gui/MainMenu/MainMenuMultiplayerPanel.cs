@@ -104,7 +104,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         public void OpenJoinServerMenu(string serverIp)
         {
-            IPEndPoint endpoint = ResolveIpv4(serverIp) ?? ResolveHostName(serverIp);
+            IPEndPoint endpoint = ResolveIp(serverIp) ?? ResolveHostName(serverIp);
             if (endpoint == null)
             {
                 Log.InGame($"Unable to resolve remote address: {serverIp}");
@@ -163,9 +163,9 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             }
         }
 
-        private IPEndPoint ResolveIpv4(string serverIp)
+        private IPEndPoint ResolveIp(string serverIp)
         {
-            Match match = Regex.Match(serverIp, @"^((?:\d{1,3}\.){3}\d{1,3})\:?(\d{2,5})?$"); // Pattern test url: https://regex101.com/r/NZsD0l/1
+            Match match = Regex.Match(serverIp, @"^((?:(?:[\da-f]+:??){8}|[\d\.]+|[^:\s]+)):?(\d+)?$"); // Pattern test url: https://regex101.com/r/WY4FWp/10
             if (!match.Success)
             {
                 return null;
