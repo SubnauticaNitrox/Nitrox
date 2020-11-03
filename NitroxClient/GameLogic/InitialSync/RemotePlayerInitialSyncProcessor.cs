@@ -43,7 +43,13 @@ namespace NitroxClient.GameLogic.InitialSync
 
                     if (sub.HasValue)
                     {
-                        player.SetSubRoot(sub.Value.GetComponent<SubRoot>());
+                        SubRoot subroot = sub.Value.GetComponent<SubRoot>();
+                        player.SetSubRoot(subroot);
+                        // Set the animation for the remote player to standing instead of swimming if player is not in a flooded subroot
+                        if (!subroot.IsUnderwater(player.Body.transform.position))
+                        {
+                            player.UpdateAnimation(AnimChangeType.UNDERWATER, AnimChangeState.OFF);
+                        }
                     }
                     else
                     {
