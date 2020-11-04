@@ -79,6 +79,11 @@ namespace NitroxClient.GameLogic
             SubRootChanged packet = new SubRootChanged(multiplayerSession.Reservation.PlayerId, subrootId);
             packetSender.Send(packet);
         }
+        public void BroadcastEscapePodChange(Optional<NitroxId> escapePodId)
+        {
+            EscapePodChanged packet = new EscapePodChanged(multiplayerSession.Reservation.PlayerId, escapePodId);
+            packetSender.Send(packet);
+        }
 
         private GameObject CreateBodyPrototype()
         {

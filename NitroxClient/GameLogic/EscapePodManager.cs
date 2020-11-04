@@ -36,10 +36,10 @@ namespace NitroxClient.GameLogic
             this.multiplayerSession = multiplayerSession;
         }
 
-        public void AssignPlayerToEscapePod(EscapePodModel escapePod)
+        public void AssignPlayerToEscapePod(EscapePodModel escapePod, bool firstTimeSpawning)
         {
             Validate.NotNull(escapePod, "Escape pod can not be null");
-
+            NitroxEntity.SetNewId(EscapePod.main.gameObject, escapePod.Id);
             EscapePod.main.transform.position = escapePod.Location.ToUnity();
             EscapePod.main.playerSpawn.position = escapePod.Location.ToUnity() + playerSpawnRelativeToEscapePodPosition; // This Might not correctly handle rotated EscapePods
 
@@ -53,12 +53,14 @@ namespace NitroxClient.GameLogic
             {
                 Log.Error("Escape pod did not have a rigid body!");
             }
-
-            Player.main.transform.position = EscapePod.main.playerSpawn.position;
-            Player.main.transform.rotation = EscapePod.main.playerSpawn.rotation;
-
+            
+                Player.main.transform.position = EscapePod.main.playerSpawn.position;
+                Player.main.transform.rotation = EscapePod.main.playerSpawn.rotation;
+            if (firstTimeSpawning)
+            {
+                Player.main.currentEscapePod = EscapePod.main;
+            }
             Player.main.escapePod.Update(true); // Tells the game to update various EscapePod features
-
             MyEscapePodId = escapePod.Id;
         }
 
@@ -94,6 +96,7 @@ namespace NitroxClient.GameLogic
             else
             {
                 escapePod = Object.Instantiate(EscapePod.main.gameObject);
+                NitroxEntity.SetNewId(escapePod, model.Id);
             }
 
             escapePod.transform.position = model.Location.ToUnity();
