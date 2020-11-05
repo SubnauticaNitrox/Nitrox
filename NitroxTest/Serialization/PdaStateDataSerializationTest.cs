@@ -43,12 +43,12 @@ namespace NitroxTest.Serialization
                     deserialized = serializer.Deserialize<PDAStateData>(stream);
                 }
 
-                deserialized.PdaLog.Count.ShouldBeEquivalentTo(1);
-                deserialized.PdaLog[0].Key.ShouldBeEquivalentTo("Some key");
-                deserialized.EncyclopediaEntries.Count.ShouldBeEquivalentTo(3);
-                deserialized.EncyclopediaEntries[2].ShouldBeEquivalentTo("");
-                deserialized.PartiallyUnlockedByTechType.Count.ShouldBeEquivalentTo(1);
-                deserialized.PartiallyUnlockedByTechType[new NitroxTechType("Battery")].Progress.ShouldBeEquivalentTo(1f);
+                deserialized.PdaLog.Count.Should().Be(1);
+                deserialized.PdaLog[0].Key.Should().Be("Some key");
+                deserialized.EncyclopediaEntries.Count.Should().Be(3);
+                deserialized.EncyclopediaEntries[2].Should().Be("");
+                deserialized.PartiallyUnlockedByTechType.Count.Should().Be(1);
+                deserialized.PartiallyUnlockedByTechType[new NitroxTechType("Battery")].Progress.Should().Be(1f);
             }
         }
     }
