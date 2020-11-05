@@ -43,11 +43,31 @@ namespace NitroxClient.GameLogic.InitialSync
 
                     if (sub.HasValue)
                     {
-                        player.SetSubRoot(sub.Value.GetComponent<SubRoot>());
+                        Log.Debug($"sub value set to {sub.Value}. Try to find subroot");
+                        SubRoot subroot = null;
+                        sub.Value.TryGetComponent<SubRoot>(out subroot);
+                        if (subroot != null)
+                        {
+                            Log.Debug("Found subroot for player. Will add him and update animation.");
+                            player.SetSubRoot(subroot);
+                            // Set the animation for the remote player to standing instead of swimming if player is not in a flooded subroot
+                            if (!subroot.IsUnderwater(player.Body.transform.position))
+                            {
+                                player.UpdateAnimation(AnimChangeType.UNDERWATER, AnimChangeState.OFF);
+                            }
+                        }
+                        Log.Debug("Trying to find escape pod.");
+                        EscapePod escapePod = null;
+                        sub.Value.TryGetComponent<EscapePod>(out escapePod);
+                        if (escapePod != null)
+                        {
+                            Log.Debug("Found escape pod for player. Will add him and update animation.");
+                            player.UpdateAnimation(AnimChangeType.UNDERWATER, AnimChangeState.OFF);
+                        }
                     }
                     else
                     {
-                        Log.Error("Could not spawn remote player into subroot with id: " + playerData.SubRootId.Value);
+                        Log.Error("Could not spawn remote player into subroot/escape pod with id: " + playerData.SubRootId.Value);
                     }
                 }
 

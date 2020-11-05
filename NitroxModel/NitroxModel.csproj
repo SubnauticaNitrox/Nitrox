@@ -111,6 +111,7 @@
     <Compile Include="Networking\NitroxDeliveryMethod.cs" />
     <Compile Include="Packets\EntityMetadataUpdate.cs" />
     <Compile Include="Packets\BedEnter.cs" />
+    <Compile Include="Packets\EscapePodChanged.cs" />
     <Compile Include="Packets\EscapePodRadioRepair.cs" />
     <Compile Include="Packets\EscapePodRepair.cs" />
     <Compile Include="Packets\IShortString.cs" />

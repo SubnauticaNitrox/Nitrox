@@ -84,6 +84,7 @@
     <Compile Include="Communication\Packets\Processors\Abstract\UnauthenticatedPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CellVisibilityChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\EntityMetadataUpdateProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\EscapePodChangedPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\FireDousedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\EscapePodRadioRepairProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\EscapePodRepairProcessor.cs" />
