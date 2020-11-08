@@ -26,10 +26,15 @@ namespace NitroxModel.Serialization
 
             using (StreamReader reader = new StreamReader(new FileStream(props.FileName, FileMode.Open), Encoding.UTF8))
             {
+                if (reader.EndOfStream)
+                {
+                    return props;
+                }
+
                 while (!reader.EndOfStream)
                 {
                     string readLine = reader.ReadLine();
-                    if (readLine[0] == '#')
+                    if (readLine.Length < 1 || readLine[0] == '#')
                     {
                         continue;
                     }
@@ -118,12 +123,14 @@ namespace NitroxModel.Serialization
 
         private static void WritePropertyDescription(MemberInfo member, StreamWriter stream)
         {
-            PropertyDescriptionAttribute attribute = (PropertyDescriptionAttribute)member.GetCustomAttribute(typeof(PropertyDescriptionAttribute));
+            PropertyDescriptionAttribute attribute = member.GetCustomAttribute<PropertyDescriptionAttribute>();
             if (attribute != null)
             {
-                foreach (string line in attribute.Description.Split(Environment.NewLine))
-                stream.Write("# ");
-                stream.WriteLine(attribute.Description);
+                foreach (string line in attribute.Description.Split(Environment.NewLine.ToCharArray()))
+                {
+                    stream.Write("# ");
+                    stream.WriteLine(line);
+                }
             }
         }
     }

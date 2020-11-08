@@ -95,7 +95,7 @@ namespace NitroxServer.Serialization
         [PropertyDescription("Possible values:", typeof(ServerSerializerMode))]
         public ServerSerializerMode SerializerMode { get; set; } = ServerSerializerMode.PROTOBUF;
 
-        [PropertyDescription("Default player stats below here")]
+        [PropertyDescription("\nDefault player stats below here")]
         public float DefaultOxygenValue { get; set; } = 45;
         public float DefaultMaxOxygenValue { get; set; } = 45;
         public float DefaultHealthValue { get; set; } = 80;
