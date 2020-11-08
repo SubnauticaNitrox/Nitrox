@@ -17,6 +17,7 @@ namespace NitroxModel.Serialization
             {
                 return props;
             }
+
             FieldInfo[] fields = typeof(T).GetFields().Where(f => f.Attributes != FieldAttributes.NotSerialized).ToArray();
             PropertyInfo[] properties = typeof(T).GetProperties().Where(p => p.CanWrite).ToArray();
 
@@ -32,7 +33,7 @@ namespace NitroxModel.Serialization
 
                     if (readLine.Contains('='))
                     {
-                        string[] property = readLine.Split('=');
+                        string[] property = readLine.Split(new char[] { '=' }, 2);
 
                         bool fieldSet = SetField(property, props, fields);
                         bool propertySet = SetProperty(property, props, properties);
