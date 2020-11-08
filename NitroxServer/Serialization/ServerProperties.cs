@@ -30,6 +30,7 @@ namespace NitroxServer.Serialization
 
         private int portSetting = 11000;
 
+        [PropertyDescription("Measured in milliseconds")]
         public int SaveInterval
         {
             get
@@ -87,10 +88,13 @@ namespace NitroxServer.Serialization
 
         public string AdminPassword { get; set; } = StringHelper.GenerateRandomString(12);
 
+        [PropertyDescription("Possible values:", typeof(ServerGameMode))]
         public ServerGameMode GameMode { get; set; } = ServerGameMode.SURVIVAL;
 
+        [PropertyDescription("Possible values:", typeof(ServerSerializerMode))]
         public ServerSerializerMode SerializerMode { get; set; } = ServerSerializerMode.PROTOBUF;
 
+        [PropertyDescription("Default player stats below here")]
         public float DefaultOxygenValue { get; set; } = 45;
         public float DefaultMaxOxygenValue { get; set; } = 45;
         public float DefaultHealthValue { get; set; } = 80;

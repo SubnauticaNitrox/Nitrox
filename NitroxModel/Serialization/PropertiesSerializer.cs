@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -10,6 +12,8 @@ namespace NitroxModel.Serialization
 {
     public static class PropertiesSerializer
     {
+        private static readonly Dictionary<Type, Dictionary<string, MemberInfo>> typeCache = new Dictionary<Type, Dictionary<string, MemberInfo>>();
+
         public static T Deserialize<T>() where T : IProperties, new()
         {
             T props = new T();
@@ -18,8 +22,17 @@ namespace NitroxModel.Serialization
                 return props;
             }
 
-            FieldInfo[] fields = typeof(T).GetFields().Where(f => f.Attributes != FieldAttributes.NotSerialized).ToArray();
-            PropertyInfo[] properties = typeof(T).GetProperties().Where(p => p.CanWrite).ToArray();
+            if (!typeCache.TryGetValue(typeof(T), out Dictionary<string, MemberInfo> typeCachedDict))
+            {
+                typeCachedDict = typeof(T).GetFields()
+                    .Where(f => f.Attributes != FieldAttributes.NotSerialized)
+                    .Cast<MemberInfo>()
+                    .Concat(typeof(T).GetProperties()
+                    .Where(p => p.CanWrite).Cast<MemberInfo>())
+                    .ToDictionary(n => n.Name);
+
+                typeCache.Add(typeof(T), typeCachedDict);
+            }
 
             using (StreamReader reader = new StreamReader(new FileStream(props.FileName, FileMode.Open), Encoding.UTF8))
             {
@@ -34,13 +47,21 @@ namespace NitroxModel.Serialization
                     if (readLine.Contains('='))
                     {
                         string[] property = readLine.Split(new char[] { '=' }, 2);
-
-                        bool fieldSet = SetField(property, props, fields);
-                        bool propertySet = SetProperty(property, props, properties);
-
-                        if (!fieldSet && !propertySet)
+                        if (!typeCachedDict.TryGetValue(property[0], out MemberInfo member))
                         {
                             Log.Error($"{property[0]} does not exist!");
+                        }
+
+                        FieldInfo field = member as FieldInfo;
+                        if (field != null)
+                        {
+                            field.SetValue(props, TypeDescriptor.GetConverter(field.FieldType).ConvertFrom(property[1]));
+                        }
+
+                        PropertyInfo prop = member as PropertyInfo;
+                        if (prop != null)
+                        {
+                            prop.SetValue(props, TypeDescriptor.GetConverter(prop.PropertyType).ConvertFrom(property[1]));
                         }
                     }
                     else
@@ -64,85 +85,24 @@ namespace NitroxModel.Serialization
 
                 foreach (FieldInfo field in fields)
                 {
+                    PropertyDescriptionAttribute attribute = (PropertyDescriptionAttribute)field.GetCustomAttribute(typeof(PropertyDescriptionAttribute));
+                    if (attribute != null)
+                    {
+                        stream.WriteLine($"# {attribute.Description}");
+                    }
                     stream.WriteLine($"{field.Name}={field.GetValue(props)}");
                 }
 
                 foreach (PropertyInfo property in properties)
                 {
+                    PropertyDescriptionAttribute attribute = (PropertyDescriptionAttribute)property.GetCustomAttribute(typeof(PropertyDescriptionAttribute));
+                    if (attribute != null)
+                    {
+                        stream.WriteLine($"# {attribute.Description}");
+                    }
                     stream.WriteLine($"{property.Name}={property.GetValue(props)}");
                 }
             }
-        }
-
-        private static bool SetField<T>(string[] property, T props, FieldInfo[] fields) where T : IProperties, new()
-        {
-            FieldInfo field = fields.FirstOrDefault(f => f.Name == property[0]);
-            if (field == null)
-            {
-                return false;
-            }
-
-            if (bool.TryParse(property[1], out bool boolean))
-            {
-                field.SetValue(props, boolean);
-            }
-            else if (int.TryParse(property[1], out int integer))
-            {
-                field.SetValue(props, integer);
-            }
-            else if (float.TryParse(property[1], out float floatingPoint))
-            {
-                field.SetValue(props, floatingPoint);
-            }
-            else if (Enum.TryParse(property[1], out ServerGameMode gameMode))
-            {
-                field.SetValue(props, gameMode);
-            }
-            else if (Enum.TryParse(property[1], out ServerSerializerMode serializerMode))
-            {
-                field.SetValue(props, serializerMode);
-            }
-            else // treat as string
-            {
-                field.SetValue(props, property[1]);
-            }
-            return true;
-        }
-
-        private static bool SetProperty<T>(string[] property, T props, PropertyInfo[] properties) where T : IProperties, new()
-        {
-            PropertyInfo propertyInfo = properties.FirstOrDefault(p => p.Name == property[0]);
-
-            if (propertyInfo == null)
-            {
-                return false;
-            }
-
-            if (bool.TryParse(property[1], out bool boolean))
-            {
-                propertyInfo.SetValue(props, boolean);
-            }
-            else if (int.TryParse(property[1], out int integer))
-            {
-                propertyInfo.SetValue(props, integer);
-            }
-            else if (float.TryParse(property[1], out float floatingPoint))
-            {
-                propertyInfo.SetValue(props, floatingPoint);
-            }
-            else if (Enum.TryParse(property[1], out ServerGameMode gameMode))
-            {
-                propertyInfo.SetValue(props, gameMode);
-            }
-            else if (Enum.TryParse(property[1], out ServerSerializerMode serializerMode))
-            {
-                propertyInfo.SetValue(props, serializerMode);
-            }
-            else // treat as string
-            {
-                propertyInfo.SetValue(props, property[1]);
-            }
-            return true;
         }
     }
 }
