@@ -22,17 +22,7 @@ namespace NitroxModel.Serialization
                 return props;
             }
 
-            if (!typeCache.TryGetValue(typeof(T), out Dictionary<string, MemberInfo> typeCachedDict))
-            {
-                typeCachedDict = typeof(T).GetFields()
-                    .Where(f => f.Attributes != FieldAttributes.NotSerialized)
-                    .Cast<MemberInfo>()
-                    .Concat(typeof(T).GetProperties()
-                    .Where(p => p.CanWrite).Cast<MemberInfo>())
-                    .ToDictionary(n => n.Name);
-
-                typeCache.Add(typeof(T), typeCachedDict);
-            }
+            Dictionary<string, MemberInfo> typeCachedDict = GetTypeCacheDictionary<T>();
 
             using (StreamReader reader = new StreamReader(new FileStream(props.FileName, FileMode.Open), Encoding.UTF8))
             {
@@ -74,33 +64,55 @@ namespace NitroxModel.Serialization
             }
         }
 
+        private static Dictionary<string, MemberInfo> GetTypeCacheDictionary<T>()
+        {
+            if (!typeCache.TryGetValue(typeof(T), out Dictionary<string, MemberInfo> typeCachedDict))
+            {
+                typeCachedDict = typeof(T).GetFields()
+                    .Where(f => f.Attributes != FieldAttributes.NotSerialized)
+                    .Cast<MemberInfo>()
+                    .Concat(typeof(T).GetProperties()
+                    .Where(p => p.CanWrite).Cast<MemberInfo>())
+                    .ToDictionary(n => n.Name);
+
+                typeCache.Add(typeof(T), typeCachedDict);
+            }
+            return typeCachedDict;
+        }
+
         public static void Serialize<T>(T props) where T : IProperties, new()
         {
-            FieldInfo[] fields = typeof(T).GetFields().Where(f => f.Attributes != FieldAttributes.NotSerialized).ToArray();
-            PropertyInfo[] properties = typeof(T).GetProperties().Where(p => p.CanWrite).ToArray();
+            Dictionary<string, MemberInfo> typeCachedDict = GetTypeCacheDictionary<T>();
 
             using (StreamWriter stream = new StreamWriter(new FileStream(props.FileName, FileMode.OpenOrCreate), Encoding.UTF8))
             {
                 stream.WriteLine("# Settings can be changed here");
 
-                foreach (FieldInfo field in fields)
+                foreach (string name in typeCachedDict.Keys)
                 {
-                    PropertyDescriptionAttribute attribute = (PropertyDescriptionAttribute)field.GetCustomAttribute(typeof(PropertyDescriptionAttribute));
-                    if (attribute != null)
-                    {
-                        stream.WriteLine($"# {attribute.Description}");
-                    }
-                    stream.WriteLine($"{field.Name}={field.GetValue(props)}");
-                }
+                    MemberInfo member = typeCachedDict[name];
 
-                foreach (PropertyInfo property in properties)
-                {
-                    PropertyDescriptionAttribute attribute = (PropertyDescriptionAttribute)property.GetCustomAttribute(typeof(PropertyDescriptionAttribute));
-                    if (attribute != null)
+                    FieldInfo field = member as FieldInfo;
+                    if (field != null)
                     {
-                        stream.WriteLine($"# {attribute.Description}");
+                        PropertyDescriptionAttribute attribute = (PropertyDescriptionAttribute)field.GetCustomAttribute(typeof(PropertyDescriptionAttribute));
+                        if (attribute != null)
+                        {
+                            stream.WriteLine($"# {attribute.Description}");
+                        }
+                        stream.WriteLine($"{name}={field.GetValue(props)}");
                     }
-                    stream.WriteLine($"{property.Name}={property.GetValue(props)}");
+
+                    PropertyInfo property = member as PropertyInfo;
+                    if (property != null)
+                    {
+                        PropertyDescriptionAttribute attribute = (PropertyDescriptionAttribute)property.GetCustomAttribute(typeof(PropertyDescriptionAttribute));
+                        if (attribute != null)
+                        {
+                            stream.WriteLine($"# {attribute.Description}");
+                        }
+                        stream.WriteLine($"{name}={property.GetValue(props)}");
+                    }
                 }
             }
         }
