@@ -86,7 +86,7 @@ namespace NitroxModel.Serialization
 
             using (StreamWriter stream = new StreamWriter(new FileStream(props.FileName, FileMode.OpenOrCreate), Encoding.UTF8))
             {
-                stream.WriteLine("# Settings can be changed here");
+                WritePropertyDescription(typeof(T), stream);
 
                 foreach (string name in typeCachedDict.Keys)
                 {
@@ -95,25 +95,35 @@ namespace NitroxModel.Serialization
                     FieldInfo field = member as FieldInfo;
                     if (field != null)
                     {
-                        PropertyDescriptionAttribute attribute = (PropertyDescriptionAttribute)field.GetCustomAttribute(typeof(PropertyDescriptionAttribute));
-                        if (attribute != null)
-                        {
-                            stream.WriteLine($"# {attribute.Description}");
-                        }
-                        stream.WriteLine($"{name}={field.GetValue(props)}");
+                        WritePropertyDescription(member, stream);
+                        WriteProperty(field, field.GetValue(props), stream);
                     }
 
                     PropertyInfo property = member as PropertyInfo;
                     if (property != null)
                     {
-                        PropertyDescriptionAttribute attribute = (PropertyDescriptionAttribute)property.GetCustomAttribute(typeof(PropertyDescriptionAttribute));
-                        if (attribute != null)
-                        {
-                            stream.WriteLine($"# {attribute.Description}");
-                        }
-                        stream.WriteLine($"{name}={property.GetValue(props)}");
+                        WritePropertyDescription(member, stream);
+                        WriteProperty(property, property.GetValue(props), stream);
                     }
                 }
+            }
+        }
+
+        private static void WriteProperty<T>(T member, object value, StreamWriter stream) where T : MemberInfo
+        {
+            stream.Write(member.Name);
+            stream.Write("=");
+            stream.WriteLine(value);
+        }
+
+        private static void WritePropertyDescription(MemberInfo member, StreamWriter stream)
+        {
+            PropertyDescriptionAttribute attribute = (PropertyDescriptionAttribute)member.GetCustomAttribute(typeof(PropertyDescriptionAttribute));
+            if (attribute != null)
+            {
+                foreach (string line in attribute.Description.Split(Environment.NewLine))
+                stream.Write("# ");
+                stream.WriteLine(attribute.Description);
             }
         }
     }

@@ -10,7 +10,7 @@ namespace NitroxModel.Serialization
         public string FileName { get; }
     }
 
-    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
     public sealed class PropertyDescriptionAttribute : DescriptionAttribute
     {
         public PropertyDescriptionAttribute(string desc) : base(desc)

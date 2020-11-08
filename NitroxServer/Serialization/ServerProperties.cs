@@ -10,6 +10,7 @@ using NitroxModel.Serialization;
 
 namespace NitroxServer.Serialization
 {
+    [PropertyDescription("Server settings can be changed here")]
     public class ServerProperties : IProperties
     {
         public string FileName => "config.properties";
