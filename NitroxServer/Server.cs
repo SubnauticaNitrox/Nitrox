@@ -25,11 +25,6 @@ namespace NitroxServer
 
         public Server(WorldPersistence worldPersistence, World world, Properties serverConfig, Communication.NetworkingLayer.NitroxServer server)
         {
-            if (ConfigurationManager.AppSettings.Count == 0)
-            {
-                Log.Warn("Nitrox Server Cant Read Config File.");
-            }
-
             this.worldPersistence = worldPersistence;
             this.serverConfig = serverConfig;
             this.server = server;
