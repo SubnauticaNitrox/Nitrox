@@ -9,9 +9,9 @@ namespace NitroxServer.Communication.Packets.Processors
 {
     public class MultiplayerSessionPolicyRequestProcessor : UnauthenticatedPacketProcessor<MultiplayerSessionPolicyRequest>
     {
-        private readonly Properties config;
+        private readonly ServerProperties config;
 
-        public MultiplayerSessionPolicyRequestProcessor(Properties config)
+        public MultiplayerSessionPolicyRequestProcessor(ServerProperties config)
         {
             this.config = config;
         }

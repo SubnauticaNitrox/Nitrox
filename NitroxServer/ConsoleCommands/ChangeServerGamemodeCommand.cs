@@ -10,10 +10,10 @@ namespace NitroxServer.ConsoleCommands
 {
     internal class ChangeServerGamemodeCommand : Command
     {
-        private readonly Properties serverConfig;
+        private readonly ServerProperties serverConfig;
         private readonly PlayerManager playerManager;
 
-        public ChangeServerGamemodeCommand(Properties serverConfig, PlayerManager playerManager) : base("changeservergamemode", Perms.ADMIN, "Changes server gamemode")
+        public ChangeServerGamemodeCommand(ServerProperties serverConfig, PlayerManager playerManager) : base("changeservergamemode", Perms.ADMIN, "Changes server gamemode")
         {
             this.serverConfig = serverConfig;
             this.playerManager = playerManager;

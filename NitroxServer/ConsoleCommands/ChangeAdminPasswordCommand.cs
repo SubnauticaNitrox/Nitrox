@@ -9,9 +9,9 @@ namespace NitroxServer.ConsoleCommands
 {
     internal class ChangeAdminPasswordCommand : Command
     {
-        private readonly Properties serverConfig;
+        private readonly ServerProperties serverConfig;
 
-        public ChangeAdminPasswordCommand(Properties serverConfig) : base("changeadminpassword", Perms.ADMIN, "Changes admin password")
+        public ChangeAdminPasswordCommand(ServerProperties serverConfig) : base("changeadminpassword", Perms.ADMIN, "Changes admin password")
         {
             this.serverConfig = serverConfig;
             AddParameter(new TypeString("password", true));

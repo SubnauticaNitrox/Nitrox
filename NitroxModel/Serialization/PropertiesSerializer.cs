@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -8,26 +6,22 @@ using System.Text;
 using NitroxModel.Logger;
 using NitroxModel.Server;
 
-namespace NitroxServer.Serialization
+namespace NitroxModel.Serialization
 {
     public static class PropertiesSerializer
     {
-        private readonly static FieldInfo[] fields = typeof(Properties).GetFields();
-        private readonly static PropertyInfo[] properties = typeof(Properties).GetProperties().Where(p => p.CanWrite).ToArray();
-
-        private const string CONFIG_NAME = "config.properties";
-
-        public static Properties Deserialize()
+        public static T Deserialize<T>() where T : IProperties, new()
         {
-            if (!File.Exists(CONFIG_NAME))
+            T props = new T();
+            if (!File.Exists(props.FileName))
             {
-                return new Properties();
+                return props;
             }
+            FieldInfo[] fields = typeof(T).GetFields().Where(f => f.Attributes != FieldAttributes.NotSerialized).ToArray();
+            PropertyInfo[] properties = typeof(T).GetProperties().Where(p => p.CanWrite).ToArray();
 
-            using (StreamReader reader = new StreamReader(new FileStream(CONFIG_NAME, FileMode.Open), Encoding.UTF8))
+            using (StreamReader reader = new StreamReader(new FileStream(props.FileName, FileMode.Open), Encoding.UTF8))
             {
-                Properties props = new Properties();
-
                 while (!reader.EndOfStream)
                 {
                     string readLine = reader.ReadLine();
@@ -40,8 +34,8 @@ namespace NitroxServer.Serialization
                     {
                         string[] property = readLine.Split('=');
 
-                        bool fieldSet = SetField(property, props);
-                        bool propertySet = SetProperty(property, props);
+                        bool fieldSet = SetField(property, props, fields);
+                        bool propertySet = SetProperty(property, props, properties);
 
                         if (!fieldSet && !propertySet)
                         {
@@ -58,11 +52,14 @@ namespace NitroxServer.Serialization
             }
         }
 
-        public static void Serialize(Properties props)
+        public static void Serialize<T>(T props) where T : IProperties, new()
         {
-            using (StreamWriter stream = new StreamWriter(new FileStream(CONFIG_NAME, FileMode.OpenOrCreate), Encoding.UTF8))
+            FieldInfo[] fields = typeof(T).GetFields().Where(f => f.Attributes != FieldAttributes.NotSerialized).ToArray();
+            PropertyInfo[] properties = typeof(T).GetProperties().Where(p => p.CanWrite).ToArray();
+
+            using (StreamWriter stream = new StreamWriter(new FileStream(props.FileName, FileMode.OpenOrCreate), Encoding.UTF8))
             {
-                stream.WriteLine("# Server settings can be changed here");
+                stream.WriteLine("# Settings can be changed here");
 
                 foreach (FieldInfo field in fields)
                 {
@@ -76,7 +73,7 @@ namespace NitroxServer.Serialization
             }
         }
 
-        private static bool SetField(string[] property, Properties props)
+        private static bool SetField<T>(string[] property, T props, FieldInfo[] fields) where T : IProperties, new()
         {
             FieldInfo field = fields.FirstOrDefault(f => f.Name == property[0]);
             if (field == null)
@@ -111,7 +108,7 @@ namespace NitroxServer.Serialization
             return true;
         }
 
-        private static bool SetProperty(string[] property, Properties props)
+        private static bool SetProperty<T>(string[] property, T props, PropertyInfo[] properties) where T : IProperties, new()
         {
             PropertyInfo propertyInfo = properties.FirstOrDefault(p => p.Name == property[0]);
 

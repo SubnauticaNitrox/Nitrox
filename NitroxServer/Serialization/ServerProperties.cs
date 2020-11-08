@@ -6,11 +6,14 @@ using System.Threading.Tasks;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
 using NitroxModel.Server;
+using NitroxModel.Serialization;
 
 namespace NitroxServer.Serialization
 {
-    public class Properties
+    public class ServerProperties : IProperties
     {
+        public string FileName => "config.properties";
+
         public int ServerPort
         {
             get

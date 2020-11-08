@@ -29,9 +29,9 @@ namespace NitroxServer.Serialization.World
         private readonly IServerSerializer saveDataSerializer;
         private readonly ServerProtoBufSerializer protoBufSerializer;
         private readonly string fileEnding;
-        private readonly Properties config;
+        private readonly ServerProperties config;
 
-        public WorldPersistence(ServerProtoBufSerializer protoBufSerializer, ServerJsonSerializer jsonSerializer, Properties config)
+        public WorldPersistence(ServerProtoBufSerializer protoBufSerializer, ServerJsonSerializer jsonSerializer, ServerProperties config)
         {
             this.protoBufSerializer = protoBufSerializer;
             this.config = config;
