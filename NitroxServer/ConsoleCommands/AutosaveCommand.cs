@@ -2,14 +2,15 @@
 using NitroxModel.Server;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
+using NitroxServer.Serialization;
 
 namespace NitroxServer.ConsoleCommands
 {
     internal class AutoSaveCommand : Command
     {
-        private readonly ServerConfig serverConfig;
+        private readonly Properties serverConfig;
 
-        public AutoSaveCommand(ServerConfig serverConfig) : base("autosave", Perms.ADMIN, "Toggles the map autosave")
+        public AutoSaveCommand(Properties serverConfig) : base("autosave", Perms.ADMIN, "Toggles the map autosave")
         {
             this.serverConfig = serverConfig;
             AddParameter(new TypeBoolean("on/off", true));

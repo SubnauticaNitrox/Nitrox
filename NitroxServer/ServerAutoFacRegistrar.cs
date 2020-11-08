@@ -10,6 +10,7 @@ using NitroxServer.Communication.NetworkingLayer.LiteNetLib;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.Communication.Packets.Processors;
 using NitroxServer.Communication.Packets;
+using NitroxServer.Serialization;
 
 namespace NitroxServer
 {
@@ -26,7 +27,7 @@ namespace NitroxServer
 
         private static void RegisterCoreDependencies(ContainerBuilder containerBuilder)
         {
-            containerBuilder.RegisterType<NitroxModel.Server.ServerConfig>().SingleInstance();
+            containerBuilder.Register(c => PropertiesSerializer.Deserialize()).SingleInstance();
             containerBuilder.RegisterType<Server>().SingleInstance();
             containerBuilder.RegisterType<PlayerManager>().SingleInstance();
             containerBuilder.RegisterType<DefaultServerPacketProcessor>().InstancePerLifetimeScope();

@@ -7,6 +7,7 @@ using NitroxModel.Server;
 using NitroxServer.Communication.Packets;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Entities;
+using NitroxServer.Serialization;
 
 namespace NitroxServer.Communication.NetworkingLayer
 {
@@ -20,7 +21,7 @@ namespace NitroxServer.Communication.NetworkingLayer
         protected readonly Dictionary<long, NitroxConnection> connectionsByRemoteIdentifier = new Dictionary<long, NitroxConnection>();
         protected readonly PlayerManager playerManager;
 
-        public NitroxServer(PacketHandler packetHandler, PlayerManager playerManager, EntitySimulation entitySimulation, ServerConfig serverConfig)
+        public NitroxServer(PacketHandler packetHandler, PlayerManager playerManager, EntitySimulation entitySimulation, Properties serverConfig)
         {
             this.packetHandler = packetHandler;
             this.playerManager = playerManager;

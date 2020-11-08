@@ -9,6 +9,7 @@ using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
 using NitroxModel.Server;
 using NitroxServer.Communication.NetworkingLayer;
+using NitroxServer.Serialization;
 
 namespace NitroxServer.GameLogic
 {
@@ -21,10 +22,10 @@ namespace NitroxServer.GameLogic
         private readonly ThreadSafeCollection<string> reservedPlayerNames = new ThreadSafeCollection<string>(new HashSet<string>());
 
         private readonly PlayerStatsData defaultPlayerStats;
-        private readonly ServerConfig serverConfig;
+        private readonly Properties serverConfig;
         private ushort currentPlayerId;
 
-        public PlayerManager(List<Player> players, ServerConfig serverConfig)
+        public PlayerManager(List<Player> players, Properties serverConfig)
         {
             allPlayersByName = new ThreadSafeDictionary<string, Player>(players.ToDictionary(x => x.Name), false);
             currentPlayerId = players.Count == 0 ? (ushort)0 : players.Max(x => x.Id);

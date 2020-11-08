@@ -3,14 +3,15 @@ using NitroxModel.Logger;
 using NitroxModel.Server;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
+using NitroxServer.Serialization;
 
 namespace NitroxServer.ConsoleCommands
 {
     internal class ChangeAdminPasswordCommand : Command
     {
-        private readonly ServerConfig serverConfig;
+        private readonly Properties serverConfig;
 
-        public ChangeAdminPasswordCommand(ServerConfig serverConfig) : base("changeadminpassword", Perms.ADMIN, "Changes admin password")
+        public ChangeAdminPasswordCommand(Properties serverConfig) : base("changeadminpassword", Perms.ADMIN, "Changes admin password")
         {
             this.serverConfig = serverConfig;
             AddParameter(new TypeString("password", true));

@@ -3,18 +3,19 @@ using NitroxModel.Packets;
 using NitroxModel.Server;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
+using NitroxServer.Serialization;
 
 namespace NitroxServer.Communication.Packets.Processors
 {
     class PlayerDeathEventProcessor : AuthenticatedPacketProcessor<PlayerDeathEvent>
     {
         private readonly PlayerManager playerManager;
-        private readonly ServerConfig serverConfig;
+        private readonly Properties serverConfig;
 
-        public PlayerDeathEventProcessor(PlayerManager playerManager, ServerConfig serverConfig)
+        public PlayerDeathEventProcessor(PlayerManager playerManager, Properties Properties)
         {
             this.playerManager = playerManager;
-            this.serverConfig = serverConfig;
+            this.serverConfig = Properties;
         }
 
         public override void Process(PlayerDeathEvent packet, Player player)

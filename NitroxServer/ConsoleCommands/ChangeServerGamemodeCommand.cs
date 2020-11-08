@@ -4,15 +4,16 @@ using NitroxModel.Server;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
 using NitroxServer.GameLogic;
+using NitroxServer.Serialization;
 
 namespace NitroxServer.ConsoleCommands
 {
     internal class ChangeServerGamemodeCommand : Command
     {
-        private readonly ServerConfig serverConfig;
+        private readonly Properties serverConfig;
         private readonly PlayerManager playerManager;
 
-        public ChangeServerGamemodeCommand(ServerConfig serverConfig, PlayerManager playerManager) : base("changeservergamemode", Perms.ADMIN, "Changes server gamemode")
+        public ChangeServerGamemodeCommand(Properties serverConfig, PlayerManager playerManager) : base("changeservergamemode", Perms.ADMIN, "Changes server gamemode")
         {
             this.serverConfig = serverConfig;
             this.playerManager = playerManager;
@@ -23,7 +24,7 @@ namespace NitroxServer.ConsoleCommands
         {
             ServerGameMode sgm = args.Get<ServerGameMode>(0);
 
-            serverConfig.GameModeEnum = sgm;
+            serverConfig.GameMode = sgm;
             playerManager.SendPacketToAllPlayers(new GameModeChanged(sgm));
 
             SendMessageToAllPlayers($"Server gamemode changed to \"{sgm}\" by {args.SenderName}");

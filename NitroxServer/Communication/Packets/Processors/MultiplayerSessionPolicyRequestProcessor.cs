@@ -3,14 +3,15 @@ using NitroxModel.Packets;
 using NitroxModel.Server;
 using NitroxServer.Communication.NetworkingLayer;
 using NitroxServer.Communication.Packets.Processors.Abstract;
+using NitroxServer.Serialization;
 
 namespace NitroxServer.Communication.Packets.Processors
 {
     public class MultiplayerSessionPolicyRequestProcessor : UnauthenticatedPacketProcessor<MultiplayerSessionPolicyRequest>
     {
-        private readonly ServerConfig config;
+        private readonly Properties config;
 
-        public MultiplayerSessionPolicyRequestProcessor(ServerConfig config)
+        public MultiplayerSessionPolicyRequestProcessor(Properties config)
         {
             this.config = config;
         }

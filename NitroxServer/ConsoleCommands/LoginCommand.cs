@@ -3,14 +3,15 @@ using NitroxModel.Helper;
 using NitroxModel.Server;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
+using NitroxServer.Serialization;
 
 namespace NitroxServer.ConsoleCommands
 {
     internal class LoginCommand : Command
     {
-        private readonly ServerConfig serverConfig;
+        private readonly Properties serverConfig;
 
-        public LoginCommand(ServerConfig serverConfig) : base("login", Perms.PLAYER, "Log in to server as admin (requires password)")
+        public LoginCommand(Properties serverConfig) : base("login", Perms.PLAYER, "Log in to server as admin (requires password)")
         {
             this.serverConfig = serverConfig;
             AddParameter(new TypeString("password", true));

@@ -29,15 +29,15 @@ namespace NitroxServer.Serialization.World
         private readonly IServerSerializer saveDataSerializer;
         private readonly ServerProtoBufSerializer protoBufSerializer;
         private readonly string fileEnding;
-        private readonly ServerConfig config;
+        private readonly Properties config;
 
-        public WorldPersistence(ServerProtoBufSerializer protoBufSerializer, ServerJsonSerializer jsonSerializer, ServerConfig config)
+        public WorldPersistence(ServerProtoBufSerializer protoBufSerializer, ServerJsonSerializer jsonSerializer, Properties config)
         {
             this.protoBufSerializer = protoBufSerializer;
             this.config = config;
 
-            saveDataSerializer = config.SerializerModeEnum == ServerSerializerMode.PROTOBUF ? (IServerSerializer)protoBufSerializer : jsonSerializer;
-            fileEnding = config.SerializerModeEnum == ServerSerializerMode.PROTOBUF ? ".nitrox" : ".json";
+            saveDataSerializer = config.SerializerMode == ServerSerializerMode.PROTOBUF ? (IServerSerializer)protoBufSerializer : jsonSerializer;
+            fileEnding = config.SerializerMode == ServerSerializerMode.PROTOBUF ? ".nitrox" : ".json";
         }
 
         public void Save(World world, string saveDir)
@@ -136,7 +136,7 @@ namespace NitroxServer.Serialization.World
                                           persistedData.WorldData.ParsedBatchCells,
                                           persistedData.WorldData.EscapePodData.EscapePods,
                                           persistedData.WorldData.StoryTimingData,
-                                          config.GameModeEnum);
+                                          config.GameMode);
 
                 return Optional.Of(world);
             }
@@ -178,7 +178,7 @@ namespace NitroxServer.Serialization.World
                 new List<VehicleModel>(), new List<Player>(), new List<ItemData>(),
                 new List<ItemData>(),
                 new GameData() { PDAState = new PDAStateData(), StoryGoals = new StoryGoalData() },
-                new List<NitroxInt3>(), new List<EscapePodModel>(), new StoryTimingData(), config.GameModeEnum
+                new List<NitroxInt3>(), new List<EscapePodModel>(), new StoryTimingData(), config.GameMode
                 );
         }
 
