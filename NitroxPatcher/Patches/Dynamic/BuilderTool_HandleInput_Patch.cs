@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
-using Harmony;
+using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxModel.Helper;
 using UnityEngine;
@@ -37,7 +37,7 @@ namespace NitroxPatcher.Patches.Dynamic
             }
         }
 
-        public override void Patch(HarmonyInstance harmony)
+        public override void Patch(Harmony harmony)
         {
             PatchTranspiler(harmony, TARGET_METHOD);
         }

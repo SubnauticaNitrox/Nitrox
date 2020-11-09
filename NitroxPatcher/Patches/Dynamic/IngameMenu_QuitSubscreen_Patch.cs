@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Reflection;
-using Harmony;
+using HarmonyLib;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
@@ -15,7 +15,7 @@ namespace NitroxPatcher.Patches.Dynamic
             return false;
         }
 
-        public override void Patch(HarmonyInstance harmony)
+        public override void Patch(Harmony harmony)
         {
             PatchPrefix(harmony, TARGET_METHOD);
         }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using Harmony;
+using HarmonyLib;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
@@ -63,7 +63,7 @@ namespace NitroxPatcher.Patches.Dynamic
             return instructionList;
         }
 
-        public override void Patch(HarmonyInstance harmony)
+        public override void Patch(Harmony harmony)
         {
             PatchTranspiler(harmony, TARGET_METHOD);
         }

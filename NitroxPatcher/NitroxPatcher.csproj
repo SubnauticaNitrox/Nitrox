@@ -222,7 +222,7 @@
       <Version>4.9.4</Version>
     </PackageReference>
     <PackageReference Include="Lib.Harmony">
-      <Version>1.2.0.1</Version>
+      <Version>2.0.4.0</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

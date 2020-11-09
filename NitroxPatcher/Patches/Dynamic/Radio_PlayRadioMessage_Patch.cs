@@ -1,6 +1,6 @@
 using System;
 using System.Reflection;
-using Harmony;
+using HarmonyLib;
 using NitroxClient.Communication.Abstract;
 using NitroxModel.Core;
 using NitroxModel.Packets;
@@ -18,7 +18,7 @@ namespace NitroxPatcher.Patches.Dynamic
             packetSender.Send(new RadioPlayPendingMessage());
         }
 
-        public override void Patch(HarmonyInstance harmony)
+        public override void Patch(Harmony harmony)
         {
             PatchPrefix(harmony, TARGET_METHOD);
         }
