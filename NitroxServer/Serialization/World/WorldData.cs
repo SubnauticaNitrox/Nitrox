@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using NitroxModel.DataStructures;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Bases;
-using NitroxServer.GameLogic.Entities;
 using NitroxServer.GameLogic.Items;
 using NitroxServer.GameLogic.Vehicles;
 using ProtoBufNet;
@@ -21,8 +20,6 @@ namespace NitroxServer.Serialization.World
         [ProtoMember(2)]
         public DateTime? ServerStartTime { get; set; }
 
-        [ProtoMember(3)]
-        public EntityData EntityData { get; set; }
 
         [ProtoMember(4)]
         public VehicleData VehicleData { get; set; }
@@ -46,7 +43,6 @@ namespace NitroxServer.Serialization.World
                    (VehicleData != null) &&
                    (InventoryData != null) &&
                    (GameData != null) &&
-                   (EntityData?.Entities != null) &&
                    (EscapePodData != null) &&
                    (StoryTimingData != null);
         }
