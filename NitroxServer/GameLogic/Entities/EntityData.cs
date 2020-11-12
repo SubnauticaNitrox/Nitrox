@@ -1,16 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using ProtoBufNet;
 
 namespace NitroxServer.GameLogic.Entities
 {
-    [ProtoContract]
+    [ProtoContract, JsonObject(MemberSerialization.OptIn)]
     public class EntityData
     {
-        [ProtoMember(1)]
+        [JsonProperty, ProtoMember(1)]
         public List<Entity> Entities = new List<Entity>();
 
         [ProtoAfterDeserialization]

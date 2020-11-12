@@ -6,16 +6,16 @@ using ProtoBufNet;
 
 namespace NitroxServer.Serialization.World
 {
-    [ProtoContract]
+    [ProtoContract, JsonObject(MemberSerialization.OptIn)]
     public class PersistedWorldData
     {
-        [ProtoMember(1)]
+        [JsonProperty, ProtoMember(1)]
         public WorldData WorldData { get; set; } = new WorldData();
 
-        [ProtoMember(2)]
+        [JsonProperty, ProtoMember(2)]
         public BaseData BaseData { get; set; }
 
-        [ProtoMember(3)]
+        [JsonProperty, ProtoMember(3)]
         public PlayerData PlayerData { get; set; }
 
         [JsonProperty, ProtoMember(4)]
