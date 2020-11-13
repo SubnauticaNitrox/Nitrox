@@ -44,7 +44,22 @@ namespace NitroxClient.GameLogic
             }
             else
             {
-                Log.Error($"{nameof(Rockets)}: Can't find model for rocket with id {id} and currentStageTech {currentStageTech}");
+                Log.Error($"{nameof(Rockets.BroadcastRocketStateUpdate)}: Can't find model for rocket with id {id} and currentStageTech {currentStageTech}");
+            }
+        }
+
+        public void CompletePreflightCheck(NitroxId id, PreflightCheck preflightCheck)
+        {
+            Optional<NeptuneRocketModel> model = vehicles.TryGetVehicle<NeptuneRocketModel>(id);
+
+            if (model.HasValue)
+            {
+                model.Value.PreflightChecks?.Add(preflightCheck);
+                packetSender.Send(new RocketPreflightComplete(id, preflightCheck));
+            }
+            else
+            {
+                Log.Error($"{nameof(Rockets.CompletePreflightCheck)}: Can't find model for rocket with id {id}");
             }
         }
 
@@ -59,7 +74,7 @@ namespace NitroxClient.GameLogic
             }
             else
             {
-                Log.Error($"{nameof(Rockets)}: Can't find model for rocket with id {id}");
+                Log.Error($"{nameof(Rockets.CallElevator)}: Can't find model for rocket with id {id}");
             }
         }
     }

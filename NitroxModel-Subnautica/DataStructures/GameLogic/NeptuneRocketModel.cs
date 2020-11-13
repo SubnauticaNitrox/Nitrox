@@ -30,7 +30,7 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
         {
             CurrentStage = 0;
             ElevatorUp = false;
-            PreflightChecks = new ThreadSafeCollection<PreflightCheck>(new HashSet<PreflightCheck>());
+            PreflightChecks = new ThreadSafeCollection<PreflightCheck>();
         }
 
         public override string ToString()
