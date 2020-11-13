@@ -37,6 +37,13 @@ namespace NitroxPatcher.Patches.Dynamic
                 __instance.elevatorState = model.Value.ElevatorUp ? Rocket.RocketElevatorStates.AtTop : Rocket.RocketElevatorStates.AtBottom;
                 __instance.elevatorPosition = model.Value.ElevatorUp ? 1f : 0f;
                 __instance.ReflectionCall("SetElevatorPosition", false, false);
+
+                //CockpitSwitch and RocketPreflightCheckScreenElement are filled based on the RocketPreflightCheckManager
+                if (__instance.currentRocketStage > 3)
+                {
+                    RocketPreflightCheckManager rocketPreflightCheckManager = gameObject.RequireComponent<RocketPreflightCheckManager>();
+                    rocketPreflightCheckManager.preflightChecks.AddRange(model.Value.PreflightChecks);
+                }
             }
 
             return true;

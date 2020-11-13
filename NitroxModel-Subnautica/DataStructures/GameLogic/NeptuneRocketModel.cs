@@ -17,6 +17,9 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
         [ProtoMember(2)]
         public bool ElevatorUp { get; set; }
 
+        [ProtoMember(3)]
+        public ThreadSafeCollection<PreflightCheck> PreflightChecks { get; set; }
+
         protected NeptuneRocketModel()
         {
             // Constructor for serialization. Has to be "protected" for json serialization.
@@ -27,11 +30,12 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
         {
             CurrentStage = 0;
             ElevatorUp = false;
+            PreflightChecks = new ThreadSafeCollection<PreflightCheck>(new HashSet<PreflightCheck>());
         }
 
         public override string ToString()
         {
-            return $"[NeptuneRocketModel - {base.ToString()}, CurrentStage: {CurrentStage}, ElevatorUp: {ElevatorUp}]";
+            return $"[NeptuneRocketModel - {base.ToString()}, CurrentStage: {CurrentStage}, ElevatorUp: {ElevatorUp}, Preflights: {PreflightChecks?.Count}]";
         }
     }
 }
