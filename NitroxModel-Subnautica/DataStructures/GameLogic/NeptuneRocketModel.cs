@@ -12,12 +12,9 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
     public class NeptuneRocketModel : VehicleModel
     {
         [ProtoMember(1)]
-        public NitroxId ConstructorId { get; set; }
-
-        [ProtoMember(2)]
         public int CurrentStage { get; set; }
 
-        [ProtoMember(3)]
+        [ProtoMember(2)]
         public bool ElevatorUp { get; set; }
 
         protected NeptuneRocketModel()
@@ -30,12 +27,11 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
         {
             CurrentStage = 0;
             ElevatorUp = false;
-            ConstructorId = new NitroxId(); //The ID will be set forever and will be fetched once a rocket base platform starts (see Rocket_Start_Patch)
         }
 
         public override string ToString()
         {
-            return $"[NeptuneRocketModel - {base.ToString()}, ConstructorId: {ConstructorId}, CurrentStage: {CurrentStage}, ElevatorUp: {ElevatorUp}]";
+            return $"[NeptuneRocketModel - {base.ToString()}, CurrentStage: {CurrentStage}, ElevatorUp: {ElevatorUp}]";
         }
     }
 }

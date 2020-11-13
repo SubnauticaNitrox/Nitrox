@@ -21,6 +21,7 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             GameObject gameObject = __instance.gameObject;
             NitroxId id = NitroxEntity.GetId(gameObject);
+
             Optional<NeptuneRocketModel> model = NitroxServiceLocator.LocateService<Vehicles>().TryGetVehicle<NeptuneRocketModel>(id);
 
             if (!model.HasValue)
@@ -30,16 +31,6 @@ namespace NitroxPatcher.Patches.Dynamic
             }
 
             __instance.currentRocketStage = model.Value.CurrentStage;
-
-            RocketConstructor rocketConstructor = gameObject.GetComponentInChildren<RocketConstructor>(true);
-            if (rocketConstructor)
-            {
-                NitroxEntity.SetNewId(rocketConstructor.gameObject, model.Value.ConstructorId);
-            }
-            else
-            {
-                Log.Error($"{nameof(Rocket_Start_Patch)}: Could not find attached RocketConstructor to rocket with id {id}");
-            }
 
             if (__instance.currentRocketStage > 0)
             {
