@@ -32,11 +32,14 @@ namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
             server.UnconnectedMessagesEnabled = true;
             server.UpdateTime = 15;
             server.UnsyncedEvents = true;
+#if DEBUG
+            server.DisconnectTimeout = 300000;  //Disables Timeout (for 5 min) for debug purpose (like if you jump though the server code)
+#endif
             if (!server.Start(portNumber))
             {
                 return false;
             }
-            
+
             isStopped = false;
             return true;
         }
