@@ -1,19 +1,20 @@
-﻿using NitroxServer.GameLogic.Bases;
+﻿using Newtonsoft.Json;
+using NitroxServer.GameLogic.Bases;
 using NitroxServer.GameLogic.Players;
 using ProtoBufNet;
 
 namespace NitroxServer.Serialization.World
 {
-    [ProtoContract]
+    [ProtoContract, JsonObject(MemberSerialization.OptIn)]
     public class SaveFileVersions
     {
-        [ProtoMember(1)]
+        [JsonProperty, ProtoMember(1)]
         public readonly short BaseDataVersion;
 
-        [ProtoMember(2)]
+        [JsonProperty, ProtoMember(2)]
         public readonly short PlayerDataVersion;
 
-        [ProtoMember(3)]
+        [JsonProperty, ProtoMember(3)]
         public readonly short WorldDataVersion;
 
         public SaveFileVersions()

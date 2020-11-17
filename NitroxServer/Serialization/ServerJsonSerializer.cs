@@ -11,18 +11,17 @@ namespace NitroxServer.Serialization
 
         public ServerJsonSerializer()
         {
-            serializer = new JsonSerializer
-            {
-                TypeNameHandling = TypeNameHandling.Auto,
-                ContractResolver = new AttributeContractResolver()
-            };
+            serializer = new JsonSerializer();
 
             serializer.Error += delegate (object sender, Newtonsoft.Json.Serialization.ErrorEventArgs e)
             {
-                Log.Error(e.ErrorContext.Error, "Error while initializing JsonSerializer.");
+                Log.Error(e.ErrorContext.Error, "Json serialization error: ");
             };
 
-            RegisterConverters();
+            serializer.TypeNameHandling = TypeNameHandling.Auto;
+            serializer.ContractResolver = new AttributeContractResolver();
+            serializer.Converters.Add(new NitroxIdConverter());
+            serializer.Converters.Add(new TechTypeConverter());
         }
 
         public void Serialize(Stream stream, object o)
@@ -57,15 +56,6 @@ namespace NitroxServer.Serialization
             {
                 return (T)serializer.Deserialize(jsonTextReader, typeof(T));
             }
-        }
-
-        private void RegisterConverters()
-        {
-            serializer.Converters.Add(new ColorConverter());
-            serializer.Converters.Add(new NitroxIdConverter());
-            serializer.Converters.Add(new QuaternionConverter());
-            serializer.Converters.Add(new TechTypeConverter());
-            serializer.Converters.Add(new Vector3Converter());
         }
     }
 }
