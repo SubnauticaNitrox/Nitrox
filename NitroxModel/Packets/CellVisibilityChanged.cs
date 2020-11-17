@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxModel.Packets
@@ -8,10 +9,10 @@ namespace NitroxModel.Packets
     public class CellVisibilityChanged : Packet
     {
         public ushort PlayerId { get; }
-        public AbsoluteEntityCell[] Added { get; }
-        public AbsoluteEntityCell[] Removed { get; }
+        public NitroxInt3[] Added { get; }
+        public NitroxInt3[] Removed { get; }
 
-        public CellVisibilityChanged(ushort playerId, AbsoluteEntityCell[] added, AbsoluteEntityCell[] removed)
+        public CellVisibilityChanged(ushort playerId, NitroxInt3[] added, NitroxInt3[] removed)
         {
             PlayerId = playerId;
             Added = added;
@@ -22,7 +23,7 @@ namespace NitroxModel.Packets
         {
             StringBuilder toString = new StringBuilder("[CellVisibilityChanged | Added: ");
 
-            foreach (AbsoluteEntityCell visibleCell in Added)
+            foreach (NitroxInt3 visibleCell in Added)
             {
                 toString.Append(visibleCell);
                 toString.Append(' ');
@@ -30,7 +31,7 @@ namespace NitroxModel.Packets
 
             toString.Append("| Removed: ");
 
-            foreach (AbsoluteEntityCell visibleCell in Removed)
+            foreach (NitroxInt3 visibleCell in Removed)
             {
                 toString.Append(visibleCell);
                 toString.Append(' ');

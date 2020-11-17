@@ -32,7 +32,7 @@ namespace NitroxServer.Communication.Packets.Processors
             BroadcastSimulationChanges(ownershipChanges);
         }
 
-        private void SendNewlyVisibleEntities(Player player, AbsoluteEntityCell[] visibleCells)
+        private void SendNewlyVisibleEntities(Player player, NitroxInt3[] visibleCells)
         {
             List<Entity> newlyVisibleEntities = entityManager.GetVisibleEntities(visibleCells);
 

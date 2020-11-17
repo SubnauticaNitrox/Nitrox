@@ -13,7 +13,7 @@ namespace NitroxServer
     {
         private readonly ThreadSafeCollection<EquippedItemData> equippedItems;
         private readonly ThreadSafeCollection<EquippedItemData> modules;
-        private readonly ThreadSafeCollection<AbsoluteEntityCell> visibleCells;
+        private readonly ThreadSafeCollection<NitroxInt3> visibleCells;
         
         public NitroxConnection connection { get; set; }
         public PlayerSettings PlayerSettings => PlayerContext.PlayerSettings;
@@ -44,7 +44,7 @@ namespace NitroxServer
             LastStoredPosition = null;
             this.equippedItems = new ThreadSafeCollection<EquippedItemData>(equippedItems);
             this.modules = new ThreadSafeCollection<EquippedItemData>(modules);
-            visibleCells = new ThreadSafeCollection<AbsoluteEntityCell>(new HashSet<AbsoluteEntityCell>(), false);
+            visibleCells = new ThreadSafeCollection<NitroxInt3>(new HashSet<NitroxInt3>(), false);
         }
 
         public static bool operator ==(Player left, Player right)
@@ -79,23 +79,23 @@ namespace NitroxServer
             return Id.GetHashCode();
         }
 
-        public void AddCells(IEnumerable<AbsoluteEntityCell> cells)
+        public void AddCells(IEnumerable<NitroxInt3> cells)
         {
-            foreach (AbsoluteEntityCell cell in cells)
+            foreach (NitroxInt3 cell in cells)
             {
                 visibleCells.Add(cell);
             }
         }
 
-        public void RemoveCells(IEnumerable<AbsoluteEntityCell> cells)
+        public void RemoveCells(IEnumerable<NitroxInt3> cells)
         {
-            foreach (AbsoluteEntityCell cell in cells)
+            foreach (NitroxInt3 cell in cells)
             {
                 visibleCells.Remove(cell);
             }
         }
 
-        public bool HasCellLoaded(AbsoluteEntityCell cell)
+        public bool HasCellLoaded(NitroxInt3 cell)
         {
             return visibleCells.Contains(cell);
         }
@@ -132,7 +132,7 @@ namespace NitroxServer
 
         public bool CanSee(Entity entity)
         {
-            return entity.ExistsInGlobalRoot || HasCellLoaded(entity.AbsoluteEntityCell);
+            return entity.ExistsInGlobalRoot || HasCellLoaded(entity.AbsoluteEntityCell.BatchId);
         }
 
         public void SendPacket(Packet packet)

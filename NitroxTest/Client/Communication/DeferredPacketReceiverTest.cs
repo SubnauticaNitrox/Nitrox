@@ -33,7 +33,7 @@ namespace NitroxTest.Client.Communication
             loadedCell = new AbsoluteEntityCell(loadedActionPosition, CELL_LEVEL);
             unloadedCell = new AbsoluteEntityCell(unloadedActionPosition, CELL_LEVEL);
 
-            visibleCells.Add(loadedCell);
+            //visibleCells.Add(loadedCell); // TODO must fix
         }
 
         [TestMethod]

@@ -19,8 +19,8 @@ namespace NitroxClient.GameLogic
         private bool cellsPendingSync;
         private float timeWhenCellsBecameOutOfSync;
 
-        private List<AbsoluteEntityCell> added = new List<AbsoluteEntityCell>();
-        private List<AbsoluteEntityCell> removed = new List<AbsoluteEntityCell>();
+        private List<NitroxModel.DataStructures.NitroxInt3> added = new List<NitroxModel.DataStructures.NitroxInt3>();
+        private List<NitroxModel.DataStructures.NitroxInt3> removed = new List<NitroxModel.DataStructures.NitroxInt3>();
 
         public Terrain(IMultiplayerSession multiplayerSession, IPacketSender packetSender, VisibleCells visibleCells)
         {
@@ -29,33 +29,29 @@ namespace NitroxClient.GameLogic
             this.visibleCells = visibleCells;
         }
 
-        public void CellLoaded(Int3 batchId, Int3 cellId, int level)
+        public void CellLoaded(Int3 batchId)
         {
-            LargeWorldStreamer.main.StartCoroutine(WaitAndAddCell(batchId, cellId, level));
+            LargeWorldStreamer.main.StartCoroutine(WaitAndAddCell(batchId));
             MarkCellsReadyForSync(0.5f);
         }
 
-        private IEnumerator WaitAndAddCell(Int3 batchId, Int3 cellId, int level)
+        private IEnumerator WaitAndAddCell(Int3 batchId)
         {
             yield return new WaitForSeconds(0.5f);
 
-            AbsoluteEntityCell cell = new AbsoluteEntityCell(batchId.ToDto(), cellId.ToDto(), level);
-
-            if (!visibleCells.Contains(cell))
+            if (!visibleCells.Contains(batchId.ToDto()))
             {
-                visibleCells.Add(cell);
-                added.Add(cell);
+                visibleCells.Add(batchId.ToDto());
+                added.Add(batchId.ToDto());
             }
         }
 
-        public void CellUnloaded(Int3 batchId, Int3 cellId, int level)
+        public void CellUnloaded(Int3 batchId)
         {
-            AbsoluteEntityCell cell = new AbsoluteEntityCell(batchId.ToDto(), cellId.ToDto(), level);
-
-            if (visibleCells.Contains(cell))
+            if (visibleCells.Contains(batchId.ToDto()))
             {
-                visibleCells.Remove(cell);
-                removed.Add(cell);
+                visibleCells.Remove(batchId.ToDto());
+                removed.Add(batchId.ToDto());
                 MarkCellsReadyForSync(0);
             }
         }

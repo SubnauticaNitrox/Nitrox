@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxClient.Map
 {
     public class VisibleCells
     {
-        private readonly HashSet<AbsoluteEntityCell> cells = new HashSet<AbsoluteEntityCell>();
+        private readonly HashSet<NitroxInt3> cells = new HashSet<NitroxInt3>();
 
-        public void Add(AbsoluteEntityCell cell)
+        public void Add(NitroxInt3 cell)
         {
             lock (cells)
             {
@@ -15,7 +16,7 @@ namespace NitroxClient.Map
             }
         }
 
-        public void Remove(AbsoluteEntityCell cell)
+        public void Remove(NitroxInt3 cell)
         {
             lock (cells)
             {
@@ -23,7 +24,7 @@ namespace NitroxClient.Map
             }
         }
 
-        public bool Contains(AbsoluteEntityCell cell)
+        public bool Contains(NitroxInt3 cell)
         {
             lock (cells)
             {

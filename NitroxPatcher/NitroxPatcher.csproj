@@ -113,8 +113,8 @@
     <Compile Include="Patches\Dynamic\EnergyMixin_OnAddItem_Patch.cs" />
     <Compile Include="Patches\Dynamic\EnergyMixin_OnRemoveItem_Patch.cs" />
     <Compile Include="Patches\Dynamic\EnergyMixin_SpawnDefault_Patch.cs" />
-    <Compile Include="Patches\Dynamic\EntityCell_QueueForAwake_Patch.cs" />
-    <Compile Include="Patches\Dynamic\EntityCell_QueueForSleep_Patch.cs" />
+    <Compile Include="Patches\Dynamic\LargeWorldStreamer_FinalizeLoadBatchObjectsAsync_Patch.cs" />
+    <Compile Include="Patches\Dynamic\LargeWorldStreamer_UnloadBatchObjects_Patch.cs" />
     <Compile Include="Patches\Dynamic\Equipment_AddItem_Patch.cs" />
     <Compile Include="Patches\Dynamic\Equipment_RemoveItem_Patch.cs" />
     <Compile Include="Patches\Dynamic\EscapePod_Awake_Patch.cs" />
