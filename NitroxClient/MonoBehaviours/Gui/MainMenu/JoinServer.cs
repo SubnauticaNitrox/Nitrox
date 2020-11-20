@@ -384,7 +384,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             //https://regex101.com/r/eTWiEs/2/
             if (!Regex.IsMatch(playerName, @"^[a-zA-Z0-9._-]{3,25}$"))
             {
-                NotifyUser("Please enter a valid player name !\n\n - Allowed characters : A-Z a-z _ . -\nLength : [3, 25]");
+                NotifyUser("Please enter a valid player name !\n\n - Allowed characters : A-Z a-z 0-9 _ . -\nLength : [3, 25]");
                 return;
             }
 
