@@ -10,12 +10,12 @@ namespace NitroxServer.Communication.Packets.Processors
     class PlayerDeathEventProcessor : AuthenticatedPacketProcessor<PlayerDeathEvent>
     {
         private readonly PlayerManager playerManager;
-        private readonly ServerProperties serverConfig;
+        private readonly ServerConfig serverConfig;
 
-        public PlayerDeathEventProcessor(PlayerManager playerManager, ServerProperties Properties)
+        public PlayerDeathEventProcessor(PlayerManager playerManager, ServerConfig config)
         {
             this.playerManager = playerManager;
-            this.serverConfig = Properties;
+            this.serverConfig = config;
         }
 
         public override void Process(PlayerDeathEvent packet, Player player)

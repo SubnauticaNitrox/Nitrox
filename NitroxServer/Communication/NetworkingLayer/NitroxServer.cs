@@ -21,7 +21,7 @@ namespace NitroxServer.Communication.NetworkingLayer
         protected readonly Dictionary<long, NitroxConnection> connectionsByRemoteIdentifier = new Dictionary<long, NitroxConnection>();
         protected readonly PlayerManager playerManager;
 
-        public NitroxServer(PacketHandler packetHandler, PlayerManager playerManager, EntitySimulation entitySimulation, ServerProperties serverConfig)
+        public NitroxServer(PacketHandler packetHandler, PlayerManager playerManager, EntitySimulation entitySimulation, ServerConfig serverConfig)
         {
             this.packetHandler = packetHandler;
             this.playerManager = playerManager;

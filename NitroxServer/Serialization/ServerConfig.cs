@@ -6,7 +6,7 @@ using NitroxModel.Server;
 namespace NitroxServer.Serialization
 {
     [PropertyDescription("Server settings can be changed here")]
-    public class ServerProperties : IProperties
+    public class ServerConfig : IProperties
     {
         private int maxConnectionsSetting = 100;
 

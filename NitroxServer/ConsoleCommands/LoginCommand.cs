@@ -9,9 +9,9 @@ namespace NitroxServer.ConsoleCommands
 {
     internal class LoginCommand : Command
     {
-        private readonly ServerProperties serverConfig;
+        private readonly ServerConfig serverConfig;
 
-        public LoginCommand(ServerProperties serverConfig) : base("login", Perms.PLAYER, "Log in to server as admin (requires password)")
+        public LoginCommand(ServerConfig serverConfig) : base("login", Perms.PLAYER, "Log in to server as admin (requires password)")
         {
             this.serverConfig = serverConfig;
             AddParameter(new TypeString("password", true));

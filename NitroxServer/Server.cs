@@ -15,7 +15,7 @@ namespace NitroxServer
     {
         private readonly Communication.NetworkingLayer.NitroxServer server;
         private readonly WorldPersistence worldPersistence;
-        private readonly ServerProperties serverConfig;
+        private readonly ServerConfig serverConfig;
         private readonly Timer saveTimer;
         private readonly World world;
 
@@ -24,7 +24,7 @@ namespace NitroxServer
         public bool IsRunning { get; private set; }
         public bool IsSaving { get; private set; }
 
-        public Server(WorldPersistence worldPersistence, World world, ServerProperties serverConfig, Communication.NetworkingLayer.NitroxServer server)
+        public Server(WorldPersistence worldPersistence, World world, ServerConfig serverConfig, Communication.NetworkingLayer.NitroxServer server)
         {
             this.worldPersistence = worldPersistence;
             this.serverConfig = serverConfig;

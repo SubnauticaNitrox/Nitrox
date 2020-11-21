@@ -22,10 +22,10 @@ namespace NitroxServer.GameLogic
         private readonly ThreadSafeCollection<string> reservedPlayerNames = new ThreadSafeCollection<string>(new HashSet<string>());
 
         private readonly PlayerStatsData defaultPlayerStats;
-        private readonly ServerProperties serverConfig;
+        private readonly ServerConfig serverConfig;
         private ushort currentPlayerId;
 
-        public PlayerManager(List<Player> players, ServerProperties serverConfig)
+        public PlayerManager(List<Player> players, ServerConfig serverConfig)
         {
             allPlayersByName = new ThreadSafeDictionary<string, Player>(players.ToDictionary(x => x.Name), false);
             currentPlayerId = players.Count == 0 ? (ushort)0 : players.Max(x => x.Id);
