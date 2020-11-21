@@ -38,6 +38,7 @@ namespace NitroxClient.GameLogic
             }
             
             NitroxId id = NitroxEntity.GetId(constructableBase.gameObject);
+
             NitroxId parentBaseId = null;
             
             if (baseGhost != null)
@@ -96,8 +97,13 @@ namespace NitroxClient.GameLogic
                 }
             }
 
+            // Leverage local position when in a cyclops as items must be relative.
+            bool inCyclops = (sub != null && sub.isCyclops);
+            Vector3 position = (inCyclops) ? gameObject.transform.localPosition : itemPosition;
+            Quaternion rotation = (inCyclops) ? gameObject.transform.localRotation : quaternion;
+
             Transform camera = Camera.main.transform;
-            BasePiece basePiece = new BasePiece(id, itemPosition.ToDto(), quaternion.ToDto(), camera.position.ToDto(), camera.rotation.ToDto(), techType.ToDto(), Optional.OfNullable(parentId), true, Optional.Empty);
+            BasePiece basePiece = new BasePiece(id, position.ToDto(), rotation.ToDto(), camera.position.ToDto(), camera.rotation.ToDto(), techType.ToDto(), Optional.OfNullable(parentId), true, Optional.Empty);
             PlaceBasePiece placedBasePiece = new PlaceBasePiece(basePiece);
             packetSender.Send(placedBasePiece);
         }
