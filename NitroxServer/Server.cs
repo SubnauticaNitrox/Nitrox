@@ -66,7 +66,7 @@ namespace NitroxServer
                 return;
             }
 
-            PropertiesSerializer.Serialize(serverConfig);
+            PropertiesWriter.Serialize(serverConfig);
             IsSaving = true;
             worldPersistence.Save(world, serverConfig.SaveName);
             IsSaving = false;
