@@ -1,12 +1,8 @@
 name: Building Nitrox Pull Request
-
 on: pull_request
-
 jobs:
   build:
     runs-on: windows-latest
-    if: github.event.pull_request.draft == false
-    
     steps:
     - name: Checking out repository
       uses: actions/checkout@v2
@@ -15,15 +11,15 @@ jobs:
     - name: Download Subnautica files
       run: ./.github/depotDownloader/QXCTF.exe
     - name: Setup Nuget.exe
-      uses: warrenbuckley/Setup-Nuget@v1
+      uses: nuget/setup-nuget@v1
     - name: Restore packages
       run: nuget restore Nitrox.sln
     - name: Setup MSBuild
-      uses: warrenbuckley/Setup-MSBuild@v1
+      uses: microsoft/setup-msbuild@v1.0.2
     - name: Build with MSBuild
       run: msbuild Nitrox.sln -p:Configuration=Release
     - name: Uploading zipped launcher
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v2
       with:
         name: release
         path: ./NitroxLauncher/bin/Release/
