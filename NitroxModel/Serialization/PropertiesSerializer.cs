@@ -6,7 +6,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using NitroxModel.Logger;
-using NitroxModel.Server;
 
 namespace NitroxModel.Serialization
 {
@@ -23,49 +22,73 @@ namespace NitroxModel.Serialization
             }
 
             Dictionary<string, MemberInfo> typeCachedDict = GetTypeCacheDictionary<T>();
+            using StreamReader reader = new StreamReader(new FileStream(props.FileName, FileMode.Open), Encoding.UTF8);
 
-            using (StreamReader reader = new StreamReader(new FileStream(props.FileName, FileMode.Open), Encoding.UTF8))
+            char[] lineSeparator = { '=' };
+            int lineNum = 0;
+            string readLine;
+            while ((readLine = reader.ReadLine()) != null)
             {
-                if (reader.EndOfStream)
+                lineNum++;
+                if (readLine.Length < 1 || readLine[0] == '#')
                 {
-                    return props;
+                    continue;
                 }
 
-                while (!reader.EndOfStream)
+                if (readLine.Contains('='))
                 {
-                    string readLine = reader.ReadLine();
-                    if (readLine.Length < 1 || readLine[0] == '#')
+                    string[] keyValuePair = readLine.Split(lineSeparator, 2);
+                    keyValuePair[0] = keyValuePair[0].ToLowerInvariant(); // Ignore case for property names in file.
+                    if (!typeCachedDict.TryGetValue(keyValuePair[0], out MemberInfo member))
                     {
+                        Log.Warn($"Property {keyValuePair[0]} does not exist on type {typeof(T).FullName}!");
                         continue;
                     }
 
-                    if (readLine.Contains('='))
+                    FieldInfo field = member as FieldInfo;
+                    if (field != null)
                     {
-                        string[] property = readLine.Split(new char[] { '=' }, 2);
-                        if (!typeCachedDict.TryGetValue(property[0], out MemberInfo member))
-                        {
-                            Log.Error($"{property[0]} does not exist!");
-                        }
-
-                        FieldInfo field = member as FieldInfo;
-                        if (field != null)
-                        {
-                            field.SetValue(props, TypeDescriptor.GetConverter(field.FieldType).ConvertFrom(property[1]));
-                        }
-
-                        PropertyInfo prop = member as PropertyInfo;
-                        if (prop != null)
-                        {
-                            prop.SetValue(props, TypeDescriptor.GetConverter(prop.PropertyType).ConvertFrom(property[1]));
-                        }
+                        field.SetValue(props, TypeDescriptor.GetConverter(field.FieldType).ConvertFrom(keyValuePair[1]));
                     }
-                    else
+                    PropertyInfo prop = member as PropertyInfo;
+                    if (prop != null)
                     {
-                        Log.Error("Incorrect format detected in config.properties!");
+                        prop.SetValue(props, TypeDescriptor.GetConverter(prop.PropertyType).ConvertFrom(keyValuePair[1]));
                     }
                 }
+                else
+                {
+                    Log.Error($"Incorrect format detected on line {lineNum} in {Path.GetFullPath(props.FileName)}:{Environment.NewLine}{readLine}");
+                }
+            }
 
-                return props;
+            return props;
+        }
+
+        public static void Serialize<T>(T props) where T : IProperties, new()
+        {
+            Dictionary<string, MemberInfo> typeCachedDict = GetTypeCacheDictionary<T>();
+
+            using StreamWriter stream = new StreamWriter(new FileStream(props.FileName, FileMode.OpenOrCreate), Encoding.UTF8);
+            WritePropertyDescription(typeof(T), stream);
+
+            foreach (string name in typeCachedDict.Keys)
+            {
+                MemberInfo member = typeCachedDict[name];
+
+                FieldInfo field = member as FieldInfo;
+                if (field != null)
+                {
+                    WritePropertyDescription(member, stream);
+                    WriteProperty(field, field.GetValue(props), stream);
+                }
+
+                PropertyInfo property = member as PropertyInfo;
+                if (property != null)
+                {
+                    WritePropertyDescription(member, stream);
+                    WriteProperty(property, property.GetValue(props), stream);
+                }
             }
         }
 
@@ -73,45 +96,29 @@ namespace NitroxModel.Serialization
         {
             if (!typeCache.TryGetValue(typeof(T), out Dictionary<string, MemberInfo> typeCachedDict))
             {
-                typeCachedDict = typeof(T).GetFields()
-                    .Where(f => f.Attributes != FieldAttributes.NotSerialized)
-                    .Cast<MemberInfo>()
-                    .Concat(typeof(T).GetProperties()
-                    .Where(p => p.CanWrite).Cast<MemberInfo>())
-                    .ToDictionary(n => n.Name);
+                IEnumerable<MemberInfo> members = typeof(T).GetFields()
+                                                           .Where(f => f.Attributes != FieldAttributes.NotSerialized)
+                                                           .Concat(typeof(T).GetProperties()
+                                                                            .Where(p => p.CanWrite)
+                                                                            .Cast<MemberInfo>());
+
+                try
+                {
+                    typeCachedDict = new Dictionary<string, MemberInfo>();
+                    foreach (MemberInfo member in members)
+                    {
+                        typeCachedDict.Add(member.Name.ToLowerInvariant(), member);
+                    }
+                }
+                catch (ArgumentException e)
+                {
+                    Log.Error(e, $"Type {typeof(T).FullName} has properties that require case-sensitivity to be unique which is unsuitable for .properties format.");
+                    throw;
+                }
 
                 typeCache.Add(typeof(T), typeCachedDict);
             }
             return typeCachedDict;
-        }
-
-        public static void Serialize<T>(T props) where T : IProperties, new()
-        {
-            Dictionary<string, MemberInfo> typeCachedDict = GetTypeCacheDictionary<T>();
-
-            using (StreamWriter stream = new StreamWriter(new FileStream(props.FileName, FileMode.OpenOrCreate), Encoding.UTF8))
-            {
-                WritePropertyDescription(typeof(T), stream);
-
-                foreach (string name in typeCachedDict.Keys)
-                {
-                    MemberInfo member = typeCachedDict[name];
-
-                    FieldInfo field = member as FieldInfo;
-                    if (field != null)
-                    {
-                        WritePropertyDescription(member, stream);
-                        WriteProperty(field, field.GetValue(props), stream);
-                    }
-
-                    PropertyInfo property = member as PropertyInfo;
-                    if (property != null)
-                    {
-                        WritePropertyDescription(member, stream);
-                        WriteProperty(property, property.GetValue(props), stream);
-                    }
-                }
-            }
         }
 
         private static void WriteProperty<T>(T member, object value, StreamWriter stream) where T : MemberInfo
