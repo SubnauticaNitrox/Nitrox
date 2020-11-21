@@ -13,7 +13,6 @@ using NitroxModel.Logger;
 using NitroxModel_Subnautica.Helper;
 using NitroxServer;
 using NitroxServer.ConsoleCommands.Processor;
-using NitroxServer.Serialization;
 
 namespace NitroxServer_Subnautica
 {

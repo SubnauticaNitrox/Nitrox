@@ -84,9 +84,7 @@ namespace NitroxServer.Serialization
         public float DefaultHungerValue { get; set; } = 50.5f;
         public float DefaultThirstValue { get; set; } = 90.5f;
 
-        /// <summary>
-        ///     Infection level of 0f will make it so everyone starts the game cured. 0.1f is the default starting value.
-        /// </summary>
+        [PropertyDescription("Recommended to keep at 0.1f which is the default starting value. If set to 0 then new players are cured by default.")]
         public float DefaultInfectionValue { get; set; } = 0.1f;
 
         public bool IsHardcore => GameMode == ServerGameMode.HARDCORE;
