@@ -451,19 +451,16 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastVehicleDocking(VehicleDockingBay dockingBay, Vehicle vehicle)
         {
+            SubRoot subRoot = dockingBay.GetSubRoot();
             NitroxId dockId;
 
-            if (dockingBay.GetSubRoot() is BaseRoot)
+            if (subRoot is BaseRoot)
             {
-                dockId = NitroxEntity.GetId(dockingBay.GetComponentInParent<BaseRoot>().gameObject);
+                dockId = NitroxEntity.GetId(dockingBay.GetComponentInParent<BaseDeconstructable>().gameObject);
             }
-            else if (dockingBay.GetSubRoot() is SubRoot)
+            else // cyclops
             {
-                dockId = NitroxEntity.GetId(dockingBay.GetSubRoot().gameObject);
-            }
-            else
-            {
-                dockId = NitroxEntity.GetId(dockingBay.GetComponentInParent<ConstructableBase>().gameObject);
+                dockId = NitroxEntity.GetId(subRoot.gameObject);
             }
 
             NitroxId vehicleId = NitroxEntity.GetId(vehicle.gameObject);

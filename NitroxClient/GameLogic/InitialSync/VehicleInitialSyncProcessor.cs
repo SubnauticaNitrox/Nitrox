@@ -1,21 +1,23 @@
 ﻿using System.Collections;
 using System.Linq;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
-using NitroxModel_Subnautica.Helper;
 
 namespace NitroxClient.GameLogic.InitialSync
 {
     public class VehicleInitialSyncProcessor : InitialSyncProcessor
     {
         private readonly Vehicles vehicles;
+        private readonly IPacketSender packetSender;
 
-        public VehicleInitialSyncProcessor(Vehicles vehicles)
+        public VehicleInitialSyncProcessor(Vehicles vehicles, IPacketSender packetSender)
         {
             this.vehicles = vehicles;
+            this.packetSender = packetSender;
 
             DependentProcessors.Add(typeof(BuildingInitialSyncProcessor));
             DependentProcessors.Add(typeof(CyclopsInitialAsyncProcessor));
@@ -30,10 +32,13 @@ namespace NitroxClient.GameLogic.InitialSync
             {
                 if (vehicle.TechType.ToUnity() != TechType.Cyclops)
                 {
-                    waitScreenItem.SetProgress(totalSyncedVehicles, nonCyclopsVehicleCount);
-                    vehicles.CreateVehicle(vehicle);
-                    totalSyncedVehicles++;
-                    yield return null;
+                    using (packetSender.Suppress<VehicleDocking>())
+                    {
+                        waitScreenItem.SetProgress(totalSyncedVehicles, nonCyclopsVehicleCount);
+                        vehicles.CreateVehicle(vehicle);
+                        totalSyncedVehicles++;
+                        yield return null;
+                    }
                 }
             }
 
