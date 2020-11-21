@@ -47,7 +47,8 @@ namespace NitroxModel.Server
             healthSetting = new ServerConfigItem<float>("StartHealth", 80);
             foodSetting = new ServerConfigItem<float>("StartFood", 50.5f);
             waterSetting = new ServerConfigItem<float>("StartWater", 90.5f);
-            infectionSetting = new ServerConfigItem<float>("StartInfection", 0);
+            //Infection level of 0f will make it so everyone starts the game cured. 0.1f is the default starting value. Also set in NitroxServer-Subnautica App.config
+            infectionSetting = new ServerConfigItem<float>("StartInfection", 0.1f);
         }
 
         #region Properties
