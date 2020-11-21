@@ -6,7 +6,6 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
-using System.Threading.Tasks;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
@@ -90,6 +89,10 @@ namespace NitroxServer_Subnautica
                 Log.Error(ex);
             }
 
+            if (!Environment.UserInteractive || Console.In == StreamReader.Null)
+            {
+                return;
+            }
             Console.WriteLine("Press L to open log file before closing. Press any other key to close . . .");
             ConsoleKeyInfo key = Console.ReadKey(true);
             if (key.Key == ConsoleKey.L)
