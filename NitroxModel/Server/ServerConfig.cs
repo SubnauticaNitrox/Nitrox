@@ -47,7 +47,7 @@ namespace NitroxModel.Server
             healthSetting = new ServerConfigItem<float>("StartHealth", 80);
             foodSetting = new ServerConfigItem<float>("StartFood", 50.5f);
             waterSetting = new ServerConfigItem<float>("StartWater", 90.5f);
-            infectionSetting = new ServerConfigItem<float>("StartInfection", 0);
+            infectionSetting = new ServerConfigItem<float>("StartInfection", 0.1f);
         }
 
         #region Properties
