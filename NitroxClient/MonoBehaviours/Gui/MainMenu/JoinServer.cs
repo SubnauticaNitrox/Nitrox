@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Exceptions;
 using NitroxClient.Communication.MultiplayerSession;
@@ -380,9 +381,10 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
             string playerName = playerNameText.text;
 
-            if (string.IsNullOrEmpty(playerName))
+            //https://regex101.com/r/eTWiEs/2/
+            if (!Regex.IsMatch(playerName, @"^[a-zA-Z0-9._-]{3,25}$"))
             {
-                NotifyUser("Please enter a player name and colour before trying to join a server");
+                NotifyUser("Please enter a valid player name !\n\n It must not contain any space or doubtful characters\n Allowed characters : A-Z a-z 0-9 _ . -\nLength : [3, 25]");
                 return;
             }
 
@@ -416,8 +418,9 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 case MultiplayerSessionConnectionStage.ESTABLISHING_SERVER_POLICY:
                     Log.InGame("Requesting session policy information...");
                     break;
+
                 case MultiplayerSessionConnectionStage.AWAITING_RESERVATION_CREDENTIALS:
-                    Log.InGame("Waiting for User Input...");
+                    Log.InGame("Waiting for user input...");
                     RightSideMainMenu.OpenGroup("Join Server");
                     FocusPlayerNameTextbox();
                     break;
@@ -434,6 +437,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                     LoadingScreenVersionText.Initialize();
 
                     break;
+
                 case MultiplayerSessionConnectionStage.SESSION_RESERVATION_REJECTED:
                     Log.InGame("Reservation rejected...");
 
@@ -450,6 +454,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                         });
 
                     break;
+
                 case MultiplayerSessionConnectionStage.DISCONNECTED:
                     Log.Info("Disconnected from server");
                     break;
@@ -463,14 +468,12 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 return;
             }
 
-            Action wrappedAction = () =>
+            MainMenuNotification notificationDialog = gameObject.AddComponent<MainMenuNotification>();
+            notificationDialog.ShowNotification(notificationMessage, () =>
             {
                 continuationAction?.Invoke();
                 Destroy(gameObject.GetComponent<MainMenuNotification>(), 0.0001f);
-            };
-
-            MainMenuNotification notificationDialog = gameObject.AddComponent<MainMenuNotification>();
-            notificationDialog.ShowNotification(notificationMessage, wrappedAction);
+            });
         }
 
         private void StopMultiplayerClient()
