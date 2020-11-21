@@ -66,17 +66,14 @@ namespace NitroxClient.GameLogic.InitialSync
         {
             if (statsData != null)
             {
-                using (packetSender.Suppress<PlayerStats>())
+                Player.main.oxygenMgr.AddOxygen(statsData.Oxygen);
+                Player.main.liveMixin.health = statsData.Health;
+                Player.main.GetComponent<Survival>().food = statsData.Food;
+                Player.main.GetComponent<Survival>().water = statsData.Water;
+                Player.main.infectedMixin.SetInfectedAmount(statsData.InfectionAmount);
+                if (statsData.InfectionAmount > 0f)
                 {
-                    Player.main.oxygenMgr.AddOxygen(statsData.Oxygen);
-                    Player.main.liveMixin.health = statsData.Health;
-                    Player.main.GetComponent<Survival>().food = statsData.Food;
-                    Player.main.GetComponent<Survival>().water = statsData.Water;
-                    Player.main.infectedMixin.SetInfectedAmount(statsData.InfectionAmount);
-                    if (statsData.InfectionAmount > 0f)
-                    {
-                        Player.main.infectionRevealed = true;
-                    }
+                    Player.main.infectionRevealed = true;
                 }
             }
         }
