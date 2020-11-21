@@ -66,19 +66,19 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         {
             return GUISkinUtils.RegisterDerivedOnce(skinName, s =>
             {
-                s.textField.fontSize = 14;
+                s.textField.fontSize = 20;
                 s.textField.richText = false;
-                s.textField.alignment = TextAnchor.MiddleLeft;
+                s.textField.alignment = TextAnchor.MiddleCenter;
                 s.textField.wordWrap = true;
                 s.textField.stretchHeight = true;
                 s.textField.padding = new RectOffset(10, 10, 5, 5);
 
-                s.label.fontSize = 14;
-                s.label.alignment = TextAnchor.MiddleRight;
+                s.label.fontSize = 20;
+                s.label.alignment = TextAnchor.MiddleCenter;
                 s.label.stretchHeight = true;
                 s.label.fixedWidth = labelWidth;
 
-                s.button.fontSize = 14;
+                s.button.fontSize = 16;
                 s.button.stretchHeight = true;
             });
         }
