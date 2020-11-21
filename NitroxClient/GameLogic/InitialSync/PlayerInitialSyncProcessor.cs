@@ -71,7 +71,10 @@ namespace NitroxClient.GameLogic.InitialSync
                 Player.main.GetComponent<Survival>().food = statsData.Food;
                 Player.main.GetComponent<Survival>().water = statsData.Water;
                 Player.main.infectedMixin.SetInfectedAmount(statsData.InfectionAmount);
-                if (statsData.InfectionAmount > 0f)
+
+                //If InfectionAmount is at least 1f then the infection reveal should have happened already.
+                //If InfectionAmount is below 1f then the reveal has not.
+                if (statsData.InfectionAmount >= 1f)
                 {
                     Player.main.infectionRevealed = true;
                 }
