@@ -61,6 +61,7 @@
     <Compile Include="Communication\Packets\Processors\RocketStageUpdateProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleSpawnedProcessor.cs" />
     <Compile Include="Debuggers\EntityDebugger.cs" />
+    <Compile Include="GameLogic\Bases\Spawning\BaseBioReactorSpawnProcessor.cs" />
     <Compile Include="GameLogic\Bases\Spawning\BasePieceSpawnProcessor.cs" />
     <Compile Include="GameLogic\Bases\Spawning\BaseLadderSpawnProcessor.cs" />
     <Compile Include="GameLogic\Bases\Spawning\BasePieceSpawnPrioritizer.cs" />
