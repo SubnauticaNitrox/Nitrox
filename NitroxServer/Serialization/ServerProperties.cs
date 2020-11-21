@@ -1,26 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NitroxModel.DataStructures.GameLogic;
+﻿using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
-using NitroxModel.Server;
 using NitroxModel.Serialization;
+using NitroxModel.Server;
 
 namespace NitroxServer.Serialization
 {
     [PropertyDescription("Server settings can be changed here")]
     public class ServerProperties : IProperties
     {
+        private int maxConnectionsSetting = 100;
+
+        private int portSetting = 11000;
+
+        private int saveIntervalSetting = 120000;
+
+        private string saveNameSetting = "world";
         public string FileName => "config.properties";
 
         public int ServerPort
         {
-            get
-            {
-                return portSetting;
-            }
+            get => portSetting;
 
             set
             {
@@ -29,15 +28,10 @@ namespace NitroxServer.Serialization
             }
         }
 
-        private int portSetting = 11000;
-
         [PropertyDescription("Measured in milliseconds")]
         public int SaveInterval
         {
-            get
-            {
-                return saveIntervalSetting;
-            }
+            get => saveIntervalSetting;
 
             set
             {
@@ -46,14 +40,9 @@ namespace NitroxServer.Serialization
             }
         }
 
-        private int saveIntervalSetting = 120000;
-
         public int MaxConnections
         {
-            get
-            {
-                return maxConnectionsSetting;
-            }
+            get => maxConnectionsSetting;
 
             set
             {
@@ -62,19 +51,13 @@ namespace NitroxServer.Serialization
             }
         }
 
-        private int maxConnectionsSetting = 100;
-
-
         public bool DisableConsole { get; set; }
 
         public bool DisableAutoSave { get; set; }
 
         public string SaveName
         {
-            get
-            {
-                return saveNameSetting;
-            }
+            get => saveNameSetting;
 
             set
             {
@@ -82,8 +65,6 @@ namespace NitroxServer.Serialization
                 saveNameSetting = value;
             }
         }
-
-        private string saveNameSetting = "world";
 
         public string ServerPassword { get; set; } = string.Empty;
 
@@ -97,11 +78,12 @@ namespace NitroxServer.Serialization
 
         [PropertyDescription("\nDefault player stats below here")]
         public float DefaultOxygenValue { get; set; } = 45;
+
         public float DefaultMaxOxygenValue { get; set; } = 45;
         public float DefaultHealthValue { get; set; } = 80;
         public float DefaultHungerValue { get; set; } = 50.5f;
         public float DefaultThirstValue { get; set; } = 90.5f;
-        public float DefaultInfectionValue { get; set; } = 0;
+        public float DefaultInfectionValue { get; set; } = 0.1f;
         public bool IsHardcore => GameMode == ServerGameMode.HARDCORE;
         public PlayerStatsData DefaultPlayerStats => new PlayerStatsData(DefaultOxygenValue, DefaultMaxOxygenValue, DefaultHealthValue, DefaultHungerValue, DefaultThirstValue, DefaultInfectionValue);
     }
