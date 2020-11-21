@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Threading.Tasks;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
@@ -45,6 +47,7 @@ namespace NitroxServer_Subnautica
                 });
             }
 
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
             AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += CurrentDomainOnAssemblyResolve;
 
@@ -80,6 +83,29 @@ namespace NitroxServer_Subnautica
             }
         }
 
+        private static void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            if (e.ExceptionObject is Exception ex)
+            {
+                Log.Error(ex);
+            }
+
+            Console.WriteLine("Press L to open log file before closing. Press any other key to close . . .");
+            ConsoleKeyInfo key = Console.ReadKey(true);
+            if (key.Key == ConsoleKey.L)
+            {
+                Log.Info($"Opening log file at: {Log.FileName}..");
+                string fileOpenerProgram = Environment.OSVersion.Platform switch
+                {
+                    PlatformID.MacOSX => "open",
+                    PlatformID.Unix => "xdg-open",
+                    _ => "explorer"
+                };
+                Process.Start(fileOpenerProgram, Log.FileName);
+            }
+            Environment.Exit(1);
+        }
+
         private static Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)
         {
             string dllFileName = args.Name.Split(',')[0];
@@ -103,14 +129,12 @@ namespace NitroxServer_Subnautica
             }
 
             // Read assemblies as bytes as to not lock the file so that Nitrox can patch assemblies while server is running.
-            using (FileStream stream = new FileStream(dllPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            using (MemoryStream mstream = new MemoryStream())
-            {
-                stream.CopyTo(mstream);
-                Assembly assembly = Assembly.Load(mstream.ToArray());
-                resolvedAssemblyCache[dllPath] = assembly;
-                return assembly;
-            }
+            using FileStream stream = new FileStream(dllPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            using MemoryStream mstream = new MemoryStream();
+            stream.CopyTo(mstream);
+            Assembly assembly = Assembly.Load(mstream.ToArray());
+            resolvedAssemblyCache[dllPath] = assembly;
+            return assembly;
         }
 
         private static void ConfigureConsoleWindow()
@@ -160,7 +184,7 @@ namespace NitroxServer_Subnautica
         [DllImport("kernel32.dll", SetLastError = true)]
         private static extern bool SetConsoleCtrlHandler(ConsoleEventDelegate callback, bool add);
 
-        // Prevents Garbage Collection issue where server closes and an exception occurs for this handle.
+        // Prevents Garbage Collection freeing this callback's memory. Causing an exception to occur for this handle.
         private static readonly ConsoleEventDelegate consoleCtrlCheckDelegate = ConsoleEventCallback;
 
         private static bool ConsoleEventCallback(int eventType)

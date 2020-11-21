@@ -7,7 +7,7 @@ namespace NitroxServer_Subnautica
     /// <summary>
     ///     Helper methods to manage the console window used by this process.
     /// </summary>
-    public class ConsoleWindow
+    public static class ConsoleWindow
     {
         /// <summary>
         ///     This flag enables the user to use the mouse to select and edit text. To enable
