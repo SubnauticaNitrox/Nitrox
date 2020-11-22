@@ -25,6 +25,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         public string SERVER_LIST_PATH = Path.Combine(".", "servers");
         private string serverHostInput;
         private string serverNameInput;
+        private string serverPortInput;
 
         private bool shouldFocus;
         private bool showingAddServer;
@@ -41,7 +42,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
             if (!File.Exists(SERVER_LIST_PATH))
             {
-                AddServer("local server", "127.0.0.1");
+                AddServer("local server", "127.0.0.1", "11000");
             }
 
             CreateButton("Add server IP", ShowAddServerWindow);
@@ -60,7 +61,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             multiplayerButtonInst.transform.SetParent(savedGameAreaContent, false);
         }
 
-        public void CreateServerButton(string text, string joinIp)
+        public void CreateServerButton(string text, string joinIp, string joinPort)
         {
             GameObject multiplayerButtonInst = Instantiate(multiplayerButton, savedGameAreaContent, false);
             multiplayerButtonInst.name = (savedGameAreaContent.childCount - 1).ToString();
@@ -73,7 +74,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             multiplayerButtonButton.onClick.AddListener(() =>
             {
                 txt.GetComponent<Text>().color = prevTextColor; // Visual fix for black text after click (hover state still active)
-                OpenJoinServerMenu(joinIp);
+                OpenJoinServerMenu(joinIp, joinPort);
             });
 
             GameObject delete = Instantiate(SavedGamesRef.GetComponent<MainMenuLoadPanel>().saveInstance.GetComponent<MainMenuLoadButton>().deleteButton);
@@ -87,11 +88,11 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             delete.transform.SetParent(multiplayerButtonInst.transform, false);
         }
 
-        public void AddServer(string name, string ip)
+        public void AddServer(string name, string ip, string port)
         {
             using (StreamWriter sw = new StreamWriter(SERVER_LIST_PATH, true))
             {
-                sw.WriteLine($"{name}|{ip}");
+                sw.WriteLine($"{name}|{ip}|{port}");
             }
         }
 
@@ -102,9 +103,9 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             File.WriteAllLines(SERVER_LIST_PATH, serverLines.ToArray());
         }
 
-        public void OpenJoinServerMenu(string serverIp)
+        public void OpenJoinServerMenu(string serverIp, string serverPort)
         {
-            IPEndPoint endpoint = ResolveIp(serverIp) ?? ResolveHostName(serverIp);
+            IPEndPoint endpoint = ResolveIp(serverIp, serverPort) ?? ResolveHostName(serverIp, serverPort);
             if (endpoint == null)
             {
                 Log.InGame($"Unable to resolve remote address: {serverIp}");
@@ -128,6 +129,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         {
             serverNameInput = "local";
             serverHostInput = "127.0.0.1";
+            serverPortInput = "11000";
             showingAddServer = true;
             shouldFocus = true;
         }
@@ -158,12 +160,13 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                     string[] lineData = line.Split('|');
                     string serverName = lineData[0];
                     string serverIp = lineData[1];
-                    CreateServerButton($"Connect to <b>{serverName}</b>\n{serverIp}", serverIp);
+                    string serverPort = lineData[2];
+                    CreateServerButton($"Connect to <b>{serverName}</b>\n{serverIp}:{serverPort}", serverIp, serverPort);
                 }
             }
         }
 
-        private IPEndPoint ResolveIp(string serverIp)
+        private IPEndPoint ResolveIp(string serverIp, string serverPort)
         {
             Match match = Regex.Match(serverIp, @"^((?:(?:[\da-fA-F]+:??){8}|[\d\.]+)):?(\d+)?$"); // Pattern test url: https://regexr.com/5go2v
             if (!match.Success)
@@ -172,11 +175,10 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             }
 
             IPAddress ip = IPAddress.Parse(match.Groups[1].Value);
-            int port = match.Groups[2].Success ? int.Parse(match.Groups[2].Value) : 11000;
-            return new IPEndPoint(ip, port);
+            return new IPEndPoint(ip, int.Parse(serverPort));
         }
 
-        private IPEndPoint ResolveHostName(string hostname)
+        private IPEndPoint ResolveHostName(string hostname, string serverPort)
         {
             Match match = Regex.Match(hostname, @"^\s*([a-zA-Z\.]*)\:?(\d{2,5})?\s*$");
             if (!match.Success)
@@ -188,11 +190,11 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             try
             {
                 IPHostEntry hostEntry = Dns.GetHostEntry(match.Groups[1].Value);
-                return new IPEndPoint(hostEntry.AddressList[0], match.Groups[2].Success ? int.Parse(match.Groups[2].Value) : 11000);
+                return new IPEndPoint(hostEntry.AddressList[0], int.Parse(serverPort));
             }
             catch (SocketException ex)
             {
-                Log.ErrorSensitive(ex, "Unable to resolve the address {hostname}", hostname);
+                Log.ErrorSensitive(ex, "Unable to resolve the address {hostname}:{serverPort}", hostname, serverPort);
                 return null;
             }
         }
@@ -201,8 +203,9 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         {
             serverNameInput = serverNameInput.Trim();
             serverHostInput = serverHostInput.Trim();
-            AddServer(serverNameInput, serverHostInput);
-            CreateServerButton($"Connect to <b>{serverNameInput}</b>\n{serverHostInput}", serverHostInput);
+            serverPortInput = serverPortInput.Trim();
+            AddServer(serverNameInput, serverHostInput, serverPortInput);
+            CreateServerButton($"Connect to <b>{serverNameInput}</b>\n{serverHostInput}:{serverPortInput}", serverHostInput, serverPortInput);
             HideAddServerWindow();
         }
 
@@ -268,6 +271,13 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                             GUI.SetNextControlName("serverHostField");
                             // 120 so users can't go too crazy.
                             serverHostInput = GUILayout.TextField(serverHostInput, 120);
+                        }
+
+                        using (new GUILayout.HorizontalScope())
+                        {
+                            GUILayout.Label("Port:");
+                            GUI.SetNextControlName("serverPortField");
+                            serverPortInput = GUILayout.TextField(serverPortInput);
                         }
 
                         if (GUILayout.Button("Add server"))
