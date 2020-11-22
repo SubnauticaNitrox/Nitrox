@@ -4,6 +4,7 @@ using NitroxModel.Server;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
 using NitroxServer.GameLogic;
+using NitroxServer.Serialization;
 
 namespace NitroxServer.ConsoleCommands
 {
@@ -23,7 +24,7 @@ namespace NitroxServer.ConsoleCommands
         {
             ServerGameMode sgm = args.Get<ServerGameMode>(0);
 
-            serverConfig.GameModeEnum = sgm;
+            serverConfig.GameMode = sgm;
             playerManager.SendPacketToAllPlayers(new GameModeChanged(sgm));
 
             SendMessageToAllPlayers($"Server gamemode changed to \"{sgm}\" by {args.SenderName}");

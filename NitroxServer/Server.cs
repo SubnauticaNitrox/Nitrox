@@ -6,6 +6,8 @@ using System.Configuration;
 using System.IO;
 using System.Text;
 using System.Linq;
+using NitroxServer.Serialization;
+using NitroxModel.Serialization;
 
 namespace NitroxServer
 {
@@ -24,11 +26,6 @@ namespace NitroxServer
 
         public Server(WorldPersistence worldPersistence, World world, ServerConfig serverConfig, Communication.NetworkingLayer.NitroxServer server)
         {
-            if (ConfigurationManager.AppSettings.Count == 0)
-            {
-                Log.Warn("Nitrox Server Cant Read Config File.");
-            }
-
             this.worldPersistence = worldPersistence;
             this.serverConfig = serverConfig;
             this.server = server;
@@ -69,6 +66,7 @@ namespace NitroxServer
                 return;
             }
 
+            PropertiesWriter.Serialize(serverConfig);
             IsSaving = true;
             worldPersistence.Save(world, serverConfig.SaveName);
             IsSaving = false;
@@ -81,11 +79,11 @@ namespace NitroxServer
                 return false;
             }
 
-            Log.Info($"Using {serverConfig.SerializerModeEnum} as save file serializer");
+            Log.Info($"Using {serverConfig.SerializerMode} as save file serializer");
             Log.InfoSensitive("Server Password: {password}", string.IsNullOrEmpty(serverConfig.ServerPassword) ? "None. Public Server." : serverConfig.ServerPassword);
             Log.InfoSensitive("Admin Password: {password}", serverConfig.AdminPassword);
             Log.Info($"Autosave: {(serverConfig.DisableAutoSave ? "DISABLED" : $"ENABLED ({serverConfig.SaveInterval / 60000} min)")}");
-            Log.Info($"World GameMode: {serverConfig.GameModeEnum}");
+            Log.Info($"World GameMode: {serverConfig.GameMode}");
 
             Log.Info($"Loaded save\n{SaveSummary}");
 

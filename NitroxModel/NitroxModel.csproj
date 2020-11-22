@@ -216,9 +216,9 @@
     <Compile Include="Packets\VehicleNameChange.cs" />
     <Compile Include="Packets\WrapperPacket.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Serialization\IProperties.cs" />
+    <Compile Include="Serialization\PropertiesWriter.cs" />
     <Compile Include="Server\ServerSerializerMode.cs" />
-    <Compile Include="Server\ServerConfig.cs" />
-    <Compile Include="Server\ServerConfigItem.cs" />
     <Compile Include="Server\ServerGameMode.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -2,6 +2,7 @@
 using NitroxModel.Server;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
+using NitroxServer.Serialization;
 
 namespace NitroxServer.ConsoleCommands
 {
