@@ -26,18 +26,8 @@ namespace NitroxClient.GameLogic.Bases.Spawning
             BaseBioReactorGeometry bioReactor = finishedPiece.RequireComponent<BaseBioReactorGeometry>();
             GameObject bioReactorModule = ((BaseBioReactor)bioReactor.ReflectionCall("GetModule")).gameObject;
 
-            NitroxId moduleId = generateDeterministicReactorModuleId(reactorId);
+            NitroxId moduleId = reactorId.Increment();
             NitroxEntity.SetNewId(bioReactorModule, moduleId);
-        }
-
-        private NitroxId generateDeterministicReactorModuleId(NitroxId parentId)
-        {
-            string guid = parentId.ToString();
-            char newLastChar = (guid.Last() == '0') ? '1' : '0';
-
-            string moduleGuid = guid.Substring(0, guid.Length - 1) + newLastChar;
-
-            return new NitroxId(moduleGuid);
         }
 
     }
