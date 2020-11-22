@@ -202,7 +202,7 @@
     <Compile Include="Communication\Packets\Processors\PlayerDeathProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlayerJoinedMultiplayerSessionProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlayerStatsProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\SignChangedProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\BasePieceMetadataChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SimulationOwnershipChangeProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\StoryEventHandler.cs" />
     <Compile Include="Communication\Packets\Processors\TimeChangeProcessor.cs" />
@@ -290,7 +290,6 @@
     <Compile Include="GameLogic\RemotePlayer.cs" />
     <Compile Include="GameLogic\RemotePlayerManagerExtensions.cs" />
     <Compile Include="GameLogic\SeamothModulesEvent.cs" />
-    <Compile Include="GameLogic\Signs.cs" />
     <Compile Include="GameLogic\SimulationOwnership.cs" />
     <Compile Include="GameLogic\Spawning\SerializedEntitySpawner.cs" />
     <Compile Include="GameLogic\Spawning\ReefbackEntitySpawner.cs" />

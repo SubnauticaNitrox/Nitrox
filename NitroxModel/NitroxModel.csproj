@@ -127,6 +127,7 @@
     <Compile Include="Packets\RadioPlayPendingMessage.cs" />
     <Compile Include="Packets\RemotePlayerEquipmentAdded.cs" />
     <Compile Include="Packets\RemotePlayerEquipmentRemoved.cs" />
+    <Compile Include="Packets\BasePieceMetadataChanged.cs" />
     <Compile Include="Packets\StorageSlotItemAdd.cs" />
     <Compile Include="Packets\StorageSlotItemRemove.cs" />
     <Compile Include="Packets\SubRootChanged.cs" />
@@ -198,7 +199,6 @@
     <Compile Include="Packets\Processors\Abstract\IProcessorContext.cs" />
     <Compile Include="Packets\Processors\Abstract\PacketProcessor.cs" />
     <Compile Include="Packets\SeamothModulesAction.cs" />
-    <Compile Include="Packets\SignChanged.cs" />
     <Compile Include="Packets\SimulationOwnershipChange.cs" />
     <Compile Include="Packets\SimulationOwnershipRequest.cs" />
     <Compile Include="Packets\SimulationOwnershipResponse.cs" />

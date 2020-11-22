@@ -4,6 +4,7 @@ using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.GameLogic.Buildings.Metadata;
 using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
@@ -211,6 +212,12 @@ namespace NitroxClient.GameLogic
 
             DeconstructionCompleted deconstructionCompleted = new DeconstructionCompleted(id);
             packetSender.Send(deconstructionCompleted);
+        }
+
+        public void MetadataChanged(NitroxId pieceId, BasePieceMetadata metadata)
+        {
+            BasePieceMetadataChanged changePacket = new BasePieceMetadataChanged(pieceId, metadata);
+            packetSender.Send(changePacket);
         }
     }
 }
