@@ -125,7 +125,7 @@ namespace NitroxPatcher
             Log.Info("Patching Subnautica...");
 
             // Enabling this creates a log file on your desktop (why there?), showing the emitted IL instructions.
-            Harmony.DEBUG = true;
+            Harmony.DEBUG = false;
 
             foreach (IPersistentPatch patch in container.Resolve<IEnumerable<IPersistentPatch>>())
             {
