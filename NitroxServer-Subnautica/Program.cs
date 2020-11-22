@@ -88,11 +88,11 @@ namespace NitroxServer_Subnautica
             {
                 Log.Error(ex);
             }
-
             if (!Environment.UserInteractive || Console.In == StreamReader.Null)
             {
                 return;
             }
+            
             Console.WriteLine("Press L to open log file before closing. Press any other key to close . . .");
             ConsoleKeyInfo key = Console.ReadKey(true);
             if (key.Key == ConsoleKey.L)
@@ -106,6 +106,7 @@ namespace NitroxServer_Subnautica
                 };
                 Process.Start(fileOpenerProgram, Log.FileName);
             }
+            
             Environment.Exit(1);
         }
 
@@ -132,12 +133,14 @@ namespace NitroxServer_Subnautica
             }
 
             // Read assemblies as bytes as to not lock the file so that Nitrox can patch assemblies while server is running.
-            using FileStream stream = new FileStream(dllPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            using MemoryStream mstream = new MemoryStream();
-            stream.CopyTo(mstream);
-            Assembly assembly = Assembly.Load(mstream.ToArray());
-            resolvedAssemblyCache[dllPath] = assembly;
-            return assembly;
+            using (FileStream stream = new FileStream(dllPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (MemoryStream mstream = new MemoryStream())
+            {
+                stream.CopyTo(mstream);
+                Assembly assembly = Assembly.Load(mstream.ToArray());
+                resolvedAssemblyCache[dllPath] = assembly;
+                return assembly;
+            }
         }
 
         private static void ConfigureConsoleWindow()
