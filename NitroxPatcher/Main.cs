@@ -86,7 +86,14 @@ namespace NitroxPatcher
             foreach (IDynamicPatch patch in container.Resolve<IDynamicPatch[]>())
             {
                 Log.Debug($"Applying dynamic patch {patch.GetType().Name}");
-                patch.Patch(harmony);
+                try
+                {
+                    patch.Patch(harmony);
+                }
+                catch (Exception e)
+                {
+                    Log.Error($"Error patching {patch.GetType().Name}. Error: {e.Message}");
+                }
             }
 
             isApplied = true;
