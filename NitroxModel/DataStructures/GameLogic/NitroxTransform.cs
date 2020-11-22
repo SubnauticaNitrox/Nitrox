@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Runtime.Serialization;
+using System.Collections.Generic;
 using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic
@@ -16,6 +18,15 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoMember(3)]
         public NitroxVector3 LocalScale;
 
+        [ProtoMember(4)]
+        private NitroxId parentId;
+
+        [ProtoMember(5)]
+        public NitroxId Id;
+
+        private static Dictionary<NitroxId, NitroxTransform> transformsById = new Dictionary<NitroxId, NitroxTransform>();
+        private static Dictionary<NitroxId, List<NitroxTransform>> pendingTransforms = new Dictionary<NitroxId, List<NitroxTransform>>();
+
         public NitroxMatrix4x4 localToWorldMatrix 
         {
             get
@@ -25,8 +36,8 @@ namespace NitroxModel.DataStructures.GameLogic
             }
         }
 
-        public NitroxTransform Parent;
-        public Entity Entity;
+        public NitroxTransform Parent { get; private set; }
+
         public NitroxVector3 Position
         {
             get 
@@ -62,27 +73,89 @@ namespace NitroxModel.DataStructures.GameLogic
         public void SetParent(NitroxTransform parent)
         {
             Parent = parent;
-            
-            
+            parentId = parent.Id;
         }
 
         public void SetParent(NitroxTransform parent, bool worldPositionStays)
         {
-            throw new NotImplementedException("This is not Implementwaed yet. Added by killzoms");
+            NitroxVector3 oldPostion = Position;
+            SetParent(parent);
+            if (worldPositionStays)
+            {
+                Position = oldPostion;
+            }
+        }
+
+        public NitroxVector3 TransformPoint(NitroxVector3 point)
+        {
+            return localToWorldMatrix.MultiplyPoint(point);
+        }
+
+        public NitroxVector3 InverseTransformPoint(NitroxVector3 point)
+        {
+            return localToWorldMatrix.Inverse.MultiplyPoint(point);
         }
 
         private NitroxTransform()
         {}
 
-        /// <summary>
-        /// NitroxTransform is always attached to an Entity
-        /// </summary>
-        public NitroxTransform(NitroxVector3 localPosition, NitroxQuaternion localRotation, NitroxVector3 scale, Entity entity)
+        public NitroxTransform(NitroxVector3 localPosition, NitroxQuaternion localRotation, NitroxVector3 scale, NitroxId id)
         {
             LocalPosition = localPosition;
             LocalRotation = localRotation;
             LocalScale = scale;
-            Entity = entity;
+            Id = id;
+        }
+
+        private void HandleParenting()
+        {
+            if (pendingTransforms.TryGetValue(Id, out List<NitroxTransform> transforms))
+            {
+                foreach (NitroxTransform transform in transforms)
+                {
+                    transform.SetParent(this);
+                }
+                pendingTransforms.Remove(Id);
+            }
+
+            if (parentId != null && transformsById.TryGetValue(parentId, out NitroxTransform parentTransform))
+            {
+                SetParent(parentTransform);
+            }
+            else if (parentId != null)
+            {
+                if (!pendingTransforms.TryGetValue(parentId, out List<NitroxTransform> parentTransforms))
+                {
+                    parentTransforms = new List<NitroxTransform>
+                    {
+                        this
+                    };
+
+                    pendingTransforms.Add(parentId, parentTransforms);
+                }
+                else
+                {
+                    pendingTransforms[parentId].Add(this);
+                }
+            }
+
+            transformsById[Id] = this;
+        }
+
+
+        [ProtoAfterDeserialization]
+        private void ProtoAfterDeserialization()
+        {
+            if (Id != null)
+            {
+                HandleParenting();
+            }
+        }
+
+        [OnDeserialized]
+        private void JsonAfterDeserialization(StreamingContext context)
+        {
+            ProtoAfterDeserialization();
         }
 
         public override string ToString()

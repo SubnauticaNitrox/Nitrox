@@ -393,7 +393,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
             SetCurrentPreference(playerName, playerColor);
 
-            PlayerSettings playerSettings = new PlayerSettings(playerColor.ToDto());
+            PlayerSettings playerSettings = new PlayerSettings(playerColor.ToDto(), QualitySettings.GetQualityLevel());
             AuthenticationContext authenticationContext = new AuthenticationContext(playerName);
 
             multiplayerSession.RequestSessionReservation(playerSettings, authenticationContext);

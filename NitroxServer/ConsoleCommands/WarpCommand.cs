@@ -30,7 +30,7 @@ namespace NitroxServer.ConsoleCommands
                 sender = args.Sender.Value;
             }
 
-            sender.Teleport(destination.Position);
+            sender.Teleport(destination.Transform.Position);
             SendMessage(sender, $"Teleported to {destination.Name}");
         }
     }

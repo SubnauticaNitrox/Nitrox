@@ -18,8 +18,7 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoMember(2)]
         public NitroxTechType TechType { get; set; }
 
-        [ProtoMember(3)]
-        public NitroxId Id { get; set; }
+        public NitroxId Id => Transform.Id;
 
         [ProtoMember(4)]
         public int Level { get; set; }
@@ -49,9 +48,6 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoMember(9)]
         public bool ExistsInGlobalRoot { get; set; }
 
-        [ProtoMember(10)]
-        public NitroxId ParentId { get; set; }
-
         [ProtoMember(11)]
         public EntityMetadata Metadata { get; set; }
 
@@ -69,9 +65,8 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public Entity(NitroxVector3 localPosition, NitroxQuaternion localRotation, NitroxVector3 scale, NitroxTechType techType, int level, string classId, bool spawnedByServer, NitroxId id, int? existingGameObjectChildIndex, Entity parentEntity = null)
         {
-            Transform = new NitroxTransform(localPosition, localRotation, scale, this);
+            Transform = new NitroxTransform(localPosition, localRotation, scale, id);
             TechType = techType;
-            Id = id;
             Level = level;
             ClassId = classId;
             SpawnedByServer = spawnedByServer;
@@ -83,16 +78,14 @@ namespace NitroxModel.DataStructures.GameLogic
 
             if (parentEntity != null)
             {
-                ParentId = parentEntity.Id;
                 Transform.SetParent(parentEntity.Transform);
             }
         }
 
         public Entity(NitroxVector3 position, NitroxQuaternion rotation, NitroxVector3 scale, NitroxTechType techType, int level, string classId, bool spawnedByServer, NitroxId waterParkId, byte[] serializedGameObject, bool existsInGlobalRoot, NitroxId id)
         {
-            Transform = new NitroxTransform(position, rotation, scale, this);
+            Transform = new NitroxTransform(position, rotation, scale, id);
             TechType = techType;
-            Id = id;
             Level = level;
             ClassId = classId;
             SpawnedByServer = spawnedByServer;
@@ -105,18 +98,6 @@ namespace NitroxModel.DataStructures.GameLogic
         public override string ToString()
         {
             return "[Entity Transform: " + Transform + " TechType: " + TechType + " Id: " + Id + " Level: " + Level + " classId: " + ClassId + " ChildEntities: " + string.Join(",\n ", ChildEntities) + " SpawnedByServer: " + SpawnedByServer + " ExistingGameObjectChildIndex: " + ExistingGameObjectChildIndex + "]";
-        }
-
-        [ProtoAfterDeserialization]
-        private void ProtoAfterDeserialization()
-        {
-            Transform.Entity = this;
-        }
-
-        [OnDeserialized]
-        private void JsonAfterDeserialization(StreamingContext context)
-        {
-            ProtoAfterDeserialization();
         }
     }
 }

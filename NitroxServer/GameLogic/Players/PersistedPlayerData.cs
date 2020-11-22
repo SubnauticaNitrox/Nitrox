@@ -64,7 +64,7 @@ namespace NitroxServer.GameLogic.Players
                 EquippedItems = player.GetEquipment(),
                 Modules = player.GetModules(),
                 Id = player.Id,
-                SpawnPosition = player.Position,
+                SpawnPosition = player.Transform.Position,
                 CurrentStats = player.Stats,
                 SubRootId = player.SubRootId.OrElse(null),
                 Permissions = player.Permissions,

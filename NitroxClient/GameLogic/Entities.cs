@@ -52,21 +52,25 @@ namespace NitroxClient.GameLogic
 
         public void Spawn(List<Entity> entities)
         {
+            LargeWorldStreamer.main.cellManager.UnloadBatchCells(entities[0].AbsoluteEntityCell.BatchId.ToUnity()); // Just in case
             foreach (Entity entity in entities)
             {
-                LargeWorldStreamer.main.cellManager.UnloadBatchCells(entity.AbsoluteEntityCell.CellId.ToUnity()); // Just in case
 
                 if (WasSpawnedByServer(entity.Id))
                 {
                     UpdatePosition(entity);
                 }
-                else if (entity.ParentId != null && !WasSpawnedByServer(entity.ParentId))
+                else if (entity.Transform.Parent != null && !WasSpawnedByServer(entity.Transform.Parent.Id))
                 {
                     AddPendingParentEntity(entity);
                 }
                 else
                 {
-                    Optional<GameObject> parent = NitroxEntity.GetObjectFrom(entity.ParentId);
+                    Optional<GameObject> parent = Optional.Empty;
+                    if (entity.Transform.Parent != null)
+                    {
+                        parent = NitroxEntity.GetObjectFrom(entity.Transform.Parent.Id);
+                    }
                     Spawn(entity, parent);
                     SpawnAnyPendingChildren(entity);
                 }
@@ -153,10 +157,10 @@ namespace NitroxClient.GameLogic
         
         private void AddPendingParentEntity(Entity entity)
         {
-            if (!pendingParentEntitiesByParentId.TryGetValue(entity.ParentId, out List<Entity> pendingEntities))
+            if (!pendingParentEntitiesByParentId.TryGetValue(entity.Transform.Parent.Id, out List<Entity> pendingEntities))
             {
                 pendingEntities = new List<Entity>();
-                pendingParentEntitiesByParentId[entity.ParentId] = pendingEntities;
+                pendingParentEntitiesByParentId[entity.Transform.Parent.Id] = pendingEntities;
             }
 
             pendingEntities.Add(entity);

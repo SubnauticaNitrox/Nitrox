@@ -64,7 +64,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 world.InventoryManager.GetAllStorageSlotItems(),
                 world.GameData.PDAState.GetInitialPDAData(),
                 world.GameData.StoryGoals.GetInitialStoryGoalData(),
-                player.Position,
+                player.Transform.Position,
                 player.SubRootId,
                 player.Stats,
                 GetRemotePlayerData(player),
@@ -86,7 +86,7 @@ namespace NitroxServer.Communication.Packets.Processors
                     List<EquippedItemData> equippedItems = otherPlayer.GetEquipment();
                     List<NitroxTechType> techTypes = equippedItems.Select(equippedItem => equippedItem.TechType).ToList();
 
-                    InitialRemotePlayerData remotePlayer = new InitialRemotePlayerData(otherPlayer.PlayerContext, otherPlayer.Position, otherPlayer.SubRootId, techTypes);
+                    InitialRemotePlayerData remotePlayer = new InitialRemotePlayerData(otherPlayer.PlayerContext, otherPlayer.Transform.Position, otherPlayer.SubRootId, techTypes);
                     playerData.Add(remotePlayer);
                 }
             }

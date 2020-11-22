@@ -5,6 +5,7 @@ using System.Linq;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic.Entities;
 
 namespace NitroxServer.GameLogic.Entities
 {
@@ -34,13 +35,13 @@ namespace NitroxServer.GameLogic.Entities
             this.batchEntitySpawner = batchEntitySpawner;
         }
 
-        public List<Entity> GetVisibleEntities(NitroxInt3[] cells)
+        public List<Entity> GetVisibleEntities(CellChanges cellChanges)
         {
-            LoadUnspawnedEntities(cells);
+            LoadUnspawnedEntities(cellChanges.Added.ToArray());
 
             List<Entity> entities = new List<Entity>();
 
-            foreach (NitroxInt3 cell in cells)
+            foreach (AbsoluteEntityCell cell in cellChanges.Added)
             {
                 List<Entity> cellEntities = GetEntities(cell);
                 entities.AddRange(cellEntities);
@@ -77,15 +78,15 @@ namespace NitroxServer.GameLogic.Entities
             }
         }
 
-        public List<Entity> GetEntities(NitroxInt3 batchCell)
+        public List<Entity> GetEntities(AbsoluteEntityCell absoluteEntityCell)
         {
             List<Entity> result;
 
             lock (phasingEntitiesByBatchCell)
             {
-                if (!phasingEntitiesByBatchCell.TryGetValue(batchCell, out result))
+                if (!phasingEntitiesByBatchCell.TryGetValue(absoluteEntityCell.BatchId, out result))
                 {
-                    result = phasingEntitiesByBatchCell[batchCell] = new List<Entity>();
+                    result = phasingEntitiesByBatchCell[absoluteEntityCell.BatchId] = new List<Entity>();
                 }
             }
 
@@ -198,9 +199,9 @@ namespace NitroxServer.GameLogic.Entities
             }
         }
 
-        private void LoadUnspawnedEntities(NitroxInt3[] cells)
+        private void LoadUnspawnedEntities(AbsoluteEntityCell[] cells)
         {
-            IEnumerable<NitroxInt3> distinctBatchIds = cells.Distinct();
+            IEnumerable<NitroxInt3> distinctBatchIds = cells.Select(c => c.BatchId).Distinct();
 
             foreach (NitroxInt3 batchId in distinctBatchIds)
             {
@@ -212,9 +213,9 @@ namespace NitroxServer.GameLogic.Entities
                     {
                         foreach (Entity entity in spawnedEntities)
                         {
-                            if (entity.ParentId != null)
+                            if (entity.Transform.Parent != null)
                             {
-                                Optional<Entity> opEnt = GetEntityById(entity.ParentId);
+                                Optional<Entity> opEnt = GetEntityById(entity.Transform.Parent.Id);
 
                                 if (opEnt.HasValue)
                                 {
@@ -222,11 +223,11 @@ namespace NitroxServer.GameLogic.Entities
                                 }
                                 else
                                 {
-                                    Log.Error("Parent not Found! Are you sure it exists? " + entity.ParentId);
+                                    Log.Error("Parent not Found! Are you sure it exists? " + entity.Transform.Parent.Id);
                                 }
                             }
 
-                            List<Entity> entitiesInCell = GetEntities(entity.AbsoluteEntityCell.BatchId);
+                            List<Entity> entitiesInCell = GetEntities(entity.AbsoluteEntityCell);
                             entitiesInCell.Add(entity);
 
                             entitiesById.Add(entity.Id, entity);
@@ -245,10 +246,10 @@ namespace NitroxServer.GameLogic.Entities
 
             lock (phasingEntitiesByBatchCell)
             {
-                List<Entity> oldList = GetEntities(oldCell.BatchId);
+                List<Entity> oldList = GetEntities(oldCell);
                 oldList.Remove(entity);
 
-                List<Entity> newList = GetEntities(newCell.BatchId);
+                List<Entity> newList = GetEntities(newCell);
                 newList.Add(entity);
             }
         }

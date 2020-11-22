@@ -55,6 +55,7 @@
     <Compile Include="Core\IAutoFacRegistrar.cs" />
     <Compile Include="Core\NitroxEnvironment.cs" />
     <Compile Include="Core\NitroxServiceLocator.cs" />
+    <Compile Include="DataStructures\GameLogic\Entities\CellChanges.cs" />
     <Compile Include="DataStructures\GameLogic\Entities\Metadata\PrecursorDoorwayMetadata.cs" />
     <Compile Include="DataStructures\GameLogic\Entities\Metadata\PrecursorKeyTerminalMetadata.cs" />
     <Compile Include="DataStructures\GameLogic\Entities\Metadata\PrecursorTeleporterActivationTerminalMetadata.cs" />

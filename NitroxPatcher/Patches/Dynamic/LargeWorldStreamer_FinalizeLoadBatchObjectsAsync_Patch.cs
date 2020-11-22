@@ -13,7 +13,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static bool Prefix(Int3 index)
         {
-            NitroxServiceLocator.LocateService<Terrain>().CellLoaded(index);
+            //NitroxServiceLocator.LocateService<Terrain>().CellLoaded(index);
 
             return true;
         }

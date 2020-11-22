@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
@@ -22,19 +23,19 @@ namespace NitroxServer.Communication.Packets.Processors
         }
 
         public override void Process(CellVisibilityChanged packet, Player player)
-        {
+        {/*
             player.AddCells(packet.Added);
             player.RemoveCells(packet.Removed);
 
             SendNewlyVisibleEntities(player, packet.Added);
 
-            List<SimulatedEntity> ownershipChanges = entitySimulation.CalculateSimulationChangesFromCellSwitch(player, packet.Added, packet.Removed);
+            List<SimulatedEntity> ownershipChanges = entitySimulation.CalculateSimulationChangesFromCellSwitch(player, new CellChanges(packet.Added, packet.Removed));
             BroadcastSimulationChanges(ownershipChanges);
         }
 
         private void SendNewlyVisibleEntities(Player player, NitroxInt3[] visibleCells)
         {
-            List<Entity> newlyVisibleEntities = entityManager.GetVisibleEntities(visibleCells);
+            List<Entity> newlyVisibleEntities = entityManager.GetVisibleEntities(new CellChanges(visibleCells, new List<NitroxInt3>()));
 
             if (newlyVisibleEntities.Count > 0)
             {
@@ -50,7 +51,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 // TODO: This should be moved to `SimulationOwnership`
                 SimulationOwnershipChange ownershipChange = new SimulationOwnershipChange(ownershipChanges);
                 playerManager.SendPacketToAllPlayers(ownershipChange);
-            }
+            }*/
         }
     }
 }

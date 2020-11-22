@@ -23,9 +23,9 @@ namespace NitroxServer.GameLogic.Entities
 
             foreach (Entity entity in Entities)
             {
-                if (entity.ParentId != null)
+                if (entity.Transform.Parent != null)
                 {
-                    Entity parent = entitiesById[entity.ParentId];
+                    Entity parent = entitiesById[entity.Transform.Parent.Id];
 
                     if (parent != null)
                     {
