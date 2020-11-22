@@ -169,8 +169,8 @@
     <Compile Include="Packets\ModuleAdded.cs" />
     <Compile Include="Packets\ModuleRemoved.cs" />
     <Compile Include="Packets\Exceptions\UncorrelatedPacketException.cs" />
-    <Compile Include="Packets\FabricatorBeginCrafting.cs" />
-    <Compile Include="Packets\FabricatorItemPickup.cs" />
+    <Compile Include="Packets\GhostCrafterBeginCrafting.cs" />
+    <Compile Include="Packets\GhostCrafterItemPickup.cs" />
     <Compile Include="Packets\FireDoused.cs" />
     <Compile Include="Packets\ItemContainerAdd.cs" />
     <Compile Include="Packets\ItemContainerRemove.cs" />

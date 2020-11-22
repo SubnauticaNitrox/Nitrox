@@ -18,20 +18,18 @@ namespace NitroxClient.GameLogic
             this.packetSender = packetSender;
         }
 
-        public void FabricatorCrafingStarted(GameObject crafter, TechType techType, float duration)
+        public void GhostCrafterCrafingStarted(GameObject crafter, TechType techType, float duration)
         {
             NitroxId crafterId = NitroxEntity.GetId(crafter);
-            FabricatorBeginCrafting fabricatorBeginCrafting = new FabricatorBeginCrafting(crafterId, techType.ToDto(), duration);
-            packetSender.Send(fabricatorBeginCrafting);
+            GhostCrafterBeginCrafting ghostCrafterBeginCrafting = new GhostCrafterBeginCrafting(crafterId, techType.ToDto(), duration);
+            packetSender.Send(ghostCrafterBeginCrafting);
         }
 
-        public void FabricatorItemPickedUp(GameObject gameObject, TechType techType)
+        public void GhostCrafterItemPickedUp(GameObject gameObject, TechType techType)
         {
             NitroxId crafterId = NitroxEntity.GetId(gameObject);
-
-            FabricatorItemPickup fabricatorItemPickup = new FabricatorItemPickup(crafterId, techType.ToDto());
-            packetSender.Send(fabricatorItemPickup);
-            Log.Debug(fabricatorItemPickup);
+            GhostCrafterItemPickup ghostCrafterItemPickup = new GhostCrafterItemPickup(crafterId, techType.ToDto());
+            packetSender.Send(ghostCrafterItemPickup);
         }
     }
 }

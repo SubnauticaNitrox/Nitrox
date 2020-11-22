@@ -32,13 +32,13 @@ namespace NitroxPatcher.Patches.Dynamic
                     injected = true;
 
                     /*
-                     * Multiplayer.Logic.Crafting.FabricatorItemPickedUp(base.gameObject, techType);
+                     * Multiplayer.Logic.Crafting.GhostCrafterItemPickedUp(base.gameObject, techType);
                      */
                     yield return TranspilerHelper.LocateService<Crafting>();
                     yield return new CodeInstruction(OpCodes.Ldarg_0);
                     yield return new CodeInstruction(OpCodes.Call, typeof(Component).GetMethod("get_gameObject", BindingFlags.Instance | BindingFlags.Public));
                     yield return original.Ldloc<TechType>();
-                    yield return new CodeInstruction(OpCodes.Callvirt, typeof(Crafting).GetMethod("FabricatorItemPickedUp", BindingFlags.Instance | BindingFlags.Public));
+                    yield return new CodeInstruction(OpCodes.Callvirt, typeof(Crafting).GetMethod("GhostCrafterItemPickedUp", BindingFlags.Instance | BindingFlags.Public));
                 }
             }
         }
