@@ -88,6 +88,7 @@
     <Compile Include="Communication\Packets\Processors\EscapePodRadioRepairProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\EscapePodRepairProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\EnergyMixinValueChangedPacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\LiveMixinChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PingRenamedPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlayerDeathEventProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlayerEquipmentAddedProcessor.cs" />
@@ -133,6 +134,7 @@
     <Compile Include="Communication\Packets\Processors\SimulationOwnershipRequestProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleSpawnedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleUndockingProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\WeldActionProcessor.cs" />
     <Compile Include="ConsoleCommands\Abstract\CallArgs.cs" />
     <Compile Include="ConsoleCommands\Abstract\Command.cs" />
     <Compile Include="ConsoleCommands\Abstract\Parameter.cs" />

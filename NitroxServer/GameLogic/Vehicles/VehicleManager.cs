@@ -30,7 +30,21 @@ namespace NitroxServer.GameLogic.Vehicles
                 VehicleModel vehicleModel = vehiclesById[vehicleMovement.Id];
                 vehicleModel.Position = vehicleMovement.Position;
                 vehicleModel.Rotation = vehicleMovement.Rotation;
-                vehicleModel.Health = vehicleMovement.Health;
+            }
+        }
+
+        public void UpdateVehicleHealth(NitroxId vehicleId, float newHealth)
+        {
+            if (vehiclesById.ContainsKey(vehicleId))
+            {
+                if (newHealth > 0)
+                {
+                    vehiclesById[vehicleId].Health = newHealth;
+                }
+                else
+                {
+                    RemoveVehicle(vehicleId);
+                }
             }
         }
 

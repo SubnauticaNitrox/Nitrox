@@ -85,6 +85,12 @@ namespace NitroxClient.GameLogic
             packetSender.Send(packet);
         }
 
+        public void BroadcastWeld(NitroxId id, float healthAdded)
+        {
+            WeldAction packet = new WeldAction(id, healthAdded);
+            packetSender.Send(packet);
+        }
+
         private GameObject CreateBodyPrototype()
         {
             GameObject prototype = Body;

@@ -51,7 +51,7 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             if (lockAquired)
             {
-                NitroxServiceLocator.LocateService<Vehicles>().BroadcastVehicleUndocking(vehicleDockingBay, vehicleDockingBay.GetDockedVehicle());
+                NitroxServiceLocator.LocateService<Vehicles>().BroadcastVehicleUndocking(vehicleDockingBay, vehicleDockingBay.GetDockedVehicle(), true);
 
                 skipPrefix = true;
                 TARGET_METHOD.Invoke(dockedVehicle, new[] { guiHand });

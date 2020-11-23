@@ -105,5 +105,17 @@ namespace NitroxServer.GameLogic
 
             return false;
         }
+
+        public Player GetPlayerForLock(NitroxId id)
+        {
+            lock (playerLocksById)
+            {
+                if(playerLocksById.ContainsKey(id))
+                {
+                    return playerLocksById[id].Player;
+                }
+            }
+            return null;
+        }
     }
 }

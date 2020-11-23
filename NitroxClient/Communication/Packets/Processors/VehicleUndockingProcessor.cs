@@ -7,6 +7,8 @@ using NitroxModel.Packets;
 using System.Collections;
 using UnityEngine;
 using NitroxClient.MonoBehaviours;
+using NitroxModel.DataStructures.Util;
+using NitroxModel.Logger;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -14,11 +16,13 @@ namespace NitroxClient.Communication.Packets.Processors
     {
         private readonly IPacketSender packetSender;
         private readonly Vehicles vehicles;
+        private readonly PlayerManager remotePlayerManager;
 
-        public VehicleUndockingProcessor(IPacketSender packetSender, Vehicles vehicles)
+        public VehicleUndockingProcessor(IPacketSender packetSender, Vehicles vehicles, PlayerManager playerManager)
         {
             this.packetSender = packetSender;
             this.vehicles = vehicles;
+            remotePlayerManager = playerManager;
         }
 
         public override void Process(VehicleUndocking packet)
@@ -31,26 +35,35 @@ namespace NitroxClient.Communication.Packets.Processors
             
             using (packetSender.Suppress<VehicleUndocking>())
             {
-                vehicles.SetOnPilotMode(packet.VehicleId, packet.PlayerId, true);
-                vehicleDockingBay.subRoot.BroadcastMessage("OnLaunchBayOpening", SendMessageOptions.DontRequireReceiver);
-                SkyEnvironmentChanged.Broadcast(vehicleGo, (GameObject)null);
-
-                
-
-                vehicle.StartCoroutine(WaitBeforePushDown(vehicle, vehicleDockingBay));
-                
+                Optional<RemotePlayer> player = remotePlayerManager.Find(packet.PlayerId);
+                if (packet.UndockingStart)
+                {
+                    vehicleDockingBay.subRoot.BroadcastMessage("OnLaunchBayOpening", SendMessageOptions.DontRequireReceiver);
+                    SkyEnvironmentChanged.Broadcast(vehicleGo, (GameObject)null);
+                    if (player.HasValue)
+                    {
+                        RemotePlayer playerInstance = player.Value;
+                        playerInstance.Attach(vehicle.transform);
+                        vehicle.mainAnimator.SetBool("player_in", true);
+                        vehicles.SetOnPilotMode(packet.VehicleId, packet.PlayerId, false);
+                        playerInstance.AnimationController.UpdatePlayerAnimations = false;
+                    }
+                }
+                else
+                {
+                    vehicleDockingBay.SetVehicleUndocked();
+                    vehicleDockingBay.ReflectionSet("vehicle_docked_param", false);
+                    vehicleDockingBay.ReflectionSet("_dockedVehicle", null);
+                    vehicle.docked = false;
+                    //vehicle.useRigidbody.AddForce(Vector3.down * 5f, ForceMode.VelocityChange);
+                    if (player.HasValue)
+                    {
+                        RemotePlayer playerInstance = player.Value;                     
+                        vehicles.SetOnPilotMode(packet.VehicleId, packet.PlayerId, true);
+                    }
+                    Log.Debug($"Set vehicle undocking complete");
+                }
             }
-        }
-
-        IEnumerator WaitBeforePushDown(Vehicle vehicle, VehicleDockingBay vehicleDockingBay)
-        {
-            yield return new WaitForSeconds(6.0f);
-            
-            vehicleDockingBay.SetVehicleUndocked();
-            vehicleDockingBay.ReflectionSet("vehicle_docked_param", false);
-            vehicleDockingBay.ReflectionSet("_dockedVehicle", null);
-            vehicle.docked = false;
-            vehicle.useRigidbody.AddForce(Vector3.down * 5f, ForceMode.VelocityChange);
         }
     }
 }

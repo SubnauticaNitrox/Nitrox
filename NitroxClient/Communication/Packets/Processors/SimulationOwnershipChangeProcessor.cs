@@ -25,14 +25,13 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             foreach (SimulatedEntity simulatedEntity in simulationOwnershipChange.Entities)
             {
+                simulationOwnershipManager.AddSimulationLock(simulatedEntity.Id, simulatedEntity.PlayerId, simulatedEntity.LockType);
                 if (multiplayerSession.Reservation.PlayerId == simulatedEntity.PlayerId)
                 {
                     if(simulatedEntity.ChangesPosition)
                     {
                         StartBroadcastingEntityPosition(simulatedEntity.Id);
                     }
-
-                    simulationOwnershipManager.SimulateEntity(simulatedEntity.Id, SimulationLockType.TRANSIENT);
                 }
                 else if(simulationOwnershipManager.HasAnyLockType(simulatedEntity.Id))
                 {
@@ -46,8 +45,6 @@ namespace NitroxClient.Communication.Packets.Processors
                     {
                         Log.Warn("The server has forcibly revoked an exlusive lock - this may cause undefined behaviour.  GUID: " + simulatedEntity.Id);
                     }
-
-                    simulationOwnershipManager.StopSimulatingEntity(simulatedEntity.Id);
                     EntityPositionBroadcaster.StopWatchingEntity(simulatedEntity.Id);
                 }
             }

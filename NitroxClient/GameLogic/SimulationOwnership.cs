@@ -3,39 +3,63 @@ using NitroxClient.Communication.Abstract;
 using NitroxModel.Packets;
 using NitroxModel.DataStructures;
 using NitroxModel.Logger;
+using System;
 
 namespace NitroxClient.GameLogic
 {
     public class SimulationOwnership
     {
+        class PlayerLock
+        {
+            public ushort? PlayerId { get; }
+            public SimulationLockType LockType { get; set; }
+
+            public PlayerLock(ushort? playerId, SimulationLockType lockType)
+            {
+                PlayerId = playerId;
+                LockType = lockType;
+            }
+        }
         public delegate void LockRequestCompleted(NitroxId id, bool lockAquired);
 
         private readonly IMultiplayerSession muliplayerSession;
         private readonly IPacketSender packetSender;
-        private readonly Dictionary<NitroxId, SimulationLockType> simulatedIdsByLockType = new Dictionary<NitroxId, SimulationLockType>();
+        private readonly Dictionary<NitroxId, PlayerLock> simulatedIdsByLockType = new Dictionary<NitroxId, PlayerLock>();
         private readonly Dictionary<NitroxId, LockRequestCompleted> completeFunctionsById = new Dictionary<NitroxId, LockRequestCompleted>();
+        private readonly HashSet<NitroxId> simulationOverride = new HashSet<NitroxId>();
         
         public SimulationOwnership(IMultiplayerSession muliplayerSession, IPacketSender packetSender)
         {
             this.muliplayerSession = muliplayerSession;
             this.packetSender = packetSender;
         }
+        public bool PlayerHasMinLockType(NitroxId id, bool isOtherPlayer, SimulationLockType lockType)
+        {
+            PlayerLock playerLock;
+
+            if (simulatedIdsByLockType.TryGetValue(id, out playerLock))
+            {
+                bool ownPlayer = playerLock.PlayerId == muliplayerSession.Reservation.PlayerId;
+                bool accepted = isOtherPlayer ? !ownPlayer : ownPlayer;
+                return accepted && playerLock.LockType <= lockType;
+            }
+
+            return false;
+        }
 
         public bool HasAnyLockType(NitroxId id)
         {
-            return simulatedIdsByLockType.ContainsKey(id);
+            return PlayerHasMinLockType(id, false, SimulationLockType.TRANSIENT);
         }
 
         public bool HasExclusiveLock(NitroxId id)
         {
-            SimulationLockType activeLockType;
+            return PlayerHasMinLockType(id, false, SimulationLockType.EXCLUSIVE);
+        }
 
-            if (simulatedIdsByLockType.TryGetValue(id, out activeLockType))
-            {
-                return (activeLockType == SimulationLockType.EXCLUSIVE);
-            }
-
-            return false;
+        public bool OtherPlayerHasAnyLock(NitroxId id)
+        {
+            return PlayerHasMinLockType(id, true, SimulationLockType.TRANSIENT);
         }
 
         public void RequestSimulationLock(NitroxId id, SimulationLockType lockType, LockRequestCompleted whenCompleted)
@@ -53,6 +77,10 @@ namespace NitroxClient.GameLogic
             {
                 SimulateEntity(id, lockType);
             }
+            else if (!OtherPlayerHasAnyLock(id))
+            {
+                AddSimulationLockForUnknown(id, lockType);
+            }
 
             LockRequestCompleted requestCompleted = null;
 
@@ -67,14 +95,71 @@ namespace NitroxClient.GameLogic
             }
         }
 
+        public void RemovePlayerSimulations(ushort playerId)
+        {
+            // When a player disconnects, we need to remove his locks
+            // We also remove locks of unknown player, as they could come from the disconnected player
+            HashSet<NitroxId> toRemove = new HashSet<NitroxId>();
+            foreach (KeyValuePair<NitroxId, PlayerLock> playerLock in simulatedIdsByLockType)
+            {
+                if (!playerLock.Value.PlayerId.HasValue ||playerLock.Value.PlayerId == playerId)
+                {
+                    toRemove.Add(playerLock.Key);
+                }
+            }
+            foreach (NitroxId id in toRemove)
+            {
+                simulatedIdsByLockType.Remove(id);
+            }
+        }
+
         public void SimulateEntity(NitroxId id, SimulationLockType lockType)
         {
-            simulatedIdsByLockType[id] = lockType;
+            simulatedIdsByLockType[id] = new PlayerLock(muliplayerSession.Reservation.PlayerId, lockType);
         }
 
         public void StopSimulatingEntity(NitroxId id)
         {
             simulatedIdsByLockType.Remove(id);
+        }
+        
+        public void AddSimulationLock(NitroxId id, ushort playerId, SimulationLockType lockType)
+        {
+            simulatedIdsByLockType[id] = new PlayerLock(playerId, lockType);
+        }
+
+        public void AddSimulationLockForUnknown(NitroxId id, SimulationLockType lockType)
+        {
+            simulatedIdsByLockType[id] = new PlayerLock(null, lockType);
+        }
+
+        public void AddSimulationOverride(NitroxId id)
+        {
+            if (simulatedIdsByLockType.ContainsKey(id) && simulatedIdsByLockType[id].PlayerId == muliplayerSession.Reservation.PlayerId)
+            {
+                Log.Warn($"Tried to add simulation override for an entity the player already simulates. NitroxId: {id}");
+            }
+            else
+            {
+                simulationOverride.Add(id);
+            }
+        }
+
+        public void RemoveSimulationOverride(NitroxId id)
+        {
+            if (simulationOverride.Contains(id))
+            {
+                simulationOverride.Remove(id);
+            }
+            else
+            {
+                Log.Warn($"Tried to remove non existing simulation override for NitroxId: {id}");
+            }
+        }
+
+        public bool SimulationLockOverrideActive(NitroxId id)
+        {
+            return simulationOverride.Contains(id);
         }
     }
 }

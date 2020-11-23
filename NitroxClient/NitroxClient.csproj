@@ -52,6 +52,7 @@
     <Compile Include="Communication\Packets\Processors\EscapePodChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\GameModeChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\EnergyMixinValueChangedProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\LifeMixinChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PingRenamedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlayerTeleportedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\RadioPlayPendingMessageProcessor.cs" />
@@ -59,6 +60,7 @@
     <Compile Include="Communication\Packets\Processors\RocketElevatorCallProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\RocketStageUpdateProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleSpawnedProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\WeldActionProcessor.cs" />
     <Compile Include="Debuggers\EntityDebugger.cs" />
     <Compile Include="GameLogic\Bases\Spawning\BasePieceSpawnProcessor.cs" />
     <Compile Include="GameLogic\Bases\Spawning\BaseLadderSpawnProcessor.cs" />
