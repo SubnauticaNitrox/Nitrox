@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="ClientAutoFacRegistrar.cs" />
     <Compile Include="Communication\PacketReceiver.cs" />
+    <Compile Include="Communication\Packets\Processors\PlayFMODAssetProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\BedEnterProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\DebugStartMapProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\EntityMetadataUpdateProcessor.cs" />
@@ -74,6 +75,7 @@
     <Compile Include="GameLogic\Containers\ContainerAddItemPostProcessor.cs" />
     <Compile Include="GameLogic\Containers\NoOpContainerAddItemPostProcessor.cs" />
     <Compile Include="GameLogic\InitialSync\SimulationOwnershipInitialSyncProcessor.cs" />
+    <Compile Include="GameLogic\FMODSystem.cs" />
     <Compile Include="GameLogic\LiveMixinManager.cs" />
     <Compile Include="GameLogic\Rockets.cs" />
     <Compile Include="GameLogic\Simulation\LockRequestBase.cs" />

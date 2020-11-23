@@ -103,12 +103,20 @@ namespace NitroxModel.DataStructures.GameLogic
             return Mathf.Sqrt(ls);
         }
 
-        public static NitroxVector3 Cross(NitroxVector3 vector1, NitroxVector3 vector2)
+        public static NitroxVector3 Cross(NitroxVector3 lhs, NitroxVector3 rhs)
         {
             return new(
                 vector1.Y * vector2.Z - vector1.Z * vector2.Y,
                 vector1.Z * vector2.X - vector1.X * vector2.Z,
                 vector1.X * vector2.Y - vector1.Y * vector2.X);
+        }
+
+        public static float Distance(NitroxVector3 lhs, NitroxVector3 rhs)
+        {
+            float num1 = lhs.X - rhs.X;
+            float num2 = lhs.Y - rhs.Y;
+            float num3 = lhs.Z - rhs.Z;
+            return Mathf.Sqrt(num1 * num1 + num2 * num2 + num3 * num3);
         }
 
         public override string ToString()
