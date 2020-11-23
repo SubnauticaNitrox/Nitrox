@@ -7,7 +7,6 @@ using System.Text.RegularExpressions;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
 using NitroxModel.Logger;
-using NitroxModel_Subnautica.Logger;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -34,7 +33,6 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         public void Awake()
         {
-            Log.InGameLogger = new SubnauticaInGameLogger();
             Main = this;
             //This sucks, but the only way around it is to establish a Subnautica resources cache and reference it everywhere we need it.
             //Given recent push-back on elaborate designs, I've just crammed it here until we can all get on the same page as far as code-quality standars are concerned.
@@ -170,8 +168,9 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                     }
                     else
                     {
-                        Match match = Regex.Match(serverIp, @"^.*:(\d{3,5})$");
-                        serverPort = match.Success ? match.Groups[1].Value : "11000";
+                        Match match = Regex.Match(serverIp, @"^(.*?)(?::(\d{3,5}))?$");
+                        serverIp = match.Groups[1].Value;
+                        serverPort = match.Groups[2].Success ? match.Groups[2].Value : "11000";
                     }
                     CreateServerButton($"Connect to <b>{serverName}</b>\n{serverIp}:{serverPort}", serverIp, serverPort);
                 }
