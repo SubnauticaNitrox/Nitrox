@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
+using System.Text.RegularExpressions;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
 using NitroxModel.Logger;
@@ -162,7 +163,16 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                     string[] lineData = line.Split('|');
                     string serverName = lineData[0];
                     string serverIp = lineData[1];
-                    string serverPort = lineData[2];
+                    string serverPort;
+                    if (lineData.Length == 3)
+                    {
+                        serverPort = lineData[2];
+                    }
+                    else
+                    {
+                        Match match = Regex.Match(serverIp, @"^.*:(\d{3,5})$");
+                        serverPort = match.Success ? match.Groups[1].Value : "11000";
+                    }
                     CreateServerButton($"Connect to <b>{serverName}</b>\n{serverIp}:{serverPort}", serverIp, serverPort);
                 }
             }
