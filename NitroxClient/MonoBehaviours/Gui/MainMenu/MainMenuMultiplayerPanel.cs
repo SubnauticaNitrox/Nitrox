@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
 using NitroxModel.Logger;
+using NitroxModel_Subnautica.Logger;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -32,6 +33,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         public void Awake()
         {
+            Log.InGameLogger = new SubnauticaInGameLogger();
             Main = this;
             //This sucks, but the only way around it is to establish a Subnautica resources cache and reference it everywhere we need it.
             //Given recent push-back on elaborate designs, I've just crammed it here until we can all get on the same page as far as code-quality standars are concerned.
