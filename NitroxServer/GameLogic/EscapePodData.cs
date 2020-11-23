@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 using NitroxModel.DataStructures.GameLogic;
 using ProtoBufNet;
 
 namespace NitroxServer.GameLogic
 {
-    [ProtoContract]
+    [ProtoContract, JsonObject(MemberSerialization.OptIn)]
     public class EscapePodData
     {
-        [ProtoMember(1)]
+        [JsonProperty, ProtoMember(1)]
         public List<EscapePodModel> EscapePods;
 
         public static EscapePodData From(List<EscapePodModel> escapePods)

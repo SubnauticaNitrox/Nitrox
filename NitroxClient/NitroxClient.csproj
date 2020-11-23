@@ -58,10 +58,13 @@
     <Compile Include="Communication\Packets\Processors\RadioPlayPendingMessageProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ExosuitArmActionProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\RocketElevatorCallProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\RocketPreflightCompleteProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\RocketStageUpdateProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleSpawnedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\WeldActionProcessor.cs" />
     <Compile Include="Debuggers\EntityDebugger.cs" />
+    <Compile Include="GameLogic\Bases\Spawning\MapRoomSpawnProcessor.cs" />
+    <Compile Include="GameLogic\Bases\Spawning\BaseBioReactorSpawnProcessor.cs" />
     <Compile Include="GameLogic\Bases\Spawning\BasePieceSpawnProcessor.cs" />
     <Compile Include="GameLogic\Bases\Spawning\BaseLadderSpawnProcessor.cs" />
     <Compile Include="GameLogic\Bases\Spawning\BasePieceSpawnPrioritizer.cs" />
@@ -201,7 +204,7 @@
     <Compile Include="Communication\Packets\Processors\PlayerDeathProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlayerJoinedMultiplayerSessionProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlayerStatsProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\SignChangedProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\BasePieceMetadataChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SimulationOwnershipChangeProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\StoryEventHandler.cs" />
     <Compile Include="Communication\Packets\Processors\TimeChangeProcessor.cs" />
@@ -289,7 +292,6 @@
     <Compile Include="GameLogic\RemotePlayer.cs" />
     <Compile Include="GameLogic\RemotePlayerManagerExtensions.cs" />
     <Compile Include="GameLogic\SeamothModulesEvent.cs" />
-    <Compile Include="GameLogic\Signs.cs" />
     <Compile Include="GameLogic\SimulationOwnership.cs" />
     <Compile Include="GameLogic\Spawning\SerializedEntitySpawner.cs" />
     <Compile Include="GameLogic\Spawning\ReefbackEntitySpawner.cs" />

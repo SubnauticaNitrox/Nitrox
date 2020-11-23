@@ -1,16 +1,17 @@
 ﻿using System;
+using Newtonsoft.Json;
 using ProtoBufNet;
 
 namespace NitroxServer.GameLogic
 {
     [Serializable]
-    [ProtoContract]
+    [ProtoContract, JsonObject(MemberSerialization.OptIn)]
     public class StoryTimingData
     {
-        [ProtoMember(1)]
+        [JsonProperty, ProtoMember(1)]
         public double ElapsedTime { get; set; }
 
-        [ProtoMember(2)]
+        [JsonProperty, ProtoMember(2)]
         public double? AuroraExplosionTime { get; set; }
 
         public static StoryTimingData From(EventTriggerer eventTriggerer)

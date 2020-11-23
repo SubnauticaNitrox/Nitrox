@@ -426,8 +426,17 @@ namespace NitroxClient.MonoBehaviours.Overrides
 
             componentInParent3.SetIsInside(flag || flag2);
             SkyEnvironmentChanged.Send(gameObject, currentSub);
-            gameObject.transform.position = overridePosition;
-            gameObject.transform.rotation = overrideQuaternion;
+
+            if (currentSub != null && currentSub.isCyclops)
+            {
+                gameObject.transform.localPosition = overridePosition;
+                gameObject.transform.localRotation = overrideQuaternion;
+            }
+            else
+            {
+                gameObject.transform.position = overridePosition;
+                gameObject.transform.rotation = overrideQuaternion;
+            }
 
             MultiplayerBuilder.ghostModel = null;
             MultiplayerBuilder.prefab = null;

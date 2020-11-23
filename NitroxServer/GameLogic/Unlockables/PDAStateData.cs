@@ -1,26 +1,27 @@
 ﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using ProtoBufNet;
 
 namespace NitroxServer.GameLogic.Unlockables
 {
-    [ProtoContract]
+    [ProtoContract, JsonObject(MemberSerialization.OptIn)]
     public class PDAStateData
     {
-        [ProtoMember(1)]
+        [JsonProperty, ProtoMember(1)]
         public ThreadSafeCollection<NitroxTechType> UnlockedTechTypes { get; } = new ThreadSafeCollection<NitroxTechType>();
 
-        [ProtoMember(2)]
+        [JsonProperty, ProtoMember(2)]
         public ThreadSafeCollection<NitroxTechType> KnownTechTypes { get; } = new ThreadSafeCollection<NitroxTechType>();
 
-        [ProtoMember(3)]
+        [JsonProperty, ProtoMember(3)]
         public ThreadSafeCollection<string> EncyclopediaEntries { get; } = new ThreadSafeCollection<string>();
 
-        [ProtoMember(4)]
-        public ThreadSafeDictionary<NitroxTechType, PDAEntry> PartiallyUnlockedByTechType { get; } = new ThreadSafeDictionary<NitroxTechType, PDAEntry>();
+        [JsonProperty, ProtoMember(4)]
+        public ThreadSafeDictionary<NitroxTechType, PDAEntry> PartiallyUnlockedByTechType { get; set; } = new ThreadSafeDictionary<NitroxTechType, PDAEntry>();
 
-        [ProtoMember(5)]
+        [JsonProperty, ProtoMember(5)]
         public ThreadSafeCollection<PDALogEntry> PdaLog { get; } = new ThreadSafeCollection<PDALogEntry>();
 
         public void UnlockedTechType(NitroxTechType techType)

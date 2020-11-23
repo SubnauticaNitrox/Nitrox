@@ -1,11 +1,9 @@
 ﻿using NitroxClient.Communication.Abstract;
-using NitroxClient.GameLogic.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxModel_Subnautica.DataStructures.GameLogic;
 using NitroxModel_Subnautica.Packets;
-using UnityEngine;
 
 namespace NitroxClient.GameLogic
 {
@@ -20,18 +18,48 @@ namespace NitroxClient.GameLogic
             this.vehicles = vehicles;
         }
 
-        public void BroadcastRocketStateUpdate(NitroxId id, NitroxId constructorId, TechType currentStageTech, GameObject builtGameObject)
+        /** Rocket states :
+         * 0 : Launch Platform
+         * 1 : Gantry
+         * 2 : Boosters
+         * 3 : Fuel Reserve
+         * 4 : Cockpit
+         * 5 : Final rocket
+         **/
+        public void BroadcastRocketStateUpdate(NitroxId id, TechType currentStageTech)
         {
             Optional<NeptuneRocketModel> model = vehicles.TryGetVehicle<NeptuneRocketModel>(id);
 
             if (model.HasValue)
             {
                 model.Value.CurrentStage += 1;
-                packetSender.Send(new RocketStageUpdate(id, constructorId, model.Value.CurrentStage, currentStageTech, SerializationHelper.GetBytes(builtGameObject)));
+
+                //State 5 cannot be reached for the server based on players events, so we do it by hand
+                if (model.Value.CurrentStage > 3)
+                {
+                    model.Value.CurrentStage = 5;
+                }
+
+                packetSender.Send(new RocketStageUpdate(id, model.Value.CurrentStage, currentStageTech));
             }
             else
             {
-                Log.Error($"{nameof(Rockets)}: Can't find model for rocket with id {id} with constructor {constructorId} and currentStageTech {currentStageTech}");
+                Log.Error($"{nameof(Rockets.BroadcastRocketStateUpdate)}: Can't find model for rocket with id {id} and currentStageTech {currentStageTech}");
+            }
+        }
+
+        public void CompletePreflightCheck(NitroxId id, PreflightCheck preflightCheck)
+        {
+            Optional<NeptuneRocketModel> model = vehicles.TryGetVehicle<NeptuneRocketModel>(id);
+
+            if (model.HasValue)
+            {
+                model.Value.PreflightChecks?.Add(preflightCheck);
+                packetSender.Send(new RocketPreflightComplete(id, preflightCheck));
+            }
+            else
+            {
+                Log.Error($"{nameof(Rockets.CompletePreflightCheck)}: Can't find model for rocket with id {id}");
             }
         }
 
@@ -46,7 +74,7 @@ namespace NitroxClient.GameLogic
             }
             else
             {
-                Log.Error($"{nameof(Rockets)}: Can't find model for rocket with id {id}");
+                Log.Error($"{nameof(Rockets.CallElevator)}: Can't find model for rocket with id {id}");
             }
         }
     }

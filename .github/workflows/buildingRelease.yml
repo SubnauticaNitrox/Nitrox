@@ -1,24 +1,20 @@
 name: Building Nitrox Release
-
 on: push
-
 jobs:
   build:
     runs-on: windows-latest
-    
     steps:
     - name: Checking out repository
       uses: actions/checkout@v2
       with:
         submodules: 'true'
     - name: Download Subnautica files
-      run: |
-          ./.github/depotDownloader/QXCTF.exe
+      run: ./.github/depotDownloader/QXCTF.exe
     - name: Setup Nuget.exe
-      uses: warrenbuckley/Setup-Nuget@v1
+      uses: nuget/setup-nuget@v1
     - name: Restore packages
       run: nuget restore Nitrox.sln
     - name: Setup MSBuild
-      uses: warrenbuckley/Setup-MSBuild@v1
+      uses: microsoft/setup-msbuild@v1.0.2
     - name: Build with MSBuild
       run: msbuild Nitrox.sln -p:Configuration=Release
