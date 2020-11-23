@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
-using System.Text.RegularExpressions;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
 using NitroxModel.Logger;
@@ -105,10 +105,10 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         public void OpenJoinServerMenu(string serverIp, string serverPort)
         {
-            IPEndPoint endpoint = ResolveIp(serverIp, serverPort) ?? ResolveHostName(serverIp, serverPort);
+            IPEndPoint endpoint = ResolveIPEndPoint(serverIp, serverPort);
             if (endpoint == null)
             {
-                Log.InGame($"Unable to resolve remote address: {serverIp}");
+                Log.InGame($"Unable to resolve remote address: {serverIp}:{serverPort}");
                 return;
             }
 
@@ -166,31 +166,36 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             }
         }
 
-        private IPEndPoint ResolveIp(string serverIp, string serverPort)
+        private IPEndPoint ResolveIPEndPoint(string serverIp, string serverPort)
         {
-            Match match = Regex.Match(serverIp, @"^((?:(?:[\da-fA-F]+:??){8}|[\d\.]+)):?(\d+)?$"); // Pattern test url: https://regexr.com/5go2v
-            if (!match.Success)
+            UriHostNameType hostType = Uri.CheckHostName(serverIp);
+            IPAddress address;
+            switch (hostType)
+            {
+                case UriHostNameType.IPv4:
+                case UriHostNameType.IPv6:
+                    IPAddress.TryParse(serverIp, out address);
+                    break;
+                case UriHostNameType.Dns:
+                    address = ResolveHostName(serverIp, serverPort);
+                    break;
+                default:
+                    return null;
+            }
+
+            if (address == null)
             {
                 return null;
             }
-
-            IPAddress ip = IPAddress.Parse(match.Groups[1].Value);
-            return new IPEndPoint(ip, int.Parse(serverPort));
+            return new IPEndPoint(address, int.Parse(serverPort));
         }
 
-        private IPEndPoint ResolveHostName(string hostname, string serverPort)
+        private IPAddress ResolveHostName(string hostname, string serverPort)
         {
-            Match match = Regex.Match(hostname, @"^\s*([a-zA-Z\.]*)\:?(\d{2,5})?\s*$");
-            if (!match.Success)
-            {
-                Log.ErrorSensitive("Hostname {hostname} has an invalid format", hostname);
-                return null;
-            }
-
             try
             {
-                IPHostEntry hostEntry = Dns.GetHostEntry(match.Groups[1].Value);
-                return new IPEndPoint(hostEntry.AddressList[0], int.Parse(serverPort));
+                IPHostEntry hostEntry = Dns.GetHostEntry(hostname);
+                return hostEntry.AddressList[0];
             }
             catch (SocketException ex)
             {
