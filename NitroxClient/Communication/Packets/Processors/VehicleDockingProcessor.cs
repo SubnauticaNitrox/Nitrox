@@ -40,10 +40,10 @@ namespace NitroxClient.Communication.Packets.Processors
             {
                 Log.Debug($"Set vehicle docked for {vehicleDockingBay.gameObject.name}");
                 vehicle.GetComponent<MultiplayerVehicleControl>().Exit();
-                Log.Debug($"before dock isKinematic: {vehicle.useRigidbody.isKinematic}");
+                // DockVehicle sets the rigid body kinematic of the vehicle to true, we don't want that behaviour
+                // Therefore disable kinematic (again) to remove the bouncing behavior
                 vehicleDockingBay.DockVehicle(vehicle);
                 vehicle.useRigidbody.isKinematic = false;
-                Log.Debug($"after dock isKinematic: {vehicle.useRigidbody.isKinematic}");
             }
 
             vehicle.StartCoroutine(DisablePilotingAfterAnimation(packet.VehicleId, packet.PlayerId));
@@ -57,7 +57,7 @@ namespace NitroxClient.Communication.Packets.Processors
             Vehicle vehicle = vehicleGo.RequireComponent<Vehicle>();
             if (!vehicle.docked)
             {
-                Log.Error($"Vehicle not docked after docking process");
+                Log.Error($"Vehicle {vehicleId} not docked after docking process");
             }
         }
     }

@@ -35,35 +35,40 @@ namespace NitroxClient.Communication.Packets.Processors
             
             using (packetSender.Suppress<VehicleUndocking>())
             {
-                Optional<RemotePlayer> player = remotePlayerManager.Find(packet.PlayerId);
+                
                 if (packet.UndockingStart)
                 {
-                    vehicleDockingBay.subRoot.BroadcastMessage("OnLaunchBayOpening", SendMessageOptions.DontRequireReceiver);
-                    SkyEnvironmentChanged.Broadcast(vehicleGo, (GameObject)null);
-                    if (player.HasValue)
-                    {
-                        RemotePlayer playerInstance = player.Value;
-                        playerInstance.Attach(vehicle.transform);
-                        vehicle.mainAnimator.SetBool("player_in", true);
-                        vehicles.SetOnPilotMode(packet.VehicleId, packet.PlayerId, false);
-                        playerInstance.AnimationController.UpdatePlayerAnimations = false;
-                    }
+                    StartVehicleUndocking(packet, vehicleGo, vehicle, vehicleDockingBay);
                 }
                 else
                 {
-                    vehicleDockingBay.SetVehicleUndocked();
-                    vehicleDockingBay.ReflectionSet("vehicle_docked_param", false);
-                    vehicleDockingBay.ReflectionSet("_dockedVehicle", null);
-                    vehicle.docked = false;
-                    //vehicle.useRigidbody.AddForce(Vector3.down * 5f, ForceMode.VelocityChange);
-                    if (player.HasValue)
-                    {
-                        RemotePlayer playerInstance = player.Value;                     
-                        vehicles.SetOnPilotMode(packet.VehicleId, packet.PlayerId, true);
-                    }
-                    Log.Debug($"Set vehicle undocking complete");
+                    FinishVehicleUndocking(packet, vehicle, vehicleDockingBay);
                 }
             }
+        }
+
+        private void StartVehicleUndocking(VehicleUndocking packet, GameObject vehicleGo, Vehicle vehicle, VehicleDockingBay vehicleDockingBay)
+        {
+            Optional<RemotePlayer> player = remotePlayerManager.Find(packet.PlayerId);
+            vehicleDockingBay.subRoot.BroadcastMessage("OnLaunchBayOpening", SendMessageOptions.DontRequireReceiver);
+            SkyEnvironmentChanged.Broadcast(vehicleGo, (GameObject)null);
+            if (player.HasValue)
+            {
+                RemotePlayer playerInstance = player.Value;
+                playerInstance.Attach(vehicle.transform);
+                vehicle.mainAnimator.SetBool("player_in", true);
+                vehicles.SetOnPilotMode(packet.VehicleId, packet.PlayerId, false);
+                playerInstance.AnimationController.UpdatePlayerAnimations = false;
+            }
+        }
+        private void FinishVehicleUndocking(VehicleUndocking packet, Vehicle vehicle, VehicleDockingBay vehicleDockingBay)
+        {
+            vehicleDockingBay.SetVehicleUndocked();
+            vehicleDockingBay.ReflectionSet("vehicle_docked_param", false);
+            vehicleDockingBay.ReflectionSet("_dockedVehicle", null);
+            vehicle.docked = false;
+            vehicles.SetOnPilotMode(packet.VehicleId, packet.PlayerId, true);
+            Log.Debug($"Set vehicle undocking complete");
         }
     }
 }

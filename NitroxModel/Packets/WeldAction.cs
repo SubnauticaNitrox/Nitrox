@@ -18,5 +18,9 @@ namespace NitroxModel.Packets
             Id = id;
             HealthAdded = healthAdded;
         }
+        public override string ToString()
+        {
+            return $"[WeldAction - Id: {Id}, HealthAdded: {HealthAdded}]";
+        }
     }
 }

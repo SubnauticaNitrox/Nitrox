@@ -297,9 +297,7 @@ namespace NitroxClient.GameLogic
                 {
                     GameObject dockingBayBase = NitroxEntity.RequireObjectFrom(dockingBayId.Value);
                     VehicleDockingBay dockingBay = dockingBayBase.GetComponentInChildren<VehicleDockingBay>();
-                    simulationOwnership.AddSimulationOverride(id);
                     dockingBay.DockVehicle(vehicle);
-                    simulationOwnership.RemoveSimulationOverride(id);
                 }
                 else if (techType == TechType.Exosuit)
                 {

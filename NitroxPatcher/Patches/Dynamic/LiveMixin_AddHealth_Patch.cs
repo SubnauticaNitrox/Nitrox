@@ -65,7 +65,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 {
                     TechType techType = CraftData.GetTechType(gameObject);
                     // This whole code should may be refactored into it's own class if more LiveMixin Entities will be synchronized
-                    LiveMixinHealthChanged packet = new LiveMixinHealthChanged(techType.ToDto(), id, healthBack, Vector3.zero.ToDto(), 0, Optional.Empty, __instance.health);
+                    LiveMixinHealthChanged packet = new LiveMixinHealthChanged(techType.ToDto(), id, healthBack, __instance.health);
                     NitroxServiceLocator.LocateService<IMultiplayerSession>().Send(packet);
                 }
                 ORIGINAL_HEALTH_PER_ENTITY.Remove(id);

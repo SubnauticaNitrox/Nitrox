@@ -9,7 +9,7 @@ namespace NitroxClient.GameLogic
 {
     public class SimulationOwnership
     {
-        class PlayerLock
+        private class PlayerLock
         {
             public ushort? PlayerId { get; }
             public SimulationLockType LockType { get; set; }
@@ -20,6 +20,22 @@ namespace NitroxClient.GameLogic
                 LockType = lockType;
             }
         }
+        public class SimulationOverride : IDisposable
+        {
+            SimulationOwnership simulationOwnership;
+            NitroxId id;
+            public SimulationOverride(SimulationOwnership simulationOwnership, NitroxId id)
+            {
+                this.simulationOwnership = simulationOwnership;
+                this.id = id;
+                this.simulationOwnership.AddSimulationOverride(id);
+            }
+            public void Dispose()
+            {
+                simulationOwnership.RemoveSimulationOverride(id);
+            }
+        }
+
         public delegate void LockRequestCompleted(NitroxId id, bool lockAquired);
 
         private readonly IMultiplayerSession muliplayerSession;
@@ -137,12 +153,17 @@ namespace NitroxClient.GameLogic
         {
             if (simulatedIdsByLockType.ContainsKey(id) && simulatedIdsByLockType[id].PlayerId == muliplayerSession.Reservation.PlayerId)
             {
-                Log.Warn($"Tried to add simulation override for an entity the player already simulates. NitroxId: {id}");
+                Log.Warn($"Tried to add simulation override for entity {id} the player already simulates.");
             }
             else
             {
                 simulationOverride.Add(id);
             }
+        }
+
+        public SimulationOverride GetSimulationOverride(NitroxId id)
+        {
+            return new SimulationOverride(this, id);
         }
 
         public void RemoveSimulationOverride(NitroxId id)

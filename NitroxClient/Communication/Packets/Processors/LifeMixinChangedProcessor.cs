@@ -29,7 +29,7 @@ namespace NitroxClient.Communication.Packets.Processors
             {
                 Log.Error($"Got LiveMixin change health for {packet.Id} but we have the simulation already. This should not happen!");
             }
-            else            
+            else
             {
                 if (!simulationOwnership.OtherPlayerHasAnyLock(packet.Id))
                 {
@@ -38,24 +38,24 @@ namespace NitroxClient.Communication.Packets.Processors
                 Optional<GameObject> opGameObject = NitroxEntity.GetObjectFrom(packet.Id);
                 if (opGameObject.HasValue)
                 {
-                    GameObject gameObject = opGameObject.Value;
-
                     LiveMixin liveMixin = opGameObject.Value.GetComponent<LiveMixin>();
                     // Since this is send by the simulator (presumably)
-                    simulationOwnership.AddSimulationOverride(packet.Id);
-                    if (packet.LifeChanged < 0)
+                    using (simulationOwnership.GetSimulationOverride(packet.Id))
                     {
-                        Optional<GameObject> opDealer = packet.DealerId.HasValue ? NitroxEntity.GetObjectFrom(packet.DealerId.Value) : Optional.Empty;
-                        GameObject dealer = opDealer.HasValue ? opDealer.Value : null;
-                        if (dealer == null && packet.DealerId.HasValue)
+                        if (packet.LifeChanged < 0)
                         {
-                            Log.Warn($"Could not find entity {packet.DealerId.Value}. This can lead to problems.");
+                            Optional<GameObject> opDealer = packet.DealerId.HasValue ? NitroxEntity.GetObjectFrom(packet.DealerId.Value) : Optional.Empty;
+                            GameObject dealer = opDealer.HasValue ? opDealer.Value : null;
+                            if (!dealer && packet.DealerId.HasValue)
+                            {
+                                Log.Warn($"Could not find entity {packet.DealerId.Value}. This can lead to problems.");
+                            }
+                            liveMixin.TakeDamage(-packet.LifeChanged, packet.Position.ToUnity(), (DamageType)packet.DamageType, dealer);
                         }
-                        liveMixin.TakeDamage(-packet.LifeChanged, packet.Position.ToUnity(), (DamageType)packet.Damagetype, dealer);
-                    }
-                    else
-                    {
-                        liveMixin.AddHealth(packet.LifeChanged);
+                        else
+                        {
+                            liveMixin.AddHealth(packet.LifeChanged);
+                        }
                     }
                     
                     // Check if the health calculated by the game is the same as the calculated damage from the simulator

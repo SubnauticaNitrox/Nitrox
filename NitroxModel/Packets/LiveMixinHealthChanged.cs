@@ -23,17 +23,18 @@ namespace NitroxModel.Packets
 
             public Optional<NitroxId> DealerId { get; set; }
         }
-        Optional<DamageTakenData> damageTakenData;
+
+        private Optional<DamageTakenData> damageTakenData;
+
         public NitroxTechType TechType { get; }
 
         public NitroxId Id { get; set; }
 
         public float LifeChanged { get; set; }
-
         
         public NitroxVector3 Position { get { return damageTakenData.HasValue ? damageTakenData.Value.Position : default; } }
 
-        public ushort Damagetype { get { return damageTakenData.HasValue ? damageTakenData.Value.Damagetype : default; } }
+        public ushort DamageType { get { return damageTakenData.HasValue ? damageTakenData.Value.Damagetype : default; } }
 
         public Optional<NitroxId> DealerId { get { return damageTakenData.HasValue ? damageTakenData.Value.DealerId : default; } }
 
@@ -45,18 +46,32 @@ namespace NitroxModel.Packets
             Id = id;
             TotalHealth = totalHealth;
             LifeChanged = lifeChanged;
-            if (lifeChanged < 0)
+            damageTakenData = new DamageTakenData
             {
-                damageTakenData = new DamageTakenData
-                {
-                    Position = position,
-                    Damagetype = damageType,
-                    DealerId = dealerId
-                };
+                Position = position,
+                Damagetype = damageType,
+                DealerId = dealerId
+            };
+        }
+
+        public LiveMixinHealthChanged(NitroxTechType techType, NitroxId id, float lifeChanged, float totalHealth)
+        {
+            TechType = techType;
+            Id = id;
+            TotalHealth = totalHealth;
+            LifeChanged = lifeChanged;
+            damageTakenData = Optional.Empty;
+        }
+
+        public override string ToString()
+        {
+            if (damageTakenData.HasValue)
+            {
+                return $"[LiveMixinHealthChanged packet: TechType: {TechType}, Id: {Id}, lifeChanged: {LifeChanged}, totalHealth {TotalHealth}, position: {Position}, damageType: {DamageType}, dealerId {DealerId}]";
             }
             else
             {
-                damageTakenData = Optional.Empty;
+                return $"[LiveMixinHealthChanged packet: TechType: {TechType}, Id: {Id}, lifeChanged: {LifeChanged}, totalHealth {TotalHealth}]";
             }
         }
     }
