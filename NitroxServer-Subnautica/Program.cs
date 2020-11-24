@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
@@ -45,6 +46,7 @@ namespace NitroxServer_Subnautica
                 });
             }
 
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
             AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += CurrentDomainOnAssemblyResolve;
 
@@ -53,22 +55,10 @@ namespace NitroxServer_Subnautica
             NitroxServiceLocator.InitializeDependencyContainer(new SubnauticaServerAutoFacRegistrar());
             NitroxServiceLocator.BeginNewLifetimeScope();
 
-            Server server;
-            try
+            Server server = NitroxServiceLocator.LocateService<Server>();
+            if (!server.Start())
             {
-                server = NitroxServiceLocator.LocateService<Server>();
-
-                if (!server.Start())
-                {
-                    Log.Error("Unable to start server.");
-                    Console.WriteLine("\nPress any key to continue..");
-                    Console.ReadKey(true);
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex);
-                return;
+                throw new Exception("Unable to start server.");
             }
 
             CatchExitEvent();
@@ -78,6 +68,34 @@ namespace NitroxServer_Subnautica
             {
                 cmdProcessor.ProcessCommand(Console.ReadLine(), Optional.Empty, Perms.CONSOLE);
             }
+        }
+
+        private static void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            if (e.ExceptionObject is Exception ex)
+            {
+                Log.Error(ex);
+            }
+            if (!Environment.UserInteractive || Console.In == StreamReader.Null)
+            {
+                return;
+            }
+            
+            Console.WriteLine("Press L to open log file before closing. Press any other key to close . . .");
+            ConsoleKeyInfo key = Console.ReadKey(true);
+            if (key.Key == ConsoleKey.L)
+            {
+                Log.Info($"Opening log file at: {Log.FileName}..");
+                string fileOpenerProgram = Environment.OSVersion.Platform switch
+                {
+                    PlatformID.MacOSX => "open",
+                    PlatformID.Unix => "xdg-open",
+                    _ => "explorer"
+                };
+                Process.Start(fileOpenerProgram, Log.FileName);
+            }
+            
+            Environment.Exit(1);
         }
 
         private static Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)
@@ -160,7 +178,7 @@ namespace NitroxServer_Subnautica
         [DllImport("kernel32.dll", SetLastError = true)]
         private static extern bool SetConsoleCtrlHandler(ConsoleEventDelegate callback, bool add);
 
-        // Prevents Garbage Collection issue where server closes and an exception occurs for this handle.
+        // Prevents Garbage Collection freeing this callback's memory. Causing an exception to occur for this handle.
         private static readonly ConsoleEventDelegate consoleCtrlCheckDelegate = ConsoleEventCallback;
 
         private static bool ConsoleEventCallback(int eventType)
