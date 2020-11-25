@@ -137,7 +137,6 @@ namespace NitroxServer_Subnautica
 
             Thread.CurrentThread.CurrentCulture = cultureInfo;
             Thread.CurrentThread.CurrentUICulture = cultureInfo;
-            CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
         }
 
         private static void CatchExitEvent()

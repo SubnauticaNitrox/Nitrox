@@ -39,22 +39,21 @@ namespace NitroxClient.Communication.Packets.Processors
             using (packetSender.Suppress<VehicleDocking>())
             {
                 Log.Debug($"Set vehicle docked for {vehicleDockingBay.gameObject.name}");
+                vehicle.GetComponent<MultiplayerVehicleControl>().SetPositionVelocityRotation(vehicle.transform.position, Vector3.zero, vehicle.transform.rotation, Vector3.zero);
                 vehicle.GetComponent<MultiplayerVehicleControl>().Exit();
-                // DockVehicle sets the rigid body kinematic of the vehicle to true, we don't want that behaviour
-                // Therefore disable kinematic (again) to remove the bouncing behavior
-                vehicleDockingBay.DockVehicle(vehicle);
-                vehicle.useRigidbody.isKinematic = false;
             }
-
-            vehicle.StartCoroutine(DisablePilotingAfterAnimation(packet.VehicleId, packet.PlayerId));
+            vehicle.StartCoroutine(DelayAnimationAndDisablePiloting(vehicle, vehicleDockingBay, packet.VehicleId, packet.PlayerId));
         }        
 
-        IEnumerator DisablePilotingAfterAnimation(NitroxId vehicleId, ushort playerId)
+        IEnumerator DelayAnimationAndDisablePiloting(Vehicle vehicle, VehicleDockingBay vehicleDockingBay, NitroxId vehicleId, ushort playerId)
         {
-            yield return new WaitForSeconds(3.0f);
+            yield return new WaitForSeconds(1.0f);
+            // DockVehicle sets the rigid body kinematic of the vehicle to true, we don't want that behaviour
+            // Therefore disable kinematic (again) to remove the bouncing behavior
+            vehicleDockingBay.DockVehicle(vehicle);
+            vehicle.useRigidbody.isKinematic = false;
+            yield return new WaitForSeconds(2.0f);
             vehicles.SetOnPilotMode(vehicleId, playerId, false);
-            GameObject vehicleGo = NitroxEntity.RequireObjectFrom(vehicleId);
-            Vehicle vehicle = vehicleGo.RequireComponent<Vehicle>();
             if (!vehicle.docked)
             {
                 Log.Error($"Vehicle {vehicleId} not docked after docking process");

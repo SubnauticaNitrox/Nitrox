@@ -52,16 +52,29 @@ namespace NitroxClient.Communication.Packets.Processors
             Optional<RemotePlayer> player = remotePlayerManager.Find(packet.PlayerId);
             vehicleDockingBay.subRoot.BroadcastMessage("OnLaunchBayOpening", SendMessageOptions.DontRequireReceiver);
             SkyEnvironmentChanged.Broadcast(vehicleGo, (GameObject)null);
+            
             if (player.HasValue)
-            {
-                vehicleDockingBay.ReflectionSet("vehicle_docked_param", false);
+            { 
                 RemotePlayer playerInstance = player.Value;
-                playerInstance.Attach(vehicle.transform);
                 vehicle.mainAnimator.SetBool("player_in", true);
-                vehicles.SetOnPilotMode(packet.VehicleId, packet.PlayerId, false);
+                playerInstance.Attach(vehicle.playerPosition.transform);
+                // It can happen that the player turns in circles around himself in the vehicle. This stops it.
+                playerInstance.RigidBody.angularVelocity = Vector3.zero;
+                playerInstance.ArmsController.SetWorldIKTarget(vehicle.leftHandPlug, vehicle.rightHandPlug);
+                playerInstance.AnimationController["in_seamoth"] = vehicle is SeaMoth;
+                playerInstance.AnimationController["in_exosuit"] = playerInstance.AnimationController["using_mechsuit"] = vehicle is Exosuit;
+                vehicles.SetOnPilotMode(packet.VehicleId, packet.PlayerId, true);
                 playerInstance.AnimationController.UpdatePlayerAnimations = false;
             }
+            vehicleDockingBay.StartCoroutine(StartUndockingAnimation(vehicleDockingBay));
         }
+        
+        public IEnumerator StartUndockingAnimation(VehicleDockingBay vehicleDockingBay)
+        {
+            yield return new WaitForSeconds(2.0f);
+            vehicleDockingBay.ReflectionSet("vehicle_docked_param", false);
+        }
+
         private void FinishVehicleUndocking(VehicleUndocking packet, Vehicle vehicle, VehicleDockingBay vehicleDockingBay)
         {
             if (vehicleDockingBay.GetSubRoot().isCyclops)
@@ -71,6 +84,15 @@ namespace NitroxClient.Communication.Packets.Processors
             vehicleDockingBay.ReflectionSet("_dockedVehicle", null);
             vehicleDockingBay.CancelInvoke("RepairVehicle");
             vehicle.docked = false;
+            Optional<RemotePlayer> player = remotePlayerManager.Find(packet.PlayerId);
+            if (player.HasValue)
+            {
+                // Sometimes the player is not set accordingly which stretches the player's model instead of putting them in place
+                // after undocking. This fixes it (the player rigid body seems to not be set right sometimes)
+                player.Value.SetSubRoot(null);
+                player.Value.SetVehicle(null);
+                player.Value.SetVehicle(vehicle);
+            }
             vehicles.SetOnPilotMode(packet.VehicleId, packet.PlayerId, true);
             Log.Debug($"Set vehicle undocking complete");
         }
