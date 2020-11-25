@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -12,7 +13,7 @@ namespace NitroxModel.Serialization
     public static class PropertiesWriter
     {
         private static readonly Dictionary<Type, Dictionary<string, MemberInfo>> typeCache = new Dictionary<Type, Dictionary<string, MemberInfo>>();
-
+        private static readonly CultureInfo cultureInfo = new CultureInfo("en-US");
         public static T Deserialize<T>() where T : IProperties, new()
         {
             T props = new T();
@@ -125,7 +126,7 @@ namespace NitroxModel.Serialization
         {
             stream.Write(member.Name);
             stream.Write("=");
-            stream.WriteLine(value);
+            stream.WriteLine(string.Format(cultureInfo,"{0}", value));
         }
 
         private static void WritePropertyDescription(MemberInfo member, StreamWriter stream)

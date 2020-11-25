@@ -54,6 +54,7 @@ namespace NitroxClient.Communication.Packets.Processors
             SkyEnvironmentChanged.Broadcast(vehicleGo, (GameObject)null);
             if (player.HasValue)
             {
+                vehicleDockingBay.ReflectionSet("vehicle_docked_param", false);
                 RemotePlayer playerInstance = player.Value;
                 playerInstance.Attach(vehicle.transform);
                 vehicle.mainAnimator.SetBool("player_in", true);
@@ -63,9 +64,12 @@ namespace NitroxClient.Communication.Packets.Processors
         }
         private void FinishVehicleUndocking(VehicleUndocking packet, Vehicle vehicle, VehicleDockingBay vehicleDockingBay)
         {
-            vehicleDockingBay.SetVehicleUndocked();
-            vehicleDockingBay.ReflectionSet("vehicle_docked_param", false);
+            if (vehicleDockingBay.GetSubRoot().isCyclops)
+            {
+                vehicleDockingBay.SetVehicleUndocked();
+            }
             vehicleDockingBay.ReflectionSet("_dockedVehicle", null);
+            vehicleDockingBay.CancelInvoke("RepairVehicle");
             vehicle.docked = false;
             vehicles.SetOnPilotMode(packet.VehicleId, packet.PlayerId, true);
             Log.Debug($"Set vehicle undocking complete");
