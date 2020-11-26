@@ -22,31 +22,21 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(WeldAction packet)
         {
-            Optional<GameObject> opGameObject = NitroxEntity.GetObjectFrom(packet.Id);
-            if (opGameObject.HasValue)
+            GameObject gameObject = NitroxEntity.RequireObjectFrom(packet.Id);
+
+            if (!simulationOwnership.HasAnyLockType(packet.Id))
             {
-                if (simulationOwnership.HasAnyLockType(packet.Id))
-                {
-                    GameObject gameObject = opGameObject.Value;
-                    LiveMixin liveMixin = gameObject.GetComponent<LiveMixin>();
-                    if (liveMixin)
-                    {
-                        liveMixin.AddHealth(packet.HealthAdded);
-                    }
-                    else
-                    {
-                        Log.Error($"Did not find LiveMixin for GameObject {packet.Id} even though it was welded.");
-                    }
-                }
-                else
-                {
-                    Log.Error($"Got WeldAction packet for {packet.Id} but did not find the lock corresponding to it");
-                }
+                Log.Error($"Got WeldAction packet for {packet.Id} but did not find the lock corresponding to it");
+                return;
             }
-            else
+
+            LiveMixin liveMixin = gameObject.GetComponent<LiveMixin>();
+            if (!liveMixin)
             {
-                Log.Error($"Did not find GameObject {packet.Id} for WeldAction even though this player should have the simulation lock");
+                Log.Error($"Did not find LiveMixin for GameObject {packet.Id} even though it was welded.");
+                return;
             }
+            liveMixin.AddHealth(packet.HealthAdded);
         }
     }
 }

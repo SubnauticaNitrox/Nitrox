@@ -17,11 +17,7 @@ namespace NitroxPatcher.Patches.Dynamic
         public static void Prefix(Vehicle __instance)
         {            
             NitroxId id = NitroxEntity.GetId(__instance.gameObject);
-            SimulationOwnership simulationOwnership = NitroxServiceLocator.LocateService<SimulationOwnership>();
-            if (simulationOwnership.HasAnyLockType(id) || simulationOwnership.OtherPlayerHasAnyLock(id))
-            {
-                simulationOwnership.StopSimulatingEntity(id);
-            }
+            NitroxServiceLocator.LocateService<SimulationOwnership>().StopSimulatingEntity(id);
         }
 
         public override void Patch(HarmonyInstance harmony)

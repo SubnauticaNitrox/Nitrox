@@ -90,7 +90,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 }
                 else
                 {
-                    Log.Warn($"Got a simulation lock response for entity {id} but did not find the corresponding parameter. This should not happen!");
+                    Log.Error($"Got a simulation lock response for entity {id} but did not find the corresponding parameter. This should not happen!");
                 }
             }
         }    

@@ -46,41 +46,14 @@ namespace NitroxClient.GameLogic.InitialSync
                         Log.Debug($"sub value set to {sub.Value}. Try to find subroot");
                         SubRoot subroot = null;
                         sub.Value.TryGetComponent<SubRoot>(out subroot);
-                        if (subroot != null)
+                        if (subroot)
                         {
                             Log.Debug("Found subroot for player. Will add him and update animation.");
                             player.SetSubRoot(subroot);
-                            // Set the animation for the remote player to standing instead of swimming if player is not in a flooded subroot
-                            // or in a waterpark
                             
-                            if (!subroot.IsUnderwater(player.Body.transform.position))
-                            {
-                                swimming = false;
-                                // We know that we are in a subroot. But we can also be in a waterpark in a subroot, where we would swim
-                                BaseRoot baseRoot = subroot.GetComponentInParent<BaseRoot>();
-                                if (baseRoot)
-                                {
-                                    WaterPark[] waterParks = baseRoot.GetComponentsInChildren<WaterPark>();
-                                    foreach (WaterPark waterPark in waterParks)
-                                    {
-                                        if (waterPark.IsPointInside(playerData.Position.ToUnity()))
-                                        {
-                                            swimming = true;
-                                            break;
-                                        }
-
-                                    }
-                                }
-                            }
                         }
-                        Log.Debug("Trying to find escape pod.");
-                        EscapePod escapePod = null;
-                        sub.Value.TryGetComponent<EscapePod>(out escapePod);
-                        if (escapePod != null)
-                        {
-                            Log.Debug("Found escape pod for player. Will add him and update animation.");
-                            swimming = false;
-                        }
+                        
+                        swimming = IsSwimming(playerData.Position.ToUnity(), subroot);
                     }
                     else
                     {
@@ -94,6 +67,40 @@ namespace NitroxClient.GameLogic.InitialSync
                 remotePlayersSynced++;
                 yield return null;
             }
+        }
+
+        private bool IsSwimming(Vector3 playerPosition, SubRoot subroot)
+        {
+            // Set the animation for the remote player to standing instead of swimming if player is not in a flooded subroot
+            // or in a waterpark                            
+            if (subroot && subroot.IsUnderwater(playerPosition))
+            {
+                return true;
+            }
+            // We know that we are in a subroot. But we can also be in a waterpark in a subroot, where we would swim
+            BaseRoot baseRoot = subroot.GetComponentInParent<BaseRoot>();
+            if (baseRoot)
+            {
+                WaterPark[] waterParks = baseRoot.GetComponentsInChildren<WaterPark>();
+                foreach (WaterPark waterPark in waterParks)
+                {
+                    if (waterPark.IsPointInside(playerPosition))
+                    {
+                        return false;
+                    }
+                }
+            }
+            Log.Debug("Trying to find escape pod.");
+            EscapePod escapePod = null;
+            subroot.TryGetComponent<EscapePod>(out escapePod);
+            if (escapePod)
+            {
+                Log.Debug("Found escape pod for player. Will add him and update animation.");
+                return false;
+            }
+            // Player can be above ocean level.
+            float oceanLevel = Ocean.main.GetOceanLevel();
+            return playerPosition.y < oceanLevel;
         }
     }
 }

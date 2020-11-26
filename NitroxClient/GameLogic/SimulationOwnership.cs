@@ -51,9 +51,7 @@ namespace NitroxClient.GameLogic
         }
         public bool PlayerHasMinLockType(NitroxId id, bool isOtherPlayer, SimulationLockType lockType)
         {
-            PlayerLock playerLock;
-
-            if (simulatedIdsByLockType.TryGetValue(id, out playerLock))
+            if (simulatedIdsByLockType.TryGetValue(id, out PlayerLock playerLock))
             {
                 bool ownPlayer = playerLock.PlayerId == muliplayerSession.Reservation.PlayerId;
                 bool accepted = isOtherPlayer ? !ownPlayer : ownPlayer;
@@ -151,7 +149,8 @@ namespace NitroxClient.GameLogic
 
         public void AddSimulationOverride(NitroxId id)
         {
-            if (simulatedIdsByLockType.ContainsKey(id) && simulatedIdsByLockType[id].PlayerId == muliplayerSession.Reservation.PlayerId)
+            simulatedIdsByLockType.TryGetValue(id, out PlayerLock @lock);
+            if (@lock.PlayerId == muliplayerSession.Reservation.PlayerId)
             {
                 Log.Warn($"Tried to add simulation override for entity {id} the player already simulates.");
             }
@@ -168,11 +167,7 @@ namespace NitroxClient.GameLogic
 
         public void RemoveSimulationOverride(NitroxId id)
         {
-            if (simulationOverride.Contains(id))
-            {
-                simulationOverride.Remove(id);
-            }
-            else
+            if (!simulationOverride.Remove(id))
             {
                 Log.Warn($"Tried to remove non existing simulation override for NitroxId: {id}");
             }

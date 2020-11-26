@@ -28,42 +28,38 @@ namespace NitroxClient.Communication.Packets.Processors
             if (simulationOwnership.HasAnyLockType(packet.Id))
             {
                 Log.Error($"Got LiveMixin change health for {packet.Id} but we have the simulation already. This should not happen!");
+                return;
             }
-            else
+
+
+            if (!simulationOwnership.OtherPlayerHasAnyLock(packet.Id))
             {
-                if (!simulationOwnership.OtherPlayerHasAnyLock(packet.Id))
+                Log.Warn($"Got LiveMixin change health for {packet.Id} but found no simulation at all.");
+            }
+            LiveMixin liveMixin = NitroxEntity.RequireObjectFrom(packet.Id).GetComponent<LiveMixin>();
+            // Since this is send by the simulator (presumably)
+            using (simulationOwnership.GetSimulationOverride(packet.Id))
+            {
+                if (packet.LifeChanged < 0)
                 {
-                    Log.Error($"Got LiveMixin change health for {packet.Id} but found no simulation at all. Simulation lock for unknown id will be added.");
+                    Optional<GameObject> opDealer = packet.DealerId.HasValue ? NitroxEntity.GetObjectFrom(packet.DealerId.Value) : Optional.Empty;
+                    GameObject dealer = opDealer.HasValue ? opDealer.Value : null;
+                    if (!dealer && packet.DealerId.HasValue)
+                    {
+                        Log.Warn($"Could not find entity {packet.DealerId.Value}. This can lead to problems.");
+                    }
+                    liveMixin.TakeDamage(-packet.LifeChanged, packet.Position.ToUnity(), (DamageType)packet.DamageType, dealer);
                 }
-                Optional<GameObject> opGameObject = NitroxEntity.GetObjectFrom(packet.Id);
-                if (opGameObject.HasValue)
+                else
                 {
-                    LiveMixin liveMixin = opGameObject.Value.GetComponent<LiveMixin>();
-                    // Since this is send by the simulator (presumably)
-                    using (simulationOwnership.GetSimulationOverride(packet.Id))
-                    {
-                        if (packet.LifeChanged < 0)
-                        {
-                            Optional<GameObject> opDealer = packet.DealerId.HasValue ? NitroxEntity.GetObjectFrom(packet.DealerId.Value) : Optional.Empty;
-                            GameObject dealer = opDealer.HasValue ? opDealer.Value : null;
-                            if (!dealer && packet.DealerId.HasValue)
-                            {
-                                Log.Warn($"Could not find entity {packet.DealerId.Value}. This can lead to problems.");
-                            }
-                            liveMixin.TakeDamage(-packet.LifeChanged, packet.Position.ToUnity(), (DamageType)packet.DamageType, dealer);
-                        }
-                        else
-                        {
-                            liveMixin.AddHealth(packet.LifeChanged);
-                        }
-                    }
-                    
-                    // Check if the health calculated by the game is the same as the calculated damage from the simulator
-                    if (liveMixin.health != packet.TotalHealth)
-                    {
-                        Log.Warn($"Calculated health and send health for {packet.Id} do not align (Calculated: {liveMixin.health}, send:{packet.TotalHealth}). This will be correted but should be investigated");
-                        liveMixin.health = packet.TotalHealth;
-                    }
+                    liveMixin.AddHealth(packet.LifeChanged);
+                }
+
+                // Check if the health calculated by the game is the same as the calculated damage from the simulator
+                if (liveMixin.health != packet.TotalHealth)
+                {
+                    Log.Warn($"Calculated health and send health for {packet.Id} do not align (Calculated: {liveMixin.health}, send:{packet.TotalHealth}). This will be correted but should be investigated");
+                    liveMixin.health = packet.TotalHealth;
                 }
             }
         }
