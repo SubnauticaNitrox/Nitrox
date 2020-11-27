@@ -45,6 +45,7 @@
     <Compile Include="ClientAutoFacRegistrar.cs" />
     <Compile Include="Communication\PacketReceiver.cs" />
     <Compile Include="Communication\Packets\Processors\PlayFMODAssetProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\PlayFMOD_CustomEmitterProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\BedEnterProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\DebugStartMapProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\EntityMetadataUpdateProcessor.cs" />
@@ -379,6 +380,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\playerBackgroundImage" />
+    <None Include="Resources\soundsWhitelist.csv" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Autofac">

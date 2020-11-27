@@ -38,6 +38,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
+    <Compile Include="Patches\Dynamic\FMOD_CustomEmitter_OnStop_Patch.cs" />
+    <Compile Include="Patches\Dynamic\FMOD_CustomEmitter_OnPlay_Patch.cs" />
     <Compile Include="Patches\Dynamic\Utils_PlayFMODAsset_Patch.cs" />
     <Compile Include="Patches\Dynamic\IncubatorActivationTerminal_OnHandClick_Patch.cs" />
     <Compile Include="Patches\Dynamic\Incubator_OnHandClick_Patch.cs" />

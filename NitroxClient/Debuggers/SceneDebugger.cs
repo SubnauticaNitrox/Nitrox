@@ -556,7 +556,7 @@ namespace NitroxClient.Debuggers
                         using (new GUILayout.VerticalScope("Box"))
                         {
                             GUILayout.Label("Fields", "header");
-                            RenderAllMonoBehaviourFields(selectedMonoBehaviour);
+                            RenderAllFields(selectedMonoBehaviour);
                             GUILayout.Label("Methods", "header");
                             RenderAllMonoBehaviourMethods(selectedMonoBehaviour);
                         }
@@ -569,24 +569,23 @@ namespace NitroxClient.Debuggers
             }
         }
 
-        private void RenderAllMonoBehaviourFields(MonoBehaviour mono)
+        private void RenderAllFields(object currentObject)
         {
-            FieldInfo[] fields = mono.GetType().GetFields(flags);
+            FieldInfo[] fields = currentObject.GetType().GetFields(flags);
             foreach (FieldInfo field in fields)
             {
                 using (new GUILayout.HorizontalScope("box"))
                 {
-                    string[] fieldTypeNames = field.FieldType.ToString().Split('.');
-                    GUILayout.Label("[" + fieldTypeNames[fieldTypeNames.Length - 1] + "]: " + field.Name, "options_label");
+                    GUILayout.Label($"[{field.FieldType.ToString().Split('.').Last()}]: {field.Name}", "options_label");
 
-                    if (field.GetValue(selectedMonoBehaviour) == null)
+                    if (field.GetValue(currentObject) == null)
                     {
                         GUILayout.Box("Field is null");
                     }
                     else if (field.FieldType == typeof(bool))
                     {
-                        bool boolVal = bool.Parse(GetValue(field, selectedMonoBehaviour));
-                        if (GUILayout.Button(boolVal.ToString()))
+                        bool boolVal = bool.Parse(GetValue(field, currentObject));
+                        if (GUILayout.Button(boolVal.ToString()) && selectedMonoBehaviour.Equals(currentObject))
                         {
                             RegisterFieldChanges(field, selectedMonoBehaviour, !boolVal);
                         }
@@ -595,14 +594,21 @@ namespace NitroxClient.Debuggers
                     {
                         if (GUILayout.Button(field.Name))
                         {
-                            selectedMonoBehaviour = (MonoBehaviour)field.GetValue(selectedMonoBehaviour);
+                            selectedMonoBehaviour = (MonoBehaviour)field.GetValue(currentObject);
+                        }
+                    }
+                    else if (field.FieldType.BaseType == typeof(ScriptableObject))
+                    {
+                        using (new GUILayout.VerticalScope("box"))
+                        {
+                            RenderAllFields(field.GetValue(currentObject));
                         }
                     }
                     else if (field.FieldType == typeof(GameObject))
                     {
                         if (GUILayout.Button(field.Name))
                         {
-                            selectedObject = (GameObject)field.GetValue(selectedMonoBehaviour);
+                            selectedObject = (GameObject)field.GetValue(currentObject);
                             ActiveTab = GetTab("GameObject").Value;
                         }
                     }
@@ -610,7 +616,7 @@ namespace NitroxClient.Debuggers
                     {
                         if (GUILayout.Button(field.Name))
                         {
-                            selectedMonoBehaviour = (Text)field.GetValue(selectedMonoBehaviour);
+                            selectedMonoBehaviour = (Text)field.GetValue(currentObject);
                         }
                     }
                     else if (field.FieldType == typeof(Texture) || field.FieldType == typeof(RawImage) || field.FieldType == typeof(Image))
@@ -618,15 +624,15 @@ namespace NitroxClient.Debuggers
                         Texture img;
                         if (field.FieldType == typeof(RawImage))
                         {
-                            img = ((RawImage)field.GetValue(selectedMonoBehaviour)).mainTexture;
+                            img = ((RawImage)field.GetValue(currentObject)).mainTexture;
                         }
                         else if (field.FieldType == typeof(Image))
                         {
-                            img = ((Image)field.GetValue(selectedMonoBehaviour)).mainTexture;
+                            img = ((Image)field.GetValue(currentObject)).mainTexture;
                         }
                         else
                         {
-                            img = (Texture)field.GetValue(selectedMonoBehaviour);
+                            img = (Texture)field.GetValue(currentObject);
                         }
 
                         GUIStyle style = new GUIStyle("box");
@@ -636,11 +642,11 @@ namespace NitroxClient.Debuggers
                     }
                     else if (field.FieldType == typeof(NitroxId))
                     {
-                        GUILayout.Box(((NitroxId)field.GetValue(selectedMonoBehaviour)).ToString(), "options");
+                        GUILayout.Box(((NitroxId)field.GetValue(currentObject)).ToString(), "options");
                     }
                     else if (field.FieldType == typeof(Int3))
                     {
-                        Int3 value = (Int3)field.GetValue(selectedMonoBehaviour);
+                        Int3 value = (Int3)field.GetValue(currentObject);
 
                         GUILayout.Box(value.x + ", " + value.y + ", " + value.z, "options");
                     }
@@ -655,20 +661,24 @@ namespace NitroxClient.Debuggers
                     }
                     else if (field.FieldType.IsEnum)
                     {
-                        GUILayout.Box(field.GetValue(selectedMonoBehaviour).ToString(), "options");
+                        GUILayout.Box(field.GetValue(currentObject).ToString(), "options");
                     }
-                    else
+                    else if (selectedMonoBehaviour.Equals(currentObject))
                     {
                         try
                         {
                             //Check if convert work to prevent two TextFields
-                            Convert.ChangeType(field.GetValue(selectedMonoBehaviour).ToString(), field.FieldType);
-                            RegisterFieldChanges(field, selectedMonoBehaviour, Convert.ChangeType(GUILayout.TextField(GetValue(field, selectedMonoBehaviour), "options"), field.FieldType));
+                            Convert.ChangeType(field.GetValue(currentObject).ToString(), field.FieldType);
+                            RegisterFieldChanges(field, selectedMonoBehaviour, Convert.ChangeType(GUILayout.TextField(GetValue(field, currentObject), "options"), field.FieldType));
                         }
                         catch
                         {
                             GUILayout.TextField("Not implemented yet", "options");
                         }
+                    }
+                    else
+                    {
+                        GUILayout.TextField("Not implemented yet", "options");
                     }
                 }
             }

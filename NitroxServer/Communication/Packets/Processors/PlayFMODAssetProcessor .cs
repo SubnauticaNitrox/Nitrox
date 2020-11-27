@@ -19,7 +19,7 @@ namespace NitroxServer.Communication.Packets.Processors
             foreach (Player player in playerManager.GetConnectedPlayers())
             {
                 float distance = NitroxVector3.Distance(player.Position, packet.Position);
-                if (player != sendingPlayer && distance <= packet.Radius)
+                if (player != sendingPlayer && (packet.IsGlobal || player.SubRootId.Equals(sendingPlayer.SubRootId)) && distance <= packet.Radius)
                 {
                     packet.Volume = 1 - distance / packet.Radius;
                     player.SendPacket(packet);

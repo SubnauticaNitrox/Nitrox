@@ -16,7 +16,10 @@ namespace NitroxPatcher.Patches.Dynamic
         public static void Postfix(FMODAsset asset, Vector3 position, float soundRadiusObsolete)
         {
             Validate.NotNull(asset);
-            fmodSystem.PlayFMODAsset(asset.id, position.ToDto(), soundRadiusObsolete);
+            if (fmodSystem.IsWhitelisted(asset.path, out bool isGlobal))
+            {
+                fmodSystem.PlayFMODAsset(asset.path, position.ToDto(), soundRadiusObsolete, isGlobal);
+            }
         }
 
         public override void Patch(HarmonyInstance harmony)
