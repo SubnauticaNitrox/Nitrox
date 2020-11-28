@@ -667,18 +667,17 @@ namespace NitroxClient.Debuggers
                     {
                         try
                         {
-                            //Check if convert work to prevent two TextFields
-                            Convert.ChangeType(field.GetValue(currentObject).ToString(), field.FieldType);
+                            Convert.ChangeType(field.GetValue(currentObject).ToString(), field.FieldType); //Check if convert work to prevent two TextFields
                             RegisterFieldChanges(field, selectedMonoBehaviour, Convert.ChangeType(GUILayout.TextField(GetValue(field, currentObject), "options"), field.FieldType));
                         }
                         catch
                         {
-                            GUILayout.TextField("Not implemented yet", "options");
+                            GUILayout.TextArea(GetValue(field, currentObject), "options");
                         }
                     }
                     else
                     {
-                        GUILayout.TextField("Not implemented yet", "options");
+                        GUILayout.TextArea(GetValue(field, currentObject), "options");
                     }
                 }
             }

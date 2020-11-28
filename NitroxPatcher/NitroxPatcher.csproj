@@ -40,6 +40,7 @@
     <Compile Include="Main.cs" />
     <Compile Include="Patches\Dynamic\FMOD_CustomEmitter_OnStop_Patch.cs" />
     <Compile Include="Patches\Dynamic\FMOD_CustomEmitter_OnPlay_Patch.cs" />
+    <Compile Include="Patches\Dynamic\FMODUWE_PlayOneShotImpl_Patch.cs" />
     <Compile Include="Patches\Dynamic\Utils_PlayFMODAsset_Patch.cs" />
     <Compile Include="Patches\Dynamic\IncubatorActivationTerminal_OnHandClick_Patch.cs" />
     <Compile Include="Patches\Dynamic\Incubator_OnHandClick_Patch.cs" />
@@ -98,7 +99,6 @@
     <Compile Include="Patches\Dynamic\CyclopsHelmHUDManager_Start_Patch.cs" />
     <Compile Include="Patches\Dynamic\CyclopsHelmHUDManager_StopPiloting_Patch.cs" />
     <Compile Include="Patches\Dynamic\CyclopsHelmHUDManager_Update_Patch.cs" />
-    <Compile Include="Patches\Dynamic\CyclopsHornButton_OnPress_Patch.cs" />
     <Compile Include="Patches\Dynamic\CyclopsLightingPanel_OnSubConstructionComplete_Patch.cs" />
     <Compile Include="Patches\Dynamic\CyclopsLightingPanel_ToggleFloodlights_Patch.cs" />
     <Compile Include="Patches\Dynamic\CyclopsLightingPanel_ToggleInternalLighting_Patch.cs" />

@@ -17,10 +17,9 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(FMOD_CustomEmitter __instance)
         {
-            if (fmodSystem.IsWhitelisted(__instance.asset.path, out bool isGlobal))
+            if (fmodSystem.IsWhitelisted(__instance.asset.path, out bool isGlobal, out float radius))
             {
                 __instance.GetEventInstance().getDescription(out EventDescription description);
-                description.getMaximumDistance(out float maxDistance);
                 description.is3D(out bool is3D);
 
                 if (__instance.TryGetComponent(out NitroxEntity nitroxEntity) && is3D)
@@ -30,10 +29,9 @@ namespace NitroxPatcher.Patches.Dynamic
                 }
                 else
                 {
-                    float radius = maxDistance <= -1 ? 20f : maxDistance;
-                    fmodSystem.PlayFMODAsset(__instance.asset.path, __instance.transform.position.ToDto(), radius, isGlobal);
+                    __instance.GetEventInstance().getVolume(out float volume, out float finaleVolume);
+                    fmodSystem.PlayFMODAsset(__instance.asset.path, __instance.transform.position.ToDto(), volume, radius, isGlobal);
                 }
-
             }
         }
 

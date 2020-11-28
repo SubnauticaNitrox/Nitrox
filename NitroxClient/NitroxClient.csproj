@@ -175,7 +175,6 @@
     <Compile Include="Communication\Packets\Processors\ConstructionCompletedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ConstructorBeginCraftingProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CreatureActionChangedProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\CyclopsActivateHornProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsChangeShieldModeProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsChangeSilentRunningProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsChangeEngineModeProcessor.cs" />
