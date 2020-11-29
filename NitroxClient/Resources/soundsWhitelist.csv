@@ -579,7 +579,7 @@ event:/sub/cyclops/enter_hatch;true;true;20
 event:/sub/cyclops/explode;false;false;0
 event:/sub/cyclops/floodlights_off;false;false;0
 event:/sub/cyclops/floodlights_on;false;false;0
-event:/sub/cyclops/horn;true;true;150
+event:/sub/cyclops/horn;true;true;500
 event:/sub/cyclops/impact_solid_hard;false;false;0
 event:/sub/cyclops/impact_solid_medium;false;false;0
 event:/sub/cyclops/impact_solid_soft;false;false;0
@@ -685,11 +685,11 @@ event:/sub/seamoth/impact_solid_soft;false;false;0
 event:/sub/seamoth/interior_loop;false;false;0
 event:/sub/seamoth/pulse;false;false;0
 event:/sub/seamoth/pulse_charge_loop;false;false;0
-event:/sub/seamoth/seaglide_equip;false;false;0
-event:/sub/seamoth/seaglide_light_off;false;false;0
-event:/sub/seamoth/seaglide_light_on;false;false;0
-event:/sub/seamoth/seaglide_loop_rpm;false;false;0
-event:/sub/seamoth/seaglide_rev_up;false;false;0
+event:/sub/seamoth/seaglide_equip;true;false;20
+event:/sub/seamoth/seaglide_light_off;true;false;10
+event:/sub/seamoth/seaglide_light_on;true;false;10
+event:/sub/seamoth/seaglide_loop_rpm;true;false;40
+event:/sub/seamoth/seaglide_rev_up;true;false;40
 event:/sub/seamoth/seamoth_light_off;false;false;0
 event:/sub/seamoth/seamoth_light_on;false;false;0
 event:/sub/seamoth/seamoth_loop_rpm;false;false;0

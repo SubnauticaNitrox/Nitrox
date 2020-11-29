@@ -1,27 +1,23 @@
-﻿using NitroxClient.Communication.Abstract;
+﻿using FMOD.Studio;
+using FMODUnity;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
+#pragma warning disable 618
 
 namespace NitroxClient.Communication.Packets.Processors
 {
     public class PlayFMODAssetProcessor : ClientPacketProcessor<PlayFMODAsset>
     {
-        private readonly IPacketSender packetSender;
-
-        public PlayFMODAssetProcessor(IPacketSender packetSender)
-        {
-            this.packetSender = packetSender;
-        }
-
         public override void Process(PlayFMODAsset packet)
         {
-            using (packetSender.Suppress<PlayFMODAsset>())
-            {
-#pragma warning disable 618
-                FMODUWE.PlayOneShot(packet.AssetPath, packet.Position.ToUnity(), packet.Volume);
-#pragma warning restore 618
-            }
+            EventInstance instance = FMODUWE.GetEvent(packet.AssetPath);
+            instance.setProperty(EVENT_PROPERTY.MINIMUM_DISTANCE, 1f);
+            instance.setProperty(EVENT_PROPERTY.MAXIMUM_DISTANCE, packet.Radius);
+            instance.setVolume(packet.Volume);
+            instance.set3DAttributes(packet.Position.ToUnity().To3DAttributes());
+            instance.start();
+            instance.release();
         }
     }
 }
