@@ -7,7 +7,7 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 
-namespace NitroxClient.GameLogic
+namespace NitroxClient.GameLogic.FMOD
 {
     public class FMODSystem
     {
@@ -77,17 +77,10 @@ namespace NitroxClient.GameLogic
         }
     }
 
-    public readonly struct SoundData
-    {
-        public bool IsWhitelisted { get; }
-        public bool IsGlobal { get; }
-        public float SoundRadius { get; }
 
-        public SoundData(bool isWhitelisted, bool isGlobal, float soundRadius)
+        public static FMODSuppressor SuppressSounds()
         {
-            IsWhitelisted = isWhitelisted;
-            IsGlobal = isGlobal;
-            SoundRadius = soundRadius;
+            return new FMODSuppressor();
         }
     }
 }

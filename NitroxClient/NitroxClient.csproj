@@ -76,8 +76,10 @@
     <Compile Include="GameLogic\Containers\ContainerAddItemPostProcessor.cs" />
     <Compile Include="GameLogic\Containers\NoOpContainerAddItemPostProcessor.cs" />
     <Compile Include="GameLogic\InitialSync\SimulationOwnershipInitialSyncProcessor.cs" />
-    <Compile Include="GameLogic\FMODSystem.cs" />
     <Compile Include="GameLogic\LiveMixinManager.cs" />
+    <Compile Include="GameLogic\FMOD\FMODSystem.cs" />
+    <Compile Include="GameLogic\FMOD\FMODSuppressor.cs" />
+    <Compile Include="GameLogic\FMOD\SoundData.cs" />
     <Compile Include="GameLogic\Rockets.cs" />
     <Compile Include="GameLogic\Simulation\LockRequestBase.cs" />
     <Compile Include="GameLogic\Simulation\PropulsionGrab.cs" />

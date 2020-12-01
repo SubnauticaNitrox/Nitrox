@@ -2,7 +2,7 @@
 using System.Reflection;
 using FMOD.Studio;
 using Harmony;
-using NitroxClient.GameLogic;
+using NitroxClient.GameLogic.FMOD;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel_Subnautica.DataStructures;
@@ -11,9 +11,14 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class FMOD_CustomEmitter_OnPlay_Patch : NitroxPatch, IDynamicPatch
     {
+        private static FMODSystem fmodSystem;
+
         private static readonly MethodInfo targetMethod = typeof(FMOD_CustomEmitter).GetMethod("OnPlay", BindingFlags.NonPublic | BindingFlags.Instance);
 
-        private static FMODSystem fmodSystem;
+        public static bool Prefix()
+        {
+            return !FMODSuppressor.SuppressFMODEvents;
+        }
 
         public static void Postfix(FMOD_CustomEmitter __instance)
         {
@@ -38,7 +43,7 @@ namespace NitroxPatcher.Patches.Dynamic
         public override void Patch(HarmonyInstance harmony)
         {
             fmodSystem = NitroxServiceLocator.LocateService<FMODSystem>();
-            PatchPostfix(harmony, targetMethod);
+            PatchMultiple(harmony, targetMethod, true, true, false);
         }
 
     }
