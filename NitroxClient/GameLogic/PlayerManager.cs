@@ -15,14 +15,12 @@ namespace NitroxClient.GameLogic
     {
         private readonly ILocalNitroxPlayer localPlayer;
         private readonly PlayerModelManager playerModelManager;
-        private readonly SimulationOwnership simulationOwnership;
         private readonly Dictionary<ushort, RemotePlayer> playersById = new Dictionary<ushort, RemotePlayer>();
 
-        public PlayerManager(ILocalNitroxPlayer localPlayer, PlayerModelManager playerModelManager, SimulationOwnership simulationOwnership)
+        public PlayerManager(ILocalNitroxPlayer localPlayer, PlayerModelManager playerModelManager)
         {
             this.localPlayer = localPlayer;
             this.playerModelManager = playerModelManager;
-            this.simulationOwnership = simulationOwnership;
         }
 
         public Optional<RemotePlayer> Find(ushort playerId)
@@ -76,7 +74,6 @@ namespace NitroxClient.GameLogic
             {
                 opPlayer.Value.Destroy();
                 playersById.Remove(playerId);
-                simulationOwnership.RemovePlayerSimulations(playerId);
                 DiscordRPController.Main.UpdatePlayerCount(GetTotalPlayerCount());
             }
         }

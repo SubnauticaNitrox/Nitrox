@@ -70,6 +70,8 @@
     <Compile Include="GameLogic\Bases\Spawning\BasePieceSpawnPrioritizer.cs" />
     <Compile Include="GameLogic\Bases\Spawning\NoOpBasePieceSpawnProcessor.cs" />
     <Compile Include="GameLogic\ChatUI\PlayerChatManager.cs" />
+    <Compile Include="GameLogic\InitialSync\SimulationOwnershipInitialSyncProcessor.cs" />
+    <Compile Include="GameLogic\LiveMixinManager.cs" />
     <Compile Include="GameLogic\Rockets.cs" />
     <Compile Include="GameLogic\Spawning\EntitySpawnerResolver.cs" />
     <Compile Include="GameLogic\Spawning\ExistingGameObjectSpawner.cs" />

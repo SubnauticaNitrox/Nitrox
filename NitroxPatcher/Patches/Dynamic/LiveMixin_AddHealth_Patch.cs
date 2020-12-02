@@ -34,14 +34,6 @@ namespace NitroxPatcher.Patches.Dynamic
                 NitroxId id = NitroxEntity.GetId(__instance.gameObject);
                 if (!simulationOwnership.HasAnyLockType(id) && !simulationOwnership.SimulationLockOverrideActive(id))
                 {
-                    //Log.Debug($"AddHealth for {__instance.gameObject.name} with heal of {healthBack} detected without lock for {id}. Will not execute the code");
-                    // If the player has no knowledge of an other player simulating the vehicle, try to get the simulation ownership
-                    if (!simulationOwnership.OtherPlayerHasAnyLock(id))
-                    {
-                        Log.Debug($"Send simulation lock request in LiveMixin_AddHealth for {id}");
-                        simulationOwnership.RequestSimulationLock(id, SimulationLockType.TRANSIENT, ResponseRecieved);
-                        PARAMETER_PER_ENTITY[id] = new Tuple<LiveMixin, float>(__instance, healthBack);
-                    }
                     return false;
                 }
                 //Log.Debug($"AddHealth for {__instance.gameObject.name} with heal of {healthBack} deteted with lock or override for {id}. Will execute code");
@@ -64,9 +56,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 if (simulationOwnership.HasAnyLockType(id) && ORIGINAL_HEALTH_PER_ENTITY[id] != __instance.health)
                 {
                     TechType techType = CraftData.GetTechType(gameObject);
-                    // This whole code should may be refactored into it's own class if more LiveMixin Entities will be synchronized
-                    LiveMixinHealthChanged packet = new LiveMixinHealthChanged(techType.ToDto(), id, healthBack, __instance.health);
-                    NitroxServiceLocator.LocateService<IMultiplayerSession>().Send(packet);
+                    NitroxServiceLocator.LocateService<LiveMixinManager>().BroadcastAddHealth(techType, id, healthBack, __instance.health);
                 }
                 ORIGINAL_HEALTH_PER_ENTITY.Remove(id);
             }
@@ -75,24 +65,6 @@ namespace NitroxPatcher.Patches.Dynamic
         public override void Patch(HarmonyInstance harmony)
         {
             PatchMultiple(harmony, TARGET_METHOD, true, true, false);
-        }
-
-        public static void ResponseRecieved(NitroxId id, bool lockAquired)
-        {
-            if (lockAquired)
-            {                
-                Tuple<LiveMixin, float> parameter = null;
-                PARAMETER_PER_ENTITY.TryGetValue(id, out parameter);
-                if (parameter != null)
-                {
-                    parameter.Item1.AddHealth(parameter.Item2);
-                    PARAMETER_PER_ENTITY.Remove(id);
-                }
-                else
-                {
-                    Log.Error($"Got a simulation lock response for entity {id} but did not find the corresponding parameter. This should not happen!");
-                }
-            }
-        }    
+        }   
     }
 }

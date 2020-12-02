@@ -36,6 +36,7 @@ namespace NitroxClient.Communication.Packets.Processors
                 Log.Error($"Did not find LiveMixin for GameObject {packet.Id} even though it was welded.");
                 return;
             }
+            // If we add other player sounds/animations, this is the place to do it for welding
             liveMixin.AddHealth(packet.HealthAdded);
         }
     }

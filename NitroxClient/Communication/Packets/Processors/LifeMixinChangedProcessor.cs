@@ -30,12 +30,6 @@ namespace NitroxClient.Communication.Packets.Processors
                 Log.Error($"Got LiveMixin change health for {packet.Id} but we have the simulation already. This should not happen!");
                 return;
             }
-
-
-            if (!simulationOwnership.OtherPlayerHasAnyLock(packet.Id))
-            {
-                Log.Warn($"Got LiveMixin change health for {packet.Id} but found no simulation at all.");
-            }
             LiveMixin liveMixin = NitroxEntity.RequireObjectFrom(packet.Id).GetComponent<LiveMixin>();
             // Since this is send by the simulator (presumably)
             using (simulationOwnership.GetSimulationOverride(packet.Id))

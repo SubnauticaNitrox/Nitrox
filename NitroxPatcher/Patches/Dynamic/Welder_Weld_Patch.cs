@@ -59,7 +59,6 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static float AddHealthOverride(LiveMixin live, float addHealth, Welder welder)
         {
-            Log.Debug("In AddHealthOverride");
             float result = 0f;
             if ((live.IsAlive() || live.canResurrect) && live.health < live.maxHealth)
             {
@@ -79,19 +78,11 @@ namespace NitroxPatcher.Patches.Dynamic
                     {
                         result = live.AddHealth(addHealth);
                     }
-                    else if (simulationOwnership.OtherPlayerHasAnyLock(id))
+                    else
                     {
                         // Another player simulates this entity. Send the weld info
                         Log.Debug($"Broadcast weld action for {id}");
                         NitroxServiceLocator.LocateService<LocalPlayer>().BroadcastWeld(id, addHealth);
-                    }
-                    else
-                    {
-                        // No one (presumably) simulates this entity; We try to get it
-                        Log.Debug($"Try to get simulation for {id} to weld it to health!");
-                        RESPONSE_WELDER = welder;
-                        simulationOwnership.RequestSimulationLock(id, SimulationLockType.TRANSIENT, SimulationRequestResponse);
-                        result = 0;
                     }
                 }
                 else
@@ -100,14 +91,6 @@ namespace NitroxPatcher.Patches.Dynamic
                 }
             }
             return result;
-        }
-
-        public static void SimulationRequestResponse(NitroxId id, bool lockAquired)
-        {
-            Welder welder = RESPONSE_WELDER;
-            SimulationOwnership simulationOwnership = NitroxServiceLocator.LocateService<SimulationOwnership>();            
-            RESPONSE_WELDER = null;
-            TARGET_METHOD.Invoke(welder, new object[] { });
         }
     }
 }

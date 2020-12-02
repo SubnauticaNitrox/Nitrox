@@ -73,9 +73,16 @@ namespace NitroxClient.GameLogic.InitialSync
         {
             // Set the animation for the remote player to standing instead of swimming if player is not in a flooded subroot
             // or in a waterpark                            
-            if (subroot && subroot.IsUnderwater(playerPosition))
+            if (subroot)
             {
-                return true;
+                if (subroot.IsUnderwater(playerPosition))
+                {
+                    return true;
+                }
+                if (subroot.isCyclops)
+                {
+                    return false;
+                }
             }
             // We know that we are in a subroot. But we can also be in a waterpark in a subroot, where we would swim
             BaseRoot baseRoot = subroot.GetComponentInParent<BaseRoot>();
@@ -86,9 +93,10 @@ namespace NitroxClient.GameLogic.InitialSync
                 {
                     if (waterPark.IsPointInside(playerPosition))
                     {
-                        return false;
+                        return true;
                     }
                 }
+                return false;
             }
             Log.Debug("Trying to find escape pod.");
             EscapePod escapePod = null;

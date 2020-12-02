@@ -28,6 +28,7 @@ namespace NitroxModel.Packets
         public PlayerStatsData PlayerStatsData { get; }
         public List<InitialRemotePlayerData> RemotePlayerData { get; }
         public List<Entity> GlobalRootEntities { get; }
+        public List<NitroxId> InitialSimulationOwnerships { get; }
         public ServerGameMode GameMode { get; }
         public Perms Permissions { get; }
 
@@ -48,6 +49,7 @@ namespace NitroxModel.Packets
             PlayerStatsData playerStatsData,
             IEnumerable<InitialRemotePlayerData> remotePlayerData,
             IEnumerable<Entity> globalRootEntities,
+            IEnumerable<NitroxId> initialSimulationOwnerships,
             ServerGameMode gameMode,
             Perms perms)
         {
@@ -68,6 +70,7 @@ namespace NitroxModel.Packets
             PlayerStatsData = playerStatsData;
             RemotePlayerData = remotePlayerData.ToList();
             GlobalRootEntities = globalRootEntities.ToList();
+            InitialSimulationOwnerships = initialSimulationOwnerships.ToList();
             GameMode = gameMode;
             Permissions = perms;
         }
