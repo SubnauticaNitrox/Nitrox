@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Reflection;
 using NLog;
 using NLog.Conditions;
@@ -31,6 +32,8 @@ namespace NitroxModel.Logger
         private static NLog.Logger logger;
 
         public static InGameLogger InGameLogger { private get; set; }
+        
+        public static string FileName { get; private set; }
 
         public static void Setup(bool performanceCritical = false)
         {
@@ -66,9 +69,10 @@ namespace NitroxModel.Logger
                 ForegroundColor = ConsoleOutputColor.DarkGray
             });
 
+            FileName = Path.GetFullPath($"Nitrox Logs/Nitrox-{GetLoggerName()}.log");
             FileTarget logFile = new FileTarget(nameof(logFile))
             {
-                FileName = $"Nitrox Logs/Nitrox-{GetLoggerName()}.log",
+                FileName = FileName,
                 ArchiveFileName = $"Nitrox Logs/archives/Nitrox-{GetLoggerName()}.{{#}}.log",
                 ArchiveEvery = FileArchivePeriod.Day,
                 ArchiveNumbering = ArchiveNumberingMode.Date,

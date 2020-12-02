@@ -19,7 +19,6 @@ using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
 using NitroxModel_Subnautica.Helper;
-using NitroxModel_Subnautica.Logger;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -77,7 +76,6 @@ namespace NitroxClient.MonoBehaviours
 
         public void Awake()
         {
-            Log.InGameLogger = new SubnauticaInGameLogger();
             Log.InGame("Multiplayer Client Loaded...");
 
             multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
