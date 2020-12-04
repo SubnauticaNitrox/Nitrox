@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic;
@@ -14,10 +14,9 @@ namespace NitroxServer.ConsoleCommands.Abstract
 {
     public abstract partial class Command
     {
-        private readonly List<string> aliases;
         private int optional, required;
 
-        public virtual ReadOnlyCollection<string> Aliases => aliases.AsReadOnly();
+        public virtual IEnumerable<string> Aliases { get; } = Array.Empty<string>();
 
         public string Name { get; }
         public string Description { get; }
@@ -31,7 +30,6 @@ namespace NitroxServer.ConsoleCommands.Abstract
 
             Name = name;
             RequiredPermLevel = perm;
-            aliases = new List<string>();
             Parameters = new List<IParameter<object>>();
             AllowedArgOverflow = allowedArgOveflow;
             Description = string.IsNullOrEmpty(description) ? "No description provided" : description;
@@ -71,38 +69,13 @@ namespace NitroxServer.ConsoleCommands.Abstract
         {
             StringBuilder cmd = new StringBuilder(Name);
 
-            if (Aliases?.Count > 0)
+            if (Aliases.Any())
             {
                 cmd.AppendFormat("/{0}", string.Join("/", Aliases));
             }
 
             cmd.AppendFormat(" {0}", string.Join(" ", Parameters));
             return cropText ? $"{cmd}" : $"{cmd,-32} - {Description}";
-        }
-
-        protected void AddParameter<T>(T param) where T : IParameter<object>
-        {
-            Validate.NotNull(param as object);
-            Parameters.Add(param);
-
-            if (param.IsRequired)
-            {
-                required++;
-            }
-            else
-            {
-                optional++;
-            }
-        }
-
-        protected void AddAlias(params string[] alias)
-        {
-            aliases.AddRange(alias);
-        }
-
-        protected void AddAlias(string alias)
-        {
-            aliases.Add(alias);
         }
 
         /// <summary>
@@ -133,6 +106,21 @@ namespace NitroxServer.ConsoleCommands.Abstract
             PlayerManager playerManager = NitroxServiceLocator.LocateService<PlayerManager>();
             playerManager.SendPacketToAllPlayers(new ChatMessage(ChatMessage.SERVER_ID, message));
             Log.Info(message);
+        }
+
+        protected void AddParameter<T>(T param) where T : IParameter<object>
+        {
+            Validate.NotNull(param as object);
+            Parameters.Add(param);
+
+            if (param.IsRequired)
+            {
+                required++;
+            }
+            else
+            {
+                optional++;
+            }
         }
     }
 }

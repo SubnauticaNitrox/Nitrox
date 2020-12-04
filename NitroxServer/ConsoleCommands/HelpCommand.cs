@@ -9,9 +9,10 @@ namespace NitroxServer.ConsoleCommands
 {
     internal class HelpCommand : Command
     {
+        public override IEnumerable<string> Aliases { get; } = new[] { "?" };
+
         public HelpCommand() : base("help", Perms.PLAYER, "Displays this", true)
         {
-            AddAlias("?");
         }
 
         protected override void Execute(CallArgs args)

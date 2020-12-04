@@ -1,4 +1,4 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
@@ -10,7 +10,7 @@ namespace NitroxServer.ConsoleCommands
 {
     internal class DirectoryCommand : Command
     {
-        public override ReadOnlyCollection<string> Aliases { get; } = new ReadOnlyCollection<string>(new[] { "dir" });
+        public override IEnumerable<string> Aliases { get; } = new[] { "dir" };
 
         public DirectoryCommand() : base("directory", Perms.CONSOLE, "Opens the directory of the main program")
         {
@@ -24,7 +24,7 @@ namespace NitroxServer.ConsoleCommands
                 Log.Error($"Unable to open Nitrox directory '{dir}' because it does not exist.");
                 return;
             }
-            
+
             Process.Start(dir);
         }
     }
