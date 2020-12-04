@@ -153,6 +153,8 @@ namespace NitroxServer_Subnautica
             cultureInfo.NumberFormat.NumberDecimalSeparator = ".";
             cultureInfo.NumberFormat.NumberGroupSeparator = ",";
 
+            Thread.CurrentThread.CurrentCulture = cultureInfo;
+            Thread.CurrentThread.CurrentUICulture = cultureInfo;
             CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
             CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
         }
