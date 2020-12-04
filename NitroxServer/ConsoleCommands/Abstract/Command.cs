@@ -17,7 +17,7 @@ namespace NitroxServer.ConsoleCommands.Abstract
         private readonly List<string> aliases;
         private int optional, required;
 
-        public ReadOnlyCollection<string> Aliases => aliases.AsReadOnly();
+        public virtual ReadOnlyCollection<string> Aliases => aliases.AsReadOnly();
 
         public string Name { get; }
         public string Description { get; }
