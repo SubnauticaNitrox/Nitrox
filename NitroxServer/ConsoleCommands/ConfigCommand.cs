@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic;
@@ -13,12 +14,20 @@ namespace NitroxServer.ConsoleCommands
 {
     internal class ConfigCommand : Command
     {
+        private readonly SemaphoreSlim configOpenLock = new SemaphoreSlim(1);
+
         public ConfigCommand() : base("config", Perms.CONSOLE, "Opens the server configuration file")
         {
         }
 
         protected override void Execute(CallArgs args)
         {
+            if (!configOpenLock.Wait(0))
+            {
+                Log.Warn("Waiting on previous config command to close the configuration file.");
+                return;
+            }
+
             ServerConfig currentActiveConfig = NitroxServiceLocator.LocateService<ServerConfig>();
             string configFile = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location) ?? "", currentActiveConfig.FileName);
             if (!File.Exists(configFile))
@@ -29,7 +38,14 @@ namespace NitroxServer.ConsoleCommands
 
             Task.Run(async () =>
             {
-                await StartProcessAsync("notepad", configFile);
+                try
+                {
+                    await StartProcessAsync("notepad", configFile);
+                }
+                finally
+                {
+                    configOpenLock.Release();
+                }
                 ServerConfig newConfigFromFile = PropertiesWriter.Deserialize<ServerConfig>();
                 if (!ServerConfig.ServerConfigComparer.Equals(currentActiveConfig, newConfigFromFile))
                 {
@@ -38,15 +54,17 @@ namespace NitroxServer.ConsoleCommands
             });
         }
 
-        private Task StartProcessAsync(string fileName, string arguments)
+        private async Task StartProcessAsync(string fileName, string arguments)
         {
             ProcessStartInfo info = new ProcessStartInfo();
             info.FileName = fileName;
             info.Arguments = arguments;
             info.UseShellExecute = false;
             using Process process = Process.Start(info);
-            process?.WaitForExit();
-            return Task.CompletedTask;
+            while (process?.HasExited == false)
+            {
+                await Task.Delay(100);
+            }
         }
     }
 }
