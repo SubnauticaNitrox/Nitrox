@@ -17,7 +17,23 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests.ConnectionStat
         {
             // Arrange
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
-            connectionContext.SessionPolicy.Returns(new MultiplayerSessionPolicy(TestConstants.TEST_CORRELATION_ID, false, TestConstants.TEST_MAX_PLAYER_CONNECTIONS));
+            connectionContext.SessionPolicy.Returns(new MultiplayerSessionPolicy(TestConstants.TEST_CORRELATION_ID, false, TestConstants.TEST_MAX_PLAYER_CONNECTIONS, false));
+
+            EstablishingSessionPolicy connectionState = new EstablishingSessionPolicy(TestConstants.TEST_CORRELATION_ID);
+
+            // Act
+            connectionState.NegotiateReservation(connectionContext);
+
+            // Assert
+            connectionContext.Received().UpdateConnectionState(Arg.Any<AwaitingReservationCredentials>());
+        }
+
+        [TestMethod]
+        public void NegotiateShouldTransitionToAwaitingReservationCredentialsStateWithPassword()
+        {
+            // Arrange
+            IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
+            connectionContext.SessionPolicy.Returns(new MultiplayerSessionPolicy(TestConstants.TEST_CORRELATION_ID, false, TestConstants.TEST_MAX_PLAYER_CONNECTIONS, true));
 
             EstablishingSessionPolicy connectionState = new EstablishingSessionPolicy(TestConstants.TEST_CORRELATION_ID);
 
@@ -33,7 +49,7 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests.ConnectionStat
         {
             // Arrange
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
-            connectionContext.SessionPolicy.Returns(new MultiplayerSessionPolicy("wrong", false, TestConstants.TEST_MAX_PLAYER_CONNECTIONS));
+            connectionContext.SessionPolicy.Returns(new MultiplayerSessionPolicy("wrong", false, TestConstants.TEST_MAX_PLAYER_CONNECTIONS, false));
 
             EstablishingSessionPolicy connectionState = new EstablishingSessionPolicy(TestConstants.TEST_CORRELATION_ID);
 
