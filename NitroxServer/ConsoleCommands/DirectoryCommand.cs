@@ -8,7 +8,7 @@ using NitroxServer.ConsoleCommands.Abstract;
 
 namespace NitroxServer.ConsoleCommands
 {
-    internal class DirectoryCommand : Command
+    internal sealed class DirectoryCommand : Command
     {
         public override IEnumerable<string> Aliases { get; } = new[] { "dir" };
 

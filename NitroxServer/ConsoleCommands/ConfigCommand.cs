@@ -12,7 +12,7 @@ using NitroxServer.Serialization;
 
 namespace NitroxServer.ConsoleCommands
 {
-    internal class ConfigCommand : Command
+    internal sealed class ConfigCommand : Command
     {
         private readonly SemaphoreSlim configOpenLock = new SemaphoreSlim(1);
 
@@ -61,7 +61,7 @@ namespace NitroxServer.ConsoleCommands
             info.Arguments = arguments;
             info.UseShellExecute = false;
             using Process process = Process.Start(info);
-            while (process?.HasExited == false)
+            while (!process?.HasExited == false)
             {
                 await Task.Delay(100);
             }
