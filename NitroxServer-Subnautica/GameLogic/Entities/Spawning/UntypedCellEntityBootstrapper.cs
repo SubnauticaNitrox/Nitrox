@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic;
+﻿using NitroxModel.DataStructures.GameLogic;
 using NitroxServer.GameLogic.Entities.Spawning;
 
 namespace NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers
@@ -11,17 +9,18 @@ namespace NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrapper
         // ClipMapManager.  Some entities have long-range visibility but are encapsulated in cells with 
         // short-range visibility.  This is reconciled in-game with custom logic for processing cell 
         // roots.  We are looking to expand our own handling of cell entities by tracking the player 
-        // position; however, as a stop gap we still want to patch entities impacted by this.
-        private readonly Dictionary<NitroxId, int> levelOverridesByEntityId = new Dictionary<NitroxId, int>()
-        {
-            {new NitroxId("bb20a676-5523-4a53-66df-a24e0c0ef83c"), 3} // the cell root that encapsulates the gun should be forced to a higher visibility
-        };
+        // position; however, as a stop gap we force cell root level to their highest child.
 
-        public void Prepare(Entity entity, DeterministicBatchGenerator deterministicBatchGenerator)
+        private readonly string cellRootClassId = "55d7ab35-de97-4d95-af6c-ac8d03bb54ca";
+
+        public void Prepare(Entity entity, Entity parentEntity, DeterministicBatchGenerator deterministicBatchGenerator)
         {
-            if (levelOverridesByEntityId.TryGetValue(entity.Id, out int level))
+            bool hasCellRootAsParent = (parentEntity != null && parentEntity.ClassId == cellRootClassId);
+
+            if (hasCellRootAsParent && parentEntity.Level < entity.Level)
             {
-                entity.Level = level;
+                // bump the cell root up to the child's visibility level
+                parentEntity.Level = entity.Level;
             }
         }
 

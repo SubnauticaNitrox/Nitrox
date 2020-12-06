@@ -230,7 +230,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
 
             if (customBootstrappersByTechType.TryGetValue(techType, out bootstrapper))
             {
-                bootstrapper.Prepare(spawnedEntity, deterministicBatchGenerator);
+                bootstrapper.Prepare(spawnedEntity, parentEntity, deterministicBatchGenerator);
             }
 
             yield return spawnedEntity;
