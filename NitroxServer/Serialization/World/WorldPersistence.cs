@@ -152,8 +152,11 @@ namespace NitroxServer.Serialization.World
                     zipFile.AddFile(Path.Combine(saveDir, "WorldData" + fileEnding));
                     zipFile.Save(Path.Combine(saveDir, "worldBackup.zip"));
                 }
-
+#if DEBUG
                 Log.Error($"Could not load world, creating a new one: {ex}");
+#else
+                Log.Warn($"Could not load world, creating a new one");
+#endif
             }
 
             return Optional.Empty;
