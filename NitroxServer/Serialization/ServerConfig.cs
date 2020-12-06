@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using NitroxModel.DataStructures.GameLogic;
+﻿using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
 using NitroxModel.Serialization;
 using NitroxModel.Server;
@@ -28,56 +27,6 @@ namespace NitroxServer.Serialization
                 portSetting = value;
             }
         }
-
-        private sealed class ServerConfigEqualityComparer : IEqualityComparer<ServerConfig>
-        {
-            public bool Equals(ServerConfig x, ServerConfig y)
-            {
-                if (ReferenceEquals(x, y))
-                {
-                    return true;
-                }
-                if (ReferenceEquals(x, null))
-                {
-                    return false;
-                }
-                if (ReferenceEquals(y, null))
-                {
-                    return false;
-                }
-                if (x.GetType() != y.GetType())
-                {
-                    return false;
-                }
-                return x.maxConnectionsSetting == y.maxConnectionsSetting && x.portSetting == y.portSetting && x.saveIntervalSetting == y.saveIntervalSetting && x.saveNameSetting == y.saveNameSetting && x.DisableConsole == y.DisableConsole && x.DisableAutoSave == y.DisableAutoSave && x.ServerPassword == y.ServerPassword && x.AdminPassword == y.AdminPassword && x.GameMode == y.GameMode && x.SerializerMode == y.SerializerMode && x.DefaultOxygenValue.Equals(y.DefaultOxygenValue) && x.DefaultMaxOxygenValue.Equals(y.DefaultMaxOxygenValue) && x.DefaultHealthValue.Equals(y.DefaultHealthValue) && x.DefaultHungerValue.Equals(y.DefaultHungerValue) && x.DefaultThirstValue.Equals(y.DefaultThirstValue) && x.DefaultInfectionValue.Equals(y.DefaultInfectionValue);
-            }
-
-            public int GetHashCode(ServerConfig obj)
-            {
-                unchecked
-                {
-                    int hashCode = obj.maxConnectionsSetting;
-                    hashCode = (hashCode * 397) ^ obj.portSetting;
-                    hashCode = (hashCode * 397) ^ obj.saveIntervalSetting;
-                    hashCode = (hashCode * 397) ^ (obj.saveNameSetting != null ? obj.saveNameSetting.GetHashCode() : 0);
-                    hashCode = (hashCode * 397) ^ obj.DisableConsole.GetHashCode();
-                    hashCode = (hashCode * 397) ^ obj.DisableAutoSave.GetHashCode();
-                    hashCode = (hashCode * 397) ^ (obj.ServerPassword != null ? obj.ServerPassword.GetHashCode() : 0);
-                    hashCode = (hashCode * 397) ^ (obj.AdminPassword != null ? obj.AdminPassword.GetHashCode() : 0);
-                    hashCode = (hashCode * 397) ^ (int) obj.GameMode;
-                    hashCode = (hashCode * 397) ^ (int) obj.SerializerMode;
-                    hashCode = (hashCode * 397) ^ obj.DefaultOxygenValue.GetHashCode();
-                    hashCode = (hashCode * 397) ^ obj.DefaultMaxOxygenValue.GetHashCode();
-                    hashCode = (hashCode * 397) ^ obj.DefaultHealthValue.GetHashCode();
-                    hashCode = (hashCode * 397) ^ obj.DefaultHungerValue.GetHashCode();
-                    hashCode = (hashCode * 397) ^ obj.DefaultThirstValue.GetHashCode();
-                    hashCode = (hashCode * 397) ^ obj.DefaultInfectionValue.GetHashCode();
-                    return hashCode;
-                }
-            }
-        }
-
-        public static IEqualityComparer<ServerConfig> ServerConfigComparer { get; } = new ServerConfigEqualityComparer();
 
         [PropertyDescription("Measured in milliseconds")]
         public int SaveInterval

@@ -1,11 +1,14 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Logger;
+using NitroxModel.OS;
 using NitroxModel.Serialization;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.Serialization;
@@ -37,33 +40,43 @@ namespace NitroxServer.ConsoleCommands
             }
 
             Task.Run(async () =>
-            {
-                try
                 {
-                    await StartProcessAsync("notepad", configFile);
-                }
-                finally
+                    try
+                    {
+                        await StartWithDefaultProgram(configFile);
+                    }
+                    finally
+                    {
+                        configOpenLock.Release();
+                    }
+                    PropertiesWriter.Deserialize<ServerConfig>(); // Notifies user if deserialization failed.
+                    Log.Info("If you made changes, restart the server for them to take effect.");
+                })
+                .ContinueWith(t =>
                 {
-                    configOpenLock.Release();
-                }
-                ServerConfig newConfigFromFile = PropertiesWriter.Deserialize<ServerConfig>();
-                if (!ServerConfig.ServerConfigComparer.Equals(currentActiveConfig, newConfigFromFile))
-                {
-                    Log.Info("Config file has changed. Restart the server to make the changes take effect!");
-                }
-            });
+#if DEBUG
+                    if (t.Exception != null)
+                    {
+                        throw t.Exception;
+                    }
+#endif
+                });
         }
 
-        private async Task StartProcessAsync(string fileName, string arguments)
+        private async Task StartWithDefaultProgram(string fileToOpen)
         {
-            ProcessStartInfo info = new ProcessStartInfo();
-            info.FileName = fileName;
-            info.Arguments = arguments;
-            info.UseShellExecute = false;
-            using Process process = Process.Start(info);
-            while (!process?.HasExited == false)
+            using Process process = FileSystem.Instance.OpenOrExecuteFile(fileToOpen);
+            process.WaitForExit();
+            try
             {
-                await Task.Delay(100);
+                while (!process.HasExited)
+                {
+                    await Task.Delay(100);
+                }
+            }
+            catch (Exception)
+            {
+                // ignored
             }
         }
     }
