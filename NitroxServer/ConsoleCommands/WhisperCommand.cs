@@ -1,4 +1,5 @@
-﻿using NitroxModel.DataStructures.GameLogic;
+﻿using System.Collections.Generic;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
 
@@ -6,9 +7,10 @@ namespace NitroxServer.ConsoleCommands
 {
     internal class WhisperCommand : Command
     {
+        public override IEnumerable<string> Aliases { get; } = new[] { "m", "whisper", "w" };
+
         public WhisperCommand() : base("msg", Perms.PLAYER, "Sends a private message to a player", true)
         {
-            AddAlias("m", "whisper", "w");
             AddParameter(new TypePlayer("name", true));
             AddParameter(new TypeString("msg", true));
         }

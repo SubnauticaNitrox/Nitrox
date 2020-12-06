@@ -111,6 +111,7 @@
     <Compile Include="Logger\InGameLogger.cs" />
     <Compile Include="Logger\Log.cs" />
     <Compile Include="Networking\NitroxDeliveryMethod.cs" />
+    <Compile Include="OS\Windows\Native.cs" />
     <Compile Include="Packets\EntityMetadataUpdate.cs" />
     <Compile Include="Packets\BedEnter.cs" />
     <Compile Include="Packets\EscapePodChanged.cs" />
@@ -220,6 +221,8 @@
     <Compile Include="Serialization\PropertiesWriter.cs" />
     <Compile Include="Server\ServerSerializerMode.cs" />
     <Compile Include="Server\ServerGameMode.cs" />
+    <Compile Include="OS\FileSystem.cs" />
+    <Compile Include="OS\Windows\WinFileSystem.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -229,6 +232,10 @@
       <Project>{b0a014e4-0392-4e35-aa42-8fb5a40417e0}</Project>
       <Name>LiteNetLib</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="OS\MacOS" />
+    <Folder Include="OS\Unix" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

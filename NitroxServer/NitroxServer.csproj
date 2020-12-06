@@ -146,8 +146,10 @@
     <Compile Include="ConsoleCommands\BackCommand.cs" />
     <Compile Include="ConsoleCommands\ChangeServerGamemodeCommand.cs" />
     <Compile Include="ConsoleCommands\ChangeServerPasswordCommand.cs" />
+    <Compile Include="ConsoleCommands\ConfigCommand.cs" />
     <Compile Include="ConsoleCommands\DeopCommand.cs" />
     <Compile Include="ConsoleCommands\ChangeAdminPasswordCommand.cs" />
+    <Compile Include="ConsoleCommands\DirectoryCommand.cs" />
     <Compile Include="ConsoleCommands\HelpCommand.cs" />
     <Compile Include="ConsoleCommands\TeleportCommand.cs" />
     <Compile Include="ConsoleCommands\WarpCommand.cs" />
