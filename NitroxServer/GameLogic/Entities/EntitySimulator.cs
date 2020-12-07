@@ -42,7 +42,7 @@ namespace NitroxServer.GameLogic.Entities
             List<SimulatedEntity> ownershipChanges = new List<SimulatedEntity>();
 
             List<NitroxId> revokedEntities = RevokeAll(player);
-            AssignEntitiesToNewPlayers(player, revokedEntities, ownershipChanges);
+            AssignSimulationsToNewPlayers(player, revokedEntities, ownershipChanges);
 
             return ownershipChanges;
         }
@@ -95,7 +95,7 @@ namespace NitroxServer.GameLogic.Entities
             }
         }
 
-        private void AssignEntitiesToNewPlayers(Player oldPlayer, List<NitroxId> entities, List<SimulatedEntity> ownershipChanges)
+        private void AssignSimulationsToNewPlayers(Player oldPlayer, List<NitroxId> entities, List<SimulatedEntity> ownershipChanges)
         {
             foreach (NitroxId id in entities)
             {

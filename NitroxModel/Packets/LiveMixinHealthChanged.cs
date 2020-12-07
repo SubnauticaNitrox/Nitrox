@@ -14,19 +14,13 @@ namespace NitroxModel.Packets
     [ProtoContract]
     public class LiveMixinHealthChanged : Packet
     {
-        private Optional<DamageTakenData> damageTakenData;
+        public Optional<DamageTakenData> DamageTakenData;
 
         public NitroxTechType TechType { get; }
 
         public NitroxId Id { get; set; }
 
         public float LifeChanged { get; set; }
-        
-        public NitroxVector3 Position { get { return damageTakenData.HasValue ? damageTakenData.Value.Position : default; } }
-
-        public ushort DamageType { get { return damageTakenData.HasValue ? damageTakenData.Value.Damagetype : default; } }
-
-        public Optional<NitroxId> DealerId { get { return damageTakenData.HasValue ? damageTakenData.Value.DealerId : default; } }
 
         public float TotalHealth { get; }
 
@@ -36,10 +30,10 @@ namespace NitroxModel.Packets
             Id = id;
             TotalHealth = totalHealth;
             LifeChanged = lifeChanged;
-            damageTakenData = new DamageTakenData
+            DamageTakenData = new DamageTakenData
             {
                 Position = position,
-                Damagetype = damageType,
+                DamageType = damageType,
                 DealerId = dealerId
             };
         }
@@ -50,14 +44,14 @@ namespace NitroxModel.Packets
             Id = id;
             TotalHealth = totalHealth;
             LifeChanged = lifeChanged;
-            damageTakenData = Optional.Empty;
+            DamageTakenData = Optional.Empty;
         }
 
         public override string ToString()
         {
-            if (damageTakenData.HasValue)
+            if (DamageTakenData.HasValue)
             {
-                return $"[LiveMixinHealthChanged packet: TechType: {TechType}, Id: {Id}, lifeChanged: {LifeChanged}, totalHealth {TotalHealth}, position: {Position}, damageType: {DamageType}, dealerId {DealerId}]";
+                return $"[LiveMixinHealthChanged packet: TechType: {TechType}, Id: {Id}, lifeChanged: {LifeChanged}, totalHealth {TotalHealth}, position: {DamageTakenData.Value.Position}, damageType: {DamageTakenData.Value.DamageType}, dealerId {DamageTakenData.Value.DealerId}]";
             }
             else
             {

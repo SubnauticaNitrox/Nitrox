@@ -22,43 +22,35 @@ namespace NitroxPatcher.Patches.Dynamic
         public static readonly Type TARGET_CLASS = typeof(LiveMixin);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("AddHealth", BindingFlags.Public | BindingFlags.Instance);
         public static readonly Dictionary<NitroxId, float> ORIGINAL_HEALTH_PER_ENTITY = new Dictionary<NitroxId, float>();
-        public static readonly Dictionary<NitroxId, Tuple<LiveMixin, float>> PARAMETER_PER_ENTITY = new Dictionary<NitroxId, Tuple<LiveMixin, float>>();
 
-        public static bool Prefix(LiveMixin __instance, float healthBack)
+        public static bool Prefix(out float? __state, LiveMixin __instance, float healthBack)
         {
-            Vehicle vehicle = __instance.GetComponent<Vehicle>();
-            SubRoot subRoot = __instance.GetComponent<SubRoot>();
-            if (vehicle != null || subRoot != null && subRoot.isCyclops)
+            __state = null;
+            // Item1: Should execute; Item2: isSimulationOwner
+            // The distinction is there to reduce calls to simulationOwnership
+            Tuple<bool, bool> result = NitroxServiceLocator.LocateService<LiveMixinManager>().ShouldExecute(__instance, healthBack, null);
+            if (result.Item2)
             {
-                SimulationOwnership simulationOwnership = NitroxServiceLocator.LocateService<SimulationOwnership>();
-                NitroxId id = NitroxEntity.GetId(__instance.gameObject);
-                if (!simulationOwnership.HasAnyLockType(id) && !simulationOwnership.SimulationLockOverrideActive(id))
-                {
-                    return false;
-                }
-                //Log.Debug($"AddHealth for {__instance.gameObject.name} with heal of {healthBack} deteted with lock or override for {id}. Will execute code");
-                ORIGINAL_HEALTH_PER_ENTITY[id] = __instance.health;
+                // We only fill state with a value if we have the ownership. 
+                // This helps us determine if we need to send the change in the postfix
+                __state = __instance.health;
             }
-            return true;
+            return result.Item1;
         }
 
-        public static void Postfix(LiveMixin __instance, float healthBack)
+        public static void Postfix(float? __state, LiveMixin __instance, float healthBack)
         {
-            Vehicle vehicle = __instance.GetComponent<Vehicle>();
-            SubRoot subRoot = __instance.GetComponent<SubRoot>();
-            if (vehicle != null || subRoot != null && subRoot.isCyclops)
+            // State is only filled if we have the ownership
+            if (__state.HasValue)
             {
-                GameObject gameObject = __instance.gameObject;
+                TechType techType = CraftData.GetTechType(__instance.gameObject);
                 // Send message to other player if LiveMixin is from a vehicle and got the simulation ownership
-                SimulationOwnership simulationOwnership = NitroxServiceLocator.LocateService<SimulationOwnership>();
-                NitroxId id = NitroxEntity.GetId(gameObject);
+                NitroxId id = NitroxEntity.GetId(__instance.gameObject);
 
-                if (simulationOwnership.HasAnyLockType(id) && ORIGINAL_HEALTH_PER_ENTITY[id] != __instance.health)
+                if (__state.Value != __instance.health)
                 {
-                    TechType techType = CraftData.GetTechType(gameObject);
                     NitroxServiceLocator.LocateService<LiveMixinManager>().BroadcastAddHealth(techType, id, healthBack, __instance.health);
                 }
-                ORIGINAL_HEALTH_PER_ENTITY.Remove(id);
             }
         }
 

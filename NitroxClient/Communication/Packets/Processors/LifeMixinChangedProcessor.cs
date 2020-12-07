@@ -16,46 +16,16 @@ namespace NitroxClient.Communication.Packets.Processors
     class LifeMixinChangedProcessor : ClientPacketProcessor<LiveMixinHealthChanged>
     {
         private readonly IPacketSender packetSender;
-        private readonly SimulationOwnership simulationOwnership;
-        public LifeMixinChangedProcessor(IPacketSender packetSender, SimulationOwnership simulationOwnership)
+        private readonly LiveMixinManager liveMixinManager;
+        public LifeMixinChangedProcessor(IPacketSender packetSender, LiveMixinManager liveMixinManager)
         {
             this.packetSender = packetSender;
-            this.simulationOwnership = simulationOwnership;
+            this.liveMixinManager = liveMixinManager;
 
         }
         public override void Process(LiveMixinHealthChanged packet)
         {
-            if (simulationOwnership.HasAnyLockType(packet.Id))
-            {
-                Log.Error($"Got LiveMixin change health for {packet.Id} but we have the simulation already. This should not happen!");
-                return;
-            }
-            LiveMixin liveMixin = NitroxEntity.RequireObjectFrom(packet.Id).GetComponent<LiveMixin>();
-            // Since this is send by the simulator (presumably)
-            using (simulationOwnership.GetSimulationOverride(packet.Id))
-            {
-                if (packet.LifeChanged < 0)
-                {
-                    Optional<GameObject> opDealer = packet.DealerId.HasValue ? NitroxEntity.GetObjectFrom(packet.DealerId.Value) : Optional.Empty;
-                    GameObject dealer = opDealer.HasValue ? opDealer.Value : null;
-                    if (!dealer && packet.DealerId.HasValue)
-                    {
-                        Log.Warn($"Could not find entity {packet.DealerId.Value}. This can lead to problems.");
-                    }
-                    liveMixin.TakeDamage(-packet.LifeChanged, packet.Position.ToUnity(), (DamageType)packet.DamageType, dealer);
-                }
-                else
-                {
-                    liveMixin.AddHealth(packet.LifeChanged);
-                }
-
-                // Check if the health calculated by the game is the same as the calculated damage from the simulator
-                if (liveMixin.health != packet.TotalHealth)
-                {
-                    Log.Warn($"Calculated health and send health for {packet.Id} do not align (Calculated: {liveMixin.health}, send:{packet.TotalHealth}). This will be correted but should be investigated");
-                    liveMixin.health = packet.TotalHealth;
-                }
-            }
+            liveMixinManager.ProcessRemoteHealthChange(packet.Id, packet.LifeChanged, packet.DamageTakenData, packet.TotalHealth);
         }
     }
 }

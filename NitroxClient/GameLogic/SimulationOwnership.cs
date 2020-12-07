@@ -9,27 +9,6 @@ namespace NitroxClient.GameLogic
 {
     public class SimulationOwnership
     {
-        private class PlayerLock
-        {
-            public ushort? PlayerId { get; }
-            public SimulationLockType LockType { get; set; }
-        }
-        public class SimulationOverride : IDisposable
-        {
-            SimulationOwnership simulationOwnership;
-            NitroxId id;
-            public SimulationOverride(SimulationOwnership simulationOwnership, NitroxId id)
-            {
-                this.simulationOwnership = simulationOwnership;
-                this.id = id;
-                this.simulationOwnership.AddSimulationOverride(id);
-            }
-            public void Dispose()
-            {
-                simulationOwnership.RemoveSimulationOverride(id);
-            }
-        }
-
         public delegate void LockRequestCompleted(NitroxId id, bool lockAquired);
 
         private readonly IMultiplayerSession muliplayerSession;
@@ -99,36 +78,6 @@ namespace NitroxClient.GameLogic
         public void StopSimulatingEntity(NitroxId id)
         {
             simulatedIdsByLockType.Remove(id);
-        }
-
-        public void AddSimulationOverride(NitroxId id)
-        {
-            if (simulatedIdsByLockType.ContainsKey(id))
-            {
-                Log.Warn($"Tried to add simulation override for entity {id} the player already simulates.");
-            }
-            else
-            {
-                simulationOverride.Add(id);
-            }
-        }
-
-        public void RemoveSimulationOverride(NitroxId id)
-        {
-            if (!simulationOverride.Remove(id))
-            {
-                Log.Warn($"Tried to remove non existing simulation override for NitroxId: {id}");
-            }
-        }
-
-        public SimulationOverride GetSimulationOverride(NitroxId id)
-        {
-            return new SimulationOverride(this, id);
-        }
-
-        public bool SimulationLockOverrideActive(NitroxId id)
-        {
-            return simulationOverride.Contains(id);
         }
     }
 }

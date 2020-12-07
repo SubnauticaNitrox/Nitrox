@@ -23,56 +23,33 @@ namespace NitroxPatcher.Patches.Dynamic
         public static readonly Type TARGET_CLASS = typeof(LiveMixin);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("TakeDamage", BindingFlags.Public | BindingFlags.Instance);
         public static readonly Dictionary<NitroxId, float> ORIGINAL_HEALTH_PER_ENTITY = new Dictionary<NitroxId, float>();
-        public static readonly Dictionary<NitroxId, Tuple<LiveMixin, float, Vector3, DamageType, GameObject>> PARAMETER_PER_ENTITY = new Dictionary<NitroxId, Tuple<LiveMixin, float, Vector3, DamageType, GameObject>>();
 
-        public static bool Prefix(LiveMixin __instance, float originalDamage, Vector3 position, DamageType type, GameObject dealer)
+        public static bool Prefix(out float? __state, LiveMixin __instance, float originalDamage, Vector3 position, DamageType type, GameObject dealer)
         {
-            Vehicle vehicle = __instance.GetComponent<Vehicle>();
-            SubRoot subRoot = __instance.GetComponent<SubRoot>();
-            
-            
-            if (vehicle != null || subRoot != null && subRoot.isCyclops)
+            __state = null;
+            // Item1: Should execute; Item2: isSimulationOwner
+            // The distinction is there to reduce calls to simulationOwnership
+            Tuple<bool, bool> result = NitroxServiceLocator.LocateService<LiveMixinManager>().ShouldExecute(__instance, -originalDamage, dealer);
+            if (result.Item2)
             {
-                SimulationOwnership simulationOwnership = NitroxServiceLocator.LocateService<SimulationOwnership>();
-                NitroxId id = NitroxEntity.GetId(__instance.gameObject);
-                if (!simulationOwnership.HasAnyLockType(id) && !simulationOwnership.SimulationLockOverrideActive(id))
-                {
-                    return false;
-                }
-                // To prevent damage that happens while docking, we check if dealer is the vehicle that is also docked.
-                VehicleDockingBay vehicleDockingBay = __instance.GetComponent<VehicleDockingBay>();
-                if (!vehicleDockingBay)
-                {
-                    vehicleDockingBay = __instance.GetComponentInChildren<VehicleDockingBay>();
-                }
-                Vehicle dealerVehicle = dealer.GetComponent<Vehicle>();
-                if (vehicleDockingBay && dealerVehicle)
-                {
-                    if (vehicleDockingBay.GetDockedVehicle() == dealerVehicle || (Vehicle)vehicleDockingBay.ReflectionGet("interpolatingVehicle") == dealerVehicle
-                        || (Vehicle)vehicleDockingBay.ReflectionGet("nearbyVehicle") == dealerVehicle)
-                    {
-                        Log.Debug($"Dealer {dealer} is vehicle and currently docked or nearby {__instance}, do not harm it!");
-                        return false;
-                    }
-                }
-                ORIGINAL_HEALTH_PER_ENTITY[id] = __instance.health;
+                // We only fill state with a value if we have the ownership. 
+                // This helps us determine if we need to send the change in the postfix
+                __state = __instance.health;
             }
-            return true;
+            Log.Debug($"TakeDamagePrefix: should execute: {result}, state: {__state}");
+            return result.Item1;
         }
 
-        public static void Postfix(LiveMixin __instance, float originalDamage, Vector3 position, DamageType type, GameObject dealer)
+        public static void Postfix(float? __state, LiveMixin __instance, float originalDamage, Vector3 position, DamageType type, GameObject dealer)
         {
-            Vehicle vehicle = __instance.GetComponent<Vehicle>();
-            SubRoot subRoot = __instance.GetComponent<SubRoot>();
-            if (vehicle != null || subRoot != null && subRoot.isCyclops)
+            // State is only filled if we have the ownership
+            if (__state.HasValue)
             {
-                GameObject gameObject = vehicle != null ? vehicle.gameObject : subRoot.gameObject;
-                TechType techType = CraftData.GetTechType(gameObject);
+                TechType techType = CraftData.GetTechType(__instance.gameObject);
                 // Send message to other player if LiveMixin is from a vehicle and got the simulation ownership
-                SimulationOwnership simulationOwnership = NitroxServiceLocator.LocateService<SimulationOwnership>();
                 NitroxId id = NitroxEntity.GetId(__instance.gameObject);
 
-                if (simulationOwnership.HasAnyLockType(id) && ORIGINAL_HEALTH_PER_ENTITY[id] != __instance.health)
+                if (__state.Value != __instance.health)
                 {
                     Optional<NitroxId> dealerId = Optional.Empty;
                     if (dealer)
@@ -81,7 +58,6 @@ namespace NitroxPatcher.Patches.Dynamic
                     }
                     NitroxServiceLocator.LocateService<LiveMixinManager>().BroadcastTakeDamage(techType, id, originalDamage, position, type, dealerId, __instance.health);
                 }
-                ORIGINAL_HEALTH_PER_ENTITY.Remove(id);
             }
         }
 
