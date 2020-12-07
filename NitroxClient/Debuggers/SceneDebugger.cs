@@ -54,8 +54,8 @@ namespace NitroxClient.Debuggers
         private Vector3 selectedObjectScale;
         private MonoBehaviour selectedMonoBehaviour;
 
-        private Texture arrowTexture;
-        private Texture circleTexture;
+        private readonly Texture arrowTexture;
+        private readonly Texture circleTexture;
 
         public SceneDebugger() : base(500, null, KeyCode.S, true, false, false, GUISkinCreationOptions.DERIVEDCOPY)
         {
@@ -250,8 +250,6 @@ namespace NitroxClient.Debuggers
                         currentScene = SceneManager.GetSceneByBuildIndex(i);
                         path = SceneUtility.GetScenePathByBuildIndex(i);
                     }
-
-                    Log.Info($"Current Scene: {currentScene.name} current Index {i}");
 
                     bool isSelected = selectedScene.IsValid() && currentScene == selectedScene;
                     bool isLoaded = currentScene.isLoaded;
