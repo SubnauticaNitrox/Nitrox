@@ -81,32 +81,54 @@ namespace NitroxServer_Subnautica
 
         private static async Task WaitForAvailablePortAsync(int port, int timeoutInSeconds = 30)
         {
+            void PrintPortWarn(int timeRemaining)
+            {
+                Log.Warn($"Port {port} UDP is already in use. Retrying for {timeRemaining} seconds until it is available..");
+            }
+
             Validate.IsTrue(timeoutInSeconds >= 5, "Timeout must be at least 5 seconds.");
 
+            DateTimeOffset time = DateTimeOffset.UtcNow;
             bool first = true;
             CancellationTokenSource source = new CancellationTokenSource(timeoutInSeconds * 1000);
             using Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.IP);
-            while (true)
-            {
-                try
-                {
-                    socket.Bind(new IPEndPoint(IPAddress.Any, port));
-                    break;
-                }
-                catch (SocketException ex)
-                {
-                    if (ex.SocketErrorCode != SocketError.AddressAlreadyInUse)
-                    {
-                        throw;
-                    }
 
-                    if (first)
+            try
+            {
+                while (true)
+                {
+                    source.Token.ThrowIfCancellationRequested();
+                    try
                     {
-                        Log.Warn($"Port {port} is already in use. Retrying for {timeoutInSeconds} seconds until it is available..");
-                        first = false;
+                        socket.Bind(new IPEndPoint(IPAddress.Any, port));
+                        break;
                     }
-                    await Task.Delay(500, source.Token);
+                    catch (SocketException ex)
+                    {
+                        if (ex.SocketErrorCode != SocketError.AddressAlreadyInUse)
+                        {
+                            throw;
+                        }
+
+                        if (first)
+                        {
+                            first = false;
+                            PrintPortWarn(timeoutInSeconds);
+                        }
+                        else if (Environment.UserInteractive)
+                        {
+                            Console.CursorTop--;
+                            Console.CursorLeft = 0;
+                            PrintPortWarn(timeoutInSeconds - (DateTimeOffset.UtcNow - time).Seconds);
+                        }
+                        await Task.Delay(500, source.Token);
+                    }
                 }
+            }
+            catch (OperationCanceledException ex)
+            {
+                Log.Error(ex, "Port availability timeout reached.");
+                throw;
             }
         }
 
