@@ -22,6 +22,8 @@ namespace NitroxServer
         public bool IsRunning { get; private set; }
         public bool IsSaving { get; private set; }
 
+        public int Port => serverConfig?.ServerPort ?? -1;
+
         public Server(WorldPersistence worldPersistence, World world, ServerConfig serverConfig, Communication.NetworkingLayer.NitroxServer server)
         {
             this.worldPersistence = worldPersistence;
@@ -81,16 +83,13 @@ namespace NitroxServer
                 return false;
             }
 
+            Log.Info($"Server is using port {Port} UDP");
             Log.Info($"Using {serverConfig.SerializerMode} as save file serializer");
             Log.InfoSensitive("Server Password: {password}", string.IsNullOrEmpty(serverConfig.ServerPassword) ? "None. Public Server." : serverConfig.ServerPassword);
             Log.InfoSensitive("Admin Password: {password}", serverConfig.AdminPassword);
             Log.Info($"Autosave: {(serverConfig.DisableAutoSave ? "DISABLED" : $"ENABLED ({serverConfig.SaveInterval / 60000} min)")}");
             Log.Info($"World GameMode: {serverConfig.GameMode}");
-
             Log.Info($"Loaded save\n{SaveSummary}");
-
-            Log.Info("Nitrox Server Started");
-            Log.Info("To get help for commands, run help in console or /help in chatbox\n");
 
             PauseServer();
 

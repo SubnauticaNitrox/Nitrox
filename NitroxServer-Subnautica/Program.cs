@@ -18,7 +18,6 @@ using NitroxModel.Logger;
 using NitroxModel_Subnautica.Helper;
 using NitroxServer;
 using NitroxServer.ConsoleCommands.Processor;
-using NitroxServer.Serialization;
 
 namespace NitroxServer_Subnautica
 {
@@ -32,46 +31,61 @@ namespace NitroxServer_Subnautica
 
         private static async Task Main(string[] args)
         {
-            ConfigureCultureInfo();
             Log.Setup();
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
+
+            ConfigureCultureInfo();
             ConfigureConsoleWindow();
 
-            // Allow game path to be given as command argument
-            if (args.Length > 0 && Directory.Exists(args[0]) && File.Exists(Path.Combine(args[0], "Subnautica.exe")))
+            AppMutex.Hold(() =>
             {
-                string gameDir = Path.GetFullPath(args[0]);
-                Log.Info($"Using game files from: {gameDir}");
-                gameInstallDir = new Lazy<string>(() => gameDir);
-            }
-            else
+                Log.Info("Waiting for 30 seconds on other Nitrox servers to initialize before starting..");
+            }, 30000);
+            Server server;
+            try
             {
-                gameInstallDir = new Lazy<string>(() =>
+                // Allow game path to be given as command argument
+                if (args.Length > 0 && Directory.Exists(args[0]) && File.Exists(Path.Combine(args[0], "Subnautica.exe")))
                 {
-                    string gameDir = GameInstallationFinder.Instance.FindGame();
+                    string gameDir = Path.GetFullPath(args[0]);
                     Log.Info($"Using game files from: {gameDir}");
-                    return gameDir;
-                });
+                    gameInstallDir = new Lazy<string>(() => gameDir);
+                }
+                else
+                {
+                    gameInstallDir = new Lazy<string>(() =>
+                    {
+                        string gameDir = GameInstallationFinder.Instance.FindGame();
+                        Log.Info($"Using game files from: {gameDir}");
+                        return gameDir;
+                    });
+                }
+
+                AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
+                AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += CurrentDomainOnAssemblyResolve;
+
+                Map.Main = new SubnauticaMap();
+
+                NitroxServiceLocator.InitializeDependencyContainer(new SubnauticaServerAutoFacRegistrar());
+                NitroxServiceLocator.BeginNewLifetimeScope();
+
+                server = NitroxServiceLocator.LocateService<Server>();
+                await WaitForAvailablePortAsync(server.Port);
+                if (!server.Start())
+                {
+                    throw new Exception("Unable to start server.");
+                }
+                Log.Info("Server is waiting for players!");
+
+                CatchExitEvent();
             }
-
-            AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
-            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
-            AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += CurrentDomainOnAssemblyResolve;
-
-            Map.Main = new SubnauticaMap();
-
-            NitroxServiceLocator.InitializeDependencyContainer(new SubnauticaServerAutoFacRegistrar());
-            NitroxServiceLocator.BeginNewLifetimeScope();
-
-            await WaitForAvailablePortAsync(NitroxServiceLocator.LocateService<ServerConfig>().ServerPort);
-
-            Server server = NitroxServiceLocator.LocateService<Server>();
-            if (!server.Start())
+            finally
             {
-                throw new Exception("Unable to start server.");
+                // Allow other servers to start initializing.
+                AppMutex.Release();
             }
 
-            CatchExitEvent();
-
+            Log.Info("To get help for commands, run help in console or /help in chatbox\n");
             ConsoleCommandProcessor cmdProcessor = NitroxServiceLocator.LocateService<ConsoleCommandProcessor>();
             while (server.IsRunning)
             {
@@ -90,7 +104,7 @@ namespace NitroxServer_Subnautica
 
             DateTimeOffset time = DateTimeOffset.UtcNow;
             bool first = true;
-            CancellationTokenSource source = new CancellationTokenSource(timeoutInSeconds * 1000);
+            using CancellationTokenSource source = new CancellationTokenSource(timeoutInSeconds * 1000);
             using Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.IP);
 
             try
