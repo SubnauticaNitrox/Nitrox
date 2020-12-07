@@ -27,12 +27,15 @@ namespace NitroxServer_Subnautica
         private static readonly Dictionary<string, Assembly> resolvedAssemblyCache = new Dictionary<string, Assembly>();
         private static Lazy<string> gameInstallDir;
 
+        // Prevents Garbage Collection freeing this callback's memory. Causing an exception to occur for this handle.
+        private static readonly ConsoleEventDelegate consoleCtrlCheckDelegate = ConsoleEventCallback;
+
         private static async Task Main(string[] args)
         {
             ConfigureCultureInfo();
             Log.Setup();
             ConfigureConsoleWindow();
-            
+
             // Allow game path to be given as command argument
             if (args.Length > 0 && Directory.Exists(args[0]) && File.Exists(Path.Combine(args[0], "Subnautica.exe")))
             {
@@ -54,7 +57,7 @@ namespace NitroxServer_Subnautica
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
             AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += CurrentDomainOnAssemblyResolve;
 
-            NitroxModel.Helper.Map.Main = new SubnauticaMap();
+            Map.Main = new SubnauticaMap();
 
             NitroxServiceLocator.InitializeDependencyContainer(new SubnauticaServerAutoFacRegistrar());
             NitroxServiceLocator.BeginNewLifetimeScope();
@@ -79,7 +82,7 @@ namespace NitroxServer_Subnautica
         private static async Task WaitForAvailablePortAsync(int port, int timeoutInSeconds = 30)
         {
             Validate.IsTrue(timeoutInSeconds >= 5, "Timeout must be at least 5 seconds.");
-            
+
             bool first = true;
             CancellationTokenSource source = new CancellationTokenSource(timeoutInSeconds * 1000);
             using Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.IP);
@@ -96,7 +99,7 @@ namespace NitroxServer_Subnautica
                     {
                         throw;
                     }
-                    
+
                     if (first)
                     {
                         Log.Warn($"Port {port} is already in use. Retrying for {timeoutInSeconds} seconds until it is available..");
@@ -106,7 +109,7 @@ namespace NitroxServer_Subnautica
                 }
             }
         }
-        
+
         private static void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             if (e.ExceptionObject is Exception ex)
@@ -117,7 +120,7 @@ namespace NitroxServer_Subnautica
             {
                 return;
             }
-            
+
             Console.WriteLine("Press L to open log file before closing. Press any other key to close . . .");
             ConsoleKeyInfo key = Console.ReadKey(true);
             if (key.Key == ConsoleKey.L)
@@ -131,7 +134,7 @@ namespace NitroxServer_Subnautica
                 };
                 Process.Start(fileOpenerProgram, Log.FileName);
             }
-            
+
             Environment.Exit(1);
         }
 
@@ -216,9 +219,6 @@ namespace NitroxServer_Subnautica
 
         [DllImport("kernel32.dll", SetLastError = true)]
         private static extern bool SetConsoleCtrlHandler(ConsoleEventDelegate callback, bool add);
-
-        // Prevents Garbage Collection freeing this callback's memory. Causing an exception to occur for this handle.
-        private static readonly ConsoleEventDelegate consoleCtrlCheckDelegate = ConsoleEventCallback;
 
         private static bool ConsoleEventCallback(int eventType)
         {
