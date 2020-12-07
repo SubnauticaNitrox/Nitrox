@@ -83,7 +83,7 @@ namespace NitroxServer
                 return false;
             }
 
-            Log.Info($"Server is using port {Port} UDP");
+            Log.Info($"Server is listening on port {Port} UDP");
             Log.Info($"Using {serverConfig.SerializerMode} as save file serializer");
             Log.InfoSensitive("Server Password: {password}", string.IsNullOrEmpty(serverConfig.ServerPassword) ? "None. Public Server." : serverConfig.ServerPassword);
             Log.InfoSensitive("Admin Password: {password}", serverConfig.AdminPassword);
