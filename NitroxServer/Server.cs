@@ -1,8 +1,6 @@
 ﻿using System.Timers;
 using NitroxModel.Logger;
-using NitroxModel.Server;
 using NitroxServer.Serialization.World;
-using System.Configuration;
 using System.IO;
 using System.Text;
 using System.Linq;
@@ -66,7 +64,11 @@ namespace NitroxServer
                 return;
             }
 
-            PropertiesWriter.Serialize(serverConfig);
+            // Don't overwrite config changes that users made to file
+            if (!File.Exists(serverConfig.FileName))
+            {
+                PropertiesWriter.Serialize(serverConfig);
+            }
             IsSaving = true;
             worldPersistence.Save(world, serverConfig.SaveName);
             IsSaving = false;

@@ -3,17 +3,22 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Net;
+using System.Net.Sockets;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Threading.Tasks;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Discovery;
+using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel_Subnautica.Helper;
 using NitroxServer;
 using NitroxServer.ConsoleCommands.Processor;
+using NitroxServer.Serialization;
 
 namespace NitroxServer_Subnautica
 {
@@ -22,13 +27,12 @@ namespace NitroxServer_Subnautica
         private static readonly Dictionary<string, Assembly> resolvedAssemblyCache = new Dictionary<string, Assembly>();
         private static Lazy<string> gameInstallDir;
 
-        private static void Main(string[] args)
+        private static async Task Main(string[] args)
         {
             ConfigureCultureInfo();
             Log.Setup();
-
             ConfigureConsoleWindow();
-
+            
             // Allow game path to be given as command argument
             if (args.Length > 0 && Directory.Exists(args[0]) && File.Exists(Path.Combine(args[0], "Subnautica.exe")))
             {
@@ -55,6 +59,8 @@ namespace NitroxServer_Subnautica
             NitroxServiceLocator.InitializeDependencyContainer(new SubnauticaServerAutoFacRegistrar());
             NitroxServiceLocator.BeginNewLifetimeScope();
 
+            await WaitForAvailablePortAsync(NitroxServiceLocator.LocateService<ServerConfig>().ServerPort);
+
             Server server = NitroxServiceLocator.LocateService<Server>();
             if (!server.Start())
             {
@@ -70,6 +76,37 @@ namespace NitroxServer_Subnautica
             }
         }
 
+        private static async Task WaitForAvailablePortAsync(int port, int timeoutInSeconds = 30)
+        {
+            Validate.IsTrue(timeoutInSeconds >= 5, "Timeout must be at least 5 seconds.");
+            
+            bool first = true;
+            CancellationTokenSource source = new CancellationTokenSource(timeoutInSeconds * 1000);
+            using Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.IP);
+            while (true)
+            {
+                try
+                {
+                    socket.Bind(new IPEndPoint(IPAddress.Any, port));
+                    break;
+                }
+                catch (SocketException ex)
+                {
+                    if (ex.SocketErrorCode != SocketError.AddressAlreadyInUse)
+                    {
+                        throw;
+                    }
+                    
+                    if (first)
+                    {
+                        Log.Warn($"Port {port} is already in use. Retrying for {timeoutInSeconds} seconds until it is available..");
+                        first = false;
+                    }
+                    await Task.Delay(500, source.Token);
+                }
+            }
+        }
+        
         private static void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             if (e.ExceptionObject is Exception ex)
