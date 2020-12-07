@@ -27,6 +27,7 @@ namespace NitroxModel.Serialization
             char[] lineSeparator = { '=' };
             int lineNum = 0;
             string readLine;
+            HashSet<MemberInfo> unserializedMembers = typeCachedDict.Values.ToHashSet();
             while ((readLine = reader.ReadLine()) != null)
             {
                 lineNum++;
@@ -44,6 +45,7 @@ namespace NitroxModel.Serialization
                         Log.Warn($"Property or field {keyValuePair[0]} does not exist on type {typeof(T).FullName}!");
                         continue;
                     }
+                    unserializedMembers.Remove(member); // This member was serialized in the file 
 
                     if (!SetMemberValue(props, member, keyValuePair[1]))
                     {
@@ -60,6 +62,25 @@ namespace NitroxModel.Serialization
                 {
                     Log.Error($"Incorrect format detected on line {lineNum} in {Path.GetFullPath(props.FileName)}:{Environment.NewLine}{readLine}");
                 }
+            }
+
+            if (unserializedMembers.Any())
+            {
+                IEnumerable<string> unserializedProps = unserializedMembers.Select(m =>
+                                                                           {
+                                                                               object value = null;
+                                                                               if (m is FieldInfo field)
+                                                                               {
+                                                                                   value = field.GetValue(props);
+                                                                               }
+                                                                               else if (m is PropertyInfo prop)
+                                                                               {
+                                                                                   value = prop.GetValue(props);
+                                                                               }
+                                                                               return new { m.Name, Value = value };
+                                                                           })
+                                                                           .Select(m => $" - {m.Name}: {m.Value}");
+                Log.Warn($@"{props.FileName} is using default values for the missing properties:{Environment.NewLine}{string.Join(Environment.NewLine, unserializedProps)}");
             }
 
             return props;
