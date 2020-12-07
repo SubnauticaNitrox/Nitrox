@@ -1,4 +1,5 @@
-﻿using NitroxModel.DataStructures.GameLogic;
+﻿using System.Collections.Generic;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
@@ -7,9 +8,10 @@ namespace NitroxServer.ConsoleCommands
 {
     internal class TeleportCommand : Command
     {
+        public override IEnumerable<string> Aliases { get; } = new[] { "teleport" };
+
         public TeleportCommand() : base("tp", Perms.ADMIN, "Teleports you on a location")
         {
-            AddAlias("teleport");
             AddParameter(new TypeInt("x", true));
             AddParameter(new TypeInt("y", true));
             AddParameter(new TypeInt("z", true));

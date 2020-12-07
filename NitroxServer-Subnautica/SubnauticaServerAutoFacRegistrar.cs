@@ -47,7 +47,8 @@ namespace NitroxServer_Subnautica
             containerBuilder.Register(c => new Dictionary<NitroxTechType, IEntityBootstrapper>
             {
                 [TechType.CrashHome.ToDto()] = new CrashFishBootstrapper(), 
-                [TechType.Reefback.ToDto()] = new ReefbackBootstrapper()
+                [TechType.Reefback.ToDto()] = new ReefbackBootstrapper(),
+                [TechType.None.ToDto()] = new UntypedCellEntityBootstrapper()
             }).SingleInstance();
         }
     }

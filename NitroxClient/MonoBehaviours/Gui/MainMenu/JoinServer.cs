@@ -32,7 +32,13 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         private IMultiplayerSession multiplayerSession;
         private GameObject playerSettingsPanel;
         private PlayerPreferenceManager preferencesManager;
-        public string ServerIp = "";
+        private Rect serverPasswordWindowRect = new Rect(Screen.width / 2 - 250, 200, 500, 200);
+        private bool shouldFocus;
+        private bool showingPasswordWindow;
+        private bool passwordEntered;
+        private string serverPassword = string.Empty;
+
+        public string ServerIp = string.Empty;
         public int ServerPort;
         public static GameObject SaveGameMenuPrototype { get; set; }
 
@@ -394,7 +400,15 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             SetCurrentPreference(playerName, playerColor);
 
             PlayerSettings playerSettings = new PlayerSettings(playerColor.ToDto());
-            AuthenticationContext authenticationContext = new AuthenticationContext(playerName);
+            AuthenticationContext authenticationContext;
+            if (passwordEntered)
+            {
+                authenticationContext = new AuthenticationContext(playerName, serverPassword);
+            }
+            else
+            {
+                authenticationContext = new AuthenticationContext(playerName);
+            }
 
             multiplayerSession.RequestSessionReservation(playerSettings, authenticationContext);
         }
@@ -420,6 +434,12 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                     break;
 
                 case MultiplayerSessionConnectionStage.AWAITING_RESERVATION_CREDENTIALS:
+                    if (multiplayerSession.SessionPolicy.RequiresServerPassword)
+                    {
+                        Log.InGame("Waiting for Server Password Input...");
+                        showingPasswordWindow = true;
+                        shouldFocus = true;
+                    }
                     Log.InGame("Waiting for user input...");
                     RightSideMainMenu.OpenGroup("Join Server");
                     FocusPlayerNameTextbox();
@@ -452,7 +472,6 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                             multiplayerSession.Disconnect();
                             multiplayerSession.Connect(ServerIp, ServerPort);
                         });
-
                     break;
 
                 case MultiplayerSessionConnectionStage.DISCONNECTED:
@@ -569,6 +588,110 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             //Flip the text so it is no longer upside down after flipping the button.
             RectTransform joinButtonTextRectTransform = (RectTransform)joinButtonTextGameObject.transform;
             joinButtonTextRectTransform.Rotate(Vector3.forward * -180);
+        }
+
+        public void OnGUI()
+        {
+            if (!showingPasswordWindow)
+            {
+                return;
+            }
+
+            serverPasswordWindowRect = GUILayout.Window(GUIUtility.GetControlID(FocusType.Keyboard), serverPasswordWindowRect, DoServerPasswordWindow, "Server Password Required");
+        }
+
+        private GUISkin GetGUISkin()
+        {
+            return GUISkinUtils.RegisterDerivedOnce("menus.serverpassword",
+                                                    s =>
+                                                    {
+                                                        s.textField.fontSize = 14;
+                                                        s.textField.richText = false;
+                                                        s.textField.alignment = TextAnchor.MiddleLeft;
+                                                        s.textField.wordWrap = true;
+                                                        s.textField.stretchHeight = true;
+                                                        s.textField.padding = new RectOffset(10, 10, 5, 5);
+
+                                                        s.label.fontSize = 14;
+                                                        s.label.alignment = TextAnchor.MiddleRight;
+                                                        s.label.stretchHeight = true;
+                                                        s.label.fixedWidth = 80; //change this when adding new labels that need more space.
+
+                                                        s.button.fontSize = 14;
+                                                        s.button.stretchHeight = true;
+                                                    });
+        }
+
+        private void DoServerPasswordWindow(int windowId)
+        {
+            Event e = Event.current;
+            if (e.isKey)
+            {
+                switch (e.keyCode)
+                {
+                    case KeyCode.Return:
+                        OnSubmitPasswordButtonClicked();
+                        break;
+                    case KeyCode.Escape:
+                        OnCancelButtonClicked();
+                        break;
+                }
+            }
+
+            GUISkinUtils.RenderWithSkin(GetGUISkin(),
+                () =>
+                {
+                    using (new GUILayout.VerticalScope("Box"))
+                    {
+                        using (new GUILayout.HorizontalScope())
+                        {
+                            GUILayout.Label("Password:");
+                            GUI.SetNextControlName("serverPasswordField");
+                            serverPassword = GUILayout.TextField(serverPassword);
+                        }
+
+                        if (GUILayout.Button("Submit Password"))
+                        {
+                            HidePasswordWindow();
+                            OnSubmitPasswordButtonClicked();
+                        }
+
+                        if (GUILayout.Button("Cancel"))
+                        {
+                            HidePasswordWindow();
+                            OnCancelClick();
+                        }
+                    }
+                });
+
+            if (shouldFocus)
+            {
+                GUI.FocusControl("serverPasswordField");
+                shouldFocus = false;
+            }
+        }
+
+        private void OnSubmitPasswordButtonClicked()
+        {
+            SubmitPassword();
+            HidePasswordWindow();
+        }
+
+        private void SubmitPassword()
+        {
+            passwordEntered = true;
+        }
+
+        private void OnCancelButtonClicked()
+        {
+            multiplayerSession.Disconnect();
+            HidePasswordWindow();
+        }
+
+        private void HidePasswordWindow()
+        {
+            showingPasswordWindow = false;
+            shouldFocus = false;
         }
     }
 }

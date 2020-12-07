@@ -22,7 +22,6 @@ namespace NitroxPatcher.Patches.Dynamic
     {
         public static readonly Type TARGET_CLASS = typeof(LiveMixin);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("TakeDamage", BindingFlags.Public | BindingFlags.Instance);
-        public static readonly Dictionary<NitroxId, float> ORIGINAL_HEALTH_PER_ENTITY = new Dictionary<NitroxId, float>();
 
         public static bool Prefix(out float? __state, LiveMixin __instance, float originalDamage, Vector3 position, DamageType type, GameObject dealer)
         {
@@ -36,7 +35,6 @@ namespace NitroxPatcher.Patches.Dynamic
                 // This helps us determine if we need to send the change in the postfix
                 __state = __instance.health;
             }
-            Log.Debug($"TakeDamagePrefix: should execute: {result}, state: {__state}");
             return result.Item1;
         }
 
