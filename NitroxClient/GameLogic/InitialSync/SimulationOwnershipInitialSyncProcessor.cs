@@ -29,14 +29,14 @@ namespace NitroxClient.GameLogic.InitialSync
         public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
         {
             int idsSynced = 0;
-            foreach (NitroxId ownerId in packet.InitialSimulationOwnerships)
+            foreach (NitroxId entityId in packet.InitialSimulationOwnerships)
             {
                 waitScreenItem.SetProgress(idsSynced++, packet.InitialSimulationOwnerships.Count);
                 // Initial locks are transient
-                simulationOwnership.SimulateEntity(ownerId, SimulationLockType.TRANSIENT);
-                Log.Debug($"Transient simulation ownership for {ownerId} from initial sync");
-                yield return null;
+                simulationOwnership.SimulateEntity(entityId, SimulationLockType.TRANSIENT);
+                Log.Debug($"Transient simulation ownership for {entityId} from initial sync");
             }
+            yield return null;
         }
     }
 }

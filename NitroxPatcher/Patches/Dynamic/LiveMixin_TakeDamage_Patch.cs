@@ -26,16 +26,15 @@ namespace NitroxPatcher.Patches.Dynamic
         public static bool Prefix(out float? __state, LiveMixin __instance, float originalDamage, Vector3 position, DamageType type, GameObject dealer)
         {
             __state = null;
-            // Item1: Should execute; Item2: isSimulationOwner
-            // The distinction is there to reduce calls to simulationOwnership
-            Tuple<bool, bool> result = NitroxServiceLocator.LocateService<LiveMixinManager>().ShouldExecute(__instance, -originalDamage, dealer);
-            if (result.Item2)
+            // The result struct is there to reduce calls to simulationOwnership
+            ExecutionAndOwnership result = NitroxServiceLocator.LocateService<LiveMixinManager>().ShouldExecute(__instance, -originalDamage, dealer);
+            if (result.isOwner)
             {
                 // We only fill state with a value if we have the ownership. 
                 // This helps us determine if we need to send the change in the postfix
                 __state = __instance.health;
             }
-            return result.Item1;
+            return result.ShouldExecute;
         }
 
         public static void Postfix(float? __state, LiveMixin __instance, float originalDamage, Vector3 position, DamageType type, GameObject dealer)

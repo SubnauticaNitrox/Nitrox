@@ -23,14 +23,7 @@ namespace NitroxPatcher.Patches.Dynamic
             {
                 podId = NitroxEntity.GetId(value.gameObject);
             }
-            // Why only send when podId is empty?
-            // At the moment, SubrootId saves if a player is in an escape pod
-            // Every time you leave an escape pod, BroadcastSubrootChange is called anyway, so this will reduce the load
-            // and some bugs that can occur, due to both pod and base/cyclops use of the same field, will be suppressed
-            if (podId != null)
-            {
-                NitroxServiceLocator.LocateService<LocalPlayer>().BroadcastEscapePodChange(Optional.OfNullable(podId));
-            }
+            NitroxServiceLocator.LocateService<LocalPlayer>().BroadcastEscapePodChange(Optional.OfNullable(podId));
         }
 
         public override void Patch(HarmonyInstance harmony)

@@ -49,14 +49,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            if (DamageTakenData.HasValue)
-            {
-                return $"[LiveMixinHealthChanged packet: TechType: {TechType}, Id: {Id}, lifeChanged: {LifeChanged}, totalHealth {TotalHealth}, position: {DamageTakenData.Value.Position}, damageType: {DamageTakenData.Value.DamageType}, dealerId {DamageTakenData.Value.DealerId}]";
-            }
-            else
-            {
-                return $"[LiveMixinHealthChanged packet: TechType: {TechType}, Id: {Id}, lifeChanged: {LifeChanged}, totalHealth {TotalHealth}]";
-            }
+            return $"[LiveMixinHealthChanged packet: TechType: {TechType}, Id: {Id}, lifeChanged: {LifeChanged}, totalHealth {TotalHealth}, {DamageTakenData}]";
         }
     }
 }

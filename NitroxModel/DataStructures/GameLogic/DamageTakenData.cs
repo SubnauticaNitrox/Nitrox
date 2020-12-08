@@ -15,5 +15,11 @@ namespace NitroxModel.DataStructures.GameLogic
         public ushort DamageType { get; set; }
 
         public Optional<NitroxId> DealerId { get; set; }
+
+        public override string ToString()
+        {
+            return $"DamageTakenData: Position: {Position}, DamageType: {DamageType}, DealerId: {DealerId}";
+            
+        }
     }
 }

@@ -16,8 +16,20 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic
 {
+    public struct ExecutionAndOwnership
+    {
+        public bool ShouldExecute { get; }
+        public bool isOwner { get; }
+
+        public ExecutionAndOwnership(bool execution, bool isOwner)
+        {
+            ShouldExecute = execution;
+            this.isOwner = isOwner;
+        }
+    }
     public class LiveMixinManager
     {
+        
         private readonly IMultiplayerSession multiplayerSession;
         private readonly SimulationOwnership simulationOwnership;
         private readonly Dictionary<NitroxId, Tuple<float, float>> outstandingChangeHealth = new Dictionary<NitroxId, Tuple<float, float>>();
@@ -33,7 +45,7 @@ namespace NitroxClient.GameLogic
         /// <param name="healthChange">The amount of health it gets back or damage dealt</param>
         /// <param name="dealer">Damage dealer</param>
         /// <returns>Tuple where the first item indicates execution and the second indicates if the player has the ownership of the reciever GameObject (if vehicle)</returns>
-        public Tuple<bool, bool> ShouldExecute(LiveMixin reciever, float healthChange, GameObject dealer)
+        public ExecutionAndOwnership ShouldExecute(LiveMixin reciever, float healthChange, GameObject dealer)
         {
             Vehicle vehicle = reciever.GetComponent<Vehicle>();
             SubRoot subRoot = reciever.GetComponent<SubRoot>();
@@ -50,7 +62,7 @@ namespace NitroxClient.GameLogic
                 // We either have a lock or an outstanding health change with the same health change and current total health when we execute the code
                 if (!hasOwnership && !isOutstandingPresent)
                 {
-                    return new Tuple<bool, bool>(false, false);
+                    return new ExecutionAndOwnership(false, false);
                 }
 
                 // Remove the outstandingHealthChange if present.
@@ -61,7 +73,7 @@ namespace NitroxClient.GameLogic
 
                 if (healthChange > 0)
                 {
-                    return new Tuple<bool, bool>(true, hasOwnership);
+                    return new ExecutionAndOwnership(true, hasOwnership);
                 }
                 // To prevent damage that happens while docking, we check if dealer is the vehicle that is also docked.
                 VehicleDockingBay vehicleDockingBay = reciever.GetComponent<VehicleDockingBay>();
@@ -76,12 +88,12 @@ namespace NitroxClient.GameLogic
                         || (Vehicle)vehicleDockingBay.ReflectionGet("nearbyVehicle") == dealerVehicle)
                     {
                         Log.Debug($"Dealer {dealer} is vehicle and currently docked or nearby {reciever}, do not harm it!");
-                        return new Tuple<bool, bool>(false, false);
+                        return new ExecutionAndOwnership(false, false);
                     }
                 }
-                return new Tuple<bool, bool>(true, hasOwnership);
+                return new ExecutionAndOwnership(true, hasOwnership);
             }
-            return new Tuple<bool, bool>(true, false);
+            return new ExecutionAndOwnership(true, false);
         }
 
         public void ProcessRemoteHealthChange(NitroxId id, float LifeChanged, Optional<DamageTakenData> opDamageTakenData, float totalHealth)
