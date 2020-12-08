@@ -49,7 +49,7 @@ namespace NitroxServer.ConsoleCommands
                     {
                         configOpenLock.Release();
                     }
-                    PropertiesWriter.Deserialize<ServerConfig>(); // Notifies user if deserialization failed.
+                    ConfigHandler.Deserialize<ServerConfig>(); // Notifies user if deserialization failed.
                     Log.Info("If you made changes, restart the server for them to take effect.");
                 })
                 .ContinueWith(t =>
