@@ -8,18 +8,56 @@ jobs:
       uses: actions/checkout@v2
       with:
         submodules: 'true'
+
     - name: Download Subnautica files
       run: ./.github/depotDownloader/QXCTF.exe
+
     - name: Setup Nuget.exe
       uses: nuget/setup-nuget@v1
+
     - name: Restore packages
       run: nuget restore Nitrox.sln
+
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v1.0.2
-    - name: Build with MSBuild
+
+    - name: Build Release with MSBuild
       run: msbuild Nitrox.sln -p:Configuration=Release
+
+    - name: Build Debug with MSBuild
+      run: msbuild Nitrox.sln -p:Configuration=Debug
+
     - name: Uploading zipped launcher
       uses: actions/upload-artifact@v2
       with:
         name: release
         path: ./NitroxLauncher/bin/Release/
+      
+  # test:
+   # runs-on: windows-latest
+   # steps:
+   # - name: Checking out repository
+     # uses: actions/checkout@v2
+     # with:
+       # submodules: 'true'
+
+   # - name: Download Subnautica files
+     # run: ./.github/depotDownloader/QXCTF.exe
+
+   # - name: Setup Nuget.exe
+     # uses: nuget/setup-nuget@v1
+
+   # - name: Restore packages
+     # run: nuget restore Nitrox.sln
+
+   # - name: Setup MSBuild
+     # uses: microsoft/setup-msbuild@v1.0.2
+
+   # - name: Setup VSTest and add to PATH
+     # uses: darenm/Setup-VSTest@v1
+
+   # - name: Build Debug with MSBuild
+     # run: msbuild Nitrox.sln -p:Configuration=Debug
+
+   # - name: Run VSTest
+     # run: vstest.console.exe ./NitroxTest/bin/Debug/NitroxTest.dll

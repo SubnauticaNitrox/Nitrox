@@ -1,3 +1,4 @@
+resources.assets
 Assembly-CSharp-firstpass.dll
 Assembly-CSharp.dll
 LibNoise.dll

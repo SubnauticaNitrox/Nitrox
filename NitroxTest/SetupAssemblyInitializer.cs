@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.IO;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 
@@ -12,6 +13,11 @@ namespace NitroxTest
         {
             NitroxEnvironment.Set(NitroxEnvironment.Types.TESTING);
             Log.Setup();
+
+            if (Directory.GetCurrentDirectory().Contains(@"D:\a\Nitrox\Nitrox")) //Check if environment is github actions
+            {
+                File.WriteAllText("path.txt", @"C:\PROGRA~2\Steam\steamapps\common\Subnautica");
+            }
         }
     }
 }
