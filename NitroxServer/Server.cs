@@ -1,8 +1,6 @@
 ﻿using System.Timers;
 using NitroxModel.Logger;
-using NitroxModel.Server;
 using NitroxServer.Serialization.World;
-using System.Configuration;
 using System.IO;
 using System.Text;
 using System.Linq;
@@ -23,6 +21,8 @@ namespace NitroxServer
 
         public bool IsRunning { get; private set; }
         public bool IsSaving { get; private set; }
+
+        public int Port => serverConfig?.ServerPort ?? -1;
 
         public Server(WorldPersistence worldPersistence, World world, ServerConfig serverConfig, Communication.NetworkingLayer.NitroxServer server)
         {
@@ -66,7 +66,11 @@ namespace NitroxServer
                 return;
             }
 
-            PropertiesWriter.Serialize(serverConfig);
+            // Don't overwrite config changes that users made to file
+            if (!File.Exists(serverConfig.FileName))
+            {
+                PropertiesWriter.Serialize(serverConfig);
+            }
             IsSaving = true;
             worldPersistence.Save(world, serverConfig.SaveName);
             IsSaving = false;
@@ -79,16 +83,13 @@ namespace NitroxServer
                 return false;
             }
 
+            Log.Info($"Server is listening on port {Port} UDP");
             Log.Info($"Using {serverConfig.SerializerMode} as save file serializer");
             Log.InfoSensitive("Server Password: {password}", string.IsNullOrEmpty(serverConfig.ServerPassword) ? "None. Public Server." : serverConfig.ServerPassword);
             Log.InfoSensitive("Admin Password: {password}", serverConfig.AdminPassword);
             Log.Info($"Autosave: {(serverConfig.DisableAutoSave ? "DISABLED" : $"ENABLED ({serverConfig.SaveInterval / 60000} min)")}");
             Log.Info($"World GameMode: {serverConfig.GameMode}");
-
             Log.Info($"Loaded save\n{SaveSummary}");
-
-            Log.Info("Nitrox Server Started");
-            Log.Info("To get help for commands, run help in console or /help in chatbox\n");
 
             PauseServer();
 

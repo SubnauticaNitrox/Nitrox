@@ -107,6 +107,7 @@
     <Compile Include="Serialization\Resources\ResourceAssetsParser.cs" />
     <Compile Include="Serialization\SubnauticaServerJsonSerializer.cs" />
     <Compile Include="Serialization\SubnauticaServerProtoBufSerializer.cs" />
+    <Compile Include="AppMutex.cs" />
     <Compile Include="SubnauticaServerAutoFacRegistrar.cs" />
   </ItemGroup>
   <ItemGroup>

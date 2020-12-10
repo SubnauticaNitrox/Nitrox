@@ -3,13 +3,17 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Net;
+using System.Net.Sockets;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Threading.Tasks;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Discovery;
+using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel_Subnautica.Helper;
 using NitroxServer;
@@ -22,51 +26,123 @@ namespace NitroxServer_Subnautica
         private static readonly Dictionary<string, Assembly> resolvedAssemblyCache = new Dictionary<string, Assembly>();
         private static Lazy<string> gameInstallDir;
 
-        private static void Main(string[] args)
-        {
-            ConfigureCultureInfo();
-            Log.Setup();
+        // Prevents Garbage Collection freeing this callback's memory. Causing an exception to occur for this handle.
+        private static readonly ConsoleEventDelegate consoleCtrlCheckDelegate = ConsoleEventCallback;
 
+        private static async Task Main(string[] args)
+        {
+            Log.Setup();
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
+
+            ConfigureCultureInfo();
             ConfigureConsoleWindow();
 
-            // Allow game path to be given as command argument
-            if (args.Length > 0 && Directory.Exists(args[0]) && File.Exists(Path.Combine(args[0], "Subnautica.exe")))
+            AppMutex.Hold(() =>
             {
-                string gameDir = Path.GetFullPath(args[0]);
-                Log.Info($"Using game files from: {gameDir}");
-                gameInstallDir = new Lazy<string>(() => gameDir);
-            }
-            else
+                Log.Info("Waiting for 30 seconds on other Nitrox servers to initialize before starting..");
+            }, 30000);
+            Server server;
+            try
             {
-                gameInstallDir = new Lazy<string>(() =>
+                // Allow game path to be given as command argument
+                if (args.Length > 0 && Directory.Exists(args[0]) && File.Exists(Path.Combine(args[0], "Subnautica.exe")))
                 {
-                    string gameDir = GameInstallationFinder.Instance.FindGame();
+                    string gameDir = Path.GetFullPath(args[0]);
                     Log.Info($"Using game files from: {gameDir}");
-                    return gameDir;
-                });
+                    gameInstallDir = new Lazy<string>(() => gameDir);
+                }
+                else
+                {
+                    gameInstallDir = new Lazy<string>(() =>
+                    {
+                        string gameDir = GameInstallationFinder.Instance.FindGame();
+                        Log.Info($"Using game files from: {gameDir}");
+                        return gameDir;
+                    });
+                }
+
+                AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
+                AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += CurrentDomainOnAssemblyResolve;
+
+                Map.Main = new SubnauticaMap();
+
+                NitroxServiceLocator.InitializeDependencyContainer(new SubnauticaServerAutoFacRegistrar());
+                NitroxServiceLocator.BeginNewLifetimeScope();
+
+                server = NitroxServiceLocator.LocateService<Server>();
+                await WaitForAvailablePortAsync(server.Port);
+                if (!server.Start())
+                {
+                    throw new Exception("Unable to start server.");
+                }
+                Log.Info("Server is waiting for players!");
+
+                CatchExitEvent();
             }
-
-            AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
-            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
-            AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += CurrentDomainOnAssemblyResolve;
-
-            NitroxModel.Helper.Map.Main = new SubnauticaMap();
-
-            NitroxServiceLocator.InitializeDependencyContainer(new SubnauticaServerAutoFacRegistrar());
-            NitroxServiceLocator.BeginNewLifetimeScope();
-
-            Server server = NitroxServiceLocator.LocateService<Server>();
-            if (!server.Start())
+            finally
             {
-                throw new Exception("Unable to start server.");
+                // Allow other servers to start initializing.
+                AppMutex.Release();
             }
 
-            CatchExitEvent();
-
+            Log.Info("To get help for commands, run help in console or /help in chatbox\n");
             ConsoleCommandProcessor cmdProcessor = NitroxServiceLocator.LocateService<ConsoleCommandProcessor>();
             while (server.IsRunning)
             {
                 cmdProcessor.ProcessCommand(Console.ReadLine(), Optional.Empty, Perms.CONSOLE);
+            }
+        }
+
+        private static async Task WaitForAvailablePortAsync(int port, int timeoutInSeconds = 30)
+        {
+            void PrintPortWarn(int timeRemaining)
+            {
+                Log.Warn($"Port {port} UDP is already in use. Retrying for {timeRemaining} seconds until it is available..");
+            }
+
+            Validate.IsTrue(timeoutInSeconds >= 5, "Timeout must be at least 5 seconds.");
+
+            DateTimeOffset time = DateTimeOffset.UtcNow;
+            bool first = true;
+            using CancellationTokenSource source = new CancellationTokenSource(timeoutInSeconds * 1000);
+            using Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.IP);
+
+            try
+            {
+                while (true)
+                {
+                    source.Token.ThrowIfCancellationRequested();
+                    try
+                    {
+                        socket.Bind(new IPEndPoint(IPAddress.Any, port));
+                        break;
+                    }
+                    catch (SocketException ex)
+                    {
+                        if (ex.SocketErrorCode != SocketError.AddressAlreadyInUse)
+                        {
+                            throw;
+                        }
+
+                        if (first)
+                        {
+                            first = false;
+                            PrintPortWarn(timeoutInSeconds);
+                        }
+                        else if (Environment.UserInteractive)
+                        {
+                            Console.CursorTop--;
+                            Console.CursorLeft = 0;
+                            PrintPortWarn(timeoutInSeconds - (DateTimeOffset.UtcNow - time).Seconds);
+                        }
+                        await Task.Delay(500, source.Token);
+                    }
+                }
+            }
+            catch (OperationCanceledException ex)
+            {
+                Log.Error(ex, "Port availability timeout reached.");
+                throw;
             }
         }
 
@@ -80,7 +156,7 @@ namespace NitroxServer_Subnautica
             {
                 return;
             }
-            
+
             Console.WriteLine("Press L to open log file before closing. Press any other key to close . . .");
             ConsoleKeyInfo key = Console.ReadKey(true);
             if (key.Key == ConsoleKey.L)
@@ -94,7 +170,7 @@ namespace NitroxServer_Subnautica
                 };
                 Process.Start(fileOpenerProgram, Log.FileName);
             }
-            
+
             Environment.Exit(1);
         }
 
@@ -179,9 +255,6 @@ namespace NitroxServer_Subnautica
 
         [DllImport("kernel32.dll", SetLastError = true)]
         private static extern bool SetConsoleCtrlHandler(ConsoleEventDelegate callback, bool add);
-
-        // Prevents Garbage Collection freeing this callback's memory. Causing an exception to occur for this handle.
-        private static readonly ConsoleEventDelegate consoleCtrlCheckDelegate = ConsoleEventCallback;
 
         private static bool ConsoleEventCallback(int eventType)
         {

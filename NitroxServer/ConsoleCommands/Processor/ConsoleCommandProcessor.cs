@@ -45,10 +45,7 @@ namespace NitroxServer.ConsoleCommands.Processor
             }
 
             string[] parts = msg.Split(splitChar, StringSplitOptions.RemoveEmptyEntries);
-
-            Command cmd;
-
-            if (!commands.TryGetValue(parts[0], out cmd))
+            if (!commands.TryGetValue(parts[0], out Command cmd))
             {
                 string errorMessage = "Command Not Found: " + parts[0];
                 Log.Info(errorMessage);
