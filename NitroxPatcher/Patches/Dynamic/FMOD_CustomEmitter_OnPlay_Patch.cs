@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using FMOD.Studio;
 using Harmony;
 using NitroxClient.GameLogic.FMOD;
@@ -27,15 +26,22 @@ namespace NitroxPatcher.Patches.Dynamic
                 __instance.GetEventInstance().getDescription(out EventDescription description);
                 description.is3D(out bool is3D);
 
-                if (__instance.TryGetComponent(out NitroxEntity nitroxEntity) && is3D)
+                if (is3D)
                 {
-                    int componentId = Array.IndexOf(__instance.GetComponents<FMOD_CustomEmitter>(), __instance);
-                    fmodSystem.PlayFMOD_CustomEmitter(nitroxEntity.Id, componentId, true);
+                    __instance.TryGetComponent(out NitroxEntity nitroxEntity);
+                    if (!nitroxEntity)
+                    {
+                        nitroxEntity = __instance.GetComponentInParent<NitroxEntity>();
+                    }
+                    if (nitroxEntity)
+                    {
+                        fmodSystem.PlayCustomEmitter(nitroxEntity.Id, __instance.asset.path, true);
+                    }
                 }
                 else
                 {
-                    __instance.GetEventInstance().getVolume(out float volume, out float finaleVolume);
-                    fmodSystem.PlayFMODAsset(__instance.asset.path, __instance.transform.position.ToDto(), volume, radius, isGlobal);
+                    __instance.GetEventInstance().getVolume(out float volume, out float _);
+                    fmodSystem.PlayAsset(__instance.asset.path, __instance.transform.position.ToDto(), volume, radius, isGlobal);
                 }
             }
         }

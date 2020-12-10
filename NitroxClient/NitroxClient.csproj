@@ -45,7 +45,9 @@
     <Compile Include="ClientAutoFacRegistrar.cs" />
     <Compile Include="Communication\PacketReceiver.cs" />
     <Compile Include="Communication\Packets\Processors\PlayFMODAssetProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\PlayFMOD_CustomEmitterProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\PlayFMODStudioEventEmitterProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\PlayFMODCustomLoopingEmitterProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\PlayFMODCustomEmitterProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\BedEnterProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\DebugStartMapProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\EntityMetadataUpdateProcessor.cs" />
@@ -63,6 +65,7 @@
     <Compile Include="Communication\Packets\Processors\VehicleSpawnedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\WeldActionProcessor.cs" />
     <Compile Include="Debuggers\EntityDebugger.cs" />
+    <Compile Include="Debuggers\SoundDebugger.cs" />
     <Compile Include="GameLogic\Bases\GeometryRespawnManager.cs" />
     <Compile Include="GameLogic\Bases\Spawning\BaseRoomWaterParkProcessor.cs" />
     <Compile Include="GameLogic\Bases\Spawning\MapRoomSpawnProcessor.cs" />
@@ -126,6 +129,7 @@
     <Compile Include="GameLogic\Spawning\Metadata\WeldableWallPanelGenericMetadataProcessor.cs" />
     <Compile Include="GameLogic\StorageSlots.cs" />
     <Compile Include="Helpers\NitroxProtobufSerializer.cs" />
+    <Compile Include="MonoBehaviours\FMODEmitterController.cs" />
     <Compile Include="MonoBehaviours\Gui\Chat\PlayerChat.cs" />
     <Compile Include="MonoBehaviours\Gui\Chat\PlayerChatLogItem.cs" />
     <Compile Include="MonoBehaviours\Gui\Chat\PlayerChatPinButton.cs" />

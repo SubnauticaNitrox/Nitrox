@@ -4,22 +4,22 @@ using NitroxModel.DataStructures;
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class PlayFMOD_CustomEmitter : Packet
+    public class PlayFMODCustomEmitter : Packet
     {
         public NitroxId Id { get; }
-        public int ComponentId { get; }
+        public string AssetPath { get; }
         public bool Play { get; }
 
-        public PlayFMOD_CustomEmitter(NitroxId id, int componentId, bool play)
+        public PlayFMODCustomEmitter(NitroxId id, string assetPath, bool play)
         {
             Id = id;
-            ComponentId = componentId;
+            AssetPath = assetPath;
             Play = play;
         }
 
         public override string ToString()
         {
-            return $"[PlayFMOD_CustomEmitter - Id: {Id}, ComponentId: {ComponentId}, Play {Play}]";
+            return $"[PlayFMODCustomEmitter - Id: {Id}, AssetPath: {AssetPath}, Play {Play}]";
         }
     }
 }

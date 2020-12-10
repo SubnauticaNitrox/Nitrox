@@ -52,31 +52,42 @@ namespace NitroxClient.GameLogic.FMOD
             return assetWhitelist.TryGetValue(path, out SoundData soundData) && soundData.IsWhitelisted;
         }
 
-        public bool IsWhitelisted(string path, out bool isGlobal, out float soundRadius)
+        public bool IsWhitelisted(string path, out bool isGlobal, out float radius)
         {
             bool hasEntry = assetWhitelist.TryGetValue(path, out SoundData soundData);
             if (hasEntry)
             {
                 isGlobal = soundData.IsGlobal;
-                soundRadius = soundData.SoundRadius;
+                radius = soundData.SoundRadius;
                 return soundData.IsWhitelisted;
             }
             isGlobal = false;
-            soundRadius = -1f;
+            radius = -1f;
             return false;
         }
 
-        public void PlayFMODAsset(string path, NitroxVector3 position, float volume, float radius, bool isGlobal)
+
+        public void PlayAsset(string path, NitroxVector3 position, float volume, float radius, bool isGlobal)
         {
             packetSender.Send(new PlayFMODAsset(path, position, volume, radius, isGlobal));
         }
 
-        public void PlayFMOD_CustomEmitter(NitroxId id, int componentNumber, bool play)
+        public void PlayCustomEmitter(NitroxId id, string assetPath, bool play)
         {
-            packetSender.Send(new PlayFMOD_CustomEmitter(id, componentNumber, play));
+            packetSender.Send(new PlayFMODCustomEmitter(id, assetPath, play));
         }
-    }
 
+        public void PlayCustomLoopingEmitter(NitroxId id, string assetPath)
+        {
+            packetSender.Send(new PlayFMODCustomLoopingEmitter(id, assetPath));
+        }
+
+        public void PlayStudioEmitter(NitroxId id, string assetPath, bool play, bool allowFadeout)
+        {
+            packetSender.Send(new PlayFMODStudioEmitter(id, assetPath, play, allowFadeout));
+        }
+
+        public Dictionary<string, SoundData> GetSoundDataList() => assetWhitelist;
 
         public static FMODSuppressor SuppressSounds()
         {

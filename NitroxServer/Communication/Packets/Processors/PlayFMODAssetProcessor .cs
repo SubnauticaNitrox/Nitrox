@@ -1,5 +1,6 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
+using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
@@ -17,6 +18,7 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(PlayFMODAsset packet, Player sendingPlayer)
         {
+            Log.Debug("[PlayFMODAssetProcessor] - " + packet);
             foreach (Player player in playerManager.GetConnectedPlayers())
             {
                 float distance = NitroxVector3.Distance(player.Position, packet.Position);

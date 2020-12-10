@@ -1,26 +1,28 @@
 ﻿using System.Reflection;
-using FMOD.Studio;
 using Harmony;
 using NitroxClient.GameLogic.FMOD;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
+using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
-    public class FMOD_CustomEmitter_OnStop_Patch : NitroxPatch, IDynamicPatch
+    public class FMOD_StudioEventEmitter_PlayUI_Patch : NitroxPatch, IDynamicPatch
     {
         private static FMODSystem fmodSystem;
 
-        private static readonly MethodInfo targetMethod = typeof(FMOD_CustomEmitter).GetMethod("OnStop", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly MethodInfo targetMethod = typeof(FMOD_StudioEventEmitter).GetMethod(nameof(FMOD_StudioEventEmitter.PlayUI), BindingFlags.Public | BindingFlags.Instance);
 
-        public static void Postfix(FMOD_CustomEmitter __instance)
+        public static bool Prefix()
+        {
+            return !FMODSuppressor.SuppressFMODEvents;
+        }
+
+        public static void Postfix(FMOD_StudioEventEmitter __instance, float ____lastTimePlayed)
         {
             if (fmodSystem.IsWhitelisted(__instance.asset.path))
             {
-                __instance.GetEventInstance().getDescription(out EventDescription description);
-                description.is3D(out bool is3D);
-
-                if (is3D)
+                if (____lastTimePlayed == 0.0 || Time.time > ____lastTimePlayed + __instance.minInterval)
                 {
                     __instance.TryGetComponent(out NitroxEntity nitroxEntity);
                     if (!nitroxEntity)
@@ -29,7 +31,7 @@ namespace NitroxPatcher.Patches.Dynamic
                     }
                     if (nitroxEntity)
                     {
-                        fmodSystem.PlayCustomEmitter(nitroxEntity.Id, __instance.asset.path, false);
+                        fmodSystem.PlayStudioEmitter(nitroxEntity.Id, __instance.asset.path, true, false);
                     }
                 }
             }
@@ -38,7 +40,8 @@ namespace NitroxPatcher.Patches.Dynamic
         public override void Patch(HarmonyInstance harmony)
         {
             fmodSystem = NitroxServiceLocator.LocateService<FMODSystem>();
-            PatchPostfix(harmony, targetMethod);
+            PatchMultiple(harmony, targetMethod, true, true, false);
         }
+
     }
 }

@@ -61,8 +61,8 @@ namespace NitroxClient.MonoBehaviours
 
         internal virtual void SetArmPositions(Vector3 leftArmPosition, Vector3 rightArmPosition)
         {
-           SmoothLeftArm.Target = leftArmPosition;
-           SmoothRightArm.Target = rightArmPosition;
+            SmoothLeftArm.Target = leftArmPosition;
+            SmoothRightArm.Target = rightArmPosition;
         }
 
         internal virtual void Enter()

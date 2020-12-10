@@ -92,8 +92,7 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public static NitroxVector3 Normalize(NitroxVector3 value)
         {
-            float ls = value.X * value.X + value.Y * value.Y + value.Z * value.Z;
-            float length = Mathf.Sqrt(ls);
+            float length = value.Magnitude;
             return new NitroxVector3(value.X / length, value.Y / length, value.Z / length);
         }
 
@@ -118,6 +117,8 @@ namespace NitroxModel.DataStructures.GameLogic
             float num3 = lhs.Z - rhs.Z;
             return Mathf.Sqrt(num1 * num1 + num2 * num2 + num3 * num3);
         }
+        
+        public float Magnitude => Mathf.Sqrt(X * X + Y * Y + Z * Z);
 
         public override string ToString()
         {

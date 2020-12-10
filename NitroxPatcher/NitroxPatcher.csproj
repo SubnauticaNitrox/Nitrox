@@ -38,6 +38,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
+    <Compile Include="Patches\Dynamic\FMOD_CustomLoopingEmitter_PlayStopSound_Patch.cs" />
+    <Compile Include="Patches\Dynamic\FMOD_CustomLoopingEmitter_OnPlay_Patch.cs" />
+    <Compile Include="Patches\Dynamic\FMOD_StudioEventEmitter_Stop_Patch.cs" />
+    <Compile Include="Patches\Dynamic\FMOD_StudioEventEmitter_PlayUI_Patch.cs" />
+    <Compile Include="Patches\Dynamic\FMOD_StudioEventEmitter_Start_Patch.cs" />
+    <Compile Include="Patches\Dynamic\FMOD_CustomEmitter_Start_Patch.cs" />
     <Compile Include="Patches\Dynamic\FMOD_CustomEmitter_OnStop_Patch.cs" />
     <Compile Include="Patches\Dynamic\FMOD_CustomEmitter_OnPlay_Patch.cs" />
     <Compile Include="Patches\Dynamic\FMODUWE_PlayOneShotImpl_Patch.cs" />

@@ -474,10 +474,10 @@ event:/player/story/VO/RadioMushroom24;false;false;0
 event:/player/story/VO/RadioRadiationSuit (male);false;false;0
 event:/player/story/VO/RadioSecondOfficer;false;false;0
 event:/player/story/VO/RadioShallows22;false;false;0
-event:/player/surface;true;false;20
-event:/player/surface_no_air;true;false;20
-event:/player/surface_tank;true;false;20
-event:/player/swim_surface;true;false;20
+event:/player/surface;false;false;20
+event:/player/surface_no_air;false;false;20
+event:/player/surface_tank;false;false;20
+event:/player/swim_surface;false;false;20
 event:/player/swim_underwater;true;false;20
 event:/player/vitals_ok;false;false;0
 event:/player/water_critical;false;false;0
@@ -688,12 +688,12 @@ event:/sub/seamoth/pulse_charge_loop;false;false;0
 event:/sub/seamoth/seaglide_equip;true;true;10
 event:/sub/seamoth/seaglide_light_off;true;true;7
 event:/sub/seamoth/seaglide_light_on;true;true;7
-event:/sub/seamoth/seaglide_loop_rpm;true;true;60
-event:/sub/seamoth/seaglide_rev_up;true;true;60
+event:/sub/seamoth/seaglide_loop_rpm;false;false;60
+event:/sub/seamoth/seaglide_rev_up;false;false;60
 event:/sub/seamoth/seamoth_light_off;true;true;10
 event:/sub/seamoth/seamoth_light_on;true;true;10
-event:/sub/seamoth/seamoth_loop_rpm;true;true;100
-event:/sub/seamoth/seamoth_rev_up;true;true;100
+event:/sub/seamoth/seamoth_loop_rpm;false;false;150
+event:/sub/seamoth/seamoth_rev_up;false;false;150
 event:/sub/seamoth/seamoth_stop;false;false;0
 event:/sub/seamoth/sonar_loop;false;false;0
 event:/sub/seamoth/storage_close;false;false;0

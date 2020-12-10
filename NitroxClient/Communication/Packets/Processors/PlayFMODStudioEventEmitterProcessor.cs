@@ -8,17 +8,17 @@ using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
-    public class PlayFMOD_CustomEmitterProcessor : ClientPacketProcessor<PlayFMOD_CustomEmitter>
+    public class PlayFMODStudioEventEmitterProcessor : ClientPacketProcessor<PlayFMODStudioEmitter>
     {
         private readonly IPacketSender packetSender;
 
-        public PlayFMOD_CustomEmitterProcessor(IPacketSender packetSender)
+        public PlayFMODStudioEventEmitterProcessor(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
         }
 
 
-        public override void Process(PlayFMOD_CustomEmitter packet)
+        public override void Process(PlayFMODStudioEmitter packet)
         {
             Optional<GameObject> soundSource = NitroxEntity.GetObjectFrom(packet.Id);
             if (!soundSource.HasValue)
@@ -26,21 +26,21 @@ namespace NitroxClient.Communication.Packets.Processors
                 return;
             }
 
-            FMOD_CustomEmitter fmodCustomEmitter = soundSource.Value.GetComponents<FMOD_CustomEmitter>()[packet.ComponentId];
-            if (!fmodCustomEmitter)
+            FMODEmitterController fmodEmitterController = soundSource.Value.GetComponent<FMODEmitterController>();
+            if (!fmodEmitterController)
             {
                 return;
             }
 
-            using (packetSender.Suppress<PlayFMOD_CustomEmitter>())
+            using (packetSender.Suppress<PlayFMODStudioEmitter>())
             {
                 if (packet.Play)
                 {
-                    fmodCustomEmitter.Play();
+                    fmodEmitterController.PlayStudioEmitter(packet.AssetPath);
                 }
                 else
                 {
-                    fmodCustomEmitter.Stop();
+                    fmodEmitterController.StopStudioEmitter(packet.AssetPath, packet.AllowFadeout);
                 }
             }
         }

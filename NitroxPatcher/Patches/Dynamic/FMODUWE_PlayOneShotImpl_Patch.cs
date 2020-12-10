@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using Harmony;
-using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.FMOD;
 using NitroxModel.Core;
 using NitroxModel_Subnautica.DataStructures;
@@ -16,14 +15,14 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static bool Prefix()
         {
-            return !NitroxModel.DataStructures.GameLogic.FMOD.FMODSuppressor.SuppressFMODEvents;
+            return !FMODSuppressor.SuppressFMODEvents;
         }
 
         public static void Postfix(string eventPath, Vector3 position, float volume)
         {
             if (fmodSystem.IsWhitelisted(eventPath, out bool isGlobal, out float radius))
             {
-                fmodSystem.PlayFMODAsset(eventPath, position.ToDto(), volume, radius, isGlobal);
+                fmodSystem.PlayAsset(eventPath, position.ToDto(), volume, radius, isGlobal);
             }
         }
 
