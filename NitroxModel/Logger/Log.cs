@@ -35,7 +35,7 @@ namespace NitroxModel.Logger
         
         public static string FileName { get; private set; }
 
-        public static void Setup(bool performanceCritical = false)
+        public static void Setup(bool performanceCritical = false, bool asyncConsoleWriter = false)
         {
             if (logger != null)
             {
@@ -83,7 +83,15 @@ namespace NitroxModel.Logger
             AsyncTargetWrapper logFileAsync = new AsyncTargetWrapper(logFile, 1000, AsyncTargetWrapperOverflowAction.Grow);
 
             // Rules for mapping loggers to targets
-            config.AddRule(LogLevel.Debug, LogLevel.Fatal, logConsole);
+            if (asyncConsoleWriter)
+            {
+                AsyncTargetWrapper logConsoleAsync = new AsyncTargetWrapper(logConsole, 1000, AsyncTargetWrapperOverflowAction.Grow);
+                config.AddRule(LogLevel.Debug, LogLevel.Fatal, logConsoleAsync);
+            }
+            else
+            {
+                config.AddRule(LogLevel.Debug, LogLevel.Fatal, logConsole);
+            }
             config.AddRule(LogLevel.Debug, LogLevel.Fatal, logFileAsync);
             config.AddRuleForOneLevel(LogLevel.Info,
                                       new MethodCallTarget("ingame",
