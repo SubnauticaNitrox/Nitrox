@@ -5,6 +5,7 @@ using NitroxClient.Communication.Abstract;
 using NitroxClient.Debuggers;
 using NitroxClient.MonoBehaviours.Gui.InGame;
 using NitroxModel.Core;
+using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Networking;
 using NitroxModel.Packets;
@@ -22,10 +23,14 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
 
         private NetManager client;
 
-        public LiteNetLibClient(PacketReceiver packetReceiver, NetworkDebugger networkDebugger)
+        public LiteNetLibClient(PacketReceiver packetReceiver)
         {
             this.packetReceiver = packetReceiver;
-            this.networkDebugger = networkDebugger;
+
+            if (NitroxEnvironment.IsNormal) //Testing would fail because NetworkDebugger inherits from Unity.
+            {
+                networkDebugger = NitroxServiceLocator.LocateService<NetworkDebugger>();
+            }
         }
 
         public void Start(string ipAddress, int serverPort)

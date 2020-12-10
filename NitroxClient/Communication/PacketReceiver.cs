@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using NitroxClient.Debuggers;
+using NitroxModel.Core;
+using NitroxModel.Helper;
 using NitroxModel.Packets;
 
 namespace NitroxClient.Communication
@@ -10,10 +12,14 @@ namespace NitroxClient.Communication
         private readonly NetworkDebugger networkDebugger;
         private readonly Queue<Packet> receivedPackets;
 
-        public PacketReceiver(NetworkDebugger networkDebugger = null)
+        public PacketReceiver()
         {
             receivedPackets = new Queue<Packet>();
-            this.networkDebugger = networkDebugger;
+
+            if (NitroxEnvironment.IsNormal) //Testing would fail because NetworkDebugger inherits from Unity.
+            {
+                networkDebugger = NitroxServiceLocator.LocateService<NetworkDebugger>();
+            }
         }
 
         public void PacketReceived(Packet packet)
@@ -38,6 +44,6 @@ namespace NitroxClient.Communication
             }
 
             return packets;
-        }        
+        }
     }
 }

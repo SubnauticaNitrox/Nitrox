@@ -119,7 +119,6 @@
     <Compile Include="Packets\GameModeChanged.cs" />
     <Compile Include="Packets\EnergyMixinValueChanged.cs" />
     <Compile Include="Packets\LiveMixinHealthChanged.cs" />
-    <Compile Include="Packets\PlayerPermaDeathEvent.cs" />
     <Compile Include="Packets\PingRenamed.cs" />
     <Compile Include="Packets\PlayerEquipmentAdded.cs" />
     <Compile Include="Packets\PlayerEquipmentRemoved.cs" />
