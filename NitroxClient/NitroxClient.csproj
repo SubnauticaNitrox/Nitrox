@@ -52,6 +52,7 @@
     <Compile Include="Communication\Packets\Processors\EscapePodChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\GameModeChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\EnergyMixinValueChangedProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\LifeMixinChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PingRenamedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlayerTeleportedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\RadioPlayPendingMessageProcessor.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="Communication\Packets\Processors\RocketPreflightCompleteProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\RocketStageUpdateProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleSpawnedProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\WeldActionProcessor.cs" />
     <Compile Include="Debuggers\EntityDebugger.cs" />
     <Compile Include="GameLogic\Bases\Spawning\MapRoomSpawnProcessor.cs" />
     <Compile Include="GameLogic\Bases\Spawning\BaseBioReactorSpawnProcessor.cs" />
@@ -68,6 +70,8 @@
     <Compile Include="GameLogic\Bases\Spawning\BasePieceSpawnPrioritizer.cs" />
     <Compile Include="GameLogic\Bases\Spawning\NoOpBasePieceSpawnProcessor.cs" />
     <Compile Include="GameLogic\ChatUI\PlayerChatManager.cs" />
+    <Compile Include="GameLogic\InitialSync\SimulationOwnershipInitialSyncProcessor.cs" />
+    <Compile Include="GameLogic\LiveMixinManager.cs" />
     <Compile Include="GameLogic\Rockets.cs" />
     <Compile Include="GameLogic\Spawning\EntitySpawnerResolver.cs" />
     <Compile Include="GameLogic\Spawning\ExistingGameObjectSpawner.cs" />

@@ -44,6 +44,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
+    <Compile Include="Patches\Dynamic\LiveMixin_AddHealth_Patch.cs" />
+    <Compile Include="Patches\Dynamic\LiveMixin_TakeDamage_Patch.cs" />
     <Compile Include="Patches\Dynamic\OnGoalUnlockTracker_NotifyGoalComplete_Patch.cs" />
     <Compile Include="Patches\Dynamic\Player_SetCurrentEscapePod_Patch.cs" />
     <Compile Include="Patches\Dynamic\PrecursorKeyTerminal_OnHandClick_Patch.cs" />
@@ -174,12 +176,14 @@
     <Compile Include="Patches\Dynamic\ToggleLights_SetLightsActive_Patch.cs" />
     <Compile Include="Patches\Dynamic\uGUI_OptionsPanel_AddBindings_Patch.cs" />
     <Compile Include="Patches\Dynamic\uGUI_SignInput_OnDeselect_Patch.cs" />
-    <Compile Include="Patches\Dynamic\VehicleDockingBay_DockVehicle_Patch.cs" />
+    <Compile Include="Patches\Dynamic\VehicleDockingBay_OnTriggerEnter.cs" />
+    <Compile Include="Patches\Dynamic\VehicleDockingBay_OnUndockingComplete_Patch.cs" />
     <Compile Include="Patches\Dynamic\Vehicle_OnHandClick_Patch.cs" />
     <Compile Include="Patches\Dynamic\Vehicle_OnKill_Patch.cs" />
     <Compile Include="Patches\Dynamic\Vehicle_OnPilotModeBegin_Patch.cs" />
     <Compile Include="Patches\Dynamic\Vehicle_OnPilotModeEnd_Patch.cs" />
     <Compile Include="Patches\Dynamic\WeldableWallPanelGeneric_UnlockDoor_Patch.cs" />
+    <Compile Include="Patches\Dynamic\Welder_Weld_Patch.cs" />
     <Compile Include="Patches\IDynamicPatch.cs" />
     <Compile Include="Patches\INitroxPatch.cs" />
     <Compile Include="Patches\IPersistentPatch.cs" />

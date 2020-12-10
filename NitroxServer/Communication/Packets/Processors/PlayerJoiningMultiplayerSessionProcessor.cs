@@ -52,6 +52,16 @@ namespace NitroxServer.Communication.Packets.Processors
                 player.Permissions = Perms.ADMIN;
             }
 
+            List<NitroxId> simulations = world.EntitySimulation.AssignGlobalRootEntities(player).ToList();
+            IEnumerable<VehicleModel> vehicles = world.VehicleManager.GetVehicles();
+            foreach(VehicleModel vehicle in vehicles)
+            {
+                if (world.SimulationOwnershipData.TryToAcquire(vehicle.Id, player, SimulationLockType.TRANSIENT))
+                {
+                    simulations.Add(vehicle.Id);
+                }
+            }
+
             InitialPlayerSync initialPlayerSync = new InitialPlayerSync(player.GameObjectId,
                 wasBrandNewPlayer,
                 world.EscapePodManager.GetEscapePods(),
@@ -59,7 +69,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 equippedItems,
                 player.GetModules(),
                 world.BaseManager.GetBasePiecesForNewlyConnectedPlayer(),
-                world.VehicleManager.GetVehicles(),
+                vehicles,
                 world.InventoryManager.GetAllInventoryItems(),
                 world.InventoryManager.GetAllStorageSlotItems(),
                 world.GameData.PDAState.GetInitialPDAData(),
@@ -69,6 +79,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 player.Stats,
                 GetRemotePlayerData(player),
                 world.EntityManager.GetGlobalRootEntities(),
+                simulations,
                 world.GameMode,
                 player.Permissions);
 

@@ -25,16 +25,18 @@ namespace NitroxClient.GameLogic
         private readonly IPacketSender packetSender;
         private readonly PlayerManager playerManager;
         private readonly IMultiplayerSession multiplayerSession;
+        private readonly SimulationOwnership simulationOwnership;
         private readonly Dictionary<NitroxId, VehicleModel> vehiclesById;
 
         public delegate void VehicleCreatedHandler(GameObject gameObject);
         public event VehicleCreatedHandler VehicleCreated;
 
-        public Vehicles(IPacketSender packetSender, PlayerManager playerManager, IMultiplayerSession multiplayerSession)
+        public Vehicles(IPacketSender packetSender, PlayerManager playerManager, IMultiplayerSession multiplayerSession, SimulationOwnership simulationOwnership)
         {
             this.packetSender = packetSender;
             this.playerManager = playerManager;
             this.multiplayerSession = multiplayerSession;
+            this.simulationOwnership = simulationOwnership;
             vehiclesById = new Dictionary<NitroxId, VehicleModel>();
         }
 
@@ -212,10 +214,14 @@ namespace NitroxClient.GameLogic
                 if (subRoot)
                 {
                     mvc = subRoot.gameObject.EnsureComponent<MultiplayerCyclops>();
-                    subRoot.GetComponent<LiveMixin>().health = vehicleModel.Health;
                 }
                 else if (vehicle)
                 {
+                    if (vehicle.docked)
+                    {
+                        Log.Debug($"For vehicle {vehicleModel.Id} position update while docked, will not execute");
+                        return;
+                    }
                     SeaMoth seamoth = vehicle as SeaMoth;
                     Exosuit exosuit = vehicle as Exosuit;
 
@@ -238,7 +244,6 @@ namespace NitroxClient.GameLogic
                         }
                     }
 
-                    vehicle.GetComponent<LiveMixin>().health = vehicleModel.Health;
                 }
                 else if (rocket)
                 {
@@ -470,10 +475,11 @@ namespace NitroxClient.GameLogic
             packetSender.Send(packet);
 
             PacketSuppressor<Movement> movementSuppressor = packetSender.Suppress<Movement>();
-            vehicle.StartCoroutine(AllowMovementPacketsAfterDockingAnimation(movementSuppressor));
+            PacketSuppressor<VehicleMovement> vehicleMovementSuppressor = packetSender.Suppress<VehicleMovement>();
+            vehicle.StartCoroutine(AllowMovementPacketsAfterDockingAnimation(movementSuppressor, vehicleMovementSuppressor));
         }
 
-        public void BroadcastVehicleUndocking(VehicleDockingBay dockingBay, Vehicle vehicle)
+        public void BroadcastVehicleUndocking(VehicleDockingBay dockingBay, Vehicle vehicle, bool undockingStart)
         {
             NitroxId dockId;
 
@@ -493,7 +499,15 @@ namespace NitroxClient.GameLogic
             NitroxId vehicleId = NitroxEntity.GetId(vehicle.gameObject);
             ushort playerId = multiplayerSession.Reservation.PlayerId;
 
-            VehicleUndocking packet = new VehicleUndocking(vehicleId, dockId, playerId);
+            PacketSuppressor<Movement> movementSuppressor = packetSender.Suppress<Movement>();
+            PacketSuppressor<VehicleMovement> vehicleMovementSuppressor = packetSender.Suppress<VehicleMovement>();
+            if (!undockingStart)
+            {
+                movementSuppressor.Dispose();
+                vehicleMovementSuppressor.Dispose();
+            }
+
+            VehicleUndocking packet = new VehicleUndocking(vehicleId, dockId, playerId, undockingStart);
             packetSender.Send(packet);
         }
 
@@ -510,17 +524,18 @@ namespace NitroxClient.GameLogic
                 place until after the player exits the vehicle.  This causes the player body to strech to
                 the current cyclops position.
         */
-        public IEnumerator AllowMovementPacketsAfterDockingAnimation(PacketSuppressor<Movement> movementSuppressor)
+        public IEnumerator AllowMovementPacketsAfterDockingAnimation(PacketSuppressor<Movement> movementSuppressor, PacketSuppressor<VehicleMovement> vehicleMovementSuppressor)
         {
             yield return new WaitForSeconds(3.0f);
             movementSuppressor.Dispose();
+            vehicleMovementSuppressor.Dispose();
         }
 
         public IEnumerator UpdateVehiclePositionAfterSpawn(VehicleModel vehicleModel, GameObject gameObject, float cooldown)
         {
             yield return new WaitForSeconds(cooldown);
 
-            VehicleMovementData vehicleMovementData = new VehicleMovementData(vehicleModel.TechType, vehicleModel.Id, gameObject.transform.position.ToDto(), gameObject.transform.rotation.ToDto(), vehicleModel.Health);
+            VehicleMovementData vehicleMovementData = new VehicleMovementData(vehicleModel.TechType, vehicleModel.Id, gameObject.transform.position.ToDto(), gameObject.transform.rotation.ToDto());
             ushort playerId = ushort.MaxValue;
 
             packetSender.Send(new VehicleMovement(playerId, vehicleMovementData));
