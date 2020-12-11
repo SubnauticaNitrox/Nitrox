@@ -49,11 +49,9 @@ namespace NitroxClient
 
         private static void RegisterCoreDependencies(ContainerBuilder containerBuilder)
         {
-            containerBuilder.RegisterAssemblyTypes(currentAssembly)
-                            .AssignableTo<BaseDebugger>()
-                            .As<BaseDebugger>()
-                            .AsSelf()
-                            .SingleInstance();
+            containerBuilder.RegisterType<EntityDebugger>().As<BaseDebugger>().AsSelf().SingleInstance();
+            containerBuilder.RegisterType<SceneDebugger>().As<BaseDebugger>().AsSelf().SingleInstance();
+            containerBuilder.RegisterType<NetworkDebugger>().As<BaseDebugger>().AsSelf().As<INetworkDebugger>().SingleInstance();
 
             containerBuilder.Register(c => new NitroxProtobufSerializer($"{nameof(NitroxModel)}.dll"));
 
@@ -108,7 +106,7 @@ namespace NitroxClient
             containerBuilder.RegisterType<NitroxConsole>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Terrain>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<BuildThrottlingQueue>().InstancePerLifetimeScope();
-            containerBuilder.RegisterType<BasePieceSpawnPrioritizer>().InstancePerLifetimeScope();            
+            containerBuilder.RegisterType<BasePieceSpawnPrioritizer>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<KnownTechEntry>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<ExosuitModuleEvent>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<SeamothModulesEvent>().InstancePerLifetimeScope();

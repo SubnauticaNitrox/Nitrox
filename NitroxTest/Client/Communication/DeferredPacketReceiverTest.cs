@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NitroxClient;
 using NitroxClient.Communication;
 using NitroxClient.Map;
+using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
 using NitroxTest.Model;
-using UnityEngine;
 
 namespace NitroxTest.Client.Communication
 {
@@ -27,7 +28,10 @@ namespace NitroxTest.Client.Communication
         [TestInitialize]
         public void TestInitialize()
         {
-            packetReceiver = new PacketReceiver();
+            NitroxServiceLocator.InitializeDependencyContainer(new ClientAutoFacRegistrar(), new TestAutoFacRegistrar());
+            NitroxServiceLocator.BeginNewLifetimeScope();
+
+            packetReceiver = NitroxServiceLocator.LocateService<PacketReceiver>();
             NitroxModel.Helper.Map.Main = new NitroxModel_Subnautica.Helper.SubnauticaMap();
 
             loadedCell = new AbsoluteEntityCell(loadedActionPosition, CELL_LEVEL);

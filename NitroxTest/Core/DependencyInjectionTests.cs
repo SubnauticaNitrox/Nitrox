@@ -13,8 +13,7 @@ namespace NitroxTest.Core
         [ClassInitialize]
         public static void BeforeAll(TestContext context)
         {
-            TestAutoFacRegistrar registrar = new TestAutoFacRegistrar();
-            NitroxServiceLocator.InitializeDependencyContainer(registrar);
+            NitroxServiceLocator.InitializeDependencyContainer(new DependencyInjectionTestsAutoFacRegistrar());
             NitroxServiceLocator.BeginNewLifetimeScope();
         }
 
@@ -79,7 +78,7 @@ namespace NitroxTest.Core
             servicerB.Should().BeOfType<ServiceBProvider>();
         }
 
-        private class TestAutoFacRegistrar : IAutoFacRegistrar
+        private class DependencyInjectionTestsAutoFacRegistrar : IAutoFacRegistrar
         {
             public void RegisterDependencies(ContainerBuilder containerBuilder)
             {
