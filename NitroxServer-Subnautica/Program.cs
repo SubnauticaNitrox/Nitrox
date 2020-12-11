@@ -31,11 +31,11 @@ namespace NitroxServer_Subnautica
 
         private static async Task Main(string[] args)
         {
-            Log.Setup();
+            // The thread that writers to console is paused while selecting text in console. So console writer needs to be async.
+            Log.Setup(asyncConsoleWriter: true);
             AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
 
             ConfigureCultureInfo();
-            ConfigureConsoleWindow();
 
             AppMutex.Hold(() =>
             {
@@ -205,11 +205,6 @@ namespace NitroxServer_Subnautica
                 resolvedAssemblyCache[dllPath] = assembly;
                 return assembly;
             }
-        }
-
-        private static void ConfigureConsoleWindow()
-        {
-            ConsoleWindow.QuickEdit(false);
         }
 
         /**
