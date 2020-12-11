@@ -27,6 +27,7 @@ namespace NitroxModel.Serialization
             char[] lineSeparator = { '=' };
             int lineNum = 0;
             string readLine;
+            HashSet<MemberInfo> unserializedMembers = typeCachedDict.Values.ToHashSet();
             while ((readLine = reader.ReadLine()) != null)
             {
                 lineNum++;
@@ -38,28 +39,48 @@ namespace NitroxModel.Serialization
                 if (readLine.Contains('='))
                 {
                     string[] keyValuePair = readLine.Split(lineSeparator, 2);
-                    keyValuePair[0] = keyValuePair[0].ToLowerInvariant(); // Ignore case for property names in file.
-                    if (!typeCachedDict.TryGetValue(keyValuePair[0], out MemberInfo member))
+                    // Ignore case for property names in file.
+                    if (!typeCachedDict.TryGetValue(keyValuePair[0].ToLowerInvariant(), out MemberInfo member))
                     {
-                        Log.Warn($"Property {keyValuePair[0]} does not exist on type {typeof(T).FullName}!");
+                        Log.Warn($"Property or field {keyValuePair[0]} does not exist on type {typeof(T).FullName}!");
                         continue;
                     }
+                    unserializedMembers.Remove(member); // This member was serialized in the file 
 
-                    FieldInfo field = member as FieldInfo;
-                    if (field != null)
+                    if (!SetMemberValue(props, member, keyValuePair[1]))
                     {
-                        field.SetValue(props, TypeDescriptor.GetConverter(field.FieldType).ConvertFrom(keyValuePair[1]));
-                    }
-                    PropertyInfo prop = member as PropertyInfo;
-                    if (prop != null)
-                    {
-                        prop.SetValue(props, TypeDescriptor.GetConverter(prop.PropertyType).ConvertFrom(keyValuePair[1]));
+                        (Type type, object value) data = member switch
+                        {
+                            FieldInfo field => (field.FieldType, field.GetValue(props)),
+                            PropertyInfo prop => (prop.PropertyType, prop.GetValue(props)),
+                            _ => (typeof(string), "")
+                        };
+                        Log.Warn($@"Property ""({data.type.Name}) {member.Name}"" has an invalid value {StringifyValue(keyValuePair[1])} on line {lineNum}. Using default value: {StringifyValue(data.value)}");
                     }
                 }
                 else
                 {
                     Log.Error($"Incorrect format detected on line {lineNum} in {Path.GetFullPath(props.FileName)}:{Environment.NewLine}{readLine}");
                 }
+            }
+
+            if (unserializedMembers.Any())
+            {
+                IEnumerable<string> unserializedProps = unserializedMembers.Select(m =>
+                                                                           {
+                                                                               object value = null;
+                                                                               if (m is FieldInfo field)
+                                                                               {
+                                                                                   value = field.GetValue(props);
+                                                                               }
+                                                                               else if (m is PropertyInfo prop)
+                                                                               {
+                                                                                   value = prop.GetValue(props);
+                                                                               }
+                                                                               return new { m.Name, Value = value };
+                                                                           })
+                                                                           .Select(m => $" - {m.Name}: {m.Value}");
+                Log.Warn($@"{props.FileName} is using default values for the missing properties:{Environment.NewLine}{string.Join(Environment.NewLine, unserializedProps)}");
             }
 
             return props;
@@ -119,6 +140,47 @@ namespace NitroxModel.Serialization
                 typeCache.Add(typeof(T), typeCachedDict);
             }
             return typeCachedDict;
+        }
+
+        private static string StringifyValue(object value)
+        {
+            return value switch
+            {
+                string _ => $@"""{value}""",
+                null => @"""""",
+                _ => value.ToString()
+            };
+        }
+
+        private static bool SetMemberValue<T>(T instance, MemberInfo member, string valueFromFile)
+        {
+            object ConvertFromStringOrDefault(Type typeOfValue, out bool isDefault, object defaultValue = default)
+            {
+                try
+                {
+                    object newValue = TypeDescriptor.GetConverter(typeOfValue).ConvertFrom(valueFromFile);
+                    isDefault = false;
+                    return newValue;
+                }
+                catch (Exception)
+                {
+                    isDefault = true;
+                    return defaultValue;
+                }
+            }
+
+            bool usedDefault;
+            switch (member)
+            {
+                case FieldInfo field:
+                    field.SetValue(instance, ConvertFromStringOrDefault(field.FieldType, out usedDefault, field.GetValue(instance)));
+                    return !usedDefault;
+                case PropertyInfo prop:
+                    prop.SetValue(instance, ConvertFromStringOrDefault(prop.PropertyType, out usedDefault, prop.GetValue(instance)));
+                    return !usedDefault;
+                default:
+                    throw new Exception($"Serialized member must be field or property: {member}.");
+            }
         }
 
         private static void WriteProperty<T>(T member, object value, StreamWriter stream) where T : MemberInfo
