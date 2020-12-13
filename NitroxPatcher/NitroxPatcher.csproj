@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Main.cs" />
     <Compile Include="Patches\Dynamic\BaseDeconstructable_MakeFaceDeconstructable_Patch.cs" />
+    <Compile Include="Patches\Dynamic\Constructable_NotifyConstructedChanged_Patch.cs" />
     <Compile Include="Patches\Dynamic\LiveMixin_AddHealth_Patch.cs" />
     <Compile Include="Patches\Dynamic\LiveMixin_TakeDamage_Patch.cs" />
     <Compile Include="Patches\Dynamic\OnGoalUnlockTracker_NotifyGoalComplete_Patch.cs" />

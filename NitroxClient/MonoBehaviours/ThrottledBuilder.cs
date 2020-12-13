@@ -88,25 +88,33 @@ namespace NitroxClient.MonoBehaviours
 
         private void ActionBuildEvent(BuildEvent buildEvent)
         {
-            if (buildEvent is BasePiecePlacedEvent)
+            using (packetSender.Suppress<ConstructionAmountChanged>())
+            using (packetSender.Suppress<ConstructionCompleted>())
+            using (packetSender.Suppress<PlaceBasePiece>())
+            using (packetSender.Suppress<DeconstructionBegin>())
+            using (packetSender.Suppress<DeconstructionCompleted>())
+            using (packetSender.Suppress<BasePieceMetadataChanged>())
             {
-                PlaceBasePiece((BasePiecePlacedEvent)buildEvent);
-            }
-            else if (buildEvent is ConstructionCompletedEvent)
-            {
-                ConstructionCompleted((ConstructionCompletedEvent)buildEvent);
-            }
-            else if (buildEvent is ConstructionAmountChangedEvent)
-            {
-                ConstructionAmountChanged((ConstructionAmountChangedEvent)buildEvent);
-            }
-            else if (buildEvent is DeconstructionBeginEvent)
-            {
-                DeconstructionBegin((DeconstructionBeginEvent)buildEvent);
-            }
-            else if (buildEvent is DeconstructionCompletedEvent)
-            {
-                DeconstructionCompleted((DeconstructionCompletedEvent)buildEvent);
+                if (buildEvent is BasePiecePlacedEvent)
+                {
+                    PlaceBasePiece((BasePiecePlacedEvent)buildEvent);
+                }
+                else if (buildEvent is ConstructionCompletedEvent)
+                {
+                    ConstructionCompleted((ConstructionCompletedEvent)buildEvent);
+                }
+                else if (buildEvent is ConstructionAmountChangedEvent)
+                {
+                    ConstructionAmountChanged((ConstructionAmountChangedEvent)buildEvent);
+                }
+                else if (buildEvent is DeconstructionBeginEvent)
+                {
+                    DeconstructionBegin((DeconstructionBeginEvent)buildEvent);
+                }
+                else if (buildEvent is DeconstructionCompletedEvent)
+                {
+                    DeconstructionCompleted((DeconstructionCompletedEvent)buildEvent);
+                }
             }
         }
 
@@ -280,7 +288,7 @@ namespace NitroxClient.MonoBehaviours
                 baseDeconstructable.Deconstruct();
 
                 // After we have begun the deconstructing for a base piece, we need to transfer the id
-                Optional<object> opGhost = TransientLocalObjectManager.Get(TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE);
+                Optional<object> opGhost = TransientLocalObjectManager.Get(TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE_GHOST);
 
                 if (opGhost.HasValue)
                 {
@@ -297,11 +305,7 @@ namespace NitroxClient.MonoBehaviours
             {
                 Constructable constructable = constructing.GetComponentInChildren<Constructable>();
                 constructable.constructedAmount = amountChanged.Amount;
-
-                using (packetSender.Suppress<ConstructionAmountChanged>())
-                {
-                    constructable.Construct();
-                }
+                constructable.Construct();                
             }
         }
 

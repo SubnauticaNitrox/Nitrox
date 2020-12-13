@@ -38,7 +38,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Callback(GameObject gameObject)
         {
-            TransientLocalObjectManager.Add(TransientLocalObjectManager.TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE, gameObject);
+            TransientLocalObjectManager.Add(TransientLocalObjectManager.TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE_GHOST, gameObject);
         }
 
         public override void Patch(HarmonyInstance harmony)

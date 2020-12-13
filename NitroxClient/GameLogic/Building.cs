@@ -212,6 +212,10 @@ namespace NitroxClient.GameLogic
 
             DeconstructionCompleted deconstructionCompleted = new DeconstructionCompleted(id);
             packetSender.Send(deconstructionCompleted);
+
+            // When deconstructed, some objects are simply hidden and potentially re-used later (such as windows). 
+            // We want to detach the nitrox entity so a new one can potentially be attached layer
+            NitroxEntity.RemoveFrom(gameObject);
         }
 
         public void MetadataChanged(NitroxId pieceId, BasePieceMetadata metadata)

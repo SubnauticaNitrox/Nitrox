@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
+using NitroxModel.Logger;
 using ProtoBuf;
 using UnityEngine;
 
@@ -81,6 +82,17 @@ namespace NitroxClient.MonoBehaviours
             SetNewId(gameObject, newId);
 
             return newId;
+        }
+
+        public static void RemoveFrom(GameObject gameObject)
+        {
+            NitroxEntity entity = gameObject.GetComponent<NitroxEntity>();
+
+            if (entity)
+            {
+                gameObjectsById.Remove(entity.Id);
+                Destroy(entity);
+            }
         }
 
         public void Start()
