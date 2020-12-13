@@ -10,7 +10,7 @@ using NitroxModel.Logger;
 
 namespace NitroxModel.Serialization
 {
-    public static class PropertiesWriter
+    public static class NitroxConfig
     {
         private static readonly Dictionary<Type, Dictionary<string, MemberInfo>> typeCache = new Dictionary<Type, Dictionary<string, MemberInfo>>();
         public static T Deserialize<T>() where T : IProperties, new()

@@ -15,7 +15,7 @@ namespace NitroxServer.Serialization
         private int saveIntervalSetting = 120000;
 
         private string saveNameSetting = "world";
-        public string FileName => "config.properties";
+        public string FileName => "server.cfg";
 
         public int ServerPort
         {

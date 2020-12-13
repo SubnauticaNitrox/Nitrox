@@ -28,7 +28,7 @@ namespace NitroxServer
 
         private static void RegisterCoreDependencies(ContainerBuilder containerBuilder)
         {
-            containerBuilder.Register(c => PropertiesWriter.Deserialize<ServerConfig>()).SingleInstance();
+            containerBuilder.Register(c => NitroxConfig.Deserialize<ServerConfig>()).SingleInstance();
             containerBuilder.RegisterType<Server>().SingleInstance();
             containerBuilder.RegisterType<PlayerManager>().SingleInstance();
             containerBuilder.RegisterType<DefaultServerPacketProcessor>().InstancePerLifetimeScope();
