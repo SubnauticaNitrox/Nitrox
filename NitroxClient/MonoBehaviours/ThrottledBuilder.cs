@@ -224,7 +224,7 @@ namespace NitroxClient.MonoBehaviours
                     }
                 }
                 
-                Validate.NotNull(finishedPiece, "Could not find finished piece in cell " + latestCell + " when constructing " + constructionCompleted.PieceId + " " + finishedPiece.name);
+                Validate.NotNull(finishedPiece, "Could not find finished piece in cell " + latestCell + " when constructing " + constructionCompleted.PieceId);
 
                 Log.Info("Construction completed on a base piece: " + constructionCompleted.PieceId + " " + finishedPiece.name);
 

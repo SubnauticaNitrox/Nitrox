@@ -644,6 +644,15 @@ namespace NitroxClient.Debuggers
 
                         GUILayout.Box(value.x + ", " + value.y + ", " + value.z, "options");
                     }
+                    else if (field.FieldType == typeof(Base.Face?))
+                    {
+                        Base.Face? value = (Base.Face?)field.GetValue(selectedMonoBehaviour);
+
+                        if (value.HasValue)
+                        {
+                            GUILayout.Box($"{value.Value.cell} {value.Value.direction}", "options");
+                        }
+                    }
                     else if (field.FieldType.IsEnum)
                     {
                         GUILayout.Box(field.GetValue(selectedMonoBehaviour).ToString(), "options");

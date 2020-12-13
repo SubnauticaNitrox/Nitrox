@@ -104,6 +104,7 @@ namespace NitroxClient
             containerBuilder.RegisterType<Rockets>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<MobileVehicleBay>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Interior>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<GeometryRespawnManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<NitroxConsole>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Terrain>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<BuildThrottlingQueue>().InstancePerLifetimeScope();
