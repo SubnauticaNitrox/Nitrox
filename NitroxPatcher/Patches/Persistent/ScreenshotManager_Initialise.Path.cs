@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Reflection;
 using Harmony;
 
@@ -11,7 +12,7 @@ namespace NitroxPatcher.Patches.Persistent
 
         public static void Prefix(ScreenshotManager __instance, ref string _savePath)
         {
-            _savePath = "Nitrox Screenshots/";
+            _savePath = Path.GetFullPath(Environment.GetEnvironmentVariable("NITROX_LAUNCHER_PATH") ?? ".");
         }
 
         public override void Patch(HarmonyInstance harmony)
