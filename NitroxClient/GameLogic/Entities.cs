@@ -127,7 +127,7 @@ namespace NitroxClient.GameLogic
 
                 foreach (Entity child in pendingEntities)
                 {
-                    Spawn(child, parent);
+                    Spawn(entity, parent);
                 }
 
                 pendingParentEntitiesByParentId.Remove(entity.Id);
