@@ -41,7 +41,7 @@ namespace NitroxServer
             IEnumerable<string> ips = netInterface.GetIPProperties().UnicastAddresses
                 .Select(address => address.Address.ToString())
                 .Where(address => !address.ToString().Contains("fe80::"));
-            Log.Info("If using Hamachi, use this IP: {ip}", string.Join(" or ", ips));
+            Log.Info($"If using Hamachi, use this IP: {string.Join(" or ", ips)}");
         }
 
         private static void PrintIfLan(NetworkInterface netInterface)

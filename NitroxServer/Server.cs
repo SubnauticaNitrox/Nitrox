@@ -85,7 +85,7 @@ namespace NitroxServer
 
             Log.Info($"Server is listening on port {Port} UDP");
             Log.Info($"Using {serverConfig.SerializerMode} as save file serializer");
-            Log.Info("Server Password: {password}", string.IsNullOrEmpty(serverConfig.ServerPassword) ? "None. Public Server." : serverConfig.ServerPassword);
+            Log.Info($"Server Password: {(string.IsNullOrEmpty(serverConfig.ServerPassword) ? "None. Public Server." : serverConfig.ServerPassword)}");
             Log.Info($"Admin Password: {serverConfig.AdminPassword}");
             Log.Info($"Autosave: {(serverConfig.DisableAutoSave ? "DISABLED" : $"ENABLED ({serverConfig.SaveInterval / 60000} min)")}");
             Log.Info($"World GameMode: {serverConfig.GameMode}");

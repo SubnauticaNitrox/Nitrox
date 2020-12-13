@@ -141,13 +141,6 @@ namespace NitroxModel.Logger
 
         public static void Info(string message) => logger.Info(message);
         public static void Info(object message) => Info(message?.ToString());
-        public static void Info(string message, params object[] args)
-        {
-            logger
-                .Info()
-                .Message(message, args)
-                .Write();
-        }
 
         public static void Warn(string message) => logger.Warn(message);
         public static void Warn(object message) => Warn(message?.ToString());
