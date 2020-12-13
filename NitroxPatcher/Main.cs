@@ -30,8 +30,7 @@ namespace NitroxPatcher
 
         public static void Execute()
         {
-            Log.Setup(true);
-            Log.InGameLogger = new SubnauticaInGameLogger();
+            Log.Setup(inGameLogger: new SubnauticaInGameLogger());
             Log.Info($"Using Nitrox version {Assembly.GetExecutingAssembly().GetName().Version} built on {File.GetCreationTimeUtc(Assembly.GetExecutingAssembly().Location)}");
             try
             {

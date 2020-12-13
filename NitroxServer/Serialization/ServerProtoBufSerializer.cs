@@ -78,7 +78,7 @@ namespace NitroxServer.Serialization
                 }
                 catch (Exception ex)
                 {
-                    if (type.FullName.Contains("Oculus.Platform.Models"))
+                    if (type.FullName?.Contains("Oculus.Platform.Models") ?? false)
                     {
                         ignoredTypeErrors.Add(type.ToString());
                     }

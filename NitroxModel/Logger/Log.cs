@@ -2,219 +2,180 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
-using NLog;
-using NLog.Conditions;
-using NLog.Config;
-using NLog.Filters;
-using NLog.Fluent;
-using NLog.MessageTemplates;
-using NLog.Targets;
-using NLog.Targets.Wrappers;
-using NLog.Time;
+using System.Threading;
+using Serilog;
+using Serilog.Context;
+using Serilog.Core;
+using Serilog.Events;
 
 namespace NitroxModel.Logger
 {
     public static class Log
     {
-        /// <summary>
-        ///     Parameters that are being logged with these names should be excluded when a log was made through the sensitive
-        ///     method calls.
-        /// </summary>
-        private static readonly HashSet<string> sensitiveLogParameters = new HashSet<string>
-        {
-            "username",
-            "password",
-            "ip",
-            "hostname"
-        };
+        private static ILogger logger;
 
-        private static NLog.Logger logger;
-
-        public static InGameLogger InGameLogger { private get; set; }
-        
         public static string FileName { get; private set; }
 
-        public static void Setup(bool performanceCritical = false, bool asyncConsoleWriter = false)
+        public static string PlayerName
+        {
+            set => SetPlayerName(value);
+        }
+
+        public static void Setup(bool asyncConsoleWriter = false, InGameLogger inGameLogger = null)
         {
             if (logger != null)
             {
                 throw new Exception($"{nameof(Log)} setup should only be executed once.");
             }
-            logger = LogManager.GetCurrentClassLogger();
-
-            LoggingConfiguration config = new LoggingConfiguration();
-            string layout = $@"[${{date:format=HH\:mm\:ss}} {GetLoggerName()}${{event-properties:item={nameof(PlayerName)}}}][${{level:uppercase=true}}] ${{message}} ${{exception}}";
-
-            // Targets where to log to: File and Console
-            ColoredConsoleTarget logConsole = new ColoredConsoleTarget(nameof(logConsole))
-            {
-                Layout = layout,
-                DetectConsoleAvailable = false
-            };
-
-            logConsole.RowHighlightingRules.Add(new ConsoleRowHighlightingRule
-            {
-                Condition = ConditionParser.ParseExpression("level == LogLevel.Error"),
-                ForegroundColor = ConsoleOutputColor.Red
-            });
-            logConsole.RowHighlightingRules.Add(new ConsoleRowHighlightingRule
-            {
-                Condition = ConditionParser.ParseExpression("level == LogLevel.Warn"),
-                ForegroundColor = ConsoleOutputColor.Yellow
-            });
-            logConsole.RowHighlightingRules.Add(new ConsoleRowHighlightingRule
-            {
-                Condition = ConditionParser.ParseExpression("level == LogLevel.Debug"),
-                ForegroundColor = ConsoleOutputColor.DarkGray
-            });
-
-            FileName = Path.GetFullPath($"Nitrox Logs/Nitrox-{GetLoggerName()}.log");
-            FileTarget logFile = new FileTarget(nameof(logFile))
-            {
-                FileName = FileName,
-                ArchiveFileName = $"Nitrox Logs/archives/Nitrox-{GetLoggerName()}.{{#}}.log",
-                ArchiveEvery = FileArchivePeriod.Day,
-                ArchiveNumbering = ArchiveNumberingMode.Date,
-                MaxArchiveFiles = 7,
-                Layout = layout,
-                EnableArchiveFileCompression = true,
-            };
-            AsyncTargetWrapper logFileAsync = new AsyncTargetWrapper(logFile, 1000, AsyncTargetWrapperOverflowAction.Grow);
-
-            // Rules for mapping loggers to targets
-            if (asyncConsoleWriter)
-            {
-                AsyncTargetWrapper logConsoleAsync = new AsyncTargetWrapper(logConsole, 1000, AsyncTargetWrapperOverflowAction.Grow);
-                config.AddRule(LogLevel.Debug, LogLevel.Fatal, logConsoleAsync);
-            }
-            else
-            {
-                config.AddRule(LogLevel.Debug, LogLevel.Fatal, logConsole);
-            }
-            config.AddRule(LogLevel.Debug, LogLevel.Fatal, logFileAsync);
-            config.AddRuleForOneLevel(LogLevel.Info,
-                                      new MethodCallTarget("ingame",
-                                                           (evt, obj) =>
-                                                           {
-                                                               if (InGameLogger == null)
-                                                               {
-                                                                   return;
-                                                               }
-                                                               evt.Properties.TryGetValue("game", out object isGameLog);
-                                                               if (isGameLog != null && (bool)isGameLog)
-                                                               {
-                                                                   InGameLogger.Log(evt.FormattedMessage);
-                                                               }
-                                                           }));
-
-            AddSensitiveFilter(config, target => target is AsyncTargetWrapper || target is FileTarget);
-
-            // Apply config
-            LogManager.Configuration = config;
-            if (!performanceCritical)
-            {
-                TimeSource.Current = new AccurateLocalTimeSource();
-            }
+            logger = new LoggerConfiguration()
+                     .MinimumLevel.Debug()
+                     .WriteTo.Logger(cnf =>
+                     {
+                         string consoleTemplate = "{Timestamp:HH:mm:ss.fff} {Message}{NewLine}{Exception}";
+                         if (asyncConsoleWriter)
+                         {
+                             cnf.WriteTo.Async(a => a.ColoredConsole(outputTemplate: consoleTemplate));
+                         }
+                         else
+                         {
+                             cnf.WriteTo.ColoredConsole(outputTemplate: consoleTemplate);
+                         }
+                     })
+                     .WriteTo.Logger(cnf => cnf
+                                            .Enrich.FromLogContext()
+                                            .WriteTo.Async(a => a.File(Path.Combine(Environment.GetEnvironmentVariable("NITROX_LAUNCHER_PATH") ?? "", "Nitrox Logs/.log"),
+                                                                       outputTemplate: $"{{Timestamp:HH:mm:ss.fff}} [{GetLoggerName()}{{{nameof(PlayerName)}}}][{{Level:u3}}] {{Message}}{{NewLine}}{{Exception}}",
+                                                                       rollingInterval: RollingInterval.Day,
+                                                                       retainedFileCountLimit: 10,
+                                                                       shared: true)))
+                     .WriteTo.Logger(cnf =>
+                     {
+                         if (inGameLogger == null)
+                         {
+                             return;
+                         }
+                         cnf
+                             .Enrich.FromLogContext()
+                             .WriteTo.Conditional(evt => evt.Properties.ContainsKey("game"), configuration => configuration.Message(inGameLogger.Log));
+                     })
+                     .CreateLogger();
         }
 
-        public static string PlayerName
+        [Conditional("DEBUG")]
+        public static void Debug(string message)
         {
-            set
-            {
-#if DEBUG //Player name in log file is just important with two instances => Developer
-                if (string.IsNullOrEmpty(value))
-                {
-                    return;
-                }
-
-                logger.Info($"Setting player name to {value}");
-                logger.SetProperty(nameof(PlayerName), $"-{value}");
-#endif
-            }
+            logger.Debug(message);
         }
 
         [Conditional("DEBUG")]
-        public static void Debug(string message) => logger.Debug(message);
-        [Conditional("DEBUG")]
-        public static void Debug(object message) => Debug(message?.ToString());
+        public static void Debug(object message)
+        {
+            Debug(message?.ToString());
+        }
 
-        public static void Info(string message) => logger.Info(message);
-        public static void Info(object message) => Info(message?.ToString());
+        public static void Info(string message)
+        {
+            logger.Information(message);
+        }
 
-        public static void Warn(string message) => logger.Warn(message);
-        public static void Warn(object message) => Warn(message?.ToString());
+        public static void Info(object message)
+        {
+            Info(message?.ToString());
+        }
 
-        public static void Error(Exception ex) => logger.Error(ex);
-        public static void Error(Exception ex, string message) => logger.Error(ex, message);
-        public static void Error(string message) => logger.Error(message);
+        public static void Warn(string message)
+        {
+            logger.Warning(message);
+        }
 
-        public static void InGame(object message) => InGame(message?.ToString());
+        public static void Warn(object message)
+        {
+            Warn(message?.ToString());
+        }
+
+        public static void Error(Exception ex)
+        {
+            logger.Error(ex, ex.Message);
+        }
+
+        public static void Error(Exception ex, string message)
+        {
+            logger.Error(ex, message);
+        }
+
+        public static void Error(string message)
+        {
+            logger.Error(message);
+        }
+
+        public static void InGame(object message)
+        {
+            InGame(message?.ToString());
+        }
+
         public static void InGame(string message)
         {
-            if (InGameLogger == null)
+            using (LogContext.PushProperty("game", true))
             {
-                logger.Warn($"{nameof(InGameLogger)} has not been set.");
-                return;
+                logger.Information(message);
             }
-            logger
-                .WithProperty("game", true)
-                .Info()
-                .Message(message)
-                .Write();
         }
 
         [Conditional("DEBUG")]
         public static void DebugSensitive(string message, params object[] args)
         {
-            logger
-                .WithProperty("sensitive", true)
-                .Debug()
-                .Message(message, args)
-                .Write();
+            using (LogContext.Push(SensitiveEnricher.Instance))
+            {
+                logger.Debug(message, args);
+            }
         }
 
         public static void InfoSensitive(string message, params object[] args)
         {
-            logger
-                .WithProperty("sensitive", true)
-                .Info()
-                .Message(message, args)
-                .Write();
+            using (LogContext.Push(SensitiveEnricher.Instance))
+            {
+                logger.Information(message, args);
+            }
         }
 
         public static void ErrorSensitive(Exception ex, string message, params object[] args)
         {
-            logger
-                .WithProperty("sensitive", true)
-                .Error()
-                .Exception(ex)
-                .Message(message, args)
-                .Write();
+            using (LogContext.Push(SensitiveEnricher.Instance))
+            {
+                logger.Error(ex, message, args);
+            }
         }
 
         public static void ErrorSensitive(string message, params object[] args)
         {
-            logger
-                .WithProperty("sensitive", true)
-                .Error()
-                .Message(message, args)
-                .Write();
+            using (LogContext.Push(SensitiveEnricher.Instance))
+            {
+                logger.Error(message, args);
+            }
         }
 
         public static void InGameSensitive(string message, params object[] args)
         {
-            if (InGameLogger == null)
+            using (LogContext.Push(SensitiveEnricher.Instance))
+            using (LogContext.PushProperty("game", true))
             {
-                logger.Warn($"{nameof(InGameLogger)} has not been set.");
-                return;
+                logger.Information(message, args);
             }
-            logger
-                .WithProperty("sensitive", true)
-                .WithProperty("game", true)
-                .Info()
-                .Message(message, args)
-                .Write();
+        }
+
+        // Player name in log file is only important with running two instances of Nitrox.
+        [Conditional("DEBUG")]
+        private static void SetPlayerName(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                value = "";
+            }
+
+            Info($"Setting player name to {value}");
+            LogContext.PushProperty(nameof(PlayerName), '-' + value);
         }
 
         /// <summary>
@@ -227,38 +188,40 @@ namespace NitroxModel.Logger
             return name.IndexOf("server", StringComparison.InvariantCultureIgnoreCase) >= 0 ? "Server" : name;
         }
 
-        /// <summary>
-        ///     Exclude sensitive logs parameters from being logged into (long-term) files
-        /// </summary>
-        /// <param name="config">The logger config to apply the filter to.</param>
-        /// <param name="applyDecider">Custom condition to decide whether to apply the sensitive log file to a log target.</param>
-        private static void AddSensitiveFilter(LoggingConfiguration config, Func<Target, bool> applyDecider)
+        private class SensitiveEnricher : ILogEventEnricher
         {
-            WhenMethodFilter sensitiveLogFilter = new WhenMethodFilter(context =>
+            /// <summary>
+            ///     Parameters that are being logged with these names should be excluded when a log was made through the sensitive
+            ///     method calls.
+            /// </summary>
+            private static readonly HashSet<string> sensitiveLogParameters = new HashSet<string>
             {
-                context.Properties.TryGetValue("sensitive", out object isSensitive);
-                if (isSensitive != null && (bool)isSensitive)
+                "username",
+                "password",
+                "ip",
+                "hostname"
+            };
+
+            private static readonly Lazy<SensitiveEnricher> instance = new Lazy<SensitiveEnricher>(() => new SensitiveEnricher(), LazyThreadSafetyMode.PublicationOnly);
+            public static SensitiveEnricher Instance => instance.Value;
+
+            public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propFactory)
+            {
+                foreach ((string key, string value) prop in GetPropertiesAsRedacted(logEvent.Properties.ToArray()))
                 {
-                    for (int i = 0; i < context.MessageTemplateParameters.Count; i++)
-                    {
-                        MessageTemplateParameter template = context.MessageTemplateParameters[i];
-                        if (sensitiveLogParameters.Contains(template.Name))
-                        {
-                            context.Parameters.SetValue(new string('*', template.Value?.ToString().Length ?? 0), i);
-                        }
-                    }
-                    context.Parameters = context.Parameters; // Triggers NLog to format the message again
+                    logEvent.AddOrUpdateProperty(propFactory.CreateProperty(prop.key, prop.value));
                 }
-                return FilterResult.Log;
-            });
-            foreach (LoggingRule rule in config.LoggingRules)
+            }
+
+            private IEnumerable<(string key, string value)> GetPropertiesAsRedacted(IEnumerable<KeyValuePair<string, LogEventPropertyValue>> originalProps)
             {
-                foreach (Target target in rule.Targets)
+                foreach (KeyValuePair<string, LogEventPropertyValue> prop in originalProps)
                 {
-                    if (applyDecider(target))
+                    if (!sensitiveLogParameters.Contains(prop.Key))
                     {
-                        rule.Filters.Add(sensitiveLogFilter);
+                        continue;
                     }
+                    yield return (prop.Key, new string('*', prop.Value.ToString().Length));
                 }
             }
         }
