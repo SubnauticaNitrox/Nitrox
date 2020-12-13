@@ -21,15 +21,7 @@ namespace NitroxModel.DataStructures
         public NitroxVector3 GenerateRandomStartPosition(string seed)
         {
 
-            Random rnd;
-            if (seed == null || seed.Trim().Length == 0)
-            {
-                rnd = new Random(StringHelper.GenerateRandomString(10).GetHashCode());
-            }
-            else
-            {
-                rnd = new Random(seed.GetHashCode());
-            }
+            Random rnd = new Random(seed.GetHashCode());
 
             for (int i = 0; i < 1000; i++)
             {

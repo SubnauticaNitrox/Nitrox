@@ -14,10 +14,13 @@ namespace NitroxServer.GameLogic
         public ThreadSafeCollection<EscapePodModel> EscapePods { get; }
         private readonly ThreadSafeDictionary<ushort, EscapePodModel> escapePodsByPlayerId = new ThreadSafeDictionary<ushort, EscapePodModel>();
         private EscapePodModel podForNextPlayer;
+        private readonly string seed;
 
-        public EscapePodManager(List<EscapePodModel> escapePods)
+        public EscapePodManager(List<EscapePodModel> escapePods, string seed)
         {
             EscapePods = new ThreadSafeCollection<EscapePodModel>(escapePods);
+
+            seed = seed;
 
             InitializePodForNextPlayer();
             InitializeEscapePodsByPlayerId();
@@ -65,10 +68,10 @@ namespace NitroxServer.GameLogic
         {
             int totalEscapePods = EscapePods.Count;
             NitroxRandomStart randomStart = NitroxServiceLocator.LocateService<NitroxRandomStart>();
-            ServerConfig config = NitroxServiceLocator.LocateService<ServerConfig>();
+
             EscapePodModel escapePod = new EscapePodModel();
             escapePod.InitEscapePodModel(new NitroxId(),
-                                         randomStart.GenerateRandomStartPosition(config.Seed),
+                                         randomStart.GenerateRandomStartPosition(seed),
                                          new NitroxId(),
                                          new NitroxId(),
                                          new NitroxId(),

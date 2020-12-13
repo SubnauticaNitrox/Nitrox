@@ -7,6 +7,7 @@ using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Server;
 using NitroxServer.GameLogic;
@@ -184,6 +185,12 @@ namespace NitroxServer.Serialization.World
                                   List<EscapePodModel> escapePods,
                                   ServerGameMode gameMode)
         {
+            string seed = config.Seed;
+            if (config.Seed == null || config.Seed.Trim().Length == 0)
+            {
+                seed = StringHelper.GenerateRandomString(10);
+            }
+
             World world = new World
             {
                 TimeKeeper = new TimeKeeper { ServerStartTime = serverStartTime },
@@ -191,7 +198,7 @@ namespace NitroxServer.Serialization.World
                 PlayerManager = new PlayerManager(players, config),
                 BaseManager = new BaseManager(partiallyConstructedPieces, completedBasePieceHistory),
                 InventoryManager = new InventoryManager(inventoryItems, storageSlotItems),
-                EscapePodManager = new EscapePodManager(escapePods),
+                EscapePodManager = new EscapePodManager(escapePods, seed),
                 GameData = gameData,
                 GameMode = gameMode
             };
