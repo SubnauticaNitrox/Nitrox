@@ -17,21 +17,9 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoMember(3)]
         public float Z;
 
-        public static NitroxVector3 Zero
-        {
-            get
-            {
-                return new NitroxVector3(0, 0, 0);
-            }
-        }
+        public static NitroxVector3 Zero => new NitroxVector3(0, 0, 0);
 
-        public static NitroxVector3 One
-        {
-            get
-            {
-                return new NitroxVector3(1, 1, 1);
-            }
-        }
+        public static NitroxVector3 One => new NitroxVector3(1, 1, 1);
 
         public NitroxVector3(float x, float y, float z)
         {
