@@ -69,7 +69,7 @@ namespace NitroxServer
             // Don't overwrite config changes that users made to file
             if (!File.Exists(serverConfig.FileName))
             {
-                ConfigHandler.Serialize(serverConfig);
+                NitroxConfig.Serialize(serverConfig);
             }
             IsSaving = true;
             worldPersistence.Save(world, serverConfig.SaveName);
