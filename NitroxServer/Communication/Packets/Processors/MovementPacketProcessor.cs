@@ -26,34 +26,6 @@ namespace NitroxServer.Communication.Packets.Processors
         {
             playerManager.SendPacketToOtherPlayers(packet, player);
             player.Transform.Position = packet.Position;
-
-            CellChanges cellChanges = player.ProcessCellChanges();
-
-            SendNewlyVisibleEntities(player, cellChanges);
-
-            List<SimulatedEntity> ownershipChanges = entitySimulation.CalculateSimulationChangesFromCellSwitch(player, cellChanges);
-            BroadcastSimulationChanges(ownershipChanges);
-        }
-
-        private void SendNewlyVisibleEntities(Player player, CellChanges cellChanges)
-        {
-            List<Entity> newlyVisibleEntities = entityManager.GetVisibleEntities(cellChanges);
-
-            if (newlyVisibleEntities.Count > 0)
-            {
-                CellEntities cellEntities = new CellEntities(newlyVisibleEntities);
-                player.SendPacket(cellEntities);
-            }
-        }
-
-        private void BroadcastSimulationChanges(List<SimulatedEntity> ownershipChanges)
-        {
-            if (ownershipChanges.Count > 0)
-            {
-                // TODO: This should be moved to `SimulationOwnership`
-                SimulationOwnershipChange ownershipChange = new SimulationOwnershipChange(ownershipChanges);
-                playerManager.SendPacketToAllPlayers(ownershipChange);
-            }
         }
     }
 }

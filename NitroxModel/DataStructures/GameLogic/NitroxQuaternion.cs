@@ -103,7 +103,7 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public NitroxVector3 ToEuler()
         {
-            NitroxVector3 result;
+            NitroxVector3 result = NitroxVector3.Zero;
 
             float test = X * Y + Z * W;
             // singularity at north pole

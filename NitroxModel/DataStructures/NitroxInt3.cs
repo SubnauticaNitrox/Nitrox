@@ -47,7 +47,7 @@ namespace NitroxModel.DataStructures
         public void Next(NitroxInt3 mins, NitroxInt3 maxs)
         {
             Z++;
-            if (Y > maxs.Z)
+            if (Z > maxs.Z)
             {
                 Y++;
                 if (Y > maxs.Y)
@@ -173,6 +173,11 @@ namespace NitroxModel.DataStructures
             public void Reset()
             {
                 current = new NitroxInt3(mins.X, mins.Y, mins.Z - 1);
+            }
+
+            public RangeEnumerator GetEnumerator()
+            {
+                return this;
             }
         }
 

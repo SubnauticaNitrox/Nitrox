@@ -12,7 +12,7 @@ namespace NitroxServer.GameLogic
     public static class CellManager
     {
 
-        public static void UpdateCenter(NitroxInt3 position, HashSet<NitroxInt3> currentlyVisibleCells, CellChanges cellChanges)
+        public static void UpdateCenter(NitroxInt3 position, HashSet<AbsoluteEntityCell> currentlyVisibleCells, CellChanges cellChanges)
         {
             for (int i = 0; i < QualityLevels.Length; i++)
             {
@@ -30,6 +30,8 @@ namespace NitroxServer.GameLogic
         {
             public Level[] Levels { get; set; }
 
+            private readonly Dictionary<int, NitroxInt3> chunksVisibleByLevel = new Dictionary<int, NitroxInt3>();
+
             public QualityLevel(int qualityLevel)
             {
                 switch (qualityLevel)
@@ -38,12 +40,18 @@ namespace NitroxServer.GameLogic
                     case 1:
                     case 2:
                     default:
-                        CreateLevelsFromQualityLevel(qualityLevel, 7, 7, 16);
+                        chunksVisibleByLevel[0] = new NitroxInt3(7, 7, 7);
+                        chunksVisibleByLevel[1] = new NitroxInt3(7, 7, 7);
+                        chunksVisibleByLevel[2] = new NitroxInt3(7, 7, 7);
+                        chunksVisibleByLevel[3] = new NitroxInt3(8, 4, 8);
+                        chunksVisibleByLevel[4] = new NitroxInt3(1, 1, 1);
+
+                        CreateLevels(16);
                         break;
                 }
             }
 
-            public void UpdateCenter(NitroxInt3 position, HashSet<NitroxInt3> currentlyVisibleCells, CellChanges cellChanges)
+            public void UpdateCenter(NitroxInt3 position, HashSet<AbsoluteEntityCell> currentlyVisibleCells, CellChanges cellChanges)
             {
                 for (int i = 0; i < Levels.Length; i++)
                 {
@@ -51,13 +59,14 @@ namespace NitroxServer.GameLogic
                 }
             }
 
-            private void CreateLevelsFromQualityLevel(int qualityLevel, int chunksPerSIde, int chunksVertically, int cellSize)
+            private void CreateLevels(int cellSize)
             {
                 Levels = new Level[5];
                 for (int i = 0; i < 5; i++)
                 {
+                    NitroxInt3 chunkVisibility = chunksVisibleByLevel[i];
                     int levelSize = cellSize << i;
-                    Levels[i] = new Level(chunksPerSIde, chunksVertically, i, levelSize);
+                    Levels[i] = new Level(chunkVisibility.X, chunkVisibility.Y, i, levelSize);
                 }
 
             }
@@ -69,7 +78,7 @@ namespace NitroxServer.GameLogic
             NitroxInt3 arraySize;
             public int Id { get; private set; }
             public int LevelSize { get; private set; }
-            public bool entityLoading => Id >= 4;
+            public bool entityLoading => Id <= 2;
 
             public Level(int chunksPerSide, int chunksVertically, int level, int levelSize)
             {
@@ -79,11 +88,11 @@ namespace NitroxServer.GameLogic
                 centerCell = new NitroxInt3(-1, -1, -1);
             }
 
-            public void UpdateCenter(NitroxInt3 position, HashSet<NitroxInt3> currentlyVisibleCells, CellChanges cellChanges)
+            public void UpdateCenter(NitroxInt3 position, HashSet<AbsoluteEntityCell> currentlyVisibleCells, CellChanges cellChanges)
             {
                 NitroxInt3 curCell = NitroxInt3.FloorDiv(position, LevelSize);
 
-                if (curCell == centerCell || entityLoading)
+                if (curCell == centerCell || !entityLoading)
                 {
                     return;
                 }
@@ -91,46 +100,62 @@ namespace NitroxServer.GameLogic
 
                 foreach (NitroxInt3 int3 in NitroxInt3.CenterSize(centerCell, arraySize))
                 {
-                    if (int3 == NitroxInt3.PositiveModulo(int3, arraySize))
-                    {
-                        HandleEntities(int3, cellChanges.Added);
-                    }
-                    else // Essentially "unload the cell if it is already visible load it otherwise"
-                    {
-                        if (currentlyVisibleCells.Contains(int3))
-                        {
-                            HandleEntities(int3, cellChanges.Removed);
-                        }
-                        else
-                        {
-                            HandleEntities(int3, cellChanges.Added);
-                        }
-                    }
+                    HandleEntities(int3, cellChanges, currentlyVisibleCells);
                 }
             }
 
-            public void HandleEntities(NitroxInt3 cell, ICollection<AbsoluteEntityCell> newlyVisibleCells)
+            public void HandleEntities(NitroxInt3 cell, CellChanges cellChanges, HashSet<AbsoluteEntityCell> currentlyVisibleCells)
             {
-                NitroxInt3.Bounds blockRange = NitroxInt3.Bounds.FinerBounds(cell, LevelSize);
-
+                NitroxInt3 p = NitroxInt3.PositiveModulo(cell, arraySize);
                 NitroxInt3 blocksPerBatch = new NitroxInt3(160, 160, 160);
 
-                NitroxInt3.Bounds batchBounds = NitroxInt3.Bounds.OuterCoarserBounds(blockRange, blocksPerBatch);
-
-                foreach (NitroxInt3 batchId in batchBounds)
+                if (cell == p)
                 {
-                    NitroxInt3 s = batchId * blocksPerBatch;
-                    NitroxInt3.Bounds bsRange = (blockRange - s).Clamp(new NitroxInt3(0, 0, 0), blocksPerBatch - 1);
+                    NitroxInt3.Bounds blockRange = NitroxInt3.Bounds.FinerBounds(cell, LevelSize);
+                    NitroxInt3.Bounds batchBounds = NitroxInt3.Bounds.OuterCoarserBounds(blockRange, blocksPerBatch);
 
-                    NitroxInt3 cellSize = GetCellSize(blocksPerBatch);
-
-                    NitroxInt3.Bounds cellBounds = NitroxInt3.Bounds.OuterCoarserBounds(bsRange, cellSize);
-
-                    foreach (NitroxInt3 cellId in cellBounds)
+                    foreach (NitroxInt3 batchId in batchBounds)
                     {
-                        newlyVisibleCells.Add(new AbsoluteEntityCell(batchId, cellId, Id));
+                        NitroxInt3.Bounds cellBounds = GetCellBounds(blockRange, batchId, blocksPerBatch);
+
+                        foreach (NitroxInt3 cellId in cellBounds)
+                        {
+                            cellChanges.Add(new AbsoluteEntityCell(batchId, cellId, Id));
+                        }
                     }
                 }
+                else
+                {
+                    NitroxInt3.Bounds blockRange = NitroxInt3.Bounds.FinerBounds(cell, LevelSize);
+                    NitroxInt3.Bounds batchBounds = NitroxInt3.Bounds.OuterCoarserBounds(blockRange, blocksPerBatch);
+                    foreach (NitroxInt3 batchId in batchBounds)
+                    {
+                        NitroxInt3.Bounds cellBounds = GetCellBounds(blockRange, batchId, blocksPerBatch);
+
+                        foreach (NitroxInt3 cellId in cellBounds)
+                        {
+                            AbsoluteEntityCell newCell = new AbsoluteEntityCell(batchId, cellId, Id);
+                            if (currentlyVisibleCells.Contains(newCell))
+                            {
+                                cellChanges.Remove(newCell);
+                            }
+                            else
+                            {
+                                cellChanges.Add(newCell);
+                            }
+                        }
+                    }
+                }    
+            }
+
+            public NitroxInt3.Bounds GetCellBounds(NitroxInt3.Bounds blockRange, NitroxInt3 batchId, NitroxInt3 blocksPerBatch)
+            {
+                NitroxInt3 s = batchId * blocksPerBatch;
+                NitroxInt3.Bounds bsRange = (blockRange - s).Clamp(new NitroxInt3(0, 0, 0), blocksPerBatch - 1);
+
+                NitroxInt3 cellSize = GetCellSize(blocksPerBatch);
+
+                return NitroxInt3.Bounds.OuterCoarserBounds(bsRange, cellSize);
             }
 
             public NitroxInt3 GetCellSize(NitroxInt3 blocksPerBatch)

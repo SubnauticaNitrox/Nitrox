@@ -60,7 +60,7 @@ namespace NitroxServer.Communication.Packets.Processors
                     Player player = playerUpdates.Key;
                     List<EntityTransformUpdate> visibleUpdates = playerUpdates.Value;
 
-                    if (player.HasCellLoaded(currentCell.Value.BatchId))
+                    if (player.HasCellLoaded(currentCell.Value))
                     {
                         visibleUpdates.Add(update);
                     }

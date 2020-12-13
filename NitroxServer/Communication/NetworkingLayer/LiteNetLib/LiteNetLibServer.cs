@@ -15,7 +15,7 @@ namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
         private readonly EventBasedNetListener listener;
         private readonly NetPacketProcessor netPacketProcessor = new NetPacketProcessor();
 
-        public LiteNetLibServer(PacketHandler packetHandler, PlayerManager playerManager, EntitySimulation entitySimulation, ServerConfig serverConfig) : base(packetHandler, playerManager, entitySimulation, serverConfig)
+        public LiteNetLibServer(PacketHandler packetHandler, PlayerManager playerManager, EntitySimulation entitySimulation, ServerConfig serverConfig, EntityManager entityManager) : base(packetHandler, playerManager, entitySimulation, serverConfig, entityManager)
         {
             netPacketProcessor.SubscribeReusable<WrapperPacket, NetPeer>(OnPacketReceived);
             listener = new EventBasedNetListener();

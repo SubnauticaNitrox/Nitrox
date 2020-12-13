@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
@@ -17,7 +19,7 @@ namespace NitroxServer
     {
         private readonly ThreadSafeCollection<EquippedItemData> equippedItems;
         private readonly ThreadSafeCollection<EquippedItemData> modules;
-        private readonly ThreadSafeCollection<NitroxInt3> visibleCells;
+        private readonly ThreadSafeCollection<AbsoluteEntityCell> visibleCells;
         
         public NitroxConnection connection { get; set; }
         public PlayerSettings PlayerSettings => PlayerContext.PlayerSettings;
@@ -29,13 +31,14 @@ namespace NitroxServer
         public NitroxId GameObjectId => Transform.Id;
         public Optional<NitroxId> SubRootId { get; set; }
 
+        private Task playerBackgroundThread;
+
         public CellChanges ProcessCellChanges()
         {
             CellChanges cellChanges = new CellChanges();
             NitroxVector3 b = new NitroxVector3(0f, -8f, 0f);
             NitroxTransform transform = new NitroxTransform(new NitroxVector3(-2048, -3040, -2048), new NitroxQuaternion(0, 0, 0, 1), NitroxVector3.One, null);
             CellManager.UpdateCenter((NitroxInt3)transform.InverseTransformPoint(Transform.Position + b), visibleCells.ToHashSet(), cellChanges);
-
             return cellChanges;
         }
 
@@ -58,7 +61,8 @@ namespace NitroxServer
             LastStoredPosition = null;
             this.equippedItems = new ThreadSafeCollection<EquippedItemData>(equippedItems);
             this.modules = new ThreadSafeCollection<EquippedItemData>(modules);
-            visibleCells = new ThreadSafeCollection<NitroxInt3>(new HashSet<NitroxInt3>(), false);
+            visibleCells = new ThreadSafeCollection<AbsoluteEntityCell>(new HashSet<AbsoluteEntityCell>(), false);
+
         }
 
         public static bool operator ==(Player left, Player right)
@@ -93,23 +97,23 @@ namespace NitroxServer
             return Id.GetHashCode();
         }
 
-        public void AddCells(IEnumerable<NitroxInt3> cells)
+        public void AddCells(IEnumerable<AbsoluteEntityCell> cells)
         {
-            foreach (NitroxInt3 cell in cells)
+            foreach (AbsoluteEntityCell cell in cells)
             {
                 visibleCells.Add(cell);
             }
         }
 
-        public void RemoveCells(IEnumerable<NitroxInt3> cells)
+        public void RemoveCells(IEnumerable<AbsoluteEntityCell> cells)
         {
-            foreach (NitroxInt3 cell in cells)
+            foreach (AbsoluteEntityCell cell in cells)
             {
                 visibleCells.Remove(cell);
             }
         }
 
-        public bool HasCellLoaded(NitroxInt3 cell)
+        public bool HasCellLoaded(AbsoluteEntityCell cell)
         {
             return visibleCells.Contains(cell);
         }
@@ -146,7 +150,7 @@ namespace NitroxServer
 
         public bool CanSee(Entity entity)
         {
-            return entity.ExistsInGlobalRoot || HasCellLoaded(entity.AbsoluteEntityCell.BatchId);
+            return entity.ExistsInGlobalRoot || HasCellLoaded(entity.AbsoluteEntityCell);
         }
 
         public void SendPacket(Packet packet)

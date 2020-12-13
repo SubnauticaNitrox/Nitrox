@@ -2,6 +2,7 @@
 using System.Runtime.Serialization;
 using System.Collections.Generic;
 using ProtoBufNet;
+using System.Reflection;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
@@ -10,29 +11,36 @@ namespace NitroxModel.DataStructures.GameLogic
     public class NitroxTransform
     {
         [ProtoMember(1)]
-        public NitroxVector3 LocalPosition;
+        public NitroxVector3 LocalPosition { get; set; }
 
         [ProtoMember(2)]
-        public NitroxQuaternion LocalRotation;
-        
+        public NitroxQuaternion LocalRotation { get; set; }
+
         [ProtoMember(3)]
-        public NitroxVector3 LocalScale;
+        public NitroxVector3 LocalScale { get; set; }
 
         [ProtoMember(4)]
         private NitroxId parentId;
 
         [ProtoMember(5)]
-        public NitroxId Id;
+        public NitroxId Id { get; private set; }
 
         private static Dictionary<NitroxId, NitroxTransform> transformsById = new Dictionary<NitroxId, NitroxTransform>();
         private static Dictionary<NitroxId, List<NitroxTransform>> pendingTransforms = new Dictionary<NitroxId, List<NitroxTransform>>();
+        
+        public NitroxMatrix4x4 LocalMatrix
+        {
+            get
+            {
+                return NitroxMatrix4x4.TRS(LocalPosition, LocalRotation, LocalScale);
+            }
+        }
 
         public NitroxMatrix4x4 localToWorldMatrix 
         {
             get
             {
-                NitroxMatrix4x4 localMatrix = NitroxMatrix4x4.TRS(LocalPosition, LocalRotation, LocalScale);
-                return Parent != null ? Parent.localToWorldMatrix * localMatrix : localMatrix;
+                return Parent != null ? Parent.localToWorldMatrix * LocalMatrix : LocalMatrix;
             }
         }
 
@@ -67,8 +75,10 @@ namespace NitroxModel.DataStructures.GameLogic
 
                 NitroxMatrix4x4.ExtractScale(ref matrix);
                 LocalRotation = NitroxMatrix4x4.ExtractRotation(ref matrix);
+                
             }
         }
+
 
         public void SetParent(NitroxTransform parent)
         {
@@ -126,12 +136,10 @@ namespace NitroxModel.DataStructures.GameLogic
             {
                 if (!pendingTransforms.TryGetValue(parentId, out List<NitroxTransform> parentTransforms))
                 {
-                    parentTransforms = new List<NitroxTransform>
+                    pendingTransforms[parentId] = new List<NitroxTransform>
                     {
                         this
                     };
-
-                    pendingTransforms.Add(parentId, parentTransforms);
                 }
                 else
                 {
@@ -146,7 +154,7 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoAfterDeserialization]
         private void ProtoAfterDeserialization()
         {
-            if (Id != null)
+            if (parentId != null)
             {
                 HandleParenting();
             }
@@ -160,7 +168,7 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public override string ToString()
         {
-            return string.Format("(Position: {0}, LocalPosition: {1}, Rotation: {2}, LocalRotation: {3}, LocalScale: {4})", Position, LocalPosition, Rotation, LocalRotation, LocalScale);
+            return string.Format("(Position: {0}, LocalPosition: {1}, Rotation: {2}, LocalRotation: {3}, LocalScale: {4}, Parent: {5})", Position, LocalPosition, Rotation, LocalRotation, LocalScale, Parent);
         }
     }
 }

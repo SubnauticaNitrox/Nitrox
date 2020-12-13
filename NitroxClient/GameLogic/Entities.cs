@@ -52,6 +52,11 @@ namespace NitroxClient.GameLogic
 
         public void Spawn(List<Entity> entities)
         {
+            if (entities.Count == 0)
+            {
+                Log.Debug("Spawned 0 Entities is something broken?");
+                return;
+            }
             LargeWorldStreamer.main.cellManager.UnloadBatchCells(entities[0].AbsoluteEntityCell.BatchId.ToUnity()); // Just in case
             foreach (Entity entity in entities)
             {

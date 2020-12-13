@@ -30,11 +30,14 @@ namespace NitroxServer.ConsoleCommands
             playerToKick.SendPacket(new PlayerKicked($"You were kicked from the server ! \n Reason : {args.GetTillEnd(1)}"));
             playerManager.PlayerDisconnected(playerToKick.connection);
 
-            List<SimulatedEntity> revokedEntities = entitySimulation.CalculateSimulationChangesFromPlayerDisconnect(playerToKick);
+            Dictionary<NitroxInt3, List<SimulatedEntity>> revokedEntities = entitySimulation.CalculateSimulationChangesFromPlayerDisconnect(playerToKick);
             if (revokedEntities.Count > 0)
             {
-                SimulationOwnershipChange ownershipChange = new SimulationOwnershipChange(revokedEntities);
-                playerManager.SendPacketToAllPlayers(ownershipChange);
+                foreach (NitroxInt3 batchId in revokedEntities.Keys)
+                {
+                    SimulationOwnershipChange ownershipChange = new SimulationOwnershipChange(revokedEntities[batchId]);
+                    playerManager.SendPacketToAllPlayers(ownershipChange);
+                }
             }
 
             playerManager.SendPacketToOtherPlayers(new Disconnect(playerToKick.Id), playerToKick);

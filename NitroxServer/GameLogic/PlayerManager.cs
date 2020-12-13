@@ -18,11 +18,16 @@ namespace NitroxServer.GameLogic
         private readonly ThreadSafeDictionary<string, Player> allPlayersByName;
         private readonly ThreadSafeDictionary<NitroxConnection, ConnectionAssets> assetsByConnection = new ThreadSafeDictionary<NitroxConnection, ConnectionAssets>();
         private readonly ThreadSafeDictionary<string, PlayerContext> reservations = new ThreadSafeDictionary<string, PlayerContext>();
+
+        private readonly ThreadSafeCollection<Player> connectedPlayers = new ThreadSafeCollection<Player>(new HashSet<Player>());
+
         private readonly ThreadSafeCollection<string> reservedPlayerNames = new ThreadSafeCollection<string>(new HashSet<string>());
 
         private readonly PlayerStatsData defaultPlayerStats;
         private readonly ServerConfig serverConfig;
         private ushort currentPlayerId;
+
+        public bool AnyConnectedPlayers { get; private set; }
 
         public PlayerManager(List<Player> players, ServerConfig serverConfig)
         {
@@ -35,7 +40,7 @@ namespace NitroxServer.GameLogic
 
         public List<Player> GetConnectedPlayers()
         {
-            return ConnectedPlayers().ToList();
+            return connectedPlayers.ToList();
         }
 
         public IEnumerable<Player> GetAllPlayers()
@@ -135,9 +140,11 @@ namespace NitroxServer.GameLogic
             assetPackage.Player = player;
             assetPackage.ReservationKey = null;
             reservations.Remove(reservationKey);
+            connectedPlayers.Add(player);
 
-            if (ConnectedPlayers().Count() == 1)
+            if (connectedPlayers.Count == 1)
             {
+                AnyConnectedPlayers = true;
                 Server.Instance.ResumeServer();
             }
 
@@ -164,13 +171,15 @@ namespace NitroxServer.GameLogic
             if (assetPackage.Player != null)
             {
                 Player player = assetPackage.Player;
+                connectedPlayers.Remove(player);
                 reservedPlayerNames.Remove(player.Name);
             }
 
             assetsByConnection.Remove(connection);
 
-            if (ConnectedPlayers().Count() == 0)
+            if (connectedPlayers.Count == 0)
             {
+                AnyConnectedPlayers = false;
                 Server.Instance.PauseServer();
                 Server.Instance.Save();
             }
@@ -179,7 +188,7 @@ namespace NitroxServer.GameLogic
         public bool TryGetPlayerByName(string playerName, out Player foundPlayer)
         {
             foundPlayer = null;
-            foreach (Player player in ConnectedPlayers())
+            foreach (Player player in connectedPlayers)
             {
                 if (player.Name == playerName)
                 {
@@ -207,7 +216,7 @@ namespace NitroxServer.GameLogic
 
         public void SendPacketToAllPlayers(Packet packet)
         {
-            foreach (Player player in ConnectedPlayers())
+            foreach (Player player in connectedPlayers)
             {
                 player.SendPacket(packet);
             }
@@ -215,20 +224,13 @@ namespace NitroxServer.GameLogic
 
         public void SendPacketToOtherPlayers(Packet packet, Player sendingPlayer)
         {
-            foreach (Player player in ConnectedPlayers())
+            foreach (Player player in connectedPlayers)
             {
                 if (player != sendingPlayer)
                 {
                     player.SendPacket(packet);
                 }
             }
-        }
-
-        private IEnumerable<Player> ConnectedPlayers()
-        {
-            return assetsByConnection.Values
-                .Where(assetPackage => assetPackage.Player != null)
-                .Select(assetPackage => assetPackage.Player);
         }
     }
 }
