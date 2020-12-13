@@ -32,7 +32,7 @@ namespace NitroxServer_Subnautica
         private static async Task Main(string[] args)
         {
             // The thread that writers to console is paused while selecting text in console. So console writer needs to be async.
-            Log.Setup(asyncConsoleWriter: true);
+            Log.Setup(asyncConsoleWriter: true, isConsoleApp: true);
             AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
 
             ConfigureCultureInfo();
