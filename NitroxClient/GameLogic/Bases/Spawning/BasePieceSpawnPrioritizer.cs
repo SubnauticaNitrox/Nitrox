@@ -25,11 +25,12 @@ namespace NitroxClient.GameLogic.Bases.Spawning
             [TechType.BaseCorridorX] = 1,
             [TechType.BasePipeConnector] = 1,
 
-            [TechType.BaseUpgradeConsole] = 1,
-
             // Reinforce fortifications to ensure good hull integrity
             [TechType.BaseReinforcement] = 2,
             [TechType.BaseBulkhead] = 2,
+
+            // upgrade consoles are a faced based piece, so allow them to be prioritized aside the two above.
+            [TechType.BaseUpgradeConsole] = 2,
 
             // Water tanks are internal and need to go before hatches because hatches can be placed on them.
             [TechType.BaseWaterPark] = 3,
