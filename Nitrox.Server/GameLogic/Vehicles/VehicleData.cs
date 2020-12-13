@@ -1,0 +1,23 @@
+﻿using System.Collections.Generic;
+using System.Linq;
+using Newtonsoft.Json;
+using Nitrox.Model.DataStructures.GameLogic;
+using ProtoBufNet;
+
+namespace Nitrox.Server.GameLogic.Vehicles
+{
+    [ProtoContract, JsonObject(MemberSerialization.OptIn)]
+    public class VehicleData
+    {
+        [JsonProperty, ProtoMember(1)]
+        public List<VehicleModel> Vehicles = new List<VehicleModel>();
+
+        public static VehicleData From(IEnumerable<VehicleModel> vehicles)
+        {
+            return new VehicleData
+            {
+                Vehicles = vehicles.ToList()
+            };
+        }
+    }
+}

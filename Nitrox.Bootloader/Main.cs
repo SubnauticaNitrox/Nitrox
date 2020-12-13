@@ -75,8 +75,8 @@ namespace Nitrox.Bootloader
 
         private static void BootstrapNitrox()
         {
-            Assembly core = Assembly.Load(new AssemblyName("NitroxPatcher"));
-            Type mainType = core.GetType("NitroxPatcher.Main");
+            Assembly core = Assembly.Load(new AssemblyName("Nitrox.Patcher"));
+            Type mainType = core.GetType("Nitrox.Patcher.Main");
             mainType.InvokeMember("Execute", BindingFlags.Public | BindingFlags.Static | BindingFlags.InvokeMethod, null, null, null);
         }
 

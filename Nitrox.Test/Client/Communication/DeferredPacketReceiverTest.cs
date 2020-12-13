@@ -1,0 +1,52 @@
+﻿using System.Collections.Generic;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Nitrox.Client.Communication;
+using Nitrox.Client.Map;
+using Nitrox.Model.DataStructures.GameLogic;
+using Nitrox.Model.Helper;
+using Nitrox.Model.Packets;
+using Nitrox.Model.Subnautica.Helper;
+using Nitrox.Test.Model.Test;
+
+namespace Nitrox.Test.Client.Communication
+{
+    [TestClass]
+    public class DeferredPacketReceiverTest
+    {
+        private readonly VisibleCells visibleCells = new VisibleCells();
+        private PacketReceiver packetReceiver;
+
+        // Test Data
+        private const ushort PLAYER_ID = 1;
+        private const int CELL_LEVEL = 3;
+        private readonly NitroxVector3 loadedActionPosition = new NitroxVector3(50, 50, 50);
+        private readonly NitroxVector3 unloadedActionPosition = new NitroxVector3(200, 200, 200);
+        private AbsoluteEntityCell loadedCell;
+        private AbsoluteEntityCell unloadedCell;
+        private Int3 cellId = Int3.zero;
+
+        [TestInitialize]
+        public void TestInitialize()
+        {
+            packetReceiver = new PacketReceiver();
+            Map.Main = new SubnauticaMap();
+
+            loadedCell = new AbsoluteEntityCell(loadedActionPosition, CELL_LEVEL);
+            unloadedCell = new AbsoluteEntityCell(unloadedActionPosition, CELL_LEVEL);
+
+            visibleCells.Add(loadedCell);
+        }
+
+        [TestMethod]
+        public void NonActionPacket()
+        {
+            Packet packet = new TestNonActionPacket(PLAYER_ID);
+            packetReceiver.PacketReceived(packet);
+
+            Queue<Packet> packets = packetReceiver.GetReceivedPackets();
+
+            Assert.AreEqual(1, packets.Count);
+            Assert.AreEqual(packet, packets.Dequeue());
+        }
+    }
+}

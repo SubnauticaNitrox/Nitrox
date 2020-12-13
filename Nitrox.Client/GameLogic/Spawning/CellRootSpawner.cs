@@ -1,0 +1,29 @@
+﻿using Nitrox.Client.MonoBehaviours;
+using Nitrox.Model.DataStructures;
+using Nitrox.Model.DataStructures.GameLogic;
+using UnityEngine;
+
+namespace Nitrox.Client.GameLogic.Spawning
+{
+    public class CellRootSpawner : IEntitySpawner
+    {
+        public Optional<GameObject> Spawn(Entity entity, Optional<GameObject> parent, EntityCell cellRoot)
+        {
+            NitroxInt3 cellId = entity.AbsoluteEntityCell.CellId;
+            NitroxInt3 batchId = entity.AbsoluteEntityCell.BatchId;
+
+            cellRoot.liveRoot.name = $"CellRoot {cellId.X}, {cellId.Y}, {cellId.Z}; Batch {batchId.X}, {batchId.Y}, {batchId.Z}";
+
+            NitroxEntity.SetNewId(cellRoot.liveRoot, entity.Id);
+
+            LargeWorldStreamer.main.cellManager.QueueForAwake(cellRoot);
+
+            return Optional.OfNullable(cellRoot.liveRoot);
+        }
+
+        public bool SpawnsOwnChildren()
+        {
+            return false;
+        }
+    }
+}

@@ -20,10 +20,10 @@
     <PropertyGroup Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(MSBuildProjectName), '^Nitrox.*$'))">
         <NitroxLibrary>true</NitroxLibrary>
     </PropertyGroup>
-    <PropertyGroup Condition="'$(NitroxLibrary)' == 'true' and '$(MSBuildProjectName)' != 'NitroxModel' and '$(MSBuildProjectName)' != 'NitroxServer' and '$(MSBuildProjectName)' != 'Nitrox.Bootloader'">
+    <PropertyGroup Condition="'$(NitroxLibrary)' == 'true' and '$(MSBuildProjectName)' != 'Nitrox.Model' and '$(MSBuildProjectName)' != 'Nitrox.Server' and '$(MSBuildProjectName)' != 'Nitrox.Bootloader'">
         <UnityModLibrary>true</UnityModLibrary>
     </PropertyGroup>
-    <PropertyGroup Condition="'$(MSBuildProjectName)' == 'NitroxTest'">
+    <PropertyGroup Condition="'$(MSBuildProjectName)' == 'Nitrox.Test'">
         <TestLibrary>true</TestLibrary>
     </PropertyGroup>
 
@@ -36,8 +36,8 @@
     <Choose>
         <When Condition="'$(UnityModLibrary)' == 'true'">
             <ItemGroup>
-                <ProjectReference Include="$(SolutionDir)NitroxModel\NitroxModel.csproj">
-                    <Name>NitroxModel</Name>
+                <ProjectReference Include="$(SolutionDir)Nitrox.Model\Nitrox.Model.csproj">
+                    <Name>Nitrox.Model</Name>
                 </ProjectReference>
             </ItemGroup>
         </When>

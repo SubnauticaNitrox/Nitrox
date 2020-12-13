@@ -1,0 +1,45 @@
+﻿using System;
+using System.Reflection;
+using Harmony;
+using Nitrox.Client.GameLogic;
+using Nitrox.Client.MonoBehaviours;
+using Nitrox.Model.Core;
+using Nitrox.Model.Logger;
+using Nitrox.Model.Subnautica.Packets;
+using UnityEngine;
+
+namespace Nitrox.Patcher.Patches.Dynamic
+{
+    class ExosuitTorpedoArm_Shoot_Patch : NitroxPatch, IDynamicPatch
+    {
+        public static readonly Type TARGET_CLASS = typeof(ExosuitTorpedoArm);
+        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("Shoot", BindingFlags.NonPublic | BindingFlags.Instance);
+
+        public static void Prefix(ExosuitTorpedoArm __instance, bool __result, TorpedoType torpedoType, Transform siloTransform)
+        {
+            if(torpedoType != null)
+            {
+                ExosuitArmAction action = ExosuitArmAction.START_USE_TOOL;
+                if(siloTransform == __instance.siloSecond)
+                {
+                    action = ExosuitArmAction.ALT_HIT;
+                }
+                if(siloTransform != __instance.siloFirst && siloTransform != __instance.siloSecond)
+                {
+                    Log.Error("Exosuit torpedo arm siloTransform is not first or second silo " + NitroxEntity.GetId(__instance.gameObject));
+                }
+                NitroxServiceLocator.LocateService<ExosuitModuleEvent>().BroadcastArmAction(TechType.ExosuitTorpedoArmModule,
+                    __instance, 
+                    action, 
+                    Player.main.camRoot.GetAimingTransform().forward, 
+                    Player.main.camRoot.GetAimingTransform().rotation
+                    );
+            }
+        }
+
+        public override void Patch(HarmonyInstance harmony)
+        {
+            PatchPrefix(harmony, TARGET_METHOD);
+        }
+    }
+}

@@ -8,7 +8,7 @@
 
   <PropertyGroup>
     <IsGameLibrary>false</IsGameLibrary>
-    <IsGameLibrary Condition="'$(OutputType)' == 'Library' and '$(MSBuildProjectName)' != 'NitroxTest'">true</IsGameLibrary>
+    <IsGameLibrary Condition="'$(OutputType)' == 'Library' and '$(MSBuildProjectName)' != 'Nitrox.Test'">true</IsGameLibrary>
   </PropertyGroup>
 
   <Import Project="$(DevVarsLoc)" Condition="Exists('$(DevVarsLoc)')" />

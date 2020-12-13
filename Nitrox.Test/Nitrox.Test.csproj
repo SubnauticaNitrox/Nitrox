@@ -1,0 +1,162 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{7787384E-3B08-4D6F-9C0E-A9E3701BA9F1}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Nitrox.Test</RootNamespace>
+    <AssemblyName>Nitrox.Test</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
+    <IsCodedUITest>False</IsCodedUITest>
+    <TestProjectType>UnitTest</TestProjectType>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="0Harmony, Version=1.2.0.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Lib.Harmony.1.2.0.1\lib\net35\0Harmony.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac, Version=4.9.4.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.9.4\lib\net45\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Castle.Core.4.4.1\lib\net45\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentAssertions, Version=5.10.3.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentAssertions.5.10.3\lib\net47\FluentAssertions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="NSubstitute, Version=4.2.0.0, Culture=neutral, PublicKeyToken=92dd2e9066daa5ca, processorArchitecture=MSIL">
+      <HintPath>..\packages\NSubstitute.4.2.2\lib\net46\NSubstitute.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.6.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.7.1\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.XML" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <Choose>
+    <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+      </ItemGroup>
+    </When>
+    <Otherwise>
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework">
+          <Private>False</Private>
+        </Reference>
+      </ItemGroup>
+    </Otherwise>
+  </Choose>
+  <ItemGroup>
+    <Compile Include="Client\Communication\DeferredPacketReceiverTest.cs" />
+    <Compile Include="Client\Communication\MultiplayerSessionTests\ConnectionStateTests\ConnectionNegotiatedStateTests\SessionJoinedStateTests.cs" />
+    <Compile Include="Client\Communication\MultiplayerSessionTests\ConnectionStateTests\ConnectionNegotiatedStateTests\SessionReservationRejectedStateTests.cs" />
+    <Compile Include="Client\Communication\MultiplayerSessionTests\ConnectionStateTests\ConnectionNegotiatedStateTests\SessionReservedStateTests.cs" />
+    <Compile Include="Client\Communication\MultiplayerSessionTests\ConnectionStateTests\ConnectionNegotiatingStateTests\AwaitingReservationCredentialsStateTests.cs" />
+    <Compile Include="Client\Communication\MultiplayerSessionTests\ConnectionStateTests\ConnectionNegotiatingStateTests\AwaitingSessionReservationStateTests.cs" />
+    <Compile Include="Client\Communication\MultiplayerSessionTests\ConnectionStateTests\ConnectionNegotiatingStateTests\EstablishingSessionPolicyStateTests.cs" />
+    <Compile Include="Client\Communication\MultiplayerSessionTests\ConnectionStateTests\DisconnectedStateTests.cs" />
+    <Compile Include="Client\Communication\MultiplayerSessionTests\MultiplayerSessionMangerTests.cs" />
+    <Compile Include="Client\Communication\MultiplayerSessionTests\TestConstants.cs" />
+    <Compile Include="Client\PlayerPreferences\PlayerPreferenceManagerTests.cs" />
+    <Compile Include="Client\PlayerPreferences\TestConstants.cs" />
+    <Compile Include="Core\DependencyInjectionTests.cs" />
+    <Compile Include="DataStructures\ThreadSafeCollectionTest.cs" />
+    <Compile Include="Model\OptionalTest.cs" />
+    <Compile Include="Model\PacketProcessorTest.cs" />
+    <Compile Include="Model\Packets\PacketsSerializableTest.cs" />
+    <Compile Include="Model\PriorityQueueTest.cs" />
+    <Compile Include="Model\Test\TestNonActionPacket.cs" />
+    <Compile Include="Patcher\Patches\BaseGhost_Finish_PatchTest.cs" />
+    <Compile Include="Patcher\Patches\BuilderPatchTest.cs" />
+    <Compile Include="Patcher\Patches\BuilderTool_HandleInput_PatchTest.cs" />
+    <Compile Include="Patcher\Patches\ConstructorInput_OnCraftingBegin_PatchTest.cs" />
+    <Compile Include="Patcher\Patches\Equipment_RemoveItem_PatchTest.cs" />
+    <Compile Include="Patcher\Test\PatchTestHelper.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Serialization\InteractiveChildObjectIdentifiersSerializationTest.cs" />
+    <Compile Include="Serialization\PdaStateDataSerializationTest.cs" />
+    <Compile Include="SetupAssemblyInitializer.cs" />
+    <Compile Include="Threading\ThreadSafeCollectionTest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Nitrox.Client\Nitrox.Client.csproj">
+      <Project>{ed5034bd-66b5-4596-94b7-66a28d3eff49}</Project>
+      <Name>Nitrox.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nitrox.Model.Subnautica\Nitrox.Model.Subnautica.csproj">
+      <Project>{0a377218-6b36-4522-89a3-a39cfc999209}</Project>
+      <Name>Nitrox.Model.Subnautica</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nitrox.Model\Nitrox.Model.csproj">
+      <Project>{b16f4de7-21ad-4fef-955b-0a5a365fa4e3}</Project>
+      <Name>Nitrox.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nitrox.Patcher\Nitrox.Patcher.csproj">
+      <Project>{be983e25-24cc-4fc8-9017-61eec43dd618}</Project>
+      <Name>Nitrox.Patcher</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nitrox.Server.Subnautica\Nitrox.Server.Subnautica.csproj">
+      <Project>{eff1d7a5-efd6-413a-8d5f-dc2408e4c9b7}</Project>
+      <Name>Nitrox.Server.Subnautica</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nitrox.Server\Nitrox.Server.csproj">
+      <Project>{0fc864b0-694e-4fca-b78c-8ef98bc6f262}</Project>
+      <Name>Nitrox.Server</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Choose>
+    <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.CodedUITestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Extension, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITesting, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets') and '$(OS)' == 'Windows_NT'" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" Condition="'$(OS)' == 'Windows_NT'" />
+  <!-- MSBuild requires a target. Give it an empty one to succeed on Linux: -->
+  <Target Name="EmptyTarget" Condition="'$(OS)' != 'Windows_NT'" />
+</Project>

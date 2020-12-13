@@ -2,7 +2,6 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-[assembly: InternalsVisibleTo("NitroxTest")]
 
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
@@ -10,8 +9,8 @@ using System.Runtime.InteropServices;
 // UNIQUE: [assembly: AssemblyTitle("")]
 // UNIQUE: [assembly: AssemblyDescription("")]
 // UNIQUE: [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
 // UNIQUE: [assembly: AssemblyProduct("")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyCopyright("Copyright ©  2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -36,3 +35,5 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.4.0.0")]
 [assembly: AssemblyFileVersion("1.4.0.0")]
+
+[assembly: InternalsVisibleTo("Nitrox.Test")]
