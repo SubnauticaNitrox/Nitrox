@@ -40,8 +40,6 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Parsers.Images
 
                     bmp.UnlockBits(picData);
 
-                    bmp.RotateFlip(RotateFlipType.RotateNoneFlipY);
-
                     resourceAssets.NitroxRandom = new NitroxModel.DataStructures.NitroxRandomStart(bmp);
                 }    
             }
