@@ -195,6 +195,16 @@ namespace NitroxServer.GameLogic.Entities
                         }
                     }
                 }
+
+                if (entity.ParentId != null)
+                {
+                    Optional<Entity> parent = GetEntityById(entity.ParentId);
+
+                    if (parent.HasValue)
+                    {
+                        parent.Value.ChildEntities.Remove(entity);
+                    }
+                }
             }
         }
 

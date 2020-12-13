@@ -191,6 +191,11 @@ namespace NitroxClient.MonoBehaviours
             yield return new WaitUntil(() => swapOperation.IsColorSwapComplete());
 
             swapOperation.ApplySwappedColors();
+
+            // UWE developers added noisy logging for non-whitelisted components during serialization.
+            // We add NitroxEntiy in here to avoid a large amount of log spam.
+            HashSet<string> whiteListedSerializableComponents = (HashSet<string>)ReflectionHelper.ReflectionGet<ProtobufSerializer>(null, "componentWhitelist", false, true);
+            whiteListedSerializableComponents.Add("NitroxEntity");
         }
 
         private void SceneManager_sceneLoaded(Scene scene, LoadSceneMode loadMode)

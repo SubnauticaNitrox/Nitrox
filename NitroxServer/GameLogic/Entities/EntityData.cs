@@ -25,9 +25,7 @@ namespace NitroxServer.GameLogic.Entities
             {
                 if (entity.ParentId != null)
                 {
-                    Entity parent = entitiesById[entity.ParentId];
-
-                    if (parent != null)
+                    if (entitiesById.TryGetValue(entity.ParentId, out Entity parent))
                     {
                         parent.ChildEntities.Add(entity);
                         entity.Transform.SetParent(parent.Transform);
