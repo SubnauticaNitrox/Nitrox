@@ -4,8 +4,10 @@ using System.IO;
 using AssetsTools.NET;
 using NitroxModel.Discovery;
 using NitroxServer_Subnautica.Serialization.Resources.Parsers;
+using NitroxServer_Subnautica.Serialization.Resources.Parsers.Images;
 using NitroxServer_Subnautica.Serialization.Resources.Processing;
 using NitroxServer.Serialization.Resources.Datastructures;
+using NitroxModel.Logger;
 
 namespace NitroxServer_Subnautica.Serialization.Resources
 {
@@ -25,6 +27,7 @@ namespace NitroxServer_Subnautica.Serialization.Resources
         {
             { 1, new GameObjectAssetParser()},
             { 4, new TransformAssetParser()},
+            { 28, new Texture2DAssetParser() },
             { 49, new TextAssetParser() },
             { 114, new MonobehaviourAssetParser() },
             { 115, new MonoscriptAssetParser() },
@@ -43,33 +46,46 @@ namespace NitroxServer_Subnautica.Serialization.Resources
             }
 
             resourceAssets = new ResourceAssets();
-
-            string basePath = FindDirectoryContainingResourceAssets();
-
-            CalculateDependencyFileIds(basePath, "resources.assets");
-
-            int rootAssetId = 0; // resources.assets is always considered to be the top level '0'
-            ParseAssetManifest(basePath, "resources.assets", rootAssetId, resourceAssets);
+            TryParseAllAssetsFiles(FindDirectoryContainingResourceAssets(), out ResourceAssets resourceAssets);
 
             prefabPlaceholderExtractor.LoadInto(resourceAssets);
 
-            resourceAssets.ValidateMembers();
+            ResourceAssets.ValidateMembers(resourceAssets);
 
             return resourceAssets;
         }
 
-        private static void ParseAssetManifest(string basePath, string fileName, int fileId, ResourceAssets resourceAssets)
-        {
-            fileName = fileName.Replace("resources/", "Resources/");
 
-            if (parsedManifests.Contains(fileName))
+        public static bool TryParseAllAssetsFiles(string basePath, out ResourceAssets resourceAssets)
+        {
+            resourceAssets = new ResourceAssets();
+            //try
+            {
+                foreach (string fileName in Directory.GetFiles(basePath, "*.assets"))
+                {
+                    ParseAssetManifest(basePath, fileName, resourceAssets);
+                }
+
+                return true;
+            }
+            /*catch (Exception ex)
+            {
+                Log.Error($"Exception thrown in AssetsParser: {ex} \n {ex.StackTrace}");
+                resourceAssets = null;
+                return false;
+            }*/
+        }
+
+
+        private static void ParseAssetManifest(string basePath, string fileName, ResourceAssets resourceAssets)
+        {
+            string path = Path.Combine(basePath, fileName).Replace("resources/", "Resources/");
+
+            if (parsedManifests.Contains(path))
             {
                 return;
             }
-
-            parsedManifests.Add(fileName);
-
-            string path = Path.Combine(basePath, fileName);
+            Dictionary<int, string> relativeFileIdToPath = new Dictionary<int, string>();
 
             using (FileStream resStream = new FileStream(path, FileMode.Open, FileAccess.Read))
             using (AssetsFileReader reader = new AssetsFileReader(resStream))
@@ -77,49 +93,35 @@ namespace NitroxServer_Subnautica.Serialization.Resources
                 AssetsFile file = new AssetsFile(reader);
                 AssetsFileTable resourcesFileTable = new AssetsFileTable(file);
 
+                parsedManifests.Add(path);
+
+
+                relativeFileIdToPath.Add(0, path);
+                int fileId = 1;
                 foreach (AssetsFileDependency dependency in file.dependencies.dependencies)
                 {
-                    int dependencyFileId = fileIdByResourcePath[dependency.assetPath];
-                    ParseAssetManifest(basePath, dependency.assetPath, dependencyFileId, resourceAssets);
+                    relativeFileIdToPath.Add(fileId++, Path.Combine(basePath, dependency.assetPath));
+                }
+
+                foreach (AssetsFileDependency dependency in file.dependencies.dependencies)
+                {
+                    ParseAssetManifest(basePath, dependency.assetPath, resourceAssets);
                 }
 
                 foreach (AssetFileInfoEx assetFileInfo in resourcesFileTable.assetFileInfo)
                 {
                     reader.Position = assetFileInfo.absoluteFilePos;
 
-                    AssetIdentifier identifier = new AssetIdentifier(fileId, assetFileInfo.index);
+                    AssetIdentifier identifier = new AssetIdentifier(path, assetFileInfo.index);
 
                     AssetParser assetParser;
 
                     if (assetParsersByClassId.TryGetValue(assetFileInfo.curFileType, out assetParser))
                     {
-                        assetParser.Parse(identifier, reader, resourceAssets);
+                        assetParser.Parse(identifier, reader, resourceAssets, relativeFileIdToPath);
                     }
 
                     assetIdentifierToClassId.Add(identifier, assetFileInfo.curFileType);
-                }
-            }
-        }
-
-        // All dependencies are stored in the root resource.assets file.  The order they
-        // are listed corresponds to the fileId order.  We store this value, so we can
-        // fetch the fileId of different assets to build AssetIdentifiers.
-        private static void CalculateDependencyFileIds(string basePath, string fileName)
-        {
-            string path = Path.Combine(basePath, fileName);
-
-            using (FileStream resStream = new FileStream(path, FileMode.Open, FileAccess.Read))
-            using (AssetsFileReader reader = new AssetsFileReader(resStream))
-            {
-                AssetsFile file = new AssetsFile(reader);
-                AssetsFileTable resourcesFileTable = new AssetsFileTable(file);
-
-                int fileId = 1;
-
-                foreach (AssetsFileDependency dependency in file.dependencies.dependencies)
-                {
-                    fileIdByResourcePath.Add(dependency.assetPath, fileId);
-                    fileId++;
                 }
             }
         }

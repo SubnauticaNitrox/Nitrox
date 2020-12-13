@@ -11,12 +11,12 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Parsers
         public static Dictionary<AssetIdentifier, AssetIdentifier> ChildrenIdToParentId { get; } = new Dictionary<AssetIdentifier, AssetIdentifier>();
         public static Dictionary<AssetIdentifier, List<AssetIdentifier>> ChildrenIdsByParentId { get; } = new Dictionary<AssetIdentifier, List<AssetIdentifier>>();
 
-        public override void Parse(AssetIdentifier identifier, AssetsFileReader reader, ResourceAssets resourceAssets)
+        public override void Parse(AssetIdentifier identifier, AssetsFileReader reader, ResourceAssets resourceAssets, Dictionary<int, string> relativeFileIdToPath)
         {
             TransformAsset transformAsset = new TransformAsset();
             transformAsset.Identifier = identifier;
 
-            transformAsset.GameObjectIdentifier = new AssetIdentifier(reader.ReadInt32(), reader.ReadInt64());
+            transformAsset.GameObjectIdentifier = new AssetIdentifier(relativeFileIdToPath[reader.ReadInt32()], reader.ReadInt64());
 
             transformAsset.LocalRotation = new NitroxQuaternion(
                 reader.ReadSingle(), // Quaternion X
@@ -38,20 +38,20 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Parsers
             // instead, we rely on a call back to index ChildrenIdsByPatentId (same access pattern as
             // the other data structures throughout this process).
             List<AssetIdentifier> children = new List<AssetIdentifier>();
-            ChildrenIdsByParentId.Add(identifier, children);
+            ChildrenIdsByParentId[identifier] = children;
 
             int childrenCount = reader.ReadInt32();
 
             for (int i = 0; i < childrenCount; i++)
             {
-                AssetIdentifier child = new AssetIdentifier(reader.ReadInt32(), reader.ReadInt64());
-                ChildrenIdToParentId.Add(child, identifier);
+                AssetIdentifier child = new AssetIdentifier(relativeFileIdToPath[reader.ReadInt32()], reader.ReadInt64());
+                ChildrenIdToParentId[child] = identifier;
                 children.Add(child);
             }
 
-            transformAsset.ParentIdentifier = new AssetIdentifier(reader.ReadInt32(), reader.ReadInt64());
+            transformAsset.ParentIdentifier = new AssetIdentifier(relativeFileIdToPath[reader.ReadInt32()], reader.ReadInt64());
 
-            TransformsByAssetId.Add(identifier, transformAsset);
+            TransformsByAssetId[identifier] = transformAsset;
         }
     }
 }

@@ -8,12 +8,12 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Parsers
     {
         public static Dictionary<AssetIdentifier, MonoscriptAsset> MonoscriptsByAssetId { get; } = new Dictionary<AssetIdentifier, MonoscriptAsset>();
 
-        public override void Parse(AssetIdentifier identifier, AssetsFileReader reader, ResourceAssets resourceAssets)
+        public override void Parse(AssetIdentifier identifier, AssetsFileReader reader, ResourceAssets resourceAssets, Dictionary<int, string> relativeFileIdToPath)
         {
             MonoscriptAsset monoscriptAsset = new MonoscriptAsset();
             monoscriptAsset.Name = reader.ReadCountStringInt32();
 
-            MonoscriptsByAssetId.Add(identifier, monoscriptAsset);
+            MonoscriptsByAssetId[identifier] = monoscriptAsset;
         }
 
         public class MonoscriptAsset

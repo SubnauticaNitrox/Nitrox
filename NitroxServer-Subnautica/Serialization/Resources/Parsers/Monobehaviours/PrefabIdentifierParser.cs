@@ -10,12 +10,12 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Parsers.Monobehaviours
 
         public static Dictionary<string, AssetIdentifier> GameObjectIdByClassId { get; } = new Dictionary<string, AssetIdentifier>();
 
-        public override void Parse(AssetIdentifier identifier, AssetIdentifier gameObjectIdentifier, AssetsFileReader reader, ResourceAssets resourceAssets)
+        public override void Parse(AssetIdentifier identifier, AssetIdentifier gameObjectIdentifier, AssetsFileReader reader, ResourceAssets resourceAssets, Dictionary<int, string> relativeFileIdToPath)
         {
             string classId = reader.ReadCountStringInt32();
 
-            ClassIdByGameObjectId.Add(gameObjectIdentifier, classId);
-            GameObjectIdByClassId.Add(classId, gameObjectIdentifier);
+            ClassIdByGameObjectId[gameObjectIdentifier] = classId;
+            GameObjectIdByClassId[classId] = gameObjectIdentifier;
         }
     }
 }

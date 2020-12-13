@@ -1,6 +1,8 @@
 ﻿using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
+using NitroxServer.Serialization;
+using NitroxModel.Core;
 using System.Collections.Generic;
 
 namespace NitroxServer.GameLogic
@@ -62,10 +64,11 @@ namespace NitroxServer.GameLogic
         private EscapePodModel CreateNewEscapePod()
         {
             int totalEscapePods = EscapePods.Count;
-
+            NitroxRandomStart randomStart = NitroxServiceLocator.LocateService<NitroxRandomStart>();
+            ServerConfig config = NitroxServiceLocator.LocateService<ServerConfig>();
             EscapePodModel escapePod = new EscapePodModel();
             escapePod.InitEscapePodModel(new NitroxId(),
-                                         new NitroxVector3(-112.2f + ESCAPE_POD_X_OFFSET * totalEscapePods, 0.0f, -322.6f),
+                                         randomStart.GenerateRandomStartPosition(config.Seed),
                                          new NitroxId(),
                                          new NitroxId(),
                                          new NitroxId(),

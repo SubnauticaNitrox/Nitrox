@@ -8,7 +8,7 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Parsers
     {
         public static Dictionary<AssetIdentifier, GameObjectAsset> GameObjectsByAssetId { get; } = new Dictionary<AssetIdentifier, GameObjectAsset>();
 
-        public override void Parse(AssetIdentifier identifier, AssetsFileReader reader, ResourceAssets resourceAssets)
+        public override void Parse(AssetIdentifier identifier, AssetsFileReader reader, ResourceAssets resourceAssets, Dictionary<int, string> relativeFileIdToPath)
         {
             GameObjectAsset gameObjectAsset = new GameObjectAsset();
             gameObjectAsset.Identifier = identifier;
@@ -17,7 +17,7 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Parsers
 
             for (int i = 0; i < componentCount; i++)
             {
-                AssetIdentifier component = new AssetIdentifier(reader.ReadInt32(), reader.ReadInt64());
+                AssetIdentifier component = new AssetIdentifier(relativeFileIdToPath[reader.ReadInt32()], reader.ReadInt64());
                 gameObjectAsset.Components.Add(component);
             }
 
@@ -26,7 +26,7 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Parsers
             int length = reader.ReadInt32();
             gameObjectAsset.Name = reader.ReadStringLength(length);
 
-            GameObjectsByAssetId.Add(identifier, gameObjectAsset);
+            GameObjectsByAssetId[identifier] = gameObjectAsset;
         }
     }
 }

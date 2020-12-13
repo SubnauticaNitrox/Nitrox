@@ -9,7 +9,7 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Parsers.Monobehaviours
     {
         public static Dictionary<AssetIdentifier, NitroxEntitySlot> EntitySlotsByIdentifier = new Dictionary<AssetIdentifier, NitroxEntitySlot>();
 
-        public override void Parse(AssetIdentifier identifier, AssetIdentifier gameObjectIdentifier, AssetsFileReader reader, ResourceAssets resourceAssets)
+        public override void Parse(AssetIdentifier identifier, AssetIdentifier gameObjectIdentifier, AssetsFileReader reader, ResourceAssets resourceAssets, Dictionary<int, string> relativeFileIdToPath)
         {
             int count = reader.ReadInt32(); // Array Count
             string[] allowedTypes = new string[count];
@@ -21,7 +21,7 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Parsers.Monobehaviours
 
             string biomeType = ((BiomeType)reader.ReadInt32()).AsString(); // Yes
 
-            EntitySlotsByIdentifier.Add(gameObjectIdentifier, new NitroxEntitySlot(biomeType, allowedTypes));
+            EntitySlotsByIdentifier[gameObjectIdentifier] = new NitroxEntitySlot(biomeType, allowedTypes);
         }
     }
 }
