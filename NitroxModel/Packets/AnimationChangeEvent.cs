@@ -15,5 +15,10 @@ namespace NitroxModel.Packets
             Type = type;
             State = state;
         }
+
+        public override string ToString()
+        {
+            return $"[AnimationChangeEvent - PlayerId: {PlayerId}, Type: {Type}, State: {State}]";
+        }
     }
 }

@@ -1,5 +1,5 @@
-﻿using NitroxModel.DataStructures;
-using System;
+﻿using System;
+using NitroxModel.DataStructures;
 
 namespace NitroxModel.Packets
 {
@@ -19,7 +19,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return "[SimulationOwnershipRequest - PlayerId: " + PlayerId + " Id: " + Id + " PlayerId: " + PlayerId + " LockType: " + LockType + "]";
+            return $"[SimulationOwnershipRequest - PlayerId: {PlayerId}, Id: {Id}, LockType: {LockType}]";
         }
     }
 }

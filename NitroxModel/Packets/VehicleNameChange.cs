@@ -17,7 +17,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return "[VehicleNameChange Id: " + Id + " Name: " + Name + "]";
+            return $"[VehicleNameChange - Id: {Id}, Name: {Name}]";
         }
     }
 }

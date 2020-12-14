@@ -3,6 +3,7 @@ using System.Reflection;
 using Harmony;
 using NitroxClient.Communication.Abstract;
 using NitroxModel.Core;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
 using Story;
 
@@ -17,7 +18,7 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             if (!StoryGoalManager.main.completedGoals.Contains(key))
             {
-                StoryEventSend packet = new StoryEventSend((StoryEventType) goalType, key);
+                StoryEventSend packet = new StoryEventSend((StoryEventType)goalType, key);
                 NitroxServiceLocator.LocateService<IPacketSender>().Send(packet);
             }
         }

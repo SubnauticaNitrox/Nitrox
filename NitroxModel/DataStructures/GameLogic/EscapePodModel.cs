@@ -56,14 +56,12 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public override string ToString()
         {
-            string toString = "[EscapePodModel - Id: " + Id + " Location:" + Location + " FabricatorId: " + FabricatorId + " MedicalFabricatorGuid: " + MedicalFabricatorId + " StorageContainerGuid: " + StorageContainerId + " RadioGuid: " + RadioId + " AssignedPlayers: {";
+            return $"[EscapePodModel - Id: {Id}, Location: {Location}, FabricatorId: {FabricatorId}, MedicalFabricatorId: {MedicalFabricatorId}, StorageContainerId: {StorageContainerId}, RadioId: {RadioId}, AssignedPlayers: {AssignedPlayers?.Count}, Damaged: {Damaged}, RadioDamaged: {RadioDamaged}]";
+        }
 
-            foreach (ushort playerId in AssignedPlayers)
-            {
-                toString += playerId + " ";
-            }
-
-            return toString + "} Damaged: " + Damaged + " RadioDamaged: " + RadioDamaged + "]";
+        public string ToLongString()
+        {
+            return $"[EscapePodModel - Id: {Id}, Location: {Location}, FabricatorId: {FabricatorId}, MedicalFabricatorId: {MedicalFabricatorId}, StorageContainerId: {StorageContainerId}, RadioId: {RadioId}, AssignedPlayers: ({string.Join(", ", AssignedPlayers)}), Damaged: {Damaged}, RadioDamaged: {RadioDamaged}]";
         }
     }
 }

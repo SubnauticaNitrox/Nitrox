@@ -1,6 +1,5 @@
 ﻿using System;
 using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Networking;
 
 namespace NitroxModel.Packets
 {
@@ -12,13 +11,12 @@ namespace NitroxModel.Packets
         public VehicleMovement(ushort playerId, VehicleMovementData vehicleMovementData) : base(playerId, vehicleMovementData.Position, vehicleMovementData.Velocity, vehicleMovementData.Rotation, vehicleMovementData.Rotation)
         {
             VehicleMovementData = vehicleMovementData;
-            DeliveryMethod = NitroxDeliveryMethod.DeliveryMethod.UNRELIABLE_SEQUENCED;
             UdpChannel = UdpChannelId.VEHICLE_MOVEMENT;
         }
 
         public override string ToString()
         {
-            return $"[VehicleMovement - {base.ToString()}, Data: {VehicleMovementData}]";
+            return $"[VehicleMovement - VehicleMovementData: {VehicleMovementData}, Movement: {base.ToString()}]";
         }
     }
 }

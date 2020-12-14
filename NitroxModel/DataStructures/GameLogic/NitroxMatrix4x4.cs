@@ -5,20 +5,21 @@ namespace NitroxModel.DataStructures.GameLogic
     public struct NitroxMatrix4x4
     {
         public float[,] M;
+
         private static readonly NitroxMatrix4x4 identity = new NitroxMatrix4x4
-            (
+        (
             1f, 0f, 0f, 0f,
             0f, 1f, 0f, 0f,
             0f, 0f, 1f, 0f,
             0f, 0f, 0f, 1f
-            );
+        );
 
         public override string ToString()
         {
-            return $"[\n[{M[0,0]}], [{M[0,1]}], [{M[0,2]}], [{M[0,3]}],\n" +
-                $"[{M[1, 0]}], [{M[1, 1]}], [{M[1, 2]}], [{M[1, 3]}],\n" +
-                $"[{M[2, 0]}], [{M[2, 1]}], [{M[2, 2]}], [{M[2, 3]}],\n" +
-                $"[{M[3, 0]}], [{M[3, 1]}], [{M[3, 2]}], [{M[3, 3]}],\n]";
+            return $"[\n[{M[0, 0]}], [{M[0, 1]}], [{M[0, 2]}], [{M[0, 3]}],\n" +
+                   $"[{M[1, 0]}], [{M[1, 1]}], [{M[1, 2]}], [{M[1, 3]}],\n" +
+                   $"[{M[2, 0]}], [{M[2, 1]}], [{M[2, 2]}], [{M[2, 3]}],\n" +
+                   $"[{M[3, 0]}], [{M[3, 1]}], [{M[3, 2]}], [{M[3, 3]}],\n]";
         }
 
         public float this[int x, int y]
@@ -54,10 +55,10 @@ namespace NitroxModel.DataStructures.GameLogic
             NitroxMatrix4x4 result;
             result.M = new float[4, 4];
 
-            float a = matrix[0,0], b = matrix[0,1], c = matrix[0,2], d = matrix[0,3];
-            float e = matrix[1,0], f = matrix[1,1], g = matrix[1,2], h = matrix[1,3];
-            float i = matrix[2,0], j = matrix[2,1], k = matrix[2,2], l = matrix[2,3];
-            float m = matrix[3,0], n = matrix[3,1], o = matrix[3,2], p = matrix[3,3];
+            float a = matrix[0, 0], b = matrix[0, 1], c = matrix[0, 2], d = matrix[0, 3];
+            float e = matrix[1, 0], f = matrix[1, 1], g = matrix[1, 2], h = matrix[1, 3];
+            float i = matrix[2, 0], j = matrix[2, 1], k = matrix[2, 2], l = matrix[2, 3];
+            float m = matrix[3, 0], n = matrix[3, 1], o = matrix[3, 2], p = matrix[3, 3];
 
             float kp_lo = k * p - l * o;
             float jp_ln = j * p - l * n;
@@ -75,15 +76,15 @@ namespace NitroxModel.DataStructures.GameLogic
 
             float invDet = 1.0f / det;
 
-            result[0,0] = a11 * invDet;
-            result[1,0] = a12 * invDet;
-            result[2,0] = a13 * invDet;
-            result[3,0] = a14 * invDet;
+            result[0, 0] = a11 * invDet;
+            result[1, 0] = a12 * invDet;
+            result[2, 0] = a13 * invDet;
+            result[3, 0] = a14 * invDet;
 
-            result[0,1] = -(b * kp_lo - c * jp_ln + d * jo_kn) * invDet;
-            result[1,1] = +(a * kp_lo - c * ip_lm + d * io_km) * invDet;
-            result[2,1] = -(a * jp_ln - b * ip_lm + d * in_jm) * invDet;
-            result[3,1] = +(a * jo_kn - b * io_km + c * in_jm) * invDet;
+            result[0, 1] = -(b * kp_lo - c * jp_ln + d * jo_kn) * invDet;
+            result[1, 1] = +(a * kp_lo - c * ip_lm + d * io_km) * invDet;
+            result[2, 1] = -(a * jp_ln - b * ip_lm + d * in_jm) * invDet;
+            result[3, 1] = +(a * jo_kn - b * io_km + c * in_jm) * invDet;
 
             float gp_ho = g * p - h * o;
             float fp_hn = f * p - h * n;
@@ -92,10 +93,10 @@ namespace NitroxModel.DataStructures.GameLogic
             float eo_gm = e * o - g * m;
             float en_fm = e * n - f * m;
 
-            result[0,2] = +(b * gp_ho - c * fp_hn + d * fo_gn) * invDet;
-            result[1,2] = -(a * gp_ho - c * ep_hm + d * eo_gm) * invDet;
-            result[2,2] = +(a * fp_hn - b * ep_hm + d * en_fm) * invDet;
-            result[3,2] = -(a * fo_gn - b * eo_gm + c * en_fm) * invDet;
+            result[0, 2] = +(b * gp_ho - c * fp_hn + d * fo_gn) * invDet;
+            result[1, 2] = -(a * gp_ho - c * ep_hm + d * eo_gm) * invDet;
+            result[2, 2] = +(a * fp_hn - b * ep_hm + d * en_fm) * invDet;
+            result[3, 2] = -(a * fo_gn - b * eo_gm + c * en_fm) * invDet;
 
             float gl_hk = g * l - h * k;
             float fl_hj = f * l - h * j;
@@ -104,10 +105,10 @@ namespace NitroxModel.DataStructures.GameLogic
             float ek_gi = e * k - g * i;
             float ej_fi = e * j - f * i;
 
-            result[0,3] = -(b * gl_hk - c * fl_hj + d * fk_gj) * invDet;
-            result[1,3] = +(a * gl_hk - c * el_hi + d * ek_gi) * invDet;
-            result[2,3] = -(a * fl_hj - b * el_hi + d * ej_fi) * invDet;
-            result[3,3] = +(a * fk_gj - b * ek_gi + c * ej_fi) * invDet;
+            result[0, 3] = -(b * gl_hk - c * fl_hj + d * fk_gj) * invDet;
+            result[1, 3] = +(a * gl_hk - c * el_hi + d * ek_gi) * invDet;
+            result[2, 3] = -(a * fl_hj - b * el_hi + d * ej_fi) * invDet;
+            result[3, 3] = +(a * fk_gj - b * ek_gi + c * ej_fi) * invDet;
 
             return result;
         }
@@ -117,10 +118,10 @@ namespace NitroxModel.DataStructures.GameLogic
             get
             {
                 return M[0, 0] == 1f && M[1, 1] == 1f && M[2, 2] == 1f && M[3, 3] == 1f &&
-                    M[0, 1] == 0f && M[0, 2] == 0f && M[0, 3] == 0f &&
-                    M[1, 0] == 0f && M[1, 2] == 0f && M[1, 3] == 0f &&
-                    M[2, 0] == 0f && M[2, 1] == 0f && M[2, 3] == 0f &&
-                    M[3, 0] == 0f && M[3, 1] == 0f && M[3, 2] == 0f;
+                       M[0, 1] == 0f && M[0, 2] == 0f && M[0, 3] == 0f &&
+                       M[1, 0] == 0f && M[1, 2] == 0f && M[1, 3] == 0f &&
+                       M[2, 0] == 0f && M[2, 1] == 0f && M[2, 3] == 0f &&
+                       M[3, 0] == 0f && M[3, 1] == 0f && M[3, 2] == 0f;
             }
         }
 
@@ -166,7 +167,6 @@ namespace NitroxModel.DataStructures.GameLogic
             scaleMatrix[2, 2] = 1f;
             scaleMatrix[3, 3] = 1f;
 
-
             scaleMatrix[0, 0] = localScale.X;
             scaleMatrix[1, 1] = localScale.Y;
             scaleMatrix[2, 2] = localScale.Z;
@@ -203,7 +203,7 @@ namespace NitroxModel.DataStructures.GameLogic
             // add: 6 + 8 + 3 = 17
             // mul: 12 + 16 = 28
 
-            float a = M[0,0], b = M[0, 1], c = M[0, 2], d = M[0, 3];
+            float a = M[0, 0], b = M[0, 1], c = M[0, 2], d = M[0, 3];
             float e = M[1, 0], f = M[1, 1], g = M[1, 2], h = M[1, 3];
             float i = M[2, 0], j = M[2, 1], k = M[2, 2], l = M[2, 3];
             float m = M[3, 0], n = M[3, 1], o = M[3, 2], p = M[3, 3];
@@ -268,8 +268,6 @@ namespace NitroxModel.DataStructures.GameLogic
             transMatrix[2, 2] = 1f;
             transMatrix[3, 3] = 1f;
 
-
-
             transMatrix[0, 3] = localPosition.X;
             transMatrix[1, 3] = localPosition.Y;
             transMatrix[2, 3] = localPosition.Z;
@@ -279,11 +277,7 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public static NitroxVector3 ExtractTranslation(ref NitroxMatrix4x4 matrix)
         {
-            NitroxVector3 position;
-            position.X = matrix[0, 3];
-            position.Y = matrix[1, 3];
-            position.Z = matrix[2, 3];
-            return position;
+            return new NitroxVector3(matrix[0, 3], matrix[1, 3], matrix[2, 3]);
         }
 
         public static NitroxMatrix4x4 operator *(NitroxMatrix4x4 lhs, NitroxMatrix4x4 rhs)
@@ -292,28 +286,28 @@ namespace NitroxModel.DataStructures.GameLogic
             result.M = new float[4, 4]; // 4x4 array
 
             // First row
-            result[0,0] = lhs[0,0] * rhs[0,0] + lhs[0,1] * rhs[1,0] + lhs[0,2] * rhs[2,0] + lhs[0,3] * rhs[3,0];
-            result[0,1] = lhs[0,0] * rhs[0,1] + lhs[0,1] * rhs[1,1] + lhs[0,2] * rhs[2,1] + lhs[0,3] * rhs[3,1];
-            result[0,2] = lhs[0,0] * rhs[0,2] + lhs[0,1] * rhs[1,2] + lhs[0,2] * rhs[2,2] + lhs[0,3] * rhs[3,2];
-            result[0,3] = lhs[0,0] * rhs[0,3] + lhs[0,1] * rhs[1,3] + lhs[0,2] * rhs[2,3] + lhs[0,3] * rhs[3,3];
+            result[0, 0] = lhs[0, 0] * rhs[0, 0] + lhs[0, 1] * rhs[1, 0] + lhs[0, 2] * rhs[2, 0] + lhs[0, 3] * rhs[3, 0];
+            result[0, 1] = lhs[0, 0] * rhs[0, 1] + lhs[0, 1] * rhs[1, 1] + lhs[0, 2] * rhs[2, 1] + lhs[0, 3] * rhs[3, 1];
+            result[0, 2] = lhs[0, 0] * rhs[0, 2] + lhs[0, 1] * rhs[1, 2] + lhs[0, 2] * rhs[2, 2] + lhs[0, 3] * rhs[3, 2];
+            result[0, 3] = lhs[0, 0] * rhs[0, 3] + lhs[0, 1] * rhs[1, 3] + lhs[0, 2] * rhs[2, 3] + lhs[0, 3] * rhs[3, 3];
 
             // Second row
-            result[1,0] = lhs[1,0] * rhs[0,0] + lhs[1,1] * rhs[1,0] + lhs[1,2] * rhs[2,0] + lhs[1,3] * rhs[3,0];
-            result[1,1] = lhs[1,0] * rhs[0,1] + lhs[1,1] * rhs[1,1] + lhs[1,2] * rhs[2,1] + lhs[1,3] * rhs[3,1];
-            result[1,2] = lhs[1,0] * rhs[0,2] + lhs[1,1] * rhs[1,2] + lhs[1,2] * rhs[2,2] + lhs[1,3] * rhs[3,2];
-            result[1,3] = lhs[1,0] * rhs[0,3] + lhs[1,1] * rhs[1,3] + lhs[1,2] * rhs[2,3] + lhs[1,3] * rhs[3,3];
+            result[1, 0] = lhs[1, 0] * rhs[0, 0] + lhs[1, 1] * rhs[1, 0] + lhs[1, 2] * rhs[2, 0] + lhs[1, 3] * rhs[3, 0];
+            result[1, 1] = lhs[1, 0] * rhs[0, 1] + lhs[1, 1] * rhs[1, 1] + lhs[1, 2] * rhs[2, 1] + lhs[1, 3] * rhs[3, 1];
+            result[1, 2] = lhs[1, 0] * rhs[0, 2] + lhs[1, 1] * rhs[1, 2] + lhs[1, 2] * rhs[2, 2] + lhs[1, 3] * rhs[3, 2];
+            result[1, 3] = lhs[1, 0] * rhs[0, 3] + lhs[1, 1] * rhs[1, 3] + lhs[1, 2] * rhs[2, 3] + lhs[1, 3] * rhs[3, 3];
 
             // Third row
-            result[2,0] = lhs[2,0] * rhs[0,0] + lhs[2,1] * rhs[1,0] + lhs[2,2] * rhs[2,0] + lhs[2,3] * rhs[3,0];
-            result[2,1] = lhs[2,0] * rhs[0,1] + lhs[2,1] * rhs[1,1] + lhs[2,2] * rhs[2,1] + lhs[2,3] * rhs[3,1];
-            result[2,2] = lhs[2,0] * rhs[0,2] + lhs[2,1] * rhs[1,2] + lhs[2,2] * rhs[2,2] + lhs[2,3] * rhs[3,2];
-            result[2,3] = lhs[2,0] * rhs[0,3] + lhs[2,1] * rhs[1,3] + lhs[2,2] * rhs[2,3] + lhs[2,3] * rhs[3,3];
+            result[2, 0] = lhs[2, 0] * rhs[0, 0] + lhs[2, 1] * rhs[1, 0] + lhs[2, 2] * rhs[2, 0] + lhs[2, 3] * rhs[3, 0];
+            result[2, 1] = lhs[2, 0] * rhs[0, 1] + lhs[2, 1] * rhs[1, 1] + lhs[2, 2] * rhs[2, 1] + lhs[2, 3] * rhs[3, 1];
+            result[2, 2] = lhs[2, 0] * rhs[0, 2] + lhs[2, 1] * rhs[1, 2] + lhs[2, 2] * rhs[2, 2] + lhs[2, 3] * rhs[3, 2];
+            result[2, 3] = lhs[2, 0] * rhs[0, 3] + lhs[2, 1] * rhs[1, 3] + lhs[2, 2] * rhs[2, 3] + lhs[2, 3] * rhs[3, 3];
 
             // Fourth row
-            result[3,0] = lhs[3,0] * rhs[0,0] + lhs[3,1] * rhs[1,0] + lhs[3,2] * rhs[2,0] + lhs[3,3] * rhs[3,0];
-            result[3,1] = lhs[3,0] * rhs[0,1] + lhs[3,1] * rhs[1,1] + lhs[3,2] * rhs[2,1] + lhs[3,3] * rhs[3,1];
-            result[3,2] = lhs[3,0] * rhs[0,2] + lhs[3,1] * rhs[1,2] + lhs[3,2] * rhs[2,2] + lhs[3,3] * rhs[3,2];
-            result[3,3] = lhs[3,0] * rhs[0,3] + lhs[3,1] * rhs[1,3] + lhs[3,2] * rhs[2,3] + lhs[3,3] * rhs[3,3];
+            result[3, 0] = lhs[3, 0] * rhs[0, 0] + lhs[3, 1] * rhs[1, 0] + lhs[3, 2] * rhs[2, 0] + lhs[3, 3] * rhs[3, 0];
+            result[3, 1] = lhs[3, 0] * rhs[0, 1] + lhs[3, 1] * rhs[1, 1] + lhs[3, 2] * rhs[2, 1] + lhs[3, 3] * rhs[3, 1];
+            result[3, 2] = lhs[3, 0] * rhs[0, 2] + lhs[3, 1] * rhs[1, 2] + lhs[3, 2] * rhs[2, 2] + lhs[3, 3] * rhs[3, 2];
+            result[3, 3] = lhs[3, 0] * rhs[0, 3] + lhs[3, 1] * rhs[1, 3] + lhs[3, 2] * rhs[2, 3] + lhs[3, 3] * rhs[3, 3];
 
             return result;
         }
@@ -322,12 +316,11 @@ namespace NitroxModel.DataStructures.GameLogic
         {
             NitroxMatrix4x4 result;
             result.M = new float[4, 4];
-            
+
             for (int i = 0; i < 4; i++)
             {
                 result[i, i] = lhs[i, i] + rhs[i, i];
             }
-
 
             return result;
         }
@@ -342,7 +335,6 @@ namespace NitroxModel.DataStructures.GameLogic
                 result[i, i] = lhs * rhs[i, i];
             }
 
-
             return result;
         }
 
@@ -355,7 +347,6 @@ namespace NitroxModel.DataStructures.GameLogic
             {
                 result[i, i] = lhs[i, i] - rhs[i, i];
             }
-
 
             return result;
         }
@@ -389,10 +380,10 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public static NitroxVector3 ExtractScale(ref NitroxMatrix4x4 matrix)
         {
-            NitroxVector3 scale;
-            scale.X = NitroxVector3.Length(new NitroxVector3(matrix[0, 0], matrix[0, 1], matrix[0, 2]));
-            scale.Y = NitroxVector3.Length(new NitroxVector3(matrix[1, 0], matrix[1, 1], matrix[1, 2]));
-            scale.Z = NitroxVector3.Length(new NitroxVector3(matrix[2, 0], matrix[2, 1], matrix[2, 2]));
+            NitroxVector3 scale = new NitroxVector3(
+                NitroxVector3.Length(new NitroxVector3(matrix[0, 0], matrix[0, 1], matrix[0, 2])),
+                NitroxVector3.Length(new NitroxVector3(matrix[1, 0], matrix[1, 1], matrix[1, 2])),
+                NitroxVector3.Length(new NitroxVector3(matrix[2, 0], matrix[2, 1], matrix[2, 2])));
 
             matrix[0, 0] /= scale.X;
             matrix[0, 1] /= scale.X;
@@ -413,7 +404,7 @@ namespace NitroxModel.DataStructures.GameLogic
         {
             NitroxQuaternion q = new NitroxQuaternion(0f, 0f, 0f, 1f);
 
-            float trace = matrix[0,0] + matrix[1,1] + matrix[2,2];
+            float trace = matrix[0, 0] + matrix[1, 1] + matrix[2, 2];
             if (trace > 0)
             {
                 float s = 0.5f / (float)Math.Sqrt(trace + 1.0f);

@@ -1,30 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
-using ProtoBufNet;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
-    [ProtoContract]
     public class LiveMixinHealthChanged : Packet
     {
-        public Optional<DamageTakenData> DamageTakenData;
-
         public NitroxTechType TechType { get; }
-
-        public NitroxId Id { get; set; }
-
-        public float LifeChanged { get; set; }
-
+        public NitroxId Id { get; }
+        public float LifeChanged { get; }
         public float TotalHealth { get; }
+        public Optional<DamageTakenData> DamageTakenData { get; }
 
-        public LiveMixinHealthChanged(NitroxTechType techType, NitroxId id, float lifeChanged, NitroxVector3 position, ushort damageType, Optional<NitroxId> dealerId, float totalHealth)
+        public LiveMixinHealthChanged(NitroxTechType techType, NitroxId id, float lifeChanged, float totalHealth, NitroxVector3 position, ushort damageType, Optional<NitroxId> dealerId)
         {
             TechType = techType;
             Id = id;
@@ -49,7 +39,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return $"[LiveMixinHealthChanged packet: TechType: {TechType}, Id: {Id}, lifeChanged: {LifeChanged}, totalHealth {TotalHealth}, {DamageTakenData}]";
+            return $"[LiveMixinHealthChanged - TechType: {TechType}, Id: {Id}, LifeChanged: {LifeChanged}, TotalHealth {TotalHealth}, DamageTakenData: {DamageTakenData}]";
         }
     }
 }

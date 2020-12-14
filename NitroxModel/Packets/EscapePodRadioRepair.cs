@@ -15,7 +15,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return "[EscapePodRadioRepair id: " + Id + "]";
+            return $"[EscapePodRadioRepair - Id: {Id}]";
         }
     }
 }

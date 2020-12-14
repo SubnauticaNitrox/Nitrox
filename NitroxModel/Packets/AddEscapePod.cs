@@ -15,7 +15,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return "[AddEscapePod " + EscapePod + " ]";
+            return $"[AddEscapePod - EscapePod: {EscapePod}]";
         }
     }
 }

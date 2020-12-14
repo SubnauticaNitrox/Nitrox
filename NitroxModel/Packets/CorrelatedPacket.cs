@@ -11,5 +11,10 @@ namespace NitroxModel.Packets
         {
             CorrelationId = correlationId;
         }
+
+        public override string ToString()
+        {
+            return $"[CorrelatedPacket - CorrelationId: {CorrelationId}]";
+        }
     }
 }

@@ -27,5 +27,10 @@ namespace NitroxModel.DataStructures.GameLogic
             Progress = progress;
             Unlocked = unlocked;
         }
+
+        public override string ToString()
+        {
+            return $"[PDAEntry - TechType: {TechType}, Progress: {Progress}, Unlocked: {Unlocked}]";
+        }
     }
 }

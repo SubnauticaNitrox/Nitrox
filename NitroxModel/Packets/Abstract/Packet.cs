@@ -1,13 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using LZ4;
 using NitroxModel.DataStructures.Surrogates;
 using NitroxModel.Logger;
-using LZ4;
 using NitroxModel.Networking;
-using System.Collections.Generic;
 
 namespace NitroxModel.Packets
 {
@@ -86,14 +86,17 @@ namespace NitroxModel.Packets
             // We have our own surrogates to (de)serialize types that are not marked [Serializable]
             // This code is very similar to how serializability is checked in:
             // System.Runtime.Serialization.Formatters.Binary.BinaryCommon.CheckSerializable
-
-            ISurrogateSelector selector;
-            return (serializer.SurrogateSelector.GetSurrogate(type, Packet.serializer.Context, out selector) != null);
+            return (serializer.SurrogateSelector.GetSurrogate(type, Packet.serializer.Context, out ISurrogateSelector _) != null);
         }
 
         public WrapperPacket ToWrapperPacket()
         {
             return new WrapperPacket(Serialize());
+        }
+
+        public virtual string ToLongString()
+        {
+            return ToString();
         }
     }
 }

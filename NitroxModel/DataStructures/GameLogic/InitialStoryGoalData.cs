@@ -21,5 +21,15 @@ namespace NitroxModel.DataStructures.GameLogic
             RadioQueue = radioQueue;
             GoalUnlocks = goalUnlocks;
         }
+
+        public override string ToString()
+        {
+            return $"[InitialStoryGoalData - CompletedGoals: {CompletedGoals?.Count}, RadioQueue: {RadioQueue?.Count}, GoalUnlocks: {GoalUnlocks?.Count}]";
+        }
+
+        public string ToLongString()
+        {
+            return $"[InitialStoryGoalData - CompletedGoals: ({string.Join(", ", CompletedGoals)}), RadioQueue: ({string.Join(", ", RadioQueue)}), GoalUnlocks: ({string.Join(", ", GoalUnlocks)}))]";
+        }
     }
 }

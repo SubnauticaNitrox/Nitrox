@@ -30,19 +30,17 @@ namespace NitroxModel.DataStructures
 
         public override string ToString()
         {
-            return $"[NitroxInt3 - {X}, {Y}, {Z}]";
+            return $"[NitroxInt3 - ({X}, {Y}, {Z})]";
         }
 
         public bool Equals(NitroxInt3 other)
         {
-            return X == other.X
-                && Y == other.Y
-                && Z == other.Z;
+            return X == other.X && Y == other.Y && Z == other.Z;
         }
 
         public override bool Equals(object obj)
         {
-            return (obj is NitroxInt3 other) && Equals(other);
+            return obj is NitroxInt3 other && Equals(other);
         }
 
         public override int GetHashCode()
@@ -58,8 +56,8 @@ namespace NitroxModel.DataStructures
         public static NitroxInt3 Floor(float x, float y, float z)
         {
             return new NitroxInt3(Convert.ToInt32(Math.Floor(x)),
-                            Convert.ToInt32(Math.Floor(y)),
-                            Convert.ToInt32(Math.Floor(z)));
+                                  Convert.ToInt32(Math.Floor(y)),
+                                  Convert.ToInt32(Math.Floor(z)));
         }
 
         public static NitroxInt3 Floor(NitroxVector3 vector)
@@ -70,8 +68,8 @@ namespace NitroxModel.DataStructures
         public static NitroxInt3 Ceil(float x, float y, float z)
         {
             return new NitroxInt3(Convert.ToInt32(Math.Ceiling(x)),
-                            Convert.ToInt32(Math.Ceiling(y)),
-                            Convert.ToInt32(Math.Ceiling(z)));
+                                  Convert.ToInt32(Math.Ceiling(y)),
+                                  Convert.ToInt32(Math.Ceiling(z)));
         }
 
         public static NitroxInt3 Ceil(NitroxVector3 vector)

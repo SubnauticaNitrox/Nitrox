@@ -104,7 +104,12 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public override string ToString()
         {
-            return "[Entity Transform: " + Transform + " TechType: " + TechType + " Id: " + Id + " Level: " + Level + " classId: " + ClassId + " ChildEntities: " + string.Join(",\n ", ChildEntities) + " SpawnedByServer: " + SpawnedByServer + " ExistingGameObjectChildIndex: " + ExistingGameObjectChildIndex + "]";
+            return $"[Entity - Transform: {Transform}, TechType: {TechType}, Id: {Id}, Level: {Level}, ClassId: {ClassId}, SpawnedByServer: {SpawnedByServer}, WaterParkId: {WaterParkId}, SerializedGameObject: {SerializedGameObject?.Length}, ExistsInGlobalRoot: {ExistsInGlobalRoot}, ParentId: {ParentId}, Metadata: {Metadata}, ExistingGameObjectChildIndex: {ExistingGameObjectChildIndex}, ChildEntities: {ChildEntities?.Count}]";
+        }
+
+        public string ToLongString()
+        {
+            return $"[Entity - Transform: {Transform}, TechType: {TechType}, Id: {Id}, Level: {Level}, ClassId: {ClassId}, SpawnedByServer: {SpawnedByServer}, WaterParkId: {WaterParkId}, SerializedGameObject: {SerializedGameObject?.Length}, ExistsInGlobalRoot: {ExistsInGlobalRoot}, ParentId: {ParentId}, Metadata: {Metadata}, ExistingGameObjectChildIndex: {ExistingGameObjectChildIndex}, ChildEntities: ({string.Join(",\n ", ChildEntities)})]";
         }
 
         [ProtoAfterDeserialization]

@@ -147,7 +147,7 @@ namespace NitroxModel.DataStructures
                     chain = priorityChains.Values[count - 1];
                 }
                 else if ((priority > (int)priorityChains.Keys[0]) &&
-                        (priority < (int)priorityChains.Keys[count - 1]))
+                         (priority < (int)priorityChains.Keys[count - 1]))
                 {
                     priorityChains.TryGetValue((int)priority, out chain);
                 }
@@ -388,8 +388,8 @@ namespace NitroxModel.DataStructures
         }
 
         // Priority chains...
-        private SortedList<int, PriorityChain<T>> priorityChains; // NOTE: should be Priority
-        private Stack<PriorityChain<T>> cacheReusableChains;
+        private readonly SortedList<int, PriorityChain<T>> priorityChains; // NOTE: should be Priority
+        private readonly Stack<PriorityChain<T>> cacheReusableChains;
 
         // Sequential chain...
         private PriorityItem<T> head;

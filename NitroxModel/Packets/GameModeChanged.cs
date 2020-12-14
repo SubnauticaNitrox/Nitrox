@@ -12,5 +12,10 @@ namespace NitroxModel.Packets
         {
             GameMode = gameMode;
         }
+
+        public override string ToString()
+        {
+            return $"[GameModeChanged - GameMode: {GameMode}]";
+        }
     }
 }

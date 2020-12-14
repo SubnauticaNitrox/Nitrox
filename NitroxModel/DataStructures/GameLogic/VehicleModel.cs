@@ -44,7 +44,8 @@ namespace NitroxModel.DataStructures.GameLogic
             Health = 200;
         }
 
-        public VehicleModel(NitroxTechType techType, NitroxId id, NitroxVector3 position, NitroxQuaternion rotation, IEnumerable<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, NitroxVector3[] hsb, float health)
+        public VehicleModel(NitroxTechType techType, NitroxId id, NitroxVector3 position, NitroxQuaternion rotation, IEnumerable<InteractiveChildObjectIdentifier> interactiveChildIdentifiers,
+                            Optional<NitroxId> dockingBayId, string name, NitroxVector3[] hsb, float health)
         {
             TechType = techType;
             Id = id;
@@ -59,7 +60,12 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public override string ToString()
         {
-            return $"[VehicleModel - TechType: {TechType}, Id: {Id}, Position: {Position}, Rotation: {Rotation}, Name: {Name}, Health: {Health}, DockingBayId: {DockingBayId}]";
+            return $"[VehicleModel - TechType: {TechType}, Id: {Id}, Position: {Position}, Rotation: {Rotation}, InteractiveChildIdentifiers: {InteractiveChildIdentifiers?.Count}, DockingBayId: {DockingBayId}, Name: {Name}, HSB: {HSB?.Length}, Health: {Health}]";
+        }
+
+        public string ToLongString()
+        {
+            return $"[VehicleModel - TechType: {TechType}, Id: {Id}, Position: {Position}, Rotation: {Rotation}, InteractiveChildIdentifiers: ({string.Join(", ", InteractiveChildIdentifiers)}), DockingBayId: {DockingBayId}, Name: {Name}, HSB: ({string.Join(", ", HSB)}), Health: {Health}]";
         }
     }
 }

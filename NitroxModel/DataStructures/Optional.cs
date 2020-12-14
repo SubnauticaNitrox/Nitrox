@@ -36,7 +36,7 @@ namespace NitroxModel.DataStructures.Util
             Type type = typeof(T);
             bool isObj = type == typeof(object);
             foreach (KeyValuePair<Type, Func<object, bool>> filter in Optional.ValueConditions)
-            { 
+            {
                 if (isObj || filter.Key.IsAssignableFrom(type))
                 {
                     // Only create the list in memory when required.
@@ -44,7 +44,7 @@ namespace NitroxModel.DataStructures.Util
                     {
                         valueChecks = new List<Func<object, bool>>();
                     }
-                    
+
                     // Exclude check for Optional<object> if the type doesn't match the type of the filter (because it'll always fail anyway be null for `o as T`) 
                     valueChecks.Add(isObj ? o => !filter.Key.IsInstanceOfType(o) || filter.Value(o) : filter.Value);
                 }
@@ -59,6 +59,7 @@ namespace NitroxModel.DataStructures.Util
                     {
                         return false;
                     }
+
                     foreach (Func<object, bool> check in valueChecks)
                     {
                         if (!check(val))
@@ -66,6 +67,7 @@ namespace NitroxModel.DataStructures.Util
                             return false;
                         }
                     }
+
                     return true;
                 };
             }
@@ -110,8 +112,7 @@ namespace NitroxModel.DataStructures.Util
 
         public override string ToString()
         {
-            string str = Value != null ? Value.ToString() : "Nothing";
-            return $"Optional Contains: {str}";
+            return Value != null ? Value.ToString() : "[Optional: Nothing]";
         }
 
         private Optional(SerializationInfo info, StreamingContext context)
@@ -136,6 +137,7 @@ namespace NitroxModel.DataStructures.Util
             {
                 return null;
             }
+
             return new Optional<T>(obj);
         }
 

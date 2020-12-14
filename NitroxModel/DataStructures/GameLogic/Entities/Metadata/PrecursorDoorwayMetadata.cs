@@ -12,7 +12,7 @@ namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata
 
         protected PrecursorDoorwayMetadata()
         {
-            //Constructor for serialization. Has to be "protected" for json serialization.
+            // Constructor for serialization. Has to be "protected" for json serialization.
         }
 
         public PrecursorDoorwayMetadata(bool isOpen)
@@ -22,7 +22,7 @@ namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata
 
         public override string ToString()
         {
-            return "[PrecursorDoorwayMetadata isOpen: " + IsOpen + "]";
+            return $"[PrecursorDoorwayMetadata - IsOpen: {IsOpen}]";
         }
     }
 }

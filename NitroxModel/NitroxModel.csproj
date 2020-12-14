@@ -155,6 +155,7 @@
     <Compile Include="DataStructures\GameLogic\NitroxQuaternion.cs" />
     <Compile Include="DataStructures\GameLogic\NitroxVector3.cs" />
     <Compile Include="DataStructures\GameLogic\NitroxTechType.cs" />
+    <Compile Include="DataStructures\GameLogic\StoryEventType.cs" />
     <Compile Include="DataStructures\NitroxId.cs" />
     <Compile Include="DataStructures\NitroxInt3.cs" />
     <Compile Include="DataStructures\Surrogates\SerializationSurrogate.cs" />
@@ -178,10 +179,11 @@
     <Compile Include="OS\Windows\Native.cs" />
     <Compile Include="Packets\EntityMetadataUpdate.cs" />
     <Compile Include="Packets\BedEnter.cs" />
+    <Compile Include="Packets\EntityTransformUpdate.cs" />
     <Compile Include="Packets\EscapePodChanged.cs" />
     <Compile Include="Packets\EscapePodRadioRepair.cs" />
     <Compile Include="Packets\EscapePodRepair.cs" />
-    <Compile Include="Packets\IShortString.cs" />
+    <Compile Include="Packets\Abstract\IShortString.cs" />
     <Compile Include="Packets\GameModeChanged.cs" />
     <Compile Include="Packets\EnergyMixinValueChanged.cs" />
     <Compile Include="Packets\LiveMixinHealthChanged.cs" />
@@ -249,7 +251,7 @@
     <Compile Include="Packets\MultiplayerSessionReservation.cs" />
     <Compile Include="Packets\MultiplayerSessionReservationRequest.cs" />
     <Compile Include="Packets\OpenableStateChanged.cs" />
-    <Compile Include="Packets\Packet.cs" />
+    <Compile Include="Packets\Abstract\Packet.cs" />
     <Compile Include="Packets\PDAEncyclopediaEntryAdd.cs" />
     <Compile Include="Packets\PDAEntryAdd.cs" />
     <Compile Include="Packets\PDAEntryProgress.cs" />
@@ -281,7 +283,7 @@
     <Compile Include="Packets\VehicleMovement.cs" />
     <Compile Include="Packets\VehicleNameChange.cs" />
     <Compile Include="Packets\WeldAction.cs" />
-    <Compile Include="Packets\WrapperPacket.cs" />
+    <Compile Include="Packets\Abstract\WrapperPacket.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Serialization\IProperties.cs" />
     <Compile Include="Serialization\NitroxConfig.cs" />

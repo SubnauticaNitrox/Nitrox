@@ -11,7 +11,7 @@ namespace NitroxModel.Packets
     [Serializable]
     public class InitialPlayerSync : Packet, IShortString
     {
-        public NitroxId AssignedEscapePodId;
+        public NitroxId AssignedEscapePodId { get; }
         public List<EscapePodModel> EscapePodsData { get; }
         public List<EquippedItemData> EquippedItems { get; }
         public List<EquippedItemData> Modules { get; }
@@ -33,25 +33,25 @@ namespace NitroxModel.Packets
         public Perms Permissions { get; }
 
         public InitialPlayerSync(NitroxId playerGameObjectId,
-            bool firstTimeConnecting,
-            IEnumerable<EscapePodModel> escapePodsData,
-            NitroxId assignedEscapePodId,
-            IEnumerable<EquippedItemData> equipment,
-            IEnumerable<EquippedItemData> modules,
-            IEnumerable<BasePiece> basePieces,
-            IEnumerable<VehicleModel> vehicles,
-            IEnumerable<ItemData> inventoryItems,
-            IEnumerable<ItemData> storageSlots,
-            InitialPDAData pdaData,
-            InitialStoryGoalData storyGoalData,
-            NitroxVector3 playerSpawnData,
-            Optional<NitroxId> playerSubRootId,
-            PlayerStatsData playerStatsData,
-            IEnumerable<InitialRemotePlayerData> remotePlayerData,
-            IEnumerable<Entity> globalRootEntities,
-            IEnumerable<NitroxId> initialSimulationOwnerships,
-            ServerGameMode gameMode,
-            Perms perms)
+                                 bool firstTimeConnecting,
+                                 IEnumerable<EscapePodModel> escapePodsData,
+                                 NitroxId assignedEscapePodId,
+                                 IEnumerable<EquippedItemData> equipment,
+                                 IEnumerable<EquippedItemData> modules,
+                                 IEnumerable<BasePiece> basePieces,
+                                 IEnumerable<VehicleModel> vehicles,
+                                 IEnumerable<ItemData> inventoryItems,
+                                 IEnumerable<ItemData> storageSlots,
+                                 InitialPDAData pdaData,
+                                 InitialStoryGoalData storyGoalData,
+                                 NitroxVector3 playerSpawnData,
+                                 Optional<NitroxId> playerSubRootId,
+                                 PlayerStatsData playerStatsData,
+                                 IEnumerable<InitialRemotePlayerData> remotePlayerData,
+                                 IEnumerable<Entity> globalRootEntities,
+                                 IEnumerable<NitroxId> initialSimulationOwnerships,
+                                 ServerGameMode gameMode,
+                                 Perms perms)
         {
             EscapePodsData = escapePodsData.ToList();
             AssignedEscapePodId = assignedEscapePodId;
@@ -77,12 +77,17 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return $"[InitialPlayerSync - GameMode: {GameMode}, EquippedItems: {EquippedItems} BasePieces: {BasePieces} Vehicles: {Vehicles} InventoryItems: {InventoryItems} PDAData: {PDAData} StoryGoalData: {StoryGoalData}]";
+            return $"[InitialPlayerSync - GameMode: {GameMode}, EquippedItems: {EquippedItems?.Count} BasePieces: {BasePieces?.Count} Vehicles: {Vehicles?.Count} InventoryItems: {InventoryItems?.Count} PDAData: {PDAData} StoryGoalData: {StoryGoalData}]";
+        }
+
+        public override string ToLongString()
+        {
+            return $"[InitialPlayerSync - GameMode: {GameMode}, EquippedItems: ({string.Join(", ", EquippedItems)}), BasePieces: ({string.Join(", ", BasePieces)}) Vehicles: ({string.Join(", ", Vehicles)}) InventoryItems: ({string.Join(", ", InventoryItems)}) PDAData: {PDAData} StoryGoalData: {StoryGoalData}]";
         }
 
         public string ToShortString()
         {
-            return $"Equipped items count: {EquippedItems.Count}\n, Base pieces count: {BasePieces.Count}\n, Vehicles count: {Vehicles.Count}\n, Inventory items count: {InventoryItems.Count}";
+            return $"Equipped items count: {EquippedItems?.Count}\n, Base pieces count: {BasePieces?.Count}\n, Vehicles count: {Vehicles?.Count}\n, Inventory items count: {InventoryItems?.Count}";
         }
     }
 }

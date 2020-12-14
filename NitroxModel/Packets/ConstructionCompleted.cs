@@ -17,7 +17,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return "[ConstructionCompleted Id: " + PieceId + " BaseId: " + BaseId + "]";
+            return $"[ConstructionCompleted - Id: {PieceId}, BaseId: {BaseId}]";
         }
     }
 }

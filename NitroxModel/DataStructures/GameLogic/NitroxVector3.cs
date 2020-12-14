@@ -1,6 +1,6 @@
 ﻿using System;
-using ProtoBufNet;
 using NitroxModel.Helper;
+using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
@@ -30,29 +30,29 @@ namespace NitroxModel.DataStructures.GameLogic
         public static NitroxVector3 operator +(NitroxVector3 a, NitroxVector3 b)
         {
             return new NitroxVector3(a.X + b.X,
-            a.Y + b.Y,
-            a.Z + b.Z);
+                                     a.Y + b.Y,
+                                     a.Z + b.Z);
         }
 
         public static NitroxVector3 operator -(NitroxVector3 a, NitroxVector3 b)
         {
             return new NitroxVector3(a.X - b.X,
-            a.Y - b.Y,
-            a.Z - b.Z);
+                                     a.Y - b.Y,
+                                     a.Z - b.Z);
         }
 
         public static NitroxVector3 operator -(NitroxVector3 a)
         {
             return new NitroxVector3(-a.X,
-            -a.Y,
-            -a.Z);
+                                     -a.Y,
+                                     -a.Z);
         }
 
         public static NitroxVector3 operator /(NitroxVector3 lhs, float rhs)
         {
             return new NitroxVector3(lhs.X / rhs, lhs.Y / rhs, lhs.Z / rhs);
         }
-        
+
         public static NitroxVector3 operator *(NitroxVector3 lhs, float rhs)
         {
             return new NitroxVector3(lhs.X * rhs, lhs.Y * rhs, lhs.Z * rhs);
@@ -81,7 +81,7 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public override string ToString()
         {
-            return $"[{X}, {Y}, {Z}]";
+            return $"[NitroxVector3 - ({X}, {Y}, {Z})]";
         }
     }
 }

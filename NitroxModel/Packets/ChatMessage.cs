@@ -14,5 +14,10 @@ namespace NitroxModel.Packets
             PlayerId = playerId;
             Text = text;
         }
+
+        public override string ToString()
+        {
+            return $"[ChatMessage - PlayerId: {PlayerId}, Text: {Text}]";
+        }
     }
 }

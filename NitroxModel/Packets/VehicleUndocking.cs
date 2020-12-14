@@ -21,7 +21,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return $"[VehicleUndocking VehicleId: {VehicleId} DockId: {DockId} PlayerId: {PlayerId} Start: {UndockingStart}]";
+            return $"[VehicleUndocking - VehicleId: {VehicleId}, DockId: {DockId}, PlayerId: {PlayerId}, UndockingStart: {UndockingStart}]";
         }
     }
 }

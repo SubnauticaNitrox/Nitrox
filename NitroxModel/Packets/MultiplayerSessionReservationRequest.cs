@@ -15,5 +15,10 @@ namespace NitroxModel.Packets
             PlayerSettings = playerSettings;
             AuthenticationContext = authenticationContext;
         }
+
+        public override string ToString()
+        {
+            return $"[MultiplayerSessionReservationRequest - PlayerSettings: {PlayerSettings}, AuthenticationContext: {AuthenticationContext}]";
+        }
     }
 }

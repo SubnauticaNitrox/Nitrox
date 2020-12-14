@@ -29,7 +29,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return "[PlayerStats - PlayerId: " + PlayerId + " Oxygen: " + Oxygen + " MaxOxygen:" + MaxOxygen + " Health: " + Health + " Food: " + Food + " Water: " + Water + " InfectionAmount: " + InfectionAmount + "]";
+            return $"[PlayerStats - PlayerId: {PlayerId}, Oxygen: {Oxygen}, MaxOxygen:{MaxOxygen}, Health: {Health}, Food: {Food}, Water: {Water}, InfectionAmount: {InfectionAmount}]";
         }
     }
 }

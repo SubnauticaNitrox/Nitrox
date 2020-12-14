@@ -15,7 +15,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return "[StorageSlotItemAdd ItemData: " + ItemData + "]";
+            return $"[StorageSlotItemAdd - ItemData: {ItemData}]";
         }
     }
 }

@@ -24,5 +24,10 @@ namespace NitroxModel.DataStructures.GameLogic
                 return (float)Math.Sqrt(X * X + Y * Y + Z * Z + W * W);
             }
         }
+
+        public override string ToString()
+        {
+            return $"[NitroxVector4 - ({X}, {Y}, {Z}, {W})]";
+        }
     }
 }

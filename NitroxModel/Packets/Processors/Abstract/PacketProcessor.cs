@@ -12,33 +12,32 @@ namespace NitroxModel.Packets.Processors.Abstract
         public static Dictionary<Type, PacketProcessor> GetProcessors(Dictionary<Type, object> processorArguments, Func<Type, bool> additionalConstraints)
         {
             return Assembly.GetCallingAssembly()
-                .GetTypes()
-                .Where(p => typeof(PacketProcessor).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract)
-                .Where(additionalConstraints)
-                .ToDictionary(proc => proc.BaseType.GetGenericArguments()[0], proc =>
-                {
-                    ConstructorInfo[] ctors = proc.GetConstructors();
-                    if (ctors.Length > 1)
-                    {
-                        throw new NotSupportedException($"{proc.Name} has more than one constructor!");
-                    }
+                           .GetTypes()
+                           .Where(p => typeof(PacketProcessor).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract)
+                           .Where(additionalConstraints)
+                           .ToDictionary(proc => proc.BaseType.GetGenericArguments()[0], proc =>
+                           {
+                               ConstructorInfo[] ctors = proc.GetConstructors();
+                               if (ctors.Length > 1)
+                               {
+                                   throw new NotSupportedException($"{proc.Name} has more than one constructor!");
+                               }
 
-                    ConstructorInfo ctor = ctors.First();
+                               ConstructorInfo ctor = ctors.First();
 
-                    // Prepare arguments for constructor (if applicable):
-                    object[] args = ctor.GetParameters().Select(pi =>
-                        {
-                            object v;
-                            if (processorArguments.TryGetValue(pi.ParameterType, out v))
-                            {
-                                return v;
-                            }
+                               // Prepare arguments for constructor (if applicable):
+                               object[] args = ctor.GetParameters().Select(pi =>
+                               {
+                                   if (processorArguments.TryGetValue(pi.ParameterType, out object v))
+                                   {
+                                       return v;
+                                   }
 
-                            throw new ArgumentException($"Argument value not defined for type {pi.ParameterType}! Used in {proc}");
-                        }).ToArray();
+                                   throw new ArgumentException($"Argument value not defined for type {pi.ParameterType}! Used in {proc}");
+                               }).ToArray();
 
-                    return (PacketProcessor)ctor.Invoke(args);
-                });
+                               return (PacketProcessor)ctor.Invoke(args);
+                           });
         }
     }
 }

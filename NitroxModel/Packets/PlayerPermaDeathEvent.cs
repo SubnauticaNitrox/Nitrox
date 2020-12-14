@@ -8,5 +8,10 @@ namespace NitroxModel.Packets
         public PlayerPermaDeathEvent()
         {
         }
+
+        public override string ToString()
+        {
+            return "[PlayerPermaDeathEvent]";
+        }
     }
 }

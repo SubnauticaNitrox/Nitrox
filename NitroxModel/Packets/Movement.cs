@@ -26,7 +26,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return "[Movement - PlayerId: " + PlayerId + " Position: " + Position + " Velocity: " + Velocity + " Body rotation: " + BodyRotation + " Camera rotation: " + AimingRotation + "]";
+            return $"[Movement - PlayerId: {PlayerId}, Position: {Position}, Velocity: {Velocity}, BodyRotation: {BodyRotation}, AimingRotation: {AimingRotation}]";
         }
     }
 }

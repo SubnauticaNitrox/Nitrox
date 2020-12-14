@@ -16,5 +16,10 @@ namespace NitroxModel.Packets
             DestinationFrom = destinationFrom;
             DestinationTo = destinationTo;
         }
+
+        public override string ToString()
+        {
+            return $"[PlayerTeleported - PlayerName: {PlayerName}, DestinationFrom: {DestinationFrom}, DestinationTo: {DestinationTo}]";
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace NitroxModel.DataStructures.GameLogic
@@ -24,6 +24,16 @@ namespace NitroxModel.DataStructures.GameLogic
             EncyclopediaEntries = encyclopediaEntries;
             PartiallyUnlockedTechTypes = partiallyUnlockedTechTypes;
             PDALogEntries = pdaLogEntries;
+        }
+
+        public override string ToString()
+        {
+            return $"[InitialPDAData - UnlockedTechTypes: {UnlockedTechTypes?.Count}, KnownTechTypes: {KnownTechTypes?.Count}, EncyclopediaEntries: {EncyclopediaEntries?.Count}, PartiallyUnlockedTechTypes: {PartiallyUnlockedTechTypes?.Count}, PDALogEntries: {PDALogEntries?.Count}]";
+        }
+
+        public string ToLongString()
+        {
+            return $"[InitialPDAData - UnlockedTechTypes: ({string.Join(", ", UnlockedTechTypes)}), KnownTechTypes: ({string.Join(", ", KnownTechTypes)}), EncyclopediaEntries: ({string.Join(", ", EncyclopediaEntries)}), PartiallyUnlockedTechTypes: ({string.Join(", ", PartiallyUnlockedTechTypes)}), PDALogEntries: ({string.Join(", ", PDALogEntries)})]";
         }
     }
 }

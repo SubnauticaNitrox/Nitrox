@@ -12,7 +12,7 @@ namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata
 
         protected WeldableWallPanelGenericMetadata()
         {
-            //Constructor for serialization. Has to be "protected" for json serialization.
+            // Constructor for serialization. Has to be "protected" for json serialization.
         }
 
         public WeldableWallPanelGenericMetadata(float liveMixInHealth)
@@ -22,7 +22,7 @@ namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata
 
         public override string ToString()
         {
-            return $"[WeldableWallPanelGenericMetadata LiveMixInHealth: {LiveMixInHealth}]";
+            return $"[WeldableWallPanelGenericMetadata - LiveMixInHealth: {LiveMixInHealth}]";
         }
     }
 }

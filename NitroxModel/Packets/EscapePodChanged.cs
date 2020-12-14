@@ -1,12 +1,12 @@
-﻿using NitroxModel.DataStructures.Util;
-using System;
+﻿using System;
 using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.Util;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class EscapePodChanged : Packet
-    {        
+    {
         public ushort PlayerId { get; }
         public Optional<NitroxId> EscapePodId { get; }
 
@@ -18,8 +18,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return "[EscapePodChanged - PlayerId: " + PlayerId + " SubRootId: " + EscapePodId + "]";
+            return $"[EscapePodChanged - PlayerId: {PlayerId}, EscapePodId: {EscapePodId}]";
         }
     }
 }
-

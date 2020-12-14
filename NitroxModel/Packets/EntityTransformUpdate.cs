@@ -5,13 +5,13 @@ using NitroxModel.DataStructures.GameLogic;
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class ItemPosition : Packet
+    public class EntityTransformUpdate
     {
         public NitroxId Id { get; }
         public NitroxVector3 Position { get; }
         public NitroxQuaternion Rotation { get; }
 
-        public ItemPosition(NitroxId id, NitroxVector3 position, NitroxQuaternion rotation)
+        public EntityTransformUpdate(NitroxId id, NitroxVector3 position, NitroxQuaternion rotation)
         {
             Id = id;
             Position = position;
@@ -20,7 +20,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return $"[ItemPosition - Id: {Id}, Position: {Position}, Rotation: {Rotation}]";
+            return $"[EntityTransformUpdate - Id: {Id}, Position: {Position}, Rotation: {Rotation}]";
         }
     }
 }

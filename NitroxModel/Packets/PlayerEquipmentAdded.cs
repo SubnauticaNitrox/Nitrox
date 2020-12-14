@@ -1,6 +1,5 @@
 ﻿using System;
 using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures;
 
 namespace NitroxModel.Packets
 {
@@ -14,6 +13,11 @@ namespace NitroxModel.Packets
         {
             TechType = techType;
             EquippedItem = equippedItem;
+        }
+
+        public override string ToString()
+        {
+            return $"[PlayerEquipmentAdded - TechType: {TechType}, EquippedItem: {EquippedItem}]";
         }
     }
 }

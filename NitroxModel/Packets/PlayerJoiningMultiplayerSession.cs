@@ -7,11 +7,14 @@ namespace NitroxModel.Packets
     {
         public string ReservationKey { get; }
 
-        public PlayerJoiningMultiplayerSession(string correlationId, string reservationKey)
-            : base(correlationId)
+        public PlayerJoiningMultiplayerSession(string correlationId, string reservationKey) : base(correlationId)
         {
-            CorrelationId = correlationId;
             ReservationKey = reservationKey;
+        }
+
+        public override string ToString()
+        {
+            return $"[PlayerJoiningMultiplayerSession - ReservationKey: {ReservationKey}]";
         }
     }
 }

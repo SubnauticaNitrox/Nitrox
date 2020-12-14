@@ -1,5 +1,4 @@
-﻿
-using NitroxModel.DataStructures.Util;
+﻿using NitroxModel.DataStructures.Util;
 
 namespace NitroxModel.DataStructures.GameLogic.Buildings.Rotation
 {

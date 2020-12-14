@@ -5,16 +5,21 @@ namespace NitroxModel.Packets
     [Serializable]
     public class ServerCommand : Packet
     {
-        public readonly string Cmd;
+        public string Command { get; }
 
-        public ServerCommand(string cmd)
+        public ServerCommand(string command)
         {
-            Cmd = cmd;
+            Command = command;
         }
 
-        public ServerCommand(string[] cmdArgs)
+        public ServerCommand(string[] commandArgs)
         {
-            Cmd = string.Join(" ", cmdArgs);
+            Command = string.Join(" ", commandArgs);
+        }
+
+        public override string ToString()
+        {
+            return $"[ServerCommand - Command: {Command}]";
         }
     }
 }

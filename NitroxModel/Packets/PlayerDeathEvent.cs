@@ -14,5 +14,10 @@ namespace NitroxModel.Packets
             PlayerName = playerName;
             DeathPosition = deathPosition;
         }
+
+        public override string ToString()
+        {
+            return $"[PlayerDeathEvent - PlayerName: {PlayerName}, DeathPosition: {DeathPosition}]";
+        }
     }
 }

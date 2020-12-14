@@ -21,9 +21,10 @@ namespace NitroxModel.Packets
             Forward = forward;
             Rotation = rotation;
         }
+
         public override string ToString()
         {
-            return "[SeamothModulesAction - TechType: " + TechType + " SlotID: " + SlotID + " Id:" + Id + " Forward: " + Forward + " Rotation: " + Rotation + "]";
+            return $"[SeamothModulesAction - TechType: {TechType}, SlotID: {SlotID}, Id:{Id}, Forward: {Forward}, Rotation: {Rotation}]";
         }
     }
 }

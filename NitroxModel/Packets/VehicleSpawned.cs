@@ -6,8 +6,8 @@ namespace NitroxModel.Packets
     [Serializable]
     public class VehicleSpawned : Packet
     {
-        public byte[] SerializedData { get; }
         public VehicleModel VehicleModel { get; }
+        public byte[] SerializedData { get; }
 
         public VehicleSpawned(byte[] serializedData, VehicleModel vehicleModel)
         {
@@ -17,7 +17,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return $"[VehicleSpawned - {VehicleModel}";
+            return $"[VehicleSpawned - VehicleModel: {VehicleModel}, SerializedData: {SerializedData?.Length}]";
         }
     }
 }

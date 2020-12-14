@@ -17,7 +17,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return "[ItemContainerRemove ownerId: " + OwnerId + " itemId: " + ItemId + "]";
+            return $"[ItemContainerRemove - OwnerId: {OwnerId}, ItemId: {ItemId}]";
         }
     }
 }

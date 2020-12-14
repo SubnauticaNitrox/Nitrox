@@ -8,7 +8,6 @@ namespace NitroxModel.Packets
     public class EntityMetadataUpdate : Packet
     {
         public NitroxId Id { get; }
-
         public EntityMetadata NewValue { get; }
 
         public EntityMetadataUpdate(NitroxId id, EntityMetadata newValue)
@@ -19,7 +18,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return $"[EntityMetadataUpdate id={Id} NewValue={NewValue} ]";
+            return $"[EntityMetadataUpdate - Id: {Id}, NewValue: {NewValue}]";
         }
     }
 }

@@ -5,9 +5,9 @@ namespace NitroxModel.DataStructures
     [Serializable]
     public class SimulatedEntity
     {
-        public bool ChangesPosition { get; }
         public NitroxId Id { get; }
         public ushort PlayerId { get; }
+        public bool ChangesPosition { get; }
         public SimulationLockType LockType { get; }
 
         public SimulatedEntity(NitroxId id, ushort playerId, bool changesPosition, SimulationLockType lockType)
@@ -20,7 +20,7 @@ namespace NitroxModel.DataStructures
 
         public override string ToString()
         {
-            return $"[SimulatedEntity Id: '{Id}' PlayerId: {PlayerId} IsEntity: {ChangesPosition} LockType: {LockType}]";
+            return $"[SimulatedEntity - Id: {Id}, PlayerId: {PlayerId}, ChangesPosition: {ChangesPosition}, LockType: {LockType}]";
         }
     }
 }

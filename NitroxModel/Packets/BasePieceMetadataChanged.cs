@@ -15,5 +15,10 @@ namespace NitroxModel.Packets
             PieceId = pieceId;
             Metadata = metadata;
         }
+
+        public override string ToString()
+        {
+            return $"[BasePieceMetadataChanged - PieceId: {PieceId}, Metadata: {Metadata}]";
+        }
     }
 }

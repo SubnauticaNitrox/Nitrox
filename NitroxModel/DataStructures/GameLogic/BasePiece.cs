@@ -1,8 +1,8 @@
-﻿using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
+﻿using System;
+using NitroxModel.DataStructures.GameLogic.Buildings.Metadata;
+using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
 using NitroxModel.DataStructures.Util;
 using ProtoBufNet;
-using System;
-using NitroxModel.DataStructures.GameLogic.Buildings.Metadata;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
@@ -14,7 +14,7 @@ namespace NitroxModel.DataStructures.GameLogic
         public NitroxId Id { get; set; }
 
         [ProtoMember(2)]
-        public NitroxVector3 ItemPosition { get; set; }
+        public NitroxVector3 Position { get; set; }
 
         [ProtoMember(3)]
         public NitroxQuaternion Rotation { get; set; }
@@ -59,25 +59,26 @@ namespace NitroxModel.DataStructures.GameLogic
             Metadata = Optional.Empty;
         }
 
-        public BasePiece(NitroxId id, NitroxVector3 itemPosition, NitroxQuaternion rotation, NitroxVector3 cameraPosition, NitroxQuaternion cameraRotation, NitroxTechType techType, Optional<NitroxId> parentId, bool isFurniture, Optional<RotationMetadata> rotationMetadata)
+        public BasePiece(NitroxId id, NitroxVector3 itemPosition, NitroxQuaternion rotation, NitroxVector3 cameraPosition, NitroxQuaternion cameraRotation,
+                         NitroxTechType techType, Optional<NitroxId> parentId, bool isFurniture, Optional<RotationMetadata> rotationMetadata)
         {
             Id = id;
-            ItemPosition = itemPosition;
+            Position = itemPosition;
             Rotation = rotation;
             TechType = techType;
+            ParentId = parentId;
             CameraPosition = cameraPosition;
             CameraRotation = cameraRotation;
-            ParentId = parentId;
-            IsFurniture = isFurniture;
             ConstructionAmount = 0.0f;
             ConstructionCompleted = false;
+            IsFurniture = isFurniture;
             RotationMetadata = rotationMetadata;
             Metadata = Optional.Empty;
         }
 
         public override string ToString()
         {
-            return "[BasePiece - ItemPosition: " + ItemPosition + " Id: " + Id + " Rotation: " + Rotation + " CameraPosition: " + CameraPosition + "CameraRotation: " + CameraRotation + " TechType: " + TechType + " ParentId: " + ParentId + " ConstructionAmount: " + ConstructionAmount + " IsFurniture: " + IsFurniture + " BaseId: " + BaseId + " RotationMetadata: " + RotationMetadata + " BuildIndex: " + BuildIndex + "]";
+            return $"[BasePiece - Id: {Id}, Position: {Position}, Rotation: {Rotation}, TechType: {TechType}, ParentId: {ParentId}, CameraPosition: {CameraPosition}, CameraRotation: {CameraRotation}, ConstructionAmount: {ConstructionAmount}, ConstructionCompleted: {ConstructionCompleted}, IsFurniture: {IsFurniture}, BaseId: {BaseId}, RotationMetadata: {RotationMetadata}, Metadata: {Metadata}, BuildIndex: {BuildIndex}]";
         }
     }
 }

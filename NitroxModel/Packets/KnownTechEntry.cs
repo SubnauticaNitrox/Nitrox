@@ -1,5 +1,4 @@
 ﻿using System;
-using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxModel.Packets
@@ -15,9 +14,10 @@ namespace NitroxModel.Packets
             TechType = techType;
             Verbose = verbose;
         }
+
         public override string ToString()
         {
-            return "[KnownTechEntryAdd - TechType: " + TechType + " Verbose: " + Verbose + "]";
+            return $"[KnownTechEntryAdd - TechType: {TechType}, Verbose: {Verbose}]";
         }
-    }    
+    }
 }

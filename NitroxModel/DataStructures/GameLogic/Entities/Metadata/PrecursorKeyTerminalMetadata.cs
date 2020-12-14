@@ -12,7 +12,7 @@ namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata
 
         protected PrecursorKeyTerminalMetadata()
         {
-            //Constructor for serialization. Has to be "protected" for json serialization.
+            // Constructor for serialization. Has to be "protected" for json serialization.
         }
 
         public PrecursorKeyTerminalMetadata(bool slotted)
@@ -22,7 +22,7 @@ namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata
 
         public override string ToString()
         {
-            return "[PrecursorKeyTerminalMetadata Slotted: " + Slotted + "]";
+            return $"[PrecursorKeyTerminalMetadata - Slotted: {Slotted}]";
         }
     }
 }

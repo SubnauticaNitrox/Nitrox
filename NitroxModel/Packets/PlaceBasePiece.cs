@@ -6,7 +6,7 @@ namespace NitroxModel.Packets
     [Serializable]
     public class PlaceBasePiece : Packet
     {
-        public BasePiece BasePiece;
+        public BasePiece BasePiece { get; }
 
         public PlaceBasePiece(BasePiece basePiece)
         {
@@ -15,7 +15,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return "[PlaceBasePiece - BasePiece: " + BasePiece + "]";
+            return $"[PlaceBasePiece - BasePiece: {BasePiece}]";
         }
     }
 }

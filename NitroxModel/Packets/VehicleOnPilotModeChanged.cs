@@ -19,7 +19,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return "[VehicleOnPilotModeChanged - VehicleId: " + VehicleId + " PlayerId: " + PlayerId + " IsPiloting: " + IsPiloting + "]";
+            return $"[VehicleOnPilotModeChanged - VehicleId: {VehicleId}, PlayerId: {PlayerId}, IsPiloting: {IsPiloting}]";
         }
     }
 }

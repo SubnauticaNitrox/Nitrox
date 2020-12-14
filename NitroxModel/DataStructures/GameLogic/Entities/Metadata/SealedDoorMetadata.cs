@@ -15,13 +15,18 @@ namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata
 
         protected SealedDoorMetadata()
         {
-            //Constructor for serialization. Has to be "protected" for json serialization.
+            // Constructor for serialization. Has to be "protected" for json serialization.
         }
 
-        public SealedDoorMetadata(bool Sealed, float OpenedAmount)
+        public SealedDoorMetadata(bool @sealed, float openedAmount)
         {
-            this.Sealed = Sealed;
-            this.OpenedAmount = OpenedAmount;
+            Sealed = @sealed;
+            OpenedAmount = openedAmount;
+        }
+
+        public override string ToString()
+        {
+            return $"[SealedDoorMetadata - Sealed: {Sealed}, OpenedAmount: {OpenedAmount}]";
         }
     }
 }

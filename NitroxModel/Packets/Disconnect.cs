@@ -11,5 +11,10 @@ namespace NitroxModel.Packets
         {
             PlayerId = playerId;
         }
+
+        public override string ToString()
+        {
+            return $"[Disconnect - PlayerId: {PlayerId}]";
+        }
     }
 }

@@ -1,5 +1,5 @@
-﻿using ProtoBufNet;
-using System;
+﻿using System;
+using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
@@ -26,7 +26,7 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public override string ToString()
         {
-            return "[EquippedItemData ContainerGuid: " + ContainerId + "Id: " + ItemId + " Slot: " + Slot + " TechType: " + TechType + "]";
+            return $"[EquippedItemData - Slot: {Slot}, TechType: {TechType}, Base: {base.ToString()}]";
         }
     }
 }

@@ -1,5 +1,5 @@
-﻿using ProtoBufNet;
-using System;
+﻿using System;
+using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
@@ -31,7 +31,7 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public override string ToString()
         {
-            return "[ItemData ContainerId: " + ContainerId + "Id: " + ItemId + "]";
+            return $"[ItemData - ContainerId: {ContainerId}, Id: {ItemId}, SerializedData: {SerializedData.Length}]";
         }
     }
 }

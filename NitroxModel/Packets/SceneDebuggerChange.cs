@@ -22,7 +22,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return "[SceneDebuggerChange Path: " + Path + " GameObjectID: " + GameObjectID + " ComponentID: " + ComponentID + " FieldName: " + FieldName + " Value: " + Value + "]";
+            return $"[SceneDebuggerChange - Path: {Path}, GameObjectID: {GameObjectID}, ComponentID: {ComponentID}, FieldName: {FieldName}, Value: {Value}]";
         }
     }
 }

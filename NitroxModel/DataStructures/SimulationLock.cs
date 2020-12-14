@@ -12,7 +12,6 @@ namespace NitroxModel.DataStructures
          */
         EXCLUSIVE,
 
-
         /*
          * Transient locks: A lock that allows a player to control the simulation of an entity.  Other players
          *                  can steal this lock by requesting exclusive access.  An example can be the following:

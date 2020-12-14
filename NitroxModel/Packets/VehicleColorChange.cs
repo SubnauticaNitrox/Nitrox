@@ -22,7 +22,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return "[VehicleColorChange Id: " + Id + " Index: " + Index + " hsb: " + HSB + " Color: " + Color + "]";
+            return $"[VehicleColorChange - Id: {Id}, Index: {Index}, HSB: {HSB}, Color: {Color}]";
         }
     }
 }

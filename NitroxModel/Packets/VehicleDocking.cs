@@ -19,7 +19,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return "[VehicleDocking VehicleId: " + VehicleId + " DockId: " + DockId + " PlayerId: " + PlayerId + "]";
+            return $"[VehicleDocking - VehicleId: {VehicleId}, DockId: {DockId}, PlayerId: {PlayerId}]";
         }
     }
 }

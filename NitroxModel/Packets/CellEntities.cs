@@ -16,22 +16,17 @@ namespace NitroxModel.Packets
 
         public CellEntities(Entity entity)
         {
-            Entities = new List<Entity>
-            {
-                entity
-            };
+            Entities = new List<Entity> { entity };
         }
 
         public override string ToString()
         {
-            string toString = "[CellEntities ";
+            return $"[CellEntities - Entities: {Entities?.Count}]";
+        }
 
-            foreach (Entity entity in Entities)
-            {
-                toString += entity;
-            }
-
-            return toString + "]";
+        public override string ToLongString()
+        {
+            return $"[CellEntities - Entities: ({string.Join(", ", Entities)})]";
         }
     }
 }

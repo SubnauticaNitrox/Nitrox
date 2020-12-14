@@ -1,5 +1,4 @@
-﻿
-namespace NitroxModel.DataStructures.GameLogic.Entities
+﻿namespace NitroxModel.DataStructures.GameLogic.Entities
 {
     public class UweWorldEntity
     {
@@ -16,6 +15,11 @@ namespace NitroxModel.DataStructures.GameLogic.Entities
             ClassId = classId;
             SlotType = slotType;
             CellLevel = cellLevel;
+        }
+
+        public override string ToString()
+        {
+            return $"[UweWorldEntity - TechType: {TechType}, Scale: {Scale}, ClassId: {ClassId}, SlotType: {SlotType}, CellLevel: {CellLevel}]";
         }
     }
 }

@@ -59,7 +59,6 @@ namespace NitroxModel.DataStructures.GameLogic
             float m21 = vector.Y;
             float m22 = vector.Z;
 
-
             float num8 = (m00 + m11) + m22;
             NitroxQuaternion quaternion;
             if (num8 > 0f)
@@ -72,6 +71,7 @@ namespace NitroxModel.DataStructures.GameLogic
                 quaternion.Z = (m01 - m10) * num;
                 return quaternion;
             }
+
             if ((m00 >= m11) && (m00 >= m22))
             {
                 float num7 = Mathf.Sqrt(((1f + m00) - m11) - m22);
@@ -82,6 +82,7 @@ namespace NitroxModel.DataStructures.GameLogic
                 quaternion.W = (m12 - m21) * num4;
                 return quaternion;
             }
+
             if (m11 > m22)
             {
                 float num6 = Mathf.Sqrt(((1f + m11) - m00) - m22);
@@ -92,6 +93,7 @@ namespace NitroxModel.DataStructures.GameLogic
                 quaternion.W = (m20 - m02) * num3;
                 return quaternion;
             }
+
             float num5 = Mathf.Sqrt(((1f + m22) - m00) - m11);
             float num2 = 0.5f / num5;
             quaternion.X = (m20 + m02) * num2;
@@ -103,7 +105,7 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public NitroxVector3 ToEuler()
         {
-            NitroxVector3 result;
+            NitroxVector3 result = NitroxVector3.Zero;
 
             float test = X * Y + Z * W;
             // singularity at north pole
@@ -133,20 +135,22 @@ namespace NitroxModel.DataStructures.GameLogic
                 if (result.Z < 0)
                     result.Z += 360;
             }
+
             return result;
         }
 
         public static NitroxQuaternion operator *(NitroxQuaternion lhs, NitroxQuaternion rhs)
         {
             return new NitroxQuaternion(lhs.W * rhs.X + lhs.X * rhs.W + lhs.Y * rhs.Z - lhs.Z * rhs.Y,
-                lhs.W * rhs.Y + lhs.Y * rhs.W + lhs.Z * rhs.X - lhs.X * rhs.Z,
-                lhs.W * rhs.Z + lhs.Z * rhs.W + lhs.X * rhs.Y - lhs.Y * rhs.X,
-                lhs.W * rhs.W - lhs.X * rhs.X - lhs.Y * rhs.Y - lhs.Z * rhs.Z);
+                                        lhs.W * rhs.Y + lhs.Y * rhs.W + lhs.Z * rhs.X - lhs.X * rhs.Z,
+                                        lhs.W * rhs.Z + lhs.Z * rhs.W + lhs.X * rhs.Y - lhs.Y * rhs.X,
+                                        lhs.W * rhs.W - lhs.X * rhs.X - lhs.Y * rhs.Y - lhs.Z * rhs.Z);
         }
 
         public override string ToString()
         {
-            return "[Quaternion - {" + X + ", " + Y + ", " + Z + "," + W + "}]";
+            NitroxVector3 euler = ToEuler();
+            return $"[Quaternion - ({euler.X}, {euler.Y}, {euler.Z})]";
         }
 
         public static NitroxQuaternion CreateFromYawPitchRoll(float yaw, float pitch, float roll)

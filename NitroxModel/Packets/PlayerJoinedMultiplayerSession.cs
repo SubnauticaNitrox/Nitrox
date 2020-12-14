@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using NitroxModel.MultiplayerSession;
-using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.MultiplayerSession;
 
 namespace NitroxModel.Packets
 {
@@ -16,6 +15,16 @@ namespace NitroxModel.Packets
         {
             PlayerContext = playerContext;
             EquippedTechTypes = equippedTechTypes;
+        }
+
+        public override string ToString()
+        {
+            return $"[PlayerJoinedMultiplayerSession - PlayerContext: {PlayerContext}, EquippedTechTypes: {EquippedTechTypes?.Count}]";
+        }
+
+        public override string ToLongString()
+        {
+            return $"[PlayerJoinedMultiplayerSession - PlayerContext: {PlayerContext}, EquippedTechTypes: ({string.Join(", ", EquippedTechTypes)})]";
         }
     }
 }

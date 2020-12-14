@@ -17,7 +17,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return "[VehicleCreated - Vehicle Id: " + CreatedVehicle.Id + " PlayerName: " + PlayerName + " Vehicle Type: " + CreatedVehicle.TechType + "]";
+            return $"[VehicleCreated - PlayerName: {PlayerName}, CreatedVehicle: {CreatedVehicle}]";
         }
     }
 }

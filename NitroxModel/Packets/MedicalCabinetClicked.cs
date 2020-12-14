@@ -21,7 +21,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return "[MedicalCabinetClicked id: " + Id + " DoorOpen: " + DoorOpen + " HasMedKit: " + HasMedKit + " NextSpawnTime: " + NextSpawnTime + "]";
+            return $"[MedicalCabinetClicked - Id: {Id}, DoorOpen: {DoorOpen}, HasMedKit: {HasMedKit}, NextSpawnTime: {NextSpawnTime}]";
         }
     }
 }

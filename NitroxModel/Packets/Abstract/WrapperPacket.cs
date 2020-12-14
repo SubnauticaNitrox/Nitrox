@@ -1,4 +1,4 @@
-namespace NitroxModel.Packets
+﻿namespace NitroxModel.Packets
 {
     /**
      * WrapperPacket for LiteNetLib implementation
@@ -9,7 +9,7 @@ namespace NitroxModel.Packets
      */
     public class WrapperPacket
     {
-        public byte[] packetData { get; set; }
+        public byte[] packetData { get; }
 
         public WrapperPacket()
         {

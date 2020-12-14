@@ -17,7 +17,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return "[ToggleLightsPacket Id: " + Id + " IsOn: " + IsOn + "]";
+            return $"[ToggleLights - Id: {Id}, IsOn: {IsOn}]";
         }
     }
 }

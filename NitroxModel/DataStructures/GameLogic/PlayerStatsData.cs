@@ -21,6 +21,7 @@ namespace NitroxModel.DataStructures.GameLogic
 
         [ProtoMember(5)]
         public float Water { get; }
+
         [ProtoMember(6)]
         public float InfectionAmount { get; }
 
@@ -41,7 +42,7 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public override string ToString()
         {
-            return "[Oxygen: " + Oxygen + " MaxOxygen: " + MaxOxygen + " Health: " + Health + " Food: " + Food + " Water: " + Water + " InfectionAmount: " + InfectionAmount + " ]";
+            return $"[PlayerStatsData - Oxygen: {Oxygen}, MaxOxygen: {MaxOxygen}, Health: {Health}, Food: {Food}, Water: {Water}, InfectionAmount: {InfectionAmount}]";
         }
     }
 }

@@ -19,7 +19,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return "[OpenableStateChanged - Id: " + Id + " IsOpen: " + IsOpen + " Duration: " + Duration + "]";
+            return $"[OpenableStateChanged - Id: {Id}, IsOpen: {IsOpen}, Duration: {Duration}]";
         }
     }
 }

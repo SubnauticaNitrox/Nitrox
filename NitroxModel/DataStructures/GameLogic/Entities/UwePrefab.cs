@@ -12,5 +12,10 @@
             Probability = probability;
             Count = count;
         }
+
+        public override string ToString()
+        {
+            return $"[UwePrefab - ClassId: {ClassId}, Probability: {Probability}, Count: {Count}]";
+        }
     }
 }

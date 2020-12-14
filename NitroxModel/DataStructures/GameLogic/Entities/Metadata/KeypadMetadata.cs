@@ -22,7 +22,7 @@ namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata
 
         public override string ToString()
         {
-            return "[KeypadMetadata isOpen: " + Unlocked + "]";
+            return $"[KeypadMetadata - Unlocked: {Unlocked}]";
         }
     }
 }

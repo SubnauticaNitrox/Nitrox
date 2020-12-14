@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -48,6 +48,7 @@ namespace NitroxModel.DataStructures
                         set.Add(i == currentIndex ? value : item);
                         currentIndex++;
                     }
+
                     collection = set;
                 }
             }
@@ -95,6 +96,7 @@ namespace NitroxModel.DataStructures
                 this.collection = CreateCopy(collection);
                 return;
             }
+
             this.collection = coll;
         }
 
@@ -147,8 +149,10 @@ namespace NitroxModel.DataStructures
                     {
                         return index;
                     }
+
                     index++;
                 }
+
                 return -1;
             }
         }
@@ -173,9 +177,11 @@ namespace NitroxModel.DataStructures
                     {
                         newSet.Add(item);
                     }
+
                     newSet.Add(currentItem);
                     currentIndex++;
                 }
+
                 collection = newSet;
             }
         }
@@ -190,12 +196,14 @@ namespace NitroxModel.DataStructures
                     list.RemoveAt(index);
                     return true;
                 }
+
                 ISet<T> set = collection as ISet<T>;
                 if (set != null)
                 {
                     T elem = set.ElementAtOrDefault(index);
                     return elem != null && set.Remove(elem);
                 }
+
                 return false;
             }
         }
@@ -286,6 +294,7 @@ namespace NitroxModel.DataStructures
                         return item;
                     }
                 }
+
                 return default(T);
             }
         }
@@ -309,8 +318,10 @@ namespace NitroxModel.DataStructures
                     {
                         set.Add(item);
                     }
+
                     currentIndex++;
                 }
+
                 collection = set;
             }
         }
@@ -321,6 +332,7 @@ namespace NitroxModel.DataStructures
             {
                 return new HashSet<T>(data);
             }
+
             return new List<T>(data);
         }
 

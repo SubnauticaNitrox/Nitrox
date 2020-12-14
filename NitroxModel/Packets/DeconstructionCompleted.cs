@@ -15,7 +15,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return "[DeconstructionCompleted Id: " + Id + "]";
+            return $"[DeconstructionCompleted - Id: {Id}]";
         }
     }
 }

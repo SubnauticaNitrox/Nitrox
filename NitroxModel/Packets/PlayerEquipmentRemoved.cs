@@ -10,10 +10,15 @@ namespace NitroxModel.Packets
         public NitroxTechType TechType { get; }
         public NitroxId EquippedItemId { get; }
 
-        public PlayerEquipmentRemoved(NitroxTechType techType, NitroxId equippeditemId)
+        public PlayerEquipmentRemoved(NitroxTechType techType, NitroxId equippedItemId)
         {
             TechType = techType;
-            EquippedItemId = equippeditemId;
+            EquippedItemId = equippedItemId;
+        }
+
+        public override string ToString()
+        {
+            return $"[PlayerEquipmentRemoved - TechType: {TechType}, EquippedItemId: {EquippedItemId}]";
         }
     }
 }

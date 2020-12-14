@@ -85,7 +85,7 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public override string ToString()
         {
-            return "[AbsoluteEntityCell Position: " + Position + " BatchId: " + BatchId + " CellId: " + CellId + " Level: " + Level + " ]";
+            return $"[AbsoluteEntityCell - Position: {Position}, BatchId: {BatchId}, CellId: {CellId}, Level: {Level}]";
         }
 
         public override bool Equals(object obj)
@@ -94,14 +94,17 @@ namespace NitroxModel.DataStructures.GameLogic
             {
                 return false;
             }
+
             if (ReferenceEquals(this, obj))
             {
                 return true;
             }
+
             if (obj.GetType() != GetType())
             {
                 return false;
             }
+
             return Equals((AbsoluteEntityCell)obj);
         }
 

@@ -14,5 +14,10 @@ namespace NitroxModel.Packets
             PlayerId = playerId;
             TechType = techType;
         }
+
+        public override string ToString()
+        {
+            return $"[RemotePlayerEquipmentRemoved - PlayerId: {PlayerId}, TechType: {TechType}]";
+        }
     }
 }

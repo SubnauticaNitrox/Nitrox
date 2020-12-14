@@ -26,7 +26,7 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public override string ToString()
         {
-            return $"{nameof(Key)}: {Key}, {nameof(Timestamp)}: {Timestamp}";
+            return $"[PDALogEntry - Key: {Key}, Timestamp: {Timestamp}]";
         }
     }
 }

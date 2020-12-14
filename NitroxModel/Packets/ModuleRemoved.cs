@@ -19,7 +19,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return "[ModuleRemoved ownerId: " + OwnerId + " Slot: " + Slot + " itemId: " + ItemId + "]";
+            return $"[ModuleRemoved - OwnerId: {OwnerId}, Slot: {Slot}, ItemId: {ItemId}]";
         }
     }
 }

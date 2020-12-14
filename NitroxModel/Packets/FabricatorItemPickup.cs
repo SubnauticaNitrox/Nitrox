@@ -18,7 +18,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return "[FabricatorItemPickup - FabricatorId: " + FabricatorId + " TechType: " + TechType + "]";
+            return $"[FabricatorItemPickup - FabricatorId: {FabricatorId}, TechType: {TechType}]";
         }
     }
 }

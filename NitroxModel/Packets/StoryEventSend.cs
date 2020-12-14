@@ -1,4 +1,5 @@
 ﻿using System;
+using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxModel.Packets
 {
@@ -8,7 +9,7 @@ namespace NitroxModel.Packets
         public StoryEventType StoryEventType { get; }
         public string Key { get; }
 
-        public StoryEventSend(StoryEventType storyEventType, string key = "") : base()
+        public StoryEventSend(StoryEventType storyEventType, string key = "")
         {
             StoryEventType = storyEventType;
             Key = key;
@@ -16,17 +17,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return "[StoryEventSend - StoryEventType: " + StoryEventType + " Key: " + Key + "]";
+            return $"[StoryEventSend - StoryEventType: {StoryEventType}, Key: {Key}]";
         }
-    }
-
-    public enum StoryEventType
-    {
-        PDA,
-        RADIO,
-        ENCYCLOPEDIA,
-        STORY,
-        EXTRA,
-        GOAL_UNLOCK
     }
 }

@@ -11,5 +11,10 @@ namespace NitroxModel.Packets
         {
             CurrentTime = currentTime;
         }
+
+        public override string ToString()
+        {
+            return $"[TimeChange - CurrentTime: {CurrentTime}]";
+        }
     }
 }
