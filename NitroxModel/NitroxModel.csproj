@@ -304,5 +304,8 @@
     <Folder Include="OS\MacOS\" />
     <Folder Include="OS\Unix\" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="5.0.0" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

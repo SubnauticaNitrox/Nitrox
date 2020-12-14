@@ -2,6 +2,11 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <Import Project="$(SolutionDir)SharedConfig.targets"/>
 
+    <!-- Target .netstandard for libraries if not set yet to use more advanced features from C# 9 -->
+    <PropertyGroup Condition="'$(TargetFramework)' == '' and '$(OutputType)' == 'Library'">
+      <TargetFramework>.netstandard2.0</TargetFramework>
+    </PropertyGroup>
+  
     <Choose>
         <When Condition="'$(UnityModLibrary)' == 'true' or '$(TestLibrary)' == 'true'">
             <!-- UnityEngine libraries to include -->

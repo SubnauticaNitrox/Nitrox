@@ -16,10 +16,7 @@
         <DefineConstants>TRACE;RELEASE</DefineConstants>
         <OutputPath>bin\Release\</OutputPath>
     </PropertyGroup>
-
-    <PropertyGroup Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(MSBuildProjectName), '^Nitrox.*$')) and '$(MSBuildProjectName)' != 'NitroxLauncher'">
-        <TargetFramework>.netstandard2.0</TargetFramework>
-    </PropertyGroup>
+    
     <PropertyGroup Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(MSBuildProjectName), '^Nitrox.*$'))">
         <NitroxLibrary>true</NitroxLibrary>
     </PropertyGroup>
