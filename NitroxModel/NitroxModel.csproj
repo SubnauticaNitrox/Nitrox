@@ -114,6 +114,7 @@
     <Compile Include="OS\MacOS\MacFileSystem.cs" />
     <Compile Include="OS\Unix\UnixFileSystem.cs" />
     <Compile Include="OS\Windows\Native.cs" />
+    <Compile Include="Packets\DebugStartMapPacket.cs" />
     <Compile Include="Packets\EntityMetadataUpdate.cs" />
     <Compile Include="Packets\BedEnter.cs" />
     <Compile Include="Packets\EscapePodChanged.cs" />

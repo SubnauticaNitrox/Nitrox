@@ -33,6 +33,9 @@ namespace NitroxServer.Serialization.World
         [JsonProperty, ProtoMember(6)]
         public EscapePodData EscapePodData { get; set; }
 
+
+        [JsonProperty, ProtoMember(8)]
+        public string Seed { get; set; }
         public bool IsValid()
         {
             return (ParsedBatchCells != null) && // Always returns false on empty saves

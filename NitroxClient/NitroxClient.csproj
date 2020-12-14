@@ -45,6 +45,7 @@
     <Compile Include="ClientAutoFacRegistrar.cs" />
     <Compile Include="Communication\PacketReceiver.cs" />
     <Compile Include="Communication\Packets\Processors\BedEnterProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\DebugStartMapProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\EntityMetadataUpdateProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\EscapePodChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\GameModeChangedProcessor.cs" />

@@ -123,6 +123,7 @@ namespace NitroxServer.Serialization.World
                                           persistedData.WorldData.GameData,
                                           persistedData.WorldData.ParsedBatchCells,
                                           persistedData.WorldData.EscapePodData.EscapePods,
+                                          persistedData.WorldData.Seed,
                                           config.GameMode);
 
                 return Optional.Of(world);
@@ -168,7 +169,7 @@ namespace NitroxServer.Serialization.World
                 new List<VehicleModel>(), new List<Player>(), new List<ItemData>(),
                 new List<ItemData>(),
                 new GameData() { PDAState = new PDAStateData(), StoryGoals = new StoryGoalData(), StoryTiming = new StoryTimingData() },
-                new List<NitroxInt3>(), new List<EscapePodModel>(), config.GameMode
+                new List<NitroxInt3>(), new List<EscapePodModel>(), config.Seed, config.GameMode
                 );
         }
 
@@ -183,6 +184,7 @@ namespace NitroxServer.Serialization.World
                                   GameData gameData,
                                   List<NitroxInt3> parsedBatchCells,
                                   List<EscapePodModel> escapePods,
+                                  string seed,
                                   ServerGameMode gameMode)
         {
             string seed = config.Seed;
@@ -200,7 +202,8 @@ namespace NitroxServer.Serialization.World
                 InventoryManager = new InventoryManager(inventoryItems, storageSlotItems),
                 EscapePodManager = new EscapePodManager(escapePods, seed),
                 GameData = gameData,
-                GameMode = gameMode
+                GameMode = gameMode,
+                Seed = seed
             };
 
             world.EventTriggerer = new EventTriggerer(world.PlayerManager, gameData.StoryTiming.ElapsedTime, gameData.StoryTiming.AuroraExplosionTime);

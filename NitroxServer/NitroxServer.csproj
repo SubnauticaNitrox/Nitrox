@@ -140,6 +140,7 @@
     <Compile Include="ConsoleCommands\ChangeServerGamemodeCommand.cs" />
     <Compile Include="ConsoleCommands\ChangeServerPasswordCommand.cs" />
     <Compile Include="ConsoleCommands\ConfigCommand.cs" />
+    <Compile Include="ConsoleCommands\DebugStartMapCommand.cs" />
     <Compile Include="ConsoleCommands\DeopCommand.cs" />
     <Compile Include="ConsoleCommands\ChangeAdminPasswordCommand.cs" />
     <Compile Include="ConsoleCommands\DirectoryCommand.cs" />

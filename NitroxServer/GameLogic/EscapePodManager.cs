@@ -20,7 +20,7 @@ namespace NitroxServer.GameLogic
         {
             EscapePods = new ThreadSafeCollection<EscapePodModel>(escapePods);
 
-            seed = seed;
+            this.seed = seed;
 
             InitializePodForNextPlayer();
             InitializeEscapePodsByPlayerId();
