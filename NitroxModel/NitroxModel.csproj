@@ -170,6 +170,7 @@
     <Compile Include="Helper\PirateDetection.cs" />
     <Compile Include="Helper\StringHelper.cs" />
     <Compile Include="Helper\WebHelper.cs" />
+    <Compile Include="IsExternalInit.cs" />
     <Compile Include="Logger\ColoredConsoleSink.cs" />
     <Compile Include="Logger\InGameLogger.cs" />
     <Compile Include="Logger\MessageSink.cs" />
