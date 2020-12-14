@@ -20,6 +20,8 @@ namespace NitroxServer.GameLogic.Entities.Spawning
         private readonly Dictionary<string, PrefabPlaceholdersGroupAsset> prefabPlaceholderGroupsbyClassId;
         private readonly UwePrefabFactory prefabFactory;
 
+        private readonly string seed;
+
         private readonly UweWorldEntityFactory worldEntityFactory;
 
         private readonly object parsedBatchesLock = new object();
@@ -55,14 +57,14 @@ namespace NitroxServer.GameLogic.Entities.Spawning
         }
 
         public BatchEntitySpawner(EntitySpawnPointFactory entitySpawnPointFactory, UweWorldEntityFactory worldEntityFactory, UwePrefabFactory prefabFactory, List<NitroxInt3> loadedPreviousParsed, ServerProtoBufSerializer serializer,
-                                  Dictionary<NitroxTechType, IEntityBootstrapper> customBootstrappersByTechType, Dictionary<string, PrefabPlaceholdersGroupAsset> prefabPlaceholderGroupsbyClassId)
+                                  Dictionary<NitroxTechType, IEntityBootstrapper> customBootstrappersByTechType, Dictionary<string, PrefabPlaceholdersGroupAsset> prefabPlaceholderGroupsbyClassId, string seed)
         {
             parsedBatches = new HashSet<NitroxInt3>(loadedPreviousParsed);
             this.worldEntityFactory = worldEntityFactory;
             this.prefabFactory = prefabFactory;
             this.customBootstrappersByTechType = customBootstrappersByTechType;
             this.prefabPlaceholderGroupsbyClassId = prefabPlaceholderGroupsbyClassId;
-
+            this.seed = seed;
             batchCellsParser = new BatchCellsParser(entitySpawnPointFactory, serializer);
         }
 
@@ -78,7 +80,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                 parsedBatches.Add(batchId);
             }
 
-            DeterministicBatchGenerator deterministicBatchGenerator = new DeterministicBatchGenerator(batchId);
+            DeterministicBatchGenerator deterministicBatchGenerator = new DeterministicBatchGenerator(seed);
             List<EntitySpawnPoint> spawnPoints = batchCellsParser.ParseBatchData(batchId);
             List<Entity> entities = SpawnEntities(spawnPoints, deterministicBatchGenerator);
 

@@ -187,8 +187,7 @@ namespace NitroxServer.Serialization.World
                                   string seed,
                                   ServerGameMode gameMode)
         {
-            string seed = config.Seed;
-            if (config.Seed == null || config.Seed.Trim().Length == 0)
+            if (string.IsNullOrWhiteSpace(seed))
             {
                 seed = StringHelper.GenerateRandomString(10);
             }
@@ -216,7 +215,8 @@ namespace NitroxServer.Serialization.World
                 parsedBatchCells,
                 protoBufSerializer,
                 NitroxServiceLocator.LocateService<Dictionary<NitroxTechType, IEntityBootstrapper>>(),
-                NitroxServiceLocator.LocateService<Dictionary<string, PrefabPlaceholdersGroupAsset>>()
+                NitroxServiceLocator.LocateService<Dictionary<string, PrefabPlaceholdersGroupAsset>>(),
+                world.Seed
             );
 
             world.EntityManager = new EntityManager(entities, world.BatchEntitySpawner);
