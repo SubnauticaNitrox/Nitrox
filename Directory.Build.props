@@ -3,7 +3,7 @@
     <!-- Set default properties for all projects (can be overridden per project) -->
     <PropertyGroup>
         <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-        <LangVersion>8</LangVersion>
+        <LangVersion>9</LangVersion>
         <TestLibrary>false</TestLibrary>
         <NitroxLibrary>false</NitroxLibrary>
         <UnityModLibrary>false</UnityModLibrary>
@@ -16,7 +16,10 @@
         <DefineConstants>TRACE;RELEASE</DefineConstants>
         <OutputPath>bin\Release\</OutputPath>
     </PropertyGroup>
-    
+
+    <PropertyGroup Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(MSBuildProjectName), '^Nitrox.*$')) and '$(MSBuildProjectName)' != 'NitroxLauncher'">
+        <TargetFramework>.netstandard2.0</TargetFramework>
+    </PropertyGroup>
     <PropertyGroup Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(MSBuildProjectName), '^Nitrox.*$'))">
         <NitroxLibrary>true</NitroxLibrary>
     </PropertyGroup>
