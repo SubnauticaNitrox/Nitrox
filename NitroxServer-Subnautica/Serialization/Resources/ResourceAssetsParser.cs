@@ -59,21 +59,12 @@ namespace NitroxServer_Subnautica.Serialization.Resources
         public static bool TryParseAllAssetsFiles(string basePath, out ResourceAssets resourceAssets)
         {
             resourceAssets = new ResourceAssets();
-            //try
+            foreach (string fileName in Directory.GetFiles(basePath, "*.assets"))
             {
-                foreach (string fileName in Directory.GetFiles(basePath, "*.assets"))
-                {
-                    ParseAssetManifest(basePath, fileName, resourceAssets);
-                }
-
-                return true;
+                ParseAssetManifest(basePath, fileName, resourceAssets);
             }
-            /*catch (Exception ex)
-            {
-                Log.Error($"Exception thrown in AssetsParser: {ex} \n {ex.StackTrace}");
-                resourceAssets = null;
-                return false;
-            }*/
+
+            return true;
         }
 
 
