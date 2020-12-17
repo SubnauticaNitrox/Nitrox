@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using Mono.Nat;
 using NitroxModel.DataStructures;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
-using NitroxModel.Server;
 using NitroxServer.Communication.Packets;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Entities;
@@ -29,12 +29,13 @@ namespace NitroxServer.Communication.NetworkingLayer
 
             portNumber = serverConfig.ServerPort;
             maxConn = serverConfig.MaxConnections;
+            SetupUPNP();
         }
 
         public abstract bool Start();
 
         public abstract void Stop();
-        
+
         protected void ClientDisconnected(NitroxConnection connection)
         {
             Player player = playerManager.GetPlayer(connection);
@@ -55,7 +56,7 @@ namespace NitroxServer.Communication.NetworkingLayer
                 }
             }
         }
-        
+
         protected void ProcessIncomingData(NitroxConnection connection, Packet packet)
         {
             try
@@ -65,6 +66,25 @@ namespace NitroxServer.Communication.NetworkingLayer
             catch (Exception ex)
             {
                 Log.Error("Exception while processing packet: " + packet + " " + ex);
+            }
+        }
+
+        private void SetupUPNP()
+        {
+            NatUtility.DeviceFound += DeviceFound;
+            NatUtility.StartDiscovery();
+        }
+
+        private void DeviceFound(object sender, DeviceEventArgs args)
+        {
+            try
+            {
+                INatDevice device = args.Device;
+                device.CreatePortMapAsync(new Mapping(Protocol.Udp, portNumber, portNumber, 0, "Nitrox Server - Subnautica"));
+            }
+            catch (Exception e)
+            {
+                Log.Error("Error occurred setting up UPNP");
             }
         }
     }
