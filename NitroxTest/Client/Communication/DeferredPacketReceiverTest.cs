@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NitroxClient;
 using NitroxClient.Communication;
@@ -49,6 +49,12 @@ namespace NitroxTest.Client.Communication
 
             Assert.AreEqual(1, packets.Count);
             Assert.AreEqual(packet, packets.Dequeue());
+        }
+
+        [TestCleanup]
+        public void Cleanup()
+        {
+            NitroxServiceLocator.EndCurrentLifetimeScope();
         }
     }
 }

@@ -11,6 +11,8 @@ namespace NitroxServer_Subnautica.Serialization.Resources
 {
     public static class ResourceAssetsParser
     {
+        private static ResourceAssets resourceAssets;
+
         private static readonly Dictionary<AssetIdentifier, uint> assetIdentifierToClassId = new Dictionary<AssetIdentifier, uint>();
 
         private static readonly Dictionary<string, int> fileIdByResourcePath = new Dictionary<string, int>();
@@ -35,7 +37,12 @@ namespace NitroxServer_Subnautica.Serialization.Resources
 
         public static ResourceAssets Parse()
         {
-            ResourceAssets resourceAssets = new ResourceAssets();
+            if (resourceAssets != null)
+            {
+                return resourceAssets;
+            }
+
+            resourceAssets = new ResourceAssets();
 
             string basePath = FindDirectoryContainingResourceAssets();
 

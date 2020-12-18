@@ -113,5 +113,11 @@ namespace NitroxTest.Model
                                                                                           .BeTrue($"Packet of type '{packet}' should have at least one processor.");
             }
         }
+
+        [TestCleanup]
+        public void Cleanup()
+        {
+            NitroxServiceLocator.EndCurrentLifetimeScope();
+        }
     }
 }
