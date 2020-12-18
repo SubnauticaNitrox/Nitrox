@@ -192,6 +192,8 @@ namespace NitroxServer.Serialization.World
                 seed = StringHelper.GenerateRandomString(10);
             }
 
+            Log.Info($"Loading world with seed {seed}");
+
             World world = new World
             {
                 TimeKeeper = new TimeKeeper { ServerStartTime = serverStartTime },

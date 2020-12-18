@@ -80,7 +80,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                 parsedBatches.Add(batchId);
             }
 
-            DeterministicBatchGenerator deterministicBatchGenerator = new DeterministicBatchGenerator(seed);
+            DeterministicBatchGenerator deterministicBatchGenerator = new DeterministicBatchGenerator(seed, batchId);
             List<EntitySpawnPoint> spawnPoints = batchCellsParser.ParseBatchData(batchId);
             List<Entity> entities = SpawnEntities(spawnPoints, deterministicBatchGenerator);
 
