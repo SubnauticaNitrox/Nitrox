@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NitroxClient;
 using NitroxClient.Communication;
@@ -32,7 +32,6 @@ namespace NitroxTest.Client.Communication
             NitroxServiceLocator.BeginNewLifetimeScope();
 
             packetReceiver = NitroxServiceLocator.LocateService<PacketReceiver>();
-            NitroxModel.Helper.Map.Main = new NitroxModel_Subnautica.Helper.SubnauticaMap();
 
             loadedCell = new AbsoluteEntityCell(loadedActionPosition, CELL_LEVEL);
             unloadedCell = new AbsoluteEntityCell(unloadedActionPosition, CELL_LEVEL);

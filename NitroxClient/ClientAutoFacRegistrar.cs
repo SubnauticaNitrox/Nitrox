@@ -20,7 +20,9 @@ using NitroxClient.Helpers;
 using NitroxClient.Map;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
+using NitroxModel.Helper;
 using NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation;
+using NitroxModel_Subnautica.Helper;
 
 namespace NitroxClient
 {
@@ -77,6 +79,10 @@ namespace NitroxClient
 
             containerBuilder.RegisterType<SubnauticaRotationMetadataFactory>()
                             .As<RotationMetadataFactory>()
+                            .InstancePerLifetimeScope();
+
+            containerBuilder.RegisterType<SubnauticaMap>()
+                            .As<IMap>()
                             .InstancePerLifetimeScope();
 
             containerBuilder.RegisterType<PlayerManager>().InstancePerLifetimeScope();

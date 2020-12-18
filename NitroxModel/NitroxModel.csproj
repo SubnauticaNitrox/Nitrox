@@ -139,7 +139,7 @@
     <Compile Include="DataStructures\PriorityQueue.cs" />
     <Compile Include="DataStructures\GameLogic\VehicleMovementData.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="Helper\Map.cs" />
+    <Compile Include="Helper\IMap.cs" />
     <Compile Include="Helper\ReflectionHelper.cs" />
     <Compile Include="Discovery\GameInstallationFinder.cs" />
     <Compile Include="Helper\Validate.cs" />

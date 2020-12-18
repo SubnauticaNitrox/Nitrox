@@ -80,7 +80,7 @@ namespace NitroxClient.MonoBehaviours
 
             multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
             packetReceiver = NitroxServiceLocator.LocateService<PacketReceiver>();
-            NitroxModel.Helper.Map.Main = new SubnauticaMap();
+
             Main = this;
             DontDestroyOnLoad(gameObject);
         }
