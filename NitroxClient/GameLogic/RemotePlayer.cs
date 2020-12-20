@@ -39,6 +39,7 @@ namespace NitroxClient.GameLogic
         public EscapePod EscapePod { get; private set; }
         public PilotingChair PilotingChair { get; private set; }
 
+        public bool IsP2P { get; private set; }
         public RemotePlayer(GameObject playerBody, PlayerContext playerContext, List<TechType> equippedTechTypes, List<Pickupable> inventoryItems, PlayerModelManager modelManager)
         {
             PlayerContext = playerContext;

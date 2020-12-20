@@ -24,7 +24,7 @@ namespace NitroxServer.Communication.Packets.Processors
             this.world = world;
         }
 
-        public override void Process(PlayerJoiningMultiplayerSession packet, NitroxConnection connection)
+        public override void Process(PlayerJoiningMultiplayerSession packet, INitroxConnection connection)
         {
             Player player = playerManager.PlayerConnected(connection, packet.ReservationKey, out bool wasBrandNewPlayer);
 

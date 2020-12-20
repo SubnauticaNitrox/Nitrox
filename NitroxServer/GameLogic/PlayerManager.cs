@@ -43,7 +43,7 @@ namespace NitroxServer.GameLogic
         }
 
         public MultiplayerSessionReservation ReservePlayerContext(
-            NitroxConnection connection,
+            INitroxConnection connection,
             PlayerSettings playerSettings,
             AuthenticationContext authenticationContext,
             string correlationId)
@@ -96,7 +96,7 @@ namespace NitroxServer.GameLogic
             return new MultiplayerSessionReservation(correlationId, playerId, reservationKey);
         }
 
-        public Player PlayerConnected(NitroxConnection connection, string reservationKey, out bool wasBrandNewPlayer)
+        public Player PlayerConnected(INitroxConnection connection, string reservationKey, out bool wasBrandNewPlayer)
         {
             PlayerContext playerContext = reservations[reservationKey];
             Validate.NotNull(playerContext);
@@ -141,7 +141,7 @@ namespace NitroxServer.GameLogic
             return player;
         }
 
-        public void PlayerDisconnected(NitroxConnection connection)
+        public void PlayerDisconnected(INitroxConnection connection)
         {
             assetsByConnection.TryGetValue(connection, out ConnectionAssets assetPackage);
             if (assetPackage == null)
@@ -163,6 +163,8 @@ namespace NitroxServer.GameLogic
             }
 
             assetsByConnection.Remove(connection);
+
+            connection.Disconnect();
 
             if (ConnectedPlayers().Count() == 0)
             {
@@ -186,7 +188,7 @@ namespace NitroxServer.GameLogic
             return false;
         }
 
-        public Player GetPlayer(NitroxConnection connection)
+        public Player GetPlayer(INitroxConnection connection)
         {
             if (!assetsByConnection.TryGetValue(connection, out ConnectionAssets assetPackage))
             {

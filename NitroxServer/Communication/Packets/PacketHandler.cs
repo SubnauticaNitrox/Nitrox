@@ -21,16 +21,22 @@ namespace NitroxServer.Communication.Packets
             defaultServerPacketProcessor = packetProcessor;
         }
 
-        public void Process(Packet packet, NitroxConnection connection)
+        public void Process(Packet packet, INitroxConnection connection)
         {
             Player player = playerManager.GetPlayer(connection);
+            Packet unpackedPacket = packet;
+            if (packet.GetType() == typeof(TunneledPacket))
+            {
+                unpackedPacket = ((TunneledPacket)packet).Packet;
+            }
+
             if (player == null)
             {
-                ProcessUnauthenticated(packet, connection);
+                ProcessUnauthenticated(unpackedPacket, connection);
             }
             else
             {
-                ProcessAuthenticated(packet, player);
+                ProcessAuthenticated(unpackedPacket, player);
             }
         }
 
@@ -53,7 +59,7 @@ namespace NitroxServer.Communication.Packets
             }
         }
 
-        private void ProcessUnauthenticated(Packet packet, NitroxConnection connection)
+        private void ProcessUnauthenticated(Packet packet, INitroxConnection connection)
         {
             try
             {

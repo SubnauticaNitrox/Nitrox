@@ -89,14 +89,27 @@ namespace NitroxServer.Communication.LiteNetLib
 
         private void OnPacketReceived(WrapperPacket wrapperPacket, NetPeer peer)
         {
-            NitroxConnection connection = GetConnection(peer.Id);
+            INitroxConnection connection = GetConnection(peer.Id);
             Packet packet = Packet.Deserialize(wrapperPacket.packetData);
             ProcessIncomingData(connection, packet);
         }
 
-        private NitroxConnection GetConnection(int remoteIdentifier)
+        public void OnConnectionRequest(ConnectionRequest request)
         {
-            NitroxConnection connection;
+            if (server.PeersCount < maxConn)
+            {
+                request.AcceptIfKey("nitrox");
+            }
+            else
+            {
+                request.Reject();
+            }
+        }
+
+        private INitroxConnection GetConnection(long remoteIdentifier)
+        {
+            INitroxConnection connection;
+
             lock (connectionsByRemoteIdentifier)
             {
                 connectionsByRemoteIdentifier.TryGetValue(remoteIdentifier, out connection);
