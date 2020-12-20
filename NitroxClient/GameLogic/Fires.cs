@@ -65,7 +65,7 @@ namespace NitroxClient.GameLogic
             {
                 float summedDouseAmount = fireDouseAmount[fireId] + douseAmount;
 
-                if (summedDouseAmount > FIRE_DOUSE_AMOUNT_TRIGGER)
+                if (summedDouseAmount > FIRE_DOUSE_AMOUNT_TRIGGER || fire.IsExtinguished() )
                 {
                     // It is significantly faster to keep the key as a 0 value than to remove it and re-add it later.
                     fireDouseAmount[fireId] = 0;
