@@ -18,7 +18,7 @@ namespace NitroxServer.Communication.NetworkingLayer
 
         protected readonly PacketHandler packetHandler;
         protected readonly EntitySimulation entitySimulation;
-        protected readonly Dictionary<long, NitroxConnection> connectionsByRemoteIdentifier = new Dictionary<long, NitroxConnection>();
+        protected readonly Dictionary<long, INitroxConnection> connectionsByRemoteIdentifier = new Dictionary<long, INitroxConnection>();
         protected readonly PlayerManager playerManager;
 
         public NitroxServer(PacketHandler packetHandler, PlayerManager playerManager, EntitySimulation entitySimulation, ServerConfig serverConfig)
@@ -34,8 +34,8 @@ namespace NitroxServer.Communication.NetworkingLayer
         public abstract bool Start();
 
         public abstract void Stop();
-
-        protected void ClientDisconnected(NitroxConnection connection)
+        
+        protected void ClientDisconnected(INitroxConnection connection)
         {
             Player player = playerManager.GetPlayer(connection);
 
@@ -55,8 +55,8 @@ namespace NitroxServer.Communication.NetworkingLayer
                 }
             }
         }
-
-        protected void ProcessIncomingData(NitroxConnection connection, Packet packet)
+        
+        protected void ProcessIncomingData(INitroxConnection connection, Packet packet)
         {
             try
             {

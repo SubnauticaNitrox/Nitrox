@@ -17,7 +17,7 @@ namespace NitroxServer.GameLogic
     public class PlayerManager
     {
         private readonly ThreadSafeDictionary<string, Player> allPlayersByName;
-        private readonly ThreadSafeDictionary<NitroxConnection, ConnectionAssets> assetsByConnection = new ThreadSafeDictionary<NitroxConnection, ConnectionAssets>();
+        private readonly ThreadSafeDictionary<INitroxConnection, ConnectionAssets> assetsByConnection = new ThreadSafeDictionary<INitroxConnection, ConnectionAssets>();
         private readonly ThreadSafeDictionary<string, PlayerContext> reservations = new ThreadSafeDictionary<string, PlayerContext>();
         private readonly ThreadSafeCollection<string> reservedPlayerNames = new ThreadSafeCollection<string>(new HashSet<string>());
 
@@ -45,7 +45,7 @@ namespace NitroxServer.GameLogic
         }
 
         public MultiplayerSessionReservation ReservePlayerContext(
-            NitroxConnection connection,
+            INitroxConnection connection,
             PlayerSettings playerSettings,
             AuthenticationContext authenticationContext,
             string correlationId)
@@ -101,7 +101,7 @@ namespace NitroxServer.GameLogic
             return new MultiplayerSessionReservation(correlationId, playerId, reservationKey);
         }
 
-        public Player PlayerConnected(NitroxConnection connection, string reservationKey, out bool wasBrandNewPlayer)
+        public Player PlayerConnected(INitroxConnection connection, string reservationKey, out bool wasBrandNewPlayer)
         {
             PlayerContext playerContext = reservations[reservationKey];
             Validate.NotNull(playerContext);
@@ -145,7 +145,7 @@ namespace NitroxServer.GameLogic
             return player;
         }
 
-        public void PlayerDisconnected(NitroxConnection connection)
+        public void PlayerDisconnected(INitroxConnection connection)
         {
             ConnectionAssets assetPackage;
             assetsByConnection.TryGetValue(connection, out assetPackage);
@@ -170,6 +170,8 @@ namespace NitroxServer.GameLogic
 
             assetsByConnection.Remove(connection);
 
+            connection.Disconnect();
+
             if (ConnectedPlayers().Count() == 0)
             {
                 Server.Instance.PauseServer();
@@ -192,7 +194,7 @@ namespace NitroxServer.GameLogic
             return false;
         }
 
-        public Player GetPlayer(NitroxConnection connection)
+        public Player GetPlayer(INitroxConnection connection)
         {
             ConnectionAssets assetPackage;
             assetsByConnection.TryGetValue(connection, out assetPackage);

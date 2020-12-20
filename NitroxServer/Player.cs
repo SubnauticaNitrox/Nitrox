@@ -15,7 +15,7 @@ namespace NitroxServer
         private readonly ThreadSafeCollection<EquippedItemData> modules;
         private readonly ThreadSafeCollection<AbsoluteEntityCell> visibleCells;
         
-        public NitroxConnection connection { get; set; }
+        public INitroxConnection connection { get; set; }
         public PlayerSettings PlayerSettings => PlayerContext.PlayerSettings;
         public PlayerContext PlayerContext { get; set; }
         public ushort Id { get; }
@@ -28,7 +28,7 @@ namespace NitroxServer
         public PlayerStatsData Stats { get; set; }
         public NitroxVector3? LastStoredPosition { get; set; }
 
-        public Player(ushort id, string name, bool isPermaDeath, PlayerContext playerContext, NitroxConnection connection, NitroxVector3 position, NitroxId playerId, Optional<NitroxId> subRootId, Perms perms, PlayerStatsData stats, IEnumerable<EquippedItemData> equippedItems,
+        public Player(ushort id, string name, bool isPermaDeath, PlayerContext playerContext, INitroxConnection connection, NitroxVector3 position, NitroxId playerId, Optional<NitroxId> subRootId, Perms perms, PlayerStatsData stats, IEnumerable<EquippedItemData> equippedItems,
                       IEnumerable<EquippedItemData> modules)
         {
             Id = id;

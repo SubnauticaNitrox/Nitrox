@@ -65,7 +65,8 @@
   <ItemGroup>
     <Compile Include="Communication\NetworkingLayer\LiteNetLib\LiteNetLibConnection.cs" />
     <Compile Include="Communication\NetworkingLayer\LiteNetLib\LiteNetLibServer.cs" />
-    <Compile Include="Communication\NetworkingLayer\NitroxConnection.cs" />
+    <Compile Include="Communication\NetworkingLayer\Tunnel\TunneledConnection.cs" />
+    <Compile Include="Communication\NetworkingLayer\INitroxConnection.cs" />
     <Compile Include="Communication\NetworkingLayer\NitroxServer.cs" />
     <Compile Include="Communication\Packets\Processors\BedEnterProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ChatMessageProcessor.cs" />

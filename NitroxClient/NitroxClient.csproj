@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClientAutoFacRegistrar.cs" />
+    <Compile Include="Communication\NetworkingLayer\PlatformP2P\Abstract\IPlatformHandler.cs" />
     <Compile Include="Communication\PacketReceiver.cs" />
     <Compile Include="Communication\Packets\Processors\BedEnterProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\DebugStartMapProcessor.cs" />

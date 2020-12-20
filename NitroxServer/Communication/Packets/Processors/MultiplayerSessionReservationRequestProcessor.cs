@@ -16,7 +16,7 @@ namespace NitroxServer.Communication.Packets.Processors
             this.playerManager = playerManager;
         }
 
-        public override void Process(MultiplayerSessionReservationRequest packet, NitroxConnection connection)
+        public override void Process(MultiplayerSessionReservationRequest packet, INitroxConnection connection)
         {
             Log.Info($"Processing reservation request from {packet.AuthenticationContext.Username}");
 

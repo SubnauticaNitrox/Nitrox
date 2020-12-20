@@ -20,6 +20,7 @@ namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
             listener = new EventBasedNetListener();
             server = new NetManager(listener);
         }
+
         public override bool Start()
         {
             listener.PeerConnectedEvent += PeerConnected;
@@ -73,7 +74,7 @@ namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
 
         private void OnPacketReceived(WrapperPacket wrapperPacket, NetPeer peer)
         {
-            NitroxConnection connection = GetConnection(peer.Id);
+            INitroxConnection connection = GetConnection(peer.Id);
             Packet packet = Packet.Deserialize(wrapperPacket.packetData);
             ProcessIncomingData(connection, packet);
         }
@@ -90,9 +91,9 @@ namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
             }
         }
 
-        private NitroxConnection GetConnection(long remoteIdentifier)
+        private INitroxConnection GetConnection(long remoteIdentifier)
         {
-            NitroxConnection connection;
+            INitroxConnection connection;
 
             lock (connectionsByRemoteIdentifier)
             {
