@@ -50,30 +50,36 @@ namespace NitroxClient.GameLogic
         }
 
         /// <summary>
-        /// Triggered when <see cref="Fire.Douse(float)"/> is executed. To Douse a fire manually, retrieve the <see cref="Fire"/> call the Douse method
+        /// Triggered when <see cref="Fire.Douse(float)"/> is executed. To Douse a fire manually, retrieve the <see cref="Fire"/> call the Douse method.
+        /// Note that the passed douseAmount is an incrment, not a total.
         /// </summary>
         public void OnDouse(Fire fire, float douseAmount)
         {
             NitroxId fireId = NitroxEntity.GetId(fire.gameObject);
 
-            // Temporary packet limiter
-            if (!fireDouseAmount.ContainsKey(fireId))
+            float summedDouseAmount = douseAmount + fireDouseAmount.GetOrDefault(fireId, 0);
+
+            if (summedDouseAmount < FIRE_DOUSE_AMOUNT_TRIGGER)
             {
-                fireDouseAmount.Add(fireId, douseAmount);
+                // combine multiple events into a single packet
+                fireDouseAmount[fireId] = summedDouseAmount;
+                // note: There is no process to eventually send out these stored partials if the player stops dousing
+                return;
+            }
+
+            if (fire.IsExtinguished())
+            {
+                // extinguished fires shouldn't pop up again
+                fireDouseAmount.Remove(fireId);
             }
             else
             {
-                float summedDouseAmount = fireDouseAmount[fireId] + douseAmount;
-
-                if (summedDouseAmount > FIRE_DOUSE_AMOUNT_TRIGGER || fire.IsExtinguished() )
-                {
-                    // It is significantly faster to keep the key as a 0 value than to remove it and re-add it later.
-                    fireDouseAmount[fireId] = 0;
-
-                    FireDoused packet = new FireDoused(fireId, douseAmount);
-                    packetSender.Send(packet);
-                }
+                // It is significantly faster to keep the key as a 0 value than to remove it and re-add it later.
+                fireDouseAmount[fireId] = 0;
             }
+
+            FireDoused packet = new FireDoused(fireId, summedDouseAmount);
+            packetSender.Send(packet);
         }
 
         /// <summary>
