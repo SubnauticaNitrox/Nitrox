@@ -61,7 +61,7 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
         {
             networkDebugger?.PacketSent(packet);
             client.SendToAll(netPacketProcessor.Write(packet.ToWrapperPacket()), NitroxDeliveryMethod.ToLiteNetLib(packet.DeliveryMethod));
-            client.Flush();
+            client.TriggerUpdate();
         }
 
         public void Stop()
