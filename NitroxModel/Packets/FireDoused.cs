@@ -11,14 +11,22 @@ namespace NitroxModel.Packets
     {
         public NitroxId Id { get; }
         public float DouseAmount { get; }
+        public NitroxId ParentId { get; }
+        public float xpos { get; }
+        public float ypos { get; }
+        public float zpos { get; }
 
         /// <param name="id">The Fire id</param>
         /// <param name="douseAmount">The amount to douse the fire by. A large number will extinguish the fire. A large number still calls the same 
         ///     method, <see cref="Fire.Douse(float)"/>, which will call <see cref="Fire.Extinguish"/> if the douse amount would extinguish it.</param>
-        public FireDoused(NitroxId id, float douseAmount)
+        public FireDoused(NitroxId id, float douseAmount, NitroxId parentId, float x, float y, float z)
         {
             Id = id;
             DouseAmount = douseAmount;
+            ParentId = parentId;
+            xpos = x;
+            ypos = y;
+            zpos = z;
         }
 
         public override string ToString()
