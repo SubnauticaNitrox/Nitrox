@@ -29,7 +29,7 @@ namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
             listener.NetworkReceiveEvent += NetworkDataReceived;
             listener.ConnectionRequestEvent += OnConnectionRequest;
 
-            server.DiscoveryEnabled = true;
+            server.BroadcastReceiveEnabled = true;
             server.UnconnectedMessagesEnabled = true;
             server.UpdateTime = 15;
             server.UnsyncedEvents = true;
@@ -80,7 +80,7 @@ namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
 
         public void OnConnectionRequest(ConnectionRequest request)
         {
-            if (server.PeersCount < maxConn)
+            if (server.ConnectedPeersCount < maxConn)
             {
                 request.AcceptIfKey("nitrox");
             }

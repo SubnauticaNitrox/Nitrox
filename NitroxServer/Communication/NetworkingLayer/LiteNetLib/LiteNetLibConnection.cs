@@ -1,4 +1,4 @@
-using System.Net;
+﻿using System.Net;
 using LiteNetLib;
 using LiteNetLib.Utils;
 using NitroxModel.Logger;
@@ -24,7 +24,7 @@ namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
             if (peer.ConnectionState == ConnectionState.Connected)
             {
                 peer.Send(netPacketProcessor.Write(packet.ToWrapperPacket()), NitroxDeliveryMethod.ToLiteNetLib(packet.DeliveryMethod));
-                peer.Flush();
+                peer.NetManager.TriggerUpdate();
             }
             else
             {
