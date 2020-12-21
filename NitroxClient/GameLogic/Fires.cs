@@ -56,7 +56,6 @@ namespace NitroxClient.GameLogic
         public void OnDouse(Fire fire, float douseAmount)
         {
             NitroxId fireId = NitroxEntity.GetId(fire.gameObject);
-
             float summedDouseAmount = douseAmount + fireDouseAmount.GetOrDefault(fireId, 0);
 
             if (summedDouseAmount < FIRE_DOUSE_AMOUNT_TRIGGER)
@@ -78,7 +77,11 @@ namespace NitroxClient.GameLogic
                 fireDouseAmount[fireId] = 0;
             }
 
-            FireDoused packet = new FireDoused(fireId, summedDouseAmount);
+            // fallback data in case the fireID is not synced
+            Transform firePlace = fire.transform.parent;
+            NitroxId placeId = NitroxEntity.GetId(firePlace.gameObject);
+
+            FireDoused packet = new FireDoused(fireId, summedDouseAmount, placeId, firePlace.position.x, firePlace.position.y, firePlace.position.z);
             packetSender.Send(packet);
         }
 
