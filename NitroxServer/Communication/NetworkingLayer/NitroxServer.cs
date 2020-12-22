@@ -79,7 +79,7 @@ namespace NitroxServer.Communication.NetworkingLayer
             try
             {
                 INatDevice device = args.Device;
-                await device.CreatePortMapAsync(new Mapping(Protocol.Udp, 11000, 11000, 86400, "Nitrox Server - Subnautica"));
+                await device.CreatePortMapAsync(new Mapping(Protocol.Udp, 11000, 11000, (int)TimeSpan.FromDays(1).TotalSeconds, "Nitrox Server - Subnautica"));
                 Log.Info($"Server port has been automatically opened on your router");
             }
 #if DEBUG
