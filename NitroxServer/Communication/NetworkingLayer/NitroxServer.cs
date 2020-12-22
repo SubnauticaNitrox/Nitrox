@@ -29,7 +29,6 @@ namespace NitroxServer.Communication.NetworkingLayer
 
             portNumber = serverConfig.ServerPort;
             maxConn = serverConfig.MaxConnections;
-            SetupUPNP();
         }
 
         public abstract bool Start();
@@ -69,23 +68,31 @@ namespace NitroxServer.Communication.NetworkingLayer
             }
         }
 
-        private void SetupUPNP()
+        protected virtual void SetupUPNP()
         {
             NatUtility.DeviceFound += DeviceFound;
             NatUtility.StartDiscovery();
         }
 
-        private void DeviceFound(object sender, DeviceEventArgs args)
+        private async void DeviceFound(object sender, DeviceEventArgs args)
         {
             try
             {
                 INatDevice device = args.Device;
-                device.CreatePortMapAsync(new Mapping(Protocol.Udp, portNumber, portNumber, 0, "Nitrox Server - Subnautica"));
+                await device.CreatePortMapAsync(new Mapping(Protocol.Udp, 11000, 11000, 7200, "Nitrox Server - Subnautica"));
+                Log.Info($"Server port has been automatically opened on your router");
             }
-            catch (Exception e)
+#if DEBUG
+            catch (Exception ex)
             {
-                Log.Error("Error occurred setting up UPNP");
+                Log.Error($"Automatic port forwarding failed: {ex}");
             }
+#else
+            catch (Exception)
+            {
+                Log.Error("Automatic port forwarding failed, please manually port forward");
+            }
+#endif
         }
     }
 }
