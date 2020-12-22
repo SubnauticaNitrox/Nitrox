@@ -6,6 +6,7 @@ using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures.GameLogic;
+using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.Packets;
 using UnityEngine;
 
@@ -81,7 +82,7 @@ namespace NitroxClient.GameLogic
             Transform firePlace = fire.transform.parent;
             NitroxId placeId = NitroxEntity.GetId(firePlace.gameObject);
 
-            FireDoused packet = new FireDoused(fireId, summedDouseAmount, placeId, firePlace.position.x, firePlace.position.y, firePlace.position.z);
+            FireDoused packet = new FireDoused(fireId, summedDouseAmount, placeId, firePlace.position.ToDto());
             packetSender.Send(packet);
         }
 
