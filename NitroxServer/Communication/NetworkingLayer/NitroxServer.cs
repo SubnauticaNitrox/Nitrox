@@ -68,7 +68,7 @@ namespace NitroxServer.Communication.NetworkingLayer
             }
         }
 
-        protected virtual void SetupUPNP()
+        protected void SetupUPNP()
         {
             NatUtility.DeviceFound += DeviceFound;
             NatUtility.StartDiscovery();
