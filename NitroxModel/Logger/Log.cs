@@ -200,24 +200,18 @@ namespace NitroxModel.Logger
 
         private static string GetLogFileName()
         {
-            bool IndexOfAny(string haystack, params string[] needles)
+            static bool Contains(string haystack, string needle) => haystack.IndexOf(needle, StringComparison.OrdinalIgnoreCase) >= 0;
+            
+            string loggerName = GetLoggerName();
+            if (Contains(loggerName, "server"))
             {
-                foreach (string needle in needles)
-                {
-                    if (haystack.IndexOf(needle, StringComparison.OrdinalIgnoreCase) >= 0)
-                    {
-                        return true;
-                    }
-                }
-                return false;
+                return "server";
             }
-
-            return GetLoggerName() switch
+            if (Contains(loggerName, "launch"))
             {
-                { } s when IndexOfAny(s, "server") => "server",
-                { } s when IndexOfAny(s, "launcher") => "launcher",
-                _ => "game"
-            };
+                return "launcher";
+            }
+            return "game";
         }
 
         private class SensitiveEnricher : ILogEventEnricher
