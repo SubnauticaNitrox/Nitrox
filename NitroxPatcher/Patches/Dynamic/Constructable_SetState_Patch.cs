@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Reflection;
-using Harmony;
-using NitroxClient.GameLogic;
+using HarmonyLib;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
@@ -37,7 +35,7 @@ namespace NitroxPatcher.Patches.Dynamic
             }
         }
         
-        public override void Patch(HarmonyInstance harmony)
+        public override void Patch(Harmony harmony)
         {
             PatchPostfix(harmony, TARGET_METHOD);
         }

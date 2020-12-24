@@ -128,7 +128,7 @@
     <Compile Include="Patches\Dynamic\ExosuitTorpedoArm_Shoot_Patch.cs" />
     <Compile Include="Patches\Dynamic\Exosuit_SpawnArm_Patch.cs" />
     <Compile Include="Patches\Dynamic\Exosuit_Update_Patch.cs" />
-    <Compile Include="Patches\Dynamic\Fabricator_OnCraftingBegin_Patch.cs" />
+    <Compile Include="Patches\Dynamic\GhostCrafter_OnCraftingBegin_Patch.cs" />
     <Compile Include="Patches\Dynamic\Fire_Douse_Patch.cs" />
     <Compile Include="Patches\Dynamic\FreezeTime_Begin_Patch.cs" />
     <Compile Include="Patches\Dynamic\GameSettings_SerializeInputSettings_Patch.cs" />
@@ -222,7 +222,7 @@
       <Version>4.9.4</Version>
     </PackageReference>
     <PackageReference Include="Lib.Harmony">
-      <Version>1.2.0.1</Version>
+      <Version>2.0.4.0</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

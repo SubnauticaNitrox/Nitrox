@@ -1,19 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Reflection;
-using Harmony;
-using NitroxClient.Communication.Abstract;
+using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.Util;
-using NitroxModel.Logger;
-using NitroxModel.Packets;
-using NitroxModel_Subnautica.DataStructures;
-using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
@@ -52,9 +43,9 @@ namespace NitroxPatcher.Patches.Dynamic
             }
         }
 
-        public override void Patch(HarmonyInstance harmony)
+        public override void Patch(Harmony harmony)
         {
-            PatchMultiple(harmony, TARGET_METHOD, true, true, false);
+            PatchMultiple(harmony, TARGET_METHOD, true, true, false, false);
         }   
     }
 }

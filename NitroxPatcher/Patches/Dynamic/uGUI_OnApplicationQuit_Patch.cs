@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Reflection;
-using Harmony;
+using HarmonyLib;
 using NitroxClient.Communication.Abstract;
 using NitroxModel.Core;
 
@@ -17,7 +17,7 @@ namespace NitroxPatcher.Patches.Dynamic
             multiplayerSession.Disconnect();
         }
 
-        public override void Patch(HarmonyInstance harmony)
+        public override void Patch(Harmony harmony)
         {
             PatchPrefix(harmony, TARGET_METHOD);
         }

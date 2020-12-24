@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using Harmony;
+using HarmonyLib;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Helper;
 
@@ -31,7 +31,7 @@ namespace NitroxPatcher.Patches.Persistent
                     labels.RemoveRange(3, 5);
                     yield return new CodeInstruction(instruction.opcode, labels.ToArray());
                 }
-                else if (instruction.opcode == OpCodes.Brtrue && instruction.operand.GetHashCode() == 10)
+                else if (instruction.opcode == OpCodes.Brtrue || instruction.opcode == OpCodes.Brtrue_S)
                 {
                     yield return new CodeInstruction(OpCodes.Brtrue, jmpLabelStartOfMethod); // replace previous jump with new one
                 }
@@ -62,7 +62,7 @@ namespace NitroxPatcher.Patches.Persistent
             }
         }
 
-        public override void Patch(HarmonyInstance harmony)
+        public override void Patch(Harmony harmony)
         {
             PatchTranspiler(harmony, GetMethod());
         }
