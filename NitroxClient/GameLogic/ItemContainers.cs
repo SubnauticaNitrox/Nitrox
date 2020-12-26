@@ -60,15 +60,12 @@ namespace NitroxClient.GameLogic
             if (!owner.HasValue)
             {
                 Log.Error($"Unable to find inventory container with id {containerId} for {item.name}");
-                // TODO: Might want to send feedback to the server so it can be removed from the save file
-                UnityEngine.Object.Destroy(item);
                 return;
             }
             Optional<ItemsContainer> opContainer = InventoryContainerHelper.GetBasedOnOwnersType(owner.Value);
             if (!opContainer.HasValue)
             {
                 Log.Error($"Could not find container field on GameObject {owner.Value.GetHierarchyPath()}");
-                UnityEngine.Object.Destroy(item);
                 return;
             }
 
