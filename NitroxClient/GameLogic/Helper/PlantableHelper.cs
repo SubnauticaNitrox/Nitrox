@@ -15,8 +15,6 @@ namespace NitroxClient.GameLogic.Helper
         /// <param name="plantableData">Timing data delivered from the server</param>
         public static void FixPlantGrowth(this GameObject gameObject, PlantableItemData plantableData)
         {
-            Log.Info($"InventoryInitialItemsSyncProcessor: Plantable {plantableData}");
-
             Plantable plant = gameObject.GetComponent<Plantable>();
             if (null == plant)
             {
@@ -38,13 +36,13 @@ namespace NitroxClient.GameLogic.Helper
             if (elapsedGrowthTime > grower.growthDuration)
             {
                 // should be ready
-                Log.Debug($"Finishing Plantable that has grown for {elapsedGrowthTime} seconds");
-                grower.SetProgress(99.9f);
+                Log.Debug($"FixPlantGrowth: Finishing {gameObject.name} {plantableData.ItemId} that has grown for {elapsedGrowthTime} seconds");
+                grower.SetProgress(1.0f);
             }
             else
             {
-                Log.Debug($"Growing Plantable that has grown for {elapsedGrowthTime} seconds");
-                grower.SetProgress(Convert.ToSingle(100f * elapsedGrowthTime / grower.growthDuration));
+                Log.Debug($"FixPlantGrowth: Growing {gameObject.name} {plantableData.ItemId} that has grown for {elapsedGrowthTime} seconds");
+                grower.SetProgress(Convert.ToSingle(elapsedGrowthTime / grower.growthDuration));
             }
         }
 
