@@ -27,10 +27,34 @@ namespace NitroxPatcher
 
         private static readonly Harmony harmony = new Harmony("com.nitroxmod.harmony");
         private static bool isApplied;
+        private static readonly char[] newLineChars = Environment.NewLine.ToCharArray();
 
         public static void Execute()
         {
-            Log.Setup(inGameLogger: new SubnauticaInGameLogger());
+            Log.Setup(inGameLogger: new SubnauticaInGameLogger(), useConsoleLogging: false);
+            Application.logMessageReceived += (condition, stackTrace, type) =>
+            {
+                switch (type)
+                {
+                    case LogType.Error:
+                    case LogType.Exception:
+                        string toWrite = condition;
+                        if (!string.IsNullOrWhiteSpace(stackTrace))
+                        {
+                            toWrite += Environment.NewLine + stackTrace;
+                        }
+                        Log.Error(toWrite.Trim(newLineChars));
+                        break;
+                    case LogType.Warning:
+                    case LogType.Log:
+                    case LogType.Assert:
+                        // These logs from Unity spam too much uninteresting stuff
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                }
+            };
+            
             Log.Info($"Using Nitrox version {Assembly.GetExecutingAssembly().GetName().Version} built on {File.GetCreationTimeUtc(Assembly.GetExecutingAssembly().Location)}");
             try
             {

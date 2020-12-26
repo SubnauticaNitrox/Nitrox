@@ -23,7 +23,7 @@ namespace NitroxModel.Logger
             set => SetPlayerName(value);
         }
 
-        public static void Setup(bool asyncConsoleWriter = false, InGameLogger inGameLogger = null, bool isConsoleApp = false)
+        public static void Setup(bool asyncConsoleWriter = false, InGameLogger inGameLogger = null, bool isConsoleApp = false, bool useConsoleLogging = true)
         {
             if (logger != null)
             {
@@ -33,6 +33,11 @@ namespace NitroxModel.Logger
                      .MinimumLevel.Debug()
                      .WriteTo.Logger(cnf =>
                      {
+                         if (!useConsoleLogging)
+                         {
+                             return;
+                         }
+                         
                          string consoleTemplate = isConsoleApp switch
                          {
                              false => $"[{{Timestamp:HH:mm:ss.fff}}] [{GetLoggerName()}{{{nameof(PlayerName)}}}][{{Level:u3}}] {{Message}}{{NewLine}}{{Exception}}",
