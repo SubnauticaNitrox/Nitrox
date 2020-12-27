@@ -54,9 +54,16 @@
                             <RadioButton x:Name="RBIsExternal" GroupName="ServerType" Content="External console" Margin="5" Click="RBServer_Clicked" />
                         </StackPanel>
 
-                        <Button Grid.Column="1" Style="{StaticResource LargeButton}" Click="StartServer_Click" ToolTip="Start the server with chosen options" Background="#FF007BFF" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,0,0" Grid.Row="1">
+                        <Button Style="{StaticResource LargeButton}" Click="StartPublicServer_Click" ToolTip="Start the server with chosen options" Background="#FF007BFF" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,255,0" Grid.Row="1" Grid.ColumnSpan="2">
                             <StackPanel>
-                                <TextBlock HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Text="START SERVER" />
+                                <TextBlock HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Text="PUBLIC SERVER" />
+                                <TextBlock HorizontalAlignment="Center" FontSize="14" Text="{Binding StartButtonSubtitle}" />
+                            </StackPanel>
+                        </Button>
+
+                        <Button Grid.Column="1" Style="{StaticResource LargeButton}" Click="StartPrivateServer_Click" ToolTip="Start the server with chosen options" Background="#FF007BFF" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,0,0" Grid.Row="1">
+                            <StackPanel>
+                                <TextBlock HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Text="PRIVATE SERVER" />
                                 <TextBlock HorizontalAlignment="Center" FontSize="14" Text="{Binding StartButtonSubtitle}" />
                             </StackPanel>
                         </Button>

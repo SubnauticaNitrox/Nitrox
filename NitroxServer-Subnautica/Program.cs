@@ -17,7 +17,9 @@ using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel_Subnautica.Helper;
 using NitroxServer;
+using LibZeroTier;
 using NitroxServer.ConsoleCommands.Processor;
+using System.Security.Principal;
 
 namespace NitroxServer_Subnautica
 {
@@ -41,6 +43,21 @@ namespace NitroxServer_Subnautica
             {
                 Log.Info("Waiting for 30 seconds on other Nitrox servers to initialize before starting..");
             }, 30000);
+
+            // private netoworking
+            ZeroTierAPI PrivateNetwork = null;
+            if (args.Length > 0)
+            {
+                if (args[0].Equals("zerotier"))
+                {
+                    PrivateNetwork = new ZeroTierAPI(IsAdministrator);
+                    PrivateNetwork.NetworkChangeEvent += PrivateNetwork_NetworkChangeEvent;
+                    PrivateNetwork.LogNetworkInfoEvent += PrivateNetwork_LogNetworkInfoEvent;
+                    PrivateNetwork.StartServerAsync().Wait();
+                }
+            }
+            // =================
+
             Server server;
             try
             {
@@ -91,6 +108,16 @@ namespace NitroxServer_Subnautica
             {
                 cmdProcessor.ProcessCommand(Console.ReadLine(), Optional.Empty, Perms.CONSOLE);
             }
+
+            // private netoworking
+            if (PrivateNetwork != null)
+            {
+                PrivateNetwork.StopServerAsync().Wait();
+            }
+            // =================
+
+            // Wait 2 seconds after close to view the output cause it closes to fast to see
+            Task.Delay(2000).Wait();
         }
 
         private static async Task WaitForAvailablePortAsync(int port, int timeoutInSeconds = 30)
@@ -275,5 +302,40 @@ namespace NitroxServer_Subnautica
 
         // See: https://docs.microsoft.com/en-us/windows/console/setconsolectrlhandler
         private delegate bool ConsoleEventDelegate(int eventType);
+
+        private static void PrivateNetwork_LogNetworkInfoEvent(object sender, string e)
+        {
+            Log.Info(e);
+        }
+
+        private static void PrivateNetwork_NetworkChangeEvent(object sender, ZeroTierAPI.NetworkChangedEventArgs e)
+        {
+            StatusChange[] NonImportantChanges = new StatusChange[] { StatusChange.Routes, StatusChange.MulticastSubscriptions, StatusChange.BroadcastEnabled, StatusChange.NetworkName, StatusChange.Bridge, StatusChange.AssignedAddresses };
+            if(Array.IndexOf(NonImportantChanges, e.Change) < 0)
+                Log.Warn("[ZeroTier] [" + FormatStatusChange(e.Property) + "] " + e.Value);
+        }
+        private static string FormatStatusChange(string PropertyName)
+        {
+            bool LastLetterWasLowerCase = false;
+            int CharacterIndexCounter = 0;
+            foreach(char Character in PropertyName)
+            {
+                string StrCharacter = Character.ToString();
+                if (StrCharacter.ToUpper() == StrCharacter && LastLetterWasLowerCase && !StrCharacter.Equals(" "))
+                {
+                    PropertyName = PropertyName.Insert(CharacterIndexCounter, " ");
+                    CharacterIndexCounter += 2;
+                    LastLetterWasLowerCase = false;
+                }
+                else
+                    CharacterIndexCounter++;
+                if (StrCharacter.ToUpper() != StrCharacter)
+                    LastLetterWasLowerCase = true;
+                else
+                    LastLetterWasLowerCase = false;
+            }
+            return PropertyName;
+        }
+        public static bool IsAdministrator => new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
     }
 }

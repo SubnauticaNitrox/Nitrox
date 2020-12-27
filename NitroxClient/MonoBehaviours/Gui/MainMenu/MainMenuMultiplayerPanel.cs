@@ -10,6 +10,8 @@ using NitroxModel.Logger;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+//using LibZeroTier;
+using Dns = System.Net.Dns;
 
 namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 {
@@ -23,10 +25,12 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         private GameObject multiplayerButton;
         private Transform savedGameAreaContent;
         public GameObject SavedGamesRef;
+        //public ZeroTierAPI PrivateNetwork;
         public string SERVER_LIST_PATH = Path.Combine(".", "servers");
         private string serverHostInput;
         private string serverNameInput;
         private string serverPortInput;
+        private string serverIdInput = "";
 
         private bool shouldFocus;
         private bool showingAddServer;
@@ -89,11 +93,11 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             delete.transform.SetParent(multiplayerButtonInst.transform, false);
         }
 
-        public void AddServer(string name, string ip, string port)
+        public void AddServer(string name, string ip, string port, string serverid = "")
         {
             using (StreamWriter sw = new StreamWriter(SERVER_LIST_PATH, true))
             {
-                sw.WriteLine($"{name}|{ip}|{port}");
+                sw.WriteLine($"{name}|{ip}|{port}|{serverid}");
             }
         }
 
@@ -147,32 +151,48 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             {
                 return;
             }
-
-            addServerWindowRect = GUILayout.Window(GUIUtility.GetControlID(FocusType.Keyboard), addServerWindowRect, DoAddServerWindow, "Add server");
+            addServerWindowRect = GUILayout.Window(GUIUtility.GetControlID(FocusType.Keyboard), addServerWindowRect, DoAddServerWindow, "Add Server");
         }
 
         private void LoadSavedServers()
         {
+            //PrivateNetwork = new ZeroTierAPI();
             using (StreamReader sr = new StreamReader(SERVER_LIST_PATH))
             {
                 string line;
                 while ((line = sr.ReadLine()) != null)
                 {
                     string[] lineData = line.Split('|');
-                    string serverName = lineData[0];
-                    string serverIp = lineData[1];
-                    string serverPort;
-                    if (lineData.Length == 3)
+                    if (lineData.Length < 4)
                     {
-                        serverPort = lineData[2];
+                        string serverName = lineData[0];
+                        string serverIp = lineData[1];
+                        string serverPort;
+                        if (lineData.Length == 3)
+                        {
+                            serverPort = lineData[2];
+                        }
+                        else
+                        {
+                            Match match = Regex.Match(serverIp, @"^(.*?)(?::(\d{3,5}))?$");
+                            serverIp = match.Groups[1].Value;
+                            serverPort = match.Groups[2].Success ? match.Groups[2].Value : "11000";
+                        }
+                        CreateServerButton($"Connect to <b>{serverName}</b>\n{serverIp}:{serverPort}", serverIp, serverPort);
                     }
                     else
                     {
-                        Match match = Regex.Match(serverIp, @"^(.*?)(?::(\d{3,5}))?$");
-                        serverIp = match.Groups[1].Value;
-                        serverPort = match.Groups[2].Success ? match.Groups[2].Value : "11000";
+                        string serverName = lineData[0];
+                        string serverDetails = lineData[3];
+                        string serverId = serverDetails.Substring(0, 15);
+                        string serverIp = "10.10.10." + serverDetails.Substring(16);
+                        string serverPort = lineData[2];
+                        if (lineData[2].Length < 3)
+                        {
+                            serverPort = "11000";
+                        }
+                        CreateServerButton($"Connect to <b>{serverName}</b>\n{serverId}:{serverIp}", serverIp, serverPort);
                     }
-                    CreateServerButton($"Connect to <b>{serverName}</b>\n{serverIp}:{serverPort}", serverIp, serverPort);
                 }
             }
         }
@@ -220,8 +240,16 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             serverNameInput = serverNameInput.Trim();
             serverHostInput = serverHostInput.Trim();
             serverPortInput = serverPortInput.Trim();
-            AddServer(serverNameInput, serverHostInput, serverPortInput);
-            CreateServerButton($"Connect to <b>{serverNameInput}</b>\n{serverHostInput}:{serverPortInput}", serverHostInput, serverPortInput);
+            serverIdInput = serverIdInput.Trim();
+            AddServer(serverNameInput, serverHostInput, serverPortInput, serverIdInput);
+            if (serverIdInput.Length > 0)
+            {
+                CreateServerButton($"Connect to <b>{serverNameInput}</b>\n{serverIdInput.Substring(0, 15)}:{serverIdInput.Substring(16)}", "10.10.10." + serverIdInput.Substring(16), "11000");
+            }
+            else
+            {
+                CreateServerButton($"Connect to <b>{serverNameInput}</b>\n{serverHostInput}:{serverPortInput}", serverHostInput, serverPortInput);
+            }
             HideAddServerWindow();
         }
 
@@ -273,6 +301,36 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 {
                     using (new GUILayout.VerticalScope("Box"))
                     {
+                        /*
+                        Texture2D BlueTexture = new Texture2D(1, 1);
+                        BlueTexture.SetPixel(0, 0, new Color(0.12f, 0.53f, 0.84f));
+                        BlueTexture.Apply();
+                        GUI.skin.box.normal.background = BlueTexture;
+                        */
+
+                        using (new GUILayout.HorizontalScope())
+                        {
+                            GUILayout.Label("Name:");
+                            GUI.SetNextControlName("serverNameField");
+                            // 120 so users can't go too crazy.
+                            serverNameInput = GUILayout.TextField(serverNameInput, 120);
+                        }
+
+                        using (new GUILayout.HorizontalScope())
+                        {
+                            GUILayout.Label("Server Id:");
+                            GUI.SetNextControlName("serverIdField");
+                            serverIdInput = GUILayout.TextField(serverIdInput, 19);
+                        }
+                        using (new GUILayout.HorizontalScope())
+                        {
+                            GUILayout.Label("Port:");
+                            GUI.SetNextControlName("serverPortField");
+                            serverPortInput = GUILayout.TextField(serverPortInput);
+                        }
+
+                        GUILayout.HorizontalSlider(0, 0, 0);
+
                         using (new GUILayout.HorizontalScope())
                         {
                             GUILayout.Label("Name:");
@@ -296,10 +354,14 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                             serverPortInput = GUILayout.TextField(serverPortInput);
                         }
 
+                        GUILayout.Space(20);
+
                         if (GUILayout.Button("Add server"))
                         {
                             OnAddServerButtonClicked();
                         }
+
+                        GUILayout.Space(5);
 
                         if (GUILayout.Button("Cancel"))
                         {

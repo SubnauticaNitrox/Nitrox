@@ -226,7 +226,7 @@ namespace NitroxLauncher
             gameProcess = StartSubnautica() ?? await WaitForProcessAsync();
         }
 
-        internal Process StartServer(bool standalone)
+        internal Process StartServer(bool standalone, string startArgs = "")
         {
             if (ServerRunning)
             {
@@ -237,6 +237,9 @@ namespace NitroxLauncher
             string serverPath = Path.Combine(launcherDir, "NitroxServer-Subnautica.exe");
             ProcessStartInfo startInfo = new ProcessStartInfo(serverPath);
             startInfo.WorkingDirectory = launcherDir;
+            // transfer perms to server
+            startInfo.Verb = "runas";
+            startInfo.Arguments = startArgs;
 
             if (!standalone)
             {

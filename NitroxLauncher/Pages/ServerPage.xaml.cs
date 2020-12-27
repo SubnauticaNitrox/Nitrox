@@ -23,11 +23,22 @@ namespace NitroxLauncher.Pages
             e.Handled = true;
         }
 
-        private void StartServer_Click(object sender, RoutedEventArgs e)
+        private void StartPublicServer_Click(object sender, RoutedEventArgs e)
         {
             try
             {
                 LauncherLogic.Instance.StartServer(RBIsExternal.IsChecked == true);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        private void StartPrivateServer_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                LauncherLogic.Instance.StartServer(RBIsExternal.IsChecked == true, "zerotier");
             }
             catch (Exception ex)
             {

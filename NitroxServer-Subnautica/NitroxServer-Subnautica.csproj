@@ -31,6 +31,10 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="LibZeroTier, Version=1.6.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\LibZeroTier\LibZeroTier.dll</HintPath>
+    </Reference>
     <Reference Include="protobuf-net">
       <HintPath>..\Nitrox.Subnautica.Assets\protobuf-net.dll</HintPath>
     </Reference>
@@ -115,6 +119,9 @@
     <PackageReference Include="Mono.Cecil">
       <Version>0.11.3</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
