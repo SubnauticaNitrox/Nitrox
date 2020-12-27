@@ -29,6 +29,7 @@ namespace NitroxModel.Logger
             {
                 throw new Exception($"{nameof(Log)} setup should only be executed once.");
             }
+            PlayerName = "";
             logger = new LoggerConfiguration()
                      .MinimumLevel.Debug()
                      .WriteTo.Logger(cnf =>
@@ -40,7 +41,7 @@ namespace NitroxModel.Logger
                          
                          string consoleTemplate = isConsoleApp switch
                          {
-                             false => $"[{{Timestamp:HH:mm:ss.fff}}] [{GetLoggerName()}{{{nameof(PlayerName)}}}][{{Level:u3}}] {{Message}}{{NewLine}}{{Exception}}",
+                             false => $"[{{Timestamp:HH:mm:ss.fff}}] {{{nameof(PlayerName)}:l}}[{{Level:u3}}] {{Message}}{{NewLine}}{{Exception}}",
                              _ => "[{Timestamp:HH:mm:ss.fff}] {Message}{NewLine}{Exception}"
                          };
 
@@ -55,8 +56,8 @@ namespace NitroxModel.Logger
                      })
                      .WriteTo.Logger(cnf => cnf
                                             .Enrich.FromLogContext()
-                                            .WriteTo.Async(a => a.File(Path.Combine(Environment.GetEnvironmentVariable("NITROX_LAUNCHER_PATH") ?? "", "Nitrox Logs/.log"),
-                                                                       outputTemplate: $"{{Timestamp:HH:mm:ss.fff}} [{GetLoggerName()}{{{nameof(PlayerName)}}}][{{Level:u3}}] {{Message}}{{NewLine}}{{Exception}}",
+                                            .WriteTo.Async(a => a.File(Path.Combine(Environment.GetEnvironmentVariable("NITROX_LAUNCHER_PATH") ?? "", $"Nitrox Logs/{GetLogFileName()}-.log"),
+                                                                       outputTemplate: $"[{{Timestamp:HH:mm:ss.fff}}] {{{nameof(PlayerName)}:l}}[{{Level:u3}}] {{Message}}{{NewLine}}{{Exception}}",
                                                                        rollingInterval: RollingInterval.Day,
                                                                        retainedFileCountLimit: 10,
                                                                        shared: true)))
@@ -181,11 +182,15 @@ namespace NitroxModel.Logger
         {
             if (string.IsNullOrEmpty(value))
             {
-                value = "";
+                LogContext.PushProperty(nameof(PlayerName), "");
+                return;
             }
 
-            Info($"Setting player name to {value}");
-            LogContext.PushProperty(nameof(PlayerName), '-' + value);
+            if (logger != null)
+            {
+                Info($"Setting player name to {value}");
+            }
+            LogContext.PushProperty(nameof(PlayerName), @$"[{value}]");
         }
 
         /// <summary>
@@ -196,6 +201,22 @@ namespace NitroxModel.Logger
         {
             string name = Assembly.GetEntryAssembly()?.GetName().Name ?? "Client"; // Unity Engine does not set Assembly name so lets default to 'Client'.
             return name.IndexOf("server", StringComparison.InvariantCultureIgnoreCase) >= 0 ? "Server" : name;
+        }
+
+        private static string GetLogFileName()
+        {
+            static bool Contains(string haystack, string needle) => haystack.IndexOf(needle, StringComparison.OrdinalIgnoreCase) >= 0;
+            
+            string loggerName = GetLoggerName();
+            if (Contains(loggerName, "server"))
+            {
+                return "server";
+            }
+            if (Contains(loggerName, "launch"))
+            {
+                return "launcher";
+            }
+            return "game";
         }
 
         private class SensitiveEnricher : ILogEventEnricher
