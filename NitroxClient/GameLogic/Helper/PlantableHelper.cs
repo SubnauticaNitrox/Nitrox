@@ -22,7 +22,7 @@ namespace NitroxClient.GameLogic.Helper
                 return;
             }
 
-            GrowingPlant grower = plant.getGrowingPlant();
+            GrowingPlant grower = plant.GetGrowingPlant();
             if (null == grower)
             {
                 Log.Error($"FixPlantGrowth: Could not find GrowingPlant for Plantable {plantableData.ItemId}!");
@@ -55,14 +55,14 @@ namespace NitroxClient.GameLogic.Helper
         /// <param name="gameObject"></param>
         /// <param name="currentDepth"></param>
         /// <param name="maxDepth"></param>
-        public static void dumpRecursive(this GameObject gameObject, int maxDepth = 10, int currentDepth=0)
+        public static void DumpRecursive(this GameObject gameObject, int maxDepth = 10, int currentDepth=0)
         {
             if (currentDepth == 0)
             {
                 // get all parents first
                 if (gameObject.transform.parent)
                 {
-                    gameObject.transform.parent.gameObject.dumpRecursive(maxDepth, -1);
+                    gameObject.transform.parent.gameObject.DumpRecursive(maxDepth, -1);
                 }
             }
             if (currentDepth < 0)
@@ -70,7 +70,7 @@ namespace NitroxClient.GameLogic.Helper
                 // tail recursion
                 if (gameObject.transform.parent)
                 {
-                    gameObject.transform.parent.gameObject.dumpRecursive(maxDepth, currentDepth - 1);
+                    gameObject.transform.parent.gameObject.DumpRecursive(maxDepth, currentDepth - 1);
                 }
                 NitroxEntity entity = gameObject.GetComponent<NitroxEntity>();
                 if (null != entity)
@@ -109,7 +109,7 @@ namespace NitroxClient.GameLogic.Helper
                         }
                         else
                         {
-                            GrowingPlant gpl = pt.getGrowingPlant();
+                            GrowingPlant gpl = pt.GetGrowingPlant();
                             if (gpl)
                             {
                                 components += $"(slot {pt.GetSlotID()} - {gpl.GetProgress()})";
@@ -132,7 +132,7 @@ namespace NitroxClient.GameLogic.Helper
                 // recurse geometry
                 foreach (Transform child in gameObject.transform)
                 {
-                    child.gameObject.dumpRecursive(maxDepth, currentDepth + 1);
+                    child.gameObject.DumpRecursive(maxDepth, currentDepth + 1);
                 }
             }
         }
@@ -160,18 +160,19 @@ namespace NitroxClient.GameLogic.Helper
         /// </summary>
         /// <param name="plantable">The Plantable item</param>
         /// <returns></returns>
-        public static GrowingPlant getGrowingPlant(this Plantable plantable)
+        public static GrowingPlant GetGrowingPlant(this Plantable plantable)
         {
             int slot = plantable.GetSlotID();
 
             Planter pp = plantable.currentPlanter;
-            // int smallSlotCount = pp.slots.Length;
-            int bigSlotCount = pp.bigSlots.Length;
-
-            if (null == plantable.currentPlanter)
+            if( null==pp)
             {
+                Log.Error($"GetGrowingPlant: plant not inside a Planter!");
                 return null;
             }
+
+            // int smallSlotCount = pp.slots.Length;
+            int bigSlotCount = pp.bigSlots.Length;
 
             // Debug code in case things go south with some new planter type
             /*

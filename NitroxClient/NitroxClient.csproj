@@ -64,6 +64,7 @@
     <Compile Include="Communication\Packets\Processors\WeldActionProcessor.cs" />
     <Compile Include="Debuggers\EntityDebugger.cs" />
     <Compile Include="GameLogic\Bases\GeometryRespawnManager.cs" />
+    <Compile Include="GameLogic\Bases\Spawning\BaseRoomWaterParkProcessor.cs" />
     <Compile Include="GameLogic\Bases\Spawning\MapRoomSpawnProcessor.cs" />
     <Compile Include="GameLogic\Bases\Spawning\BaseBioReactorSpawnProcessor.cs" />
     <Compile Include="GameLogic\Bases\Spawning\BasePieceSpawnProcessor.cs" />

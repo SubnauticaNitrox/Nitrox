@@ -66,9 +66,16 @@ namespace NitroxClient.GameLogic
                 }
                 else
                 {
-                    Optional<GameObject> parent = NitroxEntity.GetObjectFrom(entity.ParentId);
-                    Spawn(entity, parent);
-                    SpawnAnyPendingChildren(entity);
+                    try
+                    {
+                        Optional<GameObject> parent = NitroxEntity.GetObjectFrom(entity.ParentId);
+                        Spawn(entity, parent);
+                        SpawnAnyPendingChildren(entity);
+                    }
+                    catch(OptionalEmptyException<GameObject> e)
+                    {
+                        Log.Error($"Failed to spawn Entity {entity.Id}, a {entity.TechType}: {e.Message}");
+                    }
                 }
             }
         }
