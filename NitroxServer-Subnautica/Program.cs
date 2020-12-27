@@ -85,7 +85,7 @@ namespace NitroxServer_Subnautica
                 AppMutex.Release();
             }
 
-            Log.Info("To get help for commands, run help in console or /help in chatbox\n");
+            Log.Info("To get help for commands, run help in console or /help in chatbox");
             ConsoleCommandProcessor cmdProcessor = NitroxServiceLocator.LocateService<ConsoleCommandProcessor>();
             while (server.IsRunning)
             {
