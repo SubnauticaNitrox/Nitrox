@@ -214,10 +214,6 @@
       <Project>{be983e25-24cc-4fc8-9017-61eec43dd618}</Project>
       <Name>NitroxPatcher</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NitroxServer-Subnautica\NitroxServer-Subnautica.csproj">
-      <Project>{eff1d7a5-efd6-413a-8d5f-dc2408e4c9b7}</Project>
-      <Name>NitroxServer-Subnautica</Name>
-    </ProjectReference>
     <ProjectReference Include="..\NitroxServer\NitroxServer.csproj">
       <Project>{0fc864b0-694e-4fca-b78c-8ef98bc6f262}</Project>
       <Name>NitroxServer</Name>

@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using AssetsTools.NET;
 using NitroxServer.Serialization.Resources.Datastructures;
+using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxServer_Subnautica.Serialization.Resources.Parsers.Images
 {
@@ -40,7 +41,7 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Parsers.Images
 
                     bmp.UnlockBits(picData);
 
-                    resourceAssets.NitroxRandom = new NitroxModel.DataStructures.NitroxRandomStart(bmp);
+                    resourceAssets.NitroxRandom = new RandomStartGenerator(bmp);
                 }    
             }
         }

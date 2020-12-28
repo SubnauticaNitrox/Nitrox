@@ -91,7 +91,7 @@
     <Compile Include="DataStructures\GameLogic\NitroxTechType.cs" />
     <Compile Include="DataStructures\NitroxId.cs" />
     <Compile Include="DataStructures\NitroxInt3.cs" />
-    <Compile Include="DataStructures\NitroxRandomStart.cs" />
+    <Compile Include="DataStructures\GameLogic\RandomStartGenerator.cs" />
     <Compile Include="DataStructures\Surrogates\SerializationSurrogate.cs" />
     <Compile Include="DataStructures\ThreadSafeCollection.cs" />
     <Compile Include="DataStructures\ThreadSafeDictionary.cs" />

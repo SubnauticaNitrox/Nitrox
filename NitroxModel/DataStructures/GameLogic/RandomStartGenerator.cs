@@ -1,19 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Drawing;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Helper;
 
-namespace NitroxModel.DataStructures
+namespace NitroxModel.DataStructures.GameLogic
 {
-    public class NitroxRandomStart
+    public class RandomStartGenerator
     {
         private readonly Bitmap randomStartTexture;
 
-        public NitroxRandomStart(Bitmap randomStartTexture)
+        public RandomStartGenerator(Bitmap randomStartTexture)
         {
             this.randomStartTexture = randomStartTexture;
         }

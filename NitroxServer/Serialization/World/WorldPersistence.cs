@@ -163,6 +163,16 @@ namespace NitroxServer.Serialization.World
 
         private World CreateFreshWorld()
         {
+#if DEBUG
+            return CreateWorld(
+                DateTime.Now,
+                new List<Entity>(), new List<BasePiece>(), new List<BasePiece>(),
+                new List<VehicleModel>(), new List<Player>(), new List<ItemData>(),
+                new List<ItemData>(),
+                new GameData() { PDAState = new PDAStateData(), StoryGoals = new StoryGoalData() },
+                new List<NitroxInt3>(), new List<EscapePodModel>(), new StoryTimingData(), config.GameMode, "1"
+                );
+#else
             return CreateWorld(
                 DateTime.Now,
                 new List<Entity>(), new List<BasePiece>(), new List<BasePiece>(),
@@ -171,6 +181,7 @@ namespace NitroxServer.Serialization.World
                 new GameData() { PDAState = new PDAStateData(), StoryGoals = new StoryGoalData(), StoryTiming = new StoryTimingData() },
                 new List<NitroxInt3>(), new List<EscapePodModel>(), config.Seed, config.GameMode
                 );
+#endif
         }
 
         internal World CreateWorld(DateTime serverStartTime,

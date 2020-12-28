@@ -67,7 +67,7 @@ namespace NitroxServer.GameLogic
         private EscapePodModel CreateNewEscapePod()
         {
             int totalEscapePods = EscapePods.Count;
-            NitroxRandomStart randomStart = NitroxServiceLocator.LocateService<NitroxRandomStart>();
+            RandomStartGenerator randomStart = NitroxServiceLocator.LocateService<RandomStartGenerator>();
 
             EscapePodModel escapePod = new EscapePodModel();
             escapePod.InitEscapePodModel(new NitroxId(),
