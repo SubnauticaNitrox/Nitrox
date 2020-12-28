@@ -4,22 +4,24 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using NitroxModel.OS.MacOS;
+using NitroxModel.OS.Unix;
 using NitroxModel.OS.Windows;
 
 namespace NitroxModel.OS
 {
     public class FileSystem
     {
-        private static readonly Lazy<FileSystem> instance = new Lazy<FileSystem>(() =>
-                                                                                 {
-                                                                                     return Environment.OSVersion.Platform switch
-                                                                                     {
-                                                                                         PlatformID.Unix => new FileSystem(),
-                                                                                         PlatformID.MacOSX => new FileSystem(),
-                                                                                         _ => new WinFileSystem()
-                                                                                     };
-                                                                                 },
-                                                                                 LazyThreadSafetyMode.ExecutionAndPublication);
+        private static readonly Lazy<FileSystem> instance = new(() =>
+                                                                {
+                                                                    return Environment.OSVersion.Platform switch
+                                                                    {
+                                                                        PlatformID.Unix => new UnixFileSystem(),
+                                                                        PlatformID.MacOSX => new MacFileSystem(),
+                                                                        _ => new WinFileSystem()
+                                                                    };
+                                                                },
+                                                                LazyThreadSafetyMode.ExecutionAndPublication);
 
         public virtual IEnumerable<string> ExecutableFileExtensions => throw new NotSupportedException();
         public static FileSystem Instance => instance.Value;
@@ -42,6 +44,11 @@ namespace NitroxModel.OS
         /// <returns>Instance of a running process. Should be disposed.</returns>
         public virtual Process OpenOrExecuteFile(string file)
         {
+            if (string.IsNullOrWhiteSpace(file))
+            {
+                throw new ArgumentException("File path must not be null or empty.", nameof(file));
+            }
+
             string editorProgram = GetDefaultPrograms(file).FirstOrDefault() ?? TextEditor;
 
             // Handle special arguments for popular editors.
@@ -51,7 +58,7 @@ namespace NitroxModel.OS
                 _ => ""
             };
 
-            Process process = new Process();
+            Process process = new();
             process.StartInfo.UseShellExecute = false;
             // Suppress text output by redirecting it away from main console window.
             process.StartInfo.RedirectStandardOutput = true;
@@ -79,9 +86,11 @@ namespace NitroxModel.OS
             {
                 return null;
             }
-
-            fileName = Path.GetFileNameWithoutExtension(fileName);
-            foreach (string path in values.Split(Path.PathSeparator))
+            
+            fileName = Path.GetFileName(fileName);
+            // Always test filename in system lib root first, then other paths. On UNIX systems the path is case-sensitive.
+            IEnumerable<string> pathsToTools = new[] { Environment.SystemDirectory }.Concat(values.Split(Path.PathSeparator)).Distinct();
+            foreach (string path in pathsToTools)
             {
                 string fullPath = Path.Combine(path, fileName);
                 if (File.Exists(fullPath))

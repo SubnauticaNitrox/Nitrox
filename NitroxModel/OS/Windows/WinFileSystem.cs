@@ -17,7 +17,7 @@ namespace NitroxModel.OS.Windows
                 {
                     return path;
                 }
-                
+
                 foreach (string ext in ExecutableFileExtensions)
                 {
                     string newPath = Path.ChangeExtension(path, ext);
@@ -26,10 +26,10 @@ namespace NitroxModel.OS.Windows
                         return newPath;
                     }
                 }
-                
+
                 return path;
             }
-            
+
             string extension = Path.GetExtension(file);
             if (string.IsNullOrWhiteSpace(extension))
             {
@@ -45,7 +45,7 @@ namespace NitroxModel.OS.Windows
             string baseKey = $@"Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\{extension}";
             using (RegistryKey rk = Registry.CurrentUser.OpenSubKey($@"{baseKey}\OpenWithList"))
             {
-                string mruList = (string) rk?.GetValue("MRUList");
+                string mruList = (string)rk?.GetValue("MRUList");
                 if (mruList != null)
                 {
                     foreach (char c in mruList)
@@ -55,7 +55,7 @@ namespace NitroxModel.OS.Windows
                         {
                             continue;
                         }
-                        
+
                         yield return fullPath;
                     }
                 }

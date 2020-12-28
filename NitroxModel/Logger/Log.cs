@@ -16,12 +16,14 @@ namespace NitroxModel.Logger
     {
         private static ILogger logger;
 
-        public static string FileName { get; private set; }
-
         public static string PlayerName
         {
             set => SetPlayerName(value);
         }
+        
+        public static string LogDirectory { get; } = Path.GetFullPath(Path.Combine(Environment.GetEnvironmentVariable("NITROX_LAUNCHER_PATH") ?? "", "Nitrox Logs"));
+
+        public static string GetMostRecentLogFile() => new DirectoryInfo(LogDirectory).GetFiles().OrderByDescending(f => f.CreationTimeUtc).FirstOrDefault()?.FullName;
 
         public static void Setup(bool asyncConsoleWriter = false, InGameLogger inGameLogger = null, bool isConsoleApp = false, bool useConsoleLogging = true)
         {
@@ -38,7 +40,7 @@ namespace NitroxModel.Logger
                          {
                              return;
                          }
-                         
+
                          string consoleTemplate = isConsoleApp switch
                          {
                              false => $"[{{Timestamp:HH:mm:ss.fff}}] {{{nameof(PlayerName)}:l}}[{{Level:u3}}] {{Message}}{{NewLine}}{{Exception}}",
@@ -56,7 +58,7 @@ namespace NitroxModel.Logger
                      })
                      .WriteTo.Logger(cnf => cnf
                                             .Enrich.FromLogContext()
-                                            .WriteTo.Async(a => a.File(Path.Combine(Environment.GetEnvironmentVariable("NITROX_LAUNCHER_PATH") ?? "", $"Nitrox Logs/{GetLogFileName()}-.log"),
+                                            .WriteTo.Async(a => a.File(Path.Combine(LogDirectory, $"{GetLogFileName()}-.log"),
                                                                        outputTemplate: $"[{{Timestamp:HH:mm:ss.fff}}] {{{nameof(PlayerName)}:l}}[{{Level:u3}}] {{Message}}{{NewLine}}{{Exception}}",
                                                                        rollingInterval: RollingInterval.Day,
                                                                        retainedFileCountLimit: 10,
