@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
@@ -10,7 +11,6 @@ using NitroxModel.Logger;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
-using LibZeroTier;
 using Dns = System.Net.Dns;
 
 namespace NitroxClient.MonoBehaviours.Gui.MainMenu
@@ -25,8 +25,8 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         private GameObject multiplayerButton;
         private Transform savedGameAreaContent;
         public GameObject SavedGamesRef;
-        private ZeroTierAPI PrivateNetwork = null;
         public string SERVER_LIST_PATH = Path.Combine(".", "servers");
+        public string LAUNCHER_PATH = NitroxModel.Helper.NitroxAppData.Instance.LauncherPath;
         private string serverHostInput;
         private string serverNameInput;
         private string serverPortInput;
@@ -110,34 +110,17 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         public void OpenJoinServerMenu(string serverIp, string serverPort, string serverId = "")
         {
-            PrivateNetwork = new ZeroTierAPI();
-            if (!string.IsNullOrWhiteSpace(serverId))
+            Process JoinNet = new Process()
             {
-                if (PrivateNetwork.ZeroTierHandler == null)
+                StartInfo = new ProcessStartInfo()
                 {
-                    PrivateNetwork.ZeroTierHandler = new APIHandler();
-                    PrivateNetwork.ZeroTierHandler.AddEventHandler(PrivateNetwork.ZeroTierHandler_NetworkChangeEvent);
+                    Arguments = "zerotiermiddleman join " + serverId,
+                    FileName = Path.Combine(LAUNCHER_PATH, "NitroxLauncher.exe")
                 }
-                PrivateNetwork.LogNetworkInfoEvent += PrivateNetwork_LogNetworkInfoEvent;
-                PrivateNetwork.NetworkChangeEvent += PrivateNetwork_NetworkChangeEvent;
-                PrivateNetwork.ZeroTierHandler.UseStandardSerialize = false;
-                // error here, idfk why
-                List<ZeroTierNetwork> nets = PrivateNetwork.ZeroTierHandler.GetNetworks();
-                if (nets.Count == 1)
-                {
-                    if (nets[0].NetworkId == serverId && nets[0].NetworkStatus.Equals("OK"))
-                    {
-                        Debug.Log("Is Already Connected!");
-                        PrivateNetwork.JoinServerAsync(serverId).Wait();
-                    }
-                }
-                else
-                {
-                    Debug.Log("Is NOT Already Connected!");
-                    PrivateNetwork.LeaveAllServers();
-                    PrivateNetwork.JoinServerAsync(serverId).Wait();
-                }
-            }
+            };
+            JoinNet.Start();
+            JoinNet.WaitForExit();
+
             IPEndPoint endpoint = ResolveIPEndPoint(serverIp, serverPort);
             if (endpoint == null)
             {
@@ -156,16 +139,6 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             JoinServer joinServerComponent = joinServerGameObject.AddComponent<JoinServer>();
             joinServerComponent.ServerIp = endpoint.Address.ToString();
             joinServerComponent.ServerPort = endpoint.Port;
-        }
-
-        private void PrivateNetwork_NetworkChangeEvent(object sender, ZeroTierAPI.NetworkChangedEventArgs e)
-        {
-            Log.InGame("[ZeroTier] [" + e.Change.ToString() + "] " + e.Value);
-        }
-
-        private void PrivateNetwork_LogNetworkInfoEvent(object sender, string e)
-        {
-            Log.InGame(e);
         }
 
         public void ShowAddServerWindow()
