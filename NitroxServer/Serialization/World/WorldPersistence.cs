@@ -112,18 +112,7 @@ namespace NitroxServer.Serialization.World
                 }
 
 
-                World world = CreateWorld(persistedData.WorldData.ServerStartTime,
-                                          persistedData.EntityData.Entities,
-                                          persistedData.BaseData.PartiallyConstructedPieces,
-                                          persistedData.BaseData.CompletedBasePieceHistory,
-                                          persistedData.WorldData.VehicleData.Vehicles,
-                                          persistedData.PlayerData.GetPlayers(),
-                                          persistedData.WorldData.InventoryData.InventoryItems,
-                                          persistedData.WorldData.InventoryData.StorageSlotItems,
-                                          persistedData.WorldData.GameData,
-                                          persistedData.WorldData.ParsedBatchCells,
-                                          persistedData.WorldData.EscapePodData.EscapePods,
-                                          persistedData.WorldData.Seed,
+                World world = CreateWorld(persistedData,
                                           config.GameMode);
 
                 return Optional.Of(world);
@@ -163,41 +152,34 @@ namespace NitroxServer.Serialization.World
 
         private World CreateFreshWorld()
         {
+            PersistedWorldData pWorldData = new PersistedWorldData();
+            pWorldData.BaseData = BaseData.From(new List<BasePiece>(), new List<BasePiece>());
+            pWorldData.EntityData = EntityData.From(new List<Entity>());
+            pWorldData.PlayerData = PlayerData.From(new List<Player>());
+
+            pWorldData.WorldData = new WorldData()
+            {
+                EscapePodData = EscapePodData.From(new List<EscapePodModel>()),
+                GameData = new GameData { PDAState = new PDAStateData(), StoryGoals = new StoryGoalData() },
+                InventoryData = InventoryData.From(new List<ItemData>(), new List<ItemData>()),
+                VehicleData = VehicleData.From(new List<VehicleModel>()),
+                ParsedBatchCells = new List<NitroxInt3>(),
+                ServerStartTime = DateTime.Now,
 #if DEBUG
-            return CreateWorld(
-                DateTime.Now,
-                new List<Entity>(), new List<BasePiece>(), new List<BasePiece>(),
-                new List<VehicleModel>(), new List<Player>(), new List<ItemData>(),
-                new List<ItemData>(),
-                new GameData() { PDAState = new PDAStateData(), StoryGoals = new StoryGoalData() },
-                new List<NitroxInt3>(), new List<EscapePodModel>(), new StoryTimingData(), config.GameMode, "1"
-                );
-#else
-            return CreateWorld(
-                DateTime.Now,
-                new List<Entity>(), new List<BasePiece>(), new List<BasePiece>(),
-                new List<VehicleModel>(), new List<Player>(), new List<ItemData>(),
-                new List<ItemData>(),
-                new GameData() { PDAState = new PDAStateData(), StoryGoals = new StoryGoalData(), StoryTiming = new StoryTimingData() },
-                new List<NitroxInt3>(), new List<EscapePodModel>(), config.Seed, config.GameMode
-                );
+                , Seed = "1"
 #endif
+            };
+
+            return CreateWorld(
+                pWorldData,
+                config.GameMode
+                );
         }
 
-        internal World CreateWorld(DateTime serverStartTime,
-                                  List<Entity> entities,
-                                  List<BasePiece> partiallyConstructedPieces,
-                                  List<BasePiece> completedBasePieceHistory,
-                                  List<VehicleModel> vehicles,
-                                  List<Player> players,
-                                  List<ItemData> inventoryItems,
-                                  List<ItemData> storageSlotItems,
-                                  GameData gameData,
-                                  List<NitroxInt3> parsedBatchCells,
-                                  List<EscapePodModel> escapePods,
-                                  string seed,
+        private World CreateWorld(PersistedWorldData pWorldData,
                                   ServerGameMode gameMode)
         {
+            string seed = pWorldData.WorldData.Seed;
             if (string.IsNullOrWhiteSpace(seed))
             {
                 seed = StringHelper.GenerateRandomString(10);
@@ -207,13 +189,18 @@ namespace NitroxServer.Serialization.World
 
             World world = new World
             {
-                TimeKeeper = new TimeKeeper { ServerStartTime = serverStartTime },
+                TimeKeeper = new TimeKeeper { ServerStartTime = pWorldData.WorldData.ServerStartTime.Value },
+
                 SimulationOwnershipData = new SimulationOwnershipData(),
-                PlayerManager = new PlayerManager(players, config),
-                BaseManager = new BaseManager(partiallyConstructedPieces, completedBasePieceHistory),
-                InventoryManager = new InventoryManager(inventoryItems, storageSlotItems),
-                EscapePodManager = new EscapePodManager(escapePods, seed),
-                GameData = gameData,
+                PlayerManager = new PlayerManager(pWorldData.PlayerData.GetPlayers(), config),
+
+                BaseManager = new BaseManager(pWorldData.BaseData.PartiallyConstructedPieces, pWorldData.BaseData.CompletedBasePieceHistory),
+
+                InventoryManager = new InventoryManager(pWorldData.WorldData.InventoryData.InventoryItems, pWorldData.WorldData.InventoryData.StorageSlotItems),
+
+                EscapePodManager = new EscapePodManager(pWorldData.WorldData.EscapePodData.EscapePods, seed),
+
+                GameData = pWorldData.WorldData.GameData,
                 GameMode = gameMode,
                 Seed = seed
             };
@@ -225,14 +212,14 @@ namespace NitroxServer.Serialization.World
                 NitroxServiceLocator.LocateService<EntitySpawnPointFactory>(),
                 NitroxServiceLocator.LocateService<UweWorldEntityFactory>(),
                 NitroxServiceLocator.LocateService<UwePrefabFactory>(),
-                parsedBatchCells,
+                pWorldData.WorldData.ParsedBatchCells,
                 protoBufSerializer,
                 NitroxServiceLocator.LocateService<Dictionary<NitroxTechType, IEntityBootstrapper>>(),
                 NitroxServiceLocator.LocateService<Dictionary<string, PrefabPlaceholdersGroupAsset>>(),
                 world.Seed
             );
 
-            world.EntityManager = new EntityManager(entities, world.BatchEntitySpawner);
+            world.EntityManager = new EntityManager(pWorldData.EntityData.Entities, world.BatchEntitySpawner);
 
             HashSet<NitroxTechType> serverSpawnedSimulationWhiteList = NitroxServiceLocator.LocateService<HashSet<NitroxTechType>>();
             world.EntitySimulation = new EntitySimulation(world.EntityManager, world.SimulationOwnershipData, world.PlayerManager, serverSpawnedSimulationWhiteList);
