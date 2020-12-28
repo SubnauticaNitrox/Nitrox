@@ -13,9 +13,10 @@ namespace NitroxLauncher
 {
     public partial class App : Application
     {
+
         protected override void OnStartup(StartupEventArgs e)
         {
-            if(e.Args.Length > 1)
+            if (e.Args.Length > 1)
             {
                 if (e.Args[0].Equals("zerotiermiddleman"))
                 {
@@ -30,8 +31,7 @@ namespace NitroxLauncher
                             File.WriteAllText(e.Args[3], (nets.Count == 1 && (nets[0] ?? new ZeroTierNetwork() { NetworkStatus = "REQUESTING_CONFIGURATION" } ).NetworkStatus == "OK" && (nets[0] ?? new ZeroTierNetwork() { IsConnected = false }).IsConnected == true).ToString());
                             break;
                     }
-                    App.Current.Shutdown();
-                    return;
+                    Environment.Exit(0);
                 }
             }
 
@@ -92,14 +92,20 @@ namespace NitroxLauncher
         {
             ZeroTierAPI PrivateNetwork = new ZeroTierAPI();
             PrivateNetwork.RestartZeroTier();
+            PrivateNetwork = new ZeroTierAPI();
+            PrivateNetwork.ZeroTierHandler = new APIHandler();
             List<ZeroTierNetwork> nets = PrivateNetwork.ZeroTierHandler.GetNetworks();
-            foreach(ZeroTierNetwork net in nets)
+            foreach (ZeroTierNetwork net in nets)
             {
                 if(net.NetworkId != serverId)
                     PrivateNetwork.ZeroTierHandler.LeaveNetwork(net.NetworkId);
             }
-            nets = PrivateNetwork.ZeroTierHandler.GetNetworks();
-            if (nets.Count != 1)
+            List<ZeroTierNetwork> Newnets = PrivateNetwork.ZeroTierHandler.GetNetworks();
+            bool update = true;
+            if (Newnets.Count == 1)
+                if (Newnets[0].NetworkId == serverId && Newnets[0].IsConnected == true && Newnets[0].NetworkStatus == "OK")
+                    update = false;
+            if(update)
                 PrivateNetwork.JoinServerAsync(serverId).Wait();
         }
     }

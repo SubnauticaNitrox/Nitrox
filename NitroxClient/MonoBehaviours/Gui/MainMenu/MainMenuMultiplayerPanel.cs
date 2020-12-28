@@ -5,6 +5,7 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
 using NitroxModel.Logger;
@@ -115,11 +116,15 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 StartInfo = new ProcessStartInfo()
                 {
                     Arguments = "zerotiermiddleman join " + serverId,
+                    WorkingDirectory = LAUNCHER_PATH,
                     FileName = Path.Combine(LAUNCHER_PATH, "NitroxLauncher.exe")
                 }
             };
             JoinNet.Start();
             JoinNet.WaitForExit();
+
+            // delay buffer to prevent joining errors
+            Task.Delay(1000).Wait();
 
             IPEndPoint endpoint = ResolveIPEndPoint(serverIp, serverPort);
             if (endpoint == null)
@@ -180,7 +185,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                             hasInitialize = true;
                             string serverName = lineData[0];
                             string serverDetails = lineData[3];
-                            string serverId = serverDetails.Substring(0, 15);
+                            string serverId = serverDetails.Substring(0, 16);
                             string serverIp = "10.10.10." + serverDetails.Substring(16);
                             string serverPort = lineData[2];
                             if (lineData[2].Length < 3)
@@ -257,7 +262,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             AddServer(serverNameInput, serverHostInput, serverPortInput, serverIdInput);
             if (serverIdInput.Length > 0)
             {
-                string serverId = serverIdInput.Substring(0, 15);
+                string serverId = serverIdInput.Substring(0, 16);
                 string serverIp = "10.10.10." + serverIdInput.Substring(16);
                 CreateServerButton($"Connect to <b>{serverNameInput}</b>\n{serverId}:{serverIp}", serverIp, "11000", serverId);
             }

@@ -51,7 +51,7 @@ namespace NitroxServer_Subnautica
             {
                 if (args[0].Equals("zerotier"))
                 {
-                    PrivateNetwork = new ZeroTierAPI(IsAdministrator);
+                    PrivateNetwork = new ZeroTierAPI();
                     PrivateNetwork.NetworkChangeEvent += PrivateNetwork_NetworkChangeEvent;
                     PrivateNetwork.LogNetworkInfoEvent += PrivateNetwork_LogNetworkInfoEvent;
                     bool HasRun = false;
@@ -360,6 +360,5 @@ namespace NitroxServer_Subnautica
             }
             return PropertyName;
         }
-        public static bool IsAdministrator => new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
     }
 }
