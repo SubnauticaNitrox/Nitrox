@@ -282,6 +282,17 @@
       <Version>1.1.1</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="lib\netstandard.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="lib\System.Net.Http.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="lib\System.Net.Http.WebRequest.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <!-- Move assets from Subnautica assets to launcher.
        TODO: Try fix this as a project reference to Nitrox.Subnautica.Assets that will copy the files on build automatically. -->
   <Target Name="MoveNitroxAssetsToLauncherOutput" AfterTargets="Build" Condition="'$(OS)' == 'Windows_NT'">

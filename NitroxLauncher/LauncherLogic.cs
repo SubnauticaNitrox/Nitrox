@@ -214,6 +214,10 @@ namespace NitroxLauncher
             try
             {
                 File.Copy(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "lib", bootloaderName), Path.Combine(subnauticaPath, "Subnautica_Data", "Managed", bootloaderName), true);
+                File.Copy(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "lib", "netstandard.dll"), Path.Combine(subnauticaPath, "Subnautica_Data", "Managed", "netstandard.dll"), true);
+                File.Copy(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "lib", "Newtonsoft_v2.Json.dll"), Path.Combine(subnauticaPath, "Subnautica_Data", "Managed", "Newtonsoft_v2.Json.dll"), true);
+                File.Copy(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "lib", "System.Net.Http.dll"), Path.Combine(subnauticaPath, "Subnautica_Data", "Managed", "System.Net.Http.dll"), true);
+                File.Copy(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "lib", "System.Net.Http.WebRequest.dll"), Path.Combine(subnauticaPath, "Subnautica_Data", "Managed", "System.Net.Http.WebRequest.dll"), true);
             }
             catch (IOException ex)
             {

@@ -27,6 +27,7 @@ namespace NitroxServer_Subnautica
     {
         private static readonly Dictionary<string, Assembly> resolvedAssemblyCache = new Dictionary<string, Assembly>();
         private static Lazy<string> gameInstallDir;
+        private static string privateServerIdPath = Path.Combine(Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location) ?? ""), "PrivateServer.txt");
 
         // Prevents Garbage Collection freeing this callback's memory. Causing an exception to occur for this handle.
         private static readonly ConsoleEventDelegate consoleCtrlCheckDelegate = ConsoleEventCallback;
@@ -53,7 +54,29 @@ namespace NitroxServer_Subnautica
                     PrivateNetwork = new ZeroTierAPI(IsAdministrator);
                     PrivateNetwork.NetworkChangeEvent += PrivateNetwork_NetworkChangeEvent;
                     PrivateNetwork.LogNetworkInfoEvent += PrivateNetwork_LogNetworkInfoEvent;
-                    PrivateNetwork.StartServerAsync().Wait();
+                    bool HasRun = false;
+                    if (File.Exists(privateServerIdPath))
+                    {
+                        string contents = File.ReadAllText(privateServerIdPath);
+                        if (await PrivateNetwork.IsValidNetwork(contents))
+                        {
+                            PrivateNetwork.StartServerAsync(contents).Wait();
+                            HasRun = true;
+                        }
+                        else
+                        {
+                            Log.Info("[ZeroTier] [Web-API] Invalid Network Id, Creating New A Network Id!");
+                        }
+                    }
+                    if (!HasRun)
+                    {
+                        PrivateNetwork.StartServerAsync().Wait();
+                    }
+                    // update private server id
+                    if (PrivateNetwork != null)
+                    {
+                        File.WriteAllText(privateServerIdPath, PrivateNetwork.NetworkId);
+                    }
                 }
             }
             // =================
@@ -112,7 +135,8 @@ namespace NitroxServer_Subnautica
             // private netoworking
             if (PrivateNetwork != null)
             {
-                PrivateNetwork.StopServerAsync().Wait();
+                // update description for deleting after 136 hours of no use (4 days)
+                PrivateNetwork.UpdateNetworkDescription(PrivateNetwork.NetworkId, "Last Accessed: " + DateTimeOffset.UtcNow.ToUnixTimeSeconds()).Wait();
             }
             // =================
 

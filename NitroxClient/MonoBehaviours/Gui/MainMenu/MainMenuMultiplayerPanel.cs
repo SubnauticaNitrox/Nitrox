@@ -10,7 +10,7 @@ using NitroxModel.Logger;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
-//using LibZeroTier;
+using LibZeroTier;
 using Dns = System.Net.Dns;
 
 namespace NitroxClient.MonoBehaviours.Gui.MainMenu
@@ -25,7 +25,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         private GameObject multiplayerButton;
         private Transform savedGameAreaContent;
         public GameObject SavedGamesRef;
-        //public ZeroTierAPI PrivateNetwork;
+        private ZeroTierAPI PrivateNetwork = null;
         public string SERVER_LIST_PATH = Path.Combine(".", "servers");
         private string serverHostInput;
         private string serverNameInput;
@@ -66,7 +66,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             multiplayerButtonInst.transform.SetParent(savedGameAreaContent, false);
         }
 
-        public void CreateServerButton(string text, string joinIp, string joinPort)
+        public void CreateServerButton(string text, string joinIp, string joinPort, string serverId = "")
         {
             GameObject multiplayerButtonInst = Instantiate(multiplayerButton, savedGameAreaContent, false);
             multiplayerButtonInst.name = (savedGameAreaContent.childCount - 1).ToString();
@@ -79,7 +79,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             multiplayerButtonButton.onClick.AddListener(() =>
             {
                 txt.GetComponent<Text>().color = prevTextColor; // Visual fix for black text after click (hover state still active)
-                OpenJoinServerMenu(joinIp, joinPort);
+                OpenJoinServerMenu(joinIp, joinPort, serverId);
             });
 
             GameObject delete = Instantiate(SavedGamesRef.GetComponent<MainMenuLoadPanel>().saveInstance.GetComponent<MainMenuLoadButton>().deleteButton);
@@ -108,8 +108,36 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             File.WriteAllLines(SERVER_LIST_PATH, serverLines.ToArray());
         }
 
-        public void OpenJoinServerMenu(string serverIp, string serverPort)
+        public void OpenJoinServerMenu(string serverIp, string serverPort, string serverId = "")
         {
+            PrivateNetwork = new ZeroTierAPI();
+            if (!string.IsNullOrWhiteSpace(serverId))
+            {
+                if (PrivateNetwork.ZeroTierHandler == null)
+                {
+                    PrivateNetwork.ZeroTierHandler = new APIHandler();
+                    PrivateNetwork.ZeroTierHandler.AddEventHandler(PrivateNetwork.ZeroTierHandler_NetworkChangeEvent);
+                }
+                PrivateNetwork.LogNetworkInfoEvent += PrivateNetwork_LogNetworkInfoEvent;
+                PrivateNetwork.NetworkChangeEvent += PrivateNetwork_NetworkChangeEvent;
+                PrivateNetwork.ZeroTierHandler.UseStandardSerialize = false;
+                // error here, idfk why
+                List<ZeroTierNetwork> nets = PrivateNetwork.ZeroTierHandler.GetNetworks();
+                if (nets.Count == 1)
+                {
+                    if (nets[0].NetworkId == serverId && nets[0].NetworkStatus.Equals("OK"))
+                    {
+                        Debug.Log("Is Already Connected!");
+                        PrivateNetwork.JoinServerAsync(serverId).Wait();
+                    }
+                }
+                else
+                {
+                    Debug.Log("Is NOT Already Connected!");
+                    PrivateNetwork.LeaveAllServers();
+                    PrivateNetwork.JoinServerAsync(serverId).Wait();
+                }
+            }
             IPEndPoint endpoint = ResolveIPEndPoint(serverIp, serverPort);
             if (endpoint == null)
             {
@@ -128,6 +156,16 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             JoinServer joinServerComponent = joinServerGameObject.AddComponent<JoinServer>();
             joinServerComponent.ServerIp = endpoint.Address.ToString();
             joinServerComponent.ServerPort = endpoint.Port;
+        }
+
+        private void PrivateNetwork_NetworkChangeEvent(object sender, ZeroTierAPI.NetworkChangedEventArgs e)
+        {
+            Log.InGame("[ZeroTier] [" + e.Change.ToString() + "] " + e.Value);
+        }
+
+        private void PrivateNetwork_LogNetworkInfoEvent(object sender, string e)
+        {
+            Log.InGame(e);
         }
 
         public void ShowAddServerWindow()
@@ -156,14 +194,29 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         private void LoadSavedServers()
         {
-            //PrivateNetwork = new ZeroTierAPI();
             using (StreamReader sr = new StreamReader(SERVER_LIST_PATH))
             {
                 string line;
                 while ((line = sr.ReadLine()) != null)
                 {
                     string[] lineData = line.Split('|');
-                    if (lineData.Length < 4)
+                    bool hasInitialize = false;
+                    if(lineData.Length >= 4)
+                        if (lineData[3].Length >= 16)
+                        {
+                            hasInitialize = true;
+                            string serverName = lineData[0];
+                            string serverDetails = lineData[3];
+                            string serverId = serverDetails.Substring(0, 15);
+                            string serverIp = "10.10.10." + serverDetails.Substring(16);
+                            string serverPort = lineData[2];
+                            if (lineData[2].Length < 3)
+                            {
+                                serverPort = "11000";
+                            }
+                            CreateServerButton($"Connect to <b>{serverName}</b>\n{serverId}:{serverIp}", serverIp, serverPort, serverId);
+                        }
+                    if (!hasInitialize)
                     {
                         string serverName = lineData[0];
                         string serverIp = lineData[1];
@@ -179,19 +232,6 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                             serverPort = match.Groups[2].Success ? match.Groups[2].Value : "11000";
                         }
                         CreateServerButton($"Connect to <b>{serverName}</b>\n{serverIp}:{serverPort}", serverIp, serverPort);
-                    }
-                    else
-                    {
-                        string serverName = lineData[0];
-                        string serverDetails = lineData[3];
-                        string serverId = serverDetails.Substring(0, 15);
-                        string serverIp = "10.10.10." + serverDetails.Substring(16);
-                        string serverPort = lineData[2];
-                        if (lineData[2].Length < 3)
-                        {
-                            serverPort = "11000";
-                        }
-                        CreateServerButton($"Connect to <b>{serverName}</b>\n{serverId}:{serverIp}", serverIp, serverPort);
                     }
                 }
             }
@@ -244,7 +284,9 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             AddServer(serverNameInput, serverHostInput, serverPortInput, serverIdInput);
             if (serverIdInput.Length > 0)
             {
-                CreateServerButton($"Connect to <b>{serverNameInput}</b>\n{serverIdInput.Substring(0, 15)}:{serverIdInput.Substring(16)}", "10.10.10." + serverIdInput.Substring(16), "11000");
+                string serverId = serverIdInput.Substring(0, 15);
+                string serverIp = "10.10.10." + serverIdInput.Substring(16);
+                CreateServerButton($"Connect to <b>{serverNameInput}</b>\n{serverId}:{serverIp}", serverIp, "11000", serverId);
             }
             else
             {
