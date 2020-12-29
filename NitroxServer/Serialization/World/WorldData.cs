@@ -33,9 +33,6 @@ namespace NitroxServer.Serialization.World
         [JsonProperty, ProtoMember(6)]
         public EscapePodData EscapePodData { get; set; }
 
-        [JsonProperty, ProtoMember(7)]
-        public StoryTimingData StoryTimingData { get; set; }
-
         public bool IsValid()
         {
             return (ParsedBatchCells != null) && // Always returns false on empty saves
@@ -43,8 +40,7 @@ namespace NitroxServer.Serialization.World
                    (VehicleData != null) &&
                    (InventoryData != null) &&
                    (GameData != null) &&
-                   (EscapePodData != null) &&
-                   (StoryTimingData != null);
+                   (EscapePodData != null);
         }
     }
 }

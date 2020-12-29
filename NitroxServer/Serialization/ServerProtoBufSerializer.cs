@@ -21,6 +21,8 @@ namespace NitroxServer.Serialization
             }
         }
 
+        public string GetFileEnding() => ".nitrox";
+
         public void Serialize(Stream stream, object o)
         {
             Model.SerializeWithLengthPrefix(stream, o, o.GetType(), PrefixStyle.Base128, 0);

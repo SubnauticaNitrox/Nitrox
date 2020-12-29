@@ -26,9 +26,9 @@ namespace NitroxServer.Serialization.World
         /// <summary>
         ///  For nitrox save files
         /// </summary>
-        private readonly IServerSerializer saveDataSerializer;
+        private IServerSerializer saveDataSerializer;
+        private string fileEnding;
         private readonly ServerProtoBufSerializer protoBufSerializer;
-        private readonly string fileEnding;
         private readonly ServerConfig config;
 
         public WorldPersistence(ServerProtoBufSerializer protoBufSerializer, ServerJsonSerializer jsonSerializer, ServerConfig config)
@@ -37,29 +37,14 @@ namespace NitroxServer.Serialization.World
             this.config = config;
 
             saveDataSerializer = config.SerializerMode == ServerSerializerMode.PROTOBUF ? (IServerSerializer)protoBufSerializer : jsonSerializer;
-            fileEnding = config.SerializerMode == ServerSerializerMode.PROTOBUF ? ".nitrox" : ".json";
+            fileEnding = saveDataSerializer.GetFileEnding();
         }
 
-        public void Save(World world, string saveDir)
+        public bool Save(World world, string saveDir)
         {
             try
             {
-                PersistedWorldData persistedData = new PersistedWorldData
-                {
-                    BaseData = BaseData.From(world.BaseManager.GetPartiallyConstructedPieces(), world.BaseManager.GetCompletedBasePieceHistory()),
-                    PlayerData = PlayerData.From(world.PlayerManager.GetAllPlayers()),
-                    EntityData = EntityData.From(world.EntityManager.GetAllEntities()),
-                    WorldData =
-                    {
-                        ParsedBatchCells = world.BatchEntitySpawner.SerializableParsedBatches,
-                        ServerStartTime = world.TimeKeeper.ServerStartTime,
-                        VehicleData = VehicleData.From(world.VehicleManager.GetVehicles()),
-                        InventoryData = InventoryData.From(world.InventoryManager.GetAllInventoryItems(), world.InventoryManager.GetAllStorageSlotItems()),
-                        GameData = world.GameData,
-                        StoryTimingData = StoryTimingData.From(world.EventTriggerer),
-                        EscapePodData = EscapePodData.From(world.EscapePodManager.GetEscapePods())
-                    }
-                };
+                PersistedWorldData persistedData = PersistedWorldData.From(world);
 
                 if (!Directory.Exists(saveDir))
                 {
@@ -73,14 +58,16 @@ namespace NitroxServer.Serialization.World
                 saveDataSerializer.Serialize(Path.Combine(saveDir, "EntityData" + fileEnding), persistedData.EntityData);
 
                 Log.Info("World state saved.");
+                return true;
             }
             catch (Exception ex)
             {
-                Log.Info("Could not save world: " + ex);
+                Log.Error("Could not save world: " + ex);
+                return false;
             }
         }
 
-        private Optional<World> LoadFromFile(string saveDir)
+        internal Optional<World> LoadFromFile(string saveDir)
         {
             if (!Directory.Exists(saveDir) || !File.Exists(Path.Combine(saveDir, "Version" + fileEnding)))
             {
@@ -135,7 +122,6 @@ namespace NitroxServer.Serialization.World
                                           persistedData.WorldData.GameData,
                                           persistedData.WorldData.ParsedBatchCells,
                                           persistedData.WorldData.EscapePodData.EscapePods,
-                                          persistedData.WorldData.StoryTimingData,
                                           config.GameMode);
 
                 return Optional.Of(world);
@@ -180,12 +166,12 @@ namespace NitroxServer.Serialization.World
                 new List<Entity>(), new List<BasePiece>(), new List<BasePiece>(),
                 new List<VehicleModel>(), new List<Player>(), new List<ItemData>(),
                 new List<ItemData>(),
-                new GameData() { PDAState = new PDAStateData(), StoryGoals = new StoryGoalData() },
-                new List<NitroxInt3>(), new List<EscapePodModel>(), new StoryTimingData(), config.GameMode
+                new GameData() { PDAState = new PDAStateData(), StoryGoals = new StoryGoalData(), StoryTiming = new StoryTimingData() },
+                new List<NitroxInt3>(), new List<EscapePodModel>(), config.GameMode
                 );
         }
 
-        private World CreateWorld(DateTime serverStartTime,
+        internal World CreateWorld(DateTime serverStartTime,
                                   List<Entity> entities,
                                   List<BasePiece> partiallyConstructedPieces,
                                   List<BasePiece> completedBasePieceHistory,
@@ -196,7 +182,6 @@ namespace NitroxServer.Serialization.World
                                   GameData gameData,
                                   List<NitroxInt3> parsedBatchCells,
                                   List<EscapePodModel> escapePods,
-                                  StoryTimingData storyTimingData,
                                   ServerGameMode gameMode)
         {
             World world = new World
@@ -211,7 +196,7 @@ namespace NitroxServer.Serialization.World
                 GameMode = gameMode
             };
 
-            world.EventTriggerer = new EventTriggerer(world.PlayerManager, storyTimingData.ElapsedTime, storyTimingData.AuroraExplosionTime);
+            world.EventTriggerer = new EventTriggerer(world.PlayerManager, gameData.StoryTiming.ElapsedTime, gameData.StoryTiming.AuroraExplosionTime);
             world.VehicleManager = new VehicleManager(vehicles, world.InventoryManager);
 
             world.BatchEntitySpawner = new BatchEntitySpawner(
@@ -230,6 +215,12 @@ namespace NitroxServer.Serialization.World
             world.EntitySimulation = new EntitySimulation(world.EntityManager, world.SimulationOwnershipData, world.PlayerManager, serverSpawnedSimulationWhiteList);
 
             return world;
+        }
+
+        internal void UpdateSerializer(IServerSerializer serializer)
+        {
+            saveDataSerializer = serializer;
+            fileEnding = serializer.GetFileEnding();
         }
     }
 }

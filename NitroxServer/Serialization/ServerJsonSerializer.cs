@@ -24,6 +24,8 @@ namespace NitroxServer.Serialization
             serializer.Converters.Add(new TechTypeConverter());
         }
 
+        public string GetFileEnding() => ".json";
+
         public void Serialize(Stream stream, object o)
         {
             stream.Position = 0;

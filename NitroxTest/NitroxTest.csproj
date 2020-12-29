@@ -67,6 +67,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Serialization\InteractiveChildObjectIdentifiersSerializationTest.cs" />
     <Compile Include="Serialization\PdaStateDataSerializationTest.cs" />
+    <Compile Include="Serialization\WorldPersistenceTest.cs" />
     <Compile Include="SetupAssemblyInitializer.cs" />
     <Compile Include="TestAutoFacRegistrar.cs" />
     <Compile Include="Threading\ThreadSafeCollectionTest.cs" />
