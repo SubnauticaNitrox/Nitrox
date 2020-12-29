@@ -334,9 +334,11 @@ namespace NitroxServer_Subnautica
 
         private static void PrivateNetwork_NetworkChangeEvent(object sender, ZeroTierAPI.NetworkChangedEventArgs e)
         {
-            StatusChange[] NonImportantChanges = new StatusChange[] { StatusChange.Routes, StatusChange.MulticastSubscriptions, StatusChange.BroadcastEnabled, StatusChange.NetworkName, StatusChange.Bridge, StatusChange.AssignedAddresses };
-            if(Array.IndexOf(NonImportantChanges, e.Change) < 0)
+            StatusChange[] NonImportantChanges = new StatusChange[] { StatusChange.Routes, StatusChange.MulticastSubscriptions, StatusChange.BroadcastEnabled, StatusChange.NetworkName, StatusChange.Bridge, StatusChange.AssignedAddresses, StatusChange.NetconfRevision };
+            if (Array.IndexOf(NonImportantChanges, e.Change) < 0)
+            {
                 Log.Warn("[ZeroTier] [" + FormatStatusChange(e.Property) + "] " + e.Value);
+            }
         }
         private static string FormatStatusChange(string PropertyName)
         {

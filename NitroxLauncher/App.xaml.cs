@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
-using Newtonsoft.Json;
-using LibZeroTier;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
 using NitroxModel.Logger;
-using System.Collections.Generic;
 
 namespace NitroxLauncher
 {
@@ -16,24 +12,6 @@ namespace NitroxLauncher
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            if (e.Args.Length > 1)
-            {
-                if (e.Args[0].Equals("zerotiermiddleman"))
-                {
-                    ZeroTierAPI PrivateNetwork = new ZeroTierAPI();
-                    switch (e.Args[1])
-                    {
-                        case "join":
-                            JoinNet(e.Args[2]);
-                            break;
-                        case "get":
-                            List<ZeroTierNetwork> nets = PrivateNetwork.ZeroTierHandler.GetNetworks();
-                            File.WriteAllText(e.Args[3], (nets.Count == 1 && (nets[0] ?? new ZeroTierNetwork() { NetworkStatus = "REQUESTING_CONFIGURATION" } ).NetworkStatus == "OK" && (nets[0] ?? new ZeroTierNetwork() { IsConnected = false }).IsConnected == true).ToString());
-                            break;
-                    }
-                    Environment.Exit(0);
-                }
-            }
 
             Log.Setup();
             
@@ -87,26 +65,6 @@ namespace NitroxLauncher
 #else
             return e.GetBaseException().ToString();
 #endif
-        }
-        private void JoinNet(string serverId)
-        {
-            ZeroTierAPI PrivateNetwork = new ZeroTierAPI();
-            PrivateNetwork.RestartZeroTier();
-            PrivateNetwork = new ZeroTierAPI();
-            PrivateNetwork.ZeroTierHandler = new APIHandler();
-            List<ZeroTierNetwork> nets = PrivateNetwork.ZeroTierHandler.GetNetworks();
-            foreach (ZeroTierNetwork net in nets)
-            {
-                if(net.NetworkId != serverId)
-                    PrivateNetwork.ZeroTierHandler.LeaveNetwork(net.NetworkId);
-            }
-            List<ZeroTierNetwork> Newnets = PrivateNetwork.ZeroTierHandler.GetNetworks();
-            bool update = true;
-            if (Newnets.Count == 1)
-                if (Newnets[0].NetworkId == serverId && Newnets[0].IsConnected == true && Newnets[0].NetworkStatus == "OK")
-                    update = false;
-            if(update)
-                PrivateNetwork.JoinServerAsync(serverId).Wait();
         }
     }
 }

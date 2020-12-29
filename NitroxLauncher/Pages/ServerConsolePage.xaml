@@ -180,38 +180,113 @@
         </ControlTemplate>
 
     </nitroxLauncher:PageBase.Resources>
-    <Grid>
-        <Grid Margin="8,0,8,2">
-            <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition Height="Auto" MinHeight="42" />
-            </Grid.RowDefinitions>
+    <Grid Margin="0,50,0,0">
+        <Grid x:Name="ConsolePage" Visibility="Hidden">
+            <Grid Margin="8,0,8,2">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition Height="Auto" MinHeight="42" />
+                </Grid.RowDefinitions>
 
-            <Border Grid.Row="0" Width="Auto" HorizontalAlignment="Stretch" BorderBrush="Transparent" Background="Transparent" BorderThickness="0" CornerRadius="8" Padding="0,0,0,8">
-                <ScrollViewer x:Name="ConsoleWindowScrollView" Margin="0,0,0,-8">
-                    <TextBox TabIndex="0" FontFamily="{StaticResource RobotoMono}" FontSize="12" Foreground="White" x:Name="ConsoleWindow" Text="{Binding ServerOutput, Mode=OneWay}" IsReadOnly="True"
+                <Border Grid.Row="0" Width="Auto" HorizontalAlignment="Stretch" BorderBrush="Transparent" Background="Transparent" BorderThickness="0" CornerRadius="8" Padding="0,0,0,8">
+                    <ScrollViewer x:Name="ConsoleWindowScrollView" Margin="0,0,0,-8">
+                        <TextBox TabIndex="0" FontFamily="{StaticResource RobotoMono}" FontSize="12" Foreground="White" x:Name="ConsoleWindow" Text="{Binding ServerOutput, Mode=OneWay}" IsReadOnly="True"
                              TextWrapping="Wrap" Background="Transparent" BorderBrush="#00000000" BorderThickness="0" SelectionBrush="#000078D7" Width="722" />
-                </ScrollViewer>
-            </Border>
-            <Border Background="#333437" Grid.Row="1" CornerRadius="8">
-                <DockPanel>
+                    </ScrollViewer>
+                </Border>
+                <Border Background="#333437" Grid.Row="1" CornerRadius="8">
+                    <DockPanel>
 
-                    <Button TabIndex="3" DockPanel.Dock="Right" Width="34" Height="34" Style="{DynamicResource ButtonConsoleStop}" Foreground="White" x:Name="StopButton"
+                        <Button TabIndex="3" DockPanel.Dock="Right" Width="34" Height="34" Style="{DynamicResource ButtonConsoleStop}" Foreground="White" x:Name="StopButton"
                         ToolTip="Stop (exit) server" Click="StopButton_Click" Background="#FFEB5757" Margin="0,6,8,6">
-                        <Image  Stretch="Uniform"  Source="{StaticResource StopWhiteIcon}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="24" Height="24" />
-                    </Button>
-                    <Button TabIndex="2" DockPanel.Dock="Right" Width="34" Height="Auto" Style="{DynamicResource ButtonConsoleMsg}" Foreground="White" x:Name="CommandButton"
+                            <Image  Stretch="Uniform"  Source="{StaticResource StopWhiteIcon}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="24" Height="24" />
+                        </Button>
+                        <Button TabIndex="2" DockPanel.Dock="Right" Width="34" Height="Auto" Style="{DynamicResource ButtonConsoleMsg}" Foreground="White" x:Name="CommandButton"
                         ToolTip="Send command" Click="CommandButton_OnClick" RenderTransformOrigin="0.852,0.559" Margin="0,6,6,6">
-                        <Image  Stretch="Uniform"  Source="{StaticResource SendWhiteIcon}" Width="24" Height="24" />
-                    </Button>
-                    <Border DockPanel.Dock="Left" BorderBrush ="#333437" Background="#333437" BorderThickness="1" CornerRadius="8,0,0,8" Margin="0,0,0,0" >
-                        <TextBox TabIndex="1" Padding="0,5" FontSize="15" MaxLines="1" Foreground="White" TextAlignment="Left"
+                            <Image  Stretch="Uniform"  Source="{StaticResource SendWhiteIcon}" Width="24" Height="24" />
+                        </Button>
+                        <Border DockPanel.Dock="Left" BorderBrush ="#333437" Background="#333437" BorderThickness="1" CornerRadius="8,0,0,8" Margin="0,0,0,0" >
+                            <TextBox TabIndex="1" Padding="0,5" FontSize="15" MaxLines="1" Foreground="White" TextAlignment="Left"
                              Background="{x:Null}" BorderBrush="{x:Null}" Text="{Binding CommandInputText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Name="CommandInput"
                              PreviewKeyDown="CommandLine_PreviewKeyDown" Margin="13,7,14,7" SelectionBrush="#FF36383A" VerticalAlignment="Center" BorderThickness="0" CaretBrush="White" />
-                    </Border>
-                </DockPanel>
-            </Border>
-
+                        </Border>
+                    </DockPanel>
+                </Border>
+            </Grid>
+        </Grid>
+        <Grid x:Name="ServerInfo" Visibility="Visible" Margin="0,-50,0,0">
+            <Grid x:Name="Server_Id_Grid">
+                <TextBlock Padding="0,5" FontSize="25"  Foreground="White" TextAlignment="Left"
+                        Background="#232426" Text=" Server Id" Margin="10,60,17,490" VerticalAlignment="Center"/>
+                <TextBox x:Name="ServerId" Margin="10,103,17,437" BorderThickness="0" Background="{x:Null}" BorderBrush="Black"
+                        Foreground="White" FontSize="25" VerticalContentAlignment="Center" Padding="0,-3,0,0" Text="123456789123456" IsReadOnly="True"/>
+                <Rectangle Fill="Black" Margin="10,99,17,490" RenderTransformOrigin="0.5,0.5"/>
+            </Grid>
+            <Grid x:Name="Connectivity_Grid">
+                <TextBlock Padding="0,5" FontSize="25" Foreground="White" TextAlignment="Left"
+                    Background="#232426" Text=" Connectivity" Margin="10,154,17,394" VerticalAlignment="Center"/>
+                <Rectangle Fill="Black" Margin="10,195,17,394" RenderTransformOrigin="0.5,0.5"/>
+                <TextBox x:Name="Connectivity" Margin="10,206,17,334" BorderThickness="0" Background="{x:Null}"
+                        BorderBrush="Black" Foreground="White" FontSize="25" VerticalContentAlignment="Center"
+                        Padding="0,-3,0,0" Text="123 ms" IsReadOnly="True"/>
+            </Grid>
+            <Grid x:Name="Properties_Grid">
+                <TextBlock Text=" Properties" Padding="0,5" FontSize="25" Foreground="White" TextAlignment="Left"
+                        Background="#232426" Margin="10,258,17,292" VerticalAlignment="Center"/>
+                <Grid Name="NameBlock">
+                    <TextBlock Padding="0,5" FontSize="25" Foreground="White" TextAlignment="Left"
+                        Background="{x:Null}" Text="Ip Address:" Margin="10,355,628,193" VerticalAlignment="Center"/>
+                    <TextBlock Padding="0,5" FontSize="25" Foreground="White" TextAlignment="Left"
+                        Background="{x:Null}" Text="Port:" Margin="10,312,696,236" VerticalAlignment="Center"/>
+                    <TextBlock Padding="0,5" FontSize="25" Foreground="White" TextAlignment="Left"
+                        Background="{x:Null}" Text="Server Name:" Margin="10,400,606,149" VerticalAlignment="Center"/>
+                    <TextBlock Padding="0,5" FontSize="25" Foreground="White" TextAlignment="Left"
+                        Background="{x:Null}" Text="Server Password:" Margin="371,312,210,236" VerticalAlignment="Center"/>
+                    <TextBlock Padding="0,5" FontSize="25" Foreground="White" TextAlignment="Left"
+                        Background="{x:Null}" Text="Admin Password:" Margin="371,358,206,191" VerticalAlignment="Center"/>
+                    <TextBlock Padding="0,5" FontSize="25" Foreground="White" TextAlignment="Left"
+                        Background="{x:Null}" Text="Game Mode:" Margin="371,401,210,147" VerticalAlignment="Center"/>
+                </Grid>
+                <Grid Name="ValueBlock">
+                    <TextBox x:Name="Port" Margin="70,320,413,240" BorderThickness="0" Background="#232426" BorderBrush="{x:Null}"
+                            Foreground="White" FontSize="25" VerticalContentAlignment="Center" Padding="0,0,0,0"
+                            Text="11000" IsReadOnly="True"/>
+                    <TextBox x:Name="IpAddress" Margin="138,364,413,196" BorderThickness="0" Background="#232426" BorderBrush="{x:Null}"
+                            Foreground="White" FontSize="25" VerticalContentAlignment="Center" Padding="0,0,0,0"
+                            Text="10.10.10.256" IsReadOnly="True"/>
+                    <TextBox x:Name="ServerName" Margin="164,407,413,153" BorderThickness="0" Background="#232426" BorderBrush="{x:Null}"
+                        Foreground="White" FontSize="25" VerticalContentAlignment="Center" Padding="0,0,0,0"
+                        Text="world" IsReadOnly="True" Cursor="IBeam"/>
+                    <TextBox x:Name="AdminPassword" Margin="566,365,19,195" BorderThickness="0" Background="#232426" BorderBrush="{x:Null}"
+                        Foreground="White" FontSize="25" VerticalContentAlignment="Center" Padding="0,0,0,0"
+                        Text="world" IsReadOnly="True" Cursor="IBeam"/>
+                    <TextBox x:Name="ServerPassword" Margin="561,320,19,240" BorderThickness="0" Background="#232426" BorderBrush="{x:Null}"
+                        Foreground="White" FontSize="25" VerticalContentAlignment="Center" Padding="0,0,0,0"
+                        Text="world" IsReadOnly="True" Cursor="IBeam"/>
+                    <ComboBox x:Name="GameMode" Margin="520,408,19,0" Height="32" VerticalAlignment="Top" FontSize="20">
+                        <ComboBoxItem IsSelected="True" FontSize="20">SURVIVAL</ComboBoxItem>
+                        <ComboBoxItem FontSize="20">FREEDOM</ComboBoxItem>
+                        <ComboBoxItem FontSize="20">HARDCORE</ComboBoxItem>
+                        <ComboBoxItem FontSize="20">CREATIVE</ComboBoxItem>
+                    </ComboBox>
+                </Grid>
+            </Grid>
+            <Grid x:Name="Players_Grid">
+                <Rectangle Fill="Black" Margin="10,298,17,291" RenderTransformOrigin="0.5,0.5"/>
+                <TextBlock Padding="0,5" FontSize="25" Foreground="White" TextAlignment="Left"
+                        Background="#232426"  Text=" Players" Margin="10,454,17,96" VerticalAlignment="Center" />
+                <Rectangle Fill="Black" Margin="10,494,17,95" RenderTransformOrigin="0.5,0.5"/>
+            </Grid>
+        </Grid>
+        <Grid x:Name="NavBar" Margin="-10,-50,0,542">
+            <Button TabIndex="2" DockPanel.Dock="Right" Width="Auto" Height="Auto" Style="{DynamicResource ButtonConsoleMsg}" Foreground="White" x:Name="ConsoleButton"
+                Click="ConsoleButton_Click" RenderTransformOrigin="0.852,0.559" Margin="21,2,625,10">
+                <TextBlock FontSize="30" VerticalAlignment="Center" HorizontalAlignment="Center">Console</TextBlock>
+            </Button>
+            <Button TabIndex="2" DockPanel.Dock="Right" Width="Auto" Height="Auto" Style="{DynamicResource ButtonConsoleMsg}" Foreground="White" x:Name="DetailsButton"
+                Click="DetailsButton_Click" RenderTransformOrigin="0.852,0.559" Margin="156,2,490,10">
+                <TextBlock FontSize="30" VerticalAlignment="Center" HorizontalAlignment="Center">Details</TextBlock>
+            </Button>
         </Grid>
     </Grid>
 </nitroxLauncher:PageBase>

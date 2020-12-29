@@ -28,6 +28,7 @@ namespace NitroxLauncher.Pages
             try
             {
                 LauncherLogic.Instance.StartServer(RBIsExternal.IsChecked == true);
+                ServerConsolePage.ServerHasStarted();
             }
             catch (Exception ex)
             {
@@ -39,6 +40,7 @@ namespace NitroxLauncher.Pages
             try
             {
                 LauncherLogic.Instance.StartServer(RBIsExternal.IsChecked == true, "zerotier");
+                ServerConsolePage.ServerHasStarted();
             }
             catch (Exception ex)
             {

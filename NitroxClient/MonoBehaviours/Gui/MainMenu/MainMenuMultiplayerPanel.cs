@@ -69,29 +69,32 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         public void CreateServerButton(string text, string joinIp, string joinPort, string serverId = "")
         {
-            GameObject multiplayerButtonInst = Instantiate(multiplayerButton, savedGameAreaContent, false);
-            multiplayerButtonInst.name = (savedGameAreaContent.childCount - 1).ToString();
-            Transform txt = multiplayerButtonInst.RequireTransform("NewGameButton/Text");
-            txt.GetComponent<Text>().text = text;
-            Color prevTextColor = txt.GetComponent<Text>().color;
-            Destroy(txt.GetComponent<TranslationLiveUpdate>());
-            Button multiplayerButtonButton = multiplayerButtonInst.RequireTransform("NewGameButton").GetComponent<Button>();
-            multiplayerButtonButton.onClick = new Button.ButtonClickedEvent();
-            multiplayerButtonButton.onClick.AddListener(() =>
+            Task.Factory.StartNew(() => 
             {
-                txt.GetComponent<Text>().color = prevTextColor; // Visual fix for black text after click (hover state still active)
-                OpenJoinServerMenu(joinIp, joinPort, serverId);
-            });
+                GameObject multiplayerButtonInst = Instantiate(multiplayerButton, savedGameAreaContent, false);
+                multiplayerButtonInst.name = (savedGameAreaContent.childCount - 1).ToString();
+                Transform txt = multiplayerButtonInst.RequireTransform("NewGameButton/Text");
+                txt.GetComponent<Text>().text = text;
+                Color prevTextColor = txt.GetComponent<Text>().color;
+                Destroy(txt.GetComponent<TranslationLiveUpdate>());
+                Button multiplayerButtonButton = multiplayerButtonInst.RequireTransform("NewGameButton").GetComponent<Button>();
+                multiplayerButtonButton.onClick = new Button.ButtonClickedEvent();
+                multiplayerButtonButton.onClick.AddListener(() =>
+                {
+                    txt.GetComponent<Text>().color = prevTextColor; // Visual fix for black text after click (hover state still active)
+                    OpenJoinServerMenu(joinIp, joinPort, serverId);
+                });
 
-            GameObject delete = Instantiate(SavedGamesRef.GetComponent<MainMenuLoadPanel>().saveInstance.GetComponent<MainMenuLoadButton>().deleteButton);
-            Button deleteButtonButton = delete.GetComponent<Button>();
-            deleteButtonButton.onClick = new Button.ButtonClickedEvent();
-            deleteButtonButton.onClick.AddListener(() =>
-            {
-                RemoveServer(multiplayerButtonInst.transform.GetSiblingIndex() - 1);
-                Destroy(multiplayerButtonInst);
+                GameObject delete = Instantiate(SavedGamesRef.GetComponent<MainMenuLoadPanel>().saveInstance.GetComponent<MainMenuLoadButton>().deleteButton);
+                Button deleteButtonButton = delete.GetComponent<Button>();
+                deleteButtonButton.onClick = new Button.ButtonClickedEvent();
+                deleteButtonButton.onClick.AddListener(() =>
+                {
+                    RemoveServer(multiplayerButtonInst.transform.GetSiblingIndex() - 1);
+                    Destroy(multiplayerButtonInst);
+                });
+                delete.transform.SetParent(multiplayerButtonInst.transform, false);
             });
-            delete.transform.SetParent(multiplayerButtonInst.transform, false);
         }
 
         public void AddServer(string name, string ip, string port, string serverid = "")
@@ -111,6 +114,11 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         public void OpenJoinServerMenu(string serverIp, string serverPort, string serverId = "")
         {
+            JoinServerAsync(serverIp, serverPort, serverId);
+        }
+
+        public async Task JoinServerAsync(string serverIp, string serverPort, string serverId = "")
+        {
             Process JoinNet = new Process()
             {
                 StartInfo = new ProcessStartInfo()
@@ -124,8 +132,8 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             JoinNet.WaitForExit();
 
             // delay buffer to prevent joining errors
-            Task.Delay(1000).Wait();
-
+            await Task.Delay(750);
+            
             IPEndPoint endpoint = ResolveIPEndPoint(serverIp, serverPort);
             if (endpoint == null)
             {
