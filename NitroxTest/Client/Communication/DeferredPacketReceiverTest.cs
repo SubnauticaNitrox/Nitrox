@@ -42,13 +42,14 @@ namespace NitroxTest.Client.Communication
         [TestMethod]
         public void NonActionPacket()
         {
-            Packet packet = new TestNonActionPacket(PLAYER_ID);
+            TestNonActionPacket packet = new TestNonActionPacket(PLAYER_ID);
             packetReceiver.PacketReceived(packet);
 
             Queue<Packet> packets = packetReceiver.GetReceivedPackets();
 
             Assert.AreEqual(1, packets.Count);
             Assert.AreEqual(packet, packets.Dequeue());
+            Assert.AreEqual(packet.PlayerId, PLAYER_ID);
         }
 
         [TestCleanup]

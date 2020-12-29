@@ -45,7 +45,7 @@ namespace NitroxTest.Serialization
             serverConfig = NitroxServiceLocator.LocateService<ServerConfig>();
 
             worldData = GeneratePersistedWorldData();
-            world = worldPersistence.CreateWorld(worldData.WorldData.ServerStartTime.Value,
+            world = worldPersistence.CreateWorld(worldData.WorldData.ServerStartTime,
                                                  worldData.EntityData.Entities,
                                                  worldData.BaseData.PartiallyConstructedPieces,
                                                  worldData.BaseData.CompletedBasePieceHistory,
@@ -171,8 +171,8 @@ namespace NitroxTest.Serialization
                 Assert.IsTrue(worldData.WorldData.GameData.StoryGoals.RadioQueue.SequenceEqual(worldDataAfter.WorldData.GameData.StoryGoals.RadioQueue), "WorldData.GameData.StoryGoals.RadioQueue is not equal");
                 Assert.IsTrue(worldData.WorldData.GameData.StoryGoals.GoalUnlocks.SequenceEqual(worldDataAfter.WorldData.GameData.StoryGoals.GoalUnlocks), "WorldData.GameData.StoryGoals.GoalUnlocks is not equal");
 
-                Assert.AreEqual(worldData.WorldData.GameData.StoryTiming.ElapsedTime, worldData.WorldData.GameData.StoryTiming.ElapsedTime, "WorldData.GameData.StoryTiming.ElapsedTime is not equal");
-                Assert.AreEqual(worldData.WorldData.GameData.StoryTiming.AuroraExplosionTime, worldData.WorldData.GameData.StoryTiming.AuroraExplosionTime, "WorldData.GameData.StoryTiming.AuroraExplosionTime is not equal");
+                Assert.AreEqual(worldData.WorldData.GameData.StoryTiming.ElapsedTime, worldDataAfter.WorldData.GameData.StoryTiming.ElapsedTime, "WorldData.GameData.StoryTiming.ElapsedTime is not equal");
+                Assert.AreEqual(worldData.WorldData.GameData.StoryTiming.AuroraExplosionTime, worldDataAfter.WorldData.GameData.StoryTiming.AuroraExplosionTime, "WorldData.GameData.StoryTiming.AuroraExplosionTime is not equal");
             }
         }
 
@@ -239,8 +239,21 @@ namespace NitroxTest.Serialization
                     PersistedPlayerData playerDataAfter = worldDataAfter.PlayerData.Players[index];
 
                     Assert.AreEqual(playerData.Name, playerDataAfter.Name, "PlayerData.Players.Name is not equal");
-                    Assert.IsTrue(playerData.EquippedItems.SequenceEqual(playerDataAfter.EquippedItems), "PlayerData.Players.EquippedItems is not equal");
-                    Assert.IsTrue(playerData.Modules.SequenceEqual(playerDataAfter.Modules), "PlayerData.Players.Modules is not equal");
+
+                    Assert.AreEqual(playerData.EquippedItems.Count, playerDataAfter.EquippedItems.Count, "PlayerData.Players.EquippedItems.Count is not equal");
+                    for (int index2 = 0; index2 < playerData.EquippedItems.Count; index2++)
+                    {
+                        Assert.AreEqual(playerData.EquippedItems[index2].Slot, playerDataAfter.EquippedItems[index2].Slot, "PlayerData.Players.EquippedItems.Slot is not equal");
+                        Assert.AreEqual(playerData.EquippedItems[index2].TechType, playerDataAfter.EquippedItems[index2].TechType, "PlayerData.Players.EquippedItems.TechType is not equal");
+                    }
+
+                    Assert.AreEqual(playerData.Modules.Count, playerDataAfter.Modules.Count, "PlayerData.Players.Modules.Count is not equal");
+                    for (int index2 = 0; index2 < playerData.Modules.Count; index2++)
+                    {
+                        Assert.AreEqual(playerData.Modules[index2].Slot, playerDataAfter.Modules[index2].Slot, "PlayerData.Players.Modules.Slot is not equal");
+                        Assert.AreEqual(playerData.Modules[index2].TechType, playerDataAfter.Modules[index2].TechType, "PlayerData.Players.Modules.TechType is not equal");
+                    }
+
                     Assert.AreEqual(playerData.Id, playerDataAfter.Id, "PlayerData.Players.Id is not equal");
                     Assert.AreEqual(playerData.SpawnPosition, playerDataAfter.SpawnPosition, "PlayerData.Players.SpawnPosition is not equal");
 
@@ -306,7 +319,7 @@ namespace NitroxTest.Serialization
                 {
                     CompletedBasePieceHistory = new List<BasePiece>()
                     {
-                            new BasePiece(new NitroxId(), NitroxVector3.Zero, NitroxQuaternion.Identity, NitroxVector3.Zero, NitroxQuaternion.Identity, new NitroxTechType("BasePiece1"), Optional.Empty, false, Optional.Empty)
+                        new BasePiece(new NitroxId(), NitroxVector3.Zero, NitroxQuaternion.Identity, NitroxVector3.Zero, NitroxQuaternion.Identity, new NitroxTechType("BasePiece1"), Optional.Empty, false, Optional.Empty)
                     },
                     PartiallyConstructedPieces = new List<BasePiece>()
                     {
@@ -333,7 +346,7 @@ namespace NitroxTest.Serialization
                             IsPermaDeath = false,
                             Permissions = Perms.ADMIN,
                             SpawnPosition = NitroxVector3.Zero,
-                            SubRootId = new NitroxId(),
+                            SubRootId = null,
                             CurrentStats = new PlayerStatsData(45, 45, 40, 39, 28, 1),
                             EquippedItems = new List<EquippedItemData>(0),
                             Modules = new List<EquippedItemData>(0)
@@ -343,13 +356,20 @@ namespace NitroxTest.Serialization
                             NitroxId = new NitroxId(),
                             Id = 2,
                             Name = "Test2",
-                            IsPermaDeath = false,
+                            IsPermaDeath = true,
                             Permissions = Perms.PLAYER,
                             SpawnPosition = NitroxVector3.One,
                             SubRootId = new NitroxId(),
                             CurrentStats = new PlayerStatsData(40, 40, 30, 29, 28, 0),
-                            EquippedItems = new List<EquippedItemData>(0),
-                            Modules = new List<EquippedItemData>(0)
+                            EquippedItems = new List<EquippedItemData>
+                            {
+                                new EquippedItemData(new NitroxId(), new NitroxId(), new byte[]{0x30, 0x40}, "Slot3", new NitroxTechType("Flashlight")),
+                                new EquippedItemData(new NitroxId(), new NitroxId(), new byte[]{0x50, 0x9D}, "Slot4", new NitroxTechType("Knife"))
+                            },
+                            Modules = new List<EquippedItemData>()
+                            {
+                                new EquippedItemData(new NitroxId(), new NitroxId(), new byte[]{0x35, 0xD0}, "Module1", new NitroxTechType("Compass"))
+                            }
                         }
                     }
                 },
@@ -379,7 +399,10 @@ namespace NitroxTest.Serialization
                         {
                             EncyclopediaEntries = { "TestEntry1", "TestEntry2" },
                             KnownTechTypes = { new NitroxTechType("Knife") },
-                            PartiallyUnlockedByTechType = new ThreadSafeDictionary<NitroxTechType, PDAEntry>(),
+                            PartiallyUnlockedByTechType = new ThreadSafeDictionary<NitroxTechType, PDAEntry>()
+                            {
+                                new KeyValuePair<NitroxTechType, PDAEntry>(new NitroxTechType("Moonpool"), new PDAEntry(new NitroxTechType("Moonpool"), 50f, 2))
+                            },
                             PdaLog = { new PDALogEntry("key1", 1.1234f) },
                             UnlockedTechTypes = { new NitroxTechType("base") }
                         },
@@ -416,7 +439,7 @@ namespace NitroxTest.Serialization
                     {
                         Vehicles = new List<VehicleModel>()
                         {
-                            new VehicleModel(new NitroxTechType("cyclops"), new NitroxId(), NitroxVector3.One, NitroxQuaternion.Identity, new InteractiveChildObjectIdentifier[0], Optional.Empty, "Super Duper Cyclops", new []{NitroxVector3.Zero, NitroxVector3.One, NitroxVector3.One}, 100)
+                            new VehicleModel(new NitroxTechType("Cyclops"), new NitroxId(), NitroxVector3.One, NitroxQuaternion.Identity, new InteractiveChildObjectIdentifier[0], Optional.Empty, "Super Duper Cyclops", new []{NitroxVector3.Zero, NitroxVector3.One, NitroxVector3.One}, 100)
                         }
                     }
                 }

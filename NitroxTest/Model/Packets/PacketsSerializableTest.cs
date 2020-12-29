@@ -18,17 +18,14 @@ namespace NitroxTest.Model.Packets
     {
         private readonly HashSet<Type> visitedTypes = new HashSet<Type>();
 
-        public void IsSerializable(Type t)
+        private void IsSerializable(Type t)
         {
             if (visitedTypes.Contains(t))
             {
                 return;
             }
 
-            if (!t.IsSerializable && !t.IsInterface && !Packet.IsTypeSerializable(t))
-            {
-                Assert.Fail($"Type {t} is not serializable!");
-            }
+            Assert.IsFalse(!t.IsSerializable && !t.IsInterface && !Packet.IsTypeSerializable(t), $"Type {t} is not serializable!");
 
             visitedTypes.Add(t);
 
@@ -77,28 +74,22 @@ namespace NitroxTest.Model.Packets
 
             Type testedType = null;
             List<Packet> packets = new List<Packet>();
-            try
-            {
-                foreach (Type type in typeof(Packet).Assembly.GetTypes()
-                .Where(p => typeof(Packet).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract))
-                {
-                    testedType = type;
-                    packets.Add((Packet)FormatterServices.GetUninitializedObject(type));
-                }
 
-                foreach (Packet packet in packets)
-                {
-                    testedType = packet.GetType();
-                    serializer.Serialize(stream, packet);
-                    stream.Flush();
-                    stream.Position = 0;
-                    serializer.Deserialize(stream);
-                    stream.Position = 0;
-                }
-            }
-            catch (Exception ex)
+            foreach (Type type in typeof(Packet).Assembly.GetTypes()
+            .Where(p => typeof(Packet).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract))
             {
-                Assert.Fail(string.Format("Type: {0}, Exception: {1}", testedType.FullName, ex));
+                testedType = type;
+                packets.Add((Packet)FormatterServices.GetUninitializedObject(type));
+            }
+
+            foreach (Packet packet in packets)
+            {
+                testedType = packet.GetType();
+                serializer.Serialize(stream, packet);
+                stream.Flush();
+                stream.Position = 0;
+                serializer.Deserialize(stream);
+                stream.Position = 0;
             }
         }
     }

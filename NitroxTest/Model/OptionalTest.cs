@@ -54,11 +54,10 @@ namespace NitroxTest.Model
         public void OptionalSetValueNull()
         {
             Optional<Random> op = Optional.Of(new Random());
-            op.HasValue.Should().BeTrue();
-            Action setNull = () => { op = null; };
-            setNull.Should().Throw<ArgumentNullException>("Setting optional to null should not be allowed.");
+            Assert.IsTrue(op.HasValue);
+            Assert.ThrowsException<ArgumentNullException>(() => { op = null; }, "Setting optional to null should not be allowed.");
             op = Optional.Empty;
-            op.HasValue.Should().BeFalse();
+            Assert.IsFalse(op.HasValue);
         }
 
         [TestMethod]
@@ -66,34 +65,40 @@ namespace NitroxTest.Model
         {
             Optional.ApplyHasValueCondition<Base>(v => v.GetType() == typeof(A) || v.Threshold > 200); // Cheat: allow check if type A to do more complex tests on Optional<T>.HasValue
             Optional.ApplyHasValueCondition<A>(v => v.Threshold <= 200);
-            
+
+            Optional<Base> opBase = Optional.Of(new Base());
+            opBase.HasValue.Should().BeTrue();
+            opBase.Value.Threshold.Should().Be(202);
+
             Optional<A> a = Optional.Of(new A());
             a.HasValue.Should().BeTrue();
-            
+
             Optional<A> actuallyB = Optional.Of<A>(new B());
             actuallyB.HasValue.Should().BeFalse();
-            
+
             Optional<B> b = Optional.Of(new B());
             b.HasValue.Should().BeFalse();
-            
+
             // A check should still happen on Base because Optional<Base> includes more-specific-than-itself checks.
             Optional<Base> aAsBase = Optional<Base>.Of((Base)a);
             aAsBase.HasValue.Should().BeTrue();
-            
+            aAsBase.Value.Threshold.Should().Be(200);
+
             // Optional<object> should always do all checks because anything can be in it.
             Optional<object> bAsObj = Optional<object>.Of(new B());
             bAsObj.HasValue.Should().BeFalse();
-            
+
             // Type C inheritance doesn't allow for type A. But Optional<object> has the check on A. It should skip the A check on C because inheritance doesn't match up.
             Optional<object> cAsObj = Optional<object>.Of(new C());
             cAsObj.HasValue.Should().BeTrue();
+            ((C)cAsObj.Value).Threshold.Should().Be(203);
         }
 
         private class Base
         {
             public virtual int Threshold => 202;
         }
-        
+
         private class A : Base
         {
             public override int Threshold => 200;
@@ -106,7 +111,7 @@ namespace NitroxTest.Model
 
         private class C : Base
         {
-            public override int Threshold => 201;
+            public override int Threshold => 203;
         }
     }
 }

@@ -48,9 +48,11 @@ namespace NitroxTest.Core
 
             servicerA.Should().NotBeNull();
             servicerA.Should().BeOfType<ServiceAProvider>();
+            Assert.ThrowsException<NotImplementedException>(() => servicerA.PerformService(null));
 
             servicerB.Should().NotBeNull();
             servicerB.Should().BeOfType<ServiceBProvider>();
+            Assert.ThrowsException<NotImplementedException>(() => servicerB.PerformService(null));
         }
 
         [TestMethod]
@@ -73,9 +75,11 @@ namespace NitroxTest.Core
             // Assert
             servicerA.Should().NotBeNull();
             servicerA.Should().BeOfType<ServiceAProvider>();
+            Assert.ThrowsException<NotImplementedException>(() => servicerA.PerformService(null));
 
             servicerB.Should().NotBeNull();
             servicerB.Should().BeOfType<ServiceBProvider>();
+            Assert.ThrowsException<NotImplementedException>(() => servicerB.PerformService(null));
         }
 
         private class DependencyInjectionTestsAutoFacRegistrar : IAutoFacRegistrar

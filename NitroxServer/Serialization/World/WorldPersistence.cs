@@ -111,7 +111,7 @@ namespace NitroxServer.Serialization.World
                 }
 
 
-                World world = CreateWorld(persistedData.WorldData.ServerStartTime.Value,
+                World world = CreateWorld(persistedData.WorldData.ServerStartTime,
                                           persistedData.EntityData.Entities,
                                           persistedData.BaseData.PartiallyConstructedPieces,
                                           persistedData.BaseData.CompletedBasePieceHistory,
