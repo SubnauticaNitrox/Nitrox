@@ -296,6 +296,22 @@ namespace NitroxLauncher.Pages
                 {
                     NumberOfPeers += 1;
                     TotalPing += (int)e.Reply.RoundtripTime;
+                    bool hasUpdated = false;
+                    List<object> copy = new List<object>();
+                    foreach (var item in PlayerList.Items)
+                    {
+                        copy.Add(item);
+                    }
+                    foreach (var item in copy)
+                    {
+                        if (item.ToString().Contains(ip))
+                        {
+                            PlayerList.Items[copy.IndexOf(item)] = ip + "                      " + (int)e.Reply.RoundtripTime + " ms";
+                            hasUpdated = true;
+                        }
+                    }
+                    if(!hasUpdated)
+                        PlayerList.Items.Add(ip + "                      " + (int)e.Reply.RoundtripTime + " ms");
                 });
             }
             else
