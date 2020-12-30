@@ -25,7 +25,7 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Parsers.Monobehaviours
 
                 wei.cellLevel = (LargeWorldEntity.CellLevel)reader.ReadInt32();
                 wei.localScale = new UnityEngine.Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                resourceAssets.WorldEntitiesByClassId[wei.classId] = wei;
+                resourceAssets.WorldEntitiesByClassId.Add(wei.classId, wei);
             }
         }
     }

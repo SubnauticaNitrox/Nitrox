@@ -21,7 +21,7 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Parsers.Monobehaviours
 
             string biomeType = ((BiomeType)reader.ReadInt32()).AsString(); // Yes
 
-            EntitySlotsByIdentifier[gameObjectIdentifier] = new NitroxEntitySlot(biomeType, allowedTypes);
+            EntitySlotsByIdentifier.Add(gameObjectIdentifier, new NitroxEntitySlot(biomeType, allowedTypes));
         }
     }
 }

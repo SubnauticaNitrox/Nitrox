@@ -48,7 +48,7 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Parsers
                 monoResourceParser.Parse(identifier, monobehaviour.GameObjectIdentifier, reader, resourceAssets, relativeFileIdToPath);
             }
 
-            MonobehavioursByAssetId[identifier] = monobehaviour;
+            MonobehavioursByAssetId.Add(identifier, monobehaviour);
         }
     }
 }

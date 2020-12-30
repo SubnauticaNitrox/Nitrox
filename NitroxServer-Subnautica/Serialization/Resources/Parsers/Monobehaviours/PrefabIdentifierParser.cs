@@ -14,8 +14,8 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Parsers.Monobehaviours
         {
             string classId = reader.ReadCountStringInt32();
 
-            ClassIdByGameObjectId[gameObjectIdentifier] = classId;
-            GameObjectIdByClassId[classId] = gameObjectIdentifier;
+            ClassIdByGameObjectId.Add(gameObjectIdentifier, classId);
+            GameObjectIdByClassId.Add(classId, gameObjectIdentifier);
         }
     }
 }

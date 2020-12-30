@@ -38,20 +38,20 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Parsers
             // instead, we rely on a call back to index ChildrenIdsByPatentId (same access pattern as
             // the other data structures throughout this process).
             List<AssetIdentifier> children = new List<AssetIdentifier>();
-            ChildrenIdsByParentId[identifier] = children;
+            ChildrenIdsByParentId.Add(identifier, children);
 
             int childrenCount = reader.ReadInt32();
 
             for (int i = 0; i < childrenCount; i++)
             {
                 AssetIdentifier child = new AssetIdentifier(relativeFileIdToPath[reader.ReadInt32()], reader.ReadInt64());
-                ChildrenIdToParentId[child] = identifier;
+                ChildrenIdToParentId.Add(child, identifier);
                 children.Add(child);
             }
 
             transformAsset.ParentIdentifier = new AssetIdentifier(relativeFileIdToPath[reader.ReadInt32()], reader.ReadInt64());
 
-            TransformsByAssetId[identifier] = transformAsset;
+            TransformsByAssetId.Add(identifier, transformAsset);
         }
     }
 }

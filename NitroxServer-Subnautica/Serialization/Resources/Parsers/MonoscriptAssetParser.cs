@@ -13,7 +13,7 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Parsers
             MonoscriptAsset monoscriptAsset = new MonoscriptAsset();
             monoscriptAsset.Name = reader.ReadCountStringInt32();
 
-            MonoscriptsByAssetId[identifier] = monoscriptAsset;
+            MonoscriptsByAssetId.Add(identifier, monoscriptAsset);
         }
 
         public class MonoscriptAsset
