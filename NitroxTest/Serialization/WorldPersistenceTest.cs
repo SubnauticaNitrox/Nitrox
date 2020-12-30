@@ -45,8 +45,7 @@ namespace NitroxTest.Serialization
             serverConfig = NitroxServiceLocator.LocateService<ServerConfig>();
 
             worldData = GeneratePersistedWorldData();
-            world = worldPersistence.CreateWorld(worldData,
-                                                 serverConfig.GameMode);
+            world = worldPersistence.CreateWorld(worldData, serverConfig.GameMode);
 
             worldsDataAfter = new PersistedWorldData[serverSerializers.Length];
             for (int index = 0; index < serverSerializers.Length; index++)
@@ -70,6 +69,7 @@ namespace NitroxTest.Serialization
             {
                 Assert.IsTrue(worldData.WorldData.ParsedBatchCells.SequenceEqual(worldDataAfter.WorldData.ParsedBatchCells), "WorldData.ParsedBatchCells is not equal");
                 Assert.AreEqual(worldData.WorldData.ServerStartTime, worldDataAfter.WorldData.ServerStartTime, "WorldData.ServerStartTime is not equal");
+                Assert.AreEqual(worldData.WorldData.Seed, worldDataAfter.WorldData.Seed, "WorldData.Seed is not equal");
             }
         }
 

@@ -33,16 +33,16 @@ namespace NitroxServer.Serialization.World
         [JsonProperty, ProtoMember(6)]
         public EscapePodData EscapePodData { get; set; }
 
-
-        [JsonProperty, ProtoMember(8)]
+        [JsonProperty, ProtoMember(7)]
         public string Seed { get; set; }
+
         public bool IsValid()
         {
-            return (ParsedBatchCells != null) && // Always returns false on empty saves
-                   (VehicleData != null) &&
-                   (InventoryData != null) &&
-                   (GameData != null) &&
-                   (EscapePodData != null);
+            return ParsedBatchCells != null && // Always returns false on empty saves (sometimes also if never entered the ocean)
+                   VehicleData != null &&
+                   InventoryData != null &&
+                   GameData != null &&
+                   EscapePodData != null;
         }
     }
 }
