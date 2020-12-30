@@ -19,19 +19,25 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Processing
     {
         public void LoadInto(ResourceAssets resourceAssets)
         {
+
+            if (resourceAssets == null)
+            {
+                return;
+            }
+
             foreach (GameObjectAsset placeholderGroup in GameObjectAssetParser.GameObjectsByAssetId.Values)
             {
                 List<AssetIdentifier> prefabPlaceholders;
-                
+
                 if (!PrefabPlaceholdersGroupParser.PrefabPlaceholderIdsByGameObjectId.TryGetValue(placeholderGroup.Identifier, out prefabPlaceholders))
                 {
                     continue;
                 }
-                
+
                 string placeholderGroupClassId = PrefabIdentifierParser.ClassIdByGameObjectId[placeholderGroup.Identifier];
 
                 List<PrefabAsset> spawnablePrefabs = new List<PrefabAsset>();
-                               
+
                 foreach (AssetIdentifier prefabPlaceholderId in prefabPlaceholders)
                 {
                     PrefabPlaceholderAsset prefabPlaceholderAsset = PrefabPlaceholderParser.PrefabPlaceholderIdToPlaceholderAsset[prefabPlaceholderId];
