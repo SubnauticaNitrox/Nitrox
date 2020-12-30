@@ -131,7 +131,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             JoinNet.WaitForExit();
 
             // delay buffer to prevent joining errors
-            await Task.Delay(750);
+            await Task.Delay(1500);
             
             IPEndPoint endpoint = ResolveIPEndPoint(serverIp, serverPort);
             if (endpoint == null)
