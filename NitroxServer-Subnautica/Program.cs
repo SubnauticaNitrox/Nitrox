@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Net;
@@ -15,6 +14,7 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Discovery;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
+using NitroxModel.OS;
 using NitroxModel_Subnautica.Helper;
 using NitroxServer;
 using NitroxServer.ConsoleCommands.Processor;
@@ -154,19 +154,18 @@ namespace NitroxServer_Subnautica
             {
                 return;
             }
+            string mostRecentLogFile = Log.GetMostRecentLogFile();
+            if (mostRecentLogFile == null)
+            {
+                return;
+            }
 
-            Console.WriteLine("Press L to open log file before closing. Press any other key to close . . .");
+            Log.Info("Press L to open log file before closing. Press any other key to close . . .");
             ConsoleKeyInfo key = Console.ReadKey(true);
             if (key.Key == ConsoleKey.L)
             {
-                Log.Info($"Opening log file at: {Log.FileName}..");
-                string fileOpenerProgram = Environment.OSVersion.Platform switch
-                {
-                    PlatformID.MacOSX => "open",
-                    PlatformID.Unix => "xdg-open",
-                    _ => "explorer"
-                };
-                Process.Start(fileOpenerProgram, Log.FileName);
+                Log.Info($"Opening log file at: {mostRecentLogFile}..");
+                FileSystem.Instance.OpenOrExecuteFile(mostRecentLogFile);
             }
 
             Environment.Exit(1);
