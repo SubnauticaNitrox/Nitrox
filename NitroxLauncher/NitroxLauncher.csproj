@@ -36,8 +36,9 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="LibZeroTier">
-      <HintPath>..\packages\LibZeroTier\LibZeroTier.dll</HintPath>
+    <Reference Include="LibZeroTier, Version=1.6.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\LibZeroTier\LibZeroTier.dll</HintPath>
     </Reference>
     <Reference Include="PresentationFramework.Aero2" />
     <Reference Include="System" />
