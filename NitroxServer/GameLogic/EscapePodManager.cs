@@ -4,6 +4,7 @@ using NitroxModel.DataStructures.Util;
 using NitroxServer.Serialization;
 using NitroxModel.Core;
 using System.Collections.Generic;
+using System;
 
 namespace NitroxServer.GameLogic
 {
@@ -16,11 +17,14 @@ namespace NitroxServer.GameLogic
         private EscapePodModel podForNextPlayer;
         private readonly string seed;
 
-        public EscapePodManager(List<EscapePodModel> escapePods, string seed)
+        private readonly RandomStartGenerator randomStart;
+
+        public EscapePodManager(List<EscapePodModel> escapePods, RandomStartGenerator randomStart, string seed)
         {
             EscapePods = new ThreadSafeCollection<EscapePodModel>(escapePods);
 
             this.seed = seed;
+            this.randomStart = randomStart;
 
             InitializePodForNextPlayer();
             InitializeEscapePodsByPlayerId();
@@ -66,12 +70,9 @@ namespace NitroxServer.GameLogic
         
         private EscapePodModel CreateNewEscapePod()
         {
-            int totalEscapePods = EscapePods.Count;
-            RandomStartGenerator randomStart = NitroxServiceLocator.LocateService<RandomStartGenerator>();
-
             EscapePodModel escapePod = new EscapePodModel();
             escapePod.InitEscapePodModel(new NitroxId(),
-                                         randomStart.GenerateRandomStartPosition(seed),
+                                         GetStartPosition(),
                                          new NitroxId(),
                                          new NitroxId(),
                                          new NitroxId(),
@@ -82,6 +83,58 @@ namespace NitroxServer.GameLogic
             EscapePods.Add(escapePod);
 
             return escapePod;
+        }
+
+        private NitroxVector3 GetStartPosition()
+        {
+            Random rnd = new Random(seed.GetHashCode());
+            NitroxVector3 position = randomStart.GenerateRandomStartPosition(rnd);
+
+            if (EscapePods.Count == 0)
+            {
+                return position;
+            }
+
+            foreach (EscapePodModel escapePodModel in EscapePods)
+            {
+                if (position == NitroxVector3.Zero)
+                {
+                    break;
+                }
+
+                if (escapePodModel.Location != position)
+                {
+                    return position;
+                }
+            }
+
+            float xNormed = (float)rnd.NextDouble();
+            float zNormed = (float)rnd.NextDouble();
+
+            if (xNormed < 0.3f)
+            {
+                xNormed = 0.3f;
+            }
+            else if (xNormed > 0.7f)
+            {
+                xNormed = 0.7f;
+            }
+
+            if (zNormed < 0.3f)
+            {
+                zNormed = 0.3f;
+            }
+            else if (zNormed > 0.7f)
+            {
+                zNormed = 0.7f;
+            }
+
+            NitroxVector3 lastEscapePodPosition = EscapePods[EscapePods.Count - 1].Location;
+
+            float x = xNormed * 100 - 50;
+            float z = zNormed * 100 - 50;
+
+            return new NitroxVector3(lastEscapePodPosition.X + x, 0, lastEscapePodPosition.Z + z);
         }
 
         private void InitializePodForNextPlayer()

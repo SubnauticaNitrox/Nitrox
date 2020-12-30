@@ -13,11 +13,8 @@ namespace NitroxModel.DataStructures.GameLogic
             this.randomStartTexture = randomStartTexture;
         }
 
-        public NitroxVector3 GenerateRandomStartPosition(string seed)
+        public NitroxVector3 GenerateRandomStartPosition(Random rnd)
         {
-
-            Random rnd = new Random(seed.GetHashCode());
-
             for (int i = 0; i < 1000; i++)
             {
                 float normalizedX = (float)rnd.NextDouble();

@@ -31,11 +31,13 @@ namespace NitroxServer.Serialization.World
         private string fileEnding;
         private readonly ServerProtoBufSerializer protoBufSerializer;
         private readonly ServerConfig config;
+        private readonly RandomStartGenerator randomStart;
 
-        public WorldPersistence(ServerProtoBufSerializer protoBufSerializer, ServerJsonSerializer jsonSerializer, ServerConfig config)
+        public WorldPersistence(ServerProtoBufSerializer protoBufSerializer, ServerJsonSerializer jsonSerializer, ServerConfig config, RandomStartGenerator randomStart)
         {
             this.protoBufSerializer = protoBufSerializer;
             this.config = config;
+            this.randomStart = randomStart;
 
             saveDataSerializer = config.SerializerMode == ServerSerializerMode.PROTOBUF ? (IServerSerializer)protoBufSerializer : jsonSerializer;
             fileEnding = saveDataSerializer.GetFileEnding();
@@ -198,7 +200,7 @@ namespace NitroxServer.Serialization.World
 
                 InventoryManager = new InventoryManager(pWorldData.WorldData.InventoryData.InventoryItems, pWorldData.WorldData.InventoryData.StorageSlotItems),
 
-                EscapePodManager = new EscapePodManager(pWorldData.WorldData.EscapePodData.EscapePods, seed),
+                EscapePodManager = new EscapePodManager(pWorldData.WorldData.EscapePodData.EscapePods, randomStart, seed),
 
                 GameData = pWorldData.WorldData.GameData,
                 GameMode = gameMode,

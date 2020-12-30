@@ -59,6 +59,16 @@ namespace NitroxModel.DataStructures.GameLogic
             return new NitroxVector3(lhs.X * rhs, lhs.Y * rhs, lhs.Z * rhs);
         }
 
+        public static bool operator ==(NitroxVector3 lhs, NitroxVector3 rhs)
+        {
+            return lhs.X == rhs.X && lhs.Y == rhs.Y && lhs.Z == rhs.Z;
+        }
+
+        public static bool operator !=(NitroxVector3 lhs, NitroxVector3 rhs)
+        {
+            return !(lhs == rhs);
+        }
+
         public static NitroxVector3 Normalize(NitroxVector3 value)
         {
             float ls = value.X * value.X + value.Y * value.Y + value.Z * value.Z;
