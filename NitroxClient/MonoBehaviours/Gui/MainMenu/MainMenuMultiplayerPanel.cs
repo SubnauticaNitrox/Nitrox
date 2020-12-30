@@ -132,7 +132,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             JoinNet.WaitForExit();
             
             // delay buffer to prevent joining errors
-            await Task.Delay(500);
+            await Task.Delay(1500);
             Log.InGame("Connection to private server established");
 
             IPEndPoint endpoint = ResolveIPEndPoint(serverIp, serverPort);
