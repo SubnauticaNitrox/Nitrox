@@ -30,9 +30,6 @@
       <HintPath>$(SubnauticaManaged)\iTween.dll</HintPath>
       <Private>false</Private>
     </Reference>
-    <Reference Include="LibZeroTier">
-      <HintPath>..\packages\LibZeroTier\LibZeroTier.dll</HintPath>
-    </Reference>
     <Reference Include="LitJson">
       <HintPath>$(SubnauticaManaged)\LitJson.dll</HintPath>
       <Private>false</Private>
