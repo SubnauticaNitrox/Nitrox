@@ -118,6 +118,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         public async Task JoinServerAsync(string serverIp, string serverPort, string serverId = "")
         {
+            Log.InGame("Connecting to private server");
             Process JoinNet = new Process()
             {
                 StartInfo = new ProcessStartInfo()
@@ -129,10 +130,11 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             };
             JoinNet.Start();
             JoinNet.WaitForExit();
-
-            // delay buffer to prevent joining errors
-            await Task.Delay(1500);
             
+            // delay buffer to prevent joining errors
+            await Task.Delay(500);
+            Log.InGame("Connection to private server established");
+
             IPEndPoint endpoint = ResolveIPEndPoint(serverIp, serverPort);
             if (endpoint == null)
             {
