@@ -12,7 +12,6 @@ using NitroxModel.Logger;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
-using Dns = System.Net.Dns;
 
 namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 {
