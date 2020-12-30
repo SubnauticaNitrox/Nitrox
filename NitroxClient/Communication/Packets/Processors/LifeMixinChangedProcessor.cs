@@ -1,15 +1,7 @@
-﻿using System.Reflection;
-using NitroxClient.Communication.Abstract;
+﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
-using NitroxClient.Unity.Helper;
-using NitroxModel.DataStructures.Util;
-using NitroxModel.Logger;
 using NitroxModel.Packets;
-using NitroxModel_Subnautica.DataStructures;
-using NitroxModel_Subnautica.Helper;
-using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
 {

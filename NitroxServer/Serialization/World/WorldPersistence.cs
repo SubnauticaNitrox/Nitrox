@@ -121,7 +121,6 @@ namespace NitroxServer.Serialization.World
             }
             catch (Exception ex)
             {
-
                 //Backup world if loading fails
                 using (ZipFile zipFile = new ZipFile())
                 {
@@ -154,32 +153,34 @@ namespace NitroxServer.Serialization.World
 
         private World CreateFreshWorld()
         {
-            PersistedWorldData pWorldData = new PersistedWorldData();
-            pWorldData.BaseData = BaseData.From(new List<BasePiece>(), new List<BasePiece>());
-            pWorldData.EntityData = EntityData.From(new List<Entity>());
-            pWorldData.PlayerData = PlayerData.From(new List<Player>());
-
-            pWorldData.WorldData = new WorldData()
+            PersistedWorldData pWorldData = new PersistedWorldData
             {
-                EscapePodData = EscapePodData.From(new List<EscapePodModel>()),
-                GameData = new GameData { PDAState = new PDAStateData(), StoryGoals = new StoryGoalData(), StoryTiming = new StoryTimingData() },
-                InventoryData = InventoryData.From(new List<ItemData>(), new List<ItemData>()),
-                VehicleData = VehicleData.From(new List<VehicleModel>()),
-                ParsedBatchCells = new List<NitroxInt3>(),
-                ServerStartTime = DateTime.Now
+                BaseData = BaseData.From(new List<BasePiece>(), new List<BasePiece>()),
+                EntityData = EntityData.From(new List<Entity>()),
+                PlayerData = PlayerData.From(new List<Player>()),
+                WorldData = new WorldData()
+                {
+                    EscapePodData = EscapePodData.From(new List<EscapePodModel>()),
+                    GameData = new GameData
+                    {
+                        PDAState = new PDAStateData(),
+                        StoryGoals = new StoryGoalData(),
+                        StoryTiming = new StoryTimingData()
+                    },
+                    InventoryData = InventoryData.From(new List<ItemData>(), new List<ItemData>()),
+                    VehicleData = VehicleData.From(new List<VehicleModel>()),
+                    ParsedBatchCells = new List<NitroxInt3>(),
+                    ServerStartTime = DateTime.Now
 #if DEBUG
                 , Seed = "TCCBIBZXAB"
 #endif
+                }
             };
 
-            return CreateWorld(
-                pWorldData,
-                config.GameMode
-                );
+            return CreateWorld(pWorldData, config.GameMode);
         }
 
-        public World CreateWorld(PersistedWorldData pWorldData,
-                                  ServerGameMode gameMode)
+        public World CreateWorld(PersistedWorldData pWorldData, ServerGameMode gameMode)
         {
             string seed = pWorldData.WorldData.Seed;
             if (string.IsNullOrWhiteSpace(seed))

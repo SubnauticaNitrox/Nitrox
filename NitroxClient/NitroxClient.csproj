@@ -108,6 +108,7 @@
     <Compile Include="GameLogic\PlayerModel\Equipment\ScubaSuitVisibiliyHandler.cs" />
     <Compile Include="GameLogic\Spawning\CellRootSpawner.cs" />
     <Compile Include="GameLogic\Spawning\Metadata\StarshipDoorMetadataProcessor.cs" />
+    <Compile Include="GameLogic\Spawning\Metadata\IncubatorMetadataProcessor.cs" />
     <Compile Include="GameLogic\Spawning\Metadata\WeldableWallPanelGenericMetadataProcessor.cs" />
     <Compile Include="GameLogic\StorageSlots.cs" />
     <Compile Include="Helpers\NitroxProtobufSerializer.cs" />
