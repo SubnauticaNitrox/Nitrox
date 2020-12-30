@@ -1,7 +1,10 @@
 ﻿using Newtonsoft.Json;
+using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Bases;
 using NitroxServer.GameLogic.Entities;
+using NitroxServer.GameLogic.Items;
 using NitroxServer.GameLogic.Players;
+using NitroxServer.GameLogic.Vehicles;
 using ProtoBufNet;
 
 namespace NitroxServer.Serialization.World
@@ -20,6 +23,25 @@ namespace NitroxServer.Serialization.World
 
         [JsonProperty, ProtoMember(4)]
         public EntityData EntityData { get; set; }
+
+        public static PersistedWorldData From(World world)
+        {
+            return new PersistedWorldData
+            {
+                BaseData = BaseData.From(world.BaseManager.GetPartiallyConstructedPieces(), world.BaseManager.GetCompletedBasePieceHistory()),
+                PlayerData = PlayerData.From(world.PlayerManager.GetAllPlayers()),
+                EntityData = EntityData.From(world.EntityManager.GetAllEntities()),
+                WorldData =
+                {
+                    ParsedBatchCells = world.BatchEntitySpawner.SerializableParsedBatches,
+                    ServerStartTime = world.TimeKeeper.ServerStartTime,
+                    VehicleData = VehicleData.From(world.VehicleManager.GetVehicles()),
+                    InventoryData = InventoryData.From(world.InventoryManager.GetAllInventoryItems(), world.InventoryManager.GetAllStorageSlotItems()),
+                    GameData = world.GameData,
+                    EscapePodData = EscapePodData.From(world.EscapePodManager.GetEscapePods())
+                }
+            };
+        }
 
         public bool IsValid()
         {

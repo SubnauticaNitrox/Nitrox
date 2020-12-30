@@ -13,17 +13,19 @@ namespace NitroxServer.Communication.Packets.Processors
         private readonly EntityManager entityManager;
         private readonly PlayerManager playerManager;
         private readonly EntitySimulation entitySimulation;
+        private readonly IMap map;
 
-        public DroppedItemPacketProcessor(EntityManager entityManager, PlayerManager playerManager, EntitySimulation entitySimulation)
+        public DroppedItemPacketProcessor(EntityManager entityManager, PlayerManager playerManager, EntitySimulation entitySimulation, IMap map)
         {
             this.entityManager = entityManager;
             this.playerManager = playerManager;
             this.entitySimulation = entitySimulation;
+            this.map = map;
         }
 
         public override void Process(DroppedItem packet, Player droppingPlayer)
         {
-            bool existsInGlobalRoot = Map.Main.GlobalRootTechTypes.Contains(packet.TechType);
+            bool existsInGlobalRoot = map.GlobalRootTechTypes.Contains(packet.TechType);
             Entity entity = new Entity(packet.ItemPosition, packet.ItemRotation, NitroxVector3.One, packet.TechType, 0, null, true, packet.WaterParkId.OrElse(null), packet.Bytes, existsInGlobalRoot, packet.Id);
             entityManager.RegisterNewEntity(entity);
 

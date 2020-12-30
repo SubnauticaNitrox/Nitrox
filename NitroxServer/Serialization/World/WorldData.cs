@@ -19,7 +19,7 @@ namespace NitroxServer.Serialization.World
         public List<NitroxInt3> ParsedBatchCells { get; set; }
 
         [JsonProperty, ProtoMember(2)]
-        public DateTime? ServerStartTime { get; set; }
+        public DateTime ServerStartTime { get; set; }
 
         [JsonProperty, ProtoMember(3)]
         public VehicleData VehicleData { get; set; }
@@ -33,18 +33,16 @@ namespace NitroxServer.Serialization.World
         [JsonProperty, ProtoMember(6)]
         public EscapePodData EscapePodData { get; set; }
 
-        [JsonProperty, ProtoMember(7)]
-        public StoryTimingData StoryTimingData { get; set; }
 
+        [JsonProperty, ProtoMember(8)]
+        public string Seed { get; set; }
         public bool IsValid()
         {
             return (ParsedBatchCells != null) && // Always returns false on empty saves
-                   (ServerStartTime.HasValue) &&
                    (VehicleData != null) &&
                    (InventoryData != null) &&
                    (GameData != null) &&
-                   (EscapePodData != null) &&
-                   (StoryTimingData != null);
+                   (EscapePodData != null);
         }
     }
 }

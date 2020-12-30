@@ -17,8 +17,9 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoMember(3)]
         public float Z;
 
-        public static NitroxVector3 Zero { get; } = new NitroxVector3(0, 0, 0);
-        public static NitroxVector3 One { get; } = new NitroxVector3(1, 1, 1);
+        public static NitroxVector3 Zero => new NitroxVector3(0, 0, 0);
+
+        public static NitroxVector3 One => new NitroxVector3(1, 1, 1);
 
         public NitroxVector3(float x, float y, float z)
         {
@@ -56,6 +57,16 @@ namespace NitroxModel.DataStructures.GameLogic
         public static NitroxVector3 operator *(NitroxVector3 lhs, float rhs)
         {
             return new NitroxVector3(lhs.X * rhs, lhs.Y * rhs, lhs.Z * rhs);
+        }
+
+        public static bool operator ==(NitroxVector3 lhs, NitroxVector3 rhs)
+        {
+            return lhs.X == rhs.X && lhs.Y == rhs.Y && lhs.Z == rhs.Z;
+        }
+
+        public static bool operator !=(NitroxVector3 lhs, NitroxVector3 rhs)
+        {
+            return !(lhs == rhs);
         }
 
         public static NitroxVector3 Normalize(NitroxVector3 value)

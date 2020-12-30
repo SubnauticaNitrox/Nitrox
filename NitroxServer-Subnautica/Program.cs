@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Net;
@@ -15,6 +14,7 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Discovery;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
+using NitroxModel.OS;
 using NitroxModel_Subnautica.Helper;
 using NitroxServer;
 using NitroxServer.ConsoleCommands.Processor;
@@ -64,8 +64,6 @@ namespace NitroxServer_Subnautica
                 AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
                 AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += CurrentDomainOnAssemblyResolve;
 
-                Map.Main = new SubnauticaMap();
-
                 NitroxServiceLocator.InitializeDependencyContainer(new SubnauticaServerAutoFacRegistrar());
                 NitroxServiceLocator.BeginNewLifetimeScope();
 
@@ -85,7 +83,7 @@ namespace NitroxServer_Subnautica
                 AppMutex.Release();
             }
 
-            Log.Info("To get help for commands, run help in console or /help in chatbox\n");
+            Log.Info("To get help for commands, run help in console or /help in chatbox");
             ConsoleCommandProcessor cmdProcessor = NitroxServiceLocator.LocateService<ConsoleCommandProcessor>();
             while (server.IsRunning)
             {
@@ -156,19 +154,18 @@ namespace NitroxServer_Subnautica
             {
                 return;
             }
+            string mostRecentLogFile = Log.GetMostRecentLogFile();
+            if (mostRecentLogFile == null)
+            {
+                return;
+            }
 
-            Console.WriteLine("Press L to open log file before closing. Press any other key to close . . .");
+            Log.Info("Press L to open log file before closing. Press any other key to close . . .");
             ConsoleKeyInfo key = Console.ReadKey(true);
             if (key.Key == ConsoleKey.L)
             {
-                Log.Info($"Opening log file at: {Log.FileName}..");
-                string fileOpenerProgram = Environment.OSVersion.Platform switch
-                {
-                    PlatformID.MacOSX => "open",
-                    PlatformID.Unix => "xdg-open",
-                    _ => "explorer"
-                };
-                Process.Start(fileOpenerProgram, Log.FileName);
+                Log.Info($"Opening log file at: {mostRecentLogFile}..");
+                FileSystem.Instance.OpenOrExecuteFile(mostRecentLogFile);
             }
 
             Environment.Exit(1);
@@ -219,7 +216,7 @@ namespace NitroxServer_Subnautica
         private static void ConfigureCultureInfo()
         {
             CultureInfo cultureInfo = new CultureInfo("en-US");
-            
+
             // Although we loaded the en-US cultureInfo, let's make sure to set these incase the
             // default was overriden by the user.
             cultureInfo.NumberFormat.NumberDecimalSeparator = ".";

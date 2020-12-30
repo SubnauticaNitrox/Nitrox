@@ -15,10 +15,6 @@ namespace NitroxServer.GameLogic.Items
         [JsonProperty, ProtoMember(2)]
         public List<ItemData> StorageSlotItems = new List<ItemData>();
 
-        private InventoryData()
-        {
-        }
-
         public static InventoryData From(IEnumerable<ItemData> inventoryItems, IEnumerable<ItemData> storageSlotItems)
         {
             return new InventoryData

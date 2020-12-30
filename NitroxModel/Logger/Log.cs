@@ -16,26 +16,34 @@ namespace NitroxModel.Logger
     {
         private static ILogger logger;
 
-        public static string FileName { get; private set; }
-
         public static string PlayerName
         {
             set => SetPlayerName(value);
         }
+        
+        public static string LogDirectory { get; } = Path.GetFullPath(Path.Combine(Environment.GetEnvironmentVariable("NITROX_LAUNCHER_PATH") ?? "", "Nitrox Logs"));
 
-        public static void Setup(bool asyncConsoleWriter = false, InGameLogger inGameLogger = null, bool isConsoleApp = false)
+        public static string GetMostRecentLogFile() => new DirectoryInfo(LogDirectory).GetFiles().OrderByDescending(f => f.CreationTimeUtc).FirstOrDefault()?.FullName;
+
+        public static void Setup(bool asyncConsoleWriter = false, InGameLogger inGameLogger = null, bool isConsoleApp = false, bool useConsoleLogging = true)
         {
             if (logger != null)
             {
                 throw new Exception($"{nameof(Log)} setup should only be executed once.");
             }
+            PlayerName = "";
             logger = new LoggerConfiguration()
                      .MinimumLevel.Debug()
                      .WriteTo.Logger(cnf =>
                      {
+                         if (!useConsoleLogging)
+                         {
+                             return;
+                         }
+
                          string consoleTemplate = isConsoleApp switch
                          {
-                             false => $"[{{Timestamp:HH:mm:ss.fff}}] [{GetLoggerName()}{{{nameof(PlayerName)}}}][{{Level:u3}}] {{Message}}{{NewLine}}{{Exception}}",
+                             false => $"[{{Timestamp:HH:mm:ss.fff}}] {{{nameof(PlayerName)}:l}}[{{Level:u3}}] {{Message}}{{NewLine}}{{Exception}}",
                              _ => "[{Timestamp:HH:mm:ss.fff}] {Message}{NewLine}{Exception}"
                          };
 
@@ -50,8 +58,8 @@ namespace NitroxModel.Logger
                      })
                      .WriteTo.Logger(cnf => cnf
                                             .Enrich.FromLogContext()
-                                            .WriteTo.Async(a => a.File(Path.Combine(Environment.GetEnvironmentVariable("NITROX_LAUNCHER_PATH") ?? "", "Nitrox Logs/.log"),
-                                                                       outputTemplate: $"{{Timestamp:HH:mm:ss.fff}} [{GetLoggerName()}{{{nameof(PlayerName)}}}][{{Level:u3}}] {{Message}}{{NewLine}}{{Exception}}",
+                                            .WriteTo.Async(a => a.File(Path.Combine(LogDirectory, $"{GetLogFileName()}-.log"),
+                                                                       outputTemplate: $"[{{Timestamp:HH:mm:ss.fff}}] {{{nameof(PlayerName)}:l}}[{{Level:u3}}] {{Message}}{{NewLine}}{{Exception}}",
                                                                        rollingInterval: RollingInterval.Day,
                                                                        retainedFileCountLimit: 10,
                                                                        shared: true)))
@@ -176,11 +184,15 @@ namespace NitroxModel.Logger
         {
             if (string.IsNullOrEmpty(value))
             {
-                value = "";
+                LogContext.PushProperty(nameof(PlayerName), "");
+                return;
             }
 
-            Info($"Setting player name to {value}");
-            LogContext.PushProperty(nameof(PlayerName), '-' + value);
+            if (logger != null)
+            {
+                Info($"Setting player name to {value}");
+            }
+            LogContext.PushProperty(nameof(PlayerName), @$"[{value}]");
         }
 
         /// <summary>
@@ -191,6 +203,22 @@ namespace NitroxModel.Logger
         {
             string name = Assembly.GetEntryAssembly()?.GetName().Name ?? "Client"; // Unity Engine does not set Assembly name so lets default to 'Client'.
             return name.IndexOf("server", StringComparison.InvariantCultureIgnoreCase) >= 0 ? "Server" : name;
+        }
+
+        private static string GetLogFileName()
+        {
+            static bool Contains(string haystack, string needle) => haystack.IndexOf(needle, StringComparison.OrdinalIgnoreCase) >= 0;
+            
+            string loggerName = GetLoggerName();
+            if (Contains(loggerName, "server"))
+            {
+                return "server";
+            }
+            if (Contains(loggerName, "launch"))
+            {
+                return "launcher";
+            }
+            return "game";
         }
 
         private class SensitiveEnricher : ILogEventEnricher

@@ -4,7 +4,6 @@ using LiteNetLib.Utils;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Debuggers;
 using NitroxClient.MonoBehaviours.Gui.InGame;
-using NitroxModel.Core;
 using NitroxModel.Logger;
 using NitroxModel.Networking;
 using NitroxModel.Packets;
@@ -18,11 +17,11 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
         private readonly NetPacketProcessor netPacketProcessor = new NetPacketProcessor();
         private readonly AutoResetEvent connectedEvent = new AutoResetEvent(false);
         private readonly PacketReceiver packetReceiver;
-        private readonly NetworkDebugger networkDebugger;
+        private readonly INetworkDebugger networkDebugger;
 
         private NetManager client;
 
-        public LiteNetLibClient(PacketReceiver packetReceiver, NetworkDebugger networkDebugger)
+        public LiteNetLibClient(PacketReceiver packetReceiver, INetworkDebugger networkDebugger = null)
         {
             this.packetReceiver = packetReceiver;
             this.networkDebugger = networkDebugger;

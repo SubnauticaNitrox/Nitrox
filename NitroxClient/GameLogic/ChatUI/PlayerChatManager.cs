@@ -2,6 +2,7 @@
 using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours.Gui.Chat;
 using NitroxClient.Unity.Helper;
+using NitroxModel.Helper;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
@@ -20,7 +21,11 @@ namespace NitroxClient.GameLogic.ChatUI
         public PlayerChatManager(IMultiplayerSession multiplayerSession)
         {
             this.multiplayerSession = multiplayerSession;
-            Player.main.StartCoroutine(LoadChatLogAsset());
+
+            if (NitroxEnvironment.IsNormal) //Testing would fail because it's trying to access runtime MonoBehaviours.
+            {
+                Player.main.StartCoroutine(LoadChatLogAsset());
+            }
         }
 
         private PlayerChat playerChat;

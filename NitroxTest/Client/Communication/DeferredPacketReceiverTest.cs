@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NitroxClient;
 using NitroxClient.Communication;
 using NitroxClient.Map;
+using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
 using NitroxTest.Model;
-using UnityEngine;
 
 namespace NitroxTest.Client.Communication
 {
@@ -27,8 +28,10 @@ namespace NitroxTest.Client.Communication
         [TestInitialize]
         public void TestInitialize()
         {
-            packetReceiver = new PacketReceiver();
-            NitroxModel.Helper.Map.Main = new NitroxModel_Subnautica.Helper.SubnauticaMap();
+            NitroxServiceLocator.InitializeDependencyContainer(new ClientAutoFacRegistrar(), new TestAutoFacRegistrar());
+            NitroxServiceLocator.BeginNewLifetimeScope();
+
+            packetReceiver = NitroxServiceLocator.LocateService<PacketReceiver>();
 
             loadedCell = new AbsoluteEntityCell(loadedActionPosition, CELL_LEVEL);
             unloadedCell = new AbsoluteEntityCell(unloadedActionPosition, CELL_LEVEL);
@@ -39,13 +42,20 @@ namespace NitroxTest.Client.Communication
         [TestMethod]
         public void NonActionPacket()
         {
-            Packet packet = new TestNonActionPacket(PLAYER_ID);
+            TestNonActionPacket packet = new TestNonActionPacket(PLAYER_ID);
             packetReceiver.PacketReceived(packet);
 
             Queue<Packet> packets = packetReceiver.GetReceivedPackets();
 
             Assert.AreEqual(1, packets.Count);
             Assert.AreEqual(packet, packets.Dequeue());
+            Assert.AreEqual(packet.PlayerId, PLAYER_ID);
+        }
+
+        [TestCleanup]
+        public void Cleanup()
+        {
+            NitroxServiceLocator.EndCurrentLifetimeScope();
         }
     }
 }

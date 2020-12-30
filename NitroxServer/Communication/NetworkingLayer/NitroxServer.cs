@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using Mono.Nat;
 using NitroxModel.DataStructures;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
-using NitroxModel.Server;
 using NitroxServer.Communication.Packets;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Entities;
@@ -34,7 +34,7 @@ namespace NitroxServer.Communication.NetworkingLayer
         public abstract bool Start();
 
         public abstract void Stop();
-        
+
         protected void ClientDisconnected(NitroxConnection connection)
         {
             Player player = playerManager.GetPlayer(connection);
@@ -55,7 +55,7 @@ namespace NitroxServer.Communication.NetworkingLayer
                 }
             }
         }
-        
+
         protected void ProcessIncomingData(NitroxConnection connection, Packet packet)
         {
             try
@@ -66,6 +66,33 @@ namespace NitroxServer.Communication.NetworkingLayer
             {
                 Log.Error("Exception while processing packet: " + packet + " " + ex);
             }
+        }
+
+        protected void SetupUPNP()
+        {
+            NatUtility.DeviceFound += DeviceFound;
+            NatUtility.StartDiscovery();
+        }
+
+        private async void DeviceFound(object sender, DeviceEventArgs args)
+        {
+            try
+            {
+                INatDevice device = args.Device;
+                await device.CreatePortMapAsync(new Mapping(Protocol.Udp, 11000, 11000, (int)TimeSpan.FromDays(1).TotalSeconds, "Nitrox Server - Subnautica"));
+                Log.Info($"Server port has been automatically opened on your router");
+            }
+#if DEBUG
+            catch (Exception ex)
+            {
+                Log.Error($"Automatic port forwarding failed: {ex}");
+            }
+#else
+            catch (Exception)
+            {
+                Log.Error("Automatic port forwarding failed, please manually port forward");
+            }
+#endif
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using AssetsTools.NET;
+﻿using System.Collections.Generic;
+using AssetsTools.NET;
 using NitroxServer.Serialization.Resources.Datastructures;
 using UWE;
 
@@ -6,7 +7,7 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Parsers.Monobehaviours
 {
     class WorldEntityDataParser : MonobehaviourParser
     {
-        public override void Parse(AssetIdentifier identifier, AssetIdentifier gameObjectIdentifier, AssetsFileReader reader, ResourceAssets resourceAssets)
+        public override void Parse(AssetIdentifier identifier, AssetIdentifier gameObjectIdentifier, AssetsFileReader reader, ResourceAssets resourceAssets, Dictionary<int, string> relativeFileIdToPath)
         {
             reader.Align();
             uint size = reader.ReadUInt32();
