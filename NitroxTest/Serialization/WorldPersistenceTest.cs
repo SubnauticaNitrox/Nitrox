@@ -45,17 +45,7 @@ namespace NitroxTest.Serialization
             serverConfig = NitroxServiceLocator.LocateService<ServerConfig>();
 
             worldData = GeneratePersistedWorldData();
-            world = worldPersistence.CreateWorld(worldData.WorldData.ServerStartTime,
-                                                 worldData.EntityData.Entities,
-                                                 worldData.BaseData.PartiallyConstructedPieces,
-                                                 worldData.BaseData.CompletedBasePieceHistory,
-                                                 worldData.WorldData.VehicleData.Vehicles,
-                                                 worldData.PlayerData.GetPlayers(),
-                                                 worldData.WorldData.InventoryData.InventoryItems,
-                                                 worldData.WorldData.InventoryData.StorageSlotItems,
-                                                 worldData.WorldData.GameData,
-                                                 worldData.WorldData.ParsedBatchCells,
-                                                 worldData.WorldData.EscapePodData.EscapePods,
+            world = worldPersistence.CreateWorld(worldData,
                                                  serverConfig.GameMode);
 
             worldsDataAfter = new PersistedWorldData[serverSerializers.Length];

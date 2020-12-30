@@ -45,8 +45,7 @@ namespace NitroxServer_Subnautica.Serialization.Resources
                 return resourceAssets;
             }
 
-            resourceAssets = new ResourceAssets();
-            TryParseAllAssetsFiles(FindDirectoryContainingResourceAssets(), out ResourceAssets resourceAssets);
+            TryParseAllAssetsFiles(FindDirectoryContainingResourceAssets(), out resourceAssets);
 
             prefabPlaceholderExtractor.LoadInto(resourceAssets);
 

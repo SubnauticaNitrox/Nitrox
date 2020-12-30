@@ -162,11 +162,11 @@ namespace NitroxServer.Serialization.World
             pWorldData.WorldData = new WorldData()
             {
                 EscapePodData = EscapePodData.From(new List<EscapePodModel>()),
-                GameData = new GameData { PDAState = new PDAStateData(), StoryGoals = new StoryGoalData() },
+                GameData = new GameData { PDAState = new PDAStateData(), StoryGoals = new StoryGoalData(), StoryTiming = new StoryTimingData() },
                 InventoryData = InventoryData.From(new List<ItemData>(), new List<ItemData>()),
                 VehicleData = VehicleData.From(new List<VehicleModel>()),
                 ParsedBatchCells = new List<NitroxInt3>(),
-                ServerStartTime = DateTime.Now,
+                ServerStartTime = DateTime.Now
 #if DEBUG
                 , Seed = "1"
 #endif
@@ -178,7 +178,7 @@ namespace NitroxServer.Serialization.World
                 );
         }
 
-        private World CreateWorld(PersistedWorldData pWorldData,
+        public World CreateWorld(PersistedWorldData pWorldData,
                                   ServerGameMode gameMode)
         {
             string seed = pWorldData.WorldData.Seed;
@@ -191,7 +191,7 @@ namespace NitroxServer.Serialization.World
 
             World world = new World
             {
-                TimeKeeper = new TimeKeeper { ServerStartTime = pWorldData.WorldData.ServerStartTime.Value },
+                TimeKeeper = new TimeKeeper { ServerStartTime = pWorldData.WorldData.ServerStartTime },
 
                 SimulationOwnershipData = new SimulationOwnershipData(),
                 PlayerManager = new PlayerManager(pWorldData.PlayerData.GetPlayers(), config),
@@ -207,8 +207,8 @@ namespace NitroxServer.Serialization.World
                 Seed = seed
             };
 
-            world.EventTriggerer = new EventTriggerer(world.PlayerManager, gameData.StoryTiming.ElapsedTime, gameData.StoryTiming.AuroraExplosionTime);
-            world.VehicleManager = new VehicleManager(vehicles, world.InventoryManager);
+            world.EventTriggerer = new EventTriggerer(world.PlayerManager, pWorldData.WorldData.GameData.StoryTiming.ElapsedTime, pWorldData.WorldData.GameData.StoryTiming.AuroraExplosionTime);
+            world.VehicleManager = new VehicleManager(pWorldData.WorldData.VehicleData.Vehicles, world.InventoryManager);
 
             world.BatchEntitySpawner = new BatchEntitySpawner(
                 NitroxServiceLocator.LocateService<EntitySpawnPointFactory>(),
