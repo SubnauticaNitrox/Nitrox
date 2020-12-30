@@ -172,8 +172,7 @@ namespace NitroxServer.Serialization.World
                     ParsedBatchCells = new List<NitroxInt3>(),
                     ServerStartTime = DateTime.Now
 #if DEBUG
-                    ,
-                    Seed = "1"
+                , Seed = "TCCBIBZXAB"
 #endif
                 }
             };
