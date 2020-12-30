@@ -20,6 +20,8 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoMember(4)]
         public float W;
 
+        public static NitroxQuaternion Identity { get; } = new NitroxQuaternion(0, 0, 0, 1);
+
         public NitroxQuaternion(float x, float y, float z, float w)
         {
             X = x;

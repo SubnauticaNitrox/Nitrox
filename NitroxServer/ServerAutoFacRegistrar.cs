@@ -50,14 +50,15 @@ namespace NitroxServer
             containerBuilder.Register(c => c.Resolve<World>().BaseManager).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().VehicleManager).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().InventoryManager).SingleInstance();
-            containerBuilder.Register(c => c.Resolve<World>().GameData).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().PlayerManager).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().TimeKeeper).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().SimulationOwnershipData).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().EntityManager).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().BatchEntitySpawner).SingleInstance();
+            containerBuilder.Register(c => c.Resolve<World>().GameData).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().GameData.PDAState).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().GameData.StoryGoals).SingleInstance();
+            containerBuilder.Register(c => c.Resolve<World>().GameData.StoryTiming).SingleInstance();
         }
 
         private void RegisterGameSpecificServices(ContainerBuilder containerBuilder, Assembly assembly)

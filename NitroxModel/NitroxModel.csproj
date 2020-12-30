@@ -119,7 +119,6 @@
     <Compile Include="Packets\GameModeChanged.cs" />
     <Compile Include="Packets\EnergyMixinValueChanged.cs" />
     <Compile Include="Packets\LiveMixinHealthChanged.cs" />
-    <Compile Include="Packets\PlayerPermaDeathEvent.cs" />
     <Compile Include="Packets\PingRenamed.cs" />
     <Compile Include="Packets\PlayerEquipmentAdded.cs" />
     <Compile Include="Packets\PlayerEquipmentRemoved.cs" />
@@ -140,7 +139,7 @@
     <Compile Include="DataStructures\PriorityQueue.cs" />
     <Compile Include="DataStructures\GameLogic\VehicleMovementData.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="Helper\Map.cs" />
+    <Compile Include="Helper\IMap.cs" />
     <Compile Include="Helper\ReflectionHelper.cs" />
     <Compile Include="Discovery\GameInstallationFinder.cs" />
     <Compile Include="Helper\Validate.cs" />

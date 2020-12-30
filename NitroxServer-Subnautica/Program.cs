@@ -64,8 +64,6 @@ namespace NitroxServer_Subnautica
                 AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
                 AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += CurrentDomainOnAssemblyResolve;
 
-                Map.Main = new SubnauticaMap();
-
                 NitroxServiceLocator.InitializeDependencyContainer(new SubnauticaServerAutoFacRegistrar());
                 NitroxServiceLocator.BeginNewLifetimeScope();
 
@@ -219,7 +217,7 @@ namespace NitroxServer_Subnautica
         private static void ConfigureCultureInfo()
         {
             CultureInfo cultureInfo = new CultureInfo("en-US");
-            
+
             // Although we loaded the en-US cultureInfo, let's make sure to set these incase the
             // default was overriden by the user.
             cultureInfo.NumberFormat.NumberDecimalSeparator = ".";

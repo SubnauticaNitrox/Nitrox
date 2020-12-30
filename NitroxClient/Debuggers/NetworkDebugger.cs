@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace NitroxClient.Debuggers
 {
-    public class NetworkDebugger : BaseDebugger
+    public class NetworkDebugger : BaseDebugger, INetworkDebugger
     {
         private const int PACKET_STORED_COUNT = 100;
         private readonly Dictionary<Type, int> countByType = new Dictionary<Type, int>();
@@ -45,7 +45,7 @@ namespace NitroxClient.Debuggers
         protected override void OnSetSkin(GUISkin skin)
         {
             base.OnSetSkin(skin);
-            
+
             skin.SetCustomStyle("packet-type-down",
                                 skin.label,
                                 s =>
@@ -149,7 +149,7 @@ namespace NitroxClient.Debuggers
             bool isSentList = toRender.HasFlag(ToRender.SENT);
             bool isReceiveList = toRender.HasFlag(ToRender.RECEIVED);
             PacketPrefixer prefixer = isSentList && isReceiveList ? (PacketPrefixer)PacketDirectionPrefixer : PacketNoopPrefixer;
-            
+
             for (int i = packets.Count - 1; i >= 0; i--)
             {
                 PacketDebugWrapper wrapper = packets[i];
@@ -232,5 +232,11 @@ namespace NitroxClient.Debuggers
             RECEIVED = 2,
             BOTH = SENT | RECEIVED
         }
+    }
+
+    public interface INetworkDebugger
+    {
+        void PacketSent(Packet packet);
+        void PacketReceived(Packet packet);
     }
 }
