@@ -147,8 +147,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 Destroy(joinServerGameObject);
             }
 
-            joinServerGameObject = new GameObject();
-            JoinServer joinServerComponent = joinServerGameObject.AddComponent<JoinServer>();
+            JoinServer joinServerComponent = new GameObject().AddComponent<JoinServer>();
             joinServerComponent.ServerIp = endpoint.Address.ToString();
             joinServerComponent.ServerPort = endpoint.Port;
         }
