@@ -38,6 +38,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
+    <Compile Include="Patches\Dynamic\IncubatorActivationTerminal_OnHandClick_Patch.cs" />
+    <Compile Include="Patches\Dynamic\Incubator_OnHandClick_Patch.cs" />
     <Compile Include="Patches\Dynamic\BaseDeconstructable_MakeFaceDeconstructable_Patch.cs" />
     <Compile Include="Patches\Dynamic\PDAScanner_Scan_Patch.cs" />
     <Compile Include="Patches\Dynamic\Constructable_NotifyConstructedChanged_Patch.cs" />
