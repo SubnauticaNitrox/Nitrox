@@ -12,7 +12,7 @@ namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
     {
         private readonly NetManager server;
         private readonly EventBasedNetListener listener;
-        private readonly NetPacketProcessor netPacketProcessor = new NetPacketProcessor();
+        private readonly NetPacketProcessor netPacketProcessor = new();
 
         public LiteNetLibServer(PacketHandler packetHandler, PlayerManager playerManager, EntitySimulation entitySimulation, ServerConfig serverConfig) : base(packetHandler, playerManager, entitySimulation, serverConfig)
         {
@@ -53,8 +53,7 @@ namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
 
         private void PeerConnected(NetPeer peer)
         {
-            LiteNetLibConnection connection = new LiteNetLibConnection(peer);
-
+            LiteNetLibConnection connection = new(peer);
             lock (connectionsByRemoteIdentifier)
             {
                 connectionsByRemoteIdentifier[peer.Id] = connection;
@@ -90,15 +89,13 @@ namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
             }
         }
 
-        private NitroxConnection GetConnection(long remoteIdentifier)
+        private NitroxConnection GetConnection(int remoteIdentifier)
         {
             NitroxConnection connection;
-
             lock (connectionsByRemoteIdentifier)
             {
                 connectionsByRemoteIdentifier.TryGetValue(remoteIdentifier, out connection);
             }
-
             return connection;
         }
     }
