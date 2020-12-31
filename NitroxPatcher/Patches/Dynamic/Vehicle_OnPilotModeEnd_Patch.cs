@@ -19,7 +19,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
             NitroxId id = NitroxEntity.GetId(__instance.gameObject);
             SimulationOwnership simulationOwnership = NitroxServiceLocator.LocateService<SimulationOwnership>();
-            simulationOwnership.RequestSimulationLock(id, SimulationLockType.TRANSIENT, null);
+            simulationOwnership.RequestSimulationLock(id, SimulationLockType.TRANSIENT);
         }
 
         public override void Patch(Harmony harmony)

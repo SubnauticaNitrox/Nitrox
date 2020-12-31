@@ -3,6 +3,7 @@ using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.HUD;
+using NitroxClient.GameLogic.Simulation;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
@@ -15,8 +16,6 @@ namespace NitroxPatcher.Patches.Dynamic
         public static readonly Type TARGET_CLASS = typeof(Vehicle);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("OnHandClick", BindingFlags.Public | BindingFlags.Instance);
 
-        private static Vehicle vehicle;
-        private static GUIHand guiHand;
         private static bool skipPrefix = false;
 
         public static bool Prefix(Vehicle __instance, GUIHand hand)
@@ -26,9 +25,6 @@ namespace NitroxPatcher.Patches.Dynamic
                 return true;
             }
             
-            vehicle = __instance;
-            guiHand = hand;
-
             SimulationOwnership simulationOwnership = NitroxServiceLocator.LocateService<SimulationOwnership>();
             
             NitroxId id = NitroxEntity.GetId(__instance.gameObject);
@@ -39,17 +35,22 @@ namespace NitroxPatcher.Patches.Dynamic
                 return true;
             }
 
-            simulationOwnership.RequestSimulationLock(id, SimulationLockType.EXCLUSIVE, ReceivedSimulationLockResponse);
+            HandInteraction<Vehicle> context = new HandInteraction<Vehicle>(__instance, hand);
+            LockRequest<HandInteraction<Vehicle>> lockRequest = new LockRequest<HandInteraction<Vehicle>>(id, SimulationLockType.EXCLUSIVE, ReceivedSimulationLockResponse, context);
+
+            simulationOwnership.RequestSimulationLock(lockRequest);
 
             return false;
         }
 
-        private static void ReceivedSimulationLockResponse(NitroxId id, bool lockAquired)
+        private static void ReceivedSimulationLockResponse(NitroxId id, bool lockAquired, HandInteraction<Vehicle> context)
         {
+            Vehicle vehicle = context.Target;
+
             if (lockAquired)
             {
                 skipPrefix = true;
-                TARGET_METHOD.Invoke(vehicle, new[] { guiHand });
+                TARGET_METHOD.Invoke(vehicle, new[] { context.GuiHand });
                 skipPrefix = false;
             }
             else

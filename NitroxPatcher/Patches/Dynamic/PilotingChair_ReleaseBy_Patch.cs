@@ -23,7 +23,7 @@ namespace NitroxPatcher.Patches.Dynamic
             SimulationOwnership simulationOwnership = NitroxServiceLocator.LocateService<SimulationOwnership>();
 
             // Request to be downgraded to a transient lock so we can still simulate the positioning.
-            simulationOwnership.RequestSimulationLock(id, SimulationLockType.TRANSIENT, null);
+            simulationOwnership.RequestSimulationLock(id, SimulationLockType.TRANSIENT);
         }
 
         public override void Patch(Harmony harmony)
