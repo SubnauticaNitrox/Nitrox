@@ -1,6 +1,7 @@
 ﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
+using NitroxClient.GameLogic.Containers;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic;
@@ -28,11 +29,8 @@ namespace NitroxClient.Communication.Packets.Processors
             
             itemContainer.AddItem(item, itemData.ContainerId);
 
-            // special Planting helper
-            if( itemData is PlantableItemData plantableData)
-            {
-                item.FixPlantGrowth(plantableData);
-            }
+            ContainerAddItemPostProcessor postProcessor = ContainerAddItemPostProcessor.From(item);
+            postProcessor.process(item, itemData);
         }
     }
 }

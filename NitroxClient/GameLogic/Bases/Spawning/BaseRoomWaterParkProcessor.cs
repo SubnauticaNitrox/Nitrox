@@ -3,15 +3,14 @@ using NitroxModel.DataStructures;
 using UnityEngine;
 using NitroxModel.Logger;
 using NitroxModel.Helper;
-using NitroxClient.GameLogic.Helper;
 
 namespace NitroxClient.GameLogic.Bases.Spawning
 {
     /*
-     * When a bio reactor is created, two objects are spawned: the main world object (BaseBioReactorGeometry) and
-     * the core power logic as a separate game object (BaseBioReactor, also known as a 'module').  The BaseBioReactor 
-     * resides as a direct child of the base object (probably so UWE could iterate them easy).  When the object spawns, 
-     * we use this class to set a deterministic id seeded by the parent id.  This keeps inventory actions in sync.
+     * When a Alien Containment Unit is created, multiple objects are spawned: the main world object (WaterParkPiece) and
+     * the contained WaterPark as a separate game object (WaterParkPiece, also known as a 'module').  The WaterPark in turn
+     * contains a Planter.  When the object spawns, we use this class to set a deterministic id seeded by the parent id. 
+     * This keeps inventory actions in sync and allows for persistent storage of each container's contents.
      */
     public class BaseRoomWaterParkProcessor: BasePieceSpawnProcessor
     {
@@ -25,7 +24,7 @@ namespace NitroxClient.GameLogic.Bases.Spawning
             NitroxId pieceId = NitroxEntity.GetId(finishedPiece);
 
             WaterParkPiece waterParkPiece = finishedPiece.GetComponent<WaterParkPiece>();
-            if(null==waterParkPiece)
+            if(!waterParkPiece)
             {
                 // The BaseWater has multiple base pieces, but only one of them (the bottom) contains the WaterParkPiece component...
                 return;
@@ -36,7 +35,7 @@ namespace NitroxClient.GameLogic.Bases.Spawning
 
             // assuming there could be multiple pieces sharing the same waterpark we only create an ID if there is none.
             NitroxEntity waterEntity = waterPark.gameObject.GetComponent<NitroxEntity>();
-            if (null == waterEntity)
+            if (!waterEntity)
             {
                 NitroxId newWaterparkId = pieceId.Increment();
                 NitroxEntity.SetNewId(waterPark.gameObject, newWaterparkId);

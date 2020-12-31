@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.Communication.Packets.Processors;
+using NitroxClient.GameLogic.Containers;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxModel.DataStructures.GameLogic;
@@ -74,11 +74,9 @@ namespace NitroxClient.GameLogic.InitialSync
                     else
                     {
                         itemContainers.AddItem(item, itemdata.ContainerId);
-                        // special Planting helper
-                        if (itemdata is PlantableItemData plantableData)
-                        {
-                            item.FixPlantGrowth(plantableData);
-                        }
+
+                        ContainerAddItemPostProcessor postProcessor = ContainerAddItemPostProcessor.From(item);
+                        postProcessor.process(item, itemdata);
                     }
 
                     totalItemDataSynced++;
