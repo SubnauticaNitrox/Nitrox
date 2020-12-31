@@ -58,6 +58,11 @@ namespace NitroxClient.GameLogic
             packetSender.Send(new EntityMetadataUpdate(id, metadata));
         }
 
+        public void BroadcastEntitySpawnedByClient(Entity entity)
+        {
+            packetSender.Send(new EntitySpawnedByClient(entity));
+        }
+
         public void Spawn(List<Entity> entities)
         {
             foreach (Entity entity in entities)
