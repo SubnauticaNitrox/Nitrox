@@ -18,7 +18,7 @@ namespace NitroxServer.Communication.NetworkingLayer
 
         protected readonly PacketHandler packetHandler;
         protected readonly EntitySimulation entitySimulation;
-        protected readonly Dictionary<long, NitroxConnection> connectionsByRemoteIdentifier = new Dictionary<long, NitroxConnection>();
+        protected readonly Dictionary<int, NitroxConnection> connectionsByRemoteIdentifier = new();
         protected readonly PlayerManager playerManager;
 
         public NitroxServer(PacketHandler packetHandler, PlayerManager playerManager, EntitySimulation entitySimulation, ServerConfig serverConfig)

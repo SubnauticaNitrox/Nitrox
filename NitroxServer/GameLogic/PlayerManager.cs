@@ -17,9 +17,9 @@ namespace NitroxServer.GameLogic
     public class PlayerManager
     {
         private readonly ThreadSafeDictionary<string, Player> allPlayersByName;
-        private readonly ThreadSafeDictionary<NitroxConnection, ConnectionAssets> assetsByConnection = new ThreadSafeDictionary<NitroxConnection, ConnectionAssets>();
-        private readonly ThreadSafeDictionary<string, PlayerContext> reservations = new ThreadSafeDictionary<string, PlayerContext>();
-        private readonly ThreadSafeCollection<string> reservedPlayerNames = new ThreadSafeCollection<string>(new HashSet<string>());
+        private readonly ThreadSafeDictionary<NitroxConnection, ConnectionAssets> assetsByConnection = new();
+        private readonly ThreadSafeDictionary<string, PlayerContext> reservations = new();
+        private readonly ThreadSafeCollection<string> reservedPlayerNames = new(new HashSet<string>());
 
         private readonly PlayerStatsData defaultPlayerStats;
         private readonly ServerConfig serverConfig;
@@ -65,8 +65,7 @@ namespace NitroxServer.GameLogic
             }
 
             string playerName = authenticationContext.Username;
-            Player player;
-            allPlayersByName.TryGetValue(playerName, out player);
+            allPlayersByName.TryGetValue(playerName, out Player player);
             if ((player?.IsPermaDeath == true) && serverConfig.IsHardcore)
             {
                 MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.HARDCORE_PLAYER_DEAD;
@@ -79,8 +78,7 @@ namespace NitroxServer.GameLogic
                 return new MultiplayerSessionReservation(correlationId, rejectedState);
             }
 
-            ConnectionAssets assetPackage;
-            assetsByConnection.TryGetValue(connection, out assetPackage);
+            assetsByConnection.TryGetValue(connection, out ConnectionAssets assetPackage);
             if (assetPackage == null)
             {
                 assetPackage = new ConnectionAssets();
@@ -147,9 +145,7 @@ namespace NitroxServer.GameLogic
 
         public void PlayerDisconnected(NitroxConnection connection)
         {
-            ConnectionAssets assetPackage;
-            assetsByConnection.TryGetValue(connection, out assetPackage);
-
+            assetsByConnection.TryGetValue(connection, out ConnectionAssets assetPackage);
             if (assetPackage == null)
             {
                 return;
@@ -194,15 +190,16 @@ namespace NitroxServer.GameLogic
 
         public Player GetPlayer(NitroxConnection connection)
         {
-            ConnectionAssets assetPackage;
-            assetsByConnection.TryGetValue(connection, out assetPackage);
-            return assetPackage?.Player;
+            if (!assetsByConnection.TryGetValue(connection, out ConnectionAssets assetPackage))
+            {
+                return null;
+            }
+            return assetPackage.Player;
         }
 
         public Optional<Player> GetPlayer(string playerName)
         {
-            Player player;
-            allPlayersByName.TryGetValue(playerName, out player);
+            allPlayersByName.TryGetValue(playerName, out Player player);
             return Optional.OfNullable(player);
         }
 
