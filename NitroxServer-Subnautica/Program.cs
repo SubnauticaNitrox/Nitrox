@@ -50,7 +50,7 @@ namespace NitroxServer_Subnautica
             {
                 if (args[0].Equals("zerotier"))
                 {
-                    PrivateNetwork = new ZeroTierAPI();
+                    PrivateNetwork = new ZeroTierAPI( new API_Settings() { Web_API_Key = "AOVr7MaXugibaWm8kmRXOegCH84NBRnv", Internal_Id = "56e2eba4-db42-4082-9456-fe22051d54b8" }, new Network_Settings() { IP_Address_Prefix = "10.10.10", Network_Name = "Multiplayer Server", Network_Description = "Last Accessed: " + DateTime.UtcNow.Millisecond, Network_Privacy = Security.Public });
                     PrivateNetwork.NetworkChangeEvent += PrivateNetwork_NetworkChangeEvent;
                     PrivateNetwork.LogNetworkInfoEvent += PrivateNetwork_LogNetworkInfoEvent;
                     bool HasRun = false;
@@ -74,7 +74,7 @@ namespace NitroxServer_Subnautica
                     // update private server id
                     if (PrivateNetwork != null)
                     {
-                        File.WriteAllLines(privateServerIdPath, new string[] { PrivateNetwork.NetworkId, "Activated"});
+                        File.WriteAllLines(privateServerIdPath, new string[] { PrivateNetwork.Network_Settings.Network_Id, "Activated" });
                     }
                 }
             }
@@ -135,19 +135,11 @@ namespace NitroxServer_Subnautica
             if (PrivateNetwork != null)
             {
                 // update description for deleting after 136 hours of no use (4 days)
-                PrivateNetwork.UpdateNetworkDescription(PrivateNetwork.NetworkId, "Last Accessed: " + DateTimeOffset.UtcNow.ToUnixTimeSeconds()).Wait();
-                // leave all networks
-                PrivateNetwork.LeaveAllServers();
-                // delete network history
-                PrivateNetwork.DeleteAllNonConnectedNetworks();
-                // get zero teir process(es) and kill em
-                System.Diagnostics.Process[] Zero = System.Diagnostics.Process.GetProcessesByName("ZeroTier One");
-                foreach (System.Diagnostics.Process item in Zero)
-                { item.Kill(); }
-                foreach (System.Diagnostics.Process item in Zero)
-                { item.WaitForExit(); }
+                PrivateNetwork.UpdateNetworkDescription(PrivateNetwork.Network_Settings.Network_Id, PrivateNetwork.Network_Settings.Network_Name, "Last Accessed: " + DateTime.UtcNow.Millisecond).Wait();
+                // stop server
+                PrivateNetwork.StopServerAsync(false).Wait();
                 // update server usage status
-                File.WriteAllLines(privateServerIdPath, new string[] { PrivateNetwork.NetworkId, "Deactivated" });
+                File.WriteAllLines(privateServerIdPath, new string[] { PrivateNetwork.Network_Settings.Network_Id, "Deactivated" });
             }
             // =================
 
