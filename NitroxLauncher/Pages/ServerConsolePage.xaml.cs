@@ -9,18 +9,41 @@ using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Input;
 using NitroxLauncher.Events;
+using LibZeroTier;
+using System.Runtime.InteropServices;
 
 namespace NitroxLauncher.Pages
 {
     public partial class ServerConsolePage : PageBase, INotifyPropertyChanged
     {
         private readonly List<string> commandLinesHistory = new List<string>();
+        public static bool IsServerRunning;
+        private static bool isPrivateServer;
+        private static string SERVER_DETAILS_PATH = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "private_server");
+        private bool isEmbed;
+        public bool IsEmbed
+        {
+            get => isEmbed;
+            set
+            {
+                isEmbed = value;
+                if (!isEmbed)
+                {
+                    Dispatcher?.Invoke(() =>
+                    {
+                        ConsoleButton.Visibility = Visibility.Hidden;
+                        ServerInfo.Visibility = Visibility.Visible;
+                        ConsolePage.Visibility = Visibility.Hidden;
+                    });
+                }
+                Dispatcher?.Invoke(() => { ServerStartedInit(); });
+            }
+        }
         public static bool ServerWasStarted = false;
         private int commandHistoryIndex;
         private string commandInputText;
@@ -104,11 +127,6 @@ namespace NitroxLauncher.Pages
 
         private void ServerDataReceived(object sender, DataReceivedEventArgs e)
         {
-            if (ServerWasStarted)
-            {
-                ServerStartedInit();
-                ServerWasStarted = false;
-            }
             // TODO: Change to virtualized textboxes per line.
             // This sucks for performance reasons. Every string concat in .NET will create a NEW string in memory.
             ServerOutput += e.Data + Environment.NewLine;
@@ -171,11 +189,6 @@ namespace NitroxLauncher.Pages
             }
         }
 
-        private void PART_VerticalScrollBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-
-        }
-
         private void ConsoleButton_Click(object sender, RoutedEventArgs e)
         {
             ServerInfo.Visibility = Visibility.Hidden;
@@ -187,90 +200,183 @@ namespace NitroxLauncher.Pages
             ServerInfo.Visibility = Visibility.Visible;
             ConsolePage.Visibility = Visibility.Hidden;
         }
-        public static void ServerHasStarted()
-        {
-            ServerWasStarted = true;
-        }
         private void ServerStartedInit()
         {
-            Dispatcher.Invoke(() => 
-            { 
-                ServerSettings settings = ServerSettings.ReadConfigFile();
-                ServerId.Text = "???";
-                Connectivity.Text = "???";
-                Port.Text = settings.port.ToString();
-                IpAddress.Text = settings.ip_address?.ToString();
-                ServerName.Text = settings.server_name;
-                ServerPassword.Text = settings.server_password;
-                AdminPassword.Text = settings.admin_password;
-                GameMode.SelectedIndex = (int)settings.gamemode.Value;
-                if (settings.ip_address == null)
+            Task.Factory.StartNew(() =>
+            {
+                while (!File.Exists(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "server.cfg"))){ }
+                isPrivateServer = (File.ReadAllLines(SERVER_DETAILS_PATH) ?? new string[2]{"", ""})[1] == "Activated";
+                Dispatcher.Invoke(() =>
                 {
-                    Task.Factory.StartNew(() => {
-                        while(ServerSettings.GetLocalIPAddress() == null){ Task.Delay(100).Wait(); }
-                        Dispatcher.Invoke(() =>
+                    ServerSettings settings = ServerSettings.ReadConfigFile();
+                    ServerId.Text = "";
+                    Connectivity.Text = "";
+                    Port.Text = settings.port.ToString();
+                    IpAddress.Text = settings.ip_address?.ToString();
+                    ServerName.Text = settings.server_name;
+                    ServerPassword.Text = settings.server_password;
+                    AdminPassword.Text = settings.admin_password;
+                    GameMode.SelectedIndex = (int)settings.gamemode.Value;
+                    if (settings.ip_address == null)
+                    {
+                        Task.Factory.StartNew(() =>
                         {
-                            IpAddress.Text = ServerSettings.GetLocalIPAddress().ToString();
-                            ServerId.Text = File.ReadAllText(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "PrivateServer.txt")) + IpAddress.Text.Split('.')[IpAddress.Text.Split('.').Length-1];
-                        });
-                    });
-                    Task.Factory.StartNew(() => {
-                        while (true)
-                        {
-                            int average_ping = Ping_all();
+                            while (ServerSettings.GetLocalIPAddress() == null)
+                            { Task.Delay(250).Wait(); }
                             Dispatcher.Invoke(() =>
                             {
-                                Connectivity.Text = average_ping.ToString() + " ms";
+                                IpAddress.Text = ServerSettings.GetLocalIPAddress().ToString();
+                                if (isPrivateServer)
+                                    ServerId.Text = File.ReadAllLines(SERVER_DETAILS_PATH)[0] + IpAddress.Text.Split('.')[IpAddress.Text.Split('.').Length - 1];
+                                else
+                                {
+                                    string externalip = new WebClient().DownloadString("http://icanhazip.com");
+                                    ServerId.Text = "Local IP :  " + IpAddress.Text + "                         Public IP :  " + externalip;
+                                }
                             });
-                            Task.Delay(500).Wait();
-                        }
-                    });
-                }
+                        });
+                        Task.Factory.StartNew(() =>
+                        {
+                            IsServerRunning = LauncherLogic.Instance.ServerRunning;
+                            while (IsServerRunning)
+                            {
+                                int average_ping = Ping_all();
+                                Dispatcher.Invoke(() =>
+                                {
+                                    Connectivity.Text = average_ping.ToString() + " ms";
+                                    switch (average_ping)
+                                    {
+                                        case <= 50:
+                                            SignalBar1.Fill = new SolidColorBrush() { Color = Colors.LimeGreen };
+                                            SignalBar2.Fill = new SolidColorBrush() { Color = Colors.LimeGreen };
+                                            SignalBar3.Fill = new SolidColorBrush() { Color = Colors.LimeGreen };
+                                            SignalBar4.Fill = new SolidColorBrush() { Color = Colors.LimeGreen };
+                                            SignalBar5.Fill = new SolidColorBrush() { Color = Colors.LimeGreen };
+                                            break;
+                                        case <= 100:
+                                            SignalBar1.Fill = new SolidColorBrush() { Color = Colors.Lime };
+                                            SignalBar2.Fill = new SolidColorBrush() { Color = Colors.Lime };
+                                            SignalBar3.Fill = new SolidColorBrush() { Color = Colors.Lime };
+                                            SignalBar4.Fill = new SolidColorBrush() { Color = Colors.Lime };
+                                            SignalBar5.Fill = new SolidColorBrush() { Color = Colors.Gray };
+                                            break;
+                                        case <= 150:
+                                            SignalBar1.Fill = new SolidColorBrush() { Color = Colors.Yellow };
+                                            SignalBar2.Fill = new SolidColorBrush() { Color = Colors.Yellow };
+                                            SignalBar3.Fill = new SolidColorBrush() { Color = Colors.Yellow };
+                                            SignalBar4.Fill = new SolidColorBrush() { Color = Colors.Gray };
+                                            SignalBar5.Fill = new SolidColorBrush() { Color = Colors.Gray };
+                                            break;
+                                        case <= 300:
+                                            SignalBar1.Fill = new SolidColorBrush() { Color = Colors.Orange };
+                                            SignalBar2.Fill = new SolidColorBrush() { Color = Colors.Orange };
+                                            SignalBar3.Fill = new SolidColorBrush() { Color = Colors.Gray };
+                                            SignalBar4.Fill = new SolidColorBrush() { Color = Colors.Gray };
+                                            SignalBar5.Fill = new SolidColorBrush() { Color = Colors.Gray };
+                                            break;
+                                        default:
+                                            SignalBar1.Fill = new SolidColorBrush() { Color = Colors.Red };
+                                            SignalBar2.Fill = new SolidColorBrush() { Color = Colors.Gray };
+                                            SignalBar3.Fill = new SolidColorBrush() { Color = Colors.Gray };
+                                            SignalBar4.Fill = new SolidColorBrush() { Color = Colors.Gray };
+                                            SignalBar5.Fill = new SolidColorBrush() { Color = Colors.Gray };
+                                            break;
+                                    }
+                                });
+                                if (!IsServerRunning)
+                                    return;
+                                Task.Delay(500).Wait();
+                            }
+                        });
+                    }
+                });
             });
         }
-        static string NetworkGateway()
-        {
-            string ip = "10.10.10.1";
-            /*
-            foreach (var I in Dns.GetHostEntry(Dns.GetHostName()).AddressList)
-                if (ip.AddressFamily == AddressFamily.InterNetwork)
-                    if (ip.MapToIPv4().ToString().Contains("10.10.10."))
-            */
-            return ip;
-        }
-        public int TotalPing = 0;
-        public int NumberOfPeers = 0;
+        private List<KeyValuePair<string, int>> listOfPeers = new List<KeyValuePair<string, int>>();
         public int Ping_all()
         {
-            TotalPing = 0;
-            NumberOfPeers = 0;
-            string gate_ip = NetworkGateway();
-            if (gate_ip != null)
+            if(File.Exists(SERVER_DETAILS_PATH))
             {
-                //Extracting and pinging all other ip's.
-                string[] array = gate_ip.Split('.');
-
-                for (int i = 2; i <= 255; i++)
+                if (isPrivateServer)
                 {
-                    string ping_var = array[0] + "." + array[1] + "." + array[2] + "." + i;
-
-                    //time in milliseconds           
-                    Ping(ping_var, 1, 4000);
-
+                    //Extracting and pinging all other ip's.
+                    foreach (var i in ZeroTierAPI.GetPeers(File.ReadAllLines(SERVER_DETAILS_PATH)[0]))
+                    {
+                        if (i.Value)
+                            Ping(i.Key.ToString(), 1, 4000).Wait();
+                    }
+                    if (listOfPeers.Count > 0)
+                        return new Func<int>(() => { int total_ping = 0; foreach (KeyValuePair<string, int> item in listOfPeers) { total_ping += item.Value; } return total_ping; })() / listOfPeers.Count;
+                    else
+                        return 0;
                 }
-                if (NumberOfPeers > 0)
-                    return TotalPing / NumberOfPeers;
                 else
+                {
+                    IPAddress gate_way = GetGatewayForDestination(ServerSettings.GetLocalIPAddress());
+                    string MasterIp = gate_way.MapToIPv4().ToString();
+                    string[] IpArray = MasterIp.Split('.');
+                    string Ip = string.Join(".", IpArray[0], IpArray[1], IpArray[2]);
+                    for (var i = 2; i < 255; i++)
+                    {
+                        string IpAddress = Ip + "." + i.ToString();
+                        Ping(IpAddress, 1, 4000).Wait();
+                    }
                     return 0;
+                }
             }
             return 0;
         }
 
-        public void Ping(string host, int attempts, int timeout)
+        [DllImport("iphlpapi.dll", CharSet = CharSet.Auto)]
+        private static extern int GetBestInterface(UInt32 destAddr, out UInt32 bestIfIndex);
+
+        public static IPAddress GetGatewayForDestination(IPAddress destinationAddress)
+        {
+            UInt32 destaddr = BitConverter.ToUInt32(destinationAddress.GetAddressBytes(), 0);
+
+            uint interfaceIndex;
+            int result = GetBestInterface(destaddr, out interfaceIndex);
+            if (result != 0)
+                throw new Win32Exception(result);
+
+            foreach (var ni in NetworkInterface.GetAllNetworkInterfaces())
+            {
+                var niprops = ni.GetIPProperties();
+                if (niprops == null)
+                    continue;
+
+                var gateway = niprops.GatewayAddresses?.FirstOrDefault()?.Address;
+                if (gateway == null)
+                    continue;
+
+                if (ni.Supports(NetworkInterfaceComponent.IPv4))
+                {
+                    var v4props = niprops.GetIPv4Properties();
+                    if (v4props == null)
+                        continue;
+
+                    if (v4props.Index == interfaceIndex)
+                        return gateway;
+                }
+
+                if (ni.Supports(NetworkInterfaceComponent.IPv6))
+                {
+                    var v6props = niprops.GetIPv6Properties();
+                    if (v6props == null)
+                        continue;
+
+                    if (v6props.Index == interfaceIndex)
+                        return gateway;
+                }
+            }
+
+            return null;
+        }
+        public async Task Ping(string host, int attempts, int timeout)
         {
             for (int i = 0; i < attempts; i++)
             {
-                Task.Factory.StartNew(() =>
+                await Task.Factory.StartNew(() =>
                 {
                     try
                     {
@@ -289,13 +395,25 @@ namespace NitroxLauncher.Pages
         }
         private void PingCompleted(object sender, PingCompletedEventArgs e)
         {
-            string ip = (string)e.UserState;
-            if (e.Reply != null && e.Reply.Status == IPStatus.Success)
+            if (isPrivateServer || (e.Reply?.Status == IPStatus.Success))
             {
-                Dispatcher.Invoke(() => 
+                string ip = (string)e.UserState;
+                int ping = (int)e.Reply.RoundtripTime;
+                Debug.WriteLine(ip + " :: " + ping);
+                Dispatcher.Invoke(() =>
                 {
-                    NumberOfPeers += 1;
-                    TotalPing += (int)e.Reply.RoundtripTime;
+
+                    if (e.Reply.Status != IPStatus.Success)
+                        ping = 11010;
+                    int CurrentIndex = IndexOfKey(listOfPeers, ip);
+                    if (CurrentIndex >= 0)
+                    {
+                        listOfPeers[CurrentIndex] = new KeyValuePair<string, int>(ip, ping);
+                    }
+                    else
+                    {
+                        listOfPeers.Add(new KeyValuePair<string, int>(ip, ping));
+                    }
                     bool hasUpdated = false;
                     List<object> copy = new List<object>();
                     foreach (var item in PlayerList.Items)
@@ -306,18 +424,25 @@ namespace NitroxLauncher.Pages
                     {
                         if (item.ToString().Contains(ip))
                         {
-                            PlayerList.Items[copy.IndexOf(item)] = ip + "                      " + (int)e.Reply.RoundtripTime + " ms";
+                            PlayerList.Items[copy.IndexOf(item)] = ip + "                      " + ping + " ms";
                             hasUpdated = true;
                         }
                     }
-                    if(!hasUpdated)
-                        PlayerList.Items.Add(ip + "                      " + (int)e.Reply.RoundtripTime + " ms");
+                    if (!hasUpdated)
+                        PlayerList.Items.Add(ip + "                      " + ping + " ms");
                 });
             }
-            else
+        }
+        public int IndexOfKey(List<KeyValuePair<string, int>> list, string key)
+        {
+            int index = 0;
+            foreach(var i in list)
             {
-                // MessageBox.Show(e.Reply.Status.ToString());
+                if (i.Key == key)
+                    return index;
+                index++;
             }
+            return -1;
         }
     }
     public class ServerSettings
@@ -330,10 +455,18 @@ namespace NitroxLauncher.Pages
         public GameMode? gamemode { get; set; }
         public static IPAddress GetLocalIPAddress()
         {
-            foreach (var ip in Dns.GetHostEntry(Dns.GetHostName()).AddressList)
+            foreach (IPAddress ip in Dns.GetHostEntry(Dns.GetHostName()).AddressList)
                 if (ip.AddressFamily == AddressFamily.InterNetwork)
                     if(ip.MapToIPv4().ToString().Contains("10.10.10."))
                         return ip.MapToIPv4();
+            foreach (var netI in NetworkInterface.GetAllNetworkInterfaces())
+            {
+                if (netI.NetworkInterfaceType != NetworkInterfaceType.Wireless80211 && (netI.NetworkInterfaceType != NetworkInterfaceType.Ethernet || netI.OperationalStatus != OperationalStatus.Up))
+                    continue;
+                foreach (var uniIpAddrInfo in netI.GetIPProperties().UnicastAddresses.Where(x => netI.GetIPProperties().GatewayAddresses.Count > 0))
+                    if (uniIpAddrInfo.Address.AddressFamily == AddressFamily.InterNetwork && uniIpAddrInfo.AddressPreferredLifetime != uint.MaxValue)
+                        return uniIpAddrInfo.Address.MapToIPv4();
+            }
             return null;
         }
         public static ServerSettings ReadConfigFile()

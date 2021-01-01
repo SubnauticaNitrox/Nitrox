@@ -42,7 +42,7 @@
                 </Border>
             </StackPanel>
 
-            <StackPanel Grid.Row="2" Margin="0,22,0,0">
+            <StackPanel Grid.Row="2" Margin="0,22,0,157">
 
                 <TextBlock FontSize="16" Foreground="White" Margin="0,0,0,8"><Run Text="Incorrect installation path?"></Run></TextBlock>
 
@@ -50,6 +50,15 @@
                         HorizontalAlignment="Left" BorderBrush="#66FFFFFF" Click="ChangeOptions_Click"
                         ToolTip="Point the launcher to your games install location" Margin="0,4,0,142" Grid.Row="3">
                     <TextBlock Padding="0,1,0,0" FontSize="16" Foreground="White"><Run Text="Change"/></TextBlock>
+                </Button>
+
+            </StackPanel>
+            <TextBlock FontSize="12" Foreground="#7FFFFFFF" Margin="6,182,-6,82" FontWeight="Bold" Grid.Row="2"><Run Text="ZEROTIER PRIVATE NETWORKING"/></TextBlock>
+            <StackPanel Grid.Row="2" Margin="0,198,460,28">
+                <Button Style="{StaticResource LargeButton}" Background="#FF007BFF" Width="203" Height="42"
+                        HorizontalAlignment="Left" BorderBrush="#66FFFFFF" Click="ZeroTierInstall"
+                        ToolTip="Point the launcher to your games install location" Margin="0,4,0,142">
+                    <TextBlock Padding="0,1,0,0" FontSize="16" Foreground="White"><Run Text="Install"/></TextBlock>
                 </Button>
 
             </StackPanel>

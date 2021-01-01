@@ -14,7 +14,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Prefix()
         {
-            IMultiplayerSession multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();            
+            IMultiplayerSession multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
             multiplayerSession.Disconnect();
             Application.Quit();
         }

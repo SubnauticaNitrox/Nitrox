@@ -27,7 +27,7 @@ namespace NitroxServer_Subnautica
     {
         private static readonly Dictionary<string, Assembly> resolvedAssemblyCache = new Dictionary<string, Assembly>();
         private static Lazy<string> gameInstallDir;
-        private static string privateServerIdPath = Path.Combine(Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location) ?? ""), "PrivateServer.txt");
+        private static string privateServerIdPath = Path.Combine(Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location) ?? ""), "private_server");
 
         // Prevents Garbage Collection freeing this callback's memory. Causing an exception to occur for this handle.
         private static readonly ConsoleEventDelegate consoleCtrlCheckDelegate = ConsoleEventCallback;
@@ -57,7 +57,7 @@ namespace NitroxServer_Subnautica
                     bool HasRun = false;
                     if (File.Exists(privateServerIdPath))
                     {
-                        string contents = File.ReadAllText(privateServerIdPath);
+                        string contents = File.ReadAllLines(privateServerIdPath)[0];
                         if (await PrivateNetwork.IsValidNetwork(contents))
                         {
                             PrivateNetwork.StartServerAsync(contents).Wait();
@@ -75,7 +75,7 @@ namespace NitroxServer_Subnautica
                     // update private server id
                     if (PrivateNetwork != null)
                     {
-                        File.WriteAllText(privateServerIdPath, PrivateNetwork.NetworkId);
+                        File.WriteAllLines(privateServerIdPath, new string[] { PrivateNetwork.NetworkId, "Activated"});
                     }
                 }
             }
@@ -137,6 +137,18 @@ namespace NitroxServer_Subnautica
             {
                 // update description for deleting after 136 hours of no use (4 days)
                 PrivateNetwork.UpdateNetworkDescription(PrivateNetwork.NetworkId, "Last Accessed: " + DateTimeOffset.UtcNow.ToUnixTimeSeconds()).Wait();
+                // leave all networks
+                PrivateNetwork.LeaveAllServers();
+                // delete network history
+                PrivateNetwork.DeleteAllNonConnectedNetworks();
+                // get zero teir process(es) and kill em
+                Process[] Zero = Process.GetProcessesByName("ZeroTier One");
+                foreach (Process item in Zero)
+                { item.Kill(); }
+                foreach (Process item in Zero)
+                { item.WaitForExit(); }
+                // update server usage status
+                File.WriteAllLines(privateServerIdPath, new string[] { PrivateNetwork.NetworkId, "Deactivated" });
             }
             // =================
 

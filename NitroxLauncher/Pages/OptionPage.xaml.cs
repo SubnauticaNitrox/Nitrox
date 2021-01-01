@@ -1,8 +1,12 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.IO;
+using System.Net;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using Microsoft.WindowsAPICodePack.Dialogs;
+using Microsoft.Win32;
+using System.Diagnostics;
 
 namespace NitroxLauncher.Pages
 {
@@ -72,6 +76,36 @@ namespace NitroxLauncher.Pages
             {
                 OnPropertyChanged(nameof(PathToSubnautica));
             }
+        }
+
+        private void ZeroTierInstall(object sender, RoutedEventArgs e)
+        {
+            // check if zerotier is installed
+            if (File.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "ZeroTier", "One", "ZeroTier One.exe")))
+            {
+                MessageBox.Show("Error: ZeroTier is already installed!", "ZeroTier Installer", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+            // install zerotier
+            DownloadFile("https://download.zerotier.com/RELEASES/1.6.2/dist/ZeroTier%20One.msi", Path.Combine(GetDownloadFolderPath(), "ZeroTier One.msi"));
+            Process RunInstaller = new Process()
+            {
+                StartInfo = new ProcessStartInfo()
+                {
+                    FileName = Path.Combine(GetDownloadFolderPath(), "ZeroTier One.msi")
+                }
+            };
+            RunInstaller.Start();
+            RunInstaller.WaitForExit();
+        }
+        public static void DownloadFile(string remoteFilename, string localFilename)
+        {
+            WebClient client = new WebClient();
+            client.DownloadFile(remoteFilename, localFilename);
+        }
+        string GetDownloadFolderPath()
+        {
+            return Registry.GetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders", "{374DE290-123F-4565-9164-39C4925E467B}", String.Empty).ToString();
         }
     }
 }

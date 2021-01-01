@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Net;
+using System.Net.Sockets;
 using System.Text.RegularExpressions;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Exceptions;
@@ -37,6 +41,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         private bool showingPasswordWindow;
         private bool passwordEntered;
         private string serverPassword = string.Empty;
+        private string LAUNCHER_PATH = NitroxModel.Helper.NitroxAppData.Instance.LauncherPath;
 
         public string ServerIp = string.Empty;
         public int ServerPort;
@@ -349,6 +354,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 multiplayerClient.name = "Multiplayer Client";
                 multiplayerClient.AddComponent<Multiplayer>();
                 multiplayerSession.ConnectionStateChanged += SessionConnectionStateChangedHandler;
+                multiplayerSession.ServerDisconnected += MultiplayerSession_ServerDisconnected;
             }
 
             try
@@ -374,10 +380,43 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             }
         }
 
+        private void MultiplayerSession_ServerDisconnected()
+        {
+            if (MainMenuMultiplayerPanel.Main.IsPrivateServer)
+            {
+                // remove connection if not hosting server
+                if (!GetLocalIPAddresses().Contains(ServerIp))
+                {
+                    Process JoinNet = new Process()
+                    {
+                        StartInfo = new ProcessStartInfo()
+                        {
+                            Arguments = "zerotiermiddleman leaveall",
+                            WorkingDirectory = LAUNCHER_PATH,
+                            FileName = Path.Combine(LAUNCHER_PATH, "NitroxLauncher.exe")
+                        }
+                    };
+                    JoinNet.Start();
+                    JoinNet.WaitForExit();
+                }
+            }
+        }
+        public static List<string> GetLocalIPAddresses()
+        {
+            List<string> list = new List<string>();
+            IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (IPAddress ip in host.AddressList)
+                if (ip.AddressFamily == AddressFamily.InterNetwork)
+                    if(ip.MapToIPv4().ToString().StartsWith("10.10.10."))
+                        list.Add(ip.MapToIPv4().ToString());
+            return list;
+        }
+
         private void OnCancelClick()
         {
             StopMultiplayerClient();
             RightSideMainMenu.OpenGroup("Multiplayer");
+            MainMenuMultiplayerPanel.Main.IsConnectedToServer = false;
             gameObject.SetActive(false);
         }
 
@@ -409,7 +448,6 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             {
                 authenticationContext = new AuthenticationContext(playerName);
             }
-
             multiplayerSession.RequestSessionReservation(playerSettings, authenticationContext);
         }
 

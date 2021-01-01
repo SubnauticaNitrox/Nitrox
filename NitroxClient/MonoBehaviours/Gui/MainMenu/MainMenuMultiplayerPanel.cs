@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
 using NitroxModel.Logger;
@@ -26,7 +27,9 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         private Transform savedGameAreaContent;
         public GameObject SavedGamesRef;
         public string SERVER_LIST_PATH = Path.Combine(".", "servers");
-        public string LAUNCHER_PATH = NitroxModel.Helper.NitroxAppData.Instance.LauncherPath;
+        public bool IsConnectedToServer;
+        public bool IsPrivateServer;
+        private string LAUNCHER_PATH = NitroxModel.Helper.NitroxAppData.Instance.LauncherPath;
         private string serverHostInput;
         private string serverNameInput;
         private string serverPortInput;
@@ -115,30 +118,76 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         {
             JoinServerAsync(serverIp, serverPort, serverId);
         }
-
+        public bool IsOnPrivateServer = false;
         public async Task JoinServerAsync(string serverIp, string serverPort, string serverId = "")
         {
-            Log.InGame("Connecting to private server");
-            Process JoinNet = new Process()
+            if (!string.IsNullOrWhiteSpace(serverId))
             {
-                StartInfo = new ProcessStartInfo()
+                // verify zerotier is installed
+                if (!File.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "ZeroTier", "One", "ZeroTier One.exe")))
                 {
-                    Arguments = "zerotiermiddleman join " + serverId,
-                    WorkingDirectory = LAUNCHER_PATH,
-                    FileName = Path.Combine(LAUNCHER_PATH, "NitroxLauncher.exe")
+                    Log.InGame("Error: ZeroTier not installed, head over to the launcher settings to install ZeroTier private networking");
+                    return;
                 }
-            };
-            JoinNet.Start();
-            JoinNet.WaitForExit();
-            
-            // delay buffer to prevent joining errors
-            await Task.Delay(1500);
-            Log.InGame("Connection to private server established");
+                // verify server is not running and if it is, you may only join locally
+                Process[] SubnauticaProcess = Process.GetProcessesByName("NitroxServer-Subnautica");
+                Process[] ZeroTierProcess = Process.GetProcessesByName("ZeroTier One");
+                if(SubnauticaProcess.Length > 0 && ZeroTierProcess.Length > 0 && File.Exists(Path.Combine(LAUNCHER_PATH,"private_server")) && File.ReadAllLines(Path.Combine(LAUNCHER_PATH, "private_server"))?[1] == "Activated" && File.ReadAllLines(Path.Combine(LAUNCHER_PATH, "private_server"))?[0] != serverId)
+                {
+                    Log.InGame("Error: Trying to connect to server while private connection is in use by Nitrox server\nOnly local connections are allowed while server is active");
+                    return;
+                }
+                IsOnPrivateServer = true;
+                Log.InGame("Connecting to private server");
+                Process JoinNet = new Process()
+                {
+                    StartInfo = new ProcessStartInfo()
+                    {
+                        Arguments = "zerotiermiddleman join " + serverId,
+                        WorkingDirectory = LAUNCHER_PATH,
+                        FileName = Path.Combine(LAUNCHER_PATH, "NitroxLauncher.exe")
+                    }
+                };
+                JoinNet.Start();
+                JoinNet.WaitForExit();
+
+                // delay buffer to prevent joining errors
+                await Task.Delay(1500);
+                Log.InGame("Connection to private server established");
+
+                // re-launch launcher in status mode
+                JoinNet.StartInfo.Arguments = "zerotiermiddleman status " + serverId;
+                // custom handler for network events
+                JoinNet.Start();
+                // update server connection
+                IsConnectedToServer = true;
+                // deal with exit
+                Task.Factory.StartNew(() =>
+                {
+                    JoinNet.WaitForExit();
+                    IMultiplayerSession multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
+                    multiplayerSession.Disconnect();
+                    Log.InGame("Exit Code: " + JoinNet.ExitCode + " (" + string.Join(" ", ConvertCode(JoinNet.ExitCode).ToString().Split('_')) + ")");
+                    IsConnectedToServer = false;
+                });
+                // kill task if no longer connected to server
+                Task.Factory.StartNew(() =>
+                {
+                    while (IsConnectedToServer){ }
+                    if (!JoinNet.HasExited)
+                    {
+                        JoinNet.Kill();
+                    }
+                    Log.InGame("Exit Code: 1 (Server Forcibly Closed)");
+                });
+                IsPrivateServer = true;
+            }
 
             IPEndPoint endpoint = ResolveIPEndPoint(serverIp, serverPort);
             if (endpoint == null)
             {
                 Log.InGame($"Unable to resolve remote address: {serverIp}:{serverPort}");
+                IsConnectedToServer = false;
                 return;
             }
 
@@ -152,6 +201,36 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             JoinServer joinServerComponent = new GameObject().AddComponent<JoinServer>();
             joinServerComponent.ServerIp = endpoint.Address.ToString();
             joinServerComponent.ServerPort = endpoint.Port;
+        }
+
+        public enum ErrorCodes
+        {
+            Unothorized_Unkown_Network_Issue = 0,
+            Network_List_Changed = 124,
+            Connection_Timeout = 408,
+            Unothorized_Network_Removed = 119,
+            Unothorized_Networks_Added = 122,
+            Network_Identification_Changed = 126,
+            Network_Connection_Changed = 131,
+            Port_Error = 916,
+            Unexpected_Shutdown = 18,
+            Local_User_Status_Changed = 29
+        }
+        public ErrorCodes ConvertCode(int code)
+        {
+            return code switch
+            {
+                124 => ErrorCodes.Network_List_Changed,
+                408 => ErrorCodes.Connection_Timeout,
+                119 => ErrorCodes.Unothorized_Network_Removed,
+                122 => ErrorCodes.Unothorized_Networks_Added,
+                126 => ErrorCodes.Network_Identification_Changed,
+                131 => ErrorCodes.Network_Connection_Changed,
+                916 => ErrorCodes.Port_Error,
+                18 => ErrorCodes.Unexpected_Shutdown,
+                29 => ErrorCodes.Local_User_Status_Changed,
+                _ => ErrorCodes.Unothorized_Unkown_Network_Issue,
+            };
         }
 
         public void ShowAddServerWindow()

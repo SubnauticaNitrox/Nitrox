@@ -174,7 +174,7 @@
                 </Grid.RowDefinitions>
                 <Rectangle x:Name="Corner" Grid.Column="1" Fill="#7FFFFFFF" Grid.Row="1"/>
                 <ScrollContentPresenter x:Name="PART_ScrollContentPresenter" CanContentScroll="{TemplateBinding CanContentScroll}" CanHorizontallyScroll="False" CanVerticallyScroll="False" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" Grid.Column="0" Margin="{TemplateBinding Padding}" Grid.Row="0"/>
-                <ScrollBar x:Name="PART_VerticalScrollBar" AutomationProperties.AutomationId="VerticalScrollBar" Cursor="Arrow" Grid.Column="1" Maximum="{TemplateBinding ScrollableHeight}" Minimum="0" Grid.Row="0" Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" Value="{Binding VerticalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" ViewportSize="{TemplateBinding ViewportHeight}" Background="#26FFFFFF" ValueChanged="PART_VerticalScrollBar_ValueChanged" BorderBrush="#26FFFFFF"/>
+                <ScrollBar x:Name="PART_VerticalScrollBar" AutomationProperties.AutomationId="VerticalScrollBar" Cursor="Arrow" Grid.Column="1" Maximum="{TemplateBinding ScrollableHeight}" Minimum="0" Grid.Row="0" Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" Value="{Binding VerticalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" ViewportSize="{TemplateBinding ViewportHeight}" Background="#26FFFFFF" BorderBrush="#26FFFFFF"/>
                 <ScrollBar x:Name="PART_HorizontalScrollBar" AutomationProperties.AutomationId="HorizontalScrollBar" Cursor="Arrow" Grid.Column="0" Maximum="{TemplateBinding ScrollableWidth}" Minimum="0" Orientation="Horizontal" Grid.Row="1" Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" Value="{Binding HorizontalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" ViewportSize="{TemplateBinding ViewportWidth}"/>
             </Grid>
         </ControlTemplate>
@@ -219,7 +219,7 @@
                 <TextBlock Padding="0,5" FontSize="25"  Foreground="White" TextAlignment="Left"
                         Background="#232426" Text=" Server Id" Margin="10,60,17,490" VerticalAlignment="Center"/>
                 <TextBox x:Name="ServerId" Margin="10,103,17,437" BorderThickness="0" Background="{x:Null}" BorderBrush="Black"
-                        Foreground="White" FontSize="25" VerticalContentAlignment="Center" Padding="0,-3,0,0" Text="123456789123456" IsReadOnly="True"/>
+                        Foreground="White" FontSize="25" VerticalContentAlignment="Center" Padding="0,6,0,0" Text="" IsReadOnly="True"/>
                 <Rectangle Fill="Black" Margin="10,99,17,490" RenderTransformOrigin="0.5,0.5"/>
             </Grid>
             <Grid x:Name="Connectivity_Grid">
@@ -228,14 +228,22 @@
                 <Rectangle Fill="Black" Margin="10,195,17,394" RenderTransformOrigin="0.5,0.5"/>
                 <TextBox x:Name="Connectivity" Margin="10,206,17,334" BorderThickness="0" Background="{x:Null}"
                         BorderBrush="Black" Foreground="White" FontSize="25" VerticalContentAlignment="Center"
-                        Padding="0,-3,0,0" Text="123 ms" IsReadOnly="True"/>
+                        Padding="0,0,0,0" Text="0 ms" IsReadOnly="True">
+                </TextBox>
+                <Grid Margin="111,199,496,341">
+                    <Rectangle x:Name="SignalBar1" Fill="Gray" Margin="20,30,130,10"/>
+                    <Rectangle x:Name="SignalBar2" Fill="Gray" Margin="34,25,116,10"/>
+                    <Rectangle x:Name="SignalBar3" Fill="Gray" Margin="48,20,101,10"/>
+                    <Rectangle x:Name="SignalBar4" Fill="Gray" Margin="63,15,86,10"/>
+                    <Rectangle x:Name="SignalBar5" Fill="Gray" Margin="78,10,71,10"/>
+                </Grid>
             </Grid>
             <Grid x:Name="Properties_Grid">
                 <TextBlock Text=" Properties" Padding="0,5" FontSize="25" Foreground="White" TextAlignment="Left"
                         Background="#232426" Margin="10,258,17,292" VerticalAlignment="Center"/>
                 <Grid Name="NameBlock">
                     <TextBlock Padding="0,5" FontSize="25" Foreground="White" TextAlignment="Left"
-                        Background="{x:Null}" Text="Ip Address:" Margin="10,355,628,193" VerticalAlignment="Center"/>
+                        Background="{x:Null}" Text="IP Address:" Margin="10,355,628,193" VerticalAlignment="Center"/>
                     <TextBlock Padding="0,5" FontSize="25" Foreground="White" TextAlignment="Left"
                         Background="{x:Null}" Text="Port:" Margin="10,312,696,236" VerticalAlignment="Center"/>
                     <TextBlock Padding="0,5" FontSize="25" Foreground="White" TextAlignment="Left"
@@ -253,16 +261,16 @@
                             Text="11000" IsReadOnly="True"/>
                     <TextBox x:Name="IpAddress" Margin="138,364,413,196" BorderThickness="0" Background="#232426" BorderBrush="{x:Null}"
                             Foreground="White" FontSize="25" VerticalContentAlignment="Center" Padding="0,0,0,0"
-                            Text="10.10.10.256" IsReadOnly="True"/>
+                            Text="10.10.10.0" IsReadOnly="True"/>
                     <TextBox x:Name="ServerName" Margin="164,407,413,153" BorderThickness="0" Background="#232426" BorderBrush="{x:Null}"
                         Foreground="White" FontSize="25" VerticalContentAlignment="Center" Padding="0,0,0,0"
                         Text="world" IsReadOnly="True" Cursor="IBeam"/>
                     <TextBox x:Name="AdminPassword" Margin="566,365,19,195" BorderThickness="0" Background="#232426" BorderBrush="{x:Null}"
                         Foreground="White" FontSize="25" VerticalContentAlignment="Center" Padding="0,0,0,0"
-                        Text="world" IsReadOnly="True" Cursor="IBeam"/>
+                        Text="Secret" IsReadOnly="True" Cursor="IBeam"/>
                     <TextBox x:Name="ServerPassword" Margin="561,320,19,240" BorderThickness="0" Background="#232426" BorderBrush="{x:Null}"
                         Foreground="White" FontSize="25" VerticalContentAlignment="Center" Padding="0,0,0,0"
-                        Text="world" IsReadOnly="True" Cursor="IBeam"/>
+                        Text="" IsReadOnly="True" Cursor="IBeam"/>
                     <ComboBox x:Name="GameMode" Margin="520,408,19,0" Height="32" VerticalAlignment="Top" FontSize="20">
                         <ComboBoxItem IsSelected="True" FontSize="20">SURVIVAL</ComboBoxItem>
                         <ComboBoxItem FontSize="20">FREEDOM</ComboBoxItem>
@@ -276,18 +284,16 @@
                 <TextBlock Padding="0,5" FontSize="25" Foreground="White" TextAlignment="Left"
                         Background="#232426"  Text=" Players" Margin="10,454,17,96" VerticalAlignment="Center" />
                 <Rectangle Fill="Black" Margin="10,494,17,95" RenderTransformOrigin="0.5,0.5"/>
-                <ListBox x:Name="PlayerList" Margin="10,502,17,10" Background="{x:Null}" BorderThickness="0">
-                    
-                </ListBox>
+                <ListBox x:Name="PlayerList" Margin="10,502,17,10" Background="{x:Null}" BorderThickness="0" FontSize="15" Foreground="White" ScrollViewer.VerticalScrollBarVisibility="Visible"/>
             </Grid>
         </Grid>
         <Grid x:Name="NavBar" Margin="-10,-50,0,542">
             <Button TabIndex="2" DockPanel.Dock="Right" Width="Auto" Height="Auto" Style="{DynamicResource ButtonConsoleMsg}" Foreground="White" x:Name="ConsoleButton"
-                Click="ConsoleButton_Click" RenderTransformOrigin="0.852,0.559" Margin="21,2,625,10">
+                Click="ConsoleButton_Click" RenderTransformOrigin="0.852,0.559" Margin="156,2,490,10">
                 <TextBlock FontSize="30" VerticalAlignment="Center" HorizontalAlignment="Center">Console</TextBlock>
             </Button>
             <Button TabIndex="2" DockPanel.Dock="Right" Width="Auto" Height="Auto" Style="{DynamicResource ButtonConsoleMsg}" Foreground="White" x:Name="DetailsButton"
-                Click="DetailsButton_Click" RenderTransformOrigin="0.852,0.559" Margin="156,2,490,10">
+                Click="DetailsButton_Click" RenderTransformOrigin="0.852,0.559" Margin="26,2,620,10">
                 <TextBlock FontSize="30" VerticalAlignment="Center" HorizontalAlignment="Center">Details</TextBlock>
             </Button>
         </Grid>

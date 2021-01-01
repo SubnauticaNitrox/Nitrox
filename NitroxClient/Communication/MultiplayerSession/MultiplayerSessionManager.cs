@@ -40,6 +40,7 @@ namespace NitroxClient.Communication.MultiplayerSession
         }
 
         public event MultiplayerSessionConnectionStateChangedEventHandler ConnectionStateChanged;
+        public event MultiplayerSessiondDisconnectedEventHandler ServerDisconnected;
 
         public void Connect(string ipAddress, int port)
         {
@@ -89,6 +90,7 @@ namespace NitroxClient.Communication.MultiplayerSession
 
         public void Disconnect()
         {
+            ServerDisconnected?.Invoke();
             if (CurrentState.CurrentStage != MultiplayerSessionConnectionStage.DISCONNECTED)
             {
                 CurrentState.Disconnect(this);

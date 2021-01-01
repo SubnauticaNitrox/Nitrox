@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Windows;
 using System.Windows.Navigation;
 using NitroxLauncher.Properties;
@@ -28,7 +29,6 @@ namespace NitroxLauncher.Pages
             try
             {
                 LauncherLogic.Instance.StartServer(RBIsExternal.IsChecked == true);
-                ServerConsolePage.ServerHasStarted();
             }
             catch (Exception ex)
             {
@@ -39,8 +39,12 @@ namespace NitroxLauncher.Pages
         {
             try
             {
+                // verify zerotier is installed
+                if (!File.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "ZeroTier", "One", "ZeroTier One.exe")))
+                {
+                    throw new Exception("Error: ZeroTier not installed, head over to the launcher settings to install ZeroTier private networking");
+                }
                 LauncherLogic.Instance.StartServer(RBIsExternal.IsChecked == true, "zerotier");
-                ServerConsolePage.ServerHasStarted();
             }
             catch (Exception ex)
             {

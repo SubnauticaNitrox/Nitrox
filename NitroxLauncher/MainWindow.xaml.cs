@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -140,17 +141,15 @@ namespace NitroxLauncher
         private void ServerStarted(object sender, ServerStartEventArgs e)
         {
             isServerEmbedded = e.Embedded;
-
-            if (e.Embedded)
-            {
-                LauncherLogic.Instance.NavigateTo<ServerConsolePage>();
-            }
+            LauncherLogic.Instance.NavigateTo<ServerConsolePage>();
+            ((ServerConsolePage)LauncherLogic.Instance.GetCurrentPage()).IsEmbed = e.Embedded;
         }
 
         private void ServerExited(object sender, EventArgs e)
         {
             Dispatcher?.Invoke(() =>
             {
+                ServerConsolePage.IsServerRunning = false;
                 if (LauncherLogic.Instance.NavigationIsOn<ServerConsolePage>())
                 {
                     LauncherLogic.Instance.NavigateTo<ServerPage>();
@@ -164,12 +163,10 @@ namespace NitroxLauncher
             {
                 return;
             }
-            LauncherLogic.Instance.NavigateTo(elem.Tag?.GetType());
-        }
-
-        private void PART_VerticalScrollBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-
+            if(elem.Tag?.GetType() == typeof(ServerPage) && LauncherLogic.Instance.ServerRunning && !isServerEmbedded)
+                LauncherLogic.Instance.NavigateTo<ServerConsolePage>();
+            else
+                LauncherLogic.Instance.NavigateTo(elem.Tag?.GetType());
         }
     }
 }

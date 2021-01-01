@@ -8,5 +8,6 @@ namespace NitroxClient.Communication.Abstract
         void NegotiateReservation(IMultiplayerSessionConnectionContext sessionConnectionContext);
         void JoinSession(IMultiplayerSessionConnectionContext sessionConnectionContext);
         void Disconnect(IMultiplayerSessionConnectionContext sessionConnectionContext);
+        bool Equals(object currentState);
     }
 }

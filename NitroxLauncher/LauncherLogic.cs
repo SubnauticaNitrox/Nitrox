@@ -152,6 +152,10 @@ namespace NitroxLauncher
                 ((MainWindow)Application.Current.MainWindow).FrameContent = Application.Current.FindResource(page.Name);
             }
         }
+        public Page GetCurrentPage()
+        {
+            return (Page)Application.Current.FindResource((Application.Current.MainWindow as MainWindow).FrameContent?.GetType().Name);
+        }
 
         public void NavigateTo<TPage>() where TPage : Page
         {
