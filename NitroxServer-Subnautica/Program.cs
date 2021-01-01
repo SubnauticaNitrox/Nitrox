@@ -19,7 +19,6 @@ using NitroxModel_Subnautica.Helper;
 using NitroxServer;
 using LibZeroTier;
 using NitroxServer.ConsoleCommands.Processor;
-using System.Security.Principal;
 
 namespace NitroxServer_Subnautica
 {
@@ -142,10 +141,10 @@ namespace NitroxServer_Subnautica
                 // delete network history
                 PrivateNetwork.DeleteAllNonConnectedNetworks();
                 // get zero teir process(es) and kill em
-                Process[] Zero = Process.GetProcessesByName("ZeroTier One");
-                foreach (Process item in Zero)
+                System.Diagnostics.Process[] Zero = System.Diagnostics.Process.GetProcessesByName("ZeroTier One");
+                foreach (System.Diagnostics.Process item in Zero)
                 { item.Kill(); }
-                foreach (Process item in Zero)
+                foreach (System.Diagnostics.Process item in Zero)
                 { item.WaitForExit(); }
                 // update server usage status
                 File.WriteAllLines(privateServerIdPath, new string[] { PrivateNetwork.NetworkId, "Deactivated" });
