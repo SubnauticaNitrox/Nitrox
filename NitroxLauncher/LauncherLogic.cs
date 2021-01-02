@@ -54,6 +54,7 @@ namespace NitroxLauncher
 
         public void Dispose()
         {
+            Application.Current.MainWindow?.Hide();
             if (isEmbedded)
             {
                 Instance.SendServerCommand("stop\n");
