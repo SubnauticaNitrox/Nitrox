@@ -5,7 +5,6 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text.RegularExpressions;
 using NitroxClient.Unity.Helper;
-using NitroxModel.Core;
 using NitroxModel.Logger;
 using UnityEngine;
 using UnityEngine.Events;
@@ -15,15 +14,18 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 {
     public class MainMenuMultiplayerPanel : MonoBehaviour
     {
-        public static MainMenuMultiplayerPanel Main;
-        private Rect addServerWindowRect = new Rect(Screen.width / 2 - 250, 200, 500, 200);
-        private GameObject joinServerGameObject;
-        public GameObject LoadedMultiplayerRef;
+        private const string SERVER_LIST_PATH = ".\\servers";
+        private static MainMenuMultiplayerPanel main;
 
+
+        private Rect addServerWindowRect = new Rect(Screen.width / 2 - 250, 200, 500, 200);
+        private GameObject loadedMultiplayerRef;
+        private GameObject savedGamesRef;
+        private GameObject deleteButtonRef;
         private GameObject multiplayerButton;
         private Transform savedGameAreaContent;
-        public GameObject SavedGamesRef;
-        public string SERVER_LIST_PATH = Path.Combine(".", "servers");
+        private JoinServer joinServer;
+
         private string serverHostInput;
         private string serverNameInput;
         private string serverPortInput;
@@ -31,15 +33,20 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         private bool shouldFocus;
         private bool showingAddServer;
 
-        public void Awake()
+        public void Setup(GameObject loadedMultiplayer, GameObject savedGames)
         {
-            Main = this;
-            //This sucks, but the only way around it is to establish a Subnautica resources cache and reference it everywhere we need it.
-            //Given recent push-back on elaborate designs, I've just crammed it here until we can all get on the same page as far as code-quality standars are concerned.
-            JoinServer.SaveGameMenuPrototype = SavedGamesRef;
+            main = this;
+            loadedMultiplayerRef = loadedMultiplayer;
+            savedGamesRef = savedGames;
 
-            multiplayerButton = SavedGamesRef.RequireGameObject("Scroll View/Viewport/SavedGameAreaContent/NewGame");
-            savedGameAreaContent = LoadedMultiplayerRef.RequireTransform("Scroll View/Viewport/SavedGameAreaContent");
+            //This sucks, but the only way around it is to establish a Subnautica resources cache and reference it everywhere we need it.
+            //Given recent push-back on elaborate designs, I've just crammed it here until we can all get on the same page as far as code-quality standards are concerned.
+            joinServer = new GameObject("NitroxJoinServer").AddComponent<JoinServer>();
+            joinServer.Setup(savedGamesRef);
+
+            multiplayerButton = savedGamesRef.RequireGameObject("Scroll View/Viewport/SavedGameAreaContent/NewGame");
+            savedGameAreaContent = loadedMultiplayerRef.RequireTransform("Scroll View/Viewport/SavedGameAreaContent");
+            deleteButtonRef = savedGamesRef.GetComponent<MainMenuLoadPanel>().saveInstance.GetComponent<MainMenuLoadButton>().deleteButton;
 
             if (!File.Exists(SERVER_LIST_PATH))
             {
@@ -50,19 +57,18 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             LoadSavedServers();
         }
 
-        public void CreateButton(string text, UnityAction clickEvent)
+        private void CreateButton(string text, UnityAction clickEvent)
         {
-            GameObject multiplayerButtonInst = Instantiate(multiplayerButton);
+            GameObject multiplayerButtonInst = Instantiate(multiplayerButton, savedGameAreaContent, false);
             Transform txt = multiplayerButtonInst.RequireTransform("NewGameButton/Text");
             txt.GetComponent<Text>().text = text;
             Destroy(txt.GetComponent<TranslationLiveUpdate>());
             Button multiplayerButtonButton = multiplayerButtonInst.RequireTransform("NewGameButton").GetComponent<Button>();
             multiplayerButtonButton.onClick = new Button.ButtonClickedEvent();
             multiplayerButtonButton.onClick.AddListener(clickEvent);
-            multiplayerButtonInst.transform.SetParent(savedGameAreaContent, false);
         }
 
-        public void CreateServerButton(string text, string joinIp, string joinPort)
+        private void CreateServerButton(string text, string joinIp, string joinPort)
         {
             GameObject multiplayerButtonInst = Instantiate(multiplayerButton, savedGameAreaContent, false);
             multiplayerButtonInst.name = (savedGameAreaContent.childCount - 1).ToString();
@@ -78,7 +84,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 OpenJoinServerMenu(joinIp, joinPort);
             });
 
-            GameObject delete = Instantiate(SavedGamesRef.GetComponent<MainMenuLoadPanel>().saveInstance.GetComponent<MainMenuLoadButton>().deleteButton);
+            GameObject delete = Instantiate(deleteButtonRef, multiplayerButtonInst.transform, false);
             Button deleteButtonButton = delete.GetComponent<Button>();
             deleteButtonButton.onClick = new Button.ButtonClickedEvent();
             deleteButtonButton.onClick.AddListener(() =>
@@ -86,10 +92,9 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 RemoveServer(multiplayerButtonInst.transform.GetSiblingIndex() - 1);
                 Destroy(multiplayerButtonInst);
             });
-            delete.transform.SetParent(multiplayerButtonInst.transform, false);
         }
 
-        public void AddServer(string name, string ip, string port)
+        private void AddServer(string name, string ip, string port)
         {
             using (StreamWriter sw = new StreamWriter(SERVER_LIST_PATH, true))
             {
@@ -97,15 +102,20 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             }
         }
 
-        public void RemoveServer(int index)
+        private void RemoveServer(int index)
         {
             List<string> serverLines = new List<string>(File.ReadAllLines(SERVER_LIST_PATH));
             serverLines.RemoveAt(index);
             File.WriteAllLines(SERVER_LIST_PATH, serverLines.ToArray());
         }
 
-        public void OpenJoinServerMenu(string serverIp, string serverPort)
+        public static void OpenJoinServerMenu(string serverIp, string serverPort)
         {
+            if (main == null)
+            {
+                Log.Error("MainMenuMultiplayerPanel is not instantiated although OpenJoinServerMenu is called.");
+                return;
+            }
             IPEndPoint endpoint = ResolveIPEndPoint(serverIp, serverPort);
             if (endpoint == null)
             {
@@ -113,20 +123,10 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 return;
             }
 
-            NitroxServiceLocator.BeginNewLifetimeScope();
-
-            if (joinServerGameObject != null)
-            {
-                Destroy(joinServerGameObject);
-            }
-
-            joinServerGameObject = new GameObject();
-            JoinServer joinServerComponent = joinServerGameObject.AddComponent<JoinServer>();
-            joinServerComponent.ServerIp = endpoint.Address.ToString();
-            joinServerComponent.ServerPort = endpoint.Port;
+            main.joinServer.Show(endpoint.Address.ToString(), endpoint.Port);
         }
 
-        public void ShowAddServerWindow()
+        private void ShowAddServerWindow()
         {
             serverNameInput = "local";
             serverHostInput = "127.0.0.1";
@@ -135,20 +135,18 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             shouldFocus = true;
         }
 
-        public void HideAddServerWindow()
+        private void HideAddServerWindow()
         {
             showingAddServer = false;
             shouldFocus = true;
         }
 
-        public void OnGUI()
+        private void OnGUI()
         {
-            if (!showingAddServer)
+            if (showingAddServer)
             {
-                return;
+                addServerWindowRect = GUILayout.Window(GUIUtility.GetControlID(FocusType.Keyboard), addServerWindowRect, DoAddServerWindow, "Add server");
             }
-
-            addServerWindowRect = GUILayout.Window(GUIUtility.GetControlID(FocusType.Keyboard), addServerWindowRect, DoAddServerWindow, "Add server");
         }
 
         private void LoadSavedServers()
@@ -177,7 +175,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             }
         }
 
-        private IPEndPoint ResolveIPEndPoint(string serverIp, string serverPort)
+        private static IPEndPoint ResolveIPEndPoint(string serverIp, string serverPort)
         {
             UriHostNameType hostType = Uri.CheckHostName(serverIp);
             IPAddress address;
@@ -201,7 +199,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             return new IPEndPoint(address, int.Parse(serverPort));
         }
 
-        private IPAddress ResolveHostName(string hostname, string serverPort)
+        private static IPAddress ResolveHostName(string hostname, string serverPort)
         {
             try
             {

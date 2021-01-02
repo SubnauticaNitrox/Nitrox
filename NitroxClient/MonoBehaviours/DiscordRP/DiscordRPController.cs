@@ -36,12 +36,12 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
         public void JoinCallback(string secret)
         {
             Log.Info("[Discord] Joining Server");
-            if (SceneManager.GetActiveScene().name == "StartScreen" && MainMenuMultiplayerPanel.Main != null)
+            if (SceneManager.GetActiveScene().name == "StartScreen")
             {
                 string[] splitSecret = secret.Split(':');
                 string ip = splitSecret[0];
                 string port = splitSecret[1];
-                MainMenuMultiplayerPanel.Main.OpenJoinServerMenu(ip,port);
+                MainMenuMultiplayerPanel.OpenJoinServerMenu(ip, port);
             }
             else
             {
