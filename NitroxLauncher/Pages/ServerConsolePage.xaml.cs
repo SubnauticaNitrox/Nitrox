@@ -23,8 +23,8 @@ namespace NitroxLauncher.Pages
     {
         private readonly List<string> commandLinesHistory = new List<string>();
         public static bool IsServerRunning;
-        private static bool isPrivateServer;
-        private static string SERVER_DETAILS_PATH = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "private_server");
+        public static bool isPrivateServer;
+        public static string SERVER_DETAILS_PATH = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "private_server");
         private bool isEmbed;
         public bool IsEmbed
         {
@@ -220,30 +220,24 @@ namespace NitroxLauncher.Pages
                     {
                         Task.Factory.StartNew(() =>
                         {
-                            while (ServerSettings.GetLocalIPAddress() == null) { Task.Delay(250).Wait(); }
-                            Dispatcher.Invoke(() =>
-                            {
-                                isPrivateServer = File.ReadAllLines(SERVER_DETAILS_PATH)?[1] == "Activated";
-                                IpAddress.Text = ServerSettings.GetLocalIPAddress().ToString();
-                                if (isPrivateServer)
-                                    ServerId.Text = File.ReadAllLines(SERVER_DETAILS_PATH)[0] + IpAddress.Text.Split('.')[IpAddress.Text.Split('.').Length - 1];
-                                else
-                                {
-                                    string externalip = new WebClient().DownloadString("http://icanhazip.com");
-                                    ServerId.Text = "Local IP :  " + IpAddress.Text + "                         Public IP :  " + externalip;
-                                }
-                            });
-                        });
-                        Task.Factory.StartNew(() =>
-                        {
                             IsServerRunning = LauncherLogic.Instance.ServerRunning;
                             while (IsServerRunning)
                             {
-                                isPrivateServer = File.ReadAllLines(SERVER_DETAILS_PATH)?[1] == "Activated";
                                 int average_ping = Ping_all();
+                                string ip = GetLocalIPAddress().ToString();
+                                string serverid = File.ReadAllLines(SERVER_DETAILS_PATH)[0] + ip.Split('.')[ip.Split('.').Length - 1];
+                                string externalip = "Local IP :  " + ip + "                         Public IP :  " + new WebClient().DownloadString("http://icanhazip.com");
+                                string conectivity = average_ping.ToString() + " ms";
                                 Dispatcher.Invoke(() =>
                                 {
-                                    Connectivity.Text = average_ping.ToString() + " ms";
+                                    IpAddress.Text = ip;
+                                    if (isPrivateServer)
+                                        ServerId.Text = serverid;
+                                    else
+                                    {
+                                        ServerId.Text = externalip;
+                                    }
+                                    Connectivity.Text = conectivity;
                                     switch (average_ping)
                                     {
                                         case <= 50:
@@ -293,40 +287,149 @@ namespace NitroxLauncher.Pages
             });
         }
         private List<KeyValuePair<string, int>> listOfPeers = new List<KeyValuePair<string, int>>();
-        private ZeroTierAPI privateNet = new ZeroTierAPI(new API_Settings() { Web_API_Key = "AOVr7MaXugibaWm8kmRXOegCH84NBRnv" }, null);
+        public static ZeroTierAPI PrivateNet = new ZeroTierAPI(new API_Settings() { Web_API_Key = "AOVr7MaXugibaWm8kmRXOegCH84NBRnv" }, null);
         public int Ping_all()
         {
-            if(File.Exists(SERVER_DETAILS_PATH))
+            if (isPrivateServer)
             {
-                if (isPrivateServer)
-                {
-                    //Extracting and pinging all other ip's.
-                    foreach (var i in privateNet.GetPeers(File.ReadAllLines(SERVER_DETAILS_PATH)[0]))
-                        if (i.Value)
-                            Ping(i.Key.ToString(), 1, 4000).Wait();
-                    if (listOfPeers.Count > 0)
-                        return new Func<int>(() => { int total_ping = 0; foreach (KeyValuePair<string, int> item in listOfPeers) { total_ping += item.Value; } return total_ping; })() / listOfPeers.Count;
-                    else
-                        return 0;
-                }
+                //Extracting and pinging all other ip's.
+                foreach (var i in PrivateNet.GetPeers(File.ReadAllLines(SERVER_DETAILS_PATH)[0]))
+                    if (i.Value)
+                        Ping(i.Key.ToString(), 1, 2000).Wait();
+                if (listOfPeers.Count > 0)
+                    return new Func<int>(() => { int total_ping = 0; foreach (KeyValuePair<string, int> item in listOfPeers) { total_ping += item.Value; } return total_ping; })() / listOfPeers.Count;
                 else
-                {
-                    IPAddress gate_way = GetGatewayForDestination(ServerSettings.GetLocalIPAddress());
-                    string MasterIp = gate_way.MapToIPv4().ToString();
-                    string[] IpArray = MasterIp.Split('.');
-                    string Ip = string.Join(".", IpArray[0], IpArray[1], IpArray[2]);
-                    for (var i = 2; i < 255; i++)
-                        Ping(Ip + "." + i.ToString(), 1, 4000).Wait();
                     return 0;
-                }
             }
-            return 0;
+            else
+            {
+                IPAddress gate_way = GetGatewayForDestination(GetLocalIPAddress()).Key;
+                string MasterIp = gate_way.MapToIPv4().ToString();
+                string[] IpArray = MasterIp.Split('.');
+                string Ip = string.Join(".", IpArray[0], IpArray[1], IpArray[2]);
+                for (var i = 2; i < 255; i++)
+                {
+                    Ping(Ip + "." + i.ToString(), 1, 1000).Wait();
+                }
+                int failCount = 0;
+                while (ResultsCounted != 0 && failCount < 10) { if (ResultsCounted == -1 || ResultsCounted == -2) { failCount++; } else { failCount = 0; } }
+                ResultsCounted = 0;
+                Dispatcher.Invoke(() =>
+                {
+                    PlayerList.Items.Clear();
+                    foreach (object obj in tmpList)
+                        PlayerList.Items.Add(obj);
+                    tmpList.Clear();
+                });
+                return new Func<int>(() => { int total_ping = 0; foreach (KeyValuePair<string, int> item in listOfPeers) { total_ping += item.Value; } return total_ping; })() / listOfPeers.Count;
+            }
+        }
+        private int ResultsCounted = 0;
+        public async Task Ping(string host, int attempts, int timeout)
+        {
+            for (int i = 0; i < attempts; i++)
+            {
+                await Task.Factory.StartNew(() =>
+                {
+                    try
+                    {
+                        Ping ping = new Ping();
+                        ping.PingCompleted += new PingCompletedEventHandler(PingCompleted);
+                        ping.SendAsync(host, timeout, host);
+                        ResultsCounted -= 1;
+                    }
+                    catch
+                    {
+                        // Do nothing and let it try again until the attempts are exausted.
+                        // Exceptions are thrown for normal ping failurs like address lookup
+                        // failed.  For this reason we are supressing errors.
+                    }
+                });
+            }
         }
 
+        private List<object> tmpList = new List<object>();
+        private int LastNumber = 0;
+        private void PingCompleted(object sender, PingCompletedEventArgs e)
+        {
+            ResultsCounted += 1;
+            string ip = (string)e.UserState;
+            if (isPrivateServer || (e.Reply?.Status == IPStatus.Success))
+            {
+                int ping = (int)e.Reply.RoundtripTime;
+                Dispatcher.Invoke(() =>
+                {
+                    if (e.Reply.Status != IPStatus.Success)
+                        ping = 11010;
+                    int CurrentIndex = IndexOfKey(listOfPeers, ip);
+                    if (CurrentIndex >= 0)
+                    {
+                        listOfPeers[CurrentIndex] = new KeyValuePair<string, int>(ip, ping);
+                    }
+                    else
+                    {
+                        listOfPeers.Add(new KeyValuePair<string, int>(ip, ping));
+                    }
+                    if (!isPrivateServer)
+                    {
+                        tmpList.Add(formatIp(ip, ping, "ms"));
+                        LastNumber = int.Parse(ip.Split('.')[ip.Split('.').Length - 1]);
+                    }
+                    else
+                    {
+                        string content = formatIp(ip, ping, "ms");
+                        int len = PlayerList.Items.Count;
+                        for (var i = 0; i < len; i++)
+                            if (PlayerList.Items[i].ToString().Contains(ip))
+                                PlayerList.Items[PlayerList.Items.IndexOf(PlayerList.Items[i])] = content;
+                        if (!PlayerList.Items.Contains(content))
+                            PlayerList.Items.Add(content);
+                    }
+                });
+            }
+        }
+        public string formatIp(string ip, int ping, string ms)
+        {
+            while(ip.Length < 50)
+                ip += " ";
+            ip += ping.ToString() + " " + ms;
+            Debug.WriteLine(ip);
+            return ip;
+        }
+        public int IndexOfKey(List<KeyValuePair<string, int>> list, string key)
+        {
+            int index = 0;
+            foreach(var i in list)
+            {
+                if (i.Key == key)
+                    return index;
+                index++;
+            }
+            return -1;
+        }
+        public static IPAddress GetLocalIPAddress()
+        {
+            if (isPrivateServer)
+            {
+                return GetGatewayForDestination(PrivateNet.GetPeers(File.ReadAllLines(SERVER_DETAILS_PATH)[0])[0].Key).Value;
+            }
+            else
+            {
+                foreach (var netI in NetworkInterface.GetAllNetworkInterfaces())
+                {
+                    if (netI.NetworkInterfaceType != NetworkInterfaceType.Wireless80211 && (netI.NetworkInterfaceType != NetworkInterfaceType.Ethernet || netI.OperationalStatus != OperationalStatus.Up))
+                        continue;
+                    foreach (var uniIpAddrInfo in netI.GetIPProperties().UnicastAddresses.Where(x => netI.GetIPProperties().GatewayAddresses.Count > 0))
+                        if (uniIpAddrInfo.Address.AddressFamily == AddressFamily.InterNetwork && uniIpAddrInfo.AddressPreferredLifetime != uint.MaxValue)
+                            return uniIpAddrInfo.Address.MapToIPv4();
+                }
+            }
+            return null;
+        }
         [DllImport("iphlpapi.dll", CharSet = CharSet.Auto)]
         private static extern int GetBestInterface(UInt32 destAddr, out UInt32 bestIfIndex);
 
-        public static IPAddress GetGatewayForDestination(IPAddress destinationAddress)
+        public static KeyValuePair<IPAddress, IPAddress> GetGatewayForDestination(IPAddress destinationAddress)
         {
             UInt32 destaddr = BitConverter.ToUInt32(destinationAddress.GetAddressBytes(), 0);
 
@@ -347,12 +450,13 @@ namespace NitroxLauncher.Pages
 
                 if (ni.Supports(NetworkInterfaceComponent.IPv4))
                 {
+
                     var v4props = niprops.GetIPv4Properties();
                     if (v4props == null)
                         continue;
 
                     if (v4props.Index == interfaceIndex)
-                        return gateway;
+                        return new KeyValuePair<IPAddress, IPAddress>(gateway, ni.GetIPProperties().UnicastAddresses.FirstOrDefault(ip => ip.Address.AddressFamily == AddressFamily.InterNetwork).Address.MapToIPv4());
                 }
 
                 if (ni.Supports(NetworkInterfaceComponent.IPv6))
@@ -362,95 +466,11 @@ namespace NitroxLauncher.Pages
                         continue;
 
                     if (v6props.Index == interfaceIndex)
-                        return gateway;
+                        return new KeyValuePair<IPAddress, IPAddress>(null, null);
                 }
             }
 
-            return null;
-        }
-        public async Task Ping(string host, int attempts, int timeout)
-        {
-            for (int i = 0; i < attempts; i++)
-            {
-                await Task.Factory.StartNew(() =>
-                {
-                    try
-                    {
-                        Ping ping = new Ping();
-                        ping.PingCompleted += new PingCompletedEventHandler(PingCompleted);
-                        ping.SendAsync(host, timeout, host);
-                    }
-                    catch
-                    {
-                        // Do nothing and let it try again until the attempts are exausted.
-                        // Exceptions are thrown for normal ping failurs like address lookup
-                        // failed.  For this reason we are supressing errors.
-                    }
-                });
-            }
-        }
-        private List<object> tmpList = new List<object>();
-        private void PingCompleted(object sender, PingCompletedEventArgs e)
-        {
-            if (isPrivateServer || (e.Reply?.Status == IPStatus.Success))
-            {
-                string ip = (string)e.UserState;
-                int ping = (int)e.Reply.RoundtripTime;
-                Dispatcher.Invoke(() =>
-                {
-
-                if (e.Reply.Status != IPStatus.Success)
-                    ping = 11010;
-                int CurrentIndex = IndexOfKey(listOfPeers, ip);
-                if (CurrentIndex >= 0)
-                {
-                    listOfPeers[CurrentIndex] = new KeyValuePair<string, int>(ip, ping);
-                }
-                else
-                {
-                    listOfPeers.Add(new KeyValuePair<string, int>(ip, ping));
-                }
-                    if (!isPrivateServer)
-                    {
-                        tmpList.Add(formatIp(ip) + Space + ping + " ms");
-                        if (ip.EndsWith("254"))
-                        {
-                            PlayerList.Items.Clear();
-                            foreach (object obj in tmpList)
-                                PlayerList.Items.Add(obj);
-                            tmpList.Clear();
-                        }
-                    }
-                    else
-                    {
-                        string content = formatIp(ip) + Space + ping + " ms";
-                        int len = PlayerList.Items.Count;
-                        for (var i = 0; i < len; i++)
-                            if (PlayerList.Items[i].ToString().Contains(ip))
-                                PlayerList.Items[PlayerList.Items.IndexOf(PlayerList.Items[i])] = content;
-                        if (!PlayerList.Items.Contains(content))
-                            PlayerList.Items.Add(content);
-                    }
-                });
-            }
-        }
-        public string formatIp(string ip)
-        {
-            while (ip.Length < 14)
-                ip += " ";
-            return ip;
-        }
-        public string Space => "                      ";
-        public int IndexOfKey(List<KeyValuePair<string, int>> list, string key)
-        {
-            int index = 0;
-            foreach(var i in list)
-            {
-                if (i.Key == key)
-                    return index;
-                index++;
-            }
-            return -1;
+            return new KeyValuePair<IPAddress, IPAddress>(null, null);
         }
     }
     public class ServerSettings
@@ -461,22 +481,6 @@ namespace NitroxLauncher.Pages
         public string? server_password { get; set; }
         public string? admin_password { get; set; }
         public GameMode? gamemode { get; set; }
-        public static IPAddress GetLocalIPAddress()
-        {
-            foreach (IPAddress ip in Dns.GetHostEntry(Dns.GetHostName()).AddressList)
-                if (ip.AddressFamily == AddressFamily.InterNetwork)
-                    if(ip.MapToIPv4().ToString().Contains("10.10.10."))
-                        return ip.MapToIPv4();
-            foreach (var netI in NetworkInterface.GetAllNetworkInterfaces())
-            {
-                if (netI.NetworkInterfaceType != NetworkInterfaceType.Wireless80211 && (netI.NetworkInterfaceType != NetworkInterfaceType.Ethernet || netI.OperationalStatus != OperationalStatus.Up))
-                    continue;
-                foreach (var uniIpAddrInfo in netI.GetIPProperties().UnicastAddresses.Where(x => netI.GetIPProperties().GatewayAddresses.Count > 0))
-                    if (uniIpAddrInfo.Address.AddressFamily == AddressFamily.InterNetwork && uniIpAddrInfo.AddressPreferredLifetime != uint.MaxValue)
-                        return uniIpAddrInfo.Address.MapToIPv4();
-            }
-            return null;
-        }
         public static ServerSettings ReadConfigFile()
         {
             ServerSettings settings = new ServerSettings();

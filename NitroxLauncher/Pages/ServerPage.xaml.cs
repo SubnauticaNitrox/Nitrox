@@ -44,6 +44,7 @@ namespace NitroxLauncher.Pages
                 {
                     throw new Exception("Error: ZeroTier not installed, head over to the launcher settings to install ZeroTier private networking");
                 }
+                ServerConsolePage.isPrivateServer = true;
                 LauncherLogic.Instance.StartServer(RBIsExternal.IsChecked == true, "zerotier");
             }
             catch (Exception ex)

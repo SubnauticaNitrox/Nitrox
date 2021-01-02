@@ -407,8 +407,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
             foreach (IPAddress ip in host.AddressList)
                 if (ip.AddressFamily == AddressFamily.InterNetwork)
-                    if(ip.MapToIPv4().ToString().StartsWith("10.10.10."))
-                        list.Add(ip.MapToIPv4().ToString());
+                    list.Add(ip.MapToIPv4().ToString());
             return list;
         }
 

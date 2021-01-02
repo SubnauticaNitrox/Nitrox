@@ -284,7 +284,9 @@
                 <TextBlock Padding="0,5" FontSize="25" Foreground="White" TextAlignment="Left"
                         Background="#232426"  Text=" Players" Margin="10,454,17,96" VerticalAlignment="Center" />
                 <Rectangle Fill="Black" Margin="10,494,17,95" RenderTransformOrigin="0.5,0.5"/>
-                <ListBox x:Name="PlayerList" Margin="10,502,17,10" Background="{x:Null}" BorderThickness="0" FontSize="15" Foreground="White" ScrollViewer.VerticalScrollBarVisibility="Visible"/>
+                <ListBox x:Name="PlayerList" Margin="10,502,17,10" Background="{x:Null}" BorderThickness="0" FontSize="15" Foreground="White" ScrollViewer.VerticalScrollBarVisibility="Visible">
+                    <!--<TextBlock >192.168.1.183                           349 ms</TextBlock>-->
+                </ListBox>
             </Grid>
         </Grid>
         <Grid x:Name="NavBar" Margin="-10,-50,0,542">
