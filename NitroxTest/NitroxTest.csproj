@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -145,5 +145,4 @@
     <Error Condition="!Exists('$(PkgMSTest_TestAdapter)\build\net45\MSTest.TestAdapter.props')" Text="$([System.String]::Format('$(ErrorText)', '$(PkgMSTest_TestAdapter)\build\net45\MSTest.TestAdapter.props'))" />
     <Error Condition="!Exists('$(PkgMSTest_TestAdapter)\build\net45\MSTest.TestAdapter.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(PkgMSTest_TestAdapter)\build\net45\MSTest.TestAdapter.targets'))" />
   </Target>
-  <Import Project="$(PkgMSTest_TestAdapter)\build\net45\MSTest.TestAdapter.targets" Condition="Exists('$(PkgMSTest_TestAdapter)\build\net45\MSTest.TestAdapter.targets')" />
 </Project>
