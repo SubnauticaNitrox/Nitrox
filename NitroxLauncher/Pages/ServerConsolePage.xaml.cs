@@ -230,6 +230,11 @@ namespace NitroxLauncher.Pages
                                 string conectivity = average_ping.ToString() + " ms";
                                 Dispatcher.Invoke(() =>
                                 {
+                                    if (IpAddress.Text != ip)
+                                    {
+                                        listOfPeers.Clear();
+                                        PlayerList.Items.Clear();
+                                    }
                                     IpAddress.Text = ip;
                                     if (isPrivateServer)
                                         ServerId.Text = serverid;
@@ -240,28 +245,28 @@ namespace NitroxLauncher.Pages
                                     Connectivity.Text = conectivity;
                                     switch (average_ping)
                                     {
-                                        case <= 50:
+                                        case <= 100:
                                             SignalBar1.Fill = new SolidColorBrush() { Color = Colors.LimeGreen };
                                             SignalBar2.Fill = new SolidColorBrush() { Color = Colors.LimeGreen };
                                             SignalBar3.Fill = new SolidColorBrush() { Color = Colors.LimeGreen };
                                             SignalBar4.Fill = new SolidColorBrush() { Color = Colors.LimeGreen };
                                             SignalBar5.Fill = new SolidColorBrush() { Color = Colors.LimeGreen };
                                             break;
-                                        case <= 100:
+                                        case <= 200:
                                             SignalBar1.Fill = new SolidColorBrush() { Color = Colors.Lime };
                                             SignalBar2.Fill = new SolidColorBrush() { Color = Colors.Lime };
                                             SignalBar3.Fill = new SolidColorBrush() { Color = Colors.Lime };
                                             SignalBar4.Fill = new SolidColorBrush() { Color = Colors.Lime };
                                             SignalBar5.Fill = new SolidColorBrush() { Color = Colors.Gray };
                                             break;
-                                        case <= 150:
+                                        case <= 250:
                                             SignalBar1.Fill = new SolidColorBrush() { Color = Colors.Yellow };
                                             SignalBar2.Fill = new SolidColorBrush() { Color = Colors.Yellow };
                                             SignalBar3.Fill = new SolidColorBrush() { Color = Colors.Yellow };
                                             SignalBar4.Fill = new SolidColorBrush() { Color = Colors.Gray };
                                             SignalBar5.Fill = new SolidColorBrush() { Color = Colors.Gray };
                                             break;
-                                        case <= 300:
+                                        case <= 350:
                                             SignalBar1.Fill = new SolidColorBrush() { Color = Colors.Orange };
                                             SignalBar2.Fill = new SolidColorBrush() { Color = Colors.Orange };
                                             SignalBar3.Fill = new SolidColorBrush() { Color = Colors.Gray };
@@ -296,7 +301,7 @@ namespace NitroxLauncher.Pages
                 foreach (var i in PrivateNet.GetPeers(File.ReadAllLines(SERVER_DETAILS_PATH)[0]))
                     if (i.Value)
                         Ping(i.Key.ToString(), 1, 2000).Wait();
-                if (listOfPeers.Count > 0)
+                if (listOfPeers.Count > 1)
                     return new Func<int>(() => { int total_ping = 0; foreach (KeyValuePair<string, int> item in listOfPeers) { total_ping += item.Value; } return total_ping; })() / listOfPeers.Count;
                 else
                     return 0;
@@ -312,7 +317,7 @@ namespace NitroxLauncher.Pages
                     Ping(Ip + "." + i.ToString(), 1, 1000).Wait();
                 }
                 int failCount = 0;
-                while (ResultsCounted != 0 && failCount < 10) { if (ResultsCounted == -1 || ResultsCounted == -2) { failCount++; } else { failCount = 0; } }
+                while (ResultsCounted != 0 && failCount < 10) { if (ResultsCounted > 0) { ResultsCounted = 0; }  if (ResultsCounted == -1 || ResultsCounted == -2) { failCount++; } else { failCount = 0; } }
                 ResultsCounted = 0;
                 Dispatcher.Invoke(() =>
                 {
@@ -321,7 +326,10 @@ namespace NitroxLauncher.Pages
                         PlayerList.Items.Add(obj);
                     tmpList.Clear();
                 });
-                return new Func<int>(() => { int total_ping = 0; foreach (KeyValuePair<string, int> item in listOfPeers) { total_ping += item.Value; } return total_ping; })() / listOfPeers.Count;
+                if (listOfPeers.Count > 1)
+                    return new Func<int>(() => { int total_ping = 0; foreach (KeyValuePair<string, int> item in listOfPeers) { total_ping += item.Value; } return total_ping; })() / listOfPeers.Count;
+                else
+                    return 0;
             }
         }
         private int ResultsCounted = 0;

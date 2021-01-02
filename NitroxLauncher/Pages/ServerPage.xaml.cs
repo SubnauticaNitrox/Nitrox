@@ -28,7 +28,9 @@ namespace NitroxLauncher.Pages
         {
             try
             {
+                ServerConsolePage.isPrivateServer = false;
                 LauncherLogic.Instance.StartServer(RBIsExternal.IsChecked == true);
+                
             }
             catch (Exception ex)
             {
