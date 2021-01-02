@@ -26,8 +26,19 @@ namespace NitroxClient.GameLogic
         {
             NitroxId itemId = NitroxEntity.GetId(pickupable.gameObject);
             byte[] bytes = SerializationHelper.GetBytes(pickupable.gameObject);
+            NitroxId ownerId = GetOwner(containerTransform);
 
-            ItemData itemData = new ItemData(GetOwner(containerTransform), itemId, bytes);
+            ItemData itemData;
+            Plantable plant = pickupable.GetComponent<Plantable>();
+            if (plant && plant.currentPlanter)
+            {
+                // special case: we want to remember the time when the plant was added, so we can simulate growth
+                itemData = new PlantableItemData(ownerId, itemId, bytes, DayNightCycle.main.timePassedAsDouble);
+            }
+            else
+            {
+                itemData = new ItemData(ownerId, itemId, bytes);
+            }
             if (packetSender.Send(new ItemContainerAdd(itemData)))
             {
                 Log.Debug($"Sent: Added item {pickupable.GetTechType()} to container {containerTransform.gameObject.GetHierarchyPath()}");
@@ -48,7 +59,7 @@ namespace NitroxClient.GameLogic
             Optional<GameObject> owner = NitroxEntity.GetObjectFrom(containerId);
             if (!owner.HasValue)
             {
-                Log.Error($"Unable to find inventory container with id {containerId}");
+                Log.Error($"Unable to find inventory container with id {containerId} for {item.name}");
                 return;
             }
             Optional<ItemsContainer> opContainer = InventoryContainerHelper.GetBasedOnOwnersType(owner.Value);

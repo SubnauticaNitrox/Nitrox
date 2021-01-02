@@ -62,6 +62,7 @@
     <Compile Include="Communication\Packets\Processors\WeldActionProcessor.cs" />
     <Compile Include="Debuggers\EntityDebugger.cs" />
     <Compile Include="GameLogic\Bases\GeometryRespawnManager.cs" />
+    <Compile Include="GameLogic\Bases\Spawning\BaseRoomWaterParkProcessor.cs" />
     <Compile Include="GameLogic\Bases\Spawning\MapRoomSpawnProcessor.cs" />
     <Compile Include="GameLogic\Bases\Spawning\BaseBioReactorSpawnProcessor.cs" />
     <Compile Include="GameLogic\Bases\Spawning\BasePieceSpawnProcessor.cs" />
@@ -69,6 +70,9 @@
     <Compile Include="GameLogic\Bases\Spawning\BasePieceSpawnPrioritizer.cs" />
     <Compile Include="GameLogic\Bases\Spawning\NoOpBasePieceSpawnProcessor.cs" />
     <Compile Include="GameLogic\ChatUI\PlayerChatManager.cs" />
+    <Compile Include="GameLogic\Containers\PlantableContainerAddItemPostProcessor.cs" />
+    <Compile Include="GameLogic\Containers\ContainerAddItemPostProcessor.cs" />
+    <Compile Include="GameLogic\Containers\NoOpContainerAddItemPostProcessor.cs" />
     <Compile Include="GameLogic\InitialSync\SimulationOwnershipInitialSyncProcessor.cs" />
     <Compile Include="GameLogic\LiveMixinManager.cs" />
     <Compile Include="GameLogic\Rockets.cs" />
@@ -379,6 +383,7 @@
       <Version>4.9.4</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.

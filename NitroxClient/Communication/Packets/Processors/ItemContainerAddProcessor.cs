@@ -1,6 +1,7 @@
 ﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
+using NitroxClient.GameLogic.Containers;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic;
@@ -27,6 +28,9 @@ namespace NitroxClient.Communication.Packets.Processors
             NitroxEntity.SetNewId(item, itemData.ItemId);
             
             itemContainer.AddItem(item, itemData.ContainerId);
+
+            ContainerAddItemPostProcessor postProcessor = ContainerAddItemPostProcessor.From(item);
+            postProcessor.process(item, itemData);
         }
     }
 }
