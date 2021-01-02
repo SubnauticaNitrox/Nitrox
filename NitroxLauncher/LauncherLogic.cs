@@ -54,6 +54,11 @@ namespace NitroxLauncher
 
         public void Dispose()
         {
+            if (isEmbedded)
+            {
+                Instance.SendServerCommand("stop\n");
+            }
+            
             try
             {
                 nitroxEntryPatch.Remove();
@@ -68,13 +73,13 @@ namespace NitroxLauncher
             serverProcess = null; // Indicate the process is dead now.
         }
 
-        public async Task WriteToServerAsync(string inputText)
+        public void WriteToServer(string inputText)
         {
             if (ServerRunning)
             {
                 try
                 {
-                    await serverProcess.StandardInput.WriteLineAsync(inputText);
+                    serverProcess.StandardInput.WriteLine(inputText);
                 }
                 catch (Exception)
                 {
@@ -262,14 +267,14 @@ namespace NitroxLauncher
             return serverProcess;
         }
 
-        internal async Task SendServerCommandAsync(string inputText)
+        internal void SendServerCommand(string inputText)
         {
             if (!ServerRunning)
             {
                 return;
             }
 
-            await WriteToServerAsync(inputText);
+            WriteToServer(inputText);
         }
 
         private void OnEndServer()
