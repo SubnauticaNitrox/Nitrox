@@ -393,7 +393,6 @@ namespace NitroxLauncher.Pages
             while(ip.Length < 50)
                 ip += " ";
             ip += ping.ToString() + " " + ms;
-            Debug.WriteLine(ip);
             return ip;
         }
         public int IndexOfKey(List<KeyValuePair<string, int>> list, string key)
