@@ -102,7 +102,7 @@ namespace NitroxModel.DataStructures.GameLogic
             return Mathf.Sqrt(ls);
         }
 
-        public static NitroxVector3 Cross(NitroxVector3 lhs, NitroxVector3 rhs)
+        public static NitroxVector3 Cross(NitroxVector3 vector1, NitroxVector3 vector2)
         {
             return new(
                 vector1.Y * vector2.Z - vector1.Z * vector2.Y,
@@ -117,7 +117,7 @@ namespace NitroxModel.DataStructures.GameLogic
             float num3 = lhs.Z - rhs.Z;
             return Mathf.Sqrt(num1 * num1 + num2 * num2 + num3 * num3);
         }
-        
+
         public float Magnitude => Mathf.Sqrt(X * X + Y * Y + Z * Z);
 
         public override string ToString()

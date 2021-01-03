@@ -3,26 +3,25 @@ using HarmonyLib;
 using NitroxClient.GameLogic.FMOD;
 using NitroxModel.Core;
 using NitroxModel_Subnautica.DataStructures;
-using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
-    public class FMODUWE_PlayOneShotImpl_Patch : NitroxPatch, IDynamicPatch
+    public class Utils_PlayFMODAsset_Patch : NitroxPatch, IDynamicPatch
     {
         private static FMODSystem fmodSystem;
 
-        private static readonly MethodInfo targetMethod = typeof(FMODUWE).GetMethod("PlayOneShotImpl", BindingFlags.NonPublic | BindingFlags.Static, null, new[] { typeof(string), typeof(Vector3), typeof(float) }, null);
+        private static readonly MethodInfo targetMethod = typeof(Utils).GetMethod(nameof(Utils.PlayFMODAsset), BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(FMODAsset) }, null);
 
         public static bool Prefix()
         {
             return !FMODSuppressor.SuppressFMODEvents;
         }
 
-        public static void Postfix(string eventPath, Vector3 position, float volume)
+        public static void Postfix(FMODAsset asset)
         {
-            if (fmodSystem.IsWhitelisted(eventPath, out bool isGlobal, out float radius))
+            if (fmodSystem.IsWhitelisted(asset.path, out bool isGlobal, out float radius))
             {
-                fmodSystem.PlayAsset(eventPath, position.ToDto(), volume, radius, isGlobal);
+                fmodSystem.PlayAsset(asset.path, Player.main.transform.position.ToDto(), 1f, radius, isGlobal);
             }
         }
 

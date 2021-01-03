@@ -47,7 +47,6 @@
     <Compile Include="Patches\Dynamic\FMOD_CustomEmitter_OnStop_Patch.cs" />
     <Compile Include="Patches\Dynamic\FMOD_CustomEmitter_OnPlay_Patch.cs" />
     <Compile Include="Patches\Dynamic\FMODUWE_PlayOneShotImpl_Patch.cs" />
-    <Compile Include="Patches\Dynamic\Utils_PlayFMODAsset_Patch.cs" />
     <Compile Include="Patches\Dynamic\IncubatorActivationTerminal_OnHandClick_Patch.cs" />
     <Compile Include="Patches\Dynamic\Incubator_OnHandClick_Patch.cs" />
     <Compile Include="Patches\Dynamic\BaseDeconstructable_MakeFaceDeconstructable_Patch.cs" />
@@ -185,6 +184,7 @@
     <Compile Include="Patches\Dynamic\ToggleLights_SetLightsActive_Patch.cs" />
     <Compile Include="Patches\Dynamic\uGUI_OptionsPanel_AddBindings_Patch.cs" />
     <Compile Include="Patches\Dynamic\uGUI_SignInput_OnDeselect_Patch.cs" />
+    <Compile Include="Patches\Dynamic\Utils_PlayFMODAsset_Patch.cs" />
     <Compile Include="Patches\Dynamic\VehicleDockingBay_OnTriggerEnter.cs" />
     <Compile Include="Patches\Dynamic\VehicleDockingBay_OnUndockingComplete_Patch.cs" />
     <Compile Include="Patches\Dynamic\Vehicle_OnHandClick_Patch.cs" />

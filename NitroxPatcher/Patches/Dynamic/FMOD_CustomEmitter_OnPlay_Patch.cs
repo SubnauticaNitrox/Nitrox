@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 using FMOD.Studio;
-using Harmony;
+using HarmonyLib;
 using NitroxClient.GameLogic.FMOD;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
@@ -46,10 +46,10 @@ namespace NitroxPatcher.Patches.Dynamic
             }
         }
 
-        public override void Patch(HarmonyInstance harmony)
+        public override void Patch(Harmony harmony)
         {
             fmodSystem = NitroxServiceLocator.LocateService<FMODSystem>();
-            PatchMultiple(harmony, targetMethod, true, true, false);
+            PatchMultiple(harmony, targetMethod, true, true, false, false);
         }
 
     }
