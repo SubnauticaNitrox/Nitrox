@@ -9,7 +9,7 @@
 	"Nitrox_AddServerAdd": "Add",
 	"Nitrox_JoinServerIpAddress": "Server IP Address",
 	"Nitrox_JoinServerPassword": "Password:",
-	"Nitrox_JoinServerFailed": "Unable to join sever",
+	"Nitrox_JoinServerFailed": "Unable to join server",
 	"Nitrox_Cancel": "Cancel",
 	"Nitrox_Join": "Join",
 	"Nitrox_PlayerColor": "Player Color",
@@ -18,7 +18,7 @@
 	"Nitrox_MultiplayerLoaded": "Multiplayer Client Loaded...",
 	
 	// In game menu
-	"Nitrox_LoadingScreenWarn": "Expect game breaking bugs",
+	"Nitrox_LoadingScreenWarn": "Expect game-breaking bugs",
 	"Nitrox_WorldSettling": "Awaiting World Settling",
 	"Nitrox_JoiningSession": "Joining Multiplayer Session",
 	"Nitrox_SyncingWorld": "Syncing Multiplayer World",
@@ -28,8 +28,8 @@
 	// In game logging
 	"Nitrox_UnableToConnect": "Unable to contact the remote server at:",
 	"Nitrox_StartServer": "Start your server first to join your self-hosted world",
-	"Nitrox_InvalidUserName": "Please enter a valid player name !\n\n It must not contain any space or doubtful characters\n Allowed characters : A-Z a-z 0-9 _ . -\nLength : [3, 25]",
-	"Nitrox_RequestingSessionPolicy": "Requesting session policy informa,tion...",
+	"Nitrox_InvalidUserName": "Please enter a valid player name!\n\n It must not contain any space or doubtful characters\n Allowed characters : A-Z a-z 0-9 _ . -\nLength : [3, 25]",
+	"Nitrox_RequestingSessionPolicy": "Requesting session policy information...",
 	"Nitrox_RejectedSessionPolicy": "Reservation rejected...",
 	"Nitrox_WaitingPassword": "Waiting for Server Password Input...",
 	"Nitrox_WaitingUserInput": "Waiting for user input...",
