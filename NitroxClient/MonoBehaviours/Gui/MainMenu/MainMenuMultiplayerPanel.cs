@@ -119,7 +119,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             IPEndPoint endpoint = ResolveIPEndPoint(serverIp, serverPort);
             if (endpoint == null)
             {
-                Log.InGame($"Unable to resolve remote address: {serverIp}:{serverPort}");
+                Log.InGame($"{Language.main.Get("Nitrox_UnableToConnect")}: {serverIp}:{serverPort}");
                 return;
             }
 

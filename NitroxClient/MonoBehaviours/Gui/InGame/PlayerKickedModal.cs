@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -45,7 +45,7 @@ namespace NitroxClient.MonoBehaviours.Gui.InGame
                 GameObject header = playerKickedSubWindow.FindChild("Header"); //Message Object
 
                 Text messageText = header.GetComponent<Text>();
-                messageText.text = string.IsNullOrWhiteSpace(reason) ? Language.main.Get("Nitrox_PlayerKicked") : reason;
+                messageText.text = reason;
 
                 RectTransform messageTransform = header.GetComponent<RectTransform>();
                 messageTransform.sizeDelta = new Vector2(700, 195);
