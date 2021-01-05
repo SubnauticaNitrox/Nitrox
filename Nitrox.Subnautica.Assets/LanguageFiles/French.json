@@ -1,0 +1,35 @@
+﻿{
+  // Main menu
+  "Nitrox_Multiplayer": "Multijoueur",
+  "Nitrox_AddServer": "Ajouter un serveur",
+  "Nitrox_ConnectTo": "Connexion à",
+  "Nitrox_AddServerName": "Nom:",
+  "Nitrox_AddServerHost": "Hôte:",
+  "Nitrox_AddServerPort": "Port:",
+  "Nitrox_AddServerAdd": "Ajouter",
+  "Nitrox_JoinServerIpAddress": "IP du serveur",
+  "Nitrox_JoinServerPassword": "Mot de passe:",
+  "Nitrox_JoinServerFailed": "Impossible de se connecter au serveur",
+  "Nitrox_Cancel": "Annuler",
+  "Nitrox_Join": "Rejoindre",
+  "Nitrox_PlayerColor": "Couleur",
+  "Nitrox_EnterName": "Nom du joueur",
+  "Nitrox_SubmitPassword": "Confirmer",
+  "Nitrox_MultiplayerLoaded": "Chargement du client multijoueur...",
+  // In game menu
+  "Nitrox_LoadingScreenWarn": "Attendez vous à quelques instabilités",
+  "Nitrox_WorldSettling": "Chargement du monde",
+  "Nitrox_JoiningSession": "Connexion au monde multijoueur",
+  "Nitrox_SyncingWorld": "Synchronisation du monde multijoueur",
+  "Nitrox_LostConnection": "Connexion perdue au serveur",
+  "Nitrox_PlayerKicked": "Vous avez été exclu du serveur",
+  // In game logging
+  "Nitrox_UnableToConnect": "Impossible de se connecter au serveur :",
+  "Nitrox_StartServer": "Veuillez démarrer votre serveur pour rejoindre votre monde",
+  "Nitrox_InvalidUserName": "Merci d'entrer un nom valide !\n\n Il ne doit pas contenir d'espaces ou des caractères douteux\n Caractères autorisés : A-Z a-z 0-9 _ . -\nLongueur : [3, 25]",
+  "Nitrox_RequestingSessionPolicy": "En attente des informations du serveur...",
+  "Nitrox_RejectedSessionPolicy": "Réservation rejetée...",
+  "Nitrox_WaitingPassword": "En attente du mot de passe...",
+  "Nitrox_WaitingUserInput": "En attente des informations du joueur...",
+  "Nitrox_LaunchGame": "Lancement du jeu..."
+}
