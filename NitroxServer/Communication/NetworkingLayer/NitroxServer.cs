@@ -83,14 +83,26 @@ namespace NitroxServer.Communication.NetworkingLayer
                 Log.Info($"Server port ({portNumber}) has been automatically opened on your router");
             }
 #if DEBUG
-            catch (Exception ex)
+            catch (MappingException ex)
             {
                 Log.Error($"Automatic port forwarding failed: {ex}");
             }
 #else
-            catch (Exception)
+            catch (MappingException ex)
             {
-                Log.Error("Automatic port forwarding failed, please manually port forward");
+                string actionMessage = "";
+                switch (ex.ErrorCode)
+                {
+                    case ErrorCode.ConflictInMappingEntry:
+                        actionMessage = "port conflict found. It is likely already open and no action is required";
+                        break;
+                    default:
+                        actionMessage = "please manually port forward";
+                        break;
+
+                }
+
+                Log.Error($"Automatic port forwarding failed, {actionMessage}");
             }
 #endif
         }
