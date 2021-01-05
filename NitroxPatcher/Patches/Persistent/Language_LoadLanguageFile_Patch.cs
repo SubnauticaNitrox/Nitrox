@@ -16,32 +16,38 @@ namespace NitroxPatcher.Patches.Persistent
 
         public static void Postfix(string language, Dictionary<string, string> ___strings)
         {
-            string filepath = Path.Combine(NitroxAppData.Instance.LauncherPath, "LanguageFiles", language + ".json");
+            string[] files = {
+                Path.Combine(NitroxAppData.Instance.LauncherPath, "LanguageFiles", "English.json"), //Using English as fallback.
+                Path.Combine(NitroxAppData.Instance.LauncherPath, "LanguageFiles", language + ".json")
+            };
 
-            if (!File.Exists(filepath))
+            foreach (string file in files)
             {
-                Log.Warn($"No language file was found for {language}. Using english.");
-                filepath = Path.Combine(NitroxAppData.Instance.LauncherPath, "LanguageFiles", "English.json");
-            }
-
-            JsonData json = null;
-            using (StreamReader streamReader = new StreamReader(filepath))
-            {
-                try
+                if (!File.Exists(file))
                 {
-                    json = JsonMapper.ToObject((TextReader)streamReader);
+                    Log.Warn($"No language file was found for at {file}. Using English as fallback");
                 }
-                catch (Exception ex)
+
+                JsonData json;
+                using (StreamReader streamReader = new StreamReader(file))
                 {
-                    Log.Error(ex, $"Error while reading language file ({language})");
-                    return;
+                    try
+                    {
+                        json = JsonMapper.ToObject((TextReader)streamReader);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex, $"Error while reading language file {language}.json");
+                        return;
+                    }
+                }
+
+                foreach (string key in json.Keys)
+                {
+                    ___strings[key] = (string)json[key];
                 }
             }
 
-            foreach (string key in (IEnumerable<string>)json.Keys)
-            {
-                ___strings[key] = (string)json[key];
-            }
         }
 
         public override void Patch(Harmony harmony)
