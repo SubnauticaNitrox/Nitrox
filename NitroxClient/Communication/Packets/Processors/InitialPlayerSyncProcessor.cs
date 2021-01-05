@@ -32,7 +32,7 @@ namespace NitroxClient.Communication.Packets.Processors
         public override void Process(InitialPlayerSync packet)
         {
             this.packet = packet;
-            loadingMultiplayerWaitItem = WaitScreen.Add("Syncing Multiplayer World");
+            loadingMultiplayerWaitItem = WaitScreen.Add(Language.main.Get("Nitrox_SyncingWorld"));
             cumulativeProcessorsRan = 0;
             Multiplayer.Main.StartCoroutine(ProcessInitialSyncPacket(this, null));
         }
