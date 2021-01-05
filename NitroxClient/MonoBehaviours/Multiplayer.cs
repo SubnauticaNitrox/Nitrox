@@ -55,7 +55,7 @@ namespace NitroxClient.MonoBehaviours
 
         public static IEnumerator LoadAsync()
         {
-            WaitScreen.ManualWaitItem worldSettleItem = WaitScreen.Add("Awaiting World Settling");
+            WaitScreen.ManualWaitItem worldSettleItem = WaitScreen.Add(Language.main.Get("Nitrox_WorldSettling"));
             WaitScreen.ShowImmediately();
 
             yield return new WaitUntil(() => LargeWorldStreamer.main != null &&
@@ -65,7 +65,7 @@ namespace NitroxClient.MonoBehaviours
 
             WaitScreen.Remove(worldSettleItem);
 
-            WaitScreen.ManualWaitItem item = WaitScreen.Add("Joining Multiplayer Session");
+            WaitScreen.ManualWaitItem item = WaitScreen.Add(Language.main.Get("Nitrox_JoiningSession"));
             yield return Main.StartCoroutine(Main.StartSession());
             WaitScreen.Remove(item);
 
@@ -76,7 +76,7 @@ namespace NitroxClient.MonoBehaviours
 
         public void Awake()
         {
-            Log.InGame("Multiplayer Client Loaded...");
+            Log.InGame(Language.main.Get("Nitrox_MultiplayerLoaded"));
 
             multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
             packetReceiver = NitroxServiceLocator.LocateService<PacketReceiver>();

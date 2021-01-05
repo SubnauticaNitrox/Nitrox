@@ -288,8 +288,12 @@
     <ItemGroup>
       <NitroxSubnauticaStaticDlls Include="..\Nitrox.Subnautica.Assets\**\*.dll" />
     </ItemGroup>
+    <ItemGroup>
+      <NitroxSubnauticaLanguageFiles Include="..\Nitrox.Subnautica.Assets\LanguageFiles\*.json" />
+    </ItemGroup>
     <Copy SourceFiles="@(NitroxSubnauticaAssets)" DestinationFolder="$(TargetDir)\%(RecursiveDir)" />
     <Copy SourceFiles="@(NitroxSubnauticaStaticDlls)" DestinationFolder="$(TargetDir)\lib\%(RecursiveDir)" />
+    <Copy SourceFiles="@(NitroxSubnauticaLanguageFiles)" DestinationFolder="$(TargetDir)\LanguageFiles\%(RecursiveDir)" />
   </Target>
   <Target Name="MoveDependenciesToLib" AfterTargets="Build">
     <ItemGroup>
