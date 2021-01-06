@@ -20,7 +20,7 @@ public class UntypedCellEntityBootstrapper : IEntityBootstrapper
         bool hasCellRootAsParent = parentEntity != null && parentEntity.ClassId == cellRootClassId;
 
         if (hasCellRootAsParent && parentEntity.Level < entity.Level)
-        { 
+        {
             // bump the cell root up to the child's visibility level
             parentEntity.Level = entity.Level;
         }

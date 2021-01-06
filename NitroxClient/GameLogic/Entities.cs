@@ -105,7 +105,7 @@ namespace NitroxClient.GameLogic
                     if (!WasAlreadySpawned(childEntity.Id))
                     {
                         SpawnAsync(childEntity);
-                   }
+                    }
                 }
             }
         }
@@ -124,12 +124,12 @@ namespace NitroxClient.GameLogic
 
                 pendingParentEntitiesByParentId.Remove(entity.Id);
             }
-
-            yield break;
         }
 
         private void UpdatePosition(WorldEntity entity)
         {
+            LargeWorldStreamer.main.cellManager.UnloadBatchCells(entity.AbsoluteEntityCell.CellId.ToUnity()); // Just in case
+
             Optional<GameObject> opGameObject = NitroxEntity.GetObjectFrom(entity.Id);
 
             if (!opGameObject.HasValue)
@@ -142,7 +142,7 @@ namespace NitroxClient.GameLogic
 
             opGameObject.Value.transform.position = entity.Transform.Position.ToUnity();
             opGameObject.Value.transform.rotation = entity.Transform.Rotation.ToUnity();
-            opGameObject.Value.transform.localScale = entity.Transform.LocalScale.ToUnity();
+            opGameObject.Value.transform.localScale = entity.Transform.LocalScale.ToUnity();            
         }
 
         private void AddPendingParentEntity(Entity entity)

@@ -4,6 +4,7 @@ using NitroxClient.GameLogic.Spawning.WorldEntities;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Helper;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 
@@ -16,7 +17,10 @@ namespace NitroxClient.GameLogic.Spawning
 
         public WorldEntitySpawner()
         {
-            batchCellsById = (Dictionary<Int3, BatchCells>)LargeWorldStreamer.main.cellManager.batch2cells;
+            if (NitroxEnvironment.IsNormal)
+            {
+                batchCellsById = (Dictionary<Int3, BatchCells>)LargeWorldStreamer.main.cellManager.batch2cells;
+            }
         }
 
         public override IEnumerator SpawnAsync(WorldEntity entity, TaskResult<Optional<GameObject>> result)
@@ -28,7 +32,6 @@ namespace NitroxClient.GameLogic.Spawning
             Optional<GameObject> parent = (entity.ParentId != null) ? NitroxEntity.GetObjectFrom(entity.ParentId) : Optional.Empty;
 
             IWorldEntitySpawner entitySpawner = worldEntitySpawnResolver.ResolveEntitySpawner(entity);
-            Log.Info(entity.Id + " using IWorldEntitySpawner " + entitySpawner.GetType() + " with parent " + parent);
 
             return entitySpawner.SpawnAsync(entity, parent, cellRoot, result);
         }

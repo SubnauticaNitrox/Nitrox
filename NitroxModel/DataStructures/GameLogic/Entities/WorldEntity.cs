@@ -3,6 +3,7 @@ using ProtoBufNet;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using System.Collections.Generic;
+using BinaryPack.Attributes;
 
 namespace NitroxModel.DataStructures.GameLogic.Entities
 {
@@ -44,6 +45,7 @@ namespace NitroxModel.DataStructures.GameLogic.Entities
         [ProtoMember(6)]
         public bool ExistsInGlobalRoot { get; set; }
 
+        [IgnoreConstructor]
         protected WorldEntity()
         {
             // Constructor for serialization. Has to be "protected" for json serialization.

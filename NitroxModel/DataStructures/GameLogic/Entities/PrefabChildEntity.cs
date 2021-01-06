@@ -3,6 +3,7 @@ using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures.Unity;
 using System.Collections.Generic;
 using ProtoBufNet;
+using BinaryPack.Attributes;
 
 namespace NitroxModel.DataStructures.GameLogic.Entities
 {
@@ -20,6 +21,7 @@ namespace NitroxModel.DataStructures.GameLogic.Entities
         [ProtoMember(1)]
         public int ExistingGameObjectChildIndex { get; set; }
 
+        [IgnoreConstructor]
         protected PrefabChildEntity()
         {
             // Constructor for serialization. Has to be "protected" for json serialization.

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
@@ -8,84 +10,60 @@ namespace NitroxServer.GameLogic.Entities
 {
     public class EntityRegistry
     {
-        private readonly Dictionary<NitroxId, Entity> entitiesById;
+        private readonly ConcurrentDictionary<NitroxId, Entity> entitiesById;
 
         public EntityRegistry(List<Entity> entities)
         {
-            entitiesById = entities.ToDictionary(entity => entity.Id);
+            entitiesById = new(entities.Select(e => new KeyValuePair<NitroxId, Entity>(e.Id, e)));
         }
 
         public Optional<Entity> GetEntityById(NitroxId id)
         {
-            Entity entity = null;
-
-            lock (entitiesById)
-            {
-                entitiesById.TryGetValue(id, out entity);
-            }
+            entitiesById.TryGetValue(id, out Entity entity);
 
             return Optional.OfNullable(entity);
         }
 
         public Optional<T> GetEntityById<T>(NitroxId id) where T : Entity
         {
-            Entity entity = null;
-
-            lock (entitiesById)
-            {
-                entitiesById.TryGetValue(id, out entity);
-            }
-
+            entitiesById.TryGetValue(id, out Entity entity);
+            
             return Optional.OfNullable((T)entity);
         }
 
         public List<Entity> GetAllEntities()
         {
-            lock (entitiesById)
-            {
-                return new List<Entity>(entitiesById.Values);
-            }
+            return new List<Entity>(entitiesById.Values);            
         }
 
         public List<Entity> GetEntities(List<NitroxId> ids)
         {
-            lock (entitiesById)
-            {
-                return entitiesById.Join(ids,
-                                         entity => entity.Value.Id,
-                                         id => id,
-                                         (entity, id) => entity.Value)
-                                   .ToList();
-            }
+            return entitiesById.Join(ids,
+                                        entity => entity.Value.Id,
+                                        id => id,
+                                        (entity, id) => entity.Value)
+                                .ToList();
         }
 
         public void AddEntity(Entity entity)
         {
-            lock (entitiesById)
+            if (!entitiesById.TryAdd(entity.Id, entity))
             {
-                entitiesById.Add(entity.Id, entity);
+                // Log an error to show stack trace but don't halt execution.
+                Log.Error(new InvalidOperationException(), $"Trying to add duplicate entity {entity.Id}");
             }
         }
         public void AddEntities(List<Entity> entities)
         {
-            lock (entitiesById)
+            foreach(Entity entity in entities)
             {
-                foreach(Entity entity in entities)
-                {
-                    entitiesById.Add(entity.Id, entity);
-                }
-            }
+                AddEntity(entity);
+            }            
         }
 
         public Optional<Entity> RemoveEntity(NitroxId id)
         {
-            Entity entity = null;
-
-            lock (entitiesById)
-            {
-                entitiesById.TryGetValue(id, out entity);
-                entitiesById.Remove(id);
-            }
+            entitiesById.TryRemove(id, out Entity entity);
 
             return Optional.OfNullable(entity);
         }

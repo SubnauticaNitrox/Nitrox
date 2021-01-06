@@ -28,7 +28,7 @@ namespace NitroxClient.GameLogic.Spawning
             result.Set(Optional.OfNullable(gameObject));
             yield break;
         }
-
+ 
         public override bool SpawnsOwnChildren(PrefabChildEntity entity)
         {
             return false;
