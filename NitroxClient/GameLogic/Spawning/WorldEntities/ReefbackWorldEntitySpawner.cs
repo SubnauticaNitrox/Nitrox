@@ -1,21 +1,21 @@
 ﻿using System.Collections;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper;
 using UnityEngine;
 
-namespace NitroxClient.GameLogic.Spawning
+namespace NitroxClient.GameLogic.Spawning.WorldEntities
 {
-    public class ReefbackEntitySpawner : IEntitySpawner
+    public class ReefbackWorldEntitySpawner : IWorldEntitySpawner
     {
-        private readonly DefaultEntitySpawner defaultSpawner;
+        private readonly DefaultWorldEntitySpawner defaultSpawner;
 
-        public ReefbackEntitySpawner(DefaultEntitySpawner defaultSpawner)
+        public ReefbackWorldEntitySpawner(DefaultWorldEntitySpawner defaultSpawner)
         {
             this.defaultSpawner = defaultSpawner;
         }
 
-        public IEnumerator SpawnAsync(Entity entity, Optional<GameObject> parent, EntityCell cellRoot, TaskResult<Optional<GameObject>> result)
+        public IEnumerator SpawnAsync(WorldEntity entity, Optional<GameObject> parent, EntityCell cellRoot, TaskResult<Optional<GameObject>> result)
         {
             TaskResult<Optional<GameObject>> reefbackTaskResult = new();
             yield return defaultSpawner.SpawnAsync(entity, parent, cellRoot, reefbackTaskResult);
@@ -36,13 +36,16 @@ namespace NitroxClient.GameLogic.Spawning
             life.SpawnPlants();
             foreach (Entity childEntity in entity.ChildEntities)
             {
-                TaskResult<Optional<GameObject>> childTaskResult = new();
-                yield return defaultSpawner.SpawnAsync(childEntity, reefback, cellRoot, childTaskResult);
-
-                Optional<GameObject> child = childTaskResult.Get();
-                if (child.HasValue)
+                if (childEntity is WorldEntity worldChild)
                 {
-                    child.Value.AddComponent<ReefbackCreature>();
+                    TaskResult<Optional<GameObject>> childTaskResult = new();
+                    yield return defaultSpawner.SpawnAsync(worldChild, reefback, cellRoot, childTaskResult);
+                    Optional<GameObject> child = childTaskResult.Get();
+
+                    if (child.HasValue)
+                    {
+                        child.Value.AddComponent<ReefbackCreature>();
+                    }
                 }
             }
 

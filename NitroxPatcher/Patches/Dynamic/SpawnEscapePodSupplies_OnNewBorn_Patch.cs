@@ -19,5 +19,6 @@ public class SpawnEscapePodSupplies_OnNewBorn_Patch : NitroxPatch, IDynamicPatch
     public override void Patch(Harmony harmony)
     {
         PatchPrefix(harmony, TARGET_METHOD);
+
     }
 }

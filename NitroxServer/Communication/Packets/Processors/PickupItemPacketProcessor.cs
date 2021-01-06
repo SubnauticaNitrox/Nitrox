@@ -1,4 +1,4 @@
-﻿using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
@@ -9,14 +9,14 @@ namespace NitroxServer.Communication.Packets.Processors
 {
     class PickupItemPacketProcessor : AuthenticatedPacketProcessor<PickupItem>
     {
-        private readonly EntityManager entityManager;
+        private readonly WorldEntityManager worldEntityManager;
         private readonly PlayerManager playerManager;
         private readonly SimulationOwnershipData simulationOwnershipData;
         private readonly PDAStateData pdaStateData;
 
-        public PickupItemPacketProcessor(EntityManager entityManager, PlayerManager playerManager, SimulationOwnershipData simulationOwnershipData, PDAStateData pdaStateData)
+        public PickupItemPacketProcessor(WorldEntityManager worldEntityManager, PlayerManager playerManager, SimulationOwnershipData simulationOwnershipData, PDAStateData pdaStateData)
         {
-            this.entityManager = entityManager;
+            this.worldEntityManager = worldEntityManager;
             this.playerManager = playerManager;
             this.simulationOwnershipData = simulationOwnershipData;
             this.pdaStateData = pdaStateData;
@@ -41,7 +41,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 }
             }
 
-            entityManager.PickUpEntity(packet.Id);
+            worldEntityManager.PickUpEntity(packet.Id);
             playerManager.SendPacketToOtherPlayers(packet, player);
         }
     }

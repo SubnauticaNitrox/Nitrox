@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Unity;
+using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Server;
 
@@ -32,7 +33,7 @@ namespace NitroxModel.Packets
         public Optional<NitroxId> PlayerSubRootId { get; }
         public PlayerStatsData PlayerStatsData { get; }
         public List<InitialRemotePlayerData> RemotePlayerData { get; }
-        public List<Entity> GlobalRootEntities { get; }
+        public List<WorldEntity> GlobalRootEntities { get; }
         public List<NitroxId> InitialSimulationOwnerships { get; }
         public ServerGameMode GameMode { get; }
         public Perms Permissions { get; }
@@ -58,7 +59,7 @@ namespace NitroxModel.Packets
             Optional<NitroxId> playerSubRootId,
             PlayerStatsData playerStatsData,
             IEnumerable<InitialRemotePlayerData> remotePlayerData,
-            IEnumerable<Entity> globalRootEntities,
+            IEnumerable<WorldEntity> globalRootEntities,
             IEnumerable<NitroxId> initialSimulationOwnerships,
             ServerGameMode gameMode,
             Perms perms,
@@ -113,7 +114,7 @@ namespace NitroxModel.Packets
             Optional<NitroxId> playerSubRootId,
             PlayerStatsData playerStatsData,
             List<InitialRemotePlayerData> remotePlayerData,
-            List<Entity> globalRootEntities,
+            List<WorldEntity> globalRootEntities,
             List<NitroxId> initialSimulationOwnerships,
             ServerGameMode gameMode,
             Perms permissions,

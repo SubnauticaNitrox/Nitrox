@@ -16,7 +16,8 @@ namespace NitroxServer.Serialization.World
         public EscapePodManager EscapePodManager { get; set; }
         public BatchEntitySpawner BatchEntitySpawner { get; set; }
         public EntitySimulation EntitySimulation { get; set; }
-        public EntityManager EntityManager { get; set; }
+        public EntityRegistry EntityRegistry { get; set; }
+        public WorldEntityManager WorldEntityManager { get; set; }
         public BaseManager BaseManager { get; set; }
         public EventTriggerer EventTriggerer { get; set; }
         public VehicleManager VehicleManager { get; set; }

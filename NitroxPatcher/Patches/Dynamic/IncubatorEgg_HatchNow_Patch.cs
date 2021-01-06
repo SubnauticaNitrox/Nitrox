@@ -1,10 +1,10 @@
-﻿using System.Reflection;
+using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.Helper;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
@@ -48,7 +48,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
                 NitroxId babyId = NitroxEntity.GetId(baby);
 
-                Entity entity = new(baby.transform.position.ToDto(), baby.transform.rotation.ToDto(), baby.transform.localScale.ToDto(), TechType.SeaEmperorBaby.ToDto(), 3, "09883a6c-9e78-4bbf-9561-9fa6e49ce766", true, babyId, null);
+                WorldEntity entity = new WorldEntity(baby.transform.position.ToDto(), baby.transform.rotation.ToDto(), baby.transform.localScale.ToDto(), TechType.SeaEmperorBaby.ToDto(), 3, "09883a6c-9e78-4bbf-9561-9fa6e49ce766", false, babyId, null, false, null);
                 NitroxServiceLocator.LocateService<Entities>().BroadcastEntitySpawnedByClient(entity);
             }
         }

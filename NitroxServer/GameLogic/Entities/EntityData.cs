@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.GameLogic.Entities;
 using ProtoBufNet;
 
 namespace NitroxServer.GameLogic.Entities
@@ -28,7 +29,11 @@ namespace NitroxServer.GameLogic.Entities
                     if (entitiesById.TryGetValue(entity.ParentId, out Entity parent))
                     {
                         parent.ChildEntities.Add(entity);
-                        entity.Transform.SetParent(parent.Transform, false);
+
+                        if (entity is WorldEntity we && parent is WorldEntity weParent)
+                        {
+                            we.Transform.SetParent(weParent.Transform);
+                        }
                     }
                 }
             }
