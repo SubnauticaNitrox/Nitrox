@@ -1,4 +1,4 @@
-﻿using System.Timers;
+using System.Timers;
 using NitroxModel.Logger;
 using NitroxServer.Serialization.World;
 using System.IO;
@@ -66,12 +66,8 @@ namespace NitroxServer
                 return;
             }
 
-            // Don't overwrite config changes that users made to file
-            if (!File.Exists(serverConfig.FileName))
-            {
-                NitroxConfig.Serialize(serverConfig);
-            }
             IsSaving = true;
+            NitroxConfig.Serialize(serverConfig); // This is overwriting the config file => server has to be closed before making changes to it
             worldPersistence.Save(world, serverConfig.SaveName);
             IsSaving = false;
         }
@@ -100,11 +96,14 @@ namespace NitroxServer
             return true;
         }
 
-        public void Stop()
+        public void Stop(bool shouldSave = true)
         {
             Log.Info("Nitrox Server Stopping...");
             DisablePeriodicSaving();
-            Save();
+            if (shouldSave)
+            {
+                Save();
+            }
             server.Stop();
             Log.Info("Nitrox Server Stopped");
             IsRunning = false;

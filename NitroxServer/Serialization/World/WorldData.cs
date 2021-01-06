@@ -13,8 +13,6 @@ namespace NitroxServer.Serialization.World
     [ProtoContract, JsonObject(MemberSerialization.OptIn)]
     public class WorldData
     {
-        public const short VERSION = 1;
-
         [JsonProperty, ProtoMember(1)]
         public List<NitroxInt3> ParsedBatchCells { get; set; }
 

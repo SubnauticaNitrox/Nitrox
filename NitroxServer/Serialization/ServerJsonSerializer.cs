@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using NitroxModel.DataStructures.JsonConverter;
 using NitroxModel.Logger;
 
@@ -22,6 +23,9 @@ namespace NitroxServer.Serialization
             serializer.ContractResolver = new AttributeContractResolver();
             serializer.Converters.Add(new NitroxIdConverter());
             serializer.Converters.Add(new TechTypeConverter());
+            serializer.Converters.Add(new VersionConverter());
+            serializer.Converters.Add(new KeyValuePairConverter());
+            serializer.Converters.Add(new StringEnumConverter());
         }
 
         public string GetFileEnding() => ".json";
