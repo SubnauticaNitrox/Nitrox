@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
@@ -110,7 +110,12 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         {
             if (showingPasswordWindow)
             {
-                serverPasswordWindowRect = GUILayout.Window(GUIUtility.GetControlID(FocusType.Keyboard), serverPasswordWindowRect, DoServerPasswordWindow, "Server Password Required");
+                serverPasswordWindowRect = GUILayout.Window(
+                    GUIUtility.GetControlID(FocusType.Keyboard),
+                    serverPasswordWindowRect,
+                    DoServerPasswordWindow,
+                    Language.main.Get("Nitrox_JoinServerPasswordHeader")
+                );
             }
         }
 
@@ -264,7 +269,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                     break;
 
                 case MultiplayerSessionConnectionStage.DISCONNECTED:
-                    Log.Info("Disconnected from server");
+                    Log.Info(Language.main.Get("Nitrox_DisconnectedSession"));
                     break;
             }
         }
