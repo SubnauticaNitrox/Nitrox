@@ -28,8 +28,8 @@ namespace NitroxServer.ConsoleCommands
                 return;
             }
 
-            using Process proc = Process.Start(program);
             server.Stop();
+            using Process proc = Process.Start(program);
         }
     }
 }
