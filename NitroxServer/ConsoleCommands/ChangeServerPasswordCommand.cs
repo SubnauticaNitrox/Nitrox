@@ -1,5 +1,6 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Logger;
+using NitroxModel.Serialization;
 using NitroxModel.Server;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
@@ -9,11 +10,8 @@ namespace NitroxServer.ConsoleCommands
 {
     internal class ChangeServerPasswordCommand : Command
     {
-        private readonly ServerConfig serverConfig;
-
-        public ChangeServerPasswordCommand(ServerConfig serverConfig) : base("changeserverpassword", Perms.ADMIN, "Changes server password. Clear it without argument")
+        public ChangeServerPasswordCommand() : base("changeserverpassword", Perms.ADMIN, "Changes server password. Clear it without argument")
         {
-            this.serverConfig = serverConfig;
             AddParameter(new TypeString("password", false));
         }
 
@@ -21,10 +19,12 @@ namespace NitroxServer.ConsoleCommands
         {
             string password = args.Get(0) ?? string.Empty;
 
+            ServerConfig serverConfig = NitroxConfig.Deserialize<ServerConfig>();
             serverConfig.ServerPassword = password;
+            NitroxConfig.Serialize(serverConfig);
 
             Log.InfoSensitive("Server password changed to {password} by {playername}", password, args.SenderName);
-            SendMessageToPlayer(args.Sender, "Server password changed");
+            SendMessageToPlayer(args.Sender, "Server password changed. In order to take effect pls restart the server.");
         }
     }
 }
