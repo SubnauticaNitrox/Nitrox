@@ -128,6 +128,7 @@ namespace NitroxServer.Serialization.World
                     zipFile.AddFile(Path.Combine(saveDir, "BaseData" + fileEnding));
                     zipFile.AddFile(Path.Combine(saveDir, "PlayerData" + fileEnding));
                     zipFile.AddFile(Path.Combine(saveDir, "WorldData" + fileEnding));
+                    zipFile.AddFile(Path.Combine(saveDir, "EntityData" + fileEnding));
                     zipFile.Save(Path.Combine(saveDir, "worldBackup.zip"));
                 }
 #if DEBUG
