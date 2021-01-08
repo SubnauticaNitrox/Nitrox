@@ -6,8 +6,7 @@ namespace NitroxClient.Communication.Abstract
     public interface IMultiplayerSessionState
     {
         IClient Client { get; }
-        string IpAddress { get; }
-        int ServerPort { get; }
+        IConnectionInfo ConnectionInfo { get; }
         MultiplayerSessionPolicy SessionPolicy { get; }
         PlayerSettings PlayerSettings { get; }
         AuthenticationContext AuthenticationContext { get; }

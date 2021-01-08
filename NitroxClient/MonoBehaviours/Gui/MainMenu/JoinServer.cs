@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Exceptions;
 using NitroxClient.Communication.MultiplayerSession;
+using NitroxClient.Communication.NetworkingLayer.LiteNetLib;
 using NitroxClient.GameLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.PlayerModel.ColorSwap;
 using NitroxClient.GameLogic.PlayerModel.ColorSwap.Strategy;
@@ -177,7 +178,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
             try
             {
-                multiplayerSession.Connect(serverIp, serverPort);
+                multiplayerSession.Connect(new DirectConnection(serverIp, serverPort));
             }
             catch (ClientConnectionFailedException)
             {
@@ -267,7 +268,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                         () =>
                         {
                             multiplayerSession.Disconnect();
-                            multiplayerSession.Connect(serverIp, serverPort);
+                            multiplayerSession.Connect(new DirectConnection(serverIp, serverPort));
                         });
                     break;
 

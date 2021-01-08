@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using LiteNetLib;
 using LiteNetLib.Utils;
 using NitroxClient.Communication.Abstract;
@@ -27,8 +28,14 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
             this.networkDebugger = networkDebugger;
         }
 
-        public void Start(string ipAddress, int serverPort)
+        public void Start(IConnectionInfo connectionInfo)
         {
+            DirectConnection directConnection = connectionInfo as DirectConnection;
+            if (directConnection == null)
+            {
+                throw new NotSupportedException("Tried passing incorrect connectionInfo to clientConnection");
+            }
+
             Log.Info("Initializing LiteNetLibClient...");
 
             SynchronizationContext.SetSynchronizationContext(new SynchronizationContext());
@@ -50,7 +57,7 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
             };
 
             client.Start();
-            client.Connect(ipAddress, serverPort, "nitrox");
+            client.Connect(directConnection.IPAddress, directConnection.Port, "nitrox");
 
             connectedEvent.WaitOne(2000);
             connectedEvent.Reset();

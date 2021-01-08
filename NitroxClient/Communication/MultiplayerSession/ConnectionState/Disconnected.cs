@@ -1,6 +1,7 @@
 ﻿using System;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Exceptions;
+using NitroxClient.Communication.NetworkingLayer.LiteNetLib;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
 
@@ -18,9 +19,8 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
                 ValidateState(sessionConnectionContext);
 
                 IClient client = sessionConnectionContext.Client;
-                string ipAddress = sessionConnectionContext.IpAddress;
-                int port = sessionConnectionContext.ServerPort;
-                StartClient(ipAddress, client, port);
+                IConnectionInfo connectionInfo = sessionConnectionContext.ConnectionInfo;
+                StartClient(connectionInfo, client);
                 EstablishSessionPolicy(sessionConnectionContext, client);
             }
         }
@@ -31,11 +31,11 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
 
             try
             {
-                Validate.NotNull(sessionConnectionContext.IpAddress);
+                Validate.NotNull(sessionConnectionContext.ConnectionInfo);
             }
             catch (ArgumentNullException ex)
             {
-                throw new InvalidOperationException("The context is missing an IP address.", ex);
+                throw new InvalidOperationException("The context is missing the connection info.", ex);
             }
         }
 
@@ -51,11 +51,11 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             }
         }
 
-        private static void StartClient(string ipAddress, IClient client, int port)
+        private static void StartClient(IConnectionInfo connectionInfo, IClient client)
         {
             if (!client.IsConnected)
             {
-                client.Start(ipAddress, port);
+                client.Start(connectionInfo);
 
                 if (!client.IsConnected)
                 {

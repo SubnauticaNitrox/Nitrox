@@ -10,22 +10,21 @@ using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
 using NitroxModel.Serialization;
 
-namespace NitroxClient.Communication.MultiplayerSession
+namespace NitroxClient.Communication.MultiplayerSession.SessionManagers
 {
-    public class MultiplayerSessionManager : IMultiplayerSession, IMultiplayerSessionConnectionContext
+    public class DefaultMultiplayerSessionManager : IMultiplayerSession, IMultiplayerSessionConnectionContext
     {
         private readonly HashSet<Type> suppressedPacketsTypes = new HashSet<Type>();
 
         public IClient Client { get; }
-        public string IpAddress { get; private set; }
-        public int ServerPort { get; private set; }
+        public IConnectionInfo ConnectionInfo { get; private set; }
         public MultiplayerSessionPolicy SessionPolicy { get; private set; }
         public PlayerSettings PlayerSettings { get; private set; }
         public AuthenticationContext AuthenticationContext { get; private set; }
         public IMultiplayerSessionConnectionState CurrentState { get; private set; }
         public MultiplayerSessionReservation Reservation { get; private set; }
 
-        public MultiplayerSessionManager(IClient client)
+        public DefaultMultiplayerSessionManager(IClient client)
         {
             Log.Info("Initializing MultiplayerSessionManager...");
             Client = client;
@@ -33,7 +32,7 @@ namespace NitroxClient.Communication.MultiplayerSession
         }
 
         // Testing entry point
-        internal MultiplayerSessionManager(IClient client, IMultiplayerSessionConnectionState initialState)
+        internal DefaultMultiplayerSessionManager(IClient client, IMultiplayerSessionConnectionState initialState)
         {
             Client = client;
             CurrentState = initialState;
@@ -41,10 +40,9 @@ namespace NitroxClient.Communication.MultiplayerSession
 
         public event MultiplayerSessionConnectionStateChangedEventHandler ConnectionStateChanged;
 
-        public void Connect(string ipAddress, int port)
+        public void Connect(IConnectionInfo connectionInfo)
         {
-            IpAddress = ipAddress;
-            ServerPort = port;
+            ConnectionInfo = connectionInfo;
             CurrentState.NegotiateReservation(this);
         }
 
@@ -132,8 +130,7 @@ namespace NitroxClient.Communication.MultiplayerSession
 
         public void ClearSessionState()
         {
-            IpAddress = null;
-            ServerPort = ServerList.DEFAULT_PORT;
+            ConnectionInfo = null;
             SessionPolicy = null;
             PlayerSettings = null;
             AuthenticationContext = null;

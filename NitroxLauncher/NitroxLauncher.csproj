@@ -239,10 +239,6 @@
       <Project>{e4226522-9189-410b-93b2-792942fbd588}</Project>
       <Name>Nitrox.Bootloader</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NitroxClient\NitroxClient.csproj">
-      <Project>{ed5034bd-66b5-4596-94b7-66a28d3eff49}</Project>
-      <Name>NitroxClient</Name>
-    </ProjectReference>
     <ProjectReference Include="..\NitroxModel-Subnautica\NitroxModel-Subnautica.csproj">
       <Project>{0a377218-6b36-4522-89a3-a39cfc999209}</Project>
       <Name>NitroxModel-Subnautica</Name>

@@ -3,7 +3,7 @@ using Autofac;
 using Autofac.Core;
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.Communication.MultiplayerSession;
+using NitroxClient.Communication.MultiplayerSession.SessionManagers;
 using NitroxClient.Communication.NetworkingLayer.LiteNetLib;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.Debuggers;
@@ -68,7 +68,7 @@ namespace NitroxClient
 
             containerBuilder.RegisterType<PlayerPreferenceManager>().SingleInstance();
 
-            containerBuilder.RegisterType<MultiplayerSessionManager>()
+            containerBuilder.RegisterType<DefaultMultiplayerSessionManager>()
                             .As<IMultiplayerSession>()
                             .As<IPacketSender>()
                             .InstancePerLifetimeScope();
