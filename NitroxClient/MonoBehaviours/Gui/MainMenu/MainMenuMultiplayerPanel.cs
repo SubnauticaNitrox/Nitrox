@@ -123,7 +123,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             joinServerGameObject = new GameObject();
             JoinServer joinServerComponent = joinServerGameObject.AddComponent<JoinServer>();
             joinServerComponent.ServerIp = endpoint.Address.ToString();
-            joinServerComponent.ServerPort = endpoint.Port;
+            joinServerComponent.ServerPort = (ushort)endpoint.Port;
         }
 
         public void ShowAddServerWindow()

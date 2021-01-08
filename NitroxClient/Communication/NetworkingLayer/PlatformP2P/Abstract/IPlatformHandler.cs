@@ -1,4 +1,5 @@
-﻿using NitroxClient.GameLogic;
+﻿using NitroxClient.Communication.Abstract;
+using NitroxClient.GameLogic;
 using NitroxModel.Packets;
 
 namespace NitroxServer.Communication.NetworkingLayer.PlatformP2P.Abstract
@@ -8,11 +9,5 @@ namespace NitroxServer.Communication.NetworkingLayer.PlatformP2P.Abstract
         public bool IsInitialized();
 
         public bool Setup();
-
-        public void SendPacket(Packet packet, RemotePlayer remotePlayer);
-
-        public void Connect(RemotePlayer client);
-
-        public void Disconnect(RemotePlayer client);
     }
 }

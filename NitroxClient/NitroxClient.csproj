@@ -43,7 +43,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClientAutoFacRegistrar.cs" />
+    <Compile Include="Communication\Abstract\IConnectionInfo.cs" />
+    <Compile Include="Communication\NetworkingLayer\LiteNetLib\DirectConnection.cs" />
     <Compile Include="Communication\NetworkingLayer\PlatformP2P\Abstract\IPlatformHandler.cs" />
+    <Compile Include="Communication\NetworkingLayer\PlatformP2P\Steam\SteamP2P.cs" />
+    <Compile Include="Communication\NetworkingLayer\PlatformP2P\Steam\SteamP2PClient.cs" />
     <Compile Include="Communication\PacketReceiver.cs" />
     <Compile Include="Communication\Packets\Processors\BedEnterProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\DebugStartMapProcessor.cs" />
@@ -151,7 +155,7 @@
     <Compile Include="Communication\MultiplayerSession\ConnectionState\SessionReservationRejected.cs" />
     <Compile Include="Communication\MultiplayerSession\ConnectionState\SessionReserved.cs" />
     <Compile Include="Communication\MultiplayerSession\MultiplayerSessionConnectionStage.cs" />
-    <Compile Include="Communication\MultiplayerSession\MultiplayerSessionManager.cs" />
+    <Compile Include="Communication\MultiplayerSession\SessionManagers\DefaultMultiplayerSessionManager.cs" />
     <Compile Include="Communication\PacketSuppression.cs" />
     <Compile Include="Communication\Packets\Processors\Abstract\ClientPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\InitialPlayerSyncProcessor.cs" />

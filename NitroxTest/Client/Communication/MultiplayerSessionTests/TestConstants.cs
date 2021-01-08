@@ -1,4 +1,5 @@
 ﻿using NitroxClient.Communication.Abstract;
+using NitroxClient.Communication.NetworkingLayer.LiteNetLib;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
 using NSubstitute;
@@ -19,5 +20,6 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests
         public static readonly MultiplayerSessionPolicy TEST_SESSION_POLICY = new MultiplayerSessionPolicy(TEST_CORRELATION_ID, false, TEST_MAX_PLAYER_CONNECTIONS, false);
         public static readonly PlayerSettings TEST_PLAYER_SETTINGS = new PlayerSettings(RandomColorGenerator.GenerateColor());
         public static readonly IMultiplayerSessionConnectionState TEST_CONNECTION_STATE = Substitute.For<IMultiplayerSessionConnectionState>();
+        public static readonly DirectConnection TEST_CONNECTION_INFO = new DirectConnection(TEST_IP_ADDRESS, TEST_SERVER_PORT);
     }
 }

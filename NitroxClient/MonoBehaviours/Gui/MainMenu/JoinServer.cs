@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Exceptions;
 using NitroxClient.Communication.MultiplayerSession;
+using NitroxClient.Communication.NetworkingLayer.LiteNetLib;
 using NitroxClient.GameLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.PlayerModel.ColorSwap;
 using NitroxClient.GameLogic.PlayerModel.ColorSwap.Strategy;
@@ -39,7 +40,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         private string serverPassword = string.Empty;
 
         public string ServerIp = string.Empty;
-        public int ServerPort;
+        public ushort ServerPort;
         public static GameObject SaveGameMenuPrototype { get; set; }
 
         private static MainMenuRightSide RightSideMainMenu => MainMenuRightSide.main;
@@ -353,7 +354,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
             try
             {
-                multiplayerSession.Connect(ServerIp, ServerPort);
+                multiplayerSession.Connect(new DirectConnection(ServerIp, ServerPort));
             }
             catch (ClientConnectionFailedException)
             {
@@ -470,7 +471,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                         () =>
                         {
                             multiplayerSession.Disconnect();
-                            multiplayerSession.Connect(ServerIp, ServerPort);
+                            multiplayerSession.Connect(new DirectConnection(ServerIp, ServerPort));
                         });
                     break;
 

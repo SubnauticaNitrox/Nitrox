@@ -3,6 +3,7 @@ using FluentAssertions.Events;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession;
+using NitroxClient.Communication.MultiplayerSession.SessionManagers;
 using NitroxModel.Packets;
 using NSubstitute;
 
@@ -18,7 +19,7 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests
             IClient client = Substitute.For<IClient>();
 
             // Act
-            IMultiplayerSession multiplayerSession = new MultiplayerSessionManager(client);
+            IMultiplayerSession multiplayerSession = new DefaultMultiplayerSessionManager(client);
 
             // Assert
             multiplayerSession.CurrentState.CurrentStage.Should().Be(MultiplayerSessionConnectionStage.DISCONNECTED);
@@ -31,7 +32,7 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests
             IClient client = Substitute.For<IClient>();
 
             // Act
-            IMultiplayerSession multiplayerSession = new MultiplayerSessionManager(client);
+            IMultiplayerSession multiplayerSession = new DefaultMultiplayerSessionManager(client);
 
             // Assert
             multiplayerSession.Client.Should().Be(client);
@@ -42,14 +43,13 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests
         {
             // Arrange
             IClient client = Substitute.For<IClient>();
-            IMultiplayerSession multiplayerSession = new MultiplayerSessionManager(client, TestConstants.TEST_CONNECTION_STATE);
+            IMultiplayerSession multiplayerSession = new DefaultMultiplayerSessionManager(client, TestConstants.TEST_CONNECTION_STATE);
 
             // Act
-            multiplayerSession.Connect(TestConstants.TEST_IP_ADDRESS,TestConstants.TEST_SERVER_PORT);
+            multiplayerSession.Connect(TestConstants.TEST_CONNECTION_INFO);
 
             // Assert
-            multiplayerSession.IpAddress.Should().Be(TestConstants.TEST_IP_ADDRESS);
-            multiplayerSession.ServerPort.Should().Be(TestConstants.TEST_SERVER_PORT);
+            multiplayerSession.ConnectionInfo.Should().Be(TestConstants.TEST_CONNECTION_INFO);
         }
 
         [TestMethod]
@@ -57,7 +57,7 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests
         {
             // Arrange
             IClient client = Substitute.For<IClient>();
-            IMultiplayerSession multiplayerSession = new MultiplayerSessionManager(client, TestConstants.TEST_CONNECTION_STATE);
+            IMultiplayerSession multiplayerSession = new DefaultMultiplayerSessionManager(client, TestConstants.TEST_CONNECTION_STATE);
 
             // Act
             multiplayerSession.ProcessSessionPolicy(TestConstants.TEST_SESSION_POLICY);
@@ -71,7 +71,7 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests
         {
             // Arrange
             IClient client = Substitute.For<IClient>();
-            IMultiplayerSession multiplayerSession = new MultiplayerSessionManager(client, TestConstants.TEST_CONNECTION_STATE);
+            IMultiplayerSession multiplayerSession = new DefaultMultiplayerSessionManager(client, TestConstants.TEST_CONNECTION_STATE);
 
             // Act
             multiplayerSession.RequestSessionReservation(TestConstants.TEST_PLAYER_SETTINGS, TestConstants.TEST_AUTHENTICATION_CONTEXT);
@@ -91,7 +91,7 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests
                 TestConstants.TEST_RESERVATION_KEY);
 
             IClient client = Substitute.For<IClient>();
-            IMultiplayerSession multiplayerSession = new MultiplayerSessionManager(client, TestConstants.TEST_CONNECTION_STATE);
+            IMultiplayerSession multiplayerSession = new DefaultMultiplayerSessionManager(client, TestConstants.TEST_CONNECTION_STATE);
 
             // Act
             multiplayerSession.ProcessReservationResponsePacket(successfulReservation);
@@ -105,7 +105,7 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests
         {
             // Arrange
             IClient client = Substitute.For<IClient>();
-            IMultiplayerSession multiplayerSession = new MultiplayerSessionManager(client);
+            IMultiplayerSession multiplayerSession = new DefaultMultiplayerSessionManager(client);
             IMultiplayerSessionConnectionContext connectionContext = (IMultiplayerSessionConnectionContext)multiplayerSession;
             IMonitor<IMultiplayerSession> monitor = multiplayerSession.Monitor();
 

@@ -10,7 +10,7 @@ namespace NitroxClient.Communication.Abstract
         IMultiplayerSessionConnectionState CurrentState { get; }
         event MultiplayerSessionConnectionStateChangedEventHandler ConnectionStateChanged;
 
-        void Connect(string ipAddress, int port);
+        void Connect(IConnectionInfo connectionInfo);
         void ProcessSessionPolicy(MultiplayerSessionPolicy policy);
         void RequestSessionReservation(PlayerSettings playerSettings, AuthenticationContext authenticationContext);
         void ProcessReservationResponsePacket(MultiplayerSessionReservation reservation);
