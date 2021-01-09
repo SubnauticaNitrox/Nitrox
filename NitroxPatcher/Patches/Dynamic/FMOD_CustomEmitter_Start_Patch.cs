@@ -16,26 +16,44 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Prefix(FMOD_CustomEmitter __instance)
         {
-            if (fmodSystem.IsWhitelisted(__instance.asset.path, out bool _, out float radius))
+            if (!fmodSystem.IsWhitelisted(__instance.asset.path, out bool _, out float radius))
             {
-                __instance.GetEventInstance().getDescription(out EventDescription description);
-                description.is3D(out bool is3D);
+                return;
+            }
 
-                if (__instance.TryGetComponent(out NitroxEntity nitroxEntity) && is3D)
+            __instance.GetEventInstance().getDescription(out EventDescription description);
+            description.is3D(out bool is3D);
+            if (!is3D)
+            {
+                return;
+            }
+
+            if (!__instance.TryGetComponent(out NitroxEntity entity))
+            {
+                entity = __instance.GetComponentInParent<NitroxEntity>();
+                if (!entity)
                 {
-                    nitroxEntity.gameObject.AddComponent<FMODEmitterController>().AddEmitter(__instance.asset.path, __instance, radius);
+                    Log.Warn($"[FMOD_CustomEmitter_Start_Patch] - No NitroxEntity for \"{__instance.asset.path}\" found!");
+                    return;
                 }
-                else if (is3D)
+            }
+
+            if (!entity.gameObject.TryGetComponent(out FMODEmitterController fmodController))
+            {
+                fmodController = entity.gameObject.AddComponent<FMODEmitterController>();
+            }
+            fmodController.AddEmitter(__instance.asset.path, __instance, radius);
+
+            //FMOD_CustomLoopingEmitter has no Start() so we need to check it here
+            if (__instance is FMOD_CustomLoopingEmitter looping)
+            {
+                if (looping.assetStart && fmodSystem.IsWhitelisted(looping.assetStart.path, out bool _, out float radiusStart))
                 {
-                    NitroxEntity nitroxParentEntity = __instance.GetComponentInParent<NitroxEntity>();
-                    if (nitroxParentEntity)
-                    {
-                        nitroxParentEntity.gameObject.AddComponent<FMODEmitterController>().AddEmitter(__instance.asset.path, __instance, radius);
-                    }
-                    else
-                    {
-                        Log.Warn($"[FMOD_CustomEmitter_Start_Patch] - No NitroxEntity for \"{__instance.asset.path}\" found!");
-                    }
+                    fmodController.AddEmitter(looping.assetStart.path, looping, radiusStart);
+                }
+                if (looping.assetStop && fmodSystem.IsWhitelisted(looping.assetStop.path, out bool _, out float radiusStop))
+                {
+                    fmodController.AddEmitter(looping.assetStop.path, looping, radiusStop);
                 }
             }
         }

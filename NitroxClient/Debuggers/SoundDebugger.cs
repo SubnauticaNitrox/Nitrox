@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using FMOD;
 using FMOD.Studio;
 using FMODUnity;
 using NitroxClient.GameLogic.FMOD;
 using NitroxClient.Unity.Helper;
-using NitroxModel.Logger;
-using NitroxModel.Packets;
 using UnityEngine;
 #pragma warning disable 618
 
@@ -16,29 +12,45 @@ namespace NitroxClient.Debuggers
     public class SoundDebugger : BaseDebugger
     {
         private readonly Dictionary<string, SoundData> assetList;
-
         private readonly Dictionary<string, EventInstance> eventInstancesByPath = new Dictionary<string, EventInstance>();
+        private readonly Transform camera;
         private Vector2 scrollPosition;
+        private string searchText;
+        private string searchCategory;
+        private float volume = 1f;
+        private float distance;
         private bool displayIsWhitelisted = true;
         private bool displayIsGlobal;
         private bool displayWithRadius;
 
-        public SoundDebugger(FMODSystem fmodSystem) : base(650, null, KeyCode.S, true, false, true, GUISkinCreationOptions.DERIVEDCOPY)
+        public SoundDebugger(FMODSystem fmodSystem) : base(700, null, KeyCode.S, true, false, true, GUISkinCreationOptions.DERIVEDCOPY)
         {
             assetList = fmodSystem.GetSoundDataList();
-            ActiveTab = AddTab("All Sounds", RenderTabAllSounds);
-            AddTab("Settings", RenderTabSettings);
+            camera = Camera.main.transform;
+            ActiveTab = AddTab("Sounds", RenderTabAllSounds);
         }
 
         protected override void OnSetSkin(GUISkin skin)
         {
             base.OnSetSkin(skin);
 
-            skin.SetCustomStyle("middleLabel",
+            skin.SetCustomStyle("soundKeyLabel",
                                 skin.label,
                                 s =>
                                 {
-                                    s.alignment = TextAnchor.MiddleCenter;
+                                    s.fontSize = 15;
+                                });
+            skin.SetCustomStyle("enabled",
+                                skin.label,
+                                s =>
+                                {
+                                    s.normal = new GUIStyleState { textColor = Color.green };
+                                });
+            skin.SetCustomStyle("disabled",
+                                skin.label,
+                                s =>
+                                {
+                                    s.normal = new GUIStyleState { textColor = Color.red };
                                 });
         }
 
@@ -46,30 +58,104 @@ namespace NitroxClient.Debuggers
         {
             using (new GUILayout.VerticalScope("Box"))
             {
+                using (new GUILayout.VerticalScope("Box"))
+                {
+                    using (new GUILayout.HorizontalScope("Box"))
+                    {
+                        searchText = GUILayout.TextField(searchText);
+
+                        if (GUILayout.Button("Stop all", GUILayout.MaxWidth(60f)))
+                        {
+                            eventInstancesByPath.Values.ForEach(evt => evt.stop(FMOD.Studio.STOP_MODE.IMMEDIATE));
+                            eventInstancesByPath.Clear();
+                        }
+                    }
+
+                    using (new GUILayout.HorizontalScope())
+                    {
+                        if (GUILayout.Button("Creature"))
+                        {
+                            searchCategory = "event:/creature";
+                        }
+                        if (GUILayout.Button("Environment"))
+                        {
+                            searchCategory = "event:/env";
+                        }
+                        if (GUILayout.Button("Player"))
+                        {
+                            searchCategory = "event:/player";
+                        }
+                        if (GUILayout.Button("Vehicles"))
+                        {
+                            searchCategory = "event:/sub";
+                        }
+                        if (GUILayout.Button("Tools"))
+                        {
+                            searchCategory = "event:/tools";
+                        }
+                        if (GUILayout.Button("Clear"))
+                        {
+                            searchCategory = string.Empty;
+                        }
+                    }
+                }
+
+                using (new GUILayout.HorizontalScope("Box"))
+                {
+                    using (new GUILayout.VerticalScope(GUILayout.Width(325f)))
+                    {
+                        displayIsWhitelisted = GUILayout.Toggle(displayIsWhitelisted, "Whitelisted sounds");
+                        displayWithRadius = GUILayout.Toggle(displayWithRadius, "Sounds with radius");
+                        displayIsGlobal = GUILayout.Toggle(displayIsGlobal, "Global sounds");
+                    }
+
+                    using (new GUILayout.VerticalScope(GUILayout.Width(325f)))
+                    {
+                        using (new GUILayout.HorizontalScope())
+                        {
+                            GUILayout.Label($"Volume: {NitroxModel.Helper.Mathf.Round(volume, 2)}");
+                            volume = GUILayout.HorizontalSlider(volume, 0f, 1f, GUILayout.Width(240f));
+                        }
+                        GUILayout.Space(5f);
+                        using (new GUILayout.HorizontalScope())
+                        {
+                            GUILayout.Label($"Distance: {NitroxModel.Helper.Mathf.Round(distance)}");
+                            distance = GUILayout.HorizontalSlider(distance, 0f, 500f, GUILayout.Width(240f));
+                        }
+                    }
+                }
+            }
+
+            using (new GUILayout.VerticalScope("Box"))
+            {
                 scrollPosition = GUILayout.BeginScrollView(scrollPosition, GUILayout.Height(500f));
+
 
                 foreach (KeyValuePair<string, SoundData> sound in assetList)
                 {
                     if (displayIsWhitelisted && !sound.Value.IsWhitelisted ||
                         displayIsGlobal && !sound.Value.IsGlobal ||
-                        displayWithRadius && sound.Value.SoundRadius == 0f)
+                        displayWithRadius && sound.Value.SoundRadius <= 0.1f ||
+                        !string.IsNullOrWhiteSpace(searchText) && sound.Key.IndexOf(searchText, StringComparison.OrdinalIgnoreCase) == -1 ||
+                        !string.IsNullOrWhiteSpace(searchCategory) && !sound.Key.StartsWith(searchCategory))
                     {
                         continue;
                     }
 
-                    using (new GUILayout.VerticalScope("Box", GUILayout.MaxHeight(13f)))
+                    using (new GUILayout.VerticalScope("Box", GUILayout.MaxHeight(16f)))
                     {
                         using (new GUILayout.HorizontalScope())
                         {
-                            GUILayout.Label(sound.Key, "middleLabel", GUILayout.MaxWidth(250f));
+                            GUILayout.Label(sound.Key, "soundKeyLabel", GUILayout.MaxWidth(370f));
                             GUILayout.FlexibleSpace();
-                            GUILayout.Toggle(sound.Value.IsWhitelisted, "Is whitelisted", GUILayout.MaxHeight(13f));
-                            GUILayout.Toggle(sound.Value.IsGlobal, "Is global", GUILayout.MaxHeight(13f));
-                            GUILayout.Label($"Radius: {sound.Value.SoundRadius}", "middleLabel");
-                            GUILayout.Space(10f);
+                            GUILayout.Label("Whitelisted", sound.Value.IsWhitelisted ? "enabled" : "disabled");
+                            GUILayout.Space(7f);
+                            GUILayout.Label("Global", sound.Value.IsGlobal ? "enabled" : "disabled");
+                            GUILayout.Space(7f);
+                            GUILayout.Label($"Radius: {sound.Value.SoundRadius}", GUILayout.Width(70f));
                             if (GUILayout.Button("Play"))
                             {
-                                PlaySound(sound.Key, Player.main ? Player.main.transform.position : Vector3.zero);
+                                PlaySound(sound.Key);
                             }
                             if (GUILayout.Button("Stop"))
                             {
@@ -83,23 +169,16 @@ namespace NitroxClient.Debuggers
             }
         }
 
-        private void RenderTabSettings()
+        private void PlaySound(string eventPath)
         {
-            using (new GUILayout.VerticalScope("Box"))
-            {
-                displayIsWhitelisted = GUILayout.Toggle(displayIsWhitelisted, "Display whitelisted sounds");
-                displayIsGlobal = GUILayout.Toggle(displayIsGlobal, "Display global sounds");
-                displayWithRadius = GUILayout.Toggle(displayWithRadius, "Display sounds with radius");
-            }
-        }
+            Vector3 position = camera.position + new Vector3(distance, 0, 0);
 
-        private void PlaySound(string eventPath, Vector3 position)
-        {
             if (!eventInstancesByPath.TryGetValue(eventPath, out EventInstance instance))
             {
                 instance = FMODUWE.GetEvent(eventPath);
+                eventInstancesByPath.Add(eventPath, instance);
             }
-            instance.setVolume(1f);
+            instance.setVolume(volume);
             instance.set3DAttributes(position.To3DAttributes());
             instance.start();
             instance.release();
@@ -110,6 +189,7 @@ namespace NitroxClient.Debuggers
             if (eventInstancesByPath.TryGetValue(eventPath, out EventInstance instance))
             {
                 instance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+                eventInstancesByPath.Remove(eventPath);
             }
         }
     }

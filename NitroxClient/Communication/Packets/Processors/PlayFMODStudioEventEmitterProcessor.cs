@@ -1,8 +1,8 @@
-﻿using FMOD.Studio;
-using NitroxClient.Communication.Abstract;
+﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Helper;
 using NitroxModel.Packets;
 using UnityEngine;
 
@@ -21,16 +21,10 @@ namespace NitroxClient.Communication.Packets.Processors
         public override void Process(PlayFMODStudioEmitter packet)
         {
             Optional<GameObject> soundSource = NitroxEntity.GetObjectFrom(packet.Id);
-            if (!soundSource.HasValue)
-            {
-                return;
-            }
+            Validate.IsPresent(soundSource);
 
             FMODEmitterController fmodEmitterController = soundSource.Value.GetComponent<FMODEmitterController>();
-            if (!fmodEmitterController)
-            {
-                return;
-            }
+            Validate.IsTrue(fmodEmitterController);
 
             using (packetSender.Suppress<PlayFMODStudioEmitter>())
             {

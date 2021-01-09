@@ -17,22 +17,21 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             if (fmodSystem.IsWhitelisted(__instance.asset.path, out bool _, out float radius))
             {
-                if (__instance.TryGetComponent(out NitroxEntity nitroxEntity))
+                if (!__instance.TryGetComponent(out NitroxEntity entity))
                 {
-                    nitroxEntity.gameObject.AddComponent<FMODEmitterController>().AddEmitter(__instance.asset.path, __instance, radius);
-                }
-                else
-                {
-                    NitroxEntity nitroxParentEntity = __instance.GetComponentInParent<NitroxEntity>();
-                    if (nitroxParentEntity)
-                    {
-                        nitroxParentEntity.gameObject.AddComponent<FMODEmitterController>().AddEmitter(__instance.asset.path, __instance, radius);
-                    }
-                    else
+                    entity = __instance.GetComponentInParent<NitroxEntity>();
+                    if (!entity)
                     {
                         Log.Warn($"[FMOD_CustomEmitter_Start_Patch] - No NitroxEntity for \"{__instance.asset.path}\" found!");
+                        return;
                     }
                 }
+
+                if (!entity.gameObject.TryGetComponent(out FMODEmitterController fmodController))
+                {
+                    fmodController = entity.gameObject.AddComponent<FMODEmitterController>();
+                }
+                fmodController.AddEmitter(__instance.asset.path, __instance, radius);
             }
         }
 

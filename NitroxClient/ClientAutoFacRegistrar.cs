@@ -52,9 +52,12 @@ namespace NitroxClient
 
         private static void RegisterCoreDependencies(ContainerBuilder containerBuilder)
         {
-            containerBuilder.RegisterType<EntityDebugger>().As<BaseDebugger>().AsSelf().SingleInstance();
-            containerBuilder.RegisterType<SceneDebugger>().As<BaseDebugger>().AsSelf().SingleInstance();
-            containerBuilder.RegisterType<NetworkDebugger>().As<BaseDebugger>().AsSelf().As<INetworkDebugger>().SingleInstance();
+            containerBuilder.RegisterAssemblyTypes(currentAssembly)
+                            .AssignableTo<BaseDebugger>()
+                            .As<BaseDebugger>()
+                            .AsImplementedInterfaces()
+                            .AsSelf()
+                            .SingleInstance();
 
             containerBuilder.Register(c => new NitroxProtobufSerializer($"{nameof(NitroxModel)}.dll"));
 

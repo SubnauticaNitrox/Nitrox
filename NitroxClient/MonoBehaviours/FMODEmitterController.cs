@@ -14,7 +14,7 @@ namespace NitroxClient.MonoBehaviours
         private static readonly FieldInfo timeLastStopSoundField = typeof(FMOD_CustomLoopingEmitter).GetField("timeLastStopSound", BindingFlags.NonPublic | BindingFlags.Instance);
 
         private readonly Dictionary<string, FMOD_CustomEmitter> customEmitters = new Dictionary<string, FMOD_CustomEmitter>();
-        private readonly Dictionary<string, FMOD_CustomLoopingEmitter> loopingEmitters = new Dictionary<string, FMOD_CustomLoopingEmitter>();
+        private readonly Dictionary<string, KeyValuePair<FMOD_CustomLoopingEmitter, float>> loopingEmitters = new Dictionary<string, KeyValuePair<FMOD_CustomLoopingEmitter, float>>();
         private readonly Dictionary<string, FMOD_StudioEventEmitter> studioEmitters = new Dictionary<string, FMOD_StudioEventEmitter>();
 
         public void AddEmitter(string path, FMOD_CustomEmitter customEmitter, float radius)
@@ -32,11 +32,11 @@ namespace NitroxClient.MonoBehaviours
             }
         }
 
-        public void AddEmitter(string path, FMOD_CustomLoopingEmitter loopingEmitter)
+        public void AddEmitter(string path, FMOD_CustomLoopingEmitter loopingEmitter, float radius)
         {
             if (!customEmitters.ContainsKey(path))
             {
-                loopingEmitters.Add(path, loopingEmitter);
+                loopingEmitters.Add(path, new KeyValuePair<FMOD_CustomLoopingEmitter, float>(loopingEmitter, radius));
             }
             else
             {
@@ -70,9 +70,11 @@ namespace NitroxClient.MonoBehaviours
 
         public void PlayCustomLoopingEmitter(string path)
         {
-            FMOD_CustomLoopingEmitter loopingEmitter = loopingEmitters[path];
+            FMOD_CustomLoopingEmitter loopingEmitter = loopingEmitters[path].Key;
             EventInstance eventInstance = FMODUWE.GetEvent(path);
             eventInstance.set3DAttributes(loopingEmitter.transform.To3DAttributes());
+            eventInstance.setProperty(EVENT_PROPERTY.MINIMUM_DISTANCE, 1f);
+            eventInstance.setProperty(EVENT_PROPERTY.MAXIMUM_DISTANCE, loopingEmitters[path].Value);
             eventInstance.start();
             eventInstance.release();
             timeLastStopSoundField.SetValue(loopingEmitter, Time.time);
