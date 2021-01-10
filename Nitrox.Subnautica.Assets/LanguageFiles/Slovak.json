@@ -27,7 +27,7 @@
   // In game logging
   "Nitrox_UnableToConnect": "Nedá sa kontaktovať server na:",
   "Nitrox_StartServer": "Najprv spustite server aby ste sa mohli pripojiť do vášho sveta",
-  "Nitrox_FirewallInterfering": "Vyzerá, že bránia vaše nastavenia firewallu",
+  "Nitrox_FirewallInterfering": "Vyzerá, že vám bránia vaše nastavenia firewallu",
   "Nitrox_InvalidUserName": "Prosím zadajte platné meno !\n\n Nemôžu v ňom byť medzery ani pochybné znaky.\n Povolené znaky : A-Z a-z 0-9 _ . -\nDĺžka : [3, 25]",
   "Nitrox_RequestingSessionPolicy": "Pýtam pravidlá relácie...",
   "Nitrox_RejectedSessionPolicy": "Rezervácia odmietnutá...",
