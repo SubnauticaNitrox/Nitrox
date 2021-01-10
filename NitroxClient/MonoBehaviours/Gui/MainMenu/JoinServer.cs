@@ -68,7 +68,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             serverPort = port;
 
             //Set Server IP in info label
-            lowerDetailTextGameObject.GetComponent<Text>().text = $"Server IP Address\n{serverIp}";
+            lowerDetailTextGameObject.GetComponent<Text>().text = $"{Language.main.Get("Nitrox_JoinServerIpAddress")}\n{serverIp}";
 
             //Initialize elements from preferences
             activePlayerPreference = preferencesManager.GetPreference(serverIp);
@@ -110,7 +110,12 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         {
             if (showingPasswordWindow)
             {
-                serverPasswordWindowRect = GUILayout.Window(GUIUtility.GetControlID(FocusType.Keyboard), serverPasswordWindowRect, DoServerPasswordWindow, "Server Password Required");
+                serverPasswordWindowRect = GUILayout.Window(
+                    GUIUtility.GetControlID(FocusType.Keyboard),
+                    serverPasswordWindowRect,
+                    DoServerPasswordWindow,
+                    Language.main.Get("Nitrox_JoinServerPasswordHeader")
+                );
             }
         }
 
@@ -173,17 +178,17 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             }
             catch (ClientConnectionFailedException)
             {
-                Log.InGameSensitive("Unable to contact the remote server at: {ip}:{port}", serverIp, serverPort);
+                Log.InGameSensitive(Language.main.Get("Nitrox_UnableToConnect") + " {ip}:{port}", serverIp, serverPort);
 
                 if (serverIp.Equals("127.0.0.1"))
                 {
                     if (Process.GetProcessesByName("NitroxServer-Subnautica").Length == 0)
                     {
-                        Log.InGame("Start your server first to join your self-hosted world");
+                        Log.InGame(Language.main.Get("Nitrox_StartServer"));
                     }
                     else
                     {
-                        Log.InGame("Seems like your firewall settings are interfering");
+                        Log.InGame(Language.main.Get("Nitrox_FirewallInterfering"));
                     }
                 }
                 OnCancelClick();
@@ -204,7 +209,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             //https://regex101.com/r/eTWiEs/2/
             if (!Regex.IsMatch(playerName, @"^[a-zA-Z0-9._-]{3,25}$"))
             {
-                NotifyUser("Please enter a valid player name !\n\n It must not contain any space or doubtful characters\n Allowed characters : A-Z a-z 0-9 _ . -\nLength : [3, 25]");
+                NotifyUser(Language.main.Get("Nitrox_InvalidUserName"));
                 return;
             }
             preferencesManager.SetPreference(serverIp, new PlayerPreference(playerName, colorPicker.currentColor));
@@ -219,23 +224,23 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             switch (state.CurrentStage)
             {
                 case MultiplayerSessionConnectionStage.ESTABLISHING_SERVER_POLICY:
-                    Log.InGame("Requesting session policy information...");
+                    Log.InGame(Language.main.Get("Nitrox_RequestingSessionPolicy"));
                     break;
 
                 case MultiplayerSessionConnectionStage.AWAITING_RESERVATION_CREDENTIALS:
                     if (multiplayerSession.SessionPolicy.RequiresServerPassword)
                     {
-                        Log.InGame("Waiting for Server Password Input...");
+                        Log.InGame(Language.main.Get("Nitrox_WaitingPassword"));
                         showingPasswordWindow = true;
                         shouldFocus = true;
                     }
-                    Log.InGame("Waiting for user input...");
+                    Log.InGame(Language.main.Get("Nitrox_WaitingUserInput"));
                     rightSideMainMenu.OpenGroup("Join Server");
                     FocusPlayerNameTextbox();
                     break;
 
                 case MultiplayerSessionConnectionStage.SESSION_RESERVED:
-                    Log.InGame("Launching game...");
+                    Log.InGame(Language.main.Get("Nitrox_LaunchGame"));
                     multiplayerSession.ConnectionStateChanged -= SessionConnectionStateChangedHandler;
                     preferencesManager.Save();
 
@@ -248,7 +253,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                     break;
 
                 case MultiplayerSessionConnectionStage.SESSION_RESERVATION_REJECTED:
-                    Log.InGame("Reservation rejected...");
+                    Log.InGame(Language.main.Get("Nitrox_RejectedSessionPolicy"));
 
                     MultiplayerSessionReservationState reservationState = multiplayerSession.Reservation.ReservationState;
 
@@ -264,7 +269,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                     break;
 
                 case MultiplayerSessionConnectionStage.DISCONNECTED:
-                    Log.Info("Disconnected from server");
+                    Log.Info(Language.main.Get("Nitrox_DisconnectedSession"));
                     break;
             }
         }
@@ -350,8 +355,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
             RectTransform cancelButtonTransform = (RectTransform)cancelButtonGameObject.transform;
             GameObject cancelButtonTextGameObject = cancelButtonTransform.RequireGameObject("Text");
-            Text cancelButtonText = cancelButtonTextGameObject.GetComponent<Text>();
-            cancelButtonText.text = "Cancel";
+            cancelButtonTextGameObject.GetComponent<Text>().text = Language.main.Get("Nitrox_Cancel");
 
             cancelButtonTransform.sizeDelta = new Vector2(cancelButtonTransform.rect.width * 0.85f, cancelButtonTransform.rect.height);
             cancelButtonTransform.anchoredPosition = new Vector2(
@@ -368,8 +372,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             joinButtonTransform.Rotate(Vector3.forward * -180);
 
             GameObject joinButtonTextGameObject = joinButtonTransform.RequireGameObject("Text");
-            Text joinButtonText = joinButtonTextGameObject.GetComponent<Text>();
-            joinButtonText.text = "Join";
+            joinButtonTextGameObject.GetComponent<Text>().text = Language.main.Get("Nitrox_Join");
 
             //Flip the text so it is no longer upside down after flipping the button.
             RectTransform joinButtonTextRectTransform = (RectTransform)joinButtonTextGameObject.transform;
@@ -475,8 +478,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 baseTabSelectedColorImage.rectTransform.anchoredPosition.x + baseTabTextTransform.rect.width / 2f + 22f,
                 baseTabSelectedColorImage.rectTransform.anchoredPosition.y);
 
-            Text baseTabText = baseTabTextGameObject.GetComponent<Text>();
-            baseTabText.text = "Player Color";
+            baseTabTextGameObject.GetComponent<Text>().text = Language.main.Get("Nitrox_PlayerColor");
 
             //This resizes the actual Image that outlines all of the UI elements.
             GameObject baseTabBackgroundGameObject = baseTabTransform.RequireGameObject("Background");
@@ -535,8 +537,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             playerNameInputField.selectionColor = Color.white;
 
             GameObject inputFieldPlaceholder = inputFieldRectTransform.RequireGameObject("Placeholder");
-            Text inputFieldPlaceholderText = inputFieldPlaceholder.GetComponent<Text>();
-            inputFieldPlaceholderText.text = "Enter Player Name";
+            inputFieldPlaceholder.GetComponent<Text>().text = Language.main.Get("Nitrox_EnterName");
         }
 
         //This is the "service" that manages the click and drag events on the color picture RectTransform.
@@ -606,18 +607,18 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                     {
                         using (new GUILayout.HorizontalScope())
                         {
-                            GUILayout.Label("Password:");
+                            GUILayout.Label(Language.main.Get("Nitrox_JoinServerPassword"));
                             GUI.SetNextControlName("serverPasswordField");
                             serverPassword = GUILayout.TextField(serverPassword);
                         }
 
-                        if (GUILayout.Button("Submit Password"))
+                        if (GUILayout.Button(Language.main.Get("Nitrox_SubmitPassword")))
                         {
                             HidePasswordWindow();
                             OnSubmitPasswordButtonClicked();
                         }
 
-                        if (GUILayout.Button("Cancel"))
+                        if (GUILayout.Button(Language.main.Get("Nitrox_Cancel")))
                         {
                             HidePasswordWindow();
                             OnCancelClick();

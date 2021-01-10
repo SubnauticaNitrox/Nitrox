@@ -45,7 +45,7 @@ namespace NitroxClient.MonoBehaviours.Gui.InGame
                 GameObject header = playerKickedSubWindow.FindChild("Header"); //Message Object
 
                 Text messageText = header.GetComponent<Text>();
-                messageText.text = string.IsNullOrWhiteSpace(reason) ? "You've been kicked from the server" : reason;
+                messageText.text = reason;
 
                 RectTransform messageTransform = header.GetComponent<RectTransform>();
                 messageTransform.sizeDelta = new Vector2(700, 195);
@@ -53,8 +53,7 @@ namespace NitroxClient.MonoBehaviours.Gui.InGame
                 GameObject buttonYes = playerKickedSubWindow.FindChild("ButtonYes"); //Button Yes Object
                 buttonYes.transform.position = new Vector3(playerKickedSubWindow.transform.position.x / 2, buttonYes.transform.position.y, buttonYes.transform.position.z); // Center Button
 
-                Text messageTextbutton = buttonYes.GetComponentInChildren<Text>(); //Get Button Text Component
-                messageTextbutton.text = "OK";
+                buttonYes.GetComponentInChildren<Text>().text = "OK"; //Set Button Text Component
             }
         }
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -44,8 +44,7 @@ namespace NitroxClient.MonoBehaviours.Gui.InGame
 
                 GameObject header = lostConnectionSubWindow.FindChild("Header"); //Message Object
 
-                Text messageText = header.GetComponent<Text>();
-                messageText.text = "Lost Connection to Game Server";
+                header.GetComponent<Text>().text = Language.main.Get("Nitrox_LostConnection");
 
                 RectTransform messageTransform = header.GetComponent<RectTransform>();
                 messageTransform.sizeDelta = new Vector2(700, 195);
@@ -53,8 +52,7 @@ namespace NitroxClient.MonoBehaviours.Gui.InGame
                 GameObject buttonYes = lostConnectionSubWindow.FindChild("ButtonYes"); //Button Yes Object
                 buttonYes.transform.position = new Vector3(lostConnectionSubWindow.transform.position.x / 2, buttonYes.transform.position.y, buttonYes.transform.position.z); // Center Button
 
-                Text messageTextbutton = buttonYes.GetComponentInChildren<Text>(); //Get Button Text Component
-                messageTextbutton.text = "OK";
+                buttonYes.GetComponentInChildren<Text>().text = "OK"; //Set Button Text Component
             }
         }
 

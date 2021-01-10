@@ -39,7 +39,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             showLoadedMultiplayer.transform.SetSiblingIndex(3);
 
             Text buttonText = showLoadedMultiplayer.RequireGameObject("Circle/Bar/Text").GetComponent<Text>();
-            buttonText.text = "Multiplayer";
+            buttonText.text = Language.main.Get("Nitrox_Multiplayer");
             buttonText.GetComponent<TranslationLiveUpdate>().translationKey = "Nitrox_Multiplayer";
 
 
@@ -51,7 +51,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             GameObject loadedMultiplayer = Instantiate(savedGamesRef, rightSide.transform);
             loadedMultiplayer.name = "Multiplayer";
             Transform header = loadedMultiplayer.RequireTransform("Header");
-            header.GetComponent<Text>().text = "Multiplayer";
+            header.GetComponent<Text>().text = Language.main.Get("Nitrox_Multiplayer");
             header.GetComponent<TranslationLiveUpdate>().translationKey = "Nitrox_Multiplayer";
             Destroy(loadedMultiplayer.RequireGameObject("Scroll View/Viewport/SavedGameAreaContent/NewGame"));
             Destroy(loadedMultiplayer.GetComponent<MainMenuLoadPanel>());

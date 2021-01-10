@@ -25,7 +25,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         {
             if (!string.IsNullOrEmpty(notificationMessage) && awaitingAcknowledgement)
             {
-                notificationWindowRect = GUILayout.Window(GUIUtility.GetControlID(FocusType.Keyboard), notificationWindowRect, RenderUnableToJoinDialog, "Unable to Join Session");
+                notificationWindowRect = GUILayout.Window(GUIUtility.GetControlID(FocusType.Keyboard), notificationWindowRect, RenderUnableToJoinDialog, Language.main.Get("Nitrox_JoinServerFailed"));
             }
         }
 

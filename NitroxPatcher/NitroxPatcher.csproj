@@ -189,6 +189,7 @@
     <Compile Include="Patches\IPersistentPatch.cs" />
     <Compile Include="Patches\NitroxPatch.cs" />
     <Compile Include="Modules\NitroxPatchesModule.cs" />
+    <Compile Include="Patches\Persistent\Language_LoadLanguageFile_Patch.cs" />
     <Compile Include="Patches\Persistent\SentrySdk_Start_Patch.cs" />
     <Compile Include="Patches\Persistent\ScreenshotManager_Initialise.Path.cs" />
     <Compile Include="Patches\Persistent\PAXTerrainController_LoadAsync_Patch.cs" />
