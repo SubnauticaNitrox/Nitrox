@@ -49,6 +49,11 @@ namespace NitroxLauncher
             // Pirate trigger should happen after UI is loaded.
             Loaded += (sender, args) =>
             {
+                // Highlight the window border purple if ran with DEBUG
+                #if DEBUG
+                DebugBorderHint.BorderThickness = new Thickness(1.5D);
+                #endif
+
                 // This pirate detection subscriber is immediately invoked if pirate has been detected right now.
                 PirateDetection.PirateDetected += (o, eventArgs) =>
                 {
