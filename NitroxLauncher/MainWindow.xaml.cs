@@ -23,11 +23,6 @@ namespace NitroxLauncher
 
         public string Version => $"{LauncherLogic.RELEASE_PHASE} {LauncherLogic.Version}";
         public bool DebugMode = false;
-        public Visibility DebugLabelVisibility { get
-            {
-                return DebugMode ? Visibility.Visible : Visibility.Hidden;
-            } 
-        }
 
         public object FrameContent
         {
