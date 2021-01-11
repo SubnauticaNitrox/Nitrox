@@ -90,11 +90,7 @@ namespace NitroxServer.Communication.NetworkingLayer
                         Log.Warn($"Automatic port forwarding failed, port conflict found. It is likely already open and no action is required");
                         break;
                     default:
-#if DEBUG
-                        Log.Error($"Automatic port forwarding failed: {ex}");
-#else
-                        Log.Error($"Automatic port forwarding failed, please manually port forward");
-#endif
+                        Log.Warn($"Automatic port forwarding failed, please manually port forward");
                         break;
 
                 }
