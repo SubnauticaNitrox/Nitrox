@@ -17,17 +17,17 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation.Met
 
         [ProtoMember(3)]
         public int FaceType { get; set; }
-        
+
         protected AnchoredFaceRotationMetadata() : base(typeof(BaseAddFaceGhost))
         {
             // Constructor for serialization. Has to be "protected" for json serialization.
         }
 
-        public AnchoredFaceRotationMetadata(Int3 cell, int facedirection, int facetype) : base(typeof(BaseAddFaceGhost))
+        public AnchoredFaceRotationMetadata(NitroxInt3 cell, int faceDirection, int faceType) : base(typeof(BaseAddFaceGhost))
         {
-            Cell = cell.ToDto();
-            Direction = facedirection;
-            FaceType = facetype;
+            Cell = cell;
+            Direction = faceDirection;
+            FaceType = faceType;
         }
 
         public override string ToString()
