@@ -1,3 +1,4 @@
+using System;
 using System.Timers;
 using NitroxModel.Logger;
 using NitroxServer.Serialization.World;
@@ -107,6 +108,13 @@ namespace NitroxServer
             server.Stop();
             Log.Info("Nitrox Server Stopped");
             IsRunning = false;
+        }
+
+        public void StopAndWait(bool shouldSave = true)
+        {
+            Stop(shouldSave);
+            Log.Info("Press enter to continue");
+            Console.Read();
         }
 
         public void EnablePeriodicSaving()

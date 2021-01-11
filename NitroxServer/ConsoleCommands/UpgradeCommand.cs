@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Threading;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
@@ -52,8 +52,7 @@ namespace NitroxServer.ConsoleCommands
                 }
                 worldPersistence.SaveDataSerializer.Serialize(Path.Combine(saveDir, "Version" + fileEnding), new SaveFileVersion());
                 SendMessage(args.Sender, $"Save file was successfully upgraded to {NitroxEnvironment.Version}");
-                server.Stop(false);
-                Thread.Sleep(2000);
+                server.StopAndWait(false);
             }
         }
     }
