@@ -124,10 +124,8 @@ namespace NitroxServer.Serialization.World
                 //Backup world if loading fails
                 using (ZipFile zipFile = new ZipFile())
                 {
-                    zipFile.AddFile(Path.Combine(saveDir, "Version" + fileEnding));
-                    zipFile.AddFile(Path.Combine(saveDir, "BaseData" + fileEnding));
-                    zipFile.AddFile(Path.Combine(saveDir, "PlayerData" + fileEnding));
-                    zipFile.AddFile(Path.Combine(saveDir, "WorldData" + fileEnding));
+                    string[] nitroxFiles = Directory.GetFiles(saveDir, "*" + fileEnding);
+                    zipFile.AddFiles(nitroxFiles);
                     zipFile.Save(Path.Combine(saveDir, "worldBackup.zip"));
                 }
 #if DEBUG
