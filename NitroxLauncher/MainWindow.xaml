@@ -219,8 +219,8 @@
                     </StackPanel>
                     <TextBlock Margin="115,555,75,-34" FontSize="10" Foreground="Purple" x:Name="DebugModeLabel" Text="Debug Mode" Visibility="Hidden" RenderTransformOrigin="0.5,0.5" />
                 </Grid>
-                <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Grid.Column="1" Template="{DynamicResource ScrollViewerMainframe}" x:Name="ScrollViewerMainframe">
-                    <ntrx:FaderFrame Grid.Column="1" Background="#28292C" x:Name="MainFrame" NavigationUIVisibility="Hidden" Content="{Binding FrameContent}" Width="766" />
+                <ScrollViewer Background="#28292C" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Grid.Column="1" Template="{DynamicResource ScrollViewerMainframe}" x:Name="ScrollViewerMainframe">
+                    <ntrx:FaderFrame Grid.Column="1" Background="#28292C" x:Name="MainFrame" NavigationUIVisibility="Hidden" Content="{Binding FrameContent}" Width="766" FadeDuration="0:0:0.15" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
                 </ScrollViewer>
             </Grid>
         </Grid>
