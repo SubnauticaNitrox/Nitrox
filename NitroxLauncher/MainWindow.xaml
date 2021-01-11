@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NitroxLauncher"
+        xmlns:ntrx="clr-namespace:NitroxLauncher.Controls"
         mc:Ignorable="d"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
         Title="Nitrox Launcher" Height="623" MinHeight="642" MaxHeight="642" Width="1024" MinWidth="1024" MaxWidth="946"
@@ -219,7 +220,7 @@
                     <TextBlock Margin="115,555,75,-34" FontSize="10" Foreground="Purple" x:Name="DebugModeLabel" Text="Debug Mode" Visibility="Hidden" RenderTransformOrigin="0.5,0.5" />
                 </Grid>
                 <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Grid.Column="1" Template="{DynamicResource ScrollViewerMainframe}" x:Name="ScrollViewerMainframe">
-                    <Frame Grid.Column="1" Background="#28292C" x:Name="MainFrame" NavigationUIVisibility="Hidden" Content="{Binding FrameContent}" Width="766" />
+                    <ntrx:FaderFrame Grid.Column="1" Background="#28292C" x:Name="MainFrame" NavigationUIVisibility="Hidden" Content="{Binding FrameContent}" Width="766" />
                 </ScrollViewer>
             </Grid>
         </Grid>

@@ -68,6 +68,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AttachedProperties\ButtonProperties.cs" />
+    <Compile Include="Controls\FaderFrame.cs" />
     <Compile Include="DependencyObjectExtensions.cs" />
     <Compile Include="Events\ServerStartEventArgs.cs" />
     <Compile Include="LauncherLogic.cs" />
