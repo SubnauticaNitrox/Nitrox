@@ -21,6 +21,12 @@ namespace NitroxLauncher
         private bool isServerEmbedded;
 
         public string Version => $"{LauncherLogic.RELEASE_PHASE} {LauncherLogic.Version}";
+        public bool DebugMode = false;
+        public Visibility DebugLabelVisibility { get
+            {
+                return DebugMode ? Visibility.Visible : Visibility.Hidden;
+            } 
+        }
 
         public object FrameContent
         {
@@ -51,9 +57,9 @@ namespace NitroxLauncher
             {
                 // Highlight the window border purple if ran with DEBUG
                 #if DEBUG
-                DebugBorderHint.BorderThickness = new Thickness(1.5D);
+                DebugBorderHint.BorderThickness = new Thickness(4.5D);
+                DebugModeLabel.Visibility = Visibility.Visible;
                 #endif
-
                 // This pirate detection subscriber is immediately invoked if pirate has been detected right now.
                 PirateDetection.PirateDetected += (o, eventArgs) =>
                 {
