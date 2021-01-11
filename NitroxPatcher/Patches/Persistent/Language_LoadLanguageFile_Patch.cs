@@ -17,7 +17,7 @@ namespace NitroxPatcher.Patches.Persistent
         public static void Postfix(string language, Dictionary<string, string> ___strings)
         {
             string[] files = {
-                Path.Combine(NitroxAppData.Instance.LauncherPath, "LanguageFiles", "English.json"), //Using English as fallback.
+                Path.Combine(NitroxAppData.Instance.LauncherPath, "LanguageFiles", "English.json"), // Using English as fallback.
                 Path.Combine(NitroxAppData.Instance.LauncherPath, "LanguageFiles", language + ".json")
             };
 
@@ -26,6 +26,7 @@ namespace NitroxPatcher.Patches.Persistent
                 if (!File.Exists(file))
                 {
                     Log.Warn($"No language file was found for at {file}. Using English as fallback");
+                    continue;
                 }
 
                 JsonData json;
