@@ -62,7 +62,6 @@ namespace NitroxServer.PublicAPI.Routes
             {
                 await ctx.Response.SendResponseAsync(JsonConvert.SerializeObject(new ServerStoppedResponse(), Formatting.Indented));
                 srv.Stop();
-
             }
         }
         [RestRoute("POST", "/server/pause")]

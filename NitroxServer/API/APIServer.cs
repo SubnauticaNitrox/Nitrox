@@ -22,8 +22,10 @@ namespace NitroxServer.PublicAPI
             rawServer.UseCorsPolicy();
             rawServer.Prefixes.Clear();
             rawServer.Prefixes.Add($"http://localhost:{Port}/");
-            WebHeaderCollection defaultHeaders = new WebHeaderCollection();
-            defaultHeaders.Add("Content-Type", "application/json");
+            WebHeaderCollection defaultHeaders = new WebHeaderCollection
+            {
+                { "Content-Type", "application/json" }
+            };
             rawServer.ApplyGlobalResponseHeaders(defaultHeaders);
             Instance = this;
             rawServer.Start();

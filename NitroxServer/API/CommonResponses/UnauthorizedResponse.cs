@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NitroxPublic.API.CommonResponses
 {
+    [Serializable]
     public class UnauthorizedResponse
     {
         public string Message;
