@@ -237,7 +237,10 @@
       <Name>LiteNetLib</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="OS\MacOS\" />
+    <Folder Include="OS\Unix\" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Autofac">
       <Version>4.9.4</Version>
