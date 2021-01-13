@@ -17,6 +17,8 @@ namespace NitroxServer.Serialization
         private string saveNameSetting = "world";
         public string FileName => "server.cfg";
 
+        public bool EnablePublicAPI { get; set; }
+
         [PropertyDescription("Leave blank for a random spawn position")]
         public string Seed { get; set; }
 

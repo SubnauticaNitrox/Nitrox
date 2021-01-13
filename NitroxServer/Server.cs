@@ -39,7 +39,11 @@ namespace NitroxServer
             saveTimer.Interval = serverConfig.SaveInterval;
             saveTimer.AutoReset = true;
             saveTimer.Elapsed += delegate { Save(); };
-            API = new API.APIServer();
+            API = new APIServer();
+            if(serverConfig.EnablePublicAPI)
+            {
+                API.Start();
+            }
         }
 
         public string SaveSummary
@@ -57,6 +61,7 @@ namespace NitroxServer
                 builder.AppendLine($" - Inventory items: {world.InventoryManager.GetAllInventoryItems().Count}");
                 builder.AppendLine($" - Known tech: {world.GameData.PDAState.KnownTechTypes.Count}");
                 builder.AppendLine($" - Vehicles: {world.VehicleManager.GetVehicles().Count()}");
+                builder.AppendLine($" - NPAPI Enabled: {serverConfig.EnablePublicAPI}");
 
                 return builder.ToString();
             }
@@ -119,12 +124,21 @@ namespace NitroxServer
         public void Stop()
         {
             Log.Info("Nitrox Server Stopping...");
+
             DisablePeriodicSaving();
             Save();
             server.Stop();
+
+            if (API != null)
+            {
+                API.Stop();
+            }
+
             Log.Info("Nitrox Server Stopped");
+
             IsRunning = false;
-            Environment.Exit(0);
+
+            Environment.Exit(0); // Fixes the launcher not realising the server has stopped by closing the server executable.
         }
 
         public void EnablePeriodicSaving()

@@ -13,27 +13,31 @@ namespace NitroxServer.API
     {
         public int Port;
         public static APIServer Instance { get; private set; }
-        private readonly IRestServer rawServer;
+        public readonly IRestServer RawServer;
 
         public APIServer()
         {
             Port = 3000;
-            rawServer = RestServerBuilder.UseDefaults().Build();
-            rawServer.UseCorsPolicy();
-            rawServer.Prefixes.Clear();
-            rawServer.Prefixes.Add($"http://localhost:{Port}/");
+            RawServer = RestServerBuilder.UseDefaults().Build();
+            RawServer.UseCorsPolicy();
+            RawServer.Prefixes.Clear();
+            RawServer.Prefixes.Add($"http://localhost:{Port}/");
             WebHeaderCollection defaultHeaders = new WebHeaderCollection
             {
                 { "Content-Type", "application/json" }
             };
-            rawServer.ApplyGlobalResponseHeaders(defaultHeaders);
+            RawServer.ApplyGlobalResponseHeaders(defaultHeaders);
             Instance = this;
-            rawServer.Start();
+        }
+
+        public void Start()
+        {
+            RawServer.Start();
         }
 
         public void Stop()
         {
-            rawServer.Stop();
+            RawServer.Stop();
         }
     }
 }
