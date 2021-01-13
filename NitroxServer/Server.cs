@@ -6,6 +6,8 @@ using System.Text;
 using System.Linq;
 using NitroxServer.Serialization;
 using NitroxModel.Serialization;
+using System;
+using NitroxServer.PublicAPI;
 
 namespace NitroxServer
 {
@@ -37,6 +39,7 @@ namespace NitroxServer
             saveTimer.Interval = serverConfig.SaveInterval;
             saveTimer.AutoReset = true;
             saveTimer.Elapsed += delegate { Save(); };
+            API = new PublicAPI.APIServer();
         }
 
         public string SaveSummary
@@ -59,6 +62,14 @@ namespace NitroxServer
             }
         }
 
+        public APIServer API { get; }
+        public bool Paused { get; private set; }
+
+        public ServerConfig GetServerConfig()
+        {
+            return serverConfig;
+        }
+
         public void Save()
         {
             if (IsSaving)
@@ -74,6 +85,11 @@ namespace NitroxServer
             IsSaving = true;
             worldPersistence.Save(world, serverConfig.SaveName);
             IsSaving = false;
+        }
+
+        public Communication.NetworkingLayer.NitroxServer GetNitroxServer()
+        {
+            return server;
         }
 
         public bool Start()
@@ -108,6 +124,7 @@ namespace NitroxServer
             server.Stop();
             Log.Info("Nitrox Server Stopped");
             IsRunning = false;
+            Environment.Exit(0);
         }
 
         public void EnablePeriodicSaving()
@@ -122,6 +139,7 @@ namespace NitroxServer
 
         public void PauseServer()
         {
+            Paused = true;
             DisablePeriodicSaving();
             world.EventTriggerer.PauseWorldTime();
             world.EventTriggerer.PauseEventTimers();
@@ -130,6 +148,7 @@ namespace NitroxServer
 
         public void ResumeServer()
         {
+            Paused = false;
             if (!serverConfig.DisableAutoSave)
             {
                 EnablePeriodicSaving();

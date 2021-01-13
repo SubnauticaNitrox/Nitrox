@@ -74,6 +74,15 @@ namespace NitroxServer.Communication.NetworkingLayer
             NatUtility.StartDiscovery();
         }
 
+        public PlayerManager GetPlayerManager()
+        {
+            return playerManager;
+        }
+        public int GetPlayerCount()
+        {
+            return playerManager.GetConnectedPlayers().Count;
+        }
+
         private async void DeviceFound(object sender, DeviceEventArgs args)
         {
             try
