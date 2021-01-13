@@ -1,14 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Grapevine;
 using Newtonsoft.Json;
 using NitroxModel.MultiplayerSession;
-using NitroxPublic.API.CommonResponses;
-using NitroxServer.Serialization;
+using NitroxServer.API.CommonResponses;
 
-namespace NitroxServer.PublicAPI.Routes
+namespace NitroxServer.API.Routes
 {
     [RestResource]
     public class ServerRelated
@@ -30,18 +28,19 @@ namespace NitroxServer.PublicAPI.Routes
                 response.PlayersOnline = srv.GetNitroxServer().GetPlayerCount();
                 response.MaxPlayers = srv.GetServerConfig().MaxConnections;
             }
-                
+
 
             await ctx.Response.SendResponseAsync(JsonConvert.SerializeObject(response, Formatting.Indented));
         }
         [RestRoute("Get", "/server/ping")]
         public async Task pingServer(IHttpContext ctx)
         {
-            if(Server.Instance.IsRunning)
+            if (Server.Instance.IsRunning)
             {
                 ctx.Response.StatusCode = 200;
                 await ctx.Response.SendResponseAsync("{}");
-            } else
+            }
+            else
             {
                 ctx.Response.StatusCode = 400;
                 await ctx.Response.SendResponseAsync("{}");
@@ -54,11 +53,12 @@ namespace NitroxServer.PublicAPI.Routes
         public async Task stopServer(IHttpContext ctx)
         {
             Server srv = Server.Instance;
-            if(ctx.Request.Headers.Get("Auth") != srv.GetServerConfig().AdminPassword)
+            if (ctx.Request.Headers.Get("Auth") != srv.GetServerConfig().AdminPassword)
             {
                 ctx.Response.StatusCode = 401;
                 await ctx.Response.SendResponseAsync(JsonConvert.SerializeObject(new UnauthorizedResponse("Please pass your ADMIN PASSWORD through the Auth header to access this endpoint."), Formatting.Indented));
-            } else
+            }
+            else
             {
                 await ctx.Response.SendResponseAsync(JsonConvert.SerializeObject(new ServerStoppedResponse(), Formatting.Indented));
                 srv.Stop();

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NitroxServer.PublicAPI.Routes
+namespace NitroxServer.API.CommonResponses
 {
     [Serializable]
     public class ServerAlreadyResponse

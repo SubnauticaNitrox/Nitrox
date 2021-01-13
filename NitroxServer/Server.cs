@@ -7,7 +7,7 @@ using System.Linq;
 using NitroxServer.Serialization;
 using NitroxModel.Serialization;
 using System;
-using NitroxServer.PublicAPI;
+using NitroxServer.API;
 
 namespace NitroxServer
 {
@@ -39,7 +39,7 @@ namespace NitroxServer
             saveTimer.Interval = serverConfig.SaveInterval;
             saveTimer.AutoReset = true;
             saveTimer.Elapsed += delegate { Save(); };
-            API = new PublicAPI.APIServer();
+            API = new API.APIServer();
         }
 
         public string SaveSummary

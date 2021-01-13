@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NitroxPublic.API.CommonResponses
+namespace NitroxServer.API.CommonResponses
 {
     [Serializable]
     public class UnauthorizedResponse

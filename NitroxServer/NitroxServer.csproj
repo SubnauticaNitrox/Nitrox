@@ -65,7 +65,13 @@
   <ItemGroup>
     <Compile Include="API\APIServer.cs" />
     <Compile Include="API\CommonResponses\UnauthorizedResponse.cs" />
+    <Compile Include="API\CommonResponses\ServerAlreadyResponse.cs" />
+    <Compile Include="API\CommonResponses\ServerPausedResponse.cs" />
+    <Compile Include="API\CommonResponses\PlayerCountResponse.cs" />
     <Compile Include="API\Routes\ServerRelated.cs" />
+    <Compile Include="API\CommonResponses\ServerResumedResponse.cs" />
+    <Compile Include="API\CommonResponses\ServerStatusResponse.cs" />
+    <Compile Include="API\CommonResponses\ServerStoppedResponse.cs" />
     <Compile Include="Communication\NetworkingLayer\LiteNetLib\LiteNetLibConnection.cs" />
     <Compile Include="Communication\NetworkingLayer\LiteNetLib\LiteNetLibServer.cs" />
     <Compile Include="Communication\NetworkingLayer\NitroxConnection.cs" />

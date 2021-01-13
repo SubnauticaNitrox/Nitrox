@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using Grapevine;
 
-namespace NitroxServer.PublicAPI
+namespace NitroxServer.API
 {
     /**
      * <summary>
