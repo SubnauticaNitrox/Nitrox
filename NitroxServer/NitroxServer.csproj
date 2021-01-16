@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -174,6 +174,7 @@
     <Compile Include="Serialization\JsonConverter\AttributeContractResolver.cs" />
     <Compile Include="Serialization\JsonConverter\NitroxIdConverter.cs" />
     <Compile Include="Serialization\JsonConverter\TechTypeConverter.cs" />
+    <Compile Include="Serialization\SaveDataUpgrades\NewtonsoftExtensions.cs" />
     <Compile Include="Serialization\SaveDataUpgrades\SaveDataUpgrade.cs" />
     <Compile Include="Serialization\ServerConfig.cs" />
     <Compile Include="Serialization\Resources\Datastructures\AssetIdentifier.cs" />

@@ -99,6 +99,11 @@ namespace NitroxServer
 
         public void Stop(bool shouldSave = true)
         {
+            if (!IsRunning)
+            {
+                return;
+            }
+
             Log.Info("Nitrox Server Stopping...");
             DisablePeriodicSaving();
             if (shouldSave)
