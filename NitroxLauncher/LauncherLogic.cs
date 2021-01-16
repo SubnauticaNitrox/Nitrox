@@ -297,7 +297,7 @@ namespace NitroxLauncher
                 WorkingDirectory = subnauticaPath,
                 FileName = subnauticaExe
             };
-
+C:\Users\Jadyn\Downloads\Subnautica.v65786\Subnautica
             if (PlatformDetection.IsEpic(subnauticaPath))
             {
                 startInfo.Arguments = "-EpicPortal -vrmode none";
