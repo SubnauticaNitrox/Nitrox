@@ -37,8 +37,9 @@ namespace NitroxServer.Serialization.World
                     ServerStartTime = world.TimeKeeper.ServerStartTime,
                     VehicleData = VehicleData.From(world.VehicleManager.GetVehicles()),
                     InventoryData = InventoryData.From(world.InventoryManager.GetAllInventoryItems(), world.InventoryManager.GetAllStorageSlotItems()),
-                    GameData = world.GameData,
-                    EscapePodData = EscapePodData.From(world.EscapePodManager.GetEscapePods())
+                    GameData = GameData.From(world.GameData.PDAState, world.GameData.StoryGoals, world.EventTriggerer),
+                    EscapePodData = EscapePodData.From(world.EscapePodManager.GetEscapePods()),
+                    Seed = world.Seed
                 }
             };
         }

@@ -16,10 +16,11 @@ namespace NitroxServer.GameLogic
 
         public static StoryTimingData From(EventTriggerer eventTriggerer)
         {
-            StoryTimingData inst = new StoryTimingData();
-            inst.ElapsedTime = eventTriggerer.GetRealElapsedTime();
-            inst.AuroraExplosionTime = eventTriggerer.AuroraExplosionTime;
-            return inst;
+            return new StoryTimingData
+            {
+                ElapsedTime = eventTriggerer.GetRealElapsedTime(),
+                AuroraExplosionTime = eventTriggerer.AuroraExplosionTime
+            };
         }
     }
 }

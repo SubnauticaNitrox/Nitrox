@@ -17,5 +17,15 @@ namespace NitroxServer.GameLogic.Bases
 
         [JsonProperty, ProtoMember(3)]
         public StoryTimingData StoryTiming { get; set; }
+
+        public static GameData From(PDAStateData pdaState, StoryGoalData storyGoals, EventTriggerer eventTriggerer)
+        {
+            return new GameData
+            {
+                PDAState = pdaState,
+                StoryGoals = storyGoals,
+                StoryTiming = StoryTimingData.From(eventTriggerer)
+            };
+        }
     }
 }
