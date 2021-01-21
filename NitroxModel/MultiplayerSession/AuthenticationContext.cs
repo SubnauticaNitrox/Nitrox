@@ -6,16 +6,19 @@ namespace NitroxModel.MultiplayerSession
     [Serializable]
     public class AuthenticationContext
     {
-        public string Username { get; }
+        public Guid Token { get; }
+
+        public String Username { get; }
         public Optional<string> ServerPassword { get; }
 
-        public AuthenticationContext(string username) : this(username, null)
+        public AuthenticationContext(Guid token, string username) : this(token, username, null)
         {
         }
 
-        public AuthenticationContext(string username, string serverPassword)
+        public AuthenticationContext(Guid token, string username, string serverPassword)
         {
             Username = username;
+            Token = token;
             ServerPassword = Optional.OfNullable(serverPassword);
         }
     }

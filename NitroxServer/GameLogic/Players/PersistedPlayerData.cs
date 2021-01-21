@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
@@ -40,6 +41,9 @@ namespace NitroxServer.GameLogic.Players
         [JsonProperty, ProtoMember(10)]
         public bool IsPermaDeath { get; set; }
 
+        [JsonProperty, ProtoMember(11)]
+        public Guid Token { get; set; }
+
         public Player ToPlayer()
         {
             return new Player(Id,
@@ -53,7 +57,8 @@ namespace NitroxServer.GameLogic.Players
                               Permissions,
                               CurrentStats,
                               EquippedItems,
-                              Modules);
+                              Modules,
+                              Token);
         }
 
         public static PersistedPlayerData FromPlayer(Player player)
@@ -69,7 +74,8 @@ namespace NitroxServer.GameLogic.Players
                 SubRootId = player.SubRootId.OrElse(null),
                 Permissions = player.Permissions,
                 NitroxId = player.GameObjectId,
-                IsPermaDeath = player.IsPermaDeath
+                IsPermaDeath = player.IsPermaDeath,
+                Token = player.Token
             };
         }
     }

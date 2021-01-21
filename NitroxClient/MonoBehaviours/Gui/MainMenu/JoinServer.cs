@@ -41,6 +41,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         private string serverIp;
         private int serverPort;
+        private Guid token;
 
         private bool isSubscribed;
         private bool shouldFocus;
@@ -57,7 +58,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             Hide();
         }
 
-        public void Show(string ip, int port)
+        public void Show(string ip, int port, Guid token)
         {
             NitroxServiceLocator.BeginNewLifetimeScope();
             multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
@@ -66,6 +67,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             gameObject.SetActive(true);
             serverIp = ip;
             serverPort = port;
+            this.token = token;
 
             //Set Server IP in info label
             lowerDetailTextGameObject.GetComponent<Text>().text = $"{Language.main.Get("Nitrox_JoinServerIpAddress")}\n{serverIp}";
@@ -214,7 +216,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             }
             preferencesManager.SetPreference(serverIp, new PlayerPreference(playerName, colorPicker.currentColor));
 
-            AuthenticationContext authenticationContext = passwordEntered ? new AuthenticationContext(playerName, serverPassword) : new AuthenticationContext(playerName);
+            AuthenticationContext authenticationContext = passwordEntered ? new AuthenticationContext(token, playerName, serverPassword) : new AuthenticationContext(token, playerName);
 
             multiplayerSession.RequestSessionReservation(new PlayerSettings(colorPicker.currentColor.ToDto()), authenticationContext);
         }

@@ -3,6 +3,7 @@ using NitroxModel.Helper;
 using NitroxModel.Logger;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System;
 
 namespace NitroxClient.MonoBehaviours.DiscordRP
 {
@@ -41,7 +42,7 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
                 string[] splitSecret = secret.Split(':');
                 string ip = splitSecret[0];
                 string port = splitSecret[1];
-                MainMenuMultiplayerPanel.OpenJoinServerMenu(ip, port);
+                MainMenuMultiplayerPanel.OpenJoinServerMenu(ip, port, Guid.NewGuid()); //FIXME: Actually persist this in the server.cfg with this GUID.
             }
             else
             {

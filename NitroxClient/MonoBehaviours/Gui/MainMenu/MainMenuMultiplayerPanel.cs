@@ -50,7 +50,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
             if (!File.Exists(SERVER_LIST_PATH))
             {
-                AddServer("local server", "127.0.0.1", "11000");
+                AddServer("local server", "127.0.0.1", "11000", Guid.NewGuid());
             }
 
             CreateButton(Language.main.Get("Nitrox_AddServer"), ShowAddServerWindow);
@@ -68,7 +68,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             multiplayerButtonButton.onClick.AddListener(clickEvent);
         }
 
-        private void CreateServerButton(string text, string joinIp, string joinPort)
+        private void CreateServerButton(string text, string joinIp, string joinPort, Guid token)
         {
             GameObject multiplayerButtonInst = Instantiate(multiplayerButton, savedGameAreaContent, false);
             multiplayerButtonInst.name = (savedGameAreaContent.childCount - 1).ToString();
@@ -81,7 +81,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             multiplayerButtonButton.onClick.AddListener(() =>
             {
                 txt.GetComponent<Text>().color = prevTextColor; // Visual fix for black text after click (hover state still active)
-                OpenJoinServerMenu(joinIp, joinPort);
+                OpenJoinServerMenu(joinIp, joinPort, token);
             });
 
             GameObject delete = Instantiate(deleteButtonRef, multiplayerButtonInst.transform, false);
@@ -94,11 +94,11 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             });
         }
 
-        private void AddServer(string name, string ip, string port)
+        private void AddServer(string name, string ip, string port, Guid token)
         {
             using (StreamWriter sw = new StreamWriter(SERVER_LIST_PATH, true))
             {
-                sw.WriteLine($"{name}|{ip}|{port}");
+                sw.WriteLine($"{name}|{ip}|{port}|{token}");
             }
         }
 
@@ -109,7 +109,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             File.WriteAllLines(SERVER_LIST_PATH, serverLines.ToArray());
         }
 
-        public static void OpenJoinServerMenu(string serverIp, string serverPort)
+        public static void OpenJoinServerMenu(string serverIp, string serverPort, Guid token)
         {
             if (main == null)
             {
@@ -123,7 +123,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 return;
             }
 
-            main.joinServer.Show(endpoint.Address.ToString(), endpoint.Port);
+            main.joinServer.Show(endpoint.Address.ToString(), endpoint.Port, token);
         }
 
         private void ShowAddServerWindow()
@@ -160,9 +160,16 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                     string serverName = lineData[0];
                     string serverIp = lineData[1];
                     string serverPort;
+                    Guid token = Guid.NewGuid();
                     if (lineData.Length == 3)
                     {
                         serverPort = lineData[2];
+                        //FIXME: Update the at rest server file with the new token.
+                    }
+                    else if (lineData.Length == 4)
+                    {
+                        serverPort = lineData[2];
+                        token = new Guid(lineData[3]);
                     }
                     else
                     {
@@ -170,7 +177,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                         serverIp = match.Groups[1].Value;
                         serverPort = match.Groups[2].Success ? match.Groups[2].Value : "11000";
                     }
-                    CreateServerButton($"{Language.main.Get("Nitrox_ConnectTo")} <b>{serverName}</b>\n{serverIp}:{serverPort}", serverIp, serverPort);
+                    CreateServerButton($"{Language.main.Get("Nitrox_ConnectTo")} <b>{serverName}</b>\n{serverIp}:{serverPort}", serverIp, serverPort, token);
                 }
             }
         }
@@ -218,8 +225,9 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             serverNameInput = serverNameInput.Trim();
             serverHostInput = serverHostInput.Trim();
             serverPortInput = serverPortInput.Trim();
-            AddServer(serverNameInput, serverHostInput, serverPortInput);
-            CreateServerButton($"{Language.main.Get("Nitrox_ConnectTo")} <b>{serverNameInput}</b>\n{serverHostInput}:{serverPortInput}", serverHostInput, serverPortInput);
+            Guid token = Guid.NewGuid();
+            AddServer(serverNameInput, serverHostInput, serverPortInput, token);
+            CreateServerButton($"{Language.main.Get("Nitrox_ConnectTo")} <b>{serverNameInput}</b>\n{serverHostInput}:{serverPortInput}", serverHostInput, serverPortInput, token);
             HideAddServerWindow();
         }
 
