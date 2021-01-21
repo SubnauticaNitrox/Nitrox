@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -147,7 +147,9 @@
     <Compile Include="ConsoleCommands\DirectoryCommand.cs" />
     <Compile Include="ConsoleCommands\HelpCommand.cs" />
     <Compile Include="ConsoleCommands\RestartCommand.cs" />
+    <Compile Include="ConsoleCommands\SwapSerializerCommand.cs" />
     <Compile Include="ConsoleCommands\TeleportCommand.cs" />
+    <Compile Include="ConsoleCommands\UpgradeCommand.cs" />
     <Compile Include="ConsoleCommands\WarpCommand.cs" />
     <Compile Include="ConsoleCommands\WhoisCommand.cs" />
     <Compile Include="ConsoleCommands\KickCommand.cs" />
@@ -172,6 +174,8 @@
     <Compile Include="Serialization\JsonConverter\AttributeContractResolver.cs" />
     <Compile Include="Serialization\JsonConverter\NitroxIdConverter.cs" />
     <Compile Include="Serialization\JsonConverter\TechTypeConverter.cs" />
+    <Compile Include="Serialization\SaveDataUpgrades\NewtonsoftExtensions.cs" />
+    <Compile Include="Serialization\SaveDataUpgrades\SaveDataUpgrade.cs" />
     <Compile Include="Serialization\ServerConfig.cs" />
     <Compile Include="Serialization\Resources\Datastructures\AssetIdentifier.cs" />
     <Compile Include="Serialization\Resources\Datastructures\GameObjectAsset.cs" />
@@ -214,7 +218,7 @@
     <Compile Include="Serialization\World\World.cs" />
     <Compile Include="Serialization\World\WorldData.cs" />
     <Compile Include="Serialization\World\WorldPersistence.cs" />
-    <Compile Include="Serialization\World\SaveFileVersions.cs" />
+    <Compile Include="Serialization\World\SaveFileVersion.cs" />
     <Compile Include="Serialization\World\VersionMismatchException.cs" />
     <Compile Include="Server.cs" />
     <Compile Include="ServerAutoFacRegistrar.cs" />

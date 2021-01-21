@@ -8,8 +8,6 @@ namespace NitroxServer.GameLogic.Players
     [ProtoContract, JsonObject(MemberSerialization.OptIn)]
     public class PlayerData
     {
-        public const short VERSION = 2;
-
         [JsonProperty, ProtoMember(1)]
         public List<PersistedPlayerData> Players = new List<PersistedPlayerData>();
 

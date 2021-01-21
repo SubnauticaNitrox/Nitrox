@@ -27,7 +27,7 @@ namespace NitroxServer.Serialization.World
         /// <summary>
         ///  For nitrox save files
         /// </summary>
-        private IServerSerializer saveDataSerializer;
+        public IServerSerializer SaveDataSerializer { get; private set; }
         private string fileEnding;
         private readonly ServerProtoBufSerializer protoBufSerializer;
         private readonly ServerConfig config;
@@ -39,8 +39,8 @@ namespace NitroxServer.Serialization.World
             this.config = config;
             this.randomStart = randomStart;
 
-            saveDataSerializer = config.SerializerMode == ServerSerializerMode.PROTOBUF ? (IServerSerializer)protoBufSerializer : jsonSerializer;
-            fileEnding = saveDataSerializer.GetFileEnding();
+            SaveDataSerializer = config.SerializerMode == ServerSerializerMode.PROTOBUF ? (IServerSerializer)protoBufSerializer : jsonSerializer;
+            fileEnding = SaveDataSerializer.GetFileEnding();
         }
 
         public bool Save(World world, string saveDir)
@@ -54,11 +54,11 @@ namespace NitroxServer.Serialization.World
                     Directory.CreateDirectory(saveDir);
                 }
 
-                saveDataSerializer.Serialize(Path.Combine(saveDir, "Version" + fileEnding), new SaveFileVersions());
-                saveDataSerializer.Serialize(Path.Combine(saveDir, "BaseData" + fileEnding), persistedData.BaseData);
-                saveDataSerializer.Serialize(Path.Combine(saveDir, "PlayerData" + fileEnding), persistedData.PlayerData);
-                saveDataSerializer.Serialize(Path.Combine(saveDir, "WorldData" + fileEnding), persistedData.WorldData);
-                saveDataSerializer.Serialize(Path.Combine(saveDir, "EntityData" + fileEnding), persistedData.EntityData);
+                SaveDataSerializer.Serialize(Path.Combine(saveDir, "Version" + fileEnding), new SaveFileVersion());
+                SaveDataSerializer.Serialize(Path.Combine(saveDir, "BaseData" + fileEnding), persistedData.BaseData);
+                SaveDataSerializer.Serialize(Path.Combine(saveDir, "PlayerData" + fileEnding), persistedData.PlayerData);
+                SaveDataSerializer.Serialize(Path.Combine(saveDir, "WorldData" + fileEnding), persistedData.WorldData);
+                SaveDataSerializer.Serialize(Path.Combine(saveDir, "EntityData" + fileEnding), persistedData.EntityData);
 
                 Log.Info("World state saved.");
                 return true;
@@ -81,32 +81,17 @@ namespace NitroxServer.Serialization.World
             try
             {
                 PersistedWorldData persistedData = new PersistedWorldData();
-                SaveFileVersions versions = saveDataSerializer.Deserialize<SaveFileVersions>(Path.Combine(saveDir, "Version" + fileEnding));
+                SaveFileVersion saveFileVersion = SaveDataSerializer.Deserialize<SaveFileVersion>(Path.Combine(saveDir, "Version" + fileEnding));
 
-                if (versions == null)
+                if (saveFileVersion == null || saveFileVersion.Version != NitroxEnvironment.Version)
                 {
-                    throw new InvalidDataException("Version file is empty or corrupted");
+                    throw new InvalidDataException("Version file is empty or save data files are too old");
                 }
 
-                if (versions.BaseDataVersion != BaseData.VERSION)
-                {
-                    throw new VersionMismatchException("BaseData file is too old");
-                }
-
-                if (versions.PlayerDataVersion != PlayerData.VERSION)
-                {
-                    throw new VersionMismatchException("PlayerData file is too old");
-                }
-
-                if (versions.WorldDataVersion != WorldData.VERSION)
-                {
-                    throw new VersionMismatchException("WorldData file is too old");
-                }
-
-                persistedData.BaseData = saveDataSerializer.Deserialize<BaseData>(Path.Combine(saveDir, "BaseData" + fileEnding));
-                persistedData.PlayerData = saveDataSerializer.Deserialize<PlayerData>(Path.Combine(saveDir, "PlayerData" + fileEnding));
-                persistedData.WorldData = saveDataSerializer.Deserialize<WorldData>(Path.Combine(saveDir, "WorldData" + fileEnding));
-                persistedData.EntityData = saveDataSerializer.Deserialize<EntityData>(Path.Combine(saveDir, "EntityData" + fileEnding));
+                persistedData.BaseData = SaveDataSerializer.Deserialize<BaseData>(Path.Combine(saveDir, "BaseData" + fileEnding));
+                persistedData.PlayerData = SaveDataSerializer.Deserialize<PlayerData>(Path.Combine(saveDir, "PlayerData" + fileEnding));
+                persistedData.WorldData = SaveDataSerializer.Deserialize<WorldData>(Path.Combine(saveDir, "WorldData" + fileEnding));
+                persistedData.EntityData = SaveDataSerializer.Deserialize<EntityData>(Path.Combine(saveDir, "EntityData" + fileEnding));
 
                 if (!persistedData.IsValid())
                 {
@@ -170,7 +155,8 @@ namespace NitroxServer.Serialization.World
                     ParsedBatchCells = new List<NitroxInt3>(),
                     ServerStartTime = DateTime.Now
 #if DEBUG
-                , Seed = "TCCBIBZXAB"
+                ,
+                    Seed = "TCCBIBZXAB"
 #endif
                 }
             };
@@ -230,7 +216,7 @@ namespace NitroxServer.Serialization.World
 
         internal void UpdateSerializer(IServerSerializer serializer)
         {
-            saveDataSerializer = serializer;
+            SaveDataSerializer = serializer;
             fileEnding = serializer.GetFileEnding();
         }
     }

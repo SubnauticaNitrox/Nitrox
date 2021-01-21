@@ -8,8 +8,6 @@ namespace NitroxServer.GameLogic.Bases
     [ProtoContract, JsonObject(MemberSerialization.OptIn)]
     public class BaseData
     {
-        public const short VERSION = 2;
-
         [JsonProperty, ProtoMember(1)]
         public List<BasePiece> PartiallyConstructedPieces = new List<BasePiece>();
 
