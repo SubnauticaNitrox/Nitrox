@@ -90,6 +90,12 @@ namespace NitroxServer.Serialization
         [PropertyDescription("Recommended to keep at 0.1f which is the default starting value. If set to 0 then new players are cured by default.")]
         public float DefaultInfectionValue { get; set; } = 0.1f;
 
+#if RELEASE
+        public bool UseToken { get; set; } = true;
+#else
+        public bool UseToken { get; set; } = false;
+#endif
+
         public bool IsHardcore => GameMode == ServerGameMode.HARDCORE;
         public bool IsPasswordRequired => ServerPassword != string.Empty;
         public PlayerStatsData DefaultPlayerStats => new PlayerStatsData(DefaultOxygenValue, DefaultMaxOxygenValue, DefaultHealthValue, DefaultHungerValue, DefaultThirstValue, DefaultInfectionValue);

@@ -301,6 +301,7 @@ namespace NitroxTest.Serialization
                     Assert.AreEqual(playerData.Permissions, playerDataAfter.Permissions, "PlayerData.Players.Permissions is not equal");
                     Assert.AreEqual(playerData.NitroxId, playerDataAfter.NitroxId, "PlayerData.Players.NitroxId is not equal");
                     Assert.AreEqual(playerData.IsPermaDeath, playerDataAfter.IsPermaDeath, "PlayerData.Players.IsFurniture is not equal");
+                    Assert.AreEqual(playerData.Token, playerDataAfter.Token, "PlayerData.Players.Token is not equal");
                 }
             }
         }

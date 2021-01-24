@@ -75,6 +75,9 @@
     <Compile Include="GameLogic\Containers\NoOpContainerAddItemPostProcessor.cs" />
     <Compile Include="GameLogic\InitialSync\SimulationOwnershipInitialSyncProcessor.cs" />
     <Compile Include="GameLogic\LiveMixinManager.cs" />
+    <Compile Include="Persistence\Model\SavedServer.cs" />
+    <Compile Include="Persistence\PersistedClientData.cs" />
+    <Compile Include="Persistence\Model\PersistedClientDataModel.cs" />
     <Compile Include="GameLogic\Rockets.cs" />
     <Compile Include="GameLogic\Simulation\LockRequestBase.cs" />
     <Compile Include="GameLogic\Simulation\PropulsionGrab.cs" />

@@ -73,13 +73,11 @@ namespace NitroxServer.GameLogic
             }
 
             bool hasSeenPlayerBefore = player != null;
-//#if RELEASE
-            if (hasSeenPlayerBefore && player.Token != authenticationContext.Token)
+            if (serverConfig.UseToken && hasSeenPlayerBefore && player.Token != authenticationContext.Token)
             {
                 MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.AUTHENTICATION_TOKEN_REJECTED;
                 return new MultiplayerSessionReservation(correlationId, rejectedState);
             }
-//#endif
 
             if (reservedPlayerNames.Contains(playerName))
             {
