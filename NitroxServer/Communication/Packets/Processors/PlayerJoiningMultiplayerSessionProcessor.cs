@@ -67,7 +67,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 world.EscapePodManager.GetEscapePods(),
                 assignedEscapePodId,
                 equippedItems,
-                player.GetModules(),
+                GetModulesToSync(world.InventoryManager.GetAllModules(), player.GetModules()),
                 world.BaseManager.GetBasePiecesForNewlyConnectedPlayer(),
                 vehicles,
                 world.InventoryManager.GetAllInventoryItems(),
@@ -103,6 +103,14 @@ namespace NitroxServer.Communication.Packets.Processors
             }
 
             return playerData;
+        }
+
+        private List<EquippedItemData> GetModulesToSync(ICollection<EquippedItemData> globalModules, List<EquippedItemData> playerModules)
+        {
+            List<EquippedItemData> modulesToSync = new List<EquippedItemData>();
+            modulesToSync.AddRange(globalModules);
+            modulesToSync.AddRange(playerModules);
+            return modulesToSync;
         }
     }
 }
