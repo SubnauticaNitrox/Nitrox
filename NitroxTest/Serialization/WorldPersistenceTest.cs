@@ -50,6 +50,8 @@ namespace NitroxTest.Serialization
 
             worldData = GeneratePersistedWorldData();
             world = worldPersistence.CreateWorld(worldData, serverConfig.GameMode);
+            world.EventTriggerer.PauseEventTimers();
+            world.EventTriggerer.PauseWorldTime();
 
             worldsDataAfter = new PersistedWorldData[serverSerializers.Length];
             for (int index = 0; index < serverSerializers.Length; index++)
@@ -477,7 +479,8 @@ namespace NitroxTest.Serialization
                         {
                             new VehicleModel(new NitroxTechType("Cyclops"), new NitroxId(), NitroxVector3.One, NitroxQuaternion.Identity, new InteractiveChildObjectIdentifier[0], Optional<NitroxId>.Of(new NitroxId()), "Super Duper Cyclops", new []{NitroxVector3.Zero, NitroxVector3.One, NitroxVector3.One}, 100)
                         }
-                    }
+                    },
+                    Seed = "NITROXSEED"
                 }
             };
         }
