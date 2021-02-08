@@ -122,7 +122,7 @@ namespace NitroxLauncher
                 {
                     PirateDetection.TriggerOnDirectory(path);
                     File.WriteAllText("path.txt", path);
-                    if (nitroxEntryPatch?.IsApplied == true)
+                    if (nitroxEntryPatch?.IsApplied == false)
                     {
                         nitroxEntryPatch.Remove();
                     }
