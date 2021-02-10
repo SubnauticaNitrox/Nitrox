@@ -129,6 +129,17 @@ namespace NitroxTest.Serialization
                     Assert.AreEqual(itemData.ItemId, itemDataAfter.ItemId, "WorldData.InventoryData.StorageSlotItems.ItemId is not equal");
                     Assert.IsTrue(itemData.SerializedData.SequenceEqual(itemDataAfter.SerializedData), "WorldData.InventoryData.StorageSlotItems.SerializedData is not equal");
                 }
+
+                Assert.AreEqual(worldData.WorldData.InventoryData.Modules.Count, worldDataAfter.WorldData.InventoryData.Modules.Count, "WorldData.InventoryData.Modules.Count is not equal");
+                for (int index = 0; index < worldData.WorldData.InventoryData.Modules.Count; index++)
+                {
+                    EquippedItemData equippedItemData = worldData.WorldData.InventoryData.Modules[index];
+                    EquippedItemData equippedItemDataAfter = worldDataAfter.WorldData.InventoryData.Modules[index];
+
+                    Assert.AreEqual(equippedItemData.ContainerId, equippedItemDataAfter.ContainerId, "WorldData.InventoryData.Modules.ContainerId is not equal");
+                    Assert.AreEqual(equippedItemData.ItemId, equippedItemDataAfter.ItemId, "WorldData.InventoryData.Modules.ItemId is not equal");
+                    Assert.IsTrue(equippedItemData.SerializedData.SequenceEqual(equippedItemDataAfter.SerializedData), "WorldData.InventoryData.Modules.SerializedData is not equal");
+                }
             }
         }
 

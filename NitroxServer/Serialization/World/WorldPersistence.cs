@@ -150,7 +150,7 @@ namespace NitroxServer.Serialization.World
                         StoryGoals = new StoryGoalData(),
                         StoryTiming = new StoryTimingData()
                     },
-                    InventoryData = InventoryData.From(new List<ItemData>(), new List<ItemData>()),
+                    InventoryData = InventoryData.From(new List<ItemData>(), new List<ItemData>(), new List<EquippedItemData>()),
                     VehicleData = VehicleData.From(new List<VehicleModel>()),
                     ParsedBatchCells = new List<NitroxInt3>(),
                     ServerStartTime = DateTime.Now
@@ -183,7 +183,7 @@ namespace NitroxServer.Serialization.World
 
                 BaseManager = new BaseManager(pWorldData.BaseData.PartiallyConstructedPieces, pWorldData.BaseData.CompletedBasePieceHistory),
 
-                InventoryManager = new InventoryManager(pWorldData.WorldData.InventoryData.InventoryItems, pWorldData.WorldData.InventoryData.StorageSlotItems),
+                InventoryManager = new InventoryManager(pWorldData.WorldData.InventoryData.InventoryItems, pWorldData.WorldData.InventoryData.StorageSlotItems, pWorldData.WorldData.InventoryData.Modules),
 
                 EscapePodManager = new EscapePodManager(pWorldData.WorldData.EscapePodData.EscapePods, randomStart, seed),
 
