@@ -36,7 +36,9 @@ namespace NitroxClient.GameLogic
 
         public Vehicle Vehicle { get; private set; }
         public SubRoot SubRoot { get; private set; }
+#if DEBUG
         public EscapePod EscapePod { get; private set; }
+#endif
         public PilotingChair PilotingChair { get; private set; }
 
         public RemotePlayer(GameObject playerBody, PlayerContext playerContext, List<TechType> equippedTechTypes, List<Pickupable> inventoryItems, PlayerModelManager modelManager)
@@ -170,7 +172,7 @@ namespace NitroxClient.GameLogic
                 SubRoot = newSubRoot;
             }
         }
-
+#if DEBUG
         public void SetEscapePod(EscapePod newEscapePod)
         {
             if (EscapePod != newEscapePod)
@@ -187,7 +189,7 @@ namespace NitroxClient.GameLogic
                 EscapePod = newEscapePod;
             }
         }
-
+#endif
         public void SetVehicle(Vehicle newVehicle)
         {
             if (Vehicle != newVehicle)

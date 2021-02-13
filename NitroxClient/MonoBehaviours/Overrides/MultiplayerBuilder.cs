@@ -132,6 +132,9 @@ namespace NitroxClient.MonoBehaviours.Overrides
             MultiplayerBuilder.allowedInSub = component.allowedInSub;
             MultiplayerBuilder.allowedInBase = component.allowedInBase;
             MultiplayerBuilder.allowedOutside = component.allowedOutside;
+#if BELOWZERO
+            MultiplayerBuilder.allowedUnderwater = component.allowedUnderwater;
+#endif
             MultiplayerBuilder.allowedOnConstructables = component.allowedOnConstructables;
             MultiplayerBuilder.rotationEnabled = component.rotationEnabled;
             ConstructableBase component2 = MultiplayerBuilder.prefab.GetComponent<ConstructableBase>();
@@ -732,12 +735,16 @@ namespace NitroxClient.MonoBehaviours.Overrides
         // Token: 0x06002BAD RID: 11181 RVA: 0x00104B6C File Offset: 0x00102D6C
         private static bool CheckAsSubModule()
         {
+            Transform aimTransform = MultiplayerBuilder.GetAimTransform();
+#if SUBNAUTICA
             if (!Constructable.CheckFlags(MultiplayerBuilder.allowedInBase, MultiplayerBuilder.allowedInSub, MultiplayerBuilder.allowedOutside))
+#elif BELOWZERO
+            if (!Constructable.CheckFlags(MultiplayerBuilder.allowedInBase, MultiplayerBuilder.allowedInSub, MultiplayerBuilder.allowedOutside, MultiplayerBuilder.allowedUnderwater, aimTransform))
+#endif
             {
                 return false;
             }
 
-            Transform aimTransform = MultiplayerBuilder.GetAimTransform();
             MultiplayerBuilder.placementTarget = null;
             RaycastHit hit;
             if (!Physics.Raycast(aimTransform.position, aimTransform.forward, out hit, MultiplayerBuilder.placeMaxDistance, MultiplayerBuilder.placeLayerMask.value, QueryTriggerInteraction.Ignore))
@@ -966,10 +973,18 @@ namespace NitroxClient.MonoBehaviours.Overrides
         private static void CreatePowerPreview(TechType constructableTechType, GameObject ghostModel)
         {
             GameObject gameObject = null;
-            string poweredPrefabName = CraftData.GetPoweredPrefabName(constructableTechType);
+#if SUBNAUTICA
+                string poweredPrefabName = CraftData.GetPoweredPrefabName(constructableTechType);
+#elif BELOWZERO
+            string poweredPrefabName = TechData.GetPoweredPrefabName(constructableTechType);
+#endif
             if (poweredPrefabName != string.Empty)
             {
+#if SUBNAUTICA
                 gameObject = PrefabDatabase.GetPrefabForFilename(poweredPrefabName);
+#elif BELOWZERO
+                gameObject = AddressablesUtility.LoadAsync<GameObject>(poweredPrefabName).Result;
+#endif
             }
 
             if (gameObject != null)
@@ -1075,7 +1090,9 @@ namespace NitroxClient.MonoBehaviours.Overrides
 
         // Token: 0x04002A86 RID: 10886
         private static bool allowedOutside;
-
+#if BELOWZERO
+        private static bool allowedUnderwater;
+#endif
         // Token: 0x04002A87 RID: 10887
         private static bool allowedOnConstructables;
 

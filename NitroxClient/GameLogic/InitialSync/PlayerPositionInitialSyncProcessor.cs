@@ -22,7 +22,9 @@ namespace NitroxClient.GameLogic.InitialSync
 
             DependentProcessors.Add(typeof(PlayerInitialSyncProcessor)); // Make sure the player is configured
             DependentProcessors.Add(typeof(BuildingInitialSyncProcessor)); // Players can be spawned in buildings
+#if DEBUG
             DependentProcessors.Add(typeof(EscapePodInitialSyncProcessor)); // Players can be spawned in escapePod
+#endif
             DependentProcessors.Add(typeof(VehicleInitialSyncProcessor)); // Players can be spawned in vehicles
         }
 

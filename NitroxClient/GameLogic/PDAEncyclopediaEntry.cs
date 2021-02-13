@@ -12,9 +12,9 @@ namespace NitroxClient.GameLogic
             this.packetSender = packetSender;
         }
 
-        public void Add(string key)
+        public void Add(string key, bool postNotification)
         {
-            PDAEncyclopediaEntryAdd EntryAdd = new PDAEncyclopediaEntryAdd(key);
+            PDAEncyclopediaEntryAdd EntryAdd = new PDAEncyclopediaEntryAdd(key, postNotification);
             packetSender.Send(EntryAdd);
         }
     }

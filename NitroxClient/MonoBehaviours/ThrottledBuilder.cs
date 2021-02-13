@@ -123,7 +123,16 @@ namespace NitroxClient.MonoBehaviours
             Log.Debug($"BuildBasePiece - {basePiecePlacedBuildEvent.BasePiece.Id} type: {basePiecePlacedBuildEvent.BasePiece.TechType} parentId: {basePiecePlacedBuildEvent.BasePiece.ParentId.OrElse(null)}");
 
             BasePiece basePiece = basePiecePlacedBuildEvent.BasePiece;
+#if SUBNAUTICA
             GameObject buildPrefab = CraftData.GetBuildPrefab(basePiece.TechType.ToUnity());
+#elif BELOWZERO
+            uGUI_BuilderMenu uGUIBuilderMenu = null;
+            GameObject buildPrefab = (GameObject)uGUIBuilderMenu.ReflectionCall("TryGetCachedPrefab", false, false, new object[] { basePiece.TechType.ToUnity() });
+            if (buildPrefab == null)
+            {
+                buildPrefab = CraftData.GetPrefabForTechTypeAsync(basePiece.TechType.ToUnity(), true).GetResult();
+            }
+#endif
             MultiplayerBuilder.overridePosition = basePiece.ItemPosition.ToUnity();
             MultiplayerBuilder.overrideQuaternion = basePiece.Rotation.ToUnity();
             MultiplayerBuilder.overrideTransform = new GameObject().transform;

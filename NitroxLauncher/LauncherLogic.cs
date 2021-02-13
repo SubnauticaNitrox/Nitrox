@@ -230,7 +230,11 @@ namespace NitroxLauncher
             string bootloaderName = "Nitrox.Bootloader.dll";
             try
             {
+#if DEBUG
                 File.Copy(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "lib", bootloaderName), Path.Combine(subnauticaPath, "Subnautica_Data", "Managed", bootloaderName), true);
+#elif BELOWZERO
+                File.Copy(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "lib", bootloaderName), Path.Combine(subnauticaPath, "SubnauticaZero_Data", "Managed", bootloaderName), true);
+#endif
             }
             catch (IOException ex)
             {

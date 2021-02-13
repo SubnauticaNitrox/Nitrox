@@ -206,7 +206,11 @@ namespace NitroxServer_Subnautica
             if (dllPath.IndexOf("Newtonsoft.Json.dll", StringComparison.OrdinalIgnoreCase) >= 0 || !File.Exists(dllPath))
             {
                 // Try find game managed libraries
+#if DEBUG
                 dllPath = Path.Combine(gameInstallDir.Value, "Subnautica_Data", "Managed", dllFileName);
+#elif BELOWZERO
+                dllPath = Path.Combine(gameInstallDir.Value, "SubnauticaZero_Data", "Managed", dllFileName);
+#endif
             }
 
             // Return cached assembly

@@ -120,7 +120,9 @@ namespace NitroxClient
             containerBuilder.RegisterType<KnownTechEntry>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<ExosuitModuleEvent>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<SeamothModulesEvent>().InstancePerLifetimeScope();
+#if DEBUG
             containerBuilder.RegisterType<EscapePodManager>().InstancePerLifetimeScope();
+#endif
             containerBuilder.RegisterType<Debugger>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Fires>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<FMODSystem>().InstancePerLifetimeScope();

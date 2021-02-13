@@ -31,6 +31,10 @@
         <WarningLevel>4</WarningLevel>
         <PathMap>$(MSBuildProjectDirectory)=$(MSBuildProjectName)</PathMap>
     </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'BelowZero' ">
+        <DefineConstants>BELOWZERO</DefineConstants>
+        <OutputPath>bin\BelowZero\</OutputPath>
+    </PropertyGroup>
     
     <PropertyGroup Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(MSBuildProjectName), '^Nitrox.*$'))">
         <NitroxLibrary>true</NitroxLibrary>

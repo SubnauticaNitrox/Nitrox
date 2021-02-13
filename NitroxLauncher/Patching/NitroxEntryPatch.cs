@@ -25,8 +25,11 @@ namespace NitroxLauncher.Patching
         private const string NITROX_EXECUTE_INSTRUCTION = "System.Void Nitrox.Bootloader.Main::Execute()";
 
         private readonly Func<string> subnauticaBasePathFunc;
+#if SUBNAUTICA
         private string subnauticaManagedPath => Path.Combine(subnauticaBasePathFunc(), "Subnautica_Data", "Managed");
-
+#elif BELOWZERO
+        private string subnauticaManagedPath => Path.Combine(subnauticaBasePathFunc(), "SubnauticaZero_Data", "Managed");
+#endif
         public bool IsApplied => IsPatchApplied();
 
         public NitroxEntryPatch(Func<string> subnauticaBasePathFunc)

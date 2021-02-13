@@ -19,7 +19,11 @@ namespace NitroxClient.Communication.Packets.Processors
 
                 if (crafterLogic.numCrafted == 0)
                 {
+#if SUBNAUTICA
                     crafterLogic.Reset();
+#elif BELOWZERO
+                    crafterLogic.ResetCrafter();
+#endif
                 }
             }
         }

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿#if DEBUG
+using System.Collections;
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
@@ -25,3 +26,4 @@ namespace NitroxClient.GameLogic.InitialSync
         }
     }
 }
+#endif

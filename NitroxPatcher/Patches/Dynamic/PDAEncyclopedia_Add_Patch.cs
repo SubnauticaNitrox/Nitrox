@@ -11,9 +11,9 @@ namespace NitroxPatcher.Patches.Dynamic
         public static readonly Type TARGET_CLASS = typeof(PDAEncyclopedia);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("Add", BindingFlags.NonPublic | BindingFlags.Static);
 
-        public static void Prefix(string key)
+        public static void Prefix(string key, bool postNotification)
         {
-            NitroxServiceLocator.LocateService<PDAEncyclopediaEntry>().Add(key);
+            NitroxServiceLocator.LocateService<PDAEncyclopediaEntry>().Add(key, postNotification);
         }
 
         public override void Patch(Harmony harmony)

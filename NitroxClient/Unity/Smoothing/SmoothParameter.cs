@@ -15,7 +15,11 @@ namespace NitroxClient.Unity.Smoothing
 
         public void FixedUpdate()
         {
+#if SUBNAUTICA
             SmoothValue = UWE.Utils.Slerp(SmoothValue, Target, (Target - SmoothValue) * SMOOTHING_SPEED * Time.fixedDeltaTime);
+#elif BELOWZERO
+            SmoothValue = Mathf.MoveTowards(SmoothValue, Target, (Target - SmoothValue) * SMOOTHING_SPEED * Time.fixedDeltaTime);
+#endif
         }
     }
 }

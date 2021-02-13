@@ -15,7 +15,11 @@ namespace NitroxModel.Discovery
                 }
             }
 
+#if SUBNAUTICA
             if (File.Exists(Path.Combine(subnauticaPath, "Subnautica_Data", "Plugins", "CSteamworks.dll")))
+#elif BELOWZERO
+            if (File.Exists(Path.Combine(subnauticaPath, "SubnauticaZero_Data", "Plugins", "x86_64", "CSteamworks.dll")))
+#endif
             {
                 return Platform.STEAM;
             }

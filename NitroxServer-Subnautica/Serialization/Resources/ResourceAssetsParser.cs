@@ -122,7 +122,7 @@ namespace NitroxServer_Subnautica.Serialization.Resources
             {
                 throw new DirectoryNotFoundException($"Could not locate Subnautica installation directory:{Environment.NewLine}{string.Join(Environment.NewLine, errors)}");
             }
-
+#if DEBUG
             if (File.Exists(Path.Combine(subnauticaPath, "Subnautica_Data", "resources.assets")))
             {
                 return Path.Combine(subnauticaPath, "Subnautica_Data");
@@ -135,7 +135,21 @@ namespace NitroxServer_Subnautica.Serialization.Resources
             {
                 return Path.GetFullPath(Path.Combine("..", "Subnautica_Data"));
             }
-            if (File.Exists("resources.assets"))   //  SubServer/* => Subnautica/Subnautica_Data/
+#elif BELOWZERO
+            if (File.Exists(Path.Combine(subnauticaPath, "SubnauticaZero_Data", "resources.assets")))
+            {
+                return Path.Combine(subnauticaPath, "SubnauticaZero_Data");
+            }
+            if (File.Exists(Path.Combine("..", "resources.assets")))   //  SubServer => SubnauticaZero/SubnauticaZero_Data/SubServer
+            {
+                return Path.GetFullPath(Path.Combine(".."));
+            }
+            if (File.Exists(Path.Combine("..", "SubnauticaZero_Data", "resources.assets")))   //  SubServer => SubnauticaZero/SubServer
+            {
+                return Path.GetFullPath(Path.Combine("..", "SubnauticaZero_Data"));
+            }
+#endif
+            if (File.Exists("resources.assets"))   //  SubServer/* => SubnauticaZero/SubnauticaZero_Data/
             {
                 return Directory.GetCurrentDirectory();
             }

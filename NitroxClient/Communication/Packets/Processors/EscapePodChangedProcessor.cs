@@ -1,5 +1,6 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
+#if DEBUG
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
@@ -35,5 +36,4 @@ namespace NitroxClient.Communication.Packets.Processors
         }
     }
 }
-
-
+#endif
