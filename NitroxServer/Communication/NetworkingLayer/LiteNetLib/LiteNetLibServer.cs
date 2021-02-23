@@ -79,7 +79,7 @@ namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
 
         public void OnConnectionRequest(ConnectionRequest request)
         {
-            if (server.PeersCount < maxConn)
+            if (server.PeersCount < maxConn && !Banning.IpBanning.BannedIPs.Contains(request.RemoteEndPoint.Address.ToString()))
             {
                 request.AcceptIfKey("nitrox");
             }

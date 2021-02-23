@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Timers;
 using NitroxModel.Logger;
 using NitroxServer.Serialization.World;
@@ -31,7 +31,7 @@ namespace NitroxServer
             this.serverConfig = serverConfig;
             this.server = server;
             this.world = world;
-
+            Banning.IpBanning.Load();
             Instance = this;
 
             saveTimer = new Timer();
