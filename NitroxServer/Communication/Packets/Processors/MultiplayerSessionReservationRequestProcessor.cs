@@ -29,7 +29,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 authenticationContext,
                 correlationId);
 
-            Log.Info($"Reservation processed successfully: Username: {packet.AuthenticationContext.Username} - {reservation}");
+            Log.Info($"Reservation processed successfully: Username: {packet.AuthenticationContext.Username} - {reservation} - IP Address: {connection.Endpoint.Address.ToString()}");
 
             connection.SendPacket(reservation);
         }
