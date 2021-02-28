@@ -4,6 +4,7 @@ using FMOD.Studio;
 using FMODUnity;
 using NitroxClient.GameLogic.FMOD;
 using NitroxClient.Unity.Helper;
+using NitroxModel.Logger;
 using UnityEngine;
 #pragma warning disable 618
 
@@ -13,7 +14,6 @@ namespace NitroxClient.Debuggers
     {
         private readonly Dictionary<string, SoundData> assetList;
         private readonly Dictionary<string, EventInstance> eventInstancesByPath = new Dictionary<string, EventInstance>();
-        private readonly Transform camera;
         private Vector2 scrollPosition;
         private string searchText;
         private string searchCategory;
@@ -26,7 +26,6 @@ namespace NitroxClient.Debuggers
         public SoundDebugger(FMODSystem fmodSystem) : base(700, null, KeyCode.S, true, false, true, GUISkinCreationOptions.DERIVEDCOPY)
         {
             assetList = fmodSystem.GetSoundDataList();
-            camera = Camera.main.transform;
             ActiveTab = AddTab("Sounds", RenderTabAllSounds);
         }
 
@@ -171,15 +170,28 @@ namespace NitroxClient.Debuggers
 
         private void PlaySound(string eventPath)
         {
-            Vector3 position = camera.position + new Vector3(distance, 0, 0);
+            Camera camera = Camera.main;
+            if (!camera)
+            {
+                Log.InGame("Camera.main not found");
+                return;
+            }
+            Vector3 position = camera.transform.position + new Vector3(distance, 0, 0);
 
             if (!eventInstancesByPath.TryGetValue(eventPath, out EventInstance instance))
             {
                 instance = FMODUWE.GetEvent(eventPath);
                 eventInstancesByPath.Add(eventPath, instance);
             }
+            else
+            {
+                instance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+            }
+
             instance.setVolume(volume);
             instance.set3DAttributes(position.To3DAttributes());
+            instance.setProperty(EVENT_PROPERTY.MINIMUM_DISTANCE, 0f);
+            instance.setProperty(EVENT_PROPERTY.MAXIMUM_DISTANCE, 100f);
             instance.start();
             instance.release();
         }
