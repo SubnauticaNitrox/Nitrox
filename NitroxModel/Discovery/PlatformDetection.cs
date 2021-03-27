@@ -9,7 +9,10 @@ namespace NitroxModel.Discovery
         {
             if (Directory.Exists(Path.Combine(subnauticaPath, ".egstore")))
             {
-                return Platform.EPIC;
+                if (Directory.GetFiles(Path.Combine(subnauticaPath, ".egstore")).Length > 0)
+                {
+                    return Platform.EPIC;
+                }
             }
 
             if (File.Exists(Path.Combine(subnauticaPath, "Subnautica_Data", "Plugins", "CSteamworks.dll")))

@@ -52,11 +52,14 @@ namespace NitroxLauncher
                 // This pirate detection subscriber is immediately invoked if pirate has been detected right now.
                 PirateDetection.PirateDetected += (o, eventArgs) =>
                 {
-                    WebBrowser webBrowser = new WebBrowser();
+                    WebBrowser webBrowser = new()
+                    {
+                        HorizontalAlignment = HorizontalAlignment.Stretch,
+                        VerticalAlignment = VerticalAlignment.Stretch,
+                        Margin = new Thickness(0)
+                    };
+
                     FrameContent = webBrowser;
-                    webBrowser.HorizontalAlignment = HorizontalAlignment.Stretch;
-                    webBrowser.VerticalAlignment = VerticalAlignment.Stretch;
-                    webBrowser.Margin = new Thickness(0);
 
                     string embed = "<html><head>" +
                                    "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"/>" +
