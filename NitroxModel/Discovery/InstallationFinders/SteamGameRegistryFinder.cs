@@ -7,10 +7,10 @@ namespace NitroxModel.Discovery.InstallationFinders
 {
     public class SteamGameRegistryFinder : IFindGameInstallation
     {
-        public const int SUBNAUTICA_APP_ID = 264710;
         public const string SUBNAUTICA_GAME_NAME = "Subnautica";
+        public const int SUBNAUTICA_APP_ID = 264710;
 
-        public string FindGame(List<string> errors = null)
+        public string FindGame(IList<string> errors = null)
         {
             string steamPath = (string)ReadRegistrySafe("Software\\Valve\\Steam", "SteamPath");
             if (string.IsNullOrEmpty(steamPath))
@@ -42,10 +42,6 @@ namespace NitroxModel.Discovery.InstallationFinders
         ///     Finds game install directory by iterating through all the steam game libraries configured and finding the appid
         ///     that matches <see cref="SUBNAUTICA_APP_ID" />.
         /// </summary>
-        /// <param name="libraryfolders"></param>
-        /// <param name="appid"></param>
-        /// <param name="gameName"></param>
-        /// <returns></returns>
         private static string SearchAllInstallations(string libraryfolders, int appid, string gameName)
         {
             if (!File.Exists(libraryfolders))
@@ -53,7 +49,7 @@ namespace NitroxModel.Discovery.InstallationFinders
                 return null;
             }
 
-            StreamReader file = new StreamReader(libraryfolders);
+            StreamReader file = new(libraryfolders);
             string line;
             while ((line = file.ReadLine()) != null)
             {
@@ -61,8 +57,8 @@ namespace NitroxModel.Discovery.InstallationFinders
                 Match regMatch = Regex.Match(line, "\"(.*)\"\t*\"(.*)\"");
                 string key = regMatch.Groups[1].Value;
                 string value = regMatch.Groups[2].Value;
-                int number;
-                if (int.TryParse(key, out number))
+
+                if (int.TryParse(key, out _))
                 {
                     if (File.Exists(Path.Combine(value, $"steamapps/appmanifest_{appid}.acf")))
                     {

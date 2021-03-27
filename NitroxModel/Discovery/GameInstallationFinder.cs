@@ -11,6 +11,9 @@ namespace NitroxModel.Discovery
     /// </summary>
     public class GameInstallationFinder : IFindGameInstallation
     {
+        private static readonly Lazy<GameInstallationFinder> instance = new(() => new GameInstallationFinder());
+        public static GameInstallationFinder Instance => instance.Value;
+
         /// <summary>
         ///     The order of these finders is VERY important. Only change if you know what you're doing.
         /// </summary>
@@ -20,19 +23,14 @@ namespace NitroxModel.Discovery
             new SteamGameRegistryFinder(),
             new EpicGamesInstallationFinder(),
         };
-        
-        /// <summary>
-        /// Thread safe backing field for Singleton instance.
-        /// </summary>
-        private static readonly Lazy<GameInstallationFinder> instance = new Lazy<GameInstallationFinder>(() => new GameInstallationFinder());
-        public static GameInstallationFinder Instance => instance.Value;
 
-        public string FindGame(List<string> errors = null)
+        public string FindGame(IList<string> errors = null)
         {
             if (errors == null)
             {
                 errors = new List<string>();
             }
+
             foreach (IFindGameInstallation finder in finders)
             {
                 string path = finder.FindGame(errors);
@@ -41,7 +39,7 @@ namespace NitroxModel.Discovery
                     continue;
                 }
                 
-                errors?.Clear();
+                errors.Clear();
                 return Path.GetFullPath(path);
             }
 

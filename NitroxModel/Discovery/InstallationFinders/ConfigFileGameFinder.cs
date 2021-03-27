@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using NitroxModel.DataStructures.Util;
 
 namespace NitroxModel.Discovery.InstallationFinders
 {
@@ -11,7 +10,7 @@ namespace NitroxModel.Discovery.InstallationFinders
     {
         private const string FILENAME = "path.txt";
 
-        public string FindGame(List<string> errors = null)
+        public string FindGame(IList<string> errors = null)
         {
             if (!File.Exists(FILENAME))
             {
