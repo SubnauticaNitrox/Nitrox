@@ -30,10 +30,19 @@ namespace NitroxServer.Serialization
 
         public void Serialize(string filePath, object o)
         {
-            using (Stream stream = File.OpenWrite(filePath))
+            string tmpPath = $"{filePath}.tmp";
+
+            using (Stream stream = File.OpenWrite(tmpPath))
             {
                 Serialize(stream, o);
             }
+
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+
+            File.Move(tmpPath, filePath);
         }
 
         public T Deserialize<T>(Stream stream)
