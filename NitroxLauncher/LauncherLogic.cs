@@ -140,7 +140,6 @@ namespace NitroxLauncher
             }, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
-        #region Navigation
         public void NavigateTo(Type page)
         {
             if (page == null || !page.IsSubclassOf(typeof(Page)) && page != typeof(Page))
@@ -170,7 +169,6 @@ namespace NitroxLauncher
 
             return window.FrameContent is TPage;
         }
-        #endregion
 
         internal async Task StartSingleplayerAsync()
         {
@@ -335,8 +333,15 @@ namespace NitroxLauncher
                 for (int i = 0; i < 1000; i++)
                 {
                     Process[] processes = Process.GetProcessesByName("Subnautica");
-                    if (processes.Length == 1)
+
+                    if (processes.Length > 0)
                     {
+                        //When we have multiple instances, we return the first one and we dispose others
+                        if (processes.Length > 1)
+                        {
+                            processes.Skip(1).ForEach(p => p.Dispose());
+                        }
+
                         return processes[0];
                     }
 
@@ -357,13 +362,11 @@ namespace NitroxLauncher
             }, TaskContinuationOptions.OnlyOnRanToCompletion);
         }
 
-        #region PropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-        #endregion
     }
 }
