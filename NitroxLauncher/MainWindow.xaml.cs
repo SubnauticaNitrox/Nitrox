@@ -74,21 +74,18 @@ namespace NitroxLauncher
 
             logic.SetTargetedSubnauticaPath(GameInstallationFinder.Instance.FindGame())
                 .ContinueWith(task =>
+                {
+                    if (GameInstallationFinder.IsSubnauticaDirectory(task.Result))
                     {
-                        if (logic.IsSubnauticaDirectory(task.Result))
-                        {
-                            LauncherLogic.Instance.NavigateTo<LaunchGamePage>();
-                        }
-                        else
-                        {
-                            LauncherLogic.Instance.NavigateTo<OptionPage>();
-                        }
+                        LauncherLogic.Instance.NavigateTo<LaunchGamePage>();
+                    }
+                    else
+                    {
+                        LauncherLogic.Instance.NavigateTo<OptionPage>();
+                    }
 
-                        logic.CheckNitroxVersion();
-                    },
-                    CancellationToken.None,
-                    TaskContinuationOptions.OnlyOnRanToCompletion,
-                    TaskScheduler.FromCurrentSynchronizationContext());
+                    logic.CheckNitroxVersion();
+                }, CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -100,7 +97,7 @@ namespace NitroxLauncher
 
         private bool CanClose()
         {
-            if (logic.ServerRunning && isServerEmbedded)
+            if (logic.IsServerRunning && isServerEmbedded)
             {
                 MessageBoxResult userAnswer = MessageBox.Show("The embedded server is still running. Click yes to close.", "Close aborted", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                 return userAnswer == MessageBoxResult.Yes;
@@ -152,7 +149,7 @@ namespace NitroxLauncher
 
         private void ButtonNavigation_Click(object sender, RoutedEventArgs e)
         {
-            if (!(sender is FrameworkElement elem))
+            if (sender is not FrameworkElement elem)
             {
                 return;
             }
