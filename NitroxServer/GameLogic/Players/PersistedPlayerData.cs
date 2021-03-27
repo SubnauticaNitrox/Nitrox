@@ -42,7 +42,7 @@ namespace NitroxServer.GameLogic.Players
         public bool IsPermaDeath { get; set; }
 
         [JsonProperty, ProtoMember(11)]
-        public Guid Token { get; set; }
+        public Guid AuthToken { get; set; }
 
         public Player ToPlayer()
         {
@@ -58,7 +58,7 @@ namespace NitroxServer.GameLogic.Players
                               CurrentStats,
                               EquippedItems,
                               Modules,
-                              Token);
+                              AuthToken);
         }
 
         public static PersistedPlayerData FromPlayer(Player player)
@@ -75,7 +75,7 @@ namespace NitroxServer.GameLogic.Players
                 Permissions = player.Permissions,
                 NitroxId = player.GameObjectId,
                 IsPermaDeath = player.IsPermaDeath,
-                Token = player.Token
+                AuthToken = player.AuthToken
             };
         }
     }

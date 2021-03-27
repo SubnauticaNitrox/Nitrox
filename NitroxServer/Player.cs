@@ -28,10 +28,10 @@ namespace NitroxServer
         public Perms Permissions { get; set; }
         public PlayerStatsData Stats { get; set; }
         public NitroxVector3? LastStoredPosition { get; set; }
-        public Guid Token { get; set; }
+        public Guid AuthToken { get; set; }
 
         public Player(ushort id, string name, bool isPermaDeath, PlayerContext playerContext, NitroxConnection connection, NitroxVector3 position, NitroxId playerId, Optional<NitroxId> subRootId, Perms perms, PlayerStatsData stats, IEnumerable<EquippedItemData> equippedItems,
-                      IEnumerable<EquippedItemData> modules, Guid token)
+                      IEnumerable<EquippedItemData> modules, Guid authToken)
         {
             Id = id;
             Name = name;
@@ -47,7 +47,7 @@ namespace NitroxServer
             this.equippedItems = new ThreadSafeCollection<EquippedItemData>(equippedItems);
             this.modules = new ThreadSafeCollection<EquippedItemData>(modules);
             visibleCells = new ThreadSafeCollection<AbsoluteEntityCell>(new HashSet<AbsoluteEntityCell>(), false);
-            Token = token;
+            AuthToken = authToken;
         }
 
         public static bool operator ==(Player left, Player right)

@@ -301,7 +301,7 @@ namespace NitroxTest.Serialization
                     Assert.AreEqual(playerData.Permissions, playerDataAfter.Permissions, "PlayerData.Players.Permissions is not equal");
                     Assert.AreEqual(playerData.NitroxId, playerDataAfter.NitroxId, "PlayerData.Players.NitroxId is not equal");
                     Assert.AreEqual(playerData.IsPermaDeath, playerDataAfter.IsPermaDeath, "PlayerData.Players.IsFurniture is not equal");
-                    Assert.AreEqual(playerData.Token, playerDataAfter.Token, "PlayerData.Players.Token is not equal");
+                    Assert.AreEqual(playerData.AuthToken, playerDataAfter.AuthToken, "PlayerData.Players.Token is not equal");
                 }
             }
         }
@@ -386,7 +386,8 @@ namespace NitroxTest.Serialization
                             SubRootId = null,
                             CurrentStats = new PlayerStatsData(45, 45, 40, 39, 28, 1),
                             EquippedItems = new List<EquippedItemData>(0),
-                            Modules = new List<EquippedItemData>(0)
+                            Modules = new List<EquippedItemData>(0),
+                            AuthToken = Guid.NewGuid()
                         },
                         new PersistedPlayerData()
                         {
@@ -406,7 +407,8 @@ namespace NitroxTest.Serialization
                             Modules = new List<EquippedItemData>()
                             {
                                 new EquippedItemData(new NitroxId(), new NitroxId(), new byte[]{0x35, 0xD0}, "Module1", new NitroxTechType("Compass"))
-                            }
+                            },
+                            AuthToken = Guid.NewGuid()
                         }
                     }
                 },

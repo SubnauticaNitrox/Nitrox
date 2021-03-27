@@ -66,7 +66,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             multiplayerButtonButton.onClick.AddListener(clickEvent);
         }
 
-        private void CreateServerButton(string text, string joinIp, string joinPort, Guid token)
+        private void CreateServerButton(string text, string joinIp, string joinPort, Guid authToken)
         {
             GameObject multiplayerButtonInst = Instantiate(multiplayerButton, savedGameAreaContent, false);
             multiplayerButtonInst.name = (savedGameAreaContent.childCount - 1).ToString();
@@ -79,7 +79,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             multiplayerButtonButton.onClick.AddListener(() =>
             {
                 txt.GetComponent<Text>().color = prevTextColor; // Visual fix for black text after click (hover state still active)
-                OpenJoinServerMenu(joinIp, joinPort, token);
+                OpenJoinServerMenu(joinIp, joinPort, authToken);
             });
 
             GameObject delete = Instantiate(deleteButtonRef, multiplayerButtonInst.transform, false);
@@ -92,9 +92,9 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             });
         }
 
-        private void AddServer(string name, string ip, string port, Guid token)
+        private void AddServer(string name, string ip, string port, Guid authToken)
         {
-            PersistedClientData.EmplaceServer(name, ip, port, token);
+            PersistedClientData.EmplaceServer(name, ip, port, authToken);
         }
 
         private void RemoveServer(int index)
@@ -102,7 +102,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             PersistedClientData.RemoveServerByIndex(index);
         }
 
-        public static void OpenJoinServerMenu(string serverIp, string serverPort, Guid token)
+        public static void OpenJoinServerMenu(string serverIp, string serverPort, Guid authToken)
         {
             if (main == null)
             {
@@ -116,7 +116,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 return;
             }
 
-            main.joinServer.Show(endpoint.Address.ToString(), endpoint.Port, token);
+            main.joinServer.Show(endpoint.Address.ToString(), endpoint.Port, authToken);
         }
 
         private void ShowAddServerWindow()
@@ -146,7 +146,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         {
             foreach(SavedServer server in PersistedClientData.GetServers())
             {
-                CreateServerButton($"{Language.main.Get("Nitrox_ConnectTo")} <b>{server.Name}</b>\n{server.Ip}:{server.Port}", server.Ip, server.Port, new Guid(server.Token));
+                CreateServerButton($"{Language.main.Get("Nitrox_ConnectTo")} <b>{server.Name}</b>\n{server.Ip}:{server.Port}", server.Ip, server.Port, new Guid(server.AuthToken));
             }
         }
 
@@ -193,9 +193,9 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             serverNameInput = serverNameInput.Trim();
             serverHostInput = serverHostInput.Trim();
             serverPortInput = serverPortInput.Trim();
-            Guid token = Guid.NewGuid();
-            AddServer(serverNameInput, serverHostInput, serverPortInput, token);
-            CreateServerButton($"{Language.main.Get("Nitrox_ConnectTo")} <b>{serverNameInput}</b>\n{serverHostInput}:{serverPortInput}", serverHostInput, serverPortInput, token);
+            Guid authToken = Guid.NewGuid();
+            AddServer(serverNameInput, serverHostInput, serverPortInput, authToken);
+            CreateServerButton($"{Language.main.Get("Nitrox_ConnectTo")} <b>{serverNameInput}</b>\n{serverHostInput}:{serverPortInput}", serverHostInput, serverPortInput, authToken);
             HideAddServerWindow();
         }
 

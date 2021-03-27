@@ -43,13 +43,13 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
                 string[] splitSecret = secret.Split(':');
                 string ip = splitSecret[0];
                 string port = splitSecret[1];
-                Guid token = PersistedClientData.GetToken(ip, port);
-                if(token == Guid.Empty)
+                Guid authToken = PersistedClientData.GetAuthToken(ip, port);
+                if(authToken == Guid.Empty)
                 {
-                    token = Guid.NewGuid();
-                    PersistedClientData.EmplaceServer("Discord added server", ip, port, token);
+                    authToken = Guid.NewGuid();
+                    PersistedClientData.EmplaceServer("Discord added server", ip, port, authToken);
                 }
-                MainMenuMultiplayerPanel.OpenJoinServerMenu(ip, port, token);
+                MainMenuMultiplayerPanel.OpenJoinServerMenu(ip, port, authToken);
             }
             else
             {

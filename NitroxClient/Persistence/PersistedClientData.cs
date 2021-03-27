@@ -22,24 +22,24 @@ namespace NitroxClient.Persistence
             }
         }
 
-        public static Guid GetToken(string ip, string port)
+        public static Guid GetAuthToken(string ip, string port)
         {
             CheckSingleton();
             foreach (SavedServer pair in model.SavedServers)
             {
                 if (pair.Ip.Equals(ip) && pair.Port.Equals(port)) //Always use trusted members to the left a .Equals call. Don't compare potentially unsafe data; assume parameters might be null.
                 {
-                    return new Guid(pair.Token);
+                    return new Guid(pair.AuthToken);
                 }
             }
             return Guid.Empty;
         }
 
-        public static void EmplaceServer(string name, string ip, string port, Guid token)
+        public static void EmplaceServer(string name, string ip, string port, Guid authToken)
         {
             CheckSingleton();
-            SavedServer savedServer = new SavedServer() { Name = name, Ip = ip, Port = port, Token = token.ToString() };
-            if(GetToken(savedServer.Ip, savedServer.Port) != Guid.Empty) //Some validation is better than no validation.
+            SavedServer savedServer = new SavedServer() { Name = name, Ip = ip, Port = port, AuthToken = authToken.ToString() };
+            if(GetAuthToken(savedServer.Ip, savedServer.Port) != Guid.Empty) //Some validation is better than no validation.
             {
                 throw new Exception($"Failed to add '{ip}':'{port}' because there is already an entry for it.");
             }
@@ -80,14 +80,14 @@ namespace NitroxClient.Persistence
                                 serverIp = match.Groups[1].Value;
                                 serverPort = match.Groups[2].Success ? match.Groups[2].Value : "11000";
                             }
-                            model.SavedServers.Add(new SavedServer() { Name = serverName, Ip = serverIp, Port = serverPort, Token = Guid.NewGuid().ToString() });
+                            model.SavedServers.Add(new SavedServer() { Name = serverName, Ip = serverIp, Port = serverPort, AuthToken = Guid.NewGuid().ToString() });
                         }
                     }
                     File.Delete(".\\servers");
                 }
                 else
                 {
-                    model.SavedServers.Add(new SavedServer() { Name = "local server", Ip = "127.0.0.1", Port = "11000", Token = Guid.NewGuid().ToString() });
+                    model.SavedServers.Add(new SavedServer() { Name = "local server", Ip = "127.0.0.1", Port = "11000", AuthToken = Guid.NewGuid().ToString() });
                 }
                 File.WriteAllText(FILE_NAME, JsonMapper.ToJson(model));
             }

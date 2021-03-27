@@ -11,6 +11,6 @@ namespace NitroxClient.Persistence.Model
 
         public string Port;
 
-        public string Token;
+        public string AuthToken;
     }
 }
