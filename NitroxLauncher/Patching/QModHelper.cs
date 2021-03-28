@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using NitroxModel.Logger;
 
 namespace NitroxLauncher.Patching
@@ -37,10 +38,17 @@ namespace NitroxLauncher.Patching
                 return;
             }
 
-            QModPatched = !QModPatched;
-            string newFilePath = Path.Combine(subnauticaBasePath, newFileName);
-            File.Move(fileToRenamePath, newFilePath);
-            Log.Info("Removing/Restoring QMod initialisation has been successful");
+            try
+            {
+                string newFilePath = Path.Combine(subnauticaBasePath, newFileName);
+                File.Move(fileToRenamePath, newFilePath);
+                QModPatched = !QModPatched;
+                Log.Info("Removing/Restoring QMod initialisation has been successful");
+            }
+            catch (Exception)
+            {
+                Log.Error($"QMod entry cannot be removed/restored, please uninstall QMod");
+            }
         }
 
         private static bool IsQModInstalled(string subnauticaBasePath)
