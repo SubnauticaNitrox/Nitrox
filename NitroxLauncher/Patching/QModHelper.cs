@@ -6,8 +6,8 @@ namespace NitroxLauncher.Patching
 {
     public static class QModHelper
     {
-        private static readonly string originalFileName = "winhttp.dll";
-        private static readonly string renamedFileName = "winhttp_nitrox_stopped.dll";
+        private const string originalFileName = "winhttp.dll";
+        private const string renamedFileName = "winhttp_nitrox_stopped.dll";
         private static bool QModPatched;
         public static void RemoveQModEntryPoint(string subnauticaBasePath)
         {
