@@ -37,9 +37,7 @@ namespace NitroxServer.Serialization.World
             this.randomStart = randomStart;
             this.config = config;
 
-            SaveDataSerializer = config.SerializerMode == ServerSerializerMode.PROTOBUF
-                                ? protoBufSerializer
-                                : jsonSerializer;
+            SaveDataSerializer = config.SerializerMode == ServerSerializerMode.PROTOBUF ? protoBufSerializer : jsonSerializer;
             fileEnding = SaveDataSerializer.GetFileEnding();
         }
 
@@ -60,12 +58,12 @@ namespace NitroxServer.Serialization.World
                 SaveDataSerializer.Serialize(Path.Combine(saveDir, $"WorldData{fileEnding}"), persistedData.WorldData);
                 SaveDataSerializer.Serialize(Path.Combine(saveDir, $"EntityData{fileEnding}"), persistedData.EntityData);
 
-                Log.Info("World state saved.");
+                Log.Info("World state saved");
                 return true;
             }
             catch (Exception ex)
             {
-                Log.Error($"Could not save world: {ex}");
+                Log.Error(ex, $"Could not save world :");
                 return false;
             }
         }
@@ -104,7 +102,7 @@ namespace NitroxServer.Serialization.World
             }
             catch (Exception ex)
             {
-                Log.Error($"Could not load world, creating a new one: {ex.Message}");
+                Log.Error($"Could not load world, creating a new one : {ex.GetType()} {ex.Message}");
 
                 //Backup world if loading fails
                 using (ZipFile zipFile = new(Path.Combine(saveDir, "worldBackup.zip")))
@@ -112,7 +110,7 @@ namespace NitroxServer.Serialization.World
                     string[] nitroxFiles = Directory.GetFiles(saveDir, $"*{fileEnding}");
                     zipFile.AddFiles(nitroxFiles);
                     zipFile.Save();
-                    Log.Warn($"Creating a backup at {zipFile.Name}");
+                    Log.Warn($"Creating a backup at {Path.GetFullPath(zipFile.Name)}");
                 }
 
             }
