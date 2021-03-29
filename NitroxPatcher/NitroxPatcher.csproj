@@ -47,6 +47,9 @@
     <Compile Include="Patches\Dynamic\FMOD_CustomEmitter_OnStop_Patch.cs" />
     <Compile Include="Patches\Dynamic\FMOD_CustomEmitter_OnPlay_Patch.cs" />
     <Compile Include="Patches\Dynamic\FMODUWE_PlayOneShotImpl_Patch.cs" />
+    <Compile Include="Patches\Dynamic\Bench_ExitSittingMode_Patch.cs" />
+    <Compile Include="Patches\Dynamic\Bench_OnHandClick_Patch.cs" />
+    <Compile Include="Patches\Dynamic\Bench_OnPlayerDeath_Patch.cs" />
     <Compile Include="Patches\Dynamic\IncubatorActivationTerminal_OnHandClick_Patch.cs" />
     <Compile Include="Patches\Dynamic\Incubator_OnHandClick_Patch.cs" />
     <Compile Include="Patches\Dynamic\BaseDeconstructable_MakeFaceDeconstructable_Patch.cs" />
