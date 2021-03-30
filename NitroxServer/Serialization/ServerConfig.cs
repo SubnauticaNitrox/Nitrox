@@ -43,6 +43,9 @@ namespace NitroxServer.Serialization
             }
         }
 
+        [PropertyDescription("Command to run following a successful word save (e.g. world backup .exe, .bat, or PowerShell script)")]
+        public string PostSaveCommandPath { get; set; } = string.Empty;
+
         public int MaxConnections
         {
             get => maxConnectionsSetting;

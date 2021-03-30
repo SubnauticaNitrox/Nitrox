@@ -1,12 +1,13 @@
-using System;
+﻿using System;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Text;
 using System.Timers;
 using NitroxModel.Logger;
-using NitroxServer.Serialization.World;
-using System.IO;
-using System.Text;
-using System.Linq;
-using NitroxServer.Serialization;
 using NitroxModel.Serialization;
+using NitroxServer.Serialization;
+using NitroxServer.Serialization.World;
 
 namespace NitroxServer
 {
@@ -69,7 +70,25 @@ namespace NitroxServer
 
             IsSaving = true;
             NitroxConfig.Serialize(serverConfig); // This is overwriting the config file => server has to be closed before making changes to it
-            worldPersistence.Save(world, serverConfig.SaveName);
+            if (worldPersistence.Save(world, serverConfig.SaveName))
+            {
+                try
+                {
+                    string postSaveCommandPathTrimmed = serverConfig.PostSaveCommandPath.Trim('"');
+
+                    // Call external tool for backups, etc
+                    if (!string.IsNullOrEmpty(postSaveCommandPathTrimmed) ||
+                        File.Exists(postSaveCommandPathTrimmed))
+                    {
+                        Process.Start(postSaveCommandPathTrimmed);
+                        Log.Info($"Post-save command completed successfully: {postSaveCommandPathTrimmed}");
+                    }
+                }
+                catch (Exception Ex)
+                {
+                    Log.Error($"Post-save command failed: {Ex.Message}");
+                }
+            }
             IsSaving = false;
         }
 
