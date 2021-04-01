@@ -1,4 +1,5 @@
-﻿using NitroxModel.DataStructures.GameLogic;
+﻿using System;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using UnityEngine;
@@ -8,7 +9,7 @@ namespace NitroxClient.GameLogic.Spawning
     public class ReefbackEntitySpawner : IEntitySpawner
     {
         private readonly DefaultEntitySpawner defaultSpawner;
-
+        private readonly bool aprilFools = DateTime.Today is { Month: 4, Day: 1 };
         public ReefbackEntitySpawner(DefaultEntitySpawner defaultSpawner)
         {
             this.defaultSpawner = defaultSpawner;
@@ -31,7 +32,10 @@ namespace NitroxClient.GameLogic.Spawning
             life.ReflectionCall("SpawnPlants");
             foreach (Entity childEntity in entity.ChildEntities)
             {
-                Optional<GameObject> child = defaultSpawner.Spawn(childEntity, reefback, cellRoot);
+
+                Entity reefEntity = aprilFools ? new Entity(childEntity.Transform.LocalPosition, childEntity.Transform.LocalRotation, childEntity.Transform.LocalScale, entity.TechType, entity.Level, entity.ClassId, childEntity.SpawnedByServer, childEntity.Id, childEntity.ExistingGameObjectChildIndex, entity.Transform.Parent.Entity) : childEntity;
+
+                Optional<GameObject> child = defaultSpawner.Spawn(reefEntity, reefback, cellRoot);
                 if (child.HasValue)
                 {
                     child.Value.AddComponent<ReefbackCreature>();
