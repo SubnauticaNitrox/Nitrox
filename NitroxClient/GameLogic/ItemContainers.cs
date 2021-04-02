@@ -26,7 +26,7 @@ namespace NitroxClient.GameLogic
         {
             NitroxId itemId = NitroxEntity.GetId(pickupable.gameObject);
             byte[] bytes = SerializationHelper.GetBytes(pickupable.gameObject);
-            NitroxId ownerId = GetOwner(containerTransform);
+            NitroxId ownerId = InventoryContainerHelper.GetOwnerId(containerTransform);
 
             ItemData itemData;
             Plantable plant = pickupable.GetComponent<Plantable>();
@@ -39,6 +39,7 @@ namespace NitroxClient.GameLogic
             {
                 itemData = new ItemData(ownerId, itemId, bytes);
             }
+
             if (packetSender.Send(new ItemContainerAdd(itemData)))
             {
                 Log.Debug($"Sent: Added item {pickupable.GetTechType()} to container {containerTransform.gameObject.GetHierarchyPath()}");
@@ -48,7 +49,7 @@ namespace NitroxClient.GameLogic
         public void BroadcastItemRemoval(Pickupable pickupable, Transform containerTransform)
         {
             NitroxId itemId = NitroxEntity.GetId(pickupable.gameObject);
-            if (packetSender.Send(new ItemContainerRemove(GetOwner(containerTransform), itemId)))
+            if (packetSender.Send(new ItemContainerRemove(InventoryContainerHelper.GetOwnerId(containerTransform), itemId)))
             {
                 Log.Debug($"Sent: Removed item {pickupable.GetTechType()} from container {containerTransform.gameObject.GetHierarchyPath()}");
             }
@@ -62,7 +63,7 @@ namespace NitroxClient.GameLogic
                 Log.Error($"Unable to find inventory container with id {containerId} for {item.name}");
                 return;
             }
-            Optional<ItemsContainer> opContainer = InventoryContainerHelper.GetBasedOnOwnersType(owner.Value);
+            Optional<ItemsContainer> opContainer = InventoryContainerHelper.TryGetContainerByOwner(owner.Value);
             if (!opContainer.HasValue)
             {
                 Log.Error($"Could not find container field on GameObject {owner.Value.GetHierarchyPath()}");
@@ -74,6 +75,7 @@ namespace NitroxClient.GameLogic
             using (packetSender.Suppress<ItemContainerAdd>())
             {
                 container.UnsafeAdd(new InventoryItem(pickupable));
+                Log.Debug($"Received: Added item {pickupable.GetTechType()} to container {owner.Value.GetHierarchyPath()}");
             }
         }
 
@@ -81,7 +83,7 @@ namespace NitroxClient.GameLogic
         {
             GameObject owner = NitroxEntity.RequireObjectFrom(ownerId);
             GameObject item = NitroxEntity.RequireObjectFrom(itemId);
-            Optional<ItemsContainer> opContainer = InventoryContainerHelper.GetBasedOnOwnersType(owner);
+            Optional<ItemsContainer> opContainer = InventoryContainerHelper.TryGetContainerByOwner(owner);
             if (!opContainer.HasValue)
             {
                 Log.Error($"Could not find item container behaviour on object {owner.GetHierarchyPath()} with id {ownerId}");
@@ -93,46 +95,8 @@ namespace NitroxClient.GameLogic
             using (packetSender.Suppress<ItemContainerRemove>())
             {
                 container.RemoveItem(pickupable, true);
+                Log.Debug($"Received: Removed item {pickupable.GetTechType()} to container {owner.GetHierarchyPath()}");
             }
-        }
-
-        public NitroxId GetCyclopsLockerId(Transform ownerTransform)
-        {
-            string LockerId = ownerTransform.gameObject.name.Substring(7, 1);
-            GameObject locker = ownerTransform.parent.gameObject.FindChild("submarine_locker_01_0" + LockerId);
-            if (!locker)
-            {
-                throw new Exception("Could not find Locker Object: submarine_locker_01_0" + LockerId);
-            }
-            StorageContainer storageContainer = locker.GetComponentInChildren<StorageContainer>();
-            if (!storageContainer)
-            {
-                throw new Exception($"Could not find {nameof(StorageContainer)} From Object: submarine_locker_01_0{LockerId}");
-            }
-
-            return NitroxEntity.GetId(storageContainer.gameObject);
-        }
-
-        public NitroxId GetEscapePodStorageId(Transform ownerTransform)
-        {
-            StorageContainer SC = ownerTransform.parent.gameObject.RequireComponentInChildren<StorageContainer>();
-            return NitroxEntity.GetId(SC.gameObject);
-        }
-
-        private NitroxId GetOwner(Transform ownerTransform)
-        {
-            bool isCyclopsLocker = Regex.IsMatch(ownerTransform.gameObject.name, @"Locker0([0-9])StorageRoot$", RegexOptions.IgnoreCase);
-            if (isCyclopsLocker)
-            {
-                return GetCyclopsLockerId(ownerTransform);
-            }
-            bool isEscapePodStorage = ownerTransform.parent.name.StartsWith("EscapePod");
-            if (isEscapePodStorage)
-            {
-                return GetEscapePodStorageId(ownerTransform);
-            }
-
-            return NitroxEntity.GetId(ownerTransform.parent.gameObject);
         }
     }
 }

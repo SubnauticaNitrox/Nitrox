@@ -20,7 +20,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return $"[EnergyMixinValueChanged: Id: {Id}, Value: {Value}";
+            return $"[EnergyMixinValueChanged: OwnerId: {Id}, Value: {Value}, BatteryId: {BatteryData.ItemId}";
         }
     }
 }

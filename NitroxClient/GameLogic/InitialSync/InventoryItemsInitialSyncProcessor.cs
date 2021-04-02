@@ -1,11 +1,14 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Containers;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.InitialSync.Base;
+using NitroxClient.MonoBehaviours;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
@@ -29,18 +32,22 @@ namespace NitroxClient.GameLogic.InitialSync
             DependentProcessors.Add(typeof(PlayerInitialSyncProcessor)); // The player has their own inventory.
             DependentProcessors.Add(typeof(VehicleInitialSyncProcessor)); // Vehicle can have an inventory.
             DependentProcessors.Add(typeof(EquippedItemInitialSyncProcessor)); // Vehicles can have equipped items that spawns container
+            DependentProcessors.Add(typeof(RemotePlayerInitialSyncProcessor)); // Remote players can have inventory items
         }
 
         public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
         {
             int totalItemDataSynced = 0;
 
+            HashSet<NitroxId> onlinePlayers = new HashSet<NitroxId> { packet.PlayerGameObjectId };
+            onlinePlayers.AddRange(packet.RemotePlayerData.Select(playerData => playerData.PlayerContext.PlayerNitroxId));
+
             using (packetSender.Suppress<ItemContainerAdd>())
             {
                 ItemGoalTracker itemGoalTracker = (ItemGoalTracker)typeof(ItemGoalTracker).GetField("main", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
                 Dictionary<TechType, List<ItemGoal>> goals = (Dictionary<TechType, List<ItemGoal>>)(typeof(ItemGoalTracker).GetField("goals", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(itemGoalTracker));
 
-                foreach (ItemData itemdata in packet.InventoryItems)
+                foreach (ItemData itemData in packet.InventoryItems)
                 {
                     waitScreenItem.SetProgress(totalItemDataSynced, packet.InventoryItems.Count);
 
@@ -52,31 +59,30 @@ namespace NitroxClient.GameLogic.InitialSync
                     }
                     catch (Exception ex)
                     {
-                        Log.Error(ex, $"Error deserializing item data. Id: {itemdata.ItemId}");
+                        Log.Error(ex, $"Error deserializing item data. Id: {itemData.ItemId}");
                         continue;
                     }
 
-                    Log.Debug($"Initial item data for {item.name} giving to container {itemdata.ContainerId}");
+                    Log.Debug($"Initial item data for {item.name} giving to container {itemData.ContainerId}");
 
                     Pickupable pickupable = item.GetComponent<Pickupable>();
 
-                    if (pickupable != null && itemdata.ContainerId == packet.PlayerGameObjectId)
+                    if (pickupable && itemData.ContainerId == packet.PlayerGameObjectId)
                     {
-                        goals.Remove(pickupable.GetTechType());  // Remove Notification Goal Event On Item Player Already have On Any Container
+                        goals.Remove(pickupable.GetTechType());  // Remove notification goal event from item player has in any container
 
                         ItemsContainer container = Inventory.Get().container;
-                        InventoryItem inventoryItem = new InventoryItem(pickupable);
-                        inventoryItem.container = container;
+                        InventoryItem inventoryItem = new InventoryItem(pickupable) { container = container };
                         inventoryItem.item.Reparent(container.tr);
 
                         container.UnsafeAdd(inventoryItem);
                     }
-                    else
+                    else if (onlinePlayers.Any(playerId => playerId.Equals(itemData.ContainerId)))
                     {
-                        itemContainers.AddItem(item, itemdata.ContainerId);
+                        itemContainers.AddItem(item, itemData.ContainerId);
 
                         ContainerAddItemPostProcessor postProcessor = ContainerAddItemPostProcessor.From(item);
-                        postProcessor.process(item, itemdata);
+                        postProcessor.process(item, itemData);
                     }
 
                     totalItemDataSynced++;

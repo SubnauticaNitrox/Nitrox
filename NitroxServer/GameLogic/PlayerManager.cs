@@ -7,19 +7,18 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
-using NitroxModel.Server;
 using NitroxServer.Communication.NetworkingLayer;
 using NitroxServer.Serialization;
 
 namespace NitroxServer.GameLogic
 {
-    // TODO: These methods a a little chunky. Need to look at refactoring just to clean them up and get them around 30 lines a piece.
+    // TODO: These methods are a little chunky. Need to look at refactoring just to clean them up and get them around 30 lines a piece.
     public class PlayerManager
     {
         private readonly ThreadSafeDictionary<string, Player> allPlayersByName;
         private readonly ThreadSafeDictionary<NitroxConnection, ConnectionAssets> assetsByConnection = new();
         private readonly ThreadSafeDictionary<string, PlayerContext> reservations = new();
-        private readonly ThreadSafeCollection<string> reservedPlayerNames = new(new HashSet<string>());
+        private readonly ThreadSafeCollection<string> reservedPlayerNames = new ThreadSafeCollection<string>(new HashSet<string> { "Player" }); // "Player" is often used to identify the local player and should not be used by any user
 
         private readonly ServerConfig serverConfig;
         private ushort currentPlayerId;
@@ -48,8 +47,6 @@ namespace NitroxServer.GameLogic
             AuthenticationContext authenticationContext,
             string correlationId)
         {
-            // TODO: ServerPassword in NitroxClient
-
             if (!string.IsNullOrEmpty(serverConfig.ServerPassword) && (!authenticationContext.ServerPassword.HasValue || authenticationContext.ServerPassword.Value != serverConfig.ServerPassword))
             {
                 MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.AUTHENTICATION_FAILED;
@@ -87,8 +84,9 @@ namespace NitroxServer.GameLogic
 
             bool hasSeenPlayerBefore = player != null;
             ushort playerId = hasSeenPlayerBefore ? player.Id : ++currentPlayerId;
+            NitroxId playerNitroxId = hasSeenPlayerBefore ? player.GameObjectId : new NitroxId();
 
-            PlayerContext playerContext = new PlayerContext(playerName, playerId, !hasSeenPlayerBefore, playerSettings);
+            PlayerContext playerContext = new PlayerContext(playerName, playerId, playerNitroxId, !hasSeenPlayerBefore, playerSettings);
             string reservationKey = Guid.NewGuid().ToString();
 
             reservations.Add(reservationKey, playerContext);
@@ -114,7 +112,7 @@ namespace NitroxServer.GameLogic
                     playerContext,
                     connection,
                     NitroxVector3.Zero,
-                    new NitroxId(),
+                    playerContext.PlayerNitroxId,
                     Optional.Empty,
                     serverConfig.DefaultPlayerPerm,
                     serverConfig.DefaultPlayerStats,

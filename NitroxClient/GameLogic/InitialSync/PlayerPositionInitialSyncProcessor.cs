@@ -47,26 +47,27 @@ namespace NitroxClient.GameLogic.InitialSync
             {
                 yield break;
             }
+
             Optional<GameObject> sub = NitroxEntity.GetObjectFrom(subRootId.Value);
             if (!sub.HasValue)
             {
                 Log.Error("Could not spawn player into subroot with id: " + subRootId.Value);
                 yield break;
             }
-            SubRoot root = sub.Value.GetComponent<SubRoot>();
-            if (root == null)
+
+            if (!sub.Value.TryGetComponent(out SubRoot subRoot))
             {
-                Log.Error("Could not find subroot for player for subroot with id: " + subRootId.Value);
+                Log.Debug("SubRootId-GameObject has no SubRoot component, so it's assumed to be the EscapePod");
                 yield break;
             }
 
             // If player is not swimming
-            Player.main.SetCurrentSub(root);
-            if (root.isBase)
+            Player.main.SetCurrentSub(subRoot);
+            if (subRoot.isBase)
             {
                 yield break;
             }
-            Transform rootTransform = root.transform;
+            Transform rootTransform = subRoot.transform;
             Quaternion vehicleAngle = rootTransform.rotation;
             position = vehicleAngle * position;
             position = position + rootTransform.position;

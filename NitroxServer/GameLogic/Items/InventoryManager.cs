@@ -19,13 +19,13 @@ namespace NitroxServer.GameLogic.Items
             modulesByContainerId = new ThreadSafeDictionary<NitroxId, EquippedItemData>(modules.ToDictionary(module => module.ContainerId), false);
         }
 
-        public void ItemAdded(ItemData itemData)
+        public void InventoryItemAdded(ItemData itemData)
         {
             inventoryItemsById[itemData.ItemId] = itemData;
             Log.Debug($"Received inventory item {itemData.ItemId} to container {itemData.ContainerId}. Total items: {inventoryItemsById.Count}");
         }
 
-        public void ItemRemoved(NitroxId itemId)
+        public void InventoryItemRemoved(NitroxId itemId)
         {
             inventoryItemsById.Remove(itemId);
         }

@@ -28,12 +28,10 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(PlayerJoiningMultiplayerSession packet, NitroxConnection connection)
         {
-            bool wasBrandNewPlayer;
-            Player player = playerManager.PlayerConnected(connection, packet.ReservationKey, out wasBrandNewPlayer);
+            Player player = playerManager.PlayerConnected(connection, packet.ReservationKey, out bool wasBrandNewPlayer);
             timeKeeper.SendCurrentTimePacket(player);
 
-            Optional<EscapePodModel> newlyCreatedEscapePod;
-            NitroxId assignedEscapePodId = world.EscapePodManager.AssignPlayerToEscapePod(player.Id, out newlyCreatedEscapePod);
+            NitroxId assignedEscapePodId = world.EscapePodManager.AssignPlayerToEscapePod(player.Id, out Optional<EscapePodModel> newlyCreatedEscapePod);
             if (newlyCreatedEscapePod.HasValue)
             {
                 AddEscapePod addEscapePod = new AddEscapePod(newlyCreatedEscapePod.Value);
@@ -42,8 +40,9 @@ namespace NitroxServer.Communication.Packets.Processors
 
             List<EquippedItemData> equippedItems = player.GetEquipment();
             List<NitroxTechType> techTypes = equippedItems.Select(equippedItem => equippedItem.TechType).ToList();
+            List<ItemData> inventoryItems = GetInventoryItems(player.GameObjectId);
 
-            PlayerJoinedMultiplayerSession playerJoinedPacket = new PlayerJoinedMultiplayerSession(player.PlayerContext, techTypes);
+            PlayerJoinedMultiplayerSession playerJoinedPacket = new PlayerJoinedMultiplayerSession(player.PlayerContext, player.SubRootId, techTypes, inventoryItems);
             playerManager.SendPacketToOtherPlayers(playerJoinedPacket, player);
 
             // Make players on localhost admin by default.
@@ -54,7 +53,7 @@ namespace NitroxServer.Communication.Packets.Processors
 
             List<NitroxId> simulations = world.EntitySimulation.AssignGlobalRootEntities(player).ToList();
             IEnumerable<VehicleModel> vehicles = world.VehicleManager.GetVehicles();
-            foreach(VehicleModel vehicle in vehicles)
+            foreach (VehicleModel vehicle in vehicles)
             {
                 if (world.SimulationOwnershipData.TryToAcquire(vehicle.Id, player, SimulationLockType.TRANSIENT))
                 {
@@ -111,6 +110,18 @@ namespace NitroxServer.Communication.Packets.Processors
             modulesToSync.AddRange(globalModules);
             modulesToSync.AddRange(playerModules);
             return modulesToSync;
+        }
+
+        private List<ItemData> GetInventoryItems(NitroxId playerID)
+        {
+            List<ItemData> inventoryItems = world.InventoryManager.GetAllInventoryItems().Where(item => item.ContainerId.Equals(playerID)).ToList();
+
+            for (int index = 0; index < inventoryItems.Count; index++) //Also add batteries from tools to inventory items.
+            {
+                inventoryItems.AddRange(world.InventoryManager.GetAllStorageSlotItems().Where(item => item.ContainerId.Equals(inventoryItems[index].ItemId)).ToList());
+            }
+
+            return inventoryItems;
         }
     }
 }

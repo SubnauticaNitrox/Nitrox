@@ -36,13 +36,13 @@ namespace NitroxClient.GameLogic.PlayerModel.ColorSwap
 
                 finFilter.SwapColors(texturePixels);
 
-                operation.UpdateIndex(FINS_INDEX_EY, texturePixels);
+                operation.UpdateIndex(FINS_INDEX_KEY, texturePixels);
             };
         }
 
         public void ApplyPlayerColor(Dictionary<string, Color[]> pixelIndex, INitroxPlayer nitroxPlayer)
         {
-            Color[] pixels = pixelIndex[FINS_INDEX_EY];
+            Color[] pixels = pixelIndex[FINS_INDEX_KEY];
 
             GameObject playerModel = nitroxPlayer.PlayerModel;
 

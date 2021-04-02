@@ -1,12 +1,17 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerModel.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
+using NitroxModel.Core;
+using NitroxModel.DataStructures;
 using NitroxModel.Helper;
+using NitroxModel.Logger;
 using NitroxModel.MultiplayerSession;
+using NitroxModel.Packets;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -23,6 +28,7 @@ namespace NitroxClient.GameLogic
         public Rigidbody RigidBody { get; }
         public ArmsController ArmsController { get; }
         public AnimationController AnimationController { get; }
+        public ItemsContainer Inventory { get; }
 
         public ushort PlayerId => PlayerContext.PlayerId;
         public string PlayerName => PlayerContext.PlayerName;
@@ -33,7 +39,7 @@ namespace NitroxClient.GameLogic
         public EscapePod EscapePod { get; private set; }
         public PilotingChair PilotingChair { get; private set; }
 
-        public RemotePlayer(GameObject playerBody, PlayerContext playerContext, List<TechType> equippedTechTypes, PlayerModelManager playerModelManager)
+        public RemotePlayer(GameObject playerBody, PlayerContext playerContext, List<TechType> equippedTechTypes, List<Pickupable> inventoryItems, PlayerModelManager playerModelManager)
         {
             Body = playerBody;
             PlayerContext = playerContext;
@@ -46,6 +52,8 @@ namespace NitroxClient.GameLogic
             RigidBody = Body.AddComponent<Rigidbody>();
             RigidBody.useGravity = false;
 
+            NitroxEntity.SetNewId(Body, playerContext.PlayerNitroxId);
+
             // Get player
             PlayerModel = Body.RequireGameObject("player_view");
 
@@ -56,9 +64,19 @@ namespace NitroxClient.GameLogic
 
             AnimationController = PlayerModel.AddComponent<AnimationController>();
 
+            Transform inventory = new GameObject("Inventory").transform;
+            inventory.SetParent(Body.transform);
+            Inventory = new ItemsContainer(6, 8, inventory, "NitroxInventoryStorage_" + PlayerName, null);
+            foreach (Pickupable item in inventoryItems)
+            {
+                Inventory.UnsafeAdd(new InventoryItem(item));
+                Log.Debug($"Added {item.name} to {playerContext.PlayerName}.");
+            }
+
             playerModelManager.AttachPing(this);
             playerModelManager.BeginApplyPlayerColor(this);
 
+            this.playerModelManager.BeginUpdateEquipmentVisibility(Inventory, PlayerModel);
             UpdateEquipmentVisibility();
 
             ErrorMessage.AddMessage($"{PlayerName} joined the game.");
@@ -73,7 +91,7 @@ namespace NitroxClient.GameLogic
 
         public void Attach(Transform transform, bool keepWorldTransform = false)
         {
-            Body.transform.parent = transform;
+            Body.transform.SetParent(transform);
 
             if (!keepWorldTransform)
             {
@@ -210,6 +228,7 @@ namespace NitroxClient.GameLogic
         public void Destroy()
         {
             ErrorMessage.AddMessage($"{PlayerName} left the game.");
+            NitroxEntity.RemoveFrom(Body);
             Object.DestroyImmediate(Body);
         }
 
@@ -243,9 +262,7 @@ namespace NitroxClient.GameLogic
 
         private void UpdateEquipmentVisibility()
         {
-            ReadOnlyCollection<TechType> currentEquipment = new ReadOnlyCollection<TechType>(equipment.ToList());
-
-            playerModelManager.UpdateEquipmentVisibility(PlayerModel, currentEquipment);
+            playerModelManager.UpdateEquipmentVisibility(new ReadOnlyCollection<TechType>(equipment.ToList()));
         }
     }
 }

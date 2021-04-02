@@ -83,7 +83,7 @@
     <Compile Include="DataStructures\GameLogic\NitroxTransform.cs" />
     <Compile Include="DataStructures\GameLogic\NitroxVector4.cs" />
     <Compile Include="DataStructures\GameLogic\PDAEntry.cs" />
-    <Compile Include="DataStructures\GameLogic\ItemEquipment.cs" />
+    <Compile Include="DataStructures\GameLogic\EquippedItemData.cs" />
     <Compile Include="DataStructures\GameLogic\Entity.cs" />
     <Compile Include="DataStructures\GameLogic\EscapePodModel.cs" />
     <Compile Include="DataStructures\GameLogic\InteractiveChildObjectIdentifier.cs" />
