@@ -16,11 +16,11 @@ namespace NitroxServer.ConsoleCommands
 
         public KickCommand(PlayerManager playerManager, EntitySimulation entitySimulation) : base("kick", Perms.ADMIN, "Kicks a player from the server", true)
         {
-            this.playerManager = playerManager;
-            this.entitySimulation = entitySimulation;
-
             AddParameter(new TypePlayer("name", true));
             AddParameter(new TypeString("reason", false));
+
+            this.playerManager = playerManager;
+            this.entitySimulation = entitySimulation;
         }
 
         protected override void Execute(CallArgs args)
@@ -33,7 +33,7 @@ namespace NitroxServer.ConsoleCommands
             List<SimulatedEntity> revokedEntities = entitySimulation.CalculateSimulationChangesFromPlayerDisconnect(playerToKick);
             if (revokedEntities.Count > 0)
             {
-                SimulationOwnershipChange ownershipChange = new SimulationOwnershipChange(revokedEntities);
+                SimulationOwnershipChange ownershipChange = new(revokedEntities);
                 playerManager.SendPacketToAllPlayers(ownershipChange);
             }
 

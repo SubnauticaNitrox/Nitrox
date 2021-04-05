@@ -32,7 +32,6 @@ namespace NitroxServer.ConsoleCommands
             string fileEnding = worldPersistence.SaveDataSerializer.GetFileEnding();
             SaveFileVersion saveFileVersion = worldPersistence.SaveDataSerializer.Deserialize<SaveFileVersion>(Path.Combine(saveDir, "Version" + fileEnding));
 
-
             if (saveFileVersion.Version == NitroxEnvironment.Version)
             {
                 SendMessage(args.Sender, "Save files are already at the newest version");

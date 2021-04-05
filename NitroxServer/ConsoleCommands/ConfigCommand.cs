@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,9 +14,9 @@ using NitroxServer.Serialization;
 
 namespace NitroxServer.ConsoleCommands
 {
-    internal sealed class ConfigCommand : Command
+    internal class ConfigCommand : Command
     {
-        private readonly SemaphoreSlim configOpenLock = new SemaphoreSlim(1);
+        private readonly SemaphoreSlim configOpenLock = new(1);
 
         public ConfigCommand() : base("config", Perms.CONSOLE, "Opens the server configuration file")
         {

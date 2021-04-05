@@ -18,16 +18,9 @@ namespace NitroxServer.ConsoleCommands
         protected override void Execute(CallArgs args)
         {
             Player foundPlayer = args.Get<Player>(0);
+            string message = $"[{args.SenderName} -> YOU]: {args.GetTillEnd(1)}";
 
-            if (foundPlayer != null)
-            {
-                string message = $"[{args.SenderName} -> YOU]: {args.GetTillEnd(1)}";
-                SendMessageToPlayer(foundPlayer, message);
-            }
-            else
-            {
-                SendMessage(args.Sender, "Unable to whisper, player not found.");
-            }
+            SendMessageToPlayer(foundPlayer, message);
         }
     }
 }

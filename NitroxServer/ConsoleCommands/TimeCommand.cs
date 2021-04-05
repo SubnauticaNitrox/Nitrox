@@ -17,7 +17,7 @@ namespace NitroxServer.ConsoleCommands
 
         protected override void Execute(CallArgs args)
         {
-            string time = args.Get(0);
+            string time = args.Get<string>(0);
 
             switch (time?.ToLower())
             {

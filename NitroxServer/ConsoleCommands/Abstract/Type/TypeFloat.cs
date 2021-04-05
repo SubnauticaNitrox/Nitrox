@@ -8,7 +8,7 @@ namespace NitroxServer.ConsoleCommands.Abstract.Type
 
         public override bool IsValid(string arg)
         {
-            return float.TryParse(arg, out float value);
+            return float.TryParse(arg, out _);
         }
 
         public override float? Read(string arg)

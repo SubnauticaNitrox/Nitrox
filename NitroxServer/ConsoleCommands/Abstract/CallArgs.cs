@@ -41,7 +41,6 @@ namespace NitroxServer.ConsoleCommands.Abstract
                 return Get<string>(index);
             }
 
-            //TODO: Remove ability to use indexes and use an internal counter instead
             public T Get<T>(int index)
             {
                 IParameter<object> param = Command.Parameters[index];

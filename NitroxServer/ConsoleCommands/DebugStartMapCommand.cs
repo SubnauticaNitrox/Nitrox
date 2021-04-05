@@ -1,7 +1,5 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Helper;
 using NitroxServer.ConsoleCommands.Abstract;
-using NitroxModel.DataStructures;
 using NitroxServer.Serialization.World;
 using System.Collections.Generic;
 using NitroxServer.GameLogic;
@@ -11,8 +9,8 @@ namespace NitroxServer.ConsoleCommands
 {
     internal class DebugStartMapCommand : Command
     {
-        private readonly PlayerManager playerManager;
         private readonly RandomStartGenerator nitroxRandomStart;
+        private readonly PlayerManager playerManager;
         private readonly World world;
 
         public DebugStartMapCommand(PlayerManager playerManager, RandomStartGenerator nitroxRandomStart, World world) : base("debugstartmap", Perms.CONSOLE, "warning: spawns blocks")

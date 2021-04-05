@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Net;
@@ -44,6 +45,8 @@ namespace NitroxServer_Subnautica
             Server server;
             try
             {
+                Stopwatch watch = Stopwatch.StartNew();
+
                 // Allow game path to be given as command argument
                 if (args.Length > 0 && Directory.Exists(args[0]) && File.Exists(Path.Combine(args[0], "Subnautica.exe")))
                 {
@@ -73,7 +76,10 @@ namespace NitroxServer_Subnautica
                 {
                     throw new Exception("Unable to start server.");
                 }
-                Log.Info("Server is waiting for players!");
+                watch.Stop();
+
+                Log.Info($"Server started ({Math.Round(watch.Elapsed.TotalSeconds, 1)}s)");
+                Log.Info("To get help for commands, run help in console or /help in chatbox");
 
                 CatchExitEvent();
             }
@@ -83,7 +89,6 @@ namespace NitroxServer_Subnautica
                 AppMutex.Release();
             }
 
-            Log.Info("To get help for commands, run help in console or /help in chatbox");
             ConsoleCommandProcessor cmdProcessor = NitroxServiceLocator.LocateService<ConsoleCommandProcessor>();
             while (server.IsRunning)
             {

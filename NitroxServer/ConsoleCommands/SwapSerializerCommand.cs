@@ -7,13 +7,13 @@ using NitroxServer.Serialization.World;
 
 namespace NitroxServer.ConsoleCommands
 {
-    internal sealed class SwapSerializerCommand : Command
+    internal class SwapSerializerCommand : Command
     {
-        private readonly WorldPersistence worldPersistence;
         private readonly ServerProtoBufSerializer protoBufSerializer;
         private readonly ServerJsonSerializer jsonSerializer;
+        private readonly WorldPersistence worldPersistence;
 
-        public SwapSerializerCommand(WorldPersistence worldPersistence, ServerProtoBufSerializer protoBufSerializer, ServerJsonSerializer jsonSerializer) : base("swapSerializer", Perms.CONSOLE, "Swaps the world data serializer")
+        public SwapSerializerCommand(WorldPersistence worldPersistence, ServerProtoBufSerializer protoBufSerializer, ServerJsonSerializer jsonSerializer) : base("swapserializer", Perms.CONSOLE, "Swaps the save format")
         {
             this.worldPersistence = worldPersistence;
             this.protoBufSerializer = protoBufSerializer;
