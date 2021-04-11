@@ -1,5 +1,6 @@
-using System;
+﻿using System;
 using NitroxClient.Communication.Abstract;
+using NitroxClient.GameLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerModel.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
@@ -91,6 +92,11 @@ namespace NitroxClient.GameLogic
             packetSender.Send(packet);
         }
 
+        public void BroadcastHeldItemChanged(NitroxId itemId, PlayerHeldItemChangedType techType)
+        {
+            packetSender.Send(new PlayerHeldItemChanged(multiplayerSession.Reservation.PlayerId, itemId, techType));
+        }
+
         private GameObject CreateBodyPrototype()
         {
             GameObject prototype = Body;
@@ -110,7 +116,6 @@ namespace NitroxClient.GameLogic
                 {
                     using (packetSender.Suppress<ItemContainerRemove>())
                     {
-                        Log.Debug("Destroyed : " + child.gameObject.GetHierarchyPath());
                         Object.DestroyImmediate(child.gameObject);
                     }
                 }

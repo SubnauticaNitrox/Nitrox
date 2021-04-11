@@ -22,7 +22,6 @@ namespace NitroxClient.GameLogic.PlayerModel
 
         private GameObject SignalBasePrototype => signalBasePrototype.Value;
         private List<IEquipmentVisibilityHandler> equipmentVisibilityHandlers;
-        private ItemVisibilityHandler itemVisibilityHandler;
 
         public PlayerModelManager(IEnumerable<IColorSwapManager> colorSwapManagers)
         {
@@ -54,7 +53,6 @@ namespace NitroxClient.GameLogic.PlayerModel
                 new ReinforcedSuitVisibilityHandler(playerModel),
                 new StillSuitVisibilityHandler(playerModel)
             };
-            itemVisibilityHandler = new ItemVisibilityHandler(inventory, playerModel);
         }
 
         public void UpdateEquipmentVisibility(ReadOnlyCollection<TechType> currentEquipment)
@@ -63,7 +61,6 @@ namespace NitroxClient.GameLogic.PlayerModel
             {
                 equipmentVisibilityHandler.UpdateEquipmentVisibility(currentEquipment);
             }
-        }
         }
 
         public void AttachPing(INitroxPlayer player)
