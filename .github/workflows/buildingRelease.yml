@@ -1,5 +1,8 @@
 name: Building Nitrox Release
-on: push
+on: 
+  push:
+    paths-ignore:
+      - '**/PirateDetection.cs'
 jobs:
   build:
     runs-on: windows-latest
