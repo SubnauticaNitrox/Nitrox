@@ -1,34 +1,31 @@
 ﻿using System.IO;
 
-namespace NitroxLauncher.Patching
+namespace NitroxModel.Discovery
 {
     public class PlatformDetection
     {
-        public static bool IsEpic(string subnauticaPath)
-        {
 
+        public static Platform GetPlatform(string subnauticaPath)
+        {
             if (Directory.Exists(Path.Combine(subnauticaPath, ".egstore")))
             {
-                return true;
+                if (Directory.GetFiles(Path.Combine(subnauticaPath, ".egstore")).Length > 0)
+                {
+                    return Platform.EPIC;
+                }
             }
-            return false;
-        }
 
-        public static bool IsSteam(string subnauticaPath)
-        {
             if (File.Exists(Path.Combine(subnauticaPath, "Subnautica_Data", "Plugins", "CSteamworks.dll")))
             {
-                return true;
+                return Platform.STEAM;
             }
-            return false;
-        }
-        public static bool IsMicrosoftStore(string subnauticaPath)
-        {
+
             if (File.Exists(Path.Combine(subnauticaPath, "appxmanifest.xml")))
             {
-                return true;
+                return Platform.MICROSOFT;
             }
-            return false;
+
+            return Platform.NONE;
         }
     }
 }

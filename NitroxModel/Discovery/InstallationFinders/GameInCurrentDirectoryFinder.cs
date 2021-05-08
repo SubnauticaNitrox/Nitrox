@@ -5,7 +5,7 @@ namespace NitroxModel.Discovery.InstallationFinders
 {
     public class GameInCurrentDirectoryFinder : IFindGameInstallation
     {
-        public string FindGame(List<string> errors = null)
+        public string FindGame(IList<string> errors = null)
         {
             string currentDirectory = Directory.GetCurrentDirectory();
             if (File.Exists(Path.Combine(currentDirectory, "Subnautica.exe")))
