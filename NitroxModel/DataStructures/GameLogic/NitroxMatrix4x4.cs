@@ -383,6 +383,16 @@ namespace NitroxModel.DataStructures.GameLogic
             return result;
         }
 
+        public static bool operator ==(NitroxMatrix4x4 left, NitroxMatrix4x4 right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(NitroxMatrix4x4 left, NitroxMatrix4x4 right)
+        {
+            return !(left == right);
+        }
+
         public NitroxVector3 MultiplyPoint(NitroxVector3 localPosition)
         {
             float x = M11 * localPosition.X + M12 * localPosition.Y + M13 * localPosition.Z + M14;
@@ -487,6 +497,73 @@ namespace NitroxModel.DataStructures.GameLogic
             localPosition = ExtractTranslation(ref matrix);
 
             matrix = before;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is NitroxMatrix4x4 x &&
+                   M11 == x.M11 &&
+                   M12 == x.M12 &&
+                   M13 == x.M13 &&
+                   M14 == x.M14 &&
+                   M21 == x.M21 &&
+                   M22 == x.M22 &&
+                   M23 == x.M23 &&
+                   M24 == x.M24 &&
+                   M31 == x.M31 &&
+                   M32 == x.M32 &&
+                   M33 == x.M33 &&
+                   M34 == x.M34 &&
+                   M41 == x.M41 &&
+                   M42 == x.M42 &&
+                   M43 == x.M43 &&
+                   M44 == x.M44;
+        }
+
+        public bool Equals(object obj, float tolerance)
+        {
+            return obj is NitroxMatrix4x4 x &&
+                   (M11 == x.M11 || x.M11 >= M11 - tolerance && x.M11 <= M11 + tolerance) &&
+                   (M12 == x.M12 || x.M12 >= M12 - tolerance && x.M12 <= M12 + tolerance) &&
+                   (M13 == x.M13 || x.M13 >= M13 - tolerance && x.M13 <= M13 + tolerance) &&
+                   (M14 == x.M14 || x.M14 >= M14 - tolerance && x.M14 <= M14 + tolerance) &&
+                   (M21 == x.M21 || x.M21 >= M21 - tolerance && x.M21 <= M21 + tolerance) &&
+                   (M22 == x.M22 || x.M22 >= M22 - tolerance && x.M22 <= M22 + tolerance) &&
+                   (M23 == x.M23 || x.M23 >= M23 - tolerance && x.M23 <= M23 + tolerance) &&
+                   (M24 == x.M24 || x.M24 >= M24 - tolerance && x.M24 <= M24 + tolerance) &&
+                   (M31 == x.M31 || x.M31 >= M31 - tolerance && x.M31 <= M31 + tolerance) &&
+                   (M32 == x.M32 || x.M32 >= M32 - tolerance && x.M32 <= M32 + tolerance) &&
+                   (M33 == x.M33 || x.M33 >= M33 - tolerance && x.M33 <= M33 + tolerance) &&
+                   (M34 == x.M34 || x.M34 >= M34 - tolerance && x.M34 <= M34 + tolerance) &&
+                   (M41 == x.M41 || x.M41 >= M41 - tolerance && x.M41 <= M41 + tolerance) &&
+                   (M42 == x.M42 || x.M42 >= M42 - tolerance && x.M42 <= M42 + tolerance) &&
+                   (M43 == x.M43 || x.M43 >= M43 - tolerance && x.M43 <= M43 + tolerance) &&
+                   (M44 == x.M44 || x.M44 >= M44 - tolerance && x.M44 <= M44 + tolerance);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = -1955208504;
+                hashCode = hashCode * -1521134295 + M11.GetHashCode();
+                hashCode = hashCode * -1521134295 + M12.GetHashCode();
+                hashCode = hashCode * -1521134295 + M13.GetHashCode();
+                hashCode = hashCode * -1521134295 + M14.GetHashCode();
+                hashCode = hashCode * -1521134295 + M21.GetHashCode();
+                hashCode = hashCode * -1521134295 + M22.GetHashCode();
+                hashCode = hashCode * -1521134295 + M23.GetHashCode();
+                hashCode = hashCode * -1521134295 + M24.GetHashCode();
+                hashCode = hashCode * -1521134295 + M31.GetHashCode();
+                hashCode = hashCode * -1521134295 + M32.GetHashCode();
+                hashCode = hashCode * -1521134295 + M33.GetHashCode();
+                hashCode = hashCode * -1521134295 + M34.GetHashCode();
+                hashCode = hashCode * -1521134295 + M41.GetHashCode();
+                hashCode = hashCode * -1521134295 + M42.GetHashCode();
+                hashCode = hashCode * -1521134295 + M43.GetHashCode();
+                hashCode = hashCode * -1521134295 + M44.GetHashCode();
+                return hashCode;
+            }
         }
     }
 }

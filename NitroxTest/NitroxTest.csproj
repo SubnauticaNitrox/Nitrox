@@ -53,6 +53,7 @@
     <Compile Include="Core\DependencyInjectionTests.cs" />
     <Compile Include="DataStructures\NitroxInt3Test.cs" />
     <Compile Include="DataStructures\ThreadSafeCollectionTest.cs" />
+    <Compile Include="DataStructures\NitroxMatrix4x4Test.cs" />
     <Compile Include="Model\OptionalTest.cs" />
     <Compile Include="Model\PacketProcessorTest.cs" />
     <Compile Include="Model\Packets\PacketsSerializableTest.cs" />
@@ -122,7 +123,7 @@
     </PackageReference>
     <PackageReference Include="MSTest.TestAdapter">
       <Version>2.1.2</Version>
-	  <GeneratePathProperty>true</GeneratePathProperty>
+      <GeneratePathProperty>true</GeneratePathProperty>
     </PackageReference>
     <PackageReference Include="MSTest.TestFramework">
       <Version>2.1.2</Version>
