@@ -10,8 +10,7 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     class Bench_ExitSittingMode_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(Bench);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("ExitSittingMode", BindingFlags.NonPublic | BindingFlags.Instance);
+        public static readonly MethodInfo TARGET_METHOD = typeof(Bench).GetMethod("ExitSittingMode", BindingFlags.NonPublic | BindingFlags.Instance);
 
         public static void Postfix(Bench __instance)
         {
