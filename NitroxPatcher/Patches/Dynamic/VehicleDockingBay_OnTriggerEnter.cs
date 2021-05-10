@@ -28,7 +28,7 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             Vehicle interpolatingVehicle = (Vehicle)__instance.ReflectionGet("interpolatingVehicle");
             // Only send data, when interpolatingVehicle changes to avoid multiple packages send
-            if (interpolatingVehicle == null || interpolatingVehicle == prevInterpolatingVehicle)
+            if (!interpolatingVehicle || interpolatingVehicle == prevInterpolatingVehicle)
             {
                 return;
             }
