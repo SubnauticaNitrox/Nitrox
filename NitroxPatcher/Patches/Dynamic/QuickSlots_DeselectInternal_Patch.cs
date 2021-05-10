@@ -15,12 +15,13 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Prefix(InventoryItem ____heldItem)
         {
-            if (____heldItem != null)
+            if (____heldItem != null && ____heldItem.item) //____heldItem.item can be null on game quitting
             {
                 Pickupable pickupable = ____heldItem.item;
                 NitroxId itemId = NitroxEntity.GetId(pickupable.gameObject);
                 PlayerTool component = pickupable.GetComponent<PlayerTool>();
-                player.BroadcastHeldItemChanged(itemId, component ? PlayerHeldItemChangedType.HOLSTER_AS_TOOL : PlayerHeldItemChangedType.HOLSTER_AS_ITEM);
+                PlayerHeldItemChangedType type = component ? PlayerHeldItemChangedType.HOLSTER_AS_TOOL : PlayerHeldItemChangedType.HOLSTER_AS_ITEM;
+                player.BroadcastHeldItemChanged(itemId, type, null);
             }
         }
 

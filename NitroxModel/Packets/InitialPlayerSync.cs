@@ -19,6 +19,8 @@ namespace NitroxModel.Packets
         public List<VehicleModel> Vehicles { get; }
         public List<ItemData> InventoryItems { get; }
         public List<ItemData> StorageSlotItems { get; }
+        public List<NitroxTechType> UsedItems { get; }
+        public string[] QuickSlotsBinding { get; }
         public NitroxId PlayerGameObjectId { get; }
         public bool FirstTimeConnecting { get; }
         public InitialPDAData PDAData { get; }
@@ -42,6 +44,8 @@ namespace NitroxModel.Packets
             IEnumerable<VehicleModel> vehicles,
             IEnumerable<ItemData> inventoryItems,
             IEnumerable<ItemData> storageSlotItems,
+            IEnumerable<NitroxTechType> usedItems,
+            string[] quickSlotsBinding,
             InitialPDAData pdaData,
             InitialStoryGoalData storyGoalData,
             NitroxVector3 playerSpawnData,
@@ -63,6 +67,8 @@ namespace NitroxModel.Packets
             Vehicles = vehicles.ToList();
             InventoryItems = inventoryItems.ToList();
             StorageSlotItems = storageSlotItems.ToList();
+            UsedItems = usedItems.ToList();
+            QuickSlotsBinding = quickSlotsBinding;
             PDAData = pdaData;
             StoryGoalData = storyGoalData;
             PlayerSpawnData = playerSpawnData;

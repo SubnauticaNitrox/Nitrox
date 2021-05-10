@@ -71,6 +71,8 @@ namespace NitroxServer.Communication.Packets.Processors
                 vehicles,
                 world.InventoryManager.GetAllInventoryItems(),
                 world.InventoryManager.GetAllStorageSlotItems(),
+                player.usedItems,
+                player.quickSlotsBinding.ToArray(),
                 world.GameData.PDAState.GetInitialPDAData(),
                 world.GameData.StoryGoals.GetInitialStoryGoalData(),
                 player.Position,

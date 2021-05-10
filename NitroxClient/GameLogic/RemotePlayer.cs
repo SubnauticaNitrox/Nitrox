@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using NitroxClient.GameLogic.PlayerModel;
@@ -9,6 +9,7 @@ using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.MultiplayerSession;
 using UnityEngine;
+using UWE;
 using Object = UnityEngine.Object;
 
 namespace NitroxClient.GameLogic
@@ -58,6 +59,9 @@ namespace NitroxClient.GameLogic
             ArmsController = PlayerModel.GetComponent<ArmsController>();
             ArmsController.smoothSpeedUnderWater = 0;
             ArmsController.smoothSpeedAboveWater = 0;
+
+            // ConditionRules has Player.Main based conditions from ArmsController
+            PlayerModel.GetComponent<ConditionRules>().enabled = false;
 
             AnimationController = PlayerModel.AddComponent<AnimationController>();
 

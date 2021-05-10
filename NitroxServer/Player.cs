@@ -15,6 +15,9 @@ namespace NitroxServer
         private readonly ThreadSafeCollection<EquippedItemData> modules;
         private readonly ThreadSafeCollection<AbsoluteEntityCell> visibleCells;
 
+        public ThreadSafeCollection<NitroxTechType> usedItems { get; }
+        public ThreadSafeCollection<string> quickSlotsBinding { get; set; }
+
         public NitroxConnection connection { get; set; }
         public PlayerSettings PlayerSettings => PlayerContext.PlayerSettings;
         public PlayerContext PlayerContext { get; set; }
@@ -31,6 +34,7 @@ namespace NitroxServer
 
         public Player(ushort id, string name, bool isPermaDeath, PlayerContext playerContext, NitroxConnection connection,
                       NitroxVector3 position, NitroxId playerId, Optional<NitroxId> subRootId, Perms perms, PlayerStatsData stats,
+                      IEnumerable<NitroxTechType> usedItems, string[] quickSlotsBinding,
                       IEnumerable<EquippedItemData> equippedItems, IEnumerable<EquippedItemData> modules)
         {
             Id = id;
@@ -45,6 +49,8 @@ namespace NitroxServer
             Stats = stats;
             LastStoredPosition = null;
             LastStoredSubRootID = Optional.Empty;
+            this.usedItems = new ThreadSafeCollection<NitroxTechType>(usedItems);
+            this.quickSlotsBinding = new ThreadSafeCollection<string>(quickSlotsBinding);
             this.equippedItems = new ThreadSafeCollection<EquippedItemData>(equippedItems);
             this.modules = new ThreadSafeCollection<EquippedItemData>(modules);
             visibleCells = new ThreadSafeCollection<AbsoluteEntityCell>(new HashSet<AbsoluteEntityCell>(), false);

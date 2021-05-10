@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +12,7 @@ using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.DataStructures;
 using Story;
 using UnityEngine;
 
@@ -88,6 +89,14 @@ namespace NitroxClient.GameLogic.InitialSync
                     totalItemDataSynced++;
                     yield return null;
                 }
+
+                foreach (NitroxTechType usedItem in packet.UsedItems)
+                {
+                    Player.main.AddUsedTool(usedItem.ToUnity());
+                }
+
+                Inventory.main.serializedQuickSlots = packet.QuickSlotsBinding;
+                Inventory.main.quickSlots.RestoreBinding(packet.QuickSlotsBinding);
             }
 
             Log.Info($"Received initial sync with {totalItemDataSynced} inventory items");

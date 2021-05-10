@@ -92,9 +92,14 @@ namespace NitroxClient.GameLogic
             packetSender.Send(packet);
         }
 
-        public void BroadcastHeldItemChanged(NitroxId itemId, PlayerHeldItemChangedType techType)
+        public void BroadcastHeldItemChanged(NitroxId itemId, PlayerHeldItemChangedType techType, NitroxTechType isFirstTime)
         {
-            packetSender.Send(new PlayerHeldItemChanged(multiplayerSession.Reservation.PlayerId, itemId, techType));
+            packetSender.Send(new PlayerHeldItemChanged(multiplayerSession.Reservation.PlayerId, itemId, techType, isFirstTime));
+        }
+
+        public void BroadcastQuickSlotsBindingChanged(string[] binding)
+        {
+            packetSender.Send(new PlayerQuickSlotsBindingChanged(binding));
         }
 
         private GameObject CreateBodyPrototype()

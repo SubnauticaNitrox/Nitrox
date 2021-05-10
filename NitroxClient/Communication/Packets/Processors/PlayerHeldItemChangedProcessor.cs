@@ -5,7 +5,6 @@ using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
-using NitroxModel.Logger;
 using NitroxModel.Packets;
 using UnityEngine;
 
@@ -13,17 +12,27 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class PlayerHeldItemChangedProcessor : ClientPacketProcessor<PlayerHeldItemChanged>
     {
-        private readonly int defaultLayer = LayerMask.NameToLayer("Default");
-        private readonly int viewModelLayer = LayerMask.NameToLayer("Viewmodel");
-
         private readonly FieldInfo inventoryItemFromPickupable = typeof(Pickupable).GetField("inventoryItem", BindingFlags.NonPublic | BindingFlags.Instance);
         private readonly MethodInfo setHandIK = typeof(PlayerTool).GetMethod("SetHandIKTargetsEnabled", BindingFlags.NonPublic | BindingFlags.Instance);
 
+        private int defaultLayer;
+        private int viewModelLayer;
         private readonly PlayerManager playerManager;
 
         public PlayerHeldItemChangedProcessor(PlayerManager playerManager)
         {
             this.playerManager = playerManager;
+
+            if (NitroxEnvironment.IsNormal)
+            {
+                SetupLayers();
+            }
+        }
+
+        private void SetupLayers()
+        {
+            defaultLayer = LayerMask.NameToLayer("Default");
+            viewModelLayer = LayerMask.NameToLayer("Viewmodel");
         }
 
         public override void Process(PlayerHeldItemChanged packet)
@@ -62,6 +71,7 @@ namespace NitroxClient.Communication.Packets.Processors
                     opItem.Value.SetActive(true);
                     setHandIK.Invoke(tool, new object[] { true });
                     SafeAnimator.SetBool(opPlayer.Value.ArmsController.GetComponent<Animator>(), $"holding_{tool.animToolName}", true);
+                    opPlayer.Value.AnimationController["using_tool_first"] = packet.IsFirstTime == null;
 
                     if (opItem.Value.TryGetComponent(out FPModel fpModelDraw)) //FPModel needs to be updated 
                     {
@@ -84,11 +94,13 @@ namespace NitroxClient.Communication.Packets.Processors
                         componentsInChild.cullingMode = AnimatorCullingMode.CullUpdateTransforms;
                     }
                     SafeAnimator.SetBool(opPlayer.Value.ArmsController.GetComponent<Animator>(), $"holding_{tool.animToolName}", false);
+                    opPlayer.Value.AnimationController["using_tool_first"] = false;
 
                     if (opItem.Value.TryGetComponent(out FPModel fpModelHolster)) //FPModel needs to be updated 
                     {
                         fpModelHolster.OnUnequip(null, null);
                     }
+
                     break;
 
                 case PlayerHeldItemChangedType.DRAW_AS_ITEM:

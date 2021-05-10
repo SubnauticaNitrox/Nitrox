@@ -65,7 +65,11 @@ namespace NitroxClient.GameLogic
             }
 
             GameObject remotePlayerBody = CloneLocalPlayerBodyPrototype();
-            RemotePlayer remotePlayer = new RemotePlayer(remotePlayerBody, playerContext, equippedTechTypes, inventoryItems, playerModelManager);
+            RemotePlayer remotePlayer;
+            using (packetSender.Suppress<ItemContainerAdd>())
+            {
+                remotePlayer = new RemotePlayer(remotePlayerBody, playerContext, equippedTechTypes, inventoryItems, playerModelManager);
+            }
 
             if (subRootId.HasValue)
             {

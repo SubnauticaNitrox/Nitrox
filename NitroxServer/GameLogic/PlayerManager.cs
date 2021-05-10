@@ -116,6 +116,8 @@ namespace NitroxServer.GameLogic
                     Optional.Empty,
                     serverConfig.DefaultPlayerPerm,
                     serverConfig.DefaultPlayerStats,
+                    new List<NitroxTechType>(),
+                    new string[0],
                     new List<EquippedItemData>(),
                     new List<EquippedItemData>()
                 );
