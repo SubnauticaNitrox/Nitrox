@@ -59,7 +59,7 @@ namespace NitroxModel.Logger
                      .WriteTo.Logger(cnf => cnf
                                             .Enrich.FromLogContext().WriteTo
 #if DEBUG
-                                            .Map(nameof(PlayerName), "", (playerName, sinkCnf) => sinkCnf.Async(a => a.File(Path.Combine(LogDirectory, $"{GetLogFileName()}[{playerName}]-.log"),
+                                            .Map(nameof(PlayerName), "", (playerName, sinkCnf) => sinkCnf.Async(a => a.File(Path.Combine(LogDirectory, $"{GetLogFileName()}{playerName}-.log"),
 
 #else
                                             .Async((a => a.File(Path.Combine(LogDirectory, $"{GetLogFileName()}-.log"),
@@ -214,7 +214,7 @@ namespace NitroxModel.Logger
             {
                 Info($"Setting player name to {value}");
             }
-            LogContext.PushProperty(nameof(PlayerName), @$"[{value}]");
+            LogContext.PushProperty(nameof(PlayerName), $"[{value}]");
         }
 
         /// <summary>
