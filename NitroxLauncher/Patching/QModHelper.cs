@@ -6,27 +6,28 @@ namespace NitroxLauncher.Patching
 {
     public static class QModHelper
     {
-        private const string originalFileName = "winhttp.dll";
-        private const string renamedFileName = "winhttp_nitrox_stopped.dll";
-        private static bool QModPatched;
+        private const string ORIGINAL_FILE_NAME = "winhttp.dll";
+        private const string RENAMED_FILE_NAME = "winhttp_nitrox_stopped.dll";
+        private static bool qModPatched;
+
         public static void RemoveQModEntryPoint(string subnauticaBasePath)
         {
-            if (QModPatched || !IsQModInstalled(subnauticaBasePath))
+            if (qModPatched || !IsQModInstalled(subnauticaBasePath))
             {
                 return;
             }
             Log.Info("Attempting to remove QMod initialisation");
-            RenameFile(subnauticaBasePath, originalFileName, renamedFileName);
+            RenameFile(subnauticaBasePath, ORIGINAL_FILE_NAME, RENAMED_FILE_NAME);
         }
 
         public static void RestoreQModEntryPoint(string subnauticaBasePath)
         {
-            if (!QModPatched || !IsQModInstalled(subnauticaBasePath))
+            if (!qModPatched || !IsQModInstalled(subnauticaBasePath))
             {
                 return;
             }
             Log.Info("Attempting to restore QMod initialisation");
-            RenameFile(subnauticaBasePath, renamedFileName, originalFileName);
+            RenameFile(subnauticaBasePath, RENAMED_FILE_NAME, ORIGINAL_FILE_NAME);
         }
 
         private static void RenameFile(string subnauticaBasePath, string fileToRename, string newFileName)
@@ -34,7 +35,7 @@ namespace NitroxLauncher.Patching
             string fileToRenamePath = Path.Combine(subnauticaBasePath, fileToRename);
             if (!File.Exists(fileToRenamePath))
             {
-                Log.Error($"QMod entry cannot be found, please uninstall QMod");
+                Log.Error("QMod entry cannot be found, please uninstall QMod");
                 return;
             }
 
@@ -42,12 +43,12 @@ namespace NitroxLauncher.Patching
             {
                 string newFilePath = Path.Combine(subnauticaBasePath, newFileName);
                 File.Move(fileToRenamePath, newFilePath);
-                QModPatched = !QModPatched;
+                qModPatched = !qModPatched;
                 Log.Info("Removing/Restoring QMod initialisation has been successful");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                Log.Error($"QMod entry cannot be removed/restored, please uninstall QMod");
+                Log.Error(ex, "QMod entry cannot be removed/restored, please uninstall QMod");
             }
         }
 
