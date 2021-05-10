@@ -30,7 +30,7 @@ namespace NitroxClient.Communication.Packets.Processors
                 GameObject item;
                 try
                 {
-                    item = SerializationHelper.GetGameObjectWithParent(itemData.SerializedData, null);
+                    item = SerializationHelper.GetGameObject(itemData.SerializedData);
                 }
                 catch (Exception ex)
                 {

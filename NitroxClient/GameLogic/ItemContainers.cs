@@ -25,7 +25,7 @@ namespace NitroxClient.GameLogic
         public void BroadcastItemAdd(Pickupable pickupable, Transform containerTransform)
         {
             NitroxId itemId = NitroxEntity.GetId(pickupable.gameObject);
-            byte[] bytes = SerializationHelper.GetBytes(pickupable.gameObject);
+            byte[] bytes = SerializationHelper.GetBytesWithoutParent(pickupable.gameObject);
             NitroxId ownerId = InventoryContainerHelper.GetOwnerId(containerTransform);
 
             ItemData itemData;

@@ -55,7 +55,7 @@ namespace NitroxClient.GameLogic.InitialSync
 
                     try
                     {
-                        item = SerializationHelper.GetGameObject(itemdata.SerializedData);
+                        item = SerializationHelper.GetGameObject(itemData.SerializedData);
                     }
                     catch (Exception ex)
                     {

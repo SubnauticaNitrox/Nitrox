@@ -1,10 +1,13 @@
 ﻿using System.IO;
+using System.Reflection;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Helper
 {
     public class SerializationHelper
     {
+        private static readonly FieldInfo identifierIdField = typeof(UniqueIdentifier).GetField("id", BindingFlags.NonPublic | BindingFlags.Instance);
+
         // In the core of protobuf we block hand placed items (such as mushroom and coral) 
         // from being deserialized.  This is because there are so many code paths that spawn
         // them and it would be hard to patch them all.  However, any time we want to do
@@ -36,6 +39,25 @@ namespace NitroxClient.GameLogic.Helper
             BLOCK_HAND_PLACED_DESERIALIZATION = true;
 
             return gameObject;
+        }
+
+        /// <summary>
+        /// Deserializes the GameObject while ignoring the <see cref="UniqueIdentifier"/> of the parent.
+        /// This can be useful to prevent error logging on deserialization because parent (like player inventory) has not the same id anymore.
+        /// </summary>
+        public static byte[] GetBytesWithoutParent(GameObject gameObject)
+        {
+            if (!gameObject.transform.parent || !gameObject.transform.parent.TryGetComponent(out UniqueIdentifier parentIdentifier))
+            {
+                return GetBytes(gameObject);
+            }
+
+            string tmpId = parentIdentifier.Id;
+            identifierIdField.SetValue(parentIdentifier, "SoundsLikeNitrox");
+            byte[] bytes = GetBytes(gameObject);
+            identifierIdField.SetValue(parentIdentifier, tmpId);
+
+            return bytes;
         }
     }
 }
