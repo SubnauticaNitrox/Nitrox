@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using NitroxModel.Logger;
+using NitroxModel.OS;
 using ProtoBufNet;
 using ProtoBufNet.Meta;
 
@@ -21,7 +22,7 @@ namespace NitroxServer.Serialization
             }
         }
 
-        public string GetFileEnding() => ".nitrox";
+        public string FileEnding => ".nitrox";
 
         public void Serialize(Stream stream, object o)
         {
@@ -30,19 +31,12 @@ namespace NitroxServer.Serialization
 
         public void Serialize(string filePath, object o)
         {
-            string tmpPath = $"{filePath}.tmp";
-
+            string tmpPath = Path.ChangeExtension(filePath, ".tmp");
             using (Stream stream = File.OpenWrite(tmpPath))
             {
                 Serialize(stream, o);
             }
-
-            if (File.Exists(filePath))
-            {
-                File.Delete(filePath);
-            }
-
-            File.Move(tmpPath, filePath);
+            FileSystem.Instance.ReplaceFile(tmpPath, filePath);
         }
 
         public T Deserialize<T>(Stream stream)
