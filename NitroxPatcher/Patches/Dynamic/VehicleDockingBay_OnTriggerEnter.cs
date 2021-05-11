@@ -24,14 +24,16 @@ namespace NitroxPatcher.Patches.Dynamic
             return NitroxServiceLocator.LocateService<SimulationOwnership>().HasAnyLockType(NitroxEntity.GetId(vehicle.gameObject));
         }
 
-        public static void Postfix(VehicleDockingBay __instance, Collider other)
+        public static void Postfix(VehicleDockingBay __instance)
         {
             Vehicle interpolatingVehicle = (Vehicle)__instance.ReflectionGet("interpolatingVehicle");
-            NitroxId id = NitroxEntity.GetId(interpolatingVehicle.gameObject);
             // Only send data, when interpolatingVehicle changes to avoid multiple packages send
-            if (interpolatingVehicle &&
-                interpolatingVehicle != prevInterpolatingVehicle &&
-                NitroxServiceLocator.LocateService<SimulationOwnership>().HasAnyLockType(id))
+            if (!interpolatingVehicle || interpolatingVehicle == prevInterpolatingVehicle)
+            {
+                return;
+            }
+            NitroxId id = NitroxEntity.GetId(interpolatingVehicle.gameObject);
+            if (NitroxServiceLocator.LocateService<SimulationOwnership>().HasAnyLockType(id))
             {
                 Log.Debug($"Will send vehicle docking for {id}");
                 NitroxServiceLocator.LocateService<Vehicles>().BroadcastVehicleDocking(__instance, interpolatingVehicle);
