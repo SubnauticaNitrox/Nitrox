@@ -297,8 +297,8 @@ namespace NitroxLauncher
                     break;
 
                 default:
-                    Log.Error("Failed to retrieve Platform through PlatformDetection, is it updated ?");
-                    throw new Exception("Unable to retrieve the platform that runs Subnautica");
+                    // Cracked case here :)
+                    break;
             }
 
             return Process.Start(startInfo);
