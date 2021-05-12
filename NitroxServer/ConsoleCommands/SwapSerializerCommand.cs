@@ -26,7 +26,7 @@ namespace NitroxServer.ConsoleCommands
             serverConfig.SerializerMode = serverConfig.SerializerMode == ServerSerializerMode.PROTOBUF ? ServerSerializerMode.JSON : ServerSerializerMode.PROTOBUF;
             NitroxConfig.Serialize(serverConfig);
 
-            worldPersistence.UpdateSerializer(serverConfig.SerializerMode == ServerSerializerMode.PROTOBUF ? protoBufSerializer : jsonSerializer);
+            worldPersistence.UpdateSerializer(serverConfig.SerializerMode == ServerSerializerMode.PROTOBUF ? (IServerSerializer) protoBufSerializer : jsonSerializer);
             SendMessage(args.Sender, $"Swapped to {serverConfig.SerializerMode}");
         }
     }

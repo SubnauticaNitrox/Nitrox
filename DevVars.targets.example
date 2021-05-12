@@ -2,6 +2,6 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <!--Enter the location of your Subnautica installation here:-->
-    <SubnauticaDir>C:\Program Files\Epic Games\Subnautica</SubnauticaDir>
+    <SubnauticaDir>C:\Program Files (x86)\Subnautica</SubnauticaDir>
   </PropertyGroup>
 </Project>

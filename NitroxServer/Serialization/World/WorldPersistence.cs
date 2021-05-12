@@ -37,7 +37,7 @@ namespace NitroxServer.Serialization.World
             this.randomStart = randomStart;
             this.config = config;
 
-            Serializer = config.SerializerMode == ServerSerializerMode.PROTOBUF ? protoBufSerializer : jsonSerializer;
+            Serializer = config.SerializerMode == ServerSerializerMode.PROTOBUF ? (IServerSerializer) protoBufSerializer : jsonSerializer;
         }
 
         public bool Save(World world, string saveDir)
