@@ -290,6 +290,10 @@ namespace NitroxLauncher
 
                 case Platform.STEAM:
                     startInfo.FileName = "steam://run/264710";
+                    //Fix to keep legit steam version and steam cracked version
+                    string steamDll = Path.Combine(subnauticaPath, "steam_api64.dll");
+                    if (File.Exists(steamDll))
+                        startInfo.FileName = subnauticaExe;
                     break;
 
                 case Platform.MICROSOFT:
