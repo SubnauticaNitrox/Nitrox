@@ -7,6 +7,13 @@
         <TestLibrary>false</TestLibrary>
         <NitroxLibrary>false</NitroxLibrary>
         <UnityModLibrary>false</UnityModLibrary>
+        <BuildToolDir>$(SolutionDir)BuildTool\bin\</BuildToolDir>
+        <BuildGenDir>$(BuildToolDir)generated_files\</BuildGenDir>
+        <BuildGenDllDir>$(BuildGenDir)publicized_assemblies\</BuildGenDllDir>
+        <PlatformTarget>AnyCPU</PlatformTarget>
+        <ErrorReport>prompt</ErrorReport>
+        <WarningLevel>4</WarningLevel>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
         <DefineConstants>TRACE;DEBUG</DefineConstants>
@@ -34,19 +41,34 @@
         <TestLibrary>true</TestLibrary>
     </PropertyGroup>
 
-    <ItemGroup>
+    <ItemGroup Condition="'$(NitroxLibrary)' == 'true'">
         <!-- Include common assembly info if project name starts with Nitrox -->
-        <Compile Condition="'$(NitroxLibrary)' == 'true'" Include="$(SolutionDir)AssemblyInfoCommon.cs">
+        <Compile Include="$(SolutionDir)AssemblyInfoCommon.cs">
             <Link>Properties\AssemblyInfoCommon.cs</Link>
         </Compile>
     </ItemGroup>
-    <Choose>
-        <When Condition="'$(UnityModLibrary)' == 'true'">
-            <ItemGroup>
-                <ProjectReference Include="$(SolutionDir)NitroxModel\NitroxModel.csproj">
-                    <Name>NitroxModel</Name>
-                </ProjectReference>
-            </ItemGroup>
-        </When>
-    </Choose>
+
+    <!-- Include default project references to all other "Nitrox*" projects -->
+    <ItemGroup Condition="'$(UnityModLibrary)' == 'true'">
+        <ProjectReference Include="$(SolutionDir)BuildTool\BuildTool.csproj">
+            <Name>BuildTool</Name>
+            <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+        </ProjectReference>
+        <ProjectReference Include="$(SolutionDir)NitroxModel\NitroxModel.csproj">
+            <Name>NitroxModel</Name>
+        </ProjectReference>
+    </ItemGroup>
+
+    <!-- 
+    Prepare for modding: find game and generate publicized DLLs.
+    (remove "BuildTool/bin/game.props" file to rerun the BuildTool again) 
+    -->
+    <Target Name="PrepareForModding" BeforeTargets="PreBuildEvent" Condition="'$(UnityModLibrary)' == 'true'">
+        <!-- Run build tool which generates MSBuild properties file with Subnautica info. -->
+        <Exec Condition="!Exists('$(BuildGenDir)game.props') and Exists('$(BuildToolDir)BuildTool.exe')"
+              LogStandardErrorAsError="true"
+              Command="$(BuildToolDir)BuildTool.exe"/>
+    </Target>
+    <!-- Include generated build properties. -->
+    <Import Project="$(BuildGenDir)game.props" Condition="Exists('$(BuildGenDir)game.props')"/>
 </Project>

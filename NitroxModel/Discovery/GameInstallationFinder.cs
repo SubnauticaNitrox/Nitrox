@@ -55,7 +55,7 @@ namespace NitroxModel.Discovery
                 return false;
             }
 
-            return Directory.EnumerateFileSystemEntries(directory, "*.exe")
+            return Directory.EnumerateFiles(directory, "*.exe")
                 .Any(file => Path.GetFileName(file)?.Equals("subnautica.exe", StringComparison.OrdinalIgnoreCase) ?? false);
         }
     }
