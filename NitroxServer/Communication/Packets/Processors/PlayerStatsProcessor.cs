@@ -15,7 +15,11 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(PlayerStats packet, Player player)
         {
+#if SUBNAUTICA
             player.Stats = new NitroxModel.DataStructures.GameLogic.PlayerStatsData(packet.Oxygen, packet.MaxOxygen, packet.Health, packet.Food, packet.Water, packet.InfectionAmount);
+#elif BELOWZERO
+            player.Stats = new NitroxModel.DataStructures.GameLogic.PlayerStatsData(packet.Oxygen, packet.MaxOxygen, packet.Health, packet.Food, packet.Water);
+#endif
             playerManager.SendPacketToOtherPlayers(packet, player);
         }
     }

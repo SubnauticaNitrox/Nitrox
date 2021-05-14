@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,7 +19,11 @@ namespace NitroxClient.MonoBehaviours.Gui.InGame
 
         public void Show()
         {
+#if SUBNAUTICA
             FreezeTime.Begin("NitroxDisconnected");
+#elif BELOWZERO
+            FreezeTime.Begin(FreezeTime.Id.IngameMenu);
+#endif
             StartCoroutine(Show_Impl());
         }
 

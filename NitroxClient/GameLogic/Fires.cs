@@ -133,14 +133,21 @@ namespace NitroxClient.GameLogic
                     + " NodeIndex: " + fireData.NodeIndex
                     + "]");
             }
+#if SUBNAUTICA
             GameObject gameObject = component.SpawnManual();
-            Fire componentInChildren = gameObject.GetComponentInChildren<Fire>();
-            if (componentInChildren)
+#elif BELOWZERO
+            component.SpawnManual(delegate(GameObject gameObject)
             {
-                componentInChildren.fireSubRoot = subFire.subRoot;
-                NitroxEntity.SetNewId(componentInChildren.gameObject, fireData.FireId);
-            }
-
+#endif
+                Fire componentInChildren = gameObject.GetComponentInChildren<Fire>();
+                if (componentInChildren)
+                {
+                    componentInChildren.fireSubRoot = subFire.subRoot;
+                    NitroxEntity.SetNewId(componentInChildren.gameObject, fireData.FireId);
+                }
+#if BELOWZERO
+            });
+#endif
             subFire.ReflectionSet("roomFires", roomFiresDict);
             subFire.ReflectionSet("availableNodes", availableNodes);
         }

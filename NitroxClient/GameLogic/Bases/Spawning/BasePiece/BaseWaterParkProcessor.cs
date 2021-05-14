@@ -22,16 +22,24 @@ namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
         protected override void SpawnPostProcess(Base latestBase, Int3 latestCell, GameObject finishedPiece)
         {
             NitroxId pieceId = NitroxEntity.GetId(finishedPiece);
-
+#if SUBNAUTICA
             WaterParkPiece waterParkPiece = finishedPiece.GetComponent<WaterParkPiece>();
             if (!waterParkPiece)
+#elif BELOWZERO
+            WaterParkGeometry waterParkGeometry = finishedPiece.GetComponent<WaterParkGeometry>();
+            if (!waterParkGeometry)
+#endif
             {
-                // The BaseWater has multiple base pieces, but only one of them (the bottom) contains the WaterParkPiece component...
+                // The BaseWater has multiple base pieces, but only one of them (the bottom) contains the WaterParkPiece or WaterParkGeometry component...
                 return;
             }
-
+#if SUBNAUTICA
             WaterPark waterPark = waterParkPiece.GetWaterParkModule();
             Validate.NotNull(waterPark, "WaterParkPiece without WaterParkModule?!?");
+#elif BELOWZERO
+            WaterPark waterPark = waterParkGeometry.GetModule();
+            Validate.NotNull(waterPark, "WaterParkGeometry without WaterParkModule?!?");
+#endif
 
             // assuming there could be multiple pieces sharing the same waterpark we only create an ID if there is none.
             NitroxEntity waterEntity = waterPark.gameObject.GetComponent<NitroxEntity>();

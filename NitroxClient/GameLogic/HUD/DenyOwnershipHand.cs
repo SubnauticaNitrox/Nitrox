@@ -14,7 +14,11 @@ namespace NitroxClient.GameLogic.HUD
 
         void Update()
         {
+#if SUBNAUTICA
             HandReticle.main.SetInteractText("Another player is interacting with that object.");
+#elif BELOWZERO
+            HandReticle.main.SetText(HandReticle.TextType.Use, "Another player is interacting with that object.", true);
+#endif
             HandReticle.main.SetIcon(HandReticle.IconType.HandDeny, 1f);
         }
     }

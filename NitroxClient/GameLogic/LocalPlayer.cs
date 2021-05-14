@@ -42,12 +42,19 @@ namespace NitroxClient.GameLogic
             playerModel = new Lazy<GameObject>(() => Body.RequireGameObject("player_view"));
             bodyPrototype = new Lazy<GameObject>(CreateBodyPrototype);
         }
-
+#if SUBNAUTICA
         public void BroadcastStats(float oxygen, float maxOxygen, float health, float food, float water, float infectionAmount)
         {
             PlayerStats playerStats = new PlayerStats(multiplayerSession.Reservation.PlayerId, oxygen, maxOxygen, health, food, water, infectionAmount);
             packetSender.Send(playerStats);
         }
+#elif BELOWZERO
+        public void BroadcastStats(float oxygen, float maxOxygen, float health, float food, float water)
+        {
+            PlayerStats playerStats = new PlayerStats(multiplayerSession.Reservation.PlayerId, oxygen, maxOxygen, health, food, water);
+            packetSender.Send(playerStats);
+        }
+#endif
 
         public void UpdateLocation(Vector3 location, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation, Optional<VehicleMovementData> vehicle)
         {
@@ -108,9 +115,15 @@ namespace NitroxClient.GameLogic
             GameObject prototype = Body;
 
             // Cheap fix for showing head, much easier since male_geo contains many different heads
+#if SUBNAUTICA
             prototype.GetComponentInParent<Player>().head.shadowCastingMode = ShadowCastingMode.On;
             GameObject clone = Object.Instantiate(prototype, Multiplayer.Main.transform);
             prototype.GetComponentInParent<Player>().head.shadowCastingMode = ShadowCastingMode.ShadowsOnly;
+#elif BELOWZERO
+            prototype.GetComponentInParent<Player>().staticHead.shadowCastingMode = ShadowCastingMode.On;
+            GameObject clone = Object.Instantiate(prototype);
+            prototype.GetComponentInParent<Player>().staticHead.shadowCastingMode = ShadowCastingMode.ShadowsOnly;
+#endif
 
             clone.SetActive(false);
             clone.name = "RemotePlayerPrototype";

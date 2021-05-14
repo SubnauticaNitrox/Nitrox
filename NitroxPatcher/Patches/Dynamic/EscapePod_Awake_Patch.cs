@@ -1,10 +1,12 @@
-﻿using System;
+﻿#if SUBNAUTICA
+using System;
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
+
     public class EscapePod_Awake_Patch : NitroxPatch, IDynamicPatch
     {
         public static readonly Type TARGET_CLASS = typeof(EscapePod);
@@ -21,3 +23,4 @@ namespace NitroxPatcher.Patches.Dynamic
         }
     }
 }
+#endif

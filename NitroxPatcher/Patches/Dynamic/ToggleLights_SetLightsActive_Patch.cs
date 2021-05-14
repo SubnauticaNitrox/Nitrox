@@ -20,7 +20,9 @@ namespace NitroxPatcher.Patches.Dynamic
 
         private static readonly HashSet<Type> syncedParents = new HashSet<Type>()
         {
+#if SUBNAUTICA
             typeof(SeaMoth),
+#endif
             typeof(Seaglide),
             typeof(FlashLight),
             // LEDLight uses ToggleLights, but does not provide a method to toggle them.
@@ -63,10 +65,12 @@ namespace NitroxPatcher.Patches.Dynamic
 
                 NitroxId id = NitroxEntity.GetId(gameObject);
                 // If the floodlight belongs to a seamoth, then set the lights for the model
+#if SUBNAUTICA
                 if (type == typeof(SeaMoth))
                 {
                     NitroxServiceLocator.LocateService<Vehicles>().GetVehicles<SeamothModel>(id).LightOn = __instance.lightsActive;
                 }
+#endif
                 NitroxServiceLocator.LocateService<IPacketSender>().Send(new NitroxModel.Packets.ToggleLights(id, __instance.lightsActive));
             }
         }

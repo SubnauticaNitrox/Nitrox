@@ -52,7 +52,11 @@ namespace NitroxClient.GameLogic.InitialSync
             {
                 foreach (string entry in entries)
                 {
+#if SUBNAUTICA
                     PDAEncyclopedia.Add(entry, false);
+#elif BELOWZERO
+                    PDAEncyclopedia.Add(entry, false, false);
+#endif
                 }
             }
         }

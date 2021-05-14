@@ -19,7 +19,11 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static bool Prefix(DockedVehicleHandTarget __instance, GUIHand hand)
         {
+#if SUBNAUTICA
             Vehicle vehicle = __instance.dockingBay.GetDockedVehicle();
+#elif BELOWZERO
+            Vehicle vehicle = __instance.dockingBay.GetDockedObject().vehicle;
+#endif
 
             if (skipPrefix || vehicle == null)
             {
@@ -49,7 +53,11 @@ namespace NitroxPatcher.Patches.Dynamic
             if (lockAquired)
             {
                 VehicleDockingBay dockingBay = context.Target.dockingBay;
+#if SUBNAUTICA
                 NitroxServiceLocator.LocateService<Vehicles>().BroadcastVehicleUndocking(dockingBay, dockingBay.GetDockedVehicle(), true);
+#elif BELOWZERO
+                NitroxServiceLocator.LocateService<Vehicles>().BroadcastVehicleUndocking(dockingBay, dockingBay.GetDockedObject().vehicle, true);
+#endif
 
                 skipPrefix = true;
                 TARGET_METHOD.Invoke(context.Target, new[] { context.GuiHand });
@@ -57,7 +65,11 @@ namespace NitroxPatcher.Patches.Dynamic
             }
             else
             {
+#if SUBNAUTICA
                 HandReticle.main.SetInteractText("Another player is using this vehicle!");
+#elif BELOWZERO
+                HandReticle.main.SetText(HandReticle.TextType.Use, "Another player is using this vehicle!", true);
+#endif
                 HandReticle.main.SetIcon(HandReticle.IconType.HandDeny, 1f);
                 context.Target.isValidHandTarget = false;
             }

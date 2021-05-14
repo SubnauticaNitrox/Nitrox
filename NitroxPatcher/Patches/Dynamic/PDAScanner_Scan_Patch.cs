@@ -44,7 +44,11 @@ namespace NitroxPatcher.Patches.Dynamic
             PDAScanner.EntryData entryData = PDAScanner.GetEntryData(techType);
 
             // Only do this for fragments and player scans or nearby fish
+#if SUBNAUTICA
             if (entryData != null && entryData.destroyAfterScan && PDAScanner.scanTarget.gameObject && !PDAScanner.scanTarget.isPlayer)
+#elif BELOWZERO
+            if (entryData != null && entryData.destroyAfterScan && PDAScanner.scanTarget.gameObject)
+#endif
             {
                 // A lot of fragments are virtual entities (spawned by placeholders in the world).  Sometimes the server only knows the id
                 // of the placeholder and not the virtual entity. TODO: we will need to propagate deterministic ids to children entities for

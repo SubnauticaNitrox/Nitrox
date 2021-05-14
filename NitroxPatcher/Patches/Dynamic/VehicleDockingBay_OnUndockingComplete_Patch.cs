@@ -13,7 +13,11 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Prefix(VehicleDockingBay __instance, Player player)
         {
+#if SUBNAUTICA
             Vehicle vehicle = __instance.GetDockedVehicle();
+#elif BELOWZERO
+            Vehicle vehicle = __instance.GetDockedObject().vehicle;
+#endif
 
             NitroxServiceLocator.LocateService<Vehicles>().BroadcastVehicleUndocking(__instance, vehicle, false);
         }

@@ -30,7 +30,12 @@ namespace NitroxClient.MonoBehaviours
         {
             GetComponent<Rigidbody>().freezeRotation = true;
             exosuit.ReflectionCall("SetIKEnabled", false, false, new object[] { false });
+#if SUBNAUTICA
             exosuit.loopingJetSound.Stop();
+#elif BELOWZERO
+            exosuit.jumpJetsSound.Stop();
+            exosuit.boostSound.Stop();
+#endif
             exosuit.fxcontrol.Stop(0);
             exosuit.ambienceSound.Stop();
             base.Exit();
@@ -44,12 +49,16 @@ namespace NitroxClient.MonoBehaviours
                 lastThrottle = isOn;
                 if (isOn)
                 {
+#if SUBNAUTICA
                     exosuit.loopingJetSound.Play();
+#endif
                     exosuit.fxcontrol.Play(0);
                 }
                 else
                 {
+#if SUBNAUTICA
                     exosuit.loopingJetSound.Stop();
+#endif
                     exosuit.fxcontrol.Stop(0);
                 }
             }

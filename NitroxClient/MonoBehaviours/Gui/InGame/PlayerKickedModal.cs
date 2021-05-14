@@ -19,7 +19,11 @@ namespace NitroxClient.MonoBehaviours.Gui.InGame
 
         public void Show(string reason)
         {
+#if SUBNAUTICA
             FreezeTime.Begin("NitroxDisconnected");
+#elif BELOWZERO
+            FreezeTime.Begin(FreezeTime.Id.IngameMenu);
+#endif
             StartCoroutine(Show_Impl(reason));
         }
 

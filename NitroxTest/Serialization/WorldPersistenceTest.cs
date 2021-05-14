@@ -326,8 +326,9 @@ namespace NitroxTest.Serialization
                     Assert.AreEqual(playerData.CurrentStats.Health, playerDataAfter.CurrentStats.Health, $"PlayerData.Players.CurrentStats.Health is not equal while using {serverSerializers[serializerIndex]}.");
                     Assert.AreEqual(playerData.CurrentStats.Food, playerDataAfter.CurrentStats.Food, $"PlayerData.Players.CurrentStats.Food is not equal while using {serverSerializers[serializerIndex]}.");
                     Assert.AreEqual(playerData.CurrentStats.Water, playerDataAfter.CurrentStats.Water, $"PlayerData.Players.CurrentStats.Water is not equal while using {serverSerializers[serializerIndex]}.");
+#if SUBNAUTICA                    
                     Assert.AreEqual(playerData.CurrentStats.InfectionAmount, playerDataAfter.CurrentStats.InfectionAmount, $"PlayerData.Players.CurrentStats.InfectionAmount is not equal while using {serverSerializers[serializerIndex]}.");
-
+#endif
                     Assert.AreEqual(playerData.SubRootId, playerDataAfter.SubRootId, $"PlayerData.Players.SubRootId is not equal while using {serverSerializers[serializerIndex]}.");
                     Assert.AreEqual(playerData.Permissions, playerDataAfter.Permissions, $"PlayerData.Players.Permissions is not equal while using {serverSerializers[serializerIndex]}.");
                     Assert.AreEqual(playerData.NitroxId, playerDataAfter.NitroxId, $"PlayerData.Players.NitroxId is not equal while using {serverSerializers[serializerIndex]}.");
@@ -415,7 +416,11 @@ namespace NitroxTest.Serialization
                             Permissions = Perms.ADMIN,
                             SpawnPosition = NitroxVector3.Zero,
                             SubRootId = null,
+#if SUBNAUTICA
                             CurrentStats = new PlayerStatsData(45, 45, 40, 39, 28, 1),
+#elif BELOWZERO
+                            CurrentStats = new PlayerStatsData(45, 45, 40, 39, 28),
+#endif
                             UsedItems = new List<NitroxTechType>(0),
                             QuickSlotsBinding = new List<string>(0),
                             EquippedItems = new List<EquippedItemData>(0),
@@ -430,7 +435,11 @@ namespace NitroxTest.Serialization
                             Permissions = Perms.PLAYER,
                             SpawnPosition = NitroxVector3.One,
                             SubRootId = new NitroxId(),
+#if SUBNAUTICA
                             CurrentStats = new PlayerStatsData(40, 40, 30, 29, 28, 0),
+#elif BELOWZERO
+                            CurrentStats = new PlayerStatsData(40, 40, 30, 29, 28),
+#endif
                             UsedItems = new List<NitroxTechType> {new NitroxTechType("Knife"), new NitroxTechType("Flashlight")},
                             QuickSlotsBinding = new List<string>{"Test1", "Test2"},
                             EquippedItems = new List<EquippedItemData>
@@ -465,7 +474,7 @@ namespace NitroxTest.Serialization
                             }
                         }
                     },
-                    GameData = new GameData()
+                    GameData = new NitroxServer.GameLogic.Bases.GameData()
                     {
                         PDAState = new PDAStateData()
                         {

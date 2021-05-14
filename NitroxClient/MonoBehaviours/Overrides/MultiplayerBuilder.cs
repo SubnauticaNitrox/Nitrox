@@ -273,8 +273,11 @@ namespace NitroxClient.MonoBehaviours.Overrides
 
                 Base ghostBase = (Base)faceGhost.ReflectionGet("ghostBase");
                 Base.FaceType faceType = (Base.FaceType)baseModuleRotationMetadata.FaceType;
+#if SUBNAUTICA
                 ghostBase.SetFace(face, faceType);
-
+#elif BELOWZERO
+                ghostBase.SetFaceType(face, faceType);
+#endif
                 faceGhost.ReflectionCall("RebuildGhostGeometry");
             }
         }

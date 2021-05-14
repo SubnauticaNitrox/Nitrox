@@ -87,12 +87,16 @@ namespace NitroxModel.Logger
         }
 
         [Conditional("DEBUG")]
+        [Conditional("SUBNAUTICA")]
+        [Conditional("BELOWZERO")]
         public static void Debug(string message)
         {
             logger.Debug(message);
         }
 
         [Conditional("DEBUG")]
+        [Conditional("SUBNAUTICA")]
+        [Conditional("BELOWZERO")]
         public static void Debug(object message)
         {
             Debug(message?.ToString());
@@ -147,6 +151,8 @@ namespace NitroxModel.Logger
         }
 
         [Conditional("DEBUG")]
+        [Conditional("SUBNAUTICA")]
+        [Conditional("BELOWZERO")]
         public static void DebugSensitive(string message, params object[] args)
         {
             using (LogContext.Push(SensitiveEnricher.Instance))
@@ -205,6 +211,8 @@ namespace NitroxModel.Logger
 
         // Player name in log file is only important with running two instances of Nitrox.
         [Conditional("DEBUG")]
+        [Conditional("SUBNAUTICA")]
+        [Conditional("BELOWZERO")]
         private static void SetPlayerName(string value)
         {
             if (string.IsNullOrEmpty(value))

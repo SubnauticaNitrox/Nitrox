@@ -30,8 +30,9 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             GameObject vehicleGo = NitroxEntity.RequireObjectFrom(packet.VehicleId);
             GameObject vehicleDockingBayGo = NitroxEntity.RequireObjectFrom(packet.DockId);
-
+#if SUBNAUTICA
             Vehicle vehicle = vehicleGo.RequireComponent<Vehicle>();
+
             VehicleDockingBay vehicleDockingBay = vehicleDockingBayGo.RequireComponentInChildren<VehicleDockingBay>();
 
             using (packetSender.Suppress<VehicleDocking>())
@@ -41,15 +42,36 @@ namespace NitroxClient.Communication.Packets.Processors
                 vehicle.GetComponent<MultiplayerVehicleControl>().Exit();
             }
             vehicle.StartCoroutine(DelayAnimationAndDisablePiloting(vehicle, vehicleDockingBay, packet.VehicleId, packet.PlayerId));
+#elif BELOWZERO
+            Dockable dockable = vehicleGo.RequireComponent<Dockable>();
+
+            VehicleDockingBay vehicleDockingBay = vehicleDockingBayGo.RequireComponentInChildren<VehicleDockingBay>();
+
+            using (packetSender.Suppress<VehicleDocking>())
+            {
+                Log.Debug($"Set docked for {vehicleDockingBay.gameObject.name}");
+                dockable.GetComponent<MultiplayerVehicleControl>().SetPositionVelocityRotation(dockable.transform.position, Vector3.zero, dockable.transform.rotation, Vector3.zero);
+                dockable.GetComponent<MultiplayerVehicleControl>().Exit();
+            }
+            dockable.StartCoroutine(DelayAnimationAndDisablePiloting(dockable, vehicleDockingBay, packet.VehicleId, packet.PlayerId));
+#endif
         }
 
+#if SUBNAUTICA
         IEnumerator DelayAnimationAndDisablePiloting(Vehicle vehicle, VehicleDockingBay vehicleDockingBay, NitroxId vehicleId, ushort playerId)
+#elif BELOWZERO
+        IEnumerator DelayAnimationAndDisablePiloting(Dockable vehicle, VehicleDockingBay vehicleDockingBay, NitroxId vehicleId, ushort playerId)
+#endif
         {
             yield return new WaitForSeconds(1.0f);
             // DockVehicle sets the rigid body kinematic of the vehicle to true, we don't want that behaviour
             // Therefore disable kinematic (again) to remove the bouncing behavior
+#if SUBNAUTICA
             vehicleDockingBay.DockVehicle(vehicle);
             vehicle.useRigidbody.isKinematic = false;
+#elif BELOWZERO
+            vehicleDockingBay.Dock(vehicle);
+#endif
             yield return new WaitForSeconds(2.0f);
             vehicles.SetOnPilotMode(vehicleId, playerId, false);
             if (!vehicle.docked)

@@ -36,7 +36,12 @@ namespace NitroxClient.GameLogic.Helper
 
             using (MemoryStream memoryStream = new MemoryStream(bytes))
             {
+#if SUBNAUTICA
                 gameObject = Serializer.DeserializeObjectTree(memoryStream, 0);
+#elif BELOWZERO
+                CoroutineTask<GameObject> gameObjectTask = Serializer.DeserializeObjectTreeAsync(memoryStream, false, false, 0);
+                gameObject = gameObjectTask.GetResult();
+#endif
             }
 
             BLOCK_HAND_PLACED_DESERIALIZATION = true;

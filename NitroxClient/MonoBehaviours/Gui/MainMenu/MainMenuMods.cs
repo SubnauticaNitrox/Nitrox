@@ -36,11 +36,15 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             GameObject showLoadedMultiplayer = Instantiate(startButton, startButton.transform.parent);
             showLoadedMultiplayer.name = "ButtonMultiplayer";
             showLoadedMultiplayer.transform.SetSiblingIndex(3);
-
+#if SUBNAUTICA
             Text buttonText = showLoadedMultiplayer.RequireGameObject("Circle/Bar/Text").GetComponent<Text>();
             buttonText.text = Language.main.Get("Nitrox_Multiplayer");
             buttonText.GetComponent<TranslationLiveUpdate>().translationKey = "Nitrox_Multiplayer";
-
+#elif BELOWZERO
+            TMPro.TextMeshProUGUI buttonText = showLoadedMultiplayer.RequireGameObject("Circle/Bar/Text").GetComponent<TMPro.TextMeshProUGUI>();
+            buttonText.text = Language.main.Get("Nitrox_Multiplayer");
+            buttonText.GetComponent<TranslationLiveUpdate>().translationKey = "Nitrox_Multiplayer";
+#endif
 
             Button showLoadedMultiplayerButton = showLoadedMultiplayer.GetComponent<Button>();
             showLoadedMultiplayerButton.onClick.RemoveAllListeners();
@@ -50,7 +54,11 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             GameObject loadedMultiplayer = Instantiate(savedGamesRef, rightSide.transform);
             loadedMultiplayer.name = "Multiplayer";
             Transform header = loadedMultiplayer.RequireTransform("Header");
+#if SUBNAUTICA
             header.GetComponent<Text>().text = Language.main.Get("Nitrox_Multiplayer");
+#elif BELOWZERO
+            header.GetComponent<TMPro.TextMeshProUGUI>().text = Language.main.Get("Nitrox_Multiplayer");
+#endif
             header.GetComponent<TranslationLiveUpdate>().translationKey = "Nitrox_Multiplayer";
             Destroy(loadedMultiplayer.RequireGameObject("Scroll View/Viewport/SavedGameAreaContent/NewGame"));
             Destroy(loadedMultiplayer.GetComponent<MainMenuLoadPanel>());

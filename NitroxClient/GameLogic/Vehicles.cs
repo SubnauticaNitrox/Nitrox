@@ -62,15 +62,23 @@ namespace NitroxClient.GameLogic
                     {
                         health = livemixin.Value.health;
                     }
-
+#if SUBNAUTICA
                     name = opvehicle.Value.GetName();
+#elif BELOWZERO
+                    SubName subName = opvehicle.Value.GetComponent<SubName>();
+                    name = subName.GetName();
+                    
+#endif
 
                     if (techType == TechType.Exosuit)
                     {   //For odd reasons the default colors aren't set yet for exosuit so we force it
                         opvehicle.Value.ReflectionCall("RegenerateRenderInfo", false, false);
                     }
-
+#if SUBNAUTICA
                     hsb = opvehicle.Value.subName.AliveOrNull()?.GetColors().ToDto();
+#elif BELOWZERO
+                    hsb = subName.AliveOrNull()?.GetColors().ToDto();
+#endif
                 }
                 else if (techType == TechType.Cyclops)
                 { //Cyclops
@@ -101,8 +109,14 @@ namespace NitroxClient.GameLogic
 
                     if (oprocket.HasValue)
                     {
+#if SUBNAUTICA
                         name = oprocket.Value.subName.AliveOrNull()?.GetName();
                         hsb = oprocket.Value.subName.AliveOrNull()?.GetColors().ToDto();
+#elif BELOWZERO
+                        SubName subName = opvehicle.Value.GetComponent<SubName>();
+                        name = subName.AliveOrNull()?.GetName();
+                        hsb = subName.AliveOrNull()?.GetColors().ToDto();
+#endif
                     }
                     else
                     {
@@ -144,7 +158,11 @@ namespace NitroxClient.GameLogic
             {
                 EnergyMixin mixin = opEnergy.Value;
                 mixin.ReflectionSet("allowedToPlaySounds", false);
+#if SUBNAUTICA
                 mixin.SetBattery(mixin.defaultBattery, 1);
+#elif BELOWZERO
+                mixin.SetBatteryAsync(mixin.defaultBattery, 1, null);
+#endif
                 mixin.ReflectionSet("allowedToPlaySounds", true);
             }
 
@@ -160,7 +178,11 @@ namespace NitroxClient.GameLogic
                     {
                         EnergyMixin mixin = opEnergyMixin.Value;
                         mixin.ReflectionSet("allowedToPlaySounds", false);
+#if SUBNAUTICA
                         mixin.SetBattery(mixin.defaultBattery, 1);
+#elif BELOWZERO
+                        mixin.SetBatteryAsync(mixin.defaultBattery, 1, null);
+#endif
                         mixin.ReflectionSet("allowedToPlaySounds", true);
                     }
                 }
@@ -183,7 +205,12 @@ namespace NitroxClient.GameLogic
                 }
                 else
                 {
+#if SUBNAUTICA
                     GameObject techPrefab = CraftData.GetPrefabForTechType(techType, false);
+#elif BELOWZERO
+                    CoroutineTask<GameObject> techPrefabRoutine = CraftData.GetPrefabForTechTypeAsync(techType, false);
+                    GameObject techPrefab = techPrefabRoutine.GetResult();
+#endif
                     Validate.NotNull(techPrefab, $"{nameof(Vehicles)}: No prefab for tech type: {techType}");
 
                     OnVehiclePrefabLoaded(techType, techPrefab, id, position, rotation, interactiveChildIdentifiers, dockingBayId, name, hsb, health);
@@ -297,7 +324,12 @@ namespace NitroxClient.GameLogic
                 {
                     GameObject dockingBayBase = NitroxEntity.RequireObjectFrom(dockingBayId.Value);
                     VehicleDockingBay dockingBay = dockingBayBase.GetComponentInChildren<VehicleDockingBay>();
+#if SUBNAUTICA
                     dockingBay.DockVehicle(vehicle);
+#elif BELOWZERO
+                    Dockable dockable = gameObject.GetComponent<Dockable>();
+                    dockingBay.Dock(dockable);
+#endif
                 }
                 else if (techType == TechType.Exosuit)
                 {
@@ -308,13 +340,17 @@ namespace NitroxClient.GameLogic
                 if (!string.IsNullOrEmpty(name))
                 {
                     vehicle.vehicleName = name;
+#if SUBNAUTICA
                     vehicle.subName?.DeserializeName(vehicle.vehicleName);
+#endif
                 }
 
                 if (hsb != null)
                 {
                     vehicle.vehicleColors = hsb;
+#if SUBNAUTICA
                     vehicle.subName?.DeserializeColors(hsb);
+#endif
                 }
 
                 vehicle.GetComponent<LiveMixin>().health = health;
@@ -340,13 +376,17 @@ namespace NitroxClient.GameLogic
                 if (!string.IsNullOrEmpty(name))
                 {
                     rocket.rocketName = name;
+#if SUBNAUTICA
                     rocket.subName?.DeserializeName(name);
+#endif
                 }
 
                 if (hsb != null)
                 {
                     rocket.rocketColors = hsb;
+#if SUBNAUTICA
                     rocket.subName?.DeserializeColors(hsb);
+#endif
                 }
             }
 

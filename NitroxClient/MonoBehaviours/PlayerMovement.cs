@@ -92,12 +92,16 @@ namespace NitroxClient.MonoBehaviours
                 // So, we need to hack in and try to figure out when thrust needs to be applied.
                 if (vehicle && AvatarInputHandler.main.IsEnabled())
                 {
+#if SUBNAUTICA
                     if (techType == TechType.Seamoth)
                     {
                         bool flag = vehicle.transform.position.y < Ocean.main.GetOceanLevel() && vehicle.transform.position.y < vehicle.worldForces.waterDepth && !vehicle.precursorOutOfWater;
                         appliedThrottle = flag && GameInput.GetMoveDirection().sqrMagnitude > .1f;
                     }
                     else if (techType == TechType.Exosuit)
+#elif BELOWZERO
+                    if (techType == TechType.Exosuit)
+#endif
                     {
                         Exosuit exosuit = vehicle as Exosuit;
                         if (exosuit)

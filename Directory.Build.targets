@@ -257,6 +257,14 @@
                     <HintPath>$(GameManagedDir)\UnityEngine.XRModule.dll</HintPath>
                     <Private>$(TestLibrary)</Private>
                 </Reference>
+                <Reference Include="Unity.ResourceManager">
+                    <HintPath>$(GameManagedDir)\Unity.ResourceManager.dll</HintPath>
+                    <Private>$(TestLibrary)</Private>
+                </Reference>
+                <Reference Include="Unity.TextMeshPro">
+                    <HintPath>$(GameManagedDir)\Unity.TextMeshPro.dll</HintPath>
+                    <Private>$(TestLibrary)</Private>
+                </Reference>
             </ItemGroup>
         </When>
     </Choose>

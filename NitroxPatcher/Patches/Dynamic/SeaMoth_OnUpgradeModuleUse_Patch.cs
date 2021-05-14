@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿﻿#if SUBNAUTICA
+using System.Reflection;
 using HarmonyLib;
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
@@ -40,4 +41,5 @@ namespace NitroxPatcher.Patches.Dynamic
         }
     }
 }
+#endif
 
