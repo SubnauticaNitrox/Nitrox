@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Threading;
 using NitroxModel.OS.MacOS;
@@ -31,10 +32,7 @@ namespace NitroxModel.OS
         {
         }
 
-        public virtual IEnumerable<string> GetDefaultPrograms(string file)
-        {
-            throw new NotSupportedException();
-        }
+        public virtual IEnumerable<string> GetDefaultPrograms(string file) => throw new NotSupportedException();
 
         /// <summary>
         ///     Opens the file with the default associated program or the default editor of the OS.
@@ -86,7 +84,7 @@ namespace NitroxModel.OS
             {
                 return null;
             }
-            
+
             fileName = Path.GetFileName(fileName);
             // Always test filename in system lib root first, then other paths. On UNIX systems the path is case-sensitive.
             IEnumerable<string> pathsToTools = new[] { Environment.SystemDirectory }.Concat(values.Split(Path.PathSeparator)).Distinct();
@@ -99,6 +97,108 @@ namespace NitroxModel.OS
                 }
             }
             return null;
+        }
+
+        public string MakeRelativePath(string fromPath, string toPath)
+        {
+            if (string.IsNullOrEmpty(fromPath))
+            {
+                throw new ArgumentNullException(nameof(fromPath));
+            }
+            if (string.IsNullOrEmpty(toPath))
+            {
+                throw new ArgumentNullException(nameof(toPath));
+            }
+            // Ensure postfix so that result becomes relative to entire "from" path.
+            fromPath = fromPath[fromPath.Length - 1] == Path.DirectorySeparatorChar ? fromPath : fromPath + Path.DirectorySeparatorChar;
+            Uri fromUri = new(fromPath);
+            Uri toUri = new(toPath);
+            // Can path be made relative?
+            if (fromUri.Scheme != toUri.Scheme)
+            {
+                return toPath;
+            }
+
+            Uri relativeUri = fromUri.MakeRelativeUri(toUri);
+            string relativePath = Uri.UnescapeDataString(relativeUri.ToString());
+            if (toUri.Scheme.Equals("file", StringComparison.InvariantCultureIgnoreCase))
+            {
+                relativePath = relativePath.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
+            }
+            return relativePath;
+        }
+
+        /// <summary>
+        ///     Zips the files found in the given directory.
+        /// </summary>
+        /// <param name="dir">Directory to search for files to zip.</param>
+        /// <param name="outputPath">
+        ///     Name of output zip, optionally including full path. If null, uses the directory name given by
+        ///     <see cref="dir" />.
+        /// </param>
+        /// <param name="fileSearchPattern">Search pattern used to filter against files to zip.</param>
+        /// <param name="replaceFile">If true, overwrites the file matching the output path.</param>
+        /// <returns>Full path to the newly created zip or null if no files are found to zip.</returns>
+        /// <exception cref="IOException">If zip file already exists.</exception>
+        public string ZipFilesInDirectory(string dir, string outputPath = null, string fileSearchPattern = "*", bool replaceFile = false)
+        {
+            if (string.IsNullOrWhiteSpace(dir))
+            {
+                throw new ArgumentException("Directory must not be null or empty", nameof(dir));
+            }
+            dir = Path.GetFullPath(dir);
+            if (!Directory.Exists(dir))
+            {
+                throw new ArgumentException("Path is not a directory", nameof(dir));
+            }
+            // Figure out relative path of output OR use <basename>.zip of directory.
+            outputPath = Path.GetFullPath(outputPath ?? dir);
+            string outZipName = Path.GetFileName(outputPath);
+            if (string.IsNullOrEmpty(Path.GetExtension(outZipName)))
+            {
+                outZipName = Path.ChangeExtension(outZipName, ".zip");
+            }
+            string outZipDir = Path.GetDirectoryName(outputPath) ?? dir;
+            string outZipFullName = Path.Combine(outZipDir, outZipName);
+            if (!replaceFile && File.Exists(outZipFullName))
+            {
+                throw new IOException($"The file '{outZipFullName}' already exists");
+            }
+            string[] files = Directory.GetFiles(dir, fileSearchPattern, SearchOption.AllDirectories);
+            if (files.Length < 1)
+            {
+                return null;
+            }
+
+            // Create the zip.
+            Directory.CreateDirectory(outZipDir);
+            using ZipArchive zip = new(File.Create(outZipFullName), ZipArchiveMode.Create);
+            foreach (string file in files)
+            {
+                ZipArchiveEntry entry = zip.CreateEntry(MakeRelativePath(dir, file));
+                using Stream sourceStream = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read);
+                using Stream targetStream = entry.Open();
+                sourceStream.CopyTo(targetStream);
+            }
+
+            return outZipFullName;
+        }
+
+        /// <summary>
+        ///     Replaces target file with source file. If target file does not exist then it moves the file.
+        /// </summary>
+        /// <param name="source">Source file to replace with.</param>
+        /// <param name="target">Target file to replace.</param>
+        public void ReplaceFile(string source, string target)
+        {
+            if (!File.Exists(target))
+            {
+                File.Move(source, target);
+            }
+            else
+            {
+                File.Replace(source, target, null, false);
+            }
         }
     }
 }

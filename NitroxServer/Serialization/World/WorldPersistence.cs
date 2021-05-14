@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Ionic.Zip;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
@@ -9,6 +8,7 @@ using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
+using NitroxModel.OS;
 using NitroxModel.Server;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Bases;
@@ -24,23 +24,20 @@ namespace NitroxServer.Serialization.World
 {
     public class WorldPersistence
     {
-        /// <summary>
-        ///  For nitrox save files
-        /// </summary>
-        public IServerSerializer SaveDataSerializer { get; private set; }
-        private string fileEnding;
+        public IServerSerializer Serializer { get; private set; }
+        private string FileEnding => Serializer?.FileEnding ?? "";
+
         private readonly ServerProtoBufSerializer protoBufSerializer;
-        private readonly ServerConfig config;
         private readonly RandomStartGenerator randomStart;
+        private readonly ServerConfig config;
 
         public WorldPersistence(ServerProtoBufSerializer protoBufSerializer, ServerJsonSerializer jsonSerializer, ServerConfig config, RandomStartGenerator randomStart)
         {
             this.protoBufSerializer = protoBufSerializer;
-            this.config = config;
             this.randomStart = randomStart;
+            this.config = config;
 
-            SaveDataSerializer = config.SerializerMode == ServerSerializerMode.PROTOBUF ? (IServerSerializer)protoBufSerializer : jsonSerializer;
-            fileEnding = SaveDataSerializer.GetFileEnding();
+            Serializer = config.SerializerMode == ServerSerializerMode.PROTOBUF ? protoBufSerializer : jsonSerializer;
         }
 
         public bool Save(World world, string saveDir)
@@ -54,70 +51,62 @@ namespace NitroxServer.Serialization.World
                     Directory.CreateDirectory(saveDir);
                 }
 
-                SaveDataSerializer.Serialize(Path.Combine(saveDir, "Version" + fileEnding), new SaveFileVersion());
-                SaveDataSerializer.Serialize(Path.Combine(saveDir, "BaseData" + fileEnding), persistedData.BaseData);
-                SaveDataSerializer.Serialize(Path.Combine(saveDir, "PlayerData" + fileEnding), persistedData.PlayerData);
-                SaveDataSerializer.Serialize(Path.Combine(saveDir, "WorldData" + fileEnding), persistedData.WorldData);
-                SaveDataSerializer.Serialize(Path.Combine(saveDir, "EntityData" + fileEnding), persistedData.EntityData);
+                Serializer.Serialize(Path.Combine(saveDir, $"Version{FileEnding}"), new SaveFileVersion());
+                Serializer.Serialize(Path.Combine(saveDir, $"BaseData{FileEnding}"), persistedData.BaseData);
+                Serializer.Serialize(Path.Combine(saveDir, $"PlayerData{FileEnding}"), persistedData.PlayerData);
+                Serializer.Serialize(Path.Combine(saveDir, $"WorldData{FileEnding}"), persistedData.WorldData);
+                Serializer.Serialize(Path.Combine(saveDir, $"EntityData{FileEnding}"), persistedData.EntityData);
 
-                Log.Info("World state saved.");
+                Log.Info("World state saved");
                 return true;
             }
             catch (Exception ex)
             {
-                Log.Error("Could not save world: " + ex);
+                Log.Error(ex, $"Could not save world :");
                 return false;
             }
         }
 
         internal Optional<World> LoadFromFile(string saveDir)
         {
-            if (!Directory.Exists(saveDir) || !File.Exists(Path.Combine(saveDir, "Version" + fileEnding)))
+            if (!Directory.Exists(saveDir) || !File.Exists(Path.Combine(saveDir, $"Version{FileEnding}")))
             {
-                Log.Warn("No previous save file found - creating a new one.");
+                Log.Warn("No previous save file found, creating a new one");
                 return Optional.Empty;
             }
 
             try
             {
-                PersistedWorldData persistedData = new PersistedWorldData();
-                SaveFileVersion saveFileVersion = SaveDataSerializer.Deserialize<SaveFileVersion>(Path.Combine(saveDir, "Version" + fileEnding));
+                PersistedWorldData persistedData = new();
+                SaveFileVersion saveFileVersion = Serializer.Deserialize<SaveFileVersion>(Path.Combine(saveDir, $"Version{FileEnding}"));
 
                 if (saveFileVersion == null || saveFileVersion.Version != NitroxEnvironment.Version)
                 {
                     throw new InvalidDataException("Version file is empty or save data files are too old");
                 }
 
-                persistedData.BaseData = SaveDataSerializer.Deserialize<BaseData>(Path.Combine(saveDir, "BaseData" + fileEnding));
-                persistedData.PlayerData = SaveDataSerializer.Deserialize<PlayerData>(Path.Combine(saveDir, "PlayerData" + fileEnding));
-                persistedData.WorldData = SaveDataSerializer.Deserialize<WorldData>(Path.Combine(saveDir, "WorldData" + fileEnding));
-                persistedData.EntityData = SaveDataSerializer.Deserialize<EntityData>(Path.Combine(saveDir, "EntityData" + fileEnding));
+                persistedData.BaseData = Serializer.Deserialize<BaseData>(Path.Combine(saveDir, $"BaseData{FileEnding}"));
+                persistedData.PlayerData = Serializer.Deserialize<PlayerData>(Path.Combine(saveDir, $"PlayerData{FileEnding}"));
+                persistedData.WorldData = Serializer.Deserialize<WorldData>(Path.Combine(saveDir, $"WorldData{FileEnding}"));
+                persistedData.EntityData = Serializer.Deserialize<EntityData>(Path.Combine(saveDir, $"EntityData{FileEnding}"));
 
                 if (!persistedData.IsValid())
                 {
                     throw new InvalidDataException("Save files are not valid");
                 }
 
-
-                World world = CreateWorld(persistedData,
-                                          config.GameMode);
+                World world = CreateWorld(persistedData, config.GameMode);
 
                 return Optional.Of(world);
             }
             catch (Exception ex)
             {
+                Log.Error($"Could not load world, creating a new one : {ex.GetType()} {ex.Message}");
+
                 //Backup world if loading fails
-                using (ZipFile zipFile = new ZipFile())
-                {
-                    string[] nitroxFiles = Directory.GetFiles(saveDir, "*" + fileEnding);
-                    zipFile.AddFiles(nitroxFiles);
-                    zipFile.Save(Path.Combine(saveDir, "worldBackup.zip"));
-                }
-#if DEBUG
-                Log.Error($"Could not load world, creating a new one: {ex}");
-#else
-                Log.Warn($"Could not load world, creating a new one");
-#endif
+                string outZip = Path.Combine(saveDir, "worldBackup.zip");
+                Log.Warn($"Creating a backup at {Path.GetFullPath(outZip)}");
+                FileSystem.Instance.ZipFilesInDirectory(saveDir, outZip, $"*{FileEnding}", true);
             }
 
             return Optional.Empty;
@@ -136,7 +125,7 @@ namespace NitroxServer.Serialization.World
 
         private World CreateFreshWorld()
         {
-            PersistedWorldData pWorldData = new PersistedWorldData
+            PersistedWorldData pWorldData = new()
             {
                 BaseData = BaseData.From(new List<BasePiece>(), new List<BasePiece>()),
                 EntityData = EntityData.From(new List<Entity>()),
@@ -153,9 +142,8 @@ namespace NitroxServer.Serialization.World
                     InventoryData = InventoryData.From(new List<ItemData>(), new List<ItemData>(), new List<EquippedItemData>()),
                     VehicleData = VehicleData.From(new List<VehicleModel>()),
                     ParsedBatchCells = new List<NitroxInt3>(),
-                    ServerStartTime = DateTime.Now
+                    ServerStartTime = DateTime.Now,
 #if DEBUG
-                ,
                     Seed = "TCCBIBZXAB"
 #endif
                 }
@@ -174,7 +162,7 @@ namespace NitroxServer.Serialization.World
 
             Log.Info($"Loading world with seed {seed}");
 
-            World world = new World
+            World world = new()
             {
                 TimeKeeper = new TimeKeeper { ServerStartTime = pWorldData.WorldData.ServerStartTime },
 
@@ -216,8 +204,7 @@ namespace NitroxServer.Serialization.World
 
         internal void UpdateSerializer(IServerSerializer serializer)
         {
-            SaveDataSerializer = serializer;
-            fileEnding = serializer.GetFileEnding();
+            this.Serializer = serializer;
         }
     }
 }

@@ -8,9 +8,9 @@ namespace NitroxModel.Discovery.InstallationFinders
 {
     public class EpicGamesInstallationFinder : IFindGameInstallation
     {
-        private readonly Regex installLocationRegex = new Regex("\"InstallLocation\"[^\"]*\"(.*)\"");
+        private readonly Regex installLocationRegex = new("\"InstallLocation\"[^\"]*\"(.*)\"");
 
-        public string FindGame(List<string> errors = null)
+        public string FindGame(IList<string> errors = null)
         {
             string epicGamesManifestsDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), @"Epic\EpicGamesLauncher\Data\Manifests");
             if (!Directory.Exists(epicGamesManifestsDir))
