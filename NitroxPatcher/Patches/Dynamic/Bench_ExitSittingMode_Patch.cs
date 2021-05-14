@@ -8,7 +8,7 @@ using NitroxModel.DataStructures;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
-    class Bench_ExitSittingMode_Patch : NitroxPatch, IDynamicPatch
+    public class Bench_ExitSittingMode_Patch : NitroxPatch, IDynamicPatch
     {
         public static readonly MethodInfo TARGET_METHOD = typeof(Bench).GetMethod("ExitSittingMode", BindingFlags.NonPublic | BindingFlags.Instance);
 

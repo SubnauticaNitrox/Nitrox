@@ -10,7 +10,7 @@ using NitroxModel.Logger;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
-    class Bench_OnHandClick_Patch : NitroxPatch, IDynamicPatch
+    public class Bench_OnHandClick_Patch : NitroxPatch, IDynamicPatch
     {
         public static readonly MethodInfo TARGET_METHOD = typeof(Bench).GetMethod(nameof(Bench.OnHandClick), BindingFlags.Public | BindingFlags.Instance);
 
