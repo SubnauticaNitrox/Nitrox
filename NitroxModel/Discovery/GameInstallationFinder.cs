@@ -28,11 +28,7 @@ namespace NitroxModel.Discovery
 
         public string FindGame(IList<string> errors = null)
         {
-            if (errors == null)
-            {
-                errors = new List<string>();
-            }
-
+            errors ??= new List<string>();
             foreach (IFindGameInstallation finder in finders)
             {
                 string path = finder.FindGame(errors);

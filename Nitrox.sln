@@ -32,7 +32,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nitrox.Bootloader", "Nitrox
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Nitrox.Subnautica.Assets", "Nitrox.Subnautica.Assets\Nitrox.Subnautica.Assets.shproj", "{0763D551-B1A8-4960-B88A-98833F957936}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildTool", "BuildTool\BuildTool.csproj", "{15C4C9C4-683C-4EF0-9E0F-0664A3BDA0CE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nitrox.BuildTool", "Nitrox.BuildTool\Nitrox.BuildTool.csproj", "{15C4C9C4-683C-4EF0-9E0F-0664A3BDA0CE}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution

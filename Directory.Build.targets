@@ -4,12 +4,7 @@
     <PropertyGroup Condition="'$(TargetFramework)' == '' and '$(OutputType)' == 'Library'">
       <TargetFramework>.netstandard2.0</TargetFramework>
     </PropertyGroup>
-
-    <Target Name="CheckDependenciesExist" 
-            AfterTargets="PrepareForModding" 
-            Condition="'$(UnityModLibrary)' == 'true' or '$(TestLibrary)' == 'true'">
-        <Error Condition="'$(GameManagedDir)' == ''" Text="Build the solution again to let Nitrox use generated dependencies from BuildTool." />
-    </Target>
+    
     <Choose>
         <When Condition="'$(UnityModLibrary)' == 'true' or '$(TestLibrary)' == 'true'">
             <!-- UnityEngine libraries to include -->

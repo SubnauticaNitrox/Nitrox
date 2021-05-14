@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml;
+using NitroxModel.Helper;
 
 namespace NitroxModel.Discovery
 {
@@ -22,6 +23,7 @@ namespace NitroxModel.Discovery
 
         public GameInstallData(string installDir)
         {
+            Validate.NotNull(installDir, $"Argument '{nameof(installDir)}' must not be null.");
             InstallDir = installDir;
         }
 
@@ -40,6 +42,13 @@ namespace NitroxModel.Discovery
                     {
                         case "GameDir":
                             game.InstallDir = elem.LastChild.Value;
+                            break;
+                        case "GameManagedDir":
+                            if (!Directory.Exists(elem.LastChild.Value))
+                            {
+                                throw new DirectoryNotFoundException();
+                            }
+                            game.managedDllsDir = elem.LastChild.Value;
                             break;
                     }
                 }

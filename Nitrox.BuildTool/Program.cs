@@ -17,33 +17,28 @@ namespace BuildTool
         private static readonly Lazy<string> processDir =
             new(() => Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location ?? Directory.GetCurrentDirectory()));
 
-        private static uint SteamAppId => !uint.TryParse(Environment.GetEnvironmentVariable("SteamAppId"), out uint id) ? SteamGameRegistryFinder.SUBNAUTICA_APP_ID : id;
-
         public static string ProcessDir => processDir.Value;
 
         public static string GeneratedOutputDir => Path.Combine(ProcessDir, "generated_files");
 
         public static async Task Main(string[] args)
         {
-            if (SteamAppId <= 0) throw new Exception("SteamAppId environment variable must be set and be valid");
-
-            Console.WriteLine($"Building mod for Steam game with id {SteamAppId}");
-            GameInstallData game = await Task.Factory.StartNew(() => EnsureGame(SteamAppId)).ConfigureAwait(false);
+            GameInstallData game = await Task.Factory.StartNew(EnsureGame).ConfigureAwait(false);
             Console.WriteLine($"Found game at {game.InstallDir}");
             await Task.Factory.StartNew(() => EnsurePublicizedAssemblies(game)).ConfigureAwait(false);
         }
 
-        private static GameInstallData EnsureGame(uint steamAppId)
+        private static GameInstallData EnsureGame()
         {
             static string ValidateUnityGame(GameInstallData game)
             {
                 if (!File.Exists(Path.Combine(game.InstallDir, "UnityPlayer.dll")))
                 {
-                    return "Steam game is not a Unity game.";
+                    return $"Game at: '{game.InstallDir}' is not a Unity game";
                 }
                 if (!Directory.Exists(game.ManagedDllsDir))
                 {
-                    throw new Exception($"Invalid Unity managed DLLs directory: {game.ManagedDllsDir}");
+                    return $"Invalid Unity managed DLLs directory: {game.ManagedDllsDir}";
                 }
                 return null;
             }
