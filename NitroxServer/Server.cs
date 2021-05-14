@@ -37,10 +37,7 @@ namespace NitroxServer
             saveTimer = new Timer();
             saveTimer.Interval = serverConfig.SaveInterval;
             saveTimer.AutoReset = true;
-            saveTimer.Elapsed += delegate
-            {
-                Save();
-            };
+            saveTimer.Elapsed += delegate { Save(); };
         }
 
         public string SaveSummary
@@ -140,7 +137,7 @@ namespace NitroxServer
             DisablePeriodicSaving();
             world.EventTriggerer.PauseWorldTime();
             world.EventTriggerer.PauseEventTimers();
-            Log.Info("Server has paused");
+            Log.Info("Server has paused, waiting for players");
         }
 
         public void ResumeServer()

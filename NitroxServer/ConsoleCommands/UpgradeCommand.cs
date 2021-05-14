@@ -10,7 +10,7 @@ using NitroxServer.Serialization.World;
 
 namespace NitroxServer.ConsoleCommands
 {
-    internal sealed class UpgradeCommand : Command
+    internal class UpgradeCommand : Command
     {
         private readonly WorldPersistence worldPersistence;
         private readonly ServerConfig serverConfig;

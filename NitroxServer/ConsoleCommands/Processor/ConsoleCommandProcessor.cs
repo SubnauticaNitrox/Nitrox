@@ -12,7 +12,7 @@ namespace NitroxServer.ConsoleCommands.Processor
 {
     public class ConsoleCommandProcessor
     {
-        private readonly Dictionary<string, Command> commands = new Dictionary<string, Command>();
+        private readonly Dictionary<string, Command> commands = new();
         private readonly char[] splitChar = { ' ' };
 
         public ConsoleCommandProcessor(IEnumerable<Command> cmds)
@@ -47,7 +47,7 @@ namespace NitroxServer.ConsoleCommands.Processor
             string[] parts = msg.Split(splitChar, StringSplitOptions.RemoveEmptyEntries);
             if (!commands.TryGetValue(parts[0], out Command cmd))
             {
-                string errorMessage = "Command Not Found: " + parts[0];
+                string errorMessage = $"Command Not Found: {parts[0]}";
                 Log.Info(errorMessage);
 
                 if (player.HasValue)

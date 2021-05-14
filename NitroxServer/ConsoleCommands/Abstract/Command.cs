@@ -67,7 +67,7 @@ namespace NitroxServer.ConsoleCommands.Abstract
 
         public string ToHelpText(bool cropText = false)
         {
-            StringBuilder cmd = new StringBuilder(Name);
+            StringBuilder cmd = new(Name);
 
             if (Aliases.Any())
             {

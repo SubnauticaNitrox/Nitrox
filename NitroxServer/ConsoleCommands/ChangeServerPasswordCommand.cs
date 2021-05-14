@@ -21,7 +21,6 @@ namespace NitroxServer.ConsoleCommands
         {
             string password = args.Get(0) ?? string.Empty;
 
-
             serverConfig.ServerPassword = password;
             NitroxConfig.Serialize(serverConfig);
 
