@@ -65,7 +65,6 @@
     <Compile Include="Helper\VehicleMovementFactory.cs" />
     <Compile Include="Logger\SubnauticaInGameLogger.cs" />
     <Compile Include="Packets\CreatureActionChanged.cs" />
-    <Compile Include="Packets\CyclopsActivateHorn.cs" />
     <Compile Include="Packets\CyclopsChangeShieldMode.cs" />
     <Compile Include="Packets\CyclopsChangeSonarMode.cs" />
     <Compile Include="Packets\CyclopsChangeSilentRunning.cs" />

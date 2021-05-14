@@ -43,7 +43,7 @@ namespace NitroxClient.Debuggers
                 desiredWidth = 200;
             }
 
-            WindowRect = new Rect(Screen.width / 2 - (desiredWidth / 2), 100, desiredWidth, 0); // Default position in center of screen.
+            WindowRect = new Rect(Screen.width / 2 - (desiredWidth / 2), 75, desiredWidth, 0); // Default position in center of screen.
             Hotkey = hotkey;
             HotkeyAltRequired = alt;
             HotkeyShiftRequired = shift;
@@ -106,8 +106,7 @@ namespace NitroxClient.Debuggers
         {
             Validate.NotNull(name);
 
-            DebuggerTab tab;
-            tabs.TryGetValue(name, out tab);
+            tabs.TryGetValue(name, out DebuggerTab tab);
             return Optional.OfNullable(tab);
         }
 
@@ -257,7 +256,7 @@ namespace NitroxClient.Debuggers
 
         public void ResetWindowPosition()
         {
-            WindowRect = new Rect(Screen.width / 2 - (WindowRect.width / 2), 100, WindowRect.width, WindowRect.height); //Reset postion of debuggers because SN sometimes throws the windows from planet 4546B
+            WindowRect = new Rect(Screen.width / 2f - (WindowRect.width / 2), 100, WindowRect.width, WindowRect.height); //Reset position of debuggers because SN sometimes throws the windows from planet 4546B
         }
 
         public class DebuggerTab
