@@ -8,6 +8,16 @@ namespace NitroxModel.Helper
         public const float PI = 3.14159274f;
         public const float DEG2RAD = 0.0174532924f;
 
+        public static float Cos(float cs)
+        {
+            return (float)Math.Cos(cs);
+        }
+
+        public static float Sin(float sn)
+        {
+            return (float)Math.Sin(sn);
+        }
+
         public static float Sqrt(float ls)
         {
             return (float)Math.Sqrt(ls);

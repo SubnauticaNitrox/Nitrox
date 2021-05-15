@@ -80,6 +80,16 @@ namespace NitroxModel.DataStructures.GameLogic
             return new(lhs.X * rhs, lhs.Y * rhs, lhs.Z * rhs);
         }
 
+        public static NitroxVector3 operator /(NitroxVector3 lhs, double rhs)
+        {
+            return new((float)(lhs.X / rhs), (float)(lhs.Y / rhs), (float)(lhs.Z / rhs));
+        }
+
+        public static NitroxVector3 operator *(NitroxVector3 lhs, double rhs)
+        {
+            return new((float)(lhs.X * rhs), (float)(lhs.Y * rhs), (float)(lhs.Z * rhs));
+        }
+
         public static bool operator ==(NitroxVector3 lhs, NitroxVector3 rhs)
         {
             return lhs.X == rhs.X && lhs.Y == rhs.Y && lhs.Z == rhs.Z;
@@ -88,6 +98,11 @@ namespace NitroxModel.DataStructures.GameLogic
         public static bool operator !=(NitroxVector3 lhs, NitroxVector3 rhs)
         {
             return !(lhs == rhs);
+        }
+
+        public static implicit operator NitroxVector3(NitroxVector4 vector4)
+        {
+            return new NitroxVector3(vector4.X, vector4.Y, vector4.Z);
         }
 
         public static NitroxVector3 Normalize(NitroxVector3 value)

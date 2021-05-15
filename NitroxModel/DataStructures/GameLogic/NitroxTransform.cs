@@ -46,16 +46,14 @@ namespace NitroxModel.DataStructures.GameLogic
             get
             {
                 NitroxMatrix4x4 matrix = Parent != null ? Parent.localToWorldMatrix : NitroxMatrix4x4.Identity;
-                NitroxMatrix4x4.ExtractScale(ref matrix); // This is to just get the scale out of the matrix so the rotation is accurate
-                NitroxQuaternion rotation = NitroxMatrix4x4.ExtractRotation(ref matrix) * LocalRotation;
+                NitroxQuaternion rotation = NitroxMatrix4x4.GetRotation(ref matrix) * LocalRotation;
                 return rotation;
             }
             set
             {
                 NitroxMatrix4x4 matrix = Parent != null ? Parent.localToWorldMatrix.Inverse * NitroxMatrix4x4.TRS(LocalPosition, value, LocalScale) : NitroxMatrix4x4.TRS(LocalPosition, value, LocalScale);
 
-                NitroxMatrix4x4.ExtractScale(ref matrix);
-                LocalRotation = NitroxMatrix4x4.ExtractRotation(ref matrix);
+                LocalRotation = NitroxMatrix4x4.GetRotation(ref matrix);
             }
         }
 

@@ -90,5 +90,32 @@ namespace NitroxTest.DataStructures
             expectedResult.Equals(result, TOLERANCE).Should().BeTrue();
 
         }
+
+        [TestMethod]
+        public void TestTRS()
+        {
+            NitroxVector3 position = new NitroxVector3(256, 32, -256);
+            NitroxQuaternion rotation = NitroxQuaternion.FromEuler(new NitroxVector3(45, 25, 30));
+            NitroxVector3 scale = new NitroxVector3(1, 8, 5);
+            NitroxMatrix4x4 matrix = NitroxMatrix4x4.TRS(position, rotation, scale);
+
+            NitroxVector3 position2 = new NitroxVector3(-256, 32, 256);
+            NitroxQuaternion rotation2 = NitroxQuaternion.FromEuler(new NitroxVector3(90, 180, 45));
+            NitroxVector3 scale2 = new NitroxVector3(3, 2, 1);
+            NitroxMatrix4x4 matrix2 = NitroxMatrix4x4.TRS(position2, rotation2, scale2);
+
+
+            NitroxMatrix4x4.DecomposeMatrix(ref matrix, out NitroxVector3 afterPosition, out NitroxQuaternion afterRotation, out NitroxVector3 afterScale);
+            NitroxMatrix4x4.DecomposeMatrix(ref matrix2, out NitroxVector3 afterPosition2, out NitroxQuaternion afterRotation2, out NitroxVector3 afterScale2);
+
+            NitroxMatrix4x4 result = matrix * matrix2;
+
+            NitroxMatrix4x4.DecomposeMatrix(ref result, out NitroxVector3 afterPosition3, out NitroxQuaternion afterRotation3, out NitroxVector3 afterScale3);
+
+            position.Equals(afterPosition).Should().BeTrue();
+            rotation.Equals(afterRotation).Should().BeTrue();
+            scale.Equals(afterScale).Should().BeTrue();
+
+        }
     }
 }

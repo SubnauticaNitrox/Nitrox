@@ -20,6 +20,8 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoMember(4)]
         public float W;
 
+        public NitroxVector3 Euler { get { return ToEuler(); } }
+
         public static NitroxQuaternion Identity { get; } = new NitroxQuaternion(0, 0, 0, 1);
 
         public NitroxQuaternion(float x, float y, float z, float w)
@@ -105,36 +107,76 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public NitroxVector3 ToEuler()
         {
-            NitroxVector3 result;
+            float sqw = W * W;
+            float sqx = X * X;
+            float sqy = Y * Y;
+            float sqz = Z * Z;
+            float unit = sqx + sqy + sqz + sqw; // if normalised is one, otherwise is correction factor
+            float test = X * W - Y * Z;
+            NitroxVector3 v;
 
-            float test = X * Y + Z * W;
-            // singularity at north pole
-            if (test > 0.499)
-            {
-                result.X = 0;
-                result.Y = 2 * Mathf.Atan2(X, W);
-                result.Z = Mathf.PI / 2;
+            if (test > 0.4995f * unit)
+            { // singularity at north pole
+                v.Y = 2f * Mathf.Atan2(Y, X);
+                v.X = Mathf.PI / 2;
+                v.Z = 0;
+                return NormalizeAngles(v * Mathf.RAD2DEG);
             }
-            // singularity at south pole
-            else if (test < -0.499)
-            {
-                result.X = 0;
-                result.Y = -2 * Mathf.Atan2(X, W);
-                result.Z = -Mathf.PI / 2;
+            if (test < -0.4995f * unit)
+            { // singularity at south pole
+                v.Y = -2f * Mathf.Atan2(Y, X);
+                v.X = -Mathf.PI / 2;
+                v.Z = 0;
+                return NormalizeAngles(v * Mathf.RAD2DEG);
             }
-            else
-            {
-                result.X = Mathf.RAD2DEG * Mathf.Atan2(2 * X * W - 2 * Y * Z, 1 - 2 * X * X - 2 * Z * Z);
-                result.Y = Mathf.RAD2DEG * Mathf.Atan2(2 * Y * W - 2 * X * Z, 1 - 2 * Y * Y - 2 * Z * Z);
-                result.Z = Mathf.RAD2DEG * Mathf.Asin(2 * X * Y + 2 * Z * W);
+            NitroxQuaternion q = new NitroxQuaternion(W, Z, X, Y);
+            v.Y = Mathf.Atan2(2f * q.X * q.W + 2f * q.Y * q.Z, 1 - 2f * (q.Z * q.Z + q.W * q.W));     // Yaw
+            v.X = Mathf.Asin(2f * (q.X * q.Z - q.W * q.Y));                             // Pitch
+            v.Z = Mathf.Atan2(2f * q.X * q.Y + 2f * q.Z * q.W, 1 - 2f * (q.Y * q.Y + q.Z * q.Z));      // Roll
+            return NormalizeAngles(v * Mathf.RAD2DEG);
+        }
 
-                if (result.X < 0)
-                    result.X += 360;
-                if (result.Y < 0)
-                    result.Y += 360;
-                if (result.Z < 0)
-                    result.Z += 360;
+        static NitroxVector3 NormalizeAngles(NitroxVector3 angles)
+        {
+            angles.X = NormalizeAngle(angles.X);
+            angles.Y = NormalizeAngle(angles.Y);
+            angles.Z = NormalizeAngle(angles.Z);
+            return angles;
+        }
+
+        static float NormalizeAngle(float angle)
+        {
+            while (angle > 360)
+            {
+                angle -= 360;
             }
+
+            while (angle < 0)
+            {
+                angle += 360;
+            }
+            return angle;
+        }
+
+        public static NitroxQuaternion FromEuler(NitroxVector3 euler)
+        {
+            NitroxVector3 radEuler = euler * Mathf.DEG2RAD;
+
+            double yawOver2 = radEuler.Y * 0.5f;
+            float cosYawOver2 = (float)System.Math.Cos(yawOver2);
+            float sinYawOver2 = (float)System.Math.Sin(yawOver2);
+            double pitchOver2 = radEuler.X * 0.5f;
+            float cosPitchOver2 = (float)System.Math.Cos(pitchOver2);
+            float sinPitchOver2 = (float)System.Math.Sin(pitchOver2);
+            double rollOver2 = radEuler.Z * 0.5f;
+            float cosRollOver2 = (float)System.Math.Cos(rollOver2);
+            float sinRollOver2 = (float)System.Math.Sin(rollOver2);
+            NitroxQuaternion result;
+            result.W = cosYawOver2 * cosPitchOver2 * cosRollOver2 + sinYawOver2 * sinPitchOver2 * sinRollOver2;
+            result.X = sinYawOver2 * cosPitchOver2 * cosRollOver2 + cosYawOver2 * sinPitchOver2 * sinRollOver2;
+            result.Y = cosYawOver2 * sinPitchOver2 * cosRollOver2 - sinYawOver2 * cosPitchOver2 * sinRollOver2;
+            result.Z = cosYawOver2 * cosPitchOver2 * sinRollOver2 - sinYawOver2 * sinPitchOver2 * cosRollOver2;
+
             return result;
         }
 
