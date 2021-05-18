@@ -24,8 +24,7 @@ namespace NitroxClient.Communication.Packets.Processors
             {
                 TechType techType = packet.TechType.ToUnity();
 
-                PDAScanner.Entry entry;
-                if (PDAScanner.GetPartialEntryByKey(techType, out entry))
+                if (PDAScanner.GetPartialEntryByKey(techType, out PDAScanner.Entry entry))
                 {
                     if (packet.Unlocked > entry.unlocked)
                     {
