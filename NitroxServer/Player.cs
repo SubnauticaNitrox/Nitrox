@@ -14,7 +14,7 @@ namespace NitroxServer
         private readonly ThreadSafeCollection<EquippedItemData> equippedItems;
         private readonly ThreadSafeCollection<EquippedItemData> modules;
         private readonly ThreadSafeCollection<AbsoluteEntityCell> visibleCells;
-        
+
         public NitroxConnection connection { get; set; }
         public PlayerSettings PlayerSettings => PlayerContext.PlayerSettings;
         public PlayerContext PlayerContext { get; set; }
@@ -27,6 +27,7 @@ namespace NitroxServer
         public Perms Permissions { get; set; }
         public PlayerStatsData Stats { get; set; }
         public NitroxVector3? LastStoredPosition { get; set; }
+        public Optional<NitroxId> LastStoredSubRootID { get; set; }
 
         public Player(ushort id, string name, bool isPermaDeath, PlayerContext playerContext, NitroxConnection connection, NitroxVector3 position, NitroxId playerId, Optional<NitroxId> subRootId, Perms perms, PlayerStatsData stats, IEnumerable<EquippedItemData> equippedItems,
                       IEnumerable<EquippedItemData> modules)
@@ -42,6 +43,7 @@ namespace NitroxServer
             Permissions = perms;
             Stats = stats;
             LastStoredPosition = null;
+            LastStoredSubRootID = Optional.Empty;
             this.equippedItems = new ThreadSafeCollection<EquippedItemData>(equippedItems);
             this.modules = new ThreadSafeCollection<EquippedItemData>(modules);
             visibleCells = new ThreadSafeCollection<AbsoluteEntityCell>(new HashSet<AbsoluteEntityCell>(), false);
@@ -140,13 +142,14 @@ namespace NitroxServer
             connection.SendPacket(packet);
         }
 
-        public void Teleport(NitroxVector3 destination)
+        public void Teleport(NitroxVector3 destination, Optional<NitroxId> subRootID)
         {
-            PlayerTeleported playerTeleported = new PlayerTeleported(Name, Position, destination);
+            PlayerTeleported playerTeleported = new PlayerTeleported(Name, Position, destination, subRootID);
 
-            SendPacket(playerTeleported);
             Position = playerTeleported.DestinationTo;
             LastStoredPosition = playerTeleported.DestinationFrom;
+            LastStoredSubRootID = subRootID;
+            SendPacket(playerTeleported);
         }
 
         public override string ToString()

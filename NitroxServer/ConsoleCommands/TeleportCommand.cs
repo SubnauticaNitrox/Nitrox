@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
@@ -22,7 +23,7 @@ namespace NitroxServer.ConsoleCommands
             Validate.IsTrue(args.Sender.HasValue, "This command can't be used by CONSOLE");
 
             NitroxVector3 position = new NitroxVector3(args.Get<int>(0), args.Get<int>(1), args.Get<int>(2));
-            args.Sender.Value.Teleport(position);
+            args.Sender.Value.Teleport(position, Optional.Empty);
 
             SendMessage(args.Sender, $"Teleported to {position}");
         }
