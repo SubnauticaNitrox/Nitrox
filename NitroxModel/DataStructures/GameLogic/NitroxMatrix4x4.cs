@@ -344,41 +344,59 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public static NitroxMatrix4x4 GetRotationMatrix(NitroxQuaternion rotation)
         {
-            NitroxVector3 radEuler = rotation.Euler * Mathf.DEG2RAD;
-            float sinX = Mathf.Sin(radEuler.X);
-            float cosX = Mathf.Cos(radEuler.X);
-            float sinY = Mathf.Sin(radEuler.Y);
-            float cosY = Mathf.Cos(radEuler.Y);
-            float sinZ = Mathf.Sin(radEuler.Z);
-            float cosZ = Mathf.Cos(radEuler.Z);
+            NitroxQuaternion normRot = NitroxQuaternion.Normalize(rotation);
+
+            float xx = normRot.X * normRot.X;
+            float yy = normRot.Y * normRot.Y;
+            float zz = normRot.Z * normRot.Z;
+            float ww = normRot.W * normRot.W; // unused but included for completeness
+
+            float xy = normRot.X * normRot.Y;
+            float xz = normRot.X * normRot.Z;
+            float xw = normRot.X * normRot.W;
+
+            float yz = normRot.Y * normRot.Z;
+            float yw = normRot.Y * normRot.W;
+
+            float zw = normRot.Z * normRot.W;
+
 
             NitroxMatrix4x4 matrix = new NitroxMatrix4x4();
-            matrix.SetColumn(0, new NitroxVector4(
-                cosY * cosZ,
-                cosX * sinZ + sinX * sinY * cosZ,
-                sinX * sinZ - cosX * sinY * cosZ,
-                0f));
 
-            matrix.SetColumn(1, new NitroxVector4(
-                -cosY * sinZ,
-                cosX * cosZ - sinX * sinY * sinZ,
-                sinX * cosZ + cosX * sinY * sinZ,
-                0f));
+            matrix.SetRow(0, new NitroxVector4(
+                1f - 2f * yy - 2f * zz,
+                2f * xy - 2f * zw,
+                2f * xz + 2f * yw,
+                0f
+                ));
 
-            matrix.SetColumn(2, new NitroxVector4(
-                sinY,
-                -sinX * cosY,
-                cosX * cosY,
-                0f));
+            matrix.SetRow(1, new NitroxVector4(
+                2f * xy + 2f * zw,
+                1f - 2f * xx - 2f * zz,
+                2f * yz - 2f * xw,
+                0f
+                ));
 
-            matrix.SetColumn(3, new NitroxVector4(0,0,0,1f));
+            matrix.SetRow(2, new NitroxVector4(
+                2f * xz - 2f * yw,
+                2f * yz + 2f * xw,
+                1f - 2f * xx - 2f * yy,
+                0f
+                ));
+
+            matrix.SetRow(3, new NitroxVector4(
+                0f,
+                0f,
+                0f,
+                1f
+                ));
+
 
             return matrix;
         }
 
         public static NitroxMatrix4x4 SetRotation(NitroxQuaternion localRotation)
         {
-            NitroxQuaternion rot = NitroxQuaternion.Normalize(localRotation);
             NitroxMatrix4x4 rotationMatrix = GetRotationMatrix(localRotation);
 
             return rotationMatrix;
@@ -386,15 +404,49 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public static NitroxQuaternion GetRotation(ref NitroxMatrix4x4 matrix)
         {
-            NitroxQuaternion q = NitroxQuaternion.LookRotation(matrix.GetColumn(2), matrix.GetColumn(1));
+            NitroxQuaternion rotation = NitroxQuaternion.Identity;
 
+            float trace = matrix.M11 + matrix.M22 + matrix.M33;
 
-            return q;
+            if (trace > 0)
+            {
+                float S = (float)Math.Sqrt(trace + 1f) * 2f;
+                rotation.W = 0.25f * S;
+                rotation.X = (matrix.M32 - matrix.M23) / S;
+                rotation.Y = (matrix.M13 - matrix.M31) / S;
+                rotation.Z = (matrix.M21 - matrix.M12) / S;
+            }
+            else if ((matrix.M11 > matrix.M22) && (matrix.M11 > matrix.M33))
+            {
+                float S = (float)Math.Sqrt(1.0 + matrix.M11 - matrix.M22 - matrix.M33) * 2f;
+                rotation.W = (matrix.M32 - matrix.M23) / S;
+                rotation.X = 0.25f * S;
+                rotation.Y = (matrix.M12 + matrix.M21) / S;
+                rotation.Z = (matrix.M13 + matrix.M31) / S;
+            }
+            else if (matrix.M22 > matrix.M33)
+            {
+                float S = (float)Math.Sqrt(1.0 + matrix.M22 - matrix.M11 - matrix.M33) * 2f;
+                rotation.W = (matrix.M13 - matrix.M31) / S;
+                rotation.X = (matrix.M12 + matrix.M21) / S;
+                rotation.Y = 0.25f * S;
+                rotation.Z = (matrix.M23 + matrix.M32) / S;
+            }
+            else
+            {
+                float S = (float)Math.Sqrt(1.0 + matrix.M33 - matrix.M11 - matrix.M22) * 2f;
+                rotation.W = (matrix.M21 - matrix.M12) / S;
+                rotation.X = (matrix.M13 + matrix.M31) / S;
+                rotation.Y = (matrix.M23 + matrix.M32) / S;
+                rotation.Z = 0.25f * S;
+            }
+                
+            return rotation;
         }
 
         public static NitroxMatrix4x4 SetTranslation(NitroxVector3 localPosition)
         {
-            NitroxMatrix4x4 transMatrix = NitroxMatrix4x4.Identity;
+            NitroxMatrix4x4 transMatrix = Identity;
 
 
 
@@ -425,14 +477,18 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public static void DecomposeMatrix(ref NitroxMatrix4x4 matrix, out NitroxVector3 localPosition, out NitroxQuaternion localRotation, out NitroxVector3 localScale)
         {
-            NitroxMatrix4x4 before = new NitroxMatrix4x4(matrix);
-
-            localScale = GetScale(ref matrix);
-            NitroxMatrix4x4 matrixWithoutScale = SetScale(localScale).Inverse * matrix;
-            localRotation = GetRotation(ref matrixWithoutScale);
             localPosition = matrix.GetColumn(3);
+            localScale = GetScale(ref matrix);
+            NitroxMatrix4x4 rMatrix = matrix * SetScale(localScale).Inverse;
+            localRotation = GetRotation(ref rMatrix);
+        }
 
-            matrix = before;
+        public static NitroxMatrix4x4 Transpose(NitroxMatrix4x4 matrix)
+        {
+            return new NitroxMatrix4x4(matrix.M11, matrix.M21, matrix.M31, matrix.M41,
+                matrix.M12, matrix.M22, matrix.M32, matrix.M42,
+                matrix.M13, matrix.M23, matrix.M33, matrix.M43,
+                matrix.M14, matrix.M24, matrix.M34, matrix.M44);
         }
 
         public static NitroxMatrix4x4 operator *(NitroxMatrix4x4 lhs, NitroxMatrix4x4 rhs)
