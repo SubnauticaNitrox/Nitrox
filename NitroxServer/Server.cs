@@ -37,7 +37,10 @@ namespace NitroxServer
             saveTimer = new Timer();
             saveTimer.Interval = serverConfig.SaveInterval;
             saveTimer.AutoReset = true;
-            saveTimer.Elapsed += delegate { Save(); };
+            saveTimer.Elapsed += delegate
+            {
+                Save();
+            };
         }
 
         public string SaveSummary
@@ -69,7 +72,6 @@ namespace NitroxServer
             }
 
             IsSaving = true;
-            NitroxConfig.Serialize(serverConfig); // This is overwriting the config file => server has to be closed before making changes to it
             worldPersistence.Save(world, serverConfig.SaveName);
             IsSaving = false;
         }
@@ -106,10 +108,13 @@ namespace NitroxServer
 
             Log.Info("Nitrox Server Stopping...");
             DisablePeriodicSaving();
+
             if (shouldSave)
             {
                 Save();
+                NitroxConfig.Serialize(serverConfig);
             }
+
             server.Stop();
             Log.Info("Nitrox Server Stopped");
             IsRunning = false;

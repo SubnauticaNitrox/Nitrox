@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic;
@@ -17,18 +18,21 @@ namespace NitroxServer.ConsoleCommands
 
         protected override void Execute(CallArgs args)
         {
-            if (args.Sender.HasValue)
+            if (args.IsConsole)
             {
-                List<string> cmdsText = GetHelpText(args.Sender.Value.Permissions, true);
-                cmdsText.ForEach(cmdText => SendMessageToPlayer(args.Sender, cmdText));
-            }
-            else
-            {
-                List<string> cmdsText = GetHelpText(Perms.CONSOLE, false);
+                Perms perms = (Debugger.IsAttached) ? Perms.ANY : Perms.CONSOLE;
+                List<string> cmdsText = GetHelpText(perms, false);
+
                 foreach (string cmdText in cmdsText)
                 {
                     Log.Info(cmdText);
                 }
+            }
+            else
+            {
+                List<string> cmdsText = GetHelpText(args.Sender.Value.Permissions, true);
+                cmdsText.ForEach(cmdText => SendMessageToPlayer(args.Sender, cmdText));
+
             }
         }
 

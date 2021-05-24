@@ -13,7 +13,7 @@ namespace NitroxServer.ConsoleCommands
         private readonly PlayerManager playerManager;
         private readonly World world;
 
-        public DebugStartMapCommand(PlayerManager playerManager, RandomStartGenerator nitroxRandomStart, World world) : base("debugstartmap", Perms.CONSOLE, "warning: spawns blocks")
+        public DebugStartMapCommand(PlayerManager playerManager, RandomStartGenerator nitroxRandomStart, World world) : base("debugstartmap", Perms.CONSOLE | Perms.DEBUG, "warning: spawns blocks")
         {
             this.playerManager = playerManager;
             this.nitroxRandomStart = nitroxRandomStart;

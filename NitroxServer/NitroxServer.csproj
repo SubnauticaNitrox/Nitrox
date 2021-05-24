@@ -146,6 +146,7 @@
     <Compile Include="ConsoleCommands\ChangeAdminPasswordCommand.cs" />
     <Compile Include="ConsoleCommands\DirectoryCommand.cs" />
     <Compile Include="ConsoleCommands\HelpCommand.cs" />
+    <Compile Include="ConsoleCommands\LoadBatchCommand.cs" />
     <Compile Include="ConsoleCommands\RestartCommand.cs" />
     <Compile Include="ConsoleCommands\SwapSerializerCommand.cs" />
     <Compile Include="ConsoleCommands\TeleportCommand.cs" />

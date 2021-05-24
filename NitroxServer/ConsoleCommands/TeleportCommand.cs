@@ -10,7 +10,7 @@ namespace NitroxServer.ConsoleCommands
     {
         public override IEnumerable<string> Aliases { get; } = new[] { "teleport" };
 
-        public TeleportCommand() : base("tp", Perms.ADMIN, "Teleports you on a location")
+        public TeleportCommand() : base("tp", Perms.ADMIN, "Teleports you on a specific location")
         {
             AddParameter(new TypeInt("x", true));
             AddParameter(new TypeInt("y", true));

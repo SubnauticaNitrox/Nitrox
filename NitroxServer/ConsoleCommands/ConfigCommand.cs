@@ -34,8 +34,7 @@ namespace NitroxServer.ConsoleCommands
             string configFile = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location) ?? "", serverConfig.FileName);
             if (!File.Exists(configFile))
             {
-                Log.Error($"Could not find config file at: {configFile}");
-                return;
+                throw new ArgumentException($"Unable to open config file '{configFile}' because it does not exist.");
             }
 
             Task.Run(async () =>

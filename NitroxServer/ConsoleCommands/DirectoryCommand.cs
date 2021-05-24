@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
@@ -12,7 +13,7 @@ namespace NitroxServer.ConsoleCommands
     {
         public override IEnumerable<string> Aliases { get; } = new[] { "dir" };
 
-        public DirectoryCommand() : base("directory", Perms.CONSOLE, "Opens the directory of the main program")
+        public DirectoryCommand() : base("directory", Perms.CONSOLE, "Opens the current directory of the server")
         {
         }
 
@@ -22,11 +23,11 @@ namespace NitroxServer.ConsoleCommands
 
             if (!Directory.Exists(dir))
             {
-                Log.Error($"Unable to open Nitrox directory '{dir}' because it does not exist.");
-                return;
+                throw new ArgumentException($"Unable to open Nitrox directory '{dir}' because it does not exist.");
             }
 
             Process.Start(dir);
+            Log.Info($"Opening directory '{dir}'");
         }
     }
 }

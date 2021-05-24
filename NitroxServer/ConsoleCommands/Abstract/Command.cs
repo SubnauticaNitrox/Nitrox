@@ -16,7 +16,7 @@ namespace NitroxServer.ConsoleCommands.Abstract
     {
         private int optional, required;
 
-        public virtual IEnumerable<string> Aliases { get; } = Array.Empty<string>();
+        public virtual IEnumerable<string> Aliases { get; }
 
         public string Name { get; }
         public string Description { get; }
@@ -30,6 +30,7 @@ namespace NitroxServer.ConsoleCommands.Abstract
 
             Name = name;
             RequiredPermLevel = perm;
+            Aliases = Array.Empty<string>();
             Parameters = new List<IParameter<object>>();
             AllowedArgOverflow = allowedArgOveflow;
             Description = string.IsNullOrEmpty(description) ? "No description provided" : description;
@@ -78,8 +79,13 @@ namespace NitroxServer.ConsoleCommands.Abstract
             return cropText ? $"{cmd}" : $"{cmd,-32} - {Description}";
         }
 
+        public bool ContainsFlag(Perms flag)
+        {
+            return (RequiredPermLevel & flag) == flag;
+        }
+
         /// <summary>
-        ///     Send a message to an existing player
+        /// Send a message to an existing player
         /// </summary>
         public void SendMessageToPlayer(Optional<Player> player, string message)
         {
@@ -90,7 +96,7 @@ namespace NitroxServer.ConsoleCommands.Abstract
         }
 
         /// <summary>
-        ///     Send a message to an existing player and logs it in the console
+        /// Send a message to an existing player and logs it in the console
         /// </summary>
         public void SendMessage(Optional<Player> player, string message)
         {
@@ -99,7 +105,7 @@ namespace NitroxServer.ConsoleCommands.Abstract
         }
 
         /// <summary>
-        ///     Send a message to all connected players
+        /// Send a message to all connected players
         /// </summary>
         public void SendMessageToAllPlayers(string message)
         {
