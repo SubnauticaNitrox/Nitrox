@@ -39,6 +39,9 @@ namespace NitroxTest.DataStructures
 
             defaultVal.Equals(other1, TOLERANCE).Should().BeTrue();
             defaultVal.Equals(other2, TOLERANCE).Should().BeFalse();
+
+            (defaultVal == other1).Should().BeTrue();
+            (defaultVal != other2).Should().BeTrue();
         }
 
         [TestMethod]
@@ -62,11 +65,42 @@ namespace NitroxTest.DataStructures
                 13207f, 24398.9f, 16897f, 8853.4f,
                 1667.14f, 761.5f, 736.2f, 7076.4f);
 
+            float mult = 2f;
+
             NitroxMatrix4x4 result = defaultVal * other;
             NitroxMatrix4x4 result2 = other * defaultVal;
 
+            NitroxMatrix4x4 result3 = defaultVal * mult;
+
             expectedResult.Equals(result, TOLERANCE).Should().BeTrue();
             expectedResult2.Equals(result2, TOLERANCE).Should().BeTrue();
+
+        }
+
+        [TestMethod]
+        public void TestAddition()
+        {
+            NitroxMatrix4x4 other = new NitroxMatrix4x4(
+                5f, 21f, 55f, 321f,
+                4f, 50f, 3f, 50f,
+                4.4f, 427f, 3f, 52f,
+                23.4f, 5.6f, 1f, 7f);
+
+            NitroxMatrix4x4 expectedResult = new NitroxMatrix4x4(
+                5.5f, 23f, 60f, 577f,
+                6.4f, 100f, 35f, 55f,
+                8.4f, 469.7f, 16f, 564f,
+                257.4f, 61.6f, 62f, 85f);
+
+            NitroxMatrix4x4 result = other + defaultVal;
+
+            defaultVal = new NitroxMatrix4x4(
+                0.5f, 2f, 5f, 256f,
+                2.4f, 50f, 32f, 5f,
+                4f, 42.7f, 13f, 512f,
+                234f, 56f, 61f, 78f);
+
+            expectedResult.Equals(result, TOLERANCE).Should().BeTrue();
 
         }
 
@@ -113,7 +147,7 @@ namespace NitroxTest.DataStructures
             NitroxMatrix4x4.DecomposeMatrix(ref result, out NitroxVector3 afterPosition3, out NitroxQuaternion afterRotation3, out NitroxVector3 afterScale3);
 
             position.Equals(afterPosition).Should().BeTrue();
-            rotation.Equals(afterRotation).Should().BeTrue();
+            rotation.Equals(afterRotation, TOLERANCE).Should().BeTrue($"Expected: {afterRotation} should be {rotation}");
             scale.Equals(afterScale).Should().BeTrue();
 
         }

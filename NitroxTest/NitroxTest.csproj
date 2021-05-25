@@ -52,6 +52,7 @@
     <Compile Include="Client\PlayerPreferences\TestConstants.cs" />
     <Compile Include="Core\DependencyInjectionTests.cs" />
     <Compile Include="DataStructures\NitroxInt3Test.cs" />
+    <Compile Include="DataStructures\NitroxQuaternionTest.cs" />
     <Compile Include="DataStructures\ThreadSafeCollectionTest.cs" />
     <Compile Include="DataStructures\NitroxMatrix4x4Test.cs" />
     <Compile Include="Model\OptionalTest.cs" />

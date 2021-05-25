@@ -459,10 +459,7 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public static NitroxVector3 ExtractTranslation(ref NitroxMatrix4x4 matrix)
         {
-            NitroxVector3 position;
-            position.X = matrix.M14;
-            position.Y = matrix.M24;
-            position.Z = matrix.M34;
+            NitroxVector3 position = matrix.GetColumn(3);
             return position;
         }
 
@@ -477,7 +474,7 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public static void DecomposeMatrix(ref NitroxMatrix4x4 matrix, out NitroxVector3 localPosition, out NitroxQuaternion localRotation, out NitroxVector3 localScale)
         {
-            localPosition = matrix.GetColumn(3);
+            localPosition = ExtractTranslation(ref matrix);
             localScale = GetScale(ref matrix);
             NitroxMatrix4x4 rMatrix = matrix * SetScale(localScale).Inverse;
             localRotation = GetRotation(ref rMatrix);
@@ -493,7 +490,7 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public static NitroxMatrix4x4 operator *(NitroxMatrix4x4 lhs, NitroxMatrix4x4 rhs)
         {
-            NitroxMatrix4x4 result = NitroxMatrix4x4.Identity;
+            NitroxMatrix4x4 result = Identity;
 
             // First row
             result.M11 = lhs.M11 * rhs.M11 + lhs.M12 * rhs.M21 + lhs.M13 * rhs.M31 + lhs.M14 * rhs.M41;
@@ -549,29 +546,29 @@ namespace NitroxModel.DataStructures.GameLogic
             return result;
         }
 
-        public static NitroxMatrix4x4 operator *(float lhs, NitroxMatrix4x4 rhs)
+        public static NitroxMatrix4x4 operator *(NitroxMatrix4x4 lhs, float rhs)
         {
             NitroxMatrix4x4 result;
 
-            result.M11 = lhs * rhs.M11;
-            result.M12 = lhs * rhs.M12;
-            result.M13 = lhs * rhs.M13;
-            result.M14 = lhs * rhs.M14;
+            result.M11 = lhs.M11 * rhs;
+            result.M12 = lhs.M12 * rhs;
+            result.M13 = lhs.M13 * rhs;
+            result.M14 = lhs.M14 * rhs;
 
-            result.M21 = lhs * rhs.M21;
-            result.M22 = lhs * rhs.M22;
-            result.M23 = lhs * rhs.M23;
-            result.M24 = lhs * rhs.M24;
+            result.M21 = lhs.M21 * rhs;
+            result.M22 = lhs.M22 * rhs;
+            result.M23 = lhs.M23 * rhs;
+            result.M24 = lhs.M24 * rhs;
 
-            result.M31 = lhs * rhs.M31;
-            result.M32 = lhs * rhs.M32;
-            result.M33 = lhs * rhs.M33;
-            result.M34 = lhs * rhs.M34;
+            result.M31 = lhs.M31 * rhs;
+            result.M32 = lhs.M32 * rhs;
+            result.M33 = lhs.M33 * rhs;
+            result.M34 = lhs.M34 * rhs;
 
-            result.M41 = lhs * rhs.M41;
-            result.M42 = lhs * rhs.M42;
-            result.M43 = lhs * rhs.M43;
-            result.M44 = lhs * rhs.M44;
+            result.M41 = lhs.M41 * rhs;
+            result.M42 = lhs.M42 * rhs;
+            result.M43 = lhs.M43 * rhs;
+            result.M44 = lhs.M44 * rhs;
 
             return result;
         }

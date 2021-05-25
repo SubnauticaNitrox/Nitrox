@@ -6,7 +6,7 @@ namespace NitroxModel.DataStructures.GameLogic
 {
     [ProtoContract]
     [Serializable]
-    public struct NitroxQuaternion
+    public struct NitroxQuaternion : IEquatable<NitroxQuaternion>
     {
         [ProtoMember(1)]
         public float X;
@@ -190,6 +190,16 @@ namespace NitroxModel.DataStructures.GameLogic
             return Normalize(result);
         }
 
+        public static bool operator ==(NitroxQuaternion left, NitroxQuaternion right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(NitroxQuaternion left, NitroxQuaternion right)
+        {
+            return !(left == right);
+        }
+
         public override string ToString()
         {
             return "[Quaternion - {" + X + ", " + Y + ", " + Z + "," + W + "}]";
@@ -221,6 +231,37 @@ namespace NitroxModel.DataStructures.GameLogic
             result.W = cy * cp * cr + sy * sp * sr;
 
             return result;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is NitroxQuaternion quaternion && Equals(quaternion);
+        }
+
+        public bool Equals(NitroxQuaternion other)
+        {
+            return X == other.X &&
+                   Y == other.Y &&
+                   Z == other.Z &&
+                   W == other.W;
+        }
+
+        public bool Equals(NitroxQuaternion other, float tolerance)
+        {
+            return X == other.X || other.X >= X - tolerance && other.X <= X + tolerance &&
+                Y == other.Y || other.Y >= Y - tolerance && other.Y <= Y + tolerance &&
+                Z == other.Z || other.Z >= Z - tolerance && other.Z <= Z + tolerance &&
+                W == other.W || other.W >= W - tolerance && other.W <= W + tolerance;
+        }
+
+        public override int GetHashCode()
+        {
+            int hashCode = 707706286;
+            hashCode = hashCode * -1521134295 + X.GetHashCode();
+            hashCode = hashCode * -1521134295 + Y.GetHashCode();
+            hashCode = hashCode * -1521134295 + Z.GetHashCode();
+            hashCode = hashCode * -1521134295 + W.GetHashCode();
+            return hashCode;
         }
     }
 }
