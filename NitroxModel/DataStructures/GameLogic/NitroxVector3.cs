@@ -28,6 +28,13 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public static NitroxVector3 One => new(1, 1, 1);
 
+        public bool Equals(NitroxVector3 other, float tolerance)
+        {
+            return (other.X == X || other.X >= X - tolerance && other.X <= X + tolerance) &&
+                (other.Y == Y || other.Y >= Y - tolerance && other.Y <= Y + tolerance) &&
+                (other.Z == Z || other.Z >= Z - tolerance && other.Z <= Z + tolerance);
+        }
+
         public bool Equals(NitroxVector3 other)
         {
             return X.Equals(other.X) && Y.Equals(other.Y) && Z.Equals(other.Z);

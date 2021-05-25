@@ -37,7 +37,7 @@ namespace NitroxTest.DataStructures
 
             NitroxQuaternion result = mult * defaultVal;
 
-            NitroxQuaternion expectedResult = new NitroxQuaternion(-0.5229965f, 0.5234092f, 0.1701184f, -0.6508282f);
+            NitroxQuaternion expectedResult = new NitroxQuaternion(0.01030834f, -0.6953976f, -0.3045302f, -0.6508281f);
 
             expectedResult.Equals(result, TOLERANCE).Should().BeTrue();
 

@@ -316,7 +316,7 @@ namespace NitroxModel.DataStructures.GameLogic
             }
         }
 
-        public static NitroxMatrix4x4 SetScale(NitroxVector3 localScale)
+        public static NitroxMatrix4x4 GetScaleMatrix(NitroxVector3 localScale)
         {
             NitroxMatrix4x4 scaleMatrix = NitroxMatrix4x4.Identity;
             scaleMatrix.M11 = 1f;
@@ -435,16 +435,16 @@ namespace NitroxModel.DataStructures.GameLogic
             else
             {
                 float S = (float)Math.Sqrt(1.0 + matrix.M33 - matrix.M11 - matrix.M22) * 2f;
-                rotation.W = (matrix.M21 - matrix.M12) / S;
-                rotation.X = (matrix.M13 + matrix.M31) / S;
-                rotation.Y = (matrix.M23 + matrix.M32) / S;
-                rotation.Z = 0.25f * S;
+                rotation.Y = (matrix.M21 - matrix.M12) / S;
+                rotation.Z = (matrix.M13 + matrix.M31) / S;
+                rotation.W = (matrix.M23 + matrix.M32) / S;
+                rotation.X = 0.25f * S;
             }
                 
             return rotation;
         }
 
-        public static NitroxMatrix4x4 SetTranslation(NitroxVector3 localPosition)
+        public static NitroxMatrix4x4 GetTranslationMatrix(NitroxVector3 localPosition)
         {
             NitroxMatrix4x4 transMatrix = Identity;
 
@@ -465,9 +465,9 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public static NitroxMatrix4x4 TRS(NitroxVector3 localPos, NitroxQuaternion localRotation, NitroxVector3 localScale)
         {
-            NitroxMatrix4x4 scaleMatrix = SetScale(localScale);
+            NitroxMatrix4x4 scaleMatrix = GetScaleMatrix(localScale);
             NitroxMatrix4x4 rotationMatrix = SetRotation(localRotation);
-            NitroxMatrix4x4 translationMatrix = SetTranslation(localPos);
+            NitroxMatrix4x4 translationMatrix = GetTranslationMatrix(localPos);
             NitroxMatrix4x4 result = translationMatrix * rotationMatrix * scaleMatrix;
             return result;
         }
@@ -476,7 +476,7 @@ namespace NitroxModel.DataStructures.GameLogic
         {
             localPosition = ExtractTranslation(ref matrix);
             localScale = GetScale(ref matrix);
-            NitroxMatrix4x4 rMatrix = matrix * SetScale(localScale).Inverse;
+            NitroxMatrix4x4 rMatrix = matrix * GetScaleMatrix(localScale).Inverse;
             localRotation = GetRotation(ref rMatrix);
         }
 

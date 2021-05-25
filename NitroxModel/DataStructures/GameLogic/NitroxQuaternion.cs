@@ -120,23 +120,23 @@ namespace NitroxModel.DataStructures.GameLogic
                 v.Y = 2f * Mathf.Atan2(Y, X);
                 v.X = Mathf.PI / 2;
                 v.Z = 0;
-                return NormalizeAngles(v * Mathf.RAD2DEG);
+                return v * Mathf.RAD2DEG;
             }
             if (test < -0.4995f * unit)
             { // singularity at south pole
                 v.Y = -2f * Mathf.Atan2(Y, X);
                 v.X = -Mathf.PI / 2;
                 v.Z = 0;
-                return NormalizeAngles(v * Mathf.RAD2DEG);
+                return v * Mathf.RAD2DEG;
             }
             NitroxQuaternion q = new NitroxQuaternion(W, Z, X, Y);
             v.Y = Mathf.Atan2(2f * q.X * q.W + 2f * q.Y * q.Z, 1 - 2f * (q.Z * q.Z + q.W * q.W));     // Yaw
             v.X = Mathf.Asin(2f * (q.X * q.Z - q.W * q.Y));                             // Pitch
             v.Z = Mathf.Atan2(2f * q.X * q.Y + 2f * q.Z * q.W, 1 - 2f * (q.Y * q.Y + q.Z * q.Z));      // Roll
-            return NormalizeAngles(v * Mathf.RAD2DEG);
+            return v * Mathf.RAD2DEG;
         }
 
-        static NitroxVector3 NormalizeAngles(NitroxVector3 angles)
+        private static NitroxVector3 NormalizeAngles(NitroxVector3 angles)
         {
             angles.X = NormalizeAngle(angles.X);
             angles.Y = NormalizeAngle(angles.Y);
@@ -144,9 +144,9 @@ namespace NitroxModel.DataStructures.GameLogic
             return angles;
         }
 
-        static float NormalizeAngle(float angle)
+        private static float NormalizeAngle(float angle)
         {
-            while (angle > 360)
+            while (angle >= 360)
             {
                 angle -= 360;
             }
@@ -160,7 +160,9 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public static NitroxQuaternion FromEuler(NitroxVector3 euler)
         {
-            NitroxVector3 radEuler = euler * Mathf.DEG2RAD;
+            NitroxVector3 normEuler = NormalizeAngles(euler);
+            NitroxVector3 radEuler = normEuler * Mathf.DEG2RAD;
+            NitroxQuaternion result;
 
             double yawOver2 = radEuler.Y * 0.5f;
             float cosYawOver2 = (float)System.Math.Cos(yawOver2);
@@ -171,7 +173,7 @@ namespace NitroxModel.DataStructures.GameLogic
             double rollOver2 = radEuler.Z * 0.5f;
             float cosRollOver2 = (float)System.Math.Cos(rollOver2);
             float sinRollOver2 = (float)System.Math.Sin(rollOver2);
-            NitroxQuaternion result;
+
             result.W = cosYawOver2 * cosPitchOver2 * cosRollOver2 + sinYawOver2 * sinPitchOver2 * sinRollOver2;
             result.X = sinYawOver2 * cosPitchOver2 * cosRollOver2 + cosYawOver2 * sinPitchOver2 * sinRollOver2;
             result.Y = cosYawOver2 * sinPitchOver2 * cosRollOver2 - sinYawOver2 * cosPitchOver2 * sinRollOver2;
@@ -248,10 +250,10 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public bool Equals(NitroxQuaternion other, float tolerance)
         {
-            return X == other.X || other.X >= X - tolerance && other.X <= X + tolerance &&
-                Y == other.Y || other.Y >= Y - tolerance && other.Y <= Y + tolerance &&
-                Z == other.Z || other.Z >= Z - tolerance && other.Z <= Z + tolerance &&
-                W == other.W || other.W >= W - tolerance && other.W <= W + tolerance;
+            return (X == other.X || other.X >= X - tolerance && other.X <= X + tolerance) &&
+                (Y == other.Y || other.Y >= Y - tolerance && other.Y <= Y + tolerance) &&
+                (Z == other.Z || other.Z >= Z - tolerance && other.Z <= Z + tolerance) &&
+                (W == other.W || other.W >= W - tolerance && other.W <= W + tolerance);
         }
 
         public override int GetHashCode()
