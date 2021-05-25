@@ -5,17 +5,17 @@ namespace NitroxModel.DataStructures.GameLogic
 {
     public struct NitroxMatrix4x4
     {
-        public float M11, M12, M13, M14,
-            M21, M22, M23, M24,
-            M31, M32, M33, M34,
-            M41, M42, M43, M44;
+        public float M00, M01, M02, M03,
+            M10, M11, M12, M13,
+            M20, M21, M22, M23,
+            M30, M31, M32, M33;
 
         public override string ToString()
         {
-            return $"[\n[{M11}], [{M12}], [{M13}], [{M14}],\n" +
-                $"[{M21}], [{M22}], [{M23}], [{M24}],\n" +
-                $"[{M31}], [{M32}], [{M33}], [{M34}],\n" +
-                $"[{M41}], [{M42}], [{M43}], [{M44}],\n]";
+            return $"[\n[{M00}], [{M01}], [{M02}], [{M03}],\n" +
+                $"[{M10}], [{M11}], [{M12}], [{M13}],\n" +
+                $"[{M20}], [{M21}], [{M22}], [{M23}],\n" +
+                $"[{M30}], [{M31}], [{M32}], [{M33}],\n]";
         }
 
         public static NitroxMatrix4x4 Identity { get; } = new NitroxMatrix4x4
@@ -38,10 +38,10 @@ namespace NitroxModel.DataStructures.GameLogic
         {
             NitroxMatrix4x4 result;
 
-            float a = matrix.M11, b = matrix.M12, c = matrix.M13, d = matrix.M14;
-            float e = matrix.M21, f = matrix.M22, g = matrix.M23, h = matrix.M24;
-            float i = matrix.M31, j = matrix.M32, k = matrix.M33, l = matrix.M34;
-            float m = matrix.M41, n = matrix.M42, o = matrix.M43, p = matrix.M44;
+            float a = matrix.M00, b = matrix.M01, c = matrix.M02, d = matrix.M03;
+            float e = matrix.M10, f = matrix.M11, g = matrix.M12, h = matrix.M13;
+            float i = matrix.M20, j = matrix.M21, k = matrix.M22, l = matrix.M23;
+            float m = matrix.M30, n = matrix.M31, o = matrix.M32, p = matrix.M33;
 
             float kp_lo = k * p - l * o;
             float jp_ln = j * p - l * n;
@@ -59,15 +59,15 @@ namespace NitroxModel.DataStructures.GameLogic
 
             float invDet = 1.0f / det;
 
-            result.M11 = a11 * invDet;
-            result.M21 = a12 * invDet;
-            result.M31 = a13 * invDet;
-            result.M41 = a14 * invDet;
+            result.M00 = a11 * invDet;
+            result.M10 = a12 * invDet;
+            result.M20 = a13 * invDet;
+            result.M30 = a14 * invDet;
 
-            result.M12 = -(b * kp_lo - c * jp_ln + d * jo_kn) * invDet;
-            result.M22 = +(a * kp_lo - c * ip_lm + d * io_km) * invDet;
-            result.M32 = -(a * jp_ln - b * ip_lm + d * in_jm) * invDet;
-            result.M42 = +(a * jo_kn - b * io_km + c * in_jm) * invDet;
+            result.M01 = -(b * kp_lo - c * jp_ln + d * jo_kn) * invDet;
+            result.M11 = +(a * kp_lo - c * ip_lm + d * io_km) * invDet;
+            result.M21 = -(a * jp_ln - b * ip_lm + d * in_jm) * invDet;
+            result.M31 = +(a * jo_kn - b * io_km + c * in_jm) * invDet;
 
             float gp_ho = g * p - h * o;
             float fp_hn = f * p - h * n;
@@ -76,10 +76,10 @@ namespace NitroxModel.DataStructures.GameLogic
             float eo_gm = e * o - g * m;
             float en_fm = e * n - f * m;
 
-            result.M13 = +(b * gp_ho - c * fp_hn + d * fo_gn) * invDet;
-            result.M23 = -(a * gp_ho - c * ep_hm + d * eo_gm) * invDet;
-            result.M33 = +(a * fp_hn - b * ep_hm + d * en_fm) * invDet;
-            result.M43 = -(a * fo_gn - b * eo_gm + c * en_fm) * invDet;
+            result.M02 = +(b * gp_ho - c * fp_hn + d * fo_gn) * invDet;
+            result.M12 = -(a * gp_ho - c * ep_hm + d * eo_gm) * invDet;
+            result.M22 = +(a * fp_hn - b * ep_hm + d * en_fm) * invDet;
+            result.M32 = -(a * fo_gn - b * eo_gm + c * en_fm) * invDet;
 
             float gl_hk = g * l - h * k;
             float fl_hj = f * l - h * j;
@@ -88,10 +88,10 @@ namespace NitroxModel.DataStructures.GameLogic
             float ek_gi = e * k - g * i;
             float ej_fi = e * j - f * i;
 
-            result.M14 = -(b * gl_hk - c * fl_hj + d * fk_gj) * invDet;
-            result.M24 = +(a * gl_hk - c * el_hi + d * ek_gi) * invDet;
-            result.M34 = -(a * fl_hj - b * el_hi + d * ej_fi) * invDet;
-            result.M44 = +(a * fk_gj - b * ek_gi + c * ej_fi) * invDet;
+            result.M03 = -(b * gl_hk - c * fl_hj + d * fk_gj) * invDet;
+            result.M13 = +(a * gl_hk - c * el_hi + d * ek_gi) * invDet;
+            result.M23 = -(a * fl_hj - b * el_hi + d * ej_fi) * invDet;
+            result.M33 = +(a * fk_gj - b * ek_gi + c * ej_fi) * invDet;
 
             return result;
         }
@@ -100,55 +100,55 @@ namespace NitroxModel.DataStructures.GameLogic
         {
             get
             {
-                return M11 == 1f && M22 == 1f && M33 == 1f && M44 == 1f &&
-                    M12 == 0f && M13 == 0f && M14 == 0f &&
-                    M21 == 0f && M23 == 0f && M24 == 0f &&
-                    M31 == 0f && M32 == 0f && M34 == 0f &&
-                    M41 == 0f && M42 == 0f && M43 == 0f;
+                return M00 == 1f && M11 == 1f && M22 == 1f && M33 == 1f &&
+                    M01 == 0f && M02 == 0f && M03 == 0f &&
+                    M10 == 0f && M12 == 0f && M13 == 0f &&
+                    M20 == 0f && M21 == 0f && M23 == 0f &&
+                    M30 == 0f && M31 == 0f && M32 == 0f;
             }
         }
 
         public NitroxMatrix4x4(float m11, float m12, float m13, float m14, float m21, float m22, float m23, float m24, float m31, float m32, float m33, float m34, float m41, float m42, float m43, float m44)
         {
-            M11 = m11;
-            M12 = m12;
-            M13 = m13;
-            M14 = m14;
-            M21 = m21;
-            M22 = m22;
-            M23 = m23;
-            M24 = m24;
-            M31 = m31;
-            M32 = m32;
-            M33 = m33;
-            M34 = m34;
-            M41 = m41;
-            M42 = m42;
-            M43 = m43;
-            M44 = m44;
+            M00 = m11;
+            M01 = m12;
+            M02 = m13;
+            M03 = m14;
+            M10 = m21;
+            M11 = m22;
+            M12 = m23;
+            M13 = m24;
+            M20 = m31;
+            M21 = m32;
+            M22 = m33;
+            M23 = m34;
+            M30 = m41;
+            M31 = m42;
+            M32 = m43;
+            M33 = m44;
         }
 
         public NitroxMatrix4x4(NitroxMatrix4x4 matrix)
         {
+            M00 = matrix.M00;
+            M01 = matrix.M01;
+            M02 = matrix.M02;
+            M03 = matrix.M03;
+
+            M10 = matrix.M10;
             M11 = matrix.M11;
             M12 = matrix.M12;
             M13 = matrix.M13;
-            M14 = matrix.M14;
 
+            M20 = matrix.M20;
             M21 = matrix.M21;
             M22 = matrix.M22;
             M23 = matrix.M23;
-            M24 = matrix.M24;
 
+            M30 = matrix.M30;
             M31 = matrix.M31;
             M32 = matrix.M32;
             M33 = matrix.M33;
-            M34 = matrix.M34;
-
-            M41 = matrix.M41;
-            M42 = matrix.M42;
-            M43 = matrix.M43;
-            M44 = matrix.M44;
         }
 
         public float GetDeterminant()
@@ -180,10 +180,10 @@ namespace NitroxModel.DataStructures.GameLogic
             // add: 6 + 8 + 3 = 17
             // mul: 12 + 16 = 28
 
-            float a = M11, b = M12, c = M13, d = M14;
-            float e = M21, f = M22, g = M23, h = M24;
-            float i = M31, j = M32, k = M33, l = M34;
-            float m = M41, n = M42, o = M43, p = M44;
+            float a = M00, b = M01, c = M02, d = M03;
+            float e = M10, f = M11, g = M12, h = M13;
+            float i = M20, j = M21, k = M22, l = M23;
+            float m = M30, n = M31, o = M32, p = M33;
 
             float kp_lo = k * p - l * o;
             float jp_ln = j * p - l * n;
@@ -200,10 +200,10 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public NitroxVector3 MultiplyPoint(NitroxVector3 localPosition)
         {
-            float x = M11 * localPosition.X + M12 * localPosition.Y + M13 * localPosition.Z + M14;
-            float y = M21 * localPosition.X + M22 * localPosition.Y + M23 * localPosition.Z + M24;
-            float z = M31 * localPosition.X + M32 * localPosition.Y + M33 * localPosition.Z + M34;
-            float w = M41 * localPosition.X + M42 * localPosition.Y + M43 * localPosition.Z + M44;
+            float x = M00 * localPosition.X + M01 * localPosition.Y + M02 * localPosition.Z + M03;
+            float y = M10 * localPosition.X + M11 * localPosition.Y + M12 * localPosition.Z + M13;
+            float z = M20 * localPosition.X + M21 * localPosition.Y + M22 * localPosition.Z + M23;
+            float w = M30 * localPosition.X + M31 * localPosition.Y + M32 * localPosition.Z + M33;
 
             if (w == 1)
             {
@@ -221,28 +221,28 @@ namespace NitroxModel.DataStructures.GameLogic
             switch (index)
             {
                 case 0:
-                    M11 = column.X;
-                    M21 = column.Y;
-                    M31 = column.Z;
-                    M41 = column.W;
+                    M00 = column.X;
+                    M10 = column.Y;
+                    M20 = column.Z;
+                    M30 = column.W;
                     break;
                 case 1:
-                    M12 = column.X;
-                    M22 = column.Y;
-                    M32 = column.Z;
-                    M42 = column.W;
+                    M01 = column.X;
+                    M11 = column.Y;
+                    M21 = column.Z;
+                    M31 = column.W;
                     break;
                 case 2:
-                    M13 = column.X;
-                    M23 = column.Y;
-                    M33 = column.Z;
-                    M43 = column.W;
+                    M02 = column.X;
+                    M12 = column.Y;
+                    M22 = column.Z;
+                    M32 = column.W;
                     break;
                 case 3:
-                    M14 = column.X;
-                    M24 = column.Y;
-                    M34 = column.Z;
-                    M44 = column.W;
+                    M03 = column.X;
+                    M13 = column.Y;
+                    M23 = column.Z;
+                    M33 = column.W;
                     break;
                 default:
                     throw new IndexOutOfRangeException();
@@ -254,13 +254,13 @@ namespace NitroxModel.DataStructures.GameLogic
             switch (index)
             {
                 case 0:
-                    return new NitroxVector4(M11, M21, M31, M41);
+                    return new NitroxVector4(M00, M10, M20, M30);
                 case 1:
-                    return new NitroxVector4(M12, M22, M32, M42);
+                    return new NitroxVector4(M01, M11, M21, M31);
                 case 2:
-                    return new NitroxVector4(M13, M23, M33, M43);
+                    return new NitroxVector4(M02, M12, M22, M32);
                 case 3:
-                    return new NitroxVector4(M14, M24, M34, M44);
+                    return new NitroxVector4(M03, M13, M23, M33);
                 default:
                     throw new IndexOutOfRangeException();
             }
@@ -271,28 +271,28 @@ namespace NitroxModel.DataStructures.GameLogic
             switch (index)
             {
                 case 0:
-                    M11 = row.X;
-                    M12 = row.Y;
-                    M13 = row.Z;
-                    M14 = row.W;
+                    M00 = row.X;
+                    M01 = row.Y;
+                    M02 = row.Z;
+                    M03 = row.W;
                     break;
                 case 1:
-                    M21 = row.X;
-                    M22 = row.Y;
-                    M23 = row.Z;
-                    M24 = row.W;
+                    M10 = row.X;
+                    M11 = row.Y;
+                    M12 = row.Z;
+                    M13 = row.W;
                     break;
                 case 2:
-                    M31 = row.X;
-                    M32 = row.Y;
-                    M33 = row.Z;
-                    M34 = row.W;
+                    M20 = row.X;
+                    M21 = row.Y;
+                    M22 = row.Z;
+                    M23 = row.W;
                     break;
                 case 3:
-                    M41 = row.X;
-                    M42 = row.Y;
-                    M43 = row.Z;
-                    M44 = row.W;
+                    M30 = row.X;
+                    M31 = row.Y;
+                    M32 = row.Z;
+                    M33 = row.W;
                     break;
                 default:
                     throw new IndexOutOfRangeException();
@@ -304,13 +304,13 @@ namespace NitroxModel.DataStructures.GameLogic
             switch (index)
             {
                 case 0:
-                    return new NitroxVector4(M11, M12, M13, M14);
+                    return new NitroxVector4(M00, M01, M02, M03);
                 case 1:
-                    return new NitroxVector4(M21, M22, M23, M24);
+                    return new NitroxVector4(M10, M11, M12, M13);
                 case 2:
-                    return new NitroxVector4(M31, M32, M33, M34);
+                    return new NitroxVector4(M20, M21, M22, M23);
                 case 3:
-                    return new NitroxVector4(M41, M42, M43, M44);
+                    return new NitroxVector4(M30, M31, M32, M33);
                 default:
                     throw new IndexOutOfRangeException();
             }
@@ -319,15 +319,15 @@ namespace NitroxModel.DataStructures.GameLogic
         public static NitroxMatrix4x4 GetScaleMatrix(NitroxVector3 localScale)
         {
             NitroxMatrix4x4 scaleMatrix = NitroxMatrix4x4.Identity;
+            scaleMatrix.M00 = 1f;
             scaleMatrix.M11 = 1f;
             scaleMatrix.M22 = 1f;
             scaleMatrix.M33 = 1f;
-            scaleMatrix.M44 = 1f;
 
 
-            scaleMatrix.M11 = localScale.X;
-            scaleMatrix.M22 = localScale.Y;
-            scaleMatrix.M33 = localScale.Z;
+            scaleMatrix.M00 = localScale.X;
+            scaleMatrix.M11 = localScale.Y;
+            scaleMatrix.M22 = localScale.Z;
 
             return scaleMatrix;
         }
@@ -342,57 +342,43 @@ namespace NitroxModel.DataStructures.GameLogic
             return scale;
         }
 
+        public static NitroxMatrix4x4 RotateX(float aAngleRad)
+        {
+            NitroxMatrix4x4 m = NitroxMatrix4x4.Identity;     //  1   0   0   0 
+            m.M11 = m.M22 = Mathf.Cos(aAngleRad); //  0  cos -sin 0
+            m.M21 = Mathf.Sin(aAngleRad);         //  0  sin  cos 0
+            m.M12 = -m.M21;                       //  0   0   0   1
+            return m;
+        }
+        public static NitroxMatrix4x4 RotateY(float aAngleRad)
+        {
+            NitroxMatrix4x4 m = NitroxMatrix4x4.Identity;     // cos  0  sin  0
+            m.M00 = m.M22 = Mathf.Cos(aAngleRad); //  0   1   0   0
+            m.M02 = Mathf.Sin(aAngleRad);         //-sin  0  cos  0
+            m.M20 = -m.M02;                       //  0   0   0   1
+            return m;
+        }
+        public static NitroxMatrix4x4 RotateZ(float aAngleRad)
+        {
+            NitroxMatrix4x4 m = NitroxMatrix4x4.Identity;     // cos -sin 0   0
+            m.M00 = m.M11 = Mathf.Cos(aAngleRad); // sin  cos 0   0
+            m.M10 = Mathf.Sin(aAngleRad);         //  0   0   1   0
+            m.M01 = -m.M10;                       //  0   0   0   1
+            return m;
+        }
+        public static NitroxMatrix4x4 Rotate(NitroxVector3 aEulerAngles)
+        {
+            var rad = aEulerAngles * Mathf.DEG2RAD;
+            NitroxMatrix4x4 rotX = RotateX(rad.X);
+            NitroxMatrix4x4 rotY = RotateY(rad.Y);
+            NitroxMatrix4x4 rotZ = RotateZ(rad.Z);
+
+            return RotateY(rad.Y) * RotateX(rad.X) * RotateZ(rad.Z);
+        }
+
         public static NitroxMatrix4x4 GetRotationMatrix(NitroxQuaternion rotation)
         {
-            NitroxQuaternion normRot = NitroxQuaternion.Normalize(rotation);
-
-            float xx = normRot.X * normRot.X;
-            float yy = normRot.Y * normRot.Y;
-            float zz = normRot.Z * normRot.Z;
-            float ww = normRot.W * normRot.W; // unused but included for completeness
-
-            float xy = normRot.X * normRot.Y;
-            float xz = normRot.X * normRot.Z;
-            float xw = normRot.X * normRot.W;
-
-            float yz = normRot.Y * normRot.Z;
-            float yw = normRot.Y * normRot.W;
-
-            float zw = normRot.Z * normRot.W;
-
-
-            NitroxMatrix4x4 matrix = new NitroxMatrix4x4();
-
-            matrix.SetRow(0, new NitroxVector4(
-                1f - 2f * yy - 2f * zz,
-                2f * xy - 2f * zw,
-                2f * xz + 2f * yw,
-                0f
-                ));
-
-            matrix.SetRow(1, new NitroxVector4(
-                2f * xy + 2f * zw,
-                1f - 2f * xx - 2f * zz,
-                2f * yz - 2f * xw,
-                0f
-                ));
-
-            matrix.SetRow(2, new NitroxVector4(
-                2f * xz - 2f * yw,
-                2f * yz + 2f * xw,
-                1f - 2f * xx - 2f * yy,
-                0f
-                ));
-
-            matrix.SetRow(3, new NitroxVector4(
-                0f,
-                0f,
-                0f,
-                1f
-                ));
-
-
-            return matrix;
+            return Rotate(rotation.Euler);
         }
 
         public static NitroxMatrix4x4 SetRotation(NitroxQuaternion localRotation)
@@ -406,38 +392,38 @@ namespace NitroxModel.DataStructures.GameLogic
         {
             NitroxQuaternion rotation = NitroxQuaternion.Identity;
 
-            float trace = matrix.M11 + matrix.M22 + matrix.M33;
+            float trace = matrix.M00 + matrix.M11 + matrix.M22;
 
             if (trace > 0)
             {
                 float S = (float)Math.Sqrt(trace + 1f) * 2f;
                 rotation.W = 0.25f * S;
-                rotation.X = (matrix.M32 - matrix.M23) / S;
-                rotation.Y = (matrix.M13 - matrix.M31) / S;
-                rotation.Z = (matrix.M21 - matrix.M12) / S;
+                rotation.X = (matrix.M21 - matrix.M12) / S;
+                rotation.Y = (matrix.M02 - matrix.M20) / S;
+                rotation.Z = (matrix.M10 - matrix.M01) / S;
             }
-            else if ((matrix.M11 > matrix.M22) && (matrix.M11 > matrix.M33))
+            else if ((matrix.M00 > matrix.M11) && (matrix.M00 > matrix.M22))
             {
-                float S = (float)Math.Sqrt(1.0 + matrix.M11 - matrix.M22 - matrix.M33) * 2f;
-                rotation.W = (matrix.M32 - matrix.M23) / S;
+                float S = (float)Math.Sqrt(1.0 + matrix.M00 - matrix.M11 - matrix.M22) * 2f;
+                rotation.W = (matrix.M21 - matrix.M12) / S;
                 rotation.X = 0.25f * S;
-                rotation.Y = (matrix.M12 + matrix.M21) / S;
-                rotation.Z = (matrix.M13 + matrix.M31) / S;
+                rotation.Y = (matrix.M01 + matrix.M10) / S;
+                rotation.Z = (matrix.M02 + matrix.M20) / S;
             }
-            else if (matrix.M22 > matrix.M33)
+            else if (matrix.M11 > matrix.M22)
             {
-                float S = (float)Math.Sqrt(1.0 + matrix.M22 - matrix.M11 - matrix.M33) * 2f;
-                rotation.W = (matrix.M13 - matrix.M31) / S;
-                rotation.X = (matrix.M12 + matrix.M21) / S;
+                float S = (float)Math.Sqrt(1.0 + matrix.M11 - matrix.M00 - matrix.M22) * 2f;
+                rotation.W = (matrix.M02 - matrix.M20) / S;
+                rotation.X = (matrix.M01 + matrix.M10) / S;
                 rotation.Y = 0.25f * S;
-                rotation.Z = (matrix.M23 + matrix.M32) / S;
+                rotation.Z = (matrix.M12 + matrix.M21) / S;
             }
             else
             {
-                float S = (float)Math.Sqrt(1.0 + matrix.M33 - matrix.M11 - matrix.M22) * 2f;
-                rotation.Y = (matrix.M21 - matrix.M12) / S;
-                rotation.Z = (matrix.M13 + matrix.M31) / S;
-                rotation.W = (matrix.M23 + matrix.M32) / S;
+                float S = (float)Math.Sqrt(1.0 + matrix.M22 - matrix.M00 - matrix.M11) * 2f;
+                rotation.Y = (matrix.M10 - matrix.M01) / S;
+                rotation.Z = (matrix.M02 + matrix.M20) / S;
+                rotation.W = (matrix.M12 + matrix.M21) / S;
                 rotation.X = 0.25f * S;
             }
                 
@@ -450,9 +436,9 @@ namespace NitroxModel.DataStructures.GameLogic
 
 
 
-            transMatrix.M14 = localPosition.X;
-            transMatrix.M24 = localPosition.Y;
-            transMatrix.M34 = localPosition.Z;
+            transMatrix.M03 = localPosition.X;
+            transMatrix.M13 = localPosition.Y;
+            transMatrix.M23 = localPosition.Z;
 
             return transMatrix;
         }
@@ -482,40 +468,31 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public static NitroxMatrix4x4 Transpose(NitroxMatrix4x4 matrix)
         {
-            return new NitroxMatrix4x4(matrix.M11, matrix.M21, matrix.M31, matrix.M41,
-                matrix.M12, matrix.M22, matrix.M32, matrix.M42,
-                matrix.M13, matrix.M23, matrix.M33, matrix.M43,
-                matrix.M14, matrix.M24, matrix.M34, matrix.M44);
+            return new NitroxMatrix4x4(matrix.M00, matrix.M10, matrix.M20, matrix.M30,
+                matrix.M01, matrix.M11, matrix.M21, matrix.M31,
+                matrix.M02, matrix.M12, matrix.M22, matrix.M32,
+                matrix.M03, matrix.M13, matrix.M23, matrix.M33);
         }
 
         public static NitroxMatrix4x4 operator *(NitroxMatrix4x4 lhs, NitroxMatrix4x4 rhs)
         {
             NitroxMatrix4x4 result = Identity;
-
-            // First row
-            result.M11 = lhs.M11 * rhs.M11 + lhs.M12 * rhs.M21 + lhs.M13 * rhs.M31 + lhs.M14 * rhs.M41;
-            result.M12 = lhs.M11 * rhs.M12 + lhs.M12 * rhs.M22 + lhs.M13 * rhs.M32 + lhs.M14 * rhs.M42;
-            result.M13 = lhs.M11 * rhs.M13 + lhs.M12 * rhs.M23 + lhs.M13 * rhs.M33 + lhs.M14 * rhs.M43;
-            result.M14 = lhs.M11 * rhs.M14 + lhs.M12 * rhs.M24 + lhs.M13 * rhs.M34 + lhs.M14 * rhs.M44;
-
-            // Second row
-            result.M21 = lhs.M21 * rhs.M11 + lhs.M22 * rhs.M21 + lhs.M23 * rhs.M31 + lhs.M24 * rhs.M41;
-            result.M22 = lhs.M21 * rhs.M12 + lhs.M22 * rhs.M22 + lhs.M23 * rhs.M32 + lhs.M24 * rhs.M42;
-            result.M23 = lhs.M21 * rhs.M13 + lhs.M22 * rhs.M23 + lhs.M23 * rhs.M33 + lhs.M24 * rhs.M43;
-            result.M24 = lhs.M21 * rhs.M14 + lhs.M22 * rhs.M24 + lhs.M23 * rhs.M34 + lhs.M24 * rhs.M44;
-
-            // Third row
-            result.M31 = lhs.M31 * rhs.M11 + lhs.M32 * rhs.M21 + lhs.M33 * rhs.M31 + lhs.M34 * rhs.M41;
-            result.M32 = lhs.M31 * rhs.M12 + lhs.M32 * rhs.M22 + lhs.M33 * rhs.M32 + lhs.M34 * rhs.M42;
-            result.M33 = lhs.M31 * rhs.M13 + lhs.M32 * rhs.M23 + lhs.M33 * rhs.M33 + lhs.M34 * rhs.M43;
-            result.M34 = lhs.M31 * rhs.M14 + lhs.M32 * rhs.M24 + lhs.M33 * rhs.M34 + lhs.M34 * rhs.M44;
-
-            // Fourth row
-            result.M41 = lhs.M41 * rhs.M11 + lhs.M42 * rhs.M21 + lhs.M43 * rhs.M31 + lhs.M44 * rhs.M41;
-            result.M42 = lhs.M41 * rhs.M12 + lhs.M42 * rhs.M22 + lhs.M43 * rhs.M32 + lhs.M44 * rhs.M42;
-            result.M43 = lhs.M41 * rhs.M13 + lhs.M42 * rhs.M23 + lhs.M43 * rhs.M33 + lhs.M44 * rhs.M43;
-            result.M44 = lhs.M41 * rhs.M14 + lhs.M42 * rhs.M24 + lhs.M43 * rhs.M34 + lhs.M44 * rhs.M44;
-
+            result.M00 = lhs.M00 * rhs.M00 + lhs.M01 * rhs.M10 + lhs.M02 * rhs.M20 + lhs.M03 * rhs.M30;
+            result.M01 = lhs.M00 * rhs.M01 + lhs.M01 * rhs.M11 + lhs.M02 * rhs.M21 + lhs.M03 * rhs.M31;
+            result.M02 = lhs.M00 * rhs.M02 + lhs.M01 * rhs.M12 + lhs.M02 * rhs.M22 + lhs.M03 * rhs.M32;
+            result.M03 = lhs.M00 * rhs.M03 + lhs.M01 * rhs.M13 + lhs.M02 * rhs.M23 + lhs.M03 * rhs.M33;
+            result.M10 = lhs.M10 * rhs.M00 + lhs.M11 * rhs.M10 + lhs.M12 * rhs.M20 + lhs.M13 * rhs.M30;
+            result.M11 = lhs.M10 * rhs.M01 + lhs.M11 * rhs.M11 + lhs.M12 * rhs.M21 + lhs.M13 * rhs.M31;
+            result.M12 = lhs.M10 * rhs.M02 + lhs.M11 * rhs.M12 + lhs.M12 * rhs.M22 + lhs.M13 * rhs.M32;
+            result.M13 = lhs.M10 * rhs.M03 + lhs.M11 * rhs.M13 + lhs.M12 * rhs.M23 + lhs.M13 * rhs.M33;
+            result.M20 = lhs.M20 * rhs.M00 + lhs.M21 * rhs.M10 + lhs.M22 * rhs.M20 + lhs.M23 * rhs.M30;
+            result.M21 = lhs.M20 * rhs.M01 + lhs.M21 * rhs.M11 + lhs.M22 * rhs.M21 + lhs.M23 * rhs.M31;
+            result.M22 = lhs.M20 * rhs.M02 + lhs.M21 * rhs.M12 + lhs.M22 * rhs.M22 + lhs.M23 * rhs.M32;
+            result.M23 = lhs.M20 * rhs.M03 + lhs.M21 * rhs.M13 + lhs.M22 * rhs.M23 + lhs.M23 * rhs.M33;
+            result.M30 = lhs.M30 * rhs.M00 + lhs.M31 * rhs.M10 + lhs.M32 * rhs.M20 + lhs.M33 * rhs.M30;
+            result.M31 = lhs.M30 * rhs.M01 + lhs.M31 * rhs.M11 + lhs.M32 * rhs.M21 + lhs.M33 * rhs.M31;
+            result.M32 = lhs.M30 * rhs.M02 + lhs.M31 * rhs.M12 + lhs.M32 * rhs.M22 + lhs.M33 * rhs.M32;
+            result.M33 = lhs.M30 * rhs.M03 + lhs.M31 * rhs.M13 + lhs.M32 * rhs.M23 + lhs.M33 * rhs.M33;
             return result;
         }
 
@@ -523,25 +500,25 @@ namespace NitroxModel.DataStructures.GameLogic
         {
             NitroxMatrix4x4 result;
 
+            result.M00 = lhs.M00 + rhs.M00;
+            result.M01 = lhs.M01 + rhs.M01;
+            result.M02 = lhs.M02 + rhs.M02;
+            result.M03 = lhs.M03 + rhs.M03;
+
+            result.M10 = lhs.M10 + rhs.M10;
             result.M11 = lhs.M11 + rhs.M11;
             result.M12 = lhs.M12 + rhs.M12;
             result.M13 = lhs.M13 + rhs.M13;
-            result.M14 = lhs.M14 + rhs.M14;
 
+            result.M20 = lhs.M20 + rhs.M20;
             result.M21 = lhs.M21 + rhs.M21;
             result.M22 = lhs.M22 + rhs.M22;
             result.M23 = lhs.M23 + rhs.M23;
-            result.M24 = lhs.M24 + rhs.M24;
 
+            result.M30 = lhs.M30 + rhs.M30;
             result.M31 = lhs.M31 + rhs.M31;
             result.M32 = lhs.M32 + rhs.M32;
             result.M33 = lhs.M33 + rhs.M33;
-            result.M34 = lhs.M34 + rhs.M34;
-
-            result.M41 = lhs.M41 + rhs.M41;
-            result.M42 = lhs.M42 + rhs.M42;
-            result.M43 = lhs.M43 + rhs.M43;
-            result.M44 = lhs.M44 + rhs.M44;
 
             return result;
         }
@@ -550,25 +527,25 @@ namespace NitroxModel.DataStructures.GameLogic
         {
             NitroxMatrix4x4 result;
 
+            result.M00 = lhs.M00 * rhs;
+            result.M01 = lhs.M01 * rhs;
+            result.M02 = lhs.M02 * rhs;
+            result.M03 = lhs.M03 * rhs;
+
+            result.M10 = lhs.M10 * rhs;
             result.M11 = lhs.M11 * rhs;
             result.M12 = lhs.M12 * rhs;
             result.M13 = lhs.M13 * rhs;
-            result.M14 = lhs.M14 * rhs;
 
+            result.M20 = lhs.M20 * rhs;
             result.M21 = lhs.M21 * rhs;
             result.M22 = lhs.M22 * rhs;
             result.M23 = lhs.M23 * rhs;
-            result.M24 = lhs.M24 * rhs;
 
+            result.M30 = lhs.M30 * rhs;
             result.M31 = lhs.M31 * rhs;
             result.M32 = lhs.M32 * rhs;
             result.M33 = lhs.M33 * rhs;
-            result.M34 = lhs.M34 * rhs;
-
-            result.M41 = lhs.M41 * rhs;
-            result.M42 = lhs.M42 * rhs;
-            result.M43 = lhs.M43 * rhs;
-            result.M44 = lhs.M44 * rhs;
 
             return result;
         }
@@ -577,25 +554,25 @@ namespace NitroxModel.DataStructures.GameLogic
         {
             NitroxMatrix4x4 result;
 
+            result.M00 = lhs.M00 - rhs.M00;
+            result.M01 = lhs.M01 - rhs.M01;
+            result.M02 = lhs.M02 - rhs.M02;
+            result.M03 = lhs.M03 - rhs.M03;
+
+            result.M10 = lhs.M10 - rhs.M10;
             result.M11 = lhs.M11 - rhs.M11;
             result.M12 = lhs.M12 - rhs.M12;
             result.M13 = lhs.M13 - rhs.M13;
-            result.M14 = lhs.M14 - rhs.M14;
 
+            result.M20 = lhs.M20 - rhs.M20;
             result.M21 = lhs.M21 - rhs.M21;
             result.M22 = lhs.M22 - rhs.M22;
             result.M23 = lhs.M23 - rhs.M23;
-            result.M24 = lhs.M24 - rhs.M24;
 
+            result.M30 = lhs.M30 - rhs.M30;
             result.M31 = lhs.M31 - rhs.M31;
             result.M32 = lhs.M32 - rhs.M32;
             result.M33 = lhs.M33 - rhs.M33;
-            result.M34 = lhs.M34 - rhs.M34;
-
-            result.M41 = lhs.M41 - rhs.M41;
-            result.M42 = lhs.M42 - rhs.M42;
-            result.M43 = lhs.M43 - rhs.M43;
-            result.M44 = lhs.M44 - rhs.M44;
 
             return result;
         }
@@ -614,43 +591,43 @@ namespace NitroxModel.DataStructures.GameLogic
         public override bool Equals(object obj)
         {
             return obj is NitroxMatrix4x4 x &&
+                   M00 == x.M00 &&
+                   M01 == x.M01 &&
+                   M02 == x.M02 &&
+                   M03 == x.M03 &&
+                   M10 == x.M10 &&
                    M11 == x.M11 &&
                    M12 == x.M12 &&
                    M13 == x.M13 &&
-                   M14 == x.M14 &&
+                   M20 == x.M20 &&
                    M21 == x.M21 &&
                    M22 == x.M22 &&
                    M23 == x.M23 &&
-                   M24 == x.M24 &&
+                   M30 == x.M30 &&
                    M31 == x.M31 &&
                    M32 == x.M32 &&
-                   M33 == x.M33 &&
-                   M34 == x.M34 &&
-                   M41 == x.M41 &&
-                   M42 == x.M42 &&
-                   M43 == x.M43 &&
-                   M44 == x.M44;
+                   M33 == x.M33;
         }
 
         public bool Equals(object obj, float tolerance)
         {
             return obj is NitroxMatrix4x4 x &&
+                   (M00 == x.M00 || x.M00 >= M00 - tolerance && x.M00 <= M00 + tolerance) &&
+                   (M01 == x.M01 || x.M01 >= M01 - tolerance && x.M01 <= M01 + tolerance) &&
+                   (M02 == x.M02 || x.M02 >= M02 - tolerance && x.M02 <= M02 + tolerance) &&
+                   (M03 == x.M03 || x.M03 >= M03 - tolerance && x.M03 <= M03 + tolerance) &&
+                   (M10 == x.M10 || x.M10 >= M10 - tolerance && x.M10 <= M10 + tolerance) &&
                    (M11 == x.M11 || x.M11 >= M11 - tolerance && x.M11 <= M11 + tolerance) &&
                    (M12 == x.M12 || x.M12 >= M12 - tolerance && x.M12 <= M12 + tolerance) &&
                    (M13 == x.M13 || x.M13 >= M13 - tolerance && x.M13 <= M13 + tolerance) &&
-                   (M14 == x.M14 || x.M14 >= M14 - tolerance && x.M14 <= M14 + tolerance) &&
+                   (M20 == x.M20 || x.M20 >= M20 - tolerance && x.M20 <= M20 + tolerance) &&
                    (M21 == x.M21 || x.M21 >= M21 - tolerance && x.M21 <= M21 + tolerance) &&
                    (M22 == x.M22 || x.M22 >= M22 - tolerance && x.M22 <= M22 + tolerance) &&
                    (M23 == x.M23 || x.M23 >= M23 - tolerance && x.M23 <= M23 + tolerance) &&
-                   (M24 == x.M24 || x.M24 >= M24 - tolerance && x.M24 <= M24 + tolerance) &&
+                   (M30 == x.M30 || x.M30 >= M30 - tolerance && x.M30 <= M30 + tolerance) &&
                    (M31 == x.M31 || x.M31 >= M31 - tolerance && x.M31 <= M31 + tolerance) &&
                    (M32 == x.M32 || x.M32 >= M32 - tolerance && x.M32 <= M32 + tolerance) &&
-                   (M33 == x.M33 || x.M33 >= M33 - tolerance && x.M33 <= M33 + tolerance) &&
-                   (M34 == x.M34 || x.M34 >= M34 - tolerance && x.M34 <= M34 + tolerance) &&
-                   (M41 == x.M41 || x.M41 >= M41 - tolerance && x.M41 <= M41 + tolerance) &&
-                   (M42 == x.M42 || x.M42 >= M42 - tolerance && x.M42 <= M42 + tolerance) &&
-                   (M43 == x.M43 || x.M43 >= M43 - tolerance && x.M43 <= M43 + tolerance) &&
-                   (M44 == x.M44 || x.M44 >= M44 - tolerance && x.M44 <= M44 + tolerance);
+                   (M33 == x.M33 || x.M33 >= M33 - tolerance && x.M33 <= M33 + tolerance);
         }
 
         public override int GetHashCode()
@@ -658,22 +635,22 @@ namespace NitroxModel.DataStructures.GameLogic
             unchecked
             {
                 int hashCode = -1955208504;
+                hashCode = hashCode * -1521134295 + M00.GetHashCode();
+                hashCode = hashCode * -1521134295 + M01.GetHashCode();
+                hashCode = hashCode * -1521134295 + M02.GetHashCode();
+                hashCode = hashCode * -1521134295 + M03.GetHashCode();
+                hashCode = hashCode * -1521134295 + M10.GetHashCode();
                 hashCode = hashCode * -1521134295 + M11.GetHashCode();
                 hashCode = hashCode * -1521134295 + M12.GetHashCode();
                 hashCode = hashCode * -1521134295 + M13.GetHashCode();
-                hashCode = hashCode * -1521134295 + M14.GetHashCode();
+                hashCode = hashCode * -1521134295 + M20.GetHashCode();
                 hashCode = hashCode * -1521134295 + M21.GetHashCode();
                 hashCode = hashCode * -1521134295 + M22.GetHashCode();
                 hashCode = hashCode * -1521134295 + M23.GetHashCode();
-                hashCode = hashCode * -1521134295 + M24.GetHashCode();
+                hashCode = hashCode * -1521134295 + M30.GetHashCode();
                 hashCode = hashCode * -1521134295 + M31.GetHashCode();
                 hashCode = hashCode * -1521134295 + M32.GetHashCode();
                 hashCode = hashCode * -1521134295 + M33.GetHashCode();
-                hashCode = hashCode * -1521134295 + M34.GetHashCode();
-                hashCode = hashCode * -1521134295 + M41.GetHashCode();
-                hashCode = hashCode * -1521134295 + M42.GetHashCode();
-                hashCode = hashCode * -1521134295 + M43.GetHashCode();
-                hashCode = hashCode * -1521134295 + M44.GetHashCode();
                 return hashCode;
             }
         }
