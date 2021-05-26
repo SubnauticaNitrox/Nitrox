@@ -344,36 +344,54 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public static NitroxMatrix4x4 RotateX(float aAngleRad)
         {
-            NitroxMatrix4x4 m = NitroxMatrix4x4.Identity;     //  1   0   0   0 
-            m.M11 = m.M22 = Mathf.Cos(aAngleRad); //  0  cos -sin 0
-            m.M21 = Mathf.Sin(aAngleRad);         //  0  sin  cos 0
-            m.M12 = -m.M21;                       //  0   0   0   1
+            NitroxMatrix4x4 m = NitroxMatrix4x4.Identity;     //  1   0   0 
+            m.M11 = m.M22 = Mathf.Cos(aAngleRad);             //  0  cos -sin
+            m.M21 = Mathf.Sin(aAngleRad);                     //  0  sin  cos
+            m.M12 = -m.M21;                                   //  0   0   0
             return m;
         }
         public static NitroxMatrix4x4 RotateY(float aAngleRad)
         {
-            NitroxMatrix4x4 m = NitroxMatrix4x4.Identity;     // cos  0  sin  0
-            m.M00 = m.M22 = Mathf.Cos(aAngleRad); //  0   1   0   0
-            m.M02 = Mathf.Sin(aAngleRad);         //-sin  0  cos  0
-            m.M20 = -m.M02;                       //  0   0   0   1
+            NitroxMatrix4x4 m = NitroxMatrix4x4.Identity;     // cos  0  sin
+            m.M00 = m.M22 = Mathf.Cos(aAngleRad);             //  0   1   0 
+            m.M02 = Mathf.Sin(aAngleRad);                     //-sin  0  cos
+            m.M20 = -m.M02;                                   //  0   0   0
             return m;
         }
         public static NitroxMatrix4x4 RotateZ(float aAngleRad)
         {
-            NitroxMatrix4x4 m = NitroxMatrix4x4.Identity;     // cos -sin 0   0
-            m.M00 = m.M11 = Mathf.Cos(aAngleRad); // sin  cos 0   0
-            m.M10 = Mathf.Sin(aAngleRad);         //  0   0   1   0
-            m.M01 = -m.M10;                       //  0   0   0   1
+            NitroxMatrix4x4 m = NitroxMatrix4x4.Identity;     // cos -sin 0                 m00 = -sinY * cosZ + cosY * sinX * sinZ
+            m.M00 = m.M11 = Mathf.Cos(aAngleRad);             // sin  cos 0                 m01 = -sinY * -sinZ + cosY * sinX * cosZ
+            m.M10 = Mathf.Sin(aAngleRad);                     //  0   0   1                 m02 = cosY * cosX
+            m.M01 = -m.M10;                                   //  0   0   0
             return m;
         }
         public static NitroxMatrix4x4 Rotate(NitroxVector3 aEulerAngles)
         {
-            var rad = aEulerAngles * Mathf.DEG2RAD;
-            NitroxMatrix4x4 rotX = RotateX(rad.X);
-            NitroxMatrix4x4 rotY = RotateY(rad.Y);
+            NitroxVector3 rad = aEulerAngles * Mathf.DEG2RAD;
+            NitroxMatrix4x4 rotX = RotateX(rad.Y);
+            NitroxMatrix4x4 rotY = RotateY(rad.X);
             NitroxMatrix4x4 rotZ = RotateZ(rad.Z);
 
-            return RotateY(rad.Y) * RotateX(rad.X) * RotateZ(rad.Z);
+            return rotY * rotX * rotZ;
+
+            /*
+             * rotY * rotX =
+             * 
+             * cosY,    cosX,           sinY * cosX
+             * 0,       cosX,           -sinX
+             * -sinY,   cosY * sinX,    cosY * cosX
+             * 
+             * 
+             * 
+             * rotY * rotX * rotZ =
+             * 
+             * cosY * cosZ + cosX * sinZ,           cosY * -sinZ + cosX * cosZ,             sinY * cosX
+             * cosX * sinZ,                         cosX * cosZ,                            -sinX         
+             * -sinY * cosZ + cosY * sinX * sinZ,   -sinY * -sinZ + cosY * sinX * cosZ,     cosY * cosX
+             * 
+             * 
+            */
         }
 
         public static NitroxMatrix4x4 GetRotationMatrix(NitroxQuaternion rotation)
@@ -390,43 +408,29 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public static NitroxQuaternion GetRotation(ref NitroxMatrix4x4 matrix)
         {
-            NitroxQuaternion rotation = NitroxQuaternion.Identity;
 
-            float trace = matrix.M00 + matrix.M11 + matrix.M22;
+            NitroxVector3 vect = NitroxVector3.Zero;
 
-            if (trace > 0)
+            if (matrix.M12 > 0.998) // Singularity at north pole
             {
-                float S = (float)Math.Sqrt(trace + 1f) * 2f;
-                rotation.W = 0.25f * S;
-                rotation.X = (matrix.M21 - matrix.M12) / S;
-                rotation.Y = (matrix.M02 - matrix.M20) / S;
-                rotation.Z = (matrix.M10 - matrix.M01) / S;
+                //TODO
             }
-            else if ((matrix.M00 > matrix.M11) && (matrix.M00 > matrix.M22))
+            else if (matrix.M12 > -0.998) // Singularity at south pole
             {
-                float S = (float)Math.Sqrt(1.0 + matrix.M00 - matrix.M11 - matrix.M22) * 2f;
-                rotation.W = (matrix.M21 - matrix.M12) / S;
-                rotation.X = 0.25f * S;
-                rotation.Y = (matrix.M01 + matrix.M10) / S;
-                rotation.Z = (matrix.M02 + matrix.M20) / S;
-            }
-            else if (matrix.M11 > matrix.M22)
-            {
-                float S = (float)Math.Sqrt(1.0 + matrix.M11 - matrix.M00 - matrix.M22) * 2f;
-                rotation.W = (matrix.M02 - matrix.M20) / S;
-                rotation.X = (matrix.M01 + matrix.M10) / S;
-                rotation.Y = 0.25f * S;
-                rotation.Z = (matrix.M12 + matrix.M21) / S;
+                //TODO
             }
             else
             {
-                float S = (float)Math.Sqrt(1.0 + matrix.M22 - matrix.M00 - matrix.M11) * 2f;
-                rotation.Y = (matrix.M10 - matrix.M01) / S;
-                rotation.Z = (matrix.M02 + matrix.M20) / S;
-                rotation.W = (matrix.M12 + matrix.M21) / S;
-                rotation.X = 0.25f * S;
+                vect.Z = -Mathf.Atan2(-matrix.M10, matrix.M11);
+                vect.X = -Mathf.Asin(matrix.M12);
+                vect.Y = -Mathf.Atan2(-matrix.M02, matrix.M22);
+
             }
-                
+
+            vect *= Mathf.RAD2DEG; // convert radians back to degrees
+
+            NitroxQuaternion rotation = NitroxQuaternion.FromEuler(vect);
+
             return rotation;
         }
 

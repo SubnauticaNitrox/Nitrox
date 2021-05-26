@@ -129,8 +129,8 @@ namespace NitroxTest.DataStructures
         public void TestTRS()
         {
             NitroxVector3 position = new NitroxVector3(256, 32, -256);
-            NitroxQuaternion rotation = NitroxQuaternion.FromEuler(new NitroxVector3(45, 25, 30));
-            NitroxVector3 scale = new NitroxVector3(1, 8, 5);
+            NitroxQuaternion rotation = NitroxQuaternion.FromEuler(new NitroxVector3(30, 25, 45));
+            NitroxVector3 scale = new NitroxVector3(1, 1, 1);
             NitroxMatrix4x4 matrix = NitroxMatrix4x4.TRS(position, rotation, scale);
 
             NitroxVector3 position2 = new NitroxVector3(-256, 32, 256);

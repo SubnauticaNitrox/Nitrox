@@ -117,21 +117,21 @@ namespace NitroxModel.DataStructures.GameLogic
 
             if (test > 0.4995f * unit)
             { // singularity at north pole
-                v.X = 2f * Mathf.Atan2(Y, X);
-                v.Y = Mathf.PI / 2;
+                v.Y = 2f * Mathf.Atan2(Y, X);
+                v.X = Mathf.PI / 2;
                 v.Z = 0;
                 return NormalizeAngles(v * Mathf.RAD2DEG);
             }
             if (test < -0.4995f * unit)
             { // singularity at south pole
-                v.X = -2f * Mathf.Atan2(Y, X);
-                v.Y = -Mathf.PI / 2;
+                v.Y = -2f * Mathf.Atan2(Y, X);
+                v.X = -Mathf.PI / 2;
                 v.Z = 0;
                 return NormalizeAngles(v * Mathf.RAD2DEG);
             }
             NitroxQuaternion q = new NitroxQuaternion(W, Z, X, Y);
-            v.X = Mathf.Atan2(2f * q.X * q.W + 2f * q.Y * q.Z, 1 - 2f * (q.Z * q.Z + q.W * q.W));     // Yaw
-            v.Y = Mathf.Asin(2f * (q.X * q.Z - q.W * q.Y));                             // Pitch
+            v.Y = Mathf.Atan2(2f * q.X * q.W + 2f * q.Y * q.Z, 1 - 2f * (q.Z * q.Z + q.W * q.W));     // Yaw
+            v.X = Mathf.Asin(2f * (q.X * q.Z - q.W * q.Y));                             // Pitch
             v.Z = Mathf.Atan2(2f * q.X * q.Y + 2f * q.Z * q.W, 1 - 2f * (q.Y * q.Y + q.Z * q.Z));      // Roll
             return NormalizeAngles(v * Mathf.RAD2DEG);
         }
@@ -146,15 +146,16 @@ namespace NitroxModel.DataStructures.GameLogic
 
         private static float NormalizeAngle(float angle)
         {
+            while (angle < 0)
+            {
+                angle += 360;
+            }
+
             while (angle >= 360)
             {
                 angle -= 360;
             }
 
-            while (angle < 0)
-            {
-                angle += 360;
-            }
             return angle;
         }
 
