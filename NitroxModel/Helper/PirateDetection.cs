@@ -29,7 +29,7 @@ namespace NitroxModel.Helper
         public static bool Trigger()
         {
             OnPirateDetected();
-            return true;
+            return false;
         }
 
         public static bool TriggerOnDirectory(string subnauticaRoot)
