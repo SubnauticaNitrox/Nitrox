@@ -347,7 +347,7 @@ namespace NitroxModel.DataStructures.GameLogic
             NitroxMatrix4x4 m = NitroxMatrix4x4.Identity;     //  1   0   0 
             m.M11 = m.M22 = Mathf.Cos(aAngleRad);             //  0  cos -sin
             m.M21 = Mathf.Sin(aAngleRad);                     //  0  sin  cos
-            m.M12 = -m.M21;                                   //  0   0   0
+            m.M12 = -m.M21;
             return m;
         }
         public static NitroxMatrix4x4 RotateY(float aAngleRad)
@@ -355,15 +355,15 @@ namespace NitroxModel.DataStructures.GameLogic
             NitroxMatrix4x4 m = NitroxMatrix4x4.Identity;     // cos  0  sin
             m.M00 = m.M22 = Mathf.Cos(aAngleRad);             //  0   1   0 
             m.M02 = Mathf.Sin(aAngleRad);                     //-sin  0  cos
-            m.M20 = -m.M02;                                   //  0   0   0
+            m.M20 = -m.M02;
             return m;
         }
         public static NitroxMatrix4x4 RotateZ(float aAngleRad)
         {
-            NitroxMatrix4x4 m = NitroxMatrix4x4.Identity;     // cos -sin 0                 m00 = -sinY * cosZ + cosY * sinX * sinZ
-            m.M00 = m.M11 = Mathf.Cos(aAngleRad);             // sin  cos 0                 m01 = -sinY * -sinZ + cosY * sinX * cosZ
-            m.M10 = Mathf.Sin(aAngleRad);                     //  0   0   1                 m02 = cosY * cosX
-            m.M01 = -m.M10;                                   //  0   0   0
+            NitroxMatrix4x4 m = NitroxMatrix4x4.Identity;     // cos -sin 0
+            m.M00 = m.M11 = Mathf.Cos(aAngleRad);             // sin  cos 0
+            m.M10 = Mathf.Sin(aAngleRad);                     //  0   0   1
+            m.M01 = -m.M10;
             return m;
         }
         public static NitroxMatrix4x4 Rotate(NitroxVector3 aEulerAngles)
