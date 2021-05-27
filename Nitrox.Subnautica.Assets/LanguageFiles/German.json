@@ -25,7 +25,7 @@
   "Nitrox_LostConnection": "Die Verbindung zum Server wurde unterbrochen",
   "Nitrox_PlayerKicked": "Du bist vom Server geflogen",
   // In game logging
-  "Nitrox_UnableToConnect": "Der Server kann nicht erreicht werden.",
+  "Nitrox_UnableToConnect": "Der Server kann nicht erreicht werden:",
   "Nitrox_StartServer": "Bitte starte zuerst den Server um deine selbst-gehostete Welt zu betreten.",
   "Nitrox_FirewallInterfering": "Es scheint als ob Firewall-Einstellungen die Verbindung blockieren",
   "Nitrox_InvalidUserName": "Bitte gebe einen validen Spielernamen ein!\n\n Er darf kein Leerzeichen oder andere invalide Zeichen beinhalten\n Erlaubte Zeichen : A-Z a-z 0-9 _ . -\nLänge : [3, 25]",
