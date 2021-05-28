@@ -396,7 +396,7 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public static NitroxMatrix4x4 GetRotationMatrix(NitroxQuaternion rotation)
         {
-            return Rotate(rotation.Euler);
+            return Rotate(rotation.ToEuler());
         }
 
         public static NitroxMatrix4x4 SetRotation(NitroxQuaternion localRotation)

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using NitroxModel.Helper;
 using ProtoBufNet;
 
@@ -6,7 +6,7 @@ namespace NitroxModel.DataStructures.GameLogic
 {
     [ProtoContract]
     [Serializable]
-    public struct NitroxVector3
+    public struct NitroxVector3 : IEquatable<NitroxVector3>
     {
         [ProtoMember(1)]
         public float X;
@@ -28,16 +28,17 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public static NitroxVector3 One => new(1, 1, 1);
 
-        public bool Equals(NitroxVector3 other, float tolerance)
-        {
-            return (other.X == X || other.X >= X - tolerance && other.X <= X + tolerance) &&
-                (other.Y == Y || other.Y >= Y - tolerance && other.Y <= Y + tolerance) &&
-                (other.Z == Z || other.Z >= Z - tolerance && other.Z <= Z + tolerance);
-        }
-
         public bool Equals(NitroxVector3 other)
         {
-            return X.Equals(other.X) && Y.Equals(other.Y) && Z.Equals(other.Z);
+            return Equals(other, float.Epsilon);
+        }
+
+        public bool Equals(NitroxVector3 other, float tolerance)
+        {
+            return X == other.X && Y == other.Y && Z == other.Z ||
+                   Math.Abs(other.X - X) < tolerance &&
+                   Math.Abs(other.Y - Y) < tolerance &&
+                   Math.Abs(other.Z - Z) < tolerance;
         }
 
         public override bool Equals(object obj)
@@ -112,11 +113,15 @@ namespace NitroxModel.DataStructures.GameLogic
             return new NitroxVector3(vector4.X, vector4.Y, vector4.Z);
         }
 
+        // From Unity
         public static NitroxVector3 Normalize(NitroxVector3 value)
         {
             float ls = value.X * value.X + value.Y * value.Y + value.Z * value.Z;
-            float length = Mathf.Sqrt(ls);
-            return new NitroxVector3(value.X / length, value.Y / length, value.Z / length);
+            if (ls < 9.99999974737875E-06)
+            {
+                return Zero;
+            }
+            return value / Mathf.Sqrt(ls);
         }
 
         public static float Length(NitroxVector3 value)

@@ -20,8 +20,6 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoMember(4)]
         public float W;
 
-        public NitroxVector3 Euler { get { return ToEuler(); } }
-
         public static NitroxQuaternion Identity { get; } = new NitroxQuaternion(0, 0, 0, 1);
 
         public NitroxQuaternion(float x, float y, float z, float w)
@@ -32,21 +30,22 @@ namespace NitroxModel.DataStructures.GameLogic
             W = w;
         }
 
+        //From Unity
         public static NitroxQuaternion Normalize(NitroxQuaternion value)
         {
-            NitroxQuaternion ans = value;
+            float num = value.X * value.X + value.Y * value.Y + value.Z * value.Z + value.W * value.W;
 
-            float ls = ans.X * ans.X + ans.Y * ans.Y + ans.Z * ans.Z + ans.W * ans.W;
-            float invNorm = 1.0f / (float)Math.Sqrt(ls);
+            if (num < (double)float.Epsilon)
+            {
+                return Identity;
+            }
 
-            ans.X *= invNorm;
-            ans.Y *= invNorm;
-            ans.Z *= invNorm;
-            ans.W *= invNorm;
-
-            return ans;
+            float sqrt = Mathf.Sqrt(num);
+            return new NitroxQuaternion(value.X / sqrt, value.Y / sqrt, value.Z / sqrt, value.W / sqrt);
         }
 
+        // From https://answers.unity.com/questions/467614/what-is-the-source-code-of-quaternionlookrotation.html
+        // and  https://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/
         public static NitroxQuaternion LookRotation(NitroxVector3 forward, NitroxVector3 up)
         {
             NitroxVector3 vector = NitroxVector3.Normalize(forward);
@@ -63,55 +62,52 @@ namespace NitroxModel.DataStructures.GameLogic
             float m22 = vector.Z;
 
 
-            float num8 = (m00 + m11) + m22;
-            NitroxQuaternion quaternion;
-            if (num8 > 0f)
+            float tr = m00 + m11 + m22;
+            NitroxQuaternion quaternion = new();
+            if (tr > 0)
             {
-                float num = Mathf.Sqrt(num8 + 1f);
-                quaternion.W = num * 0.5f;
-                num = 0.5f / num;
-                quaternion.X = (m12 - m21) * num;
-                quaternion.Y = (m20 - m02) * num;
-                quaternion.Z = (m01 - m10) * num;
-                return Normalize(quaternion);
+                float s = Mathf.Sqrt(tr + 1.0f) * 2f; // S=4*qw 
+                quaternion.W = 0.25f * s;
+                quaternion.Y = (m21 - m12) / s;
+                quaternion.X = (m02 - m20) / s;
+                quaternion.Z = (m10 - m01) / s;
             }
-            if ((m00 >= m11) && (m00 >= m22))
+            else if ((m00 > m11) & (m00 > m22))
             {
-                float num7 = Mathf.Sqrt(((1f + m00) - m11) - m22);
-                float num4 = 0.5f / num7;
-                quaternion.X = 0.5f * num7;
-                quaternion.Y = (m01 + m10) * num4;
-                quaternion.Z = (m02 + m20) * num4;
-                quaternion.W = (m12 - m21) * num4;
-                return Normalize(quaternion);
+                float s = Mathf.Sqrt(1.0f + m00 - m11 - m22) * 2; // S=4*qx 
+                quaternion.W = (m21 - m12) / s;
+                quaternion.Y = 0.25f * s;
+                quaternion.X = (m01 + m10) / s;
+                quaternion.Z = (m02 + m20) / s;
             }
-            if (m11 > m22)
+            else if (m11 > m22)
             {
-                float num6 = Mathf.Sqrt(((1f + m11) - m00) - m22);
-                float num3 = 0.5f / num6;
-                quaternion.X = (m10 + m01) * num3;
-                quaternion.Y = 0.5f * num6;
-                quaternion.Z = (m21 + m12) * num3;
-                quaternion.W = (m20 - m02) * num3;
-                return Normalize(quaternion);
+                float s = Mathf.Sqrt(1.0f + m11 - m00 - m22) * 2; // S=4*qy
+                quaternion.W = (m02 - m20) / s;
+                quaternion.Y = (m01 + m10) / s;
+                quaternion.X = 0.25f * s;
+                quaternion.Z = (m12 + m21) / s;
             }
-            float num5 = Mathf.Sqrt(((1f + m22) - m00) - m11);
-            float num2 = 0.5f / num5;
-            quaternion.X = (m20 + m02) * num2;
-            quaternion.Y = (m21 + m12) * num2;
-            quaternion.Z = 0.5f * num5;
-            quaternion.W = (m01 - m10) * num2;
+            else
+            {
+                float s = Mathf.Sqrt(1.0f + m22 - m00 - m11) * 2; // S=4*qz
+                quaternion.W = (m10 - m01) / s;
+                quaternion.Y = (m02 + m20) / s;
+                quaternion.X = (m12 + m21) / s;
+                quaternion.Z = 0.25f * s;
+            }
 
             return Normalize(quaternion);
         }
 
+        // From https://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToEuler/index.htm
         public NitroxVector3 ToEuler()
         {
             float sqw = W * W;
             float sqx = X * X;
             float sqy = Y * Y;
             float sqz = Z * Z;
-            float unit = sqx + sqy + sqz + sqw; // if normalised is one, otherwise is correction factor
+            float unit = sqx + sqy + sqz + sqw; // if normalized is one, otherwise is correction factor
             float test = X * W - Y * Z;
             NitroxVector3 v;
 
@@ -124,24 +120,46 @@ namespace NitroxModel.DataStructures.GameLogic
             }
             if (test < -0.4995f * unit)
             { // singularity at south pole
-                v.Y = -2f * Mathf.Atan2(Y, X);
-                v.X = -Mathf.PI / 2;
+                v.X = -2f * Mathf.Atan2(Y, X);
+                v.Y = -Mathf.PI / 2;
                 v.Z = 0;
                 return NormalizeAngles(v * Mathf.RAD2DEG);
             }
             NitroxQuaternion q = new NitroxQuaternion(W, Z, X, Y);
-            v.Y = Mathf.Atan2(2f * q.X * q.W + 2f * q.Y * q.Z, 1 - 2f * (q.Z * q.Z + q.W * q.W));     // Yaw
-            v.X = Mathf.Asin(2f * (q.X * q.Z - q.W * q.Y));                             // Pitch
-            v.Z = Mathf.Atan2(2f * q.X * q.Y + 2f * q.Z * q.W, 1 - 2f * (q.Y * q.Y + q.Z * q.Z));      // Roll
+            v.Y = Mathf.Atan2(2f * q.X * q.W + 2f * q.Y * q.Z, 1 - 2f * (q.Z * q.Z + q.W * q.W));   // Yaw
+            v.X = Mathf.Asin(2f * (q.X * q.Z - q.W * q.Y));                                         // Pitch
+            v.Z = Mathf.Atan2(2f * q.X * q.Y + 2f * q.Z * q.W, 1 - 2f * (q.Y * q.Y + q.Z * q.Z));   // Roll
             return NormalizeAngles(v * Mathf.RAD2DEG);
+        }
+
+        // From https://www.euclideanspace.com/maths/geometry/rotations/conversions/eulerToQuaternion/index.htm
+        public static NitroxQuaternion FromEuler(NitroxVector3 euler)
+        {
+            NitroxVector3 normEuler = NormalizeAngles(euler);
+            NitroxVector3 radEuler = normEuler * ((float)Math.PI / 180f); //Yeah, Unity uses different formulas for setting and getting euler. (╯°□°)╯︵ ┻━┻
+            NitroxQuaternion result;
+
+            double yawOver2 = radEuler.Y * 0.5;
+            double c1 = Math.Cos(yawOver2);
+            double s1 = Math.Sin(yawOver2);
+            double pitchOver2 = radEuler.X * 0.5;
+            double c2 = Math.Cos(pitchOver2);
+            double s2 = Math.Sin(pitchOver2);
+            double rollOver2 = radEuler.Z * 0.5;
+            double c3 = Math.Cos(rollOver2);
+            double s3 = Math.Sin(rollOver2);
+
+            result.W = (float)(c1 * c2 * c3 + s1 * s2 * s3);
+            result.X = (float)(c1 * s2 * c3 + s1 * c2 * s3);
+            result.Y = (float)(s1 * c2 * c3 - c1 * s2 * s3);
+            result.Z = (float)(c1 * c2 * s3 - s1 * s2 * c3);
+
+            return Normalize(result);
         }
 
         private static NitroxVector3 NormalizeAngles(NitroxVector3 angles)
         {
-            angles.X = NormalizeAngle(angles.X);
-            angles.Y = NormalizeAngle(angles.Y);
-            angles.Z = NormalizeAngle(angles.Z);
-            return angles;
+            return new NitroxVector3(NormalizeAngle(angles.X), NormalizeAngle(angles.Y), NormalizeAngle(angles.Z));
         }
 
         private static float NormalizeAngle(float angle)
@@ -159,38 +177,13 @@ namespace NitroxModel.DataStructures.GameLogic
             return angle;
         }
 
-        public static NitroxQuaternion FromEuler(NitroxVector3 euler)
-        {
-            NitroxVector3 normEuler = NormalizeAngles(euler);
-            NitroxVector3 radEuler = normEuler * Mathf.DEG2RAD;
-            NitroxQuaternion result;
-
-            double yawOver2 = radEuler.Y * 0.5f;
-            float cosYawOver2 = (float)System.Math.Cos(yawOver2);
-            float sinYawOver2 = (float)System.Math.Sin(yawOver2);
-            double pitchOver2 = radEuler.X * 0.5f;
-            float cosPitchOver2 = (float)System.Math.Cos(pitchOver2);
-            float sinPitchOver2 = (float)System.Math.Sin(pitchOver2);
-            double rollOver2 = radEuler.Z * 0.5f;
-            float cosRollOver2 = (float)System.Math.Cos(rollOver2);
-            float sinRollOver2 = (float)System.Math.Sin(rollOver2);
-
-            result.W = cosYawOver2 * cosPitchOver2 * cosRollOver2 + sinYawOver2 * sinPitchOver2 * sinRollOver2;
-            result.X = sinYawOver2 * cosPitchOver2 * cosRollOver2 + cosYawOver2 * sinPitchOver2 * sinRollOver2;
-            result.Y = cosYawOver2 * sinPitchOver2 * cosRollOver2 - sinYawOver2 * cosPitchOver2 * sinRollOver2;
-            result.Z = cosYawOver2 * cosPitchOver2 * sinRollOver2 - sinYawOver2 * sinPitchOver2 * cosRollOver2;
-
-            return Normalize(result);
-        }
-
         public static NitroxQuaternion operator *(NitroxQuaternion lhs, NitroxQuaternion rhs)
         {
-            NitroxQuaternion result = new NitroxQuaternion(lhs.W * rhs.X + lhs.X * rhs.W + lhs.Y * rhs.Z - lhs.Z * rhs.Y,
-                lhs.W * rhs.Y + lhs.Y * rhs.W + lhs.Z * rhs.X - lhs.X * rhs.Z,
-                lhs.W * rhs.Z + lhs.Z * rhs.W + lhs.X * rhs.Y - lhs.Y * rhs.X,
-                lhs.W * rhs.W - lhs.X * rhs.X - lhs.Y * rhs.Y - lhs.Z * rhs.Z);
+            return new NitroxQuaternion((float)(lhs.W * (double)rhs.X + lhs.X * (double)rhs.W + lhs.Y * (double)rhs.Z - lhs.Z * (double)rhs.Y),
+                                        (float)(lhs.W * (double)rhs.Y + lhs.Y * (double)rhs.W + lhs.Z * (double)rhs.X - lhs.X * (double)rhs.Z),
+                                        (float)(lhs.W * (double)rhs.Z + lhs.Z * (double)rhs.W + lhs.X * (double)rhs.Y - lhs.Y * (double)rhs.X),
+                                        (float)(lhs.W * (double)rhs.W - lhs.X * (double)rhs.X - lhs.Y * (double)rhs.Y - lhs.Z * (double)rhs.Z));
 
-            return result;
         }
 
         public static bool operator ==(NitroxQuaternion left, NitroxQuaternion right)
@@ -205,35 +198,7 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public override string ToString()
         {
-            return "[Quaternion - {" + X + ", " + Y + ", " + Z + "," + W + "}]";
-        }
-
-        public static NitroxQuaternion CreateFromYawPitchRoll(float yaw, float pitch, float roll)
-        {
-            //  Roll first, about axis the object is facing, then
-            //  pitch upward, then yaw to face into the new heading
-            float sr, cr, sp, cp, sy, cy;
-
-            float halfRoll = roll * 0.5f;
-            sr = (float)Math.Sin(halfRoll);
-            cr = (float)Math.Cos(halfRoll);
-
-            float halfPitch = pitch * 0.5f;
-            sp = (float)Math.Sin(halfPitch);
-            cp = (float)Math.Cos(halfPitch);
-
-            float halfYaw = yaw * 0.5f;
-            sy = (float)Math.Sin(halfYaw);
-            cy = (float)Math.Cos(halfYaw);
-
-            NitroxQuaternion result = new NitroxQuaternion();
-
-            result.X = cy * sp * cr + sy * cp * sr;
-            result.Y = sy * cp * cr - cy * sp * sr;
-            result.Z = cy * cp * sr - sy * sp * cr;
-            result.W = cy * cp * cr + sy * sp * sr;
-
-            return result;
+            return $"[Quaternion - {X}, {Y}, {Z}, {W}]";
         }
 
         public override bool Equals(object obj)
@@ -243,18 +208,16 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public bool Equals(NitroxQuaternion other)
         {
-            return X == other.X &&
-                   Y == other.Y &&
-                   Z == other.Z &&
-                   W == other.W;
+            return Equals(other, float.Epsilon);
         }
 
         public bool Equals(NitroxQuaternion other, float tolerance)
         {
-            return (X == other.X || other.X >= X - tolerance && other.X <= X + tolerance) &&
-                (Y == other.Y || other.Y >= Y - tolerance && other.Y <= Y + tolerance) &&
-                (Z == other.Z || other.Z >= Z - tolerance && other.Z <= Z + tolerance) &&
-                (W == other.W || other.W >= W - tolerance && other.W <= W + tolerance);
+            return X == other.X && Y == other.Y && Z == other.Z && W == other.W ||
+                   Math.Abs(other.X - X) < tolerance &&
+                   Math.Abs(other.Y - Y) < tolerance &&
+                   Math.Abs(other.Z - Z) < tolerance &&
+                   Math.Abs(other.W - W) < tolerance;
         }
 
         public override int GetHashCode()
