@@ -10,6 +10,7 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class PDAScannerEntryProgressProcessor : ClientPacketProcessor<PDAEntryProgress>
     {
+        private readonly MethodInfo methodAdd = typeof(PDAScanner).GetMethod("Add", BindingFlags.NonPublic | BindingFlags.Static, null, new Type[] { typeof(TechType), typeof(int) }, null);
         private readonly IPacketSender packetSender;
 
         public PDAScannerEntryProgressProcessor(IPacketSender packetSender)
@@ -35,7 +36,6 @@ namespace NitroxClient.Communication.Packets.Processors
                 else
                 {
                     Log.Info($"PDAEntryProgress New TechType:{techType} Unlocked:{packet.Unlocked}");
-                    MethodInfo methodAdd = typeof(PDAScanner).GetMethod("Add", BindingFlags.NonPublic | BindingFlags.Static, null, new Type[] { typeof(TechType), typeof(int) }, null);
                     methodAdd.Invoke(null, new object[] { techType, packet.Unlocked });
                 }
             }
