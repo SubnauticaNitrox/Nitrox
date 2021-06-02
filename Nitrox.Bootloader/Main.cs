@@ -1,14 +1,20 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using BepInEx;
 
 namespace Nitrox.Bootloader
 {
-    public static class Main
+    [BepInPlugin(GUID, MOD_NAME, VERSION)]
+    public class Main: BaseUnityPlugin
     {
-        private static readonly Lazy<string> nitroxLauncherDir = new Lazy<string>(() =>
+        public const string
+            MOD_NAME = "Nitrox",
+            GUID = "com.nitroxmod",
+            VERSION = "1.0.0.0";
+
+        private readonly Lazy<string> nitroxLauncherDir = new Lazy<string>(() =>
         {
             // Get path from command args.
             string[] args = Environment.GetCommandLineArgs();
@@ -56,7 +62,7 @@ namespace Nitrox.Bootloader
             return null;
         });
 
-        public static void Execute()
+        public void Awake()
         {
             string error = ValidateNitroxSetup();
             if (error != null)
@@ -73,14 +79,14 @@ namespace Nitrox.Bootloader
             BootstrapNitrox();
         }
 
-        private static void BootstrapNitrox()
+        private void BootstrapNitrox()
         {
             Assembly core = Assembly.Load(new AssemblyName("NitroxPatcher"));
             Type mainType = core.GetType("NitroxPatcher.Main");
             mainType.InvokeMember("Execute", BindingFlags.Public | BindingFlags.Static | BindingFlags.InvokeMethod, null, null, null);
         }
 
-        private static string ValidateNitroxSetup()
+        private  string ValidateNitroxSetup()
         {
             if (nitroxLauncherDir.Value == null)
             {
@@ -90,7 +96,7 @@ namespace Nitrox.Bootloader
             return null;
         }
 
-        private static Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)
+        private Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)
         {
             string dllFileName = args.Name.Split(',')[0];
             if (!dllFileName.EndsWith(".dll"))
