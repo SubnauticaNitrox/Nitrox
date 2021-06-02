@@ -285,9 +285,15 @@
     <ItemGroup>
       <NitroxSubnauticaLanguageFiles Include="$(SolutionDir)\Nitrox.Subnautica.Assets\LanguageFiles\*.json" />
     </ItemGroup>
-    <Copy SourceFiles="@(NitroxSubnauticaAssets)" DestinationFolder="$(TargetDir)\%(RecursiveDir)" />
-    <Copy SourceFiles="@(NitroxSubnauticaStaticDlls)" DestinationFolder="$(TargetDir)\lib\%(RecursiveDir)" />
-    <Copy SourceFiles="@(NitroxSubnauticaLanguageFiles)" DestinationFolder="$(TargetDir)\LanguageFiles\%(RecursiveDir)" />
+    <ItemGroup>
+      <NitroxBepInExAssets Include="$(SolutionDir)\BepInEx\**\*.*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(NitroxSubnauticaAssets)" DestinationFolder="$(TargetDir)\%(RecursiveDir)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(NitroxSubnauticaStaticDlls)" DestinationFolder="$(TargetDir)\lib\%(RecursiveDir)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(NitroxSubnauticaLanguageFiles)" DestinationFolder="$(TargetDir)\LanguageFiles\%(RecursiveDir)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(NitroxBepInExAssets)" DestinationFolder="$(TargetDir)\lib\BepInEx\%(RecursiveDir)" SkipUnchangedFiles="true" />
+    <MakeDir Directories="$(TargetDir)lib\BepInEx\BepInEx\plugins"/>
+    <MakeDir Directories="$(TargetDir)lib\BepInEx\BepInEx\patchers"/>
   </Target>
   <Target Name="MoveDependenciesToLib" AfterTargets="Build">
     <ItemGroup>
@@ -299,8 +305,4 @@
     <Move SourceFiles="@(AllDependencies)" DestinationFolder="$(TargetDir)lib" />
   </Target>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" Condition="'$(OS)' == 'Windows_NT'" />
-  <PropertyGroup>
-    <PostBuildEvent>rmdir "$(TargetDir)lib\BepInEx" /q /s
-xcopy "$(SolutionDir)BepInEx" "$(TargetDir)lib\BepInEx"  /E /H /I /Q /Y</PostBuildEvent>
-  </PropertyGroup>
 </Project>
