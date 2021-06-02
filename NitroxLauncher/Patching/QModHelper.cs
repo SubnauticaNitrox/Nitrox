@@ -39,6 +39,7 @@ namespace NitroxLauncher.Patching
 
             if (error != null)
             {
+                Log.Error(error, "Unable to remove QModManager.");
                 throw error;
             }
             Log.Info("Successfully removed QModManager");
@@ -67,6 +68,7 @@ namespace NitroxLauncher.Patching
             Exception error = NitroxEntryPatch.RetryWait(() => Directory.Move(qmmPatchersBackupPath, Path.Combine(qmmPatchersOriginPath, "QModManager")), 100, 5) ?? NitroxEntryPatch.RetryWait(() => Directory.Move(qmmPluginBackupPath, Path.Combine(qmmPluginOriginPath, "QModManager")), 100, 5);
             if (error != null)
             {
+                Log.Error(error, "Unable to restore QModManager.");
                 throw error;
             }
 

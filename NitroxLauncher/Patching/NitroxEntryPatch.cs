@@ -42,6 +42,7 @@ namespace NitroxLauncher.Patching
                 error = RetryWait(() => RecursiveCopyBepInExFolder(bepinexSourcePath, bepinexInstallPath), 100, 5);
                 if (error != null)
                 {
+                    Log.Error(error, "Unable to install BepInEx.");
                     throw error;
                 }
             }
@@ -59,6 +60,7 @@ namespace NitroxLauncher.Patching
                 error = RetryWait(() => File.Delete(nitroxBootloaderDestination), 100, 5);
                 if (error != null)
                 {
+                    Log.Error(error, "Unable to delete bootloader dll.");
                     throw error;
                 }
             }
@@ -134,11 +136,13 @@ namespace NitroxLauncher.Patching
                 Exception error = RetryWait(() => File.Delete(nitroxBootloaderDestination), 100, 5);
                 if (error != null)
                 {
+                    Log.Error(error, "Unable to delete bootloader dll.");
                     throw error;
                 }
                 error = RetryWait(() => Directory.Delete(nitroxFolder), 100, 5);
                 if (error != null)
                 {
+                    Log.Error(error, "Unable to delete nitrox plugin folder.");
                     throw error;
                 }
 
