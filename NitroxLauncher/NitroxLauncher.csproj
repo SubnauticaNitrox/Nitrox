@@ -302,6 +302,6 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" Condition="'$(OS)' == 'Windows_NT'" />
   <PropertyGroup>
     <PostBuildEvent>rmdir "$(TargetDir)lib\BepInEx" /q /s
-xcopy "$(ProjectDir)BepInEx" "$(TargetDir)lib\BepInEx"  /E /H /I /Q /Y</PostBuildEvent>
+xcopy "$(SolutionDir)BepInEx" "$(TargetDir)lib\BepInEx"  /E /H /I /Q /Y</PostBuildEvent>
   </PropertyGroup>
 </Project>

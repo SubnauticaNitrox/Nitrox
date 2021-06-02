@@ -30,7 +30,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="0Harmony">
-      <HintPath>..\NitroxLauncher\BepInEx\BepInEx\core\0Harmony.dll</HintPath>
+      <HintPath>$(SolutionDir)BepInEx\BepInEx\core\0Harmony.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
