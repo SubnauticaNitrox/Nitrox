@@ -57,7 +57,7 @@ namespace NitroxPatcher.Patches
         }
 
         protected void PatchMultiple(Harmony harmony, MethodBase targetMethod,
-            string prefixMethod = null, string postfixMethod = null, string transpilerMethod = null, string finalizerMethod = null)
+            string prefixMethod = null, string postfixMethod = null, string transpilerMethod = null, string finalizerMethod = null, string ilManipulatorMethod = null)
         {
             Validate.NotNull(targetMethod, "Target method cannot be null");
 
@@ -65,8 +65,9 @@ namespace NitroxPatcher.Patches
             HarmonyMethod harmonyPostfixMethod = postfixMethod != null ? GetHarmonyMethod(postfixMethod) : null;
             HarmonyMethod harmonyTranspilerMethod = transpilerMethod != null ? GetHarmonyMethod(transpilerMethod) : null;
             HarmonyMethod harmonyFinalizerMethod = finalizerMethod != null ? GetHarmonyMethod(finalizerMethod) : null;
+            HarmonyMethod harmonyIlManipulatorMethod = ilManipulatorMethod != null ? GetHarmonyMethod(ilManipulatorMethod) : null;
 
-            harmony.Patch(targetMethod, harmonyPrefixMethod, harmonyPostfixMethod, harmonyTranspilerMethod, harmonyFinalizerMethod);
+            harmony.Patch(targetMethod, harmonyPrefixMethod, harmonyPostfixMethod, harmonyTranspilerMethod, harmonyFinalizerMethod, harmonyIlManipulatorMethod);
             activePatches.Add(targetMethod); // Store our patched methods
         }
     }

@@ -20,7 +20,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static readonly OpCode INSTRUCTION_BEFORE_JUMP = OpCodes.Ldfld;
         public static readonly object INSTRUCTION_BEFORE_JUMP_OPERAND = typeof(SubRoot).GetField("isBase", BindingFlags.Public | BindingFlags.Instance);
-        public static readonly OpCode JUMP_INSTRUCTION_TO_COPY = OpCodes.Brtrue_S;
+        public static readonly OpCode JUMP_INSTRUCTION_TO_COPY = OpCodes.Brtrue;
 
         public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
         {
