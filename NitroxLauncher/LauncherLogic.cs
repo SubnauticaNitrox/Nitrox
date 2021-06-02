@@ -64,7 +64,7 @@ namespace NitroxLauncher
             try
             {
                 nitroxEntryPatch.Remove();
-                QModHelper.RestoreQModEntryPoint(subnauticaPath);
+                QModHelper.RestoreQModManagerFolders(subnauticaPath);
             }
             catch (Exception)
             {
@@ -179,8 +179,8 @@ namespace NitroxLauncher
                 throw new Exception("An instance of Subnautica is already running");
             }
 #endif
-            nitroxEntryPatch.Remove();
-            QModHelper.RestoreQModEntryPoint(subnauticaPath);
+            nitroxEntryPatch.Remove(); //Merged qmm restore into remove.
+
             gameProcess = StartSubnautica() ?? await WaitForProcessAsync();
         }
 
@@ -196,21 +196,8 @@ namespace NitroxLauncher
             string nitroxAppData = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox");
             Directory.CreateDirectory(nitroxAppData);
             File.WriteAllText(Path.Combine(nitroxAppData, "launcherpath.txt"), Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
-
-            // TODO: The launcher should override FileRead win32 API for the Subnautica process to give it the modified Assembly-CSharp from memory 
-            string bootloaderName = "Nitrox.Bootloader.dll";
-            try
-            {
-                File.Copy(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "lib", bootloaderName), Path.Combine(subnauticaPath, "Subnautica_Data", "Managed", bootloaderName), true);
-            }
-            catch (IOException ex)
-            {
-                Log.Error(ex, "Unable to move bootloader dll to Managed folder. Still attempting to launch because it might exist from previous runs.");
-            }
-
-            nitroxEntryPatch.Remove(); // Remove any previous instances first.
-            nitroxEntryPatch.Apply();
-            QModHelper.RemoveQModEntryPoint(subnauticaPath);
+            
+            nitroxEntryPatch.Apply(); //Merged remove and qmm remove into apply.
 
             gameProcess = StartSubnautica() ?? await WaitForProcessAsync();
         }
@@ -316,7 +303,7 @@ namespace NitroxLauncher
             {
                 nitroxEntryPatch.Remove();
                 Log.Info("Finished removing patches!");
-                QModHelper.RestoreQModEntryPoint(subnauticaPath);
+                QModHelper.RestoreQModManagerFolders(subnauticaPath);
             }
             catch (Exception ex)
             {

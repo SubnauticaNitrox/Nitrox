@@ -266,12 +266,6 @@
     <Resource Include="Images\serverIllustration.png" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="dnlib">
-      <Version>3.3.2</Version>
-    </PackageReference>
-    <PackageReference Include="Lib.Harmony">
-      <Version>2.0.4.0</Version>
-    </PackageReference>
     <PackageReference Include="WindowsAPICodePack-Core">
       <Version>1.1.2</Version>
     </PackageReference>
@@ -279,6 +273,7 @@
       <Version>1.1.1</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup />
   <!-- Move assets from Subnautica assets to launcher.
        TODO: Try fix this as a project reference to Nitrox.Subnautica.Assets that will copy the files on build automatically. -->
   <Target Name="MoveNitroxAssetsToLauncherOutput" AfterTargets="Build" Condition="'$(OS)' == 'Windows_NT'">
@@ -305,4 +300,8 @@
     <Move SourceFiles="@(AllDependencies)" DestinationFolder="$(TargetDir)lib" />
   </Target>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" Condition="'$(OS)' == 'Windows_NT'" />
+  <PropertyGroup>
+    <PostBuildEvent>rmdir "$(TargetDir)lib\BepInEx" /q /s
+xcopy "$(ProjectDir)BepInEx" "$(TargetDir)lib\BepInEx"  /E /H /I /Q /Y</PostBuildEvent>
+  </PropertyGroup>
 </Project>

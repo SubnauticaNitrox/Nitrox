@@ -1,75 +1,112 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
-using dnlib.DotNet;
-using dnlib.DotNet.Emit;
-using FileAttributes = System.IO.FileAttributes;
+using NitroxModel.Logger;
 
 namespace NitroxLauncher.Patching
 {
     internal class NitroxEntryPatch
     {
-        public const string GAME_ASSEMBLY_NAME = "Assembly-CSharp.dll";
+        public const string BEPINEX_ASSEMBLY_NAME = "BepInEx.dll";
         public const string NITROX_ASSEMBLY_NAME = "Nitrox.Bootloader.dll";
-        public const string GAME_ASSEMBLY_MODIFIED_NAME = "Assembly-CSharp-Nitrox.dll";
-
-        private const string NITROX_ENTRY_TYPE_NAME = "Main";
-        private const string NITROX_ENTRY_METHOD_NAME = "Execute";
-
-        private const string GAME_INPUT_TYPE_NAME = "GameInput";
-        private const string GAME_INPUT_METHOD_NAME = "Awake";
-
-        private const string NITROX_EXECUTE_INSTRUCTION = "System.Void Nitrox.Bootloader.Main::Execute()";
-
-        private readonly string subnauticaManagedPath;
+        public const string QMODMANAGER_ASSEMBLY_NAME = "QModInstaller.dll";
+        
+        private readonly string bepinexCorePath;
+        private readonly string bepinexPluginsPath;
+        private readonly string subnauticaCorePath;
 
         public bool IsApplied => IsPatchApplied();
 
         public NitroxEntryPatch(string subnauticaBasePath)
         {
-            subnauticaManagedPath = Path.Combine(subnauticaBasePath, "Subnautica_Data", "Managed");
+            subnauticaCorePath = subnauticaBasePath;
+            bepinexCorePath = Path.Combine(subnauticaBasePath, "BepInEx", "Core");
+            bepinexPluginsPath = Path.Combine(subnauticaBasePath, "BepInEx", "plugins");
         }
 
         public void Apply()
         {
-            string assemblyCSharp = Path.Combine(subnauticaManagedPath, GAME_ASSEMBLY_NAME);
-            string nitroxPatcherPath = Path.Combine(subnauticaManagedPath, NITROX_ASSEMBLY_NAME);
-            string modifiedAssemblyCSharp = Path.Combine(subnauticaManagedPath, GAME_ASSEMBLY_MODIFIED_NAME);
+            string nitroxLibPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "lib");
+            string bepinex = Path.Combine(bepinexCorePath, BEPINEX_ASSEMBLY_NAME);
+            string bepinexSourcePath = Path.Combine(nitroxLibPath, "BepInEx");
+            string bepinexInstallPath = subnauticaCorePath;
+            string nitroxFolder = Path.Combine(bepinexPluginsPath, "Nitrox");
+            string nitroxBootloaderDestination = Path.Combine(nitroxFolder, NITROX_ASSEMBLY_NAME);
+            string nitroxBootloaderSource = Path.Combine(nitroxLibPath, NITROX_ASSEMBLY_NAME);
+            
+            Exception error;
 
-            if (File.Exists(modifiedAssemblyCSharp))
+            if (!File.Exists(bepinex))
             {
-                File.Delete(modifiedAssemblyCSharp);
+                error = RetryWait(() => RecursiveCopyBepInExFolder(bepinexSourcePath, bepinexInstallPath), 100, 5);
+                if (error != null)
+                {
+                    throw error;
+                }
             }
-
-            using (ModuleDefMD module = ModuleDefMD.Load(assemblyCSharp))
-            using (ModuleDefMD nitroxPatcherAssembly = ModuleDefMD.Load(nitroxPatcherPath))
+            else 
             {
-                TypeDef nitroxMainDefinition = nitroxPatcherAssembly.GetTypes().FirstOrDefault(x => x.Name == NITROX_ENTRY_TYPE_NAME);
-                MethodDef executeMethodDefinition = nitroxMainDefinition.Methods.FirstOrDefault(x => x.Name == NITROX_ENTRY_METHOD_NAME);
-
-                MemberRef executeMethodReference = module.Import(executeMethodDefinition);
-
-                TypeDef gameInputType = module.GetTypes().First(x => x.FullName == GAME_INPUT_TYPE_NAME);
-                MethodDef awakeMethod = gameInputType.Methods.First(x => x.Name == GAME_INPUT_METHOD_NAME);
-
-                Instruction callNitroxExecuteInstruction = OpCodes.Call.ToInstruction(executeMethodReference);
-
-                awakeMethod.Body.Instructions.Insert(0, callNitroxExecuteInstruction);
-                module.Write(modifiedAssemblyCSharp);
+                error = RetryWait(() => QModHelper.RemoveQModManagerFolders(subnauticaCorePath), 100, 5);
+                if (error != null)
+                {
+                    throw error;
+                }
             }
-
-            // The assembly might be used by other code or some other program might work in it. Retry to be on the safe side.
-            Exception error = RetryWait(() => File.Delete(assemblyCSharp), 100, 5);
+            
+            if (File.Exists(nitroxBootloaderDestination))
+            {
+                error = RetryWait(() => File.Delete(nitroxBootloaderDestination), 100, 5);
+                if (error != null)
+                {
+                    throw error;
+                }
+            }
+            
+            error = RetryWait(() => Directory.CreateDirectory(nitroxFolder), 100, 5);
             if (error != null)
             {
+                Log.Error(error, "Unable to create Nitrox folder.");
                 throw error;
             }
-            File.Move(modifiedAssemblyCSharp, assemblyCSharp);
+
+            error = RetryWait(() => File.Copy(nitroxBootloaderSource, nitroxBootloaderDestination), 100, 5);
+            if (error != null)
+            {
+                Log.Error(error, "Unable to move bootloader dll.");
+                throw error;
+            }
         }
 
-        private Exception RetryWait(Action action, int interval, int retries = 0)
+        private static void RecursiveCopyBepInExFolder(string sourceDirName, string destDirName)
+        {
+            DirectoryInfo dir = new DirectoryInfo(sourceDirName);
+
+            if (!dir.Exists)
+            {
+                throw new DirectoryNotFoundException(
+                    "Source directory does not exist or could not be found: "
+                    + sourceDirName);
+            }
+
+            DirectoryInfo[] dirs = dir.GetDirectories();
+            Directory.CreateDirectory(destDirName);
+            
+            FileInfo[] files = dir.GetFiles();
+            foreach (FileInfo file in files)
+            {
+                string tempPath = Path.Combine(destDirName, file.Name);
+                file.CopyTo(tempPath, false);
+            }
+            
+            foreach (DirectoryInfo subdir in dirs)
+            {
+                string tempPath = Path.Combine(destDirName, subdir.Name);
+                RecursiveCopyBepInExFolder(subdir.FullName, tempPath);
+            }
+        }
+
+        internal static Exception RetryWait(Action action, int interval, int retries = 0)
         {
             Exception lastException = null;
             while (retries >= 0)
@@ -91,58 +128,39 @@ namespace NitroxLauncher.Patching
         
         public void Remove()
         {
-            string assemblyCSharp = Path.Combine(subnauticaManagedPath, GAME_ASSEMBLY_NAME);
-            string modifiedAssemblyCSharp = Path.Combine(subnauticaManagedPath, GAME_ASSEMBLY_MODIFIED_NAME);
+            string nitroxFolder = Path.Combine(bepinexPluginsPath, "Nitrox");
+            string nitroxBootloaderDestination = Path.Combine(nitroxFolder, NITROX_ASSEMBLY_NAME);
 
-            using (ModuleDefMD module = ModuleDefMD.Load(assemblyCSharp))
+            if (File.Exists(nitroxBootloaderDestination))
             {
-                TypeDef gameInputType = module.GetTypes().First(x => x.FullName == GAME_INPUT_TYPE_NAME);
-                MethodDef awakeMethod = gameInputType.Methods.First(x => x.Name == GAME_INPUT_METHOD_NAME);
-
-                IList<Instruction> methodInstructions = awakeMethod.Body.Instructions;
-                int nitroxExecuteInstructionIndex = FindNitroxExecuteInstructionIndex(methodInstructions);
-
-                if (nitroxExecuteInstructionIndex == -1)
+                Exception error = RetryWait(() => File.Delete(nitroxBootloaderDestination), 100, 5);
+                if (error != null)
                 {
-                    return;
+                    throw error;
+                }
+                error = RetryWait(() => Directory.Delete(nitroxFolder), 100, 5);
+                if (error != null)
+                {
+                    throw error;
                 }
 
-                methodInstructions.RemoveAt(nitroxExecuteInstructionIndex);
-                module.Write(modifiedAssemblyCSharp);
 
-                File.SetAttributes(assemblyCSharp, FileAttributes.Normal);
-            }
-
-            File.Delete(assemblyCSharp);
-            File.Move(modifiedAssemblyCSharp, assemblyCSharp);
-        }
-
-        private static int FindNitroxExecuteInstructionIndex(IList<Instruction> methodInstructions)
-        {
-            for (int instructionIndex = 0; instructionIndex < methodInstructions.Count; instructionIndex++)
-            {
-                string instruction = methodInstructions[instructionIndex].Operand?.ToString();
-
-                if (instruction == NITROX_EXECUTE_INSTRUCTION)
+                error = RetryWait(() => QModHelper.RestoreQModManagerFolders(subnauticaCorePath), 100, 5);
+                if (error != null)
                 {
-                    return instructionIndex;
+                    throw error;
                 }
             }
 
-            return -1;
+
         }
 
         private bool IsPatchApplied()
         {
-            string gameInputPath = Path.Combine(subnauticaManagedPath, GAME_ASSEMBLY_NAME);
+            string bepinex = Path.Combine(bepinexCorePath, BEPINEX_ASSEMBLY_NAME);
+            string nitroxBootloaderDestination = Path.Combine(bepinexPluginsPath, "Nitrox", NITROX_ASSEMBLY_NAME);
 
-            using (ModuleDefMD module = ModuleDefMD.Load(gameInputPath))
-            {
-                TypeDef gameInputType = module.GetTypes().First(x => x.FullName == GAME_INPUT_TYPE_NAME);
-                MethodDef awakeMethod = gameInputType.Methods.First(x => x.Name == GAME_INPUT_METHOD_NAME);
-
-                return awakeMethod.Body.Instructions.Any(instruction => instruction.Operand?.ToString() == NITROX_EXECUTE_INSTRUCTION);
-            }
+            return File.Exists(bepinex) && File.Exists(nitroxBootloaderDestination);
         }
     }
 }

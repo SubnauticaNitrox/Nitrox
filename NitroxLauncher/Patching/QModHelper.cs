@@ -6,56 +6,80 @@ namespace NitroxLauncher.Patching
 {
     public static class QModHelper
     {
-        private const string ORIGINAL_FILE_NAME = "winhttp.dll";
-        private const string RENAMED_FILE_NAME = "winhttp_nitrox_stopped.dll";
-        private static bool qModPatched;
+        private static string qmmPluginOriginPath;
+        private static string qmmPatchersOriginPath;
+        private static string qmmPluginBackupPath;
+        private static string qmmPatchersBackupPath;
+        private static bool qModPatched = true;
 
-        public static void RemoveQModEntryPoint(string subnauticaBasePath)
-        {
-            if (qModPatched || !IsQModInstalled(subnauticaBasePath))
-            {
-                return;
-            }
-            Log.Info("Attempting to remove QMod initialisation");
-            RenameFile(subnauticaBasePath, ORIGINAL_FILE_NAME, RENAMED_FILE_NAME);
-        }
-
-        public static void RestoreQModEntryPoint(string subnauticaBasePath)
+        public static void RemoveQModManagerFolders(string subnauticaBasePath)
         {
             if (!qModPatched || !IsQModInstalled(subnauticaBasePath))
             {
                 return;
             }
-            Log.Info("Attempting to restore QMod initialisation");
-            RenameFile(subnauticaBasePath, RENAMED_FILE_NAME, ORIGINAL_FILE_NAME);
+
+            string pluginOriginPath = Path.Combine(subnauticaBasePath, "BepInEx", "plugins", "QModManager");
+            string patchersOriginPath = Path.Combine(subnauticaBasePath, "BepInEx", "patchers", "QModManager");
+            if (!Directory.Exists(pluginOriginPath) || !Directory.Exists(patchersOriginPath))
+            {
+                return;
+            }
+            qmmPluginOriginPath = pluginOriginPath;
+            qmmPatchersOriginPath = patchersOriginPath;
+            qmmPluginBackupPath = Path.Combine(subnauticaBasePath, "QMMBackup", "plugins");
+            qmmPatchersBackupPath = Path.Combine(subnauticaBasePath, "QMMBackup", "patchers");
+            Directory.CreateDirectory(qmmPluginBackupPath);
+            Directory.CreateDirectory(qmmPatchersBackupPath);
+
+
+            Log.Info("Attempting to remove QModManager");
+
+            Exception error = NitroxEntryPatch.RetryWait(() => Directory.Move(qmmPatchersOriginPath, Path.Combine(qmmPatchersBackupPath, "QModManager")), 100, 5) ?? NitroxEntryPatch.RetryWait(() => Directory.Move(qmmPluginOriginPath, Path.Combine(qmmPluginBackupPath, "QModManager")), 100, 5);
+
+            if (error != null)
+            {
+                throw error;
+            }
+            Log.Info("Successfully removed QModManager");
+            qModPatched = false;
         }
 
-        private static void RenameFile(string subnauticaBasePath, string fileToRename, string newFileName)
+        public static void RestoreQModManagerFolders(string subnauticaBasePath)
         {
-            string fileToRenamePath = Path.Combine(subnauticaBasePath, fileToRename);
-            if (!File.Exists(fileToRenamePath))
+            if (qModPatched || IsQModInstalled(subnauticaBasePath))
             {
-                Log.Error("QMod entry cannot be found, please uninstall QMod");
                 return;
             }
 
-            try
+            string pluginBackupPath = Path.Combine(subnauticaBasePath, "QMMBackup", "plugins", "QModManager");
+            string patchersBackupPath = Path.Combine(subnauticaBasePath, "QMMBackup", "patchers", "QModManager");
+            if (!Directory.Exists(pluginBackupPath) || !Directory.Exists(patchersBackupPath))
             {
-                string newFilePath = Path.Combine(subnauticaBasePath, newFileName);
-                File.Move(fileToRenamePath, newFilePath);
-                qModPatched = !qModPatched;
-                Log.Info("Removing/Restoring QMod initialisation has been successful");
+                return;
             }
-            catch (Exception ex)
-            {
-                Log.Error(ex, "QMod entry cannot be removed/restored, please uninstall QMod");
-            }
-        }
+            qmmPluginOriginPath = Path.Combine(subnauticaBasePath, "BepInEx", "plugins");
+            qmmPatchersOriginPath = Path.Combine(subnauticaBasePath, "BepInEx", "patchers");
+            qmmPluginBackupPath = pluginBackupPath;
+            qmmPatchersBackupPath = patchersBackupPath;
 
+            Log.Info("Attempting to restore QModManager");
+            Exception error = NitroxEntryPatch.RetryWait(() => Directory.Move(qmmPatchersBackupPath, Path.Combine(qmmPatchersOriginPath, "QModManager")), 100, 5) ?? NitroxEntryPatch.RetryWait(() => Directory.Move(qmmPluginBackupPath, Path.Combine(qmmPluginOriginPath, "QModManager")), 100, 5);
+            if (error != null)
+            {
+                throw error;
+            }
+
+            Directory.Delete(Path.Combine(subnauticaBasePath, "QMMBackup"), true);
+
+            Log.Info("Successfully restored QModManager");
+            qModPatched = true;
+        }
+        
         private static bool IsQModInstalled(string subnauticaBasePath)
         {
-            string subnauticaQModsPath = Path.Combine(subnauticaBasePath, "QMods");
-            return Directory.Exists(subnauticaQModsPath);
+            string subnauticaQModsPath = Path.Combine(subnauticaBasePath, "BepInEx", "plugins", "QModManager", "QModInstaller.dll");
+            return File.Exists(subnauticaQModsPath);
         }
     }
 }
