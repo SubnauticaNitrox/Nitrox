@@ -32,14 +32,6 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="BepInEx">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine">
-      <HintPath>..\..\..\..\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\UnityEngine.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.CoreModule">
-      <HintPath>..\..\..\..\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
       <HintPath>$(SolutionDir)BepInEx\BepInEx\core\BepInEx.dll</HintPath>
       <Private>False</Private>
     </Reference>
