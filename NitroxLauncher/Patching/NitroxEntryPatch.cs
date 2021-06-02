@@ -46,15 +46,9 @@ namespace NitroxLauncher.Patching
                     throw error;
                 }
             }
-            else 
-            {
-                error = RetryWait(() => QModHelper.RemoveQModManagerFolders(subnauticaCorePath), 100, 5);
-                if (error != null)
-                {
-                    throw error;
-                }
-            }
-            
+
+            QModHelper.RemoveQModManagerFolders(subnauticaCorePath);
+
             if (File.Exists(nitroxBootloaderDestination))
             {
                 error = RetryWait(() => File.Delete(nitroxBootloaderDestination), 100, 5);
@@ -145,13 +139,8 @@ namespace NitroxLauncher.Patching
                     Log.Error(error, "Unable to delete nitrox plugin folder.");
                     throw error;
                 }
-
-
-                error = RetryWait(() => QModHelper.RestoreQModManagerFolders(subnauticaCorePath), 100, 5);
-                if (error != null)
-                {
-                    throw error;
-                }
+                
+                QModHelper.RestoreQModManagerFolders(subnauticaCorePath);
             }
 
 
