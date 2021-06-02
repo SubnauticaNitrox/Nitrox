@@ -277,13 +277,13 @@
        TODO: Try fix this as a project reference to Nitrox.Subnautica.Assets that will copy the files on build automatically. -->
   <Target Name="MoveNitroxAssetsToLauncherOutput" AfterTargets="Build" Condition="'$(OS)' == 'Windows_NT'">
     <ItemGroup>
-      <NitroxSubnauticaAssets Include="..\Nitrox.Subnautica.Assets\**\*." />
+      <NitroxSubnauticaAssets Include="$(SolutionDir)\Nitrox.Subnautica.Assets\**\*." />
     </ItemGroup>
     <ItemGroup>
-      <NitroxSubnauticaStaticDlls Include="..\Nitrox.Subnautica.Assets\**\*.dll" />
+      <NitroxSubnauticaStaticDlls Include="$(SolutionDir)\Nitrox.Subnautica.Assets\**\*.dll" />
     </ItemGroup>
     <ItemGroup>
-      <NitroxSubnauticaLanguageFiles Include="..\Nitrox.Subnautica.Assets\LanguageFiles\*.json" />
+      <NitroxSubnauticaLanguageFiles Include="$(SolutionDir)\Nitrox.Subnautica.Assets\LanguageFiles\*.json" />
     </ItemGroup>
     <Copy SourceFiles="@(NitroxSubnauticaAssets)" DestinationFolder="$(TargetDir)\%(RecursiveDir)" />
     <Copy SourceFiles="@(NitroxSubnauticaStaticDlls)" DestinationFolder="$(TargetDir)\lib\%(RecursiveDir)" />
