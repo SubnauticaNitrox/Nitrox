@@ -35,7 +35,12 @@ namespace NitroxLauncher.Patching
 
             Log.Info("Attempting to remove QModManager");
 
-            Exception error = NitroxEntryPatch.RetryWait(() => Directory.Move(qmmPatchersOriginPath, Path.Combine(qmmPatchersBackupPath, "QModManager")), 100, 5) ?? NitroxEntryPatch.RetryWait(() => Directory.Move(qmmPluginOriginPath, Path.Combine(qmmPluginBackupPath, "QModManager")), 100, 5);
+            Exception error = NitroxEntryPatch.RetryWait(() => Directory.Move(qmmPatchersOriginPath, Path.Combine(qmmPatchersBackupPath, "QModManager")), 100, 5);
+            
+            if (error is null)
+            {
+                error = NitroxEntryPatch.RetryWait(() => Directory.Move(qmmPluginOriginPath, Path.Combine(qmmPluginBackupPath, "QModManager")), 100, 5);
+            }
 
             if (error != null)
             {
@@ -65,7 +70,13 @@ namespace NitroxLauncher.Patching
             qmmPatchersBackupPath = patchersBackupPath;
 
             Log.Info("Attempting to restore QModManager");
-            Exception error = NitroxEntryPatch.RetryWait(() => Directory.Move(qmmPatchersBackupPath, Path.Combine(qmmPatchersOriginPath, "QModManager")), 100, 5) ?? NitroxEntryPatch.RetryWait(() => Directory.Move(qmmPluginBackupPath, Path.Combine(qmmPluginOriginPath, "QModManager")), 100, 5);
+            Exception error = NitroxEntryPatch.RetryWait(() => Directory.Move(qmmPatchersBackupPath, Path.Combine(qmmPatchersOriginPath, "QModManager")), 100, 5);
+            
+            if(error is null)
+            {
+                error = NitroxEntryPatch.RetryWait(() => Directory.Move(qmmPluginBackupPath, Path.Combine(qmmPluginOriginPath, "QModManager")), 100, 5);
+            }
+
             if (error != null)
             {
                 Log.Error(error, "Unable to restore QModManager.");
