@@ -84,9 +84,7 @@ namespace NitroxLauncher.Patching
 
             if (!dir.Exists)
             {
-                throw new DirectoryNotFoundException(
-                    "Source directory does not exist or could not be found: "
-                    + sourceDirName);
+                throw new DirectoryNotFoundException($"Source directory does not exist or could not be found: {sourceDirName}";
             }
 
             DirectoryInfo[] dirs = dir.GetDirectories();
