@@ -12,7 +12,7 @@ namespace Nitrox.Bootloader
         public const string
             MOD_NAME = "Nitrox",
             GUID = "com.nitroxmod",
-            VERSION = "1.0.0.0";
+            VERSION = "1.4.0.0";
 
         private readonly Lazy<string> nitroxLauncherDir = new Lazy<string>(() =>
         {
