@@ -42,7 +42,7 @@ namespace NitroxClient.GameLogic.PlayerModel
             Multiplayer.Main.StartCoroutine(ApplyPlayerColor(player, colorSwapManagers));
         }
 
-        public void BeginUpdateEquipmentVisibility(ItemsContainer inventory, GameObject playerModel)
+        public void RegisterEquipmentVisibilityHandler(GameObject playerModel)
         {
             equipmentVisibilityHandlers = new List<IEquipmentVisibilityHandler>
             {

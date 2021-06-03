@@ -114,9 +114,9 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        public void EnergyMixinValueChanged(NitroxId id, float amount, ItemData batteryData)
+        public void EnergyMixinValueChanged(NitroxId ownerId, float amount, ItemData batteryData)
         {
-            EnergyMixinValueChanged batteryChanged = new EnergyMixinValueChanged(id, amount, batteryData);
+            EnergyMixinValueChanged batteryChanged = new EnergyMixinValueChanged(ownerId, amount, batteryData);
             packetSender.Send(batteryChanged);
         }
 

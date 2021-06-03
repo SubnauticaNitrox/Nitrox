@@ -5,6 +5,7 @@ using NitroxModel.Core;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
+    //TODO: The binding should only be send on a timer and/or on disconnect. But this functionality is not implemented yet.
     public class QuickSlots_Bind_Patch : NitroxPatch, IDynamicPatch
     {
         private static readonly MethodInfo targetMethod = typeof(QuickSlots).GetMethod(nameof(QuickSlots.Bind), BindingFlags.Public | BindingFlags.Instance);

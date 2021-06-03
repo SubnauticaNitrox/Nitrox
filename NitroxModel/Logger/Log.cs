@@ -214,7 +214,7 @@ namespace NitroxModel.Logger
             {
                 Info($"Setting player name to {value}");
             }
-            LogContext.PushProperty(nameof(PlayerName), $"[{value}]");
+            LogContext.PushProperty(nameof(PlayerName), @$"[{value}]");
         }
 
         /// <summary>

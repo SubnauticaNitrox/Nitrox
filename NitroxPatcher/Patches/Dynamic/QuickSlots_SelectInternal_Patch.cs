@@ -19,6 +19,10 @@ namespace NitroxPatcher.Patches.Dynamic
         public static void Prefix(QuickSlots __instance, int slotID, ref NitroxTechType __state)
         {
             InventoryItem item = ((InventoryItem[])bindingField.GetValue(__instance))[slotID];
+            if (item == null)
+            {
+                return;
+            }
             __state = Player.main.IsToolUsed(item.item.GetTechType()) ? item.item.GetTechType().ToDto() : null;
         }
 

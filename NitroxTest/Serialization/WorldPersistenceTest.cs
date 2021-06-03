@@ -9,6 +9,7 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Buildings.Metadata;
 using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Server;
 using NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation;
 using NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation.Metadata;
 using NitroxServer.GameLogic;
@@ -39,12 +40,12 @@ namespace NitroxTest.Serialization
             NitroxServiceLocator.BeginNewLifetimeScope();
 
             WorldPersistence worldPersistence = NitroxServiceLocator.LocateService<WorldPersistence>();
-            ServerConfig serverConfig = NitroxServiceLocator.LocateService<ServerConfig>();
             serverSerializers = NitroxServiceLocator.LocateService<IServerSerializer[]>();
-            tempSaveFilePath = Path.Combine(Path.GetTempPath(), "NitroxTestTempDir");
             worldsDataAfter = new PersistedWorldData[serverSerializers.Length];
+            tempSaveFilePath = Path.Combine(Path.GetTempPath(), "NitroxTestTempDir");
+
             worldData = GeneratePersistedWorldData();
-            World world = worldPersistence.CreateWorld(worldData, serverConfig.GameMode);
+            World world = worldPersistence.CreateWorld(worldData, ServerGameMode.CREATIVE);
             world.EventTriggerer.ResetWorldTime();
 
             for (int index = 0; index < serverSerializers.Length; index++)

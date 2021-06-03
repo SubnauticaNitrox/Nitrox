@@ -79,7 +79,7 @@ namespace NitroxClient.GameLogic
             playerModelManager = modelManager;
             playerModelManager.AttachPing(this);
             playerModelManager.BeginApplyPlayerColor(this);
-            playerModelManager.BeginUpdateEquipmentVisibility(Inventory, PlayerModel);
+            playerModelManager.RegisterEquipmentVisibilityHandler(PlayerModel);
             UpdateEquipmentVisibility();
 
             ErrorMessage.AddMessage($"{PlayerName} joined the game.");
