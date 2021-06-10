@@ -45,6 +45,7 @@ namespace NitroxLauncher.Patching
                     Log.Error(error, "Unable to install BepInEx.");
                     throw error;
                 }
+                Log.Info("Successfully installed BepInEx.");
             }
 
             QModHelper.RemoveQModManagerFolders(subnauticaCorePath);
@@ -90,7 +91,19 @@ namespace NitroxLauncher.Patching
             foreach (FileInfo file in files)
             {
                 string tempPath = Path.Combine(destDirName, file.Name);
-                file.CopyTo(tempPath, false);
+                try
+                {
+                    if(File.Exists(tempPath))
+                    {
+                        File.Delete(tempPath);
+                    }
+
+                    file.CopyTo(tempPath, false);
+                }
+                catch (IOException error)
+                {
+                    Log.Warn($"Unable to move {file.Name}. {error.Message}");
+                }
             }
             
             foreach (DirectoryInfo subdir in dirs)
