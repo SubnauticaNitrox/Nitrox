@@ -32,7 +32,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="BepInEx">
-      <HintPath>$(SolutionDir)BepInEx\BepInEx\core\BepInEx.dll</HintPath>
+      <HintPath>$(NitroxSubnauticaAssets)BepInEx\BepInEx\core\BepInEx.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>

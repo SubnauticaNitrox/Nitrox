@@ -3,6 +3,7 @@ using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using NitroxModel.Logger;
+using NitroxModel.OS;
 
 namespace NitroxLauncher.Patching
 {
@@ -29,7 +30,7 @@ namespace NitroxLauncher.Patching
         {
             string nitroxLibPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "lib");
             string bepinex = Path.Combine(bepinexCorePath, BEPINEX_ASSEMBLY_NAME);
-            string bepinexSourcePath = Path.Combine(nitroxLibPath, "BepInEx");
+            string bepinexSourcePath = Path.Combine(nitroxLibPath ,"../", "BepInEx");
             string bepinexInstallPath = subnauticaCorePath;
             string nitroxFolder = Path.Combine(bepinexPluginsPath, "Nitrox");
             string nitroxBootloaderDestination = Path.Combine(nitroxFolder, NITROX_ASSEMBLY_NAME);
@@ -39,7 +40,7 @@ namespace NitroxLauncher.Patching
 
             if (!File.Exists(bepinex))
             {
-                error = RetryWait(() => RecursiveCopyBepInExFolder(bepinexSourcePath, bepinexInstallPath), 100, 5);
+                error = RetryWait(() => FileSystem.Instance.RecursiveCopyFolder(bepinexSourcePath, bepinexInstallPath), 100, 5);
                 if (error != null)
                 {
                     Log.Error(error, "Unable to install BepInEx.");
@@ -72,44 +73,6 @@ namespace NitroxLauncher.Patching
             {
                 Log.Error(error, "Unable to move bootloader dll.");
                 throw error;
-            }
-        }
-
-        private static void RecursiveCopyBepInExFolder(string sourceDirName, string destDirName)
-        {
-            DirectoryInfo dir = new DirectoryInfo(sourceDirName);
-
-            if (!dir.Exists)
-            {
-                throw new DirectoryNotFoundException($"Source directory does not exist or could not be found: {sourceDirName}");
-            }
-
-            DirectoryInfo[] dirs = dir.GetDirectories();
-            Directory.CreateDirectory(destDirName);
-            
-            FileInfo[] files = dir.GetFiles();
-            foreach (FileInfo file in files)
-            {
-                string tempPath = Path.Combine(destDirName, file.Name);
-                try
-                {
-                    if(File.Exists(tempPath))
-                    {
-                        File.Delete(tempPath);
-                    }
-
-                    file.CopyTo(tempPath, false);
-                }
-                catch (IOException error)
-                {
-                    Log.Warn($"Unable to move {file.Name}. {error.Message}");
-                }
-            }
-            
-            foreach (DirectoryInfo subdir in dirs)
-            {
-                string tempPath = Path.Combine(destDirName, subdir.Name);
-                RecursiveCopyBepInExFolder(subdir.FullName, tempPath);
             }
         }
 

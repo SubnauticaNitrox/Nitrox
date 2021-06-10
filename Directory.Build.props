@@ -19,6 +19,7 @@
     
     <PropertyGroup Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(MSBuildProjectName), '^Nitrox.*$'))">
         <NitroxLibrary>true</NitroxLibrary>
+        <NitroxSubnauticaAssets>$(SolutionDir)\Nitrox.Subnautica.Assets\</NitroxSubnauticaAssets>
     </PropertyGroup>
     <PropertyGroup Condition="'$(NitroxLibrary)' == 'true' and '$(MSBuildProjectName)' != 'NitroxModel' and '$(MSBuildProjectName)' != 'NitroxServer'">
         <UnityModLibrary>true</UnityModLibrary>

@@ -9,12 +9,11 @@ namespace Nitrox.Bootloader
     [BepInPlugin(GUID, MOD_NAME, VERSION)]
     public class Main: BaseUnityPlugin
     {
-        public const string
-            MOD_NAME = "Nitrox",
-            GUID = "com.nitroxmod",
-            VERSION = "1.4.0.0";
+        private const string MOD_NAME = "Nitrox";
+        private const string GUID = "com.nitroxmod";
+        private const string VERSION = "1.4.0.0";
 
-        private readonly Lazy<string> nitroxLauncherDir = new Lazy<string>(() =>
+        private readonly Lazy<string> nitroxLauncherDir = new(() =>
         {
             // Get path from command args.
             string[] args = Environment.GetCommandLineArgs();

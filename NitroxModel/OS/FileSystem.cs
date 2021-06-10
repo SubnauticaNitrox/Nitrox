@@ -200,5 +200,35 @@ namespace NitroxModel.OS
                 File.Replace(source, target, null, false);
             }
         }
+        
+        public void RecursiveCopyFolder(string sourceDirName, string destDirName)
+        {
+            DirectoryInfo dir = new(sourceDirName);
+            if (!dir.Exists)
+            {
+                throw new DirectoryNotFoundException($"Source directory does not exist or could not be found: {sourceDirName}");
+            }
+
+            DirectoryInfo[] dirs = dir.GetDirectories();
+            Directory.CreateDirectory(destDirName);
+            
+            FileInfo[] files = dir.GetFiles();
+            foreach (FileInfo file in files)
+            {
+                string tempPath = Path.Combine(destDirName, file.Name);
+                if (File.Exists(tempPath))
+                {
+                    File.Delete(tempPath);
+                }
+
+                file.CopyTo(tempPath, false);
+            }
+            
+            foreach (DirectoryInfo subDir in dirs)
+            {
+                string tempPath = Path.Combine(destDirName, subDir.Name);
+                RecursiveCopyFolder(subDir.FullName, tempPath);
+            }
+        }
     }
 }

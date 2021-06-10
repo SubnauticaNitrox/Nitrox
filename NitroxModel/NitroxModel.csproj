@@ -27,11 +27,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="LZ4">
-      <HintPath>..\Nitrox.Subnautica.Assets\LZ4.dll</HintPath>
+      <HintPath>$(NitroxSubnauticaAssets)LZ4.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="protobuf-net">
-      <HintPath>..\Nitrox.Subnautica.Assets\protobuf-net.dll</HintPath>
+      <HintPath>$(NitroxSubnauticaAssets)protobuf-net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
