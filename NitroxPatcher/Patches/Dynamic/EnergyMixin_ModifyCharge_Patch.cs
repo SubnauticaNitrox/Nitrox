@@ -16,12 +16,12 @@ namespace NitroxPatcher.Patches.Dynamic
         public static readonly Type TARGET_CLASS = typeof(EnergyMixin);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("ModifyCharge", BindingFlags.Public | BindingFlags.Instance);
 
-        public static void Postfix(EnergyMixin __instance, float amount)
+        public static void Postfix(float __result, EnergyMixin __instance)
         {
             GameObject battery = __instance.GetBattery();
             if (battery)
             {
-                if (Math.Abs(Math.Floor(__instance.charge + amount) - Math.Floor(__instance.charge)) > 0.005f) //Send package if power changed to next natural number
+                if (Math.Abs(Math.Floor(__instance.charge) - Math.Floor(__instance.charge - __result)) > 0.0) //Send package if power changed to next natural number
                 {
                     NitroxId instanceId = NitroxEntity.GetId(__instance.gameObject);
                     ItemData batteryData = new ItemData(instanceId, NitroxEntity.GetId(battery), SerializationHelper.GetBytes(battery));
