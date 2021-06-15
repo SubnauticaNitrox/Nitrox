@@ -16,7 +16,7 @@ namespace NitroxPatcher.Patches.Dynamic
         public static readonly Type TARGET_CLASS = typeof(EnergyMixin);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("ModifyCharge", BindingFlags.Public | BindingFlags.Instance);
 
-        public static void Postfix(float __result, EnergyMixin __instance)
+        public static void Postfix(EnergyMixin __instance, float __result)
         {
             GameObject battery = __instance.GetBattery();
             if (battery)
