@@ -1,5 +1,7 @@
 ﻿using System;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Util;
 
 namespace NitroxModel.Packets
 {
@@ -9,12 +11,19 @@ namespace NitroxModel.Packets
         public string PlayerName { get; }
         public NitroxVector3 DestinationFrom { get; }
         public NitroxVector3 DestinationTo { get; }
+        public Optional<NitroxId> SubRootID { get; }
 
-        public PlayerTeleported(string playerName, NitroxVector3 destinationFrom, NitroxVector3 destinationTo)
+        public PlayerTeleported(string playerName, NitroxVector3 destinationFrom, NitroxVector3 destinationTo, Optional<NitroxId> subRootID)
         {
             PlayerName = playerName;
             DestinationFrom = destinationFrom;
             DestinationTo = destinationTo;
+            SubRootID = subRootID;
+        }
+
+        public override string ToString()
+        {
+            return $"[PlayerTeleported: PlayerName: {PlayerName}, DestinationFrom: {DestinationFrom}, DestinationTo: {DestinationTo}, SubRootID: {SubRootID}";
         }
     }
 }
