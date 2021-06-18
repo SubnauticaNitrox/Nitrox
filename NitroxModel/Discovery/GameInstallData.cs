@@ -19,6 +19,7 @@ namespace NitroxModel.Discovery
 
         private GameInstallData()
         {
+            // Required for serialization
         }
 
         public GameInstallData(string installDir)
@@ -27,7 +28,7 @@ namespace NitroxModel.Discovery
             InstallDir = installDir;
         }
 
-        public static GameInstallData TryFrom(string path)
+        public static bool TryFrom(string path, out GameInstallData result)
         {
             try
             {
@@ -52,11 +53,14 @@ namespace NitroxModel.Discovery
                             break;
                     }
                 }
-                return game;
+
+                result = game;
+                return true;
             }
             catch (Exception)
             {
-                return null;
+                result = null;
+                return false;
             }
         }
 

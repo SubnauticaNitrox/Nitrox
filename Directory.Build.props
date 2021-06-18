@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" InitialTargets="BeforeResolveReferences">
     <!-- Set default properties for all projects (can be overridden per project) -->
     <PropertyGroup>
         <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>

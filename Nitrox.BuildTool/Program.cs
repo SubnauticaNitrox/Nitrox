@@ -30,32 +30,30 @@ namespace BuildTool
 
         private static GameInstallData EnsureGame()
         {
-            static string ValidateUnityGame(GameInstallData game)
+            static bool ValidateUnityGame(GameInstallData game, out string error)
             {
                 if (!File.Exists(Path.Combine(game.InstallDir, "UnityPlayer.dll")))
                 {
-                    return $"Game at: '{game.InstallDir}' is not a Unity game";
+                    error = $"Game at: '{game.InstallDir}' is not a Unity game";
+                    return false;
                 }
                 if (!Directory.Exists(game.ManagedDllsDir))
                 {
-                    return $"Invalid Unity managed DLLs directory: {game.ManagedDllsDir}";
+                    error = $"Invalid Unity managed DLLs directory: {game.ManagedDllsDir}";
+                    return false;
                 }
-                return null;
+
+                error = null;
+                return true;
             }
 
             string cacheFile = Path.Combine(GeneratedOutputDir, "game.props");
-            GameInstallData game = GameInstallData.TryFrom(cacheFile);
-            if (game == null || ValidateUnityGame(game) != null)
-            {
-                game = new GameInstallData(GameInstallationFinder.Instance.FindGame());
-            }
-
-            string error = ValidateUnityGame(game);
-            if (error != null)
+            if (GameInstallData.TryFrom(cacheFile, out GameInstallData game) && !ValidateUnityGame(game, out string error))
             {
                 throw new Exception(error);
             }
 
+            game ??= new GameInstallData(GameInstallationFinder.Instance.FindGame());
             game.TrySave(cacheFile);
             return game;
         }

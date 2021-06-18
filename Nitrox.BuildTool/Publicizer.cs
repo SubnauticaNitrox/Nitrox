@@ -28,7 +28,7 @@ namespace BuildTool
             {
                 if (!File.Exists(file))
                 {
-                    throw new FileNotFoundException("Dll to publicize not found ", file);
+                    throw new FileNotFoundException("Dll to publicize not found", file);
                 }
                 resolver.AddSearchDirectory(Path.GetDirectoryName(file));
 
@@ -50,11 +50,11 @@ namespace BuildTool
         }
 
         /// <summary>
-        ///     Method which returns all Types of the given module, including nested ones (recursively)
+        ///     Method which returns all Types of the given module, including nested ones (recursively).
         /// </summary>
-        /// <param name="moduleDefinition"></param>
-        /// <returns></returns>
-        public static IEnumerable<TypeDefinition> GetAllTypes(ModuleDefinition moduleDefinition) => GetAllNestedTypes(moduleDefinition.Types); //.Reverse();
+        /// <param name="moduleDefinition">.NET module to search through for types.</param>
+        /// <returns>Types found in module.</returns>
+        public static IEnumerable<TypeDefinition> GetAllTypes(ModuleDefinition moduleDefinition) => GetAllNestedTypes(moduleDefinition.Types);
 
         private static AssemblyDefinition Publicize(string file, BaseAssemblyResolver dllResolver)
         {
@@ -75,9 +75,13 @@ namespace BuildTool
                 if (!type.IsPublic || !type.IsNestedPublic)
                 {
                     if (type.IsNested)
+                    {
                         type.IsNestedPublic = true;
+                    }
                     else
+                    {
                         type.IsPublic = true;
+                    }
                 }
                 // Publicize methods on type.
                 foreach (MethodDefinition method in type.Methods)
