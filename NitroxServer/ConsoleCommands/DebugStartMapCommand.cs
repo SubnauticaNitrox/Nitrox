@@ -13,7 +13,7 @@ namespace NitroxServer.ConsoleCommands
         private readonly PlayerManager playerManager;
         private readonly World world;
 
-        public DebugStartMapCommand(PlayerManager playerManager, RandomStartGenerator nitroxRandomStart, World world) : base("debugstartmap", Perms.CONSOLE | Perms.DEBUG, "warning: spawns blocks")
+        public DebugStartMapCommand(PlayerManager playerManager, RandomStartGenerator nitroxRandomStart, World world) : base("debugstartmap", Perms.ANY, "Spawns blocks at spawn positions")
         {
             this.playerManager = playerManager;
             this.nitroxRandomStart = nitroxRandomStart;
@@ -25,6 +25,7 @@ namespace NitroxServer.ConsoleCommands
             List<NitroxVector3> randomStartPositions = nitroxRandomStart.GenerateRandomStartPositions(world.Seed);
 
             playerManager.SendPacketToAllPlayers(new DebugStartMapPacket(randomStartPositions));
+            SendMessage(args.Sender, $"Rendered {randomStartPositions.Count} spawn positions");
         }
     }
 }

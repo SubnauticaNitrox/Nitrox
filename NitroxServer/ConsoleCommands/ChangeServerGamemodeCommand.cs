@@ -30,14 +30,13 @@ namespace NitroxServer.ConsoleCommands
                 serverConfig.GameMode = sgm;
                 NitroxConfig.Serialize(serverConfig);
 
+                playerManager.SendPacketToAllPlayers(new GameModeChanged(sgm));
                 SendMessageToAllPlayers($"Server gamemode changed to \"{sgm}\" by {args.SenderName}");
             }
             else
             {
                 SendMessage(args.Sender, "Server is already using this gamemode");
             }
-
-            playerManager.SendPacketToAllPlayers(new GameModeChanged(sgm));
         }
     }
 }

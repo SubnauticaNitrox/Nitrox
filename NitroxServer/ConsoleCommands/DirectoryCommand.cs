@@ -19,15 +19,17 @@ namespace NitroxServer.ConsoleCommands
 
         protected override void Execute(CallArgs args)
         {
-            string dir = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location);
+            string path = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location);
 
-            if (!Directory.Exists(dir))
+            if (!Directory.Exists(path))
             {
-                throw new ArgumentException($"Unable to open Nitrox directory '{dir}' because it does not exist.");
+                Log.ErrorSensitive("Unable to open Nitrox directory {path} because it does not exist", path);
+                return;
+
             }
 
-            Process.Start(dir);
-            Log.Info($"Opening directory '{dir}'");
+            Log.InfoSensitive("Opening directory {path}", path);
+            Process.Start(path);
         }
     }
 }

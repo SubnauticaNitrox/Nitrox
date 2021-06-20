@@ -42,6 +42,11 @@ namespace NitroxServer.Serialization.World
             UpdateSerializer(config.SerializerMode);
         }
 
+        internal void UpdateSerializer(IServerSerializer serverSerializer)
+        {
+            Serializer = serverSerializer;
+        }
+
         internal void UpdateSerializer(ServerSerializerMode mode)
         {
             Serializer = (mode == ServerSerializerMode.PROTOBUF) ? protoBufSerializer : jsonSerializer;
@@ -112,7 +117,7 @@ namespace NitroxServer.Serialization.World
 
                 //Backup world if loading fails
                 string outZip = Path.Combine(saveDir, "worldBackup.zip");
-                Log.Warn($"Creating a backup at {Path.GetFullPath(outZip)}");
+                Log.WarnSensitive("Creating a backup at {path}", Path.GetFullPath(outZip));
                 FileSystem.Instance.ZipFilesInDirectory(saveDir, outZip, $"*{FileEnding}", true);
             }
 
