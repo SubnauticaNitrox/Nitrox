@@ -7,7 +7,7 @@ namespace NitroxModel.DataStructures.GameLogic
     public class NitroxMatrix4x4Test
     {
         private NitroxMatrix4x4 defaultVal;
-        private const float TOLERANCE = 0.000002f;
+        private const float TOLERANCE = 0.00009f;
 
         [TestInitialize]
         public void Init()

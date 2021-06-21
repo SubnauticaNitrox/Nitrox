@@ -313,53 +313,143 @@ namespace NitroxModel.DataStructures.GameLogic
             return scale;
         }
 
-        // From https://github.com/Unity-Technologies/Unity.Mathematics/blob/4915b7afebc50b9c6c9a410b7a86ae5489aa6b9c/src/Unity.Mathematics/matrix.cs#L791
-        private static NitroxMatrix4x4 GetRotationMatrix(NitroxQuaternion rotation)
+        // From https://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToMatrix/index.htm
+        public static NitroxMatrix4x4 GetRotationMatrix(NitroxQuaternion rotation)
         {
-            NitroxVector3 rad = rotation.ToEuler() * ((float)Math.PI / 180f);
+            NitroxQuaternion normedRot = rotation;
 
-            NitroxMatrix4x4 rotX = new(1, 0, 0, 0,
-                                       0, Mathf.Cos(rad.X), -Mathf.Sin(rad.X), 0,
-                                       0, Mathf.Sin(rad.X), Mathf.Cos(rad.X), 0,
-                                       0, 0, 0, 1);
+            if (!normedRot.Normalized) // Check for normalized just in case
+            {
+                normedRot = NitroxQuaternion.Normalize(normedRot);
+            }
 
-            NitroxMatrix4x4 rotY = new(Mathf.Cos(rad.Y), 0, Mathf.Sin(rad.Y), 0,
-                                       0, 1, 0, 0,
-                                       -Mathf.Sin(rad.Y), 0, Mathf.Cos(rad.Y), 0,
-                                       0, 0, 0, 1);
+            NitroxMatrix4x4 rotMat = Identity;
+            float sqx = normedRot.X * normedRot.X;
+            float sqy = normedRot.Y * normedRot.Y;
+            float sqz = normedRot.Z * normedRot.Z;
+            float sqw = normedRot.W * normedRot.W;
 
-            NitroxMatrix4x4 rotZ = new(Mathf.Cos(rad.Z), -Mathf.Sin(rad.Z), 0, 0,
-                                       Mathf.Sin(rad.Z), Mathf.Cos(rad.Z), 0, 0,
-                                       0, 0, 1, 0,
-                                       0, 0, 0, 1);
+            float xy = normedRot.X * normedRot.Y;
+            float xz = normedRot.X * normedRot.Z;
+            float xw = normedRot.X * normedRot.W;
 
-            return rotY * rotX * rotZ;
+            float yz = normedRot.Y * normedRot.Z;
+            float yw = normedRot.Y * normedRot.W;
+
+            float zw = normedRot.Z * normedRot.W;
+
+
+            rotMat.M00 = sqx - sqy - sqz + sqw;
+            rotMat.M11 = -sqx + sqy - sqz + sqw;
+            rotMat.M22 = -sqx - sqy + sqz + sqw;
+
+            rotMat.M10 = 2f * (xy + zw);
+            rotMat.M01 = 2f * (xy - zw);
+
+            rotMat.M20 = 2f * (xz - yw);
+            rotMat.M02 = 2f * (xz + yw);
+
+            rotMat.M21 = 2f * (yz + xw);
+            rotMat.M12 = 2f * (yz - xw);
+
+            return rotMat;
+        }
+
+        // From https://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/index.htm
+        // left in case weirdness ensues with the simpler method
+        public static NitroxQuaternion GetRotation2(ref NitroxMatrix4x4 matrix)
+        {
+
+            NitroxQuaternion rotation = NitroxQuaternion.Identity;
+            float tr = matrix.M00 + matrix.M11 + matrix.M22;
+            if (tr > 0f)
+            {
+                double s = 0.5d / Math.Sqrt(tr + 1d);
+                rotation.W = (float)(0.25d / s);
+                rotation.X = (float)((matrix.M21 - matrix.M12) * s);
+                rotation.Y = (float)((matrix.M02 - matrix.M20) * s);
+                rotation.Z = (float)((matrix.M10 - matrix.M01) * s);
+                return rotation;
+            }
+            else
+            {
+                if (matrix.M00 > matrix.M11 && matrix.M00 > matrix.M22)
+                {
+                    double s = 2d * Math.Sqrt(1d + matrix.M00 - matrix.M11 - matrix.M22);
+                    rotation.W = (float)((matrix.M21 - matrix.M12) / s);
+                    rotation.X = (float)(0.25d * s);
+                    rotation.Y = (float)((matrix.M01 + matrix.M10) / s);
+                    rotation.Z = (float)((matrix.M02 + matrix.M20) / s);
+                }
+                return rotation;
+                if (matrix.M00 > matrix.M11 && matrix.M00 > matrix.M22)
+                {
+                    double s = 2d * Math.Sqrt(1d + matrix.M00 - matrix.M11 - matrix.M22);
+                    rotation.W = (float)((matrix.M21 - matrix.M12) / s);
+                    rotation.X = (float)(0.25d * s);
+                    rotation.Y = (float)((matrix.M01 + matrix.M10) / s);
+                    rotation.Z = (float)((matrix.M02 + matrix.M20) / s);
+
+                    return rotation;
+                }
+                else if (matrix.M11 > matrix.M22)
+                {
+                    double s = 2d * Math.Sqrt(1d + matrix.M11 - matrix.M00 - matrix.M22);
+                    rotation.W = (float)((matrix.M02 + matrix.M20) / s);
+                    rotation.X = (float)((matrix.M01 + matrix.M10) / s);
+                    rotation.Y = (float)(0.25d * s);
+                    rotation.Z = (float)((matrix.M12 - matrix.M21) / s);
+                    return rotation;
+                }
+                else
+                {
+                    double s = 2d * Math.Sqrt(1d + matrix.M22 - matrix.M00 - matrix.M11);
+                    rotation.W = (float)((matrix.M10 - matrix.M01) / s);
+                    rotation.X = (float)((matrix.M02 + matrix.M20) / s);
+                    rotation.Y = (float)((matrix.M12 + matrix.M21) / s);
+                    rotation.Z = (float)(0.25d * s);
+
+                    return rotation;
+                }
+            }
+        }
+
+        public static NitroxMatrix4x4 ExtractScale(ref NitroxMatrix4x4 matrix, out NitroxVector3 scale)
+        {
+            scale = GetScale(ref matrix);
+
+            // Normalize Scale from Matrix4x4
+            float m00 = matrix.M00 / scale.X;
+            float m01 = matrix.M01 / scale.Y;
+            float m02 = matrix.M02 / scale.Z;
+            float m10 = matrix.M10 / scale.X;
+            float m11 = matrix.M11 / scale.Y;
+            float m12 = matrix.M12 / scale.Z;
+            float m20 = matrix.M20 / scale.X;
+            float m21 = matrix.M21 / scale.Y;
+            float m22 = matrix.M22 / scale.Z;
+
+            return new NitroxMatrix4x4(m00, m01, m02, matrix.M03,
+                                       m10, m11, m12, matrix.M13,
+                                       m20, m21, m22, matrix.M23,
+                                       matrix.M30, matrix.M31, matrix.M32, matrix.M33);
         }
 
         // From https://answers.unity.com/questions/402280/how-to-decompose-a-trs-matrix.html
+        /// <remarks>
+        /// Assumes a pure rotation matrix
+        /// </remarks>
         public static NitroxQuaternion GetRotation(ref NitroxMatrix4x4 matrix)
         {
-            NitroxVector3 s = GetScale(ref matrix);
-
-            // Normalize Scale from Matrix4x4
-            float m00 = matrix.M00 / s.X;
-            float m01 = matrix.M01 / s.Y;
-            float m02 = matrix.M02 / s.Z;
-            float m10 = matrix.M10 / s.X;
-            float m11 = matrix.M11 / s.Y;
-            float m12 = matrix.M12 / s.Z;
-            float m20 = matrix.M20 / s.X;
-            float m21 = matrix.M21 / s.Y;
-            float m22 = matrix.M22 / s.Z;
-
             NitroxQuaternion q;
-            q.W = Mathf.Sqrt(Mathf.Max(0, 1 + m00 + m11 + m22)) / 2;
-            q.X = Mathf.Sqrt(Mathf.Max(0, 1 + m00 - m11 - m22)) / 2;
-            q.Y = Mathf.Sqrt(Mathf.Max(0, 1 - m00 + m11 - m22)) / 2;
-            q.Z = Mathf.Sqrt(Mathf.Max(0, 1 - m00 - m11 + m22)) / 2;
-            q.X *= Mathf.Sign(q.X * (m21 - m12));
-            q.Y *= Mathf.Sign(q.Y * (m02 - m20));
-            q.Z *= Mathf.Sign(q.Z * (m10 - m01));
+            q.W = Mathf.Sqrt(Mathf.Max(0, 1 + matrix.M00 + matrix.M11 + matrix.M22)) / 2;
+            q.X = Mathf.Sqrt(Mathf.Max(0, 1 + matrix.M00 - matrix.M11 - matrix.M22)) / 2;
+            q.Y = Mathf.Sqrt(Mathf.Max(0, 1 - matrix.M00 + matrix.M11 - matrix.M22)) / 2;
+            q.Z = Mathf.Sqrt(Mathf.Max(0, 1 - matrix.M00 - matrix.M11 + matrix.M22)) / 2;
+            q.X *= Mathf.Sign(q.X * (matrix.M21 - matrix.M12));
+            q.Y *= Mathf.Sign(q.Y * (matrix.M02 - matrix.M20));
+            q.Z *= Mathf.Sign(q.Z * (matrix.M10 - matrix.M01));
+
 
             return NitroxQuaternion.Normalize(q);
         }
@@ -392,8 +482,8 @@ namespace NitroxModel.DataStructures.GameLogic
         public static void DecomposeMatrix(ref NitroxMatrix4x4 matrix, out NitroxVector3 localPosition, out NitroxQuaternion localRotation, out NitroxVector3 localScale)
         {
             localPosition = GetTranslation(ref matrix);
-            localScale = GetScale(ref matrix);
-            localRotation = GetRotation(ref matrix);
+            NitroxMatrix4x4 rMatrix = ExtractScale(ref matrix, out localScale);
+            localRotation = GetRotation(ref rMatrix);
         }
 
         public static NitroxMatrix4x4 Transpose(NitroxMatrix4x4 matrix)

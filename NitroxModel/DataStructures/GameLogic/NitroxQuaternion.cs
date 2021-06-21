@@ -22,6 +22,13 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public static NitroxQuaternion Identity { get; } = new NitroxQuaternion(0, 0, 0, 1);
 
+        public bool Normalized {
+            get
+            {
+                return (X * X + Y * Y + Z * Z + W * W) > 0.9998f;
+            }
+        }
+
         public NitroxQuaternion(float x, float y, float z, float w)
         {
             X = x;
@@ -168,17 +175,7 @@ namespace NitroxModel.DataStructures.GameLogic
 
         private static float NormalizeAngle(float angle)
         {
-            while (angle < 0)
-            {
-                angle += 360;
-            }
-
-            while (angle >= 360)
-            {
-                angle -= 360;
-            }
-
-            return angle;
+            return angle % 360f;
         }
 
         public static NitroxQuaternion operator *(NitroxQuaternion lhs, NitroxQuaternion rhs)
