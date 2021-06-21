@@ -31,21 +31,21 @@ namespace NitroxModel.DataStructures.GameLogic
         {
             get 
             {
-                NitroxMatrix4x4 matrix = Parent != null ? Parent.localToWorldMatrix : NitroxMatrix4x4.Identity;
+                NitroxMatrix4x4 matrix = Parent?.localToWorldMatrix ?? NitroxMatrix4x4.Identity;
                 return matrix.MultiplyPoint(LocalPosition);
             }
             set
             {
                 NitroxMatrix4x4 matrix = Parent != null ? Parent.localToWorldMatrix.Inverse * NitroxMatrix4x4.TRS(value, LocalRotation, LocalScale) : NitroxMatrix4x4.TRS(value, LocalRotation, LocalScale);
 
-                LocalPosition = NitroxMatrix4x4.ExtractTranslation(ref matrix);
+                LocalPosition = NitroxMatrix4x4.GetTranslation(ref matrix);
             }
         }
         public NitroxQuaternion Rotation
         {
             get
             {
-                NitroxMatrix4x4 matrix = Parent != null ? Parent.localToWorldMatrix : NitroxMatrix4x4.Identity;
+                NitroxMatrix4x4 matrix = Parent?.localToWorldMatrix ?? NitroxMatrix4x4.Identity;
                 NitroxQuaternion rotation = NitroxMatrix4x4.GetRotation(ref matrix) * LocalRotation;
                 return rotation;
             }
@@ -60,13 +60,12 @@ namespace NitroxModel.DataStructures.GameLogic
         public void SetParent(NitroxTransform parent)
         {
             Parent = parent;
-            
-            
         }
 
+        [Obsolete("This is not implemented yet. Added by killzoms")]
         public void SetParent(NitroxTransform parent, bool worldPositionStays)
         {
-            throw new NotImplementedException("This is not Implementwaed yet. Added by killzoms");
+            throw new NotImplementedException("This is not implemented yet. Added by killzoms");
         }
 
         private NitroxTransform()
@@ -85,7 +84,7 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public override string ToString()
         {
-            return string.Format("(Position: {0}, LocalPosition: {1}, Rotation: {2}, LocalRotation: {3}, LocalScale: {4})", Position, LocalPosition, Rotation, LocalRotation, LocalScale);
+            return $"[Transform - Position: {Position}; LocalPosition: {LocalPosition}; Rotation: {Rotation}; LocalRotation: {LocalRotation}; LocalScale: {LocalScale}]";
         }
     }
 }

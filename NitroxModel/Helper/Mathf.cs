@@ -32,5 +32,28 @@ namespace NitroxModel.Helper
         {
             return (float)Math.Asin(p);
         }
+
+        // Copied from Unity
+        public static float Max(params float[] values)
+        {
+            int length = values.Length;
+            if (length == 0)
+            {
+                return 0.0f;
+            }
+
+            float num = values[0];
+            for (int index = 1; index < length; ++index)
+            {
+                if ((double) values[index] > (double) num)
+                {
+                    num = values[index];
+                }
+            }
+            return num;
+        }
+
+        // Copied from Unity
+        public static float Sign(float f) => f < 0.0 ? -1f : 1f;
     }
 }

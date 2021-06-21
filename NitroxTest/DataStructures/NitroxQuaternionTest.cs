@@ -1,8 +1,7 @@
 ﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NitroxModel.DataStructures.GameLogic;
 
-namespace NitroxTest.DataStructures
+namespace NitroxModel.DataStructures.GameLogic
 {
     [TestClass]
     public class NitroxQuaternionTest
@@ -20,7 +19,7 @@ namespace NitroxTest.DataStructures
         public void TestEquality()
         {
             NitroxQuaternion other1 = new NitroxQuaternion(0.5682333f, -0.01828304f, -0.5182831f, 0.6388735f);
-            NitroxQuaternion other2 = new NitroxQuaternion(0.5682334f, -0.01828303f, -0.5182832f, 0.6388734f);
+            NitroxQuaternion other2 = new NitroxQuaternion(0.5682343f, -0.01828314f, -0.5182841f, 0.6388745f);
 
             defaultVal.Equals(other1, TOLERANCE).Should().BeTrue();
             defaultVal.Equals(other2, TOLERANCE).Should().BeTrue(); //Tolerance to low to detect the difference

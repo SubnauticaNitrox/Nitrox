@@ -1,9 +1,7 @@
-﻿using System;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NitroxModel.DataStructures.GameLogic;
 
-namespace NitroxTest.DataStructures
+namespace NitroxModel.DataStructures.GameLogic
 {
     [TestClass]
     public class NitroxMatrix4x4Test
@@ -128,38 +126,38 @@ namespace NitroxTest.DataStructures
         [TestMethod]
         public void TestTRS()
         {
-            NitroxVector3 position = new NitroxVector3(256, 32, -256);
-            NitroxQuaternion rotation = NitroxQuaternion.FromEuler(new NitroxVector3(30, 25, 45));
-            NitroxVector3 scale = new NitroxVector3(1, 1, 1);
+            NitroxVector3 position = new NitroxVector3(256f, 32f, -256f);
+            NitroxQuaternion rotation = NitroxQuaternion.FromEuler(30f, 25f, 45f);
+            NitroxVector3 scale = new NitroxVector3(1f, 2f, 3f);
             NitroxMatrix4x4 matrix = NitroxMatrix4x4.TRS(position, rotation, scale);
 
-            NitroxVector3 position2 = new NitroxVector3(-256, 32, 256);
-            NitroxQuaternion rotation2 = NitroxQuaternion.FromEuler(new NitroxVector3(90, 180, 45));
-            NitroxVector3 scale2 = new NitroxVector3(3, 2, 1);
+            NitroxVector3 position2 = new NitroxVector3(-256f, 32f, 256f);
+            NitroxQuaternion rotation2 = NitroxQuaternion.FromEuler(90f, 180f, 45f);
+            NitroxVector3 scale2 = new NitroxVector3(3f, 2f, 1f);
             NitroxMatrix4x4 matrix2 = NitroxMatrix4x4.TRS(position2, rotation2, scale2);
+
+            NitroxMatrix4x4 matrix3 = matrix * matrix2;
 
             NitroxMatrix4x4.DecomposeMatrix(ref matrix, out NitroxVector3 afterPosition, out NitroxQuaternion afterRotation, out NitroxVector3 afterScale);
             NitroxMatrix4x4.DecomposeMatrix(ref matrix2, out NitroxVector3 afterPosition2, out NitroxQuaternion afterRotation2, out NitroxVector3 afterScale2);
+            NitroxMatrix4x4.DecomposeMatrix(ref matrix3, out NitroxVector3 afterPosition3, out NitroxQuaternion afterRotation3, out NitroxVector3 afterScale3);
 
-            NitroxMatrix4x4 result = matrix * matrix2;
+            NitroxVector3 position3 = new NitroxVector3(303.3243f, -469.5755f, 380.89752f); //Actual Values from Unity: [303.3242f, -469.5755f, 380.8975f], but seems plausible anyway
+            NitroxQuaternion rotation3 = new NitroxQuaternion(-0.2975527f, 0.8491729f, 0.2783289f, 0.3360072f);
+            NitroxVector3 scale3 = new NitroxVector3(6.708203f, 4.472136f, 2f);
 
-            NitroxVector3 resultPosition = new NitroxVector3(349.5739f, -806.8391f, 772.1367f);
-            NitroxQuaternion resultRotation = new NitroxQuaternion(0.1899641f, 0.9203625f, -0.2981839f, 0.1671313f);
-            NitroxVector3 resultScale = new NitroxVector3(9, 6, 8);
 
-            NitroxMatrix4x4.DecomposeMatrix(ref result, out NitroxVector3 afterPosition3, out NitroxQuaternion afterRotation3, out NitroxVector3 afterScale3);
+            position.Equals(afterPosition, TOLERANCE).Should().BeTrue($"Expected: {position}; Found: {afterPosition}");
+            rotation.Equals(afterRotation, TOLERANCE).Should().BeTrue($"Expected: {rotation}; Found: {afterRotation}");
+            scale.Equals(afterScale, TOLERANCE).Should().BeTrue($"Expected: {scale}; Found: {afterScale}");
 
-            position.Equals(afterPosition, TOLERANCE).Should().BeTrue();
-            rotation.Equals(afterRotation, TOLERANCE).Should().BeTrue($"Expected: {afterRotation} should be {rotation}");
-            scale.Equals(afterScale, TOLERANCE).Should().BeTrue();
+            position2.Equals(afterPosition2, TOLERANCE).Should().BeTrue($"Expected: {position2}; Found: {afterPosition2}");
+            rotation2.Equals(afterRotation2, TOLERANCE).Should().BeTrue($"Expected: {rotation2}; Found: {afterRotation2}");
+            scale2.Equals(afterScale2, TOLERANCE).Should().BeTrue($"Expected: {scale2}; Found: {afterScale2}");
 
-            position2.Equals(afterPosition2, TOLERANCE).Should().BeTrue();
-            rotation2.Equals(afterRotation2, TOLERANCE).Should().BeTrue($"Expected: {afterRotation2} should be {rotation2}");
-            scale2.Equals(afterScale2, TOLERANCE).Should().BeTrue();
-
-            resultPosition.Equals(afterPosition3, TOLERANCE).Should().BeTrue();
-            resultRotation.Equals(afterRotation3, TOLERANCE).Should().BeTrue($"Expected: {afterRotation3} should be {resultRotation}");
-            resultScale.Equals(afterScale3, TOLERANCE).Should().BeTrue();
+            position3.Equals(afterPosition3, TOLERANCE).Should().BeTrue($"Expected: {position3}; Found: {afterPosition3}");
+            rotation3.Equals(afterRotation3, TOLERANCE).Should().BeTrue($"Expected: {rotation3}; Found: {afterRotation3}");
+            scale3.Equals(afterScale3, TOLERANCE).Should().BeTrue($"Expected: {scale3}; Found: {afterScale3}");
         }
     }
 }

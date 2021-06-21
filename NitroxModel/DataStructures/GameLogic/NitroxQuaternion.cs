@@ -111,26 +111,30 @@ namespace NitroxModel.DataStructures.GameLogic
             float test = X * W - Y * Z;
             NitroxVector3 v;
 
-            if (test > 0.4995f * unit)
-            { // singularity at north pole
+            if (test > 0.4995f * unit) // singularity at north pole
+            {
                 v.Y = 2f * Mathf.Atan2(Y, X);
                 v.X = Mathf.PI / 2;
                 v.Z = 0;
                 return NormalizeAngles(v * Mathf.RAD2DEG);
             }
-            if (test < -0.4995f * unit)
-            { // singularity at south pole
+
+            if (test < -0.4995f * unit) // singularity at south pole
+            {
                 v.X = -2f * Mathf.Atan2(Y, X);
                 v.Y = -Mathf.PI / 2;
                 v.Z = 0;
                 return NormalizeAngles(v * Mathf.RAD2DEG);
             }
+
             NitroxQuaternion q = new NitroxQuaternion(W, Z, X, Y);
             v.Y = Mathf.Atan2(2f * q.X * q.W + 2f * q.Y * q.Z, 1 - 2f * (q.Z * q.Z + q.W * q.W));   // Yaw
             v.X = Mathf.Asin(2f * (q.X * q.Z - q.W * q.Y));                                         // Pitch
             v.Z = Mathf.Atan2(2f * q.X * q.Y + 2f * q.Z * q.W, 1 - 2f * (q.Y * q.Y + q.Z * q.Z));   // Roll
             return NormalizeAngles(v * Mathf.RAD2DEG);
         }
+
+        public static NitroxQuaternion FromEuler(float x, float y, float z) => FromEuler(new NitroxVector3(x, y, z));
 
         // From https://www.euclideanspace.com/maths/geometry/rotations/conversions/eulerToQuaternion/index.htm
         public static NitroxQuaternion FromEuler(NitroxVector3 euler)
@@ -208,26 +212,28 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public bool Equals(NitroxQuaternion other)
         {
-            return Equals(other, float.Epsilon);
+            return Equals(other, 0.000001f);
         }
 
         public bool Equals(NitroxQuaternion other, float tolerance)
         {
-            return X == other.X && Y == other.Y && Z == other.Z && W == other.W ||
-                   Math.Abs(other.X - X) < tolerance &&
-                   Math.Abs(other.Y - Y) < tolerance &&
-                   Math.Abs(other.Z - Z) < tolerance &&
-                   Math.Abs(other.W - W) < tolerance;
+            return W == other.W && X == other.X && Y == other.Y && Z == other.Z ||
+                   Math.Abs(other.W - W) < tolerance && Math.Abs(other.X - X) < tolerance && Math.Abs(other.Y - Y) < tolerance && Math.Abs(other.Z - Z) < tolerance ||
+                   Math.Abs(other.W + W) < tolerance && Math.Abs(other.X + X) < tolerance && Math.Abs(other.Y + Y) < tolerance && Math.Abs(other.Z + Z) < tolerance;
         }
 
         public override int GetHashCode()
         {
-            int hashCode = 707706286;
-            hashCode = hashCode * -1521134295 + X.GetHashCode();
-            hashCode = hashCode * -1521134295 + Y.GetHashCode();
-            hashCode = hashCode * -1521134295 + Z.GetHashCode();
-            hashCode = hashCode * -1521134295 + W.GetHashCode();
-            return hashCode;
+            unchecked
+            {
+                int hashCode = 707706286;
+                hashCode = hashCode * -1521134295 + X.GetHashCode();
+                hashCode = hashCode * -1521134295 + Y.GetHashCode();
+                hashCode = hashCode * -1521134295 + Z.GetHashCode();
+                hashCode = hashCode * -1521134295 + W.GetHashCode();
+                return hashCode;
+            }
+
         }
     }
 }

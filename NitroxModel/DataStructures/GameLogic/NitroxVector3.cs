@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using NitroxModel.Helper;
 using ProtoBufNet;
 
@@ -100,7 +100,7 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public static bool operator ==(NitroxVector3 lhs, NitroxVector3 rhs)
         {
-            return lhs.X == rhs.X && lhs.Y == rhs.Y && lhs.Z == rhs.Z;
+            return lhs.Equals(rhs);
         }
 
         public static bool operator !=(NitroxVector3 lhs, NitroxVector3 rhs)
