@@ -58,15 +58,21 @@ namespace NitroxModel.DataStructures.GameLogic
             }
         }
 
-        public void SetParent(NitroxTransform parent)
+        public void SetParent(NitroxTransform parent, bool worldPositionStays = true)
         {
-            Parent = parent;
-        }
+            if (!worldPositionStays)
+            {
+                Parent = parent;
+                return;
+            }
 
-        [Obsolete("This is not implemented yet. Added by killzoms")]
-        public void SetParent(NitroxTransform parent, bool worldPositionStays)
-        {
-            throw new NotImplementedException("This is not implemented yet. Added by killzoms");
+            NitroxVector3 position = Position;
+            NitroxQuaternion rotation = Rotation;
+
+            Parent = parent;
+
+            Position = position;
+            Rotation = rotation;
         }
 
         private NitroxTransform()

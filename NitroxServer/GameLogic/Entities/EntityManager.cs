@@ -228,7 +228,7 @@ namespace NitroxServer.GameLogic.Entities
 
                                 if (opEnt.HasValue)
                                 {
-                                    entity.Transform.SetParent(opEnt.Value.Transform);
+                                    entity.Transform.SetParent(opEnt.Value.Transform, false);
                                 }
                                 else
                                 {

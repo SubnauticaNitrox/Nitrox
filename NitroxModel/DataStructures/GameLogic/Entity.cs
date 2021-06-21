@@ -84,7 +84,7 @@ namespace NitroxModel.DataStructures.GameLogic
             if (parentEntity != null)
             {
                 ParentId = parentEntity.Id;
-                Transform.SetParent(parentEntity.Transform);
+                Transform.SetParent(parentEntity.Transform, false);
             }
         }
 

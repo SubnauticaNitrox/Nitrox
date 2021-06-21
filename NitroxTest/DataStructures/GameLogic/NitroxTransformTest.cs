@@ -24,10 +24,10 @@ namespace NitroxModel.DataStructures.GameLogic
             grandchild1 = new NitroxTransform(new NitroxVector3(13, 8, 15), NitroxQuaternion.FromEuler(-50, 5, 10), new NitroxVector3(1, 1, 1), null);
             grandchild2 = new NitroxTransform(new NitroxVector3(3, 18, -5), NitroxQuaternion.FromEuler(-5, 15, 1), new NitroxVector3(10, 10, 10), null);
 
-            child1.SetParent(root);
-            child2.SetParent(root);
-            grandchild1.SetParent(child1);
-            grandchild2.SetParent(child2);
+            child1.SetParent(root, false);
+            child2.SetParent(root, false);
+            grandchild1.SetParent(child1, false);
+            grandchild2.SetParent(child2, false);
         }
 
         [TestMethod]
