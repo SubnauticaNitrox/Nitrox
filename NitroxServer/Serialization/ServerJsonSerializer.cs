@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using NitroxModel.DataStructures.JsonConverter;
 using NitroxModel.Logger;
+using NitroxModel.OS;
 
 namespace NitroxServer.Serialization
 {
@@ -28,40 +29,36 @@ namespace NitroxServer.Serialization
             serializer.Converters.Add(new StringEnumConverter());
         }
 
-        public string GetFileEnding() => ".json";
+        public string FileEnding => ".json";
 
         public void Serialize(Stream stream, object o)
         {
             stream.Position = 0;
-            using (JsonTextWriter jsonTextWriter = new JsonTextWriter(new StreamWriter(stream)))
-            {
-                serializer.Serialize(jsonTextWriter, o);
-            }
+            using JsonTextWriter writer = new(new StreamWriter(stream));
+            serializer.Serialize(writer, o);
         }
 
         public void Serialize(string filePath, object o)
         {
-            using (StreamWriter stream = File.CreateText(filePath))
+            string tmpPath = Path.ChangeExtension(filePath, ".tmp");
+            using (StreamWriter stream = File.CreateText(tmpPath))
             {
                 serializer.Serialize(stream, o);
             }
+            FileSystem.Instance.ReplaceFile(tmpPath, filePath);
         }
 
         public T Deserialize<T>(Stream stream)
         {
             stream.Position = 0;
-            using (JsonTextReader jsonTextReader = new JsonTextReader(new StreamReader(stream)))
-            {
-                return (T)serializer.Deserialize(jsonTextReader, typeof(T));
-            }
+            using JsonTextReader reader = new(new StreamReader(stream));
+            return (T)serializer.Deserialize(reader, typeof(T));
         }
 
         public T Deserialize<T>(string filePath)
         {
-            using (StreamReader jsonTextReader = File.OpenText(filePath))
-            {
-                return (T)serializer.Deserialize(jsonTextReader, typeof(T));
-            }
+            using StreamReader reader = File.OpenText(filePath);
+            return (T)serializer.Deserialize(reader, typeof(T));
         }
     }
 }

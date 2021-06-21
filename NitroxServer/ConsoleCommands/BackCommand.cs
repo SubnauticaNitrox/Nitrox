@@ -21,7 +21,7 @@ namespace NitroxServer.ConsoleCommands
                 return;
             }
 
-            player.Teleport(player.LastStoredPosition.Value);
+            player.Teleport(player.LastStoredPosition.Value, player.LastStoredSubRootID);
             SendMessage(args.Sender, $"Teleported back to {player.LastStoredPosition.Value}");
         }
     }
