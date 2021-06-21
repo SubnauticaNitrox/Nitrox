@@ -113,7 +113,6 @@ namespace NitroxModel.DataStructures.GameLogic
             return new NitroxVector3(vector4.X, vector4.Y, vector4.Z);
         }
 
-        // From Unity
         public static NitroxVector3 Normalize(NitroxVector3 value)
         {
             float ls = value.X * value.X + value.Y * value.Y + value.Z * value.Z;
