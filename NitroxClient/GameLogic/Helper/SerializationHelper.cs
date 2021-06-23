@@ -14,6 +14,9 @@ namespace NitroxClient.GameLogic.Helper
         // deserialization then we should not be subjected to this behaviour.
         public static bool BLOCK_HAND_PLACED_DESERIALIZATION = true;
 
+        /// See <see cref="UniqueIdentifier_Id_Getter_Patch.Prefix"/> for more info.
+        public const string ID_IGNORE_KEY = "SoundsLikeNitrox";
+
         private static ProtobufSerializer Serializer => ProtobufSerializerPool.GetProxy().Value;
 
         public static byte[] GetBytes(GameObject gameObject)
@@ -53,7 +56,7 @@ namespace NitroxClient.GameLogic.Helper
             }
 
             string tmpId = parentIdentifier.Id;
-            identifierIdField.SetValue(parentIdentifier, "SoundsLikeNitrox");
+            identifierIdField.SetValue(parentIdentifier, ID_IGNORE_KEY);
             byte[] bytes = GetBytes(gameObject);
             identifierIdField.SetValue(parentIdentifier, tmpId);
 

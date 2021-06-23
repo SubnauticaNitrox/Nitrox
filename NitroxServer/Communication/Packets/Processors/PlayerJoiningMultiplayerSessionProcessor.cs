@@ -120,7 +120,7 @@ namespace NitroxServer.Communication.Packets.Processors
 
             for (int index = 0; index < inventoryItems.Count; index++) //Also add batteries from tools to inventory items.
             {
-                inventoryItems.AddRange(world.InventoryManager.GetAllStorageSlotItems().Where(item => item.ContainerId.Equals(inventoryItems[index].ItemId)).ToList());
+                inventoryItems.AddRange(world.InventoryManager.GetAllStorageSlotItems().Where(item => item.ContainerId.Equals(inventoryItems[index].ItemId)));
             }
 
             return inventoryItems;

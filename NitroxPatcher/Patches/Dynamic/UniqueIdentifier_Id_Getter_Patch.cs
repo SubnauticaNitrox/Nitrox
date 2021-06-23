@@ -11,7 +11,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static bool Prefix(string ___id, ref string __result)
         {
-            if (___id == "SoundsLikeNitrox")
+            if (___id == SerializationHelper.ID_IGNORE_KEY)
             {
 
                 __result = null;

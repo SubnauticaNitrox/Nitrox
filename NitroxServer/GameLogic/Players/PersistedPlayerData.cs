@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 using NitroxModel.DataStructures;
@@ -18,7 +19,7 @@ namespace NitroxServer.GameLogic.Players
         public List<NitroxTechType> UsedItems { get; set; } = new List<NitroxTechType>();
 
         [JsonProperty, ProtoMember(3)]
-        public string[] QuickSlotsBinding { get; set; } = new string[0];
+        public string[] QuickSlotsBinding { get; set; } = Array.Empty<string>();
 
         [JsonProperty, ProtoMember(4)]
         public List<EquippedItemData> EquippedItems { get; set; } = new List<EquippedItemData>();
