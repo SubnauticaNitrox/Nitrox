@@ -22,5 +22,16 @@ namespace NitroxModel.Helper
         {
             return (float)Math.Asin(p);
         }
+
+        public static float Pow(float p1, float p2)
+        {
+            return (float)Math.Pow(p1, p2);
+        }
+
+        /// <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="digits" /> is less than 0 or greater than 15.</exception>
+        public static float Round(float value, int digits = 0)
+        {
+            return (float)Math.Round(value, digits);
+        }
     }
 }

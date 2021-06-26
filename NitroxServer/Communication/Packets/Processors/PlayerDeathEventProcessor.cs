@@ -20,7 +20,7 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(PlayerDeathEvent packet, Player player)
         {
-            if(serverConfig.IsHardcore)
+            if (serverConfig.IsHardcore)
             {
                 player.IsPermaDeath = true;
                 PlayerKicked playerKicked = new PlayerKicked("Permanent death from hardcore mode");
@@ -28,6 +28,7 @@ namespace NitroxServer.Communication.Packets.Processors
             }
 
             player.LastStoredPosition = packet.DeathPosition;
+            player.LastStoredSubRootID = player.SubRootId;
 
             if (player.Permissions > Perms.MODERATOR)
             {
