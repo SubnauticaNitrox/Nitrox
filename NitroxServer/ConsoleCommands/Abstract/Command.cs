@@ -84,36 +84,6 @@ namespace NitroxServer.ConsoleCommands.Abstract
             return (RequiredPermLevel & flag) == flag;
         }
 
-        /// <summary>
-        /// Send a message to an existing player
-        /// </summary>
-        public void SendMessageToPlayer(Optional<Player> player, string message)
-        {
-            if (player.HasValue)
-            {
-                player.Value.SendPacket(new ChatMessage(ChatMessage.SERVER_ID, message));
-            }
-        }
-
-        /// <summary>
-        /// Send a message to an existing player and logs it in the console
-        /// </summary>
-        public void SendMessage(Optional<Player> player, string message)
-        {
-            SendMessageToPlayer(player, message);
-            Log.Info(message);
-        }
-
-        /// <summary>
-        /// Send a message to all connected players
-        /// </summary>
-        public void SendMessageToAllPlayers(string message)
-        {
-            PlayerManager playerManager = NitroxServiceLocator.LocateService<PlayerManager>();
-            playerManager.SendPacketToAllPlayers(new ChatMessage(ChatMessage.SERVER_ID, message));
-            Log.Info(message);
-        }
-
         protected void AddParameter<T>(T param) where T : IParameter<object>
         {
             Validate.NotNull(param as object);
@@ -127,6 +97,36 @@ namespace NitroxServer.ConsoleCommands.Abstract
             {
                 optional++;
             }
+        }
+
+        /// <summary>
+        /// Send a message to an existing player
+        /// </summary>
+        public static void SendMessageToPlayer(Optional<Player> player, string message)
+        {
+            if (player.HasValue)
+            {
+                player.Value.SendPacket(new ChatMessage(ChatMessage.SERVER_ID, message));
+            }
+        }
+
+        /// <summary>
+        /// Send a message to an existing player and logs it in the console
+        /// </summary>
+        public static void SendMessage(Optional<Player> player, string message)
+        {
+            SendMessageToPlayer(player, message);
+            Log.Info(message);
+        }
+
+        /// <summary>
+        /// Send a message to all connected players
+        /// </summary>
+        public static void SendMessageToAllPlayers(string message)
+        {
+            PlayerManager playerManager = NitroxServiceLocator.LocateService<PlayerManager>();
+            playerManager.SendPacketToAllPlayers(new ChatMessage(ChatMessage.SERVER_ID, message));
+            Log.Info(message);
         }
     }
 }

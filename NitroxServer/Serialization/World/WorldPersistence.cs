@@ -44,6 +44,7 @@ namespace NitroxServer.Serialization.World
 
         internal void UpdateSerializer(IServerSerializer serverSerializer)
         {
+            Validate.NotNull(serverSerializer, "Serializer cannot be null");
             Serializer = serverSerializer;
         }
 

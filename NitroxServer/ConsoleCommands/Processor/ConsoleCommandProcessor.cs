@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Logger;
-using NitroxModel.Packets;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.Exceptions;
 
@@ -47,14 +45,7 @@ namespace NitroxServer.ConsoleCommands.Processor
             string[] parts = msg.Split(splitChar, StringSplitOptions.RemoveEmptyEntries);
             if (!commands.TryGetValue(parts[0], out Command cmd))
             {
-                string errorMessage = $"Command Not Found: {parts[0]}";
-                Log.Info(errorMessage);
-
-                if (player.HasValue)
-                {
-                    player.Value.SendPacket(new ChatMessage(ChatMessage.SERVER_ID, errorMessage));
-                }
-
+                Command.SendMessage(player, $"Command Not Found: {parts[0]}");
                 return;
             }
 
@@ -64,7 +55,7 @@ namespace NitroxServer.ConsoleCommands.Processor
             }
             else
             {
-                cmd.SendMessageToPlayer(player, "You do not have the required permissions for this command!");
+                Command.SendMessage(player, "You do not have the required permissions for this command !");
             }
         }
 

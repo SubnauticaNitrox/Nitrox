@@ -20,7 +20,11 @@ namespace NitroxServer.ConsoleCommands
         {
             if (args.IsConsole)
             {
-                Perms perms = (Debugger.IsAttached) ? Perms.ANY : Perms.CONSOLE;
+#if DEBUG
+                Perms perms = Perms.ANY;
+#else
+                Perms perms = Perms.CONSOLE;
+#endif
                 List<string> cmdsText = GetHelpText(perms, false);
 
                 foreach (string cmdText in cmdsText)

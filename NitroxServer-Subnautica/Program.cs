@@ -16,7 +16,6 @@ using NitroxModel.Discovery;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.OS;
-using NitroxModel_Subnautica.Helper;
 using NitroxServer;
 using NitroxServer.ConsoleCommands.Processor;
 
@@ -92,7 +91,7 @@ namespace NitroxServer_Subnautica
             ConsoleCommandProcessor cmdProcessor = NitroxServiceLocator.LocateService<ConsoleCommandProcessor>();
             while (server.IsRunning)
             {
-                cmdProcessor.ProcessCommand(Console.ReadLine(), Optional.Empty, Perms.CONSOLE);
+                cmdProcessor.ProcessCommand(Console.ReadLine(), Optional.Empty, Perms.ANY);
             }
         }
 
