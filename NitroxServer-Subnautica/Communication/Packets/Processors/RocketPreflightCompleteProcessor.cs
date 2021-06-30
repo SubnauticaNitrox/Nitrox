@@ -30,7 +30,7 @@ namespace NitroxServer_Subnautica.Communication.Packets.Processors
 
                 if (!collection.Contains(packet.FlightCheck))
                 {
-                    opRocket.Value.PreflightChecks.Add(packet.FlightCheck);
+                    collection.Add(packet.FlightCheck);
                 }
                 else
                 {
