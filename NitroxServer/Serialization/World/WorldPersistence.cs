@@ -28,16 +28,29 @@ namespace NitroxServer.Serialization.World
         private string FileEnding => Serializer?.FileEnding ?? "";
 
         private readonly ServerProtoBufSerializer protoBufSerializer;
+        private readonly ServerJsonSerializer jsonSerializer;
         private readonly RandomStartGenerator randomStart;
         private readonly ServerConfig config;
 
         public WorldPersistence(ServerProtoBufSerializer protoBufSerializer, ServerJsonSerializer jsonSerializer, ServerConfig config, RandomStartGenerator randomStart)
         {
             this.protoBufSerializer = protoBufSerializer;
+            this.jsonSerializer = jsonSerializer;
             this.randomStart = randomStart;
             this.config = config;
 
-            Serializer = config.SerializerMode == ServerSerializerMode.PROTOBUF ? protoBufSerializer : jsonSerializer;
+            UpdateSerializer(config.SerializerMode);
+        }
+
+        internal void UpdateSerializer(IServerSerializer serverSerializer)
+        {
+            Validate.NotNull(serverSerializer, "Serializer cannot be null");
+            Serializer = serverSerializer;
+        }
+
+        internal void UpdateSerializer(ServerSerializerMode mode)
+        {
+            Serializer = (mode == ServerSerializerMode.PROTOBUF) ? protoBufSerializer : jsonSerializer;
         }
 
         public bool Save(World world, string saveDir)
@@ -105,7 +118,7 @@ namespace NitroxServer.Serialization.World
 
                 //Backup world if loading fails
                 string outZip = Path.Combine(saveDir, "worldBackup.zip");
-                Log.Warn($"Creating a backup at {Path.GetFullPath(outZip)}");
+                Log.WarnSensitive("Creating a backup at {path}", Path.GetFullPath(outZip));
                 FileSystem.Instance.ZipFilesInDirectory(saveDir, outZip, $"*{FileEnding}", true);
             }
 
@@ -200,11 +213,6 @@ namespace NitroxServer.Serialization.World
             world.EntitySimulation = new EntitySimulation(world.EntityManager, world.SimulationOwnershipData, world.PlayerManager, serverSpawnedSimulationWhiteList);
 
             return world;
-        }
-
-        internal void UpdateSerializer(IServerSerializer serializer)
-        {
-            this.Serializer = serializer;
         }
     }
 }

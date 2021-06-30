@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Logger;
 using NitroxModel.OS;
@@ -15,12 +13,14 @@ using NitroxServer.Serialization;
 
 namespace NitroxServer.ConsoleCommands
 {
-    internal sealed class ConfigCommand : Command
+    internal class ConfigCommand : Command
     {
-        private readonly SemaphoreSlim configOpenLock = new SemaphoreSlim(1);
+        private readonly SemaphoreSlim configOpenLock = new(1);
+        private readonly ServerConfig serverConfig;
 
-        public ConfigCommand() : base("config", Perms.CONSOLE, "Opens the server configuration file")
+        public ConfigCommand(ServerConfig serverConfig) : base("config", Perms.CONSOLE, "Opens the server configuration file")
         {
+            this.serverConfig = serverConfig;
         }
 
         protected override void Execute(CallArgs args)
@@ -31,11 +31,10 @@ namespace NitroxServer.ConsoleCommands
                 return;
             }
 
-            ServerConfig currentActiveConfig = NitroxServiceLocator.LocateService<ServerConfig>();
-            string configFile = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location) ?? "", currentActiveConfig.FileName);
+            string configFile = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location) ?? "", serverConfig.FileName);
             if (!File.Exists(configFile))
             {
-                Log.Error($"Could not find config file at: {configFile}");
+                Log.ErrorSensitive("Unable to open config file {path} because it does not exist.", configFile);
                 return;
             }
 

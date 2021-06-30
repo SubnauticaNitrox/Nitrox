@@ -4,7 +4,7 @@ using NitroxModel.Helper;
 
 namespace NitroxServer.ConsoleCommands.Abstract.Type
 {
-    public class TypeBoolean : Parameter<bool?>, IParameter<object>
+    public class TypeBoolean : Parameter<bool>, IParameter<object>
     {
         private static readonly string[] noValues = new string[]
         {
@@ -27,7 +27,7 @@ namespace NitroxServer.ConsoleCommands.Abstract.Type
             return yesValues.Contains(arg, StringComparer.OrdinalIgnoreCase) || noValues.Contains(arg, StringComparer.OrdinalIgnoreCase);
         }
 
-        public override bool? Read(string arg)
+        public override bool Read(string arg)
         {
             Validate.IsTrue(IsValid(arg), "Invalid boolean value received");
             return yesValues.Contains(arg, StringComparer.OrdinalIgnoreCase);

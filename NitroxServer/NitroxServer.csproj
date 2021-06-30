@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -147,6 +147,8 @@
     <Compile Include="ConsoleCommands\ChangeAdminPasswordCommand.cs" />
     <Compile Include="ConsoleCommands\DirectoryCommand.cs" />
     <Compile Include="ConsoleCommands\HelpCommand.cs" />
+    <Compile Include="ConsoleCommands\LoadBatchCommand.cs" />
+    <Compile Include="ConsoleCommands\PromoteCommand.cs" />
     <Compile Include="ConsoleCommands\RestartCommand.cs" />
     <Compile Include="ConsoleCommands\SwapSerializerCommand.cs" />
     <Compile Include="ConsoleCommands\TeleportCommand.cs" />
@@ -155,7 +157,6 @@
     <Compile Include="ConsoleCommands\WhoisCommand.cs" />
     <Compile Include="ConsoleCommands\KickCommand.cs" />
     <Compile Include="ConsoleCommands\ListCommand.cs" />
-    <Compile Include="ConsoleCommands\LoadBatchCommand.cs" />
     <Compile Include="ConsoleCommands\LoginCommand.cs" />
     <Compile Include="ConsoleCommands\OpCommand.cs" />
     <Compile Include="ConsoleCommands\BroadcastCommand.cs" />
@@ -185,7 +186,7 @@
     <Compile Include="Serialization\Resources\Datastructures\PrefabPlaceholderAsset.cs" />
     <Compile Include="Serialization\Resources\Datastructures\PrefabPlaceholdersGroupAsset.cs" />
     <Compile Include="Serialization\Resources\Datastructures\TransformAsset.cs" />
-    <Compile Include="ConsoleCommands\ExitCommand.cs" />
+    <Compile Include="ConsoleCommands\StopCommand.cs" />
     <Compile Include="ConsoleCommands\Processor\ConsoleCommandProcessor.cs" />
     <Compile Include="ConsoleCommands\SaveCommand.cs" />
     <Compile Include="GameLogic\Bases\BaseData.cs" />

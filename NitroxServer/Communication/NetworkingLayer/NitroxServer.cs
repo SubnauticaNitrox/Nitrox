@@ -43,14 +43,14 @@ namespace NitroxServer.Communication.NetworkingLayer
             {
                 playerManager.PlayerDisconnected(connection);
 
-                Disconnect disconnect = new Disconnect(player.Id);
+                Disconnect disconnect = new(player.Id);
                 playerManager.SendPacketToAllPlayers(disconnect);
 
                 List<SimulatedEntity> ownershipChanges = entitySimulation.CalculateSimulationChangesFromPlayerDisconnect(player);
 
                 if (ownershipChanges.Count > 0)
                 {
-                    SimulationOwnershipChange ownershipChange = new SimulationOwnershipChange(ownershipChanges);
+                    SimulationOwnershipChange ownershipChange = new(ownershipChanges);
                     playerManager.SendPacketToAllPlayers(ownershipChange);
                 }
             }
@@ -64,7 +64,7 @@ namespace NitroxServer.Communication.NetworkingLayer
             }
             catch (Exception ex)
             {
-                Log.Error("Exception while processing packet: " + packet + " " + ex);
+                Log.Error(ex, $"Exception while processing packet: {packet}");
             }
         }
 
@@ -87,7 +87,7 @@ namespace NitroxServer.Communication.NetworkingLayer
                 switch (ex.ErrorCode)
                 {
                     case ErrorCode.ConflictInMappingEntry:
-                        Log.Warn($"Automatic port forwarding failed, port conflict found. It is likely already open and no action is required");
+                        Log.Warn($"Automatic port forwarding failed (Is it already open ?)");
                         break;
                     default:
                         Log.Warn($"Automatic port forwarding failed, please manually port forward");

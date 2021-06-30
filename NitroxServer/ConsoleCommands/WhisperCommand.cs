@@ -7,27 +7,22 @@ namespace NitroxServer.ConsoleCommands
 {
     internal class WhisperCommand : Command
     {
-        public override IEnumerable<string> Aliases { get; } = new[] { "m", "whisper", "w" };
+        public override IEnumerable<string> Aliases { get; } = new[] { "w", "msg", "m" };
 
-        public WhisperCommand() : base("msg", Perms.PLAYER, "Sends a private message to a player", true)
+        public WhisperCommand() : base("whisper", Perms.PLAYER, "Sends a private message to a player")
         {
             AddParameter(new TypePlayer("name", true));
             AddParameter(new TypeString("msg", true));
+
+            AllowedArgOverflow = true;
         }
 
         protected override void Execute(CallArgs args)
         {
             Player foundPlayer = args.Get<Player>(0);
+            string message = $"[{args.SenderName} -> YOU]: {args.GetTillEnd(1)}";
 
-            if (foundPlayer != null)
-            {
-                string message = $"[{args.SenderName} -> YOU]: {args.GetTillEnd(1)}";
-                SendMessageToPlayer(foundPlayer, message);
-            }
-            else
-            {
-                SendMessage(args.Sender, "Unable to whisper, player not found.");
-            }
+            SendMessageToPlayer(foundPlayer, message);
         }
     }
 }

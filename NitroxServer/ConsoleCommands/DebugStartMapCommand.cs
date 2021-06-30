@@ -1,7 +1,6 @@
-﻿using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Helper;
+﻿#if DEBUG
+using NitroxModel.DataStructures.GameLogic;
 using NitroxServer.ConsoleCommands.Abstract;
-using NitroxModel.DataStructures;
 using NitroxServer.Serialization.World;
 using System.Collections.Generic;
 using NitroxServer.GameLogic;
@@ -9,13 +8,15 @@ using NitroxModel.Packets;
 
 namespace NitroxServer.ConsoleCommands
 {
+
     internal class DebugStartMapCommand : Command
     {
-        private readonly PlayerManager playerManager;
         private readonly RandomStartGenerator nitroxRandomStart;
+        private readonly PlayerManager playerManager;
         private readonly World world;
 
-        public DebugStartMapCommand(PlayerManager playerManager, RandomStartGenerator nitroxRandomStart, World world) : base("debugstartmap", Perms.CONSOLE, "warning: spawns blocks")
+        public DebugStartMapCommand(PlayerManager playerManager, RandomStartGenerator nitroxRandomStart, World world) :
+            base("debugstartmap", Perms.ADMIN, "Spawns blocks at spawn positions")
         {
             this.playerManager = playerManager;
             this.nitroxRandomStart = nitroxRandomStart;
@@ -27,6 +28,9 @@ namespace NitroxServer.ConsoleCommands
             List<NitroxVector3> randomStartPositions = nitroxRandomStart.GenerateRandomStartPositions(world.Seed);
 
             playerManager.SendPacketToAllPlayers(new DebugStartMapPacket(randomStartPositions));
+            SendMessage(args.Sender, $"Rendered {randomStartPositions.Count} spawn positions");
         }
     }
+
 }
+#endif

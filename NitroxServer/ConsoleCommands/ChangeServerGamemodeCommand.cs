@@ -1,5 +1,6 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
+using NitroxModel.Serialization;
 using NitroxModel.Server;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
@@ -10,24 +11,33 @@ namespace NitroxServer.ConsoleCommands
 {
     internal class ChangeServerGamemodeCommand : Command
     {
-        private readonly ServerConfig serverConfig;
         private readonly PlayerManager playerManager;
+        private readonly ServerConfig serverConfig;
 
-        public ChangeServerGamemodeCommand(ServerConfig serverConfig, PlayerManager playerManager) : base("changeservergamemode", Perms.ADMIN, "Changes server gamemode")
+        public ChangeServerGamemodeCommand(PlayerManager playerManager, ServerConfig serverConfig) : base("changeservergamemode", Perms.ADMIN, "Changes server gamemode")
         {
-            this.serverConfig = serverConfig;
-            this.playerManager = playerManager;
             AddParameter(new TypeEnum<ServerGameMode>("gamemode", true));
+
+            this.playerManager = playerManager;
+            this.serverConfig = serverConfig;
         }
 
         protected override void Execute(CallArgs args)
         {
             ServerGameMode sgm = args.Get<ServerGameMode>(0);
 
-            serverConfig.GameMode = sgm;
-            playerManager.SendPacketToAllPlayers(new GameModeChanged(sgm));
+            if (serverConfig.GameMode != sgm)
+            {
+                serverConfig.GameMode = sgm;
+                NitroxConfig.Serialize(serverConfig);
 
-            SendMessageToAllPlayers($"Server gamemode changed to \"{sgm}\" by {args.SenderName}");
+                playerManager.SendPacketToAllPlayers(new GameModeChanged(sgm));
+                SendMessageToAllPlayers($"Server gamemode changed to \"{sgm}\" by {args.SenderName}");
+            }
+            else
+            {
+                SendMessage(args.Sender, "Server is already using this gamemode");
+            }
         }
     }
 }

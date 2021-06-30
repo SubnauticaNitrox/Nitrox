@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -12,22 +11,24 @@ namespace NitroxModel.Serialization
 {
     public static class NitroxConfig
     {
-        private static readonly Dictionary<Type, Dictionary<string, MemberInfo>> typeCache = new Dictionary<Type, Dictionary<string, MemberInfo>>();
+        private static readonly Dictionary<Type, Dictionary<string, MemberInfo>> typeCache = new();
+
         public static T Deserialize<T>() where T : IProperties, new()
         {
-            T props = new T();
+            T props = new();
             if (!File.Exists(props.FileName))
             {
                 return props;
             }
 
             Dictionary<string, MemberInfo> typeCachedDict = GetTypeCacheDictionary<T>();
-            using StreamReader reader = new StreamReader(new FileStream(props.FileName, FileMode.Open), Encoding.UTF8);
+            using StreamReader reader = new(new FileStream(props.FileName, FileMode.Open), Encoding.UTF8);
 
+            HashSet<MemberInfo> unserializedMembers = typeCachedDict.Values.ToHashSet();
             char[] lineSeparator = { '=' };
             int lineNum = 0;
             string readLine;
-            HashSet<MemberInfo> unserializedMembers = typeCachedDict.Values.ToHashSet();
+
             while ((readLine = reader.ReadLine()) != null)
             {
                 lineNum++;
@@ -67,19 +68,19 @@ namespace NitroxModel.Serialization
             if (unserializedMembers.Any())
             {
                 IEnumerable<string> unserializedProps = unserializedMembers.Select(m =>
-                                                                           {
-                                                                               object value = null;
-                                                                               if (m is FieldInfo field)
-                                                                               {
-                                                                                   value = field.GetValue(props);
-                                                                               }
-                                                                               else if (m is PropertyInfo prop)
-                                                                               {
-                                                                                   value = prop.GetValue(props);
-                                                                               }
-                                                                               return new { m.Name, Value = value };
-                                                                           })
-                                                                           .Select(m => $" - {m.Name}: {m.Value}");
+                {
+                    object value = null;
+                    if (m is FieldInfo field)
+                    {
+                        value = field.GetValue(props);
+                    }
+                    else if (m is PropertyInfo prop)
+                    {
+                        value = prop.GetValue(props);
+                    }
+                    return new { m.Name, Value = value };
+                }).Select(m => $" - {m.Name}: {m.Value}");
+
                 Log.Warn($@"{props.FileName} is using default values for the missing properties:{Environment.NewLine}{string.Join(Environment.NewLine, unserializedProps)}");
             }
 
@@ -90,7 +91,7 @@ namespace NitroxModel.Serialization
         {
             Dictionary<string, MemberInfo> typeCachedDict = GetTypeCacheDictionary<T>();
 
-            using StreamWriter stream = new StreamWriter(new FileStream(props.FileName, FileMode.OpenOrCreate), Encoding.UTF8);
+            using StreamWriter stream = new(new FileStream(props.FileName, FileMode.OpenOrCreate), Encoding.UTF8);
             WritePropertyDescription(typeof(T), stream);
 
             foreach (string name in typeCachedDict.Keys)

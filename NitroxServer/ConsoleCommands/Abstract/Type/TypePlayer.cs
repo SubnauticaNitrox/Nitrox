@@ -15,7 +15,7 @@ namespace NitroxServer.ConsoleCommands.Abstract.Type
 
         public override bool IsValid(string arg)
         {
-            return playerManager.TryGetPlayerByName(arg, out Player player);
+            return playerManager.TryGetPlayerByName(arg, out _);
         }
 
         public override Player Read(string arg)

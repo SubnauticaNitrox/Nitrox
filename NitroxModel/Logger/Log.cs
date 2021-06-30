@@ -152,6 +152,13 @@ namespace NitroxModel.Logger
                 logger.Information(message, args);
             }
         }
+        public static void WarnSensitive(string message, params object[] args)
+        {
+            using (LogContext.Push(SensitiveEnricher.Instance))
+            {
+                logger.Warning(message, args);
+            }
+        }
 
         public static void ErrorSensitive(Exception ex, string message, params object[] args)
         {
@@ -232,7 +239,8 @@ namespace NitroxModel.Logger
                 "username",
                 "password",
                 "ip",
-                "hostname"
+                "hostname",
+                "path"
             };
 
             private static readonly Lazy<SensitiveEnricher> instance = new Lazy<SensitiveEnricher>(() => new SensitiveEnricher(), LazyThreadSafetyMode.PublicationOnly);
