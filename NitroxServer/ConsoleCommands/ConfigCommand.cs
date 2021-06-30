@@ -48,7 +48,7 @@ namespace NitroxServer.ConsoleCommands
                     {
                         configOpenLock.Release();
                     }
-                    NitroxConfig.Deserialize<ServerConfig>(); // Notifies user if deserialization failed.
+                    serverConfig.Deserialize(); // Notifies user if deserialization failed.
                     Log.Info("If you made changes, restart the server for them to take effect.");
                 })
                 .ContinueWith(t =>

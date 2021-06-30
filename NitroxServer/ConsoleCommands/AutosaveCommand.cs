@@ -34,7 +34,7 @@ namespace NitroxServer.ConsoleCommands
                 SendMessage(args.Sender, "Disabled periodical saving");
             }
 
-            NitroxConfig.Serialize(serverConfig);
+            serverConfig.Serialize();
         }
     }
 }

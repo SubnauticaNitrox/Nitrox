@@ -28,7 +28,7 @@ namespace NitroxServer.ConsoleCommands
             if (serializerMode != serverConfig.SerializerMode)
             {
                 serverConfig.SerializerMode = serializerMode;
-                NitroxConfig.Serialize(serverConfig);
+                serverConfig.Serialize();
 
                 worldPersistence.UpdateSerializer(serializerMode);
                 SendMessage(args.Sender, $"Server save format swapped to {serverConfig.SerializerMode}");

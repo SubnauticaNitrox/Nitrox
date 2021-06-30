@@ -1,6 +1,5 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Logger;
-using NitroxModel.Serialization;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
 using NitroxServer.Serialization;
@@ -23,7 +22,7 @@ namespace NitroxServer.ConsoleCommands
             string newPassword = args.Get(0);
 
             serverConfig.AdminPassword = newPassword;
-            NitroxConfig.Serialize(serverConfig);
+            serverConfig.Serialize();
 
             Log.InfoSensitive("Admin password changed to {password} by {playername}", newPassword, args.SenderName);
             SendMessageToPlayer(args.Sender, "Admin password has been updated");
