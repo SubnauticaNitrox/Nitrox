@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -102,39 +104,30 @@ namespace NitroxServer_Subnautica
 
             DateTimeOffset time = DateTimeOffset.UtcNow;
             bool first = true;
-            using CancellationTokenSource source = new CancellationTokenSource(timeoutInSeconds * 1000);
-            using Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.IP);
+            using CancellationTokenSource source = new(timeoutInSeconds * 1000);
 
             try
             {
                 while (true)
                 {
                     source.Token.ThrowIfCancellationRequested();
-                    try
+                    if (IPGlobalProperties.GetIPGlobalProperties().GetActiveUdpListeners().All(ip => ip.Port != 11000))
                     {
-                        socket.Bind(new IPEndPoint(IPAddress.Any, port));
                         break;
                     }
-                    catch (SocketException ex)
+                    
+                    if (first)
                     {
-                        if (ex.SocketErrorCode != SocketError.AddressAlreadyInUse)
-                        {
-                            throw;
-                        }
-
-                        if (first)
-                        {
-                            first = false;
-                            PrintPortWarn(timeoutInSeconds);
-                        }
-                        else if (Environment.UserInteractive)
-                        {
-                            Console.CursorTop--;
-                            Console.CursorLeft = 0;
-                            PrintPortWarn(timeoutInSeconds - (DateTimeOffset.UtcNow - time).Seconds);
-                        }
-                        await Task.Delay(500, source.Token);
+                        first = false;
+                        PrintPortWarn(timeoutInSeconds);
                     }
+                    else if (Environment.UserInteractive)
+                    {
+                        Console.CursorTop--;
+                        Console.CursorLeft = 0;
+                        PrintPortWarn(timeoutInSeconds - (DateTimeOffset.UtcNow - time).Seconds);
+                    }
+                    await Task.Delay(500, source.Token);
                 }
             }
             catch (OperationCanceledException ex)
