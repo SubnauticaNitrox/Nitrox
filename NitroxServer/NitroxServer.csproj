@@ -148,6 +148,7 @@
     <Compile Include="ConsoleCommands\DirectoryCommand.cs" />
     <Compile Include="ConsoleCommands\HelpCommand.cs" />
     <Compile Include="ConsoleCommands\LoadBatchCommand.cs" />
+    <Compile Include="ConsoleCommands\PromoteCommand.cs" />
     <Compile Include="ConsoleCommands\RestartCommand.cs" />
     <Compile Include="ConsoleCommands\SwapSerializerCommand.cs" />
     <Compile Include="ConsoleCommands\TeleportCommand.cs" />
@@ -185,7 +186,7 @@
     <Compile Include="Serialization\Resources\Datastructures\PrefabPlaceholderAsset.cs" />
     <Compile Include="Serialization\Resources\Datastructures\PrefabPlaceholdersGroupAsset.cs" />
     <Compile Include="Serialization\Resources\Datastructures\TransformAsset.cs" />
-    <Compile Include="ConsoleCommands\ExitCommand.cs" />
+    <Compile Include="ConsoleCommands\StopCommand.cs" />
     <Compile Include="ConsoleCommands\Processor\ConsoleCommandProcessor.cs" />
     <Compile Include="ConsoleCommands\SaveCommand.cs" />
     <Compile Include="GameLogic\Bases\BaseData.cs" />

@@ -10,16 +10,15 @@ namespace NitroxServer.ConsoleCommands
     {
         private readonly ServerConfig serverConfig;
 
-        public LoginCommand(ServerConfig serverConfig) : base("login", Perms.PLAYER, "Log in to server as admin (requires password)")
+        public LoginCommand(ServerConfig serverConfig) : base("login", Perms.PLAYER, PermsFlag.NO_CONSOLE, "Log in to server as admin (requires password)")
         {
             AddParameter(new TypeString("password", true));
+
             this.serverConfig = serverConfig;
         }
 
         protected override void Execute(CallArgs args)
         {
-            Validate.IsTrue(args.Sender.HasValue, "This command can't be used by CONSOLE");
-
             if (args.Get<string>(0) == serverConfig.AdminPassword)
             {
                 args.Sender.Value.Permissions = Perms.ADMIN;

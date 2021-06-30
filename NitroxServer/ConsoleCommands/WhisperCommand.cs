@@ -7,12 +7,14 @@ namespace NitroxServer.ConsoleCommands
 {
     internal class WhisperCommand : Command
     {
-        public override IEnumerable<string> Aliases { get; } = new[] { "m", "whisper", "w" };
+        public override IEnumerable<string> Aliases { get; } = new[] { "w", "msg", "m" };
 
-        public WhisperCommand() : base("msg", Perms.PLAYER, "Sends a private message to a player", true)
+        public WhisperCommand() : base("whisper", Perms.PLAYER, "Sends a private message to a player")
         {
             AddParameter(new TypePlayer("name", true));
             AddParameter(new TypeString("msg", true));
+
+            AllowedArgOverflow = true;
         }
 
         protected override void Execute(CallArgs args)

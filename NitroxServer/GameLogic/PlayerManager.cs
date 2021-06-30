@@ -21,7 +21,6 @@ namespace NitroxServer.GameLogic
         private readonly ThreadSafeDictionary<string, PlayerContext> reservations = new();
         private readonly ThreadSafeCollection<string> reservedPlayerNames = new(new HashSet<string>());
 
-        private readonly PlayerStatsData defaultPlayerStats;
         private readonly ServerConfig serverConfig;
         private ushort currentPlayerId;
 
@@ -29,7 +28,6 @@ namespace NitroxServer.GameLogic
         {
             allPlayersByName = new ThreadSafeDictionary<string, Player>(players.ToDictionary(x => x.Name), false);
             currentPlayerId = players.Count == 0 ? (ushort)0 : players.Max(x => x.Id);
-            defaultPlayerStats = serverConfig.DefaultPlayerStats;
 
             this.serverConfig = serverConfig;
         }
@@ -108,9 +106,7 @@ namespace NitroxServer.GameLogic
 
             wasBrandNewPlayer = playerContext.WasBrandNewPlayer;
 
-            Player player;
-
-            if (!allPlayersByName.TryGetValue(playerContext.PlayerName, out player))
+            if (!allPlayersByName.TryGetValue(playerContext.PlayerName, out Player player))
             {
                 player = new Player(playerContext.PlayerId,
                     playerContext.PlayerName,
@@ -120,10 +116,11 @@ namespace NitroxServer.GameLogic
                     NitroxVector3.Zero,
                     new NitroxId(),
                     Optional.Empty,
-                    Perms.PLAYER,
-                    defaultPlayerStats,
+                    serverConfig.DefaultPlayerPerm,
+                    serverConfig.DefaultPlayerStats,
                     new List<EquippedItemData>(),
-                    new List<EquippedItemData>());
+                    new List<EquippedItemData>()
+                );
                 allPlayersByName[playerContext.PlayerName] = player;
             }
 

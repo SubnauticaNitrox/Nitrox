@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#if DEBUG
+using System.Collections.Generic;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxServer.ConsoleCommands.Abstract;
@@ -11,12 +12,13 @@ namespace NitroxServer.ConsoleCommands
     {
         private readonly BatchEntitySpawner batchEntitySpawner;
 
-        public LoadBatchCommand(BatchEntitySpawner batchEntitySpawner) : base("loadbatch", Perms.ANY, "Loads entities at x y z")
+        public LoadBatchCommand(BatchEntitySpawner batchEntitySpawner) : base("loadbatch", Perms.ADMIN, "Loads entities at x y z")
         {
-            this.batchEntitySpawner = batchEntitySpawner;
             AddParameter(new TypeInt("x", true));
             AddParameter(new TypeInt("y", true));
             AddParameter(new TypeInt("z", true));
+
+            this.batchEntitySpawner = batchEntitySpawner;
         }
 
         protected override void Execute(CallArgs args)
@@ -28,3 +30,4 @@ namespace NitroxServer.ConsoleCommands
         }
     }
 }
+#endif

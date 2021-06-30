@@ -79,6 +79,9 @@ namespace NitroxServer.Serialization
         [PropertyDescription("Possible values:", typeof(ServerSerializerMode))]
         public ServerSerializerMode SerializerMode { get; set; } = ServerSerializerMode.PROTOBUF;
 
+        [PropertyDescription("Possible values:", typeof(Perms))]
+        public Perms DefaultPlayerPerm { get; set; } = Perms.PLAYER;
+
         [PropertyDescription("\nDefault player stats below here")]
         public float DefaultOxygenValue { get; set; } = 45;
 

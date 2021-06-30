@@ -7,7 +7,7 @@ namespace NitroxServer.ConsoleCommands
 {
     internal class WarpCommand : Command
     {
-        public WarpCommand() : base("warp", Perms.ADMIN, "Allows to teleport players")
+        public WarpCommand() : base("warp", Perms.MODERATOR, "Allows to teleport players")
         {
             AddParameter(new TypePlayer("name", true));
             AddParameter(new TypePlayer("name", false));
@@ -18,6 +18,7 @@ namespace NitroxServer.ConsoleCommands
             Player destination;
             Player sender;
 
+            //Allows the console to teleport two players
             if (args.IsValid(1))
             {
                 destination = args.Get<Player>(1);
@@ -25,7 +26,7 @@ namespace NitroxServer.ConsoleCommands
             }
             else
             {
-                Validate.IsTrue(args.Sender.HasValue, "This command can't be used by CONSOLE");
+                Validate.IsFalse(args.IsConsole, "This command can't be used by CONSOLE");
                 destination = args.Get<Player>(0);
                 sender = args.Sender.Value;
             }

@@ -5,7 +5,7 @@ namespace NitroxServer.ConsoleCommands
 {
     internal class SaveCommand : Command
     {
-        public SaveCommand() : base("save", Perms.ADMIN, "Saves the map")
+        public SaveCommand() : base("save", Perms.MODERATOR, "Saves the map")
         {
         }
 

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic;
@@ -12,20 +11,18 @@ namespace NitroxServer.ConsoleCommands
     {
         public override IEnumerable<string> Aliases { get; } = new[] { "?" };
 
-        public HelpCommand() : base("help", Perms.PLAYER, "Displays this", true)
+        public HelpCommand() : base("help", Perms.PLAYER, "Displays this")
         {
+            AllowedArgOverflow = true;
         }
 
         protected override void Execute(CallArgs args)
         {
+            List<string> cmdsText;
+
             if (args.IsConsole)
             {
-#if DEBUG
-                Perms perms = Perms.ANY;
-#else
-                Perms perms = Perms.CONSOLE;
-#endif
-                List<string> cmdsText = GetHelpText(perms, false);
+                cmdsText = GetHelpText(Perms.CONSOLE, false);
 
                 foreach (string cmdText in cmdsText)
                 {
@@ -34,9 +31,12 @@ namespace NitroxServer.ConsoleCommands
             }
             else
             {
-                List<string> cmdsText = GetHelpText(args.Sender.Value.Permissions, true);
-                cmdsText.ForEach(cmdText => SendMessageToPlayer(args.Sender, cmdText));
+                cmdsText = GetHelpText(args.Sender.Value.Permissions, true);
 
+                foreach (string cmdText in cmdsText)
+                {
+                    SendMessageToPlayer(args.Sender, cmdText);
+                }
             }
         }
 
@@ -44,7 +44,7 @@ namespace NitroxServer.ConsoleCommands
         {
             //Runtime query to avoid circular dependencies
             IEnumerable<Command> commands = NitroxServiceLocator.LocateService<IEnumerable<Command>>();
-            return new List<string>(commands.Where(cmd => cmd.RequiredPermLevel <= permThreshold)
+            return new List<string>(commands.Where(cmd => cmd.CanExecute(permThreshold))
                                             .OrderByDescending(cmd => cmd.Name)
                                             .Select(cmd => cmd.ToHelpText(cropText)));
         }

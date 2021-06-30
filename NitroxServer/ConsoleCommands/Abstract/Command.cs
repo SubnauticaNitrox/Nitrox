@@ -21,18 +21,25 @@ namespace NitroxServer.ConsoleCommands.Abstract
         public string Name { get; }
         public string Description { get; }
         public Perms RequiredPermLevel { get; }
-        public bool AllowedArgOverflow { get; }
+        public PermsFlag Flags { get; }
+        public bool AllowedArgOverflow { get; set; }
         public List<IParameter<object>> Parameters { get; }
 
-        protected Command(string name, Perms perm, string description, bool allowedArgOveflow = false)
+        protected Command(string name, Perms perms, PermsFlag flag, string description) : this(name, perms, description)
+        {
+            Flags = flag;
+        }
+
+        protected Command(string name, Perms perms, string description)
         {
             Validate.NotNull(name);
 
             Name = name;
-            RequiredPermLevel = perm;
+            Flags = PermsFlag.NONE;
+            RequiredPermLevel = perms;
+            AllowedArgOverflow = false;
             Aliases = Array.Empty<string>();
             Parameters = new List<IParameter<object>>();
-            AllowedArgOverflow = allowedArgOveflow;
             Description = string.IsNullOrEmpty(description) ? "No description provided" : description;
         }
 
@@ -66,6 +73,11 @@ namespace NitroxServer.ConsoleCommands.Abstract
             }
         }
 
+        public bool CanExecute(Perms treshold)
+        {
+            return RequiredPermLevel <= treshold;
+        }
+
         public string ToHelpText(bool cropText = false)
         {
             StringBuilder cmd = new(Name);
@@ -77,11 +89,6 @@ namespace NitroxServer.ConsoleCommands.Abstract
 
             cmd.AppendFormat(" {0}", string.Join(" ", Parameters));
             return cropText ? $"{cmd}" : $"{cmd,-32} - {Description}";
-        }
-
-        public bool ContainsFlag(Perms flag)
-        {
-            return (RequiredPermLevel & flag) == flag;
         }
 
         protected void AddParameter<T>(T param) where T : IParameter<object>

@@ -2,7 +2,7 @@
 
 namespace NitroxServer.ConsoleCommands.Abstract.Type
 {
-    public class TypeFloat : Parameter<float?>, IParameter<object>
+    public class TypeFloat : Parameter<float>, IParameter<object>
     {
         public TypeFloat(string name, bool isRequired) : base(name, isRequired) { }
 
@@ -11,7 +11,7 @@ namespace NitroxServer.ConsoleCommands.Abstract.Type
             return float.TryParse(arg, out _);
         }
 
-        public override float? Read(string arg)
+        public override float Read(string arg)
         {
             Validate.IsTrue(float.TryParse(arg, out float value), "Invalid decimal number received");
             return value;

@@ -16,6 +16,7 @@ namespace NitroxServer.ConsoleCommands
         public SwapSerializerCommand(ServerConfig serverConfig, WorldPersistence worldPersistence) : base("swapserializer", Perms.CONSOLE, "Allows to change the save format")
         {
             AddParameter(new TypeEnum<ServerSerializerMode>("serializer", true));
+
             this.worldPersistence = worldPersistence;
             this.serverConfig = serverConfig;
         }

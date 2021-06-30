@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Logger;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.Exceptions;
 
@@ -23,6 +24,7 @@ namespace NitroxServer.ConsoleCommands.Processor
                 }
 
                 commands[cmd.Name] = cmd;
+
                 foreach (string alias in cmd.Aliases)
                 {
                     if (commands.ContainsKey(alias))
@@ -35,7 +37,7 @@ namespace NitroxServer.ConsoleCommands.Processor
             }
         }
 
-        public void ProcessCommand(string msg, Optional<Player> player, Perms perms)
+        public void ProcessCommand(string msg, Optional<Player> sender, Perms permissions)
         {
             if (string.IsNullOrWhiteSpace(msg))
             {
@@ -43,25 +45,27 @@ namespace NitroxServer.ConsoleCommands.Processor
             }
 
             string[] parts = msg.Split(splitChar, StringSplitOptions.RemoveEmptyEntries);
-            if (!commands.TryGetValue(parts[0], out Command cmd))
+
+            if (!commands.TryGetValue(parts[0], out Command command))
             {
-                Command.SendMessage(player, $"Command Not Found: {parts[0]}");
+                Command.SendMessage(sender, $"Command not found: {parts[0]}");
                 return;
             }
 
-            if (perms >= cmd.RequiredPermLevel)
+            if (!sender.HasValue && command.Flags.HasFlag(PermsFlag.NO_CONSOLE))
             {
-                RunCommand(cmd, player, parts);
+                Log.Error("This command cannot be used by CONSOLE");
+                return;
+            }
+
+            if (command.CanExecute(permissions))
+            {
+                command.TryExecute(sender, parts.Skip(1).ToArray());
             }
             else
             {
-                Command.SendMessage(player, "You do not have the required permissions for this command !");
+                Command.SendMessage(sender, "You do not have the required permissions for this command !");
             }
-        }
-
-        private void RunCommand(Command command, Optional<Player> player, string[] parts)
-        {
-            command.TryExecute(player, parts.Skip(1).ToArray());
         }
     }
 }

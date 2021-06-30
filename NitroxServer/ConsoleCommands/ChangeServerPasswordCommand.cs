@@ -14,6 +14,7 @@ namespace NitroxServer.ConsoleCommands
         public ChangeServerPasswordCommand(ServerConfig serverConfig) : base("changeserverpassword", Perms.ADMIN, "Changes server password. Clear it without argument")
         {
             AddParameter(new TypeString("password", false));
+
             this.serverConfig = serverConfig;
         }
 

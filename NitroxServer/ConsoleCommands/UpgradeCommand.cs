@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.Threading;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
 using NitroxModel.Server;
@@ -30,7 +29,7 @@ namespace NitroxServer.ConsoleCommands
             server.DisablePeriodicSaving();
             string saveDir = serverConfig.SaveName;
             string fileEnding = worldPersistence.Serializer.FileEnding;
-            SaveFileVersion saveFileVersion = worldPersistence.Serializer.Deserialize<SaveFileVersion>(Path.Combine(saveDir, "Version" + fileEnding));
+            SaveFileVersion saveFileVersion = worldPersistence.Serializer.Deserialize<SaveFileVersion>(Path.Combine(saveDir, $"Version{fileEnding}"));
 
             if (saveFileVersion.Version == NitroxEnvironment.Version)
             {
@@ -49,7 +48,8 @@ namespace NitroxServer.ConsoleCommands
                         upgrade.UpgradeData(saveDir, fileEnding);
                     }
                 }
-                worldPersistence.Serializer.Serialize(Path.Combine(saveDir, "Version" + fileEnding), new SaveFileVersion());
+
+                worldPersistence.Serializer.Serialize(Path.Combine(saveDir, $"Version{fileEnding}"), new SaveFileVersion());
                 SendMessage(args.Sender, $"Save file was upgraded to {NitroxEnvironment.Version}");
                 server.StopAndWait(false);
             }

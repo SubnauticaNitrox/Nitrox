@@ -9,15 +9,16 @@ namespace NitroxServer.ConsoleCommands
     {
         private readonly TimeKeeper timeKeeper;
 
-        public TimeCommand(TimeKeeper timeKeeper) : base("time", Perms.ADMIN, "Changes the map time")
+        public TimeCommand(TimeKeeper timeKeeper) : base("time", Perms.MODERATOR, "Changes the map time")
         {
-            this.timeKeeper = timeKeeper;
             AddParameter(new TypeString("day/night", false));
+
+            this.timeKeeper = timeKeeper;
         }
 
         protected override void Execute(CallArgs args)
         {
-            string time = args.Get<string>(0);
+            string time = args.Get(0);
 
             switch (time?.ToLower())
             {

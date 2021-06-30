@@ -29,6 +29,8 @@ namespace NitroxServer.ConsoleCommands
                 return;
             }
 
+            SendMessageToAllPlayers("Server is restarting...");
+
             server.Stop();
             using Process proc = Process.Start(program);
         }

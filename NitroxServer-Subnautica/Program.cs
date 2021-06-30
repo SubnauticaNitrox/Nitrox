@@ -91,7 +91,7 @@ namespace NitroxServer_Subnautica
             ConsoleCommandProcessor cmdProcessor = NitroxServiceLocator.LocateService<ConsoleCommandProcessor>();
             while (server.IsRunning)
             {
-                cmdProcessor.ProcessCommand(Console.ReadLine(), Optional.Empty, Perms.ANY);
+                cmdProcessor.ProcessCommand(Console.ReadLine(), Optional.Empty, Perms.CONSOLE);
             }
         }
 

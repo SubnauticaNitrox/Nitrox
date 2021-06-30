@@ -28,6 +28,7 @@ namespace NitroxModel.Serialization
             char[] lineSeparator = { '=' };
             int lineNum = 0;
             string readLine;
+
             while ((readLine = reader.ReadLine()) != null)
             {
                 lineNum++;

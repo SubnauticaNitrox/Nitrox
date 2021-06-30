@@ -13,6 +13,7 @@ namespace NitroxServer.ConsoleCommands
         public AutoSaveCommand(ServerConfig serverConfig) : base("autosave", Perms.ADMIN, "Toggles the map autosave")
         {
             AddParameter(new TypeBoolean("on/off", true));
+
             this.serverConfig = serverConfig;
         }
 

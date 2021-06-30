@@ -14,10 +14,12 @@ namespace NitroxServer.ConsoleCommands
         private readonly EntitySimulation entitySimulation;
         private readonly PlayerManager playerManager;
 
-        public KickCommand(PlayerManager playerManager, EntitySimulation entitySimulation) : base("kick", Perms.ADMIN, "Kicks a player from the server", true)
+        public KickCommand(PlayerManager playerManager, EntitySimulation entitySimulation) : base("kick", Perms.MODERATOR, "Kicks a player from the server")
         {
             AddParameter(new TypePlayer("name", true));
             AddParameter(new TypeString("reason", false));
+
+            AllowedArgOverflow = true;
 
             this.playerManager = playerManager;
             this.entitySimulation = entitySimulation;
@@ -26,6 +28,18 @@ namespace NitroxServer.ConsoleCommands
         protected override void Execute(CallArgs args)
         {
             Player playerToKick = args.Get<Player>(0);
+
+            if (args.SenderName == playerToKick.Name)
+            {
+                SendMessage(args.Sender, "You can't kick yourself");
+                return;
+            }
+
+            if (!args.IsConsole && playerToKick.Permissions >= args.Sender.Value.Permissions)
+            {
+                SendMessage(args.Sender, $"You're not allowed to kick {playerToKick.Name}");
+                return;
+            }
 
             playerToKick.SendPacket(new PlayerKicked(args.GetTillEnd(1)));
             playerManager.PlayerDisconnected(playerToKick.connection);
