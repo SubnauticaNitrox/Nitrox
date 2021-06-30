@@ -34,7 +34,7 @@ namespace NitroxServer_Subnautica.Communication.Packets.Processors
                 }
                 else
                 {
-                    Log.Error($"{nameof(RocketPreflightCompleteProcessor)}: Received an existing preflight {packet.FlightCheck} for {packet.Id}");
+                    Log.Error($"{nameof(RocketPreflightCompleteProcessor)}: Received an existing preflight '{packet.FlightCheck}' for rocket '{packet.Id}'");
                 }
 
             }
