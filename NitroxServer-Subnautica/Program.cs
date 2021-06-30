@@ -108,7 +108,7 @@ namespace NitroxServer_Subnautica
                 while (true)
                 {
                     source.Token.ThrowIfCancellationRequested();
-                    if (IPGlobalProperties.GetIPGlobalProperties().GetActiveUdpListeners().All(ip => ip.Port != 11000))
+                    if (IPGlobalProperties.GetIPGlobalProperties().GetActiveUdpListeners().All(ip => ip.Port != port))
                     {
                         break;
                     }
