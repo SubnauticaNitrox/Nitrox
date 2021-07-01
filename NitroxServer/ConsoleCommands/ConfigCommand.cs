@@ -31,11 +31,11 @@ namespace NitroxServer.ConsoleCommands
                 return;
             }
 
+            // Save config file if it doesn't exist yet.
             string configFile = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location) ?? "", serverConfig.FileName);
             if (!File.Exists(configFile))
             {
-                Log.ErrorSensitive("Unable to open config file {path} because it does not exist.", configFile);
-                return;
+                serverConfig.Serialize();
             }
 
             Task.Run(async () =>

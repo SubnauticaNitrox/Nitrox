@@ -17,9 +17,11 @@ namespace NitroxModel.Serialization
 
         public abstract string FileName { get; }
 
+        public bool ConfigFileExists => File.Exists(FileName);
+
         public void Deserialize()
         {
-            if (!File.Exists(FileName))
+            if (!ConfigFileExists)
             {
                 return;
             }
