@@ -21,20 +21,21 @@ namespace NitroxServer.ConsoleCommands
         {
             bool toggle = args.Get<bool>(0);
 
-            if (toggle)
+            serverConfig.Update(c =>
             {
-                serverConfig.DisableAutoSave = false;
-                Server.Instance.EnablePeriodicSaving();
-                SendMessage(args.Sender, "Enabled periodical saving");
-            }
-            else
-            {
-                serverConfig.DisableAutoSave = true;
-                Server.Instance.DisablePeriodicSaving();
-                SendMessage(args.Sender, "Disabled periodical saving");
-            }
-
-            serverConfig.Serialize();
+                if (toggle)
+                {
+                    c.DisableAutoSave = false;
+                    Server.Instance.EnablePeriodicSaving();
+                    SendMessage(args.Sender, "Enabled periodical saving");
+                }
+                else
+                {
+                    c.DisableAutoSave = true;
+                    Server.Instance.DisablePeriodicSaving();
+                    SendMessage(args.Sender, "Disabled periodical saving");
+                }
+            });
         }
     }
 }

@@ -26,18 +26,20 @@ namespace NitroxServer.ConsoleCommands
         {
             ServerGameMode sgm = args.Get<ServerGameMode>(0);
 
-            if (serverConfig.GameMode != sgm)
+            serverConfig.Update(c =>
             {
-                serverConfig.GameMode = sgm;
-                serverConfig.Serialize();
+                if (c.GameMode != sgm)
+                {
+                    c.GameMode = sgm;
 
-                playerManager.SendPacketToAllPlayers(new GameModeChanged(sgm));
-                SendMessageToAllPlayers($"Server gamemode changed to \"{sgm}\" by {args.SenderName}");
-            }
-            else
-            {
-                SendMessage(args.Sender, "Server is already using this gamemode");
-            }
+                    playerManager.SendPacketToAllPlayers(new GameModeChanged(sgm));
+                    SendMessageToAllPlayers($"Server gamemode changed to \"{sgm}\" by {args.SenderName}");
+                }
+                else
+                {
+                    SendMessage(args.Sender, "Server is already using this gamemode");
+                }
+            });
         }
     }
 }

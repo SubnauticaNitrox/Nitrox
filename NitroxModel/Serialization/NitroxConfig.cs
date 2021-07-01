@@ -9,12 +9,14 @@ using NitroxModel.Logger;
 
 namespace NitroxModel.Serialization
 {
-    public abstract class NitroxConfig
+    public abstract class NitroxConfig<T> where T : NitroxConfig<T>
     {
-        private static readonly Dictionary<Type, Dictionary<string, MemberInfo>> typeCache = new();
+        // ReSharper disable once StaticMemberInGenericType
+        private static readonly Dictionary<string, MemberInfo> typeCache = new();
+        private readonly object locker = new();
 
         public abstract string FileName { get; }
-        
+
         public void Deserialize()
         {
             if (!File.Exists(FileName))
@@ -22,102 +24,128 @@ namespace NitroxModel.Serialization
                 return;
             }
 
-            Type type = GetType();
-            Dictionary<string, MemberInfo> typeCachedDict = GetTypeCacheDictionary(type);
-            using StreamReader reader = new(new FileStream(FileName, FileMode.Open), Encoding.UTF8);
-
-            HashSet<MemberInfo> unserializedMembers = typeCachedDict.Values.ToHashSet();
-            char[] lineSeparator = { '=' };
-            int lineNum = 0;
-            string readLine;
-
-            while ((readLine = reader.ReadLine()) != null)
+            lock (locker)
             {
-                lineNum++;
-                if (readLine.Length < 1 || readLine[0] == '#')
-                {
-                    continue;
-                }
+                Type type = GetType();
+                Dictionary<string, MemberInfo> typeCachedDict = GetTypeCacheDictionary();
+                using StreamReader reader = new(new FileStream(FileName, FileMode.Open), Encoding.UTF8);
 
-                if (readLine.Contains('='))
+                HashSet<MemberInfo> unserializedMembers = typeCachedDict.Values.ToHashSet();
+                char[] lineSeparator = { '=' };
+                int lineNum = 0;
+                string readLine;
+
+                while ((readLine = reader.ReadLine()) != null)
                 {
-                    string[] keyValuePair = readLine.Split(lineSeparator, 2);
-                    // Ignore case for property names in file.
-                    if (!typeCachedDict.TryGetValue(keyValuePair[0].ToLowerInvariant(), out MemberInfo member))
+                    lineNum++;
+                    if (readLine.Length < 1 || readLine[0] == '#')
                     {
-                        Log.Warn($"Property or field {keyValuePair[0]} does not exist on type {type.FullName}!");
                         continue;
                     }
-                    unserializedMembers.Remove(member); // This member was serialized in the file 
 
-                    if (!SetMemberValue(this, member, keyValuePair[1]))
+                    if (readLine.Contains('='))
                     {
-                        (Type type, object value) data = member switch
+                        string[] keyValuePair = readLine.Split(lineSeparator, 2);
+                        // Ignore case for property names in file.
+                        if (!typeCachedDict.TryGetValue(keyValuePair[0].ToLowerInvariant(), out MemberInfo member))
                         {
-                            FieldInfo field => (field.FieldType, field.GetValue(this)),
-                            PropertyInfo prop => (prop.PropertyType, prop.GetValue(this)),
-                            _ => (typeof(string), "")
-                        };
-                        Log.Warn($@"Property ""({data.type.Name}) {member.Name}"" has an invalid value {StringifyValue(keyValuePair[1])} on line {lineNum}. Using default value: {StringifyValue(data.value)}");
+                            Log.Warn($"Property or field {keyValuePair[0]} does not exist on type {type.FullName}!");
+                            continue;
+                        }
+
+                        unserializedMembers.Remove(member); // This member was serialized in the file 
+
+                        if (!SetMemberValue(this, member, keyValuePair[1]))
+                        {
+                            (Type type, object value) data = member switch
+                            {
+                                FieldInfo field => (field.FieldType, field.GetValue(this)),
+                                PropertyInfo prop => (prop.PropertyType, prop.GetValue(this)),
+                                _ => (typeof(string), "")
+                            };
+                            Log.Warn($@"Property ""({data.type.Name}) {member.Name}"" has an invalid value {StringifyValue(keyValuePair[1])} on line {lineNum}. Using default value: {StringifyValue(data.value)}");
+                        }
+                    }
+                    else
+                    {
+                        Log.Error($"Incorrect format detected on line {lineNum} in {Path.GetFullPath(FileName)}:{Environment.NewLine}{readLine}");
                     }
                 }
-                else
+
+                if (unserializedMembers.Any())
                 {
-                    Log.Error($"Incorrect format detected on line {lineNum} in {Path.GetFullPath(FileName)}:{Environment.NewLine}{readLine}");
+                    IEnumerable<string> unserializedProps = unserializedMembers.Select(m =>
+                    {
+                        object value = null;
+                        if (m is FieldInfo field)
+                        {
+                            value = field.GetValue(this);
+                        }
+                        else if (m is PropertyInfo prop)
+                        {
+                            value = prop.GetValue(this);
+                        }
+
+                        return new { m.Name, Value = value };
+                    }).Select(m => $" - {m.Name}: {m.Value}");
+
+                    Log.Warn($@"{FileName} is using default values for the missing properties:{Environment.NewLine}{string.Join(Environment.NewLine, unserializedProps)}");
                 }
-            }
-
-            if (unserializedMembers.Any())
-            {
-                IEnumerable<string> unserializedProps = unserializedMembers.Select(m =>
-                {
-                    object value = null;
-                    if (m is FieldInfo field)
-                    {
-                        value = field.GetValue(this);
-                    }
-                    else if (m is PropertyInfo prop)
-                    {
-                        value = prop.GetValue(this);
-                    }
-                    return new { m.Name, Value = value };
-                }).Select(m => $" - {m.Name}: {m.Value}");
-
-                Log.Warn($@"{FileName} is using default values for the missing properties:{Environment.NewLine}{string.Join(Environment.NewLine, unserializedProps)}");
             }
         }
 
         public void Serialize()
         {
-            Type type = GetType();
-            Dictionary<string, MemberInfo> typeCachedDict = GetTypeCacheDictionary(type);
-
-            using StreamWriter stream = new(new FileStream(FileName, FileMode.OpenOrCreate), Encoding.UTF8);
-            WritePropertyDescription(type, stream);
-
-            foreach (string name in typeCachedDict.Keys)
+            lock (locker)
             {
-                MemberInfo member = typeCachedDict[name];
+                Type type = GetType();
+                Dictionary<string, MemberInfo> typeCachedDict = GetTypeCacheDictionary();
 
-                FieldInfo field = member as FieldInfo;
-                if (field != null)
-                {
-                    WritePropertyDescription(member, stream);
-                    WriteProperty(field, field.GetValue(this), stream);
-                }
+                using StreamWriter stream = new(new FileStream(FileName, FileMode.OpenOrCreate), Encoding.UTF8);
+                WritePropertyDescription(type, stream);
 
-                PropertyInfo property = member as PropertyInfo;
-                if (property != null)
+                foreach (string name in typeCachedDict.Keys)
                 {
-                    WritePropertyDescription(member, stream);
-                    WriteProperty(property, property.GetValue(this), stream);
+                    MemberInfo member = typeCachedDict[name];
+
+                    FieldInfo field = member as FieldInfo;
+                    if (field != null)
+                    {
+                        WritePropertyDescription(member, stream);
+                        WriteProperty(field, field.GetValue(this), stream);
+                    }
+
+                    PropertyInfo property = member as PropertyInfo;
+                    if (property != null)
+                    {
+                        WritePropertyDescription(member, stream);
+                        WriteProperty(property, property.GetValue(this), stream);
+                    }
                 }
             }
         }
 
-        private static Dictionary<string, MemberInfo> GetTypeCacheDictionary(Type type)
+        /// <summary>
+        ///     Ensures updates are properly persisted to the backing config file without overwriting user edits.
+        /// </summary>
+        /// <param name="config"></param>
+        public void Update(Action<T> config)
         {
-            if (!typeCache.TryGetValue(type, out Dictionary<string, MemberInfo> typeCachedDict))
+            try
+            {
+                Deserialize();
+                config(this as T);
+            }
+            finally
+            {
+                Serialize();
+            }
+        }
+
+        private static Dictionary<string, MemberInfo> GetTypeCacheDictionary()
+        {
+            Type type = typeof(T);
+            if (!typeCache.Any())
             {
                 IEnumerable<MemberInfo> members = type.GetFields()
                                                       .Where(f => f.Attributes != FieldAttributes.NotSerialized)
@@ -127,10 +155,9 @@ namespace NitroxModel.Serialization
 
                 try
                 {
-                    typeCachedDict = new Dictionary<string, MemberInfo>();
                     foreach (MemberInfo member in members)
                     {
-                        typeCachedDict.Add(member.Name.ToLowerInvariant(), member);
+                        typeCache.Add(member.Name.ToLowerInvariant(), member);
                     }
                 }
                 catch (ArgumentException e)
@@ -138,13 +165,12 @@ namespace NitroxModel.Serialization
                     Log.Error(e, $"Type {type.FullName} has properties that require case-sensitivity to be unique which is unsuitable for .properties format.");
                     throw;
                 }
-
-                typeCache.Add(type, typeCachedDict);
             }
-            return typeCachedDict;
+
+            return typeCache;
         }
 
-        private static string StringifyValue(object value)
+        private string StringifyValue(object value)
         {
             return value switch
             {
@@ -154,7 +180,7 @@ namespace NitroxModel.Serialization
             };
         }
 
-        private static bool SetMemberValue<T>(T instance, MemberInfo member, string valueFromFile)
+        private bool SetMemberValue(NitroxConfig<T> instance, MemberInfo member, string valueFromFile)
         {
             object ConvertFromStringOrDefault(Type typeOfValue, out bool isDefault, object defaultValue = default)
             {
@@ -185,14 +211,14 @@ namespace NitroxModel.Serialization
             }
         }
 
-        private static void WriteProperty<T>(T member, object value, StreamWriter stream) where T : MemberInfo
+        private void WriteProperty<TMember>(TMember member, object value, StreamWriter stream) where TMember : MemberInfo
         {
             stream.Write(member.Name);
             stream.Write("=");
             stream.WriteLine(value);
         }
 
-        private static void WritePropertyDescription(MemberInfo member, StreamWriter stream)
+        private void WritePropertyDescription(MemberInfo member, StreamWriter stream)
         {
             PropertyDescriptionAttribute attribute = member.GetCustomAttribute<PropertyDescriptionAttribute>();
             if (attribute != null)
