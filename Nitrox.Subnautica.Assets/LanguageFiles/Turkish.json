@@ -2,7 +2,7 @@
   // Main menu
   "Nitrox_Multiplayer": "Multiplayer",
   "Nitrox_AddServer": "Sunucu Ekle",
-  "Nitrox_ConnectTo": "Sunucuya Bağlan: ",
+  "Nitrox_ConnectTo": "Sunucuya Bağlan",
   "Nitrox_AddServerName": "İsim:",
   "Nitrox_AddServerHost": "Sunucu:",
   "Nitrox_AddServerPort": "Port:",
