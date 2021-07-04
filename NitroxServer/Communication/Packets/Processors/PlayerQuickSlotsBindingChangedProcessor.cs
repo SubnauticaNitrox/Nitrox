@@ -8,7 +8,7 @@ namespace NitroxServer.Communication.Packets.Processors
     {
         public override void Process(PlayerQuickSlotsBindingChanged packet, Player player)
         {
-            player.quickSlotsBinding = new ThreadSafeCollection<string>(packet.Binding);
+            player.QuickSlotsBinding = new ThreadSafeCollection<string>(packet.Binding);
         }
     }
 }

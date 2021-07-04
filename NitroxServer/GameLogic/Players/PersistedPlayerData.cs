@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
@@ -19,7 +17,7 @@ namespace NitroxServer.GameLogic.Players
         public List<NitroxTechType> UsedItems { get; set; } = new List<NitroxTechType>();
 
         [JsonProperty, ProtoMember(3)]
-        public string[] QuickSlotsBinding { get; set; } = Array.Empty<string>();
+        public List<string> QuickSlotsBinding { get; set; } = new List<string>();
 
         [JsonProperty, ProtoMember(4)]
         public List<EquippedItemData> EquippedItems { get; set; } = new List<EquippedItemData>();
@@ -71,8 +69,8 @@ namespace NitroxServer.GameLogic.Players
             return new PersistedPlayerData
             {
                 Name = player.Name,
-                UsedItems = player.usedItems?.ToList(),
-                QuickSlotsBinding = player.quickSlotsBinding?.ToArray(),
+                UsedItems = player.UsedItems?.ToList(),
+                QuickSlotsBinding = player.QuickSlotsBinding?.ToList(),
                 EquippedItems = player.GetEquipment(),
                 Modules = player.GetModules(),
                 Id = player.Id,

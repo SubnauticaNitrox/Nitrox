@@ -15,9 +15,9 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(PlayerHeldItemChanged packet, Player player)
         {
-            if (packet.IsFirstTime != null && !player.usedItems.Contains(packet.IsFirstTime))
+            if (packet.IsFirstTime != null && !player.UsedItems.Contains(packet.IsFirstTime))
             {
-                player.usedItems.Add(packet.IsFirstTime);
+                player.UsedItems.Add(packet.IsFirstTime);
             }
 
             playerManager.SendPacketToOtherPlayers(packet, player);

@@ -126,7 +126,7 @@ namespace NitroxServer.GameLogic
 
             // TODO: make a ConnectedPlayer wrapper so this is not stateful
             player.PlayerContext = playerContext;
-            player.connection = connection;
+            player.Connection = connection;
 
             assetPackage.Player = player;
             assetPackage.ReservationKey = null;

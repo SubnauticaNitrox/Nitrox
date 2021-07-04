@@ -13,7 +13,6 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             if (___id == SerializationHelper.ID_IGNORE_KEY)
             {
-
                 __result = null;
                 return false;
             }

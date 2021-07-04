@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerModel.Abstract;
@@ -97,7 +98,7 @@ namespace NitroxClient.GameLogic
             packetSender.Send(new PlayerHeldItemChanged(multiplayerSession.Reservation.PlayerId, itemId, techType, isFirstTime));
         }
 
-        public void BroadcastQuickSlotsBindingChanged(string[] binding)
+        public void BroadcastQuickSlotsBindingChanged(List<string> binding)
         {
             packetSender.Send(new PlayerQuickSlotsBindingChanged(binding));
         }

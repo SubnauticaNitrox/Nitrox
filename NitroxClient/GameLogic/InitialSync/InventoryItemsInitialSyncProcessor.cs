@@ -95,8 +95,9 @@ namespace NitroxClient.GameLogic.InitialSync
                     Player.main.AddUsedTool(usedItem.ToUnity());
                 }
 
-                Inventory.main.serializedQuickSlots = packet.QuickSlotsBinding;
-                Inventory.main.quickSlots.RestoreBinding(packet.QuickSlotsBinding);
+                string[] quickSlotsBinding = packet.QuickSlotsBinding.ToArray();
+                Inventory.main.serializedQuickSlots = quickSlotsBinding;
+                Inventory.main.quickSlots.RestoreBinding(quickSlotsBinding);
             }
 
             Log.Info($"Received initial sync with {totalItemDataSynced} inventory items");
