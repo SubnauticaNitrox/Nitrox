@@ -33,7 +33,7 @@ namespace NitroxServer_Subnautica
         private static async Task Main(string[] args)
         {
             // The thread that writers to console is paused while selecting text in console. So console writer needs to be async.
-            Log.Setup(true, isConsoleApp: true);
+            Log.Setup(asyncConsoleWriter: true, isConsoleApp: true);
             AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
 
             ConfigureCultureInfo();
@@ -254,7 +254,7 @@ namespace NitroxServer_Subnautica
         {
             if (eventType == 2) // close
             {
-                StopAndExitServer();
+                StopServer();
             }
 
             return false;
@@ -262,10 +262,10 @@ namespace NitroxServer_Subnautica
 
         private static void OnCtrlCPressed(object sender, ConsoleCancelEventArgs e)
         {
-            StopAndExitServer();
+            StopServer();
         }
 
-        private static void StopAndExitServer()
+        private static void StopServer()
         {
             Log.Info("Exiting ...");
             Server.Instance.Stop();
