@@ -22,8 +22,7 @@ namespace NitroxServer.ConsoleCommands
         {
             string password = args.Get(0) ?? string.Empty;
 
-            serverConfig.ServerPassword = password;
-            NitroxConfig.Serialize(serverConfig);
+            serverConfig.Update(c => c.ServerPassword = password);
 
             Log.InfoSensitive("Server password changed to \"{password}\" by {playername}", password, args.SenderName);
             SendMessageToPlayer(args.Sender, "Server password has been updated");

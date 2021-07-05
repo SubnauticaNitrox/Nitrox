@@ -112,7 +112,10 @@ namespace NitroxServer
             if (shouldSave)
             {
                 Save();
-                NitroxConfig.Serialize(serverConfig);
+                if (!serverConfig.ConfigFileExists)
+                {
+                    serverConfig.Serialize();
+                }
             }
 
             server.Stop();

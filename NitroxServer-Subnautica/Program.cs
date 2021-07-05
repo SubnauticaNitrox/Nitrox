@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -23,7 +24,7 @@ namespace NitroxServer_Subnautica
 {
     public class Program
     {
-        private static readonly Dictionary<string, Assembly> resolvedAssemblyCache = new Dictionary<string, Assembly>();
+        private static readonly Dictionary<string, Assembly> resolvedAssemblyCache = new();
         private static Lazy<string> gameInstallDir;
 
         // Prevents Garbage Collection freeing this callback's memory. Causing an exception to occur for this handle.
@@ -75,6 +76,7 @@ namespace NitroxServer_Subnautica
                 {
                     throw new Exception("Unable to start server.");
                 }
+
                 watch.Stop();
 
                 Log.Info($"Server started ({Math.Round(watch.Elapsed.TotalSeconds, 1)}s)");
@@ -113,11 +115,12 @@ namespace NitroxServer_Subnautica
                 while (true)
                 {
                     source.Token.ThrowIfCancellationRequested();
-                    if (IPGlobalProperties.GetIPGlobalProperties().GetActiveUdpListeners().All(ip => ip.Port != port))
+                    IPEndPoint endPoint = IPGlobalProperties.GetIPGlobalProperties().GetActiveUdpListeners().FirstOrDefault(ip => ip.Port == port);
+                    if (endPoint == null)
                     {
                         break;
                     }
-                    
+
                     if (first)
                     {
                         first = false;
@@ -129,6 +132,7 @@ namespace NitroxServer_Subnautica
                         Console.CursorLeft = 0;
                         PrintPortWarn(timeoutInSeconds - (DateTimeOffset.UtcNow - time).Seconds);
                     }
+
                     await Task.Delay(500, source.Token);
                 }
             }
@@ -145,10 +149,12 @@ namespace NitroxServer_Subnautica
             {
                 Log.Error(ex);
             }
+
             if (!Environment.UserInteractive || Console.In == StreamReader.Null)
             {
                 return;
             }
+
             string mostRecentLogFile = Log.GetMostRecentLogFile();
             if (mostRecentLogFile == null)
             {
@@ -190,8 +196,8 @@ namespace NitroxServer_Subnautica
             }
 
             // Read assemblies as bytes as to not lock the file so that Nitrox can patch assemblies while server is running.
-            using (FileStream stream = new FileStream(dllPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            using (MemoryStream mstream = new MemoryStream())
+            using (FileStream stream = new(dllPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (MemoryStream mstream = new())
             {
                 stream.CopyTo(mstream);
                 Assembly assembly = Assembly.Load(mstream.ToArray());
@@ -210,7 +216,7 @@ namespace NitroxServer_Subnautica
          */
         private static void ConfigureCultureInfo()
         {
-            CultureInfo cultureInfo = new CultureInfo("en-US");
+            CultureInfo cultureInfo = new("en-US");
 
             // Although we loaded the en-US cultureInfo, let's make sure to set these incase the
             // default was overriden by the user.
@@ -248,21 +254,21 @@ namespace NitroxServer_Subnautica
         {
             if (eventType == 2) // close
             {
-                StopAndExitServer();
+                StopServer();
             }
+
             return false;
         }
 
         private static void OnCtrlCPressed(object sender, ConsoleCancelEventArgs e)
         {
-            StopAndExitServer();
+            StopServer();
         }
 
-        private static void StopAndExitServer()
+        private static void StopServer()
         {
             Log.Info("Exiting ...");
             Server.Instance.Stop();
-            Environment.Exit(0);
         }
 
         // See: https://docs.microsoft.com/en-us/windows/console/setconsolectrlhandler

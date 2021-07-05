@@ -6,7 +6,7 @@ using NitroxModel.Server;
 namespace NitroxServer.Serialization
 {
     [PropertyDescription("Server settings can be changed here")]
-    public class ServerConfig : IProperties
+    public class ServerConfig : NitroxConfig<ServerConfig>
     {
         private int maxConnectionsSetting = 100;
 
@@ -15,7 +15,7 @@ namespace NitroxServer.Serialization
         private int saveIntervalSetting = 120000;
 
         private string saveNameSetting = "world";
-        public string FileName => "server.cfg";
+        public override string FileName => "server.cfg";
 
         [PropertyDescription("Leave blank for a random spawn position")]
         public string Seed { get; set; }
@@ -95,6 +95,13 @@ namespace NitroxServer.Serialization
 
         public bool IsHardcore => GameMode == ServerGameMode.HARDCORE;
         public bool IsPasswordRequired => ServerPassword != string.Empty;
-        public PlayerStatsData DefaultPlayerStats => new PlayerStatsData(DefaultOxygenValue, DefaultMaxOxygenValue, DefaultHealthValue, DefaultHungerValue, DefaultThirstValue, DefaultInfectionValue);
+        public PlayerStatsData DefaultPlayerStats => new(DefaultOxygenValue, DefaultMaxOxygenValue, DefaultHealthValue, DefaultHungerValue, DefaultThirstValue, DefaultInfectionValue);
+
+        public static ServerConfig Load()
+        {
+            ServerConfig config = new();
+            config.Deserialize();
+            return config;
+        }
     }
 }
