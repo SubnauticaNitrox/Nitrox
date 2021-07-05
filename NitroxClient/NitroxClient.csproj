@@ -56,6 +56,7 @@
     <Compile Include="Communication\Packets\Processors\EnergyMixinValueChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\LifeMixinChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PingRenamedProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\PlayerHeldItemChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlayerTeleportedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\RadioPlayPendingMessageProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ExosuitArmActionProcessor.cs" />
@@ -252,7 +253,6 @@
     <Compile Include="GameLogic\Entities.cs" />
     <Compile Include="GameLogic\EquipmentSlots.cs" />
     <Compile Include="GameLogic\Debugger.cs" />
-    <Compile Include="GameLogic\PlayerModel\Equipment\Abstract\EquipmentVisibilityHandler.cs" />
     <Compile Include="GameLogic\EscapePodManager.cs" />
     <Compile Include="GameLogic\Fires.cs" />
     <Compile Include="GameLogic\PlayerModel\Equipment\FinsVisibilityHandler.cs" />

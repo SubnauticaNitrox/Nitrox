@@ -84,6 +84,8 @@
     <Compile Include="Communication\Packets\Processors\LiveMixinChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PingRenamedPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlayerDeathEventProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\PlayerQuickSlotsBindingChangedProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\PlayerHeldItemChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlayerEquipmentAddedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlayerEquipmentRemovedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\RadioPlayPendingMessageProcessor.cs" />

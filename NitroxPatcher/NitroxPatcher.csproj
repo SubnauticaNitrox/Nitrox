@@ -50,6 +50,10 @@
     <Compile Include="Patches\Dynamic\Bench_ExitSittingMode_Patch.cs" />
     <Compile Include="Patches\Dynamic\Bench_OnHandClick_Patch.cs" />
     <Compile Include="Patches\Dynamic\Bench_OnPlayerDeath_Patch.cs" />
+    <Compile Include="Patches\Dynamic\UniqueIdentifier_Id_Getter_Patch.cs" />
+    <Compile Include="Patches\Dynamic\QuickSlots_Bind_Patch.cs" />
+    <Compile Include="Patches\Dynamic\QuickSlots_DeselectInternal_Patch.cs" />
+    <Compile Include="Patches\Dynamic\QuickSlots_SelectInternal_Patch.cs" />
     <Compile Include="Patches\Dynamic\IncubatorActivationTerminal_OnHandClick_Patch.cs" />
     <Compile Include="Patches\Dynamic\Incubator_OnHandClick_Patch.cs" />
     <Compile Include="Patches\Dynamic\BaseDeconstructable_MakeFaceDeconstructable_Patch.cs" />

@@ -42,7 +42,7 @@ namespace NitroxServer.ConsoleCommands
             }
 
             playerToKick.SendPacket(new PlayerKicked(args.GetTillEnd(1)));
-            playerManager.PlayerDisconnected(playerToKick.connection);
+            playerManager.PlayerDisconnected(playerToKick.Connection);
 
             List<SimulatedEntity> revokedEntities = entitySimulation.CalculateSimulationChangesFromPlayerDisconnect(playerToKick);
             if (revokedEntities.Count > 0)

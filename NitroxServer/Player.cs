@@ -15,11 +15,14 @@ namespace NitroxServer
         private readonly ThreadSafeCollection<EquippedItemData> modules;
         private readonly ThreadSafeCollection<AbsoluteEntityCell> visibleCells;
 
-        public NitroxConnection connection { get; set; }
+        public ThreadSafeCollection<NitroxTechType> UsedItems { get; }
+        public ThreadSafeCollection<string> QuickSlotsBinding { get; set; }
+
+        public NitroxConnection Connection { get; set; }
         public PlayerSettings PlayerSettings => PlayerContext.PlayerSettings;
         public PlayerContext PlayerContext { get; set; }
         public ushort Id { get; }
-        public string Name { get; set; }
+        public string Name { get; }
         public bool IsPermaDeath { get; set; }
         public NitroxVector3 Position { get; set; }
         public NitroxId GameObjectId { get; }
@@ -29,14 +32,16 @@ namespace NitroxServer
         public NitroxVector3? LastStoredPosition { get; set; }
         public Optional<NitroxId> LastStoredSubRootID { get; set; }
 
-        public Player(ushort id, string name, bool isPermaDeath, PlayerContext playerContext, NitroxConnection connection, NitroxVector3 position, NitroxId playerId, Optional<NitroxId> subRootId, Perms perms, PlayerStatsData stats, IEnumerable<EquippedItemData> equippedItems,
-                      IEnumerable<EquippedItemData> modules)
+        public Player(ushort id, string name, bool isPermaDeath, PlayerContext playerContext, NitroxConnection connection,
+                      NitroxVector3 position, NitroxId playerId, Optional<NitroxId> subRootId, Perms perms, PlayerStatsData stats,
+                      IEnumerable<NitroxTechType> usedItems, IEnumerable<string> quickSlotsBinding,
+                      IEnumerable<EquippedItemData> equippedItems, IEnumerable<EquippedItemData> modules)
         {
             Id = id;
             Name = name;
             IsPermaDeath = isPermaDeath;
             PlayerContext = playerContext;
-            this.connection = connection;
+            Connection = connection;
             Position = position;
             SubRootId = subRootId;
             GameObjectId = playerId;
@@ -44,6 +49,8 @@ namespace NitroxServer
             Stats = stats;
             LastStoredPosition = null;
             LastStoredSubRootID = Optional.Empty;
+            UsedItems = new ThreadSafeCollection<NitroxTechType>(usedItems);
+            QuickSlotsBinding = new ThreadSafeCollection<string>(quickSlotsBinding);
             this.equippedItems = new ThreadSafeCollection<EquippedItemData>(equippedItems);
             this.modules = new ThreadSafeCollection<EquippedItemData>(modules);
             visibleCells = new ThreadSafeCollection<AbsoluteEntityCell>(new HashSet<AbsoluteEntityCell>(), false);
@@ -139,7 +146,7 @@ namespace NitroxServer
 
         public void SendPacket(Packet packet)
         {
-            connection.SendPacket(packet);
+            Connection.SendPacket(packet);
         }
 
         public void Teleport(NitroxVector3 destination, Optional<NitroxId> subRootID)

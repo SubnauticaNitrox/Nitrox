@@ -20,7 +20,7 @@ namespace NitroxModel.Logger
         {
             set => SetPlayerName(value);
         }
-        
+
         public static string LogDirectory { get; } = Path.GetFullPath(Path.Combine(Environment.GetEnvironmentVariable("NITROX_LAUNCHER_PATH") ?? "", "Nitrox Logs"));
 
         public static string GetMostRecentLogFile() => new DirectoryInfo(LogDirectory).GetFiles().OrderByDescending(f => f.CreationTimeUtc).FirstOrDefault()?.FullName;
@@ -57,12 +57,19 @@ namespace NitroxModel.Logger
                          }
                      })
                      .WriteTo.Logger(cnf => cnf
-                                            .Enrich.FromLogContext()
-                                            .WriteTo.Async(a => a.File(Path.Combine(LogDirectory, $"{GetLogFileName()}-.log"),
-                                                                       outputTemplate: $"[{{Timestamp:HH:mm:ss.fff}}] {{{nameof(PlayerName)}:l}}[{{Level:u3}}] {{Message}}{{NewLine}}{{Exception}}",
-                                                                       rollingInterval: RollingInterval.Day,
-                                                                       retainedFileCountLimit: 10,
-                                                                       shared: true)))
+                                            .Enrich.FromLogContext().WriteTo
+#if DEBUG
+                                            .Map(nameof(PlayerName), "", (playerName, sinkCnf) => sinkCnf.Async(a => a.File(Path.Combine(LogDirectory, $"{GetLogFileName()}{playerName}-.log"),
+
+#else
+                                            .Async((a => a.File(Path.Combine(LogDirectory, $"{GetLogFileName()}-.log"),
+#endif
+                                                               outputTemplate: $"[{{Timestamp:HH:mm:ss.fff}}] [{{Level:u3}}{{IsUnity}}] {{Message}}{{NewLine}}{{Exception}}",
+                                                               rollingInterval: RollingInterval.Day,
+                                                               retainedFileCountLimit: 10,
+                                                               fileSizeLimitBytes: 200000000, // 200MB
+                                                               shared: true))))
+
                      .WriteTo.Logger(cnf =>
                      {
                          if (inGameLogger == null)
@@ -185,6 +192,14 @@ namespace NitroxModel.Logger
             }
         }
 
+        public static void ErrorUnity(string message)
+        {
+            using (LogContext.PushProperty("IsUnity", "-UNITY"))
+            {
+                logger.Error(message);
+            }
+        }
+
         // Player name in log file is only important with running two instances of Nitrox.
         [Conditional("DEBUG")]
         private static void SetPlayerName(string value)
@@ -215,7 +230,7 @@ namespace NitroxModel.Logger
         private static string GetLogFileName()
         {
             static bool Contains(string haystack, string needle) => haystack.IndexOf(needle, StringComparison.OrdinalIgnoreCase) >= 0;
-            
+
             string loggerName = GetLoggerName();
             if (Contains(loggerName, "server"))
             {

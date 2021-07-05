@@ -14,30 +14,36 @@ namespace NitroxServer.GameLogic.Players
         public string Name { get; set; }
 
         [JsonProperty, ProtoMember(2)]
-        public List<EquippedItemData> EquippedItems { get; set; } = new List<EquippedItemData>();
+        public List<NitroxTechType> UsedItems { get; set; } = new List<NitroxTechType>();
 
         [JsonProperty, ProtoMember(3)]
-        public List<EquippedItemData> Modules { get; set; } = new List<EquippedItemData>();
+        public List<string> QuickSlotsBinding { get; set; } = new List<string>();
 
         [JsonProperty, ProtoMember(4)]
-        public ushort Id { get; set; }
+        public List<EquippedItemData> EquippedItems { get; set; } = new List<EquippedItemData>();
 
         [JsonProperty, ProtoMember(5)]
-        public NitroxVector3 SpawnPosition { get; set; }
+        public List<EquippedItemData> Modules { get; set; } = new List<EquippedItemData>();
 
         [JsonProperty, ProtoMember(6)]
-        public PlayerStatsData CurrentStats { get; set; }
+        public ushort Id { get; set; }
 
         [JsonProperty, ProtoMember(7)]
-        public NitroxId SubRootId { get; set; }
+        public NitroxVector3 SpawnPosition { get; set; }
 
         [JsonProperty, ProtoMember(8)]
-        public Perms Permissions { get; set; } = Perms.PLAYER;
+        public PlayerStatsData CurrentStats { get; set; }
 
         [JsonProperty, ProtoMember(9)]
-        public NitroxId NitroxId { get; set; }
+        public NitroxId SubRootId { get; set; }
 
         [JsonProperty, ProtoMember(10)]
+        public Perms Permissions { get; set; } = Perms.PLAYER;
+
+        [JsonProperty, ProtoMember(11)]
+        public NitroxId NitroxId { get; set; }
+
+        [JsonProperty, ProtoMember(12)]
         public bool IsPermaDeath { get; set; }
 
         public Player ToPlayer()
@@ -52,6 +58,8 @@ namespace NitroxServer.GameLogic.Players
                               Optional.OfNullable(SubRootId),
                               Permissions,
                               CurrentStats,
+                              UsedItems,
+                              QuickSlotsBinding,
                               EquippedItems,
                               Modules);
         }
@@ -61,6 +69,8 @@ namespace NitroxServer.GameLogic.Players
             return new PersistedPlayerData
             {
                 Name = player.Name,
+                UsedItems = player.UsedItems?.ToList(),
+                QuickSlotsBinding = player.QuickSlotsBinding?.ToList(),
                 EquippedItems = player.GetEquipment(),
                 Modules = player.GetModules(),
                 Id = player.Id,

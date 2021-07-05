@@ -28,7 +28,7 @@ namespace NitroxClient.GameLogic
             NitroxId id = NitroxEntity.GetId(gameObject);
 
             NitroxId itemId = NitroxEntity.GetId(item.item.gameObject);
-            byte[] bytes = SerializationHelper.GetBytes(item.item.gameObject);
+            byte[] bytes = SerializationHelper.GetBytesWithoutParent(item.item.gameObject);
 
             ItemData itemData = new ItemData(id, itemId, bytes);
             StorageSlotItemAdd add = new StorageSlotItemAdd(itemData);
@@ -114,9 +114,9 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        public void EnergyMixinValueChanged(NitroxId id, float amount, ItemData batteryData)
+        public void EnergyMixinValueChanged(NitroxId ownerId, float amount, ItemData batteryData)
         {
-            EnergyMixinValueChanged batteryChanged = new EnergyMixinValueChanged(id, amount, batteryData);
+            EnergyMixinValueChanged batteryChanged = new EnergyMixinValueChanged(ownerId, amount, batteryData);
             packetSender.Send(batteryChanged);
         }
 
