@@ -38,7 +38,7 @@ namespace NitroxServer.GameLogic.Players
         public NitroxId SubRootId { get; set; }
 
         [JsonProperty, ProtoMember(10)]
-        public Perms Permissions { get; set; } = Perms.PLAYER;
+        public Perms Permissions { get; set; }
 
         [JsonProperty, ProtoMember(11)]
         public NitroxId NitroxId { get; set; }
