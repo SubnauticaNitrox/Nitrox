@@ -692,8 +692,8 @@ event:/sub/seamoth/seaglide_loop_rpm;false;false;60
 event:/sub/seamoth/seaglide_rev_up;false;false;60
 event:/sub/seamoth/seamoth_light_off;true;true;10
 event:/sub/seamoth/seamoth_light_on;true;true;10
-event:/sub/seamoth/seamoth_loop_rpm;false;false;150
-event:/sub/seamoth/seamoth_rev_up;false;false;150
+event:/sub/seamoth/seamoth_loop_rpm;false;false;90
+event:/sub/seamoth/seamoth_rev_up;false;false;75
 event:/sub/seamoth/seamoth_stop;false;false;0
 event:/sub/seamoth/sonar_loop;false;false;0
 event:/sub/seamoth/storage_close;false;false;0
