@@ -28,6 +28,10 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(InventoryItem ____heldItem, NitroxTechType __state)
         {
+            if (____heldItem == null)
+            {
+                return;
+            }
             Pickupable pickupable = ____heldItem.item;
             NitroxId itemId = NitroxEntity.GetId(pickupable.gameObject);
             PlayerTool component = pickupable.GetComponent<PlayerTool>();
