@@ -74,7 +74,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             activePlayerPreference = preferencesManager.GetPreference(serverIp);
             SubscribeColorChanged();
 
-            // HSV => Hue Saturation Valuen, HSB => Hue Saturation Brightness
+            // HSV => Hue Saturation Value, HSB => Hue Saturation Brightness
             Color.RGBToHSV(activePlayerPreference.PreferredColor(), out float hue, out _, out float brightness);
             colorPicker.SetHSB(new Vector3(hue, 1f, brightness));
 
