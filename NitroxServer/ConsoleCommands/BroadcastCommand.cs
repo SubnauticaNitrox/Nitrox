@@ -9,9 +9,11 @@ namespace NitroxServer.ConsoleCommands
     {
         public override IEnumerable<string> Aliases { get; } = new[] { "say" };
 
-        public BroadcastCommand() : base("broadcast", Perms.ADMIN, "Broadcasts a message on the server", true)
+        public BroadcastCommand() : base("broadcast", Perms.MODERATOR, "Broadcasts a message on the server")
         {
             AddParameter(new TypeString("message", true));
+
+            AllowedArgOverflow = true;
         }
 
         protected override void Execute(CallArgs args)

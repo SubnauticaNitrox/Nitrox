@@ -1,4 +1,5 @@
-﻿using NitroxModel.DataStructures.Util;
+﻿using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxModel_Subnautica.DataStructures.GameLogic;
 using NitroxModel_Subnautica.Packets;
@@ -25,7 +26,17 @@ namespace NitroxServer_Subnautica.Communication.Packets.Processors
 
             if (opRocket.HasValue)
             {
-                opRocket.Value.PreflightChecks.Add(packet.FlightCheck);
+                ThreadSafeCollection<PreflightCheck> collection = opRocket.Value.PreflightChecks;
+
+                if (!collection.Contains(packet.FlightCheck))
+                {
+                    collection.Add(packet.FlightCheck);
+                }
+                else
+                {
+                    Log.Error($"{nameof(RocketPreflightCompleteProcessor)}: Received an existing preflight '{packet.FlightCheck}' for rocket '{packet.Id}'");
+                }
+
             }
             else
             {

@@ -1,6 +1,5 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
-using NitroxModel.Server;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
 using NitroxServer.Serialization;
@@ -11,20 +10,19 @@ namespace NitroxServer.ConsoleCommands
     {
         private readonly ServerConfig serverConfig;
 
-        public LoginCommand(ServerConfig serverConfig) : base("login", Perms.PLAYER, "Log in to server as admin (requires password)")
+        public LoginCommand(ServerConfig serverConfig) : base("login", Perms.PLAYER, PermsFlag.NO_CONSOLE, "Log in to server as admin (requires password)")
         {
-            this.serverConfig = serverConfig;
             AddParameter(new TypeString("password", true));
+
+            this.serverConfig = serverConfig;
         }
 
         protected override void Execute(CallArgs args)
         {
-            Validate.IsTrue(args.Sender.HasValue, "This command can't be used by CONSOLE");
-
-            if (args.Get(0) == serverConfig.AdminPassword)
+            if (args.Get<string>(0) == serverConfig.AdminPassword)
             {
                 args.Sender.Value.Permissions = Perms.ADMIN;
-                SendMessage(args.Sender, $"Updated permissions to admin for {args.SenderName}");
+                SendMessage(args.Sender, $"Updated permissions to ADMIN for {args.SenderName}");
             }
             else
             {

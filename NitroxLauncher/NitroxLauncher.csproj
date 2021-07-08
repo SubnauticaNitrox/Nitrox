@@ -85,7 +85,6 @@
       <DependentUpon>ServerPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Patching\NitroxEntryPatch.cs" />
-    <Compile Include="Patching\PlatformDetection.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -117,6 +116,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Patching\AppHelper.cs" />
+    <Compile Include="Patching\QModHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

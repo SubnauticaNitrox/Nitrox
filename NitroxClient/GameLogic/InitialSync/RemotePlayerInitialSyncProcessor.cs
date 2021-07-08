@@ -36,29 +36,9 @@ namespace NitroxClient.GameLogic.InitialSync
                 waitScreenItem.SetProgress(remotePlayersSynced, packet.RemotePlayerData.Count);
 
                 List<TechType> equippedTechTypes = playerData.EquippedTechTypes.Select(techType => techType.ToUnity()).ToList();
-                RemotePlayer player = remotePlayerManager.Create(playerData.PlayerContext, equippedTechTypes);
-                
-                if (playerData.SubRootId.HasValue)
-                {
-                    Optional<GameObject> sub = NitroxEntity.GetObjectFrom(playerData.SubRootId.Value);
 
-                    if (sub.HasValue)
-                    {
-                        Log.Debug($"sub value set to {sub.Value}. Try to find subroot");
-                        SubRoot subroot = null;
-                        sub.Value.TryGetComponent<SubRoot>(out subroot);
-                        if (subroot)
-                        {
-                            Log.Debug("Found subroot for player. Will add him and update animation.");
-                            player.SetSubRoot(subroot);                            
-                        }
-                    }
-                    else
-                    {
-                        Log.Error("Could not spawn remote player into subroot/escape pod with id: " + playerData.SubRootId.Value);
-                    }
-                }
-                
+                RemotePlayer player = remotePlayerManager.Create(playerData.PlayerContext, playerData.SubRootId, equippedTechTypes, new List<Pickupable>());
+
                 if (!IsSwimming(playerData.Position.ToUnity(), playerData.SubRootId))
                 {
                     player.UpdateAnimation(AnimChangeType.UNDERWATER, AnimChangeState.OFF);

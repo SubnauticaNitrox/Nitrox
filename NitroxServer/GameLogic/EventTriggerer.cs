@@ -95,6 +95,11 @@ namespace NitroxServer.GameLogic
             stopWatch.Stop();
         }
 
+        public void ResetWorldTime()
+        {
+            stopWatch.Reset();
+        }
+
         public void StartEventTimers()
         {
             foreach (Timer eventTimer in eventTimers.Values)

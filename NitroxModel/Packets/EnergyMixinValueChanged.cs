@@ -7,20 +7,20 @@ namespace NitroxModel.Packets
     [Serializable]
     public class EnergyMixinValueChanged : Packet
     {
-        public NitroxId Id { get; }
+        public NitroxId OwnerId { get; }
         public float Value { get; }
         public ItemData BatteryData { get; }
 
-        public EnergyMixinValueChanged(NitroxId id, float value, ItemData batteryData)
+        public EnergyMixinValueChanged(NitroxId ownerId, float value, ItemData batteryData)
         {
-            Id = id;
+            OwnerId = ownerId;
             Value = value;
             BatteryData = batteryData;
         }
 
         public override string ToString()
         {
-            return $"[EnergyMixinValueChanged: Id: {Id}, Value: {Value}";
+            return $"[EnergyMixinValueChanged: OwnerId: {OwnerId}, Value: {Value}, BatteryId: {BatteryData.ItemId}";
         }
     }
 }

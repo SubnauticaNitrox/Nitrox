@@ -6,18 +6,17 @@ namespace NitroxServer.ConsoleCommands
 {
     internal class OpCommand : Command
     {
-        public OpCommand() : base("op", Perms.ADMIN, "Sets an user as admin")
+        public OpCommand() : base("op", Perms.ADMIN, "Sets a user as admin")
         {
             AddParameter(new TypePlayer("name", true));
         }
 
         protected override void Execute(CallArgs args)
         {
-            Player receivingPlayer = args.Get<Player>(0);
-            string playerName = receivingPlayer.Name;
+            Player targetPlayer = args.Get<Player>(0);
+            targetPlayer.Permissions = Perms.ADMIN;
 
-            receivingPlayer.Permissions = Perms.ADMIN;
-            SendMessage(args.Sender, $"Updated {playerName}\'s permissions to admin");
+            SendMessage(args.Sender, $"Updated {targetPlayer.Name}\'s permissions to ADMIN");
         }
     }
 }

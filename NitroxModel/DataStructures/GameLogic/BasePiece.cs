@@ -75,6 +75,11 @@ namespace NitroxModel.DataStructures.GameLogic
             Metadata = Optional.Empty;
         }
 
+        public BasePiece(NitroxId id, NitroxVector3 itemPosition, NitroxQuaternion rotation, NitroxVector3 cameraPosition, NitroxQuaternion cameraRotation, NitroxTechType techType, Optional<NitroxId> parentId, bool isFurniture, Optional<RotationMetadata> rotationMetadata, Optional<BasePieceMetadata> metadata) : this(id, itemPosition, rotation, cameraPosition, cameraRotation, techType, parentId, isFurniture, rotationMetadata)
+        {
+            Metadata = metadata;
+        }
+
         public override string ToString()
         {
             return $"[BasePiece - ItemPosition: {ItemPosition}, Id: {Id}, Rotation: {Rotation}, CameraPosition: {CameraPosition}, CameraRotation: {CameraRotation}, TechType: {TechType}, ParentId: {ParentId}, ConstructionAmount: {ConstructionAmount}, IsFurniture: {IsFurniture}, BaseId: {BaseId}, RotationMetadata: {RotationMetadata}, BuildIndex: {BuildIndex}]";

@@ -1,7 +1,8 @@
-﻿using System.IO;
-using System.Threading;
+﻿using System;
+using System.IO;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
+using NitroxModel.Logger;
 using NitroxModel.Server;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.Serialization;
@@ -10,7 +11,7 @@ using NitroxServer.Serialization.World;
 
 namespace NitroxServer.ConsoleCommands
 {
-    internal sealed class UpgradeCommand : Command
+    internal class UpgradeCommand : Command
     {
         private readonly WorldPersistence worldPersistence;
         private readonly ServerConfig serverConfig;
@@ -29,9 +30,9 @@ namespace NitroxServer.ConsoleCommands
         {
             server.DisablePeriodicSaving();
             string saveDir = serverConfig.SaveName;
-            string fileEnding = worldPersistence.SaveDataSerializer.GetFileEnding();
-            SaveFileVersion saveFileVersion = worldPersistence.SaveDataSerializer.Deserialize<SaveFileVersion>(Path.Combine(saveDir, "Version" + fileEnding));
+            string fileEnding = worldPersistence.Serializer.FileEnding;
 
+            SaveFileVersion saveFileVersion = worldPersistence.Serializer.Deserialize<SaveFileVersion>(Path.Combine(saveDir, $"Version{fileEnding}"));
 
             if (saveFileVersion.Version == NitroxEnvironment.Version)
             {
@@ -43,14 +44,23 @@ namespace NitroxServer.ConsoleCommands
             }
             else
             {
-                foreach (SaveDataUpgrade upgrade in upgrades)
+                try
                 {
-                    if (upgrade.TargetVersion > saveFileVersion.Version)
+                    foreach (SaveDataUpgrade upgrade in upgrades)
                     {
-                        upgrade.UpgradeData(saveDir, fileEnding);
+                        if (upgrade.TargetVersion > saveFileVersion.Version)
+                        {
+                            upgrade.UpgradeData(saveDir, fileEnding);
+                        }
                     }
                 }
-                worldPersistence.SaveDataSerializer.Serialize(Path.Combine(saveDir, "Version" + fileEnding), new SaveFileVersion());
+                catch (Exception ex)
+                {
+                    Log.Error(ex, "Error while upgrading save file.");
+                    return;
+                }
+
+                worldPersistence.Serializer.Serialize(Path.Combine(saveDir, $"Version{fileEnding}"), new SaveFileVersion());
                 SendMessage(args.Sender, $"Save file was upgraded to {NitroxEnvironment.Version}");
                 server.StopAndWait(false);
             }

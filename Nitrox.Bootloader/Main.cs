@@ -86,10 +86,6 @@ namespace Nitrox.Bootloader
             {
                 return "Nitrox launcher path not set in AppData. Nitrox will not start.";
             }
-            if (AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.FullName.StartsWith("QMod", StringComparison.Ordinal)) != null)
-            {
-                return "Nitrox will not start because QModManager is active.";
-            }
 
             return null;
         }

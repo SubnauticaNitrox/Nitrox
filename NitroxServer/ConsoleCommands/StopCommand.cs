@@ -4,17 +4,18 @@ using NitroxServer.ConsoleCommands.Abstract;
 
 namespace NitroxServer.ConsoleCommands
 {
-    internal class ExitCommand : Command
+    internal class StopCommand : Command
     {
         public override IEnumerable<string> Aliases { get; } = new[] { "exit", "halt", "quit" };
 
-        public ExitCommand() : base("stop", Perms.ADMIN, "Stops the server")
+        public StopCommand() : base("stop", Perms.ADMIN, "Stops the server")
         {
         }
 
         protected override void Execute(CallArgs args)
         {
-            Server.Instance.Stop();
+            SendMessageToAllPlayers("Server is shutting down...");
+            Server.Instance.Stop(shouldSave: true);
         }
     }
 }

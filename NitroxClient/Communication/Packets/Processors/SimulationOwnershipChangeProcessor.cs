@@ -61,7 +61,7 @@ namespace NitroxClient.Communication.Packets.Processors
             {
                 EntityPositionBroadcaster.WatchEntity(id, gameObject.Value);
             }
-#if DEBUG
+#if DEBUG && ENTITY_LOG
             else
             {
                 Log.Error($"Expected to simulate an unknown entity: {id}");

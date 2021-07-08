@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -32,6 +32,9 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="protobuf-net">
       <HintPath>..\Nitrox.Subnautica.Assets\protobuf-net.dll</HintPath>
+    </Reference>
+    <Reference Include="Serilog.Sinks.Map">
+      <HintPath>..\Nitrox.Subnautica.Assets\Serilog.Sinks.Map.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -80,7 +83,7 @@
     <Compile Include="DataStructures\GameLogic\NitroxTransform.cs" />
     <Compile Include="DataStructures\GameLogic\NitroxVector4.cs" />
     <Compile Include="DataStructures\GameLogic\PDAEntry.cs" />
-    <Compile Include="DataStructures\GameLogic\ItemEquipment.cs" />
+    <Compile Include="DataStructures\GameLogic\EquippedItemData.cs" />
     <Compile Include="DataStructures\GameLogic\Entity.cs" />
     <Compile Include="DataStructures\GameLogic\EscapePodModel.cs" />
     <Compile Include="DataStructures\GameLogic\InteractiveChildObjectIdentifier.cs" />
@@ -102,6 +105,8 @@
     <Compile Include="Discovery\InstallationFinders\GameInCurrentDirectoryFinder.cs" />
     <Compile Include="Discovery\InstallationFinders\SteamGameRegistryFinder.cs" />
     <Compile Include="Discovery\InstallationFinders\ConfigFileGameFinder.cs" />
+    <Compile Include="Discovery\Models\Platform.cs" />
+    <Compile Include="Discovery\PlatformDetection.cs" />
     <Compile Include="Helper\Mathf.cs" />
     <Compile Include="Helper\NitroxAppData.cs" />
     <Compile Include="Helper\PirateDetection.cs" />
@@ -118,6 +123,10 @@
     <Compile Include="OS\Windows\Native.cs" />
     <Compile Include="Packets\DebugStartMapPacket.cs" />
     <Compile Include="Packets\EntitySpawnedByClient.cs" />
+    <Compile Include="Packets\PlayFMODCustomLoopingEmitter.cs" />
+    <Compile Include="Packets\PlayFMODStudioEmitter.cs" />
+    <Compile Include="Packets\PlayFMODCustomEmitter.cs" />
+    <Compile Include="Packets\PlayFMODAsset.cs" />
     <Compile Include="Packets\EntityMetadataUpdate.cs" />
     <Compile Include="Packets\BedEnter.cs" />
     <Compile Include="Packets\EscapePodChanged.cs" />
@@ -130,6 +139,8 @@
     <Compile Include="Packets\PingRenamed.cs" />
     <Compile Include="Packets\PlayerEquipmentAdded.cs" />
     <Compile Include="Packets\PlayerEquipmentRemoved.cs" />
+    <Compile Include="Packets\PlayerQuickSlotsBindingChanged.cs" />
+    <Compile Include="Packets\PlayerHeldItemChanged.cs" />
     <Compile Include="Packets\PlayerTeleported.cs" />
     <Compile Include="Packets\RadioPlayPendingMessage.cs" />
     <Compile Include="Packets\RemotePlayerEquipmentAdded.cs" />

@@ -4,9 +4,22 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic.PlayerModel.Equipment
 {
-    internal class ScubaSuitVisibiliyHandler : EquipmentVisibilityHandler
+    public class ScubaSuitVisibilityHandler : IEquipmentVisibilityHandler
     {
-        public override void UpdateEquipmentVisibility(GameObject playerModel, ReadOnlyCollection<TechType> currentEquipment)
+        private readonly GameObject rebreather;
+        private readonly GameObject scuba;
+        private readonly GameObject scubaTank;
+        private readonly GameObject scubaTankTubes;
+
+        public ScubaSuitVisibilityHandler(GameObject playerModel)
+        {
+            rebreather = playerModel.transform.Find(PlayerEquipmentConstants.REBREATHER_GAME_OBJECT_NAME).gameObject;
+            scuba = playerModel.transform.Find(PlayerEquipmentConstants.SCUBA_ROOT_GAME_OBJECT_NAME).gameObject;
+            scubaTank = playerModel.transform.Find(PlayerEquipmentConstants.SCUBA_TANK_GAME_OBJECT_NAME).gameObject;
+            scubaTankTubes = playerModel.transform.Find(PlayerEquipmentConstants.SCUBA_TANK_TUBES_GAME_OBJECT_NAME).gameObject;
+        }
+
+        public void UpdateEquipmentVisibility(ReadOnlyCollection<TechType> currentEquipment)
         {
             bool tankEquipped = currentEquipment.Contains(TechType.Tank) ||
                                 currentEquipment.Contains(TechType.DoubleTank) ||
@@ -18,13 +31,12 @@ namespace NitroxClient.GameLogic.PlayerModel.Equipment
             bool tankVisible = tankEquipped && !currentEquipment.Contains(TechType.RadiationSuit);
             bool tubesVisible = (rebreatherVisible || radiationHelmetVisible) && tankVisible;
             bool rootVisible = rebreatherVisible || tankVisible;
-            
-            playerModel.transform.Find(PlayerEquipmentConstants.REBREATHER_GAME_OBJECT_NAME).gameObject.SetActive(rebreatherVisible);
-            playerModel.transform.Find(PlayerEquipmentConstants.SCUBA_TANK_GAME_OBJECT_NAME).gameObject.SetActive(tankVisible);
-            playerModel.transform.Find(PlayerEquipmentConstants.SCUBA_TANK_TUBES_GAME_OBJECT_NAME).gameObject.SetActive(tubesVisible);
-            playerModel.transform.Find(PlayerEquipmentConstants.SCUBA_ROOT_GAME_OBJECT_NAME).gameObject.SetActive(rootVisible);
 
-            CallSuccessor(playerModel, currentEquipment);
+            rebreather.SetActive(rebreatherVisible);
+            scuba.SetActive(rootVisible);
+            scubaTank.SetActive(tankVisible);
+            scubaTankTubes.SetActive(tubesVisible);
+
         }
     }
 }

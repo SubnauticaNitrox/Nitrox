@@ -2,16 +2,16 @@
 
 namespace NitroxServer.ConsoleCommands.Abstract.Type
 {
-    public class TypeInt : Parameter<int?>, IParameter<object>
+    public class TypeInt : Parameter<int>, IParameter<object>
     {
         public TypeInt(string name, bool isRequired) : base(name, isRequired) { }
 
         public override bool IsValid(string arg)
         {
-            return int.TryParse(arg, out int value);
+            return int.TryParse(arg, out _);
         }
 
-        public override int? Read(string arg)
+        public override int Read(string arg)
         {
             Validate.IsTrue(int.TryParse(arg, out int value), "Invalid integer received");
             return value;
