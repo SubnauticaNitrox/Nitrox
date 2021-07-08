@@ -15,6 +15,13 @@
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
         <DefineConstants>TRACE;RELEASE</DefineConstants>
         <OutputPath>bin\Release\</OutputPath>
+        <DebugType>pdbonly</DebugType>
+        <DebugSymbols>false</DebugSymbols>
+        <Optimize>true</Optimize>
+        <PlatformTarget>AnyCPU</PlatformTarget>
+        <ErrorReport>prompt</ErrorReport>
+        <WarningLevel>4</WarningLevel>
+        <PathMap>$(MSBuildProjectDirectory)=$(MSBuildProjectName)</PathMap>
     </PropertyGroup>
     
     <PropertyGroup Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(MSBuildProjectName), '^Nitrox.*$'))">
