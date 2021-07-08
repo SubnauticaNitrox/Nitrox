@@ -22,13 +22,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
   <PropertyGroup>
     <StartupObject>
     </StartupObject>
@@ -298,11 +291,16 @@
   <Target Name="MoveDependenciesToLib" AfterTargets="Build">
     <ItemGroup>
       <AllDependencies Include="$(TargetDir)*.dll" />
-      <AllDependencies Include="$(TargetDir)*.pdb" />
       <AllDependencies Include="$(TargetDir)*.dll.config" />
       <AllDependencies Include="$(TargetDir)*.xml" />
     </ItemGroup>
     <Move SourceFiles="@(AllDependencies)" DestinationFolder="$(TargetDir)lib" />
+  </Target>
+  <Target Name="DeletePdbFiles" AfterTargets="MoveDependenciesToLib">
+    <ItemGroup>
+      <PdbFiles Include="$(TargetDir)**\*.pdb"/>
+    </ItemGroup>
+    <Delete Files="@(PdbFiles)" />
   </Target>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" Condition="'$(OS)' == 'Windows_NT'" />
 </Project>
