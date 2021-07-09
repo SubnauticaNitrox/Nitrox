@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using NitroxModel.DataStructures.GameLogic;
 using NitroxModel_Subnautica.DataStructures;
 
-namespace NitroxClient.GameLogic.Bases.Spawning
+using BasePieceData = NitroxModel.DataStructures.GameLogic.BasePiece;
+
+namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
 {
     public class BasePieceSpawnPrioritizer
     {
-        public readonly Dictionary<TechType, int> PiecesToPriority = new Dictionary<TechType, int>()
+        private readonly Dictionary<TechType, int> piecesToPriority = new Dictionary<TechType, int>()
         {
             // Prioritize core foundations, basic rooms, and corridors
             [TechType.BaseFoundation] = 1,
@@ -59,26 +60,20 @@ namespace NitroxClient.GameLogic.Bases.Spawning
 
         };
 
-        public List<BasePiece> OrderBasePiecesByPriority(List<BasePiece> inputPieces)
+        public IEnumerable<BasePieceData> OrderBasePiecesByPriority(IEnumerable<BasePieceData> inputPieces)
         {
             return inputPieces.OrderBy(piece => piece.ParentId.HasValue) // Ensure pieces without parents go first.
                               .ThenByDescending(piece => piece.ConstructionCompleted) // Ensure completed pieces are before pending pieces
                               .ThenBy(piece => piece.IsFurniture) // Ensure base building block go before furniture
-                              .ThenBy(piece => ComputeBasePiecePriority(piece))    // Ensure remaining pieces are prioritized by above order. 
-                              .ThenBy(piece => piece.BuildIndex)
-                              .ToList();
+                              .ThenBy(ComputeBasePiecePriority) // Ensure remaining pieces are prioritized by above order. 
+                              .ThenBy(piece => piece.BuildIndex);
         }
 
-        private int ComputeBasePiecePriority(BasePiece basePiece)
+        private int ComputeBasePiecePriority(BasePieceData basePiece)
         {
             TechType techType = basePiece.TechType.ToUnity();
 
-            if (PiecesToPriority.TryGetValue(techType, out int position))
-            {
-                return position;
-            }
-
-            return int.MaxValue;
+            return piecesToPriority.TryGetValue(techType, out int position) ? position : int.MaxValue;
         }
     }
 }
