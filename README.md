@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="https://github.com/SubnauticaNitrox/Nitrox/blob/master/github_banner.png?raw=true" alt="Nitrox" />
+    <img src="https://i.imgur.com/ofnNX5z.gif" alt="Nitrox Subnautica Multiplayer Mod" />
 </p>
 
 # Subnautica Nitrox
