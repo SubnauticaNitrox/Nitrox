@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
@@ -34,6 +34,13 @@ namespace NitroxServer.ConsoleCommands
 
             SaveFileVersion saveFileVersion = worldPersistence.Serializer.Deserialize<SaveFileVersion>(Path.Combine(saveDir, $"Version{fileEnding}"));
 
+            // SaveFileVersion structure was updated in V1.5.0.0
+            // This can be removed with V1.6.0.0 or later
+            if(File.ReadAllText(Path.Combine(saveDir, $"Version{fileEnding}")).Contains("BaseDataVersion"))
+            {
+                saveFileVersion = new SaveFileVersion(new Version(1,4,0,0));
+            }
+
             if (saveFileVersion.Version == NitroxEnvironment.Version)
             {
                 SendMessage(args.Sender, "Save files are already at the newest version");
@@ -50,7 +57,7 @@ namespace NitroxServer.ConsoleCommands
                     {
                         if (upgrade.TargetVersion > saveFileVersion.Version)
                         {
-                            upgrade.UpgradeData(saveDir, fileEnding);
+                            upgrade.UpgradeSaveFiles(saveDir, fileEnding);
                         }
                     }
                 }
