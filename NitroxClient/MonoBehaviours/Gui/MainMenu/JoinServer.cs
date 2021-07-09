@@ -72,10 +72,11 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
             //Initialize elements from preferences
             activePlayerPreference = preferencesManager.GetPreference(serverIp);
-
-            Color.RGBToHSV(activePlayerPreference.PreferredColor(), out float hue, out float _, out float vibrancy);
-            colorPicker.SetHSB(new Vector3(hue, 1f, vibrancy));
             SubscribeColorChanged();
+
+            // HSV => Hue Saturation Value, HSB => Hue Saturation Brightness
+            Color.RGBToHSV(activePlayerPreference.PreferredColor(), out float hue, out _, out float brightness);
+            colorPicker.SetHSB(new Vector3(hue, 1f, brightness));
 
             playerNameInputField.text = activePlayerPreference.PlayerName;
 
