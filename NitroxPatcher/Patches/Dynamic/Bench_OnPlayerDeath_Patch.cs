@@ -9,7 +9,7 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class Bench_OnPlayerDeath_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly MethodInfo TARGET_METHOD = typeof(Bench).GetMethod("OnPlayerDeath", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly MethodInfo targetMethod = typeof(Bench).GetMethod("OnPlayerDeath", BindingFlags.NonPublic | BindingFlags.Instance);
 
         public static void Postfix(Bench __instance)
         {
@@ -23,7 +23,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public override void Patch(Harmony harmony)
         {
-            PatchPostfix(harmony, TARGET_METHOD);
+            PatchPostfix(harmony, targetMethod);
         }
     }
 }

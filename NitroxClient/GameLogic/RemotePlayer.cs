@@ -235,6 +235,11 @@ namespace NitroxClient.GameLogic
                 case AnimChangeType.UNDERWATER:
                     AnimationController["is_underwater"] = state != AnimChangeState.OFF;
                     break;
+                case AnimChangeType.BENCH:
+                    AnimationController["cinematics_enabled"] = state != AnimChangeState.UNSET;
+                    AnimationController["bench_sit"] = state == AnimChangeState.ON;
+                    AnimationController["bench_stand_up"] = state == AnimChangeState.OFF;
+                    break;
             }
         }
 
