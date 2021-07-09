@@ -37,6 +37,7 @@ namespace NitroxServer_Subnautica
             AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
 
             ConfigureCultureInfo();
+            Log.Info($"Starting NitroxServer V{NitroxEnvironment.Version} for Subnautica");
 
             AppMutex.Hold(() =>
             {
