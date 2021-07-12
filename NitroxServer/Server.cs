@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Timers;
 using NitroxModel.Logger;
+using NitroxModel.OS;
 using NitroxModel.Serialization;
 using NitroxServer.Serialization;
 using NitroxServer.Serialization.World;
@@ -73,23 +74,25 @@ namespace NitroxServer
             }
 
             IsSaving = true;
+
             if (worldPersistence.Save(world, serverConfig.SaveName))
             {
                 try
                 {
-                    string postSaveCommandPathTrimmed = serverConfig.PostSaveCommandPath.Trim('"');
-
                     // Call external tool for backups, etc
-                    if (!string.IsNullOrEmpty(postSaveCommandPathTrimmed) ||
-                        File.Exists(postSaveCommandPathTrimmed))
+                    if (File.Exists(serverConfig.PostSaveCommandPath))
                     {
-                        Process.Start(postSaveCommandPathTrimmed);
-                        Log.Info($"Post-save command completed successfully: {postSaveCommandPathTrimmed}");
+                        using Process process = FileSystem.Instance.OpenOrExecuteFile(serverConfig.PostSaveCommandPath);
+                        Log.Info($"Post-save command completed successfully: {serverConfig.PostSaveCommandPath}");
+                    }
+                    else
+                    {
+                        Log.Info($"Post-save command not found: {serverConfig.PostSaveCommandPath}");
                     }
                 }
-                catch (Exception Ex)
+                catch (Exception ex)
                 {
-                    Log.Error($"Post-save command failed: {Ex.Message}");
+                    Log.Error($"Post-save command failed: {ex.Message}");
                 }
             }
             IsSaving = false;

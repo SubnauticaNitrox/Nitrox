@@ -14,6 +14,8 @@ namespace NitroxServer.Serialization
 
         private int saveIntervalSetting = 120000;
 
+        private string mPostSaveCommandPath = string.Empty;
+
         private string saveNameSetting = "world";
         public override string FileName => "server.cfg";
 
@@ -44,7 +46,19 @@ namespace NitroxServer.Serialization
         }
 
         [PropertyDescription("Command to run following a successful word save (e.g. world backup .exe, .bat, or PowerShell script)")]
-        public string PostSaveCommandPath { get; set; } = string.Empty;
+        public string PostSaveCommandPath
+        {
+            get => mPostSaveCommandPath;
+            set
+            {
+                mPostSaveCommandPath = value;
+
+                if (mPostSaveCommandPath != null)
+                {
+                    mPostSaveCommandPath = value.Trim('"');
+                }
+            }
+        }
 
         public int MaxConnections
         {
