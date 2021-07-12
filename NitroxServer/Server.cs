@@ -87,7 +87,7 @@ namespace NitroxServer
                     }
                     else
                     {
-                        Log.Info($"Post-save command not found: {serverConfig.PostSaveCommandPath}");
+                        Log.Error($"Post-save command not found: {serverConfig.PostSaveCommandPath}");
                     }
                 }
                 catch (Exception ex)
