@@ -1,12 +1,14 @@
 ﻿using System;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Text;
 using System.Timers;
 using NitroxModel.Logger;
-using NitroxServer.Serialization.World;
-using System.IO;
-using System.Text;
-using System.Linq;
-using NitroxServer.Serialization;
+using NitroxModel.OS;
 using NitroxModel.Serialization;
+using NitroxServer.Serialization;
+using NitroxServer.Serialization.World;
 
 namespace NitroxServer
 {
@@ -72,7 +74,28 @@ namespace NitroxServer
             }
 
             IsSaving = true;
-            worldPersistence.Save(world, serverConfig.SaveName);
+
+            bool savedSuccessfully = worldPersistence.Save(world, serverConfig.SaveName);
+            if (savedSuccessfully && !string.IsNullOrWhiteSpace(serverConfig.PostSaveCommandPath))
+            {
+                try
+                {
+                    // Call external tool for backups, etc
+                    if (File.Exists(serverConfig.PostSaveCommandPath))
+                    {
+                        using Process process = Process.Start(serverConfig.PostSaveCommandPath);
+                        Log.Info($"Post-save command completed successfully: {serverConfig.PostSaveCommandPath}");
+                    }
+                    else
+                    {
+                        Log.Error($"Post-save file does not exist: {serverConfig.PostSaveCommandPath}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex, "Post-save command failed");
+                }
+            }
             IsSaving = false;
         }
 
