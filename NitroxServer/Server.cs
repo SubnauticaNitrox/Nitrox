@@ -75,7 +75,7 @@ namespace NitroxServer
 
             IsSaving = true;
 
-            if (worldPersistence.Save(world, serverConfig.SaveName))
+            if (worldPersistence.Save(world, serverConfig.SaveName) && !string.IsNullOrWhiteSpace(serverConfig.PostSaveCommandPath))
             {
                 try
                 {
@@ -87,12 +87,12 @@ namespace NitroxServer
                     }
                     else
                     {
-                        Log.Error($"Post-save command not found: {serverConfig.PostSaveCommandPath}");
+                        Log.Error($"Post-save file does not exist: {serverConfig.PostSaveCommandPath}");
                     }
                 }
                 catch (Exception ex)
                 {
-                    Log.Error($"Post-save command failed: {ex.Message}");
+                    Log.Error(ex, "Post-save command failed");
                 }
             }
             IsSaving = false;

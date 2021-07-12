@@ -50,7 +50,7 @@ namespace NitroxModel.OS
             string editorProgram = GetDefaultPrograms(file).FirstOrDefault() ?? TextEditor;
 
             // Handle special arguments for popular editors.
-            string arguments = Path.GetFileName(editorProgram).ToLowerInvariant() switch
+            string arguments = Path.GetFileName(editorProgram)?.ToLowerInvariant() switch
             {
                 "code.cmd" => "--wait", // Allow to wait on VS code
                 _ => ""
