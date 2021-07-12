@@ -75,7 +75,8 @@ namespace NitroxServer
 
             IsSaving = true;
 
-            if (worldPersistence.Save(world, serverConfig.SaveName) && !string.IsNullOrWhiteSpace(serverConfig.PostSaveCommandPath))
+            bool savedSuccessfully = worldPersistence.Save(world, serverConfig.SaveName);
+            if (savedSuccessfully && !string.IsNullOrWhiteSpace(serverConfig.PostSaveCommandPath))
             {
                 try
                 {
