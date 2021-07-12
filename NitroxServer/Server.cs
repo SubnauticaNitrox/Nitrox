@@ -82,7 +82,7 @@ namespace NitroxServer
                     // Call external tool for backups, etc
                     if (File.Exists(serverConfig.PostSaveCommandPath))
                     {
-                        using Process process = FileSystem.Instance.OpenOrExecuteFile(serverConfig.PostSaveCommandPath);
+                        using Process process = Process.Start(serverConfig.PostSaveCommandPath);
                         Log.Info($"Post-save command completed successfully: {serverConfig.PostSaveCommandPath}");
                     }
                     else
