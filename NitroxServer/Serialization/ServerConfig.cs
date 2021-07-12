@@ -45,7 +45,7 @@ namespace NitroxServer.Serialization
             }
         }
 
-        [PropertyDescription("Command to run following a successful word save (e.g. .exe, .bat, or PowerShell script). ")]
+        [PropertyDescription("Command to run following a successful world save (e.g. .exe, .bat, or PowerShell script). ")]
         public string PostSaveCommandPath
         {
             get => postSaveCommandPath;
