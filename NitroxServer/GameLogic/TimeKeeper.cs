@@ -6,19 +6,20 @@ namespace NitroxServer.GameLogic
 {
     public class TimeKeeper
     {
-        // Values taken directly from hardcoded subnautica values
-        private static readonly DateTime SUBNAUTICA_FUTURE_START_DATE = new DateTime(2287, 5, 7, 9, 36, 0);
+        public readonly float SUBNAUTICA_BEGIN_TIME_OFFSET;
+        public readonly DateTime SUBNAUTICA_DATE_ORIGIN;
+        public DateTime ServerStartTime { get; set; }
 
-        private static readonly float SUBNAUTICA_BEGIN_TIME_OFFSET = 1200f /
-                                                                     86400f *
-                                                                     (3600f * SUBNAUTICA_FUTURE_START_DATE.Hour +
-                                                                      60f * SUBNAUTICA_FUTURE_START_DATE.Minute +
-                                                                      SUBNAUTICA_FUTURE_START_DATE.Second);
-
-        // Discrepancy value for player based time modifications
         private float correctionValue;
 
-        public DateTime ServerStartTime { get; set; } = DateTime.UtcNow;
+        public TimeKeeper()
+        {
+            ServerStartTime = DateTime.UtcNow;
+            SUBNAUTICA_DATE_ORIGIN = new(2287, 5, 7, 9, 36, 0);
+            SUBNAUTICA_BEGIN_TIME_OFFSET = 1200f * (3600f * SUBNAUTICA_DATE_ORIGIN.Hour
+                                                    + 60f * SUBNAUTICA_DATE_ORIGIN.Minute
+                                                    + SUBNAUTICA_DATE_ORIGIN.Second) / 86400f;
+        }
 
         public void SetDay()
         {

@@ -20,7 +20,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return "[GhostCrafterBeginCrafting - GhostCrafterId: " + GhostCrafterId + " TechType: " + TechType + " Duration: " + Duration + "]";
+            return $"[GhostCrafterBeginCrafting - GhostCrafterId: {GhostCrafterId}, TechType: {TechType}, Duration: {Duration}]";
         }
     }
 }
