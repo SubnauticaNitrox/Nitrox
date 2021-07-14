@@ -15,8 +15,7 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class Constructable_NotifyConstructedChanged_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(Constructable);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("NotifyConstructedChanged", BindingFlags.NonPublic | BindingFlags.Instance);
+        public static readonly MethodInfo TARGET_METHOD = typeof(Constructable).GetMethod("NotifyConstructedChanged", BindingFlags.NonPublic | BindingFlags.Instance);
 
         public static void Postfix(Constructable __instance)
         {
@@ -33,13 +32,13 @@ namespace NitroxPatcher.Patches.Dynamic
                 {
                     // base piece, get id before ghost appeared
                     id = (NitroxId)opId.Value;
-                    Log.Info("Deconstructing base piece with id: " + id);
+                    Log.Debug($"Deconstructing base piece with id: {id}");
                 }
                 else
                 {
                     // furniture, just use the same object to get the id
                     id = NitroxEntity.GetId(__instance.gameObject);
-                    Log.Info("Deconstructing furniture with id: " + id);
+                    Log.Debug($"Deconstructing furniture with id: {id}");
                 }
 
                 NitroxServiceLocator.LocateService<Building>().DeconstructionBegin(id);
