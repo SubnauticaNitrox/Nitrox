@@ -10,6 +10,8 @@ using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Util;
+using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
@@ -67,8 +69,9 @@ namespace NitroxClient.GameLogic.InitialSync
                     Log.Debug($"Initial item data for {item.name} giving to container {itemData.ContainerId}");
 
                     Pickupable pickupable = item.GetComponent<Pickupable>();
+                    Validate.NotNull(pickupable);
 
-                    if (pickupable && itemData.ContainerId == packet.PlayerGameObjectId)
+                    if (itemData.ContainerId == packet.PlayerGameObjectId)
                     {
                         goals.Remove(pickupable.GetTechType());  // Remove notification goal event from item player has in any container
 
@@ -78,9 +81,11 @@ namespace NitroxClient.GameLogic.InitialSync
 
                         container.UnsafeAdd(inventoryItem);
                     }
-                    else if (onlinePlayers.Any(playerId => playerId.Equals(itemData.ContainerId)))
+                    else if (NitroxEntity.TryGetObjectFrom(itemData.ContainerId, out GameObject containerOwner))
                     {
-                        itemContainers.AddItem(item, itemData.ContainerId);
+                        Optional<ItemsContainer> opContainer = InventoryContainerHelper.TryGetContainerByOwner(containerOwner);
+                        Validate.IsPresent(opContainer);
+                        opContainer.Value.UnsafeAdd(new InventoryItem(pickupable));
 
                         ContainerAddItemPostProcessor postProcessor = ContainerAddItemPostProcessor.From(item);
                         postProcessor.process(item, itemData);
