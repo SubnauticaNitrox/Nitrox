@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Containers;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
@@ -22,13 +20,14 @@ namespace NitroxClient.GameLogic.InitialSync
 {
     public class InventoryItemsInitialSyncProcessor : InitialSyncProcessor
     {
-        private readonly IPacketSender packetSender;
-        private readonly ItemContainers itemContainers;
+        private readonly FieldInfo itemGoalTrackerMainField = typeof(ItemGoalTracker).GetField("main", BindingFlags.NonPublic | BindingFlags.Static);
+        private readonly FieldInfo itemGoalTrackerGoalsField = typeof(ItemGoalTracker).GetField("goals", BindingFlags.NonPublic | BindingFlags.Instance);
 
-        public InventoryItemsInitialSyncProcessor(IPacketSender packetSender, ItemContainers itemContainers)
+        private readonly IPacketSender packetSender;
+
+        public InventoryItemsInitialSyncProcessor(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
-            this.itemContainers = itemContainers;
 
             DependentProcessors.Add(typeof(GlobalRootInitialSyncProcessor)); // Global root items can have inventories like the floating locker.
             DependentProcessors.Add(typeof(BuildingInitialSyncProcessor)); // Buildings can have inventories like storage lockers.
@@ -42,13 +41,10 @@ namespace NitroxClient.GameLogic.InitialSync
         {
             int totalItemDataSynced = 0;
 
-            HashSet<NitroxId> onlinePlayers = new HashSet<NitroxId> { packet.PlayerGameObjectId };
-            onlinePlayers.AddRange(packet.RemotePlayerData.Select(playerData => playerData.PlayerContext.PlayerNitroxId));
-
             using (packetSender.Suppress<ItemContainerAdd>())
             {
-                ItemGoalTracker itemGoalTracker = (ItemGoalTracker)typeof(ItemGoalTracker).GetField("main", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
-                Dictionary<TechType, List<ItemGoal>> goals = (Dictionary<TechType, List<ItemGoal>>)(typeof(ItemGoalTracker).GetField("goals", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(itemGoalTracker));
+                ItemGoalTracker itemGoalTracker = (ItemGoalTracker)itemGoalTrackerMainField.GetValue(null);
+                Dictionary<TechType, List<ItemGoal>> goals = (Dictionary<TechType, List<ItemGoal>>)itemGoalTrackerGoalsField.GetValue(itemGoalTracker);
 
                 foreach (ItemData itemData in packet.InventoryItems)
                 {
