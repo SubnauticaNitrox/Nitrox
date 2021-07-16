@@ -57,7 +57,8 @@ namespace NitroxModel.Discovery.InstallationFinders
                 line = Regex.Unescape(line.Trim().Trim('\t'));
                 Match regMatch = Regex.Match(line, "\"(.*)\"\t*\"(.*)\"");
                 string key = regMatch.Groups[1].Value;
-                if (!key.Equals("path", StringComparison.OrdinalIgnoreCase))
+                // New format (about 2021-07-16) uses "path" key instead of steam app id as key. If either, it could be steam game path.
+                if (!key.Equals("path", StringComparison.OrdinalIgnoreCase) && !int.TryParse(key, out _))
                 {
                     continue;
                 }
