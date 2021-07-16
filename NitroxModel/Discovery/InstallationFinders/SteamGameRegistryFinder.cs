@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using Microsoft.Win32;
@@ -56,14 +57,15 @@ namespace NitroxModel.Discovery.InstallationFinders
                 line = Regex.Unescape(line.Trim().Trim('\t'));
                 Match regMatch = Regex.Match(line, "\"(.*)\"\t*\"(.*)\"");
                 string key = regMatch.Groups[1].Value;
+                if (!key.Equals("path", StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
                 string value = regMatch.Groups[2].Value;
 
-                if (int.TryParse(key, out _))
+                if (File.Exists(Path.Combine(value, "steamapps", $"appmanifest_{appid}.acf")))
                 {
-                    if (File.Exists(Path.Combine(value, $"steamapps/appmanifest_{appid}.acf")))
-                    {
-                        return Path.Combine(value, "steamapps/common", gameName);
-                    }
+                    return Path.Combine(value, "steamapps/common", gameName);
                 }
             }
 
