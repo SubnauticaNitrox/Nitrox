@@ -13,7 +13,10 @@ namespace NitroxClient.Communication.Packets.Processors
             GameObject gameObject = NitroxEntity.RequireObjectFrom(packet.GhostCrafterId);
             CrafterLogic crafterLogic = gameObject.RequireComponentInChildren<CrafterLogic>(true);
 
-            crafterLogic.Reset();
+            if (crafterLogic.numCrafted > 0)
+            {
+                crafterLogic.Reset();
+            }
         }
     }
 }

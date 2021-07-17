@@ -4,19 +4,22 @@ using System.Diagnostics;
 using System.Timers;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
-using NitroxServer.GameLogic.Bases;
 
 namespace NitroxServer.GameLogic
 {
     public class EventTriggerer
     {
-        private PlayerManager playerManager;
+        private readonly Dictionary<string, Timer> eventTimers;
+        private readonly PlayerManager playerManager;
         private Stopwatch stopWatch;
-        private Dictionary<String, Timer> eventTimers = new Dictionary<string, Timer>();
+        
+
         public double ElapsedTime;
         public double AuroraExplosionTime;
+
         public EventTriggerer(PlayerManager playerManager, double elapsedTime, double? auroraExplosionTime)
         {
+            eventTimers = new();
             this.playerManager = playerManager;
             SetupEventTimers(elapsedTime, auroraExplosionTime);
         }

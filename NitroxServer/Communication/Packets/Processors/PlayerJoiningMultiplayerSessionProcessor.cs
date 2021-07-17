@@ -83,7 +83,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 player.Permissions
             );
 
-            timeKeeper.SendCurrentTimePacket(player);
+            timeKeeper.SendCurrentTimePacket();
             player.SendPacket(initialPlayerSync);
         }
 
