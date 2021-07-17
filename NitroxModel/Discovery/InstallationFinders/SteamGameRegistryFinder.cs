@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using Microsoft.Win32;
@@ -56,14 +57,16 @@ namespace NitroxModel.Discovery.InstallationFinders
                 line = Regex.Unescape(line.Trim().Trim('\t'));
                 Match regMatch = Regex.Match(line, "\"(.*)\"\t*\"(.*)\"");
                 string key = regMatch.Groups[1].Value;
+                // New format (about 2021-07-16) uses "path" key instead of steam-library-index as key. If either, it could be steam game path.
+                if (!key.Equals("path", StringComparison.OrdinalIgnoreCase) && !int.TryParse(key, out _))
+                {
+                    continue;
+                }
                 string value = regMatch.Groups[2].Value;
 
-                if (int.TryParse(key, out _))
+                if (File.Exists(Path.Combine(value, "steamapps", $"appmanifest_{appid}.acf")))
                 {
-                    if (File.Exists(Path.Combine(value, $"steamapps/appmanifest_{appid}.acf")))
-                    {
-                        return Path.Combine(value, "steamapps/common", gameName);
-                    }
+                    return Path.Combine(value, "steamapps/common", gameName);
                 }
             }
 
