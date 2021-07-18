@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Containers;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Util;
+using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
@@ -20,13 +20,14 @@ namespace NitroxClient.GameLogic.InitialSync
 {
     public class InventoryItemsInitialSyncProcessor : InitialSyncProcessor
     {
-        private readonly IPacketSender packetSender;
-        private readonly ItemContainers itemContainers;
+        private readonly FieldInfo itemGoalTrackerMainField = typeof(ItemGoalTracker).GetField("main", BindingFlags.NonPublic | BindingFlags.Static);
+        private readonly FieldInfo itemGoalTrackerGoalsField = typeof(ItemGoalTracker).GetField("goals", BindingFlags.NonPublic | BindingFlags.Instance);
 
-        public InventoryItemsInitialSyncProcessor(IPacketSender packetSender, ItemContainers itemContainers)
+        private readonly IPacketSender packetSender;
+
+        public InventoryItemsInitialSyncProcessor(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
-            this.itemContainers = itemContainers;
 
             DependentProcessors.Add(typeof(GlobalRootInitialSyncProcessor)); // Global root items can have inventories like the floating locker.
             DependentProcessors.Add(typeof(BuildingInitialSyncProcessor)); // Buildings can have inventories like storage lockers.
@@ -40,13 +41,10 @@ namespace NitroxClient.GameLogic.InitialSync
         {
             int totalItemDataSynced = 0;
 
-            HashSet<NitroxId> onlinePlayers = new HashSet<NitroxId> { packet.PlayerGameObjectId };
-            onlinePlayers.AddRange(packet.RemotePlayerData.Select(playerData => playerData.PlayerContext.PlayerNitroxId));
-
             using (packetSender.Suppress<ItemContainerAdd>())
             {
-                ItemGoalTracker itemGoalTracker = (ItemGoalTracker)typeof(ItemGoalTracker).GetField("main", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
-                Dictionary<TechType, List<ItemGoal>> goals = (Dictionary<TechType, List<ItemGoal>>)(typeof(ItemGoalTracker).GetField("goals", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(itemGoalTracker));
+                ItemGoalTracker itemGoalTracker = (ItemGoalTracker)itemGoalTrackerMainField.GetValue(null);
+                Dictionary<TechType, List<ItemGoal>> goals = (Dictionary<TechType, List<ItemGoal>>)itemGoalTrackerGoalsField.GetValue(itemGoalTracker);
 
                 foreach (ItemData itemData in packet.InventoryItems)
                 {
@@ -67,8 +65,9 @@ namespace NitroxClient.GameLogic.InitialSync
                     Log.Debug($"Initial item data for {item.name} giving to container {itemData.ContainerId}");
 
                     Pickupable pickupable = item.GetComponent<Pickupable>();
+                    Validate.NotNull(pickupable);
 
-                    if (pickupable && itemData.ContainerId == packet.PlayerGameObjectId)
+                    if (itemData.ContainerId == packet.PlayerGameObjectId)
                     {
                         goals.Remove(pickupable.GetTechType());  // Remove notification goal event from item player has in any container
 
@@ -78,9 +77,11 @@ namespace NitroxClient.GameLogic.InitialSync
 
                         container.UnsafeAdd(inventoryItem);
                     }
-                    else if (onlinePlayers.Any(playerId => playerId.Equals(itemData.ContainerId)))
+                    else if (NitroxEntity.TryGetObjectFrom(itemData.ContainerId, out GameObject containerOwner))
                     {
-                        itemContainers.AddItem(item, itemData.ContainerId);
+                        Optional<ItemsContainer> opContainer = InventoryContainerHelper.TryGetContainerByOwner(containerOwner);
+                        Validate.IsPresent(opContainer);
+                        opContainer.Value.UnsafeAdd(new InventoryItem(pickupable));
 
                         ContainerAddItemPostProcessor postProcessor = ContainerAddItemPostProcessor.From(item);
                         postProcessor.process(item, itemData);

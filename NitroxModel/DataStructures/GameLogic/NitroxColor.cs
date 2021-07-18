@@ -19,16 +19,17 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoMember(4)]
         public float A { get; private set; }
 
-        public NitroxColor(float r, float g, float b) : this(r, g, b, 1)
-        {
-        }
-
-        public NitroxColor(float r, float g, float b, float a)
+        public NitroxColor(float r, float g, float b, float a = 1)
         {
             R = r;
             G = g;
             B = b;
             A = a;
+        }
+
+        public override string ToString()
+        {
+            return $"[NitroxColor: {R}, {G}, {B}, {A}]";
         }
     }
 }
