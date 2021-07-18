@@ -6,7 +6,6 @@ using System.IO;
 using System.Text;
 using System.Linq;
 using NitroxServer.Serialization;
-using NitroxModel.Serialization;
 
 namespace NitroxServer
 {

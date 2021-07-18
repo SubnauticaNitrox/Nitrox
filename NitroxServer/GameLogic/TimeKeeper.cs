@@ -8,6 +8,7 @@ namespace NitroxServer.GameLogic
     {
         public readonly double SUBNAUTICA_BEGIN_TIME_OFFSET;
         public readonly DateTime SUBNAUTICA_DATE_ORIGIN;
+
         public DateTime ServerStartTime { get; set; }
 
         private double correctionValue;

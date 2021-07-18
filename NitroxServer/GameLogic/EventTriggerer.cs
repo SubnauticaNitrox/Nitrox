@@ -9,17 +9,15 @@ namespace NitroxServer.GameLogic
 {
     public class EventTriggerer
     {
-        private readonly Dictionary<string, Timer> eventTimers;
+        private readonly Dictionary<string, Timer> eventTimers = new();
+        private readonly Stopwatch stopWatch = new();
         private readonly PlayerManager playerManager;
-        private Stopwatch stopWatch;
-        
 
         public double ElapsedTime;
         public double AuroraExplosionTime;
 
         public EventTriggerer(PlayerManager playerManager, double elapsedTime, double? auroraExplosionTime)
         {
-            eventTimers = new();
             this.playerManager = playerManager;
             SetupEventTimers(elapsedTime, auroraExplosionTime);
         }
@@ -45,7 +43,7 @@ namespace NitroxServer.GameLogic
             CreateTimer(AuroraExplosionTime - ElapsedTime, StoryEventType.PDA, "Story_AuroraWarning4");
             CreateTimer(AuroraExplosionTime + 24000 - ElapsedTime, StoryEventType.EXTRA, "Story_AuroraExplosion");
             //like the timers, except we can see how much time has passed
-            stopWatch = new Stopwatch();
+
             stopWatch.Start();
         }
 
@@ -57,15 +55,18 @@ namespace NitroxServer.GameLogic
                 return null;
             }
 
-            Timer timer = new Timer();
+            Timer timer = new()
+            {
+                Interval = time,
+                Enabled = true,
+                AutoReset = false
+            };
             timer.Elapsed += delegate
             {
                 Log.Info($"Triggering event type {eventType} at time {time} with param {key}");
                 playerManager.SendPacketToAllPlayers(new StoryEventSend(eventType, key));
             };
-            timer.Interval = time;
-            timer.Enabled = true;
-            timer.AutoReset = false;
+
             if (!eventTimers.ContainsKey(key))
             {
                 eventTimers.Add(key, timer);
