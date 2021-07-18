@@ -30,7 +30,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 TransientLocalObjectManager.Add(TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE_GUID, null);
 
                 NitroxId id = (NitroxId)opId.Value;
-                Log.Info("Setting ghost id via Constructable_SetState_Patch " + id);
+                Log.Debug($"Setting ghost id via Constructable_SetState_Patch {id}");
                 NitroxEntity.SetNewId(__instance.gameObject, id);
             }
         }

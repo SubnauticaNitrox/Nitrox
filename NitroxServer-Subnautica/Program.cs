@@ -163,10 +163,11 @@ namespace NitroxServer_Subnautica
 
             Log.Info("Press L to open log file before closing. Press any other key to close . . .");
             ConsoleKeyInfo key = Console.ReadKey(true);
+
             if (key.Key == ConsoleKey.L)
             {
                 Log.Info($"Opening log file at: {mostRecentLogFile}..");
-                FileSystem.Instance.OpenOrExecuteFile(mostRecentLogFile);
+                using Process process = FileSystem.Instance.OpenOrExecuteFile(mostRecentLogFile);
             }
 
             Environment.Exit(1);
