@@ -14,9 +14,9 @@ namespace NitroxServer.Serialization.Upgrade
 
         public abstract Version TargetVersion { get; }
 
-        public void UpgradeData(string saveDir, string fileEnding)
+        public void UpgradeSaveFiles(string saveDir, string fileEnding)
         {
-            Log.Info($"Executing {GetType().Name}");
+            Log.Info($"┌── Executing {GetType().Name}");
             string baseDataPath = Path.Combine(saveDir, "BaseData" + fileEnding);
             string playerDataPath = Path.Combine(saveDir, "PlayerData" + fileEnding);
             string worldDataPath = Path.Combine(saveDir, "WorldData" + fileEnding);
