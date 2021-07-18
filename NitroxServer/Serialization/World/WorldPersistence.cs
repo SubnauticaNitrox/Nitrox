@@ -155,7 +155,7 @@ namespace NitroxServer.Serialization.World
                     InventoryData = InventoryData.From(new List<ItemData>(), new List<ItemData>(), new List<EquippedItemData>()),
                     VehicleData = VehicleData.From(new List<VehicleModel>()),
                     ParsedBatchCells = new List<NitroxInt3>(),
-                    ServerStartTime = DateTime.Now,
+                    ServerStartTime = DateTime.UtcNow,
 #if DEBUG
                     Seed = "TCCBIBZXAB"
 #endif

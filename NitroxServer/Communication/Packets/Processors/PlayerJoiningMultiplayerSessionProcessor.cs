@@ -18,23 +18,21 @@ namespace NitroxServer.Communication.Packets.Processors
         private readonly TimeKeeper timeKeeper;
         private readonly World world;
 
-        public PlayerJoiningMultiplayerSessionProcessor(TimeKeeper timeKeeper,
-            PlayerManager playerManager, World world)
+        public PlayerJoiningMultiplayerSessionProcessor(TimeKeeper timeKeeper, PlayerManager playerManager, World world)
         {
-            this.timeKeeper = timeKeeper;
             this.playerManager = playerManager;
+            this.timeKeeper = timeKeeper;
             this.world = world;
         }
 
         public override void Process(PlayerJoiningMultiplayerSession packet, NitroxConnection connection)
         {
             Player player = playerManager.PlayerConnected(connection, packet.ReservationKey, out bool wasBrandNewPlayer);
-            timeKeeper.SendCurrentTimePacket(player);
 
             NitroxId assignedEscapePodId = world.EscapePodManager.AssignPlayerToEscapePod(player.Id, out Optional<EscapePodModel> newlyCreatedEscapePod);
             if (newlyCreatedEscapePod.HasValue)
             {
-                AddEscapePod addEscapePod = new AddEscapePod(newlyCreatedEscapePod.Value);
+                AddEscapePod addEscapePod = new(newlyCreatedEscapePod.Value);
                 playerManager.SendPacketToOtherPlayers(addEscapePod, player);
             }
 
@@ -42,7 +40,7 @@ namespace NitroxServer.Communication.Packets.Processors
             List<NitroxTechType> techTypes = equippedItems.Select(equippedItem => equippedItem.TechType).ToList();
             List<ItemData> inventoryItems = GetInventoryItems(player.GameObjectId);
 
-            PlayerJoinedMultiplayerSession playerJoinedPacket = new PlayerJoinedMultiplayerSession(player.PlayerContext, player.SubRootId, techTypes, inventoryItems);
+            PlayerJoinedMultiplayerSession playerJoinedPacket = new(player.PlayerContext, player.SubRootId, techTypes, inventoryItems);
             playerManager.SendPacketToOtherPlayers(playerJoinedPacket, player);
 
             // Make players on localhost admin by default.
@@ -61,7 +59,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 }
             }
 
-            InitialPlayerSync initialPlayerSync = new InitialPlayerSync(player.GameObjectId,
+            InitialPlayerSync initialPlayerSync = new(player.GameObjectId,
                 wasBrandNewPlayer,
                 world.EscapePodManager.GetEscapePods(),
                 assignedEscapePodId,
@@ -82,14 +80,16 @@ namespace NitroxServer.Communication.Packets.Processors
                 world.EntityManager.GetGlobalRootEntities(),
                 simulations,
                 world.GameMode,
-                player.Permissions);
+                player.Permissions
+            );
 
+            timeKeeper.SendCurrentTimePacket();
             player.SendPacket(initialPlayerSync);
         }
 
         private List<InitialRemotePlayerData> GetRemotePlayerData(Player player)
         {
-            List<InitialRemotePlayerData> playerData = new List<InitialRemotePlayerData>();
+            List<InitialRemotePlayerData> playerData = new();
 
             foreach (Player otherPlayer in playerManager.GetConnectedPlayers())
             {
@@ -98,7 +98,7 @@ namespace NitroxServer.Communication.Packets.Processors
                     List<EquippedItemData> equippedItems = otherPlayer.GetEquipment();
                     List<NitroxTechType> techTypes = equippedItems.Select(equippedItem => equippedItem.TechType).ToList();
 
-                    InitialRemotePlayerData remotePlayer = new InitialRemotePlayerData(otherPlayer.PlayerContext, otherPlayer.Position, otherPlayer.SubRootId, techTypes);
+                    InitialRemotePlayerData remotePlayer = new(otherPlayer.PlayerContext, otherPlayer.Position, otherPlayer.SubRootId, techTypes);
                     playerData.Add(remotePlayer);
                 }
             }
@@ -108,7 +108,7 @@ namespace NitroxServer.Communication.Packets.Processors
 
         private List<EquippedItemData> GetAllModules(ICollection<EquippedItemData> globalModules, List<EquippedItemData> playerModules)
         {
-            List<EquippedItemData> modulesToSync = new List<EquippedItemData>();
+            List<EquippedItemData> modulesToSync = new();
             modulesToSync.AddRange(globalModules);
             modulesToSync.AddRange(playerModules);
             return modulesToSync;

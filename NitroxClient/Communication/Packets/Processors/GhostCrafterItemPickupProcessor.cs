@@ -1,5 +1,4 @@
-﻿using NitroxClient.Communication.Abstract;
-using NitroxClient.Communication.Packets.Processors.Abstract;
+﻿using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Packets;
@@ -9,13 +8,6 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class GhostCrafterItemPickupProcessor : ClientPacketProcessor<GhostCrafterItemPickup>
     {
-        private readonly IPacketSender packetSender;
-
-        public GhostCrafterItemPickupProcessor(IPacketSender packetSender)
-        {
-            this.packetSender = packetSender;
-        }
-
         public override void Process(GhostCrafterItemPickup packet)
         {
             GameObject gameObject = NitroxEntity.RequireObjectFrom(packet.GhostCrafterId);

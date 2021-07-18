@@ -5,11 +5,16 @@ namespace NitroxModel.Packets
     [Serializable]
     public class TimeChange : Packet
     {
-        public float CurrentTime { get; }
+        public double CurrentTime { get; }
 
-        public TimeChange(float currentTime)
+        public TimeChange(double currentTime)
         {
             CurrentTime = currentTime;
+        }
+
+        public override string ToString()
+        {
+            return $"[TimeChange - CurrentTime: {CurrentTime}]";
         }
     }
 }
