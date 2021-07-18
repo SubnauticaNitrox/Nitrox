@@ -30,8 +30,8 @@ namespace NitroxServer.Serialization.World
 
         private readonly ServerProtoBufSerializer protoBufSerializer;
         private readonly ServerJsonSerializer jsonSerializer;
-        private readonly RandomStartGenerator randomStart;
         private readonly ServerConfig config;
+        private readonly RandomStartGenerator randomStart;
         private readonly SaveDataUpgrade[] upgrades;
 
         public WorldPersistence(ServerProtoBufSerializer protoBufSerializer, ServerJsonSerializer jsonSerializer, ServerConfig config, RandomStartGenerator randomStart, SaveDataUpgrade[] upgrades)
@@ -40,7 +40,6 @@ namespace NitroxServer.Serialization.World
             this.jsonSerializer = jsonSerializer;
             this.config = config;
             this.randomStart = randomStart;
-            this.config = config;
             this.upgrades = upgrades;
 
             UpdateSerializer(config.SerializerMode);
