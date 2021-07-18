@@ -95,7 +95,8 @@ namespace NitroxServer.Serialization.World
             {
                 PersistedWorldData persistedData = new();
 
-                UpgradeSave();
+
+                UpgradeSave(saveDir);
 
                 persistedData.BaseData = Serializer.Deserialize<BaseData>(Path.Combine(saveDir, $"BaseData{FileEnding}"));
                 persistedData.PlayerData = Serializer.Deserialize<PlayerData>(Path.Combine(saveDir, $"PlayerData{FileEnding}"));
@@ -214,10 +215,8 @@ namespace NitroxServer.Serialization.World
             return world;
         }
 
-        private void UpgradeSave()
+        private void UpgradeSave(string saveDir)
         {
-            string saveDir = config.SaveName;
-
             SaveFileVersion saveFileVersion = Serializer.Deserialize<SaveFileVersion>(Path.Combine(saveDir, $"Version{FileEnding}"));
 
             // SaveFileVersion structure was updated in V1.5.0.0
@@ -229,9 +228,10 @@ namespace NitroxServer.Serialization.World
 
             if (saveFileVersion.Version == NitroxEnvironment.Version)
             {
-                Log.Info("Save files are already at the newest version");
+                return;
             }
-            else if (config.SerializerMode == ServerSerializerMode.PROTOBUF)
+
+            if (config.SerializerMode == ServerSerializerMode.PROTOBUF)
             {
                 Log.Info("Can't upgrade while using ProtoBuf as serializer");
             }
