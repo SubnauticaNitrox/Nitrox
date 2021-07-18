@@ -19,6 +19,7 @@ using NitroxServer.GameLogic.Players;
 using NitroxServer.GameLogic.Unlockables;
 using NitroxServer.GameLogic.Vehicles;
 using NitroxServer.Serialization.Resources.Datastructures;
+using NitroxServer.Serialization.Upgrade;
 
 namespace NitroxServer.Serialization.World
 {
@@ -31,13 +32,16 @@ namespace NitroxServer.Serialization.World
         private readonly ServerJsonSerializer jsonSerializer;
         private readonly RandomStartGenerator randomStart;
         private readonly ServerConfig config;
+        private readonly SaveDataUpgrade[] upgrades;
 
-        public WorldPersistence(ServerProtoBufSerializer protoBufSerializer, ServerJsonSerializer jsonSerializer, ServerConfig config, RandomStartGenerator randomStart)
+        public WorldPersistence(ServerProtoBufSerializer protoBufSerializer, ServerJsonSerializer jsonSerializer, ServerConfig config, RandomStartGenerator randomStart, SaveDataUpgrade[] upgrades)
         {
             this.protoBufSerializer = protoBufSerializer;
             this.jsonSerializer = jsonSerializer;
+            this.config = config;
             this.randomStart = randomStart;
             this.config = config;
+            this.upgrades = upgrades;
 
             UpdateSerializer(config.SerializerMode);
         }
@@ -91,12 +95,8 @@ namespace NitroxServer.Serialization.World
             try
             {
                 PersistedWorldData persistedData = new();
-                SaveFileVersion saveFileVersion = Serializer.Deserialize<SaveFileVersion>(Path.Combine(saveDir, $"Version{FileEnding}"));
 
-                if (saveFileVersion == null || saveFileVersion.Version != NitroxEnvironment.Version)
-                {
-                    throw new InvalidDataException("Version file is empty or save data files are too old");
-                }
+                UpgradeSave();
 
                 persistedData.BaseData = Serializer.Deserialize<BaseData>(Path.Combine(saveDir, $"BaseData{FileEnding}"));
                 persistedData.PlayerData = Serializer.Deserialize<PlayerData>(Path.Combine(saveDir, $"PlayerData{FileEnding}"));
@@ -213,6 +213,50 @@ namespace NitroxServer.Serialization.World
             world.EntitySimulation = new EntitySimulation(world.EntityManager, world.SimulationOwnershipData, world.PlayerManager, serverSpawnedSimulationWhiteList);
 
             return world;
+        }
+
+        private void UpgradeSave()
+        {
+            string saveDir = config.SaveName;
+
+            SaveFileVersion saveFileVersion = Serializer.Deserialize<SaveFileVersion>(Path.Combine(saveDir, $"Version{FileEnding}"));
+
+            // SaveFileVersion structure was updated in V1.5.0.0
+            // This can be removed with V1.6.0.0 or later
+            if (File.ReadAllText(Path.Combine(saveDir, $"Version{FileEnding}")).Contains("BaseDataVersion"))
+            {
+                saveFileVersion = new SaveFileVersion(new Version(1, 4, 0, 0));
+            }
+
+            if (saveFileVersion.Version == NitroxEnvironment.Version)
+            {
+                Log.Info("Save files are already at the newest version");
+            }
+            else if (config.SerializerMode == ServerSerializerMode.PROTOBUF)
+            {
+                Log.Info("Can't upgrade while using ProtoBuf as serializer");
+            }
+            else
+            {
+                try
+                {
+                    foreach (SaveDataUpgrade upgrade in upgrades)
+                    {
+                        if (upgrade.TargetVersion > saveFileVersion.Version)
+                        {
+                            upgrade.UpgradeSaveFiles(saveDir, FileEnding);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex, "Error while upgrading save file.");
+                    return;
+                }
+
+                Serializer.Serialize(Path.Combine(saveDir, $"Version{FileEnding}"), new SaveFileVersion());
+                Log.Info($"Save file was upgraded to {NitroxEnvironment.Version}");
+            }
         }
     }
 }
