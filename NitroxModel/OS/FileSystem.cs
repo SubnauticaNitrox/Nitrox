@@ -5,6 +5,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Threading;
+using NitroxModel.Logger;
 using NitroxModel.OS.MacOS;
 using NitroxModel.OS.Unix;
 using NitroxModel.OS.Windows;
@@ -189,16 +190,54 @@ namespace NitroxModel.OS
         /// </summary>
         /// <param name="source">Source file to replace with.</param>
         /// <param name="target">Target file to replace.</param>
-        public void ReplaceFile(string source, string target)
+        /// <returns>True if file was moved or replaced.</returns>
+        public bool ReplaceFile(string source, string target)
         {
+            if (!File.Exists(source))
+            {
+                return false;
+            }
+            source = Path.GetFullPath(source);
+
             if (!File.Exists(target))
             {
                 File.Move(source, target);
+                return true;
             }
-            else
+            try
             {
                 File.Replace(source, target, null, false);
             }
+            catch (IOException ex)
+            {
+                switch ((uint)ex.HResult)
+                {
+                    case 0x80070498:
+                        // Tried to replace file between drives. This does not work, need to do so in steps.
+                        try
+                        {
+                            string originalExtension = Path.GetExtension(target);
+                            originalExtension = string.IsNullOrWhiteSpace(originalExtension) ? "" : $".{originalExtension}";
+                            string backupFileName = $"{Path.GetFileNameWithoutExtension(target)}_{Path.GetFileNameWithoutExtension(Path.GetTempFileName())}{originalExtension}.bak";
+                            Log.Debug($"Renaming file '{target}' to '{backupFileName}' as backup plan if file replace fails");
+                            File.Move(target, backupFileName);
+                            File.Copy(source, target);
+                            File.Delete(source);
+                            File.Delete(backupFileName);
+                        }
+                        catch (Exception ex2)
+                        {
+                            Log.Error(ex2, $"Failed to replace file '{source}' with '{target}' which is on another drive");
+                            return false;
+                        }
+                        break;
+                    default:
+                        // No special handling implemented for error, abort.
+                        Log.Warn($"Unhandled file replace of '{source}' with '{target}' with HRESULT: 0x{ex.HResult:X}");
+                        return false;
+                }
+            }
+            return true;
         }
     }
 }

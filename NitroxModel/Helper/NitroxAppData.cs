@@ -12,7 +12,7 @@ namespace NitroxModel.Helper
             Directory.CreateDirectory(RootDir);
         }
 
-        public static NitroxAppData Instance => instance ?? (instance = new NitroxAppData());
+        public static NitroxAppData Instance => instance ??= new NitroxAppData();
 
         private string RootDir { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox");
 
