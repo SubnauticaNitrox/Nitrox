@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using NitroxModel.Helper;
-using NitroxModel.Logger;
+using NitroxModel.OS;
 
 namespace NitroxModel.Serialization
 {
@@ -31,10 +31,7 @@ namespace NitroxModel.Serialization
         public static ServerList From(string file = null)
         {
             // TODO: Remove backward compatibility after 1.5.0.0 release (no need to move old server file).
-            if (File.Exists(SERVERS_FILE_NAME))
-            {
-                File.Move(SERVERS_FILE_NAME, DefaultFile);
-            }
+            FileSystem.Instance.ReplaceFile(SERVERS_FILE_NAME, DefaultFile);
 
             // Create file if it doesn't exist yet.
             file ??= DefaultFile;
@@ -95,7 +92,7 @@ namespace NitroxModel.Serialization
             {
                 Validate.String(name);
                 Validate.NotNull(address);
-                Validate.IsTrue(port is > ushort.MinValue and <= ushort.MaxValue);
+                Validate.IsTrue(port is >= 1024 and <= ushort.MaxValue);
 
                 Name = name;
                 Address = address;

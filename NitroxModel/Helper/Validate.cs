@@ -76,11 +76,7 @@ namespace NitroxModel.Helper
             }
             
             Optional<string> paramName = GetParameterName<string>();
-            if (paramName.HasValue)
-            {
-                throw new ArgumentException("String must not be null of whitespace", paramName.Value);
-            }
-            throw new ArgumentException("String must not be null of whitespace");
+            throw new ArgumentException("String must not be null of whitespace", paramName.OrElse(null));
         }
 
         public static void IsFalse(bool b, string message)
