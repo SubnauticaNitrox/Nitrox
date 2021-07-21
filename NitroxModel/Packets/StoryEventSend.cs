@@ -16,7 +16,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return "[StoryEventSend - StoryEventType: " + StoryEventType + " Key: " + Key + "]";
+            return $"[StoryEventSend - StoryEventType: {StoryEventType}, Key: {Key}]";
         }
     }
 

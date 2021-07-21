@@ -220,7 +220,7 @@
     <Compile Include="Communication\Packets\Processors\PlayerStatsProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\BasePieceMetadataChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SimulationOwnershipChangeProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\StoryEventHandler.cs" />
+    <Compile Include="Communication\Packets\Processors\StoryEventProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\TimeChangeProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ToggleLightsProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleColorChangeProcessor.cs" />

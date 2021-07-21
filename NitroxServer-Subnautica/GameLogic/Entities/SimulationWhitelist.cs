@@ -13,7 +13,7 @@ namespace NitroxServer_Subnautica.GameLogic.Entities
          * list should not be checked for non-server spawned items as they were probably dropped
          * by the player and are mostly guaranteed to move.
          */
-        public static readonly HashSet<NitroxTechType> ForServerSpawned = new HashSet<NitroxTechType>
+        public static readonly HashSet<NitroxTechType> ForServerSpawned = new()
         {
             TechType.Shocker.ToDto(),
             TechType.Biter.ToDto(),

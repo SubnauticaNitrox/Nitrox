@@ -47,6 +47,7 @@
     <Compile Include="DataStructures\GameLogic\ExoSuitMovementData.cs" />
     <Compile Include="DataStructures\GameLogic\NeptuneRocketModel.cs" />
     <Compile Include="DataStructures\GameLogic\SeamothModel.cs" />
+    <Compile Include="DataStructures\GameLogic\StoryGoalWhitelist.cs" />
     <Compile Include="DataStructures\Surrogates\ColorSurrogate.cs" />
     <Compile Include="DataStructures\Surrogates\QuaternionSurrogate.cs" />
     <Compile Include="DataStructures\Surrogates\TechTypeSurrogate.cs" />
