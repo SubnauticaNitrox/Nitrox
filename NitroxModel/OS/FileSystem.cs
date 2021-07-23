@@ -222,8 +222,17 @@ namespace NitroxModel.OS
                             Log.Debug($"Renaming file '{target}' to '{backupFileName}' as backup plan if file replace fails");
                             File.Move(target, backupFileName);
                             File.Copy(source, target);
-                            File.Delete(source);
-                            File.Delete(backupFileName);
+                            
+                            // Cleanup redundant files, ignoring errors.
+                            try
+                            {
+                                File.Delete(source);
+                                File.Delete(backupFileName);
+                            }
+                            catch (Exception)
+                            {
+                                // ignored
+                            }
                         }
                         catch (Exception ex2)
                         {
