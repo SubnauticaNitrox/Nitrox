@@ -14,14 +14,11 @@ namespace NitroxModel.OS
 {
     public class FileSystem
     {
-        private static readonly Lazy<FileSystem> instance = new(() =>
+        private static readonly Lazy<FileSystem> instance = new(() => Environment.OSVersion.Platform switch
                                                                 {
-                                                                    return Environment.OSVersion.Platform switch
-                                                                    {
-                                                                        PlatformID.Unix => new UnixFileSystem(),
-                                                                        PlatformID.MacOSX => new MacFileSystem(),
-                                                                        _ => new WinFileSystem()
-                                                                    };
+                                                                    PlatformID.Unix => new UnixFileSystem(),
+                                                                    PlatformID.MacOSX => new MacFileSystem(),
+                                                                    _ => new WinFileSystem()
                                                                 },
                                                                 LazyThreadSafetyMode.ExecutionAndPublication);
 
@@ -187,10 +184,12 @@ namespace NitroxModel.OS
 
         /// <summary>
         ///     Replaces target file with source file. If target file does not exist then it moves the file.
+        ///     This falls back to a copy if the target is on a different drive.
+        ///     The source file will always be deleted.
         /// </summary>
         /// <param name="source">Source file to replace with.</param>
         /// <param name="target">Target file to replace.</param>
-        /// <returns>True if file was moved or replaced.</returns>
+        /// <returns>True if file was moved or replaced successfully.</returns>
         public bool ReplaceFile(string source, string target)
         {
             if (!File.Exists(source))
@@ -210,6 +209,7 @@ namespace NitroxModel.OS
             }
             catch (IOException ex)
             {
+                // TODO: Need to test on Linux because the ex.HResult will likely not work or be different number cross-platform.
                 switch ((uint)ex.HResult)
                 {
                     case 0x80070498:
