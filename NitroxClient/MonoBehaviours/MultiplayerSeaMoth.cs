@@ -24,9 +24,10 @@ namespace NitroxClient.MonoBehaviours
 
         protected void Update()
         {
+            // Clamp volume between 0 and 1 (nothing or max). Going below 0 turns up volume to max.
             float distance = Vector3.Distance(Player.main.transform.position, transform.position);
-            rpmSound.GetEventInstance().setVolume(1 - distance / radiusRpmSound);
-            revSound.GetEventInstance().setVolume(1 - distance / radiusRevSound);
+            rpmSound.GetEventInstance().setVolume(Mathf.Clamp01(1 - distance / radiusRpmSound));
+            revSound.GetEventInstance().setVolume(Mathf.Clamp01(1 - distance / radiusRevSound));
 
             if (lastThrottle)
             {

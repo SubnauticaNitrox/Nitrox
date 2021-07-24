@@ -25,7 +25,7 @@ namespace NitroxClient.Debuggers
 
         public SoundDebugger(FMODSystem fmodSystem) : base(700, null, KeyCode.S, true, false, true, GUISkinCreationOptions.DERIVEDCOPY)
         {
-            assetList = fmodSystem.GetSoundDataList();
+            assetList = fmodSystem.SoundDataList;
             ActiveTab = AddTab("Sounds", RenderTabAllSounds);
         }
 
