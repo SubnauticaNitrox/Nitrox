@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using NitroxClient.Communication.Abstract;
+using NitroxClient.Properties;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Logger;
@@ -11,19 +12,16 @@ namespace NitroxClient.GameLogic.FMOD
 {
     public class FMODSystem
     {
-        private readonly Dictionary<string, SoundData> assetWhitelist = new Dictionary<string, SoundData>();
-
+        private readonly Dictionary<string, SoundData> assetWhitelist = new();
         private readonly IPacketSender packetSender;
 
         public FMODSystem(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
-
-            string soundsWhitelist = Properties.Resources.soundsWhitelist;
-
+            string soundsWhitelist = Resources.soundsWhitelist;
             if (string.IsNullOrWhiteSpace(soundsWhitelist))
             {
-                Log.Error(new NullReferenceException(), "[FMODSystem]: soundsWhitelist.csv is null or whitespace");
+                Log.Error(new Exception(), "[FMODSystem]: soundsWhitelist.csv is null or whitespace");
             }
 
             foreach (string entry in soundsWhitelist.Split('\n'))
@@ -47,6 +45,11 @@ namespace NitroxClient.GameLogic.FMOD
             }
         }
 
+        public static FMODSuppressor SuppressSounds()
+        {
+            return new();
+        }
+
         public bool IsWhitelisted(string path)
         {
             return assetWhitelist.TryGetValue(path, out SoundData soundData) && soundData.IsWhitelisted;
@@ -65,7 +68,6 @@ namespace NitroxClient.GameLogic.FMOD
             radius = -1f;
             return false;
         }
-
 
         public void PlayAsset(string path, NitroxVector3 position, float volume, float radius, bool isGlobal)
         {
@@ -87,11 +89,6 @@ namespace NitroxClient.GameLogic.FMOD
             packetSender.Send(new PlayFMODStudioEmitter(id, assetPath, play, allowFadeout));
         }
 
-        public Dictionary<string, SoundData> GetSoundDataList() => assetWhitelist;
-
-        public static FMODSuppressor SuppressSounds()
-        {
-            return new FMODSuppressor();
-        }
+        public Dictionary<string, SoundData> SoundDataList => assetWhitelist;
     }
 }
