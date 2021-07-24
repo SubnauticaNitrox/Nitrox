@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using dnlib.DotNet;
 using dnlib.DotNet.Emit;
+using NitroxModel.OS;
 using FileAttributes = System.IO.FileAttributes;
 
 namespace NitroxLauncher.Patching
@@ -66,7 +67,7 @@ namespace NitroxLauncher.Patching
             {
                 throw error;
             }
-            File.Move(modifiedAssemblyCSharp, assemblyCSharp);
+            FileSystem.Instance.ReplaceFile(modifiedAssemblyCSharp, assemblyCSharp);
         }
 
         private Exception RetryWait(Action action, int interval, int retries = 0)
@@ -112,9 +113,8 @@ namespace NitroxLauncher.Patching
 
                 File.SetAttributes(assemblyCSharp, FileAttributes.Normal);
             }
-
-            File.Delete(assemblyCSharp);
-            File.Move(modifiedAssemblyCSharp, assemblyCSharp);
+            
+            FileSystem.Instance.ReplaceFile(modifiedAssemblyCSharp, assemblyCSharp);
         }
 
         private static int FindNitroxExecuteInstructionIndex(IList<Instruction> methodInstructions)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using NitroxModel.Logger;
+using NitroxModel.OS;
 
 namespace NitroxLauncher.Patching
 {
@@ -42,7 +43,7 @@ namespace NitroxLauncher.Patching
             try
             {
                 string newFilePath = Path.Combine(subnauticaBasePath, newFileName);
-                File.Move(fileToRenamePath, newFilePath);
+                FileSystem.Instance.ReplaceFile(fileToRenamePath, newFilePath);
                 qModPatched = !qModPatched;
                 Log.Info("Removing/Restoring QMod initialisation has been successful");
             }
