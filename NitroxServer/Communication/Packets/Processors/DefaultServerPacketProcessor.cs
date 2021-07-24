@@ -11,7 +11,8 @@ namespace NitroxServer.Communication.Packets.Processors
     {
         private readonly PlayerManager playerManager;
 
-        private readonly HashSet<Type> loggingPacketBlackList = new HashSet<Type> {
+        private readonly HashSet<Type> loggingPacketBlackList = new()
+        {
             typeof(AnimationChangeEvent),
             typeof(Movement),
             typeof(VehicleMovement),
