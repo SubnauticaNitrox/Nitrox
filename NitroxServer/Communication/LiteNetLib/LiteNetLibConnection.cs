@@ -5,7 +5,7 @@ using NitroxModel.Logger;
 using NitroxModel.Networking;
 using NitroxModel.Packets;
 
-namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
+namespace NitroxServer.Communication.LiteNetLib
 {
     public class LiteNetLibConnection : NitroxConnection
     {

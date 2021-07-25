@@ -47,6 +47,7 @@
     <Compile Include="Core\IAutoFacRegistrar.cs" />
     <Compile Include="Core\NitroxEnvironment.cs" />
     <Compile Include="Core\NitroxServiceLocator.cs" />
+    <Compile Include="DataStructures\AtomicBool.cs" />
     <Compile Include="DataStructures\GameLogic\PlantableItemData.cs" />
     <Compile Include="DataStructures\GameLogic\DamageTakenData.cs" />
     <Compile Include="DataStructures\GameLogic\Entities\Metadata\PrecursorDoorwayMetadata.cs" />

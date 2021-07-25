@@ -3,7 +3,7 @@ using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Unlockables;
 
-namespace NitroxServer
+namespace NitroxServer.Communication.Packets.Processors
 {
     public class RadioPlayPendingMessageProcessor :  AuthenticatedPacketProcessor<RadioPlayPendingMessage>
     {

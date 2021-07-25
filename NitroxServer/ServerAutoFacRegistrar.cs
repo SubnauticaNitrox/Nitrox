@@ -2,7 +2,7 @@
 using Autofac;
 using NitroxModel.Core;
 using NitroxModel.Serialization;
-using NitroxServer.Communication.NetworkingLayer.LiteNetLib;
+using NitroxServer.Communication.LiteNetLib;
 using NitroxServer.Communication.Packets;
 using NitroxServer.Communication.Packets.Processors;
 using NitroxServer.Communication.Packets.Processors.Abstract;
@@ -39,7 +39,7 @@ namespace NitroxServer
             containerBuilder.RegisterType<ConsoleCommandProcessor>().SingleInstance();
 
             containerBuilder.RegisterType<LiteNetLibServer>()
-                            .As<Communication.NetworkingLayer.NitroxServer>()
+                            .As<Communication.NitroxServer>()
                             .SingleInstance();
         }
 

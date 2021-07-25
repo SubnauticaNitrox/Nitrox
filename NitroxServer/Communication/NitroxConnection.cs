@@ -2,7 +2,7 @@ using System.Net;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
 
-namespace NitroxServer.Communication.NetworkingLayer
+namespace NitroxServer.Communication
 {
     public interface NitroxConnection : IProcessorContext
     {

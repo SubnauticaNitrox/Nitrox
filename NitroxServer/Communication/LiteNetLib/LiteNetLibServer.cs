@@ -6,13 +6,13 @@ using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Entities;
 using NitroxServer.Serialization;
 
-namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
+namespace NitroxServer.Communication.LiteNetLib
 {
     public class LiteNetLibServer : NitroxServer
     {
-        private readonly NetManager server;
         private readonly EventBasedNetListener listener;
         private readonly NetPacketProcessor netPacketProcessor = new();
+        private readonly NetManager server;
 
         public LiteNetLibServer(PacketHandler packetHandler, PlayerManager playerManager, EntitySimulation entitySimulation, ServerConfig serverConfig) : base(packetHandler, playerManager, entitySimulation, serverConfig)
         {
@@ -20,6 +20,7 @@ namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
             listener = new EventBasedNetListener();
             server = new NetManager(listener);
         }
+
         public override bool Start()
         {
             listener.PeerConnectedEvent += PeerConnected;
@@ -32,23 +33,39 @@ namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
             server.UpdateTime = 15;
             server.UnsyncedEvents = true;
 #if DEBUG
-            server.DisconnectTimeout = 300000;  //Disables Timeout (for 5 min) for debug purpose (like if you jump though the server code)
+            server.DisconnectTimeout = 300000; //Disables Timeout (for 5 min) for debug purpose (like if you jump though the server code)
 #endif
+
             if (!server.Start(portNumber))
             {
                 return false;
             }
-            
-            SetupUPNP();
-            
-            isStopped = false;
+
+#if RELEASE
+            if (useUpNpPortForwarding)
+            {
+                BeginPortForward(portNumber);
+            }
+#endif
+
             return true;
         }
 
         public override void Stop()
         {
-            isStopped = true;
             server.Stop();
+        }
+
+        public void OnConnectionRequest(ConnectionRequest request)
+        {
+            if (server.PeersCount < maxConnections)
+            {
+                request.AcceptIfKey("nitrox");
+            }
+            else
+            {
+                request.Reject();
+            }
         }
 
         private void PeerConnected(NetPeer peer)
@@ -75,18 +92,6 @@ namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
             NitroxConnection connection = GetConnection(peer.Id);
             Packet packet = Packet.Deserialize(wrapperPacket.packetData);
             ProcessIncomingData(connection, packet);
-        }
-
-        public void OnConnectionRequest(ConnectionRequest request)
-        {
-            if (server.PeersCount < maxConn)
-            {
-                request.AcceptIfKey("nitrox");
-            }
-            else
-            {
-                request.Reject();
-            }
         }
 
         private NitroxConnection GetConnection(int remoteIdentifier)

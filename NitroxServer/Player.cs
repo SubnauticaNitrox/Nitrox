@@ -5,7 +5,7 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
-using NitroxServer.Communication.NetworkingLayer;
+using NitroxServer.Communication;
 
 namespace NitroxServer
 {
