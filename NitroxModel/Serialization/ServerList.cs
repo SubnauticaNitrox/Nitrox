@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Text.RegularExpressions;
 using NitroxModel.Helper;
 using NitroxModel.OS;
 
@@ -113,10 +114,12 @@ namespace NitroxModel.Serialization
                 {
                     return null;
                 }
-                string[] parts = line.Split('|');
-                if (parts.Length != 3)
+                List<string> parts = new(line.Split('|'));
+                if (parts.Count != 3)
                 {
-                    throw new Exception($"Expected server entry to have 3 parts: {line}");
+                    Match match = Regex.Match(parts[1].Trim(), @"^(.*?)(?::(\d{3,5}))?$");
+                    parts[1] = match.Groups[1].Value;
+                    parts.Add(match.Groups[2].Success ? match.Groups[2].Value : "11000");
                 }
                 
                 return new Entry(parts[0].Trim(), parts[1].Trim(), int.Parse(parts[2].Trim()));
