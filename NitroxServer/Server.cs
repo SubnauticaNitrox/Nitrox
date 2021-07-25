@@ -133,10 +133,6 @@ namespace NitroxServer
             if (shouldSave)
             {
                 Save();
-                if (!serverConfig.ConfigFileExists)
-                {
-                    serverConfig.Serialize();
-                }
             }
 
             server.Stop();

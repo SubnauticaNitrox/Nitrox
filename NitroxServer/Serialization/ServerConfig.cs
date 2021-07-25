@@ -109,7 +109,7 @@ namespace NitroxServer.Serialization
         public static ServerConfig Load()
         {
             ServerConfig config = new();
-            config.Deserialize();
+            config.Update(c => { });
             return config;
         }
     }
