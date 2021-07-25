@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using NitroxModel.Helper;
 using NitroxModel.OS;
@@ -10,6 +11,7 @@ namespace NitroxModel.Serialization
     public class ServerList
     {
         private const string SERVERS_FILE_NAME = "servers";
+        public const int DEFAULT_PORT = 11000;
         private static ServerList instance;
         private readonly List<Entry> entries = new();
         public static ServerList Instance => instance ??= From(DefaultFile);
@@ -19,7 +21,7 @@ namespace NitroxModel.Serialization
             get
             {
                 ServerList list = new();
-                list.Add(new Entry("local server", "127.0.0.1", 11000));
+                list.Add(new Entry("local server", "127.0.0.1", DEFAULT_PORT));
                 return list;
             }
         }
@@ -114,12 +116,32 @@ namespace NitroxModel.Serialization
                     return null;
                 }
                 string[] parts = line.Split('|');
-                if (parts.Length != 3)
+                int port;
+                string address;
+                switch (parts.Length)
                 {
-                    throw new Exception($"Expected server entry to have 3 parts: {line}");
+                    case 2:
+                        // Split from address as format "hostname:port".
+                        string[] addressSplit = parts[1].Split(':');
+                        address = addressSplit[0];
+                        if (!int.TryParse(addressSplit.ElementAtOrDefault(1), out port))
+                        {
+                            port = DEFAULT_PORT;
+                        }
+                        break;
+                    case 3:
+                        address = parts[1].Trim();
+                        if (!int.TryParse(parts[2], out port))
+                        {
+                            port = DEFAULT_PORT;
+                        }
+                        break;
+                    default:
+                        throw new Exception($"Expected server entry to have 2 or 3 parts: {line}");
                 }
                 
-                return new Entry(parts[0].Trim(), parts[1].Trim(), int.Parse(parts[2].Trim()));
+                string name = parts[0].Trim();
+                return new Entry(name, address, port);
             }
 
             public override string ToString()
