@@ -85,21 +85,21 @@ namespace NitroxModel.Serialization
         public class Entry
         {
             public string Name { get; }
-            public IPAddress Address { get; }
+            public string Address { get; }
             public int Port { get; }
 
-            public Entry(string name, IPAddress address, int port)
+            public Entry(string name, string address, int port)
             {
                 Validate.String(name);
                 Validate.NotNull(address);
                 Validate.IsTrue(port is >= 1024 and <= ushort.MaxValue);
 
-                Name = name;
-                Address = address;
+                Name = name.Trim();
+                Address = address.Trim();
                 Port = port;
             }
 
-            public Entry(string name, string address, int port) : this(name, IPAddress.Parse(address), port)
+            public Entry(string name, IPAddress address, int port) : this(name, address.ToString(), port)
             {
             }
 
