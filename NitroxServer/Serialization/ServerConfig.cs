@@ -10,7 +10,7 @@ namespace NitroxServer.Serialization
     {
         private int maxConnectionsSetting = 100;
 
-        private int portSetting = 11000;
+        private int portSetting = ServerList.DEFAULT_PORT;
 
         private int saveIntervalSetting = 120000;
 

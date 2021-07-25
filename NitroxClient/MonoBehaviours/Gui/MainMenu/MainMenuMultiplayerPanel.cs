@@ -106,7 +106,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         {
             serverNameInput = "local";
             serverHostInput = "127.0.0.1";
-            serverPortInput = "11000";
+            serverPortInput = ServerList.DEFAULT_PORT.ToString();
             showingAddServer = true;
             shouldFocus = true;
         }
