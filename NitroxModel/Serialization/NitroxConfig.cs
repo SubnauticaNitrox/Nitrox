@@ -131,12 +131,12 @@ namespace NitroxModel.Serialization
         ///     Ensures updates are properly persisted to the backing config file without overwriting user edits.
         /// </summary>
         /// <param name="config"></param>
-        public void Update(Action<T> config)
+        public void Update(Action<T> config = null)
         {
             try
             {
                 Deserialize();
-                config(this as T);
+                config?.Invoke(this as T);
             }
             finally
             {
