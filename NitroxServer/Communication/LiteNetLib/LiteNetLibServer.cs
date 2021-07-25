@@ -42,7 +42,7 @@ namespace NitroxServer.Communication.LiteNetLib
             }
 
 #if RELEASE
-            if (useUpNpPortForwarding)
+            if (useUpnpPortForwarding)
             {
                 BeginPortForward(portNumber);
             }

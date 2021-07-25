@@ -14,7 +14,7 @@ namespace NitroxServer.Communication
     {
         protected readonly int portNumber;
         protected readonly int maxConnections;
-        protected readonly bool useUpNpPortForwarding;
+        protected readonly bool useUpnpPortForwarding;
 
         protected readonly PacketHandler packetHandler;
         protected readonly EntitySimulation entitySimulation;
@@ -29,7 +29,7 @@ namespace NitroxServer.Communication
 
             portNumber = serverConfig.ServerPort;
             maxConnections = serverConfig.MaxConnections;
-            useUpNpPortForwarding = serverConfig.AutoPortForward;
+            useUpnpPortForwarding = serverConfig.AutoPortForward;
         }
 
         public abstract bool Start();
@@ -67,7 +67,7 @@ namespace NitroxServer.Communication
                 }
                 else
                 {
-                    Log.Warn(PortForward.GetError(port) ?? $"Failed to port forward {port} UDP through UpNp");
+                    Log.Warn(PortForward.GetError(port) ?? $"Failed to port forward {port} UDP through UPnP");
                 }
             }).ConfigureAwait(false);
         }

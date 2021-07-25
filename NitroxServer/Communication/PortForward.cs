@@ -9,6 +9,7 @@ namespace NitroxServer.Communication
 {
     public static class PortForward
     {
+        private static event EventHandler<INatDevice> DeviceDiscovered;
         private static readonly List<INatDevice> devices = new();
         private static readonly ThreadSafeDictionary<int, Exception> lastPortErrors = new();
 
@@ -21,7 +22,7 @@ namespace NitroxServer.Communication
             {
                 try
                 {
-                    await device.CreatePortMapAsync(new Mapping(Protocol.Udp, port, port, (int)TimeSpan.FromDays(1).TotalSeconds, "Nitrox Server - Subnautica"));
+                    await device.CreatePortMapAsync(new Mapping(Protocol.Udp, port, port, (int)TimeSpan.FromDays(1).TotalSeconds, "Nitrox Server"));
                     errors[port] = null;
                 }
                 catch (MappingException ex)
@@ -86,8 +87,6 @@ namespace NitroxServer.Communication
             }
             return false;
         }
-
-        private static event EventHandler<INatDevice> DeviceDiscovered;
 
         private static void BeginDiscoverDevices()
         {
