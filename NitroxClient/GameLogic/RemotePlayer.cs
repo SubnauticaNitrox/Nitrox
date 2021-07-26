@@ -6,29 +6,23 @@ using NitroxClient.GameLogic.PlayerModel.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Helper;
-using NitroxModel.Logger;
 using NitroxModel.MultiplayerSession;
 using UnityEngine;
-using UWE;
 using Object = UnityEngine.Object;
 
 namespace NitroxClient.GameLogic
 {
     public class RemotePlayer : INitroxPlayer
     {
-        private static readonly int animatorPlayerIn = Animator.StringToHash("player_in");
-
         private readonly PlayerModelManager playerModelManager;
-        private readonly HashSet<TechType> equipment;
+        private readonly HashSet<TechType> equipment = new HashSet<TechType>();
 
         public PlayerContext PlayerContext { get; }
-        public GameObject Body { get; }
-        public GameObject PlayerModel { get; }
+        public GameObject Body { get; set; }
+        public GameObject PlayerModel { get; set; }
         public Rigidbody RigidBody { get; }
         public ArmsController ArmsController { get; }
         public AnimationController AnimationController { get; }
-        public ItemsContainer Inventory { get; }
-        public Transform ItemAttachPoint { get; }
 
         public ushort PlayerId => PlayerContext.PlayerId;
         public string PlayerName => PlayerContext.PlayerName;
@@ -36,58 +30,49 @@ namespace NitroxClient.GameLogic
 
         public Vehicle Vehicle { get; private set; }
         public SubRoot SubRoot { get; private set; }
-        public EscapePod EscapePod { get; private set; }
         public PilotingChair PilotingChair { get; private set; }
 
-        public RemotePlayer(GameObject playerBody, PlayerContext playerContext, List<TechType> equippedTechTypes, List<Pickupable> inventoryItems, PlayerModelManager modelManager)
+        public RemotePlayer(GameObject playerBody, PlayerContext playerContext, List<TechType> equippedTechTypes, PlayerModelManager playerModelManager)
         {
-            PlayerContext = playerContext;
-
             Body = playerBody;
-            Body.name = PlayerName;
-
+            PlayerContext = playerContext;
             equipment = new HashSet<TechType>(equippedTechTypes);
+
+            this.playerModelManager = playerModelManager;
+
+            Body.name = PlayerName;
 
             RigidBody = Body.AddComponent<Rigidbody>();
             RigidBody.useGravity = false;
 
-            NitroxEntity.SetNewId(Body, playerContext.PlayerNitroxId);
-
             // Get player
             PlayerModel = Body.RequireGameObject("player_view");
+
             // Move variables to keep player animations from mirroring and for identification
             ArmsController = PlayerModel.GetComponent<ArmsController>();
             ArmsController.smoothSpeedUnderWater = 0;
             ArmsController.smoothSpeedAboveWater = 0;
 
-            // ConditionRules has Player.Main based conditions from ArmsController
-            PlayerModel.GetComponent<ConditionRules>().enabled = false;
-
             AnimationController = PlayerModel.AddComponent<AnimationController>();
 
-            Transform inventoryTransform = new GameObject("Inventory").transform;
-            inventoryTransform.SetParent(Body.transform);
-            Inventory = new ItemsContainer(6, 8, inventoryTransform, "NitroxInventoryStorage_" + PlayerName, null);
-            foreach (Pickupable item in inventoryItems)
-            {
-                Inventory.UnsafeAdd(new InventoryItem(item));
-                Log.Debug($"Added {item.name} to {playerContext.PlayerName}.");
-            }
-
-            ItemAttachPoint = PlayerModel.transform.Find(PlayerEquipmentConstants.ITEM_ATTACH_POINT_GAME_OBJECT_NAME);
-
-            playerModelManager = modelManager;
             playerModelManager.AttachPing(this);
             playerModelManager.BeginApplyPlayerColor(this);
-            playerModelManager.RegisterEquipmentVisibilityHandler(PlayerModel);
+
             UpdateEquipmentVisibility();
 
             ErrorMessage.AddMessage($"{PlayerName} joined the game.");
         }
 
+        public void ResetModel(ILocalNitroxPlayer localPlayer)
+        {
+            Body = Object.Instantiate(localPlayer.BodyPrototype);
+            Body.SetActive(true);
+            PlayerModel = Body.RequireGameObject("player_view");
+        }
+
         public void Attach(Transform transform, bool keepWorldTransform = false)
         {
-            Body.transform.SetParent(transform);
+            Body.transform.parent = transform;
 
             if (!keepWorldTransform)
             {
@@ -97,7 +82,7 @@ namespace NitroxClient.GameLogic
 
         public void Detach()
         {
-            Body.transform.SetParent(null);
+            Body.transform.parent = null;
         }
 
         public void UpdatePosition(Vector3 position, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation)
@@ -108,11 +93,11 @@ namespace NitroxClient.GameLogic
             SetVehicle(null);
             SetPilotingChair(null);
             // If in a subroot the position will be relative to the subroot
-            if (SubRoot && !SubRoot.isBase)
+            if (SubRoot != null && !SubRoot.isBase)
             {
                 Quaternion vehicleAngle = SubRoot.transform.rotation;
                 position = vehicleAngle * position;
-                position += SubRoot.transform.position;
+                position = position + SubRoot.transform.position;
                 bodyRotation = vehicleAngle * bodyRotation;
                 aimingRotation = vehicleAngle * aimingRotation;
             }
@@ -133,7 +118,7 @@ namespace NitroxClient.GameLogic
 
                 MultiplayerCyclops mpCyclops = SubRoot.GetComponent<MultiplayerCyclops>();
 
-                if (PilotingChair)
+                if (PilotingChair != null)
                 {
                     Attach(PilotingChair.sittingPosition.transform);
                     ArmsController.SetWorldIKTarget(PilotingChair.leftHandPlug, PilotingChair.rightHandPlug);
@@ -158,7 +143,7 @@ namespace NitroxClient.GameLogic
         {
             if (SubRoot != newSubRoot)
             {
-                if (newSubRoot)
+                if (newSubRoot != null)
                 {
                     Attach(newSubRoot.transform, true);
                 }
@@ -171,30 +156,13 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        public void SetEscapePod(EscapePod newEscapePod)
-        {
-            if (EscapePod != newEscapePod)
-            {
-                if (newEscapePod)
-                {
-                    Attach(newEscapePod.transform, true);
-                }
-                else
-                {
-                    Detach();
-                }
-
-                EscapePod = newEscapePod;
-            }
-        }
-
         public void SetVehicle(Vehicle newVehicle)
         {
             if (Vehicle != newVehicle)
             {
-                if (Vehicle)
+                if (Vehicle != null)
                 {
-                    Vehicle.mainAnimator.SetBool(animatorPlayerIn, false);
+                    Vehicle.mainAnimator.SetBool("player_in", false);
 
                     Detach();
                     ArmsController.SetWorldIKTarget(null, null);
@@ -202,9 +170,9 @@ namespace NitroxClient.GameLogic
                     Vehicle.GetComponent<MultiplayerVehicleControl<Vehicle>>().Exit();
                 }
 
-                if (newVehicle)
+                if (newVehicle != null)
                 {
-                    newVehicle.mainAnimator.SetBool(animatorPlayerIn, true);
+                    newVehicle.mainAnimator.SetBool("player_in", true);
 
                     Attach(newVehicle.playerPosition.transform);
                     ArmsController.SetWorldIKTarget(newVehicle.leftHandPlug, newVehicle.rightHandPlug);
@@ -212,7 +180,7 @@ namespace NitroxClient.GameLogic
                     newVehicle.GetComponent<MultiplayerVehicleControl<Vehicle>>().Enter();
                 }
 
-                RigidBody.isKinematic = newVehicle;
+                RigidBody.isKinematic = newVehicle != null;
 
                 Vehicle = newVehicle;
 
@@ -224,7 +192,6 @@ namespace NitroxClient.GameLogic
         public void Destroy()
         {
             ErrorMessage.AddMessage($"{PlayerName} left the game.");
-            NitroxEntity.RemoveFrom(Body);
             Object.DestroyImmediate(Body);
         }
 
@@ -258,7 +225,9 @@ namespace NitroxClient.GameLogic
 
         private void UpdateEquipmentVisibility()
         {
-            playerModelManager.UpdateEquipmentVisibility(new ReadOnlyCollection<TechType>(equipment.ToList()));
+            ReadOnlyCollection<TechType> currentEquipment = new ReadOnlyCollection<TechType>(equipment.ToList());
+
+            playerModelManager.UpdateEquipmentVisibility(PlayerModel, currentEquipment);
         }
     }
 }

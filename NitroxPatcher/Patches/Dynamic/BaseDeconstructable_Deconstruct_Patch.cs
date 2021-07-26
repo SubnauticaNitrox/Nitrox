@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
-using HarmonyLib;
+using Harmony;
 using NitroxClient.GameLogic.Helper;
 using NitroxModel.Helper;
 using UnityEngine;
@@ -38,10 +38,10 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Callback(GameObject gameObject)
         {
-            TransientLocalObjectManager.Add(TransientLocalObjectManager.TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE_GHOST, gameObject);
+            TransientLocalObjectManager.Add(TransientLocalObjectManager.TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE, gameObject);
         }
 
-        public override void Patch(Harmony harmony)
+        public override void Patch(HarmonyInstance harmony)
         {
             PatchTranspiler(harmony, TARGET_METHOD);
         }

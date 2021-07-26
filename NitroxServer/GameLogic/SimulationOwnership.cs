@@ -23,8 +23,10 @@ namespace NitroxServer.GameLogic
         {
             lock (playerLocksById)
             {
+                PlayerLock playerLock;
+
                 // If no one is simulating then aquire a lock for this player
-                if (!playerLocksById.TryGetValue(id, out PlayerLock playerLock))
+                if (!playerLocksById.TryGetValue(id, out playerLock))
                 {
                     playerLocksById[id] = new PlayerLock(player, requestedLock);
                     return true;
@@ -55,7 +57,9 @@ namespace NitroxServer.GameLogic
         {
             lock (playerLocksById)
             {
-                if (playerLocksById.TryGetValue(id, out PlayerLock playerLock) && playerLock.Player == player)
+                PlayerLock playerLock;
+
+                if (playerLocksById.TryGetValue(id, out playerLock) && playerLock.Player == player)
                 {
                     playerLocksById.Remove(id);
                     return true;
@@ -92,20 +96,14 @@ namespace NitroxServer.GameLogic
         {
             lock (playerLocksById)
             {
-                return playerLocksById.Remove(id);
-            }
-        }
-
-        public Player GetPlayerForLock(NitroxId id)
-        {
-            lock (playerLocksById)
-            {
-                if(playerLocksById.TryGetValue(id, out PlayerLock playerLock))
+                if(playerLocksById.ContainsKey(id))
                 {
-                    return playerLock.Player;
+                    playerLocksById.Remove(id);
+                    return true;
                 }
             }
-            return null;
+
+            return false;
         }
     }
 }

@@ -1,4 +1,3 @@
-[submodule "LiteNetLib"]
-	path = LiteNetLib
-	url = https://github.com/SubnauticaNitrox/LiteNetLib
-	branch = 0.8
+[submodule "NitroxUnity"]
+	path = NitroxUnity
+	url = https://github.com/SubnauticaNitrox/NitroxUnity

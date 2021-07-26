@@ -20,7 +20,7 @@ namespace NitroxModel_Subnautica.Packets
 
         public override string ToString()
         {
-            return $"[CyclopsFireCreated - {FireCreatedData}]";
+            return "[CyclopsFireCreated " + FireCreatedData + "]";
         }
     }
 }

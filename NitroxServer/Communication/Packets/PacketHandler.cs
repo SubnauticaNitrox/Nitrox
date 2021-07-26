@@ -7,6 +7,7 @@ using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.Util;
+using NitroxServer.Communication.NetworkingLayer;
 
 namespace NitroxServer.Communication.Packets
 {
@@ -66,7 +67,8 @@ namespace NitroxServer.Communication.Packets
             }
             catch (Exception ex)
             {
-                Log.Error(ex, $"Received invalid, unauthenticated packet: {packet}");
+                Log.Info("Received invalid, unauthenticated packet: " + packet);
+                Log.Error("Exception:", ex);
             }
         }
     }

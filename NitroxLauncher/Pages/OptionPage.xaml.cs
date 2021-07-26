@@ -3,7 +3,6 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using Microsoft.WindowsAPICodePack.Dialogs;
-using NitroxModel.Discovery;
 
 namespace NitroxLauncher.Pages
 {
@@ -28,7 +27,7 @@ namespace NitroxLauncher.Pages
             string selectedDirectory;
 
             // Don't use FolderBrowserDialog because its UI sucks. See: https://stackoverflow.com/a/31082
-            CommonOpenFileDialog dialog = new()
+            CommonOpenFileDialog dialog = new CommonOpenFileDialog
             {
                 Multiselect = false,
                 InitialDirectory = PathToSubnautica,
@@ -45,7 +44,7 @@ namespace NitroxLauncher.Pages
                 selectedDirectory = Path.GetFullPath(dialog.FileName);
             }
 
-            if (GameInstallationFinder.IsSubnauticaDirectory(selectedDirectory))
+            if (LauncherLogic.Instance.IsSubnauticaDirectory(selectedDirectory))
             {
                 await LauncherLogic.Instance.SetTargetedSubnauticaPath(selectedDirectory);
             }

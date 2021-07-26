@@ -20,7 +20,7 @@ namespace NitroxModel_Subnautica.Packets
 
         public override string ToString()
         {
-            return $"[CyclopsToggleEngineState - Id: {Id}, IsOn: {IsOn}, IsStarting: {IsStarting}]";
+            return "[CyclopsToggleEngineState Id: " + Id + " IsOn: " + IsOn + " IsStarting: " + IsStarting + "]";
         }
     }
 }

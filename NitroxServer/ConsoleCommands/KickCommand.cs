@@ -1,11 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Util;
+using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxServer.ConsoleCommands.Abstract;
-using NitroxServer.ConsoleCommands.Abstract.Type;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Entities;
+using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxServer.ConsoleCommands
 {
@@ -14,45 +17,44 @@ namespace NitroxServer.ConsoleCommands
         private readonly EntitySimulation entitySimulation;
         private readonly PlayerManager playerManager;
 
-        public KickCommand(PlayerManager playerManager, EntitySimulation entitySimulation) : base("kick", Perms.MODERATOR, "Kicks a player from the server")
+        public KickCommand(PlayerManager playerManager, EntitySimulation entitySimulation) : base("kick", Perms.ADMIN, "{name} [{Reason}]", "Kicks a player from the server")
         {
-            AddParameter(new TypePlayer("name", true));
-            AddParameter(new TypeString("reason", false));
-
-            AllowedArgOverflow = true;
-
             this.playerManager = playerManager;
             this.entitySimulation = entitySimulation;
         }
 
-        protected override void Execute(CallArgs args)
+        public override void RunCommand(string[] args, Optional<Player> sender)
         {
-            Player playerToKick = args.Get<Player>(0);
-
-            if (args.SenderName == playerToKick.Name)
+            try
             {
-                SendMessage(args.Sender, "You can't kick yourself");
-                return;
-            }
+                Player playerToKick = playerManager.GetConnectedPlayers().Single(t => t.Name == args[0]);
 
-            if (!args.IsConsole && playerToKick.Permissions >= args.Sender.Value.Permissions)
+                playerToKick.SendPacket(new PlayerKicked($"You were kicked from the server ! \n Reason : {string.Join(" ", args.Skip(1))}"));
+                playerManager.PlayerDisconnected(playerToKick.connection);
+                List<SimulatedEntity> revokedEntities = entitySimulation.CalculateSimulationChangesFromPlayerDisconnect(playerToKick);
+
+                if (revokedEntities.Count > 0)
+                {
+                    SimulationOwnershipChange ownershipChange = new SimulationOwnershipChange(revokedEntities);
+                    playerManager.SendPacketToAllPlayers(ownershipChange);
+                }
+
+                playerManager.SendPacketToOtherPlayers(new Disconnect(playerToKick.Id), playerToKick);
+                Notify(sender, $"The player {args[0]} has been disconnected");
+            }
+            catch (InvalidOperationException)
             {
-                SendMessage(args.Sender, $"You're not allowed to kick {playerToKick.Name}");
-                return;
+                Notify(sender, $"Error attempting to kick: {args[0]}, Player is not found");
             }
-
-            playerToKick.SendPacket(new PlayerKicked(args.GetTillEnd(1)));
-            playerManager.PlayerDisconnected(playerToKick.Connection);
-
-            List<SimulatedEntity> revokedEntities = entitySimulation.CalculateSimulationChangesFromPlayerDisconnect(playerToKick);
-            if (revokedEntities.Count > 0)
+            catch (Exception ex)
             {
-                SimulationOwnershipChange ownershipChange = new(revokedEntities);
-                playerManager.SendPacketToAllPlayers(ownershipChange);
+                Log.Error($"Error attempting to kick: {args[0]}", ex);
             }
+        }
 
-            playerManager.SendPacketToOtherPlayers(new Disconnect(playerToKick.Id), playerToKick);
-            SendMessage(args.Sender, $"The player {playerToKick.Name} has been disconnected");
+        public override bool VerifyArgs(string[] args)
+        {
+            return args.Length >= 1;
         }
     }
 }

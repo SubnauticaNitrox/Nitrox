@@ -20,8 +20,6 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoMember(4)]
         public float W;
 
-        public static NitroxQuaternion Identity { get; } = new NitroxQuaternion(0, 0, 0, 1);
-
         public NitroxQuaternion(float x, float y, float z, float w)
         {
             X = x;
@@ -138,12 +136,30 @@ namespace NitroxModel.DataStructures.GameLogic
             return result;
         }
 
+        public NitroxQuaternion(UnityEngine.Quaternion quaternion)
+        {
+            X = quaternion.x;
+            Y = quaternion.y;
+            Z = quaternion.z;
+            W = quaternion.w;
+        }
+
         public static NitroxQuaternion operator *(NitroxQuaternion lhs, NitroxQuaternion rhs)
         {
             return new NitroxQuaternion(lhs.W * rhs.X + lhs.X * rhs.W + lhs.Y * rhs.Z - lhs.Z * rhs.Y,
                 lhs.W * rhs.Y + lhs.Y * rhs.W + lhs.Z * rhs.X - lhs.X * rhs.Z,
                 lhs.W * rhs.Z + lhs.Z * rhs.W + lhs.X * rhs.Y - lhs.Y * rhs.X,
                 lhs.W * rhs.W - lhs.X * rhs.X - lhs.Y * rhs.Y - lhs.Z * rhs.Z);
+        }
+
+        public static implicit operator NitroxQuaternion(UnityEngine.Quaternion quaternion)
+        {
+            return new NitroxQuaternion(quaternion);
+        }
+
+        public static implicit operator UnityEngine.Quaternion(NitroxQuaternion quaternion)
+        {
+            return new UnityEngine.Quaternion(quaternion.X, quaternion.Y, quaternion.Z, quaternion.W);
         }
 
         public override string ToString()

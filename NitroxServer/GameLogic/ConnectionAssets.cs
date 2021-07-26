@@ -2,7 +2,7 @@
 {
     internal class ConnectionAssets
     {
-        public string ReservationKey { get; set; }
-        public Player Player { get; set; }
+        public string ReservationKey;
+        public Player Player;
     }
 }

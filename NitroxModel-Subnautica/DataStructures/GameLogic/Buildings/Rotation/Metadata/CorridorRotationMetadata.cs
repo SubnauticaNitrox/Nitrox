@@ -13,19 +13,19 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation
         [ProtoMember(1)]
         public int Rotation { get; set; }
 
-        protected CorridorRotationMetadata() : base(typeof(BaseAddCorridorGhost))
+        public CorridorRotationMetadata() : base(typeof(BaseAddCorridorGhost))
         {
-            // Constructor for serialization. Has to be "protected" for json serialization.
+            // For serialization purposes
         }
 
-        public CorridorRotationMetadata(int rotation) : base(typeof(BaseAddCorridorGhost))
+        public CorridorRotationMetadata(int rotation) : base (typeof(BaseAddCorridorGhost))
         {
             Rotation = rotation;
         }
 
         public override string ToString()
         {
-            return $"[CorridorRotationMetadata - Rotation: {Rotation} ]";
+            return "[CorridorRotationMetadata Rotation: " + Rotation + " ]";
         }
     }
 }

@@ -18,7 +18,7 @@ namespace NitroxModel_Subnautica.Packets
 
         public override string ToString()
         {
-            return $"[CyclopsActivateShield - Id: {Id}, IsOn: {IsOn}]";
+            return "[CyclopsActivateShield Id: " + Id + " activate: " + IsOn + "]";
         }
     }
 }

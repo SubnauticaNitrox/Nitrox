@@ -1,5 +1,5 @@
 ﻿using System;
-using NitroxModel.DataStructures.GameLogic;
+using UnityEngine;
 using NitroxModel.Networking;
 
 namespace NitroxModel.Packets
@@ -8,12 +8,12 @@ namespace NitroxModel.Packets
     public class Movement : Packet
     {
         public ushort PlayerId { get; }
-        public NitroxVector3 Position { get; }
-        public NitroxVector3 Velocity { get; }
-        public NitroxQuaternion BodyRotation { get; }
-        public NitroxQuaternion AimingRotation { get; }
+        public Vector3 Position { get; }
+        public Vector3 Velocity { get; }
+        public Quaternion BodyRotation { get; }
+        public Quaternion AimingRotation { get; }
 
-        public Movement(ushort playerId, NitroxVector3 position, NitroxVector3 velocity, NitroxQuaternion bodyRotation, NitroxQuaternion aimingRotation)
+        public Movement(ushort playerId, Vector3 position, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation)
         {
             PlayerId = playerId;
             Position = position;

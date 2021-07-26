@@ -1,19 +1,20 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
-using System.Collections.Generic;
-using Newtonsoft.Json;
 using ProtoBufNet;
+using System.Collections.Generic;
 
 namespace NitroxServer.GameLogic.Bases
 {
-    [ProtoContract, JsonObject(MemberSerialization.OptIn)]
+    [ProtoContract]
     public class BaseData
     {
-        [JsonProperty, ProtoMember(1)]
+        public const long VERSION = 2;
+        
+        [ProtoMember(1)]
         public List<BasePiece> PartiallyConstructedPieces = new List<BasePiece>();
 
-        [JsonProperty, ProtoMember(2)]
+        [ProtoMember(2)]
         public List<BasePiece> CompletedBasePieceHistory = new List<BasePiece>();
-
+                
         public static BaseData From(List<BasePiece> partiallyConstructedPieces, List<BasePiece> completedBasePieceHistory)
         {
             BaseData baseData = new BaseData();

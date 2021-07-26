@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Reflection;
-using HarmonyLib;
+using Harmony;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
@@ -32,13 +32,13 @@ namespace NitroxPatcher.Patches.Dynamic
                 NitroxServiceLocator.LocateService<ExosuitModuleEvent>().BroadcastArmAction(TechType.ExosuitTorpedoArmModule,
                     __instance, 
                     action, 
-                    Player.main.camRoot.GetAimingTransform().forward, 
-                    Player.main.camRoot.GetAimingTransform().rotation
+                    Optional.Of(Player.main.camRoot.GetAimingTransform().forward), 
+                    Optional.Of(Player.main.camRoot.GetAimingTransform().rotation)
                     );
             }
         }
 
-        public override void Patch(Harmony harmony)
+        public override void Patch(HarmonyInstance harmony)
         {
             PatchPrefix(harmony, TARGET_METHOD);
         }

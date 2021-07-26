@@ -7,17 +7,17 @@ using NitroxModel.Logger;
 
 namespace NitroxLauncher
 {
-    internal static class AppHelper
+    public class AppHelper
     {
         public static string ProgramFileDirectory = Environment.ExpandEnvironmentVariables("%ProgramW6432%");
 
-        internal static bool IsAppRunningInAdmin()
+        public static bool IsAppRunningInAdmin()
         {
-            WindowsPrincipal wp = new(WindowsIdentity.GetCurrent());
+            WindowsPrincipal wp = new WindowsPrincipal(WindowsIdentity.GetCurrent());
             return wp.IsInRole(WindowsBuiltInRole.Administrator);
         }
 
-        internal static void RestartAsAdmin()
+        public static void RestartAsAdmin()
         {
             if (!IsAppRunningInAdmin())
             {

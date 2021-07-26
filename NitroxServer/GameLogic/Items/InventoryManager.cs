@@ -9,23 +9,21 @@ namespace NitroxServer.GameLogic.Items
     public class InventoryManager
     {
         private readonly ThreadSafeDictionary<NitroxId, ItemData> inventoryItemsById;
-        private readonly ThreadSafeDictionary<NitroxId, ItemData> storageSlotItemsByContainerId;
-        private readonly ThreadSafeDictionary<NitroxId, EquippedItemData> modulesByContainerId;
+        private readonly ThreadSafeDictionary<NitroxId, ItemData> storageSlotItemsById;
 
-        public InventoryManager(List<ItemData> inventoryItems, List<ItemData> storageSlotItems, List<EquippedItemData> modules)
+        public InventoryManager(List<ItemData> inventoryItems, List<ItemData> storageSlotItems)
         {
             inventoryItemsById = new ThreadSafeDictionary<NitroxId, ItemData>(inventoryItems.ToDictionary(item => item.ItemId), false);
-            storageSlotItemsByContainerId = new ThreadSafeDictionary<NitroxId, ItemData>(storageSlotItems.ToDictionary(item => item.ContainerId), false);
-            modulesByContainerId = new ThreadSafeDictionary<NitroxId, EquippedItemData>(modules.ToDictionary(module => module.ContainerId), false);
+            storageSlotItemsById = new ThreadSafeDictionary<NitroxId, ItemData>(storageSlotItems.ToDictionary(item => item.ItemId), false);
         }
 
-        public void InventoryItemAdded(ItemData itemData)
+        public void ItemAdded(ItemData itemData)
         {
             inventoryItemsById[itemData.ItemId] = itemData;
-            Log.Debug($"Received inventory item {itemData.ItemId} to container {itemData.ContainerId}. Total items: {inventoryItemsById.Count}");
+            Log.Debug($"Received inventory item '{itemData.ItemId}' to container '{itemData.ContainerId}'. Total items: {inventoryItemsById.Count}");
         }
 
-        public void InventoryItemRemoved(NitroxId itemId)
+        public void ItemRemoved(NitroxId itemId)
         {
             inventoryItemsById.Remove(itemId);
         }
@@ -37,32 +35,17 @@ namespace NitroxServer.GameLogic.Items
 
         public void StorageItemAdded(ItemData itemData)
         {
-            storageSlotItemsByContainerId[itemData.ContainerId] = itemData;
+            storageSlotItemsById[itemData.ContainerId] = itemData;
         }
 
         public bool StorageItemRemoved(NitroxId ownerId)
         {
-            return storageSlotItemsByContainerId.Remove(ownerId);
+            return storageSlotItemsById.Remove(ownerId);
         }
 
         public ICollection<ItemData> GetAllStorageSlotItems()
         {
-            return storageSlotItemsByContainerId.Values;
-        }
-
-        public void ModuleAdded(EquippedItemData itemData)
-        {
-            modulesByContainerId[itemData.ContainerId] = itemData;
-        }
-
-        public bool ModuleRemoved(NitroxId ownerId)
-        {
-            return modulesByContainerId.Remove(ownerId);
-        }
-
-        public ICollection<EquippedItemData> GetAllModules()
-        {
-            return modulesByContainerId.Values;
+            return storageSlotItemsById.Values;
         }
     }
 }

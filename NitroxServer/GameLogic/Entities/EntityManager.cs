@@ -2,6 +2,7 @@
 using NitroxServer.GameLogic.Entities.Spawning;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxModel.DataStructures;
@@ -17,7 +18,7 @@ namespace NitroxServer.GameLogic.Entities
 
         // Global root entities that are always visible.
         private readonly Dictionary<NitroxId, Entity> globalRootEntitiesById;
-
+        
         private readonly BatchEntitySpawner batchEntitySpawner;
 
         public EntityManager(List<Entity> entities, BatchEntitySpawner batchEntitySpawner)
@@ -42,8 +43,8 @@ namespace NitroxServer.GameLogic.Entities
 
             foreach (AbsoluteEntityCell cell in cells)
             {
-                List<Entity> cellEntities = GetEntities(cell);
-                entities.AddRange(cellEntities.Where(entity => cell.Level <= entity.Level));
+                List<Entity> cellEntities = GetEntities(cell);                
+                entities.AddRange(cellEntities.Where(entity => cell.Level <= entity.Level));                                
             }
 
             return entities;
@@ -75,7 +76,7 @@ namespace NitroxServer.GameLogic.Entities
             {
                 return new List<Entity>(globalRootEntitiesById.Values);
             }
-        }
+        }        
 
         public List<Entity> GetEntities(AbsoluteEntityCell absoluteEntityCell)
         {
@@ -96,15 +97,15 @@ namespace NitroxServer.GameLogic.Entities
         {
             lock (entitiesById)
             {
-                return entitiesById.Join(ids,
-                                         entity => entity.Value.Id,
-                                         id => id,
+                return entitiesById.Join(ids, 
+                                         entity => entity.Value.Id, 
+                                         id => id, 
                                          (entity, id) => entity.Value)
                                    .ToList();
             }
         }
 
-        public Optional<AbsoluteEntityCell> UpdateEntityPosition(NitroxId id, NitroxVector3 position, NitroxQuaternion rotation)
+        public Optional<AbsoluteEntityCell> UpdateEntityPosition(NitroxId id, Vector3 position, Quaternion rotation)
         {
             Optional<Entity> opEntity = GetEntityById(id);
             if (!opEntity.HasValue)
@@ -195,24 +196,14 @@ namespace NitroxServer.GameLogic.Entities
                         }
                     }
                 }
-
-                if (entity.ParentId != null)
-                {
-                    Optional<Entity> parent = GetEntityById(entity.ParentId);
-
-                    if (parent.HasValue)
-                    {
-                        parent.Value.ChildEntities.Remove(entity);
-                    }
-                }
             }
         }
 
         private void LoadUnspawnedEntities(AbsoluteEntityCell[] cells)
         {
-            IEnumerable<NitroxInt3> distinctBatchIds = cells.Select(cell => cell.BatchId).Distinct();
+            IEnumerable<Int3> distinctBatchIds = cells.Select(cell => cell.BatchId).Distinct();
 
-            foreach (NitroxInt3 batchId in distinctBatchIds)
+            foreach(Int3 batchId in distinctBatchIds)
             {
                 List<Entity> spawnedEntities = batchEntitySpawner.LoadUnspawnedEntities(batchId);
 
@@ -250,7 +241,8 @@ namespace NitroxServer.GameLogic.Entities
         {
             if (entity.ExistsInGlobalRoot)
             {
-                return; // We don't care what cell a global root entity resides in.  Only phasing entities.
+                // We don't care what cell a global root entity resides in.  Only phasing entities.
+                return;
             }
 
             lock (phasingEntitiesByAbsoluteCell)

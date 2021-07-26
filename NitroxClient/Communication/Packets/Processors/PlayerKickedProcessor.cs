@@ -16,15 +16,8 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(PlayerKicked packet)
         {
-            string message = Language.main.Get("Nitrox_PlayerKicked");
-
-            if (!string.IsNullOrEmpty(packet.Reason))
-            {
-                message += $"\n {packet.Reason}";
-            }
-
             session.Disconnect();
-            PlayerKickedModal.Instance.Show(message);
+            PlayerKickedModal.Instance.Show(packet.Reason);
         }
     }
 }

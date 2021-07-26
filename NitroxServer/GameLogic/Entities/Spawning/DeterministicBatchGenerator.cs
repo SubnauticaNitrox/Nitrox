@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using NitroxModel.DataStructures;
 
 namespace NitroxServer.GameLogic.Entities.Spawning
@@ -8,9 +7,9 @@ namespace NitroxServer.GameLogic.Entities.Spawning
     {
         private readonly Random random;
 
-        public DeterministicBatchGenerator(string seed, NitroxInt3 batchId)
+        public DeterministicBatchGenerator(Int3 batchId)
         {
-            random = new Random(seed.GetHashCode() + batchId.GetHashCode());
+            random = new Random(batchId.GetHashCode());
         }
 
         public double NextDouble()
@@ -27,6 +26,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
         {
             byte[] bytes = new byte[16];
             random.NextBytes(bytes);
+
             return new NitroxId(bytes);
         }
     }

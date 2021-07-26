@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using NitroxModel.DataStructures.GameLogic;
+using UnityEngine;
 
 namespace NitroxServer.GameLogic.Entities.Spawning
 {
@@ -7,11 +8,11 @@ namespace NitroxServer.GameLogic.Entities.Spawning
     {
         public readonly List<EntitySpawnPoint> Children = new List<EntitySpawnPoint>();
 
-        public NitroxVector3 LocalPosition;
+        public Vector3 LocalPosition;
 
-        public NitroxQuaternion LocalRotation;
+        public Quaternion LocalRotation;
         public AbsoluteEntityCell AbsoluteEntityCell { get; }
-        public NitroxVector3 Scale { get; }
+        public Vector3 Scale { get; }
         public string ClassId { get; }
         public string BiomeType { get; }
         public float Density { get; }
@@ -20,7 +21,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
 
         public EntitySpawnPoint Parent { get; set; }
 
-        public EntitySpawnPoint(AbsoluteEntityCell absoluteEntityCell, NitroxVector3 localPosition, NitroxQuaternion localRotation, List<string> allowedTypes, float density, string biomeType)
+        public EntitySpawnPoint(AbsoluteEntityCell absoluteEntityCell, Vector3 localPosition, Quaternion localRotation, List<string> allowedTypes, float density, string biomeType)
         {
             AbsoluteEntityCell = absoluteEntityCell;
             LocalPosition = localPosition;
@@ -30,7 +31,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             AllowedTypes = allowedTypes;
         }
 
-        public EntitySpawnPoint(AbsoluteEntityCell absoluteEntityCell, NitroxVector3 localPosition, NitroxQuaternion localRotation, NitroxVector3 scale, string classId)
+        public EntitySpawnPoint(AbsoluteEntityCell absoluteEntityCell, Vector3 localPosition, Quaternion localRotation, Vector3 scale, string classId)
         {
             AbsoluteEntityCell = absoluteEntityCell;
             ClassId = classId;

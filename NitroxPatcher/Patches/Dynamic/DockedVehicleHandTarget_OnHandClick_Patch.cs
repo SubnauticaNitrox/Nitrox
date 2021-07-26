@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Reflection;
-using HarmonyLib;
+using Harmony;
 using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.Simulation;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
@@ -15,17 +14,24 @@ namespace NitroxPatcher.Patches.Dynamic
         public static readonly Type TARGET_CLASS = typeof(DockedVehicleHandTarget);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("OnHandClick", BindingFlags.Public | BindingFlags.Instance);
 
+        private static DockedVehicleHandTarget dockedVehicle;
+        private static VehicleDockingBay vehicleDockingBay;
+        private static GUIHand guiHand;
         private static bool skipPrefix = false;
 
         public static bool Prefix(DockedVehicleHandTarget __instance, GUIHand hand)
         {
-            Vehicle vehicle = __instance.dockingBay.GetDockedVehicle();
+            vehicleDockingBay = __instance.dockingBay;
+            Vehicle vehicle = vehicleDockingBay.GetDockedVehicle();
 
             if (skipPrefix || vehicle == null)
             {
                 return true;
             }
             
+            dockedVehicle = __instance;
+            guiHand = hand;
+
             SimulationOwnership simulationOwnership = NitroxServiceLocator.LocateService<SimulationOwnership>();
 
             NitroxId id = NitroxEntity.GetId(vehicle.gameObject);
@@ -36,34 +42,30 @@ namespace NitroxPatcher.Patches.Dynamic
                 return true;
             }
 
-            HandInteraction<DockedVehicleHandTarget> context = new HandInteraction<DockedVehicleHandTarget>(__instance, hand);
-            LockRequest<HandInteraction<DockedVehicleHandTarget>> lockRequest = new LockRequest<HandInteraction<DockedVehicleHandTarget>>(id, SimulationLockType.EXCLUSIVE, ReceivedSimulationLockResponse, context);
-
-            simulationOwnership.RequestSimulationLock(lockRequest);
+            simulationOwnership.RequestSimulationLock(id, SimulationLockType.EXCLUSIVE, ReceivedSimulationLockResponse);
 
             return false;
         }
 
-        private static void ReceivedSimulationLockResponse(NitroxId id, bool lockAquired, HandInteraction<DockedVehicleHandTarget> context)
+        private static void ReceivedSimulationLockResponse(NitroxId id, bool lockAquired)
         {
             if (lockAquired)
             {
-                VehicleDockingBay dockingBay = context.Target.dockingBay;
-                NitroxServiceLocator.LocateService<Vehicles>().BroadcastVehicleUndocking(dockingBay, dockingBay.GetDockedVehicle(), true);
+                NitroxServiceLocator.LocateService<Vehicles>().BroadcastVehicleUndocking(vehicleDockingBay, vehicleDockingBay.GetDockedVehicle());
 
                 skipPrefix = true;
-                TARGET_METHOD.Invoke(context.Target, new[] { context.GuiHand });
+                TARGET_METHOD.Invoke(dockedVehicle, new[] { guiHand });
                 skipPrefix = false;
             }
             else
             {
                 HandReticle.main.SetInteractText("Another player is using this vehicle!");
                 HandReticle.main.SetIcon(HandReticle.IconType.HandDeny, 1f);
-                context.Target.isValidHandTarget = false;
+                dockedVehicle.isValidHandTarget = false;
             }
         }
 
-        public override void Patch(Harmony harmony)
+        public override void Patch(HarmonyInstance harmony)
         {
             PatchPrefix(harmony, TARGET_METHOD);
         }

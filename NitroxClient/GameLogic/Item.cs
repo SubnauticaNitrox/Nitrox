@@ -5,7 +5,7 @@ using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
-using NitroxModel_Subnautica.DataStructures;
+using NitroxModel_Subnautica.Helper;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic
@@ -21,45 +21,35 @@ namespace NitroxClient.GameLogic
 
         public void UpdatePosition(NitroxId id, Vector3 location, Quaternion rotation)
         {
-            ItemPosition itemPosition = new ItemPosition(id, location.ToDto(), rotation.ToDto());
+            ItemPosition itemPosition = new ItemPosition(id, location, rotation);
             packetSender.Send(itemPosition);
         }
 
         public void PickedUp(GameObject gameObject, TechType techType)
         {
-            // We want to remove any remote tracking immediately on pickup as it can cause weird behavior like holding a ghost item still in the world.
-            RemoveAnyRemoteControl(gameObject);
-
             NitroxId id = NitroxEntity.GetId(gameObject);
             Vector3 itemPosition = gameObject.transform.position;
 
-            Log.Info("PickedUp " + id + " " + techType);
+            PickedUp(itemPosition, id, techType);
+        }
 
-            PickupItem pickupItem = new PickupItem(itemPosition.ToDto(), id, techType.ToDto());
+        public void PickedUp(Vector3 itemPosition, NitroxId id, TechType techType)
+        {
+            Log.Info("PickedUp " + id + " " + techType);
+            PickupItem pickupItem = new PickupItem(itemPosition, id, techType.Model());
             packetSender.Send(pickupItem);
         }
 
         public void Dropped(GameObject gameObject, TechType techType, Vector3 dropPosition)
         {
-            // there is a theoretical possibility of a stray remote tracking packet that re-adds the monobehavior, this is purely a safety call.
-            RemoveAnyRemoteControl(gameObject);
-
             Optional<NitroxId> waterparkId = GetCurrentWaterParkId();
             NitroxId id = NitroxEntity.GetId(gameObject);
-            byte[] bytes = SerializationHelper.GetBytesWithoutParent(gameObject);
-
+            byte[] bytes = SerializationHelper.GetBytes(gameObject);
+            
             Log.Debug("Dropping item with id: " + id);
 
-            DroppedItem droppedItem = new DroppedItem(id, waterparkId, techType.ToDto(), dropPosition.ToDto(), gameObject.transform.rotation.ToDto(), bytes);
+            DroppedItem droppedItem = new DroppedItem(id, waterparkId, techType.Model(), dropPosition, gameObject.transform.rotation, bytes);
             packetSender.Send(droppedItem);
-        }
-
-        private void RemoveAnyRemoteControl(GameObject gameObject)
-        {
-            // Some items might be remotely simulated if they were dropped by other players.  We'll want to remove
-            // any remote tracking when we actively handle the item. 
-            RemotelyControlled remotelyControlled = gameObject.GetComponent<RemotelyControlled>();
-            Object.Destroy(remotelyControlled);
         }
 
         private Optional<NitroxId> GetCurrentWaterParkId()

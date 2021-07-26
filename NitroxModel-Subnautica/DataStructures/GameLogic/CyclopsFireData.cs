@@ -20,9 +20,9 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
         [ProtoMember(4)]
         public int NodeIndex { get; set; }
 
-        protected CyclopsFireData()
+        public CyclopsFireData()
         {
-            // Constructor for serialization. Has to be "protected" for json serialization.
+
         }
 
         public CyclopsFireData(NitroxId fireId, NitroxId cyclopsId, CyclopsRooms room, int nodeIndex)
@@ -35,7 +35,12 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
 
         public override string ToString()
         {
-            return $"[CyclopsFireData - FireId: {FireId}, CyclopsId: {CyclopsId}, Room: {Room}, FireNodeIndex: {NodeIndex}]";
+            return "[CyclopsFireData"
+                + " FireId: " + FireId
+                + " CyclopsId: " + CyclopsId
+                + " Room: " + Room
+                + " FireNodeIndex: " + NodeIndex
+                + "]";
         }
     }
 }

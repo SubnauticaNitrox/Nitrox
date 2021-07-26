@@ -21,23 +21,13 @@ namespace NitroxServer.Communication.Packets.Processors
             switch (packet.StoryEventType)
             {
                 case StoryEventType.RADIO:
-                    if (!storyGoalData.RadioQueue.Contains(packet.Key))
-                    {
-                        storyGoalData.RadioQueue.Add(packet.Key);
-                    }
+                    storyGoalData.RadioQueue.Add(packet.Key);
                     break;
                 case StoryEventType.GOAL_UNLOCK:
-                    if (!storyGoalData.GoalUnlocks.Contains(packet.Key))
-                    {
-                        storyGoalData.GoalUnlocks.Add(packet.Key);
-                        packet = new StoryEventSend(StoryEventType.STORY, packet.Key);
-                    }
+                    storyGoalData.GoalUnlocks.Add(packet.Key);
                     break;
                 default:
-                    if (!storyGoalData.CompletedGoals.Contains(packet.Key))
-                    {
-                        storyGoalData.CompletedGoals.Add(packet.Key);
-                    }
+                    storyGoalData.CompletedGoals.Add(packet.Key);
                     break;
             }
             playerManager.SendPacketToOtherPlayers(packet, player);

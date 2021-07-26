@@ -7,7 +7,6 @@ namespace NitroxClient.Communication.Packets.Processors
     {
         public override void Process(TimeChange timeChangePacket)
         {
-            DayNightCycle.main.StopSkipTimeMode();
             DayNightCycle.main.timePassedAsDouble = timeChangePacket.CurrentTime; //TODO: account for player latency
         }
     }

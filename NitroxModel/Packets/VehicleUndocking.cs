@@ -9,19 +9,17 @@ namespace NitroxModel.Packets
         public NitroxId VehicleId { get; }
         public NitroxId DockId { get; }
         public ushort PlayerId { get; }
-        public bool UndockingStart { get; }
 
-        public VehicleUndocking(NitroxId vehicleId, NitroxId dockId, ushort playerId, bool undockingStart)
+        public VehicleUndocking(NitroxId vehicleId, NitroxId dockId, ushort playerId)
         {
             VehicleId = vehicleId;
             DockId = dockId;
             PlayerId = playerId;
-            UndockingStart = undockingStart;
         }
 
         public override string ToString()
         {
-            return $"[VehicleUndocking VehicleId: {VehicleId} DockId: {DockId} PlayerId: {PlayerId} Start: {UndockingStart}]";
+            return "[VehicleUndocking VehicleId: " + VehicleId + " DockId: " + DockId + " PlayerId: " + PlayerId + "]";
         }
     }
 }

@@ -6,11 +6,11 @@ namespace NitroxClient.Unity.Smoothing
     {
         private const float SMOOTHING_SPEED = 10f;
         public Vector3 Target { get; set; }
-        public Vector3 Current { get; set; }
+        public Vector3 SmoothValue { get; private set; }
 
         public SmoothVector(Vector3 initial)
         {
-            Target = Current = initial;
+            Target = SmoothValue = initial;
         }
 
         public SmoothVector()
@@ -19,7 +19,7 @@ namespace NitroxClient.Unity.Smoothing
 
         public void FixedUpdate()
         {
-            Current = UWE.Utils.SlerpVector(Current, Target, (Target - Current).normalized * SMOOTHING_SPEED * Time.fixedDeltaTime);
+            SmoothValue = UWE.Utils.SlerpVector(SmoothValue, Target, (Target - SmoothValue).normalized * SMOOTHING_SPEED * Time.fixedDeltaTime);
         }
     }
 }

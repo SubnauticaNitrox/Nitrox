@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Timers;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
@@ -9,115 +7,43 @@ namespace NitroxServer.GameLogic
 {
     public class EventTriggerer
     {
-        private readonly Dictionary<string, Timer> eventTimers = new();
-        private readonly Stopwatch stopWatch = new();
-        private readonly PlayerManager playerManager;
-
-        public double ElapsedTime;
-        public double AuroraExplosionTime;
-
-        public EventTriggerer(PlayerManager playerManager, double elapsedTime, double? auroraExplosionTime)
+        PlayerManager playerManager;
+        public EventTriggerer(PlayerManager playerManager)
         {
             this.playerManager = playerManager;
-            SetupEventTimers(elapsedTime, auroraExplosionTime);
+            SetupEventTimers();
         }
 
-        private void SetupEventTimers(double elapsedTime, double? auroraExplosionTime)
+        public void SetupEventTimers()
         {
             // eventually this should be on a better timer so it can be saved, paused, etc
             Log.Debug("Event Triggerer started!");
-
-            ElapsedTime = elapsedTime;
-            if (auroraExplosionTime.HasValue)
-            {
-                AuroraExplosionTime = auroraExplosionTime.Value;
-            }
-            else
-            {
-                AuroraExplosionTime = RandomNumber(2.3d, 4d) * 1200d * 1000d; //Time.deltaTime returns seconds so we need to multiply 1000
-            }
-
-            CreateTimer(AuroraExplosionTime * 0.2d - ElapsedTime, StoryEventType.PDA, "Story_AuroraWarning1");
-            CreateTimer(AuroraExplosionTime * 0.5d - ElapsedTime, StoryEventType.PDA, "Story_AuroraWarning2");
-            CreateTimer(AuroraExplosionTime * 0.8d - ElapsedTime, StoryEventType.PDA, "Story_AuroraWarning3");
-            CreateTimer(AuroraExplosionTime - ElapsedTime, StoryEventType.PDA, "Story_AuroraWarning4");
-            CreateTimer(AuroraExplosionTime + 24000 - ElapsedTime, StoryEventType.EXTRA, "Story_AuroraExplosion");
-            //like the timers, except we can see how much time has passed
-
-            stopWatch.Start();
+            double auroraTimer = RandomNumber(2.3d, 4d) * 1200d * 1000d; //Time.deltaTime returns seconds so we need to multiply 1000
+            CreateTimer(auroraTimer * 0.2d, StoryEventType.PDA, "Story_AuroraWarning1");
+            CreateTimer(auroraTimer * 0.5d, StoryEventType.PDA, "Story_AuroraWarning2");
+            CreateTimer(auroraTimer * 0.8d, StoryEventType.PDA, "Story_AuroraWarning3");
+            CreateTimer(auroraTimer, StoryEventType.PDA, "Story_AuroraWarning4");
+            CreateTimer(auroraTimer + 24000, StoryEventType.EXTRA, "Story_AuroraExplosion");
         }
 
-        private Timer CreateTimer(double time, StoryEventType eventType, string key)
+        public Timer CreateTimer(double time, StoryEventType eventType, string key)
         {
-            //if timeOffset goes past the time
-            if (time <= 0)
-            {
-                return null;
-            }
-
-            Timer timer = new()
-            {
-                Interval = time,
-                Enabled = true,
-                AutoReset = false
-            };
+            Timer timer = new Timer();
             timer.Elapsed += delegate
             {
-                Log.Info($"Triggering event type {eventType} at time {time} with param {key}");
+                Log.Info("Triggering event type " + eventType.ToString() + " at time " + time.ToString() + " with param " + key.ToString());
                 playerManager.SendPacketToAllPlayers(new StoryEventSend(eventType, key));
             };
-
-            if (!eventTimers.ContainsKey(key))
-            {
-                eventTimers.Add(key, timer);
-            }
+            timer.Interval = time;
+            timer.Enabled = true;
+            timer.AutoReset = false;
             return timer;
         }
 
-        private double RandomNumber(double min, double max)
+        public double RandomNumber(double min, double max)
         {
             Random random = new Random();
             return random.NextDouble() * (max - min) + min;
-        }
-
-        public double GetRealElapsedTime()
-        {
-            if (stopWatch == null)
-            {
-                return ElapsedTime;
-            }
-            return stopWatch.ElapsedMilliseconds + ElapsedTime;
-        }
-
-        public void StartWorldTime()
-        {
-            stopWatch.Start();
-        }
-
-        public void PauseWorldTime()
-        {
-            stopWatch.Stop();
-        }
-
-        public void ResetWorldTime()
-        {
-            stopWatch.Reset();
-        }
-
-        public void StartEventTimers()
-        {
-            foreach (Timer eventTimer in eventTimers.Values)
-            {
-                eventTimer.Start();
-            }
-        }
-
-        public void PauseEventTimers()
-        {
-            foreach (Timer eventTimer in eventTimers.Values)
-            {
-                eventTimer.Stop();
-            }
         }
     }
 }

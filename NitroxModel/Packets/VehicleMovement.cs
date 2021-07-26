@@ -7,18 +7,19 @@ namespace NitroxModel.Packets
     [Serializable]
     public class VehicleMovement : Movement
     {
-        public VehicleMovementData VehicleMovementData { get; }
+        public VehicleMovementData Vehicle { get; }
 
-        public VehicleMovement(ushort playerId, VehicleMovementData vehicleMovementData) : base(playerId, vehicleMovementData.Position, vehicleMovementData.Velocity, vehicleMovementData.Rotation, vehicleMovementData.Rotation)
+        public VehicleMovement(ushort playerId, VehicleMovementData vehicle) : base(playerId, vehicle.Position, vehicle.Velocity, vehicle.Rotation, vehicle.Rotation)
         {
-            VehicleMovementData = vehicleMovementData;
+            Vehicle = vehicle;
             DeliveryMethod = NitroxDeliveryMethod.DeliveryMethod.UNRELIABLE_SEQUENCED;
             UdpChannel = UdpChannelId.VEHICLE_MOVEMENT;
         }
 
         public override string ToString()
         {
-            return $"[VehicleMovement - {base.ToString()}, Data: {VehicleMovementData}]";
+            return "[VehicleMovement - vehicle: " + Vehicle +
+                "]\n\t" + base.ToString();
         }
     }
 }

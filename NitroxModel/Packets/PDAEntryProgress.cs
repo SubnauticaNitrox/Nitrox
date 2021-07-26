@@ -1,17 +1,16 @@
 ﻿using System;
 using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class PDAEntryProgress : Packet
     {
-        public NitroxTechType TechType;
+        public TechType TechType;
         public float Progress;
         public int Unlocked;
 
-        public PDAEntryProgress(NitroxTechType techType, float progress, int unlocked)
+        public PDAEntryProgress(TechType techType, float progress, int unlocked)
         {
             TechType = techType;
             Progress = progress;

@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Reflection;
 using Autofac;
-using HarmonyLib;
+using Harmony;
 using NitroxClient;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
-using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
-using NitroxModel_Subnautica.Logger;
 using NitroxPatcher.Modules;
 using NitroxPatcher.Patches;
 using UnityEngine;
@@ -25,75 +20,22 @@ namespace NitroxPatcher
         /// </summary>
         private static IContainer container;
 
-        private static readonly Harmony harmony = new Harmony("com.nitroxmod.harmony");
+        private static readonly HarmonyInstance harmony = HarmonyInstance.Create("com.nitroxmod.harmony");
         private static bool isApplied;
-        private static readonly char[] newLineChars = Environment.NewLine.ToCharArray();
 
         public static void Execute()
         {
-            Log.Setup(inGameLogger: new SubnauticaInGameLogger(), useConsoleLogging: false);
-            Application.logMessageReceived += (condition, stackTrace, type) =>
-            {
-                switch (type)
-                {
-                    case LogType.Error:
-                    case LogType.Exception:
-                        string toWrite = condition;
-                        if (!string.IsNullOrWhiteSpace(stackTrace))
-                        {
-                            toWrite += Environment.NewLine + stackTrace;
-                        }
-                        Log.ErrorUnity(toWrite.Trim(newLineChars));
-                        break;
-                    case LogType.Warning:
-                    case LogType.Log:
-                    case LogType.Assert:
-                        // These logs from Unity spam too much uninteresting stuff
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(type), type, null);
-                }
-            };
-
-            Log.Info($"Using Nitrox version {Assembly.GetExecutingAssembly().GetName().Version} built on {File.GetCreationTimeUtc(Assembly.GetExecutingAssembly().Location)}");
-            try
-            {
-                Initialize();
-            }
-            catch (Exception ex)
-            { // Placeholder for popup gui
-                Log.Error(ex, "Unhandled exception occurred while initializing Nitrox:");
-            }
-        }
-
-        private static void Initialize()
-        {
-            Optional.ApplyHasValueCondition<UnityEngine.Object>(o => (bool)o);
+            Log.EnableInGameMessages();
 
             if (container != null)
             {
-                throw new Exception($"Patches have already been detected! Call {nameof(Apply)} or {nameof(Restore)} instead.");
+                Log.Warn("Patches have already been detected! Call Apply or Restore instead.");
+                return;
             }
-            Log.Info("Registering dependencies");
+
+            Log.Info("Registering Dependencies");
             container = CreatePatchingContainer();
-            try
-            {
-                NitroxServiceLocator.InitializeDependencyContainer(new ClientAutoFacRegistrar());
-            }
-            catch (ReflectionTypeLoadException ex)
-            {
-                Log.Error($"Failed to load one or more dependency types for Nitrox. Assembly: {ex.Types.FirstOrDefault()?.Assembly.FullName ?? "unknown"}");
-                foreach (Exception loaderEx in ex.LoaderExceptions)
-                {
-                    Log.Error(loaderEx);
-                }
-                throw;
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex, "Error while initializing and loading dependencies.");
-                throw;
-            }
+            NitroxServiceLocator.InitializeDependencyContainer(new ClientAutoFacRegistrar());
 
             InitPatches();
             ApplyNitroxBehaviours();
@@ -109,15 +51,8 @@ namespace NitroxPatcher
 
             foreach (IDynamicPatch patch in container.Resolve<IDynamicPatch[]>())
             {
-                Log.Debug($"Applying dynamic patch {patch.GetType().Name}");
-                try
-                {
-                    patch.Patch(harmony);
-                }
-                catch (Exception e)
-                {
-                    Log.Error($"Error patching {patch.GetType().Name}. Error: {e.Message}");
-                }
+                Log.Info("Applying dynamic patch " + patch.GetType().Name);
+                patch.Patch(harmony);
             }
 
             isApplied = true;
@@ -137,7 +72,7 @@ namespace NitroxPatcher
 
             foreach (IDynamicPatch patch in container.Resolve<IDynamicPatch[]>())
             {
-                Log.Debug($"Restoring dynamic patch {patch.GetType().Name}");
+                Log.Info("Restoring dynamic patch " + patch.GetType().Name);
                 patch.Restore(harmony);
             }
 
@@ -149,17 +84,17 @@ namespace NitroxPatcher
             Log.Info("Patching Subnautica...");
 
             // Enabling this creates a log file on your desktop (why there?), showing the emitted IL instructions.
-            Harmony.DEBUG = false;
+            HarmonyInstance.DEBUG = false;
 
             foreach (IPersistentPatch patch in container.Resolve<IEnumerable<IPersistentPatch>>())
             {
-                Log.Debug($"Applying persistent patch {patch.GetType().Name}");
+                Log.Info("Applying persistent patch " + patch.GetType().Name);
                 patch.Patch(harmony);
             }
 
             Multiplayer.OnBeforeMultiplayerStart += Apply;
             Multiplayer.OnAfterMultiplayerEnd += Restore;
-            Log.Info("Completed patching");
+            Log.Info("Completed patching using " + Assembly.GetExecutingAssembly().FullName);
         }
 
         private static IContainer CreatePatchingContainer()

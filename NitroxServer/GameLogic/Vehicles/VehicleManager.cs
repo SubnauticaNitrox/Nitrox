@@ -4,6 +4,7 @@ using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxServer.GameLogic.Items;
+using UnityEngine;
 
 namespace NitroxServer.GameLogic.Vehicles
 {
@@ -25,65 +26,38 @@ namespace NitroxServer.GameLogic.Vehicles
 
         public void UpdateVehicle(VehicleMovementData vehicleMovement)
         {
-            if (vehiclesById.TryGetValue(vehicleMovement.Id, out VehicleModel vehicleModel))
+            if (vehiclesById.ContainsKey(vehicleMovement.Id))
             {
+                VehicleModel vehicleModel = vehiclesById[vehicleMovement.Id];
                 vehicleModel.Position = vehicleMovement.Position;
                 vehicleModel.Rotation = vehicleMovement.Rotation;
-            }
-        }
-
-        public void UpdateVehicleHealth(NitroxId vehicleId, float newHealth)
-        {
-            if (vehiclesById.TryGetValue(vehicleId, out VehicleModel vehicleModel))
-            {
-                if (newHealth > 0)
-                {
-                    vehicleModel.Health = newHealth;
-                }
-                else
-                {
-                    RemoveVehicle(vehicleId);
-                }
+                vehicleModel.Health = vehicleMovement.Health;
             }
         }
 
         public void UpdateVehicleChildObjects(NitroxId id, List<InteractiveChildObjectIdentifier> interactiveChildObjectIdentifier)
         {
-            if (vehiclesById.TryGetValue(id, out VehicleModel vehicleModel))
+            if (vehiclesById.ContainsKey(id))
             {
-                vehicleModel.InteractiveChildIdentifiers.Set(interactiveChildObjectIdentifier);
-            }
-        }
-
-        public void UpdateVehiclePosition(NitroxId id, NitroxVector3 position)
-        {
-            if (vehiclesById.TryGetValue(id, out VehicleModel vehicleModel))
-            {
-                vehicleModel.Position = position;
-            }
-        }
-
-        public void UpdateVehicleRotation(NitroxId id, NitroxQuaternion rotation)
-        {
-            if (vehiclesById.TryGetValue(id, out VehicleModel vehicleModel))
-            {
-                vehicleModel.Rotation = rotation;
+                vehiclesById[id].InteractiveChildIdentifiers.Set(interactiveChildObjectIdentifier);
             }
         }
 
         public void UpdateVehicleName(NitroxId id, string name)
         {
-            if (vehiclesById.TryGetValue(id, out VehicleModel vehicleModel))
+            if (vehiclesById.ContainsKey(id))
             {
-                vehicleModel.Name = name;
+                vehiclesById[id].Name = name;
             }
         }
 
-        public void UpdateVehicleColours(int index, NitroxId id, NitroxVector3 hsb)
+        public void UpdateVehicleColours(int index, NitroxId id, Vector3 hsb, Color colour)
         {
-            if (vehiclesById.TryGetValue(id, out VehicleModel vehicleModel))
+            if (vehiclesById.ContainsKey(id))
             {
-                vehicleModel.HSB[index] = hsb;
+                Vector4 tmpVect = colour;
+                vehiclesById[id].Colours[index] = tmpVect;
+                vehiclesById[id].HSB[index] = hsb;
             }
         }
 

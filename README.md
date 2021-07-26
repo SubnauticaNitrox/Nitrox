@@ -1,13 +1,11 @@
 <p align="center">
-    <img src="https://i.imgur.com/ofnNX5z.gif" alt="Nitrox Subnautica Multiplayer Mod" />
+    <img src="https://s3.amazonaws.com/nitroxmod/Logo.png" alt="Nitrox" />
 </p>
 
 # Subnautica Nitrox
 An open-source, multiplayer modification for the game <a href="https://unknownworlds.com/subnautica/">Subnautica</a>.
 
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/SubnauticaNitrox/Nitrox)](https://github.com/SubnauticaNitrox/Nitrox/releases)
-[![Discord](https://img.shields.io/discord/525437013403631617?logo=discord&logoColor=white)](https://discord.gg/E8B4X9s)
+![](https://github.com/SubnauticaNitrox/Nitrox/workflows/Building%20Nitrox%20Release/badge.svg)
 
 ## FAQ
 
@@ -30,7 +28,7 @@ The following milestones have been completed:
 * Basic player animations
 * Integration with <a href="https://github.com/pardeike/Harmony">Harmony</a>
 * Friendly Launcher
-* Published on the <a href="https://nitrox.rux.gg">Nitrox website</a>
+* Published on <a href="https://www.nexusmods.com/">NexusMods</a> (on <a href="https://www.nexusmods.com/subnautica/mods/159">https://www.nexusmods.com/subnautica/mods/159</a>) or on the <a href="https://nitrox.rux.gg">Nitrox website</a>
 
 ### How can I play this mod?
 Please do keep in mind that this mod is still in progressional development. 
@@ -39,7 +37,7 @@ We finally have reached a stage, where we feel comfortable enough to give the pu
 
 If you want to follow the development progress exactly on each pull request. Refer to the <a href="https://github.com/Sunrunner37/Nitrox/wiki">wiki tab</a> to set up a development environment where pushed updates will be synchronized automatically.
 
-You can download the latest release of the mod on the <a href="https://nitrox.rux.gg">Nitrox website</a>.
+You can find the mod here on <a href="https://www.nexusmods.com/subnautica/mods/159">NexusMods</a> or the <a href="https://nitrox.rux.gg">Nitrox website</a>.
 
 ### Problems/bugs/issues
 Due to the huge influx of new players for Subnautica the Issue tracker turned into a forum instead of its actual purpose. Please join the <a href="https://discord.gg/E8B4X9s">Nitrox Discord</a> to discuss any and all issues you have with Nitrox. From there we'll pick up on new issues to track.

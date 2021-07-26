@@ -23,7 +23,6 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests.ConnectionStat
 
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
             connectionContext.Client.Returns(serverClient);
-            connectionContext.ServerPort.Returns(TestConstants.TEST_SERVER_PORT);
 
             Disconnected connectionState = new Disconnected();
 
@@ -46,7 +45,6 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests.ConnectionStat
 
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
             connectionContext.Client.Returns(serverClient);
-            connectionContext.ServerPort.Returns(TestConstants.TEST_SERVER_PORT);
 
             Disconnected connectionState = new Disconnected();
 
@@ -69,7 +67,6 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests.ConnectionStat
 
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
             connectionContext.Client.Returns(serverClient);
-            connectionContext.ServerPort.Returns(TestConstants.TEST_SERVER_PORT);
 
             Disconnected connectionState = new Disconnected();
 
@@ -94,7 +91,7 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests.ConnectionStat
             Action action = () => connectionState.NegotiateReservation(connectionContext);
 
             // Assert
-            action.Should().Throw<InvalidOperationException>();
+            action.ShouldThrow<InvalidOperationException>();
         }
 
         [TestMethod]
@@ -112,7 +109,7 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests.ConnectionStat
             Action action = () => connectionState.NegotiateReservation(connectionContext);
 
             // Assert
-            action.Should().Throw<InvalidOperationException>();
+            action.ShouldThrow<InvalidOperationException>();
         }
 
         [TestMethod]
@@ -126,7 +123,7 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests.ConnectionStat
             Action action = () => connectionState.JoinSession(connectionContext);
 
             // Assert
-            action.Should().Throw<InvalidOperationException>();
+            action.ShouldThrow<InvalidOperationException>();
         }
 
         [TestMethod]
@@ -140,7 +137,7 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests.ConnectionStat
             Action action = () => connectionState.Disconnect(connectionContext);
 
             // Assert
-            action.Should().Throw<InvalidOperationException>();
+            action.ShouldThrow<InvalidOperationException>();
         }
     }
 }

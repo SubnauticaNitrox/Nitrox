@@ -52,14 +52,11 @@ namespace NitroxLauncher
                 // This pirate detection subscriber is immediately invoked if pirate has been detected right now.
                 PirateDetection.PirateDetected += (o, eventArgs) =>
                 {
-                    WebBrowser webBrowser = new()
-                    {
-                        HorizontalAlignment = HorizontalAlignment.Stretch,
-                        VerticalAlignment = VerticalAlignment.Stretch,
-                        Margin = new Thickness(0)
-                    };
-
+                    WebBrowser webBrowser = new WebBrowser();
                     FrameContent = webBrowser;
+                    webBrowser.HorizontalAlignment = HorizontalAlignment.Stretch;
+                    webBrowser.VerticalAlignment = VerticalAlignment.Stretch;
+                    webBrowser.Margin = new Thickness(0);
 
                     string embed = "<html><head>" +
                                    "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"/>" +
@@ -68,27 +65,27 @@ namespace NitroxLauncher
                                    "frameborder = \"0\" allow = \"autoplay; encrypted-media\" allowfullscreen></iframe>" +
                                    "</body></html>";
                     webBrowser.NavigateToString(string.Format(embed, "https://www.youtube.com/embed/i8ju_10NkGY?autoplay=1"));
-                    SideBarPanel.Visibility = Visibility.Hidden;
                 };
             };
 
             logic.ServerStarted += ServerStarted;
             logic.ServerExited += ServerExited;
 
-            logic.SetTargetedSubnauticaPath(GameInstallationFinder.Instance.FindGame())
+            logic.SetTargetedSubnauticaPath(GameInstallationFinder.Instance.FindGame().OrElse(null))
                 .ContinueWith(task =>
-                {
-                    if (GameInstallationFinder.IsSubnauticaDirectory(task.Result))
                     {
-                        LauncherLogic.Instance.NavigateTo<LaunchGamePage>();
-                    }
-                    else
-                    {
-                        LauncherLogic.Instance.NavigateTo<OptionPage>();
-                    }
-
-                    logic.CheckNitroxVersion();
-                }, CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.FromCurrentSynchronizationContext());
+                        if (logic.IsSubnauticaDirectory(task.Result))
+                        {
+                            LauncherLogic.Instance.NavigateTo<LaunchGamePage>();
+                        }
+                        else
+                        {
+                            LauncherLogic.Instance.NavigateTo<OptionPage>();
+                        }
+                    },
+                    CancellationToken.None,
+                    TaskContinuationOptions.OnlyOnRanToCompletion,
+                    TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -98,30 +95,38 @@ namespace NitroxLauncher
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        internal async Task CloseInternalServerAndRemovePatchAsync()
+        {
+            await LauncherLogic.Instance.SendServerCommandAsync("stop\n");
+            logic.Dispose();
+        }
+
         private bool CanClose()
         {
-            if (logic.IsServerRunning && isServerEmbedded)
+            if (logic.ServerRunning && isServerEmbedded)
             {
-                MessageBoxResult userAnswer = MessageBox.Show("The embedded server is still running. Click yes to close.", "Close aborted", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                return userAnswer == MessageBoxResult.Yes;
+                MessageBox.Show("The embedded server is still running.", "Close aborted", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
             }
 
             return true;
         }
 
-        private void OnClosing(object sender, CancelEventArgs e)
+        private async void OnClosing(object sender, CancelEventArgs e)
         {
             if (!CanClose())
             {
                 e.Cancel = true;
-                return;
             }
-            logic.Dispose();
+            await CloseInternalServerAndRemovePatchAsync();
         }
 
         private void Close_Click(object sender, RoutedEventArgs e)
         {
-            Close();
+            if (CanClose())
+            {
+                Close();
+            }
         }
 
         private void Minimze_Click(object sender, RoutedEventArgs e)
@@ -152,7 +157,7 @@ namespace NitroxLauncher
 
         private void ButtonNavigation_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is not FrameworkElement elem)
+            if (!(sender is FrameworkElement elem))
             {
                 return;
             }

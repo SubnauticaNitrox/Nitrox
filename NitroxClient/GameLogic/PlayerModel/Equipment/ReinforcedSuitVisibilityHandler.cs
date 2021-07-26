@@ -4,23 +4,17 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic.PlayerModel.Equipment
 {
-    public class ReinforcedSuitVisibilityHandler : IEquipmentVisibilityHandler
+    internal class ReinforcedSuitVisibilityHandler : EquipmentVisibilityHandler
     {
-        private readonly GameObject gloves;
-        private readonly GameObject suit;
-
-        public ReinforcedSuitVisibilityHandler(GameObject playerModel)
-        {
-            gloves = playerModel.transform.Find(PlayerEquipmentConstants.REINFORCED_GLOVES_GAME_OBJECT_NAME).gameObject;
-            suit = playerModel.transform.Find(PlayerEquipmentConstants.REINFORCED_SUIT_GAME_OBJECT_NAME).gameObject;
-        }
-        public void UpdateEquipmentVisibility(ReadOnlyCollection<TechType> currentEquipment)
+        public override void UpdateEquipmentVisibility(GameObject playerModel, ReadOnlyCollection<TechType> currentEquipment)
         {
             bool glovesVisible = currentEquipment.Contains(TechType.ReinforcedGloves);
             bool bodyVisible = currentEquipment.Contains(TechType.ReinforcedDiveSuit);
 
-            gloves.SetActive(glovesVisible);
-            suit.SetActive(bodyVisible);
+            playerModel.transform.Find(PlayerEquipmentConstants.REINFORCED_GLOVES_GAME_OBJECT_NAME).gameObject.SetActive(glovesVisible);
+            playerModel.transform.Find(PlayerEquipmentConstants.REINFORCED_SUIT_GAME_OBJECT_NAME).gameObject.SetActive(bodyVisible);
+
+            CallSuccessor(playerModel, currentEquipment);
         }
     }
 }

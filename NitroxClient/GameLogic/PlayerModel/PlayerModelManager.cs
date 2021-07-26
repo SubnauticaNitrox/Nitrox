@@ -8,8 +8,6 @@ using NitroxClient.GameLogic.PlayerModel.ColorSwap;
 using NitroxClient.GameLogic.PlayerModel.Equipment;
 using NitroxClient.GameLogic.PlayerModel.Equipment.Abstract;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.DataStructures;
-using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -21,18 +19,15 @@ namespace NitroxClient.GameLogic.PlayerModel
         private readonly Lazy<GameObject> signalBasePrototype;
 
         private GameObject SignalBasePrototype => signalBasePrototype.Value;
-        private List<IEquipmentVisibilityHandler> equipmentVisibilityHandlers;
 
         public PlayerModelManager(IEnumerable<IColorSwapManager> colorSwapManagers)
         {
             this.colorSwapManagers = colorSwapManagers;
             signalBasePrototype = new Lazy<GameObject>(() =>
             {
-                GameObject go = (GameObject)Object.Instantiate(Resources.Load("VFX/xSignal"), Multiplayer.Main.transform);
-                go.name = "RemotePlayerSignalPrototype";
+                GameObject go = (GameObject)Object.Instantiate(Resources.Load("VFX/xSignal"));
                 go.transform.localScale = new Vector3(.5f, .5f, .5f);
                 go.transform.localPosition += new Vector3(0, 0.8f, 0);
-                go.SetActive(false);
                 return go;
             });
         }
@@ -42,32 +37,16 @@ namespace NitroxClient.GameLogic.PlayerModel
             Multiplayer.Main.StartCoroutine(ApplyPlayerColor(player, colorSwapManagers));
         }
 
-        public void RegisterEquipmentVisibilityHandler(GameObject playerModel)
+        public void UpdateEquipmentVisibility(GameObject playerModel, ReadOnlyCollection<TechType> currentEquipment)
         {
-            equipmentVisibilityHandlers = new List<IEquipmentVisibilityHandler>
-            {
-                new DiveSuitVisibilityHandler(playerModel),
-                new ScubaSuitVisibilityHandler(playerModel),
-                new FinsVisibilityHandler(playerModel),
-                new RadiationSuitVisibilityHandler(playerModel),
-                new ReinforcedSuitVisibilityHandler(playerModel),
-                new StillSuitVisibilityHandler(playerModel)
-            };
-        }
-
-        public void UpdateEquipmentVisibility(ReadOnlyCollection<TechType> currentEquipment)
-        {
-            foreach (IEquipmentVisibilityHandler equipmentVisibilityHandler in equipmentVisibilityHandlers)
-            {
-                equipmentVisibilityHandler.UpdateEquipmentVisibility(currentEquipment);
-            }
+            IEquipmentVisibilityHandler handler = BuildVisibilityHandlerChain();
+            handler.UpdateEquipmentVisibility(playerModel, currentEquipment);
         }
 
         public void AttachPing(INitroxPlayer player)
         {
             GameObject signalBase = Object.Instantiate(SignalBasePrototype, player.PlayerModel.transform, false);
             signalBase.name = "signal" + player.PlayerName;
-            signalBase.SetActive(true);
 
             PingInstance ping = signalBase.GetComponent<PingInstance>();
             ping.SetLabel("Player " + player.PlayerName);
@@ -75,6 +54,16 @@ namespace NitroxClient.GameLogic.PlayerModel
 
             UpdateLocalPlayerPda(player, ping);
             SetInGamePingColor(player, ping);
+        }
+
+        private static EquipmentVisibilityHandler BuildVisibilityHandlerChain()
+        {
+            return new DiveSuitVisibilityHandler()
+                .WithPredecessorHandler(new ScubaSuitVisibiliyHandler())
+                .WithPredecessorHandler(new FinsVisibilityHandler())
+                .WithPredecessorHandler(new RadiationSuitVisibilityHandler())
+                .WithPredecessorHandler(new ReinforcedSuitVisibilityHandler())
+                .WithPredecessorHandler(new StillSuitVisibilityHandler());
         }
 
         private static void UpdateLocalPlayerPda(INitroxPlayer player, PingInstance ping)
@@ -93,7 +82,7 @@ namespace NitroxClient.GameLogic.PlayerModel
             FieldInfo pingTabEntriesField = typeof(uGUI_PingTab).GetField("entries", BindingFlags.NonPublic | BindingFlags.Instance);
             Dictionary<int, uGUI_PingEntry> pingEntries = (Dictionary<int, uGUI_PingEntry>)pingTabEntriesField.GetValue(pingTab);
             uGUI_PingEntry pingEntry = pingEntries[ping.GetInstanceID()];
-            pingEntry.icon.color = player.PlayerSettings.PlayerColor.ToUnity();
+            pingEntry.icon.color = player.PlayerSettings.PlayerColor;
 
             GameObject pingEntryGameObject = pingEntry.gameObject;
             pingEntryGameObject.transform.Find("ColorToggle").gameObject.SetActive(false);
@@ -112,7 +101,7 @@ namespace NitroxClient.GameLogic.PlayerModel
             setColor.Invoke(pings,
                 new object[]
                 {
-                    ping.GetInstanceID(), player.PlayerSettings.PlayerColor.ToUnity()
+                    ping.GetInstanceID(), player.PlayerSettings.PlayerColor
                 });
         }
 

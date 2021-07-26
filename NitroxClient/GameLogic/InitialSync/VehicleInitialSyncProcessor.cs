@@ -1,23 +1,20 @@
 ﻿using System.Collections;
 using System.Linq;
-using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
-using NitroxModel_Subnautica.DataStructures;
+using NitroxModel_Subnautica.Helper;
 
 namespace NitroxClient.GameLogic.InitialSync
 {
     public class VehicleInitialSyncProcessor : InitialSyncProcessor
     {
         private readonly Vehicles vehicles;
-        private readonly IPacketSender packetSender;
 
-        public VehicleInitialSyncProcessor(Vehicles vehicles, IPacketSender packetSender)
+        public VehicleInitialSyncProcessor(Vehicles vehicles)
         {
             this.vehicles = vehicles;
-            this.packetSender = packetSender;
 
             DependentProcessors.Add(typeof(BuildingInitialSyncProcessor));
             DependentProcessors.Add(typeof(CyclopsInitialAsyncProcessor));
@@ -26,19 +23,16 @@ namespace NitroxClient.GameLogic.InitialSync
         public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
         {
             int totalSyncedVehicles = 0;
-            int nonCyclopsVehicleCount = packet.Vehicles.Where(v => v.TechType.ToUnity() != TechType.Cyclops).Count();
+            int nonCyclopsVehicleCount = packet.Vehicles.Where(v => v.TechType.Enum() != TechType.Cyclops).Count();
 
             foreach (VehicleModel vehicle in packet.Vehicles)
             {
-                if (vehicle.TechType.ToUnity() != TechType.Cyclops)
+                if (vehicle.TechType.Enum() != TechType.Cyclops)
                 {
-                    using (packetSender.Suppress<VehicleDocking>())
-                    {
-                        waitScreenItem.SetProgress(totalSyncedVehicles, nonCyclopsVehicleCount);
-                        vehicles.CreateVehicle(vehicle);
-                        totalSyncedVehicles++;
-                        yield return null;
-                    }
+                    waitScreenItem.SetProgress(totalSyncedVehicles, nonCyclopsVehicleCount);
+                    vehicles.CreateVehicle(vehicle);
+                    totalSyncedVehicles++;
+                    yield return null;
                 }
             }
 

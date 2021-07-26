@@ -2,12 +2,12 @@
 {
     public class AssetIdentifier
     {
-        public string File { get; }
+        public int FileId { get; }
         public long IndexId { get; }
 
-        public AssetIdentifier(string file, long indexId)
+        public AssetIdentifier(int fileId, long indexId)
         {
-            File = file;
+            FileId = fileId;
             IndexId = indexId;
         }
 
@@ -16,7 +16,7 @@
             AssetIdentifier identifier = obj as AssetIdentifier;
 
             return identifier != null &&
-                   File == identifier.File &&
+                   FileId == identifier.FileId &&
                    IndexId == identifier.IndexId;
         }
 
@@ -24,7 +24,7 @@
         {
             int hashCode = 390124324;
 
-            hashCode = hashCode * -1521134295 + File.GetHashCode();
+            hashCode = hashCode * -1521134295 + FileId.GetHashCode();
             hashCode = hashCode * -1521134295 + IndexId.GetHashCode();
 
             return hashCode;

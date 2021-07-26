@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using NitroxModel.DataStructures.GameLogic;
-using NitroxModel_Subnautica.DataStructures;
 using NitroxServer.GameLogic.Entities.Spawning;
 using NitroxServer.UnityStubs;
 
@@ -23,8 +22,8 @@ namespace NitroxServer_Subnautica.GameLogic.Entities.Spawning
                     List<EntitySlot.Type> slotTypes = SlotsHelper.GetEntitySlotTypes(entitySlotData);
                     List<string> stringSlotTypes = slotTypes.Select(s => s.ToString()).ToList();
                     EntitySpawnPoint entitySpawnPoint = new EntitySpawnPoint(absoluteEntityCell,
-                                             entitySlotData.localPosition.ToDto(),
-                                             entitySlotData.localRotation.ToDto(),
+                                             entitySlotData.localPosition,
+                                             entitySlotData.localRotation,
                                              stringSlotTypes,
                                              entitySlotData.density,
                                              entitySlotData.biomeType.ToString());

@@ -69,25 +69,5 @@ namespace NitroxClient.Properties {
                 return ((byte[])(obj));
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to event:/creature/bird_small/flap;false;false
-        ///event:/creature/bird_small/idle;false;false
-        ///event:/creature/biter/bite_1;false;false
-        ///event:/creature/biter/idle_1;false;false
-        ///event:/creature/bleeder/attach_loop;false;false
-        ///event:/creature/bleeder/detach;false;false
-        ///event:/creature/bleeder/idle;false;false
-        ///event:/creature/bleeder/pain;false;false
-        ///event:/creature/bleeder/punch;false;false
-        ///event:/creature/blood_kelp_biter/bite;false;false
-        ///event:/creature/blood_kelp_biter/idle;false;false
-        ///event:/creature/ [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string soundsWhitelist {
-            get {
-                return ResourceManager.GetString("soundsWhitelist", resourceCulture);
-            }
-        }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using NitroxModel.DataStructures.Util;
+using UnityEngine;
 using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxModel.Packets
 {
@@ -10,12 +10,12 @@ namespace NitroxModel.Packets
     {
         public NitroxId Id { get; }
         public Optional<NitroxId> WaterParkId { get; }
-        public NitroxTechType TechType { get; }
-        public NitroxVector3 ItemPosition { get; }
-        public NitroxQuaternion ItemRotation { get; }
+        public TechType TechType { get; }
+        public Vector3 ItemPosition { get; }
+        public Quaternion ItemRotation { get; }
         public byte[] Bytes { get; }
 
-        public DroppedItem(NitroxId id, Optional<NitroxId> waterParkId, NitroxTechType techType, NitroxVector3 itemPosition, NitroxQuaternion itemRotation, byte[] bytes)
+        public DroppedItem(NitroxId id, Optional<NitroxId> waterParkId, TechType techType, Vector3 itemPosition, Quaternion itemRotation, byte[] bytes)
         {
             Id = id;
             WaterParkId = waterParkId;

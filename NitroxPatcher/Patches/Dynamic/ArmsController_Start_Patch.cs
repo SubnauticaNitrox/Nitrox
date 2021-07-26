@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Reflection;
-using HarmonyLib;
+using Harmony;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
@@ -16,7 +16,7 @@ namespace NitroxPatcher.Patches.Dynamic
             reconfigure.Invoke(__instance, new PlayerTool[] { null });
         }
 
-        public override void Patch(Harmony harmony)
+        public override void Patch(HarmonyInstance harmony)
         {
             PatchPostfix(harmony, TARGET_METHOD);
         }

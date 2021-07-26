@@ -68,17 +68,6 @@ namespace NitroxModel.Helper
             }
         }
 
-        public static void String(string s)
-        {
-            if (!string.IsNullOrWhiteSpace(s))
-            {
-                return;
-            }
-            
-            Optional<string> paramName = GetParameterName<string>();
-            throw new ArgumentException("String must not be null of whitespace", paramName.OrElse(null));
-        }
-
         public static void IsFalse(bool b, string message)
         {
             if (b)
@@ -87,7 +76,7 @@ namespace NitroxModel.Helper
             }
         }
 
-        public static void IsPresent<T>(Optional<T> opt) where T : class
+        public static void IsPresent<T>(Optional<T> opt)
         {
             if (!opt.HasValue)
             {
@@ -95,7 +84,7 @@ namespace NitroxModel.Helper
             }
         }
 
-        public static void IsPresent<T>(Optional<T> opt, string message) where T : class
+        public static void IsPresent<T>(Optional<T> opt, string message)
         {
             if (!opt.HasValue)
             {

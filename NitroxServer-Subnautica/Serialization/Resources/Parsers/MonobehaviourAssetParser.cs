@@ -19,14 +19,14 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Parsers
             { "EntitySlot", new EntitySlotParser() }
         };
         
-        public override void Parse(AssetIdentifier identifier, AssetsFileReader reader, ResourceAssets resourceAssets, Dictionary<int, string> relativeFileIdToPath)
+        public override void Parse(AssetIdentifier identifier, AssetsFileReader reader, ResourceAssets resourceAssets)
         {
             MonobehaviourAsset monobehaviour = new MonobehaviourAsset();
-            int fileId = reader.ReadInt32();
-            monobehaviour.GameObjectIdentifier = new AssetIdentifier(relativeFileIdToPath[fileId], reader.ReadInt64());
+
+            monobehaviour.GameObjectIdentifier = new AssetIdentifier(reader.ReadInt32(), reader.ReadInt64());
             monobehaviour.Enabled = reader.ReadBoolean();
             reader.Align();
-            monobehaviour.MonoscriptIdentifier = new AssetIdentifier(relativeFileIdToPath[reader.ReadInt32()], reader.ReadInt64());
+            monobehaviour.MonoscriptIdentifier = new AssetIdentifier(reader.ReadInt32(), reader.ReadInt64());
             monobehaviour.Name = reader.ReadCountStringInt32();
 
             // Hack - If we have not yet loaded monoscripts then we are currently processing unit monobehaviours 
@@ -45,7 +45,7 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Parsers
 
             if (monobehaviourParsersByMonoscriptName.TryGetValue(monoscript.Name, out monoResourceParser))
             {
-                monoResourceParser.Parse(identifier, monobehaviour.GameObjectIdentifier, reader, resourceAssets, relativeFileIdToPath);
+                monoResourceParser.Parse(identifier, monobehaviour.GameObjectIdentifier, reader, resourceAssets);
             }
 
             MonobehavioursByAssetId.Add(identifier, monobehaviour);

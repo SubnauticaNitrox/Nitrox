@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.MultiplayerSession;
+using UnityEngine;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
@@ -9,16 +10,16 @@ namespace NitroxModel.DataStructures.GameLogic
     public class InitialRemotePlayerData
     {
         public PlayerContext PlayerContext { get; set; }        
-        public NitroxVector3 Position { get; set; }
+        public Vector3 Position { get; set; }
         public Optional<NitroxId> SubRootId { get; }
-        public List<NitroxTechType> EquippedTechTypes { get; }
+        public List<TechType> EquippedTechTypes { get; }
 
-        protected InitialRemotePlayerData()
+        public InitialRemotePlayerData()
         {
-            // Constructor for serialization. Has to be "protected" for json serialization.
+            // Constructor for serialization
         }
 
-        public InitialRemotePlayerData(PlayerContext playerContext, NitroxVector3 position, Optional<NitroxId> subRootId, List<NitroxTechType> equippedTechTypes)
+        public InitialRemotePlayerData(PlayerContext playerContext, Vector3 position, Optional<NitroxId> subRootId, List<TechType> equippedTechTypes)
         {
             PlayerContext = playerContext;
             Position = position;

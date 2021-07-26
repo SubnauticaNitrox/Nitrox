@@ -6,9 +6,9 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel.Helper;
+using TechTypeModel = NitroxModel.DataStructures.TechType;
 using NitroxModel_Subnautica.Helper;
 using System.Collections;
-using NitroxModel_Subnautica.DataStructures;
 
 namespace NitroxClient.GameLogic.InitialSync
 {
@@ -43,10 +43,10 @@ namespace NitroxClient.GameLogic.InitialSync
             waitScreenItem.SetProgress(1f);
             yield return null;
         }
-
+        
         private void SetEncyclopediaEntry(List<string> entries)
         {
-            Log.Info($"Received initial sync packet with {entries.Count} encyclopedia entries");
+            Log.Info("Received initial sync packet with " + entries.Count + " encyclopedia entries");
 
             using (packetSender.Suppress<PDAEncyclopediaEntryAdd>())
             {
@@ -57,16 +57,16 @@ namespace NitroxClient.GameLogic.InitialSync
             }
         }
 
-        private void SetPDAEntryComplete(List<NitroxTechType> pdaEntryComplete)
+        private void SetPDAEntryComplete(List<TechTypeModel> pdaEntryComplete)
         {
             HashSet<TechType> complete = (HashSet<TechType>)(typeof(PDAScanner).GetField("complete", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null));
 
-            foreach (NitroxTechType item in pdaEntryComplete)
+            foreach (TechTypeModel item in pdaEntryComplete)
             {
-                complete.Add(item.ToUnity());
+                complete.Add(item.Enum());
             }
 
-            Log.Info($"PDAEntryComplete: New added: {pdaEntryComplete.Count}, Total: {complete.Count}");
+            Log.Info("PDAEntryComplete Save:" + pdaEntryComplete.Count + " Read Partial Client Final Count:" + complete.Count);
 
         }
 
@@ -76,29 +76,29 @@ namespace NitroxClient.GameLogic.InitialSync
 
             foreach (PDAEntry entry in entries)
             {
-                partial.Add(new PDAScanner.Entry { progress = entry.Progress, techType = entry.TechType.ToUnity(), unlocked = entry.Unlocked });
+                partial.Add(new PDAScanner.Entry { progress = entry.Progress, techType = entry.TechType.Enum(), unlocked = entry.Unlocked });
             }
 
-            Log.Debug($"PDAEntryPartial: New added: {entries.Count}, Total: {partial.Count}");
+            Log.Info("PDAEntryPartial Save :" + entries.Count + " Read Partial Client Final Count:" + partial.Count);
         }
-
-        private void SetKnownTech(List<NitroxTechType> techTypes)
+        
+        private void SetKnownTech(List<TechTypeModel> techTypes)
         {
-            Log.Info($"Received initial sync packet with {techTypes.Count} known tech types");
+            Log.Info("Received initial sync packet with " + techTypes.Count + " known tech types");
 
             using (packetSender.Suppress<KnownTechEntryAdd>())
             {
-                foreach (NitroxTechType techType in techTypes)
+                foreach (TechTypeModel techType in techTypes)
                 {
                     HashSet<TechType> complete = (HashSet<TechType>)(typeof(PDAScanner).GetField("complete", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null));
-                    KnownTech.Add(techType.ToUnity(), false);
+                    KnownTech.Add(techType.Enum(), false);
                 }
             }
         }
 
         private void SetPDALog(List<PDALogEntry> logEntries)
         {
-            Log.Info($"Received initial sync packet with {logEntries.Count} pda log entries");
+            Log.Info("Received initial sync packet with " + logEntries.Count + " pda log entries");
 
             using (packetSender.Suppress<PDALogEntryAdd>())
             {

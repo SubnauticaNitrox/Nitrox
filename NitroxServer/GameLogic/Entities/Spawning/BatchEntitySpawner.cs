@@ -8,6 +8,7 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxServer.Serialization;
 using NitroxServer.Serialization.Resources.Datastructures;
+using UnityEngine;
 
 namespace NitroxServer.GameLogic.Entities.Spawning
 {
@@ -15,34 +16,32 @@ namespace NitroxServer.GameLogic.Entities.Spawning
     {
         private readonly BatchCellsParser batchCellsParser;
 
-        private readonly Dictionary<NitroxTechType, IEntityBootstrapper> customBootstrappersByTechType;
-        private readonly HashSet<NitroxInt3> emptyBatches = new HashSet<NitroxInt3>();
-        private readonly Dictionary<string, PrefabPlaceholdersGroupAsset> prefabPlaceholderGroupsbyClassId;
+        private readonly Dictionary<TechType, IEntityBootstrapper> customBootstrappersByTechType;
+        private readonly HashSet<Int3> emptyBatches = new HashSet<Int3>();
+        private readonly Dictionary<string, List<PrefabAsset>> placeholderPrefabsByGroupClassId;
         private readonly UwePrefabFactory prefabFactory;
-
-        private readonly string seed;
 
         private readonly UweWorldEntityFactory worldEntityFactory;
 
         private readonly object parsedBatchesLock = new object();
         private readonly object emptyBatchesLock = new object();
-        private HashSet<NitroxInt3> parsedBatches;
+        private HashSet<Int3> parsedBatches;
 
-        public List<NitroxInt3> SerializableParsedBatches
+        public List<Int3> SerializableParsedBatches
         {
             get
             {
-                List<NitroxInt3> parsed;
-                List<NitroxInt3> empty;
+                List<Int3> parsed;
+                List<Int3> empty;
 
                 lock (parsedBatchesLock)
                 {
-                    parsed = new List<NitroxInt3>(parsedBatches);
+                    parsed = new List<Int3>(parsedBatches);
                 }
 
                 lock (emptyBatchesLock)
                 {
-                    empty = new List<NitroxInt3>(emptyBatches);
+                    empty = new List<Int3>(emptyBatches);
                 }
 
                 return parsed.Except(empty).ToList();
@@ -51,24 +50,24 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             {
                 lock (parsedBatchesLock)
                 {
-                    parsedBatches = new HashSet<NitroxInt3>(value);
+                    parsedBatches = new HashSet<Int3>(value);
                 }
             }
         }
 
-        public BatchEntitySpawner(EntitySpawnPointFactory entitySpawnPointFactory, UweWorldEntityFactory worldEntityFactory, UwePrefabFactory prefabFactory, List<NitroxInt3> loadedPreviousParsed, ServerProtoBufSerializer serializer,
-                                  Dictionary<NitroxTechType, IEntityBootstrapper> customBootstrappersByTechType, Dictionary<string, PrefabPlaceholdersGroupAsset> prefabPlaceholderGroupsbyClassId, string seed)
+        public BatchEntitySpawner(EntitySpawnPointFactory entitySpawnPointFactory, UweWorldEntityFactory worldEntityFactory, UwePrefabFactory prefabFactory, List<Int3> loadedPreviousParsed, ServerProtobufSerializer serializer,
+                                  Dictionary<TechType, IEntityBootstrapper> customBootstrappersByTechType, Dictionary<string, List<PrefabAsset>> placeholderPrefabsByGroupClassId)
         {
-            parsedBatches = new HashSet<NitroxInt3>(loadedPreviousParsed);
+            parsedBatches = new HashSet<Int3>(loadedPreviousParsed);
             this.worldEntityFactory = worldEntityFactory;
             this.prefabFactory = prefabFactory;
             this.customBootstrappersByTechType = customBootstrappersByTechType;
-            this.prefabPlaceholderGroupsbyClassId = prefabPlaceholderGroupsbyClassId;
-            this.seed = seed;
+            this.placeholderPrefabsByGroupClassId = placeholderPrefabsByGroupClassId;
+
             batchCellsParser = new BatchCellsParser(entitySpawnPointFactory, serializer);
         }
 
-        public List<Entity> LoadUnspawnedEntities(NitroxInt3 batchId)
+        public List<Entity> LoadUnspawnedEntities(Int3 batchId)
         {
             lock (parsedBatches)
             {
@@ -80,7 +79,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                 parsedBatches.Add(batchId);
             }
 
-            DeterministicBatchGenerator deterministicBatchGenerator = new DeterministicBatchGenerator(seed, batchId);
+            DeterministicBatchGenerator deterministicBatchGenerator = new DeterministicBatchGenerator(batchId);
             List<EntitySpawnPoint> spawnPoints = batchCellsParser.ParseBatchData(batchId);
             List<Entity> entities = SpawnEntities(spawnPoints, deterministicBatchGenerator);
 
@@ -211,7 +210,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             }
         }
 
-        private IEnumerable<Entity> CreateEntityWithChildren(EntitySpawnPoint entitySpawnPoint, NitroxVector3 scale, NitroxTechType techType, int cellLevel, string classId, DeterministicBatchGenerator deterministicBatchGenerator, Entity parentEntity = null)
+        private IEnumerable<Entity> CreateEntityWithChildren(EntitySpawnPoint entitySpawnPoint, Vector3 scale, TechType techType, int cellLevel, string classId, DeterministicBatchGenerator deterministicBatchGenerator, Entity parentEntity = null)
         {
             Entity spawnedEntity = new Entity(entitySpawnPoint.LocalPosition,
                                               entitySpawnPoint.LocalRotation,
@@ -221,7 +220,6 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                                               classId,
                                               true,
                                               deterministicBatchGenerator.NextId(),
-                                              null,
                                               parentEntity);
 
             spawnedEntity.ChildEntities = SpawnEntities(entitySpawnPoint.Children, deterministicBatchGenerator, spawnedEntity);
@@ -232,7 +230,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
 
             if (customBootstrappersByTechType.TryGetValue(techType, out bootstrapper))
             {
-                bootstrapper.Prepare(spawnedEntity, parentEntity, deterministicBatchGenerator);
+                bootstrapper.Prepare(spawnedEntity, deterministicBatchGenerator);
             }
 
             yield return spawnedEntity;
@@ -288,15 +286,15 @@ namespace NitroxServer.GameLogic.Entities.Spawning
 
         private void CreatePrefabPlaceholdersWithChildren(Entity entity, string classId, DeterministicBatchGenerator deterministicBatchGenerator)
         {
-            PrefabPlaceholdersGroupAsset group;
+            List<PrefabAsset> prefabs;
 
             // Check to see if this entity is a PrefabPlaceholderGroup.  If it is, 
             // we want to add the children that would be spawned here.  This is 
             // surpressed on the client so we don't get virtual entities that the
             // server doesn't know about.
-            if (prefabPlaceholderGroupsbyClassId.TryGetValue(classId, out group))
+            if (placeholderPrefabsByGroupClassId.TryGetValue(classId, out prefabs))
             {
-                foreach (PrefabAsset prefab in group.SpawnablePrefabs)
+                foreach (PrefabAsset prefab in prefabs)
                 {
                     TransformAsset transform = prefab.TransformAsset;
 
@@ -317,7 +315,6 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                                                      prefab.ClassId,
                                                      true,
                                                      deterministicBatchGenerator.NextId(),
-                                                     null,
                                                      entity);
 
                     if (prefab.EntitySlot.HasValue)
@@ -332,41 +329,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                     CreatePrefabPlaceholdersWithChildren(prefabEntity, prefabEntity.ClassId, deterministicBatchGenerator);
                     entity.ChildEntities.Add(prefabEntity);
                 }
-
-                entity.ChildEntities.AddRange(ConvertComponentPrefabsToEntities(group.ExistingPrefabs, entity, deterministicBatchGenerator));
             }
-        }
-
-        // Entities that have been spawned by a parent prefab (child game objects baked into the prefab).
-        // created separately as we don't actually want to spawn these but instead just update the id.
-        // will refactor this piece a bit later to split these into a new data structure.
-        private List<Entity> ConvertComponentPrefabsToEntities(List<PrefabAsset> prefabs, Entity parent, DeterministicBatchGenerator deterministicBatchGenerator)
-        {
-            List<Entity> entities = new List<Entity>();
-
-            int counter = 0;
-
-            foreach (PrefabAsset prefab in prefabs)
-            {
-                TransformAsset transform = prefab.TransformAsset;
-
-                Entity prefabEntity = new Entity(transform.LocalPosition,
-                             transform.LocalRotation,
-                             transform.LocalScale,
-                             new NitroxTechType("None"),
-                             1,
-                             prefab.ClassId,
-                             true,
-                             deterministicBatchGenerator.NextId(),
-                             counter++,
-                             parent);
-
-                prefabEntity.ChildEntities = ConvertComponentPrefabsToEntities(prefab.Children, prefabEntity, deterministicBatchGenerator);
-                
-                entities.Add(prefabEntity);
-            }
-
-            return entities;
         }
 
         private Entity SpawnEntitySlotEntities(NitroxEntitySlot entitySlot, TransformAsset transform, DeterministicBatchGenerator deterministicBatchGenerator, Entity parentEntity)

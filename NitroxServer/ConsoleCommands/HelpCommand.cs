@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxServer.ConsoleCommands.Abstract;
 
@@ -9,44 +9,36 @@ namespace NitroxServer.ConsoleCommands
 {
     internal class HelpCommand : Command
     {
-        public override IEnumerable<string> Aliases { get; } = new[] { "?" };
-
-        public HelpCommand() : base("help", Perms.PLAYER, "Displays this")
+        public HelpCommand() : base("help", Perms.PLAYER, "", "Displays this", new[] { "?" })
         {
-            AllowedArgOverflow = true;
         }
 
-        protected override void Execute(CallArgs args)
+        public override void RunCommand(string[] args, Optional<Player> sender)
         {
-            List<string> cmdsText;
-
-            if (args.IsConsole)
+            if (sender.HasValue)
             {
-                cmdsText = GetHelpText(Perms.CONSOLE, false);
-
-                foreach (string cmdText in cmdsText)
-                {
-                    Log.Info(cmdText);
-                }
+                List<string> cmdsText = GetHelpText(sender.Value.Permissions);
+                cmdsText.ForEach(cmdText => SendMessageToPlayer(sender, cmdText));
             }
             else
             {
-                cmdsText = GetHelpText(args.Sender.Value.Permissions, true);
-
-                foreach (string cmdText in cmdsText)
-                {
-                    SendMessageToPlayer(args.Sender, cmdText);
-                }
+                List<string> cmdsText = GetHelpText(Perms.CONSOLE);
+                cmdsText.ForEach(cmdText => Log.Info(cmdText));
             }
         }
 
-        private List<string> GetHelpText(Perms permThreshold, bool cropText)
+        public override bool VerifyArgs(string[] args)
         {
-            //Runtime query to avoid circular dependencies
-            IEnumerable<Command> commands = NitroxServiceLocator.LocateService<IEnumerable<Command>>();
-            return new List<string>(commands.Where(cmd => cmd.CanExecute(permThreshold))
+            return args.Length == 0;
+        }
+
+        private List<string> GetHelpText(Perms perm)
+        {
+            // runtime query to avoid circular dependencies
+            IEnumerable<Command> commands = NitroxModel.Core.NitroxServiceLocator.LocateService<IEnumerable<Command>>();
+            return new List<string>(commands.Where(cmd => cmd.RequiredPermLevel <= perm)
                                             .OrderByDescending(cmd => cmd.Name)
-                                            .Select(cmd => cmd.ToHelpText(cropText)));
+                                            .Select(cmd => cmd.ToHelpText()));
         }
     }
 }

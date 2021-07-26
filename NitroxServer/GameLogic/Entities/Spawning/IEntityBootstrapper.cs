@@ -4,6 +4,6 @@ namespace NitroxServer.GameLogic.Entities.Spawning
 {
     public interface IEntityBootstrapper
     {
-        void Prepare(Entity spawnedEntity, Entity parentEntity, DeterministicBatchGenerator idGenerator);
+        void Prepare(Entity spawnedEntity, DeterministicBatchGenerator idGenerator);
     }
 }

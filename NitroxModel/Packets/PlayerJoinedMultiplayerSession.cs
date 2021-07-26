@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using NitroxModel.DataStructures;
 using NitroxModel.MultiplayerSession;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.Util;
+using NitroxModel.DataStructures;
 
 namespace NitroxModel.Packets
 {
@@ -11,16 +9,12 @@ namespace NitroxModel.Packets
     public class PlayerJoinedMultiplayerSession : Packet
     {
         public PlayerContext PlayerContext { get; }
-        public Optional<NitroxId> SubRootId { get; }
-        public List<NitroxTechType> EquippedTechTypes { get; }
-        public List<ItemData> InventoryItems { get; }
+        public List<TechType> EquippedTechTypes { get; }
 
-        public PlayerJoinedMultiplayerSession(PlayerContext playerContext, Optional<NitroxId> subRootId, List<NitroxTechType> equippedTechTypes, List<ItemData> inventoryItems)
+        public PlayerJoinedMultiplayerSession(PlayerContext playerContext, List<TechType> equippedTechTypes)
         {
             PlayerContext = playerContext;
-            SubRootId = subRootId;
             EquippedTechTypes = equippedTechTypes;
-            InventoryItems = inventoryItems;
         }
     }
 }

@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Reflection;
-using HarmonyLib;
+using Harmony;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
-using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.Util;
-using NitroxModel.Logger;
 using NitroxModel_Subnautica.DataStructures.GameLogic;
 using UnityEngine;
 
@@ -21,19 +18,14 @@ namespace NitroxPatcher.Patches.Dynamic
         public static bool Prefix(CyclopsLightingPanel __instance)
         {
             // Suppress powered on if a cyclops´s floodlight is set to false            
-            GameObject gameObject = __instance.gameObject.transform.parent.gameObject; // GO = LightsControl, Parent = main cyclops game object
+            GameObject gameObject = __instance.gameObject;
             NitroxId id = NitroxEntity.GetId(gameObject);
-            Optional<CyclopsModel> model = NitroxServiceLocator.LocateService<Vehicles>().TryGetVehicle<CyclopsModel>(id);
-            if (!model.HasValue)
-            {
-                Log.Error($"{nameof(CyclopsLightingPanel_OnSubConstructionComplete_Patch)}: Could not find {nameof(CyclopsModel)} by Nitrox id {id}.\nGO containing wrong id: {__instance.GetHierarchyPath()}");
-                return false;
-            }
-
-            return model.Value.FloodLightsOn;
+            CyclopsModel model = NitroxServiceLocator.LocateService<Vehicles>().GetVehicles<CyclopsModel>(id);
+            
+            return model.FloodLightsOn;
         }
 
-        public override void Patch(Harmony harmony)
+        public override void Patch(HarmonyInstance harmony)
         {
             PatchPrefix(harmony, TARGET_METHOD);
         }

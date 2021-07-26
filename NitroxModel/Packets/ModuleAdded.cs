@@ -7,17 +7,15 @@ namespace NitroxModel.Packets
     public class ModuleAdded : Packet
     {
         public EquippedItemData EquippedItemData { get; }
-        public bool PlayerModule { get; }
 
-        public ModuleAdded(EquippedItemData equippedItemData, bool playerModule)
+        public ModuleAdded(EquippedItemData equippedItemData)
         {
             EquippedItemData = equippedItemData;
-            PlayerModule = playerModule;
         }
 
         public override string ToString()
         {
-            return $"[ModuleAdded EquippedItemData: {EquippedItemData}, PlayerModule: {PlayerModule}]";
+            return "[ModuleAdded EquippedItemData: " + EquippedItemData + " ]";
         }
     }
 }

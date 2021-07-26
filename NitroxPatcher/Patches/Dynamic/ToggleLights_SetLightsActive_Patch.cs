@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using HarmonyLib;
+using Harmony;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
@@ -71,9 +71,9 @@ namespace NitroxPatcher.Patches.Dynamic
             }
         }
 
-        public override void Patch(Harmony harmony)
+        public override void Patch(HarmonyInstance harmony)
         {
-            PatchMultiple(harmony, TARGET_METHOD, true, true, false, false);
+            PatchMultiple(harmony, TARGET_METHOD, true, true, false);
         }
 
         public class LightToggleContainer

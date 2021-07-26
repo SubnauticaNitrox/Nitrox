@@ -3,7 +3,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using HarmonyLib;
+using Harmony;
+using Harmony.ILCopying;
 using NitroxModel.Helper;
 
 namespace NitroxTest.Patcher.Test
@@ -32,25 +33,25 @@ namespace NitroxTest.Patcher.Test
             return GetInstructionsFromIL(GetILInstructions(targetMethod));
         }
 
-        private static ReadOnlyCollection<CodeInstruction> GetInstructionsFromIL(IEnumerable<KeyValuePair<OpCode, object>> il)
+        private static ReadOnlyCollection<CodeInstruction> GetInstructionsFromIL(IEnumerable<ILInstruction> il)
         {
             List<CodeInstruction> result = new List<CodeInstruction>();
-            foreach (KeyValuePair<OpCode, object> instruction in il)
+            foreach (ILInstruction instruction in il)
             {
-                result.Add(new CodeInstruction(instruction.Key, instruction.Value));
+                result.Add(instruction.GetCodeInstruction());
             }
             return result.AsReadOnly();
         }
 
-        public static IEnumerable<KeyValuePair<OpCode, object>> GetILInstructions(MethodInfo method)
+        public static IEnumerable<ILInstruction> GetILInstructions(MethodInfo method)
         {
             DynamicMethod dynMethod = new DynamicMethod(method.Name, method.ReturnType, method.GetParameters().Select(p => p.ParameterType).ToArray(), false);
-            return PatchProcessor.ReadMethodBody(method, dynMethod.GetILGenerator());
+            return MethodBodyReader.GetInstructions(dynMethod.GetILGenerator(), method);
         }
 
-        public static IEnumerable<KeyValuePair<OpCode, object>> GetILInstructions(DynamicMethod method)
+        public static IEnumerable<ILInstruction> GetILInstructions(DynamicMethod method)
         {
-            return PatchProcessor.ReadMethodBody(method, method.GetILGenerator());
+            return MethodBodyReader.GetInstructions(method.GetILGenerator(), method);
         }
     }
 }

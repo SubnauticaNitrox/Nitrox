@@ -6,16 +6,15 @@ namespace NitroxClient.MonoBehaviours
 {
     public class NitroxBootstrapper : MonoBehaviour
     {
-        internal static NitroxBootstrapper Instance;
-        private void Awake()
+        public void Awake()
         {
             DontDestroyOnLoad(gameObject);
-            Instance = this;
             gameObject.AddComponent<SceneCleanerPreserve>();
             gameObject.AddComponent<MainMenuMods>();
 
 #if DEBUG
             EnableDeveloperFeatures();
+            AttachWarpToCommand();
 #endif
 
             CreateDebugger();
@@ -26,7 +25,13 @@ namespace NitroxClient.MonoBehaviours
             Log.Info("Enabling developer console.");
             DevConsole.disableConsole = false;
             Application.runInBackground = true;
-            Log.Info($"Unity run in background set to \"{Application.runInBackground}\"");
+            Log.Info($"Unity run in background set to {Application.runInBackground.ToString().ToUpperInvariant()}.");
+        }
+
+        private void AttachWarpToCommand()
+        {
+            GameObject consoleRoot = new GameObject();
+            consoleRoot.AddComponent<WarpToCommand>();
         }
 
         private void CreateDebugger()

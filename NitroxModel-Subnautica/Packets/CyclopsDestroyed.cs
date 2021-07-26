@@ -13,10 +13,5 @@ namespace NitroxModel_Subnautica.Packets
         {
             Id = id;
         }
-
-        public override string ToString()
-        {
-            return $"[CyclopsDestroyed - Id: {Id}]";
-        }
     }
 }

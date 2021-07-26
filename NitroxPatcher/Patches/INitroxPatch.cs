@@ -1,10 +1,10 @@
-﻿using HarmonyLib;
+﻿using Harmony;
 
 namespace NitroxPatcher.Patches
 {
     public interface INitroxPatch
     {
-        void Patch(Harmony instance);
-        void Restore(Harmony instance);
+        void Patch(HarmonyInstance instance);
+        void Restore(HarmonyInstance instance);
     }
 }

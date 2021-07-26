@@ -1,46 +1,51 @@
 ﻿using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 using NitroxModel.DataStructures;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Bases;
+using NitroxServer.GameLogic.Entities;
 using NitroxServer.GameLogic.Items;
 using NitroxServer.GameLogic.Vehicles;
 using ProtoBufNet;
 
 namespace NitroxServer.Serialization.World
 {
-    [ProtoContract, JsonObject(MemberSerialization.OptIn)]
+    [ProtoContract]
     public class WorldData
     {
-        [JsonProperty, ProtoMember(1)]
-        public List<NitroxInt3> ParsedBatchCells { get; set; }
+        public const long VERSION = 1;
 
-        [JsonProperty, ProtoMember(2)]
-        public DateTime ServerStartTime { get; set; }
+        [ProtoMember(1)]
+        public List<Int3> ParsedBatchCells { get; set; }
 
-        [JsonProperty, ProtoMember(3)]
+        [ProtoMember(2)]
+        public DateTime? ServerStartTime { get; set; }
+
+        [ProtoMember(3)]
+        public EntityData EntityData { get; set; }
+
+        [ProtoMember(4)]
         public VehicleData VehicleData { get; set; }
 
-        [JsonProperty, ProtoMember(4)]
+        [ProtoMember(5)]
         public InventoryData InventoryData { get; set; }
 
-        [JsonProperty, ProtoMember(5)]
+        [ProtoMember(6)]
         public GameData GameData { get; set; }
 
-        [JsonProperty, ProtoMember(6)]
+        [ProtoMember(7)]
         public EscapePodData EscapePodData { get; set; }
-
-        [JsonProperty, ProtoMember(7)]
-        public string Seed { get; set; }
 
         public bool IsValid()
         {
-            return ParsedBatchCells != null && // Always returns false on empty saves (sometimes also if never entered the ocean)
-                   VehicleData != null &&
-                   InventoryData != null &&
-                   GameData != null &&
-                   EscapePodData != null;
+            return (ParsedBatchCells != null) && // Always returns false on empty saves
+                   (ServerStartTime.HasValue) &&
+                   (VehicleData != null) &&
+                   (InventoryData != null) &&
+                   (GameData != null) &&
+                   (EntityData != null) &&
+                   (EntityData.Entities.Count > 0) &&
+                   (EscapePodData != null);
         }
     }
 }

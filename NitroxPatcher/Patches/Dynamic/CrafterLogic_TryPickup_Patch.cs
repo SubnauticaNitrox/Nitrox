@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
-using HarmonyLib;
+using Harmony;
 using NitroxClient.GameLogic;
 using NitroxModel.Helper;
 using UnityEngine;
@@ -32,18 +32,18 @@ namespace NitroxPatcher.Patches.Dynamic
                     injected = true;
 
                     /*
-                     * Multiplayer.Logic.Crafting.GhostCrafterItemPickedUp(base.gameObject, techType);
+                     * Multiplayer.Logic.Crafting.FabricatorItemPickedUp(base.gameObject, techType);
                      */
                     yield return TranspilerHelper.LocateService<Crafting>();
                     yield return new CodeInstruction(OpCodes.Ldarg_0);
                     yield return new CodeInstruction(OpCodes.Call, typeof(Component).GetMethod("get_gameObject", BindingFlags.Instance | BindingFlags.Public));
                     yield return original.Ldloc<TechType>();
-                    yield return new CodeInstruction(OpCodes.Callvirt, typeof(Crafting).GetMethod("GhostCrafterItemPickedUp", BindingFlags.Instance | BindingFlags.Public));
+                    yield return new CodeInstruction(OpCodes.Callvirt, typeof(Crafting).GetMethod("FabricatorItemPickedUp", BindingFlags.Instance | BindingFlags.Public));
                 }
             }
         }
 
-        public override void Patch(Harmony harmony)
+        public override void Patch(HarmonyInstance harmony)
         {
             PatchTranspiler(harmony, TARGET_METHOD);
         }

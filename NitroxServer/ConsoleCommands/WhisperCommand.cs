@@ -1,28 +1,47 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxServer.ConsoleCommands.Abstract;
-using NitroxServer.ConsoleCommands.Abstract.Type;
+using NitroxServer.GameLogic;
+using NitroxModel.Packets;
+using NitroxModel.DataStructures.Util;
 
 namespace NitroxServer.ConsoleCommands
 {
     internal class WhisperCommand : Command
     {
-        public override IEnumerable<string> Aliases { get; } = new[] { "w", "msg", "m" };
+        private readonly PlayerManager playerManager;
 
-        public WhisperCommand() : base("whisper", Perms.PLAYER, "Sends a private message to a player")
+        public WhisperCommand(PlayerManager playerManager) : base("msg", Perms.PLAYER, "{name} {msg}", "Sends a private message to a player", new string[] { "m", "whisper", "w" })
         {
-            AddParameter(new TypePlayer("name", true));
-            AddParameter(new TypeString("msg", true));
-
-            AllowedArgOverflow = true;
+            this.playerManager = playerManager;
         }
 
-        protected override void Execute(CallArgs args)
+        public override void RunCommand(string[] args, Optional<Player> sender)
         {
-            Player foundPlayer = args.Get<Player>(0);
-            string message = $"[{args.SenderName} -> YOU]: {args.GetTillEnd(1)}";
+            Player foundPlayer;
 
-            SendMessageToPlayer(foundPlayer, message);
+            if (playerManager.TryGetPlayerByName(args[0], out foundPlayer))
+            {
+                string message = string.Join(" ", args.Skip(1).ToArray());
+
+                if (sender.HasValue)
+                {
+                    foundPlayer.SendPacket(new ChatMessage(sender.Value.Id, message));
+                }
+                else
+                {
+                    foundPlayer.SendPacket(new ChatMessage(ChatMessage.SERVER_ID, message));
+                }
+            }
+            else
+            {
+                Notify(sender, $"Unable to whisper {args[0]}, player not found.");
+            }
+        }
+
+        public override bool VerifyArgs(string[] args)
+        {
+            return args.Length == 2;
         }
     }
 }

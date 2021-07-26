@@ -1,14 +1,14 @@
 ﻿using System;
-using NitroxModel.DataStructures.GameLogic;
+using UnityEngine;
 
 namespace NitroxModel.MultiplayerSession
 {
     [Serializable]
     public class PlayerSettings
     {
-        public NitroxColor PlayerColor { get; }
+        public Color PlayerColor { get; }
 
-        public PlayerSettings(NitroxColor playerColor)
+        public PlayerSettings(Color32 playerColor)
         {
             PlayerColor = playerColor;
         }

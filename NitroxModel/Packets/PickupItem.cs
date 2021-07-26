@@ -1,6 +1,6 @@
 ﻿using System;
+using UnityEngine;
 using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxModel.Packets
 {
@@ -8,10 +8,10 @@ namespace NitroxModel.Packets
     public class PickupItem : Packet
     {
         public NitroxId Id { get; }
-        public NitroxVector3 ItemPosition { get; }
-        public NitroxTechType TechType { get; }
+        public Vector3 ItemPosition { get; }
+        public TechType TechType { get; }
 
-        public PickupItem(NitroxVector3 itemPosition, NitroxId id, NitroxTechType techType)
+        public PickupItem(Vector3 itemPosition, NitroxId id, TechType techType)
         {
             ItemPosition = itemPosition;
             Id = id;
@@ -36,7 +36,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return $"[Pickup Item - ItemPosition: {ItemPosition}, Id: {Id} TechType: {TechType}]";
+            return "[Pickup Item - ItemPosition: " + ItemPosition + " Id: " + Id + " TechType: " + TechType + "]";
         }
     }
 }

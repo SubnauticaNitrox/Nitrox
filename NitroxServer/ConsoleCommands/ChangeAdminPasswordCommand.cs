@@ -1,8 +1,9 @@
-﻿using NitroxModel.DataStructures.GameLogic;
+﻿using System;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxServer.ConsoleCommands.Abstract;
-using NitroxServer.ConsoleCommands.Abstract.Type;
-using NitroxServer.Serialization;
+using NitroxModel.DataStructures.GameLogic;
+using NitroxServer.ConfigParser;
 
 namespace NitroxServer.ConsoleCommands
 {
@@ -10,23 +11,30 @@ namespace NitroxServer.ConsoleCommands
     {
         private readonly ServerConfig serverConfig;
 
-        public ChangeAdminPasswordCommand(ServerConfig serverConfig) : base("changeadminpassword", Perms.ADMIN, "Changes admin password")
+        public ChangeAdminPasswordCommand(ServerConfig serverConfig) : base("changeadminpassword", Perms.ADMIN, "{password}", "Changes admin password")
         {
-            AddParameter(new TypeString("password", true));
-
             this.serverConfig = serverConfig;
         }
 
-        protected override void Execute(CallArgs args)
+        public override void RunCommand(string[] args, Optional<Player> sender)
         {
-            serverConfig.Update(c =>
+            try
             {
-                string newPassword = args.Get(0);
-                c.AdminPassword = newPassword;
-                Log.InfoSensitive("Admin password changed to {password} by {playername}", newPassword, args.SenderName);
-            });
-            
-            SendMessageToPlayer(args.Sender, "Admin password has been updated");
+                string playerName = sender.HasValue ? sender.Value.Name : "SERVER";
+                serverConfig.ChangeAdminPassword(args[0]);
+
+                Log.Info($"Admin password changed to \"{args[0]}\" by {playerName}");
+                SendMessageToPlayer(sender, "Admin password changed");
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"Error attempting to change admin password to \"{args[0]}\"", ex);
+            }
+        }
+
+        public override bool VerifyArgs(string[] args)
+        {
+            return args.Length >= 1;
         }
     }
 }

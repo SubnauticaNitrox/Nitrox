@@ -1,8 +1,9 @@
 ﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
+using NitroxModel.Logger;
 using NitroxModel.Packets;
-using NitroxModel_Subnautica.DataStructures;
+using NitroxModel_Subnautica.Helper;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic
@@ -16,18 +17,20 @@ namespace NitroxClient.GameLogic
             this.packetSender = packetSender;
         }
 
-        public void GhostCrafterCrafingStarted(GameObject crafter, TechType techType, float duration)
+        public void FabricatorCrafingStarted(GameObject crafter, TechType techType, float duration)
         {
             NitroxId crafterId = NitroxEntity.GetId(crafter);
-            GhostCrafterBeginCrafting ghostCrafterBeginCrafting = new(crafterId, techType.ToDto(), duration);
-            packetSender.Send(ghostCrafterBeginCrafting);
+            FabricatorBeginCrafting fabricatorBeginCrafting = new FabricatorBeginCrafting(crafterId, techType.Model(), duration);
+            packetSender.Send(fabricatorBeginCrafting);
         }
 
-        public void GhostCrafterItemPickedUp(GameObject gameObject, TechType techType)
+        public void FabricatorItemPickedUp(GameObject gameObject, TechType techType)
         {
             NitroxId crafterId = NitroxEntity.GetId(gameObject);
-            GhostCrafterItemPickup ghostCrafterItemPickup = new(crafterId, techType.ToDto());
-            packetSender.Send(ghostCrafterItemPickup);
+
+            FabricatorItemPickup fabricatorItemPickup = new FabricatorItemPickup(crafterId, techType.Model());
+            packetSender.Send(fabricatorItemPickup);
+            Log.Debug(fabricatorItemPickup);
         }
     }
 }

@@ -4,7 +4,6 @@ using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NitroxClient.GameLogic.PlayerPreferences;
 using NitroxModel.MultiplayerSession;
-using NitroxModel_Subnautica.DataStructures;
 using NSubstitute;
 using UnityEngine;
 
@@ -25,7 +24,7 @@ namespace NitroxTest.Client.PlayerPreferences
 
             PlayerPreferenceManager playerPreferenceManager = new PlayerPreferenceManager(stateProvider);
 
-            PlayerPreference playerPreference = new PlayerPreference(TestConstants.TEST_PLAYER_NAME, RandomColorGenerator.GenerateColor().ToUnity());
+            PlayerPreference playerPreference = new PlayerPreference(TestConstants.TEST_PLAYER_NAME, RandomColorGenerator.GenerateColor());
             Color preferredColor = playerPreference.PreferredColor();
 
             //When
@@ -51,9 +50,9 @@ namespace NitroxTest.Client.PlayerPreferences
 
             PlayerPreferenceManager playerPreferenceManager = new PlayerPreferenceManager(stateProvider);
 
-            PlayerPreference playerPreference = new PlayerPreference(TestConstants.TEST_PLAYER_NAME, RandomColorGenerator.GenerateColor().ToUnity());
+            PlayerPreference playerPreference = new PlayerPreference(TestConstants.TEST_PLAYER_NAME, RandomColorGenerator.GenerateColor());
 
-            Color newColor = RandomColorGenerator.GenerateColor().ToUnity();
+            Color newColor = RandomColorGenerator.GenerateColor();
             PlayerPreference newPlayerPreference = new PlayerPreference(TestConstants.TEST_PLAYER_NAME, newColor);
 
             //When
@@ -79,13 +78,13 @@ namespace NitroxTest.Client.PlayerPreferences
 
             PlayerPreferenceManager playerPreferenceManager = new PlayerPreferenceManager(stateProvider);
 
-            PlayerPreference playerPreference = new PlayerPreference(TestConstants.TEST_PLAYER_NAME, RandomColorGenerator.GenerateColor().ToUnity());
+            PlayerPreference playerPreference = new PlayerPreference(TestConstants.TEST_PLAYER_NAME, RandomColorGenerator.GenerateColor());
 
             //Act
             Action action = () => playerPreferenceManager.SetPreference(null, playerPreference);
 
             //Assert
-            action.Should().Throw<ArgumentNullException>();
+            action.ShouldThrow<ArgumentNullException>();
         }
 
         [TestMethod]
@@ -104,7 +103,7 @@ namespace NitroxTest.Client.PlayerPreferences
             Action action = () => playerPreferenceManager.SetPreference(TestConstants.TEST_IP_ADDRESS, null);
 
             //Assert
-            action.Should().Throw<ArgumentNullException>();
+            action.ShouldThrow<ArgumentNullException>();
         }
 
         [TestMethod]
@@ -119,17 +118,17 @@ namespace NitroxTest.Client.PlayerPreferences
 
             PlayerPreferenceManager playerPreferenceManager = new PlayerPreferenceManager(stateProvider);
 
-            PlayerPreference firstPreference = new PlayerPreference(TestConstants.TEST_PLAYER_NAME, RandomColorGenerator.GenerateColor().ToUnity());
+            PlayerPreference firstPreference = new PlayerPreference(TestConstants.TEST_PLAYER_NAME, RandomColorGenerator.GenerateColor());
 
             string firstIpAddress = "127.0.0.1";
             playerPreferenceManager.SetPreference(firstIpAddress, firstPreference);
 
-            PlayerPreference secondPreference = new PlayerPreference(TestConstants.TEST_PLAYER_NAME, RandomColorGenerator.GenerateColor().ToUnity());
+            PlayerPreference secondPreference = new PlayerPreference(TestConstants.TEST_PLAYER_NAME, RandomColorGenerator.GenerateColor());
 
             string secondIpAddress = "123.456.789.321";
             playerPreferenceManager.SetPreference(secondIpAddress, secondPreference);
 
-            PlayerPreference thirdPreference = new PlayerPreference(TestConstants.TEST_PLAYER_NAME, RandomColorGenerator.GenerateColor().ToUnity());
+            PlayerPreference thirdPreference = new PlayerPreference(TestConstants.TEST_PLAYER_NAME, RandomColorGenerator.GenerateColor());
             Color expectedColor = thirdPreference.PreferredColor();
 
             string thirdIpAddress = "000.000.000.000";
@@ -181,7 +180,7 @@ namespace NitroxTest.Client.PlayerPreferences
             Action action = () => playerPreferenceManager.GetPreference(null);
 
             //Assert
-            action.Should().Throw<ArgumentNullException>();
+            action.ShouldThrow<ArgumentNullException>();
         }
     }
 }

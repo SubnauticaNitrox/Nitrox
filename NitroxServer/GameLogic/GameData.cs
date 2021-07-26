@@ -1,31 +1,17 @@
 ﻿using NitroxServer.GameLogic.Unlockables;
-using System;
-using Newtonsoft.Json;
 using ProtoBufNet;
+using System;
 
 namespace NitroxServer.GameLogic.Bases
 {
     [Serializable]
-    [ProtoContract, JsonObject(MemberSerialization.OptIn)]
+    [ProtoContract]
     public class GameData
     {
-        [JsonProperty, ProtoMember(1)]
+        [ProtoMember(1)]
         public PDAStateData PDAState { get; set; }
-
-        [JsonProperty, ProtoMember(2)]
+        
+        [ProtoMember(2)]
         public StoryGoalData StoryGoals { get; set; }
-
-        [JsonProperty, ProtoMember(3)]
-        public StoryTimingData StoryTiming { get; set; }
-
-        public static GameData From(PDAStateData pdaState, StoryGoalData storyGoals, EventTriggerer eventTriggerer)
-        {
-            return new GameData
-            {
-                PDAState = pdaState,
-                StoryGoals = storyGoals,
-                StoryTiming = StoryTimingData.From(eventTriggerer)
-            };
-        }
     }
 }

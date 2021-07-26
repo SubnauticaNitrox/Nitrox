@@ -25,33 +25,21 @@ namespace NitroxClient.GameLogic
         public void BroadcastItemAdd(Pickupable pickupable, Transform containerTransform)
         {
             NitroxId itemId = NitroxEntity.GetId(pickupable.gameObject);
-            byte[] bytes = SerializationHelper.GetBytesWithoutParent(pickupable.gameObject);
-            NitroxId ownerId = InventoryContainerHelper.GetOwnerId(containerTransform);
+            byte[] bytes = SerializationHelper.GetBytes(pickupable.gameObject);
 
-            ItemData itemData;
-            Plantable plant = pickupable.GetComponent<Plantable>();
-            if (plant && plant.currentPlanter)
-            {
-                // special case: we want to remember the time when the plant was added, so we can simulate growth
-                itemData = new PlantableItemData(ownerId, itemId, bytes, DayNightCycle.main.timePassedAsDouble);
-            }
-            else
-            {
-                itemData = new ItemData(ownerId, itemId, bytes);
-            }
-
+            ItemData itemData = new ItemData(GetOwner(containerTransform), itemId, bytes);
             if (packetSender.Send(new ItemContainerAdd(itemData)))
             {
-                Log.Debug($"Sent: Added item {pickupable.GetTechType()} to container {containerTransform.gameObject.GetHierarchyPath()}");
+                Log.Debug($"Sent: Added item '{pickupable.GetTechType()}' to container '{containerTransform.gameObject.GetHierarchyPath()}'");
             }
         }
 
         public void BroadcastItemRemoval(Pickupable pickupable, Transform containerTransform)
         {
             NitroxId itemId = NitroxEntity.GetId(pickupable.gameObject);
-            if (packetSender.Send(new ItemContainerRemove(InventoryContainerHelper.GetOwnerId(containerTransform), itemId)))
+            if (packetSender.Send(new ItemContainerRemove(GetOwner(containerTransform), itemId)))
             {
-                Log.Debug($"Sent: Removed item {pickupable.GetTechType()} from container {containerTransform.gameObject.GetHierarchyPath()}");
+                Log.Debug($"Sent: removed item '{pickupable.GetTechType()}' from container '{containerTransform.gameObject.GetHierarchyPath()}'");
             }
         }
 
@@ -60,13 +48,13 @@ namespace NitroxClient.GameLogic
             Optional<GameObject> owner = NitroxEntity.GetObjectFrom(containerId);
             if (!owner.HasValue)
             {
-                Log.Error($"Unable to find inventory container with id {containerId} for {item.name}");
+                Log.Error("Unable to find inventory container with id: " + containerId);
                 return;
             }
-            Optional<ItemsContainer> opContainer = InventoryContainerHelper.TryGetContainerByOwner(owner.Value);
+            Optional<ItemsContainer> opContainer = InventoryContainerHelper.GetBasedOnOwnersType(owner.Value);
             if (!opContainer.HasValue)
             {
-                Log.Error($"Could not find container field on GameObject {owner.Value.GetHierarchyPath()}");
+                Log.Error("Could not find container field on object " + owner.Value.name);
                 return;
             }
 
@@ -75,7 +63,6 @@ namespace NitroxClient.GameLogic
             using (packetSender.Suppress<ItemContainerAdd>())
             {
                 container.UnsafeAdd(new InventoryItem(pickupable));
-                Log.Debug($"Received: Added item {pickupable.GetTechType()} to container {owner.Value.GetHierarchyPath()}");
             }
         }
 
@@ -83,10 +70,10 @@ namespace NitroxClient.GameLogic
         {
             GameObject owner = NitroxEntity.RequireObjectFrom(ownerId);
             GameObject item = NitroxEntity.RequireObjectFrom(itemId);
-            Optional<ItemsContainer> opContainer = InventoryContainerHelper.TryGetContainerByOwner(owner);
+            Optional<ItemsContainer> opContainer = InventoryContainerHelper.GetBasedOnOwnersType(owner);
             if (!opContainer.HasValue)
             {
-                Log.Error($"Could not find item container behaviour on object {owner.GetHierarchyPath()} with id {ownerId}");
+                Log.Error($"Could not find item container behaviour on object '{owner.name}' with Nitrox id '{ownerId}'");
                 return;
             }
 
@@ -95,8 +82,46 @@ namespace NitroxClient.GameLogic
             using (packetSender.Suppress<ItemContainerRemove>())
             {
                 container.RemoveItem(pickupable, true);
-                Log.Debug($"Received: Removed item {pickupable.GetTechType()} to container {owner.GetHierarchyPath()}");
             }
+        }
+
+        public NitroxId GetCyclopsLockerId(Transform ownerTransform)
+        {
+            string LockerId = ownerTransform.gameObject.name.Substring(7, 1);
+            GameObject locker = ownerTransform.parent.gameObject.FindChild("submarine_locker_01_0" + LockerId);
+            if (!locker)
+            {
+                throw new Exception("Could not find Locker Object: submarine_locker_01_0" + LockerId);
+            }
+            StorageContainer storageContainer = locker.GetComponentInChildren<StorageContainer>();
+            if (!storageContainer)
+            {
+                throw new Exception($"Could not find {nameof(StorageContainer)} From Object: submarine_locker_01_0{LockerId}");                
+            }
+            
+            return NitroxEntity.GetId(storageContainer.gameObject);
+        }
+
+        public NitroxId GetEscapePodStorageId(Transform ownerTransform)
+        {
+            StorageContainer SC = ownerTransform.parent.gameObject.RequireComponentInChildren<StorageContainer>();
+            return NitroxEntity.GetId(SC.gameObject);
+        }
+
+        private NitroxId GetOwner(Transform ownerTransform)
+        {
+            bool isCyclopsLocker = Regex.IsMatch(ownerTransform.gameObject.name, @"Locker0([0-9])StorageRoot$", RegexOptions.IgnoreCase);
+            if (isCyclopsLocker)
+            {
+                return GetCyclopsLockerId(ownerTransform);
+            }
+            bool isEscapePodStorage = ownerTransform.parent.name.StartsWith("EscapePod");
+            if (isEscapePodStorage)
+            {
+                return GetEscapePodStorageId(ownerTransform);
+            }
+
+            return NitroxEntity.GetId(ownerTransform.parent.gameObject);
         }
     }
 }

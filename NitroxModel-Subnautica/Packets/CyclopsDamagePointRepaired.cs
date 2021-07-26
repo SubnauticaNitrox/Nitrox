@@ -19,10 +19,5 @@ namespace NitroxModel_Subnautica.Packets
             DamagePointIndex = damagePointIndex;
             RepairAmount = repairAmount;
         }
-
-        public override string ToString()
-        {
-            return $"[CyclopsDamagePointRepaired - Id: {Id}, DamagePointIndex: {DamagePointIndex}, RepairAmount: {RepairAmount}]";
-        }
     }
 }

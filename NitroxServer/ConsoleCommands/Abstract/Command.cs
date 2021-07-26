@@ -1,115 +1,63 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NitroxModel.Core;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.Util;
+﻿using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
-using NitroxModel.Logger;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
-using NitroxServer.GameLogic;
+using NitroxModel.Logger;
+using System.Text;
 
 namespace NitroxServer.ConsoleCommands.Abstract
 {
-    public abstract partial class Command
+    public abstract class Command
     {
-        private int optional, required;
+        public string Name { get; protected set; }
+        public string[] Alias { get; protected set; }
+        public string Description { get; protected set; }
+        public string ArgsDescription { get; protected set; }
+        public Perms RequiredPermLevel { get; protected set; }
 
-        public virtual IEnumerable<string> Aliases { get; }
-
-        public string Name { get; }
-        public string Description { get; }
-        public Perms RequiredPermLevel { get; }
-        public PermsFlag Flags { get; }
-        public bool AllowedArgOverflow { get; set; }
-        public List<IParameter<object>> Parameters { get; }
-
-        protected Command(string name, Perms perms, PermsFlag flag, string description) : this(name, perms, description)
+        protected Command(string name, Perms requiredPermLevel, string argsDescription, string description) : this(name, requiredPermLevel, argsDescription, "", null)
         {
-            Flags = flag;
+            ArgsDescription = argsDescription;
+            Name = name;
+            Description = description;
         }
 
-        protected Command(string name, Perms perms, string description)
+        protected Command(string name, Perms requiredPermLevel, string argsDescription, string description, string[] alias)
         {
             Validate.NotNull(name);
+            Validate.NotNull(argsDescription);
+            Validate.NotNull(description);
 
             Name = name;
-            Flags = PermsFlag.NONE;
-            RequiredPermLevel = perms;
-            AllowedArgOverflow = false;
-            Aliases = Array.Empty<string>();
-            Parameters = new List<IParameter<object>>();
-            Description = string.IsNullOrEmpty(description) ? "No description provided" : description;
+            Description = string.IsNullOrEmpty(description) ? "No description" : description;
+            ArgsDescription = argsDescription;
+            RequiredPermLevel = requiredPermLevel;
+            Alias = alias ?? new string[0];
         }
 
-        protected abstract void Execute(CallArgs args);
+        public abstract void RunCommand(string[] args, Optional<Player> sender);
 
-        public void TryExecute(Optional<Player> sender, string[] args)
+        public abstract bool VerifyArgs(string[] args);
+
+        public override string ToString()
         {
-            if (args.Length < required)
-            {
-                SendMessage(sender, $"Error: Invalid Parameters\nUsage: {ToHelpText(true)}");
-                return;
-            }
-
-            if (!AllowedArgOverflow && args.Length > optional + required)
-            {
-                SendMessage(sender, $"Error: Too many Parameters\nUsage: {ToHelpText(true)}");
-                return;
-            }
-
-            try
-            {
-                Execute(new CallArgs(this, sender, args));
-            }
-            catch (ArgumentException ex)
-            {
-                SendMessage(sender, $"Error: {ex.Message}");
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex, "Fatal error while trying to execute the command");
-            }
+            return $"{nameof(Name)}: {Name}, {nameof(Description)}: {Description}, {nameof(ArgsDescription)}: {ArgsDescription}, {nameof(Alias)}: [{string.Join(", ", Alias)}]";
         }
 
-        public bool CanExecute(Perms treshold)
+        public string ToHelpText()
         {
-            return RequiredPermLevel <= treshold;
+            StringBuilder cmd = new StringBuilder(Name);
+
+            if (Alias.Length > 0)
+            {
+                cmd.AppendFormat("/{0}", string.Join("/", Alias));
+            }
+            cmd.AppendFormat(" {0}", ArgsDescription);
+
+            return $"{cmd,-35}  -  {Description}";
         }
 
-        public string ToHelpText(bool cropText = false)
-        {
-            StringBuilder cmd = new(Name);
-
-            if (Aliases.Any())
-            {
-                cmd.AppendFormat("/{0}", string.Join("/", Aliases));
-            }
-
-            cmd.AppendFormat(" {0}", string.Join(" ", Parameters));
-            return cropText ? $"{cmd}" : $"{cmd,-32} - {Description}";
-        }
-
-        protected void AddParameter<T>(T param) where T : IParameter<object>
-        {
-            Validate.NotNull(param as object);
-            Parameters.Add(param);
-
-            if (param.IsRequired)
-            {
-                required++;
-            }
-            else
-            {
-                optional++;
-            }
-        }
-
-        /// <summary>
-        /// Send a message to an existing player
-        /// </summary>
-        public static void SendMessageToPlayer(Optional<Player> player, string message)
+        public void SendMessageToPlayer(Optional<Player> player, string message)
         {
             if (player.HasValue)
             {
@@ -117,23 +65,10 @@ namespace NitroxServer.ConsoleCommands.Abstract
             }
         }
 
-        /// <summary>
-        /// Send a message to an existing player and logs it in the console
-        /// </summary>
-        public static void SendMessage(Optional<Player> player, string message)
+        public void Notify(Optional<Player> player, string message)
         {
+            Log.Info(message);
             SendMessageToPlayer(player, message);
-            Log.Info(message);
-        }
-
-        /// <summary>
-        /// Send a message to all connected players
-        /// </summary>
-        public static void SendMessageToAllPlayers(string message)
-        {
-            PlayerManager playerManager = NitroxServiceLocator.LocateService<PlayerManager>();
-            playerManager.SendPacketToAllPlayers(new ChatMessage(ChatMessage.SERVER_ID, message));
-            Log.Info(message);
         }
     }
 }

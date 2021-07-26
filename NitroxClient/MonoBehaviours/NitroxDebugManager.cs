@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using NitroxClient.Debuggers;
-using NitroxModel.Core;
 using NitroxModel.Logger;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -18,7 +16,12 @@ namespace NitroxClient.MonoBehaviours
 
         private NitroxDebugManager()
         {
-            Debuggers = NitroxServiceLocator.LocateServicePreLifetime<IEnumerable<BaseDebugger>>().ToList();
+            Debuggers = new List<BaseDebugger>
+            {
+                new SceneDebugger(),
+                new NetworkDebugger(),
+                new EntityDebugger()
+            };
         }
 
         public static void ToggleCursor()
@@ -155,17 +158,17 @@ namespace NitroxClient.MonoBehaviours
 
         private void SceneManager_sceneLoaded(Scene scene, LoadSceneMode loadMode)
         {
-            Log.Debug($"Scene {scene.name} loaded as {loadMode}");
+            Log.Debug($"Scene '{scene.name}' loaded as {loadMode}");
         }
 
         private void SceneManager_sceneUnloaded(Scene scene)
         {
-            Log.Debug($"Scene {scene.name} unloaded.");
+            Log.Debug($"Scene '{scene.name}' unloaded.");
         }
 
         private void SceneManager_activeSceneChanged(Scene fromScene, Scene toScene)
         {
-            Log.Debug($"Active scene changed from {fromScene.name} to {toScene.name}");
+            Log.Debug($"Active scene changed from '{fromScene.name}' to '{toScene.name}'");
         }
     }
 }

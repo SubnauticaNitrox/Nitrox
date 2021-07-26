@@ -36,12 +36,9 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
         public void JoinCallback(string secret)
         {
             Log.Info("[Discord] Joining Server");
-            if (SceneManager.GetActiveScene().name == "StartScreen")
+            if (SceneManager.GetActiveScene().name == "StartScreen" && MainMenuMultiplayerPanel.Main != null)
             {
-                string[] splitSecret = secret.Split(':');
-                string ip = splitSecret[0];
-                string port = splitSecret[1];
-                MainMenuMultiplayerPanel.OpenJoinServerMenu(ip, port);
+                MainMenuMultiplayerPanel.Main.OpenJoinServerMenu(secret);
             }
             else
             {
@@ -95,14 +92,14 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
             DiscordRpc.Shutdown();
         }
 
-        public void InitializeInGame(string username, int playerCount, int maxConnections, string ipAddressPort)
+        public void InitializeInGame(string username, int playerCount, string ipAddressPort)
         {
             Presence.state = "In game";
             Presence.details = "Playing as " + username;
             Presence.startTimestamp = 0;
             Presence.partyId = "PartyID:" + CheckIP(ipAddressPort);
             Presence.partySize = playerCount;
-            Presence.partyMax = maxConnections;
+            Presence.partyMax = 100;
             Presence.joinSecret = CheckIP(ipAddressPort);
             SendRP();
         }
@@ -140,7 +137,7 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
 
             if (ip == "127.0.0.1")
             {
-                return WebHelper.GetPublicIP() + ":" + port;
+                return IPHelper.GetPublicIP() + ":" + port;
             }
             else
             {

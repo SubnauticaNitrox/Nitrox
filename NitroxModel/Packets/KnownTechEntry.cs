@@ -1,16 +1,15 @@
 ﻿using System;
 using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class KnownTechEntryAdd : Packet
     {
-        public NitroxTechType TechType { get; }
-        public bool Verbose { get; }
+        public TechType TechType;
+        public bool Verbose;
 
-        public KnownTechEntryAdd(NitroxTechType techType, bool verbose)
+        public KnownTechEntryAdd(TechType techType, bool verbose)
         {
             TechType = techType;
             Verbose = verbose;

@@ -8,7 +8,7 @@ namespace NitroxModel.DataStructures.GameLogic
     public class PDAEntry
     {
         [ProtoMember(1)]
-        public NitroxTechType TechType { get; set; }
+        public TechType TechType { get; set; }
 
         [ProtoMember(2)]
         public float Progress { get; set; }
@@ -16,12 +16,12 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoMember(3)]
         public int Unlocked { get; set; }
 
-        protected PDAEntry()
+        public PDAEntry()
         {
-            // Constructor for serialization. Has to be "protected" for json serialization.
+            // Default Constructor for serialization
         }
 
-        public PDAEntry(NitroxTechType techType, float progress, int unlocked)
+        public PDAEntry(TechType techType, float progress, int unlocked)
         {
             TechType = techType;
             Progress = progress;

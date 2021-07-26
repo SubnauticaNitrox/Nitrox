@@ -2,7 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
-using HarmonyLib;
+using Harmony;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NitroxTest.Patcher.Test;
 using System.Reflection.Emit;

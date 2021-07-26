@@ -18,7 +18,7 @@ namespace NitroxModel_Subnautica.Packets
 
         public override string ToString()
         {
-            return $"[CyclopsChangeEngineMode - Id: {Id}, Mode: {Mode}]";
+            return "[CyclopsChangeEngineMode Id: " + Id + " Mode: " + Mode + "]";
         }
     }
 }

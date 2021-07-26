@@ -3,7 +3,6 @@ using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
-using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.Helper;
 using UnityEngine;
 
@@ -26,7 +25,7 @@ namespace NitroxClient.Communication.Packets.Processors
                 SeaMoth seamoth = _gameObject.GetComponent<SeaMoth>();
                 if (seamoth != null)
                 {
-                    TechType techType = packet.TechType.ToUnity();
+                    TechType techType = packet.TechType.Enum();
 
                     if (techType == TechType.SeamothElectricalDefense)
                     {
@@ -55,7 +54,7 @@ namespace NitroxClient.Communication.Packets.Processors
                         }
 
                         //Original Function use Player Camera need parse owner camera values
-                        TorpedoShot(storageInSlot, torpedoType, muzzle, packet.Forward.ToUnity(), packet.Rotation.ToUnity());
+                        TorpedoShot(storageInSlot, torpedoType, muzzle,packet.Forward,packet.Rotation);
                     }
                 }
             }

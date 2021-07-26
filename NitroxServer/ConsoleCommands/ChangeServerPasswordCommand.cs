@@ -1,9 +1,9 @@
-﻿using NitroxModel.DataStructures.GameLogic;
+﻿using System;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
-using NitroxModel.Serialization;
 using NitroxServer.ConsoleCommands.Abstract;
-using NitroxServer.ConsoleCommands.Abstract.Type;
-using NitroxServer.Serialization;
+using NitroxModel.DataStructures.GameLogic;
+using NitroxServer.ConfigParser;
 
 namespace NitroxServer.ConsoleCommands
 {
@@ -11,21 +11,31 @@ namespace NitroxServer.ConsoleCommands
     {
         private readonly ServerConfig serverConfig;
 
-        public ChangeServerPasswordCommand(ServerConfig serverConfig) : base("changeserverpassword", Perms.ADMIN, "Changes server password. Clear it without argument")
+        public ChangeServerPasswordCommand(ServerConfig serverConfig) : base("changeserverpassword", Perms.ADMIN, "[{password}]", "Changes server password. Clear it without argument")
         {
-            AddParameter(new TypeString("password", false));
-
             this.serverConfig = serverConfig;
         }
 
-        protected override void Execute(CallArgs args)
+        public override void RunCommand(string[] args, Optional<Player> sender)
         {
-            string password = args.Get(0) ?? string.Empty;
+            try
+            {
+                string playerName = sender.HasValue ? sender.Value.Name : "SERVER";
+                string password = args.Length == 0 ? "" : args[0];
+                serverConfig.ChangeServerPassword(password);
 
-            serverConfig.Update(c => c.ServerPassword = password);
+                Log.Info($"Server password changed to \"{password}\" by {playerName}");
+                SendMessageToPlayer(sender, "Server password changed");
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"Error attempting to change server password", ex);
+            }
+        }
 
-            Log.InfoSensitive("Server password changed to \"{password}\" by {playername}", password, args.SenderName);
-            SendMessageToPlayer(args.Sender, "Server password has been updated");
+        public override bool VerifyArgs(string[] args)
+        {
+            return args.Length >= 0;
         }
     }
 }

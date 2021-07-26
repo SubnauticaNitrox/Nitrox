@@ -2,6 +2,7 @@
 using NitroxModel.DataStructures.Util;
 using ProtoBufNet;
 using System;
+using UnityEngine;
 using NitroxModel.DataStructures.GameLogic.Buildings.Metadata;
 
 namespace NitroxModel.DataStructures.GameLogic
@@ -14,22 +15,22 @@ namespace NitroxModel.DataStructures.GameLogic
         public NitroxId Id { get; set; }
 
         [ProtoMember(2)]
-        public NitroxVector3 ItemPosition { get; set; }
+        public Vector3 ItemPosition { get; set; }
 
         [ProtoMember(3)]
-        public NitroxQuaternion Rotation { get; set; }
+        public Quaternion Rotation { get; set; }
 
         [ProtoMember(4)]
-        public NitroxTechType TechType { get; set; }
+        public TechType TechType { get; set; }
 
-        [ProtoMember(5, DynamicType = true)]
+        [ProtoMember(5)]
         public Optional<NitroxId> ParentId { get; set; }
 
         [ProtoMember(6)]
-        public NitroxVector3 CameraPosition { get; set; }
+        public Vector3 CameraPosition { get; set; }
 
         [ProtoMember(7)]
-        public NitroxQuaternion CameraRotation { get; set; }
+        public Quaternion CameraRotation { get; set; }
 
         [ProtoMember(8)]
         public float ConstructionAmount { get; set; }
@@ -44,22 +45,19 @@ namespace NitroxModel.DataStructures.GameLogic
         public NitroxId BaseId { get; set; }
 
         [ProtoMember(12, DynamicType = true)]
-        public Optional<RotationMetadata> RotationMetadata { get; set; }
-
+        public Optional<RotationMetadata> RotationMetadata {get; set; }
+        
         [ProtoMember(13, DynamicType = true)]
         public Optional<BasePieceMetadata> Metadata { get; set; }
-
-        [ProtoMember(14, DynamicType = true)]
-        public int BuildIndex { get; set; }
-
-        protected BasePiece()
+                
+        public BasePiece()
         {
             ParentId = Optional.Empty;
             RotationMetadata = Optional.Empty;
             Metadata = Optional.Empty;
         }
 
-        public BasePiece(NitroxId id, NitroxVector3 itemPosition, NitroxQuaternion rotation, NitroxVector3 cameraPosition, NitroxQuaternion cameraRotation, NitroxTechType techType, Optional<NitroxId> parentId, bool isFurniture, Optional<RotationMetadata> rotationMetadata)
+        public BasePiece(NitroxId id, Vector3 itemPosition, Quaternion rotation, Vector3 cameraPosition, Quaternion cameraRotation, TechType techType, Optional<NitroxId> parentId, bool isFurniture, Optional<RotationMetadata> rotationMetadata)
         {
             Id = id;
             ItemPosition = itemPosition;
@@ -75,14 +73,9 @@ namespace NitroxModel.DataStructures.GameLogic
             Metadata = Optional.Empty;
         }
 
-        public BasePiece(NitroxId id, NitroxVector3 itemPosition, NitroxQuaternion rotation, NitroxVector3 cameraPosition, NitroxQuaternion cameraRotation, NitroxTechType techType, Optional<NitroxId> parentId, bool isFurniture, Optional<RotationMetadata> rotationMetadata, Optional<BasePieceMetadata> metadata) : this(id, itemPosition, rotation, cameraPosition, cameraRotation, techType, parentId, isFurniture, rotationMetadata)
-        {
-            Metadata = metadata;
-        }
-
         public override string ToString()
         {
-            return $"[BasePiece - ItemPosition: {ItemPosition}, Id: {Id}, Rotation: {Rotation}, CameraPosition: {CameraPosition}, CameraRotation: {CameraRotation}, TechType: {TechType}, ParentId: {ParentId}, ConstructionAmount: {ConstructionAmount}, IsFurniture: {IsFurniture}, BaseId: {BaseId}, RotationMetadata: {RotationMetadata}, BuildIndex: {BuildIndex}]";
+            return "[BasePiece - ItemPosition: " + ItemPosition + " Id: " + Id + " Rotation: " + Rotation + " CameraPosition: " + CameraPosition + "CameraRotation: " + CameraRotation + " TechType: " + TechType + " ParentId: " + ParentId + " ConstructionAmount: " + ConstructionAmount + " IsFurniture: " + IsFurniture + " BaseId: " + BaseId + " RotationMetadata: " + RotationMetadata + "]";
         }
     }
 }

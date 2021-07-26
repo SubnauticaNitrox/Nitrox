@@ -19,10 +19,10 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(VehicleColorChange packet, Player player)
         {
-            vehicleManager.UpdateVehicleColours(packet.Index, packet.Id, packet.HSB);
+            vehicleManager.UpdateVehicleColours(packet.Index, packet.Id, packet.HSB, packet.Color);
             playerManager.SendPacketToOtherPlayers(packet, player);
 
-            Log.Debug("Received packet: " + packet);
+            Log.Info(packet);
         }
     }
 }

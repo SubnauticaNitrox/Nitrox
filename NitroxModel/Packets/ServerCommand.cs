@@ -16,10 +16,5 @@ namespace NitroxModel.Packets
         {
             Cmd = string.Join(" ", cmdArgs);
         }
-
-        public override string ToString()
-        {
-            return $"[ServerCommand - Command: {Cmd}]";
-        }
     }
 }

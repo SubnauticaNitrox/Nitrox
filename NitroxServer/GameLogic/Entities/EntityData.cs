@@ -1,31 +1,31 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
-using Newtonsoft.Json;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using ProtoBufNet;
 
 namespace NitroxServer.GameLogic.Entities
 {
-    [ProtoContract, JsonObject(MemberSerialization.OptIn)]
+    [ProtoContract]
     public class EntityData
     {
-        [JsonProperty, ProtoMember(1)]
+        [ProtoMember(1)]
         public List<Entity> Entities = new List<Entity>();
 
         [ProtoAfterDeserialization]
-        private void ProtoAfterDeserialization()
+        public void ProtoAfterDeserialization()
         {
-            // After deserialization, we want to assign all of the 
+            // After deserialziation, we want to assign all of the 
             // children to their respective parent entities.
             Dictionary<NitroxId, Entity> entitiesById = Entities.ToDictionary(entity => entity.Id);
 
-            foreach (Entity entity in Entities)
+            foreach(Entity entity in Entities)
             {
-                if (entity.ParentId != null)
+                if(entity.ParentId != null)
                 {
-                    if (entitiesById.TryGetValue(entity.ParentId, out Entity parent))
+                    Entity parent = entitiesById[entity.ParentId];
+
+                    if(parent != null)
                     {
                         parent.ChildEntities.Add(entity);
                         entity.Transform.SetParent(parent.Transform);
@@ -34,16 +34,12 @@ namespace NitroxServer.GameLogic.Entities
             }
         }
 
-        [OnDeserialized]
-        private void JsonAfterDeserialization(StreamingContext context)
-        {
-            ProtoAfterDeserialization();
-        }
-
-
         public static EntityData From(List<Entity> entities)
         {
-            return new EntityData { Entities = entities };
+            EntityData entityData = new EntityData();
+            entityData.Entities = entities;
+
+            return entityData;
         }
     }
 }

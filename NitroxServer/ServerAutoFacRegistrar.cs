@@ -1,17 +1,15 @@
 ﻿using System.Reflection;
 using Autofac;
 using NitroxModel.Core;
-using NitroxModel.Serialization;
-using NitroxServer.Communication.LiteNetLib;
+using NitroxServer.Communication.NetworkingLayer.LiteNetLib;
 using NitroxServer.Communication.Packets;
 using NitroxServer.Communication.Packets.Processors;
 using NitroxServer.Communication.Packets.Processors.Abstract;
+using NitroxServer.ConfigParser;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Processor;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Entities;
-using NitroxServer.Serialization;
-using NitroxServer.Serialization.Upgrade;
 using NitroxServer.Serialization.World;
 
 namespace NitroxServer
@@ -29,7 +27,7 @@ namespace NitroxServer
 
         private static void RegisterCoreDependencies(ContainerBuilder containerBuilder)
         {
-            containerBuilder.Register(c => ServerConfig.Load()).SingleInstance();
+            containerBuilder.RegisterType<ServerConfig>().SingleInstance();
             containerBuilder.RegisterType<Server>().SingleInstance();
             containerBuilder.RegisterType<PlayerManager>().SingleInstance();
             containerBuilder.RegisterType<DefaultServerPacketProcessor>().InstancePerLifetimeScope();
@@ -39,7 +37,7 @@ namespace NitroxServer
             containerBuilder.RegisterType<ConsoleCommandProcessor>().SingleInstance();
 
             containerBuilder.RegisterType<LiteNetLibServer>()
-                            .As<Communication.NitroxServer>()
+                            .As<Communication.NetworkingLayer.NitroxServer>()
                             .SingleInstance();
         }
 
@@ -51,15 +49,14 @@ namespace NitroxServer
             containerBuilder.Register(c => c.Resolve<World>().BaseManager).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().VehicleManager).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().InventoryManager).SingleInstance();
+            containerBuilder.Register(c => c.Resolve<World>().GameData).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().PlayerManager).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().TimeKeeper).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().SimulationOwnershipData).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().EntityManager).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().BatchEntitySpawner).SingleInstance();
-            containerBuilder.Register(c => c.Resolve<World>().GameData).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().GameData.PDAState).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().GameData.StoryGoals).SingleInstance();
-            containerBuilder.Register(c => c.Resolve<World>().GameData.StoryTiming).SingleInstance();
         }
 
         private void RegisterGameSpecificServices(ContainerBuilder containerBuilder, Assembly assembly)
@@ -78,12 +75,6 @@ namespace NitroxServer
             containerBuilder
                 .RegisterAssemblyTypes(assembly)
                 .AsClosedTypesOf(typeof(UnauthenticatedPacketProcessor<>))
-                .InstancePerLifetimeScope();
-
-            containerBuilder
-                .RegisterAssemblyTypes(assembly)
-                .AssignableTo<SaveDataUpgrade>()
-                .As<SaveDataUpgrade>()
                 .InstancePerLifetimeScope();
         }
     }

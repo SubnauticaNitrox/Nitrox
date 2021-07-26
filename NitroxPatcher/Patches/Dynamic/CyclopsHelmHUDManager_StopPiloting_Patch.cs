@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Reflection;
-using HarmonyLib;
+using Harmony;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic
@@ -15,7 +15,7 @@ namespace NitroxPatcher.Patches.Dynamic
             __instance.ReflectionSet("hudActive", true);
         }
 
-        public override void Patch(Harmony harmony)
+        public override void Patch(HarmonyInstance harmony)
         {
             PatchPostfix(harmony, TARGET_METHOD);
         }

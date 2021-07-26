@@ -1,4 +1,4 @@
-﻿using NitroxModel.DataStructures.GameLogic;
+﻿using UnityEngine;
 
 namespace NitroxModel.MultiplayerSession
 {
@@ -6,10 +6,10 @@ namespace NitroxModel.MultiplayerSession
     {
         private static readonly System.Random random = new System.Random();
 
-        public static NitroxColor GenerateColor()
+        public static Color GenerateColor()
         {
             int r = random.Next();
-            return new NitroxColor((byte)r / 255f, (byte)(r >> 8) / 255f, (byte)(r >> 16) / 255f, 1f);
+            return new Color32((byte)r, (byte)(r >> 8), (byte)(r >> 16), 255);
         }
     }
 }

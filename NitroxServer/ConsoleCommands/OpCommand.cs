@@ -1,22 +1,42 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Util;
 using NitroxServer.ConsoleCommands.Abstract;
-using NitroxServer.ConsoleCommands.Abstract.Type;
+using NitroxServer.GameLogic;
 
 namespace NitroxServer.ConsoleCommands
 {
     internal class OpCommand : Command
     {
-        public OpCommand() : base("op", Perms.ADMIN, "Sets a user as admin")
+        private readonly PlayerManager playerManager;
+
+        public OpCommand(PlayerManager playerManager) : base("op", Perms.ADMIN, "{name}", "Sets an user as admin")
         {
-            AddParameter(new TypePlayer("name", true));
+            this.playerManager = playerManager;
         }
 
-        protected override void Execute(CallArgs args)
+        public override void RunCommand(string[] args, Optional<Player> sender)
         {
-            Player targetPlayer = args.Get<Player>(0);
-            targetPlayer.Permissions = Perms.ADMIN;
+            string playerName = args[0];
+            string message;
 
-            SendMessage(args.Sender, $"Updated {targetPlayer.Name}\'s permissions to ADMIN");
+            Optional<Player> receivingPlayer = playerManager.GetPlayer(playerName);
+
+            if (receivingPlayer.HasValue)
+            {
+                receivingPlayer.Value.Permissions = Perms.ADMIN;
+                message = $"Updated {playerName}\'s permissions to admin";
+            }
+            else
+            {
+                message = $"Could not update permissions of unknown player '{playerName}'";
+            }
+
+            Notify(sender, message);
+        }
+
+        public override bool VerifyArgs(string[] args)
+        {
+            return args.Length == 1;
         }
     }
 }

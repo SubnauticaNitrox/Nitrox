@@ -1,5 +1,5 @@
 ﻿using System;
-using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures;
 
 namespace NitroxModel.Packets
 {
@@ -7,9 +7,9 @@ namespace NitroxModel.Packets
     public class RemotePlayerEquipmentAdded : Packet
     {
         public ushort PlayerId { get; }
-        public NitroxTechType TechType { get; }
+        public TechType TechType { get; }
 
-        public RemotePlayerEquipmentAdded(ushort playerId, NitroxTechType techType)
+        public RemotePlayerEquipmentAdded(ushort playerId, TechType techType)
         {
             PlayerId = playerId;
             TechType = techType;

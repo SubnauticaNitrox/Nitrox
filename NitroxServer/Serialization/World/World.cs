@@ -1,5 +1,4 @@
-﻿using NitroxModel.Server;
-using NitroxServer.GameLogic;
+﻿using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Bases;
 using NitroxServer.GameLogic.Entities;
 using NitroxServer.GameLogic.Entities.Spawning;
@@ -22,7 +21,6 @@ namespace NitroxServer.Serialization.World
         public VehicleManager VehicleManager { get; set; }
         public InventoryManager InventoryManager { get; set; }
         public GameData GameData { get; set; }
-        public ServerGameMode GameMode { get; set; }
-        public string Seed { get; set; }
+        public string GameMode { get; set; }
     }
 }

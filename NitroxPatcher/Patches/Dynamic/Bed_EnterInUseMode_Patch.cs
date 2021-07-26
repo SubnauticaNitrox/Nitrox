@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Reflection;
-using HarmonyLib;
+using Harmony;
 using NitroxClient.Communication.Abstract;
 using NitroxModel.Core;
 using NitroxModel.Packets;
@@ -18,7 +18,7 @@ namespace NitroxPatcher.Patches.Dynamic
             packetSender.Send(new BedEnter());
         }
 
-        public override void Patch(Harmony harmony)
+        public override void Patch(HarmonyInstance harmony)
         {
             PatchPostfix(harmony, TARGET_METHOD);
         }

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Reflection;
-using HarmonyLib;
+using Harmony;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.Util;
@@ -48,9 +48,9 @@ namespace NitroxPatcher.Patches.Dynamic
             }
         }
 
-        public override void Patch(Harmony harmony)
+        public override void Patch(HarmonyInstance harmony)
         {
-            PatchMultiple(harmony, TARGET_METHOD, true, true, false, false);
+            PatchMultiple(harmony, TARGET_METHOD, true, true, false);
         }
     }
 }

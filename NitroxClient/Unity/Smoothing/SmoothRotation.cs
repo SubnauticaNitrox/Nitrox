@@ -6,11 +6,11 @@ namespace NitroxClient.Unity.Smoothing
     {
         private const float SMOOTHING_SPEED = 10f;
         public Quaternion Target { get; set; }
-        public Quaternion Current { get; set; }
+        public Quaternion SmoothValue { get; protected set; }
 
         public SmoothRotation(Quaternion initial)
         {
-            Target = Current = initial;
+            Target = SmoothValue = initial;
         }
 
         public SmoothRotation()
@@ -19,7 +19,7 @@ namespace NitroxClient.Unity.Smoothing
 
         public void FixedUpdate()
         {
-            Current = Quaternion.Slerp(Current, Target, SMOOTHING_SPEED * Time.fixedDeltaTime);
+            SmoothValue = Quaternion.Slerp(SmoothValue, Target, SMOOTHING_SPEED * Time.fixedDeltaTime);
         }
     }
 }

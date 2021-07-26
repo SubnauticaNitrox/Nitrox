@@ -5,16 +5,11 @@ namespace NitroxModel.Packets
     [Serializable]
     public class PlayerKicked : Packet
     {
-        public string Reason { get; }
+        public string Reason;
 
         public PlayerKicked(string reason)
         {
-            Reason = reason;
-        }
-
-        public override string ToString()
-        {
-            return $"[PlayerKicked - Reason : {Reason}]";
+            Reason = reason; // Going to want to implement this later
         }
     }
 }

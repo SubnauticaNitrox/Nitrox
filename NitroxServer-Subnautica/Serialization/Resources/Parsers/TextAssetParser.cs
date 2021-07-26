@@ -12,7 +12,7 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Parsers
             { "EntityDistributions", new EntityDistributionsParser() }
         };
 
-        public override void Parse(AssetIdentifier identifier, AssetsFileReader reader, ResourceAssets resourceAssets, Dictionary<int, string> relativeFileIdToPath)
+        public override void Parse(AssetIdentifier identifier, AssetsFileReader reader, ResourceAssets resourceAssets)
         {
             string assetName = reader.ReadCountStringInt32();
 
@@ -20,7 +20,7 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Parsers
 
             if (textParsersByAssetName.TryGetValue(assetName, out textResourceParser))
             {
-                textResourceParser.Parse(identifier, reader, resourceAssets, relativeFileIdToPath);
+                textResourceParser.Parse(identifier, reader, resourceAssets);
             }
         }
     }

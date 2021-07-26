@@ -13,7 +13,8 @@ namespace NitroxTest.Core
         [ClassInitialize]
         public static void BeforeAll(TestContext context)
         {
-            NitroxServiceLocator.InitializeDependencyContainer(new DependencyInjectionTestsAutoFacRegistrar());
+            TestAutoFacRegistrar registrar = new TestAutoFacRegistrar();
+            NitroxServiceLocator.InitializeDependencyContainer(registrar);
             NitroxServiceLocator.BeginNewLifetimeScope();
         }
 
@@ -48,11 +49,9 @@ namespace NitroxTest.Core
 
             servicerA.Should().NotBeNull();
             servicerA.Should().BeOfType<ServiceAProvider>();
-            Assert.ThrowsException<NotImplementedException>(() => servicerA.PerformService(null));
 
             servicerB.Should().NotBeNull();
             servicerB.Should().BeOfType<ServiceBProvider>();
-            Assert.ThrowsException<NotImplementedException>(() => servicerB.PerformService(null));
         }
 
         [TestMethod]
@@ -75,14 +74,12 @@ namespace NitroxTest.Core
             // Assert
             servicerA.Should().NotBeNull();
             servicerA.Should().BeOfType<ServiceAProvider>();
-            Assert.ThrowsException<NotImplementedException>(() => servicerA.PerformService(null));
 
             servicerB.Should().NotBeNull();
             servicerB.Should().BeOfType<ServiceBProvider>();
-            Assert.ThrowsException<NotImplementedException>(() => servicerB.PerformService(null));
         }
 
-        private class DependencyInjectionTestsAutoFacRegistrar : IAutoFacRegistrar
+        private class TestAutoFacRegistrar : IAutoFacRegistrar
         {
             public void RegisterDependencies(ContainerBuilder containerBuilder)
             {

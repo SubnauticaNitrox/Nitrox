@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using HarmonyLib;
+using Harmony;
 using NitroxClient.GameLogic;
 
 namespace NitroxPatcher.Patches.Dynamic
@@ -11,7 +11,7 @@ namespace NitroxPatcher.Patches.Dynamic
             DevConsole.disableConsole = NitroxConsole.DisableConsole;
         }
 
-        public override void Patch(Harmony harmony)
+        public override void Patch(HarmonyInstance harmony)
         {
             PatchPrefix(harmony, typeof(DevConsole).GetMethod("Update", BindingFlags.Instance | BindingFlags.NonPublic));
         }

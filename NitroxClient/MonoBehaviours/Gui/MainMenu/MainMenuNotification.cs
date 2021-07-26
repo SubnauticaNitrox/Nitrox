@@ -25,7 +25,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         {
             if (!string.IsNullOrEmpty(notificationMessage) && awaitingAcknowledgement)
             {
-                notificationWindowRect = GUILayout.Window(GUIUtility.GetControlID(FocusType.Keyboard), notificationWindowRect, RenderUnableToJoinDialog, Language.main.Get("Nitrox_JoinServerFailed"));
+                notificationWindowRect = GUILayout.Window(GUIUtility.GetControlID(FocusType.Keyboard), notificationWindowRect, RenderUnableToJoinDialog, "Unable to Join Session");
             }
         }
 
@@ -66,19 +66,19 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         {
             return GUISkinUtils.RegisterDerivedOnce(skinName, s =>
             {
-                s.textField.fontSize = 20;
+                s.textField.fontSize = 14;
                 s.textField.richText = false;
-                s.textField.alignment = TextAnchor.MiddleCenter;
+                s.textField.alignment = TextAnchor.MiddleLeft;
                 s.textField.wordWrap = true;
                 s.textField.stretchHeight = true;
                 s.textField.padding = new RectOffset(10, 10, 5, 5);
 
-                s.label.fontSize = 20;
-                s.label.alignment = TextAnchor.MiddleCenter;
+                s.label.fontSize = 14;
+                s.label.alignment = TextAnchor.MiddleRight;
                 s.label.stretchHeight = true;
                 s.label.fixedWidth = labelWidth;
 
-                s.button.fontSize = 16;
+                s.button.fontSize = 14;
                 s.button.stretchHeight = true;
             });
         }

@@ -26,9 +26,9 @@ namespace NitroxClient.GameLogic
         public void BroadcastItemAdd(InventoryItem item, GameObject gameObject)
         {
             NitroxId id = NitroxEntity.GetId(gameObject);
-
+            
             NitroxId itemId = NitroxEntity.GetId(item.item.gameObject);
-            byte[] bytes = SerializationHelper.GetBytesWithoutParent(item.item.gameObject);
+            byte[] bytes = SerializationHelper.GetBytes(item.item.gameObject);
 
             ItemData itemData = new ItemData(id, itemId, bytes);
             StorageSlotItemAdd add = new StorageSlotItemAdd(itemData);
@@ -38,7 +38,7 @@ namespace NitroxClient.GameLogic
         public void BroadcastItemRemoval(GameObject gameObject)
         {
             NitroxId id = NitroxEntity.GetId(gameObject);
-
+            
             StorageSlotItemRemove slotItemRemove = new StorageSlotItemRemove(id);
             packetSender.Send(slotItemRemove);
         }
@@ -58,7 +58,7 @@ namespace NitroxClient.GameLogic
             if (opEnergy.HasValue)
             {
                 EnergyMixin mixin = opEnergy.Value;
-                StorageSlot slot = (StorageSlot)mixin.ReflectionGet("batterySlot");
+                StorageSlot slot = (StorageSlot)mixin.ReflectionGet("batterySlot");                
 
                 Pickupable pickupable = item.RequireComponent<Pickupable>();
 
@@ -66,7 +66,7 @@ namespace NitroxClient.GameLogic
                 // Will be used to suppress swap sound at the initialisation of the game
                 bool allowedToPlaySounds = true;
                 if (silent)
-                {
+                {                    
                     allowedToPlaySounds = (bool)mixin.ReflectionGet("allowedToPlaySounds");
                     mixin.ReflectionSet("allowedToPlaySounds", !silent);
                 }
@@ -83,9 +83,9 @@ namespace NitroxClient.GameLogic
 
         public void RemoveItem(NitroxId ownerId, bool silent = false)
         {
-            GameObject owner = NitroxEntity.RequireObjectFrom(ownerId);
+            GameObject owner = NitroxEntity.RequireObjectFrom(ownerId);            
             Optional<EnergyMixin> opMixin = Optional.OfNullable(owner.GetComponent<EnergyMixin>());
-
+            
             if (opMixin.HasValue)
             {
                 EnergyMixin mixin = opMixin.Value;
@@ -112,12 +112,6 @@ namespace NitroxClient.GameLogic
             {
                 Log.Error("Removing storage slot item: Could not find storage slot field on object " + owner.name);
             }
-        }
-
-        public void EnergyMixinValueChanged(NitroxId ownerId, float amount, ItemData batteryData)
-        {
-            EnergyMixinValueChanged batteryChanged = new EnergyMixinValueChanged(ownerId, amount, batteryData);
-            packetSender.Send(batteryChanged);
         }
 
     }
