@@ -1,5 +1,4 @@
-﻿using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic;
+﻿using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
@@ -26,7 +25,7 @@ namespace NitroxServer.Communication.Packets.Processors
 
             if (!vehicle.HasValue)
             {
-                Log.Error("VehicleDocking received for vehicle id {0} that does not exist!", packet.VehicleId);
+                Log.Error($"VehicleDocking received for vehicle id {packet.VehicleId} that does not exist!");
                 return;
             }
 

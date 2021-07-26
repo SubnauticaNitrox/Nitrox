@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
+using NitroxClient.GameLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerModel.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
@@ -8,6 +10,7 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 using UnityEngine.Rendering;
 using Object = UnityEngine.Object;
@@ -49,14 +52,13 @@ namespace NitroxClient.GameLogic
         public void UpdateLocation(Vector3 location, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation, Optional<VehicleMovementData> vehicle)
         {
             Movement movement;
-
             if (vehicle.HasValue)
             {
                 movement = new VehicleMovement(multiplayerSession.Reservation.PlayerId, vehicle.Value);
             }
             else
             {
-                movement = new Movement(multiplayerSession.Reservation.PlayerId, location, velocity, bodyRotation, aimingRotation);
+                movement = new Movement(multiplayerSession.Reservation.PlayerId, location.ToDto(), velocity.ToDto(), bodyRotation.ToDto(), aimingRotation.ToDto());
             }
 
             packetSender.Send(movement);
@@ -70,7 +72,7 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastDeath(Vector3 deathPosition)
         {
-            PlayerDeathEvent playerDeath = new PlayerDeathEvent(multiplayerSession.AuthenticationContext.Username, deathPosition);
+            PlayerDeathEvent playerDeath = new PlayerDeathEvent(multiplayerSession.AuthenticationContext.Username, deathPosition.ToDto());
             packetSender.Send(playerDeath);
         }
 
@@ -79,6 +81,27 @@ namespace NitroxClient.GameLogic
             SubRootChanged packet = new SubRootChanged(multiplayerSession.Reservation.PlayerId, subrootId);
             packetSender.Send(packet);
         }
+        public void BroadcastEscapePodChange(Optional<NitroxId> escapePodId)
+        {
+            EscapePodChanged packet = new EscapePodChanged(multiplayerSession.Reservation.PlayerId, escapePodId);
+            packetSender.Send(packet);
+        }
+
+        public void BroadcastWeld(NitroxId id, float healthAdded)
+        {
+            WeldAction packet = new WeldAction(id, healthAdded);
+            packetSender.Send(packet);
+        }
+
+        public void BroadcastHeldItemChanged(NitroxId itemId, PlayerHeldItemChangedType techType, NitroxTechType isFirstTime)
+        {
+            packetSender.Send(new PlayerHeldItemChanged(multiplayerSession.Reservation.PlayerId, itemId, techType, isFirstTime));
+        }
+
+        public void BroadcastQuickSlotsBindingChanged(List<string> binding)
+        {
+            packetSender.Send(new PlayerQuickSlotsBindingChanged(binding));
+        }
 
         private GameObject CreateBodyPrototype()
         {
@@ -86,9 +109,23 @@ namespace NitroxClient.GameLogic
 
             // Cheap fix for showing head, much easier since male_geo contains many different heads
             prototype.GetComponentInParent<Player>().head.shadowCastingMode = ShadowCastingMode.On;
-            GameObject clone = Object.Instantiate(prototype);
+            GameObject clone = Object.Instantiate(prototype, Multiplayer.Main.transform);
             prototype.GetComponentInParent<Player>().head.shadowCastingMode = ShadowCastingMode.ShadowsOnly;
+
             clone.SetActive(false);
+            clone.name = "RemotePlayerPrototype";
+
+            // Removing items that are held in hand
+            foreach (Transform child in clone.transform.Find($"player_view/{PlayerEquipmentConstants.ITEM_ATTACH_POINT_GAME_OBJECT_NAME}"))
+            {
+                if (!child.gameObject.name.Contains("attach1_"))
+                {
+                    using (packetSender.Suppress<ItemContainerRemove>())
+                    {
+                        Object.DestroyImmediate(child.gameObject);
+                    }
+                }
+            }
 
             return clone;
         }

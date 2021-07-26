@@ -18,13 +18,11 @@ namespace NitroxClient.GameLogic
     public class Cyclops
     {
         private readonly IPacketSender packetSender;
-        private readonly SimulationOwnership simulationOwnershipManager;
         private readonly Vehicles vehicles;
 
-        public Cyclops(IPacketSender packetSender, SimulationOwnership simulationOwnershipManager, Vehicles vehicles)
+        public Cyclops(IPacketSender packetSender, Vehicles vehicles)
         {
             this.packetSender = packetSender;
-            this.simulationOwnershipManager = simulationOwnershipManager;
             this.vehicles = vehicles;
         }
 
@@ -60,12 +58,6 @@ namespace NitroxClient.GameLogic
         {
             vehicles.GetVehicles<CyclopsModel>(id).EngineState = isStarting;
             CyclopsToggleEngineState packet = new CyclopsToggleEngineState(id, isOn, isStarting);
-            packetSender.Send(packet);
-        }
-
-        public void BroadcastActivateHorn(NitroxId id)
-        {
-            CyclopsActivateHorn packet = new CyclopsActivateHorn(id);
             packetSender.Send(packet);
         }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 using ProtoBufNet;
@@ -28,6 +29,11 @@ namespace NitroxModel.DataStructures
         public NitroxId(string str)
         {
             guid = new Guid(str);
+        }
+
+        public NitroxId(Guid guid)
+        {
+            this.guid = guid;
         }
 
         public NitroxId(byte[] bytes)
@@ -81,6 +87,17 @@ namespace NitroxModel.DataStructures
         public override string ToString()
         {
             return guid.ToString();
+        }
+
+        static int[] byteOrder = { 15, 14, 13, 12, 11, 10, 9, 8, 6, 7, 4, 5, 0, 1, 2, 3 };
+
+        public NitroxId Increment()
+        {
+            byte[] bytes = guid.ToByteArray();
+            bool canIncrement = byteOrder.Any(i => ++bytes[i] != 0);
+            Guid nextGuid = new Guid(canIncrement ? bytes : new byte[16]);
+
+            return new NitroxId(nextGuid);
         }
     }
 }

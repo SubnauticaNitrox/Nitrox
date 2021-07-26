@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Harmony;
+using HarmonyLib;
 using NitroxClient.Communication.Abstract;
 using NitroxModel.Core;
 using NitroxModel.Helper;
@@ -21,12 +21,12 @@ namespace NitroxPatcher.Patches.Dynamic
             OnGoalUnlock onGoalUnlock;
             if (goalUnlocks.TryGetValue(completedGoal, out onGoalUnlock))
             {
-                StoryEventSend packet = new StoryEventSend(StoryEventType.GoalUnlock, completedGoal);
+                StoryEventSend packet = new StoryEventSend(StoryEventType.GOAL_UNLOCK, completedGoal);
                 NitroxServiceLocator.LocateService<IPacketSender>().Send(packet);
             }
         }
 
-        public override void Patch(HarmonyInstance harmony)
+        public override void Patch(Harmony harmony)
         {
             PatchPrefix(harmony, TARGET_METHOD);
         }

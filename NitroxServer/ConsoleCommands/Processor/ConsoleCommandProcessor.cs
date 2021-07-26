@@ -1,20 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.Exceptions;
-using NitroxServer.GameLogic;
-using NitroxModel.Packets;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.Util;
-using System;
 
 namespace NitroxServer.ConsoleCommands.Processor
 {
     public class ConsoleCommandProcessor
     {
-        private readonly Dictionary<string, Command> commands = new Dictionary<string, Command>();
-        private readonly char[] splitChar = new[] { ' ' };
+        private readonly Dictionary<string, Command> commands = new();
+        private readonly char[] splitChar = { ' ' };
 
         public ConsoleCommandProcessor(IEnumerable<Command> cmds)
         {
@@ -26,7 +24,8 @@ namespace NitroxServer.ConsoleCommands.Processor
                 }
 
                 commands[cmd.Name] = cmd;
-                foreach (string alias in cmd.Alias)
+
+                foreach (string alias in cmd.Aliases)
                 {
                     if (commands.ContainsKey(alias))
                     {
@@ -38,7 +37,7 @@ namespace NitroxServer.ConsoleCommands.Processor
             }
         }
 
-        public void ProcessCommand(string msg, Optional<Player> player, Perms perms)
+        public void ProcessCommand(string msg, Optional<Player> sender, Perms permissions)
         {
             if (string.IsNullOrWhiteSpace(msg))
             {
@@ -47,42 +46,25 @@ namespace NitroxServer.ConsoleCommands.Processor
 
             string[] parts = msg.Split(splitChar, StringSplitOptions.RemoveEmptyEntries);
 
-            Command cmd;
-
-            if (!commands.TryGetValue(parts[0], out cmd))
+            if (!commands.TryGetValue(parts[0], out Command command))
             {
-                string errorMessage = "Command Not Found: " + parts[0];
-                Log.Info(errorMessage);
-
-                if (player.HasValue)
-                {
-                    player.Value.SendPacket(new ChatMessage(ChatMessage.SERVER_ID, errorMessage));
-                }
-
+                Command.SendMessage(sender, $"Command not found: {parts[0]}");
                 return;
             }
 
-            if (perms >= cmd.RequiredPermLevel)
+            if (!sender.HasValue && command.Flags.HasFlag(PermsFlag.NO_CONSOLE))
             {
-                RunCommand(cmd, parts, player);
+                Log.Error("This command cannot be used by CONSOLE");
+                return;
+            }
+
+            if (command.CanExecute(permissions))
+            {
+                command.TryExecute(sender, parts.Skip(1).ToArray());
             }
             else
             {
-                cmd.SendMessageToPlayer(player, "You do not have the required permissions for this command!");
-            }
-        }
-
-        private void RunCommand(Command command, string[] parts, Optional<Player> player)
-        {
-            string[] args = parts.Skip(1).ToArray();
-
-            if (command.VerifyArgs(args))
-            {
-                command.RunCommand(args, player);
-            }
-            else
-            {
-                command.Notify(player, string.Format("Received Command Arguments for {0}: {1}", command.Name, command.ArgsDescription));
+                Command.SendMessage(sender, "You do not have the required permissions for this command !");
             }
         }
     }

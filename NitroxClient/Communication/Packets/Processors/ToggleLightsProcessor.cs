@@ -1,5 +1,6 @@
 ﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxClient.GameLogic.FMOD;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using UnityEngine;
@@ -18,7 +19,7 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             GameObject gameObject = NitroxEntity.RequireObjectFrom(packet.Id);
             ToggleLights toggleLights = gameObject.GetComponent<ToggleLights>();
-            if (toggleLights == null)
+            if (!toggleLights)
             {
                 toggleLights = gameObject.RequireComponentInChildren<ToggleLights>();
             }
@@ -26,6 +27,7 @@ namespace NitroxClient.Communication.Packets.Processors
             if (packet.IsOn != toggleLights.GetLightsActive())
             {
                 using (packetSender.Suppress<NitroxModel.Packets.ToggleLights>())
+                using (FMODSystem.SuppressSounds())
                 {
                     toggleLights.SetLightsActive(packet.IsOn);
                 }

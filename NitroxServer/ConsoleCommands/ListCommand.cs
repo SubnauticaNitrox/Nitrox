@@ -1,45 +1,32 @@
-﻿using NitroxServer.ConsoleCommands.Abstract;
-using NitroxServer.GameLogic;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.Util;
-using NitroxModel.Logger;
+using NitroxServer.ConsoleCommands.Abstract;
+using NitroxServer.GameLogic;
+using NitroxServer.Serialization;
 
 namespace NitroxServer.ConsoleCommands
 {
     internal class ListCommand : Command
     {
         private readonly PlayerManager playerManager;
+        private readonly ServerConfig serverConfig;
 
-        public ListCommand(PlayerManager playerManager) : base("list", Perms.PLAYER, "", "Shows who's online")
+        public ListCommand(ServerConfig serverConfig, PlayerManager playerManager) : base("list", Perms.PLAYER, "Shows who's online")
         {
             this.playerManager = playerManager;
+            this.serverConfig = serverConfig;
         }
 
-        public override void RunCommand(string[] args, Optional<Player> sender)
+        protected override void Execute(CallArgs args)
         {
-            IEnumerable<Player> players = playerManager.GetConnectedPlayers();
-            string playerList = "List of players : " + string.Join(", ", players);
+            IList<string> players = playerManager.GetConnectedPlayers().Select(player => player.Name).ToList();
 
-            if (!players.Any())
-            {
-                playerList += "No players online";
-            }
+            StringBuilder builder = new($"List of players ({players.Count}/{serverConfig.MaxConnections}):\n");
+            builder.Append(string.Join(", ", players));
 
-            if (sender.HasValue)
-            {
-                SendMessageToPlayer(sender, playerList);
-            }
-            else
-            {
-                Log.Info(playerList);
-            }
-        }
-
-        public override bool VerifyArgs(string[] args)
-        {
-            return args.Length == 0;
+            SendMessage(args.Sender, builder.ToString());
         }
     }
 }

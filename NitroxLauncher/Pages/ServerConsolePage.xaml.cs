@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using NitroxLauncher.Events;
@@ -16,7 +15,7 @@ namespace NitroxLauncher.Pages
         private readonly List<string> commandLinesHistory = new List<string>();
         private int commandHistoryIndex;
         private string commandInputText;
-        private string serverOutput = "";
+        private string serverOutput = string.Empty;
 
         public string ServerOutput
         {
@@ -98,9 +97,9 @@ namespace NitroxLauncher.Pages
             ServerOutput += e.Data + Environment.NewLine;
         }
 
-        private async Task SendCommandInputToServerAsync()
+        private void SendCommandInputToServer()
         {
-            await LauncherLogic.Instance.SendServerCommandAsync(CommandInputText);
+            LauncherLogic.Instance.SendServerCommand(CommandInputText);
             ServerOutput += CommandInputText + Environment.NewLine;
 
             // Deduplication of command history
@@ -116,29 +115,29 @@ namespace NitroxLauncher.Pages
             CommandHistoryIndex = commandLinesHistory.Count;
         }
 
-        private async void CommandButton_OnClick(object sender, RoutedEventArgs e)
+        private void CommandButton_OnClick(object sender, RoutedEventArgs e)
         {
-            await SendCommandInputToServerAsync();
+            SendCommandInputToServer();
         }
 
-        private async void StopButton_Click(object sender, RoutedEventArgs e)
+        private void StopButton_Click(object sender, RoutedEventArgs e)
         {
             // Suggest referencing NitroxServer.ConsoleCommands.ExitCommand.name, but the class is internal
-            await LauncherLogic.Instance.SendServerCommandAsync("stop");
+            LauncherLogic.Instance.SendServerCommand("stop");
             ServerOutput += $"stop{Environment.NewLine}";
 
             commandLinesHistory.Add("stop");
             HideCommandHistory();
         }
 
-        private async void CommandLine_PreviewKeyDown(object sender, KeyEventArgs e)
+        private void CommandLine_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             e.Handled = true;
 
             switch (e.Key)
             {
                 case Key.Enter:
-                    await SendCommandInputToServerAsync();
+                    SendCommandInputToServer();
                     break;
                 case Key.Escape:
                     HideCommandHistory();

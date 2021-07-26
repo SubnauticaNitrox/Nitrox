@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Reflection;
 
 namespace NitroxModel.Helper
 {
     public static class NitroxEnvironment
     {
+        public static readonly Version Version = Assembly.GetAssembly(typeof(NitroxEnvironment)).GetName().Version;
+
         public enum Types
         {
             NORMAL,

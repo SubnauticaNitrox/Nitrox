@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Reflection;
-using Harmony;
+using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
@@ -23,10 +23,10 @@ namespace NitroxPatcher.Patches.Dynamic
             SimulationOwnership simulationOwnership = NitroxServiceLocator.LocateService<SimulationOwnership>();
 
             // Request to be downgraded to a transient lock so we can still simulate the positioning.
-            simulationOwnership.RequestSimulationLock(id, SimulationLockType.TRANSIENT, null);
+            simulationOwnership.RequestSimulationLock(id, SimulationLockType.TRANSIENT);
         }
 
-        public override void Patch(HarmonyInstance harmony)
+        public override void Patch(Harmony harmony)
         {
             PatchPostfix(harmony, TARGET_METHOD);
         }

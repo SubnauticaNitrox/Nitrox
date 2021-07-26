@@ -46,6 +46,13 @@ namespace NitroxModel.Helper
             return fieldInfo.GetValue(o);
         }
 
+        public static object ReflectionGetProperty<T>(this T o, string fieldName)
+        {
+            Type t = typeof(T);
+            PropertyInfo propertyInfo = GetProperty(t, fieldName);
+            return propertyInfo.GetValue(o);
+        }
+
         public static void ReflectionSet<T>(this T o, string fieldName, object value, bool isPublic = false, bool isStatic = false)
         {
             ValidateStatic(o, isStatic);
@@ -103,6 +110,15 @@ namespace NitroxModel.Helper
             FieldInfo fieldInfo = t.GetField(fieldName, bindingFlags);
             Validate.NotNull(fieldInfo, $"Type \"{t.Name}\" does not have a field called \"{fieldName}\" with bindingFlags {bindingFlags}.");
             return fieldInfo;
+        }
+
+        private static PropertyInfo GetProperty(this Type t, string propertyName)
+        {
+            BindingFlags bindingFlags = GetBindingFlagsFromMethodQualifiers(false, false);
+            PropertyInfo propertyInfo = t.GetProperty(propertyName, bindingFlags);
+            Validate.NotNull(propertyInfo, $"Type \"{t.Name}\" does not have a property called \"{propertyName}\" with bindingFlags {bindingFlags}.");
+
+            return propertyInfo;
         }
 
         private static BindingFlags GetBindingFlagsFromMethodQualifiers(bool isPublic, bool isStatic)

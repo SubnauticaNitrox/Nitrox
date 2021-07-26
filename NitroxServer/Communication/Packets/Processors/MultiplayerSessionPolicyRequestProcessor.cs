@@ -1,8 +1,8 @@
 ﻿using NitroxModel.Logger;
 using NitroxModel.Packets;
-using NitroxServer.Communication.NetworkingLayer;
+using NitroxModel.Server;
 using NitroxServer.Communication.Packets.Processors.Abstract;
-using NitroxServer.ConfigParser;
+using NitroxServer.Serialization;
 
 namespace NitroxServer.Communication.Packets.Processors
 {
@@ -19,7 +19,7 @@ namespace NitroxServer.Communication.Packets.Processors
         public override void Process(MultiplayerSessionPolicyRequest packet, NitroxConnection connection)
         {
             Log.Info("Providing session policies...");
-            connection.SendPacket(new MultiplayerSessionPolicy(packet.CorrelationId, config.DisableConsole));
+            connection.SendPacket(new MultiplayerSessionPolicy(packet.CorrelationId, config.DisableConsole, config.MaxConnections, config.IsPasswordRequired));
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using NitroxModel.Logger;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
-using NitroxServer.Communication.NetworkingLayer;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
 
@@ -18,7 +17,7 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(MultiplayerSessionReservationRequest packet, NitroxConnection connection)
         {
-            Log.Info("Processing reservation request...");
+            Log.Info($"Processing reservation request from {packet.AuthenticationContext.Username}");
 
             string correlationId = packet.CorrelationId;
             PlayerSettings playerSettings = packet.PlayerSettings;
@@ -29,7 +28,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 authenticationContext,
                 correlationId);
 
-            Log.Info($"Reservation processed successfully: {reservation}...");
+            Log.Info($"Reservation processed successfully: Username: {packet.AuthenticationContext.Username} - {reservation}");
 
             connection.SendPacket(reservation);
         }

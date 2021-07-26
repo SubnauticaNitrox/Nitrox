@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession.ConnectionState;
+using NitroxClient.Debuggers;
 using NitroxClient.GameLogic;
 using NitroxModel;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
+using NitroxModel.Serialization;
 
 namespace NitroxClient.Communication.MultiplayerSession
 {
@@ -116,18 +118,23 @@ namespace NitroxClient.Communication.MultiplayerSession
 
             string fromStage = CurrentState == null ? "null" : CurrentState.CurrentStage.ToString();
             string username = AuthenticationContext == null ? "" : AuthenticationContext.Username;
-            Log.Info($"Updating session stage from '{fromStage}' to '{sessionConnectionState.CurrentStage}' for '{username}'");
+            Log.Debug($"Updating session stage from '{fromStage}' to '{sessionConnectionState.CurrentStage}' for '{username}'");
 
             CurrentState = sessionConnectionState;
 
             // Last connection state changed will not have any handlers
             ConnectionStateChanged?.Invoke(CurrentState);
+
+            if (sessionConnectionState.CurrentStage == MultiplayerSessionConnectionStage.SESSION_RESERVED)
+            {
+                Log.PlayerName = username;
+            }
         }
 
         public void ClearSessionState()
         {
             IpAddress = null;
-            ServerPort = 11000;
+            ServerPort = ServerList.DEFAULT_PORT;
             SessionPolicy = null;
             PlayerSettings = null;
             AuthenticationContext = null;

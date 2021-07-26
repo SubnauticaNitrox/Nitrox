@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Reflection;
-using Harmony;
+using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
 
@@ -21,7 +21,7 @@ namespace NitroxPatcher.Patches.Dynamic
             NitroxServiceLocator.LocateService<Cyclops>().OnDamagePointRepaired(__instance.GetComponentInParent<SubRoot>(), __instance, 999);
         }
 
-        public override void Patch(HarmonyInstance harmony)
+        public override void Patch(Harmony harmony)
         {
             PatchPostfix(harmony, TARGET_METHOD);
         }

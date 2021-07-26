@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Harmony;
+﻿using HarmonyLib;
 using System.Reflection;
 using NitroxClient.MonoBehaviours;
+using NitroxModel.Logger;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
@@ -15,16 +12,20 @@ namespace NitroxPatcher.Patches.Dynamic
         public static void Prefix(Base __instance, Base sourceBase)
         {
             NitroxEntity entity = sourceBase.GetComponent<NitroxEntity>();
-
-            if (!sourceBase.GetComponent<BaseRoot>())
+            
+            // The game will clone the base when doing things like rebuilding gemometry or placing a new
+            // piece.  The copy is normally between a base ghost and a base - and vise versa.  When building
+            // a face piece, such as a window, this will clone a ghost base to stage the change which is later
+            // integrated into the real base.  For now, prevent guid copies to these staging ghost bases; however,
+            // there is still a pending edge case when a base converts to a BaseGhost for deconstruction.
+            if(entity != null && __instance.gameObject.name != "BaseGhost")
             {
-                entity = sourceBase.transform.parent.GetComponent<NitroxEntity>();
+                Log.Debug("Transfering base id : " + entity.Id + " from " + sourceBase.name + " to " + __instance.name);
+                NitroxEntity.SetNewId(__instance.gameObject, entity.Id);
             }
-
-            NitroxEntity.SetNewId(__instance.gameObject, entity.Id);
         }
 
-        public override void Patch(HarmonyInstance harmony)
+        public override void Patch(Harmony harmony)
         {
             PatchPrefix(harmony, METHOD);
         }

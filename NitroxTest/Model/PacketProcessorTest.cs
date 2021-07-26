@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
@@ -89,13 +89,13 @@ namespace NitroxTest.Model
             List<Type> packetTypes = typeof(DefaultServerPacketProcessor).Assembly.GetTypes()
                 .Where(p => typeof(PacketProcessor).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract)
                 .ToList();
-            
-            NitroxServiceLocator.InitializeDependencyContainer(new ClientAutoFacRegistrar(), new SubnauticaServerAutoFacRegistrar());
+
+            NitroxServiceLocator.InitializeDependencyContainer(new ClientAutoFacRegistrar(), new SubnauticaServerAutoFacRegistrar(), new TestAutoFacRegistrar());
             NitroxServiceLocator.BeginNewLifetimeScope();
 
             foreach (Type packet in typeof(Packet).Assembly.GetTypes()
-                .Where(p => typeof(Packet).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract)
-                .ToList())
+                                                  .Where(p => typeof(Packet).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract)
+                                                  .ToList())
             {
                 Type clientPacketProcessorType = typeof(ClientPacketProcessor<>);
                 Type authenticatedPacketProcessorType = typeof(AuthenticatedPacketProcessor<>);
@@ -110,8 +110,14 @@ namespace NitroxTest.Model
                  NitroxServiceLocator.LocateOptionalService(clientProcessorType).HasValue ||
                  NitroxServiceLocator.LocateOptionalService(authProcessorType).HasValue ||
                  NitroxServiceLocator.LocateOptionalService(unauthProcessorType).HasValue).Should()
-                    .BeTrue($"Packet of type '{packet}' should have at least one processor.");
+                                                                                          .BeTrue($"Packet of type '{packet}' should have at least one processor.");
             }
+        }
+
+        [TestCleanup]
+        public void Cleanup()
+        {
+            NitroxServiceLocator.EndCurrentLifetimeScope();
         }
     }
 }

@@ -50,6 +50,19 @@ namespace NitroxClient.MonoBehaviours
             return Optional.OfNullable(gameObject);
         }
 
+        public static bool TryGetObjectFrom(NitroxId id, out GameObject gameObject)
+        {
+            gameObject = null;
+            return id != null && gameObjectsById.TryGetValue(id, out gameObject);
+        }
+
+        public static bool TryGetComponentFrom<T>(NitroxId id, out T component) where T : Component
+        {
+            component = null;
+            return id != null && gameObjectsById.TryGetValue(id, out GameObject gameObject) &&
+                   gameObject.TryGetComponent(out component);
+        }
+
         public static void SetNewId(GameObject gameObject, NitroxId id)
         {
             Validate.NotNull(gameObject);
@@ -83,10 +96,24 @@ namespace NitroxClient.MonoBehaviours
             return newId;
         }
 
+        public static void RemoveFrom(GameObject gameObject)
+        {
+            NitroxEntity entity = gameObject.GetComponent<NitroxEntity>();
+
+            if (entity)
+            {
+                gameObjectsById.Remove(entity.Id);
+                Destroy(entity);
+            }
+        }
+
         public void Start()
         {
             // Just in case this object comes to life via serialization
-            gameObjectsById[Id] = gameObject;
+            if (Id != null)
+            {
+                gameObjectsById[Id] = gameObject;
+            }
         }
 
         public void OnProtoSerializeObjectTree(ProtobufSerializer _)

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using ProtoBufNet;
-using UnityEngine;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
@@ -15,7 +14,7 @@ namespace NitroxModel.DataStructures.GameLogic
         public NitroxId Id { get; set; }
 
         [ProtoMember(2)]
-        public Vector3 Location { get; set; }
+        public NitroxVector3 Location { get; set; }
 
         [ProtoMember(3)]
         public NitroxId FabricatorId { get; set; }
@@ -38,7 +37,7 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoMember(9)]
         public bool RadioDamaged { get; set; }
 
-        public void InitEscapePodModel(NitroxId id, Vector3 location, NitroxId fabricatorId, NitroxId medicalFabricatorId, NitroxId storageContainerId, NitroxId radioId, bool damaged, bool radioDamaged)
+        public void InitEscapePodModel(NitroxId id, NitroxVector3 location, NitroxId fabricatorId, NitroxId medicalFabricatorId, NitroxId storageContainerId, NitroxId radioId, bool damaged, bool radioDamaged)
         {
             Id = id;
             Location = location;
@@ -52,7 +51,7 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public bool IsFull()
         {
-            return AssignedPlayers.Count >= PLAYERS_PER_ESCAPEPOD;
+            return false; //AssignedPlayers.Count >= PLAYERS_PER_ESCAPEPOD; // TODO FIX THIS
         }
 
         public override string ToString()

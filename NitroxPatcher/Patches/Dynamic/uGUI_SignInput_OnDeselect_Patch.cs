@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Reflection;
-using Harmony;
+using HarmonyLib;
 using NitroxClient.GameLogic;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
+using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic.Buildings.Metadata;
+using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
@@ -13,10 +17,14 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(uGUI_SignInput __instance)
         {
-            NitroxServiceLocator.LocateService<Signs>().Changed(__instance);
+            GameObject gameObject = __instance.gameObject.FindAncestor<PrefabIdentifier>().gameObject;
+            NitroxId id = NitroxEntity.GetId(gameObject);
+
+            SignMetadata signMetadata = new SignMetadata(__instance.text, __instance.colorIndex, __instance.scaleIndex, __instance.elementsState, __instance.IsBackground());
+            NitroxServiceLocator.LocateService<Building>().MetadataChanged(id, signMetadata);
         }
 
-        public override void Patch(HarmonyInstance harmony)
+        public override void Patch(Harmony harmony)
         {
             PatchPostfix(harmony, TARGET_METHOD);
         }

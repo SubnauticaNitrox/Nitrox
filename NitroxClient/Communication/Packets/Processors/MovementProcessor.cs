@@ -2,6 +2,7 @@
 using NitroxClient.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.DataStructures;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -22,10 +23,10 @@ namespace NitroxClient.Communication.Packets.Processors
             {
                 remotePlayer
                     .Value
-                    .UpdatePosition(movement.Position,
-                        movement.Velocity,
-                        movement.BodyRotation,
-                        movement.AimingRotation);
+                    .UpdatePosition(movement.Position.ToUnity(),
+                        movement.Velocity.ToUnity(),
+                        movement.BodyRotation.ToUnity(),
+                        movement.AimingRotation.ToUnity());
             }
         }
     }

@@ -1,29 +1,29 @@
 ﻿using System;
+using System.Collections.Generic;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Packets;
+using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.DataStructures.GameLogic;
 
 namespace NitroxModel_Subnautica.Helper
 {
-    public class VehicleModelFactory
+    public static class VehicleModelFactory
     {
-        public static VehicleModel BuildFrom(ConstructorBeginCrafting packet)
+        public static VehicleModel BuildFrom(NitroxTechType techType, NitroxId constructedItemId, NitroxVector3 position, NitroxQuaternion rotation, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, NitroxVector3[] hsb, float health)
         {
-            switch (packet.TechType.Enum())
+            switch (techType.ToUnity())
             {
                 case TechType.Seamoth:
-                    return new SeamothModel(packet.TechType, packet.ConstructedItemId, packet.Position, packet.Rotation, packet.InteractiveChildIdentifiers, Optional.Empty, packet.Name, packet.HSB, packet.Colours, packet.Health);
+                    return new SeamothModel(techType, constructedItemId, position, rotation, interactiveChildIdentifiers, dockingBayId, name, hsb, health);
                 case TechType.Exosuit:
-                    return new ExosuitModel(packet.TechType, packet.ConstructedItemId, packet.Position, packet.Rotation, packet.InteractiveChildIdentifiers, Optional.Empty, packet.Name, packet.HSB, packet.Colours, packet.Health);
+                    return new ExosuitModel(techType, constructedItemId, position, rotation, interactiveChildIdentifiers, dockingBayId, name, hsb, health);
                 case TechType.Cyclops:
-                    return new CyclopsModel(packet.TechType, packet.ConstructedItemId, packet.Position, packet.Rotation, packet.InteractiveChildIdentifiers, Optional.Empty, packet.Name, packet.HSB, packet.Colours, packet.Health);
+                    return new CyclopsModel(techType, constructedItemId, position, rotation, interactiveChildIdentifiers, dockingBayId, name, hsb, health);
                 case TechType.RocketBase:
-                    return null;
+                    return new NeptuneRocketModel(techType, constructedItemId, position, rotation, interactiveChildIdentifiers, dockingBayId, name, hsb, health);
                 default:
-                    throw new Exception("Could not build from: " + packet.TechType);
-
+                    throw new Exception($"Could not build from: {techType}");
             }
         }
     }

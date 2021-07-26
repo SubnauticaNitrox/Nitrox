@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel_Subnautica.DataStructures;
 
 namespace NitroxModel_Subnautica.Helper
 {
@@ -7,24 +8,12 @@ namespace NitroxModel_Subnautica.Helper
     {
         public int Compare(VehicleModel x, VehicleModel y)
         {
-            if(x.TechType.Enum() == y.TechType.Enum())
-            {
-                return 0;
-            }
-            else
-            {
-                return CompareTo(x.TechType.Enum(), y.TechType.Enum());
-            }
+            return (x.TechType.ToUnity() == y.TechType.ToUnity()) ? 0 : CompareTo(x.TechType.ToUnity(), y.TechType.ToUnity());
         }
+
         private int CompareTo(TechType x, TechType y)
         {
-            if(x > y)
-            {
-                return -1;
-            } else
-            {
-                return 1;
-            }
+            return (x > y) ? -1 : 1;
         }
     }
 }

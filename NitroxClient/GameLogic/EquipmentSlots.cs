@@ -9,13 +9,24 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
-using NitroxModel_Subnautica.Helper;
+using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic
 {
     public class EquipmentSlots
     {
+        private List<EquipmentType> ApplicableEquipmentTypes { get; } = new List<EquipmentType>()
+        {
+            EquipmentType.CyclopsModule,
+            EquipmentType.SeamothModule,
+            EquipmentType.ExosuitModule,
+            EquipmentType.ExosuitArm,
+            EquipmentType.NuclearReactor,
+            EquipmentType.BatteryCharger,
+            EquipmentType.PowerCellCharger,
+            EquipmentType.DecoySlot
+        };
         private readonly IPacketSender packetSender;
 
         public EquipmentSlots(IPacketSender packetSender)
@@ -38,21 +49,27 @@ namespace NitroxClient.GameLogic
 
             Transform parent = pickupable.gameObject.transform.parent;
             pickupable.gameObject.transform.SetParent(null);
-            byte[] bytes = SerializationHelper.GetBytes(pickupable.gameObject);
+            byte[] bytes = SerializationHelper.GetBytesWithoutParent(pickupable.gameObject);
 
-            EquippedItemData equippedItem = new EquippedItemData(ownerId, itemId, bytes, slot, techType.Model());
+            EquippedItemData equippedItem = new EquippedItemData(ownerId, itemId, bytes, slot, techType.ToDto());
             Player player = owner.GetComponent<Player>();
 
             if (player != null)
             {
-                PlayerEquipmentAdded equipmentAdded = new PlayerEquipmentAdded(techType.Model(), equippedItem);
+                PlayerEquipmentAdded equipmentAdded = new PlayerEquipmentAdded(techType.ToDto(), equippedItem);
                 packetSender.Send(equipmentAdded);
                 pickupable.gameObject.transform.SetParent(parent);
 
                 return;
             }
 
-            ModuleAdded moduleAdded = new ModuleAdded(equippedItem);
+            bool playerModule = true;
+            if (ApplicableEquipmentTypes.Contains(Equipment.GetSlotType(slot)))
+            {
+                playerModule = false;
+            }
+
+            ModuleAdded moduleAdded = new ModuleAdded(equippedItem, playerModule);
             packetSender.Send(moduleAdded);
             pickupable.gameObject.transform.SetParent(parent);
         }
@@ -65,7 +82,7 @@ namespace NitroxClient.GameLogic
             if (player != null)
             {
                 TechType techType = pickupable.GetTechType();
-                PlayerEquipmentRemoved equipmentAdded = new PlayerEquipmentRemoved(techType.Model(), itemId);
+                PlayerEquipmentRemoved equipmentAdded = new PlayerEquipmentRemoved(techType.ToDto(), itemId);
                 packetSender.Send(equipmentAdded);
 
                 return;
@@ -79,7 +96,13 @@ namespace NitroxClient.GameLogic
                 packetSender.Send(vehicleChildInteractiveData);
             }
 
-            ModuleRemoved moduleRemoved = new ModuleRemoved(ownerId, slot, itemId);
+            bool playerModule = true;
+            if (ApplicableEquipmentTypes.Contains(Equipment.GetSlotType(slot)))
+            {
+                playerModule = false;
+            }
+
+            ModuleRemoved moduleRemoved = new ModuleRemoved(ownerId, slot, itemId, playerModule);
             packetSender.Send(moduleRemoved);
         }
 

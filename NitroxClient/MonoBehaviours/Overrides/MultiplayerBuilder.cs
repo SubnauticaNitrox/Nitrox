@@ -9,7 +9,8 @@ using UnityEngine;
 using UWE;
 using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
 using NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation;
-using NitroxModel_Subnautica.Helper.Int3;
+using NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation.Metadata;
+using NitroxModel_Subnautica.DataStructures;
 
 namespace NitroxClient.MonoBehaviours.Overrides
 {
@@ -254,8 +255,24 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 BaseModuleRotationMetadata baseModuleRotationMetadata = (rotationMetadata as BaseModuleRotationMetadata);
                 BaseAddModuleGhost module = (component as BaseAddModuleGhost);
 
-                module.anchoredFace = new Base.Face(baseModuleRotationMetadata.Cell.Global(), (Base.Direction)baseModuleRotationMetadata.Direction);
+                module.anchoredFace = new Base.Face(baseModuleRotationMetadata.Cell.ToUnity(), (Base.Direction)baseModuleRotationMetadata.Direction);
                 module.ReflectionCall("RebuildGhostGeometry");
+            }
+            else if (component is BaseAddFaceGhost)
+            {
+                AnchoredFaceRotationMetadata baseModuleRotationMetadata = (rotationMetadata as AnchoredFaceRotationMetadata);
+                BaseAddFaceGhost faceGhost = (component as BaseAddFaceGhost);
+                Log.Info("Applying BaseAddFaceGhost " + baseModuleRotationMetadata);
+
+
+                Base.Face face = new Base.Face(baseModuleRotationMetadata.Cell.ToUnity(), (Base.Direction)baseModuleRotationMetadata.Direction);
+                faceGhost.anchoredFace = face;
+                
+                Base ghostBase = (Base)faceGhost.ReflectionGet("ghostBase");
+                Base.FaceType faceType = (Base.FaceType)baseModuleRotationMetadata.FaceType;
+                ghostBase.SetFace(face, faceType);
+                
+                faceGhost.ReflectionCall("RebuildGhostGeometry");
             }
         }
 
@@ -409,8 +426,17 @@ namespace NitroxClient.MonoBehaviours.Overrides
 
             componentInParent3.SetIsInside(flag || flag2);
             SkyEnvironmentChanged.Send(gameObject, currentSub);
-            gameObject.transform.position = overridePosition;
-            gameObject.transform.rotation = overrideQuaternion;
+
+            if (currentSub != null && currentSub.isCyclops)
+            {
+                gameObject.transform.localPosition = overridePosition;
+                gameObject.transform.localRotation = overrideQuaternion;
+            }
+            else
+            {
+                gameObject.transform.position = overridePosition;
+                gameObject.transform.rotation = overrideQuaternion;
+            }
 
             MultiplayerBuilder.ghostModel = null;
             MultiplayerBuilder.prefab = null;

@@ -1,8 +1,8 @@
 ﻿using NitroxClient.MonoBehaviours;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using UnityEngine;
-using NitroxInt3 = NitroxModel.DataStructures.Int3;
 
 namespace NitroxClient.GameLogic.Spawning
 {

@@ -4,15 +4,19 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic.PlayerModel.Equipment
 {
-    internal class StillSuitVisibilityHandler : EquipmentVisibilityHandler
+    public class StillSuitVisibilityHandler : IEquipmentVisibilityHandler
     {
-        public override void UpdateEquipmentVisibility(GameObject playerModel, ReadOnlyCollection<TechType> currentEquipment)
+        private readonly GameObject stillSuit;
+
+        public StillSuitVisibilityHandler(GameObject playerModel)
+        {
+            stillSuit = playerModel.transform.Find(PlayerEquipmentConstants.STILL_SUIT_GAME_OBJECT_NAME).gameObject;
+        }
+        public void UpdateEquipmentVisibility(ReadOnlyCollection<TechType> currentEquipment)
         {
             bool bodyVisible = currentEquipment.Contains(TechType.Stillsuit);
 
-            playerModel.transform.Find(PlayerEquipmentConstants.STILL_SUIT_GAME_OBJECT_NAME).gameObject.SetActive(bodyVisible);
-
-            CallSuccessor(playerModel, currentEquipment);
+            stillSuit.SetActive(bodyVisible);
         }
     }
 }

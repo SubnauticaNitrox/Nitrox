@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using NitroxModel.DataStructures.Util;
 using ProtoBufNet;
-using UnityEngine;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
@@ -11,16 +10,16 @@ namespace NitroxModel.DataStructures.GameLogic
     public class VehicleModel
     {
         [ProtoMember(1)]
-        public TechType TechType { get; }
+        public NitroxTechType TechType { get; }
 
         [ProtoMember(2)]
         public NitroxId Id { get; set; }
 
         [ProtoMember(3)]
-        public Vector3 Position { get; set; }
+        public NitroxVector3 Position { get; set; }
 
         [ProtoMember(4)]
-        public Quaternion Rotation { get; set; }
+        public NitroxQuaternion Rotation { get; set; }
 
         [ProtoMember(5)]
         public ThreadSafeCollection<InteractiveChildObjectIdentifier> InteractiveChildIdentifiers { get; }
@@ -32,23 +31,20 @@ namespace NitroxModel.DataStructures.GameLogic
         public string Name { get; set; }
 
         [ProtoMember(8)]
-        public Vector3[] HSB { get; set; }
+        public NitroxVector3[] HSB { get; set; }
 
         [ProtoMember(9)]
-        public Vector3[] Colours { get; set; }
+        public float Health { get; set; }
 
-        [ProtoMember(10)]
-        public float Health { get; set; } = 1;
-
-        public VehicleModel()
+        protected VehicleModel()
         {
+            // Constructor for serialization. Has to be "protected" for json serialization.
             InteractiveChildIdentifiers = new ThreadSafeCollection<InteractiveChildObjectIdentifier>();
             DockingBayId = Optional.Empty;
+            Health = 200;
         }
 
-        public VehicleModel(TechType techType, NitroxId id, Vector3 position, Quaternion rotation, IEnumerable<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, Vector3[] hsb,
-            Vector3[] colours,
-            float health)
+        public VehicleModel(NitroxTechType techType, NitroxId id, NitroxVector3 position, NitroxQuaternion rotation, IEnumerable<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, NitroxVector3[] hsb, float health)
         {
             TechType = techType;
             Id = id;
@@ -58,8 +54,12 @@ namespace NitroxModel.DataStructures.GameLogic
             DockingBayId = dockingBayId;
             Name = name;
             HSB = hsb;
-            Colours = colours;
             Health = health;
+        }
+
+        public override string ToString()
+        {
+            return $"[VehicleModel - TechType: {TechType}, Id: {Id}, Position: {Position}, Rotation: {Rotation}, Name: {Name}, Health: {Health}, DockingBayId: {DockingBayId}]";
         }
     }
 }

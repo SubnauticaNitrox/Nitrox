@@ -18,7 +18,7 @@ namespace NitroxClient.GameLogic.InitialSync
         {
             EscapePodModel escapePod = packet.EscapePodsData.Find(x => x.Id.Equals(packet.AssignedEscapePodId));
             
-            escapePodManager.AssignPlayerToEscapePod(escapePod);
+            escapePodManager.AssignPlayerToEscapePod(escapePod, packet.FirstTimeConnecting);
             yield return null;
 
             escapePodManager.SyncEscapePodIds(packet.EscapePodsData);

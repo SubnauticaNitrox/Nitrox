@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Reflection;
-using Harmony;
+using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.Util;
@@ -34,12 +34,12 @@ namespace NitroxPatcher.Patches.Dynamic
         public static void Postfix(ExosuitGrapplingArm __instance, GrapplingHook ___hook)
         {
             // We send the hook direction to the other player so he sees where the other player exosuit is heading
-            NitroxServiceLocator.LocateService<ExosuitModuleEvent>().BroadcastArmAction(TechType.ExosuitGrapplingArmModule, __instance, ExosuitArmAction.START_USE_TOOL, Optional.Of(___hook.rb.velocity), Optional.Empty);
+            NitroxServiceLocator.LocateService<ExosuitModuleEvent>().BroadcastArmAction(TechType.ExosuitGrapplingArmModule, __instance, ExosuitArmAction.START_USE_TOOL, ___hook.rb.velocity, null);
         }
 
-        public override void Patch(HarmonyInstance harmony)
+        public override void Patch(Harmony harmony)
         {
-            PatchMultiple(harmony, TARGET_METHOD, true, true, false);            
+            PatchMultiple(harmony, TARGET_METHOD, true, true, false, false);            
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using Harmony;
+using HarmonyLib;
 using NitroxClient.MonoBehaviours.Overrides;
 using NitroxModel.Helper;
 
@@ -20,7 +20,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static readonly OpCode INSTRUCTION_BEFORE_JUMP = OpCodes.Ldfld;
         public static readonly object INSTRUCTION_BEFORE_JUMP_OPERAND = typeof(SubRoot).GetField("isBase", BindingFlags.Public | BindingFlags.Instance);
-        public static readonly OpCode JUMP_INSTRUCTION_TO_COPY = OpCodes.Brtrue;
+        public static readonly OpCode JUMP_INSTRUCTION_TO_COPY = OpCodes.Brtrue_S;
 
         public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
         {
@@ -84,7 +84,7 @@ namespace NitroxPatcher.Patches.Dynamic
             throw new Exception("Could not locate jump instruction to copy! Injection has failed.");
         }
         
-        public override void Patch(HarmonyInstance harmony)
+        public override void Patch(Harmony harmony)
         {
             PatchTranspiler(harmony, TARGET_METHOD);
         }

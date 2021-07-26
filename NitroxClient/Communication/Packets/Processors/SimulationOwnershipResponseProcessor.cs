@@ -1,7 +1,11 @@
 ﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
+using NitroxClient.MonoBehaviours;
+using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
+using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -28,6 +32,22 @@ namespace NitroxClient.Communication.Packets.Processors
              * 
              */
             simulationOwnershipManager.ReceivedSimulationLockResponse(response.Id, response.LockAquired, response.LockType);
+
+            if (response.LockAquired)
+            {
+                RemoveRemoteController(response.Id);
+            }
+        }
+
+        private void RemoveRemoteController(NitroxId id)
+        {
+            Optional<GameObject> gameObject = NitroxEntity.GetObjectFrom(id);
+
+            if (gameObject.HasValue)
+            {
+                RemotelyControlled remotelyControlled = gameObject.Value.GetComponent<RemotelyControlled>();
+                Object.Destroy(remotelyControlled);
+            }
         }
     }
 }

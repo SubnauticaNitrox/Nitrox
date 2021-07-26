@@ -2,8 +2,8 @@
 using LiteNetLib;
 using LiteNetLib.Utils;
 using NitroxClient.Communication.Abstract;
+using NitroxClient.Debuggers;
 using NitroxClient.MonoBehaviours.Gui.InGame;
-using NitroxModel.Core;
 using NitroxModel.Logger;
 using NitroxModel.Networking;
 using NitroxModel.Packets;
@@ -15,14 +15,16 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
         public bool IsConnected { get; private set; }
 
         private readonly NetPacketProcessor netPacketProcessor = new NetPacketProcessor();
-        private AutoResetEvent connectedEvent = new AutoResetEvent(false);
+        private readonly AutoResetEvent connectedEvent = new AutoResetEvent(false);
         private readonly PacketReceiver packetReceiver;
+        private readonly INetworkDebugger networkDebugger;
 
         private NetManager client;
 
-        public LiteNetLibClient()
+        public LiteNetLibClient(PacketReceiver packetReceiver, INetworkDebugger networkDebugger = null)
         {
-            packetReceiver = NitroxServiceLocator.LocateService<PacketReceiver>();
+            this.packetReceiver = packetReceiver;
+            this.networkDebugger = networkDebugger;
         }
 
         public void Start(string ipAddress, int serverPort)
@@ -38,9 +40,15 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
             listener.PeerDisconnectedEvent += Disconnected;
             listener.NetworkReceiveEvent += ReceivedNetworkData;
 
-            client = new NetManager(listener);
-            client.UpdateTime = 15;
-            client.UnsyncedEvents = true; //experimental feature, may need to replace with calls to client.PollEvents();
+            client = new NetManager(listener)
+            {
+                UpdateTime = 15,
+                UnsyncedEvents = true,  //experimental feature, may need to replace with calls to client.PollEvents();
+#if DEBUG
+                DisconnectTimeout = 300000  //Disables Timeout (for 5 min) for debug purpose (like if you jump though the server code)
+#endif
+            };
+
             client.Start();
             client.Connect(ipAddress, serverPort, "nitrox");
 
@@ -50,6 +58,7 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
 
         public void Send(Packet packet)
         {
+            networkDebugger?.PacketSent(packet);
             client.SendToAll(netPacketProcessor.Write(packet.ToWrapperPacket()), NitroxDeliveryMethod.ToLiteNetLib(packet.DeliveryMethod));
             client.Flush();
         }
@@ -80,7 +89,10 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
 
         private void Disconnected(NetPeer peer, DisconnectInfo disconnectInfo)
         {
-            LostConnectionModal.Instance.Show();
+            if (LostConnectionModal.Instance)
+            {
+                LostConnectionModal.Instance.Show();
+            }
             IsConnected = false;
             Log.Info("Disconnected from server");
         }

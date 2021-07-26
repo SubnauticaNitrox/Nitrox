@@ -4,6 +4,7 @@ using System.Reflection;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.Helper;
 using UnityEngine;
 
@@ -23,7 +24,7 @@ namespace NitroxClient.Communication.Packets.Processors
             using (packetSender.Suppress<PDAEntryAdd>())
             using (packetSender.Suppress<PDAEntryProgress>())
             {
-                TechType techType = packet.TechType.Enum();
+                TechType techType = packet.TechType.ToUnity();
                 PDAScanner.EntryData entryData = PDAScanner.GetEntryData(techType);
 
                 PDAScanner.Entry entry;

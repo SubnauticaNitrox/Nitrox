@@ -1,30 +1,29 @@
 ﻿using ProtoBufNet;
 using System;
-using UnityEngine;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
     [Serializable]
-    [ProtoContract]    
+    [ProtoContract]
     public class VehicleMovementData
     {
         [ProtoMember(1)]
-        public TechType TechType { get; }
+        public NitroxTechType TechType { get; }
 
         [ProtoMember(2)]
         public NitroxId Id { get; set; }
 
         [ProtoMember(3)]
-        public Vector3 Position { get; }
+        public NitroxVector3 Position { get; }
 
         [ProtoMember(4)]
-        public Quaternion Rotation { get; }
+        public NitroxQuaternion Rotation { get; }
 
         [ProtoMember(5)]
-        public Vector3 Velocity { get; }
+        public NitroxVector3 Velocity { get; }
 
         [ProtoMember(6)]
-        public Vector3 AngularVelocity { get; }
+        public NitroxVector3 AngularVelocity { get; }
 
         [ProtoMember(7)]
         public float SteeringWheelYaw { get; }
@@ -35,15 +34,12 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoMember(9)]
         public bool AppliedThrottle { get; }
 
-        [ProtoMember(10)]
-        public float Health { get; }
-        
-        public VehicleMovementData()
+        protected VehicleMovementData()
         {
-            // For serialization purposes
+            // Constructor for serialization. Has to be "protected" for json serialization.
         }
 
-        public VehicleMovementData(TechType techType, NitroxId id, Vector3 position, Quaternion rotation, Vector3 velocity, Vector3 angularVelocity, float steeringWheelYaw, float steeringWheelPitch, bool appliedThrottle, float health)
+        public VehicleMovementData(NitroxTechType techType, NitroxId id, NitroxVector3 position, NitroxQuaternion rotation, NitroxVector3 velocity, NitroxVector3 angularVelocity, float steeringWheelYaw, float steeringWheelPitch, bool appliedThrottle)
         {
             TechType = techType;
             Id = id;
@@ -54,7 +50,24 @@ namespace NitroxModel.DataStructures.GameLogic
             SteeringWheelYaw = steeringWheelYaw;
             SteeringWheelPitch = steeringWheelPitch;
             AppliedThrottle = appliedThrottle;
-            Health = health;
+        }
+
+        public VehicleMovementData(NitroxTechType techType, NitroxId id, NitroxVector3 position, NitroxQuaternion rotation)
+        {
+            TechType = techType;
+            Id = id;
+            Position = position;
+            Rotation = rotation;
+            Velocity = NitroxVector3.Zero;
+            AngularVelocity = NitroxVector3.Zero;
+            SteeringWheelYaw = 0f;
+            SteeringWheelPitch = 0f;
+            AppliedThrottle = false;
+        }
+
+        public override string ToString()
+        {
+            return $"[VehicleMovementData - TechType: {TechType}, Id: {Id}, Position: {Position}, Rotation: {Rotation}, Velocity: {Velocity}, AngularVelocity: {AngularVelocity}, SteeringWheelYaw: {SteeringWheelYaw}, SteeringWheelPitch: {SteeringWheelPitch}, AppliedThrottle: {AppliedThrottle}]";
         }
     }
 }

@@ -9,17 +9,19 @@ namespace NitroxModel.Packets
         public NitroxId OwnerId { get; }
         public string Slot { get; }
         public NitroxId ItemId { get; }
+        public bool PlayerModule { get; }
 
-        public ModuleRemoved(NitroxId ownerId, string slot, NitroxId itemId)
+        public ModuleRemoved(NitroxId ownerId, string slot, NitroxId itemId, bool playerModule)
         {
             OwnerId = ownerId;
             Slot = slot;
             ItemId = itemId;
+            PlayerModule = playerModule;
         }
 
         public override string ToString()
         {
-            return "[ModuleRemoved ownerId: " + OwnerId + " Slot: " + Slot + " itemId: " + ItemId + "]";
+            return $"[ModuleRemoved OwnerId: {OwnerId}, Slot: {Slot}, ItemId: {ItemId}, PlayerModule: {PlayerModule}]";
         }
     }
 }

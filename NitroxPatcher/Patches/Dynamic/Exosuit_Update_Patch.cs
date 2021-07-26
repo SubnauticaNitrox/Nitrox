@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using Harmony;
+using HarmonyLib;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic
@@ -50,7 +50,7 @@ namespace NitroxPatcher.Patches.Dynamic
             }
         }
 
-        public override void Patch(HarmonyInstance harmony)
+        public override void Patch(Harmony harmony)
         {
             PatchTranspiler(harmony, TARGET_METHOD);
         }

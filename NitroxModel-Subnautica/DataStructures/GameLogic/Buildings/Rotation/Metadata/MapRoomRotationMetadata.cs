@@ -16,12 +16,12 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation
         [ProtoMember(2)]
         public int ConnectionMask { get; set; }
 
-        public MapRoomRotationMetadata() : base(typeof(BaseAddMapRoomGhost))
+        protected MapRoomRotationMetadata() : base(typeof(BaseAddMapRoomGhost))
         {
-            // For serialization purposes
+            // Constructor for serialization. Has to be "protected" for json serialization.
         }
 
-        public MapRoomRotationMetadata(byte cellType, int connectionMask) : base (typeof(BaseAddMapRoomGhost))
+        public MapRoomRotationMetadata(byte cellType, int connectionMask) : base(typeof(BaseAddMapRoomGhost))
         {
             CellType = cellType;
             ConnectionMask = connectionMask;
@@ -29,7 +29,7 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation
 
         public override string ToString()
         {
-            return "[MapRoomRotationMetadata CellType: " + CellType + " ConnectionMask: " + ConnectionMask + " ]";
+            return $"[MapRoomRotationMetadata - CellType: {CellType}, ConnectionMask: {ConnectionMask}]";
         }
     }
 }

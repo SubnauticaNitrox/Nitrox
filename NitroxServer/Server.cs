@@ -1,39 +1,46 @@
 ﻿using System;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Text;
 using System.Timers;
 using NitroxModel.Logger;
+using NitroxServer.Serialization;
 using NitroxServer.Serialization.World;
-using NitroxServer.ConfigParser;
-using System.Configuration;
-using System.Text;
 
 namespace NitroxServer
 {
     public class Server
     {
-        private readonly Timer saveTimer;
-        private readonly Communication.NetworkingLayer.NitroxServer server;
-        private readonly World world;
+        private readonly Communication.NitroxServer server;
         private readonly WorldPersistence worldPersistence;
-        public bool IsRunning { get; private set; }
-        private bool isSaving;
+        private readonly ServerConfig serverConfig;
+        private readonly Timer saveTimer;
+        private readonly World world;
+
         public static Server Instance { get; private set; }
 
-        public Server(WorldPersistence worldPersistence, World world, ServerConfig serverConfig, Communication.NetworkingLayer.NitroxServer server)
+        public bool IsRunning { get; private set; }
+        public bool IsSaving { get; private set; }
+
+        public int Port => serverConfig?.ServerPort ?? -1;
+
+        public Server(WorldPersistence worldPersistence, World world, ServerConfig serverConfig, Communication.NitroxServer server)
         {
-            if (ConfigurationManager.AppSettings.Count == 0)
-            {
-                Log.Warn("Nitrox Server Cant Read Config File.");
-            }
-            Instance = this;
             this.worldPersistence = worldPersistence;
-            this.world = world;
+            this.serverConfig = serverConfig;
             this.server = server;
-            
-            // TODO: Save once after last player leaves then stop saving.
+            this.world = world;
+
+            Instance = this;
+
             saveTimer = new Timer();
             saveTimer.Interval = serverConfig.SaveInterval;
             saveTimer.AutoReset = true;
-            saveTimer.Elapsed += delegate { Save(); };
+            saveTimer.Elapsed += delegate
+            {
+                Save();
+            };
         }
 
         public string SaveSummary
@@ -41,28 +48,53 @@ namespace NitroxServer
             get
             {
                 // TODO: Extend summary with more useful save file data
-                StringBuilder builder = new StringBuilder();
-                builder.AppendLine($" - Game mode: {world.GameMode}");
-                builder.AppendLine($" - Inventory items: {world.InventoryManager.GetAllInventoryItems().Count}");
-                builder.AppendLine($" - Storage slot items: {world.InventoryManager.GetAllStorageSlotItems().Count}");
-                builder.AppendLine($" - Known tech: {world.GameData.PDAState.KnownTechTypes.Count}");
+                StringBuilder builder = new("\n");
+                builder.AppendLine($" - Save location: {Path.GetFullPath(serverConfig.SaveName)}");
+                builder.AppendLine($" - World GameMode: {serverConfig.GameMode}");
                 builder.AppendLine($" - Radio messages stored: {world.GameData.StoryGoals.RadioQueue.Count}");
-                builder.AppendLine($" - Story goals unlocked: {world.GameData.StoryGoals.GoalUnlocks.Count}");
                 builder.AppendLine($" - Story goals completed: {world.GameData.StoryGoals.CompletedGoals.Count}");
+                builder.AppendLine($" - Story goals unlocked: {world.GameData.StoryGoals.GoalUnlocks.Count}");
                 builder.AppendLine($" - Encyclopedia entries: {world.GameData.PDAState.EncyclopediaEntries.Count}");
+                builder.AppendLine($" - Storage slot items: {world.InventoryManager.GetAllStorageSlotItems().Count}");
+                builder.AppendLine($" - Inventory items: {world.InventoryManager.GetAllInventoryItems().Count}");
+                builder.AppendLine($" - Known tech: {world.GameData.PDAState.KnownTechTypes.Count}");
+                builder.AppendLine($" - Vehicles: {world.VehicleManager.GetVehicles().Count()}");
+
                 return builder.ToString();
             }
         }
 
         public void Save()
         {
-            if (isSaving)
+            if (IsSaving)
             {
                 return;
             }
-            isSaving = true;
-            worldPersistence.Save(world);
-            isSaving = false;
+
+            IsSaving = true;
+
+            bool savedSuccessfully = worldPersistence.Save(world, serverConfig.SaveName);
+            if (savedSuccessfully && !string.IsNullOrWhiteSpace(serverConfig.PostSaveCommandPath))
+            {
+                try
+                {
+                    // Call external tool for backups, etc
+                    if (File.Exists(serverConfig.PostSaveCommandPath))
+                    {
+                        using Process process = Process.Start(serverConfig.PostSaveCommandPath);
+                        Log.Info($"Post-save command completed successfully: {serverConfig.PostSaveCommandPath}");
+                    }
+                    else
+                    {
+                        Log.Error($"Post-save file does not exist: {serverConfig.PostSaveCommandPath}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex, "Post-save command failed");
+                }
+            }
+            IsSaving = false;
         }
 
         public bool Start()
@@ -71,36 +103,77 @@ namespace NitroxServer
             {
                 return false;
             }
-            Log.Info("Nitrox Server Started");
+
+            Log.Info($"Server is listening on port {Port} UDP");
+            Log.Info($"Using {serverConfig.SerializerMode} as save file serializer");
+            Log.InfoSensitive("Server Password: {password}", string.IsNullOrEmpty(serverConfig.ServerPassword) ? "None. Public Server." : serverConfig.ServerPassword);
+            Log.InfoSensitive("Admin Password: {password}", serverConfig.AdminPassword);
+            Log.Info($"Autosave: {(serverConfig.DisableAutoSave ? "DISABLED" : $"ENABLED ({serverConfig.SaveInterval / 60000} min)")}");
+            Log.Info($"Loaded save\n{SaveSummary}");
+
+            PauseServer();
+
             IsRunning = true;
-            EnablePeriodicSaving();
-            
 #if RELEASE
-            // Help new players on which IP they should give to their friends
             IpLogger.PrintServerIps();
 #endif
-            
             return true;
         }
 
-        public void Stop()
+        public void Stop(bool shouldSave = true)
         {
+            if (!IsRunning)
+            {
+                return;
+            }
+
             Log.Info("Nitrox Server Stopping...");
             DisablePeriodicSaving();
-            Save();
+
+            if (shouldSave)
+            {
+                Save();
+            }
+
             server.Stop();
             Log.Info("Nitrox Server Stopped");
             IsRunning = false;
         }
 
-        private void EnablePeriodicSaving()
+        public void StopAndWait(bool shouldSave = true)
+        {
+            Stop(shouldSave);
+            Log.Info("Press enter to continue");
+            Console.Read();
+        }
+
+        public void EnablePeriodicSaving()
         {
             saveTimer.Start();
         }
 
-        private void DisablePeriodicSaving()
+        public void DisablePeriodicSaving()
         {
             saveTimer.Stop();
+        }
+
+        public void PauseServer()
+        {
+            DisablePeriodicSaving();
+            world.EventTriggerer.PauseWorldTime();
+            world.EventTriggerer.PauseEventTimers();
+            Log.Info("Server has paused, waiting for players to connect");
+        }
+
+        public void ResumeServer()
+        {
+            if (!serverConfig.DisableAutoSave)
+            {
+                EnablePeriodicSaving();
+            }
+            world.EventTriggerer.StartWorldTime();
+            world.EventTriggerer.StartEventTimers();
+            Log.Info("Server has resumed");
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.Serialization;
-using JetBrains.Annotations;
 
 namespace NitroxModel.Packets.Exceptions
 {
@@ -27,7 +26,7 @@ namespace NitroxModel.Packets.Exceptions
             ExpectedCorrelationId = expectedCorrelationId;
         }
 
-        protected UncorrelatedPacketException([NotNull] SerializationInfo info, StreamingContext context, CorrelatedPacket invalidPacket, string expectedCorrelationId) : base(info, context)
+        protected UncorrelatedPacketException(SerializationInfo info, StreamingContext context, CorrelatedPacket invalidPacket, string expectedCorrelationId) : base(info, context)
         {
             InvalidPacket = invalidPacket;
             ExpectedCorrelationId = expectedCorrelationId;

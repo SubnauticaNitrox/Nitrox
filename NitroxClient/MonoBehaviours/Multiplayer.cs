@@ -7,6 +7,7 @@ using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
+using NitroxClient.GameLogic.ChatUI;
 using NitroxClient.GameLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.PlayerModel.ColorSwap;
 using NitroxClient.MonoBehaviours.DiscordRP;
@@ -18,7 +19,6 @@ using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
 using NitroxModel_Subnautica.Helper;
-using NitroxModel_Subnautica.Logger;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -55,7 +55,7 @@ namespace NitroxClient.MonoBehaviours
 
         public static IEnumerator LoadAsync()
         {
-            WaitScreen.ManualWaitItem worldSettleItem = WaitScreen.Add("Awaiting World Settling");
+            WaitScreen.ManualWaitItem worldSettleItem = WaitScreen.Add(Language.main.Get("Nitrox_WorldSettling"));
             WaitScreen.ShowImmediately();
 
             yield return new WaitUntil(() => LargeWorldStreamer.main != null &&
@@ -65,7 +65,7 @@ namespace NitroxClient.MonoBehaviours
 
             WaitScreen.Remove(worldSettleItem);
 
-            WaitScreen.ManualWaitItem item = WaitScreen.Add("Joining Multiplayer Session");
+            WaitScreen.ManualWaitItem item = WaitScreen.Add(Language.main.Get("Nitrox_JoiningSession"));
             yield return Main.StartCoroutine(Main.StartSession());
             WaitScreen.Remove(item);
 
@@ -76,11 +76,11 @@ namespace NitroxClient.MonoBehaviours
 
         public void Awake()
         {
-            Log.InGame("Multiplayer Client Loaded...");
+            Log.InGame(Language.main.Get("Nitrox_MultiplayerLoaded"));
+
             multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
             packetReceiver = NitroxServiceLocator.LocateService<PacketReceiver>();
-            Log.InGameLogger = new SubnauticaInGameLogger();
-            NitroxModel.Helper.Map.Main = new SubnauticaMap();
+
             Main = this;
             DontDestroyOnLoad(gameObject);
         }
@@ -110,7 +110,7 @@ namespace NitroxClient.MonoBehaviours
                 }
                 catch (Exception ex)
                 {
-                    Log.Error("Error processing packet: " + packet, ex);
+                    Log.Error(ex, $"Error processing packet {packet}");
                 }
             }
         }
@@ -168,9 +168,10 @@ namespace NitroxClient.MonoBehaviours
             items.Clear();
 
             PlayerManager remotePlayerManager = NitroxServiceLocator.LocateService<PlayerManager>();
-            
+
             LoadingScreenVersionText.DisableWarningText();
-            DiscordRPController.Main.InitializeInGame(Main.multiplayerSession.AuthenticationContext.Username, remotePlayerManager.GetTotalPlayerCount(), Main.multiplayerSession.IpAddress + ":" + Main.multiplayerSession.ServerPort);
+            DiscordRPController.Main.InitializeInGame(Main.multiplayerSession.AuthenticationContext.Username, remotePlayerManager.GetTotalPlayerCount(), Main.multiplayerSession.SessionPolicy.MaxConnections, $"{Main.multiplayerSession.IpAddress}:{Main.multiplayerSession.ServerPort}");
+            NitroxServiceLocator.LocateService<PlayerChatManager>().LoadChatKeyHint();
         }
 
         private void OnConsoleCommand_execute(NotificationCenter.Notification n)
@@ -190,6 +191,11 @@ namespace NitroxClient.MonoBehaviours
             yield return new WaitUntil(() => swapOperation.IsColorSwapComplete());
 
             swapOperation.ApplySwappedColors();
+
+            // UWE developers added noisy logging for non-whitelisted components during serialization.
+            // We add NitroxEntiy in here to avoid a large amount of log spam.
+            HashSet<string> whiteListedSerializableComponents = (HashSet<string>)ReflectionHelper.ReflectionGet<ProtobufSerializer>(null, "componentWhitelist", false, true);
+            whiteListedSerializableComponents.Add("NitroxEntity");
         }
 
         private void SceneManager_sceneLoaded(Scene scene, LoadSceneMode loadMode)

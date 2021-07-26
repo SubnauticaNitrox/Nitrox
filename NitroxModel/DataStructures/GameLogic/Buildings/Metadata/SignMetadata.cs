@@ -8,31 +8,27 @@ namespace NitroxModel.DataStructures.GameLogic.Buildings.Metadata
     public class SignMetadata : BasePieceMetadata
     {
         [ProtoMember(1)]
-        public NitroxId Id { get; }
-
-        [ProtoMember(2)]
         public string Text { get; set; }
 
-        [ProtoMember(3)]
+        [ProtoMember(2)]
         public int ColorIndex { get; set; }
 
-        [ProtoMember(4)]
+        [ProtoMember(3)]
         public int ScaleIndex { get; set; }
 
-        [ProtoMember(5)]
+        [ProtoMember(4)]
         public bool[] Elements { get; set; }
 
-        [ProtoMember(6)]
+        [ProtoMember(5)]
         public bool Background { get; set; }
 
-        public SignMetadata()
+        protected SignMetadata()
         {
-            // Constructor for serialization
+            //Constructor for serialization. Has to be "protected" for json serialization.
         }
 
-        public SignMetadata(NitroxId id, string text, int colorIndex, int scaleIndex, bool[] elements, bool backgroundToggle)
+        public SignMetadata(string text, int colorIndex, int scaleIndex, bool[] elements, bool backgroundToggle)
         {
-            Id = id;
             Text = text;
             ColorIndex = colorIndex;
             ScaleIndex = scaleIndex;
@@ -42,7 +38,7 @@ namespace NitroxModel.DataStructures.GameLogic.Buildings.Metadata
 
         public override string ToString()
         {
-            return "[SignMetadata - Id: " + Id + " Text: " + Text + " ColorIndex: " + ColorIndex + "ScaleIndex: " + ScaleIndex + " Elements: " + Elements + " Background: " + Background + "]";
+            return "[SignMetadata - Text: " + Text + " ColorIndex: " + ColorIndex + "ScaleIndex: " + ScaleIndex + " Elements: " + Elements + " Background: " + Background + "]";
         }
     }
 }

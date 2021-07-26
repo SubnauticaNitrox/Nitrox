@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Reflection;
-using Harmony;
+using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
-using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
@@ -17,16 +16,15 @@ namespace NitroxPatcher.Patches.Dynamic
             if (item != null)
             {
                 //For now only broadcast, if it is a vehicle
-                GameObject gameObject = __instance.gameObject;
-                if (gameObject.GetComponent<Vehicle>() != null || gameObject.GetComponentInParent<Vehicle>() != null || gameObject.GetComponentInParent<SubRoot>() != null)
+                if (__instance.gameObject.GetComponent<Vehicle>() || __instance.gameObject.GetComponentInParent<Vehicle>() || __instance.gameObject.GetComponentInParent<SubRoot>())
                 {
                     NitroxServiceLocator.LocateService<StorageSlots>().BroadcastItemAdd(item, __instance.gameObject);
-                }               
-                
+                }
+
             }
         }
 
-        public override void Patch(HarmonyInstance harmony)
+        public override void Patch(Harmony harmony)
         {
             PatchPostfix(harmony, TARGET_METHOD);
         }

@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Reflection;
-using Harmony;
+using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
-using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
@@ -17,17 +16,16 @@ namespace NitroxPatcher.Patches.Dynamic
             if (item != null)
             {
                 // For now only broadcast, if it is a vehicle
-                // Items that use batteries also have energymixin components. But the items will be serialized with the battery
-                // and therefore dont need to be synchronized this way
-                GameObject gameObject = __instance.gameObject;
-                if (gameObject.GetComponent<Vehicle>() != null || gameObject.GetComponentInParent<Vehicle>() != null || gameObject.GetComponentInParent<SubRoot>() != null)
+                // Items that use batteries also have EnergyMixin components. But the items will be serialized with the battery
+                // and therefore don't need to be synchronized this way
+                if (__instance.gameObject.GetComponent<Vehicle>() || __instance.gameObject.GetComponentInParent<Vehicle>() || __instance.gameObject.GetComponentInParent<SubRoot>())
                 {
                     NitroxServiceLocator.LocateService<StorageSlots>().BroadcastItemRemoval(__instance.gameObject);
                 }
             }
         }
 
-        public override void Patch(HarmonyInstance harmony)
+        public override void Patch(Harmony harmony)
         {
             PatchPostfix(harmony, TARGET_METHOD);
         }

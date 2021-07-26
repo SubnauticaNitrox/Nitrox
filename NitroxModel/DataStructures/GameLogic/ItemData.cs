@@ -6,6 +6,7 @@ namespace NitroxModel.DataStructures.GameLogic
     [Serializable]
     [ProtoContract]
     [ProtoInclude(50, typeof(EquippedItemData))]
+    [ProtoInclude(51, typeof(PlantableItemData))]
     public class ItemData
     {
         [ProtoMember(1)]
@@ -17,9 +18,9 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoMember(3)]
         public byte[] SerializedData { get; }
 
-        public ItemData()
+        protected ItemData()
         {
-            // For serialization
+            // Constructor for serialization. Has to be "protected" for json serialization.
         }
 
         public ItemData(NitroxId containerId, NitroxId itemId, byte[] serializedData)

@@ -12,7 +12,7 @@ namespace NitroxTest.Model
         public void OptionalGet()
         {
             Optional<string> op = Optional.Of("test");
-            op.Value.ShouldBeEquivalentTo("test");
+            op.Value.Should().Be("test");
         }
 
         [TestMethod]
@@ -33,14 +33,14 @@ namespace NitroxTest.Model
         public void OptionalOrElseValidValue()
         {
             Optional<string> op = Optional.Of("test");
-            op.OrElse("test2").ShouldBeEquivalentTo("test");
+            op.OrElse("test2").Should().Be("test");
         }
 
         [TestMethod]
         public void OptionalOrElseNoValue()
         {
             Optional<string> op = Optional.Empty;
-            op.OrElse("test").ShouldBeEquivalentTo("test");
+            op.OrElse("test").Should().Be("test");
         }
 
         [TestMethod]
@@ -51,63 +51,67 @@ namespace NitroxTest.Model
         }
 
         [TestMethod]
-        public void OptionalValueTypeGet()
-        {
-            Optional<int> op = Optional.Of(1);
-            op.Value.ShouldBeEquivalentTo(1);
-        }
-
-        [TestMethod]
-        public void OptionalValueTypeIsPresent()
-        {
-            Optional<int> op = Optional.Of(0);
-            op.HasValue.Should().BeTrue();
-        }
-
-        [TestMethod]
-        public void OptionalValueTypeIsNotPresent()
-        {
-            Optional<int> op = Optional.Empty;
-            op.HasValue.Should().BeFalse();
-        }
-
-        [TestMethod]
-        public void OptionalValueTypeOrElseValidValue()
-        {
-            Optional.Of(1).OrElse(2).ShouldBeEquivalentTo(1);
-        }
-
-        [TestMethod]
-        public void OptionalSetValue()
-        {
-            Optional<int> op;
-            op = 1;
-            ((int)op).Should().NotBe(0);
-        }
-
-        [TestMethod]
         public void OptionalSetValueNull()
         {
             Optional<Random> op = Optional.Of(new Random());
-            op.HasValue.Should().BeTrue();
-            Action setNull = () => { op = null; };
-            setNull.ShouldThrow<ArgumentNullException>("Setting optional to null should not be allowed.");
+            Assert.IsTrue(op.HasValue);
+            Assert.ThrowsException<ArgumentNullException>(() => { op = null; }, "Setting optional to null should not be allowed.");
             op = Optional.Empty;
-            op.HasValue.Should().BeFalse();
+            Assert.IsFalse(op.HasValue);
         }
 
         [TestMethod]
-        public void OptionalValueTypeOrElseNoValue()
+        public void OptionalHasValueDynamicChecks()
         {
-            Optional<int> op = Optional.Empty;
-            op.OrElse(1).ShouldBeEquivalentTo(1);
+            Optional.ApplyHasValueCondition<Base>(v => v.GetType() == typeof(A) || v.Threshold > 200); // Cheat: allow check if type A to do more complex tests on Optional<T>.HasValue
+            Optional.ApplyHasValueCondition<A>(v => v.Threshold <= 200);
+
+            Optional<Base> opBase = Optional.Of(new Base());
+            opBase.HasValue.Should().BeTrue();
+            opBase.Value.Threshold.Should().Be(202);
+
+            Optional<A> a = Optional.Of(new A());
+            a.HasValue.Should().BeTrue();
+
+            Optional<A> actuallyB = Optional.Of<A>(new B());
+            actuallyB.HasValue.Should().BeFalse();
+
+            Optional<B> b = Optional.Of(new B());
+            b.HasValue.Should().BeFalse();
+
+            // A check should still happen on Base because Optional<Base> includes more-specific-than-itself checks.
+            Optional<Base> aAsBase = Optional<Base>.Of((Base)a);
+            aAsBase.HasValue.Should().BeTrue();
+            aAsBase.Value.Threshold.Should().Be(200);
+
+            // Optional<object> should always do all checks because anything can be in it.
+            Optional<object> bAsObj = Optional<object>.Of(new B());
+            bAsObj.HasValue.Should().BeFalse();
+
+            // Type C inheritance doesn't allow for type A. But Optional<object> has the check on A. It should skip the A check on C because inheritance doesn't match up.
+            Optional<object> cAsObj = Optional<object>.Of(new C());
+            cAsObj.HasValue.Should().BeTrue();
+            ((C)cAsObj.Value).Threshold.Should().Be(203);
         }
 
-        [TestMethod]
-        public void OptionalValueTypeEmpty()
+        private class Base
         {
-            Optional<int> op = Optional.Empty;
-            op.HasValue.Should().BeFalse();
+            public virtual int Threshold => 202;
+        }
+
+        private class A : Base
+        {
+            public override int Threshold => 200;
+        }
+
+        private class B : A
+        {
+            public override int Threshold => 201;
+        }
+
+        private class C : Base
+        {
+            public override int Threshold => 203;
         }
     }
 }

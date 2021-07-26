@@ -3,46 +3,51 @@ using NitroxClient.Communication.Abstract;
 using NitroxModel.Packets;
 using NitroxModel.DataStructures;
 using NitroxModel.Logger;
+using NitroxClient.GameLogic.Simulation;
 
 namespace NitroxClient.GameLogic
 {
     public class SimulationOwnership
     {
-        public delegate void LockRequestCompleted(NitroxId id, bool lockAquired);
-
         private readonly IMultiplayerSession muliplayerSession;
         private readonly IPacketSender packetSender;
         private readonly Dictionary<NitroxId, SimulationLockType> simulatedIdsByLockType = new Dictionary<NitroxId, SimulationLockType>();
-        private readonly Dictionary<NitroxId, LockRequestCompleted> completeFunctionsById = new Dictionary<NitroxId, LockRequestCompleted>();
+        private readonly Dictionary<NitroxId, LockRequestBase> lockRequestsById = new Dictionary<NitroxId, LockRequestBase>();
         
         public SimulationOwnership(IMultiplayerSession muliplayerSession, IPacketSender packetSender)
         {
             this.muliplayerSession = muliplayerSession;
             this.packetSender = packetSender;
         }
+        public bool PlayerHasMinLockType(NitroxId id, SimulationLockType lockType)
+        {
+            if (simulatedIdsByLockType.TryGetValue(id, out SimulationLockType playerLock))
+            {
+                return playerLock <= lockType;
+            }
+            return false;
+        }
 
         public bool HasAnyLockType(NitroxId id)
         {
-            return simulatedIdsByLockType.ContainsKey(id);
+            return PlayerHasMinLockType(id, SimulationLockType.TRANSIENT);
         }
 
         public bool HasExclusiveLock(NitroxId id)
         {
-            SimulationLockType activeLockType;
-
-            if (simulatedIdsByLockType.TryGetValue(id, out activeLockType))
-            {
-                return (activeLockType == SimulationLockType.EXCLUSIVE);
-            }
-
-            return false;
+            return PlayerHasMinLockType(id, SimulationLockType.EXCLUSIVE);
         }
 
-        public void RequestSimulationLock(NitroxId id, SimulationLockType lockType, LockRequestCompleted whenCompleted)
+        public void RequestSimulationLock(NitroxId id, SimulationLockType lockType)
         {
             SimulationOwnershipRequest ownershipRequest = new SimulationOwnershipRequest(muliplayerSession.Reservation.PlayerId, id, lockType);
             packetSender.Send(ownershipRequest);
-            completeFunctionsById[id] = whenCompleted;
+        }
+
+        public void RequestSimulationLock(LockRequestBase lockRequest)
+        {
+            lockRequestsById[lockRequest.Id] = lockRequest;
+            RequestSimulationLock(lockRequest.Id, lockRequest.LockType);
         }
 
         public void ReceivedSimulationLockResponse(NitroxId id, bool lockAquired, SimulationLockType lockType)
@@ -54,16 +59,10 @@ namespace NitroxClient.GameLogic
                 SimulateEntity(id, lockType);
             }
 
-            LockRequestCompleted requestCompleted = null;
-
-            if (completeFunctionsById.TryGetValue(id, out requestCompleted) && requestCompleted != null)
+            if (lockRequestsById.TryGetValue(id, out LockRequestBase lockRequest))
             {
-                completeFunctionsById.Remove(id);
-                requestCompleted(id, lockAquired);
-            }
-            else
-            {
-                Log.Warn("Did not have an outstanding simulation request for " + id + " maybe there were multiple outstanding requests?");
+                lockRequest.LockRequestComplete(id, lockAquired);
+                lockRequestsById.Remove(id);
             }
         }
 

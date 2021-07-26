@@ -1,10 +1,13 @@
-﻿using System;
+using System;
 using System.Reflection;
-using Harmony;
+using HarmonyLib;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
+using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
+using NitroxModel.DataStructures;
+using NitroxModel.Logger;
 using NitroxModel.Packets;
 
 namespace NitroxPatcher.Patches.Dynamic
@@ -16,14 +19,17 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(PingInstance instance)
         {
-            if (!instance)
+            // Only beacons are synced here (not mission, vehicle or other signals) because spawning is handled differently for non-droppable entities
+            if (!instance || !instance.GetComponent<Beacon>())
             {
                 return;
             }
-            NitroxServiceLocator.LocateService<IPacketSender>().Send(new PingRenamed(NitroxEntity.GetId(instance.gameObject), instance.GetLabel(), SerializationHelper.GetBytes(instance.gameObject)));
+            
+            PingRenamed packet = new PingRenamed(NitroxEntity.GetId(instance.gameObject), instance.GetLabel(), SerializationHelper.GetBytes(instance.gameObject));
+            NitroxServiceLocator.LocateService<IPacketSender>().Send(packet);
         }
 
-        public override void Patch(HarmonyInstance harmony)
+        public override void Patch(Harmony harmony)
         {
             PatchPostfix(harmony, TARGET_METHOD);
         }
