@@ -12,7 +12,7 @@ namespace NitroxServer
 {
     public class Server
     {
-        private readonly Communication.NetworkingLayer.NitroxServer server;
+        private readonly Communication.NitroxServer server;
         private readonly WorldPersistence worldPersistence;
         private readonly ServerConfig serverConfig;
         private readonly Timer saveTimer;
@@ -25,7 +25,7 @@ namespace NitroxServer
 
         public int Port => serverConfig?.ServerPort ?? -1;
 
-        public Server(WorldPersistence worldPersistence, World world, ServerConfig serverConfig, Communication.NetworkingLayer.NitroxServer server)
+        public Server(WorldPersistence worldPersistence, World world, ServerConfig serverConfig, Communication.NitroxServer server)
         {
             this.worldPersistence = worldPersistence;
             this.serverConfig = serverConfig;

@@ -105,6 +105,8 @@ namespace NitroxServer.Serialization
         public bool IsHardcore => GameMode == ServerGameMode.HARDCORE;
         public bool IsPasswordRequired => ServerPassword != string.Empty;
         public PlayerStatsData DefaultPlayerStats => new(DefaultOxygenValue, DefaultMaxOxygenValue, DefaultHealthValue, DefaultHungerValue, DefaultThirstValue, DefaultInfectionValue);
+        [PropertyDescription("If set to true, the server will try to open port on your router via UPnP")]
+        public bool AutoPortForward { get; set; } = true;
 
         public static ServerConfig Load()
         {

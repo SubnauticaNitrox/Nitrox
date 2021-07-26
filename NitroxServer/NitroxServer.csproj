@@ -52,10 +52,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Communication\NetworkingLayer\LiteNetLib\LiteNetLibConnection.cs" />
-    <Compile Include="Communication\NetworkingLayer\LiteNetLib\LiteNetLibServer.cs" />
-    <Compile Include="Communication\NetworkingLayer\NitroxConnection.cs" />
-    <Compile Include="Communication\NetworkingLayer\NitroxServer.cs" />
+    <Compile Include="Communication\LiteNetLib\LiteNetLibConnection.cs" />
+    <Compile Include="Communication\LiteNetLib\LiteNetLibServer.cs" />
+    <Compile Include="Communication\NitroxConnection.cs" />
+    <Compile Include="Communication\NitroxServer.cs" />
     <Compile Include="Communication\Packets\Processors\BedEnterProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlayFMODAssetProcessor .cs" />
     <Compile Include="Communication\Packets\Processors\ChatMessageProcessor.cs" />
@@ -119,6 +119,7 @@
     <Compile Include="Communication\Packets\Processors\VehicleSpawnedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleUndockingProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\WeldActionProcessor.cs" />
+    <Compile Include="Communication\PortForward.cs" />
     <Compile Include="ConsoleCommands\Abstract\CallArgs.cs" />
     <Compile Include="ConsoleCommands\Abstract\Command.cs" />
     <Compile Include="ConsoleCommands\Abstract\Parameter.cs" />
