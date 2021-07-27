@@ -65,6 +65,9 @@
     <Compile Include="Events\ServerStartEventArgs.cs" />
     <Compile Include="LauncherLogic.cs" />
     <Compile Include="PageBase.cs" />
+    <Compile Include="Pages\BlogPage.xaml.cs">
+      <DependentUpon>BlogPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\CommunityPage.xaml.cs">
       <DependentUpon>CommunityPage.xaml</DependentUpon>
     </Compile>
@@ -96,6 +99,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Pages\BlogPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\CommunityPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
