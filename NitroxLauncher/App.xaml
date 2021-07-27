@@ -10,28 +10,45 @@
             <!-- Fonts -->
             <FontFamily x:Key="OpenSans">pack://application:,,,/Fonts/#OpenSans</FontFamily>
             <FontFamily x:Key="RobotoMono">pack://application:,,,/Fonts/#Roboto Mono</FontFamily>
-            <FontFamily x:Key="DefaultFont">pack://application:,,,/Fonts/#OpenSans</FontFamily>
+            <FontFamily x:Key="Inter">pack://application:,,,/Fonts/#Inter</FontFamily>
+            <FontFamily x:Key="DefaultFont">pack://application:,,,/Fonts/#Inter</FontFamily>
 
             <!-- Background images -->
             <BitmapImage x:Key="VinesImage" UriSource="pack://application:,,,/Images/Vines.png" />
             <BitmapImage x:Key="PlayGameImage" UriSource="pack://application:,,,/Images/PlayGameImage.png" />
             <BitmapImage x:Key="SubnauticaMainImage" UriSource="pack://application:,,,/Images/SubnauticaMain.png" />
             <BitmapImage x:Key="EscapePodImage" UriSource="pack://application:,,,/Images/EscapePod.png" />
+            <BitmapImage x:Key="CommunityHeader" UriSource="pack://application:,,,/Images/communityHeader.png" />
 
             <!-- Foreground images -->
             <BitmapImage x:Key="NitroxImage" UriSource="pack://application:,,,/Images/Nitrox.png" />
-            <BitmapImage x:Key="ExitImage" UriSource="pack://application:,,,/Images/exit.png" />
-            <BitmapImage x:Key="MinimizeImage" UriSource="pack://application:,,,/Images/minimize.png" />
+            <BitmapImage x:Key="ExitImage" UriSource="pack://application:,,,/Images/close-w-10.png" />
+            <BitmapImage x:Key="MinimizeImage" UriSource="pack://application:,,,/Images/min-w-10.png" />
 
             <!-- Icons -->
             <BitmapImage x:Key="StopWhiteIcon" UriSource="pack://application:,,,/Images/material-design-icons/baseline_stop_white_24dp.png" />
             <BitmapImage x:Key="SendWhiteIcon" UriSource="pack://application:,,,/Images/material-design-icons/baseline_send_white_24dp.png" />
+            <BitmapImage x:Key="DownloadWhiteIcon" UriSource="pack://application:,,,/Images/material-design-icons/download.png" />
+            <BitmapImage x:Key="DownloadDotWhiteIcon" UriSource="pack://application:,,,/Images/material-design-icons/downloadDot.png" />
+            <BitmapImage x:Key="BlogWhiteIcon" UriSource="pack://application:,,,/Images/material-design-icons/blog.png" />
+            <BitmapImage x:Key="LibraryWhiteIcon" UriSource="pack://application:,,,/Images/material-design-icons/library.png" />
+            <BitmapImage x:Key="CommunityWhiteIcon" UriSource="pack://application:,,,/Images/material-design-icons/community.png" />
+
+            <BitmapImage x:Key="SocialDiscordIcon" UriSource="pack://application:,,,/Images/social/discordIco.png" />
+            <BitmapImage x:Key="SocialRedditIcon" UriSource="pack://application:,,,/Images/social/redditIco.png" />
+            <BitmapImage x:Key="SocialTwitterIcon" UriSource="pack://application:,,,/Images/social/twitterIco.png" />
+            <BitmapImage x:Key="SocialGithubIcon" UriSource="pack://application:,,,/Images/social/githubIco.png" />
+
+            <BitmapImage x:Key="NitroxIcon" UriSource="pack://application:,,,/Images/nitroxIco.png" />
+
 
             <!-- Pages TODO: Find another solution for the hard-coded viewbox values so that page background image aligns with sidebar and header -->
-            <pages:LaunchGamePage x:Key="LaunchGamePage" Background="#FF28292C"/>
-            <pages:OptionPage x:Key="OptionPage" Background="#FF28292C"/>
-            <pages:ServerPage x:Key="ServerPage" Background="#FF28292C"/>
-            <pages:ServerConsolePage x:Key="ServerConsolePage" Background="#FF28292C"/>
+            <pages:LaunchGamePage x:Key="LaunchGamePage" Background="#000000"/>
+            <pages:OptionPage x:Key="OptionPage" Background="#000000"/>
+            <pages:ServerPage x:Key="ServerPage" Background="#000000"/>
+            <pages:ServerConsolePage x:Key="ServerConsolePage" Background="#000000"/>
+            <pages:CommunityPage x:Key="CommunityPage" Background="#000000"/>
+            <pages:UpdatePage x:Key="UpdatePage" Background="#000000"/>
 
             <!-- Styles -->
             <Style x:Key="SocialButton" TargetType="TextBlock">
@@ -101,7 +118,7 @@
                 <Setter Property="FontSize" Value="16" />
                 <Style.Resources>
                     <Style TargetType="Border">
-                        <Setter Property="CornerRadius" Value="3" />
+                        <Setter Property="CornerRadius" Value="8" />
                         <Setter Property="BorderThickness" Value="1" />
                     </Style>
                 </Style.Resources>
