@@ -5,7 +5,7 @@
                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                 xmlns:local="clr-namespace:NitroxLauncher"
                 mc:Ignorable="d" d:DesignWidth="766"
-                Title="Launch Game" Height="984">
+                Title="Launch Game" Height="1020">
     <local:PageBase.Resources>
         <BitmapImage x:Key="SocialDiscord" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/images/social/discord.png"/>
         <BitmapImage x:Key="SocialTwitter" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/images/social/twitter.png"/>
@@ -14,7 +14,7 @@
         <BitmapImage x:Key="SocialGithub" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/images/social/github.png"/>
         <BitmapImage x:Key="PlayBoxImage" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/images/PlayBoxImage.png"/>
     </local:PageBase.Resources>
-    <Grid Height="974" VerticalAlignment="Top" >
+    <Grid >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="22*"/>
             <ColumnDefinition Width="675*"/>
@@ -30,10 +30,9 @@
 
         <Grid Grid.Row="1" VerticalAlignment="Top" Height="644" Grid.Column="1" RenderTransformOrigin="0.503,0.447" Margin="0,370,0,0" Grid.RowSpan="2">
             <Grid.RowDefinitions>
-                <RowDefinition Height="225*"/>
-                <RowDefinition Height="98*"/>
-                <RowDefinition Height="256*"/>
-                <RowDefinition Height="65*"/>
+                <RowDefinition Height="123*"/>
+                <RowDefinition Height="84*"/>
+                <RowDefinition Height="115*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="0*"/>
@@ -67,13 +66,15 @@
             </StackPanel>
 
 
-
+            <Grid Grid.Row="1" Grid.ColumnSpan="4">
+                <Image Stretch="UniformToFill" Source="{StaticResource NitroxGallery}" Margin="0,0,0,22" Grid.Row="1" Grid.ColumnSpan="3" />
+            </Grid>
 
 
             <StackPanel Margin="0,11,0,0" Grid.Column="1" HorizontalAlignment="Left" Width="171" Height="44" VerticalAlignment="Top" Grid.Row="2">
                 <TextBlock FontSize="14" Foreground="White" Margin="0,0,0,12" TextWrapping="Wrap"><Run Text="Contributors" FontWeight="Bold"/></TextBlock>
             </StackPanel>
-            <StackPanel Margin="0,11,0,0" Grid.Column="2" HorizontalAlignment="Left" Width="545" Grid.Row="2" Grid.ColumnSpan="2" Grid.RowSpan="2">
+            <StackPanel Margin="0,11,0,0" Grid.Column="2" HorizontalAlignment="Left" Width="545" Grid.Row="2" Grid.ColumnSpan="2">
                 <TextBlock FontSize="10" Foreground="#7FFFFFFF" Margin="0,0,0,6" FontWeight="Bold"><Run Text="DEVELOPERS"/></TextBlock>
                 <TextBlock FontSize="14" Foreground="White" Margin="0,0,0,12" TextWrapping="Wrap" LineHeight="24">                    <Run>Sunrunner, Killzoms, Jannify, Marijn, Measurity, MadMax, Nes, _HeN_, CatSZekely, Garsia, RabidCrab, AquariusSidhe, Amarok, iCleeem</Run>
                 </TextBlock>

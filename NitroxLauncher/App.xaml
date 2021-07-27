@@ -19,6 +19,7 @@
             <BitmapImage x:Key="SubnauticaMainImage" UriSource="pack://application:,,,/Images/SubnauticaMain.png" />
             <BitmapImage x:Key="EscapePodImage" UriSource="pack://application:,,,/Images/EscapePod.png" />
             <BitmapImage x:Key="CommunityHeader" UriSource="pack://application:,,,/Images/communityHeader.png" />
+            <BitmapImage x:Key="NitroxGallery" UriSource="pack://application:,,,/Images/NitroxGallery.png" />
 
             <!-- Foreground images -->
             <BitmapImage x:Key="NitroxImage" UriSource="pack://application:,,,/Images/Nitrox.png" />
