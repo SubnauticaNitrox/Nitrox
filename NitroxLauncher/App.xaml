@@ -57,14 +57,14 @@
             <Style x:Key="SocialButton" TargetType="TextBlock">
                 <Setter Property="OpacityMask">
                     <Setter.Value>
-                        <SolidColorBrush Color="#BF000000" />
+                        <SolidColorBrush Color="#FF000000" />
                     </Setter.Value>
                 </Setter>
                 <Style.Triggers>
                     <Trigger Property="IsMouseOver" Value="True">
                         <Setter Property="OpacityMask">
                             <Setter.Value>
-                                <SolidColorBrush Color="#FF000000" />
+                                <SolidColorBrush Color="#BF000000" />
                             </Setter.Value>
                         </Setter>
                     </Trigger>

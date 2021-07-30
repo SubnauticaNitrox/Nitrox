@@ -16,9 +16,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="106"/>
             <RowDefinition Height="252"/>
-            <RowDefinition Height="100*"/>
-            <RowDefinition Height="113*"/>
-            <RowDefinition Height="8*"/>
+
         </Grid.RowDefinitions>
 
         <Grid>
@@ -26,28 +24,21 @@
         </Grid>
 
         <Grid Grid.Column="1">
-            <StackPanel
-    VerticalAlignment="Stretch"
-    HorizontalAlignment="Right"
-    Orientation="Horizontal"
-    >
-            <Button Style="{StaticResource LargeButton}" Background="#FF007BFF" Width="Auto" Height="34"
+            <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Right" Orientation="Horizontal">
+                <Button Style="{StaticResource LargeButton}" Background="#FF007BFF" Width="Auto" Height="34"
                         HorizontalAlignment="Right" BorderBrush="#66FFFFFF"
                         ToolTip="Add games to the launcher" VerticalAlignment="Bottom" Margin="8,0,0,0">
-                <TextBlock FontSize="14" Foreground="White" Margin="16,0" VerticalAlignment="Center" HorizontalAlignment="Center"><Run Text="Add games"/></TextBlock>
-            </Button>
-
+                    <TextBlock FontSize="14" Foreground="White" Margin="16,0" VerticalAlignment="Center" HorizontalAlignment="Center"><Run Text="Add games"/></TextBlock>
+                </Button>
                 <Button Style="{StaticResource LargeButton}" Background="#19FFFFFF" Width="Auto" Height="34"
                         HorizontalAlignment="Right" BorderBrush="#66FFFFFF"
                         ToolTip="Library options" VerticalAlignment="Bottom" Margin="8,0,0,0">
                     <TextBlock FontSize="14" Foreground="White" Margin="16,0" VerticalAlignment="Center" HorizontalAlignment="Center"><Run Text="Options"/></TextBlock>
                 </Button>
-
             </StackPanel>
-
         </Grid>
 
-<!-- TODO: Library Logic -->
-
+    <!-- TODO: Library Logic -->
+        
     </Grid>
 </Page>

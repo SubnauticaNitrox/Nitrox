@@ -203,7 +203,7 @@
 
                 <Image Margin="32,42,131,473" Source="nitroxLogo.png" Stretch="Fill"/>
 
-                <StackPanel Margin="32,108,0,0" x:Name="SideBarPanel" HorizontalAlignment="Left" Width="196" Height="234" VerticalAlignment="Top">
+                <StackPanel Margin="32,108,0,0" x:Name="SideBarPanel" HorizontalAlignment="Left" Width="196" VerticalAlignment="Top">
                     <TextBlock HorizontalAlignment="Left" FontSize="10" Foreground="#7FFFFFFF" Margin="0,0,0,4" FontWeight="Bold"><Run Text="PLAY"/></TextBlock>
                     <Button Click="ButtonNavigation_Click" Tag="{StaticResource LaunchGamePage}" ToolTip="Play the game" BorderBrush="#00000000" >
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
