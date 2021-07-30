@@ -50,9 +50,18 @@
                 <StackPanel.Background>
                     <ImageBrush ImageSource="/NitroxLauncher;component/Images/PlayBoxImage.png"/>
                 </StackPanel.Background>
-                <TextBlock Margin="22,18,0,0" Foreground="#7FFFFFFF" Text="PLAY NITROX" FontSize="10" FontWeight="Bold" />
-                <!--TODO Need to add version number here-->
-                <TextBlock Margin="22,0,0,0" x:Name="NitroxVersionLabel" Foreground="White" FontSize="10" Text="{Binding Version}" />
+                <Grid VerticalAlignment="Top" Margin="22,18,22,0">
+                    <StackPanel Orientation="Vertical" HorizontalAlignment="Left" >
+                        <TextBlock Foreground="#7FFFFFFF" Text="PLAY NITROX" FontSize="10" FontWeight="Bold" />
+                        <!-- TODO Need to add version number here -->
+                        <TextBlock x:Name="NitroxVersionLabel" Foreground="White" FontSize="10" Text="{Binding Version}" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right">
+                        <!-- TODO Swap icon logic depending on which store version is selected -->
+                        <Image Source="{StaticResource StoreSteam}" HorizontalAlignment="Right" VerticalAlignment="Top" Height="20" />
+                    </StackPanel>
+                </Grid>
+                
 
                 <Button Style="{StaticResource LargeButton}" Click="MultiplayerButton_Click" ToolTip="Launch the game with multiplayer enabled." Background="#FF007BFF" Width="Auto" HorizontalAlignment="Stretch" Margin="24,16,24,8" Height="62">
                     <StackPanel>

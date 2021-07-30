@@ -42,6 +42,11 @@
             <BitmapImage x:Key="SocialTwitterIcon" UriSource="pack://application:,,,/Images/social/twitterIco.png" />
             <BitmapImage x:Key="SocialGithubIcon" UriSource="pack://application:,,,/Images/social/githubIco.png" />
 
+            <BitmapImage x:Key="StoreSteam" UriSource="pack://application:,,,/Images/store-icons/steam-2x.png" />
+            <BitmapImage x:Key="StoreEpic" UriSource="pack://application:,,,/Images/store-icons/epic-2x.png" />
+            <BitmapImage x:Key="StoreXbox" UriSource="pack://application:,,,/Images/store-icons/xbox-2x.png" />
+            <BitmapImage x:Key="StoreDiscord" UriSource="pack://application:,,,/Images/store-icons/discord-2x.png" />
+
             <BitmapImage x:Key="NitroxIcon" UriSource="pack://application:,,,/Images/nitroxIco.png" />
 
 
