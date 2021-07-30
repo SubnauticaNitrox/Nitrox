@@ -51,6 +51,7 @@
             <pages:CommunityPage x:Key="CommunityPage" Background="#000000"/>
             <pages:BlogPage x:Key="BlogPage" Background="#000000"/>
             <pages:UpdatePage x:Key="UpdatePage" Background="#000000"/>
+            <pages:LibraryPage x:Key="LibraryPage" Background="#000000"/>
 
             <!-- Styles -->
             <Style x:Key="SocialButton" TargetType="TextBlock">

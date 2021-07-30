@@ -1,4 +1,5 @@
-﻿<local:PageBase x:Class="NitroxLauncher.Pages.LaunchGamePage"
+﻿<!-- TODO: Responsive width when resizing the image -->
+<local:PageBase x:Class="NitroxLauncher.Pages.LaunchGamePage"
                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
