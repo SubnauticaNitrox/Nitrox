@@ -45,6 +45,8 @@ namespace NitroxLauncher
         public MainWindow()
         {
             InitializeComponent();
+            MaxHeight = SystemParameters.VirtualScreenHeight;
+            MaxWidth = SystemParameters.VirtualScreenWidth;
 
             // Pirate trigger should happen after UI is loaded.
             Loaded += (sender, args) =>
@@ -127,6 +129,20 @@ namespace NitroxLauncher
         private void Minimze_Click(object sender, RoutedEventArgs e)
         {
             WindowState = WindowState.Minimized;
+        }
+
+        private void Maximize_Click(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState.Maximized;
+            MaximizeButton.Visibility = Visibility.Collapsed;
+            RestoreButton.Visibility = Visibility.Visible;
+        }
+
+        private void Restore_Click(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState.Normal;
+            RestoreButton.Visibility = Visibility.Collapsed;
+            MaximizeButton.Visibility = Visibility.Visible;
         }
 
         private void ServerStarted(object sender, ServerStartEventArgs e)

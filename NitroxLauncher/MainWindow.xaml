@@ -116,11 +116,13 @@
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter Property="Background" Value="#EB5757" />
                             </Trigger>
+
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
+
         <BitmapImage x:Key="SideBarPlayIcon" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/Images/play.png"/>
         <BitmapImage x:Key="SideBarServerIcon" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/Images/server.png"/>
         <BitmapImage x:Key="SideBarOptionsIcon" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/Images/options.png"/>
@@ -169,21 +171,23 @@
             </Grid.ColumnDefinitions>
             <Grid>
                 <Grid Panel.ZIndex="100">
-                    <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0" HorizontalAlignment="Right"/>
-
-                    <Button Margin="0,0,46,0" HorizontalAlignment="Right" VerticalAlignment="Stretch" Click="Minimze_Click" WindowChrome.IsHitTestVisibleInChrome="True" Width="46">
-                        <Image Height="10" Width="10" Source="{StaticResource MinimizeImage}" Stretch="Fill" />
-                    </Button>
-                    <!-- TODO: Maximise and restore button -->
-                    <Button HorizontalAlignment="Right" VerticalAlignment="Stretch" Click="Close_Click" WindowChrome.IsHitTestVisibleInChrome="True" Width="46" Style="{DynamicResource CloseButton}">
-                        <Image Height="10" Width="10" Source="{StaticResource ExitImage}" Stretch="Fill" />
-                    </Button>
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Width="46" Click="Minimze_Click" WindowChrome.IsHitTestVisibleInChrome="True" VerticalAlignment="Stretch">
+                            <Image Height="10" Width="10" Source="{StaticResource MinimizeImage}" Stretch="Fill" />
+                        </Button>
+                        <Button Width="46" x:Name="MaximizeButton" Click="Maximize_Click" WindowChrome.IsHitTestVisibleInChrome="True" VerticalAlignment="Stretch" >
+                            <Image Height="10" Width="10" Source="{StaticResource MaxImage}" Stretch="Fill" />
+                        </Button>
+                        <Button Width="46" x:Name="RestoreButton" Click="Restore_Click"  Visibility="Collapsed" WindowChrome.IsHitTestVisibleInChrome="True" VerticalAlignment="Stretch">
+                            <Image Height="10" Width="10" Source="{StaticResource RestoreImage}" Stretch="Fill" />
+                        </Button>
+                        <Button Width="46" Click="Close_Click" WindowChrome.IsHitTestVisibleInChrome="True" Style="{DynamicResource CloseButton}" VerticalAlignment="Stretch">
+                            <Image Height="10" Width="10" Source="{StaticResource ExitImage}" Stretch="Fill" />
+                        </Button>
+                    </StackPanel>
                 </Grid>
-
-                <Border CornerRadius="0,0,0,6"  Margin="0,0,0,0" Padding="22,22,22,0" VerticalAlignment="Top" Background="#7F000000">
-                </Border>
+                <Border CornerRadius="0,0,0,6"  Margin="0,0,0,0" Padding="22,22,22,0" VerticalAlignment="Top" Background="#7F000000"></Border>
             </Grid>
-
 
 
         </Grid>
