@@ -1,5 +1,4 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Serialization;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
 using NitroxServer.Serialization;

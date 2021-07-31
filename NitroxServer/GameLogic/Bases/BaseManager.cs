@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Buildings.Metadata;
-using NitroxModel.DataStructures;
-using System.Linq;
 using NitroxModel.DataStructures.Util;
-using System;
 
 namespace NitroxServer.GameLogic.Bases
 {
@@ -27,7 +27,7 @@ namespace NitroxServer.GameLogic.Bases
 
         public List<BasePiece> GetCompletedBasePieceHistory()
         {
-            lock(completedBasePieceHistory)
+            lock (completedBasePieceHistory)
             {
                 return new List<BasePiece>(completedBasePieceHistory);
             }
@@ -52,11 +52,10 @@ namespace NitroxServer.GameLogic.Bases
 
         public void BasePieceConstructionAmountChanged(NitroxId id, float constructionAmount)
         {
-            BasePiece basePiece;
 
             lock (partiallyConstructedPiecesById)
             {
-                if (partiallyConstructedPiecesById.TryGetValue(id, out basePiece))
+                if (partiallyConstructedPiecesById.TryGetValue(id, out BasePiece basePiece))
                 {
                     basePiece.ConstructionAmount = constructionAmount;
 
@@ -70,16 +69,15 @@ namespace NitroxServer.GameLogic.Bases
 
         public void BasePieceConstructionCompleted(NitroxId id, NitroxId baseId)
         {
-            BasePiece basePiece;
 
             lock (partiallyConstructedPiecesById)
             {
-                if (partiallyConstructedPiecesById.TryGetValue(id, out basePiece))
+                if (partiallyConstructedPiecesById.TryGetValue(id, out BasePiece basePiece))
                 {
                     basePiece.ConstructionAmount = 1.0f;
                     basePiece.ConstructionCompleted = true;
 
-                    if(!basePiece.IsFurniture)
+                    if (!basePiece.IsFurniture)
                     {
                         // For standard base pieces, the baseId is may not be finialized until construction 
                         // completes because Subnautica uses a GhostBase in the world if there hasn't yet been
@@ -113,12 +111,12 @@ namespace NitroxServer.GameLogic.Bases
                     basePiece.ConstructionCompleted = false;
                     completedBasePieceHistory.Remove(basePiece);
 
-                    lock(partiallyConstructedPiecesById)
+                    lock (partiallyConstructedPiecesById)
                     {
                         partiallyConstructedPiecesById[basePiece.Id] = basePiece;
                     }
                 }
-            }        
+            }
         }
 
         public void BasePieceDeconstructionCompleted(NitroxId id)

@@ -48,7 +48,7 @@ namespace NitroxServer.Communication.Packets.Processors
             {
                 Optional<AbsoluteEntityCell> currentCell = entityManager.UpdateEntityPosition(update.Id, update.Position, update.Rotation);
 
-                if(!currentCell.HasValue)
+                if (!currentCell.HasValue)
                 {
                     // Normal behaviour if the entity was removed at the same time as someone trying to simulate a postion update.
                     // we log an info inside entityManager.UpdateEntityPosition just in case.

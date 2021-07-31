@@ -1,5 +1,5 @@
-﻿using NitroxModel.DataStructures;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using NitroxModel.DataStructures;
 
 namespace NitroxServer.GameLogic
 {
@@ -18,7 +18,7 @@ namespace NitroxServer.GameLogic
         }
 
         Dictionary<NitroxId, PlayerLock> playerLocksById = new Dictionary<NitroxId, PlayerLock>();
-        
+
         public bool TryToAcquire(NitroxId id, Player player, SimulationLockType requestedLock)
         {
             lock (playerLocksById)
@@ -44,13 +44,13 @@ namespace NitroxServer.GameLogic
                     playerLocksById[id] = new PlayerLock(player, requestedLock);
                     return true;
                 }
-                
+
                 // We must be requesting a transient lock and the owner already has a lock (either transient or exclusive).
                 // there is no way to break it so we will return false.
                 return false;
             }
         }
-        
+
         public bool RevokeIfOwner(NitroxId id, Player player)
         {
             lock (playerLocksById)
@@ -71,15 +71,15 @@ namespace NitroxServer.GameLogic
             {
                 List<NitroxId> revokedIds = new List<NitroxId>();
 
-                foreach(KeyValuePair<NitroxId, PlayerLock> idWithPlayerLock in playerLocksById)
+                foreach (KeyValuePair<NitroxId, PlayerLock> idWithPlayerLock in playerLocksById)
                 {
-                    if(idWithPlayerLock.Value.Player == player)
+                    if (idWithPlayerLock.Value.Player == player)
                     {
                         revokedIds.Add(idWithPlayerLock.Key);
                     }
                 }
 
-                foreach(NitroxId id in revokedIds)
+                foreach (NitroxId id in revokedIds)
                 {
                     playerLocksById.Remove(id);
                 }
@@ -100,7 +100,7 @@ namespace NitroxServer.GameLogic
         {
             lock (playerLocksById)
             {
-                if(playerLocksById.TryGetValue(id, out PlayerLock playerLock))
+                if (playerLocksById.TryGetValue(id, out PlayerLock playerLock))
                 {
                     return playerLock.Player;
                 }

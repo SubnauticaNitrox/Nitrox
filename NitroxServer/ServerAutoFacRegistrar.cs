@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using Autofac;
 using NitroxModel.Core;
-using NitroxModel.Serialization;
 using NitroxServer.Communication.LiteNetLib;
 using NitroxServer.Communication.Packets;
 using NitroxServer.Communication.Packets.Processors;
