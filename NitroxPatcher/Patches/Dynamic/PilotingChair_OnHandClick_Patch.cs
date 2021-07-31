@@ -9,7 +9,6 @@ using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
-using static NitroxClient.GameLogic.SimulationOwnership;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
@@ -26,7 +25,7 @@ namespace NitroxPatcher.Patches.Dynamic
             {
                 return true;
             }
-            
+
             SimulationOwnership simulationOwnership = NitroxServiceLocator.LocateService<SimulationOwnership>();
 
             SubRoot subRoot = __instance.GetComponentInParent<SubRoot>();
@@ -40,7 +39,7 @@ namespace NitroxPatcher.Patches.Dynamic
             }
 
             HandInteraction<PilotingChair> context = new HandInteraction<PilotingChair>(__instance, hand);
-            LockRequest<HandInteraction<PilotingChair>> lockRequest = new LockRequest<HandInteraction<PilotingChair>> (id, SimulationLockType.EXCLUSIVE, ReceivedSimulationLockResponse, context);
+            LockRequest<HandInteraction<PilotingChair>> lockRequest = new LockRequest<HandInteraction<PilotingChair>>(id, SimulationLockType.EXCLUSIVE, ReceivedSimulationLockResponse, context);
 
             simulationOwnership.RequestSimulationLock(lockRequest);
 

@@ -1,7 +1,6 @@
 using System;
 using System.Reflection;
 using HarmonyLib;
-using NitroxClient.MonoBehaviours;
 
 namespace NitroxPatcher.Patches.Persistent
 {

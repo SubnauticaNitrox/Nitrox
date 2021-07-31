@@ -18,8 +18,7 @@ namespace NitroxPatcher.Patches.Dynamic
         public static void Prefix(OnGoalUnlockData __instance, string completedGoal)
         {
             Dictionary<string, OnGoalUnlock> goalUnlocks = __instance.ReflectionGet("goalUnlocks", false, false) as Dictionary<string, OnGoalUnlock>;
-            OnGoalUnlock onGoalUnlock;
-            if (goalUnlocks.TryGetValue(completedGoal, out onGoalUnlock))
+            if (goalUnlocks.TryGetValue(completedGoal, out OnGoalUnlock onGoalUnlock))
             {
                 StoryEventSend packet = new StoryEventSend(StoryEventSend.EventType.GOAL_UNLOCK, completedGoal);
                 NitroxServiceLocator.LocateService<IPacketSender>().Send(packet);

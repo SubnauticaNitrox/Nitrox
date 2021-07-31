@@ -39,7 +39,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
                 HandInteraction<Incubator> context = new HandInteraction<Incubator>(__instance, hand);
                 LockRequest<HandInteraction<Incubator>> lockRequest = new LockRequest<HandInteraction<Incubator>>(id, SimulationLockType.EXCLUSIVE, ReceivedSimulationLockResponse, context);
-                
+
                 simulationOwnership.RequestSimulationLock(lockRequest);
             }
 

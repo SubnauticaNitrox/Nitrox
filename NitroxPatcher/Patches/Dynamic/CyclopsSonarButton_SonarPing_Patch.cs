@@ -19,7 +19,7 @@ namespace NitroxPatcher.Patches.Dynamic
         public static readonly OpCode JUMP_TARGET_CODE = OpCodes.Ldsfld;
         public static readonly FieldInfo JUMP_TARGET_FIELD = typeof(SNCameraRoot).GetField("main", BindingFlags.Public | BindingFlags.Static);
 
-        
+
         // Send ping to other players        
         public static void Postfix(CyclopsSonarButton __instance)
         {
@@ -27,7 +27,7 @@ namespace NitroxPatcher.Patches.Dynamic
             NitroxServiceLocator.LocateService<Cyclops>().BroadcastSonarPing(id);
         }
 
-       
+
         /* As the ping would be always be executed it should be restricted to players, that are in the cyclops
         * Therefore the code generated from AssembleNewCode will be injected before the ping would be send but after energy consumption
         * End result:
@@ -46,7 +46,7 @@ namespace NitroxPatcher.Patches.Dynamic
         * 	SNCameraRoot.main.SonarPing();
         * 	this.soundFX.Play();
         * }
-        */        
+        */
         public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions, ILGenerator iLGenerator)
         {
             List<CodeInstruction> instructionList = instructions.ToList();
@@ -59,10 +59,10 @@ namespace NitroxPatcher.Patches.Dynamic
             for (int i = 0; i < instructionList.Count; i++)
             {
                 CodeInstruction instruction = instructionList[i];
-                if(instruction.opcode.Equals(JUMP_TARGET_CODE) && instruction.operand.Equals(JUMP_TARGET_FIELD))
-                {                    
+                if (instruction.opcode.Equals(JUMP_TARGET_CODE) && instruction.operand.Equals(JUMP_TARGET_FIELD))
+                {
                     Label jumpLabel = instruction.labels[0];
-                    IEnumerable<CodeInstruction> injectInstructions = AssembleNewCode(jumpLabel,toInjectJump);
+                    IEnumerable<CodeInstruction> injectInstructions = AssembleNewCode(jumpLabel, toInjectJump);
                     foreach (CodeInstruction injectInstruction in injectInstructions)
                     {
                         yield return injectInstruction;
@@ -83,10 +83,10 @@ namespace NitroxPatcher.Patches.Dynamic
                     }
                 }
                 yield return instruction;
-            }           
+            }
         }
 
-        private static IEnumerable<CodeInstruction> AssembleNewCode(Label outJumpLabel,Label innerJumpLabel)
+        private static IEnumerable<CodeInstruction> AssembleNewCode(Label outJumpLabel, Label innerJumpLabel)
         {
             //Code to inject:
             /*
@@ -96,7 +96,7 @@ namespace NitroxPatcher.Patches.Dynamic
 		     * }
              * 
              */
-                List<CodeInstruction> injectInstructions = new List<CodeInstruction>();
+            List<CodeInstruction> injectInstructions = new List<CodeInstruction>();
 
             CodeInstruction instruction = new CodeInstruction(OpCodes.Ldsfld);
             instruction.operand = typeof(Player).GetField("main", BindingFlags.Public | BindingFlags.Static);
@@ -107,7 +107,7 @@ namespace NitroxPatcher.Patches.Dynamic
             instruction.operand = typeof(Player).GetMethod("get_currentSub", BindingFlags.Public | BindingFlags.Instance);
             injectInstructions.Add(instruction);
 
-            instruction = new CodeInstruction(OpCodes.Ldarg_0);            
+            instruction = new CodeInstruction(OpCodes.Ldarg_0);
             injectInstructions.Add(instruction);
 
             instruction = new CodeInstruction(OpCodes.Ldfld);

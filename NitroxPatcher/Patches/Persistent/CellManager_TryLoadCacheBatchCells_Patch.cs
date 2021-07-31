@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Reflection;
-using HarmonyLib;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Reflection.Emit;
+using HarmonyLib;
 
 namespace NitroxPatcher.Patches.Persistent
 {
@@ -11,15 +11,15 @@ namespace NitroxPatcher.Patches.Persistent
     {
         public static readonly Type TARGET_CLASS = typeof(CellManager);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("TryLoadCacheBatchCells", BindingFlags.Public | BindingFlags.Instance);
-        
+
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             List<CodeInstruction> instrList = instructions.ToList();
 
             Label pathPrefixJmp = generator.DefineLabel();
-            
+
             Label labeledPathInstructionJmp = generator.DefineLabel();
-            
+
             Label fallbackPrefixJmp = generator.DefineLabel();
 
             Label labeledFallbackInstructionJmp = generator.DefineLabel();
@@ -27,7 +27,7 @@ namespace NitroxPatcher.Patches.Persistent
             for (int i = 0; i < instrList.Count; i++)
             {
                 CodeInstruction instruction = instrList[i];
-                if (instrList.Count > i + 2 && instrList[i+2].opcode == OpCodes.Callvirt && instrList[i+2].operand == (object)typeof(LargeWorldStreamer).GetProperty("pathPrefix", BindingFlags.Public | BindingFlags.Instance).GetGetMethod())
+                if (instrList.Count > i + 2 && instrList[i + 2].opcode == OpCodes.Callvirt && instrList[i + 2].operand == (object)typeof(LargeWorldStreamer).GetProperty("pathPrefix", BindingFlags.Public | BindingFlags.Instance).GetGetMethod())
                 {
                     foreach (CodeInstruction instr in TranspilerHelper.IsMultiplayer(pathPrefixJmp, generator))
                     {

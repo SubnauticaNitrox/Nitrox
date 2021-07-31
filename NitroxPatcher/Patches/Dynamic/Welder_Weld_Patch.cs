@@ -68,7 +68,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
                 SimulationOwnership simulationOwnership = NitroxServiceLocator.LocateService<SimulationOwnership>();
                 NitroxId id = NitroxEntity.GetId(live.gameObject);
-                
+
                 // For now, we only control the LiveMixin for vehicles (not even repair nodes at a cyclops)
                 // If we change that, this if should be removed!
                 Vehicle vehicle = live.GetComponent<Vehicle>();

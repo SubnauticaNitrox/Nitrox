@@ -4,10 +4,7 @@ using HarmonyLib;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
-using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
-using NitroxModel.DataStructures;
-using NitroxModel.Logger;
 using NitroxModel.Packets;
 
 namespace NitroxPatcher.Patches.Dynamic
@@ -24,7 +21,7 @@ namespace NitroxPatcher.Patches.Dynamic
             {
                 return;
             }
-            
+
             PingRenamed packet = new PingRenamed(NitroxEntity.GetId(instance.gameObject), instance.GetLabel(), SerializationHelper.GetBytes(instance.gameObject));
             NitroxServiceLocator.LocateService<IPacketSender>().Send(packet);
         }
