@@ -19,22 +19,11 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="protobuf-net">
-      <HintPath>..\Nitrox.Subnautica.Assets\protobuf-net.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
+  <ItemGroup Label=".cs files">
     <Compile Include="DataStructures\DataExtensions.cs" />
-    <Compile Include="DataStructures\GameLogic\Buildings\Rotation\Metadata\CorridorRotationMetadata.cs" />
-    <Compile Include="DataStructures\GameLogic\Buildings\Rotation\Metadata\BaseModuleRotationMetadata.cs" />
     <Compile Include="DataStructures\GameLogic\Buildings\Rotation\Metadata\AnchoredFaceRotationMetadata.cs" />
+    <Compile Include="DataStructures\GameLogic\Buildings\Rotation\Metadata\BaseModuleRotationMetadata.cs" />
+    <Compile Include="DataStructures\GameLogic\Buildings\Rotation\Metadata\CorridorRotationMetadata.cs" />
     <Compile Include="DataStructures\GameLogic\Buildings\Rotation\Metadata\MapRoomRotationMetadata.cs" />
     <Compile Include="DataStructures\GameLogic\Buildings\Rotation\SubnauticaRotationMetadataFactory.cs" />
     <Compile Include="DataStructures\GameLogic\Creatures\Actions\SerializableCreatureAction.cs" />
@@ -51,18 +40,18 @@
     <Compile Include="DataStructures\Surrogates\QuaternionSurrogate.cs" />
     <Compile Include="DataStructures\Surrogates\TechTypeSurrogate.cs" />
     <Compile Include="DataStructures\Surrogates\Vector3Surrogate.cs" />
-    <Compile Include="Helper\TextureScaler.cs" />
     <Compile Include="Helper\SubnauticaMap.cs" />
+    <Compile Include="Helper\TextureScaler.cs" />
     <Compile Include="Helper\VehicleHelper.cs" />
     <Compile Include="Helper\VehicleModelComparer.cs" />
     <Compile Include="Helper\VehicleModelFactory.cs" />
     <Compile Include="Helper\VehicleMovementFactory.cs" />
     <Compile Include="Logger\SubnauticaInGameLogger.cs" />
     <Compile Include="Packets\CreatureActionChanged.cs" />
-    <Compile Include="Packets\CyclopsChangeShieldMode.cs" />
-    <Compile Include="Packets\CyclopsChangeSonarMode.cs" />
-    <Compile Include="Packets\CyclopsChangeSilentRunning.cs" />
     <Compile Include="Packets\CyclopsChangeEngineMode.cs" />
+    <Compile Include="Packets\CyclopsChangeShieldMode.cs" />
+    <Compile Include="Packets\CyclopsChangeSilentRunning.cs" />
+    <Compile Include="Packets\CyclopsChangeSonarMode.cs" />
     <Compile Include="Packets\CyclopsDamage.cs" />
     <Compile Include="Packets\CyclopsDamagePointRepaired.cs" />
     <Compile Include="Packets\CyclopsDecoyLaunch.cs" />
@@ -79,19 +68,30 @@
     <Compile Include="Packets\RocketStageUpdate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\NitroxModel\NitroxModel.csproj">
-      <Project>{b16f4de7-21ad-4fef-955b-0a5a365fa4e3}</Project>
-      <Name>NitroxModel</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
+  <ItemGroup Label="NuGet Packages">
     <PackageReference Include="Autofac">
       <Version>4.9.4</Version>
     </PackageReference>
     <PackageReference Include="LitJson">
       <Version>0.16.0</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup Label="Project References">
+    <ProjectReference Include="..\NitroxModel\NitroxModel.csproj">
+      <Project>{b16f4de7-21ad-4fef-955b-0a5a365fa4e3}</Project>
+      <Name>NitroxModel</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup Label="Assembly References">
+    <Reference Include="protobuf-net">
+      <HintPath>..\Nitrox.Subnautica.Assets\protobuf-net.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
