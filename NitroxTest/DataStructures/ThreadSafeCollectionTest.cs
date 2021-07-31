@@ -76,7 +76,7 @@ namespace NitroxTest.DataStructures
             list.Find(s => s == "test 1").Should().Be("test 1");
             list.Find(s => s == "tesT 1").Should().BeNull();
             list.Find(s => s == "test 1361").Should().BeNull();
-            
+
             set.Find(s => s == "test 7").Should().Be("test 7");
             set.Find(s => s == "tesT 7").Should().BeNull();
             set.Find(s => s == "test 1361").Should().BeNull();
