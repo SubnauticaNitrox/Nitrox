@@ -11,7 +11,7 @@ namespace NitroxClient.GameLogic.Bases
      * hold build events for future processing.  Incoming packets can be converted
      * to more generic BuildEvent classes that can be re-used. Examples: we want
      * to re-use logic for ConstructionCompleted packet and InitialPlayerSync build
-     * packets - this class helps faciliate that.
+     * packets - this class helps facilitate that.
      */
     public class BuildThrottlingQueue : Queue<BuildEvent>
     {
@@ -28,31 +28,31 @@ namespace NitroxClient.GameLogic.Bases
 
         public void EnqueueBasePiecePlaced(BasePiece basePiece)
         {
-            Log.Info("Enqueuing base piece to be placed techtype: " + basePiece.TechType + " id: " + basePiece.Id + " parentId: " + basePiece.ParentId.OrElse(null) + " build index: " + basePiece.BuildIndex);
+            Log.Info($"Enqueuing base piece to be placed - TechType: {basePiece.TechType}, Id: {basePiece.Id}, ParentId: {basePiece.ParentId.OrElse(null)}, BuildIndex: {basePiece.BuildIndex}");
             Enqueue(new BasePiecePlacedEvent(basePiece));
         }
 
         public void EnqueueConstructionCompleted(NitroxId id, NitroxId baseId)
         {
-            Log.Info("Enqueuing item to have construction completed id: " + id);
+            Log.Info($"Enqueuing item to have construction completed - Id: {id}");
             Enqueue(new ConstructionCompletedEvent(id, baseId));
         }
 
         public void EnqueueAmountChanged(NitroxId id, float amount)
         {
-            Log.Info("Enqueuing item to have construction amount changed id: " + id);
+            Log.Info($"Enqueuing item to have construction amount changed - Id: {id}");
             Enqueue(new ConstructionAmountChangedEvent(id, amount));
         }
 
         public void EnqueueDeconstructionBegin(NitroxId id)
         {
-            Log.Info("Enqueuing item to have deconstruction beginning id: " + id);
+            Log.Info($"Enqueuing item to have deconstruction beginning - Id: {id}");
             Enqueue(new DeconstructionBeginEvent(id));
         }
 
         public void EnqueueDeconstructionCompleted(NitroxId id)
         {
-            Log.Info("Enqueuing item to have deconstruction completed id: " + id);
+            Log.Info($"Enqueuing item to have deconstruction completed - Id: {id}");
             Enqueue(new DeconstructionCompletedEvent(id));
         }
     }
