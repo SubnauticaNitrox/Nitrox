@@ -9,11 +9,7 @@ namespace NitroxLauncher
         /// <summary>
         ///     Gets the children of the given dependency object if the are an instance of the given type.
         /// </summary>
-        /// <param name="depObj"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public static IEnumerable<T> GetChildrenOfType<T>(this DependencyObject depObj)
-            where T : DependencyObject
+        public static IEnumerable<T> GetChildrenOfType<T>(this DependencyObject depObj) where T : DependencyObject
         {
             if (depObj == null)
             {
@@ -23,7 +19,7 @@ namespace NitroxLauncher
             for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
             {
                 DependencyObject child = VisualTreeHelper.GetChild(depObj, i);
-                if (!(child is T))
+                if (child is not T)
                 {
                     continue;
                 }

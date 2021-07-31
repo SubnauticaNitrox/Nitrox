@@ -50,8 +50,6 @@ namespace NitroxLauncher
                         Log.Error("Error while trying to instance an admin processus of the launcher, aborting");
                     }
                 }
-
-                //We might exit the application if the user says no ?
             }
             else
             {

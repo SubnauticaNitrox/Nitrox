@@ -10,9 +10,11 @@
                          Title="OptionPage"
                          Loaded="OptionPage_OnLoaded"
                          Unloaded="OptionPage_OnUnloaded">
+
     <nitroxLauncher:PageBase.Resources>
         <BitmapImage x:Key="SubnauticaIcon" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/images/subnauticaIcon.png "/>
     </nitroxLauncher:PageBase.Resources>
+
     <Grid>
         <Grid Margin="32,0">
             <Grid.RowDefinitions>
@@ -24,7 +26,6 @@
             <Grid>
                 <TextBlock FontSize="32" Foreground="White" TextWrapping="Wrap" Margin="0" VerticalAlignment="Bottom" FontWeight="Bold"><Run Text="Options"/></TextBlock>
             </Grid>
-
 
             <StackPanel Grid.Row="1" Margin="0,22,0,0">
                 <TextBlock FontSize="12" Foreground="#7FFFFFFF" Margin="0,0,0,12" FontWeight="Bold"><Run Text="SUBNAUTICA INSTALLATION"/></TextBlock>
@@ -47,7 +48,6 @@
             </StackPanel>
 
             <StackPanel Grid.Row="2" Margin="0,22,0,0">
-
                 <TextBlock FontSize="14" Foreground="White" Margin="0,0,0,8"><Run Text="Incorrect installation path?"></Run></TextBlock>
 
                 <Button Style="{StaticResource LargeButton}" Background="#FF007BFF" Width="203" Height="42"
@@ -55,8 +55,9 @@
                         ToolTip="Point the launcher to your games install location" Margin="0,4,0,142" Grid.Row="3">
                     <TextBlock Padding="0,1,0,0" FontSize="14" Foreground="White"><Run Text="Change" FontWeight="Bold"/></TextBlock>
                 </Button>
-
             </StackPanel>
+
         </Grid>
     </Grid>
+
 </nitroxLauncher:PageBase>

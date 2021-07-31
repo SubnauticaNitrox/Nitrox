@@ -14,6 +14,7 @@
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
+        
         <Grid.RowDefinitions>
             <RowDefinition Height="106"/>
             <RowDefinition Height="400"/>
@@ -34,11 +35,11 @@
                             <ImageBrush Stretch="UniformToFill" ImageSource="{StaticResource PlayGameImage}"/>
                         </Border.Background>
                     </Border>
+                    
                     <TextBlock HorizontalAlignment="Left" FontSize="10" Foreground="#7FFFFFFF" Margin="0,12,0,4" FontWeight="Bold" TextWrapping="Wrap"><Run Text="25. JUL 2021"/></TextBlock>
                     <TextBlock FontSize="16" Foreground="#FFFFFF" Margin="0,2,0,4" FontWeight="Bold" TextWrapping="Wrap"><Run Text="Title"/></TextBlock>
                     <TextBlock FontSize="14" Foreground="#7FFFFFFF" FontWeight="Normal" TextWrapping="Wrap"><Run Text="Exciting waters ahead! Hello everyone! We have some exciting new things coming in the next update (Soon™), and we can finally tell you all about it. Seeds to grow a world Many of you might not…"/></TextBlock>
                 </StackPanel>
-
             </Grid>
         </Grid>
 
@@ -50,18 +51,13 @@
                             <ImageBrush Stretch="UniformToFill" ImageSource="{StaticResource PlayGameImage}"/>
                         </Border.Background>
                     </Border>
+
                     <TextBlock HorizontalAlignment="Left" FontSize="10" Foreground="#7FFFFFFF" Margin="0,12,0,4" FontWeight="Bold" TextWrapping="Wrap"><Run Text="25. JUL 2021"/></TextBlock>
                     <TextBlock FontSize="16" Foreground="#FFFFFF" Margin="0,2,0,4" FontWeight="Bold" TextWrapping="Wrap"><Run Text="Title"/></TextBlock>
                     <TextBlock FontSize="14" Foreground="#7FFFFFFF" FontWeight="Normal" TextWrapping="Wrap"><Run Text="Exciting waters ahead! Hello everyone! We have some exciting new things coming in the next update (Soon™), and we can finally tell you all about it. Seeds to grow a world Many of you might not…"/></TextBlock>
                 </StackPanel>
-
             </Grid>
         </Grid>
-
-
-
-
-
 
     </Grid>
 </Page>

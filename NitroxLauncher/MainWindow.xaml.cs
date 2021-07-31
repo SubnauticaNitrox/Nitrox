@@ -16,9 +16,9 @@ namespace NitroxLauncher
 {
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
-        private readonly LauncherLogic logic = new LauncherLogic();
-        private object frameContent;
+        private readonly LauncherLogic logic = new();
         private bool isServerEmbedded;
+        private object frameContent;
 
         public string Version => $"{LauncherLogic.RELEASE_PHASE} {LauncherLogic.Version}";
 
@@ -147,9 +147,9 @@ namespace NitroxLauncher
 
         private void ServerStarted(object sender, ServerStartEventArgs e)
         {
-            isServerEmbedded = e.Embedded;
+            isServerEmbedded = e.IsEmbedded;
 
-            if (e.Embedded)
+            if (e.IsEmbedded)
             {
                 LauncherLogic.Instance.NavigateTo<ServerConsolePage>();
             }

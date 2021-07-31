@@ -8,6 +8,7 @@
                 DataContext="{Binding RelativeSource={RelativeSource Self}}"
                 mc:Ignorable="d" d:DesignWidth="766"
                 Title="Launch Game" Height="1020">
+
     <local:PageBase.Resources>
         <BitmapImage x:Key="SocialDiscord" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/images/social/discord.png"/>
         <BitmapImage x:Key="SocialTwitter" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/images/social/twitter.png"/>
@@ -16,12 +17,14 @@
         <BitmapImage x:Key="SocialGithub" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/images/social/github.png"/>
         <BitmapImage x:Key="PlayBoxImage" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/images/PlayBoxImage.png"/>
     </local:PageBase.Resources>
+
     <Grid >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="22*"/>
             <ColumnDefinition Width="675*"/>
             <ColumnDefinition Width="22*"/>
         </Grid.ColumnDefinitions>
+
         <Grid.RowDefinitions>
             <RowDefinition Height="0" />
             <RowDefinition Height="475" />
@@ -36,6 +39,7 @@
                 <RowDefinition Height="84*"/>
                 <RowDefinition Height="115*"/>
             </Grid.RowDefinitions>
+
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="0*"/>
                 <ColumnDefinition Width="174*"/>
@@ -49,10 +53,10 @@
                 <StackPanel.Background>
                     <ImageBrush ImageSource="/NitroxLauncher;component/Images/PlayBoxImage.png"/>
                 </StackPanel.Background>
+
                 <Grid VerticalAlignment="Top" Margin="22,18,22,0">
                     <StackPanel Orientation="Vertical" HorizontalAlignment="Left" >
                         <TextBlock Foreground="#7FFFFFFF" Text="PLAY NITROX" FontSize="10" FontWeight="Bold" />
-                        <!-- TODO Need to add version number here -->
                         <TextBlock x:Name="NitroxVersionLabel" Foreground="White" FontSize="10" Text="{Binding Version}" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right">
@@ -60,7 +64,6 @@
                         <Image Source="{StaticResource StoreSteam}" HorizontalAlignment="Right" VerticalAlignment="Top" Height="20" />
                     </StackPanel>
                 </Grid>
-                
 
                 <Button Style="{StaticResource LargeButton}" Click="MultiplayerButton_Click" ToolTip="Launch the game with multiplayer enabled." Background="#FF007BFF" Width="Auto" HorizontalAlignment="Stretch" Margin="24,16,24,8" Height="62">
                     <StackPanel>
@@ -68,6 +71,7 @@
                         <TextBlock HorizontalAlignment="Center" FontSize="10"><Run Text="MULTIPLAYER"/></TextBlock>
                     </StackPanel>
                 </Button>
+
                 <Button Margin="24,0,24,24" Background="#19FFFFFF" BorderBrush="#66FFFFFF" Style="{StaticResource LargeButton}" Click="SinglePlayerButton_Click" ToolTip="Play alone" HorizontalAlignment="Stretch" Width="Auto" Height="48">
                     <TextBlock Padding="0,4,0,0" Foreground="White" Margin="0,-4,0,0"  FontSize="14"><Run Text="SINGLEPLAYER"/></TextBlock>
                 </Button>
@@ -81,7 +85,7 @@
             <StackPanel Margin="0,11,0,0" Grid.Column="1" HorizontalAlignment="Left" Width="171" Height="44" VerticalAlignment="Top" Grid.Row="2">
                 <TextBlock FontSize="14" Foreground="White" Margin="0,0,0,12" TextWrapping="Wrap"><Run Text="Contributors" FontWeight="Bold"/></TextBlock>
             </StackPanel>
-            
+
             <StackPanel Margin="0,11,0,0" Grid.Column="2" HorizontalAlignment="Left" Width="545" Grid.Row="2" Grid.ColumnSpan="2">
                 <TextBlock FontSize="10" Foreground="#7FFFFFFF" Margin="0,0,0,6" FontWeight="Bold"><Run Text="DEVELOPERS"/></TextBlock>
                 <TextBlock FontSize="14" Foreground="White" Margin="0,0,0,12" TextWrapping="Wrap" LineHeight="24">
@@ -99,8 +103,8 @@
                 </TextBlock>
 
             </StackPanel>
-
         </Grid>
+
         <Image Stretch="Uniform" Source="{StaticResource SubnauticaMainImage}" Height="48" VerticalAlignment="Center" Margin="193,197,192,230" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" Width="334" />
     </Grid>
 </local:PageBase>

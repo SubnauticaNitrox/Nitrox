@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Navigation;
 using NitroxLauncher.Properties;
@@ -19,7 +20,7 @@ namespace NitroxLauncher.Pages
 
         private void OnRequestNavigate(object sender, RequestNavigateEventArgs e)
         {
-            System.Diagnostics.Process.Start(e.Uri.AbsoluteUri);
+            Process.Start(e.Uri.AbsoluteUri);
             e.Handled = true;
         }
 

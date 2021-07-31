@@ -8,8 +8,8 @@
                          d:DesignHeight="470" d:DesignWidth="719"
                          DataContext="{Binding RelativeSource={RelativeSource Self}}"
                          Title="ServerConsolePage" Width="766" Height="592">
-    <nitroxLauncher:PageBase.Resources>
 
+    <nitroxLauncher:PageBase.Resources>
         <Style x:Key="ScrollThumbs" TargetType="{x:Type Thumb}">
             <Setter Property="Template">
                 <Setter.Value>
@@ -21,6 +21,7 @@
                                         VerticalAlignment="Stretch" Width="Auto" Height="Auto" 
                                         Background="{TemplateBinding Background}" Margin="0,6" Panel.ZIndex="9999"/>
                         </Grid>
+
                         <ControlTemplate.Triggers>
                             <Trigger Property="Tag" Value="Horizontal">
                                 <Setter TargetName="Rectangle1" Property="Width" Value="Auto"/>
@@ -178,8 +179,8 @@
                 <ScrollBar x:Name="PART_HorizontalScrollBar" AutomationProperties.AutomationId="HorizontalScrollBar" Cursor="Arrow" Grid.Column="0" Maximum="{TemplateBinding ScrollableWidth}" Minimum="0" Orientation="Horizontal" Grid.Row="1" Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" Value="{Binding HorizontalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" ViewportSize="{TemplateBinding ViewportWidth}"/>
             </Grid>
         </ControlTemplate>
-
     </nitroxLauncher:PageBase.Resources>
+
     <Grid>
         <Grid Margin="8,0,8,2">
             <Grid.RowDefinitions>
@@ -193,17 +194,19 @@
                              TextWrapping="Wrap" Background="Transparent" BorderBrush="#00000000" BorderThickness="0" SelectionBrush="#000078D7" Width="722" />
                 </ScrollViewer>
             </Border>
+
             <Border Background="#333437" Grid.Row="1" CornerRadius="8">
                 <DockPanel>
-
                     <Button TabIndex="3" DockPanel.Dock="Right" Width="34" Height="34" Style="{DynamicResource ButtonConsoleStop}" Foreground="White" x:Name="StopButton"
                         ToolTip="Stop (exit) server" Click="StopButton_Click" Background="#FFEB5757" Margin="0,6,8,6">
                         <Image  Stretch="Uniform"  Source="{StaticResource StopWhiteIcon}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="24" Height="24" />
                     </Button>
+
                     <Button TabIndex="2" DockPanel.Dock="Right" Width="34" Height="Auto" Style="{DynamicResource ButtonConsoleMsg}" Foreground="White" x:Name="CommandButton"
                         ToolTip="Send command" Click="CommandButton_OnClick" RenderTransformOrigin="0.852,0.559" Margin="0,6,6,6">
                         <Image  Stretch="Uniform"  Source="{StaticResource SendWhiteIcon}" Width="24" Height="24" />
                     </Button>
+
                     <Border DockPanel.Dock="Left" BorderBrush ="#333437" Background="#333437" BorderThickness="1" CornerRadius="8,0,0,8" Margin="0,0,0,0" >
                         <TextBox TabIndex="1" Padding="0,5" FontSize="15" MaxLines="1" Foreground="White" TextAlignment="Left"
                              Background="{x:Null}" BorderBrush="{x:Null}" Text="{Binding CommandInputText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Name="CommandInput"
@@ -214,4 +217,5 @@
 
         </Grid>
     </Grid>
+
 </nitroxLauncher:PageBase>

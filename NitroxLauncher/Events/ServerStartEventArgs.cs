@@ -2,16 +2,18 @@
 
 namespace NitroxLauncher.Events
 {
-    public class ServerStartEventArgs : EventArgs
+    public sealed class ServerStartEventArgs : EventArgs
     {
-        /// <summary>
-        ///     True if server has been started in embedded mode.
-        /// </summary>
-        public bool Embedded { get; }
+        public bool IsEmbedded { get; }
 
         public ServerStartEventArgs(bool embedded)
         {
-            Embedded = embedded;
+            IsEmbedded = embedded;
+        }
+
+        public override string ToString()
+        {
+            return $"[ServerStartEventArgs - IsEmbedded: {IsEmbedded}]";
         }
     }
 }

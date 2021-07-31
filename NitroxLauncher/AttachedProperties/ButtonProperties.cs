@@ -2,7 +2,7 @@
 
 namespace NitroxLauncher.AttachedProperties
 {
-    public class ButtonProperties
+    public static class ButtonProperties
     {
         public static readonly DependencyProperty SelectedProperty =
             DependencyProperty.RegisterAttached("Selected", typeof(bool), typeof(ButtonProperties), new UIPropertyMetadata(default(bool)));

@@ -15,6 +15,7 @@
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
+
         <Grid.RowDefinitions>
             <RowDefinition Height="106"/>
             <RowDefinition Height="252"/>
@@ -42,6 +43,7 @@
                             </Hyperlink>
                         </TextBlock>
                     </StackPanel>
+
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                         <Button Style="{StaticResource LargeButton}" Background="#19FFFFFF" Width="Auto" Height="34"
                         HorizontalAlignment="Right" BorderBrush="#66FFFFFF"
@@ -69,6 +71,7 @@
                             </Hyperlink>
                         </TextBlock>
                     </StackPanel>
+
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                         <Button Style="{StaticResource LargeButton}" Background="#19FFFFFF" Width="Auto" Height="34"
                         HorizontalAlignment="Right" BorderBrush="#66FFFFFF"
@@ -96,6 +99,7 @@
                             </Hyperlink>
                         </TextBlock>
                     </StackPanel>
+
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                         <Button Style="{StaticResource LargeButton}" Background="#19FFFFFF" Width="Auto" Height="34"
                         HorizontalAlignment="Right" BorderBrush="#66FFFFFF"
@@ -118,6 +122,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
+
                 <Grid VerticalAlignment="Top">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" >
                         <TextBlock Foreground="White" Style="{DynamicResource SocialButton}" Margin="0" Height="56" VerticalAlignment="Top" >
@@ -126,6 +131,7 @@
                             </Hyperlink>
                         </TextBlock>
                     </StackPanel>
+
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                         <Button Style="{StaticResource LargeButton}" Background="#19FFFFFF" Width="Auto" Height="34"
                         HorizontalAlignment="Right" BorderBrush="#66FFFFFF"
@@ -141,7 +147,6 @@
                 <TextBlock FontSize="16" Foreground="White" TextWrapping="Wrap" Margin="0,98,10,0" VerticalAlignment="Top" FontWeight="Bold"><Run Text="Want to be part of the team? Contribute from code to translations to the Nitrox project on GitHub." FontSize="14" FontWeight="Normal"/></TextBlock>
             </Grid>
         </Grid>
-
 
     </Grid>
 
