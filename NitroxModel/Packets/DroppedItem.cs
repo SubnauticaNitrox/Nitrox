@@ -23,11 +23,6 @@ namespace NitroxModel.Packets
             ItemRotation = itemRotation;
             TechType = techType;
             Bytes = bytes;
-        }        
-
-        public override string ToString()
-        {
-            return "[DroppedItem - id: " + Id + " WaterParkId: " + WaterParkId + " techType: " + TechType + " itemPosition: " + ItemPosition + "]";
         }
     }
 }

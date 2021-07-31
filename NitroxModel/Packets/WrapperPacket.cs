@@ -1,4 +1,4 @@
-namespace NitroxModel.Packets
+﻿namespace NitroxModel.Packets
 {
     /**
      * WrapperPacket for LiteNetLib implementation

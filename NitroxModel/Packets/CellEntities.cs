@@ -21,17 +21,5 @@ namespace NitroxModel.Packets
                 entity
             };
         }
-
-        public override string ToString()
-        {
-            string toString = "[CellEntities ";
-
-            foreach (Entity entity in Entities)
-            {
-                toString += entity;
-            }
-
-            return toString + "]";
-        }
     }
 }

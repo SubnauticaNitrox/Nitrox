@@ -15,10 +15,5 @@ namespace NitroxModel.Packets
             DeliveryMethod = NitroxDeliveryMethod.DeliveryMethod.UNRELIABLE_SEQUENCED;
             UdpChannel = UdpChannelId.VEHICLE_MOVEMENT;
         }
-
-        public override string ToString()
-        {
-            return $"[VehicleMovement - {base.ToString()}, Data: {VehicleMovementData}]";
-        }
     }
 }

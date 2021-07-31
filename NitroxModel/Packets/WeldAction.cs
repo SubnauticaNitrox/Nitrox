@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NitroxModel.DataStructures;
 
 namespace NitroxModel.Packets
@@ -17,10 +13,6 @@ namespace NitroxModel.Packets
         {
             Id = id;
             HealthAdded = healthAdded;
-        }
-        public override string ToString()
-        {
-            return $"[WeldAction - Id: {Id}, HealthAdded: {HealthAdded}]";
         }
     }
 }

@@ -26,10 +26,5 @@ namespace NitroxModel.Packets
             DeliveryMethod = NitroxDeliveryMethod.DeliveryMethod.UNRELIABLE_SEQUENCED;
             UdpChannel = UdpChannelId.PLAYER_STATS;
         }
-
-        public override string ToString()
-        {
-            return "[PlayerStats - PlayerId: " + PlayerId + " Oxygen: " + Oxygen + " MaxOxygen:" + MaxOxygen + " Health: " + Health + " Food: " + Food + " Water: " + Water + " InfectionAmount: " + InfectionAmount + "]";
-        }
     }
 }

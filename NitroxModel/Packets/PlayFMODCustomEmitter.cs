@@ -16,10 +16,5 @@ namespace NitroxModel.Packets
             AssetPath = assetPath;
             Play = play;
         }
-
-        public override string ToString()
-        {
-            return $"[PlayFMODCustomEmitter - Id: {Id}, AssetPath: {AssetPath}, Play {Play}]";
-        }
     }
 }

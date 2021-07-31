@@ -19,10 +19,5 @@ namespace NitroxModel.Packets
             FieldName = fieldName;
             Value = value;
         }
-
-        public override string ToString()
-        {
-            return "[SceneDebuggerChange Path: " + Path + " GameObjectID: " + GameObjectID + " ComponentID: " + ComponentID + " FieldName: " + FieldName + " Value: " + Value + "]";
-        }
     }
 }

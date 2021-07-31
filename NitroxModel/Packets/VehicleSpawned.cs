@@ -14,10 +14,5 @@ namespace NitroxModel.Packets
             SerializedData = serializedData;
             VehicleModel = vehicleModel;
         }
-
-        public override string ToString()
-        {
-            return $"[VehicleSpawned - {VehicleModel}";
-        }
     }
 }

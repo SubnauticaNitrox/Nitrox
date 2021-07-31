@@ -11,11 +11,6 @@ namespace NitroxModel.Packets
         public EntitySpawnedByClient(Entity entity)
         {
             Entity = entity;
-        }        
-
-        public override string ToString()
-        {
-            return $"[EntitySpawnedByClient - Entity: {Entity}]";
         }
     }
 }

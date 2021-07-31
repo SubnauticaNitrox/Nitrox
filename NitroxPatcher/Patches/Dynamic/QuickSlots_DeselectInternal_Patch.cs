@@ -20,7 +20,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 Pickupable pickupable = ____heldItem.item;
                 NitroxId itemId = NitroxEntity.GetId(pickupable.gameObject);
                 PlayerTool component = pickupable.GetComponent<PlayerTool>();
-                PlayerHeldItemChangedType type = component ? PlayerHeldItemChangedType.HOLSTER_AS_TOOL : PlayerHeldItemChangedType.HOLSTER_AS_ITEM;
+                PlayerHeldItemChanged.ChangeType type = component ? PlayerHeldItemChanged.ChangeType.HOLSTER_AS_TOOL : PlayerHeldItemChanged.ChangeType.HOLSTER_AS_ITEM;
                 player.BroadcastHeldItemChanged(itemId, type, null);
             }
         }

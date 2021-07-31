@@ -14,10 +14,5 @@ namespace NitroxModel.Packets
             CreatedVehicle = createdVehicle;
             PlayerName = playerName;
         }
-
-        public override string ToString()
-        {
-            return "[VehicleCreated - Vehicle Id: " + CreatedVehicle.Id + " PlayerName: " + PlayerName + " Vehicle Type: " + CreatedVehicle.TechType + "]";
-        }
     }
 }

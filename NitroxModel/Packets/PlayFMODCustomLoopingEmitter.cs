@@ -14,10 +14,5 @@ namespace NitroxModel.Packets
             Id = id;
             AssetPath = assetPath;
         }
-
-        public override string ToString()
-        {
-            return $"[PlayFMODCustomLoopingEmitter - Id: {Id}, AssetPath: {AssetPath}]";
-        }
     }
 }

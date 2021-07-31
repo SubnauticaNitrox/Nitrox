@@ -16,10 +16,5 @@ namespace NitroxModel.Packets
             Id = id;
             NewValue = newValue;
         }
-
-        public override string ToString()
-        {
-            return $"[EntityMetadataUpdate id={Id} NewValue={NewValue} ]";
-        }
     }
 }

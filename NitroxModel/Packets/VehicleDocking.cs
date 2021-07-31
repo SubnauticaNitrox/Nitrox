@@ -16,10 +16,5 @@ namespace NitroxModel.Packets
             DockId = dockId;
             PlayerId = playerId;
         }
-
-        public override string ToString()
-        {
-            return "[VehicleDocking VehicleId: " + VehicleId + " DockId: " + DockId + " PlayerId: " + PlayerId + "]";
-        }
     }
 }
