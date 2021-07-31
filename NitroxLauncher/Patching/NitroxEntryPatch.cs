@@ -89,7 +89,7 @@ namespace NitroxLauncher.Patching
             }
             return lastException;
         }
-        
+
         public void Remove()
         {
             string assemblyCSharp = Path.Combine(subnauticaManagedPath, GAME_ASSEMBLY_NAME);
@@ -113,7 +113,7 @@ namespace NitroxLauncher.Patching
 
                 File.SetAttributes(assemblyCSharp, FileAttributes.Normal);
             }
-            
+
             FileSystem.Instance.ReplaceFile(modifiedAssemblyCSharp, assemblyCSharp);
         }
 
