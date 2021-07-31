@@ -22,7 +22,7 @@
             <BitmapImage x:Key="NitroxGallery" UriSource="pack://application:,,,/Images/NitroxGallery.png" />
 
             <!-- Foreground images -->
-            <BitmapImage x:Key="NitroxImage" UriSource="pack://application:,,,/Images/Nitrox.png" />
+            <BitmapImage x:Key="NitroxImage" UriSource="pack://application:,,,/Images/Nitrox.ico" />
             <BitmapImage x:Key="ExitImage" UriSource="pack://application:,,,/Images/close-w-10.png" />
             <BitmapImage x:Key="MaxImage" UriSource="pack://application:,,,/Images/max-w-10.png" />
             <BitmapImage x:Key="RestoreImage" UriSource="pack://application:,,,/Images/restore-w-10.png" />
