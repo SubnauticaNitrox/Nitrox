@@ -10,13 +10,13 @@ namespace NitroxServer.GameLogic.Items
     {
         private readonly ThreadSafeDictionary<NitroxId, ItemData> inventoryItemsById;
         private readonly ThreadSafeDictionary<NitroxId, ItemData> storageSlotItemsByContainerId;
-        private readonly ThreadSafeDictionary<NitroxId, EquippedItemData> modulesByContainerId;
+        private readonly ThreadSafeDictionary<NitroxId, EquippedItemData> modulesById;
 
         public InventoryManager(List<ItemData> inventoryItems, List<ItemData> storageSlotItems, List<EquippedItemData> modules)
         {
             inventoryItemsById = new ThreadSafeDictionary<NitroxId, ItemData>(inventoryItems.ToDictionary(item => item.ItemId), false);
             storageSlotItemsByContainerId = new ThreadSafeDictionary<NitroxId, ItemData>(storageSlotItems.ToDictionary(item => item.ContainerId), false);
-            modulesByContainerId = new ThreadSafeDictionary<NitroxId, EquippedItemData>(modules.ToDictionary(module => module.ContainerId), false);
+            modulesById = new ThreadSafeDictionary<NitroxId, EquippedItemData>(modules.ToDictionary(module => module.ItemId), false);
         }
 
         public void InventoryItemAdded(ItemData itemData)
@@ -52,17 +52,17 @@ namespace NitroxServer.GameLogic.Items
 
         public void ModuleAdded(EquippedItemData itemData)
         {
-            modulesByContainerId[itemData.ContainerId] = itemData;
+            modulesById[itemData.ItemId] = itemData;
         }
 
         public bool ModuleRemoved(NitroxId ownerId)
         {
-            return modulesByContainerId.Remove(ownerId);
+            return modulesById.Remove(ownerId);
         }
 
         public ICollection<EquippedItemData> GetAllModules()
         {
-            return modulesByContainerId.Values;
+            return modulesById.Values;
         }
     }
 }
