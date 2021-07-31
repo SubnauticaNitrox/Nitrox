@@ -20,10 +20,5 @@ namespace NitroxModel.Packets
             DestinationTo = destinationTo;
             SubRootID = subRootID;
         }
-
-        public override string ToString()
-        {
-            return $"[PlayerTeleported: PlayerName: {PlayerName}, DestinationFrom: {DestinationFrom}, DestinationTo: {DestinationTo}, SubRootID: {SubRootID}";
-        }
     }
 }

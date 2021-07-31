@@ -10,22 +10,15 @@ namespace NitroxModel.Packets
         public ushort PlayerId { get; }
         public string ReservationKey { get; }
 
-        public MultiplayerSessionReservation(string correlationId, MultiplayerSessionReservationState reservationState)
-            : base(correlationId)
+        public MultiplayerSessionReservation(string correlationId, MultiplayerSessionReservationState reservationState) : base(correlationId)
         {
             ReservationState = reservationState;
         }
 
-        public MultiplayerSessionReservation(string correlationId, ushort playerId, string reservationKey)
-            : this(correlationId, MultiplayerSessionReservationState.RESERVED)
+        public MultiplayerSessionReservation(string correlationId, ushort playerId, string reservationKey) : this(correlationId, MultiplayerSessionReservationState.RESERVED)
         {
             PlayerId = playerId;
             ReservationKey = reservationKey;
-        }
-
-        public override string ToString()
-        {
-            return $"ReservationState: {ReservationState.ToString()} - ReservationKey: {ReservationKey}";
         }
     }
 }

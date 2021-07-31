@@ -17,10 +17,5 @@ namespace NitroxModel.Packets
             Value = value;
             BatteryData = batteryData;
         }
-
-        public override string ToString()
-        {
-            return $"[EnergyMixinValueChanged: OwnerId: {OwnerId}, Value: {Value}, BatteryId: {BatteryData.ItemId}";
-        }
     }
 }

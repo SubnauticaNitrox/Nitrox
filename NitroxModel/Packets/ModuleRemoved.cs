@@ -18,10 +18,5 @@ namespace NitroxModel.Packets
             ItemId = itemId;
             PlayerModule = playerModule;
         }
-
-        public override string ToString()
-        {
-            return $"[ModuleRemoved OwnerId: {OwnerId}, Slot: {Slot}, ItemId: {ItemId}, PlayerModule: {PlayerModule}]";
-        }
     }
 }

@@ -9,10 +9,10 @@ namespace NitroxModel.Packets
     {
         public ushort PlayerId { get; }
         public NitroxId ItemId { get; }
-        public PlayerHeldItemChangedType Type { get; }
+        public ChangeType Type { get; }
         public NitroxTechType IsFirstTime { get; } // If it's the first time the player used that item type it send the techType, if not null.
 
-        public PlayerHeldItemChanged(ushort playerId, NitroxId itemId, PlayerHeldItemChangedType type, NitroxTechType isFirstTime)
+        public PlayerHeldItemChanged(ushort playerId, NitroxId itemId, ChangeType type, NitroxTechType isFirstTime)
         {
             PlayerId = playerId;
             ItemId = itemId;
@@ -20,17 +20,12 @@ namespace NitroxModel.Packets
             IsFirstTime = isFirstTime;
         }
 
-        public override string ToString()
+        public enum ChangeType
         {
-            return $"[PlayerHeldItemChanged - PlayerId: {PlayerId}, Type: {Type}, ItemId: {ItemId}, IsFirstTime: {IsFirstTime}]";
+            DRAW_AS_TOOL,
+            DRAW_AS_ITEM,
+            HOLSTER_AS_TOOL,
+            HOLSTER_AS_ITEM
         }
-    }
-
-    public enum PlayerHeldItemChangedType
-    {
-        DRAW_AS_TOOL,
-        DRAW_AS_ITEM,
-        HOLSTER_AS_TOOL,
-        HOLSTER_AS_ITEM
     }
 }

@@ -16,10 +16,5 @@ namespace NitroxModel.Packets
             Id = id;
             LockType = lockType;
         }
-
-        public override string ToString()
-        {
-            return "[SimulationOwnershipRequest - PlayerId: " + PlayerId + " Id: " + Id + " PlayerId: " + PlayerId + " LockType: " + LockType + "]";
-        }
     }
 }

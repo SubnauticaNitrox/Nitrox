@@ -18,19 +18,19 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(StoryEventSend packet, Player player)
         {
-            switch (packet.StoryEventType)
+            switch (packet.Type)
             {
-                case StoryEventType.RADIO:
+                case StoryEventSend.EventType.RADIO:
                     if (!storyGoalData.RadioQueue.Contains(packet.Key))
                     {
                         storyGoalData.RadioQueue.Add(packet.Key);
                     }
                     break;
-                case StoryEventType.GOAL_UNLOCK:
+                case StoryEventSend.EventType.GOAL_UNLOCK:
                     if (!storyGoalData.GoalUnlocks.Contains(packet.Key))
                     {
                         storyGoalData.GoalUnlocks.Add(packet.Key);
-                        packet = new StoryEventSend(StoryEventType.STORY, packet.Key);
+                        packet = new StoryEventSend(StoryEventSend.EventType.STORY, packet.Key);
                     }
                     break;
                 default:

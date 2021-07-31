@@ -17,10 +17,5 @@ namespace NitroxModel.Packets
             VehicleModel = vehicleModel;
             Duration = duration;
         }
-
-        public override string ToString()
-        {
-            return $"[ConstructorBeginCrafting - VehicleModel: {VehicleModel}, ConstructorId: {ConstructorId}, Duration: {Duration}";
-        }
     }
 }

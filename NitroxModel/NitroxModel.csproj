@@ -127,7 +127,6 @@
     <Compile Include="Packets\EscapePodChanged.cs" />
     <Compile Include="Packets\EscapePodRadioRepair.cs" />
     <Compile Include="Packets\EscapePodRepair.cs" />
-    <Compile Include="Packets\IShortString.cs" />
     <Compile Include="Packets\GameModeChanged.cs" />
     <Compile Include="Packets\EnergyMixinValueChanged.cs" />
     <Compile Include="Packets\LiveMixinHealthChanged.cs" />

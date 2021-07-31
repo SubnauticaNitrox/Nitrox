@@ -18,10 +18,5 @@ namespace NitroxModel.Packets
             PlayerId = playerId;
             UndockingStart = undockingStart;
         }
-
-        public override string ToString()
-        {
-            return $"[VehicleUndocking VehicleId: {VehicleId} DockId: {DockId} PlayerId: {PlayerId} Start: {UndockingStart}]";
-        }
     }
 }

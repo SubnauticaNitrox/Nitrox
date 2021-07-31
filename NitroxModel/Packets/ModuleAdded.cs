@@ -1,5 +1,5 @@
-﻿using NitroxModel.DataStructures.GameLogic;
-using System;
+﻿using System;
+using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxModel.Packets
 {
@@ -13,11 +13,6 @@ namespace NitroxModel.Packets
         {
             EquippedItemData = equippedItemData;
             PlayerModule = playerModule;
-        }
-
-        public override string ToString()
-        {
-            return $"[ModuleAdded EquippedItemData: {EquippedItemData}, PlayerModule: {PlayerModule}]";
         }
     }
 }

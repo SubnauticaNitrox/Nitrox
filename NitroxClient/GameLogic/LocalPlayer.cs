@@ -93,7 +93,7 @@ namespace NitroxClient.GameLogic
             packetSender.Send(packet);
         }
 
-        public void BroadcastHeldItemChanged(NitroxId itemId, PlayerHeldItemChangedType techType, NitroxTechType isFirstTime)
+        public void BroadcastHeldItemChanged(NitroxId itemId, PlayerHeldItemChanged.ChangeType techType, NitroxTechType isFirstTime)
         {
             packetSender.Send(new PlayerHeldItemChanged(multiplayerSession.Reservation.PlayerId, itemId, techType, isFirstTime));
         }

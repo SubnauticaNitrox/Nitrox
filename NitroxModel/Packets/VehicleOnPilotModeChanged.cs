@@ -16,10 +16,5 @@ namespace NitroxModel.Packets
             PlayerId = playerId;
             IsPiloting = isPiloting;
         }
-
-        public override string ToString()
-        {
-            return "[VehicleOnPilotModeChanged - VehicleId: " + VehicleId + " PlayerId: " + PlayerId + " IsPiloting: " + IsPiloting + "]";
-        }
     }
 }

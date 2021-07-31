@@ -13,7 +13,7 @@ namespace NitroxClient.GameLogic
 {
     public class LiveMixinManager
     {
-        
+
         private readonly IMultiplayerSession multiplayerSession;
         private readonly SimulationOwnership simulationOwnership;
 
@@ -104,7 +104,7 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastTakeDamage(TechType techType, NitroxId id, float originalDamage, Vector3 position, DamageType damageType, Optional<NitroxId> dealerId, float totalHealth)
         {
-            LiveMixinHealthChanged packet = new LiveMixinHealthChanged(techType.ToDto(), id, -originalDamage, position.ToDto(), (ushort)damageType, dealerId, totalHealth);
+            LiveMixinHealthChanged packet = new LiveMixinHealthChanged(techType.ToDto(), id, -originalDamage, totalHealth, position.ToDto(), (ushort)damageType, dealerId);
             multiplayerSession.Send(packet);
         }
 

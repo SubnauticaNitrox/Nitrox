@@ -12,10 +12,5 @@ namespace NitroxModel.Packets
         {
             OwnerId = ownerId;
         }
-
-        public override string ToString()
-        {
-            return "[StorageSlotItemRemove ownerId: " + OwnerId + "]";
-        }
     }
 }

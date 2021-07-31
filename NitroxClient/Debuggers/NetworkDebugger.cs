@@ -174,8 +174,7 @@ namespace NitroxClient.Debuggers
 
                     if (wrapper.ShowDetails)
                     {
-                        IShortString hasShortString = wrapper.Packet as IShortString;
-                        GUILayout.Label(hasShortString != null ? hasShortString.ToShortString() : wrapper.Packet.ToString());
+                        GUILayout.Label(wrapper.Packet.ToString());
                     }
                 }
             }

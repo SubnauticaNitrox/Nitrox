@@ -14,10 +14,5 @@ namespace NitroxModel.Packets
             Id = id;
             ConstructionAmount = constructionAmount;
         }
-
-        public override string ToString()
-        {
-            return "[ConstructionAmountChanged Id:" + Id + " ConstructionAmount: " + ConstructionAmount + "]";
-        }
     }
 }

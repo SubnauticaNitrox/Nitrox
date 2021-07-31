@@ -5,28 +5,23 @@ namespace NitroxModel.Packets
     [Serializable]
     public class StoryEventSend : Packet
     {
-        public StoryEventType StoryEventType { get; }
+        public EventType Type { get; }
         public string Key { get; }
 
-        public StoryEventSend(StoryEventType storyEventType, string key = "") : base()
+        public StoryEventSend(EventType type, string key = "")
         {
-            StoryEventType = storyEventType;
+            Type = type;
             Key = key;
         }
 
-        public override string ToString()
+        public enum EventType
         {
-            return "[StoryEventSend - StoryEventType: " + StoryEventType + " Key: " + Key + "]";
+            PDA,
+            RADIO,
+            ENCYCLOPEDIA,
+            STORY,
+            EXTRA,
+            GOAL_UNLOCK
         }
-    }
-
-    public enum StoryEventType
-    {
-        PDA,
-        RADIO,
-        ENCYCLOPEDIA,
-        STORY,
-        EXTRA,
-        GOAL_UNLOCK
     }
 }

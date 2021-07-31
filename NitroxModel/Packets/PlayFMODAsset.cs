@@ -20,10 +20,5 @@ namespace NitroxModel.Packets
             Radius = radius;
             IsGlobal = isGlobal;
         }
-
-        public override string ToString()
-        {
-            return $"[PlayFMODAsset - AssetPath: {AssetPath}, Position: {Position}, Volume {Volume}, Radius {Radius}, IsGlobal {IsGlobal}]";
-        }
     }
 }
