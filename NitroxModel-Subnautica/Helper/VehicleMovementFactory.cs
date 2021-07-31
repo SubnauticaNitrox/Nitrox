@@ -1,8 +1,8 @@
-﻿using NitroxModel.DataStructures.GameLogic;
+﻿using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
+using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.DataStructures.GameLogic;
 using UnityEngine;
-using NitroxModel.DataStructures;
-using NitroxModel_Subnautica.DataStructures;
 
 namespace NitroxModel_Subnautica.Helper
 {

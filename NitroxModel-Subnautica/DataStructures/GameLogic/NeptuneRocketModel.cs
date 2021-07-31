@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.DataStructures;
 using ProtoBufNet;
 
 namespace NitroxModel_Subnautica.DataStructures.GameLogic

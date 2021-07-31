@@ -20,22 +20,21 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic.Entities
         public override List<UwePrefab> GetPossiblePrefabs(string biome)
         {
             List<UwePrefab> prefabs = new List<UwePrefab>();
-            
+
             if (biome == null)
             {
                 return prefabs;
             }
 
-            DstData dstData;
 
             BiomeType biomeType = (BiomeType)Enum.Parse(typeof(BiomeType), biome);
 
-            if (lootDistributionData.GetBiomeLoot(biomeType, out dstData))
+            if (lootDistributionData.GetBiomeLoot(biomeType, out DstData dstData))
             {
-                foreach(PrefabData prefabData in dstData.prefabs)
+                foreach (PrefabData prefabData in dstData.prefabs)
                 {
-                   UwePrefab prefab = new UwePrefab(prefabData.classId, prefabData.probability, prefabData.count);
-                   prefabs.Add(prefab);
+                    UwePrefab prefab = new UwePrefab(prefabData.classId, prefabData.probability, prefabData.count);
+                    prefabs.Add(prefab);
                 }
             }
 
@@ -46,7 +45,7 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic.Entities
         {
             ForceCultureOverride();
             JsonMapper.RegisterImporter((double value) => Convert.ToSingle(value));
-            
+
             Dictionary<string, LootDistributionData.SrcData> result = JsonMapper.ToObject<Dictionary<string, LootDistributionData.SrcData>>(lootDistributionJson);
 
             LootDistributionData lootDistributionData = new LootDistributionData();
