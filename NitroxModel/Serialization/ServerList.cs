@@ -52,7 +52,7 @@ namespace NitroxModel.Serialization
                 {
                     continue;
                 }
-                
+
                 list.entries.Add(entry);
             }
             return list;
@@ -139,7 +139,7 @@ namespace NitroxModel.Serialization
                     default:
                         throw new Exception($"Expected server entry to have 2 or 3 parts: {line}");
                 }
-                
+
                 string name = parts[0].Trim();
                 return new Entry(name, address, port);
             }

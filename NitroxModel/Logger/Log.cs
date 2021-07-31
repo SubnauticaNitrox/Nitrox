@@ -229,7 +229,10 @@ namespace NitroxModel.Logger
 
         private static string GetLogFileName()
         {
-            static bool Contains(string haystack, string needle) => haystack.IndexOf(needle, StringComparison.OrdinalIgnoreCase) >= 0;
+            static bool Contains(string haystack, string needle)
+            {
+                return haystack.IndexOf(needle, StringComparison.OrdinalIgnoreCase) >= 0;
+            }
 
             string loggerName = GetLoggerName();
             if (Contains(loggerName, "server"))

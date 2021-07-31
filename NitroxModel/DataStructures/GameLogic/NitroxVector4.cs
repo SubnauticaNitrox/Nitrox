@@ -17,12 +17,6 @@ namespace NitroxModel.DataStructures.GameLogic
             Z = z;
         }
 
-        public float Magnitude
-        {
-            get
-            {
-                return (float)Math.Sqrt(X * X + Y * Y + Z * Z + W * W);
-            }
-        }
+        public float Magnitude => (float)Math.Sqrt(X * X + Y * Y + Z * Z + W * W);
     }
 }

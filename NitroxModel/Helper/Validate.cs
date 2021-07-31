@@ -19,7 +19,7 @@ namespace NitroxModel.Helper
             {
                 return;
             }
-            
+
             Optional<string> paramName = GetParameterName<T>();
             if (paramName.HasValue)
             {
@@ -35,7 +35,7 @@ namespace NitroxModel.Helper
             {
                 return;
             }
-            
+
             Optional<string> paramName = GetParameterName<T>();
             if (paramName.HasValue)
             {
@@ -74,7 +74,7 @@ namespace NitroxModel.Helper
             {
                 return;
             }
-            
+
             Optional<string> paramName = GetParameterName<string>();
             throw new ArgumentException("String must not be null of whitespace", paramName.OrElse(null));
         }

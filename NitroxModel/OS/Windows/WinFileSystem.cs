@@ -48,7 +48,7 @@ namespace NitroxModel.OS.Windows
             {
                 yield break;
             }
-                
+
             foreach (char c in mruList)
             {
                 string fullPath = SearchExecutableInSameDirectory(GetFullPath(rk.GetValue(c.ToString()).ToString()));
