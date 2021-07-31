@@ -4,9 +4,10 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:NitroxLauncher.Pages"
+      DataContext="{Binding RelativeSource={RelativeSource Self}}"
       mc:Ignorable="d" 
-      d:DesignHeight="800
-      " d:DesignWidth="800"
+      d:DesignHeight="800"
+      d:DesignWidth="800"
       Title="CommunityPage">
 
     <Grid Margin="32,0" Height="800" VerticalAlignment="Top">
@@ -78,7 +79,7 @@
                         </Button>
                     </StackPanel>
                 </Grid>
-                
+
                 <TextBlock FontSize="16" Foreground="White" TextWrapping="Wrap" Margin="0,72,10,0" VerticalAlignment="Top" FontWeight="Bold"><Run Text="Twitter"/></TextBlock>
                 <TextBlock FontSize="16" Foreground="White" TextWrapping="Wrap" Margin="0,98,10,-18" VerticalAlignment="Top" FontWeight="Bold"><Run Text="Follow the Nitrox Twitter account to always be up to date on latest developments, events, and releases." FontSize="14" FontWeight="Normal"/></TextBlock>
             </Grid>
@@ -105,7 +106,7 @@
                         </Button>
                     </StackPanel>
                 </Grid>
-                
+
                 <TextBlock FontSize="16" Foreground="White" TextWrapping="Wrap" Margin="0,72,10,0" VerticalAlignment="Top" FontWeight="Bold" Text="Reddit"/>
                 <TextBlock FontSize="16" Foreground="White" TextWrapping="Wrap" Margin="0,98,10,-18" VerticalAlignment="Top" FontWeight="Bold"><Run FontWeight="Normal" FontSize="14" Text="Join the Nitrox Subreddit to stay informed about latest releases and post your own"/><Run FontWeight="Normal" FontSize="14" Text=" Nitrox content."/></TextBlock>
             </Grid>
@@ -135,7 +136,7 @@
                         </Button>
                     </StackPanel>
                 </Grid>
-                
+
                 <TextBlock FontSize="16" Foreground="White" TextWrapping="Wrap" Margin="0,72,10,0" VerticalAlignment="Top" FontWeight="Bold" Text="GitHub"/>
                 <TextBlock FontSize="16" Foreground="White" TextWrapping="Wrap" Margin="0,98,10,0" VerticalAlignment="Top" FontWeight="Bold"><Run Text="Want to be part of the team? Contribute from code to translations to the Nitrox project on GitHub." FontSize="14" FontWeight="Normal"/></TextBlock>
             </Grid>
@@ -143,6 +144,5 @@
 
 
     </Grid>
-
 
 </Page>

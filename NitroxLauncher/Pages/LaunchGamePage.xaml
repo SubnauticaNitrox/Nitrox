@@ -5,6 +5,7 @@
                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                 xmlns:local="clr-namespace:NitroxLauncher"
+                DataContext="{Binding RelativeSource={RelativeSource Self}}"
                 mc:Ignorable="d" d:DesignWidth="766"
                 Title="Launch Game" Height="1020">
     <local:PageBase.Resources>
@@ -43,8 +44,6 @@
                 <ColumnDefinition Width="0*"/>
             </Grid.ColumnDefinitions>
 
-
-
             <TextBlock FontSize="14" Foreground="White" TextWrapping="Wrap" Grid.Column="1" Margin="0,112,20,0" Height="87" VerticalAlignment="Top" Grid.ColumnSpan="2"><Run Text="Nitrox is an open-source, multiplayer modification for the game Subnautica."/><Run Text=" "/><Run Text="The project is maintained by the community with regular support and updates from the generous contributors."/></TextBlock>
             <StackPanel Orientation="Vertical" Grid.Column="3" Margin="0" Height="203" VerticalAlignment="Top">
                 <StackPanel.Background>
@@ -75,26 +74,28 @@
 
             </StackPanel>
 
-
             <Grid Grid.Row="1" Grid.ColumnSpan="4">
                 <Image Stretch="UniformToFill" Source="{StaticResource NitroxGallery}" Margin="0,0,0,22" Grid.Row="1" Grid.ColumnSpan="3" />
             </Grid>
 
-
             <StackPanel Margin="0,11,0,0" Grid.Column="1" HorizontalAlignment="Left" Width="171" Height="44" VerticalAlignment="Top" Grid.Row="2">
                 <TextBlock FontSize="14" Foreground="White" Margin="0,0,0,12" TextWrapping="Wrap"><Run Text="Contributors" FontWeight="Bold"/></TextBlock>
             </StackPanel>
+            
             <StackPanel Margin="0,11,0,0" Grid.Column="2" HorizontalAlignment="Left" Width="545" Grid.Row="2" Grid.ColumnSpan="2">
                 <TextBlock FontSize="10" Foreground="#7FFFFFFF" Margin="0,0,0,6" FontWeight="Bold"><Run Text="DEVELOPERS"/></TextBlock>
-                <TextBlock FontSize="14" Foreground="White" Margin="0,0,0,12" TextWrapping="Wrap" LineHeight="24">                    <Run>Sunrunner, Killzoms, Jannify, Marijn, Measurity, MadMax, Nes, _HeN_, CatSZekely, Garsia, RabidCrab, AquariusSidhe, Amarok, iCleeem</Run>
+                <TextBlock FontSize="14" Foreground="White" Margin="0,0,0,12" TextWrapping="Wrap" LineHeight="24">
+                    <Run>Sunrunner, Killzoms, Jannify, Marijn, Measurity, MadMax, Nes, _HeN_, CatSZekely, Garsia, RabidCrab, AquariusSidhe, Amarok, iCleeem</Run>
                 </TextBlock>
 
                 <TextBlock FontSize="10" Foreground="#7FFFFFFF" Margin="0,0,0,6" FontWeight="Bold"><Run Text="STAFF"/></TextBlock>
-                <TextBlock FontSize="14" Foreground="White" Margin="0,0,0,12" TextWrapping="Wrap" LineHeight="24">                    <Run>Werewolfs, Shalix, CriticalCookie, InfamousJay, and a big thanks to the discord support team (Artic-Peepers, Peepers)</Run>
+                <TextBlock FontSize="14" Foreground="White" Margin="0,0,0,12" TextWrapping="Wrap" LineHeight="24">
+                    <Run>Werewolfs, Shalix, CriticalCookie, InfamousJay, and a big thanks to the discord support team (Artic-Peepers, Peepers)</Run>
                 </TextBlock>
 
                 <TextBlock FontSize="10" Foreground="#7FFFFFFF" Margin="0,0,0,6" FontWeight="Bold"><Run Text="DESIGN"/></TextBlock>
-                <TextBlock FontSize="14" Foreground="White" Margin="0,0,0,12" TextWrapping="Wrap" LineHeight="24">                    <Run>Rux</Run>
+                <TextBlock FontSize="14" Foreground="White" Margin="0,0,0,12" TextWrapping="Wrap" LineHeight="24">
+                    <Run>Rux</Run>
                 </TextBlock>
 
             </StackPanel>

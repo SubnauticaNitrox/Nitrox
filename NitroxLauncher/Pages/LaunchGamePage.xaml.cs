@@ -6,6 +6,8 @@ namespace NitroxLauncher.Pages
 {
     public partial class LaunchGamePage : PageBase
     {
+        public string Version => LauncherLogic.Version;
+
         public LaunchGamePage()
         {
             InitializeComponent();
