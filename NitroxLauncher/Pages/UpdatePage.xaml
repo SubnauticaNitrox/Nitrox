@@ -34,7 +34,7 @@
                 <TextBlock FontSize="16" Foreground="White" TextWrapping="Wrap" Margin="0,72,0,0" VerticalAlignment="Top" FontWeight="Bold" TextAlignment="Center" Text="No Update Available"/>
                 <TextBlock FontWeight="Normal" FontSize="14"  Foreground="White" TextWrapping="Wrap" Margin="0,98,0,-18" VerticalAlignment="Top" TextAlignment="Center">
                     <Run Text="You are already using the latest version of Nitrox"/>
-                    <Run Text="{Binding Version}"/><Run Text="."/>
+                    <Run Text="{Binding Version, Mode=OneTime}"/><Run Text="."/>
                     <Run Text="Missing a feature? Check the changelogs if the feature has already been implemented. If you experience any other issues, please contact support."/></TextBlock>
             </Grid>
         </Grid>

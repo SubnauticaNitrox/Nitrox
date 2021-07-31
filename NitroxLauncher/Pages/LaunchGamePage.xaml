@@ -57,7 +57,7 @@
                 <Grid VerticalAlignment="Top" Margin="22,18,22,0">
                     <StackPanel Orientation="Vertical" HorizontalAlignment="Left" >
                         <TextBlock Foreground="#7FFFFFFF" Text="PLAY NITROX" FontSize="10" FontWeight="Bold" />
-                        <TextBlock x:Name="NitroxVersionLabel" Foreground="White" FontSize="10" Text="{Binding Version}" />
+                        <TextBlock x:Name="NitroxVersionLabel" Foreground="White" FontSize="10" Text="{Binding Version, Mode=OneTime}" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right">
                         <!-- TODO Swap icon logic depending on which store version is selected -->
