@@ -6,7 +6,7 @@ namespace NitroxClient.MonoBehaviours
 {
     public class RemotelyControlled : MonoBehaviour
     {
-        private SmoothVector smoothPosition = new SmoothVector(); 
+        private SmoothVector smoothPosition = new SmoothVector();
         private SmoothRotation smoothRotation = new SmoothRotation();
 
         private SwimBehaviour swimBehaviour;
@@ -42,7 +42,7 @@ namespace NitroxClient.MonoBehaviours
                 gameObject.transform.position = position;
                 gameObject.transform.rotation = rotation;
             }
-            
+
             if (swimBehaviour)
             {
                 swimBehaviour.SwimTo(position, 3f);

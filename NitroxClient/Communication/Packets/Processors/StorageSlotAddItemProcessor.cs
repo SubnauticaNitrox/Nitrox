@@ -21,13 +21,13 @@ namespace NitroxClient.Communication.Packets.Processors
         }
 
         public override void Process(StorageSlotItemAdd packet)
-        {            
+        {
             ItemData itemData = packet.ItemData;
-            GameObject item = SerializationHelper.GetGameObject(itemData.SerializedData);            
-            
+            GameObject item = SerializationHelper.GetGameObject(itemData.SerializedData);
+
             NitroxEntity.SetNewId(item, itemData.ItemId);
 
-            storageSlots.AddItem(item, itemData.ContainerId);            
+            storageSlots.AddItem(item, itemData.ContainerId);
         }
     }
 }

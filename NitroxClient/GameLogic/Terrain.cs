@@ -1,12 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using NitroxClient.Communication;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.Map;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
-using NitroxClient.Communication.Abstract;
-using UnityEngine;
 using NitroxModel_Subnautica.DataStructures;
+using UnityEngine;
 
 namespace NitroxClient.GameLogic
 {

@@ -121,7 +121,7 @@ namespace NitroxClient.MonoBehaviours
             {
                 id = NitroxEntity.GetId(sub.gameObject);
                 position = sub.gameObject.transform.position;
-                rotation = sub.gameObject.transform.rotation;                
+                rotation = sub.gameObject.transform.rotation;
                 Rigidbody rigidbody = sub.GetComponent<Rigidbody>();
                 velocity = rigidbody.velocity;
                 angularVelocity = rigidbody.angularVelocity;

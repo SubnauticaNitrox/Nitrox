@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using NitroxClient.MonoBehaviours.DiscordRP;
 using NitroxClient.Unity.Helper;
-using NitroxModel.Helper;
 using NitroxModel_Subnautica.Helper;
 using UnityEngine;
 using UnityEngine.Networking;

@@ -32,8 +32,7 @@ namespace NitroxClient.GameLogic
 
         public Optional<RemotePlayer> Find(ushort playerId)
         {
-            RemotePlayer player;
-            playersById.TryGetValue(playerId, out player);
+            playersById.TryGetValue(playerId, out RemotePlayer player);
             return Optional.OfNullable(player);
         }
 

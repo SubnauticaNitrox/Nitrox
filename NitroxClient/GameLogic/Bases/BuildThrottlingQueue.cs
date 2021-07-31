@@ -1,7 +1,7 @@
-﻿using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Logger;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Logger;
 
 namespace NitroxClient.GameLogic.Bases
 {
@@ -17,7 +17,7 @@ namespace NitroxClient.GameLogic.Bases
     {
         public bool NextEventRequiresFreshFrame()
         {
-            if(Count > 0)
+            if (Count > 0)
             {
                 BuildEvent nextEvent = Peek();
                 return nextEvent.RequiresFreshFrame();
@@ -28,7 +28,7 @@ namespace NitroxClient.GameLogic.Bases
 
         public void EnqueueBasePiecePlaced(BasePiece basePiece)
         {
-            Log.Info("Enqueuing base piece to be placed techtype: " + basePiece.TechType + " id: " + basePiece.Id + " parentId: " + basePiece.ParentId.OrElse(null) + " build index: " + basePiece.BuildIndex );
+            Log.Info("Enqueuing base piece to be placed techtype: " + basePiece.TechType + " id: " + basePiece.Id + " parentId: " + basePiece.ParentId.OrElse(null) + " build index: " + basePiece.BuildIndex);
             Enqueue(new BasePiecePlacedEvent(basePiece));
         }
 

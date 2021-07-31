@@ -21,7 +21,7 @@ namespace NitroxClient.GameLogic.InitialSync
         public EquippedItemInitialSyncProcessor(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
-            
+
             DependentProcessors.Add(typeof(PlayerInitialSyncProcessor));  // the player needs to be configured before we can equip items
             DependentProcessors.Add(typeof(RemotePlayerInitialSyncProcessor)); // remote players can also equip items
             DependentProcessors.Add(typeof(VehicleInitialSyncProcessor)); // Equipment also includes vehicles modules
@@ -50,7 +50,7 @@ namespace NitroxClient.GameLogic.InitialSync
                         Optional<Equipment> opEquipment = EquipmentHelper.FindEquipmentComponent(owner);
 
                         if (opEquipment.HasValue)
-                        {                            
+                        {
                             Equipment equipment = opEquipment.Value;
                             InventoryItem inventoryItem = new InventoryItem(pickupable);
                             inventoryItem.container = equipment;

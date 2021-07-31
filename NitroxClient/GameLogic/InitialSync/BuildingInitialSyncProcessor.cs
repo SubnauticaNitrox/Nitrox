@@ -20,7 +20,7 @@ namespace NitroxClient.GameLogic.InitialSync
         private readonly BasePieceSpawnPrioritizer basePieceSpawnPrioritizer;
 
         private bool completed;
-        
+
         public BuildingInitialSyncProcessor(IPacketSender packetSender, BuildThrottlingQueue buildEventQueue, BasePieceSpawnPrioritizer basePieceSpawnPrioritizer)
         {
             this.packetSender = packetSender;

@@ -57,12 +57,9 @@ namespace NitroxClient.GameLogic.PlayerModel.ColorSwap
             for (int pixelIndex = 0; pixelIndex < texturePixels.Length; pixelIndex++)
             {
                 Color pixel = texturePixels[pixelIndex];
-                float hue;
-                float saturation;
-                float vibrancy;
                 float alpha = pixel.a;
 
-                Color.RGBToHSV(pixel, out hue, out saturation, out vibrancy);
+                Color.RGBToHSV(pixel, out float hue, out float saturation, out float vibrancy);
 
                 if (hueValueRange.Covers(hue) &&
                     saturationValueRange.Covers(saturation) &&

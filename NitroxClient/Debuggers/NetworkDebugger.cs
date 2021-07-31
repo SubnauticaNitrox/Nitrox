@@ -192,8 +192,7 @@ namespace NitroxClient.Debuggers
                 }
             }
 
-            int count;
-            if (countByType.TryGetValue(packetType, out count))
+            if (countByType.TryGetValue(packetType, out int count))
             {
                 countByType[packetType] = count + 1;
             }

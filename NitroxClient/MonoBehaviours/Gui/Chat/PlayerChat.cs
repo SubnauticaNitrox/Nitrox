@@ -28,8 +28,8 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
 
         public string InputText
         {
-            get { return inputField.text; }
-            set { inputField.text = value; }
+            get => inputField.text;
+            set => inputField.text = value;
         }
 
         public IEnumerator SetupChatComponents()

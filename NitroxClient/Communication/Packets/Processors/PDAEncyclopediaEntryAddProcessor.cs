@@ -17,7 +17,7 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             using (packetSender.Suppress<PDAEncyclopediaEntryAdd>())
             {
-                PDAEncyclopedia.Add(packet.Key,true);
+                PDAEncyclopedia.Add(packet.Key, true);
             }
         }
     }

@@ -13,7 +13,7 @@ namespace NitroxClient.GameLogic.PlayerModel.ColorSwap
         private readonly IEnumerable<IColorSwapManager> colorSwapManagers;
         private readonly Dictionary<string, Color[]> texturePixelIndexes;
         private int taskCount = -1;
-        
+
         public ColorSwapAsyncOperation(INitroxPlayer nitroxPlayer, IEnumerable<IColorSwapManager> colorSwapManagers)
         {
             this.nitroxPlayer = nitroxPlayer;
@@ -71,7 +71,7 @@ namespace NitroxClient.GameLogic.PlayerModel.ColorSwap
         {
             Action<ColorSwapAsyncOperation> task = state as Action<ColorSwapAsyncOperation>;
 
-            if(task == null)
+            if (task == null)
             {
                 //TODO: We need to handle job cancellation during stabilization to ensure that the client shuts down gracefully.
 

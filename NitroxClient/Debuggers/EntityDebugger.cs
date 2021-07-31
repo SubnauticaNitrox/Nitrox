@@ -80,7 +80,7 @@ namespace NitroxClient.Debuggers
                     GUI.backgroundColor = labelBgColor;
                     GUI.color = labelFgColor;
                     GUI.Box(drawSize, textContent);
-                    
+
                     GUI.backgroundColor = oldBgColor;
                 }
             }

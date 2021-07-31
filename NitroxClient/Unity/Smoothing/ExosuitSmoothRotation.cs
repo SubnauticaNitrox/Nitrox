@@ -9,7 +9,7 @@ namespace NitroxClient.Unity.Smoothing
         private Quaternion target;
         public new Quaternion Target
         {
-            get { return target; }
+            get => target;
             set
             {
                 timeCount = 0;

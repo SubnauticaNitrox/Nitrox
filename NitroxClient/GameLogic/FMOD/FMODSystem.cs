@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Properties;

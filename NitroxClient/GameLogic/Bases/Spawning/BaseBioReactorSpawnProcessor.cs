@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using NitroxClient.MonoBehaviours;
+﻿using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;

@@ -40,9 +40,8 @@ namespace NitroxClient.GameLogic.Bases.Spawning
         {
             TechType techType = (TechType)baseDeconstructable.ReflectionGet("recipe");
 
-            BasePieceSpawnProcessor processor;
 
-            if (processorsByType.TryGetValue(techType, out processor))
+            if (processorsByType.TryGetValue(techType, out BasePieceSpawnProcessor processor))
             {
                 Log.Info("Found custom BasePieceSpawnProcessor for " + techType);
                 return processor;

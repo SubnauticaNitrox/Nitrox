@@ -23,7 +23,7 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             GameObject vehicleGo = NitroxEntity.RequireObjectFrom(packet.VehicleId);
             Vehicle vehicle = vehicleGo.RequireComponent<Vehicle>();
-            
+
             // If the vehicle is docked, then we will manually set the piloting mode
             // once the animations complete.  This prevents weird behaviour such as the
             // player existing the vehicle while it is about to dock (the event fires 

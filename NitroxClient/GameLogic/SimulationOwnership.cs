@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
-using NitroxModel.Packets;
+using NitroxClient.GameLogic.Simulation;
 using NitroxModel.DataStructures;
 using NitroxModel.Logger;
-using NitroxClient.GameLogic.Simulation;
+using NitroxModel.Packets;
 
 namespace NitroxClient.GameLogic
 {
@@ -13,7 +13,7 @@ namespace NitroxClient.GameLogic
         private readonly IPacketSender packetSender;
         private readonly Dictionary<NitroxId, SimulationLockType> simulatedIdsByLockType = new Dictionary<NitroxId, SimulationLockType>();
         private readonly Dictionary<NitroxId, LockRequestBase> lockRequestsById = new Dictionary<NitroxId, LockRequestBase>();
-        
+
         public SimulationOwnership(IMultiplayerSession muliplayerSession, IPacketSender packetSender)
         {
             this.muliplayerSession = muliplayerSession;
