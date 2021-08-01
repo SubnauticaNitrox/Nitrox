@@ -15,7 +15,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Input.KeyBindings.Actions
             BaseGhost[] ghosts = GameObject.FindObjectsOfType<BaseGhost>();
             List<BaseGhost> nearbyGhosts = new List<BaseGhost>();
             GameObject localPlayer = Utils.GetLocalPlayer().gameObject;
-            // grab nearby ghosts so it's more of a targeted command
+            // grab nearby ghosts so it's more of a targeted action
             ghosts.ForEach((ghost) =>
             {
                 if (Vector3.Distance(ghost.transform.position, localPlayer.transform.position) < maxSlayDistance)
