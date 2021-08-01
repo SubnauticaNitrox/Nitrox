@@ -11,13 +11,16 @@ namespace NitroxClient.MonoBehaviours.Gui.Input
 
         private const int CHAT_KEY_VALUE = 45;
         private const string CHAT_KEY_LABEL = "Chat";
+        private const int GHOST_SLAYER_KEY_VALUE = 46;
+        private const string GHOST_SLAYER_KEY_LABEL = "Slay Ghosts";
 
         public KeyBindingManager()
         {
             KeyboardKeyBindings = new List<KeyBinding>
             {
                 // new bindings should not be set to a value equivalent to a pre-existing GameInput.Button enum or another custom binding
-                new KeyBinding(CHAT_KEY_VALUE, CHAT_KEY_LABEL, GameInput.Device.Keyboard, new DefaultKeyBinding("Y", GameInput.BindingSet.Primary), new ChatKeyBindingAction())
+                new KeyBinding(CHAT_KEY_VALUE, CHAT_KEY_LABEL, GameInput.Device.Keyboard, new DefaultKeyBinding("Y", GameInput.BindingSet.Primary), new ChatKeyBindingAction()),
+                new KeyBinding(GHOST_SLAYER_KEY_VALUE, GHOST_SLAYER_KEY_LABEL, GameInput.Device.Keyboard, new DefaultKeyBinding("U", GameInput.BindingSet.Primary), new GhostSlayerBindingAction())
             };
         }
 
