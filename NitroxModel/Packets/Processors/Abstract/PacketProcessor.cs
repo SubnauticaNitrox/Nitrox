@@ -28,8 +28,7 @@ namespace NitroxModel.Packets.Processors.Abstract
                     // Prepare arguments for constructor (if applicable):
                     object[] args = ctor.GetParameters().Select(pi =>
                         {
-                            object v;
-                            if (processorArguments.TryGetValue(pi.ParameterType, out v))
+                            if (processorArguments.TryGetValue(pi.ParameterType, out object v))
                             {
                                 return v;
                             }

@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using System.Reflection;
+using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
@@ -8,7 +9,6 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel_Subnautica.DataStructures.GameLogic;
-using System.Reflection;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic

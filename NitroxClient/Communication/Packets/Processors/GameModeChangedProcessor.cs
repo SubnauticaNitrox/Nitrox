@@ -7,7 +7,7 @@ namespace NitroxClient.Communication.Packets.Processors
     {
         public override void Process(GameModeChanged packet)
         {
-            GameModeUtils.SetGameMode((GameModeOption)(int) packet.GameMode, GameModeOption.None);
+            GameModeUtils.SetGameMode((GameModeOption)(int)packet.GameMode, GameModeOption.None);
         }
     }
 }

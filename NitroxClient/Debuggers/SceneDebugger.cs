@@ -237,7 +237,7 @@ namespace NitroxClient.Debuggers
             using (new GUILayout.VerticalScope("Box"))
             {
                 GUILayout.Label("All scenes", "header");
-                for (int i = 0; i < SceneManager.sceneCountInBuildSettings+1; i++)
+                for (int i = 0; i < SceneManager.sceneCountInBuildSettings + 1; i++)
                 {
                     Scene currentScene;
                     string path = "";

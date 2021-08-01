@@ -15,7 +15,7 @@ namespace NitroxServer_Subnautica.Communication.Packets.Processors
         {
             this.vehicleManager = vehicleManager;
             this.playerManager = playerManager;
-        }        
+        }
 
         public override void Process(NitroxModel.Packets.ToggleLights packet, NitroxServer.Player player)
         {

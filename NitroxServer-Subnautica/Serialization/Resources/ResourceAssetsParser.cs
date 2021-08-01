@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using AssetsTools.NET;
 using NitroxModel.Discovery;
+using NitroxServer.Serialization.Resources.Datastructures;
 using NitroxServer_Subnautica.Serialization.Resources.Parsers;
 using NitroxServer_Subnautica.Serialization.Resources.Parsers.Images;
 using NitroxServer_Subnautica.Serialization.Resources.Processing;
-using NitroxServer.Serialization.Resources.Datastructures;
-using NitroxModel.Logger;
 
 namespace NitroxServer_Subnautica.Serialization.Resources
 {
@@ -104,9 +103,8 @@ namespace NitroxServer_Subnautica.Serialization.Resources
 
                     AssetIdentifier identifier = new AssetIdentifier(path, assetFileInfo.index);
 
-                    AssetParser assetParser;
 
-                    if (assetParsersByClassId.TryGetValue(assetFileInfo.curFileType, out assetParser))
+                    if (assetParsersByClassId.TryGetValue(assetFileInfo.curFileType, out AssetParser assetParser))
                     {
                         assetParser.Parse(identifier, reader, resourceAssets, relativeFileIdToPath);
                     }

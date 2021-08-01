@@ -33,7 +33,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 Log.Error($"Entity metadata updated on an entity unknown to the server {packet.Id} {packet.NewValue.GetType()} ");
             }
         }
-        
+
         private void SendUpdateToVisiblePlayers(EntityMetadataUpdate packet, Player sendingPlayer, Entity entity)
         {
             foreach (Player player in playerManager.GetConnectedPlayers())

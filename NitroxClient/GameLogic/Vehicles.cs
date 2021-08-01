@@ -596,8 +596,7 @@ namespace NitroxClient.GameLogic
 
         public Optional<T> TryGetVehicle<T>(NitroxId vehicleId) where T : VehicleModel
         {
-            VehicleModel vehicle;
-            vehiclesById.TryGetValue(vehicleId, out vehicle);
+            vehiclesById.TryGetValue(vehicleId, out VehicleModel vehicle);
             return Optional.OfNullable((T)vehicle);
         }
     }

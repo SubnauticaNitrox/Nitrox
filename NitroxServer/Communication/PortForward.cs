@@ -57,10 +57,10 @@ namespace NitroxServer.Communication
             {
                 return ex.Message;
             }
-            
+
             return null;
         }
-        
+
         public static async Task<bool> IsPortOpenAsync(int port, TimeSpan timeout)
         {
             CancellationTokenSource source = new(timeout);

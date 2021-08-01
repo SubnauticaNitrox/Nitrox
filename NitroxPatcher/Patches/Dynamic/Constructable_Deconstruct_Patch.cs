@@ -10,7 +10,7 @@ namespace NitroxPatcher.Patches.Dynamic
     {
         public static readonly Type TARGET_CLASS = typeof(Constructable);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("Deconstruct");
-        
+
         public static void Postfix(Constructable __instance, bool __result)
         {
             if (__result && __instance.constructedAmount <= 0f)
@@ -22,7 +22,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 NitroxServiceLocator.LocateService<Building>().ChangeConstructionAmount(__instance.gameObject, __instance.constructedAmount);
             }
         }
-        
+
         public override void Patch(Harmony harmony)
         {
             PatchPostfix(harmony, TARGET_METHOD);

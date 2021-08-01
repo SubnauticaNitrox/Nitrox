@@ -11,7 +11,7 @@ namespace NitroxClient.Communication.Packets.Processors
         public ConstructionAmountChangedProcessor(BuildThrottlingQueue buildEventQueue)
         {
             this.buildEventQueue = buildEventQueue;
-        }        
+        }
 
         public override void Process(ConstructionAmountChanged amountChanged)
         {

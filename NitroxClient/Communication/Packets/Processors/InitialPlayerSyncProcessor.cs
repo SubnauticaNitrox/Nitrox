@@ -1,12 +1,12 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxModel.Packets;
-using System.Collections.Generic;
-using NitroxClient.GameLogic.InitialSync.Base;
-using System;
-using NitroxModel.Logger;
-using NitroxClient.MonoBehaviours;
+﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
+using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxClient.GameLogic.InitialSync.Base;
+using NitroxClient.MonoBehaviours;
+using NitroxModel.Logger;
+using NitroxModel.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors
 {

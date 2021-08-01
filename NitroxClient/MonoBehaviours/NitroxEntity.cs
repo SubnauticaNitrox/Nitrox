@@ -40,8 +40,7 @@ namespace NitroxClient.MonoBehaviours
                 return Optional.Empty;
             }
 
-            GameObject gameObject;
-            if (!gameObjectsById.TryGetValue(id, out gameObject))
+            if (!gameObjectsById.TryGetValue(id, out GameObject gameObject))
             {
                 return Optional.Empty;
             }

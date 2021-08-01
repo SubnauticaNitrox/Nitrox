@@ -1,7 +1,7 @@
 ﻿using System;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Logger;
 using UnityEngine;
-using NitroxModel.DataStructures.GameLogic;
 
 
 namespace NitroxClient.GameLogic.Containers

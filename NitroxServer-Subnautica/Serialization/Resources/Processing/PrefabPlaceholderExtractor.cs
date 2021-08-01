@@ -27,9 +27,8 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Processing
 
             foreach (GameObjectAsset placeholderGroup in GameObjectAssetParser.GameObjectsByAssetId.Values)
             {
-                List<AssetIdentifier> prefabPlaceholders;
 
-                if (!PrefabPlaceholdersGroupParser.PrefabPlaceholderIdsByGameObjectId.TryGetValue(placeholderGroup.Identifier, out prefabPlaceholders))
+                if (!PrefabPlaceholdersGroupParser.PrefabPlaceholderIdsByGameObjectId.TryGetValue(placeholderGroup.Identifier, out List<AssetIdentifier> prefabPlaceholders))
                 {
                     continue;
                 }
@@ -72,9 +71,8 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Processing
             {
                 TransformAsset childTransform = TransformAssetParser.TransformsByAssetId[childTransformId];
 
-                string childClassId;
 
-                PrefabIdentifierParser.ClassIdByGameObjectId.TryGetValue(childTransform.GameObjectIdentifier, out childClassId);
+                PrefabIdentifierParser.ClassIdByGameObjectId.TryGetValue(childTransform.GameObjectIdentifier, out string childClassId);
 
                 children.Add(CreatePrefabAsset(childTransform.GameObjectIdentifier, childClassId));
             }
@@ -86,9 +84,8 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Processing
         {
             AssetIdentifier prefabId = PrefabIdentifierParser.GameObjectIdByClassId[classId];
             GameObjectAsset gameObject = GameObjectAssetParser.GameObjectsByAssetId[prefabId];
-            NitroxEntitySlot entitySlot;
 
-            EntitySlotParser.EntitySlotsByIdentifier.TryGetValue(gameObject.Identifier, out entitySlot);
+            EntitySlotParser.EntitySlotsByIdentifier.TryGetValue(gameObject.Identifier, out NitroxEntitySlot entitySlot);
 
             return Optional.OfNullable(entitySlot);
         }
@@ -97,9 +94,8 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Processing
         {
             foreach (AssetIdentifier componentIdentifier in gameObjectAsset.Components)
             {
-                TransformAsset transform;
 
-                if (TransformAssetParser.TransformsByAssetId.TryGetValue(componentIdentifier, out transform))
+                if (TransformAssetParser.TransformsByAssetId.TryGetValue(componentIdentifier, out TransformAsset transform))
                 {
                     return transform;
                 }

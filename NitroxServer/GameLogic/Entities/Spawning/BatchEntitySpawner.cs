@@ -228,9 +228,8 @@ namespace NitroxServer.GameLogic.Entities.Spawning
 
             CreatePrefabPlaceholdersWithChildren(spawnedEntity, classId, deterministicBatchGenerator);
 
-            IEntityBootstrapper bootstrapper;
 
-            if (customBootstrappersByTechType.TryGetValue(techType, out bootstrapper))
+            if (customBootstrappersByTechType.TryGetValue(techType, out IEntityBootstrapper bootstrapper))
             {
                 bootstrapper.Prepare(spawnedEntity, parentEntity, deterministicBatchGenerator);
             }
@@ -288,13 +287,12 @@ namespace NitroxServer.GameLogic.Entities.Spawning
 
         private void CreatePrefabPlaceholdersWithChildren(Entity entity, string classId, DeterministicBatchGenerator deterministicBatchGenerator)
         {
-            PrefabPlaceholdersGroupAsset group;
 
             // Check to see if this entity is a PrefabPlaceholderGroup.  If it is, 
             // we want to add the children that would be spawned here.  This is 
             // surpressed on the client so we don't get virtual entities that the
             // server doesn't know about.
-            if (prefabPlaceholderGroupsbyClassId.TryGetValue(classId, out group))
+            if (prefabPlaceholderGroupsbyClassId.TryGetValue(classId, out PrefabPlaceholdersGroupAsset group))
             {
                 foreach (PrefabAsset prefab in group.SpawnablePrefabs)
                 {
@@ -362,7 +360,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                              parent);
 
                 prefabEntity.ChildEntities = ConvertComponentPrefabsToEntities(prefab.Children, prefabEntity, deterministicBatchGenerator);
-                
+
                 entities.Add(prefabEntity);
             }
 

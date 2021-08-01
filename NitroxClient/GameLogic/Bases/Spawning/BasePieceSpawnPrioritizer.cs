@@ -66,15 +66,14 @@ namespace NitroxClient.GameLogic.Bases.Spawning
                               .ThenBy(piece => piece.IsFurniture) // Ensure base building block go before furniture
                               .ThenBy(piece => ComputeBasePiecePriority(piece))    // Ensure remaining pieces are prioritized by above order. 
                               .ThenBy(piece => piece.BuildIndex)
-                              .ToList();                              
+                              .ToList();
         }
 
         private int ComputeBasePiecePriority(BasePiece basePiece)
         {
             TechType techType = basePiece.TechType.ToUnity();
-            int position;
 
-            if (PiecesToPriority.TryGetValue(techType, out position))
+            if (PiecesToPriority.TryGetValue(techType, out int position))
             {
                 return position;
             }

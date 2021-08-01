@@ -53,9 +53,7 @@ namespace NitroxClient.GameLogic
         {
             Quaternion delta = remoteRotation * gameObject.transform.rotation.GetInverse();
 
-            float angle;
-            Vector3 axis;
-            delta.ToAngleAxis(out angle, out axis);
+            delta.ToAngleAxis(out float angle, out Vector3 axis);
 
             // We get an infinite axis in the event that our rotation is already aligned.
             if (float.IsInfinity(axis.x))

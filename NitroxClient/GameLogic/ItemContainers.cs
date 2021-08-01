@@ -1,6 +1,4 @@
-﻿using System;
-using System.Text.RegularExpressions;
-using NitroxClient.Communication.Abstract;
+﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;

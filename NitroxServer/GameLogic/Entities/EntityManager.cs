@@ -1,10 +1,10 @@
-﻿using NitroxModel.DataStructures.GameLogic;
-using NitroxServer.GameLogic.Entities.Spawning;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
-using NitroxModel.DataStructures;
+using NitroxServer.GameLogic.Entities.Spawning;
 
 namespace NitroxServer.GameLogic.Entities
 {
@@ -153,9 +153,8 @@ namespace NitroxServer.GameLogic.Entities
             {
                 lock (phasingEntitiesByAbsoluteCell)
                 {
-                    List<Entity> phasingEntitiesInCell = null;
 
-                    if (!phasingEntitiesByAbsoluteCell.TryGetValue(entity.AbsoluteEntityCell, out phasingEntitiesInCell))
+                    if (!phasingEntitiesByAbsoluteCell.TryGetValue(entity.AbsoluteEntityCell, out List<Entity> phasingEntitiesInCell))
                     {
                         phasingEntitiesInCell = phasingEntitiesByAbsoluteCell[entity.AbsoluteEntityCell] = new List<Entity>();
                     }
@@ -187,9 +186,8 @@ namespace NitroxServer.GameLogic.Entities
                 {
                     lock (phasingEntitiesByAbsoluteCell)
                     {
-                        List<Entity> entities;
 
-                        if (phasingEntitiesByAbsoluteCell.TryGetValue(entity.AbsoluteEntityCell, out entities))
+                        if (phasingEntitiesByAbsoluteCell.TryGetValue(entity.AbsoluteEntityCell, out List<Entity> entities))
                         {
                             entities.Remove(entity);
                         }

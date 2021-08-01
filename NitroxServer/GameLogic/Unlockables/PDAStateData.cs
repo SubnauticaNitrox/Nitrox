@@ -47,8 +47,7 @@ namespace NitroxServer.GameLogic.Unlockables
 
         public void EntryProgressChanged(NitroxTechType techType, float progress, int unlocked)
         {
-            PDAEntry pdaEntry;
-            if (!PartiallyUnlockedByTechType.TryGetValue(techType, out pdaEntry))
+            if (!PartiallyUnlockedByTechType.TryGetValue(techType, out PDAEntry pdaEntry))
             {
                 PartiallyUnlockedByTechType[techType] = pdaEntry = new PDAEntry(techType, progress, unlocked);
             }

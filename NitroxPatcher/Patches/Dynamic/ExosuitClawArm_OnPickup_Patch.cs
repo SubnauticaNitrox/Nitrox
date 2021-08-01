@@ -22,7 +22,8 @@ namespace NitroxPatcher.Patches.Dynamic
                 if (pickupable != null && pickupable.isPickupable && componentInParent.storageContainer.container.HasRoomFor(pickupable))
                 {
                     NitroxServiceLocator.LocateService<Item>().PickedUp(pickupable.gameObject, pickupable.GetTechType());
-                } else if(component != null)
+                }
+                else if (component != null)
                 {
                     Log.Debug("Delete Pickprefab for exosuit claw arm");
                     NitroxServiceLocator.LocateService<Item>().PickedUp(component.gameObject, component.pickTech);

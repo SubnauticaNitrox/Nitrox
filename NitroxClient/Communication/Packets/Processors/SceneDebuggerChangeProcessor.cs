@@ -1,10 +1,10 @@
 ﻿using System.Linq;
 using System.Reflection;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using UnityEngine;
-using NitroxClient.Communication.Abstract;
 
 namespace NitroxClient.Communication.Packets.Processors
 {

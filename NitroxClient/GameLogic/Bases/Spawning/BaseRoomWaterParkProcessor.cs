@@ -1,8 +1,8 @@
 ﻿using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
-using UnityEngine;
-using NitroxModel.Logger;
 using NitroxModel.Helper;
+using NitroxModel.Logger;
+using UnityEngine;
 
 namespace NitroxClient.GameLogic.Bases.Spawning
 {
@@ -12,7 +12,7 @@ namespace NitroxClient.GameLogic.Bases.Spawning
      * contains a Planter.  When the object spawns, we use this class to set a deterministic id seeded by the parent id. 
      * This keeps inventory actions in sync and allows for persistent storage of each container's contents.
      */
-    public class BaseRoomWaterParkProcessor: BasePieceSpawnProcessor
+    public class BaseRoomWaterParkProcessor : BasePieceSpawnProcessor
     {
         public override TechType[] ApplicableTechTypes { get; } =
         {
@@ -24,7 +24,7 @@ namespace NitroxClient.GameLogic.Bases.Spawning
             NitroxId pieceId = NitroxEntity.GetId(finishedPiece);
 
             WaterParkPiece waterParkPiece = finishedPiece.GetComponent<WaterParkPiece>();
-            if(!waterParkPiece)
+            if (!waterParkPiece)
             {
                 // The BaseWater has multiple base pieces, but only one of them (the bottom) contains the WaterParkPiece component...
                 return;

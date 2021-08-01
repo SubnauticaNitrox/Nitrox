@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using NitroxModel.Logger;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Logger;
 using UnityEngine;
 
 
@@ -32,11 +32,11 @@ namespace NitroxClient.GameLogic.Containers
 
         public static ContainerAddItemPostProcessor From(GameObject item)
         {
-            foreach( ContainerAddItemPostProcessor processor in processors )
+            foreach (ContainerAddItemPostProcessor processor in processors)
             {
-                foreach( Type type in processor.ApplicableComponents )
+                foreach (Type type in processor.ApplicableComponents)
                 {
-                    if( item.GetComponent(type))
+                    if (item.GetComponent(type))
                     {
                         Log.Info("Found custom ContainerAddItemPostProcessor for " + type);
                         return processor;

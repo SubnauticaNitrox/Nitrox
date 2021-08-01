@@ -22,14 +22,14 @@ namespace NitroxPatcher.Patches.Dynamic
             GameObject gameObject = null;
             // Suppress powered on if a seamoth´s default is set to false            
             if (__instance.GetComponentInParent<SeaMoth>() != null && powered)
-            {                
+            {
                 gameObject = __instance.transform.parent.gameObject;
                 NitroxId id = NitroxEntity.GetId(gameObject);
-                SeamothModel model = NitroxServiceLocator.LocateService<Vehicles>().GetVehicles<SeamothModel>(id);           
+                SeamothModel model = NitroxServiceLocator.LocateService<Vehicles>().GetVehicles<SeamothModel>(id);
                 return (model.LightOn == __instance.lightsActive);
-            }        
-            
-            return true;            
+            }
+
+            return true;
         }
 
 

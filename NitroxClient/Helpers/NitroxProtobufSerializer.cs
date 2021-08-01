@@ -14,7 +14,7 @@ namespace NitroxClient.Helpers
 
         private readonly Dictionary<Type, int> knownTypes;
 
-        protected RuntimeTypeModel Model { get { return model; } }
+        protected RuntimeTypeModel Model => model;
 
         public NitroxProtobufSerializer(params string[] assemblies)
         {

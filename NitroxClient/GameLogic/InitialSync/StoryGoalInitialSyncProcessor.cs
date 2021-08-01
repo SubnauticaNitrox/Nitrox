@@ -9,7 +9,7 @@ namespace NitroxClient.GameLogic.InitialSync
 {
     public class StoryGoalInitialSyncProcessor : InitialSyncProcessor
     {
-        
+
         public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
         {
             SetCompletedStoryGoals(packet.StoryGoalData.CompletedGoals);
@@ -30,7 +30,7 @@ namespace NitroxClient.GameLogic.InitialSync
             StoryGoalManager.main.pendingRadioMessages.AddRange(radioQueue);
             StoryGoalManager.main.PulsePendingMessages();
         }
-        
+
         private void SetCompletedStoryGoals(List<string> storyGoalData)
         {
             StoryGoalManager.main.completedGoals.Clear();
@@ -42,7 +42,7 @@ namespace NitroxClient.GameLogic.InitialSync
 
             Log.Info("Received initial sync packet with " + storyGoalData.Count + " completed story goals");
         }
-        
+
         private void SetGoalUnlocks(List<string> goalUnlocks)
         {
             foreach (string goalUnlock in goalUnlocks)

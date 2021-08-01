@@ -18,11 +18,11 @@ namespace NitroxPatcher.Patches.Dynamic
          */
         public static void Postfix(Transform geometry, Base.Face face)
         {
-            if(!geometry || !geometry.gameObject)
+            if (!geometry || !geometry.gameObject)
             {
                 return;
             }
-            
+
             NitroxServiceLocator.LocateService<GeometryRespawnManager>().BaseFaceRespawned(geometry.gameObject, face.cell, face.direction);
         }
 

@@ -19,7 +19,7 @@ namespace NitroxServer.Communication.Packets.Processors
         public override void Process(EscapePodRepair packet, Player player)
         {
             world.EscapePodManager.RepairEscapePod(packet.Id);
-            playerManager.SendPacketToOtherPlayers(packet, player);            
+            playerManager.SendPacketToOtherPlayers(packet, player);
         }
     }
 
