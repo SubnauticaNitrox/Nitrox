@@ -29,6 +29,7 @@ namespace NitroxLauncher
         private Process serverProcess;
         private Process gameProcess;
         private bool isEmbedded;
+        private Task<string> lastFindSubnauticaTask;
 
         private string subnauticaPath;
         public string SubnauticaPath
@@ -118,10 +119,13 @@ namespace NitroxLauncher
             {
                 return null;
             }
-
             SubnauticaPath = path;
+            if (lastFindSubnauticaTask != null)
+            {
+                return await lastFindSubnauticaTask;
+            }
 
-            return await Task.Factory.StartNew(() =>
+            lastFindSubnauticaTask = Task.Factory.StartNew(() =>
             {
                 PirateDetection.TriggerOnDirectory(path);
                 File.WriteAllText("path.txt", path);
@@ -139,6 +143,7 @@ namespace NitroxLauncher
 
                 return path;
             }, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
+            return await lastFindSubnauticaTask;
         }
 
         public void NavigateTo(Type page)
@@ -213,7 +218,16 @@ namespace NitroxLauncher
                 Log.Error(ex, "Unable to move bootloader dll to Managed folder. Still attempting to launch because it might exist from previous runs.");
             }
 
-            nitroxEntryPatch.Remove(); // Remove any previous instances first.
+            // Try inject Nitrox into Subnautica code.
+            if (lastFindSubnauticaTask != null)
+            {
+                await lastFindSubnauticaTask;
+            }
+            if (nitroxEntryPatch == null)
+            {
+                throw new Exception("Nitrox patch to Assembly-CSharp.dll could not be applied");
+            }
+            nitroxEntryPatch.Remove();
             nitroxEntryPatch.Apply();
             QModHelper.RemoveQModEntryPoint(subnauticaPath);
 

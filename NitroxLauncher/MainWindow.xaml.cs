@@ -16,7 +16,7 @@ namespace NitroxLauncher
 {
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
-        private readonly LauncherLogic logic = new LauncherLogic();
+        private readonly LauncherLogic logic = new();
         private object frameContent;
         private bool isServerEmbedded;
 
@@ -76,19 +76,19 @@ namespace NitroxLauncher
             logic.ServerExited += ServerExited;
 
             logic.SetTargetedSubnauticaPath(GameInstallationFinder.Instance.FindGame())
-                .ContinueWith(task =>
-                {
-                    if (GameInstallationFinder.IsSubnauticaDirectory(task.Result))
-                    {
-                        LauncherLogic.Instance.NavigateTo<LaunchGamePage>();
-                    }
-                    else
-                    {
-                        LauncherLogic.Instance.NavigateTo<OptionPage>();
-                    }
+                                   .ContinueWith(task =>
+                                   {
+                                       if (GameInstallationFinder.IsSubnauticaDirectory(task.Result))
+                                       {
+                                           LauncherLogic.Instance.NavigateTo<LaunchGamePage>();
+                                       }
+                                       else
+                                       {
+                                           LauncherLogic.Instance.NavigateTo<OptionPage>();
+                                       }
 
-                    logic.CheckNitroxVersion();
-                }, CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.FromCurrentSynchronizationContext());
+                                       logic.CheckNitroxVersion();
+                                   }, CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -157,11 +157,6 @@ namespace NitroxLauncher
                 return;
             }
             LauncherLogic.Instance.NavigateTo(elem.Tag?.GetType());
-        }
-
-        private void PART_VerticalScrollBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-
         }
     }
 }
