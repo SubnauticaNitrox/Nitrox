@@ -22,7 +22,7 @@ namespace NitroxModel.Helper
 
         public static Version GetNitroxLatestVersion()
         {
-            HttpWebRequest req = WebRequest.Create("https://api.github.com/repos/SubnauticaNitrox/Nitrox/releases/latest") as HttpWebRequest;
+            HttpWebRequest req = WebRequest.Create("https://nitrox.rux.gg/api/version/latest") as HttpWebRequest;
             req.Method = "GET";
             req.UserAgent = "Nitrox";
             req.ContentType = "application/json";
@@ -33,7 +33,7 @@ namespace NitroxModel.Helper
                 using (StreamReader sr = new StreamReader(req.GetResponse().GetResponseStream()))
                 {
                     string json = sr.ReadToEnd();
-                    Regex rx = new Regex(@"""name"":""([^""]*)""");
+                    Regex rx = new Regex(@"""version"":""([^""]*)""");
                     Match match = rx.Match(json);
 
                     if (match.Success)
