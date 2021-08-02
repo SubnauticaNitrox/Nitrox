@@ -16,11 +16,9 @@ namespace NitroxLauncher
 {
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
-        private readonly LauncherLogic logic = new LauncherLogic();
-        private object frameContent;
-        private bool isServerEmbedded;
+        public event PropertyChangedEventHandler PropertyChanged;
 
-        public string Version => $"{LauncherLogic.RELEASE_PHASE} {LauncherLogic.Version}";
+        public ImageSource CurrentPageBackground => (ImageSource)(FrameContent as Page)?.Background.GetValue(ImageBrush.ImageSourceProperty);
 
         public object FrameContent
         {
@@ -40,7 +38,10 @@ namespace NitroxLauncher
             }
         }
 
-        public ImageSource CurrentPageBackground => (ImageSource)(FrameContent as Page)?.Background.GetValue(ImageBrush.ImageSourceProperty);
+        public string Version => $"{LauncherLogic.RELEASE_PHASE} {LauncherLogic.Version}";
+        private object frameContent;
+        private bool isServerEmbedded;
+        private readonly LauncherLogic logic = new();
 
         public MainWindow()
         {
@@ -76,22 +77,20 @@ namespace NitroxLauncher
             logic.ServerExited += ServerExited;
 
             logic.SetTargetedSubnauticaPath(GameInstallationFinder.Instance.FindGame())
-                .ContinueWith(task =>
-                {
-                    if (GameInstallationFinder.IsSubnauticaDirectory(task.Result))
-                    {
-                        LauncherLogic.Instance.NavigateTo<LaunchGamePage>();
-                    }
-                    else
-                    {
-                        LauncherLogic.Instance.NavigateTo<OptionPage>();
-                    }
+                 .ContinueWith(task =>
+                 {
+                     if (GameInstallationFinder.IsSubnauticaDirectory(task.Result))
+                     {
+                         LauncherLogic.Instance.NavigateTo<LaunchGamePage>();
+                     }
+                     else
+                     {
+                         LauncherLogic.Instance.NavigateTo<OptionPage>();
+                     }
 
-                    logic.CheckNitroxVersion();
-                }, CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.FromCurrentSynchronizationContext());
+                     logic.CheckNitroxVersion();
+                 }, CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.FromCurrentSynchronizationContext());
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
@@ -157,11 +156,6 @@ namespace NitroxLauncher
                 return;
             }
             LauncherLogic.Instance.NavigateTo(elem.Tag?.GetType());
-        }
-
-        private void PART_VerticalScrollBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-
         }
     }
 }
