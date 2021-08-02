@@ -128,13 +128,23 @@ namespace NitroxLauncher
             lastFindSubnauticaTask = Task.Factory.StartNew(() =>
             {
                 PirateDetection.TriggerOnDirectory(path);
-                File.WriteAllText("path.txt", path);
-
-                if (nitroxEntryPatch?.IsApplied == true)
+                try
                 {
-                    nitroxEntryPatch.Remove();
+                    File.WriteAllText("path.txt", path);
                 }
-                nitroxEntryPatch = new NitroxEntryPatch(path);
+                catch (Exception ex)
+                {
+                    throw new Exception(
+                        $"If you use a third-party anti virus (excluding Windows Defender) like:{Environment.NewLine} - {string.Join($"{Environment.NewLine} - ", "Avast", "McAfee")}{Environment.NewLine}Then make sure it's not blocking Nitrox from working", ex);
+                }
+                finally
+                {
+                    if (nitroxEntryPatch?.IsApplied == true)
+                    {
+                        nitroxEntryPatch.Remove();
+                    }
+                    nitroxEntryPatch = new NitroxEntryPatch(path);
+                }
 
                 if (Path.GetFullPath(path).StartsWith(AppHelper.ProgramFileDirectory, StringComparison.OrdinalIgnoreCase))
                 {
@@ -225,7 +235,7 @@ namespace NitroxLauncher
             }
             if (nitroxEntryPatch == null)
             {
-                throw new Exception("Nitrox patch to Assembly-CSharp.dll could not be applied");
+                throw new Exception("Nitrox was blocked by another program");
             }
             nitroxEntryPatch.Remove();
             nitroxEntryPatch.Apply();
