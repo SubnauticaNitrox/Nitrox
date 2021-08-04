@@ -1,3 +1,4 @@
+﻿using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
@@ -18,7 +19,11 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(RadioPlayPendingMessage packet, Player player)
         {
-            storyGoalData.RemovedLatestRadioMessage();
+            bool removed = storyGoalData.RemovedLatestRadioMessage();
+            if (!removed)
+            {
+                Log.Error($"Error while processing RadioPlayPendingMessage [{packet}]");
+            }
             playerManager.SendPacketToOtherPlayers(packet, player);
         }
     }

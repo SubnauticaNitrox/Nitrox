@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Logger;
 using ProtoBufNet;
 
 namespace NitroxServer.GameLogic.Unlockables
@@ -18,9 +19,18 @@ namespace NitroxServer.GameLogic.Unlockables
         [JsonProperty, ProtoMember(3)]
         public ThreadSafeCollection<string> GoalUnlocks { get; } = new ThreadSafeCollection<string>();
 
-        public void RemovedLatestRadioMessage()
+        public bool RemovedLatestRadioMessage()
         {
-            RadioQueue.RemoveAt(0);
+            if (RadioQueue.Count > 0)
+            {
+                RadioQueue.RemoveAt(0);
+                return true;
+            }
+            else
+            {
+                Log.Error("Couldn't remove the latest radio message: the radio queue is empty");
+                return false;
+            }
         }
 
         public InitialStoryGoalData GetInitialStoryGoalData()
