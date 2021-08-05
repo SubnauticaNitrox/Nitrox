@@ -4,7 +4,7 @@ using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using UnityEngine;
 
-namespace NitroxClient.GameLogic.Bases.Spawning
+namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
 {
     /*
      * When a bio reactor is created, two objects are spawned: the main world object (BaseBioReactorGeometry) and
@@ -14,12 +14,12 @@ namespace NitroxClient.GameLogic.Bases.Spawning
      */
     public class BaseBioReactorSpawnProcessor : BasePieceSpawnProcessor
     {
-        public override TechType[] ApplicableTechTypes { get; } =
+        protected override TechType[] ApplicableTechTypes { get; } =
         {
             TechType.BaseBioReactor
         };
 
-        public override void SpawnPostProcess(Base latestBase, Int3 latestCell, GameObject finishedPiece)
+        protected override void SpawnPostProcess(Base latestBase, Int3 latestCell, GameObject finishedPiece)
         {
             NitroxId reactorId = NitroxEntity.GetId(finishedPiece);
             BaseBioReactorGeometry bioReactor = finishedPiece.RequireComponent<BaseBioReactorGeometry>();

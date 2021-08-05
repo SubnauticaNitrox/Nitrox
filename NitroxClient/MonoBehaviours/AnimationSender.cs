@@ -35,6 +35,7 @@ namespace NitroxClient.MonoBehaviours
 
     public enum AnimChangeType
     {
-        UNDERWATER
+        UNDERWATER,
+        BENCH
     }
 }

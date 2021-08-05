@@ -4,7 +4,7 @@ using NitroxModel.Helper;
 using NitroxModel.Logger;
 using UnityEngine;
 
-namespace NitroxClient.GameLogic.Bases.Spawning
+namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
 {
     /*
      * When a Alien Containment Unit is created, multiple objects are spawned: the main world object (WaterParkPiece) and
@@ -14,12 +14,12 @@ namespace NitroxClient.GameLogic.Bases.Spawning
      */
     public class BaseRoomWaterParkProcessor : BasePieceSpawnProcessor
     {
-        public override TechType[] ApplicableTechTypes { get; } =
+        protected override TechType[] ApplicableTechTypes { get; } =
         {
             TechType.BaseWaterPark
         };
 
-        public override void SpawnPostProcess(Base latestBase, Int3 latestCell, GameObject finishedPiece)
+        protected override void SpawnPostProcess(Base latestBase, Int3 latestCell, GameObject finishedPiece)
         {
             NitroxId pieceId = NitroxEntity.GetId(finishedPiece);
 

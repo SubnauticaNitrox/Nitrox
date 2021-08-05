@@ -2,7 +2,8 @@
 using System.Reflection;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Bases;
-using NitroxClient.GameLogic.Bases.Spawning;
+using NitroxClient.GameLogic.Bases.Spawning.BasePiece;
+using NitroxClient.GameLogic.Bases.Spawning.Furniture;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours.Overrides;
 using NitroxClient.Unity.Helper;
@@ -175,11 +176,9 @@ namespace NitroxClient.MonoBehaviours
         {
             GameObject constructing = NitroxEntity.RequireObjectFrom(constructionCompleted.PieceId);
 
-            ConstructableBase constructableBase = constructing.GetComponent<ConstructableBase>();
-
             // For bases, we need to transfer the GUID off of the ghost and onto the finished piece.
             // Furniture just re-uses the same piece.
-            if (constructableBase)
+            if (constructing.TryGetComponent(out ConstructableBase constructableBase))
             {
                 Int3 latestCell = default(Int3);
                 Base latestBase = null;
@@ -196,7 +195,7 @@ namespace NitroxClient.MonoBehaviours
                 constructableBase.constructedAmount = 1f;
                 constructableBase.SetState(true, true);
 
-                if (latestBase == null)
+                if (!latestBase)
                 {
                     Optional<object> opConstructedBase = TransientLocalObjectManager.Get(TransientObjectType.BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT);
                     latestBase = ((GameObject)opConstructedBase.Value).GetComponent<Base>();
@@ -205,22 +204,21 @@ namespace NitroxClient.MonoBehaviours
 
                 Transform cellTransform = latestBase.GetCellObject(latestCell);
 
-                if (latestCell == default(Int3) || cellTransform == null)
+                if (latestCell == default(Int3) || !cellTransform)
                 {
                     latestBase.GetClosestCell(constructing.gameObject.transform.position, out latestCell, out _, out _);
                     cellTransform = latestBase.GetCellObject(latestCell);
 
-                    Validate.NotNull(cellTransform, $"Must have a cell transform, one not found near {constructing.gameObject.transform.position} for latestcell {latestCell}");
+                    Validate.NotNull(cellTransform, $"Must have a cell transform, one not found near {constructing.gameObject.transform.position} for latestCell {latestCell}");
                 }
 
                 GameObject finishedPiece = null;
 
-                // There can be multiple objects in a cell (such as a corridor with hatces built into it)
-                // we look for a object that is able to be deconstucted that hasn't been tagged yet.
+                // There can be multiple objects in a cell (such as a corridor with hatches built into it)
+                // we look for a object that is able to be deconstructed that hasn't been tagged yet.
                 foreach (Transform child in cellTransform)
                 {
-                    bool isNewBasePiece = (child.GetComponent<NitroxEntity>() == null &&
-                                           child.GetComponent<BaseDeconstructable>() != null);
+                    bool isNewBasePiece = !child.GetComponent<NitroxEntity>() && child.GetComponent<BaseDeconstructable>();
 
                     if (isNewBasePiece)
                     {
@@ -233,19 +231,23 @@ namespace NitroxClient.MonoBehaviours
 
                 Log.Debug($"Construction completed on a base piece: {constructionCompleted.PieceId} {finishedPiece.name}");
 
-                UnityEngine.Object.Destroy(constructableBase.gameObject);
+                Destroy(constructableBase.gameObject);
                 NitroxEntity.SetNewId(finishedPiece, constructionCompleted.PieceId);
 
-                BasePieceSpawnProcessor customSpawnProcessor = BasePieceSpawnProcessor.From(finishedPiece.GetComponent<BaseDeconstructable>());
-                customSpawnProcessor.SpawnPostProcess(latestBase, latestCell, finishedPiece);
+                BasePieceSpawnProcessor.RunSpawnProcessor(finishedPiece.GetComponent<BaseDeconstructable>(), latestBase, latestCell, finishedPiece);
             }
-            else
+            else if (constructing.TryGetComponent(out Constructable constructable))
             {
-                Constructable constructable = constructing.GetComponent<Constructable>();
                 constructable.constructedAmount = 1f;
                 constructable.SetState(true, true);
 
+                FurnitureSpawnProcessor.RunSpawnProcessor(constructable);
+
                 Log.Debug($"Construction completed on a piece of furniture: {constructionCompleted.PieceId} {constructable.gameObject.name}");
+            }
+            else
+            {
+                Log.Error($"Found ghost which is neither base piece nor a constructable: {constructing.name}");
             }
 
             if (constructionCompleted.BaseId != null && !NitroxEntity.GetObjectFrom(constructionCompleted.BaseId).HasValue)

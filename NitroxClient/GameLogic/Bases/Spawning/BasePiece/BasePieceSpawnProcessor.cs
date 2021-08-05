@@ -6,22 +6,19 @@ using NitroxModel.Helper;
 using NitroxModel.Logger;
 using UnityEngine;
 
-namespace NitroxClient.GameLogic.Bases.Spawning
+namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
 {
     public abstract class BasePieceSpawnProcessor
     {
-        private static readonly NoOpBasePieceSpawnProcessor noOpProcessor = new NoOpBasePieceSpawnProcessor();
         private static readonly Dictionary<TechType, BasePieceSpawnProcessor> processorsByType = new Dictionary<TechType, BasePieceSpawnProcessor>();
 
-        public abstract TechType[] ApplicableTechTypes { get; }
+        protected abstract TechType[] ApplicableTechTypes { get; }
 
         static BasePieceSpawnProcessor()
         {
             IEnumerable<BasePieceSpawnProcessor> processors = Assembly.GetExecutingAssembly()
                                                                          .GetTypes()
-                                                                         .Where(t => typeof(BasePieceSpawnProcessor).IsAssignableFrom(t) &&
-                                                                                     t.IsClass && !t.IsAbstract && t != typeof(NoOpBasePieceSpawnProcessor)
-                                                                               )
+                                                                         .Where(t => typeof(BasePieceSpawnProcessor).IsAssignableFrom(t) && t.IsClass && !t.IsAbstract)
                                                                          .Select(Activator.CreateInstance)
                                                                          .Cast<BasePieceSpawnProcessor>();
 
@@ -34,20 +31,17 @@ namespace NitroxClient.GameLogic.Bases.Spawning
             }
         }
 
-        public abstract void SpawnPostProcess(Base latestBase, Int3 latestCell, GameObject finishedPiece);
+        protected abstract void SpawnPostProcess(Base latestBase, Int3 latestCell, GameObject finishedPiece);
 
-        public static BasePieceSpawnProcessor From(BaseDeconstructable baseDeconstructable)
+        public static void RunSpawnProcessor(BaseDeconstructable baseDeconstructable, Base latestBase, Int3 latestCell, GameObject finishedPiece)
         {
             TechType techType = (TechType)baseDeconstructable.ReflectionGet("recipe");
 
-
             if (processorsByType.TryGetValue(techType, out BasePieceSpawnProcessor processor))
             {
-                Log.Info("Found custom BasePieceSpawnProcessor for " + techType);
-                return processor;
+                Log.Info($"Found custom BasePieceSpawnProcessor for {techType}");
+                processor.SpawnPostProcess(latestBase, latestCell, finishedPiece);
             }
-
-            return noOpProcessor;
         }
     }
 }

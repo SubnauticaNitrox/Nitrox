@@ -1,5 +1,6 @@
 ﻿using NitroxClient.Communication.Abstract;
-using NitroxClient.GameLogic.Bases.Spawning;
+using NitroxClient.GameLogic.Bases.Spawning.BasePiece;
+using NitroxClient.GameLogic.Bases.Spawning.Furniture;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
@@ -136,7 +137,7 @@ namespace NitroxClient.GameLogic
 
             NitroxId id = NitroxEntity.GetId(ghost);
 
-            Log.Info("Construction complete on " + id + " " + ghost.name);
+            Log.Info($"Construction complete on {id} {ghost.name}");
 
             if (opConstructedBase.HasValue)
             {
@@ -146,10 +147,10 @@ namespace NitroxClient.GameLogic
 
             // For base pieces, we must switch the id from the ghost to the newly constructed piece.
             // Furniture just uses the same game object as the ghost for the final product.
-            if (ghost.GetComponent<ConstructableBase>() != null)
+            if (ghost.GetComponent<ConstructableBase>())
             {
                 Int3 latestCell = lastTargetBaseOffset;
-                Base latestBase = (lastTargetBase.HasValue) ? lastTargetBase.Value : ((GameObject)opConstructedBase.Value).GetComponent<Base>();
+                Base latestBase = lastTargetBase.HasValue ? lastTargetBase.Value : ((GameObject)opConstructedBase.Value).GetComponent<Base>();
                 baseId = NitroxEntity.GetId(latestBase.gameObject);
 
                 Transform cellTransform = latestBase.GetCellObject(latestCell);
@@ -159,20 +160,18 @@ namespace NitroxClient.GameLogic
                 // however, there may still be pieces were the ghost base's target offset is authoratitive due to incorrect game object positioning.
                 if (latestCell == default(Int3) || cellTransform == null)
                 {
-
-                    latestBase.GetClosestCell(ghost.transform.position, out latestCell, out Vector3 worldPosition, out float distance);
+                    latestBase.GetClosestCell(ghost.transform.position, out latestCell, out Vector3 _, out float _);
                     cellTransform = latestBase.GetCellObject(latestCell);
                     Validate.NotNull(cellTransform, "Unable to find cell transform at " + latestCell);
                 }
 
                 GameObject finishedPiece = null;
 
-                // There can be multiple objects in a cell (such as a corridor with hatces built into it)
-                // we look for a object that is able to be deconstucted that hasn't been tagged yet.
+                // There can be multiple objects in a cell (such as a corridor with hatches built into it)
+                // we look for a object that is able to be deconstructed that hasn't been tagged yet.
                 foreach (Transform child in cellTransform)
                 {
-                    bool isNewBasePiece = (child.GetComponent<NitroxEntity>() == null &&
-                                           child.GetComponent<BaseDeconstructable>() != null);
+                    bool isNewBasePiece = !child.GetComponent<NitroxEntity>() && child.GetComponent<BaseDeconstructable>();
 
                     if (isNewBasePiece)
                     {
@@ -181,18 +180,25 @@ namespace NitroxClient.GameLogic
                     }
                 }
 
-                Validate.NotNull(finishedPiece, "Could not find finished piece in cell " + latestCell);
+                Validate.NotNull(finishedPiece, $"Could not find finished piece in cell {latestCell}");
 
-                Log.Info("Setting id to finished piece: " + finishedPiece.name + " " + id);
+                Log.Info($"Setting id to finished piece: {finishedPiece.name} {id}");
 
-                UnityEngine.Object.Destroy(ghost);
+                Object.Destroy(ghost);
                 NitroxEntity.SetNewId(finishedPiece, id);
 
-                BasePieceSpawnProcessor customSpawnProcessor = BasePieceSpawnProcessor.From(finishedPiece.GetComponent<BaseDeconstructable>());
-                customSpawnProcessor.SpawnPostProcess(latestBase, latestCell, finishedPiece);
+                BasePieceSpawnProcessor.RunSpawnProcessor(finishedPiece.GetComponent<BaseDeconstructable>(), latestBase, latestCell, finishedPiece);
+            }
+            else if (ghost.TryGetComponent(out Constructable constructable))
+            {
+                FurnitureSpawnProcessor.RunSpawnProcessor(constructable);
+            }
+            else
+            {
+                Log.Error($"Found ghost which is neither base piece nor a constructable: {ghost.name}");
             }
 
-            Log.Info("Construction Completed " + id + " in base " + baseId);
+            Log.Info($"Construction Completed {id} in base {baseId}");
 
             ConstructionCompleted constructionCompleted = new ConstructionCompleted(id, baseId);
             packetSender.Send(constructionCompleted);

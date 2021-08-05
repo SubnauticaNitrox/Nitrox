@@ -3,7 +3,7 @@ using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using UnityEngine;
 
-namespace NitroxClient.GameLogic.Bases.Spawning
+namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
 {
     /*
      * When a map room is created, two objects are added to the base: a BaseMapRoom piece that is
@@ -13,12 +13,12 @@ namespace NitroxClient.GameLogic.Bases.Spawning
      */
     public class MapRoomSpawnProcessor : BasePieceSpawnProcessor
     {
-        public override TechType[] ApplicableTechTypes { get; } =
+        protected override TechType[] ApplicableTechTypes { get; } =
         {
             TechType.BaseMapRoom
         };
 
-        public override void SpawnPostProcess(Base latestBase, Int3 latestCell, GameObject finishedPiece)
+        protected override void SpawnPostProcess(Base latestBase, Int3 latestCell, GameObject finishedPiece)
         {
             NitroxId mapRoomGeometryPieceId = NitroxEntity.GetId(finishedPiece);
             GameObject mapRoomFunctionality = FindUntaggedMapRoomFunctionality(latestBase);
@@ -31,20 +31,17 @@ namespace NitroxClient.GameLogic.Bases.Spawning
             NitroxEntity.SetNewId(mapRoomModules, mapRoomModulesId);
         }
 
-        private GameObject FindUntaggedMapRoomFunctionality(Base latestBase)
+        private static GameObject FindUntaggedMapRoomFunctionality(Base latestBase)
         {
             foreach (Transform child in latestBase.transform)
             {
-                NitroxEntity nitroxEntity = child.GetComponent<NitroxEntity>();
-                MapRoomFunctionality mapRoomFunctionality = child.GetComponent<MapRoomFunctionality>();
-
-                if (mapRoomFunctionality && !nitroxEntity)
+                if (child.GetComponent<MapRoomFunctionality>() && !child.GetComponent<NitroxEntity>())
                 {
                     return child.gameObject;
                 }
             }
 
-            throw new Exception("Unable to locate recently built map room");
+            throw new ArgumentException($"Unable to locate recently built map room with {latestBase}");
         }
     }
 }

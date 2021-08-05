@@ -5,16 +5,16 @@ using NitroxModel.Helper;
 using NitroxModel.Logger;
 using UnityEngine;
 
-namespace NitroxClient.GameLogic.Bases.Spawning
+namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
 {
     public class BaseLadderSpawnProcessor : BasePieceSpawnProcessor
     {
-        public override TechType[] ApplicableTechTypes { get; } =
+        protected override TechType[] ApplicableTechTypes { get; } =
         {
             TechType.BaseLadder
         };
 
-        public override void SpawnPostProcess(Base latestBase, Int3 latestCell, GameObject finishedPiece)
+        protected override void SpawnPostProcess(Base latestBase, Int3 latestCell, GameObject finishedPiece)
         {
             bool builtLadderOnFloor = finishedPiece.name.Contains("Bottom");
             Int3 cellToSearch = builtLadderOnFloor ? new Int3(latestCell.x, latestCell.y - 1, latestCell.z) : new Int3(latestCell.x, latestCell.y + 1, latestCell.z);
