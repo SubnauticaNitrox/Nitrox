@@ -1,3 +1,4 @@
+﻿using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
@@ -18,7 +19,10 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(RadioPlayPendingMessage packet, Player player)
         {
-            storyGoalData.RemovedLatestRadioMessage();
+            if (!storyGoalData.RemovedLatestRadioMessage())
+            {
+                Log.Warn($"Tried to remove the latest radio message but the radio queue is empty: {packet}");
+            }
             playerManager.SendPacketToOtherPlayers(packet, player);
         }
     }
