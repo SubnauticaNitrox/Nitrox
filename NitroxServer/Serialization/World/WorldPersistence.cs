@@ -159,6 +159,9 @@ namespace NitroxServer.Serialization.World
 #if DEBUG
                     Seed = "TCCBIBZXAB"
 #endif
+#if (!DEBUG)
+                    Seed = config.Seed
+#endif
                 }
             };
 
