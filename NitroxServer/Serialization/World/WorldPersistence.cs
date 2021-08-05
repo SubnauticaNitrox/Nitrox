@@ -158,6 +158,8 @@ namespace NitroxServer.Serialization.World
                     ServerStartTime = DateTime.UtcNow,
 #if DEBUG
                     Seed = "TCCBIBZXAB"
+#else
+                    Seed = config.Seed
 #endif
                 }
             };
