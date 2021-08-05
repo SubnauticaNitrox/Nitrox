@@ -22,7 +22,7 @@ namespace NitroxServer.Communication.Packets.Processors
             bool removed = storyGoalData.RemovedLatestRadioMessage();
             if (!removed)
             {
-                Log.Error($"Error while processing RadioPlayPendingMessage [{packet}]");
+                Log.Error($"Error while processing RadioPlayPendingMessage: couldn't remove the latest radio message because the radio queue is empty [{packet}]");
             }
             playerManager.SendPacketToOtherPlayers(packet, player);
         }

@@ -28,7 +28,6 @@ namespace NitroxServer.GameLogic.Unlockables
             }
             else
             {
-                Log.Error("Couldn't remove the latest radio message: the radio queue is empty");
                 return false;
             }
         }
