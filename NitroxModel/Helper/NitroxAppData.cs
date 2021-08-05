@@ -23,10 +23,5 @@ namespace NitroxModel.Helper
         public string LauncherPath => Environment.GetEnvironmentVariable("NITROX_LAUNCHER_PATH");
 
         public string AssetsPath => Path.Combine(LauncherPath, "AssetBundles");
-
-        public static NitroxAppData Load()
-        {
-            return new NitroxAppData();
-        }
     }
 }
