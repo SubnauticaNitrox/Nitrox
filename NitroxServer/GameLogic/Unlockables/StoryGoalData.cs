@@ -2,7 +2,6 @@
 using Newtonsoft.Json;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Logger;
 using ProtoBufNet;
 
 namespace NitroxServer.GameLogic.Unlockables
@@ -21,15 +20,14 @@ namespace NitroxServer.GameLogic.Unlockables
 
         public bool RemovedLatestRadioMessage()
         {
-            if (RadioQueue.Count > 0)
-            {
-                RadioQueue.RemoveAt(0);
-                return true;
-            }
-            else
+            if (RadioQueue.Count <= 0)
             {
                 return false;
             }
+            
+            RadioQueue.RemoveAt(0);
+            return true;
+
         }
 
         public InitialStoryGoalData GetInitialStoryGoalData()

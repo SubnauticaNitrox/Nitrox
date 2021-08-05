@@ -19,10 +19,9 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(RadioPlayPendingMessage packet, Player player)
         {
-            bool removed = storyGoalData.RemovedLatestRadioMessage();
-            if (!removed)
+            if (!storyGoalData.RemovedLatestRadioMessage())
             {
-                Log.Error($"Error while processing RadioPlayPendingMessage: couldn't remove the latest radio message because the radio queue is empty [{packet}]");
+                Log.Warn($"Tried to remove the latest radio message but the radio queue is empty: {packet}");
             }
             playerManager.SendPacketToOtherPlayers(packet, player);
         }
