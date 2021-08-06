@@ -11,7 +11,7 @@ namespace NitroxServer.ConsoleCommands
 
         public TimeCommand(TimeKeeper timeKeeper) : base("time", Perms.MODERATOR, "Changes the map time")
         {
-            AddParameter(new TypeString("day/night", false));
+            AddParameter(new TypeString("day/night", false, "Time to change too"));
 
             this.timeKeeper = timeKeeper;
         }

@@ -11,8 +11,8 @@ namespace NitroxServer.ConsoleCommands
 
         public WhisperCommand() : base("whisper", Perms.PLAYER, "Sends a private message to a player")
         {
-            AddParameter(new TypePlayer("name", true));
-            AddParameter(new TypeString("msg", true));
+            AddParameter(new TypePlayer("name", true, "The players name to message"));
+            AddParameter(new TypeString("msg", true, "The message to send"));
 
             AllowedArgOverflow = true;
         }

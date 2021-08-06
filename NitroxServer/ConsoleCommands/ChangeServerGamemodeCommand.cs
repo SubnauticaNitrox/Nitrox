@@ -15,7 +15,7 @@ namespace NitroxServer.ConsoleCommands
 
         public ChangeServerGamemodeCommand(PlayerManager playerManager, ServerConfig serverConfig) : base("changeservergamemode", Perms.ADMIN, "Changes server gamemode")
         {
-            AddParameter(new TypeEnum<ServerGameMode>("gamemode", true));
+            AddParameter(new TypeEnum<ServerGameMode>("gamemode", true, "survival/freedom/hardcore/creative"));
 
             this.playerManager = playerManager;
             this.serverConfig = serverConfig;

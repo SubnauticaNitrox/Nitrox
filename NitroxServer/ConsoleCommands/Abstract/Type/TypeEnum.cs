@@ -5,7 +5,7 @@ namespace NitroxServer.ConsoleCommands.Abstract.Type
 {
     public class TypeEnum<T> : Parameter<object> where T : struct, Enum
     {
-        public TypeEnum(string name, bool required) : base(name, required)
+        public TypeEnum(string name, bool required, string description) : base(name, required, description)
         {
             Validate.IsTrue(typeof(T).IsEnum, $"Type {typeof(T).FullName} isn't an enum");
         }
