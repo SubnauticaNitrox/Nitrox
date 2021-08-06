@@ -9,8 +9,8 @@ namespace NitroxServer.ConsoleCommands
     {
         public WarpCommand() : base("warp", Perms.MODERATOR, "Allows to teleport players")
         {
-            AddParameter(new TypePlayer("name", true));
-            AddParameter(new TypePlayer("name", false));
+            AddParameter(new TypePlayer("name", true, "The players name to teleport"));
+            AddParameter(new TypePlayer("name", false, "The players name to teleport too"));
         }
 
         protected override void Execute(CallArgs args)

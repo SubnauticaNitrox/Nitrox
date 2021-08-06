@@ -20,7 +20,7 @@ namespace NitroxServer.ConsoleCommands.Abstract.Type
             "on"
         };
 
-        public TypeBoolean(string name, bool isRequired) : base(name, isRequired) { }
+        public TypeBoolean(string name, bool isRequired, string description) : base(name, isRequired, description) { }
 
         public override bool IsValid(string arg)
         {

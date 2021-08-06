@@ -8,7 +8,7 @@ namespace NitroxServer.ConsoleCommands.Abstract.Type
     {
         private static readonly PlayerManager playerManager = NitroxServiceLocator.LocateService<PlayerManager>();
 
-        public TypePlayer(string name, bool required) : base(name, required)
+        public TypePlayer(string name, bool required, string description) : base(name, required, description)
         {
             Validate.NotNull(playerManager, "PlayerManager can't be null to resolve the command");
         }

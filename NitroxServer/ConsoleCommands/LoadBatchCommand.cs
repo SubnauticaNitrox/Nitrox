@@ -14,9 +14,9 @@ namespace NitroxServer.ConsoleCommands
 
         public LoadBatchCommand(BatchEntitySpawner batchEntitySpawner) : base("loadbatch", Perms.ADMIN, "Loads entities at x y z")
         {
-            AddParameter(new TypeInt("x", true));
-            AddParameter(new TypeInt("y", true));
-            AddParameter(new TypeInt("z", true));
+            AddParameter(new TypeInt("x", true, "x coordinate"));
+            AddParameter(new TypeInt("y", true, "y coordinate"));
+            AddParameter(new TypeInt("z", true, "z coordinate"));
 
             this.batchEntitySpawner = batchEntitySpawner;
         }

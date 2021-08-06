@@ -4,7 +4,7 @@ namespace NitroxServer.ConsoleCommands.Abstract.Type
 {
     public class TypeInt : Parameter<int>, IParameter<object>
     {
-        public TypeInt(string name, bool isRequired) : base(name, isRequired) { }
+        public TypeInt(string name, bool isRequired, string description) : base(name, isRequired, description) { }
 
         public override bool IsValid(string arg)
         {

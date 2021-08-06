@@ -87,7 +87,11 @@ namespace NitroxServer.ConsoleCommands.Abstract
             }
 
             cmd.AppendFormat(" {0}", string.Join(" ", Parameters));
-            return cropText ? $"{cmd}" : $"{cmd,-32} - {Description}";
+
+            string parameterPreText = Parameters.Count == 0 ? "" : Environment.NewLine;
+            string parameterText = parameterPreText + string.Join("\n", Parameters.Select(p => $"{p.Name,-47} - {p.Description}"));
+
+            return cropText ? $"{cmd}" : $"{cmd,-32} - {Description} {parameterText}";
         }
 
         protected void AddParameter<T>(T param) where T : IParameter<object>
