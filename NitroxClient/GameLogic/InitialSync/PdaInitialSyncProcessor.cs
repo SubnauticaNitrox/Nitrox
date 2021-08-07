@@ -72,12 +72,17 @@ namespace NitroxClient.GameLogic.InitialSync
         private void SetPDAEntryPartial(List<PDAEntry> entries)
         {
             List<PDAScanner.Entry> partial = (List<PDAScanner.Entry>)(typeof(PDAScanner).GetField("partial", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null));
-
+            
             foreach (PDAEntry entry in entries)
             {
-                partial.Add(new PDAScanner.Entry { progress = entry.Progress, techType = entry.TechType.ToUnity(), unlocked = entry.Unlocked });
+                PDAScanner.Entry newEntry = new PDAScanner.Entry { progress = entry.Progress, techType = entry.TechType.ToUnity(), unlocked = entry.Unlocked };
+                // If, for some reason this happens, at least the client will be able to ignore it, in the other case, he wouldn't be able to connect
+                if (newEntry.progress != 0f)
+                {
+                    partial.Add(newEntry);
+                    Log.Debug($"New partial entry: {newEntry}");
+                }
             }
-
             Log.Debug($"PDAEntryPartial: New added: {entries.Count}, Total: {partial.Count}");
         }
 

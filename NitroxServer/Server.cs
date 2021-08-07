@@ -57,6 +57,7 @@ namespace NitroxServer
                 builder.AppendLine($" - Encyclopedia entries: {world.GameData.PDAState.EncyclopediaEntries.Count}");
                 builder.AppendLine($" - Storage slot items: {world.InventoryManager.GetAllStorageSlotItems().Count}");
                 builder.AppendLine($" - Inventory items: {world.InventoryManager.GetAllInventoryItems().Count}");
+                builder.AppendLine($" - Partially unlocked: {world.GameData.PDAState.PartiallyUnlockedByTechType.Count}");
                 builder.AppendLine($" - Known tech: {world.GameData.PDAState.KnownTechTypes.Count}");
                 builder.AppendLine($" - Vehicles: {world.VehicleManager.GetVehicles().Count()}");
 
