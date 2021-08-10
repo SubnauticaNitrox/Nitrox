@@ -12,7 +12,7 @@ using NitroxModel.OS.Windows;
 
 namespace NitroxModel.OS
 {
-    public class FileSystem
+    public abstract class FileSystem
     {
         private static readonly Lazy<FileSystem> instance = new(() => Environment.OSVersion.Platform switch
                                                                 {
@@ -25,10 +25,6 @@ namespace NitroxModel.OS
         public virtual IEnumerable<string> ExecutableFileExtensions => throw new NotSupportedException();
         public static FileSystem Instance => instance.Value;
         public virtual string TextEditor => throw new NotSupportedException();
-
-        protected FileSystem()
-        {
-        }
 
         public virtual IEnumerable<string> GetDefaultPrograms(string file) => throw new NotSupportedException();
 
@@ -248,5 +244,7 @@ namespace NitroxModel.OS
             }
             return true;
         }
+
+        public abstract bool SetFullAccessToCurrentUser(string directory);
     }
 }

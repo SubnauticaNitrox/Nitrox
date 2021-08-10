@@ -87,7 +87,7 @@ namespace NitroxLauncher
                      {
                          LauncherLogic.Instance.NavigateTo<OptionPage>();
                      }
-
+                     
                      logic.CheckNitroxVersion();
                  }, CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.FromCurrentSynchronizationContext());
         }

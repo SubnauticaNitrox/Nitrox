@@ -8,5 +8,10 @@ namespace NitroxModel.OS.Unix
         {
             yield return "xdg-open";
         }
+
+        public override bool SetFullAccessToCurrentUser(string directory)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
