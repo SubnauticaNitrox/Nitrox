@@ -24,7 +24,7 @@ namespace NitroxPatcher.Patches.Dynamic
             GameObject gameObject = __instance.gameObject;
             NitroxId id = NitroxEntity.GetId(gameObject);
             Optional<SeamothModel> model = NitroxServiceLocator.LocateService<Vehicles>().TryGetVehicle<SeamothModel>(id);
-            
+
             if (!model.HasValue)
             {
                 Log.Error($"{nameof(Seamoth_SubConstructionComplete_Patch)}: Could not find {nameof(CyclopsModel)} by Nitrox id {id}.\nGO containing wrong id: {__instance.GetHierarchyPath()}");

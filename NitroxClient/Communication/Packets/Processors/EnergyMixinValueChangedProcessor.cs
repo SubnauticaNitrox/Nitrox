@@ -19,7 +19,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(EnergyMixinValueChanged energyMixinPacket)
         {
-            Optional<GameObject> target = NitroxEntity.GetObjectFrom(energyMixinPacket.Id); // Can't find inventory items for now because they aren't really synced.
+            Optional<GameObject> target = NitroxEntity.GetObjectFrom(energyMixinPacket.OwnerId); // Can't find inventory items for now because they aren't really synced.
             if (target.HasValue)
             {
                 EnergyMixin energyMixin = target.Value.RequireComponent<EnergyMixin>();

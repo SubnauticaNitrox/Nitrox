@@ -49,7 +49,7 @@ namespace NitroxClient.GameLogic
 
             Transform parent = pickupable.gameObject.transform.parent;
             pickupable.gameObject.transform.SetParent(null);
-            byte[] bytes = SerializationHelper.GetBytes(pickupable.gameObject);
+            byte[] bytes = SerializationHelper.GetBytesWithoutParent(pickupable.gameObject);
 
             EquippedItemData equippedItem = new EquippedItemData(ownerId, itemId, bytes, slot, techType.ToDto());
             Player player = owner.GetComponent<Player>();

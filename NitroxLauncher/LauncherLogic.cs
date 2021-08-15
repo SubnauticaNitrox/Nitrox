@@ -29,6 +29,7 @@ namespace NitroxLauncher
         private Process serverProcess;
         private Process gameProcess;
         private bool isEmbedded;
+        private Task<string> lastFindSubnauticaTask;
 
         private string subnauticaPath;
         public string SubnauticaPath
@@ -118,19 +119,32 @@ namespace NitroxLauncher
             {
                 return null;
             }
-
             SubnauticaPath = path;
+            if (lastFindSubnauticaTask != null)
+            {
+                return await lastFindSubnauticaTask;
+            }
 
-            return await Task.Factory.StartNew(() =>
+            lastFindSubnauticaTask = Task.Factory.StartNew(() =>
             {
                 PirateDetection.TriggerOnDirectory(path);
-                File.WriteAllText("path.txt", path);
-
-                if (nitroxEntryPatch?.IsApplied == true)
+                try
                 {
-                    nitroxEntryPatch.Remove();
+                    File.WriteAllText("path.txt", path);
                 }
-                nitroxEntryPatch = new NitroxEntryPatch(path);
+                catch (Exception ex)
+                {
+                    throw new Exception(
+                        $"If you use a third-party anti virus (excluding Windows Defender) like:{Environment.NewLine} - {string.Join($"{Environment.NewLine} - ", "Avast", "McAfee")}{Environment.NewLine}Then make sure it's not blocking Nitrox from working", ex);
+                }
+                finally
+                {
+                    if (nitroxEntryPatch?.IsApplied == true)
+                    {
+                        nitroxEntryPatch.Remove();
+                    }
+                    nitroxEntryPatch = new NitroxEntryPatch(path);
+                }
 
                 if (Path.GetFullPath(path).StartsWith(AppHelper.ProgramFileDirectory, StringComparison.OrdinalIgnoreCase))
                 {
@@ -139,6 +153,7 @@ namespace NitroxLauncher
 
                 return path;
             }, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
+            return await lastFindSubnauticaTask;
         }
 
         public void NavigateTo(Type page)
@@ -186,6 +201,11 @@ namespace NitroxLauncher
 
         internal async Task StartMultiplayerAsync()
         {
+            if (string.IsNullOrWhiteSpace(subnauticaPath) || !Directory.Exists(subnauticaPath))
+            {
+                NavigateTo<OptionPage>();
+                throw new Exception("Location of Subnautica is unknown. Set the path to it in settings.");
+            }
 #if RELEASE
             if (Process.GetProcessesByName("Subnautica").Length > 0)
             {
@@ -208,7 +228,16 @@ namespace NitroxLauncher
                 Log.Error(ex, "Unable to move bootloader dll to Managed folder. Still attempting to launch because it might exist from previous runs.");
             }
 
-            nitroxEntryPatch.Remove(); // Remove any previous instances first.
+            // Try inject Nitrox into Subnautica code.
+            if (lastFindSubnauticaTask != null)
+            {
+                await lastFindSubnauticaTask;
+            }
+            if (nitroxEntryPatch == null)
+            {
+                throw new Exception("Nitrox was blocked by another program");
+            }
+            nitroxEntryPatch.Remove();
             nitroxEntryPatch.Apply();
             QModHelper.RemoveQModEntryPoint(subnauticaPath);
 

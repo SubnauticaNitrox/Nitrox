@@ -85,7 +85,7 @@ namespace NitroxClient.GameLogic
                         Spawn(entity, parent);
                         SpawnAnyPendingChildren(entity);
                     }
-                    catch(OptionalEmptyException<GameObject> e)
+                    catch (OptionalEmptyException<GameObject> e)
                     {
                         Log.Error($"Failed to spawn Entity {entity.Id}, a {entity.TechType}: {e.Message}");
                     }
@@ -160,7 +160,7 @@ namespace NitroxClient.GameLogic
 
             if (!opGameObject.HasValue)
             {
-#if DEBUG
+#if DEBUG && ENTITY_LOG
                 Log.Error($"Entity was already spawned but not found(is it in another chunk?) NitroxId: {entity.Id} TechType: {entity.TechType} ClassId: {entity.ClassId} Transform: {entity.Transform}");
 #endif
                 return;

@@ -1,7 +1,7 @@
 ﻿using System;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Logger;
 using UnityEngine;
-using NitroxModel.DataStructures.GameLogic;
 
 
 namespace NitroxClient.GameLogic.Containers
@@ -15,21 +15,20 @@ namespace NitroxClient.GameLogic.Containers
 
         public override void process(GameObject item, ItemData itemData)
         {
-            PlantableItemData plantableData = itemData as PlantableItemData;
-            if (plantableData == null)
+            if (itemData is not PlantableItemData plantableData)
             {
                 // nothing to do; false alarm
                 return;
             }
             Plantable plant = item.GetComponent<Plantable>();
-            if (plant == null)
+            if (!plant)
             {
                 Log.Error($"FixPlantGrowth: Item for Plantable {plantableData.ItemId} is not a Plantable!");
                 return;
             }
 
             GrowingPlant grower = GetGrowingPlant(plant);
-            if (grower == null)
+            if (!grower)
             {
                 Log.Error($"FixPlantGrowth: Could not find GrowingPlant for Plantable {plantableData.ItemId}!");
                 return;
@@ -52,30 +51,30 @@ namespace NitroxClient.GameLogic.Containers
             }
         }
 
-        public static GrowingPlant GetGrowingPlant(Plantable plantable)
+        private static GrowingPlant GetGrowingPlant(Plantable plantable)
         {
             int slot = plantable.GetSlotID();
 
-            Planter pp = plantable.currentPlanter;
-            if (null == pp)
+            Planter planter = plantable.currentPlanter;
+            if (!planter)
             {
                 Log.Error($"GetGrowingPlant: plant not inside a Planter!");
                 return null;
             }
 
             // int smallSlotCount = pp.slots.Length;
-            int bigSlotCount = pp.bigSlots.Length;
+            int bigSlotCount = planter.bigSlots.Length;
 
             // for all the planters I have seen, the logic is the same: Available slots are numbered starting with the big slots
             if (slot < bigSlotCount)
             {
                 // index 0 .. #big-1
-                return pp.bigSlots[slot].GetComponentInChildren<GrowingPlant>();
+                return planter.bigSlots[slot].GetComponentInChildren<GrowingPlant>();
             }
             else
             {
                 // index #big .. #big+#small-1
-                return pp.slots[slot - bigSlotCount].GetComponentInChildren<GrowingPlant>();
+                return planter.slots[slot - bigSlotCount].GetComponentInChildren<GrowingPlant>();
             }
         }
     }

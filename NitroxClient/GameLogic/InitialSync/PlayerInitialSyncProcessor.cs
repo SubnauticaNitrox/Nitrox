@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
@@ -14,12 +13,10 @@ namespace NitroxClient.GameLogic.InitialSync
     public class PlayerInitialSyncProcessor : InitialSyncProcessor
     {
         private readonly ItemContainers itemContainers;
-        private readonly IPacketSender packetSender;
 
-        public PlayerInitialSyncProcessor(ItemContainers itemContainers, IPacketSender packetSender)
+        public PlayerInitialSyncProcessor(ItemContainers itemContainers)
         {
             this.itemContainers = itemContainers;
-            this.packetSender = packetSender;
         }
 
         public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
@@ -56,7 +53,7 @@ namespace NitroxClient.GameLogic.InitialSync
                     GameObject gameObject = CraftData.InstantiateFromPrefab(techType, false);
                     Pickupable pickupable = gameObject.GetComponent<Pickupable>();
                     pickupable = pickupable.Initialize();
-                    itemContainers.AddItem(pickupable.gameObject, NitroxEntity.GetId(Player.main.transform.gameObject));
+                    itemContainers.AddItem(pickupable.gameObject, NitroxEntity.GetId(Player.main.gameObject));
                     itemContainers.BroadcastItemAdd(pickupable, Inventory.main.container.tr);
                 }
             }
@@ -71,7 +68,7 @@ namespace NitroxClient.GameLogic.InitialSync
                 Player.main.GetComponent<Survival>().food = statsData.Food;
                 Player.main.GetComponent<Survival>().water = statsData.Water;
                 Player.main.infectedMixin.SetInfectedAmount(statsData.InfectionAmount);
-				
+
                 //If InfectionAmount is at least 1f then the infection reveal should have happened already.
                 //If InfectionAmount is below 1f then the reveal has not.
                 if (statsData.InfectionAmount >= 1f)
@@ -80,7 +77,7 @@ namespace NitroxClient.GameLogic.InitialSync
                 }
             }
         }
-        
+
         private void SetPlayerGameMode(ServerGameMode gameMode)
         {
             Log.Info($"Received initial sync packet with gamemode {gameMode}");

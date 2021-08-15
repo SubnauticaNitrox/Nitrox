@@ -14,7 +14,7 @@ namespace NitroxClient.GameLogic.InitialSync
         {
             DependentProcessors.Add(typeof(BuildingInitialSyncProcessor)); // Meta data augments base pieces so they must be spawned first.
         }
-        
+
         public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
         {
             int basePiecesWithMetadata = 0;

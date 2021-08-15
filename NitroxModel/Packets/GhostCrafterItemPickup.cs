@@ -15,10 +15,5 @@ namespace NitroxModel.Packets
             GhostCrafterId = ghostCrafterId;
             TechType = techType;
         }
-
-        public override string ToString()
-        {
-            return "[GhostCrafterItemPickup - GhostCrafterId: " + GhostCrafterId + " TechType: " + TechType + "]";
-        }
     }
 }

@@ -44,7 +44,7 @@ namespace NitroxPatcher.Patches.Persistent
                     instruction.labels.Add(jmpLabelStartOfMethod);
                     yield return instruction; // Add a label for jumping
                 }
-                else if (instruction.opcode == OpCodes.Stfld && 
+                else if (instruction.opcode == OpCodes.Stfld &&
                          Equals(instruction.operand, LARGE_WORLD_STREAMER_FROZEN_FIELD))
                 {
                     yield return instruction;

@@ -16,8 +16,7 @@ namespace NitroxPatcher.Patches.Persistent
 
         public static bool Prefix(Stream stream, object target, Type type)
         {
-            int key;
-            if (Multiplayer.Active && serializer.NitroxTypes.TryGetValue(type, out key))
+            if (Multiplayer.Active && serializer.NitroxTypes.TryGetValue(type, out int key))
             {
                 serializer.Deserialize(stream, target, type);
                 return false;

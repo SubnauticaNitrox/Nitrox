@@ -19,10 +19,5 @@ namespace NitroxModel.Packets
             HSB = hsb;
             Color = color;
         }
-
-        public override string ToString()
-        {
-            return "[VehicleColorChange Id: " + Id + " Index: " + Index + " hsb: " + HSB + " Color: " + Color + "]";
-        }
     }
 }

@@ -2,15 +2,15 @@
 // ReSharper disable InconsistentNaming
 
 using System.Collections.Generic;
+using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
-using UnityEngine;
-using UWE;
-using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
+using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation;
 using NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation.Metadata;
-using NitroxModel_Subnautica.DataStructures;
+using UnityEngine;
+using UWE;
 
 namespace NitroxClient.MonoBehaviours.Overrides
 {
@@ -246,7 +246,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 mapRoom.ReflectionSet("connectionMask", mapRoomRotationMetadata.ConnectionMask);
 
                 Base ghostBase = (Base)mapRoom.ReflectionGet("ghostBase");
-                
+
                 ghostBase.SetCell(Int3.zero, (Base.CellType)mapRoomRotationMetadata.CellType);
                 mapRoom.ReflectionCall("RebuildGhostGeometry");
             }
@@ -267,11 +267,11 @@ namespace NitroxClient.MonoBehaviours.Overrides
 
                 Base.Face face = new Base.Face(baseModuleRotationMetadata.Cell.ToUnity(), (Base.Direction)baseModuleRotationMetadata.Direction);
                 faceGhost.anchoredFace = face;
-                
+
                 Base ghostBase = (Base)faceGhost.ReflectionGet("ghostBase");
                 Base.FaceType faceType = (Base.FaceType)baseModuleRotationMetadata.FaceType;
                 ghostBase.SetFace(face, faceType);
-                
+
                 faceGhost.ReflectionCall("RebuildGhostGeometry");
             }
         }

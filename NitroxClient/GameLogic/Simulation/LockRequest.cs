@@ -23,5 +23,5 @@ namespace NitroxClient.GameLogic.Simulation
             }
         }
 
-    }   
+    }
 }

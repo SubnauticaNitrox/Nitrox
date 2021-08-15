@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession.ConnectionState;
-using NitroxClient.Debuggers;
 using NitroxClient.GameLogic;
 using NitroxModel;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
+using NitroxModel.Serialization;
 
 namespace NitroxClient.Communication.MultiplayerSession
 {
@@ -133,7 +133,7 @@ namespace NitroxClient.Communication.MultiplayerSession
         public void ClearSessionState()
         {
             IpAddress = null;
-            ServerPort = 11000;
+            ServerPort = ServerList.DEFAULT_PORT;
             SessionPolicy = null;
             PlayerSettings = null;
             AuthenticationContext = null;

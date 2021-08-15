@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
+using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Util;
+using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
-using UnityEngine;
-using NitroxModel.DataStructures.Util;
-using NitroxModel.DataStructures;
-using NitroxClient.MonoBehaviours;
-using NitroxModel.Helper;
 using NitroxModel_Subnautica.DataStructures;
+using UnityEngine;
 
 namespace NitroxClient.GameLogic
 {
@@ -21,7 +21,7 @@ namespace NitroxClient.GameLogic
          * EscapePod.main to the new escape pod.
          */
         public static bool SURPRESS_ESCAPE_POD_AWAKE_METHOD;
-        
+
         private readonly IPacketSender packetSender;
         private readonly IMultiplayerSession multiplayerSession;
 
@@ -53,9 +53,9 @@ namespace NitroxClient.GameLogic
             {
                 Log.Error("Escape pod did not have a rigid body!");
             }
-            
-                Player.main.transform.position = EscapePod.main.playerSpawn.position;
-                Player.main.transform.rotation = EscapePod.main.playerSpawn.rotation;
+
+            Player.main.transform.position = EscapePod.main.playerSpawn.position;
+            Player.main.transform.rotation = EscapePod.main.playerSpawn.rotation;
             if (firstTimeSpawning)
             {
                 Player.main.currentEscapePod = EscapePod.main;
@@ -158,7 +158,8 @@ namespace NitroxClient.GameLogic
                 pod.animator.SetFloat("lifepod_damage", 1.0f);
                 pod.fixPanelGoal.Trigger();
                 pod.fixPanelPowerUp.Play();
-            } else
+            }
+            else
             {
                 Log.Warn("No escape pod to be repaired by id " + id);
             }
@@ -168,9 +169,9 @@ namespace NitroxClient.GameLogic
         {
             NitroxId id = null;
 
-            foreach(KeyValuePair<NitroxId, GameObject> dict in escapePodsById)
+            foreach (KeyValuePair<NitroxId, GameObject> dict in escapePodsById)
             {
-                if(NitroxEntity.GetId(dict.Value) == NitroxEntity.GetId(pod.gameObject))
+                if (NitroxEntity.GetId(dict.Value) == NitroxEntity.GetId(pod.gameObject))
                 {
                     id = dict.Key; // we're looking for serverside id here
                     break;
@@ -181,7 +182,8 @@ namespace NitroxClient.GameLogic
             {
                 EscapePodRepair repair = new EscapePodRepair(id);
                 packetSender.Send(repair);
-            } else
+            }
+            else
             {
                 Log.Warn("Couldn't find escape pod id on repair");
             }
@@ -205,7 +207,7 @@ namespace NitroxClient.GameLogic
             // todo: can this apply to non-escape pod radios?
 
             NitroxId id = NitroxEntity.GetId(radio.gameObject);
-            
+
             EscapePodRadioRepair repair = new EscapePodRadioRepair(id);
             packetSender.Send(repair);
         }

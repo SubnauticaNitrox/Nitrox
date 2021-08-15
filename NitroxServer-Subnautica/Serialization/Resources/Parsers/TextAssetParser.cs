@@ -16,9 +16,8 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Parsers
         {
             string assetName = reader.ReadCountStringInt32();
 
-            AssetParser textResourceParser;
 
-            if (textParsersByAssetName.TryGetValue(assetName, out textResourceParser))
+            if (textParsersByAssetName.TryGetValue(assetName, out AssetParser textResourceParser))
             {
                 textResourceParser.Parse(identifier, reader, resourceAssets, relativeFileIdToPath);
             }

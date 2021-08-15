@@ -61,12 +61,6 @@ namespace NitroxClient.GameLogic
             packetSender.Send(packet);
         }
 
-        public void BroadcastActivateHorn(NitroxId id)
-        {
-            CyclopsActivateHorn packet = new CyclopsActivateHorn(id);
-            packetSender.Send(packet);
-        }
-
         public void BroadcastLaunchDecoy(NitroxId id)
         {
             CyclopsDecoyLaunch packet = new CyclopsDecoyLaunch(id);

@@ -14,7 +14,7 @@ namespace NitroxServer.UnityStubs
         public string ClassId { get; }
         public string Parent { get; }
 
-        public int TotalComponents { get { return components.Count; } }
+        public int TotalComponents => components.Count;
 
         private readonly Dictionary<Type, object> components = new Dictionary<Type, object>();
 
@@ -30,8 +30,7 @@ namespace NitroxServer.UnityStubs
 
         public override string ToString()
         {
-            object transform = null;
-            components.TryGetValue(typeof(NitroxTransform), out transform); // Honestly this should never be null every gameObject has a Transform
+            components.TryGetValue(typeof(NitroxTransform), out object transform); // Honestly this should never be null every gameObject has a Transform
 
             return string.Format("Id: {0}, Class Id: {1}, Transform: {2}", Id, ClassId, transform as NitroxTransform);
         }
@@ -43,8 +42,7 @@ namespace NitroxServer.UnityStubs
 
         public object GetComponent(Type type)
         {
-            object res;
-            if (components.TryGetValue(type, out res))
+            if (components.TryGetValue(type, out object res))
             {
                 return res;
             }

@@ -24,7 +24,7 @@ namespace NitroxClient.Communication.Packets.Processors
                 Log.Error("Could not find equipment type for " + owner.name);
                 return;
             }
-            
+
             GameObject item = NitroxEntity.RequireObjectFrom(packet.ItemId);
             Pickupable pickupable = item.RequireComponent<Pickupable>();
             Equipment equipment = opEquipment.Value;
@@ -32,7 +32,7 @@ namespace NitroxClient.Communication.Packets.Processors
             InventoryItem inventoryItem = itemsBySlot[packet.Slot];
             itemsBySlot[packet.Slot] = null;
 
-            equipment.ReflectionCall("UpdateCount",false,false,pickupable.GetTechType(), false);
+            equipment.ReflectionCall("UpdateCount", false, false, pickupable.GetTechType(), false);
             Equipment.SendEquipmentEvent(pickupable, UNEQUIP_EVENT_TYPE_ID, owner, packet.Slot);
             equipment.ReflectionCall("NotifyUnequip", false, false, packet.Slot, inventoryItem);
 

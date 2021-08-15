@@ -17,10 +17,5 @@ namespace NitroxModel.Packets
             TechType = techType;
             Duration = duration;
         }
-
-        public override string ToString()
-        {
-            return "[GhostCrafterBeginCrafting - GhostCrafterId: " + GhostCrafterId + " TechType: " + TechType + " Duration: " + Duration + "]";
-        }
     }
 }

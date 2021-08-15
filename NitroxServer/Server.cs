@@ -1,18 +1,18 @@
-using System;
+﻿using System;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Text;
 using System.Timers;
 using NitroxModel.Logger;
-using NitroxServer.Serialization.World;
-using System.IO;
-using System.Text;
-using System.Linq;
 using NitroxServer.Serialization;
-using NitroxModel.Serialization;
+using NitroxServer.Serialization.World;
 
 namespace NitroxServer
 {
     public class Server
     {
-        private readonly Communication.NetworkingLayer.NitroxServer server;
+        private readonly Communication.NitroxServer server;
         private readonly WorldPersistence worldPersistence;
         private readonly ServerConfig serverConfig;
         private readonly Timer saveTimer;
@@ -25,7 +25,7 @@ namespace NitroxServer
 
         public int Port => serverConfig?.ServerPort ?? -1;
 
-        public Server(WorldPersistence worldPersistence, World world, ServerConfig serverConfig, Communication.NetworkingLayer.NitroxServer server)
+        public Server(WorldPersistence worldPersistence, World world, ServerConfig serverConfig, Communication.NitroxServer server)
         {
             this.worldPersistence = worldPersistence;
             this.serverConfig = serverConfig;
@@ -37,7 +37,10 @@ namespace NitroxServer
             saveTimer = new Timer();
             saveTimer.Interval = serverConfig.SaveInterval;
             saveTimer.AutoReset = true;
-            saveTimer.Elapsed += delegate { Save(); };
+            saveTimer.Elapsed += delegate
+            {
+                Save();
+            };
         }
 
         public string SaveSummary
@@ -45,8 +48,9 @@ namespace NitroxServer
             get
             {
                 // TODO: Extend summary with more useful save file data
-                StringBuilder builder = new StringBuilder("\n");
+                StringBuilder builder = new("\n");
                 builder.AppendLine($" - Save location: {Path.GetFullPath(serverConfig.SaveName)}");
+                builder.AppendLine($" - World GameMode: {serverConfig.GameMode}");
                 builder.AppendLine($" - Radio messages stored: {world.GameData.StoryGoals.RadioQueue.Count}");
                 builder.AppendLine($" - Story goals completed: {world.GameData.StoryGoals.CompletedGoals.Count}");
                 builder.AppendLine($" - Story goals unlocked: {world.GameData.StoryGoals.GoalUnlocks.Count}");
@@ -68,8 +72,28 @@ namespace NitroxServer
             }
 
             IsSaving = true;
-            NitroxConfig.Serialize(serverConfig); // This is overwriting the config file => server has to be closed before making changes to it
-            worldPersistence.Save(world, serverConfig.SaveName);
+
+            bool savedSuccessfully = worldPersistence.Save(world, serverConfig.SaveName);
+            if (savedSuccessfully && !string.IsNullOrWhiteSpace(serverConfig.PostSaveCommandPath))
+            {
+                try
+                {
+                    // Call external tool for backups, etc
+                    if (File.Exists(serverConfig.PostSaveCommandPath))
+                    {
+                        using Process process = Process.Start(serverConfig.PostSaveCommandPath);
+                        Log.Info($"Post-save command completed successfully: {serverConfig.PostSaveCommandPath}");
+                    }
+                    else
+                    {
+                        Log.Error($"Post-save file does not exist: {serverConfig.PostSaveCommandPath}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex, "Post-save command failed");
+                }
+            }
             IsSaving = false;
         }
 
@@ -85,7 +109,6 @@ namespace NitroxServer
             Log.InfoSensitive("Server Password: {password}", string.IsNullOrEmpty(serverConfig.ServerPassword) ? "None. Public Server." : serverConfig.ServerPassword);
             Log.InfoSensitive("Admin Password: {password}", serverConfig.AdminPassword);
             Log.Info($"Autosave: {(serverConfig.DisableAutoSave ? "DISABLED" : $"ENABLED ({serverConfig.SaveInterval / 60000} min)")}");
-            Log.Info($"World GameMode: {serverConfig.GameMode}");
             Log.Info($"Loaded save\n{SaveSummary}");
 
             PauseServer();
@@ -106,10 +129,12 @@ namespace NitroxServer
 
             Log.Info("Nitrox Server Stopping...");
             DisablePeriodicSaving();
+
             if (shouldSave)
             {
                 Save();
             }
+
             server.Stop();
             Log.Info("Nitrox Server Stopped");
             IsRunning = false;
@@ -137,7 +162,7 @@ namespace NitroxServer
             DisablePeriodicSaving();
             world.EventTriggerer.PauseWorldTime();
             world.EventTriggerer.PauseEventTimers();
-            Log.Info("Server has paused");
+            Log.Info("Server has paused, waiting for players to connect");
         }
 
         public void ResumeServer()

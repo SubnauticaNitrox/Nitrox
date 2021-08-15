@@ -33,7 +33,7 @@ namespace NitroxPatcher.Patches.Dynamic
                  */
                 if (instruction.opcode == INJECTION_CODE && instruction.operand.Equals(INJECTION_OPERAND))
                 {
-                    
+
                     yield return new CodeInstruction(OpCodes.Dup);
                     yield return new CodeInstruction(OpCodes.Call, typeof(SpawnConsoleCommand_OnConsoleCommand_Patch).GetMethod("Callback", BindingFlags.Static | BindingFlags.Public));
                 }

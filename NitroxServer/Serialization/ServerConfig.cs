@@ -6,16 +6,18 @@ using NitroxModel.Server;
 namespace NitroxServer.Serialization
 {
     [PropertyDescription("Server settings can be changed here")]
-    public class ServerConfig : IProperties
+    public class ServerConfig : NitroxConfig<ServerConfig>
     {
         private int maxConnectionsSetting = 100;
 
-        private int portSetting = 11000;
+        private int portSetting = ServerList.DEFAULT_PORT;
 
         private int saveIntervalSetting = 120000;
 
+        private string postSaveCommandPath = string.Empty;
+
         private string saveNameSetting = "world";
-        public string FileName => "server.cfg";
+        public override string FileName => "server.cfg";
 
         [PropertyDescription("Leave blank for a random spawn position")]
         public string Seed { get; set; }
@@ -41,6 +43,13 @@ namespace NitroxServer.Serialization
                 Validate.IsTrue(value > 1000, "SaveInterval must be greater than 1000");
                 saveIntervalSetting = value;
             }
+        }
+
+        [PropertyDescription("Command to run following a successful world save (e.g. .exe, .bat, or PowerShell script). ")]
+        public string PostSaveCommandPath
+        {
+            get => postSaveCommandPath;
+            set => postSaveCommandPath = value?.Trim('"').Trim();
         }
 
         public int MaxConnections
@@ -79,6 +88,9 @@ namespace NitroxServer.Serialization
         [PropertyDescription("Possible values:", typeof(ServerSerializerMode))]
         public ServerSerializerMode SerializerMode { get; set; } = ServerSerializerMode.PROTOBUF;
 
+        [PropertyDescription("Possible values:", typeof(Perms))]
+        public Perms DefaultPlayerPerm { get; set; } = Perms.PLAYER;
+
         [PropertyDescription("\nDefault player stats below here")]
         public float DefaultOxygenValue { get; set; } = 45;
 
@@ -92,6 +104,15 @@ namespace NitroxServer.Serialization
 
         public bool IsHardcore => GameMode == ServerGameMode.HARDCORE;
         public bool IsPasswordRequired => ServerPassword != string.Empty;
-        public PlayerStatsData DefaultPlayerStats => new PlayerStatsData(DefaultOxygenValue, DefaultMaxOxygenValue, DefaultHealthValue, DefaultHungerValue, DefaultThirstValue, DefaultInfectionValue);
+        public PlayerStatsData DefaultPlayerStats => new(DefaultOxygenValue, DefaultMaxOxygenValue, DefaultHealthValue, DefaultHungerValue, DefaultThirstValue, DefaultInfectionValue);
+        [PropertyDescription("If set to true, the server will try to open port on your router via UPnP")]
+        public bool AutoPortForward { get; set; } = true;
+
+        public static ServerConfig Load()
+        {
+            ServerConfig config = new();
+            config.Update();
+            return config;
+        }
     }
 }

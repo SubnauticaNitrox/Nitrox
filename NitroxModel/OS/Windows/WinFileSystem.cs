@@ -7,7 +7,7 @@ namespace NitroxModel.OS.Windows
     internal class WinFileSystem : FileSystem
     {
         public override IEnumerable<string> ExecutableFileExtensions { get; } = new[] { "exe", "cmd", "bat" };
-        public override string TextEditor => GetFullPath("notepad");
+        public override string TextEditor => GetFullPath("notepad.exe");
 
         public override IEnumerable<string> GetDefaultPrograms(string file)
         {
@@ -43,22 +43,21 @@ namespace NitroxModel.OS.Windows
             }
 
             string baseKey = $@"Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\{extension}";
-            using (RegistryKey rk = Registry.CurrentUser.OpenSubKey($@"{baseKey}\OpenWithList"))
+            using RegistryKey rk = Registry.CurrentUser.OpenSubKey($@"{baseKey}\OpenWithList");
+            if (rk?.GetValue("MRUList") is not string mruList)
             {
-                string mruList = (string)rk?.GetValue("MRUList");
-                if (mruList != null)
-                {
-                    foreach (char c in mruList)
-                    {
-                        string fullPath = SearchExecutableInSameDirectory(GetFullPath(rk.GetValue(c.ToString()).ToString()));
-                        if (fullPath == null)
-                        {
-                            continue;
-                        }
+                yield break;
+            }
 
-                        yield return fullPath;
-                    }
+            foreach (char c in mruList)
+            {
+                string fullPath = SearchExecutableInSameDirectory(GetFullPath(rk.GetValue(c.ToString()).ToString()));
+                if (fullPath == null)
+                {
+                    continue;
                 }
+
+                yield return fullPath;
             }
         }
     }

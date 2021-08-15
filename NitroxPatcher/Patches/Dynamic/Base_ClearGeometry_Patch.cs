@@ -13,14 +13,14 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Prefix(Base __instance)
         {
-            if(__instance == null)
+            if (__instance == null)
             {
                 return;
             }
 
             NitroxServiceLocator.LocateService<GeometryRespawnManager>().GeometryClearedForBase(__instance);
         }
-        
+
         public override void Patch(Harmony harmony)
         {
             PatchPrefix(harmony, TARGET_METHOD);

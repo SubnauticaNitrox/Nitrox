@@ -22,5 +22,48 @@ namespace NitroxModel.Helper
         {
             return (float)Math.Asin(p);
         }
+
+        public static float Pow(float p1, float p2)
+        {
+            return (float)Math.Pow(p1, p2);
+        }
+
+        /// <summary>
+        ///     Clamps the given value between 0 and 1.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static float Clamp01(float value)
+        {
+            // Not using Clamp as an optimization.
+            if (value < 0)
+            {
+                return 0;
+            }
+            if (value > 1)
+            {
+                return 1;
+            }
+            return value;
+        }
+
+        public static T Clamp<T>(T val, T min, T max) where T : IComparable<T>
+        {
+            if (val.CompareTo(min) < 0)
+            {
+                return min;
+            }
+            if (val.CompareTo(max) > 0)
+            {
+                return max;
+            }
+            return val;
+        }
+
+        /// <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="digits" /> is less than 0 or greater than 15.</exception>
+        public static float Round(float value, int digits = 0)
+        {
+            return (float)Math.Round(value, digits);
+        }
     }
 }

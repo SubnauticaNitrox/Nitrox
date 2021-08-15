@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
+using NitroxClient.GameLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerModel.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
@@ -91,15 +93,39 @@ namespace NitroxClient.GameLogic
             packetSender.Send(packet);
         }
 
+        public void BroadcastHeldItemChanged(NitroxId itemId, PlayerHeldItemChanged.ChangeType techType, NitroxTechType isFirstTime)
+        {
+            packetSender.Send(new PlayerHeldItemChanged(multiplayerSession.Reservation.PlayerId, itemId, techType, isFirstTime));
+        }
+
+        public void BroadcastQuickSlotsBindingChanged(List<string> binding)
+        {
+            packetSender.Send(new PlayerQuickSlotsBindingChanged(binding));
+        }
+
         private GameObject CreateBodyPrototype()
         {
             GameObject prototype = Body;
 
             // Cheap fix for showing head, much easier since male_geo contains many different heads
             prototype.GetComponentInParent<Player>().head.shadowCastingMode = ShadowCastingMode.On;
-            GameObject clone = Object.Instantiate(prototype);
+            GameObject clone = Object.Instantiate(prototype, Multiplayer.Main.transform);
             prototype.GetComponentInParent<Player>().head.shadowCastingMode = ShadowCastingMode.ShadowsOnly;
+
             clone.SetActive(false);
+            clone.name = "RemotePlayerPrototype";
+
+            // Removing items that are held in hand
+            foreach (Transform child in clone.transform.Find($"player_view/{PlayerEquipmentConstants.ITEM_ATTACH_POINT_GAME_OBJECT_NAME}"))
+            {
+                if (!child.gameObject.name.Contains("attach1_"))
+                {
+                    using (packetSender.Suppress<ItemContainerRemove>())
+                    {
+                        Object.DestroyImmediate(child.gameObject);
+                    }
+                }
+            }
 
             return clone;
         }

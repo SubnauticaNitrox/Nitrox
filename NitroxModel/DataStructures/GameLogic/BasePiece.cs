@@ -1,8 +1,8 @@
-﻿using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
+﻿using System;
+using NitroxModel.DataStructures.GameLogic.Buildings.Metadata;
+using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
 using NitroxModel.DataStructures.Util;
 using ProtoBufNet;
-using System;
-using NitroxModel.DataStructures.GameLogic.Buildings.Metadata;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
@@ -73,6 +73,11 @@ namespace NitroxModel.DataStructures.GameLogic
             ConstructionCompleted = false;
             RotationMetadata = rotationMetadata;
             Metadata = Optional.Empty;
+        }
+
+        public BasePiece(NitroxId id, NitroxVector3 itemPosition, NitroxQuaternion rotation, NitroxVector3 cameraPosition, NitroxQuaternion cameraRotation, NitroxTechType techType, Optional<NitroxId> parentId, bool isFurniture, Optional<RotationMetadata> rotationMetadata, Optional<BasePieceMetadata> metadata) : this(id, itemPosition, rotation, cameraPosition, cameraRotation, techType, parentId, isFurniture, rotationMetadata)
+        {
+            Metadata = metadata;
         }
 
         public override string ToString()

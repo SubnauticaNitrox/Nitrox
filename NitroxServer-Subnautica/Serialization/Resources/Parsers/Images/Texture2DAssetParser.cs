@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using AssetsTools.NET;
-using NitroxServer.Serialization.Resources.Datastructures;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxServer.Serialization.Resources.Datastructures;
 
 namespace NitroxServer_Subnautica.Serialization.Resources.Parsers.Images
 {
@@ -17,7 +15,7 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Parsers.Images
         public override void Parse(AssetIdentifier identifier, AssetsFileReader reader, ResourceAssets resourceAssets, Dictionary<int, string> relativeFileIdToPath)
         {
             string assetName = reader.ReadCountStringInt32();
-            
+
             if (assetName == "RandomStart")
             {
                 reader.Position += 9;
@@ -42,7 +40,7 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Parsers.Images
                     bmp.UnlockBits(picData);
 
                     resourceAssets.NitroxRandom = new RandomStartGenerator(bmp);
-                }    
+                }
             }
         }
     }

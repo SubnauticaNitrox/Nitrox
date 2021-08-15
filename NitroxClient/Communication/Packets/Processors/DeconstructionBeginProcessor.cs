@@ -23,7 +23,7 @@ namespace NitroxClient.Communication.Packets.Processors
             Log.Info("Received deconstruction packet for id: " + packet.Id);
 
             GameObject deconstructing = NitroxEntity.RequireObjectFrom(packet.Id);
-            
+
             Constructable constructable = deconstructing.GetComponent<Constructable>();
             BaseDeconstructable baseDeconstructable = deconstructing.GetComponent<BaseDeconstructable>();
 

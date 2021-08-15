@@ -1,13 +1,16 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Text;
+using LZ4;
 using NitroxModel.DataStructures.Surrogates;
 using NitroxModel.Logger;
-using LZ4;
 using NitroxModel.Networking;
-using System.Collections.Generic;
 
 namespace NitroxModel.Packets
 {
@@ -19,6 +22,9 @@ namespace NitroxModel.Packets
         private static readonly BinaryFormatter serializer;
 
         private static readonly string[] blacklistedAssemblies = { "NLog" };
+
+        private static readonly Dictionary<Type, PropertyInfo[]> cachedPropertiesByType = new();
+        private static readonly StringBuilder toStringBuilder = new();
 
         static Packet()
         {
@@ -60,25 +66,17 @@ namespace NitroxModel.Packets
 
         public byte[] Serialize()
         {
-            byte[] packetData;
-
-            using (MemoryStream ms = new MemoryStream())
-            using (LZ4Stream lz4Stream = new LZ4Stream(ms, LZ4StreamMode.Compress))
-            {
-                serializer.Serialize(lz4Stream, this);
-                packetData = ms.ToArray();
-            }
-
-            return packetData;
+            using MemoryStream ms = new MemoryStream();
+            using LZ4Stream lz4Stream = new LZ4Stream(ms, LZ4StreamMode.Compress);
+            serializer.Serialize(lz4Stream, this);
+            return ms.ToArray();
         }
 
         public static Packet Deserialize(byte[] data)
         {
-            using (Stream stream = new MemoryStream(data))
-            using (LZ4Stream lz4Stream = new LZ4Stream(stream, LZ4StreamMode.Decompress))
-            {
-                return (Packet)serializer.Deserialize(lz4Stream);
-            }
+            using Stream stream = new MemoryStream(data);
+            using LZ4Stream lz4Stream = new LZ4Stream(stream, LZ4StreamMode.Decompress);
+            return (Packet)serializer.Deserialize(lz4Stream);
         }
 
         public static bool IsTypeSerializable(Type type)
@@ -86,14 +84,43 @@ namespace NitroxModel.Packets
             // We have our own surrogates to (de)serialize types that are not marked [Serializable]
             // This code is very similar to how serializability is checked in:
             // System.Runtime.Serialization.Formatters.Binary.BinaryCommon.CheckSerializable
-
-            ISurrogateSelector selector;
-            return (serializer.SurrogateSelector.GetSurrogate(type, Packet.serializer.Context, out selector) != null);
+            return serializer.SurrogateSelector.GetSurrogate(type, Packet.serializer.Context, out ISurrogateSelector _) != null;
         }
 
         public WrapperPacket ToWrapperPacket()
         {
             return new WrapperPacket(Serialize());
+        }
+
+        public override string ToString()
+        {
+            Type packetType = GetType();
+
+            if (!cachedPropertiesByType.TryGetValue(packetType, out PropertyInfo[] properties))
+            {
+                properties = packetType.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                                       .Where(x => x.Name is not nameof(DeliveryMethod) and not nameof(UdpChannel)).ToArray();
+                cachedPropertiesByType.Add(packetType, properties);
+            }
+
+            toStringBuilder.Clear();
+            toStringBuilder.Append($"[{packetType.Name}: ");
+            foreach (PropertyInfo property in properties)
+            {
+                object propertyValue = property.GetValue(this);
+                if (propertyValue is IList propertyList)
+                {
+                    toStringBuilder.Append($"{property.Name}: {propertyList.Count}, ");
+                }
+                else
+                {
+                    toStringBuilder.Append($"{property.Name}: {propertyValue}, ");
+                }
+            }
+            toStringBuilder.Remove(toStringBuilder.Length - 2, 2);
+            toStringBuilder.Append("]");
+
+            return toStringBuilder.ToString();
         }
     }
 }

@@ -196,19 +196,16 @@ namespace NitroxClient.GameLogic
 
         public void UpdateVehiclePosition(VehicleMovementData vehicleModel, Optional<RemotePlayer> player)
         {
+            Optional<GameObject> opGameObject = NitroxEntity.GetObjectFrom(vehicleModel.Id);
             Vehicle vehicle = null;
             SubRoot subRoot = null;
 
-            Optional<GameObject> opGameObject = NitroxEntity.GetObjectFrom(vehicleModel.Id);
-
             if (opGameObject.HasValue)
             {
-                GameObject gameObject = opGameObject.Value;
+                Rocket rocket = opGameObject.Value.GetComponent<Rocket>();
+                vehicle = opGameObject.Value.GetComponent<Vehicle>();
+                subRoot = opGameObject.Value.GetComponent<SubRoot>();
 
-                Rocket rocket = gameObject.GetComponent<Rocket>();
-                vehicle = gameObject.GetComponent<Vehicle>();
-                subRoot = gameObject.GetComponent<SubRoot>();
-                
                 MultiplayerVehicleControl mvc = null;
 
                 if (subRoot)
@@ -222,33 +219,35 @@ namespace NitroxClient.GameLogic
                         Log.Debug($"For vehicle {vehicleModel.Id} position update while docked, will not execute");
                         return;
                     }
-                    SeaMoth seamoth = vehicle as SeaMoth;
-                    Exosuit exosuit = vehicle as Exosuit;
 
-                    if (seamoth)
+                    switch (vehicle)
                     {
-                        mvc = seamoth.gameObject.EnsureComponent<MultiplayerSeaMoth>();
-                    }
-                    else if (exosuit)
-                    {
-                        mvc = exosuit.gameObject.EnsureComponent<MultiplayerExosuit>();
+                        case SeaMoth seamoth:
+                            {
+                                mvc = seamoth.gameObject.EnsureComponent<MultiplayerSeaMoth>();
+                                break;
+                            }
+                        case Exosuit exosuit:
+                            {
+                                mvc = exosuit.gameObject.EnsureComponent<MultiplayerExosuit>();
 
-                        if (vehicleModel is ExosuitMovementData)
-                        {
-                            ExosuitMovementData exoSuitMovement = (ExosuitMovementData)vehicleModel;
-                            mvc.SetArmPositions(exoSuitMovement.LeftAimTarget.ToUnity(), exoSuitMovement.RightAimTarget.ToUnity());
-                        }
-                        else
-                        {
-                            Log.Error($"{nameof(Vehicles)}: Got exosuit vehicle but no ExosuitMovementData");
-                        }
+                                if (vehicleModel is ExosuitMovementData exoSuitMovement)
+                                {
+                                    mvc.SetArmPositions(exoSuitMovement.LeftAimTarget.ToUnity(), exoSuitMovement.RightAimTarget.ToUnity());
+                                }
+                                else
+                                {
+                                    Log.Error($"{nameof(Vehicles)}: Got exosuit vehicle but no ExosuitMovementData");
+                                }
+                                break;
+                            }
                     }
 
                 }
                 else if (rocket)
                 {
-                    opGameObject.Value.transform.position = vehicleModel.Position.ToUnity();
-                    opGameObject.Value.transform.rotation = vehicleModel.Rotation.ToUnity();
+                    rocket.transform.position = vehicleModel.Position.ToUnity();
+                    rocket.transform.rotation = vehicleModel.Rotation.ToUnity();
                 }
 
                 if (mvc)
@@ -597,8 +596,7 @@ namespace NitroxClient.GameLogic
 
         public Optional<T> TryGetVehicle<T>(NitroxId vehicleId) where T : VehicleModel
         {
-            VehicleModel vehicle;
-            vehiclesById.TryGetValue(vehicleId, out vehicle);
+            vehiclesById.TryGetValue(vehicleId, out VehicleModel vehicle);
             return Optional.OfNullable((T)vehicle);
         }
     }

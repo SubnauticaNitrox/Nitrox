@@ -2,7 +2,6 @@
 using NitroxClient.GameLogic;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
-using NitroxModel_Subnautica.Helper;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -19,8 +18,7 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             ushort playerId = packet.PlayerId;
 
-            RemotePlayer player;
-            if (!playerManager.TryFind(playerId, out player))
+            if (!playerManager.TryFind(playerId, out RemotePlayer player))
             {
                 return;
             }

@@ -8,24 +8,27 @@ using NitroxServer.ConsoleCommands.Abstract;
 
 namespace NitroxServer.ConsoleCommands
 {
-    internal sealed class DirectoryCommand : Command
+    internal class DirectoryCommand : Command
     {
         public override IEnumerable<string> Aliases { get; } = new[] { "dir" };
 
-        public DirectoryCommand() : base("directory", Perms.CONSOLE, "Opens the directory of the main program")
+        public DirectoryCommand() : base("directory", Perms.CONSOLE, "Opens the current directory of the server")
         {
         }
 
         protected override void Execute(CallArgs args)
         {
-            string dir = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location);
-            if (!Directory.Exists(dir))
+            string path = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location);
+
+            if (!Directory.Exists(path))
             {
-                Log.Error($"Unable to open Nitrox directory '{dir}' because it does not exist.");
+                Log.ErrorSensitive("Unable to open Nitrox directory {path} because it does not exist", path);
                 return;
+
             }
 
-            Process.Start(dir);
+            Log.InfoSensitive("Opening directory {path}", path);
+            Process.Start(path);
         }
     }
 }

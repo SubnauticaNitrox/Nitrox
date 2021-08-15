@@ -18,18 +18,18 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(StoryEventSend packet)
         {
-            switch (packet.StoryEventType)
+            switch (packet.Type)
             {
-                case StoryEventType.PDA:
-                case StoryEventType.RADIO:
-                case StoryEventType.ENCYCLOPEDIA:
-                case StoryEventType.STORY:
+                case StoryEventSend.EventType.PDA:
+                case StoryEventSend.EventType.RADIO:
+                case StoryEventSend.EventType.ENCYCLOPEDIA:
+                case StoryEventSend.EventType.STORY:
                     using (NitroxServiceLocator.LocateService<IPacketSender>().Suppress<StoryEventSend>())
                     {
-                        StoryGoal.Execute(packet.Key, (Story.GoalType)packet.StoryEventType);
+                        StoryGoal.Execute(packet.Key, (Story.GoalType)packet.Type);
                     }
                     break;
-                case StoryEventType.EXTRA:
+                case StoryEventSend.EventType.EXTRA:
                     ExecuteExtraEvent(packet.Key);
                     break;
             }

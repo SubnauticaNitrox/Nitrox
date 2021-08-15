@@ -23,10 +23,5 @@ namespace NitroxModel.Packets
             DeliveryMethod = NitroxDeliveryMethod.DeliveryMethod.UNRELIABLE_SEQUENCED;
             UdpChannel = UdpChannelId.PLAYER_MOVEMENT;
         }
-
-        public override string ToString()
-        {
-            return "[Movement - PlayerId: " + PlayerId + " Position: " + Position + " Velocity: " + Velocity + " Body rotation: " + BodyRotation + " Camera rotation: " + AimingRotation + "]";
-        }
     }
 }

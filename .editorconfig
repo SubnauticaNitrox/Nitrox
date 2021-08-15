@@ -47,6 +47,10 @@ csharp_space_between_parentheses = false
 csharp_preserve_single_line_statements = false
 csharp_preserve_single_line_blocks = true
 
+# Alignment
+resharper_csharp_align_multiline_calls_chain = true
+resharper_align_multiline_calls_chain = true
+
 # Avoid `this.` when not necessary
 dotnet_style_qualification_for_field = false:warning
 dotnet_style_qualification_for_property = false:warning

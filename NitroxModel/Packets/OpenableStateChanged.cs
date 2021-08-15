@@ -16,10 +16,5 @@ namespace NitroxModel.Packets
             IsOpen = isOpen;
             Duration = duration;
         }
-
-        public override string ToString()
-        {
-            return "[OpenableStateChanged - Id: " + Id + " IsOpen: " + IsOpen + " Duration: " + Duration + "]";
-        }
     }
 }

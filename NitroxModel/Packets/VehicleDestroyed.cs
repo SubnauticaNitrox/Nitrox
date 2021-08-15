@@ -16,10 +16,5 @@ namespace NitroxModel.Packets
             PlayerName = playerName;
             GetPilotingMode = getPilotingMode;
         }
-
-        public override string ToString()
-        {
-            return "[VehicleRemove - Vehicle Id: " + Id + " PlayerName: " + PlayerName + " GetPilotingMode: " + GetPilotingMode + "]";
-        }
     }
 }

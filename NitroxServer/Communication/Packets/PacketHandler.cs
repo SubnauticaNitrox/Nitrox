@@ -1,13 +1,12 @@
 ﻿using System;
+using NitroxModel.Core;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
 using NitroxServer.Communication.Packets.Processors;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
-using NitroxModel.Core;
-using NitroxModel.DataStructures.Util;
-using NitroxServer.Communication.NetworkingLayer;
 
 namespace NitroxServer.Communication.Packets
 {

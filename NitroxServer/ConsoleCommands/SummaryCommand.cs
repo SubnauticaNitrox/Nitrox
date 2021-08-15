@@ -7,9 +7,11 @@ namespace NitroxServer.ConsoleCommands
     {
         private readonly Server server;
 
-        public SummaryCommand(Server server) : base("summary", Perms.PLAYER, "Shows persisted data", true)
+        public SummaryCommand(Server server) : base("summary", Perms.MODERATOR, "Shows persisted data")
         {
             this.server = server;
+
+            AllowedArgOverflow = true;
         }
 
         protected override void Execute(CallArgs args)

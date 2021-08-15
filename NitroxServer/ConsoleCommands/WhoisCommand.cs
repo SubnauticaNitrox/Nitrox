@@ -16,16 +16,16 @@ namespace NitroxServer.ConsoleCommands
         {
             Player player = args.Get<Player>(0);
 
-            StringBuilder info = new StringBuilder($"==== {player.Name} ====\n");
-            info.AppendLine($"ID: {player.Id}");
-            info.AppendLine($"Role: {player.Permissions}");
-            info.AppendLine($"Position: {player.Position.X}, {player.Position.Y}, {player.Position.Z}");
-            info.AppendLine($"Oxygen: {player.Stats.Oxygen}/{player.Stats.MaxOxygen}");
-            info.AppendLine($"Food: {player.Stats.Food}");
-            info.AppendLine($"Water: {player.Stats.Water}");
-            info.AppendLine($"Infection: {player.Stats.InfectionAmount}");
+            StringBuilder builder = new($"==== {player.Name} ====\n");
+            builder.AppendLine($"ID: {player.Id}");
+            builder.AppendLine($"Role: {player.Permissions}");
+            builder.AppendLine($"Position: {player.Position.X}, {player.Position.Y}, {player.Position.Z}");
+            builder.AppendLine($"Oxygen: {player.Stats.Oxygen}/{player.Stats.MaxOxygen}");
+            builder.AppendLine($"Food: {player.Stats.Food}");
+            builder.AppendLine($"Water: {player.Stats.Water}");
+            builder.AppendLine($"Infection: {player.Stats.InfectionAmount}");
 
-            SendMessage(args.Sender, info.ToString());
+            SendMessage(args.Sender, builder.ToString());
         }
     }
 }

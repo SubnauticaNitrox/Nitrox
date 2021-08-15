@@ -5,7 +5,7 @@ namespace NitroxModel.Packets
     [Serializable]
     public class ServerCommand : Packet
     {
-        public readonly string Cmd;
+        public string Cmd { get; }
 
         public ServerCommand(string cmd)
         {

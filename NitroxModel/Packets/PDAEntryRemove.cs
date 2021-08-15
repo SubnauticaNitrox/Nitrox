@@ -1,5 +1,4 @@
 ﻿using System;
-using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxModel.Packets
@@ -7,20 +6,11 @@ namespace NitroxModel.Packets
     [Serializable]
     public class PDAEntryRemove : Packet
     {
-        public NitroxTechType TechType;
-        public float Progress;
-        public int Unlocked;
+        public NitroxTechType TechType { get; }
 
-        public PDAEntryRemove(NitroxTechType techType, float progress, int unlocked)
+        public PDAEntryRemove(NitroxTechType techType)
         {
             TechType = techType;
-            Progress = progress;
-            Unlocked = unlocked;
-        }
-
-        public override string ToString()
-        {
-            return "[PDAEntryRemove - techType: " + TechType + " progress: " + Progress + " unlocked: " + Unlocked + "]";
         }
     }
 }

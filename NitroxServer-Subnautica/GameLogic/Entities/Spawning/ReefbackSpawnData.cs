@@ -13,7 +13,7 @@ namespace NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrapper
             public float probability;
             public string classId;
         }
-        
+
         public static List<ReefbackEntity> SpawnableCreatures { get; } = new List<ReefbackEntity>()
         {
             new ReefbackEntity() { techType = TechType.Peeper, probability = 1, minNumber = 1, maxNumber = 2, classId = "3fcd548b-781f-46ba-b076-7412608deeef" },

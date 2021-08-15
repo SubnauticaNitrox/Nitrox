@@ -43,7 +43,7 @@ namespace NitroxPatcher
                         {
                             toWrite += Environment.NewLine + stackTrace;
                         }
-                        Log.Error(toWrite.Trim(newLineChars));
+                        Log.ErrorUnity(toWrite.Trim(newLineChars));
                         break;
                     case LogType.Warning:
                     case LogType.Log:
@@ -54,7 +54,7 @@ namespace NitroxPatcher
                         throw new ArgumentOutOfRangeException(nameof(type), type, null);
                 }
             };
-            
+
             Log.Info($"Using Nitrox version {Assembly.GetExecutingAssembly().GetName().Version} built on {File.GetCreationTimeUtc(Assembly.GetExecutingAssembly().Location)}");
             try
             {

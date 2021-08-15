@@ -11,11 +11,9 @@ namespace NitroxModel.Packets
         public int MaxConnections { get; }
 
         public MultiplayerSessionAuthenticationAuthority AuthenticationAuthority { get; }
-
         public Version NitroxVersionAllowed { get; }
 
-        public MultiplayerSessionPolicy(string correlationId, bool disableConsole, int maxConnections, bool requiresServerPassword)
-            : base(correlationId)
+        public MultiplayerSessionPolicy(string correlationId, bool disableConsole, int maxConnections, bool requiresServerPassword) : base(correlationId)
         {
             // This is done intentionally. It is only a stub for future extension.
             RequiresServerPassword = requiresServerPassword;

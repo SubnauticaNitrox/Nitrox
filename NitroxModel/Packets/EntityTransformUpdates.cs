@@ -25,18 +25,6 @@ namespace NitroxModel.Packets
             Updates.Add(new EntityTransformUpdate(id, position, rotation));
         }
 
-        public override string ToString()
-        {
-            string toString = "";
-
-            foreach (EntityTransformUpdate update in Updates)
-            {
-                toString += update + " ";
-            }
-
-            return "[EntityTransformUpdates - Updates: " + toString + "]";
-        }
-
         [Serializable]
         public class EntityTransformUpdate
         {
@@ -49,11 +37,6 @@ namespace NitroxModel.Packets
                 Id = id;
                 Position = position;
                 Rotation = rotation;
-            }
-
-            public override string ToString()
-            {
-                return "(" + Id + " " + Position + " " + Rotation + ")";
             }
         }
     }

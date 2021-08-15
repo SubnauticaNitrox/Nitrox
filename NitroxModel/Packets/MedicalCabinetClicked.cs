@@ -18,10 +18,5 @@ namespace NitroxModel.Packets
             HasMedKit = hasMedKit;
             NextSpawnTime = nextSpawnTime;
         }
-
-        public override string ToString()
-        {
-            return "[MedicalCabinetClicked id: " + Id + " DoorOpen: " + DoorOpen + " HasMedKit: " + HasMedKit + " NextSpawnTime: " + NextSpawnTime + "]";
-        }
     }
 }

@@ -5,7 +5,6 @@ using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
-using NitroxModel.Logger;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
@@ -15,7 +14,7 @@ namespace NitroxPatcher.Patches.Dynamic
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("OnKill", BindingFlags.NonPublic | BindingFlags.Instance);
 
         public static void Prefix(Vehicle __instance)
-        {            
+        {
             NitroxId id = NitroxEntity.GetId(__instance.gameObject);
             NitroxServiceLocator.LocateService<SimulationOwnership>().StopSimulatingEntity(id);
         }

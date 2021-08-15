@@ -14,10 +14,5 @@ namespace NitroxModel.Packets
             OwnerId = ownerId;
             ItemId = itemId;
         }
-
-        public override string ToString()
-        {
-            return "[ItemContainerRemove ownerId: " + OwnerId + " itemId: " + ItemId + "]";
-        }
     }
 }

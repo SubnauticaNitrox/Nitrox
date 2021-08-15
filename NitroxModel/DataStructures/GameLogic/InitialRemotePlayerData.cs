@@ -8,7 +8,7 @@ namespace NitroxModel.DataStructures.GameLogic
     [Serializable]
     public class InitialRemotePlayerData
     {
-        public PlayerContext PlayerContext { get; set; }        
+        public PlayerContext PlayerContext { get; set; }
         public NitroxVector3 Position { get; set; }
         public Optional<NitroxId> SubRootId { get; }
         public List<NitroxTechType> EquippedTechTypes { get; }

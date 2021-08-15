@@ -5,6 +5,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Threading;
+using NitroxModel.Logger;
 using NitroxModel.OS.MacOS;
 using NitroxModel.OS.Unix;
 using NitroxModel.OS.Windows;
@@ -13,14 +14,11 @@ namespace NitroxModel.OS
 {
     public class FileSystem
     {
-        private static readonly Lazy<FileSystem> instance = new(() =>
+        private static readonly Lazy<FileSystem> instance = new(() => Environment.OSVersion.Platform switch
                                                                 {
-                                                                    return Environment.OSVersion.Platform switch
-                                                                    {
-                                                                        PlatformID.Unix => new UnixFileSystem(),
-                                                                        PlatformID.MacOSX => new MacFileSystem(),
-                                                                        _ => new WinFileSystem()
-                                                                    };
+                                                                    PlatformID.Unix => new UnixFileSystem(),
+                                                                    PlatformID.MacOSX => new MacFileSystem(),
+                                                                    _ => new WinFileSystem()
                                                                 },
                                                                 LazyThreadSafetyMode.ExecutionAndPublication);
 
@@ -50,7 +48,7 @@ namespace NitroxModel.OS
             string editorProgram = GetDefaultPrograms(file).FirstOrDefault() ?? TextEditor;
 
             // Handle special arguments for popular editors.
-            string arguments = Path.GetFileName(editorProgram).ToLowerInvariant() switch
+            string arguments = Path.GetFileName(editorProgram)?.ToLowerInvariant() switch
             {
                 "code.cmd" => "--wait", // Allow to wait on VS code
                 _ => ""
@@ -186,19 +184,69 @@ namespace NitroxModel.OS
 
         /// <summary>
         ///     Replaces target file with source file. If target file does not exist then it moves the file.
+        ///     This falls back to a copy if the target is on a different drive.
+        ///     The source file will always be deleted.
         /// </summary>
         /// <param name="source">Source file to replace with.</param>
         /// <param name="target">Target file to replace.</param>
-        public void ReplaceFile(string source, string target)
+        /// <returns>True if file was moved or replaced successfully.</returns>
+        public bool ReplaceFile(string source, string target)
         {
+            if (!File.Exists(source))
+            {
+                return false;
+            }
+            source = Path.GetFullPath(source);
+
             if (!File.Exists(target))
             {
                 File.Move(source, target);
+                return true;
             }
-            else
+            try
             {
                 File.Replace(source, target, null, false);
             }
+            catch (IOException ex)
+            {
+                // TODO: Need to test on Linux because the ex.HResult will likely not work or be different number cross-platform.
+                switch ((uint)ex.HResult)
+                {
+                    case 0x80070498:
+                        // Tried to replace file between drives. This does not work, need to do so in steps.
+                        try
+                        {
+                            string originalExtension = Path.GetExtension(target);
+                            originalExtension = string.IsNullOrWhiteSpace(originalExtension) ? "" : $".{originalExtension}";
+                            string backupFileName = $"{Path.GetFileNameWithoutExtension(target)}_{Path.GetFileNameWithoutExtension(Path.GetTempFileName())}{originalExtension}.bak";
+                            Log.Debug($"Renaming file '{target}' to '{backupFileName}' as backup plan if file replace fails");
+                            File.Move(target, backupFileName);
+                            File.Copy(source, target);
+
+                            // Cleanup redundant files, ignoring errors.
+                            try
+                            {
+                                File.Delete(source);
+                                File.Delete(backupFileName);
+                            }
+                            catch (Exception)
+                            {
+                                // ignored
+                            }
+                        }
+                        catch (Exception ex2)
+                        {
+                            Log.Error(ex2, $"Failed to replace file '{source}' with '{target}' which is on another drive");
+                            return false;
+                        }
+                        break;
+                    default:
+                        // No special handling implemented for error, abort.
+                        Log.Warn($"Unhandled file replace of '{source}' with '{target}' with HRESULT: 0x{ex.HResult:X}");
+                        return false;
+                }
+            }
+            return true;
         }
     }
 }

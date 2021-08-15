@@ -1,5 +1,5 @@
-﻿using ProtoBufNet;
 using System;
+using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
@@ -20,8 +20,7 @@ namespace NitroxModel.DataStructures.GameLogic
         /// Extends the basic ItemData by adding the game time when the Plantable was added to its Planter container.
         /// </summary>
         /// <param name="plantedGameTime">Clients will use this to determine expected plant growth progress when connecting </param>
-        public PlantableItemData(NitroxId containerId, NitroxId itemId, byte[] serializedData, double plantedGameTime)
-            :base(containerId, itemId, serializedData)
+        public PlantableItemData(NitroxId containerId, NitroxId itemId, byte[] serializedData, double plantedGameTime) : base(containerId, itemId, serializedData)
         {
             PlantedGameTime = plantedGameTime;
         }

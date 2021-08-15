@@ -17,7 +17,7 @@ namespace NitroxClient.GameLogic.Helper
         {
             CONSTRUCTOR_INPUT_CRAFTED_GAMEOBJECT,
             BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT,
-            
+
             LATEST_DECONSTRUCTED_BASE_PIECE_GHOST,
             LATEST_DECONSTRUCTED_BASE_PIECE_GUID
         }
@@ -36,19 +36,17 @@ namespace NitroxClient.GameLogic.Helper
 
         public static Optional<object> Get(TransientObjectType key)
         {
-            object obj;
-            localObjectsById.TryGetValue(key, out obj);
+            localObjectsById.TryGetValue(key, out object obj);
             return Optional.OfNullable(obj);
         }
 
         public static T Require<T>(TransientObjectType key)
         {
-            object obj;
-            if (!localObjectsById.TryGetValue(key, out obj))
+            if (!localObjectsById.TryGetValue(key, out object obj))
             {
                 throw new Exception("Did not have an entry for key: " + key);
             }
-            
+
             return (T)obj;
         }
     }

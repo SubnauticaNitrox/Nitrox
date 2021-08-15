@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
-using NitroxModel.Logger;
 using ProtoBuf;
 using UnityEngine;
 
@@ -41,14 +40,26 @@ namespace NitroxClient.MonoBehaviours
                 return Optional.Empty;
             }
 
-            GameObject gameObject;
-            if (!gameObjectsById.TryGetValue(id, out gameObject))
+            if (!gameObjectsById.TryGetValue(id, out GameObject gameObject))
             {
                 return Optional.Empty;
             }
 
             // Nullable incase game object is marked as destroyed
             return Optional.OfNullable(gameObject);
+        }
+
+        public static bool TryGetObjectFrom(NitroxId id, out GameObject gameObject)
+        {
+            gameObject = null;
+            return id != null && gameObjectsById.TryGetValue(id, out gameObject);
+        }
+
+        public static bool TryGetComponentFrom<T>(NitroxId id, out T component) where T : Component
+        {
+            component = null;
+            return id != null && gameObjectsById.TryGetValue(id, out GameObject gameObject) &&
+                   gameObject.TryGetComponent(out component);
         }
 
         public static void SetNewId(GameObject gameObject, NitroxId id)

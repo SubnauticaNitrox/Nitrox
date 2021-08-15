@@ -39,7 +39,7 @@ namespace NitroxModel.Discovery
                 {
                     continue;
                 }
-                
+
                 errors.Clear();
                 return Path.GetFullPath(path);
             }

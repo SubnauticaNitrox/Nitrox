@@ -75,7 +75,7 @@ namespace NitroxClient.GameLogic.PlayerModel.ColorSwap
             GameObject playerModel = nitroxPlayer.PlayerModel;
 
             SkinnedMeshRenderer radiationSuitRenderer = playerModel.GetRenderer(RADIATION_SUIT_GAME_OBJECT_NAME);
-            
+
             radiationSuitRenderer.material.UpdateMainTextureColors(legPixels, legTextureBlock);
             radiationSuitRenderer.material.UpdateMainTextureColors(feetPixels, feetTextureBlock);
             radiationSuitRenderer.material.UpdateMainTextureColors(beltPixels, beltTextureBlock);

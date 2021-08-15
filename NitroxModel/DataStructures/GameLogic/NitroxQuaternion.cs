@@ -129,11 +129,19 @@ namespace NitroxModel.DataStructures.GameLogic
                 result.Z = Mathf.RAD2DEG * Mathf.Asin(2 * X * Y + 2 * Z * W);
 
                 if (result.X < 0)
+                {
                     result.X += 360;
+                }
+
                 if (result.Y < 0)
+                {
                     result.Y += 360;
+                }
+
                 if (result.Z < 0)
+                {
                     result.Z += 360;
+                }
             }
             return result;
         }

@@ -18,7 +18,6 @@ using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
-using NitroxModel_Subnautica.Helper;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 

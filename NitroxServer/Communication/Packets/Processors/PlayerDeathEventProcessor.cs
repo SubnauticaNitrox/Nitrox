@@ -1,6 +1,5 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
-using NitroxModel.Server;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
 using NitroxServer.Serialization;
@@ -20,7 +19,7 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(PlayerDeathEvent packet, Player player)
         {
-            if(serverConfig.IsHardcore)
+            if (serverConfig.IsHardcore)
             {
                 player.IsPermaDeath = true;
                 PlayerKicked playerKicked = new PlayerKicked("Permanent death from hardcore mode");
@@ -28,6 +27,7 @@ namespace NitroxServer.Communication.Packets.Processors
             }
 
             player.LastStoredPosition = packet.DeathPosition;
+            player.LastStoredSubRootID = player.SubRootId;
 
             if (player.Permissions > Perms.MODERATOR)
             {

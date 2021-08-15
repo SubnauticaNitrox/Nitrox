@@ -9,8 +9,9 @@ using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.Debuggers;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Bases;
-using NitroxClient.GameLogic.Bases.Spawning;
+using NitroxClient.GameLogic.Bases.Spawning.BasePiece;
 using NitroxClient.GameLogic.ChatUI;
+using NitroxClient.GameLogic.FMOD;
 using NitroxClient.GameLogic.HUD;
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxClient.GameLogic.PlayerModel;
@@ -51,9 +52,12 @@ namespace NitroxClient
 
         private static void RegisterCoreDependencies(ContainerBuilder containerBuilder)
         {
-            containerBuilder.RegisterType<EntityDebugger>().As<BaseDebugger>().AsSelf().SingleInstance();
-            containerBuilder.RegisterType<SceneDebugger>().As<BaseDebugger>().AsSelf().SingleInstance();
-            containerBuilder.RegisterType<NetworkDebugger>().As<BaseDebugger>().AsSelf().As<INetworkDebugger>().SingleInstance();
+            containerBuilder.RegisterAssemblyTypes(currentAssembly)
+                            .AssignableTo<BaseDebugger>()
+                            .As<BaseDebugger>()
+                            .AsImplementedInterfaces()
+                            .AsSelf()
+                            .SingleInstance();
 
             containerBuilder.Register(c => new NitroxProtobufSerializer($"{nameof(NitroxModel)}.dll"));
 
@@ -119,6 +123,7 @@ namespace NitroxClient
             containerBuilder.RegisterType<EscapePodManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Debugger>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Fires>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<FMODSystem>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<LiveMixinManager>().InstancePerLifetimeScope();
         }
 

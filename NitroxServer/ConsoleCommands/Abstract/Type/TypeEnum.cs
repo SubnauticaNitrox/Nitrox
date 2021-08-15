@@ -12,7 +12,7 @@ namespace NitroxServer.ConsoleCommands.Abstract.Type
 
         public override bool IsValid(string arg)
         {
-            return Enum.TryParse(arg, true, out T result);
+            return Enum.TryParse<T>(arg, true, out _);
         }
 
         public override object Read(string arg)

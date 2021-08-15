@@ -11,9 +11,9 @@ namespace NitroxPatcher.Patches.Dynamic
         public static readonly Type TARGET_CLASS = typeof(ExosuitClawArm);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("TryUse", BindingFlags.NonPublic | BindingFlags.Instance);
 
-        public static void Postfix(bool __result, ExosuitClawArm __instance,float ___cooldownTime)
+        public static void Postfix(bool __result, ExosuitClawArm __instance, float ___cooldownTime)
         {
-            if(__result)
+            if (__result)
             {
                 NitroxServiceLocator.LocateService<ExosuitModuleEvent>().BroadcastClawUse(__instance, ___cooldownTime);
             }

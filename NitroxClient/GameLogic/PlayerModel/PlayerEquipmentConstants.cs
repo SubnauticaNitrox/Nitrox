@@ -26,6 +26,8 @@
         public const string RADIATION_SUIT_NECK_CLASP_GAME_OBJECT_NAME = "male_geo/radiationSuit/radiationSuit_vest_reducedNeck_geo/radiationSuit_vest_neckExtension_geo";
         public const string RADIATION_TANK_GAME_OBJECT_NAME = "male_geo/radiationSuit/radiationSuit_vest_reducedNeck_geo/radiationSuit_tank_geo 1";
         public const string RADIATION_TANK_TUBES_GAME_OBJECT_NAME = "male_geo/radiationSuit/radiationSuit_vest_reducedNeck_geo/radiationSuit_tank_geo 1/radiationSuit_tubes_geo 1";
+        public const string ITEM_ATTACH_POINT_GAME_OBJECT_NAME = "export_skeleton/head_rig/neck/chest/clav_R/clav_R_aim/shoulder_R/elbow_R/hand_R/attach1";
+
 
         public const string DIVE_SUIT_INDEX_KEY = "dive-suit";
         public const string DIVE_SUIT_ARMS_INDEX_KEY = "dive-suit-arms";
@@ -44,6 +46,6 @@
         public const string RADIATION_HELMET_INDEX_KEY = "radiation-helmet";
         public const string RADIATION_SUIT_NECK_CLASP_INDEX_KEY = "radiation-suit-neck-clasp";
         public const string RADIATION_SUIT_TANK_INDEX_KEY = "radiation-suit-tank";
-        public const string FINS_INDEX_EY = "fins";
+        public const string FINS_INDEX_KEY = "fins";
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using NitroxModel.DataStructures;
 
 namespace NitroxModel.Packets
@@ -14,13 +13,8 @@ namespace NitroxModel.Packets
         {
             Entities = new List<SimulatedEntity>
             {
-                new SimulatedEntity(id, owningPlayerId, false, lockType)
+                new(id, owningPlayerId, false, lockType)
             };
-        }
-
-        public SimulationOwnershipChange(List<SimulatedEntity> entities)
-        {
-            Entities = entities;
         }
 
         public SimulationOwnershipChange(SimulatedEntity entity)
@@ -31,18 +25,9 @@ namespace NitroxModel.Packets
             };
         }
 
-        public override string ToString()
+        public SimulationOwnershipChange(List<SimulatedEntity> entities)
         {
-            StringBuilder stringBuilder = new StringBuilder("[SimulationOwnershipChange - ");
-
-            foreach (SimulatedEntity entity in Entities)
-            {
-                stringBuilder.Append(entity);
-            }
-
-            stringBuilder.Append("]");
-
-            return stringBuilder.ToString();
+            Entities = entities;
         }
     }
 }

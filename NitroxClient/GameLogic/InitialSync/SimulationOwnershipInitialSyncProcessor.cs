@@ -1,13 +1,9 @@
 ﻿using System.Collections;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.InitialSync.Base;
-using NitroxClient.MonoBehaviours;
-using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
-using NitroxModel.DataStructures;
-using UnityEngine;
 
 namespace NitroxClient.GameLogic.InitialSync
 {

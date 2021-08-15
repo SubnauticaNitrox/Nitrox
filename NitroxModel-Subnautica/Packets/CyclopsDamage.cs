@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
+using NitroxModel.DataStructures;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures.GameLogic;
-using NitroxModel.DataStructures;
 
 namespace NitroxModel_Subnautica.Packets
 {

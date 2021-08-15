@@ -11,7 +11,7 @@ namespace NitroxClient.GameLogic.Spawning.Metadata
     public abstract class EntityMetadataProcessor
     {
         public abstract void ProcessMetadata(GameObject gameObject, EntityMetadata metadata);
-        
+
         private static Dictionary<Type, Optional<EntityMetadataProcessor>> processorsByType = new Dictionary<Type, Optional<EntityMetadataProcessor>>();
 
         static EntityMetadataProcessor()
@@ -19,14 +19,14 @@ namespace NitroxClient.GameLogic.Spawning.Metadata
             IEnumerable<EntityMetadataProcessor> processors = Assembly.GetExecutingAssembly()
                                                                          .GetTypes()
                                                                          .Where(t => typeof(EntityMetadataProcessor).IsAssignableFrom(t) &&
-                                                                                     t.IsClass && 
+                                                                                     t.IsClass &&
                                                                                      !t.IsAbstract
                                                                                )
                                                                          .Select(Activator.CreateInstance)
                                                                          .Cast<EntityMetadataProcessor>();
 
             foreach (EntityMetadataProcessor processor in processors)
-            {                
+            {
                 Type metadataType = processor.GetType().BaseType.GetGenericArguments()[0];
                 processorsByType.Add(metadataType, Optional.Of(processor));
             }
@@ -34,9 +34,8 @@ namespace NitroxClient.GameLogic.Spawning.Metadata
 
         public static Optional<EntityMetadataProcessor> FromMetaData(EntityMetadata metadata)
         {
-            Optional<EntityMetadataProcessor> processor;
 
-            if (metadata != null && processorsByType.TryGetValue(metadata.GetType(), out processor))
+            if (metadata != null && processorsByType.TryGetValue(metadata.GetType(), out Optional<EntityMetadataProcessor> processor))
             {
                 return processor;
             }
