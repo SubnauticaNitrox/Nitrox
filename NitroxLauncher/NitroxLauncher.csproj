@@ -22,30 +22,100 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
   <PropertyGroup>
-    <StartupObject/>
+    <StartupObject>
+    </StartupObject>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
-  <ItemGroup Label="ApplicationDefinitions">
+  <ItemGroup>
+    <Reference Include="PresentationFramework.Aero2" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Serialization">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.ServiceModel">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Windows" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Presentation" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup Label=".cs files">
     <Compile Include="AttachedProperties\ButtonProperties.cs" />
     <Compile Include="DependencyObjectExtensions.cs" />
     <Compile Include="Events\ServerStartEventArgs.cs" />
     <Compile Include="LauncherLogic.cs" />
     <Compile Include="PageBase.cs" />
-    <Compile Include="Patching\AppHelper.cs" />
+    <Compile Include="Pages\LaunchGamePage.xaml.cs">
+      <DependentUpon>LaunchGamePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\OptionPage.xaml.cs">
+      <DependentUpon>OptionPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\ServerConsolePage.xaml.cs">
+      <DependentUpon>ServerConsolePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\ServerPage.xaml.cs">
+      <DependentUpon>ServerPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Patching\NitroxEntryPatch.cs" />
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="Pages\LaunchGamePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\OptionPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\ServerConsolePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\ServerPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Patching\AppHelper.cs" />
     <Compile Include="Patching\QModHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -60,92 +130,10 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-  </ItemGroup>
-  <ItemGroup Label="Pages">
-    <Page Include="MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Page Include="Pages\LaunchGamePage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Compile Include="Pages\LaunchGamePage.xaml.cs">
-      <DependentUpon>LaunchGamePage.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Pages\OptionPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Compile Include="Pages\OptionPage.xaml.cs">
-      <DependentUpon>OptionPage.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Pages\ServerConsolePage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Compile Include="Pages\ServerConsolePage.xaml.cs">
-      <DependentUpon>ServerConsolePage.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Pages\ServerPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Compile Include="Pages\ServerPage.xaml.cs">
-      <DependentUpon>ServerPage.xaml</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup Label=".resx files">
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup Label="None Build Files">
-    <None Include="App.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <None Include="Fonts\LICENSE.txt" />
-    <None Include="Images\material-design-icons\LICENSE.txt" />
-  </ItemGroup>
-  <ItemGroup Label="Resources">
-    <Resource Include="icon.ico" />
-    <Resource Include="Images\EscapePod.png" />
-    <Resource Include="Images\exit.png" />
-    <Resource Include="Images\material-design-icons\baseline_send_white_24dp.png" />
-    <Resource Include="Images\material-design-icons\baseline_stop_white_24dp.png" />
-    <Resource Include="Images\minimize.png" />
-    <Resource Include="Images\Nitrox.png" />
-    <Resource Include="Images\options.png" />
-    <Resource Include="Images\play.png" />
-    <Resource Include="Images\PlayGameImage.png" />
-    <Resource Include="Images\server.png" />
-    <Resource Include="Images\serverIllustration.png" />
-    <Resource Include="Images\social\discord.png" />
-    <Resource Include="Images\social\github.png" />
-    <Resource Include="Images\social\reddit.png" />
-    <Resource Include="Images\social\twitter.png" />
-    <Resource Include="Images\social\website.png" />
-    <Resource Include="Images\subnauticaIcon.png" />
-    <Resource Include="Images\SubnauticaMain.png" />
-    <Resource Include="Images\Vines.png" />
-    <Resource Include="nitroxLogo.png" />
-    <Resource Include="Fonts\OpenSans-Bold.ttf" />
-    <Resource Include="Fonts\OpenSans-BoldItalic.ttf" />
-    <Resource Include="Fonts\OpenSans-ExtraBold.ttf" />
-    <Resource Include="Fonts\OpenSans-ExtraBoldItalic.ttf" />
-    <Resource Include="Fonts\OpenSans-Italic.ttf" />
-    <Resource Include="Fonts\OpenSans-Light.ttf" />
-    <Resource Include="Fonts\OpenSans-LightItalic.ttf" />
-    <Resource Include="Fonts\OpenSans-Regular.ttf" />
-    <Resource Include="Fonts\OpenSans-Semibold.ttf" />
-    <Resource Include="Fonts\OpenSans-SemiboldItalic.ttf" />
     <Resource Include="Fonts\Roboto-Black.ttf" />
     <Resource Include="Fonts\Roboto-BlackItalic.ttf" />
     <Resource Include="Fonts\Roboto-Bold.ttf" />
@@ -155,6 +143,9 @@
     <Resource Include="Fonts\Roboto-LightItalic.ttf" />
     <Resource Include="Fonts\Roboto-Medium.ttf" />
     <Resource Include="Fonts\Roboto-MediumItalic.ttf" />
+    <Resource Include="Fonts\Roboto-Regular.ttf" />
+    <Resource Include="Fonts\Roboto-Thin.ttf" />
+    <Resource Include="Fonts\Roboto-ThinItalic.ttf" />
     <Resource Include="Fonts\RobotoMono-Bold.ttf" />
     <Resource Include="Fonts\RobotoMono-BoldItalic.ttf" />
     <Resource Include="Fonts\RobotoMono-Italic.ttf" />
@@ -165,15 +156,44 @@
     <Resource Include="Fonts\RobotoMono-Regular.ttf" />
     <Resource Include="Fonts\RobotoMono-Thin.ttf" />
     <Resource Include="Fonts\RobotoMono-ThinItalic.ttf" />
-    <Resource Include="Fonts\Roboto-Regular.ttf" />
-    <Resource Include="Fonts\Roboto-Thin.ttf" />
-    <Resource Include="Fonts\Roboto-ThinItalic.ttf" />
-    <Resource Include="Fonts\Apache License.txt" />
+    <Resource Include="Fonts\OpenSans-Bold.ttf" />
+    <Resource Include="Fonts\OpenSans-BoldItalic.ttf" />
+    <Resource Include="Fonts\OpenSans-ExtraBold.ttf" />
+    <Resource Include="Fonts\OpenSans-ExtraBoldItalic.ttf" />
+    <Resource Include="Fonts\OpenSans-Italic.ttf" />
+    <Resource Include="Fonts\OpenSans-Light.ttf" />
+    <Resource Include="Fonts\OpenSans-LightItalic.ttf" />
+    <Resource Include="Fonts\OpenSans-Regular.ttf" />
+    <Resource Include="Fonts\OpenSans-Semibold.ttf" />
+    <Resource Include="Fonts\OpenSans-SemiboldItalic.ttf" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
-  <ItemGroup Label="SplashScreen">
-    <SplashScreen Include="Images\loadingSmall.png" />
+  <ItemGroup>
+    <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup Label="Project References">
+  <ItemGroup>
+    <Resource Include="Images\PlayGameImage.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\minimize.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\exit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\SubnauticaMain.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\EscapePod.png" />
+    <Resource Include="Images\Vines.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Nitrox.png" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Nitrox.Bootloader\Nitrox.Bootloader.csproj">
       <Project>{e4226522-9189-410b-93b2-792942fbd588}</Project>
       <Name>Nitrox.Bootloader</Name>
@@ -182,30 +202,75 @@
       <Project>{ed5034bd-66b5-4596-94b7-66a28d3eff49}</Project>
       <Name>NitroxClient</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NitroxModel\NitroxModel.csproj">
-      <Project>{b16f4de7-21ad-4fef-955b-0a5a365fa4e3}</Project>
-      <Name>NitroxModel</Name>
-    </ProjectReference>
     <ProjectReference Include="..\NitroxModel-Subnautica\NitroxModel-Subnautica.csproj">
       <Project>{0a377218-6b36-4522-89a3-a39cfc999209}</Project>
       <Name>NitroxModel-Subnautica</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NitroxModel\NitroxModel.csproj">
+      <Project>{b16f4de7-21ad-4fef-955b-0a5a365fa4e3}</Project>
+      <Name>NitroxModel</Name>
     </ProjectReference>
     <ProjectReference Include="..\NitroxPatcher\NitroxPatcher.csproj">
       <Project>{be983e25-24cc-4fc8-9017-61eec43dd618}</Project>
       <Name>NitroxPatcher</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NitroxServer\NitroxServer.csproj">
-      <Project>{0fc864b0-694e-4fca-b78c-8ef98bc6f262}</Project>
-      <Name>NitroxServer</Name>
-    </ProjectReference>
     <ProjectReference Include="..\NitroxServer-Subnautica\NitroxServer-Subnautica.csproj">
       <Project>{eff1d7a5-efd6-413a-8d5f-dc2408e4c9b7}</Project>
       <Name>NitroxServer-Subnautica</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NitroxServer\NitroxServer.csproj">
+      <Project>{0fc864b0-694e-4fca-b78c-8ef98bc6f262}</Project>
+      <Name>NitroxServer</Name>
+    </ProjectReference>
   </ItemGroup>
-  <ItemGroup Label="NuGet Packages">
+  <ItemGroup>
+    <Resource Include="Images\material-design-icons\baseline_send_white_24dp.png" />
+    <Resource Include="Images\material-design-icons\baseline_stop_white_24dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Fonts\LICENSE.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\material-design-icons\LICENSE.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="nitroxLogo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\options.png" />
+    <Resource Include="Images\play.png" />
+    <Resource Include="Images\server.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\social\discord.png" />
+    <Resource Include="Images\social\reddit.png" />
+    <Resource Include="Images\social\twitter.png" />
+    <Resource Include="Images\social\website.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <SplashScreen Include="Images\loadingSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\social\github.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Fonts\Apache License.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\subnauticaIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\serverIllustration.png" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="dnlib">
       <Version>3.3.2</Version>
+    </PackageReference>
+    <PackageReference Include="Lib.Harmony">
+      <Version>2.0.4.0</Version>
     </PackageReference>
     <PackageReference Include="WindowsAPICodePack-Core">
       <Version>1.1.2</Version>
@@ -213,35 +278,6 @@
     <PackageReference Include="WindowsAPICodePack-Shell">
       <Version>1.1.1</Version>
     </PackageReference>
-    <PackageReference Include="Lib.Harmony">
-      <Version>2.0.4.0</Version>
-    </PackageReference>
-  </ItemGroup>
-  <ItemGroup Label="Assembly References">
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="System" />
-    <Reference Include="WindowsBase" />
-    <Reference Include="PresentationFramework.Aero2" />
-    <Reference Include="System.Core" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Windows.Presentation" />
-    <Reference Include="System.Runtime.Serialization">
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.ServiceModel">
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Windows" />
-    <Reference Include="System.Xaml">
-      <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <!-- Move assets from Subnautica assets to launcher.
        TODO: Try fix this as a project reference to Nitrox.Subnautica.Assets that will copy the files on build automatically. -->
@@ -262,8 +298,8 @@
   <Target Name="MoveDependenciesToLib" AfterTargets="Build">
     <ItemGroup>
       <AllDependencies Include="$(TargetDir)*.dll" />
+      <AllDependencies Include="$(TargetDir)*.pdb" />
       <AllDependencies Include="$(TargetDir)*.dll.config" />
-      <AllDependencies Include="$(TargetDir)*.pdb" Exclude="$(TargetDir)NitroxLauncher.pdb;$(TargetDir)NitroxServer-Subnautica.pdb" />
       <AllDependencies Include="$(TargetDir)*.xml" />
     </ItemGroup>
     <Move SourceFiles="@(AllDependencies)" DestinationFolder="$(TargetDir)lib" />

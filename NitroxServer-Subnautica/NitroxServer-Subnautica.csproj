@@ -20,11 +20,30 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject/>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <ItemGroup Label=".cs files">
-    <Compile Include="AppMutex.cs" />
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="protobuf-net">
+      <HintPath>..\Nitrox.Subnautica.Assets\protobuf-net.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="Communication\Packets\Processors\ConstructorBeginCraftingProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsChangeEngineModeProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsChangeShieldModeProcessor.cs" />
@@ -41,75 +60,63 @@
     <Compile Include="Communication\Packets\Processors\RocketStageUpdateProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ToggleLightsProcessor.cs" />
     <Compile Include="GameLogic\Entities\SimulationWhitelist.cs" />
+    <Compile Include="GameLogic\Entities\Spawning\UntypedCellEntityBootstrapper.cs" />
     <Compile Include="GameLogic\Entities\Spawning\CrashFishBootstrapper.cs" />
     <Compile Include="GameLogic\Entities\Spawning\ReefbackBootstrapper.cs" />
     <Compile Include="GameLogic\Entities\Spawning\ReefbackSpawnData.cs" />
     <Compile Include="GameLogic\Entities\Spawning\SlotsHelper.cs" />
     <Compile Include="GameLogic\Entities\Spawning\SubnauticaEntitySpawnPointFactory.cs" />
-    <Compile Include="GameLogic\Entities\Spawning\UntypedCellEntityBootstrapper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Serialization\Resources\Parsers\AssetParser.cs" />
-    <Compile Include="Serialization\Resources\Parsers\GameObjectAssetParser.cs" />
     <Compile Include="Serialization\Resources\Parsers\Images\Texture2DAssetParser.cs" />
     <Compile Include="Serialization\Resources\Parsers\MonobehaviourAssetParser.cs" />
-    <Compile Include="Serialization\Resources\Parsers\Monobehaviours\EntitySlotParser.cs" />
     <Compile Include="Serialization\Resources\Parsers\Monobehaviours\MonobehaviourParser.cs" />
+    <Compile Include="Serialization\Resources\Parsers\Monobehaviours\EntitySlotParser.cs" />
     <Compile Include="Serialization\Resources\Parsers\Monobehaviours\PrefabIdentifierParser.cs" />
     <Compile Include="Serialization\Resources\Parsers\Monobehaviours\PrefabPlaceholderParser.cs" />
-    <Compile Include="Serialization\Resources\Parsers\Monobehaviours\PrefabPlaceholdersGroupParser.cs" />
-    <Compile Include="Serialization\Resources\Parsers\Monobehaviours\WorldEntityDataParser.cs" />
     <Compile Include="Serialization\Resources\Parsers\MonoscriptAssetParser.cs" />
     <Compile Include="Serialization\Resources\Parsers\Text\EntityDistributionsParser.cs" />
+    <Compile Include="Serialization\Resources\Parsers\GameObjectAssetParser.cs" />
+    <Compile Include="Serialization\Resources\Parsers\Monobehaviours\PrefabPlaceholdersGroupParser.cs" />
+    <Compile Include="Serialization\Resources\Parsers\AssetParser.cs" />
     <Compile Include="Serialization\Resources\Parsers\TextAssetParser.cs" />
     <Compile Include="Serialization\Resources\Parsers\TransformAssetParser.cs" />
+    <Compile Include="Serialization\Resources\Parsers\Monobehaviours\WorldEntityDataParser.cs" />
     <Compile Include="Serialization\Resources\Processing\PrefabPlaceholderExtractor.cs" />
     <Compile Include="Serialization\Resources\ResourceAssets.cs" />
     <Compile Include="Serialization\Resources\ResourceAssetsParser.cs" />
     <Compile Include="Serialization\SubnauticaServerJsonSerializer.cs" />
     <Compile Include="Serialization\SubnauticaServerProtoBufSerializer.cs" />
+    <Compile Include="AppMutex.cs" />
     <Compile Include="SubnauticaServerAutoFacRegistrar.cs" />
   </ItemGroup>
-  <ItemGroup Label="Non-Build Files">
+  <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup Label="NuGet Packages">
-    <PackageReference Include="Autofac">
-      <Version>4.9.4</Version>
-    </PackageReference>
-    <PackageReference Include="Mono.Cecil">
-      <Version>0.11.3</Version>
-    </PackageReference>
-    <PackageReference Include="AssetsTools.NET">
-      <Version>2.0.6</Version>
-    </PackageReference>
-  </ItemGroup>
-  <ItemGroup Label="Project References">
-    <ProjectReference Include="..\NitroxModel\NitroxModel.csproj">
-      <Project>{b16f4de7-21ad-4fef-955b-0a5a365fa4e3}</Project>
-      <Name>NitroxModel</Name>
-    </ProjectReference>
+  <ItemGroup>
     <ProjectReference Include="..\NitroxModel-Subnautica\NitroxModel-Subnautica.csproj">
       <Project>{0a377218-6b36-4522-89a3-a39cfc999209}</Project>
       <Name>NitroxModel-Subnautica</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NitroxModel\NitroxModel.csproj">
+      <Project>{b16f4de7-21ad-4fef-955b-0a5a365fa4e3}</Project>
+      <Name>NitroxModel</Name>
     </ProjectReference>
     <ProjectReference Include="..\NitroxServer\NitroxServer.csproj">
       <Project>{0fc864b0-694e-4fca-b78c-8ef98bc6f262}</Project>
       <Name>NitroxServer</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup Label="Assembly References">
-    <Reference Include="protobuf-net">
-      <HintPath>..\Nitrox.Subnautica.Assets\protobuf-net.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Xml" />
+  <ItemGroup>
+    <PackageReference Include="AssetsTools.NET">
+      <Version>2.0.6</Version>
+    </PackageReference>
+    <PackageReference Include="Autofac">
+      <Version>4.9.4</Version>
+    </PackageReference>
+    <PackageReference Include="Mono.Cecil">
+      <Version>0.11.3</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
