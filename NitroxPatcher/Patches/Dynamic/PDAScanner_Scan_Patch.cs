@@ -1,13 +1,16 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Threading;
 using HarmonyLib;
 using NitroxClient.GameLogic;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
+using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
@@ -62,34 +65,64 @@ namespace NitroxPatcher.Patches.Dynamic
                 NitroxServiceLocator.LocateService<Item>().PickedUp(PDAScanner.scanTarget.gameObject, techType);
             }
         }
+        
+        public const int PACKET_SENDING_RATE = 500; // in milliseconds
 
-        public static readonly int PACKET_SENDING_RATE = 500; // in milliseconds
+        public static readonly PDAManagerEntry PDAManagerEntry = NitroxServiceLocator.LocateService<PDAManagerEntry>();
+        public static Dictionary<TechType, ThrottledEntry> ThrottlingEntries = new Dictionary<TechType, ThrottledEntry>();
 
-        // Tuple<LatestProgressTime, LatestPacketSendTime, Entry>
-        public static Dictionary<TechType, Tuple<DateTimeOffset, DateTimeOffset, PDAScanner.Entry>> ThrottlingEntries = new Dictionary<TechType, Tuple<DateTimeOffset, DateTimeOffset, PDAScanner.Entry>>();
-        // Store the thread concerning a certain type
-        public static Dictionary<TechType, Thread> ThrottlingThreads = new Dictionary<TechType, Thread>();
+        public class ThrottledEntry
+        {
+            public TechType EntryTechType;
+            public DateTimeOffset LatestProgressTime, LatestPacketSendTime;
+            public PDAScanner.Entry Entry;
+            public Coroutine LastProgressThrottler;
 
-        // After 2 seconds without scanning, a packet will be sent with the latest progress
-        public static void Throttle(TechType techType)
+            public ThrottledEntry(TechType techType, PDAScanner.Entry entry) : this(techType, DateTimeOffset.FromUnixTimeMilliseconds(0), DateTimeOffset.FromUnixTimeMilliseconds(0), entry)
+            { }
+
+            public ThrottledEntry(TechType techType, DateTimeOffset latestProgressTime, DateTimeOffset latestPacketSendTime, PDAScanner.Entry entry)
+            {
+                EntryTechType = techType;
+                LatestProgressTime = latestProgressTime;
+                LatestPacketSendTime = latestPacketSendTime;
+                Entry = entry;
+            }
+
+            public void Update(DateTimeOffset? newLatestProgressTime, DateTimeOffset? newLatestPacketSendTime, PDAScanner.Entry newEntry)
+            {
+                if (newLatestProgressTime.HasValue)
+                {
+                    LatestProgressTime = newLatestProgressTime.Value;
+                }
+                if(newLatestPacketSendTime.HasValue)
+                {
+                    LatestPacketSendTime = newLatestPacketSendTime.Value;
+                }
+                Entry = newEntry;
+            }
+
+            public void StartThrottler()
+            {
+                LastProgressThrottler = Player.main.StartCoroutine(ThrottleLastProgress(EntryTechType));
+            }
+        }
+
+        static IEnumerator ThrottleLastProgress(TechType techType)
         {
             do
             {
-                Thread.Sleep(2000);
-                Log.Debug($"Throttled {techType} waiting");
+                yield return new WaitForSeconds(2);
             }
-            while (DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() < ThrottlingEntries[techType].Item1.ToUnixTimeMilliseconds() + 2000);
-            Log.Debug($"Throttled {techType} will now be sent");
+            while (DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() < ThrottlingEntries[techType].LatestProgressTime.ToUnixTimeMilliseconds() + 2000);
 
-            // Don't send the packet if the scan is already finished
             if (!PDAScanner.ContainsCompleteEntry(techType))
             {
-                NitroxServiceLocator.LocateService<PDAManagerEntry>().Progress(ThrottlingEntries[techType].Item3);
+                PDAManagerEntry.Progress(ThrottlingEntries[techType].Entry);
             }
-            
-            // No need to keep these in memory
+
+            // No need to keep this in memory
             ThrottlingEntries.Remove(techType);
-            ThrottlingThreads.Remove(techType);
         }
         
         // Happens each time a progress is made
@@ -100,16 +133,15 @@ namespace NitroxPatcher.Patches.Dynamic
             if (scanTarget.isValid && scanTarget.progress > 0f)
             {
                 PDAScanner.Entry entry = new PDAScanner.Entry() { techType = scanTarget.techType, progress = scanTarget.progress };
+                DateTimeOffset Now = DateTimeOffset.UtcNow;
 
                 // Start a thread when a scanning period starts
-                if (!ThrottlingThreads.ContainsKey(scanTarget.techType))
+                if (!ThrottlingEntries.TryGetValue(scanTarget.techType, out ThrottledEntry throttledEntry))
                 {
-                    ThrottlingThreads.Add(scanTarget.techType, new Thread(() => {
-                        Throttle(scanTarget.techType);
-                    }));
-                    ThrottlingThreads[scanTarget.techType].Start();
-                }
+                    ThrottlingEntries.Add(scanTarget.techType, new ThrottledEntry(scanTarget.techType, entry));
 
+                    ThrottlingEntries[scanTarget.techType].StartThrottler();
+                }
 
                 // Check if the entry is already in the partial list, and then, change the progress
                 if (PDAScanner.GetPartialEntryByKey(scanTarget.techType, out PDAScanner.Entry partialEntry) && partialEntry.progress > entry.progress)
@@ -119,18 +151,25 @@ namespace NitroxPatcher.Patches.Dynamic
                 }
 
                 // Updating the progress throttling
-                if (ThrottlingEntries.ContainsKey(scanTarget.techType))
+                if (ThrottlingEntries.TryGetValue(scanTarget.techType, out throttledEntry))
                 {
-                    ThrottlingEntries[scanTarget.techType] = Tuple.Create(DateTimeOffset.UtcNow, ThrottlingEntries[scanTarget.techType].Item2, entry);
+                    throttledEntry.Update(Now, null, entry);
                 }
 
                 // Throttling the packet sending
-                if (ThrottlingEntries.ContainsKey(scanTarget.techType) && DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() < ThrottlingEntries[scanTarget.techType].Item2.ToUnixTimeMilliseconds() + PACKET_SENDING_RATE)
+                if (ThrottlingEntries.TryGetValue(scanTarget.techType, out throttledEntry))
                 {
-                    return;
+                    if (Now.ToUnixTimeMilliseconds() < ThrottlingEntries[scanTarget.techType].LatestPacketSendTime.ToUnixTimeMilliseconds() + PACKET_SENDING_RATE)
+                    {
+                        return;
+                    }
+                    throttledEntry.Update(Now, Now, entry);
                 }
-                ThrottlingEntries[scanTarget.techType] = Tuple.Create(DateTimeOffset.UtcNow, DateTimeOffset.UtcNow, entry);
-                NitroxServiceLocator.LocateService<PDAManagerEntry>().Progress(entry);
+                else
+                {
+                    ThrottlingEntries.Add(scanTarget.techType, new ThrottledEntry(scanTarget.techType, Now, Now, entry));
+                }
+                PDAManagerEntry.Progress(entry);
             }
         }
 
