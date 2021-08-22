@@ -8,5 +8,10 @@ namespace NitroxModel.OS.MacOS
         {
             yield return "open";
         }
+
+        public override bool SetFullAccessToCurrentUser(string directory)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

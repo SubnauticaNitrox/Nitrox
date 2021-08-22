@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Security.AccessControl;
+using System.Security.Principal;
 using Microsoft.Win32;
 
 namespace NitroxModel.OS.Windows
@@ -58,6 +61,30 @@ namespace NitroxModel.OS.Windows
                 }
 
                 yield return fullPath;
+            }
+        }
+
+        /// <summary>
+        ///     Adds full access flag to the directory (and sub files/directories) for the current user.
+        /// </summary>
+        /// <param name="directory"></param>
+        /// <returns>True if set, false if program is not allowed to change permissions.</returns>
+        public override bool SetFullAccessToCurrentUser(string directory)
+        {
+            try
+            {
+                string identity = WindowsIdentity.GetCurrent().Name;
+                
+                DirectorySecurity flags = Directory.GetAccessControl(directory);
+                flags.AddAccessRule(new(identity, FileSystemRights.FullControl, InheritanceFlags.None, PropagationFlags.InheritOnly, AccessControlType.Allow));
+                flags.AddAccessRule(new (identity, FileSystemRights.FullControl, InheritanceFlags.ContainerInherit, PropagationFlags.InheritOnly, AccessControlType.Allow));
+                flags.AddAccessRule(new (identity, FileSystemRights.FullControl, InheritanceFlags.ObjectInherit, PropagationFlags.InheritOnly, AccessControlType.Allow));
+                Directory.SetAccessControl(directory, flags);
+                return true;
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return false;
             }
         }
     }
