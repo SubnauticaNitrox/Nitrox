@@ -251,6 +251,10 @@ namespace NitroxLauncher
             }
             nitroxEntryPatch.Remove();
             nitroxEntryPatch.Apply();
+            if (QModHelper.IsQModInstalled(subnauticaPath))
+            {
+                Log.Warn("QModManager is Installed! Please Direct user to MrPurple6411#0415.");
+            }
 
             gameProcess = StartSubnautica() ?? await WaitForProcessAsync();
         }

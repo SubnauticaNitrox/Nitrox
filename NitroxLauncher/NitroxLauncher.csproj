@@ -46,6 +46,7 @@
     <Compile Include="PageBase.cs" />
     <Compile Include="Patching\AppHelper.cs" />
     <Compile Include="Patching\NitroxEntryPatch.cs" />
+    <Compile Include="Patching\QModHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
