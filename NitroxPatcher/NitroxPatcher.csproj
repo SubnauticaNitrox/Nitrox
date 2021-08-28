@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -212,8 +212,8 @@
     <PackageReference Include="Autofac">
       <Version>4.9.4</Version>
     </PackageReference>
-    <PackageReference Include="Lib.Harmony">
-      <Version>2.0.4.0</Version>
+    <PackageReference Include="HarmonyX">
+      <Version>2.5.4</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup Label="Project References">
