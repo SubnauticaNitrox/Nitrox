@@ -54,7 +54,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public override void Patch(Harmony harmony)
         {
-            PatchMultiple(harmony, TARGET_METHOD, true, false, true, false);
+            PatchMultiple(harmony, TARGET_METHOD, prefix:true, transpiler:true);
         }
 
         public static float AddHealthOverride(LiveMixin live, float addHealth, Welder welder)
