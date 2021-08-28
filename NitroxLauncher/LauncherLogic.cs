@@ -67,7 +67,6 @@ namespace NitroxLauncher
             try
             {
                 nitroxEntryPatch.Remove();
-                QModHelper.RestoreQModEntryPoint(subnauticaPath);
             }
             catch (Exception)
             {
@@ -209,7 +208,6 @@ namespace NitroxLauncher
             }
 #endif
             nitroxEntryPatch.Remove();
-            QModHelper.RestoreQModEntryPoint(subnauticaPath);
             gameProcess = StartSubnautica() ?? await WaitForProcessAsync();
         }
 
@@ -253,7 +251,10 @@ namespace NitroxLauncher
             }
             nitroxEntryPatch.Remove();
             nitroxEntryPatch.Apply();
-            QModHelper.RemoveQModEntryPoint(subnauticaPath);
+            if (QModHelper.IsQModInstalled(subnauticaPath))
+            {
+                Log.Warn("QModManager is Installed! Please Direct user to MrPurple6411#0415.");
+            }
 
             gameProcess = StartSubnautica() ?? await WaitForProcessAsync();
         }
@@ -359,7 +360,6 @@ namespace NitroxLauncher
             {
                 nitroxEntryPatch.Remove();
                 Log.Info("Finished removing patches!");
-                QModHelper.RestoreQModEntryPoint(subnauticaPath);
             }
             catch (Exception ex)
             {
