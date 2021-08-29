@@ -112,7 +112,7 @@ namespace NitroxClient.GameLogic.ChatUI
 
         private IEnumerator LoadChatLogAsset()
         {
-            yield return AssetBundleLoader.LoadUIAsset(CHAT_LOG_ASSET, "PlayerChatCanvas", true, playerChatGameObject =>
+            yield return AssetBundleLoader.LoadUIAsset(CHAT_LOG_ASSET, true, playerChatGameObject =>
             {
                 playerChat = playerChatGameObject.AddComponent<PlayerChat>();
             });
@@ -124,7 +124,7 @@ namespace NitroxClient.GameLogic.ChatUI
         {
             if (!chatUsed)
             {
-                Player.main.StartCoroutine(AssetBundleLoader.LoadUIAsset(CHAT_KEY_HINT_ASSET, "ChatKeyCanvas", false, chatKeyHintGameObject =>
+                Player.main.StartCoroutine(AssetBundleLoader.LoadUIAsset(CHAT_KEY_HINT_ASSET, false, chatKeyHintGameObject =>
                 {
                     chatKeyHint = chatKeyHintGameObject;
                 }));

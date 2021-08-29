@@ -12,7 +12,7 @@ namespace Packages.ThunderKit.GameImporter.Editor
         public static readonly string AssetPath = Application.dataPath + "/Subnautica";
         public static ProgressBar ProgressBar;
 
-        private static readonly ISNFix[] fixes = { new CleanShader(), new FixShader(), new UnityUIReference(), new RegisterAssetBundle() };
+        private static readonly ISNFix[] fixes = { new CleanShader(), new FixShader(), new UnityUIReference(), new RegisterBuildScenes() };
 
         [MenuItem("Tools/SubnauticaImporter/All SN-Asset Fixes", false, -10)]
         private static void RunFixes()
@@ -83,7 +83,7 @@ namespace Packages.ThunderKit.GameImporter.Editor
         [MenuItem("Tools/SubnauticaImporter/Selected Fixes/UnityUIReference", false, 20)]
         private static void UnityUIReferenceFix() => RunSelectedFix(UnityUIReference.TASK_NAME, UnityUIReference.UnityUIReferenceFix);
 
-        [MenuItem("Tools/SubnauticaImporter/Selected Fixes/RegisterAssetsAsBundle", false, 30)]
-        private static void RegisterAssetsAsBundle() => RunSelectedFix(RegisterAssetBundle.TASK_NAME, RegisterAssetBundle.RegisterAssetsAsBundle);
+        [MenuItem("Tools/SubnauticaImporter/Selected Fixes/RegisterSubnauticaBuildScenes", false, 30)]
+        private static void RegisterSubnauticaBuildScenes() => RunSelectedFix(RegisterBuildScenes.TASK_NAME, RegisterBuildScenes.RegisterAssetsAsBundle);
     }
 }

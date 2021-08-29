@@ -5,43 +5,52 @@ using UnityEngine;
 
 namespace Assets.Editor
 {
-    public class CreateAssetBundles
+    public static class CreateAssetBundles
     {
-        private const string UNITY_DIRECTORY = "AssetBundles";
-        private const string NITROX_DIRECTORY = "../Nitrox.Subnautica.Assets/AssetBundles";
+        private const string UNITY_OUTPUT_DIRECTORY = "AssetBundles";
+        private const string NITROX_OUTPUT_DIRECTORY = "../Nitrox.Subnautica.Assets/AssetBundles";
 
-        [MenuItem("Nitrox/Build AssetBundles")]
+        [MenuItem("Tools/Nitrox/Build AssetBundles")]
         private static void BuildAllAssetBundles()
         {
+            EditorUtility.DisplayProgressBar("Building Asset Bundles", "", 0);
             try
             {
-                if (Directory.Exists(UNITY_DIRECTORY))
+                if (Directory.Exists(UNITY_OUTPUT_DIRECTORY))
                 {
-                    Directory.Delete(UNITY_DIRECTORY, true);
+                    Directory.Delete(UNITY_OUTPUT_DIRECTORY, true);
                 }
-                Directory.CreateDirectory(UNITY_DIRECTORY);
+                Directory.CreateDirectory(UNITY_OUTPUT_DIRECTORY);
 
-                BuildPipeline.BuildAssetBundles(UNITY_DIRECTORY, BuildAssetBundleOptions.None, BuildTarget.StandaloneWindows);
+                BuildPipeline.BuildAssetBundles(UNITY_OUTPUT_DIRECTORY, BuildAssetBundleOptions.None, BuildTarget.StandaloneWindows64);
 
-                if (Directory.Exists(NITROX_DIRECTORY))
+                // Moves AssetBundles direct to Nitrox.Subnautica.Assets
+                if (Directory.Exists(NITROX_OUTPUT_DIRECTORY))
                 {
-                    foreach (string assetBundleName in AssetDatabase.GetAllAssetBundleNames())
+                    foreach (string assetBundle in Directory.GetFiles(UNITY_OUTPUT_DIRECTORY))
                     {
-                        File.Copy(Path.Combine(UNITY_DIRECTORY, assetBundleName), Path.Combine(NITROX_DIRECTORY, assetBundleName), true);
+                        string assetBundleName = Path.GetFileName(assetBundle);
+                        if (!assetBundleName.EndsWith(".manifest") && !assetBundleName.Equals("AssetBundles"))
+                        {
+                            File.Copy(assetBundle, Path.Combine(NITROX_OUTPUT_DIRECTORY, assetBundleName), true);
+                        }
                     }
                 }
                 else
                 {
-                    throw new DirectoryNotFoundException(NITROX_DIRECTORY + " wasn't found");
+                    throw new DirectoryNotFoundException(NITROX_OUTPUT_DIRECTORY + " was not found");
                 }
+
                 Debug.Log("Building Nitrox AssetBundles successfully finished");
             }
             catch (Exception ex)
             {
-                Debug.LogError("Building Nitrox AssetBundles successfully finished");
-                Debug.LogException(ex);
+                Debug.LogError("Building Nitrox AssetBundles threw an error.\n" + ex);
             }
-
+            finally
+            {
+                EditorUtility.ClearProgressBar();
+            }
         }
     }
 }

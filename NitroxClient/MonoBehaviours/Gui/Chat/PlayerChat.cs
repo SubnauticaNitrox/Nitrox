@@ -38,7 +38,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
 
             canvasGroup = GetComponent<CanvasGroup>();
 
-            logEntryPrefab = GameObject.Find("ChatLogEntryPrefab");
+            logEntryPrefab = transform.GetChild(2).GetChild(0).GetChild(1).GetChild(0).gameObject; //ChatLogContent
             logEntryPrefab.AddComponent<PlayerChatLogItem>();
             logEntryPrefab.SetActive(false);
 
