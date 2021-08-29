@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using UnityEngine;
+using UnityEngine.XR;
 
 namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 {
@@ -9,10 +10,11 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         private static GameObject loadingTextGameObject => uGUI.main.loading.loadingText.gameObject;
 
         private static uGUI_TextFade loadingScreenWarning;
+        private static uGUI_TextFade versionText;
 
         public static void Initialize()
         {
-            AddTextToLoadingScreen($"\nNitrox Alpha V{assemblyVersion}");
+            versionText = AddTextToLoadingScreen($"\nNitrox Alpha V{assemblyVersion}");
             loadingScreenWarning = AddTextToLoadingScreen($"\n\n{Language.main.Get("Nitrox_LoadingScreenWarn")}");
         }
 
@@ -32,6 +34,10 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         public static void DisableWarningText()
         {
             loadingScreenWarning.FadeOut(1f, null);
+            if(XRSettings.enabled)
+            {
+                versionText.FadeOut(1f, null);
+            }
         }
     }
 }
