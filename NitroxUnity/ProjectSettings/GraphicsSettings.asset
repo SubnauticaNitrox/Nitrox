@@ -5,8 +5,8 @@ GraphicsSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 12
   m_Deferred:
-    m_Mode: 1
-    m_Shader: {fileID: 69, guid: 0000000000000000f000000000000000, type: 0}
+    m_Mode: 2
+    m_Shader: {fileID: 4800000, guid: 214a9c6f72a5432d9ae73106f61fa601, type: 3}
   m_DeferredReflections:
     m_Mode: 1
     m_Shader: {fileID: 74, guid: 0000000000000000f000000000000000, type: 0}
@@ -14,8 +14,8 @@ GraphicsSettings:
     m_Mode: 1
     m_Shader: {fileID: 64, guid: 0000000000000000f000000000000000, type: 0}
   m_LegacyDeferred:
-    m_Mode: 1
-    m_Shader: {fileID: 63, guid: 0000000000000000f000000000000000, type: 0}
+    m_Mode: 2
+    m_Shader: {fileID: 4800000, guid: 918dd4ccb7c042489320817f55e17581, type: 3}
   m_DepthNormals:
     m_Mode: 1
     m_Shader: {fileID: 62, guid: 0000000000000000f000000000000000, type: 0}
@@ -29,17 +29,43 @@ GraphicsSettings:
     m_Mode: 1
     m_Shader: {fileID: 102, guid: 0000000000000000f000000000000000, type: 0}
   m_AlwaysIncludedShaders:
-  - {fileID: 7, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 15104, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 15105, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 15106, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 10753, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 10770, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 10783, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 4800000, guid: 0000000deadbeef15deadf00d0000000, type: 3}
+  - {fileID: 4800000, guid: 0000000deadbeef15deadf00d0000000, type: 3}
+  - {fileID: 4800000, guid: 0000000deadbeef15deadf00d0000000, type: 3}
+  - {fileID: 4800000, guid: 0000000deadbeef15deadf00d0000000, type: 3}
+  - {fileID: 4800000, guid: 0000000deadbeef15deadf00d0000000, type: 3}
+  - {fileID: 4800000, guid: 0000000deadbeef15deadf00d0000000, type: 3}
+  - {fileID: 4800000, guid: 9d5e244138c64f33b268dcd043b67bba, type: 3}
+  - {fileID: 4800000, guid: 0000000deadbeef15deadf00d0000000, type: 3}
+  - {fileID: 4800000, guid: 0000000deadbeef15deadf00d0000000, type: 3}
+  - {fileID: 4800000, guid: 0000000deadbeef15deadf00d0000000, type: 3}
+  - {fileID: 4800000, guid: 0000000deadbeef15deadf00d0000000, type: 3}
+  - {fileID: 4800000, guid: 0000000deadbeef15deadf00d0000000, type: 3}
+  - {fileID: 4800000, guid: 0000000deadbeef15deadf00d0000000, type: 3}
+  - {fileID: 4800000, guid: 0000000deadbeef15deadf00d0000000, type: 3}
+  - {fileID: 4800000, guid: 0000000deadbeef15deadf00d0000000, type: 3}
+  - {fileID: 4800000, guid: 0000000deadbeef15deadf00d0000000, type: 3}
+  - {fileID: 4800000, guid: 0000000deadbeef15deadf00d0000000, type: 3}
+  - {fileID: 4800000, guid: 0000000deadbeef15deadf00d0000000, type: 3}
+  - {fileID: 4800000, guid: 0000000deadbeef15deadf00d0000000, type: 3}
+  - {fileID: 4800000, guid: 0000000deadbeef15deadf00d0000000, type: 3}
+  - {fileID: 4800000, guid: 0000000deadbeef15deadf00d0000000, type: 3}
+  - {fileID: 4800000, guid: 0000000deadbeef15deadf00d0000000, type: 3}
+  - {fileID: 4800000, guid: 0000000deadbeef15deadf00d0000000, type: 3}
+  - {fileID: 4800000, guid: 0000000deadbeef15deadf00d0000000, type: 3}
+  - {fileID: 4800000, guid: 0000000deadbeef15deadf00d0000000, type: 3}
+  - {fileID: 4800000, guid: 0000000deadbeef15deadf00d0000000, type: 3}
+  - {fileID: 4800000, guid: 0000000deadbeef15deadf00d0000000, type: 3}
+  - {fileID: 4800000, guid: 0000000deadbeef15deadf00d0000000, type: 3}
+  - {fileID: 4800000, guid: 0000000deadbeef15deadf00d0000000, type: 3}
+  - {fileID: 4800000, guid: 0000000deadbeef15deadf00d0000000, type: 3}
+  - {fileID: 4800000, guid: 0000000deadbeef15deadf00d0000000, type: 3}
+  - {fileID: 4800000, guid: 0000000deadbeef15deadf00d0000000, type: 3}
   - {fileID: 16000, guid: 0000000000000000f000000000000000, type: 0}
   - {fileID: 16001, guid: 0000000000000000f000000000000000, type: 0}
   - {fileID: 17000, guid: 0000000000000000f000000000000000, type: 0}
-  m_PreloadedShaders: []
+  m_PreloadedShaders:
+  - {fileID: 20000000, guid: 61a01ab5a6d946c78dd66a10fccdbeb7, type: 2}
   m_SpritesDefaultMaterial: {fileID: 10754, guid: 0000000000000000f000000000000000,
     type: 0}
   m_CustomRenderPipeline: {fileID: 0}
@@ -47,7 +73,58 @@ GraphicsSettings:
   m_TransparencySortAxis: {x: 0, y: 0, z: 1}
   m_DefaultRenderingPath: 1
   m_DefaultMobileRenderingPath: 1
-  m_TierSettings: []
+  m_TierSettings:
+  - serializedVersion: 5
+    m_BuildTarget: 1
+    m_Tier: 0
+    m_Settings:
+      standardShaderQuality: 2
+      renderingPath: 3
+      hdrMode: 1
+      realtimeGICPUUsage: 25
+      useReflectionProbeBoxProjection: 1
+      useReflectionProbeBlending: 1
+      useHDR: 1
+      useDetailNormalMap: 1
+      useCascadedShadowMaps: 1
+      prefer32BitShadowMaps: 0
+      enableLPPV: 1
+      useDitherMaskForAlphaBlendedShadows: 1
+    m_Automatic: 0
+  - serializedVersion: 5
+    m_BuildTarget: 1
+    m_Tier: 1
+    m_Settings:
+      standardShaderQuality: 2
+      renderingPath: 3
+      hdrMode: 1
+      realtimeGICPUUsage: 25
+      useReflectionProbeBoxProjection: 1
+      useReflectionProbeBlending: 1
+      useHDR: 1
+      useDetailNormalMap: 1
+      useCascadedShadowMaps: 1
+      prefer32BitShadowMaps: 0
+      enableLPPV: 1
+      useDitherMaskForAlphaBlendedShadows: 1
+    m_Automatic: 0
+  - serializedVersion: 5
+    m_BuildTarget: 1
+    m_Tier: 2
+    m_Settings:
+      standardShaderQuality: 2
+      renderingPath: 3
+      hdrMode: 1
+      realtimeGICPUUsage: 50
+      useReflectionProbeBoxProjection: 1
+      useReflectionProbeBlending: 1
+      useHDR: 1
+      useDetailNormalMap: 1
+      useCascadedShadowMaps: 1
+      prefer32BitShadowMaps: 0
+      enableLPPV: 1
+      useDitherMaskForAlphaBlendedShadows: 1
+    m_Automatic: 0
   m_LightmapStripping: 0
   m_FogStripping: 0
   m_InstancingStripping: 0

@@ -3,7 +3,30 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - MoveWithShip
+  - Creature
+  - Submarine
+  - LightSensitive
+  - SeaJet
+  - CoralTube
+  - Lavaprop
+  - Triggerer
+  - Ladder
+  - Platform
+  - Terrain
+  - Explode
+  - Light
+  - EffectSource
+  - Plant
+  - UICamera
+  - AvatarInputHandler
+  - TelemetryManager
+  - SteamEconomy
+  - Generated
+  - SteamManager
+  - DenyBuilding
+  - MainPieceGeometry
   layers:
   - Default
   - TransparentFX
@@ -13,31 +36,70 @@ TagManager:
   - UI
   - 
   - 
+  - Viewmodel
+  - Interior
+  - BuildPreview
+  - BuiltEntities
+  - HardPoints
+  - Useable
+  - IgnoreDepthWorldUI
+  - Minimap
+  - HUDRenderTexture
+  - CraftingMenu
+  - FrontEnd
+  - Player
+  - TouchScreen
+  - Trigger
+  - NotUseable
+  - FXrt
+  - RenderForAllCameras
+  - TerrainOpaque
+  - DiveReel
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - BaseClipProxy
+  - Sky
+  - TerrainCollider
+  - DebugOverlays
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: PDA
+    uniqueID: 1479780821
+    locked: 0
+  - name: DepthClear
+    uniqueID: 3932284739
+    locked: 0
+  - name: StartScreen
+    uniqueID: 1036435603
+    locked: 0
+  - name: EndCredits
+    uniqueID: 1589434833
+    locked: 0
+  - name: XMenu
+    uniqueID: 129692565
+    locked: 0
+  - name: HUD
+    uniqueID: 297955065
+    locked: 0
+  - name: CraftingMenu
+    uniqueID: 2013417555
+    locked: 0
+  - name: BuilderMenu
+    uniqueID: 1068698731
+    locked: 0
+  - name: ItemDragManager
+    uniqueID: 3881712225
+    locked: 0
+  - name: IngameMenu
+    uniqueID: 3569837711
+    locked: 0
+  - name: Tooltip
+    uniqueID: 2494882709
+    locked: 0
+  - name: Overlay
+    uniqueID: 2996307249
+    locked: 0
+  - name: ErrorMessage
+    uniqueID: 524926167
     locked: 0

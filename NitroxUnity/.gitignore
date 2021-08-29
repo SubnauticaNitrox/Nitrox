@@ -79,5 +79,6 @@ crashlytics-build.properties
 # NitroxUnity: Local/Generated Files
 /AssetBundles/
 /Assets/Subnautica/
+/Assets/Subnautica.meta
 /Assets/ThunderKitSettings/
 /Assets/ThunderKitSettings.meta

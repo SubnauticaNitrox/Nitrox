@@ -1,6 +1,11 @@
 {
   "dependencies": {
+    "com.passivepicasso.thunderkit": "https://github.com/PassivePicasso/ThunderKit.git",
+    "com.unity.2d.sprite": "1.0.0",
+    "com.unity.assetbundlebrowser": "1.7.0",
+    "com.unity.ide.rider": "3.0.7",
     "com.unity.package-manager-ui": "2.2.0",
+    "com.unity.sharp-zip-lib": "https://github.com/needle-mirror/com.unity.sharp-zip-lib.git",
     "com.unity.ugui": "1.0.0",
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.androidjni": "1.0.0",
@@ -33,5 +38,15 @@
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
     "com.unity.modules.xr": "1.0.0"
+  },
+  "lock": {
+    "com.passivepicasso.thunderkit": {
+      "hash": "02894426422d5eb39f7b68075115459ee4f3b5b6",
+      "revision": "HEAD"
+    },
+    "com.unity.sharp-zip-lib": {
+      "hash": "cbca8129490dad7c1ad843f21587326f540650ee",
+      "revision": "HEAD"
+    }
   }
 }

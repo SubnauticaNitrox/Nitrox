@@ -2,7 +2,6 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!126 &1
 NavMeshProjectSettings:
-  m_ObjectHideFlags: 0
   serializedVersion: 2
   areas:
   - name: Walkable
@@ -11,63 +10,63 @@ NavMeshProjectSettings:
     cost: 1
   - name: Jump
     cost: 2
-  - name: 
+  - name:
     cost: 1
-  - name: 
+  - name:
     cost: 1
-  - name: 
+  - name:
     cost: 1
-  - name: 
+  - name:
     cost: 1
-  - name: 
+  - name:
     cost: 1
-  - name: 
+  - name:
     cost: 1
-  - name: 
+  - name:
     cost: 1
-  - name: 
+  - name:
     cost: 1
-  - name: 
+  - name:
     cost: 1
-  - name: 
+  - name:
     cost: 1
-  - name: 
+  - name:
     cost: 1
-  - name: 
+  - name:
     cost: 1
-  - name: 
+  - name:
     cost: 1
-  - name: 
+  - name:
     cost: 1
-  - name: 
+  - name:
     cost: 1
-  - name: 
+  - name:
     cost: 1
-  - name: 
+  - name:
     cost: 1
-  - name: 
+  - name:
     cost: 1
-  - name: 
+  - name:
     cost: 1
-  - name: 
+  - name:
     cost: 1
-  - name: 
+  - name:
     cost: 1
-  - name: 
+  - name:
     cost: 1
-  - name: 
+  - name:
     cost: 1
-  - name: 
+  - name:
     cost: 1
-  - name: 
+  - name:
     cost: 1
-  - name: 
+  - name:
     cost: 1
-  - name: 
+  - name:
     cost: 1
-  - name: 
+  - name:
     cost: 1
-  - name: 
+  - name:
     cost: 1
   m_LastAgentTypeID: -887442657
   m_Settings:
@@ -81,7 +80,7 @@ NavMeshProjectSettings:
     maxJumpAcrossDistance: 0
     minRegionArea: 2
     manualCellSize: 0
-    cellSize: 0.16666667
+    cellSize: 0.1666667
     manualTileSize: 0
     tileSize: 256
     accuratePlacement: 0
