@@ -7,6 +7,7 @@
     "com.unity.package-manager-ui": "2.2.0",
     "com.unity.sharp-zip-lib": "https://github.com/needle-mirror/com.unity.sharp-zip-lib.git",
     "com.unity.ugui": "1.0.0",
+    "de.jannify.unitygameimporter": "https://github.com/Jannify/GameImporter-Subnautica.git",
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.androidjni": "1.0.0",
     "com.unity.modules.animation": "1.0.0",
@@ -46,6 +47,10 @@
     },
     "com.unity.sharp-zip-lib": {
       "hash": "cbca8129490dad7c1ad843f21587326f540650ee",
+      "revision": "HEAD"
+    },
+    "de.jannify.unitygameimporter": {
+      "hash": "1969457786815230d7e63660887a0f540225abd7",
       "revision": "HEAD"
     }
   }

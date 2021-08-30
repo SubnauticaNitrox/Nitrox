@@ -71,9 +71,7 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
 
-# NitroxUnity: Local Package
-!/Packages/Unity*Game*Importer/
-!/Packages/Unity*Game*Importer/**/*.meta
+# NitroxUnity: Reversing Nitrox gitignore
 !*.rsp
 
 # NitroxUnity: Local/Generated Files
