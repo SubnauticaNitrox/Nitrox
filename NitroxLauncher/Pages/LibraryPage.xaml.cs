@@ -1,11 +1,8 @@
-﻿using System.Windows.Controls;
+﻿using NitroxLauncher.Models;
 
 namespace NitroxLauncher.Pages
 {
-    /// <summary>
-    /// Interaction logic for LibraryPage.xaml
-    /// </summary>
-    public partial class LibraryPage : Page
+    public partial class LibraryPage : PageBase
     {
         public LibraryPage()
         {

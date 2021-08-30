@@ -9,9 +9,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using NitroxLauncher.Events;
+using NitroxLauncher.Models.Events;
+using NitroxLauncher.Models.Patching;
+using NitroxLauncher.Models.Utils;
 using NitroxLauncher.Pages;
-using NitroxLauncher.Patching;
 using NitroxModel;
 using NitroxModel.Discovery;
 using NitroxModel.Helper;
@@ -132,9 +133,9 @@ namespace NitroxLauncher
                 }
                 nitroxEntryPatch = new NitroxEntryPatch(path);
 
-                if (Path.GetFullPath(path).StartsWith(AppHelper.ProgramFileDirectory, StringComparison.OrdinalIgnoreCase))
+                if (Path.GetFullPath(path).StartsWith(WindowsHelper.ProgramFileDirectory, StringComparison.OrdinalIgnoreCase))
                 {
-                    AppHelper.RestartAsAdmin();
+                    WindowsHelper.RestartAsAdmin();
                 }
 
                 return path;
@@ -143,19 +144,17 @@ namespace NitroxLauncher
 
         public void NavigateTo(Type page)
         {
-            if (page == null || !page.IsSubclassOf(typeof(Page)) && page != typeof(Page))
+            if (page != null && (page.IsSubclassOf(typeof(Page)) || page == typeof(Page)))
             {
-                return;
-            }
+                if (IsServerRunning && isEmbedded && page == typeof(ServerPage))
+                {
+                    page = typeof(ServerConsolePage);
+                }
 
-            if (IsServerRunning && isEmbedded && page == typeof(ServerPage))
-            {
-                page = typeof(ServerConsolePage);
-            }
-
-            if (Application.Current.MainWindow != null)
-            {
-                ((MainWindow)Application.Current.MainWindow).FrameContent = Application.Current.FindResource(page.Name);
+                if (Application.Current.MainWindow != null)
+                {
+                    ((MainWindow)Application.Current.MainWindow).FrameContent = Application.Current.FindResource(page.Name);
+                }
             }
         }
 
@@ -163,12 +162,7 @@ namespace NitroxLauncher
 
         public bool NavigationIsOn<TPage>() where TPage : Page
         {
-            if (Application.Current.MainWindow is not MainWindow window)
-            {
-                return false;
-            }
-
-            return window.FrameContent is TPage;
+            return Application.Current.MainWindow is MainWindow window && window.FrameContent is TPage;
         }
 
         internal async Task StartSingleplayerAsync()

@@ -5,9 +5,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
-using NitroxLauncher.AttachedProperties;
-using NitroxLauncher.Events;
+using NitroxLauncher.Models.Events;
+using NitroxLauncher.Models.Properties;
 using NitroxLauncher.Pages;
 using NitroxModel.Discovery;
 using NitroxModel.Helper;
@@ -16,10 +15,6 @@ namespace NitroxLauncher
 {
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
-        private readonly LauncherLogic logic = new();
-        private bool isServerEmbedded;
-        private object frameContent;
-
         public string Version => $"{LauncherLogic.RELEASE_PHASE} {LauncherLogic.Version}";
 
         public object FrameContent
@@ -28,19 +23,15 @@ namespace NitroxLauncher
             set
             {
                 frameContent = value;
-
-                // Update navigation buttons styling
-                foreach (Button button in SideBarPanel.GetChildrenOfType<Button>())
-                {
-                    button.SetValue(ButtonProperties.SelectedProperty, button.Tag == value || button.Tag?.GetType() == typeof(ServerPage) && value?.GetType() == typeof(ServerConsolePage));
-                }
-
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(CurrentPageBackground));
             }
         }
 
-        public ImageSource CurrentPageBackground => (ImageSource)(FrameContent as Page)?.Background.GetValue(ImageBrush.ImageSourceProperty);
+        private readonly LauncherLogic logic = new();
+        private bool isServerEmbedded;
+        private object frameContent;
+
+        private Button LastButton { get; set; }
 
         public MainWindow()
         {
@@ -91,13 +82,6 @@ namespace NitroxLauncher
 
                     logic.CheckNitroxVersion();
                 }, CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.FromCurrentSynchronizationContext());
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         private bool CanClose()
@@ -173,11 +157,20 @@ namespace NitroxLauncher
                 return;
             }
             LauncherLogic.Instance.NavigateTo(elem.Tag?.GetType());
+
+            if (sender is Button button)
+            {
+                LastButton?.SetValue(ButtonProperties.SelectedProperty, false);
+                LastButton = button;
+                button.SetValue(ButtonProperties.SelectedProperty, true);
+            }
         }
 
-        private void PART_VerticalScrollBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
+        public event PropertyChangedEventHandler PropertyChanged;
 
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

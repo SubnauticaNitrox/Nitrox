@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Navigation;
+using NitroxLauncher.Models;
 
 namespace NitroxLauncher.Pages
 {

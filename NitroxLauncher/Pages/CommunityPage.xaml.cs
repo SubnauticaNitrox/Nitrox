@@ -1,13 +1,10 @@
 ﻿using System.Diagnostics;
-using System.Windows.Controls;
 using System.Windows.Navigation;
+using NitroxLauncher.Models;
 
 namespace NitroxLauncher.Pages
 {
-    /// <summary>
-    /// Interaction logic for CommunityPage.xaml
-    /// </summary>
-    public partial class CommunityPage : Page
+    public partial class CommunityPage : PageBase
     {
         public CommunityPage()
         {

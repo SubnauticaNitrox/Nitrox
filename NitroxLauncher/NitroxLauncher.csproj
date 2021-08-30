@@ -60,11 +60,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="AttachedProperties\ButtonProperties.cs" />
-    <Compile Include="DependencyObjectExtensions.cs" />
-    <Compile Include="Events\ServerStartEventArgs.cs" />
+    <Compile Include="Models\Properties\ButtonProperties.cs" />
+    <Compile Include="Models\Events\ServerStartEventArgs.cs" />
     <Compile Include="LauncherLogic.cs" />
-    <Compile Include="PageBase.cs" />
+    <Compile Include="Models\PageBase.cs" />
     <Compile Include="Pages\BlogPage.xaml.cs">
       <DependentUpon>BlogPage.xaml</DependentUpon>
     </Compile>
@@ -89,7 +88,7 @@
     <Compile Include="Pages\UpdatePage.xaml.cs">
       <DependentUpon>UpdatePage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Patching\NitroxEntryPatch.cs" />
+    <Compile Include="Models\Patching\NitroxEntryPatch.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -136,8 +135,8 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Patching\AppHelper.cs" />
-    <Compile Include="Patching\QModHelper.cs" />
+    <Compile Include="Models\Utils\WindowsHelper.cs" />
+    <Compile Include="Models\Utils\QModHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -226,7 +225,6 @@
     <Resource Include="Images\SubnauticaMain.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\EscapePod.png" />
     <Resource Include="Images\Vines.png" />
   </ItemGroup>
   <ItemGroup>
@@ -273,7 +271,7 @@
     <None Include="Images\material-design-icons\LICENSE.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="nitroxLogo.png" />
+    <Resource Include="Images\nitroxLogo.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="icon.ico" />

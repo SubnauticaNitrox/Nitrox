@@ -1,9 +1,9 @@
-﻿<nitroxLauncher:PageBase x:Class="NitroxLauncher.Pages.OptionPage"
+﻿<local:PageBase x:Class="NitroxLauncher.Pages.OptionPage"
                          xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                          xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                         xmlns:nitroxLauncher="clr-namespace:NitroxLauncher"
+                         xmlns:local="clr-namespace:NitroxLauncher.Models"
                          mc:Ignorable="d"
                          d:DesignHeight="470" d:DesignWidth="719"
                          DataContext="{Binding RelativeSource={RelativeSource Self}}"
@@ -11,9 +11,9 @@
                          Loaded="OptionPage_OnLoaded"
                          Unloaded="OptionPage_OnUnloaded">
 
-    <nitroxLauncher:PageBase.Resources>
-        <BitmapImage x:Key="SubnauticaIcon" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/images/subnauticaIcon.png "/>
-    </nitroxLauncher:PageBase.Resources>
+    <local:PageBase.Resources>
+        <BitmapImage x:Key="SubnauticaIcon" UriSource="pack://application:,,,/images/subnauticaIcon.png "/>
+    </local:PageBase.Resources>
 
     <Grid>
         <Grid Margin="32,0">
@@ -60,4 +60,4 @@
         </Grid>
     </Grid>
 
-</nitroxLauncher:PageBase>
+</local:PageBase>

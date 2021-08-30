@@ -3,6 +3,7 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using Microsoft.WindowsAPICodePack.Dialogs;
+using NitroxLauncher.Models;
 using NitroxModel.Discovery;
 
 namespace NitroxLauncher.Pages

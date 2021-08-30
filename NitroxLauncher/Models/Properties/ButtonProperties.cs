@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace NitroxLauncher.AttachedProperties
+namespace NitroxLauncher.Models.Properties
 {
     public static class ButtonProperties
     {

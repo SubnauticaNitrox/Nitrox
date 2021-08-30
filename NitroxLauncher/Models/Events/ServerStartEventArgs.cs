@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NitroxLauncher.Events
+namespace NitroxLauncher.Models.Events
 {
     public sealed class ServerStartEventArgs : EventArgs
     {

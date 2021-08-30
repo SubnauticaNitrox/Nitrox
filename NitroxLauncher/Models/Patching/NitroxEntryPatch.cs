@@ -8,7 +8,7 @@ using dnlib.DotNet.Emit;
 using NitroxModel.OS;
 using FileAttributes = System.IO.FileAttributes;
 
-namespace NitroxLauncher.Patching
+namespace NitroxLauncher.Models.Patching
 {
     internal class NitroxEntryPatch
     {

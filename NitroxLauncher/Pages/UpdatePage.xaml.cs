@@ -1,11 +1,8 @@
-﻿using System.Windows.Controls;
+﻿using NitroxLauncher.Models;
 
 namespace NitroxLauncher.Pages
 {
-    /// <summary>
-    /// Interaction logic for UpdatePage.xaml
-    /// </summary>
-    public partial class UpdatePage : Page
+    public partial class UpdatePage : PageBase
     {
         public string Version => LauncherLogic.Version;
 

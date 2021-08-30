@@ -5,9 +5,9 @@ using System.Security.Principal;
 using System.Windows;
 using NitroxModel.Logger;
 
-namespace NitroxLauncher
+namespace NitroxLauncher.Models.Utils
 {
-    internal static class AppHelper
+    internal static class WindowsHelper
     {
         public static string ProgramFileDirectory = Environment.ExpandEnvironmentVariables("%ProgramW6432%");
 

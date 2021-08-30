@@ -4,18 +4,15 @@
                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                xmlns:local="clr-namespace:NitroxLauncher"
+                xmlns:local="clr-namespace:NitroxLauncher.Models"
                 DataContext="{Binding RelativeSource={RelativeSource Self}}"
                 mc:Ignorable="d" d:DesignWidth="766"
                 Title="Launch Game" Height="1020">
 
     <local:PageBase.Resources>
-        <BitmapImage x:Key="SocialDiscord" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/images/social/discord.png"/>
-        <BitmapImage x:Key="SocialTwitter" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/images/social/twitter.png"/>
-        <BitmapImage x:Key="SocialReddit" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/images/social/reddit.png"/>
-        <BitmapImage x:Key="SocialWebsite" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/images/social/website.png"/>
-        <BitmapImage x:Key="SocialGithub" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/images/social/github.png"/>
-        <BitmapImage x:Key="PlayBoxImage" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/images/PlayBoxImage.png"/>
+        <BitmapImage x:Key="PlayGameImage" UriSource="pack://application:,,,/Images/PlayGameImage.png" />
+        <BitmapImage x:Key="SubnauticaMainImage" UriSource="pack://application:,,,/Images/SubnauticaMain.png" />
+        <BitmapImage x:Key="NitroxGallery" UriSource="pack://application:,,,/Images/NitroxGallery.png" />
     </local:PageBase.Resources>
 
     <Grid >
@@ -61,7 +58,7 @@
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right">
                         <!-- TODO Swap icon logic depending on which store version is selected -->
-                        <Image Source="{StaticResource StoreSteam}" HorizontalAlignment="Right" VerticalAlignment="Top" Height="20" />
+                        <Image Source="{DynamicResource StoreSteam}" HorizontalAlignment="Right" VerticalAlignment="Top" Height="20" />
                     </StackPanel>
                 </Grid>
 
@@ -72,7 +69,7 @@
                     </StackPanel>
                 </Button>
 
-                <Button Margin="24,0,24,24" Background="#19FFFFFF" BorderBrush="#66FFFFFF" Style="{StaticResource LargeButton}" Click="SinglePlayerButton_Click" ToolTip="Play alone" HorizontalAlignment="Stretch" Width="Auto" Height="48">
+                <Button Margin="24,0,24,24" Background="#19FFFFFF" BorderBrush="#66FFFFFF" Style="{DynamicResource LargeButton}" Click="SinglePlayerButton_Click" ToolTip="Play alone" HorizontalAlignment="Stretch" Width="Auto" Height="48">
                     <TextBlock Padding="0,4,0,0" Foreground="White" Margin="0,-4,0,0"  FontSize="14"><Run Text="SINGLEPLAYER"/></TextBlock>
                 </Button>
 

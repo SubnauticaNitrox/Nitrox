@@ -1,11 +1,8 @@
-﻿using System.Windows.Controls;
+﻿using NitroxLauncher.Models;
 
 namespace NitroxLauncher.Pages
 {
-    /// <summary>
-    /// Interaction logic for BlogPage.xaml
-    /// </summary>
-    public partial class BlogPage : Page
+    public partial class BlogPage : PageBase
     {
         public BlogPage()
         {

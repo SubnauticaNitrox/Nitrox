@@ -3,7 +3,7 @@ using System.IO;
 using NitroxModel.Logger;
 using NitroxModel.OS;
 
-namespace NitroxLauncher.Patching
+namespace NitroxLauncher.Models.Utils
 {
     public static class QModHelper
     {

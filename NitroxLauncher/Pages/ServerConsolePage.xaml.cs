@@ -6,16 +6,17 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
-using NitroxLauncher.Events;
+using NitroxLauncher.Models;
+using NitroxLauncher.Models.Events;
 
 namespace NitroxLauncher.Pages
 {
     public partial class ServerConsolePage : PageBase, INotifyPropertyChanged
     {
-        private readonly List<string> commandLinesHistory = new List<string>();
-        private int commandHistoryIndex;
-        private string commandInputText;
+        private readonly List<string> commandLinesHistory = new();
         private string serverOutput = string.Empty;
+        private string commandInputText;
+        private int commandHistoryIndex;
 
         public string ServerOutput
         {
@@ -76,10 +77,6 @@ namespace NitroxLauncher.Pages
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        /// <summary>
-        ///     Raises this object's PropertyChanged event.
-        /// </summary>
-        /// <param name="propertyName">The property that has a new value.</param>
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -152,11 +149,6 @@ namespace NitroxLauncher.Pages
                     e.Handled = false;
                     break;
             }
-        }
-
-        private void PART_VerticalScrollBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-
         }
     }
 }

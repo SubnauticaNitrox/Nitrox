@@ -1,9 +1,9 @@
 ﻿using System.Windows.Controls;
 
-namespace NitroxLauncher
+namespace NitroxLauncher.Models
 {
     public abstract class PageBase : Page
     {
-        
+
     }
 }
