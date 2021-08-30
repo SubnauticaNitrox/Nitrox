@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxServer.GameLogic.Entities.Spawning;
 
@@ -201,6 +203,52 @@ namespace NitroxServer.GameLogic.Entities
                     if (parent.HasValue)
                     {
                         parent.Value.ChildEntities.Remove(entity);
+                    }
+                }
+            }
+        }
+
+        public void LoadAllUnspawnedEntities()
+        {
+            
+            IMap map = NitroxServiceLocator.LocateService<IMap>();
+
+            for (int x = 0; x < map.DimensionsInBatches.X; x++)
+            {
+                for (int y = 0; y < map.DimensionsInBatches.Y; y++)
+                {
+                    for (int z = 0; z < map.DimensionsInBatches.Z; z++)
+                    {
+                        NitroxInt3 batchId = new NitroxInt3(x, y, z);
+                        List<Entity> spawnedEntities = batchEntitySpawner.LoadUnspawnedEntities(batchId);
+
+                        lock (entitiesById)
+                        {
+                            lock (phasingEntitiesByAbsoluteCell)
+                            {
+                                foreach (Entity entity in spawnedEntities)
+                                {
+                                    if (entity.ParentId != null)
+                                    {
+                                        Optional<Entity> opEnt = GetEntityById(entity.ParentId);
+
+                                        if (opEnt.HasValue)
+                                        {
+                                            entity.Transform.SetParent(opEnt.Value.Transform);
+                                        }
+                                        else
+                                        {
+                                            Log.Error("Parent not Found! Are you sure it exists? " + entity.ParentId);
+                                        }
+                                    }
+
+                                    List<Entity> entitiesInCell = GetEntities(entity.AbsoluteEntityCell);
+                                    entitiesInCell.Add(entity);
+
+                                    entitiesById.Add(entity.Id, entity);
+                                }
+                            }
+                        }
                     }
                 }
             }

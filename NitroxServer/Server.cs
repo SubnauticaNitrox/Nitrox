@@ -4,7 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Timers;
+using NitroxModel.Core;
 using NitroxModel.Logger;
+using NitroxServer.GameLogic.Entities;
 using NitroxServer.Serialization;
 using NitroxServer.Serialization.World;
 
@@ -117,6 +119,12 @@ namespace NitroxServer
 #if RELEASE
             IpLogger.PrintServerIps();
 #endif
+
+            if (serverConfig.CreateFullEntityCache)
+            {
+                NitroxServiceLocator.LocateService<EntityManager>().LoadAllUnspawnedEntities();
+                Save();
+            }
             return true;
         }
 
