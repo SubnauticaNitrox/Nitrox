@@ -115,6 +115,22 @@ namespace NitroxClient.MonoBehaviours
             }
         }
 
+        public void OnDisable() // Called with Destroy as well
+        {
+            if (Id != null) // Theoretically shouldnt happen but Unity sucks
+            {
+                gameObjectsById.Remove(Id);
+            }
+        }
+
+        public void OnEnable()
+        {
+            if (Id != null)
+            {
+                gameObjectsById[Id] = gameObject;
+            }
+        }
+
         public void OnProtoSerializeObjectTree(ProtobufSerializer _)
         {
         }
