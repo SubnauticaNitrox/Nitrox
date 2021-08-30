@@ -28,7 +28,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
             if (baseGhost != null && baseGhost.TargetBase)
             {
-                lastTargetBase = baseGhost.TargetBase.GetComponent<Base>();
+                lastTargetBase = baseGhost.TargetBase;
                 lastTargetBaseOffset = baseGhost.TargetOffset;
             }
             else

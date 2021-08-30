@@ -150,9 +150,11 @@ namespace NitroxClient.GameLogic
             if (ghost.GetComponent<ConstructableBase>())
             {
                 Int3 latestCell = lastTargetBaseOffset;
-                Base latestBase = lastTargetBase.HasValue ? lastTargetBase.Value : ((GameObject)opConstructedBase.Value).GetComponent<Base>();
+                Base latestBase = lastTargetBase.HasValue ? lastTargetBase.Value : opConstructedBase.HasValue? ((GameObject)opConstructedBase.Value).GetComponent<Base>() : ghost.GetComponentInParent<Base>();
+                
+                Validate.NotNull(latestBase, "Unable to find latestBase for " + ghost.name);
                 baseId = NitroxEntity.GetId(latestBase.gameObject);
-
+                
                 Transform cellTransform = latestBase.GetCellObject(latestCell);
 
                 // This check ensures that the latestCell actually leads us to the correct entity.  The lastTargetBaseOffset is unreliable as the base shape
