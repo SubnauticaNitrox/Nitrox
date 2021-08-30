@@ -285,6 +285,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             }
             return entities;
         }
+        private Entity IonCrystal = null;
 
         private void CreatePrefabPlaceholdersWithChildren(Entity entity, string classId, DeterministicBatchGenerator deterministicBatchGenerator)
         {
@@ -318,6 +319,10 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                                                      deterministicBatchGenerator.NextId(),
                                                      null,
                                                      entity);
+                    if (prefabEntity.TechType.ToString() == "PrecursorIonCrystal")
+                    {
+                        IonCrystal = prefabEntity;
+                    }
 
                     if (prefab.EntitySlot.HasValue)
                     {
@@ -361,6 +366,16 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                              parent);
 
                 prefabEntity.ChildEntities = ConvertComponentPrefabsToEntities(prefab.Children, prefabEntity, deterministicBatchGenerator);
+
+                if (IonCrystal != null && IonCrystal.ParentId == parent.Id && prefab.Name == "precursor_block_maze_04_04_04_v4")
+                {
+                    IonCrystal.Transform.Parent.Entity.ChildEntities.Remove(IonCrystal);
+                    IonCrystal.ParentId = prefabEntity.Id;
+                    IonCrystal.Transform.SetParent(prefabEntity.Transform);
+                    prefabEntity.ChildEntities.Add(IonCrystal);
+
+                    IonCrystal = null;
+                }
 
                 entities.Add(prefabEntity);
             }
