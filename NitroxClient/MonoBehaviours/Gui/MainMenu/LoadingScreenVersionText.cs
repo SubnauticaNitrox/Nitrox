@@ -34,7 +34,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         public static void DisableWarningText()
         {
             loadingScreenWarning.FadeOut(1f, null);
-            if(XRSettings.enabled)
+            if (XRSettings.enabled)
             {
                 versionText.FadeOut(1f, null);
             }
