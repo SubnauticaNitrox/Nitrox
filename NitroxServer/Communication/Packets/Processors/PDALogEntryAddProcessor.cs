@@ -1,4 +1,5 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
@@ -19,7 +20,10 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(PDALogEntryAdd packet, Player player)
         {
-            pdaState.AddPDALogEntry(new PDALogEntry(packet.Key, packet.Timestamp));
+            if (pdaState.PdaLog.Find(entry => entry.Key == packet.Key) == null)
+            {
+                pdaState.AddPDALogEntry(new PDALogEntry(packet.Key, packet.Timestamp));
+            }
             playerManager.SendPacketToOtherPlayers(packet, player);
         }
     }

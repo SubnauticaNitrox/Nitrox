@@ -18,7 +18,10 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(PDAEntryRemove packet, Player player)
         {
-            pdaStateData.UnlockedTechType(packet.TechType);
+            if (!pdaStateData.UnlockedTechTypes.Contains(packet.TechType))
+            {
+                pdaStateData.UnlockedTechType(packet.TechType);
+            }
             playerManager.SendPacketToOtherPlayers(packet, player);
         }
     }
