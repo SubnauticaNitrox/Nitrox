@@ -117,18 +117,24 @@ namespace NitroxClient.MonoBehaviours
 
         public void OnDisable() // Called with Destroy as well
         {
-            if (Id != null) // Theoretically shouldnt happen but Unity sucks
+            if (Id == null)
             {
-                gameObjectsById.Remove(Id);
+                Log.Error($"Nitrox Id was null on {gameObject.name} in OnDisable");
+                return;
             }
+
+            gameObjectsById.Remove(Id);
         }
 
         public void OnEnable()
         {
-            if (Id != null)
+            if (Id == null)
             {
-                gameObjectsById[Id] = gameObject;
+                Log.Error($"Nitrox Id was null on {gameObject.name} in OnEnable");
+                return;
             }
+
+            gameObjectsById[Id] = gameObject;
         }
 
         public void OnProtoSerializeObjectTree(ProtobufSerializer _)
