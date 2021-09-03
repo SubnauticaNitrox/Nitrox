@@ -32,7 +32,11 @@ namespace NitroxPatcher.Patches.Dynamic
                      * TransientLocalObjectManager.Add(TransientLocalObjectManager.TransientObjectType.BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT, gameObject);
                      */
                     yield return new CodeInstruction(OpCodes.Ldc_I4_1);
+#if SUBNAUTICA
                     yield return original.Ldloc<GameObject>(1);
+#elif BELOWZERO
+                    yield return original.Ldloc<GameObject>(0);
+#endif
                     yield return new CodeInstruction(OpCodes.Call, typeof(TransientLocalObjectManager).GetMethod("Add", BindingFlags.Static | BindingFlags.Public, null, new Type[] { TransientObjectType.BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT.GetType(), typeof(object) }, null));
                 }
             }

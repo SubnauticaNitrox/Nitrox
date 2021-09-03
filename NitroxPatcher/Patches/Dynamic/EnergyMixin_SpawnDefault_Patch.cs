@@ -6,8 +6,11 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     class EnergyMixin_SpawnDefault_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(EnergyMixin);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("SpawnDefault", BindingFlags.Public | BindingFlags.Instance);
+#if SUBNAUTICA
+        public static readonly MethodInfo TARGET_METHOD = typeof(EnergyMixin).GetMethod("SpawnDefault", BindingFlags.Public | BindingFlags.Instance);
+#elif BELOWZERO
+        public static readonly MethodInfo TARGET_METHOD = typeof(EnergyMixin).GetMethod("SpawnDefaultAsync", BindingFlags.Public | BindingFlags.Instance);
+#endif
 
         public static bool Prefix(EnergyMixin __instance)
         {

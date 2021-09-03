@@ -12,9 +12,13 @@ namespace NitroxPatcher.Patches.Dynamic
     {
         public static readonly Type TARGET_CLASS = typeof(Exosuit);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("Update", BindingFlags.Public | BindingFlags.Instance);
-
+#if SUBNAUTICA
         public static readonly OpCode INJECTION_OPCODE = OpCodes.Call;
         public static readonly object INJECTION_OPERAND = TARGET_CLASS.GetMethod("UpdateSounds", BindingFlags.NonPublic | BindingFlags.Instance);
+#elif BELOWZERO
+        public static readonly OpCode INJECTION_OPCODE = OpCodes.Stfld;
+        public static readonly object INJECTION_OPERAND = TARGET_CLASS.GetField("timeLastSlideEffect", BindingFlags.NonPublic | BindingFlags.Instance);
+#endif
 
         public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
         {

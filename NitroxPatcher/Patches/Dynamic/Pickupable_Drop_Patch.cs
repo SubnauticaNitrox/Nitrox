@@ -9,9 +9,11 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class Pickupable_Drop_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(Pickupable);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("Drop", BindingFlags.Public | BindingFlags.Instance, null, new Type[] { typeof(Vector3), typeof(Vector3), typeof(bool) }, null);
-
+#if SUBNAUTICA
+        public static readonly MethodInfo TARGET_METHOD = typeof(Pickupable).GetMethod(nameof(Pickupable.Drop), BindingFlags.Public | BindingFlags.Instance, null, new Type[] { typeof(Vector3), typeof(Vector3), typeof(bool) }, null);
+#elif BELOWZERO
+        public static readonly MethodInfo TARGET_METHOD = typeof(Pickupable).GetMethod(nameof(Pickupable.Drop), BindingFlags.Public | BindingFlags.Instance, null, new Type[] { typeof(Vector3), typeof(Vector3) }, null);
+#endif
         public static void Postfix(Pickupable __instance, Vector3 dropPosition)
         {
             NitroxServiceLocator.LocateService<Item>().Dropped(__instance.gameObject, __instance.GetTechType(), dropPosition);

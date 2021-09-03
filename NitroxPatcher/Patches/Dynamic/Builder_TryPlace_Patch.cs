@@ -35,9 +35,15 @@ namespace NitroxPatcher.Patches.Dynamic
                      *  Multiplayer.Logic.Building.PlaceBasePiece(componentInParent, component.TargetBase, CraftData.GetTechType(Builder.prefab), Builder.placeRotation);
                      */
                     yield return TranspilerHelper.LocateService<Building>();
+#if SUBNAUTICA
                     yield return new CodeInstruction(OpCodes.Ldloc_1);
                     yield return new CodeInstruction(OpCodes.Ldloc_0);
                     yield return new CodeInstruction(OpCodes.Ldloc_1);
+#elif BELOWZERO
+                    yield return new CodeInstruction(OpCodes.Ldloc_2);
+                    yield return new CodeInstruction(OpCodes.Ldloc_0);
+                    yield return new CodeInstruction(OpCodes.Ldloc_2);
+#endif
                     yield return new CodeInstruction(OpCodes.Callvirt, typeof(BaseGhost).GetMethod("get_TargetBase"));
                     yield return new CodeInstruction(OpCodes.Ldsfld, TARGET_CLASS.GetField("prefab", BindingFlags.Static | BindingFlags.NonPublic));
                     yield return new CodeInstruction(OpCodes.Call, typeof(CraftData).GetMethod("GetTechType", BindingFlags.Static | BindingFlags.Public, null, new Type[] { typeof(GameObject) }, null));

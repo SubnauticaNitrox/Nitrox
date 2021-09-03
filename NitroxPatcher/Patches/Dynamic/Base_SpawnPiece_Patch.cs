@@ -9,8 +9,11 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class Base_SpawnPiece_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(Base);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("SpawnPiece", BindingFlags.NonPublic | BindingFlags.Instance, null, new Type[] { typeof(Base).GetNestedType("Piece", BindingFlags.NonPublic | BindingFlags.Instance), typeof(Int3), typeof(Quaternion), typeof(Base.Direction?) }, null);
+#if SUBNAUTICA
+        public static readonly MethodInfo TARGET_METHOD = typeof(Base).GetMethod("SpawnPiece", BindingFlags.NonPublic | BindingFlags.Instance, null, new Type[] { typeof(Base).GetNestedType("Piece", BindingFlags.NonPublic | BindingFlags.Instance), typeof(Int3), typeof(Quaternion), typeof(Base.Direction?) }, null);
+#elif BELOWZERO
+        public static readonly MethodInfo TARGET_METHOD = typeof(Base).GetMethod("SpawnPiece", BindingFlags.NonPublic | BindingFlags.Instance, null, new Type[] { typeof(Base.Piece), typeof(Int3), typeof(Quaternion), typeof(Base.Direction?), typeof(BaseDeconstructable) }, null);
+#endif
 
         /**
          * This function is called directly after the game clears all base pieces (to update

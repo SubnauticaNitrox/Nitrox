@@ -46,7 +46,9 @@ namespace NitroxPatcher.Patches.Dynamic
                     {
                         int nodeIndex = Array.IndexOf(roomFiresDict[startInRoom.roomLinks.room].spawnNodes, transform);
                         Fire fire = transform.GetComponentInChildren<Fire>();
+#if SUBNAUTICA
                         fires.OnCreate(transform.GetComponentInChildren<Fire>(), startInRoom, nodeIndex);
+#endif
                         return;
                     }
                 }

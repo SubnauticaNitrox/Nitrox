@@ -6,29 +6,46 @@ using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
 using NitroxModel.Helper;
+#if BELOWZERO
+using UnityEngine;
+#endif
 
 namespace NitroxPatcher.Patches.Dynamic
 {
     public class PDAScanner_Scan_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(PDAScanner);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("Scan", BindingFlags.Public | BindingFlags.Static);
-
+        public static readonly MethodInfo TARGET_METHOD = typeof(PDAScanner).GetMethod(nameof(PDAScanner.Scan), BindingFlags.Public | BindingFlags.Static);
+#if SUBNAUTICA
         public static readonly OpCode INJECTION_OPCODE = OpCodes.Call;
         public static readonly object INJECTION_OPERAND = typeof(ResourceTracker).GetMethod("UpdateFragments", BindingFlags.Public | BindingFlags.Static);
+#elif BELOWZERO
+        public static readonly OpCode INJECTION_OPCODE = OpCodes.Callvirt;
+        public static readonly object INJECTION_OPERAND = typeof(GameObject).GetMethod(nameof(GameObject.SendMessage), BindingFlags.Public | BindingFlags.Instance, null, new Type[] { typeof(string), typeof(object), typeof(SendMessageOptions) }, null);
+#endif
 
         public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
         {
             Validate.NotNull(INJECTION_OPERAND);
 
+#if BELOWZERO
+            bool shouldInject = false;
+#endif
             foreach (CodeInstruction instruction in instructions)
             {
                 yield return instruction;
 
                 if (instruction.opcode.Equals(INJECTION_OPCODE) && instruction.operand.Equals(INJECTION_OPERAND))
                 {
+#if BELOWZERO
+                    shouldInject = true;
+                    continue;
+                }
+
+                if (shouldInject)
+                {
+#endif
                     /*
-                     * ResourceTracker::UpdateFragments()
+                     * ResourceTracker::UpdateFragments() - Only in Subnautica
                      * >> PDAScanner_Scan_Patch.Callback();
                      */
                     yield return new CodeInstruction(OpCodes.Call, typeof(PDAScanner_Scan_Patch).GetMethod("Callback", BindingFlags.Static | BindingFlags.Public));

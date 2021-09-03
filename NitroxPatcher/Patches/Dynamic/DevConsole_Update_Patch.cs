@@ -8,7 +8,11 @@ namespace NitroxPatcher.Patches.Dynamic
     {
         public static void Prefix()
         {
+#if SUBNAUTICA
             DevConsole.disableConsole = NitroxConsole.DisableConsole;
+#elif BELOWZERO
+            PlatformUtils.SetDevToolsEnabled(NitroxConsole.DisableConsole);
+#endif
         }
 
         public override void Patch(Harmony harmony)

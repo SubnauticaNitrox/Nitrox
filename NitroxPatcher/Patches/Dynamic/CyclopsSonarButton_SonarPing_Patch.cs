@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if SUBNAUTICA
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -135,3 +136,4 @@ namespace NitroxPatcher.Patches.Dynamic
         }
     }
 }
+#endif
