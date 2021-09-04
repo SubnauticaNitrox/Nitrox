@@ -8,6 +8,8 @@ using NitroxClient.GameLogic.PlayerModel.ColorSwap;
 using NitroxClient.GameLogic.PlayerModel.Equipment;
 using NitroxClient.GameLogic.PlayerModel.Equipment.Abstract;
 using NitroxClient.MonoBehaviours;
+using NitroxClient.Unity.Helper;
+using NitroxModel.Logger;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -27,7 +29,12 @@ namespace NitroxClient.GameLogic.PlayerModel
             this.colorSwapManagers = colorSwapManagers;
             signalBasePrototype = new Lazy<GameObject>(() =>
             {
+#if SUBNAUTICA
                 GameObject go = (GameObject)Object.Instantiate(Resources.Load("VFX/xSignal"), Multiplayer.Main.transform);
+#elif BELOWZERO
+                //TODO: Find the correct asset to load here
+                GameObject go = (GameObject)Object.Instantiate(Resources.Load("Assets/uGUI/uGUI.prefab"), Multiplayer.Main.transform);
+#endif
                 go.name = "RemotePlayerSignalPrototype";
                 go.transform.localScale = new Vector3(.5f, .5f, .5f);
                 go.transform.localPosition += new Vector3(0, 0.8f, 0);
@@ -46,11 +53,16 @@ namespace NitroxClient.GameLogic.PlayerModel
             equipmentVisibilityHandlers = new List<IEquipmentVisibilityHandler>
             {
                 new DiveSuitVisibilityHandler(playerModel),
-                new ScubaSuitVisibilityHandler(playerModel),
                 new FinsVisibilityHandler(playerModel),
-                new RadiationSuitVisibilityHandler(playerModel),
                 new ReinforcedSuitVisibilityHandler(playerModel),
+#if SUBNAUTICA
+                new RadiationSuitVisibilityHandler(playerModel),
+                new ScubaSuitVisibilityHandler(playerModel),
                 new StillSuitVisibilityHandler(playerModel)
+#elif BELOWZERO
+                new ColdProtectiveSuitVisibilityHandler(playerModel),
+                new BaseVisibilityHandler(playerModel)
+#endif
             };
         }
 

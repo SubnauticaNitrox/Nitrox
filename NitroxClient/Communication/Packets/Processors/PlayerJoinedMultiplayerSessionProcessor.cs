@@ -37,8 +37,12 @@ namespace NitroxClient.Communication.Packets.Processors
                     Log.Error(ex, $"Error deserializing item data. Id: {itemData.ItemId}");
                     continue;
                 }
-
+#if SUBNAUTICA
                 Pickupable pickupable = item.GetComponent<Pickupable>().Initialize();
+#elif BELOWZERO
+                Pickupable pickupable = item.GetComponent<Pickupable>();
+                pickupable.Initialize();
+#endif
                 pickupable.SetVisible(false);
                 items.Add(pickupable);
             }

@@ -14,7 +14,7 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic.Entities
 
         public SubnauticaUwePrefabFactory(string lootDistributionJson)
         {
-            lootDistributionData = GetLootDistributionData(lootDistributionJson);
+            //lootDistributionData = GetLootDistributionData(lootDistributionJson);
         }
 
         public override List<UwePrefab> GetPossiblePrefabs(string biome)

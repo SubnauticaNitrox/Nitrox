@@ -39,7 +39,11 @@ namespace NitroxClient.GameLogic
             this.multiplayerSession = multiplayerSession;
             this.packetSender = packetSender;
             body = new Lazy<GameObject>(() => Player.main.RequireGameObject("body"));
+#if SUBNAUTICA
             playerModel = new Lazy<GameObject>(() => Body.RequireGameObject("player_view"));
+#elif BELOWZERO
+            playerModel = new Lazy<GameObject>(() => Body.RequireGameObject("player_view_female"));
+#endif
             bodyPrototype = new Lazy<GameObject>(CreateBodyPrototype);
         }
 #if SUBNAUTICA
@@ -129,7 +133,11 @@ namespace NitroxClient.GameLogic
             clone.name = "RemotePlayerPrototype";
 
             // Removing items that are held in hand
+#if SUBNAUTICA
             foreach (Transform child in clone.transform.Find($"player_view/{PlayerEquipmentConstants.ITEM_ATTACH_POINT_GAME_OBJECT_NAME}"))
+#elif BELOWZERO
+            foreach (Transform child in clone.transform.Find($"player_view_female/{PlayerEquipmentConstants.ITEM_ATTACH_POINT_GAME_OBJECT_NAME}"))
+#endif
             {
                 if (!child.gameObject.name.Contains("attach1_"))
                 {

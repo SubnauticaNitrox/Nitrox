@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if SUBNAUTICA
+using System;
 using NitroxModel.DataStructures;
 using ProtoBufNet;
 
@@ -39,3 +40,4 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
         }
     }
 }
+#endif

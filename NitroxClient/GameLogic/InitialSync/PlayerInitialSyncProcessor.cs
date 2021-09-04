@@ -43,8 +43,11 @@ namespace NitroxClient.GameLogic.InitialSync
             NitroxEntity.SetNewId(Player.mainObject, id);
             Log.Info($"Received initial sync player GameObject Id: {id}");
         }
-
+#if SUBNAUTICA
+        private void AddStartingItemsToPlayer(bool firstTimeConnecting)
+#elif BELOWZERO
         private IEnumerable AddStartingItemsToPlayer(bool firstTimeConnecting)
+#endif
         {
             if (firstTimeConnecting)
             {

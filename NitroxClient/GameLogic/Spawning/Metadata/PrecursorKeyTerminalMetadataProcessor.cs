@@ -1,4 +1,5 @@
-﻿using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
+﻿#if SUBNAUTICA
+using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.Logger;
 using UnityEngine;
 
@@ -18,3 +19,4 @@ namespace NitroxClient.GameLogic.Spawning.Metadata
         }
     }
 }
+#endif

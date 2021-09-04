@@ -11,10 +11,15 @@ namespace NitroxClient.GameLogic
         {
             this.packetSender = packetSender;
         }
-
+#if SUBNAUTICA
+        public void Add(string key)
+        {
+            PDAEncyclopediaEntryAdd EntryAdd = new PDAEncyclopediaEntryAdd(key);
+#elif BELOWZERO
         public void Add(string key, bool postNotification)
         {
             PDAEncyclopediaEntryAdd EntryAdd = new PDAEncyclopediaEntryAdd(key, postNotification);
+#endif
             packetSender.Send(EntryAdd);
         }
     }

@@ -13,7 +13,9 @@ namespace NitroxServer.Serialization.World
         public PlayerManager PlayerManager { get; set; }
         public TimeKeeper TimeKeeper { get; set; }
         public SimulationOwnershipData SimulationOwnershipData { get; set; }
+#if SUBNAUTICA
         public EscapePodManager EscapePodManager { get; set; }
+#endif
         public BatchEntitySpawner BatchEntitySpawner { get; set; }
         public EntitySimulation EntitySimulation { get; set; }
         public EntityManager EntityManager { get; set; }

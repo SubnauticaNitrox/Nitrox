@@ -16,7 +16,9 @@ namespace NitroxClient.GameLogic.Spawning
         public EntitySpawnerResolver()
         {
             customSpawnersByTechType[TechType.Crash] = new CrashEntitySpawner();
+#if SUBNAUTICA
             customSpawnersByTechType[TechType.Reefback] = new ReefbackEntitySpawner(defaultEntitySpawner);
+#endif
         }
 
         public IEntitySpawner ResolveEntitySpawner(Entity entity)

@@ -27,9 +27,11 @@ namespace NitroxServer.Serialization.World
 
         [JsonProperty, ProtoMember(5)]
         public GameData GameData { get; set; }
+#if SUBNAUTICA
 
         [JsonProperty, ProtoMember(6)]
         public EscapePodData EscapePodData { get; set; }
+#endif
 
         [JsonProperty, ProtoMember(7)]
         public string Seed { get; set; }
@@ -39,8 +41,12 @@ namespace NitroxServer.Serialization.World
             return ParsedBatchCells != null && // Always returns false on empty saves (sometimes also if never entered the ocean)
                    VehicleData != null &&
                    InventoryData != null &&
+#if SUBNAUTICA
                    GameData != null &&
                    EscapePodData != null;
+#elif BELOWZERO
+                   GameData != null;
+#endif
         }
     }
 }

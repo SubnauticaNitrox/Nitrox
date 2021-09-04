@@ -19,12 +19,13 @@ namespace NitroxClient.GameLogic.PlayerModel.ColorSwap
 
             SkinnedMeshRenderer basicFinRenderer = playerModel.GetRenderer(FINS_GAME_OBJECT_NAME);
             basicFinRenderer.material.ApplyClonedTexture();
-
+#if SUBNAUTICA
             SkinnedMeshRenderer chargedFinRenderer = playerModel.GetRenderer(CHARGED_FINS_GAME_OBJECT_NAME);
             chargedFinRenderer.material.ApplyClonedTexture();
 
             SkinnedMeshRenderer glideFinRenderer = playerModel.GetRenderer(GLIDE_FINS_GAME_OBJECT_NAME);
             glideFinRenderer.material.ApplyClonedTexture();
+#endif
 
             //All fin models use the same texture.
             Color[] texturePixels = basicFinRenderer.material.GetMainTexturePixels();
@@ -50,7 +51,7 @@ namespace NitroxClient.GameLogic.PlayerModel.ColorSwap
             basicFinRenderer.material.UpdateMainTextureColors(pixels);
             basicFinRenderer.material.SetTexture("_MainTex", basicFinRenderer.material.mainTexture);
             basicFinRenderer.material.SetTexture("_SpecTex", basicFinRenderer.material.mainTexture);
-
+#if SUBNAUTICA
             SkinnedMeshRenderer chargedFinRenderer = playerModel.GetRenderer(CHARGED_FINS_GAME_OBJECT_NAME);
             chargedFinRenderer.material.UpdateMainTextureColors(pixels);
             chargedFinRenderer.material.SetTexture("_MainTex", chargedFinRenderer.material.mainTexture);
@@ -60,6 +61,7 @@ namespace NitroxClient.GameLogic.PlayerModel.ColorSwap
             glideFinRenderer.material.UpdateMainTextureColors(pixels);
             glideFinRenderer.material.SetTexture("_MainTex", glideFinRenderer.material.mainTexture);
             glideFinRenderer.material.SetTexture("_SpecTex", glideFinRenderer.material.mainTexture);
+#endif
         }
     }
 }

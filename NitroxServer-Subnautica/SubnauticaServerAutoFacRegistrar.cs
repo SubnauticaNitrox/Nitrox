@@ -42,7 +42,9 @@ namespace NitroxServer_Subnautica
             containerBuilder.Register(c => resourceAssets).SingleInstance();
             containerBuilder.Register(c => resourceAssets.WorldEntitiesByClassId).SingleInstance();
             containerBuilder.Register(c => resourceAssets.PrefabPlaceholderGroupsByGroupClassId).SingleInstance();
+#if SUBNAUTICA
             containerBuilder.Register(c => resourceAssets.NitroxRandom).SingleInstance();
+#endif
             containerBuilder.RegisterType<SubnauticaUweWorldEntityFactory>().As<UweWorldEntityFactory>().SingleInstance();
 
             SubnauticaUwePrefabFactory prefabFactory = new SubnauticaUwePrefabFactory(resourceAssets.LootDistributionsJson);
@@ -50,7 +52,9 @@ namespace NitroxServer_Subnautica
             containerBuilder.Register(c => new Dictionary<NitroxTechType, IEntityBootstrapper>
             {
                 [TechType.CrashHome.ToDto()] = new CrashFishBootstrapper(),
+#if SUBNAUTICA
                 [TechType.Reefback.ToDto()] = new ReefbackBootstrapper(),
+#endif
                 [TechType.None.ToDto()] = new UntypedCellEntityBootstrapper()
             }).SingleInstance();
 

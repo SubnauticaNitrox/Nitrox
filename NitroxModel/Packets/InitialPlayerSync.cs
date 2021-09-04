@@ -12,8 +12,10 @@ namespace NitroxModel.Packets
     [Serializable]
     public class InitialPlayerSync : Packet
     {
+#if SUBNAUTICA
         public NitroxId AssignedEscapePodId;
         public List<EscapePodModel> EscapePodsData { get; }
+#endif
         public List<EquippedItemData> EquippedItems { get; }
         public List<EquippedItemData> Modules { get; }
         public List<BasePiece> BasePieces { get; }
@@ -37,8 +39,10 @@ namespace NitroxModel.Packets
 
         public InitialPlayerSync(NitroxId playerGameObjectId,
             bool firstTimeConnecting,
+#if SUBNAUTICA
             IEnumerable<EscapePodModel> escapePodsData,
             NitroxId assignedEscapePodId,
+#endif
             IEnumerable<EquippedItemData> equipment,
             IEnumerable<EquippedItemData> modules,
             IEnumerable<BasePiece> basePieces,
@@ -58,8 +62,10 @@ namespace NitroxModel.Packets
             ServerGameMode gameMode,
             Perms perms)
         {
+#if SUBNAUTICA
             EscapePodsData = escapePodsData.ToList();
             AssignedEscapePodId = assignedEscapePodId;
+#endif
             PlayerGameObjectId = playerGameObjectId;
             FirstTimeConnecting = firstTimeConnecting;
             EquippedItems = equipment.ToList();

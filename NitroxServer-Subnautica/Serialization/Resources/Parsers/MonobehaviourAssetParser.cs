@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using AssetsTools.NET;
+using NitroxModel.Logger;
 using NitroxServer.Serialization.Resources.Datastructures;
 using NitroxServer_Subnautica.Serialization.Resources.Parsers.Monobehaviours;
 using static NitroxServer_Subnautica.Serialization.Resources.Parsers.MonoscriptAssetParser;
@@ -26,6 +27,7 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Parsers
             monobehaviour.GameObjectIdentifier = new AssetIdentifier(relativeFileIdToPath[fileId], reader.ReadInt64());
             monobehaviour.Enabled = reader.ReadBoolean();
             reader.Align();
+
             monobehaviour.MonoscriptIdentifier = new AssetIdentifier(relativeFileIdToPath[reader.ReadInt32()], reader.ReadInt64());
             monobehaviour.Name = reader.ReadCountStringInt32();
 
@@ -40,8 +42,7 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Parsers
 
             MonoscriptAsset monoscript = MonoscriptAssetParser.MonoscriptsByAssetId[monobehaviour.MonoscriptIdentifier];
             monobehaviour.MonoscriptName = monoscript.Name;
-
-
+            
             if (monobehaviourParsersByMonoscriptName.TryGetValue(monoscript.Name, out MonobehaviourParser monoResourceParser))
             {
                 monoResourceParser.Parse(identifier, monobehaviour.GameObjectIdentifier, reader, resourceAssets, relativeFileIdToPath);

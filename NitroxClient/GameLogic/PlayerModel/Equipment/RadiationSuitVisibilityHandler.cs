@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿#if SUBNAUTICA
+using System.Collections.ObjectModel;
 using NitroxClient.GameLogic.PlayerModel.Equipment.Abstract;
 using UnityEngine;
 
@@ -34,7 +35,6 @@ namespace NitroxClient.GameLogic.PlayerModel.Equipment
                                 currentEquipment.Contains(TechType.DoubleTank) ||
                                 currentEquipment.Contains(TechType.HighCapacityTank) ||
                                 currentEquipment.Contains(TechType.PlasteelTank);
-
             bool helmetVisible = currentEquipment.Contains(TechType.RadiationHelmet);
             bool glovesVisible = currentEquipment.Contains(TechType.RadiationGloves);
             bool bodyVisible = currentEquipment.Contains(TechType.RadiationSuit);
@@ -53,3 +53,4 @@ namespace NitroxClient.GameLogic.PlayerModel.Equipment
         }
     }
 }
+#endif

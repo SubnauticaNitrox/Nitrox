@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if SUBNAUTICA
+using System;
 using NitroxModel.DataStructures;
 using NitroxModel.Packets;
 
@@ -20,4 +21,4 @@ namespace NitroxModel_Subnautica.Packets
         }
     }
 }
-
+#endif

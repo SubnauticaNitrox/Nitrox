@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#if SUBNAUTICA
+using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
@@ -200,3 +201,4 @@ namespace NitroxClient.Communication.Packets.Processors
         }
     }
 }
+#endif

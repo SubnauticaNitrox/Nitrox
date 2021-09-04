@@ -31,15 +31,22 @@ namespace NitroxServer.Serialization.World
         private readonly ServerProtoBufSerializer protoBufSerializer;
         private readonly ServerJsonSerializer jsonSerializer;
         private readonly ServerConfig config;
+#if SUBNAUTICA
         private readonly RandomStartGenerator randomStart;
+#endif
         private readonly SaveDataUpgrade[] upgrades;
-
+#if SUBNAUTICA
         public WorldPersistence(ServerProtoBufSerializer protoBufSerializer, ServerJsonSerializer jsonSerializer, ServerConfig config, RandomStartGenerator randomStart, SaveDataUpgrade[] upgrades)
+#elif BELOWZERO
+        public WorldPersistence(ServerProtoBufSerializer protoBufSerializer, ServerJsonSerializer jsonSerializer, ServerConfig config, SaveDataUpgrade[] upgrades)
+#endif
         {
             this.protoBufSerializer = protoBufSerializer;
             this.jsonSerializer = jsonSerializer;
             this.config = config;
+#if SUBNAUTICA
             this.randomStart = randomStart;
+#endif
             this.upgrades = upgrades;
 
             UpdateSerializer(config.SerializerMode);
@@ -145,7 +152,9 @@ namespace NitroxServer.Serialization.World
                 PlayerData = PlayerData.From(new List<Player>()),
                 WorldData = new WorldData()
                 {
+#if SUBNAUTICA
                     EscapePodData = EscapePodData.From(new List<EscapePodModel>()),
+#endif
                     GameData = new GameData
                     {
                         PDAState = new PDAStateData(),
@@ -187,8 +196,9 @@ namespace NitroxServer.Serialization.World
                 BaseManager = new BaseManager(pWorldData.BaseData.PartiallyConstructedPieces, pWorldData.BaseData.CompletedBasePieceHistory),
 
                 InventoryManager = new InventoryManager(pWorldData.WorldData.InventoryData.InventoryItems, pWorldData.WorldData.InventoryData.StorageSlotItems, pWorldData.WorldData.InventoryData.Modules),
-
+#if SUBNAUTICA
                 EscapePodManager = new EscapePodManager(pWorldData.WorldData.EscapePodData.EscapePods, randomStart, seed),
+#endif
 
                 GameData = pWorldData.WorldData.GameData,
                 GameMode = gameMode,

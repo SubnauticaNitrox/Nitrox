@@ -1,4 +1,5 @@
-﻿using NitroxClient.GameLogic;
+﻿#if SUBNAUTICA
+using NitroxClient.GameLogic;
 using NitroxModel.Helper;
 
 namespace NitroxClient.MonoBehaviours
@@ -53,3 +54,4 @@ namespace NitroxClient.MonoBehaviours
         }
     }
 }
+#endif

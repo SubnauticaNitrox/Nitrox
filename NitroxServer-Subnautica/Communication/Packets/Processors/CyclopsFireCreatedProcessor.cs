@@ -1,4 +1,5 @@
-﻿using NitroxModel_Subnautica.Packets;
+﻿#if SUBNAUTICA
+using NitroxModel_Subnautica.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
 
@@ -19,3 +20,4 @@ namespace NitroxServer_Subnautica.Communication.Packets.Processors
         }
     }
 }
+#endif

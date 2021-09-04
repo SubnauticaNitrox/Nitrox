@@ -52,7 +52,11 @@ namespace NitroxModel.Discovery
             }
 
             return Directory.EnumerateFiles(directory, "*.exe")
+#if SUBNAUTICA
                 .Any(file => Path.GetFileName(file)?.Equals("subnautica.exe", StringComparison.OrdinalIgnoreCase) ?? false);
+#elif BELOWZERO
+                .Any(file => Path.GetFileName(file)?.Equals("subnauticazero.exe", StringComparison.OrdinalIgnoreCase) ?? false);
+#endif
         }
     }
 }

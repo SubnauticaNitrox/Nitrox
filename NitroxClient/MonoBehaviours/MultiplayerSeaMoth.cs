@@ -1,4 +1,5 @@
-﻿using FMOD.Studio;
+﻿#if SUBNAUTICA
+using FMOD.Studio;
 using NitroxClient.GameLogic.FMOD;
 using NitroxModel.Core;
 using UnityEngine;
@@ -77,3 +78,4 @@ namespace NitroxClient.MonoBehaviours
         }
     }
 }
+#endif

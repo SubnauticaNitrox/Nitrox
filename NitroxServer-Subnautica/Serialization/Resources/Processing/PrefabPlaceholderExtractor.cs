@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Logger;
 using NitroxServer.GameLogic.Entities;
 using NitroxServer.Serialization.Resources.Datastructures;
 using NitroxServer_Subnautica.Serialization.Resources.Parsers;
@@ -33,22 +34,36 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Processing
                     continue;
                 }
 
-                string placeholderGroupClassId = PrefabIdentifierParser.ClassIdByGameObjectId[placeholderGroup.Identifier];
-
-                List<PrefabAsset> spawnablePrefabs = new List<PrefabAsset>();
-
-                foreach (AssetIdentifier prefabPlaceholderId in prefabPlaceholders)
+                try
                 {
-                    PrefabPlaceholderAsset prefabPlaceholderAsset = PrefabPlaceholderParser.PrefabPlaceholderIdToPlaceholderAsset[prefabPlaceholderId];
-                    spawnablePrefabs.Add(CreatePrefabAsset(prefabPlaceholderAsset.GameObjectIdentifier, prefabPlaceholderAsset.ClassId));
+                    string placeholderGroupClassId = PrefabIdentifierParser.ClassIdByGameObjectId[placeholderGroup.Identifier];
+
+                    List<PrefabAsset> spawnablePrefabs = new List<PrefabAsset>();
+
+                    foreach (AssetIdentifier prefabPlaceholderId in prefabPlaceholders)
+                    {
+                        try
+                        {
+                            PrefabPlaceholderAsset prefabPlaceholderAsset = PrefabPlaceholderParser.PrefabPlaceholderIdToPlaceholderAsset[prefabPlaceholderId];
+                            spawnablePrefabs.Add(CreatePrefabAsset(prefabPlaceholderAsset.GameObjectIdentifier, prefabPlaceholderAsset.ClassId));
+                        }
+                        catch (Exception e)
+                        {
+                            Log.Debug($"Error processing asset {e}");
+                        }
+                    }
+
+                    GameObjectAsset gameObject = GameObjectAssetParser.GameObjectsByAssetId[placeholderGroup.Identifier];
+                    TransformAsset localTransform = GetTransform(gameObject);
+
+                    List<PrefabAsset> existingPrefabs = GetChildPrefabs(localTransform);
+
+                    resourceAssets.PrefabPlaceholderGroupsByGroupClassId[placeholderGroupClassId] = new PrefabPlaceholdersGroupAsset(spawnablePrefabs, existingPrefabs);
                 }
-
-                GameObjectAsset gameObject = GameObjectAssetParser.GameObjectsByAssetId[placeholderGroup.Identifier];
-                TransformAsset localTransform = GetTransform(gameObject);
-
-                List<PrefabAsset> existingPrefabs = GetChildPrefabs(localTransform);
-
-                resourceAssets.PrefabPlaceholderGroupsByGroupClassId[placeholderGroupClassId] = new PrefabPlaceholdersGroupAsset(spawnablePrefabs, existingPrefabs);
+                catch (Exception e)
+                {
+                    Log.Debug($"Exception {e}");
+                }
             }
         }
 
@@ -82,6 +97,7 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Processing
 
         private Optional<NitroxEntitySlot> GetEntitySlot(string classId)
         {
+            Log.Debug($"Class id is {classId}");
             AssetIdentifier prefabId = PrefabIdentifierParser.GameObjectIdByClassId[classId];
             GameObjectAsset gameObject = GameObjectAssetParser.GameObjectsByAssetId[prefabId];
 

@@ -167,8 +167,9 @@ namespace NitroxClient.MonoBehaviours
             items.Clear();
 
             PlayerManager remotePlayerManager = NitroxServiceLocator.LocateService<PlayerManager>();
-
+#if SUBNAUTICA
             LoadingScreenVersionText.DisableWarningText();
+#endif
             DiscordRPController.Main.InitializeInGame(Main.multiplayerSession.AuthenticationContext.Username, remotePlayerManager.GetTotalPlayerCount(), Main.multiplayerSession.SessionPolicy.MaxConnections, $"{Main.multiplayerSession.IpAddress}:{Main.multiplayerSession.ServerPort}");
             NitroxServiceLocator.LocateService<PlayerChatManager>().LoadChatKeyHint();
         }

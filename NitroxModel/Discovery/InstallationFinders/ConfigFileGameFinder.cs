@@ -24,7 +24,7 @@ namespace NitroxModel.Discovery.InstallationFinders
                 errors?.Add($@"Config file {Path.GetFullPath(FILENAME)} was found empty. Please enter the path to the Subnautica installation.");
                 return null;
             }
-#if DEBUG
+#if SUBNAUTICA
             if (!Directory.Exists(Path.Combine(path, "Subnautica_Data", "Managed")))
 #elif BELOWZERO
             if (!Directory.Exists(Path.Combine(path, "SubnauticaZero_Data", "Managed")))

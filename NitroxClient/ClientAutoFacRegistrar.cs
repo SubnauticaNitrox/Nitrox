@@ -108,7 +108,6 @@ namespace NitroxClient
             containerBuilder.RegisterType<PDAEncyclopediaEntry>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<SimulationOwnership>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Crafting>().InstancePerLifetimeScope();
-            containerBuilder.RegisterType<Cyclops>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Rockets>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<MobileVehicleBay>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Interior>().InstancePerLifetimeScope();
@@ -119,8 +118,9 @@ namespace NitroxClient
             containerBuilder.RegisterType<BasePieceSpawnPrioritizer>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<KnownTechEntry>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<ExosuitModuleEvent>().InstancePerLifetimeScope();
+#if SUBNAUTICA
+            containerBuilder.RegisterType<Cyclops>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<SeamothModulesEvent>().InstancePerLifetimeScope();
-#if DEBUG
             containerBuilder.RegisterType<EscapePodManager>().InstancePerLifetimeScope();
 #endif
             containerBuilder.RegisterType<Debugger>().InstancePerLifetimeScope();

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using AssetsTools.NET;
+using NitroxModel.Logger;
 using NitroxServer.Serialization.Resources.Datastructures;
 
 namespace NitroxServer_Subnautica.Serialization.Resources.Parsers
@@ -14,7 +15,6 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Parsers
             gameObjectAsset.Identifier = identifier;
 
             uint componentCount = reader.ReadUInt32();
-
             for (int i = 0; i < componentCount; i++)
             {
                 AssetIdentifier component = new AssetIdentifier(relativeFileIdToPath[reader.ReadInt32()], reader.ReadInt64());

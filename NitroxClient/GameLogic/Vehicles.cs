@@ -80,6 +80,7 @@ namespace NitroxClient.GameLogic
                     hsb = subName.AliveOrNull()?.GetColors().ToDto();
 #endif
                 }
+#if SUBNAUTICA
                 else if (techType == TechType.Cyclops)
                 { //Cyclops
                     try
@@ -103,6 +104,7 @@ namespace NitroxClient.GameLogic
                         Log.Error(ex, $"{nameof(Vehicles)}: Error while trying to spawn a cyclops. Id: {constructedObjectId}");
                     }
                 }
+#endif
                 else
                 { //Rocket
                     Optional<Rocket> oprocket = Optional.OfNullable(gameObject.GetComponent<Rocket>());
@@ -199,13 +201,13 @@ namespace NitroxClient.GameLogic
         {
             try
             {
+#if SUBNAUTICA
                 if (techType == TechType.Cyclops)
                 {
                     LightmappedPrefabs.main.RequestScenePrefab("cyclops", (go) => OnVehiclePrefabLoaded(techType, go, id, position, rotation, interactiveChildIdentifiers, dockingBayId, name, hsb, health));
                 }
                 else
                 {
-#if SUBNAUTICA
                     GameObject techPrefab = CraftData.GetPrefabForTechType(techType, false);
 #elif BELOWZERO
                     CoroutineTask<GameObject> techPrefabRoutine = CraftData.GetPrefabForTechTypeAsync(techType, false);
@@ -214,7 +216,9 @@ namespace NitroxClient.GameLogic
                     Validate.NotNull(techPrefab, $"{nameof(Vehicles)}: No prefab for tech type: {techType}");
 
                     OnVehiclePrefabLoaded(techType, techPrefab, id, position, rotation, interactiveChildIdentifiers, dockingBayId, name, hsb, health);
-                }
+#if SUBNAUTICA
+            }
+#endif
             }
             catch (Exception ex)
             {
@@ -235,12 +239,16 @@ namespace NitroxClient.GameLogic
                 subRoot = opGameObject.Value.GetComponent<SubRoot>();
 
                 MultiplayerVehicleControl mvc = null;
-
+#if SUBNAUTICA
                 if (subRoot)
                 {
                     mvc = subRoot.gameObject.EnsureComponent<MultiplayerCyclops>();
                 }
                 else if (vehicle)
+#elif BELOWZERO
+                //TODO: Add other vehicles
+                if (vehicle)
+#endif
                 {
                     if (vehicle.docked)
                     {
@@ -250,11 +258,13 @@ namespace NitroxClient.GameLogic
 
                     switch (vehicle)
                     {
+#if SUBNAUTICA
                         case SeaMoth seamoth:
                             {
                                 mvc = seamoth.gameObject.EnsureComponent<MultiplayerSeaMoth>();
                                 break;
                             }
+#endif
                         case Exosuit exosuit:
                             {
                                 mvc = exosuit.gameObject.EnsureComponent<MultiplayerExosuit>();
@@ -316,7 +326,11 @@ namespace NitroxClient.GameLogic
             NitroxEntity.SetNewId(gameObject, id);
 
             // Updates names and colours with persisted data
+#if SUBNAUTICA
             if (techType == TechType.Seamoth || techType == TechType.Exosuit)
+#elif BELOWZERO
+            if (techType == TechType.Exosuit)
+#endif
             {
                 Vehicle vehicle = gameObject.GetComponent<Vehicle>();
 
@@ -355,6 +369,7 @@ namespace NitroxClient.GameLogic
 
                 vehicle.GetComponent<LiveMixin>().health = health;
             }
+#if SUBNAUTICA
             else if (techType == TechType.Cyclops)
             {
                 GameObject target = NitroxEntity.RequireObjectFrom(id);
@@ -376,19 +391,16 @@ namespace NitroxClient.GameLogic
                 if (!string.IsNullOrEmpty(name))
                 {
                     rocket.rocketName = name;
-#if SUBNAUTICA
                     rocket.subName?.DeserializeName(name);
-#endif
                 }
 
                 if (hsb != null)
                 {
                     rocket.rocketColors = hsb;
-#if SUBNAUTICA
                     rocket.subName?.DeserializeColors(hsb);
-#endif
                 }
             }
+#endif
 
             VehicleChildObjectIdentifierHelper.SetInteractiveChildrenIds(gameObject, interactiveChildIdentifiers);
 

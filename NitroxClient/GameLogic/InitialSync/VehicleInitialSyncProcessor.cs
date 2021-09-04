@@ -20,14 +20,16 @@ namespace NitroxClient.GameLogic.InitialSync
             this.packetSender = packetSender;
 
             DependentProcessors.Add(typeof(BuildingInitialSyncProcessor));
+#if SUBNAUTICA
             DependentProcessors.Add(typeof(CyclopsInitialAsyncProcessor));
+#endif
         }
 
         public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
         {
             int totalSyncedVehicles = 0;
+#if SUBNAUTICA
             int nonCyclopsVehicleCount = packet.Vehicles.Where(v => v.TechType.ToUnity() != TechType.Cyclops).Count();
-
             foreach (VehicleModel vehicle in packet.Vehicles)
             {
                 if (vehicle.TechType.ToUnity() != TechType.Cyclops)
@@ -41,8 +43,21 @@ namespace NitroxClient.GameLogic.InitialSync
                     }
                 }
             }
-
-            Log.Info("Recieved initial sync with " + totalSyncedVehicles + " non-cyclops vehicles");
+            Log.Info("Received initial sync with " + totalSyncedVehicles + " non-cyclops vehicles");
+#elif BELOWZERO
+            int vehicleCount = packet.Vehicles.Count;
+            foreach (VehicleModel vehicle in packet.Vehicles)
+            {
+                using (packetSender.Suppress<VehicleDocking>())
+                {
+                    waitScreenItem.SetProgress(totalSyncedVehicles, vehicleCount);
+                    vehicles.CreateVehicle(vehicle);
+                    totalSyncedVehicles++;
+                    yield return null;
+                }
+            }
+            Log.Info("Received initial sync with " + totalSyncedVehicles + " vehicles");
+#endif
         }
     }
 }

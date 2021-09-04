@@ -1,4 +1,4 @@
-﻿#if DEBUG
+﻿#if SUBNAUTICA
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;

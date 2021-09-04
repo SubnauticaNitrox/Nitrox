@@ -51,7 +51,11 @@ namespace NitroxLauncher.Pages
             }
             else
             {
+#if SUBNAUTICA
                 MessageBox.Show("The selected directory does not contain the required Subnautica.exe file.", "Invalid Subnautica directory", MessageBoxButton.OK, MessageBoxImage.Warning);
+#elif BELOWZERO
+                MessageBox.Show("The selected directory does not contain the required SubnauticaZero.exe file.", "Invalid Subnautica:Below Zero directory", MessageBoxButton.OK, MessageBoxImage.Warning);
+#endif
             }
         }
 

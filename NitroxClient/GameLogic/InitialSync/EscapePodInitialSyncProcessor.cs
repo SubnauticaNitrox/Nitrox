@@ -1,4 +1,4 @@
-﻿#if DEBUG
+﻿#if SUBNAUTICA
 using System.Collections;
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxModel.DataStructures.GameLogic;

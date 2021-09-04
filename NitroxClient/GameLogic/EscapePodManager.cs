@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#if SUBNAUTICA
+using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
@@ -13,7 +14,6 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic
 {
-#if DEBUG
     public class EscapePodManager
     {
         /*
@@ -213,6 +213,5 @@ namespace NitroxClient.GameLogic
             packetSender.Send(repair);
         }
     }
-    
-#endif
 }
+#endif

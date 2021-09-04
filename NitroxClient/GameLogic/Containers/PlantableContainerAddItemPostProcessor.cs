@@ -1,5 +1,8 @@
 ﻿using System;
 using NitroxModel.DataStructures.GameLogic;
+#if BELOWZERO
+using NitroxModel.Helper;
+#endif
 using NitroxModel.Logger;
 using UnityEngine;
 
@@ -65,7 +68,6 @@ namespace NitroxClient.GameLogic.Containers
                 return null;
             }
 
-            // int smallSlotCount = pp.slots.Length;
             int bigSlotCount = planter.bigSlots.Length;
 
             // for all the planters I have seen, the logic is the same: Available slots are numbered starting with the big slots

@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿#if SUBNAUTICA
+using System.Collections.ObjectModel;
 using NitroxClient.GameLogic.PlayerModel.Equipment.Abstract;
 using UnityEngine;
 
@@ -20,3 +21,4 @@ namespace NitroxClient.GameLogic.PlayerModel.Equipment
         }
     }
 }
+#endif

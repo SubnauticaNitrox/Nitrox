@@ -22,7 +22,7 @@ namespace NitroxClient.GameLogic.InitialSync
 
             DependentProcessors.Add(typeof(PlayerInitialSyncProcessor)); // Make sure the player is configured
             DependentProcessors.Add(typeof(BuildingInitialSyncProcessor)); // Players can be spawned in buildings
-#if DEBUG
+#if SUBNAUTICA
             DependentProcessors.Add(typeof(EscapePodInitialSyncProcessor)); // Players can be spawned in escapePod
 #endif
             DependentProcessors.Add(typeof(VehicleInitialSyncProcessor)); // Players can be spawned in vehicles
@@ -37,11 +37,13 @@ namespace NitroxClient.GameLogic.InitialSync
             }
             Player.main.SetPosition(position);
 
+#if SUBNAUTICA
             // Player.Update is setting SubRootID to null after Player position is set
             using (packetSender.Suppress<EscapePodChanged>())
             {
                 Player.main.ValidateEscapePod();
             }
+#endif
 
             // Player position is relative to a subroot if in a subroot
             Optional<NitroxId> subRootId = packet.PlayerSubRootId;

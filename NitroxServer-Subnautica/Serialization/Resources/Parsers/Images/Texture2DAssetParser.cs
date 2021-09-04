@@ -15,7 +15,7 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Parsers.Images
         public override void Parse(AssetIdentifier identifier, AssetsFileReader reader, ResourceAssets resourceAssets, Dictionary<int, string> relativeFileIdToPath)
         {
             string assetName = reader.ReadCountStringInt32();
-
+#if SUBNAUTICA
             if (assetName == "RandomStart")
             {
                 reader.Position += 9;
@@ -42,6 +42,7 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Parsers.Images
                     resourceAssets.NitroxRandom = new RandomStartGenerator(bmp);
                 }
             }
+#endif
         }
     }
 }

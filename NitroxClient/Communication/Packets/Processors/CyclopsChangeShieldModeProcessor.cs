@@ -1,4 +1,5 @@
-﻿using NitroxClient.Communication.Abstract;
+﻿#if SUBNAUTICA
+using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxModel_Subnautica.Packets;
@@ -22,3 +23,4 @@ namespace NitroxClient.Communication.Packets.Processors
         }
     }
 }
+#endif

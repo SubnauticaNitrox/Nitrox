@@ -17,7 +17,11 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             using (packetSender.Suppress<PDAEncyclopediaEntryAdd>())
             {
+#if SUBNAUTICA
                 PDAEncyclopedia.Add(packet.Key, true);
+#elif BELOWZERO
+                PDAEncyclopedia.Add(packet.Key, true, packet.PostNotification);
+#endif
             }
         }
     }

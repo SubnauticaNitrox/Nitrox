@@ -121,6 +121,7 @@ namespace NitroxClient.MonoBehaviours
                     }
                 }
             }
+#if SUBNAUTICA
             else if (sub != null && Player.main.isPiloting)
             {
                 id = NitroxEntity.GetId(sub.gameObject);
@@ -136,6 +137,7 @@ namespace NitroxClient.MonoBehaviours
                 steeringWheelPitch = (float)subControl.ReflectionGet("steeringWheelPitch");
                 appliedThrottle = subControl.appliedThrottle && (bool)subControl.ReflectionGet("canAccel");
             }
+#endif
             else
             {
                 return Optional.Empty;

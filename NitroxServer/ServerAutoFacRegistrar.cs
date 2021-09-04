@@ -33,7 +33,9 @@ namespace NitroxServer
             containerBuilder.RegisterType<PlayerManager>().SingleInstance();
             containerBuilder.RegisterType<DefaultServerPacketProcessor>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<PacketHandler>().InstancePerLifetimeScope();
+#if SUBNAUTICA
             containerBuilder.RegisterType<EscapePodManager>().InstancePerLifetimeScope();
+#endif
             containerBuilder.RegisterType<EntitySimulation>().SingleInstance();
             containerBuilder.RegisterType<ConsoleCommandProcessor>().SingleInstance();
 

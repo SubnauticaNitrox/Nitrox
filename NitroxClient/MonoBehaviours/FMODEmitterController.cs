@@ -62,7 +62,11 @@ namespace NitroxClient.MonoBehaviours
         }
 
         public void PlayCustomEmitter(string path) => customEmitters[path]?.Play();
+#if SUBNAUTICA
         public void ParamCustomEmitter(string path, int paramIndex, float value) => customEmitters[path]?.SetParameterValue(paramIndex, value);
+#elif BELOWZERO
+        public void ParamCustomEmitter(string path, PARAMETER_ID paramIndex, float value) => customEmitters[path]?.SetParameterValue(paramIndex, value);
+#endif
         public void StopCustomEmitter(string path) => customEmitters[path]?.Stop();
 
         public void PlayStudioEmitter(string path) => studioEmitters[path]?.PlayUI();

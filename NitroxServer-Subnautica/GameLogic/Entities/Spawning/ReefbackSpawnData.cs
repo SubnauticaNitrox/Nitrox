@@ -1,3 +1,4 @@
+﻿#if SUBNAUTICA
 ﻿using System.Collections.Generic;
 using NitroxModel.DataStructures.Unity;
 
@@ -44,3 +45,4 @@ namespace NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrapper
         };
     }
 }
+#endif

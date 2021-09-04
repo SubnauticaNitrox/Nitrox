@@ -78,14 +78,20 @@ namespace NitroxClient.GameLogic
                     Log.Debug($"Found sub root for {playerContext.PlayerName}. Will add him and update animation.");
                     remotePlayer.SetSubRoot(subRoot);
                 }
+#if SUBNAUTICA
                 else if (sub.HasValue && sub.Value.TryGetComponent(out EscapePod escapePod))
                 {
                     Log.Debug($"Found EscapePod for {playerContext.PlayerName}.");
                     remotePlayer.SetEscapePod(escapePod);
                 }
+#endif
                 else
                 {
+#if SUBNAUTICA
                     Log.Error($"Found neither SubRoot component nor EscapePod on {subRootId.Value} for {playerContext.PlayerName}.");
+#elif BELOWZERO
+                    Log.Error($"Found neither SubRoot component on {subRootId.Value} for {playerContext.PlayerName}.");
+#endif
                 }
             }
 

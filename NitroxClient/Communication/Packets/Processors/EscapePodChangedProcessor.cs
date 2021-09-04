@@ -1,6 +1,6 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
+﻿#if SUBNAUTICA
+using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
-#if DEBUG
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;

@@ -36,7 +36,7 @@ namespace NitroxClient.GameLogic
 
         public Vehicle Vehicle { get; private set; }
         public SubRoot SubRoot { get; private set; }
-#if DEBUG
+#if SUBNAUTICA
         public EscapePod EscapePod { get; private set; }
 #endif
         public PilotingChair PilotingChair { get; private set; }
@@ -56,7 +56,11 @@ namespace NitroxClient.GameLogic
             NitroxEntity.SetNewId(Body, playerContext.PlayerNitroxId);
 
             // Get player
+#if SUBNAUTICA
             PlayerModel = Body.RequireGameObject("player_view");
+#elif BELOWZERO
+            PlayerModel = Body.RequireGameObject("player_view_female");
+#endif
             // Move variables to keep player animations from mirroring and for identification
             ArmsController = PlayerModel.GetComponent<ArmsController>();
             ArmsController.smoothSpeedUnderWater = 0;
@@ -79,7 +83,8 @@ namespace NitroxClient.GameLogic
             ItemAttachPoint = PlayerModel.transform.Find(PlayerEquipmentConstants.ITEM_ATTACH_POINT_GAME_OBJECT_NAME);
 
             playerModelManager = modelManager;
-            playerModelManager.AttachPing(this);
+            //TODO: Fix ping 
+            //playerModelManager.AttachPing(this);
             playerModelManager.BeginApplyPlayerColor(this);
             playerModelManager.RegisterEquipmentVisibilityHandler(PlayerModel);
             UpdateEquipmentVisibility();
@@ -132,7 +137,8 @@ namespace NitroxClient.GameLogic
                 PilotingChair = newPilotingChair;
 
                 Validate.NotNull(SubRoot, "Player changed PilotingChair but is not in SubRoot!");
-
+                //TODO: probably change to allow bz vehicles
+#if SUBNAUTICA
                 MultiplayerCyclops mpCyclops = SubRoot.GetComponent<MultiplayerCyclops>();
 
                 if (PilotingChair)
@@ -153,6 +159,7 @@ namespace NitroxClient.GameLogic
                 }
 
                 RigidBody.isKinematic = AnimationController["cyclops_steering"] = newPilotingChair != null;
+#endif
             }
         }
 
@@ -172,7 +179,7 @@ namespace NitroxClient.GameLogic
                 SubRoot = newSubRoot;
             }
         }
-#if DEBUG
+#if SUBNAUTICA
         public void SetEscapePod(EscapePod newEscapePod)
         {
             if (EscapePod != newEscapePod)
@@ -217,8 +224,9 @@ namespace NitroxClient.GameLogic
                 RigidBody.isKinematic = newVehicle;
 
                 Vehicle = newVehicle;
-
+#if SUBNAUTICA
                 AnimationController["in_seamoth"] = newVehicle is SeaMoth;
+#endif
                 AnimationController["in_exosuit"] = AnimationController["using_mechsuit"] = newVehicle is Exosuit;
             }
         }

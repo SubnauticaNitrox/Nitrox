@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if SUBNAUTICA
+using System;
 using System.Collections.Generic;
 using NitroxClient.GameLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.PlayerModel.ColorSwap.Strategy;
@@ -44,3 +45,4 @@ namespace NitroxClient.GameLogic.PlayerModel.ColorSwap
         }
     }
 }
+#endif

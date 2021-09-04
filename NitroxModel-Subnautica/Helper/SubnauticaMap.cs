@@ -21,7 +21,9 @@ namespace NitroxModel_Subnautica.Helper
             new NitroxTechType(nameof(TechType.Gravsphere)),
             new NitroxTechType(nameof(TechType.PipeSurfaceFloater)),
             new NitroxTechType(nameof(TechType.SmallStorage)),
+#if SUBNAUTICA
             new NitroxTechType(nameof(TechType.CyclopsDecoy)),
+#endif
             new NitroxTechType(nameof(TechType.LEDLight)),
             new NitroxTechType(nameof(TechType.Beacon))
         };

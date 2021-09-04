@@ -37,6 +37,7 @@ namespace NitroxClient.GameLogic
             this.packetSender = packetSender;
         }
 
+#if SUBNAUTICA
         /// <summary>
         /// Triggered when <see cref="SubFire.CreateFire(SubFire.RoomFire)"/> is executed. To create a new fire manually, 
         /// call <see cref="Create(string, Optional{string}, Optional{CyclopsRooms}, Optional{int})"/>
@@ -48,6 +49,7 @@ namespace NitroxClient.GameLogic
             CyclopsFireCreated packet = new CyclopsFireCreated(NitroxEntity.GetId(fire.gameObject), subRootId, room.roomLinks.room, nodeIndex);
             packetSender.Send(packet);
         }
+#endif
 
         /// <summary>
         /// Triggered when <see cref="Fire.Douse(float)"/> is executed. To Douse a fire manually, retrieve the <see cref="Fire"/> call the Douse method
@@ -75,7 +77,7 @@ namespace NitroxClient.GameLogic
                 }
             }
         }
-
+#if SUBNAUTICA
         /// <summary>
         /// Create a new <see cref="Fire"/>. Majority of code copied from <see cref="SubFire.CreateFire(SubFire.RoomFire)"/>. Currently does not support Fires created outside of a Cyclops
         /// </summary>
@@ -151,5 +153,6 @@ namespace NitroxClient.GameLogic
             subFire.ReflectionSet("roomFires", roomFiresDict);
             subFire.ReflectionSet("availableNodes", availableNodes);
         }
+#endif
     }
 }

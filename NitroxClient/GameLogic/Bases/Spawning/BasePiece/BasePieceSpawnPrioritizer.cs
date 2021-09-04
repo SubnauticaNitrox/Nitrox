@@ -45,9 +45,11 @@ namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
             // Place energy producing before consuming
             [TechType.SolarPanel] = 6,
             [TechType.BaseNuclearReactor] = 6,
-            [TechType.NuclearReactor] = 6,
             [TechType.BaseBioReactor] = 6,
+#if SUBNAUTICA
+            [TechType.NuclearReactor] = 6,
             [TechType.Bioreactor] = 6,
+#endif
             [TechType.ThermalPlant] = 6,
             [TechType.PowerTransmitter] = 6,
 

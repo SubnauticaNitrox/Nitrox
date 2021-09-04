@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿#if SUBNAUTICA
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.GameLogic.InitialSync.Base;
@@ -63,3 +64,4 @@ namespace NitroxClient.GameLogic.InitialSync
         }
     }
 }
+#endif

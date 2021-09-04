@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿#if SUBNAUTICA
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -445,3 +446,4 @@ namespace NitroxClient.GameLogic
         }
     }
 }
+#endif 

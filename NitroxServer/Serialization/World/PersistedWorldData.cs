@@ -38,7 +38,9 @@ namespace NitroxServer.Serialization.World
                     VehicleData = VehicleData.From(world.VehicleManager.GetVehicles()),
                     InventoryData = InventoryData.From(world.InventoryManager.GetAllInventoryItems(), world.InventoryManager.GetAllStorageSlotItems(), world.InventoryManager.GetAllModules()),
                     GameData = GameData.From(world.GameData.PDAState, world.GameData.StoryGoals, world.EventTriggerer),
+#if SUBNAUTICA
                     EscapePodData = EscapePodData.From(world.EscapePodManager.GetEscapePods()),
+#endif
                     Seed = world.Seed
                 }
             };

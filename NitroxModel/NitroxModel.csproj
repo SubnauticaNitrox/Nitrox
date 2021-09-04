@@ -24,7 +24,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'BelowZero|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\BelowZero\</OutputPath>
-    <DefineConstants>BELOWZERO</DefineConstants>
+    <DefineConstants>BELOWZERO;DEBUG</DefineConstants>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <ErrorReport>prompt</ErrorReport>

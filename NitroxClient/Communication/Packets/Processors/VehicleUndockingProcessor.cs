@@ -61,7 +61,9 @@ namespace NitroxClient.Communication.Packets.Processors
                 // It can happen that the player turns in circles around himself in the vehicle. This stops it.
                 playerInstance.RigidBody.angularVelocity = Vector3.zero;
                 playerInstance.ArmsController.SetWorldIKTarget(vehicle.leftHandPlug, vehicle.rightHandPlug);
+#if SUBNAUTICA
                 playerInstance.AnimationController["in_seamoth"] = vehicle is SeaMoth;
+#endif
                 playerInstance.AnimationController["in_exosuit"] = playerInstance.AnimationController["using_mechsuit"] = vehicle is Exosuit;
                 vehicles.SetOnPilotMode(packet.VehicleId, packet.PlayerId, true);
                 playerInstance.AnimationController.UpdatePlayerAnimations = false;

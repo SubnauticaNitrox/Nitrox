@@ -183,7 +183,7 @@ namespace NitroxTest.Serialization
                 Assert.AreEqual(worldData.WorldData.GameData.StoryTiming.AuroraExplosionTime, worldDataAfter.WorldData.GameData.StoryTiming.AuroraExplosionTime, $"WorldData.GameData.StoryTiming.AuroraExplosionTime is not equal while using {serverSerializers[serializerIndex]}.");
             }
         }
-
+#if SUBNAUTICA
         [TestMethod]
         public void EscapePodDataTest()
         {
@@ -208,7 +208,7 @@ namespace NitroxTest.Serialization
                 }
             }
         }
-
+#endif
         [TestMethod]
         public void BaseDataTest()
         {
@@ -326,7 +326,7 @@ namespace NitroxTest.Serialization
                     Assert.AreEqual(playerData.CurrentStats.Health, playerDataAfter.CurrentStats.Health, $"PlayerData.Players.CurrentStats.Health is not equal while using {serverSerializers[serializerIndex]}.");
                     Assert.AreEqual(playerData.CurrentStats.Food, playerDataAfter.CurrentStats.Food, $"PlayerData.Players.CurrentStats.Food is not equal while using {serverSerializers[serializerIndex]}.");
                     Assert.AreEqual(playerData.CurrentStats.Water, playerDataAfter.CurrentStats.Water, $"PlayerData.Players.CurrentStats.Water is not equal while using {serverSerializers[serializerIndex]}.");
-#if SUBNAUTICA                    
+#if SUBNAUTICA
                     Assert.AreEqual(playerData.CurrentStats.InfectionAmount, playerDataAfter.CurrentStats.InfectionAmount, $"PlayerData.Players.CurrentStats.InfectionAmount is not equal while using {serverSerializers[serializerIndex]}.");
 #endif
                     Assert.AreEqual(playerData.SubRootId, playerDataAfter.SubRootId, $"PlayerData.Players.SubRootId is not equal while using {serverSerializers[serializerIndex]}.");
@@ -456,6 +456,7 @@ namespace NitroxTest.Serialization
                 },
                 WorldData = new WorldData()
                 {
+#if SUBNAUTICA
                     EscapePodData = new EscapePodData()
                     {
                         EscapePods = new List<EscapePodModel>()
@@ -474,6 +475,7 @@ namespace NitroxTest.Serialization
                             }
                         }
                     },
+#endif
                     GameData = new NitroxServer.GameLogic.Bases.GameData()
                     {
                         PDAState = new PDAStateData()

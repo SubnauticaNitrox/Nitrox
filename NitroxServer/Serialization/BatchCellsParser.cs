@@ -60,8 +60,9 @@ namespace NitroxServer.Serialization
                 Log.Error($"Could not locate Subnautica installation directory: {Environment.NewLine}{string.Join(Environment.NewLine, errors)}");
                 return;
             }
-#if DEBUG
+#if SUBNAUTICA
             string path = Path.Combine(subnauticaPath, "Subnautica_Data", "StreamingAssets", "SNUnmanagedData", "Build18");
+            string fileName = Path.Combine(path, pathPrefix, $"{prefix}batch-cells-{batchId.X}-{batchId.Y}-{batchId.Z}{suffix}.bin");
 #elif BELOWZERO
             List<string> directories = new List<string> { "Expansion", "ExportWindow_completecaverns", "ExportWindow_treespires", "MiniatureLod2", "MiniatureLod3", "ThermalZoneExpansion" };
             string fileName = null;

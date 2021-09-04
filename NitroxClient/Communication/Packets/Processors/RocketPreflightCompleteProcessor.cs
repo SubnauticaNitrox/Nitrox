@@ -1,4 +1,5 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
+﻿#if SUBNAUTICA
+using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxModel_Subnautica.Packets;
 using UnityEngine;
@@ -61,3 +62,4 @@ namespace NitroxClient.Communication.Packets.Processors
         }
     }
 }
+#endif

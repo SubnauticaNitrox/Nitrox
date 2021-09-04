@@ -26,8 +26,9 @@ namespace NitroxClient.GameLogic.InitialSync
             this.packetSender = packetSender;
             this.buildEventQueue = buildEventQueue;
             this.basePieceSpawnPrioritizer = basePieceSpawnPrioritizer;
-
+#if SUBNAUTICA
             DependentProcessors.Add(typeof(CyclopsInitialAsyncProcessor));
+#endif
         }
 
         public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)

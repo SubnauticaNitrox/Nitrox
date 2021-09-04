@@ -1,5 +1,8 @@
 ﻿using NitroxClient.MonoBehaviours.DiscordRP;
 using NitroxClient.Unity.Helper;
+#if BELOWZERO
+using TMPro;
+#endif
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -41,7 +44,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             buttonText.text = Language.main.Get("Nitrox_Multiplayer");
             buttonText.GetComponent<TranslationLiveUpdate>().translationKey = "Nitrox_Multiplayer";
 #elif BELOWZERO
-            TMPro.TextMeshProUGUI buttonText = showLoadedMultiplayer.RequireGameObject("Circle/Bar/Text").GetComponent<TMPro.TextMeshProUGUI>();
+            TMPro.TextMeshProUGUI buttonText = showLoadedMultiplayer.RequireGameObject("Circle/Bar/Text").GetComponent<TextMeshProUGUI>();
             buttonText.text = Language.main.Get("Nitrox_Multiplayer");
             buttonText.GetComponent<TranslationLiveUpdate>().translationKey = "Nitrox_Multiplayer";
 #endif

@@ -18,7 +18,9 @@ namespace NitroxClient.GameLogic.InitialSync
             this.simulationOwnership = simulationOwnership;
 
             DependentProcessors.Add(typeof(BuildingInitialSyncProcessor));
+#if SUBNAUTICA
             DependentProcessors.Add(typeof(CyclopsInitialAsyncProcessor));
+#endif
             DependentProcessors.Add(typeof(VehicleInitialSyncProcessor));
         }
 

@@ -15,14 +15,16 @@ namespace NitroxModel_Subnautica.Helper
         {
             switch (techType.ToUnity())
             {
+#if SUBNAUTICA
                 case TechType.Seamoth:
                     return new SeamothModel(techType, constructedItemId, position, rotation, interactiveChildIdentifiers, dockingBayId, name, hsb, health);
-                case TechType.Exosuit:
-                    return new ExosuitModel(techType, constructedItemId, position, rotation, interactiveChildIdentifiers, dockingBayId, name, hsb, health);
                 case TechType.Cyclops:
                     return new CyclopsModel(techType, constructedItemId, position, rotation, interactiveChildIdentifiers, dockingBayId, name, hsb, health);
                 case TechType.RocketBase:
                     return new NeptuneRocketModel(techType, constructedItemId, position, rotation, interactiveChildIdentifiers, dockingBayId, name, hsb, health);
+#endif
+                case TechType.Exosuit:
+                    return new ExosuitModel(techType, constructedItemId, position, rotation, interactiveChildIdentifiers, dockingBayId, name, hsb, health);
                 default:
                     throw new Exception($"Could not build from: {techType}");
             }
