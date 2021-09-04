@@ -218,8 +218,7 @@ namespace NitroxClient.MonoBehaviours
                 // we look for a object that is able to be deconstructed that hasn't been tagged yet.
                 foreach (Transform child in cellTransform)
                 {
-                    bool isNewBasePiece = !child.GetComponent<NitroxEntity>() && child.GetComponent<BaseDeconstructable>();
-
+                    bool isNewBasePiece = !child.GetComponent<NitroxEntity>() && child.GetComponent<BaseDeconstructable>() && !child.name.Contains("CorridorConnector");
                     if (isNewBasePiece)
                     {
                         finishedPiece = child.gameObject;
@@ -227,6 +226,26 @@ namespace NitroxClient.MonoBehaviours
                     }
                 }
 
+                // This is a backup way to find the cell and final object if the TargetOffset fails.
+                if (finishedPiece == null)
+                {
+                    latestBase.GetClosestCell(constructing.gameObject.transform.position, out latestCell, out _, out _);
+                    cellTransform = latestBase.GetCellObject(latestCell);
+                    Validate.NotNull(cellTransform, $"Must have a cell transform, one not found near {constructing.gameObject.transform.position} for latestCell {latestCell}");
+                    
+                    // There can be multiple objects in a cell (such as a corridor with hatches built into it)
+                    // we look for a object that is able to be deconstructed that hasn't been tagged yet.
+                    foreach (Transform child in cellTransform)
+                    {
+                        bool isNewBasePiece = !child.GetComponent<NitroxEntity>() && child.GetComponent<BaseDeconstructable>() && !child.name.Contains("CorridorConnector");
+                        
+                        if (isNewBasePiece)
+                        {
+                            finishedPiece = child.gameObject;
+                            break;
+                        }
+                    }
+                }
                 Validate.NotNull(finishedPiece, $"Could not find finished piece in cell {latestCell} when constructing {constructionCompleted.PieceId}");
 
                 Log.Debug($"Construction completed on a base piece: {constructionCompleted.PieceId} {finishedPiece.name}");
