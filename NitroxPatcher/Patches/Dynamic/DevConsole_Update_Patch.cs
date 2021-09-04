@@ -11,7 +11,7 @@ namespace NitroxPatcher.Patches.Dynamic
 #if SUBNAUTICA
             DevConsole.disableConsole = NitroxConsole.DisableConsole;
 #elif BELOWZERO
-            PlatformUtils.SetDevToolsEnabled(NitroxConsole.DisableConsole);
+            PlatformUtils.SetDevToolsEnabled(!NitroxConsole.DisableConsole);
 #endif
         }
 
