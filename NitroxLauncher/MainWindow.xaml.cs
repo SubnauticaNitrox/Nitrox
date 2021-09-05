@@ -65,8 +65,8 @@ namespace NitroxLauncher
                 };
             };
 
-            logic.ServerStarted += ServerStarted;
-            logic.ServerExited += ServerExited;
+            LauncherLogic.Server.ServerStarted += ServerStarted;
+            LauncherLogic.Server.ServerExited += ServerExited;
 
             logic.SetTargetedSubnauticaPath(GameInstallationFinder.Instance.FindGame())
                 .ContinueWith(task =>
@@ -86,7 +86,7 @@ namespace NitroxLauncher
 
         private bool CanClose()
         {
-            if (logic.IsServerRunning && isServerEmbedded)
+            if (LauncherLogic.Server.IsServerRunning && isServerEmbedded)
             {
                 MessageBoxResult userAnswer = MessageBox.Show("The embedded server is still running. Click yes to close.", "Close aborted", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                 return userAnswer == MessageBoxResult.Yes;
@@ -102,6 +102,7 @@ namespace NitroxLauncher
                 e.Cancel = true;
                 return;
             }
+
             logic.Dispose();
         }
 
@@ -156,6 +157,7 @@ namespace NitroxLauncher
             {
                 return;
             }
+
             LauncherLogic.Instance.NavigateTo(elem.Tag?.GetType());
 
             if (sender is Button button)

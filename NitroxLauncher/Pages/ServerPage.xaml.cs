@@ -21,15 +21,17 @@ namespace NitroxLauncher.Pages
 
         private void OnRequestNavigate(object sender, RequestNavigateEventArgs e)
         {
-            Process.Start(e.Uri.AbsoluteUri);
-            e.Handled = true;
+            using (Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri)))
+            {
+                e.Handled = true;
+            }
         }
 
         private void StartServer_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                LauncherLogic.Instance.StartServer(RBIsExternal.IsChecked == true);
+                LauncherLogic.Server.StartServer(RBIsExternal.IsChecked == true);
             }
             catch (Exception ex)
             {

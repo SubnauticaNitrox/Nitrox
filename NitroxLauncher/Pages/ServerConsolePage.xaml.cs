@@ -66,8 +66,8 @@ namespace NitroxLauncher.Pages
         {
             InitializeComponent();
 
-            LauncherLogic.Instance.ServerStarted += ServerStarted;
-            LauncherLogic.Instance.ServerDataReceived += ServerDataReceived;
+            LauncherLogic.Server.ServerStarted += ServerStarted;
+            LauncherLogic.Server.ServerDataReceived += ServerDataReceived;
 
             Loaded += (sender, args) =>
             {
@@ -96,7 +96,7 @@ namespace NitroxLauncher.Pages
 
         private void SendCommandInputToServer()
         {
-            LauncherLogic.Instance.SendServerCommand(CommandInputText);
+            LauncherLogic.Server.SendServerCommand(CommandInputText);
             ServerOutput += CommandInputText + Environment.NewLine;
 
             // Deduplication of command history
@@ -120,7 +120,7 @@ namespace NitroxLauncher.Pages
         private void StopButton_Click(object sender, RoutedEventArgs e)
         {
             // Suggest referencing NitroxServer.ConsoleCommands.ExitCommand.name, but the class is internal
-            LauncherLogic.Instance.SendServerCommand("stop");
+            LauncherLogic.Server.SendServerCommand("stop");
             ServerOutput += $"stop{Environment.NewLine}";
 
             commandLinesHistory.Add("stop");

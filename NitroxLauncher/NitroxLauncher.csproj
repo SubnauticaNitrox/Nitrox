@@ -89,6 +89,7 @@
       <DependentUpon>UpdatePage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\Patching\NitroxEntryPatch.cs" />
+    <Compile Include="ServerLogic.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -216,12 +217,6 @@
     <Resource Include="Images\PlayGameImage.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\minimize.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\exit.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\SubnauticaMain.png" />
   </ItemGroup>
   <ItemGroup>
@@ -277,9 +272,9 @@
     <Resource Include="icon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\options.png" />
-    <Resource Include="Images\play.png" />
-    <Resource Include="Images\server.png" />
+    <Resource Include="Images\material-design-icons\options.png" />
+    <Resource Include="Images\material-design-icons\play.png" />
+    <Resource Include="Images\material-design-icons\server.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\social\discord.png" />
@@ -320,10 +315,10 @@
     <Resource Include="Images\PlayBoxImage.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\close-w-10.png" />
-    <Resource Include="Images\max-w-10.png" />
-    <Resource Include="Images\min-w-10.png" />
-    <Resource Include="Images\restore-w-10.png" />
+    <Resource Include="Images\material-design-icons\close-w-10.png" />
+    <Resource Include="Images\material-design-icons\max-w-10.png" />
+    <Resource Include="Images\material-design-icons\min-w-10.png" />
+    <Resource Include="Images\material-design-icons\restore-w-10.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\material-design-icons\blog.png" />

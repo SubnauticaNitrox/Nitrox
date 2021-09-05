@@ -13,8 +13,10 @@ namespace NitroxLauncher.Pages
 
         private void OnRequestNavigate(object sender, RequestNavigateEventArgs e)
         {
-            Process.Start(e.Uri.AbsoluteUri);
-            e.Handled = true;
+            using (Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri)))
+            {
+                e.Handled = true;
+            }
         }
     }
 }
