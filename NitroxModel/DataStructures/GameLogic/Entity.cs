@@ -84,13 +84,13 @@ namespace NitroxModel.DataStructures.GameLogic
             if (parentEntity != null)
             {
                 ParentId = parentEntity.Id;
-                Transform.SetParent(parentEntity.Transform);
+                Transform.SetParent(parentEntity.Transform, false);
             }
         }
 
-        public Entity(NitroxVector3 position, NitroxQuaternion rotation, NitroxVector3 scale, NitroxTechType techType, int level, string classId, bool spawnedByServer, NitroxId waterParkId, byte[] serializedGameObject, bool existsInGlobalRoot, NitroxId id)
+        public Entity(NitroxVector3 localPosition, NitroxQuaternion localRotation, NitroxVector3 scale, NitroxTechType techType, int level, string classId, bool spawnedByServer, NitroxId waterParkId, byte[] serializedGameObject, bool existsInGlobalRoot, NitroxId id)
         {
-            Transform = new NitroxTransform(position, rotation, scale, this);
+            Transform = new NitroxTransform(localPosition, localRotation, scale, this);
             TechType = techType;
             Id = id;
             Level = level;

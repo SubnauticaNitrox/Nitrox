@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Numerics;
 using NitroxModel.Helper;
 using ProtoBufNet;
 
@@ -6,7 +7,7 @@ namespace NitroxModel.DataStructures.GameLogic
 {
     [ProtoContract]
     [Serializable]
-    public struct NitroxVector3
+    public struct NitroxVector3 : IEquatable<NitroxVector3>
     {
         [ProtoMember(1)]
         public float X;
@@ -28,14 +29,27 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public static NitroxVector3 One => new(1, 1, 1);
 
-        public bool Equals(NitroxVector3 other)
-        {
-            return X.Equals(other.X) && Y.Equals(other.Y) && Z.Equals(other.Z);
-        }
+
+        public static bool operator ==(NitroxVector3 left, NitroxVector3 right) => left.Equals(right);
+
+        public static bool operator !=(NitroxVector3 left, NitroxVector3 right) => !left.Equals(right);
 
         public override bool Equals(object obj)
         {
             return obj is NitroxVector3 other && Equals(other);
+        }
+
+        public bool Equals(NitroxVector3 other)
+        {
+            return Equals(other, float.Epsilon);
+        }
+
+        public bool Equals(NitroxVector3 other, float tolerance)
+        {
+            return X == other.X && Y == other.Y && Z == other.Z ||
+                   Math.Abs(other.X - X) < tolerance &&
+                   Math.Abs(other.Y - Y) < tolerance &&
+                   Math.Abs(other.Z - Z) < tolerance;
         }
 
         public override int GetHashCode()
@@ -65,9 +79,7 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public static NitroxVector3 operator -(NitroxVector3 a)
         {
-            return new(-a.X,
-                       -a.Y,
-                       -a.Z);
+            return new(-a.X, -a.Y, -a.Z);
         }
 
         public static NitroxVector3 operator /(NitroxVector3 lhs, float rhs)
@@ -80,15 +92,8 @@ namespace NitroxModel.DataStructures.GameLogic
             return new(lhs.X * rhs, lhs.Y * rhs, lhs.Z * rhs);
         }
 
-        public static bool operator ==(NitroxVector3 lhs, NitroxVector3 rhs)
-        {
-            return lhs.X == rhs.X && lhs.Y == rhs.Y && lhs.Z == rhs.Z;
-        }
-
-        public static bool operator !=(NitroxVector3 lhs, NitroxVector3 rhs)
-        {
-            return !(lhs == rhs);
-        }
+        public static explicit operator Vector3(NitroxVector3 v) => new Vector3(v.X, v.Y,v.Z);
+        public static explicit operator NitroxVector3(Vector3 v) => new NitroxVector3(v.X, v.Y,v.Z);
 
         public static NitroxVector3 Normalize(NitroxVector3 value)
         {
