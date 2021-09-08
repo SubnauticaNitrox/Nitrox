@@ -93,6 +93,10 @@ namespace NitroxModel.DataStructures.Util
             return HasValue ? Value : elseValue;
         }
 
+        public Optional<T> OrElse(Func<T> elseValue) => HasValue ? Value : elseValue();
+
+        public T OrNull() => HasValue ? Value : null;
+
         internal static Optional<T> Of(T value)
         {
             if (value == null)

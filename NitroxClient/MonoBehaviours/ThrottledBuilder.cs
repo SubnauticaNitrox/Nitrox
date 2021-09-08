@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Reflection;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Bases;
@@ -95,32 +96,30 @@ namespace NitroxClient.MonoBehaviours
             using (packetSender.Suppress<DeconstructionCompleted>())
             using (packetSender.Suppress<BasePieceMetadataChanged>())
             {
-                if (buildEvent is BasePiecePlacedEvent)
+                switch (buildEvent)
                 {
-                    PlaceBasePiece((BasePiecePlacedEvent)buildEvent);
-                }
-                else if (buildEvent is ConstructionCompletedEvent)
-                {
-                    ConstructionCompleted((ConstructionCompletedEvent)buildEvent);
-                }
-                else if (buildEvent is ConstructionAmountChangedEvent)
-                {
-                    ConstructionAmountChanged((ConstructionAmountChangedEvent)buildEvent);
-                }
-                else if (buildEvent is DeconstructionBeginEvent)
-                {
-                    DeconstructionBegin((DeconstructionBeginEvent)buildEvent);
-                }
-                else if (buildEvent is DeconstructionCompletedEvent)
-                {
-                    DeconstructionCompleted((DeconstructionCompletedEvent)buildEvent);
+                    case BasePiecePlacedEvent @event:
+                        PlaceBasePiece(@event);
+                        break;
+                    case ConstructionCompletedEvent completedEvent:
+                        ConstructionCompleted(completedEvent);
+                        break;
+                    case ConstructionAmountChangedEvent changedEvent:
+                        ConstructionAmountChanged(changedEvent);
+                        break;
+                    case DeconstructionBeginEvent beginEvent:
+                        DeconstructionBegin(beginEvent);
+                        break;
+                    case DeconstructionCompletedEvent deconstructionCompletedEvent:
+                        DeconstructionCompleted(deconstructionCompletedEvent);
+                        break;
                 }
             }
         }
 
         private void PlaceBasePiece(BasePiecePlacedEvent basePiecePlacedBuildEvent)
         {
-            Log.Debug($"BuildBasePiece - {basePiecePlacedBuildEvent.BasePiece.Id} type: {basePiecePlacedBuildEvent.BasePiece.TechType} parentId: {basePiecePlacedBuildEvent.BasePiece.ParentId.OrElse(null)}");
+            Log.Debug($"BuildBasePiece - {basePiecePlacedBuildEvent.BasePiece} type: {basePiecePlacedBuildEvent.BasePiece.TechType} parentId: {basePiecePlacedBuildEvent.BasePiece.ParentId.OrNull()}");
 
             BasePiece basePiece = basePiecePlacedBuildEvent.BasePiece;
             GameObject buildPrefab = CraftData.GetBuildPrefab(basePiece.TechType.ToUnity());
@@ -138,7 +137,7 @@ namespace NitroxClient.MonoBehaviours
 
             if (basePiece.ParentId.HasValue)
             {
-                parentBase = NitroxEntity.GetObjectFrom(basePiece.ParentId.Value).OrElse(null);
+                parentBase = NitroxEntity.GetObjectFrom(basePiece.ParentId.Value).OrNull();
             }
 
             Constructable constructable;
@@ -182,68 +181,70 @@ namespace NitroxClient.MonoBehaviours
             {
                 Int3 latestCell = default(Int3);
                 Base latestBase = null;
+                Base.Face lastFace = default(Base.Face);
 
-                // must fetch BEFORE setState or else the BaseGhost gets destroyed
-                BaseGhost baseGhost = constructing.GetComponentInChildren<BaseGhost>();
-
-                if (baseGhost)
+                // must fetch BEFORE setState as the BaseGhost gets destroyed
+                BaseGhost baseGhost = constructableBase.model?.GetComponent<BaseGhost>();
+                if (baseGhost != null)
                 {
-                    latestCell = baseGhost.TargetOffset;
                     latestBase = baseGhost.TargetBase;
+                    latestCell = latestBase?.AliveOrNull()?.WorldToGrid(baseGhost.transform.position) ?? latestCell;
+
+                    lastFace = baseGhost switch
+                    {
+                        BaseAddFaceGhost { anchoredFace: { } } baseAddFaceGhost => baseAddFaceGhost.anchoredFace.Value,
+                        BaseAddModuleGhost { anchoredFace: { } } baseAddModuleGhost => baseAddModuleGhost.anchoredFace.Value,
+                        _ => lastFace,
+                    };
                 }
 
-                constructableBase.constructedAmount = 1f;
                 constructableBase.SetState(true, true);
 
                 if (!latestBase)
                 {
                     Optional<object> opConstructedBase = TransientLocalObjectManager.Get(TransientObjectType.BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT);
-                    latestBase = ((GameObject)opConstructedBase.Value).GetComponent<Base>();
+                    if (opConstructedBase.HasValue)
+                    {
+                        latestBase = ((GameObject)opConstructedBase.Value).GetComponent<Base>();
+                    }
+
                     Validate.NotNull(latestBase, "latestBase can not be null");
+                    latestCell = latestBase.WorldToGrid(constructing.transform.position);
                 }
 
-                Transform cellTransform = latestBase.GetCellObject(latestCell);
-
-                if (latestCell == default(Int3) || !cellTransform)
-                {
-                    latestBase.GetClosestCell(constructing.gameObject.transform.position, out latestCell, out _, out _);
-                    cellTransform = latestBase.GetCellObject(latestCell);
-
-                    Validate.NotNull(cellTransform, $"Must have a cell transform, one not found near {constructing.gameObject.transform.position} for latestCell {latestCell}");
-                }
-
+                Transform cellTransform;
                 GameObject finishedPiece = null;
 
-                // There can be multiple objects in a cell (such as a corridor with hatches built into it)
-                // we look for a object that is able to be deconstructed that hasn't been tagged yet.
-                foreach (Transform child in cellTransform)
+                // This is the way the game uses find the final object if the built part is an internal face part like a window, reinforcement, bio-reactor, etc.
+                if (lastFace != default(Base.Face))
                 {
-                    bool isNewBasePiece = !child.GetComponent<NitroxEntity>() && child.GetComponent<BaseDeconstructable>() && !child.name.Contains("CorridorConnector");
-                    if (isNewBasePiece)
-                    {
-                        finishedPiece = child.gameObject;
-                        break;
-                    }
+                    cellTransform = latestBase.GetCellObject(lastFace.cell);
+                    Validate.NotNull(cellTransform, "Unable to find cell transform at " + lastFace.cell);
+
+                    Log.Debug($"Looking for {constructing.name} in cell {lastFace.cell}");
+                    finishedPiece = FindFinishedPiece(cellTransform);
                 }
 
-                // This is a backup way to find the cell and final object if the TargetOffset fails.
-                if (finishedPiece == null)
+                if (!finishedPiece)
                 {
-                    latestBase.GetClosestCell(constructing.gameObject.transform.position, out latestCell, out _, out _);
-                    cellTransform = latestBase.GetCellObject(latestCell);
-                    Validate.NotNull(cellTransform, $"Must have a cell transform, one not found near {constructing.gameObject.transform.position} for latestCell {latestCell}");
-                    
-                    // There can be multiple objects in a cell (such as a corridor with hatches built into it)
-                    // we look for a object that is able to be deconstructed that hasn't been tagged yet.
-                    foreach (Transform child in cellTransform)
+                    if (latestCell != default(Int3))
                     {
-                        bool isNewBasePiece = !child.GetComponent<NitroxEntity>() && child.GetComponent<BaseDeconstructable>() && !child.name.Contains("CorridorConnector");
-                        
-                        if (isNewBasePiece)
-                        {
-                            finishedPiece = child.gameObject;
-                            break;
-                        }
+                        cellTransform = latestBase.GetCellObject(latestCell);
+                        Log.Debug($"Looking for {constructing.name} in cell {latestCell}");
+                        finishedPiece = FindFinishedPiece(cellTransform);
+                    }
+
+                    // This check ensures that the latestCell actually leads us to the correct entity.  The lastTargetBaseOffset is unreliable as the base shape
+                    // can change which makes the target offset change. It may be possible to fully deprecate lastTargetBaseOffset and only rely on GetClosestCell; 
+                    // however, there may still be pieces were the ghost base's target offset is authoratitive due to incorrect game object positioning.
+                    if (!finishedPiece)
+                    {
+                        latestCell = latestBase.WorldToGrid(constructing.transform.position);
+                        cellTransform = latestBase.GetCellObject(latestCell);
+
+                        Validate.NotNull(cellTransform, $"Must have a cell transform, one not found near {constructing.gameObject.transform.position} for latestCell {latestCell}");
+                        Log.Debug($"Looking for {constructing.name} in cell {latestCell}");
+                        finishedPiece = FindFinishedPiece(cellTransform);
                     }
                 }
                 Validate.NotNull(finishedPiece, $"Could not find finished piece in cell {latestCell} when constructing {constructionCompleted.PieceId}");
@@ -274,6 +275,23 @@ namespace NitroxClient.MonoBehaviours
                 Log.Debug($"Creating base: {constructionCompleted.BaseId}");
                 ConfigureNewlyConstructedBase(constructionCompleted.BaseId);
             }
+        }
+        
+        // There can be multiple objects in a cell (such as a corridor with hatches built into it)
+        // we look for a object that is able to be deconstructed that hasn't been tagged yet.
+        private static GameObject FindFinishedPiece(Transform cellTransform)
+        {
+            foreach (Transform child in cellTransform)
+            {
+                bool isNewBasePiece = !child.TryGetComponent(out NitroxEntity entity) && child.GetComponent<BaseDeconstructable>() && !child.name.Contains("CorridorConnector");
+                
+                if (isNewBasePiece)
+                {
+                    return child.gameObject;
+                }
+            }
+
+            return null;
         }
 
         private void ConfigureNewlyConstructedBase(NitroxId newBaseId)
