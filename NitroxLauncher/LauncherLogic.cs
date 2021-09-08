@@ -1,10 +1,8 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -19,33 +17,21 @@ using NitroxModel.Logger;
 
 namespace NitroxLauncher
 {
-    public class LauncherLogic : IDisposable, INotifyPropertyChanged
+    internal class LauncherLogic : IDisposable
     {
         public static string Version => Assembly.GetAssembly(typeof(Extensions)).GetName().Version.ToString();
-
         public static LauncherLogic Instance { get; private set; }
-        public static ServerLogic Server {  get; private set; }
+        public static LauncherConfig Config { get; private set; }
+        public static ServerLogic Server { get; private set; }
 
         public const string RELEASE_PHASE = "ALPHA";
 
         private NitroxEntryPatch nitroxEntryPatch;
-
         private Process gameProcess;
-
-        private string subnauticaPath;
-        public string SubnauticaPath
-        {
-            get => subnauticaPath;
-            private set
-            {
-                value = Path.GetFullPath(value); // Ensures the path looks alright (no mixed / and \ path separators)
-                subnauticaPath = value;
-                OnPropertyChanged();
-            }
-        }
 
         public LauncherLogic()
         {
+            Config = new LauncherConfig();
             Server = new ServerLogic();
             Instance = this;
         }
@@ -57,7 +43,7 @@ namespace NitroxLauncher
             try
             {
                 nitroxEntryPatch.Remove();
-                QModHelper.RestoreQModEntryPoint(subnauticaPath);
+                //QModHelper.RestoreQModEntryPoint(subnauticaPath);
             }
             catch (Exception ex)
             {
@@ -91,12 +77,12 @@ namespace NitroxLauncher
 
         public async Task<string> SetTargetedSubnauticaPath(string path)
         {
-            if (SubnauticaPath == path || !Directory.Exists(path))
+            if (Config.SubnauticaPath == path || !Directory.Exists(path))
             {
                 return null;
             }
 
-            SubnauticaPath = path;
+            Config.SubnauticaPath = path;
 
             return await Task.Factory.StartNew(() =>
             {
@@ -122,7 +108,7 @@ namespace NitroxLauncher
         {
             if (page != null && (page.IsSubclassOf(typeof(Page)) || page == typeof(Page)))
             {
-                if (Server.IsServerRunning && Server.IsEmbedded && page == typeof(ServerPage))
+                if (Server.IsManagedByLauncher && page == typeof(ServerPage))
                 {
                     page = typeof(ServerConsolePage);
                 }
@@ -147,17 +133,17 @@ namespace NitroxLauncher
             }
 #endif
             nitroxEntryPatch.Remove();
-            QModHelper.RestoreQModEntryPoint(subnauticaPath);
             gameProcess = StartSubnautica() ?? await WaitForProcessAsync();
         }
 
         internal async Task StartMultiplayerAsync()
         {
-            if (string.IsNullOrWhiteSpace(subnauticaPath) || !Directory.Exists(subnauticaPath))
+            if (string.IsNullOrWhiteSpace(Config.SubnauticaPath) || !Directory.Exists(Config.SubnauticaPath))
             {
                 NavigateTo<OptionPage>();
                 throw new Exception("Location of Subnautica is unknown. Set the path to it in settings.");
             }
+
 #if RELEASE
             if (Process.GetProcessesByName("Subnautica").Length > 0)
             {
@@ -173,30 +159,36 @@ namespace NitroxLauncher
             string bootloaderName = "Nitrox.Bootloader.dll";
             try
             {
-                File.Copy(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "lib", bootloaderName), Path.Combine(subnauticaPath, "Subnautica_Data", "Managed", bootloaderName), true);
+                File.Copy(
+                    Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "lib", bootloaderName),
+                    Path.Combine(Config.SubnauticaPath, "Subnautica_Data", "Managed", bootloaderName),
+                    true
+                );
             }
             catch (IOException ex)
             {
                 Log.Error(ex, "Unable to move bootloader dll to Managed folder. Still attempting to launch because it might exist from previous runs.");
             }
 
-            nitroxEntryPatch.Remove(); // Remove any previous instances first.
+            // Remove any previous instances first
+            nitroxEntryPatch.Remove();
             nitroxEntryPatch.Apply();
-            QModHelper.RemoveQModEntryPoint(subnauticaPath);
 
             gameProcess = StartSubnautica() ?? await WaitForProcessAsync();
         }
 
         private Process StartSubnautica()
         {
+            string subnauticaPath = Config.SubnauticaPath;
             string subnauticaExe = Path.Combine(subnauticaPath, "Subnautica.exe");
+
             ProcessStartInfo startInfo = new()
             {
                 WorkingDirectory = subnauticaPath,
                 FileName = subnauticaExe
             };
 
-            switch (PlatformDetection.GetPlatform(SubnauticaPath))
+            switch (Config.SubnauticaPlatform)
             {
                 case Platform.EPIC:
                     startInfo.Arguments = "-EpicPortal -vrmode none";
@@ -224,7 +216,6 @@ namespace NitroxLauncher
             {
                 nitroxEntryPatch.Remove();
                 Log.Info("Finished removing patches!");
-                QModHelper.RestoreQModEntryPoint(subnauticaPath);
             }
             catch (Exception ex)
             {
@@ -272,13 +263,6 @@ namespace NitroxLauncher
                 proc.Exited += OnSubnauticaExited;
                 return proc;
             }, TaskContinuationOptions.OnlyOnRanToCompletion);
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

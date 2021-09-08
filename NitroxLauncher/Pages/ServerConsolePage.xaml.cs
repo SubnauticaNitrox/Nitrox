@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.CompilerServices;
+using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using NitroxLauncher.Models;
@@ -11,19 +10,19 @@ using NitroxLauncher.Models.Events;
 
 namespace NitroxLauncher.Pages
 {
-    public partial class ServerConsolePage : PageBase, INotifyPropertyChanged
+    public partial class ServerConsolePage : PageBase
     {
         private readonly List<string> commandLinesHistory = new();
-        private string serverOutput = string.Empty;
+        private readonly StringBuilder serverOutput = new("");
         private string commandInputText;
         private int commandHistoryIndex;
 
         public string ServerOutput
         {
-            get => serverOutput;
+            get => serverOutput.ToString();
             set
             {
-                serverOutput = value;
+                serverOutput.AppendLine(value);
                 OnPropertyChanged();
                 Dispatcher?.BeginInvoke(new Action(() => ConsoleWindowScrollView.ScrollToEnd()));
             }
@@ -75,13 +74,6 @@ namespace NitroxLauncher.Pages
             };
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
         private void ServerStarted(object sender, ServerStartEventArgs e)
         {
             ServerOutput = string.Empty;
@@ -91,19 +83,20 @@ namespace NitroxLauncher.Pages
         {
             // TODO: Change to virtualized textboxes per line.
             // This sucks for performance reasons. Every string concat in .NET will create a NEW string in memory.
-            ServerOutput += e.Data + Environment.NewLine;
+            ServerOutput = e.Data;
         }
 
         private void SendCommandInputToServer()
         {
+            ServerOutput = CommandInputText;
             LauncherLogic.Server.SendServerCommand(CommandInputText);
-            ServerOutput += CommandInputText + Environment.NewLine;
 
             // Deduplication of command history
             if (!string.IsNullOrWhiteSpace(CommandInputText) && CommandInputText != commandLinesHistory.LastOrDefault())
             {
                 commandLinesHistory.Add(CommandInputText);
             }
+
             HideCommandHistory();
         }
 
@@ -121,8 +114,6 @@ namespace NitroxLauncher.Pages
         {
             // Suggest referencing NitroxServer.ConsoleCommands.ExitCommand.name, but the class is internal
             LauncherLogic.Server.SendServerCommand("stop");
-            ServerOutput += $"stop{Environment.NewLine}";
-
             commandLinesHistory.Add("stop");
             HideCommandHistory();
         }
@@ -136,15 +127,19 @@ namespace NitroxLauncher.Pages
                 case Key.Enter:
                     SendCommandInputToServer();
                     break;
+
                 case Key.Escape:
                     HideCommandHistory();
                     break;
+
                 case Key.Up:
                     CommandHistoryIndex--;
                     break;
+
                 case Key.Down:
                     CommandHistoryIndex++;
                     break;
+
                 default:
                     e.Handled = false;
                     break;

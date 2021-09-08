@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel;
 using System.IO;
-using System.Runtime.CompilerServices;
 using System.Windows;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using NitroxLauncher.Models;
@@ -8,20 +7,13 @@ using NitroxModel.Discovery;
 
 namespace NitroxLauncher.Pages
 {
-    public partial class OptionPage : PageBase, INotifyPropertyChanged
+    public partial class OptionPage : PageBase
     {
-        public string PathToSubnautica => LauncherLogic.Instance.SubnauticaPath;
+        public string PathToSubnautica => LauncherLogic.Config.SubnauticaPath;
 
         public OptionPage()
         {
             InitializeComponent();
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         private async void ChangeOptions_Click(object sender, RoutedEventArgs e)
@@ -58,19 +50,19 @@ namespace NitroxLauncher.Pages
 
         private void OptionPage_OnLoaded(object sender, RoutedEventArgs e)
         {
-            LauncherLogic.Instance.PropertyChanged += OnLogicPropertyChanged;
+            LauncherLogic.Config.PropertyChanged += OnLogicPropertyChanged;
             OnPropertyChanged(nameof(PathToSubnautica));
         }
 
         private void OptionPage_OnUnloaded(object sender, RoutedEventArgs e)
         {
-            LauncherLogic.Instance.PropertyChanged -= OnLogicPropertyChanged;
+            LauncherLogic.Config.PropertyChanged -= OnLogicPropertyChanged;
         }
 
         private void OnLogicPropertyChanged(object sender, PropertyChangedEventArgs args)
         {
             // Pass-through property change events.
-            if (args.PropertyName == nameof(LauncherLogic.Instance.SubnauticaPath))
+            if (args.PropertyName == nameof(LauncherLogic.Config.SubnauticaPath))
             {
                 OnPropertyChanged(nameof(PathToSubnautica));
             }

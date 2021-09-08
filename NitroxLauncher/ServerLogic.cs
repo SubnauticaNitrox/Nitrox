@@ -3,11 +3,15 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using NitroxLauncher.Models.Events;
+using NitroxModel.Logger;
 
 namespace NitroxLauncher
 {
-    public sealed class ServerLogic : IDisposable
+    internal sealed class ServerLogic : IDisposable
     {
+        public const string SERVER_EXECUTABLE = "NitroxServer-Subnautica.exe";
+
+        public bool IsManagedByLauncher => IsEmbedded && IsServerRunning;
         public bool IsServerRunning => !serverProcess?.HasExited ?? false;
         public bool IsEmbedded { get; private set; }
 
@@ -17,11 +21,9 @@ namespace NitroxLauncher
 
         private Process serverProcess;
 
-        private bool isEmbedded;
-
         public void Dispose()
         {
-            if (isEmbedded)
+            if (IsEmbedded)
             {
                 SendServerCommand("stop\n");
             }
@@ -38,7 +40,7 @@ namespace NitroxLauncher
             }
 
             string launcherDir = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-            string serverPath = Path.Combine(launcherDir, "NitroxServer-Subnautica.exe");
+            string serverPath = Path.Combine(launcherDir, SERVER_EXECUTABLE);
             ProcessStartInfo startInfo = new(serverPath);
             startInfo.WorkingDirectory = launcherDir;
 
@@ -64,6 +66,7 @@ namespace NitroxLauncher
                 serverProcess.Exited += (sender, args) => OnEndServer();
                 OnStartServer(!standalone);
             }
+
             return serverProcess;
         }
 
@@ -78,21 +81,21 @@ namespace NitroxLauncher
             {
                 serverProcess.StandardInput.WriteLine(inputText);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // Ignore errors while writing to process
+                Log.Error(ex);
             }
         }
 
         private void OnEndServer()
         {
+            IsEmbedded = false;
             ServerExited?.Invoke(serverProcess, new EventArgs());
-            isEmbedded = false;
         }
 
         private void OnStartServer(bool embedded)
         {
-            isEmbedded = embedded;
+            IsEmbedded = embedded;
             ServerStarted?.Invoke(serverProcess, new ServerStartEventArgs(embedded));
         }
 

@@ -5,9 +5,12 @@
                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                 xmlns:local="clr-namespace:NitroxLauncher.Models"
+                xmlns:converters="clr-namespace:NitroxLauncher.Models.Converters"
                 DataContext="{Binding RelativeSource={RelativeSource Self}}"
                 mc:Ignorable="d" d:DesignWidth="766"
-                Title="Launch Game" Height="1020">
+                Title="Launch Game" Height="1020"
+                Loaded="Page_OnLoaded"
+                Unloaded="Page_OnUnloaded">
 
     <local:PageBase.Resources>
         <BitmapImage x:Key="PlayGameImage" UriSource="pack://application:,,,/Images/PlayGameImage.png" />
@@ -56,9 +59,15 @@
                         <TextBlock Foreground="#7FFFFFFF" Text="PLAY NITROX" FontSize="10" FontWeight="Bold" />
                         <TextBlock x:Name="NitroxVersionLabel" Foreground="White" FontSize="10" Text="{Binding Version, Mode=OneTime}" />
                     </StackPanel>
+                    
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right">
-                        <!-- TODO Swap icon logic depending on which store version is selected -->
-                        <Image Source="{DynamicResource StoreSteam}" HorizontalAlignment="Right" VerticalAlignment="Top" Height="20" />
+                        <Image Source="{Binding GamePlateform, Converter={converters:PlatformToIconConverter}, Mode=OneWay}"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Top">
+                            <Image.ToolTip>
+                                <ToolTip Content="{Binding PlatformToolTip, Mode=OneWay}" />
+                            </Image.ToolTip>
+                        </Image>
                     </StackPanel>
                 </Grid>
 
