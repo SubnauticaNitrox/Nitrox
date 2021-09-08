@@ -325,29 +325,12 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             Validate.NotNull(rocketBase, "Need to locate base to create prototype color selector.");
 
             colorPickerPanelPrototype = rocketBase.RequireGameObject("Base/BuildTerminal/GUIScreen/CustomizeScreen/Panel/");
-
-            rightSideMainMenu = MainMenuRightSide.main;
-
-                joinServerMenu = CloneSaveGameMenuPrototype();
-
-                joinServerMenu.transform.SetParent(rightSideMainMenu.transform, false);
-                rightSideMainMenu.groups.Add(joinServerMenu.GetComponent<MainMenuGroup>());
-
-                //Not sure what is up with this menu, but we have to use the RectTransform of the Image component as the parent for our color picker panel.
-                //Most of the UI elements seem to vanish behind this Image otherwise.
-                joinServerBackground = joinServerMenu.GetComponent<Image>().rectTransform;
-                joinServerBackground.anchorMin = new Vector2(0.5f, 0.5f);
-                joinServerBackground.anchorMax = new Vector2(0.5f, 0.5f);
-                joinServerBackground.pivot = new Vector2(0.5f, 0.5f);
-                joinServerBackground.anchoredPosition = new Vector2(joinServerBackground.anchoredPosition.x, 5f);
-
-                InitializePlayerSettingsPanel();
 #elif BELOWZERO
             AddressablesUtility.LoadAsync<GameObject>("Assets/Prefabs/Base/GeneratorPieces/BaseMoonpoolUpgradeConsole.prefab").Completed += (x) =>
             {
                 GameObject gameObject = x.Result;
                 colorPickerPanelPrototype = gameObject.RequireGameObject("EditScreen/Active");
-
+#endif
                 rightSideMainMenu = MainMenuRightSide.main;
 
                 joinServerMenu = CloneSaveGameMenuPrototype();
@@ -364,6 +347,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 joinServerBackground.anchoredPosition = new Vector2(joinServerBackground.anchoredPosition.x, 5f);
 
                 InitializePlayerSettingsPanel();
+#if BELOWZERO
             };
 #endif
         }
@@ -453,13 +437,11 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             GameObject stripe1Tab = playerSettingsPanel.RequireGameObject("Stripe1Tab");
 #if SUBNAUTICA
             GameObject stripe2Tab = playerSettingsPanel.RequireGameObject("Stripe2Tab");
+            GameObject frontOverlay = playerSettingsPanel.RequireGameObject("FrontOverlay");
 #elif BELOWZERO
             GameObject interiorTab = playerSettingsPanel.RequireGameObject("InteriorTab");
 #endif
             GameObject nameTab = playerSettingsPanel.RequireGameObject("NameTab");
-#if SUBNAUTICA
-            GameObject frontOverlay = playerSettingsPanel.RequireGameObject("FrontOverlay");
-#endif
             GameObject colorLabel = playerSettingsPanel.RequireGameObject("Color Label");
 
             //Enables pointer events that are a required for the uGUI_ColorPicker to work.
@@ -476,18 +458,16 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             Destroy(stripe1Tab);
 #if SUBNAUTICA
             Destroy(stripe2Tab);
+            //We can't just destroy the game object for some reason. The image still hangs around.
+            //Destruction of the actual overlay game object is done for good measure.
+            Destroy(frontOverlay.GetComponent<Image>());
+            Destroy(frontOverlay);
 #elif BELOWZERO
             Destroy(interiorTab);
 #endif
             Destroy(nameTab);
             Destroy(colorLabel);
             Destroy(serverNameLabel);
-#if SUBNAUTICA
-            //We can't just destroy the game object for some reason. The image still hangs around.
-            //Destruction of the actual overlay game object is done for good measure.
-            Destroy(frontOverlay.GetComponent<Image>());
-            Destroy(frontOverlay);
-#endif
         }
 
         //This panel acts as the parent of all other UI elements on the menu. It is parented by the cloned "SaveGame" menu.
