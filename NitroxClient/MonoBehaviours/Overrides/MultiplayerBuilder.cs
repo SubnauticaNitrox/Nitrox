@@ -386,6 +386,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
             MultiplayerBuilder.ghostModel = null;
             MultiplayerBuilder.prefab = null;
             MultiplayerBuilder.canPlace = false;
+            MultiplayerBuilder.rotationMetadata = Optional.Empty;
 
             return componentInParent;
         }
@@ -441,6 +442,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
             MultiplayerBuilder.ghostModel = null;
             MultiplayerBuilder.prefab = null;
             MultiplayerBuilder.canPlace = false;
+            MultiplayerBuilder.rotationMetadata = Optional.Empty;
 
             return gameObject;
         }

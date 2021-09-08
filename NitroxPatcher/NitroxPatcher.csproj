@@ -27,6 +27,8 @@
     <Compile Include="Patches\Dynamic\ArmsController_Start_Patch.cs" />
     <Compile Include="Patches\Dynamic\ArmsController_Update_Patch.cs" />
     <Compile Include="Patches\Dynamic\Base_ClearGeometry_Patch.cs" />
+    <Compile Include="Patches\Dynamic\Base_GetAdjacentFace_Patch.cs" />
+    <Compile Include="Patches\Dynamic\Base_PickFace_Patch.cs" />
     <Compile Include="Patches\Dynamic\Base_CopyFrom_Patch.cs" />
     <Compile Include="Patches\Dynamic\Base_SpawnPiece_Patch.cs" />
     <Compile Include="Patches\Dynamic\BaseAddBulkheadGhost_UpdatePlacement_Patch.cs" />
