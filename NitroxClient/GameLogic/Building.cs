@@ -137,7 +137,7 @@ namespace NitroxClient.GameLogic
 
             NitroxId id = NitroxEntity.GetId(ghost);
 
-            Log.Info($"Construction complete on {id} {ghost.name}");
+            Log.Debug($"Construction complete on {id} {ghost.name}");
 
             if (opConstructedBase.HasValue)
             {
@@ -199,7 +199,7 @@ namespace NitroxClient.GameLogic
                 
                 Validate.NotNull(finishedPiece, $"Could not find finished piece in cell {latestCell}");
 
-                Log.Info($"Setting id to finished piece: {finishedPiece.name} {id}");
+                Log.Debug($"Setting id to finished piece: {finishedPiece.name} {id}");
 
                 Object.Destroy(ghost);
                 NitroxEntity.SetNewId(finishedPiece, id);
@@ -215,7 +215,7 @@ namespace NitroxClient.GameLogic
                 Log.Error($"Found ghost which is neither base piece nor a constructable: {ghost.name}");
             }
 
-            Log.Info($"Construction Completed {id} in base {baseId}");
+            Log.Debug($"Construction Completed {id} in base {baseId}");
 
             ConstructionCompleted constructionCompleted = new ConstructionCompleted(id, baseId);
             packetSender.Send(constructionCompleted);

@@ -1,9 +1,6 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using HarmonyLib;
-using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.Overrides;
-using NitroxModel.Logger;
 using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation;
 using NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation.Metadata;
@@ -22,18 +19,11 @@ namespace NitroxPatcher.Patches.Dynamic
                 {
                     case AnchoredFaceRotationMetadata anchoredFaceRotationMetadata:
                         __result = new Base.Face(anchoredFaceRotationMetadata.Cell.ToUnity(), (Base.Direction)anchoredFaceRotationMetadata.Direction);
-                        Log.Info($"Base.PickFace: {face.cell} {face.direction}");
                         return false;
                     case BaseModuleRotationMetadata baseModuleRotationMetadata:
                         __result = new Base.Face(baseModuleRotationMetadata.Cell.ToUnity(), (Base.Direction)baseModuleRotationMetadata.Direction);
-                        Log.Info($"Base.PickFace: {face.cell} {face.direction}");
                         return false;
                 }
-                Log.Info($"rotationMetadata type not found.");
-            }
-            else
-            {
-                Log.Info($"rotationMetadata no value");
             }
             
             return true;
