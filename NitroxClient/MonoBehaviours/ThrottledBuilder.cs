@@ -230,8 +230,11 @@ namespace NitroxClient.MonoBehaviours
                     if (latestCell != default(Int3))
                     {
                         cellTransform = latestBase.GetCellObject(latestCell);
-                        Log.Debug($"Looking for {constructing.name} in cell {latestCell}");
-                        finishedPiece = FindFinishedPiece(cellTransform);
+                        if (cellTransform != null)
+                        {
+                            Log.Debug($"Looking for {constructing.name} in cell {latestCell}");
+                            finishedPiece = FindFinishedPiece(cellTransform);
+                        }
                     }
 
                     // This check ensures that the latestCell actually leads us to the correct entity.  The lastTargetBaseOffset is unreliable as the base shape
