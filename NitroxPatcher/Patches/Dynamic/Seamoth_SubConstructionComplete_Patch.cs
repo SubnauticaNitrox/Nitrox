@@ -7,6 +7,7 @@ using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel_Subnautica.DataStructures.GameLogic;
 using UnityEngine;
@@ -32,8 +33,8 @@ namespace NitroxPatcher.Patches.Dynamic
             }
 
             // Set lights of seamoth            
-            ToggleLights toggleLights = gameObject.RequireComponentInChildren<ToggleLights>();
-            toggleLights.lightsActive = model.Value.LightOn;
+            Validate.NotNull(__instance.toggleLights, $"toggleLights is Null on {__instance.gameObject.name} {__instance.transform.position}");
+            __instance.toggleLights.SetLightsActive(model.Value.LightOn);
             return model.Value.LightOn;
         }
 
