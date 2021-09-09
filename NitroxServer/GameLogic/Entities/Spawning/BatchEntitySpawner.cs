@@ -372,6 +372,8 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                     IonCrystal.Transform.Parent.Entity.ChildEntities.Remove(IonCrystal);
                     IonCrystal.ParentId = prefabEntity.Id;
                     IonCrystal.Transform.SetParent(prefabEntity.Transform);
+                    IonCrystal.Transform.LocalPosition = NitroxVector3.Zero;
+                    IonCrystal.Transform.Rotation = NitroxQuaternion.Identity;
                     prefabEntity.ChildEntities.Add(IonCrystal);
 
                     IonCrystal = null;
