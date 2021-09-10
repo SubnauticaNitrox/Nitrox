@@ -285,18 +285,19 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             }
             return entities;
         }
-        private Entity IonCrystal = null;
 
         private void CreatePrefabPlaceholdersWithChildren(Entity entity, string classId, DeterministicBatchGenerator deterministicBatchGenerator)
         {
 
             // Check to see if this entity is a PrefabPlaceholderGroup.  If it is, 
             // we want to add the children that would be spawned here.  This is 
-            // surpressed on the client so we don't get virtual entities that the
+            // suppressed on the client so we don't get virtual entities that the
             // server doesn't know about.
             if (prefabPlaceholderGroupsbyClassId.TryGetValue(classId, out PrefabPlaceholdersGroupAsset group))
             {
-                foreach (PrefabAsset prefab in group.SpawnablePrefabs)
+                List<PrefabAsset> spawnablePrefabs = new List<PrefabAsset>(group.SpawnablePrefabs);
+                entity.ChildEntities.AddRange(ConvertComponentPrefabsToEntities(group.ExistingPrefabs, entity, ref deterministicBatchGenerator, ref spawnablePrefabs));
+                foreach (PrefabAsset prefab in spawnablePrefabs)
                 {
                     TransformAsset transform = prefab.TransformAsset;
 
@@ -319,10 +320,6 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                                                      deterministicBatchGenerator.NextId(),
                                                      null,
                                                      entity);
-                    if (prefabEntity.TechType.ToString() == "PrecursorIonCrystal")
-                    {
-                        IonCrystal = prefabEntity;
-                    }
 
                     if (prefab.EntitySlot.HasValue)
                     {
@@ -336,15 +333,13 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                     CreatePrefabPlaceholdersWithChildren(prefabEntity, prefabEntity.ClassId, deterministicBatchGenerator);
                     entity.ChildEntities.Add(prefabEntity);
                 }
-
-                entity.ChildEntities.AddRange(ConvertComponentPrefabsToEntities(group.ExistingPrefabs, entity, deterministicBatchGenerator));
             }
         }
 
         // Entities that have been spawned by a parent prefab (child game objects baked into the prefab).
         // created separately as we don't actually want to spawn these but instead just update the id.
         // will refactor this piece a bit later to split these into a new data structure.
-        private List<Entity> ConvertComponentPrefabsToEntities(List<PrefabAsset> prefabs, Entity parent, DeterministicBatchGenerator deterministicBatchGenerator)
+        private List<Entity> ConvertComponentPrefabsToEntities(List<PrefabAsset> prefabs, Entity parent, ref DeterministicBatchGenerator deterministicBatchGenerator, ref List<PrefabAsset> spawnablePrefabs)
         {
             List<Entity> entities = new List<Entity>();
 
@@ -365,20 +360,52 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                              counter++,
                              parent);
 
-                prefabEntity.ChildEntities = ConvertComponentPrefabsToEntities(prefab.Children, prefabEntity, deterministicBatchGenerator);
-
-                if (IonCrystal != null && IonCrystal.ParentId == parent.Id && prefab.Name == "precursor_block_maze_04_04_04_v4")
+                if (prefab.Name.Contains("(Placeholder)"))
                 {
-                    IonCrystal.Transform.Parent.Entity.ChildEntities.Remove(IonCrystal);
-                    IonCrystal.ParentId = prefabEntity.Id;
-                    IonCrystal.Transform.SetParent(prefabEntity.Transform);
-                    IonCrystal.Transform.LocalPosition = NitroxVector3.Zero;
-                    IonCrystal.Transform.Rotation = NitroxQuaternion.Identity;
-                    prefabEntity.ChildEntities.Add(IonCrystal);
+                    PrefabAsset spawnablePrefab = spawnablePrefabs.Find((x) => x.TransformAsset == transform);
+                    if (spawnablePrefab != null)
+                    {
+                        Optional<UweWorldEntity> opWorldEntity = worldEntityFactory.From(spawnablePrefab.ClassId);
 
-                    IonCrystal = null;
+                        if (!opWorldEntity.HasValue)
+                        {
+                            Log.Debug("Unexpected Empty WorldEntity! " + spawnablePrefab.ClassId);
+                            continue;
+                        }
+
+                        UweWorldEntity worldEntity = opWorldEntity.Value;
+                        Entity spawnableprefabEntity = new Entity(transform.LocalPosition,
+                                                                  transform.LocalRotation,
+                                                                  transform.LocalScale,
+                                                                  worldEntity.TechType,
+                                                                  worldEntity.CellLevel,
+                                                                  spawnablePrefab.ClassId,
+                                                                  true,
+                                                                  deterministicBatchGenerator.NextId(),
+                                                                  null,
+                                                                  parent);
+                        
+                        Log.Debug($"Name: {spawnablePrefab.Name}, TechType: {worldEntity.TechType}, ParentPosition: {parent.Transform.Position}, LocalPosition: {transform.LocalPosition}");
+                        if (spawnablePrefab.EntitySlot.HasValue)
+                        {
+                            Entity possibleEntity = SpawnEntitySlotEntities(spawnablePrefab.EntitySlot.Value, transform, deterministicBatchGenerator, parent);
+                            if (possibleEntity != null)
+                            {
+                                parent.ChildEntities.Add(possibleEntity);
+                            }
+                        }
+
+                        CreatePrefabPlaceholdersWithChildren(spawnableprefabEntity, spawnableprefabEntity.ClassId, deterministicBatchGenerator);
+                        parent.ChildEntities.Add(spawnableprefabEntity);
+                        spawnablePrefabs.Remove(spawnablePrefab);
+                    }
+                    else
+                    {
+                        Log.Error($"Unable to find matching spawnable prefab for Placeholder {prefab.Name}");
+                    }
                 }
-
+                
+                prefabEntity.ChildEntities = ConvertComponentPrefabsToEntities(prefab.Children, prefabEntity, ref deterministicBatchGenerator, ref spawnablePrefabs);
                 entities.Add(prefabEntity);
             }
 
