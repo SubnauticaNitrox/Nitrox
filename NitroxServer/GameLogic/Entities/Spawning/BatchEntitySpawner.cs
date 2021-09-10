@@ -305,7 +305,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
 
                     if (!opWorldEntity.HasValue)
                     {
-                        Log.Debug("Unexpected Empty WorldEntity! " + prefab.ClassId);
+                        Log.Debug($"Unexpected Empty WorldEntity! {prefab.Name}-{prefab.ClassId}");
                         continue;
                     }
 
@@ -371,7 +371,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
 
                         if (!opWorldEntity.HasValue)
                         {
-                            Log.Debug("Unexpected Empty WorldEntity! " + spawnablePrefab.ClassId);
+                            Log.Debug($"Unexpected Empty WorldEntity! {spawnablePrefab.Name}-{spawnablePrefab.ClassId}");
                             continue;
                         }
 
