@@ -10,7 +10,7 @@ using FileAttributes = System.IO.FileAttributes;
 
 namespace NitroxLauncher.Models.Patching
 {
-    internal class NitroxEntryPatch
+    internal sealed class NitroxEntryPatch
     {
         public const string GAME_ASSEMBLY_NAME = "Assembly-CSharp.dll";
         public const string NITROX_ASSEMBLY_NAME = "Nitrox.Bootloader.dll";
@@ -89,7 +89,7 @@ namespace NitroxLauncher.Models.Patching
             }
             return lastException;
         }
-        
+
         public void Remove()
         {
             string assemblyCSharp = Path.Combine(subnauticaManagedPath, GAME_ASSEMBLY_NAME);
@@ -113,7 +113,7 @@ namespace NitroxLauncher.Models.Patching
 
                 File.SetAttributes(assemblyCSharp, FileAttributes.Normal);
             }
-            
+
             FileSystem.Instance.ReplaceFile(modifiedAssemblyCSharp, assemblyCSharp);
         }
 

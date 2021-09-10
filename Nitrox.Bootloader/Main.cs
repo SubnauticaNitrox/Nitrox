@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -8,7 +7,7 @@ namespace Nitrox.Bootloader
 {
     public static class Main
     {
-        private static readonly Lazy<string> nitroxLauncherDir = new Lazy<string>(() =>
+        private static readonly Lazy<string> nitroxLauncherDir = new(() =>
         {
             // Get path from command args.
             string[] args = Environment.GetCommandLineArgs();
@@ -26,6 +25,7 @@ namespace Nitrox.Bootloader
             {
                 return null;
             }
+
             string nitroxLauncherPathFile = Path.Combine(nitroxAppData, "launcherpath.txt");
             if (!File.Exists(nitroxLauncherPathFile))
             {
