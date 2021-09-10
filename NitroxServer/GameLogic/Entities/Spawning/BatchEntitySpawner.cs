@@ -385,7 +385,6 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                                                                   null,
                                                                   parent);
                         
-                        Log.Debug($"Name: {spawnablePrefab.Name}, TechType: {worldEntity.TechType}, ParentPosition: {parent.Transform.Position}, LocalPosition: {transform.LocalPosition}");
                         if (spawnablePrefab.EntitySlot.HasValue)
                         {
                             Entity possibleEntity = SpawnEntitySlotEntities(spawnablePrefab.EntitySlot.Value, transform, deterministicBatchGenerator, parent);
@@ -396,7 +395,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                         }
 
                         CreatePrefabPlaceholdersWithChildren(spawnableprefabEntity, spawnableprefabEntity.ClassId, deterministicBatchGenerator);
-                        parent.ChildEntities.Add(spawnableprefabEntity);
+                        entities.Add(spawnableprefabEntity);
                         spawnablePrefabs.Remove(spawnablePrefab);
                     }
                     else
