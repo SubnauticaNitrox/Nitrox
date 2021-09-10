@@ -360,8 +360,10 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                              counter++,
                              parent);
 
+                // Checkes if the current object being setup is a Placeholder object.
                 if (prefab.Name.Contains("(Placeholder)"))
                 {
+                    // Finds the matching prefab that the placeholder is supposed to spawn.
                     PrefabAsset spawnablePrefab = spawnablePrefabs.Find((x) => x.TransformAsset == transform);
                     if (spawnablePrefab != null)
                     {
@@ -394,8 +396,13 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                             }
                         }
 
+                        // Setup any children this object may have attached to it.
                         CreatePrefabPlaceholdersWithChildren(spawnableprefabEntity, spawnableprefabEntity.ClassId, deterministicBatchGenerator);
+
+                        // Add the object to the child list that that is being returned by this method.
                         entities.Add(spawnableprefabEntity);
+
+                        // remove prefab from placeholder list so it is not duplicated later by mistake.
                         spawnablePrefabs.Remove(spawnablePrefab);
                     }
                     else
