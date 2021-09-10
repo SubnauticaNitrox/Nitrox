@@ -296,7 +296,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             if (prefabPlaceholderGroupsbyClassId.TryGetValue(classId, out PrefabPlaceholdersGroupAsset group))
             {
                 List<PrefabAsset> spawnablePrefabs = new List<PrefabAsset>(group.SpawnablePrefabs);
-                entity.ChildEntities.AddRange(ConvertComponentPrefabsToEntities(group.ExistingPrefabs, entity, ref deterministicBatchGenerator, ref spawnablePrefabs));
+                entity.ChildEntities.AddRange(ConvertComponentPrefabsToEntities(group.ExistingPrefabs, entity, deterministicBatchGenerator, ref spawnablePrefabs));
                 foreach (PrefabAsset prefab in spawnablePrefabs)
                 {
                     TransformAsset transform = prefab.TransformAsset;
@@ -339,7 +339,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
         // Entities that have been spawned by a parent prefab (child game objects baked into the prefab).
         // created separately as we don't actually want to spawn these but instead just update the id.
         // will refactor this piece a bit later to split these into a new data structure.
-        private List<Entity> ConvertComponentPrefabsToEntities(List<PrefabAsset> prefabs, Entity parent, ref DeterministicBatchGenerator deterministicBatchGenerator, ref List<PrefabAsset> spawnablePrefabs)
+        private List<Entity> ConvertComponentPrefabsToEntities(List<PrefabAsset> prefabs, Entity parent, DeterministicBatchGenerator deterministicBatchGenerator, ref List<PrefabAsset> spawnablePrefabs)
         {
             List<Entity> entities = new List<Entity>();
 
@@ -404,7 +404,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                     }
                 }
                 
-                prefabEntity.ChildEntities = ConvertComponentPrefabsToEntities(prefab.Children, prefabEntity, ref deterministicBatchGenerator, ref spawnablePrefabs);
+                prefabEntity.ChildEntities = ConvertComponentPrefabsToEntities(prefab.Children, prefabEntity, deterministicBatchGenerator, ref spawnablePrefabs);
                 entities.Add(prefabEntity);
             }
 
