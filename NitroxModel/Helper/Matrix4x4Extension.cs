@@ -1,4 +1,4 @@
-using System.Numerics;
+﻿using System.Numerics;
 using NitroxModel.DataStructures.Unity;
 
 namespace NitroxModel.Helper
@@ -10,7 +10,7 @@ namespace NitroxModel.Helper
             Matrix4x4 translationMatrix = Matrix4x4.CreateTranslation(localPosition.X, localPosition.Y, localPosition.Z);
             Matrix4x4 rotationMatrix = Matrix4x4.CreateFromQuaternion((Quaternion)localRotation);
             Matrix4x4 scaleMatrix = Matrix4x4.CreateScale(localScale.X, localScale.Y, localScale.Z);
-            return rotationMatrix * scaleMatrix * translationMatrix;
+            return scaleMatrix *rotationMatrix *  translationMatrix;
         }
 
         public static Matrix4x4 Invert(this Matrix4x4 m)
