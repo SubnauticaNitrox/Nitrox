@@ -37,6 +37,7 @@ namespace NitroxModel.DataStructures.Unity
 
         public static NitroxQuaternion FromEuler(float x, float y, float z) => (NitroxQuaternion)Quaternion.CreateFromYawPitchRoll(y * Mathf.DEG2RAD, x * Mathf.DEG2RAD, z * Mathf.DEG2RAD);
 
+        //Used https://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToEuler/
         public NitroxVector3 ToEuler()
         {
             float sqw = W * W;
