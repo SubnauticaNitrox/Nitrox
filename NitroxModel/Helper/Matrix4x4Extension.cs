@@ -1,5 +1,5 @@
-﻿using System.Numerics;
-using NitroxModel.DataStructures.GameLogic;
+using System.Numerics;
+using NitroxModel.DataStructures.Unity;
 
 namespace NitroxModel.Helper
 {

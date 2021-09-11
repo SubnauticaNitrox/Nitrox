@@ -1,5 +1,5 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Unity;
 using NitroxModel.Packets;
 using UnityEngine;
 

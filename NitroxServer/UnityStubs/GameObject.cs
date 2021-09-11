@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Unity;
 using NitroxServer.Serialization;
 
 namespace NitroxServer.UnityStubs

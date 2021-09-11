@@ -3,7 +3,7 @@ using System.Globalization;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Properties;
 using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Unity;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 

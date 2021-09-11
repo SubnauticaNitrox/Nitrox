@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
+using NitroxModel.DataStructures.Unity;
 using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic

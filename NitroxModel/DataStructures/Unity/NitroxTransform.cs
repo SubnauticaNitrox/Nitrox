@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Numerics;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
 using ProtoBufNet;
 
-namespace NitroxModel.DataStructures.GameLogic
+namespace NitroxModel.DataStructures.Unity
 {
     [ProtoContract]
     [Serializable]

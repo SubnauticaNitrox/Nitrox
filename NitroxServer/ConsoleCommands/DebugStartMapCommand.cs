@@ -1,6 +1,7 @@
 ﻿#if DEBUG
 using System.Collections.Generic;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Unity;
 using NitroxModel.Packets;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.GameLogic;
