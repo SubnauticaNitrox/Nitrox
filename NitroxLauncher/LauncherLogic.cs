@@ -43,7 +43,6 @@ namespace NitroxLauncher
             try
             {
                 nitroxEntryPatch.Remove();
-                //QModHelper.RestoreQModEntryPoint(subnauticaPath);
             }
             catch (Exception ex)
             {
@@ -57,9 +56,9 @@ namespace NitroxLauncher
         [Conditional("RELEASE")]
         public async void CheckNitroxVersion()
         {
-            await Task.Factory.StartNew(() =>
+            await Task.Factory.StartNew(async () =>
             {
-                Version latestVersion = WebHelper.GetNitroxLatestVersion();
+                Version latestVersion = await Downloader.GetNitroxLatestVersion();
                 Version currentVersion = new(Version);
 
                 if (latestVersion > currentVersion)

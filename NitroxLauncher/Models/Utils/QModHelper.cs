@@ -5,10 +5,11 @@ using NitroxModel.OS;
 
 namespace NitroxLauncher.Models.Utils
 {
-    public static class QModHelper
+    internal static class QModHelper
     {
         private const string RENAMED_FILE_NAME = "winhttp_nitrox_stopped.dll";
         private const string ORIGINAL_FILE_NAME = "winhttp.dll";
+        private const string QMOD_FOLDER = "QMods";
         private static bool qModPatched;
 
         public static void RemoveQModEntryPoint(string subnauticaBasePath)
@@ -17,6 +18,7 @@ namespace NitroxLauncher.Models.Utils
             {
                 return;
             }
+
             Log.Info("Attempting to remove QMod initialisation");
             RenameFile(subnauticaBasePath, ORIGINAL_FILE_NAME, RENAMED_FILE_NAME);
         }
@@ -27,6 +29,7 @@ namespace NitroxLauncher.Models.Utils
             {
                 return;
             }
+
             Log.Info("Attempting to restore QMod initialisation");
             RenameFile(subnauticaBasePath, RENAMED_FILE_NAME, ORIGINAL_FILE_NAME);
         }
@@ -55,7 +58,7 @@ namespace NitroxLauncher.Models.Utils
 
         private static bool IsQModInstalled(string subnauticaBasePath)
         {
-            string subnauticaQModsPath = Path.Combine(subnauticaBasePath, "QMods");
+            string subnauticaQModsPath = Path.Combine(subnauticaBasePath, QMOD_FOLDER);
             return Directory.Exists(subnauticaQModsPath);
         }
     }

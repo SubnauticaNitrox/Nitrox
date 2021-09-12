@@ -60,6 +60,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Downloader.cs" />
     <Compile Include="LauncherConfig.cs" />
     <Compile Include="Models\Converters\PlatformToIconConverter.cs" />
     <Compile Include="Models\Properties\ButtonProperties.cs" />
@@ -302,9 +303,6 @@
   <ItemGroup>
     <PackageReference Include="dnlib">
       <Version>3.3.4</Version>
-    </PackageReference>
-    <PackageReference Include="Newtonsoft.Json">
-      <Version>13.0.1</Version>
     </PackageReference>
     <PackageReference Include="WindowsAPICodePack-Core">
       <Version>1.1.2</Version>
