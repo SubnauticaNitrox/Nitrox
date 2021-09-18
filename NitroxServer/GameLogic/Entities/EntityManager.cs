@@ -252,6 +252,8 @@ namespace NitroxServer.GameLogic.Entities
                                 }
                             }
                         }
+
+                        Log.Debug($"Loaded {spawnedEntities.Count} entities from batch ({x}, {y}, {z})");
                     }
                 }
 
