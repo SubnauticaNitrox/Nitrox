@@ -85,7 +85,6 @@ namespace NitroxServer_Subnautica
                 else if (cancellationToken.IsCancellationRequested)
                 {
                     watch.Stop();
-                    Log.Info("Server Loading canceled by user");
                 }
                 else
                 {
@@ -93,15 +92,14 @@ namespace NitroxServer_Subnautica
                     Log.Info($"Server started ({Math.Round(watch.Elapsed.TotalSeconds, 1)}s)");
                     Log.Info("To get help for commands, run help in console or /help in chatbox");
                 }
-
-                await listenForCommands;
             }
             finally
             {
                 // Allow other servers to start initializing.
                 AppMutex.Release();
             }
-
+            
+            await listenForCommands;
         }
 
         private static async Task ListenForCommandsAsync(Server server)

@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using System.Timers;
 using NitroxModel.Core;
 using NitroxModel.Logger;
 using NitroxServer.GameLogic.Entities;
@@ -25,7 +24,7 @@ namespace NitroxServer
 
         public static Server Instance { get; private set; }
 
-        public bool IsRunning { get; private set; }
+        public bool IsRunning => serverCancelSource?.IsCancellationRequested == false;
         public bool IsSaving { get; private set; }
 
         public int Port => serverConfig?.ServerPort ?? -1;
@@ -110,8 +109,6 @@ namespace NitroxServer
                 return false;
             }
 
-            IsRunning = true;
-
             try
             {
                 if (serverConfig.CreateFullEntityCache)
@@ -124,7 +121,7 @@ namespace NitroxServer
                     {
                         entityManager.LoadAllUnspawnedEntities(serverCancelSource.Token);
 
-                        Log.Info($"Saving newly cached entities.");
+                        Log.Info("Saving newly cached entities.");
                         Save();
                     }
                     Log.Info("All batches have now been loaded.");
@@ -132,7 +129,7 @@ namespace NitroxServer
             }
             catch (OperationCanceledException ex)
             {
-                Log.Warn($"Server start was cancelled by user:{Environment.NewLine}${ex.Message}");
+                Log.Warn($"Server start was cancelled by user:{Environment.NewLine}{ex.Message}");
                 return false;
             }
 
@@ -158,11 +155,6 @@ namespace NitroxServer
                 return;
             }
 
-            if (serverCancelSource.IsCancellationRequested)
-            {
-                return;
-            }
-
             serverCancelSource.Cancel();
             Log.Info("Nitrox Server Stopping...");
             DisablePeriodicSaving();
@@ -174,7 +166,6 @@ namespace NitroxServer
 
             server.Stop();
             Log.Info("Nitrox Server Stopped");
-            IsRunning = false;
         }
 
         public void StopAndWait(bool shouldSave = true)
