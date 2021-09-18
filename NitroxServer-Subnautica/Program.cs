@@ -44,6 +44,7 @@ namespace NitroxServer_Subnautica
                 Log.Info("Waiting for 30 seconds on other Nitrox servers to initialize before starting..");
             }, 30000);
             Server server;
+            Task listenForCommands;
             try
             {
                 Stopwatch watch = Stopwatch.StartNew();
@@ -74,9 +75,9 @@ namespace NitroxServer_Subnautica
                 server = NitroxServiceLocator.LocateService<Server>();
                 await WaitForAvailablePortAsync(server.Port);
                 CatchExitEvent();
-                ListenForCommandsAsync(server);
+                listenForCommands = ListenForCommandsAsync(server);
 
-                CancellationTokenSource cancellationToken = new CancellationTokenSource();
+                CancellationTokenSource cancellationToken = new();
                 if (!server.Start(cancellationToken) && !cancellationToken.IsCancellationRequested)
                 {
                     throw new Exception("Unable to start server.");
@@ -93,6 +94,7 @@ namespace NitroxServer_Subnautica
                     Log.Info("To get help for commands, run help in console or /help in chatbox");
                 }
 
+                await listenForCommands;
             }
             finally
             {
