@@ -277,11 +277,6 @@ paket-files/
 .idea/
 *.sln.iml
 
-# Sonar
-/.sonarqube
-sonar.config.bat
-*.bak
-
 # Unity3D: Generated meta files
 *.pidb.meta
 *.pdb.meta
