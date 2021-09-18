@@ -1,6 +1,7 @@
 ﻿
 using System.Collections.Generic;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Unity;
 using NitroxServer.UnityStubs;
 
 namespace NitroxServer.GameLogic.Entities.Spawning

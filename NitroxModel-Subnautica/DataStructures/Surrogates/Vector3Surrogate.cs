@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
-using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Surrogates;
+using NitroxModel.DataStructures.Unity;
 using ProtoBuf;
 using UnityEngine;
 

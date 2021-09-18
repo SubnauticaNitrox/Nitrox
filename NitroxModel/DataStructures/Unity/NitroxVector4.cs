@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NitroxModel.DataStructures.GameLogic
+namespace NitroxModel.DataStructures.Unity
 {
     public struct NitroxVector4
     {

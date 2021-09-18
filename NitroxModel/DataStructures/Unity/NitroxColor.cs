@@ -1,7 +1,7 @@
 ﻿using System;
 using ProtoBufNet;
 
-namespace NitroxModel.DataStructures.GameLogic
+namespace NitroxModel.DataStructures.Unity
 {
     [ProtoContract]
     [Serializable]

@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Unity;
 
 namespace NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers
 {
