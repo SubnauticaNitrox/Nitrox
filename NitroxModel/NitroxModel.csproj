@@ -85,6 +85,7 @@
     <Compile Include="Discovery\Models\Platform.cs" />
     <Compile Include="Discovery\PlatformDetection.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="GameInfo.cs" />
     <Compile Include="Helper\IMap.cs" />
     <Compile Include="Helper\Mathf.cs" />
     <Compile Include="Helper\Matrix4x4Extension.cs" />
