@@ -102,13 +102,15 @@ namespace NitroxServer
             IsSaving = false;
         }
 
-        public bool Start()
+        public bool Start(CancellationTokenSource cancellationToken)
         {
+            serverCancelSource = cancellationToken;
             if (!server.Start())
             {
                 return false;
             }
-            serverCancelSource = new CancellationTokenSource();
+
+            IsRunning = true;
 
             try
             {
@@ -143,7 +145,6 @@ namespace NitroxServer
 
             PauseServer();
 
-            IsRunning = true;
 #if RELEASE
             IpLogger.PrintServerIps();
 #endif
@@ -153,10 +154,16 @@ namespace NitroxServer
         public void Stop(bool shouldSave = true)
         {
             if (!IsRunning)
+            { 
+                return;
+            }
+
+            if (serverCancelSource.IsCancellationRequested)
             {
                 return;
             }
 
+            serverCancelSource.Cancel();
             Log.Info("Nitrox Server Stopping...");
             DisablePeriodicSaving();
 

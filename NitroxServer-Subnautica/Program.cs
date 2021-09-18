@@ -74,21 +74,39 @@ namespace NitroxServer_Subnautica
                 server = NitroxServiceLocator.LocateService<Server>();
                 await WaitForAvailablePortAsync(server.Port);
                 CatchExitEvent();
-                if (!server.Start())
+                ListenForCommandsAsync(server);
+
+                CancellationTokenSource cancellationToken = new CancellationTokenSource();
+                if (!server.Start(cancellationToken) && !cancellationToken.IsCancellationRequested)
                 {
                     throw new Exception("Unable to start server.");
                 }
-
-                watch.Stop();
-
-                Log.Info($"Server started ({Math.Round(watch.Elapsed.TotalSeconds, 1)}s)");
-                Log.Info("To get help for commands, run help in console or /help in chatbox");
+                else if (cancellationToken.IsCancellationRequested)
+                {
+                    watch.Stop();
+                    Log.Info("Server Loading canceled by user");
+                }
+                else
+                {
+                    watch.Stop();
+                    Log.Info($"Server started ({Math.Round(watch.Elapsed.TotalSeconds, 1)}s)");
+                    Log.Info("To get help for commands, run help in console or /help in chatbox");
+                }
 
             }
             finally
             {
                 // Allow other servers to start initializing.
                 AppMutex.Release();
+            }
+
+        }
+
+        private static async Task ListenForCommandsAsync(Server server)
+        {
+            while (!server.IsRunning)
+            {
+                await Task.Delay(100);
             }
 
             ConsoleCommandProcessor cmdProcessor = NitroxServiceLocator.LocateService<ConsoleCommandProcessor>();
