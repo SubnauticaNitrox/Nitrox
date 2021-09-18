@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
+using NitroxModel.Platforms.OS.Shared;
 
-namespace NitroxModel.OS.Unix
+namespace NitroxModel.Platforms.OS.MacOS
 {
-    public sealed class UnixFileSystem : FileSystem
+    public sealed class MacFileSystem : FileSystem
     {
         public override IEnumerable<string> GetDefaultPrograms(string file)
         {
-            yield return "xdg-open";
+            yield return "open";
         }
 
         public override bool SetFullAccessToCurrentUser(string directory)

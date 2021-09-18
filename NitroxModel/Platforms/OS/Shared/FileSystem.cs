@@ -6,11 +6,11 @@ using System.IO.Compression;
 using System.Linq;
 using System.Threading;
 using NitroxModel.Logger;
-using NitroxModel.OS.MacOS;
-using NitroxModel.OS.Unix;
-using NitroxModel.OS.Windows;
+using NitroxModel.Platforms.OS.MacOS;
+using NitroxModel.Platforms.OS.Unix;
+using NitroxModel.Platforms.OS.Windows;
 
-namespace NitroxModel.OS
+namespace NitroxModel.Platforms.OS.Shared
 {
     public abstract class FileSystem
     {

@@ -4,8 +4,10 @@ using System.IO;
 using System.Security.AccessControl;
 using System.Security.Principal;
 using Microsoft.Win32;
+using NitroxModel.Platforms.OS.Shared;
+using NitroxModel.Platforms.OS.Windows.Internal;
 
-namespace NitroxModel.OS.Windows
+namespace NitroxModel.Platforms.OS.Windows
 {
     internal class WinFileSystem : FileSystem
     {
@@ -39,7 +41,7 @@ namespace NitroxModel.OS.Windows
                 yield break;
             }
 
-            string defaultProgramOnDblClick = Native.AssocQueryString(Native.AssocStr.Executable, extension);
+            string defaultProgramOnDblClick = Win32Native.AssocQueryString(Win32Native.AssocStr.Executable, extension);
             if (!string.IsNullOrWhiteSpace(defaultProgramOnDblClick) && File.Exists(defaultProgramOnDblClick))
             {
                 yield return Path.GetFullPath(defaultProgramOnDblClick);
