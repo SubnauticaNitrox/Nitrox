@@ -213,6 +213,7 @@ namespace NitroxServer.GameLogic.Entities
             
             IMap map = NitroxServiceLocator.LocateService<IMap>();
 
+            int totalEntites = 0;
             for (int x = 0; x < map.DimensionsInBatches.X; x++)
             {
                 for (int y = 0; y < map.DimensionsInBatches.Y; y++)
@@ -220,7 +221,7 @@ namespace NitroxServer.GameLogic.Entities
                     for (int z = 0; z < map.DimensionsInBatches.Z; z++)
                     {
                         NitroxInt3 batchId = new NitroxInt3(x, y, z);
-                        List<Entity> spawnedEntities = batchEntitySpawner.LoadUnspawnedEntities(batchId);
+                        List<Entity> spawnedEntities = batchEntitySpawner.LoadUnspawnedEntities(batchId, true);
 
                         lock (entitiesById)
                         {
@@ -246,10 +247,16 @@ namespace NitroxServer.GameLogic.Entities
                                     entitiesInCell.Add(entity);
 
                                     entitiesById.Add(entity.Id, entity);
+                                    totalEntites++;
                                 }
                             }
                         }
                     }
+                }
+
+                if (totalEntites > 0)
+                {
+                    Log.Info($"Loading: {(int)((totalEntites/ 504732.0) * 100)}%");
                 }
             }
         }

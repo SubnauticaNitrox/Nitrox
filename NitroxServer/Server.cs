@@ -106,6 +106,22 @@ namespace NitroxServer
                 return false;
             }
 
+            if (serverConfig.CreateFullEntityCache)
+            {
+                Log.Info("Starting to load all batches up front.");
+                Log.Info("This can take up to several minutes and you can't join until it's completed.");
+                EntityManager entityManager = NitroxServiceLocator.LocateService<EntityManager>();
+                Log.Info($"{entityManager.GetAllEntities().Count} entities already cached");
+                if (entityManager.GetAllEntities().Count < 504732)
+                {
+                    entityManager.LoadAllUnspawnedEntities();
+
+                    Log.Info($"Saving newly cached entities.");
+                    Save();
+                }
+                Log.Info("All batches have now been loaded.");
+            }
+
             Log.Info($"Server is listening on port {Port} UDP");
             Log.Info($"Using {serverConfig.SerializerMode} as save file serializer");
             Log.InfoSensitive("Server Password: {password}", string.IsNullOrEmpty(serverConfig.ServerPassword) ? "None. Public Server." : serverConfig.ServerPassword);
@@ -119,12 +135,6 @@ namespace NitroxServer
 #if RELEASE
             IpLogger.PrintServerIps();
 #endif
-
-            if (serverConfig.CreateFullEntityCache)
-            {
-                NitroxServiceLocator.LocateService<EntityManager>().LoadAllUnspawnedEntities();
-                Save();
-            }
             return true;
         }
 
