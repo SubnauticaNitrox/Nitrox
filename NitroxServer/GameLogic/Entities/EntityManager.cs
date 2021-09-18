@@ -208,7 +208,7 @@ namespace NitroxServer.GameLogic.Entities
             }
         }
 
-        public void LoadAllUnspawnedEntities()
+        public void LoadAllUnspawnedEntities(System.Threading.CancellationToken token)
         {
             
             IMap map = NitroxServiceLocator.LocateService<IMap>();
@@ -216,6 +216,7 @@ namespace NitroxServer.GameLogic.Entities
             int totalEntites = 0;
             for (int x = 0; x < map.DimensionsInBatches.X; x++)
             {
+                token.ThrowIfCancellationRequested();
                 for (int y = 0; y < map.DimensionsInBatches.Y; y++)
                 {
                     for (int z = 0; z < map.DimensionsInBatches.Z; z++)

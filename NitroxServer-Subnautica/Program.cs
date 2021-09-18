@@ -73,6 +73,7 @@ namespace NitroxServer_Subnautica
 
                 server = NitroxServiceLocator.LocateService<Server>();
                 await WaitForAvailablePortAsync(server.Port);
+                CatchExitEvent();
                 if (!server.Start())
                 {
                     throw new Exception("Unable to start server.");
@@ -83,7 +84,6 @@ namespace NitroxServer_Subnautica
                 Log.Info($"Server started ({Math.Round(watch.Elapsed.TotalSeconds, 1)}s)");
                 Log.Info("To get help for commands, run help in console or /help in chatbox");
 
-                CatchExitEvent();
             }
             finally
             {

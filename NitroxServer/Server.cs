@@ -3,12 +3,14 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Timers;
 using NitroxModel.Core;
 using NitroxModel.Logger;
 using NitroxServer.GameLogic.Entities;
 using NitroxServer.Serialization;
 using NitroxServer.Serialization.World;
+using Timer = System.Timers.Timer;
 
 namespace NitroxServer
 {
@@ -19,6 +21,7 @@ namespace NitroxServer
         private readonly ServerConfig serverConfig;
         private readonly Timer saveTimer;
         private readonly World world;
+        private CancellationTokenSource serverCancelSource;
 
         public static Server Instance { get; private set; }
 
@@ -105,21 +108,30 @@ namespace NitroxServer
             {
                 return false;
             }
+            serverCancelSource = new CancellationTokenSource();
 
-            if (serverConfig.CreateFullEntityCache)
+            try
             {
-                Log.Info("Starting to load all batches up front.");
-                Log.Info("This can take up to several minutes and you can't join until it's completed.");
-                EntityManager entityManager = NitroxServiceLocator.LocateService<EntityManager>();
-                Log.Info($"{entityManager.GetAllEntities().Count} entities already cached");
-                if (entityManager.GetAllEntities().Count < 504732)
+                if (serverConfig.CreateFullEntityCache)
                 {
-                    entityManager.LoadAllUnspawnedEntities();
+                    Log.Info("Starting to load all batches up front.");
+                    Log.Info("This can take up to several minutes and you can't join until it's completed.");
+                    EntityManager entityManager = NitroxServiceLocator.LocateService<EntityManager>();
+                    Log.Info($"{entityManager.GetAllEntities().Count} entities already cached");
+                    if (entityManager.GetAllEntities().Count < 504732)
+                    {
+                        entityManager.LoadAllUnspawnedEntities(serverCancelSource.Token);
 
-                    Log.Info($"Saving newly cached entities.");
-                    Save();
+                        Log.Info($"Saving newly cached entities.");
+                        Save();
+                    }
+                    Log.Info("All batches have now been loaded.");
                 }
-                Log.Info("All batches have now been loaded.");
+            }
+            catch (OperationCanceledException ex)
+            {
+                Log.Warn($"Server start was cancelled by user:{Environment.NewLine}${ex.Message}");
+                return false;
             }
 
             Log.Info($"Server is listening on port {Port} UDP");
