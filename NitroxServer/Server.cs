@@ -152,7 +152,7 @@ namespace NitroxServer
         public void Stop(bool shouldSave = true)
         {
             if (!IsRunning)
-            { 
+            {
                 return;
             }
 
