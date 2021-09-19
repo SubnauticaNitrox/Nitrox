@@ -41,8 +41,8 @@ namespace NitroxServer_Subnautica
 
             AppMutex.Hold(() =>
             {
-                Log.Info("Waiting for 30 seconds on other Nitrox servers to initialize before starting..");
-            }, 30000);
+                Log.Info("Waiting on other Nitrox servers to initialize before starting..");
+            }, 120000);
             Server server;
             Task listenForCommands;
             try
