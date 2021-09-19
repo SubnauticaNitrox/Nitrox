@@ -20,6 +20,7 @@ namespace NitroxServer
         private readonly ServerConfig serverConfig;
         private readonly Timer saveTimer;
         private readonly World world;
+        private readonly EntityManager entityManager;
         private CancellationTokenSource serverCancelSource;
 
         public static Server Instance { get; private set; }
@@ -29,12 +30,13 @@ namespace NitroxServer
 
         public int Port => serverConfig?.ServerPort ?? -1;
 
-        public Server(WorldPersistence worldPersistence, World world, ServerConfig serverConfig, Communication.NitroxServer server)
+        public Server(WorldPersistence worldPersistence, World world, ServerConfig serverConfig, Communication.NitroxServer server, EntityManager entityManager)
         {
             this.worldPersistence = worldPersistence;
             this.serverConfig = serverConfig;
             this.server = server;
             this.world = world;
+            this.entityManager = entityManager;
 
             Instance = this;
 
@@ -115,7 +117,6 @@ namespace NitroxServer
                 {
                     Log.Info("Starting to load all batches up front.");
                     Log.Info("This can take up to several minutes and you can't join until it's completed.");
-                    EntityManager entityManager = NitroxServiceLocator.LocateService<EntityManager>();
                     Log.Info($"{entityManager.GetAllEntities().Count} entities already cached");
                     if (entityManager.GetAllEntities().Count < 504732)
                     {
