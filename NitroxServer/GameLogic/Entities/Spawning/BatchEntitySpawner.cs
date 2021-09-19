@@ -69,7 +69,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             batchCellsParser = new BatchCellsParser(entitySpawnPointFactory, serializer);
         }
 
-        public List<Entity> LoadUnspawnedEntities(NitroxInt3 batchId)
+        public List<Entity> LoadUnspawnedEntities(NitroxInt3 batchId, bool fullCacheCreation = false)
         {
             lock (parsedBatches)
             {
@@ -92,7 +92,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                     emptyBatches.Add(batchId);
                 }
             }
-            else
+            else if(!fullCacheCreation)
             {
                 Log.Info("Spawning " + entities.Count + " entities from " + spawnPoints.Count + " spawn points in batch " + batchId);
             }
