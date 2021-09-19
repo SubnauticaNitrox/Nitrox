@@ -361,6 +361,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                              parent);
 
                 // Checkes if the current object being setup is a Placeholder object.
+                // MrPurple6411 Verified All Placeholders use this in the name.  (verified in SN1 did not check BZ yet)
                 if (prefab.Name.Contains("(Placeholder)"))
                 {
                     // Finds the matching prefab that the placeholder is supposed to spawn.
