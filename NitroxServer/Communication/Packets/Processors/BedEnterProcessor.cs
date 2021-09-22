@@ -9,8 +9,8 @@ namespace NitroxServer.Communication.Packets.Processors
     {
         public override void Process(BedEnter packet, Player player)
         {
-            TimeKeeper timeKeeper = NitroxServiceLocator.LocateService<TimeKeeper>();
-            timeKeeper.SkipTime();
+            ScheduleKeeper scheduleKeeper = NitroxServiceLocator.LocateService<ScheduleKeeper>();
+            scheduleKeeper.ChangeTime("skip");
         }
     }
 }

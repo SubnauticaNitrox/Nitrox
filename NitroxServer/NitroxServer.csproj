@@ -63,6 +63,7 @@
     <Compile Include="Communication\Packets\Processors\EscapePodChangedPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\EscapePodRadioRepairProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\EscapePodRepairProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\ScheduleProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\FireDousedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ItemContainerAddPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ItemContainerRemovePacketProcessor.cs" />
@@ -170,6 +171,7 @@
     <Compile Include="GameLogic\Players\PlayerData.cs" />
     <Compile Include="GameLogic\SimulationOwnership.cs" />
     <Compile Include="GameLogic\StoryTimingData.cs" />
+    <Compile Include="GameLogic\ScheduleKeeper.cs" />
     <Compile Include="GameLogic\TimeKeeper.cs" />
     <Compile Include="GameLogic\Unlockables\PDAStateData.cs" />
     <Compile Include="GameLogic\Unlockables\StoryGoalData.cs" />

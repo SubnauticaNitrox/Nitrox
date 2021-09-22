@@ -24,6 +24,7 @@
     <Compile Include="Core\NitroxEnvironment.cs" />
     <Compile Include="Core\NitroxServiceLocator.cs" />
     <Compile Include="DataStructures\AtomicBool.cs" />
+    <Compile Include="DataStructures\FakeScheduledGoal.cs" />
     <Compile Include="DataStructures\GameLogic\AbsoluteEntityCell.cs" />
     <Compile Include="DataStructures\GameLogic\BasePiece.cs" />
     <Compile Include="DataStructures\GameLogic\Buildings\Metadata\BasePieceMetadata.cs" />
@@ -194,6 +195,7 @@
     <Compile Include="Packets\StorageSlotItemRemove.cs" />
     <Compile Include="Packets\StoryEventSend.cs" />
     <Compile Include="Packets\SubRootChanged.cs" />
+    <Compile Include="Packets\Schedule.cs" />
     <Compile Include="Packets\TimeChange.cs" />
     <Compile Include="Packets\ToggleLights.cs" />
     <Compile Include="Packets\VehicleChildUpdate.cs" />
@@ -246,6 +248,27 @@
     <Compile Include="Serialization\ServerList.cs" />
     <Compile Include="Server\ServerGameMode.cs" />
     <Compile Include="Server\ServerSerializerMode.cs" />
+  </ItemGroup>
+    <Folder Include="OS\MacOS\" />
+    <Folder Include="OS\Unix\" />
+  </ItemGroup>
+    <Folder Include="OS\MacOS\" />
+    <Folder Include="OS\Unix\" />
+  </ItemGroup>
+    <Folder Include="OS\MacOS\" />
+    <Folder Include="OS\Unix\" />
+  </ItemGroup>
+    <Folder Include="OS\MacOS\" />
+    <Folder Include="OS\Unix\" />
+  </ItemGroup>
+    <Folder Include="OS\MacOS\" />
+    <Folder Include="OS\Unix\" />
+  </ItemGroup>
+    <Folder Include="OS\MacOS\" />
+    <Folder Include="OS\Unix\" />
+  </ItemGroup>
+    <Folder Include="OS\MacOS\" />
+    <Folder Include="OS\Unix\" />
   </ItemGroup>
   <ItemGroup Label="NuGet Package">
     <PackageReference Include="Autofac">

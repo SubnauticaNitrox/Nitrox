@@ -18,6 +18,9 @@ namespace NitroxServer.GameLogic.Unlockables
         [JsonProperty, ProtoMember(3)]
         public ThreadSafeSet<string> GoalUnlocks { get; } = new();
 
+        [JsonProperty, ProtoMember(4)]
+        public ThreadSafeCollection<FakeScheduledGoal> ScheduledGoals { get; } = new();
+
         public bool RemovedLatestRadioMessage()
         {
             if (RadioQueue.Count <= 0)
@@ -29,9 +32,9 @@ namespace NitroxServer.GameLogic.Unlockables
             return true;
         }
 
-        public InitialStoryGoalData GetInitialStoryGoalData()
+        public InitialStoryGoalData GetInitialStoryGoalData(ScheduleKeeper scheduleKeeper)
         {
-            return new InitialStoryGoalData(new List<string>(CompletedGoals), new List<string>(RadioQueue), new List<string>(GoalUnlocks));
+            return new InitialStoryGoalData(new List<string>(CompletedGoals), new List<string>(RadioQueue), new List<string>(GoalUnlocks), scheduleKeeper.GetScheduledGoals());
         }
     }
 }

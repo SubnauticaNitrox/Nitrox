@@ -9,11 +9,13 @@ namespace NitroxServer.Communication.Packets.Processors
     {
         private readonly PlayerManager playerManager;
         private readonly StoryGoalData storyGoalData;
+        private readonly ScheduleKeeper scheduleKeeper;
 
-        public StoryEventSendProcessor(PlayerManager playerManager, StoryGoalData storyGoalData)
+        public StoryEventSendProcessor(PlayerManager playerManager, StoryGoalData storyGoalData, ScheduleKeeper scheduleKeeper)
         {
             this.playerManager = playerManager;
             this.storyGoalData = storyGoalData;
+            this.scheduleKeeper = scheduleKeeper;
         }
 
         public override void Process(StoryEventSend packet, Player player)
@@ -39,6 +41,11 @@ namespace NitroxServer.Communication.Packets.Processors
                         storyGoalData.CompletedGoals.Add(packet.Key);
                     }
                     break;
+            }
+
+            if (scheduleKeeper.ContainsScheduledGoal(packet.Key))
+            {
+                scheduleKeeper.UnScheduleGoal(packet.Key);
             }
             playerManager.SendPacketToOtherPlayers(packet, player);
         }

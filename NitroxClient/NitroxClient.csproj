@@ -127,6 +127,7 @@
     <Compile Include="Communication\Packets\Processors\StorageSlotRemoveItemProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\StoryEventHandler.cs" />
     <Compile Include="Communication\Packets\Processors\SubRootChangedProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\ScheduleProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\TimeChangeProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ToggleLightsProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleChildUpdateProcessor.cs" />

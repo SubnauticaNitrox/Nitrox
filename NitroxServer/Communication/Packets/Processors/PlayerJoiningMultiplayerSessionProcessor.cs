@@ -14,13 +14,13 @@ namespace NitroxServer.Communication.Packets.Processors
     public class PlayerJoiningMultiplayerSessionProcessor : UnauthenticatedPacketProcessor<PlayerJoiningMultiplayerSession>
     {
         private readonly PlayerManager playerManager;
-        private readonly TimeKeeper timeKeeper;
+        private readonly ScheduleKeeper scheduleKeeper;
         private readonly World world;
 
-        public PlayerJoiningMultiplayerSessionProcessor(TimeKeeper timeKeeper, PlayerManager playerManager, World world)
+        public PlayerJoiningMultiplayerSessionProcessor(ScheduleKeeper scheduleKeeper, PlayerManager playerManager, World world)
         {
+            this.scheduleKeeper = scheduleKeeper;
             this.playerManager = playerManager;
-            this.timeKeeper = timeKeeper;
             this.world = world;
         }
 
@@ -71,7 +71,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 player.UsedItems,
                 player.QuickSlotsBinding,
                 world.GameData.PDAState.GetInitialPDAData(),
-                world.GameData.StoryGoals.GetInitialStoryGoalData(),
+                world.GameData.StoryGoals.GetInitialStoryGoalData(scheduleKeeper),
                 player.Position,
                 player.SubRootId,
                 player.Stats,
@@ -82,7 +82,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 player.Permissions
             );
 
-            timeKeeper.SendCurrentTimePacket();
+            scheduleKeeper.SendCurrentTimePacket(true);
             player.SendPacket(initialPlayerSync);
         }
 

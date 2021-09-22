@@ -85,7 +85,9 @@ namespace NitroxServer.GameLogic
             {
                 return ElapsedTime;
             }
-            return stopWatch.ElapsedMilliseconds + ElapsedTime;
+            // ElapsedMilliseconds and seconds should not be added without thinking of time units
+            // It should be by dividing ElapsedMilliseconds by 1000
+            return stopWatch.ElapsedMilliseconds / 1000 + ElapsedTime;
         }
 
         public void StartWorldTime()

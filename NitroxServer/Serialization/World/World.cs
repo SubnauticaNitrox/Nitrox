@@ -11,6 +11,7 @@ namespace NitroxServer.Serialization.World
     public class World
     {
         public PlayerManager PlayerManager { get; set; }
+        public ScheduleKeeper ScheduleKeeper { get; set; }
         public TimeKeeper TimeKeeper { get; set; }
         public SimulationOwnershipData SimulationOwnershipData { get; set; }
         public EscapePodManager EscapePodManager { get; set; }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
@@ -66,6 +67,7 @@ namespace NitroxServer.Serialization.World
                     Directory.CreateDirectory(saveDir);
                 }
 
+                world.ScheduleKeeper.CleanScheduledGoals();
                 Serializer.Serialize(Path.Combine(saveDir, $"Version{FileEnding}"), new SaveFileVersion());
                 Serializer.Serialize(Path.Combine(saveDir, $"BaseData{FileEnding}"), persistedData.BaseData);
                 Serializer.Serialize(Path.Combine(saveDir, $"PlayerData{FileEnding}"), persistedData.PlayerData);
@@ -107,6 +109,7 @@ namespace NitroxServer.Serialization.World
                     throw new InvalidDataException("Save files are not valid");
                 }
 
+                persistedData.WorldData = CleanWorldData(persistedData.WorldData);
                 World world = CreateWorld(persistedData, config.GameMode);
 
                 return Optional.Of(world);
@@ -149,7 +152,7 @@ namespace NitroxServer.Serialization.World
                     {
                         PDAState = new PDAStateData(),
                         StoryGoals = new StoryGoalData(),
-                        StoryTiming = new StoryTimingData()
+                        StoryTiming = new StoryTimingData(),
                     },
                     InventoryData = InventoryData.From(new List<ItemData>(), new List<ItemData>(), new List<EquippedItemData>()),
                     VehicleData = VehicleData.From(new List<VehicleModel>()),
@@ -179,6 +182,7 @@ namespace NitroxServer.Serialization.World
             World world = new()
             {
                 TimeKeeper = new TimeKeeper { ServerStartTime = pWorldData.WorldData.ServerStartTime },
+                ScheduleKeeper = new ScheduleKeeper(pWorldData.WorldData.GameData.StoryGoals.ScheduledGoals, pWorldData.WorldData.GameData.PDAState, pWorldData.WorldData.GameData.StoryGoals),
 
                 SimulationOwnershipData = new SimulationOwnershipData(),
                 PlayerManager = new PlayerManager(pWorldData.PlayerData.GetPlayers(), config),
@@ -196,6 +200,8 @@ namespace NitroxServer.Serialization.World
 
             world.EventTriggerer = new EventTriggerer(world.PlayerManager, pWorldData.WorldData.GameData.StoryTiming.ElapsedTime, pWorldData.WorldData.GameData.StoryTiming.AuroraExplosionTime);
             world.VehicleManager = new VehicleManager(pWorldData.WorldData.VehicleData.Vehicles, world.InventoryManager);
+
+            world.ScheduleKeeper.Init(world.EventTriggerer, world.PlayerManager);
 
             world.BatchEntitySpawner = new BatchEntitySpawner(
                 NitroxServiceLocator.LocateService<EntitySpawnPointFactory>(),
@@ -257,6 +263,38 @@ namespace NitroxServer.Serialization.World
                 Serializer.Serialize(Path.Combine(saveDir, $"Version{FileEnding}"), new SaveFileVersion());
                 Log.Info($"Save file was upgraded to {NitroxEnvironment.Version}");
             }
+        }
+
+        private WorldData CleanWorldData(WorldData worldData)
+        {
+            // Log.Debug($"Cleaning world data PDAState duplicates");
+            List<NitroxTechType> cleanUnlockedTechTypes = worldData.GameData.PDAState.UnlockedTechTypes.Distinct().ToList();
+            List<NitroxTechType> cleanKnownTechTypes = worldData.GameData.PDAState.KnownTechTypes.Distinct().ToList();
+            List<string> cleanEncyclopediaEntries = worldData.GameData.PDAState.EncyclopediaEntries.Distinct().ToList();
+            List<PDALogEntry> cleanPdaLog = new List<PDALogEntry>();
+            List<string> cleanPdaLogKeys = new List<string>();
+
+            worldData.GameData.PDAState.UnlockedTechTypes.Clear();
+            worldData.GameData.PDAState.KnownTechTypes.Clear();
+            worldData.GameData.PDAState.EncyclopediaEntries.Clear();
+
+            cleanUnlockedTechTypes.ForEach(techType => worldData.GameData.PDAState.UnlockedTechTypes.Add(techType));
+            cleanKnownTechTypes.ForEach(techType => worldData.GameData.PDAState.KnownTechTypes.Add(techType));
+            cleanEncyclopediaEntries.ForEach(encyclopediaEntry => worldData.GameData.PDAState.EncyclopediaEntries.Add(encyclopediaEntry));
+
+            foreach (PDALogEntry pdaLogEntry in worldData.GameData.PDAState.PdaLog)
+            {
+                if (!cleanPdaLogKeys.Contains(pdaLogEntry.Key))
+                {
+                    cleanPdaLogKeys.Add(pdaLogEntry.Key);
+                    cleanPdaLog.Add(pdaLogEntry);
+                }
+            }
+            // Log.Debug($"Removed {worldData.GameData.PDAState.PdaLog.Count - cleanPdaLog.Count} duplicated entries in PdaLog");
+            worldData.GameData.PDAState.PdaLog.Clear();
+            cleanPdaLog.ForEach(pdaLogEntry => worldData.GameData.PDAState.PdaLog.Add(pdaLogEntry));
+            
+            return worldData;
         }
     }
 }

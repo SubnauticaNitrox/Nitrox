@@ -164,6 +164,7 @@
     <Compile Include="Patches\Dynamic\StarshipDoor_LockDoor_Patch.cs" />
     <Compile Include="Patches\Dynamic\StarshipDoor_OnDoorToggle_Patch.cs" />
     <Compile Include="Patches\Dynamic\StarshipDoor_UnlockDoor_Patch.cs" />
+    <Compile Include="Patches\Dynamic\StoryGoalScheduler_Schedule_Patch.cs" />
     <Compile Include="Patches\Dynamic\StoryGoal_Execute_Patch.cs" />
     <Compile Include="Patches\Dynamic\SubConsoleCommand_OnConsoleCommand_sub_Patch.cs" />
     <Compile Include="Patches\Dynamic\SubFire_CreateFire_Patch.cs" />

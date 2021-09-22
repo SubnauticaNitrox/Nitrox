@@ -4,6 +4,7 @@ using NitroxModel.Packets;
 
 namespace NitroxServer.GameLogic
 {
+    // Deprecated, replaced by ScheduleKeeper
     public class TimeKeeper
     {
         public readonly double SubnauticaBeginTimeOffset;
@@ -45,7 +46,7 @@ namespace NitroxServer.GameLogic
         public void SendCurrentTimePacket()
         {
             PlayerManager playerManager = NitroxServiceLocator.LocateService<PlayerManager>();
-            playerManager.SendPacketToAllPlayers(new TimeChange(CurrentTime));
+            playerManager.SendPacketToAllPlayers(new TimeChange(CurrentTime, false));
         }
 
         private double CurrentTime => SubnauticaBeginTimeOffset + (DateTime.UtcNow - ServerStartTime).TotalSeconds + correctionValue;

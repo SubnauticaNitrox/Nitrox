@@ -7,13 +7,13 @@ namespace NitroxServer.ConsoleCommands
 {
     internal class TimeCommand : Command
     {
-        private readonly TimeKeeper timeKeeper;
+        private readonly ScheduleKeeper scheduleKeeper;
 
-        public TimeCommand(TimeKeeper timeKeeper) : base("time", Perms.MODERATOR, "Changes the map time")
+        public TimeCommand(ScheduleKeeper scheduleKeeper) : base("time", Perms.MODERATOR, "Changes the map time")
         {
             AddParameter(new TypeString("day/night", false));
 
-            this.timeKeeper = timeKeeper;
+            this.scheduleKeeper = scheduleKeeper;
         }
 
         protected override void Execute(CallArgs args)
@@ -23,17 +23,17 @@ namespace NitroxServer.ConsoleCommands
             switch (time?.ToLower())
             {
                 case "day":
-                    timeKeeper.SetDay();
+                    scheduleKeeper.ChangeTime("day");
                     SendMessageToAllPlayers("Time set to day");
                     break;
 
                 case "night":
-                    timeKeeper.SetNight();
+                    scheduleKeeper.ChangeTime("night");
                     SendMessageToAllPlayers("Time set to night");
                     break;
 
                 default:
-                    timeKeeper.SkipTime();
+                    scheduleKeeper.ChangeTime("skip");
                     SendMessageToAllPlayers("Skipped time");
                     break;
             }
