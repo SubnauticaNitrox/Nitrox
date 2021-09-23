@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace NitroxModel
@@ -15,6 +16,23 @@ namespace NitroxModel
                        .GetCustomAttributes(false)
                        .OfType<TAttribute>()
                        .SingleOrDefault();
+        }
+
+        public static IEnumerable<T> TakeUntilLast<T>(this IEnumerable<T> source)
+        {
+            using IEnumerator<T> enumerator = source.GetEnumerator();
+            bool first = true;
+            
+            T prev = default;
+            while (enumerator.MoveNext())
+            {
+                if (!first)
+                {
+                    yield return prev;
+                }
+                first = false;
+                prev = enumerator.Current;
+            }
         }
     }
 }

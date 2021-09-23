@@ -45,8 +45,7 @@ namespace NitroxModel.Platforms.Store
             }));
 
             // Wait for Steam to get ready.
-            await RegistryEx.CompareAsync<int>(@"SOFTWARE\Valve\Steam\ActiveProcess",
-                                               "pid",
+            await RegistryEx.CompareAsync<int>(@"SOFTWARE\Valve\Steam\ActiveProcess\pid",
                                                v => v == steam.Id,
                                                TimeSpan.FromSeconds(45));
             return steam;
@@ -54,7 +53,7 @@ namespace NitroxModel.Platforms.Store
 
         public string GetExeFile()
         {
-            string steamPath = RegistryEx.Read<string>(@"Software\Valve\Steam", "SteamPath");
+            string steamPath = RegistryEx.Read(@"SOFTWARE\Valve\Steam\SteamPath", "");
             string exe = Path.Combine(steamPath, "steam.exe");
             return File.Exists(exe) ? Path.GetFullPath(exe) : null;
         }
