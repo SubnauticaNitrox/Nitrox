@@ -265,6 +265,9 @@ namespace NitroxServer.Serialization.World
             }
         }
 
+        /* If bad things occur, the savefile will be full of duplicated entries, in which case
+         *  we may want to bring a CleanWorldData() function. (https://github.com/SubnauticaNitrox/Nitrox/pull/1583)
+         */
         private WorldData CleanWorldData(WorldData worldData)
         {
             // Log.Debug($"Cleaning world data PDAState duplicates");

@@ -15,6 +15,7 @@ namespace NitroxPatcher.Patches.Dynamic
         public static readonly Type TARGET_CLASS = typeof(StoryGoalScheduler);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("Schedule", BindingFlags.Public | BindingFlags.Instance);
         private static Dictionary<string, PDALog.Entry> entries = (Dictionary<string, PDALog.Entry>)(typeof(PDALog).GetField("entries", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null));
+        private static readonly IPacketSender iPacketSender = NitroxServiceLocator.LocateService<IPacketSender>();
 
         // __state is a bool made to prevent duplicated entries
         // if it's false, then it should be skipped
@@ -25,7 +26,7 @@ namespace NitroxPatcher.Patches.Dynamic
             {
                 if (StoryGoalManager.main.pendingRadioMessages.Contains(goal.key))
                 {
-                    skip = false;
+                    skip = true;
                 }
             }
             // Log.Debug($"Prefix({goal.key}) [skip={skip}]");
@@ -49,8 +50,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 return;
             }
             // Log.Debug($"StoryGoalScheduler.Schedule({scheduledGoal.goalKey};{scheduledGoal.goalType};{scheduledGoal.timeExecute})");
-            Schedule packet = new Schedule(scheduledGoal.timeExecute, goal.key, goal.goalType.ToString());
-            NitroxServiceLocator.LocateService<IPacketSender>().Send(packet);
+            iPacketSender.Send(new Schedule(scheduledGoal.timeExecute, goal.key, goal.goalType.ToString()));
         }
 
         public override void Patch(Harmony harmony)

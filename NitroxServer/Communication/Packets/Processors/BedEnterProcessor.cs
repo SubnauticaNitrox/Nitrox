@@ -7,10 +7,16 @@ namespace NitroxServer.Communication.Packets.Processors
 {
     public class BedEnterProcessor : AuthenticatedPacketProcessor<BedEnter>
     {
+        private readonly ScheduleKeeper scheduleKeeper;
+
+        public BedEnterProcessor(ScheduleKeeper scheduleKeeper)
+        {
+            this.scheduleKeeper = scheduleKeeper;
+        }
+
         public override void Process(BedEnter packet, Player player)
         {
-            ScheduleKeeper scheduleKeeper = NitroxServiceLocator.LocateService<ScheduleKeeper>();
-            scheduleKeeper.ChangeTime("skip");
+            scheduleKeeper.ChangeTime(ScheduleKeeper.TimeModification.SKIP);
         }
     }
 }

@@ -23,17 +23,17 @@ namespace NitroxServer.ConsoleCommands
             switch (time?.ToLower())
             {
                 case "day":
-                    scheduleKeeper.ChangeTime("day");
+                    scheduleKeeper.ChangeTime(ScheduleKeeper.TimeModification.DAY);
                     SendMessageToAllPlayers("Time set to day");
                     break;
 
                 case "night":
-                    scheduleKeeper.ChangeTime("night");
+                    scheduleKeeper.ChangeTime(ScheduleKeeper.TimeModification.NIGHT);
                     SendMessageToAllPlayers("Time set to night");
                     break;
 
                 default:
-                    scheduleKeeper.ChangeTime("skip");
+                    scheduleKeeper.ChangeTime(ScheduleKeeper.TimeModification.SKIP);
                     SendMessageToAllPlayers("Skipped time");
                     break;
             }

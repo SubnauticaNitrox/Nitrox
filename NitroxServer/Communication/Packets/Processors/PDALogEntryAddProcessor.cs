@@ -23,7 +23,7 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(PDALogEntryAdd packet, Player player)
         {
-            if (!pdaState.PdaLog.Any(entry => entry.Key == packet.Key))
+            if (pdaState.PdaLog.All(entry => entry.Key != packet.Key))
             {
                 pdaState.AddPDALogEntry(new PDALogEntry(packet.Key, packet.Timestamp));
             }
