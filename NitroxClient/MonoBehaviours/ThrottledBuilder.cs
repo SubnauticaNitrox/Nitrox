@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Reflection;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.Bases.Spawning.BasePiece;
 using NitroxClient.GameLogic.Bases.Spawning.Furniture;
-using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours.Overrides;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
@@ -35,6 +33,7 @@ namespace NitroxClient.MonoBehaviours
         public event EventHandler QueueDrained;
         private BuildThrottlingQueue buildEvents;
         private IPacketSender packetSender;
+        private readonly MethodInfo constructableStartMethod = typeof(Constructable).GetMethod("Start", BindingFlags.NonPublic | BindingFlags.Instance);
 
         public void Start()
         {
@@ -56,7 +55,7 @@ namespace NitroxClient.MonoBehaviours
 
             if (queueHadItems && buildEvents.Count == 0 && QueueDrained != null)
             {
-                QueueDrained(this, new EventArgs());
+                QueueDrained(this, EventArgs.Empty);
             }
         }
 
@@ -141,34 +140,31 @@ namespace NitroxClient.MonoBehaviours
             }
 
             Constructable constructable;
-            GameObject gameObject;
+            GameObject gameObj;
 
             if (basePiece.IsFurniture)
             {
                 SubRoot subRoot = (parentBase != null) ? parentBase.GetComponent<SubRoot>() : null;
 
-                gameObject = MultiplayerBuilder.TryPlaceFurniture(subRoot);
-                constructable = gameObject.RequireComponentInParent<Constructable>();
+                gameObj = MultiplayerBuilder.TryPlaceFurniture(subRoot);
+                constructable = gameObj.RequireComponentInParent<Constructable>();
             }
             else
             {
                 constructable = MultiplayerBuilder.TryPlaceBase(parentBase);
-                gameObject = constructable.gameObject;
+                gameObj = constructable.gameObject;
             }
 
             if (parentBase != null && basePiece.IsFurniture)
             {
-                gameObject.transform.parent = parentBase.gameObject.transform;
+                gameObj.transform.parent = parentBase.gameObject.transform;
             }
 
-            NitroxEntity.SetNewId(gameObject, basePiece.Id);
+            NitroxEntity.SetNewId(gameObj, basePiece.Id);
 
-            /**
-             * Manually call start to initialize the object as we may need to interact with it within the same frame.
-             */
-            MethodInfo startCrafting = typeof(Constructable).GetMethod("Start", BindingFlags.NonPublic | BindingFlags.Instance);
-            Validate.NotNull(startCrafting);
-            startCrafting.Invoke(constructable, new object[] { });
+            // Manually call start to initialize the object as we may need to interact with it within the same frame.
+            Validate.NotNull(constructableStartMethod);
+            constructableStartMethod.Invoke(constructable, Array.Empty<object>());
         }
 
         private void ConstructionCompleted(ConstructionCompletedEvent constructionCompleted)
@@ -179,16 +175,16 @@ namespace NitroxClient.MonoBehaviours
             // Furniture just re-uses the same piece.
             if (constructing.TryGetComponent(out ConstructableBase constructableBase))
             {
-                Int3 latestCell = default(Int3);
+                Int3 latestCell = default;
                 Base latestBase = null;
-                Base.Face lastFace = default(Base.Face);
+                Base.Face lastFace = default;
 
                 // must fetch BEFORE setState as the BaseGhost gets destroyed
-                BaseGhost baseGhost = constructableBase.model?.GetComponent<BaseGhost>();
+                BaseGhost baseGhost = constructableBase.model.AliveOrNull()?.GetComponent<BaseGhost>();
                 if (baseGhost != null)
                 {
                     latestBase = baseGhost.TargetBase;
-                    latestCell = latestBase?.AliveOrNull()?.WorldToGrid(baseGhost.transform.position) ?? latestCell;
+                    latestCell = latestBase.AliveOrNull()?.WorldToGrid(baseGhost.transform.position) ?? latestCell;
 
                     lastFace = baseGhost switch
                     {
@@ -202,7 +198,7 @@ namespace NitroxClient.MonoBehaviours
 
                 if (!latestBase)
                 {
-                    Optional<object> opConstructedBase = TransientLocalObjectManager.Get(TransientObjectType.BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT);
+                    Optional<object> opConstructedBase = Get(TransientObjectType.BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT);
                     if (opConstructedBase.HasValue)
                     {
                         latestBase = ((GameObject)opConstructedBase.Value).GetComponent<Base>();
@@ -286,8 +282,7 @@ namespace NitroxClient.MonoBehaviours
         {
             foreach (Transform child in cellTransform)
             {
-                bool isNewBasePiece = !child.TryGetComponent(out NitroxEntity entity) && child.GetComponent<BaseDeconstructable>() && !child.name.Contains("CorridorConnector");
-                
+                bool isNewBasePiece = !child.TryGetComponent(out NitroxEntity _) && child.GetComponent<BaseDeconstructable>() && !child.name.Contains("CorridorConnector");
                 if (isNewBasePiece)
                 {
                     return child.gameObject;
@@ -299,7 +294,7 @@ namespace NitroxClient.MonoBehaviours
 
         private void ConfigureNewlyConstructedBase(NitroxId newBaseId)
         {
-            Optional<object> opNewlyCreatedBase = TransientLocalObjectManager.Get(TransientLocalObjectManager.TransientObjectType.BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT);
+            Optional<object> opNewlyCreatedBase = Get(TransientObjectType.BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT);
 
             if (opNewlyCreatedBase.HasValue)
             {
@@ -327,7 +322,7 @@ namespace NitroxClient.MonoBehaviours
                 baseDeconstructable.Deconstruct();
 
                 // After we have begun the deconstructing for a base piece, we need to transfer the id
-                Optional<object> opGhost = TransientLocalObjectManager.Get(TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE_GHOST);
+                Optional<object> opGhost = Get(TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE_GHOST);
 
                 if (opGhost.HasValue)
                 {
@@ -359,7 +354,7 @@ namespace NitroxClient.MonoBehaviours
         private void DeconstructionCompleted(DeconstructionCompletedEvent completed)
         {
             GameObject deconstructing = NitroxEntity.RequireObjectFrom(completed.PieceId);
-            UnityEngine.Object.Destroy(deconstructing);
+            Destroy(deconstructing);
         }
     }
 }

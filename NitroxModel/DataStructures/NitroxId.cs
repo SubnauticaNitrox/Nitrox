@@ -95,7 +95,7 @@ namespace NitroxModel.DataStructures
         {
             byte[] bytes = guid.ToByteArray();
             bool canIncrement = byteOrder.Any(i => ++bytes[i] != 0);
-            Guid nextGuid = new Guid(canIncrement ? bytes : new byte[16]);
+            Guid nextGuid = new(canIncrement ? bytes : new byte[16]);
 
             return new NitroxId(nextGuid);
         }
