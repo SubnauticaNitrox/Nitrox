@@ -181,10 +181,10 @@ namespace NitroxClient.MonoBehaviours
 
                 // must fetch BEFORE setState as the BaseGhost gets destroyed
                 BaseGhost baseGhost = constructableBase.model.AliveOrNull()?.GetComponent<BaseGhost>();
-                if (baseGhost != null)
+                if (baseGhost && baseGhost.TargetBase)
                 {
                     latestBase = baseGhost.TargetBase;
-                    latestCell = latestBase.AliveOrNull()?.WorldToGrid(baseGhost.transform.position) ?? latestCell;
+                    latestCell = latestBase.WorldToGrid(baseGhost.transform.position);
 
                     lastFace = baseGhost switch
                     {
