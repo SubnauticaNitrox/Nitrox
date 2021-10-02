@@ -17,6 +17,7 @@ using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Platforms.OS.Shared;
 using NitroxModel.Platforms.Store;
+using DiscordStore = NitroxModel.Platforms.Store.Discord; 
 using NitroxModel.Platforms.Store.Interfaces;
 
 namespace NitroxLauncher
@@ -323,6 +324,7 @@ namespace NitroxLauncher
                 Steam s => await s.StartGameAsync(subnauticaExe, GameInfo.Subnautica.SteamAppId),
                 Egs e => await e.StartGameAsync(subnauticaExe),
                 MSStore m => await m.StartGameAsync(subnauticaExe),
+                DiscordStore d => await d.StartGameAsync(subnauticaExe),
                 _ => throw new Exception($"Directory '{subnauticaPath}' is not a valid {GameInfo.Subnautica.Name} game installation or the game's platform is unsupported.")
             };
 

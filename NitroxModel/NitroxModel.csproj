@@ -79,6 +79,7 @@
     <Compile Include="Discovery\GameInstallationFinder.cs" />
     <Compile Include="Discovery\IFindGameInstallation.cs" />
     <Compile Include="Discovery\InstallationFinders\ConfigFileGameFinder.cs" />
+    <Compile Include="Discovery\InstallationFinders\DiscordGameFinder.cs" />
     <Compile Include="Discovery\InstallationFinders\EpicGamesInstallationFinder.cs" />
     <Compile Include="Discovery\InstallationFinders\GameInCurrentDirectoryFinder.cs" />
     <Compile Include="Discovery\InstallationFinders\SteamGameRegistryFinder.cs" />
@@ -247,6 +248,7 @@
     <Compile Include="Platforms\OS\Windows\Structs\StartupInfo.cs" />
     <Compile Include="Platforms\OS\Windows\Structs\ThreadAccess.cs" />
     <Compile Include="Platforms\OS\Windows\WinFileSystem.cs" />
+    <Compile Include="Platforms\Store\Discord.cs" />
     <Compile Include="Platforms\Store\Egs.cs" />
     <Compile Include="Platforms\Store\Exceptions\PlatformException.cs" />
     <Compile Include="Platforms\Store\GamePlatforms.cs" />
