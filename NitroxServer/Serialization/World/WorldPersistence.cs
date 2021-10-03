@@ -115,10 +115,11 @@ namespace NitroxServer.Serialization.World
             catch (Exception ex)
             {
                 Log.Error($"Could not load world, creating a new one : {ex.GetType()} {ex.Message}");
+                Log.Error($" {ex.StackTrace}");
 
                 //Backup world if loading fails
-                string outZip = Path.Combine(saveDir, "worldBackup.zip");
-                Log.WarnSensitive("Creating a backup at {path}", Path.GetFullPath(outZip));
+                string outZip = Path.Combine(saveDir, "worldBackup-" + DateTime.Now.ToString("ddMMMyy_HHmm") + ".zip");
+                Log.WarnSensitive("Creating a backup at {path}", Path.GetFullPath(outZip)); 
                 FileSystem.Instance.ZipFilesInDirectory(saveDir, outZip, $"*{FileEnding}", true);
             }
 
