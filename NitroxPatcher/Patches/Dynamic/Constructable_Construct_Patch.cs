@@ -22,10 +22,6 @@ namespace NitroxPatcher.Patches.Dynamic
                 NitroxServiceLocator.LocateService<Building>().ChangeConstructionAmount(__instance.gameObject, __instance.constructedAmount);
             }
 
-            // If we are constructing a base piece then we'll want to store all of the BaseGhost information
-            // as it will not be available when the construction hits 100%
-            BaseGhost baseGhost = __instance.gameObject.GetComponentInChildren<BaseGhost>();
-
             UnityEngine.GameObject gameObject;
             float dist;
 
@@ -78,6 +74,11 @@ namespace NitroxPatcher.Patches.Dynamic
                         {
                             // We're only running this code if the prc is using a builder and targetting something constructable within its build range.
                             // Feels sane -- feedback?
+
+                            // If we are constructing a base piece then we'll want to store all of the BaseGhost information
+                            // as it will not be available when the construction hits 100%
+                            BaseGhost baseGhost = __instance.gameObject.GetComponentInChildren<BaseGhost>();
+
                             if (baseGhost != null && baseGhost.TargetBase)
                             {
                                 lastTargetBase = baseGhost.TargetBase.GetComponent<Base>();
