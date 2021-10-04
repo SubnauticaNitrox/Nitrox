@@ -13,7 +13,7 @@ namespace NitroxModel.Platforms.Store
 
         public bool OwnsGame(string gameDirectory)
         {
-            bool isLocalAppData = Path.GetFullPath(gameDirectory).StartsWith(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), StringComparison.InvariantCultureIgnoreCase);
+            bool isLocalAppData = Path.GetFullPath(gameDirectory).StartsWith(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Packages"), StringComparison.InvariantCultureIgnoreCase);
             return isLocalAppData;
         }
 
