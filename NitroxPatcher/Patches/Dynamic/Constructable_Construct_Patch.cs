@@ -26,6 +26,35 @@ namespace NitroxPatcher.Patches.Dynamic
             // as it will not be available when the construction hits 100%
             BaseGhost baseGhost = __instance.gameObject.GetComponentInChildren<BaseGhost>();
 
+            UnityEngine.GameObject gameObject;
+            float dist;
+
+            Targeting.GetTarget(Player.main.gameObject, 30f, out gameObject, out dist, null);
+            if (gameObject != null)
+            {
+                Constructable constructable = gameObject.GetComponentInParent<Constructable>();
+                if (constructable != null)
+                {
+                    if (dist > constructable.placeMaxDistance)
+                    {
+                        return false;
+                    }
+
+                    if (!(GameInput.GetButtonHeld(GameInput.Button.LeftHand) | GameInput.GetButtonDown(GameInput.Button.Deconstruct) | GameInput.GetButtonHeld(GameInput.Button.Deconstruct)))
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+
             if (baseGhost != null && baseGhost.TargetBase)
             {
                 lastTargetBase = baseGhost.TargetBase.GetComponent<Base>();
