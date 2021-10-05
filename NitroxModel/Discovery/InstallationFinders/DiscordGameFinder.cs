@@ -9,7 +9,6 @@ namespace NitroxModel.Discovery.InstallationFinders
         /// <summary>
         ///     Subnautica Discord is either in appdata or in C:. So for now we just check these 2 paths until we have a better way.
         /// </summary>
-        /// <returns></returns>
         public string FindGame(IList<string> errors = null)
         {
             bool HasGameInDir(string path)
