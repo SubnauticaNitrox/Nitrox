@@ -39,7 +39,7 @@ namespace NitroxModel.Platforms.Store
             return await Task.FromResult(ProcessEx.Start(pathToGameExe,
                                                          new[] { ("NITROX_LAUNCHER_PATH", Path.GetDirectoryName(Assembly.GetEntryAssembly().Location)) },
                                                          Path.GetDirectoryName(pathToGameExe),
-                                                         "-EpicPortal -vrmode"));
+                                                         "-EpicPortal -vrmode none"));
         }
     }
 }
