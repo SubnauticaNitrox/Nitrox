@@ -32,9 +32,9 @@ namespace NitroxModel.Platforms.Store
 
         public async Task<ProcessEx> StartGameAsync(string pathToGameExe)
         {
-            return ProcessEx.Start(pathToGameExe,
+            return await Task.FromResult(ProcessEx.Start(pathToGameExe,
                                    new[] { ("NITROX_LAUNCHER_PATH", Path.GetDirectoryName(Assembly.GetEntryAssembly().Location)) },
-                                   Path.GetDirectoryName(pathToGameExe)
+                                   Path.GetDirectoryName(pathToGameExe))
             );
         }
     }

@@ -227,7 +227,6 @@
     <Compile Include="Platforms\OS\Windows\Internal\StartupInfo.cs" />
     <Compile Include="Platforms\OS\Windows\Internal\ThreadAccess.cs" />
     <Compile Include="Platforms\OS\Windows\Internal\Win32Native.cs" />
-    <Compile Include="Platforms\OS\Windows\Native.cs" />
     <Compile Include="Platforms\OS\Windows\Structs\CoffFileHeader.cs" />
     <Compile Include="Platforms\OS\Windows\Structs\ImageDosHeader.cs" />
     <Compile Include="Platforms\OS\Windows\Structs\ImageExportDirectory.cs" />
