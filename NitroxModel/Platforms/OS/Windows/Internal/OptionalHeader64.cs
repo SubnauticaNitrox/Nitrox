@@ -5,7 +5,7 @@ namespace NitroxModel.Platforms.OS.Windows.Internal
     /// <summary>
     ///     Structs from (copy paste url in browser to visit):
     ///     <a
-    ///         href="https://www.vergiliusproject.com/kernels/x64/Windows%2010%20|%202016/2009%2020H2%20(October%202020%20Update)/_IMAGE_OPTIONAL_HEADER64">
+    ///         href="https://www.vergiliusproject.com/kernels/x64/Windows 10 |%202016%2F2104 21H1 (May 2021 Update)/_IMAGE_OPTIONAL_HEADER64">
     ///         _IMAGE_OPTIONAL_HEADER64
     ///     </a>
     ///     Also see:
