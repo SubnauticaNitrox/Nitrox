@@ -16,7 +16,7 @@ namespace NitroxModel.Platforms.OS.Shared
     /// <summary>
     ///     Lower-level wrapper for an OS process than normal <see cref="Process" /> to support memory access, DLLs discovery and exported functions listing.
     ///
-    ///     TODO: Turns this class into abstract that is used by OS specific implementations. Right now it's Windows only.
+    ///     TODO: Turn this class into abstract that is used by OS specific implementations. Right now it's Windows only.
     /// </summary>
     public sealed class ProcessEx : IDisposable
     {
