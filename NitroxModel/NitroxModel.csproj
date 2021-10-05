@@ -242,7 +242,6 @@
     <Compile Include="Platforms\OS\Windows\Structs\ProcessCreationFlags.cs" />
     <Compile Include="Platforms\OS\Windows\Structs\ProcessEnvironmentBlock64.cs" />
     <Compile Include="Platforms\OS\Windows\Structs\ProcessInfo.cs" />
-    <Compile Include="Platforms\OS\Windows\Structs\RegistryEx.cs" />
     <Compile Include="Platforms\OS\Windows\Structs\SecurityAttributes.cs" />
     <Compile Include="Platforms\OS\Windows\Structs\SnapshotFlags.cs" />
     <Compile Include="Platforms\OS\Windows\Structs\StartupInfo.cs" />
