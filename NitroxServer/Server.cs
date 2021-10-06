@@ -3,10 +3,13 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Timers;
+using System.Threading;
+using NitroxModel.Core;
 using NitroxModel.Logger;
+using NitroxServer.GameLogic.Entities;
 using NitroxServer.Serialization;
 using NitroxServer.Serialization.World;
+using Timer = System.Timers.Timer;
 
 namespace NitroxServer
 {
@@ -17,20 +20,23 @@ namespace NitroxServer
         private readonly ServerConfig serverConfig;
         private readonly Timer saveTimer;
         private readonly World world;
+        private readonly EntityManager entityManager;
+        private CancellationTokenSource serverCancelSource;
 
         public static Server Instance { get; private set; }
 
-        public bool IsRunning { get; private set; }
+        public bool IsRunning => serverCancelSource?.IsCancellationRequested == false;
         public bool IsSaving { get; private set; }
 
         public int Port => serverConfig?.ServerPort ?? -1;
 
-        public Server(WorldPersistence worldPersistence, World world, ServerConfig serverConfig, Communication.NitroxServer server)
+        public Server(WorldPersistence worldPersistence, World world, ServerConfig serverConfig, Communication.NitroxServer server, EntityManager entityManager)
         {
             this.worldPersistence = worldPersistence;
             this.serverConfig = serverConfig;
             this.server = server;
             this.world = world;
+            this.entityManager = entityManager;
 
             Instance = this;
 
@@ -97,10 +103,34 @@ namespace NitroxServer
             IsSaving = false;
         }
 
-        public bool Start()
+        public bool Start(CancellationTokenSource cancellationToken)
         {
+            serverCancelSource = cancellationToken;
             if (!server.Start())
             {
+                return false;
+            }
+
+            try
+            {
+                if (serverConfig.CreateFullEntityCache)
+                {
+                    Log.Info("Starting to load all batches up front.");
+                    Log.Info("This can take up to several minutes and you can't join until it's completed.");
+                    Log.Info($"{entityManager.GetAllEntities().Count} entities already cached");
+                    if (entityManager.GetAllEntities().Count < 504732)
+                    {
+                        entityManager.LoadAllUnspawnedEntities(serverCancelSource.Token);
+
+                        Log.Info("Saving newly cached entities.");
+                        Save();
+                    }
+                    Log.Info("All batches have now been loaded.");
+                }
+            }
+            catch (OperationCanceledException ex)
+            {
+                Log.Warn($"Server start was cancelled by user:{Environment.NewLine}{ex.Message}");
                 return false;
             }
 
@@ -113,7 +143,6 @@ namespace NitroxServer
 
             PauseServer();
 
-            IsRunning = true;
 #if RELEASE
             IpLogger.PrintServerIps();
 #endif
@@ -127,6 +156,7 @@ namespace NitroxServer
                 return;
             }
 
+            serverCancelSource.Cancel();
             Log.Info("Nitrox Server Stopping...");
             DisablePeriodicSaving();
 
@@ -137,7 +167,6 @@ namespace NitroxServer
 
             server.Stop();
             Log.Info("Nitrox Server Stopped");
-            IsRunning = false;
         }
 
         public void StopAndWait(bool shouldSave = true)

@@ -53,11 +53,15 @@ namespace NitroxClient.GameLogic.Spawning
 
         private GameObject CreateGameObject(TechType techType, string classId)
         {
-            IPrefabRequest prefabRequest = PrefabDatabase.GetPrefabAsync(classId);
-            if (!prefabRequest.TryGetPrefab(out GameObject prefab))
+            GameObject prefab = null;
+            if (PrefabDatabase.TryGetPrefabFilename(classId, out string filename))
+            {
+                prefab = Resources.Load<GameObject>(filename);
+            }
+
+            if (prefab == null)
             {
                 prefab = CraftData.GetPrefabForTechType(techType, false);
-
                 if (prefab == null)
                 {
                     return Utils.CreateGenericLoot(techType);

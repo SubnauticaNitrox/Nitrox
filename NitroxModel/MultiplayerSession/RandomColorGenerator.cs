@@ -1,4 +1,4 @@
-﻿using NitroxModel.DataStructures.GameLogic;
+﻿using NitroxModel.DataStructures.Unity;
 
 namespace NitroxModel.MultiplayerSession
 {

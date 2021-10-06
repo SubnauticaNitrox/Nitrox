@@ -4,6 +4,7 @@ using System.Linq;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
+using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxServer.Serialization;
@@ -68,7 +69,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             batchCellsParser = new BatchCellsParser(entitySpawnPointFactory, serializer);
         }
 
-        public List<Entity> LoadUnspawnedEntities(NitroxInt3 batchId)
+        public List<Entity> LoadUnspawnedEntities(NitroxInt3 batchId, bool fullCacheCreation = false)
         {
             lock (parsedBatches)
             {
@@ -91,7 +92,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                     emptyBatches.Add(batchId);
                 }
             }
-            else
+            else if(!fullCacheCreation)
             {
                 Log.Info("Spawning " + entities.Count + " entities from " + spawnPoints.Count + " spawn points in batch " + batchId);
             }

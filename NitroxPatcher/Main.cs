@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using Autofac;
 using HarmonyLib;
+using HarmonyLib.Tools;
 using NitroxClient;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
@@ -149,7 +150,7 @@ namespace NitroxPatcher
             Log.Info("Patching Subnautica...");
 
             // Enabling this creates a log file on your desktop (why there?), showing the emitted IL instructions.
-            Harmony.DEBUG = false;
+            HarmonyFileLog.Enabled = false;
 
             foreach (IPersistentPatch patch in container.Resolve<IEnumerable<IPersistentPatch>>())
             {
