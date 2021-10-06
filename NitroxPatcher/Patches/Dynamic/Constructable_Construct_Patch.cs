@@ -25,6 +25,21 @@ namespace NitroxPatcher.Patches.Dynamic
             UnityEngine.GameObject gameObject;
             float dist;
 
+            // If we are constructing a base piece then we'll want to store all of the BaseGhost information
+            // as it will not be available when the construction hits 100%
+            BaseGhost baseGhost = __instance.gameObject.GetComponentInChildren<BaseGhost>();
+
+            if (baseGhost != null && baseGhost.TargetBase)
+            {
+                lastTargetBase = baseGhost.TargetBase.GetComponent<Base>();
+                lastTargetBaseOffset = baseGhost.TargetOffset;
+            }
+            else
+            {
+                lastTargetBase = null;
+                lastTargetBaseOffset = default(Int3);
+            }
+
             //   Prefix returning false skips client execution of patched routine; here
             // we're (ideally) skipping execution of Constructable class Construct
             // function any time the client running code is not the client building
@@ -67,26 +82,6 @@ namespace NitroxPatcher.Patches.Dynamic
                                 // False positive consequence; Player running code loses one inventory item of matching type, only if player building does not have required items available
                                 // False negative consequence; Player is unable to continue building until condition clears. No known -valid- conditions exist.
                                 return true;
-                            }
-                        }
-                        else
-                        {
-                            // We're only running this code if the prc is using a builder and targetting something constructable within its build range.
-                            // Feels sane -- feedback?
-
-                            // If we are constructing a base piece then we'll want to store all of the BaseGhost information
-                            // as it will not be available when the construction hits 100%
-                            BaseGhost baseGhost = __instance.gameObject.GetComponentInChildren<BaseGhost>();
-
-                            if (baseGhost != null && baseGhost.TargetBase)
-                            {
-                                lastTargetBase = baseGhost.TargetBase.GetComponent<Base>();
-                                lastTargetBaseOffset = baseGhost.TargetOffset;
-                            }
-                            else
-                            {
-                                lastTargetBase = null;
-                                lastTargetBaseOffset = default(Int3);
                             }
                         }
                     }
