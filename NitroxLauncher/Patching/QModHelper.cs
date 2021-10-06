@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-using NitroxModel.Logger;
-using NitroxModel.OS;
+﻿using System.IO;
 
 namespace NitroxLauncher.Patching
 {
