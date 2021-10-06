@@ -10,51 +10,18 @@ namespace NitroxModel.Platforms.OS.Windows.Internal
 {
     public static class RegistryEx
     {
-        private static (RegistryKey baseKey, string valueKey) GetKey(string path, bool needsWriteAccess = true)
-        {
-            if (string.IsNullOrWhiteSpace(path))
-            {
-                return (null, null);
-            }
-            path = path.Trim();
-
-            // Parse path to get the registry key instance and the name of the . 
-            string[] parts = path.Split(Path.DirectorySeparatorChar);
-            RegistryHive hive = RegistryHive.CurrentUser;
-            string regPathWithoutHiveOrKey;
-            if (path.IndexOf("Computer", StringComparison.OrdinalIgnoreCase) < 0)
-            {
-                regPathWithoutHiveOrKey = string.Join(Path.DirectorySeparatorChar.ToString(), parts.TakeUntilLast());
-            }
-            else
-            {
-                regPathWithoutHiveOrKey = string.Join(Path.DirectorySeparatorChar.ToString(), parts.Skip(2).TakeUntilLast());
-                hive = parts[1].ToLowerInvariant() switch
-                {
-                    "hkey_classes_root" => RegistryHive.ClassesRoot,
-                    "hkey_local_machine" => RegistryHive.LocalMachine,
-                    "hkey_current_user" => RegistryHive.CurrentUser,
-                    "hkey_users" => RegistryHive.Users,
-                    "hkey_current_config" => RegistryHive.CurrentConfig,
-                    _ => throw new ArgumentException($"Path must contain a valid registry hive but was given '{parts[1]}'", nameof(path))
-                };
-            }
-
-            return (RegistryKey.OpenBaseKey(hive, RegistryView.Registry64).OpenSubKey(regPathWithoutHiveOrKey, needsWriteAccess), parts[parts.Length - 1]);
-        }
-
         /// <summary>
         ///     Reads the value of the registry key or returns the default value of <see cref="T" />.
         /// </summary>
-        /// <param name="pathWithKey">
+        /// <param name="pathWithValue">
         ///     Full path to the registry key. If the registry hive is omitted then "current user" is used.
         /// </param>
         /// <param name="defaultValue">The default value if the registry key is not found or failed to convert to <see cref="T" />.</param>
         /// <typeparam name="T">Type of value to read. If the value in the registry key does not match it will try to convert.</typeparam>
         /// <returns>Value as read from registry or null if not found.</returns>
-        public static T Read<T>(string pathWithKey, T defaultValue = default)
+        public static T Read<T>(string pathWithValue, T defaultValue = default)
         {
-            (RegistryKey baseKey, string valueKey) = GetKey(pathWithKey, false);
+            (RegistryKey baseKey, string valueKey) = GetKey(pathWithValue, false);
             if (baseKey == null)
             {
                 return defaultValue;
@@ -62,7 +29,12 @@ namespace NitroxModel.Platforms.OS.Windows.Internal
 
             try
             {
-                return (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFrom(baseKey.GetValue(valueKey));
+                object value = baseKey.GetValue(valueKey);
+                if (value == null)
+                {
+                    return defaultValue;
+                }
+                return (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFrom(value);
             }
             catch (Exception)
             {
@@ -74,14 +46,51 @@ namespace NitroxModel.Platforms.OS.Windows.Internal
             }
         }
 
+        /// <summary>
+        ///     Deletes the whole subtree or value, whichever exists.
+        /// </summary>
+        /// <param name="pathWithOptionalValue">If no value name is given it will delete the key instead.</param>
+        /// <returns>True if something was deleted.</returns>
+        public static bool Delete(string pathWithOptionalValue)
+        {
+            (RegistryKey key, string valueKey) = GetKey(pathWithOptionalValue);
+            if (key == null)
+            {
+                return false;
+            }
+
+            // Try delete the key.
+            RegistryKey prev = key;
+            key = key.OpenSubKey(valueKey);
+            if (key != null)
+            {
+                key.DeleteSubKeyTree(valueKey);
+                key.Dispose();
+                prev.Dispose();
+                return true;
+            }
+            key = prev; // Restore state for next step
+            
+            // Not a key, delete the value if it exists.
+            if (key.GetValue(valueKey) != null)
+            {
+                key.DeleteValue(valueKey);
+                key.Dispose();
+                return true;
+            }
+
+            // Nothing to delete.
+            return false;
+        }
+
         public static void Write<T>(string pathWithKey, T value)
         {
             if (value == null)
             {
                 throw new ArgumentNullException(nameof(value));
             }
-            (RegistryKey baseKey, string valueKey) pair = GetKey(pathWithKey, false);
-            if (pair.baseKey == null)
+            (RegistryKey baseKey, string valueKey) = GetKey(pathWithKey, true, true);
+            if (baseKey == null)
             {
                 return;
             }
@@ -99,7 +108,7 @@ namespace NitroxModel.Platforms.OS.Windows.Internal
             {
                 try
                 {
-                    kind = pair.baseKey.GetValueKind(pair.valueKey);
+                    kind = baseKey.GetValueKind(valueKey);
                 }
                 catch (Exception)
                 {
@@ -109,11 +118,11 @@ namespace NitroxModel.Platforms.OS.Windows.Internal
 
             try
             {
-                pair.baseKey.SetValue(pair.valueKey, value, kind.GetValueOrDefault(RegistryValueKind.String));
+                baseKey.SetValue(valueKey, value, kind.GetValueOrDefault(RegistryValueKind.String));
             }
             finally
             {
-                pair.baseKey.Dispose();
+                baseKey.Dispose();
             }
         }
 
@@ -170,6 +179,58 @@ namespace NitroxModel.Platforms.OS.Windows.Internal
         {
             CancellationTokenSource source = new(timeout == default ? TimeSpan.FromSeconds(10) : timeout);
             return CompareAsync(pathWithKey, predicate, source.Token);
+        }
+
+        private static (RegistryKey baseKey, string valueKey) GetKey(string path, bool needsWriteAccess = true, bool createIfNotExists = false)
+        {
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                return (null, null);
+            }
+            path = path.Trim();
+
+            // Parse path to get the registry key instance and the name of the . 
+            string[] parts = path.Split(Path.DirectorySeparatorChar);
+            string[] partsWithoutHive;
+            RegistryHive hive = RegistryHive.CurrentUser;
+            string regPathWithoutHiveOrKey;
+            if (path.IndexOf("Computer", StringComparison.OrdinalIgnoreCase) < 0)
+            {
+                partsWithoutHive = parts.TakeUntilLast().ToArray();
+                regPathWithoutHiveOrKey = string.Join(Path.DirectorySeparatorChar.ToString(), partsWithoutHive);
+            }
+            else
+            {
+                partsWithoutHive = parts.Skip(2).TakeUntilLast().ToArray();
+                regPathWithoutHiveOrKey = string.Join(Path.DirectorySeparatorChar.ToString(), partsWithoutHive);
+                hive = parts[1].ToLowerInvariant() switch
+                {
+                    "hkey_classes_root" => RegistryHive.ClassesRoot,
+                    "hkey_local_machine" => RegistryHive.LocalMachine,
+                    "hkey_current_user" => RegistryHive.CurrentUser,
+                    "hkey_users" => RegistryHive.Users,
+                    "hkey_current_config" => RegistryHive.CurrentConfig,
+                    _ => throw new ArgumentException($"Path must contain a valid registry hive but was given '{parts[1]}'", nameof(path))
+                };
+            }
+
+            RegistryKey hiveRef = RegistryKey.OpenBaseKey(hive, RegistryView.Registry64);
+            RegistryKey key = hiveRef.OpenSubKey(regPathWithoutHiveOrKey, needsWriteAccess);
+            // Should the key (and its path leading to it) be created?
+            if (key == null && createIfNotExists)
+            {
+                key = hiveRef;
+                foreach (string part in partsWithoutHive)
+                {
+                    RegistryKey prev = key;
+                    key = key?.OpenSubKey(part, needsWriteAccess) ?? key?.CreateSubKey(part, needsWriteAccess);
+
+                    // Cleanup old/parent key reference
+                    prev?.Dispose();
+                }
+            }
+
+            return (key, parts[parts.Length - 1]);
         }
     }
 }
