@@ -6,11 +6,10 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("NitroxModel-Subnautica")]
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
-// COMMON: [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("NitroxModel-Subnautica")]
+[assembly: AssemblyTitle("Shared code used by Nitrox projects that interfaces with Subnautica code")]
+[assembly: AssemblyDescription("Shared code used by Nitrox projects that interfaces with Subnautica code")]
+// COMMON: [assembly: AssemblyCompany("")]
 // COMMON: [assembly: AssemblyCopyright("")]
 // COMMON: [assembly: AssemblyTrademark("")]
 // COMMON: [assembly: AssemblyCulture("")]

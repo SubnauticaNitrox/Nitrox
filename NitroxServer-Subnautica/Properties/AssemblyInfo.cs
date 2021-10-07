@@ -6,14 +6,9 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("NitroxServer-Subnautica")]
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
-// COMMON: [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("NitroxServer-Subnautica")]
-// COMMON: [assembly: AssemblyCopyright("")]
-// COMMON: [assembly: AssemblyTrademark("")]
-// COMMON: [assembly: AssemblyCulture("")]
+[assembly: AssemblyProduct("Nitrox Server Subnautica")]
+[assembly: AssemblyTitle("Nitrox server implemenation for the game Subnautica")]
+[assembly: AssemblyDescription("Nitrox server implemenation for the game Subnautica")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
 // to COM components.  If you need to access a type in this assembly from
