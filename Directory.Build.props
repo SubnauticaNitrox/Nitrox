@@ -49,15 +49,21 @@
     </ItemGroup>
 
     <!-- Include default project references to all other "Nitrox*" projects -->
-    <ItemGroup Condition="'$(UnityModLibrary)' == 'true'">
-        <!-- Require other Nitrox projects (that need game DLLs) to wait on BuildTool. -->
-        <ProjectReference Include="$(SolutionDir)Nitrox.BuildTool\Nitrox.BuildTool.csproj">
-            <Name>Nitrox.BuildTool</Name>
-        </ProjectReference>
-        <ProjectReference Include="$(SolutionDir)NitroxModel\NitroxModel.csproj">
-            <Name>NitroxModel</Name>
-        </ProjectReference>
-    </ItemGroup>
+    <Choose>
+        <When Condition="'$(UnityModLibrary)' == 'true'">
+            <ItemGroup>
+                <!-- Require other Nitrox projects (that need game DLLs) to wait on BuildTool. -->
+                <ProjectReference Include="$(SolutionDir)Nitrox.BuildTool\Nitrox.BuildTool.csproj">
+                    <Project>{15C4C9C4-683C-4EF0-9E0F-0664A3BDA0CE}</Project>
+                    <Name>Nitrox.BuildTool</Name>
+                </ProjectReference>
+                <ProjectReference Include="$(SolutionDir)NitroxModel\NitroxModel.csproj">
+                    <Project>{B16F4DE7-21AD-4FEF-955B-0A5A365FA4E3}</Project>
+                    <Name>NitroxModel</Name>
+                </ProjectReference>
+            </ItemGroup>
+        </When>
+    </Choose>
 
     <!-- Tell developer that it needs to build the Nitrox.BuildTool to fetch the game assemblies.  -->
     <Target Name="PrepareForModding" BeforeTargets="BeforeResolveReferences" Condition="'$(UnityModLibrary)' == 'true' and !Exists('$(BuildGenDir)publicized_assemblies')">
