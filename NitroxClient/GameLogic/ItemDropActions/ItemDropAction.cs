@@ -14,8 +14,7 @@ namespace NitroxClient.GameLogic.ItemDropActions
 
         public static ItemDropAction FromTechType(TechType techType)
         {
-            ItemDropAction itemDropAction;
-            if (dropActionsByTechType.TryGetValue(techType, out itemDropAction))
+            if (dropActionsByTechType.TryGetValue(techType, out ItemDropAction itemDropAction))
             {
                 return itemDropAction;
             }

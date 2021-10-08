@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using dnlib.DotNet;
 using dnlib.DotNet.Emit;
-using NitroxModel.OS;
+using NitroxModel.Platforms.OS.Shared;
 using FileAttributes = System.IO.FileAttributes;
 
 namespace NitroxLauncher.Models.Patching
@@ -24,13 +24,14 @@ namespace NitroxLauncher.Models.Patching
 
         private const string NITROX_EXECUTE_INSTRUCTION = "System.Void Nitrox.Bootloader.Main::Execute()";
 
-        private readonly string subnauticaManagedPath;
+        private readonly Func<string> subnauticaBasePathFunc;
+        private string subnauticaManagedPath => Path.Combine(subnauticaBasePathFunc(), "Subnautica_Data", "Managed");
 
         public bool IsApplied => IsPatchApplied();
 
-        public NitroxEntryPatch(string subnauticaBasePath)
+        public NitroxEntryPatch(Func<string> subnauticaBasePathFunc)
         {
-            subnauticaManagedPath = Path.Combine(subnauticaBasePath, "Subnautica_Data", "Managed");
+            this.subnauticaBasePathFunc = subnauticaBasePathFunc;
         }
 
         public void Apply()

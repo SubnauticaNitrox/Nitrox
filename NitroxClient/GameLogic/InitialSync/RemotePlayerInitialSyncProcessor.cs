@@ -9,7 +9,6 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
-using NitroxModel_Subnautica.Helper;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.InitialSync
@@ -53,8 +52,7 @@ namespace NitroxClient.GameLogic.InitialSync
             if (subId.HasValue)
             {
                 Optional<GameObject> sub = NitroxEntity.GetObjectFrom(subId.Value);
-                SubRoot subroot = null;
-                sub.Value.TryGetComponent<SubRoot>(out subroot);
+                sub.Value.TryGetComponent<SubRoot>(out SubRoot subroot);
                 // Set the animation for the remote player to standing instead of swimming if player is not in a flooded subroot
                 // or in a waterpark                            
                 if (subroot)
@@ -84,8 +82,7 @@ namespace NitroxClient.GameLogic.InitialSync
                 }
 
                 Log.Debug($"Trying to find escape pod for {subId}.");
-                EscapePod escapePod = null;
-                sub.Value.TryGetComponent<EscapePod>(out escapePod);
+                sub.Value.TryGetComponent<EscapePod>(out EscapePod escapePod);
                 if (escapePod)
                 {
                     Log.Debug("Found escape pod for player. Will add him and update animation.");

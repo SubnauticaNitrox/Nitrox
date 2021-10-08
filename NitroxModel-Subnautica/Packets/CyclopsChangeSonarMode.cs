@@ -1,6 +1,6 @@
 ﻿using System;
-using NitroxModel.Packets;
 using NitroxModel.DataStructures;
+using NitroxModel.Packets;
 
 namespace NitroxModel_Subnautica.Packets
 {
@@ -9,7 +9,7 @@ namespace NitroxModel_Subnautica.Packets
     {
         public NitroxId Id { get; }
         public bool IsOn { get; }
-        
+
         public CyclopsChangeSonarMode(NitroxId id, bool isOn)
         {
             Id = id;

@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Server;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class InitialPlayerSync : Packet, IShortString
+    public class InitialPlayerSync : Packet
     {
         public NitroxId AssignedEscapePodId;
         public List<EscapePodModel> EscapePodsData { get; }
@@ -79,16 +80,6 @@ namespace NitroxModel.Packets
             InitialSimulationOwnerships = initialSimulationOwnerships.ToList();
             GameMode = gameMode;
             Permissions = perms;
-        }
-
-        public override string ToString()
-        {
-            return $"[InitialPlayerSync - GameMode: {GameMode}, EquippedItems: {EquippedItems} BasePieces: {BasePieces} Vehicles: {Vehicles} InventoryItems: {InventoryItems} PDAData: {PDAData} StoryGoalData: {StoryGoalData}]";
-        }
-
-        public string ToShortString()
-        {
-            return $"Equipped items count: {EquippedItems.Count}\n, Base pieces count: {BasePieces.Count}\n, Vehicles count: {Vehicles.Count}\n, Inventory items count: {InventoryItems.Count}";
         }
     }
 }

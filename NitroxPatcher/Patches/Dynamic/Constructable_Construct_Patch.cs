@@ -21,7 +21,7 @@ namespace NitroxPatcher.Patches.Dynamic
             {
                 NitroxServiceLocator.LocateService<Building>().ChangeConstructionAmount(__instance.gameObject, __instance.constructedAmount);
             }
-            
+
             // If we are constructing a base piece then we'll want to store all of the BaseGhost information
             // as it will not be available when the construction hits 100%
             BaseGhost baseGhost = __instance.gameObject.GetComponentInChildren<BaseGhost>();
@@ -50,7 +50,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public override void Patch(Harmony harmony)
         {
-            PatchMultiple(harmony, TARGET_METHOD, true, true, false, false);
+            PatchMultiple(harmony, TARGET_METHOD, prefix:true, postfix:true);
         }
     }
 }

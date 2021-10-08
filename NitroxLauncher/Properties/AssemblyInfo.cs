@@ -6,11 +6,10 @@ using System.Windows;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("NitroxLauncher")]
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyProduct("Nitrox Launcher")]
+[assembly: AssemblyTitle("Starting point for playing multiplayer Subnautica")]
+[assembly: AssemblyDescription("Starting point for playing multiplayer Subnautica")]
 // COMMON: [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("NitroxLauncher")]
 // COMMON: [assembly: AssemblyCopyright("")]
 // COMMON: [assembly: AssemblyTrademark("")]
 // COMMON: [assembly: AssemblyCulture("")]

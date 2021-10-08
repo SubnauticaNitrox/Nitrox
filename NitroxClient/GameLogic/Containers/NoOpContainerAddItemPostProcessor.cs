@@ -1,10 +1,10 @@
 ﻿using System;
-using UnityEngine;
 using NitroxModel.DataStructures.GameLogic;
+using UnityEngine;
 
 namespace NitroxClient.GameLogic.Containers
 {
-    class NoOpContainerAddItemPostProcessor: ContainerAddItemPostProcessor
+    class NoOpContainerAddItemPostProcessor : ContainerAddItemPostProcessor
     {
         public override Type[] ApplicableComponents { get; } = new Type[0];
 

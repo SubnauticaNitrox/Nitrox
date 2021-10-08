@@ -1,15 +1,13 @@
-﻿using NitroxClient.Communication.Abstract;
+﻿using System.Collections;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
-using NitroxClient.Unity.Helper;
-using NitroxModel.Packets;
-using System.Collections;
-using UnityEngine;
-using NitroxModel.DataStructures;
 using NitroxClient.MonoBehaviours;
+using NitroxClient.Unity.Helper;
+using NitroxModel.DataStructures;
 using NitroxModel.Logger;
-using NitroxModel.Helper;
-using NitroxModel.DataStructures.Util;
+using NitroxModel.Packets;
+using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -43,7 +41,7 @@ namespace NitroxClient.Communication.Packets.Processors
                 vehicle.GetComponent<MultiplayerVehicleControl>().Exit();
             }
             vehicle.StartCoroutine(DelayAnimationAndDisablePiloting(vehicle, vehicleDockingBay, packet.VehicleId, packet.PlayerId));
-        }        
+        }
 
         IEnumerator DelayAnimationAndDisablePiloting(Vehicle vehicle, VehicleDockingBay vehicleDockingBay, NitroxId vehicleId, ushort playerId)
         {

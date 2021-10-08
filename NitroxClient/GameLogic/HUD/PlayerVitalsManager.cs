@@ -24,8 +24,7 @@ namespace NitroxClient.GameLogic.HUD
 
         public RemotePlayerVitals CreateForPlayer(ushort playerId)
         {
-            RemotePlayerVitals vitals;
-            if (!vitalsByPlayerId.TryGetValue(playerId, out vitals))
+            if (!vitalsByPlayerId.TryGetValue(playerId, out RemotePlayerVitals vitals))
             {
                 vitals = RemotePlayerVitals.CreateForPlayer(playerId);
                 vitalsByPlayerId[playerId] = vitals;

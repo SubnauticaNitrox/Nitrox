@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using AssetsTools.NET;
-using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Unity;
 using NitroxServer.Serialization.Resources.Datastructures;
 
 namespace NitroxServer_Subnautica.Serialization.Resources.Parsers

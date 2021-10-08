@@ -22,7 +22,7 @@ namespace NitroxClient.GameLogic.InitialSync
             DependentProcessors.Add(typeof(BuildingInitialSyncProcessor));
             DependentProcessors.Add(typeof(CyclopsInitialAsyncProcessor));
         }
-        
+
         public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
         {
             int totalSyncedVehicles = 0;

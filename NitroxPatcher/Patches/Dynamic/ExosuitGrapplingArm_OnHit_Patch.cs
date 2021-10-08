@@ -3,9 +3,7 @@ using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
-using NitroxModel.DataStructures.Util;
 using NitroxModel_Subnautica.Packets;
-using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
@@ -17,17 +15,17 @@ namespace NitroxPatcher.Patches.Dynamic
         public static bool Prefix(ExosuitGrapplingArm __instance, GrapplingHook ___hook)
         {
             Exosuit componentInParent = __instance.GetComponentInParent<Exosuit>();
-            
-            if(componentInParent != null )
+
+            if (componentInParent != null)
             {
-                if(!componentInParent.GetPilotingMode())
+                if (!componentInParent.GetPilotingMode())
                 {
                     // We suppress this method if it is called from another player pilot, so we can use our own implementation
                     // See: ExosuitModuleEvents.UseGrapplingarm -> onHit Section
                     return false;
                 }
             }
-            
+
             return true;
         }
 
@@ -39,7 +37,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public override void Patch(Harmony harmony)
         {
-            PatchMultiple(harmony, TARGET_METHOD, true, true, false, false);            
+            PatchMultiple(harmony, TARGET_METHOD, prefix:true, postfix:true);
         }
     }
 }

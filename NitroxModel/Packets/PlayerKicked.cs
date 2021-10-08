@@ -11,10 +11,5 @@ namespace NitroxModel.Packets
         {
             Reason = reason;
         }
-
-        public override string ToString()
-        {
-            return $"[PlayerKicked - Reason : {Reason}]";
-        }
     }
 }

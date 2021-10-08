@@ -1,7 +1,8 @@
 ﻿using System;
-using NitroxModel.DataStructures.GameLogic;
-using ProtoBufNet;
 using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Unity;
+using ProtoBufNet;
 
 namespace NitroxModel_Subnautica.DataStructures.GameLogic
 {

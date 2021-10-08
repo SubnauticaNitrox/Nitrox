@@ -4,7 +4,6 @@ using NitroxClient.MonoBehaviours;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
-using NitroxModel_Subnautica.Helper;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors

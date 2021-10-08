@@ -174,8 +174,7 @@ namespace NitroxClient.Debuggers
 
                     if (wrapper.ShowDetails)
                     {
-                        IShortString hasShortString = wrapper.Packet as IShortString;
-                        GUILayout.Label(hasShortString != null ? hasShortString.ToShortString() : wrapper.Packet.ToString());
+                        GUILayout.Label(wrapper.Packet.ToString());
                     }
                 }
             }
@@ -193,8 +192,7 @@ namespace NitroxClient.Debuggers
                 }
             }
 
-            int count;
-            if (countByType.TryGetValue(packetType, out count))
+            if (countByType.TryGetValue(packetType, out int count))
             {
                 countByType[packetType] = count + 1;
             }

@@ -2,6 +2,7 @@
 using System.Linq;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
 using NitroxServer.GameLogic.Items;
 
@@ -100,8 +101,7 @@ namespace NitroxServer.GameLogic.Vehicles
 
         public Optional<VehicleModel> GetVehicleModel(NitroxId id)
         {
-            VehicleModel vehicleModel;
-            vehiclesById.TryGetValue(id, out vehicleModel);
+            vehiclesById.TryGetValue(id, out VehicleModel vehicleModel);
             return Optional.OfNullable(vehicleModel);
         }
 

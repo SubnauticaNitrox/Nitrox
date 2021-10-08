@@ -12,10 +12,5 @@ namespace NitroxModel.Packets
         {
             Id = id;
         }
-
-        public override string ToString()
-        {
-            return "[DeconstructionBegin Id: " + Id + "]";
-        }
     }
 }

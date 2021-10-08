@@ -9,6 +9,7 @@ using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
@@ -596,8 +597,7 @@ namespace NitroxClient.GameLogic
 
         public Optional<T> TryGetVehicle<T>(NitroxId vehicleId) where T : VehicleModel
         {
-            VehicleModel vehicle;
-            vehiclesById.TryGetValue(vehicleId, out vehicle);
+            vehiclesById.TryGetValue(vehicleId, out VehicleModel vehicle);
             return Optional.OfNullable((T)vehicle);
         }
     }

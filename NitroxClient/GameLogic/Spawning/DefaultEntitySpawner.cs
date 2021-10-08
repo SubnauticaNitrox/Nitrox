@@ -3,7 +3,6 @@ using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel_Subnautica.DataStructures;
-using NitroxModel_Subnautica.Helper;
 using UnityEngine;
 using UWE;
 
@@ -54,12 +53,15 @@ namespace NitroxClient.GameLogic.Spawning
 
         private GameObject CreateGameObject(TechType techType, string classId)
         {
-            GameObject prefab;
-            IPrefabRequest prefabRequest = PrefabDatabase.GetPrefabAsync(classId);
-            if (!prefabRequest.TryGetPrefab(out prefab))
+            GameObject prefab = null;
+            if (PrefabDatabase.TryGetPrefabFilename(classId, out string filename))
+            {
+                prefab = Resources.Load<GameObject>(filename);
+            }
+
+            if (prefab == null)
             {
                 prefab = CraftData.GetPrefabForTechType(techType, false);
-
                 if (prefab == null)
                 {
                     return Utils.CreateGenericLoot(techType);

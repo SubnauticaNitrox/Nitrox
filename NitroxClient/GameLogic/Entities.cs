@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Spawning;
 using NitroxClient.MonoBehaviours;
@@ -105,13 +105,7 @@ namespace NitroxClient.GameLogic
                 batchCells = LargeWorldStreamer.main.cellManager.InitializeBatchCells(batchId);
             }
 
-            entityCell = batchCells.Get(cellId, entity.AbsoluteEntityCell.Level);
-
-            if (entityCell == null)
-            {
-                entityCell = batchCells.Add(cellId, entity.AbsoluteEntityCell.Level);
-                entityCell.Initialize();
-            }
+            entityCell = batchCells.EnsureCell(cellId, entity.AbsoluteEntityCell.Level);
 
             entityCell.EnsureRoot();
 

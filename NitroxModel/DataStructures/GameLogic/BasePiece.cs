@@ -1,8 +1,9 @@
-﻿using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
+﻿using System;
+using NitroxModel.DataStructures.GameLogic.Buildings.Metadata;
+using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
+using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
 using ProtoBufNet;
-using System;
-using NitroxModel.DataStructures.GameLogic.Buildings.Metadata;
 
 namespace NitroxModel.DataStructures.GameLogic
 {

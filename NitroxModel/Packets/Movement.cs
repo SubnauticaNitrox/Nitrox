@@ -1,5 +1,5 @@
 ﻿using System;
-using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Unity;
 using NitroxModel.Networking;
 
 namespace NitroxModel.Packets
@@ -22,11 +22,6 @@ namespace NitroxModel.Packets
             AimingRotation = aimingRotation;
             DeliveryMethod = NitroxDeliveryMethod.DeliveryMethod.UNRELIABLE_SEQUENCED;
             UdpChannel = UdpChannelId.PLAYER_MOVEMENT;
-        }
-
-        public override string ToString()
-        {
-            return "[Movement - PlayerId: " + PlayerId + " Position: " + Position + " Velocity: " + Velocity + " Body rotation: " + BodyRotation + " Camera rotation: " + AimingRotation + "]";
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Unity;
 
 namespace NitroxModel.Packets
 {
@@ -20,10 +21,6 @@ namespace NitroxModel.Packets
             Id = id;
             Forward = forward;
             Rotation = rotation;
-        }
-        public override string ToString()
-        {
-            return "[SeamothModulesAction - TechType: " + TechType + " SlotID: " + SlotID + " Id:" + Id + " Forward: " + Forward + " Rotation: " + Rotation + "]";
         }
     }
 }

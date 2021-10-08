@@ -1,5 +1,5 @@
-﻿using NitroxModel.DataStructures;
-using System;
+﻿using System;
+using NitroxModel.DataStructures;
 
 namespace NitroxModel.Packets
 {
@@ -7,19 +7,14 @@ namespace NitroxModel.Packets
     public class SimulationOwnershipResponse : Packet
     {
         public NitroxId Id { get; }
-        public bool LockAquired { get; }
+        public bool LockAcquired { get; }
         public SimulationLockType LockType { get; }
 
-        public SimulationOwnershipResponse(NitroxId id, bool lockAquired, SimulationLockType lockType)
+        public SimulationOwnershipResponse(NitroxId id, bool lockAcquired, SimulationLockType lockType)
         {
             Id = id;
-            LockAquired = lockAquired;
+            LockAcquired = lockAcquired;
             LockType = lockType;
-        }
-
-        public override string ToString()
-        {
-            return "[SimulationOwnershipResponse - Id: " + Id + " LockAquired: " + LockAquired + " LockType: " + LockType + "]";
         }
     }
 }

@@ -1,5 +1,5 @@
-﻿using NitroxModel.DataStructures.GameLogic;
-using System;
+﻿using System;
+using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxModel.Packets
 {
@@ -11,11 +11,6 @@ namespace NitroxModel.Packets
         public ItemContainerAdd(ItemData itemData)
         {
             ItemData = itemData;
-        }
-
-        public override string ToString()
-        {
-            return "[ItemContainerAdd ItemData: " + ItemData + "]";
         }
     }
 }

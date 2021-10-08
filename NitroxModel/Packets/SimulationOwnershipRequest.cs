@@ -1,5 +1,5 @@
-﻿using NitroxModel.DataStructures;
-using System;
+﻿using System;
+using NitroxModel.DataStructures;
 
 namespace NitroxModel.Packets
 {
@@ -15,11 +15,6 @@ namespace NitroxModel.Packets
             PlayerId = playerId;
             Id = id;
             LockType = lockType;
-        }
-
-        public override string ToString()
-        {
-            return "[SimulationOwnershipRequest - PlayerId: " + PlayerId + " Id: " + Id + " PlayerId: " + PlayerId + " LockType: " + LockType + "]";
         }
     }
 }

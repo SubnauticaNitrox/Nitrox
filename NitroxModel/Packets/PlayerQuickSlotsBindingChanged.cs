@@ -12,10 +12,5 @@ namespace NitroxModel.Packets
         {
             Binding = binding;
         }
-
-        public override string ToString()
-        {
-            return $"[PlayerQuickSlotsBindingChanged - Binding: {Binding.Count}]";
-        }
     }
 }

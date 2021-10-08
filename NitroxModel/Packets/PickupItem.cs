@@ -1,6 +1,7 @@
 ﻿using System;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Unity;
 
 namespace NitroxModel.Packets
 {
@@ -33,10 +34,5 @@ namespace NitroxModel.Packets
             // All other pickup events should only happen when the cell is loaded.  
             return Optional.Of(new AbsoluteEntityCell(ItemPosition, Map.Main.ItemLevelOfDetail));
         }*/
-
-        public override string ToString()
-        {
-            return $"[Pickup Item - ItemPosition: {ItemPosition}, Id: {Id} TechType: {TechType}]";
-        }
     }
 }

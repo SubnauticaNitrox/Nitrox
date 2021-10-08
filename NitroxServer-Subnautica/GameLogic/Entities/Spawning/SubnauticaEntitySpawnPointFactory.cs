@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Unity;
 using NitroxModel_Subnautica.DataStructures;
 using NitroxServer.GameLogic.Entities.Spawning;
 using NitroxServer.UnityStubs;
@@ -45,8 +46,7 @@ namespace NitroxServer_Subnautica.GameLogic.Entities.Spawning
 
         private void HandleParenting(List<EntitySpawnPoint> spawnPoints, EntitySpawnPoint entitySpawnPoint, GameObject gameObject)
         {
-            EntitySpawnPoint parent;
-            if (gameObject.Parent != null && spawnPointsByUid.TryGetValue(gameObject.Parent, out parent))
+            if (gameObject.Parent != null && spawnPointsByUid.TryGetValue(gameObject.Parent, out EntitySpawnPoint parent))
             {
                 entitySpawnPoint.Parent = parent;
                 parent.Children.Add(entitySpawnPoint);

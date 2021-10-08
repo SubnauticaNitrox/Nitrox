@@ -17,7 +17,7 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             float dropProbability = 0f;
             TechType techType = CraftData.GetTechType(target);
-            
+
             if (techType == TechType.ScrapMetal)
             {
                 dropProbability = 0.15f; //15% probability

@@ -12,9 +12,11 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class Bench_OnHandClick_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly MethodInfo TARGET_METHOD = typeof(Bench).GetMethod(nameof(Bench.OnHandClick), BindingFlags.Public | BindingFlags.Instance);
+        private static readonly MethodInfo targetMethod = typeof(Bench).GetMethod(nameof(Bench.OnHandClick), BindingFlags.Public | BindingFlags.Instance);
+        private static LocalPlayer localPlayer;
+        private static SimulationOwnership simulationOwnership;
+        private static bool skipPrefix;
 
-        private static bool skipPrefix = false;
 
         public static bool Prefix(Bench __instance, GUIHand hand)
         {
@@ -23,8 +25,6 @@ namespace NitroxPatcher.Patches.Dynamic
                 return true;
             }
 
-            SimulationOwnership simulationOwnership = NitroxServiceLocator.LocateService<SimulationOwnership>();
-            
             NitroxId id = NitroxEntity.GetId(__instance.gameObject);
 
             if (simulationOwnership.HasExclusiveLock(id))
@@ -33,8 +33,8 @@ namespace NitroxPatcher.Patches.Dynamic
                 return true;
             }
 
-            HandInteraction<Bench> context = new HandInteraction<Bench>(__instance, hand);
-            LockRequest<HandInteraction<Bench>> lockRequest = new LockRequest<HandInteraction<Bench>>(id, SimulationLockType.EXCLUSIVE, ReceivedSimulationLockResponse, context);
+            HandInteraction<Bench> context = new(__instance, hand);
+            LockRequest<HandInteraction<Bench>> lockRequest = new(id, SimulationLockType.EXCLUSIVE, ReceivedSimulationLockResponse, context);
 
             simulationOwnership.RequestSimulationLock(lockRequest);
 
@@ -48,7 +48,8 @@ namespace NitroxPatcher.Patches.Dynamic
             if (lockAquired)
             {
                 skipPrefix = true;
-                TARGET_METHOD.Invoke(bench, new[] { context.GuiHand });
+                targetMethod.Invoke(bench, new object[] { context.GuiHand });
+                localPlayer.AnimationChange(AnimChangeType.BENCH, AnimChangeState.ON);
                 skipPrefix = false;
             }
             else
@@ -60,7 +61,9 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public override void Patch(Harmony harmony)
         {
-            PatchPrefix(harmony, TARGET_METHOD);
+            localPlayer = NitroxServiceLocator.LocateService<LocalPlayer>();
+            simulationOwnership = NitroxServiceLocator.LocateService<SimulationOwnership>();
+            PatchPrefix(harmony, targetMethod);
         }
     }
 }

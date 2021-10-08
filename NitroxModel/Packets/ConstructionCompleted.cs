@@ -14,10 +14,5 @@ namespace NitroxModel.Packets
             PieceId = id;
             BaseId = baseId;
         }
-
-        public override string ToString()
-        {
-            return "[ConstructionCompleted Id: " + PieceId + " BaseId: " + BaseId + "]";
-        }
     }
 }

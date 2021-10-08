@@ -25,7 +25,7 @@ namespace NitroxServer.ConsoleCommands
                 c.AdminPassword = newPassword;
                 Log.InfoSensitive("Admin password changed to {password} by {playername}", newPassword, args.SenderName);
             });
-            
+
             SendMessageToPlayer(args.Sender, "Admin password has been updated");
         }
     }

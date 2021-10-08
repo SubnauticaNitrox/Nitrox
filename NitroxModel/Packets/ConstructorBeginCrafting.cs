@@ -1,6 +1,6 @@
 ﻿using System;
-using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxModel.Packets
 {
@@ -16,11 +16,6 @@ namespace NitroxModel.Packets
             ConstructorId = constructorId;
             VehicleModel = vehicleModel;
             Duration = duration;
-        }
-
-        public override string ToString()
-        {
-            return $"[ConstructorBeginCrafting - VehicleModel: {VehicleModel}, ConstructorId: {ConstructorId}, Duration: {Duration}";
         }
     }
 }

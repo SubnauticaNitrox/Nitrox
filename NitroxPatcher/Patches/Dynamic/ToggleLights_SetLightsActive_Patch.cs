@@ -34,7 +34,7 @@ namespace NitroxPatcher.Patches.Dynamic
         }
 
         public static void Postfix(ToggleLights __instance, bool __state)
-        {            
+        {
             if (__state != __instance.lightsActive)
             {
                 // Find the right gameobject in the hierarchy to sync on:
@@ -63,7 +63,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
                 NitroxId id = NitroxEntity.GetId(gameObject);
                 // If the floodlight belongs to a seamoth, then set the lights for the model
-                if(type == typeof(SeaMoth))
+                if (type == typeof(SeaMoth))
                 {
                     NitroxServiceLocator.LocateService<Vehicles>().GetVehicles<SeamothModel>(id).LightOn = __instance.lightsActive;
                 }
@@ -73,7 +73,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public override void Patch(Harmony harmony)
         {
-            PatchMultiple(harmony, TARGET_METHOD, true, true, false, false);
+            PatchMultiple(harmony, TARGET_METHOD, prefix:true, postfix:true);
         }
 
         public class LightToggleContainer

@@ -9,7 +9,7 @@ namespace NitroxServer.Communication.Packets.Processors
     {
         private readonly BaseManager baseManager;
         private readonly PlayerManager playerManager;
-        
+
         public ConstructionCompletedPacketProcessor(BaseManager baseManager, PlayerManager playerManager)
         {
             this.baseManager = baseManager;

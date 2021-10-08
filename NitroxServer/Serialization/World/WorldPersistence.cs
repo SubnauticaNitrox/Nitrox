@@ -8,7 +8,7 @@ using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
-using NitroxModel.OS;
+using NitroxModel.Platforms.OS.Shared;
 using NitroxModel.Server;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Bases;
@@ -158,6 +158,8 @@ namespace NitroxServer.Serialization.World
                     ServerStartTime = DateTime.UtcNow,
 #if DEBUG
                     Seed = "TCCBIBZXAB"
+#else
+                    Seed = config.Seed
 #endif
                 }
             };

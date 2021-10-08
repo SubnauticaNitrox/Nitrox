@@ -55,7 +55,7 @@ namespace NitroxClient.Communication.Packets.Processors
             // Copied from QuickSlots
             switch (packet.Type)
             {
-                case PlayerHeldItemChangedType.DRAW_AS_TOOL:
+                case PlayerHeldItemChanged.ChangeType.DRAW_AS_TOOL:
                     Validate.IsTrue(tool);
                     ModelPlug.PlugIntoSocket(tool, opPlayer.Value.ItemAttachPoint);
                     Utils.SetLayerRecursively(opItem.Value, viewModelLayer);
@@ -79,7 +79,7 @@ namespace NitroxClient.Communication.Packets.Processors
                     }
                     break;
 
-                case PlayerHeldItemChangedType.HOLSTER_AS_TOOL:
+                case PlayerHeldItemChanged.ChangeType.HOLSTER_AS_TOOL:
                     Validate.IsTrue(tool);
                     opItem.Value.SetActive(false);
                     Utils.SetLayerRecursively(opItem.Value, defaultLayer);
@@ -103,13 +103,13 @@ namespace NitroxClient.Communication.Packets.Processors
 
                     break;
 
-                case PlayerHeldItemChangedType.DRAW_AS_ITEM:
+                case PlayerHeldItemChanged.ChangeType.DRAW_AS_ITEM:
                     inventoryItem.item.Reparent(opPlayer.Value.ItemAttachPoint);
                     inventoryItem.item.SetVisible(true);
                     Utils.SetLayerRecursively(inventoryItem.item.gameObject, viewModelLayer);
                     break;
 
-                case PlayerHeldItemChangedType.HOLSTER_AS_ITEM:
+                case PlayerHeldItemChanged.ChangeType.HOLSTER_AS_ITEM:
                     inventoryItem.item.Reparent(inventory.tr);
                     inventoryItem.item.SetVisible(false);
                     Utils.SetLayerRecursively(inventoryItem.item.gameObject, defaultLayer);

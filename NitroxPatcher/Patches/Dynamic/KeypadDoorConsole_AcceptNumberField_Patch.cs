@@ -13,12 +13,12 @@ namespace NitroxPatcher.Patches.Dynamic
     {
         public static readonly Type TARGET_CLASS = typeof(KeypadDoorConsole);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("AcceptNumberField", BindingFlags.NonPublic | BindingFlags.Instance);
-        
+
         public static void Postfix(KeypadDoorConsole __instance)
         {
             NitroxId id = NitroxEntity.GetId(__instance.gameObject);
             KeypadMetadata keypadMetadata = new KeypadMetadata(__instance.unlocked);
-            
+
             Entities entities = NitroxServiceLocator.LocateService<Entities>();
             entities.BroadcastMetadataUpdate(id, keypadMetadata);
         }

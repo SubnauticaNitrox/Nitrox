@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Unity;
 using NitroxModel.Discovery;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
@@ -86,11 +87,10 @@ namespace NitroxServer.Serialization
                 {
                     CellHeaderEx cellHeader = serializer.Deserialize<CellHeaderEx>(stream);
 
-                    bool wasLegacy;
 
                     byte[] serialData = new byte[cellHeader.DataLength];
                     stream.Read(serialData, 0, cellHeader.DataLength);
-                    ParseGameObjectsWithHeader(serialData, batchId, cellHeader.CellId, cellHeader.Level, spawnPoints, out wasLegacy);
+                    ParseGameObjectsWithHeader(serialData, batchId, cellHeader.CellId, cellHeader.Level, spawnPoints, out bool wasLegacy);
 
                     if (!wasLegacy)
                     {

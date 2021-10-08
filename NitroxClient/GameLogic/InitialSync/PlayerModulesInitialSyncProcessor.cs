@@ -22,7 +22,7 @@ namespace NitroxClient.GameLogic.InitialSync
         }
 
         public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
-        {            
+        {
             using (packetSender.Suppress<ModuleAdded>())
             {
                 equipmentSlots.AddItems(packet.Modules);

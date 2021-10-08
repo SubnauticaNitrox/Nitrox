@@ -1,6 +1,6 @@
 ﻿using System;
 using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
 
 namespace NitroxModel.Packets
@@ -19,11 +19,6 @@ namespace NitroxModel.Packets
             DestinationFrom = destinationFrom;
             DestinationTo = destinationTo;
             SubRootID = subRootID;
-        }
-
-        public override string ToString()
-        {
-            return $"[PlayerTeleported: PlayerName: {PlayerName}, DestinationFrom: {DestinationFrom}, DestinationTo: {DestinationTo}, SubRootID: {SubRootID}";
         }
     }
 }

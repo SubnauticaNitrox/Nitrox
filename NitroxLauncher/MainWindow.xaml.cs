@@ -69,19 +69,19 @@ namespace NitroxLauncher
             LauncherLogic.Server.ServerExited += ServerExited;
 
             logic.SetTargetedSubnauticaPath(GameInstallationFinder.Instance.FindGame())
-                .ContinueWith(task =>
-                {
-                    if (GameInstallationFinder.IsSubnauticaDirectory(task.Result))
-                    {
-                        LauncherLogic.Instance.NavigateTo<LaunchGamePage>();
-                    }
-                    else
-                    {
-                        LauncherLogic.Instance.NavigateTo<OptionPage>();
-                    }
-
-                    logic.CheckNitroxVersion();
-                }, CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.FromCurrentSynchronizationContext());
+                 .ContinueWith(task =>
+                 {
+                     if (GameInstallationFinder.IsSubnauticaDirectory(task.Result))
+                     {
+                         LauncherLogic.Instance.NavigateTo<LaunchGamePage>();
+                     }
+                     else
+                     {
+                         LauncherLogic.Instance.NavigateTo<OptionPage>();
+                     }
+                     
+                     logic.CheckNitroxVersion();
+                 }, CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         private bool CanClose()

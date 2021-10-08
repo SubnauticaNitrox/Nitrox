@@ -35,14 +35,14 @@ namespace NitroxPatcher.Patches.Dynamic
             Pickupable pickupable = ____heldItem.item;
             NitroxId itemId = NitroxEntity.GetId(pickupable.gameObject);
             PlayerTool component = pickupable.GetComponent<PlayerTool>();
-            PlayerHeldItemChangedType type = component ? PlayerHeldItemChangedType.DRAW_AS_TOOL : PlayerHeldItemChangedType.DRAW_AS_ITEM;
+            PlayerHeldItemChanged.ChangeType type = component ? PlayerHeldItemChanged.ChangeType.DRAW_AS_TOOL : PlayerHeldItemChanged.ChangeType.DRAW_AS_ITEM;
             player.BroadcastHeldItemChanged(itemId, type, __state);
         }
 
         public override void Patch(Harmony harmony)
         {
             player = NitroxServiceLocator.LocateService<LocalPlayer>();
-            PatchMultiple(harmony, targetMethod, true, true, false, false);
+            PatchMultiple(harmony, targetMethod, prefix:true, postfix:true);
         }
     }
 }

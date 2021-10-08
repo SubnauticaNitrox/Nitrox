@@ -37,17 +37,17 @@ namespace NitroxServer.GameLogic
                 AuroraExplosionTime = RandomNumber(2.3d, 4d) * 1200d * 1000d; //Time.deltaTime returns seconds so we need to multiply 1000
             }
 
-            CreateTimer(AuroraExplosionTime * 0.2d - ElapsedTime, StoryEventType.PDA, "Story_AuroraWarning1");
-            CreateTimer(AuroraExplosionTime * 0.5d - ElapsedTime, StoryEventType.PDA, "Story_AuroraWarning2");
-            CreateTimer(AuroraExplosionTime * 0.8d - ElapsedTime, StoryEventType.PDA, "Story_AuroraWarning3");
-            CreateTimer(AuroraExplosionTime - ElapsedTime, StoryEventType.PDA, "Story_AuroraWarning4");
-            CreateTimer(AuroraExplosionTime + 24000 - ElapsedTime, StoryEventType.EXTRA, "Story_AuroraExplosion");
+            CreateTimer(AuroraExplosionTime * 0.2d - ElapsedTime, StoryEventSend.EventType.PDA, "Story_AuroraWarning1");
+            CreateTimer(AuroraExplosionTime * 0.5d - ElapsedTime, StoryEventSend.EventType.PDA, "Story_AuroraWarning2");
+            CreateTimer(AuroraExplosionTime * 0.8d - ElapsedTime, StoryEventSend.EventType.PDA, "Story_AuroraWarning3");
+            CreateTimer(AuroraExplosionTime - ElapsedTime, StoryEventSend.EventType.PDA, "Story_AuroraWarning4");
+            CreateTimer(AuroraExplosionTime + 24000 - ElapsedTime, StoryEventSend.EventType.EXTRA, "Story_AuroraExplosion");
             //like the timers, except we can see how much time has passed
 
             stopWatch.Start();
         }
 
-        private Timer CreateTimer(double time, StoryEventType eventType, string key)
+        private Timer CreateTimer(double time, StoryEventSend.EventType eventType, string key)
         {
             //if timeOffset goes past the time
             if (time <= 0)

@@ -19,6 +19,13 @@ namespace Nitrox.Bootloader
                 }
             }
 
+            // Get path from environment variable.
+            string envPath = Environment.GetEnvironmentVariable("NITROX_LAUNCHER_PATH");
+            if (Directory.Exists(envPath))
+            {
+                return envPath;
+            }
+
             // Get path from AppData file.
             string nitroxAppData = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox");
             if (!Directory.Exists(nitroxAppData))

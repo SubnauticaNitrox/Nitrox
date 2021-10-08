@@ -20,7 +20,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static readonly OpCode INSTRUCTION_BEFORE_JUMP = OpCodes.Ldfld;
         public static readonly object INSTRUCTION_BEFORE_JUMP_OPERAND = typeof(SubRoot).GetField("isBase", BindingFlags.Public | BindingFlags.Instance);
-        public static readonly OpCode JUMP_INSTRUCTION_TO_COPY = OpCodes.Brtrue_S;
+        public static readonly OpCode JUMP_INSTRUCTION_TO_COPY = OpCodes.Brtrue;
 
         public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
         {
@@ -46,7 +46,7 @@ namespace NitroxPatcher.Patches.Dynamic
             {
                 CodeInstruction instruction = instructionList[i];
                 yield return instruction;
-                
+
                 if (shouldInject)
                 {
                     shouldInject = false;
@@ -69,7 +69,7 @@ namespace NitroxPatcher.Patches.Dynamic
             {
                 CodeInstruction instruction = instructions[i];
 
-                if(instruction.opcode == INSTRUCTION_BEFORE_JUMP && instruction.operand == INSTRUCTION_BEFORE_JUMP_OPERAND)
+                if (instruction.opcode == INSTRUCTION_BEFORE_JUMP && instruction.operand == INSTRUCTION_BEFORE_JUMP_OPERAND)
                 {
                     // we located the instruction before the jump... the next instruction should be the jump
                     CodeInstruction jmpInstruction = instructions[i + 1];
@@ -83,7 +83,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
             throw new Exception("Could not locate jump instruction to copy! Injection has failed.");
         }
-        
+
         public override void Patch(Harmony harmony)
         {
             PatchTranspiler(harmony, TARGET_METHOD);

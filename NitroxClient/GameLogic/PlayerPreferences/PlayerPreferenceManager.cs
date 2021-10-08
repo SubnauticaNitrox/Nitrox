@@ -45,9 +45,8 @@ namespace NitroxClient.GameLogic.PlayerPreferences
         {
             Validate.NotNull(ipAddress);
 
-            PlayerPreference preference;
 
-            if (state.Preferences.TryGetValue(ipAddress, out preference))
+            if (state.Preferences.TryGetValue(ipAddress, out PlayerPreference preference))
             {
                 return preference.Clone();
             }

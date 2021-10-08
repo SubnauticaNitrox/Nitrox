@@ -1,6 +1,6 @@
 ﻿using System;
 using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Unity;
 
 namespace NitroxModel.Packets
 {
@@ -18,11 +18,6 @@ namespace NitroxModel.Packets
             Index = index;
             HSB = hsb;
             Color = color;
-        }
-
-        public override string ToString()
-        {
-            return "[VehicleColorChange Id: " + Id + " Index: " + Index + " hsb: " + HSB + " Color: " + Color + "]";
         }
     }
 }

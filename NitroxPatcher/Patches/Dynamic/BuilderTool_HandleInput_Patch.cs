@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
 using NitroxClient.GameLogic;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.Helper;
 using UnityEngine;
 
@@ -16,7 +17,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static readonly OpCode INJECTION_OPCODE = OpCodes.Callvirt;
         public static readonly object INJECTION_OPERAND = typeof(Constructable).GetMethod("SetState", BindingFlags.Public | BindingFlags.Instance);
-        
+
         public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
         {
             Validate.NotNull(INJECTION_OPERAND);
@@ -32,6 +33,7 @@ namespace NitroxPatcher.Patches.Dynamic
                     yield return TranspilerHelper.LocateService<Building>();
                     yield return original.Ldloc<Constructable>();
                     yield return new CodeInstruction(OpCodes.Callvirt, typeof(Component).GetMethod("get_gameObject", BindingFlags.Instance | BindingFlags.Public));
+                    yield return new CodeInstruction(OpCodes.Callvirt, typeof(NitroxEntity).GetMethod("GetId", BindingFlags.Public | BindingFlags.Static));
                     yield return new CodeInstruction(OpCodes.Callvirt, typeof(Building).GetMethod("DeconstructionBegin", BindingFlags.Public | BindingFlags.Instance));
                 }
             }

@@ -1,5 +1,5 @@
 ﻿using System;
-using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Unity;
 
 namespace NitroxModel.Packets
 {
@@ -19,11 +19,6 @@ namespace NitroxModel.Packets
             Volume = volume;
             Radius = radius;
             IsGlobal = isGlobal;
-        }
-
-        public override string ToString()
-        {
-            return $"[PlayFMODAsset - AssetPath: {AssetPath}, Position: {Position}, Volume {Volume}, Radius {Radius}, IsGlobal {IsGlobal}]";
         }
     }
 }

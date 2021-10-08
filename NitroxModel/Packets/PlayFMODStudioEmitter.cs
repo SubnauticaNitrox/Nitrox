@@ -18,10 +18,5 @@ namespace NitroxModel.Packets
             Play = play;
             AllowFadeout = allowFadeout;
         }
-
-        public override string ToString()
-        {
-            return $"[PlayFMODStudioEmitter - Id: {Id}, AssetPath: {AssetPath}, Play {Play}, AllowFadeout {AllowFadeout}]";
-        }
     }
 }

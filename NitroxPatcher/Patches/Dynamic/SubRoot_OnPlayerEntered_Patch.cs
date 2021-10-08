@@ -14,7 +14,7 @@ namespace NitroxPatcher.Patches.Dynamic
         public static readonly OpCode START_INJECTION_CODE = OpCodes.Ldarg_0;
         public static readonly OpCode START_INJECTION_CODE_INVINCIBLE = OpCodes.Stfld;
         public static readonly FieldInfo LIVEMIXIN_INVINCIBLE = typeof(LiveMixin).GetField("invincible", BindingFlags.Public | BindingFlags.Instance);
-        
+
         /* There is a bug, where Subroot.live is not loaded when starting in a cyclops. Therefore this codepiece needs to check that and jump accordingly if not present
          * 
          * For this change
@@ -31,7 +31,7 @@ namespace NitroxPatcher.Patches.Dynamic
         public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             List<CodeInstruction> instructionList = instructions.ToList();
-            
+
             int injectionPoint = 0;
             Label newJumpPoint = generator.DefineLabel();
             for (int i = 3; i < instructionList.Count; i++)
@@ -40,14 +40,14 @@ namespace NitroxPatcher.Patches.Dynamic
                     Equals(instructionList[i].operand, LIVEMIXIN_INVINCIBLE))
                 {
                     if (instructionList[i - 3].opcode == START_INJECTION_CODE)
-                    {                                                
+                    {
                         instructionList[i + 1].labels.Add(newJumpPoint);
-                        injectionPoint = i - 3;                        
+                        injectionPoint = i - 3;
                     }
                 }
 
             }
-            if(injectionPoint != 0)
+            if (injectionPoint != 0)
             {
 
                 MethodInfo op_inequality_method = typeof(UnityEngine.Object).GetMethod("op_Inequality");
@@ -59,7 +59,7 @@ namespace NitroxPatcher.Patches.Dynamic
                                                                     new CodeInstruction(OpCodes.Brfalse, newJumpPoint)
                                                                     };
                 instructionList.InsertRange(injectionPoint, injectedInstructions);
-            }            
+            }
             return instructionList;
         }
 

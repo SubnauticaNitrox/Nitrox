@@ -1,5 +1,6 @@
-﻿using ProtoBufNet;
-using System;
+﻿using System;
+using NitroxModel.DataStructures.Unity;
+using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic
 {

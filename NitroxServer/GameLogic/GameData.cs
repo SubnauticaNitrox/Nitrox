@@ -1,6 +1,6 @@
-﻿using NitroxServer.GameLogic.Unlockables;
-using System;
+﻿using System;
 using Newtonsoft.Json;
+using NitroxServer.GameLogic.Unlockables;
 using ProtoBufNet;
 
 namespace NitroxServer.GameLogic.Bases

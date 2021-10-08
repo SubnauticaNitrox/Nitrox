@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
-using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Surrogates;
+using NitroxModel.DataStructures.Unity;
 using ProtoBuf;
 using UnityEngine;
 
@@ -11,13 +11,13 @@ namespace NitroxModel_Subnautica.DataStructures.Surrogates
     {
         [ProtoMember(1)]
         public float X { get; private set; }
-        
+
         [ProtoMember(2)]
         public float Y { get; private set; }
-        
+
         [ProtoMember(3)]
         public float Z { get; private set; }
-        
+
         protected override void GetObjectData(Vector3 vector3, SerializationInfo info)
         {
             info.AddValue("x", vector3.x);
@@ -32,7 +32,7 @@ namespace NitroxModel_Subnautica.DataStructures.Surrogates
             vector3.z = info.GetSingle("z");
             return vector3;
         }
-        
+
         public static implicit operator Vector3Surrogate(NitroxVector3 v)
         {
             return new Vector3Surrogate
@@ -42,12 +42,12 @@ namespace NitroxModel_Subnautica.DataStructures.Surrogates
                 Z = v.Z
             };
         }
-        
+
         public static implicit operator NitroxVector3(Vector3Surrogate surrogate)
         {
             return new NitroxVector3(surrogate.X, surrogate.Y, surrogate.Z);
         }
-        
+
         public static implicit operator Vector3Surrogate(Vector3 v)
         {
             return new Vector3Surrogate
@@ -57,7 +57,7 @@ namespace NitroxModel_Subnautica.DataStructures.Surrogates
                 Z = v.z
             };
         }
-        
+
         public static implicit operator Vector3(Vector3Surrogate surrogate)
         {
             return new Vector3(surrogate.X, surrogate.Y, surrogate.Z);

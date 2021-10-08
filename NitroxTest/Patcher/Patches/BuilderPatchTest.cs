@@ -4,9 +4,8 @@ using System.Linq;
 using System.Reflection;
 using HarmonyLib;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NitroxTest.Patcher.Test;
-using System.Reflection.Emit;
 using NitroxPatcher.Patches.Dynamic;
+using NitroxTest.Patcher.Test;
 
 namespace NitroxTest.Patcher.Patches
 {
