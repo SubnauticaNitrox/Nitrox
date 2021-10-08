@@ -3,7 +3,6 @@ using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using NitroxModel.Discovery;
-using NitroxModel.Discovery.InstallationFinders;
 
 namespace BuildTool
 {
