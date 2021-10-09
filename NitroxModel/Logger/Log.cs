@@ -27,7 +27,7 @@ namespace NitroxModel.Logger
 
         public static void Setup(bool asyncConsoleWriter = false, InGameLogger inGameLogger = null, bool isConsoleApp = false, bool useConsoleLogging = true)
         {
-            if (logger != null)
+            if (logger != Serilog.Core.Logger.None)
             {
                 throw new Exception($"{nameof(Log)} setup should only be executed once.");
             }
