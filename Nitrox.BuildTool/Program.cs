@@ -22,9 +22,28 @@ namespace BuildTool
 
         public static async Task Main(string[] args)
         {
+            AppDomain.CurrentDomain.UnhandledException += (sender, eventArgs) =>
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(eventArgs.ExceptionObject);
+                Console.ResetColor();
+
+                Exit((eventArgs.ExceptionObject as Exception)?.HResult ?? 1);
+            };
+
             GameInstallData game = await Task.Factory.StartNew(EnsureGame).ConfigureAwait(false);
             Console.WriteLine($"Found game at {game.InstallDir}");
             await Task.Factory.StartNew(() => EnsurePublicizedAssemblies(game)).ConfigureAwait(false);
+
+            Exit();
+        }
+
+        private static void Exit(int exitCode = 0)
+        {
+            Console.WriteLine();
+            Console.WriteLine("Press any key to continue . . .");
+            Console.ReadKey(true);
+            Environment.Exit(exitCode);
         }
 
         private static GameInstallData EnsureGame()
