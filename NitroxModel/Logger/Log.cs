@@ -14,7 +14,7 @@ namespace NitroxModel.Logger
 {
     public static class Log
     {
-        private static ILogger logger;
+        private static ILogger logger = Serilog.Core.Logger.None;
 
         public static string PlayerName
         {
