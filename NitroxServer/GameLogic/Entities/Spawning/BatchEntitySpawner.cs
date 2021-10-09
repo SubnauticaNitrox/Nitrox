@@ -291,11 +291,13 @@ namespace NitroxServer.GameLogic.Entities.Spawning
 
             // Check to see if this entity is a PrefabPlaceholderGroup.  If it is, 
             // we want to add the children that would be spawned here.  This is 
-            // surpressed on the client so we don't get virtual entities that the
+            // suppressed on the client so we don't get virtual entities that the
             // server doesn't know about.
             if (prefabPlaceholderGroupsbyClassId.TryGetValue(classId, out PrefabPlaceholdersGroupAsset group))
             {
-                foreach (PrefabAsset prefab in group.SpawnablePrefabs)
+                List<PrefabAsset> spawnablePrefabs = new List<PrefabAsset>(group.SpawnablePrefabs);
+                entity.ChildEntities.AddRange(ConvertComponentPrefabsToEntities(group.ExistingPrefabs, entity, deterministicBatchGenerator, ref spawnablePrefabs));
+                foreach (PrefabAsset prefab in spawnablePrefabs)
                 {
                     TransformAsset transform = prefab.TransformAsset;
 
@@ -303,7 +305,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
 
                     if (!opWorldEntity.HasValue)
                     {
-                        Log.Debug("Unexpected Empty WorldEntity! " + prefab.ClassId);
+                        Log.Debug($"Unexpected Empty WorldEntity! {prefab.Name}-{prefab.ClassId}");
                         continue;
                     }
 
@@ -331,15 +333,13 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                     CreatePrefabPlaceholdersWithChildren(prefabEntity, prefabEntity.ClassId, deterministicBatchGenerator);
                     entity.ChildEntities.Add(prefabEntity);
                 }
-
-                entity.ChildEntities.AddRange(ConvertComponentPrefabsToEntities(group.ExistingPrefabs, entity, deterministicBatchGenerator));
             }
         }
 
         // Entities that have been spawned by a parent prefab (child game objects baked into the prefab).
         // created separately as we don't actually want to spawn these but instead just update the id.
         // will refactor this piece a bit later to split these into a new data structure.
-        private List<Entity> ConvertComponentPrefabsToEntities(List<PrefabAsset> prefabs, Entity parent, DeterministicBatchGenerator deterministicBatchGenerator)
+        private List<Entity> ConvertComponentPrefabsToEntities(List<PrefabAsset> prefabs, Entity parent, DeterministicBatchGenerator deterministicBatchGenerator, ref List<PrefabAsset> spawnablePrefabs)
         {
             List<Entity> entities = new List<Entity>();
 
@@ -360,8 +360,59 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                              counter++,
                              parent);
 
-                prefabEntity.ChildEntities = ConvertComponentPrefabsToEntities(prefab.Children, prefabEntity, deterministicBatchGenerator);
+                // Checkes if the current object being setup is a Placeholder object.
+                // MrPurple6411 Verified All Placeholders use this in the name.  (verified in SN1 did not check BZ yet)
+                if (prefab.Name.Contains("(Placeholder)"))
+                {
+                    // Finds the matching prefab that the placeholder is supposed to spawn.
+                    PrefabAsset spawnablePrefab = spawnablePrefabs.Find((x) => x.TransformAsset == transform);
+                    if (spawnablePrefab != null)
+                    {
+                        Optional<UweWorldEntity> opWorldEntity = worldEntityFactory.From(spawnablePrefab.ClassId);
 
+                        if (!opWorldEntity.HasValue)
+                        {
+                            Log.Debug($"Unexpected Empty WorldEntity! {spawnablePrefab.Name}-{spawnablePrefab.ClassId}");
+                            continue;
+                        }
+
+                        UweWorldEntity worldEntity = opWorldEntity.Value;
+                        Entity spawnableprefabEntity = new Entity(transform.LocalPosition,
+                                                                  transform.LocalRotation,
+                                                                  transform.LocalScale,
+                                                                  worldEntity.TechType,
+                                                                  worldEntity.CellLevel,
+                                                                  spawnablePrefab.ClassId,
+                                                                  true,
+                                                                  deterministicBatchGenerator.NextId(),
+                                                                  null,
+                                                                  parent);
+                        
+                        if (spawnablePrefab.EntitySlot.HasValue)
+                        {
+                            Entity possibleEntity = SpawnEntitySlotEntities(spawnablePrefab.EntitySlot.Value, transform, deterministicBatchGenerator, parent);
+                            if (possibleEntity != null)
+                            {
+                                parent.ChildEntities.Add(possibleEntity);
+                            }
+                        }
+
+                        // Setup any children this object may have attached to it.
+                        CreatePrefabPlaceholdersWithChildren(spawnableprefabEntity, spawnableprefabEntity.ClassId, deterministicBatchGenerator);
+
+                        // Add the object to the child list that that is being returned by this method.
+                        entities.Add(spawnableprefabEntity);
+
+                        // remove prefab from placeholder list so it is not duplicated later by mistake.
+                        spawnablePrefabs.Remove(spawnablePrefab);
+                    }
+                    else
+                    {
+                        Log.Error($"Unable to find matching spawnable prefab for Placeholder {prefab.Name}");
+                    }
+                }
+                
+                prefabEntity.ChildEntities = ConvertComponentPrefabsToEntities(prefab.Children, prefabEntity, deterministicBatchGenerator, ref spawnablePrefabs);
                 entities.Add(prefabEntity);
             }
 
