@@ -1,18 +1,14 @@
-﻿using System.Reflection;
-
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Windows;
+
 
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyProduct("Nitrox Launcher")]
-[assembly: AssemblyTitle("Starting point for playing multiplayer Subnautica")]
-[assembly: AssemblyDescription("Starting point for playing multiplayer Subnautica")]
-// COMMON: [assembly: AssemblyCompany("")]
-// COMMON: [assembly: AssemblyCopyright("")]
-// COMMON: [assembly: AssemblyTrademark("")]
-// COMMON: [assembly: AssemblyCulture("")]
+[assembly: AssemblyProduct("Nitrox Bootloader")]
+[assembly: AssemblyTitle("Simple loader that initiates code to be loaded into the game from Nitrox's install location")]
+[assembly: AssemblyDescription("Simple loader that initiates code to be loaded into the game from Nitrox's install location")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
 // to COM components.  If you need to access a type in this assembly from
@@ -20,7 +16,7 @@ using System.Windows;
 // COMMON: [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("228948e3-b68e-47ad-abe2-2972ecf36b06")]
+[assembly: Guid("3d257315-8072-44f4-9859-6dea57ea1ad6")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -35,9 +31,4 @@ using System.Windows;
 // COMMON: [assembly: AssemblyVersion("X.X.X.X")]
 // COMMON: [assembly: AssemblyFileVersion("X.X.X.X")]
 
-//[assembly: NeutralResourcesLanguage("en-US", UltimateResourceFallbackLocation.Satellite)]
-
-[assembly: ThemeInfo(
-    ResourceDictionaryLocation.None,
-    ResourceDictionaryLocation.SourceAssembly
-)]
+[assembly: InternalsVisibleTo("NitroxTest")]

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -59,6 +59,7 @@
     <Compile Include="Patcher\Patches\ConstructorInput_OnCraftingBegin_PatchTest.cs" />
     <Compile Include="Patcher\Patches\Equipment_RemoveItem_PatchTest.cs" />
     <Compile Include="Patcher\Test\PatchTestHelper.cs" />
+    <Compile Include="Platforms\OS\Windows\RegistryTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Serialization\InteractiveChildObjectIdentifiersSerializationTest.cs" />
     <Compile Include="Serialization\PdaStateDataSerializationTest.cs" />
@@ -107,10 +108,6 @@
     <ProjectReference Include="..\NitroxClient\NitroxClient.csproj">
       <Project>{ed5034bd-66b5-4596-94b7-66a28d3eff49}</Project>
       <Name>NitroxClient</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NitroxModel\NitroxModel.csproj">
-      <Project>{b16f4de7-21ad-4fef-955b-0a5a365fa4e3}</Project>
-      <Name>NitroxModel</Name>
     </ProjectReference>
     <ProjectReference Include="..\NitroxModel-Subnautica\NitroxModel-Subnautica.csproj">
       <Project>{0a377218-6b36-4522-89a3-a39cfc999209}</Project>

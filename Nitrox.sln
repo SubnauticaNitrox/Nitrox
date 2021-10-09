@@ -18,7 +18,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 		Directory.Build.props = Directory.Build.props
 		Directory.Build.targets = Directory.Build.targets
-		SharedConfig.targets = SharedConfig.targets
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NitroxModel-Subnautica", "NitroxModel-Subnautica\NitroxModel-Subnautica.csproj", "{0A377218-6B36-4522-89A3-A39CFC999209}"
@@ -32,6 +31,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nitrox.Bootloader", "Nitrox.Bootloader\Nitrox.Bootloader.csproj", "{E4226522-9189-410B-93B2-792942FBD588}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Nitrox.Subnautica.Assets", "Nitrox.Subnautica.Assets\Nitrox.Subnautica.Assets.shproj", "{0763D551-B1A8-4960-B88A-98833F957936}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nitrox.BuildTool", "Nitrox.BuildTool\Nitrox.BuildTool.csproj", "{15C4C9C4-683C-4EF0-9E0F-0664A3BDA0CE}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -82,6 +83,10 @@ Global
 		{E4226522-9189-410B-93B2-792942FBD588}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E4226522-9189-410B-93B2-792942FBD588}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E4226522-9189-410B-93B2-792942FBD588}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15C4C9C4-683C-4EF0-9E0F-0664A3BDA0CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15C4C9C4-683C-4EF0-9E0F-0664A3BDA0CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15C4C9C4-683C-4EF0-9E0F-0664A3BDA0CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15C4C9C4-683C-4EF0-9E0F-0664A3BDA0CE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
