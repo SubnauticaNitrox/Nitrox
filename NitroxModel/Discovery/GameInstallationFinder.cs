@@ -28,11 +28,7 @@ namespace NitroxModel.Discovery
 
         public string FindGame(IList<string> errors = null)
         {
-            if (errors == null)
-            {
-                errors = new List<string>();
-            }
-
+            errors ??= new List<string>();
             foreach (IFindGameInstallation finder in finders)
             {
                 string path = finder.FindGame(errors);
@@ -55,7 +51,7 @@ namespace NitroxModel.Discovery
                 return false;
             }
 
-            return Directory.EnumerateFileSystemEntries(directory, "*.exe")
+            return Directory.EnumerateFiles(directory, "*.exe")
                 .Any(file => Path.GetFileName(file)?.Equals("subnautica.exe", StringComparison.OrdinalIgnoreCase) ?? false);
         }
     }

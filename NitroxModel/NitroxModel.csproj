@@ -77,6 +77,7 @@
     <Compile Include="DataStructures\ThreadSafeCollection.cs" />
     <Compile Include="DataStructures\ThreadSafeDictionary.cs" />
     <Compile Include="Discovery\GameInstallationFinder.cs" />
+    <Compile Include="Discovery\GameInstallData.cs" />
     <Compile Include="Discovery\IFindGameInstallation.cs" />
     <Compile Include="Discovery\InstallationFinders\ConfigFileGameFinder.cs" />
     <Compile Include="Discovery\InstallationFinders\DiscordGameFinder.cs" />
