@@ -257,12 +257,31 @@
                     <HintPath>$(GameManagedDir)\UnityEngine.XRModule.dll</HintPath>
                     <Private>$(TestLibrary)</Private>
                 </Reference>
+            </ItemGroup>
+        </When>
+    </Choose>
+
+    <Choose>
+        <When Condition="'$(UnityModLibrary)' == 'true' and '$(TestLibrary)' != 'true'">
+            <ItemGroup>
                 <Reference Include="Assembly-CSharp">
-                    <HintPath>$(BuildGenDllDir)\Assembly-CSharp_publicized.dll</HintPath>
+                    <HintPath>$(BuildGenDllDir)\Assembly-CSharp.dll</HintPath>
                     <Private>$(TestLibrary)</Private>
                 </Reference>
                 <Reference Include="Assembly-CSharp-firstpass">
-                    <HintPath>$(BuildGenDllDir)\Assembly-CSharp-firstpass_publicized.dll</HintPath>
+                    <HintPath>$(BuildGenDllDir)\Assembly-CSharp-firstpass.dll</HintPath>
+                    <Private>$(TestLibrary)</Private>
+                </Reference>
+            </ItemGroup>
+        </When>
+        <When Condition="'$(TestLibrary)' == 'true'">
+            <ItemGroup>
+                <Reference Include="Assembly-CSharp">
+                    <HintPath>$(GameManagedDir)\Assembly-CSharp.dll</HintPath>
+                    <Private>$(TestLibrary)</Private>
+                </Reference>
+                <Reference Include="Assembly-CSharp-firstpass">
+                    <HintPath>$(GameManagedDir)\Assembly-CSharp-firstpass.dll</HintPath>
                     <Private>$(TestLibrary)</Private>
                 </Reference>
             </ItemGroup>

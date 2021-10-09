@@ -86,7 +86,7 @@ namespace BuildTool
 
             string[] dllsToPublicize = Directory.GetFiles(game.ManagedDllsDir, "Assembly-*.dll");
             foreach (string publicizedDll in Publicizer.Execute(dllsToPublicize,
-                                                                "_publicized",
+                                                                "",
                                                                 Path.Combine(GeneratedOutputDir, "publicized_assemblies")))
             {
                 Console.WriteLine($"Publicized dll: {publicizedDll}");
