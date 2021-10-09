@@ -88,12 +88,14 @@ namespace NitroxLauncher
             {
                 return null;
             }
+
             Config.SubnauticaPath = path;
 
             if (lastFindSubnauticaTask != null)
             {
                 await lastFindSubnauticaTask;
             }
+
             lastFindSubnauticaTask = Task.Factory.StartNew(() =>
             {
                 PirateDetection.TriggerOnDirectory(path);
@@ -134,6 +136,7 @@ namespace NitroxLauncher
 
                 return path;
             }, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
+
             return await lastFindSubnauticaTask;
         }
 
