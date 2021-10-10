@@ -19,7 +19,7 @@
   "Nitrox_MultiplayerLoaded": "Multiplayerový klient načten...",
   // In game menu
   "Nitrox_LoadingScreenWarn": "Očekávejte herní chyby které mohou kazit hru",
-  "Nitrox_WorldSettling": "Awaiting World Settling",
+  "Nitrox_WorldSettling": "Čekání na načtení světa",
   "Nitrox_JoiningSession": "Připojování k serveru",
   "Nitrox_SyncingWorld": "Synchronizování Multiplayerového Světa",
   "Nitrox_LostConnection": "Připojení k serveru ztraceno",
