@@ -140,7 +140,11 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
                     newBar.borderColor = OXYGEN_BAR_BORDER_COLOR;
                     cloned.transform.localPosition = new Vector3(-0.025f, 0.35f, 0f);
                     cloned.name = playerName + "'s Oxygen";
+#if SUBNAUTICA
                     cloned.RequireTransform("OxygenTextLabel").localRotation = Quaternion.Euler(0f, 270f, 0f);
+#elif BELOWZERO
+                    cloned.RequireTransform("Icon").localRotation = Quaternion.Euler(0f, 0f, 0f);
+#endif
                     Destroy(cloned.GetComponent<uGUI_OxygenBar>());
                     cloned.transform.localScale = new Vector3(0.0003f, 0.0003f, 0.0003f);
                     break;

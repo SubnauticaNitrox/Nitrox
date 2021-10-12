@@ -204,8 +204,11 @@ namespace NitroxServer.Serialization.World
                 GameMode = gameMode,
                 Seed = seed
             };
-
+#if SUBNAUTICA
             world.EventTriggerer = new EventTriggerer(world.PlayerManager, pWorldData.WorldData.GameData.StoryTiming.ElapsedTime, pWorldData.WorldData.GameData.StoryTiming.AuroraExplosionTime);
+#elif BELOWZERO
+            world.EventTriggerer = new EventTriggerer(world.PlayerManager, pWorldData.WorldData.GameData.StoryTiming.ElapsedTime);
+#endif
             world.VehicleManager = new VehicleManager(pWorldData.WorldData.VehicleData.Vehicles, world.InventoryManager);
 
             world.BatchEntitySpawner = new BatchEntitySpawner(

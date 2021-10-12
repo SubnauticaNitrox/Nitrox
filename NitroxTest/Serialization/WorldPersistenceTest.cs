@@ -180,7 +180,9 @@ namespace NitroxTest.Serialization
                 Assert.IsTrue(worldData.WorldData.GameData.StoryGoals.GoalUnlocks.SequenceEqual(worldDataAfter.WorldData.GameData.StoryGoals.GoalUnlocks), $"WorldData.GameData.StoryGoals.GoalUnlocks is not equal while using {serverSerializers[serializerIndex]}.");
 
                 Assert.AreEqual(worldData.WorldData.GameData.StoryTiming.ElapsedTime, worldDataAfter.WorldData.GameData.StoryTiming.ElapsedTime, $"WorldData.GameData.StoryTiming.ElapsedTime is not equal while using {serverSerializers[serializerIndex]}.");
+#if SUBNAUTICA
                 Assert.AreEqual(worldData.WorldData.GameData.StoryTiming.AuroraExplosionTime, worldDataAfter.WorldData.GameData.StoryTiming.AuroraExplosionTime, $"WorldData.GameData.StoryTiming.AuroraExplosionTime is not equal while using {serverSerializers[serializerIndex]}.");
+#endif
             }
         }
 #if SUBNAUTICA
@@ -497,8 +499,10 @@ namespace NitroxTest.Serialization
                         },
                         StoryTiming = new StoryTimingData()
                         {
-                            AuroraExplosionTime = 10000,
-                            ElapsedTime = 10
+                            ElapsedTime = 10,
+#if SUBNAUTICA
+                            AuroraExplosionTime = 10000
+#endif
                         },
                     },
                     InventoryData = new InventoryData()

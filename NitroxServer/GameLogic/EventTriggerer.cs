@@ -14,20 +14,32 @@ namespace NitroxServer.GameLogic
         private readonly PlayerManager playerManager;
 
         public double ElapsedTime;
+#if SUBNAUTICA
         public double AuroraExplosionTime;
 
         public EventTriggerer(PlayerManager playerManager, double elapsedTime, double? auroraExplosionTime)
+#elif BELOWZERO
+        public EventTriggerer(PlayerManager playerManager, double elapsedTime)
+#endif
         {
             this.playerManager = playerManager;
+#if SUBNAUTICA
             SetupEventTimers(elapsedTime, auroraExplosionTime);
+#elif BELOWZERO
+            SetupEventTimers(elapsedTime);
+#endif
         }
-
+#if SUBNAUTICA
         private void SetupEventTimers(double elapsedTime, double? auroraExplosionTime)
+#elif BELOWZERO
+        private void SetupEventTimers(double elapsedTime)
+#endif
         {
             // eventually this should be on a better timer so it can be saved, paused, etc
             Log.Debug("Event Triggerer started!");
 
             ElapsedTime = elapsedTime;
+#if SUBNAUTICA
             if (auroraExplosionTime.HasValue)
             {
                 AuroraExplosionTime = auroraExplosionTime.Value;
@@ -42,6 +54,7 @@ namespace NitroxServer.GameLogic
             CreateTimer(AuroraExplosionTime * 0.8d - ElapsedTime, StoryEventSend.EventType.PDA, "Story_AuroraWarning3");
             CreateTimer(AuroraExplosionTime - ElapsedTime, StoryEventSend.EventType.PDA, "Story_AuroraWarning4");
             CreateTimer(AuroraExplosionTime + 24000 - ElapsedTime, StoryEventSend.EventType.EXTRA, "Story_AuroraExplosion");
+#endif
             //like the timers, except we can see how much time has passed
 
             stopWatch.Start();
