@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using NitroxModel.Logger;
-using NitroxModel.OS;
+using NitroxModel.Platforms.OS.Shared;
 using ProtoBufNet;
 using ProtoBufNet.Meta;
 

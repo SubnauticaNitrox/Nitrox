@@ -16,7 +16,7 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Discovery;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
-using NitroxModel.OS;
+using NitroxModel.Platforms.OS.Shared;
 using NitroxServer;
 using NitroxServer.ConsoleCommands.Processor;
 
@@ -41,9 +41,10 @@ namespace NitroxServer_Subnautica
 
             AppMutex.Hold(() =>
             {
-                Log.Info("Waiting for 30 seconds on other Nitrox servers to initialize before starting..");
-            }, 30000);
+                Log.Info("Waiting on other Nitrox servers to initialize before starting..");
+            }, 120000);
             Server server;
+            Task listenForCommands;
             try
             {
                 Stopwatch watch = Stopwatch.StartNew();
@@ -73,22 +74,39 @@ namespace NitroxServer_Subnautica
 
                 server = NitroxServiceLocator.LocateService<Server>();
                 await WaitForAvailablePortAsync(server.Port);
-                if (!server.Start())
+                CatchExitEvent();
+                listenForCommands = ListenForCommandsAsync(server);
+
+                CancellationTokenSource cancellationToken = new();
+                if (!server.Start(cancellationToken) && !cancellationToken.IsCancellationRequested)
                 {
                     throw new Exception("Unable to start server.");
                 }
-
-                watch.Stop();
-
-                Log.Info($"Server started ({Math.Round(watch.Elapsed.TotalSeconds, 1)}s)");
-                Log.Info("To get help for commands, run help in console or /help in chatbox");
-
-                CatchExitEvent();
+                else if (cancellationToken.IsCancellationRequested)
+                {
+                    watch.Stop();
+                }
+                else
+                {
+                    watch.Stop();
+                    Log.Info($"Server started ({Math.Round(watch.Elapsed.TotalSeconds, 1)}s)");
+                    Log.Info("To get help for commands, run help in console or /help in chatbox");
+                }
             }
             finally
             {
                 // Allow other servers to start initializing.
                 AppMutex.Release();
+            }
+            
+            await listenForCommands;
+        }
+
+        private static async Task ListenForCommandsAsync(Server server)
+        {
+            while (!server.IsRunning)
+            {
+                await Task.Delay(100);
             }
 
             ConsoleCommandProcessor cmdProcessor = NitroxServiceLocator.LocateService<ConsoleCommandProcessor>();

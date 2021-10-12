@@ -10,7 +10,6 @@
     <RootNamespace>Nitrox.Bootloader</RootNamespace>
     <AssemblyName>Nitrox.Bootloader</AssemblyName>
     <FileAlignment>512</FileAlignment>
-    <NitroxLibrary>false</NitroxLibrary>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -22,6 +21,7 @@
   </PropertyGroup>
   <ItemGroup Label=".cs files">
     <Compile Include="Main.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

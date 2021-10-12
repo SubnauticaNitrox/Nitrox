@@ -21,7 +21,7 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             Vehicle vehicle = other.GetComponentInParent<Vehicle>();
             prevInterpolatingVehicle = (Vehicle)__instance.ReflectionGet("interpolatingVehicle");
-            return NitroxServiceLocator.LocateService<SimulationOwnership>().HasAnyLockType(NitroxEntity.GetId(vehicle.gameObject));
+            return vehicle == null || NitroxServiceLocator.LocateService<SimulationOwnership>().HasAnyLockType(NitroxEntity.GetId(vehicle.gameObject));
         }
 
         public static void Postfix(VehicleDockingBay __instance)
@@ -42,7 +42,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public override void Patch(Harmony harmony)
         {
-            PatchMultiple(harmony, TARGET_METHOD, true, true, false, false);
+            PatchMultiple(harmony, TARGET_METHOD, prefix:true, postfix:true);
         }
     }
 }

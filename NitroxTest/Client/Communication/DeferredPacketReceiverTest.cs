@@ -5,6 +5,7 @@ using NitroxClient.Communication;
 using NitroxClient.Map;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Unity;
 using NitroxModel.Packets;
 using NitroxTest.Model;
 

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using NitroxClient.Communication.Abstract;
@@ -110,17 +111,19 @@ namespace NitroxClient.GameLogic.InitialSync
 
                 foreach (PDALogEntry logEntry in logEntries)
                 {
-                    if (!entries.ContainsKey(logEntry.Key))
+                    if (logEntry.Key != null && !entries.ContainsKey(logEntry.Key))
                     {
-                        PDALog.GetEntryData(logEntry.Key, out PDALog.EntryData entryData);
-                        PDALog.Entry entry = new PDALog.Entry();
-                        entry.data = entryData;
-                        entry.timestamp = logEntry.Timestamp;
-                        entries.Add(entryData.key, entry);
-
-                        if (entryData.key == "Story_AuroraWarning4")
+                        if (PDALog.GetEntryData(logEntry.Key, out PDALog.EntryData entryData))
                         {
-                            CrashedShipExploder.main.ReflectionCall("SwapModels", false, false, new object[] { true });
+                            PDALog.Entry entry = new PDALog.Entry();
+                            entry.data = entryData;
+                            entry.timestamp = logEntry.Timestamp;
+                            entries.Add(entryData.key, entry);
+
+                            if (entryData.key == "Story_AuroraWarning4")
+                            {
+                                CrashedShipExploder.main.ReflectionCall("SwapModels", false, false, new object[] { true });
+                            }
                         }
                     }
                 }

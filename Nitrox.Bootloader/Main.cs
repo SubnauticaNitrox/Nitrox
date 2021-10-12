@@ -7,7 +7,7 @@ namespace Nitrox.Bootloader
 {
     public static class Main
     {
-        private static readonly Lazy<string> nitroxLauncherDir = new Lazy<string>(() =>
+        private static readonly Lazy<string> nitroxLauncherDir = new(() =>
         {
             // Get path from command args.
             string[] args = Environment.GetCommandLineArgs();
@@ -17,6 +17,13 @@ namespace Nitrox.Bootloader
                 {
                     return Path.GetFullPath(args[i + 1]);
                 }
+            }
+
+            // Get path from environment variable.
+            string envPath = Environment.GetEnvironmentVariable("NITROX_LAUNCHER_PATH");
+            if (Directory.Exists(envPath))
+            {
+                return envPath;
             }
 
             // Get path from AppData file.

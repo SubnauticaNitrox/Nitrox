@@ -46,18 +46,19 @@ namespace NitroxPatcher.Patches
             PatchMultiple(harmony, targetMethod, null, postfixMethod);
         }
 
-        protected void PatchMultiple(Harmony harmony, MethodBase targetMethod, bool prefix, bool postfix, bool transpiler, bool finalizer)
+        protected void PatchMultiple(Harmony harmony, MethodBase targetMethod, bool prefix = false, bool postfix = false, bool transpiler = false, bool finalizer = false, bool iLManipulator = false)
         {
             string prefixMethod = prefix ? "Prefix" : null;
             string postfixMethod = postfix ? "Postfix" : null;
             string transpilerMethod = transpiler ? "Transpiler" : null;
             string finalizerMethod = finalizer ? "Finalizer" : null;
+            string iLManipulatorMethod = iLManipulator ? "ILManipulator" : null;
 
-            PatchMultiple(harmony, targetMethod, prefixMethod, postfixMethod, transpilerMethod, finalizerMethod);
+            PatchMultiple(harmony, targetMethod, prefixMethod, postfixMethod, transpilerMethod, finalizerMethod, iLManipulatorMethod);
         }
 
         protected void PatchMultiple(Harmony harmony, MethodBase targetMethod,
-            string prefixMethod = null, string postfixMethod = null, string transpilerMethod = null, string finalizerMethod = null)
+            string prefixMethod = null, string postfixMethod = null, string transpilerMethod = null, string finalizerMethod = null, string iLManipulatorMethod = null)
         {
             Validate.NotNull(targetMethod, "Target method cannot be null");
 
@@ -65,8 +66,9 @@ namespace NitroxPatcher.Patches
             HarmonyMethod harmonyPostfixMethod = postfixMethod != null ? GetHarmonyMethod(postfixMethod) : null;
             HarmonyMethod harmonyTranspilerMethod = transpilerMethod != null ? GetHarmonyMethod(transpilerMethod) : null;
             HarmonyMethod harmonyFinalizerMethod = finalizerMethod != null ? GetHarmonyMethod(finalizerMethod) : null;
+            HarmonyMethod harmonyILManipulatorMethod = iLManipulatorMethod != null ? GetHarmonyMethod(iLManipulatorMethod) : null;
 
-            harmony.Patch(targetMethod, harmonyPrefixMethod, harmonyPostfixMethod, harmonyTranspilerMethod, harmonyFinalizerMethod);
+            harmony.Patch(targetMethod, harmonyPrefixMethod, harmonyPostfixMethod, harmonyTranspilerMethod, harmonyFinalizerMethod, harmonyILManipulatorMethod);
             activePatches.Add(targetMethod); // Store our patched methods
         }
     }
