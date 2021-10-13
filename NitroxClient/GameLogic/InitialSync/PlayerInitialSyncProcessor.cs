@@ -25,7 +25,7 @@ namespace NitroxClient.GameLogic.InitialSync
             waitScreenItem.SetProgress(0.25f);
             yield return null;
 
-            AddStartingItemsToPlayer(packet.FirstTimeConnecting);
+            yield return AddStartingItemsToPlayer(packet.FirstTimeConnecting);
             waitScreenItem.SetProgress(0.5f);
             yield return null;
 
@@ -68,6 +68,9 @@ namespace NitroxClient.GameLogic.InitialSync
                     itemContainers.BroadcastItemAdd(pickupable, Inventory.main.container.tr);
                 }
             }
+#if BELOWZERO
+            yield return null;
+#endif
         }
 
         private void SetPlayerStats(PlayerStatsData statsData)

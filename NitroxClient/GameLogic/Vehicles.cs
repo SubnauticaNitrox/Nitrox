@@ -18,6 +18,7 @@ using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.DataStructures.GameLogic;
 using NitroxModel_Subnautica.Helper;
 using UnityEngine;
+using UWE;
 
 namespace NitroxClient.GameLogic
 {
@@ -158,14 +159,14 @@ namespace NitroxClient.GameLogic
 
             if (opEnergy.HasValue)
             {
+#if SUBNAUTICA
                 EnergyMixin mixin = opEnergy.Value;
                 mixin.ReflectionSet("allowedToPlaySounds", false);
-#if SUBNAUTICA
                 mixin.SetBattery(mixin.defaultBattery, 1);
-#elif BELOWZERO
-                mixin.SetBatteryAsync(mixin.defaultBattery, 1, null);
-#endif
                 mixin.ReflectionSet("allowedToPlaySounds", true);
+#elif BELOWZERO
+                CoroutineHost.StartCoroutine(SetBatteryWithoutPlayingSoundAsync(opEnergy.Value));
+#endif
             }
 
             foreach (InteractiveChildObjectIdentifier identifier in childIdentifiers)
@@ -178,30 +179,46 @@ namespace NitroxClient.GameLogic
 
                     if (opEnergyMixin.HasValue)
                     {
+#if SUBNAUTICA
                         EnergyMixin mixin = opEnergyMixin.Value;
                         mixin.ReflectionSet("allowedToPlaySounds", false);
-#if SUBNAUTICA
                         mixin.SetBattery(mixin.defaultBattery, 1);
-#elif BELOWZERO
-                        mixin.SetBatteryAsync(mixin.defaultBattery, 1, null);
-#endif
                         mixin.ReflectionSet("allowedToPlaySounds", true);
+#elif BELOWZERO
+                        CoroutineHost.StartCoroutine(SetBatteryWithoutPlayingSoundAsync(opEnergyMixin.Value));
+#endif
                     }
                 }
             }
         }
 
+#if BELOWZERO
+        private IEnumerator SetBatteryWithoutPlayingSoundAsync(EnergyMixin energyMixin)
+        {
+            TaskResult<InventoryItem> result = new();
+
+            energyMixin.ReflectionSet("allowedToPlaySounds", false);
+            yield return energyMixin.SetBatteryAsync(energyMixin.defaultBattery, 1, result);
+            energyMixin.ReflectionSet("allowedToPlaySounds", true);
+        }
+#endif
+
         public void CreateVehicle(VehicleModel vehicleModel)
         {
             AddVehicle(vehicleModel);
+#if SUBNAUTICA
             CreateVehicle(vehicleModel.TechType.ToUnity(), vehicleModel.Id, vehicleModel.Position.ToUnity(), vehicleModel.Rotation.ToUnity(), vehicleModel.InteractiveChildIdentifiers, vehicleModel.DockingBayId, vehicleModel.Name, vehicleModel.HSB.ToUnity(), vehicleModel.Health);
+#elif BELOWZERO
+            IEnumerator vehicleCreator = CreateVehicle(vehicleModel.TechType.ToUnity(), vehicleModel.Id, vehicleModel.Position.ToUnity(), vehicleModel.Rotation.ToUnity(), vehicleModel.InteractiveChildIdentifiers, vehicleModel.DockingBayId, vehicleModel.Name, vehicleModel.HSB.ToUnity(), vehicleModel.Health);
+            CoroutineHost.StartCoroutine(vehicleCreator);
+#endif
         }
 
+#if SUBNAUTICA
         public void CreateVehicle(TechType techType, NitroxId id, Vector3 position, Quaternion rotation, IEnumerable<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, Vector3[] hsb, float health)
         {
             try
             {
-#if SUBNAUTICA
                 if (techType == TechType.Cyclops)
                 {
                     LightmappedPrefabs.main.RequestScenePrefab("cyclops", (go) => OnVehiclePrefabLoaded(techType, go, id, position, rotation, interactiveChildIdentifiers, dockingBayId, name, hsb, health));
@@ -209,22 +226,30 @@ namespace NitroxClient.GameLogic
                 else
                 {
                     GameObject techPrefab = CraftData.GetPrefabForTechType(techType, false);
-#elif BELOWZERO
-                    CoroutineTask<GameObject> techPrefabRoutine = CraftData.GetPrefabForTechTypeAsync(techType, false);
-                    GameObject techPrefab = techPrefabRoutine.GetResult();
-#endif
                     Validate.NotNull(techPrefab, $"{nameof(Vehicles)}: No prefab for tech type: {techType}");
 
                     OnVehiclePrefabLoaded(techType, techPrefab, id, position, rotation, interactiveChildIdentifiers, dockingBayId, name, hsb, health);
-#if SUBNAUTICA
-            }
-#endif
+                }
             }
             catch (Exception ex)
             {
                 Log.Error(ex, $"{nameof(Vehicles)}: Error while creating a vehicle. TechType: {techType} Id: {id}");
             }
         }
+#elif BELOWZERO
+        public IEnumerator CreateVehicle(TechType techType, NitroxId id, Vector3 position, Quaternion rotation, IEnumerable<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, Vector3[] hsb, float health)
+        {
+            CoroutineTask<GameObject> techPrefabCoroutine = CraftData.GetPrefabForTechTypeAsync(techType, false);
+            yield return techPrefabCoroutine;
+
+            GameObject techPrefab = techPrefabCoroutine.GetResult();
+            Validate.NotNull(techPrefab, $"{nameof(Vehicles)}: No prefab for tech type: {techType}");
+
+            OnVehiclePrefabLoaded(techType, techPrefab, id, position, rotation, interactiveChildIdentifiers, dockingBayId, name, hsb, health);
+
+            yield return null;
+        }
+#endif
 
         public void UpdateVehiclePosition(VehicleMovementData vehicleModel, Optional<RemotePlayer> player)
         {

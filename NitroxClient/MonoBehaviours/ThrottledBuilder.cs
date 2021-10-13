@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Reflection;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Bases;
@@ -35,6 +36,10 @@ namespace NitroxClient.MonoBehaviours
         private BuildThrottlingQueue buildEvents;
         private IPacketSender packetSender;
 
+#if BELOWZERO
+        private bool processingQueue = false;
+#endif
+
         public void Start()
         {
             main = this;
@@ -49,16 +54,25 @@ namespace NitroxClient.MonoBehaviours
                 return;
             }
 
+#if SUBNAUTICA
             bool queueHadItems = (buildEvents.Count > 0);
 
             ProcessBuildEventsUntilFrameBlocked();
-
             if (queueHadItems && buildEvents.Count == 0 && QueueDrained != null)
             {
                 QueueDrained(this, new EventArgs());
+#elif BELOWZERO
+            bool queueHasItems = (buildEvents.Count > 0);
+
+            if (queueHasItems && !processingQueue)
+            {
+                StartCoroutine(ProcessBuildEvents());
+                processingQueue = true;
+#endif
+
             }
         }
-
+#if SUBNAUTICA
         private void ProcessBuildEventsUntilFrameBlocked()
         {
             bool processedFrameBlockingEvent = false;
@@ -85,8 +99,44 @@ namespace NitroxClient.MonoBehaviours
                 isNextEventFrameBlocked = (processedFrameBlockingEvent && buildEvents.NextEventRequiresFreshFrame());
             }
         }
+#elif BELOWZERO
+        private IEnumerator ProcessBuildEvents()
+        {
+            while (buildEvents.Count > 0)
+            {
+                BuildEvent currentEvent = buildEvents.Dequeue();
 
+                try
+                {
+                    ActionBuildEvent(currentEvent);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("Error processing buildEvent in ThrottledBuilder" + ex);
+                }
+
+                if (currentEvent.RequiresFreshFrame() || buildEvents.NextEventRequiresFreshFrame())
+                {
+                    yield return null;
+                }
+            }
+
+            if (QueueDrained != null)
+            {
+                QueueDrained(this, EventArgs.Empty);
+            }
+
+            processingQueue = false;
+
+            yield return null;
+        }
+#endif
+
+#if SUBNAUTICA
         private void ActionBuildEvent(BuildEvent buildEvent)
+#elif BELOWZERO
+        private IEnumerator ActionBuildEvent(BuildEvent buildEvent)
+#endif
         {
             using (packetSender.Suppress<ConstructionAmountChanged>())
             using (packetSender.Suppress<ConstructionCompleted>())
@@ -97,7 +147,11 @@ namespace NitroxClient.MonoBehaviours
             {
                 if (buildEvent is BasePiecePlacedEvent)
                 {
+#if SUBNAUTICA
                     PlaceBasePiece((BasePiecePlacedEvent)buildEvent);
+#elif BELOWZERO
+                    yield return PlaceBasePiece((BasePiecePlacedEvent)buildEvent);
+#endif
                 }
                 else if (buildEvent is ConstructionCompletedEvent)
                 {
@@ -115,10 +169,16 @@ namespace NitroxClient.MonoBehaviours
                 {
                     DeconstructionCompleted((DeconstructionCompletedEvent)buildEvent);
                 }
+#if BELOWZERO
+                yield return null;
+#endif
             }
         }
-
+#if SUBNAUTICA
         private void PlaceBasePiece(BasePiecePlacedEvent basePiecePlacedBuildEvent)
+#elif BELOWZERO
+        private IEnumerator PlaceBasePiece(BasePiecePlacedEvent basePiecePlacedBuildEvent)
+#endif
         {
             Log.Debug($"BuildBasePiece - {basePiecePlacedBuildEvent.BasePiece.Id} type: {basePiecePlacedBuildEvent.BasePiece.TechType} parentId: {basePiecePlacedBuildEvent.BasePiece.ParentId.OrElse(null)}");
 
@@ -126,12 +186,10 @@ namespace NitroxClient.MonoBehaviours
 #if SUBNAUTICA
             GameObject buildPrefab = CraftData.GetBuildPrefab(basePiece.TechType.ToUnity());
 #elif BELOWZERO
-            //uGUI_BuilderMenu uGUIBuilderMenu = null;
-            //GameObject buildPrefab = (GameObject)uGUIBuilderMenu.ReflectionCall("TryGetCachedPrefab", false, false, new object[] { basePiece.TechType.ToUnity() });
-            //if (buildPrefab == null)
-            //{
-            GameObject buildPrefab = CraftData.GetPrefabForTechTypeAsync(basePiece.TechType.ToUnity(), true).GetResult();
-            //}
+            CoroutineTask<GameObject> spawnedPrefab = CraftData.GetPrefabForTechTypeAsync(basePiece.TechType.ToUnity());
+            yield return spawnedPrefab;
+                
+            GameObject buildPrefab = spawnedPrefab.GetResult();
 #endif
             MultiplayerBuilder.overridePosition = basePiece.ItemPosition.ToUnity();
             MultiplayerBuilder.overrideQuaternion = basePiece.Rotation.ToUnity();
@@ -179,6 +237,10 @@ namespace NitroxClient.MonoBehaviours
             MethodInfo startCrafting = typeof(Constructable).GetMethod("Start", BindingFlags.NonPublic | BindingFlags.Instance);
             Validate.NotNull(startCrafting);
             startCrafting.Invoke(constructable, new object[] { });
+
+#if BELOWZERO
+            yield return null;
+#endif
         }
 
         private void ConstructionCompleted(ConstructionCompletedEvent constructionCompleted)

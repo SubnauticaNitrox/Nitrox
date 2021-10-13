@@ -41,5 +41,11 @@
     <Compile Include="Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NitroxModel\NitroxModel.csproj">
+      <Project>{B16F4DE7-21AD-4FEF-955B-0A5A365FA4E3}</Project>
+      <Name>NitroxModel</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

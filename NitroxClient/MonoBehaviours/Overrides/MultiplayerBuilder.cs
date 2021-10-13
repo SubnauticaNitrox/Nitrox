@@ -1,6 +1,7 @@
 ﻿#pragma warning disable // Disable all warnings for copied file
 // ReSharper disable InconsistentNaming
 
+using System.Collections;
 using System.Collections.Generic;
 using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
 using NitroxModel.DataStructures.Util;
@@ -10,6 +11,7 @@ using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation;
 using NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation.Metadata;
 using UnityEngine;
+using UnityEngine.ResourceManagement.AsyncOperations;
 using UWE;
 
 namespace NitroxClient.MonoBehaviours.Overrides
@@ -169,7 +171,15 @@ namespace NitroxClient.MonoBehaviours.Overrides
 
                 MultiplayerBuilder.renderers = MaterialExtensions.AssignMaterial(MultiplayerBuilder.ghostModel, MultiplayerBuilder.ghostStructureMaterial);
                 MultiplayerBuilder.SetupRenderers(MultiplayerBuilder.ghostModel, Player.main.IsInSub());
+#if SUBNAUTICA
                 MultiplayerBuilder.CreatePowerPreview(MultiplayerBuilder.constructableTechType, MultiplayerBuilder.ghostModel);
+#elif BELOWZERO
+                string poweredPrefabName = TechData.GetPoweredPrefabName(MultiplayerBuilder.constructableTechType);
+                if (!string.IsNullOrEmpty(poweredPrefabName))
+                {
+                    CoroutineHost.StartCoroutine(MultiplayerBuilder.CreatePowerPreviewAsync(MultiplayerBuilder.ghostModel, poweredPrefabName));
+                }
+#endif
                 MultiplayerBuilder.InitBounds(MultiplayerBuilder.prefab);
             }
 
@@ -973,30 +983,41 @@ namespace NitroxClient.MonoBehaviours.Overrides
         }
 
         // Token: 0x06002BB7 RID: 11191 RVA: 0x00104FDC File Offset: 0x001031DC
-        private static void CreatePowerPreview(TechType constructableTechType, GameObject ghostModel)
-        {
-            GameObject gameObject = null;
 #if SUBNAUTICA
-                string poweredPrefabName = CraftData.GetPoweredPrefabName(constructableTechType);
+        private static void CreatePowerPreview(TechType constructableTechType, GameObject ghostModel)
 #elif BELOWZERO
-            string poweredPrefabName = TechData.GetPoweredPrefabName(constructableTechType);
+        private static IEnumerator CreatePowerPreviewAsync(GameObject ghostModel, string poweredPrefabName)
 #endif
+        {
+#if SUBNAUTICA
+            GameObject gameObject = null;
+            string poweredPrefabName = CraftData.GetPoweredPrefabName(constructableTechType);
             if (poweredPrefabName != string.Empty)
             {
-#if SUBNAUTICA
                 gameObject = PrefabDatabase.GetPrefabForFilename(poweredPrefabName);
-#elif BELOWZERO
-                gameObject = AddressablesUtility.LoadAsync<GameObject>(poweredPrefabName).Result;
-#endif
             }
 
             if (gameObject != null)
+#elif BELOWZERO
+            AsyncOperationHandle<GameObject> asyncOperationHandle = AddressablesUtility.LoadAsync<GameObject>(poweredPrefabName);
+            yield return asyncOperationHandle;
+            GameObject result = asyncOperationHandle.Result;
+            if (result != null)
+#endif
             {
+#if SUBNAUTICA
                 PowerRelay component = gameObject.GetComponent<PowerRelay>();
+#elif BELOWZERO
+                PowerRelay component = result.GetComponent<PowerRelay>();
+#endif
                 if (component.powerFX != null && component.powerFX.attachPoint != null)
                 {
+#if SUBNAUTICA
                     PowerFX powerFX = ghostModel.AddComponent<PowerFX>();
                     powerFX.attachPoint = new GameObject
+#elif BELOWZERO
+                    ghostModel.AddComponent<PowerFX>().attachPoint = new GameObject
+#endif
                     {
                         transform =
                     {
@@ -1007,13 +1028,26 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 }
 
                 PowerRelay powerRelay = ghostModel.AddComponent<PowerRelay>();
+#if BELOWZERO
+                powerRelay.powerSystemPreviewPrefab = component.powerSystemPreviewPrefab;
+#endif
                 powerRelay.maxOutboundDistance = component.maxOutboundDistance;
                 powerRelay.dontConnectToRelays = component.dontConnectToRelays;
                 if (component.internalPowerSource != null)
                 {
+#if SUBNAUTICA
                     powerRelay.internalPowerSource = ghostModel.AddComponent<PowerSource>();
+#elif BELOWZERO
+                    PowerSource powerSource = ghostModel.AddComponent<PowerSource>();
+                    powerSource.maxPower = 0f;
+                    powerRelay.internalPowerSource = powerSource;
+#endif
                 }
             }
+#if BELOWZERO
+            asyncOperationHandle.QueueRelease<GameObject>();
+            yield break;
+#endif
         }
 
         public static Vector3 overridePosition;
