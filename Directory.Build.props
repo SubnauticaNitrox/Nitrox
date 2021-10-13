@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" InitialTargets="BeforeResolveReferences">
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="PrepareForModding">
     <!-- Set default properties for all projects (can be overridden per project) -->
     <PropertyGroup>
         <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
@@ -33,6 +33,8 @@
     
     <PropertyGroup Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(MSBuildProjectName), '^Nitrox.*$'))">
         <NitroxLibrary>true</NitroxLibrary>
+        <!-- Set default runtime target to windows (until we can do cross-platform code) -->
+        <RuntimeIdentifier>win</RuntimeIdentifier>
     </PropertyGroup>
     <PropertyGroup Condition="'$(NitroxLibrary)' == 'true' and '$(MSBuildProjectName)' != 'NitroxModel' and '$(MSBuildProjectName)' != 'NitroxServer' and '$(MSBuildProjectName)' != 'Nitrox.Bootloader' and '$(MSBuildProjectName)' != 'Nitrox.BuildTool'">
         <UnityModLibrary>true</UnityModLibrary>
@@ -64,9 +66,10 @@
             </ItemGroup>
         </When>
     </Choose>
-
-    <!-- Tell developer that it needs to build the Nitrox.BuildTool to fetch the game assemblies.  -->
-    <Target Name="PrepareForModding" BeforeTargets="BeforeResolveReferences" Condition="'$(UnityModLibrary)' == 'true' and !Exists('$(BuildGenDir)publicized_assemblies')">
+    
+    <!-- Tell developer that it needs to build the Nitrox.BuildTool to fetch the game assemblies. 
+    "dotnet restore" should still be allowed to run to fetch NuGet packages -->
+    <Target Name="PrepareForModding" AfterTargets="Restore;BeforeResolveReferences" Condition="'$(UnityModLibrary)' == 'true' and !Exists('$(BuildGenDir)publicized_assemblies')">
         <Error Text="Run the Nitrox.BuildTool project to fetch the assemblies, before building other Nitrox projects." />
     </Target>
     <!-- Include generated build properties. -->
