@@ -15,7 +15,7 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             if (entry != null)
             {
-                NitroxServiceLocator.LocateService<PDAManagerEntry>().Progress(entry);
+                NitroxServiceLocator.LocateService<PDAManagerEntry>().Progress(entry, "");
             }
         }
 

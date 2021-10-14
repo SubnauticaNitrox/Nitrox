@@ -1,11 +1,16 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
 using NitroxClient.GameLogic;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
+using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
+using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
@@ -17,9 +22,13 @@ namespace NitroxPatcher.Patches.Dynamic
         public static readonly OpCode INJECTION_OPCODE = OpCodes.Call;
         public static readonly object INJECTION_OPERAND = typeof(ResourceTracker).GetMethod("UpdateFragments", BindingFlags.Public | BindingFlags.Static);
 
+        public static readonly OpCode INJECTION_OPCODE_2 = OpCodes.Ldsfld;
+        public static readonly object INJECTION_OPERAND_2 = typeof(PDAScanner).GetField("cachedProgress", BindingFlags.NonPublic | BindingFlags.Static);
+
         public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
         {
             Validate.NotNull(INJECTION_OPERAND);
+            Validate.NotNull(INJECTION_OPERAND_2);
 
             foreach (CodeInstruction instruction in instructions)
             {
@@ -32,6 +41,10 @@ namespace NitroxPatcher.Patches.Dynamic
                      * >> PDAScanner_Scan_Patch.Callback();
                      */
                     yield return new CodeInstruction(OpCodes.Call, typeof(PDAScanner_Scan_Patch).GetMethod("Callback", BindingFlags.Static | BindingFlags.Public));
+                }
+                else if (instruction.opcode.Equals(INJECTION_OPCODE_2) && instruction.operand.Equals(INJECTION_OPERAND_2))
+                {
+                    yield return new CodeInstruction(OpCodes.Call, typeof(PDAScanner_Scan_Patch).GetMethod("ProgressCallback", BindingFlags.Static | BindingFlags.Public));
                 }
             }
         }
@@ -50,6 +63,122 @@ namespace NitroxPatcher.Patches.Dynamic
                 // of the placeholder and not the virtual entity. TODO: we will need to propagate deterministic ids to children entities for
                 // these virtual entities.
                 NitroxServiceLocator.LocateService<Item>().PickedUp(PDAScanner.scanTarget.gameObject, techType);
+            }
+        }
+
+        public const int PACKET_SENDING_RATE = 500; // in milliseconds
+
+        public static readonly PDAManagerEntry PDAManagerEntry = NitroxServiceLocator.LocateService<PDAManagerEntry>();
+        public static Dictionary<NitroxId, ThrottledEntry> ThrottlingEntries = new Dictionary<NitroxId, ThrottledEntry>();
+
+        public class ThrottledEntry
+        {
+            public TechType EntryTechType;
+            public NitroxId Id;
+            public DateTimeOffset LatestProgressTime, LatestPacketSendTime;
+            public PDAScanner.Entry Entry;
+            public Coroutine LastProgressThrottler;
+
+            public ThrottledEntry(TechType techType, NitroxId id, PDAScanner.Entry entry) : this(techType, id, DateTimeOffset.FromUnixTimeMilliseconds(0), DateTimeOffset.FromUnixTimeMilliseconds(0), entry)
+            { }
+
+            public ThrottledEntry(TechType techType, NitroxId id, DateTimeOffset latestProgressTime, DateTimeOffset latestPacketSendTime, PDAScanner.Entry entry)
+            {
+                EntryTechType = techType;
+                Id = id;
+                LatestProgressTime = latestProgressTime;
+                LatestPacketSendTime = latestPacketSendTime;
+                Entry = entry;
+            }
+
+            public void Update(DateTimeOffset? newLatestProgressTime, DateTimeOffset? newLatestPacketSendTime, PDAScanner.Entry newEntry)
+            {
+                if (newLatestProgressTime.HasValue)
+                {
+                    LatestProgressTime = newLatestProgressTime.Value;
+                }
+                if (newLatestPacketSendTime.HasValue)
+                {
+                    LatestPacketSendTime = newLatestPacketSendTime.Value;
+                }
+                Entry = newEntry;
+            }
+
+            public void StartThrottler()
+            {
+                LastProgressThrottler = Player.main.StartCoroutine(ThrottleLastProgress(this));
+            }
+        }
+
+        // After 2 seconds without scanning, a packet will be sent with the latest progress
+        static IEnumerator ThrottleLastProgress(ThrottledEntry throttledEntry)
+        {
+            do
+            {
+                yield return new WaitForSeconds(2);
+            }
+            while (DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() < throttledEntry.LatestProgressTime.ToUnixTimeMilliseconds() + 2000);
+
+            if (!PDAScanner.ContainsCompleteEntry(throttledEntry.EntryTechType))
+            {
+                PDAManagerEntry.Progress(throttledEntry.Entry, throttledEntry.Id.ToString());
+            }
+
+            // No need to keep this in memory
+            ThrottlingEntries.Remove(throttledEntry.Id);
+        }
+
+        // Happens each time a progress is made
+        public static void ProgressCallback()
+        {
+            PDAScanner.ScanTarget scanTarget = PDAScanner.scanTarget;
+
+            if (scanTarget.isValid && scanTarget.progress > 0f)
+            {
+                PDAScanner.Entry entry = new PDAScanner.Entry() { techType = scanTarget.techType, progress = scanTarget.progress };
+                if (entry.techType == TechType.Player)
+                {
+                    return;
+                }
+                // Should always be the same for the same entity
+                NitroxId UID = scanTarget.gameObject.GetComponent<NitroxEntity>().Id;
+                NitroxTechType nitroxTechType = new NitroxTechType(scanTarget.techType.ToString());
+                DateTimeOffset Now = DateTimeOffset.UtcNow;
+
+                // Start a thread when a scanning period starts
+                if (!ThrottlingEntries.TryGetValue(UID, out ThrottledEntry throttledEntry))
+                {
+                    ThrottlingEntries.Add(UID, throttledEntry = new ThrottledEntry(scanTarget.techType, UID, entry));
+
+                    throttledEntry.StartThrottler();
+                }
+
+                // Updating the progress throttling
+                throttledEntry.Update(Now, null, entry);
+                // Throttling the packet sending
+                if (Now.ToUnixTimeMilliseconds() < throttledEntry.LatestPacketSendTime.ToUnixTimeMilliseconds() + PACKET_SENDING_RATE)
+                {
+                    return;
+                }
+
+                // This should not occur all the time because it only takes effect one time per entity
+                // Check if the entry is already in the partial list, and then, change the progress
+                if (PDACache.CachedEntries.TryGetValue(nitroxTechType, out PDAProgressEntry pdaProgressEntry))
+                {
+                    if (pdaProgressEntry.Entries.TryGetValue(UID, out float progress))
+                    {
+                        pdaProgressEntry.Entries.Remove(UID);
+                        PDAScanner.scanTarget.progress = progress;
+                        entry.progress = progress;
+                        if (pdaProgressEntry.Entries.Count == 0)
+                        {
+                            PDACache.CachedEntries.Remove(nitroxTechType);
+                        }
+                    }
+                }
+
+                throttledEntry.Update(Now, Now, entry);
+                PDAManagerEntry.Progress(entry, UID.ToString());
             }
         }
 

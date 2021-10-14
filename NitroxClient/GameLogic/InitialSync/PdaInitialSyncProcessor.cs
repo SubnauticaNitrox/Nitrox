@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using NitroxClient.Communication.Abstract;
@@ -24,22 +23,26 @@ namespace NitroxClient.GameLogic.InitialSync
         public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
         {
             SetEncyclopediaEntry(packet.PDAData.EncyclopediaEntries);
-            waitScreenItem.SetProgress(0.2f);
+            waitScreenItem.SetProgress(0.17f);
             yield return null;
 
             SetPDAEntryComplete(packet.PDAData.UnlockedTechTypes);
-            waitScreenItem.SetProgress(0.4f);
+            waitScreenItem.SetProgress(0.33f);
             yield return null;
 
             SetPDAEntryPartial(packet.PDAData.PartiallyUnlockedTechTypes);
-            waitScreenItem.SetProgress(0.6f);
+            waitScreenItem.SetProgress(0.5f);
             yield return null;
 
             SetKnownTech(packet.PDAData.KnownTechTypes);
-            waitScreenItem.SetProgress(0.8f);
+            waitScreenItem.SetProgress(0.67f);
             yield return null;
 
             SetPDALog(packet.PDAData.PDALogEntries);
+            waitScreenItem.SetProgress(0.83f);
+            yield return null;
+
+            SetCachedProgress(packet.PDAData.CachedProgress);
             waitScreenItem.SetProgress(1f);
             yield return null;
         }
@@ -65,7 +68,7 @@ namespace NitroxClient.GameLogic.InitialSync
             {
                 complete.Add(item.ToUnity());
             }
-
+            
             Log.Info($"PDAEntryComplete: New added: {pdaEntryComplete.Count}, Total: {complete.Count}");
 
         }
@@ -76,7 +79,14 @@ namespace NitroxClient.GameLogic.InitialSync
 
             foreach (PDAEntry entry in entries)
             {
-                partial.Add(new PDAScanner.Entry { progress = entry.Progress, techType = entry.TechType.ToUnity(), unlocked = entry.Unlocked });
+                PDAScanner.Entry newEntry = new PDAScanner.Entry { progress = entry.Progress, techType = entry.TechType.ToUnity(), unlocked = entry.Unlocked };
+                // If, for some reason this happens, at least the client will be able to ignore it, in the other case, he wouldn't be able to connect
+                if (newEntry.progress == 0f)
+                {
+                    Log.Warn("A partial entry progress was set to 0 and was removed");
+                    continue;
+                }
+                partial.Add(newEntry);
             }
 
             Log.Debug($"PDAEntryPartial: New added: {entries.Count}, Total: {partial.Count}");
@@ -122,6 +132,16 @@ namespace NitroxClient.GameLogic.InitialSync
                         }
                     }
                 }
+            }
+        }
+
+        private void SetCachedProgress(List<PDAProgressEntry> pdaCachedEntries)
+        {
+            Log.Info($"Received initial sync packet with {pdaCachedEntries.Count} cached progress entries");
+            PDACache.CachedEntries = new Dictionary<NitroxTechType, PDAProgressEntry>();
+            foreach (PDAProgressEntry pdaProgressEntry in pdaCachedEntries)
+            {
+                PDACache.CachedEntries.Add(pdaProgressEntry.TechType, pdaProgressEntry);
             }
         }
     }

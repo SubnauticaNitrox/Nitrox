@@ -215,6 +215,7 @@
     <Compile Include="GameLogic\MobileVehicleBay.cs" />
     <Compile Include="GameLogic\MovementHelper.cs" />
     <Compile Include="GameLogic\NitroxConsole.cs" />
+    <Compile Include="GameLogic\PDACache.cs" />
     <Compile Include="GameLogic\PDAEncyclopediaEntry.cs" />
     <Compile Include="GameLogic\PDAManagerEntry.cs" />
     <Compile Include="GameLogic\PlayerManager.cs" />

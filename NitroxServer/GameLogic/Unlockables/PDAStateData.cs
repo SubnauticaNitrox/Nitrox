@@ -24,10 +24,17 @@ namespace NitroxServer.GameLogic.Unlockables
         [JsonProperty, ProtoMember(5)]
         public ThreadSafeList<PDALogEntry> PdaLog { get; } = new ThreadSafeList<PDALogEntry>();
 
+        [JsonProperty, ProtoMember(6)]
+        public ThreadSafeDictionary<NitroxTechType, PDAProgressEntry> CachedProgress { get; } = new ThreadSafeDictionary<NitroxTechType, PDAProgressEntry>();
+
         public void UnlockedTechType(NitroxTechType techType)
         {
             PartiallyUnlockedByTechType.Remove(techType);
             UnlockedTechTypes.Add(techType);
+            if (CachedProgress.TryGetValue(techType, out PDAProgressEntry pdaProgressEntry))
+            {
+                CachedProgress.Remove(techType);
+            }
         }
 
         public void AddKnownTechType(NitroxTechType techType)
@@ -45,7 +52,7 @@ namespace NitroxServer.GameLogic.Unlockables
             PdaLog.Add(entry);
         }
 
-        public void EntryProgressChanged(NitroxTechType techType, float progress, int unlocked)
+        public void EntryProgressChanged(NitroxTechType techType, float progress, int unlocked, string id)
         {
             if (!PartiallyUnlockedByTechType.TryGetValue(techType, out PDAEntry pdaEntry))
             {
@@ -54,6 +61,16 @@ namespace NitroxServer.GameLogic.Unlockables
 
             pdaEntry.Progress = progress;
             pdaEntry.Unlocked = unlocked;
+            
+            // Stuff concerning PDA CachedEntries
+            PDAProgressEntry pdaProgressEntry;
+            bool exists = CachedProgress.TryGetValue(techType, out pdaProgressEntry);
+            if (id != null && id.Length > 0 && !exists)
+            {
+                CachedProgress.Add(techType, pdaProgressEntry = new PDAProgressEntry(techType, new Dictionary<NitroxId, float>()));
+            }
+
+            pdaProgressEntry.Entries[new NitroxId(id)] = progress;
         }
 
         public InitialPDAData GetInitialPDAData()
@@ -62,7 +79,8 @@ namespace NitroxServer.GameLogic.Unlockables
                 new List<NitroxTechType>(KnownTechTypes),
                 new List<string>(EncyclopediaEntries),
                 new List<PDAEntry>(PartiallyUnlockedByTechType.Values),
-                new List<PDALogEntry>(PdaLog));
+                new List<PDALogEntry>(PdaLog),
+                new List<PDAProgressEntry>(CachedProgress.Values));
         }
     }
 }

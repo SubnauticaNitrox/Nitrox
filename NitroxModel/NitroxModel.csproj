@@ -54,6 +54,7 @@
     <Compile Include="DataStructures\GameLogic\InteractiveChildObjectIdentifier.cs" />
     <Compile Include="DataStructures\GameLogic\ItemData.cs" />
     <Compile Include="DataStructures\GameLogic\NitroxTechType.cs" />
+    <Compile Include="DataStructures\GameLogic\PDAProgressEntry.cs" />
     <Compile Include="DataStructures\GameLogic\PDAEntry.cs" />
     <Compile Include="DataStructures\GameLogic\PDALogEntry.cs" />
     <Compile Include="DataStructures\GameLogic\Perms.cs" />
