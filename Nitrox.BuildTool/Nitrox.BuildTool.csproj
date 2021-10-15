@@ -35,4 +35,8 @@
       <ProjectReference Include="..\NitroxModel\NitroxModel.csproj" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+    <Target Name="Clean"  AfterTargets="Clean">
+        <!-- Remove bin folder -->
+        <RemoveDir Directories="$(BaseOutputPath)" />
+    </Target>
 </Project>
