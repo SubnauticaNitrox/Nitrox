@@ -12,12 +12,21 @@ namespace NitroxModel.Discovery.InstallationFinders
         /// </summary>
         public string FindGame(IList<string> errors = null)
         {
+#if SUBNAUTICA
             string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DiscordGames", "Subnautica", "content");
             if (HasSubnautica(path))
             {
                 return path;
             }
             path = @"C:\Games\Subnautica\content";
+#elif BELOWZERO
+            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DiscordGames", "SubnauticaZero", "content");
+            if (HasSubnautica(path))
+            {
+                return path;
+            }
+            path = @"C:\Games\SubnauticaZero\content";
+#endif
             if (HasSubnautica(path))
             {
                 return path;
@@ -28,7 +37,11 @@ namespace NitroxModel.Discovery.InstallationFinders
 
         private bool HasSubnautica(string path)
         {
+#if SUBNAUTICA
             return File.Exists(Path.Combine(path, GameInfo.Subnautica.ExeName));
+#elif BELOWZERO
+            return File.Exists(Path.Combine(path, GameInfo.SubnauticaBelowZero.ExeName));
+#endif
         }
     }
 }

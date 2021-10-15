@@ -12,11 +12,7 @@ namespace NitroxClient.GameLogic.Spawning
         /**
          * Crash fish are spawned by the CrashHome in the Monobehaviours Start method
          */
-#if SUBNAUTICA
-        public Optional<GameObject> Spawn(Entity entity, Optional<GameObject> parent, EntityCell cellRoot)
-#elif BELOWZERO
         public IEnumerator Spawn(TaskResult<Optional<GameObject>> result, Entity entity, Optional<GameObject> parent, EntityCell cellRoot)
-#endif
         {
             if (parent.HasValue)
             {
@@ -27,12 +23,8 @@ namespace NitroxClient.GameLogic.Spawning
                 NitroxEntity.SetNewId(gameObject, entity.Id);
                 crashHome.ReflectionSet("crash", gameObject.GetComponent<Crash>());
             }
-#if SUBNAUTICA
-            return Optional.Empty;
-#elif BELOWZERO
             result.Set(Optional.Empty);
             yield break;
-#endif
         }
 
         public bool SpawnsOwnChildren()

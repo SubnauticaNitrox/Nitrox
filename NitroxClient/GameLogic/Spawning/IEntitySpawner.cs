@@ -10,11 +10,7 @@ namespace NitroxClient.GameLogic.Spawning
      */
     public interface IEntitySpawner
     {
-#if SUBNAUTICA
-        Optional<GameObject> Spawn(Entity entity, Optional<GameObject> parent, EntityCell cellRoot);
-#elif BELOWZERO
         IEnumerator Spawn(TaskResult<Optional<GameObject>> result, Entity entity, Optional<GameObject> parent, EntityCell cellRoot);
-#endif
         bool SpawnsOwnChildren();
     }
 }

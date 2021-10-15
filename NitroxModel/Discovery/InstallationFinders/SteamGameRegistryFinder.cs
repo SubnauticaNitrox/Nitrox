@@ -18,15 +18,22 @@ namespace NitroxModel.Discovery.InstallationFinders
             }
 
             string appsPath = Path.Combine(steamPath, "steamapps");
-            if (File.Exists(Path.Combine(appsPath, $"appmanifest_{GameInfo.Subnautica.SteamAppId}.acf")))
+#if SUBNAUTICA
+            int steamAppId = GameInfo.Subnautica.SteamAppId;
+            string steamAppName = GameInfo.Subnautica.Name;
+#elif BELOWZERO
+            int steamAppId = GameInfo.SubnauticaBelowZero.SteamAppId;
+            string steamAppName = GameInfo.SubnauticaBelowZero.Name;
+#endif
+            if (File.Exists(Path.Combine(appsPath, $"appmanifest_{steamAppId}.acf")))
             {
-                return Path.Combine(appsPath, "common", GameInfo.Subnautica.Name);
+                return Path.Combine(appsPath, "common", steamAppName);
             }
 
-            string path = SearchAllInstallations(Path.Combine(appsPath, "libraryfolders.vdf"), GameInfo.Subnautica.SteamAppId, GameInfo.Subnautica.Name);
+            string path = SearchAllInstallations(Path.Combine(appsPath, "libraryfolders.vdf"), steamAppId, steamAppName);
             if (string.IsNullOrEmpty(path))
             {
-                errors?.Add($"It appears you don't have {GameInfo.Subnautica.Name} installed anywhere. The game files are needed to run the server.");
+                errors?.Add($"It appears you don't have {steamAppName} installed anywhere. The game files are needed to run the server.");
             }
             else
             {

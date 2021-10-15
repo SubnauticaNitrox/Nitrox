@@ -11,21 +11,14 @@ namespace NitroxClient.GameLogic.Spawning
 {
     public class DefaultEntitySpawner : IEntitySpawner
     {
-#if SUBNAUTICA
-        public Optional<GameObject> Spawn(Entity entity, Optional<GameObject> parent, EntityCell cellRoot)
-#elif BELOWZERO
         public IEnumerator Spawn(TaskResult<Optional<GameObject>> result, Entity entity, Optional<GameObject> parent, EntityCell cellRoot)
-#endif
         {
             TechType techType = entity.TechType.ToUnity();
-#if SUBNAUTICA
-            GameObject gameObject = CreateGameObject(techType, entity.ClassId);
-#elif BELOWZERO
+
             TaskResult<GameObject> gameObjectResult = new TaskResult<GameObject>();
             yield return CreateGameObject(gameObjectResult, techType, entity.ClassId);
 
             GameObject gameObject = gameObjectResult.Get();
-#endif
             gameObject.transform.position = entity.Transform.Position.ToUnity();
             gameObject.transform.rotation = entity.Transform.Rotation.ToUnity();
             gameObject.transform.localScale = entity.Transform.LocalScale.ToUnity();
@@ -58,19 +51,10 @@ namespace NitroxClient.GameLogic.Spawning
             {
                 metadataProcessor.Value.ProcessMetadata(gameObject, entity.Metadata);
             }
-#if SUBNAUTICA
-            return Optional.Of(gameObject);
-#elif BELOWZERO
             result.Set(Optional.Of(gameObject));
-            yield break;
-#endif
         }
 
-#if SUBNAUTICA
-        private GameObject CreateGameObject(TechType techType, string classId)
-#elif BELOWZERO
         private IEnumerator CreateGameObject(TaskResult<GameObject> result, TechType techType, string classId)
-#endif
         {
             GameObject prefab = null;
             if (PrefabDatabase.TryGetPrefabFilename(classId, out string filename))
@@ -80,21 +64,16 @@ namespace NitroxClient.GameLogic.Spawning
 
             if (prefab == null)
             {
-                prefab = CraftData.GetPrefabForTechType(techType, false);
+                CoroutineTask<GameObject> techPrefabCoroutine = CraftData.GetPrefabForTechTypeAsync(techType, false);
+                yield return techPrefabCoroutine;
+
+                prefab = techPrefabCoroutine.GetResult();
                 if (prefab == null)
                 {
-#if SUBNAUTICA
-                    return Utils.CreateGenericLoot(techType);
-#elif BELOWZERO
                     result.Set(Utils.CreateGenericLoot(techType));
-#endif
                 }
             }
-#if SUBNAUTICA
-            return Utils.SpawnFromPrefab(prefab, null);
-#elif BELOWZERO
             result.Set(Utils.SpawnFromPrefab(prefab, null));
-#endif
         }
 
         public bool SpawnsOwnChildren()

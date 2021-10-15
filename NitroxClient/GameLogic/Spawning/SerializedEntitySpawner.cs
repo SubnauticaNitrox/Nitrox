@@ -15,11 +15,7 @@ namespace NitroxClient.GameLogic.Spawning
 {
     public class SerializedEntitySpawner : IEntitySpawner
     {
-#if SUBNAUTICA
-        public Optional<GameObject> Spawn(Entity entity, Optional<GameObject> parent, EntityCell cellRoot)
-#elif BELOWZERO
         public IEnumerator Spawn(TaskResult<Optional<GameObject>> result, Entity entity, Optional<GameObject> parent, EntityCell cellRoot)
-#endif
         {
             GameObject gameObject = SerializationHelper.GetGameObject(entity.SerializedGameObject);
             gameObject.transform.position = entity.Transform.Position.ToUnity();
@@ -42,12 +38,9 @@ namespace NitroxClient.GameLogic.Spawning
             {
                 metadataProcessor.Value.ProcessMetadata(gameObject, entity.Metadata);
             }
-#if SUBNAUTICA
-            return Optional.Of(gameObject);
-#elif BELOWZERO
+
             result.Set(Optional.Of(gameObject));
             yield break;
-#endif
         }
 
         public bool SpawnsOwnChildren()

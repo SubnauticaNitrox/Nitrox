@@ -321,15 +321,27 @@ namespace NitroxLauncher
         private async Task<ProcessEx> StartSubnauticaAsync()
         {
             // Start game & gaming platform if needed.
+#if SUBNAUTICA
             string subnauticaExe = Path.Combine(subnauticaPath, GameInfo.Subnautica.ExeName);
+#elif BELOWZERO
+            string subnauticaExe = Path.Combine(subnauticaPath, GameInfo.SubnauticaBelowZero.ExeName);
+#endif
             IGamePlatform platform = GamePlatforms.GetPlatformByGameDir(subnauticaPath);
             using ProcessEx game = platform switch
             {
+#if SUBNAUTICA
                 Steam s => await s.StartGameAsync(subnauticaExe, GameInfo.Subnautica.SteamAppId),
+#elif BELOWZERO
+                Steam s => await s.StartGameAsync(subnauticaExe, GameInfo.SubnauticaBelowZero.SteamAppId),
+#endif
                 Egs e => await e.StartGameAsync(subnauticaExe),
                 MSStore m => await m.StartGameAsync(subnauticaExe),
                 DiscordStore d => await d.StartGameAsync(subnauticaExe),
+#if SUBNAUTICA
                 _ => throw new Exception($"Directory '{subnauticaPath}' is not a valid {GameInfo.Subnautica.Name} game installation or the game's platform is unsupported.")
+#elif BELOWZERO
+                _ => throw new Exception($"Directory '{subnauticaPath}' is not a valid {GameInfo.SubnauticaBelowZero.Name} game installation or the game's platform is unsupported.")
+#endif
             };
 
             return game ?? throw new Exception($"Unable to start game through {platform.Name}");

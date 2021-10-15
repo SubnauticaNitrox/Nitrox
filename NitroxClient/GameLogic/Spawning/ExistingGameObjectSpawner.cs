@@ -15,31 +15,19 @@ namespace NitroxClient.GameLogic.Spawning
      */
     public class ExistingGameObjectSpawner : IEntitySpawner
     {
-#if SUBNAUTICA
-        public Optional<GameObject> Spawn(Entity entity, Optional<GameObject> parent, EntityCell cellRoot)
-#elif BELOWZERO
         public IEnumerator Spawn(TaskResult<Optional<GameObject>> result, Entity entity, Optional<GameObject> parent, EntityCell cellRoot)
-#endif
         {
             if (!parent.HasValue)
             {
-#if SUBNAUTICA
-                return Optional.Empty;
-#elif BELOWZERO
                 result.Set(Optional.Empty);
                 yield break;
-#endif
             }
 
             if (parent.Value.transform.childCount - 1 < entity.ExistingGameObjectChildIndex.Value)
             {
                 Log.Error($"Parent {parent.Value} did not have a child at index {entity.ExistingGameObjectChildIndex.Value}");
-#if SUBNAUTICA
-                return Optional.Empty;
-#elif BELOWZERO
                 result.Set(Optional.Empty);
                 yield break;
-#endif
             }
 
             GameObject gameObject = parent.Value.transform.GetChild(entity.ExistingGameObjectChildIndex.Value).gameObject;
@@ -52,11 +40,7 @@ namespace NitroxClient.GameLogic.Spawning
             {
                 metadataProcessor.Value.ProcessMetadata(gameObject, entity.Metadata);
             }
-#if SUBNAUTICA
-            return Optional.Of(gameObject);
-#elif BELOWZERO
             result.Set(Optional.Of(gameObject));
-#endif
         }
 
         public bool SpawnsOwnChildren()

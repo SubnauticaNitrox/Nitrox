@@ -396,7 +396,6 @@
   <ItemGroup Label="Assembly References">
     <Reference Include="iTween">
       <HintPath>$(GameManagedDir)\iTween.dll</HintPath>
-      <Private>false</Private>
     </Reference>
     <Reference Include="LitJson">
       <HintPath>$(GameManagedDir)\LitJson.dll</HintPath>
@@ -408,6 +407,12 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml" />
+    <Reference Include="Unity.ResourceManager">
+      <HintPath>$(GameManagedDir)\Unity.ResourceManager.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.TextMeshPro">
+      <HintPath>$(GameManagedDir)\Unity.TextMeshPro.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
