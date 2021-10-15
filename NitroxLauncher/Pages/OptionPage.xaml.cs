@@ -56,16 +56,11 @@ namespace NitroxLauncher.Pages
 
         private void OptionPage_OnUnloaded(object sender, RoutedEventArgs e)
         {
-            LauncherLogic.Config.PropertyChanged -= OnLogicPropertyChanged;
-        }
+            LauncherLogic.Config.PropertyChanged -= OnLogicPropertyChanged;        }
 
         private void OnLogicPropertyChanged(object sender, PropertyChangedEventArgs args)
         {
-            // Pass-through property change events.
-            if (args.PropertyName == nameof(LauncherLogic.Config.SubnauticaPath))
-            {
-                OnPropertyChanged(nameof(PathToSubnautica));
-            }
+            OnPropertyChanged(nameof(PathToSubnautica));
         }
     }
 }

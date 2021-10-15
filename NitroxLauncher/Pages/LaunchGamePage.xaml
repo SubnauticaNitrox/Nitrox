@@ -48,7 +48,12 @@
                 <ColumnDefinition Width="0*"/>
             </Grid.ColumnDefinitions>
 
-            <TextBlock FontSize="14" Foreground="White" TextWrapping="Wrap" Grid.Column="1" Margin="0,112,20,0" Height="87" VerticalAlignment="Top" Grid.ColumnSpan="2"><Run Text="Nitrox is an open-source, multiplayer modification for the game Subnautica."/><Run Text=" "/><Run Text="The project is maintained by the community with regular support and updates from the generous contributors."/></TextBlock>
+            <TextBlock FontSize="14" Foreground="White" TextWrapping="Wrap" Grid.Column="1" Margin="0,112,20,0" Height="87" VerticalAlignment="Top" Grid.ColumnSpan="2">
+                <Run Text="Nitrox is an open-source, multiplayer modification for the game Subnautica."/>
+                <Run Text=" "/>
+                <Run Text="The project is maintained by the community with regular support and updates from the generous contributors."/>
+            </TextBlock>
+            
             <StackPanel Orientation="Vertical" Grid.Column="3" Margin="0" Height="203" VerticalAlignment="Top">
                 <StackPanel.Background>
                     <ImageBrush ImageSource="/NitroxLauncher;component/Images/PlayBoxImage.png"/>
@@ -61,11 +66,11 @@
                     </StackPanel>
                     
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right">
-                        <Image Source="{Binding GamePlateform, Converter={converters:PlatformToIconConverter}, Mode=OneWay}"
+                        <Image Source="{Binding GamePlateform, Converter={converters:PlatformToIconConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                                HorizontalAlignment="Right"
                                VerticalAlignment="Top">
                             <Image.ToolTip>
-                                <ToolTip Content="{Binding PlatformToolTip, Mode=OneWay}" />
+                                <ToolTip Content="{Binding PlatformToolTip, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
                             </Image.ToolTip>
                         </Image>
                     </StackPanel>
@@ -95,7 +100,7 @@
             <StackPanel Margin="0,11,0,0" Grid.Column="2" HorizontalAlignment="Left" Width="545" Grid.Row="2" Grid.ColumnSpan="2">
                 <TextBlock FontSize="10" Foreground="#7FFFFFFF" Margin="0,0,0,6" FontWeight="Bold"><Run Text="DEVELOPERS"/></TextBlock>
                 <TextBlock FontSize="14" Foreground="White" Margin="0,0,0,12" TextWrapping="Wrap" LineHeight="24">
-                    <Run>Sunrunner, Killzoms, Jannify, Marijn, Measurity, MadMax, Nes, _HeN_, CatSZekely, Garsia, RabidCrab, AquariusSidhe, Amarok, iCleeem</Run>
+                    <Run>Sunrunner, Killzoms, Jannify, Marijn, Measurity, MadMax, Nes, _HeN_, dartasen, CatSZekely, Garsia, RabidCrab, AquariusSidhe, Amarok, iCleeem</Run>
                 </TextBlock>
 
                 <TextBlock FontSize="10" Foreground="#7FFFFFFF" Margin="0,0,0,6" FontWeight="Bold"><Run Text="STAFF"/></TextBlock>

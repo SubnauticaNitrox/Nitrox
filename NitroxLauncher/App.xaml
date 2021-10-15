@@ -13,19 +13,13 @@
             <FontFamily x:Key="Inter">pack://application:,,,/Fonts/#Inter</FontFamily>
             <FontFamily x:Key="DefaultFont">pack://application:,,,/Fonts/#Inter</FontFamily>
 
-            <!-- Foreground images -->
-            <BitmapImage x:Key="NitroxImage" UriSource="pack://application:,,,/Images/Nitrox.ico" />
-
-            <!-- Icons -->
+            <!-- Platforms icons -->
             <BitmapImage x:Key="StoreSteam" UriSource="pack://application:,,,/Images/store-icons/steam-2x.png" />
             <BitmapImage x:Key="StoreEpic" UriSource="pack://application:,,,/Images/store-icons/epic-2x.png" />
             <BitmapImage x:Key="StoreXbox" UriSource="pack://application:,,,/Images/store-icons/xbox-2x.png" />
             <BitmapImage x:Key="StoreDiscord" UriSource="pack://application:,,,/Images/store-icons/discord-2x.png" />
 
-            <BitmapImage x:Key="NitroxIcon" UriSource="pack://application:,,,/Images/nitroxIco.png" />
-
-
-            <!-- Pages TODO: Find another solution for the hard-coded viewbox values so that page background image aligns with sidebar and header -->
+            <!-- Pages -->
             <pages:LaunchGamePage x:Key="LaunchGamePage" Background="#000000"/>
             <pages:OptionPage x:Key="OptionPage" Background="#000000"/>
             <pages:ServerPage x:Key="ServerPage" Background="#000000"/>
@@ -53,12 +47,57 @@
                 </Style.Triggers>
             </Style>
 
+            <Style x:Key="ButtonConsoleStop" TargetType="{x:Type Button}">
+                <Style.Resources>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="CornerRadius" Value="6" />
+                        <Setter Property="BorderThickness" Value="1" />
+                    </Style>
+                </Style.Resources>
+                <Setter Property="Width" Value="240" />
+                <Setter Property="Height" Value="80" />
+                <Setter Property="FontSize" Value="16" />
+                <Style.BasedOn>
+                    <StaticResource ResourceKey="{x:Type Button}"/>
+                </Style.BasedOn>
+            </Style>
+
+            <Style x:Key="ButtonConsoleMsg" TargetType="{x:Type Button}">
+                <Style.Resources>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="CornerRadius" Value="6" />
+                        <Setter Property="BorderThickness" Value="1" />
+                    </Style>
+                </Style.Resources>
+                <Setter Property="Cursor" Value="Hand" />
+                <Setter Property="Width" Value="240" />
+                <Setter Property="Height" Value="80" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#19FFFFFF" />
+                                </Trigger>
+
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Background" Value="Transparent"/>
+            </Style>
+
             <Style TargetType="Window">
-                <Setter Property="FontFamily" Value="{StaticResource DefaultFont}" />
+                <Setter Property="FontFamily" Value="{DynamicResource DefaultFont}" />
             </Style>
 
             <Style TargetType="Page">
-                <Setter Property="FontFamily" Value="{StaticResource DefaultFont}" />
+                <Setter Property="FontFamily" Value="{DynamicResource DefaultFont}" />
                 <Setter Property="Margin" Value="0" />
             </Style>
 

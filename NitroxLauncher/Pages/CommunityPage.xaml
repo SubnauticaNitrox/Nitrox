@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:NitroxLauncher.Models"
+      xmlns:pages="clr-namespace:NitroxLauncher.Pages"
       DataContext="{Binding RelativeSource={RelativeSource Self}}"
       mc:Ignorable="d" 
       d:DesignHeight="800"
@@ -37,7 +38,7 @@
         </Grid>
 
         <Grid Grid.Row="1" Grid.ColumnSpan="2">
-            <Image Source="{DynamicResource CommunityHeader}"></Image>
+            <Image Source="{StaticResource CommunityHeader}"></Image>
         </Grid>
 
         <Grid Grid.Column="0" Margin="0,0,8,8" Grid.Row="2" Grid.ColumnSpan="1">
@@ -45,9 +46,9 @@
             <Grid Margin="22,22,22,0" Height="164" VerticalAlignment="Top">
                 <Grid VerticalAlignment="Top">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" >
-                        <TextBlock Foreground="White" Style="{DynamicResource SocialButton}" Margin="0" Height="56" VerticalAlignment="Top" HorizontalAlignment="Left">
-                            <Hyperlink NavigateUri="https://discord.gg/E8B4X9s" RequestNavigate="OnRequestNavigate" ToolTip="Join the Discord Server" Foreground="White" TextDecorations="{x:Null}">
-                                    <Image Source="{DynamicResource SocialDiscordIcon}" Width="56" Height="56" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                        <TextBlock Foreground="White" Style="{StaticResource SocialButton}" Margin="0" Height="56" VerticalAlignment="Top" HorizontalAlignment="Left">
+                            <Hyperlink NavigateUri="{x:Static pages:CommunityPage.DISCORD_LINK}" RequestNavigate="OnRequestNavigate" ToolTip="Join the Discord Server" Foreground="White" TextDecorations="{x:Null}">
+                                    <Image Source="{StaticResource SocialDiscordIcon}" Width="56" Height="56" HorizontalAlignment="Left" VerticalAlignment="Top" />
                             </Hyperlink>
                         </TextBlock>
                     </StackPanel>
@@ -56,7 +57,7 @@
                         <Button Style="{StaticResource LargeButton}" Background="#19FFFFFF" Width="Auto" Height="34"
                         HorizontalAlignment="Right" BorderBrush="#66FFFFFF"
                         ToolTip="Join the Discord Server"  VerticalAlignment="Stretch" Margin="8,0,0,0">
-                            <Hyperlink NavigateUri="https://discord.gg/E8B4X9s" RequestNavigate="OnRequestNavigate" Foreground="White" TextDecorations="{x:Null}">
+                            <Hyperlink NavigateUri="{x:Static pages:CommunityPage.DISCORD_LINK}" RequestNavigate="OnRequestNavigate" Foreground="White" TextDecorations="{x:Null}">
                                 <TextBlock FontSize="14" Foreground="White" Margin="16,0" VerticalAlignment="Center" HorizontalAlignment="Center"><Run Text="Join Discord"/></TextBlock>
                             </Hyperlink>
                         </Button>
@@ -73,9 +74,9 @@
             <Grid Margin="22,22,22,22">
                 <Grid VerticalAlignment="Top">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" >
-                        <TextBlock Foreground="White" Style="{DynamicResource SocialButton}" Margin="0" Height="56" VerticalAlignment="Top" >
-                            <Hyperlink NavigateUri="https://twitter.com/modnitrox" RequestNavigate="OnRequestNavigate" ToolTip="Follow on Twitter" Foreground="White" TextDecorations="{x:Null}">
-                                <Image Source="{DynamicResource SocialTwitterIcon}" Width="56" Height="56" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                        <TextBlock Foreground="White" Style="{StaticResource SocialButton}" Margin="0" Height="56" VerticalAlignment="Top" >
+                            <Hyperlink NavigateUri="{x:Static pages:CommunityPage.TWITTER_LINK}" RequestNavigate="OnRequestNavigate" ToolTip="Follow on Twitter" Foreground="White" TextDecorations="{x:Null}">
+                                <Image Source="{StaticResource SocialTwitterIcon}" Width="56" Height="56" HorizontalAlignment="Left" VerticalAlignment="Top" />
                             </Hyperlink>
                         </TextBlock>
                     </StackPanel>
@@ -84,7 +85,7 @@
                         <Button Style="{StaticResource LargeButton}" Background="#19FFFFFF" Width="Auto" Height="34"
                         HorizontalAlignment="Right" BorderBrush="#66FFFFFF"
                         ToolTip="Follow on Twitter"  VerticalAlignment="Stretch" Margin="8,0,0,0">
-                            <Hyperlink NavigateUri="https://twitter.com/modnitrox" RequestNavigate="OnRequestNavigate" Foreground="White" TextDecorations="{x:Null}">
+                            <Hyperlink NavigateUri="{x:Static pages:CommunityPage.TWITTER_LINK}" RequestNavigate="OnRequestNavigate" Foreground="White" TextDecorations="{x:Null}">
                                 <TextBlock FontSize="14" Foreground="White" Margin="16,0" VerticalAlignment="Center" HorizontalAlignment="Center"><Run Text="Follow"/></TextBlock>
                             </Hyperlink>
                         </Button>
@@ -101,9 +102,9 @@
             <Grid Margin="22,22,22,0" Height="164" VerticalAlignment="Top">
                 <Grid VerticalAlignment="Top">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" >
-                        <TextBlock Foreground="White" Style="{DynamicResource SocialButton}" Margin="0" Height="56" VerticalAlignment="Top" >
-                            <Hyperlink NavigateUri="https://reddit.com/r/SubnauticaNitrox" RequestNavigate="OnRequestNavigate" ToolTip="Nitrox Subreddit" Foreground="White" TextDecorations="{x:Null}">
-                                <Image Source="{DynamicResource SocialRedditIcon}" Width="56" Height="56" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                        <TextBlock Foreground="White" Style="{StaticResource SocialButton}" Margin="0" Height="56" VerticalAlignment="Top" >
+                            <Hyperlink NavigateUri="{x:Static pages:CommunityPage.REDDIT_LINK}" RequestNavigate="OnRequestNavigate" ToolTip="Nitrox Subreddit" Foreground="White" TextDecorations="{x:Null}">
+                                <Image Source="{StaticResource SocialRedditIcon}" Width="56" Height="56" HorizontalAlignment="Left" VerticalAlignment="Top" />
                             </Hyperlink>
                         </TextBlock>
                     </StackPanel>
@@ -112,7 +113,7 @@
                         <Button Style="{StaticResource LargeButton}" Background="#19FFFFFF" Width="Auto" Height="34"
                         HorizontalAlignment="Right" BorderBrush="#66FFFFFF"
                         ToolTip="Nitrox Subreddit"  VerticalAlignment="Stretch" Margin="8,0,0,0">
-                            <Hyperlink NavigateUri="https://reddit.com/r/SubnauticaNitrox" RequestNavigate="OnRequestNavigate" Foreground="White" TextDecorations="{x:Null}">
+                            <Hyperlink NavigateUri="{x:Static pages:CommunityPage.REDDIT_LINK}" RequestNavigate="OnRequestNavigate" Foreground="White" TextDecorations="{x:Null}">
                                 <TextBlock FontSize="14" Foreground="White" Margin="16,0" VerticalAlignment="Center" HorizontalAlignment="Center"><Run Text="Join Subreddit"/></TextBlock>
                             </Hyperlink>
                         </Button>
@@ -133,9 +134,9 @@
 
                 <Grid VerticalAlignment="Top">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" >
-                        <TextBlock Foreground="White" Style="{DynamicResource SocialButton}" Margin="0" Height="56" VerticalAlignment="Top" >
-                            <Hyperlink NavigateUri="https://github.com/SubnauticaNitrox/Nitrox" RequestNavigate="OnRequestNavigate" ToolTip="Contribute on GitHub" Foreground="White" TextDecorations="{x:Null}">
-                                <Image Source="{DynamicResource SocialGithubIcon}" Width="56" Height="56" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                        <TextBlock Foreground="White" Style="{StaticResource SocialButton}" Margin="0" Height="56" VerticalAlignment="Top" >
+                            <Hyperlink NavigateUri="{x:Static pages:CommunityPage.GITHUB_LINK}" RequestNavigate="OnRequestNavigate" ToolTip="Contribute on GitHub" Foreground="White" TextDecorations="{x:Null}">
+                                <Image Source="{StaticResource SocialGithubIcon}" Width="56" Height="56" HorizontalAlignment="Left" VerticalAlignment="Top" />
                             </Hyperlink>
                         </TextBlock>
                     </StackPanel>
@@ -144,7 +145,7 @@
                         <Button Style="{StaticResource LargeButton}" Background="#19FFFFFF" Width="Auto" Height="34"
                         HorizontalAlignment="Right" BorderBrush="#66FFFFFF"
                         ToolTip="Contribute on GitHub"  VerticalAlignment="Stretch" Margin="8,0,0,0">
-                            <Hyperlink NavigateUri="https://github.com/SubnauticaNitrox/Nitrox" RequestNavigate="OnRequestNavigate" Foreground="White" TextDecorations="{x:Null}">
+                            <Hyperlink NavigateUri="{x:Static pages:CommunityPage.GITHUB_LINK}" RequestNavigate="OnRequestNavigate" Foreground="White" TextDecorations="{x:Null}">
                                 <TextBlock FontSize="14" Foreground="White" Margin="16,0" VerticalAlignment="Center" HorizontalAlignment="Center"><Run Text="Contribute"/></TextBlock>
                             </Hyperlink>
                         </Button>

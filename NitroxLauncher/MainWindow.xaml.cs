@@ -27,7 +27,9 @@ namespace NitroxLauncher
             }
         }
 
-        private readonly LauncherLogic logic = new();
+        public bool UpdateAvailable => !LauncherLogic.Config.IsUpToDate;
+
+        private readonly LauncherLogic logic;
         private bool isServerEmbedded;
         private object frameContent;
 
@@ -35,10 +37,17 @@ namespace NitroxLauncher
 
         public MainWindow()
         {
-            InitializeComponent();
+            logic = new LauncherLogic();
+
             MaxHeight = SystemParameters.VirtualScreenHeight;
             MaxWidth = SystemParameters.VirtualScreenWidth;
 
+            LauncherLogic.Config.PropertyChanged += (s, e) => OnPropertyChanged(nameof(UpdateAvailable));
+            LauncherLogic.Server.ServerStarted += ServerStarted;
+            LauncherLogic.Server.ServerExited += ServerExited;
+
+            InitializeComponent();
+            
             // Pirate trigger should happen after UI is loaded.
             Loaded += (sender, args) =>
             {
@@ -64,9 +73,6 @@ namespace NitroxLauncher
                     SideBarPanel.Visibility = Visibility.Hidden;
                 };
             };
-
-            LauncherLogic.Server.ServerStarted += ServerStarted;
-            LauncherLogic.Server.ServerExited += ServerExited;
 
             logic.SetTargetedSubnauticaPath(GameInstallationFinder.Instance.FindGame())
                  .ContinueWith(task =>

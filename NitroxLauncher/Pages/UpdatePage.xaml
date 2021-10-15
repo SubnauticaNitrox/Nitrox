@@ -4,10 +4,16 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:NitroxLauncher.Models"
+      xmlns:converters="clr-namespace:NitroxLauncher.Models.Converters"
       DataContext="{Binding RelativeSource={RelativeSource Self}}"
       mc:Ignorable="d" 
       d:DesignHeight="800" d:DesignWidth="800"
+      Loaded="UpdatePage_Loaded" Unloaded="UpdatePage_UnLoaded"
       Title="UpdatePage">
+
+    <local:PageBase.Resources>
+        <BitmapImage x:Key="NitroxIcon" UriSource="pack://application:,,,/Images/nitroxIco.png" />
+    </local:PageBase.Resources>
 
     <Grid Margin="32,0">
         <Grid.ColumnDefinitions>
@@ -30,21 +36,38 @@
             <Border CornerRadius="12" Background="#151516" Margin="0,0,0,0" Padding="22,22,22,0"></Border>
 
             <Grid Margin="22,22,22,0" VerticalAlignment="Top">
-                <Image Source="{DynamicResource NitroxIcon}" Width="56" Height="56" HorizontalAlignment="Center" VerticalAlignment="Top" />
+                <Image Source="{StaticResource NitroxIcon}" Width="56" Height="56" HorizontalAlignment="Center" VerticalAlignment="Top" />
+                
                 <TextBlock FontSize="16" Foreground="White" TextWrapping="Wrap" Margin="0,72,0,0" VerticalAlignment="Top" FontWeight="Bold" TextAlignment="Center" Text="No Update Available"/>
                 <TextBlock FontWeight="Normal" FontSize="14"  Foreground="White" TextWrapping="Wrap" Margin="0,98,0,-18" VerticalAlignment="Top" TextAlignment="Center">
                     <Run Text="You are already using the latest version of Nitrox"/>
-                    <Run Text="{Binding Version, Mode=OneTime}"/><Run Text="."/>
-                    <Run Text="Missing a feature? Check the changelogs if the feature has already been implemented. If you experience any other issues, please contact support."/></TextBlock>
+                    <Run Text="{Binding Version, Mode=OneTime, FallbackValue='.'}"/>
+                    <LineBreak/>
+                    <LineBreak/>
+                    <Run Text="Missing a feature? Check the changelogs if the feature has already been implemented. If you experience any other issues, please contact support."/>
+                </TextBlock>
             </Grid>
         </Grid>
 
-        <Grid Grid.Row="3" Grid.ColumnSpan="2">
-            <StackPanel Margin="0,22,0,0">
-                <TextBlock FontSize="20" Foreground="White" TextWrapping="Wrap" Margin="0" VerticalAlignment="Top" FontWeight="Bold" TextAlignment="Left" Text="1.5.0.0"/>
-                <TextBlock FontSize="14" Foreground="White" TextWrapping="Wrap" Margin="0,8,0,0" VerticalAlignment="Top" FontWeight="Normal" TextAlignment="Left" Text="The Nitrox version 1.5.0.0 Now adds a key feature from Subnautica that was missing from the Mod: Seeded worlds. Our community and devs have taken the time to translate the mod into a bunch of languages! The translations will be..."/>
-                <Border BorderThickness="0 1 0 0" BorderBrush="#1EFFFFFF" Margin="0,20,0,22" />
-            </StackPanel>
+        <Grid Grid.Row="3" Grid.ColumnSpan="2" Margin="10">
+            <ItemsControl x:Name="Changelogs">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type local:NitroxChangelog}">
+                        <StackPanel Margin="0,22,0,0" Background="Transparent">
+
+                            <Grid Margin="0">
+                                <TextBlock FontSize="20" Foreground="White" TextWrapping="Wrap" Margin="0" VerticalAlignment="Top" FontWeight="Bold" HorizontalAlignment="Left" Text="{Binding Version, FallbackValue='Unknown'}"/>
+                                <TextBlock FontSize="12" Foreground="White" TextWrapping="Wrap" Margin="0" VerticalAlignment="Center" FontWeight="Light" HorizontalAlignment="Right" Text="{Binding Released, Converter={converters:DateToRelativeDateConverter}, FallbackValue='Unknown'}"/>
+                            </Grid>
+
+                            <Expander Header="View changelogs" Foreground="#1EFFFFFF" HorizontalAlignment="Left">
+                                <TextBlock FontSize="14" Foreground="White" TextWrapping="Wrap" Margin="0,8,0,0" VerticalAlignment="Top" FontWeight="Normal" TextAlignment="Left" Text="{Binding PatchNotes}"/>
+                            </Expander>
+                            <Border BorderThickness="0 1 0 0" BorderBrush="#1EFFFFFF" Margin="0,20,0,22" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </Grid>
 
     </Grid>

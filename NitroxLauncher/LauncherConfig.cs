@@ -7,7 +7,32 @@ namespace NitroxLauncher
 {
     internal sealed class LauncherConfig : INotifyPropertyChanged
     {
-        private Platform subnauticaPlatform;
+        // Is the Nitrox version the latest available
+        private bool isUpToDate = true;
+        public bool IsUpToDate
+        {
+            get => isUpToDate;
+            set
+            {
+                isUpToDate = value;
+                OnPropertyChanged();
+            }
+        }
+
+        // Is the Launcher connected to internet somehow
+        private bool isConnectedToInternet = false;
+        public bool IsConnectedToInternet
+        {
+            get => isConnectedToInternet;
+            set
+            {
+                isConnectedToInternet = value;
+                OnPropertyChanged();
+            }
+        }
+
+        // Subnautica game platform (Epic, Steam, MS, ...)
+        private Platform subnauticaPlatform = Platform.NONE;
         public Platform SubnauticaPlatform
         {
             get => subnauticaPlatform;
@@ -18,13 +43,15 @@ namespace NitroxLauncher
             }
         }
 
-        private string subnauticaPath;
+        // Subnautica game files path
+        private string subnauticaPath = string.Empty;
         public string SubnauticaPath
         {
             get => subnauticaPath;
             set
             {
-                subnauticaPath = Path.GetFullPath(value); // Ensures the path looks alright (no mixed / and \ path separators)
+                // Ensures the path looks alright (no mixed / and \ path separators)
+                subnauticaPath = Path.GetFullPath(value);
                 SubnauticaPlatform = PlatformDetection.GetPlatform(subnauticaPath);
                 OnPropertyChanged();
             }

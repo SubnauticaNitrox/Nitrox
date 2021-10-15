@@ -13,7 +13,6 @@
         <BitmapImage x:Key="StopWhiteIcon" UriSource="pack://application:,,,/Images/material-design-icons/baseline_stop_white_24dp.png" />
         <BitmapImage x:Key="SendWhiteIcon" UriSource="pack://application:,,,/Images/material-design-icons/baseline_send_white_24dp.png" />
 
-        <!--SCROLLBARS-->
         <Style TargetType="{x:Type Button}">
             <Setter Property="OverridesDefaultStyle" Value="True" />
             <Setter Property="FontWeight" Value="Normal" />
@@ -41,66 +40,6 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
-        <Style x:Key="ButtonConsoleStop" TargetType="{x:Type Button}">
-            <Style.Resources>
-                <Style TargetType="{x:Type Border}">
-                    <Setter Property="CornerRadius" Value="6" />
-                    <Setter Property="BorderThickness" Value="1" />
-                </Style>
-            </Style.Resources>
-            <Setter Property="Width" Value="240" />
-            <Setter Property="Height" Value="80" />
-            <Setter Property="FontSize" Value="16" />
-            <Style.BasedOn>
-                <StaticResource ResourceKey="{x:Type Button}"/>
-            </Style.BasedOn>
-        </Style>
-        <Style x:Key="ButtonConsoleMsg" TargetType="{x:Type Button}">
-            <Style.Resources>
-                <Style TargetType="{x:Type Border}">
-                    <Setter Property="CornerRadius" Value="6" />
-                    <Setter Property="BorderThickness" Value="1" />
-                </Style>
-            </Style.Resources>
-            <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="Width" Value="240" />
-            <Setter Property="Height" Value="80" />
-            <Setter Property="FontSize" Value="16" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Button}">
-                        <Border Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#19FFFFFF" />
-                            </Trigger>
-
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Setter Property="Background" Value="Transparent"/>
-        </Style>
-        <ControlTemplate x:Key="ScrollViewerControlConsole" TargetType="{x:Type ScrollViewer}">
-            <Grid x:Name="Grid" Background="{TemplateBinding Background}">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <Rectangle x:Name="Corner" Grid.Column="1" Fill="#7FFFFFFF" Grid.Row="1"/>
-                <ScrollContentPresenter x:Name="PART_ScrollContentPresenter" CanContentScroll="{TemplateBinding CanContentScroll}" CanHorizontallyScroll="False" CanVerticallyScroll="False" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" Grid.Column="0" Margin="{TemplateBinding Padding}" Grid.Row="0"/>
-                <ScrollBar x:Name="PART_VerticalScrollBar" AutomationProperties.AutomationId="VerticalScrollBar" Cursor="Arrow" Grid.Column="1" Maximum="{TemplateBinding ScrollableHeight}" Minimum="0" Grid.Row="0" Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" Value="{Binding VerticalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" ViewportSize="{TemplateBinding ViewportHeight}" Background="#26FFFFFF" BorderBrush="#26FFFFFF"/>
-                <ScrollBar x:Name="PART_HorizontalScrollBar" AutomationProperties.AutomationId="HorizontalScrollBar" Cursor="Arrow" Grid.Column="0" Maximum="{TemplateBinding ScrollableWidth}" Minimum="0" Orientation="Horizontal" Grid.Row="1" Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" Value="{Binding HorizontalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" ViewportSize="{TemplateBinding ViewportWidth}"/>
-            </Grid>
-        </ControlTemplate>
     </local:PageBase.Resources>
 
     <Grid>

@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Windows;
-using System.Windows.Navigation;
 using NitroxLauncher.Models;
 using NitroxLauncher.Properties;
 
@@ -17,14 +15,6 @@ namespace NitroxLauncher.Pages
 
             RBIsDocked.IsChecked = !Settings.Default.IsExternalServer;
             RBIsExternal.IsChecked = Settings.Default.IsExternalServer;
-        }
-
-        private void OnRequestNavigate(object sender, RequestNavigateEventArgs e)
-        {
-            using (Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri)))
-            {
-                e.Handled = true;
-            }
         }
 
         private void StartServer_Click(object sender, RoutedEventArgs e)

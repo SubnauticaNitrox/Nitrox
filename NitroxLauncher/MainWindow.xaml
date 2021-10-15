@@ -4,11 +4,13 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:converters="clr-namespace:NitroxLauncher.Models.Converters"
         mc:Ignorable="d"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
         Title="Nitrox Launcher" Height="623" MinHeight="642" Width="1024" MinWidth="1024" 
-        WindowStyle="None" WindowStartupLocation="CenterScreen" Icon="{StaticResource NitroxImage}"
-        Closing="OnClosing" Background="Black">
+        WindowStyle="None" WindowStartupLocation="CenterScreen"
+        Closing="OnClosing"
+        Background="Black">
 
     <Window.Resources>
         <BitmapImage x:Key="SidebarNitroxLogo" UriSource="pack://application:,,,/Images/nitroxLogo.png" />
@@ -86,30 +88,32 @@
                 </Grid.RowDefinitions>
                 
                 <!-- Make sure the navigation items align vertically with the "NITROX" header. -->
-                <Image Margin="32,42,131,473" Source="{DynamicResource SidebarNitroxLogo}" Stretch="Fill"/>
+                <Image Margin="32,42,131,473" Source="{StaticResource SidebarNitroxLogo}" Stretch="Fill"/>
 
                 <StackPanel Margin="32,108,0,0" HorizontalAlignment="Left" Width="196" VerticalAlignment="Top">
                     <TextBlock HorizontalAlignment="Left" FontSize="10" Foreground="#7FFFFFFF" Margin="0,0,0,4" FontWeight="Bold"><Run Text="PLAY"/></TextBlock>
                     <Button Click="ButtonNavigation_Click" Tag="{StaticResource LaunchGamePage}" ToolTip="Play the game" BorderBrush="#00000000" >
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Image Source="{DynamicResource SideBarPlayIcon}" Width="24px" Height="24px" />
+                            <Image Source="{StaticResource SideBarPlayIcon}" Width="24px" Height="24px" />
                             <TextBlock FontSize="16" Margin="12,0,0,0" VerticalAlignment="Center">Play game</TextBlock>
                         </StackPanel>
                     </Button>
                     
                     <Button Click="ButtonNavigation_Click" Tag="{StaticResource ServerPage}" ToolTip="Configure and start the server" BorderBrush="#00000000">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Image Source="{DynamicResource SideBarServerIcon}" Width="24px" Height="24px" />
+                            <Image Source="{StaticResource SideBarServerIcon}" Width="24px" Height="24px" />
                             <TextBlock FontSize="16" Margin="12,0,0,0" VerticalAlignment="Center">Server</TextBlock>
                         </StackPanel>
                     </Button>
                     
+                    <!--
                     <Button Click="ButtonNavigation_Click" Tag="{StaticResource LibraryPage}" ToolTip="Subnautica installations and recent servers" BorderBrush="#00000000">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <Image Source="{DynamicResource SidebarLibraryIcon}" Width="24px" Height="24px" />
                             <TextBlock FontSize="16" Margin="12,0,0,0" VerticalAlignment="Center">Library</TextBlock>
                         </StackPanel>
                     </Button>
+                    -->
                     
                     <TextBlock HorizontalAlignment="Left" FontSize="10" Foreground="#7FFFFFFF" Margin="0,22,0,4" Text="EXPLORE" FontWeight="Bold"/>
                     <Button Click="ButtonNavigation_Click" Tag="{StaticResource CommunityPage}" ToolTip="Join the Nitrox community" BorderBrush="#00000000">
@@ -119,25 +123,27 @@
                         </StackPanel>
                     </Button>
                     
+                    <!--
                     <Button Click="ButtonNavigation_Click" Tag="{StaticResource BlogPage}" ToolTip="Read the latest from the Dev Blog" BorderBrush="#00000000">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <Image Source="{DynamicResource SidebarBlogIcon}" Width="24px" Height="24px" />
                             <TextBlock FontSize="16" Margin="12,0,0,0" VerticalAlignment="Center">Blog</TextBlock>
                         </StackPanel>
                     </Button>
+                    -->
                 </StackPanel>
 
                 <StackPanel HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="32,0,0,-82" Height="87" Width="196">
                     <Button Click="ButtonNavigation_Click" Tag="{StaticResource UpdatePage}" ToolTip="Check for Updates" BorderBrush="#00000000">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Image Source="{DynamicResource SideBarUpdateIcon}" Width="24px" Height="24px" />
+                            <Image Source="{Binding UpdateAvailable, Converter={converters:UpdateToIconConverter}, FallbackValue={StaticResource SideBarUpdateIcon}}" Width="24px" Height="24px" />
                             <TextBlock FontSize="16" Margin="12,0,0,0" VerticalAlignment="Center">Updates</TextBlock>
                         </StackPanel>
                     </Button>
 
                     <Button Click="ButtonNavigation_Click" Tag="{StaticResource OptionPage}" ToolTip="Launcher options" BorderBrush="#00000000">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Image Source="{DynamicResource SideBarOptionsIcon}" Width="24px" Height="24px" />
+                            <Image Source="{StaticResource SideBarOptionsIcon}" Width="24px" Height="24px" />
                             <TextBlock FontSize="16" Margin="12,0,0,0" VerticalAlignment="Center">Options</TextBlock>
                         </StackPanel>
                     </Button>

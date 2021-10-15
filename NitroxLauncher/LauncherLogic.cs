@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -19,6 +18,7 @@ using System.Windows;
 using System.Windows.Threading;
 using NitroxLauncher.Models.Utils;
 using System.Windows.Controls;
+using System.Diagnostics;
 
 namespace NitroxLauncher
 {
@@ -58,7 +58,7 @@ namespace NitroxLauncher
             }
 
             gameProcess?.Dispose();
-            Server.Dispose();
+            Server?.Dispose();
         }
 
         [Conditional("RELEASE")]
@@ -71,6 +71,8 @@ namespace NitroxLauncher
 
                 if (latestVersion > currentVersion)
                 {
+                    Config.IsUpToDate = false;
+                    Log.Info($"A new version of the mod ({latestVersion}) is available");
                     MessageBox.Show($"A new version of the mod ({latestVersion}) is available !\n\nPlease check our website to download it",
                         "New version available",
                         MessageBoxButton.OK,

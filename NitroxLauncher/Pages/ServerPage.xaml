@@ -10,7 +10,7 @@
                 Title="Server Page">
 
     <local:PageBase.Resources>
-        <BitmapImage x:Key="ServerIllustration" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/images/serverIllustration.png"/>
+        <BitmapImage x:Key="ServerIllustration" UriSource="pack://application:,,,/images/serverIllustration.png"/>
     </local:PageBase.Resources>
 
     <Grid Margin="32,0">
@@ -38,7 +38,7 @@
         </Grid>
 
         <Grid Grid.Row="2" Grid.ColumnSpan="2">
-            <Image Source="{DynamicResource ServerIllustration}" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center" Width="420" Height="218"></Image>
+            <Image Source="{StaticResource ServerIllustration}" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center" Width="420" Height="218"></Image>
         </Grid>
 
         <Grid Grid.Column="0" Margin="0,0,8,8" Grid.Row="3" Grid.ColumnSpan="2" Height="128" VerticalAlignment="Bottom">
@@ -64,7 +64,7 @@
                 <Button Style="{StaticResource LargeButton}" Click="StartServer_Click" ToolTip="Start the server with chosen options" Background="#FF007BFF" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Row="1" Width="Auto" Margin="10,0,10,22" Grid.Column="1" Height="62">
                     <StackPanel>
                         <TextBlock HorizontalAlignment="Center" FontSize="16" FontWeight="Bold" Text="START SERVER" />
-                        <TextBlock HorizontalAlignment="Center" FontSize="10" Text="{Binding StartButtonSubtitle}" />
+                        <TextBlock HorizontalAlignment="Center" FontSize="10" Text="{Binding StartButtonSubtitle, Mode=OneTime, FallbackValue='NITROX'}" />
                     </StackPanel>
                 </Button>
             </Grid>

@@ -12,7 +12,7 @@
                          Unloaded="OptionPage_OnUnloaded">
 
     <local:PageBase.Resources>
-        <BitmapImage x:Key="SubnauticaIcon" UriSource="pack://application:,,,/images/subnauticaIcon.png "/>
+        <BitmapImage x:Key="SubnauticaIcon" UriSource="pack://application:,,,/images/subnauticaIcon.png"/>
     </local:PageBase.Resources>
 
     <Grid>
@@ -37,7 +37,7 @@
                             <ColumnDefinition Width="567*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Image Stretch="Fill" Source="{DynamicResource SubnauticaIcon}"/>
+                        <Image Stretch="Fill" Source="{StaticResource SubnauticaIcon}"/>
 
                         <StackPanel Grid.Column="1" Margin="22,0,0,0">
                             <TextBlock FontSize="16" Foreground="White" Margin="0,12,0,8"><Run Text="Subnautica" FontWeight="Bold" FontSize="14"></Run></TextBlock>
