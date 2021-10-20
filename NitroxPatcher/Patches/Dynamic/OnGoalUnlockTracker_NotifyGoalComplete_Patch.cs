@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
+﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.Communication.Abstract;
-using NitroxModel.Core;
+using NitroxModel.Helper;
 using NitroxModel.Packets;
 using Story;
 
@@ -11,8 +9,7 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class OnGoalUnlockTracker_NotifyGoalComplete_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(OnGoalUnlockTracker);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod(nameof(OnGoalUnlockTracker.NotifyGoalComplete), BindingFlags.Public | BindingFlags.Instance);
+        public static readonly MethodInfo TARGET_METHOD = ReflectionHelper.GetMethodInfo((OnGoalUnlockTracker t) => t.NotifyGoalComplete(default(string)));
 
         public static void Prefix(OnGoalUnlockTracker __instance, string completedGoal)
         {
