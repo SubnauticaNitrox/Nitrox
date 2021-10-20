@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -60,7 +60,6 @@
     <Compile Include="DataStructures\GameLogic\PlantableItemData.cs" />
     <Compile Include="DataStructures\GameLogic\PlayerStatsData.cs" />
     <Compile Include="DataStructures\GameLogic\RandomStartGenerator.cs" />
-    <Compile Include="DataStructures\ThreadSafeSet.cs" />
     <Compile Include="DataStructures\Unity\NitroxColor.cs" />
     <Compile Include="DataStructures\Unity\NitroxQuaternion.cs" />
     <Compile Include="DataStructures\Unity\NitroxTransform.cs" />
@@ -77,6 +76,7 @@
     <Compile Include="DataStructures\Surrogates\SerializationSurrogate.cs" />
     <Compile Include="DataStructures\ThreadSafeList.cs" />
     <Compile Include="DataStructures\ThreadSafeDictionary.cs" />
+    <Compile Include="DataStructures\ThreadSafeSet.cs" />
     <Compile Include="Discovery\GameInstallationFinder.cs" />
     <Compile Include="Discovery\GameInstallData.cs" />
     <Compile Include="Discovery\IFindGameInstallation.cs" />
