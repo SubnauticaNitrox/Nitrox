@@ -60,6 +60,7 @@
     <Compile Include="DataStructures\GameLogic\PlantableItemData.cs" />
     <Compile Include="DataStructures\GameLogic\PlayerStatsData.cs" />
     <Compile Include="DataStructures\GameLogic\RandomStartGenerator.cs" />
+    <Compile Include="DataStructures\ThreadSafeSet.cs" />
     <Compile Include="DataStructures\Unity\NitroxColor.cs" />
     <Compile Include="DataStructures\Unity\NitroxQuaternion.cs" />
     <Compile Include="DataStructures\Unity\NitroxTransform.cs" />
