@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Logger;
 using ProtoBufNet;
 
 namespace NitroxServer.GameLogic.Unlockables
@@ -31,7 +32,7 @@ namespace NitroxServer.GameLogic.Unlockables
         {
             PartiallyUnlockedByTechType.Remove(techType);
             UnlockedTechTypes.Add(techType);
-            if (CachedProgress.TryGetValue(techType, out PDAProgressEntry pdaProgressEntry))
+            if (CachedProgress.ContainsKey(techType))
             {
                 CachedProgress.Remove(techType);
             }
@@ -52,7 +53,7 @@ namespace NitroxServer.GameLogic.Unlockables
             PdaLog.Add(entry);
         }
 
-        public void EntryProgressChanged(NitroxTechType techType, float progress, int unlocked, string id)
+        public void EntryProgressChanged(NitroxTechType techType, float progress, int unlocked, NitroxId nitroxId)
         {
             if (!PartiallyUnlockedByTechType.TryGetValue(techType, out PDAEntry pdaEntry))
             {
@@ -61,16 +62,20 @@ namespace NitroxServer.GameLogic.Unlockables
 
             pdaEntry.Progress = progress;
             pdaEntry.Unlocked = unlocked;
-            
-            // Stuff concerning PDA CachedEntries
-            PDAProgressEntry pdaProgressEntry;
-            bool exists = CachedProgress.TryGetValue(techType, out pdaProgressEntry);
-            if (id != null && id.Length > 0 && !exists)
+
+
+            // Updating CachedEntries if id is not null and not already cached
+            if (nitroxId == null)
+            {
+                return;
+            }
+
+            if (!CachedProgress.TryGetValue(techType, out PDAProgressEntry pdaProgressEntry))
             {
                 CachedProgress.Add(techType, pdaProgressEntry = new PDAProgressEntry(techType, new Dictionary<NitroxId, float>()));
             }
 
-            pdaProgressEntry.Entries[new NitroxId(id)] = progress;
+            pdaProgressEntry.Entries[nitroxId] = progress;
         }
 
         public InitialPDAData GetInitialPDAData()

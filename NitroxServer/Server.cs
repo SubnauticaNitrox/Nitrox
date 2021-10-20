@@ -63,7 +63,7 @@ namespace NitroxServer
                 builder.AppendLine($" - Encyclopedia entries: {world.GameData.PDAState.EncyclopediaEntries.Count}");
                 builder.AppendLine($" - Storage slot items: {world.InventoryManager.GetAllStorageSlotItems().Count}");
                 builder.AppendLine($" - Inventory items: {world.InventoryManager.GetAllInventoryItems().Count}");
-                builder.AppendLine($" - Cached progress tech types: {world.GameData.PDAState.CachedProgress.Count}");
+                builder.AppendLine($" - Progress tech: {world.GameData.PDAState.CachedProgress.Count}");
                 builder.AppendLine($" - Known tech: {world.GameData.PDAState.KnownTechTypes.Count}");
                 builder.AppendLine($" - Vehicles: {world.VehicleManager.GetVehicles().Count()}");
 

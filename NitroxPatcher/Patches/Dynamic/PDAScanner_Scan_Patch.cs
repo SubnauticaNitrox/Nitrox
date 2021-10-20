@@ -66,7 +66,9 @@ namespace NitroxPatcher.Patches.Dynamic
             }
         }
 
-        public const int PACKET_SENDING_RATE = 500; // in milliseconds
+        // Both in milliseconds
+        public const int PACKET_SENDING_RATE = 500;
+        public const int LAST_PACKET_SEND_DELAY = 2000;
 
         public static readonly PDAManagerEntry PDAManagerEntry = NitroxServiceLocator.LocateService<PDAManagerEntry>();
         public static Dictionary<NitroxId, ThrottledEntry> ThrottlingEntries = new Dictionary<NitroxId, ThrottledEntry>();
@@ -78,6 +80,7 @@ namespace NitroxPatcher.Patches.Dynamic
             public DateTimeOffset LatestProgressTime, LatestPacketSendTime;
             public PDAScanner.Entry Entry;
             public Coroutine LastProgressThrottler;
+            public bool Unlocked;
 
             public ThrottledEntry(TechType techType, NitroxId id, PDAScanner.Entry entry) : this(techType, id, DateTimeOffset.FromUnixTimeMilliseconds(0), DateTimeOffset.FromUnixTimeMilliseconds(0), entry)
             { }
@@ -91,7 +94,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 Entry = entry;
             }
 
-            public void Update(DateTimeOffset? newLatestProgressTime, DateTimeOffset? newLatestPacketSendTime, PDAScanner.Entry newEntry)
+            public void Update(DateTimeOffset? newLatestProgressTime, DateTimeOffset? newLatestPacketSendTime, float progress)
             {
                 if (newLatestProgressTime.HasValue)
                 {
@@ -101,12 +104,23 @@ namespace NitroxPatcher.Patches.Dynamic
                 {
                     LatestPacketSendTime = newLatestPacketSendTime.Value;
                 }
-                Entry = newEntry;
+                Entry.progress = progress;
             }
 
             public void StartThrottler()
             {
                 LastProgressThrottler = Player.main.StartCoroutine(ThrottleLastProgress(this));
+            }
+
+            public PDAScanner.Entry GetEntry()
+            {
+                if (PDAScanner.GetPartialEntryByKey(EntryTechType, out PDAScanner.Entry entry) && entry.unlocked > Entry.unlocked)
+                {
+                    Unlocked = true;
+                    Entry.unlocked = entry.unlocked;
+                }
+                
+                return Entry;
             }
         }
 
@@ -115,13 +129,14 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             do
             {
-                yield return new WaitForSeconds(2);
+                yield return new WaitForSeconds(LAST_PACKET_SEND_DELAY / 1000);
             }
-            while (DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() < throttledEntry.LatestProgressTime.ToUnixTimeMilliseconds() + 2000);
-
-            if (!PDAScanner.ContainsCompleteEntry(throttledEntry.EntryTechType))
+            while (DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() < throttledEntry.LatestProgressTime.ToUnixTimeMilliseconds() + LAST_PACKET_SEND_DELAY);
+            
+            throttledEntry.GetEntry();
+            if (!throttledEntry.Unlocked && !PDAScanner.ContainsCompleteEntry(throttledEntry.EntryTechType))
             {
-                PDAManagerEntry.Progress(throttledEntry.Entry, throttledEntry.Id.ToString());
+                PDAManagerEntry.Progress(throttledEntry.Entry, throttledEntry.Id);
             }
 
             // No need to keep this in memory
@@ -132,53 +147,53 @@ namespace NitroxPatcher.Patches.Dynamic
         public static void ProgressCallback()
         {
             PDAScanner.ScanTarget scanTarget = PDAScanner.scanTarget;
-
-            if (scanTarget.isValid && scanTarget.progress > 0f)
+            if (scanTarget.techType == TechType.Player)
             {
-                PDAScanner.Entry entry = new PDAScanner.Entry() { techType = scanTarget.techType, progress = scanTarget.progress };
-                if (entry.techType == TechType.Player)
-                {
-                    return;
-                }
+                return;
+            }
+
+            if (scanTarget.isValid && scanTarget.progress > 0f && scanTarget.gameObject.GetComponent<NitroxEntity>() != null)
+            {
                 // Should always be the same for the same entity
-                NitroxId UID = scanTarget.gameObject.GetComponent<NitroxEntity>().Id;
-                NitroxTechType nitroxTechType = new NitroxTechType(scanTarget.techType.ToString());
+                NitroxId nitroxId = scanTarget.gameObject.GetComponent<NitroxEntity>().Id;
                 DateTimeOffset Now = DateTimeOffset.UtcNow;
 
                 // Start a thread when a scanning period starts
-                if (!ThrottlingEntries.TryGetValue(UID, out ThrottledEntry throttledEntry))
+                if (!ThrottlingEntries.TryGetValue(nitroxId, out ThrottledEntry throttledEntry))
                 {
-                    ThrottlingEntries.Add(UID, throttledEntry = new ThrottledEntry(scanTarget.techType, UID, entry));
+                    ThrottlingEntries.Add(nitroxId, throttledEntry = new ThrottledEntry(scanTarget.techType, nitroxId, new PDAScanner.Entry() { techType = scanTarget.techType, progress = scanTarget.progress }));
 
                     throttledEntry.StartThrottler();
                 }
+                PDAScanner.Entry scannerEntry = throttledEntry.GetEntry();
 
                 // Updating the progress throttling
-                throttledEntry.Update(Now, null, entry);
+                throttledEntry.Update(Now, null, scanTarget.progress);
                 // Throttling the packet sending
                 if (Now.ToUnixTimeMilliseconds() < throttledEntry.LatestPacketSendTime.ToUnixTimeMilliseconds() + PACKET_SENDING_RATE)
                 {
                     return;
                 }
 
+                NitroxTechType nitroxTechType = new NitroxTechType(scanTarget.techType.ToString());
                 // This should not occur all the time because it only takes effect one time per entity
                 // Check if the entry is already in the partial list, and then, change the progress
-                if (PDACache.CachedEntries.TryGetValue(nitroxTechType, out PDAProgressEntry pdaProgressEntry))
+                if (PDAManagerEntry.CachedEntries.TryGetValue(nitroxTechType, out PDAProgressEntry pdaProgressEntry))
                 {
-                    if (pdaProgressEntry.Entries.TryGetValue(UID, out float progress))
+                    if (pdaProgressEntry.Entries.TryGetValue(nitroxId, out float progress))
                     {
-                        pdaProgressEntry.Entries.Remove(UID);
+                        pdaProgressEntry.Entries.Remove(nitroxId);
                         PDAScanner.scanTarget.progress = progress;
-                        entry.progress = progress;
+                        scannerEntry.progress = progress;
                         if (pdaProgressEntry.Entries.Count == 0)
                         {
-                            PDACache.CachedEntries.Remove(nitroxTechType);
+                            PDAManagerEntry.CachedEntries.Remove(nitroxTechType);
                         }
                     }
                 }
 
-                throttledEntry.Update(Now, Now, entry);
-                PDAManagerEntry.Progress(entry, UID.ToString());
+                throttledEntry.Update(Now, Now, scanTarget.progress);
+                PDAManagerEntry.Progress(throttledEntry.GetEntry(), nitroxId);
             }
         }
 
