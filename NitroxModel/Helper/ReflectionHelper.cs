@@ -1,9 +1,17 @@
 ﻿using System;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace NitroxModel.Helper
 {
+    /// <summary>
+    ///     Utility class for reflection API.
+    /// </summary>
+    /// <remarks>
+    ///     This class should be used when requiring <see cref="MethodInfo" /> or <see cref="MemberInfo" /> like information from code. This will ensure that compilation only succeeds
+    ///     when reflection is used properly.
+    /// </remarks>
     public static class ReflectionHelper
     {
         // Public calls are useful for reflected, inaccessible objects.
@@ -33,7 +41,7 @@ namespace NitroxModel.Helper
 
         public static object ReflectionGet(this object o, FieldInfo fieldInfo)
         {
-            Validate.NotNull(fieldInfo, $"Field cannot be null!");
+            Validate.NotNull(fieldInfo, "Field cannot be null!");
             return fieldInfo.GetValue(o);
         }
 
@@ -63,7 +71,7 @@ namespace NitroxModel.Helper
 
         public static void ReflectionSet(this object o, FieldInfo fieldInfo, object value)
         {
-            Validate.NotNull(fieldInfo, $"Field cannot be null!");
+            Validate.NotNull(fieldInfo, "Field cannot be null!");
             fieldInfo.SetValue(o, value);
         }
 
@@ -79,6 +87,90 @@ namespace NitroxModel.Helper
         public static MethodInfo GetMethod<T>(string methodName, bool isPublic = false, bool isStatic = false, params Type[] types)
         {
             return GetMethod(typeof(T), methodName, isPublic, isStatic, types);
+        }
+
+        public static FieldInfo GetField<T>(string fieldName, bool isPublic = false, bool isStatic = false)
+        {
+            return GetField(typeof(T), fieldName, isPublic, isStatic);
+        }
+
+        /// <summary>
+        ///     Given a lambda expression that calls a method, returns the method info.
+        ///     If method has parameters then anything can be supplied, the actual method won't be called.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="expression">The expression.</param>
+        /// <returns></returns>
+        public static MethodInfo GetMethodInfo(Expression<Action> expression)
+        {
+            return GetMethodInfo((LambdaExpression)expression);
+        }
+
+        /// <summary>
+        ///     Given a lambda expression that calls a method, returns the method info.
+        ///     If method has parameters then anything can be supplied, the actual method won't be called.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="expression">The expression.</param>
+        /// <returns></returns>
+        public static MethodInfo GetMethodInfo<T>(Expression<Action<T>> expression)
+        {
+            return GetMethodInfo((LambdaExpression)expression);
+        }
+
+        /// <summary>
+        ///     Given a lambda expression that calls a method, returns the method info.
+        ///     If method has parameters then anything can be supplied, the actual method won't be called.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="expression">The expression.</param>
+        /// <returns></returns>
+        public static MethodInfo GetMethodInfo<T, TResult>(Expression<Func<T, TResult>> expression)
+        {
+            return GetMethodInfo((LambdaExpression)expression);
+        }
+
+        public static FieldInfo GetFieldInfo<T>(Expression<Func<T>> expression)
+        {
+            return (FieldInfo)GetMemberInfo(expression);
+        }
+        
+        public static FieldInfo GetFieldInfo<TClass>(Expression<Func<TClass, object>> expression)
+        {
+            return (FieldInfo)GetMemberInfo(expression);
+        }
+        
+        public static PropertyInfo GetPropertyInfo<T>(Expression<Func<T>> expression)
+        {
+            return (PropertyInfo)GetMemberInfo(expression);
+        }
+        
+        public static PropertyInfo GetPropertyInfo<TClass>(Expression<Func<TClass, object>> expression)
+        {
+            return (PropertyInfo)GetMemberInfo(expression);
+        }
+        
+        private static MethodInfo GetMethodInfo(LambdaExpression expression)
+        {
+            MethodCallExpression outermostExpression = expression.Body as MethodCallExpression;
+            if (outermostExpression == null)
+            {
+                throw new ArgumentException("Invalid Expression. Expression should consist of a method call only.");
+            }
+            return outermostExpression.Method;
+        }
+        
+        private static MemberInfo GetMemberInfo(LambdaExpression expression)
+        {
+            MemberExpression currentExpression = expression.Body as MemberExpression;
+            // If expression contains a cast (e.g. (object)value), then operand is the member access.
+            currentExpression ??= (expression.Body as UnaryExpression)?.Operand as MemberExpression;
+            if (currentExpression == null)
+            {
+                throw new ArgumentException("Invalid Expression. Expression should consist of a field or property access only.");
+            }
+            return currentExpression.Member;
         }
 
         private static MethodInfo GetMethod(this Type t, string methodName, bool isPublic = false, bool isStatic = false, params Type[] types)
@@ -97,11 +189,6 @@ namespace NitroxModel.Helper
             }
 
             return methodInfo;
-        }
-
-        public static FieldInfo GetField<T>(string fieldName, bool isPublic = false, bool isStatic = false)
-        {
-            return GetField(typeof(T), fieldName, isPublic, isStatic);
         }
 
         private static FieldInfo GetField(this Type t, string fieldName, bool isPublic = false, bool isStatic = false)
@@ -135,7 +222,7 @@ namespace NitroxModel.Helper
             {
                 throw new ArgumentException("Object can't be null when isStatic is false!");
             }
-            else if (o != null && isStatic)
+            if (o != null && isStatic)
             {
                 throw new ArgumentException("Object must be be null when isStatic is true!");
             }
