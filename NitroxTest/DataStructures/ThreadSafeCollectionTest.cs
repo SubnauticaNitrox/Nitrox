@@ -7,12 +7,12 @@ namespace NitroxTest.DataStructures
     [TestClass]
     public class ThreadSafeCollectionTest
     {
-        private ThreadSafeCollection<string> list;
+        private ThreadSafeList<string> list;
 
         [TestInitialize]
         public void Setup()
         {
-            list = new ThreadSafeCollection<string>();
+            list = new ThreadSafeList<string>();
             for (int i = 0; i < 10; i++)
             {
                 list.Add($"test {i}");

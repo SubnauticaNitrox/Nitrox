@@ -26,11 +26,11 @@ namespace NitroxServer_Subnautica.Communication.Packets.Processors
 
             if (opRocket.HasValue)
             {
-                ThreadSafeCollection<PreflightCheck> collection = opRocket.Value.PreflightChecks;
+                ThreadSafeList<PreflightCheck> list = opRocket.Value.PreflightChecks;
 
-                if (!collection.Contains(packet.FlightCheck))
+                if (!list.Contains(packet.FlightCheck))
                 {
-                    collection.Add(packet.FlightCheck);
+                    list.Add(packet.FlightCheck);
                 }
                 else
                 {

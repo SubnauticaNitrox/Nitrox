@@ -16,7 +16,7 @@ namespace NitroxTest.Threading
         {
             int iterations = 500000;
 
-            ThreadSafeCollection<string> comeGetMe = new(iterations);
+            ThreadSafeList<string> comeGetMe = new(iterations);
             List<long> countsRead = new();
             long addCount = 0;
 
@@ -43,7 +43,7 @@ namespace NitroxTest.Threading
         {
             int iterations = 500000;
 
-            ThreadSafeCollection<string> comeGetMe = new(iterations);
+            ThreadSafeList<string> comeGetMe = new(iterations);
             long addCount = 0;
             long iterationsReadMany = 0;
 
@@ -70,7 +70,7 @@ namespace NitroxTest.Threading
         [TestMethod]
         public void IterateAndAdd()
         {
-            ThreadSafeCollection<int> nums = new()
+            ThreadSafeList<int> nums = new()
             {
                 1,2,3,4,5
             };

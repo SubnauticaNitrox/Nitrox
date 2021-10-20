@@ -14,15 +14,12 @@ namespace NitroxPatcher.Patches.Dynamic
         public static readonly Type TARGET_CLASS = typeof(OnGoalUnlockTracker);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod(nameof(OnGoalUnlockTracker.NotifyGoalComplete), BindingFlags.Public | BindingFlags.Instance);
 
-        private static IPacketSender packetSender;
-        private static IPacketSender PacketSender => packetSender ??= NitroxServiceLocator.LocateService<IPacketSender>();
-
         public static void Prefix(OnGoalUnlockTracker __instance, string completedGoal)
         {
             if (__instance.goalUnlocks.ContainsKey(completedGoal))
             {
                 StoryEventSend packet = new(StoryEventSend.EventType.GOAL_UNLOCK, completedGoal);
-                PacketSender.Send(packet);
+                Resolve<IPacketSender>().Send(packet);
             }
         }
 

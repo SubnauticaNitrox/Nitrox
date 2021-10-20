@@ -75,7 +75,7 @@
     <Compile Include="DataStructures\SimulatedEntity.cs" />
     <Compile Include="DataStructures\SimulationLock.cs" />
     <Compile Include="DataStructures\Surrogates\SerializationSurrogate.cs" />
-    <Compile Include="DataStructures\ThreadSafeCollection.cs" />
+    <Compile Include="DataStructures\ThreadSafeList.cs" />
     <Compile Include="DataStructures\ThreadSafeDictionary.cs" />
     <Compile Include="Discovery\GameInstallationFinder.cs" />
     <Compile Include="Discovery\GameInstallData.cs" />

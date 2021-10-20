@@ -13,7 +13,7 @@ namespace NitroxServer.GameLogic.Unlockables
         public ThreadSafeSet<string> CompletedGoals { get; } = new();
 
         [JsonProperty, ProtoMember(2)]
-        public ThreadSafeCollection<string> RadioQueue { get; } = new();
+        public ThreadSafeList<string> RadioQueue { get; } = new();
 
         [JsonProperty, ProtoMember(3)]
         public ThreadSafeSet<string> GoalUnlocks { get; } = new();

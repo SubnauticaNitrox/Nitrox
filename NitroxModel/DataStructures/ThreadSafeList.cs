@@ -11,7 +11,7 @@ namespace NitroxModel.DataStructures
     [DebuggerDisplay("Items = {" + nameof(list) + "}")]
     [ProtoContract]
     [Serializable]
-    public class ThreadSafeCollection<T> : IList<T>
+    public class ThreadSafeList<T> : IList<T>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         [ProtoIgnore]
@@ -52,22 +52,22 @@ namespace NitroxModel.DataStructures
 
         public bool IsReadOnly => false;
 
-        public ThreadSafeCollection()
+        public ThreadSafeList()
         {
             list = new List<T>();
         }
 
-        public ThreadSafeCollection(int initialCapacity)
+        public ThreadSafeList(int initialCapacity)
         {
             list = new List<T>(initialCapacity);
         }
 
-        public ThreadSafeCollection(IEnumerable<T> values)
+        public ThreadSafeList(IEnumerable<T> values)
         {
             list = new List<T>(values);
         }
 
-        public ThreadSafeCollection(IList<T> collection, bool createCopy = true)
+        public ThreadSafeList(IList<T> collection, bool createCopy = true)
         {
             list = createCopy ? CreateCopy(collection) : collection;
         }
