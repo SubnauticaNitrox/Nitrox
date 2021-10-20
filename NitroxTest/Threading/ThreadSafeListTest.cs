@@ -9,7 +9,7 @@ using NitroxModel.DataStructures;
 namespace NitroxTest.Threading
 {
     [TestClass]
-    public class ThreadSafeCollectionTest
+    public class ThreadSafeListTest
     {
         [TestMethod]
         public void ReadAndWriteSimultaneous()

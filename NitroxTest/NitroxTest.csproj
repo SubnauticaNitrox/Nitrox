@@ -68,7 +68,8 @@
     <Compile Include="Serialization\WorldPersistenceTest.cs" />
     <Compile Include="SetupAssemblyInitializer.cs" />
     <Compile Include="TestAutoFacRegistrar.cs" />
-    <Compile Include="Threading\ThreadSafeCollectionTest.cs" />
+    <Compile Include="Threading\ThreadSafeListTest.cs" />
+    <Compile Include="Threading\ThreadSafeSetTest.cs" />
   </ItemGroup>
   <ItemGroup Label="Non-Build Files">
     <None Include="app.config" />
