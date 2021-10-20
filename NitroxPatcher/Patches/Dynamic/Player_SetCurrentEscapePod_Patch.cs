@@ -1,18 +1,17 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
     class Player_SetCurrentEscapePod_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(Player);
-        public static readonly PropertyInfo TARGET_PROPERTY = TARGET_CLASS.GetProperty("currentEscapePod", BindingFlags.Public | BindingFlags.Instance);
+        private static readonly PropertyInfo TARGET_PROPERTY = Reflect.Property((Player p) => p.currentEscapePod);
 
         public static void Prefix(ref Player __instance, EscapePod value)
         {

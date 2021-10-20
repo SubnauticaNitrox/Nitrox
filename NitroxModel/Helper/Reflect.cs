@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -12,7 +13,7 @@ namespace NitroxModel.Helper
     ///     This class should be used when requiring <see cref="MethodInfo" /> or <see cref="MemberInfo" /> like information from code. This will ensure that compilation only succeeds
     ///     when reflection is used properly.
     /// </remarks>
-    public static class ReflectionHelper
+    public static class Reflect
     {
         // Public calls are useful for reflected, inaccessible objects.
         public static object ReflectionCall<T>(this T o, string methodName, bool isPublic = false, bool isStatic = false, params object[] args)
@@ -94,6 +95,11 @@ namespace NitroxModel.Helper
             return GetField(typeof(T), fieldName, isPublic, isStatic);
         }
 
+        public static ConstructorInfo Constructor(Expression<Action> expression)
+        {
+            return (ConstructorInfo)GetMemberInfo(expression);
+        }
+        
         /// <summary>
         ///     Given a lambda expression that calls a method, returns the method info.
         ///     If method has parameters then anything can be supplied, the actual method won't be called.
@@ -101,9 +107,9 @@ namespace NitroxModel.Helper
         /// <typeparam name="T"></typeparam>
         /// <param name="expression">The expression.</param>
         /// <returns></returns>
-        public static MethodInfo GetMethodInfo(Expression<Action> expression)
+        public static MethodInfo Method(Expression<Action> expression)
         {
-            return GetMethodInfo((LambdaExpression)expression);
+            return (MethodInfo)GetMemberInfo(expression);
         }
 
         /// <summary>
@@ -113,9 +119,9 @@ namespace NitroxModel.Helper
         /// <typeparam name="T"></typeparam>
         /// <param name="expression">The expression.</param>
         /// <returns></returns>
-        public static MethodInfo GetMethodInfo<T>(Expression<Action<T>> expression)
+        public static MethodInfo Method<T>(Expression<Action<T>> expression) where T : class
         {
-            return GetMethodInfo((LambdaExpression)expression);
+            return (MethodInfo)GetMemberInfo(expression, typeof(T));
         }
 
         /// <summary>
@@ -126,51 +132,73 @@ namespace NitroxModel.Helper
         /// <typeparam name="TResult"></typeparam>
         /// <param name="expression">The expression.</param>
         /// <returns></returns>
-        public static MethodInfo GetMethodInfo<T, TResult>(Expression<Func<T, TResult>> expression)
+        public static MethodInfo Method<T, TResult>(Expression<Func<T, TResult>> expression) where T : class
         {
-            return GetMethodInfo((LambdaExpression)expression);
+            return (MethodInfo)GetMemberInfo(expression, typeof(T));
         }
 
-        public static FieldInfo GetFieldInfo<T>(Expression<Func<T>> expression)
+        public static FieldInfo Field<T>(Expression<Func<T>> expression)
         {
             return (FieldInfo)GetMemberInfo(expression);
         }
         
-        public static FieldInfo GetFieldInfo<TClass>(Expression<Func<TClass, object>> expression)
+        public static FieldInfo Field<T>(Expression<Func<T, object>> expression) where T : class
         {
             return (FieldInfo)GetMemberInfo(expression);
         }
         
-        public static PropertyInfo GetPropertyInfo<T>(Expression<Func<T>> expression)
+        public static PropertyInfo Property<T>(Expression<Func<T>> expression)
         {
             return (PropertyInfo)GetMemberInfo(expression);
         }
         
-        public static PropertyInfo GetPropertyInfo<TClass>(Expression<Func<TClass, object>> expression)
+        public static PropertyInfo Property<T>(Expression<Func<T, object>> expression) where T : class
         {
             return (PropertyInfo)GetMemberInfo(expression);
         }
         
-        private static MethodInfo GetMethodInfo(LambdaExpression expression)
+        private static MemberInfo GetMemberInfo(LambdaExpression expression, Type implementingType = null)
         {
-            MethodCallExpression outermostExpression = expression.Body as MethodCallExpression;
-            if (outermostExpression == null)
+            Expression currentExpression = expression.Body;
+            while (true)
             {
-                throw new ArgumentException("Invalid Expression. Expression should consist of a method call only.");
+                switch (currentExpression.NodeType)
+                {
+                    case ExpressionType.MemberAccess:
+                        // If it cannot be unwrapped further, return this member.
+                        MemberExpression exp = (MemberExpression)currentExpression;
+                        if (exp.Expression is null or ParameterExpression)
+                        {
+                            return exp.Member;
+                        }
+                        currentExpression = exp.Expression;
+                        break;
+                    case ExpressionType.UnaryPlus:
+                        currentExpression = ((UnaryExpression)currentExpression).Operand;
+                        break;
+                    case ExpressionType.New:
+                        return ((NewExpression)currentExpression).Constructor;
+                    case ExpressionType.Call:
+                        MethodInfo method = ((MethodCallExpression)currentExpression).Method;
+                        // Expression does not know which type the MethodInfo belongs to if it's virtual.
+                        if (implementingType != null && implementingType != method.ReflectedType)
+                        {
+                            BindingFlags all = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
+                            Type[] args = method.GetParameters().Select(p => p.ParameterType).ToArray();
+                            return implementingType.GetMethod(method.Name, all, null, args, null);
+                        }
+                        return method;
+                    case ExpressionType.Convert:
+                    case ExpressionType.ConvertChecked:
+                        currentExpression = ((UnaryExpression)currentExpression).Operand;
+                        break;
+                    case ExpressionType.Invoke:
+                        currentExpression = ((InvocationExpression)currentExpression).Expression;
+                        break;
+                    default:
+                        throw new ArgumentException($"Lambda expression '{expression}' does not target a member");
+                }
             }
-            return outermostExpression.Method;
-        }
-        
-        private static MemberInfo GetMemberInfo(LambdaExpression expression)
-        {
-            MemberExpression currentExpression = expression.Body as MemberExpression;
-            // If expression contains a cast (e.g. (object)value), then operand is the member access.
-            currentExpression ??= (expression.Body as UnaryExpression)?.Operand as MemberExpression;
-            if (currentExpression == null)
-            {
-                throw new ArgumentException("Invalid Expression. Expression should consist of a field or property access only.");
-            }
-            return currentExpression.Member;
         }
 
         private static MethodInfo GetMethod(this Type t, string methodName, bool isPublic = false, bool isStatic = false, params Type[] types)

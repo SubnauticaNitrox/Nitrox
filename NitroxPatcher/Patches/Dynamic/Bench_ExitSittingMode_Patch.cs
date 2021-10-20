@@ -5,13 +5,14 @@ using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
+using NitroxModel.Helper;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
     public class Bench_ExitSittingMode_Patch : NitroxPatch, IDynamicPatch
     {
-        private static readonly MethodInfo targetMethod = typeof(Bench).GetMethod("ExitSittingMode", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Bench t) => t.ExitSittingMode(default(Player), default(bool)));
         private static LocalPlayer localPlayer;
         private static SimulationOwnership simulationOwnership;
 
@@ -36,7 +37,7 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             localPlayer = NitroxServiceLocator.LocateService<LocalPlayer>();
             simulationOwnership = NitroxServiceLocator.LocateService<SimulationOwnership>();
-            PatchPostfix(harmony, targetMethod);
+            PatchPostfix(harmony, TARGET_METHOD);
         }
     }
 }

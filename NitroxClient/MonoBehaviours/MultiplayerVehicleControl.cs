@@ -80,9 +80,8 @@ namespace NitroxClient.MonoBehaviours
 
     public abstract class MultiplayerVehicleControl<T> : MultiplayerVehicleControl
     {
-
-        private readonly FieldInfo steeringWheelYaw = ReflectionHelper.GetField<T>("steeringWheelYaw");
-        private readonly FieldInfo steeringWheelPitch = ReflectionHelper.GetField<T>("steeringWheelPitch");
+        private readonly FieldInfo steeringWheelYaw = Reflect.GetField<T>("steeringWheelYaw");
+        private readonly FieldInfo steeringWheelPitch = Reflect.GetField<T>("steeringWheelPitch");
 
         protected T SteeringControl;
 

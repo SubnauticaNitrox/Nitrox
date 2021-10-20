@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
@@ -11,11 +10,10 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class CrafterLogic_TryPickup_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(CrafterLogic);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("TryPickup", BindingFlags.Public | BindingFlags.Instance);
+        public static readonly MethodInfo TARGET_METHOD = Reflect.Method((CrafterLogic t) => t.TryPickup());
 
         public static readonly OpCode INJECTION_OPCODE = OpCodes.Stfld;
-        public static readonly object INJECTION_OPERAND = TARGET_CLASS.GetField("numCrafted", BindingFlags.Public | BindingFlags.Instance);
+        public static readonly object INJECTION_OPERAND = Reflect.Field((CrafterLogic t) => t.numCrafted);
 
         public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
         {
@@ -36,9 +34,9 @@ namespace NitroxPatcher.Patches.Dynamic
                      */
                     yield return TranspilerHelper.LocateService<Crafting>();
                     yield return new CodeInstruction(OpCodes.Ldarg_0);
-                    yield return new CodeInstruction(OpCodes.Call, typeof(Component).GetMethod("get_gameObject", BindingFlags.Instance | BindingFlags.Public));
+                    yield return new CodeInstruction(OpCodes.Call, Reflect.Method((Component t) => t.gameObject));
                     yield return original.Ldloc<TechType>();
-                    yield return new CodeInstruction(OpCodes.Callvirt, typeof(Crafting).GetMethod("GhostCrafterItemPickedUp", BindingFlags.Instance | BindingFlags.Public));
+                    yield return new CodeInstruction(OpCodes.Callvirt, Reflect.Method((Crafting t) => t.GhostCrafterItemPickedUp(default(GameObject), default(TechType))));
                 }
             }
         }

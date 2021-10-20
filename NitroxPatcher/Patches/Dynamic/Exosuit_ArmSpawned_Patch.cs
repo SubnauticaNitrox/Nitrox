@@ -1,15 +1,14 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
+using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
     public class Exosuit_ArmSpawned_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(Exosuit);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("UpdateColliders", BindingFlags.NonPublic | BindingFlags.Instance);
+        public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Exosuit t) => t.UpdateColliders());
 
         public static void Postfix(Exosuit __instance)
         {

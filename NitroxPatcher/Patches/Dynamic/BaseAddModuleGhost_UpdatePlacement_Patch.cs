@@ -6,20 +6,23 @@ using System.Reflection.Emit;
 using HarmonyLib;
 using NitroxClient.MonoBehaviours.Overrides;
 using NitroxModel.Helper;
+using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
     public class BaseAddModuleGhost_UpdatePlacement_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(BaseAddModuleGhost);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("UpdatePlacement", BindingFlags.Public | BindingFlags.Instance);
+        /// <summary>
+        ///     Unable to use <see cref="Reflect.Method" /> here because expression trees do not support out parameters (yet).
+        /// </summary>
+        public static readonly MethodInfo TARGET_METHOD = typeof(BaseAddModuleGhost).GetMethod(nameof(BaseAddModuleGhost.UpdatePlacement), BindingFlags.Public | BindingFlags.Instance, null,
+                                                                                               new[] { typeof(Transform), typeof(float), typeof(bool), typeof(bool), typeof(ConstructableBase) }, null);
 
         public static readonly OpCode INJECTION_OPCODE = OpCodes.Ldsfld;
-        public static readonly Type OPERAND_CLASS = typeof(Player);
-        public static readonly object INJECTION_OPERAND = OPERAND_CLASS.GetField("main", BindingFlags.Public | BindingFlags.Static);
+        public static readonly object INJECTION_OPERAND = Reflect.Field(() => Player.main);
 
         public static readonly OpCode INSTRUCTION_BEFORE_JUMP = OpCodes.Ldfld;
-        public static readonly object INSTRUCTION_BEFORE_JUMP_OPERAND = typeof(SubRoot).GetField("isBase", BindingFlags.Public | BindingFlags.Instance);
+        public static readonly object INSTRUCTION_BEFORE_JUMP_OPERAND = Reflect.Field((SubRoot t) => t.isBase);
         public static readonly OpCode JUMP_INSTRUCTION_TO_COPY = OpCodes.Brtrue;
 
         public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
@@ -49,18 +52,21 @@ namespace NitroxPatcher.Patches.Dynamic
 
                 if (shouldInject)
                 {
-                    shouldInject = false;
-
                     // First fetch the place we want to jump... this will be the same place as !main.currentSub.isBase
                     CodeInstruction jumpInstruction = GetJumpInstruction(instructionList, i);
 
-                    yield return new CodeInstruction(OpCodes.Call, typeof(MultiplayerBuilder).GetMethod("get_isPlacing", BindingFlags.Public | BindingFlags.Static));
+                    yield return new CodeInstruction(OpCodes.Call, Reflect.Property(() => MultiplayerBuilder.isPlacing).GetMethod);
                     yield return new CodeInstruction(OpCodes.Brtrue_S, jumpInstruction.operand); // copy the jump location
                 }
 
                 // We want to inject just after Player main = Player.main... if this is that instruction then we'll inject after the next opcode (stfld)
-                shouldInject = (instruction.opcode.Equals(INJECTION_OPCODE) && instruction.operand.Equals(INJECTION_OPERAND));
+                shouldInject = instruction.opcode.Equals(INJECTION_OPCODE) && instruction.operand.Equals(INJECTION_OPERAND);
             }
+        }
+
+        public override void Patch(Harmony harmony)
+        {
+            PatchTranspiler(harmony, TARGET_METHOD);
         }
 
         private static CodeInstruction GetJumpInstruction(List<CodeInstruction> instructions, int startingIndex)
@@ -75,7 +81,7 @@ namespace NitroxPatcher.Patches.Dynamic
                     CodeInstruction jmpInstruction = instructions[i + 1];
 
                     // Validate that it is what we are looking for
-                    Validate.IsTrue(JUMP_INSTRUCTION_TO_COPY == jmpInstruction.opcode, "Looks like subnautica code has changed.  Update jump offset!");
+                    Validate.IsTrue(JUMP_INSTRUCTION_TO_COPY == jmpInstruction.opcode, "Looks like subnautica code has changed. Update jump offset!");
 
                     return jmpInstruction;
                 }
@@ -83,11 +89,5 @@ namespace NitroxPatcher.Patches.Dynamic
 
             throw new Exception("Could not locate jump instruction to copy! Injection has failed.");
         }
-
-        public override void Patch(Harmony harmony)
-        {
-            PatchTranspiler(harmony, TARGET_METHOD);
-        }
     }
 }
-

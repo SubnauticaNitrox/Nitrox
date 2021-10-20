@@ -3,6 +3,7 @@ using HarmonyLib;
 using NitroxClient.GameLogic.FMOD;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
+using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
@@ -10,7 +11,7 @@ namespace NitroxPatcher.Patches.Dynamic
     {
         private static FMODSystem fmodSystem;
 
-        private static readonly MethodInfo targetMethod = typeof(FMOD_CustomLoopingEmitter).GetMethod("OnPlay", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((FMOD_CustomLoopingEmitter t) => t.OnPlay());
 
         public static bool Prefix()
         {
@@ -36,7 +37,7 @@ namespace NitroxPatcher.Patches.Dynamic
         public override void Patch(Harmony harmony)
         {
             fmodSystem = NitroxServiceLocator.LocateService<FMODSystem>();
-            PatchMultiple(harmony, targetMethod, prefix:true, postfix:true);
+            PatchMultiple(harmony, TARGET_METHOD, prefix:true, postfix:true);
         }
     }
 }

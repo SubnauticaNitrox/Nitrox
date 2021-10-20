@@ -3,24 +3,25 @@ using System.Diagnostics;
 using System.Reflection;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NitroxClient.MonoBehaviours.Gui.Input;
 using NitroxModel.Helper;
 
 namespace NitroxTest.Model
 {
     [TestClass]
-    public class ReflectionHelperTest
+    public class ReflectTest
     {
         [TestMethod]
-        public void GetMethodInfo()
+        public void Method()
         {
             // Get static method.
-            MethodInfo staticMethod = ReflectionHelper.GetMethodInfo(() => AbusedClass.StaticMethodReturnsInt());
+            MethodInfo staticMethod = Reflect.Method(() => AbusedClass.StaticMethodReturnsInt());
             staticMethod.Should().NotBeNull();
             staticMethod.ReturnType.Should().Be<int>();
             staticMethod.Name.Should().BeEquivalentTo(nameof(AbusedClass.StaticMethodReturnsInt));
             staticMethod.Invoke(null, Array.Empty<object>());
             // Extra check for method with parameters, just to be safe.
-            staticMethod = ReflectionHelper.GetMethodInfo(() => AbusedClass.StaticMethodHasParams("", null));
+            staticMethod = Reflect.Method(() => AbusedClass.StaticMethodHasParams("", null));
             staticMethod.Should().NotBeNull();
             staticMethod.ReturnType.Should().Be<string>();
             staticMethod.Name.Should().BeEquivalentTo(nameof(AbusedClass.StaticMethodHasParams));
@@ -31,51 +32,45 @@ namespace NitroxTest.Model
             staticMethod.Invoke(null, new[] { "hello, reflection", (object)null }).Should().BeEquivalentTo("hello, reflection");
 
             // Get instance method.
-            MethodInfo instanceMethod = ReflectionHelper.GetMethodInfo<AbusedClass>(t => t.Method());
+            MethodInfo instanceMethod = Reflect.Method((AbusedClass t) => t.Method());
             instanceMethod.Should().NotBeNull();
             instanceMethod.ReturnType.Should().Be<int>();
             instanceMethod.Name.Should().BeEquivalentTo(nameof(AbusedClass.Method));
         }
 
         [TestMethod]
-        public void GetFieldInfo()
+        public void Field()
         {
             // Get static field.
-            FieldInfo staticField = ReflectionHelper.GetFieldInfo(() => AbusedClass.StaticField);
+            FieldInfo staticField = Reflect.Field(() => AbusedClass.StaticField);
             staticField.Name.Should().BeEquivalentTo(nameof(AbusedClass.StaticField));
             staticField.FieldType.Should().Be<int>();
             // Get instance field.
-            FieldInfo instanceField = ReflectionHelper.GetFieldInfo<AbusedClass>(t => t.InstanceField);
+            FieldInfo instanceField = Reflect.Field((AbusedClass t) => t.InstanceField);
             instanceField.Name.Should().BeEquivalentTo(nameof(AbusedClass.InstanceField));
             instanceField.FieldType.Should().Be<int>();
         }
 
         [TestMethod]
-        public void GetPropertyInfo()
+        public void Property()
         {
             // Get static property.
-            PropertyInfo staticProperty = ReflectionHelper.GetPropertyInfo(() => AbusedClass.StaticProperty);
+            PropertyInfo staticProperty = Reflect.Property(() => AbusedClass.StaticProperty);
             staticProperty.Name.Should().BeEquivalentTo(nameof(AbusedClass.StaticProperty));
             staticProperty.PropertyType.Should().Be<int>();
             // Get instance property.
-            PropertyInfo instanceProperty = ReflectionHelper.GetPropertyInfo<AbusedClass>(t => t.InstanceProperty);
+            PropertyInfo instanceProperty = Reflect.Property((AbusedClass t) => t.InstanceProperty);
             instanceProperty.Name.Should().BeEquivalentTo(nameof(AbusedClass.InstanceProperty));
             instanceProperty.PropertyType.Should().Be<int>();
         }
 
         [TestMethod]
-        public void GetMemberInfo()
+        public void Constructor()
         {
-            // Get static property.
-            PropertyInfo staticProperty = ReflectionHelper.GetPropertyInfo(() => AbusedClass.StaticProperty);
-            staticProperty.Name.Should().BeEquivalentTo(nameof(AbusedClass.StaticProperty));
-            staticProperty.PropertyType.Should().Be<int>();
-            // Get instance property.
-            PropertyInfo instanceProperty = ReflectionHelper.GetPropertyInfo<AbusedClass>(t => t.InstanceProperty);
-            instanceProperty.Name.Should().BeEquivalentTo(nameof(AbusedClass.InstanceProperty));
-            instanceProperty.PropertyType.Should().Be<int>();
+            ConstructorInfo method = Reflect.Constructor(() => new KeyBindingManager());
+            method.DeclaringType.Should().Be<KeyBindingManager>();
         }
-
+        
         private class AbusedClass
         {
             public static readonly int StaticReadOnlyField = 1;

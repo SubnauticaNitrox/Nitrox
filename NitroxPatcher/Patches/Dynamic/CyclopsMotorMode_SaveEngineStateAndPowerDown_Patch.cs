@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using HarmonyLib;
 using NitroxModel.Helper;
 
@@ -7,13 +6,12 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class CyclopsMotorMode_SaveEngineStateAndPowerDown_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(CyclopsMotorMode);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("SaveEngineStateAndPowerDown", BindingFlags.Public | BindingFlags.Instance);
+        public static readonly MethodInfo TARGET_METHOD = Reflect.Method((CyclopsMotorMode t) => t.SaveEngineStateAndPowerDown());
 
         public static bool Prefix(CyclopsMotorMode __instance)
         {
             // SN disable the engine if the player leave the cyclops. So this must be avoided.
-            __instance.ReflectionSet("engineOnOldState", __instance.engineOn);
+            __instance.engineOnOldState = __instance.engineOn;
             return false;
         }
 

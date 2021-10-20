@@ -11,10 +11,10 @@ namespace NitroxPatcher.Patches.Persistent
 {
     public class PAXTerrainController_LoadAsync_Patch : NitroxPatch, IPersistentPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(PAXTerrainController);
-        public static readonly object INJECTION_OPERAND = typeof(PAXTerrainController).GetMethod("LoadWorldTiles", BindingFlags.NonPublic | BindingFlags.Instance);
-        public static readonly FieldInfo LARGE_WORLD_STREAMER_FROZEN_FIELD = typeof(LargeWorldStreamer).GetField("frozen", BindingFlags.Public | BindingFlags.Instance);
-        public static readonly FieldInfo PAX_TERRAIN_CONTROLLER_STREAMER_FIELD = typeof(PAXTerrainController).GetField("streamer", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly Type TARGET_CLASS = typeof(PAXTerrainController);
+        private static readonly object INJECTION_OPERAND = Reflect.Method((PAXTerrainController t) => t.LoadWorldTiles());
+        private static readonly FieldInfo LARGE_WORLD_STREAMER_FROZEN_FIELD = Reflect.Field((LargeWorldStreamer t) => t.frozen);
+        private static readonly FieldInfo PAX_TERRAIN_CONTROLLER_STREAMER_FIELD = Reflect.Field((PAXTerrainController t) => t.streamer);
 
         public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, ILGenerator ilGenerator, IEnumerable<CodeInstruction> instructions)
         {
@@ -48,7 +48,7 @@ namespace NitroxPatcher.Patches.Persistent
                          Equals(instruction.operand, LARGE_WORLD_STREAMER_FROZEN_FIELD))
                 {
                     yield return instruction;
-                    yield return new CodeInstruction(OpCodes.Call, typeof(Multiplayer).GetMethod(nameof(Multiplayer.SubnauticaLoadingCompleted), BindingFlags.Public | BindingFlags.Static));
+                    yield return new CodeInstruction(OpCodes.Call, Reflect.Method(() => Multiplayer.SubnauticaLoadingCompleted()));
                     yield return new CodeInstruction(OpCodes.Ldarg_0); // this
                     yield return new CodeInstruction(OpCodes.Ldc_I4_8); // Load 8 onto the stack
                     yield return new CodeInstruction(OpCodes.Stfld, GetStateField(GetLoadAsyncEnumerableMethod())); // Store last stack item into state field

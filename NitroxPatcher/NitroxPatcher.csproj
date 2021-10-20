@@ -84,7 +84,7 @@
     <Compile Include="Patches\Dynamic\Equipment_RemoveItem_Patch.cs" />
     <Compile Include="Patches\Dynamic\EscapePod_Awake_Patch.cs" />
     <Compile Include="Patches\Dynamic\EscapePod_OnRepair_Patch.cs" />
-    <Compile Include="Patches\Dynamic\Exosuit_SpawnArm_Patch.cs" />
+    <Compile Include="Patches\Dynamic\Exosuit_ArmSpawned_Patch.cs" />
     <Compile Include="Patches\Dynamic\Exosuit_Update_Patch.cs" />
     <Compile Include="Patches\Dynamic\ExosuitClawArm_OnPickup_Patch.cs" />
     <Compile Include="Patches\Dynamic\ExosuitClawArm_TryUse_Patch.cs" />

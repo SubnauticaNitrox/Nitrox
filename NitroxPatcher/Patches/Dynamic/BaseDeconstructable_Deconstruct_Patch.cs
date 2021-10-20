@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
@@ -11,11 +10,10 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class BaseDeconstructable_Deconstruct_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(BaseDeconstructable);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("Deconstruct");
+        public static readonly MethodInfo TARGET_METHOD = Reflect.Method((BaseDeconstructable t) => t.Deconstruct());
 
         public static readonly OpCode INJECTION_OPCODE = OpCodes.Callvirt;
-        public static readonly object INJECTION_OPERAND = typeof(Constructable).GetMethod("SetState");
+        public static readonly object INJECTION_OPERAND = Reflect.Method((Constructable t) => t.SetState(default(bool), default(bool)));
 
         public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
         {
@@ -31,7 +29,7 @@ namespace NitroxPatcher.Patches.Dynamic
                      * BaseDeconstructable_Deconstruct_Patch.Callback(gameObject);
                      */
                     yield return original.Ldloc<ConstructableBase>(0);
-                    yield return new CodeInstruction(OpCodes.Call, typeof(BaseDeconstructable_Deconstruct_Patch).GetMethod("Callback", BindingFlags.Static | BindingFlags.Public));
+                    yield return new CodeInstruction(OpCodes.Call, Reflect.Method(() => Callback(default(GameObject))));
                 }
             }
         }

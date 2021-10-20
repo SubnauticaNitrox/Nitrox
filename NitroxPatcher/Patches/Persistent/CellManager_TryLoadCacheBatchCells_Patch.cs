@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
+using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Persistent
 {
     class CellManager_TryLoadCacheBatchCells_Patch : NitroxPatch, IPersistentPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(CellManager);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("TryLoadCacheBatchCells", BindingFlags.Public | BindingFlags.Instance);
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((CellManager t) => t.TryLoadCacheBatchCells(default(BatchCells)));
 
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
@@ -27,7 +26,7 @@ namespace NitroxPatcher.Patches.Persistent
             for (int i = 0; i < instrList.Count; i++)
             {
                 CodeInstruction instruction = instrList[i];
-                if (instrList.Count > i + 2 && instrList[i + 2].opcode == OpCodes.Callvirt && instrList[i + 2].operand == (object)typeof(LargeWorldStreamer).GetProperty("pathPrefix", BindingFlags.Public | BindingFlags.Instance).GetGetMethod())
+                if (instrList.Count > i + 2 && instrList[i + 2].opcode == OpCodes.Callvirt && ReferenceEquals(instrList[i + 2].operand, Reflect.Property((LargeWorldStreamer t) => t.pathPrefix)))
                 {
                     foreach (CodeInstruction instr in TranspilerHelper.IsMultiplayer(pathPrefixJmp, generator))
                     {
@@ -41,13 +40,13 @@ namespace NitroxPatcher.Patches.Persistent
                     yield return instrList[i + 1];
                     yield return instrList[i + 2];
 
-                    CodeInstruction labeledCodeInstruction = new CodeInstruction(instrList[i + 3].opcode, instrList[i + 3].operand);
+                    CodeInstruction labeledCodeInstruction = new(instrList[i + 3].opcode, instrList[i + 3].operand);
                     labeledCodeInstruction.labels.Add(labeledPathInstructionJmp);
 
                     yield return labeledCodeInstruction;
                     i += 3;
                 }
-                else if (instrList.Count > i + 2 && instrList[i + 2].opcode == OpCodes.Callvirt && instrList[i + 2].operand == (object)typeof(LargeWorldStreamer).GetProperty("fallbackPrefix", BindingFlags.Public | BindingFlags.Instance).GetGetMethod())
+                else if (instrList.Count > i + 2 && instrList[i + 2].opcode == OpCodes.Callvirt && ReferenceEquals(instrList[i + 2].operand, Reflect.Property((LargeWorldStreamer t) => t.fallbackPrefix)))
                 {
                     foreach (CodeInstruction instr in TranspilerHelper.IsMultiplayer(fallbackPrefixJmp, generator))
                     {
@@ -61,7 +60,7 @@ namespace NitroxPatcher.Patches.Persistent
                     yield return instrList[i + 1];
                     yield return instrList[i + 2];
 
-                    CodeInstruction labeledCodeInstruction = new CodeInstruction(instrList[i + 3].opcode, instrList[i + 3].operand);
+                    CodeInstruction labeledCodeInstruction = new(instrList[i + 3].opcode, instrList[i + 3].operand);
                     labeledCodeInstruction.labels.Add(labeledFallbackInstructionJmp);
 
                     yield return labeledCodeInstruction;

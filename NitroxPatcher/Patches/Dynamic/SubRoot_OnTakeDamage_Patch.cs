@@ -1,9 +1,9 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
+using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
@@ -13,8 +13,7 @@ namespace NitroxPatcher.Patches.Dynamic
     /// </summary>
     class SubRoot_OnTakeDamage_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(SubRoot);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("OnTakeDamage", BindingFlags.Instance | BindingFlags.Public, null, new Type[] { typeof(DamageInfo) }, null);
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((SubRoot t) => t.OnTakeDamage(default(DamageInfo)));
 
         public static bool Prefix(SubRoot __instance, DamageInfo damageInfo)
         {

@@ -11,7 +11,7 @@ namespace NitroxPatcher.Patches.Dynamic
     {
         public static readonly Type TARGET_CLASS = typeof(ExosuitTorpedoArm);
         public static readonly Type TARGET_INTERFACE = typeof(IExosuitArm);
-        public static readonly MethodInfo TARGET_METHOD_INTERFACE = typeof(IExosuitArm).GetMethod("OnUseUp");
+        public static readonly MethodInfo TARGET_METHOD_INTERFACE = typeof(IExosuitArm).GetMethod(nameof(IExosuitArm.OnUseUp));
 
         public static void Prefix(ExosuitTorpedoArm __instance)
         {

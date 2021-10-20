@@ -1,11 +1,12 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Helper;
 using NitroxModel.Logger;
 using static NitroxClient.GameLogic.Helper.TransientLocalObjectManager;
 
@@ -14,13 +15,13 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class Constructable_NotifyConstructedChanged_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly MethodInfo TARGET_METHOD = typeof(Constructable).GetMethod("NotifyConstructedChanged", BindingFlags.NonPublic | BindingFlags.Instance);
+        public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Constructable t) => t.NotifyConstructedChanged(default(bool)));
 
         public static void Postfix(Constructable __instance)
         {
-            if (!__instance._constructed && __instance.constructedAmount == 1f)
+            if (!__instance._constructed && Math.Abs(__instance.constructedAmount - 1f) < 0.0002)
             {
-                Optional<object> opId = TransientLocalObjectManager.Get(TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE_GUID);
+                Optional<object> opId = Get(TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE_GUID);
 
                 NitroxId id;
 
