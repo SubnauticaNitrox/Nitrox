@@ -47,7 +47,7 @@
     <Compile Include="DataStructures\NitroxInt3Test.cs" />
     <Compile Include="DataStructures\NitroxQuaternionTest.cs" />
     <Compile Include="DataStructures\NitroxTransformTest.cs" />
-    <Compile Include="DataStructures\ThreadSafeCollectionTest.cs" />
+    <Compile Include="DataStructures\ThreadSafeListTest.cs" />
     <Compile Include="DataStructures\ThreadSafeSetTest.cs" />
     <Compile Include="Model\OptionalTest.cs" />
     <Compile Include="Model\PacketProcessorTest.cs" />

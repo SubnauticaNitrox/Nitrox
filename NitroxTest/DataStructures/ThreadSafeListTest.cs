@@ -5,7 +5,7 @@ using NitroxModel.DataStructures;
 namespace NitroxTest.DataStructures
 {
     [TestClass]
-    public class ThreadSafeCollectionTest
+    public class ThreadSafeListTest
     {
         private ThreadSafeList<string> list;
 

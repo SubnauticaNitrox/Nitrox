@@ -204,9 +204,9 @@ namespace NitroxModel.DataStructures
         }
 
         /// <summary>
-        ///     Clears the collection and adds the given items.
+        ///     Clears the set and adds the given items.
         /// </summary>
-        /// <param name="items">Items to add onto the empty collection.</param>
+        /// <param name="items">Items to add onto the empty set.</param>
         public void Set(IEnumerable<T> items)
         {
             lock (locker)

@@ -67,9 +67,9 @@ namespace NitroxModel.DataStructures
             list = new List<T>(values);
         }
 
-        public ThreadSafeList(IList<T> collection, bool createCopy = true)
+        public ThreadSafeList(IList<T> list, bool createCopy = true)
         {
-            list = createCopy ? CreateCopy(collection) : collection;
+            this.list = createCopy ? CreateCopy(list) : list;
         }
 
         public void Add(T item)
@@ -173,9 +173,9 @@ namespace NitroxModel.DataStructures
         }
 
         /// <summary>
-        ///     Clears the collection and adds the given items.
+        ///     Clears the list and adds the given items.
         /// </summary>
-        /// <param name="items">Items to add onto the empty collection.</param>
+        /// <param name="items">Items to add onto the empty list.</param>
         public void Set(IEnumerable<T> items)
         {
             lock (locker)
