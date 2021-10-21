@@ -30,8 +30,7 @@ namespace NitroxClient.GameLogic.Helper
             BaseBioReactor baseBioReactor = owner.GetComponentInChildren<BaseBioReactor>();
             if (baseBioReactor)
             {
-                ItemsContainer container = (ItemsContainer)baseBioReactor.ReflectionGetProperty("container");
-                return Optional.Of(container);
+                return Optional.Of(baseBioReactor.container);
             }
             if (owner.name == "Player")
             {

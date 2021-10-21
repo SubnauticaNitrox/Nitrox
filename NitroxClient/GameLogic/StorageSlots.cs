@@ -30,8 +30,8 @@ namespace NitroxClient.GameLogic
             NitroxId itemId = NitroxEntity.GetId(item.item.gameObject);
             byte[] bytes = SerializationHelper.GetBytesWithoutParent(item.item.gameObject);
 
-            ItemData itemData = new ItemData(id, itemId, bytes);
-            StorageSlotItemAdd add = new StorageSlotItemAdd(itemData);
+            ItemData itemData = new(id, itemId, bytes);
+            StorageSlotItemAdd add = new(itemData);
             packetSender.Send(add);
         }
 
@@ -39,7 +39,7 @@ namespace NitroxClient.GameLogic
         {
             NitroxId id = NitroxEntity.GetId(gameObject);
 
-            StorageSlotItemRemove slotItemRemove = new StorageSlotItemRemove(id);
+            StorageSlotItemRemove slotItemRemove = new(id);
             packetSender.Send(slotItemRemove);
         }
 
@@ -58,7 +58,7 @@ namespace NitroxClient.GameLogic
             if (opEnergy.HasValue)
             {
                 EnergyMixin mixin = opEnergy.Value;
-                StorageSlot slot = (StorageSlot)mixin.ReflectionGet("batterySlot");
+                StorageSlot slot = mixin.batterySlot;
 
                 Pickupable pickupable = item.RequireComponent<Pickupable>();
 
@@ -67,8 +67,8 @@ namespace NitroxClient.GameLogic
                 bool allowedToPlaySounds = true;
                 if (silent)
                 {
-                    allowedToPlaySounds = (bool)mixin.ReflectionGet("allowedToPlaySounds");
-                    mixin.ReflectionSet("allowedToPlaySounds", !silent);
+                    allowedToPlaySounds = mixin.allowedToPlaySounds;
+                    mixin.allowedToPlaySounds = !silent;
                 }
                 using (packetSender.Suppress<StorageSlotItemAdd>())
                 {
@@ -76,7 +76,7 @@ namespace NitroxClient.GameLogic
                 }
                 if (silent)
                 {
-                    mixin.ReflectionSet("allowedToPlaySounds", allowedToPlaySounds);
+                    mixin.allowedToPlaySounds = allowedToPlaySounds;
                 }
             }
         }
@@ -89,15 +89,15 @@ namespace NitroxClient.GameLogic
             if (opMixin.HasValue)
             {
                 EnergyMixin mixin = opMixin.Value;
-                StorageSlot slot = (StorageSlot)mixin.ReflectionGet("batterySlot");
+                StorageSlot slot = mixin.batterySlot;
 
                 // Suppress sound when silent is active
                 // Will be used to suppress swap sound at the initialisation of the game
                 bool allowedToPlaySounds = true;
                 if (silent)
                 {
-                    allowedToPlaySounds = (bool)mixin.ReflectionGet("allowedToPlaySounds");
-                    mixin.ReflectionSet("allowedToPlaySounds", !silent);
+                    allowedToPlaySounds = mixin.allowedToPlaySounds;
+                    mixin.allowedToPlaySounds = !silent;
                 }
                 using (packetSender.Suppress<StorageSlotItemRemove>())
                 {
@@ -105,7 +105,7 @@ namespace NitroxClient.GameLogic
                 }
                 if (silent)
                 {
-                    mixin.ReflectionSet("allowedToPlaySounds", allowedToPlaySounds);
+                    mixin.allowedToPlaySounds = allowedToPlaySounds;
                 }
             }
             else
@@ -116,7 +116,7 @@ namespace NitroxClient.GameLogic
 
         public void EnergyMixinValueChanged(NitroxId ownerId, float amount, ItemData batteryData)
         {
-            EnergyMixinValueChanged batteryChanged = new EnergyMixinValueChanged(ownerId, amount, batteryData);
+            EnergyMixinValueChanged batteryChanged = new(ownerId, amount, batteryData);
             packetSender.Send(batteryChanged);
         }
 

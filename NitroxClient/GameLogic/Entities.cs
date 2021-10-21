@@ -30,7 +30,7 @@ namespace NitroxClient.GameLogic
 
             if (NitroxEnvironment.IsNormal) //Testing would fail because it's trying to access runtime UWE resources.
             {
-                batchCellsById = (Dictionary<Int3, BatchCells>)LargeWorldStreamer.main.cellManager.ReflectionGet("batch2cells");
+                batchCellsById = LargeWorldStreamer.main.cellManager.batch2cells;
             }
             else
             {

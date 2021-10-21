@@ -49,7 +49,7 @@ namespace NitroxPatcher.Patches.Dynamic
             if (lockAquired)
             {
                 skipPrefix = true;
-                TARGET_METHOD.Invoke(vehicle, new[] { context.GuiHand });
+                vehicle.OnHandClick(context.GuiHand);
                 skipPrefix = false;
             }
             else

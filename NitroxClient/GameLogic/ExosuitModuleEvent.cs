@@ -28,8 +28,8 @@ namespace NitroxClient.GameLogic
             NitroxId id = NitroxEntity.GetId(exosuit.gameObject);
             ExosuitModel exosuitModel = vehicles.GetVehicles<ExosuitModel>(id);
 
-            IExosuitArm rightArm = (IExosuitArm)exosuit.ReflectionGet("rightArm");
-            IExosuitArm leftArm = (IExosuitArm)exosuit.ReflectionGet("leftArm");
+            IExosuitArm rightArm = exosuit.rightArm;
+            IExosuitArm leftArm = exosuit.leftArm;
 
             try
             {
@@ -92,7 +92,7 @@ namespace NitroxClient.GameLogic
             else if (armAction == ExosuitArmAction.END_USE_TOOL)
             {
                 drillArm.animator.SetBool("use_tool", false);
-                drillArm.ReflectionCall("StopEffects");
+                drillArm.StopEffects();
             }
             else
             {
@@ -119,7 +119,7 @@ namespace NitroxClient.GameLogic
             if (armAction == ExosuitArmAction.END_USE_TOOL)
             {
                 grapplingArm.animator.SetBool("use_tool", false);
-                grapplingArm.ReflectionCall("ResetHook");
+                grapplingArm.ResetHook();
             }
             else if (armAction == ExosuitArmAction.START_USE_TOOL)
             {
@@ -129,7 +129,7 @@ namespace NitroxClient.GameLogic
                     grapplingArm.rope.LaunchHook(35f);
                 }
 
-                GrapplingHook hook = (GrapplingHook)grapplingArm.ReflectionGet("hook");
+                GrapplingHook hook = grapplingArm.hook;
 
                 hook.transform.parent = null;
                 hook.transform.position = grapplingArm.front.transform.position;
@@ -144,8 +144,8 @@ namespace NitroxClient.GameLogic
                 }
 
                 hook.rb.velocity = opHitVector.Value;
-                global::Utils.PlayFMODAsset(grapplingArm.shootSound, grapplingArm.front, 15f);
-                grapplingArm.ReflectionSet("grapplingStartPos", componentInParent.transform.position);
+                Utils.PlayFMODAsset(grapplingArm.shootSound, grapplingArm.front, 15f);
+                grapplingArm.grapplingStartPos = componentInParent.transform.position;
             }
             else
             {
@@ -173,7 +173,7 @@ namespace NitroxClient.GameLogic
                 {
                     silo = torpedoArm.siloSecond;
                 }
-                ItemsContainer container = (ItemsContainer)torpedoArm.ReflectionGet("container");
+                ItemsContainer container = torpedoArm.container;
                 Exosuit exosuit = torpedoArm.GetComponentInParent<Exosuit>();
                 TorpedoType[] torpedoTypes = exosuit.torpedoTypes;
 

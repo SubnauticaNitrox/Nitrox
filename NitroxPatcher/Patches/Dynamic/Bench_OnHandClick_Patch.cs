@@ -48,7 +48,7 @@ namespace NitroxPatcher.Patches.Dynamic
             if (lockAquired)
             {
                 skipPrefix = true;
-                TARGET_METHOD.Invoke(bench, new object[] { context.GuiHand });
+                bench.OnHandClick(context.GuiHand);
                 localPlayer.AnimationChange(AnimChangeType.BENCH, AnimChangeState.ON);
                 skipPrefix = false;
             }

@@ -9,10 +9,10 @@ namespace NitroxClient.GameLogic.Helper
 {
     public class EquipmentHelper
     {
-        private static readonly List<Func<GameObject, Equipment>> equipmentFinders = new List<Func<GameObject, Equipment>>
+        private static readonly List<Func<GameObject, Equipment>> equipmentFinders = new()
         {
-            o => (Equipment)o.GetComponent<Charger>().AliveOrNull()?.ReflectionGet("equipment"),
-            o => (Equipment)o.GetComponent<BaseNuclearReactor>().AliveOrNull()?.ReflectionGet("_equipment"),
+            o => o.GetComponent<Charger>().AliveOrNull()?.equipment,
+            o => o.GetComponent<BaseNuclearReactor>().AliveOrNull()?._equipment,
             o => o.GetComponent<CyclopsDecoyLoadingTube>().AliveOrNull()?.decoySlots,
             o => o.GetComponent<Exosuit>().AliveOrNull()?.modules,
             o => o.GetComponent<SeaMoth>().AliveOrNull()?.modules,

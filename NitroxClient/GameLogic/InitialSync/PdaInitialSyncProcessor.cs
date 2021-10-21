@@ -127,7 +127,7 @@ namespace NitroxClient.GameLogic.InitialSync
 
                             if (entryData.key == "Story_AuroraWarning4")
                             {
-                                CrashedShipExploder.main.ReflectionCall("SwapModels", false, false, new object[] { true });
+                                CrashedShipExploder.main.SwapModels(true);
                             }
                         }
                     }
