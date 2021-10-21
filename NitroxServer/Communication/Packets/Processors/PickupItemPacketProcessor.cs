@@ -31,7 +31,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 playerManager.SendPacketToAllPlayers(simulationOwnershipChange);
             }
 
-            // Need to remove the cached progress entry if when the object is fully scanned
+            // Need to remove the cached progress entry if the object is fully scanned
             if (pdaStateData.CachedProgress.TryGetValue(packet.TechType, out PDAProgressEntry pdaProgressEntry) && pdaProgressEntry.Entries.ContainsKey(packet.Id))
             {
                 pdaProgressEntry.Entries.Remove(packet.Id);

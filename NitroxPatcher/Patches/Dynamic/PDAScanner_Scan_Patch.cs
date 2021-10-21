@@ -17,13 +17,13 @@ namespace NitroxPatcher.Patches.Dynamic
     public class PDAScanner_Scan_Patch : NitroxPatch, IDynamicPatch
     {
         public static readonly Type TARGET_CLASS = typeof(PDAScanner);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("Scan", BindingFlags.Public | BindingFlags.Static);
+        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod(nameof(PDAScanner.Scan), BindingFlags.Public | BindingFlags.Static);
 
         public static readonly OpCode INJECTION_OPCODE = OpCodes.Call;
-        public static readonly object INJECTION_OPERAND = typeof(ResourceTracker).GetMethod("UpdateFragments", BindingFlags.Public | BindingFlags.Static);
+        public static readonly object INJECTION_OPERAND = typeof(ResourceTracker).GetMethod(nameof(ResourceTracker.UpdateFragments), BindingFlags.Public | BindingFlags.Static);
 
         public static readonly OpCode INJECTION_OPCODE_2 = OpCodes.Ldsfld;
-        public static readonly object INJECTION_OPERAND_2 = typeof(PDAScanner).GetField("cachedProgress", BindingFlags.NonPublic | BindingFlags.Static);
+        public static readonly object INJECTION_OPERAND_2 = typeof(PDAScanner).GetField(nameof(PDAScanner.cachedProgress), BindingFlags.NonPublic | BindingFlags.Static);
 
         public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
         {
@@ -40,11 +40,11 @@ namespace NitroxPatcher.Patches.Dynamic
                      * ResourceTracker::UpdateFragments()
                      * >> PDAScanner_Scan_Patch.Callback();
                      */
-                    yield return new CodeInstruction(OpCodes.Call, typeof(PDAScanner_Scan_Patch).GetMethod("Callback", BindingFlags.Static | BindingFlags.Public));
+                    yield return new CodeInstruction(OpCodes.Call, typeof(PDAScanner_Scan_Patch).GetMethod(nameof(Callback), BindingFlags.Static | BindingFlags.Public));
                 }
                 else if (instruction.opcode.Equals(INJECTION_OPCODE_2) && instruction.operand.Equals(INJECTION_OPERAND_2))
                 {
-                    yield return new CodeInstruction(OpCodes.Call, typeof(PDAScanner_Scan_Patch).GetMethod("ProgressCallback", BindingFlags.Static | BindingFlags.Public));
+                    yield return new CodeInstruction(OpCodes.Call, typeof(PDAScanner_Scan_Patch).GetMethod(nameof(ProgressCallback), BindingFlags.Static | BindingFlags.Public));
                 }
             }
         }
@@ -152,10 +152,10 @@ namespace NitroxPatcher.Patches.Dynamic
                 return;
             }
 
-            if (scanTarget.isValid && scanTarget.progress > 0f && scanTarget.gameObject.GetComponent<NitroxEntity>() != null)
+            if (scanTarget.isValid && scanTarget.progress > 0f && scanTarget.gameObject.TryGetComponent(out NitroxEntity nitroxEntity))
             {
                 // Should always be the same for the same entity
-                NitroxId nitroxId = scanTarget.gameObject.GetComponent<NitroxEntity>().Id;
+                NitroxId nitroxId = nitroxEntity.Id;
                 DateTimeOffset Now = DateTimeOffset.UtcNow;
 
                 // Start a thread when a scanning period starts

@@ -2,7 +2,6 @@
 using Newtonsoft.Json;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Logger;
 using ProtoBufNet;
 
 namespace NitroxServer.GameLogic.Unlockables
@@ -31,11 +30,8 @@ namespace NitroxServer.GameLogic.Unlockables
         public void UnlockedTechType(NitroxTechType techType)
         {
             PartiallyUnlockedByTechType.Remove(techType);
+            CachedProgress.Remove(techType);
             UnlockedTechTypes.Add(techType);
-            if (CachedProgress.ContainsKey(techType))
-            {
-                CachedProgress.Remove(techType);
-            }
         }
 
         public void AddKnownTechType(NitroxTechType techType)
@@ -65,17 +61,15 @@ namespace NitroxServer.GameLogic.Unlockables
 
 
             // Updating CachedEntries if id is not null and not already cached
-            if (nitroxId == null)
+            if (nitroxId != null)
             {
-                return;
-            }
+                if (!CachedProgress.TryGetValue(techType, out PDAProgressEntry pdaProgressEntry))
+                {
+                    CachedProgress.Add(techType, pdaProgressEntry = new PDAProgressEntry(techType, new Dictionary<NitroxId, float>()));
+                }
 
-            if (!CachedProgress.TryGetValue(techType, out PDAProgressEntry pdaProgressEntry))
-            {
-                CachedProgress.Add(techType, pdaProgressEntry = new PDAProgressEntry(techType, new Dictionary<NitroxId, float>()));
+                pdaProgressEntry.Entries[nitroxId] = progress;
             }
-
-            pdaProgressEntry.Entries[nitroxId] = progress;
         }
 
         public InitialPDAData GetInitialPDAData()

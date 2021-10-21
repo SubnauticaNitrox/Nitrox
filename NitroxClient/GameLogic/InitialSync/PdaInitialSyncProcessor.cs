@@ -138,7 +138,6 @@ namespace NitroxClient.GameLogic.InitialSync
         private void SetCachedProgress(List<PDAProgressEntry> pdaCachedEntries)
         {
             Log.Info($"Received initial sync packet with {pdaCachedEntries.Count} cached progress entries");
-            PDAManagerEntry.CachedEntries = new Dictionary<NitroxTechType, PDAProgressEntry>();
             PDAManagerEntry.CachedEntries = pdaCachedEntries.ToDictionary(entry => entry.TechType);
         }
     }

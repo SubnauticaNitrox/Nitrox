@@ -4,6 +4,9 @@ using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
+    /// <summary>
+    ///     Entity tech progress. Stores per unique scannable entity.
+    /// </summary>
     [Serializable]
     [ProtoContract]
     public class PDAProgressEntry
