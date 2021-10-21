@@ -10,19 +10,19 @@ namespace NitroxServer.GameLogic.Unlockables
     public class PDAStateData
     {
         [JsonProperty, ProtoMember(1)]
-        public ThreadSafeCollection<NitroxTechType> UnlockedTechTypes { get; } = new ThreadSafeCollection<NitroxTechType>();
+        public ThreadSafeList<NitroxTechType> UnlockedTechTypes { get; } = new ThreadSafeList<NitroxTechType>();
 
         [JsonProperty, ProtoMember(2)]
-        public ThreadSafeCollection<NitroxTechType> KnownTechTypes { get; } = new ThreadSafeCollection<NitroxTechType>();
+        public ThreadSafeList<NitroxTechType> KnownTechTypes { get; } = new ThreadSafeList<NitroxTechType>();
 
         [JsonProperty, ProtoMember(3)]
-        public ThreadSafeCollection<string> EncyclopediaEntries { get; } = new ThreadSafeCollection<string>();
+        public ThreadSafeList<string> EncyclopediaEntries { get; } = new ThreadSafeList<string>();
 
         [JsonProperty, ProtoMember(4)]
         public ThreadSafeDictionary<NitroxTechType, PDAEntry> PartiallyUnlockedByTechType { get; set; } = new ThreadSafeDictionary<NitroxTechType, PDAEntry>();
 
         [JsonProperty, ProtoMember(5)]
-        public ThreadSafeCollection<PDALogEntry> PdaLog { get; } = new ThreadSafeCollection<PDALogEntry>();
+        public ThreadSafeList<PDALogEntry> PdaLog { get; } = new ThreadSafeList<PDALogEntry>();
 
         public void UnlockedTechType(NitroxTechType techType)
         {

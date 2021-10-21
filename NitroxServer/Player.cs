@@ -12,12 +12,12 @@ namespace NitroxServer
 {
     public class Player : IProcessorContext
     {
-        private readonly ThreadSafeCollection<EquippedItemData> equippedItems;
-        private readonly ThreadSafeCollection<EquippedItemData> modules;
-        private readonly ThreadSafeCollection<AbsoluteEntityCell> visibleCells;
+        private readonly ThreadSafeList<EquippedItemData> equippedItems;
+        private readonly ThreadSafeList<EquippedItemData> modules;
+        private readonly ThreadSafeSet<AbsoluteEntityCell> visibleCells;
 
-        public ThreadSafeCollection<NitroxTechType> UsedItems { get; }
-        public ThreadSafeCollection<string> QuickSlotsBinding { get; set; }
+        public ThreadSafeList<NitroxTechType> UsedItems { get; }
+        public ThreadSafeList<string> QuickSlotsBinding { get; set; }
 
         public NitroxConnection Connection { get; set; }
         public PlayerSettings PlayerSettings => PlayerContext.PlayerSettings;
@@ -50,11 +50,11 @@ namespace NitroxServer
             Stats = stats;
             LastStoredPosition = null;
             LastStoredSubRootID = Optional.Empty;
-            UsedItems = new ThreadSafeCollection<NitroxTechType>(usedItems);
-            QuickSlotsBinding = new ThreadSafeCollection<string>(quickSlotsBinding);
-            this.equippedItems = new ThreadSafeCollection<EquippedItemData>(equippedItems);
-            this.modules = new ThreadSafeCollection<EquippedItemData>(modules);
-            visibleCells = new ThreadSafeCollection<AbsoluteEntityCell>(new HashSet<AbsoluteEntityCell>(), false);
+            UsedItems = new ThreadSafeList<NitroxTechType>(usedItems);
+            QuickSlotsBinding = new ThreadSafeList<string>(quickSlotsBinding);
+            this.equippedItems = new ThreadSafeList<EquippedItemData>(equippedItems);
+            this.modules = new ThreadSafeList<EquippedItemData>(modules);
+            visibleCells = new ThreadSafeSet<AbsoluteEntityCell>();
         }
 
         public static bool operator ==(Player left, Player right)
