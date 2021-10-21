@@ -60,7 +60,7 @@ namespace NitroxServer.GameLogic.Unlockables
             pdaEntry.Unlocked = unlocked;
 
 
-            // Updating CachedEntries if id is not null and not already cached
+            // Update progress for specific entity if NitroxID is provided.
             if (nitroxId != null)
             {
                 if (!CachedProgress.TryGetValue(techType, out PDAProgressEntry pdaProgressEntry))
