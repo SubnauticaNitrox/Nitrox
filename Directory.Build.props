@@ -59,6 +59,7 @@
                 <ProjectReference Include="$(SolutionDir)Nitrox.BuildTool\Nitrox.BuildTool.csproj">
                     <Project>{15C4C9C4-683C-4EF0-9E0F-0664A3BDA0CE}</Project>
                     <Name>Nitrox.BuildTool</Name>
+                    <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
                 </ProjectReference>
                 <ProjectReference Include="$(SolutionDir)NitroxModel\NitroxModel.csproj">
                     <Project>{B16F4DE7-21AD-4FEF-955B-0A5A365FA4E3}</Project>
