@@ -16,7 +16,7 @@ namespace NitroxPatcher.Patches.Dynamic
         ///     Unable to use <see cref="Reflect.Method" /> here because expression trees do not support out parameters (yet).
         /// </summary>
         public static readonly MethodInfo TARGET_METHOD = typeof(BaseAddModuleGhost).GetMethod(nameof(BaseAddModuleGhost.UpdatePlacement), BindingFlags.Public | BindingFlags.Instance, null,
-                                                                                               new[] { typeof(Transform), typeof(float), typeof(bool), typeof(bool), typeof(ConstructableBase) }, null);
+                                                                                               new[] { typeof(Transform), typeof(float), typeof(bool).MakeByRefType(), typeof(bool).MakeByRefType(), typeof(ConstructableBase) }, null);
 
         public static readonly OpCode INJECTION_OPCODE = OpCodes.Ldsfld;
         public static readonly object INJECTION_OPERAND = Reflect.Field(() => Player.main);

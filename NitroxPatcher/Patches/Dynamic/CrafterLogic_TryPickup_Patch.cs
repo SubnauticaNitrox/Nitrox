@@ -34,7 +34,7 @@ namespace NitroxPatcher.Patches.Dynamic
                      */
                     yield return TranspilerHelper.LocateService<Crafting>();
                     yield return new CodeInstruction(OpCodes.Ldarg_0);
-                    yield return new CodeInstruction(OpCodes.Call, Reflect.Method((Component t) => t.gameObject));
+                    yield return new CodeInstruction(OpCodes.Call, Reflect.Property((Component t) => t.gameObject).GetMethod);
                     yield return original.Ldloc<TechType>();
                     yield return new CodeInstruction(OpCodes.Callvirt, Reflect.Method((Crafting t) => t.GhostCrafterItemPickedUp(default(GameObject), default(TechType))));
                 }

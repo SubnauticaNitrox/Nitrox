@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
@@ -21,7 +20,9 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public override void Patch(Harmony harmony)
         {
-            MethodInfo targetMethod = TARGET_CLASS.GetInterfaceMap(TARGET_INTERFACE).InterfaceMethods.First(m => m == TARGET_METHOD_INTERFACE);
+            InterfaceMapping interfaceMap = TARGET_CLASS.GetInterfaceMap(TARGET_INTERFACE);
+            int i = Array.IndexOf(interfaceMap.InterfaceMethods, TARGET_METHOD_INTERFACE);
+            MethodInfo targetMethod = interfaceMap.TargetMethods[i];
             PatchPrefix(harmony, targetMethod);
         }
     }
