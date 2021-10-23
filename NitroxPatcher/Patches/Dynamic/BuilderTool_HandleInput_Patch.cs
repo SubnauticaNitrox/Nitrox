@@ -12,10 +12,13 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class BuilderTool_HandleInput_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly MethodInfo TARGET_METHOD = Reflect.Method((BuilderTool t) => t.HandleInput());
+        internal static readonly MethodInfo TARGET_METHOD = Reflect.Method((BuilderTool t) => t.HandleInput());
 
-        public static readonly OpCode INJECTION_OPCODE = OpCodes.Callvirt;
-        public static readonly object INJECTION_OPERAND = Reflect.Method((Constructable t) => t.SetState(default(bool), default(bool)));
+        internal static readonly OpCode INJECTION_OPCODE = OpCodes.Callvirt;
+        internal static readonly object INJECTION_OPERAND = Reflect.Method((Constructable t) => t.SetState(default(bool), default(bool)));
+        private static readonly MethodInfo COMPONENT_GAMEOBJECT_GETTER = Reflect.Property((Component t) => t.gameObject).GetMethod;
+        private static readonly MethodInfo NITROXENTITY_GETID = Reflect.Method(() => NitroxEntity.GetId(default(GameObject)));
+        private static readonly MethodInfo BUILDING_DESCONSTRUCTIONBEGIN = Reflect.Method((Building t) => t.DeconstructionBegin(default(NitroxId)));
 
         public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
         {
@@ -31,9 +34,9 @@ namespace NitroxPatcher.Patches.Dynamic
                      */
                     yield return TranspilerHelper.LocateService<Building>();
                     yield return original.Ldloc<Constructable>();
-                    yield return new CodeInstruction(OpCodes.Callvirt, Reflect.Property((Component t) => t.gameObject).GetMethod);
-                    yield return new CodeInstruction(OpCodes.Callvirt, Reflect.Method(() => NitroxEntity.GetId(default(GameObject))));
-                    yield return new CodeInstruction(OpCodes.Callvirt, Reflect.Method((Building t) => t.DeconstructionBegin(default(NitroxId))));
+                    yield return new CodeInstruction(OpCodes.Callvirt, COMPONENT_GAMEOBJECT_GETTER);
+                    yield return new CodeInstruction(OpCodes.Callvirt, NITROXENTITY_GETID);
+                    yield return new CodeInstruction(OpCodes.Callvirt, BUILDING_DESCONSTRUCTIONBEGIN);
                 }
             }
         }

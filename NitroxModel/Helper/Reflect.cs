@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -15,6 +14,8 @@ namespace NitroxModel.Helper
     /// </remarks>
     public static class Reflect
     {
+        private static readonly BindingFlags BINDING_FLAGS_ALL = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
+        
         public static ConstructorInfo Constructor(Expression<Action> expression)
         {
             return (ConstructorInfo)GetMemberInfo(expression);
@@ -103,9 +104,13 @@ namespace NitroxModel.Helper
                         // Expression does not know which type the MethodInfo belongs to if it's virtual.
                         if (implementingType != null && implementingType != method.ReflectedType)
                         {
-                            BindingFlags all = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
-                            Type[] args = method.GetParameters().Select(p => p.ParameterType).ToArray();
-                            return implementingType.GetMethod(method.Name, all, null, args, null);
+                            ParameterInfo[] parameters = method.GetParameters();
+                            Type[] args = new Type[parameters.Length];
+                            for (int i = 0; i < parameters.Length; i++)
+                            {
+                                args[i] = parameters[i].ParameterType;
+                            }
+                            return implementingType.GetMethod(method.Name, BINDING_FLAGS_ALL, null, args, null);
                         }
                         return method;
                     case ExpressionType.Convert:

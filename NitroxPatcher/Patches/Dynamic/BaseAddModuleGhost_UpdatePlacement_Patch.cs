@@ -15,15 +15,16 @@ namespace NitroxPatcher.Patches.Dynamic
         /// <summary>
         ///     Unable to use <see cref="Reflect.Method" /> here because expression trees do not support out parameters (yet).
         /// </summary>
-        public static readonly MethodInfo TARGET_METHOD = typeof(BaseAddModuleGhost).GetMethod(nameof(BaseAddModuleGhost.UpdatePlacement), BindingFlags.Public | BindingFlags.Instance, null,
-                                                                                               new[] { typeof(Transform), typeof(float), typeof(bool).MakeByRefType(), typeof(bool).MakeByRefType(), typeof(ConstructableBase) }, null);
+        private static readonly MethodInfo TARGET_METHOD = typeof(BaseAddModuleGhost).GetMethod(nameof(BaseAddModuleGhost.UpdatePlacement), BindingFlags.Public | BindingFlags.Instance, null,
+                                                                                                new[] { typeof(Transform), typeof(float), typeof(bool).MakeByRefType(), typeof(bool).MakeByRefType(), typeof(ConstructableBase) }, null);
 
-        public static readonly OpCode INJECTION_OPCODE = OpCodes.Ldsfld;
-        public static readonly object INJECTION_OPERAND = Reflect.Field(() => Player.main);
+        private static readonly OpCode INJECTION_OPCODE = OpCodes.Ldsfld;
 
-        public static readonly OpCode INSTRUCTION_BEFORE_JUMP = OpCodes.Ldfld;
-        public static readonly object INSTRUCTION_BEFORE_JUMP_OPERAND = Reflect.Field((SubRoot t) => t.isBase);
-        public static readonly OpCode JUMP_INSTRUCTION_TO_COPY = OpCodes.Brtrue;
+        private static readonly object INJECTION_OPERAND = Reflect.Field(() => Player.main);
+
+        private static readonly OpCode INSTRUCTION_BEFORE_JUMP = OpCodes.Ldfld;
+        private static readonly object INSTRUCTION_BEFORE_JUMP_OPERAND = Reflect.Field((SubRoot t) => t.isBase);
+        private static readonly OpCode JUMP_INSTRUCTION_TO_COPY = OpCodes.Brtrue;
 
         public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
         {

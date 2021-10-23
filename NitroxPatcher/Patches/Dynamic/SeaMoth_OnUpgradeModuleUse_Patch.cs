@@ -3,7 +3,6 @@ using HarmonyLib;
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
-using NitroxModel.Core;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
 
@@ -20,11 +19,11 @@ namespace NitroxPatcher.Patches.Dynamic
             switch (techType)
             {
                 case TechType.SeamothElectricalDefense:
-                    NitroxServiceLocator.LocateService<SeamothModulesEvent>().BroadcastElectricalDefense(techType, slotID, __instance);
+                    Resolve<SeamothModulesEvent>().BroadcastElectricalDefense(techType, slotID, __instance);
                     break;
                 case TechType.SeamothTorpedoModule:
-                    __state = NitroxServiceLocator.LocateService<IPacketSender>().Suppress<ItemContainerRemove>();
-                    NitroxServiceLocator.LocateService<SeamothModulesEvent>().BroadcastTorpedoLaunch(techType, slotID, __instance);
+                    __state = Resolve<IPacketSender>().Suppress<ItemContainerRemove>();
+                    Resolve<SeamothModulesEvent>().BroadcastTorpedoLaunch(techType, slotID, __instance);
                     break;
             }
 
