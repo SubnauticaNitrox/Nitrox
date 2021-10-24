@@ -231,8 +231,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 corridor.rotation = corridorRotationMetadata.Rotation;
 
                 int corridorType = corridor.CalculateCorridorType();
-                Base ghostBase = corridor.ghostBase;
-                ghostBase.SetCorridor(Int3.zero, corridorType, corridor.isGlass);
+                corridor.ghostBase.SetCorridor(Int3.zero, corridorType, corridor.isGlass);
                 corridor.RebuildGhostGeometry();
             }
             else if (component is BaseAddMapRoomGhost mapRoom)
@@ -243,18 +242,15 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 mapRoom.cellType = (Base.CellType)mapRoomRotationMetadata.CellType;
                 mapRoom.connectionMask = mapRoomRotationMetadata.ConnectionMask;
 
-                Base ghostBase = mapRoom.ghostBase;
-
-                ghostBase.SetCell(Int3.zero, (Base.CellType)mapRoomRotationMetadata.CellType);
+                mapRoom.ghostBase.SetCell(Int3.zero, (Base.CellType)mapRoomRotationMetadata.CellType);
                 mapRoom.RebuildGhostGeometry();
             }
             else if (component is BaseAddModuleGhost ghost)
             {
                 BaseModuleRotationMetadata baseModuleRotationMetadata = (BaseModuleRotationMetadata)rotationMetadata;
-                BaseAddModuleGhost module = ghost;
 
-                module.anchoredFace = new Base.Face(baseModuleRotationMetadata.Cell.ToUnity(), (Base.Direction)baseModuleRotationMetadata.Direction);
-                module.RebuildGhostGeometry();
+                ghost.anchoredFace = new Base.Face(baseModuleRotationMetadata.Cell.ToUnity(), (Base.Direction)baseModuleRotationMetadata.Direction);
+                ghost.RebuildGhostGeometry();
             }
             else if (component is BaseAddFaceGhost faceGhost)
             {
@@ -263,10 +259,9 @@ namespace NitroxClient.MonoBehaviours.Overrides
 
                 Base.Face face = new(baseModuleRotationMetadata.Cell.ToUnity(), (Base.Direction)baseModuleRotationMetadata.Direction);
                 faceGhost.anchoredFace = face;
-
-                Base ghostBase = faceGhost.ghostBase;
+                
                 Base.FaceType faceType = (Base.FaceType)baseModuleRotationMetadata.FaceType;
-                ghostBase.SetFace(face, faceType);
+                faceGhost.ghostBase.SetFace(face, faceType);
 
                 faceGhost.RebuildGhostGeometry();
             }
