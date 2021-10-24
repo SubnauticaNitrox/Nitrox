@@ -1,10 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 
@@ -61,7 +61,7 @@ namespace NitroxClient.GameLogic.InitialSync
 
         private void SetPDAEntryComplete(List<NitroxTechType> pdaEntryComplete)
         {
-            HashSet<TechType> complete = (HashSet<TechType>)(typeof(PDAScanner).GetField("complete", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null));
+            HashSet<TechType> complete = PDAScanner.complete;
 
             foreach (NitroxTechType item in pdaEntryComplete)
             {
@@ -74,7 +74,7 @@ namespace NitroxClient.GameLogic.InitialSync
 
         private void SetPDAEntryPartial(List<PDAEntry> entries)
         {
-            List<PDAScanner.Entry> partial = (List<PDAScanner.Entry>)(typeof(PDAScanner).GetField("partial", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null));
+            List<PDAScanner.Entry> partial = PDAScanner.partial;
 
             foreach (PDAEntry entry in entries)
             {
@@ -98,7 +98,7 @@ namespace NitroxClient.GameLogic.InitialSync
             {
                 foreach (NitroxTechType techType in techTypes)
                 {
-                    HashSet<TechType> complete = (HashSet<TechType>)(typeof(PDAScanner).GetField("complete", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null));
+                    HashSet<TechType> complete = PDAScanner.complete;
                     KnownTech.Add(techType.ToUnity(), false);
                 }
             }
@@ -110,7 +110,7 @@ namespace NitroxClient.GameLogic.InitialSync
 
             using (packetSender.Suppress<PDALogEntryAdd>())
             {
-                Dictionary<string, PDALog.Entry> entries = (Dictionary<string, PDALog.Entry>)(typeof(PDALog).GetField("entries", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null));
+                Dictionary<string, PDALog.Entry> entries = PDALog.entries;
 
                 foreach (PDALogEntry logEntry in logEntries)
                 {

@@ -14,7 +14,7 @@ namespace NitroxPatcher.Patches.Dynamic
     {
         public static readonly Type TARGET_CLASS = typeof(StoryGoalScheduler);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("Schedule", BindingFlags.Public | BindingFlags.Instance);
-        private static Dictionary<string, PDALog.Entry> entries = (Dictionary<string, PDALog.Entry>)(typeof(PDALog).GetField("entries", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null));
+        private static Dictionary<string, PDALog.Entry> entries = PDALog.entries;
         private static readonly IPacketSender iPacketSender = NitroxServiceLocator.LocateService<IPacketSender>();
 
         // __state is a bool made to prevent duplicated entries

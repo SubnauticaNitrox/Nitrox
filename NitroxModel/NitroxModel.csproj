@@ -249,27 +249,6 @@
     <Compile Include="Server\ServerGameMode.cs" />
     <Compile Include="Server\ServerSerializerMode.cs" />
   </ItemGroup>
-    <Folder Include="OS\MacOS\" />
-    <Folder Include="OS\Unix\" />
-  </ItemGroup>
-    <Folder Include="OS\MacOS\" />
-    <Folder Include="OS\Unix\" />
-  </ItemGroup>
-    <Folder Include="OS\MacOS\" />
-    <Folder Include="OS\Unix\" />
-  </ItemGroup>
-    <Folder Include="OS\MacOS\" />
-    <Folder Include="OS\Unix\" />
-  </ItemGroup>
-    <Folder Include="OS\MacOS\" />
-    <Folder Include="OS\Unix\" />
-  </ItemGroup>
-    <Folder Include="OS\MacOS\" />
-    <Folder Include="OS\Unix\" />
-  </ItemGroup>
-    <Folder Include="OS\MacOS\" />
-    <Folder Include="OS\Unix\" />
-  </ItemGroup>
   <ItemGroup Label="NuGet Package">
     <PackageReference Include="Autofac">
       <Version>4.9.4</Version>

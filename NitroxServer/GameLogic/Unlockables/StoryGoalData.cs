@@ -19,7 +19,7 @@ namespace NitroxServer.GameLogic.Unlockables
         public ThreadSafeSet<string> GoalUnlocks { get; } = new();
 
         [JsonProperty, ProtoMember(4)]
-        public ThreadSafeCollection<FakeScheduledGoal> ScheduledGoals { get; } = new();
+        public ThreadSafeList<FakeScheduledGoal> ScheduledGoals { get; } = new();
 
         public bool RemovedLatestRadioMessage()
         {

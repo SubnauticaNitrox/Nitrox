@@ -10,13 +10,13 @@ namespace NitroxServer.GameLogic
     public class ScheduleKeeper
     {
         public Dictionary<string, FakeScheduledGoal> Schedule = new Dictionary<string, FakeScheduledGoal>();
-        private ThreadSafeCollection<FakeScheduledGoal> scheduledGoals;
+        private ThreadSafeList<FakeScheduledGoal> scheduledGoals;
         private PDAStateData pdaStateData;
         private StoryGoalData storyGoalData;
         private EventTriggerer eventTriggerer;
         private PlayerManager playerManager;
      
-        public ScheduleKeeper(ThreadSafeCollection<FakeScheduledGoal> scheduledGoals, PDAStateData pdaStateData, StoryGoalData storyGoalData)
+        public ScheduleKeeper(ThreadSafeList<FakeScheduledGoal> scheduledGoals, PDAStateData pdaStateData, StoryGoalData storyGoalData)
         {
             this.pdaStateData = pdaStateData;
             this.storyGoalData = storyGoalData;

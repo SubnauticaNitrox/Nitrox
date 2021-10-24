@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxModel.DataStructures;
 using NitroxModel.Logger;
@@ -65,8 +64,8 @@ namespace NitroxClient.GameLogic.InitialSync
 
         private void SetBiomeGoalTrackerGoals()
         {
-            Dictionary<string, PDALog.Entry> entries = (Dictionary<string, PDALog.Entry>)(typeof(PDALog).GetField("entries", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null));
-            List<BiomeGoal> goals = (List<BiomeGoal>)typeof(BiomeGoalTracker).GetField("goals", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(BiomeGoalTracker.main);
+            Dictionary<string, PDALog.Entry> entries = PDALog.entries;
+            List<BiomeGoal> goals = BiomeGoalTracker.main.goals;
             int alreadyIn = 0;
             for (int i = goals.Count - 1; i >= 0; i--)
             {
@@ -85,7 +84,7 @@ namespace NitroxClient.GameLogic.InitialSync
         private void SetScheduledGoals(List<FakeScheduledGoal> scheduledGoals)
         {
             Log.Debug("SetScheduledGoals()");
-            Dictionary<string, PDALog.Entry> entries = (Dictionary<string, PDALog.Entry>)(typeof(PDALog).GetField("entries", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null));
+            Dictionary<string, PDALog.Entry> entries = PDALog.entries;
             // Need to clear some duplicated goals that might have appeared during loading and before sync
             for (int i = StoryGoalScheduler.main.schedule.Count - 1; i >= 0; i--)
             {

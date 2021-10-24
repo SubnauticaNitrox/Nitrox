@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
+﻿using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxModel.Packets;
@@ -28,9 +26,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
                 if (!PDAScanner.GetPartialEntryByKey(techType, out PDAScanner.Entry entry))
                 {
-                    MethodInfo methodAdd = typeof(PDAScanner).GetMethod("Add", BindingFlags.NonPublic | BindingFlags.Static, null, new Type[] { typeof(TechType), typeof(int) }, null);
-                    entry = (PDAScanner.Entry)methodAdd.Invoke(null, new object[] { techType, packet.Unlocked });
-
+                    entry = PDAScanner.Add(techType, packet.Unlocked);
                 }
 
                 if (entry != null)
@@ -39,8 +35,8 @@ namespace NitroxClient.Communication.Packets.Processors
 
                     if (entry.unlocked >= entryData.totalFragments)
                     {
-                        List<PDAScanner.Entry> partial = (List<PDAScanner.Entry>)(typeof(PDAScanner).GetField("partial", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null));
-                        HashSet<TechType> complete = (HashSet<TechType>)(typeof(PDAScanner).GetField("complete", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null));
+                        List<PDAScanner.Entry> partial = PDAScanner.partial;
+                        HashSet<TechType> complete = PDAScanner.complete;
                         partial.Remove(entry);
                         complete.Add(entry.techType);
                     }
