@@ -56,10 +56,6 @@ namespace NitroxServer.GameLogic.Unlockables
                 PartiallyUnlockedByTechType[techType] = pdaEntry = new PDAEntry(techType, progress, unlocked);
             }
 
-            pdaEntry.Progress = progress;
-            pdaEntry.Unlocked = unlocked;
-
-
             // Update progress for specific entity if NitroxID is provided.
             if (nitroxId != null)
             {
@@ -67,9 +63,17 @@ namespace NitroxServer.GameLogic.Unlockables
                 {
                     CachedProgress.Add(techType, pdaProgressEntry = new PDAProgressEntry(techType, new Dictionary<NitroxId, float>()));
                 }
-
-                pdaProgressEntry.Entries[nitroxId] = progress;
+                // Prevents decreasing progress
+                if (!pdaProgressEntry.Entries.ContainsKey(nitroxId) || (unlocked == pdaEntry.Unlocked && pdaProgressEntry.Entries.TryGetValue(nitroxId, out float oldProgress) && oldProgress < progress))
+                {
+                    pdaProgressEntry.Entries[nitroxId] = progress;
+                    pdaEntry.Progress = progress;
+                }
             }
+
+            // This needs to occur after the progress update because
+            // progress update needs to know what was the old unlocked state
+            pdaEntry.Unlocked = unlocked;
         }
 
         public InitialPDAData GetInitialPDAData()

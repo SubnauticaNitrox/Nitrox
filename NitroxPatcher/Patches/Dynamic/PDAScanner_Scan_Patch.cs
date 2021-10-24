@@ -177,14 +177,19 @@ namespace NitroxPatcher.Patches.Dynamic
 
                 NitroxTechType nitroxTechType = new NitroxTechType(scanTarget.techType.ToString());
                 // This should not occur all the time because it only takes effect one time per entity
+                // Then it occurs when someone else already scanned the entity
                 // Check if the entry is already in the partial list, and then, change the progress
                 if (PDAManagerEntry.CachedEntries.TryGetValue(nitroxTechType, out PDAProgressEntry pdaProgressEntry))
                 {
                     if (pdaProgressEntry.Entries.TryGetValue(nitroxId, out float progress))
                     {
                         pdaProgressEntry.Entries.Remove(nitroxId);
-                        PDAScanner.scanTarget.progress = progress;
-                        scannerEntry.progress = progress;
+                        // We'd like the progress to not decrease when two people scan the same thing at the same time
+                        if (scannerEntry.progress < progress)
+                        {
+                            PDAScanner.scanTarget.progress = progress;
+                            scannerEntry.progress = progress;
+                        }
                         if (pdaProgressEntry.Entries.Count == 0)
                         {
                             PDAManagerEntry.CachedEntries.Remove(nitroxTechType);
