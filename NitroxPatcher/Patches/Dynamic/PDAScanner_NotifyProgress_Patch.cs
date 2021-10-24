@@ -10,12 +10,13 @@ namespace NitroxPatcher.Patches.Dynamic
     {
         public static readonly Type TARGET_CLASS = typeof(PDAScanner);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("NotifyProgress", BindingFlags.NonPublic | BindingFlags.Static);
+        private static PDAManagerEntry pdaManagerEntry = NitroxServiceLocator.LocateService<PDAManagerEntry>();
 
         public static void Prefix(PDAScanner.Entry entry)
         {
             if (entry != null)
             {
-                NitroxServiceLocator.LocateService<PDAManagerEntry>().Progress(entry);
+                pdaManagerEntry.Progress(entry, null);
             }
         }
 
