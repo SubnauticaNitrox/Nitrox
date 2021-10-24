@@ -13,11 +13,11 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class SubNameInput_OnColorChange_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly MethodInfo TARGET_METHOD = typeof(SubNameInput).GetMethod("OnColorChange", BindingFlags.Public | BindingFlags.Instance);
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((SubNameInput t) => t.OnColorChange(default(ColorChangeEventData)));
 
         public static void Postfix(SubNameInput __instance, ColorChangeEventData eventData)
         {
-            SubName subname = (SubName)__instance.ReflectionGet("target");
+            SubName subname = __instance.target;
             if (subname != null)
             {
                 GameObject parentVehicle;
@@ -39,7 +39,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 }
 
                 NitroxId id = NitroxEntity.GetId(parentVehicle);
-                VehicleColorChange packet = new VehicleColorChange(__instance.SelectedColorIndex, id, eventData.hsb.ToDto(), eventData.color.ToDto());
+                VehicleColorChange packet = new(__instance.SelectedColorIndex, id, eventData.hsb.ToDto(), eventData.color.ToDto());
                 NitroxServiceLocator.LocateService<IPacketSender>().Send(packet);
             }
         }

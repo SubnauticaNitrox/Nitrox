@@ -6,14 +6,14 @@ using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
+using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
     public class RocketConstructor_StartRocketConstruction_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly MethodInfo TARGET_METHOD = typeof(RocketConstructor).GetMethod("StartRocketConstruction", BindingFlags.Public | BindingFlags.Instance);
-
-        public static readonly OpCode INJECTION_CODE = OpCodes.Stloc_2;
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((RocketConstructor t) => t.StartRocketConstruction());
+        private static readonly OpCode INJECTION_CODE = OpCodes.Stloc_2;
 
         public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
         {
@@ -31,11 +31,10 @@ namespace NitroxPatcher.Patches.Dynamic
                 if (instruction.opcode == INJECTION_CODE)
                 {
                     yield return new CodeInstruction(OpCodes.Ldarg_0); //this
-                    yield return new CodeInstruction(OpCodes.Ldfld, typeof(RocketConstructor).GetField("rocket", BindingFlags.Public | BindingFlags.Instance)); //this.rocket
-                    yield return new CodeInstruction(OpCodes.Ldloc_0); //techtype
-                    yield return new CodeInstruction(OpCodes.Call, typeof(RocketConstructor_StartRocketConstruction_Patch).GetMethod("Callback", BindingFlags.Static | BindingFlags.NonPublic));
+                    yield return new CodeInstruction(OpCodes.Ldfld, Reflect.Field((RocketConstructor t) => t.rocket)); // this.rocket
+                    yield return new CodeInstruction(OpCodes.Ldloc_0); // techtype
+                    yield return new CodeInstruction(OpCodes.Call, Reflect.Method(() => Callback(default(Rocket), default(TechType))));
                 }
-
             }
         }
 

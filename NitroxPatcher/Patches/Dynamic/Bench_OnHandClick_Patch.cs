@@ -6,17 +6,17 @@ using NitroxClient.GameLogic.Simulation;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
+using NitroxModel.Helper;
 using NitroxModel.Logger;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
     public class Bench_OnHandClick_Patch : NitroxPatch, IDynamicPatch
     {
-        private static readonly MethodInfo targetMethod = typeof(Bench).GetMethod(nameof(Bench.OnHandClick), BindingFlags.Public | BindingFlags.Instance);
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Bench t) => t.OnHandClick(default(GUIHand)));
         private static LocalPlayer localPlayer;
         private static SimulationOwnership simulationOwnership;
         private static bool skipPrefix;
-
 
         public static bool Prefix(Bench __instance, GUIHand hand)
         {
@@ -48,7 +48,7 @@ namespace NitroxPatcher.Patches.Dynamic
             if (lockAquired)
             {
                 skipPrefix = true;
-                targetMethod.Invoke(bench, new object[] { context.GuiHand });
+                bench.OnHandClick(context.GuiHand);
                 localPlayer.AnimationChange(AnimChangeType.BENCH, AnimChangeState.ON);
                 skipPrefix = false;
             }
@@ -63,7 +63,7 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             localPlayer = NitroxServiceLocator.LocateService<LocalPlayer>();
             simulationOwnership = NitroxServiceLocator.LocateService<SimulationOwnership>();
-            PatchPrefix(harmony, targetMethod);
+            PatchPrefix(harmony, TARGET_METHOD);
         }
     }
 }

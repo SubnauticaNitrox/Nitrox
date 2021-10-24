@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours
 {
-    class MultiplayerExosuit : MultiplayerVehicleControl<Vehicle>
+    class MultiplayerExosuit : MultiplayerVehicleControl
     {
         private bool lastThrottle;
         private float timeJetsChanged;
@@ -12,7 +12,9 @@ namespace NitroxClient.MonoBehaviours
 
         protected override void Awake()
         {
-            SteeringControl = exosuit = GetComponent<Exosuit>();
+            exosuit = GetComponent<Exosuit>();
+            WheelYawSetter = value => exosuit.steeringWheelYaw = value;
+            WheelPitchSetter = value => exosuit.steeringWheelPitch = value;
             base.Awake();
             SmoothRotation = new ExosuitSmoothRotation(gameObject.transform.rotation);
         }
@@ -20,8 +22,8 @@ namespace NitroxClient.MonoBehaviours
         internal override void Enter()
         {
             GetComponent<Rigidbody>().freezeRotation = false;
-            exosuit.ReflectionCall("SetIKEnabled", false, false, new object[] { true });
-            exosuit.ReflectionSet("thrustIntensity", 0f);
+            exosuit.SetIKEnabled(true);
+            exosuit.thrustIntensity = 0;
             exosuit.ambienceSound.Play();
             base.Enter();
         }
@@ -29,7 +31,7 @@ namespace NitroxClient.MonoBehaviours
         internal override void Exit()
         {
             GetComponent<Rigidbody>().freezeRotation = true;
-            exosuit.ReflectionCall("SetIKEnabled", false, false, new object[] { false });
+            exosuit.SetIKEnabled(false);
             exosuit.loopingJetSound.Stop();
             exosuit.fxcontrol.Stop(0);
             exosuit.ambienceSound.Stop();

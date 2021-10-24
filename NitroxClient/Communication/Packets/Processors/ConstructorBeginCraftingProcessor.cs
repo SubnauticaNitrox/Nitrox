@@ -28,7 +28,7 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             GameObject gameObject = NitroxEntity.RequireObjectFrom(packet.ConstructorId);
             Crafter crafter = gameObject.RequireComponentInChildren<Crafter>(true);
-            crafter.ReflectionCall("OnCraftingBegin", false, false, new object[] { packet.VehicleModel.TechType.ToUnity(), packet.Duration });
+            crafter.OnCraftingBegin(packet.VehicleModel.TechType.ToUnity(), packet.Duration);
 
             vehicles.AddVehicle(packet.VehicleModel);
 

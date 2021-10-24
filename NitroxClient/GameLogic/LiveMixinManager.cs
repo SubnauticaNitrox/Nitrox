@@ -52,8 +52,8 @@ namespace NitroxClient.GameLogic
 
                 if (vehicleDockingBay && dealerVehicle)
                 {
-                    if (vehicleDockingBay.GetDockedVehicle() == dealerVehicle || (Vehicle)vehicleDockingBay.ReflectionGet("interpolatingVehicle") == dealerVehicle
-                        || (Vehicle)vehicleDockingBay.ReflectionGet("nearbyVehicle") == dealerVehicle)
+                    if (vehicleDockingBay.GetDockedVehicle() == dealerVehicle || vehicleDockingBay.interpolatingVehicle == dealerVehicle
+                        || vehicleDockingBay.nearbyVehicle == dealerVehicle)
                     {
                         Log.Debug($"Dealer {dealer} is vehicle and currently docked or nearby {reciever}, do not harm it!");
                         return false;

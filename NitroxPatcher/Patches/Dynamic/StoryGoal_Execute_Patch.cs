@@ -9,7 +9,7 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class StoryGoal_Execute_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly MethodInfo TARGET_METHOD = ReflectionHelper.GetMethodInfo(() => StoryGoal.Execute(default(string), default(Story.GoalType)));
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => StoryGoal.Execute(default(string), default(Story.GoalType)));
 
         public static void Prefix(string key, Story.GoalType goalType)
         {

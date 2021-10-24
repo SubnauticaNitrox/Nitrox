@@ -1,15 +1,14 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
+using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
     public class ConstructorInput_Craft_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(ConstructorInput);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("Craft", BindingFlags.NonPublic | BindingFlags.Instance);
+        public static readonly MethodInfo TARGET_METHOD = Reflect.Method((ConstructorInput t) => t.Craft(default(TechType), default(float)));
 
         public static void Postfix(ConstructorInput __instance, TechType techType, float duration)
         {

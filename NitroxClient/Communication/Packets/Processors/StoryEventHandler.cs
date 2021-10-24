@@ -48,7 +48,7 @@ namespace NitroxClient.Communication.Packets.Processors
         private void ExplodeAurora()
         {
             CrashedShipExploder main = CrashedShipExploder.main;
-            main.timeToStartCountdown = ((Utils.ScalarMonitor)main.ReflectionGet("timeMonitor", false, false)).Get() - 25f + 1f;
+            main.timeToStartCountdown = main.timeMonitor.Get() - 25f + 1f;
             main.timeToStartWarning = main.timeToStartCountdown - 1f;
         }
     }

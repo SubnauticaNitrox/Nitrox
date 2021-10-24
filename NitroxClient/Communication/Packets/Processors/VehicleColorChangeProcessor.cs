@@ -22,7 +22,7 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             GameObject target = NitroxEntity.RequireObjectFrom(colorPacket.Id);
             SubNameInput subNameInput = target.RequireComponentInChildren<SubNameInput>();
-            SubName subNameTarget = (SubName)subNameInput.ReflectionGet("target");
+            SubName subNameTarget = subNameInput.target;
 
             using (packetSender.Suppress<VehicleColorChange>())
             {
@@ -31,7 +31,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
                 // OnColorChange calls these two methods, in order to update the vehicle color and the color+text on the ingame panel, respectively:
                 subNameTarget.SetColor(colorPacket.Index, colorPacket.HSB.ToUnity(), colorPacket.Color.ToUnity());
-                subNameInput.ReflectionCall("SetColor", args: new object[] { colorPacket.Index, colorPacket.Color });
+                subNameInput.SetColor(colorPacket.Index, colorPacket.Color.ToUnity());
             }
         }
     }

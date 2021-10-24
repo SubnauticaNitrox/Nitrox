@@ -11,8 +11,7 @@ namespace NitroxPatcher.Patches.Persistent
 {
     internal class Language_LoadLanguageFile_Patch : NitroxPatch, IPersistentPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(Language);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("LoadLanguageFile", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Language t) => t.LoadLanguageFile(default(string)));
 
         public static void Postfix(string language, Dictionary<string, string> ___strings)
         {
@@ -30,11 +29,11 @@ namespace NitroxPatcher.Patches.Persistent
                 }
 
                 JsonData json;
-                using (StreamReader streamReader = new StreamReader(file))
+                using (StreamReader streamReader = new(file))
                 {
                     try
                     {
-                        json = JsonMapper.ToObject((TextReader)streamReader);
+                        json = JsonMapper.ToObject(streamReader);
                     }
                     catch (Exception ex)
                     {

@@ -19,7 +19,7 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             using (packetSender.Suppress<PDALogEntryAddProcessor>())
             {
-                Dictionary<string, PDALog.Entry> entries = (Dictionary<string, PDALog.Entry>)(typeof(PDALog).GetField("entries", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null));
+                Dictionary<string, PDALog.Entry> entries = PDALog.entries;
 
                 if (!entries.ContainsKey(packet.Key))
                 {

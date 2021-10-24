@@ -8,6 +8,7 @@ using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
+using NitroxModel.Helper;
 using NitroxModel_Subnautica.DataStructures.GameLogic;
 using UnityEngine;
 
@@ -15,10 +16,9 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class ToggleLights_SetLightsActive_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(ToggleLights);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("SetLightsActive", BindingFlags.Public | BindingFlags.Instance);
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((ToggleLights t) => t.SetLightsActive(default(bool)));
 
-        private static readonly HashSet<Type> syncedParents = new HashSet<Type>()
+        private static readonly HashSet<Type> syncedParents = new()
         {
             typeof(SeaMoth),
             typeof(Seaglide),
@@ -48,7 +48,7 @@ namespace NitroxPatcher.Patches.Dynamic
                         gameObject = __instance.gameObject;
                         break;
                     }
-                    else if (__instance.GetComponentInParent(t))
+                    if (__instance.GetComponentInParent(t))
                     {
                         type = t;
                         gameObject = __instance.transform.parent.gameObject;

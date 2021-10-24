@@ -15,7 +15,7 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class Rocket_Start_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly MethodInfo TARGET_METHOD = typeof(Rocket).GetMethod("Start", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Rocket t) => t.Start());
 
         public static bool Prefix(Rocket __instance)
         {
@@ -23,7 +23,6 @@ namespace NitroxPatcher.Patches.Dynamic
             NitroxId id = NitroxEntity.GetId(gameObject);
 
             Optional<NeptuneRocketModel> model = NitroxServiceLocator.LocateService<Vehicles>().TryGetVehicle<NeptuneRocketModel>(id);
-
             if (!model.HasValue)
             {
                 Log.Error($"{nameof(Rocket_Start_Patch)}: Could not find NeptuneRocketModel by Nitrox id {id}.\nGO containing wrong id: {__instance.GetHierarchyPath()}");
@@ -36,7 +35,7 @@ namespace NitroxPatcher.Patches.Dynamic
             {
                 __instance.elevatorState = model.Value.ElevatorUp ? Rocket.RocketElevatorStates.AtTop : Rocket.RocketElevatorStates.AtBottom;
                 __instance.elevatorPosition = model.Value.ElevatorUp ? 1f : 0f;
-                __instance.ReflectionCall("SetElevatorPosition", false, false);
+                __instance.SetElevatorPosition();
 
                 //CockpitSwitch and RocketPreflightCheckScreenElement are filled based on the RocketPreflightCheckManager
                 if (__instance.currentRocketStage > 3)

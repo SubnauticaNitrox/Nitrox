@@ -95,7 +95,7 @@
     <Compile Include="Helper\Matrix4x4Extension.cs" />
     <Compile Include="Helper\NitroxAppData.cs" />
     <Compile Include="Helper\PirateDetection.cs" />
-    <Compile Include="Helper\ReflectionHelper.cs" />
+    <Compile Include="Helper\Reflect.cs" />
     <Compile Include="Helper\StringHelper.cs" />
     <Compile Include="Helper\Validate.cs" />
     <Compile Include="Helper\WebHelper.cs" />

@@ -15,11 +15,11 @@ namespace NitroxClient.GameLogic.Bases
      */
     public class GeometryRespawnManager
     {
-        public static Dictionary<string, NitroxId> NitroxIdByObjectKey = new Dictionary<string, NitroxId>();
+        public static readonly Dictionary<string, NitroxId> NitroxIdByObjectKey = new();
 
         public void GeometryClearedForBase(Base baseObj)
         {
-            Transform[] cellObjects = (Transform[])baseObj.ReflectionGet("cellObjects");
+            Transform[] cellObjects = baseObj.cellObjects;
 
             if (cellObjects == null)
             {

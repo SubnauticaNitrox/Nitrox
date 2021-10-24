@@ -105,7 +105,7 @@ namespace NitroxClient.GameLogic
                     lighting.cyclopsRoot.ForceLightingState(lighting.lightingOn);
                     FMODAsset asset = (!lighting.lightingOn) ? lighting.vn_lightsOff : lighting.vn_lightsOn;
                     FMODUWE.PlayOneShot(asset, lighting.transform.position, 1f);
-                    lighting.ReflectionCall("UpdateLightingButtons");
+                    lighting.UpdateLightingButtons();
                 }
             }
         }
@@ -120,10 +120,10 @@ namespace NitroxClient.GameLogic
                 using (packetSender.Suppress<CyclopsToggleFloodLights>())
                 {
                     lighting.floodlightsOn = !lighting.floodlightsOn;
-                    lighting.ReflectionCall("SetExternalLighting", false, false, new object[] { lighting.floodlightsOn });
-                    FMODAsset asset = (!lighting.floodlightsOn) ? lighting.vn_floodlightsOff : lighting.vn_floodlightsOn;
+                    lighting.SetExternalLighting(lighting.floodlightsOn);
+                    FMODAsset asset = !lighting.floodlightsOn ? lighting.vn_floodlightsOff : lighting.vn_floodlightsOn;
                     FMODUWE.PlayOneShot(asset, lighting.transform.position, 1f);
-                    lighting.ReflectionCall("UpdateLightingButtons");
+                    lighting.UpdateLightingButtons();
                 }
             }
         }
@@ -136,18 +136,18 @@ namespace NitroxClient.GameLogic
 
             if (isOn == engineState.motorMode.engineOn)
             {
-                if ((isStarting != (bool)engineState.ReflectionGet("startEngine")) != isOn)
+                if (isStarting != engineState.startEngine != isOn)
                 {
                     if (Player.main.currentSub != engineState.subRoot || silent)
                     {
-                        engineState.ReflectionSet("startEngine", !isOn);
-                        engineState.ReflectionSet("invalidButton", true);
-                        engineState.Invoke("ResetInvalidButton", 2.5f);
+                        engineState.startEngine = !isOn;
+                        engineState.invalidButton = true;
+                        engineState.Invoke(nameof(CyclopsEngineChangeState.ResetInvalidButton), 2.5f);
                         engineState.subRoot.BroadcastMessage("InvokeChangeEngineState", !isOn, SendMessageOptions.RequireReceiver);
                     }
                     else
                     {
-                        engineState.ReflectionSet("invalidButton", false);
+                        engineState.invalidButton = false;
                         using (packetSender.Suppress<CyclopsToggleInternalLighting>())
                         {
                             engineState.OnClick();
@@ -174,21 +174,21 @@ namespace NitroxClient.GameLogic
 
             using (packetSender.Suppress<CyclopsChangeSilentRunning>())
             {
-                if ((bool)ability.ReflectionGet("active") != isOn)
+                if (ability.active != isOn)
                 {
                     Log.Debug("Set silent running to " + isOn + " for " + id);
-                    ability.ReflectionSet("active", isOn);
+                    ability.active = isOn;
                     if (isOn)
                     {
                         ability.image.sprite = ability.activeSprite;
                         ability.subRoot.BroadcastMessage("RigForSilentRunning");
-                        ability.InvokeRepeating("SilentRunningIteration", 0f, ability.silentRunningIteration);
+                        ability.InvokeRepeating(nameof(CyclopsSilentRunningAbilityButton.SilentRunningIteration), 0f, ability.silentRunningIteration);
                     }
                     else
                     {
                         ability.image.sprite = ability.inactiveSprite;
                         ability.subRoot.BroadcastMessage("SecureFromSilentRunning");
-                        ability.CancelInvoke("SilentRunningIteration");
+                        ability.CancelInvoke(nameof(CyclopsSilentRunningAbilityButton.SilentRunningIteration));
                     }
                 }
             }
@@ -206,11 +206,11 @@ namespace NitroxClient.GameLogic
                     {
                         if (isOn)
                         {
-                            shield.ReflectionCall("StartShield");
+                            shield.StartShield();
                         }
                         else
                         {
-                            shield.ReflectionCall("StopShield");
+                            shield.StopShield();
                         }
                     }
                 }
@@ -227,20 +227,8 @@ namespace NitroxClient.GameLogic
                 {
                     // At this moment the code is "non functional" as for some reason changing the sprite will never happen
                     // Also setting sonar as active will never work
-
-                    MethodInfo sonarSetActiveInfo = sonar.GetType().GetMethod("set_sonarActive", BindingFlags.NonPublic | BindingFlags.Instance);
-                    if (sonarSetActiveInfo != null)
-                    {
-                        sonarSetActiveInfo.Invoke(sonar, new object[] { isOn });
-                    }
-                    if (isOn)
-                    {
-                        sonar.image.sprite = sonar.activeSprite;
-                    }
-                    else
-                    {
-                        sonar.image.sprite = sonar.inactiveSprite;
-                    }
+                    sonar.sonarActive = isOn;
+                    sonar.image.sprite = isOn ? sonar.activeSprite : sonar.inactiveSprite;
                 }
             }
         }
@@ -253,7 +241,7 @@ namespace NitroxClient.GameLogic
             {
                 using (packetSender.Suppress<CyclopsSonarPing>())
                 {
-                    sonar.ReflectionCall("SonarPing");
+                    sonar.SonarPing();
                 }
             }
         }
@@ -264,7 +252,7 @@ namespace NitroxClient.GameLogic
             CyclopsDecoyManager decoyManager = cyclops.RequireComponent<CyclopsDecoyManager>();
             using (packetSender.Suppress<CyclopsChangeSilentRunning>())
             {
-                decoyManager.Invoke("LaunchWithDelay", 3f);
+                decoyManager.Invoke(nameof(CyclopsDecoyManager.LaunchWithDelay), 3f);
                 decoyManager.decoyLaunchButton.UpdateText();
                 decoyManager.subRoot.voiceNotificationManager.PlayVoiceNotification(decoyManager.subRoot.decoyNotification, false, true);
                 decoyManager.subRoot.BroadcastMessage("UpdateTotalDecoys", decoyManager.decoyCount, SendMessageOptions.DontRequireReceiver);
@@ -292,10 +280,10 @@ namespace NitroxClient.GameLogic
         {
             fire.subRoot.voiceNotificationManager.PlayVoiceNotification(fire.subRoot.fireSupressionNotification, false, true);
             yield return new WaitForSeconds(3f);
-            fire.ReflectionSet("fireSuppressionActive", true);
+            fire.fireSuppressionActive = true;
             fire.subRoot.fireSuppressionState = true;
             fire.subRoot.BroadcastMessage("NewAlarmState", null, SendMessageOptions.DontRequireReceiver);
-            fire.Invoke("CancelFireSuppression", fire.fireSuppressionSystemDuration);
+            fire.Invoke(nameof(SubFire.CancelFireSuppression), fire.fireSuppressionSystemDuration);
             float doorCloseDuration = 30f;
             fire.gameObject.BroadcastMessage("TemporaryLock", doorCloseDuration, SendMessageOptions.DontRequireReceiver);
             yield break;
@@ -317,7 +305,7 @@ namespace NitroxClient.GameLogic
             // At this time all Equipment will be loaded into the cyclops, so we do not need other structures
             SubRoot root = NitroxEntity.GetObjectFrom(cyclopsModel.Id).Value.GetComponent<SubRoot>();
             UWE.Event<PowerRelay>.HandleFunction handleFunction = null;
-            handleFunction = new UWE.Event<PowerRelay>.HandleFunction((relay) =>
+            handleFunction = _ =>
             {
                 ChangeSilentRunning(cyclopsModel.Id, cyclopsModel.SilentRunningOn);
                 ChangeShieldMode(cyclopsModel.Id, cyclopsModel.ShieldOn);
@@ -325,7 +313,7 @@ namespace NitroxClient.GameLogic
 
                 // After registering all modes. Remove the handler
                 root.powerRelay.powerUpEvent.RemoveHandler(root, handleFunction);
-            });
+            };
             root.powerRelay.powerUpEvent.AddHandler(root, handleFunction);
 
         }
@@ -359,7 +347,7 @@ namespace NitroxClient.GameLogic
             {
                 if (subRoot.damageManager.damagePoints[i] == damagePoint)
                 {
-                    CyclopsDamagePointRepaired packet = new CyclopsDamagePointRepaired(subId, i, repairAmount);
+                    CyclopsDamagePointRepaired packet = new(subId, i, repairAmount);
                     packetSender.Send(packet);
 
                     return;
@@ -395,13 +383,13 @@ namespace NitroxClient.GameLogic
                 int[] damagePointIndexes = GetActiveDamagePoints(subRoot).ToArray();
                 CyclopsFireData[] firePoints = GetActiveRoomFires(subRoot.GetComponent<SubFire>()).ToArray();
 
-                CyclopsDamage packet = new CyclopsDamage(subId, subRoot.GetComponent<LiveMixin>().health, subRoot.damageManager.subLiveMixin.health, subRoot.GetComponent<SubFire>().liveMixin.health, damagePointIndexes, firePoints, damageInfo);
+                CyclopsDamage packet = new(subId, subRoot.GetComponent<LiveMixin>().health, subRoot.damageManager.subLiveMixin.health, subRoot.GetComponent<SubFire>().liveMixin.health, damagePointIndexes, firePoints, damageInfo);
                 packetSender.Send(packet);
             }
             else
             {
                 // RIP
-                CyclopsDestroyed packet = new CyclopsDestroyed(subId);
+                CyclopsDestroyed packet = new(subId);
                 packetSender.Send(packet);
             }
         }
@@ -427,7 +415,7 @@ namespace NitroxClient.GameLogic
         private IEnumerable<CyclopsFireData> GetActiveRoomFires(SubFire subFire)
         {
             NitroxId subRootId = NitroxEntity.GetId(subFire.subRoot.gameObject);
-            Dictionary<CyclopsRooms, SubFire.RoomFire> roomFires = (Dictionary<CyclopsRooms, SubFire.RoomFire>)subFire.ReflectionGet("roomFires");
+            Dictionary<CyclopsRooms, SubFire.RoomFire> roomFires = subFire.roomFires;
 
             foreach (KeyValuePair<CyclopsRooms, SubFire.RoomFire> roomFire in roomFires)
             {

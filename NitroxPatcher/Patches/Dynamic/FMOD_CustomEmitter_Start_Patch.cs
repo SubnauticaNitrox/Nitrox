@@ -4,6 +4,7 @@ using HarmonyLib;
 using NitroxClient.GameLogic.FMOD;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
+using NitroxModel.Helper;
 using NitroxModel.Logger;
 
 namespace NitroxPatcher.Patches.Dynamic
@@ -12,7 +13,7 @@ namespace NitroxPatcher.Patches.Dynamic
     {
         private static FMODSystem fmodSystem;
 
-        private static readonly MethodInfo targetMethod = typeof(FMOD_CustomEmitter).GetMethod("Start", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((FMOD_CustomEmitter t) => t.Start());
 
         public static void Prefix(FMOD_CustomEmitter __instance)
         {
@@ -61,7 +62,7 @@ namespace NitroxPatcher.Patches.Dynamic
         public override void Patch(Harmony harmony)
         {
             fmodSystem = NitroxServiceLocator.LocateService<FMODSystem>();
-            PatchPrefix(harmony, targetMethod);
+            PatchPrefix(harmony, TARGET_METHOD);
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
@@ -11,11 +10,10 @@ namespace NitroxPatcher.Patches.Persistent
 {
     public class GameInput_Initialize_Patch : NitroxPatch, IPersistentPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(GameInput);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("Initialize", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((GameInput t) => t.Initialize());
 
-        public static readonly OpCode INJECTION_OPCODE = OpCodes.Stsfld;
-        public static readonly object INJECTION_OPERAND = TARGET_CLASS.GetField("numButtons", BindingFlags.Static | BindingFlags.NonPublic);
+        private static readonly OpCode INJECTION_OPCODE = OpCodes.Stsfld;
+        private static readonly object INJECTION_OPERAND = Reflect.Field(() => GameInput.numButtons);
 
         public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
         {
@@ -31,11 +29,11 @@ namespace NitroxPatcher.Patches.Persistent
                      * KeyBindingManager keyBindingManager = new KeyBindingManager();
                      * GameButton.numButtons = Math.Max(keyBindingManager.GetHighestKeyBindingValue() + 1, prev);
                      */
-                    yield return new CodeInstruction(OpCodes.Newobj, typeof(KeyBindingManager).GetConstructors().First());
-                    yield return new CodeInstruction(OpCodes.Callvirt, typeof(KeyBindingManager).GetMethod("GetHighestKeyBindingValue", BindingFlags.Instance | BindingFlags.Public));
+                    yield return new CodeInstruction(OpCodes.Newobj, Reflect.Constructor(() => new KeyBindingManager()));
+                    yield return new CodeInstruction(OpCodes.Callvirt, Reflect.Method((KeyBindingManager t) => t.GetHighestKeyBindingValue()));
                     yield return new CodeInstruction(OpCodes.Ldc_I4_1);
                     yield return new CodeInstruction(OpCodes.Add);
-                    yield return new CodeInstruction(OpCodes.Call, typeof(Math).GetMethod("Max", new[] { typeof(int), typeof(int) }));
+                    yield return new CodeInstruction(OpCodes.Call, Reflect.Method(() => Math.Max(default(int), default(int))));
                 }
 
                 yield return instruction;

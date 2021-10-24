@@ -9,7 +9,7 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class OnGoalUnlockTracker_NotifyGoalComplete_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly MethodInfo TARGET_METHOD = ReflectionHelper.GetMethodInfo((OnGoalUnlockTracker t) => t.NotifyGoalComplete(default(string)));
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((OnGoalUnlockTracker t) => t.NotifyGoalComplete(default(string)));
 
         public static void Prefix(OnGoalUnlockTracker __instance, string completedGoal)
         {

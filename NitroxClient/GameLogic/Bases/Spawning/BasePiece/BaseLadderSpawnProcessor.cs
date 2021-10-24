@@ -47,8 +47,7 @@ namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
 
                 if (isNewBasePiece)
                 {
-                    TechType techType = (TechType)baseDeconstructable.ReflectionGet("recipe");
-
+                    TechType techType = baseDeconstructable.recipe;
                     if (techType == TechType.BaseLadder)
                     {
                         return Optional.Of(child.gameObject);

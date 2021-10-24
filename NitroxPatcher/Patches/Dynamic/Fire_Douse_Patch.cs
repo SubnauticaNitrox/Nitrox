@@ -1,15 +1,14 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
+using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
     public class Fire_Douse_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(Fire);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("Douse", BindingFlags.Public | BindingFlags.Instance, null, new Type[] { typeof(float) }, null);
+        public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Fire t) => t.Douse(default(float)));
 
         public static void Postfix(Fire __instance, float amount)
         {

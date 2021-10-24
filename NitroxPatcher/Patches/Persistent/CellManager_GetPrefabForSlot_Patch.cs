@@ -1,18 +1,17 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.MonoBehaviours;
+using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Persistent
 {
     internal class CellManager_GetPrefabForSlot_Patch : NitroxPatch, IPersistentPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(CellManager);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("GetPrefabForSlot", BindingFlags.Public | BindingFlags.Instance);
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((CellManager t) => t.GetPrefabForSlot(default(EntitySlot)));
 
         public static bool Prefix(IEntitySlot slot, out EntitySlot.Filler __result)
         {
-            __result = default(EntitySlot.Filler);
+            __result = default;
             return !Multiplayer.Active;
         }
 

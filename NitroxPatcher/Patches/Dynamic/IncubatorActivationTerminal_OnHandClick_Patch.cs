@@ -1,11 +1,11 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
+using NitroxModel.Helper;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic
@@ -14,8 +14,7 @@ namespace NitroxPatcher.Patches.Dynamic
     // power up the main incubator terminal window.
     public class IncubatorActivationTerminal_OnHandClick_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(IncubatorActivationTerminal);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("OnHandClick", BindingFlags.Public | BindingFlags.Instance);
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((IncubatorActivationTerminal t) => t.OnHandClick(default(GUIHand)));
 
         public static void Prefix(IncubatorActivationTerminal __instance)
         {
@@ -24,7 +23,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 // the server only knows about the main incubator platform which is the direct parent
                 GameObject platform = __instance.gameObject.transform.parent.gameObject;
                 NitroxId id = NitroxEntity.GetId(platform);
-                IncubatorMetadata metadata = new IncubatorMetadata(true, false);
+                IncubatorMetadata metadata = new(true, false);
 
                 Entities entities = NitroxServiceLocator.LocateService<Entities>();
                 entities.BroadcastMetadataUpdate(id, metadata);

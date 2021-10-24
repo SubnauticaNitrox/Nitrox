@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.HUD;
@@ -14,10 +13,9 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class PilotingChair_OnHandClick_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(PilotingChair);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("OnHandClick", BindingFlags.Public | BindingFlags.Instance);
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((PilotingChair t) => t.OnHandClick(default(GUIHand)));
 
-        private static bool skipPrefix = false;
+        private static bool skipPrefix;
 
         public static bool Prefix(PilotingChair __instance, GUIHand hand)
         {
@@ -38,8 +36,8 @@ namespace NitroxPatcher.Patches.Dynamic
                 return true;
             }
 
-            HandInteraction<PilotingChair> context = new HandInteraction<PilotingChair>(__instance, hand);
-            LockRequest<HandInteraction<PilotingChair>> lockRequest = new LockRequest<HandInteraction<PilotingChair>>(id, SimulationLockType.EXCLUSIVE, ReceivedSimulationLockResponse, context);
+            HandInteraction<PilotingChair> context = new(__instance, hand);
+            LockRequest<HandInteraction<PilotingChair>> lockRequest = new(id, SimulationLockType.EXCLUSIVE, ReceivedSimulationLockResponse, context);
 
             simulationOwnership.RequestSimulationLock(lockRequest);
 
@@ -53,7 +51,7 @@ namespace NitroxPatcher.Patches.Dynamic
             if (lockAquired)
             {
                 skipPrefix = true;
-                TARGET_METHOD.Invoke(pilotingChair, new[] { context.GuiHand });
+                pilotingChair.OnHandClick(context.GuiHand);
                 skipPrefix = false;
             }
             else

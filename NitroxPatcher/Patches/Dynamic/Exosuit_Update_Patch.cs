@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -10,11 +9,10 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class Exosuit_Update_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(Exosuit);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("Update", BindingFlags.Public | BindingFlags.Instance);
+        public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Exosuit t) => t.Update());
 
         public static readonly OpCode INJECTION_OPCODE = OpCodes.Call;
-        public static readonly object INJECTION_OPERAND = TARGET_CLASS.GetMethod("UpdateSounds", BindingFlags.NonPublic | BindingFlags.Instance);
+        public static readonly object INJECTION_OPERAND = Reflect.Method((Exosuit t) => t.UpdateSounds());
 
         public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
         {

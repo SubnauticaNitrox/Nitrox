@@ -53,7 +53,7 @@
     <Compile Include="Model\PacketProcessorTest.cs" />
     <Compile Include="Model\Packets\PacketsSerializableTest.cs" />
     <Compile Include="Model\PriorityQueueTest.cs" />
-    <Compile Include="Model\ReflectionHelperTest.cs" />
+    <Compile Include="Model\ReflectTest.cs" />
     <Compile Include="Model\Test\TestNonActionPacket.cs" />
     <Compile Include="Patcher\Patches\BaseGhost_Finish_PatchTest.cs" />
     <Compile Include="Patcher\Patches\BuilderPatchTest.cs" />
