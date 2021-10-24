@@ -22,7 +22,7 @@ namespace NitroxPatcher.Patches.Dynamic
         private static readonly object INJECTION_OPERAND = Reflect.Method(() => ResourceTracker.UpdateFragments());
 
         public static readonly OpCode INJECTION_OPCODE_2 = OpCodes.Ldsfld;
-        public static readonly object INJECTION_OPERAND_2 = typeof(PDAScanner).GetField(nameof(PDAScanner.cachedProgress), BindingFlags.NonPublic | BindingFlags.Static);
+        public static readonly object INJECTION_OPERAND_2 = Reflect.Field(() => PDAScanner.cachedProgress);
         
         public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
         {
@@ -40,11 +40,10 @@ namespace NitroxPatcher.Patches.Dynamic
                      * >> PDAScanner_Scan_Patch.Callback();
                      */
                     yield return new CodeInstruction(OpCodes.Call, Reflect.Method(() => Callback()));
-                    yield return new CodeInstruction(OpCodes.Call, typeof(PDAScanner_Scan_Patch).GetMethod(nameof(Callback), BindingFlags.Static | BindingFlags.Public));
                 }
                 else if (instruction.opcode.Equals(INJECTION_OPCODE_2) && instruction.operand.Equals(INJECTION_OPERAND_2))
                 {
-                    yield return new CodeInstruction(OpCodes.Call, typeof(PDAScanner_Scan_Patch).GetMethod(nameof(ProgressCallback), BindingFlags.Static | BindingFlags.Public));
+                    yield return new CodeInstruction(OpCodes.Call, Reflect.Method(() => ProgressCallback()));
                 }
             }
         }
