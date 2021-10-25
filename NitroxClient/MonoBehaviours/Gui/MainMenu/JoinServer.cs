@@ -47,7 +47,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         private bool passwordEntered;
         private string serverPassword = string.Empty;
 
-        private bool streamerMode => NitroxPrefs.StreamerMode;
+        private bool hideIp => NitroxPrefs.HideIp;
         public string MenuName => joinServerMenu.AliveOrNull()?.name ?? throw new Exception("Menu not yet initialized");
 
         public void Setup(GameObject saveGameMenu)
@@ -70,7 +70,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             serverPort = port;
 
             //Set Server IP in info label
-            lowerDetailTextGameObject.GetComponent<Text>().text = $"{Language.main.Get("Nitrox_JoinServerIpAddress")}\n{(streamerMode ? "****" : serverIp)}";
+            lowerDetailTextGameObject.GetComponent<Text>().text = $"{Language.main.Get("Nitrox_JoinServerIpAddress")}\n{(hideIp ? "****" : serverIp)}";
 
             //Initialize elements from preferences
             activePlayerPreference = preferencesManager.GetPreference(serverIp);

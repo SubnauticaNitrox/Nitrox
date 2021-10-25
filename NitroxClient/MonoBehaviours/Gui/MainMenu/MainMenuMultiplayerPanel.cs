@@ -29,7 +29,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         private bool shouldFocus;
         private bool showingAddServer;
 
-        private bool streamerMode => NitroxPrefs.StreamerMode;
+        private bool hideIp => NitroxPrefs.HideIp;
 
         public void Setup(GameObject loadedMultiplayer, GameObject savedGames)
         {
@@ -132,7 +132,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         {
             foreach (ServerList.Entry entry in ServerList.Instance.Entries)
             {
-                CreateServerButton($"{Language.main.Get("Nitrox_ConnectTo")} <b>{entry.Name}</b>\n{(streamerMode ? "****" : entry.Address)}:{(streamerMode ? "****" : entry.Port)}", entry.Address.ToString(), entry.Port.ToString());
+                CreateServerButton($"{Language.main.Get("Nitrox_ConnectTo")} <b>{entry.Name}</b>\n{(hideIp ? "****" : entry.Address)}:{(hideIp ? "****" : entry.Port)}", entry.Address.ToString(), entry.Port.ToString());
             }
         }
 
@@ -181,7 +181,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             serverPortInput = serverPortInput.Trim();
             ServerList.Instance.Add(new ServerList.Entry(serverNameInput, serverHostInput, serverPortInput));
             ServerList.Instance.Save();
-            CreateServerButton($"{Language.main.Get("Nitrox_ConnectTo")} <b>{serverNameInput}</b>\n{(streamerMode ? "****" : serverHostInput)}:{(streamerMode ? "****" : serverPortInput)}", serverHostInput, serverPortInput);
+            CreateServerButton($"{Language.main.Get("Nitrox_ConnectTo")} <b>{serverNameInput}</b>\n{(hideIp ? "****" : serverHostInput)}:{(hideIp ? "****" : serverPortInput)}", serverHostInput, serverPortInput);
             HideAddServerWindow();
         }
 

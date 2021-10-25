@@ -4,19 +4,36 @@ namespace NitroxClient.GameLogic.PlayerPreferences
 {
     public class NitroxPrefs
     {
-        public static bool StreamerMode
+        public static bool HideIp
         {
             get
             {
-                if (PlayerPrefs.HasKey("Nitrox.streamerMode"))
+                if (PlayerPrefs.HasKey("Nitrox.hideIp"))
                 {
-                    return PlayerPrefs.GetInt("Nitrox.streamerMode") == 1;
+                    return PlayerPrefs.GetInt("Nitrox.hideIp") == 1;
                 }
                 return false;
             }
             set
             {
-                PlayerPrefs.SetInt("Nitrox.streamerMode", value ? 1 : 0);
+                PlayerPrefs.SetInt("Nitrox.hideIp", value ? 1 : 0);
+                PlayerPrefs.Save();
+            }
+        }
+
+        public static bool SilenceChat
+        {
+            get
+            {
+                if (PlayerPrefs.HasKey("Nitrox.silenceChat"))
+                {
+                    return PlayerPrefs.GetInt("Nitrox.silenceChat") == 1;
+                }
+                return false;
+            }
+            set
+            {
+                PlayerPrefs.SetInt("Nitrox.silenceChat", value ? 1 : 0);
                 PlayerPrefs.Save();
             }
         }

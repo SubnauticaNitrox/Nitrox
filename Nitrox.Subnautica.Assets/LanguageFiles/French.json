@@ -17,8 +17,9 @@
   "Nitrox_EnterName": "Nom du joueur",
   "Nitrox_SubmitPassword": "Confirmer",
   "Nitrox_MultiplayerLoaded": "Chargement du client multijoueur...",
-  "Nitrox_UtilitiesSettings": "Utilitaires",
-  "Nitrox_StreamerMode": "Mode streamer",
+  "Nitrox_StreamerSettings": "Mode streamer",
+  "Nitrox_SilenceChat": "Cacher la discussion",
+  "Nitrox_HideIp": "Cacher les IPs",
   // In game menu
   "Nitrox_LoadingScreenWarn": "Attendez vous à quelques instabilités",
   "Nitrox_WorldSettling": "Chargement du monde",

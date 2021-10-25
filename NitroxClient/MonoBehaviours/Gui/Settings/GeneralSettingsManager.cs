@@ -26,7 +26,8 @@ namespace NitroxClient.MonoBehaviours.Gui.Settings
          */
         private void MakeSettings()
         {
-            AddSetting(Language.main.Get("Nitrox_UtilitiesSettings"), new Setting(SettingType.TOGGLE, Language.main.Get("Nitrox_StreamerMode"), NitroxPrefs.StreamerMode, (UnityAction<bool>)delegate (bool newMode) { NitroxPrefs.StreamerMode = newMode; }), true);
+            AddSetting(Language.main.Get("Nitrox_StreamerSettings"), new Setting(SettingType.TOGGLE, Language.main.Get("Nitrox_SilenceChat"), NitroxPrefs.SilenceChat, (UnityAction<bool>)delegate (bool silence) { NitroxPrefs.SilenceChat = silence; }), true);
+            AddSetting(Language.main.Get("Nitrox_StreamerSettings"), new Setting(SettingType.TOGGLE, Language.main.Get("Nitrox_HideIp"), NitroxPrefs.HideIp, (UnityAction<bool>)delegate (bool hide) { NitroxPrefs.HideIp = hide; }), true);
         }
 
         public void AddSetting(string heading, Setting setting, bool newHeading)
