@@ -3,6 +3,7 @@ using System.Linq;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.ChatUI;
+using NitroxClient.GameLogic.PlayerPreferences;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
@@ -17,6 +18,8 @@ namespace NitroxClient.Communication.Packets.Processors
         private readonly PlayerChatManager playerChatManager;
 
         private readonly Color32 serverMessageColor = new Color32(0x8c, 0x00, 0xFF, 0xFF);
+
+        private bool streamerMode => NitroxPrefs.StreamerMode;
 
         public ChatMessageProcessor(PlayerManager remotePlayerManager, PlayerChatManager playerChatManager)
         {
@@ -48,13 +51,19 @@ namespace NitroxClient.Communication.Packets.Processors
 
             RemotePlayer remotePlayerInstance = remotePlayer.Value;
             playerChatManager.AddMessage(remotePlayerInstance.PlayerName, message.Text, remotePlayerInstance.PlayerSettings.PlayerColor.ToUnity());
-            playerChatManager.ShowChat();
+            if (!streamerMode)
+            {
+                playerChatManager.ShowChat();
+            }
         }
 
         private void LogServerMessage(ChatMessage message)
         {
             playerChatManager.AddMessage("Server", message.Text, serverMessageColor);
-            playerChatManager.ShowChat();
+            if (!streamerMode)
+            {
+                playerChatManager.ShowChat();
+            }
         }
     }
 }

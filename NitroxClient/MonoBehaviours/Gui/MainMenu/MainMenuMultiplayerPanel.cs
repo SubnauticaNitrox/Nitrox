@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
+using NitroxClient.GameLogic.PlayerPreferences;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Serialization;
@@ -18,8 +19,8 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         private GameObject savedGamesRef;
         private GameObject deleteButtonRef;
         private GameObject multiplayerButton;
-        private Transform savedGameAreaContent;
-        public JoinServer JoinServer;
+        public Transform SavedGameAreaContent;
+        private JoinServer joinServer;
 
         private string serverHostInput;
         private string serverNameInput;
@@ -27,6 +28,8 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         private bool shouldFocus;
         private bool showingAddServer;
+
+        private bool streamerMode => NitroxPrefs.StreamerMode;
 
         public void Setup(GameObject loadedMultiplayer, GameObject savedGames)
         {
@@ -40,7 +43,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             JoinServer.Setup(savedGamesRef);
 
             multiplayerButton = savedGamesRef.RequireGameObject("Scroll View/Viewport/SavedGameAreaContent/NewGame");
-            savedGameAreaContent = loadedMultiplayerRef.RequireTransform("Scroll View/Viewport/SavedGameAreaContent");
+            SavedGameAreaContent = loadedMultiplayerRef.RequireTransform("Scroll View/Viewport/SavedGameAreaContent");
             deleteButtonRef = savedGamesRef.GetComponent<MainMenuLoadPanel>().saveInstance.GetComponent<MainMenuLoadButton>().deleteButton;
 
             CreateButton(Language.main.Get("Nitrox_AddServer"), ShowAddServerWindow);
@@ -49,7 +52,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         private void CreateButton(string text, UnityAction clickEvent)
         {
-            GameObject multiplayerButtonInst = Instantiate(multiplayerButton, savedGameAreaContent, false);
+            GameObject multiplayerButtonInst = Instantiate(multiplayerButton, SavedGameAreaContent, false);
             Transform txt = multiplayerButtonInst.RequireTransform("NewGameButton/Text");
             txt.GetComponent<Text>().text = text;
             Destroy(txt.GetComponent<TranslationLiveUpdate>());
@@ -60,8 +63,8 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         private void CreateServerButton(string text, string joinIp, string joinPort)
         {
-            GameObject multiplayerButtonInst = Instantiate(multiplayerButton, savedGameAreaContent, false);
-            multiplayerButtonInst.name = (savedGameAreaContent.childCount - 1).ToString();
+            GameObject multiplayerButtonInst = Instantiate(multiplayerButton, SavedGameAreaContent, false);
+            multiplayerButtonInst.name = (SavedGameAreaContent.childCount - 1).ToString();
             Transform txt = multiplayerButtonInst.RequireTransform("NewGameButton/Text");
             txt.GetComponent<Text>().text = text;
             Color prevTextColor = txt.GetComponent<Text>().color;
@@ -125,11 +128,11 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             }
         }
 
-        private void LoadSavedServers()
+        public void LoadSavedServers()
         {
             foreach (ServerList.Entry entry in ServerList.Instance.Entries)
             {
-                CreateServerButton($"{Language.main.Get("Nitrox_ConnectTo")} <b>{entry.Name}</b>\n{entry.Address}:{entry.Port}", entry.Address.ToString(), entry.Port.ToString());
+                CreateServerButton($"{Language.main.Get("Nitrox_ConnectTo")} <b>{entry.Name}</b>\n{(streamerMode ? "****" : entry.Address)}:{(streamerMode ? "****" : entry.Port)}", entry.Address.ToString(), entry.Port.ToString());
             }
         }
 
@@ -178,7 +181,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             serverPortInput = serverPortInput.Trim();
             ServerList.Instance.Add(new ServerList.Entry(serverNameInput, serverHostInput, serverPortInput));
             ServerList.Instance.Save();
-            CreateServerButton($"{Language.main.Get("Nitrox_ConnectTo")} <b>{serverNameInput}</b>\n{serverHostInput}:{serverPortInput}", serverHostInput, serverPortInput);
+            CreateServerButton($"{Language.main.Get("Nitrox_ConnectTo")} <b>{serverNameInput}</b>\n{(streamerMode ? "****" : serverHostInput)}:{(streamerMode ? "****" : serverPortInput)}", serverHostInput, serverPortInput);
             HideAddServerWindow();
         }
 

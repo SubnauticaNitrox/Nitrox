@@ -9,6 +9,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
     public class MainMenuMods : MonoBehaviour
     {
         private MainMenuRightSide rightSide;
+        private MainMenuMultiplayerPanel mainMenuMultiplayerPanel;
 
         private void OnEnable()
         {
@@ -44,7 +45,14 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
             Button showLoadedMultiplayerButton = showLoadedMultiplayer.GetComponent<Button>();
             showLoadedMultiplayerButton.onClick.RemoveAllListeners();
-            showLoadedMultiplayerButton.onClick.AddListener(ShowMultiplayerMenu);
+            showLoadedMultiplayerButton.onClick.AddListener(delegate () {
+                foreach (Transform child in mainMenuMultiplayerPanel.SavedGameAreaContent)
+                {
+                    Destroy(child.gameObject);
+                }
+                mainMenuMultiplayerPanel.LoadSavedServers();
+                ShowMultiplayerMenu();
+            });
 
             GameObject savedGamesRef = rightSide.gameObject.RequireGameObject("SavedGames");
             GameObject loadedMultiplayer = Instantiate(savedGamesRef, rightSide.transform);
@@ -55,7 +63,8 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             Destroy(loadedMultiplayer.RequireGameObject("Scroll View/Viewport/SavedGameAreaContent/NewGame"));
             Destroy(loadedMultiplayer.GetComponent<MainMenuLoadPanel>());
 
-            loadedMultiplayer.AddComponent<MainMenuMultiplayerPanel>().Setup(loadedMultiplayer, savedGamesRef);
+            mainMenuMultiplayerPanel = loadedMultiplayer.AddComponent<MainMenuMultiplayerPanel>();
+            mainMenuMultiplayerPanel.Setup(loadedMultiplayer, savedGamesRef);
 
             rightSide.groups.Add(loadedMultiplayer.GetComponent<MainMenuGroup>());
 

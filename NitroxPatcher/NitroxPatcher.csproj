@@ -174,7 +174,8 @@
     <Compile Include="Patches\Dynamic\ToggleLights_OnPoweredChanged_Patch.cs" />
     <Compile Include="Patches\Dynamic\ToggleLights_SetLightsActive_Patch.cs" />
     <Compile Include="Patches\Dynamic\uGUI_OnApplicationQuit_Patch.cs" />
-    <Compile Include="Patches\Dynamic\uGUI_OptionsPanel_AddBindings_Patch.cs" />
+    <Compile Include="Patches\Persistent\uGUI_OptionsPanel_AddGeneralTab_Patch.cs" />
+    <Compile Include="Patches\Persistent\uGUI_OptionsPanel_AddBindings_Patch.cs" />
     <Compile Include="Patches\Dynamic\uGUI_SignInput_OnDeselect_Patch.cs" />
     <Compile Include="Patches\Dynamic\UniqueIdentifier_Id_Getter_Patch.cs" />
     <Compile Include="Patches\Dynamic\Utils_PlayFMODAsset_Patch.cs" />

@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.GameLogic.ChatUI;
+using NitroxClient.GameLogic.PlayerPreferences;
 using NitroxModel.Core;
+using NitroxModel.Logger;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -53,6 +55,10 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
 
             yield return new WaitForEndOfFrame(); //Needed so Select() works on initialization
             IsReady = true;
+            if (NitroxPrefs.StreamerMode)
+            {
+                Log.InGame("Streamer mode is enabled");
+            }
         }
 
         public void WriteLogEntry(string playerName, string message, Color color)
