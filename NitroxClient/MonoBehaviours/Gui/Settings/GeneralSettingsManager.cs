@@ -6,24 +6,35 @@ namespace NitroxClient.MonoBehaviours.Gui.Settings
 {
     public class GeneralSettingsManager
     {
-        public Dictionary<string, List<Setting>> SettingsToAdd;
+        // List of settings which will be in new headings
+        public Dictionary<string, List<Setting>> SettingsToAddWithNewHeading;
+        // List of settings which will be in already existing headings ("Subtitles", "Display", "Sound", "Advanced")
+        public Dictionary<string, List<Setting>> SettingsToAddInAlreadyExistingHeadings;
+
         public GeneralSettingsManager()
         {
-            SettingsToAdd = new Dictionary<string, List<Setting>>()
-            {
-                { "Utilities", new List<Setting>()
-                    {
-                        new Setting(SettingType.TOGGLE, "Streamer mode", NitroxPrefs.StreamerMode, (UnityAction<bool>)delegate (bool newMode) { NitroxPrefs.StreamerMode = newMode; })
-                    }
-                }
-            };
+            SettingsToAddWithNewHeading = new Dictionary<string, List<Setting>>();
+            SettingsToAddInAlreadyExistingHeadings = new Dictionary<string, List<Setting>>();
+            MakeSettings();
         }
 
-        public void AddSetting(string heading, Setting setting)
+        /*
+         * Example for adding each type of setting
+         * AddSetting("Sound", new Setting(SettingType.TOGGLE, "Test option", true, (UnityAction<bool>)delegate (bool newMode) { }), false);
+         * AddSetting("Subtitles", new Setting(SettingType.SLIDER, "TEST SLIDER", 0.2f, (UnityAction<float>)delegate (float newValue) { }, 0f, 1f, 0.5f), false);
+         * AddSetting("Advanced", new Setting(SettingType.DROPDOWN, "Test dropdown", (UnityAction<int>)delegate (int newValue) { }, new string[] { "option 1", "option 2", "option 3" }, 0), false);
+         */
+        private void MakeSettings()
         {
-            if (!SettingsToAdd.TryGetValue(heading, out List<Setting> settings))
+            AddSetting(Language.main.Get("Nitrox_UtilitiesSettings"), new Setting(SettingType.TOGGLE, Language.main.Get("Nitrox_StreamerMode"), NitroxPrefs.StreamerMode, (UnityAction<bool>)delegate (bool newMode) { NitroxPrefs.StreamerMode = newMode; }), true);
+        }
+
+        public void AddSetting(string heading, Setting setting, bool newHeading)
+        {
+            Dictionary<string, List<Setting>> targetDict = newHeading ? SettingsToAddWithNewHeading : SettingsToAddInAlreadyExistingHeadings;
+            if (!targetDict.TryGetValue(heading, out List<Setting> settings))
             {
-                SettingsToAdd.Add(heading, new List<Setting>() { setting });
+                targetDict.Add(heading, new List<Setting>() { setting });
             }
             else
             {
@@ -47,7 +58,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Settings
             public string[] Items;
             public int CurrentIndex;
 
-            // base constructor (works for ToggleSetting)
+            // base constructor (works for ToggleSetting in which case callback should be a UnityAction<bool>)
             public Setting(SettingType settingType, string label, object value, object callback)
             {
                 SettingType = settingType;
@@ -56,7 +67,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Settings
                 Callback = callback;
             }
 
-            // Constructor for SliderSetting
+            // Constructor for SliderSetting, callback should be a UnityAction<float>
             public Setting(SettingType settingType, string label, object value, object callback, float minValue, float maxValue, float defaultValue) : this(settingType, label, value, callback)
             {
                 MinValue = minValue;
@@ -64,8 +75,8 @@ namespace NitroxClient.MonoBehaviours.Gui.Settings
                 DefaultValue = defaultValue;
             }
 
-            // Constructor for DropdownSetting
-            public Setting(SettingType settingType, string label, object value, object callback, string[] items, int currentIndex) : this(settingType, label, value, callback)
+            // Constructor for DropdownSetting, callback should be UnityAction<int>
+            public Setting(SettingType settingType, string label, object callback, string[] items, int currentIndex) : this(settingType, label, null, callback)
             {
                 Items = items;
                 CurrentIndex = currentIndex;

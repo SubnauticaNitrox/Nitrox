@@ -46,10 +46,13 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             Button showLoadedMultiplayerButton = showLoadedMultiplayer.GetComponent<Button>();
             showLoadedMultiplayerButton.onClick.RemoveAllListeners();
             showLoadedMultiplayerButton.onClick.AddListener(delegate () {
+                // Need to refresh the servers names if streamer mode is enabled or disabled
+                // The easiest way of doing it is by repopulating each time
                 foreach (Transform child in mainMenuMultiplayerPanel.SavedGameAreaContent)
                 {
                     Destroy(child.gameObject);
                 }
+                mainMenuMultiplayerPanel.CreateButton(Language.main.Get("Nitrox_AddServer"), mainMenuMultiplayerPanel.ShowAddServerWindow);
                 mainMenuMultiplayerPanel.LoadSavedServers();
                 ShowMultiplayerMenu();
             });

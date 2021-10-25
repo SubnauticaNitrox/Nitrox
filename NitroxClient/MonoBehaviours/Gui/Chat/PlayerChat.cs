@@ -57,7 +57,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             IsReady = true;
             if (NitroxPrefs.StreamerMode)
             {
-                Log.InGame("Streamer mode is enabled");
+                Log.InGame(Language.main.Get("Nitrox_StreamerModeNotif"));
             }
         }
 

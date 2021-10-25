@@ -17,6 +17,8 @@
   "Nitrox_EnterName": "Nom du joueur",
   "Nitrox_SubmitPassword": "Confirmer",
   "Nitrox_MultiplayerLoaded": "Chargement du client multijoueur...",
+  "Nitrox_UtilitiesSettings": "Utilitaires",
+  "Nitrox_StreamerMode": "Mode streamer",
   // In game menu
   "Nitrox_LoadingScreenWarn": "Attendez vous à quelques instabilités",
   "Nitrox_WorldSettling": "Chargement du monde",
@@ -34,5 +36,6 @@
   "Nitrox_DisconnectedSession": "Déconnecté du serveur",
   "Nitrox_WaitingPassword": "En attente du mot de passe...",
   "Nitrox_WaitingUserInput": "En attente des informations du joueur...",
-  "Nitrox_LaunchGame": "Lancement du jeu..."
+  "Nitrox_LaunchGame": "Lancement du jeu...",
+  "Nitrox_StreamerModeNotif": "Le mode streamer est activé"
 }

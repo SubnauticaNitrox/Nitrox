@@ -7,18 +7,16 @@ using UnityEngine.Events;
 
 namespace NitroxPatcher.Patches.Persistent
 {
-    public class uGUI_OptionsPanel_AddGeneralTab_Patch : NitroxPatch, IPersistentPatch
+    public class uGUI_TabbedControlsPanel_AddHeading_Patch : NitroxPatch, IPersistentPatch
     {
-        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((uGUI_OptionsPanel t) => t.AddGeneralTab());
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((uGUI_TabbedControlsPanel t) => t.AddHeading(default(int), default(string)));
 
-        public static void Postfix(uGUI_OptionsPanel __instance)
+        public static void Postfix(uGUI_OptionsPanel __instance, int tabIndex, string label)
         {
             GeneralSettingsManager generalSettingsManager = new();
-            int tabIndex = 0;
-            foreach (KeyValuePair<string, List<GeneralSettingsManager.Setting>> settingEntry in generalSettingsManager.SettingsToAddWithNewHeading)
+            if (generalSettingsManager.SettingsToAddInAlreadyExistingHeadings.TryGetValue(label, out List<GeneralSettingsManager.Setting> settingsList))
             {
-                __instance.AddHeading(tabIndex, settingEntry.Key);
-                foreach (GeneralSettingsManager.Setting setting in settingEntry.Value)
+                foreach (GeneralSettingsManager.Setting setting in settingsList)
                 {
                     switch (setting.SettingType)
                     {

@@ -50,7 +50,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             LoadSavedServers();
         }
 
-        private void CreateButton(string text, UnityAction clickEvent)
+        public void CreateButton(string text, UnityAction clickEvent)
         {
             GameObject multiplayerButtonInst = Instantiate(multiplayerButton, SavedGameAreaContent, false);
             Transform txt = multiplayerButtonInst.RequireTransform("NewGameButton/Text");
@@ -105,7 +105,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             Main.JoinServer.Show(endpoint.Address.ToString(), endpoint.Port);
         }
 
-        private void ShowAddServerWindow()
+        public void ShowAddServerWindow()
         {
             serverNameInput = "local";
             serverHostInput = "127.0.0.1";
