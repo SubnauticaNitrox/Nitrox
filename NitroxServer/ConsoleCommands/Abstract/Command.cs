@@ -78,7 +78,7 @@ namespace NitroxServer.ConsoleCommands.Abstract
             return RequiredPermLevel <= treshold;
         }
 
-        public string ToHelpText(bool cropText = false)
+        public string ToHelpText(bool cropText = false, bool singleCommand = false)
         {
             StringBuilder cmd = new(Name);
 
@@ -89,10 +89,14 @@ namespace NitroxServer.ConsoleCommands.Abstract
 
             cmd.AppendFormat(" {0}", string.Join(" ", Parameters));
 
-            string parameterPreText = Parameters.Count == 0 ? "" : Environment.NewLine;
-            string parameterText = parameterPreText + string.Join("\n", Parameters.Select(p => $"{p.Name,-47} - {p.Description}"));
+            if (singleCommand)
+            {
+                string parameterPreText = Parameters.Count == 0 ? "" : Environment.NewLine;
+                string parameterText = parameterPreText + string.Join("\n", Parameters.Select(p => $"{p.Name,-47} - {p.Description}"));
 
-            return cropText ? $"{cmd}" : $"{cmd,-32} - {Description} {parameterText}";
+                return cropText ? $"{cmd}" : $"{cmd,-32} - {Description} {parameterText}";
+            }
+            return cropText ? $"{cmd}" : $"{cmd,-32} - {Description}";
         }
 
         protected void AddParameter<T>(T param) where T : IParameter<object>
