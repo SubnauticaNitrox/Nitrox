@@ -50,7 +50,7 @@ namespace NitroxServer.ConsoleCommands
             }
             return new List<string>(commands.Where(cmd => cmd.CanExecute(permThreshold) && (singleCommand == null || cmd.Name.Equals(singleCommand)))
                                             .OrderByDescending(cmd => cmd.Name)
-                                            .Select(cmd => cmd.ToHelpText(cropText)));
+                                            .Select(cmd => cmd.ToHelpText(singleCommand != null, cropText)));
         }
     }
 }

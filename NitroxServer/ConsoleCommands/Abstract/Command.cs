@@ -48,13 +48,13 @@ namespace NitroxServer.ConsoleCommands.Abstract
         {
             if (args.Length < required)
             {
-                SendMessage(sender, $"Error: Invalid Parameters\nUsage: {ToHelpText(true)}");
+                SendMessage(sender, $"Error: Invalid Parameters\nUsage: {ToHelpText(false, true)}");
                 return;
             }
 
             if (!AllowedArgOverflow && args.Length > optional + required)
             {
-                SendMessage(sender, $"Error: Too many Parameters\nUsage: {ToHelpText(true)}");
+                SendMessage(sender, $"Error: Too many Parameters\nUsage: {ToHelpText(false, true)}");
                 return;
             }
 
@@ -77,7 +77,7 @@ namespace NitroxServer.ConsoleCommands.Abstract
             return RequiredPermLevel <= treshold;
         }
 
-        public string ToHelpText(bool cropText = false, bool singleCommand = false)
+        public string ToHelpText(bool singleCommand, bool cropText = false)
         {
             StringBuilder cmd = new(Name);
 
