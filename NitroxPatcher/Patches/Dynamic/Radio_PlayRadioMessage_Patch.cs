@@ -1,16 +1,15 @@
-using System;
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.Communication.Abstract;
 using NitroxModel.Core;
+using NitroxModel.Helper;
 using NitroxModel.Packets;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
     public class Radio_PlayRadioMessage_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(Radio);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("PlayRadioMessage", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Radio t) => t.PlayRadioMessage());
 
         public static void Prefix()
         {

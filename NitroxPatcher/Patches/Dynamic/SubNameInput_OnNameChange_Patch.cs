@@ -12,12 +12,11 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class SubNameInput_OnNameChange_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly MethodInfo TARGET_METHOD = typeof(SubNameInput).GetMethod("OnNameChange", BindingFlags.Public | BindingFlags.Instance);
+        public static readonly MethodInfo TARGET_METHOD = Reflect.Method((SubNameInput t) => t.OnNameChange(default(string)));
 
         public static void Postfix(SubNameInput __instance)
         {
-            SubName subname = (SubName)__instance.ReflectionGet("target");
-
+            SubName subname = __instance.target;
             if (subname != null)
             {
                 GameObject parentVehicle;
@@ -39,7 +38,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 }
 
                 NitroxId id = NitroxEntity.GetId(parentVehicle);
-                VehicleNameChange packet = new VehicleNameChange(id, subname.GetName());
+                VehicleNameChange packet = new(id, subname.GetName());
                 NitroxServiceLocator.LocateService<IPacketSender>().Send(packet);
             }
         }

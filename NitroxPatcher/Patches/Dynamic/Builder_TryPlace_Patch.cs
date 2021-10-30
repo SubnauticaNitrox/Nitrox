@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
@@ -11,14 +10,13 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class Builder_TryPlace_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(Builder);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("TryPlace");
+        public static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => Builder.TryPlace());
 
         public static readonly OpCode PLACE_BASE_INJECTION_OPCODE = OpCodes.Callvirt;
-        public static readonly object PLACE_BASE_INJECTION_OPERAND = typeof(BaseGhost).GetMethod("Place");
+        public static readonly object PLACE_BASE_INJECTION_OPERAND = Reflect.Method((BaseGhost t) => t.Place());
 
         public static readonly OpCode PLACE_FURNITURE_INJECTION_OPCODE = OpCodes.Call;
-        public static readonly object PLACE_FURNITURE_INJECTION_OPERAND = typeof(SkyEnvironmentChanged).GetMethod("Send", BindingFlags.Static | BindingFlags.Public, null, new Type[] { typeof(GameObject), typeof(Component) }, null);
+        public static readonly object PLACE_FURNITURE_INJECTION_OPERAND = Reflect.Method(() => SkyEnvironmentChanged.Send(default(GameObject), default(Component)));
 
         public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
         {
@@ -38,11 +36,11 @@ namespace NitroxPatcher.Patches.Dynamic
                     yield return new CodeInstruction(OpCodes.Ldloc_1);
                     yield return new CodeInstruction(OpCodes.Ldloc_0);
                     yield return new CodeInstruction(OpCodes.Ldloc_1);
-                    yield return new CodeInstruction(OpCodes.Callvirt, typeof(BaseGhost).GetMethod("get_TargetBase"));
-                    yield return new CodeInstruction(OpCodes.Ldsfld, TARGET_CLASS.GetField("prefab", BindingFlags.Static | BindingFlags.NonPublic));
-                    yield return new CodeInstruction(OpCodes.Call, typeof(CraftData).GetMethod("GetTechType", BindingFlags.Static | BindingFlags.Public, null, new Type[] { typeof(GameObject) }, null));
-                    yield return new CodeInstruction(OpCodes.Ldsfld, TARGET_CLASS.GetField("placeRotation", BindingFlags.Static | BindingFlags.NonPublic));
-                    yield return new CodeInstruction(OpCodes.Callvirt, typeof(Building).GetMethod("PlaceBasePiece", BindingFlags.Instance | BindingFlags.Public, null, new Type[] { typeof(BaseGhost), typeof(ConstructableBase), typeof(Base), typeof(TechType), typeof(Quaternion) }, null));
+                    yield return new CodeInstruction(OpCodes.Callvirt, Reflect.Property((BaseGhost t) => t.TargetBase).GetMethod);
+                    yield return new CodeInstruction(OpCodes.Ldsfld, Reflect.Field(() => Builder.prefab));
+                    yield return new CodeInstruction(OpCodes.Call, Reflect.Method(() => CraftData.GetTechType(default(GameObject))));
+                    yield return new CodeInstruction(OpCodes.Ldsfld, Reflect.Field(() => Builder.placeRotation));
+                    yield return new CodeInstruction(OpCodes.Callvirt, Reflect.Method((Building t) => t.PlaceBasePiece(default(BaseGhost), default(ConstructableBase), default(Base), default(TechType), default(Quaternion))));
                 }
 
                 if (instruction.opcode.Equals(PLACE_FURNITURE_INJECTION_OPCODE) && instruction.operand.Equals(PLACE_FURNITURE_INJECTION_OPERAND))
@@ -52,13 +50,13 @@ namespace NitroxPatcher.Patches.Dynamic
                      */
                     yield return TranspilerHelper.LocateService<Building>();
                     yield return new CodeInstruction(OpCodes.Ldloc_2);
-                    yield return new CodeInstruction(OpCodes.Ldsfld, TARGET_CLASS.GetField("prefab", BindingFlags.Static | BindingFlags.NonPublic));
-                    yield return new CodeInstruction(OpCodes.Call, typeof(CraftData).GetMethod("GetTechType", BindingFlags.Static | BindingFlags.Public, null, new Type[] { typeof(GameObject) }, null));
-                    yield return new CodeInstruction(OpCodes.Ldsfld, TARGET_CLASS.GetField("ghostModel", BindingFlags.Static | BindingFlags.NonPublic));
-                    yield return new CodeInstruction(OpCodes.Callvirt, typeof(GameObject).GetMethod("get_transform"));
-                    yield return new CodeInstruction(OpCodes.Callvirt, typeof(Transform).GetMethod("get_position"));
-                    yield return new CodeInstruction(OpCodes.Ldsfld, TARGET_CLASS.GetField("placeRotation", BindingFlags.Static | BindingFlags.NonPublic));
-                    yield return new CodeInstruction(OpCodes.Callvirt, typeof(Building).GetMethod("PlaceFurniture", BindingFlags.Instance | BindingFlags.Public, null, new Type[] { typeof(GameObject), typeof(TechType), typeof(Vector3), typeof(Quaternion) }, null));
+                    yield return new CodeInstruction(OpCodes.Ldsfld, Reflect.Field(() => Builder.prefab));
+                    yield return new CodeInstruction(OpCodes.Call, Reflect.Method(() => CraftData.GetTechType(default(GameObject))));
+                    yield return new CodeInstruction(OpCodes.Ldsfld, Reflect.Field(() => Builder.ghostModel));
+                    yield return new CodeInstruction(OpCodes.Callvirt, Reflect.Property((GameObject t) => t.transform).GetMethod);
+                    yield return new CodeInstruction(OpCodes.Callvirt, Reflect.Property((Transform t) => t.position).GetMethod);
+                    yield return new CodeInstruction(OpCodes.Ldsfld, Reflect.Field(() => Builder.placeRotation));
+                    yield return new CodeInstruction(OpCodes.Callvirt, Reflect.Method((Building t) => t.PlaceFurniture(default(GameObject), default(TechType), default(Vector3), default(Quaternion))));
                 }
             }
         }

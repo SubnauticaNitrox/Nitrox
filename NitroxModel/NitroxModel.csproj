@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -54,6 +54,7 @@
     <Compile Include="DataStructures\GameLogic\InteractiveChildObjectIdentifier.cs" />
     <Compile Include="DataStructures\GameLogic\ItemData.cs" />
     <Compile Include="DataStructures\GameLogic\NitroxTechType.cs" />
+    <Compile Include="DataStructures\GameLogic\PDAProgressEntry.cs" />
     <Compile Include="DataStructures\GameLogic\PDAEntry.cs" />
     <Compile Include="DataStructures\GameLogic\PDALogEntry.cs" />
     <Compile Include="DataStructures\GameLogic\Perms.cs" />
@@ -74,9 +75,11 @@
     <Compile Include="DataStructures\SimulatedEntity.cs" />
     <Compile Include="DataStructures\SimulationLock.cs" />
     <Compile Include="DataStructures\Surrogates\SerializationSurrogate.cs" />
-    <Compile Include="DataStructures\ThreadSafeCollection.cs" />
+    <Compile Include="DataStructures\ThreadSafeList.cs" />
     <Compile Include="DataStructures\ThreadSafeDictionary.cs" />
+    <Compile Include="DataStructures\ThreadSafeSet.cs" />
     <Compile Include="Discovery\GameInstallationFinder.cs" />
+    <Compile Include="Discovery\GameInstallData.cs" />
     <Compile Include="Discovery\IFindGameInstallation.cs" />
     <Compile Include="Discovery\InstallationFinders\ConfigFileGameFinder.cs" />
     <Compile Include="Discovery\InstallationFinders\DiscordGameFinder.cs" />
@@ -92,7 +95,7 @@
     <Compile Include="Helper\Matrix4x4Extension.cs" />
     <Compile Include="Helper\NitroxAppData.cs" />
     <Compile Include="Helper\PirateDetection.cs" />
-    <Compile Include="Helper\ReflectionHelper.cs" />
+    <Compile Include="Helper\Reflect.cs" />
     <Compile Include="Helper\StringHelper.cs" />
     <Compile Include="Helper\Validate.cs" />
     <Compile Include="Helper\WebHelper.cs" />

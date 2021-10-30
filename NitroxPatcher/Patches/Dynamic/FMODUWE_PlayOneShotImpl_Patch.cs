@@ -2,6 +2,7 @@
 using HarmonyLib;
 using NitroxClient.GameLogic.FMOD;
 using NitroxModel.Core;
+using NitroxModel.Helper;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 
@@ -11,7 +12,7 @@ namespace NitroxPatcher.Patches.Dynamic
     {
         private static FMODSystem fmodSystem;
 
-        private static readonly MethodInfo targetMethod = typeof(FMODUWE).GetMethod("PlayOneShotImpl", BindingFlags.NonPublic | BindingFlags.Static, null, new[] { typeof(string), typeof(Vector3), typeof(float) }, null);
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => FMODUWE.PlayOneShotImpl(default(string), default(Vector3), default(float)));
 
         public static bool Prefix()
         {
@@ -29,7 +30,7 @@ namespace NitroxPatcher.Patches.Dynamic
         public override void Patch(Harmony harmony)
         {
             fmodSystem = NitroxServiceLocator.LocateService<FMODSystem>();
-            PatchMultiple(harmony, targetMethod, prefix:true, postfix:true);
+            PatchMultiple(harmony, TARGET_METHOD, prefix:true, postfix:true);
         }
     }
 }

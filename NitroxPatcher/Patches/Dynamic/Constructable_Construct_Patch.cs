@@ -1,16 +1,15 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
     public class Constructable_Construct_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(Constructable);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("Construct");
+        public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Constructable t) => t.Construct());
 
         private static Base lastTargetBase;
         private static Int3 lastTargetBaseOffset;

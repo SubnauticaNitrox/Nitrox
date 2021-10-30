@@ -11,10 +11,10 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class SpawnConsoleCommand_OnConsoleCommand_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly MethodInfo TARGET_METHOD = typeof(SpawnConsoleCommand).GetMethod("OnConsoleCommand_spawn", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((SpawnConsoleCommand t) => t.OnConsoleCommand_spawn(default(NotificationCenter.Notification)));
 
-        public static readonly OpCode INJECTION_CODE = OpCodes.Call;
-        public static readonly object INJECTION_OPERAND = typeof(Utils).GetMethod("CreatePrefab", BindingFlags.Public | BindingFlags.Static);
+        private static readonly OpCode INJECTION_CODE = OpCodes.Call;
+        private static readonly object INJECTION_OPERAND = Reflect.Method(() => Utils.CreatePrefab(default(GameObject), default(float), default(bool)));
 
         public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
         {
@@ -35,7 +35,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 {
 
                     yield return new CodeInstruction(OpCodes.Dup);
-                    yield return new CodeInstruction(OpCodes.Call, typeof(SpawnConsoleCommand_OnConsoleCommand_Patch).GetMethod("Callback", BindingFlags.Static | BindingFlags.Public));
+                    yield return new CodeInstruction(OpCodes.Call, Reflect.Method(() => Callback(default(GameObject))));
                 }
 
             }

@@ -157,14 +157,9 @@ namespace NitroxClient.MonoBehaviours
 
         private static void SetLoadingComplete()
         {
-            PropertyInfo property = PAXTerrainController.main.GetType().GetProperty("isWorking");
-            property.SetValue(PAXTerrainController.main, false, null);
-
-            WaitScreen waitScreen = (WaitScreen)ReflectionHelper.ReflectionGet<WaitScreen>(null, "main", false, true);
-            waitScreen.ReflectionCall("Hide");
-
-            List<WaitScreen.IWaitItem> items = (List<WaitScreen.IWaitItem>)waitScreen.ReflectionGet("items");
-            items.Clear();
+            PAXTerrainController.main.isWorking = false;
+            WaitScreen.main.Hide();
+            WaitScreen.main.items.Clear();
 
             PlayerManager remotePlayerManager = NitroxServiceLocator.LocateService<PlayerManager>();
 
@@ -193,8 +188,7 @@ namespace NitroxClient.MonoBehaviours
 
             // UWE developers added noisy logging for non-whitelisted components during serialization.
             // We add NitroxEntiy in here to avoid a large amount of log spam.
-            HashSet<string> whiteListedSerializableComponents = (HashSet<string>)ReflectionHelper.ReflectionGet<ProtobufSerializer>(null, "componentWhitelist", false, true);
-            whiteListedSerializableComponents.Add("NitroxEntity");
+            ProtobufSerializer.componentWhitelist.Add(nameof(NitroxEntity));
         }
 
         private void SceneManager_sceneLoaded(Scene scene, LoadSceneMode loadMode)

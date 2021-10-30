@@ -1,13 +1,14 @@
 ﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic.Helper;
+using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
     /// See <see cref="SerializationHelper.GetBytesWithoutParent"/> for more info.
     public class UniqueIdentifier_Id_Getter_Patch : NitroxPatch, IDynamicPatch
     {
-        private static readonly MethodInfo targetMethod = typeof(UniqueIdentifier).GetProperty(nameof(UniqueIdentifier.Id), BindingFlags.Public | BindingFlags.Instance)?.GetGetMethod();
+        private static readonly MethodInfo targetMethod = Reflect.Property((UniqueIdentifier t) => t.Id).GetMethod;
 
         public static bool Prefix(string ___id, ref string __result)
         {

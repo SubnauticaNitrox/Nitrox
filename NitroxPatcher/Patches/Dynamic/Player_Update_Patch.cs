@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.MonoBehaviours.Gui.Input;
 using NitroxClient.MonoBehaviours.Gui.Input.KeyBindings;
@@ -9,24 +8,20 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class Player_Update_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(Player);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("Update", BindingFlags.Public | BindingFlags.Instance);
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Player t) => t.Update());
 
         public static void Postfix(Player __instance)
         {
             // TODO: Use proper way to check if input is free, because players can be editing labels etc.
-            if ((bool)((DevConsole)ReflectionHelper.ReflectionGet<DevConsole>(null, "instance", false, true)).ReflectionGet("state"))
+            if (DevConsole.instance.state)
             {
                 return;
             }
 
-            KeyBindingManager keyBindingManager = new KeyBindingManager();
-
+            KeyBindingManager keyBindingManager = new();
             foreach (KeyBinding keyBinding in keyBindingManager.KeyboardKeyBindings)
             {
-                bool isButtonDown = (bool)ReflectionHelper.ReflectionCall<GameInput>(null, "GetButtonDown", new Type[] { typeof(GameInput.Button) }, true, true, keyBinding.Button);
-
-                if (isButtonDown)
+                if (GameInput.GetButtonDown(keyBinding.Button))
                 {
                     keyBinding.Action.Execute();
                 }

@@ -1,19 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
+using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
     public class CyclopsShieldButton_OnClick_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(CyclopsShieldButton);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("OnClick", BindingFlags.Public | BindingFlags.Instance);
+        public static readonly MethodInfo TARGET_METHOD = Reflect.Method((CyclopsShieldButton t) => t.OnClick());
         public static readonly OpCode START_CUT_CODE = OpCodes.Ldsfld;
         public static readonly OpCode START_CUT_CODE_CALL = OpCodes.Callvirt;
-        public static readonly FieldInfo PLAYER_MAIN_FIELD = typeof(Player).GetField("main", BindingFlags.Public | BindingFlags.Static);
+        public static readonly FieldInfo PLAYER_MAIN_FIELD = Reflect.Field(() => Player.main);
         public static readonly OpCode END_CUT_CODE = OpCodes.Ret;
 
         public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)

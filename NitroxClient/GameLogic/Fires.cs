@@ -87,7 +87,7 @@ namespace NitroxClient.GameLogic
         public void Create(CyclopsFireData fireData)
         {
             SubFire subFire = NitroxEntity.RequireObjectFrom(fireData.CyclopsId).GetComponent<SubRoot>().damageManager.subFire;
-            Dictionary<CyclopsRooms, SubFire.RoomFire> roomFiresDict = (Dictionary<CyclopsRooms, SubFire.RoomFire>)subFire.ReflectionGet("roomFires");
+            Dictionary<CyclopsRooms, SubFire.RoomFire> roomFiresDict = subFire.roomFires;
             // Copied from SubFire_CreateFire_Patch, which copies from SubFire.CreateFire()
             Transform transform2 = roomFiresDict[fireData.Room].spawnNodes[fireData.NodeIndex];
 
@@ -109,7 +109,7 @@ namespace NitroxClient.GameLogic
                 return;
             }
 
-            List<Transform> availableNodes = (List<Transform>)subFire.ReflectionGet("availableNodes");
+            List<Transform> availableNodes = subFire.availableNodes;
             availableNodes.Clear();
             foreach (Transform transform in roomFiresDict[fireData.Room].spawnNodes)
             {
@@ -141,8 +141,8 @@ namespace NitroxClient.GameLogic
                 NitroxEntity.SetNewId(componentInChildren.gameObject, fireData.FireId);
             }
 
-            subFire.ReflectionSet("roomFires", roomFiresDict);
-            subFire.ReflectionSet("availableNodes", availableNodes);
+            subFire.roomFires = roomFiresDict;
+            subFire.availableNodes = availableNodes;
         }
     }
 }

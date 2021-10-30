@@ -19,7 +19,7 @@ namespace NitroxClient.GameLogic.Spawning.Metadata
 
             if (laseredObject && door._sealed)
             {
-                laseredObject.ReflectionSet("lastCutValue", door.openedAmount);
+                laseredObject.lastCutValue = door.openedAmount;
                 laseredObject.ActivateFX();
             }
         }

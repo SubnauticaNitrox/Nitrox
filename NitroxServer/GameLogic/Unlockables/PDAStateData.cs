@@ -10,23 +10,27 @@ namespace NitroxServer.GameLogic.Unlockables
     public class PDAStateData
     {
         [JsonProperty, ProtoMember(1)]
-        public ThreadSafeCollection<NitroxTechType> UnlockedTechTypes { get; } = new ThreadSafeCollection<NitroxTechType>();
+        public ThreadSafeList<NitroxTechType> UnlockedTechTypes { get; } = new ThreadSafeList<NitroxTechType>();
 
         [JsonProperty, ProtoMember(2)]
-        public ThreadSafeCollection<NitroxTechType> KnownTechTypes { get; } = new ThreadSafeCollection<NitroxTechType>();
+        public ThreadSafeList<NitroxTechType> KnownTechTypes { get; } = new ThreadSafeList<NitroxTechType>();
 
         [JsonProperty, ProtoMember(3)]
-        public ThreadSafeCollection<string> EncyclopediaEntries { get; } = new ThreadSafeCollection<string>();
+        public ThreadSafeList<string> EncyclopediaEntries { get; } = new ThreadSafeList<string>();
 
         [JsonProperty, ProtoMember(4)]
         public ThreadSafeDictionary<NitroxTechType, PDAEntry> PartiallyUnlockedByTechType { get; set; } = new ThreadSafeDictionary<NitroxTechType, PDAEntry>();
 
         [JsonProperty, ProtoMember(5)]
-        public ThreadSafeCollection<PDALogEntry> PdaLog { get; } = new ThreadSafeCollection<PDALogEntry>();
+        public ThreadSafeList<PDALogEntry> PdaLog { get; } = new ThreadSafeList<PDALogEntry>();
+
+        [JsonProperty, ProtoMember(6)]
+        public ThreadSafeDictionary<NitroxTechType, PDAProgressEntry> CachedProgress { get; } = new ThreadSafeDictionary<NitroxTechType, PDAProgressEntry>();
 
         public void UnlockedTechType(NitroxTechType techType)
         {
             PartiallyUnlockedByTechType.Remove(techType);
+            CachedProgress.Remove(techType);
             UnlockedTechTypes.Add(techType);
         }
 
@@ -45,14 +49,30 @@ namespace NitroxServer.GameLogic.Unlockables
             PdaLog.Add(entry);
         }
 
-        public void EntryProgressChanged(NitroxTechType techType, float progress, int unlocked)
+        public void EntryProgressChanged(NitroxTechType techType, float progress, int unlocked, NitroxId nitroxId)
         {
             if (!PartiallyUnlockedByTechType.TryGetValue(techType, out PDAEntry pdaEntry))
             {
                 PartiallyUnlockedByTechType[techType] = pdaEntry = new PDAEntry(techType, progress, unlocked);
             }
 
-            pdaEntry.Progress = progress;
+            // Update progress for specific entity if NitroxID is provided.
+            if (nitroxId != null)
+            {
+                if (!CachedProgress.TryGetValue(techType, out PDAProgressEntry pdaProgressEntry))
+                {
+                    CachedProgress.Add(techType, pdaProgressEntry = new PDAProgressEntry(techType, new Dictionary<NitroxId, float>()));
+                }
+                // Prevents decreasing progress
+                if (!pdaProgressEntry.Entries.ContainsKey(nitroxId) || (unlocked == pdaEntry.Unlocked && pdaProgressEntry.Entries.TryGetValue(nitroxId, out float oldProgress) && oldProgress < progress))
+                {
+                    pdaProgressEntry.Entries[nitroxId] = progress;
+                    pdaEntry.Progress = progress;
+                }
+            }
+
+            // This needs to occur after the progress update because
+            // progress update needs to know what was the old unlocked state
             pdaEntry.Unlocked = unlocked;
         }
 
@@ -62,7 +82,8 @@ namespace NitroxServer.GameLogic.Unlockables
                 new List<NitroxTechType>(KnownTechTypes),
                 new List<string>(EncyclopediaEntries),
                 new List<PDAEntry>(PartiallyUnlockedByTechType.Values),
-                new List<PDALogEntry>(PdaLog));
+                new List<PDALogEntry>(PdaLog),
+                new List<PDAProgressEntry>(CachedProgress.Values));
         }
     }
 }

@@ -1,21 +1,19 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxModel.Core;
+using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
     public class PDAScanner_NotifyProgress_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(PDAScanner);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("NotifyProgress", BindingFlags.NonPublic | BindingFlags.Static);
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => PDAScanner.NotifyProgress(default(PDAScanner.Entry)));
 
         public static void Prefix(PDAScanner.Entry entry)
         {
             if (entry != null)
             {
-                NitroxServiceLocator.LocateService<PDAManagerEntry>().Progress(entry);
+                Resolve<PDAManagerEntry>().Progress(entry, null);
             }
         }
 

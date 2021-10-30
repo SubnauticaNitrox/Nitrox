@@ -34,16 +34,16 @@ namespace NitroxClient.Communication.Packets.Processors
             }
 
             Equipment equipment = opEquipment.Value;
-            InventoryItem inventoryItem = new InventoryItem(pickupable);
+            InventoryItem inventoryItem = new(pickupable);
             inventoryItem.container = equipment;
             inventoryItem.item.Reparent(equipment.tr);
 
-            Dictionary<string, InventoryItem> itemsBySlot = (Dictionary<string, InventoryItem>)equipment.ReflectionGet("equipment");
+            Dictionary<string, InventoryItem> itemsBySlot = equipment.equipment;
             itemsBySlot[equippedItemData.Slot] = inventoryItem;
 
-            equipment.ReflectionCall("UpdateCount", false, false, pickupable.GetTechType(), true);
+            equipment.UpdateCount(pickupable.GetTechType(), true);
             Equipment.SendEquipmentEvent(pickupable, EQUIP_EVENT_TYPE_ID, owner, equippedItemData.Slot);
-            equipment.ReflectionCall("NotifyEquip", false, false, equippedItemData.Slot, inventoryItem);
+            equipment.NotifyEquip(equippedItemData.Slot, inventoryItem);
         }
     }
 }

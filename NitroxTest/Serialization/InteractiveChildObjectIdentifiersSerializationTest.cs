@@ -11,13 +11,13 @@ namespace NitroxTest.Serialization
     [TestClass]
     public class InteractiveChildObjectIdentifiersSerializationTest
     {
-        private ThreadSafeCollection<InteractiveChildObjectIdentifier> state;
+        private ThreadSafeList<InteractiveChildObjectIdentifier> state;
         private readonly Random random = new Random();
 
         [TestInitialize]
         public void Setup()
         {
-            state = new ThreadSafeCollection<InteractiveChildObjectIdentifier> { new InteractiveChildObjectIdentifier(new NitroxId(), "/BlablaScene/SomeBlablaContainer/BlaItem") };
+            state = new ThreadSafeList<InteractiveChildObjectIdentifier> { new InteractiveChildObjectIdentifier(new NitroxId(), "/BlablaScene/SomeBlablaContainer/BlaItem") };
             byte[] idBytes = new byte[16];
             random.NextBytes(idBytes);
             state.Add(new InteractiveChildObjectIdentifier(new NitroxId(idBytes), ""));
@@ -32,7 +32,7 @@ namespace NitroxTest.Serialization
             foreach (IServerSerializer serializer in serializers)
             {
 
-                ThreadSafeCollection<InteractiveChildObjectIdentifier> deserialized;
+                ThreadSafeList<InteractiveChildObjectIdentifier> deserialized;
                 byte[] buffer;
                 using (MemoryStream stream = new MemoryStream())
                 {
@@ -41,7 +41,7 @@ namespace NitroxTest.Serialization
                 }
                 using (MemoryStream stream = new MemoryStream(buffer))
                 {
-                    deserialized = serializer.Deserialize<ThreadSafeCollection<InteractiveChildObjectIdentifier>>(stream);
+                    deserialized = serializer.Deserialize<ThreadSafeList<InteractiveChildObjectIdentifier>>(stream);
                 }
 
                 deserialized.Count.Should().BeGreaterThan(0);

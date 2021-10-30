@@ -374,11 +374,11 @@
   </ItemGroup>
   <ItemGroup Label="Assembly References">
     <Reference Include="iTween">
-      <HintPath>$(SubnauticaManaged)\iTween.dll</HintPath>
+      <HintPath>$(GameManagedDir)\iTween.dll</HintPath>
       <Private>false</Private>
     </Reference>
     <Reference Include="LitJson">
-      <HintPath>$(SubnauticaManaged)\LitJson.dll</HintPath>
+      <HintPath>$(GameManagedDir)\LitJson.dll</HintPath>
       <Private>false</Private>
     </Reference>
     <Reference Include="System" />

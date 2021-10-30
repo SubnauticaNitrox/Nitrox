@@ -1,11 +1,12 @@
 ﻿using System.Reflection;
 using HarmonyLib;
+using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
     public class PrefabPlaceholdersGroup_Spawn_Patch : NitroxPatch, IDynamicPatch
     {
-        public static MethodInfo TARGET_METHOD = typeof(PrefabPlaceholdersGroup).GetMethod("Spawn", BindingFlags.Instance | BindingFlags.Public);
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((PrefabPlaceholdersGroup t) => t.Spawn(default(bool), default(bool)));
 
         public static bool Prefix()
         {

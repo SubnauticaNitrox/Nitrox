@@ -246,7 +246,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                     preferencesManager.Save();
 
 #pragma warning disable CS0618 // God Damn it UWE...
-                    IEnumerator startNewGame = (IEnumerator)uGUI_MainMenu.main.ReflectionCall("StartNewGame", false, false, GameMode.Survival);
+                    IEnumerator startNewGame = uGUI_MainMenu.main.StartNewGame(GameMode.Survival);
 #pragma warning restore CS0618 // God damn it UWE...
                     StartCoroutine(startNewGame);
                     LoadingScreenVersionText.Initialize();

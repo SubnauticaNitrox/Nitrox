@@ -1,15 +1,14 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
+using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
     public class EntityCell_QueueForSleep_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(EntityCell);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("QueueForSleep");
+        public static readonly MethodInfo TARGET_METHOD = Reflect.Method((EntityCell t) => t.QueueForSleep(default(IQueue<EntityCell>)));
 
         public static bool Prefix(EntityCell __instance)
         {

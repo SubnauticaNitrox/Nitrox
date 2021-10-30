@@ -9,15 +9,15 @@ using NitroxModel.DataStructures;
 namespace NitroxTest.Threading
 {
     [TestClass]
-    public class ThreadSafeCollectionTest
+    public class ThreadSafeListTest
     {
         [TestMethod]
-        public void ReadAndWriteSimultanious()
+        public void ReadAndWriteSimultaneous()
         {
             int iterations = 500000;
 
-            ThreadSafeCollection<string> comeGetMe = new ThreadSafeCollection<string>(iterations);
-            List<long> countsRead = new List<long>();
+            ThreadSafeList<string> comeGetMe = new(iterations);
+            List<long> countsRead = new();
             long addCount = 0;
 
             Random r = new Random();
@@ -39,11 +39,11 @@ namespace NitroxTest.Threading
         }
 
         [TestMethod]
-        public void IterateAndAddSimultanious()
+        public void IterateAndAddSimultaneous()
         {
             int iterations = 500000;
 
-            ThreadSafeCollection<string> comeGetMe = new ThreadSafeCollection<string>(iterations);
+            ThreadSafeList<string> comeGetMe = new(iterations);
             long addCount = 0;
             long iterationsReadMany = 0;
 
@@ -70,7 +70,7 @@ namespace NitroxTest.Threading
         [TestMethod]
         public void IterateAndAdd()
         {
-            ThreadSafeCollection<int> nums = new ThreadSafeCollection<int>()
+            ThreadSafeList<int> nums = new()
             {
                 1,2,3,4,5
             };
@@ -89,8 +89,8 @@ namespace NitroxTest.Threading
 
         private void DoReaderWriter(Action reader, Action<int> writer, int iterators)
         {
-            ManualResetEvent barrier = new ManualResetEvent(false);
-            Thread readerThread = new Thread(() =>
+            ManualResetEvent barrier = new(false);
+            Thread readerThread = new(() =>
             {
                 while (!barrier.SafeWaitHandle.IsClosed)
                 {
@@ -101,7 +101,7 @@ namespace NitroxTest.Threading
                 // Read one last time after writer finishes
                 reader();
             });
-            Thread writerThread = new Thread(() =>
+            Thread writerThread = new(() =>
             {
                 for (int i = 0; i < iterators; i++)
                 {

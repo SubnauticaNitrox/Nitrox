@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
@@ -16,8 +15,7 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     class Seamoth_SubConstructionComplete_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(SeaMoth);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("SubConstructionComplete", BindingFlags.Public | BindingFlags.Instance);
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((SeaMoth t) => t.SubConstructionComplete());
 
         public static bool Prefix(SeaMoth __instance)
         {

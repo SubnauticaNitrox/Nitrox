@@ -14,7 +14,8 @@ namespace NitroxModel.Logger
 {
     public static class Log
     {
-        private static ILogger logger;
+        private static ILogger logger = Serilog.Core.Logger.None;
+        private static bool isSetup;
 
         public static string PlayerName
         {
@@ -27,10 +28,12 @@ namespace NitroxModel.Logger
 
         public static void Setup(bool asyncConsoleWriter = false, InGameLogger inGameLogger = null, bool isConsoleApp = false, bool useConsoleLogging = true)
         {
-            if (logger != null)
+            if (isSetup)
             {
                 throw new Exception($"{nameof(Log)} setup should only be executed once.");
             }
+            isSetup = true;
+            
             PlayerName = "";
             logger = new LoggerConfiguration()
                      .MinimumLevel.Debug()
