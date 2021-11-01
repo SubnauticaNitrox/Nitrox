@@ -202,6 +202,7 @@
     <Compile Include="Patches\Persistent\ScreenshotManager_Initialise.Path.cs" />
     <Compile Include="Patches\Persistent\SentrySdk_Start_Patch.cs" />
     <Compile Include="Patches\Persistent\uGUI_FeedbackCollector_IsEnabled_Patch.cs" />
+    <Compile Include="Patches\Persistent\MainMenuRightSide_OpenGroup_Patch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TranspilerHelper.cs" />
   </ItemGroup>
