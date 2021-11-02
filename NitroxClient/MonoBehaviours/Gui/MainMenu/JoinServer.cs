@@ -290,7 +290,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             });
         }
 
-        private void StopMultiplayerClient()
+        public void StopMultiplayerClient()
         {
             if (!multiplayerClient)
             {
