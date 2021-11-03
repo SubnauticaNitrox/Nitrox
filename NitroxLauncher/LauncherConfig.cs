@@ -19,18 +19,6 @@ namespace NitroxLauncher
             }
         }
 
-        // Is the Launcher connected to internet somehow
-        private bool isConnectedToInternet = true;
-        public bool IsConnectedToInternet
-        {
-            get => isConnectedToInternet;
-            set
-            {
-                isConnectedToInternet = value;
-                OnPropertyChanged();
-            }
-        }
-
         // Is subnautica a pirated version
         private bool isPirated = false;
         public bool IsPirated

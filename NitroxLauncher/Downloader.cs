@@ -118,6 +118,7 @@ namespace NitroxLauncher
             if (!NetworkInterface.GetIsNetworkAvailable())
             {
                 Log.Warn("Launcher might not be connected to internet");
+                LauncherNotifier.Error("Launcher might not be connected to internet");
             }
 
             Log.Info($"Trying to request data from {url}");

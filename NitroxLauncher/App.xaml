@@ -317,17 +317,10 @@
 
             <!-- Notifications -->
 
-            <Color x:Key="InformationColor">#FF007BFF</Color>
-            <SolidColorBrush x:Key="InformationColorBrush" Color="{StaticResource InformationColor}" />
-
-            <Color x:Key="SuccessColor">#11ad45</Color>
-            <SolidColorBrush x:Key="SuccessColorBrush" Color="{StaticResource SuccessColor}" />
-
-            <Color x:Key="ErrorColor">#e60914</Color>
-            <SolidColorBrush x:Key="ErrorColorBrush" Color="{StaticResource ErrorColor}" />
-
-            <Color x:Key="WarningColor">#f5a300</Color>
-            <SolidColorBrush x:Key="WarningColorBrush" Color="{StaticResource WarningColor}" />
+            <SolidColorBrush x:Key="InformationColorBrush" Color="#FF007BFF" />
+            <SolidColorBrush x:Key="SuccessColorBrush" Color="#11ad45" />
+            <SolidColorBrush x:Key="ErrorColorBrush" Color="#e60914" />
+            <SolidColorBrush x:Key="WarningColorBrush" Color="#f5a300" />
 
             <Canvas x:Key="InformationIcon"  Width="24" Height="24">
                 <Path Data="M11,9H13V7H11M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,17H13V11H11V17Z" Fill="White" />
@@ -351,6 +344,7 @@
 
             <Style TargetType="Border" x:Key="NotificationBorder">
                 <Setter Property="Padding" Value="15" />
+                <Setter Property="Margin" Value="3" />
                 <Setter Property="Effect">
                     <Setter.Value>
                         <DropShadowEffect Opacity="0.5" ShadowDepth="1" BlurRadius="2" />
