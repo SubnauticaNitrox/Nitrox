@@ -73,12 +73,14 @@ namespace NitroxLauncher
                 {
                     Config.IsUpToDate = false;
                     Log.Info($"A new version of the mod ({latestVersion}) is available");
-                    MessageBox.Show($"A new version of the mod ({latestVersion}) is available !\n\nPlease check our website to download it",
-                        "New version available",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Question,
-                        MessageBoxResult.OK,
-                        MessageBoxOptions.DefaultDesktopOnly);
+
+                    LauncherNotifier.Warning($"A new version of the mod ({latestVersion}) is available", new ToastNotifications.Core.MessageOptions()
+                    {
+                        NotificationClickAction = (n) =>
+                        {
+                            NavigateTo<UpdatePage>();
+                        },
+                    });
                 }
 
             }, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());

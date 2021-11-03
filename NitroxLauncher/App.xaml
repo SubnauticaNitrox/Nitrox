@@ -47,51 +47,6 @@
                 </Style.Triggers>
             </Style>
 
-            <Style x:Key="ButtonConsoleStop" TargetType="{x:Type Button}">
-                <Style.Resources>
-                    <Style TargetType="{x:Type Border}">
-                        <Setter Property="CornerRadius" Value="6" />
-                        <Setter Property="BorderThickness" Value="1" />
-                    </Style>
-                </Style.Resources>
-                <Setter Property="Width" Value="240" />
-                <Setter Property="Height" Value="80" />
-                <Setter Property="FontSize" Value="16" />
-                <Style.BasedOn>
-                    <StaticResource ResourceKey="{x:Type Button}"/>
-                </Style.BasedOn>
-            </Style>
-
-            <Style x:Key="ButtonConsoleMsg" TargetType="{x:Type Button}">
-                <Style.Resources>
-                    <Style TargetType="{x:Type Border}">
-                        <Setter Property="CornerRadius" Value="6" />
-                        <Setter Property="BorderThickness" Value="1" />
-                    </Style>
-                </Style.Resources>
-                <Setter Property="Cursor" Value="Hand" />
-                <Setter Property="Width" Value="240" />
-                <Setter Property="Height" Value="80" />
-                <Setter Property="FontSize" Value="16" />
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type Button}">
-                            <Border Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0">
-                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                            </Border>
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="#19FFFFFF" />
-                                </Trigger>
-
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-                <Setter Property="Background" Value="Transparent"/>
-            </Style>
-
             <Style TargetType="Window">
                 <Setter Property="FontFamily" Value="{DynamicResource DefaultFont}" />
             </Style>
@@ -291,7 +246,54 @@
                     </Style>
                 </Style.Resources>
             </Style>
-            
+
+            <!-- Server -->
+
+            <Style x:Key="ButtonConsoleStop" TargetType="{x:Type Button}">
+                <Style.Resources>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="CornerRadius" Value="6" />
+                        <Setter Property="BorderThickness" Value="1" />
+                    </Style>
+                </Style.Resources>
+                <Setter Property="Width" Value="240" />
+                <Setter Property="Height" Value="80" />
+                <Setter Property="FontSize" Value="16" />
+                <Style.BasedOn>
+                    <StaticResource ResourceKey="{x:Type Button}"/>
+                </Style.BasedOn>
+            </Style>
+
+            <Style x:Key="ButtonConsoleMsg" TargetType="{x:Type Button}">
+                <Style.Resources>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="CornerRadius" Value="6" />
+                        <Setter Property="BorderThickness" Value="1" />
+                    </Style>
+                </Style.Resources>
+                <Setter Property="Cursor" Value="Hand" />
+                <Setter Property="Width" Value="240" />
+                <Setter Property="Height" Value="80" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#19FFFFFF" />
+                                </Trigger>
+
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Background" Value="Transparent"/>
+            </Style>
+
             <!-- HyperLink -->
 
             <Style TargetType="{x:Type Hyperlink}">
@@ -313,6 +315,105 @@
                 <Setter Property="VerticalAlignment" Value="Bottom" />
             </Style>
 
+            <!-- Notifications -->
+
+            <Color x:Key="InformationColor">#FF007BFF</Color>
+            <SolidColorBrush x:Key="InformationColorBrush" Color="{StaticResource InformationColor}" />
+
+            <Color x:Key="SuccessColor">#11ad45</Color>
+            <SolidColorBrush x:Key="SuccessColorBrush" Color="{StaticResource SuccessColor}" />
+
+            <Color x:Key="ErrorColor">#e60914</Color>
+            <SolidColorBrush x:Key="ErrorColorBrush" Color="{StaticResource ErrorColor}" />
+
+            <Color x:Key="WarningColor">#f5a300</Color>
+            <SolidColorBrush x:Key="WarningColorBrush" Color="{StaticResource WarningColor}" />
+
+            <Canvas x:Key="InformationIcon"  Width="24" Height="24">
+                <Path Data="M11,9H13V7H11M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,17H13V11H11V17Z" Fill="White" />
+            </Canvas>
+
+            <Canvas x:Key="SuccessIcon"  Width="24" Height="24">
+                <Path Data="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z" Fill="White" />
+            </Canvas>
+
+            <Canvas x:Key="ErrorIcon" Width="24" Height="24">
+                <Path Data="M11,15H13V17H11V15M11,7H13V13H11V7M12,2C6.47,2 2,6.5 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20Z" Fill="White" />
+            </Canvas>
+
+            <Canvas x:Key="WarningIcon" Width="24" Height="24">
+                <Path Data="M12,2L1,21H23M12,6L19.53,19H4.47M11,10V14H13V10M11,16V18H13V16" Fill="White" />
+            </Canvas>
+
+            <Canvas x:Key="CloseIcon" Width="76" Height="76" Clip="F1 M 0,0L 76,0L 76,76L 0,76L 0,0">
+                <Path Width="31.6666" Height="31.6667" Canvas.Left="22.1666" Canvas.Top="22.1667" Stretch="Fill" Fill="#FF000000" Data="F1 M 26.9166,22.1667L 37.9999,33.25L 49.0832,22.1668L 53.8332,26.9168L 42.7499,38L 53.8332,49.0834L 49.0833,53.8334L 37.9999,42.75L 26.9166,53.8334L 22.1666,49.0833L 33.25,38L 22.1667,26.9167L 26.9166,22.1667 Z "/>
+            </Canvas>
+
+            <Style TargetType="Border" x:Key="NotificationBorder">
+                <Setter Property="Padding" Value="15" />
+                <Setter Property="Effect">
+                    <Setter.Value>
+                        <DropShadowEffect Opacity="0.5" ShadowDepth="1" BlurRadius="2" />
+                    </Setter.Value>
+                </Setter>
+
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Cursor" Value="Hand"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style TargetType="Rectangle" x:Key="NotificationIcon">
+                <Setter Property="Width" Value="24"/>
+                <Setter Property="Height" Value="24"/>
+                <Setter Property="Margin" Value="0,5,5,5" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="Fill" Value="White"/>
+            </Style>
+
+            <Style TargetType="TextBlock" x:Key="NotificationText">
+                <Setter Property="Foreground" Value="White" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                <Setter Property="TextWrapping" Value="Wrap" />
+                <Setter Property="Margin" Value="15,0,0,0" />
+            </Style>
+
+            <Style TargetType="{x:Type Button}" x:Key="NotificationCloseButton">
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="Foreground" Value="#FFF" />
+                <Setter Property="FontSize" Value="15" />
+                <Setter Property="SnapsToDevicePixels" Value="True" />
+                <Setter Property="VerticalAlignment" Value="Top" />
+                <Setter Property="HorizontalAlignment" Value="Right" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Border Background="{TemplateBinding Background}">
+                                <ContentPresenter Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" />
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#33000000" />
+                                    <Setter Property="Cursor" Value="Hand"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter Property="Background" Value="#77000000" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style TargetType="Rectangle" x:Key="CloseButtonIcon">
+                <Setter Property="Width" Value="10"/>
+                <Setter Property="Height" Value="10"/>
+                <Setter Property="Fill" Value="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}" />
+            </Style>
+
         </ResourceDictionary>
+
     </Application.Resources>
 </Application>
