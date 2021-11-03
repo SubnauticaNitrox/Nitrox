@@ -14,6 +14,7 @@ namespace NitroxClient.Communication.Abstract
         void ProcessSessionPolicy(MultiplayerSessionPolicy policy);
         void RequestSessionReservation(PlayerSettings playerSettings, AuthenticationContext authenticationContext);
         void ProcessReservationResponsePacket(MultiplayerSessionReservation reservation);
+        void ProcessJoinQueueDequeuedPacket(JoinQueueDequeued packet);
         void JoinSession();
         void Disconnect();
     }

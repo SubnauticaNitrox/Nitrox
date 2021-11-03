@@ -78,7 +78,20 @@ namespace NitroxClient.Communication.MultiplayerSession
 
         public void ProcessReservationResponsePacket(MultiplayerSessionReservation reservation)
         {
+            if (reservation.ReservationState == MultiplayerSessionReservationState.ENQUEUED_IN_JOIN_QUEUE)
+            {
+                // TODO: Add this message in other languages
+                Log.InGame("Waiting in join queue...");
+                return;
+            }
+
             Reservation = reservation;
+            CurrentState.NegotiateReservation(this);
+        }
+
+        public void ProcessJoinQueueDequeuedPacket(JoinQueueDequeued packet)
+        {
+            Reservation = new MultiplayerSessionReservation(packet.CorrelationId, packet.PlayerId, packet.ReservationKey);
             CurrentState.NegotiateReservation(this);
         }
 
