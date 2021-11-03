@@ -22,6 +22,9 @@ namespace NitroxModel.MultiplayerSession
 
         [Description("The server is using hardcore gamemode, player is dead.")]
         HARDCORE_PLAYER_DEAD = 1 << 4,
+
+        [Description("Another user is currently joining the server.")]
+        ENQUEUED_IN_JOIN_QUEUE = 1 << 5,
     }
 
     public static class MultiplayerSessionReservationStateExtensions
