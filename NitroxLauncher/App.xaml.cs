@@ -12,6 +12,7 @@ namespace NitroxLauncher
         protected override void OnStartup(StartupEventArgs e)
         {
             Log.Setup();
+            LauncherNotifier.Setup();
 
             // Set default style for all windows to the style with the target type 'Window' (in App.xaml).
             FrameworkElement.StyleProperty.OverrideMetadata(typeof(Window),
@@ -37,6 +38,12 @@ namespace NitroxLauncher
             }
 
             base.OnStartup(e);
+        }
+
+        protected override void OnExit(ExitEventArgs e)
+        {
+            LauncherNotifier.Shutdown();
+            base.OnExit(e);
         }
 
         private void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
