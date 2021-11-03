@@ -54,6 +54,9 @@ namespace NitroxLauncher
                 // This pirate detection subscriber is immediately invoked if pirate has been detected right now.
                 PirateDetection.PirateDetected += (o, eventArgs) =>
                 {
+                    LauncherLogic.Config.SubnauticaPlatform = Platform.PIRATED;
+                    LauncherLogic.Config.IsPirated = true;
+
                     WebBrowser webBrowser = new()
                     {
                         HorizontalAlignment = HorizontalAlignment.Stretch,

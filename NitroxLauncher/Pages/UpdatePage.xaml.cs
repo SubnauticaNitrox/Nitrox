@@ -10,9 +10,10 @@ namespace NitroxLauncher.Pages
 {
     public partial class UpdatePage : PageBase
     {
+        public static readonly Uri WEBSITE_LINK = new("https://nitrox.rux.gg/download");
+
         private readonly ObservableCollection<NitroxChangelog> nitroxChangelogs = new();
 
-        public bool IsUpToDate => LauncherLogic.Config.IsUpToDate;
         public string Version => LauncherLogic.Version;
 
         public UpdatePage()
@@ -42,7 +43,8 @@ namespace NitroxLauncher.Pages
         private void UpdatePage_Loaded(object sender, RoutedEventArgs e)
         {
             LauncherLogic.Config.PropertyChanged += OnLogicPropertyChanged;
-            OnPropertyChanged(nameof(IsUpToDate));
+            OnLogicPropertyChanged(null, null);
+
         }
 
         private void UpdatePage_UnLoaded(object sender, RoutedEventArgs e)
@@ -52,7 +54,16 @@ namespace NitroxLauncher.Pages
 
         private void OnLogicPropertyChanged(object sender, PropertyChangedEventArgs args)
         {
-            OnPropertyChanged(nameof(IsUpToDate));
+            if (LauncherLogic.Config.IsUpToDate)
+            {
+                UpdateAvailableBox.Visibility = Visibility.Hidden;
+                NoUpdateAvailableBox.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                NoUpdateAvailableBox.Visibility = Visibility.Hidden;
+                UpdateAvailableBox.Visibility = Visibility.Visible;
+            }
         }
     }
 }

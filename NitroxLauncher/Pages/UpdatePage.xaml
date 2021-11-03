@@ -5,6 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:NitroxLauncher.Models"
       xmlns:converters="clr-namespace:NitroxLauncher.Models.Converters"
+      xmlns:pages="clr-namespace:NitroxLauncher.Pages"
       DataContext="{Binding RelativeSource={RelativeSource Self}}"
       mc:Ignorable="d" 
       d:DesignHeight="800" d:DesignWidth="800"
@@ -36,17 +37,37 @@
             <Border CornerRadius="12" Background="#151516" Margin="0,0,0,0" Padding="22,22,22,0"></Border>
 
             <Grid Margin="22,22,22,0" VerticalAlignment="Top">
-                <Image Source="{StaticResource NitroxIcon}" Width="56" Height="56" HorizontalAlignment="Center" VerticalAlignment="Top" />
-                
-                <TextBlock FontSize="16" Foreground="White" TextWrapping="Wrap" Margin="0,72,0,0" VerticalAlignment="Top" FontWeight="Bold" TextAlignment="Center" Text="No Update Available"/>
-                <TextBlock FontWeight="Normal" FontSize="14"  Foreground="White" TextWrapping="Wrap" Margin="0,98,0,-18" VerticalAlignment="Top" TextAlignment="Center">
-                    <Run Text="You are already using the latest version of Nitrox"/>
-                    <Run Text="{Binding Version, Mode=OneTime, FallbackValue='.'}"/>
-                    <LineBreak/>
-                    <LineBreak/>
-                    <Run Text="Missing a feature? Check the changelogs if the feature has already been implemented. If you experience any other issues, please contact support."/>
-                </TextBlock>
+                <Image Source="{StaticResource NitroxIcon}" ToolTip="Welcome aboard captain !" Width="56" Height="56" HorizontalAlignment="Center" VerticalAlignment="Top" />
+
+                <Grid x:Name="NoUpdateAvailableBox" Visibility="Visible">
+                    <TextBlock FontSize="16" Foreground="White" TextWrapping="Wrap" Margin="0,72,0,0" VerticalAlignment="Top" FontWeight="Bold" TextAlignment="Center" Text="No Update Available"/>
+
+                    <TextBlock FontWeight="Normal" FontSize="14"  Foreground="White" TextWrapping="Wrap" Margin="0,98,0,-18" VerticalAlignment="Top" TextAlignment="Center">
+                        <Run Text="You are already using the latest version of Nitrox"/>
+                        <Run Text="{Binding Version, Mode=OneTime, FallbackValue='.'}"/>
+                        <LineBreak/>
+                        <LineBreak/>
+                        
+                        <Run Text="Missing a feature? Check the changelogs if the feature has already been implemented. If you experience any other issues, please contact support."/>
+                    </TextBlock>
+                </Grid>
+
+                <Grid x:Name="UpdateAvailableBox" Visibility="Hidden">
+                    <TextBlock FontSize="16" Foreground="White" TextWrapping="Wrap" Margin="0,72,0,0" VerticalAlignment="Top" FontWeight="Bold" TextAlignment="Center" Text="New Nitrox Update Available"/>
+
+                    <TextBlock FontWeight="Normal" FontSize="14"  Foreground="White" TextWrapping="Wrap" Margin="0,98,0,-18" VerticalAlignment="Top" TextAlignment="Center">
+                        <Run Text="Time for an update! A new version of Nitrox is now available to download. Back up your content and get the latest version to start using all the latest features and improvements."/>
+                        <LineBreak />
+                    
+                        <Button Style="{StaticResource LargeButton}" ToolTip="Download the latest version" Background="#FF007BFF" Width="149" HorizontalAlignment="Stretch" Margin="24,10,24,8" Height="32">
+                            <Hyperlink NavigateUri="{x:Static pages:UpdatePage.WEBSITE_LINK}" RequestNavigate="OnRequestNavigate" Foreground="White" TextDecorations="{x:Null}">
+                                    <TextBlock HorizontalAlignment="Center" FontSize="12" FontWeight="Regular" Foreground="White"><Run Text="Download update"/></TextBlock>
+                            </Hyperlink>
+                        </Button>
+                    </TextBlock>
+                </Grid>
             </Grid>
+
         </Grid>
 
         <Grid Grid.Row="3" Grid.ColumnSpan="2" Margin="10">
