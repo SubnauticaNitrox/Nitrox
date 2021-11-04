@@ -21,6 +21,9 @@ namespace NitroxServer.GameLogic
         private readonly ThreadSafeDictionary<string, PlayerContext> reservations = new();
         private readonly ThreadSafeSet<string> reservedPlayerNames = new("Player"); // "Player" is often used to identify the local player and should not be used by any user
 
+        public ThreadSafeQueue<KeyValuePair<NitroxConnection, MultiplayerSessionReservationRequest>> JoinQueue { get; } = new();
+        public bool PlayerCurrentlyJoining { get; set; }
+
         private readonly ServerConfig serverConfig;
         private ushort currentPlayerId;
 
@@ -52,6 +55,15 @@ namespace NitroxServer.GameLogic
             {
                 MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.AUTHENTICATION_FAILED;
                 return new MultiplayerSessionReservation(correlationId, rejectedState);
+            }
+
+            if (PlayerCurrentlyJoining)
+            {
+                JoinQueue.Enqueue(new KeyValuePair<NitroxConnection, MultiplayerSessionReservationRequest>(
+                    connection,
+                    new MultiplayerSessionReservationRequest(correlationId, playerSettings, authenticationContext)));
+
+                return new MultiplayerSessionReservation(correlationId, MultiplayerSessionReservationState.ENQUEUED_IN_JOIN_QUEUE);
             }
 
             if (reservedPlayerNames.Count >= serverConfig.MaxConnections)

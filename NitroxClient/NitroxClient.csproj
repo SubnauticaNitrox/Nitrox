@@ -86,6 +86,7 @@
     <Compile Include="Communication\Packets\Processors\ItemContainerAddProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ItemContainerRemoveProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ItemPositionProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\JoinQueueDequeuedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\KnownTechEntryAddProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\LifeMixinChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\MedicalCabinetClickedProcessor.cs" />
