@@ -89,12 +89,6 @@ namespace NitroxClient.Communication.MultiplayerSession
             CurrentState.NegotiateReservation(this);
         }
 
-        public void ProcessJoinQueueDequeuedPacket(JoinQueueDequeued packet)
-        {
-            Reservation = new MultiplayerSessionReservation(packet.CorrelationId, packet.PlayerId, packet.ReservationKey);
-            CurrentState.NegotiateReservation(this);
-        }
-
         public void JoinSession()
         {
             CurrentState.JoinSession(this);

@@ -144,7 +144,6 @@
     <Compile Include="Packets\ItemContainerAdd.cs" />
     <Compile Include="Packets\ItemContainerRemove.cs" />
     <Compile Include="Packets\ItemPosition.cs" />
-    <Compile Include="Packets\JoinQueueDequeued.cs" />
     <Compile Include="Packets\KnownTechEntry.cs" />
     <Compile Include="Packets\LiveMixinHealthChanged.cs" />
     <Compile Include="Packets\MedicalCabinetClicked.cs" />
@@ -174,6 +173,7 @@
     <Compile Include="Packets\PlayerKicked.cs" />
     <Compile Include="Packets\PlayerQuickSlotsBindingChanged.cs" />
     <Compile Include="Packets\PlayerStats.cs" />
+    <Compile Include="Packets\PlayerSyncFinished.cs" />
     <Compile Include="Packets\PlayerTeleported.cs" />
     <Compile Include="Packets\PlayFMODAsset.cs" />
     <Compile Include="Packets\PlayFMODCustomEmitter.cs" />
