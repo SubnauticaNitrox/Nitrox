@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Unity;
@@ -104,6 +105,20 @@ namespace NitroxServer.GameLogic
 
             reservations.Add(reservationKey, playerContext);
             assetPackage.ReservationKey = reservationKey;
+
+            PlayerCurrentlyJoining = true;
+
+            // One-minute timeout for initial sync
+            Task.Delay(60000).ContinueWith(_ =>
+            {
+                PlayerCurrentlyJoining = false;
+
+                // TODO: Add this message in other languages
+                player.SendPacket(new PlayerKicked("Took too long for initial sync to complete"));
+                PlayerDisconnected(player.Connection);
+
+                SendPacketToOtherPlayers(new Disconnect(player.Id), player);
+            }).Start();
 
             return new MultiplayerSessionReservation(correlationId, playerId, reservationKey);
         }

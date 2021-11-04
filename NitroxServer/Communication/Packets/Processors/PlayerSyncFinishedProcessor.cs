@@ -17,11 +17,13 @@ namespace NitroxServer.Communication.Packets.Processors
         {
             playerManager.PlayerCurrentlyJoining = false;
 
-            var keyValuePair = playerManager.JoinQueue.Dequeue();
-            NitroxConnection requestConnection = keyValuePair.Key;
-            MultiplayerSessionReservationRequest request = keyValuePair.Value;
-
-            playerManager.ReservePlayerContext(requestConnection, request.PlayerSettings, request.AuthenticationContext, request.CorrelationId);
+            if (playerManager.JoinQueue.Count > 0)
+            {
+                var keyValuePair = playerManager.JoinQueue.Dequeue();
+                NitroxConnection requestConnection = keyValuePair.Key;
+                MultiplayerSessionReservationRequest request = keyValuePair.Value;
+                playerManager.ReservePlayerContext(requestConnection, request.PlayerSettings, request.AuthenticationContext, request.CorrelationId);
+            }
         }
     }
 }
