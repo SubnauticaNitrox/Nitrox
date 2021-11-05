@@ -9,7 +9,7 @@ namespace NitroxClient.GameLogic.Settings
     public class NitroxSettingsManager
     {
         // Lists of settings sorted by headings
-        public Dictionary<string, List<Setting>> NitroxSettings;
+        public readonly Dictionary<string, List<Setting>> NitroxSettings;
 
         public NitroxSettingsManager()
         {
@@ -24,10 +24,10 @@ namespace NitroxClient.GameLogic.Settings
             // Examples:
             // AddSetting("Subtitles", new Setting("Test Slidder", NitroxPrefs.SliderPref, newValue => NitroxPrefs.SliderPref.Value = newValue, 0.1f, 1f, 0.4f));
             // AddSetting("Advanced", new Setting("Test list", NitroxPrefs.ListPref, newIndex => NitroxPrefs.ListPref.Value = newIndex, new string[] { "option 1", "option 2", "option 3" }));
-            AddSetting(Language.main.Get("Nitrox_StreamerSettings"), new Setting(Language.main.Get("Nitrox_SilenceChat"), NitroxPrefs.SilenceChatPref, silence => NitroxPrefs.SilenceChatPref.Value = silence));
-            AddSetting(Language.main.Get("Nitrox_StreamerSettings"), new Setting(Language.main.Get("Nitrox_HideIp"), NitroxPrefs.HideIpPref, hide =>
+            AddSetting(Language.main.Get("Nitrox_StreamerSettings"), new Setting(Language.main.Get("Nitrox_SilenceChat"), NitroxPrefs.SilenceChat, silence => NitroxPrefs.SilenceChat.Value = silence));
+            AddSetting(Language.main.Get("Nitrox_StreamerSettings"), new Setting(Language.main.Get("Nitrox_HideIp"), NitroxPrefs.HideIp, hide =>
             {
-                NitroxPrefs.HideIpPref.Value = hide;
+                NitroxPrefs.HideIp.Value = hide;
                 MainMenuMultiplayerPanel.Main.RefreshServerEntries();
             }));
         }
@@ -41,7 +41,7 @@ namespace NitroxClient.GameLogic.Settings
             }
             else
             {
-                NitroxSettings.Add(heading, new List<Setting>() { setting });
+                NitroxSettings.Add(heading, new List<Setting> { setting });
             }
         }
 
@@ -49,18 +49,18 @@ namespace NitroxClient.GameLogic.Settings
         {
             // These fields are used by each type of setting
             // To get the value, you need to type setting.GetValue<type>() or (type)NitroxPrefs.MyPref.Value when you don't have the setting
-            public SettingType SettingType;
-            public string Label;
-            public NitroxPref NitroxPref;
-            public Delegate Callback;
+            public readonly SettingType SettingType;
+            public readonly string Label;
+            public readonly NitroxPref NitroxPref;
+            public readonly Delegate Callback;
 
             // Slider specifics
-            public float SliderMinValue;
-            public float SliderMaxValue;
-            public float SliderDefaultValue;
+            public readonly float SliderMinValue;
+            public readonly float SliderMaxValue;
+            public readonly float SliderDefaultValue;
 
             // List specifics
-            public string[] ListItems;
+            public readonly string[] ListItems;
 
             /// <summary>Base constructor for the class</summary>
             private Setting(SettingType settingType, string label, NitroxPref nitroxPref, Delegate callback)
@@ -88,9 +88,9 @@ namespace NitroxClient.GameLogic.Settings
                 ListItems = listItems;
             }
 
-            public T GetValue<T>()
+            public T GetValue<T>() where T : IConvertible
             {
-                return (T)NitroxPref.Value;
+                return ((NitroxPref<T>)NitroxPref).Value;
             }
         }
 

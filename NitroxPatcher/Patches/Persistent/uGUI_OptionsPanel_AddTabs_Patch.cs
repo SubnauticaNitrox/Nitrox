@@ -35,7 +35,6 @@ namespace NitroxPatcher.Patches.Persistent
                     }
                 }
             }
-            
         }
 
         public override void Patch(Harmony harmony)

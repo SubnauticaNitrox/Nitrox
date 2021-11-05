@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
-using NitroxClient.GameLogic.PlayerPreferences;
+using NitroxClient.GameLogic.Settings;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Serialization;
@@ -130,7 +130,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         {
             foreach (ServerList.Entry entry in ServerList.Instance.Entries)
             {
-                CreateServerButton($"{Language.main.Get("Nitrox_ConnectTo")} <b>{entry.Name}</b>\n{(NitroxPrefs.HideIpPref.Value ? "****" : entry.Address)}:{(NitroxPrefs.HideIpPref.Value ? "****" : entry.Port)}", entry.Address.ToString(), entry.Port.ToString());
+                CreateServerButton($"{Language.main.Get("Nitrox_ConnectTo")} <b>{entry.Name}</b>\n{(NitroxPrefs.HideIp.Value ? "****" : entry.Address)}:{(NitroxPrefs.HideIp.Value ? "****" : entry.Port)}", entry.Address.ToString(), entry.Port.ToString());
             }
         }
 
@@ -179,7 +179,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             serverPortInput = serverPortInput.Trim();
             ServerList.Instance.Add(new ServerList.Entry(serverNameInput, serverHostInput, serverPortInput));
             ServerList.Instance.Save();
-            CreateServerButton($"{Language.main.Get("Nitrox_ConnectTo")} <b>{serverNameInput}</b>\n{(NitroxPrefs.HideIpPref.Value ? "****" : serverHostInput)}:{(NitroxPrefs.HideIpPref.Value ? "****" : serverPortInput)}", serverHostInput, serverPortInput);
+            CreateServerButton($"{Language.main.Get("Nitrox_ConnectTo")} <b>{serverNameInput}</b>\n{(NitroxPrefs.HideIp.Value ? "****" : serverHostInput)}:{(NitroxPrefs.HideIp.Value ? "****" : serverPortInput)}", serverHostInput, serverPortInput);
             HideAddServerWindow();
         }
 

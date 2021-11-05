@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.GameLogic.ChatUI;
-using NitroxClient.GameLogic.PlayerPreferences;
+using NitroxClient.GameLogic.Settings;
 using NitroxModel.Core;
 using NitroxModel.Logger;
 using UnityEngine;
@@ -55,7 +55,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
 
             yield return new WaitForEndOfFrame(); //Needed so Select() works on initialization
             IsReady = true;
-            if (NitroxPrefs.SilenceChatPref.Value)
+            if (NitroxPrefs.SilenceChat.Value)
             {
                 Log.InGame(Language.main.Get("Nitrox_SilencedChatNotif"));
             }
