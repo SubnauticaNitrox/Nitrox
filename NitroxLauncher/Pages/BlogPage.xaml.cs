@@ -33,7 +33,8 @@ namespace NitroxLauncher.Pages
                 {
                     Log.Error(ex, "Error while trying to display nitrox blogs");
                 }
-            }));
+            }
+            ));
         }
     }
 }

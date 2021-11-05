@@ -14,6 +14,17 @@ namespace NitroxLauncher.Pages
         public OptionPage()
         {
             InitializeComponent();
+
+            Loaded += (s, e) =>
+            {
+                LauncherLogic.Config.PropertyChanged += OnLogicPropertyChanged;
+                OnPropertyChanged(nameof(PathToSubnautica));
+            };
+
+            Unloaded += (s, e) =>
+            {
+                LauncherLogic.Config.PropertyChanged -= OnLogicPropertyChanged;
+            };
         }
 
         private async void ChangeOptions_Click(object sender, RoutedEventArgs e)
@@ -47,16 +58,6 @@ namespace NitroxLauncher.Pages
                 MessageBox.Show("The selected directory does not contain the required Subnautica.exe file.", "Invalid Subnautica directory", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
-
-        private void OptionPage_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            LauncherLogic.Config.PropertyChanged += OnLogicPropertyChanged;
-            OnPropertyChanged(nameof(PathToSubnautica));
-        }
-
-        private void OptionPage_OnUnloaded(object sender, RoutedEventArgs e)
-        {
-            LauncherLogic.Config.PropertyChanged -= OnLogicPropertyChanged;        }
 
         private void OnLogicPropertyChanged(object sender, PropertyChangedEventArgs args)
         {

@@ -16,6 +16,17 @@ namespace NitroxLauncher.Pages
         public LaunchGamePage()
         {
             InitializeComponent();
+
+            Loaded += (s, e) =>
+            {
+                LauncherLogic.Config.PropertyChanged += LogicPropertyChanged;
+                LogicPropertyChanged(null, null);
+            };
+
+            Unloaded += (s, e) =>
+            {
+                LauncherLogic.Config.PropertyChanged -= LogicPropertyChanged;
+            };
         }
 
         private async void SinglePlayerButton_Click(object sender, RoutedEventArgs e)
@@ -40,17 +51,6 @@ namespace NitroxLauncher.Pages
             {
                 MessageBox.Show(ex.ToString(), "Error while starting in multiplayer mode", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-        }
-
-        private void Page_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            LauncherLogic.Config.PropertyChanged += LogicPropertyChanged;
-            LogicPropertyChanged(null, null);
-        }
-
-        private void Page_OnUnloaded(object sender, RoutedEventArgs e)
-        {
-            LauncherLogic.Config.PropertyChanged -= LogicPropertyChanged;
         }
 
         private void LogicPropertyChanged(object sender, PropertyChangedEventArgs args)

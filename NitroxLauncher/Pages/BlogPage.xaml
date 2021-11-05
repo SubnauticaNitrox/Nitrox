@@ -22,12 +22,12 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="106"/>
-            <RowDefinition Height="57"/>
+            <RowDefinition Height="37"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0" Grid.ColumnSpan="2" Margin="0,0,0,3">
-            <TextBlock FontSize="32" Foreground="White" TextWrapping="Wrap" Margin="0" VerticalAlignment="Bottom" FontWeight="Bold" Text="Blogs"/>
+            <TextBlock FontSize="32" Foreground="White" TextWrapping="Wrap" Margin="0" VerticalAlignment="Bottom" FontWeight="Bold" Text="Blog"/>
         </Grid>
 
         <Grid Grid.Row="1" Grid.ColumnSpan="2">

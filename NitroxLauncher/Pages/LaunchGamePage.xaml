@@ -8,9 +8,7 @@
                 xmlns:converters="clr-namespace:NitroxLauncher.Models.Converters"
                 DataContext="{Binding RelativeSource={RelativeSource Self}}"
                 mc:Ignorable="d" d:DesignWidth="766"
-                Title="Launch Game" Height="1020"
-                Loaded="Page_OnLoaded"
-                Unloaded="Page_OnUnloaded">
+                Title="Launch Game" Height="1020">
 
     <local:PageBase.Resources>
         <BitmapImage x:Key="PlayGameImage" UriSource="pack://application:,,,/Images/PlayGameImage.png" />

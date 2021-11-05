@@ -38,18 +38,17 @@ namespace NitroxLauncher.Pages
                     Log.Error(ex, "Error while trying to display nitrox changelogs");
                 }
             }));
-        }
 
-        private void UpdatePage_Loaded(object sender, RoutedEventArgs e)
-        {
-            LauncherLogic.Config.PropertyChanged += OnLogicPropertyChanged;
-            OnLogicPropertyChanged(null, null);
+            Loaded += (s, e) =>
+            {
+                LauncherLogic.Config.PropertyChanged += OnLogicPropertyChanged;
+                OnLogicPropertyChanged(null, null);
+            };
 
-        }
-
-        private void UpdatePage_UnLoaded(object sender, RoutedEventArgs e)
-        {
-            LauncherLogic.Config.PropertyChanged -= OnLogicPropertyChanged;
+            Unloaded += (s, e) =>
+            {
+                LauncherLogic.Config.PropertyChanged -= OnLogicPropertyChanged;
+            };
         }
 
         private void OnLogicPropertyChanged(object sender, PropertyChangedEventArgs args)

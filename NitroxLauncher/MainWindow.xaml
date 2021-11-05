@@ -7,9 +7,8 @@
         xmlns:converters="clr-namespace:NitroxLauncher.Models.Converters"
         mc:Ignorable="d"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
-        Title="Nitrox Launcher" Height="623" MinHeight="642" Width="1024" MinWidth="1024" 
+        Title="Nitrox Launcher" Height="642" MinHeight="642" Width="1024" MinWidth="1024" 
         WindowStyle="None" WindowStartupLocation="CenterScreen"
-        Loaded="Window_Loaded"
         Closing="OnClosing"
         Background="Black">
 
@@ -149,7 +148,7 @@
                 </StackPanel>
             </Grid>
             
-            <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Grid.Column="1" Template="{DynamicResource ScrollViewerMainframe}" x:Name="ScrollViewerMainframe">
+            <ScrollViewer Background="Black" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Grid.Column="1" Template="{DynamicResource ScrollViewerMainframe}" x:Name="ScrollViewerMainframe">
                 <Frame Grid.Column="1" Background="Black" x:Name="MainFrame" NavigationUIVisibility="Hidden" Content="{Binding FrameContent}" Width="766" />
             </ScrollViewer>
         </Grid>

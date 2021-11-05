@@ -7,9 +7,7 @@
                          mc:Ignorable="d"
                          d:DesignHeight="470" d:DesignWidth="719"
                          DataContext="{Binding RelativeSource={RelativeSource Self}}"
-                         Title="OptionPage"
-                         Loaded="OptionPage_OnLoaded"
-                         Unloaded="OptionPage_OnUnloaded">
+                         Title="OptionPage">
 
     <local:PageBase.Resources>
         <BitmapImage x:Key="SubnauticaIcon" UriSource="pack://application:,,,/images/subnauticaIcon.png"/>
