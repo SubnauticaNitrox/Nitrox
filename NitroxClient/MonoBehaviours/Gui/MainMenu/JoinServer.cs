@@ -11,7 +11,6 @@ using NitroxClient.GameLogic.PlayerModel.ColorSwap.Strategy;
 using NitroxClient.GameLogic.PlayerPreferences;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
-using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.MultiplayerSession;
 using NitroxModel_Subnautica.DataStructures;
@@ -47,6 +46,8 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         private bool showingPasswordWindow;
         private bool passwordEntered;
         private string serverPassword = string.Empty;
+
+        public string MenuName => joinServerMenu.AliveOrNull()?.name ?? throw new Exception("Menu not yet initialized");
 
         public void Setup(GameObject saveGameMenu)
         {
