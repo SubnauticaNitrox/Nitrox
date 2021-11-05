@@ -19,8 +19,6 @@ namespace NitroxClient.Communication.Packets.Processors
 
         private readonly Color32 serverMessageColor = new Color32(0x8c, 0x00, 0xFF, 0xFF);
 
-        private bool silenceChat => NitroxPrefs.SilenceChat;
-
         public ChatMessageProcessor(PlayerManager remotePlayerManager, PlayerChatManager playerChatManager)
         {
             this.remotePlayerManager = remotePlayerManager;
@@ -51,7 +49,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
             RemotePlayer remotePlayerInstance = remotePlayer.Value;
             playerChatManager.AddMessage(remotePlayerInstance.PlayerName, message.Text, remotePlayerInstance.PlayerSettings.PlayerColor.ToUnity());
-            if (!silenceChat)
+            if (!NitroxPrefs.SilenceChatPref.Value)
             {
                 playerChatManager.ShowChat();
             }
@@ -60,7 +58,7 @@ namespace NitroxClient.Communication.Packets.Processors
         private void LogServerMessage(ChatMessage message)
         {
             playerChatManager.AddMessage("Server", message.Text, serverMessageColor);
-            if (!silenceChat)
+            if (!NitroxPrefs.SilenceChatPref.Value)
             {
                 playerChatManager.ShowChat();
             }

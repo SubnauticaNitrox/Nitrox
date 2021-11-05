@@ -38,5 +38,5 @@
   "Nitrox_WaitingPassword": "Waiting for server password input...",
   "Nitrox_WaitingUserInput": "Waiting for user input...",
   "Nitrox_LaunchGame": "Launching game...",
-  "Nitrox_StreamerModeNotif": "Streamer mode is enabled"
+  "Nitrox_SilencedChatNotif": "Chat is silenced"
 }

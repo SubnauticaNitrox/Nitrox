@@ -55,9 +55,9 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
 
             yield return new WaitForEndOfFrame(); //Needed so Select() works on initialization
             IsReady = true;
-            if (NitroxPrefs.SilenceChat && NitroxPrefs.HideIp)
+            if (NitroxPrefs.SilenceChatPref.Value)
             {
-                Log.InGame(Language.main.Get("Nitrox_StreamerModeNotif"));
+                Log.InGame(Language.main.Get("Nitrox_SilencedChatNotif"));
             }
         }
 

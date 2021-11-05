@@ -17,6 +17,9 @@
   "Nitrox_EnterName": "Geb den Spielername ein",
   "Nitrox_SubmitPassword": "Bestätige Passwort",
   "Nitrox_MultiplayerLoaded": "Mehrspieler Client wurde gestartet...",
+  "Nitrox_StreamerSettings": "Streamer Einstellungen",
+  "Nitrox_SilenceChat": "Chat stummschalten",
+  "Nitrox_HideIp": "IPs verstecken",
   // In game menu
   "Nitrox_LoadingScreenWarn": "Erwarte spielbrechende Fehler",
   "Nitrox_WorldSettling": "Erwarte Fertigstellung der Welt",
@@ -34,5 +37,6 @@
   "Nitrox_DisconnectedSession": "Die Verbindung wurde unterbrochen",
   "Nitrox_WaitingPassword": "Warte auf Eingabe des Server Passworts...",
   "Nitrox_WaitingUserInput": "Warte auf Nutzereingaben...",
-  "Nitrox_LaunchGame": "Starte das Spiel..."
+  "Nitrox_LaunchGame": "Starte das Spiel...",
+  "Nitrox_SilencedChatNotif": "Chat ist stummgeschaltet"
 }

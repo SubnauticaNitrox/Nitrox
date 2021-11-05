@@ -9,7 +9,6 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
     public class MainMenuMods : MonoBehaviour
     {
         private MainMenuRightSide rightSide;
-        private MainMenuMultiplayerPanel mainMenuMultiplayerPanel;
 
         private void OnEnable()
         {
@@ -45,17 +44,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
             Button showLoadedMultiplayerButton = showLoadedMultiplayer.GetComponent<Button>();
             showLoadedMultiplayerButton.onClick.RemoveAllListeners();
-            showLoadedMultiplayerButton.onClick.AddListener(delegate () {
-                // Need to refresh the servers names if streamer mode is enabled or disabled
-                // The easiest way of doing it is by repopulating each time
-                foreach (Transform child in mainMenuMultiplayerPanel.SavedGameAreaContent)
-                {
-                    Destroy(child.gameObject);
-                }
-                mainMenuMultiplayerPanel.CreateButton(Language.main.Get("Nitrox_AddServer"), mainMenuMultiplayerPanel.ShowAddServerWindow);
-                mainMenuMultiplayerPanel.LoadSavedServers();
-                ShowMultiplayerMenu();
-            });
+            showLoadedMultiplayerButton.onClick.AddListener(ShowMultiplayerMenu);
 
             GameObject savedGamesRef = rightSide.gameObject.RequireGameObject("SavedGames");
             GameObject loadedMultiplayer = Instantiate(savedGamesRef, rightSide.transform);
@@ -66,8 +55,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             Destroy(loadedMultiplayer.RequireGameObject("Scroll View/Viewport/SavedGameAreaContent/NewGame"));
             Destroy(loadedMultiplayer.GetComponent<MainMenuLoadPanel>());
 
-            mainMenuMultiplayerPanel = loadedMultiplayer.AddComponent<MainMenuMultiplayerPanel>();
-            mainMenuMultiplayerPanel.Setup(loadedMultiplayer, savedGamesRef);
+            loadedMultiplayer.AddComponent<MainMenuMultiplayerPanel>().Setup(loadedMultiplayer, savedGamesRef);
 
             rightSide.groups.Add(loadedMultiplayer.GetComponent<MainMenuGroup>());
 

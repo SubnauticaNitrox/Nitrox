@@ -174,9 +174,6 @@
     <Compile Include="Patches\Dynamic\ToggleLights_OnPoweredChanged_Patch.cs" />
     <Compile Include="Patches\Dynamic\ToggleLights_SetLightsActive_Patch.cs" />
     <Compile Include="Patches\Dynamic\uGUI_OnApplicationQuit_Patch.cs" />
-    <Compile Include="Patches\Persistent\uGUI_TabbedControlsPanel_AddHeading_Patch.cs" />
-    <Compile Include="Patches\Persistent\uGUI_OptionsPanel_AddGeneralTab_Patch.cs" />
-    <Compile Include="Patches\Persistent\uGUI_OptionsPanel_AddBindings_Patch.cs" />
     <Compile Include="Patches\Dynamic\uGUI_SignInput_OnDeselect_Patch.cs" />
     <Compile Include="Patches\Dynamic\UniqueIdentifier_Id_Getter_Patch.cs" />
     <Compile Include="Patches\Dynamic\Utils_PlayFMODAsset_Patch.cs" />
@@ -198,13 +195,15 @@
     <Compile Include="Patches\Persistent\GameInput_Initialize_Patch.cs" />
     <Compile Include="Patches\Persistent\GameInput_SetupDefaultKeyboardBindings_Patch.cs" />
     <Compile Include="Patches\Persistent\Language_LoadLanguageFile_Patch.cs" />
+    <Compile Include="Patches\Persistent\MainMenuRightSide_OpenGroup_Patch.cs" />
     <Compile Include="Patches\Persistent\PAXTerrainController_LoadAsync_Patch.cs" />
     <Compile Include="Patches\Persistent\ProtobufSerializer_Deserialize_Patch.cs" />
     <Compile Include="Patches\Persistent\ProtobufSerializer_Serialize_Patch.cs" />
     <Compile Include="Patches\Persistent\ScreenshotManager_Initialise.Path.cs" />
     <Compile Include="Patches\Persistent\SentrySdk_Start_Patch.cs" />
     <Compile Include="Patches\Persistent\uGUI_FeedbackCollector_IsEnabled_Patch.cs" />
-    <Compile Include="Patches\Persistent\MainMenuRightSide_OpenGroup_Patch.cs" />
+    <Compile Include="Patches\Persistent\uGUI_OptionsPanel_AddBindings_Patch.cs" />
+    <Compile Include="Patches\Persistent\uGUI_OptionsPanel_AddTabs_Patch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TranspilerHelper.cs" />
   </ItemGroup>

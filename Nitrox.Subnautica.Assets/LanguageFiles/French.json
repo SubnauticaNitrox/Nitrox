@@ -38,5 +38,5 @@
   "Nitrox_WaitingPassword": "En attente du mot de passe...",
   "Nitrox_WaitingUserInput": "En attente des informations du joueur...",
   "Nitrox_LaunchGame": "Lancement du jeu...",
-  "Nitrox_StreamerModeNotif": "Le mode streamer est activé"
+  "Nitrox_SilencedChatNotif": "La discussion est en silencieux"
 }

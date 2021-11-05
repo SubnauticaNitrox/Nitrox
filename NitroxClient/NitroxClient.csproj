@@ -259,6 +259,7 @@
     <Compile Include="GameLogic\RemotePlayerManagerExtensions.cs" />
     <Compile Include="GameLogic\Rockets.cs" />
     <Compile Include="GameLogic\SeamothModulesEvent.cs" />
+    <Compile Include="GameLogic\Settings\NitroxSettingsManager.cs" />
     <Compile Include="GameLogic\Simulation\HandInteraction.cs" />
     <Compile Include="GameLogic\Simulation\LockRequest.cs" />
     <Compile Include="GameLogic\Simulation\LockRequestBase.cs" />
@@ -314,7 +315,6 @@
     <Compile Include="MonoBehaviours\Gui\MainMenu\MainMenuMods.cs" />
     <Compile Include="MonoBehaviours\Gui\MainMenu\MainMenuMultiplayerPanel.cs" />
     <Compile Include="MonoBehaviours\Gui\MainMenu\MainMenuNotification.cs" />
-    <Compile Include="MonoBehaviours\Gui\Settings\GeneralSettingsManager.cs" />
     <Compile Include="MonoBehaviours\Multiplayer.cs" />
     <Compile Include="MonoBehaviours\MultiplayerCyclops.cs" />
     <Compile Include="MonoBehaviours\MultiplayerExosuit.cs" />
