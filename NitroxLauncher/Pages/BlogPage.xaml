@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:NitroxLauncher.Models"
+      xmlns:pages="clr-namespace:NitroxLauncher.Pages"
       DataContext="{Binding RelativeSource={RelativeSource Self}}"
       mc:Ignorable="d" 
       d:DesignHeight="800" d:DesignWidth="800"
@@ -18,49 +19,61 @@
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        
+
         <Grid.RowDefinitions>
             <RowDefinition Height="106"/>
-            <RowDefinition Height="400"/>
-            <RowDefinition Height="106*"/>
-            <RowDefinition Height="323*"/>
-
+            <RowDefinition Height="57"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Grid Margin="0,0,0,1">
-            <TextBlock FontSize="32" Foreground="White" TextWrapping="Wrap" Margin="0" VerticalAlignment="Bottom" FontWeight="Bold" Text="Blog"/>
+        <Grid Grid.Row="0" Grid.ColumnSpan="2" Margin="0,0,0,3">
+            <TextBlock FontSize="32" Foreground="White" TextWrapping="Wrap" Margin="0" VerticalAlignment="Bottom" FontWeight="Bold" Text="Blogs"/>
         </Grid>
 
-        <Grid Grid.Column="0" Margin="0,22,8,0" Grid.Row="1" Grid.ColumnSpan="1">
-            <Grid VerticalAlignment="Top">
-                <StackPanel>
-                    <Border CornerRadius="12" Height="200" Margin="0" VerticalAlignment="Top">
-                        <Border.Background>
-                            <ImageBrush Stretch="UniformToFill" ImageSource="{DynamicResource VinesImage}"/>
-                        </Border.Background>
-                    </Border>
-                    
-                    <TextBlock HorizontalAlignment="Left" FontSize="10" Foreground="#7FFFFFFF" Margin="0,12,0,4" FontWeight="Bold" TextWrapping="Wrap"><Run Text="25. JUL 2021"/></TextBlock>
-                    <TextBlock FontSize="16" Foreground="#FFFFFF" Margin="0,2,0,4" FontWeight="Bold" TextWrapping="Wrap"><Run Text="Title"/></TextBlock>
-                    <TextBlock FontSize="14" Foreground="#7FFFFFFF" FontWeight="Normal" TextWrapping="Wrap"><Run Text="Exciting waters ahead! Hello everyone! We have some exciting new things coming in the next update (Soon™), and we can finally tell you all about it. Seeds to grow a world Many of you might not…"/></TextBlock>
-                </StackPanel>
-            </Grid>
+        <Grid Grid.Row="1" Grid.ColumnSpan="2">
+            <TextBlock FontSize="14" Foreground="#BFFFFFFF" TextAlignment="Left" VerticalAlignment="Top" Margin="0,12,0,0" >
+                    Read the latest news from the Nitrox team! You can view all our blogs <Hyperlink NavigateUri="{x:Static pages:BlogPage.BLOGS_LINK}" RequestNavigate="OnRequestNavigate" ToolTip="Open Nitrox guide website">here</Hyperlink>
+            </TextBlock>
         </Grid>
 
-        <Grid Grid.Column="1" Margin="8,22,0,0" Grid.Row="1" Grid.ColumnSpan="1">
-            <Grid VerticalAlignment="Top">
-                <StackPanel>
-                    <Border CornerRadius="12" Height="200" Margin="0" VerticalAlignment="Top">
-                        <Border.Background>
-                            <ImageBrush Stretch="UniformToFill" ImageSource="{DynamicResource VinesImage}"/>
-                        </Border.Background>
-                    </Border>
+        <Grid Grid.Row="2" Grid.ColumnSpan="2">
 
-                    <TextBlock HorizontalAlignment="Left" FontSize="10" Foreground="#7FFFFFFF" Margin="0,12,0,4" FontWeight="Bold" TextWrapping="Wrap"><Run Text="25. JUL 2021"/></TextBlock>
-                    <TextBlock FontSize="16" Foreground="#FFFFFF" Margin="0,2,0,4" FontWeight="Bold" TextWrapping="Wrap"><Run Text="Title"/></TextBlock>
-                    <TextBlock FontSize="14" Foreground="#7FFFFFFF" FontWeight="Normal" TextWrapping="Wrap"><Run Text="Exciting waters ahead! Hello everyone! We have some exciting new things coming in the next update (Soon™), and we can finally tell you all about it. Seeds to grow a world Many of you might not…"/></TextBlock>
-                </StackPanel>
-            </Grid>
+            <ItemsControl x:Name="Blogs">
+
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel ItemWidth="350" ItemHeight="300" Width="Auto"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type local:NitroxBlog}">
+                        <Grid Margin="0,15,15,0">
+                            <Grid VerticalAlignment="Top">
+                                <StackPanel>
+                                    <Border CornerRadius="12" Height="200" Margin="0" VerticalAlignment="Top">
+                                        <Border.Background>
+                                            <ImageBrush Stretch="UniformToFill" ImageSource="{Binding Image, TargetNullValue={StaticResource VinesImage}}" />
+                                        </Border.Background>
+                                    </Border>
+
+                                    <TextBlock HorizontalAlignment="Left" FontSize="10" Foreground="#7FFFFFFF" Margin="0,12,0,4" FontWeight="Bold" TextWrapping="Wrap">
+                                        <Run Text="{Binding Date, Mode=OneTime, StringFormat='{}{0:MMMM dd, yyyy}', TargetNullValue=''}"/>
+                                    </TextBlock>
+
+                                    <TextBlock FontSize="16" Foreground="#FFFFFF" Margin="0,2,0,4" FontWeight="Bold" TextWrapping="Wrap">
+                                        <Hyperlink NavigateUri="{Binding Url, Mode=OneTime, TargetNullValue={x:Static pages:BlogPage.BLOGS_LINK}}" RequestNavigate="OnRequestNavigate" Foreground="White" TextDecorations="{x:Null}">
+                                            <Run Text="{Binding Title, Mode=OneTime, TargetNullValue='No title'}"/>
+                                        </Hyperlink>
+                                    </TextBlock>
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+
+            </ItemsControl>
+
         </Grid>
 
     </Grid>

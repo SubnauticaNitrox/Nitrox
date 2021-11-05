@@ -50,6 +50,8 @@ namespace NitroxLauncher
         {
             // If something went wrong. Close the server if embedded.
             LauncherLogic.Instance.Dispose();
+            LauncherNotifier.Shutdown();
+
             Log.Error(e.Exception.GetBaseException().ToString()); // Gets the exception that was unhandled, not the "dispatched unhandled" exception.
             MessageBox.Show(GetExceptionError(e.Exception), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }

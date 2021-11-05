@@ -41,7 +41,7 @@
 
                         <StackPanel Grid.Column="1" Margin="22,0,0,0">
                             <TextBlock FontSize="16" Foreground="White" Margin="0,12,0,8"><Run Text="Subnautica" FontWeight="Bold" FontSize="14"></Run></TextBlock>
-                            <TextBlock FontSize="14" Foreground="#BFFFFFFF"><Run Text="{Binding PathToSubnautica, Mode=OneWay}"></Run></TextBlock>
+                            <TextBlock FontSize="14" Foreground="#BFFFFFFF"><Run Text="{Binding PathToSubnautica, Mode=OneWay, FallbackValue='Unknown path'}"></Run></TextBlock>
                         </StackPanel>
                     </Grid>
                 </Border>

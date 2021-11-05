@@ -23,13 +23,16 @@ namespace NitroxLauncher
                         parentWindow: Application.Current.MainWindow,
                         corner: Corner.BottomRight,
                         offsetX: 10,
-                        offsetY: 10);
+                        offsetY: 10
+                    );
 
+                    // Should we display toaster over other applications
                     cfg.DisplayOptions.TopMost = false;
 
                     cfg.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(
                         notificationLifetime: TimeSpan.FromSeconds(20),
-                        maximumNotificationCount: MaximumNotificationCount.FromCount(5));
+                        maximumNotificationCount: MaximumNotificationCount.FromCount(5)
+                    );
 
                     cfg.Dispatcher = Application.Current.Dispatcher;
                 });
@@ -46,12 +49,16 @@ namespace NitroxLauncher
             notifier = null;
         }
 
-        public static void Info(string message, MessageOptions options = null) => notifier.ShowInformation(message, options ?? new MessageOptions());
+        public static void Info(string message) => notifier.ShowInformation(message);
+        public static void Info(string message, MessageOptions options) => notifier.ShowInformation(message, options);
 
-        public static void Error(string message, MessageOptions options = null) => notifier.ShowError(message, options ?? new MessageOptions());
+        public static void Error(string message) => notifier.ShowError(message);
+        public static void Error(string message, MessageOptions options) => notifier.ShowError(message, options);
 
-        public static void Success(string message, MessageOptions options = null) => notifier.ShowSuccess(message, options ?? new MessageOptions());
+        public static void Success(string message) => notifier.ShowSuccess(message);
+        public static void Success(string message, MessageOptions options) => notifier.ShowSuccess(message, options);
 
-        public static void Warning(string message, MessageOptions options = null) => notifier.ShowWarning(message, options ?? new MessageOptions());
+        public static void Warning(string message) => notifier.ShowWarning(message);
+        public static void Warning(string message, MessageOptions options) => notifier.ShowWarning(message, options);
     }
 }

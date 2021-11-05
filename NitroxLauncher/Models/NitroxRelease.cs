@@ -28,7 +28,7 @@ namespace NitroxLauncher.Models
 
         public override string ToString()
         {
-            return $"[NitroxRelease - Url: {Url}, Version: {Version}, FileSize: {FileSize}, Md5: {Md5}]";
+            return $"[{nameof(NitroxRelease)} - Url: {Url}, Version: {Version}, FileSize: {FileSize}, Md5: {Md5}]";
         }
     }
 }

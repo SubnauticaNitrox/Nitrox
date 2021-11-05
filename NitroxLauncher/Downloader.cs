@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Cache;
-using System.Net.NetworkInformation;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -15,21 +14,60 @@ namespace NitroxLauncher
 {
     internal static class Downloader
     {
+        public const string BLOGS_URL = "https://nitroxblog.rux.gg/wp-json/wp/v2/posts?per_page=8&page=1";
         public const string LATEST_VERSION_URL = "https://nitrox.rux.gg/api/version/latest";
         public const string CHANGELOGS_URL = "https://nitrox.rux.gg/api/changelog/releases";
-        public const string RELEASES_URL = " https://nitrox.rux.gg/api/version/releases";
-        public const string BLOGS_URL = " https://nitroxblog.rux.gg/wp-json/wp/v2/posts";
-        public const string LATEST_RELEASE_URL = "https://nitrox.rux.gg/download";
+        public const string RELEASES_URL = "https://nitrox.rux.gg/api/version/releases";
 
         // Create a policy that allows any cache to supply requested resources if the resource on the server is not newer than the cached copy
         private static readonly HttpRequestCachePolicy cachePolicy = new(
             HttpCacheAgeControl.MaxAge,
-            TimeSpan.FromHours(2)
+            TimeSpan.FromDays(1)
         );
 
-        public static Task<IList<NitroxBlog>> GetBlogs()
+        public static async Task<IList<NitroxBlog>> GetBlogs()
         {
-            throw new NotImplementedException();
+            IList<NitroxBlog> blogs = new List<NitroxBlog>();
+
+            try
+            {
+                using WebResponse response = await GetResponseFromCache(BLOGS_URL);
+
+                if (response.IsFromCache)
+                {
+                    Log.Info("Fetched nitrox blogs from the local cache");
+                }
+
+                using (StreamReader sr = new(response.GetResponseStream()))
+                {
+                    string json = sr.ReadToEnd();
+                    JsonData data = JsonMapper.ToObject(json);
+
+                    // TODO : Add a json schema validator 
+                    for (int i = 0; i < data.Count; i++)
+                    {
+                        string released = (string)data[i]["date"];
+                        string url = (string)data[i]["link"];
+                        string title = (string)data[i]["title"]["rendered"];
+                        string image = (string)data[i]["jetpack_featured_media_url"];
+
+                        if (!DateTime.TryParse(released, out DateTime dateTime))
+                        {
+                            dateTime = DateTime.UtcNow;
+                            Log.Error($"Error while trying to parse release time ({released}) of blog {url}");
+                        }
+
+                        blogs.Add(new NitroxBlog(title, dateTime, url, image));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, $"{nameof(Downloader)} : Error while fetching nitrox blogs from {BLOGS_URL}");
+                LauncherNotifier.Error("Unable to fetch nitrox blogs");
+            }
+
+            return blogs;
         }
 
         public async static Task<IList<NitroxChangelog>> GetChangeLogs()
@@ -38,6 +76,7 @@ namespace NitroxLauncher
 
             try
             {
+                //https://developer.wordpress.org/rest-api/reference/posts/#arguments
                 using WebResponse response = await GetResponseFromCache(CHANGELOGS_URL);
 
                 if (response.IsFromCache)
@@ -77,6 +116,7 @@ namespace NitroxLauncher
             catch (Exception ex)
             {
                 Log.Error(ex, $"{nameof(Downloader)} : Error while fetching nitrox changelogs from {CHANGELOGS_URL}");
+                LauncherNotifier.Error("Unable to fetch nitrox changelogs");
             }
 
             return changelogs;
@@ -108,19 +148,14 @@ namespace NitroxLauncher
             catch (Exception ex)
             {
                 Log.Error(ex, $"{nameof(Downloader)} : Error while fetching nitrox version from {LATEST_VERSION_URL}");
+                LauncherNotifier.Error("Unable to check for updates");
             }
 
             return new Version();
         }
 
-        private async static Task<WebResponse> GetResponseFromCache(string url)
+        private static async Task<WebResponse> GetResponseFromCache(string url)
         {
-            if (!NetworkInterface.GetIsNetworkAvailable())
-            {
-                Log.Warn("Launcher might not be connected to internet");
-                LauncherNotifier.Error("Launcher might not be connected to internet");
-            }
-
             Log.Info($"Trying to request data from {url}");
 
             HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;

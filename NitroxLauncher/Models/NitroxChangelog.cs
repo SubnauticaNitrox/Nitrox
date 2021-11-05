@@ -25,7 +25,7 @@ namespace NitroxLauncher.Models
 
         public override string ToString()
         {
-            return $"[NitroxChangelog - Version: {Version}, Released: {Released}, PatchNotes: {PatchNotes}]";
+            return $"[{nameof(NitroxChangelog)} - Version: {Version}, Released: {Released}, PatchNotes: {PatchNotes}]";
         }
     }
 }

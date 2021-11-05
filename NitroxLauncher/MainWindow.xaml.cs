@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ using NitroxLauncher.Models.Properties;
 using NitroxLauncher.Pages;
 using NitroxModel.Discovery;
 using NitroxModel.Helper;
+using NitroxModel.Logger;
 
 namespace NitroxLauncher
 {
@@ -47,7 +49,7 @@ namespace NitroxLauncher
             LauncherLogic.Server.ServerExited += ServerExited;
 
             InitializeComponent();
-            
+
             // Pirate trigger should happen after UI is loaded.
             Loaded += (sender, args) =>
             {
@@ -76,7 +78,10 @@ namespace NitroxLauncher
                     SideBarPanel.Visibility = Visibility.Hidden;
                 };
             };
+        }
 
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
             logic.SetTargetedSubnauticaPath(GameInstallationFinder.Instance.FindGame())
                  .ContinueWith(task =>
                  {
@@ -88,9 +93,15 @@ namespace NitroxLauncher
                      {
                          LauncherLogic.Instance.NavigateTo<OptionPage>();
                      }
-                     
+
                      logic.CheckNitroxVersion();
                  }, CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.FromCurrentSynchronizationContext());
+
+            if (!NetworkInterface.GetIsNetworkAvailable())
+            {
+                Log.Warn("Launcher may not be connected to internet");
+                LauncherNotifier.Error("Launcher may not be connected to internet");
+            }
         }
 
         private bool CanClose()
@@ -127,7 +138,7 @@ namespace NitroxLauncher
 
         private void Maximize_Click(object sender, RoutedEventArgs e)
         {
-            WindowState = WindowState.Maximized;
+            WindowState = WindowState.Normal;
             MaximizeButton.Visibility = Visibility.Collapsed;
             RestoreButton.Visibility = Visibility.Visible;
         }

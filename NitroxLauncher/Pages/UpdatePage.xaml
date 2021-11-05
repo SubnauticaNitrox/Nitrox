@@ -72,22 +72,30 @@
 
         <Grid Grid.Row="3" Grid.ColumnSpan="2" Margin="10">
             <ItemsControl x:Name="Changelogs">
+
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel IsVirtualizing="True" VirtualizationMode="Standard" Orientation="Vertical" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
                 <ItemsControl.ItemTemplate>
                     <DataTemplate DataType="{x:Type local:NitroxChangelog}">
                         <StackPanel Margin="0,22,0,0" Background="Transparent">
 
                             <Grid Margin="0">
-                                <TextBlock FontSize="20" Foreground="White" TextWrapping="Wrap" Margin="0" VerticalAlignment="Top" FontWeight="Bold" HorizontalAlignment="Left" Text="{Binding Version, FallbackValue='Unknown'}"/>
-                                <TextBlock FontSize="12" Foreground="White" TextWrapping="Wrap" Margin="0" VerticalAlignment="Center" FontWeight="Light" HorizontalAlignment="Right" Text="{Binding Released, Converter={converters:DateToRelativeDateConverter}, FallbackValue='Unknown'}"/>
+                                <TextBlock FontSize="20" Foreground="White" TextWrapping="Wrap" Margin="0" VerticalAlignment="Top" FontWeight="Bold" HorizontalAlignment="Left" Text="{Binding Version, TargetNullValue='Unknown'}"/>
+                                <TextBlock FontSize="12" Foreground="White" TextWrapping="Wrap" Margin="0" VerticalAlignment="Center" FontWeight="Light" HorizontalAlignment="Right" Text="{Binding Released, Converter={converters:DateToRelativeDateConverter}, FallbackValue='Unknown', TargetNullValue='Unknown'}"/>
                             </Grid>
 
                             <Expander Header="View changelogs" Foreground="#1EFFFFFF" HorizontalAlignment="Left">
-                                <TextBlock FontSize="14" Foreground="White" TextWrapping="Wrap" Margin="0,8,0,0" VerticalAlignment="Top" FontWeight="Normal" TextAlignment="Left" Text="{Binding PatchNotes}"/>
+                                <TextBlock FontSize="14" Foreground="White" TextWrapping="Wrap" Margin="0,8,0,0" VerticalAlignment="Top" FontWeight="Normal" TextAlignment="Left" Text="{Binding PatchNotes, FallbackValue='Empty', TargetNullValue='Empty'}"/>
                             </Expander>
                             <Border BorderThickness="0 1 0 0" BorderBrush="#1EFFFFFF" Margin="0,20,0,22" />
                         </StackPanel>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
+
             </ItemsControl>
         </Grid>
 
