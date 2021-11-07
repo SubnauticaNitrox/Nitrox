@@ -121,6 +121,11 @@
     <Compile Include="Patches\Dynamic\KnownTech_NotifyAdd_Patch.cs" />
     <Compile Include="Patches\Dynamic\LiveMixin_AddHealth_Patch.cs" />
     <Compile Include="Patches\Dynamic\LiveMixin_TakeDamage_Patch.cs" />
+    <Compile Include="Patches\Dynamic\MapRoomCamera_Control_Patch.cs" />
+    <Compile Include="Patches\Dynamic\MapRoomCamera_FreeCamera_Patch.cs" />
+    <Compile Include="Patches\Dynamic\MapRoomCamera_Update_Patch.cs" />
+    <Compile Include="Patches\Dynamic\MapRoomCameraDocking_DockCamera_Patch.cs" />
+    <Compile Include="Patches\Dynamic\MapRoomScreen_OnHandClick_Patch.cs" />
     <Compile Include="Patches\Dynamic\MedicalCabinet_OnHandClick_Patch.cs" />
     <Compile Include="Patches\Dynamic\OnGoalUnlockTracker_NotifyGoalComplete_Patch.cs" />
     <Compile Include="Patches\Dynamic\Openable_PlayOpenAnimation_Patch.cs" />
@@ -136,6 +141,7 @@
     <Compile Include="Patches\Dynamic\PilotingChair_OnPlayerDeath_Patch.cs" />
     <Compile Include="Patches\Dynamic\PilotingChair_ReleaseBy_Patch.cs" />
     <Compile Include="Patches\Dynamic\PingManager_NotifyRename_Patch.cs" />
+    <Compile Include="Patches\Dynamic\Player_EnterLockedMode_Patch.cs" />
     <Compile Include="Patches\Dynamic\Player_OnKill_Patch.cs" />
     <Compile Include="Patches\Dynamic\Player_SetCurrentEscapePod_Patch.cs" />
     <Compile Include="Patches\Dynamic\Player_SetCurrentSub_Patch.cs" />
@@ -176,6 +182,8 @@
     <Compile Include="Patches\Dynamic\SubRoot_OnTakeDamage_Patch.cs" />
     <Compile Include="Patches\Dynamic\ToggleLights_OnPoweredChanged_Patch.cs" />
     <Compile Include="Patches\Dynamic\ToggleLights_SetLightsActive_Patch.cs" />
+    <Compile Include="Patches\Dynamic\uGUI_MapRoomScanner_OnCancelScan_Patch.cs" />
+    <Compile Include="Patches\Dynamic\uGUI_MapRoomScanner_OnStartScan_Patch.cs" />
     <Compile Include="Patches\Dynamic\uGUI_OnApplicationQuit_Patch.cs" />
     <Compile Include="Patches\Dynamic\uGUI_SignInput_OnDeselect_Patch.cs" />
     <Compile Include="Patches\Dynamic\UniqueIdentifier_Id_Getter_Patch.cs" />

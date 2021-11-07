@@ -18,9 +18,10 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             GameObject gameObject = __instance.gameObject.FindAncestor<PrefabIdentifier>().gameObject;
             NitroxId id = NitroxEntity.GetId(gameObject);
+            NitroxId baseParentId = NitroxEntity.GetId(gameObject.transform.parent.gameObject);
 
             SignMetadata signMetadata = new(__instance.text, __instance.colorIndex, __instance.scaleIndex, __instance.elementsState, __instance.IsBackground());
-            NitroxServiceLocator.LocateService<Building>().MetadataChanged(id, signMetadata);
+            NitroxServiceLocator.LocateService<Building>().MetadataChanged(baseParentId, id, signMetadata);
         }
 
         public override void Patch(Harmony harmony)

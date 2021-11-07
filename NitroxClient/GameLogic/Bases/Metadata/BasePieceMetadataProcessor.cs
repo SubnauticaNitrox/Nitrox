@@ -9,7 +9,7 @@ namespace NitroxClient.GameLogic.Bases.Metadata
 {
     public abstract class BasePieceMetadataProcessor
     {
-        public abstract void UpdateMetadata(NitroxId id, BasePieceMetadata metadata);
+        public abstract void UpdateMetadata(NitroxId id, BasePieceMetadata metadata, bool initialSync = false);
 
         private static NoOpBasePieceMetadataProcessor noOpProcessor = new NoOpBasePieceMetadataProcessor();
         private static Dictionary<Type, BasePieceMetadataProcessor> processorsByType = new Dictionary<Type, BasePieceMetadataProcessor>();

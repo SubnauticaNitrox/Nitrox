@@ -5,7 +5,7 @@ namespace NitroxClient.GameLogic.Bases.Metadata
 {
     public class NoOpBasePieceMetadataProcessor : BasePieceMetadataProcessor
     {
-        public override void UpdateMetadata(NitroxId id, BasePieceMetadata metadata)
+        public override void UpdateMetadata(NitroxId id, BasePieceMetadata metadata, bool initialSync)
         {
             // No-op
         }

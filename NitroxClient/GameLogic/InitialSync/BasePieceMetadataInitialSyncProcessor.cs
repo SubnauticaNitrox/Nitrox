@@ -27,7 +27,7 @@ namespace NitroxClient.GameLogic.InitialSync
                 {
                     BasePieceMetadata metadata = basePiece.Metadata.Value;
                     BasePieceMetadataProcessor metadataProcessor = BasePieceMetadataProcessor.FromMetaData(metadata);
-                    metadataProcessor.UpdateMetadata(basePiece.Id, metadata);
+                    metadataProcessor.UpdateMetadata(basePiece.ParentId.Value, metadata, true);
                     basePiecesWithMetadata++;
                 }
 

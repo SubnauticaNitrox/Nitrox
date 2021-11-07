@@ -47,6 +47,7 @@
     <Compile Include="Communication\Packets\Processors\AnimationProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\BasePieceMetadataChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\BedEnterProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\CameraMovementProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CellEntitiesProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ChatMessageProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ConstructionAmountChangedProcessor.cs" />
@@ -71,6 +72,7 @@
     <Compile Include="Communication\Packets\Processors\DeconstructionBeginProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\DeconstructionCompletedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\DisconnectProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\DockingStateChangeProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\EnergyMixinValueChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\EntityMetadataUpdateProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\EntityTransformUpdatesProcessor.cs" />
@@ -88,6 +90,7 @@
     <Compile Include="Communication\Packets\Processors\ItemPositionProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\KnownTechEntryAddProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\LifeMixinChangedProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\MapRoomScanProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\MedicalCabinetClickedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ModuleAddedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ModuleRemovedProcessor.cs" />
@@ -152,6 +155,7 @@
     <Compile Include="GameLogic\Bases\GeometryRespawnManager.cs" />
     <Compile Include="GameLogic\Bases\Metadata\BasePieceMetadataProcessor.cs" />
     <Compile Include="GameLogic\Bases\Metadata\GenericBasePieceMetadataProcessor.cs" />
+    <Compile Include="GameLogic\Bases\Metadata\MapRoomMetadataProcessor.cs" />
     <Compile Include="GameLogic\Bases\Metadata\NoOpBasePieceMetadataProcessor.cs" />
     <Compile Include="GameLogic\Bases\Metadata\SignMetadataProcessor.cs" />
     <Compile Include="GameLogic\Bases\Spawning\BasePiece\BaseBioReactorSpawnProcessor.cs" />
@@ -168,6 +172,7 @@
     <Compile Include="GameLogic\Containers\ContainerAddItemPostProcessor.cs" />
     <Compile Include="GameLogic\Containers\NoOpContainerAddItemPostProcessor.cs" />
     <Compile Include="GameLogic\Containers\PlantableContainerAddItemPostProcessor.cs" />
+    <Compile Include="GameLogic\CameraControlManager.cs" />
     <Compile Include="GameLogic\Crafting.cs" />
     <Compile Include="GameLogic\Cyclops.cs" />
     <Compile Include="GameLogic\Debugger.cs" />
@@ -261,6 +266,7 @@
     <Compile Include="GameLogic\Rockets.cs" />
     <Compile Include="GameLogic\SeamothModulesEvent.cs" />
     <Compile Include="GameLogic\Settings\NitroxSettingsManager.cs" />
+    <Compile Include="GameLogic\Simulation\CameraControl.cs" />
     <Compile Include="GameLogic\Simulation\HandInteraction.cs" />
     <Compile Include="GameLogic\Simulation\LockRequest.cs" />
     <Compile Include="GameLogic\Simulation\LockRequestBase.cs" />

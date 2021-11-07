@@ -19,7 +19,7 @@ namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
             TechType.BaseBioReactor
         };
 
-        protected override void SpawnPostProcess(Base latestBase, Int3 latestCell, GameObject finishedPiece)
+        protected override void SpawnPostProcess(Base latestBase, Int3 latestCell, GameObject finishedPiece, bool justConstructed)
         {
             NitroxId reactorId = NitroxEntity.GetId(finishedPiece);
             BaseBioReactorGeometry bioReactor = finishedPiece.RequireComponent<BaseBioReactorGeometry>();

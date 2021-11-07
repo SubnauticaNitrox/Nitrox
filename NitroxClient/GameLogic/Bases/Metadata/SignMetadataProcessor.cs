@@ -8,7 +8,7 @@ namespace NitroxClient.GameLogic.Bases.Metadata
 {
     public class SignMetadataProcessor : GenericBasePieceMetadataProcessor<SignMetadata>
     {
-        public override void UpdateMetadata(NitroxId id, SignMetadata metadata)
+        public override void UpdateMetadata(NitroxId id, SignMetadata metadata, bool initialSync)
         {
             GameObject gameObject = NitroxEntity.RequireObjectFrom(id);
             uGUI_SignInput sign = gameObject.GetComponentInChildren<uGUI_SignInput>(true);

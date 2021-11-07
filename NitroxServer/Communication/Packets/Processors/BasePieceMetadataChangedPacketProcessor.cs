@@ -18,7 +18,7 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(BasePieceMetadataChanged packet, Player player)
         {
-            baseManager.UpdateBasePieceMetadata(packet.PieceId, packet.Metadata);
+            baseManager.UpdateBasePieceMetadata(packet.BaseParentId, packet.PieceId, packet.Metadata);
 
             playerManager.SendPacketToOtherPlayers(packet, player);
         }

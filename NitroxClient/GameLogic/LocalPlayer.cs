@@ -49,6 +49,12 @@ namespace NitroxClient.GameLogic
             packetSender.Send(playerStats);
         }
 
+        public void UpdateCameraLocation(CameraMovementData cameraMovementData)
+        {
+            CameraMovement cameraMovement = new CameraMovement(multiplayerSession.Reservation.PlayerId, cameraMovementData);
+            packetSender.Send(cameraMovement);
+        }
+
         public void UpdateLocation(Vector3 location, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation, Optional<VehicleMovementData> vehicle)
         {
             Movement movement;

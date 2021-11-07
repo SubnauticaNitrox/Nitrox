@@ -5,6 +5,7 @@ using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Buildings.Metadata;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Logger;
 
 namespace NitroxServer.GameLogic.Bases
 {
@@ -13,6 +14,7 @@ namespace NitroxServer.GameLogic.Bases
         private Dictionary<NitroxId, BasePiece> partiallyConstructedPiecesById = new Dictionary<NitroxId, BasePiece>();
         private List<BasePiece> completedBasePieceHistory;
         private int nextBuildIndex;
+        private Dictionary<NitroxId, BasePieceMetadata> earlyMetadataCache = new Dictionary<NitroxId, BasePieceMetadata>();
 
         public BaseManager(List<BasePiece> partiallyConstructedPieces, List<BasePiece> completedBasePieceHistory)
         {
@@ -93,6 +95,13 @@ namespace NitroxServer.GameLogic.Bases
                     {
                         completedBasePieceHistory.Add(basePiece);
                     }
+                    // Log.Debug($"EarlyMetadataCache check: {string.Join(", ", earlyMetadataCache.Keys)}, this piece id is: {id}");
+                    if (earlyMetadataCache.TryGetValue(id, out BasePieceMetadata metadataToProcess))
+                    {
+                        Log.Debug($"Found an early metadata {basePiece.ParentId.Value} it will now be updated");
+                        earlyMetadataCache.Remove(basePiece.ParentId.Value);
+                        UpdateBasePieceMetadata(basePiece.ParentId.Value, id, metadataToProcess);
+                    }
                 }
             }
         }
@@ -127,17 +136,46 @@ namespace NitroxServer.GameLogic.Bases
             }
         }
 
-        public void UpdateBasePieceMetadata(NitroxId id, BasePieceMetadata metadata)
+        public void UpdateBasePieceMetadata(NitroxId baseParentId, NitroxId id, BasePieceMetadata metadata)
         {
             BasePiece basePiece;
 
             lock (completedBasePieceHistory)
             {
-                basePiece = completedBasePieceHistory.Find(piece => piece.Id == id);
+                if (metadata is MapRoomMetadata)
+                {
+                    MapRoomMetadata cdMetadata = (MapRoomMetadata)metadata;
+                    basePiece = completedBasePieceHistory.Find(piece => piece.Id.Increment() == cdMetadata.MapRoomFunctionalityId && piece.ParentId.Value == baseParentId);
+                }
+                else
+                {
+                    basePiece = completedBasePieceHistory.Find(piece => piece.ParentId.Value == baseParentId);
+                }
 
                 if (basePiece != null)
                 {
-                    basePiece.Metadata = Optional.OfNullable(metadata);
+                    if (metadata.OnlyUpdate)
+                    {
+                        if (!basePiece.Metadata.HasValue)
+                        {
+                            basePiece.Metadata = metadata;
+                        }
+                        else
+                        {
+                            basePiece.Metadata.Value.LoadUpdatePayload(metadata.UpdatePayload, metadata.PayloadType);
+                        }
+                    }
+                    else
+                    {
+                        basePiece.Metadata = Optional.OfNullable(metadata);
+                    }
+                }
+                else
+                {
+                    if (baseParentId != null)
+                    {
+                        earlyMetadataCache[baseParentId] = metadata;
+                    }
                 }
             }
         }

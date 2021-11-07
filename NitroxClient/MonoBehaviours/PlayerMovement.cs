@@ -2,8 +2,10 @@
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper;
+using NitroxModel.Logger;
+using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.Helper;
 using UnityEngine;
 
@@ -15,10 +17,14 @@ namespace NitroxClient.MonoBehaviours
         private LocalPlayer localPlayer;
 
         private float time;
+        public static bool ControllingCamera;
+        public static MapRoomCamera ControlledCamera;
+        private PacketSaver packetSaver;
 
         public void Awake()
         {
             localPlayer = NitroxServiceLocator.LocateService<LocalPlayer>();
+            packetSaver = new PacketSaver(localPlayer);
         }
 
         public void Update()
@@ -42,16 +48,46 @@ namespace NitroxClient.MonoBehaviours
                 Optional<VehicleMovementData> vehicle = GetVehicleMovement();
                 SubRoot subRoot = Player.main.GetCurrentSub();
                 // If in a subroot the position will be relative to the subroot
-                if (subRoot != null && !subRoot.isBase)
+                if (subRoot != null)
                 {
-                    // Rotate relative player position relative to the subroot (else there are problems with respawning)
-                    Quaternion undoVehicleAngle = subRoot.transform.rotation.GetInverse();
-                    currentPosition = currentPosition - subRoot.transform.position;
-                    currentPosition = undoVehicleAngle * currentPosition;
-                    bodyRotation = undoVehicleAngle * bodyRotation;
-                    aimingRotation = undoVehicleAngle * aimingRotation;
+                    if (!subRoot.isBase)
+                    {
+                        // Rotate relative player position relative to the subroot (else there are problems with respawning)
+                        Quaternion undoVehicleAngle = subRoot.transform.rotation.GetInverse();
+                        currentPosition -= subRoot.transform.position;
+                        currentPosition = undoVehicleAngle * currentPosition;
+                        bodyRotation = undoVehicleAngle * bodyRotation;
+                        aimingRotation = undoVehicleAngle * aimingRotation;
+                    }
+                    else if(ControlledCamera != null)
+                    {
+                        if(!ControllingCamera)
+                        {
+                            return;
+                        }
+                        NitroxVector3 position = ControlledCamera.transform.position.ToDto();
+                        NitroxQuaternion rotation = ControlledCamera.transform.rotation.ToDto();
+                        CameraMovementData cameraMovementData = new CameraMovementData(TechType.MapRoomCamera.ToDto(), NitroxEntity.GetId(ControlledCamera.gameObject), position, rotation);
+                        if (packetSaver.SameCameraMovement(cameraMovementData))
+                        {
+                            return;
+                        }
+                        localPlayer.UpdateCameraLocation(cameraMovementData);
+                        return;
+                    }
                 }
 
+                if (vehicle.HasValue && packetSaver.SameVehicleMovement(vehicle.Value))
+                {
+                    // Please do something
+                    // return;
+                }
+                if (packetSaver.SameMovement(currentPosition, playerVelocity, bodyRotation, aimingRotation))
+                {
+                    // Please do something
+                    playerVelocity = Vector3.zero;
+                    aimingRotation = Quaternion.identity;
+                }
                 localPlayer.UpdateLocation(currentPosition, playerVelocity, bodyRotation, aimingRotation, vehicle);
             }
         }
@@ -119,18 +155,25 @@ namespace NitroxClient.MonoBehaviours
             }
             else if (sub != null && Player.main.isPiloting)
             {
-                id = NitroxEntity.GetId(sub.gameObject);
-                position = sub.gameObject.transform.position;
-                rotation = sub.gameObject.transform.rotation;
-                Rigidbody rigidbody = sub.GetComponent<Rigidbody>();
-                velocity = rigidbody.velocity;
-                angularVelocity = rigidbody.angularVelocity;
-                techType = TechType.Cyclops;
-
-                SubControl subControl = sub.GetComponent<SubControl>();
-                steeringWheelYaw = subControl.steeringWheelYaw;
-                steeringWheelPitch = subControl.steeringWheelPitch;
-                appliedThrottle = subControl.appliedThrottle && subControl.canAccel;
+                if (sub.isCyclops)
+                {
+                    id = NitroxEntity.GetId(sub.gameObject);
+                    position = sub.gameObject.transform.position;
+                    rotation = sub.gameObject.transform.rotation;
+                    Rigidbody rigidbody = sub.GetComponent<Rigidbody>();
+                    velocity = rigidbody.velocity;
+                    angularVelocity = rigidbody.angularVelocity;
+                    techType = TechType.Cyclops;
+                    SubControl subControl = sub.GetComponent<SubControl>();
+                    steeringWheelYaw = subControl.steeringWheelYaw;
+                    steeringWheelPitch = subControl.steeringWheelPitch;
+                    appliedThrottle = subControl.appliedThrottle && subControl.canAccel;
+                }
+                // In the case of controlling a MapRoomCamera
+                else
+                {
+                    return Optional.Empty;
+                }
             }
             else
             {
@@ -149,6 +192,80 @@ namespace NitroxClient.MonoBehaviours
                                                                                         leftArmPosition,
                                                                                         rightArmPosition);
             return Optional.Of(model);
+        }
+
+        public class PacketSaver
+        {
+            private LocalPlayer localPlayer;
+
+            private CameraMovementData latestCameraMovementData;
+            private VehicleMovementData latestVehicleMovementData;
+            private Vector3 latestCurrentPosition;
+            private Vector3 latestPlayerVelocity;
+            private Quaternion latestBodyRotation;
+            private Quaternion latestAimingRotation;
+
+            private bool[] updatedLocationOnce;
+
+            public PacketSaver(LocalPlayer localPlayer)
+            {
+                this.localPlayer = localPlayer;
+                latestCurrentPosition = Vector3.zero;
+                latestPlayerVelocity = Vector3.zero;
+                latestBodyRotation = Quaternion.identity;
+                latestAimingRotation = Quaternion.identity;
+                updatedLocationOnce = new bool[] { false, false, false };
+            }
+
+            public bool SameCameraMovement(CameraMovementData cameraMovementData)
+            {
+                bool same = cameraMovementData.Equals(latestCameraMovementData);
+                latestCameraMovementData = cameraMovementData;
+                UpdateLocationOnce(same, 0);
+                return same;
+            }
+
+
+            // Maybe SameMovement should just check currentPosition and bodyRotation ?
+            public bool SameMovement(Vector3 currentPosition, Vector3 playerVelocity, Quaternion bodyRotation, Quaternion aimingRotation)
+            {
+                bool same = currentPosition.Equals(latestCurrentPosition)
+                    && playerVelocity.Equals(latestPlayerVelocity)
+                    && bodyRotation.Equals(latestBodyRotation)
+                    && aimingRotation.Equals(latestAimingRotation);
+
+                latestCurrentPosition = currentPosition;
+                latestPlayerVelocity = playerVelocity;
+                latestBodyRotation = bodyRotation;
+                latestAimingRotation = aimingRotation;
+                UpdateLocationOnce(same, 1);
+                return same;
+            }
+
+            public bool SameVehicleMovement(VehicleMovementData vehicleMovementData)
+            {
+                bool same = vehicleMovementData.Equals(latestVehicleMovementData);
+                latestVehicleMovementData = vehicleMovementData;
+                UpdateLocationOnce(same, 2);
+                return same;
+            }
+
+            public void UpdateLocationOnce(bool same, int movementType)
+            {
+                // TO BE FIXED
+                return;
+                if (!same)
+                {
+                    updatedLocationOnce[movementType] = false;
+                }
+                else if (!updatedLocationOnce[movementType])
+                {
+                    updatedLocationOnce[movementType] = true;
+                    Vector3 currentPosition = Player.main.transform.position;
+                    Quaternion bodyRotation = MainCameraControl.main.viewModel.transform.rotation;
+                    localPlayer.UpdateLocation(currentPosition, Vector3.zero, bodyRotation, Quaternion.identity, Optional.Empty);
+                }
+            }
         }
     }
 }

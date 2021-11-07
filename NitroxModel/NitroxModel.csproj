@@ -28,6 +28,7 @@
     <Compile Include="DataStructures\GameLogic\AbsoluteEntityCell.cs" />
     <Compile Include="DataStructures\GameLogic\BasePiece.cs" />
     <Compile Include="DataStructures\GameLogic\Buildings\Metadata\BasePieceMetadata.cs" />
+    <Compile Include="DataStructures\GameLogic\Buildings\Metadata\MapRoomMetadata.cs" />
     <Compile Include="DataStructures\GameLogic\Buildings\Metadata\SignMetadata.cs" />
     <Compile Include="DataStructures\GameLogic\Buildings\Rotation\RotationMetadata.cs" />
     <Compile Include="DataStructures\GameLogic\Buildings\Rotation\RotationMetadataFactory.cs" />
@@ -46,6 +47,7 @@
     <Compile Include="DataStructures\GameLogic\Entities\UwePrefabFactory.cs" />
     <Compile Include="DataStructures\GameLogic\Entities\UweWorldEntity.cs" />
     <Compile Include="DataStructures\GameLogic\Entities\UweWorldEntityFactory.cs" />
+    <Compile Include="DataStructures\GameLogic\CameraMovementData.cs" />
     <Compile Include="DataStructures\GameLogic\Entity.cs" />
     <Compile Include="DataStructures\GameLogic\EquippedItemData.cs" />
     <Compile Include="DataStructures\GameLogic\EscapePodModel.cs" />
@@ -117,6 +119,7 @@
     <Compile Include="Packets\AnimationChangeEvent.cs" />
     <Compile Include="Packets\BasePieceMetadataChanged.cs" />
     <Compile Include="Packets\BedEnter.cs" />
+    <Compile Include="Packets\CameraMovement.cs" />
     <Compile Include="Packets\CellEntities.cs" />
     <Compile Include="Packets\CellVisibilityChanged.cs" />
     <Compile Include="Packets\ChatMessage.cs" />
@@ -128,6 +131,7 @@
     <Compile Include="Packets\DeconstructionBegin.cs" />
     <Compile Include="Packets\DeconstructionCompleted.cs" />
     <Compile Include="Packets\Disconnect.cs" />
+    <Compile Include="Packets\DockingStateChange.cs" />
     <Compile Include="Packets\DroppedItem.cs" />
     <Compile Include="Packets\EnergyMixinValueChanged.cs" />
     <Compile Include="Packets\EntityMetadataUpdate.cs" />
@@ -147,6 +151,7 @@
     <Compile Include="Packets\ItemPosition.cs" />
     <Compile Include="Packets\KnownTechEntry.cs" />
     <Compile Include="Packets\LiveMixinHealthChanged.cs" />
+    <Compile Include="Packets\MapRoomScan.cs" />
     <Compile Include="Packets\MedicalCabinetClicked.cs" />
     <Compile Include="Packets\ModuleAdded.cs" />
     <Compile Include="Packets\ModuleRemoved.cs" />

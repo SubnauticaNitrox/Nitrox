@@ -38,7 +38,17 @@ namespace NitroxModel.DataStructures.GameLogic.Buildings.Metadata
 
         public override string ToString()
         {
-            return "[SignMetadata - Text: " + Text + " ColorIndex: " + ColorIndex + "ScaleIndex: " + ScaleIndex + " Elements: " + Elements + " Background: " + Background + "]";
+            return "[SignMetadata - Text: " + Text + ", ColorIndex: " + ColorIndex + ", ScaleIndex: " + ScaleIndex + ", Elements: " + Elements + ", Background: " + Background + "]";
+        }
+
+        public override BasePieceMetadata LoadUpdatePayload(object[] updatePayload, int payloadType)
+        {
+            return this;
+        }
+
+        public override void RefreshUpdatePayload()
+        {
+            
         }
     }
 }

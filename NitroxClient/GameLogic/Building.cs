@@ -186,7 +186,7 @@ namespace NitroxClient.GameLogic
                 Object.Destroy(ghost);
                 NitroxEntity.SetNewId(finishedPiece, id);
 
-                BasePieceSpawnProcessor.RunSpawnProcessor(finishedPiece.GetComponent<BaseDeconstructable>(), latestBase, latestCell, finishedPiece);
+                BasePieceSpawnProcessor.RunSpawnProcessor(finishedPiece.GetComponent<BaseDeconstructable>(), latestBase, latestCell, finishedPiece, true);
             }
             else if (ghost.TryGetComponent(out Constructable constructable))
             {
@@ -221,9 +221,16 @@ namespace NitroxClient.GameLogic
             NitroxEntity.RemoveFrom(gameObject);
         }
 
+        // Deprecated, this should no longer be used
         public void MetadataChanged(NitroxId pieceId, BasePieceMetadata metadata)
         {
-            BasePieceMetadataChanged changePacket = new BasePieceMetadataChanged(pieceId, metadata);
+            BasePieceMetadataChanged changePacket = new BasePieceMetadataChanged(null, pieceId, metadata);
+            packetSender.Send(changePacket);
+        }
+
+        public void MetadataChanged(NitroxId baseParentId, NitroxId pieceId, BasePieceMetadata metadata)
+        {
+            BasePieceMetadataChanged changePacket = new BasePieceMetadataChanged(baseParentId, pieceId, metadata);
             packetSender.Send(changePacket);
         }
     }

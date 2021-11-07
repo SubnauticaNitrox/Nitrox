@@ -18,7 +18,7 @@ namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
             TechType.BaseWaterPark
         };
 
-        protected override void SpawnPostProcess(Base latestBase, Int3 latestCell, GameObject finishedPiece)
+        protected override void SpawnPostProcess(Base latestBase, Int3 latestCell, GameObject finishedPiece, bool justConstruced)
         {
             NitroxId pieceId = NitroxEntity.GetId(finishedPiece);
 
