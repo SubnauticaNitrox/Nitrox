@@ -109,7 +109,7 @@ namespace NitroxServer.GameLogic
             PlayerCurrentlyJoining = true;
 
             // One-minute timeout for initial sync
-            Task.Delay(60000).ContinueWith(_ =>
+            Task.Delay(serverConfig.InitialSyncTimeout).ContinueWith(_ =>
             {
                 PlayerCurrentlyJoining = false;
 
