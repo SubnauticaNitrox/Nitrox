@@ -16,7 +16,7 @@ namespace NitroxTest
 
             if (Directory.GetCurrentDirectory().Contains(@"D:\a\Nitrox\Nitrox")) //Check if environment is github actions
             {
-                File.WriteAllText("path.txt", @"C:\PROGRA~2\Steam\steamapps\common\Subnautica");
+                NitroxUser.PreferredGamePath = @"C:\PROGRA~2\Steam\steamapps\common\Subnautica";
             }
         }
     }

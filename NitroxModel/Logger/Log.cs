@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
+using NitroxModel.Helper;
 using Serilog;
 using Serilog.Context;
 using Serilog.Core;
@@ -22,7 +23,7 @@ namespace NitroxModel.Logger
             set => SetPlayerName(value);
         }
 
-        public static string LogDirectory { get; } = Path.GetFullPath(Path.Combine(Environment.GetEnvironmentVariable("NITROX_LAUNCHER_PATH") ?? "", "Nitrox Logs"));
+        public static string LogDirectory { get; } = Path.GetFullPath(Path.Combine(NitroxUser.LauncherPath ?? "", "Nitrox Logs"));
 
         public static string GetMostRecentLogFile() => new DirectoryInfo(LogDirectory).GetFiles().OrderByDescending(f => f.CreationTimeUtc).FirstOrDefault()?.FullName;
 

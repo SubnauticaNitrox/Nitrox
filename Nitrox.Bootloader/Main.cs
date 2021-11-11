@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
-using System.Threading.Tasks;
+using Microsoft.Win32;
 
 namespace Nitrox.Bootloader
 {
@@ -26,40 +26,15 @@ namespace Nitrox.Bootloader
                 return envPath;
             }
 
-            // Get path from AppData file.
-            string nitroxAppData = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox");
-            if (!Directory.Exists(nitroxAppData))
-            {
-                return null;
-            }
-            string nitroxLauncherPathFile = Path.Combine(nitroxAppData, "launcherpath.txt");
-            if (!File.Exists(nitroxLauncherPathFile))
+            // Get path from windows registry.
+            using RegistryKey nitroxRegKey = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Nitrox");
+            if (nitroxRegKey == null)
             {
                 return null;
             }
 
-            try
-            {
-                string valueInFile = File.ReadAllText(nitroxLauncherPathFile).Trim();
-                Task.Factory.StartNew(() =>
-                {
-                    try
-                    {
-                        // Delete the path so that the launcher should be used to launch Nitrox
-                        File.Delete(nitroxLauncherPathFile);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Unable to delete the launcherpath.txt file. Nitrox will launch again without launcher. Error:{Environment.NewLine}{ex}");
-                    }
-                });
-                return Directory.Exists(valueInFile) ? valueInFile : null;
-            }
-            catch
-            {
-                // ignored
-            }
-            return null;
+            string path = nitroxRegKey.GetValue("LauncherPath") as string;
+            return Directory.Exists(path) ? path : null;
         });
 
         public static void Execute()
@@ -90,7 +65,7 @@ namespace Nitrox.Bootloader
         {
             if (nitroxLauncherDir.Value == null)
             {
-                return "Nitrox launcher path not set in AppData. Nitrox will not start.";
+                return "Nitrox will not load because launcher path was not provided.";
             }
 
             return null;

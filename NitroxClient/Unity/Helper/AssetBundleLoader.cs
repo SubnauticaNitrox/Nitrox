@@ -11,7 +11,7 @@ namespace NitroxClient.Unity.Helper
 {
     public class AssetBundleLoader
     {
-        private static readonly string assetRootFolder = NitroxAppData.Instance.AssetsPath;
+        private static readonly string assetRootFolder = NitroxUser.AssetsPath;
 
         public static IEnumerator LoadAsset(string name)
         {
