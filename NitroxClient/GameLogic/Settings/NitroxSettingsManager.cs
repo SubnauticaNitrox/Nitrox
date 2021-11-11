@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using NitroxClient.GameLogic.PlayerPreferences;
 using NitroxClient.MonoBehaviours.Gui.MainMenu;
 using UnityEngine.Events;
 

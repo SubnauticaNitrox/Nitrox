@@ -275,6 +275,11 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         public void RefreshServerEntries()
         {
+            if (!savedGameAreaContent)
+            {
+                return;
+            }
+
             foreach (Transform child in savedGameAreaContent)
             {
                 Destroy(child.gameObject);
