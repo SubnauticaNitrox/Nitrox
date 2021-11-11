@@ -8,6 +8,7 @@ namespace NitroxClient.GameLogic.Settings
         // Add new fields here, you can use bool, float and int as type
         public static readonly NitroxPref<bool> HideIp = new("Nitrox.hideIp");
         public static readonly NitroxPref<bool> SilenceChat = new("Nitrox.silenceChat");
+        public static readonly NitroxPref<bool> ChatUsed = new("Nitrox.chatUsed");
     }
 
     public abstract class NitroxPref { }
