@@ -67,7 +67,7 @@ namespace NitroxServer.Communication
                 }
                 else
                 {
-                    Log.Warn(PortForward.GetError(port) ?? $"Failed to port forward {port} UDP through UPnP. If using Hamachi or manually port-forwarding, please disregard this warning");
+                    Log.Warn(PortForward.GetError(port) ?? $"Failed to automatically port forward {port} UDP through UPnP. If using Hamachi or manually port-forwarding, please disregard this warning. To disable this feature you can go into the server settings.");
                 }
             }).ConfigureAwait(false);
         }
