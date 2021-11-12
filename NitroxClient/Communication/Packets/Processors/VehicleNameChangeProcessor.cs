@@ -4,6 +4,7 @@ using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Packets;
 using UnityEngine;
+using NitroxModel.DataStructures.Util;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -18,16 +19,35 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(VehicleNameChange namePacket)
         {
-            GameObject target = NitroxEntity.RequireObjectFrom(namePacket.Id);
-            target = target.transform.parent.gameObject;
+            GameObject vehicleObject = NitroxEntity.RequireObjectFrom(namePacket.VehicleId);
+            SubNameInput subNameInput = null;
+            SubName subNameTarget = null;
 
-            if (target.AliveOrNull())
+            if (vehicleObject.GetComponent<Vehicle>())
             {
-                SubNameInput subNameInput = target.RequireComponentInChildren<SubNameInput>();
-
-                using (packetSender.Suppress<VehicleNameChange>())
+                if (namePacket.ParentId.HasValue)
                 {
-                    subNameInput.OnNameChange(namePacket.Name);
+                    GameObject moonpool = NitroxEntity.RequireObjectFrom(namePacket.ParentId.Value);
+                    GameObject baseCell = moonpool.RequireComponentInParent<BaseCell>().gameObject;
+
+                    subNameInput = baseCell.RequireComponentInChildren<SubNameInput>();
+                    subNameTarget = vehicleObject.RequireComponentInChildren<SubName>();
+                }
+            }
+            else
+            {
+                subNameInput = vehicleObject.RequireComponentInChildren<SubNameInput>();
+                subNameTarget = subNameInput.target;
+            }
+
+            if (subNameInput != null && subNameTarget != null)
+            {
+                using (packetSender.Suppress<VehicleColorChange>())
+                {
+                    // OnColorChange calls these two methods, in order to update the vehicle color and the color+text on the ingame panel, respectively:
+                    subNameTarget.SetName(namePacket.Name);
+                    subNameInput.SetName(namePacket.Name);
+
                 }
             }
         }
