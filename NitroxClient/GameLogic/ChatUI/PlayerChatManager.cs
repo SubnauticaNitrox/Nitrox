@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using NitroxClient.Communication.Abstract;
+using NitroxClient.GameLogic.Settings;
 using NitroxClient.MonoBehaviours.Gui.Chat;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Helper;
@@ -32,24 +33,6 @@ namespace NitroxClient.GameLogic.ChatUI
         private GameObject chatKeyHint;
         public Transform PlayerChaTransform => playerChat.transform;
 
-        private bool chatUsed
-        {
-            get
-            {
-                if (PlayerPrefs.HasKey("Nitrox.chatUsed"))
-                {
-                    return PlayerPrefs.GetInt("Nitrox.chatUsed") == 1;
-                }
-
-                return false;
-            }
-            set
-            {
-                PlayerPrefs.SetInt("Nitrox.chatUsed", value ? 1 : 0);
-                PlayerPrefs.Save();
-            }
-        }
-
         public void ShowChat() => Player.main.StartCoroutine(ShowChatAsync());
         private IEnumerator ShowChatAsync()
         {
@@ -72,7 +55,7 @@ namespace NitroxClient.GameLogic.ChatUI
             playerChat.Show();
             playerChat.Select();
 
-            if (!chatUsed)
+            if (!NitroxPrefs.ChatUsed.Value)
             {
                 DisableChatKeyHint();
             }
@@ -122,7 +105,7 @@ namespace NitroxClient.GameLogic.ChatUI
 
         public void LoadChatKeyHint()
         {
-            if (!chatUsed)
+            if (!NitroxPrefs.ChatUsed.Value)
             {
                 Player.main.StartCoroutine(AssetBundleLoader.LoadUIAsset(CHAT_KEY_HINT_ASSET, "ChatKeyCanvas", false, chatKeyHintGameObject =>
                 {
@@ -131,12 +114,11 @@ namespace NitroxClient.GameLogic.ChatUI
             }
         }
 
-        //TODO: Has to be reworked if the config API for NitroxClient is finished.
         private void DisableChatKeyHint()
         {
             chatKeyHint.GetComponentInChildren<Text>().CrossFadeAlpha(0, 1, false);
             chatKeyHint.GetComponentInChildren<Image>().CrossFadeAlpha(0, 1, false);
-            chatUsed = true;
+            NitroxPrefs.ChatUsed.Value = true;
         }
     }
 }
