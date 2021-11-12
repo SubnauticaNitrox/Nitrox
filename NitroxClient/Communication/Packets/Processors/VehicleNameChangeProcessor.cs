@@ -44,7 +44,7 @@ namespace NitroxClient.Communication.Packets.Processors
             {
                 using (packetSender.Suppress<VehicleColorChange>())
                 {
-                    // OnColorChange calls these two methods, in order to update the vehicle color and the color+text on the ingame panel, respectively:
+                    // OnColorChange calls these two methods, in order to update the vehicle name on the ingame panel:
                     subNameTarget.SetName(namePacket.Name);
                     subNameInput.SetName(namePacket.Name);
 
