@@ -142,23 +142,14 @@ namespace NitroxLauncher
                     }, DispatcherPriority.ApplicationIdle);
                 }
                 
-                try
+                // Save game path as preferred for future sessions.
+                NitroxUser.PreferredGamePath = path;
+                
+                if (nitroxEntryPatch?.IsApplied == true)
                 {
-                    File.WriteAllText("path.txt", path);
+                    nitroxEntryPatch.Remove();
                 }
-                catch (Exception ex)
-                {
-                    throw new Exception(
-                        $"If you use a third-party anti virus (excluding Windows Defender) like:{Environment.NewLine} - {string.Join($"{Environment.NewLine} - ", "Avast", "McAfee")}{Environment.NewLine}Then make sure it's not blocking Nitrox from working", ex);
-                }
-                finally
-                {
-                    if (nitroxEntryPatch?.IsApplied == true)
-                    {
-                        nitroxEntryPatch.Remove();
-                    }
-                    nitroxEntryPatch = new NitroxEntryPatch(() => subnauticaPath);
-                }
+                nitroxEntryPatch = new NitroxEntryPatch(() => subnauticaPath);
 
                 if (Path.GetFullPath(path).StartsWith(AppHelper.ProgramFileDirectory, StringComparison.OrdinalIgnoreCase))
                 {

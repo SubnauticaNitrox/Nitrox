@@ -16,8 +16,8 @@ namespace NitroxPatcher.Patches.Persistent
         public static void Postfix(string language, Dictionary<string, string> ___strings)
         {
             string[] files = {
-                Path.Combine(NitroxAppData.Instance.LauncherPath, "LanguageFiles", "English.json"), // Using English as fallback.
-                Path.Combine(NitroxAppData.Instance.LauncherPath, "LanguageFiles", language + ".json")
+                Path.Combine(NitroxUser.LauncherPath, "LanguageFiles", "English.json"), // Using English as fallback.
+                Path.Combine(NitroxUser.LauncherPath, "LanguageFiles", language + ".json")
             };
 
             foreach (string file in files)

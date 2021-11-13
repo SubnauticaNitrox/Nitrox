@@ -101,6 +101,7 @@ namespace NitroxModel.Platforms.OS.Windows.Internal
                 int => RegistryValueKind.DWord,
                 long => RegistryValueKind.QWord,
                 byte[] => RegistryValueKind.Binary,
+                string => RegistryValueKind.String,
                 _ => null
             };
             // If regKey already exists and we don't know how to parse the value, use existing kind.
