@@ -138,7 +138,6 @@
     <Compile Include="Patches\Dynamic\Player_OnKill_Patch.cs" />
     <Compile Include="Patches\Dynamic\Player_SetCurrentEscapePod_Patch.cs" />
     <Compile Include="Patches\Dynamic\Player_SetCurrentSub_Patch.cs" />
-    <Compile Include="Patches\Dynamic\Player_Update_Patch.cs" />
     <Compile Include="Patches\Dynamic\PrecursorDoorway_ToggleDoor_Patch.cs" />
     <Compile Include="Patches\Dynamic\PrecursorKeyTerminal_OnHandClick_Patch.cs" />
     <Compile Include="Patches\Dynamic\PrecursorTeleporter_OnActivateTeleporter_Patch.cs" />

@@ -29,8 +29,7 @@ namespace NitroxPatcher.Patches.Persistent
                      * KeyBindingManager keyBindingManager = new KeyBindingManager();
                      * GameButton.numButtons = Math.Max(keyBindingManager.GetHighestKeyBindingValue() + 1, prev);
                      */
-                    yield return new CodeInstruction(OpCodes.Newobj, Reflect.Constructor(() => new KeyBindingManager()));
-                    yield return new CodeInstruction(OpCodes.Callvirt, Reflect.Method((KeyBindingManager t) => t.GetHighestKeyBindingValue()));
+                    yield return new CodeInstruction(OpCodes.Call, Reflect.Method(() => KeyBindingManager.GetHighestKeyBindingValue()));
                     yield return new CodeInstruction(OpCodes.Ldc_I4_1);
                     yield return new CodeInstruction(OpCodes.Add);
                     yield return new CodeInstruction(OpCodes.Call, Reflect.Method(() => Math.Max(default(int), default(int))));

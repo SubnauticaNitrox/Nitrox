@@ -306,10 +306,6 @@
     <Compile Include="MonoBehaviours\Gui\InGame\LostConnectionModal.cs" />
     <Compile Include="MonoBehaviours\Gui\InGame\PlayerKickedModal.cs" />
     <Compile Include="MonoBehaviours\Gui\Input\KeyBindingManager.cs" />
-    <Compile Include="MonoBehaviours\Gui\Input\KeyBindings\Actions\ChatKeyBindingAction.cs" />
-    <Compile Include="MonoBehaviours\Gui\Input\KeyBindings\Actions\KeyBindingAction.cs" />
-    <Compile Include="MonoBehaviours\Gui\Input\KeyBindings\DefaultKeyBinding.cs" />
-    <Compile Include="MonoBehaviours\Gui\Input\KeyBindings\KeyBinding.cs" />
     <Compile Include="MonoBehaviours\Gui\MainMenu\JoinServer.cs" />
     <Compile Include="MonoBehaviours\Gui\MainMenu\LoadingScreenVersionText.cs" />
     <Compile Include="MonoBehaviours\Gui\MainMenu\MainMenuMods.cs" />

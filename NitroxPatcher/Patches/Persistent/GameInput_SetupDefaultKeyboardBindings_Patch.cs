@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.MonoBehaviours.Gui.Input;
-using NitroxClient.MonoBehaviours.Gui.Input.KeyBindings;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Persistent
@@ -12,10 +11,9 @@ namespace NitroxPatcher.Patches.Persistent
 
         public static void Postfix()
         {
-            KeyBindingManager keyBindingManager = new();
-            foreach (KeyBinding keyBinding in keyBindingManager.KeyboardKeyBindings)
+            foreach (KeyBindingManager.KeyBinding keyBinding in KeyBindingManager.KeyboardBindings)
             {
-                GameInput.SetBindingInternal(keyBinding.Device, keyBinding.Button, keyBinding.DefaultKeyBinding.BindingSet, keyBinding.DefaultKeyBinding.Binding);
+                GameInput.SetBindingInternal(keyBinding.Device, keyBinding.Button, GameInput.BindingSet.Primary, keyBinding.Default.ToString());
             }
         }
 

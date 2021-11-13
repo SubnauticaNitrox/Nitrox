@@ -5,6 +5,7 @@ using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NitroxClient.MonoBehaviours.Gui.Input;
 using NitroxModel.Helper;
+using UnityEngine;
 
 namespace NitroxTest.Model
 {
@@ -67,8 +68,8 @@ namespace NitroxTest.Model
         [TestMethod]
         public void Constructor()
         {
-            ConstructorInfo method = Reflect.Constructor(() => new KeyBindingManager());
-            method.DeclaringType.Should().Be<KeyBindingManager>();
+            ConstructorInfo method = Reflect.Constructor(() => new KeyBindingManager.KeyBinding(default(string), default(KeyCode), default(Action), default(bool), default(GameInput.Device)));
+            method.DeclaringType.Should().Be<KeyBindingManager.KeyBinding>();
         }
         
         private class AbusedClass
