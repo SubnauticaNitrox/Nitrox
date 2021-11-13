@@ -7,7 +7,6 @@ using System.Reflection;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
-using LZ4;
 using NitroxModel.DataStructures.Surrogates;
 using NitroxModel.Logger;
 using NitroxModel.Networking;
@@ -20,6 +19,8 @@ namespace NitroxModel.Packets
         private static readonly SurrogateSelector surrogateSelector;
         private static readonly StreamingContext streamingContext;
         private static readonly BinaryFormatter serializer;
+        private static readonly SevenZip.Compression.LZMA.Decoder decoder = new();
+        private static readonly SevenZip.Compression.LZMA.Encoder encoder = new();
 
         private static readonly string[] blacklistedAssemblies = { "NLog" };
 
@@ -66,17 +67,39 @@ namespace NitroxModel.Packets
 
         public byte[] Serialize()
         {
-            using MemoryStream ms = new MemoryStream();
-            using LZ4Stream lz4Stream = new LZ4Stream(ms, LZ4StreamMode.Compress);
-            serializer.Serialize(lz4Stream, this);
-            return ms.ToArray();
+            using MemoryStream input = new();
+            using MemoryStream output = new();
+
+            serializer.Serialize(input, this);
+            input.Position = 0;
+
+            // Write the data size and compress the data.
+            encoder.WriteCoderProperties(output);
+            output.Write(BitConverter.GetBytes((uint)input.Length), 0, 4);
+            encoder.Code(input, output, input.Length, -1, null);
+
+            return output.ToArray();
         }
 
         public static Packet Deserialize(byte[] data)
         {
-            using Stream stream = new MemoryStream(data);
-            using LZ4Stream lz4Stream = new LZ4Stream(stream, LZ4StreamMode.Decompress);
-            return (Packet)serializer.Deserialize(lz4Stream);
+            using MemoryStream input = new(data);
+            using MemoryStream output = new();
+
+            byte[] properties = new byte[5];
+            input.Read(properties, 0, 5);
+
+            // Read in the size of serialized (uncompressed) data.
+            byte[] fileLengthBytes = new byte[4];
+            input.Read(fileLengthBytes, 0, 4);
+            uint fileLength = BitConverter.ToUInt32(fileLengthBytes, 0);
+
+            // Decompress.
+            decoder.SetDecoderProperties(properties);
+            decoder.Code(input, output, input.Length, fileLength, null);
+            output.Position = 0;
+
+            return (Packet)serializer.Deserialize(output);
         }
 
         public static bool IsTypeSerializable(Type type)
@@ -84,7 +107,7 @@ namespace NitroxModel.Packets
             // We have our own surrogates to (de)serialize types that are not marked [Serializable]
             // This code is very similar to how serializability is checked in:
             // System.Runtime.Serialization.Formatters.Binary.BinaryCommon.CheckSerializable
-            return serializer.SurrogateSelector.GetSurrogate(type, Packet.serializer.Context, out ISurrogateSelector _) != null;
+            return serializer.SurrogateSelector.GetSurrogate(type, serializer.Context, out ISurrogateSelector _) != null;
         }
 
         public WrapperPacket ToWrapperPacket()
@@ -99,7 +122,8 @@ namespace NitroxModel.Packets
             if (!cachedPropertiesByType.TryGetValue(packetType, out PropertyInfo[] properties))
             {
                 properties = packetType.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                                       .Where(x => x.Name is not nameof(DeliveryMethod) and not nameof(UdpChannel)).ToArray();
+                                       .Where(x => x.Name is not nameof(DeliveryMethod) and not nameof(UdpChannel))
+                                       .ToArray();
                 cachedPropertiesByType.Add(packetType, properties);
             }
 
