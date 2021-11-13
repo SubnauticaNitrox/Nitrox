@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
+using Microsoft.IO;
 using NitroxModel.DataStructures.Surrogates;
 using NitroxModel.Logger;
 using NitroxModel.Networking;
@@ -19,6 +20,7 @@ namespace NitroxModel.Packets
         private static readonly SurrogateSelector surrogateSelector;
         private static readonly StreamingContext streamingContext;
         private static readonly BinaryFormatter serializer;
+        private static readonly RecyclableMemoryStreamManager streamManager = new();
         private static readonly SevenZip.Compression.LZMA.Decoder decoder = new();
         private static readonly SevenZip.Compression.LZMA.Encoder encoder = new();
 
@@ -67,8 +69,8 @@ namespace NitroxModel.Packets
 
         public byte[] Serialize()
         {
-            using MemoryStream input = new();
-            using MemoryStream output = new();
+            using MemoryStream input = streamManager.GetStream();
+            using MemoryStream output = streamManager.GetStream();
 
             serializer.Serialize(input, this);
             input.Position = 0;
@@ -83,8 +85,10 @@ namespace NitroxModel.Packets
 
         public static Packet Deserialize(byte[] data)
         {
-            using MemoryStream input = new(data);
-            using MemoryStream output = new();
+            using RecyclableMemoryStream input = (RecyclableMemoryStream)streamManager.GetStream();
+            input.Write(data, 0, data.Length);
+            input.Position = 0;
+            using RecyclableMemoryStream output = (RecyclableMemoryStream)streamManager.GetStream();
 
             byte[] properties = new byte[5];
             input.Read(properties, 0, 5);
