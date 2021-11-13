@@ -48,7 +48,6 @@
 
             <TextBlock FontSize="14" Foreground="White" TextWrapping="Wrap" Grid.Column="1" Margin="0,112,20,0" Height="87" VerticalAlignment="Top" Grid.ColumnSpan="2">
                 <Run Text="Nitrox is an open-source, multiplayer modification for the game Subnautica."/>
-                <Run Text=" "/>
                 <Run Text="The project is maintained by the community with regular support and updates from the generous contributors."/>
             </TextBlock>
             
