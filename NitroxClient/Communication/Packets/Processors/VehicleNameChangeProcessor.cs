@@ -4,7 +4,7 @@ using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Packets;
 using UnityEngine;
-using NitroxModel.DataStructures.Util;
+using NitroxModel.Logger;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -23,16 +23,15 @@ namespace NitroxClient.Communication.Packets.Processors
             SubNameInput subNameInput = null;
             SubName subNameTarget = null;
 
-            if (vehicleObject.GetComponent<Vehicle>())
-            {
-                if (namePacket.ParentId.HasValue)
-                {
-                    GameObject moonpool = NitroxEntity.RequireObjectFrom(namePacket.ParentId.Value);
-                    GameObject baseCell = moonpool.RequireComponentInParent<BaseCell>().gameObject;
 
-                    subNameInput = baseCell.RequireComponentInChildren<SubNameInput>();
-                    subNameTarget = vehicleObject.RequireComponentInChildren<SubName>();
-                }
+            if (namePacket.ParentId.HasValue)
+            {
+                GameObject moonpool = NitroxEntity.RequireObjectFrom(namePacket.ParentId.Value);
+                GameObject baseCell = moonpool.RequireComponentInParent<BaseCell>().gameObject;
+
+                subNameInput = baseCell.RequireComponentInChildren<SubNameInput>();
+                subNameTarget = subNameInput.target;
+
             }
             else
             {
@@ -40,15 +39,23 @@ namespace NitroxClient.Communication.Packets.Processors
                 subNameTarget = subNameInput.target;
             }
 
-            if (subNameInput != null && subNameTarget != null)
+            if (subNameInput && subNameTarget)
             {
-                using (packetSender.Suppress<VehicleColorChange>())
+                if (vehicleObject.GetComponent<Vehicle>())
                 {
                     // OnColorChange calls these two methods, in order to update the vehicle name on the ingame panel:
                     subNameTarget.SetName(namePacket.Name);
                     subNameInput.SetName(namePacket.Name);
 
                 }
+                else
+                {
+                    Log.Error($"[VehicleNameChangeProcessor] The GameObject {vehicleObject.name} doesn't have a Vehicle component");
+                }
+            }
+            else
+            {
+                Log.Error($"[VehicleNameChangeProcessor] SubNameInput or targeted SubName is null.");
             }
         }
     }

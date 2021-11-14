@@ -8,6 +8,7 @@ using NitroxModel.Helper;
 using NitroxModel.Packets;
 using UnityEngine;
 using NitroxClient.Unity.Helper;
+using NitroxModel.Logger;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
@@ -18,30 +19,31 @@ namespace NitroxPatcher.Patches.Dynamic
         public static void Postfix(SubNameInput __instance)
         {
             SubName subname = __instance.target;
-            if (subname != null)
+            if (subname)
             {
                 GameObject parentVehicle;
                 NitroxId controllerId = null;
-                Vehicle vehicle = subname.GetComponentInParent<Vehicle>();
-                SubRoot subRoot = subname.GetComponentInParent<SubRoot>();
-                Rocket rocket = subname.GetComponentInParent<Rocket>();
 
-                if (vehicle)
+                if (subname.TryGetComponent(out Vehicle vehicle))
                 {
-                    parentVehicle = vehicle.gameObject;
-
                     GameObject baseCell = __instance.gameObject.RequireComponentInParent<BaseCell>().gameObject;
                     GameObject moonpool = baseCell.RequireComponentInChildren<BaseFoundationPiece>().gameObject;
 
                     controllerId = NitroxEntity.GetId(moonpool);
+                    parentVehicle = vehicle.gameObject;
                 }
-                else if (subRoot)
+                else if (subname.TryGetComponent(out SubRoot subRoot))
                 {
                     parentVehicle = subRoot.gameObject;
                 }
-                else
+                else if (subname.TryGetComponent(out Rocket rocket))
                 {
                     parentVehicle = rocket.gameObject;
+                }
+                else
+                {
+                    Log.Error($"[SubNameInput_OnNameChange_Patch] The GameObject {subname.gameObject.name} doesn't have a Vehicle/SubRoot/Rocket component.");
+                    return;
                 }
 
                 NitroxId vehicleId = NitroxEntity.GetId(parentVehicle);

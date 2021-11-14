@@ -2,10 +2,10 @@
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
-using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
+using NitroxModel.Logger;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -24,26 +24,25 @@ namespace NitroxClient.Communication.Packets.Processors
             SubNameInput subNameInput = null;
             SubName subNameTarget = null;
 
-            if (vehicleObject.GetComponent<Vehicle>())
-            {
-                if (colorPacket.ParentId.HasValue)
-                {
-                    GameObject moonpool = NitroxEntity.RequireObjectFrom(colorPacket.ParentId.Value);
-                    GameObject baseCell = moonpool.RequireComponentInParent<BaseCell>().gameObject;
 
-                    subNameInput = baseCell.RequireComponentInChildren<SubNameInput>();
-                    subNameTarget = vehicleObject.RequireComponentInChildren<SubName>();
-                }
+            if (colorPacket.ParentId.HasValue)
+            {
+                GameObject moonpool = NitroxEntity.RequireObjectFrom(colorPacket.ParentId.Value);
+                GameObject baseCell = moonpool.RequireComponentInParent<BaseCell>().gameObject;
+
+                subNameInput = baseCell.RequireComponentInChildren<SubNameInput>();
+                subNameTarget = subNameInput.target;
             }
+
             else
             {
                 subNameInput = vehicleObject.RequireComponentInChildren<SubNameInput>();
                 subNameTarget = subNameInput.target;
             }
 
-            if (subNameInput != null && subNameTarget != null)
+            if (subNameInput && subNameTarget)
             {
-                using (packetSender.Suppress<VehicleColorChange>())
+                if (vehicleObject.GetComponent<Vehicle>())
                 {
                     // Switch to the currently selected tab
                     subNameInput.SetSelected(colorPacket.Index);
@@ -53,6 +52,14 @@ namespace NitroxClient.Communication.Packets.Processors
                     subNameInput.SetColor(colorPacket.Index, colorPacket.Color.ToUnity());
 
                 }
+                else
+                {
+                    Log.Error($"[VehicleColorChangeProcessor] The GameObject {vehicleObject.name} doesn't have a Vehicle component");
+                }
+            }
+            else
+            {
+                Log.Error($"[VehicleColorChangeProcessor] SubNameInput or targeted SubName is null.");
             }
         }
     }
