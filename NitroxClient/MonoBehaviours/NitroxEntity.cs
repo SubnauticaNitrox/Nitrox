@@ -115,7 +115,7 @@ namespace NitroxClient.MonoBehaviours
             }
         }
 
-        public void OnDisable() // Called with Destroy as well
+        public void OnDestroy()
         {
             if (Id == null)
             {
