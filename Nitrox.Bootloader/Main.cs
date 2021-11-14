@@ -32,11 +32,6 @@ namespace Nitrox.Bootloader
             {
                 return null;
             }
-            string nitroxLauncherPathFile = Path.Combine(nitroxAppData, "launcherpath.txt");
-            if (!File.Exists(nitroxLauncherPathFile))
-            {
-                return null;
-            }
 
             string path = nitroxRegKey.GetValue("LauncherPath") as string;
             return Directory.Exists(path) ? path : null;

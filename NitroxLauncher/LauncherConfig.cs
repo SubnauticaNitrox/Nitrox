@@ -23,7 +23,7 @@ namespace NitroxLauncher
         private bool isPirated = false;
         public bool IsPirated
         {
-            get => IsPirated;
+            get => isPirated;
             set
             {
                 isPirated = value;

@@ -122,7 +122,7 @@ namespace NitroxLauncher
                 {
                     nitroxEntryPatch.Remove();
                 }
-                nitroxEntryPatch = new NitroxEntryPatch(() => subnauticaPath);
+                nitroxEntryPatch = new NitroxEntryPatch(() => Config.SubnauticaPath);
 
                 if (Path.GetFullPath(path).StartsWith(WindowsHelper.ProgramFileDirectory, StringComparison.OrdinalIgnoreCase))
                 {
