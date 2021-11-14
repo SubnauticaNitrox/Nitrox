@@ -105,6 +105,7 @@ namespace NitroxModel.Core
         {
             private static T value;
             public static T Value => value ??= LocateService<T>();
+            public static T ValuePrelifetime => value ??= LocateServicePreLifetime<T>();
 
             /// <summary>
             ///     Invalidates the cache for type <see cref="T"/>. The next <see cref="Value"/> access will request from <see cref="NitroxServiceLocator"/> again.

@@ -81,7 +81,7 @@
     <Compile Include="Discovery\GameInstallationFinder.cs" />
     <Compile Include="Discovery\GameInstallData.cs" />
     <Compile Include="Discovery\IFindGameInstallation.cs" />
-    <Compile Include="Discovery\InstallationFinders\ConfigFileGameFinder.cs" />
+    <Compile Include="Discovery\InstallationFinders\ConfigGameFinder.cs" />
     <Compile Include="Discovery\InstallationFinders\DiscordGameFinder.cs" />
     <Compile Include="Discovery\InstallationFinders\EpicGamesInstallationFinder.cs" />
     <Compile Include="Discovery\InstallationFinders\GameInCurrentDirectoryFinder.cs" />
@@ -93,7 +93,7 @@
     <Compile Include="Helper\IMap.cs" />
     <Compile Include="Helper\Mathf.cs" />
     <Compile Include="Helper\Matrix4x4Extension.cs" />
-    <Compile Include="Helper\NitroxAppData.cs" />
+    <Compile Include="Helper\NitroxUser.cs" />
     <Compile Include="Helper\PirateDetection.cs" />
     <Compile Include="Helper\Reflect.cs" />
     <Compile Include="Helper\StringHelper.cs" />

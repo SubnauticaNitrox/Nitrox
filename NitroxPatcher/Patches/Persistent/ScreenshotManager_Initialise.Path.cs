@@ -12,7 +12,7 @@ namespace NitroxPatcher.Patches.Persistent
 
         public static void Prefix(ScreenshotManager __instance, ref string _savePath)
         {
-            _savePath = Path.GetFullPath(Environment.GetEnvironmentVariable("NITROX_LAUNCHER_PATH") ?? ".");
+            _savePath = Path.GetFullPath(NitroxUser.LauncherPath ?? ".");
         }
 
         public override void Patch(Harmony harmony)

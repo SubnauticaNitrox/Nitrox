@@ -26,7 +26,7 @@ namespace NitroxModel.Serialization
             }
         }
 
-        public static string DefaultFile => Path.Combine(NitroxAppData.Instance.LauncherPath, SERVERS_FILE_NAME);
+        public static string DefaultFile => Path.Combine(NitroxUser.LauncherPath, SERVERS_FILE_NAME);
 
         public IEnumerable<Entry> Entries => entries;
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using NitroxModel.Helper;
 using NitroxModel.Platforms.OS.Shared;
 using NitroxModel.Platforms.Store.Interfaces;
 
@@ -34,7 +35,7 @@ namespace NitroxModel.Platforms.Store
         {
             // TODO: Support MS Store again and run command (example, should use pathToGameExe argument):
             // return await Task.FromResult(ProcessEx.Start(null,
-            //                                        new[] { ("NITROX_LAUNCHER_PATH", "") },
+            //                                        new[] { (NitroxUser.LAUNCHER_PATH_ENV_KEY, "") },
             //                                        commandLine: GameInfo.Subnautica.MsStoreStartUrl));
             await Task.CompletedTask; // Suppresses async-without-await warning - can be removed.
             throw new NotImplementedException($"{Name} support is unavailable");
