@@ -115,6 +115,27 @@ namespace NitroxClient.MonoBehaviours
             }
         }
 
+        public void OnEnable()
+        {
+            if (Id == null)
+            {
+                Log.Error($"Nitrox Id was null on {gameObject.name} in OnEnable");
+                return;
+            }
+
+            gameObjectsById[Id] = gameObject;
+        }
+
+        public void OnDestroy()
+        {
+            if (Id == null)
+            {
+                Log.Error($"Nitrox Id was null on {gameObject.name} in OnDestroy");
+                return;
+            }
+
+            gameObjectsById.Remove(Id);
+        }
         public void OnProtoSerializeObjectTree(ProtobufSerializer _)
         {
         }
