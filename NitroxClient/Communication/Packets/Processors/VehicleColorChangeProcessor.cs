@@ -21,8 +21,7 @@ namespace NitroxClient.Communication.Packets.Processors
         public override void Process(VehicleColorChange colorPacket)
         {
             GameObject vehicleObject = NitroxEntity.RequireObjectFrom(colorPacket.VehicleId);
-            SubNameInput subNameInput = null;
-            SubName subNameTarget = null;
+            SubNameInput subNameInput;
 
 
             if (colorPacket.ParentId.HasValue)
@@ -31,35 +30,28 @@ namespace NitroxClient.Communication.Packets.Processors
                 GameObject baseCell = moonpool.RequireComponentInParent<BaseCell>().gameObject;
 
                 subNameInput = baseCell.RequireComponentInChildren<SubNameInput>();
-                subNameTarget = subNameInput.target;
             }
 
             else
             {
                 subNameInput = vehicleObject.RequireComponentInChildren<SubNameInput>();
-                subNameTarget = subNameInput.target;
             }
 
-            if (subNameInput && subNameTarget)
+            using (packetSender.Suppress<VehicleColorChange>())
             {
-                if (vehicleObject.GetComponent<Vehicle>())
+                if (subNameInput && subNameInput.target)
                 {
                     // Switch to the currently selected tab
                     subNameInput.SetSelected(colorPacket.Index);
 
                     // OnColorChange calls these two methods, in order to update the vehicle color and the color+text on the ingame panel, respectively:
-                    subNameTarget.SetColor(colorPacket.Index, colorPacket.HSB.ToUnity(), colorPacket.Color.ToUnity());
+                    subNameInput.target.SetColor(colorPacket.Index, colorPacket.HSB.ToUnity(), colorPacket.Color.ToUnity());
                     subNameInput.SetColor(colorPacket.Index, colorPacket.Color.ToUnity());
-
                 }
                 else
                 {
-                    Log.Error($"[VehicleColorChangeProcessor] The GameObject {vehicleObject.name} doesn't have a Vehicle component");
+                    Log.Error($"[VehicleColorChangeProcessor] SubNameInput or targeted SubName is null.");
                 }
-            }
-            else
-            {
-                Log.Error($"[VehicleColorChangeProcessor] SubNameInput or targeted SubName is null.");
             }
         }
     }

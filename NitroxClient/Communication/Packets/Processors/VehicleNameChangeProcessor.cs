@@ -20,8 +20,7 @@ namespace NitroxClient.Communication.Packets.Processors
         public override void Process(VehicleNameChange namePacket)
         {
             GameObject vehicleObject = NitroxEntity.RequireObjectFrom(namePacket.VehicleId);
-            SubNameInput subNameInput = null;
-            SubName subNameTarget = null;
+            SubNameInput subNameInput;
 
 
             if (namePacket.ParentId.HasValue)
@@ -30,32 +29,25 @@ namespace NitroxClient.Communication.Packets.Processors
                 GameObject baseCell = moonpool.RequireComponentInParent<BaseCell>().gameObject;
 
                 subNameInput = baseCell.RequireComponentInChildren<SubNameInput>();
-                subNameTarget = subNameInput.target;
 
             }
             else
             {
                 subNameInput = vehicleObject.RequireComponentInChildren<SubNameInput>();
-                subNameTarget = subNameInput.target;
             }
 
-            if (subNameInput && subNameTarget)
+            using (packetSender.Suppress<VehicleNameChange>())
             {
-                if (vehicleObject.GetComponent<Vehicle>())
+                if (subNameInput && subNameInput.target)
                 {
                     // OnColorChange calls these two methods, in order to update the vehicle name on the ingame panel:
-                    subNameTarget.SetName(namePacket.Name);
+                    subNameInput.target.SetName(namePacket.Name);
                     subNameInput.SetName(namePacket.Name);
-
                 }
                 else
                 {
-                    Log.Error($"[VehicleNameChangeProcessor] The GameObject {vehicleObject.name} doesn't have a Vehicle component");
+                    Log.Error($"[VehicleNameChangeProcessor] SubNameInput or targeted SubName is null.");
                 }
-            }
-            else
-            {
-                Log.Error($"[VehicleNameChangeProcessor] SubNameInput or targeted SubName is null.");
             }
         }
     }
