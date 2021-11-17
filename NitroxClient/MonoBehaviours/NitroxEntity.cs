@@ -119,7 +119,6 @@ namespace NitroxClient.MonoBehaviours
         {
             if (Id == null)
             {
-                Log.Error($"Nitrox Id was null on {gameObject.name} in OnEnable");
                 return;
             }
 
@@ -130,12 +129,12 @@ namespace NitroxClient.MonoBehaviours
         {
             if (Id == null)
             {
-                Log.Error($"Nitrox Id was null on {gameObject.name} in OnDestroy");
                 return;
             }
 
             gameObjectsById.Remove(Id);
         }
+
         public void OnProtoSerializeObjectTree(ProtobufSerializer _)
         {
         }
