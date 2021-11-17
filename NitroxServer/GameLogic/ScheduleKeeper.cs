@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using NitroxModel.DataStructures;
-using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxServer.GameLogic.Unlockables;
 
@@ -9,45 +8,45 @@ namespace NitroxServer.GameLogic
 {
     public class ScheduleKeeper
     {
-        public Dictionary<string, FakeScheduledGoal> Schedule = new Dictionary<string, FakeScheduledGoal>();
-        private ThreadSafeList<FakeScheduledGoal> scheduledGoals;
+        public Dictionary<string, NitroxScheduledGoal> Schedule = new Dictionary<string, NitroxScheduledGoal>();
+        private ThreadSafeList<NitroxScheduledGoal> scheduledGoals;
         private PDAStateData pdaStateData;
         private StoryGoalData storyGoalData;
         private EventTriggerer eventTriggerer;
         private PlayerManager playerManager;
-     
-        public ScheduleKeeper(ThreadSafeList<FakeScheduledGoal> scheduledGoals, PDAStateData pdaStateData, StoryGoalData storyGoalData)
+        public float CurrentTime => (float)eventTriggerer.GetRealElapsedTime();
+
+        public ScheduleKeeper(ThreadSafeList<NitroxScheduledGoal> scheduledGoals, PDAStateData pdaStateData, StoryGoalData storyGoalData, EventTriggerer eventTriggerer, PlayerManager playerManager)
         {
             this.pdaStateData = pdaStateData;
             this.storyGoalData = storyGoalData;
+            this.eventTriggerer = eventTriggerer;
+            this.playerManager = playerManager;
 
-            if (scheduledGoals == null)
-            {
-                return;
-            }
             // This one var is the reference to the original one
             this.scheduledGoals = scheduledGoals;
             // We still want to get a "replicated" list in memory
             for (int i = scheduledGoals.Count - 1; i >= 0; i--)
             {
-                FakeScheduledGoal scheduledGoal = scheduledGoals[i];
+                NitroxScheduledGoal scheduledGoal = scheduledGoals[i];
                 // In the unlikely case that there's a duplicated entry
-                if (Schedule.TryGetValue(scheduledGoal.GoalKey, out FakeScheduledGoal alreadyInGoal))
+                if (Schedule.TryGetValue(scheduledGoal.GoalKey, out NitroxScheduledGoal alreadyInGoal))
                 {
                     // We remove the goal that's already in if it's planned for later than the first one
-                    if (GetLatestOfTwoGoals(scheduledGoal, alreadyInGoal).TimeExecute == alreadyInGoal.TimeExecute)
+                    if (NitroxScheduledGoal.GetLatestOfTwoGoals(scheduledGoal, alreadyInGoal).TimeExecute == alreadyInGoal.TimeExecute)
                     {
                         UnScheduleGoal(alreadyInGoal.GoalKey);
                     }
-                    // Else we simply don't add it
                     continue;
                 }
                 
                 Schedule.Add(scheduledGoal.GoalKey, scheduledGoal);
             }
+
+            CleanScheduledGoals();
         }
 
-        public List<FakeScheduledGoal> GetScheduledGoals()
+        public List<NitroxScheduledGoal> GetScheduledGoals()
         {
             CleanScheduledGoals();
             return new(Schedule.Values);
@@ -55,20 +54,13 @@ namespace NitroxServer.GameLogic
 
         public bool ContainsScheduledGoal(string goalKey)
         {
-            return Schedule.TryGetValue(goalKey, out FakeScheduledGoal value);
+            return Schedule.ContainsKey(goalKey);
         }
 
-        public void ScheduleGoal(FakeScheduledGoal scheduledGoal)
+        public void ScheduleGoal(NitroxScheduledGoal scheduledGoal)
         {
-            // Some weird goal that activates when the player swims, tho it should not get here
-            if (scheduledGoal.GoalKey == "PlayerDiving")
-            {
-                Log.WarnOnce("Some weird thing happened: server received a goal named \"PlayerDiving\", even though the client is not supposed to send them. Maybe one of them is playing with an outdated version ?");
-                return;
-            }
-
             // Only add if it's not in already
-            if (!Schedule.TryGetValue(scheduledGoal.GoalKey, out FakeScheduledGoal value))
+            if (!Schedule.ContainsKey(scheduledGoal.GoalKey))
             {
                 // If it's not already in any PDA stuff (completed goals or PDALog)
                 if (!IsAlreadyRegistered(scheduledGoal.GoalKey))
@@ -82,14 +74,13 @@ namespace NitroxServer.GameLogic
             }
         }
 
-        public void UnScheduleGoal(string goalKey)
+        /// <param name="becauseOfTime">
+        ///     When the server starts, it happens that there are still some goals that were supposed to happen
+        ///     but didn't, so to make sure that they happen on at least one client, we postpone its execution
+        /// </param>
+        public void UnScheduleGoal(string goalKey, bool becauseOfTime = false)
         {
-            UnScheduleGoal(goalKey, false);
-        }
-
-        public void UnScheduleGoal(string goalKey, bool becauseOfTime)
-        {
-            if (!Schedule.TryGetValue(goalKey, out FakeScheduledGoal scheduledGoal))
+            if (!Schedule.TryGetValue(goalKey, out NitroxScheduledGoal scheduledGoal))
             {
                 return;
             }
@@ -98,57 +89,37 @@ namespace NitroxServer.GameLogic
             if (becauseOfTime && !IsAlreadyRegistered(goalKey))
             {
                 scheduledGoal.TimeExecute = CurrentTime + 15;
-                if (playerManager.GetConnectedPlayers().Count > 0)
-                {
-                    playerManager.SendPacketToAllPlayers(new Schedule(CurrentTime + 15, goalKey, scheduledGoal.GoalType));
-                    // Log.Debug($"Players connected, sending them the scheduledGoal [{scheduledGoal.GoalKey}]");
-                }
-                /* else
-                {
-                    Log.Debug($"No player connected, scheduledGoal [{scheduledGoal.GoalKey}] will be postponed");
-                }*/
+                playerManager.SendPacketToAllPlayers(new Schedule(scheduledGoal.TimeExecute, goalKey, scheduledGoal.GoalType));
                 return;
             }
             Schedule.Remove(goalKey);
             scheduledGoals.Remove(scheduledGoal);
         }
-
-        public void Init(EventTriggerer eventTriggerer, PlayerManager playerManager)
-        {
-            this.eventTriggerer = eventTriggerer;
-            this.playerManager = playerManager;
-            // Only clean scheduled goals when these classes are avalaible
-            CleanScheduledGoals();
-        }
         
         // Cleans from duplicated entries and outdated entries
         public void CleanScheduledGoals()
         {
-            // Log.Debug($"CleanScheduledGoals() [time={CurrentTime}]");
             for (int i = scheduledGoals.Count - 1; i >= 0; i--)
             {
-                FakeScheduledGoal scheduledGoal = scheduledGoals[i];
+                NitroxScheduledGoal scheduledGoal = scheduledGoals[i];
 
                 // will let the check occur or not depending on if the goal was already unscheduled
                 bool removed = false;
                 for (int j = scheduledGoals.Count - 1; j >= 0; j--)
                 {
-                    FakeScheduledGoal otherGoal = scheduledGoals[j];
+                    NitroxScheduledGoal otherGoal = scheduledGoals[j];
                     if (otherGoal.GoalKey == scheduledGoal.GoalKey && otherGoal.TimeExecute != scheduledGoal.TimeExecute)
                     {
                         removed = true;
-                        // Log.Debug($"Removing because duplicated [GoalKey={scheduledGoal.GoalKey}, time={scheduledGoal.TimeExecute}, otherTime={otherGoal.TimeExecute}] [Diff={Math.Abs(otherGoal.TimeExecute - scheduledGoal.TimeExecute)}]");
                         // Remove the latest one
-                        UnScheduleGoal(GetLatestOfTwoGoals(scheduledGoal, otherGoal).GoalKey);
+                        UnScheduleGoal(NitroxScheduledGoal.GetLatestOfTwoGoals(scheduledGoal, otherGoal).GoalKey);
                     }
                 }
                 // Check if it's still in, then if it's supposed to have occurred
                 if (!removed)
                 {
-                    // Log.Debug($"Checking: [{scheduledGoal.GoalKey}: {scheduledGoal.TimeExecute}<{CurrentTime}]");
                     if (scheduledGoal.TimeExecute < CurrentTime)
                     {
-                        // Log.Debug($"Already passed [{scheduledGoal.GoalKey}]");
                         UnScheduleGoal(scheduledGoal.GoalKey, true);
                     }
                 }
@@ -180,30 +151,15 @@ namespace NitroxServer.GameLogic
             SendCurrentTimePacket(false);
         }
 
-        public FakeScheduledGoal GetLatestOfTwoGoals(FakeScheduledGoal firstGoal, FakeScheduledGoal secondGoal)
-        {
-            if (firstGoal.TimeExecute >= secondGoal.TimeExecute)
-            {
-                return firstGoal;
-            }
-            return secondGoal;
-        }
-
         public bool IsAlreadyRegistered(string goalKey)
         {
-            bool alreadyRegistered = pdaStateData.PdaLog.Any(entry => entry.Key == goalKey);
-            if (!alreadyRegistered)
-            {
-                alreadyRegistered = storyGoalData.CompletedGoals.Contains(goalKey);
-            }
-            return alreadyRegistered;
+            return pdaStateData.PdaLog.Any(entry => entry.Key == goalKey)
+                || storyGoalData.CompletedGoals.Contains(goalKey);
         }
 
         public enum TimeModification
         {
             DAY, NIGHT, SKIP
         }
-
-        public float CurrentTime => (float)eventTriggerer.GetRealElapsedTime();
     }
 }

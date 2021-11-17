@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.Communication.Abstract;
-using NitroxModel.Core;
+using NitroxModel.Helper;
 using NitroxModel.Packets;
 using Story;
 
@@ -13,12 +12,10 @@ namespace NitroxPatcher.Patches.Dynamic
     public class StoryGoalScheduler_Schedule_Patch : NitroxPatch, IDynamicPatch
     {
         public static readonly Type TARGET_CLASS = typeof(StoryGoalScheduler);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("Schedule", BindingFlags.Public | BindingFlags.Instance);
-        private static Dictionary<string, PDALog.Entry> entries = PDALog.entries;
-        private static readonly IPacketSender iPacketSender = NitroxServiceLocator.LocateService<IPacketSender>();
+        public static readonly MethodInfo TARGET_METHOD = Reflect.Method((StoryGoalScheduler t) => t.Schedule(default(StoryGoal)));
+        private static readonly IPacketSender packetSender = Resolve<IPacketSender>();
 
-        // __state is a bool made to prevent duplicated entries
-        // if it's false, then it should be skipped
+        // __state is a bool made to prevent duplicated entries, if it's false, then it should be skipped
         public static bool Prefix(StoryGoal goal, out bool __state)
         {
             bool skip = StoryGoalScheduler.main.schedule.Any(scheduledGoal => scheduledGoal.goalKey == goal.key);
@@ -29,7 +26,6 @@ namespace NitroxPatcher.Patches.Dynamic
                     skip = true;
                 }
             }
-            // Log.Debug($"Prefix({goal.key}) [skip={skip}]");
             __state = !skip;
             // if skip = false, it returns true : the function will be called normally
             // if skip = true,  it returns false: the function will be skipped
@@ -39,7 +35,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(StoryGoal goal, bool __state)
         {
-            if (!__state || goal.key == "PlayerDiving" || entries.TryGetValue(goal.key, out PDALog.Entry value))
+            if (!__state || goal.key == "PlayerDiving" || PDALog.entries.ContainsKey(goal.key))
             {
                 return;
             }
@@ -49,8 +45,8 @@ namespace NitroxPatcher.Patches.Dynamic
             {
                 return;
             }
-            // Log.Debug($"StoryGoalScheduler.Schedule({scheduledGoal.goalKey};{scheduledGoal.goalType};{scheduledGoal.timeExecute})");
-            iPacketSender.Send(new Schedule(scheduledGoal.timeExecute, goal.key, goal.goalType.ToString()));
+            
+            packetSender.Send(new Schedule(scheduledGoal.timeExecute, goal.key, goal.goalType.ToString()));
         }
 
         public override void Patch(Harmony harmony)

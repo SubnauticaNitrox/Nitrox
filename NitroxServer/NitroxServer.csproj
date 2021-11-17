@@ -172,7 +172,6 @@
     <Compile Include="GameLogic\SimulationOwnership.cs" />
     <Compile Include="GameLogic\StoryTimingData.cs" />
     <Compile Include="GameLogic\ScheduleKeeper.cs" />
-    <Compile Include="GameLogic\TimeKeeper.cs" />
     <Compile Include="GameLogic\Unlockables\PDAStateData.cs" />
     <Compile Include="GameLogic\Unlockables\StoryGoalData.cs" />
     <Compile Include="GameLogic\Vehicles\VehicleData.cs" />
@@ -195,6 +194,7 @@
     <Compile Include="Serialization\SaveDataUpgrades\NewtonsoftExtensions.cs" />
     <Compile Include="Serialization\SaveDataUpgrades\SaveDataUpgrade.cs" />
     <Compile Include="Serialization\SaveDataUpgrades\Upgrade_V1500.cs" />
+    <Compile Include="Serialization\SaveDataUpgrades\Upgrade_V1600.cs" />
     <Compile Include="Serialization\ServerConfig.cs" />
     <Compile Include="Serialization\ServerJsonSerializer.cs" />
     <Compile Include="Serialization\ServerProtoBufSerializer.cs" />

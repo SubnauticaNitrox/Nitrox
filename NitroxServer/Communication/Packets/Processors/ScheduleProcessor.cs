@@ -16,7 +16,7 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(Schedule packet, Player simulatingPlayer)
         {
-            scheduleKeeper.ScheduleGoal(FakeScheduledGoal.From(packet.TimeExecute, packet.Key, packet.Type));
+            scheduleKeeper.ScheduleGoal(NitroxScheduledGoal.From(packet.TimeExecute, packet.Key, packet.Type));
         }
     }
 }

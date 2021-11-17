@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Logger;
 using ProtoBufNet;
 
 namespace NitroxServer.GameLogic.Unlockables
@@ -46,7 +48,14 @@ namespace NitroxServer.GameLogic.Unlockables
 
         public void AddPDALogEntry(PDALogEntry entry)
         {
-            PdaLog.Add(entry);
+            if (!PdaLog.Any(logEntry => logEntry.Key == entry.Key))
+            {
+                PdaLog.Add(entry);
+            }
+            else
+            {
+                Log.Info($"There was an attempt of adding a duplicated entry in the PDALog [{entry.Key}]");
+            }
         }
 
         public void EntryProgressChanged(NitroxTechType techType, float progress, int unlocked, NitroxId nitroxId)

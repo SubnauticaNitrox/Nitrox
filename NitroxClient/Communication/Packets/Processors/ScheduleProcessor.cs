@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
@@ -14,9 +12,8 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             ScheduledGoal goal = new()
             {
-                version = 1,
                 goalKey = schedulePacket.Key,
-                goalType = (Story.GoalType)Enum.Parse(typeof(Story.GoalType), schedulePacket.Type),
+                goalType = (Story.GoalType)System.Enum.Parse(typeof(Story.GoalType), schedulePacket.Type),
                 timeExecute = schedulePacket.TimeExecute
             };
             if (ShouldSchedule(goal.timeExecute) && !IsAlreadyKnown(goal.goalKey))

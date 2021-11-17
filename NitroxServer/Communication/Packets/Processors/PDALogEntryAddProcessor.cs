@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Logger;
+﻿using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
@@ -23,14 +21,7 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(PDALogEntryAdd packet, Player player)
         {
-            if (pdaState.PdaLog.All(entry => entry.Key != packet.Key))
-            {
-                pdaState.AddPDALogEntry(new PDALogEntry(packet.Key, packet.Timestamp));
-            }
-            else
-            {
-                Log.Debug($"[PDALogEntryAddProcessor] There was an attempt of adding a duplicated entry in the PDALog [{packet.Key}]");
-            }
+            pdaState.AddPDALogEntry(new PDALogEntry(packet.Key, packet.Timestamp));
             if (scheduleKeeper.ContainsScheduledGoal(packet.Key))
             {
                 scheduleKeeper.UnScheduleGoal(packet.Key);

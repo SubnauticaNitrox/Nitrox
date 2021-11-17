@@ -12,17 +12,17 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             double oldTimePassedAsDouble = DayNightCycle.main.timePassedAsDouble;
             double newTimePassedAsDouble = timeChangePacket.CurrentTime;
-            DayNightCycle.main.timePassedAsDouble = newTimePassedAsDouble; //TODO: account for player latency
+            DayNightCycle.main.timePassedAsDouble = newTimePassedAsDouble;
             DayNightCycle.main.StopSkipTimeMode();
 
             if (timeChangePacket.InitialSync)
             {
                 AuroraWarnings auroraWarnings = GameObject.Find("Player/SpawnPlayerSounds/PlayerSounds(Clone)/auroraWarnings").GetComponent<AuroraWarnings>();
-                
-                Utils.ScalarMonitor auroraTimeMonitor = (Utils.ScalarMonitor)typeof(AuroraWarnings).GetField("timeMonitor", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(auroraWarnings);
+
+                Utils.ScalarMonitor auroraTimeMonitor = auroraWarnings.timeMonitor;
                 auroraTimeMonitor.Init((float)newTimePassedAsDouble);
 
-                Utils.ScalarMonitor crashedTimeMonitor = (Utils.ScalarMonitor)typeof(CrashedShipExploder).GetField("timeMonitor", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(CrashedShipExploder.main);
+                Utils.ScalarMonitor crashedTimeMonitor = CrashedShipExploder.main.timeMonitor;
                 crashedTimeMonitor.Init((float)newTimePassedAsDouble);
             }
             

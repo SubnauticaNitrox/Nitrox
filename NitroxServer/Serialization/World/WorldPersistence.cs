@@ -109,7 +109,6 @@ namespace NitroxServer.Serialization.World
                     throw new InvalidDataException("Save files are not valid");
                 }
 
-                persistedData.WorldData = CleanWorldData(persistedData.WorldData);
                 World world = CreateWorld(persistedData, config.GameMode);
 
                 return Optional.Of(world);
@@ -181,9 +180,6 @@ namespace NitroxServer.Serialization.World
 
             World world = new()
             {
-                TimeKeeper = new TimeKeeper { ServerStartTime = pWorldData.WorldData.ServerStartTime },
-                ScheduleKeeper = new ScheduleKeeper(pWorldData.WorldData.GameData.StoryGoals.ScheduledGoals, pWorldData.WorldData.GameData.PDAState, pWorldData.WorldData.GameData.StoryGoals),
-
                 SimulationOwnershipData = new SimulationOwnershipData(),
                 PlayerManager = new PlayerManager(pWorldData.PlayerData.GetPlayers(), config),
 
@@ -200,8 +196,7 @@ namespace NitroxServer.Serialization.World
 
             world.EventTriggerer = new EventTriggerer(world.PlayerManager, pWorldData.WorldData.GameData.StoryTiming.ElapsedTime, pWorldData.WorldData.GameData.StoryTiming.AuroraExplosionTime);
             world.VehicleManager = new VehicleManager(pWorldData.WorldData.VehicleData.Vehicles, world.InventoryManager);
-
-            world.ScheduleKeeper.Init(world.EventTriggerer, world.PlayerManager);
+            world.ScheduleKeeper = new ScheduleKeeper(pWorldData.WorldData.GameData.StoryGoals.ScheduledGoals, pWorldData.WorldData.GameData.PDAState, pWorldData.WorldData.GameData.StoryGoals, world.EventTriggerer, world.PlayerManager);
 
             world.BatchEntitySpawner = new BatchEntitySpawner(
                 NitroxServiceLocator.LocateService<EntitySpawnPointFactory>(),
@@ -270,7 +265,6 @@ namespace NitroxServer.Serialization.World
          */
         private WorldData CleanWorldData(WorldData worldData)
         {
-            // Log.Debug($"Cleaning world data PDAState duplicates");
             List<NitroxTechType> cleanUnlockedTechTypes = worldData.GameData.PDAState.UnlockedTechTypes.Distinct().ToList();
             List<NitroxTechType> cleanKnownTechTypes = worldData.GameData.PDAState.KnownTechTypes.Distinct().ToList();
             List<string> cleanEncyclopediaEntries = worldData.GameData.PDAState.EncyclopediaEntries.Distinct().ToList();

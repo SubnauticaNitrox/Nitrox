@@ -24,7 +24,7 @@
     <Compile Include="Core\NitroxEnvironment.cs" />
     <Compile Include="Core\NitroxServiceLocator.cs" />
     <Compile Include="DataStructures\AtomicBool.cs" />
-    <Compile Include="DataStructures\FakeScheduledGoal.cs" />
+    <Compile Include="DataStructures\NitroxScheduledGoal.cs" />
     <Compile Include="DataStructures\GameLogic\AbsoluteEntityCell.cs" />
     <Compile Include="DataStructures\GameLogic\BasePiece.cs" />
     <Compile Include="DataStructures\GameLogic\Buildings\Metadata\BasePieceMetadata.cs" />

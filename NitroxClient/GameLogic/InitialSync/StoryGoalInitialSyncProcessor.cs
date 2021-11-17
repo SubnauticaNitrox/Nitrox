@@ -69,45 +69,40 @@ namespace NitroxClient.GameLogic.InitialSync
             int alreadyIn = 0;
             for (int i = goals.Count - 1; i >= 0; i--)
             {
-                BiomeGoal goal = goals[i];
-                // Log.Debug($"BiomeGoal in goals: [{goal}]");
-                if (entries.TryGetValue(goal.key, out PDALog.Entry entry))
+                if (entries.ContainsKey(goals[i].key))
                 {
-                    // Log.Debug($"Pda log entry already in [{goal.key}]");
-                    goals.Remove(goal);
+                    goals.Remove(goals[i]);
                     alreadyIn++;
                 }
             }
-            Log.Info($"{alreadyIn} pda log entries were removed from the goals");
+            Log.Debug($"{alreadyIn} pda log entries were removed from the goals");
         }
 
-        private void SetScheduledGoals(List<FakeScheduledGoal> scheduledGoals)
+        private void SetScheduledGoals(List<NitroxScheduledGoal> scheduledGoals)
         {
-            Log.Debug("SetScheduledGoals()");
             Dictionary<string, PDALog.Entry> entries = PDALog.entries;
             // Need to clear some duplicated goals that might have appeared during loading and before sync
             for (int i = StoryGoalScheduler.main.schedule.Count - 1; i >= 0; i--)
             {
                 ScheduledGoal scheduledGoal = StoryGoalScheduler.main.schedule[i];
-                if (entries.TryGetValue(scheduledGoal.goalKey, out PDALog.Entry value))
+                if (entries.ContainsKey(scheduledGoal.goalKey))
                 {
                     StoryGoalScheduler.main.schedule.Remove(scheduledGoal);
                 }
             }
 
-            foreach (FakeScheduledGoal scheduledGoal in scheduledGoals)
+            foreach (NitroxScheduledGoal scheduledGoal in scheduledGoals)
             {
                 ScheduledGoal goal = new ScheduledGoal();
-                goal.version = 1;
                 goal.goalKey = scheduledGoal.GoalKey;
                 goal.goalType = (Story.GoalType)System.Enum.Parse(typeof(Story.GoalType), scheduledGoal.GoalType);
                 goal.timeExecute = scheduledGoal.TimeExecute;
-                if (goal.timeExecute >= DayNightCycle.main.timePassedAsDouble)
+                if (goal.timeExecute >= DayNightCycle.main.timePassedAsDouble
+                    && !StoryGoalScheduler.main.schedule.Any(alreadyInGoal => alreadyInGoal.goalKey == goal.goalKey)
+                    && !entries.TryGetValue(goal.goalKey, out PDALog.Entry value)
+                    && !StoryGoalManager.main.completedGoals.Contains(goal.goalKey))
                 {
-                    if (!StoryGoalScheduler.main.schedule.Any(alreadyInGoal => alreadyInGoal.goalKey == goal.goalKey) && !entries.TryGetValue(goal.goalKey, out PDALog.Entry value) && !StoryGoalManager.main.completedGoals.Contains(goal.goalKey))
-                    {
-                        StoryGoalScheduler.main.schedule.Add(goal);
-                    }
+                    StoryGoalScheduler.main.schedule.Add(goal);
                 }
             }
         }
