@@ -19,9 +19,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(VehicleNameChange namePacket)
         {
-            GameObject vehicleObject = NitroxEntity.RequireObjectFrom(namePacket.VehicleId);
             SubNameInput subNameInput;
-
 
             if (namePacket.ParentId.HasValue)
             {
@@ -29,10 +27,10 @@ namespace NitroxClient.Communication.Packets.Processors
                 GameObject baseCell = moonpool.RequireComponentInParent<BaseCell>().gameObject;
 
                 subNameInput = baseCell.RequireComponentInChildren<SubNameInput>();
-
             }
             else
             {
+                GameObject vehicleObject = NitroxEntity.RequireObjectFrom(namePacket.VehicleId);
                 subNameInput = vehicleObject.RequireComponentInChildren<SubNameInput>();
             }
 

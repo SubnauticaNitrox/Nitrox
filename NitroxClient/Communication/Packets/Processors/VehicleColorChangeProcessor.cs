@@ -20,9 +20,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(VehicleColorChange colorPacket)
         {
-            GameObject vehicleObject = NitroxEntity.RequireObjectFrom(colorPacket.VehicleId);
             SubNameInput subNameInput;
-
 
             if (colorPacket.ParentId.HasValue)
             {
@@ -31,9 +29,9 @@ namespace NitroxClient.Communication.Packets.Processors
 
                 subNameInput = baseCell.RequireComponentInChildren<SubNameInput>();
             }
-
             else
             {
+                GameObject vehicleObject = NitroxEntity.RequireObjectFrom(colorPacket.VehicleId);
                 subNameInput = vehicleObject.RequireComponentInChildren<SubNameInput>();
             }
 
