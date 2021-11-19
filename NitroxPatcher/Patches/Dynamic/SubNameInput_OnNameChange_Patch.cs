@@ -32,11 +32,11 @@ namespace NitroxPatcher.Patches.Dynamic
                     controllerId = NitroxEntity.GetId(moonpool);
                     parentVehicle = vehicle.gameObject;
                 }
-                else if (subname.TryGetComponentInParent<SubRoot>(out SubRoot subRoot))
+                else if (subname.TryGetComponentInParent(out SubRoot subRoot))
                 {
                     parentVehicle = subRoot.gameObject;
                 }
-                else if (subname.TryGetComponentInParent<Rocket>(out Rocket rocket))
+                else if (subname.TryGetComponentInParent(out Rocket rocket))
                 {
                     parentVehicle = rocket.gameObject;
                 }
@@ -48,7 +48,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
                 NitroxId vehicleId = NitroxEntity.GetId(parentVehicle);
                 VehicleNameChange packet = new(controllerId, vehicleId, subname.GetName());
-                NitroxServiceLocator.LocateService<IPacketSender>().Send(packet);
+                Resolve<IPacketSender>().Send(packet);
             }
         }
 
