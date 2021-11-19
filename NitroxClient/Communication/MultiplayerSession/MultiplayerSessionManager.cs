@@ -16,6 +16,8 @@ namespace NitroxClient.Communication.MultiplayerSession
     {
         private readonly HashSet<Type> suppressedPacketsTypes = new HashSet<Type>();
 
+        private Dictionary<Type, Packet> smoothPackets = new Dictionary<Type, Packet>();
+
         public IClient Client { get; }
         public string IpAddress { get; private set; }
         public int ServerPort { get; private set; }
@@ -104,6 +106,31 @@ namespace NitroxClient.Communication.MultiplayerSession
                 return true;
             }
             return false;
+        }
+
+        public bool SendSmooth(Packet packet)
+        {
+            Type packetType = packet.GetType();
+            if (!suppressedPacketsTypes.Contains(packetType))
+            {
+                smoothPackets[packetType] = packet;
+                return true;
+            }
+            return false;
+        }
+
+        public void FlushSmoothPackets()
+        {
+            if (smoothPackets.Count == 0)
+            {
+                return;
+            }
+
+            foreach (Packet packet in smoothPackets.Values)
+            {
+                Client.Send(packet);
+            }
+            smoothPackets.Clear();
         }
 
         public PacketSuppressor<T> Suppress<T>()

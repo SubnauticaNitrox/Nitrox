@@ -82,7 +82,10 @@ namespace NitroxClient.MonoBehaviours
 
             Main = this;
             DontDestroyOnLoad(gameObject);
+            InvokeRepeating(nameof(FlushSmoothPackets), 0.1f, 0.1f);
         }
+
+        private void FlushSmoothPackets() => multiplayerSession.FlushSmoothPackets();
 
         public void Update()
         {
@@ -150,6 +153,7 @@ namespace NitroxClient.MonoBehaviours
             }
 
             OnAfterMultiplayerEnd?.Invoke();
+            CancelInvoke(nameof(FlushSmoothPackets));
 
             //Always do this last.
             NitroxServiceLocator.EndCurrentLifetimeScope();
