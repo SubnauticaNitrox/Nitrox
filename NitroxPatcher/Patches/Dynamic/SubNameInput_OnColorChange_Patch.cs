@@ -34,11 +34,11 @@ namespace NitroxPatcher.Patches.Dynamic
 
                     controllerId = NitroxEntity.GetId(moonpool);
                 }
-                else if (subname.TryGetComponentInParent<SubRoot>(out SubRoot subRoot))
+                else if (subname.TryGetComponentInParent(out SubRoot subRoot))
                 {
                     parentVehicle = subRoot.gameObject;
                 }
-                else if (subname.TryGetComponentInParent<Rocket>(out Rocket rocket))
+                else if (subname.TryGetComponentInParent(out Rocket rocket))
                 {
                     parentVehicle = rocket.gameObject;
                 }
