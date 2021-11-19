@@ -115,26 +115,6 @@ namespace NitroxClient.MonoBehaviours
             }
         }
 
-        public void OnEnable()
-        {
-            if (Id == null)
-            {
-                return;
-            }
-
-            gameObjectsById[Id] = gameObject;
-        }
-
-        public void OnDestroy()
-        {
-            if (Id == null)
-            {
-                return;
-            }
-
-            gameObjectsById.Remove(Id);
-        }
-
         public void OnProtoSerializeObjectTree(ProtobufSerializer _)
         {
         }
