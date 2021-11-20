@@ -26,12 +26,12 @@ namespace NitroxClient.Communication.Packets.Processors
                 GameObject moonpool = NitroxEntity.RequireObjectFrom(namePacket.ParentId.Value);
                 GameObject baseCell = moonpool.RequireComponentInParent<BaseCell>().gameObject;
 
-                subNameInput = baseCell.RequireComponentInChildren<SubNameInput>();
+                subNameInput = baseCell.GetComponentInChildren<SubNameInput>();
             }
             else
             {
                 GameObject vehicleObject = NitroxEntity.RequireObjectFrom(namePacket.VehicleId);
-                subNameInput = vehicleObject.RequireComponentInChildren<SubNameInput>();
+                subNameInput = vehicleObject.GetComponentInChildren<SubNameInput>();
             }
 
             using (packetSender.Suppress<VehicleNameChange>())
@@ -44,7 +44,7 @@ namespace NitroxClient.Communication.Packets.Processors
                 }
                 else
                 {
-                    Log.Error($"[VehicleNameChangeProcessor] SubNameInput or targeted SubName is null.");
+                    Log.Error($"[VehicleNameChangeProcessor] SubNameInput or targeted SubName is null with {namePacket}.");
                 }
             }
         }

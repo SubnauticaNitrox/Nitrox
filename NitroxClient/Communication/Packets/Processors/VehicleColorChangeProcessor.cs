@@ -27,12 +27,13 @@ namespace NitroxClient.Communication.Packets.Processors
                 GameObject moonpool = NitroxEntity.RequireObjectFrom(colorPacket.ParentId.Value);
                 GameObject baseCell = moonpool.RequireComponentInParent<BaseCell>().gameObject;
 
-                subNameInput = baseCell.RequireComponentInChildren<SubNameInput>();
+                subNameInput = baseCell.GetComponentInChildren<SubNameInput>();
             }
             else
             {
                 GameObject vehicleObject = NitroxEntity.RequireObjectFrom(colorPacket.VehicleId);
-                subNameInput = vehicleObject.RequireComponentInChildren<SubNameInput>();
+
+                subNameInput = vehicleObject.GetComponentInChildren<SubNameInput>();
             }
 
             using (packetSender.Suppress<VehicleColorChange>())
@@ -48,7 +49,7 @@ namespace NitroxClient.Communication.Packets.Processors
                 }
                 else
                 {
-                    Log.Error($"[VehicleColorChangeProcessor] SubNameInput or targeted SubName is null.");
+                    Log.Error($"[VehicleColorChangeProcessor] SubNameInput or targeted SubName is null with {colorPacket}.");
                 }
             }
         }

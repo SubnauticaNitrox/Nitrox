@@ -1,9 +1,8 @@
-using System.Reflection;
+﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
-using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
@@ -40,6 +39,12 @@ namespace NitroxPatcher.Patches.Dynamic
                 }
                 else if (subname.TryGetComponentInParent(out Rocket rocket))
                 {
+                    // For some reason only the rocket has a full functioning ghost with a different NitroxId when spawning/constructing, so we are ignoring it.
+                    if (rocket.TryGetComponentInChildren(out VFXConstructing constructing) && !constructing.isDone)
+                    {
+                        return;
+                    }
+
                     parentVehicle = rocket.gameObject;
                 }
                 else
