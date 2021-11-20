@@ -1,5 +1,4 @@
-﻿using NitroxModel.Logger;
-using NitroxModel.Packets;
+﻿using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Vehicles;
@@ -21,8 +20,6 @@ namespace NitroxServer.Communication.Packets.Processors
         {
             vehicleManager.UpdateVehicleColours(packet.Index, packet.VehicleId, packet.HSB);
             playerManager.SendPacketToOtherPlayers(packet, player);
-
-            Log.Debug("Received packet: " + packet);
         }
     }
 }
