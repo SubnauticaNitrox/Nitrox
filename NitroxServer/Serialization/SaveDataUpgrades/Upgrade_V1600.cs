@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
-using NitroxModel.Logger;
 using NitroxServer.Serialization.Upgrade;
 
 namespace NitroxServer.Serialization.SaveDataUpgrades
@@ -16,15 +15,13 @@ namespace NitroxServer.Serialization.SaveDataUpgrades
             List<string> cleanUnlockedTechTypes = data["GameData"]["PDAState"]["UnlockedTechTypes"].ToObject<List<string>>().Distinct().ToList();
             List<string> cleanKnownTechTypes = data["GameData"]["PDAState"]["KnownTechTypes"].ToObject<List<string>>().Distinct().ToList();
             List<string> cleanEncyclopediaEntries = data["GameData"]["PDAState"]["EncyclopediaEntries"].ToObject<List<string>>().Distinct().ToList();
-            List<JToken> cleanPdaLog = new List<JToken>();
-            List<string> cleanPdaLogKeys = new List<string>();
-
             data["GameData"]["PDAState"]["UnlockedTechTypes"] = new JArray(cleanUnlockedTechTypes);
             data["GameData"]["PDAState"]["KnownTechTypes"] = new JArray(cleanKnownTechTypes);
             data["GameData"]["PDAState"]["EncyclopediaEntries"] = new JArray(cleanEncyclopediaEntries);
 
+            List<JToken> cleanPdaLog = new List<JToken>();
             List<JToken> pdaLog = data["GameData"]["PDAState"]["PdaLog"].ToObject<List<JToken>>();
-            foreach(JToken pdaLogEntry in pdaLog)
+            foreach (JToken pdaLogEntry in pdaLog)
             {
                 string Key = pdaLogEntry["Key"].ToString();
                 if (!cleanPdaLog.Any(entry => entry["Key"].ToString() == Key))
@@ -36,9 +33,10 @@ namespace NitroxServer.Serialization.SaveDataUpgrades
 
             float elapsedTime = data["GameData"]["StoryTiming"]["ElapsedTime"].ToObject<float>() * 0.001f;
             float auroraExplosionTime = data["GameData"]["StoryTiming"]["AuroraExplosionTime"].ToObject<float>() * 0.001f;
-
             data["GameData"]["StoryTiming"]["ElapsedTime"] = elapsedTime;
             data["GameData"]["StoryTiming"]["AuroraExplosionTime"] = auroraExplosionTime;
+
+            data["GameData"]["ServerStartTime"]?.Remove();
         }
     }
 }

@@ -22,10 +22,8 @@ namespace NitroxClient.Communication.Packets.Processors
 
                 if (PDAScanner.GetPartialEntryByKey(packet.TechType.ToUnity(), out PDAScanner.Entry entry))
                 {
-                    List<PDAScanner.Entry> partial = PDAScanner.partial;
-                    HashSet<TechType> complete = PDAScanner.complete;
-                    partial.Remove(entry);
-                    complete.Add(entry.techType);
+                    PDAScanner.partial.Remove(entry);
+                    PDAScanner.complete.Add(entry.techType);
                 }
             }
         }

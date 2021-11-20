@@ -67,7 +67,6 @@ namespace NitroxServer.Serialization.World
                     Directory.CreateDirectory(saveDir);
                 }
 
-                world.ScheduleKeeper.CleanScheduledGoals();
                 Serializer.Serialize(Path.Combine(saveDir, $"Version{FileEnding}"), new SaveFileVersion());
                 Serializer.Serialize(Path.Combine(saveDir, $"BaseData{FileEnding}"), persistedData.BaseData);
                 Serializer.Serialize(Path.Combine(saveDir, $"PlayerData{FileEnding}"), persistedData.PlayerData);
@@ -156,7 +155,6 @@ namespace NitroxServer.Serialization.World
                     InventoryData = InventoryData.From(new List<ItemData>(), new List<ItemData>(), new List<EquippedItemData>()),
                     VehicleData = VehicleData.From(new List<VehicleModel>()),
                     ParsedBatchCells = new List<NitroxInt3>(),
-                    ServerStartTime = DateTime.UtcNow,
 #if DEBUG
                     Seed = "TCCBIBZXAB"
 #else
@@ -258,40 +256,6 @@ namespace NitroxServer.Serialization.World
                 Serializer.Serialize(Path.Combine(saveDir, $"Version{FileEnding}"), new SaveFileVersion());
                 Log.Info($"Save file was upgraded to {NitroxEnvironment.Version}");
             }
-        }
-
-        /* If bad things occur, the savefile will be full of duplicated entries, in which case
-         *  we may want to bring a CleanWorldData() function. (https://github.com/SubnauticaNitrox/Nitrox/pull/1583)
-         */
-        private WorldData CleanWorldData(WorldData worldData)
-        {
-            List<NitroxTechType> cleanUnlockedTechTypes = worldData.GameData.PDAState.UnlockedTechTypes.Distinct().ToList();
-            List<NitroxTechType> cleanKnownTechTypes = worldData.GameData.PDAState.KnownTechTypes.Distinct().ToList();
-            List<string> cleanEncyclopediaEntries = worldData.GameData.PDAState.EncyclopediaEntries.Distinct().ToList();
-            List<PDALogEntry> cleanPdaLog = new List<PDALogEntry>();
-            List<string> cleanPdaLogKeys = new List<string>();
-
-            worldData.GameData.PDAState.UnlockedTechTypes.Clear();
-            worldData.GameData.PDAState.KnownTechTypes.Clear();
-            worldData.GameData.PDAState.EncyclopediaEntries.Clear();
-
-            cleanUnlockedTechTypes.ForEach(techType => worldData.GameData.PDAState.UnlockedTechTypes.Add(techType));
-            cleanKnownTechTypes.ForEach(techType => worldData.GameData.PDAState.KnownTechTypes.Add(techType));
-            cleanEncyclopediaEntries.ForEach(encyclopediaEntry => worldData.GameData.PDAState.EncyclopediaEntries.Add(encyclopediaEntry));
-
-            foreach (PDALogEntry pdaLogEntry in worldData.GameData.PDAState.PdaLog)
-            {
-                if (!cleanPdaLogKeys.Contains(pdaLogEntry.Key))
-                {
-                    cleanPdaLogKeys.Add(pdaLogEntry.Key);
-                    cleanPdaLog.Add(pdaLogEntry);
-                }
-            }
-            // Log.Debug($"Removed {worldData.GameData.PDAState.PdaLog.Count - cleanPdaLog.Count} duplicated entries in PdaLog");
-            worldData.GameData.PDAState.PdaLog.Clear();
-            cleanPdaLog.ForEach(pdaLogEntry => worldData.GameData.PDAState.PdaLog.Add(pdaLogEntry));
-            
-            return worldData;
         }
     }
 }

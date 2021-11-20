@@ -18,24 +18,19 @@ namespace NitroxPatcher.Patches.Dynamic
         // __state is a bool made to prevent duplicated entries, if it's false, then it should be skipped
         public static bool Prefix(StoryGoal goal, out bool __state)
         {
-            bool skip = StoryGoalScheduler.main.schedule.Any(scheduledGoal => scheduledGoal.goalKey == goal.key);
-            if (!skip && goal.goalType == Story.GoalType.Radio)
+            __state = StoryGoalScheduler.main.schedule.Any(scheduledGoal => scheduledGoal.goalKey == goal.key);
+            if (!__state && goal.goalType == Story.GoalType.Radio
+                && StoryGoalManager.main.pendingRadioMessages.Contains(goal.key))
             {
-                if (StoryGoalManager.main.pendingRadioMessages.Contains(goal.key))
-                {
-                    skip = true;
-                }
+                __state = true;
             }
-            __state = !skip;
-            // if skip = false, it returns true : the function will be called normally
-            // if skip = true,  it returns false: the function will be skipped
-            return !skip;
+            return !__state;
         }
 
 
         public static void Postfix(StoryGoal goal, bool __state)
         {
-            if (!__state || goal.key == "PlayerDiving" || PDALog.entries.ContainsKey(goal.key))
+            if (__state || goal.key == "PlayerDiving" || PDALog.entries.ContainsKey(goal.key))
             {
                 return;
             }

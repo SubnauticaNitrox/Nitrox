@@ -72,7 +72,6 @@ namespace NitroxTest.Serialization
             {
                 PersistedWorldData worldDataAfter = worldsDataAfter[serializerIndex];
                 Assert.IsTrue(worldData.WorldData.ParsedBatchCells.SequenceEqual(worldDataAfter.WorldData.ParsedBatchCells), $"WorldData.ParsedBatchCells is not equal while using {serverSerializers[serializerIndex]}.");
-                Assert.AreEqual(worldData.WorldData.ServerStartTime, worldDataAfter.WorldData.ServerStartTime, $"WorldData.ServerStartTime is not equal while using {serverSerializers[serializerIndex]}.");
                 Assert.AreEqual(worldData.WorldData.Seed, worldDataAfter.WorldData.Seed, $"WorldData.Seed is not equal while using {serverSerializers[serializerIndex]}.");
             }
         }
@@ -510,7 +509,6 @@ namespace NitroxTest.Serialization
                         new NitroxInt3(10,1,10),
                         new NitroxInt3(15,4,12)
                     },
-                    ServerStartTime = DateTime.UtcNow,
                     VehicleData = new VehicleData()
                     {
                         Vehicles = new List<VehicleModel>()

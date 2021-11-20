@@ -17,21 +17,18 @@ namespace NitroxServer.Serialization.World
         public List<NitroxInt3> ParsedBatchCells { get; set; }
 
         [JsonProperty, ProtoMember(2)]
-        public DateTime ServerStartTime { get; set; }
-
-        [JsonProperty, ProtoMember(3)]
         public VehicleData VehicleData { get; set; }
 
-        [JsonProperty, ProtoMember(4)]
+        [JsonProperty, ProtoMember(3)]
         public InventoryData InventoryData { get; set; }
 
-        [JsonProperty, ProtoMember(5)]
+        [JsonProperty, ProtoMember(4)]
         public GameData GameData { get; set; }
 
-        [JsonProperty, ProtoMember(6)]
+        [JsonProperty, ProtoMember(5)]
         public EscapePodData EscapePodData { get; set; }
 
-        [JsonProperty, ProtoMember(7)]
+        [JsonProperty, ProtoMember(6)]
         public string Seed { get; set; }
 
         public bool IsValid()

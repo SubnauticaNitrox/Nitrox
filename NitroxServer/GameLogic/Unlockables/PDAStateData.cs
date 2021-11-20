@@ -54,7 +54,7 @@ namespace NitroxServer.GameLogic.Unlockables
             }
             else
             {
-                Log.Info($"There was an attempt of adding a duplicated entry in the PDALog [{entry.Key}]");
+                Log.Debug($"There was an attempt of adding a duplicated entry in the PDALog: [{entry.Key}]");
             }
         }
 

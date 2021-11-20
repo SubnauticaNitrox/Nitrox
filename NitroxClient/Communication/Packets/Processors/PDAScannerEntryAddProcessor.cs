@@ -35,10 +35,8 @@ namespace NitroxClient.Communication.Packets.Processors
 
                     if (entry.unlocked >= entryData.totalFragments)
                     {
-                        List<PDAScanner.Entry> partial = PDAScanner.partial;
-                        HashSet<TechType> complete = PDAScanner.complete;
-                        partial.Remove(entry);
-                        complete.Add(entry.techType);
+                        PDAScanner.partial.Remove(entry);
+                        PDAScanner.complete.Add(entry.techType);
                     }
                     else
                     {
