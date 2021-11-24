@@ -1,4 +1,5 @@
-﻿using NitroxModel.Packets;
+﻿using System;
+using NitroxModel.Packets;
 
 namespace NitroxClient.Communication.Abstract
 {
@@ -10,14 +11,8 @@ namespace NitroxClient.Communication.Abstract
         /// <param name="packet">The packet to send.</param>
         /// <returns>True if not suppressed and actually sent.</returns>
         bool Send(Packet packet);
-        /// <summary>
-        ///     Saves only the newest <see cref="Packet"/> per type in a list. This list can be send with <see cref="FlushSmoothPackets"/>.
-        /// </summary>
-        bool SendSmooth(Packet packet);
-        /// <summary>
-        ///     Sends all packets queued by <see cref="SendSmooth(Packet)"/>.
-        /// </summary>
-        void FlushSmoothPackets();
+
+        bool IsPacketSuppressed(Type packetType);
 
         PacketSuppressor<T> Suppress<T>();
     }

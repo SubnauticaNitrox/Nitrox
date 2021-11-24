@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession.ConnectionState;
@@ -15,8 +15,6 @@ namespace NitroxClient.Communication.MultiplayerSession
     public class MultiplayerSessionManager : IMultiplayerSession, IMultiplayerSessionConnectionContext
     {
         private readonly HashSet<Type> suppressedPacketsTypes = new HashSet<Type>();
-
-        private Dictionary<Type, Packet> smoothPackets = new Dictionary<Type, Packet>();
 
         public IClient Client { get; }
         public string IpAddress { get; private set; }
@@ -108,30 +106,7 @@ namespace NitroxClient.Communication.MultiplayerSession
             return false;
         }
 
-        public bool SendSmooth(Packet packet)
-        {
-            Type packetType = packet.GetType();
-            if (!suppressedPacketsTypes.Contains(packetType))
-            {
-                smoothPackets[packetType] = packet;
-                return true;
-            }
-            return false;
-        }
-
-        public void FlushSmoothPackets()
-        {
-            if (smoothPackets.Count == 0)
-            {
-                return;
-            }
-
-            foreach (Packet packet in smoothPackets.Values)
-            {
-                Client.Send(packet);
-            }
-            smoothPackets.Clear();
-        }
+        public bool IsPacketSuppressed(Type packetType) => suppressedPacketsTypes.Contains(packetType);
 
         public PacketSuppressor<T> Suppress<T>()
         {
