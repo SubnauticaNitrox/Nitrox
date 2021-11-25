@@ -8,6 +8,7 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
+using NitroxModel.Logger;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
 using NitroxServer.Communication;
@@ -112,7 +113,7 @@ namespace NitroxServer.GameLogic
 
             // One-minute timeout for initial sync
             initialSyncTimeoutCancellation = new CancellationTokenSource();
-            new Task(_ =>
+            new Task(() =>
             {
                 Thread.Sleep(serverConfig.InitialSyncTimeout);
 
@@ -206,7 +207,7 @@ namespace NitroxServer.GameLogic
         {
             PlayerCurrentlyJoining = false;
 
-            NitroxModel.Logger.Log.Info($"Finished processing reservation. Remaining requests: {JoinQueue.Count}");
+            Log.Info($"Finished processing reservation. Remaining requests: {JoinQueue.Count}");
 
             CancellationTokenSource oldToken = initialSyncTimeoutCancellation;
 
