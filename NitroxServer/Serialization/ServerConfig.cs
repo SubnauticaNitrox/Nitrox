@@ -69,7 +69,7 @@ namespace NitroxServer.Serialization
 
             set
             {
-                Validate.IsTrue(value > 0, "InitialSyncTimeout must be greater than 0");
+                Validate.IsTrue(value > 30000, "InitialSyncTimeout must be greater than 30 seconds");
                 initialSyncTimeoutSetting = value;
             }
         }
