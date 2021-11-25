@@ -4,7 +4,7 @@ using NitroxServer.GameLogic;
 
 namespace NitroxServer.Communication.Packets.Processors
 {
-    public class PlayerSyncFinishedProcessor : UnauthenticatedPacketProcessor<PlayerSyncFinished>
+    public class PlayerSyncFinishedProcessor : AuthenticatedPacketProcessor<PlayerSyncFinished>
     {
         private readonly PlayerManager playerManager;
 
@@ -13,17 +13,9 @@ namespace NitroxServer.Communication.Packets.Processors
             this.playerManager = playerManager;
         }
 
-        public override void Process(PlayerSyncFinished packet, NitroxConnection connection)
+        public override void Process(PlayerSyncFinished packet, Player player)
         {
-            playerManager.PlayerCurrentlyJoining = false;
-
-            if (playerManager.JoinQueue.Count > 0)
-            {
-                var keyValuePair = playerManager.JoinQueue.Dequeue();
-                NitroxConnection requestConnection = keyValuePair.Key;
-                MultiplayerSessionReservationRequest request = keyValuePair.Value;
-                playerManager.ReservePlayerContext(requestConnection, request.PlayerSettings, request.AuthenticationContext, request.CorrelationId);
-            }
+            playerManager.FinishProcessingReservation();
         }
     }
 }
