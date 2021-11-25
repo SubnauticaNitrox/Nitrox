@@ -34,6 +34,7 @@
   "Nitrox_InvalidUserName": "Please enter a valid player name !\n\n It must not contain any space or doubtful characters\n Allowed characters : A-Z a-z 0-9 _ . -\nLength : [3, 25]",
   "Nitrox_RequestingSessionPolicy": "Requesting session policy information...",
   "Nitrox_RejectedSessionPolicy": "Reservation rejected...",
+  "Nitrox_Waiting":  "Waiting in join queue...",
   "Nitrox_DisconnectedSession": "Disconnected from server",
   "Nitrox_WaitingPassword": "Waiting for server password input...",
   "Nitrox_WaitingUserInput": "Waiting for user input...",

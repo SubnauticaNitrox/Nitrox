@@ -80,8 +80,7 @@ namespace NitroxClient.Communication.MultiplayerSession
         {
             if (reservation.ReservationState == MultiplayerSessionReservationState.ENQUEUED_IN_JOIN_QUEUE)
             {
-                // TODO: Add this message in other languages
-                Log.InGame("Waiting in join queue...");
+                Log.InGame(Language.main.Get("Nitrox_Waiting"));
                 return;
             }
 
