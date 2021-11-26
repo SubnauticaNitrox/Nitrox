@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Unity;
@@ -27,7 +26,7 @@ namespace NitroxServer.GameLogic
         public ThreadSafeQueue<KeyValuePair<NitroxConnection, MultiplayerSessionReservationRequest>> JoinQueue { get; } = new();
         public bool PlayerCurrentlyJoining { get; set; }
 
-        private CancellationTokenSource initialSyncTimeoutCancellation;
+        private Timer initialSyncTimer;
 
         private readonly ServerConfig serverConfig;
         private ushort currentPlayerId;
@@ -111,19 +110,18 @@ namespace NitroxServer.GameLogic
 
             PlayerCurrentlyJoining = true;
 
-            // One-minute timeout for initial sync
-            initialSyncTimeoutCancellation = new CancellationTokenSource();
-            new Task(() =>
+            initialSyncTimer = new Timer(state =>
             {
-                Thread.Sleep(serverConfig.InitialSyncTimeout);
-
                 player.SendPacket(new PlayerKicked("Took too long for initial sync to complete"));
                 PlayerDisconnected(player.Connection);
 
                 SendPacketToOtherPlayers(new Disconnect(player.Id), player);
 
                 FinishProcessingReservation();
-            }, initialSyncTimeoutCancellation.Token).Start();
+            });
+
+            // Starts the timer, using the server config option as the due time and with intervals disabled
+            initialSyncTimer.Change(serverConfig.InitialSyncTimeout, Timeout.Infinite);
 
             return new MultiplayerSessionReservation(correlationId, playerId, reservationKey);
         }
@@ -205,11 +203,10 @@ namespace NitroxServer.GameLogic
 
         public void FinishProcessingReservation()
         {
+            initialSyncTimer.Dispose();
             PlayerCurrentlyJoining = false;
 
             Log.Info($"Finished processing reservation. Remaining requests: {JoinQueue.Count}");
-
-            CancellationTokenSource oldToken = initialSyncTimeoutCancellation;
 
             if (JoinQueue.Count > 0)
             {
@@ -223,9 +220,6 @@ namespace NitroxServer.GameLogic
 
                 requestConnection.SendPacket(reservation);
             }
-
-            // This goes here because otherwise it might return from the function prematurely due to the task cancelling itself
-            oldToken?.Cancel();
         }
 
         public bool TryGetPlayerByName(string playerName, out Player foundPlayer)
