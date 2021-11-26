@@ -19,7 +19,7 @@ namespace NitroxTest.Patcher.Patches
 
             IEnumerable<CodeInstruction> result = BuilderTool_HandleInput_Patch.Transpiler(BuilderTool_HandleInput_Patch.TARGET_METHOD, instructions);
 
-            Assert.AreEqual(instructions.Count + 4, result.Count());
+            Assert.AreEqual(instructions.Count + 5, result.Count());
         }
 
         [TestMethod]
