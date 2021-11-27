@@ -195,15 +195,22 @@ namespace NitroxLauncher
             {
                 return;
             }
+            if (sender is not Button button)
+            {
+                return;
+            }
 
             LauncherLogic.Instance.NavigateTo(elem.Tag?.GetType());
-
-            if (sender is Button button)
+            if (LastButton == null)
             {
-                LastButton?.SetValue(ButtonProperties.SelectedProperty, false);
-                LastButton = button;
-                button.SetValue(ButtonProperties.SelectedProperty, true);
+                NavPlayGamePageButton.SetValue(ButtonProperties.SelectedProperty, false);
             }
+            else
+            {
+                LastButton.SetValue(ButtonProperties.SelectedProperty, false);
+            }
+            LastButton = button;
+            button.SetValue(ButtonProperties.SelectedProperty, true);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
