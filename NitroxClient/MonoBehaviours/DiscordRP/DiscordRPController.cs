@@ -8,7 +8,7 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
 {
     public class DiscordRPController : MonoBehaviour
     {
-        public DiscordRpc.RichPresence Presence = new DiscordRpc.RichPresence();
+        public DiscordRpc.RichPresence Presence = new();
         public bool ShowingWindow;
 
         private const string APPLICATION_ID = "405122994348752896";
@@ -98,9 +98,9 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
         public void InitializeInGame(string username, int playerCount, int maxConnections, string ipAddressPort)
         {
             Presence.state = "In game";
-            Presence.details = "Playing as " + username;
+            Presence.details = $"Playing as {username}";
             Presence.startTimestamp = 0;
-            Presence.partyId = "PartyID:" + CheckIP(ipAddressPort);
+            Presence.partyId = $"PartyID:{CheckIP(ipAddressPort)}";
             Presence.partySize = playerCount;
             Presence.partyMax = maxConnections;
             Presence.joinSecret = CheckIP(ipAddressPort);
@@ -140,7 +140,7 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
 
             if (ip == "127.0.0.1")
             {
-                return WebHelper.GetPublicIP() + ":" + port;
+                return $"{WebHelper.GetPublicIP()}:{port}";
             }
             else
             {

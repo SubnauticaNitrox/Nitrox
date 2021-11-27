@@ -1,20 +1,32 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Windows;
-using System.Windows.Navigation;
+using NitroxLauncher.Models;
+using NitroxModel;
+using NitroxModel.Discovery;
 
 namespace NitroxLauncher.Pages
 {
     public partial class LaunchGamePage : PageBase
     {
+        public string PlatformToolTip => GamePlateform.GetAttribute<DescriptionAttribute>()?.Description ?? "Unknown";
+        public Platform GamePlateform => LauncherLogic.Config.SubnauticaPlatform;
+        public string Version => LauncherLogic.Version;
+
         public LaunchGamePage()
         {
             InitializeComponent();
-        }
 
-        private void OnRequestNavigate(object sender, RequestNavigateEventArgs e)
-        {
-            System.Diagnostics.Process.Start(e.Uri.AbsoluteUri);
-            e.Handled = true;
+            Loaded += (s, e) =>
+            {
+                LauncherLogic.Config.PropertyChanged += LogicPropertyChanged;
+                LogicPropertyChanged(null, null);
+            };
+
+            Unloaded += (s, e) =>
+            {
+                LauncherLogic.Config.PropertyChanged -= LogicPropertyChanged;
+            };
         }
 
         private async void SinglePlayerButton_Click(object sender, RoutedEventArgs e)
@@ -39,6 +51,12 @@ namespace NitroxLauncher.Pages
             {
                 MessageBox.Show(ex.ToString(), "Error while starting in multiplayer mode", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private void LogicPropertyChanged(object sender, PropertyChangedEventArgs args)
+        {
+            OnPropertyChanged(nameof(GamePlateform));
+            OnPropertyChanged(nameof(PlatformToolTip));
         }
     }
 }

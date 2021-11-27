@@ -1,50 +1,46 @@
 ﻿<Application x:Class="NitroxLauncher.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:NitroxLauncher"
-             xmlns:ap="clr-namespace:NitroxLauncher.AttachedProperties"
+             xmlns:ap="clr-namespace:NitroxLauncher.Models.Properties"
              xmlns:pages="clr-namespace:NitroxLauncher.Pages"
              StartupUri="MainWindow.xaml" DispatcherUnhandledException="Application_DispatcherUnhandledException">
+
     <Application.Resources>
         <ResourceDictionary>
             <!-- Fonts -->
             <FontFamily x:Key="OpenSans">pack://application:,,,/Fonts/#OpenSans</FontFamily>
             <FontFamily x:Key="RobotoMono">pack://application:,,,/Fonts/#Roboto Mono</FontFamily>
-            <FontFamily x:Key="DefaultFont">pack://application:,,,/Fonts/#OpenSans</FontFamily>
+            <FontFamily x:Key="Inter">pack://application:,,,/Fonts/#Inter</FontFamily>
+            <FontFamily x:Key="DefaultFont">pack://application:,,,/Fonts/#Inter</FontFamily>
 
-            <!-- Background images -->
-            <BitmapImage x:Key="VinesImage" UriSource="pack://application:,,,/Images/Vines.png" />
-            <BitmapImage x:Key="PlayGameImage" UriSource="pack://application:,,,/Images/PlayGameImage.png" />
-            <BitmapImage x:Key="SubnauticaMainImage" UriSource="pack://application:,,,/Images/SubnauticaMain.png" />
-            <BitmapImage x:Key="EscapePodImage" UriSource="pack://application:,,,/Images/EscapePod.png" />
+            <!-- Platforms icons -->
+            <BitmapImage x:Key="StoreSteam" UriSource="pack://application:,,,/Images/store-icons/steam-2x.png" />
+            <BitmapImage x:Key="StoreEpic" UriSource="pack://application:,,,/Images/store-icons/epic-2x.png" />
+            <BitmapImage x:Key="StoreXbox" UriSource="pack://application:,,,/Images/store-icons/xbox-2x.png" />
+            <BitmapImage x:Key="StoreDiscord" UriSource="pack://application:,,,/Images/store-icons/discord-2x.png" />
 
-            <!-- Foreground images -->
-            <BitmapImage x:Key="NitroxImage" UriSource="pack://application:,,,/Images/Nitrox.png" />
-            <BitmapImage x:Key="ExitImage" UriSource="pack://application:,,,/Images/exit.png" />
-            <BitmapImage x:Key="MinimizeImage" UriSource="pack://application:,,,/Images/minimize.png" />
-
-            <!-- Icons -->
-            <BitmapImage x:Key="StopWhiteIcon" UriSource="pack://application:,,,/Images/material-design-icons/baseline_stop_white_24dp.png" />
-            <BitmapImage x:Key="SendWhiteIcon" UriSource="pack://application:,,,/Images/material-design-icons/baseline_send_white_24dp.png" />
-
-            <!-- Pages TODO: Find another solution for the hard-coded viewbox values so that page background image aligns with sidebar and header -->
-            <pages:LaunchGamePage x:Key="LaunchGamePage" Background="#FF28292C"/>
-            <pages:OptionPage x:Key="OptionPage" Background="#FF28292C"/>
-            <pages:ServerPage x:Key="ServerPage" Background="#FF28292C"/>
-            <pages:ServerConsolePage x:Key="ServerConsolePage" Background="#FF28292C"/>
+            <!-- Pages -->
+            <pages:LaunchGamePage x:Key="LaunchGamePage" Background="#000000"/>
+            <pages:OptionPage x:Key="OptionPage" Background="#000000"/>
+            <pages:ServerPage x:Key="ServerPage" Background="#000000"/>
+            <pages:ServerConsolePage x:Key="ServerConsolePage" Background="#000000"/>
+            <pages:CommunityPage x:Key="CommunityPage" Background="#000000"/>
+            <pages:BlogPage x:Key="BlogPage" Background="#000000"/>
+            <pages:UpdatePage x:Key="UpdatePage" Background="#000000"/>
+            <pages:LibraryPage x:Key="LibraryPage" Background="#000000"/>
 
             <!-- Styles -->
             <Style x:Key="SocialButton" TargetType="TextBlock">
                 <Setter Property="OpacityMask">
                     <Setter.Value>
-                        <SolidColorBrush Color="#BF000000" />
+                        <SolidColorBrush Color="#FF000000" />
                     </Setter.Value>
                 </Setter>
                 <Style.Triggers>
                     <Trigger Property="IsMouseOver" Value="True">
                         <Setter Property="OpacityMask">
                             <Setter.Value>
-                                <SolidColorBrush Color="#FF000000" />
+                                <SolidColorBrush Color="#BF000000" />
                             </Setter.Value>
                         </Setter>
                     </Trigger>
@@ -52,11 +48,11 @@
             </Style>
 
             <Style TargetType="Window">
-                <Setter Property="FontFamily" Value="{StaticResource DefaultFont}" />
+                <Setter Property="FontFamily" Value="{DynamicResource DefaultFont}" />
             </Style>
 
             <Style TargetType="Page">
-                <Setter Property="FontFamily" Value="{StaticResource DefaultFont}" />
+                <Setter Property="FontFamily" Value="{DynamicResource DefaultFont}" />
                 <Setter Property="Margin" Value="0" />
             </Style>
 
@@ -88,7 +84,7 @@
                                 <Trigger Property="IsMouseOver" Value="True">
                                     <Setter Property="Opacity" Value="0.75" />
                                 </Trigger>
-                                
+
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
                     </Setter.Value>
@@ -101,11 +97,138 @@
                 <Setter Property="FontSize" Value="16" />
                 <Style.Resources>
                     <Style TargetType="Border">
-                        <Setter Property="CornerRadius" Value="3" />
+                        <Setter Property="CornerRadius" Value="8" />
                         <Setter Property="BorderThickness" Value="1" />
                     </Style>
                 </Style.Resources>
             </Style>
+
+            <Style x:Key="CloseButton" TargetType="{x:Type Button}">
+                <Setter Property="OverridesDefaultStyle" Value="True" />
+                <Setter Property="FontWeight" Value="Normal" />
+                <Setter Property="HorizontalAlignment" Value="Center" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="Cursor" Value="Hand" />
+                <Setter Property="Foreground" Value="#BFFFFFFF" />
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="BorderBrush" Value="Black" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#EB5757" />
+                                </Trigger>
+
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!--SCROLLBARS-->
+            <!-- TODO: MacOS style vertical scrollbar -->
+            <Style x:Key="ScrollThumbs" TargetType="{x:Type Thumb}">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate>
+                            <Grid x:Name="Grid">
+                                <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" 
+                                           Height="Auto" Fill="Transparent" Panel.ZIndex="9999"/>
+                                <Border x:Name="Rectangle1" CornerRadius="3" HorizontalAlignment="Stretch" 
+                                        VerticalAlignment="Stretch" Width="Auto" Height="Auto" 
+                                        Background="{TemplateBinding Background}" Margin="0,6" Panel.ZIndex="9999"/>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="Tag" Value="Horizontal">
+                                    <Setter TargetName="Rectangle1" Property="Width" Value="Auto"/>
+                                    <Setter TargetName="Rectangle1" Property="Height" Value="7"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="{x:Type ScrollBar}" TargetType="{x:Type ScrollBar}">
+                <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+                <Setter Property="Foreground" Value="#26FFFFFF"/>
+                <Setter Property="Background" Value="{x:Null}"/>
+                <Setter Property="Width" Value="6"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ScrollBar}">
+                            <Grid x:Name="GridRoot" Width="6" Background="{x:Null}" Margin="0,20,0,0">
+                                <Track x:Name="PART_Track" Grid.Row="0" IsDirectionReversed="true" Focusable="False">
+                                    <Track.Thumb>
+                                        <Thumb x:Name="Thumb" Background="{TemplateBinding Foreground}" 
+                                               Style="{DynamicResource ScrollThumbs}"/>
+                                    </Track.Thumb>
+                                    <Track.IncreaseRepeatButton>
+                                        <RepeatButton x:Name="PageUp" Command="ScrollBar.PageDownCommand" Opacity="0" Focusable="False"/>
+                                    </Track.IncreaseRepeatButton>
+                                    <Track.DecreaseRepeatButton>
+                                        <RepeatButton x:Name="PageDown" Command="ScrollBar.PageUpCommand" Opacity="0" Focusable="False"/>
+                                    </Track.DecreaseRepeatButton>
+                                </Track>
+                            </Grid>
+
+                            <ControlTemplate.Triggers>
+                                <Trigger SourceName="Thumb" Property="IsMouseOver" Value="true">
+                                    <Setter Value="#3FFFFFFF" 
+                                            TargetName="Thumb" Property="Background"/>
+                                </Trigger>
+                                <Trigger SourceName="Thumb" Property="IsDragging" Value="true">
+                                    <Setter Value="{DynamicResource DarkBrush}" TargetName="Thumb" Property="Background"/>
+                                </Trigger>
+
+                                <Trigger Property="IsEnabled" Value="false">
+                                    <Setter TargetName="Thumb" Property="Visibility" Value="Collapsed"/>
+                                </Trigger>
+                                <Trigger Property="Orientation" Value="Horizontal">
+                                    <Setter TargetName="GridRoot" Property="LayoutTransform">
+                                        <Setter.Value>
+                                            <RotateTransform Angle="-90"/>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Setter TargetName="PART_Track" Property="LayoutTransform">
+                                        <Setter.Value>
+                                            <RotateTransform Angle="-90"/>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Setter Property="Width" Value="Auto"/>
+                                    <Setter Property="Height" Value="12"/>
+                                    <Setter TargetName="Thumb" Property="Tag" Value="Horizontal"/>
+                                    <Setter TargetName="PageDown" Property="Command" Value="ScrollBar.PageLeftCommand"/>
+                                    <Setter TargetName="PageUp" Property="Command" Value="ScrollBar.PageRightCommand"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <ControlTemplate x:Key="ScrollViewerMainframe" TargetType="{x:Type ScrollViewer}">
+                <Grid x:Name="Grid" Background="{TemplateBinding Background}" Margin="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Rectangle x:Name="Corner" Grid.Column="1" Fill="#3FFFFFFF" Grid.Row="1"/>
+                    <ScrollContentPresenter x:Name="PART_ScrollContentPresenter" CanContentScroll="{TemplateBinding CanContentScroll}" CanHorizontallyScroll="False" CanVerticallyScroll="False" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" Grid.Column="0" Margin="{TemplateBinding Padding}" Grid.Row="0"/>
+                    <ScrollBar x:Name="PART_VerticalScrollBar" AutomationProperties.AutomationId="VerticalScrollBar" Cursor="Arrow" Grid.Column="1" Maximum="{TemplateBinding ScrollableHeight}" Minimum="0" Grid.Row="0" Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" Value="{Binding VerticalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" ViewportSize="{TemplateBinding ViewportHeight}" Background="#14FFFFFF" BorderBrush="#00000000" Width="14"/>
+                    <ScrollBar x:Name="PART_HorizontalScrollBar" AutomationProperties.AutomationId="HorizontalScrollBar" Cursor="Arrow" Grid.Column="0" Maximum="{TemplateBinding ScrollableWidth}" Minimum="0" Orientation="Horizontal" Grid.Row="1" Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" Value="{Binding HorizontalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" ViewportSize="{TemplateBinding ViewportWidth}"/>
+                </Grid>
+            </ControlTemplate>
 
             <!-- Make sure the navigation items align vertically with the "NITROX" header. -->
             <Style TargetType="Grid" x:Key="MainNavigationGrid" >
@@ -123,6 +246,55 @@
                     </Style>
                 </Style.Resources>
             </Style>
+
+            <!-- Server -->
+
+            <Style x:Key="ButtonConsoleStop" TargetType="{x:Type Button}">
+                <Style.Resources>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="CornerRadius" Value="6" />
+                        <Setter Property="BorderThickness" Value="1" />
+                    </Style>
+                </Style.Resources>
+                <Setter Property="Width" Value="240" />
+                <Setter Property="Height" Value="80" />
+                <Setter Property="FontSize" Value="16" />
+                <Style.BasedOn>
+                    <StaticResource ResourceKey="{x:Type Button}"/>
+                </Style.BasedOn>
+            </Style>
+
+            <Style x:Key="ButtonConsoleMsg" TargetType="{x:Type Button}">
+                <Style.Resources>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="CornerRadius" Value="6" />
+                        <Setter Property="BorderThickness" Value="1" />
+                    </Style>
+                </Style.Resources>
+                <Setter Property="Cursor" Value="Hand" />
+                <Setter Property="Width" Value="240" />
+                <Setter Property="Height" Value="80" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#19FFFFFF" />
+                                </Trigger>
+
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Background" Value="Transparent"/>
+            </Style>
+
+            <!-- HyperLink -->
 
             <Style TargetType="{x:Type Hyperlink}">
                 <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
@@ -143,6 +315,99 @@
                 <Setter Property="VerticalAlignment" Value="Bottom" />
             </Style>
 
+            <!-- Notifications -->
+
+            <SolidColorBrush x:Key="InformationColorBrush" Color="#FF007BFF" />
+            <SolidColorBrush x:Key="SuccessColorBrush" Color="#11ad45" />
+            <SolidColorBrush x:Key="ErrorColorBrush" Color="#e60914" />
+            <SolidColorBrush x:Key="WarningColorBrush" Color="#f5a300" />
+
+            <Canvas x:Key="InformationIcon"  Width="24" Height="24">
+                <Path Data="M11,9H13V7H11M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,17H13V11H11V17Z" Fill="White" />
+            </Canvas>
+
+            <Canvas x:Key="SuccessIcon"  Width="24" Height="24">
+                <Path Data="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z" Fill="White" />
+            </Canvas>
+
+            <Canvas x:Key="ErrorIcon" Width="24" Height="24">
+                <Path Data="M11,15H13V17H11V15M11,7H13V13H11V7M12,2C6.47,2 2,6.5 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20Z" Fill="White" />
+            </Canvas>
+
+            <Canvas x:Key="WarningIcon" Width="24" Height="24">
+                <Path Data="M12,2L1,21H23M12,6L19.53,19H4.47M11,10V14H13V10M11,16V18H13V16" Fill="White" />
+            </Canvas>
+
+            <Canvas x:Key="CloseIcon" Width="76" Height="76" Clip="F1 M 0,0L 76,0L 76,76L 0,76L 0,0">
+                <Path Width="31.6666" Height="31.6667" Canvas.Left="22.1666" Canvas.Top="22.1667" Stretch="Fill" Fill="#FF000000" Data="F1 M 26.9166,22.1667L 37.9999,33.25L 49.0832,22.1668L 53.8332,26.9168L 42.7499,38L 53.8332,49.0834L 49.0833,53.8334L 37.9999,42.75L 26.9166,53.8334L 22.1666,49.0833L 33.25,38L 22.1667,26.9167L 26.9166,22.1667 Z "/>
+            </Canvas>
+
+            <Style TargetType="Border" x:Key="NotificationBorder">
+                <Setter Property="Padding" Value="15" />
+                <Setter Property="Margin" Value="3" />
+                <Setter Property="Effect">
+                    <Setter.Value>
+                        <DropShadowEffect Opacity="0.5" ShadowDepth="1" BlurRadius="2" />
+                    </Setter.Value>
+                </Setter>
+
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Cursor" Value="Hand"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style TargetType="Rectangle" x:Key="NotificationIcon">
+                <Setter Property="Width" Value="24"/>
+                <Setter Property="Height" Value="24"/>
+                <Setter Property="Margin" Value="0,5,5,5" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="Fill" Value="White"/>
+            </Style>
+
+            <Style TargetType="TextBlock" x:Key="NotificationText">
+                <Setter Property="Foreground" Value="White" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                <Setter Property="TextWrapping" Value="Wrap" />
+                <Setter Property="Margin" Value="15,0,0,0" />
+            </Style>
+
+            <Style TargetType="{x:Type Button}" x:Key="NotificationCloseButton">
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="Foreground" Value="#FFF" />
+                <Setter Property="FontSize" Value="15" />
+                <Setter Property="SnapsToDevicePixels" Value="True" />
+                <Setter Property="VerticalAlignment" Value="Top" />
+                <Setter Property="HorizontalAlignment" Value="Right" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Border Background="{TemplateBinding Background}">
+                                <ContentPresenter Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" />
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#33000000" />
+                                    <Setter Property="Cursor" Value="Hand"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter Property="Background" Value="#77000000" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style TargetType="Rectangle" x:Key="CloseButtonIcon">
+                <Setter Property="Width" Value="10"/>
+                <Setter Property="Height" Value="10"/>
+                <Setter Property="Fill" Value="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}" />
+            </Style>
+
         </ResourceDictionary>
+
     </Application.Resources>
 </Application>

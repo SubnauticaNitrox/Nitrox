@@ -2,69 +2,74 @@
                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                xmlns:local="clr-namespace:NitroxLauncher"
+                xmlns:local="clr-namespace:NitroxLauncher.Models"
                 x:Class="NitroxLauncher.Pages.ServerPage"
                 mc:Ignorable="d"
-                d:DesignHeight="470" d:DesignWidth="719"
+                d:DesignHeight="800" d:DesignWidth="800"
                 DataContext="{Binding RelativeSource={RelativeSource Self}}"
                 Title="Server Page">
 
     <local:PageBase.Resources>
-        <BitmapImage x:Key="ServerIllustration" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/images/serverIllustration.png"/>
+        <BitmapImage x:Key="ServerIllustration" UriSource="pack://application:,,,/images/serverIllustration.png"/>
     </local:PageBase.Resources>
 
-    <Grid>
-        <Grid Margin="22,0,0,0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="32" />
-                <RowDefinition />
-            </Grid.RowDefinitions>
-            <Grid Grid.Row="1">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="44*"/>
-                    <RowDefinition Height="175*"/>
-                </Grid.RowDefinitions>
-                <TextBlock FontSize="22" Foreground="White" Text="Nitrox server" TextAlignment="Center" Margin="0,22,0,0" />
-                <TextBlock FontSize="14" Foreground="#BFFFFFFF" Margin="0,64,0,0" TextAlignment="Center">
+    <Grid Margin="32,0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="106"/>
+            <RowDefinition Height="37"/>
+            <RowDefinition Height="380*"/>
+            <RowDefinition Height="249*"/>
+            <RowDefinition Height="8*"/>
+        </Grid.RowDefinitions>
+
+        <Grid>
+            <TextBlock FontSize="32" Foreground="White" TextWrapping="Wrap" Margin="0" VerticalAlignment="Bottom" FontWeight="Bold" Text="Nitrox server"/>
+        </Grid>
+
+        <Grid Grid.Row="1" Grid.ColumnSpan="2">
+            <TextBlock FontSize="14" Foreground="#BFFFFFFF" TextAlignment="Left" VerticalAlignment="Top" Margin="0,12,0,0" >
                     Welcome to your Nitrox server! For more information please refer to the <Hyperlink NavigateUri="https://on.rux.gg/nitrox-wiki" RequestNavigate="OnRequestNavigate" ToolTip="Open Nitrox guide website">Wiki</Hyperlink>
-                </TextBlock>
-                <Image Source="{DynamicResource ServerIllustration}" Margin="133,6,159,166" Grid.Row="1" Width="405" Height="178" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            </Grid>
-            <Grid Grid.Row="1" Margin="0,0,22,0" Height="129" VerticalAlignment="Bottom">
+            </TextBlock>
+        </Grid>
+
+        <Grid Grid.Row="2" Grid.ColumnSpan="2">
+            <Image Source="{StaticResource ServerIllustration}" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center" Width="420" Height="218"></Image>
+        </Grid>
+
+        <Grid Grid.Column="0" Margin="0,0,8,8" Grid.Row="3" Grid.ColumnSpan="2" Height="128" VerticalAlignment="Bottom">
+            <Border CornerRadius="12" Background="#151516" Padding="22,22,22,22" Margin="0,0,0,22" Height="106" VerticalAlignment="Bottom"/>
+            <Grid Margin="22,22,22,22"/>
+            <Grid Margin="0,0,0,22" Grid.Row="1" Height="106" VerticalAlignment="Bottom">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="22*"/>
-                    <RowDefinition Height="85*"/>
-                    <RowDefinition Height="22*"/>
+                    <RowDefinition Height="11*"/>
+                    <RowDefinition Height="42*"/>
                 </Grid.RowDefinitions>
-                <Border BorderThickness="0 1 0 0" BorderBrush="#1EFFFFFF" Margin="0,-10,0,10" Grid.RowSpan="3" >
 
-                    <Grid Margin="0,0,0,22" Grid.Row="1" Height="106" VerticalAlignment="Bottom">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="11*"/>
-                            <RowDefinition Height="42*"/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition />
-                            <ColumnDefinition Width="264" />
-                        </Grid.ColumnDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="210" />
+                    <ColumnDefinition Width="308" />
+                    <ColumnDefinition Width="210"/>
+                </Grid.ColumnDefinitions>
 
-                        <StackPanel Grid.Column="0" Margin="0,0,0,0" Grid.Row="1">
-                            <TextBlock Foreground="White" FontSize="16" Margin="0,0,0,8" Text="Server window type" />
-                            <RadioButton x:Name="RBIsDocked" GroupName="ServerType" Content="Docked console" Margin="5" Click="RBServer_Clicked" />
-                            <RadioButton x:Name="RBIsExternal" GroupName="ServerType" Content="External console" Margin="5" Click="RBServer_Clicked" />
-                        </StackPanel>
+                <StackPanel Grid.Column="0" Margin="22,0,0,22" Grid.Row="1" VerticalAlignment="Center">
+                    <RadioButton x:Name="RBIsDocked" GroupName="ServerType" Content="Docked console" Margin="5" Click="RBServer_Clicked" />
+                    <RadioButton x:Name="RBIsExternal" GroupName="ServerType" Content="External console" Margin="5" Click="RBServer_Clicked" />
+                </StackPanel>
 
-                        <Button Grid.Column="1" Style="{StaticResource LargeButton}" Click="StartServer_Click" ToolTip="Start the server with chosen options" Background="#FF007BFF" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,0,0" Grid.Row="1">
-                            <StackPanel>
-                                <TextBlock HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Text="START SERVER" />
-                                <TextBlock HorizontalAlignment="Center" FontSize="14" Text="{Binding StartButtonSubtitle}" />
-                            </StackPanel>
-                        </Button>
-
-                    </Grid>
-
-                </Border>
+                <Button Style="{StaticResource LargeButton}" Click="StartServer_Click" ToolTip="Start the server with chosen options" Background="#FF007BFF" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Row="1" Width="Auto" Margin="10,0,10,22" Grid.Column="1" Height="62">
+                    <StackPanel>
+                        <TextBlock HorizontalAlignment="Center" FontSize="16" FontWeight="Bold" Text="START SERVER" />
+                        <TextBlock HorizontalAlignment="Center" FontSize="10" Text="{Binding StartButtonSubtitle, Mode=OneTime, FallbackValue='NITROX'}" />
+                    </StackPanel>
+                </Button>
             </Grid>
         </Grid>
+
     </Grid>
+
 </local:PageBase>
