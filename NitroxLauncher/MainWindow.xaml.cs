@@ -154,18 +154,10 @@ namespace NitroxLauncher
             WindowState = WindowState.Minimized;
         }
 
-        private void Maximize_Click(object sender, RoutedEventArgs e)
-        {
-            WindowState = WindowState.Normal;
-            MaximizeButton.Visibility = Visibility.Collapsed;
-            RestoreButton.Visibility = Visibility.Visible;
-        }
-
         private void Restore_Click(object sender, RoutedEventArgs e)
         {
             WindowState = WindowState.Normal;
             RestoreButton.Visibility = Visibility.Collapsed;
-            MaximizeButton.Visibility = Visibility.Visible;
         }
 
         private void ServerStarted(object sender, ServerStartEventArgs e)

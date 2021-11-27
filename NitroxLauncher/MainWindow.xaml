@@ -54,9 +54,6 @@
                         <Button Width="46" Click="Minimze_Click" WindowChrome.IsHitTestVisibleInChrome="True" VerticalAlignment="Stretch">
                             <Image Height="10" Width="10" Source="{StaticResource MinimizeImage}" Stretch="Fill" />
                         </Button>
-                        <Button Width="46" x:Name="MaximizeButton" Click="Maximize_Click" WindowChrome.IsHitTestVisibleInChrome="True" VerticalAlignment="Stretch" >
-                            <Image Height="10" Width="10" Source="{StaticResource MaxImage}" Stretch="Fill" />
-                        </Button>
                         <Button Width="46" x:Name="RestoreButton" Click="Restore_Click"  Visibility="Collapsed" WindowChrome.IsHitTestVisibleInChrome="True" VerticalAlignment="Stretch">
                             <Image Height="10" Width="10" Source="{StaticResource RestoreImage}" Stretch="Fill" />
                         </Button>
