@@ -59,6 +59,7 @@ namespace NitroxLauncher
 
             gameProcess?.Dispose();
             Server?.Dispose();
+            LauncherNotifier.Shutdown();
         }
 
         [Conditional("RELEASE")]

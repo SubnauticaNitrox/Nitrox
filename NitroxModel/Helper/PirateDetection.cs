@@ -23,18 +23,18 @@ namespace NitroxModel.Helper
                     value?.Invoke(null, EventArgs.Empty);
                 }
             }
-            remove { pirateDetected -= value; }
-        }
-
-        public static bool Trigger()
-        {
-            OnPirateDetected();
-            return true;
+            remove => pirateDetected -= value;
         }
 
         public static bool TriggerOnDirectory(string subnauticaRoot)
         {
-            return IsPirateByDirectory(subnauticaRoot) && Trigger();
+            if (!IsPirateByDirectory(subnauticaRoot))
+            {
+                return false;
+            }
+            
+            OnPirateDetected();
+            return true;
         }
 
         private static event EventHandler pirateDetected;

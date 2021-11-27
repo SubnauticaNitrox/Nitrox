@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.IO;
 using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
 using System.Threading;
@@ -39,6 +40,9 @@ namespace NitroxLauncher
 
         public MainWindow()
         {
+            Log.Setup();
+            LauncherNotifier.Setup();
+            
             logic = new LauncherLogic();
 
             MaxHeight = SystemParameters.VirtualScreenHeight;
@@ -53,6 +57,17 @@ namespace NitroxLauncher
             // Pirate trigger should happen after UI is loaded.
             Loaded += (sender, args) =>
             {
+                // Error if running from a temporary directory because Nitrox Launcher won't be able to write files directly to zip/rar
+                // Tools like WinRAR do this to support running EXE files while it's still zipped.
+                if (Directory.GetCurrentDirectory().StartsWith(Path.GetTempPath(), StringComparison.OrdinalIgnoreCase))
+                {
+                    MessageBox.Show("Nitrox launcher should not be executed from a temporary directory. Install Nitrox launcher properly by extracting ALL files and moving these to a dedicated location on your PC.",
+                                    "Invalid working directory",
+                                    MessageBoxButton.OK,
+                                    MessageBoxImage.Error);
+                    Environment.Exit(1);
+                }
+                
                 // This pirate detection subscriber is immediately invoked if pirate has been detected right now.
                 PirateDetection.PirateDetected += (o, eventArgs) =>
                 {

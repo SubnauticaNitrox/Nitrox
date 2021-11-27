@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
@@ -7,13 +6,13 @@ using NitroxModel.Logger;
 
 namespace NitroxLauncher
 {
+    /// <summary>
+    ///     Use MainWindow.xaml.cs or LauncherLogic.cs for Nitrox init code to make exceptions during startup unlikely.
+    /// </summary>
     public partial class App : Application
     {
         protected override void OnStartup(StartupEventArgs e)
         {
-            Log.Setup();
-            LauncherNotifier.Setup();
-
             // Set default style for all windows to the style with the target type 'Window' (in App.xaml).
             FrameworkElement.StyleProperty.OverrideMetadata(typeof(Window),
                 new FrameworkPropertyMetadata
@@ -26,34 +25,16 @@ namespace NitroxLauncher
                     DefaultValue = FindResource(typeof(Page))
                 });
 
-            // Error if running from a temporary directory because Nitrox Launcher won't be able to write files directly to zip/rar
-            // Tools like WinRAR do this to support running EXE files while it's still zipped.
-            if (Directory.GetCurrentDirectory().StartsWith(Path.GetTempPath(), StringComparison.OrdinalIgnoreCase))
-            {
-                MessageBox.Show("Nitrox launcher should not be executed from a temporary directory. Install Nitrox launcher properly by extracting ALL files and moving these to a dedicated location on your PC.",
-                    "Invalid working directory",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
-                Environment.Exit(1);
-            }
-
             base.OnStartup(e);
-        }
-
-        protected override void OnExit(ExitEventArgs e)
-        {
-            LauncherNotifier.Shutdown();
-            base.OnExit(e);
         }
 
         private void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             // If something went wrong. Close the server if embedded.
             LauncherLogic.Instance.Dispose();
-            LauncherNotifier.Shutdown();
 
             Log.Error(e.Exception.GetBaseException().ToString()); // Gets the exception that was unhandled, not the "dispatched unhandled" exception.
-            MessageBox.Show(GetExceptionError(e.Exception), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show(GetExceptionError(e.Exception), "Error", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly);
         }
 
         private string GetExceptionError(Exception e)
