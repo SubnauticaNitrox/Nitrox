@@ -104,7 +104,7 @@ namespace NitroxLauncher
             {
                 PirateDetection.TriggerOnDirectory(path);
 
-                // TODO: Move this if block to another place where Nitrox installation is verified.
+                // TODO: Move this check to another place where Nitrox installation can be verified. (i.e: another page on the launcher in order to check permissions, network setup, ...)
                 if (!FileSystem.Instance.SetFullAccessToCurrentUser(Directory.GetCurrentDirectory()) || !FileSystem.Instance.SetFullAccessToCurrentUser(path))
                 {
                     Dispatcher.CurrentDispatcher.BeginInvoke(() =>
