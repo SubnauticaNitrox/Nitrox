@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using HarmonyLib;
+using NitroxClient.Helpers;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
@@ -54,7 +55,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
                 NitroxId vehicleId = NitroxEntity.GetId(parentVehicle);
                 VehicleColorChange packet = new(__instance.SelectedColorIndex, controllerId, vehicleId, eventData.hsb.ToDto(), eventData.color.ToDto());
-                ThrottledPacketSender.SendThrottled(packet);
+                Resolve<ThrottledPacketSender>().SendThrottled(packet);
             }
         }
 
