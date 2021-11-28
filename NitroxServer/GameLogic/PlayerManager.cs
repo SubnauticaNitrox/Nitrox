@@ -63,11 +63,19 @@ namespace NitroxServer.GameLogic
 
             if (PlayerCurrentlyJoining)
             {
-                JoinQueue.Enqueue(new KeyValuePair<NitroxConnection, MultiplayerSessionReservationRequest>(
-                    connection,
-                    new MultiplayerSessionReservationRequest(correlationId, playerSettings, authenticationContext)));
+                if (JoinQueue.Any(pair => pair.Key == connection))
+                {
+                    // Don't enqueue the request if there is already another enqueued request by the same user
+                    return new MultiplayerSessionReservation(correlationId, MultiplayerSessionReservationState.REJECTED);
+                }
+                else
+                {
+                    JoinQueue.Enqueue(new KeyValuePair<NitroxConnection, MultiplayerSessionReservationRequest>(
+                        connection,
+                        new MultiplayerSessionReservationRequest(correlationId, playerSettings, authenticationContext)));
 
-                return new MultiplayerSessionReservation(correlationId, MultiplayerSessionReservationState.ENQUEUED_IN_JOIN_QUEUE);
+                    return new MultiplayerSessionReservation(correlationId, MultiplayerSessionReservationState.ENQUEUED_IN_JOIN_QUEUE);
+                }
             }
 
             if (reservedPlayerNames.Count >= serverConfig.MaxConnections)
@@ -173,6 +181,19 @@ namespace NitroxServer.GameLogic
 
         public void PlayerDisconnected(NitroxConnection connection)
         {
+            // Remove any requests sent by the connection from the join queue
+            Queue<KeyValuePair<NitroxConnection, MultiplayerSessionReservationRequest>> copy = new(JoinQueue);
+            JoinQueue.Clear();
+            while (copy.Any())
+            {
+                var item = copy.Dequeue();
+
+                if (item.Key != connection)
+                {
+                    JoinQueue.Enqueue(item);
+                }
+            }
+
             assetsByConnection.TryGetValue(connection, out ConnectionAssets assetPackage);
             if (assetPackage == null)
             {
