@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Reflection;
 using System.Threading.Tasks;
 using NitroxModel.Helper;
 using NitroxModel.Platforms.OS.Shared;
@@ -16,12 +15,12 @@ namespace NitroxModel.Platforms.Store
         private static Steam instance;
         public static Steam Instance => instance ??= new Steam();
 
+        public string Name => nameof(Steam);
+
         public bool OwnsGame(string gameDirectory)
         {
             return File.Exists(Path.Combine(gameDirectory, "steam_api64.dll"));
         }
-
-        public string Name => nameof(Steam);
 
         public async Task<ProcessEx> StartPlatformAsync()
         {
@@ -75,8 +74,9 @@ namespace NitroxModel.Platforms.Store
             }
 
             return ProcessEx.Start(pathToGameExe,
-                                   new[] { ("SteamGameId", steamAppId.ToString()), ("SteamAppID", steamAppId.ToString()), (NitroxUser.LAUNCHER_PATH_ENV_KEY, NitroxUser.LauncherPath), },
-                                   Path.GetDirectoryName(pathToGameExe)
+                                   new[] { ("SteamGameId", steamAppId.ToString()), ("SteamAppID", steamAppId.ToString()), (NitroxUser.LAUNCHER_PATH_ENV_KEY, NitroxUser.LauncherPath) },
+                                   Path.GetDirectoryName(pathToGameExe),
+                                   "-vrmode none"
             );
         }
     }

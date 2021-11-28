@@ -42,32 +42,27 @@
         </Grid>
 
         <Grid Grid.Column="0" Margin="0,0,8,8" Grid.Row="3" Grid.ColumnSpan="2" Height="128" VerticalAlignment="Bottom">
-            <Border CornerRadius="12" Background="#151516" Padding="22,22,22,22" Margin="0,0,0,22" Height="106" VerticalAlignment="Bottom"/>
-            <Grid Margin="22,22,22,22"/>
-            <Grid Margin="0,0,0,22" Grid.Row="1" Height="106" VerticalAlignment="Bottom">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="11*"/>
-                    <RowDefinition Height="42*"/>
-                </Grid.RowDefinitions>
+            <Border CornerRadius="12" Background="#151516" Padding="22" Margin="0,0,0,22" Height="106" VerticalAlignment="Bottom">
+                <Grid VerticalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="210" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="308" />
+                    </Grid.ColumnDefinitions>
 
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="210" />
-                    <ColumnDefinition Width="308" />
-                    <ColumnDefinition Width="210"/>
-                </Grid.ColumnDefinitions>
-
-                <StackPanel Grid.Column="0" Margin="22,0,0,22" Grid.Row="1" VerticalAlignment="Center">
-                    <RadioButton x:Name="RBIsDocked" GroupName="ServerType" Content="Docked console" Margin="5" Click="RBServer_Clicked" />
-                    <RadioButton x:Name="RBIsExternal" GroupName="ServerType" Content="External console" Margin="5" Click="RBServer_Clicked" />
-                </StackPanel>
-
-                <Button Style="{StaticResource LargeButton}" Click="StartServer_Click" ToolTip="Start the server with chosen options" Background="#FF007BFF" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Row="1" Width="Auto" Margin="10,0,10,22" Grid.Column="1" Height="62">
-                    <StackPanel>
-                        <TextBlock HorizontalAlignment="Center" FontSize="16" FontWeight="Bold" Text="START SERVER" />
-                        <TextBlock HorizontalAlignment="Center" FontSize="10" Text="{Binding StartButtonSubtitle, Mode=OneTime, FallbackValue='NITROX'}" />
+                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                        <RadioButton x:Name="RBIsDocked" GroupName="ServerType" Content="Docked console" Margin="5" Click="RBServer_Clicked" />
+                        <RadioButton x:Name="RBIsExternal" GroupName="ServerType" Content="External console" Margin="5" Click="RBServer_Clicked" />
                     </StackPanel>
-                </Button>
-            </Grid>
+
+                    <Button Style="{StaticResource LargeButton}" Click="StartServer_Click" ToolTip="Start the server with chosen options" Background="#FF007BFF" HorizontalAlignment="Stretch" Width="Auto" Grid.Column="2" Height="62">
+                        <StackPanel>
+                            <TextBlock HorizontalAlignment="Center" FontSize="16" FontWeight="Bold" Text="START SERVER" />
+                            <TextBlock HorizontalAlignment="Center" FontSize="10" Text="{Binding StartButtonSubtitle, Mode=OneTime, FallbackValue='NITROX'}" />
+                        </StackPanel>
+                    </Button>
+                </Grid>
+            </Border>
         </Grid>
 
     </Grid>

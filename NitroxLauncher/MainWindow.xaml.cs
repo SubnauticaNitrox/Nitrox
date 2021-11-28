@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.IO;
 using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
 using System.Threading;
@@ -39,6 +40,9 @@ namespace NitroxLauncher
 
         public MainWindow()
         {
+            Log.Setup();
+            LauncherNotifier.Setup();
+            
             logic = new LauncherLogic();
 
             MaxHeight = SystemParameters.VirtualScreenHeight;
@@ -53,6 +57,17 @@ namespace NitroxLauncher
             // Pirate trigger should happen after UI is loaded.
             Loaded += (sender, args) =>
             {
+                // Error if running from a temporary directory because Nitrox Launcher won't be able to write files directly to zip/rar
+                // Tools like WinRAR do this to support running EXE files while it's still zipped.
+                if (Directory.GetCurrentDirectory().StartsWith(Path.GetTempPath(), StringComparison.OrdinalIgnoreCase))
+                {
+                    MessageBox.Show("Nitrox launcher should not be executed from a temporary directory. Install Nitrox launcher properly by extracting ALL files and moving these to a dedicated location on your PC.",
+                                    "Invalid working directory",
+                                    MessageBoxButton.OK,
+                                    MessageBoxImage.Error);
+                    Environment.Exit(1);
+                }
+                
                 // This pirate detection subscriber is immediately invoked if pirate has been detected right now.
                 PirateDetection.PirateDetected += (o, eventArgs) =>
                 {
@@ -139,18 +154,10 @@ namespace NitroxLauncher
             WindowState = WindowState.Minimized;
         }
 
-        private void Maximize_Click(object sender, RoutedEventArgs e)
-        {
-            WindowState = WindowState.Normal;
-            MaximizeButton.Visibility = Visibility.Collapsed;
-            RestoreButton.Visibility = Visibility.Visible;
-        }
-
         private void Restore_Click(object sender, RoutedEventArgs e)
         {
             WindowState = WindowState.Normal;
             RestoreButton.Visibility = Visibility.Collapsed;
-            MaximizeButton.Visibility = Visibility.Visible;
         }
 
         private void ServerStarted(object sender, ServerStartEventArgs e)
@@ -180,15 +187,22 @@ namespace NitroxLauncher
             {
                 return;
             }
+            if (sender is not Button button)
+            {
+                return;
+            }
 
             LauncherLogic.Instance.NavigateTo(elem.Tag?.GetType());
-
-            if (sender is Button button)
+            if (LastButton == null)
             {
-                LastButton?.SetValue(ButtonProperties.SelectedProperty, false);
-                LastButton = button;
-                button.SetValue(ButtonProperties.SelectedProperty, true);
+                NavPlayGamePageButton.SetValue(ButtonProperties.SelectedProperty, false);
             }
+            else
+            {
+                LastButton.SetValue(ButtonProperties.SelectedProperty, false);
+            }
+            LastButton = button;
+            button.SetValue(ButtonProperties.SelectedProperty, true);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -5,6 +5,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:converters="clr-namespace:NitroxLauncher.Models.Converters"
+        xmlns:props="clr-namespace:NitroxLauncher.Models.Properties"
         mc:Ignorable="d"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
         Title="Nitrox Launcher" Height="642" MinHeight="642" Width="1024" MinWidth="1024" 
@@ -47,22 +48,11 @@
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0" Background="Transparent" Panel.ZIndex="100" HorizontalAlignment="Right" >
-            <Grid.RowDefinitions>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-            
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition  />
-            </Grid.ColumnDefinitions>
-
             <Grid>
                 <Grid Panel.ZIndex="100">
                     <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
                         <Button Width="46" Click="Minimze_Click" WindowChrome.IsHitTestVisibleInChrome="True" VerticalAlignment="Stretch">
                             <Image Height="10" Width="10" Source="{StaticResource MinimizeImage}" Stretch="Fill" />
-                        </Button>
-                        <Button Width="46" x:Name="MaximizeButton" Click="Maximize_Click" WindowChrome.IsHitTestVisibleInChrome="True" VerticalAlignment="Stretch" >
-                            <Image Height="10" Width="10" Source="{StaticResource MaxImage}" Stretch="Fill" />
                         </Button>
                         <Button Width="46" x:Name="RestoreButton" Click="Restore_Click"  Visibility="Collapsed" WindowChrome.IsHitTestVisibleInChrome="True" VerticalAlignment="Stretch">
                             <Image Height="10" Width="10" Source="{StaticResource RestoreImage}" Stretch="Fill" />
@@ -92,7 +82,7 @@
 
                 <StackPanel Margin="32,108,0,0" HorizontalAlignment="Left" Width="196" VerticalAlignment="Top">
                     <TextBlock HorizontalAlignment="Left" FontSize="10" Foreground="#7FFFFFFF" Margin="0,0,0,4" FontWeight="Bold"><Run Text="PLAY"/></TextBlock>
-                    <Button Click="ButtonNavigation_Click" Tag="{StaticResource LaunchGamePage}" ToolTip="Play the game" BorderBrush="#00000000" >
+                    <Button x:Name="NavPlayGamePageButton" Click="ButtonNavigation_Click" Tag="{StaticResource LaunchGamePage}" ToolTip="Play the game" BorderBrush="#00000000" props:ButtonProperties.Selected="True">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <Image Source="{StaticResource SideBarPlayIcon}" Width="24px" Height="24px" />
                             <TextBlock FontSize="16" Margin="12,0,0,0" VerticalAlignment="Center">Play game</TextBlock>
