@@ -26,6 +26,7 @@ namespace NitroxServer_Subnautica.Communication.Packets.Processors
 
             if (opRocket.HasValue)
             {
+                opRocket.Value.PreflightChecks ??= new();
                 ThreadSafeList<PreflightCheck> list = opRocket.Value.PreflightChecks;
 
                 if (!list.Contains(packet.FlightCheck))

@@ -1,5 +1,7 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
+﻿using NitroxClient.Communication.Abstract;
+using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.MonoBehaviours;
+using NitroxModel.Core;
 using NitroxModel_Subnautica.Packets;
 using UnityEngine;
 
@@ -7,6 +9,7 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class RocketPreflightCompleteProcessor : ClientPacketProcessor<RocketPreflightComplete>
     {
+        private IPacketSender packetSender;
         public override void Process(RocketPreflightComplete packet)
         {
             GameObject gameObjectRocket = NitroxEntity.RequireObjectFrom(packet.Id);
@@ -26,7 +29,7 @@ namespace NitroxClient.Communication.Packets.Processors
                             cockpitSwitch.animator.SetBool("Completed", true);
                             cockpitSwitch.completed = true;
 
-                            cockpitSwitch.preflightCheckSwitch?.CompletePreflightCheck();
+                            CompletePreflightCheck(cockpitSwitch.preflightCheckSwitch);
 
                             if (cockpitSwitch.collision)
                             {
@@ -48,7 +51,7 @@ namespace NitroxClient.Communication.Packets.Processors
                         {
                             throwSwitch.animator?.SetTrigger("Throw");
                             throwSwitch.completed = true;
-                            throwSwitch.preflightCheckSwitch?.CompletePreflightCheck();
+                            CompletePreflightCheck(throwSwitch.preflightCheckSwitch);
                             throwSwitch.cinematicTrigger.showIconOnHandHover = false;
                             throwSwitch.triggerCollider.enabled = false;
                             throwSwitch.lamp.GetComponent<SkinnedMeshRenderer>().material = throwSwitch.completeMat;
@@ -58,6 +61,15 @@ namespace NitroxClient.Communication.Packets.Processors
                     break;
             }
 
+        }
+
+        private void CompletePreflightCheck(PreflightCheckSwitch preflightCheckSwitch)
+        {
+            packetSender ??= NitroxServiceLocator.LocateService<IPacketSender>();
+            using (packetSender.Suppress<RocketPreflightComplete>())
+            {
+                preflightCheckSwitch.preflightCheckManager?.CompletePreflightCheck(preflightCheckSwitch.preflightCheck);   
+            }
         }
     }
 }
