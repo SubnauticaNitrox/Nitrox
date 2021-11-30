@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
@@ -150,7 +149,7 @@ namespace NitroxServer.Serialization.World
                     {
                         PDAState = new PDAStateData(),
                         StoryGoals = new StoryGoalData(),
-                        StoryTiming = new StoryTimingData(),
+                        StoryTiming = new StoryTimingData()
                     },
                     InventoryData = InventoryData.From(new List<ItemData>(), new List<ItemData>(), new List<EquippedItemData>()),
                     VehicleData = VehicleData.From(new List<VehicleModel>()),

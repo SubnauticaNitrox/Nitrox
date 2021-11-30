@@ -18,12 +18,9 @@ namespace NitroxPatcher.Patches.Dynamic
         // __state is a bool made to prevent duplicated entries, if it's false, then it should be skipped
         public static bool Prefix(StoryGoal goal, out bool __state)
         {
-            __state = StoryGoalScheduler.main.schedule.Any(scheduledGoal => scheduledGoal.goalKey == goal.key);
-            if (!__state && goal.goalType == Story.GoalType.Radio
-                && StoryGoalManager.main.pendingRadioMessages.Contains(goal.key))
-            {
-                __state = true;
-            }
+            __state = StoryGoalScheduler.main.schedule.Any(scheduledGoal => scheduledGoal.goalKey == goal.key)
+                || goal.goalType == Story.GoalType.Radio && StoryGoalManager.main.pendingRadioMessages.Contains(goal.key);
+
             return !__state;
         }
 
@@ -36,10 +33,6 @@ namespace NitroxPatcher.Patches.Dynamic
             }
 
             ScheduledGoal scheduledGoal = StoryGoalScheduler.main.schedule.Find(scheduledGoal => scheduledGoal.goalKey == goal.key);
-            if (scheduledGoal.timeExecute < DayNightCycle.main.timePassedAsDouble)
-            {
-                return;
-            }
             
             packetSender.Send(new Schedule(scheduledGoal.timeExecute, goal.key, goal.goalType.ToString()));
         }

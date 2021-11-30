@@ -24,7 +24,7 @@ namespace NitroxServer.Serialization.SaveDataUpgrades
             foreach (JToken pdaLogEntry in pdaLog)
             {
                 string Key = pdaLogEntry["Key"].ToString();
-                if (!cleanPdaLog.Any(entry => entry["Key"].ToString() == Key))
+                if (cleanPdaLog.All(entry => entry["Key"].ToString() != Key))
                 {
                     cleanPdaLog.Add(pdaLogEntry);
                 }
@@ -36,7 +36,7 @@ namespace NitroxServer.Serialization.SaveDataUpgrades
             data["GameData"]["StoryTiming"]["ElapsedTime"] = elapsedTime;
             data["GameData"]["StoryTiming"]["AuroraExplosionTime"] = auroraExplosionTime;
 
-            data["GameData"]["ServerStartTime"]?.Remove();
+            data.Property("ServerStartTime")?.Remove();
         }
     }
 }

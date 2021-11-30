@@ -8,11 +8,11 @@ namespace NitroxServer.GameLogic
 {
     public class ScheduleKeeper
     {
-        private Dictionary<string, NitroxScheduledGoal> scheduledGoals = new Dictionary<string, NitroxScheduledGoal>();
-        private PDAStateData pdaStateData;
-        private StoryGoalData storyGoalData;
-        private EventTriggerer eventTriggerer;
-        private PlayerManager playerManager;
+        private readonly Dictionary<string, NitroxScheduledGoal> scheduledGoals = new();
+        private readonly PDAStateData pdaStateData;
+        private readonly StoryGoalData storyGoalData;
+        private readonly EventTriggerer eventTriggerer;
+        private readonly PlayerManager playerManager;
 
         public float CurrentTime => (float)eventTriggerer.GetRealElapsedTime();
 
@@ -31,7 +31,7 @@ namespace NitroxServer.GameLogic
                 if (scheduledGoals.TryGetValue(scheduledGoal.GoalKey, out NitroxScheduledGoal alreadyInGoal))
                 {
                     // We remove the goal that's already in if it's planned for later than the first one
-                    if (NitroxScheduledGoal.GetLatestOfTwoGoals(scheduledGoal, alreadyInGoal).TimeExecute == alreadyInGoal.TimeExecute)
+                    if (scheduledGoal.TimeExecute <= alreadyInGoal.TimeExecute)
                     {
                         UnScheduleGoal(alreadyInGoal.GoalKey);
                     }
