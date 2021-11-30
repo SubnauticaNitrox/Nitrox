@@ -1,7 +1,6 @@
 ﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Core;
 using NitroxModel_Subnautica.Packets;
 using UnityEngine;
 
@@ -9,7 +8,13 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class RocketPreflightCompleteProcessor : ClientPacketProcessor<RocketPreflightComplete>
     {
-        private IPacketSender packetSender;
+        private readonly IPacketSender packetSender;
+
+        public RocketPreflightCompleteProcessor(IPacketSender packetSender)
+        {
+            this.packetSender = packetSender;
+        }
+
         public override void Process(RocketPreflightComplete packet)
         {
             GameObject gameObjectRocket = NitroxEntity.RequireObjectFrom(packet.Id);
@@ -65,7 +70,6 @@ namespace NitroxClient.Communication.Packets.Processors
 
         private void CompletePreflightCheck(PreflightCheckSwitch preflightCheckSwitch)
         {
-            packetSender ??= NitroxServiceLocator.LocateService<IPacketSender>();
             using (packetSender.Suppress<RocketPreflightComplete>())
             {
                 preflightCheckSwitch.preflightCheckManager?.CompletePreflightCheck(preflightCheckSwitch.preflightCheck);   
