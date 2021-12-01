@@ -1,0 +1,67 @@
+﻿using System;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using NitroxModel.Constants;
+using NitroxModel.Logger;
+
+namespace NitroxClient.Communication
+{
+    public static class LANDiscoveryClient
+    {
+        private static readonly byte[] requestData = Encoding.UTF8.GetBytes(LANDiscoveryConstants.BROADCAST_REQUEST_STRING);
+
+        private static Action<IPEndPoint> foundServerCallback;
+
+        public static void SearchForServers(Action<IPEndPoint> callback)
+        {
+            foundServerCallback = callback;
+
+            Task.Run(BroadcastData);
+            Task.Run(ReceiveData);
+        }
+
+        private static void BroadcastData()
+        {
+            UdpClient broadcastClient = new UdpClient();
+            broadcastClient.EnableBroadcast = true;
+#if DEBUG
+            broadcastClient.ExclusiveAddressUse = false; // for multiple instances
+#endif
+            broadcastClient.Client.Bind(new IPEndPoint(IPAddress.Broadcast, LANDiscoveryConstants.BROADCAST_PORT));
+
+            // Send four broadcast packets, spaced one second apart
+            for (int i = 0; i < 4; i++)
+            {
+                broadcastClient.Send(requestData, requestData.Length);
+                Thread.Sleep(1000);
+            }
+
+            broadcastClient.Dispose();
+        }
+
+        private static void ReceiveData()
+        {
+            UdpClient receiveClient = new UdpClient(LANDiscoveryConstants.BROADCAST_PORT);
+
+            while (true)
+            {
+                IPEndPoint responseEndPoint = new IPEndPoint(0, 0);
+                byte[] responseData = receiveClient.Receive(ref responseEndPoint);
+                string responseString = Encoding.UTF8.GetString(responseData);
+
+                if (responseString.StartsWith(LANDiscoveryConstants.BROADCAST_RESPONSE_STRING)) // security check
+                {
+                    IPAddress serverIP = responseEndPoint.Address;
+                    int serverPort = int.Parse(responseString.Substring(LANDiscoveryConstants.BROADCAST_RESPONSE_STRING.Length));
+                    IPEndPoint serverEndPoint = new IPEndPoint(serverIP, serverPort);
+
+                    Log.Info($"Found LAN server at {serverEndPoint}.");
+                    foundServerCallback(serverEndPoint);
+                }
+            }
+        }
+    }
+}
