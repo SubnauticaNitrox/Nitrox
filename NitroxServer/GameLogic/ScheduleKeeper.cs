@@ -16,7 +16,7 @@ namespace NitroxServer.GameLogic
 
         public float CurrentTime => (float)eventTriggerer.GetRealElapsedTime();
 
-        public ScheduleKeeper(ThreadSafeList<NitroxScheduledGoal> nitroxScheduledGoals, PDAStateData pdaStateData, StoryGoalData storyGoalData, EventTriggerer eventTriggerer, PlayerManager playerManager)
+        public ScheduleKeeper(PDAStateData pdaStateData, StoryGoalData storyGoalData, EventTriggerer eventTriggerer, PlayerManager playerManager)
         {
             this.pdaStateData = pdaStateData;
             this.storyGoalData = storyGoalData;
@@ -24,9 +24,9 @@ namespace NitroxServer.GameLogic
             this.playerManager = playerManager;
 
             // We still want to get a "replicated" list in memory
-            for (int i = nitroxScheduledGoals.Count - 1; i >= 0; i--)
+            for (int i = storyGoalData.ScheduledGoals.Count - 1; i >= 0; i--)
             {
-                NitroxScheduledGoal scheduledGoal = nitroxScheduledGoals[i];
+                NitroxScheduledGoal scheduledGoal = storyGoalData.ScheduledGoals[i];
                 // In the unlikely case that there's a duplicated entry
                 if (scheduledGoals.TryGetValue(scheduledGoal.GoalKey, out NitroxScheduledGoal alreadyInGoal))
                 {
@@ -63,6 +63,7 @@ namespace NitroxServer.GameLogic
                     if (scheduledGoal.TimeExecute > CurrentTime)
                     {
                         scheduledGoals.Add(scheduledGoal.GoalKey, scheduledGoal);
+                        storyGoalData.ScheduledGoals.Add(scheduledGoal);
                     }
                 }
             }
@@ -87,6 +88,7 @@ namespace NitroxServer.GameLogic
                 return;
             }
             scheduledGoals.Remove(goalKey);
+            storyGoalData.ScheduledGoals.Remove(scheduledGoal);
         }
 
         public bool IsAlreadyRegistered(string goalKey)

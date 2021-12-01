@@ -18,8 +18,9 @@ namespace NitroxPatcher.Patches.Dynamic
         // __state is a bool made to prevent duplicated entries, if it's false, then it should be skipped
         public static bool Prefix(StoryGoal goal, out bool __state)
         {
-            __state = StoryGoalScheduler.main.schedule.Any(scheduledGoal => scheduledGoal.goalKey == goal.key)
-                || goal.goalType == Story.GoalType.Radio && StoryGoalManager.main.pendingRadioMessages.Contains(goal.key);
+            __state = StoryGoalScheduler.main.schedule.Any(scheduledGoal => scheduledGoal.goalKey == goal.key) ||
+                      goal.goalType == Story.GoalType.Radio && StoryGoalManager.main.pendingRadioMessages.Contains(goal.key) ||
+                      PDALog.entries.ContainsKey(goal.key);
 
             return !__state;
         }
@@ -27,14 +28,13 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(StoryGoal goal, bool __state)
         {
-            if (__state || goal.key == "PlayerDiving" || PDALog.entries.ContainsKey(goal.key))
+            if (__state || goal.key == "PlayerDiving")
             {
                 return;
             }
 
-            ScheduledGoal scheduledGoal = StoryGoalScheduler.main.schedule.Find(scheduledGoal => scheduledGoal.goalKey == goal.key);
-            
-            packetSender.Send(new Schedule(scheduledGoal.timeExecute, goal.key, goal.goalType.ToString()));
+            float timePassed = DayNightCycle.main ? ((float)DayNightCycle.main.timePassed) : 0f;
+            packetSender.Send(new Schedule(timePassed + goal.delay, goal.key, goal.goalType.ToString()));
         }
 
         public override void Patch(Harmony harmony)

@@ -193,7 +193,7 @@ namespace NitroxServer.Serialization.World
 
             world.EventTriggerer = new EventTriggerer(world.PlayerManager, pWorldData.WorldData.GameData.StoryTiming.ElapsedTime, pWorldData.WorldData.GameData.StoryTiming.AuroraExplosionTime);
             world.VehicleManager = new VehicleManager(pWorldData.WorldData.VehicleData.Vehicles, world.InventoryManager);
-            world.ScheduleKeeper = new ScheduleKeeper(pWorldData.WorldData.GameData.StoryGoals.ScheduledGoals, pWorldData.WorldData.GameData.PDAState, pWorldData.WorldData.GameData.StoryGoals, world.EventTriggerer, world.PlayerManager);
+            world.ScheduleKeeper = new ScheduleKeeper(pWorldData.WorldData.GameData.PDAState, pWorldData.WorldData.GameData.StoryGoals, world.EventTriggerer, world.PlayerManager);
 
             world.BatchEntitySpawner = new BatchEntitySpawner(
                 NitroxServiceLocator.LocateService<EntitySpawnPointFactory>(),

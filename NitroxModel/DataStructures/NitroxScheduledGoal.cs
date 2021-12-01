@@ -24,13 +24,9 @@ namespace NitroxModel.DataStructures
             };
         }
 
-        public static NitroxScheduledGoal GetLatestOfTwoGoals(NitroxScheduledGoal firstGoal, NitroxScheduledGoal secondGoal)
+        public override string ToString()
         {
-            if (firstGoal.TimeExecute >= secondGoal.TimeExecute)
-            {
-                return firstGoal;
-            }
-            return secondGoal;
+            return $"[TimeExecute: {TimeExecute}, GoalKey: {GoalKey}, GoalType: {GoalType}]";
         }
     }
 }
