@@ -21,7 +21,7 @@ namespace NitroxModel.Serialization
             get
             {
                 ServerList list = new();
-                list.Add(new Entry("local server", "127.0.0.1", DEFAULT_PORT));
+                list.Add(new Entry("Your server", "127.0.0.1", DEFAULT_PORT));
                 return list;
             }
         }
