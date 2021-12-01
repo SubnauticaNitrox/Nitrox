@@ -1,7 +1,5 @@
 ﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxModel.Core;
-using NitroxModel.Helper;
 using NitroxModel.Packets;
 using Story;
 
@@ -25,11 +23,9 @@ namespace NitroxClient.Communication.Packets.Processors
                 case StoryEventSend.EventType.ENCYCLOPEDIA:
                 case StoryEventSend.EventType.STORY:
                     using (packetSender.Suppress<StoryEventSend>())
+                    using (packetSender.Suppress<PDALogEntryAdd>())
                     {
-                        using (packetSender.Suppress<PDALogEntryAdd>())
-                        {
-                            StoryGoal.Execute(packet.Key, (Story.GoalType)packet.Type);
-                        }
+                        StoryGoal.Execute(packet.Key, (Story.GoalType)packet.Type);
                     }
                     break;
                 case StoryEventSend.EventType.EXTRA:

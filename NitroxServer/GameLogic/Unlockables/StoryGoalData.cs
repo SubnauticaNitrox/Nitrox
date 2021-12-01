@@ -19,7 +19,7 @@ namespace NitroxServer.GameLogic.Unlockables
         public ThreadSafeSet<string> GoalUnlocks { get; } = new();
 
         [JsonProperty, ProtoMember(4)]
-        public ThreadSafeList<NitroxScheduledGoal> ScheduledGoals { get; } = new();
+        public ThreadSafeList<NitroxScheduledGoal> ScheduledGoals { get; set; } = new();
 
         public bool RemovedLatestRadioMessage()
         {
@@ -27,9 +27,15 @@ namespace NitroxServer.GameLogic.Unlockables
             {
                 return false;
             }
-            
+
             RadioQueue.RemoveAt(0);
             return true;
+        }
+
+        public static StoryGoalData From(StoryGoalData storyGoals, ScheduleKeeper scheduleKeeper)
+        {
+            storyGoals.ScheduledGoals = new ThreadSafeList<NitroxScheduledGoal>(scheduleKeeper.GetScheduledGoals());
+            return storyGoals;
         }
 
         public InitialStoryGoalData GetInitialStoryGoalData(ScheduleKeeper scheduleKeeper)

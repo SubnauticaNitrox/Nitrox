@@ -26,7 +26,7 @@ namespace NitroxModel.DataStructures
 
         public override string ToString()
         {
-            return $"[TimeExecute: {TimeExecute}, GoalKey: {GoalKey}, GoalType: {GoalType}]";
+            return $"[NitroxScheduledGoal: TimeExecute: {TimeExecute}, GoalKey: {GoalKey}, GoalType: {GoalType}]";
         }
     }
 }

@@ -63,7 +63,6 @@ namespace NitroxServer.GameLogic
                     if (scheduledGoal.TimeExecute > CurrentTime)
                     {
                         scheduledGoals.Add(scheduledGoal.GoalKey, scheduledGoal);
-                        storyGoalData.ScheduledGoals.Add(scheduledGoal);
                     }
                 }
             }
@@ -88,7 +87,6 @@ namespace NitroxServer.GameLogic
                 return;
             }
             scheduledGoals.Remove(goalKey);
-            storyGoalData.ScheduledGoals.Remove(scheduledGoal);
         }
 
         public bool IsAlreadyRegistered(string goalKey)

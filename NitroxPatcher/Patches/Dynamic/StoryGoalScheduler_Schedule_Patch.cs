@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.Communication.Abstract;
@@ -11,8 +10,7 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class StoryGoalScheduler_Schedule_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(StoryGoalScheduler);
-        public static readonly MethodInfo TARGET_METHOD = Reflect.Method((StoryGoalScheduler t) => t.Schedule(default(StoryGoal)));
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((StoryGoalScheduler t) => t.Schedule(default(StoryGoal)));
         private static readonly IPacketSender packetSender = Resolve<IPacketSender>();
 
         // __state is a bool made to prevent duplicated entries, if it's false, then it should be skipped
@@ -33,7 +31,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 return;
             }
 
-            float timePassed = DayNightCycle.main ? ((float)DayNightCycle.main.timePassed) : 0f;
+            float timePassed = DayNightCycle.main ? DayNightCycle.main.timePassedAsFloat : 0f;
             packetSender.Send(new Schedule(timePassed + goal.delay, goal.key, goal.goalType.ToString()));
         }
 

@@ -36,7 +36,7 @@ namespace NitroxServer.Serialization.World
                     ParsedBatchCells = world.BatchEntitySpawner.SerializableParsedBatches,
                     VehicleData = VehicleData.From(world.VehicleManager.GetVehicles()),
                     InventoryData = InventoryData.From(world.InventoryManager.GetAllInventoryItems(), world.InventoryManager.GetAllStorageSlotItems(), world.InventoryManager.GetAllModules()),
-                    GameData = GameData.From(world.GameData.PDAState, world.GameData.StoryGoals, world.EventTriggerer),
+                    GameData = GameData.From(world.GameData.PDAState, world.GameData.StoryGoals, world.ScheduleKeeper, world.EventTriggerer),
                     EscapePodData = EscapePodData.From(world.EscapePodManager.GetEscapePods()),
                     Seed = world.Seed
                 }
