@@ -37,8 +37,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public override void Patch(Harmony harmony)
         {
-            PatchPrefix(harmony, TARGET_METHOD);
-            PatchPostfix(harmony, TARGET_METHOD);
+            PatchMultiple(harmony, TARGET_METHOD, true, true);
         }
     }
 }
