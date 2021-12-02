@@ -23,7 +23,7 @@ namespace NitroxServer.GameLogic
         private readonly ThreadSafeDictionary<string, PlayerContext> reservations = new();
         private readonly ThreadSafeSet<string> reservedPlayerNames = new("Player"); // "Player" is often used to identify the local player and should not be used by any user
 
-        public ThreadSafeQueue<KeyValuePair<NitroxConnection, MultiplayerSessionReservationRequest>> JoinQueue { get; } = new();
+        public ThreadSafeQueue<KeyValuePair<NitroxConnection, MultiplayerSessionReservationRequest>> JoinQueue { get; private set; } = new();
         public bool PlayerCurrentlyJoining { get; set; }
 
         private Timer initialSyncTimer;
@@ -182,17 +182,7 @@ namespace NitroxServer.GameLogic
         public void PlayerDisconnected(NitroxConnection connection)
         {
             // Remove any requests sent by the connection from the join queue
-            Queue<KeyValuePair<NitroxConnection, MultiplayerSessionReservationRequest>> copy = new(JoinQueue);
-            JoinQueue.Clear();
-            while (copy.Any())
-            {
-                var item = copy.Dequeue();
-
-                if (item.Key != connection)
-                {
-                    JoinQueue.Enqueue(item);
-                }
-            }
+            JoinQueue = (ThreadSafeQueue<KeyValuePair<NitroxConnection, MultiplayerSessionReservationRequest>>)JoinQueue.Where(item => !Equals(item.Key, connection));
 
             assetsByConnection.TryGetValue(connection, out ConnectionAssets assetPackage);
             if (assetPackage == null)
@@ -231,13 +221,14 @@ namespace NitroxServer.GameLogic
 
             if (JoinQueue.Count > 0)
             {
-                var keyValuePair = JoinQueue.Dequeue();
+                KeyValuePair<NitroxConnection, MultiplayerSessionReservationRequest> keyValuePair = JoinQueue.Dequeue();
                 NitroxConnection requestConnection = keyValuePair.Key;
                 MultiplayerSessionReservationRequest reservationRequest = keyValuePair.Value;
+
                 MultiplayerSessionReservation reservation = ReservePlayerContext(requestConnection,
-                    reservationRequest.PlayerSettings,
-                    reservationRequest.AuthenticationContext,
-                    reservationRequest.CorrelationId);
+                reservationRequest.PlayerSettings,
+                reservationRequest.AuthenticationContext,
+                reservationRequest.CorrelationId);
 
                 requestConnection.SendPacket(reservation);
             }

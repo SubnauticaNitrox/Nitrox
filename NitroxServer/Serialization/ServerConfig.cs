@@ -10,8 +10,8 @@ namespace NitroxServer.Serialization
     {
         private int maxConnectionsSetting = 100;
 
-        private int initialSyncTimeoutSetting = 120000;
-        
+        private int initialSyncTimeoutSetting = 300000;
+
         [PropertyDescription("Set to true to Cache entities for the whole map on next run. \nWARNING! Will make server load take longer on the cache run but players will gain a performance boost when entering new areas.")]
         public bool CreateFullEntityCache = false;
 
