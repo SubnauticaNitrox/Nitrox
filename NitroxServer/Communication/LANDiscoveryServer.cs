@@ -23,7 +23,7 @@ namespace NitroxServer.Communication
 
             while (true)
             {
-                IPEndPoint requestEndPoint = new IPEndPoint(0, 0);
+                IPEndPoint requestEndPoint = new(0, 0);
                 byte[] requestData = client.Receive(ref requestEndPoint);
                 string requestString = Encoding.UTF8.GetString(requestData);
 

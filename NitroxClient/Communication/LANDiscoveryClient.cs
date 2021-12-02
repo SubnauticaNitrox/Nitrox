@@ -25,30 +25,33 @@ namespace NitroxClient.Communication
 
         private static void BroadcastData()
         {
-            UdpClient broadcastClient = new UdpClient();
+            using UdpClient broadcastClient = new();
             broadcastClient.EnableBroadcast = true;
 #if DEBUG
             broadcastClient.ExclusiveAddressUse = false; // for multiple instances
 #endif
             broadcastClient.Client.Bind(new IPEndPoint(IPAddress.Broadcast, LANDiscoveryConstants.BROADCAST_PORT));
 
-            // Send four broadcast packets, spaced one second apart
-            for (int i = 0; i < 4; i++)
+            while (true)
             {
-                broadcastClient.Send(requestData, requestData.Length);
-                Thread.Sleep(1000);
-            }
+                // Send four broadcast packets, spaced one second apart
+                for (int i = 0; i < 4; i++)
+                {
+                    broadcastClient.Send(requestData, requestData.Length);
+                    Thread.Sleep(1000);
+                }
 
-            broadcastClient.Dispose();
+                Thread.Sleep(6000);
+            }
         }
 
         private static void ReceiveData()
         {
-            UdpClient receiveClient = new UdpClient(LANDiscoveryConstants.BROADCAST_PORT);
+            using UdpClient receiveClient = new(LANDiscoveryConstants.BROADCAST_PORT);
 
             while (true)
             {
-                IPEndPoint responseEndPoint = new IPEndPoint(0, 0);
+                IPEndPoint responseEndPoint = new(0, 0);
                 byte[] responseData = receiveClient.Receive(ref responseEndPoint);
                 string responseString = Encoding.UTF8.GetString(responseData);
 
@@ -56,7 +59,7 @@ namespace NitroxClient.Communication
                 {
                     IPAddress serverIP = responseEndPoint.Address;
                     int serverPort = int.Parse(responseString.Substring(LANDiscoveryConstants.BROADCAST_RESPONSE_STRING.Length));
-                    IPEndPoint serverEndPoint = new IPEndPoint(serverIP, serverPort);
+                    IPEndPoint serverEndPoint = new(serverIP, serverPort);
 
                     Log.Info($"Found LAN server at {serverEndPoint}.");
                     foundServerCallback(serverEndPoint);
