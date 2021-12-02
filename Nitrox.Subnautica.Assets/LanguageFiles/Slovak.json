@@ -31,6 +31,7 @@
   "Nitrox_InvalidUserName": "Prosím zadajte platné meno !\n\n Nemôžu v ňom byť medzery ani pochybné znaky.\n Povolené znaky : A-Z a-z 0-9 _ . -\nDĺžka : [3, 25]",
   "Nitrox_RequestingSessionPolicy": "Pýtam pravidlá relácie...",
   "Nitrox_RejectedSessionPolicy": "Rezervácia odmietnutá...",
+  "Nitrox_Waiting": "Čaká sa v rade na pripojenie...",
   "Nitrox_DisconnectedSession": "Odpojený zo serveru",
   "Nitrox_WaitingPassword": "Čakám na zadanie hesla...",
   "Nitrox_WaitingUserInput": "Čakám na vstup od používateľa...",

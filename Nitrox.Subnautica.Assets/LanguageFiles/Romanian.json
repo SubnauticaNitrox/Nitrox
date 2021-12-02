@@ -31,6 +31,7 @@
   "Nitrox_InvalidUserName": "Te rugăm să introduci un nume de jucător valid!\n\n Trebuie să nu conțină spațiu sau caractere ambigue\n Caracterele permise : A-Z a-z 0-9 _ . -\nLungime : [3, 25]",
   "Nitrox_RequestingSessionPolicy": "Se solicită informații despre politica sesiunii...",
   "Nitrox_RejectedSessionPolicy": "Rezervare respinsă...",
+  "Nitrox_Waiting": "Se așteaptă în coada de înscriere...",
   "Nitrox_DisconnectedSession": "Deconectat de la server",
   "Nitrox_WaitingPassword": "Se așteaptă introducerea parolei serverului...",
   "Nitrox_WaitingUserInput": "Se așteaptă datele introduse de utilizator...",

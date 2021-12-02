@@ -31,6 +31,7 @@
   "Nitrox_InvalidUserName": "Per favore inserisce un nome valido!\n\n Non può contenere spazi o caratteri ambigui\n Caratteri consentiti : A-Z a-z 0-9 _ . -\nLunghezza : [3, 25]",
   "Nitrox_RequestingSessionPolicy": "Sto richiedendo le impostazioni della sessione...",
   "Nitrox_RejectedSessionPolicy": "Richiesta rifiutata...",
+  "Nitrox_Waiting": "In attesa in coda di iscrizione...",
   "Nitrox_DisconnectedSession": "Disconnesso dal server",
   "Nitrox_WaitingPassword": "In attesa della password per il server...",
   "Nitrox_WaitingUserInput": "In attesa dell'inserimento dal parte dell'utente...",

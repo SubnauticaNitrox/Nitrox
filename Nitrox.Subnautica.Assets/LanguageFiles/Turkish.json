@@ -31,6 +31,7 @@
   "Nitrox_InvalidUserName": "Lütfen geçerli bir kullanıcı adı girin!\n\n Boşluk ve özel karakter içermemelidir\n İzin verilen karakterler: A-Z a-z 0-9 _ . -\nUzunluk : [3, 25]",
   "Nitrox_RequestingSessionPolicy": "Oturum bilgileri alınıyor...",
   "Nitrox_RejectedSessionPolicy": "Rezervasyon reddedildi...",
+  "Nitrox_Waiting": "Katılma kuyruğunda bekleniyor...",
   "Nitrox_DisconnectedSession": "Sunucu bağlantısı kesildi",
   "Nitrox_WaitingPassword": "Sunucu şifresi girilmesi bekleniyor...",
   "Nitrox_WaitingUserInput": "Kullanıcı adı girilmesi bekleniyor...",
