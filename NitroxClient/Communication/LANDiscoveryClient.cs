@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -12,6 +13,7 @@ namespace NitroxClient.Communication
     public static class LANDiscoveryClient
     {
         private static readonly byte[] requestData = Encoding.UTF8.GetBytes(LANDiscoveryConstants.BROADCAST_REQUEST_STRING);
+        private static readonly List<IPEndPoint> discoveredServers = new();
 
         private static Action<IPEndPoint> foundServerCallback;
 
@@ -32,22 +34,20 @@ namespace NitroxClient.Communication
 #endif
             broadcastClient.Client.Bind(new IPEndPoint(IPAddress.Broadcast, LANDiscoveryConstants.BROADCAST_PORT));
 
-            while (true)
+            // Send four broadcast packets, spaced one second apart
+            for (int i = 0; i < 4; i++)
             {
-                // Send four broadcast packets, spaced one second apart
-                for (int i = 0; i < 4; i++)
-                {
-                    broadcastClient.Send(requestData, requestData.Length);
-                    Thread.Sleep(1000);
-                }
-
-                Thread.Sleep(6000);
+                broadcastClient.Send(requestData, requestData.Length, new IPEndPoint(IPAddress.Loopback, LANDiscoveryConstants.BROADCAST_PORT));
+                Thread.Sleep(1000);
             }
+
+            Thread.Sleep(6000);
         }
 
         private static void ReceiveData()
         {
             using UdpClient receiveClient = new(LANDiscoveryConstants.BROADCAST_PORT);
+            receiveClient.Client.Bind(new IPEndPoint(IPAddress.Any, LANDiscoveryConstants.BROADCAST_PORT));
 
             while (true)
             {
@@ -61,8 +61,12 @@ namespace NitroxClient.Communication
                     int serverPort = int.Parse(responseString.Substring(LANDiscoveryConstants.BROADCAST_RESPONSE_STRING.Length));
                     IPEndPoint serverEndPoint = new(serverIP, serverPort);
 
-                    Log.Info($"Found LAN server at {serverEndPoint}.");
-                    foundServerCallback(serverEndPoint);
+                    if (!discoveredServers.Contains(serverEndPoint)) // prevents duplicate entries
+                    {
+                        Log.Info($"Found LAN server at {serverEndPoint}.");
+                        discoveredServers.Add(serverEndPoint);
+                        foundServerCallback(serverEndPoint);
+                    }
                 }
             }
         }

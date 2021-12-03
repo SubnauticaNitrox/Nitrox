@@ -304,6 +304,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
             CreateButton(translationKey: "Nitrox_AddServer", clickEvent: ShowAddServerWindow, disableTranslation: false);
             LoadSavedServers();
+            FindLANServers();
         }
     }
 }

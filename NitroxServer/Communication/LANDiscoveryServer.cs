@@ -10,16 +10,18 @@ namespace NitroxServer.Communication
     public static class LANDiscoveryServer
     {
         private static readonly byte[] responseData = Encoding.UTF8.GetBytes(LANDiscoveryConstants.BROADCAST_RESPONSE_STRING);
-        private static UdpClient client;
+
+        private static Task listenTask;
 
         public static void Start()
         {
-            Task.Run(Listen);
+            listenTask = Task.Run(Listen);
         }
 
         private static void Listen()
         {
-            client = new UdpClient(LANDiscoveryConstants.BROADCAST_PORT);
+            using UdpClient client = new(LANDiscoveryConstants.BROADCAST_PORT);
+            client.Client.Bind(new IPEndPoint(IPAddress.Any, LANDiscoveryConstants.BROADCAST_PORT));
 
             while (true)
             {
@@ -30,14 +32,16 @@ namespace NitroxServer.Communication
                 if (requestString == LANDiscoveryConstants.BROADCAST_REQUEST_STRING) // security check
                 {
                     Log.Info($"Client at {requestEndPoint} discovered this server through LAN.");
+                    client.Connect(requestEndPoint);
                     client.Send(responseData, responseData.Length, requestEndPoint);
+                    client.Close();
                 }
             }
         }
 
         public static void Stop()
         {
-            client.Dispose();
+            listenTask.Dispose();
         }
     }
 }
