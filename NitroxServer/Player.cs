@@ -19,7 +19,7 @@ namespace NitroxServer
         public ThreadSafeList<NitroxTechType> UsedItems { get; }
         public ThreadSafeList<string> QuickSlotsBinding { get; set; }
 
-        public NitroxConnection Connection { get; set; }
+        public INitroxConnection Connection { get; set; }
         public PlayerSettings PlayerSettings => PlayerContext.PlayerSettings;
         public PlayerContext PlayerContext { get; set; }
         public ushort Id { get; }
@@ -33,7 +33,7 @@ namespace NitroxServer
         public NitroxVector3? LastStoredPosition { get; set; }
         public Optional<NitroxId> LastStoredSubRootID { get; set; }
 
-        public Player(ushort id, string name, bool isPermaDeath, PlayerContext playerContext, NitroxConnection connection,
+        public Player(ushort id, string name, bool isPermaDeath, PlayerContext playerContext, INitroxConnection connection,
                       NitroxVector3 position, NitroxId playerId, Optional<NitroxId> subRootId, Perms perms, PlayerStatsData stats,
                       IEnumerable<NitroxTechType> usedItems, IEnumerable<string> quickSlotsBinding,
                       IEnumerable<EquippedItemData> equippedItems, IEnumerable<EquippedItemData> modules)

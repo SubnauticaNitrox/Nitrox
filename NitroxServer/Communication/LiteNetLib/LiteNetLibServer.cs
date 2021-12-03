@@ -94,18 +94,6 @@ namespace NitroxServer.Communication.LiteNetLib
             ProcessIncomingData(connection, packet);
         }
 
-        public void OnConnectionRequest(ConnectionRequest request)
-        {
-            if (server.PeersCount < maxConn)
-            {
-                request.AcceptIfKey("nitrox");
-            }
-            else
-            {
-                request.Reject();
-            }
-        }
-
         private INitroxConnection GetConnection(long remoteIdentifier)
         {
             INitroxConnection connection;

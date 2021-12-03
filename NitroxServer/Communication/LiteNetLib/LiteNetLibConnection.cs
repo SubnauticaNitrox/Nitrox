@@ -1,4 +1,4 @@
-using System.Net;
+﻿using System.Net;
 using LiteNetLib;
 using LiteNetLib.Utils;
 using NitroxModel.Logger;
@@ -7,7 +7,7 @@ using NitroxModel.Packets;
 
 namespace NitroxServer.Communication.LiteNetLib
 {
-    public class LiteNetLibConnection : NitroxConnection
+    public class LiteNetLibConnection : INitroxConnection
     {
         private readonly NetPacketProcessor netPacketProcessor = new();
         private readonly NetPeer peer;
@@ -62,6 +62,11 @@ namespace NitroxServer.Communication.LiteNetLib
             {
                 Log.Warn($"Cannot send packet {packet?.GetType()} to a closed connection {peer?.EndPoint}");
             }
+        }
+
+        public void Disconnect()
+        {
+            peer.Disconnect();
         }
 
         protected bool Equals(LiteNetLibConnection other)

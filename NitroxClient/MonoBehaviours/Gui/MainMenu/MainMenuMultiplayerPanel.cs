@@ -100,7 +100,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 return;
             }
 
-            Main.JoinServer.Show(endpoint.Address.ToString(), endpoint.Port);
+            Main.JoinServer.Show(endpoint.Address.ToString(), (ushort)endpoint.Port);
         }
 
         private void ShowAddServerWindow()

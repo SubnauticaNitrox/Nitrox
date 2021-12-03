@@ -17,7 +17,7 @@ namespace NitroxServer.GameLogic
     public class PlayerManager
     {
         private readonly ThreadSafeDictionary<string, Player> allPlayersByName;
-        private readonly ThreadSafeDictionary<NitroxConnection, ConnectionAssets> assetsByConnection = new();
+        private readonly ThreadSafeDictionary<INitroxConnection, ConnectionAssets> assetsByConnection = new();
         private readonly ThreadSafeDictionary<string, PlayerContext> reservations = new();
         private readonly ThreadSafeSet<string> reservedPlayerNames = new("Player"); // "Player" is often used to identify the local player and should not be used by any user
 

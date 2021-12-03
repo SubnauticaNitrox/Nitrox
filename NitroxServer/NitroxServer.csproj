@@ -41,7 +41,7 @@
   <ItemGroup Label=".cs files">
     <Compile Include="Communication\LiteNetLib\LiteNetLibConnection.cs" />
     <Compile Include="Communication\LiteNetLib\LiteNetLibServer.cs" />
-    <Compile Include="Communication\NitroxConnection.cs" />
+    <Compile Include="Communication\INitroxConnection.cs" />
     <Compile Include="Communication\NitroxServer.cs" />
     <Compile Include="Communication\Packets\PacketHandler.cs" />
     <Compile Include="Communication\Packets\Processors\Abstract\AuthenticatedPacketProcessor.cs" />

@@ -1,12 +1,14 @@
-using System.Net;
+﻿using System.Net;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
 
 namespace NitroxServer.Communication
 {
-    public interface NitroxConnection : IProcessorContext
+    public interface INitroxConnection : IProcessorContext
     {
         IPEndPoint Endpoint { get; }
         void SendPacket(Packet packet);
+
+        void Disconnect();
     }
 }

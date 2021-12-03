@@ -41,7 +41,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         private RectTransform joinServerBackground;
 
         private string serverIp;
-        private int serverPort;
+        private ushort serverPort;
 
         private bool isSubscribed;
         private bool shouldFocus;
@@ -60,7 +60,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             Hide();
         }
 
-        public void Show(string ip, int port)
+        public void Show(string ip, ushort port)
         {
             NitroxServiceLocator.BeginNewLifetimeScope();
             multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();

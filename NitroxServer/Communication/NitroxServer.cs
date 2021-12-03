@@ -72,7 +72,7 @@ namespace NitroxServer.Communication
             }).ConfigureAwait(false);
         }
 
-        protected void ProcessIncomingData(NitroxConnection connection, Packet packet)
+        protected void ProcessIncomingData(INitroxConnection connection, Packet packet)
         {
             try
             {
