@@ -21,6 +21,8 @@ namespace NitroxClient.Communication
         {
             foundServerCallback = callback;
 
+            Log.Info("Searching for LAN servers...");
+
             Task.Run(BroadcastData);
             Task.Run(ReceiveData);
         }
@@ -37,7 +39,7 @@ namespace NitroxClient.Communication
             // Send four broadcast packets, spaced one second apart
             for (int i = 0; i < 4; i++)
             {
-                broadcastClient.Send(requestData, requestData.Length, new IPEndPoint(IPAddress.Loopback, LANDiscoveryConstants.BROADCAST_PORT));
+                broadcastClient.Send(requestData, requestData.Length);
                 Thread.Sleep(1000);
             }
 

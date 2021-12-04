@@ -21,6 +21,7 @@ namespace NitroxServer.Communication
         private static void Listen()
         {
             using UdpClient client = new(LANDiscoveryConstants.BROADCAST_PORT);
+            client.EnableBroadcast = true;
             client.Client.Bind(new IPEndPoint(IPAddress.Any, LANDiscoveryConstants.BROADCAST_PORT));
 
             while (true)
