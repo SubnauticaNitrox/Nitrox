@@ -245,6 +245,22 @@ namespace NitroxModel.Platforms.OS.Shared
             return true;
         }
 
+
+        public bool IsWritable(string directory)
+        {
+            string randFileName = Path.GetRandomFileName();
+            try
+            {
+                File.Create(Path.Combine(directory, randFileName)).Close();
+                File.Delete(Path.Combine(directory, randFileName));
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public abstract bool SetFullAccessToCurrentUser(string directory);
     }
 }
