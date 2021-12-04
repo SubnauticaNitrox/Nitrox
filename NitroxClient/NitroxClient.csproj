@@ -22,7 +22,6 @@
   <ItemGroup Label=".cs files">
     <Compile Include="ClientAutoFacRegistrar.cs" />
     <Compile Include="Communication\Abstract\IClient.cs" />
-    <Compile Include="Communication\Abstract\IConnectionInfo.cs" />
     <Compile Include="Communication\Abstract\IMultiplayerSession.cs" />
     <Compile Include="Communication\Abstract\IMultiplayerSessionConnectionContext.cs" />
     <Compile Include="Communication\Abstract\IMultiplayerSessionConnectionState.cs" />
@@ -41,7 +40,6 @@
     <Compile Include="Communication\MultiplayerSession\ConnectionState\SessionReserved.cs" />
     <Compile Include="Communication\MultiplayerSession\MultiplayerSessionConnectionStage.cs" />
     <Compile Include="Communication\MultiplayerSession\SessionManagers\DefaultMultiplayerSessionManager.cs" />
-    <Compile Include="Communication\NetworkingLayer\LiteNetLib\DirectConnection.cs" />
     <Compile Include="Communication\NetworkingLayer\LiteNetLib\LiteNetLibClient.cs" />
     <Compile Include="Communication\NetworkingLayer\PlatformP2P\Abstract\IPlatformHandler.cs" />
     <Compile Include="Communication\NetworkingLayer\PlatformP2P\Steam\SteamP2P.cs" />

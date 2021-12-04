@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NitroxClient.Communication.Abstract
+namespace NitroxModel.Networking
 {
     public interface IConnectionInfo : IEquatable<IConnectionInfo>
     {

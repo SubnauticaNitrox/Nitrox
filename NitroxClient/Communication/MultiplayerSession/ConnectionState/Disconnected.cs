@@ -4,6 +4,7 @@ using NitroxClient.Communication.Exceptions;
 using NitroxClient.Communication.NetworkingLayer.LiteNetLib;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
+using NitroxModel.Networking;
 
 namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
 {

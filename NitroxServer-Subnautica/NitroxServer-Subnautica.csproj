@@ -21,7 +21,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject/>
+    <StartupObject />
   </PropertyGroup>
   <ItemGroup Label=".cs files">
     <Compile Include="AppMutex.cs" />
@@ -78,10 +78,10 @@
       <Version>4.9.4</Version>
     </PackageReference>
     <PackageReference Include="Mono.Cecil">
-      <Version>0.11.3</Version>
+      <Version>0.11.4</Version>
     </PackageReference>
     <PackageReference Include="AssetsTools.NET">
-      <Version>2.0.6</Version>
+      <Version>2.0.9</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup Label="Project References">

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NitroxClient.Communication.Abstract;
 using Steamworks;
+using NitroxModel.Networking;
 
 namespace NitroxClient.Communication.NetworkingLayer.PlatformP2P.Steam
 {

@@ -15,6 +15,7 @@ using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
 using NitroxModel.Logger;
 using NitroxModel.MultiplayerSession;
+using NitroxModel.Networking;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 using UnityEngine.UI;

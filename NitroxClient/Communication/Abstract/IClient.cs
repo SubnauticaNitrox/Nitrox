@@ -1,4 +1,5 @@
 ﻿using NitroxModel.Packets;
+using NitroxModel.Networking;
 
 namespace NitroxClient.Communication.Abstract
 {

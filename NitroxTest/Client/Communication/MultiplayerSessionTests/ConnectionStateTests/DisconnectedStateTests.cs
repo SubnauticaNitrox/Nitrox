@@ -5,6 +5,7 @@ using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession.ConnectionState;
 using NitroxClient.Communication.NetworkingLayer.LiteNetLib;
 using NitroxModel.Packets;
+using NitroxModel.Networking;
 using NSubstitute;
 
 namespace NitroxTest.Client.Communication.MultiplayerSessionTests.ConnectionStateTests

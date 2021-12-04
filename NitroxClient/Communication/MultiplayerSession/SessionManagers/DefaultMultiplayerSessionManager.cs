@@ -9,6 +9,7 @@ using NitroxModel.Logger;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
 using NitroxModel.Serialization;
+using NitroxModel.Networking;
 
 namespace NitroxClient.Communication.MultiplayerSession.SessionManagers
 {

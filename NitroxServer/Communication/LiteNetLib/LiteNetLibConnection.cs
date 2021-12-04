@@ -12,7 +12,7 @@ namespace NitroxServer.Communication.LiteNetLib
         private readonly NetPacketProcessor netPacketProcessor = new();
         private readonly NetPeer peer;
 
-        public IPEndPoint Endpoint => peer.EndPoint;
+        public IConnectionInfo Endpoint => new DirectConnection(peer.EndPoint.Address.ToString(), (ushort)peer.EndPoint.Port);
 
         public LiteNetLibConnection(NetPeer peer)
         {

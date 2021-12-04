@@ -1,6 +1,7 @@
 ﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.NetworkingLayer.LiteNetLib;
 using NitroxModel.MultiplayerSession;
+using NitroxModel.Networking;
 using NitroxModel.Packets;
 using NSubstitute;
 

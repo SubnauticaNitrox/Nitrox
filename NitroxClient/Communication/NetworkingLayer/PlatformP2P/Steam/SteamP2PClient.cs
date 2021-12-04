@@ -8,6 +8,7 @@ using NitroxClient.GameLogic;
 using NitroxModel.Packets;
 using NitroxServer.Communication.NetworkingLayer.PlatformP2P.Abstract;
 using Steamworks;
+using NitroxModel.Networking;
 
 namespace NitroxClient.Communication.NetworkingLayer.PlatformP2P.Steam
 {
@@ -44,12 +45,7 @@ namespace NitroxClient.Communication.NetworkingLayer.PlatformP2P.Steam
 
         public void Start(IConnectionInfo connectionInfo)
         {
-            SteamP2P steamP2P = connectionInfo as SteamP2P;
-            if (steamP2P == null)
-            {
-                throw new NotSupportedException("Tried passing incorrect connectionInfo to clientConnection");
-            }
-
+            SteamP2P steamP2P = IConnectionInfoHelper.RequireType<SteamP2P>(connectionInfo);
             
         }
 

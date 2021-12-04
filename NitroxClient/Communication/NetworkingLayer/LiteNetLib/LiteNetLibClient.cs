@@ -19,6 +19,7 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
         private readonly AutoResetEvent connectedEvent = new AutoResetEvent(false);
         private readonly PacketReceiver packetReceiver;
         private readonly INetworkDebugger networkDebugger;
+        private readonly EventBasedNetListener listener = new EventBasedNetListener();
 
         private NetManager client;
 
@@ -28,21 +29,15 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
             this.networkDebugger = networkDebugger;
         }
 
-        public void Start(IConnectionInfo connectionInfo)
+        public void Start(IConnectionInfo connectionInfo) 
         {
-            DirectConnection directConnection = connectionInfo as DirectConnection;
-            if (directConnection == null)
-            {
-                throw new NotSupportedException("Tried passing incorrect connectionInfo to clientConnection");
-            }
-
+            DirectConnection directConnection = IConnectionInfoHelper.RequireType<DirectConnection>(connectionInfo);
             Log.Info("Initializing LiteNetLibClient...");
 
             SynchronizationContext.SetSynchronizationContext(new SynchronizationContext());
 
             netPacketProcessor.SubscribeReusable<WrapperPacket, NetPeer>(OnPacketReceived);
 
-            EventBasedNetListener listener = new EventBasedNetListener();
             listener.PeerConnectedEvent += Connected;
             listener.PeerDisconnectedEvent += Disconnected;
             listener.NetworkReceiveEvent += ReceivedNetworkData;
@@ -74,6 +69,10 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
         {
             IsConnected = false;
             client.Stop();
+
+            listener.PeerConnectedEvent -= Connected;
+            listener.PeerDisconnectedEvent -= Disconnected;
+            listener.NetworkReceiveEvent -= ReceivedNetworkData;
         }
 
         private void ReceivedNetworkData(NetPeer peer, NetDataReader reader, DeliveryMethod deliveryMethod)

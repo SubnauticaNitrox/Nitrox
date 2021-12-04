@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NitroxClient.Communication.Abstract;
-
-namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
+﻿namespace NitroxModel.Networking
 {
     public class DirectConnection : IConnectionInfo
     {
@@ -43,11 +36,6 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
         public override bool Equals(object obj)
         {
             return Equals(obj as DirectConnection);
-        }
-
-        public int GetHashCode(IConnectionInfo obj)
-        {
-            throw new NotImplementedException();
         }
 
         public override int GetHashCode()
