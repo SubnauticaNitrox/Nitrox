@@ -255,11 +255,10 @@ namespace NitroxModel.Platforms.OS.Shared
                 File.Delete(Path.Combine(directory, randFileName));
                 return true;
             }
-            catch (UnauthorizedAccessException)
+            catch
             {
                 return false;
             }
-
         }
 
         public abstract bool SetFullAccessToCurrentUser(string directory);
