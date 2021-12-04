@@ -25,7 +25,7 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests.ConnectionStat
 
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
             connectionContext.Client.Returns(serverClient);
-            DirectConnection connection = connectionContext.ConnectionInfo as DirectConnection;
+            DirectConnection connection = ConnectionInfoHelper.RequireType<DirectConnection>(connectionContext.ConnectionInfo);
             connection.Port.Returns((ushort)TestConstants.TEST_SERVER_PORT);
 
             Disconnected connectionState = new Disconnected();

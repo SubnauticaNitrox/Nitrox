@@ -112,7 +112,7 @@
     <Compile Include="MultiplayerSession\RandomColorGenerator.cs" />
     <Compile Include="Networking\DirectConnection.cs" />
     <Compile Include="Networking\IConnectionInfo.cs" />
-    <Compile Include="Networking\INitroxConnectioHelper.cs" />
+    <Compile Include="Networking\ConnectioInfoHelper.cs" />
     <Compile Include="Networking\NitroxDeliveryMethod.cs" />
     <Compile Include="Packets\AddEscapePod.cs" />
     <Compile Include="Packets\AnimationChangeEvent.cs" />

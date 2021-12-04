@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using Autofac;
 using NitroxModel.Core;
-using NitroxServer.Communication.LiteNetLib;
+using NitroxServer.Communication.NetworkingLayer.LiteNetLib;
 using NitroxServer.Communication.Packets;
 using NitroxServer.Communication.Packets.Processors;
 using NitroxServer.Communication.Packets.Processors.Abstract;

@@ -39,9 +39,10 @@
     <OutputType>Library</OutputType>
   </PropertyGroup>
   <ItemGroup Label=".cs files">
-    <Compile Include="Communication\LiteNetLib\LiteNetLibConnection.cs" />
-    <Compile Include="Communication\LiteNetLib\LiteNetLibServer.cs" />
-    <Compile Include="Communication\INitroxConnection.cs" />
+    <Compile Include="Communication\NetworkingLayer\INitroxConnection.cs" />
+    <Compile Include="Communication\NetworkingLayer\LiteNetLib\LiteNetLibConnection.cs" />
+    <Compile Include="Communication\NetworkingLayer\LiteNetLib\LiteNetLibServer.cs" />
+    <Compile Include="Communication\NetworkingLayer\Tunnel\TunneledConnection.cs" />
     <Compile Include="Communication\NitroxServer.cs" />
     <Compile Include="Communication\Packets\PacketHandler.cs" />
     <Compile Include="Communication\Packets\Processors\Abstract\AuthenticatedPacketProcessor.cs" />

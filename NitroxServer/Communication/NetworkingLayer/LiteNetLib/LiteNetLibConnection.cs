@@ -1,11 +1,13 @@
-﻿using System.Net;
+﻿using System.Collections.Generic;
+using System.Net;
 using LiteNetLib;
 using LiteNetLib.Utils;
 using NitroxModel.Logger;
 using NitroxModel.Networking;
 using NitroxModel.Packets;
+using NitroxServer.Communication.NetworkingLayer.Tunnel;
 
-namespace NitroxServer.Communication.LiteNetLib
+namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
 {
     public class LiteNetLibConnection : INitroxConnection
     {
@@ -13,6 +15,8 @@ namespace NitroxServer.Communication.LiteNetLib
         private readonly NetPeer peer;
 
         public IConnectionInfo Endpoint => new DirectConnection(peer.EndPoint.Address.ToString(), (ushort)peer.EndPoint.Port);
+
+        public HashSet<TunneledConnection> TunneledConnections { get; private set; }
 
         public LiteNetLibConnection(NetPeer peer)
         {

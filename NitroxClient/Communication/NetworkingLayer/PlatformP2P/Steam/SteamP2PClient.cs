@@ -45,7 +45,7 @@ namespace NitroxClient.Communication.NetworkingLayer.PlatformP2P.Steam
 
         public void Start(IConnectionInfo connectionInfo)
         {
-            SteamP2P steamP2P = IConnectionInfoHelper.RequireType<SteamP2P>(connectionInfo);
+            SteamP2P steamP2P = ConnectionInfoHelper.RequireType<SteamP2P>(connectionInfo);
             
         }
 

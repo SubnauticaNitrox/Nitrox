@@ -4,6 +4,7 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
+using NitroxServer.Communication.NetworkingLayer;
 using NitroxServer.Communication.Packets.Processors;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
@@ -25,9 +26,9 @@ namespace NitroxServer.Communication.Packets
         {
             Player player = playerManager.GetPlayer(connection);
             Packet unpackedPacket = packet;
-            if (packet.GetType() == typeof(TunneledPacket))
+            if (packet is TunneledPacket tPacket)
             {
-                unpackedPacket = ((TunneledPacket)packet).Packet;
+                unpackedPacket = tPacket.Packet;
             }
 
             if (player == null)

@@ -6,6 +6,7 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Networking;
 using NitroxModel.Packets;
+using NitroxServer.Communication.NetworkingLayer;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
 using NitroxServer.Serialization.World;
@@ -43,11 +44,10 @@ namespace NitroxServer.Communication.Packets.Processors
             PlayerJoinedMultiplayerSession playerJoinedPacket = new(player.PlayerContext, player.SubRootId, techTypes, inventoryItems);
             playerManager.SendPacketToOtherPlayers(playerJoinedPacket, player);
 
-            DirectConnection dc = connection.Endpoint as DirectConnection;
-            if (dc != null)
+            if (connection.Endpoint is DirectConnection directConnection)
             {
                 // Make players on localhost admin by default.
-                if (IPAddress.TryParse(dc.IPAddress, out IPAddress address) && IPAddress.IsLoopback(address))
+                if (IPAddress.TryParse(directConnection.IPAddress, out IPAddress address) && IPAddress.IsLoopback(address))
                 {
                     player.Permissions = Perms.ADMIN;
                 }

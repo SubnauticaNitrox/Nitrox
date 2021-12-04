@@ -5,13 +5,14 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using NitroxModel.Logger;
+using NitroxModel.Networking;
 using NitroxModel.Packets;
 
 namespace NitroxServer.Communication.NetworkingLayer.Tunnel
 {
-    public class TunneledConnection : INitroxConnection, IEquatable<TunneledConnection>
+    public class TunneledConnection : INitroxConnection
     {
-        public IPEndPoint Endpoint => Host.Endpoint;
+        public IConnectionInfo Endpoint => Host.Endpoint;
         internal int hostRelativeId { get; private set; }
 
         public HashSet<TunneledConnection> TunneledConnections { get; }
@@ -54,36 +55,6 @@ namespace NitroxServer.Communication.NetworkingLayer.Tunnel
             {
                 tunneledConnection.Disconnect();
             }
-        }
-
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as TunneledConnection);
-        }
-
-        public bool Equals(TunneledConnection other)
-        {
-            return other != null &&
-                   EqualityComparer<IPEndPoint>.Default.Equals(Endpoint, other.Endpoint) &&
-                   hostRelativeId == other.hostRelativeId;
-        }
-
-        public override int GetHashCode()
-        {
-            int hashCode = 1488984782;
-            hashCode = hashCode * -1521134295 + EqualityComparer<IPEndPoint>.Default.GetHashCode(Endpoint);
-            hashCode = hashCode * -1521134295 + hostRelativeId.GetHashCode();
-            return hashCode;
-        }
-
-        public static bool operator ==(TunneledConnection left, TunneledConnection right)
-        {
-            return EqualityComparer<TunneledConnection>.Default.Equals(left, right);
-        }
-
-        public static bool operator !=(TunneledConnection left, TunneledConnection right)
-        {
-            return !(left == right);
         }
     }
 }

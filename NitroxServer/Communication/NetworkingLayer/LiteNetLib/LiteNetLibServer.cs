@@ -6,7 +6,7 @@ using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Entities;
 using NitroxServer.Serialization;
 
-namespace NitroxServer.Communication.LiteNetLib
+namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
 {
     public class LiteNetLibServer : NitroxServer
     {

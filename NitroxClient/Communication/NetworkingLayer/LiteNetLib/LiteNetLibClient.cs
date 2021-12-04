@@ -31,7 +31,7 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
 
         public void Start(IConnectionInfo connectionInfo) 
         {
-            DirectConnection directConnection = IConnectionInfoHelper.RequireType<DirectConnection>(connectionInfo);
+            DirectConnection directConnection = ConnectionInfoHelper.RequireType<DirectConnection>(connectionInfo);
             Log.Info("Initializing LiteNetLibClient...");
 
             SynchronizationContext.SetSynchronizationContext(new SynchronizationContext());
