@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using NitroxClient.Communication.Packets.Processors.Abstract;
+﻿using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using UnityEngine;
@@ -25,7 +24,7 @@ namespace NitroxClient.Communication.Packets.Processors
                 Utils.ScalarMonitor crashedTimeMonitor = CrashedShipExploder.main.timeMonitor;
                 crashedTimeMonitor.Init((float)newTimePassedAsDouble);
             }
-            
+
             Log.Info($"Processed a Time Change [from {oldTimePassedAsDouble} to {DayNightCycle.main.timePassedAsDouble}]");
         }
     }

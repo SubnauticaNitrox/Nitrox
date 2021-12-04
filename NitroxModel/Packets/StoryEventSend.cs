@@ -17,6 +17,7 @@ namespace NitroxModel.Packets
         public enum EventType
         {
             PDA,
+            PDA_EXTRA,
             RADIO,
             ENCYCLOPEDIA,
             STORY,

@@ -18,10 +18,7 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(KnownTechEntryAdd packet, Player player)
         {
-            if (!pdaStateData.KnownTechTypes.Contains(packet.TechType))
-            {
-                pdaStateData.AddKnownTechType(packet.TechType);
-            }
+            pdaStateData.AddKnownTechType(packet.TechType);
             playerManager.SendPacketToOtherPlayers(packet, player);
         }
     }

@@ -48,6 +48,7 @@
     <Compile Include="Patches\Dynamic\ConstructorInput_Craft_Patch.cs" />
     <Compile Include="Patches\Dynamic\ConstructorInput_OnCraftingBegin_Patch.cs" />
     <Compile Include="Patches\Dynamic\CrafterLogic_TryPickup_Patch.cs" />
+    <Compile Include="Patches\Dynamic\CrashedShipExploder_Update_Patch.cs" />
     <Compile Include="Patches\Dynamic\CrashHome_Spawn_Patch.cs" />
     <Compile Include="Patches\Dynamic\Creature_ChooseBestAction_Patch.cs" />
     <Compile Include="Patches\Dynamic\CyclopsDamagePoint_OnRepair_Patch.cs" />
@@ -165,6 +166,7 @@
     <Compile Include="Patches\Dynamic\StarshipDoor_OnDoorToggle_Patch.cs" />
     <Compile Include="Patches\Dynamic\StarshipDoor_UnlockDoor_Patch.cs" />
     <Compile Include="Patches\Dynamic\StoryGoalScheduler_Schedule_Patch.cs" />
+    <Compile Include="Patches\Dynamic\StoryGoal_Trigger_Patch.cs" />
     <Compile Include="Patches\Dynamic\StoryGoal_Execute_Patch.cs" />
     <Compile Include="Patches\Dynamic\SubConsoleCommand_OnConsoleCommand_sub_Patch.cs" />
     <Compile Include="Patches\Dynamic\SubFire_CreateFire_Patch.cs" />
