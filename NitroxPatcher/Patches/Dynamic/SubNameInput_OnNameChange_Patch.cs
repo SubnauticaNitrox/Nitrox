@@ -2,9 +2,10 @@
 using HarmonyLib;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Core;
+using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
+using NitroxModel.Logger;
 using NitroxModel.Packets;
 using UnityEngine;
 
@@ -17,29 +18,42 @@ namespace NitroxPatcher.Patches.Dynamic
         public static void Postfix(SubNameInput __instance)
         {
             SubName subname = __instance.target;
-            if (subname != null)
+            if (subname)
             {
                 GameObject parentVehicle;
-                Vehicle vehicle = subname.GetComponentInParent<Vehicle>();
-                SubRoot subRoot = subname.GetComponentInParent<SubRoot>();
-                Rocket rocket = subname.GetComponentInParent<Rocket>();
+                NitroxId controllerId = null;
 
-                if (vehicle)
+                if (subname.TryGetComponent(out Vehicle vehicle))
                 {
+                    GameObject baseCell = __instance.gameObject.RequireComponentInParent<BaseCell>().gameObject;
+                    GameObject moonpool = baseCell.RequireComponentInChildren<BaseFoundationPiece>().gameObject;
+
+                    controllerId = NitroxEntity.GetId(moonpool);
                     parentVehicle = vehicle.gameObject;
                 }
-                else if (rocket)
+                else if (subname.TryGetComponentInParent(out SubRoot subRoot))
                 {
+                    parentVehicle = subRoot.gameObject;
+                }
+                else if (subname.TryGetComponentInParent(out Rocket rocket))
+                {
+                    // For some reason only the rocket has a full functioning ghost with a different NitroxId when spawning/constructing, so we are ignoring it.
+                    if (rocket.TryGetComponentInChildren(out VFXConstructing constructing) && !constructing.isDone)
+                    {
+                        return;
+                    }
+
                     parentVehicle = rocket.gameObject;
                 }
                 else
                 {
-                    parentVehicle = subRoot.gameObject;
+                    Log.Error($"[SubNameInput_OnNameChange_Patch] The GameObject {subname.gameObject.name} doesn't have a Vehicle/SubRoot/Rocket component.");
+                    return;
                 }
 
-                NitroxId id = NitroxEntity.GetId(parentVehicle);
-                VehicleNameChange packet = new(id, subname.GetName());
-                NitroxServiceLocator.LocateService<IPacketSender>().Send(packet);
+                NitroxId vehicleId = NitroxEntity.GetId(parentVehicle);
+                VehicleNameChange packet = new(controllerId, vehicleId, subname.GetName());
+                Resolve<IPacketSender>().Send(packet);
             }
         }
 

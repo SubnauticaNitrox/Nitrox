@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession;
@@ -10,11 +9,11 @@ using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.ChatUI;
 using NitroxClient.GameLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.PlayerModel.ColorSwap;
+using NitroxClient.Helpers;
 using NitroxClient.MonoBehaviours.DiscordRP;
 using NitroxClient.MonoBehaviours.Gui.InGame;
 using NitroxClient.MonoBehaviours.Gui.MainMenu;
 using NitroxModel.Core;
-using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
@@ -29,6 +28,7 @@ namespace NitroxClient.MonoBehaviours
 
         private IMultiplayerSession multiplayerSession;
         private PacketReceiver packetReceiver;
+        private ThrottledPacketSender throttledPacketSender;
         public bool InitialSyncCompleted { get; set; }
 
         /// <summary>
@@ -79,6 +79,7 @@ namespace NitroxClient.MonoBehaviours
 
             multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
             packetReceiver = NitroxServiceLocator.LocateService<PacketReceiver>();
+            throttledPacketSender = NitroxServiceLocator.LocateService<ThrottledPacketSender>();
 
             Main = this;
             DontDestroyOnLoad(gameObject);
@@ -89,6 +90,7 @@ namespace NitroxClient.MonoBehaviours
             if (multiplayerSession.CurrentState.CurrentStage != MultiplayerSessionConnectionStage.DISCONNECTED)
             {
                 ProcessPackets();
+                throttledPacketSender.Update();
             }
         }
 
@@ -128,10 +130,10 @@ namespace NitroxClient.MonoBehaviours
         public void InitMonoBehaviours()
         {
             // Gameplay.
+            gameObject.AddComponent<AnimationSender>();
             gameObject.AddComponent<PlayerMovement>();
             gameObject.AddComponent<PlayerDeathBroadcaster>();
             gameObject.AddComponent<PlayerStatsBroadcaster>();
-            gameObject.AddComponent<AnimationSender>();
             gameObject.AddComponent<EntityPositionBroadcaster>();
             gameObject.AddComponent<ThrottledBuilder>();
 

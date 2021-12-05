@@ -5,7 +5,6 @@ using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using UnityEngine;
@@ -81,7 +80,7 @@ namespace NitroxClient.Communication.Packets.Processors
             {
                 vehicleDockingBay.SetVehicleUndocked();
             }
-            vehicleDockingBay._dockedVehicle = null;
+            vehicleDockingBay.dockedVehicle = null;
             vehicleDockingBay.CancelInvoke("RepairVehicle");
             vehicle.docked = false;
             Optional<RemotePlayer> player = remotePlayerManager.Find(packet.PlayerId);

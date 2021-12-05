@@ -9,7 +9,22 @@ namespace NitroxClient.Unity.Helper
 {
     public static class GameObjectHelper
     {
-        public static T RequireComponent<T>(this GameObject o) where T : class
+        public static bool TryGetComponentInChildren<T>(this GameObject go, out T component, bool includeInactive = false) where T : Component
+        {
+            component = go.GetComponentInChildren<T>(includeInactive);
+            return component;
+        }
+
+        public static bool TryGetComponentInParent<T>(this GameObject go, out T component) where T : Component
+        {
+            component = go.GetComponentInParent<T>();
+            return component;
+        }
+
+        public static bool TryGetComponentInChildren<T>(this Component co, out T component, bool includeInactive = false) where T : Component => TryGetComponentInChildren(co.gameObject, out component, includeInactive);
+        public static bool TryGetComponentInParent<T>(this Component co, out T component) where T : Component => TryGetComponentInParent(co.gameObject, out component);
+
+        public static T RequireComponent<T>(this GameObject o) where T : Component
         {
             T component = o.GetComponent<T>();
             Validate.NotNull(component, $"{o.name} did not have a component of type {typeof(T)}");
@@ -17,7 +32,7 @@ namespace NitroxClient.Unity.Helper
             return component;
         }
 
-        public static T RequireComponentInChildren<T>(this GameObject o, bool includeInactive = false) where T : class
+        public static T RequireComponentInChildren<T>(this GameObject o, bool includeInactive = false) where T : Component
         {
             T component = o.GetComponentInChildren<T>(includeInactive);
             Validate.NotNull(component, $"{o.name} did not have a component of type {typeof(T)} in its children");
@@ -25,13 +40,17 @@ namespace NitroxClient.Unity.Helper
             return component;
         }
 
-        public static T RequireComponentInParent<T>(this GameObject o) where T : class
+        public static T RequireComponentInParent<T>(this GameObject o) where T : Component
         {
             T component = o.GetComponentInParent<T>();
             Validate.NotNull(component, $"{o.name} did not have a component of type {typeof(T)} in its parent");
 
             return component;
         }
+
+        public static T RequireComponent<T>(this Component co) where T : Component => RequireComponent<T>(co.gameObject);
+        public static T RequireComponentInChildren<T>(this Component co, bool includeInactive = false) where T : Component => RequireComponentInChildren<T>(co.gameObject, includeInactive);
+        public static T RequireComponentInParent<T>(this Component co) where T : Component => RequireComponentInParent<T>(co.gameObject);
 
         public static Transform RequireTransform(this Transform tf, string name)
         {

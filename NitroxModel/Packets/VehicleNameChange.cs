@@ -1,17 +1,20 @@
 ﻿using System;
 using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.Util;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class VehicleNameChange : Packet
     {
-        public NitroxId Id { get; }
+        public Optional<NitroxId> ParentId { get; }
+        public NitroxId VehicleId { get; }
         public string Name { get; }
 
-        public VehicleNameChange(NitroxId id, string name)
+        public VehicleNameChange(NitroxId parentId, NitroxId vehicleId, string name)
         {
-            Id = id;
+            ParentId = Optional.OfNullable(parentId);
+            VehicleId = vehicleId;
             Name = name;
         }
     }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession.ConnectionState;
@@ -105,6 +105,8 @@ namespace NitroxClient.Communication.MultiplayerSession
             }
             return false;
         }
+
+        public bool IsPacketSuppressed(Type packetType) => suppressedPacketsTypes.Contains(packetType);
 
         public PacketSuppressor<T> Suppress<T>()
         {
