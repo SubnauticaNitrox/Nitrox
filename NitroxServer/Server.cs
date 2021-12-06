@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
+using NitroxModel.Helper;
 using NitroxServer.GameLogic.Entities;
 using NitroxServer.Serialization;
 using NitroxServer.Serialization.World;
@@ -134,7 +138,8 @@ namespace NitroxServer
                 Log.Warn($"Server start was cancelled by user:{Environment.NewLine}{ex.Message}");
                 return false;
             }
-
+            
+            LogHowToConnectAsync().ConfigureAwait(false);
             Log.Info($"Server is listening on port {Port} UDP");
             Log.Info($"Using {serverConfig.SerializerMode} as save file serializer");
             Log.InfoSensitive("Server Password: {password}", string.IsNullOrEmpty(serverConfig.ServerPassword) ? "None. Public Server." : serverConfig.ServerPassword);
@@ -144,9 +149,6 @@ namespace NitroxServer
 
             PauseServer();
 
-#if RELEASE
-            IpLogger.PrintServerIps();
-#endif
             return true;
         }
 
@@ -168,6 +170,31 @@ namespace NitroxServer
 
             server.Stop();
             Log.Info("Nitrox Server Stopped");
+        }
+
+        private async Task LogHowToConnectAsync()
+        {
+            Task<IPAddress> localIp = Task.Factory.StartNew(NetHelper.GetLanIp);
+            Task<IPAddress> wanIp = NetHelper.GetWanIpAsync();
+            Task<IPAddress> hamachiIp = Task.Factory.StartNew(NetHelper.GetHamachiIp);
+
+            List<string> options = new();
+            options.Add("127.0.0.1 - You (Local)");
+            if (await wanIp != null)
+            {
+                options.Add("{ip:l} - Friends on another internet network (Port Forwarding)");
+            }
+            if (await hamachiIp != null)
+            {
+                options.Add($"{hamachiIp.Result} - Friends using Hamachi (VPN)");
+            }
+            // LAN IP could be null if all Ethernet/Wi-Fi interfaces are disabled.
+            if (await localIp != null)
+            {
+                options.Add($"{localIp.Result} - Friends on same internet network (LAN)");
+            }
+
+            Log.InfoSensitive($"Use IP to connect:{Environment.NewLine}\t{string.Join($"{Environment.NewLine}\t", options)}", wanIp.Result);
         }
 
         public void StopAndWait(bool shouldSave = true)
