@@ -1,48 +1,76 @@
 ﻿using System.Net;
 using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
+using LiteNetLib;
+using LiteNetLib.Utils;
 using NitroxModel.Constants;
-using NitroxModel.Logger;
 
 namespace NitroxServer.Communication
 {
     public static class LANDiscoveryServer
     {
-        private static readonly byte[] responseData = Encoding.UTF8.GetBytes(LANDiscoveryConstants.BROADCAST_RESPONSE_STRING);
+        private static NetManager server;
+        private static EventBasedNetListener listener;
 
-        private static Task listenTask;
+        private static Timer pollTimer;
 
         public static void Start()
         {
-            listenTask = Task.Run(Listen);
+            listener = new EventBasedNetListener();
+            server = new NetManager(listener);
+
+            server.AutoRecycle = true;
+            server.DiscoveryEnabled = true;
+            server.UnconnectedMessagesEnabled = true;
+
+            server.Start(LANDiscoveryConstants.BROADCAST_PORT);
+
+            listener.NetworkReceiveUnconnectedEvent += NetworkReceiveUnconnected;
+
+            pollTimer = new Timer((state) =>
+            {
+                server.PollEvents();
+            });
+            pollTimer.Change(0, 15);
         }
 
-        private static void Listen()
+        private static void NetworkReceiveUnconnected(IPEndPoint remoteEndPoint, NetPacketReader reader, UnconnectedMessageType messageType)
         {
-            using UdpClient client = new(LANDiscoveryConstants.BROADCAST_PORT);
-            client.EnableBroadcast = true;
-            client.Client.Bind(new IPEndPoint(IPAddress.Any, LANDiscoveryConstants.BROADCAST_PORT));
-
-            while (true)
+            if (messageType == UnconnectedMessageType.DiscoveryRequest)
             {
-                IPEndPoint requestEndPoint = new(0, 0);
-                byte[] requestData = client.Receive(ref requestEndPoint);
-                string requestString = Encoding.UTF8.GetString(requestData);
-
-                if (requestString == LANDiscoveryConstants.BROADCAST_REQUEST_STRING) // security check
+                string requestString = reader.GetString();
+                if (requestString == LANDiscoveryConstants.BROADCAST_REQUEST_STRING)
                 {
-                    Log.Info($"Client at {requestEndPoint} discovered this server through LAN.");
-                    client.Connect(requestEndPoint);
-                    client.Send(responseData, responseData.Length, requestEndPoint);
-                    client.Close();
+                    NetDataWriter writer = new();
+                    writer.Put(LANDiscoveryConstants.BROADCAST_RESPONSE_STRING);
+                    writer.Put(new IPEndPoint(GetLocalIPAddress(), Server.Instance.Port));
+
+                    server.SendDiscoveryResponse(writer, remoteEndPoint);
                 }
             }
         }
 
+        // https://stackoverflow.com/questions/6803073/get-local-ip-address
+        private static IPAddress GetLocalIPAddress()
+        {
+            IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
+
+            foreach (IPAddress ip in host.AddressList)
+            {
+                if (ip.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    return ip;
+                }
+            }
+
+            return null;
+        }
+
         public static void Stop()
         {
-            listenTask.Dispose();
+            listener.ClearNetworkReceiveUnconnectedEvent();
+            server.Stop();
+            pollTimer.Dispose();
         }
     }
 }

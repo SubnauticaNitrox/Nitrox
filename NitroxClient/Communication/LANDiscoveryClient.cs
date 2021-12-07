@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Net.Sockets;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
+using LiteNetLib;
+using LiteNetLib.Utils;
 using NitroxModel.Constants;
 using NitroxModel.Logger;
 
@@ -12,64 +11,63 @@ namespace NitroxClient.Communication
 {
     public static class LANDiscoveryClient
     {
-        private static readonly byte[] requestData = Encoding.UTF8.GetBytes(LANDiscoveryConstants.BROADCAST_REQUEST_STRING);
         private static readonly List<IPEndPoint> discoveredServers = new();
 
         private static Action<IPEndPoint> foundServerCallback;
 
-        private static Task broadcastTask;
-        private static Task receiveTask;
+        private static EventBasedNetListener listener;
+        private static NetManager client;
+
+        private static Timer broadcastTimer;
+        private static Timer pollTimer;
 
         public static void SearchForServers(Action<IPEndPoint> callback)
         {
-            broadcastTask?.Dispose();
-            receiveTask?.Dispose();
+            listener?.ClearNetworkReceiveUnconnectedEvent();
+            client?.Stop();
+            broadcastTimer?.Dispose();
+            pollTimer?.Dispose();
 
             foundServerCallback = callback;
             discoveredServers.Clear();
 
             Log.Info("Searching for LAN servers...");
 
-            broadcastTask = new Task(BroadcastData);
-            receiveTask = new Task(ReceiveData);
+            listener = new EventBasedNetListener();
+            client = new NetManager(listener);
 
-            broadcastTask.Start();
-            receiveTask.Start();
+            client.AutoRecycle = true;
+            client.DiscoveryEnabled = true;
+            client.UnconnectedMessagesEnabled = true;
+
+            client.Start(LANDiscoveryConstants.BROADCAST_PORT);
+
+            listener.NetworkReceiveUnconnectedEvent += NetworkReceiveUnconnected;
+
+            broadcastTimer = new Timer((state) =>
+            {
+                NetDataWriter writer = new();
+                writer.Put(LANDiscoveryConstants.BROADCAST_REQUEST_STRING);
+
+                client.SendDiscoveryRequest(writer, LANDiscoveryConstants.BROADCAST_PORT);
+            });
+            broadcastTimer.Change(0, 5000);
+
+            pollTimer = new Timer((state) =>
+            {
+                client.PollEvents();
+            });
+            pollTimer.Change(0, 15);
         }
 
-        private static void BroadcastData()
+        private static void NetworkReceiveUnconnected(IPEndPoint remoteEndPoint, NetPacketReader reader, UnconnectedMessageType messageType)
         {
-            using UdpClient broadcastClient = new();
-            broadcastClient.EnableBroadcast = true;
-#if DEBUG
-            broadcastClient.ExclusiveAddressUse = false; // for multiple instances
-#endif
-            broadcastClient.Client.Bind(new IPEndPoint(IPAddress.Broadcast, LANDiscoveryConstants.BROADCAST_PORT));
-
-            // Send four broadcast packets, spaced one second apart
-            for (int i = 0; i < 4; i++)
+            if (messageType == UnconnectedMessageType.DiscoveryResponse)
             {
-                broadcastClient.Send(requestData, requestData.Length);
-                Thread.Sleep(1000);
-            }
-        }
-
-        private static void ReceiveData()
-        {
-            using UdpClient receiveClient = new(LANDiscoveryConstants.BROADCAST_PORT);
-            receiveClient.Client.Bind(new IPEndPoint(IPAddress.Any, LANDiscoveryConstants.BROADCAST_PORT));
-
-            while (true)
-            {
-                IPEndPoint responseEndPoint = new(0, 0);
-                byte[] responseData = receiveClient.Receive(ref responseEndPoint);
-                string responseString = Encoding.UTF8.GetString(responseData);
-
-                if (responseString.StartsWith(LANDiscoveryConstants.BROADCAST_RESPONSE_STRING)) // security check
+                string responseString = reader.GetString();
+                if (responseString == LANDiscoveryConstants.BROADCAST_RESPONSE_STRING)
                 {
-                    IPAddress serverIP = responseEndPoint.Address;
-                    int serverPort = int.Parse(responseString.Substring(LANDiscoveryConstants.BROADCAST_RESPONSE_STRING.Length));
-                    IPEndPoint serverEndPoint = new(serverIP, serverPort);
+                    IPEndPoint serverEndPoint = reader.GetNetEndPoint();
 
                     if (!discoveredServers.Contains(serverEndPoint)) // prevents duplicate entries
                     {
