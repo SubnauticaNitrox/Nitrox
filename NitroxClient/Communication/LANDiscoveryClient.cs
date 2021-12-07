@@ -17,15 +17,24 @@ namespace NitroxClient.Communication
 
         private static Action<IPEndPoint> foundServerCallback;
 
+        private static Task broadcastTask;
+        private static Task receiveTask;
+
         public static void SearchForServers(Action<IPEndPoint> callback)
         {
+            broadcastTask?.Dispose();
+            receiveTask?.Dispose();
+
             foundServerCallback = callback;
             discoveredServers.Clear();
 
             Log.Info("Searching for LAN servers...");
 
-            Task.Run(BroadcastData);
-            Task.Run(ReceiveData);
+            broadcastTask = new Task(BroadcastData);
+            receiveTask = new Task(ReceiveData);
+
+            broadcastTask.Start();
+            receiveTask.Start();
         }
 
         private static void BroadcastData()
@@ -43,8 +52,6 @@ namespace NitroxClient.Communication
                 broadcastClient.Send(requestData, requestData.Length);
                 Thread.Sleep(1000);
             }
-
-            Thread.Sleep(6000);
         }
 
         private static void ReceiveData()
