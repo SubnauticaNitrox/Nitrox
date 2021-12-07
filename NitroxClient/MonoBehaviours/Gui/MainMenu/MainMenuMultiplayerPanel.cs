@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 using NitroxClient.Communication;
 using NitroxClient.GameLogic.Settings;
 using NitroxClient.Unity.Helper;
@@ -47,6 +48,13 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             CreateButton(translationKey: "Nitrox_AddServer", clickEvent: ShowAddServerWindow, disableTranslation: false);
             LoadSavedServers();
             FindLANServers();
+
+            // refresh server entries every 10 seconds
+            Timer refreshTimer = new Timer((state) =>
+            {
+                RefreshServerEntries();
+            });
+            refreshTimer.Change(10000, 10000);
         }
 
         private void CreateButton(string translationKey, UnityAction clickEvent, bool disableTranslation)

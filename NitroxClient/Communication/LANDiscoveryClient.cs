@@ -20,6 +20,7 @@ namespace NitroxClient.Communication
         public static void SearchForServers(Action<IPEndPoint> callback)
         {
             foundServerCallback = callback;
+            discoveredServers.Clear();
 
             Log.Info("Searching for LAN servers...");
 
