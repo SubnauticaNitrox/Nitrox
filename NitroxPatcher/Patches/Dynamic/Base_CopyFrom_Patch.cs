@@ -2,7 +2,6 @@
 using HarmonyLib;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Helper;
-using NitroxModel.Logger;
 
 namespace NitroxPatcher.Patches.Dynamic
 {

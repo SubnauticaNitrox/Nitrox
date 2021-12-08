@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿global using NitroxModel.Logger;
+using System.Reflection;
 using Autofac;
 using NitroxModel.Core;
 using NitroxServer.Communication.LiteNetLib;

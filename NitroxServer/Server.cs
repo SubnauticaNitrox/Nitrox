@@ -4,8 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using NitroxModel.Core;
-using NitroxModel.Logger;
 using NitroxServer.GameLogic.Entities;
 using NitroxServer.Serialization;
 using NitroxServer.Serialization.World;

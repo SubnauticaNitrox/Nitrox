@@ -1,4 +1,5 @@
-﻿using System;
+﻿global using NitroxModel.Logger;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -15,7 +16,6 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Discovery;
 using NitroxModel.Helper;
-using NitroxModel.Logger;
 using NitroxModel.Platforms.OS.Shared;
 using NitroxServer;
 using NitroxServer.ConsoleCommands.Processor;

@@ -1,6 +1,4 @@
 ﻿using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
-using NitroxModel.Helper;
-using NitroxModel.Logger;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.Metadata

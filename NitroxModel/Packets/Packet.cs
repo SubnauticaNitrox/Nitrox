@@ -9,7 +9,6 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using LZ4;
 using NitroxModel.DataStructures.Surrogates;
-using NitroxModel.Logger;
 using NitroxModel.Networking;
 
 namespace NitroxModel.Packets

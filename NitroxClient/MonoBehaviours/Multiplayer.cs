@@ -14,7 +14,6 @@ using NitroxClient.MonoBehaviours.DiscordRP;
 using NitroxClient.MonoBehaviours.Gui.InGame;
 using NitroxClient.MonoBehaviours.Gui.MainMenu;
 using NitroxModel.Core;
-using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
 using UnityEngine;

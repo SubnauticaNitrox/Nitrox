@@ -5,7 +5,6 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Threading;
-using NitroxModel.Logger;
 using NitroxModel.Platforms.OS.MacOS;
 using NitroxModel.Platforms.OS.Unix;
 using NitroxModel.Platforms.OS.Windows;

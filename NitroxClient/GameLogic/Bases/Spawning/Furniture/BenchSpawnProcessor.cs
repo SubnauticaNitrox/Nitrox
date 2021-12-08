@@ -2,7 +2,6 @@
 using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.Overrides;
 using NitroxModel.DataStructures;
-using NitroxModel.Logger;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Bases.Spawning.Furniture

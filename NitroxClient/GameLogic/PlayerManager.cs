@@ -8,7 +8,6 @@ using NitroxClient.MonoBehaviours.DiscordRP;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
-using NitroxModel.Logger;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
 using UnityEngine;

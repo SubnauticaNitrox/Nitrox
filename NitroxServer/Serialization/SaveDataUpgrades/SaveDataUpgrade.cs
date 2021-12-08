@@ -4,7 +4,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 using NitroxModel.DataStructures.JsonConverter;
-using NitroxModel.Logger;
 
 namespace NitroxServer.Serialization.Upgrade
 {

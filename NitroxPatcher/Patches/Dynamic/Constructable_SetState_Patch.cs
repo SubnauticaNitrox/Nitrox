@@ -4,7 +4,6 @@ using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
-using NitroxModel.Logger;
 using static NitroxClient.GameLogic.Helper.TransientLocalObjectManager;
 
 namespace NitroxPatcher.Patches.Dynamic

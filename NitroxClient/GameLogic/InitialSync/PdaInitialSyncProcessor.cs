@@ -5,8 +5,6 @@ using System.Reflection;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Helper;
-using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 

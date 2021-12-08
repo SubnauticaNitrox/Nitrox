@@ -8,7 +8,6 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using LitJson;
 using NitroxLauncher.Models;
-using NitroxModel.Logger;
 
 namespace NitroxLauncher
 {

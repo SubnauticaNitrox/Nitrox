@@ -2,7 +2,6 @@
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Simulation;
 using NitroxModel.DataStructures;
-using NitroxModel.Logger;
 using NitroxModel.Packets;
 
 namespace NitroxClient.GameLogic

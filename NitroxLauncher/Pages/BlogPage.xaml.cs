@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using NitroxLauncher.Models;
-using NitroxModel.Logger;
 
 namespace NitroxLauncher.Pages
 {

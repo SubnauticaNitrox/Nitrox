@@ -5,8 +5,6 @@ using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper;
-using NitroxModel.Logger;
 using NitroxModel.Packets;
 using UnityEngine;
 

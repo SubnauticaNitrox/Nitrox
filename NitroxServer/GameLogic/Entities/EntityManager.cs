@@ -6,7 +6,6 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
-using NitroxModel.Logger;
 using NitroxServer.GameLogic.Entities.Spawning;
 
 namespace NitroxServer.GameLogic.Entities
