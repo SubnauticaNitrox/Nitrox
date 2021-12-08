@@ -4,16 +4,15 @@ using System.Reflection.Emit;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxModel.Helper;
-using NitroxModel.Logger;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
     public class CrashedShipExploder_Update_Patch : NitroxPatch, IDynamicPatch
     {
-        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((CrashedShipExploder t) => t.Update());
+        internal static readonly MethodInfo TARGET_METHOD = Reflect.Method((CrashedShipExploder t) => t.Update());
 
-        private static readonly OpCode INJECTION_OPCODE = OpCodes.Ldsfld;
-        private static readonly object INJECTION_OPERAND = Reflect.Field(() => DayNightCycle.main);
+        internal static readonly OpCode INJECTION_OPCODE = OpCodes.Ldsfld;
+        internal static readonly object INJECTION_OPERAND = Reflect.Field(() => DayNightCycle.main);
 
         public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
         {

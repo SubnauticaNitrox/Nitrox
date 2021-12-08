@@ -14,7 +14,7 @@ namespace NitroxServer.GameLogic
 
         // ElapsedTime is in seconds while AuroraExplosionTime is in milliseconds (be careful when mixing them)
         public double ElapsedTime;
-        public double AuroraExplosionTime;
+        public double AuroraExplosionTimeInMs;
 
         public EventTriggerer(PlayerManager playerManager, double elapsedTime, double? auroraExplosionTime)
         {
