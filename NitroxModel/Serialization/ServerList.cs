@@ -94,7 +94,6 @@ namespace NitroxModel.Serialization
             {
                 Validate.String(name);
                 Validate.NotNull(address);
-                Validate.IsTrue(port is >= 1024 and <= ushort.MaxValue);
 
                 Name = name.Trim();
                 Address = address.Trim();

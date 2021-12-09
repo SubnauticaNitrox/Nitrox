@@ -28,12 +28,7 @@ namespace NitroxServer.Serialization
         public int ServerPort
         {
             get => portSetting;
-
-            set
-            {
-                Validate.IsTrue(value > 1024, "Server Port must be greater than 1024");
-                portSetting = value;
-            }
+            set => portSetting = value;
         }
 
         [PropertyDescription("Measured in milliseconds")]
