@@ -38,7 +38,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 __instance.SetElevatorPosition();
 
                 //CockpitSwitch and RocketPreflightCheckScreenElement are filled based on the RocketPreflightCheckManager
-                if (__instance.currentRocketStage > 3 && model.Value.PreflightChecks != null)
+                if (__instance.currentRocketStage > 3)
                 {
                     RocketPreflightCheckManager rocketPreflightCheckManager = gameObject.RequireComponent<RocketPreflightCheckManager>();
                     rocketPreflightCheckManager.preflightChecks.AddRange(model.Value.PreflightChecks);
