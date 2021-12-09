@@ -23,8 +23,8 @@ namespace NitroxServer.GameLogic
         private readonly ThreadSafeDictionary<string, PlayerContext> reservations = new();
         private readonly ThreadSafeSet<string> reservedPlayerNames = new("Player"); // "Player" is often used to identify the local player and should not be used by any user
 
-        public ThreadSafeQueue<KeyValuePair<NitroxConnection, MultiplayerSessionReservationRequest>> JoinQueue { get; private set; } = new();
-        public bool PlayerCurrentlyJoining { get; set; }
+        private ThreadSafeQueue<KeyValuePair<NitroxConnection, MultiplayerSessionReservationRequest>> JoinQueue { get; set; } = new();
+        private bool PlayerCurrentlyJoining { get; set; }
 
         private Timer initialSyncTimer;
 
@@ -63,19 +63,17 @@ namespace NitroxServer.GameLogic
 
             if (PlayerCurrentlyJoining)
             {
-                if (JoinQueue.Any(pair => pair.Key == connection))
+                if (JoinQueue.Any(pair => ReferenceEquals(pair.Key, connection)))
                 {
                     // Don't enqueue the request if there is already another enqueued request by the same user
                     return new MultiplayerSessionReservation(correlationId, MultiplayerSessionReservationState.REJECTED);
                 }
-                else
-                {
-                    JoinQueue.Enqueue(new KeyValuePair<NitroxConnection, MultiplayerSessionReservationRequest>(
-                        connection,
-                        new MultiplayerSessionReservationRequest(correlationId, playerSettings, authenticationContext)));
+                
+                JoinQueue.Enqueue(new KeyValuePair<NitroxConnection, MultiplayerSessionReservationRequest>(
+                                      connection,
+                                      new MultiplayerSessionReservationRequest(correlationId, playerSettings, authenticationContext)));
 
-                    return new MultiplayerSessionReservation(correlationId, MultiplayerSessionReservationState.ENQUEUED_IN_JOIN_QUEUE);
-                }
+                return new MultiplayerSessionReservation(correlationId, MultiplayerSessionReservationState.ENQUEUED_IN_JOIN_QUEUE);
             }
 
             if (reservedPlayerNames.Count >= serverConfig.MaxConnections)
@@ -86,7 +84,7 @@ namespace NitroxServer.GameLogic
 
             string playerName = authenticationContext.Username;
             allPlayersByName.TryGetValue(playerName, out Player player);
-            if ((player?.IsPermaDeath == true) && serverConfig.IsHardcore)
+            if (player?.IsPermaDeath == true && serverConfig.IsHardcore)
             {
                 MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.HARDCORE_PLAYER_DEAD;
                 return new MultiplayerSessionReservation(correlationId, rejectedState);
@@ -182,7 +180,7 @@ namespace NitroxServer.GameLogic
         public void PlayerDisconnected(NitroxConnection connection)
         {
             // Remove any requests sent by the connection from the join queue
-            JoinQueue = (ThreadSafeQueue<KeyValuePair<NitroxConnection, MultiplayerSessionReservationRequest>>)JoinQueue.Where(item => !Equals(item.Key, connection));
+            JoinQueue = new(JoinQueue.Where(item => !Equals(item.Key, connection)));
 
             assetsByConnection.TryGetValue(connection, out ConnectionAssets assetPackage);
             if (assetPackage == null)
@@ -205,7 +203,7 @@ namespace NitroxServer.GameLogic
 
             assetsByConnection.Remove(connection);
 
-            if (ConnectedPlayers().Count() == 0)
+            if (!ConnectedPlayers().Any())
             {
                 Server.Instance.PauseServer();
                 Server.Instance.Save();
@@ -219,6 +217,7 @@ namespace NitroxServer.GameLogic
 
             Log.Info($"Finished processing reservation. Remaining requests: {JoinQueue.Count}");
 
+            // Tell next client that it can start joining.
             if (JoinQueue.Count > 0)
             {
                 KeyValuePair<NitroxConnection, MultiplayerSessionReservationRequest> keyValuePair = JoinQueue.Dequeue();
