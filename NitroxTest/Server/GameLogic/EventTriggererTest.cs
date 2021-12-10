@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NitroxServer.GameLogic;
 
-namespace NitroxTest.Server
+namespace NitroxServer.GameLogic
 {
     [TestClass]
     public class EventTriggererTest
