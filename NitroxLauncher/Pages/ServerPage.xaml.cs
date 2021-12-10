@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Windows;
 using NitroxLauncher.Models;
-using NitroxLauncher.Properties;
 
 namespace NitroxLauncher.Pages
 {
     public partial class ServerPage : PageBase
     {
         public string StartButtonSubtitle => $"NITROX {LauncherLogic.RELEASE_PHASE} {LauncherLogic.Version}";
+        public bool IsServerExternal => LauncherLogic.Config.IsExternalServer;
 
         public ServerPage()
         {
             InitializeComponent();
 
-            RBIsDocked.IsChecked = !Settings.Default.IsExternalServer;
-            RBIsExternal.IsChecked = Settings.Default.IsExternalServer;
+            RBIsDocked.IsChecked = !IsServerExternal;
+            RBIsExternal.IsChecked = IsServerExternal;
         }
 
         private void StartServer_Click(object sender, RoutedEventArgs e)
@@ -31,8 +31,7 @@ namespace NitroxLauncher.Pages
 
         private void RBServer_Clicked(object sender, RoutedEventArgs e)
         {
-            Settings.Default.IsExternalServer = RBIsExternal.IsChecked == true;
-            Settings.Default.Save();
+            LauncherLogic.Config.IsExternalServer = RBIsExternal.IsChecked ?? true;
         }
     }
 }

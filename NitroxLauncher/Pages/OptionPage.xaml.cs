@@ -4,7 +4,6 @@ using System.Windows;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using NitroxLauncher.Models;
 using NitroxModel.Discovery;
-using NitroxLauncher.Properties;
 
 namespace NitroxLauncher.Pages
 {

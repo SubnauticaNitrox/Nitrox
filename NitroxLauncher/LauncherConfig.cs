@@ -58,6 +58,7 @@ namespace NitroxLauncher
             }
         }
 
+        // Launch arguments used to launch Subnautica
         private string subnauticaLaunchArguments = Settings.Default.LaunchArgs ?? "-vrmode none";
         public string SubnauticaLaunchArguments
         {
@@ -66,6 +67,20 @@ namespace NitroxLauncher
             {
                 subnauticaLaunchArguments = value;
                 Settings.Default.LaunchArgs = value;
+                Settings.Default.Save();
+                OnPropertyChanged();
+            }
+        }
+
+        // Is server external by default
+        private bool isExternalServer = Settings.Default.IsExternalServer;
+        public bool IsExternalServer
+        {
+            get => isExternalServer;
+            set
+            {
+                isExternalServer = value;
+                Settings.Default.IsExternalServer = value;
                 Settings.Default.Save();
                 OnPropertyChanged();
             }
