@@ -3,7 +3,6 @@ using NitroxClient.GameLogic.Bases.Metadata;
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Buildings.Metadata;
-using NitroxModel.Logger;
 using NitroxModel.Packets;
 
 namespace NitroxClient.GameLogic.InitialSync

@@ -4,7 +4,6 @@ using NitroxClient.GameLogic.FMOD;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.Helper;
-using NitroxModel.Logger;
 
 namespace NitroxPatcher.Patches.Dynamic
 {

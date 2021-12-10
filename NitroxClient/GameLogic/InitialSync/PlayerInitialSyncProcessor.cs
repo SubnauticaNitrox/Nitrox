@@ -3,7 +3,6 @@ using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel.Server;
 using UnityEngine;

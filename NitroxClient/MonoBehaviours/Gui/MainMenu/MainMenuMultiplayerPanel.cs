@@ -3,7 +3,6 @@ using System.Net;
 using System.Net.Sockets;
 using NitroxClient.GameLogic.Settings;
 using NitroxClient.Unity.Helper;
-using NitroxModel.Logger;
 using NitroxModel.Serialization;
 using UnityEngine;
 using UnityEngine.Events;

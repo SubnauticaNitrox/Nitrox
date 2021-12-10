@@ -1,6 +1,5 @@
 ﻿using NitroxClient.MonoBehaviours.Gui.MainMenu;
 using NitroxModel.Helper;
-using NitroxModel.Logger;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 

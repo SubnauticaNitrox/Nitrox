@@ -1,7 +1,6 @@
 using System.Net;
 using LiteNetLib;
 using LiteNetLib.Utils;
-using NitroxModel.Logger;
 using NitroxModel.Networking;
 using NitroxModel.Packets;
 

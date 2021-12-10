@@ -4,7 +4,6 @@ using System.Linq;
 using NitroxClient.GameLogic.ChatUI;
 using NitroxClient.GameLogic.Settings;
 using NitroxModel.Core;
-using NitroxModel.Logger;
 using UnityEngine;
 using UnityEngine.UI;
 

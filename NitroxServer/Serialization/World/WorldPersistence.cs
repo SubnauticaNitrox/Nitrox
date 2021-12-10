@@ -7,7 +7,6 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
-using NitroxModel.Logger;
 using NitroxModel.Platforms.OS.Shared;
 using NitroxModel.Server;
 using NitroxServer.GameLogic;

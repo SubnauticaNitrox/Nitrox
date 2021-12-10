@@ -5,7 +5,6 @@ using ToastNotifications.Lifetime;
 using ToastNotifications.Position;
 using ToastNotifications.Messages;
 using ToastNotifications.Core;
-using NitroxModel.Logger;
 
 namespace NitroxLauncher
 {

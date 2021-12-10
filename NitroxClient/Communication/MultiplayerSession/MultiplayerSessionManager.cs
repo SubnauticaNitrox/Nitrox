@@ -5,7 +5,6 @@ using NitroxClient.Communication.MultiplayerSession.ConnectionState;
 using NitroxClient.GameLogic;
 using NitroxModel;
 using NitroxModel.Helper;
-using NitroxModel.Logger;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
 using NitroxModel.Serialization;

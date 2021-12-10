@@ -5,7 +5,6 @@ using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.ChatUI;
 using NitroxClient.GameLogic.Settings;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;

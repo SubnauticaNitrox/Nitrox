@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Timers;
-using NitroxModel.Logger;
 using NitroxModel.Packets;
 
 namespace NitroxServer.GameLogic

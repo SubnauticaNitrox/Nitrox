@@ -7,7 +7,6 @@ using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
-using NitroxModel.Logger;
 using NitroxModel_Subnautica.DataStructures.GameLogic;
 using UnityEngine;
 

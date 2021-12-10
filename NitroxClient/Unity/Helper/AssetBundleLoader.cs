@@ -3,7 +3,6 @@ using System.Collections;
 using System.IO;
 using System.Linq;
 using NitroxModel.Helper;
-using NitroxModel.Logger;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 

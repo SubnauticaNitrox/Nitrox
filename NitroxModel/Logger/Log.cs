@@ -1,4 +1,5 @@
-﻿using System;
+﻿global using NitroxModel.Logger;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;

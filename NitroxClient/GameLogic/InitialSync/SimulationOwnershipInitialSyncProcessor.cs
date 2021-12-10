@@ -2,7 +2,6 @@
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxModel.DataStructures;
-using NitroxModel.Logger;
 using NitroxModel.Packets;
 
 namespace NitroxClient.GameLogic.InitialSync

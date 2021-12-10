@@ -2,7 +2,6 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using NitroxModel.DataStructures.JsonConverter;
-using NitroxModel.Logger;
 using NitroxModel.Platforms.OS.Shared;
 
 namespace NitroxServer.Serialization

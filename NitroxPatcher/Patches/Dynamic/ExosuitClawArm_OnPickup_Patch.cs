@@ -3,7 +3,6 @@ using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
 using NitroxModel.Helper;
-using NitroxModel.Logger;
 
 namespace NitroxPatcher.Patches.Dynamic
 {

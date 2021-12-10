@@ -12,7 +12,6 @@ using NitroxLauncher.Models.Properties;
 using NitroxLauncher.Pages;
 using NitroxModel.Discovery;
 using NitroxModel.Helper;
-using NitroxModel.Logger;
 
 namespace NitroxLauncher
 {

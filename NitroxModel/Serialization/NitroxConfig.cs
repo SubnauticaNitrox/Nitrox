@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using NitroxModel.Logger;
 
 namespace NitroxModel.Serialization
 {

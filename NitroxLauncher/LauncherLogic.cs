@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using NitroxLauncher.Pages;
 using NitroxModel;
 using NitroxModel.Helper;
-using NitroxModel.Logger;
 using NitroxModel.Platforms.OS.Shared;
 using NitroxModel.Platforms.Store;
 using DiscordStore = NitroxModel.Platforms.Store.Discord;

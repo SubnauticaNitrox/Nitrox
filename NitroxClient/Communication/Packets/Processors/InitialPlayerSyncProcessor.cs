@@ -5,7 +5,6 @@ using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Logger;
 using NitroxModel.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors

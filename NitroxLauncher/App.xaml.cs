@@ -1,8 +1,8 @@
-﻿using System;
+﻿global using NitroxModel.Logger;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
-using NitroxModel.Logger;
 
 namespace NitroxLauncher
 {

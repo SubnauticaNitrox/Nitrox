@@ -4,7 +4,6 @@ using HarmonyLib;
 using NitroxClient.MonoBehaviours.Gui.Input;
 using NitroxClient.MonoBehaviours.Gui.Input.KeyBindings;
 using NitroxModel.Helper;
-using NitroxModel.Logger;
 
 namespace NitroxPatcher.Patches.Dynamic
 {

@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using NitroxLauncher.Models.Events;
-using NitroxModel.Logger;
 
 namespace NitroxLauncher
 {

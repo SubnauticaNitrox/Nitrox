@@ -8,7 +8,6 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.Discovery;
 using NitroxModel.Helper;
-using NitroxModel.Logger;
 using NitroxServer.GameLogic.Entities.Spawning;
 using NitroxServer.UnityStubs;
 using ProtoBufNet;

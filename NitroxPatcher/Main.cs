@@ -1,4 +1,5 @@
-﻿using System;
+﻿global using NitroxModel.Logger;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,7 +12,6 @@ using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
-using NitroxModel.Logger;
 using NitroxModel_Subnautica.Logger;
 using NitroxPatcher.Modules;
 using NitroxPatcher.Patches;

@@ -3,7 +3,6 @@ using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Logger;
 using NitroxModel.Packets;
 using UnityEngine;
 

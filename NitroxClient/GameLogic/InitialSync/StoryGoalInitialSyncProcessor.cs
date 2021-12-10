@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using NitroxClient.GameLogic.InitialSync.Base;
-using NitroxModel.Logger;
 using NitroxModel.Packets;
 using Story;
 

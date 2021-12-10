@@ -6,7 +6,6 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Logger;
 using NitroxServer.Serialization;
 using NitroxServer.Serialization.Resources.Datastructures;
 
