@@ -58,7 +58,7 @@ namespace NitroxModel.Platforms.Store
             return File.Exists(exe) ? Path.GetFullPath(exe) : null;
         }
 
-        public async Task<ProcessEx> StartGameAsync(string pathToGameExe, int steamAppId)
+        public async Task<ProcessEx> StartGameAsync(string pathToGameExe, int steamAppId, string launchArguments)
         {
             try
             {
@@ -73,10 +73,11 @@ namespace NitroxModel.Platforms.Store
                 throw new PlatformException(Instance, "Timeout reached while waiting for platform to start. Try again once platform has finished loading.", ex);
             }
 
-            return ProcessEx.Start(pathToGameExe,
-                                   new[] { ("SteamGameId", steamAppId.ToString()), ("SteamAppID", steamAppId.ToString()), (NitroxUser.LAUNCHER_PATH_ENV_KEY, NitroxUser.LauncherPath) },
-                                   Path.GetDirectoryName(pathToGameExe),
-                                   "-vrmode none"
+            return ProcessEx.Start(
+                    pathToGameExe,
+                    new[] { ("SteamGameId", steamAppId.ToString()), ("SteamAppID", steamAppId.ToString()), (NitroxUser.LAUNCHER_PATH_ENV_KEY, NitroxUser.LauncherPath) },
+                    Path.GetDirectoryName(pathToGameExe),
+                    launchArguments
             );
         }
     }

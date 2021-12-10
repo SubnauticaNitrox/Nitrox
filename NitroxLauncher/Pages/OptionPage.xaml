@@ -4,6 +4,7 @@
                          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                          xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                          xmlns:local="clr-namespace:NitroxLauncher.Models"
+                         xmlns:converters="clr-namespace:NitroxLauncher.Models.Converters"
                          mc:Ignorable="d"
                          d:DesignHeight="470" d:DesignWidth="719"
                          DataContext="{Binding RelativeSource={RelativeSource Self}}"
@@ -17,44 +18,90 @@
         <Grid Margin="32,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="106" />
-                <RowDefinition Height="Auto" MinHeight="165" />
-                <RowDefinition Height="199" />
+                <RowDefinition Height="200" />
+                <RowDefinition Height="200*" />
             </Grid.RowDefinitions>
 
-            <Grid>
+            <Grid Grid.Row="0">
                 <TextBlock FontSize="32" Foreground="White" TextWrapping="Wrap" Margin="0" VerticalAlignment="Bottom" FontWeight="Bold"><Run Text="Options"/></TextBlock>
             </Grid>
 
             <StackPanel Grid.Row="1" Margin="0,22,0,0">
-                <TextBlock FontSize="12" Foreground="#7FFFFFFF" Margin="0,0,0,12" FontWeight="Bold"><Run Text="SUBNAUTICA INSTALLATION"/></TextBlock>
 
-                <Border Padding="22" CornerRadius="12" Background="#151516">
+                <TextBlock FontSize="20" Foreground="#7FFFFFFF" TextWrapping="Wrap" Margin="0" VerticalAlignment="Top" FontWeight="Bold" HorizontalAlignment="Left" Text="Subnautica Installation"/>
+
+                <TextBlock FontSize="12" Foreground="#FFFFFF" TextWrapping="Wrap" FontWeight="Regular" VerticalAlignment="Top" HorizontalAlignment="Left">
+                    <Run Text="Nitrox can automatically scan your system to find your Subnautica installations" />
+                    <LineBreak />
+                    <Run Text="Choose which Subnautica instance we we'll use to load multiplayer" />
+                </TextBlock>
+
+                <Border Margin="0,12,0,0" Padding="22" CornerRadius="12" Background="#151516">
                     <Grid Height="auto">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="64*"/>
-                            <ColumnDefinition Width="567*"/>
+                            <ColumnDefinition Width="230*"/>
+                            <ColumnDefinition Width="127*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Image Stretch="Fill" Source="{StaticResource SubnauticaIcon}"/>
+                        <Image Grid.Column="0" Source="{Binding GamePlatform, Converter={converters:PlatformToIconConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                               ToolTip="Welcome aboard captain !"
+                               Stretch="Uniform"
+                               MaxHeight="50"
+                               MaxWidth="64">
+                        </Image>
 
-                        <StackPanel Grid.Column="1" Margin="22,0,0,0">
-                            <TextBlock FontSize="16" Foreground="White" Margin="0,12,0,8"><Run Text="Subnautica" FontWeight="Bold" FontSize="14"></Run></TextBlock>
-                            <TextBlock FontSize="14" Foreground="#BFFFFFFF"><Run Text="{Binding PathToSubnautica, Mode=OneWay, FallbackValue='Unknown path'}"></Run></TextBlock>
+                        <StackPanel Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0">
+                            <TextBlock FontSize="16" Foreground="White" Margin="0,0,0,8"><Run Text="Subnautica" FontWeight="Bold" FontSize="14"></Run></TextBlock>
+                            <TextBlock FontSize="14" Foreground="#BFFFFFFF">
+                                <Run Text="{Binding PathToSubnautica, Mode=OneWay, FallbackValue='Unknown path'}" />
+                            </TextBlock>
                         </StackPanel>
+
+                        <Button Grid.Column="2" Style="{StaticResource LargeButton}" Click="ChangePath_Click"
+                                Background="#FF007BFF" Width="120" Height="38"
+                                HorizontalAlignment="Right" BorderBrush="#66FFFFFF"
+                                ToolTip="Point the launcher to your games install location">
+                            <TextBlock Padding="0,1,0,0" FontSize="14" FontWeight="Bold" Foreground="White" Text="Change" />
+                        </Button>
                     </Grid>
                 </Border>
             </StackPanel>
 
             <StackPanel Grid.Row="2" Margin="0,22,0,0">
-                <TextBlock FontSize="14" Foreground="White" Margin="0,0,0,8"><Run Text="Incorrect installation path?"></Run></TextBlock>
+                <TextBlock FontSize="20" Foreground="#7FFFFFFF" TextWrapping="Wrap" Margin="0" VerticalAlignment="Top" FontWeight="Bold" HorizontalAlignment="Left" Text="Subnautica Launch Arguments"/>
 
-                <Button Style="{StaticResource LargeButton}" Background="#FF007BFF" Width="203" Height="42"
-                        HorizontalAlignment="Left" BorderBrush="#66FFFFFF" Click="ChangeOptions_Click"
-                        ToolTip="Point the launcher to your games install location" Margin="0,4,0,142" Grid.Row="3">
-                    <TextBlock Padding="0,1,0,0" FontSize="14" Foreground="White"><Run Text="Change" FontWeight="Bold"/></TextBlock>
-                </Button>
+                <TextBlock FontSize="12" Foreground="#FFFFFF" TextWrapping="Wrap" FontWeight="Regular" VerticalAlignment="Top" HorizontalAlignment="Left">
+                    <Run Text="Allows you to override Nitrox default launch arguments" />
+                </TextBlock>
+
+                <Border Margin="0,12,0,0" Padding="22" CornerRadius="12" Background="#151516">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="294*"/>
+                            <ColumnDefinition Width="128*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border BorderBrush ="#333437" Background="#333437" BorderThickness="1" CornerRadius="8" Margin="0,0,0,0" >
+                            <TextBox x:Name="LaunchArguments"
+                                 Padding="0,5" FontSize="15" MaxLines="1"
+                                 Foreground="White" TextAlignment="Left"
+                                 Background="{x:Null}" BorderBrush="{x:Null}"
+                                 Margin="13,7,14,7" SelectionBrush="#FF36383A"
+                                 VerticalAlignment="Center" BorderThickness="0" CaretBrush="White" />
+                        </Border>
+
+                        <Button Grid.Column="2" Style="{StaticResource LargeButton}" Click="ChangeArguments_Click"
+                                Background="#FF007BFF" Width="120" Height="38"
+                                HorizontalAlignment="Right" BorderBrush="#66FFFFFF"
+                                ToolTip="Save launch arguments">
+                            <TextBlock Padding="0,1,0,0" FontSize="14" FontWeight="Bold" Foreground="White" Text="Apply" />
+                        </Button>
+
+                    </Grid>
+
+                </Border>
             </StackPanel>
-
         </Grid>
     </Grid>
 

@@ -161,6 +161,12 @@ namespace NitroxLauncher
 
         internal async Task StartSingleplayerAsync()
         {
+            if (string.IsNullOrWhiteSpace(Config.SubnauticaPath) || !Directory.Exists(Config.SubnauticaPath))
+            {
+                NavigateTo<OptionPage>();
+                throw new Exception("Location of Subnautica is unknown. Set the path to it in settings.");
+            }
+
 #if RELEASE
             if (Process.GetProcessesByName("Subnautica").Length > 0)
             {
@@ -220,7 +226,8 @@ namespace NitroxLauncher
 
             if (QModHelper.IsQModInstalled(Config.SubnauticaPath))
             {
-                Log.Warn("QModManager is Installed! Please Direct user to MrPurple6411#0415.");
+                Log.Warn("Seems like QModManager is Installed");
+                LauncherNotifier.Info("Detected QModManager in the game folder");
             }
 
             gameProcess = await StartSubnauticaAsync();
@@ -229,16 +236,17 @@ namespace NitroxLauncher
         private async Task<ProcessEx> StartSubnauticaAsync()
         {
             string subnauticaPath = Config.SubnauticaPath;
+            string subnauticaLaunchArguments = Config.SubnauticaLaunchArguments;
             string subnauticaExe = Path.Combine(subnauticaPath, GameInfo.Subnautica.ExeName);
             IGamePlatform platform = GamePlatforms.GetPlatformByGameDir(subnauticaPath);
-
+            
             // Start game & gaming platform if needed.
             using ProcessEx game = platform switch
             {
-                Steam s => await s.StartGameAsync(subnauticaExe, GameInfo.Subnautica.SteamAppId),
-                Egs e => await e.StartGameAsync(subnauticaExe),
+                Steam s => await s.StartGameAsync(subnauticaExe, GameInfo.Subnautica.SteamAppId, subnauticaLaunchArguments),
+                Egs e => await e.StartGameAsync(subnauticaExe, subnauticaLaunchArguments),
                 MSStore m => await m.StartGameAsync(subnauticaExe),
-                DiscordStore d => await d.StartGameAsync(subnauticaExe),
+                DiscordStore d => await d.StartGameAsync(subnauticaExe, subnauticaLaunchArguments),
                 _ => throw new Exception($"Directory '{subnauticaPath}' is not a valid {GameInfo.Subnautica.Name} game installation or the game's platform is unsupported by Nitrox.")
             };
 

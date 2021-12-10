@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
+using NitroxLauncher.Properties;
 using NitroxModel.Discovery;
 
 namespace NitroxLauncher
@@ -53,6 +54,19 @@ namespace NitroxLauncher
                 // Ensures the path looks alright (no mixed / and \ path separators)
                 subnauticaPath = Path.GetFullPath(value);
                 SubnauticaPlatform = PlatformDetection.GetPlatform(subnauticaPath);
+                OnPropertyChanged();
+            }
+        }
+
+        private string subnauticaLaunchArguments = Settings.Default.LaunchArgs ?? "-vrmode none";
+        public string SubnauticaLaunchArguments
+        {
+            get => subnauticaLaunchArguments;
+            set
+            {
+                subnauticaLaunchArguments = value;
+                Settings.Default.LaunchArgs = value;
+                Settings.Default.Save();
                 OnPropertyChanged();
             }
         }
