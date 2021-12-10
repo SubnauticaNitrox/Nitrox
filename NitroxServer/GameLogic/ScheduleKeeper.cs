@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using NitroxModel.DataStructures;
 using NitroxModel.Packets;
@@ -14,7 +14,7 @@ namespace NitroxServer.GameLogic
         private readonly EventTriggerer eventTriggerer;
         private readonly PlayerManager playerManager;
 
-        public float CurrentTime => (float)eventTriggerer.GetRealElapsedTime();
+        private float ElapsedSecondsFloat => (float)eventTriggerer.ElapsedSeconds;
 
         public ScheduleKeeper(PDAStateData pdaStateData, StoryGoalData storyGoalData, EventTriggerer eventTriggerer, PlayerManager playerManager)
         {
@@ -60,7 +60,7 @@ namespace NitroxServer.GameLogic
                 // If it's not already in any PDA stuff (completed goals or PDALog)
                 if (!IsAlreadyRegistered(scheduledGoal.GoalKey))
                 {
-                    if (scheduledGoal.TimeExecute > CurrentTime)
+                    if (scheduledGoal.TimeExecute > ElapsedSecondsFloat)
                     {
                         scheduledGoals.Add(scheduledGoal.GoalKey, scheduledGoal);
                     }
@@ -82,7 +82,7 @@ namespace NitroxServer.GameLogic
             // If the goal is already done, no need to check anything
             if (becauseOfTime && !IsAlreadyRegistered(goalKey))
             {
-                scheduledGoal.TimeExecute = CurrentTime + 15;
+                scheduledGoal.TimeExecute = ElapsedSecondsFloat + 15;
                 playerManager.SendPacketToAllPlayers(new Schedule(scheduledGoal.TimeExecute, goalKey, scheduledGoal.GoalType));
                 return;
             }

@@ -18,8 +18,8 @@ namespace NitroxServer.GameLogic
         {
             return new StoryTimingData
             {
-                ElapsedTime = eventTriggerer.GetRealElapsedTime(),
-                AuroraExplosionTime = eventTriggerer.AuroraExplosionTimeInMs
+                ElapsedTime = eventTriggerer.ElapsedTime,
+                AuroraExplosionTime = eventTriggerer.AuroraExplosionTime
             };
         }
     }

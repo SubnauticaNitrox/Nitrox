@@ -9,52 +9,57 @@ namespace NitroxServer.GameLogic
     public class EventTriggerer
     {
         internal readonly Dictionary<string, Timer> eventTimers = new();
-        internal readonly Stopwatch stopWatch = new();
+        private readonly Stopwatch stopWatch = new();
         private readonly PlayerManager playerManager;
 
-        // ElapsedTime is in seconds while AuroraExplosionTime is in milliseconds (be careful when mixing them)
-        public double ElapsedTime;
-        public double AuroraExplosionTimeInMs;
+        public readonly double AuroraExplosionTime;
+
+        private double elapsedTimeOutsideStopWatch;
+
+        public double ElapsedTime
+        {
+            get => stopWatch.ElapsedMilliseconds + elapsedTimeOutsideStopWatch;
+            private set => elapsedTimeOutsideStopWatch = value - stopWatch.ElapsedMilliseconds;
+        }
+
+        public double ElapsedSeconds
+        {
+            get => ElapsedTime * 0.001;
+            private set => ElapsedTime = value * 1000;
+        }
 
         public EventTriggerer(PlayerManager playerManager, double elapsedTime, double? auroraExplosionTime)
         {
             this.playerManager = playerManager;
-            SetupEventTimers(elapsedTime, auroraExplosionTime);
-        }
+            elapsedTimeOutsideStopWatch = elapsedTime;
 
-        private void SetupEventTimers(double elapsedTime, double? auroraExplosionTime)
-        {
-            // eventually this should be on a better timer so it can be saved, paused, etc
-            Log.Debug($"Event Triggerer started! ElapsedTime={elapsedTime}");
+            Log.Debug($"Event Triggerer started! ElapsedTime={Math.Floor(ElapsedSeconds)}s");
 
-            ElapsedTime = elapsedTime;
+
             if (auroraExplosionTime.HasValue)
             {
-                AuroraExplosionTimeInMs = auroraExplosionTime.Value;
+                AuroraExplosionTime = auroraExplosionTime.Value;
             }
             else
             {
-                AuroraExplosionTimeInMs = RandomNumber(2.3d, 4d) * 1200d * 1000d; //Time.deltaTime returns seconds so we need to multiply 1000
+                AuroraExplosionTime = RandomNumber(2.3d, 4d) * 1200d * 1000d; //Time.deltaTime returns seconds so we need to multiply 1000
             }
 
-            double elapsedTimeMilliseconds = ElapsedTime * 1000;
-            CreateTimer(AuroraExplosionTimeInMs * 0.2d - elapsedTimeMilliseconds, StoryEventSend.EventType.PDA_EXTRA, "Story_AuroraWarning1");
-            CreateTimer(AuroraExplosionTimeInMs * 0.5d - elapsedTimeMilliseconds, StoryEventSend.EventType.PDA_EXTRA, "Story_AuroraWarning2");
-            CreateTimer(AuroraExplosionTimeInMs * 0.8d - elapsedTimeMilliseconds, StoryEventSend.EventType.PDA_EXTRA, "Story_AuroraWarning3");
+            CreateTimer(AuroraExplosionTime * 0.2d - ElapsedTime, StoryEventSend.EventType.PDA_EXTRA, "Story_AuroraWarning1");
+            CreateTimer(AuroraExplosionTime * 0.5d - ElapsedTime, StoryEventSend.EventType.PDA_EXTRA, "Story_AuroraWarning2");
+            CreateTimer(AuroraExplosionTime * 0.8d - ElapsedTime, StoryEventSend.EventType.PDA_EXTRA, "Story_AuroraWarning3");
             // Story_AuroraWarning4 and Story_AuroraExplosion must occur at the same time
-            CreateTimer(AuroraExplosionTimeInMs - elapsedTimeMilliseconds, StoryEventSend.EventType.PDA_EXTRA, "Story_AuroraWarning4");
-            CreateTimer(AuroraExplosionTimeInMs - elapsedTimeMilliseconds, StoryEventSend.EventType.EXTRA, "Story_AuroraExplosion");
-            //like the timers, except we can see how much time has passed
+            CreateTimer(AuroraExplosionTime - ElapsedTime, StoryEventSend.EventType.PDA_EXTRA, "Story_AuroraWarning4");
+            CreateTimer(AuroraExplosionTime - ElapsedTime, StoryEventSend.EventType.EXTRA, "Story_AuroraExplosion");
 
             stopWatch.Start();
         }
 
-        private Timer CreateTimer(double time, StoryEventSend.EventType eventType, string key)
+        private void CreateTimer(double time, StoryEventSend.EventType eventType, string key)
         {
-            //if timeOffset goes past the time
-            if (time <= 0)
+            if (time <= 0) // Ignoring if time is in the past
             {
-                return null;
+                return;
             }
 
             Timer timer = new()
@@ -70,28 +75,13 @@ namespace NitroxServer.GameLogic
                 playerManager.SendPacketToAllPlayers(new StoryEventSend(eventType, key));
             };
 
-            if (!eventTimers.ContainsKey(key))
-            {
-                eventTimers.Add(key, timer);
-            }
-            return timer;
+            eventTimers.Add(key, timer);
         }
 
         private double RandomNumber(double min, double max)
         {
             Random random = new Random();
             return random.NextDouble() * (max - min) + min;
-        }
-
-        public double GetRealElapsedTime()
-        {
-            if (stopWatch == null)
-            {
-                return ElapsedTime;
-            }
-            // ElapsedMilliseconds and seconds should not be added without thinking of time units
-            // It should be by dividing ElapsedMilliseconds by 1000
-            return stopWatch.ElapsedMilliseconds * 0.001 + ElapsedTime;
         }
 
         public void StartWorldTime()
@@ -127,7 +117,7 @@ namespace NitroxServer.GameLogic
 
         public void SendCurrentTimePacket(bool initialSync)
         {
-            playerManager.SendPacketToAllPlayers(new TimeChange(ElapsedTime, initialSync));
+            playerManager.SendPacketToAllPlayers(new TimeChange(ElapsedSeconds, initialSync));
         }
 
         public void ChangeTime(TimeModification type)
@@ -135,13 +125,13 @@ namespace NitroxServer.GameLogic
             switch (type)
             {
                 case TimeModification.DAY:
-                    ElapsedTime += 1200.0 - ElapsedTime % 1200.0 + 600.0;
+                    ElapsedTime += 1200000.0 - ElapsedTime % 1200000.0 + 600000.0;
                     break;
                 case TimeModification.NIGHT:
-                    ElapsedTime += 1200.0 - ElapsedTime % 1200.0;
+                    ElapsedTime += 1200000.0 - ElapsedTime % 1200000.0;
                     break;
                 case TimeModification.SKIP:
-                    ElapsedTime += 600.0 - ElapsedTime % 600.0;
+                    ElapsedTime += 600000.0 - ElapsedTime % 600000.0;
                     break;
             }
 

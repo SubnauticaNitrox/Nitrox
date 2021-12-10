@@ -65,7 +65,7 @@ namespace NitroxServer
                 builder.AppendLine($" - Progress tech: {world.GameData.PDAState.CachedProgress.Count}");
                 builder.AppendLine($" - Known tech: {world.GameData.PDAState.KnownTechTypes.Count}");
                 builder.AppendLine($" - Vehicles: {world.VehicleManager.GetVehicles().Count()}");
-                builder.AppendLine($" - Current Time: {world.ScheduleKeeper.CurrentTime}");
+                builder.AppendLine($" - Current Time: {Math.Floor(world.EventTriggerer.ElapsedSeconds)}s");
                 
                 return builder.ToString();
             }

@@ -31,11 +31,6 @@ namespace NitroxServer.Serialization.SaveDataUpgrades
             }
             data["GameData"]["PDAState"]["PdaLog"] = new JArray(cleanPdaLog);
 
-            float elapsedTime = data["GameData"]["StoryTiming"]["ElapsedTime"].ToObject<float>() * 0.001f;
-            float auroraExplosionTime = data["GameData"]["StoryTiming"]["AuroraExplosionTime"].ToObject<float>() * 0.001f;
-            data["GameData"]["StoryTiming"]["ElapsedTime"] = elapsedTime;
-            data["GameData"]["StoryTiming"]["AuroraExplosionTime"] = auroraExplosionTime;
-
             data.Property("ServerStartTime")?.Remove();
         }
     }
