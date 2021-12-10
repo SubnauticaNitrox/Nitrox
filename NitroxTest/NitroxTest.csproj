@@ -68,6 +68,7 @@
     <Compile Include="Serialization\InteractiveChildObjectIdentifiersSerializationTest.cs" />
     <Compile Include="Serialization\PdaStateDataSerializationTest.cs" />
     <Compile Include="Serialization\WorldPersistenceTest.cs" />
+    <Compile Include="Server\EventTriggererTest.cs" />
     <Compile Include="SetupAssemblyInitializer.cs" />
     <Compile Include="TestAutoFacRegistrar.cs" />
     <Compile Include="Threading\ThreadSafeListTest.cs" />

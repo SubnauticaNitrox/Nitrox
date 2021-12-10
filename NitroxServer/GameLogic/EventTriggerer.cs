@@ -8,8 +8,8 @@ namespace NitroxServer.GameLogic
 {
     public class EventTriggerer
     {
-        private readonly Dictionary<string, Timer> eventTimers = new();
-        private readonly Stopwatch stopWatch = new();
+        internal readonly Dictionary<string, Timer> eventTimers = new();
+        internal readonly Stopwatch stopWatch = new();
         private readonly PlayerManager playerManager;
 
         // ElapsedTime is in seconds while AuroraExplosionTime is in milliseconds (be careful when mixing them)
@@ -45,10 +45,6 @@ namespace NitroxServer.GameLogic
             CreateTimer(AuroraExplosionTimeInMs - elapsedTimeMilliseconds, StoryEventSend.EventType.PDA_EXTRA, "Story_AuroraWarning4");
             CreateTimer(AuroraExplosionTimeInMs - elapsedTimeMilliseconds, StoryEventSend.EventType.EXTRA, "Story_AuroraExplosion");
             //like the timers, except we can see how much time has passed
-            // TODO: Remove this when the PR is ready to be merged
-            // For testing purposes, uncomment these 2 lines and comment the 2 lines above
-            // CreateTimer(100000, StoryEventSend.EventType.PDA_EXTRA, "Story_AuroraWarning4");
-            // CreateTimer(100000, StoryEventSend.EventType.EXTRA, "Story_AuroraExplosion");
 
             stopWatch.Start();
         }

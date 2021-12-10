@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxModel.DataStructures;
-using NitroxModel.Logger;
 using NitroxModel.Packets;
 using Story;
 
