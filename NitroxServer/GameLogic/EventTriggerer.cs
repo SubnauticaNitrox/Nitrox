@@ -12,7 +12,7 @@ namespace NitroxServer.GameLogic
         private readonly Stopwatch stopWatch = new();
         private readonly PlayerManager playerManager;
 
-        // ElapsedTime is in seconds while AuroraExplosionTime is in milliseconds (becareful when mixing them)
+        // ElapsedTime is in seconds while AuroraExplosionTime is in milliseconds (be careful when mixing them)
         public double ElapsedTime;
         public double AuroraExplosionTime;
 
@@ -30,25 +30,25 @@ namespace NitroxServer.GameLogic
             ElapsedTime = elapsedTime;
             if (auroraExplosionTime.HasValue)
             {
-                AuroraExplosionTime = auroraExplosionTime.Value;
+                AuroraExplosionTimeInMs = auroraExplosionTime.Value;
             }
             else
             {
-                AuroraExplosionTime = RandomNumber(2.3d, 4d) * 1200d * 1000d; //Time.deltaTime returns seconds so we need to multiply 1000
+                AuroraExplosionTimeInMs = RandomNumber(2.3d, 4d) * 1200d * 1000d; //Time.deltaTime returns seconds so we need to multiply 1000
             }
 
             double elapsedTimeMilliseconds = ElapsedTime * 1000;
-            CreateTimer(AuroraExplosionTime * 0.2d - elapsedTimeMilliseconds, StoryEventSend.EventType.PDA_EXTRA, "Story_AuroraWarning1");
-            CreateTimer(AuroraExplosionTime * 0.5d - elapsedTimeMilliseconds, StoryEventSend.EventType.PDA_EXTRA, "Story_AuroraWarning2");
-            CreateTimer(AuroraExplosionTime * 0.8d - elapsedTimeMilliseconds, StoryEventSend.EventType.PDA_EXTRA, "Story_AuroraWarning3");
+            CreateTimer(AuroraExplosionTimeInMs * 0.2d - elapsedTimeMilliseconds, StoryEventSend.EventType.PDA_EXTRA, "Story_AuroraWarning1");
+            CreateTimer(AuroraExplosionTimeInMs * 0.5d - elapsedTimeMilliseconds, StoryEventSend.EventType.PDA_EXTRA, "Story_AuroraWarning2");
+            CreateTimer(AuroraExplosionTimeInMs * 0.8d - elapsedTimeMilliseconds, StoryEventSend.EventType.PDA_EXTRA, "Story_AuroraWarning3");
             // Story_AuroraWarning4 and Story_AuroraExplosion must occur at the same time
-            CreateTimer(AuroraExplosionTime - elapsedTimeMilliseconds, StoryEventSend.EventType.PDA_EXTRA, "Story_AuroraWarning4");
-            CreateTimer(AuroraExplosionTime - elapsedTimeMilliseconds, StoryEventSend.EventType.EXTRA, "Story_AuroraExplosion");
+            CreateTimer(AuroraExplosionTimeInMs - elapsedTimeMilliseconds, StoryEventSend.EventType.PDA_EXTRA, "Story_AuroraWarning4");
+            CreateTimer(AuroraExplosionTimeInMs - elapsedTimeMilliseconds, StoryEventSend.EventType.EXTRA, "Story_AuroraExplosion");
             //like the timers, except we can see how much time has passed
             // TODO: Remove this when the PR is ready to be merged
             // For testing purposes, uncomment these 2 lines and comment the 2 lines above
-            // CreateTimer(15000, StoryEventSend.EventType.PDA_EXTRA, "Story_AuroraWarning4");
-            // CreateTimer(15000, StoryEventSend.EventType.EXTRA, "Story_AuroraExplosion");
+            // CreateTimer(100000, StoryEventSend.EventType.PDA_EXTRA, "Story_AuroraWarning4");
+            // CreateTimer(100000, StoryEventSend.EventType.EXTRA, "Story_AuroraExplosion");
 
             stopWatch.Start();
         }

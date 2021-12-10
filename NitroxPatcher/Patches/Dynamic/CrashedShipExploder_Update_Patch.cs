@@ -11,7 +11,6 @@ namespace NitroxPatcher.Patches.Dynamic
     public class CrashedShipExploder_Update_Patch : NitroxPatch, IDynamicPatch
     {
         private static readonly MethodInfo TARGET_METHOD = Reflect.Method((CrashedShipExploder t) => t.Update());
-        public static CrashedShipExploder_Update_Patch Instance;
 
         private static readonly OpCode INJECTION_OPCODE = OpCodes.Ldsfld;
         private static readonly object INJECTION_OPERAND = Reflect.Field(() => DayNightCycle.main);
@@ -54,7 +53,6 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public override void Patch(Harmony harmony)
         {
-            Instance = this;
             PatchTranspiler(harmony, TARGET_METHOD);
         }
     }
