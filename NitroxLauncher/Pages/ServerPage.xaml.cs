@@ -7,7 +7,7 @@ namespace NitroxLauncher.Pages
     public partial class ServerPage : PageBase
     {
         public string StartButtonSubtitle => $"NITROX {LauncherLogic.RELEASE_PHASE} {LauncherLogic.Version}";
-        public bool IsServerExternal => LauncherLogic.Config.IsExternalServer;
+        private bool IsServerExternal => LauncherLogic.Config.IsExternalServer;
 
         public ServerPage()
         {

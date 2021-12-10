@@ -44,7 +44,7 @@
                             <ColumnDefinition Width="127*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Image Grid.Column="0" Source="{Binding GamePlatform, Converter={converters:PlatformToIconConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                        <Image Grid.Column="0" Source="{Binding GamePlatform, Converter={converters:PlatformToIconConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, FallbackValue={StaticResource SubnauticaIcon}}"
                                ToolTip="Welcome aboard captain !"
                                Stretch="Uniform"
                                MaxHeight="50"
@@ -58,7 +58,7 @@
                             </TextBlock>
                         </StackPanel>
 
-                        <Button Grid.Column="2" Style="{StaticResource LargeButton}" Click="ChangePath_Click"
+                        <Button Grid.Column="2" Style="{StaticResource LargeButton}" Click="OnChangePath_Click"
                                 Background="#FF007BFF" Width="120" Height="38"
                                 HorizontalAlignment="Right" BorderBrush="#66FFFFFF"
                                 ToolTip="Point the launcher to your games install location">
@@ -78,29 +78,63 @@
                 <Border Margin="0,12,0,0" Padding="22" CornerRadius="12" Background="#151516">
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="294*"/>
-                            <ColumnDefinition Width="128*"/>
+                            <ColumnDefinition Width="262*"/>
+                            <ColumnDefinition Width="32*" />
+                            <ColumnDefinition Width="108*" />
                         </Grid.ColumnDefinitions>
 
-                        <Border BorderBrush ="#333437" Background="#333437" BorderThickness="1" CornerRadius="8" Margin="0,0,0,0" >
-                            <TextBox x:Name="LaunchArguments"
-                                 Padding="0,5" FontSize="15" MaxLines="1"
-                                 Foreground="White" TextAlignment="Left"
-                                 Background="{x:Null}" BorderBrush="{x:Null}"
-                                 Margin="13,7,14,7" SelectionBrush="#FF36383A"
-                                 VerticalAlignment="Center" BorderThickness="0" CaretBrush="White" />
+                        <Border Grid.Column="0" BorderBrush ="#333437" Background="#333437" BorderThickness="1" CornerRadius="8" Margin="0" Padding="2">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="86" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBox Grid.Column="0" x:Name="ArgumentsTextbox"
+                                     Padding="0,5" FontSize="15" MaxLines="1"
+                                     Foreground="White" TextAlignment="Left"
+                                     Background="{x:Null}" BorderBrush="{x:Null}"
+                                     Margin="13,7,14,7" SelectionBrush="#FF36383A"
+                                     VerticalAlignment="Center" BorderThickness="0" CaretBrush="White" />
+
+                                <Button Grid.Column="1" x:Name="ResetButton" HorizontalAlignment="Right" Style="{StaticResource LargeButton}" Click="OnResetArguments_Click"
+                                    Background="#E60914" Width="72" Height="28" BorderBrush="#66FFFFFF" Visibility="Hidden"
+                                    ToolTip="Reset arguments" FontWeight="Bold" FontSize="12" Content="Reset" Margin="0,0,10,0" />
+                            </Grid>
                         </Border>
 
-                        <Button Grid.Column="2" Style="{StaticResource LargeButton}" Click="ChangeArguments_Click"
-                                Background="#FF007BFF" Width="120" Height="38"
-                                HorizontalAlignment="Right" BorderBrush="#66FFFFFF"
-                                ToolTip="Save launch arguments">
-                            <TextBlock Padding="0,1,0,0" FontSize="14" FontWeight="Bold" Foreground="White" Text="Apply" />
-                        </Button>
+                        <Rectangle Grid.Column="1" Width="24" Height="24" Margin="10,0,0,0">
+                            <Rectangle.Fill>
+                                <VisualBrush Visual="{StaticResource InformationIcon}" />
+                            </Rectangle.Fill>
+
+                            <Rectangle.ToolTip>
+                                <StackPanel>
+
+                                    <TextBlock>
+                                        Virtual Reality mode (VR) is disabled by default,
+                                        <LineBreak />
+                                        you can still edit this line if you wanna use it
+                                        <LineBreak />
+                                        <LineBreak />
+                                        Possible values : oculus, openvr, none
+                                    </TextBlock>
+
+                                    <Border BorderBrush="Silver" BorderThickness="0,1,0,0" Margin="0,8" />
+
+                                    <TextBlock FontStyle="Italic">Contact our support for more informations</TextBlock>
+                                </StackPanel>
+                            </Rectangle.ToolTip>
+                        </Rectangle>
+
+                        <Button Grid.Column="2" HorizontalAlignment="Right" Style="{StaticResource LargeButton}" Click="OnChangeArguments_Click"
+                                Background="#FF007BFF" Width="120" Height="38" BorderBrush="#66FFFFFF"
+                                ToolTip="Save launch arguments" FontWeight="Bold" FontSize="14"
+                                Foreground="White" Margin="15,0,0,0" Content="Apply" />
 
                     </Grid>
-
                 </Border>
+
             </StackPanel>
         </Grid>
     </Grid>

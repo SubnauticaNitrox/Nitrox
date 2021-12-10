@@ -17,7 +17,11 @@ namespace NitroxLauncher.Pages
         {
             InitializeComponent();
 
-            LaunchArguments.Text = SubnauticaLaunchArguments;
+            ArgumentsTextbox.Text = SubnauticaLaunchArguments;
+            if (SubnauticaLaunchArguments != LauncherConfig.DEFAULT_LAUNCH_ARGUMENTS)
+            {
+                ResetButton.Visibility = Visibility.Visible;
+            }
 
             Loaded += (s, e) =>
             {
@@ -31,7 +35,7 @@ namespace NitroxLauncher.Pages
             };
         }
 
-        private async void ChangePath_Click(object sender, RoutedEventArgs e)
+        private async void OnChangePath_Click(object sender, RoutedEventArgs e)
         {
             string selectedDirectory;
 
@@ -53,7 +57,7 @@ namespace NitroxLauncher.Pages
                 selectedDirectory = Path.GetFullPath(dialog.FileName);
             }
 
-            if (GameInstallationFinder.IsSubnauticaDirectory(selectedDirectory))
+            if (GameInstallationFinder.IsSubnauticaDirectory(selectedDirectory) && selectedDirectory != PathToSubnautica)
             {
                 await LauncherLogic.Instance.SetTargetedSubnauticaPath(selectedDirectory);
                 LauncherNotifier.Success("Applied changes");
@@ -64,21 +68,26 @@ namespace NitroxLauncher.Pages
             }
         }
 
-        private void ChangeArguments_Click(object sender, RoutedEventArgs e)
+        private void OnChangeArguments_Click(object sender, RoutedEventArgs e)
         {
-            string newArguments = LaunchArguments.Text;
-
-            if (!string.IsNullOrWhiteSpace(newArguments))
+            if (ArgumentsTextbox.Text == SubnauticaLaunchArguments)
             {
-                newArguments = newArguments.Trim();
-                LauncherLogic.Config.SubnauticaLaunchArguments = newArguments;
-                LaunchArguments.Text = newArguments;
-                LauncherNotifier.Success("Applied changes");
+                return;
             }
-            else
+
+            ResetButton.Visibility = SubnauticaLaunchArguments == LauncherConfig.DEFAULT_LAUNCH_ARGUMENTS ? Visibility.Visible : Visibility.Hidden;
+            ArgumentsTextbox.Text = LauncherLogic.Config.SubnauticaLaunchArguments = ArgumentsTextbox.Text.Trim();
+            LauncherNotifier.Success("Applied changes");
+        }
+
+        private void OnResetArguments_Click(object sender, RoutedEventArgs e)
+        {
+            if (SubnauticaLaunchArguments != LauncherConfig.DEFAULT_LAUNCH_ARGUMENTS)
             {
-                LauncherNotifier.Error("Invalid launch arguments");
-                LaunchArguments.Text = SubnauticaLaunchArguments;
+                ArgumentsTextbox.Text = LauncherLogic.Config.SubnauticaLaunchArguments = LauncherConfig.DEFAULT_LAUNCH_ARGUMENTS;
+                ResetButton.Visibility = Visibility.Hidden;
+                LauncherNotifier.Success("Applied changes");
+                return;
             }
         }
 
