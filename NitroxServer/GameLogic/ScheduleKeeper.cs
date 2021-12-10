@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using NitroxModel.DataStructures;
 using NitroxModel.Packets;
@@ -93,36 +93,6 @@ namespace NitroxServer.GameLogic
         {
             return pdaStateData.PdaLog.Any(entry => entry.Key == goalKey)
                 || storyGoalData.CompletedGoals.Contains(goalKey);
-        }
-
-        public void SendCurrentTimePacket(bool initialSync)
-        {
-            playerManager.SendPacketToAllPlayers(new TimeChange(CurrentTime, initialSync));
-        }
-
-        // We shall prefer this method to the TimeKeeper's one that are based on a weirdly-made time
-        // While this one is based on the working EventTriggerer's time which works with stopwatches
-        public void ChangeTime(TimeModification type)
-        {
-            switch (type)
-            {
-                case TimeModification.DAY:
-                    eventTriggerer.ElapsedTime += 1200.0 - CurrentTime % 1200.0 + 600.0;
-                    break;
-                case TimeModification.NIGHT:
-                    eventTriggerer.ElapsedTime += 1200.0 - CurrentTime % 1200.0;
-                    break;
-                case TimeModification.SKIP:
-                    eventTriggerer.ElapsedTime += 600.0 - CurrentTime % 600.0;
-                    break;
-            }
-
-            SendCurrentTimePacket(false);
-        }
-
-        public enum TimeModification
-        {
-            DAY, NIGHT, SKIP
         }
     }
 }

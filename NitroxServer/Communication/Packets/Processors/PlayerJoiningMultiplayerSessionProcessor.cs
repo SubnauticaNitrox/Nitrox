@@ -15,11 +15,13 @@ namespace NitroxServer.Communication.Packets.Processors
     {
         private readonly PlayerManager playerManager;
         private readonly ScheduleKeeper scheduleKeeper;
+        private readonly EventTriggerer eventTriggerer;
         private readonly World world;
 
-        public PlayerJoiningMultiplayerSessionProcessor(ScheduleKeeper scheduleKeeper, PlayerManager playerManager, World world)
+        public PlayerJoiningMultiplayerSessionProcessor(ScheduleKeeper scheduleKeeper, EventTriggerer eventTriggerer, PlayerManager playerManager, World world)
         {
             this.scheduleKeeper = scheduleKeeper;
+            this.eventTriggerer = eventTriggerer;
             this.playerManager = playerManager;
             this.world = world;
         }
@@ -82,7 +84,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 player.Permissions
             );
 
-            scheduleKeeper.SendCurrentTimePacket(true);
+            eventTriggerer.SendCurrentTimePacket(true);
             player.SendPacket(initialPlayerSync);
         }
 

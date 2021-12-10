@@ -124,5 +124,33 @@ namespace NitroxServer.GameLogic
                 eventTimer.Stop();
             }
         }
+
+        public void SendCurrentTimePacket(bool initialSync)
+        {
+            playerManager.SendPacketToAllPlayers(new TimeChange(ElapsedTime, initialSync));
+        }
+
+        public void ChangeTime(TimeModification type)
+        {
+            switch (type)
+            {
+                case TimeModification.DAY:
+                    ElapsedTime += 1200.0 - ElapsedTime % 1200.0 + 600.0;
+                    break;
+                case TimeModification.NIGHT:
+                    ElapsedTime += 1200.0 - ElapsedTime % 1200.0;
+                    break;
+                case TimeModification.SKIP:
+                    ElapsedTime += 600.0 - ElapsedTime % 600.0;
+                    break;
+            }
+
+            SendCurrentTimePacket(false);
+        }
+
+        public enum TimeModification
+        {
+            DAY, NIGHT, SKIP
+        }
     }
 }
