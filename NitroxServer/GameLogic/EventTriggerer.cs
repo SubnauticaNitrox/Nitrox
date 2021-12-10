@@ -37,12 +37,13 @@ namespace NitroxServer.GameLogic
                 AuroraExplosionTime = RandomNumber(2.3d, 4d) * 1200d * 1000d; //Time.deltaTime returns seconds so we need to multiply 1000
             }
 
-            CreateTimer(AuroraExplosionTime * 0.2d - ElapsedTime * 1000, StoryEventSend.EventType.PDA_EXTRA, "Story_AuroraWarning1");
-            CreateTimer(AuroraExplosionTime * 0.5d - ElapsedTime * 1000, StoryEventSend.EventType.PDA_EXTRA, "Story_AuroraWarning2");
-            CreateTimer(AuroraExplosionTime * 0.8d - ElapsedTime * 1000, StoryEventSend.EventType.PDA_EXTRA, "Story_AuroraWarning3");
+            double elapsedTimeMilliseconds = ElapsedTime * 1000;
+            CreateTimer(AuroraExplosionTime * 0.2d - elapsedTimeMilliseconds, StoryEventSend.EventType.PDA_EXTRA, "Story_AuroraWarning1");
+            CreateTimer(AuroraExplosionTime * 0.5d - elapsedTimeMilliseconds, StoryEventSend.EventType.PDA_EXTRA, "Story_AuroraWarning2");
+            CreateTimer(AuroraExplosionTime * 0.8d - elapsedTimeMilliseconds, StoryEventSend.EventType.PDA_EXTRA, "Story_AuroraWarning3");
             // Story_AuroraWarning4 and Story_AuroraExplosion must occur at the same time
-            CreateTimer(AuroraExplosionTime - ElapsedTime * 1000, StoryEventSend.EventType.PDA_EXTRA, "Story_AuroraWarning4");
-            CreateTimer(AuroraExplosionTime - ElapsedTime * 1000, StoryEventSend.EventType.EXTRA, "Story_AuroraExplosion");
+            CreateTimer(AuroraExplosionTime - elapsedTimeMilliseconds, StoryEventSend.EventType.PDA_EXTRA, "Story_AuroraWarning4");
+            CreateTimer(AuroraExplosionTime - elapsedTimeMilliseconds, StoryEventSend.EventType.EXTRA, "Story_AuroraExplosion");
             //like the timers, except we can see how much time has passed
             // TODO: Remove this when the PR is ready to be merged
             // For testing purposes, uncomment these 2 lines and comment the 2 lines above

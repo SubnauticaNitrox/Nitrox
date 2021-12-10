@@ -35,6 +35,7 @@ namespace NitroxClient.Communication.Packets.Processors
                     ExecuteExtraEvent(packet.Key);
                     break;
                 case StoryEventSend.EventType.PDA_EXTRA:
+                    PDALog.entries.Remove(packet.Key);
                     StoryGoal.Execute(packet.Key, Story.GoalType.PDA);
                     break;
             }
@@ -52,7 +53,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         private void ExplodeAurora()
         {
-            pdaManagerEntry.CrashedUpdate = true;
+            pdaManagerEntry.AuroraExplosionTriggered = true;
             CrashedShipExploder main = CrashedShipExploder.main;
             main.timeMonitor.Update(DayNightCycle.main.timePassedAsFloat);
             main.timeToStartCountdown = main.timeMonitor.Get();
