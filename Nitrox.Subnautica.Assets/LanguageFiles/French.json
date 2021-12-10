@@ -34,6 +34,7 @@
   "Nitrox_InvalidUserName": "Merci d'entrer un nom valide !\n\n Il ne doit pas contenir d'espaces ou des caractères douteux\n Caractères autorisés : A-Z a-z 0-9 _ . -\nLongueur : [3, 25]",
   "Nitrox_RequestingSessionPolicy": "En attente des informations du serveur...",
   "Nitrox_RejectedSessionPolicy": "Réservation rejetée...",
+  "Nitrox_Waiting": "En attente dans la file d'attente...",
   "Nitrox_DisconnectedSession": "Déconnecté du serveur",
   "Nitrox_WaitingPassword": "En attente du mot de passe...",
   "Nitrox_WaitingUserInput": "En attente des informations du joueur...",

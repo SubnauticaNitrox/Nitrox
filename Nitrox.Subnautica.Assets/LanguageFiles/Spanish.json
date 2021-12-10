@@ -35,6 +35,7 @@
   "Nitrox_RequestingSessionPolicy": "Conectando con el servidor...",
   "Nitrox_RejectedSessionPolicy": "Reservación rechazada....",
   "Nitrox_DisconnectedSession": "Desconectado del servidor",
+  "Nitrox_Waiting": "Esperando en cola para unirse...",
   "Nitrox_WaitingPassword": "Esperando contraseña...",
   "Nitrox_WaitingUserInput": "Esperando información del jugador...",
   "Nitrox_LaunchGame": "Lanzamiento de la partida...",

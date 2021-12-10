@@ -34,6 +34,7 @@
   "Nitrox_InvalidUserName": "Por favor, digite um nome de jogador valido!\n\n Nao deve conter nenhum espaço ou caracteres duvidosos\n Caracteres permitidos : A-Z a-z 0-9 _ . -\nComprimento : [3, 25]",
   "Nitrox_RequestingSessionPolicy": "Solicitando informacoes de política de sessao...",
   "Nitrox_RejectedSessionPolicy": "Reserva rejeitada...",
+  "Nitrox_Waiting": "Esperando na fila de entrada...",
   "Nitrox_DisconnectedSession": "Desconectado do servidor",
   "Nitrox_WaitingPassword": "Aguardando entrada de senha do servidor...",
   "Nitrox_WaitingUserInput": "Aguardando entrada do usuaio...",

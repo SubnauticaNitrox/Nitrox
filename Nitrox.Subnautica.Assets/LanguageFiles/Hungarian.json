@@ -31,6 +31,7 @@
   "Nitrox_InvalidUserName": "Kérlek, érvényes nevet adj meg !\n\n Nem tartalmazhat szóközt, vagy kétes karaktereket\n Megengetett karakterek : A-Z a-z 0-9 _ . -\nHosszúság : [3, 25]",
   "Nitrox_RequestingSessionPolicy": "Munkamenet irányelvek lekérése...",
   "Nitrox_RejectedSessionPolicy": "A foglalás elutasítva...",
+  "Nitrox_Waiting": "Várakozás a csatlakozási sorba...",
   "Nitrox_DisconnectedSession": "Kilépve a munkameneből",
   "Nitrox_WaitingPassword": "Várakozás a szerver jelszó megadására...",
   "Nitrox_WaitingUserInput": "Várakozás a felhasználóra...",

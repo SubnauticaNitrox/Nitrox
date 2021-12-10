@@ -31,6 +31,7 @@
   "Nitrox_InvalidUserName": "Пожалуйста введите корректное имя!\n\n Доступные символы: A-Z a-z 0-9 _ . -\nДлинна: [3, 25]",
   "Nitrox_RequestingSessionPolicy": "Запрос информации о политике сеанса...",
   "Nitrox_RejectedSessionPolicy": "Бронирование отклонено...",
+  "Nitrox_Waiting": "Ожидание в очереди на присоединение...",
   "Nitrox_DisconnectedSession": "Отключение от сервера",
   "Nitrox_WaitingPassword": "Ожидание ввода пароля сервера...",
   "Nitrox_WaitingUserInput": "Ожидание ввода данных пользователем...",

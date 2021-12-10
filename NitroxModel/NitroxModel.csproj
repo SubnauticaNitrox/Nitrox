@@ -61,6 +61,7 @@
     <Compile Include="DataStructures\GameLogic\PlantableItemData.cs" />
     <Compile Include="DataStructures\GameLogic\PlayerStatsData.cs" />
     <Compile Include="DataStructures\GameLogic\RandomStartGenerator.cs" />
+    <Compile Include="DataStructures\ThreadSafeQueue.cs" />
     <Compile Include="DataStructures\Unity\NitroxColor.cs" />
     <Compile Include="DataStructures\Unity\NitroxQuaternion.cs" />
     <Compile Include="DataStructures\Unity\NitroxTransform.cs" />
@@ -172,6 +173,7 @@
     <Compile Include="Packets\PlayerKicked.cs" />
     <Compile Include="Packets\PlayerQuickSlotsBindingChanged.cs" />
     <Compile Include="Packets\PlayerStats.cs" />
+    <Compile Include="Packets\PlayerSyncFinished.cs" />
     <Compile Include="Packets\PlayerTeleported.cs" />
     <Compile Include="Packets\PlayFMODAsset.cs" />
     <Compile Include="Packets\PlayFMODCustomEmitter.cs" />
