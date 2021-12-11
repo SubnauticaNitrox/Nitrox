@@ -10,6 +10,13 @@ namespace NitroxLauncher
 {
     internal static class LauncherNotifier
     {
+        private static readonly MessageOptions defaultOptions = new()
+        {
+            FreezeOnMouseEnter = true,
+            UnfreezeOnMouseLeave = true,
+            ShowCloseButton = true,
+        };
+
         private static Notifier notifier;
 
         public static void Setup()
@@ -29,7 +36,7 @@ namespace NitroxLauncher
                     cfg.DisplayOptions.TopMost = false;
 
                     cfg.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(
-                        notificationLifetime: TimeSpan.FromSeconds(20),
+                        notificationLifetime: TimeSpan.FromSeconds(5),
                         maximumNotificationCount: MaximumNotificationCount.FromCount(5)
                     );
 
@@ -48,16 +55,16 @@ namespace NitroxLauncher
             notifier = null;
         }
 
-        public static void Info(string message) => notifier.ShowInformation(message);
+        public static void Info(string message) => notifier.ShowInformation(message, defaultOptions);
         public static void Info(string message, MessageOptions options) => notifier.ShowInformation(message, options);
 
-        public static void Error(string message) => notifier.ShowError(message);
+        public static void Error(string message) => notifier.ShowError(message, defaultOptions);
         public static void Error(string message, MessageOptions options) => notifier.ShowError(message, options);
 
-        public static void Success(string message) => notifier.ShowSuccess(message);
+        public static void Success(string message) => notifier.ShowSuccess(message, defaultOptions);
         public static void Success(string message, MessageOptions options) => notifier.ShowSuccess(message, options);
 
-        public static void Warning(string message) => notifier.ShowWarning(message);
+        public static void Warning(string message) => notifier.ShowWarning(message, defaultOptions);
         public static void Warning(string message, MessageOptions options) => notifier.ShowWarning(message, options);
     }
 }

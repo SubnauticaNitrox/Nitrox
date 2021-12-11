@@ -36,7 +36,7 @@
             <Border CornerRadius="12" Background="#151516" Margin="0,0,0,0" Padding="22,22,22,0"></Border>
 
             <Grid Margin="22,22,22,0" VerticalAlignment="Top">
-                <Image Source="{StaticResource NitroxIcon}" ToolTip="Welcome aboard captain !" Width="56" Height="56" HorizontalAlignment="Center" VerticalAlignment="Top" />
+                <Image Source="{StaticResource NitroxIcon}" ToolTip="You are the best captain on the planet, I'm not even squiddin" Width="56" Height="56" HorizontalAlignment="Center" VerticalAlignment="Top" />
 
                 <Grid x:Name="NoUpdateAvailableBox" Visibility="Visible">
                     <TextBlock FontSize="16" Foreground="White" TextWrapping="Wrap" Margin="0,72,0,0" VerticalAlignment="Top" FontWeight="Bold" TextAlignment="Center" Text="No Update Available"/>

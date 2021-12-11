@@ -50,7 +50,7 @@
                 <Run Text="Nitrox is an open-source, multiplayer modification for the game Subnautica."/>
                 <Run Text="The project is maintained by the community with regular support and updates from the generous contributors."/>
             </TextBlock>
-            
+
             <StackPanel Orientation="Vertical" Grid.Column="3" Margin="0" Height="203" VerticalAlignment="Top">
                 <StackPanel.Background>
                     <ImageBrush ImageSource="/NitroxLauncher;component/Images/PlayBoxImage.png"/>
@@ -61,9 +61,9 @@
                         <TextBlock Foreground="#7FFFFFFF" Text="PLAY NITROX" FontSize="10" FontWeight="Bold" />
                         <TextBlock x:Name="NitroxVersionLabel" Foreground="White" FontSize="10" Text="{Binding Version, Mode=OneTime}" />
                     </StackPanel>
-                    
+
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right">
-                        <Image Source="{Binding GamePlateform, Converter={converters:PlatformToIconConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                        <Image Source="{Binding GamePlatform, Converter={converters:PlatformToIconConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                                HorizontalAlignment="Right"
                                VerticalAlignment="Top">
                             <Image.ToolTip>
@@ -73,14 +73,14 @@
                     </StackPanel>
                 </Grid>
 
-                <Button Style="{StaticResource LargeButton}" Click="MultiplayerButton_Click" ToolTip="Launch the game with multiplayer enabled." Background="#FF007BFF" Width="Auto" HorizontalAlignment="Stretch" Margin="24,16,24,8" Height="62">
+                <Button Style="{StaticResource LargeButton}" Click="MultiplayerButton_Click" ToolTip="Launch Subnautica with multiplayer enabled" Background="#FF007BFF" Width="Auto" HorizontalAlignment="Stretch" Margin="24,16,24,8" Height="62">
                     <StackPanel>
                         <TextBlock HorizontalAlignment="Center" FontSize="16" FontWeight="Bold" Foreground="White"><Run Text="PLAY"/></TextBlock>
                         <TextBlock HorizontalAlignment="Center" FontSize="10"><Run Text="MULTIPLAYER"/></TextBlock>
                     </StackPanel>
                 </Button>
 
-                <Button Margin="24,0,24,24" Background="#19FFFFFF" BorderBrush="#66FFFFFF" Style="{DynamicResource LargeButton}" Click="SinglePlayerButton_Click" ToolTip="Play alone" HorizontalAlignment="Stretch" Width="Auto" Height="48">
+                <Button Style="{DynamicResource LargeButton}" Click="SinglePlayerButton_Click" Background="#19FFFFFF" BorderBrush="#66FFFFFF" ToolTip="Launch Subnautica" Width="Auto" HorizontalAlignment="Stretch" Margin="24,0,24,24" Height="48">
                     <TextBlock Padding="0,4,0,0" Foreground="White" Margin="0,-4,0,0"  FontSize="14"><Run Text="SINGLEPLAYER"/></TextBlock>
                 </Button>
 

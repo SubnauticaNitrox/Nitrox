@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Reflection;
 using System.Threading.Tasks;
 using NitroxModel.Helper;
 using NitroxModel.Platforms.OS.Shared;
@@ -34,13 +33,16 @@ namespace NitroxModel.Platforms.Store
             throw new NotImplementedException();
         }
 
-        public async Task<ProcessEx> StartGameAsync(string pathToGameExe)
+        public async Task<ProcessEx> StartGameAsync(string pathToGameExe, string launchArguments)
         {
             // Normally should call StartPlatformAsync first. But Subnautica will start without EGS.
-            return await Task.FromResult(ProcessEx.Start(pathToGameExe,
-                                                         new[] { (NitroxUser.LAUNCHER_PATH_ENV_KEY, NitroxUser.LauncherPath) },
-                                                         Path.GetDirectoryName(pathToGameExe),
-                                                         "-EpicPortal -vrmode none"));
+            return await Task.FromResult(
+                ProcessEx.Start(
+                    pathToGameExe,
+                    new[] { (NitroxUser.LAUNCHER_PATH_ENV_KEY, NitroxUser.LauncherPath) },
+                    Path.GetDirectoryName(pathToGameExe),
+                    $"-EpicPortal {launchArguments}")
+                );
         }
     }
 }

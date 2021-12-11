@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Reflection;
 using System.Threading.Tasks;
 using NitroxModel.Helper;
 using NitroxModel.Platforms.OS.Shared;
@@ -31,11 +30,15 @@ namespace NitroxModel.Platforms.Store
             throw new NotImplementedException();
         }
 
-        public async Task<ProcessEx> StartGameAsync(string pathToGameExe)
+        public async Task<ProcessEx> StartGameAsync(string pathToGameExe, string launchArguments)
         {
-            return await Task.FromResult(ProcessEx.Start(pathToGameExe,
-                                   new[] { (NitroxUser.LAUNCHER_PATH_ENV_KEY, NitroxUser.LauncherPath) },
-                                   Path.GetDirectoryName(pathToGameExe))
+            return await Task.FromResult(
+                ProcessEx.Start(
+                    pathToGameExe,
+                    new[] { (NitroxUser.LAUNCHER_PATH_ENV_KEY, NitroxUser.LauncherPath) },
+                    Path.GetDirectoryName(pathToGameExe),
+                    launchArguments
+                )
             );
         }
     }

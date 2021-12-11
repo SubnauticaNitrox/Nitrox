@@ -9,8 +9,8 @@ namespace NitroxLauncher.Pages
 {
     public partial class LaunchGamePage : PageBase
     {
-        public string PlatformToolTip => GamePlateform.GetAttribute<DescriptionAttribute>()?.Description ?? "Unknown";
-        public Platform GamePlateform => LauncherLogic.Config.SubnauticaPlatform;
+        public string PlatformToolTip => GamePlatform.GetAttribute<DescriptionAttribute>()?.Description ?? "Unknown";
+        public Platform GamePlatform => LauncherLogic.Config.SubnauticaPlatform;
         public string Version => LauncherLogic.Version;
 
         public LaunchGamePage()
@@ -55,7 +55,7 @@ namespace NitroxLauncher.Pages
 
         private void LogicPropertyChanged(object sender, PropertyChangedEventArgs args)
         {
-            OnPropertyChanged(nameof(GamePlateform));
+            OnPropertyChanged(nameof(GamePlatform));
             OnPropertyChanged(nameof(PlatformToolTip));
         }
     }
