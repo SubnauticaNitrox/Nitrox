@@ -70,6 +70,13 @@ namespace NitroxClient.Communication.MultiplayerSession
 
         public void RequestSessionReservation(PlayerSettings playerSettings, AuthenticationContext authenticationContext)
         {
+            // If a reservation has already been sent (in which case the client is enqueued in the join queue)
+            if (CurrentState.CurrentStage == MultiplayerSessionConnectionStage.AWAITING_SESSION_RESERVATION)
+            {
+                Log.InGame(Language.main.Get("Nitrox_Waiting"));
+                return;
+            }
+
             PlayerSettings = playerSettings;
             AuthenticationContext = authenticationContext;
             CurrentState.NegotiateReservation(this);
