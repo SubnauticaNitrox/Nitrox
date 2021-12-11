@@ -40,15 +40,14 @@ namespace NitroxLauncher.Pages
             string selectedDirectory;
 
             // Don't use FolderBrowserDialog because its UI sucks. See: https://stackoverflow.com/a/31082
-            CommonOpenFileDialog dialog = new()
+            using (CommonOpenFileDialog dialog = new()
             {
                 Multiselect = false,
                 InitialDirectory = PathToSubnautica,
                 EnsurePathExists = true,
                 IsFolderPicker = true,
                 Title = "Select Subnautica installation directory"
-            };
-            using (dialog)
+            })
             {
                 if (dialog.ShowDialog() != CommonFileDialogResult.Ok)
                 {
@@ -57,14 +56,16 @@ namespace NitroxLauncher.Pages
                 selectedDirectory = Path.GetFullPath(dialog.FileName);
             }
 
-            if (GameInstallationFinder.IsSubnauticaDirectory(selectedDirectory) && selectedDirectory != PathToSubnautica)
+            if (!GameInstallationFinder.IsSubnauticaDirectory(selectedDirectory))
+            {
+                LauncherNotifier.Error("Invalid subnautica directory");
+                return;
+            }
+
+            if (selectedDirectory != PathToSubnautica)
             {
                 await LauncherLogic.Instance.SetTargetedSubnauticaPath(selectedDirectory);
                 LauncherNotifier.Success("Applied changes");
-            }
-            else
-            {
-                LauncherNotifier.Error("Invalid subnautica directory");
             }
         }
 
