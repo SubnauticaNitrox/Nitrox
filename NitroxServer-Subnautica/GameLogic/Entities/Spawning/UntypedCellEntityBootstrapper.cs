@@ -1,5 +1,6 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
 using NitroxServer.GameLogic.Entities.Spawning;
+using NitroxServer.Helper;
 
 namespace NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers
 {
@@ -13,7 +14,7 @@ namespace NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrapper
 
         private readonly string cellRootClassId = "55d7ab35-de97-4d95-af6c-ac8d03bb54ca";
 
-        public void Prepare(Entity entity, Entity parentEntity, DeterministicBatchGenerator deterministicBatchGenerator)
+        public void Prepare(Entity entity, Entity parentEntity, DeterministicGenerator deterministicBatchGenerator)
         {
             bool hasCellRootAsParent = (parentEntity != null && parentEntity.ClassId == cellRootClassId);
 
