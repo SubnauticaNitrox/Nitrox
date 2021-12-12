@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Timers;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
+using NitroxServer.Helper;
 
 namespace NitroxServer.GameLogic
 {
@@ -42,7 +43,7 @@ namespace NitroxServer.GameLogic
             get => (int) Math.Ceiling(ElapsedTimeMs / TimeSpan.FromMinutes(20).TotalMilliseconds);
         }
 
-        public EventTriggerer(PlayerManager playerManager, double elapsedTime, double? auroraExplosionTime)
+        public EventTriggerer(PlayerManager playerManager, string seed, double elapsedTime, double? auroraExplosionTime)
         {
             this.playerManager = playerManager;
             // Default time in Base SN is 480s
@@ -51,7 +52,15 @@ namespace NitroxServer.GameLogic
             Log.Debug($"Event Triggerer started! ElapsedTime={Math.Floor(ElapsedSeconds)}s");
 
             // The timer interval is in milliseconds, and so the AuroraExplosionTime should be
-            AuroraExplosionTimeMs = auroraExplosionTime ?? elapsedTimeOutsideStopWatchMs + RandomNumber(2.3d, 4d) * 1200d * 1000d;
+            if (auroraExplosionTime.HasValue)
+            {
+                AuroraExplosionTimeMs = auroraExplosionTime.Value;
+            }
+            else
+            {
+                DeterministicGenerator generator = new(seed, nameof(EventTriggerer));
+                AuroraExplosionTimeMs = elapsedTimeOutsideStopWatchMs + generator.NextDouble(2.3d, 4d) * 1200d * 1000d;
+            }
 
             CreateTimer(AuroraExplosionTimeMs * 0.2d - ElapsedTimeMs, StoryEventSend.EventType.PDA_EXTRA, "Story_AuroraWarning1");
             CreateTimer(AuroraExplosionTimeMs * 0.5d - ElapsedTimeMs, StoryEventSend.EventType.PDA_EXTRA, "Story_AuroraWarning2");
@@ -89,12 +98,6 @@ namespace NitroxServer.GameLogic
             };
 
             eventTimers.Add(key, timer);
-        }
-
-        private double RandomNumber(double min, double max)
-        {
-            Random random = new Random();
-            return random.NextDouble() * (max - min) + min;
         }
 
         public void StartWorldTime()
