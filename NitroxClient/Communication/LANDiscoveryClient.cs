@@ -67,7 +67,8 @@ namespace NitroxClient.Communication
                 string responseString = reader.GetString();
                 if (responseString == LANDiscoveryConstants.BROADCAST_RESPONSE_STRING)
                 {
-                    IPEndPoint serverEndPoint = reader.GetNetEndPoint();
+                    int serverPort = reader.GetInt();
+                    IPEndPoint serverEndPoint = new(remoteEndPoint.Address, serverPort);
 
                     if (!discoveredServers.Contains(serverEndPoint)) // prevents duplicate entries
                     {

@@ -43,27 +43,11 @@ namespace NitroxServer.Communication
                 {
                     NetDataWriter writer = new();
                     writer.Put(LANDiscoveryConstants.BROADCAST_RESPONSE_STRING);
-                    writer.Put(new IPEndPoint(GetLocalIPAddress(), Server.Instance.Port));
+                    writer.Put(Server.Instance.Port);
 
                     server.SendDiscoveryResponse(writer, remoteEndPoint);
                 }
             }
-        }
-
-        // https://stackoverflow.com/questions/6803073/get-local-ip-address
-        private static IPAddress GetLocalIPAddress()
-        {
-            IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
-
-            foreach (IPAddress ip in host.AddressList)
-            {
-                if (ip.AddressFamily == AddressFamily.InterNetwork)
-                {
-                    return ip;
-                }
-            }
-
-            return null;
         }
 
         public static void Stop()
