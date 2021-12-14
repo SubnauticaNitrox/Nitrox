@@ -1,6 +1,0 @@
-hey, so im not sure where to put this file since i couldnt find anything in the readme nor on the wiki.... But i'd like to contribute some (maybe all??) translated
-lines from english to dutch.
-
-hopefully some can comment under my pull request and redirect me to the page(s) where this file could sit properly. :)
-
-P.S: the first word in the Wiki is wrong, it says "the" and it should be "this".
