@@ -17,6 +17,9 @@
     "Nitrox_EnterName": "Speler Naam",
     "Nitrox_SubmitPassword": "Verzenden",
     "Nitrox_MultiplayerLoaded": "Multiplayer client geladen...",
+    "Nitrox_StreamerSettings": "Streamer modus",
+    "Nitrox_SilenceChat": "Chat dempen",
+    "Nitrox_HideIp": "IPs verschuilen",
     // In game menu
     "Nitrox_LoadingScreenWarn": "Verwacht spel-brekende bugs",
     "Nitrox_WorldSettling": "Wachten op Wereld Neerzetten",
@@ -31,8 +34,10 @@
     "Nitrox_InvalidUserName": "Voer een geldige spelernaam in !\n\n Het mag geen spatie of twijfelachtige karakters bevatten\n Toegestane karakters : A-Z a-z 0-9 _ . -\nLengte : [3, 25]",
     "Nitrox_RequestingSessionPolicy": "Informatie van het sessie beleid aanvragen...",
     "Nitrox_RejectedSessionPolicy": "sessie beleid geweigerd...",
+    "Nitrox_Waiting":  "Waiting in join queue...",
     "Nitrox_DisconnectedSession": "U heeft de server verlaten",
     "Nitrox_WaitingPassword": "Wachtend op invoer van de server...",
     "Nitrox_WaitingUserInput": "Wachtend op invoer van de gebruiker...",
-    "Nitrox_LaunchGame": "Game opstarten..."
+    "Nitrox_LaunchGame": "Game opstarten...",
+    "Nitrox_SilencedChatNotif": "Chat is gedempt"
   }
