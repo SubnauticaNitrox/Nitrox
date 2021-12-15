@@ -12,9 +12,12 @@ namespace NitroxClient.GameLogic
         private readonly IPacketSender packetSender;
         public static Dictionary<NitroxTechType, PDAProgressEntry> CachedEntries { get; set; }
 
+        public bool AuroraExplosionTriggered;
+
         public PDAManagerEntry(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
+            AuroraExplosionTriggered = false;
         }
 
         public void Add(PDAScanner.Entry entry)

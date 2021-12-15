@@ -18,20 +18,29 @@ namespace NitroxServer.GameLogic.Unlockables
         [JsonProperty, ProtoMember(3)]
         public ThreadSafeSet<string> GoalUnlocks { get; } = new();
 
+        [JsonProperty, ProtoMember(4)]
+        public ThreadSafeList<NitroxScheduledGoal> ScheduledGoals { get; set; } = new();
+
         public bool RemovedLatestRadioMessage()
         {
             if (RadioQueue.Count <= 0)
             {
                 return false;
             }
-            
+
             RadioQueue.RemoveAt(0);
             return true;
         }
 
-        public InitialStoryGoalData GetInitialStoryGoalData()
+        public static StoryGoalData From(StoryGoalData storyGoals, ScheduleKeeper scheduleKeeper)
         {
-            return new InitialStoryGoalData(new List<string>(CompletedGoals), new List<string>(RadioQueue), new List<string>(GoalUnlocks));
+            storyGoals.ScheduledGoals = new ThreadSafeList<NitroxScheduledGoal>(scheduleKeeper.GetScheduledGoals());
+            return storyGoals;
+        }
+
+        public InitialStoryGoalData GetInitialStoryGoalData(ScheduleKeeper scheduleKeeper)
+        {
+            return new InitialStoryGoalData(new List<string>(CompletedGoals), new List<string>(RadioQueue), new List<string>(GoalUnlocks), scheduleKeeper.GetScheduledGoals());
         }
     }
 }

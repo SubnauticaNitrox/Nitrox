@@ -1,7 +1,6 @@
 ﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxModel.Core;
-using NitroxModel.Helper;
+using NitroxClient.GameLogic;
 using NitroxModel.Packets;
 using Story;
 
@@ -10,10 +9,12 @@ namespace NitroxClient.Communication.Packets.Processors
     public class StoryEventHandler : ClientPacketProcessor<StoryEventSend>
     {
         private readonly IPacketSender packetSender;
+        private readonly PDAManagerEntry pdaManagerEntry;
 
-        public StoryEventHandler(IPacketSender packetSender)
+        public StoryEventHandler(IPacketSender packetSender, PDAManagerEntry pdaManagerEntry)
         {
             this.packetSender = packetSender;
+            this.pdaManagerEntry = pdaManagerEntry;
         }
 
         public override void Process(StoryEventSend packet)
@@ -24,13 +25,18 @@ namespace NitroxClient.Communication.Packets.Processors
                 case StoryEventSend.EventType.RADIO:
                 case StoryEventSend.EventType.ENCYCLOPEDIA:
                 case StoryEventSend.EventType.STORY:
-                    using (NitroxServiceLocator.LocateService<IPacketSender>().Suppress<StoryEventSend>())
+                    using (packetSender.Suppress<StoryEventSend>())
+                    using (packetSender.Suppress<PDALogEntryAdd>())
                     {
                         StoryGoal.Execute(packet.Key, (Story.GoalType)packet.Type);
                     }
                     break;
                 case StoryEventSend.EventType.EXTRA:
                     ExecuteExtraEvent(packet.Key);
+                    break;
+                case StoryEventSend.EventType.PDA_EXTRA:
+                    PDALog.entries.Remove(packet.Key);
+                    StoryGoal.Execute(packet.Key, Story.GoalType.PDA);
                     break;
             }
         }
@@ -47,9 +53,10 @@ namespace NitroxClient.Communication.Packets.Processors
 
         private void ExplodeAurora()
         {
+            pdaManagerEntry.AuroraExplosionTriggered = true;
             CrashedShipExploder main = CrashedShipExploder.main;
-            main.timeToStartCountdown = main.timeMonitor.Get() - 25f + 1f;
-            main.timeToStartWarning = main.timeToStartCountdown - 1f;
+            main.timeMonitor.Update(DayNightCycle.main.timePassedAsFloat);
+            main.timeToStartCountdown = main.timeMonitor.Get();
         }
     }
 }

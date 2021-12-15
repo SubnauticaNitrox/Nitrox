@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Logger;
 using ProtoBufNet;
 
 namespace NitroxServer.GameLogic.Unlockables
@@ -31,22 +33,50 @@ namespace NitroxServer.GameLogic.Unlockables
         {
             PartiallyUnlockedByTechType.Remove(techType);
             CachedProgress.Remove(techType);
-            UnlockedTechTypes.Add(techType);
+            if (!UnlockedTechTypes.Contains(techType))
+            {
+                UnlockedTechTypes.Add(techType);
+            }
+            else
+            {
+                Log.Debug($"There was an attempt of adding a duplicated entry in the UnlockedTechTypes: [{techType.Name}]");
+            }
         }
 
         public void AddKnownTechType(NitroxTechType techType)
         {
-            KnownTechTypes.Add(techType);
+            if (!KnownTechTypes.Contains(techType))
+            {
+                KnownTechTypes.Add(techType);
+            }
+            else
+            {
+                Log.Debug($"There was an attempt of adding a duplicated entry in the KnownTechTypes: [{techType.Name}]");
+            }
         }
 
         public void AddEncyclopediaEntry(string entry)
         {
-            EncyclopediaEntries.Add(entry);
+            if (!EncyclopediaEntries.Contains(entry))
+            {
+                EncyclopediaEntries.Add(entry);
+            }
+            else
+            {
+                Log.Debug($"There was an attempt of adding a duplicated entry in the EncyclopediaEntries: [{entry}]");
+            }
         }
 
         public void AddPDALogEntry(PDALogEntry entry)
         {
-            PdaLog.Add(entry);
+            if (!PdaLog.Any(logEntry => logEntry.Key == entry.Key))
+            {
+                PdaLog.Add(entry);
+            }
+            else
+            {
+                Log.Debug($"There was an attempt of adding a duplicated entry in the PDALog: [{entry.Key}]");
+            }
         }
 
         public void EntryProgressChanged(NitroxTechType techType, float progress, int unlocked, NitroxId nitroxId)

@@ -60,6 +60,7 @@
     <Compile Include="Patcher\Patches\BuilderPatchTest.cs" />
     <Compile Include="Patcher\Patches\BuilderTool_HandleInput_PatchTest.cs" />
     <Compile Include="Patcher\Patches\ConstructorInput_OnCraftingBegin_PatchTest.cs" />
+    <Compile Include="Patcher\Patches\CrashedShipExploder_Update_PatchTest.cs" />
     <Compile Include="Patcher\Patches\Equipment_RemoveItem_PatchTest.cs" />
     <Compile Include="Patcher\Test\PatchTestHelper.cs" />
     <Compile Include="Platforms\OS\Windows\RegistryTest.cs" />
@@ -67,6 +68,7 @@
     <Compile Include="Serialization\InteractiveChildObjectIdentifiersSerializationTest.cs" />
     <Compile Include="Serialization\PdaStateDataSerializationTest.cs" />
     <Compile Include="Serialization\WorldPersistenceTest.cs" />
+    <Compile Include="Server\GameLogic\EventTriggererTest.cs" />
     <Compile Include="SetupAssemblyInitializer.cs" />
     <Compile Include="TestAutoFacRegistrar.cs" />
     <Compile Include="Threading\ThreadSafeListTest.cs" />

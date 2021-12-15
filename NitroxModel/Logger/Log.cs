@@ -17,6 +17,7 @@ namespace NitroxModel.Logger
     public static class Log
     {
         private static ILogger logger = Serilog.Core.Logger.None;
+        private static readonly HashSet<int> logOnceCache = new();
         private static bool isSetup;
 
         public static string PlayerName
@@ -62,19 +63,18 @@ namespace NitroxModel.Logger
                          }
                      })
                      .WriteTo.Logger(cnf => cnf
-                                            .Enrich.FromLogContext().WriteTo
+                                            .Enrich.FromLogContext()
+                                            .WriteTo
 #if DEBUG
                                             .Map(nameof(PlayerName), "", (playerName, sinkCnf) => sinkCnf.Async(a => a.File(Path.Combine(LogDirectory, $"{GetLogFileName()}{playerName}-.log"),
-
 #else
                                             .Async((a => a.File(Path.Combine(LogDirectory, $"{GetLogFileName()}-.log"),
 #endif
-                                                               outputTemplate: $"[{{Timestamp:HH:mm:ss.fff}}] [{{Level:u3}}{{IsUnity}}] {{Message}}{{NewLine}}{{Exception}}",
-                                                               rollingInterval: RollingInterval.Day,
-                                                               retainedFileCountLimit: 10,
-                                                               fileSizeLimitBytes: 200000000, // 200MB
-                                                               shared: true))))
-
+                                                                                                                            outputTemplate: "[{Timestamp:HH:mm:ss.fff}] [{Level:u3}{IsUnity}] {Message}{NewLine}{Exception}",
+                                                                                                                            rollingInterval: RollingInterval.Day,
+                                                                                                                            retainedFileCountLimit: 10,
+                                                                                                                            fileSizeLimitBytes: 200000000, // 200MB
+                                                                                                                            shared: true))))
                      .WriteTo.Logger(cnf =>
                      {
                          if (inGameLogger == null)
@@ -135,6 +135,21 @@ namespace NitroxModel.Logger
             logger.Error(message);
         }
 
+        /// <summary>
+        ///     Only logs the message one time. The messages must be the same for this function to work.
+        /// </summary>
+        public static void WarnOnce(string message)
+        {
+            int hash = message?.GetHashCode() ?? 0;
+            if (logOnceCache.Contains(hash))
+            {
+                return;
+            }
+            
+            Warn(message);
+            logOnceCache.Add(hash);
+        }
+
         public static void InGame(object message)
         {
             InGame(message?.ToString());
@@ -164,6 +179,7 @@ namespace NitroxModel.Logger
                 logger.Information(message, args);
             }
         }
+
         public static void WarnSensitive(string message, params object[] args)
         {
             using (LogContext.Push(SensitiveEnricher.Instance))
