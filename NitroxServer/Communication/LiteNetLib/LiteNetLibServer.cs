@@ -47,7 +47,11 @@ namespace NitroxServer.Communication.LiteNetLib
                 BeginPortForward(portNumber);
             }
 #endif
-            LANDiscoveryServer.Start();
+
+            if (useLANDiscovery)
+            {
+                LANDiscoveryServer.Start();
+            }
 
             return true;
         }
@@ -55,7 +59,11 @@ namespace NitroxServer.Communication.LiteNetLib
         public override void Stop()
         {
             server.Stop();
-            LANDiscoveryServer.Stop();
+
+            if (useLANDiscovery)
+            {
+                LANDiscoveryServer.Stop();
+            }
         }
 
         public void OnConnectionRequest(ConnectionRequest request)

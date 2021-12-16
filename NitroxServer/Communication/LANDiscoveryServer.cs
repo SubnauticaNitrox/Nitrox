@@ -52,9 +52,9 @@ namespace NitroxServer.Communication
 
         public static void Stop()
         {
-            listener.ClearNetworkReceiveUnconnectedEvent();
-            server.Stop();
-            pollTimer.Dispose();
+            listener?.ClearNetworkReceiveUnconnectedEvent();
+            server?.Stop();
+            pollTimer?.Dispose();
         }
     }
 }
