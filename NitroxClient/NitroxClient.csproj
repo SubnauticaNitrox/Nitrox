@@ -376,10 +376,6 @@
       <Project>{0a377218-6b36-4522-89a3-a39cfc999209}</Project>
       <Name>NitroxModel-Subnautica</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NitroxServer\NitroxServer.csproj">
-      <Project>{0FC864B0-694E-4FCA-B78C-8EF98BC6F262}</Project>
-      <Name>NitroxServer</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup Label="Assembly References">
     <Reference Include="iTween">
