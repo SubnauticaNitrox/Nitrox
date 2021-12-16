@@ -31,7 +31,7 @@ namespace NitroxServer.Communication
             {
                 server.PollEvents();
             });
-            pollTimer.Change(0, 15);
+            pollTimer.Change(0, 100);
         }
 
         private static void NetworkReceiveUnconnected(IPEndPoint remoteEndPoint, NetPacketReader reader, UnconnectedMessageType messageType)
