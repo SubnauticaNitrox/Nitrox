@@ -5,7 +5,6 @@ using System.Threading;
 using LiteNetLib;
 using LiteNetLib.Utils;
 using NitroxModel.Constants;
-using NitroxModel.Logger;
 
 namespace NitroxClient.Communication
 {
@@ -13,23 +12,17 @@ namespace NitroxClient.Communication
     {
         private static readonly List<IPEndPoint> discoveredServers = new();
 
-        private static Action<IPEndPoint> foundServerCallback;
-
         private static EventBasedNetListener listener;
         private static NetManager client;
 
         private static Timer broadcastTimer;
         private static Timer pollTimer;
 
-        public static void SearchForServers(Action<IPEndPoint> callback)
-        {
-            listener?.ClearNetworkReceiveUnconnectedEvent();
-            client?.Stop();
-            broadcastTimer?.Dispose();
-            pollTimer?.Dispose();
+        public static event Action<IPEndPoint> ServerFound;
 
-            foundServerCallback = callback;
-            discoveredServers.Clear();
+        public static void BeginSearching()
+        {
+            EndSearching();
 
             Log.Info("Searching for LAN servers...");
 
@@ -60,6 +53,21 @@ namespace NitroxClient.Communication
             pollTimer.Change(0, 100);
         }
 
+        public static void EndSearching()
+        {
+            listener?.ClearNetworkReceiveUnconnectedEvent();
+            client?.Stop();
+            broadcastTimer?.Dispose();
+            pollTimer?.Dispose();
+
+            listener = null;
+            client = null;
+            broadcastTimer = null;
+            pollTimer = null;
+
+            discoveredServers.Clear();
+        }
+
         private static void NetworkReceiveUnconnected(IPEndPoint remoteEndPoint, NetPacketReader reader, UnconnectedMessageType messageType)
         {
             if (messageType == UnconnectedMessageType.DiscoveryResponse)
@@ -74,7 +82,7 @@ namespace NitroxClient.Communication
                     {
                         Log.Info($"Found LAN server at {serverEndPoint}.");
                         discoveredServers.Add(serverEndPoint);
-                        foundServerCallback(serverEndPoint);
+                        ServerFound(serverEndPoint);
                     }
                 }
             }

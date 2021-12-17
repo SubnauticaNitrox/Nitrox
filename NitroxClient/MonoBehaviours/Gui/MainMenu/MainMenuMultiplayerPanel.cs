@@ -142,11 +142,12 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         private void FindLANServers()
         {
-            LANDiscoveryClient.SearchForServers(serverEndPoint =>
+            LANDiscoveryClient.BeginSearching();
+            LANDiscoveryClient.ServerFound += (serverEndPoint) =>
             {
                 // mostly copied from LoadSavedServers()
                 CreateServerButton($"{Language.main.Get("Nitrox_ConnectTo")} <b>LAN Server</b>\n{(NitroxPrefs.HideIp.Value ? "****" : serverEndPoint.Address)}:{(NitroxPrefs.HideIp.Value ? "****" : serverEndPoint.Port)}", serverEndPoint.Address.ToString(), serverEndPoint.Port.ToString());
-            });
+            };
         }
 
         private static IPEndPoint ResolveIPEndPoint(string serverIp, string serverPort)
