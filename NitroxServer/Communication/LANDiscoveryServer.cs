@@ -22,7 +22,13 @@ namespace NitroxServer.Communication
             server.DiscoveryEnabled = true;
             server.UnconnectedMessagesEnabled = true;
 
-            server.Start(LANDiscoveryConstants.BROADCAST_PORT);
+            for (int i = 0; i < LANDiscoveryConstants.BROADCAST_PORTS.Length; i++)
+            {
+                if (server.Start(LANDiscoveryConstants.BROADCAST_PORTS[i]))
+                {
+                    break;
+                }
+            }
 
             listener.NetworkReceiveUnconnectedEvent += NetworkReceiveUnconnected;
 

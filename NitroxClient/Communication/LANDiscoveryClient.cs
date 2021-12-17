@@ -33,7 +33,13 @@ namespace NitroxClient.Communication
             client.DiscoveryEnabled = true;
             client.UnconnectedMessagesEnabled = true;
 
-            client.Start(LANDiscoveryConstants.BROADCAST_PORT);
+            foreach (int port in LANDiscoveryConstants.BROADCAST_PORTS)
+            {
+                if (client.Start(port))
+                {
+                    break;
+                }
+            }
 
             listener.NetworkReceiveUnconnectedEvent += NetworkReceiveUnconnected;
 
@@ -42,7 +48,7 @@ namespace NitroxClient.Communication
                 NetDataWriter writer = new();
                 writer.Put(LANDiscoveryConstants.BROADCAST_REQUEST_STRING);
 
-                client.SendDiscoveryRequest(writer, LANDiscoveryConstants.BROADCAST_PORT);
+                client.SendDiscoveryRequest(writer, client.LocalPort);
             });
             broadcastTimer.Change(0, 5000);
 
