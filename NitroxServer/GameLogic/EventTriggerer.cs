@@ -1,7 +1,8 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Timers;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 
 namespace NitroxServer.GameLogic
@@ -31,7 +32,8 @@ namespace NitroxServer.GameLogic
         public EventTriggerer(PlayerManager playerManager, double elapsedTime, double? auroraExplosionTime)
         {
             this.playerManager = playerManager;
-            elapsedTimeOutsideStopWatch = elapsedTime;
+            // Default time in Base SN is 480s
+            elapsedTimeOutsideStopWatch = elapsedTime == 0 ? 480000d : elapsedTime;
 
             Log.Debug($"Event Triggerer started! ElapsedTime={Math.Floor(ElapsedSeconds)}s");
 
@@ -115,9 +117,16 @@ namespace NitroxServer.GameLogic
             }
         }
 
-        public void SendCurrentTimePacket(bool initialSync)
+        public void SendCurrentTimePacket(bool initialSync, Optional<Player> player)
         {
-            playerManager.SendPacketToAllPlayers(new TimeChange(ElapsedSeconds, initialSync));
+            if (player.HasValue)
+            {
+                player.Value.SendPacket(new TimeChange(ElapsedSeconds, initialSync));
+            }
+            else
+            {
+                playerManager.SendPacketToAllPlayers(new TimeChange(ElapsedSeconds, initialSync));
+            }
         }
 
         public void ChangeTime(TimeModification type)
@@ -135,7 +144,7 @@ namespace NitroxServer.GameLogic
                     break;
             }
 
-            SendCurrentTimePacket(false);
+            SendCurrentTimePacket(false, null);
         }
 
         public enum TimeModification

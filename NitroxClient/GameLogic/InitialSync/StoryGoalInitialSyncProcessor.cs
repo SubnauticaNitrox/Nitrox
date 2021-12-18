@@ -44,11 +44,7 @@ namespace NitroxClient.GameLogic.InitialSync
         private void SetCompletedStoryGoals(List<string> storyGoalData)
         {
             StoryGoalManager.main.completedGoals.Clear();
-
-            foreach (string completedGoal in storyGoalData)
-            {
-                StoryGoalManager.main.completedGoals.Add(completedGoal);
-            }
+            StoryGoalManager.main.completedGoals.AddRange(storyGoalData);
 
             Log.Info("Received initial sync packet with " + storyGoalData.Count + " completed story goals");
         }

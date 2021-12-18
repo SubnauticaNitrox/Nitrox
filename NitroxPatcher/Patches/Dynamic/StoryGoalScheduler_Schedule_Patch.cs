@@ -31,8 +31,8 @@ namespace NitroxPatcher.Patches.Dynamic
                 return;
             }
 
-            float timePassed = DayNightCycle.main ? DayNightCycle.main.timePassedAsFloat : 0f;
-            packetSender.Send(new Schedule(timePassed + goal.delay, goal.key, goal.goalType.ToString()));
+            float timeExecute = StoryGoalScheduler.main.schedule.GetLast().timeExecute;
+            packetSender.Send(new Schedule(timeExecute, goal.key, goal.goalType.ToString()));
         }
 
         public override void Patch(Harmony harmony)
