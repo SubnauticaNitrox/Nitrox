@@ -14,15 +14,16 @@ namespace NitroxModel.Packets
             Key = key;
         }
 
+        // The 4 first items of this enum should always be in the same order as the GoalType enum
         public enum EventType
         {
             PDA,
-            PDA_EXTRA,
             RADIO,
             ENCYCLOPEDIA,
             STORY,
+            GOAL_UNLOCK,
             EXTRA,
-            GOAL_UNLOCK
+            PDA_EXTRA,
         }
     }
 }

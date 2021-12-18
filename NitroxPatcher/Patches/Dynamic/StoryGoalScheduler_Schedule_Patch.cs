@@ -26,7 +26,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(StoryGoal goal, bool __state)
         {
-            if (__state || goal.key == "PlayerDiving")
+            if (__state || goal.key == "PlayerDiving" || goal.delay == 0f)
             {
                 return;
             }

@@ -33,7 +33,7 @@ namespace NitroxServer.GameLogic
         {
             this.playerManager = playerManager;
             // Default time in Base SN is 480s
-            elapsedTimeOutsideStopWatch = elapsedTime == 0 ? 480000d : elapsedTime;
+            elapsedTimeOutsideStopWatch = elapsedTime == 0 ? TimeSpan.FromMinutes(8).TotalMilliseconds : elapsedTime;
 
             Log.Debug($"Event Triggerer started! ElapsedTime={Math.Floor(ElapsedSeconds)}s");
 
@@ -44,7 +44,7 @@ namespace NitroxServer.GameLogic
             }
             else
             {
-                AuroraExplosionTime = RandomNumber(2.3d, 4d) * 1200d * 1000d; //Time.deltaTime returns seconds so we need to multiply 1000
+                AuroraExplosionTime = elapsedTimeOutsideStopWatch + RandomNumber(2.3d, 4d) * 1200d * 1000d; //Time.deltaTime returns seconds so we need to multiply 1000
             }
 
             CreateTimer(AuroraExplosionTime * 0.2d - ElapsedTime, StoryEventSend.EventType.PDA_EXTRA, "Story_AuroraWarning1");
@@ -144,7 +144,7 @@ namespace NitroxServer.GameLogic
                     break;
             }
 
-            SendCurrentTimePacket(false, null);
+            SendCurrentTimePacket(false, Optional.Empty);
         }
 
         public enum TimeModification
