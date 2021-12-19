@@ -1,5 +1,5 @@
 ﻿{
-"version": 1,
+"version": 2,
 // Main menu
 "Nitrox_Multiplayer": "Többjátékos mód",
 "Nitrox_AddServer": "Szerver hozzáadása",
@@ -18,6 +18,9 @@
 "Nitrox_EnterName": "Játékos neve",
 "Nitrox_SubmitPassword": "Jelszó megadása",
 "Nitrox_MultiplayerLoaded": "Többjátékos Kliens betöltött...",
+"Nitrox_StreamerSettings": "Streamer mód",
+"Nitrox_SilenceChat": "Csevegés elnémítása",
+"Nitrox_HideIp": "IP-címek elrejtése",
 // In game menu
 "Nitrox_LoadingScreenWarn": "Játékélményt romboló hibák várhatóak",
 "Nitrox_WorldSettling": "A világ rendelkezésre vár",
@@ -35,5 +38,6 @@
 "Nitrox_DisconnectedSession": "Kilépve a munkameneből",
 "Nitrox_WaitingPassword": "Várakozás a szerver jelszó megadására...",
 "Nitrox_WaitingUserInput": "Várakozás a felhasználóra...",
-"Nitrox_LaunchGame": "Játék indítása..."
+"Nitrox_LaunchGame": "Játék indítása...",
+"Nitrox_SilencedChatNotif": "A csevegés mostantól néma"
 }

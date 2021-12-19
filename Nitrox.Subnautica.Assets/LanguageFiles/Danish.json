@@ -1,5 +1,5 @@
 {
-"version": 1,
+"version": 2,
 // Main menu
 "Nitrox_Multiplayer": "Multiplayer",
 "Nitrox_AddServer": "Tilføj server",
@@ -18,6 +18,9 @@
 "Nitrox_EnterName": "Spillernavn",
 "Nitrox_SubmitPassword": "Forbind",
 "Nitrox_MultiplayerLoaded": "Multiplayer-klient indlæst...",
+"Nitrox_StreamerSettings": "Streamer-tilstand",
+"Nitrox_SilenceChat": "Slå chat fra",
+"Nitrox_HideIp": "Skjul IP-adresser",
 // In game menu
 "Nitrox_LoadingScreenWarn": "Forvent spil-ødelæggene fejl",
 "Nitrox_WorldSettling": "Afventer verdens afvikling",
@@ -35,5 +38,6 @@
 "Nitrox_DisconnectedSession": "Afbrudt fra server",
 "Nitrox_WaitingPassword": "Venter på serveradgangskode...",
 "Nitrox_WaitingUserInput": "Venter på brugerens input...",
-"Nitrox_LaunchGame": "Starter spil..."
+"Nitrox_LaunchGame": "Starter spil...",
+"Nitrox_SilencedChatNotif": "Chat er nu slået fra"
 }

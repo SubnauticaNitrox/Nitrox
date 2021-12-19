@@ -1,5 +1,5 @@
 {
-"version": 1,
+"version": 2,
 // Main menu
 "Nitrox_Multiplayer": "Multiplayer",
 "Nitrox_AddServer": "Sunucu Ekle",
@@ -18,6 +18,9 @@
 "Nitrox_EnterName": "Oyuncu İsmi",
 "Nitrox_SubmitPassword": "Gönder",
 "Nitrox_MultiplayerLoaded": "Multiplayer istemcisi yüklendi...",
+"Nitrox_StreamerSettings": "Streamer modu",
+"Nitrox_SilenceChat": "Sohbeti sessize al",
+"Nitrox_HideIp": "IP adreslerini gizle",
 // In game menu
 "Nitrox_LoadingScreenWarn": "Oyunu bozacak hatalar",
 "Nitrox_WorldSettling": "Dünya Yerleşimi Bekleniyor",
@@ -35,5 +38,6 @@
 "Nitrox_DisconnectedSession": "Sunucu bağlantısı kesildi",
 "Nitrox_WaitingPassword": "Sunucu şifresi girilmesi bekleniyor...",
 "Nitrox_WaitingUserInput": "Kullanıcı adı girilmesi bekleniyor...",
-"Nitrox_LaunchGame": "Oyun başlatılıyor..."
+"Nitrox_LaunchGame": "Oyun başlatılıyor...",
+"Nitrox_SilencedChatNotif": "Sohbet artık sessiz"
 }

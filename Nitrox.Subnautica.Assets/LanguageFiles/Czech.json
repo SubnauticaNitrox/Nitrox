@@ -1,5 +1,5 @@
 {
-"version": 1
+"version": 2,
 // Main menu
 "Nitrox_Multiplayer": "Multiplayer",
 "Nitrox_AddServer": "Přidat Server",
@@ -18,6 +18,9 @@
 "Nitrox_EnterName": "Jméno Hráče",
 "Nitrox_SubmitPassword": "Potvrdit",
 "Nitrox_MultiplayerLoaded": "Multiplayerový klient načten...",
+"Nitrox_StreamerSettings": "Režim streamování",
+"Nitrox_SilenceChat": "Tichý chat",
+"Nitrox_HideIp": "Skrýt IP adresu",
 // In game menu
 "Nitrox_LoadingScreenWarn": "Očekávejte herní chyby které mohou kazit hru",
 "Nitrox_WorldSettling": "Čekání na načtení světa",
@@ -35,5 +38,6 @@
 "Nitrox_DisconnectedSession": "Odpojen ze serveru",
 "Nitrox_WaitingPassword": "Čekání na zadání serverového hesla...",
 "Nitrox_WaitingUserInput": "Čekání na uživatelský vstup...",
-"Nitrox_LaunchGame": "Spouštení hry..."
+"Nitrox_LaunchGame": "Spouštení hry...",
+"Nitrox_SilencedChatNotif": "Chat je nyní tichý"
 }

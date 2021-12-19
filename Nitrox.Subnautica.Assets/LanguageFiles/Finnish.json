@@ -1,5 +1,5 @@
 {
-"version": 1,
+"version": 2,
 // Main menu
 "Nitrox_Multiplayer": "Moninpeli",
 "Nitrox_AddServer": "Lisää palvelin",
@@ -18,6 +18,9 @@
 "Nitrox_EnterName": "Pelaaja nimi",
 "Nitrox_SubmitPassword": "Syötä salasana",
 "Nitrox_MultiplayerLoaded": "Moninpeli ladattu...",
+"Nitrox_StreamerSettings": "Streamer-tila",
+"Nitrox_SilenceChat": "Mykistä chat",
+"Nitrox_HideIp": "Piilota IP-osoitteet",
 // In game menu
 "Nitrox_LoadingScreenWarn": "Odota peliä rikkovia bugeja ja pelin kaatumista",
 "Nitrox_WorldSettling": "Odotetaan mailman asettumista",
@@ -36,5 +39,6 @@
 "Nitrox_DisconnectedSession": "Yhteys palvelimeen on katkaistu",
 "Nitrox_WaitingPassword": "Odotetaan palvelimen salasanan syöttöä...",
 "Nitrox_WaitingUserInput": "Odotetaan käyttäjän syöttöä...",
-"Nitrox_LaunchGame": "Käynnistetään peliä..."
+"Nitrox_LaunchGame": "Käynnistetään peliä...",
+"Nitrox_SilencedChatNotif": "Keskustelu on nyt mykistetty"
 }

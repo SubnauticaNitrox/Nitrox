@@ -1,5 +1,5 @@
 {
-"version": 1,
+"version": 2,
 // Main menu
 "Nitrox_Multiplayer": "Сетевая игра",
 "Nitrox_AddServer": "Добавить сервер",
@@ -18,6 +18,9 @@
 "Nitrox_EnterName": "Имя игрока",
 "Nitrox_SubmitPassword": "Принять",
 "Nitrox_MultiplayerLoaded": "Загрузка сетевой игры...",
+"Nitrox_StreamerSettings": "Режим стримера",
+"Nitrox_SilenceChat": "Отключить звук в чате",
+"Nitrox_HideIp": "Скрыть IP-адреса",
 // In game menu
 "Nitrox_LoadingScreenWarn": "Осторожно, иногда могут возникать ошибки",
 "Nitrox_WorldSettling": "Ожидание настроек сервера",
@@ -35,5 +38,6 @@
 "Nitrox_DisconnectedSession": "Отключение от сервера",
 "Nitrox_WaitingPassword": "Ожидание ввода пароля сервера...",
 "Nitrox_WaitingUserInput": "Ожидание ввода данных пользователем...",
-"Nitrox_LaunchGame": "Загрузка игры..."
+"Nitrox_LaunchGame": "Загрузка игры...",
+"Nitrox_SilencedChatNotif": "Чат теперь отключен"
 }

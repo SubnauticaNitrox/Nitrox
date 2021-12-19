@@ -20,7 +20,7 @@
 "Nitrox_MultiplayerLoaded": "Multiplayer client loaded...",
 "Nitrox_StreamerSettings": "Streamer mode",
 "Nitrox_SilenceChat": "Silence chat",
-"Nitrox_HideIp": "Hide IPs",
+"Nitrox_HideIp": "Hide IP address",
 // In game menu
 "Nitrox_LoadingScreenWarn": "Expect game-breaking bugs",
 "Nitrox_WorldSettling": "Awaiting World Settling",
@@ -40,5 +40,5 @@
 "Nitrox_WaitingPassword": "Waiting for server password input...",
 "Nitrox_WaitingUserInput": "Waiting for user input...",
 "Nitrox_LaunchGame": "Launching game...",
-"Nitrox_SilencedChatNotif": "Chat is silenced"
+"Nitrox_SilencedChatNotif": "Chat is now silent"
 }

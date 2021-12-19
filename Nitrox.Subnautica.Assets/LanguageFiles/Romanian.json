@@ -1,5 +1,5 @@
 {
-"version": 1,
+"version": 2,
 // Main menu
 "Nitrox_Multiplayer": "Multiplayer",
 "Nitrox_AddServer": "Adaugă server",
@@ -18,6 +18,9 @@
 "Nitrox_EnterName": "Introdu numele de jucător",
 "Nitrox_SubmitPassword": "Trimite parola",
 "Nitrox_MultiplayerLoaded": "Clientul Multiplayer încărcat...",
+"Nitrox_StreamerSettings": "Mod Streamer",
+"Nitrox_SilenceChat": "Ascundeți chat-ul",
+"Nitrox_HideIp": "Ascundeți adresele IP",
 // In game menu
 "Nitrox_LoadingScreenWarn": "Așteptă-te la bug-uri care pot strica jocul",
 "Nitrox_WorldSettling": "În așteptarea stabilirii lumii",
@@ -35,5 +38,6 @@
 "Nitrox_DisconnectedSession": "Deconectat de la server",
 "Nitrox_WaitingPassword": "Se așteaptă introducerea parolei serverului...",
 "Nitrox_WaitingUserInput": "Se așteaptă datele introduse de utilizator...",
-"Nitrox_LaunchGame": "Se lansează jocul..."
+"Nitrox_LaunchGame": "Se lansează jocul...",
+"Nitrox_SilencedChatNotif": "Chat-ul este acum dezactivat"
 }

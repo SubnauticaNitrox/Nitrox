@@ -1,5 +1,5 @@
 {
-"version": 1,
+"version": 2,
 // Main menu
 "Nitrox_Multiplayer": "Gra wieloosobowa",
 "Nitrox_AddServer": "Dodaj serwer",
@@ -18,6 +18,9 @@
 "Nitrox_EnterName": "Nazwa gracza",
 "Nitrox_SubmitPassword": "Potwierdź",
 "Nitrox_MultiplayerLoaded": "Klient wieloosobowy wczytany...",
+"Nitrox_StreamerSettings": "Tryb Streamera",
+"Nitrox_SilenceChat": "Wycisz czat",
+"Nitrox_HideIp": "Ukryj adresy IP",
 // In game menu
 "Nitrox_LoadingScreenWarn": "Spodziewaj się błędów utrudniających rozgrywkę",
 "Nitrox_WorldSettling": "Oczekiwanie na osadzenie świata",
@@ -35,5 +38,6 @@
 "Nitrox_DisconnectedSession": "Odłączono od serwera",
 "Nitrox_WaitingPassword": "Oczekiwanie na wprowadzenie hasła do serwera...",
 "Nitrox_WaitingUserInput": "Oczekiwanie na dane od użytkownika...",
-"Nitrox_LaunchGame": "Uruchamianie gry..."
+"Nitrox_LaunchGame": "Uruchamianie gry...",
+"Nitrox_SilencedChatNotif": "Czat jest teraz wyciszony"
 }
