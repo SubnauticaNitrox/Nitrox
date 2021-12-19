@@ -43,7 +43,10 @@ namespace NitroxPatcher.Patches.Persistent
 
                 foreach (string key in json.Keys)
                 {
-                    ___strings[key] = (string)json[key];
+                    if (json[key].IsString)
+                    {
+                        ___strings[key] = (string)json[key];
+                    }
                 }
             }
 
