@@ -5,7 +5,6 @@ using System.Reflection.Emit;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 
@@ -22,7 +21,7 @@ namespace NitroxPatcher.Patches.Dynamic
         public static void Postfix(CyclopsSonarButton __instance)
         {
             NitroxId id = NitroxEntity.GetId(__instance.subRoot.gameObject);
-            NitroxServiceLocator.LocateService<Cyclops>().BroadcastSonarPing(id);
+            Resolve<Cyclops>().BroadcastSonarPing(id);
         }
 
 
@@ -75,7 +74,7 @@ namespace NitroxPatcher.Patches.Dynamic
                  */
                 if (instruction.opcode.Equals(OpCodes.Brtrue))
                 {
-                    if (instructionList[i - 1].opcode.Equals(OpCodes.Ldloc_1) && instructionList[i + 1].opcode.Equals(OpCodes.Ldarg_0))
+                    if (instructionList[i - 1].opcode.Equals(OpCodes.Call) && instructionList[i + 1].opcode.Equals(OpCodes.Ldarg_0))
                     {
                         instruction.operand = toInjectJump;
                     }
@@ -129,8 +128,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public override void Patch(Harmony harmony)
         {
-            PatchPostfix(harmony, TARGET_METHOD);
-            PatchTranspiler(harmony, TARGET_METHOD);
+            PatchMultiple(harmony, TARGET_METHOD, postfix: true, transpiler: true);
         }
     }
 }
