@@ -6,8 +6,6 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyProduct("Nitrox Bootloader")]
-[assembly: AssemblyTitle("Simple loader that initiates code to be loaded into the game from Nitrox's install location")]
 [assembly: AssemblyDescription("Simple loader that initiates code to be loaded into the game from Nitrox's install location")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
@@ -31,4 +29,4 @@ using System.Runtime.InteropServices;
 // COMMON: [assembly: AssemblyVersion("X.X.X.X")]
 // COMMON: [assembly: AssemblyFileVersion("X.X.X.X")]
 
-[assembly: InternalsVisibleTo("NitroxTest")]
+[assembly: InternalsVisibleTo("Nitrox.Test")]

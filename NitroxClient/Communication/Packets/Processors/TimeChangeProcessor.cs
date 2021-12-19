@@ -1,5 +1,4 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxModel.Logger;
 using NitroxModel.Packets;
 using UnityEngine;
 

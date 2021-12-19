@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.Versioning;
 using System.Security.AccessControl;
 using System.Security.Principal;
 using Microsoft.Win32;
@@ -76,12 +77,13 @@ namespace NitroxModel.Platforms.OS.Windows
             try
             {
                 string identity = WindowsIdentity.GetCurrent().Name;
-                
-                DirectorySecurity flags = Directory.GetAccessControl(directory);
+
+                DirectoryInfo dir = new(directory);
+                DirectorySecurity flags = dir.GetAccessControl();
                 flags.AddAccessRule(new(identity, FileSystemRights.FullControl, InheritanceFlags.None, PropagationFlags.InheritOnly, AccessControlType.Allow));
                 flags.AddAccessRule(new (identity, FileSystemRights.FullControl, InheritanceFlags.ContainerInherit, PropagationFlags.InheritOnly, AccessControlType.Allow));
                 flags.AddAccessRule(new (identity, FileSystemRights.FullControl, InheritanceFlags.ObjectInherit, PropagationFlags.InheritOnly, AccessControlType.Allow));
-                Directory.SetAccessControl(directory, flags);
+                dir.SetAccessControl(flags);
                 return true;
             }
             catch (UnauthorizedAccessException)

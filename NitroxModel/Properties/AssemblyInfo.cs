@@ -1,13 +1,11 @@
 ﻿using System.Reflection;
-
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyProduct("Nitrox Model")]
-[assembly: AssemblyTitle("Shared code between the Nitrox projects like networking protocols and common data structures")]
 [assembly: AssemblyDescription("Shared code between the Nitrox projects like networking protocols and common data structures")]
 // COMMON: [assembly: AssemblyCompany("")]
 // COMMON: [assembly: AssemblyCopyright("")]
@@ -34,3 +32,5 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 // COMMON: [assembly: AssemblyVersion("X.X.X.X")]
 // COMMON: [assembly: AssemblyFileVersion("X.X.X.X")]
+
+[assembly: InternalsVisibleTo("Nitrox.Test")]

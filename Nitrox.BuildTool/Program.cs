@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using NitroxModel.Discovery;
 
-namespace BuildTool
+namespace Nitrox.BuildTool
 {
     /// <summary>
     ///     Entry point of the build automation project.

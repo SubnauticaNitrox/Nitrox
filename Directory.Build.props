@@ -1,8 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="PrepareForModding">
+<Project InitialTargets="PrepareForModding">
     <!-- Set default properties for all projects (can be overridden per project) -->
     <PropertyGroup>
-        <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+        <Version>1.5.0.1</Version>
         <LangVersion>10</LangVersion>
         <TestLibrary>false</TestLibrary>
         <NitroxLibrary>false</NitroxLibrary>
@@ -10,32 +9,15 @@
         <BuildToolDir>$(SolutionDir)Nitrox.BuildTool\bin\</BuildToolDir>
         <BuildGenDir>$(BuildToolDir)generated_files\</BuildGenDir>
         <BuildGenDllDir>$(BuildGenDir)publicized_assemblies\</BuildGenDllDir>
-        <PlatformTarget>AnyCPU</PlatformTarget>
-        <ErrorReport>prompt</ErrorReport>
-        <WarningLevel>4</WarningLevel>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <Prefer32Bit>false</Prefer32Bit>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-        <DefineConstants>TRACE;DEBUG</DefineConstants>
-        <OutputPath>bin\Debug\</OutputPath>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-        <DefineConstants>TRACE;RELEASE</DefineConstants>
-        <OutputPath>bin\Release\</OutputPath>
-        <DebugType>pdbonly</DebugType>
-        <DebugSymbols>false</DebugSymbols>
-        <Optimize>true</Optimize>
-        <PlatformTarget>AnyCPU</PlatformTarget>
-        <ErrorReport>prompt</ErrorReport>
-        <WarningLevel>4</WarningLevel>
-        <PathMap>$(MSBuildProjectDirectory)=$(MSBuildProjectName)</PathMap>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <ImplicitUsings>disable</ImplicitUsings>
+<!--        <PathMap>$(MSBuildProjectDirectory)=$(MSBuildProjectName)</PathMap>-->
     </PropertyGroup>
     
     <PropertyGroup Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(MSBuildProjectName), '^Nitrox.*$'))">
         <NitroxLibrary>true</NitroxLibrary>
-        <!-- Set default runtime target to windows (until we can do cross-platform code) -->
-        <RuntimeIdentifier>win</RuntimeIdentifier>
     </PropertyGroup>
     <PropertyGroup Condition="'$(NitroxLibrary)' == 'true' and '$(MSBuildProjectName)' != 'NitroxModel' and '$(MSBuildProjectName)' != 'NitroxServer' and '$(MSBuildProjectName)' != 'Nitrox.Bootloader' and '$(MSBuildProjectName)' != 'Nitrox.BuildTool'">
         <UnityModLibrary>true</UnityModLibrary>
@@ -44,25 +26,16 @@
         <TestLibrary>true</TestLibrary>
     </PropertyGroup>
 
-    <ItemGroup Condition="'$(NitroxLibrary)' == 'true'">
-        <!-- Include common assembly info if project name starts with Nitrox -->
-        <Compile Include="$(SolutionDir)AssemblyInfoCommon.cs">
-            <Link>Properties\AssemblyInfoCommon.cs</Link>
-        </Compile>
-    </ItemGroup>
-
     <!-- Include default project references to all other "Nitrox*" projects -->
     <Choose>
         <When Condition="'$(UnityModLibrary)' == 'true'">
             <ItemGroup>
                 <!-- Require other Nitrox projects (that need game DLLs) to wait on BuildTool. -->
                 <ProjectReference Include="$(SolutionDir)Nitrox.BuildTool\Nitrox.BuildTool.csproj">
-                    <Project>{15C4C9C4-683C-4EF0-9E0F-0664A3BDA0CE}</Project>
                     <Name>Nitrox.BuildTool</Name>
                     <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
                 </ProjectReference>
                 <ProjectReference Include="$(SolutionDir)NitroxModel\NitroxModel.csproj">
-                    <Project>{B16F4DE7-21AD-4FEF-955B-0A5A365FA4E3}</Project>
                     <Name>NitroxModel</Name>
                 </ProjectReference>
             </ItemGroup>
