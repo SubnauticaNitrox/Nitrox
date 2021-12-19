@@ -157,10 +157,10 @@ namespace NitroxClient.GameLogic
         public void ChangeEngineMode(NitroxId id, CyclopsMotorMode.CyclopsMotorModes mode)
         {
             GameObject cyclops = NitroxEntity.RequireObjectFrom(id);
-            CyclopsMotorMode motorMode = cyclops.RequireComponentInChildren<CyclopsMotorMode>();
-            if (motorMode.cyclopsMotorMode != mode)
+            CyclopsMotorModeButton motorModeButton = cyclops.RequireComponentInChildren<CyclopsMotorModeButton>();
+            if (motorModeButton.motorModeIndex != mode)
             {
-                motorMode.BroadcastMessage("SetCyclopsMotorMode", mode, SendMessageOptions.RequireReceiver);
+                motorModeButton.BroadcastMessage("SetCyclopsMotorMode", mode, SendMessageOptions.RequireReceiver);
             }
         }
 
