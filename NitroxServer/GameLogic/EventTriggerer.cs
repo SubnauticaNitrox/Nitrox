@@ -29,6 +29,12 @@ namespace NitroxServer.GameLogic
             private set => ElapsedTime = value * 1000;
         }
 
+        // Using ceiling because days count start at 1 and not 0
+        public int Day
+        {
+            get => (int) Math.Ceiling(ElapsedTime / TimeSpan.FromMinutes(20).TotalMilliseconds);
+        }
+
         public EventTriggerer(PlayerManager playerManager, double elapsedTime, double? auroraExplosionTime)
         {
             this.playerManager = playerManager;
