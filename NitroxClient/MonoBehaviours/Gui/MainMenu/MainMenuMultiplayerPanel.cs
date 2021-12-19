@@ -43,16 +43,21 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             savedGameAreaContent = loadedMultiplayerRef.RequireTransform("Scroll View/Viewport/SavedGameAreaContent");
             deleteButtonRef = savedGamesRef.GetComponent<MainMenuLoadPanel>().saveInstance.GetComponent<MainMenuLoadButton>().deleteButton;
 
-            CreateButton(Language.main.Get("Nitrox_AddServer"), ShowAddServerWindow);
+            CreateButton(translationKey: "Nitrox_AddServer", clickEvent: ShowAddServerWindow, disableTranslation: false);
             LoadSavedServers();
         }
 
-        private void CreateButton(string text, UnityAction clickEvent)
+        private void CreateButton(string translationKey, UnityAction clickEvent, bool disableTranslation)
         {
             GameObject multiplayerButtonInst = Instantiate(multiplayerButton, savedGameAreaContent, false);
             Transform txt = multiplayerButtonInst.RequireTransform("NewGameButton/Text");
-            txt.GetComponent<Text>().text = text;
-            Destroy(txt.GetComponent<TranslationLiveUpdate>());
+            txt.GetComponent<Text>().text = translationKey;
+
+            if (disableTranslation)
+            {
+                Destroy(txt.GetComponent<TranslationLiveUpdate>());
+            }
+
             Button multiplayerButtonButton = multiplayerButtonInst.RequireTransform("NewGameButton").GetComponent<Button>();
             multiplayerButtonButton.onClick = new Button.ButtonClickedEvent();
             multiplayerButtonButton.onClick.AddListener(clickEvent);
@@ -283,7 +288,8 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             {
                 Destroy(child.gameObject);
             }
-            CreateButton(Language.main.Get("Nitrox_AddServer"), ShowAddServerWindow);
+
+            CreateButton(translationKey: "Nitrox_AddServer", clickEvent: ShowAddServerWindow, disableTranslation: false);
             LoadSavedServers();
         }
     }
