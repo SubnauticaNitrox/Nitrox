@@ -1,5 +1,5 @@
 {
-"version": 2,
+"version": 3,
 // Main menu
 "Nitrox_Multiplayer": "Multiplayer",
 "Nitrox_AddServer": "Sunucu Ekle",
@@ -36,6 +36,7 @@
 "Nitrox_RequestingSessionPolicy": "Oturum bilgileri alınıyor...",
 "Nitrox_RejectedSessionPolicy": "Rezervasyon reddedildi...",
 "Nitrox_DisconnectedSession": "Sunucu bağlantısı kesildi",
+"Nitrox_Waiting": "Bağlantı kuyruğunda beklemek...",
 "Nitrox_WaitingPassword": "Sunucu şifresi girilmesi bekleniyor...",
 "Nitrox_WaitingUserInput": "Kullanıcı adı girilmesi bekleniyor...",
 "Nitrox_LaunchGame": "Oyun başlatılıyor...",

@@ -1,5 +1,5 @@
 {
-"version": 2,
+"version": 3,
 // Main menu
 "Nitrox_Multiplayer": "Gra wieloosobowa",
 "Nitrox_AddServer": "Dodaj serwer",
@@ -36,6 +36,7 @@
 "Nitrox_RequestingSessionPolicy": "Żądanie informacji o warunkach sesji...",
 "Nitrox_RejectedSessionPolicy": "Rezerwacja odrzucona...",
 "Nitrox_DisconnectedSession": "Odłączono od serwera",
+"Nitrox_Waiting": "Oczekiwanie w kolejce do dołączenia",
 "Nitrox_WaitingPassword": "Oczekiwanie na wprowadzenie hasła do serwera...",
 "Nitrox_WaitingUserInput": "Oczekiwanie na dane od użytkownika...",
 "Nitrox_LaunchGame": "Uruchamianie gry...",

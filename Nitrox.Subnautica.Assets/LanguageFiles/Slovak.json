@@ -1,5 +1,5 @@
 {
-"version": 2,
+"version": 3,
 // Main menu
 "Nitrox_Multiplayer": "Hrať spoločne",
 "Nitrox_AddServer": "Pridať server",
@@ -36,6 +36,7 @@
 "Nitrox_RequestingSessionPolicy": "Pýtam pravidlá relácie...",
 "Nitrox_RejectedSessionPolicy": "Rezervácia odmietnutá...",
 "Nitrox_DisconnectedSession": "Odpojený zo serveru",
+"Nitrox_Waiting": "Čakanie vo fronte pripojení...",
 "Nitrox_WaitingPassword": "Čakám na zadanie hesla...",
 "Nitrox_WaitingUserInput": "Čakám na vstup od používateľa...",
 "Nitrox_LaunchGame": "Spúštam hru...",

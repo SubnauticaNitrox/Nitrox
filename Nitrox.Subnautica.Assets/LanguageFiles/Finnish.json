@@ -1,5 +1,5 @@
 {
-"version": 2,
+"version": 3,
 // Main menu
 "Nitrox_Multiplayer": "Moninpeli",
 "Nitrox_AddServer": "Lisää palvelin",
@@ -35,8 +35,8 @@
 "Nitrox_InvalidUserName": "Syötä kelvollinen pelaaja nimi !\n\n Pelaaja nimi ei saa sisältää välilyöntejä tai merkkejä \n Sallitut merkit : A-Z a-z 0-9 _ . -\nLength : [3, 25]",
 "Nitrox_RequestingSessionPolicy": "Istuntokäytäntötietojen pyytäminen...",
 "Nitrox_RejectedSessionPolicy": "Varaus hylätty...",
-"Nitrox_Waiting": "Odotetaan liittymisjonossa...",
 "Nitrox_DisconnectedSession": "Yhteys palvelimeen on katkaistu",
+"Nitrox_Waiting": "Odotetaan liittymisjonossa...",
 "Nitrox_WaitingPassword": "Odotetaan palvelimen salasanan syöttöä...",
 "Nitrox_WaitingUserInput": "Odotetaan käyttäjän syöttöä...",
 "Nitrox_LaunchGame": "Käynnistetään peliä...",

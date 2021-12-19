@@ -1,5 +1,5 @@
 {
-"version": 2,
+"version": 3,
 // Main menu
 "Nitrox_Multiplayer": "Multiplayer",
 "Nitrox_AddServer": "Adaugă server",
@@ -36,6 +36,7 @@
 "Nitrox_RequestingSessionPolicy": "Se solicită informații despre politica sesiunii...",
 "Nitrox_RejectedSessionPolicy": "Rezervare respinsă...",
 "Nitrox_DisconnectedSession": "Deconectat de la server",
+"Nitrox_Waiting": "Așteptând în coadă de așteptare pentru a se alătura serverului",
 "Nitrox_WaitingPassword": "Se așteaptă introducerea parolei serverului...",
 "Nitrox_WaitingUserInput": "Se așteaptă datele introduse de utilizator...",
 "Nitrox_LaunchGame": "Se lansează jocul...",

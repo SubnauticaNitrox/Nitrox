@@ -1,5 +1,5 @@
 {
-"version": 2,
+"version": 3,
 // Main menu
 "Nitrox_Multiplayer": "Сетевая игра",
 "Nitrox_AddServer": "Добавить сервер",
@@ -36,6 +36,7 @@
 "Nitrox_RequestingSessionPolicy": "Запрос информации о политике сеанса...",
 "Nitrox_RejectedSessionPolicy": "Бронирование отклонено...",
 "Nitrox_DisconnectedSession": "Отключение от сервера",
+"Nitrox_Waiting": "Ожидание в очереди на подключение",
 "Nitrox_WaitingPassword": "Ожидание ввода пароля сервера...",
 "Nitrox_WaitingUserInput": "Ожидание ввода данных пользователем...",
 "Nitrox_LaunchGame": "Загрузка игры...",

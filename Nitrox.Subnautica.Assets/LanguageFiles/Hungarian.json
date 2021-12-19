@@ -1,5 +1,5 @@
 ﻿{
-"version": 2,
+"version": 3,
 // Main menu
 "Nitrox_Multiplayer": "Többjátékos mód",
 "Nitrox_AddServer": "Szerver hozzáadása",
@@ -36,6 +36,7 @@
 "Nitrox_RequestingSessionPolicy": "Munkamenet irányelvek lekérése...",
 "Nitrox_RejectedSessionPolicy": "A foglalás elutasítva...",
 "Nitrox_DisconnectedSession": "Kilépve a munkameneből",
+"Nitrox_Waiting": "Várakozás a várólistán",
 "Nitrox_WaitingPassword": "Várakozás a szerver jelszó megadására...",
 "Nitrox_WaitingUserInput": "Várakozás a felhasználóra...",
 "Nitrox_LaunchGame": "Játék indítása...",

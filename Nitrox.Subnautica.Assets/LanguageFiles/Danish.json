@@ -1,5 +1,5 @@
 {
-"version": 2,
+"version": 3,
 // Main menu
 "Nitrox_Multiplayer": "Multiplayer",
 "Nitrox_AddServer": "Tilføj server",
@@ -36,6 +36,7 @@
 "Nitrox_RequestingSessionPolicy": "Anmoder om sessionens politik...",
 "Nitrox_RejectedSessionPolicy": "Reservation afvist...",
 "Nitrox_DisconnectedSession": "Afbrudt fra server",
+"Nitrox_Waiting": "Venter i forbindelseskøen...",
 "Nitrox_WaitingPassword": "Venter på serveradgangskode...",
 "Nitrox_WaitingUserInput": "Venter på brugerens input...",
 "Nitrox_LaunchGame": "Starter spil...",
