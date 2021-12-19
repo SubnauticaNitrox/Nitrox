@@ -27,6 +27,7 @@ namespace NitroxClient.MonoBehaviours
 
         public void OnGUI()
         {
+#if DEBUG
             if (!isDebugging)
             {
                 return;
@@ -40,10 +41,12 @@ namespace NitroxClient.MonoBehaviours
             {
                 debugger.OnGUI();
             }
+#endif
         }
 
         public void Update()
         {
+#if DEBUG
             if (Input.GetKeyDown(EnableDebuggerHotkey))
             {
                 ToggleDebugging();
@@ -58,14 +61,12 @@ namespace NitroxClient.MonoBehaviours
 
                 CheckDebuggerHotkeys();
 
-                foreach (BaseDebugger debugger in Debuggers)
+                foreach (BaseDebugger debugger in Debuggers.Where(debugger => debugger.Enabled))
                 {
-                    if (debugger.Enabled)
-                    {
-                        debugger.Update();
-                    }
+                    debugger.Update();
                 }
             }
+#endif
         }
 
         public void ToggleDebugging()

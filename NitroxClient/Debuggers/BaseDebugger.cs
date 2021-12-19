@@ -79,30 +79,19 @@ namespace NitroxClient.Debuggers
             DERIVEDCOPY
         }
 
-        public DebuggerTab AddTab(DebuggerTab tab)
+        protected DebuggerTab AddTab(string name, Action render)
         {
-            Validate.NotNull(tab);
-
+            DebuggerTab tab = new(name, render);
             tabs.Add(tab.Name, tab);
             return tab;
         }
 
-        public DebuggerTab AddTab(string name, Action render)
-        {
-            return AddTab(new DebuggerTab(name, render));
-        }
-
         public string GetHotkeyString()
         {
-            if (Hotkey == KeyCode.None)
-            {
-                return "";
-            }
-
-            return $"{(HotkeyControlRequired ? "CTRL+" : "")}{(HotkeyAltRequired ? "ALT+" : "")}{(HotkeyShiftRequired ? "SHIFT+" : "")}{Hotkey}";
+            return Hotkey == KeyCode.None ? "" : $"{(HotkeyControlRequired ? "CTRL+" : "")}{(HotkeyAltRequired ? "ALT+" : "")}{(HotkeyShiftRequired ? "SHIFT+" : "")}{Hotkey}";
         }
 
-        public Optional<DebuggerTab> GetTab(string name)
+        protected Optional<DebuggerTab> GetTab(string name)
         {
             Validate.NotNull(name);
 
