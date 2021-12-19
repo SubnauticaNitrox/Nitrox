@@ -132,6 +132,12 @@ namespace NitroxServer.GameLogic
             return new MultiplayerSessionReservation(correlationId, playerId, reservationKey);
         }
 
+        public void NonPlayerDisconnected(NitroxConnection connection)
+        {
+            // Remove any requests sent by the connection from the join queue
+            JoinQueue = new(JoinQueue.Where(pair => !Equals(pair.Key, connection)));
+        }
+
         public Player PlayerConnected(NitroxConnection connection, string reservationKey, out bool wasBrandNewPlayer)
         {
             PlayerContext playerContext = reservations[reservationKey];
@@ -179,9 +185,6 @@ namespace NitroxServer.GameLogic
 
         public void PlayerDisconnected(NitroxConnection connection)
         {
-            // Remove any requests sent by the connection from the join queue
-            JoinQueue = new(JoinQueue.Where(item => !Equals(item.Key, connection)));
-
             assetsByConnection.TryGetValue(connection, out ConnectionAssets assetPackage);
             if (assetPackage == null)
             {
