@@ -16,8 +16,10 @@ namespace NitroxPatcher.Patches.Persistent
         {
             string[] files = {
                 Path.Combine(NitroxUser.LauncherPath, "LanguageFiles", "English.json"), // Using English as fallback.
-                Path.Combine(NitroxUser.LauncherPath, "LanguageFiles", language + ".json")
+                Path.Combine(NitroxUser.LauncherPath, "LanguageFiles", $"{language}.json")
             };
+
+            int maxVersion = -1;
 
             foreach (string file in files)
             {
@@ -38,6 +40,22 @@ namespace NitroxPatcher.Patches.Persistent
                     {
                         Log.Error(ex, $"Error while reading language file {language}.json");
                         return;
+                    }
+                }
+
+                if (json.ContainsKey("version"))
+                {
+                    int localVersion = (int)json["version"];
+
+                    if (maxVersion == -1)
+                    {
+                        maxVersion = localVersion;
+                    }
+
+                    if (maxVersion > localVersion)
+                    {
+                        Log.Warn($"{file} is outdated (current version: {localVersion}, latest: {maxVersion})");
+                        Log.InGame($"Selected language is outdated (current version: {localVersion}, latest: {maxVersion})");
                     }
                 }
 
