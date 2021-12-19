@@ -13,7 +13,7 @@ namespace NitroxLauncher.Models.Patching
     internal sealed class NitroxEntryPatch
     {
         public const string GAME_ASSEMBLY_NAME = "Assembly-CSharp.dll";
-        public const string NITROX_ASSEMBLY_NAME = "Nitrox.Bootloader.dll";
+        public const string NITROX_ASSEMBLY_NAME = "NitroxPatcher.dll";
         public const string GAME_ASSEMBLY_MODIFIED_NAME = "Assembly-CSharp-Nitrox.dll";
 
         private const string NITROX_ENTRY_TYPE_NAME = "Main";
@@ -22,7 +22,7 @@ namespace NitroxLauncher.Models.Patching
         private const string GAME_INPUT_TYPE_NAME = "GameInput";
         private const string GAME_INPUT_METHOD_NAME = "Awake";
 
-        private const string NITROX_EXECUTE_INSTRUCTION = "System.Void Nitrox.Bootloader.Main::Execute()";
+        private const string NITROX_EXECUTE_INSTRUCTION = "System.Void NitroxPatcher.Main::Execute()";
 
         private readonly Func<string> subnauticaBasePathFunc;
         private string subnauticaManagedPath => Path.Combine(subnauticaBasePathFunc(), "Subnautica_Data", "Managed");

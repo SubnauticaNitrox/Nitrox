@@ -10,7 +10,7 @@ using NitroxModel.Helper;
 
 namespace NitroxPatcher
 {
-    static class TranspilerHelper
+    internal static class TranspilerHelper
     {
         private static readonly MethodInfo serviceLocator = typeof(NitroxServiceLocator)
             .GetMethod(nameof(NitroxServiceLocator.LocateService), BindingFlags.Static | BindingFlags.Public, null, new Type[] { }, null);

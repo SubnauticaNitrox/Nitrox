@@ -1,184 +1,129 @@
 ﻿global using NitroxModel.Logger;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using Autofac;
-using HarmonyLib;
-using HarmonyLib.Tools;
-using NitroxClient;
-using NitroxClient.MonoBehaviours;
-using NitroxModel.Core;
-using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper;
+using System.Runtime.CompilerServices;
+using JetBrains.Annotations;
+using Microsoft.Win32;
 using NitroxModel_Subnautica.Logger;
-using NitroxPatcher.Modules;
-using NitroxPatcher.Patches;
 using UnityEngine;
 
-namespace NitroxPatcher
+namespace NitroxPatcher;
+
+public static class Main
 {
-    public static class Main
+    private static readonly Lazy<string> nitroxLauncherDir = new(() =>
     {
-        /// <summary>
-        ///     Dependency Injection container used by NitroxPatcher only.
-        /// </summary>
-        private static IContainer container;
-
-        private static readonly Harmony harmony = new Harmony("com.nitroxmod.harmony");
-        private static bool isApplied;
-        private static readonly char[] newLineChars = Environment.NewLine.ToCharArray();
-
-        public static void Execute()
+        // Get path from command args.
+        string[] args = Environment.GetCommandLineArgs();
+        for (int i = 0; i < args.Length - 1; i++)
         {
-            Log.Setup(inGameLogger: new SubnauticaInGameLogger(), useConsoleLogging: false);
-            Application.logMessageReceived += (condition, stackTrace, type) =>
+            if (args[i].Equals("-nitrox", StringComparison.OrdinalIgnoreCase) && Directory.Exists(args[i + 1]))
             {
-                switch (type)
-                {
-                    case LogType.Error:
-                    case LogType.Exception:
-                        string toWrite = condition;
-                        if (!string.IsNullOrWhiteSpace(stackTrace))
-                        {
-                            toWrite += Environment.NewLine + stackTrace;
-                        }
-                        Log.ErrorUnity(toWrite.Trim(newLineChars));
-                        break;
-                    case LogType.Warning:
-                    case LogType.Log:
-                    case LogType.Assert:
-                        // These logs from Unity spam too much uninteresting stuff
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(type), type, null);
-                }
-            };
-
-            Log.Info($"Using Nitrox version {Assembly.GetExecutingAssembly().GetName().Version} built on {File.GetCreationTimeUtc(Assembly.GetExecutingAssembly().Location)}");
-            try
-            {
-                Initialize();
-            }
-            catch (Exception ex)
-            { // Placeholder for popup gui
-                Log.Error(ex, "Unhandled exception occurred while initializing Nitrox:");
+                return Path.GetFullPath(args[i + 1]);
             }
         }
 
-        private static void Initialize()
+        // Get path from environment variable.
+        string envPath = Environment.GetEnvironmentVariable("NITROX_LAUNCHER_PATH");
+        if (Directory.Exists(envPath))
         {
-            Optional.ApplyHasValueCondition<UnityEngine.Object>(o => (bool)o);
-
-            if (container != null)
-            {
-                throw new Exception($"Patches have already been detected! Call {nameof(Apply)} or {nameof(Restore)} instead.");
-            }
-            Log.Info("Registering dependencies");
-            container = CreatePatchingContainer();
-            try
-            {
-                NitroxServiceLocator.InitializeDependencyContainer(new ClientAutoFacRegistrar());
-            }
-            catch (ReflectionTypeLoadException ex)
-            {
-                Log.Error($"Failed to load one or more dependency types for Nitrox. Assembly: {ex.Types.FirstOrDefault()?.Assembly.FullName ?? "unknown"}");
-                foreach (Exception loaderEx in ex.LoaderExceptions)
-                {
-                    Log.Error(loaderEx);
-                }
-                throw;
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex, "Error while initializing and loading dependencies.");
-                throw;
-            }
-
-            InitPatches();
-            ApplyNitroxBehaviours();
+            return envPath;
         }
 
-        public static void Apply()
+        // Get path from windows registry.
+        using RegistryKey nitroxRegKey = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Nitrox");
+        if (nitroxRegKey == null)
         {
-            Validate.NotNull(container, "No patches have been discovered yet! Run Execute() first.");
-            if (isApplied)
-            {
-                return;
-            }
-
-            foreach (IDynamicPatch patch in container.Resolve<IDynamicPatch[]>())
-            {
-                Log.Debug($"Applying dynamic patch {patch.GetType().Name}");
-                try
-                {
-                    patch.Patch(harmony);
-                }
-                catch (Exception e)
-                {
-                    Log.Error($"Error patching {patch.GetType().Name}. Error: {e.Message}");
-                }
-            }
-
-            isApplied = true;
+            return null;
         }
 
-        /// <summary>
-        ///     If the player starts the main menu for the first time, or returns from a (multiplayer) session, get rid of all the
-        ///     patches if applicable.
-        /// </summary>
-        public static void Restore()
+        string path = nitroxRegKey.GetValue("LauncherPath") as string;
+        return Directory.Exists(path) ? path : null;
+    });
+
+    private static readonly char[] newLineChars = Environment.NewLine.ToCharArray();
+
+    /// <summary>
+    ///     Entrypoint of Nitrox. Code in this method cannot use other dependencies (DLLs) without crashing
+    ///     due to <see cref="AppDomain.AssemblyResolve" /> not being called.
+    ///     Use the <see cref="Init" /> method or later before using dependency code.
+    /// </summary>
+    [UsedImplicitly]
+    public static void Execute()
+    {
+        AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
+        AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += CurrentDomainOnAssemblyResolve;
+
+        if (nitroxLauncherDir.Value == null)
         {
-            Validate.NotNull(container, "No patches have been discovered yet! Run Execute() first.");
-            if (!isApplied)
+            Console.WriteLine("Nitrox will not load because launcher path was not provided.");
+            return;
+        }
+
+        Environment.SetEnvironmentVariable("NITROX_LAUNCHER_PATH", nitroxLauncherDir.Value);
+
+        Init();
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static void Init()
+    {
+        Log.Setup(inGameLogger: new SubnauticaInGameLogger(), useConsoleLogging: false);
+        Application.logMessageReceived += (condition, stackTrace, type) =>
+        {
+            switch (type)
             {
-                return;
+                case LogType.Error:
+                case LogType.Exception:
+                    string toWrite = condition;
+                    if (!string.IsNullOrWhiteSpace(stackTrace))
+                    {
+                        toWrite += Environment.NewLine + stackTrace;
+                    }
+                    Log.ErrorUnity(toWrite.Trim(newLineChars));
+                    break;
+                case LogType.Warning:
+                case LogType.Log:
+                case LogType.Assert:
+                    // These logs from Unity spam too much uninteresting stuff
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
+        };
 
-            foreach (IDynamicPatch patch in container.Resolve<IDynamicPatch[]>())
-            {
-                Log.Debug($"Restoring dynamic patch {patch.GetType().Name}");
-                patch.Restore(harmony);
-            }
-
-            isApplied = false;
-        }
-
-        private static void InitPatches()
+        Log.Info($"Using Nitrox version {Assembly.GetExecutingAssembly().GetName().Version} built on {File.GetCreationTimeUtc(Assembly.GetExecutingAssembly().Location)}");
+        try
         {
-            Log.Info("Patching Subnautica...");
-
-            // Enabling this creates a log file on your desktop (why there?), showing the emitted IL instructions.
-            HarmonyFileLog.Enabled = false;
-
-            foreach (IPersistentPatch patch in container.Resolve<IEnumerable<IPersistentPatch>>())
-            {
-                Log.Debug($"Applying persistent patch {patch.GetType().Name}");
-                patch.Patch(harmony);
-            }
-
-            Multiplayer.OnBeforeMultiplayerStart += Apply;
-            Multiplayer.OnAfterMultiplayerEnd += Restore;
-            Log.Info("Completed patching");
+            Patcher.Initialize();
         }
-
-        private static IContainer CreatePatchingContainer()
+        catch (Exception ex)
         {
-            ContainerBuilder builder = new ContainerBuilder();
-            builder.RegisterModule(new NitroxPatchesModule());
-            return builder.Build();
+            // Placeholder for popup gui
+            Log.Error(ex, "Unhandled exception occurred while initializing Nitrox:");
         }
+    }
 
-        private static void ApplyNitroxBehaviours()
+    private static Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)
+    {
+        string dllFileName = args.Name.Split(',')[0];
+        if (!dllFileName.EndsWith(".dll"))
         {
-            Log.Info("Applying Nitrox behaviours..");
-
-            GameObject nitroxRoot = new GameObject();
-            nitroxRoot.name = "Nitrox";
-            nitroxRoot.AddComponent<NitroxBootstrapper>();
-
-            Log.Info("Behaviours applied.");
+            dllFileName += ".dll";
         }
+
+        // Load DLLs where Nitrox launcher is first, if not found, use Subnautica's DLLs.
+        string dllPath = Path.Combine(nitroxLauncherDir.Value, "lib", dllFileName);
+        if (!File.Exists(dllPath))
+        {
+            dllPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), dllFileName);
+        }
+
+        if (!File.Exists(dllPath))
+        {
+            Console.WriteLine($"Nitrox dll missing: {dllPath}");
+        }
+        return Assembly.LoadFile(dllPath);
     }
 }

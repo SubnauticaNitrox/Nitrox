@@ -197,18 +197,18 @@ namespace NitroxLauncher
 #endif
 
             // TODO: The launcher should override FileRead win32 API for the Subnautica process to give it the modified Assembly-CSharp from memory 
-            string bootloaderName = "Nitrox.Bootloader.dll";
+            string initDllName = "NitroxPatcher.dll";
             try
             {
                 File.Copy(
-                    Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "lib", bootloaderName),
-                    Path.Combine(Config.SubnauticaPath, "Subnautica_Data", "Managed", bootloaderName),
+                    Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? "", "lib", initDllName),
+                    Path.Combine(Config.SubnauticaPath, "Subnautica_Data", "Managed", initDllName),
                     true
                 );
             }
             catch (IOException ex)
             {
-                Log.Error(ex, "Unable to move bootloader dll to Managed folder. Still attempting to launch because it might exist from previous runs.");
+                Log.Error(ex, "Unable to move initialization dll to Managed folder. Still attempting to launch because it might exist from previous runs.");
             }
 
             // Try inject Nitrox into Subnautica code.
