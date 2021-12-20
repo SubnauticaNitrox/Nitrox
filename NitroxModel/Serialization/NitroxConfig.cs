@@ -31,7 +31,7 @@ namespace NitroxModel.Serialization
                 Dictionary<string, MemberInfo> typeCachedDict = GetTypeCacheDictionary();
                 using StreamReader reader = new(new FileStream(FileName, FileMode.Open), Encoding.UTF8);
 
-                HashSet<MemberInfo> unserializedMembers = typeCachedDict.Values.ToHashSet();
+                HashSet<MemberInfo> unserializedMembers = new HashSet<MemberInfo>(typeCachedDict.Values);
                 char[] lineSeparator = { '=' };
                 int lineNum = 0;
                 string readLine;

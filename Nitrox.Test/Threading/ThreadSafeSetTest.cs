@@ -16,7 +16,7 @@ namespace NitroxTest.Threading
         {
             int iterations = 500000;
 
-            ThreadSafeSet<string> comeGetMe = new(iterations);
+            ThreadSafeSet<string> comeGetMe = new();
             List<long> countsRead = new();
             long addCount = 0;
 
@@ -43,7 +43,7 @@ namespace NitroxTest.Threading
         {
             int iterations = 500000;
 
-            ThreadSafeSet<string> comeGetMe = new(iterations);
+            ThreadSafeSet<string> comeGetMe = new();
             long addCount = 0;
             long iterationsReadMany = 0;
 

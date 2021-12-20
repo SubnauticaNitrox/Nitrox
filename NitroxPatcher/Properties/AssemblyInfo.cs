@@ -1,13 +1,11 @@
 ﻿using System.Reflection;
-
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyProduct("Nitrox Patcher")]
-[assembly: AssemblyTitle("Defines new code that matches against Subnautica code to extend it for multiplayer support")]
 [assembly: AssemblyDescription("Defines new code that matches against Subnautica code to extend it for multiplayer support")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
@@ -30,3 +28,5 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 // COMMON: [assembly: AssemblyVersion("X.X.X.X")]
 // COMMON: [assembly: AssemblyFileVersion("X.X.X.X")]
+
+[assembly: InternalsVisibleTo("Nitrox.Test")]
