@@ -1,8 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nitrox.BuildTool", "Nitrox.BuildTool\Nitrox.BuildTool.csproj", "{CB7FAEFC-D9C0-40B8-A6D5-8B284683E79E}"
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nitrox.BuildTool", "Nitrox.BuildTool\Nitrox.BuildTool.csproj", "{CB7FAEFC-D9C0-40B8-A6D5-8B284683E79E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NitroxModel", "NitroxModel\NitroxModel.csproj", "{EBEBC7DC-FAE3-4FBC-BDD3-38ED8FC072D9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NitroxModel", "NitroxModel\NitroxModel.csproj", "{EBEBC7DC-FAE3-4FBC-BDD3-38ED8FC072D9}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Nitrox.Subnautica.Assets", "Nitrox.Subnautica.Assets\Nitrox.Subnautica.Assets.shproj", "{0763D551-B1A8-4960-B88A-98833F957936}"
 EndProject
@@ -12,21 +15,24 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFolder", "SolutionF
 		Directory.Build.targets = Directory.Build.targets
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NitroxLauncher", "NitroxLauncher\NitroxLauncher.csproj", "{59EB8953-864F-4147-A210-7FC97E1A5294}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NitroxLauncher", "NitroxLauncher\NitroxLauncher.csproj", "{59EB8953-864F-4147-A210-7FC97E1A5294}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NitroxPatcher", "NitroxPatcher\NitroxPatcher.csproj", "{39E377AD-2163-4428-952D-EBECD402C8F3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NitroxPatcher", "NitroxPatcher\NitroxPatcher.csproj", "{39E377AD-2163-4428-952D-EBECD402C8F3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NitroxModel-Subnautica", "NitroxModel-Subnautica\NitroxModel-Subnautica.csproj", "{47D774E0-750C-427B-8C38-F8F985114A2E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NitroxModel-Subnautica", "NitroxModel-Subnautica\NitroxModel-Subnautica.csproj", "{47D774E0-750C-427B-8C38-F8F985114A2E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NitroxClient", "NitroxClient\NitroxClient.csproj", "{5453E724-5A8B-46A4-850B-1F17FA2E938D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NitroxClient", "NitroxClient\NitroxClient.csproj", "{5453E724-5A8B-46A4-850B-1F17FA2E938D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NitroxServer-Subnautica", "NitroxServer-Subnautica\NitroxServer-Subnautica.csproj", "{77692FDB-F713-41F1-B2AB-9019457B8909}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NitroxServer-Subnautica", "NitroxServer-Subnautica\NitroxServer-Subnautica.csproj", "{77692FDB-F713-41F1-B2AB-9019457B8909}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NitroxServer", "NitroxServer\NitroxServer.csproj", "{0CD6846B-EDA6-4FFD-A540-2A46CC1074BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NitroxServer", "NitroxServer\NitroxServer.csproj", "{0CD6846B-EDA6-4FFD-A540-2A46CC1074BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nitrox.Test", "Nitrox.Test\Nitrox.Test.csproj", "{E4D8C360-34E4-4BE6-909F-3791DD9169B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nitrox.Test", "Nitrox.Test\Nitrox.Test.csproj", "{E4D8C360-34E4-4BE6-909F-3791DD9169B5}"
 EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Nitrox.Subnautica.Assets\Nitrox.Subnautica.Assets.projitems*{0763d551-b1a8-4960-b88a-98833f957936}*SharedItemsImports = 13
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -68,5 +74,11 @@ Global
 		{E4D8C360-34E4-4BE6-909F-3791DD9169B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E4D8C360-34E4-4BE6-909F-3791DD9169B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E4D8C360-34E4-4BE6-909F-3791DD9169B5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F0F6A3CF-233A-421E-B923-810C284F4827}
 	EndGlobalSection
 EndGlobal
