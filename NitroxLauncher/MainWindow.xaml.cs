@@ -1,17 +1,22 @@
 ﻿using System;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Net.NetworkInformation;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
+using NitroxLauncher.Install.Core;
 using NitroxLauncher.Models.Events;
 using NitroxLauncher.Models.Properties;
 using NitroxLauncher.Pages;
 using NitroxModel.Discovery;
 using NitroxModel.Helper;
+using NitroxModel.Platforms.OS.Shared;
 
 namespace NitroxLauncher
 {
@@ -39,6 +44,9 @@ namespace NitroxLauncher
 
         public MainWindow()
         {
+            // Ensure the working directory is always where the .exe is
+            Directory.SetCurrentDirectory(NitroxUser.CurrentExecutableDirectory);
+            
             Log.Setup();
             LauncherNotifier.Setup();
             
@@ -52,7 +60,7 @@ namespace NitroxLauncher
             LauncherLogic.Server.ServerExited += ServerExited;
 
             InitializeComponent();
-
+            
             // Pirate trigger should happen after UI is loaded.
             Loaded += (sender, args) =>
             {
@@ -66,6 +74,40 @@ namespace NitroxLauncher
                                     MessageBoxImage.Error);
                     Environment.Exit(1);
                 }
+
+                Dispatcher dispatcher = Dispatcher.CurrentDispatcher;
+                Task.Run(() =>
+                {
+                    InstallResult[] results = logic.Install().ToArray();
+                    InstallResult[] adminResults = results.Where(r => r.AuthorizationRequired).ToArray();
+                    if (adminResults.Any())
+                    {
+                        dispatcher.BeginInvoke(() =>
+                        {
+                            MessageBox.Show(Application.Current.MainWindow!,
+                                            InstallResult.GetPrettyErrorMessage(adminResults, "Restart Nitrox Launcher as admin to allow Nitrox to install properly for the first time. Nitrox will close after this message."),
+                                            "Administrator required",
+                                            MessageBoxButton.OK,
+                                            MessageBoxImage.Error);
+                            Environment.Exit(1);
+                        });
+                    }
+                    else
+                    {
+                        string message = InstallResult.GetPrettyErrorMessage(results, "Nitrox might have problems running properly because some install steps failed:");
+                        if (message != null)
+                        {
+                            dispatcher.BeginInvoke(() =>
+                            {
+                                MessageBox.Show(Application.Current.MainWindow!,
+                                                message,
+                                                "Install errors occurred",
+                                                MessageBoxButton.OK,
+                                                MessageBoxImage.Warning);
+                            });
+                        }
+                    }
+                });
                 
                 // This pirate detection subscriber is immediately invoked if pirate has been detected right now.
                 PirateDetection.PirateDetected += (o, eventArgs) =>

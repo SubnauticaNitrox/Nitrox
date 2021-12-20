@@ -58,5 +58,10 @@ namespace NitroxModel.Helper
             get => RegistryEx.Read<string>(PREFERRED_GAMEPATH_REGKEY);
             set => RegistryEx.Write(PREFERRED_GAMEPATH_REGKEY, value);
         }
+
+        private static string currentExecutablePath;
+
+        public static string CurrentExecutablePath => currentExecutablePath ??= Assembly.GetEntryAssembly()?.Location ?? Assembly.GetExecutingAssembly().Location;
+        public static string CurrentExecutableDirectory = Path.GetDirectoryName(CurrentExecutablePath);
     }
 }
