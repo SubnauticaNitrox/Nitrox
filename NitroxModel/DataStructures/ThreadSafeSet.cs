@@ -26,11 +26,6 @@ namespace NitroxModel.DataStructures
             set = new HashSet<T>();
         }
 
-        public ThreadSafeSet(int capacity)
-        {
-            set = new HashSet<T>(capacity);
-        }
-
         public ThreadSafeSet(HashSet<T> set, bool createCopy = true)
         {
             if (set == null || createCopy)

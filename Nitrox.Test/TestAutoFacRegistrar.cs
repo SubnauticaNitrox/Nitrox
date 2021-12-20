@@ -1,7 +1,7 @@
 ﻿using Autofac;
-using Moq;
 using NitroxClient.Debuggers;
 using NitroxModel.Core;
+using NSubstitute;
 
 namespace NitroxTest
 {
@@ -9,7 +9,7 @@ namespace NitroxTest
     {
         public void RegisterDependencies(ContainerBuilder containerBuilder)
         {
-            containerBuilder.RegisterInstance(new Mock<INetworkDebugger>().Object).As<INetworkDebugger>().SingleInstance();
+            containerBuilder.RegisterInstance(Substitute.For<INetworkDebugger>()).As<INetworkDebugger>().SingleInstance();
         }
     }
 }
