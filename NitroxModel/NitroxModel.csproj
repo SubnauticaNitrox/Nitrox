@@ -19,15 +19,15 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Reference Include="LZ4, Version=1.0.15.93, Culture=neutral, PublicKeyToken=null">
-            <HintPath>..\Nitrox.Subnautica.Assets\LZ4.dll</HintPath>
-        </Reference>
-        <Reference Include="protobuf-net, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-            <HintPath>..\Nitrox.Subnautica.Assets\protobuf-net.dll</HintPath>
-        </Reference>
-        <Reference Include="Serilog.Sinks.Map, Version=1.0.3.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10">
-            <HintPath>..\Nitrox.Subnautica.Assets\Serilog.Sinks.Map.dll</HintPath>
-        </Reference>
+      <Reference Include="LZ4">
+        <HintPath>..\Nitrox.Assets.Subnautica\LZ4.dll</HintPath>
+      </Reference>
+      <Reference Include="protobuf-net">
+        <HintPath>..\Nitrox.Assets.Subnautica\protobuf-net.dll</HintPath>
+      </Reference>
+      <Reference Include="Serilog.Sinks.Map">
+        <HintPath>..\Nitrox.Assets.Subnautica\Serilog.Sinks.Map.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
 </Project>
