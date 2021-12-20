@@ -19,7 +19,7 @@
 
     <ItemGroup>
         <Reference Include="protobuf-net, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-            <HintPath>..\Nitrox.Subnautica.Assets\protobuf-net.dll</HintPath>
+            <HintPath>..\Nitrox.Assets.Subnautica\protobuf-net.dll</HintPath>
         </Reference>
     </ItemGroup>
 
