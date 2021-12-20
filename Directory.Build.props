@@ -22,7 +22,7 @@
     <PropertyGroup Condition="'$(NitroxLibrary)' == 'true' and '$(MSBuildProjectName)' != 'NitroxModel' and '$(MSBuildProjectName)' != 'NitroxServer' and '$(MSBuildProjectName)' != 'Nitrox.BuildTool'">
         <UnityModLibrary>true</UnityModLibrary>
     </PropertyGroup>
-    <PropertyGroup Condition="'$(MSBuildProjectName)' == 'NitroxTest'">
+    <PropertyGroup Condition="'$(MSBuildProjectName)' == 'Nitrox.Test'">
         <TestLibrary>true</TestLibrary>
     </PropertyGroup>
 
