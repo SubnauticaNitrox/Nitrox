@@ -3,6 +3,7 @@ using HarmonyLib;
 using NitroxClient.Communication.Abstract;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.DataStructures;
 using Story;
 
 namespace NitroxPatcher.Patches.Dynamic
@@ -15,7 +16,7 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             if (!StoryGoalManager.main.completedGoals.Contains(key))
             {
-                StoryEventSend packet = new((StoryEventSend.EventType)goalType, key);
+                StoryEventSend packet = new(goalType.ToDto(), key);
                 Resolve<IPacketSender>().Send(packet);
             }
         }

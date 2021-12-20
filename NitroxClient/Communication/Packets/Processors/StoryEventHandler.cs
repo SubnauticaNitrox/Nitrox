@@ -2,6 +2,7 @@
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.DataStructures;
 using Story;
 
 namespace NitroxClient.Communication.Packets.Processors
@@ -28,7 +29,7 @@ namespace NitroxClient.Communication.Packets.Processors
                     using (packetSender.Suppress<StoryEventSend>())
                     using (packetSender.Suppress<PDALogEntryAdd>())
                     {
-                        StoryGoal.Execute(packet.Key, (Story.GoalType)packet.Type);
+                        StoryGoal.Execute(packet.Key, packet.Type.ToUnity());
                     }
                     break;
                 case StoryEventSend.EventType.EXTRA:
