@@ -1,8 +1,6 @@
 ﻿using System;
-using System.ComponentModel;
 using System.IO;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using NitroxLauncher.Pages;
@@ -140,23 +138,31 @@ namespace NitroxLauncher
 
         public void NavigateTo(Type page)
         {
-            if (page != null && (page.IsSubclassOf(typeof(Page)) || page == typeof(Page)))
+            if (page == null)
             {
-                if (Server.IsManagedByLauncher && page == typeof(ServerPage))
-                {
-                    page = typeof(ServerConsolePage);
-                }
-
-                if (Application.Current.MainWindow != null)
-                {
-                    ((MainWindow)Application.Current.MainWindow).FrameContent = Application.Current.FindResource(page.Name);
-                }
+                throw new ArgumentNullException(nameof(page));
             }
+            if (!page.IsSubclassOf(typeof(Page)) && page != typeof(Page))
+            {
+                throw new ArgumentException("Argument must be a type of page to navigate to", nameof(page));
+            }
+            if (Application.Current.MainWindow is not MainWindow window)
+            {
+                throw new InvalidOperationException($"{nameof(MainWindow)} is not initialized");
+            }
+            
+            // Rewrite type if server is already running so it opens the correct page.
+            if (Server.IsManagedByLauncher && page == typeof(ServerPage))
+            {
+                page = typeof(ServerConsolePage);
+            }
+            
+            window.FrameContent = Application.Current.FindResource(page.Name);
         }
 
         public void NavigateTo<TPage>() where TPage : Page => NavigateTo(typeof(TPage));
 
-        public bool NavigationIsOn<TPage>() where TPage : Page => Application.Current.MainWindow is MainWindow window && window.FrameContent is TPage;
+        public bool NavigationIsOn<TPage>() where TPage : Page => Application.Current.MainWindow is MainWindow { FrameContent: TPage };
 
         internal async Task StartSingleplayerAsync()
         {
@@ -250,27 +256,6 @@ namespace NitroxLauncher
             };
 
             return game ?? throw new Exception($"Unable to start game through {platform.Name}");
-        }
-
-        private void OnSubnauticaExited(object sender, EventArgs e)
-        {
-            try
-            {
-                nitroxEntryPatch.Remove();
-                Log.Info("Finished removing patches!");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                Log.Error(ex);
-            }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
