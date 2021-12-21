@@ -23,8 +23,8 @@ namespace NitroxClient.GameLogic.Settings
             // Examples:
             // AddSetting("Subtitles", new Setting("Test Slidder", NitroxPrefs.SliderPref, newValue => NitroxPrefs.SliderPref.Value = newValue, 0.1f, 1f, 0.4f));
             // AddSetting("Advanced", new Setting("Test list", NitroxPrefs.ListPref, newIndex => NitroxPrefs.ListPref.Value = newIndex, new string[] { "option 1", "option 2", "option 3" }));
-            AddSetting(Language.main.Get("Nitrox_StreamerSettings"), new Setting(Language.main.Get("Nitrox_SilenceChat"), NitroxPrefs.SilenceChat, silence => NitroxPrefs.SilenceChat.Value = silence));
-            AddSetting(Language.main.Get("Nitrox_StreamerSettings"), new Setting(Language.main.Get("Nitrox_HideIp"), NitroxPrefs.HideIp, hide =>
+            AddSetting("Nitrox_StreamerSettings", new Setting("Nitrox_SilenceChat", NitroxPrefs.SilenceChat, silence => NitroxPrefs.SilenceChat.Value = silence));
+            AddSetting("Nitrox_StreamerSettings", new Setting("Nitrox_HideIp", NitroxPrefs.HideIp, hide =>
             {
                 NitroxPrefs.HideIp.Value = hide;
                 MainMenuMultiplayerPanel.Main.RefreshServerEntries();

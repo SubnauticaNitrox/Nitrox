@@ -16,7 +16,7 @@ namespace NitroxPatcher.Patches.Persistent
         {
             string[] files = {
                 Path.Combine(NitroxUser.LauncherPath, "LanguageFiles", "English.json"), // Using English as fallback.
-                Path.Combine(NitroxUser.LauncherPath, "LanguageFiles", language + ".json")
+                Path.Combine(NitroxUser.LauncherPath, "LanguageFiles", $"{language}.json")
             };
 
             foreach (string file in files)
@@ -43,7 +43,10 @@ namespace NitroxPatcher.Patches.Persistent
 
                 foreach (string key in json.Keys)
                 {
-                    ___strings[key] = (string)json[key];
+                    if (json[key].IsString)
+                    {
+                        ___strings[key] = (string)json[key];
+                    }
                 }
             }
 
