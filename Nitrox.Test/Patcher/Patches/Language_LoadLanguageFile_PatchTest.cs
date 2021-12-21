@@ -13,6 +13,8 @@ namespace Nitrox.Test.Patcher.Patches
         private string languageFolder, defaultFile;
         private JsonData defaultLanguage;
 
+        public TestContext TestContext { get; set; }
+        
         [TestInitialize]
         public void Sanity()
         {
@@ -42,6 +44,8 @@ namespace Nitrox.Test.Patcher.Patches
             Assert.IsTrue(files.Length > 0);
             Assert.IsTrue(defaultLanguage.Keys.Count > 0);
 
+            List<string> failedLanguageFiles = new();
+            Lazy<HashSet<string>> defaultKeySet = new(() => defaultLanguage.Keys.ToHashSet());
             foreach (string file in files)
             {
                 using StreamReader streamReader = new(file);
@@ -50,13 +54,27 @@ namespace Nitrox.Test.Patcher.Patches
 
                 if (json.Keys.Count != defaultLanguage.Keys.Count)
                 {
-                    List<string> missingdiff = defaultLanguage.Keys.Where(key => !json.ContainsKey(key)).ToList();
-                    List<string> addeddiff = json.Keys.Where(key => !defaultLanguage.ContainsKey(key)).ToList();
+                    IEnumerable<string> missingKeys = defaultKeySet.Value.Except(json.Keys).ToArray();
+                    IEnumerable<string> overflowingKeys = json.Keys.ToHashSet().Except(defaultKeySet.Value).ToArray();
 
-                    Assert.Inconclusive(
-                        $"{file} structure is incorrect:\n'{string.Join(", ", missingdiff)}' keys are missing;\n '{string.Join(", ", addeddiff)}' keys shouldn't be here"
-                    );
+                    string fileName = Path.GetFileName(file);
+                    TestContext.WriteLine($"{fileName} structure is incorrect:");
+                    if (missingKeys.Any())
+                    {
+                        TestContext.WriteLine($"\t - Missing keys: {string.Join(", ", missingKeys)}");
+                    }
+                    if (overflowingKeys.Any())
+                    {
+                        TestContext.WriteLine($"\t - Keys not in default language: {string.Join(", ", overflowingKeys)}");                        
+                    }
+                    
+                    failedLanguageFiles.Add(file);
                 }
+            }
+
+            if (failedLanguageFiles.Any())
+            {
+                Assert.Inconclusive($"Language files with problems: {string.Join(", ", failedLanguageFiles.Select(Path.GetFileName))}");
             }
         }
     }
