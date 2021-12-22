@@ -70,6 +70,17 @@ namespace NitroxLauncher.Models.Utils
             }
         }
 
+        internal static void CheckClientFirewallRules()
+        {
+            string clientRuleName = "Subnautica";
+            string clientPath = Path.Combine(LauncherLogic.Config.SubnauticaPath, "Subnautica.exe");
+
+            if (!FirewallRuleExists(clientRuleName))
+            {
+                AddFirewallRule(clientRuleName, clientPath);
+            }
+        }
+
         private static bool FirewallRuleExists(string name) => FirewallManager.Instance.Rules.Any(rule => rule.FriendlyName == name);
 
         private static void AddFirewallRule(string name, string filePath)
