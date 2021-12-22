@@ -230,6 +230,7 @@ namespace NitroxLauncher
             }
 
             WindowsHelper.CheckClientFirewallRules();
+            WindowsHelper.CheckHamachiFirewallRules();
 
             gameProcess = await StartSubnauticaAsync();
         }

@@ -40,6 +40,7 @@ namespace NitroxLauncher
             }
 
             WindowsHelper.CheckServerFirewallRules();
+            WindowsHelper.CheckHamachiFirewallRules();
 
             string launcherDir = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
             string serverPath = Path.Combine(launcherDir, SERVER_EXECUTABLE);

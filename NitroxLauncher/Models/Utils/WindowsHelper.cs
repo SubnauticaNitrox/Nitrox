@@ -64,10 +64,7 @@ namespace NitroxLauncher.Models.Utils
             string serverRuleName = "nitroxserver-subnautica.exe";
             string serverPath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), ServerLogic.SERVER_EXECUTABLE);
 
-            if (!FirewallRuleExists(serverRuleName))
-            {
-                AddFirewallRule(serverRuleName, serverPath);
-            }
+            AddExclusiveFirewallRule(serverRuleName, serverPath);
         }
 
         internal static void CheckClientFirewallRules()
@@ -75,9 +72,30 @@ namespace NitroxLauncher.Models.Utils
             string clientRuleName = "Subnautica";
             string clientPath = Path.Combine(LauncherLogic.Config.SubnauticaPath, "Subnautica.exe");
 
-            if (!FirewallRuleExists(clientRuleName))
+            AddExclusiveFirewallRule(clientRuleName, clientPath);
+        }
+
+        internal static void CheckHamachiFirewallRules()
+        {
+            string hamachiBasePath = @"C:\Program Files (x86)\LogMeIn Hamachi";
+
+            if (!Directory.Exists(hamachiBasePath))
             {
-                AddFirewallRule(clientRuleName, clientPath);
+                return;
+            }
+
+            string hamachiUiPath = Path.Combine(hamachiBasePath, "hamachi-2-ui.exe");
+            AddExclusiveFirewallRule("Hamachi Client Application", hamachiUiPath);
+
+            string hamachiExePath = Path.Combine(hamachiBasePath, "x64", "hamachi-2.exe");
+            AddExclusiveFirewallRule("Hamachi Client Tunneling Engine", hamachiExePath);
+        }
+
+        private static void AddExclusiveFirewallRule(string name, string filePath)
+        {
+            if (!FirewallRuleExists(name))
+            {
+                AddFirewallRule(name, filePath);
             }
         }
 
