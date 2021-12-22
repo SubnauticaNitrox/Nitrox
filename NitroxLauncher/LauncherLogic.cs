@@ -229,6 +229,8 @@ namespace NitroxLauncher
                 LauncherNotifier.Info("Detected QModManager in the game folder");
             }
 
+            WindowsHelper.CheckClientFirewallRules();
+
             gameProcess = await StartSubnauticaAsync();
         }
 

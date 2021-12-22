@@ -1,9 +1,6 @@
 ﻿using System;
-using System.IO;
-using System.Reflection;
 using System.Windows;
 using NitroxLauncher.Models;
-using NitroxLauncher.Models.Utils;
 
 namespace NitroxLauncher.Pages
 {
@@ -24,8 +21,6 @@ namespace NitroxLauncher.Pages
         {
             try
             {
-                WindowsHelper.CheckServerFirewallRules();
-
                 LauncherLogic.Server.StartServer(RBIsExternal.IsChecked == true);
             }
             catch (Exception ex)

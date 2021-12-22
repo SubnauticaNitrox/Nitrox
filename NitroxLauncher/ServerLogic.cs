@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using NitroxLauncher.Models.Events;
+using NitroxLauncher.Models.Utils;
 
 namespace NitroxLauncher
 {
@@ -37,6 +38,8 @@ namespace NitroxLauncher
             {
                 throw new Exception("An instance of Nitrox Server is already running");
             }
+
+            WindowsHelper.CheckServerFirewallRules();
 
             string launcherDir = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
             string serverPath = Path.Combine(launcherDir, SERVER_EXECUTABLE);

@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.Windows;
 using NitroxLauncher.Models;
-using NitroxLauncher.Models.Utils;
 using NitroxModel;
 using NitroxModel.Discovery;
 
@@ -46,8 +45,6 @@ namespace NitroxLauncher.Pages
         {
             try
             {
-                WindowsHelper.CheckClientFirewallRules();
-
                 await LauncherLogic.Instance.StartMultiplayerAsync();
             }
             catch (Exception ex)
