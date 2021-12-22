@@ -39,7 +39,7 @@ namespace NitroxServer.Communication.Packets.Processors
 
             List<EquippedItemData> equippedItems = player.GetEquipment();
             List<NitroxTechType> techTypes = equippedItems.Select(equippedItem => equippedItem.TechType).ToList();
-            List<ItemData> inventoryItems = GetInventoryItems(player.GameObjectId);
+            List<ItemData> inventoryItems = GetInventoryItems(player.GameObjectId);            
 
             PlayerJoinedMultiplayerSession playerJoinedPacket = new(player.PlayerContext, player.SubRootId, techTypes, inventoryItems);
             playerManager.SendPacketToOtherPlayers(playerJoinedPacket, player);
@@ -74,6 +74,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 player.QuickSlotsBinding,
                 world.GameData.PDAState.GetInitialPDAData(),
                 world.GameData.StoryGoals.GetInitialStoryGoalData(scheduleKeeper),
+                new HashSet<string>(player.CompletedGoals),
                 player.Position,
                 player.SubRootId,
                 player.Stats,

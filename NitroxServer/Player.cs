@@ -32,11 +32,12 @@ namespace NitroxServer
         public PlayerStatsData Stats { get; set; }
         public NitroxVector3? LastStoredPosition { get; set; }
         public Optional<NitroxId> LastStoredSubRootID { get; set; }
+        public ThreadSafeSet<string> CompletedGoals { get; }
 
         public Player(ushort id, string name, bool isPermaDeath, PlayerContext playerContext, NitroxConnection connection,
                       NitroxVector3 position, NitroxId playerId, Optional<NitroxId> subRootId, Perms perms, PlayerStatsData stats,
                       IEnumerable<NitroxTechType> usedItems, IEnumerable<string> quickSlotsBinding,
-                      IEnumerable<EquippedItemData> equippedItems, IEnumerable<EquippedItemData> modules)
+                      IEnumerable<EquippedItemData> equippedItems, IEnumerable<EquippedItemData> modules, HashSet<string> completedGoals)
         {
             Id = id;
             Name = name;
@@ -55,6 +56,7 @@ namespace NitroxServer
             this.equippedItems = new ThreadSafeList<EquippedItemData>(equippedItems);
             this.modules = new ThreadSafeList<EquippedItemData>(modules);
             visibleCells = new ThreadSafeSet<AbsoluteEntityCell>();
+            CompletedGoals = new ThreadSafeSet<string>(completedGoals);
         }
 
         public static bool operator ==(Player left, Player right)
