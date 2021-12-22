@@ -16,6 +16,7 @@ namespace NitroxClient.GameLogic
     {
         private readonly IPacketSender packetSender;
         private readonly Vehicles vehicles;
+        private static List<NitroxId> skipSonarTurnoff = new();
 
         public Cyclops(IPacketSender packetSender, Vehicles vehicles)
         {
@@ -220,15 +221,20 @@ namespace NitroxClient.GameLogic
         public void ChangeSonarMode(NitroxId id, bool isOn)
         {
             GameObject cyclops = NitroxEntity.RequireObjectFrom(id);
-            CyclopsSonarButton sonar = cyclops.RequireComponentInChildren<CyclopsSonarButton>();
-            if (sonar != null)
+            CyclopsSonarButton sonarButton = cyclops.GetComponentInChildren<CyclopsSonarButton>();
+            if (sonarButton && sonarButton.image)
             {
                 using (packetSender.Suppress<CyclopsChangeSonarMode>())
                 {
-                    // At this moment the code is "non functional" as for some reason changing the sprite will never happen
-                    // Also setting sonar as active will never work
-                    sonar.sonarActive = isOn;
-                    sonar.image.sprite = isOn ? sonar.activeSprite : sonar.inactiveSprite;
+                    if (isOn)
+                    {
+                        skipSonarTurnoff.Add(id);
+                    }
+                    else
+                    {
+                        skipSonarTurnoff.Remove(id);
+                    }
+                    sonarButton.sonarActive = isOn;
                 }
             }
         }
@@ -430,6 +436,12 @@ namespace NitroxClient.GameLogic
                     }
                 }
             }
+        }
+
+        public bool ShouldSonarTurnoff(NitroxId cyclopsId)
+        {
+            // Return the opposite because, if we want to skip the turnoff (true), we should not turn it off (false)
+            return !skipSonarTurnoff.Contains(cyclopsId);
         }
     }
 }

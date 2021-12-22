@@ -10,7 +10,7 @@ using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
-    class CyclopsSonarButton_SonarPing_Patch : NitroxPatch, IDynamicPatch
+    public class CyclopsSonarButton_SonarPing_Patch : NitroxPatch, IDynamicPatch
     {
         public static readonly MethodInfo TARGET_METHOD = Reflect.Method((CyclopsSonarButton t) => t.SonarPing());
         public static readonly OpCode JUMP_TARGET_CODE = OpCodes.Ldsfld;

@@ -14,8 +14,7 @@ namespace NitroxPatcher.Patches.Dynamic
         public static void Postfix(CyclopsSonarButton __instance)
         {
             NitroxId id = NitroxEntity.GetId(__instance.subRoot.gameObject);
-            bool activeSonar = __instance.sonarActive;
-            Resolve<Cyclops>().BroadcastChangeSonarState(id, activeSonar);
+            Resolve<Cyclops>().BroadcastChangeSonarState(id, __instance.sonarActive);
         }
 
         public override void Patch(Harmony harmony)
