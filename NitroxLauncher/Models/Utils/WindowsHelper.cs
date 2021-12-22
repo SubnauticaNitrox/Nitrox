@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Security.Principal;
 using System.Windows;
+using WindowsFirewallHelper;
 
 namespace NitroxLauncher.Models.Utils
 {
@@ -55,6 +58,28 @@ namespace NitroxLauncher.Models.Utils
                 Log.Info("Can't restart the launcher as administrator, we already have permissions");
             }
         }
-    }
 
+        internal static void CheckServerFirewallRules()
+        {
+            string serverRuleName = "nitroxserver-subnautica.exe";
+            string serverPath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), ServerLogic.SERVER_EXECUTABLE);
+
+            if (!FirewallRuleExists(serverRuleName))
+            {
+                AddFirewallRule(serverRuleName, serverPath);
+            }
+        }
+
+        private static bool FirewallRuleExists(string name) => FirewallManager.Instance.Rules.Any(rule => rule.FriendlyName == name);
+
+        private static void AddFirewallRule(string name, string filePath)
+        {
+            IFirewallRule rule = FirewallManager.Instance.CreateApplicationRule(name, FirewallAction.Allow, filePath);
+            rule.Direction = FirewallDirection.Inbound;
+            rule.Protocol = FirewallProtocol.Any;
+            rule.IsEnable = true;
+
+            FirewallManager.Instance.Rules.Add(rule);
+        }
+    }
 }
