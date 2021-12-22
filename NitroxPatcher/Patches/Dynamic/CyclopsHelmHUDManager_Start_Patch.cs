@@ -1,6 +1,10 @@
 ﻿using System.Reflection;
 using HarmonyLib;
+using NitroxClient.GameLogic;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.Helper;
+using NitroxModel_Subnautica.DataStructures.GameLogic;
+using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
@@ -10,8 +14,10 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(CyclopsHelmHUDManager __instance)
         {
+            GameObject cyclopsObject = __instance.transform.parent.gameObject;
+            CyclopsModel cyclops = Resolve<Vehicles>().GetVehicles<CyclopsModel>(NitroxEntity.GetId(cyclopsObject));
             __instance.hudActive = true;
-            __instance.engineToggleAnimator.SetTrigger(__instance.motorMode.engineOn ? "EngineOn" : "EngineOff");
+            __instance.engineToggleAnimator.SetTrigger(cyclops.EngineState ? "EngineOn" : "EngineOff");
         }
 
         public override void Patch(Harmony harmony)

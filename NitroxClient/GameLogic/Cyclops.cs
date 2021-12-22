@@ -129,7 +129,6 @@ namespace NitroxClient.GameLogic
         {
             GameObject cyclops = NitroxEntity.RequireObjectFrom(id);
             CyclopsEngineChangeState engineState = cyclops.RequireComponentInChildren<CyclopsEngineChangeState>();
-            CyclopsMotorMode motorMode = cyclops.RequireComponentInChildren<CyclopsMotorMode>();
 
             if (isOn == engineState.motorMode.engineOn)
             {
@@ -157,10 +156,14 @@ namespace NitroxClient.GameLogic
         public void ChangeEngineMode(NitroxId id, CyclopsMotorMode.CyclopsMotorModes mode)
         {
             GameObject cyclops = NitroxEntity.RequireObjectFrom(id);
-            CyclopsMotorModeButton motorModeButton = cyclops.RequireComponentInChildren<CyclopsMotorModeButton>();
-            if (motorModeButton.motorModeIndex != mode)
+            foreach (CyclopsMotorModeButton button in cyclops.GetComponentsInChildren<CyclopsMotorModeButton>())
             {
-                motorModeButton.BroadcastMessage("SetCyclopsMotorMode", mode, SendMessageOptions.RequireReceiver);
+                // At initial sync, this kind of processor is executed before the Start()
+                if (button.subRoot == null)
+                {
+                    button.Start();
+                }
+                button.SetCyclopsMotorMode(mode);
             }
         }
 
@@ -217,7 +220,7 @@ namespace NitroxClient.GameLogic
         public void ChangeSonarMode(NitroxId id, bool isOn)
         {
             GameObject cyclops = NitroxEntity.RequireObjectFrom(id);
-            CyclopsSonarButton sonar = cyclops.GetComponentInChildren<CyclopsSonarButton>();
+            CyclopsSonarButton sonar = cyclops.RequireComponentInChildren<CyclopsSonarButton>();
             if (sonar != null)
             {
                 using (packetSender.Suppress<CyclopsChangeSonarMode>())
