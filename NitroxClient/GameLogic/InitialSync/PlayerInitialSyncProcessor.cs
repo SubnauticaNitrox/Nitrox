@@ -34,7 +34,7 @@ namespace NitroxClient.GameLogic.InitialSync
             yield return null;
 
             SetPlayerGameMode(packet.GameMode);
-            waitScreenItem.SetProgress(.8f);
+            waitScreenItem.SetProgress(0.8f);
             yield return null;
 
             SetPlayerCompletedGoals(packet.CompletedGoals);
