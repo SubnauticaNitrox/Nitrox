@@ -2,10 +2,15 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
 using System.Reflection;
 using System.Security.Principal;
 using System.Windows;
 using WindowsFirewallHelper;
+using WindowsFirewallHelper.Addresses;
+using WindowsFirewallHelper.FirewallRules;
 
 namespace NitroxLauncher.Models.Utils
 {
@@ -77,18 +82,47 @@ namespace NitroxLauncher.Models.Utils
 
         internal static void CheckHamachiFirewallRules()
         {
-            string hamachiBasePath = @"C:\Program Files (x86)\LogMeIn Hamachi";
+            static IPAddress GetHamachiAddress()
+            {
+                foreach (NetworkInterface networkInterface in NetworkInterface.GetAllNetworkInterfaces())
+                {
+                    if (networkInterface.Name == "Hamachi")
+                    {
+                        foreach (UnicastIPAddressInformation addressInfo in networkInterface.GetIPProperties().UnicastAddresses)
+                        {
+                            if (addressInfo.Address.AddressFamily == AddressFamily.InterNetwork)
+                            {
+                                return addressInfo.Address;
+                            }
+                        }
+                    }
+                }
 
-            if (!Directory.Exists(hamachiBasePath))
+                return null;
+            }
+
+            if (GetHamachiAddress() == null || !FirewallWASRule.IsLocallySupported)
             {
                 return;
             }
 
-            string hamachiUiPath = Path.Combine(hamachiBasePath, "hamachi-2-ui.exe");
-            AddExclusiveFirewallRule("Hamachi Client Application", hamachiUiPath);
+            foreach (IFirewallRule firewallRule in FirewallManager.Instance.Rules)
+            {
+                if (firewallRule.Name == "Hamachi")
+                {
+                    return;
+                }
+            }
 
-            string hamachiExePath = Path.Combine(hamachiBasePath, "x64", "hamachi-2.exe");
-            AddExclusiveFirewallRule("Hamachi Client Tunneling Engine", hamachiExePath);
+            FirewallWASRule rule = new("Hamachi", FirewallAction.Allow, FirewallDirection.Inbound, FirewallManager.Instance.GetActiveProfile().Type)
+            {
+                Description = "Ignore Hamachi network",
+                Protocol = FirewallProtocol.Any,
+                RemoteAddresses = new[] { new NetworkAddress(GetHamachiAddress()) },
+                IsEnable = true
+            };
+
+            FirewallManager.Instance.Rules.Add(rule);
         }
 
         private static void AddExclusiveFirewallRule(string name, string filePath)
