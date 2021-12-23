@@ -19,13 +19,7 @@ public static class NatHelper
     public static async Task<bool> DeletePortMappingAsync(ushort port, Protocol protocol)
     {
         Mapping mapping = new(protocol, port, port);
-        return await MonoNatHelper.GetFirstAsync(async d =>
-        {
-            Log.Debug($"Trying to delete port rule on device: {d.DeviceEndpoint}");
-            Mapping result = await d.DeletePortMapAsync(mapping).ConfigureAwait(false);
-            Log.Debug($"Deleted port rule on {d.DeviceEndpoint}: {mapping}");
-            return result != null;
-        }).ConfigureAwait(false);
+        return await MonoNatHelper.GetFirstAsync(async d => await d.DeletePortMapAsync(mapping).ConfigureAwait(false) != null).ConfigureAwait(false);
     }
 
     public static async Task<Mapping> GetPortMappingAsync(ushort port, Protocol protocol)
@@ -46,13 +40,7 @@ public static class NatHelper
     public static async Task<bool> AddPortMappingAsync(ushort port, Protocol protocol)
     {
         Mapping mapping = new(protocol, port, port);
-        return await MonoNatHelper.GetFirstAsync(async d =>
-        {
-            Log.Debug($"Trying to create port rule on device: {d.DeviceEndpoint}");
-            Mapping result = await d.CreatePortMapAsync(mapping).ConfigureAwait(false);
-            Log.Debug($"Created port rule on {d.DeviceEndpoint}: {mapping}");
-            return result != null;
-        }).ConfigureAwait(false);
+        return await MonoNatHelper.GetFirstAsync(async d => await d.CreatePortMapAsync(mapping).ConfigureAwait(false) != null).ConfigureAwait(false);
     }
 
     private static class MonoNatHelper
