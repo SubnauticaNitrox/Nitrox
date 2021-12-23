@@ -17,7 +17,7 @@ namespace NitroxServer
         private readonly WorldPersistence worldPersistence;
         private readonly ServerConfig serverConfig;
         private readonly Timer saveTimer;
-        private readonly World world;
+        public readonly World World;
         private readonly EntityManager entityManager;
         private CancellationTokenSource serverCancelSource;
 
@@ -33,7 +33,7 @@ namespace NitroxServer
             this.worldPersistence = worldPersistence;
             this.serverConfig = serverConfig;
             this.server = server;
-            this.world = world;
+            this.World = world;
             this.entityManager = entityManager;
 
             Instance = this;
@@ -55,18 +55,18 @@ namespace NitroxServer
                 // Note for later additions: order these lines by their length
                 StringBuilder builder = new("\n");
                 builder.AppendLine($" - Save location: {Path.GetFullPath(serverConfig.SaveName)}");
-                builder.AppendLine($" - Current time: day {world.EventTriggerer.Day} ({Math.Floor(world.EventTriggerer.ElapsedSeconds)}s)");
-                builder.AppendLine($" - Scheduled goals stored: {world.GameData.StoryGoals.ScheduledGoals.Count}");
-                builder.AppendLine($" - Story goals completed: {world.GameData.StoryGoals.CompletedGoals.Count}");
-                builder.AppendLine($" - Radio messages stored: {world.GameData.StoryGoals.RadioQueue.Count}");
+                builder.AppendLine($" - Current time: day {World.EventTriggerer.Day} ({Math.Floor(World.EventTriggerer.ElapsedSeconds)}s)");
+                builder.AppendLine($" - Scheduled goals stored: {World.GameData.StoryGoals.ScheduledGoals.Count}");
+                builder.AppendLine($" - Story goals completed: {World.GameData.StoryGoals.CompletedGoals.Count}");
+                builder.AppendLine($" - Radio messages stored: {World.GameData.StoryGoals.RadioQueue.Count}");
                 builder.AppendLine($" - World gamemode: {serverConfig.GameMode}");
-                builder.AppendLine($" - Story goals unlocked: {world.GameData.StoryGoals.GoalUnlocks.Count}");
-                builder.AppendLine($" - Encyclopedia entries: {world.GameData.PDAState.EncyclopediaEntries.Count}");
-                builder.AppendLine($" - Storage slot items: {world.InventoryManager.GetAllStorageSlotItems().Count}");
-                builder.AppendLine($" - Inventory items: {world.InventoryManager.GetAllInventoryItems().Count}");
-                builder.AppendLine($" - Progress tech: {world.GameData.PDAState.CachedProgress.Count}");
-                builder.AppendLine($" - Known tech: {world.GameData.PDAState.KnownTechTypes.Count}");
-                builder.AppendLine($" - Vehicles: {world.VehicleManager.GetVehicles().Count()}");
+                builder.AppendLine($" - Story goals unlocked: {World.GameData.StoryGoals.GoalUnlocks.Count}");
+                builder.AppendLine($" - Encyclopedia entries: {World.GameData.PDAState.EncyclopediaEntries.Count}");
+                builder.AppendLine($" - Storage slot items: {World.InventoryManager.GetAllStorageSlotItems().Count}");
+                builder.AppendLine($" - Inventory items: {World.InventoryManager.GetAllInventoryItems().Count}");
+                builder.AppendLine($" - Progress tech: {World.GameData.PDAState.CachedProgress.Count}");
+                builder.AppendLine($" - Known tech: {World.GameData.PDAState.KnownTechTypes.Count}");
+                builder.AppendLine($" - Vehicles: {World.VehicleManager.GetVehicles().Count()}");
                 
                 return builder.ToString();
             }
@@ -81,7 +81,7 @@ namespace NitroxServer
 
             IsSaving = true;
 
-            bool savedSuccessfully = worldPersistence.Save(world, serverConfig.SaveName);
+            bool savedSuccessfully = worldPersistence.Save(World, serverConfig.SaveName);
             if (savedSuccessfully && !string.IsNullOrWhiteSpace(serverConfig.PostSaveCommandPath))
             {
                 try
@@ -191,8 +191,8 @@ namespace NitroxServer
         public void PauseServer()
         {
             DisablePeriodicSaving();
-            world.EventTriggerer.PauseWorldTime();
-            world.EventTriggerer.PauseEventTimers();
+            World.EventTriggerer.PauseWorldTime();
+            World.EventTriggerer.PauseEventTimers();
             Log.Info("Server has paused, waiting for players to connect");
         }
 
@@ -202,8 +202,8 @@ namespace NitroxServer
             {
                 EnablePeriodicSaving();
             }
-            world.EventTriggerer.StartWorldTime();
-            world.EventTriggerer.StartEventTimers();
+            World.EventTriggerer.StartWorldTime();
+            World.EventTriggerer.StartEventTimers();
             Log.Info("Server has resumed");
         }
     }

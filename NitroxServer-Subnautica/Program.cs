@@ -18,8 +18,10 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Discovery;
 using NitroxModel.Helper;
 using NitroxModel.Platforms.OS.Shared;
+using NitroxModel_Subnautica.DataStructures.GameLogic;
 using NitroxServer;
 using NitroxServer.ConsoleCommands.Processor;
+using NitroxServer.GameLogic.Vehicles;
 
 namespace NitroxServer_Subnautica;
 
@@ -84,6 +86,8 @@ public class Program
             NitroxServiceLocator.BeginNewLifetimeScope();
 
             server = NitroxServiceLocator.LocateService<Server>();
+            // TODO: We do not support loading back into as vehicle driver yet so the sonar must be off
+            SetDefaultCyclopsState(server.World.VehicleManager);
             await WaitForAvailablePortAsync(server.Port);
             CatchExitEvent();
             listenForCommands = ListenForCommandsAsync(server);
@@ -300,6 +304,17 @@ public class Program
     {
         Log.Info("Exiting ...");
         Server.Instance.Stop();
+    }
+
+    private static void SetDefaultCyclopsState(VehicleManager vehicleManager)
+    {
+        foreach (VehicleModel vehicleModel in vehicleManager.GetVehicles())
+        {
+            if (vehicleModel is CyclopsModel cyclopsModel)
+            {
+                cyclopsModel.SonarOn = false;
+            }
+        }
     }
 
     // See: https://docs.microsoft.com/en-us/windows/console/setconsolectrlhandler
