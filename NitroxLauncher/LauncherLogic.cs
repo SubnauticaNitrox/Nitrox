@@ -86,6 +86,11 @@ namespace NitroxLauncher
             }, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
+        public async void ConfigureFirewall()
+        {
+            await Task.Run(() => WindowsHelper.CheckFirewallRules());
+        }
+
         public async Task<string> SetTargetedSubnauticaPath(string path)
         {
             if (Config.SubnauticaPath == path || !Directory.Exists(path))
@@ -228,9 +233,6 @@ namespace NitroxLauncher
                 Log.Warn("Seems like QModManager is Installed");
                 LauncherNotifier.Info("Detected QModManager in the game folder");
             }
-
-            WindowsHelper.CheckClientFirewallRules();
-            WindowsHelper.CheckHamachiFirewallRules();
 
             gameProcess = await StartSubnauticaAsync();
         }

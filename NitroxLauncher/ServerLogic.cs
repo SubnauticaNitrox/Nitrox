@@ -39,9 +39,6 @@ namespace NitroxLauncher
                 throw new Exception("An instance of Nitrox Server is already running");
             }
 
-            WindowsHelper.CheckServerFirewallRules();
-            WindowsHelper.CheckHamachiFirewallRules();
-
             string launcherDir = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
             string serverPath = Path.Combine(launcherDir, SERVER_EXECUTABLE);
             ProcessStartInfo startInfo = new(serverPath);

@@ -64,7 +64,14 @@ namespace NitroxLauncher.Models.Utils
             }
         }
 
-        internal static void CheckServerFirewallRules()
+        internal static void CheckFirewallRules()
+        {
+            CheckClientFirewallRules();
+            CheckServerFirewallRules();
+            CheckHamachiFirewallRules();
+        }
+
+        private static void CheckServerFirewallRules()
         {
             string serverRuleName = "nitroxserver-subnautica.exe";
             string serverPath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), ServerLogic.SERVER_EXECUTABLE);
@@ -72,7 +79,7 @@ namespace NitroxLauncher.Models.Utils
             AddExclusiveFirewallRule(serverRuleName, serverPath);
         }
 
-        internal static void CheckClientFirewallRules()
+        private static void CheckClientFirewallRules()
         {
             string clientRuleName = "Subnautica";
             string clientPath = Path.Combine(LauncherLogic.Config.SubnauticaPath, "Subnautica.exe");
@@ -80,7 +87,7 @@ namespace NitroxLauncher.Models.Utils
             AddExclusiveFirewallRule(clientRuleName, clientPath);
         }
 
-        internal static void CheckHamachiFirewallRules()
+        private static void CheckHamachiFirewallRules()
         {
             static IPAddress GetHamachiAddress()
             {
