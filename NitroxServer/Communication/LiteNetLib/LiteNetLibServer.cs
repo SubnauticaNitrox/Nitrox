@@ -1,10 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using LiteNetLib;
 using LiteNetLib.Utils;
 using Mono.Nat;
 using NitroxModel.Helper;
-using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets;
 using NitroxServer.GameLogic;
