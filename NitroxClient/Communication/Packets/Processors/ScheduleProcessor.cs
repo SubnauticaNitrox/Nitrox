@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxModel.Logger;
 using NitroxModel.Packets;
 using Story;
 
@@ -20,7 +19,7 @@ namespace NitroxClient.Communication.Packets.Processors
             {
                 StoryGoalScheduler.main.schedule.Add(goal);
             }
-            Log.Debug($"Processed a Schedule packet [{goal}]");
+            Log.Debug($"Processed a Schedule packet [Key: {goal.goalKey}, Type: {goal.goalType}, TimeExecute: {goal.timeExecute}]");
         }
 
         private bool ShouldSchedule(float timeToExecute)

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.GameLogic.InitialSync.Base;
-using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
 using Story;
 
@@ -44,13 +44,9 @@ namespace NitroxClient.GameLogic.InitialSync
         private void SetCompletedStoryGoals(List<string> storyGoalData)
         {
             StoryGoalManager.main.completedGoals.Clear();
+            StoryGoalManager.main.completedGoals.AddRange(storyGoalData);
 
-            foreach (string completedGoal in storyGoalData)
-            {
-                StoryGoalManager.main.completedGoals.Add(completedGoal);
-            }
-
-            Log.Info("Received initial sync packet with " + storyGoalData.Count + " completed story goals");
+            Log.Info($"Received initial sync packet with {storyGoalData.Count} completed story goals");
         }
 
         private void SetGoalUnlocks(List<string> goalUnlocks)

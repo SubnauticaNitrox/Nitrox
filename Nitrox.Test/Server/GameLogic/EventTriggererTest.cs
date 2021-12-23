@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace NitroxServer.GameLogic
@@ -23,8 +24,20 @@ namespace NitroxServer.GameLogic
         [TestMethod]
         public void AuroraExplosionAndWarningTime()
         {
-            EventTriggerer eventTriggerer = new(null, 0.0, 30d);
+            EventTriggerer eventTriggerer = new(null, 0.0, TimeSpan.FromMinutes(40).TotalMilliseconds);
             Assert.AreEqual(eventTriggerer.eventTimers["Story_AuroraWarning4"].Interval, eventTriggerer.eventTimers["Story_AuroraExplosion"].Interval);
+        }
+
+        [TestMethod]
+        public void TestTimeSkip()
+        {
+            EventTriggerer eventTriggerer = new(null, 480.0, null);
+            double interval = eventTriggerer.eventTimers["Story_AuroraExplosion"].Interval;
+            eventTriggerer.ElapsedTimeMs += TimeSpan.FromMinutes(40).TotalMilliseconds;
+            Assert.AreEqual(interval - TimeSpan.FromMinutes(40).TotalMilliseconds, eventTriggerer.eventTimers["Story_AuroraExplosion"].Interval);
+            interval = eventTriggerer.eventTimers["Story_AuroraExplosion"].Interval;
+            eventTriggerer.ElapsedTimeMs += TimeSpan.FromMinutes(2).TotalMilliseconds;
+            Assert.AreEqual(interval - TimeSpan.FromMinutes(2).TotalMilliseconds, eventTriggerer.eventTimers["Story_AuroraExplosion"].Interval);
         }
     }
 }

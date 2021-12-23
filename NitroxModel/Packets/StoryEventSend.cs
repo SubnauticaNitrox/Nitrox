@@ -17,12 +17,12 @@ namespace NitroxModel.Packets
         public enum EventType
         {
             PDA,
-            PDA_EXTRA,
             RADIO,
             ENCYCLOPEDIA,
             STORY,
+            GOAL_UNLOCK,
             EXTRA,
-            GOAL_UNLOCK
+            PDA_EXTRA,
         }
     }
 }

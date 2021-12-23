@@ -26,13 +26,13 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(StoryGoal goal, bool __state)
         {
-            if (__state || goal.key == "PlayerDiving")
+            if (__state || goal.key == "PlayerDiving" || goal.delay == 0f)
             {
                 return;
             }
 
-            float timePassed = DayNightCycle.main ? DayNightCycle.main.timePassedAsFloat : 0f;
-            packetSender.Send(new Schedule(timePassed + goal.delay, goal.key, goal.goalType.ToString()));
+            float timeExecute = StoryGoalScheduler.main.schedule.GetLast().timeExecute;
+            packetSender.Send(new Schedule(timeExecute, goal.key, goal.goalType.ToString()));
         }
 
         public override void Patch(Harmony harmony)
