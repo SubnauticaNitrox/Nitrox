@@ -88,7 +88,13 @@ namespace NitroxLauncher
 
         public async void ConfigureFirewall()
         {
-            await Task.Run(() => WindowsHelper.CheckFirewallRules());
+            Task task = Task.Run(() => WindowsHelper.CheckFirewallRules());
+            await task;
+
+            if (task.Exception != null)
+            {
+                MessageBox.Show($"An error occurred configuring the firewall: {task.Exception}");
+            }
         }
 
         public async Task<string> SetTargetedSubnauticaPath(string path)
