@@ -9,6 +9,9 @@ using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
+    /// <summary>
+    /// Prevents sonar from turning off automatically for the player that isn't currently piloting the Cyclops.
+    /// </summary>
     public class CyclopsSonarButton_Update_Patch : NitroxPatch, IDynamicPatch
     {
         public static readonly MethodInfo TARGET_METHOD = Reflect.Method((CyclopsSonarButton t) => t.Update());
@@ -32,7 +35,7 @@ namespace NitroxPatcher.Patches.Dynamic
 		     * {
 		     *     this.TurnOffSonar();
 		     * }
-             * this part will be changed:
+             * this part will be changed into:
              * if (Player.main.GetMode() == Player.Mode.Normal && this.sonarActive && CyclopsSonarButton_Update_Patch.ShouldTurnOff())
              */
             CodeInstruction callInstruction = new(OpCodes.Call, Reflect.Method(() => ShouldTurnoff()));
@@ -55,10 +58,8 @@ namespace NitroxPatcher.Patches.Dynamic
                         continue;
                     }
                     brInstruction.operand = instruction.operand;
-                    foreach (CodeInstruction instructionToAdd in new List<CodeInstruction>() { callInstruction, brInstruction })
-                    {
-                        yield return instructionToAdd;
-                    }
+                    yield return callInstruction;
+                    yield return brInstruction;
                 }
                 // When getting to this.sonarActive, we want to inject the code after the brfalse that follows this instruction
                 if (instruction.opcode.Equals(INJECTION_OPCODE) && instruction.operand.Equals(INJECTION_OPERAND))

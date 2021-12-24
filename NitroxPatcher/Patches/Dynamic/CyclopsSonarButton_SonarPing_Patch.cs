@@ -10,6 +10,9 @@ using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
+    /// <summary>
+    /// The sonar will stay on until the player leaves the vehicle and automatically turns on when they enter again (if sonar was on at that time).
+    /// </summary>
     public class CyclopsSonarButton_SonarPing_Patch : NitroxPatch, IDynamicPatch
     {
         public static readonly MethodInfo TARGET_METHOD = Reflect.Method((CyclopsSonarButton t) => t.SonarPing());

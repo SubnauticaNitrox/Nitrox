@@ -86,7 +86,7 @@ public class Program
             NitroxServiceLocator.BeginNewLifetimeScope();
 
             server = NitroxServiceLocator.LocateService<Server>();
-            // TODO: We do not support loading back into as vehicle driver yet so the sonar must be off
+            // Sonar must be set off by default since we cannot load back as a vehicle driver (as in vanilla SN)
             SetDefaultCyclopsState(server.World.VehicleManager);
             await WaitForAvailablePortAsync(server.Port);
             CatchExitEvent();
