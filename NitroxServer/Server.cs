@@ -33,7 +33,7 @@ namespace NitroxServer
             this.worldPersistence = worldPersistence;
             this.serverConfig = serverConfig;
             this.server = server;
-            this.World = world;
+            World = world;
             this.entityManager = entityManager;
 
             Instance = this;

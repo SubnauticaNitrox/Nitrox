@@ -3,7 +3,7 @@ using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper;
+using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.Helper;
 using UnityEngine;
 
@@ -50,6 +50,11 @@ namespace NitroxClient.MonoBehaviours
                     currentPosition = undoVehicleAngle * currentPosition;
                     bodyRotation = undoVehicleAngle * bodyRotation;
                     aimingRotation = undoVehicleAngle * aimingRotation;
+                    if (Player.main.isPiloting && subRoot.isCyclops)
+                    {
+                        // In case you're driving the cyclops, the currentPosition is the real position of the player, so we need to send it to the server
+                        vehicle.Value.DriverPosition = currentPosition.ToDto();
+                    }
                 }
 
                 localPlayer.UpdateLocation(currentPosition, playerVelocity, bodyRotation, aimingRotation, vehicle);
