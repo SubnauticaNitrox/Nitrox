@@ -91,8 +91,11 @@ public static class NatHelper
             try
             {
                 CancellationTokenSource cancellation = new(timeoutInMs);
-                
-                lastFoundDeviceTime = DateTime.UtcNow;
+
+                lock (lastFoundDeviceTimeLock)
+                {
+                    lastFoundDeviceTime = DateTime.UtcNow;
+                }
                 bool hasFoundDeviceRecently = true;
                 while (!cancellation.IsCancellationRequested && hasFoundDeviceRecently)
                 {
