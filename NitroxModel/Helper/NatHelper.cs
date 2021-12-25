@@ -19,7 +19,17 @@ public static class NatHelper
     public static async Task<bool> DeletePortMappingAsync(ushort port, Protocol protocol)
     {
         Mapping mapping = new(protocol, port, port);
-        return await MonoNatHelper.GetFirstAsync(async d => await d.DeletePortMapAsync(mapping).ConfigureAwait(false) != null).ConfigureAwait(false);
+        return await MonoNatHelper.GetFirstAsync(async d =>
+        {
+            try
+            {
+                return await d.DeletePortMapAsync(mapping).ConfigureAwait(false) != null;
+            }
+            catch (MappingException)
+            {
+                return false;
+            }
+        }).ConfigureAwait(false);
     }
 
     public static async Task<Mapping> GetPortMappingAsync(ushort port, Protocol protocol)
