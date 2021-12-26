@@ -16,6 +16,7 @@
         <PackageReference Include="System.IO.Compression" Version="4.3.0" />
         <PackageReference Include="System.IO.FileSystem.AccessControl" Version="5.0.0" />
         <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
+        <PackageReference Include="ZeroFormatter" Version="1.6.4" />
     </ItemGroup>
 
     <ItemGroup>
