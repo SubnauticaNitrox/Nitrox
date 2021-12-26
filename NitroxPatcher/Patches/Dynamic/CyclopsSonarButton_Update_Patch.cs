@@ -16,8 +16,8 @@ namespace NitroxPatcher.Patches.Dynamic
     {
         public static readonly MethodInfo TARGET_METHOD = Reflect.Method((CyclopsSonarButton t) => t.Update());
 
-        private static readonly OpCode INJECTION_OPCODE = OpCodes.Call;
-        private static readonly object INJECTION_OPERAND = Reflect.Property((CyclopsSonarButton t) => t.sonarActive).GetGetMethod(true);
+        private static readonly OpCode INJECTION_OPCODE = OpCodes.Ldsfld;
+        private static readonly object INJECTION_OPERAND = Reflect.Field(() => Player.main);
 
         private static NitroxId currentCyclopsId;
 
@@ -26,46 +26,40 @@ namespace NitroxPatcher.Patches.Dynamic
             currentCyclopsId = NitroxEntity.GetId(__instance.subRoot.gameObject);
         }
 
-        public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
             Validate.NotNull(INJECTION_OPERAND);
-
+            
             /* Normally in the Update()
              * if (Player.main.GetMode() == Player.Mode.Normal && this.sonarActive)
 		     * {
 		     *     this.TurnOffSonar();
 		     * }
              * this part will be changed into:
-             * if (Player.main.GetMode() == Player.Mode.Normal && this.sonarActive && CyclopsSonarButton_Update_Patch.ShouldTurnOff())
+             * if (CyclopsSonarButton_Update_Patch.ShouldTurnOff() && Player.main.GetMode() == Player.Mode.Normal && this.sonarActive)
              */
+            List<CodeInstruction> codeInstructions = new List<CodeInstruction>(instructions);
             CodeInstruction callInstruction = new(OpCodes.Call, Reflect.Method(() => ShouldTurnoff()));
             CodeInstruction brInstruction = new(OpCodes.Brfalse);
-
-            // There are 2 occurences of INJECTION_OPCODE and INJECTION_OPERAND
-            // shouldAdd makes it so that the code is only injected the second time
-            int addIndex = -1;
-            bool shouldAdd = true;
-            foreach (CodeInstruction instruction in instructions)
+            for (int i = 0; i < codeInstructions.Count; i++)
             {
-                addIndex--;
-                yield return instruction;
-                
-                if (addIndex == 0)
+                CodeInstruction instruction = codeInstructions[i];
+
+                if (instruction.opcode.Equals(INJECTION_OPCODE) && instruction.operand.Equals(INJECTION_OPERAND))
                 {
-                    shouldAdd = !shouldAdd;
-                    if (!shouldAdd)
-                    {
-                        continue;
-                    }
-                    brInstruction.operand = instruction.operand;
+                    // The second line after the current instruction should be a Brtrue, we need its operand to have the same jump label for our brfalse
+                    CodeInstruction nextBr = codeInstructions[i + 2];
+                    Validate.IsTrue(nextBr.opcode.Equals(OpCodes.Brtrue), "Looks like subnautica code has changed. Update jump offset!");
+                    
+                    // The new instruction will be the first of the if statement, so it should take the jump labels that the former first part of the statement had
+                    callInstruction.labels = new List<Label>(instruction.labels);
+                    instruction.labels.Clear();
+                    brInstruction.operand = nextBr.operand;
+
                     yield return callInstruction;
                     yield return brInstruction;
                 }
-                // When getting to this.sonarActive, we want to inject the code after the brfalse that follows this instruction
-                if (instruction.opcode.Equals(INJECTION_OPCODE) && instruction.operand.Equals(INJECTION_OPERAND))
-                {
-                    addIndex = 1;
-                }
+                yield return instruction;
             }
         }
 
