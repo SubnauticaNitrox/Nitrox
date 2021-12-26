@@ -1,21 +1,28 @@
-﻿using System;
-using NitroxModel.DataStructures;
+﻿using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
 using ProtoBufNet;
+using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     [ProtoContract]
     public class LiveMixinHealthChanged : Packet
     {
-        public Optional<DamageTakenData> DamageTakenData;
-        public NitroxTechType TechType { get; }
-        public NitroxId Id { get; set; }
-        public float LifeChanged { get; set; }
-        public float TotalHealth { get; }
+        [Index(0)]
+        public virtual Optional<DamageTakenData> DamageTakenData { get; protected set; }
+        [Index(1)]
+        public virtual NitroxTechType TechType { get; protected set; }
+        [Index(2)]
+        public virtual NitroxId Id { get; protected set; }
+        [Index(3)]
+        public virtual float LifeChanged { get; protected set; }
+        [Index(4)]
+        public virtual float TotalHealth { get; protected set; }
+
+        private LiveMixinHealthChanged() { }
 
         public LiveMixinHealthChanged(NitroxTechType techType, NitroxId id, float lifeChanged, float totalHealth)
         {

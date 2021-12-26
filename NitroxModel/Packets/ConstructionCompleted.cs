@@ -1,13 +1,17 @@
-﻿using System;
-using NitroxModel.DataStructures;
+﻿using NitroxModel.DataStructures;
+using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class ConstructionCompleted : Packet
     {
-        public NitroxId PieceId { get; }
-        public NitroxId BaseId { get; }
+        [Index(0)]
+        public virtual NitroxId PieceId { get; protected set; }
+        [Index(1)]
+        public virtual NitroxId BaseId { get; protected set; }
+
+        private ConstructionCompleted() { }
 
         public ConstructionCompleted(NitroxId id, NitroxId baseId)
         {

@@ -1,13 +1,17 @@
-﻿using System;
+﻿using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class ChatMessage : Packet
     {
-        public ushort PlayerId { get; }
-        public string Text { get; }
+        [Index(0)]
+        public virtual ushort PlayerId { get; protected set; }
+        [Index(1)]
+        public virtual string Text { get; protected set; }
         public const ushort SERVER_ID = ushort.MaxValue;
+
+        private ChatMessage() { }
 
         public ChatMessage(ushort playerId, string text)
         {

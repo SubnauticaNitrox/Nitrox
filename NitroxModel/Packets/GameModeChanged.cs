@@ -1,12 +1,15 @@
-﻿using System;
-using NitroxModel.Server;
+﻿using NitroxModel.Server;
+using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class GameModeChanged : Packet
     {
-        public ServerGameMode GameMode { get; }
+        [Index(0)]
+        public virtual ServerGameMode GameMode { get; protected set; }
+
+        private GameModeChanged() { }
 
         public GameModeChanged(ServerGameMode gameMode)
         {

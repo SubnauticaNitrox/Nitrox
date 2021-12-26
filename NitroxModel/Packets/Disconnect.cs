@@ -1,11 +1,14 @@
-﻿using System;
+﻿using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class Disconnect : Packet
     {
-        public ushort PlayerId { get; }
+        [Index(0)]
+        public virtual ushort PlayerId { get; protected set; }
+
+        private Disconnect() { }
 
         public Disconnect(ushort playerId)
         {

@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Unity;
+using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class EntityTransformUpdates : Packet
     {
-        public List<EntityTransformUpdate> Updates { get; }
+        [Index(0)]
+        public virtual List<EntityTransformUpdate> Updates { get; protected set; }
 
         public EntityTransformUpdates()
         {

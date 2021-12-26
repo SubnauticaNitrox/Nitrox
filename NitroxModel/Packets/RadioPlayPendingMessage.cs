@@ -1,8 +1,8 @@
-using System;
+﻿using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class RadioPlayPendingMessage : Packet
     {
     }

@@ -1,12 +1,15 @@
-﻿using System;
-using NitroxModel.DataStructures.GameLogic;
+﻿using NitroxModel.DataStructures.GameLogic;
+using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class AddEscapePod : Packet
     {
-        public EscapePodModel EscapePod { get; }
+        [Index(0)]
+        public virtual EscapePodModel EscapePod { get; protected set; }
+
+        private AddEscapePod() { }
 
         public AddEscapePod(EscapePodModel escapePod)
         {

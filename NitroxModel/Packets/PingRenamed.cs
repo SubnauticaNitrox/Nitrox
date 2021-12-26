@@ -1,14 +1,19 @@
-﻿using System;
-using NitroxModel.DataStructures;
+﻿using NitroxModel.DataStructures;
+using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class PingRenamed : Packet
     {
-        public NitroxId Id { get; }
-        public string Name { get; }
-        public byte[] BeaconGameObjectSerialized { get; }
+        [Index(0)]
+        public virtual NitroxId Id { get; protected set; }
+        [Index(1)]
+        public virtual string Name { get; protected set; }
+        [Index(2)]
+        public virtual byte[] BeaconGameObjectSerialized { get; protected set; } // TODO: Change this to send only the important info
+
+        private PingRenamed() { }
 
         public PingRenamed(NitroxId id, string name, byte[] beaconGameObjectSerialized)
         {

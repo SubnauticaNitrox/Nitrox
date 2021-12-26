@@ -1,13 +1,17 @@
-﻿using System;
-using NitroxModel.DataStructures.GameLogic;
+﻿using NitroxModel.DataStructures.GameLogic;
+using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class ModuleAdded : Packet
     {
-        public EquippedItemData EquippedItemData { get; }
-        public bool PlayerModule { get; }
+        [Index(0)]
+        public virtual EquippedItemData EquippedItemData { get; protected set; }
+        [Index(1)]
+        public virtual bool PlayerModule { get; protected set; }
+
+        private ModuleAdded() { }
 
         public ModuleAdded(EquippedItemData equippedItemData, bool playerModule)
         {

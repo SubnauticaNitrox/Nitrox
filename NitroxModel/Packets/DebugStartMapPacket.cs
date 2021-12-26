@@ -1,13 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using NitroxModel.DataStructures.Unity;
+using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class DebugStartMapPacket : Packet
     {
-        public IList<NitroxVector3> StartPositions { get; }
+        [Index(0)]
+        public virtual IList<NitroxVector3> StartPositions { get; protected set; }
+
+        private DebugStartMapPacket() { }
 
         public DebugStartMapPacket(IList<NitroxVector3> startPositions)
         {

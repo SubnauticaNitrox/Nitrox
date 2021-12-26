@@ -1,11 +1,14 @@
-﻿using System;
+﻿using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class PlayerKicked : Packet
     {
-        public string Reason { get; }
+        [Index(0)]
+        public virtual string Reason { get; protected set; }
+
+        private PlayerKicked() { }
 
         public PlayerKicked(string reason)
         {

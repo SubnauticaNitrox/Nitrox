@@ -1,17 +1,24 @@
 ﻿using System;
 using NitroxModel.MultiplayerSession;
+using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class MultiplayerSessionPolicy : CorrelatedPacket
     {
-        public bool RequiresServerPassword { get; }
-        public bool DisableConsole { get; }
-        public int MaxConnections { get; }
+        [Index(0)]
+        public virtual bool RequiresServerPassword { get; protected set; }
+        [Index(1)]
+        public virtual bool DisableConsole { get; protected set; }
+        [Index(2)]
+        public virtual int MaxConnections { get; protected set; }
+        [Index(3)]
+        public virtual MultiplayerSessionAuthenticationAuthority AuthenticationAuthority { get; protected set; }
+        [Index(4)]
+        public virtual Version NitroxVersionAllowed { get; protected set; }
 
-        public MultiplayerSessionAuthenticationAuthority AuthenticationAuthority { get; }
-        public Version NitroxVersionAllowed { get; }
+        private MultiplayerSessionPolicy() : base(default) { }
 
         public MultiplayerSessionPolicy(string correlationId, bool disableConsole, int maxConnections, bool requiresServerPassword) : base(correlationId)
         {

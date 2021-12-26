@@ -1,16 +1,23 @@
-﻿using System;
-using NitroxModel.DataStructures.Unity;
+﻿using NitroxModel.DataStructures.Unity;
+using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class PlayFMODAsset : Packet
     {
-        public string AssetPath { get; }
-        public NitroxVector3 Position { get; }
-        public float Volume { get; set; }
-        public float Radius { get; set; }
-        public bool IsGlobal { get; }
+        [Index(0)]
+        public virtual string AssetPath { get; protected set; }
+        [Index(1)]
+        public virtual NitroxVector3 Position { get; protected set; }
+        [Index(2)]
+        public virtual float Volume { get; set; }
+        [Index(3)]
+        public virtual float Radius { get; protected set; }
+        [Index(4)]
+        public virtual bool IsGlobal { get; protected set; }
+
+        private PlayFMODAsset() { }
 
         public PlayFMODAsset(string assetPath, NitroxVector3 position, float volume, float radius, bool isGlobal)
         {

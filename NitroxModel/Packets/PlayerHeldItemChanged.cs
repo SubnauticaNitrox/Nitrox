@@ -1,16 +1,22 @@
-﻿using System;
-using NitroxModel.DataStructures;
+﻿using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
+using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class PlayerHeldItemChanged : Packet
     {
-        public ushort PlayerId { get; }
-        public NitroxId ItemId { get; }
-        public ChangeType Type { get; }
-        public NitroxTechType IsFirstTime { get; } // If it's the first time the player used that item type it send the techType, if not null.
+        [Index(0)]
+        public virtual ushort PlayerId { get; protected set; }
+        [Index(1)]
+        public virtual NitroxId ItemId { get; protected set; }
+        [Index(2)]
+        public virtual ChangeType Type { get; protected set; }
+        [Index(3)]
+        public virtual NitroxTechType IsFirstTime { get; protected set; } // If it's the first time the player used that item type it send the techType, if not null.
+
+        private PlayerHeldItemChanged() { }
 
         public PlayerHeldItemChanged(ushort playerId, NitroxId itemId, ChangeType type, NitroxTechType isFirstTime)
         {

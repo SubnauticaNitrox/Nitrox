@@ -1,11 +1,14 @@
-﻿using System;
+﻿using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class PDAEncyclopediaEntryAdd : Packet
     {
-        public string Key { get; }
+        [Index(0)]
+        public virtual string Key { get; protected set; }
+
+        private PDAEncyclopediaEntryAdd() { }
 
         public PDAEncyclopediaEntryAdd(string key)
         {

@@ -1,13 +1,17 @@
-﻿using System;
-using NitroxModel.DataStructures.GameLogic;
+﻿using NitroxModel.DataStructures.GameLogic;
+using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class RemotePlayerEquipmentRemoved : Packet
     {
-        public ushort PlayerId { get; }
-        public NitroxTechType TechType { get; }
+        [Index(0)]
+        public virtual ushort PlayerId { get; protected set; }
+        [Index(1)]
+        public virtual NitroxTechType TechType { get; protected set; }
+
+        private RemotePlayerEquipmentRemoved() { }
 
         public RemotePlayerEquipmentRemoved(ushort playerId, NitroxTechType techType)
         {

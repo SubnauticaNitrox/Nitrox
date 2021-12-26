@@ -1,12 +1,15 @@
-﻿using System;
-using NitroxModel.DataStructures.GameLogic;
+﻿using NitroxModel.DataStructures.GameLogic;
+using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class EntitySpawnedByClient : Packet
     {
-        public Entity Entity { get; }
+        [Index(0)]
+        public virtual Entity Entity { get; protected set; }
+
+        private EntitySpawnedByClient() { }
 
         public EntitySpawnedByClient(Entity entity)
         {

@@ -1,11 +1,14 @@
-﻿using System;
+﻿using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public abstract class CorrelatedPacket : Packet
     {
-        public string CorrelationId { get; protected set; }
+        [Index(-3)]
+        public virtual string CorrelationId { get; protected set; }
+
+        private CorrelatedPacket() { }
 
         protected CorrelatedPacket(string correlationId)
         {

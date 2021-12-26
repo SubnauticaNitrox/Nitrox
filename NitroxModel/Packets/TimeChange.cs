@@ -1,12 +1,16 @@
-﻿using System;
+﻿using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class TimeChange : Packet
     {
-        public double CurrentTime { get; }
-        public bool InitialSync { get; }
+        [Index(0)]
+        public virtual double CurrentTime { get; protected set; }
+        [Index(1)]
+        public virtual bool InitialSync { get; protected set; }
+
+        private TimeChange() { }
 
         public TimeChange(double currentTime, bool initialSync)
         {

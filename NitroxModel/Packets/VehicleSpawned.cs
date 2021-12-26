@@ -1,13 +1,17 @@
-﻿using System;
-using NitroxModel.DataStructures.GameLogic;
+﻿using NitroxModel.DataStructures.GameLogic;
+using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class VehicleSpawned : Packet
     {
-        public byte[] SerializedData { get; }
-        public VehicleModel VehicleModel { get; }
+        [Index(0)]
+        public virtual byte[] SerializedData { get; protected set; } // TODO: change data type, similar to PingRenamed
+        [Index(1)]
+        public virtual VehicleModel VehicleModel { get; protected set; }
+
+        private VehicleSpawned() { }
 
         public VehicleSpawned(byte[] serializedData, VehicleModel vehicleModel)
         {

@@ -1,13 +1,17 @@
-﻿using System;
-using NitroxModel.DataStructures.GameLogic;
+﻿using NitroxModel.DataStructures.GameLogic;
+using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class PlayerEquipmentAdded : Packet
     {
-        public NitroxTechType TechType { get; }
-        public EquippedItemData EquippedItem { get; }
+        [Index(0)]
+        public virtual NitroxTechType TechType { get; protected set; }
+        [Index(1)]
+        public virtual EquippedItemData EquippedItem { get; protected set; }
+
+        private PlayerEquipmentAdded() { }
 
         public PlayerEquipmentAdded(NitroxTechType techType, EquippedItemData equippedItem)
         {

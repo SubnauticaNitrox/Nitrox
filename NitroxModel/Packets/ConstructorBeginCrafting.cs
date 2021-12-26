@@ -1,15 +1,20 @@
-﻿using System;
-using NitroxModel.DataStructures;
+﻿using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
+using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class ConstructorBeginCrafting : Packet
     {
-        public VehicleModel VehicleModel { get; }
-        public NitroxId ConstructorId { get; }
-        public float Duration { get; }
+        [Index(0)]
+        public virtual VehicleModel VehicleModel { get; protected set; }
+        [Index(1)]
+        public virtual NitroxId ConstructorId { get; protected set; }
+        [Index(2)]
+        public virtual float Duration { get; protected set; }
+
+        private ConstructorBeginCrafting() { }
 
         public ConstructorBeginCrafting(VehicleModel vehicleModel, NitroxId constructorId, float duration)
         {

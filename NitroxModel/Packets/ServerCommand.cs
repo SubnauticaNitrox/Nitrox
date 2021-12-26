@@ -1,11 +1,14 @@
-﻿using System;
+﻿using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class ServerCommand : Packet
     {
-        public string Cmd { get; }
+        [Index(0)]
+        public virtual string Cmd { get; protected set; }
+
+        private ServerCommand() { }
 
         public ServerCommand(string cmd)
         {

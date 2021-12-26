@@ -1,15 +1,20 @@
-﻿using System;
-using NitroxModel.DataStructures;
+﻿using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
+using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class GhostCrafterBeginCrafting : Packet
     {
-        public NitroxId GhostCrafterId { get; }
-        public NitroxTechType TechType { get; }
-        public float Duration { get; }
+        [Index(0)]
+        public virtual NitroxId GhostCrafterId { get; protected set; }
+        [Index(1)]
+        public virtual NitroxTechType TechType { get; protected set; }
+        [Index(2)]
+        public virtual float Duration { get; protected set; }
+
+        private GhostCrafterBeginCrafting() { }
 
         public GhostCrafterBeginCrafting(NitroxId ghostCrafterId, NitroxTechType techType, float duration)
         {

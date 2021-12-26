@@ -1,12 +1,15 @@
-﻿using System;
-using NitroxModel.DataStructures;
+﻿using NitroxModel.DataStructures;
+using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class StorageSlotItemRemove : Packet
     {
-        public NitroxId OwnerId { get; }
+        [Index(0)]
+        public virtual NitroxId OwnerId { get; protected set; }
+
+        private StorageSlotItemRemove() { }
 
         public StorageSlotItemRemove(NitroxId ownerId)
         {

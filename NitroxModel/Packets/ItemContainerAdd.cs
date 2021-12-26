@@ -1,12 +1,15 @@
-﻿using System;
-using NitroxModel.DataStructures.GameLogic;
+﻿using NitroxModel.DataStructures.GameLogic;
+using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class ItemContainerAdd : Packet
     {
-        public ItemData ItemData { get; }
+        [Index(0)]
+        public virtual ItemData ItemData { get; protected set; }
+
+        private ItemContainerAdd() { }
 
         public ItemContainerAdd(ItemData itemData)
         {

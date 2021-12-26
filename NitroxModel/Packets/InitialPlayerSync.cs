@@ -1,39 +1,63 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Server;
+using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class InitialPlayerSync : Packet
     {
-        public NitroxId AssignedEscapePodId;
-        public List<EscapePodModel> EscapePodsData { get; }
-        public List<EquippedItemData> EquippedItems { get; }
-        public List<EquippedItemData> Modules { get; }
-        public List<BasePiece> BasePieces { get; }
-        public List<VehicleModel> Vehicles { get; }
-        public List<ItemData> InventoryItems { get; }
-        public List<ItemData> StorageSlotItems { get; }
-        public List<NitroxTechType> UsedItems { get; }
-        public List<string> QuickSlotsBinding { get; }
-        public NitroxId PlayerGameObjectId { get; }
-        public bool FirstTimeConnecting { get; }
-        public InitialPDAData PDAData { get; }
-        public InitialStoryGoalData StoryGoalData { get; }
-        public NitroxVector3 PlayerSpawnData { get; }
-        public Optional<NitroxId> PlayerSubRootId { get; }
-        public PlayerStatsData PlayerStatsData { get; }
-        public List<InitialRemotePlayerData> RemotePlayerData { get; }
-        public List<Entity> GlobalRootEntities { get; }
-        public List<NitroxId> InitialSimulationOwnerships { get; }
-        public ServerGameMode GameMode { get; }
-        public Perms Permissions { get; }
+        [Index(0)]
+        public virtual NitroxId AssignedEscapePodId { get; protected set; }
+        [Index(1)]
+        public virtual List<EscapePodModel> EscapePodsData { get; protected set; }
+        [Index(2)]
+        public virtual List<EquippedItemData> EquippedItems { get; protected set; }
+        [Index(3)]
+        public virtual List<EquippedItemData> Modules { get; protected set; }
+        [Index(4)]
+        public virtual List<BasePiece> BasePieces { get; protected set; }
+        [Index(5)]
+        public virtual List<VehicleModel> Vehicles { get; protected set; }
+        [Index(6)]
+        public virtual List<ItemData> InventoryItems { get; protected set; }
+        [Index(7)]
+        public virtual List<ItemData> StorageSlotItems { get; protected set; }
+        [Index(8)]
+        public virtual List<NitroxTechType> UsedItems { get; protected set; }
+        [Index(9)]
+        public virtual List<string> QuickSlotsBinding { get; protected set; }
+        [Index(10)]
+        public virtual NitroxId PlayerGameObjectId { get; protected set; }
+        [Index(11)]
+        public virtual bool FirstTimeConnecting { get; protected set; }
+        [Index(12)]
+        public virtual InitialPDAData PDAData { get; protected set; }
+        [Index(13)]
+        public virtual InitialStoryGoalData StoryGoalData { get; protected set; }
+        [Index(14)]
+        public virtual NitroxVector3 PlayerSpawnData { get; protected set; }
+        [Index(15)]
+        public virtual Optional<NitroxId> PlayerSubRootId { get; protected set; }
+        [Index(16)]
+        public virtual PlayerStatsData PlayerStatsData { get; protected set; }
+        [Index(17)]
+        public virtual List<InitialRemotePlayerData> RemotePlayerData { get; protected set; }
+        [Index(18)]
+        public virtual List<Entity> GlobalRootEntities { get; protected set; }
+        [Index(19)]
+        public virtual List<NitroxId> InitialSimulationOwnerships { get; protected set; }
+        [Index(20)]
+        public virtual ServerGameMode GameMode { get; protected set; }
+        [Index(21)]
+        public virtual Perms Permissions { get; protected set; }
+
+        private InitialPlayerSync() { }
 
         public InitialPlayerSync(NitroxId playerGameObjectId,
             bool firstTimeConnecting,

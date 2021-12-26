@@ -1,13 +1,17 @@
-﻿using System;
-using NitroxModel.DataStructures.Unity;
+﻿using NitroxModel.DataStructures.Unity;
+using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class PlayerDeathEvent : Packet
     {
-        public string PlayerName { get; }
-        public NitroxVector3 DeathPosition { get; }
+        [Index(0)]
+        public virtual string PlayerName { get; protected set; }
+        [Index(1)]
+        public virtual NitroxVector3 DeathPosition { get; protected set; }
+
+        private PlayerDeathEvent() { }
 
         public PlayerDeathEvent(string playerName, NitroxVector3 deathPosition)
         {

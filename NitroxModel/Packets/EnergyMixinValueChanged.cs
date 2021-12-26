@@ -1,15 +1,20 @@
-﻿using System;
-using NitroxModel.DataStructures;
+﻿using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
+using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class EnergyMixinValueChanged : Packet
     {
-        public NitroxId OwnerId { get; }
-        public float Value { get; }
-        public ItemData BatteryData { get; }
+        [Index(0)]
+        public virtual NitroxId OwnerId { get; protected set; }
+        [Index(1)]
+        public virtual float Value { get; protected set; }
+        [Index(2)]
+        public virtual ItemData BatteryData { get; protected set; }
+
+        private EnergyMixinValueChanged() { }
 
         public EnergyMixinValueChanged(NitroxId ownerId, float value, ItemData batteryData)
         {

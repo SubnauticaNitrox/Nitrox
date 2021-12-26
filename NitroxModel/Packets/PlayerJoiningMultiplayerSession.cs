@@ -1,11 +1,14 @@
-﻿using System;
+﻿using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class PlayerJoiningMultiplayerSession : CorrelatedPacket
     {
-        public string ReservationKey { get; }
+        [Index(0)]
+        public virtual string ReservationKey { get; protected set; }
+
+        private PlayerJoiningMultiplayerSession() : base(default) { }
 
         public PlayerJoiningMultiplayerSession(string correlationId, string reservationKey) : base(correlationId)
         {

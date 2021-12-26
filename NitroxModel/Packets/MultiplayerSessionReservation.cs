@@ -1,14 +1,19 @@
-﻿using System;
-using NitroxModel.MultiplayerSession;
+﻿using NitroxModel.MultiplayerSession;
+using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class MultiplayerSessionReservation : CorrelatedPacket
     {
-        public MultiplayerSessionReservationState ReservationState { get; }
-        public ushort PlayerId { get; }
-        public string ReservationKey { get; }
+        [Index(0)]
+        public virtual MultiplayerSessionReservationState ReservationState { get; protected set; }
+        [Index(1)]
+        public virtual ushort PlayerId { get; protected set; }
+        [Index(2)]
+        public virtual string ReservationKey { get; protected set; }
+
+        private MultiplayerSessionReservation() : base(default) { }
 
         public MultiplayerSessionReservation(string correlationId, MultiplayerSessionReservationState reservationState) : base(correlationId)
         {

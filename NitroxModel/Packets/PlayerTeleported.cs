@@ -1,17 +1,23 @@
-﻿using System;
-using NitroxModel.DataStructures;
+﻿using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
+using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class PlayerTeleported : Packet
     {
-        public string PlayerName { get; }
-        public NitroxVector3 DestinationFrom { get; }
-        public NitroxVector3 DestinationTo { get; }
-        public Optional<NitroxId> SubRootID { get; }
+        [Index(0)]
+        public virtual string PlayerName { get; protected set; }
+        [Index(1)]
+        public virtual NitroxVector3 DestinationFrom { get; protected set; }
+        [Index(2)]
+        public virtual NitroxVector3 DestinationTo { get; protected set; }
+        [Index(3)]
+        public virtual Optional<NitroxId> SubRootID { get; protected set; }
+
+        private PlayerTeleported() { }
 
         public PlayerTeleported(string playerName, NitroxVector3 destinationFrom, NitroxVector3 destinationTo, Optional<NitroxId> subRootID)
         {

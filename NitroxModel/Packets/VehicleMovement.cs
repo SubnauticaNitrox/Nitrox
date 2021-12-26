@@ -1,13 +1,16 @@
-﻿using System;
-using NitroxModel.DataStructures.GameLogic;
+﻿using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Networking;
+using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class VehicleMovement : Movement
     {
-        public VehicleMovementData VehicleMovementData { get; }
+        [Index(0)]
+        public virtual VehicleMovementData VehicleMovementData { get; protected set; }
+
+        private VehicleMovement() { }
 
         public VehicleMovement(ushort playerId, VehicleMovementData vehicleMovementData) : base(playerId, vehicleMovementData.Position, vehicleMovementData.Velocity, vehicleMovementData.Rotation, vehicleMovementData.Rotation)
         {

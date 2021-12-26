@@ -1,13 +1,17 @@
-﻿using System;
-using NitroxModel.DataStructures;
+﻿using NitroxModel.DataStructures;
+using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class PlayFMODCustomLoopingEmitter : Packet
     {
-        public NitroxId Id { get; }
-        public string AssetPath { get; }
+        [Index(0)]
+        public virtual NitroxId Id { get; protected set; }
+        [Index(1)]
+        public virtual string AssetPath { get; protected set; }
+
+        private PlayFMODCustomLoopingEmitter() { }
 
         public PlayFMODCustomLoopingEmitter(NitroxId id, string assetPath)
         {

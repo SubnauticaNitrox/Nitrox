@@ -1,13 +1,17 @@
-﻿using System;
-using NitroxModel.DataStructures;
+﻿using NitroxModel.DataStructures;
+using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class WeldAction : Packet
     {
-        public NitroxId Id { get; }
-        public float HealthAdded { get; }
+        [Index(0)]
+        public virtual NitroxId Id { get; protected set; }
+        [Index(1)]
+        public virtual float HealthAdded { get; protected set; }
+
+        private WeldAction() { }
 
         public WeldAction(NitroxId id, float healthAdded)
         {

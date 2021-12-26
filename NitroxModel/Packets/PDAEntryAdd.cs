@@ -1,14 +1,19 @@
-﻿using System;
-using NitroxModel.DataStructures.GameLogic;
+﻿using NitroxModel.DataStructures.GameLogic;
+using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class PDAEntryAdd : Packet
     {
-        public NitroxTechType TechType { get; }
-        public float Progress { get; }
-        public int Unlocked { get; }
+        [Index(0)]
+        public virtual NitroxTechType TechType { get; protected set; }
+        [Index(1)]
+        public virtual float Progress { get; protected set; }
+        [Index(2)]
+        public virtual int Unlocked { get; protected set; }
+
+        private PDAEntryAdd() { }
 
         public PDAEntryAdd(NitroxTechType techType, float progress, int unlocked)
         {

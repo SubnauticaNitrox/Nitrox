@@ -1,20 +1,28 @@
-﻿using System;
-using NitroxModel.DataStructures;
+﻿using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
+using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class DroppedItem : Packet
     {
-        public NitroxId Id { get; }
-        public Optional<NitroxId> WaterParkId { get; }
-        public NitroxTechType TechType { get; }
-        public NitroxVector3 ItemPosition { get; }
-        public NitroxQuaternion ItemRotation { get; }
-        public byte[] Bytes { get; }
+        [Index(0)]
+        public virtual NitroxId Id { get; protected set; }
+        [Index(1)]
+        public virtual Optional<NitroxId> WaterParkId { get; protected set; }
+        [Index(2)]
+        public virtual NitroxTechType TechType { get; protected set; }
+        [Index(3)]
+        public virtual NitroxVector3 ItemPosition { get; protected set; }
+        [Index(4)]
+        public virtual NitroxQuaternion ItemRotation { get; protected set; }
+        [Index(5)]
+        public virtual byte[] Bytes { get; protected set; }
+
+        private DroppedItem() { }
 
         public DroppedItem(NitroxId id, Optional<NitroxId> waterParkId, NitroxTechType techType, NitroxVector3 itemPosition, NitroxQuaternion itemRotation, byte[] bytes)
         {

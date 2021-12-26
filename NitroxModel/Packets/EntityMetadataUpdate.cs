@@ -1,15 +1,18 @@
-﻿using System;
-using NitroxModel.DataStructures;
+﻿using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
+using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class EntityMetadataUpdate : Packet
     {
-        public NitroxId Id { get; }
+        [Index(0)]
+        public virtual NitroxId Id { get; protected set; }
+        [Index(1)]
+        public virtual EntityMetadata NewValue { get; protected set; }
 
-        public EntityMetadata NewValue { get; }
+        private EntityMetadataUpdate() { }
 
         public EntityMetadataUpdate(NitroxId id, EntityMetadata newValue)
         {

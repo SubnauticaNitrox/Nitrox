@@ -1,18 +1,25 @@
-﻿using System;
-using NitroxModel.DataStructures;
+﻿using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Unity;
+using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class SeamothModulesAction : Packet
     {
-        public NitroxTechType TechType { get; }
-        public int SlotID { get; }
-        public NitroxId Id { get; }
-        public NitroxVector3 Forward { get; }
-        public NitroxQuaternion Rotation { get; }
+        [Index(0)]
+        public virtual NitroxTechType TechType { get; protected set; }
+        [Index(1)]
+        public virtual int SlotID { get; protected set; }
+        [Index(2)]
+        public virtual NitroxId Id { get; protected set; }
+        [Index(3)]
+        public virtual NitroxVector3 Forward { get; protected set; }
+        [Index(4)]
+        public virtual NitroxQuaternion Rotation { get; protected set; }
+
+        private SeamothModulesAction() { }
 
         public SeamothModulesAction(NitroxTechType techType, int slotID, NitroxId id, NitroxVector3 forward, NitroxQuaternion rotation)
         {

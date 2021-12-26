@@ -1,12 +1,15 @@
-﻿using System;
-using NitroxModel.DataStructures.GameLogic;
+﻿using NitroxModel.DataStructures.GameLogic;
+using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class PlaceBasePiece : Packet
     {
-        public BasePiece BasePiece { get; }
+        [Index(0)]
+        public virtual BasePiece BasePiece { get; protected set; }
+
+        private PlaceBasePiece() { }
 
         public PlaceBasePiece(BasePiece basePiece)
         {

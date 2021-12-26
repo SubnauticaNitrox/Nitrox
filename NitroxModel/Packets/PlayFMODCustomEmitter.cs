@@ -1,14 +1,19 @@
-﻿using System;
-using NitroxModel.DataStructures;
+﻿using NitroxModel.DataStructures;
+using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class PlayFMODCustomEmitter : Packet
     {
-        public NitroxId Id { get; }
-        public string AssetPath { get; }
-        public bool Play { get; }
+        [Index(0)]
+        public virtual NitroxId Id { get; protected set; }
+        [Index(1)]
+        public virtual string AssetPath { get; protected set; }
+        [Index(2)]
+        public virtual bool Play { get; protected set; }
+
+        private PlayFMODCustomEmitter() { }
 
         public PlayFMODCustomEmitter(NitroxId id, string assetPath, bool play)
         {

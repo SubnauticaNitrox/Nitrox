@@ -1,13 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using NitroxModel.DataStructures;
+using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class SimulationOwnershipChange : Packet
     {
-        public List<SimulatedEntity> Entities { get; }
+        [Index(0)]
+        public virtual List<SimulatedEntity> Entities { get; protected set; }
+
+        private SimulationOwnershipChange() { }
 
         public SimulationOwnershipChange(NitroxId id, ushort owningPlayerId, SimulationLockType lockType)
         {

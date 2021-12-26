@@ -1,13 +1,17 @@
-﻿using System;
-using NitroxModel.DataStructures;
+﻿using NitroxModel.DataStructures;
+using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class ConstructionAmountChanged : Packet
     {
-        public NitroxId Id { get; }
-        public float ConstructionAmount { get; }
+        [Index(0)]
+        public virtual NitroxId Id { get; protected set; }
+        [Index(1)]
+        public virtual float ConstructionAmount { get; protected set; }
+
+        private ConstructionAmountChanged() { }
 
         public ConstructionAmountChanged(NitroxId id, float constructionAmount)
         {

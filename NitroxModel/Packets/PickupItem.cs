@@ -1,16 +1,21 @@
-﻿using System;
-using NitroxModel.DataStructures;
+﻿using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Unity;
+using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class PickupItem : Packet
     {
-        public NitroxId Id { get; }
-        public NitroxVector3 ItemPosition { get; }
-        public NitroxTechType TechType { get; }
+        [Index(0)]
+        public virtual NitroxId Id { get; protected set; }
+        [Index(1)]
+        public virtual NitroxVector3 ItemPosition { get; protected set; }
+        [Index(2)]
+        public virtual NitroxTechType TechType { get; protected set; }
+
+        private PickupItem() { }
 
         public PickupItem(NitroxVector3 itemPosition, NitroxId id, NitroxTechType techType)
         {

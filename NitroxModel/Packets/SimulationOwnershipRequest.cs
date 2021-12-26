@@ -1,14 +1,19 @@
-﻿using System;
-using NitroxModel.DataStructures;
+﻿using NitroxModel.DataStructures;
+using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class SimulationOwnershipRequest : Packet
     {
-        public ushort PlayerId { get; }
-        public NitroxId Id { get; }
-        public SimulationLockType LockType { get; }
+        [Index(0)]
+        public virtual ushort PlayerId { get; protected set; }
+        [Index(1)]
+        public virtual NitroxId Id { get; protected set; }
+        [Index(2)]
+        public virtual SimulationLockType LockType { get; protected set; }
+
+        private SimulationOwnershipRequest() { }
 
         public SimulationOwnershipRequest(ushort playerId, NitroxId id, SimulationLockType lockType)
         {

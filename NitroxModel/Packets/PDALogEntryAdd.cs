@@ -1,12 +1,16 @@
-﻿using System;
+﻿using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class PDALogEntryAdd : Packet
     {
-        public string Key { get; }
-        public float Timestamp { get; }
+        [Index(0)]
+        public virtual string Key { get; protected set; }
+        [Index(1)]
+        public virtual float Timestamp { get; protected set; }
+
+        private PDALogEntryAdd() { }
 
         public PDALogEntryAdd(string key, float timestamp)
         {

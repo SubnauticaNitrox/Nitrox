@@ -1,12 +1,15 @@
-﻿using System;
-using NitroxModel.DataStructures.GameLogic;
+﻿using NitroxModel.DataStructures.GameLogic;
+using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class PDAEntryRemove : Packet
     {
-        public NitroxTechType TechType { get; }
+        [Index(0)]
+        public virtual NitroxTechType TechType { get; protected set; }
+
+        private PDAEntryRemove() { }
 
         public PDAEntryRemove(NitroxTechType techType)
         {

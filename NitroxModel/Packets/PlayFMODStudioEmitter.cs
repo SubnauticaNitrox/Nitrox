@@ -1,15 +1,21 @@
-﻿using System;
-using NitroxModel.DataStructures;
+﻿using NitroxModel.DataStructures;
+using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class PlayFMODStudioEmitter : Packet
     {
-        public NitroxId Id { get; }
-        public string AssetPath { get; }
-        public bool Play { get; }
-        public bool AllowFadeout { get; }
+        [Index(0)]
+        public virtual NitroxId Id { get; protected set; }
+        [Index(1)]
+        public virtual string AssetPath { get; protected set; }
+        [Index(2)]
+        public virtual bool Play { get; protected set; }
+        [Index(3)]
+        public virtual bool AllowFadeout { get; protected set; }
+
+        private PlayFMODStudioEmitter() { }
 
         public PlayFMODStudioEmitter(NitroxId id, string assetPath, bool play, bool allowFadeout)
         {

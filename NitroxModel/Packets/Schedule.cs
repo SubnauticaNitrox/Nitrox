@@ -1,13 +1,18 @@
-﻿using System;
+﻿using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class Schedule : Packet
     {
-        public float TimeExecute { get; }
-        public string Key { get; }
-        public string Type { get; }
+        [Index(0)]
+        public virtual float TimeExecute { get; protected set; }
+        [Index(1)]
+        public virtual string Key { get; protected set; }
+        [Index(2)]
+        public virtual string Type { get; protected set; }
+
+        private Schedule() { }
         
         public Schedule(float timeExecute, string key, string type)
         {

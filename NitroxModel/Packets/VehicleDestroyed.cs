@@ -1,14 +1,19 @@
-﻿using System;
-using NitroxModel.DataStructures;
+﻿using NitroxModel.DataStructures;
+using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class VehicleDestroyed : Packet
     {
-        public NitroxId Id { get; }
-        public string PlayerName { get; }
-        public bool GetPilotingMode { get; }
+        [Index(0)]
+        public virtual NitroxId Id { get; protected set; }
+        [Index(1)]
+        public virtual string PlayerName { get; protected set; }
+        [Index(2)]
+        public virtual bool GetPilotingMode { get; protected set; }
+
+        private VehicleDestroyed() { }
 
         public VehicleDestroyed(NitroxId id, string playerName, bool getPilotingMode)
         {

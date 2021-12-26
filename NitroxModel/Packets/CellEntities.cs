@@ -1,13 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using NitroxModel.DataStructures.GameLogic;
+using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class CellEntities : Packet
     {
-        public List<Entity> Entities { get; }
+        [Index(0)]
+        public virtual List<Entity> Entities { get; protected set; }
+
+        private CellEntities() { }
 
         public CellEntities(List<Entity> entities)
         {

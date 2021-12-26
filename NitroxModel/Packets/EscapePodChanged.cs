@@ -1,14 +1,18 @@
-﻿using System;
-using NitroxModel.DataStructures;
+﻿using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
+using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class EscapePodChanged : Packet
     {
-        public ushort PlayerId { get; }
-        public Optional<NitroxId> EscapePodId { get; }
+        [Index(0)]
+        public virtual ushort PlayerId { get; protected set; }
+        [Index(1)]
+        public virtual Optional<NitroxId> EscapePodId { get; protected set; }
+
+        private EscapePodChanged() { }
 
         public EscapePodChanged(ushort playerId, Optional<NitroxId> escapePodId)
         {

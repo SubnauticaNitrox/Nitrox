@@ -1,14 +1,19 @@
-﻿using System;
-using NitroxModel.DataStructures;
+﻿using NitroxModel.DataStructures;
+using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class OpenableStateChanged : Packet
     {
-        public NitroxId Id { get; }
-        public bool IsOpen { get; }
-        public float Duration { get; }
+        [Index(0)]
+        public virtual NitroxId Id { get; protected set; }
+        [Index(1)]
+        public virtual bool IsOpen { get; protected set; }
+        [Index(2)]
+        public virtual float Duration { get; protected set; }
+
+        private OpenableStateChanged() { }
 
         public OpenableStateChanged(NitroxId id, bool isOpen, float duration)
         {

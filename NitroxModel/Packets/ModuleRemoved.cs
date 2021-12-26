@@ -1,15 +1,21 @@
-﻿using System;
-using NitroxModel.DataStructures;
+﻿using NitroxModel.DataStructures;
+using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class ModuleRemoved : Packet
     {
-        public NitroxId OwnerId { get; }
-        public string Slot { get; }
-        public NitroxId ItemId { get; }
-        public bool PlayerModule { get; }
+        [Index(0)]
+        public virtual NitroxId OwnerId { get; protected set; }
+        [Index(1)]
+        public virtual string Slot { get; protected set; }
+        [Index(2)]
+        public virtual NitroxId ItemId { get; protected set; }
+        [Index(3)]
+        public virtual bool PlayerModule { get; protected set; }
+
+        private ModuleRemoved() { }
 
         public ModuleRemoved(NitroxId ownerId, string slot, NitroxId itemId, bool playerModule)
         {

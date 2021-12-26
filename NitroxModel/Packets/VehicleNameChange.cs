@@ -1,15 +1,20 @@
-﻿using System;
-using NitroxModel.DataStructures;
+﻿using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
+using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class VehicleNameChange : Packet
     {
-        public Optional<NitroxId> ParentId { get; }
-        public NitroxId VehicleId { get; }
-        public string Name { get; }
+        [Index(0)]
+        public virtual Optional<NitroxId> ParentId { get; protected set; }
+        [Index(1)]
+        public virtual NitroxId VehicleId { get; protected set; }
+        [Index(2)]
+        public virtual string Name { get; protected set; }
+
+        private VehicleNameChange() { }
 
         public VehicleNameChange(NitroxId parentId, NitroxId vehicleId, string name)
         {

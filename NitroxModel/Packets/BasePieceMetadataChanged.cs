@@ -1,14 +1,18 @@
-﻿using System;
-using NitroxModel.DataStructures;
+﻿using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Buildings.Metadata;
+using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class BasePieceMetadataChanged : Packet
     {
-        public NitroxId PieceId { get; }
-        public BasePieceMetadata Metadata { get; }
+        [Index(0)]
+        public virtual NitroxId PieceId { get; protected set; }
+        [Index(1)]
+        public virtual BasePieceMetadata Metadata { get; protected set; }
+
+        private BasePieceMetadataChanged() { }
 
         public BasePieceMetadataChanged(NitroxId pieceId, BasePieceMetadata metadata)
         {

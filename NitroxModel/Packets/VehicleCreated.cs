@@ -1,13 +1,17 @@
-﻿using System;
-using NitroxModel.DataStructures.GameLogic;
+﻿using NitroxModel.DataStructures.GameLogic;
+using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class VehicleCreated : Packet
     {
-        public string PlayerName { get; }
-        public VehicleModel CreatedVehicle { get; }
+        [Index(0)]
+        public virtual string PlayerName { get; protected set; }
+        [Index(1)]
+        public virtual VehicleModel CreatedVehicle { get; protected set; }
+
+        private VehicleCreated() { }
 
         public VehicleCreated(VehicleModel createdVehicle, string playerName)
         {

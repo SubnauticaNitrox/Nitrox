@@ -12,6 +12,7 @@ using ZeroFormatter.Formatters;
 
 namespace NitroxModel.Packets
 {
+    [ZeroFormattable]
     [DynamicUnion]
     public abstract class Packet
     {
@@ -21,6 +22,39 @@ namespace NitroxModel.Packets
         static Packet()
         {
             // TODO: setup ZeroFormatter formatters
+            // Need support for:
+            /*
+             * EscapePodModel
+             * NitroxId
+             * BasePieceMetadata
+             * Entity
+             * AbsoluteEntityCell
+             * VehicleModel
+             * NitroxVector3
+             * Optional<>
+             * NitroxTechType
+             * NitroxQuaternion
+             * ItemData
+             * EntityMetadata
+             * EntityTransformUpdate
+             * EquippedItemData
+             * BasePiece
+             * InitialPDAData
+             * InitialStoryGoalData
+             * PlayerStatsData
+             * InitialRemotePlayerData
+             * DamageTakenData
+             * Version*
+             * PlayerSettings
+             * AuthenticationContext
+             * PlayerContext
+             * Object (SceneDebuggerChange)
+             * SimulatedEntity
+             * InteractiveChildObjectIdentifier
+             * NitroxColor
+             * VehicleMovementData
+             */
+
             Formatter.AppendDynamicUnionResolver((unionType, resolver) =>
             {
                 if (unionType != typeof(Packet))
@@ -50,7 +84,9 @@ namespace NitroxModel.Packets
             });
         }
 
+        [Index(-1)]
         public NitroxDeliveryMethod.DeliveryMethod DeliveryMethod { get; protected set; } = NitroxDeliveryMethod.DeliveryMethod.RELIABLE_ORDERED;
+        [Index(-2)]
         public UdpChannelId UdpChannel { get; protected set; } = UdpChannelId.DEFAULT;
 
         public enum UdpChannelId

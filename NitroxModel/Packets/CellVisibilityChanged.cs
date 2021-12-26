@@ -1,14 +1,19 @@
-﻿using System;
-using NitroxModel.DataStructures.GameLogic;
+﻿using NitroxModel.DataStructures.GameLogic;
+using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class CellVisibilityChanged : Packet
     {
-        public ushort PlayerId { get; }
-        public AbsoluteEntityCell[] Added { get; }
-        public AbsoluteEntityCell[] Removed { get; }
+        [Index(0)]
+        public virtual ushort PlayerId { get; protected set; }
+        [Index(1)]
+        public virtual AbsoluteEntityCell[] Added { get; protected set; }
+        [Index(2)]
+        public virtual AbsoluteEntityCell[] Removed { get; protected set; }
+
+        private CellVisibilityChanged() { }
 
         public CellVisibilityChanged(ushort playerId, AbsoluteEntityCell[] added, AbsoluteEntityCell[] removed)
         {

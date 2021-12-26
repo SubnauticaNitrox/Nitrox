@@ -1,12 +1,16 @@
-﻿using System;
+﻿using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class StoryEventSend : Packet
     {
-        public EventType Type { get; }
-        public string Key { get; }
+        [Index(0)]
+        public virtual EventType Type { get; protected set; }
+        [Index(1)]
+        public virtual string Key { get; protected set; }
+
+        private StoryEventSend() { }
 
         public StoryEventSend(EventType type, string key = "")
         {

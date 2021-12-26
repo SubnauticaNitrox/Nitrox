@@ -1,18 +1,27 @@
-﻿using System;
-using NitroxModel.Networking;
+﻿using NitroxModel.Networking;
+using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class PlayerStats : Packet
     {
-        public ushort PlayerId { get; }
-        public float Oxygen { get; }
-        public float MaxOxygen { get; }
-        public float Health { get; }
-        public float Food { get; }
-        public float Water { get; }
-        public float InfectionAmount { get; }
+        [Index(0)]
+        public virtual ushort PlayerId { get; protected set; }
+        [Index(1)]
+        public virtual float Oxygen { get; protected set; }
+        [Index(2)]
+        public virtual float MaxOxygen { get; protected set; }
+        [Index(3)]
+        public virtual float Health { get; protected set; }
+        [Index(4)]
+        public virtual float Food { get; protected set; }
+        [Index(5)]
+        public virtual float Water { get; protected set; }
+        [Index(6)]
+        public virtual float InfectionAmount { get; protected set; }
+
+        private PlayerStats() { }
 
         public PlayerStats(ushort playerId, float oxygen, float maxOxygen, float health, float food, float water, float infectionAmount)
         {

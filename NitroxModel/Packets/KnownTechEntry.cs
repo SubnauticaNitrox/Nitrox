@@ -1,13 +1,17 @@
-﻿using System;
-using NitroxModel.DataStructures.GameLogic;
+﻿using NitroxModel.DataStructures.GameLogic;
+using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class KnownTechEntryAdd : Packet
     {
-        public NitroxTechType TechType { get; }
-        public bool Verbose { get; }
+        [Index(0)]
+        public virtual NitroxTechType TechType { get; protected set; }
+        [Index(1)]
+        public virtual bool Verbose { get; protected set; }
+
+        private KnownTechEntryAdd() { }
 
         public KnownTechEntryAdd(NitroxTechType techType, bool verbose)
         {

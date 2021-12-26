@@ -1,13 +1,17 @@
-﻿using System;
-using NitroxModel.DataStructures;
+﻿using NitroxModel.DataStructures;
+using ZeroFormatter;
 
 namespace NitroxModel.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class ToggleLights : Packet
     {
-        public NitroxId Id { get; }
-        public bool IsOn { get; }
+        [Index(0)]
+        public virtual NitroxId Id { get; protected set; }
+        [Index(1)]
+        public virtual bool IsOn { get; protected set; }
+
+        private ToggleLights() { }
 
         public ToggleLights(NitroxId id, bool isOn)
         {
