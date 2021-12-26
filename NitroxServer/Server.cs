@@ -52,20 +52,21 @@ namespace NitroxServer
             get
             {
                 // TODO: Extend summary with more useful save file data
+                // Note for later additions: order these lines by their length
                 StringBuilder builder = new("\n");
                 builder.AppendLine($" - Save location: {Path.GetFullPath(serverConfig.SaveName)}");
-                builder.AppendLine($" - World GameMode: {serverConfig.GameMode}");
-                builder.AppendLine($" - Radio messages stored: {world.GameData.StoryGoals.RadioQueue.Count}");
-                builder.AppendLine($" - Story goals completed: {world.GameData.StoryGoals.CompletedGoals.Count}");
-                builder.AppendLine($" - Story goals unlocked: {world.GameData.StoryGoals.GoalUnlocks.Count}");
+                builder.AppendLine($" - Current time: day {world.EventTriggerer.Day} ({Math.Floor(world.EventTriggerer.ElapsedSeconds)}s)");
                 builder.AppendLine($" - Scheduled goals stored: {world.GameData.StoryGoals.ScheduledGoals.Count}");
+                builder.AppendLine($" - Story goals completed: {world.GameData.StoryGoals.CompletedGoals.Count}");
+                builder.AppendLine($" - Radio messages stored: {world.GameData.StoryGoals.RadioQueue.Count}");
+                builder.AppendLine($" - World gamemode: {serverConfig.GameMode}");
+                builder.AppendLine($" - Story goals unlocked: {world.GameData.StoryGoals.GoalUnlocks.Count}");
                 builder.AppendLine($" - Encyclopedia entries: {world.GameData.PDAState.EncyclopediaEntries.Count}");
                 builder.AppendLine($" - Storage slot items: {world.InventoryManager.GetAllStorageSlotItems().Count}");
                 builder.AppendLine($" - Inventory items: {world.InventoryManager.GetAllInventoryItems().Count}");
                 builder.AppendLine($" - Progress tech: {world.GameData.PDAState.CachedProgress.Count}");
                 builder.AppendLine($" - Known tech: {world.GameData.PDAState.KnownTechTypes.Count}");
                 builder.AppendLine($" - Vehicles: {world.VehicleManager.GetVehicles().Count()}");
-                builder.AppendLine($" - Current Time: day {world.EventTriggerer.Day} ({Math.Floor(world.EventTriggerer.ElapsedSeconds)}s)");
                 
                 return builder.ToString();
             }
