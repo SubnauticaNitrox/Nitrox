@@ -87,7 +87,7 @@ public class Program
 
             server = NitroxServiceLocator.LocateService<Server>();
             // Sonar must be set off by default since we cannot load back as a vehicle driver (as in vanilla SN)
-            SetDefaultCyclopsState(server.World.VehicleManager);
+            SetDefaultCyclopsState();
             await WaitForAvailablePortAsync(server.Port);
             CatchExitEvent();
             listenForCommands = ListenForCommandsAsync(server);
@@ -306,8 +306,9 @@ public class Program
         Server.Instance.Stop();
     }
 
-    private static void SetDefaultCyclopsState(VehicleManager vehicleManager)
+    private static void SetDefaultCyclopsState()
     {
+        VehicleManager vehicleManager = NitroxServiceLocator.LocateService<VehicleManager>();
         foreach (VehicleModel vehicleModel in vehicleManager.GetVehicles())
         {
             if (vehicleModel is CyclopsModel cyclopsModel)
