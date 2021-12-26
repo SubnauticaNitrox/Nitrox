@@ -8,9 +8,11 @@ using System.Text;
 using LZ4;
 using NitroxModel.Networking;
 using ZeroFormatter;
+using ZeroFormatter.Formatters;
 
 namespace NitroxModel.Packets
 {
+    [DynamicUnion]
     public abstract class Packet
     {
         private static readonly Dictionary<Type, PropertyInfo[]> cachedPropertiesByType = new();
@@ -18,7 +20,34 @@ namespace NitroxModel.Packets
 
         static Packet()
         {
-            // TODO: setup ZeroFormatter dynamic unions and formatters
+            // TODO: setup ZeroFormatter formatters
+            Formatter.AppendDynamicUnionResolver((unionType, resolver) =>
+            {
+                if (unionType != typeof(Packet))
+                {
+                    return;
+                }
+
+                resolver.RegisterUnionKeyType(typeof(uint));
+
+                IEnumerable<Type> GetPacketTypes()
+                {
+                    string[] packetAssemblies = new[] { "NitroxModel", "NitroxModel-Subnautica" };
+
+                    return AppDomain.CurrentDomain.GetAssemblies()
+                                    .Where(a => packetAssemblies.Contains(a.GetName().Name))
+                                    .SelectMany(a => a.GetTypes()
+                                                      .Where(t => t.IsSubclassOf(typeof(Packet))));
+                }
+
+                uint key = uint.MinValue;
+
+                foreach (Type packetType in GetPacketTypes())
+                {
+                    resolver.RegisterSubType(key, packetType);
+                    key++;
+                }
+            });
         }
 
         public NitroxDeliveryMethod.DeliveryMethod DeliveryMethod { get; protected set; } = NitroxDeliveryMethod.DeliveryMethod.RELIABLE_ORDERED;
