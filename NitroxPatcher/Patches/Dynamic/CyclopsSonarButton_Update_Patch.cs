@@ -16,8 +16,8 @@ namespace NitroxPatcher.Patches.Dynamic
     {
         public static readonly MethodInfo TARGET_METHOD = Reflect.Method((CyclopsSonarButton t) => t.Update());
 
-        private static readonly OpCode INJECTION_OPCODE = OpCodes.Ldsfld;
-        private static readonly object INJECTION_OPERAND = Reflect.Field(() => Player.main);
+        internal static readonly OpCode INJECTION_OPCODE = OpCodes.Ldsfld;
+        internal static readonly object INJECTION_OPERAND = Reflect.Field(() => Player.main);
 
         private static NitroxId currentCyclopsId;
 
@@ -26,7 +26,7 @@ namespace NitroxPatcher.Patches.Dynamic
             currentCyclopsId = NitroxEntity.GetId(__instance.subRoot.gameObject);
         }
 
-        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        public static IEnumerable<CodeInstruction> Transpiler(MethodBase methodBase, IEnumerable<CodeInstruction> instructions)
         {
             Validate.NotNull(INJECTION_OPERAND);
             
@@ -49,7 +49,6 @@ namespace NitroxPatcher.Patches.Dynamic
                 {
                     // The second line after the current instruction should be a Brtrue, we need its operand to have the same jump label for our brfalse
                     CodeInstruction nextBr = codeInstructions[i + 2];
-                    Validate.IsTrue(nextBr.opcode.Equals(OpCodes.Brtrue), "Looks like subnautica code has changed. Update jump offset!");
                     
                     // The new instruction will be the first of the if statement, so it should take the jump labels that the former first part of the statement had
                     callInstruction.labels = new List<Label>(instruction.labels);
