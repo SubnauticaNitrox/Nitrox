@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Text;
 using LZ4;
 using NitroxModel.Networking;
+using NitroxModel.Serialization.Formatters;
 using ZeroFormatter;
 using ZeroFormatter.Formatters;
 
@@ -28,9 +29,11 @@ namespace NitroxModel.Packets
              * ItemData*
              * EntityMetadata*
              * RotationMetadata*
-             * Version*
              * Object (SceneDebuggerChange)
              */
+
+            // Version is in an external assembly so a custom formatter is required
+            Formatter<DefaultResolver, Version>.Register(new VersionFormatter<DefaultResolver>());
 
             Formatter.AppendDynamicUnionResolver((unionType, resolver) =>
             {
