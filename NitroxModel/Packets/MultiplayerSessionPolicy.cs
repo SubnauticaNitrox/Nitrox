@@ -16,7 +16,9 @@ namespace NitroxModel.Packets
         [Index(3)]
         public virtual MultiplayerSessionAuthenticationAuthority AuthenticationAuthority { get; protected set; }
         [Index(4)]
+#pragma warning disable ZeroFormatterAnalyzer_TypeMustBeZeroFormattable // Lint of ZeroFormattable Type.
         public virtual Version NitroxVersionAllowed { get; protected set; }
+#pragma warning restore ZeroFormatterAnalyzer_TypeMustBeZeroFormattable // Lint of ZeroFormattable Type.
 
         private MultiplayerSessionPolicy() : base(default) { }
 

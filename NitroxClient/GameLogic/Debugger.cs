@@ -1,4 +1,5 @@
-﻿using NitroxClient.Communication.Abstract;
+﻿using LitJson;
+using NitroxClient.Communication.Abstract;
 using NitroxModel.Packets;
 
 namespace NitroxClient.GameLogic
@@ -14,7 +15,7 @@ namespace NitroxClient.GameLogic
 
         public void SceneDebuggerChange(string path, int gameObjectID, int componentID, string fieldName, object value)
         {
-            SceneDebuggerChange packet = new SceneDebuggerChange(path, gameObjectID, componentID, fieldName, value);
+            SceneDebuggerChange packet = new(path, gameObjectID, componentID, fieldName, JsonMapper.ToJson(value));
             packetSender.Send(packet);
         }
     }

@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Reflection;
+using LitJson;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxModel.Packets;
@@ -18,6 +19,8 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(SceneDebuggerChange sceneDebuggerChange)
         {
+            object value = JsonMapper.ToObject<object>(sceneDebuggerChange.Value);
+
             Transform gameObject = GameObject.Find(sceneDebuggerChange.Path).transform;
             if (sceneDebuggerChange.GameObjectID != -1)
             {
@@ -30,7 +33,7 @@ namespace NitroxClient.Communication.Packets.Processors
                 FieldInfo field = component.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic).First(fi => fi.Name == sceneDebuggerChange.FieldName);
                 try
                 {
-                    field.SetValue(component, sceneDebuggerChange.Value);
+                    field.SetValue(component, value);
                 }
                 catch
                 {
@@ -42,18 +45,18 @@ namespace NitroxClient.Communication.Packets.Processors
                 switch (sceneDebuggerChange.FieldName)
                 {
                     case "position":
-                        gameObject.position = (Vector3)sceneDebuggerChange.Value;
+                        gameObject.position = (Vector3)value;
                         break;
 
                     case "rotation":
-                        gameObject.rotation = (Quaternion)sceneDebuggerChange.Value;
+                        gameObject.rotation = (Quaternion)value;
                         break;
 
                     case "scale":
-                        gameObject.localScale = (Vector3)sceneDebuggerChange.Value;
+                        gameObject.localScale = (Vector3)value;
                         break;
                     case "enabled":
-                        gameObject.gameObject.SetActive((bool)sceneDebuggerChange.Value);
+                        gameObject.gameObject.SetActive((bool)value);
                         break;
                 }
             }

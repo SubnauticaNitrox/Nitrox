@@ -22,12 +22,6 @@ namespace NitroxModel.Packets
 
         static Packet()
         {
-            // TODO: setup ZeroFormatter formatters
-            // Need support for:
-            /*
-             * Object (SceneDebuggerChange)
-             */
-
             // Version is in an external assembly so a custom formatter is required
             Formatter<DefaultResolver, Version>.Register(new VersionFormatter<DefaultResolver>());
 
@@ -63,9 +57,9 @@ namespace NitroxModel.Packets
         }
 
         [Index(-1)]
-        public NitroxDeliveryMethod.DeliveryMethod DeliveryMethod { get; protected set; } = NitroxDeliveryMethod.DeliveryMethod.RELIABLE_ORDERED;
+        public virtual NitroxDeliveryMethod.DeliveryMethod DeliveryMethod { get; protected set; } = NitroxDeliveryMethod.DeliveryMethod.RELIABLE_ORDERED;
         [Index(-2)]
-        public UdpChannelId UdpChannel { get; protected set; } = UdpChannelId.DEFAULT;
+        public virtual UdpChannelId UdpChannel { get; protected set; } = UdpChannelId.DEFAULT;
 
         public enum UdpChannelId
         {

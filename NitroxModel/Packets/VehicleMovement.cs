@@ -7,7 +7,7 @@ namespace NitroxModel.Packets
     [ZeroFormattable]
     public class VehicleMovement : Movement
     {
-        [Index(0)]
+        [Index(5)]
         public virtual VehicleMovementData VehicleMovementData { get; protected set; }
 
         private VehicleMovement() { }

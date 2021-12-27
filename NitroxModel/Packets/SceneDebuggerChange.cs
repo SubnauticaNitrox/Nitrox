@@ -14,11 +14,11 @@ namespace NitroxModel.Packets
         [Index(3)]
         public virtual string FieldName { get; protected set; }
         [Index(4)]
-        public virtual object Value { get; protected set; }
+        public virtual string Value { get; protected set; }
 
         private SceneDebuggerChange() { }
 
-        public SceneDebuggerChange(string path, int gameObjectID, int componentID, string fieldName, object value)
+        public SceneDebuggerChange(string path, int gameObjectID, int componentID, string fieldName, string value)
         {
             Path = path;
             GameObjectID = gameObjectID;
