@@ -1,26 +1,31 @@
-﻿using System;
-using ProtoBufNet;
+﻿using ProtoBufNet;
+using ZeroFormatter;
 
 namespace NitroxModel.DataStructures.GameLogic.Buildings.Metadata
 {
-    [Serializable]
+    [ZeroFormattable]
     [ProtoContract]
     public class SignMetadata : BasePieceMetadata
     {
+        [Index(0)]
         [ProtoMember(1)]
-        public string Text { get; set; }
+        public virtual string Text { get; set; }
 
+        [Index(1)]
         [ProtoMember(2)]
-        public int ColorIndex { get; set; }
+        public virtual int ColorIndex { get; set; }
 
+        [Index(2)]
         [ProtoMember(3)]
-        public int ScaleIndex { get; set; }
+        public virtual int ScaleIndex { get; set; }
 
+        [Index(3)]
         [ProtoMember(4)]
-        public bool[] Elements { get; set; }
+        public virtual bool[] Elements { get; set; }
 
+        [Index(4)]
         [ProtoMember(5)]
-        public bool Background { get; set; }
+        public virtual bool Background { get; set; }
 
         protected SignMetadata()
         {

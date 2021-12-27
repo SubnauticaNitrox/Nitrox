@@ -1,17 +1,19 @@
-﻿using System;
-using ProtoBufNet;
+﻿using ProtoBufNet;
+using ZeroFormatter;
 
 namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata
 {
-    [Serializable]
+    [ZeroFormattable]
     [ProtoContract]
     public class SealedDoorMetadata : EntityMetadata
     {
+        [Index(0)]
         [ProtoMember(1)]
-        public bool Sealed { get; }
+        public virtual bool Sealed { get; protected set; }
 
+        [Index(1)]
         [ProtoMember(2)]
-        public float OpenedAmount { get; }
+        public virtual float OpenedAmount { get; protected set; }
 
         protected SealedDoorMetadata()
         {

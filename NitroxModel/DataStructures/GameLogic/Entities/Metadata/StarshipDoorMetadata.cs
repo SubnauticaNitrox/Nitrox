@@ -1,16 +1,18 @@
-﻿using System;
-using ProtoBufNet;
+﻿using ProtoBufNet;
+using ZeroFormatter;
 
 namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata
 {
-    [Serializable]
+    [ZeroFormattable]
     [ProtoContract]
     public class StarshipDoorMetadata : EntityMetadata
     {
+        [Index(0)]
         [ProtoMember(1)]
-        public bool DoorLocked { get; }
+        public virtual bool DoorLocked { get; protected set; }
+        [Index(1)]
         [ProtoMember(2)]
-        public bool DoorOpen { get; }
+        public virtual bool DoorOpen { get; protected set; }
 
         protected StarshipDoorMetadata()
         {

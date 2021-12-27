@@ -1,17 +1,19 @@
-﻿using System;
-using ProtoBufNet;
+﻿using ProtoBufNet;
+using ZeroFormatter;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
-    [Serializable]
+    [ZeroFormattable]
     [ProtoContract]
     public class EquippedItemData : ItemData
     {
+        [Index(0)]
         [ProtoMember(1)]
-        public string Slot { get; }
+        public virtual string Slot { get; protected set; }
 
+        [Index(1)]
         [ProtoMember(2)]
-        public NitroxTechType TechType { get; }
+        public virtual NitroxTechType TechType { get; protected set; }
 
         protected EquippedItemData()
         {

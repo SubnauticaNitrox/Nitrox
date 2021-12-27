@@ -25,10 +25,6 @@ namespace NitroxModel.Packets
             // TODO: setup ZeroFormatter formatters
             // Need support for:
             /*
-             * BasePieceMetadata*
-             * ItemData*
-             * EntityMetadata*
-             * RotationMetadata*
              * Object (SceneDebuggerChange)
              */
 
@@ -37,28 +33,30 @@ namespace NitroxModel.Packets
 
             Formatter.AppendDynamicUnionResolver((unionType, resolver) =>
             {
-                if (unionType != typeof(Packet))
+                string[] assemblies = new[] { "NitroxModel", "NitroxModel-Subnautica" };
+
+                if (!assemblies.Contains(unionType.Assembly.GetName().Name))
                 {
                     return;
                 }
 
                 resolver.RegisterUnionKeyType(typeof(uint));
 
-                IEnumerable<Type> GetPacketTypes()
+                IEnumerable<Type> GetUnionSubTypes()
                 {
-                    string[] packetAssemblies = new[] { "NitroxModel", "NitroxModel-Subnautica" };
+                    
 
                     return AppDomain.CurrentDomain.GetAssemblies()
-                                    .Where(a => packetAssemblies.Contains(a.GetName().Name))
+                                    .Where(a => assemblies.Contains(a.GetName().Name))
                                     .SelectMany(a => a.GetTypes()
-                                                      .Where(t => t.IsSubclassOf(typeof(Packet))));
+                                                      .Where(t => t.IsSubclassOf(unionType) || t.GetInterface(unionType.Name) != null));
                 }
 
                 uint key = uint.MinValue;
 
-                foreach (Type packetType in GetPacketTypes())
+                foreach (Type unionSubType in GetUnionSubTypes())
                 {
-                    resolver.RegisterSubType(key, packetType);
+                    resolver.RegisterSubType(key, unionSubType);
                     key++;
                 }
             });

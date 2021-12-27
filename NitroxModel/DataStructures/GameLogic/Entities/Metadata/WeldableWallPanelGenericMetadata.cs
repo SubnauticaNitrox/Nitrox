@@ -1,14 +1,15 @@
-﻿using System;
-using ProtoBufNet;
+﻿using ProtoBufNet;
+using ZeroFormatter;
 
 namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata
 {
-    [Serializable]
+    [ZeroFormattable]
     [ProtoContract]
     public class WeldableWallPanelGenericMetadata : EntityMetadata
     {
+        [Index(0)]
         [ProtoMember(1)]
-        public float LiveMixInHealth { get; }
+        public virtual float LiveMixInHealth { get; protected set; }
 
         protected WeldableWallPanelGenericMetadata()
         {

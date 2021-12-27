@@ -1,14 +1,15 @@
-using System;
-using ProtoBufNet;
+﻿using ProtoBufNet;
+using ZeroFormatter;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
-    [Serializable]
+    [ZeroFormattable]
     [ProtoContract]
     public class PlantableItemData : ItemData
     {
+        [Index(0)]
         [ProtoMember(1)]
-        public double PlantedGameTime { get; }
+        public virtual double PlantedGameTime { get; protected set; }
 
 
         protected PlantableItemData()

@@ -1,9 +1,9 @@
-﻿using System;
-using ProtoBufNet;
+﻿using ProtoBufNet;
+using ZeroFormatter;
 
 namespace NitroxModel.DataStructures.GameLogic.Buildings.Metadata
 {
-    [Serializable]
+    [DynamicUnion]
     [ProtoContract, ProtoInclude(50, typeof(SignMetadata))]
     public abstract class BasePieceMetadata
     {

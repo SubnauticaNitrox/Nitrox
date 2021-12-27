@@ -1,14 +1,15 @@
-﻿using System;
-using ProtoBufNet;
+﻿using ProtoBufNet;
+using ZeroFormatter;
 
 namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata
 {
-    [Serializable]
+    [ZeroFormattable]
     [ProtoContract]
     public class PrecursorTeleporterActivationTerminalMetadata : EntityMetadata
     {
+        [Index(0)]
         [ProtoMember(1)]
-        public bool Unlocked { get; }
+        public virtual bool Unlocked { get; protected set; }
 
         protected PrecursorTeleporterActivationTerminalMetadata()
         {

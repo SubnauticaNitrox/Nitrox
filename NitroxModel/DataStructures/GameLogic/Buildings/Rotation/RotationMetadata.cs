@@ -1,9 +1,10 @@
 ﻿using System;
 using ProtoBufNet;
+using ZeroFormatter;
 
 namespace NitroxModel.DataStructures.GameLogic.Buildings.Rotation
 {
-    [Serializable]
+    [DynamicUnion]
     [ProtoContract]
     public abstract class RotationMetadata
     {

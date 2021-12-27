@@ -1,22 +1,26 @@
-﻿using System;
-using ProtoBufNet;
+﻿using ProtoBufNet;
+using ZeroFormatter;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
-    [Serializable]
+    [ZeroFormattable]
+    [DynamicUnion]
     [ProtoContract]
     [ProtoInclude(50, typeof(EquippedItemData))]
     [ProtoInclude(51, typeof(PlantableItemData))]
     public class ItemData
     {
+        [Index(-1)]
         [ProtoMember(1)]
-        public NitroxId ContainerId { get; }
+        public virtual NitroxId ContainerId { get; protected set; }
 
+        [Index(-2)]
         [ProtoMember(2)]
-        public NitroxId ItemId { get; }
+        public virtual NitroxId ItemId { get; protected set; }
 
+        [Index(-3)]
         [ProtoMember(3)]
-        public byte[] SerializedData { get; }
+        public virtual byte[] SerializedData { get; protected set; } // TODO: change
 
         protected ItemData()
         {
