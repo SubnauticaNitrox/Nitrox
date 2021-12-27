@@ -1,14 +1,18 @@
-﻿using System;
-using NitroxModel.DataStructures;
+﻿using NitroxModel.DataStructures;
 using NitroxModel.Packets;
+using ZeroFormatter;
 
 namespace NitroxModel_Subnautica.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class CyclopsChangeSonarMode : Packet
     {
-        public NitroxId Id { get; }
-        public bool IsOn { get; }
+        [Index(0)]
+        public virtual NitroxId Id { get; protected set; }
+        [Index(1)]
+        public virtual bool IsOn { get; protected set; }
+
+        private CyclopsChangeSonarMode() { }
 
         public CyclopsChangeSonarMode(NitroxId id, bool isOn)
         {

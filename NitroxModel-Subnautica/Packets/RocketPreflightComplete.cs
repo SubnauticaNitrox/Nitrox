@@ -1,14 +1,18 @@
-﻿using System;
-using NitroxModel.DataStructures;
+﻿using NitroxModel.DataStructures;
 using NitroxModel.Packets;
+using ZeroFormatter;
 
 namespace NitroxModel_Subnautica.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class RocketPreflightComplete : Packet
     {
-        public NitroxId Id { get; }
-        public PreflightCheck FlightCheck { get; }
+        [Index(0)]
+        public virtual NitroxId Id { get; protected set; }
+        [Index(1)]
+        public virtual PreflightCheck FlightCheck { get; protected set; }
+
+        private RocketPreflightComplete() { }
 
         public RocketPreflightComplete(NitroxId id, PreflightCheck flightCheck)
         {

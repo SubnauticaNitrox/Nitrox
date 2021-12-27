@@ -1,13 +1,16 @@
-﻿using System;
-using NitroxModel.DataStructures;
+﻿using NitroxModel.DataStructures;
 using NitroxModel.Packets;
+using ZeroFormatter;
 
 namespace NitroxModel_Subnautica.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class CyclopsDestroyed : Packet
     {
-        public NitroxId Id { get; }
+        [Index(0)]
+        public virtual NitroxId Id { get; protected set; }
+
+        private CyclopsDestroyed() { }
 
         public CyclopsDestroyed(NitroxId id)
         {

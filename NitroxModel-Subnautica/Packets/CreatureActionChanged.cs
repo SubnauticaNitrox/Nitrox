@@ -1,15 +1,19 @@
-﻿using System;
-using NitroxModel.DataStructures;
+﻿using NitroxModel.DataStructures;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures.GameLogic.Creatures.Actions;
+using ZeroFormatter;
 
 namespace NitroxModel_Subnautica.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class CreatureActionChanged : Packet
     {
-        public NitroxId Id { get; }
-        public SerializableCreatureAction NewAction { get; }
+        [Index(0)]
+        public virtual NitroxId Id { get; protected set; }
+        [Index(1)]
+        public virtual SerializableCreatureAction NewAction { get; protected set; }
+
+        private CreatureActionChanged() { }
 
         public CreatureActionChanged(NitroxId id, SerializableCreatureAction newAction)
         {

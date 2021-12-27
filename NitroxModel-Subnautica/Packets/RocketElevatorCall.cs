@@ -1,15 +1,20 @@
-﻿using System;
-using NitroxModel.DataStructures;
+﻿using NitroxModel.DataStructures;
 using NitroxModel.Packets;
+using ZeroFormatter;
 
 namespace NitroxModel_Subnautica.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class RocketElevatorCall : Packet
     {
-        public bool Up { get; }
-        public NitroxId Id { get; }
-        public RocketElevatorPanel Panel { get; }
+        [Index(0)]
+        public virtual bool Up { get; protected set; }
+        [Index(1)]
+        public virtual NitroxId Id { get; protected set; }
+        [Index(2)]
+        public virtual RocketElevatorPanel Panel { get; protected set; }
+
+        private RocketElevatorCall() { }
 
         public RocketElevatorCall(NitroxId id, RocketElevatorPanel panel, bool up)
         {

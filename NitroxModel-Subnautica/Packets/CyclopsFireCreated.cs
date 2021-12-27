@@ -2,16 +2,20 @@
 using NitroxModel.DataStructures;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures.GameLogic;
+using ZeroFormatter;
 
 namespace NitroxModel_Subnautica.Packets
 {
     /// <summary>
     /// Triggered when a fire has been created in <see cref="SubFire.CreateFire(SubFire.RoomFire)"/>
     /// </summary>
-    [Serializable]
+    [ZeroFormattable]
     public class CyclopsFireCreated : Packet
     {
-        public CyclopsFireData FireCreatedData { get; }
+        [Index(0)]
+        public virtual CyclopsFireData FireCreatedData { get; protected set; }
+
+        private CyclopsFireCreated() { }
 
         public CyclopsFireCreated(NitroxId id, NitroxId cyclopsId, CyclopsRooms room, int nodeIndex)
         {

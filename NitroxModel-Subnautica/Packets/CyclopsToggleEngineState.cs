@@ -1,15 +1,20 @@
-﻿using System;
-using NitroxModel.DataStructures;
+﻿using NitroxModel.DataStructures;
 using NitroxModel.Packets;
+using ZeroFormatter;
 
 namespace NitroxModel_Subnautica.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class CyclopsToggleEngineState : Packet
     {
-        public NitroxId Id { get; }
-        public bool IsOn { get; }
-        public bool IsStarting { get; }
+        [Index(0)]
+        public virtual NitroxId Id { get; protected set; }
+        [Index(1)]
+        public virtual bool IsOn { get; protected set; }
+        [Index(2)]
+        public virtual bool IsStarting { get; protected set; }
+
+        private CyclopsToggleEngineState() { }
 
         public CyclopsToggleEngineState(NitroxId id, bool isOn, bool isStarting)
         {

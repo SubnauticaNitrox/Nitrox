@@ -53,6 +53,10 @@ namespace NitroxModel.Packets
              * InteractiveChildObjectIdentifier
              * NitroxColor
              * VehicleMovementData
+             * ---
+             * SerializableCreatureAction
+             * CyclopsFireData
+             * CyclopsDamageInfoData
              */
 
             Formatter.AppendDynamicUnionResolver((unionType, resolver) =>

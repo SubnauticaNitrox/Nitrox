@@ -1,15 +1,20 @@
-﻿using System;
-using NitroxModel.DataStructures;
+﻿using NitroxModel.DataStructures;
 using NitroxModel.Packets;
+using ZeroFormatter;
 
 namespace NitroxModel_Subnautica.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class CyclopsDamagePointRepaired : Packet
     {
-        public NitroxId Id { get; }
-        public int DamagePointIndex { get; }
-        public float RepairAmount { get; }
+        [Index(0)]
+        public virtual NitroxId Id { get; protected set; }
+        [Index(1)]
+        public virtual int DamagePointIndex { get; protected set; }
+        [Index(2)]
+        public virtual float RepairAmount { get; protected set; }
+
+        private CyclopsDamagePointRepaired() { }
 
         /// <param name="id">The Cyclops id</param>
         /// <param name="repairAmount">The amount to repair the damage by. A large repair amount is passed if the point is meant to be fully repaired</param>

@@ -1,8 +1,8 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using NitroxModel.DataStructures;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures.GameLogic;
+using ZeroFormatter;
 
 namespace NitroxModel_Subnautica.Packets
 {
@@ -10,16 +10,25 @@ namespace NitroxModel_Subnautica.Packets
     /// A state update packet for the Cyclops that could be sent due to a <see cref="CyclopsDamagePoint"/> create/repair, <see cref="SubFire"/> create/extinguish,
     /// or a general Cyclops health change. A health change to 0 means the Cyclops has been destroyed.
     /// </summary>
-    [Serializable]
+    [ZeroFormattable]
     public class CyclopsDamage : Packet
     {
-        public NitroxId Id { get; }
-        public float SubHealth { get; }
-        public float DamageManagerHealth { get; }
-        public float SubFireHealth { get; }
-        public int[] DamagePointIndexes { get; }
-        public CyclopsFireData[] RoomFires { get; }
-        public CyclopsDamageInfoData DamageInfo { get; }
+        [Index(0)]
+        public virtual NitroxId Id { get; protected set; }
+        [Index(1)]
+        public virtual float SubHealth { get; protected set; }
+        [Index(2)]
+        public virtual float DamageManagerHealth { get; protected set; }
+        [Index(3)]
+        public virtual float SubFireHealth { get; protected set; }
+        [Index(4)]
+        public virtual int[] DamagePointIndexes { get; protected set; }
+        [Index(5)]
+        public virtual CyclopsFireData[] RoomFires { get; protected set; }
+        [Index(6)]
+        public virtual CyclopsDamageInfoData DamageInfo { get; protected set; }
+
+        private CyclopsDamage() { }
 
         /// <param name="id"><see cref="SubRoot"/> Id.</param>
         /// <param name="subHealth"><see cref="SubRoot.liveMixin.health"/>.</param>

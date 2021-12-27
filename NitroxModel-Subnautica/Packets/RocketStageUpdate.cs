@@ -1,15 +1,20 @@
-﻿using System;
-using NitroxModel.DataStructures;
+﻿using NitroxModel.DataStructures;
 using NitroxModel.Packets;
+using ZeroFormatter;
 
 namespace NitroxModel_Subnautica.Packets
 {
-    [Serializable]
+    [ZeroFormattable]
     public class RocketStageUpdate : Packet
     {
-        public NitroxId Id { get; }
-        public int NewStage { get; }
-        public TechType CurrentStageTech { get; }
+        [Index(0)]
+        public virtual NitroxId Id { get; protected set; }
+        [Index(1)]
+        public virtual int NewStage { get; protected set; }
+        [Index(2)]
+        public virtual TechType CurrentStageTech { get; protected set; }
+
+        private RocketStageUpdate() { }
 
         public RocketStageUpdate(NitroxId id, int newStage, TechType currentStageTech)
         {
