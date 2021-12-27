@@ -56,21 +56,6 @@ namespace NitroxServer.Communication
             }
         }
 
-        protected void BeginPortForward(int port)
-        {
-            PortForward.TryOpenPortAsync(port, TimeSpan.FromSeconds(20)).ContinueWith(task =>
-            {
-                if (task.Result)
-                {
-                    Log.Info($"Server port {port} UDP has been automatically opened on your router (expires in 1 day)");
-                }
-                else
-                {
-                    Log.Warn(PortForward.GetError(port) ?? $"Failed to automatically port forward {port} UDP through UPnP. If using Hamachi or manually port-forwarding, please disregard this warning. To disable this feature you can go into the server settings.");
-                }
-            }).ConfigureAwait(false);
-        }
-
         protected void ProcessIncomingData(NitroxConnection connection, Packet packet)
         {
             try
