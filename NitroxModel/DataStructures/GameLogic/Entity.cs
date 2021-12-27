@@ -1,42 +1,50 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures.Unity;
 using ProtoBufNet;
+using ZeroFormatter;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
-    [Serializable]
+    [ZeroFormattable]
     [ProtoContract]
     public class Entity
     {
+        [IgnoreFormat]
         public AbsoluteEntityCell AbsoluteEntityCell => new AbsoluteEntityCell(Transform.Position, Level);
 
+        [Index(0)]
         [ProtoMember(1)]
-        public NitroxTransform Transform { get; set; }
+        public virtual NitroxTransform Transform { get; set; }
 
+        [Index(1)]
         [ProtoMember(2)]
-        public NitroxTechType TechType { get; set; }
+        public virtual NitroxTechType TechType { get; set; }
 
+        [Index(2)]
         [ProtoMember(3)]
-        public NitroxId Id { get; set; }
+        public virtual NitroxId Id { get; set; }
 
+        [Index(3)]
         [ProtoMember(4)]
-        public int Level { get; set; }
+        public virtual int Level { get; set; }
 
+        [Index(4)]
         [ProtoMember(5)]
-        public string ClassId { get; set; }
+        public virtual string ClassId { get; set; }
 
         /// <summary>
         ///     Keeps track if an entity was spawned by the server or a player
         ///     Server-spawned entities need to be techType white-listed to be simulated
         /// </summary>
+        [Index(5)]
         [ProtoMember(6)]
-        public bool SpawnedByServer;
+        public virtual bool SpawnedByServer { get; set; }
 
+        [Index(6)]
         [ProtoMember(7)]
-        public NitroxId WaterParkId { get; set; }
+        public virtual NitroxId WaterParkId { get; set; }
 
         /// <summary>
         ///     Gets or sets the the serialized GameObject for this entity which is used on the client-side to spawn it.
@@ -44,24 +52,30 @@ namespace NitroxModel.DataStructures.GameLogic
         /// <remarks>
         ///     Used for player droppable items including items that hold metadata/state that a player can change and should be persisted on the server.
         /// </remarks>
+        [Index(7)]
         [ProtoMember(8)]
-        public byte[] SerializedGameObject { get; set; }
+        public virtual byte[] SerializedGameObject { get; set; } // TODO: Remove this, possible security concern
 
+        [Index(8)]
         [ProtoMember(9)]
-        public bool ExistsInGlobalRoot { get; set; }
+        public virtual bool ExistsInGlobalRoot { get; set; }
 
+        [Index(9)]
         [ProtoMember(10)]
-        public NitroxId ParentId { get; set; }
+        public virtual NitroxId ParentId { get; set; }
 
+        [Index(10)]
         [ProtoMember(11)]
-        public EntityMetadata Metadata { get; set; }
+        public virtual EntityMetadata Metadata { get; set; }
 
         // If set, this entity already exists as a gameobject in the world (maybe as a child of a prefab we already spawned).  This
         // id can be used to find the object and update the corresponding id.
+        [Index(11)]
         [ProtoMember(12)]
-        public int? ExistingGameObjectChildIndex { get; set; }
+        public virtual int? ExistingGameObjectChildIndex { get; set; }
 
-        public List<Entity> ChildEntities { get; set; } = new List<Entity>();
+        [Index(12)]
+        public virtual List<Entity> ChildEntities { get; set; } = new List<Entity>();
 
         protected Entity()
         {

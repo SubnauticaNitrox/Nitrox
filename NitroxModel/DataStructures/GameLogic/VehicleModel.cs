@@ -1,41 +1,50 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
 using ProtoBufNet;
+using ZeroFormatter;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
-    [Serializable]
+    [ZeroFormattable]
     [ProtoContract]
     public class VehicleModel
     {
+        [Index(0)]
         [ProtoMember(1)]
-        public NitroxTechType TechType { get; }
+        public virtual NitroxTechType TechType { get; protected set; }
 
+        [Index(1)]
         [ProtoMember(2)]
-        public NitroxId Id { get; set; }
+        public virtual NitroxId Id { get; set; }
 
+        [Index(2)]
         [ProtoMember(3)]
-        public NitroxVector3 Position { get; set; }
+        public virtual NitroxVector3 Position { get; set; }
 
+        [Index(3)]
         [ProtoMember(4)]
-        public NitroxQuaternion Rotation { get; set; }
+        public virtual NitroxQuaternion Rotation { get; set; }
 
+        [Index(4)]
         [ProtoMember(5)]
-        public ThreadSafeList<InteractiveChildObjectIdentifier> InteractiveChildIdentifiers { get; }
+        public virtual ThreadSafeList<InteractiveChildObjectIdentifier> InteractiveChildIdentifiers { get; protected set; }
 
+        [Index(5)]
         [ProtoMember(6)]
-        public Optional<NitroxId> DockingBayId { get; set; }
+        public virtual Optional<NitroxId> DockingBayId { get; set; }
 
+        [Index(6)]
         [ProtoMember(7)]
-        public string Name { get; set; }
+        public virtual string Name { get; set; }
 
+        [Index(7)]
         [ProtoMember(8)]
-        public NitroxVector3[] HSB { get; set; }
+        public virtual NitroxVector3[] HSB { get; set; }
 
+        [Index(8)]
         [ProtoMember(9)]
-        public float Health { get; set; }
+        public virtual float Health { get; set; }
 
         protected VehicleModel()
         {

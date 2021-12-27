@@ -1,17 +1,19 @@
-﻿using System;
-using ProtoBufNet;
+﻿using ProtoBufNet;
+using ZeroFormatter;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
-    [Serializable]
+    [ZeroFormattable]
     [ProtoContract]
     public class InteractiveChildObjectIdentifier
     {
+        [Index(0)]
         [ProtoMember(1)]
-        public NitroxId Id { get; set; }
+        public virtual NitroxId Id { get; set; }
 
+        [Index(1)]
         [ProtoMember(2)]
-        public string GameObjectNamePath { get; set; }
+        public virtual string GameObjectNamePath { get; set; }
 
         protected InteractiveChildObjectIdentifier()
         {

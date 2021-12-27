@@ -1,6 +1,7 @@
 ﻿using System;
 using NitroxModel.DataStructures.Unity;
 using ProtoBufNet;
+using ZeroFormatter;
 
 namespace NitroxModel.DataStructures
 {
@@ -8,16 +9,19 @@ namespace NitroxModel.DataStructures
      * NitroxInt3 model to allow NitroxModel to be decoupled from Assembly-csharp-firstpass
      * as it is common between subnautica and below zero.
      */
-    [Serializable]
+    [ZeroFormattable]
     [ProtoContract]
     public struct NitroxInt3 : IEquatable<NitroxInt3>
     {
+        [Index(0)]
         [ProtoMember(1)]
         public int X { get; set; }
 
+        [Index(1)]
         [ProtoMember(2)]
         public int Y { get; set; }
 
+        [Index(2)]
         [ProtoMember(3)]
         public int Z { get; set; }
 

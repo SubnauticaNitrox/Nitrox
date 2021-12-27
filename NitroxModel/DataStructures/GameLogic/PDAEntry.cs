@@ -1,20 +1,23 @@
-﻿using System;
-using ProtoBufNet;
+﻿using ProtoBufNet;
+using ZeroFormatter;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
-    [Serializable]
+    [ZeroFormattable]
     [ProtoContract]
     public class PDAEntry
     {
+        [Index(0)]
         [ProtoMember(1)]
-        public NitroxTechType TechType { get; set; }
+        public virtual NitroxTechType TechType { get; set; }
 
+        [Index(1)]
         [ProtoMember(2)]
-        public float Progress { get; set; }
+        public virtual float Progress { get; set; }
 
+        [Index(2)]
         [ProtoMember(3)]
-        public int Unlocked { get; set; }
+        public virtual int Unlocked { get; set; }
 
         protected PDAEntry()
         {

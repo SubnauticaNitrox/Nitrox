@@ -6,6 +6,7 @@ using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
+using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.DataStructures.GameLogic;
 using NitroxModel_Subnautica.Packets;
 using UnityEngine;
@@ -373,7 +374,7 @@ namespace NitroxClient.GameLogic
                         damage.dealer != null ? NitroxEntity.GetId(damage.dealer) : null,
                         damage.originalDamage,
                         damage.damage,
-                        damage.position,
+                        damage.position.ToDto(),
                         damage.type);
                 }
 

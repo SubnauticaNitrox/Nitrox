@@ -27,12 +27,17 @@ namespace NitroxModel.Packets
             Updates.Add(new EntityTransformUpdate(id, position, rotation));
         }
 
-        [Serializable]
+        [ZeroFormattable]
         public class EntityTransformUpdate
         {
-            public NitroxId Id { get; }
-            public NitroxVector3 Position { get; }
-            public NitroxQuaternion Rotation { get; }
+            [Index(0)]
+            public virtual NitroxId Id { get; protected set; }
+            [Index(1)]
+            public virtual NitroxVector3 Position { get; protected set; }
+            [Index(2)]
+            public virtual NitroxQuaternion Rotation { get; protected set; }
+
+            private EntityTransformUpdate() { }
 
             public EntityTransformUpdate(NitroxId id, NitroxVector3 position, NitroxQuaternion rotation)
             {

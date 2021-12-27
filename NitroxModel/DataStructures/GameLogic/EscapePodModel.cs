@@ -1,42 +1,51 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using NitroxModel.DataStructures.Unity;
 using ProtoBufNet;
+using ZeroFormatter;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
-    [Serializable]
+    [ZeroFormattable]
     [ProtoContract]
     public class EscapePodModel
     {
         public const int PLAYERS_PER_ESCAPEPOD = 50;
 
+        [Index(0)]
         [ProtoMember(1)]
-        public NitroxId Id { get; set; }
+        public virtual NitroxId Id { get; set; }
 
+        [Index(1)]
         [ProtoMember(2)]
-        public NitroxVector3 Location { get; set; }
+        public virtual NitroxVector3 Location { get; set; }
 
+        [Index(2)]
         [ProtoMember(3)]
-        public NitroxId FabricatorId { get; set; }
+        public virtual NitroxId FabricatorId { get; set; }
 
+        [Index(3)]
         [ProtoMember(4)]
-        public NitroxId MedicalFabricatorId { get; set; }
+        public virtual NitroxId MedicalFabricatorId { get; set; }
 
+        [Index(4)]
         [ProtoMember(5)]
-        public NitroxId StorageContainerId { get; set; }
+        public virtual NitroxId StorageContainerId { get; set; }
 
+        [Index(5)]
         [ProtoMember(6)]
-        public NitroxId RadioId { get; set; }
+        public virtual NitroxId RadioId { get; set; }
 
+        [Index(6)]
         [ProtoMember(7)]
-        public List<ushort> AssignedPlayers { get; set; } = new List<ushort>();
+        public virtual List<ushort> AssignedPlayers { get; set; } = new List<ushort>();
 
+        [Index(7)]
         [ProtoMember(8)]
-        public bool Damaged { get; set; }
+        public virtual bool Damaged { get; set; }
 
+        [Index(8)]
         [ProtoMember(9)]
-        public bool RadioDamaged { get; set; }
+        public virtual bool RadioDamaged { get; set; }
 
         public void InitEscapePodModel(NitroxId id, NitroxVector3 location, NitroxId fabricatorId, NitroxId medicalFabricatorId, NitroxId storageContainerId, NitroxId radioId, bool damaged, bool radioDamaged)
         {

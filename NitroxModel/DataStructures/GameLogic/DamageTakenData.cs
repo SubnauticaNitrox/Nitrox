@@ -1,17 +1,20 @@
-﻿using System;
-using NitroxModel.DataStructures.Unity;
+﻿using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
+using ZeroFormatter;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
-    [Serializable]
+    [ZeroFormattable]
     public class DamageTakenData
     {
-        public NitroxVector3 Position { get; set; }
+        [Index(0)]
+        public virtual NitroxVector3 Position { get; set; }
 
-        public ushort DamageType { get; set; }
+        [Index(1)]
+        public virtual ushort DamageType { get; set; }
 
-        public Optional<NitroxId> DealerId { get; set; }
+        [Index(2)]
+        public virtual Optional<NitroxId> DealerId { get; set; }
 
         public override string ToString()
         {

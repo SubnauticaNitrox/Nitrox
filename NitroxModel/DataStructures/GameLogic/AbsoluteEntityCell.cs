@@ -3,26 +3,33 @@ using NitroxModel.Core;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.Helper;
 using ProtoBufNet;
+using ZeroFormatter;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
-    [Serializable]
+    [ZeroFormattable]
     [ProtoContract]
     public class AbsoluteEntityCell
     {
+        [Index(0)]
         [ProtoMember(1)]
-        public NitroxInt3 BatchId { get; }
+        public virtual NitroxInt3 BatchId { get; protected set; }
 
+        [Index(1)]
         [ProtoMember(2)]
-        public NitroxInt3 CellId { get; }
+        public virtual NitroxInt3 CellId { get; protected set; }
 
+        [Index(2)]
         [ProtoMember(3)]
-        public int Level { get; }
+        public virtual int Level { get; protected set; }
 
         private static IMap map = NitroxServiceLocator.LocateService<IMap>();
+        [IgnoreFormat]
         private NitroxInt3 BatchPosition => BatchId * map.BatchSize - map.BatchDimensionCenter;
+        [IgnoreFormat]
         public NitroxInt3 Position => BatchPosition + CellId * GetCellSize();
 
+        [IgnoreFormat]
         public NitroxInt3 Center
         {
             get

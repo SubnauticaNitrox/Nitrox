@@ -1,21 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using ProtoBufNet;
+using ZeroFormatter;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
     /// <summary>
     ///     Entity tech progress. Stores per unique scannable entity.
     /// </summary>
-    [Serializable]
+    [ZeroFormattable]
     [ProtoContract]
     public class PDAProgressEntry
     {
+        [Index(0)]
         [ProtoMember(1)]
-        public NitroxTechType TechType { get; set; }
+        public virtual NitroxTechType TechType { get; set; }
 
+        [Index(1)]
         [ProtoMember(2)]
-        public Dictionary<NitroxId, float> Entries { get; set; }
+        public virtual Dictionary<NitroxId, float> Entries { get; set; }
 
         protected PDAProgressEntry()
         {

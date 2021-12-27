@@ -1,18 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.MultiplayerSession;
+using ZeroFormatter;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
-    [Serializable]
+    [ZeroFormattable]
     public class InitialRemotePlayerData
     {
-        public PlayerContext PlayerContext { get; set; }
-        public NitroxVector3 Position { get; set; }
-        public Optional<NitroxId> SubRootId { get; }
-        public List<NitroxTechType> EquippedTechTypes { get; }
+        [Index(0)]
+        public virtual PlayerContext PlayerContext { get; set; }
+        [Index(1)]
+        public virtual NitroxVector3 Position { get; set; }
+        [Index(2)]
+        public virtual Optional<NitroxId> SubRootId { get; protected set; }
+        [Index(3)]
+        public virtual List<NitroxTechType> EquippedTechTypes { get; protected set; }
 
         protected InitialRemotePlayerData()
         {

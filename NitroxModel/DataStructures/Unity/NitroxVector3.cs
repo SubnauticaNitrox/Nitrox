@@ -2,20 +2,24 @@
 using System.Numerics;
 using NitroxModel.Helper;
 using ProtoBufNet;
+using ZeroFormatter;
 
 namespace NitroxModel.DataStructures.Unity
 {
     [ProtoContract]
-    [Serializable]
+    [ZeroFormattable]
     public struct NitroxVector3 : IEquatable<NitroxVector3>
     {
         [ProtoMember(1)]
+        [Index(0)]
         public float X;
 
         [ProtoMember(2)]
+        [Index(1)]
         public float Y;
 
         [ProtoMember(3)]
+        [Index(2)]
         public float Z;
 
         public NitroxVector3(float x, float y, float z)
@@ -123,6 +127,7 @@ namespace NitroxModel.DataStructures.Unity
             return Mathf.Sqrt(num1 * num1 + num2 * num2 + num3 * num3);
         }
 
+        [IgnoreFormat]
         public float Magnitude => Mathf.Sqrt(X * X + Y * Y + Z * Z);
 
         public override string ToString()

@@ -1,17 +1,19 @@
-﻿using System;
-using ProtoBufNet;
+﻿using ProtoBufNet;
+using ZeroFormatter;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
-    [Serializable]
+    [ZeroFormattable]
     [ProtoContract]
     public class PDALogEntry
     {
+        [Index(0)]
         [ProtoMember(1)]
-        public string Key;
+        public virtual string Key { get; set; }
 
+        [Index(1)]
         [ProtoMember(2)]
-        public float Timestamp;
+        public virtual float Timestamp { get; set; }
 
         protected PDALogEntry()
         {

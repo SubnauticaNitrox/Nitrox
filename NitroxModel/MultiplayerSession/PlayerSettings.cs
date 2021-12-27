@@ -1,12 +1,15 @@
-﻿using System;
-using NitroxModel.DataStructures.Unity;
+﻿using NitroxModel.DataStructures.Unity;
+using ZeroFormatter;
 
 namespace NitroxModel.MultiplayerSession
 {
-    [Serializable]
+    [ZeroFormattable]
     public class PlayerSettings
     {
-        public NitroxColor PlayerColor { get; }
+        [Index(0)]
+        public virtual NitroxColor PlayerColor { get; protected set; }
+
+        private PlayerSettings() { }
 
         public PlayerSettings(NitroxColor playerColor)
         {

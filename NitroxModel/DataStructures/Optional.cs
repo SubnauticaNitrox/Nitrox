@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 using ProtoBufNet;
+using ZeroFormatter;
 
 namespace NitroxModel.DataStructures.Util
 {
@@ -15,7 +16,7 @@ namespace NitroxModel.DataStructures.Util
     ///     Code from https://tyrrrz.me/blog/return-type-inference
     /// </remarks>
     /// <typeparam name="T"></typeparam>
-    [Serializable]
+    [ZeroFormattable]
     [ProtoContract]
     public struct Optional<T> : ISerializable where T : class
     {
@@ -78,9 +79,11 @@ namespace NitroxModel.DataStructures.Util
             return valueChecksForT(value);
         };
 
+        [Index(0)]
         [ProtoMember(1)]
         public T Value { get; private set; }
 
+        [IgnoreFormat]
         public bool HasValue => valueChecksForT(Value);
 
         private Optional(T value)

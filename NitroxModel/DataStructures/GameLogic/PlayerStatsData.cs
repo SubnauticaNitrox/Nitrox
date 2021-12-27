@@ -1,28 +1,35 @@
-﻿using System;
-using ProtoBufNet;
+﻿using ProtoBufNet;
+using ZeroFormatter;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
-    [Serializable]
+    [ZeroFormattable]
     [ProtoContract]
     public class PlayerStatsData
     {
+        [Index(0)]
         [ProtoMember(1)]
-        public float Oxygen { get; }
+        public virtual float Oxygen { get; protected set; }
 
+        [Index(1)]
         [ProtoMember(2)]
-        public float MaxOxygen { get; }
+        public virtual float MaxOxygen { get; protected set; }
 
+        [Index(2)]
         [ProtoMember(3)]
-        public float Health { get; }
+        public virtual float Health { get; protected set; }
 
+        [Index(3)]
         [ProtoMember(4)]
-        public float Food { get; }
+        public virtual float Food { get; protected set; }
 
+        [Index(4)]
         [ProtoMember(5)]
-        public float Water { get; }
+        public virtual float Water { get; protected set; }
+
+        [Index(5)]
         [ProtoMember(6)]
-        public float InfectionAmount { get; }
+        public virtual float InfectionAmount { get; protected set; }
 
         protected PlayerStatsData()
         {

@@ -1,13 +1,17 @@
-﻿using System;
-using NitroxModel.DataStructures.Util;
+﻿using NitroxModel.DataStructures.Util;
+using ZeroFormatter;
 
 namespace NitroxModel.MultiplayerSession
 {
-    [Serializable]
+    [ZeroFormattable]
     public class AuthenticationContext
     {
-        public string Username { get; }
-        public Optional<string> ServerPassword { get; }
+        [Index(0)]
+        public virtual string Username { get; protected set; }
+        [Index(1)]
+        public virtual Optional<string> ServerPassword { get; protected set; }
+
+        private AuthenticationContext() { }
 
         public AuthenticationContext(string username) : this(username, null)
         {

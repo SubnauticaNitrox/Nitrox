@@ -1,57 +1,71 @@
-﻿using System;
-using NitroxModel.DataStructures.GameLogic.Buildings.Metadata;
+﻿using NitroxModel.DataStructures.GameLogic.Buildings.Metadata;
 using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
 using ProtoBufNet;
+using ZeroFormatter;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
-    [Serializable]
+    [ZeroFormattable]
     [ProtoContract]
     public class BasePiece
     {
+        [Index(0)]
         [ProtoMember(1)]
-        public NitroxId Id { get; set; }
+        public virtual NitroxId Id { get; set; }
 
+        [Index(1)]
         [ProtoMember(2)]
-        public NitroxVector3 ItemPosition { get; set; }
+        public virtual NitroxVector3 ItemPosition { get; set; }
 
+        [Index(2)]
         [ProtoMember(3)]
-        public NitroxQuaternion Rotation { get; set; }
+        public virtual NitroxQuaternion Rotation { get; set; }
 
+        [Index(3)]
         [ProtoMember(4)]
-        public NitroxTechType TechType { get; set; }
+        public virtual NitroxTechType TechType { get; set; }
 
         [ProtoMember(5, DynamicType = true)]
-        public Optional<NitroxId> ParentId { get; set; }
+        [Index(4)]
+        public virtual Optional<NitroxId> ParentId { get; set; }
 
         [ProtoMember(6)]
-        public NitroxVector3 CameraPosition { get; set; }
+        [Index(5)]
+        public virtual NitroxVector3 CameraPosition { get; set; }
 
         [ProtoMember(7)]
-        public NitroxQuaternion CameraRotation { get; set; }
+        [Index(6)]
+        public virtual NitroxQuaternion CameraRotation { get; set; }
 
         [ProtoMember(8)]
-        public float ConstructionAmount { get; set; }
+        [Index(7)]
+        public virtual float ConstructionAmount { get; set; }
 
         [ProtoMember(9)]
-        public bool ConstructionCompleted { get; set; }
+        [Index(8)]
+        public virtual bool ConstructionCompleted { get; set; }
 
         [ProtoMember(10)]
-        public bool IsFurniture { get; set; }
+        [Index(9)]
+        public virtual bool IsFurniture { get; set; }
 
         [ProtoMember(11)]
-        public NitroxId BaseId { get; set; }
+        [Index(10)]
+        public virtual NitroxId BaseId { get; set; }
 
         [ProtoMember(12, DynamicType = true)]
-        public Optional<RotationMetadata> RotationMetadata { get; set; }
+        [Index(11)]
+        public virtual Optional<RotationMetadata> RotationMetadata { get; set; }
 
         [ProtoMember(13, DynamicType = true)]
-        public Optional<BasePieceMetadata> Metadata { get; set; }
+        [Index(12)]
+        public virtual Optional<BasePieceMetadata> Metadata { get; set; }
 
         [ProtoMember(14, DynamicType = true)]
-        public int BuildIndex { get; set; }
+        [Index(13)]
+        public virtual int BuildIndex { get; set; }
 
         protected BasePiece()
         {

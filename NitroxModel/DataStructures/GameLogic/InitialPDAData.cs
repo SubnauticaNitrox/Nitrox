@@ -1,17 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using ZeroFormatter;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
-    [Serializable]
+    [ZeroFormattable]
     public class InitialPDAData
     {
-        public List<NitroxTechType> UnlockedTechTypes { get; set; }
-        public List<NitroxTechType> KnownTechTypes { get; set; }
-        public List<string> EncyclopediaEntries { get; set; }
-        public List<PDAEntry> PartiallyUnlockedTechTypes { get; set; }
-        public List<PDALogEntry> PDALogEntries { get; set; }
-        public List<PDAProgressEntry> CachedProgress { get; set; }
+        [Index(0)]
+        public virtual List<NitroxTechType> UnlockedTechTypes { get; set; }
+        [Index(1)]
+        public virtual List<NitroxTechType> KnownTechTypes { get; set; }
+        [Index(2)]
+        public virtual List<string> EncyclopediaEntries { get; set; }
+        [Index(3)]
+        public virtual List<PDAEntry> PartiallyUnlockedTechTypes { get; set; }
+        [Index(4)]
+        public virtual List<PDALogEntry> PDALogEntries { get; set; }
+        [Index(5)]
+        public virtual List<PDAProgressEntry> CachedProgress { get; set; }
 
         protected InitialPDAData()
         {

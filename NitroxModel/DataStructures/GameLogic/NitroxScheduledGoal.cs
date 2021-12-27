@@ -1,18 +1,21 @@
-﻿using System;
-using ProtoBufNet;
+﻿using ProtoBufNet;
+using ZeroFormatter;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
-    [Serializable]
+    [ZeroFormattable]
     [ProtoContract]
     public class NitroxScheduledGoal
     {
+        [Index(0)]
         [ProtoMember(1)]
-        public float TimeExecute { get; set; }
+        public virtual float TimeExecute { get; set; }
+        [Index(1)]
         [ProtoMember(2)]
-        public string GoalKey { get; set; }
+        public virtual string GoalKey { get; set; }
+        [Index(2)]
         [ProtoMember(3)]
-        public string GoalType { get; set; }
+        public virtual string GoalType { get; set; }
 
         public static NitroxScheduledGoal From(float timeExecute, string goalKey, string goalType)
         {

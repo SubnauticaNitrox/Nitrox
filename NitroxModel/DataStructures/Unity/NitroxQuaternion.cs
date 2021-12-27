@@ -2,23 +2,28 @@
 using System.Numerics;
 using NitroxModel.Helper;
 using ProtoBufNet;
+using ZeroFormatter;
 
 namespace NitroxModel.DataStructures.Unity
 {
     [ProtoContract]
-    [Serializable]
+    [ZeroFormattable]
     public struct NitroxQuaternion : IEquatable<NitroxQuaternion>
     {
         [ProtoMember(1)]
+        [Index(0)]
         public float X;
 
         [ProtoMember(2)]
+        [Index(1)]
         public float Y;
 
         [ProtoMember(3)]
+        [Index(2)]
         public float Z;
 
         [ProtoMember(4)]
+        [Index(3)]
         public float W;
 
         public static NitroxQuaternion Identity { get; } = new NitroxQuaternion(0, 0, 0, 1);

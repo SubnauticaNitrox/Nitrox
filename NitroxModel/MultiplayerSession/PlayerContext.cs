@@ -1,16 +1,23 @@
-﻿using System;
-using NitroxModel.DataStructures;
+﻿using NitroxModel.DataStructures;
+using ZeroFormatter;
 
 namespace NitroxModel.MultiplayerSession
 {
-    [Serializable]
+    [ZeroFormattable]
     public class PlayerContext
     {
-        public string PlayerName { get; }
-        public ushort PlayerId { get; }
-        public NitroxId PlayerNitroxId { get; }
-        public bool WasBrandNewPlayer { get; }
-        public PlayerSettings PlayerSettings { get; }
+        [Index(0)]
+        public virtual string PlayerName { get; protected set; }
+        [Index(1)]
+        public virtual ushort PlayerId { get; protected set; }
+        [Index(2)]
+        public virtual NitroxId PlayerNitroxId { get; protected set; }
+        [Index(3)]
+        public virtual bool WasBrandNewPlayer { get; protected set; }
+        [Index(4)]
+        public virtual PlayerSettings PlayerSettings { get; protected set; }
+
+        private PlayerContext() { }
 
         public PlayerContext(string playerName, ushort playerId, NitroxId playerNitroxId, bool wasBrandNewPlayer, PlayerSettings playerSettings)
         {

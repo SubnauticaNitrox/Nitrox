@@ -1,39 +1,48 @@
-﻿using System;
-using NitroxModel.DataStructures.Unity;
+﻿using NitroxModel.DataStructures.Unity;
 using ProtoBufNet;
+using ZeroFormatter;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
-    [Serializable]
+    [ZeroFormattable]
     [ProtoContract]
     public class VehicleMovementData
     {
+        [Index(0)]
         [ProtoMember(1)]
-        public NitroxTechType TechType { get; }
+        public virtual NitroxTechType TechType { get; protected set; }
 
+        [Index(1)]
         [ProtoMember(2)]
-        public NitroxId Id { get; set; }
+        public virtual NitroxId Id { get; set; }
 
+        [Index(2)]
         [ProtoMember(3)]
-        public NitroxVector3 Position { get; }
+        public virtual NitroxVector3 Position { get; protected set; }
 
+        [Index(3)]
         [ProtoMember(4)]
-        public NitroxQuaternion Rotation { get; }
+        public virtual NitroxQuaternion Rotation { get; protected set; }
 
+        [Index(4)]
         [ProtoMember(5)]
-        public NitroxVector3 Velocity { get; }
+        public virtual NitroxVector3 Velocity { get; protected set; }
 
+        [Index(5)]
         [ProtoMember(6)]
-        public NitroxVector3 AngularVelocity { get; }
+        public virtual NitroxVector3 AngularVelocity { get; protected set; }
 
+        [Index(6)]
         [ProtoMember(7)]
-        public float SteeringWheelYaw { get; }
+        public virtual float SteeringWheelYaw { get; protected set; }
 
+        [Index(7)]
         [ProtoMember(8)]
-        public float SteeringWheelPitch { get; }
+        public virtual float SteeringWheelPitch { get; protected set; }
 
+        [Index(8)]
         [ProtoMember(9)]
-        public bool AppliedThrottle { get; }
+        public virtual bool AppliedThrottle { get; protected set; }
 
         protected VehicleMovementData()
         {

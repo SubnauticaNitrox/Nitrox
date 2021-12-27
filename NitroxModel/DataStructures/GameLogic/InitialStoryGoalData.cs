@@ -1,15 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using ZeroFormatter;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
-    [Serializable]
+    [ZeroFormattable]
     public class InitialStoryGoalData
     {
-        public List<string> CompletedGoals { get; set; }
-        public List<string> RadioQueue { get; set; }
-        public List<string> GoalUnlocks { get; set; }
-        public List<NitroxScheduledGoal> ScheduledGoals { get; set; }
+        [Index(0)]
+        public virtual List<string> CompletedGoals { get; set; }
+        [Index(1)]
+        public virtual List<string> RadioQueue { get; set; }
+        [Index(2)]
+        public virtual List<string> GoalUnlocks { get; set; }
+        [Index(3)]
+        public virtual List<NitroxScheduledGoal> ScheduledGoals { get; set; }
 
         protected InitialStoryGoalData()
         {

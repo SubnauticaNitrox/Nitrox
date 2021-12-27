@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using ProtoBufNet;
+using ZeroFormatter;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
@@ -8,11 +8,12 @@ namespace NitroxModel.DataStructures.GameLogic
      * Shim tech type model to bridge the gap between original subnautica and BZ
      */
     [ProtoContract]
-    [Serializable]
+    [ZeroFormattable]
     public class NitroxTechType
     {
         [ProtoMember(1)]
-        public string Name { get; set; }
+        [Index(0)]
+        public virtual string Name { get; set; }
 
         protected NitroxTechType()
         {

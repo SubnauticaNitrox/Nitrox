@@ -1,14 +1,20 @@
-﻿using System;
+﻿using ZeroFormatter;
 
 namespace NitroxModel.DataStructures
 {
-    [Serializable]
+    [ZeroFormattable]
     public class SimulatedEntity
     {
-        public bool ChangesPosition { get; }
-        public NitroxId Id { get; }
-        public ushort PlayerId { get; }
-        public SimulationLockType LockType { get; }
+        [Index(0)]
+        public virtual bool ChangesPosition { get; protected set; }
+        [Index(1)]
+        public virtual NitroxId Id { get; protected set; }
+        [Index(2)]
+        public virtual ushort PlayerId { get; protected set; }
+        [Index(3)]
+        public virtual SimulationLockType LockType { get; protected set; }
+
+        private SimulatedEntity() { }
 
         public SimulatedEntity(NitroxId id, ushort playerId, bool changesPosition, SimulationLockType lockType)
         {

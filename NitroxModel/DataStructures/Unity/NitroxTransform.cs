@@ -1,24 +1,28 @@
-﻿using System;
-using System.Numerics;
+﻿using System.Numerics;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
 using ProtoBufNet;
+using ZeroFormatter;
 
 namespace NitroxModel.DataStructures.Unity
 {
     [ProtoContract]
-    [Serializable]
+    [ZeroFormattable]
     public class NitroxTransform
     {
         [ProtoMember(1)]
-        public NitroxVector3 LocalPosition;
+        [Index(0)]
+        public virtual NitroxVector3 LocalPosition { get; set; }
 
         [ProtoMember(2)]
-        public NitroxQuaternion LocalRotation;
+        [Index(1)]
+        public virtual NitroxQuaternion LocalRotation { get; set; }
 
         [ProtoMember(3)]
-        public NitroxVector3 LocalScale;
+        [Index(2)]
+        public virtual NitroxVector3 LocalScale { get; set; }
 
+        [IgnoreFormat]
         public Matrix4x4 LocalToWorldMatrix
         {
             get
@@ -29,9 +33,12 @@ namespace NitroxModel.DataStructures.Unity
             }
         }
 
-        public NitroxTransform Parent;
-        public Entity Entity;
+        [Index(3)]
+        public virtual NitroxTransform Parent { get; set; }
+        [Index(4)]
+        public virtual Entity Entity { get; set; }
 
+        [IgnoreFormat]
         public NitroxVector3 Position
         {
             get
@@ -45,6 +52,7 @@ namespace NitroxModel.DataStructures.Unity
                 LocalPosition = (NitroxVector3)matrix.Translation;
             }
         }
+        [IgnoreFormat]
         public NitroxQuaternion Rotation
         {
             get

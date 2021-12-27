@@ -24,39 +24,12 @@ namespace NitroxModel.Packets
             // TODO: setup ZeroFormatter formatters
             // Need support for:
             /*
-             * EscapePodModel
-             * NitroxId
-             * BasePieceMetadata
-             * Entity
-             * AbsoluteEntityCell
-             * VehicleModel
-             * NitroxVector3
-             * Optional<>
-             * NitroxTechType
-             * NitroxQuaternion
-             * ItemData
-             * EntityMetadata
-             * EntityTransformUpdate
-             * EquippedItemData
-             * BasePiece
-             * InitialPDAData
-             * InitialStoryGoalData
-             * PlayerStatsData
-             * InitialRemotePlayerData
-             * DamageTakenData
+             * BasePieceMetadata*
+             * ItemData*
+             * EntityMetadata*
+             * RotationMetadata*
              * Version*
-             * PlayerSettings
-             * AuthenticationContext
-             * PlayerContext
              * Object (SceneDebuggerChange)
-             * SimulatedEntity
-             * InteractiveChildObjectIdentifier
-             * NitroxColor
-             * VehicleMovementData
-             * ---
-             * SerializableCreatureAction
-             * CyclopsFireData
-             * CyclopsDamageInfoData
              */
 
             Formatter.AppendDynamicUnionResolver((unionType, resolver) =>
