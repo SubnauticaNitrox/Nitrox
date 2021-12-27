@@ -1,4 +1,5 @@
 ﻿using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
 using ZeroFormatter;
 
@@ -12,11 +13,11 @@ namespace NitroxModel_Subnautica.Packets
         [Index(1)]
         public virtual int NewStage { get; protected set; }
         [Index(2)]
-        public virtual TechType CurrentStageTech { get; protected set; }
+        public virtual NitroxTechType CurrentStageTech { get; protected set; }
 
         private RocketStageUpdate() { }
 
-        public RocketStageUpdate(NitroxId id, int newStage, TechType currentStageTech)
+        public RocketStageUpdate(NitroxId id, int newStage, NitroxTechType currentStageTech)
         {
             Id = id;
             NewStage = newStage;

@@ -1,27 +1,28 @@
 ﻿using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Unity;
 using NitroxModel.Packets;
-using UnityEngine;
 using ZeroFormatter;
 
 namespace NitroxModel_Subnautica.Packets
 {
     [ZeroFormattable]
-    public class ExosuitArmActionPacket : Packet // TODO: Edit this class to be consistent with other packets
+    public class ExosuitArmActionPacket : Packet
     {
         [Index(0)]
-        public virtual TechType TechType { get; protected set; }
+        public virtual NitroxTechType TechType { get; protected set; }
         [Index(1)]
         public virtual NitroxId ArmId { get; protected set; }
         [Index(2)]
         public virtual ExosuitArmAction ArmAction { get; protected set; }
         [Index(3)]
-        public virtual Vector3? OpVector { get; protected set; }
+        public virtual NitroxVector3? OpVector { get; protected set; }
         [Index(4)]
-        public virtual Quaternion? OpRotation { get; protected set; }
+        public virtual NitroxQuaternion? OpRotation { get; protected set; }
 
         private ExosuitArmActionPacket() { }
 
-        public ExosuitArmActionPacket(TechType techType, NitroxId armId, ExosuitArmAction armAction, Vector3? opVector, Quaternion? opRotation)
+        public ExosuitArmActionPacket(NitroxTechType techType, NitroxId armId, ExosuitArmAction armAction, NitroxVector3? opVector, NitroxQuaternion? opRotation)
         {
             TechType = techType;
             ArmId = armId;

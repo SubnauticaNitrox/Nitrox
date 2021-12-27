@@ -2,6 +2,9 @@
 using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Unity;
+using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.DataStructures.GameLogic;
 using NitroxModel_Subnautica.Packets;
 using UnityEngine;
@@ -101,14 +104,14 @@ namespace NitroxClient.GameLogic
         public void BroadcastArmAction(TechType techType, IExosuitArm exosuitArm, ExosuitArmAction armAction, Vector3? opVector, Quaternion? opRotation)
         {
             NitroxId id = NitroxEntity.GetId(exosuitArm.GetGameObject());
-            ExosuitArmActionPacket packet = new ExosuitArmActionPacket(techType, id, armAction, opVector, opRotation);
+            ExosuitArmActionPacket packet = new(techType.ToDto(), id, armAction, opVector.HasValue ? opVector.Value.ToDto() : null, opRotation.HasValue ? opRotation.Value.ToDto() : null);
             packetSender.Send(packet);
         }
 
         public void BroadcastArmAction(TechType techType, IExosuitArm exosuitArm, ExosuitArmAction armAction)
         {
             NitroxId id = NitroxEntity.GetId(exosuitArm.GetGameObject());
-            ExosuitArmActionPacket packet = new ExosuitArmActionPacket(techType, id, armAction, null, null);
+            ExosuitArmActionPacket packet = new(techType.ToDto(), id, armAction, null, null);
             packetSender.Send(packet);
         }
 

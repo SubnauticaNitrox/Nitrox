@@ -3,6 +3,7 @@ using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.Util;
+using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.Packets;
 using UnityEngine;
 
@@ -28,7 +29,7 @@ namespace NitroxClient.Communication.Packets.Processors
                 return;
             }
             GameObject gameObject = opGameObject.Value;
-            switch (packet.TechType)
+            switch (packet.TechType.ToUnity())
             {
 
                 case TechType.ExosuitClawArmModule:
@@ -38,10 +39,10 @@ namespace NitroxClient.Communication.Packets.Processors
                     exosuitModuleEvent.UseDrill(gameObject.GetComponent<ExosuitDrillArm>(), packet.ArmAction);
                     break;
                 case TechType.ExosuitGrapplingArmModule:
-                    exosuitModuleEvent.UseGrappling(gameObject.GetComponent<ExosuitGrapplingArm>(), packet.ArmAction, packet.OpVector);
+                    exosuitModuleEvent.UseGrappling(gameObject.GetComponent<ExosuitGrapplingArm>(), packet.ArmAction, packet.OpVector.HasValue ? packet.OpVector.Value.ToUnity() : null);
                     break;
                 case TechType.ExosuitTorpedoArmModule:
-                    exosuitModuleEvent.UseTorpedo(gameObject.GetComponent<ExosuitTorpedoArm>(), packet.ArmAction, packet.OpVector, packet.OpRotation);
+                    exosuitModuleEvent.UseTorpedo(gameObject.GetComponent<ExosuitTorpedoArm>(), packet.ArmAction, packet.OpVector.HasValue ? packet.OpVector.Value.ToUnity() : null, packet.OpRotation.HasValue ? packet.OpRotation.Value.ToUnity() : null);
                     break;
                 default:
                     Log.Error("Got an arm tech that is not handled: " + packet.TechType + " with action: " + packet.ArmAction + " for id " + packet.ArmId);

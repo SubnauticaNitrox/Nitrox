@@ -1,6 +1,7 @@
 ﻿using NitroxClient.Communication.Abstract;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
+using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.DataStructures.GameLogic;
 using NitroxModel_Subnautica.Packets;
 
@@ -39,7 +40,7 @@ namespace NitroxClient.GameLogic
                     model.Value.CurrentStage = 5;
                 }
 
-                packetSender.Send(new RocketStageUpdate(id, model.Value.CurrentStage, currentStageTech));
+                packetSender.Send(new RocketStageUpdate(id, model.Value.CurrentStage, currentStageTech.ToDto()));
             }
             else
             {

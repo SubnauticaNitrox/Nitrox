@@ -2,6 +2,7 @@
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Helper;
+using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.Packets;
 using Story;
 using UnityEngine;
@@ -17,7 +18,7 @@ namespace NitroxClient.Communication.Packets.Processors
             Rocket rocket = gameObjectRocket.RequireComponent<Rocket>();
             GameObject build = rocket.StartRocketConstruction();
 
-            ItemGoalTracker.OnConstruct(packet.CurrentStageTech);
+            ItemGoalTracker.OnConstruct(packet.CurrentStageTech.ToUnity());
 
             RocketConstructor rocketConstructor = gameObjectRocket.RequireComponentInChildren<RocketConstructor>(true);
             rocketConstructor.SendBuildBots(build);
