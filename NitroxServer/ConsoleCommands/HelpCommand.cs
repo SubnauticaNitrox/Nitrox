@@ -18,11 +18,11 @@ namespace NitroxServer.ConsoleCommands
 
         protected override void Execute(CallArgs args)
         {
-            List<string> cmdsText;
-
+            List<string> cmdsText = new();
+            cmdsText.Add(args.IsValid(0) ? $"=== Showing help for {args.Get<string>(0)} ===" : "=== Showing command list ===");
             if (args.IsConsole)
             {
-                cmdsText = GetHelpText(Perms.CONSOLE, false, args.IsValid(0) ? args.Get<string>(0) : null);
+                cmdsText.AddRange(GetHelpText(Perms.CONSOLE, false, args.IsValid(0) ? args.Get<string>(0) : null));
 
                 foreach (string cmdText in cmdsText)
                 {
@@ -31,7 +31,7 @@ namespace NitroxServer.ConsoleCommands
             }
             else
             {
-                cmdsText = GetHelpText(args.Sender.Value.Permissions, true, args.IsValid(0) ? args.Get<string>(0) : null);
+                cmdsText.AddRange(GetHelpText(args.Sender.Value.Permissions, true, args.IsValid(0) ? args.Get<string>(0) : null));
 
                 foreach (string cmdText in cmdsText)
                 {
