@@ -22,7 +22,7 @@ namespace NitroxModel
         {
             using IEnumerator<T> enumerator = source.GetEnumerator();
             bool first = true;
-            
+
             T prev = default;
             while (enumerator.MoveNext())
             {
