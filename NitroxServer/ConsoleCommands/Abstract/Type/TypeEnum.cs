@@ -20,5 +20,10 @@ namespace NitroxServer.ConsoleCommands.Abstract.Type
             Validate.IsTrue(Enum.TryParse(arg, true, out T value), "Unknown value received");
             return value;
         }
+
+        public override string GetDescription()
+        {
+            return $"{base.GetDescription()} (values: {string.Join(", ", Enum.GetNames(typeof(T)))})";
+        }
     }
 }

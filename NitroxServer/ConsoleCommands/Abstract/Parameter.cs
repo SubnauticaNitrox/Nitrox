@@ -6,7 +6,7 @@ namespace NitroxServer.ConsoleCommands.Abstract
     {
         public bool IsRequired { get; }
         public string Name { get; }
-        public string Description { get; }
+        private string Description { get; }
 
         protected Parameter(string name, bool isRequired, string description)
         {
@@ -20,6 +20,11 @@ namespace NitroxServer.ConsoleCommands.Abstract
         public abstract bool IsValid(string arg);
         public abstract T Read(string arg);
 
+        public virtual string GetDescription()
+        {
+            return Description;
+        }
+
         public override string ToString()
         {
             return $"{(IsRequired ? '{' : '[')}{Name}{(IsRequired ? '}' : ']')}";
@@ -30,9 +35,9 @@ namespace NitroxServer.ConsoleCommands.Abstract
     {
         bool IsRequired { get; }
         string Name { get; }
-        string Description { get; }
 
         bool IsValid(string arg);
         T Read(string arg);
+        string GetDescription();
     }
 }

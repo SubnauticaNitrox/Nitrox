@@ -7,6 +7,7 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
+using NitroxServer.ConsoleCommands.Abstract.Type;
 using NitroxServer.GameLogic;
 
 namespace NitroxServer.ConsoleCommands.Abstract
@@ -91,7 +92,7 @@ namespace NitroxServer.ConsoleCommands.Abstract
             if (singleCommand)
             {
                 string parameterPreText = Parameters.Count == 0 ? "" : Environment.NewLine;
-                string parameterText = parameterPreText + string.Join("\n", Parameters.Select(p => $"{p.Name,-47} - {p.Description}"));
+                string parameterText = $"{parameterPreText}{string.Join("\n", Parameters.Select(p => $"{p,-47} - {p.GetDescription()}"))}";
 
                 return cropText ? $"{cmd}" : $"{cmd,-32} - {Description} {parameterText}";
             }
