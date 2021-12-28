@@ -3,7 +3,6 @@ using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
-using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 
@@ -37,7 +36,7 @@ namespace NitroxPatcher.Patches.Dynamic
             {
                 SubRoot cyclops = __instance.subRoot;
                 NitroxId id = NitroxEntity.GetId(cyclops.gameObject);
-                NitroxServiceLocator.LocateService<Cyclops>().BroadcastChangeEngineMode(id, __instance.motorModeIndex);
+                Resolve<Cyclops>().BroadcastChangeEngineMode(id, __instance.motorModeIndex);
             }
         }
 

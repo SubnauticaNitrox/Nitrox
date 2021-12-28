@@ -30,7 +30,10 @@ namespace NitroxClient.Communication.Packets.Processors
             }
             else
             {
-                GameObject vehicleObject = NitroxEntity.RequireObjectFrom(colorPacket.VehicleId);
+                if (!NitroxEntity.TryGetObjectFrom(colorPacket.VehicleId, out GameObject vehicleObject))
+                {
+                    return;
+                }
 
                 subNameInput = vehicleObject.GetComponentInChildren<SubNameInput>();
             }

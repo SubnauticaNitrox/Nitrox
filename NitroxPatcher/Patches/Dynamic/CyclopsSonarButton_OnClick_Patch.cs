@@ -2,7 +2,6 @@
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 
@@ -15,8 +14,7 @@ namespace NitroxPatcher.Patches.Dynamic
         public static void Postfix(CyclopsSonarButton __instance)
         {
             NitroxId id = NitroxEntity.GetId(__instance.subRoot.gameObject);
-            bool activeSonar = __instance.sonarActive;
-            NitroxServiceLocator.LocateService<Cyclops>().BroadcastChangeSonarState(id, activeSonar);
+            Resolve<Cyclops>().BroadcastChangeSonarState(id, __instance.sonarActive);
         }
 
         public override void Patch(Harmony harmony)
