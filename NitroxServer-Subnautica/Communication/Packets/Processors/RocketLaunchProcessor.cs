@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using NitroxModel.DataStructures.Util;
+﻿using NitroxModel.DataStructures.Util;
 using NitroxModel_Subnautica.DataStructures.GameLogic;
 using NitroxModel_Subnautica.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
@@ -26,7 +25,7 @@ public class RocketLaunchProcessor : AuthenticatedPacketProcessor<RocketLaunch>
         if (opRocket.HasValue)
         {
             // 5 is the value of RocketPreflightCheckManager.totalPreflightChecks
-            if (opRocket.Value.PreflightChecks.Count() == 5)
+            if (opRocket.Value.PreflightChecks.Count == 5)
             {
                 // Tell every player to launch rocket
                 playerManager.SendPacketToAllPlayers(packet);

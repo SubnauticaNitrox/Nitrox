@@ -7,7 +7,8 @@ namespace NitroxModel_Subnautica.Packets;
 [Serializable]
 public class RocketLaunch : Packet
 {
-    public NitroxId RocketId;
+    public NitroxId RocketId { get; }
+
     public RocketLaunch(NitroxId rocketId)
     {
         RocketId = rocketId;

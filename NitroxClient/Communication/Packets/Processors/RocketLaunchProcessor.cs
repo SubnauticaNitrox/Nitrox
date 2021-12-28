@@ -2,7 +2,6 @@
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
-using NitroxModel.Core;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.Packets;
@@ -12,6 +11,12 @@ namespace NitroxClient.Communication.Packets.Processors;
 
 public class RocketLaunchProcessor : ClientPacketProcessor<RocketLaunch>
 {
+    private readonly PlayerManager playerManager;
+
+    public RocketLaunchProcessor(PlayerManager playerManager)
+    {
+        this.playerManager = playerManager;
+    }
 
     public override void Process(RocketLaunch rocketLaunch)
     {
@@ -38,8 +43,7 @@ public class RocketLaunchProcessor : ClientPacketProcessor<RocketLaunch>
         HandReticle.main.RequestCrosshairHide();
 
         // We also need to hide the other players
-        PlayerManager remotePlayerManager = NitroxServiceLocator.LocateService<PlayerManager>();
-        foreach (RemotePlayer player in remotePlayerManager.GetAll())
+        foreach (RemotePlayer player in playerManager.GetAll())
         {
             player.PlayerModel.SetActive(false);
         }

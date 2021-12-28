@@ -8,8 +8,9 @@ namespace NitroxModel_Subnautica.Packets;
 [Serializable]
 public class RocketResync : Packet
 {
-    public NitroxId RocketId;
-    public List<PreflightCheck> PreflightChecks;
+    public NitroxId RocketId { get; }
+    public List<PreflightCheck> PreflightChecks { get; }
+
     public RocketResync(NitroxId rocketId, List<PreflightCheck> preflightChecks)
     {
         RocketId = rocketId;
