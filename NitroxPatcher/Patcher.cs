@@ -26,6 +26,7 @@ internal static class Patcher
 
     private static readonly Harmony harmony = new("com.nitroxmod.harmony");
     private static bool isApplied;
+    private static readonly List<IDynamicPatch> dynamicPatches = new();
 
     /// <summary>
     ///     Applies all the dynamic patches defined in Patches namespace.
@@ -46,6 +47,7 @@ internal static class Patcher
             try
             {
                 patch.Patch(harmony);
+                dynamicPatches.Add(patch);
             }
             catch (Exception e)
             {
@@ -70,11 +72,11 @@ internal static class Patcher
             return;
         }
 
-        foreach (IDynamicPatch patch in container.Resolve<IDynamicPatch[]>())
+        foreach (IDynamicPatch patch in dynamicPatches)
         {
-            Log.Debug($"Restoring dynamic patch {patch.GetType().Name}");
             patch.Restore(harmony);
         }
+        dynamicPatches.Clear();
 
         isApplied = false;
     }
