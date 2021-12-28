@@ -11,7 +11,7 @@ namespace NitroxModel.Packets
         [Index(1)]
         public virtual NitroxTechType TechType { get; protected set; }
 
-        private RemotePlayerEquipmentRemoved() { }
+        public RemotePlayerEquipmentRemoved() { }
 
         public RemotePlayerEquipmentRemoved(ushort playerId, NitroxTechType techType)
         {

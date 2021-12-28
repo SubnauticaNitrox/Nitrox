@@ -13,7 +13,7 @@ namespace NitroxModel.Packets
         [Index(2)]
         public virtual string ReservationKey { get; protected set; }
 
-        private MultiplayerSessionReservation() : base(default) { }
+        public MultiplayerSessionReservation() : base(default) { }
 
         public MultiplayerSessionReservation(string correlationId, MultiplayerSessionReservationState reservationState) : base(correlationId)
         {

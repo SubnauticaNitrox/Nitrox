@@ -15,7 +15,7 @@ namespace NitroxModel.Packets
         [Index(2)]
         public virtual NitroxTechType TechType { get; protected set; }
 
-        private PickupItem() { }
+        public PickupItem() { }
 
         public PickupItem(NitroxVector3 itemPosition, NitroxId id, NitroxTechType techType)
         {

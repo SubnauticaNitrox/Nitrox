@@ -12,7 +12,7 @@ namespace NitroxModel.Packets
         [Index(1)]
         public virtual BasePieceMetadata Metadata { get; protected set; }
 
-        private BasePieceMetadataChanged() { }
+        public BasePieceMetadataChanged() { }
 
         public BasePieceMetadataChanged(NitroxId pieceId, BasePieceMetadata metadata)
         {

@@ -13,7 +13,7 @@ namespace NitroxModel.Packets
         [Index(2)]
         public virtual float Duration { get; protected set; }
 
-        private OpenableStateChanged() { }
+        public OpenableStateChanged() { }
 
         public OpenableStateChanged(NitroxId id, bool isOpen, float duration)
         {

@@ -16,7 +16,7 @@ namespace NitroxModel.Packets
         [Index(4)]
         public virtual string Value { get; protected set; }
 
-        private SceneDebuggerChange() { }
+        public SceneDebuggerChange() { }
 
         public SceneDebuggerChange(string path, int gameObjectID, int componentID, string fieldName, string value)
         {

@@ -11,7 +11,7 @@ namespace NitroxModel.MultiplayerSession
         [Index(1)]
         public virtual Optional<string> ServerPassword { get; protected set; }
 
-        private AuthenticationContext() { }
+        public AuthenticationContext() { }
 
         public AuthenticationContext(string username) : this(username, null)
         {

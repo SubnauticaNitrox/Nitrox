@@ -19,7 +19,7 @@ namespace NitroxModel.Packets
         [Index(4)]
         public virtual NitroxColor Color { get; protected set; }
 
-        private VehicleColorChange() { }
+        public VehicleColorChange() { }
 
         public VehicleColorChange(int index, NitroxId parentId, NitroxId vehicleId, NitroxVector3 hsb, NitroxColor color)
         {

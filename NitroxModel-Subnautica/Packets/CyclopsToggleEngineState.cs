@@ -14,7 +14,7 @@ namespace NitroxModel_Subnautica.Packets
         [Index(2)]
         public virtual bool IsStarting { get; protected set; }
 
-        private CyclopsToggleEngineState() { }
+        public CyclopsToggleEngineState() { }
 
         public CyclopsToggleEngineState(NitroxId id, bool isOn, bool isStarting)
         {

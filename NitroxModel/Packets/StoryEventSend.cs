@@ -10,7 +10,7 @@ namespace NitroxModel.Packets
         [Index(1)]
         public virtual string Key { get; protected set; }
 
-        private StoryEventSend() { }
+        public StoryEventSend() { }
 
         public StoryEventSend(EventType type, string key = "")
         {

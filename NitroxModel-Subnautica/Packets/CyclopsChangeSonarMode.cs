@@ -12,7 +12,7 @@ namespace NitroxModel_Subnautica.Packets
         [Index(1)]
         public virtual bool IsOn { get; protected set; }
 
-        private CyclopsChangeSonarMode() { }
+        public CyclopsChangeSonarMode() { }
 
         public CyclopsChangeSonarMode(NitroxId id, bool isOn)
         {

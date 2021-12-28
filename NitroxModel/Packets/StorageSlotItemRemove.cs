@@ -9,7 +9,7 @@ namespace NitroxModel.Packets
         [Index(0)]
         public virtual NitroxId OwnerId { get; protected set; }
 
-        private StorageSlotItemRemove() { }
+        public StorageSlotItemRemove() { }
 
         public StorageSlotItemRemove(NitroxId ownerId)
         {

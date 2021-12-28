@@ -1,22 +1,24 @@
-﻿using System;
-using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
+﻿using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
 using ProtoBufNet;
+using ZeroFormatter;
 
 namespace NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation
 {
-    [Serializable]
+    [ZeroFormattable]
     [ProtoContract]
     public class MapRoomRotationMetadata : RotationMetadata
     {
         // The map room internally maintains a cellType and connectionMask for rotation - these values
         // are updated when the scroll wheel changes.
+        [Index(0)]
         [ProtoMember(1)]
-        public byte CellType { get; set; }
+        public virtual byte CellType { get; set; }
 
+        [Index(1)]
         [ProtoMember(2)]
-        public int ConnectionMask { get; set; }
+        public virtual int ConnectionMask { get; set; }
 
-        protected MapRoomRotationMetadata() : base(typeof(BaseAddMapRoomGhost))
+        public MapRoomRotationMetadata() : base(typeof(BaseAddMapRoomGhost))
         {
             // Constructor for serialization. Has to be "protected" for json serialization.
         }

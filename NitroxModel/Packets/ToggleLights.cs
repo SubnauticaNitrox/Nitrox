@@ -11,7 +11,7 @@ namespace NitroxModel.Packets
         [Index(1)]
         public virtual bool IsOn { get; protected set; }
 
-        private ToggleLights() { }
+        public ToggleLights() { }
 
         public ToggleLights(NitroxId id, bool isOn)
         {

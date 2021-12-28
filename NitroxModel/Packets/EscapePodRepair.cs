@@ -9,7 +9,7 @@ namespace NitroxModel.Packets
         [Index(0)]
         public virtual NitroxId Id { get; protected set; }
 
-        private EscapePodRepair() { }
+        public EscapePodRepair() { }
 
         public EscapePodRepair(NitroxId id)
         {

@@ -12,7 +12,7 @@ namespace NitroxModel.Packets
         [Index(1)]
         public virtual Optional<NitroxId> EscapePodId { get; protected set; }
 
-        private EscapePodChanged() { }
+        public EscapePodChanged() { }
 
         public EscapePodChanged(ushort playerId, Optional<NitroxId> escapePodId)
         {

@@ -11,7 +11,7 @@ namespace NitroxModel.Packets
         [Index(1)]
         public virtual bool Verbose { get; protected set; }
 
-        private KnownTechEntryAdd() { }
+        public KnownTechEntryAdd() { }
 
         public KnownTechEntryAdd(NitroxTechType techType, bool verbose)
         {

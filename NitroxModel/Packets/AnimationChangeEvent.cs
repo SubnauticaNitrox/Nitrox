@@ -12,7 +12,7 @@ namespace NitroxModel.Packets
         [Index(2)]
         public virtual int State { get; protected set; }
 
-        private AnimationChangeEvent() { }
+        public AnimationChangeEvent() { }
 
         public AnimationChangeEvent(ushort playerId, int type, int state)
         {

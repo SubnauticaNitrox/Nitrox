@@ -10,7 +10,7 @@ namespace NitroxModel.Packets
         [Index(0)]
         public virtual IList<NitroxVector3> StartPositions { get; protected set; }
 
-        private DebugStartMapPacket() { }
+        public DebugStartMapPacket() { }
 
         public DebugStartMapPacket(IList<NitroxVector3> startPositions)
         {

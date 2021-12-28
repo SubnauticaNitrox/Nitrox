@@ -24,7 +24,7 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
         [ProtoMember(4)]
         public virtual int NodeIndex { get; set; }
 
-        protected CyclopsFireData()
+        public CyclopsFireData()
         {
             // Constructor for serialization. Has to be "protected" for json serialization.
         }

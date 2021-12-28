@@ -8,7 +8,7 @@ namespace NitroxModel.Packets
         [Index(0)]
         public virtual string Cmd { get; protected set; }
 
-        private ServerCommand() { }
+        public ServerCommand() { }
 
         public ServerCommand(string cmd)
         {

@@ -9,7 +9,7 @@ namespace NitroxModel.MultiplayerSession
         [Index(0)]
         public virtual NitroxColor PlayerColor { get; protected set; }
 
-        private PlayerSettings() { }
+        public PlayerSettings() { }
 
         public PlayerSettings(NitroxColor playerColor)
         {

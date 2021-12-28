@@ -12,7 +12,7 @@ namespace NitroxModel_Subnautica.Packets
         [Index(1)]
         public virtual PreflightCheck FlightCheck { get; protected set; }
 
-        private RocketPreflightComplete() { }
+        public RocketPreflightComplete() { }
 
         public RocketPreflightComplete(NitroxId id, PreflightCheck flightCheck)
         {

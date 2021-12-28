@@ -13,7 +13,7 @@ namespace NitroxModel.Packets
         [Index(2)]
         public virtual SimulationLockType LockType { get; protected set; }
 
-        private SimulationOwnershipRequest() { }
+        public SimulationOwnershipRequest() { }
 
         public SimulationOwnershipRequest(ushort playerId, NitroxId id, SimulationLockType lockType)
         {

@@ -34,7 +34,7 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
         [ProtoMember(6)]
         public virtual DamageType Type { get; set; }
 
-        protected CyclopsDamageInfoData()
+        public CyclopsDamageInfoData()
         {
             // Constructor for serialization. Has to be "protected" for json serialization.
         }

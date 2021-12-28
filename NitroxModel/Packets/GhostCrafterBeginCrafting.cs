@@ -14,7 +14,7 @@ namespace NitroxModel.Packets
         [Index(2)]
         public virtual float Duration { get; protected set; }
 
-        private GhostCrafterBeginCrafting() { }
+        public GhostCrafterBeginCrafting() { }
 
         public GhostCrafterBeginCrafting(NitroxId ghostCrafterId, NitroxTechType techType, float duration)
         {

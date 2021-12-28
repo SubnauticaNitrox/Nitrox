@@ -11,7 +11,7 @@ namespace NitroxModel.Packets
         [Index(1)]
         public virtual NitroxId ItemId { get; protected set; }
 
-        private ItemContainerRemove() { }
+        public ItemContainerRemove() { }
 
         public ItemContainerRemove(NitroxId ownerId, NitroxId itemId)
         {

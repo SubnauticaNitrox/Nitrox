@@ -12,7 +12,7 @@ namespace NitroxModel.Packets
         [Index(1)]
         public virtual EntityMetadata NewValue { get; protected set; }
 
-        private EntityMetadataUpdate() { }
+        public EntityMetadataUpdate() { }
 
         public EntityMetadataUpdate(NitroxId id, EntityMetadata newValue)
         {

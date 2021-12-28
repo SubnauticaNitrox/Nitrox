@@ -13,7 +13,7 @@ namespace NitroxModel.Packets
         [Index(2)]
         public virtual bool GetPilotingMode { get; protected set; }
 
-        private VehicleDestroyed() { }
+        public VehicleDestroyed() { }
 
         public VehicleDestroyed(NitroxId id, string playerName, bool getPilotingMode)
         {

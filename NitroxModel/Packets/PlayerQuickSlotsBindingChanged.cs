@@ -9,7 +9,7 @@ namespace NitroxModel.Packets
         [Index(0)]
         public virtual List<string> Binding { get; protected set; }
 
-        private PlayerQuickSlotsBindingChanged() { }
+        public PlayerQuickSlotsBindingChanged() { }
 
         public PlayerQuickSlotsBindingChanged(List<string> binding)
         {

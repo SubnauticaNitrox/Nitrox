@@ -10,7 +10,7 @@ namespace NitroxModel.Packets
         [Index(5)]
         public virtual VehicleMovementData VehicleMovementData { get; protected set; }
 
-        private VehicleMovement() { }
+        public VehicleMovement() { }
 
         public VehicleMovement(ushort playerId, VehicleMovementData vehicleMovementData) : base(playerId, vehicleMovementData.Position, vehicleMovementData.Velocity, vehicleMovementData.Rotation, vehicleMovementData.Rotation)
         {

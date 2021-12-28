@@ -10,7 +10,7 @@ namespace NitroxModel_Subnautica.Packets
         [Index(0)]
         public virtual NitroxId Id { get; protected set; }
 
-        private CyclopsSonarPing() { }
+        public CyclopsSonarPing() { }
 
         public CyclopsSonarPing(NitroxId id)
         {

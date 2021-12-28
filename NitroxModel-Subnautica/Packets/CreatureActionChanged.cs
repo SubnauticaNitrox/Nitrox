@@ -13,7 +13,7 @@ namespace NitroxModel_Subnautica.Packets
         [Index(1)]
         public virtual SerializableCreatureAction NewAction { get; protected set; }
 
-        private CreatureActionChanged() { }
+        public CreatureActionChanged() { }
 
         public CreatureActionChanged(NitroxId id, SerializableCreatureAction newAction)
         {

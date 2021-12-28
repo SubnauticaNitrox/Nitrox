@@ -8,7 +8,7 @@ namespace NitroxModel.Packets
         [Index(0)]
         public virtual string Reason { get; protected set; }
 
-        private PlayerKicked() { }
+        public PlayerKicked() { }
 
         public PlayerKicked(string reason)
         {

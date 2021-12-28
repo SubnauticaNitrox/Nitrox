@@ -8,7 +8,7 @@ namespace NitroxModel.Packets
         [Index(-3)]
         public virtual string CorrelationId { get; protected set; }
 
-        private CorrelatedPacket() { }
+        public CorrelatedPacket() { }
 
         protected CorrelatedPacket(string correlationId)
         {

@@ -11,7 +11,7 @@ namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata
         [ProtoMember(1)]
         public virtual bool Slotted { get; protected set; }
 
-        protected PrecursorKeyTerminalMetadata()
+        public PrecursorKeyTerminalMetadata()
         {
             //Constructor for serialization. Has to be "protected" for json serialization.
         }

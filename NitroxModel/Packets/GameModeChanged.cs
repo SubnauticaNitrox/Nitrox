@@ -9,7 +9,7 @@ namespace NitroxModel.Packets
         [Index(0)]
         public virtual ServerGameMode GameMode { get; protected set; }
 
-        private GameModeChanged() { }
+        public GameModeChanged() { }
 
         public GameModeChanged(ServerGameMode gameMode)
         {

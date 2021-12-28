@@ -15,7 +15,7 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoMember(2)]
         public virtual float Timestamp { get; set; }
 
-        protected PDALogEntry()
+        public PDALogEntry()
         {
             // Constructor for serialization. Has to be "protected" for json serialization.
         }

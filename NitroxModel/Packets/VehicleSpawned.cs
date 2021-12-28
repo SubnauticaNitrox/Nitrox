@@ -11,7 +11,7 @@ namespace NitroxModel.Packets
         [Index(1)]
         public virtual VehicleModel VehicleModel { get; protected set; }
 
-        private VehicleSpawned() { }
+        public VehicleSpawned() { }
 
         public VehicleSpawned(byte[] serializedData, VehicleModel vehicleModel)
         {

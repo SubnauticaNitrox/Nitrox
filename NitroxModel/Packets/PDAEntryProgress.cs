@@ -16,7 +16,7 @@ namespace NitroxModel.Packets
         [Index(3)]
         public virtual NitroxId NitroxId { get; protected set; }
 
-        private PDAEntryProgress() { }
+        public PDAEntryProgress() { }
 
         public PDAEntryProgress(NitroxTechType techType, float progress, int unlocked, NitroxId nitroxId)
         {

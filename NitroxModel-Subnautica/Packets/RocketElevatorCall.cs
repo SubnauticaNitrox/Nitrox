@@ -14,7 +14,7 @@ namespace NitroxModel_Subnautica.Packets
         [Index(2)]
         public virtual RocketElevatorPanel Panel { get; protected set; }
 
-        private RocketElevatorCall() { }
+        public RocketElevatorCall() { }
 
         public RocketElevatorCall(NitroxId id, RocketElevatorPanel panel, bool up)
         {

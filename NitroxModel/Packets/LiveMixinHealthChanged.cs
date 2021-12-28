@@ -22,7 +22,7 @@ namespace NitroxModel.Packets
         [Index(4)]
         public virtual float TotalHealth { get; protected set; }
 
-        private LiveMixinHealthChanged() { }
+        public LiveMixinHealthChanged() { }
 
         public LiveMixinHealthChanged(NitroxTechType techType, NitroxId id, float lifeChanged, float totalHealth)
         {

@@ -14,7 +14,7 @@ namespace NitroxModel.Packets
         [Index(1)]
         public virtual float DouseAmount { get; protected set; }
 
-        private FireDoused() { }
+        public FireDoused() { }
 
         /// <param name="id">The Fire id</param>
         /// <param name="douseAmount">The amount to douse the fire by. A large number will extinguish the fire. A large number still calls the same 

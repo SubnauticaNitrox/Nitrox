@@ -31,7 +31,7 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoMember(6)]
         public virtual float InfectionAmount { get; protected set; }
 
-        protected PlayerStatsData()
+        public PlayerStatsData()
         {
             // Constructor for serialization. Has to be "protected" for json serialization.
         }

@@ -11,7 +11,7 @@ namespace NitroxModel.Packets
         [Index(1)]
         public virtual EquippedItemData EquippedItem { get; protected set; }
 
-        private PlayerEquipmentAdded() { }
+        public PlayerEquipmentAdded() { }
 
         public PlayerEquipmentAdded(NitroxTechType techType, EquippedItemData equippedItem)
         {

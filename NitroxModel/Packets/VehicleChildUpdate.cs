@@ -13,7 +13,7 @@ namespace NitroxModel.Packets
         [Index(1)]
         public virtual List<InteractiveChildObjectIdentifier> InteractiveChildIdentifiers { get; protected set; }
         
-        private VehicleChildUpdate() { }
+        public VehicleChildUpdate() { }
 
         public VehicleChildUpdate(NitroxId vehicleId, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers)
         {

@@ -9,7 +9,7 @@ namespace NitroxModel.Packets
         [Index(0)]
         public virtual ItemData ItemData { get; protected set; }
 
-        private StorageSlotItemAdd() { }
+        public StorageSlotItemAdd() { }
 
         public StorageSlotItemAdd(ItemData itemData)
         {

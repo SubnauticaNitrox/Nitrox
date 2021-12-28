@@ -19,7 +19,7 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoMember(3)]
         public virtual int Unlocked { get; set; }
 
-        protected PDAEntry()
+        public PDAEntry()
         {
             // Constructor for serialization. Has to be "protected" for json serialization.
         }

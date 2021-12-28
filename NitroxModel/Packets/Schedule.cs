@@ -12,7 +12,7 @@ namespace NitroxModel.Packets
         [Index(2)]
         public virtual string Type { get; protected set; }
 
-        private Schedule() { }
+        public Schedule() { }
         
         public Schedule(float timeExecute, string key, string type)
         {

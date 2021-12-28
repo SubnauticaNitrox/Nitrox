@@ -57,7 +57,7 @@ namespace NitroxModel.Packets
         [Index(21)]
         public virtual Perms Permissions { get; protected set; }
 
-        private InitialPlayerSync() { }
+        public InitialPlayerSync() { }
 
         public InitialPlayerSync(NitroxId playerGameObjectId,
             bool firstTimeConnecting,

@@ -39,7 +39,7 @@ namespace NitroxModel.DataStructures.GameLogic
             }
         }
 
-        protected AbsoluteEntityCell()
+        public AbsoluteEntityCell()
         {
             // Constructor for serialization. Has to be "protected" for json serialization.
         }

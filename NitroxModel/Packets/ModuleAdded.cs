@@ -11,7 +11,7 @@ namespace NitroxModel.Packets
         [Index(1)]
         public virtual bool PlayerModule { get; protected set; }
 
-        private ModuleAdded() { }
+        public ModuleAdded() { }
 
         public ModuleAdded(EquippedItemData equippedItemData, bool playerModule)
         {

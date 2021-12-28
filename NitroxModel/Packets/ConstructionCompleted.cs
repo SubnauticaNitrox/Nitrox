@@ -11,7 +11,7 @@ namespace NitroxModel.Packets
         [Index(1)]
         public virtual NitroxId BaseId { get; protected set; }
 
-        private ConstructionCompleted() { }
+        public ConstructionCompleted() { }
 
         public ConstructionCompleted(NitroxId id, NitroxId baseId)
         {

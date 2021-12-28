@@ -11,7 +11,7 @@ namespace NitroxModel.Packets
         [Index(1)]
         public virtual float ConstructionAmount { get; protected set; }
 
-        private ConstructionAmountChanged() { }
+        public ConstructionAmountChanged() { }
 
         public ConstructionAmountChanged(NitroxId id, float constructionAmount)
         {

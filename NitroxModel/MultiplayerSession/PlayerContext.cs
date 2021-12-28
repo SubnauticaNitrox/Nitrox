@@ -17,7 +17,7 @@ namespace NitroxModel.MultiplayerSession
         [Index(4)]
         public virtual PlayerSettings PlayerSettings { get; protected set; }
 
-        private PlayerContext() { }
+        public PlayerContext() { }
 
         public PlayerContext(string playerName, ushort playerId, NitroxId playerNitroxId, bool wasBrandNewPlayer, PlayerSettings playerSettings)
         {

@@ -19,7 +19,7 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoMember(2)]
         public virtual Dictionary<NitroxId, float> Entries { get; set; }
 
-        protected PDAProgressEntry()
+        public PDAProgressEntry()
         {
             // Constructor for serialization. Has to be "protected" for json serialization.
         }

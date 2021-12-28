@@ -11,7 +11,7 @@ namespace NitroxModel.Packets
         [Index(1)]
         public virtual string AssetPath { get; protected set; }
 
-        private PlayFMODCustomLoopingEmitter() { }
+        public PlayFMODCustomLoopingEmitter() { }
 
         public PlayFMODCustomLoopingEmitter(NitroxId id, string assetPath)
         {

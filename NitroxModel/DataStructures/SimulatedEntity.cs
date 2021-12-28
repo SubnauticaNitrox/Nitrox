@@ -14,7 +14,7 @@ namespace NitroxModel.DataStructures
         [Index(3)]
         public virtual SimulationLockType LockType { get; protected set; }
 
-        private SimulatedEntity() { }
+        public SimulatedEntity() { }
 
         public SimulatedEntity(NitroxId id, ushort playerId, bool changesPosition, SimulationLockType lockType)
         {

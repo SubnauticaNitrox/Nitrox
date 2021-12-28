@@ -20,7 +20,7 @@ namespace NitroxModel_Subnautica.Packets
         [Index(4)]
         public virtual NitroxQuaternion? OpRotation { get; protected set; }
 
-        private ExosuitArmActionPacket() { }
+        public ExosuitArmActionPacket() { }
 
         public ExosuitArmActionPacket(NitroxTechType techType, NitroxId armId, ExosuitArmAction armAction, NitroxVector3? opVector, NitroxQuaternion? opRotation)
         {

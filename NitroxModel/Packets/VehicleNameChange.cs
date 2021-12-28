@@ -14,7 +14,7 @@ namespace NitroxModel.Packets
         [Index(2)]
         public virtual string Name { get; protected set; }
 
-        private VehicleNameChange() { }
+        public VehicleNameChange() { }
 
         public VehicleNameChange(NitroxId parentId, NitroxId vehicleId, string name)
         {

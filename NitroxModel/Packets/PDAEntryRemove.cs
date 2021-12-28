@@ -9,7 +9,7 @@ namespace NitroxModel.Packets
         [Index(0)]
         public virtual NitroxTechType TechType { get; protected set; }
 
-        private PDAEntryRemove() { }
+        public PDAEntryRemove() { }
 
         public PDAEntryRemove(NitroxTechType techType)
         {

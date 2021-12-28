@@ -19,7 +19,7 @@ namespace NitroxModel.Packets
         [Index(3)]
         public virtual List<ItemData> InventoryItems { get; protected set; }
 
-        private PlayerJoinedMultiplayerSession() { }
+        public PlayerJoinedMultiplayerSession() { }
 
         public PlayerJoinedMultiplayerSession(PlayerContext playerContext, Optional<NitroxId> subRootId, List<NitroxTechType> equippedTechTypes, List<ItemData> inventoryItems)
         {

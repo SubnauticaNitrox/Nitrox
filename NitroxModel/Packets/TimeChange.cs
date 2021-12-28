@@ -10,7 +10,7 @@ namespace NitroxModel.Packets
         [Index(1)]
         public virtual bool InitialSync { get; protected set; }
 
-        private TimeChange() { }
+        public TimeChange() { }
 
         public TimeChange(double currentTime, bool initialSync)
         {

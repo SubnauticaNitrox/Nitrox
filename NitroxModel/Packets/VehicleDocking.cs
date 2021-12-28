@@ -13,7 +13,7 @@ namespace NitroxModel.Packets
         [Index(2)]
         public virtual ushort PlayerId { get; protected set; }
 
-        private VehicleDocking() { }
+        public VehicleDocking() { }
 
         public VehicleDocking(NitroxId vehicleId, NitroxId dockId, ushort playerId)
         {

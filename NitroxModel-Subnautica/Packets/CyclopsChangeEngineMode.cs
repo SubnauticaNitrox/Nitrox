@@ -12,7 +12,7 @@ namespace NitroxModel_Subnautica.Packets
         [Index(1)]
         public virtual CyclopsMotorMode.CyclopsMotorModes Mode { get; protected set; }
 
-        private CyclopsChangeEngineMode() { }
+        public CyclopsChangeEngineMode() { }
 
         public CyclopsChangeEngineMode(NitroxId id, CyclopsMotorMode.CyclopsMotorModes mode)
         {

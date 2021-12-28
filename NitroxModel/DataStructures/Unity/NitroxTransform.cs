@@ -88,7 +88,7 @@ namespace NitroxModel.DataStructures.Unity
             Rotation = rotation;
         }
 
-        private NitroxTransform()
+        public NitroxTransform()
         { }
 
         /// <summary>

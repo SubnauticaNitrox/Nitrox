@@ -13,7 +13,7 @@ namespace NitroxModel.Packets
         [Index(2)]
         public virtual AbsoluteEntityCell[] Removed { get; protected set; }
 
-        private CellVisibilityChanged() { }
+        public CellVisibilityChanged() { }
 
         public CellVisibilityChanged(ushort playerId, AbsoluteEntityCell[] added, AbsoluteEntityCell[] removed)
         {

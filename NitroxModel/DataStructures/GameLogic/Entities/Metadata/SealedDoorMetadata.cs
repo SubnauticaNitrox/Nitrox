@@ -15,7 +15,7 @@ namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata
         [ProtoMember(2)]
         public virtual float OpenedAmount { get; protected set; }
 
-        protected SealedDoorMetadata()
+        public SealedDoorMetadata()
         {
             //Constructor for serialization. Has to be "protected" for json serialization.
         }

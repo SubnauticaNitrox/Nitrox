@@ -1,5 +1,4 @@
-﻿using System;
-using NitroxModel.DataStructures;
+﻿using NitroxModel.DataStructures;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures.GameLogic;
 using ZeroFormatter;
@@ -15,7 +14,7 @@ namespace NitroxModel_Subnautica.Packets
         [Index(0)]
         public virtual CyclopsFireData FireCreatedData { get; protected set; }
 
-        private CyclopsFireCreated() { }
+        public CyclopsFireCreated() { }
 
         public CyclopsFireCreated(NitroxId id, NitroxId cyclopsId, CyclopsRooms room, int nodeIndex)
         {

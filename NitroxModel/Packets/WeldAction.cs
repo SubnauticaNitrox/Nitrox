@@ -11,7 +11,7 @@ namespace NitroxModel.Packets
         [Index(1)]
         public virtual float HealthAdded { get; protected set; }
 
-        private WeldAction() { }
+        public WeldAction() { }
 
         public WeldAction(NitroxId id, float healthAdded)
         {

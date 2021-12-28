@@ -11,7 +11,7 @@ namespace NitroxModel.Packets
         [Index(1)]
         public virtual VehicleModel CreatedVehicle { get; protected set; }
 
-        private VehicleCreated() { }
+        public VehicleCreated() { }
 
         public VehicleCreated(VehicleModel createdVehicle, string playerName)
         {

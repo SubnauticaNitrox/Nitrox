@@ -22,7 +22,7 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoMember(3)]
         public virtual byte[] SerializedData { get; protected set; } // TODO: change
 
-        protected ItemData()
+        public ItemData()
         {
             // Constructor for serialization. Has to be "protected" for json serialization.
         }

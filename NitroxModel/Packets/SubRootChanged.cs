@@ -12,7 +12,7 @@ namespace NitroxModel.Packets
         [Index(1)]
         public virtual Optional<NitroxId> SubRootId { get; protected set; }
 
-        private SubRootChanged() { }
+        public SubRootChanged() { }
 
         public SubRootChanged(ushort playerId, Optional<NitroxId> subRootId)
         {

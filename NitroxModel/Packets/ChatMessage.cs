@@ -11,7 +11,7 @@ namespace NitroxModel.Packets
         public virtual string Text { get; protected set; }
         public const ushort SERVER_ID = ushort.MaxValue;
 
-        private ChatMessage() { }
+        public ChatMessage() { }
 
         public ChatMessage(ushort playerId, string text)
         {

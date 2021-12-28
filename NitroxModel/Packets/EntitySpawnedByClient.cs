@@ -9,7 +9,7 @@ namespace NitroxModel.Packets
         [Index(0)]
         public virtual Entity Entity { get; protected set; }
 
-        private EntitySpawnedByClient() { }
+        public EntitySpawnedByClient() { }
 
         public EntitySpawnedByClient(Entity entity)
         {

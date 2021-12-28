@@ -10,7 +10,7 @@ namespace NitroxModel_Subnautica.Packets
         [Index(0)]
         public virtual NitroxId Id { get; protected set; }
 
-        private CyclopsFireSuppression() { }
+        public CyclopsFireSuppression() { }
 
         public CyclopsFireSuppression(NitroxId id)
         {

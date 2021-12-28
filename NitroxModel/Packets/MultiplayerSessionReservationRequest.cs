@@ -11,7 +11,7 @@ namespace NitroxModel.Packets
         [Index(1)]
         public virtual AuthenticationContext AuthenticationContext { get; protected set; }
 
-        private MultiplayerSessionReservationRequest() : base(default) { }
+        public MultiplayerSessionReservationRequest() : base(default) { }
 
         public MultiplayerSessionReservationRequest(string reservationCorrelationId, PlayerSettings playerSettings, AuthenticationContext authenticationContext) : base(reservationCorrelationId)
         {

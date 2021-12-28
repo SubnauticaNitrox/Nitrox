@@ -12,7 +12,7 @@ namespace NitroxModel.Packets
         [Index(1)]
         public virtual NitroxId EquippedItemId { get; protected set; }
 
-        private PlayerEquipmentRemoved() { }
+        public PlayerEquipmentRemoved() { }
 
         public PlayerEquipmentRemoved(NitroxTechType techType, NitroxId equippeditemId)
         {

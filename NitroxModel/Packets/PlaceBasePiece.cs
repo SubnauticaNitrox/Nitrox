@@ -9,7 +9,7 @@ namespace NitroxModel.Packets
         [Index(0)]
         public virtual BasePiece BasePiece { get; protected set; }
 
-        private PlaceBasePiece() { }
+        public PlaceBasePiece() { }
 
         public PlaceBasePiece(BasePiece basePiece)
         {

@@ -19,7 +19,7 @@ namespace NitroxModel.DataStructures.GameLogic
         [Index(5)]
         public virtual List<PDAProgressEntry> CachedProgress { get; set; }
 
-        protected InitialPDAData()
+        public InitialPDAData()
         {
             //Constructor for serialization. Has to be "protected" for json serialization.
         }

@@ -13,7 +13,7 @@ namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata
         [ProtoMember(2)]
         public bool Hatched { get; }
 
-        protected IncubatorMetadata()
+        public IncubatorMetadata()
         {
             //Constructor for serialization. Has to be "protected" for json serialization.
         }

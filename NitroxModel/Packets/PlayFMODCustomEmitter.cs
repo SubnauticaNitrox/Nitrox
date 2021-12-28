@@ -13,7 +13,7 @@ namespace NitroxModel.Packets
         [Index(2)]
         public virtual bool Play { get; protected set; }
 
-        private PlayFMODCustomEmitter() { }
+        public PlayFMODCustomEmitter() { }
 
         public PlayFMODCustomEmitter(NitroxId id, string assetPath, bool play)
         {

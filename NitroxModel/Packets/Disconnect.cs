@@ -8,7 +8,7 @@ namespace NitroxModel.Packets
         [Index(0)]
         public virtual ushort PlayerId { get; protected set; }
 
-        private Disconnect() { }
+        public Disconnect() { }
 
         public Disconnect(ushort playerId)
         {

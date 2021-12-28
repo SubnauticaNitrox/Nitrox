@@ -19,7 +19,7 @@ namespace NitroxModel.Packets
         [Index(4)]
         public virtual NitroxQuaternion Rotation { get; protected set; }
 
-        private SeamothModulesAction() { }
+        public SeamothModulesAction() { }
 
         public SeamothModulesAction(NitroxTechType techType, int slotID, NitroxId id, NitroxVector3 forward, NitroxQuaternion rotation)
         {

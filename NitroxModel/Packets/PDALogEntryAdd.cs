@@ -10,7 +10,7 @@ namespace NitroxModel.Packets
         [Index(1)]
         public virtual float Timestamp { get; protected set; }
 
-        private PDALogEntryAdd() { }
+        public PDALogEntryAdd() { }
 
         public PDALogEntryAdd(string key, float timestamp)
         {

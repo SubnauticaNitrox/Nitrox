@@ -22,7 +22,7 @@ namespace NitroxModel.Packets
         [Index(5)]
         public virtual byte[] Bytes { get; protected set; }
 
-        private DroppedItem() { }
+        public DroppedItem() { }
 
         public DroppedItem(NitroxId id, Optional<NitroxId> waterParkId, NitroxTechType techType, NitroxVector3 itemPosition, NitroxQuaternion itemRotation, byte[] bytes)
         {

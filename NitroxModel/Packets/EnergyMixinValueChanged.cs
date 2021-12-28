@@ -14,7 +14,7 @@ namespace NitroxModel.Packets
         [Index(2)]
         public virtual ItemData BatteryData { get; protected set; }
 
-        private EnergyMixinValueChanged() { }
+        public EnergyMixinValueChanged() { }
 
         public EnergyMixinValueChanged(NitroxId ownerId, float value, ItemData batteryData)
         {

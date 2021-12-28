@@ -77,7 +77,7 @@ namespace NitroxModel.DataStructures.GameLogic
         [Index(12)]
         public virtual List<Entity> ChildEntities { get; set; } = new List<Entity>();
 
-        protected Entity()
+        public Entity()
         {
             // Constructor for serialization. Has to be "protected" for json serialization.
         }

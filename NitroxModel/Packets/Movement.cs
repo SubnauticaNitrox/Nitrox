@@ -18,7 +18,7 @@ namespace NitroxModel.Packets
         [Index(4)]
         public virtual NitroxQuaternion AimingRotation { get; protected set; }
 
-        protected Movement() { }
+        public Movement() { }
 
         public Movement(ushort playerId, NitroxVector3 position, NitroxVector3 velocity, NitroxQuaternion bodyRotation, NitroxQuaternion aimingRotation)
         {

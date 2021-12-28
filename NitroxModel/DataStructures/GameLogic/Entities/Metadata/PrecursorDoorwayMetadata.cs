@@ -11,7 +11,7 @@ namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata
         [ProtoMember(1)]
         public virtual bool IsOpen { get; protected set; }
 
-        protected PrecursorDoorwayMetadata()
+        public PrecursorDoorwayMetadata()
         {
             //Constructor for serialization. Has to be "protected" for json serialization.
         }

@@ -13,7 +13,7 @@ namespace NitroxModel.Packets
         [Index(2)]
         public virtual byte[] BeaconGameObjectSerialized { get; protected set; } // TODO: Change this to send only the important info
 
-        private PingRenamed() { }
+        public PingRenamed() { }
 
         public PingRenamed(NitroxId id, string name, byte[] beaconGameObjectSerialized)
         {

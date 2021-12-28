@@ -15,7 +15,7 @@ namespace NitroxModel_Subnautica.Packets
         [Index(2)]
         public virtual NitroxTechType CurrentStageTech { get; protected set; }
 
-        private RocketStageUpdate() { }
+        public RocketStageUpdate() { }
 
         public RocketStageUpdate(NitroxId id, int newStage, NitroxTechType currentStageTech)
         {

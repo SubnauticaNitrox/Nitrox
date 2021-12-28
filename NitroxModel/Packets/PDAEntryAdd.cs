@@ -13,7 +13,7 @@ namespace NitroxModel.Packets
         [Index(2)]
         public virtual int Unlocked { get; protected set; }
 
-        private PDAEntryAdd() { }
+        public PDAEntryAdd() { }
 
         public PDAEntryAdd(NitroxTechType techType, float progress, int unlocked)
         {

@@ -14,7 +14,7 @@ namespace NitroxModel.Packets
         [Index(2)]
         public virtual NitroxQuaternion Rotation { get; protected set; }
 
-        private ItemPosition() { }
+        public ItemPosition() { }
 
         public ItemPosition(NitroxId id, NitroxVector3 position, NitroxQuaternion rotation)
         {

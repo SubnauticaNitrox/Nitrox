@@ -15,7 +15,7 @@ namespace NitroxModel.Packets
         [Index(3)]
         public virtual float NextSpawnTime { get; protected set; }
 
-        private MedicalCabinetClicked() { }
+        public MedicalCabinetClicked() { }
 
         public MedicalCabinetClicked(NitroxId id, bool doorOpen, bool hasMedKit, float nextSpawnTime)
         {

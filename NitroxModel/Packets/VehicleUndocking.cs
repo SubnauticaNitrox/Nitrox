@@ -15,7 +15,7 @@ namespace NitroxModel.Packets
         [Index(3)]
         public virtual bool UndockingStart { get; protected set; }
 
-        private VehicleUndocking() { }
+        public VehicleUndocking() { }
 
         public VehicleUndocking(NitroxId vehicleId, NitroxId dockId, ushort playerId, bool undockingStart)
         {

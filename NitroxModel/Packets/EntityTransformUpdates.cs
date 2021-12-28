@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Unity;
 using ZeroFormatter;
@@ -37,7 +36,7 @@ namespace NitroxModel.Packets
             [Index(2)]
             public virtual NitroxQuaternion Rotation { get; protected set; }
 
-            private EntityTransformUpdate() { }
+            public EntityTransformUpdate() { }
 
             public EntityTransformUpdate(NitroxId id, NitroxVector3 position, NitroxQuaternion rotation)
             {

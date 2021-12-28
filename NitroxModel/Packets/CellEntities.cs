@@ -10,7 +10,7 @@ namespace NitroxModel.Packets
         [Index(0)]
         public virtual List<Entity> Entities { get; protected set; }
 
-        private CellEntities() { }
+        public CellEntities() { }
 
         public CellEntities(List<Entity> entities)
         {

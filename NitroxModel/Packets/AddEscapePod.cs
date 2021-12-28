@@ -9,7 +9,7 @@ namespace NitroxModel.Packets
         [Index(0)]
         public virtual EscapePodModel EscapePod { get; protected set; }
 
-        private AddEscapePod() { }
+        public AddEscapePod() { }
 
         public AddEscapePod(EscapePodModel escapePod)
         {

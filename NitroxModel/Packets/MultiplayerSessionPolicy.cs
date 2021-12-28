@@ -20,7 +20,7 @@ namespace NitroxModel.Packets
         public virtual Version NitroxVersionAllowed { get; protected set; }
 #pragma warning restore ZeroFormatterAnalyzer_TypeMustBeZeroFormattable // Lint of ZeroFormattable Type.
 
-        private MultiplayerSessionPolicy() : base(default) { }
+        public MultiplayerSessionPolicy() : base(default) { }
 
         public MultiplayerSessionPolicy(string correlationId, bool disableConsole, int maxConnections, bool requiresServerPassword) : base(correlationId)
         {

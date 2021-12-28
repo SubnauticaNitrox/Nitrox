@@ -9,7 +9,7 @@ namespace NitroxModel.Packets
         [Index(0)]
         public virtual NitroxId Id { get; protected set; }
 
-        private DeconstructionBegin() { }
+        public DeconstructionBegin() { }
 
         public DeconstructionBegin(NitroxId id)
         {

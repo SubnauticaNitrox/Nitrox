@@ -15,7 +15,7 @@ namespace NitroxModel.Packets
         [Index(3)]
         public virtual bool PlayerModule { get; protected set; }
 
-        private ModuleRemoved() { }
+        public ModuleRemoved() { }
 
         public ModuleRemoved(NitroxId ownerId, string slot, NitroxId itemId, bool playerModule)
         {

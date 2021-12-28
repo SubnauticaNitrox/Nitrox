@@ -12,7 +12,7 @@ namespace NitroxModel.Packets
         [Index(1)]
         public virtual NitroxTechType TechType { get; protected set; }
 
-        private GhostCrafterItemPickup() { }
+        public GhostCrafterItemPickup() { }
 
         public GhostCrafterItemPickup(NitroxId ghostCrafterId, NitroxTechType techType)
         {

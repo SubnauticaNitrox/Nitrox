@@ -18,7 +18,7 @@ namespace NitroxModel.DataStructures.GameLogic
         [Index(3)]
         public virtual List<NitroxTechType> EquippedTechTypes { get; protected set; }
 
-        protected InitialRemotePlayerData()
+        public InitialRemotePlayerData()
         {
             // Constructor for serialization. Has to be "protected" for json serialization.
         }

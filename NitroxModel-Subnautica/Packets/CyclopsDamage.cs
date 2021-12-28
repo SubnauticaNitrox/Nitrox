@@ -28,7 +28,7 @@ namespace NitroxModel_Subnautica.Packets
         [Index(6)]
         public virtual CyclopsDamageInfoData DamageInfo { get; protected set; }
 
-        private CyclopsDamage() { }
+        public CyclopsDamage() { }
 
         /// <param name="id"><see cref="SubRoot"/> Id.</param>
         /// <param name="subHealth"><see cref="SubRoot.liveMixin.health"/>.</param>

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using LZ4;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.Networking;
 using NitroxModel.Serialization.Formatters;
 using ZeroFormatter;
@@ -23,6 +24,18 @@ namespace NitroxModel.Packets
         {
             // Version is in an external assembly so a custom formatter is required
             Formatter<DefaultResolver, Version>.Register(new VersionFormatter<DefaultResolver>());
+
+            // Optional<T> is generic and weird
+            Formatter.AppendFormatterResolver(t =>
+            {
+                if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Optional<>))
+                {
+                    Type formatter = Type.GetType("NitroxModel.Serialization.Formatters.OptionalFormatter`2").MakeGenericType(typeof(DefaultResolver), t.GetGenericArguments().First());
+                    return Activator.CreateInstance(formatter);
+                }
+
+                return null;
+            });
 
             Formatter.AppendDynamicUnionResolver((unionType, resolver) =>
             {

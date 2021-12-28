@@ -17,7 +17,7 @@ namespace NitroxModel.Packets
         [Index(4)]
         public virtual bool IsGlobal { get; protected set; }
 
-        private PlayFMODAsset() { }
+        public PlayFMODAsset() { }
 
         public PlayFMODAsset(string assetPath, NitroxVector3 position, float volume, float radius, bool isGlobal)
         {

@@ -15,7 +15,7 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoMember(2)]
         public virtual NitroxTechType TechType { get; protected set; }
 
-        protected EquippedItemData()
+        public EquippedItemData()
         {
             // Constructor for serialization. Has to be "protected" for json serialization.
         }

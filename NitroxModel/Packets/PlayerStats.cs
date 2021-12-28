@@ -21,7 +21,7 @@ namespace NitroxModel.Packets
         [Index(6)]
         public virtual float InfectionAmount { get; protected set; }
 
-        private PlayerStats() { }
+        public PlayerStats() { }
 
         public PlayerStats(ushort playerId, float oxygen, float maxOxygen, float health, float food, float water, float infectionAmount)
         {

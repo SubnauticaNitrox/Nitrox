@@ -12,7 +12,7 @@ namespace NitroxModel.DataStructures.GameLogic
         public virtual double PlantedGameTime { get; protected set; }
 
 
-        protected PlantableItemData()
+        public PlantableItemData()
         {
             // Constructor for serialization. Has to be "protected" for json serialization.
         }

@@ -17,7 +17,7 @@ namespace NitroxModel.Packets
         [Index(3)]
         public virtual Optional<NitroxId> SubRootID { get; protected set; }
 
-        private PlayerTeleported() { }
+        public PlayerTeleported() { }
 
         public PlayerTeleported(string playerName, NitroxVector3 destinationFrom, NitroxVector3 destinationTo, Optional<NitroxId> subRootID)
         {
