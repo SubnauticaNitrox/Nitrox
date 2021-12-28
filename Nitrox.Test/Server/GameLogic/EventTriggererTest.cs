@@ -35,8 +35,7 @@ namespace NitroxServer.GameLogic
         public void TestTimeSkip()
         {
             EventTriggerer eventTriggerer = new(null, seed, 480.0, null);
-            eventTriggerer.PauseEventTimers();
-            eventTriggerer.PauseWorldTime();
+            eventTriggerer.PauseWorld();
 
             double interval = eventTriggerer.eventTimers["Story_AuroraExplosion"].Interval;
             eventTriggerer.ElapsedTimeMs += TimeSpan.FromMinutes(40).TotalMilliseconds;
