@@ -4,34 +4,24 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NitroxModel.DataStructures.Surrogates;
 using NitroxModel.Packets;
-using NitroxModel_Subnautica.DataStructures.Surrogates;
+using ZeroFormatter;
 
 namespace NitroxTest.Model.Packets
 {
-    // TODO: Rewrite this test to work with ZeroFormatter
     [TestClass]
     public class PacketsSerializableTest
     {
-        private readonly HashSet<Type> visitedTypes = new HashSet<Type>();
-
         private void IsSerializable(Type t)
         {
-            if (visitedTypes.Contains(t))
-            {
-                return;
-            }
+            Assert.IsTrue(t.GetCustomAttribute<ZeroFormattableAttribute>() != null || InDynamicUnion(t));
+        }
 
-            // Assert.IsFalse(!t.IsSerializable && !t.IsInterface && !Packet.IsTypeSerializable(t), $"Type {t} is not serializable!");
-
-            visitedTypes.Add(t);
-
-            // Recursively check all properties and fields, because IsSerializable only checks if the current type is a primitive or has the [Serializable] attribute.
-            // t.GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public).Select(tt => tt.FieldType).ForEach(IsSerializable);
+        private bool InDynamicUnion(Type t)
+        {
+            return t.GetCustomAttribute<DynamicUnionAttribute>() != null || InDynamicUnion(t.BaseType);
         }
 
         [TestMethod]
@@ -48,36 +38,17 @@ namespace NitroxTest.Model.Packets
         [TestMethod]
         public void PacketSerializationTest()
         {
-            SurrogateSelector surrogateSelector = new SurrogateSelector();
-            StreamingContext streamingContext = new StreamingContext(StreamingContextStates.All); // Our surrogates can be safely used in every context.
-
-            Type[] types = typeof(Vector3Surrogate).Assembly
-                .GetTypes();
-
-            IEnumerable<Type> surrogates = types.Where(t =>
-                                                       t.BaseType != null &&
-                                                       t.BaseType.IsGenericType &&
-                                                       t.BaseType.GetGenericTypeDefinition() == typeof(SerializationSurrogate<>) &&
-                                                       t.IsClass &&
-                                                       !t.IsAbstract);
-            foreach (Type type in surrogates)
-            {
-                ISerializationSurrogate surrogate = (ISerializationSurrogate)Activator.CreateInstance(type);
-                Type surrogatedType = type.BaseType?.GetGenericArguments()[0];
-                surrogatedType.Should().NotBeNull();
-                surrogateSelector.AddSurrogate(surrogatedType, streamingContext, surrogate);
-            }
-
-            // For completeness, we could pass a StreamingContextStates.CrossComputer.
-            BinaryFormatter serializer = new BinaryFormatter(surrogateSelector, streamingContext);
+            string[] assemblies = new[] { "NitroxModel", "NitroxModel-Subnautica" };
 
             Stream stream = new MemoryStream();
 
             Type testedType = null;
             List<Packet> packets = new List<Packet>();
 
-            foreach (Type type in typeof(Packet).Assembly.GetTypes()
-            .Where(p => typeof(Packet).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract))
+            foreach (Type type in AppDomain.CurrentDomain.GetAssemblies()
+                                                         .Where(a => Enumerable.Contains(assemblies, a.GetName().Name))
+                                                         .SelectMany(a => a.GetTypes()
+                                                                           .Where(p => typeof(Packet).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract)))
             {
                 testedType = type;
                 packets.Add((Packet)FormatterServices.GetUninitializedObject(type));
@@ -86,10 +57,10 @@ namespace NitroxTest.Model.Packets
             foreach (Packet packet in packets)
             {
                 testedType = packet.GetType();
-                serializer.Serialize(stream, packet);
+                ZeroFormatterSerializer.Serialize(stream, packet);
                 stream.Flush();
                 stream.Position = 0;
-                serializer.Deserialize(stream);
+                ZeroFormatterSerializer.NonGeneric.Deserialize(testedType, stream);
                 stream.Position = 0;
             }
         }

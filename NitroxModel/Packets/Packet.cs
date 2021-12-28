@@ -13,7 +13,6 @@ using ZeroFormatter.Formatters;
 
 namespace NitroxModel.Packets
 {
-    [ZeroFormattable]
     [DynamicUnion]
     public abstract class Packet
     {
@@ -43,7 +42,7 @@ namespace NitroxModel.Packets
                     return AppDomain.CurrentDomain.GetAssemblies()
                                     .Where(a => assemblies.Contains(a.GetName().Name))
                                     .SelectMany(a => a.GetTypes()
-                                                      .Where(t => t.IsSubclassOf(unionType) || t.GetInterface(unionType.Name) != null));
+                                                      .Where(t => unionType.IsAssignableFrom(t) && !unionType.Equals(t)));
                 }
 
                 uint key = uint.MinValue;
