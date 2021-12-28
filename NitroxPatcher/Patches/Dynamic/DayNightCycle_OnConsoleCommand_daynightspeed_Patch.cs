@@ -11,13 +11,8 @@ public class DayNightCycle_OnConsoleCommand_daynightspeed_Patch : NitroxPatch, I
     // The command is skipped because simulating speed reliable on the server is out of scope
     public static bool Prefix()
     {
-#if DEBUG
-        ErrorMessage.AddMessage("This command is not fully supported. Expect breaking your instance/world.");
-        return true;
-#else
         ErrorMessage.AddMessage(Language.main.Get("Nitrox_CommandNotAvailable"));
         return false;
-#endif
     }
 
     public override void Patch(Harmony harmony)
