@@ -1,5 +1,4 @@
-﻿using NitroxClient.Unity.Helper;
-using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
+﻿using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.Metadata;
@@ -9,7 +8,7 @@ public class EntitySignMetadataProcessor : GenericEntityMetadataProcessor<Entity
     public override void ProcessMetadata(GameObject gameObject, EntitySignMetadata metadata)
     {
         uGUI_SignInput sign = gameObject.GetComponentInChildren<uGUI_SignInput>(true);
-        if (sign.AliveOrNull() != null)
+        if (sign)
         {
             sign.text = metadata.Text;
             sign.colorIndex = metadata.ColorIndex;

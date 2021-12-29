@@ -28,13 +28,13 @@ public class EntitySignMetadata : EntityMetadata
         //Constructor for serialization. Has to be "protected" for json serialization.
     }
 
-    public EntitySignMetadata(string text, int colorIndex, int scaleIndex, bool[] elements, bool backgroundToggle)
+    public EntitySignMetadata(string text, int colorIndex, int scaleIndex, bool[] elements, bool background)
     {
         Text = text;
         ColorIndex = colorIndex;
         ScaleIndex = scaleIndex;
         Elements = elements;
-        Background = backgroundToggle;
+        Background = background;
     }
 
     public static EntitySignMetadata FromSignMetadata(SignMetadata signMetadata)
