@@ -14,6 +14,7 @@ namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata
     [ProtoInclude(110, typeof(StarshipDoorMetadata))]
     [ProtoInclude(120, typeof(WeldableWallPanelGenericMetadata))]
     [ProtoInclude(130, typeof(IncubatorMetadata))]
+    [ProtoInclude(140, typeof(EntitySignMetadata))]
     public abstract class EntityMetadata
     {
     }

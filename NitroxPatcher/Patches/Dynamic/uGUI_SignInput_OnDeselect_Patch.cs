@@ -2,9 +2,9 @@
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Buildings.Metadata;
+using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.Helper;
 using UnityEngine;
 
@@ -18,9 +18,19 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             GameObject gameObject = __instance.gameObject.FindAncestor<PrefabIdentifier>().gameObject;
             NitroxId id = NitroxEntity.GetId(gameObject);
-
+            TechTag tag = gameObject.GetComponent<TechTag>();
             SignMetadata signMetadata = new(__instance.text, __instance.colorIndex, __instance.scaleIndex, __instance.elementsState, __instance.IsBackground());
-            NitroxServiceLocator.LocateService<Building>().MetadataChanged(id, signMetadata);
+            switch (tag.type)
+            {
+                case TechType.SmallStorage:
+                    // In the water
+                    Resolve<Entities>().BroadcastMetadataUpdate(id, EntitySignMetadata.FromSignMetadata(signMetadata));
+                    break;
+                case TechType.SmallLocker:
+                    // On wall
+                    Resolve<Building>().MetadataChanged(id, signMetadata);
+                    break;
+            }
         }
 
         public override void Patch(Harmony harmony)
