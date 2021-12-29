@@ -18,11 +18,11 @@ namespace NitroxServer.ConsoleCommands
 
         protected override void Execute(CallArgs args)
         {
-            List<string> cmdsText = new();
-            cmdsText.Add(args.IsValid(0) ? $"=== Showing help for {args.Get<string>(0)} ===" : "=== Showing command list ===");
+            List<string> cmdsText;
+
             if (args.IsConsole)
             {
-                cmdsText.AddRange(GetHelpText(Perms.CONSOLE, false, args.IsValid(0) ? args.Get<string>(0) : null));
+                cmdsText = GetHelpText(Perms.CONSOLE, false, args.IsValid(0) ? args.Get<string>(0) : null);
 
                 foreach (string cmdText in cmdsText)
                 {
@@ -31,7 +31,7 @@ namespace NitroxServer.ConsoleCommands
             }
             else
             {
-                cmdsText.AddRange(GetHelpText(args.Sender.Value.Permissions, true, args.IsValid(0) ? args.Get<string>(0) : null));
+                cmdsText = GetHelpText(args.Sender.Value.Permissions, true, args.IsValid(0) ? args.Get<string>(0) : null);
 
                 foreach (string cmdText in cmdsText)
                 {
@@ -46,11 +46,14 @@ namespace NitroxServer.ConsoleCommands
             IEnumerable<Command> commands = NitroxServiceLocator.LocateService<IEnumerable<Command>>();
             if (singleCommand != null && !commands.Any(cmd => cmd.Name.Equals(singleCommand)))
             {
-                return new List<string>() { "Command does not exist" };
+                return new List<string> { "Command does not exist" };
             }
-            return new List<string>(commands.Where(cmd => cmd.CanExecute(permThreshold) && (singleCommand == null || cmd.Name.Equals(singleCommand)))
-                                            .OrderByDescending(cmd => cmd.Name)
-                                            .Select(cmd => cmd.ToHelpText(singleCommand != null, cropText)));
+            List<string> cmdsText = new();
+            cmdsText.Add(singleCommand != null ? $"=== Showing help for {singleCommand} ===" : "=== Showing command list ===");
+            cmdsText.AddRange(commands.Where(cmd => cmd.CanExecute(permThreshold) && (singleCommand == null || cmd.Name.Equals(singleCommand)))
+                                             .OrderByDescending(cmd => cmd.Name)
+                                             .Select(cmd => cmd.ToHelpText(singleCommand != null, cropText)));
+            return cmdsText;
         }
     }
 }
