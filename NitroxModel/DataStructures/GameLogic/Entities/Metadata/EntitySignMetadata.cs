@@ -1,5 +1,4 @@
 ﻿using System;
-using NitroxModel.DataStructures.GameLogic.Buildings.Metadata;
 using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata;
@@ -35,11 +34,6 @@ public class EntitySignMetadata : EntityMetadata
         ScaleIndex = scaleIndex;
         Elements = elements;
         Background = background;
-    }
-
-    public static EntitySignMetadata FromSignMetadata(SignMetadata signMetadata)
-    {
-        return new EntitySignMetadata(signMetadata.Text, signMetadata.ColorIndex, signMetadata.ScaleIndex, signMetadata.Elements, signMetadata.Background);
     }
 
     public override string ToString()

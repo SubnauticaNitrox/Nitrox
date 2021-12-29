@@ -19,16 +19,17 @@ namespace NitroxPatcher.Patches.Dynamic
             GameObject gameObject = __instance.gameObject.FindAncestor<PrefabIdentifier>().gameObject;
             NitroxId id = NitroxEntity.GetId(gameObject);
             TechTag tag = gameObject.GetComponent<TechTag>();
-            SignMetadata signMetadata = new(__instance.text, __instance.colorIndex, __instance.scaleIndex, __instance.elementsState, __instance.IsBackground());
             
             switch (tag.type)
             {
                 case TechType.SmallStorage:
                     // In the water
-                    Resolve<Entities>().BroadcastMetadataUpdate(id, EntitySignMetadata.FromSignMetadata(signMetadata));
+                    EntitySignMetadata entitySignMetadata = new(__instance.text, __instance.colorIndex, __instance.scaleIndex, __instance.elementsState, __instance.IsBackground());
+                    Resolve<Entities>().BroadcastMetadataUpdate(id, entitySignMetadata);
                     break;
                 case TechType.SmallLocker:
                     // On wall
+                    SignMetadata signMetadata = new(__instance.text, __instance.colorIndex, __instance.scaleIndex, __instance.elementsState, __instance.IsBackground());
                     Resolve<Building>().MetadataChanged(id, signMetadata);
                     break;
                 default:
