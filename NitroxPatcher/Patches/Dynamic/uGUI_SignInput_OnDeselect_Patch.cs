@@ -20,6 +20,7 @@ namespace NitroxPatcher.Patches.Dynamic
             NitroxId id = NitroxEntity.GetId(gameObject);
             TechTag tag = gameObject.GetComponent<TechTag>();
             SignMetadata signMetadata = new(__instance.text, __instance.colorIndex, __instance.scaleIndex, __instance.elementsState, __instance.IsBackground());
+            
             switch (tag.type)
             {
                 case TechType.SmallStorage:
@@ -29,6 +30,9 @@ namespace NitroxPatcher.Patches.Dynamic
                 case TechType.SmallLocker:
                     // On wall
                     Resolve<Building>().MetadataChanged(id, signMetadata);
+                    break;
+                default:
+                    Log.Warn($"[{nameof(uGUI_SignInput_OnDeselect_Patch)}] no case planned for tech type {tag.type}");
                     break;
             }
         }

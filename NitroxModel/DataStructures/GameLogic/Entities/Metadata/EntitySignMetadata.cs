@@ -44,6 +44,6 @@ public class EntitySignMetadata : EntityMetadata
 
     public override string ToString()
     {
-        return "[EntitySignMetadata - Text: " + Text + ", ColorIndex: " + ColorIndex + ", ScaleIndex: " + ScaleIndex + ", Elements: " + Elements + ", Background: " + Background + "]";
+        return $"[EntitySignMetadata - Text: {Text}, ColorIndex: {ColorIndex}, ScaleIndex: {ScaleIndex}, Elements: {Elements}, Background: {Background}]";
     }
 }
