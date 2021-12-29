@@ -13,9 +13,9 @@ namespace NitroxServer.ConsoleCommands
 
         public TeleportCommand() : base("teleport", Perms.MODERATOR, PermsFlag.NO_CONSOLE, "Teleports you on a specific location")
         {
-            AddParameter(new TypeInt("x", true));
-            AddParameter(new TypeInt("y", true));
-            AddParameter(new TypeInt("z", true));
+            AddParameter(new TypeInt("x", true, "x coordinate"));
+            AddParameter(new TypeInt("y", true, "y coordinate"));
+            AddParameter(new TypeInt("z", true, "z coordinate"));
         }
 
         protected override void Execute(CallArgs args)
