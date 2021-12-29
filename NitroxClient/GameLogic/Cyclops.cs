@@ -262,7 +262,7 @@ namespace NitroxClient.GameLogic
                 decoyManager.decoyLaunchButton.UpdateText();
                 decoyManager.subRoot.voiceNotificationManager.PlayVoiceNotification(decoyManager.subRoot.decoyNotification, false, true);
                 decoyManager.subRoot.BroadcastMessage("UpdateTotalDecoys", decoyManager.decoyCount, SendMessageOptions.DontRequireReceiver);
-                CyclopsDecoyLaunchButton decoyLaunchButton = cyclops.RequireComponent<CyclopsDecoyLaunchButton>();
+                CyclopsDecoyLaunchButton decoyLaunchButton = cyclops.RequireComponentInChildren<CyclopsDecoyLaunchButton>();
                 decoyLaunchButton.StartCooldown();
             }
         }
