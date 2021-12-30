@@ -54,6 +54,10 @@ namespace NitroxServer.Communication
                     playerManager.SendPacketToAllPlayers(ownershipChange);
                 }
             }
+            else
+            {
+                playerManager.NonPlayerDisconnected(connection);
+            }
         }
 
         protected void ProcessIncomingData(NitroxConnection connection, Packet packet)
