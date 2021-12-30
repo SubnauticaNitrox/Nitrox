@@ -22,7 +22,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 float distance = NitroxVector3.Distance(player.Position, packet.Position);
                 if (player != sendingPlayer && (packet.IsGlobal || player.SubRootId.Equals(sendingPlayer.SubRootId)) && distance <= packet.Radius)
                 {
-                    packet.Volume -= (1 - distance / packet.Radius) * packet.Volume; // Non realistic volume calculation but enough for us
+                    packet.Volume = (1 - distance / packet.Radius) * packet.Volume; // Non realistic volume calculation but enough for us
                     player.SendPacket(packet);
                 }
             }
