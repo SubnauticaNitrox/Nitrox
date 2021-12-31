@@ -97,7 +97,7 @@ namespace NitroxServer.Serialization
         public ServerGameMode GameMode { get; set; } = ServerGameMode.SURVIVAL;
 
         [PropertyDescription("Possible values:", typeof(ServerSerializerMode))]
-        public ServerSerializerMode SerializerMode { get; set; } = ServerSerializerMode.PROTOBUF;
+        public ServerSerializerMode SerializerMode { get; set; } = ServerSerializerMode.JSON;
 
         [PropertyDescription("Possible values:", typeof(Perms))]
         public Perms DefaultPlayerPerm { get; set; } = Perms.PLAYER;
