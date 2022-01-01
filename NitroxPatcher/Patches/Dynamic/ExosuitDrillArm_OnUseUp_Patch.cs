@@ -2,7 +2,6 @@
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxModel.Core;
 using NitroxModel_Subnautica.Packets;
 
 namespace NitroxPatcher.Patches.Dynamic
@@ -11,11 +10,11 @@ namespace NitroxPatcher.Patches.Dynamic
     {
         public static readonly Type TARGET_CLASS = typeof(ExosuitDrillArm);
         public static readonly Type TARGET_INTERFACE = typeof(IExosuitArm);
-        public static readonly MethodInfo TARGET_METHOD_INTERFACE = typeof(IExosuitArm).GetMethod(nameof(IExosuitArm.OnUseUp));
+        public static readonly MethodInfo TARGET_METHOD_INTERFACE = TARGET_INTERFACE.GetMethod(nameof(IExosuitArm.OnUseUp));
 
         public static void Prefix(ExosuitDrillArm __instance)
         {
-            NitroxServiceLocator.LocateService<ExosuitModuleEvent>().BroadcastArmAction(TechType.ExosuitDrillArmModule, __instance, ExosuitArmAction.END_USE_TOOL);
+            Resolve<ExosuitModuleEvent>().BroadcastArmAction(TechType.ExosuitDrillArmModule, __instance, ExosuitArmAction.END_USE_TOOL);
         }
 
         public override void Patch(Harmony harmony)

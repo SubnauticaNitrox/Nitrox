@@ -1,4 +1,5 @@
 ﻿using NitroxModel.DataStructures.Unity;
+using NitroxModel.Helper;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
@@ -22,7 +23,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 float distance = NitroxVector3.Distance(player.Position, packet.Position);
                 if (player != sendingPlayer && (packet.IsGlobal || player.SubRootId.Equals(sendingPlayer.SubRootId)) && distance <= packet.Radius)
                 {
-                    packet.Volume = (1 - distance / packet.Radius) * packet.Volume; // Non realistic volume calculation but enough for us
+                    packet.Volume = Mathf.CalculateVolume(distance, packet.Radius, packet.Volume);
                     player.SendPacket(packet);
                 }
             }
