@@ -50,13 +50,12 @@ namespace NitroxClient.GameLogic.FMOD
 
         public bool IsWhitelisted(string path)
         {
-            return assetWhitelist.TryGetValue(path, out SoundData soundData) && soundData.IsWhitelisted;
+            return HasSoundData(path, out SoundData soundData) && soundData.IsWhitelisted;
         }
 
         public bool IsWhitelisted(string path, out bool isGlobal, out float radius)
         {
-            bool hasEntry = assetWhitelist.TryGetValue(path, out SoundData soundData);
-            if (hasEntry)
+            if (HasSoundData(path, out SoundData soundData))
             {
                 isGlobal = soundData.IsGlobal;
                 radius = soundData.SoundRadius;
@@ -64,6 +63,17 @@ namespace NitroxClient.GameLogic.FMOD
             }
             isGlobal = false;
             radius = -1f;
+            return false;
+        }
+
+        public bool HasSoundData(string path, out SoundData soundData)
+        {
+            if (assetWhitelist.TryGetValue(path, out SoundData value))
+            {
+                soundData = value;
+                return true;
+            }
+            soundData = new SoundData();
             return false;
         }
 
