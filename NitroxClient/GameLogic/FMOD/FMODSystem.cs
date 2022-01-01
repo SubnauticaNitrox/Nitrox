@@ -73,7 +73,7 @@ namespace NitroxClient.GameLogic.FMOD
                 soundData = value;
                 return true;
             }
-            soundData = new SoundData();
+            soundData = default;
             return false;
         }
 

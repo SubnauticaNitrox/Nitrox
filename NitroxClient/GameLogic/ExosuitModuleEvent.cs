@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using FMOD.Studio;
 using FMODUnity;
 using NitroxClient.Communication.Abstract;
@@ -92,13 +91,13 @@ namespace NitroxClient.GameLogic
             if (armAction == ExosuitArmAction.START_USE_TOOL)
             {
                 drillArm.animator.SetBool("use_tool", true);
-                ToggleDrillSound(drillArm, true);
+                SetDrillSound(drillArm, true);
             }
             else if (armAction == ExosuitArmAction.END_USE_TOOL)
             {
                 drillArm.animator.SetBool("use_tool", false);
                 drillArm.StopEffects();
-                ToggleDrillSound(drillArm, false);
+                SetDrillSound(drillArm, false);
             }
             else
             {
@@ -220,9 +219,9 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        private void ToggleDrillSound(ExosuitDrillArm drillArm, bool toggled)
+        private void SetDrillSound(ExosuitDrillArm drillArm, bool play)
         {
-            if (toggled && fmodSystem.HasSoundData(drillArm.loop.asset.path, out SoundData soundData))
+            if (play && fmodSystem.HasSoundData(drillArm.loop.asset.path, out SoundData soundData))
             {
                 float distance = NitroxVector3.Distance(Player.main.transform.position.ToDto(), drillArm.transform.position.ToDto());
                 if (distance > soundData.SoundRadius)
