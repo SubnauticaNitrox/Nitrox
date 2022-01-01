@@ -1,5 +1,5 @@
 #List of every sound and if it should be synced;;;
-#Eventpath;Should be syned;Should ignore subroot;Sound radius
+#Eventpath;Should be synced;Should ignore subroot;Sound radius
 ;;;
 event:/creature/bird_small/flap;false;false;0
 event:/creature/bird_small/idle;false;false;0
@@ -610,8 +610,8 @@ event:/sub/exo/claw_pickup;true;true;20
 event:/sub/exo/claw_punch;true;true;20
 event:/sub/exo/dock_exo_cyclops;false;false;0
 event:/sub/exo/dock_exo_moonpool;false;false;0
-event:/sub/exo/drill_hit_loop;true;true;20
-event:/sub/exo/drill_loop;true;true;20
+event:/sub/exo/drill_hit_loop;false;true;20
+event:/sub/exo/drill_loop;false;true;20
 event:/sub/exo/enter_exo;false;false;0
 event:/sub/exo/hook_hit;true;true;20
 event:/sub/exo/hook_loop;true;true;20

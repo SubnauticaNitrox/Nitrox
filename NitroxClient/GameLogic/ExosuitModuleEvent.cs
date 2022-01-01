@@ -21,8 +21,6 @@ namespace NitroxClient.GameLogic
         private readonly Vehicles vehicles;
         private readonly FMODSystem fmodSystem;
 
-        private readonly Dictionary<NitroxId, EventInstance> drillArmEIs = new();
-
         public ExosuitModuleEvent(IPacketSender packetSender, Vehicles vehicles, FMODSystem fmodSystem)
         {
             this.packetSender = packetSender;
@@ -94,13 +92,13 @@ namespace NitroxClient.GameLogic
             if (armAction == ExosuitArmAction.START_USE_TOOL)
             {
                 drillArm.animator.SetBool("use_tool", true);
-                ToggleDrillSound(drillArm, armId, true);
+                ToggleDrillSound(drillArm, true);
             }
             else if (armAction == ExosuitArmAction.END_USE_TOOL)
             {
                 drillArm.animator.SetBool("use_tool", false);
                 drillArm.StopEffects();
-                ToggleDrillSound(drillArm, armId, false);
+                ToggleDrillSound(drillArm, false);
             }
             else
             {
@@ -222,38 +220,26 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        private void ToggleDrillSound(ExosuitDrillArm drillArm, NitroxId armId, bool toggled)
+        private void ToggleDrillSound(ExosuitDrillArm drillArm, bool toggled)
         {
-            if (drillArmEIs.TryGetValue(armId, out EventInstance instance))
+            if (toggled && fmodSystem.HasSoundData(drillArm.loop.asset.path, out SoundData soundData))
             {
-                instance.stop(IMMEDIATE);
-                instance.release();
-                drillArmEIs.Remove(armId);
-            }
-            if (!toggled)
-            {
-                return;
-            }
-
-            if (fmodSystem.IsWhitelisted(drillArm.loop.asset.path, out bool isGlobal, out float radius))
-            {
-                // The volume calculation is the same as in the server-side processor PlayFMODAssetProcessor
-                // The instance creation process is the same as in the client-side processor PlayFMODAssetProcessor
                 float distance = NitroxVector3.Distance(Player.main.transform.position.ToDto(), drillArm.transform.position.ToDto());
-                float volume = 1 - distance / radius;
-                if (volume < 0)
+                if (distance > soundData.SoundRadius)
                 {
-                    // In this case, it means you're too far to hear the sound
                     return;
                 }
-                instance = FMODUWE.GetEvent(drillArm.loop.asset);
+                float volume = NitroxModel.Helper.Mathf.CalculateVolume(distance, soundData.SoundRadius, 1f);
+                EventInstance instance = drillArm.loop.GetEventInstance();
                 instance.setProperty(EVENT_PROPERTY.MINIMUM_DISTANCE, 1f);
-                instance.setProperty(EVENT_PROPERTY.MAXIMUM_DISTANCE, radius);
+                instance.setProperty(EVENT_PROPERTY.MAXIMUM_DISTANCE, soundData.SoundRadius);
                 instance.setVolume(volume);
                 instance.set3DAttributes(drillArm.transform.position.To3DAttributes());
-                drillArmEIs.Add(armId, instance);
                 instance.start();
-                Log.Debug($"Playing with volume: {volume}, distance: {distance}, radius: {radius}");
+            }
+            else
+            {
+                drillArm.loop.GetEventInstance().stop(IMMEDIATE);
             }
         }
     }

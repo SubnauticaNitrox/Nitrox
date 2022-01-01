@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using FMOD.Studio;
+﻿using FMOD.Studio;
 using FMODUnity;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxModel.Packets;
@@ -14,10 +13,6 @@ namespace NitroxClient.Communication.Packets.Processors
     {
         public override void Process(PlayFMODAsset packet)
         {
-            if (FMODAssetBlacklist.BlacklistedAssetPaths.Contains(packet.AssetPath))
-            {
-                return;
-            }
             EventInstance instance = FMODUWE.GetEvent(packet.AssetPath);
             instance.setProperty(EVENT_PROPERTY.MINIMUM_DISTANCE, 1f);
             instance.setProperty(EVENT_PROPERTY.MAXIMUM_DISTANCE, packet.Radius);
@@ -27,17 +22,6 @@ namespace NitroxClient.Communication.Packets.Processors
             instance.set3DAttributes(packet.Position.ToUnity().To3DAttributes());
             instance.start();
             instance.release();
-        }
-
-        class FMODAssetBlacklist
-        {
-            // Certain FMOD sounds are played manually by the client after he receives a packet (eg. exosuit)
-            // So we don't want them to be ALSO received by the PlayFMODAssetProcessor
-            public static List<string> BlacklistedAssetPaths = new()
-            {
-                "event:/sub/exo/drill_loop",
-                "event:/sub/exo/drill_hit_loop"
-            };
         }
     }
 }
