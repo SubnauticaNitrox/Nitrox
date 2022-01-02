@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.Util;
@@ -8,6 +9,7 @@ using UnityEngine;
 
 namespace NitroxClient.Debuggers
 {
+    [ExcludeFromCodeCoverage]
     public abstract class BaseDebugger
     {
         public readonly string DebuggerName;

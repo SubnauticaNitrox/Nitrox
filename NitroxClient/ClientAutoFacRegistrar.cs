@@ -55,13 +55,14 @@ namespace NitroxClient
 
         private static void RegisterCoreDependencies(ContainerBuilder containerBuilder)
         {
+#if DEBUG
             containerBuilder.RegisterAssemblyTypes(currentAssembly)
                             .AssignableTo<BaseDebugger>()
                             .As<BaseDebugger>()
                             .AsImplementedInterfaces()
                             .AsSelf()
                             .SingleInstance();
-#if DEBUG
+
             containerBuilder.RegisterAssemblyTypes(currentAssembly)
                             .AssignableTo<IDrawer>()
                             .As<IDrawer>()

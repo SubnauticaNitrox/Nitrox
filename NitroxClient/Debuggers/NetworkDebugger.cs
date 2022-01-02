@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Packets;
@@ -7,6 +8,7 @@ using UnityEngine;
 
 namespace NitroxClient.Debuggers
 {
+    [ExcludeFromCodeCoverage]
     public class NetworkDebugger : BaseDebugger, INetworkDebugger
     {
         private const int PACKET_STORED_COUNT = 100;

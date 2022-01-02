@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using FMOD.Studio;
 using FMODUnity;
 using NitroxClient.GameLogic.FMOD;
@@ -9,6 +10,7 @@ using UnityEngine;
 
 namespace NitroxClient.Debuggers
 {
+    [ExcludeFromCodeCoverage]
     public class SoundDebugger : BaseDebugger
     {
         private readonly Dictionary<string, SoundData> assetList;
