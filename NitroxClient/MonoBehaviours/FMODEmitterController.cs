@@ -11,6 +11,7 @@ namespace NitroxClient.MonoBehaviours
         private readonly Dictionary<string, FMOD_CustomEmitter> customEmitters = new();
         private readonly Dictionary<string, KeyValuePair<FMOD_CustomLoopingEmitter, float>> loopingEmitters = new();
         private readonly Dictionary<string, FMOD_StudioEventEmitter> studioEmitters = new();
+        private readonly Dictionary<string, EventInstance> eventInstances = new(); // 2D Sounds
 
         public void AddEmitter(string path, FMOD_CustomEmitter customEmitter, float radius)
         {
@@ -56,6 +57,18 @@ namespace NitroxClient.MonoBehaviours
             }
         }
 
+        public void AddEventInstance(string path, EventInstance eventInstance)
+        {
+            if (!eventInstances.ContainsKey(path))
+            {
+                eventInstances.Add(path, eventInstance);
+            }
+            else
+            {
+                Log.Warn($"[FMODEmitterController] eventInstances already contains {path}");
+            }
+        }
+
         public void PlayCustomEmitter(string path) => customEmitters[path]?.Play();
         public void ParamCustomEmitter(string path, int paramIndex, float value) => customEmitters[path]?.SetParameterValue(paramIndex, value);
         public void StopCustomEmitter(string path) => customEmitters[path]?.Stop();
@@ -73,6 +86,20 @@ namespace NitroxClient.MonoBehaviours
             eventInstance.start();
             eventInstance.release();
             loopingEmitter.timeLastStopSound = Time.time;
+        }
+
+
+        public void PlayEventInstance(string path, float volume)
+        {
+            EventInstance eventInstance = eventInstances[path];
+            eventInstance.setVolume(volume);
+            eventInstance.start();
+        }
+
+        public void StopEventInstance(string path)
+        {
+            EventInstance eventInstance = eventInstances[path];
+            eventInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
         }
     }
 }

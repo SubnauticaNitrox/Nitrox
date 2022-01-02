@@ -21,13 +21,6 @@ namespace NitroxPatcher.Patches.Dynamic
                 return;
             }
 
-            __instance.GetEventInstance().getDescription(out EventDescription description);
-            description.is3D(out bool is3D);
-            if (!is3D)
-            {
-                return;
-            }
-
             if (!__instance.TryGetComponent(out NitroxEntity entity))
             {
                 entity = __instance.GetComponentInParent<NitroxEntity>();
@@ -42,7 +35,19 @@ namespace NitroxPatcher.Patches.Dynamic
             {
                 fmodController = entity.gameObject.AddComponent<FMODEmitterController>();
             }
-            fmodController.AddEmitter(__instance.asset.path, __instance, radius);
+
+            EventInstance evt = __instance.GetEventInstance();
+            evt.getDescription(out EventDescription description);
+            description.is3D(out bool is3D);
+
+            if (is3D)
+            {
+                fmodController.AddEmitter(__instance.asset.path, __instance, radius);
+            }
+            else
+            {
+                fmodController.AddEventInstance(__instance.asset.path, evt);
+            }
 
             //FMOD_CustomLoopingEmitter has no Start() so we need to check it here
             if (__instance is FMOD_CustomLoopingEmitter looping)

@@ -45,7 +45,7 @@ namespace NitroxClient.GameLogic.FMOD
 
         public static FMODSuppressor SuppressSounds()
         {
-            return new();
+            return new FMODSuppressor();
         }
 
         public bool IsWhitelisted(string path)
@@ -62,6 +62,7 @@ namespace NitroxClient.GameLogic.FMOD
                 radius = soundData.SoundRadius;
                 return soundData.IsWhitelisted;
             }
+
             isGlobal = false;
             radius = -1f;
             return false;
@@ -85,6 +86,11 @@ namespace NitroxClient.GameLogic.FMOD
         public void PlayStudioEmitter(NitroxId id, string assetPath, bool play, bool allowFadeout)
         {
             packetSender.Send(new PlayFMODStudioEmitter(id, assetPath, play, allowFadeout));
+        }
+
+        public void PlayEventInstance(NitroxId id, string assetPath, bool play, NitroxVector3 position, float volume, float radius, bool isGlobal)
+        {
+            packetSender.Send(new PlayFMODEventInstance(id, assetPath, play, position, volume, radius, isGlobal));
         }
 
         public Dictionary<string, SoundData> SoundDataList => assetWhitelist;

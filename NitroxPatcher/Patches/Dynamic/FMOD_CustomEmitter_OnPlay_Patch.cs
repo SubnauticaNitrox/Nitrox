@@ -3,52 +3,57 @@ using FMOD.Studio;
 using HarmonyLib;
 using NitroxClient.GameLogic.FMOD;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Core;
 using NitroxModel.Helper;
 using NitroxModel_Subnautica.DataStructures;
 
-namespace NitroxPatcher.Patches.Dynamic
+namespace NitroxPatcher.Patches.Dynamic;
+
+public class FMOD_CustomEmitter_OnPlay_Patch : NitroxPatch, IDynamicPatch
 {
-    public class FMOD_CustomEmitter_OnPlay_Patch : NitroxPatch, IDynamicPatch
+    private static FMODSystem fmodSystem;
+
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((FMOD_CustomEmitter t) => t.OnPlay());
+
+    public static bool Prefix()
     {
-        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((FMOD_CustomEmitter t) => t.OnPlay());
+        return !FMODSuppressor.SuppressFMODEvents;
+    }
 
-        public static bool Prefix()
+    public static void Postfix(FMOD_CustomEmitter __instance)
+    {
+        if (fmodSystem.IsWhitelisted(__instance.asset.path, out bool isGlobal, out float radius))
         {
-            return !FMODSuppressor.SuppressFMODEvents;
-        }
+            EventInstance evt = __instance.GetEventInstance();
+            evt.getDescription(out EventDescription description);
+            evt.getVolume(out float volume, out float _);
+            description.is3D(out bool is3D);
 
-        public static void Postfix(FMOD_CustomEmitter __instance)
-        {
-            if (Resolve<FMODSystem>().IsWhitelisted(__instance.asset.path, out bool isGlobal, out float radius))
+            if (!__instance.TryGetComponent(out NitroxEntity nitroxEntity))
             {
-                __instance.GetEventInstance().getDescription(out EventDescription description);
-                description.is3D(out bool is3D);
+                nitroxEntity = __instance.GetComponentInParent<NitroxEntity>();
+            }
 
+            if (nitroxEntity)
+            {
                 if (is3D)
                 {
-                    __instance.TryGetComponent(out NitroxEntity nitroxEntity);
-                    if (!nitroxEntity)
-                    {
-                        nitroxEntity = __instance.GetComponentInParent<NitroxEntity>();
-                    }
-                    if (nitroxEntity)
-                    {
-                        Resolve<FMODSystem>().PlayCustomEmitter(nitroxEntity.Id, __instance.asset.path, true);
-                    }
+                    fmodSystem.PlayCustomEmitter(nitroxEntity.Id, __instance.asset.path, true);
                 }
                 else
                 {
-                    __instance.GetEventInstance().getVolume(out float volume, out float _);
-                    Resolve<FMODSystem>().PlayAsset(__instance.asset.path, __instance.transform.position.ToDto(), volume, radius, isGlobal);
+                    fmodSystem.PlayEventInstance(nitroxEntity.Id, __instance.asset.path, true, __instance.transform.position.ToDto(), volume, radius, isGlobal);
                 }
             }
+            else
+            {
+                fmodSystem.PlayAsset(__instance.asset.path, __instance.transform.position.ToDto(), volume, radius, isGlobal);
+            }
         }
+    }
 
-        public override void Patch(Harmony harmony)
-        {
-            PatchMultiple(harmony, TARGET_METHOD, prefix:true, postfix:true);
-        }
-
+    public override void Patch(Harmony harmony)
+    {
+        fmodSystem = Resolve<FMODSystem>();
+        PatchMultiple(harmony, TARGET_METHOD, prefix: true, postfix: true);
     }
 }
