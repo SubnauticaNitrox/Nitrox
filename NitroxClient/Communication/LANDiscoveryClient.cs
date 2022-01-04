@@ -48,7 +48,10 @@ namespace NitroxClient.Communication
                 NetDataWriter writer = new();
                 writer.Put(LANDiscoveryConstants.BROADCAST_REQUEST_STRING);
 
-                client.SendDiscoveryRequest(writer, client.LocalPort);
+                foreach (int port in LANDiscoveryConstants.BROADCAST_PORTS)
+                {
+                    client.SendDiscoveryRequest(writer, port);
+                }
             });
             broadcastTimer.Change(0, 5000);
 
