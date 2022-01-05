@@ -26,7 +26,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             {
                 rightSide = MainMenuRightSide.main;
                 MultiplayerMenuMods();
-                DiscordRPController.Main.InitializeMenu();
+                DiscordClient.InitializeRPMenu();
             }
         }
 

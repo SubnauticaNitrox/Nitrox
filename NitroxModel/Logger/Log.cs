@@ -163,6 +163,11 @@ namespace NitroxModel.Logger
             }
         }
 
+        public static void Write(LogLevel level, string message)
+        {
+            logger.Write((LogEventLevel)level, message);
+        }
+
         [Conditional("DEBUG")]
         public static void DebugSensitive(string message, params object[] args)
         {
@@ -302,5 +307,13 @@ namespace NitroxModel.Logger
                 }
             }
         }
+    }
+
+    public enum LogLevel
+    {
+        Debug = 1,
+        Information = 2,
+        Warning = 3,
+        Error = 4
     }
 }

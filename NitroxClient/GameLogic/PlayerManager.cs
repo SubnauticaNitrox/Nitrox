@@ -90,7 +90,7 @@ namespace NitroxClient.GameLogic
 
             playersById.Add(remotePlayer.PlayerId, remotePlayer);
 
-            DiscordRPController.Main.UpdatePlayerCount(GetTotalPlayerCount());
+            DiscordClient.UpdatePartySize(GetTotalPlayerCount());
 
             return remotePlayer;
         }
@@ -105,7 +105,7 @@ namespace NitroxClient.GameLogic
                     opPlayer.Value.Destroy();
                 }
                 playersById.Remove(playerId);
-                DiscordRPController.Main.UpdatePlayerCount(GetTotalPlayerCount());
+                DiscordClient.UpdatePartySize(GetTotalPlayerCount());
             }
         }
 
