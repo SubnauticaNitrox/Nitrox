@@ -245,7 +245,7 @@ namespace NitroxClient.Debuggers
             });
         }
 
-        public void ResetWindowPosition()
+        public virtual void ResetWindowPosition()
         {
             WindowRect = new Rect(Screen.width / 2f - (WindowRect.width / 2), 100, WindowRect.width, WindowRect.height); //Reset position of debuggers because SN sometimes throws the windows from planet 4546B
         }

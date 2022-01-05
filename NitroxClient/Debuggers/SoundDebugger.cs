@@ -24,7 +24,7 @@ namespace NitroxClient.Debuggers
         private bool displayIsGlobal;
         private bool displayWithRadius;
 
-        public SoundDebugger(FMODSystem fmodSystem) : base(700, null, KeyCode.S, true, false, true, GUISkinCreationOptions.DERIVEDCOPY)
+        public SoundDebugger(FMODSystem fmodSystem) : base(700, null, KeyCode.F, true, false, false, GUISkinCreationOptions.DERIVEDCOPY)
         {
             assetList = fmodSystem.SoundDataList;
             ActiveTab = AddTab("Sounds", RenderTabAllSounds);
