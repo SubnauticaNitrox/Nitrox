@@ -101,27 +101,33 @@ namespace NitroxModel.Serialization
             {
                 Type type = GetType();
                 Dictionary<string, MemberInfo> typeCachedDict = GetTypeCacheDictionary();
-
-                using StreamWriter stream = new(new FileStream(FileName, FileMode.OpenOrCreate), Encoding.UTF8);
-                WritePropertyDescription(type, stream);
-
-                foreach (string name in typeCachedDict.Keys)
+                try
                 {
-                    MemberInfo member = typeCachedDict[name];
+                    using StreamWriter stream = new(new FileStream(FileName, FileMode.Create), Encoding.UTF8);
+                    WritePropertyDescription(type, stream);
 
-                    FieldInfo field = member as FieldInfo;
-                    if (field != null)
+                    foreach (string name in typeCachedDict.Keys)
                     {
-                        WritePropertyDescription(member, stream);
-                        WriteProperty(field, field.GetValue(this), stream);
-                    }
+                        MemberInfo member = typeCachedDict[name];
 
-                    PropertyInfo property = member as PropertyInfo;
-                    if (property != null)
-                    {
-                        WritePropertyDescription(member, stream);
-                        WriteProperty(property, property.GetValue(this), stream);
+                        FieldInfo field = member as FieldInfo;
+                        if (field != null)
+                        {
+                            WritePropertyDescription(member, stream);
+                            WriteProperty(field, field.GetValue(this), stream);
+                        }
+
+                        PropertyInfo property = member as PropertyInfo;
+                        if (property != null)
+                        {
+                            WritePropertyDescription(member, stream);
+                            WriteProperty(property, property.GetValue(this), stream);
+                        }
                     }
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    Log.Error($"Config file {FileName} exists but is a hidden file and cannot be modified, config file will not be updated. Please make file accessible");
                 }
             }
         }
