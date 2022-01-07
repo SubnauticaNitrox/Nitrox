@@ -8,12 +8,20 @@
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     </PropertyGroup>
 
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+      <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+      <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    </PropertyGroup>
+
     <ItemGroup>
-        <PackageReference Include="Mono.Cecil" Version="0.11.4"/>
+        <PackageReference Include="Mono.Cecil" Version="0.11.4" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\NitroxModel\NitroxModel.csproj"/>
+        <ProjectReference Include="..\NitroxModel\NitroxModel.csproj" />
     </ItemGroup>
 
 </Project>

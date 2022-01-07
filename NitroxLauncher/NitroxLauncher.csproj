@@ -8,6 +8,14 @@
         <ApplicationIcon>icon.ico</ApplicationIcon>
     </PropertyGroup>
 
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+      <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+      <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    </PropertyGroup>
+
     <ItemGroup>
       <PackageReference Include="dnlib" Version="3.4.0" />
       <PackageReference Include="LitJson" Version="0.17.0" />

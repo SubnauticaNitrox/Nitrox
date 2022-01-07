@@ -5,8 +5,16 @@
         <Nullable>disable</Nullable>
     </PropertyGroup>
 
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+      <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+      <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    </PropertyGroup>
+
     <ItemGroup>
-        <ProjectReference Include="..\NitroxModel-Subnautica\NitroxModel-Subnautica.csproj"/>
+        <ProjectReference Include="..\NitroxModel-Subnautica\NitroxModel-Subnautica.csproj" />
     </ItemGroup>
 
     <ItemGroup>
