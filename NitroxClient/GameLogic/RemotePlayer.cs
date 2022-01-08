@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using NitroxClient.GameLogic.FMOD;
 using NitroxClient.GameLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerModel.Abstract;
 using NitroxClient.MonoBehaviours;
@@ -38,7 +39,7 @@ namespace NitroxClient.GameLogic
         public EscapePod EscapePod { get; private set; }
         public PilotingChair PilotingChair { get; private set; }
 
-        public RemotePlayer(GameObject playerBody, PlayerContext playerContext, List<TechType> equippedTechTypes, List<Pickupable> inventoryItems, PlayerModelManager modelManager)
+        public RemotePlayer(GameObject playerBody, PlayerContext playerContext, List<TechType> equippedTechTypes, List<Pickupable> inventoryItems, PlayerModelManager modelManager, FMODSystem fmodSystem)
         {
             PlayerContext = playerContext;
 
@@ -80,6 +81,9 @@ namespace NitroxClient.GameLogic
             playerModelManager.BeginApplyPlayerColor(this);
             playerModelManager.RegisterEquipmentVisibilityHandler(PlayerModel);
             UpdateEquipmentVisibility();
+
+            // Add a FMODEmitterController to it so that it can play the bubbles effect
+            SetupBubblesEmitter(fmodSystem);
 
             ErrorMessage.AddMessage($"{PlayerName} joined the game.");
         }
@@ -263,6 +267,19 @@ namespace NitroxClient.GameLogic
         private void UpdateEquipmentVisibility()
         {
             playerModelManager.UpdateEquipmentVisibility(new ReadOnlyCollection<TechType>(equipment.ToList()));
+        }
+
+        private void SetupBubblesEmitter(FMODSystem fmodSystem)
+        {
+            FMODEmitterController bubblesEmitterController = Body.AddComponent<FMODEmitterController>();
+            FMOD_CustomEmitter bubblesCustomEmitter = Body.AddComponent<FMOD_CustomEmitter>();
+            GameObject ownBubblesGO = Player.main.GetComponentInChildren<PlayerBreathBubbles>().gameObject;
+            bubblesCustomEmitter.asset = ownBubblesGO.GetComponent<FMOD_CustomEmitter>().asset;
+            if(fmodSystem.HasSoundData(bubblesCustomEmitter.asset.path, out SoundData soundData))
+            {
+                bubblesEmitterController.AddEmitter(bubblesCustomEmitter.asset.path, bubblesCustomEmitter, soundData.SoundRadius);
+                Log.Debug($"Successfully set up the bubbles emitter of player {PlayerContext.PlayerName}");
+            }
         }
     }
 }

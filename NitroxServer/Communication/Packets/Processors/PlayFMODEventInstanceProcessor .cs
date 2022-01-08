@@ -19,7 +19,9 @@ public class PlayFMODEventInstanceProcessor : AuthenticatedPacketProcessor<PlayF
         foreach (Player player in playerManager.GetConnectedPlayers())
         {
             float distance = NitroxVector3.Distance(player.Position, packet.Position);
-            if (player != sendingPlayer && (packet.IsGlobal || player.SubRootId.Equals(sendingPlayer.SubRootId)) && distance <= packet.Radius)
+            if (player != sendingPlayer
+                && (packet.IsGlobal || player.SubRootId.Equals(sendingPlayer.SubRootId))
+                && ((packet.Play && distance <= packet.Radius) || !packet.Play))
             {
                 packet.Volume = PlayFMODAssetProcessor.CalculateVolume(distance, packet.Radius, packet.Volume);
                 player.SendPacket(packet);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
+using NitroxClient.GameLogic.FMOD;
 using NitroxClient.GameLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerModel.Abstract;
 using NitroxClient.MonoBehaviours;
@@ -20,13 +21,15 @@ namespace NitroxClient.GameLogic
         private readonly IPacketSender packetSender;
         private readonly ILocalNitroxPlayer localPlayer;
         private readonly PlayerModelManager playerModelManager;
+        private readonly FMODSystem fmodSystem;
         private readonly Dictionary<ushort, RemotePlayer> playersById = new Dictionary<ushort, RemotePlayer>();
 
-        public PlayerManager(IPacketSender packetSender, ILocalNitroxPlayer localPlayer, PlayerModelManager playerModelManager)
+        public PlayerManager(IPacketSender packetSender, ILocalNitroxPlayer localPlayer, PlayerModelManager playerModelManager, FMODSystem fmodSystem)
         {
             this.packetSender = packetSender;
             this.localPlayer = localPlayer;
             this.playerModelManager = playerModelManager;
+            this.fmodSystem = fmodSystem;
         }
 
         public Optional<RemotePlayer> Find(ushort playerId)
@@ -66,7 +69,7 @@ namespace NitroxClient.GameLogic
             RemotePlayer remotePlayer;
             using (packetSender.Suppress<ItemContainerAdd>())
             {
-                remotePlayer = new RemotePlayer(remotePlayerBody, playerContext, equippedTechTypes, inventoryItems, playerModelManager);
+                remotePlayer = new RemotePlayer(remotePlayerBody, playerContext, equippedTechTypes, inventoryItems, playerModelManager, fmodSystem);
             }
 
             if (subRootId.HasValue)

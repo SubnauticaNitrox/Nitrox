@@ -1,16 +1,11 @@
 ﻿using System;
-using FMOD.Studio;
-using FMODUnity;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.FMOD;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.Unity;
-using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.DataStructures.GameLogic;
 using NitroxModel_Subnautica.Packets;
 using UnityEngine;
-using static FMOD.Studio.STOP_MODE;
 
 namespace NitroxClient.GameLogic
 {
@@ -18,13 +13,11 @@ namespace NitroxClient.GameLogic
     {
         private readonly IPacketSender packetSender;
         private readonly Vehicles vehicles;
-        private readonly FMODSystem fmodSystem;
 
-        public ExosuitModuleEvent(IPacketSender packetSender, Vehicles vehicles, FMODSystem fmodSystem)
+        public ExosuitModuleEvent(IPacketSender packetSender, Vehicles vehicles)
         {
             this.packetSender = packetSender;
             this.vehicles = vehicles;
-            this.fmodSystem = fmodSystem;
         }
 
         public void SpawnedArm(Exosuit exosuit)
@@ -86,18 +79,16 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        public void UseDrill(ExosuitDrillArm drillArm, ExosuitArmAction armAction, NitroxId armId)
+        public void UseDrill(ExosuitDrillArm drillArm, ExosuitArmAction armAction)
         {
             if (armAction == ExosuitArmAction.START_USE_TOOL)
             {
                 drillArm.animator.SetBool("use_tool", true);
-                SetDrillSound(drillArm, true);
             }
             else if (armAction == ExosuitArmAction.END_USE_TOOL)
             {
                 drillArm.animator.SetBool("use_tool", false);
                 drillArm.StopEffects();
-                SetDrillSound(drillArm, false);
             }
             else
             {
@@ -216,29 +207,6 @@ namespace NitroxClient.GameLogic
             else
             {
                 Log.Error("Torpedo arm got an arm action he should not get: " + armAction);
-            }
-        }
-
-        private void SetDrillSound(ExosuitDrillArm drillArm, bool play)
-        {
-            if (play && fmodSystem.HasSoundData(drillArm.loop.asset.path, out SoundData soundData))
-            {
-                float distance = NitroxVector3.Distance(Player.main.transform.position.ToDto(), drillArm.transform.position.ToDto());
-                if (distance > soundData.SoundRadius)
-                {
-                    return;
-                }
-                float volume = NitroxModel.Helper.Mathf.CalculateVolume(distance, soundData.SoundRadius, 1f);
-                EventInstance instance = drillArm.loop.GetEventInstance();
-                instance.setProperty(EVENT_PROPERTY.MINIMUM_DISTANCE, 1f);
-                instance.setProperty(EVENT_PROPERTY.MAXIMUM_DISTANCE, soundData.SoundRadius);
-                instance.setVolume(volume);
-                instance.set3DAttributes(drillArm.transform.position.To3DAttributes());
-                instance.start();
-            }
-            else
-            {
-                drillArm.loop.GetEventInstance().stop(IMMEDIATE);
             }
         }
     }

@@ -19,11 +19,11 @@ public class PlayFMODEventInstanceProcessor : ClientPacketProcessor<PlayFMODEven
 
         if (packet.Play)
         {
-            fmodEmitterController.PlayEventInstance(packet.AssetPath, packet.Volume);
+            fmodEmitterController.PlayEventInstance(packet.AssetPath, packet.Volume, packet.Id);
         }
         else
         {
-            fmodEmitterController.StopEventInstance(packet.AssetPath);
+            fmodEmitterController.StopEventInstance(packet.AssetPath, packet.Id);
         }
     }
 }

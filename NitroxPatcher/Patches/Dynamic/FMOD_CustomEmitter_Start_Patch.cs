@@ -46,7 +46,7 @@ namespace NitroxPatcher.Patches.Dynamic
             }
             else
             {
-                fmodController.AddEventInstance(__instance.asset.path, evt);
+                fmodController.AddEventInstance(__instance.asset.path, evt, entity.Id);
             }
 
             //FMOD_CustomLoopingEmitter has no Start() so we need to check it here
