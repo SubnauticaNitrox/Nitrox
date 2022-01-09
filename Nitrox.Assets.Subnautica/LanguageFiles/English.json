@@ -1,5 +1,5 @@
 {
-"version": 3,
+"version": 4,
 // Main menu
 "Nitrox_Multiplayer": "Multiplayer",
 "Nitrox_AddServer": "Add Server",
@@ -40,5 +40,6 @@
 "Nitrox_WaitingPassword": "Waiting for server password input...",
 "Nitrox_WaitingUserInput": "Waiting for user input...",
 "Nitrox_LaunchGame": "Launching game...",
-"Nitrox_SilencedChatNotif": "Chat is now muted"
+"Nitrox_SilencedChatNotif": "Chat is now muted",
+"Nitrox_CommandNotAvailable": "This command is not available in Nitrox"
 }

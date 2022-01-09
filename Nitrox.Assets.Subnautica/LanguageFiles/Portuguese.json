@@ -1,5 +1,5 @@
 {
-"version": 3,
+"version": 4,
 // Main menu
 "Nitrox_Multiplayer": "Multijugador",
 "Nitrox_AddServer": "Adicionar Servidor",
@@ -40,5 +40,6 @@
 "Nitrox_WaitingPassword": "Aguardando entrada de senha do servidor...",
 "Nitrox_WaitingUserInput": "Aguardando entrada do usuaio...",
 "Nitrox_LaunchGame": "Iniciando o jogo...",
-"Nitrox_SilencedChatNotif": "A conversa é silenciada"
+"Nitrox_SilencedChatNotif": "A conversa é silenciada",
+"Nitrox_CommandNotAvailable": "Este comando não está disponível com Nitrox"
 }
