@@ -1,7 +1,9 @@
 {
   "dependencies": {
+    "com.unity.assetbundlebrowser": "1.7.0",
     "com.unity.ide.rider": "1.1.4",
     "com.unity.package-manager-ui": "2.2.0",
+    "com.unity.test-framework": "1.1.30",
     "com.unity.ugui": "1.0.0",
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.androidjni": "1.0.0",
