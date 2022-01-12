@@ -1,4 +1,5 @@
 ﻿using System;
+using NitroxClient.Debuggers.Drawer.Unity;
 using NitroxModel.Core;
 using UnityEngine;
 using UnityEngine.UI;
@@ -57,6 +58,7 @@ public class ToggleDrawer : IDrawer
                 NitroxServiceLocator.Cache<SceneDebugger>.Value.UpdateSelectedObject(toggle.group.gameObject);
             }
         }
-        //UnityEventDrawer.DrawUnityEvent(toggle.onValueChanged, "OnClick()");
+
+        UnityEventDrawer.DrawUnityEventBool(toggle.onValueChanged, "OnClick()");
     }
 }

@@ -22,11 +22,11 @@ public sealed class SceneExtraDebugger : BaseDebugger
     private bool worldMarkerEnabled = true;
     private bool rayCastingEnabled;
 
-    private string gameObjectSearch = "";
-    private string gameObjectSearchCache = "";
-    private bool gameObjectSearchIsSearching;
-    private string gameObjectSearchPatternInvalidMessage = "";
-    private List<GameObject> gameObjectResult = new();
+    private string gameObjectSearch = string.Empty;
+    private string gameObjectSearchCache = string.Empty;
+    private bool gameObjectSearching;
+    private string gameObjectSearchPatternInvalidMessage = string.Empty;
+    private List<GameObject> gameObjectResults = new();
 
     private Vector2 hierarchyScrollPos;
 
@@ -74,13 +74,20 @@ public sealed class SceneExtraDebugger : BaseDebugger
 
         using (new GUILayout.VerticalScope("box", GUILayout.MinHeight(425)))
         {
-            if (gameObjectResult.Count > 0)
+            if (gameObjectResults.Count > 0)
             {
                 using GUILayout.ScrollViewScope scroll = new(hierarchyScrollPos);
                 hierarchyScrollPos = scroll.scrollPosition;
 
-                foreach (GameObject child in gameObjectResult)
+                for (int index = 0; index < gameObjectResults.Count; index++)
                 {
+                    if (index > 30)
+                    {
+                        GUILayout.Label($"There are {gameObjectResults.Count - index} more results which aren't displayed", "fillMessage");
+                        break;
+                    }
+
+                    GameObject child = gameObjectResults[index];
                     using (new GUILayout.VerticalScope("box"))
                     {
                         if (GUILayout.Button(child.GetHierarchyPath(), child.transform.childCount > 0 ? "bold" : "label"))
@@ -92,7 +99,7 @@ public sealed class SceneExtraDebugger : BaseDebugger
             }
             else
             {
-                GUILayout.Label($"No results", "fillMessage");
+                GUILayout.Label("No results", "fillMessage");
             }
         }
     }
@@ -110,39 +117,39 @@ public sealed class SceneExtraDebugger : BaseDebugger
             gameObjectSearch = GUILayout.TextField(gameObjectSearch);
 
             // Disable searching if text is cleared after a search has happened.
-            if (gameObjectSearchIsSearching && string.IsNullOrEmpty(gameObjectSearch))
+            if (gameObjectSearching && string.IsNullOrEmpty(gameObjectSearch))
             {
-                gameObjectSearchIsSearching = false;
+                gameObjectSearching = false;
             }
 
             if (gameObjectSearch.Length > 0)
             {
                 if (GUILayout.Button("Search", "button", GUILayout.Width(80)))
                 {
-                    gameObjectSearchIsSearching = true;
+                    gameObjectSearching = true;
                 }
 
                 if (GUILayout.Button("X", "button", GUILayout.Width(30)))
                 {
-                    gameObjectSearchIsSearching = false;
+                    gameObjectSearching = false;
                     gameObjectSearch = string.Empty;
-                    gameObjectResult.Clear();
+                    gameObjectResults.Clear();
                 }
                 else if (Event.current.isKey && Event.current.keyCode == KeyCode.Return)
                 {
-                    gameObjectSearchIsSearching = true;
+                    gameObjectSearching = true;
                 }
             }
         }
 
         // Searching. Return all gameobjects with matching type name.
-        if (gameObjectSearch != gameObjectSearchCache && gameObjectSearch.Length > 2)
+        if (gameObjectSearching && gameObjectSearch != gameObjectSearchCache && gameObjectSearch.Length > 2)
         {
             try
             {
                 // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
-                Regex.IsMatch("", gameObjectSearch);
-                gameObjectSearchPatternInvalidMessage = "";
+                Regex.IsMatch(string.Empty, gameObjectSearch);
+                gameObjectSearchPatternInvalidMessage = string.Empty;
             }
             catch (Exception ex)
             {
@@ -151,20 +158,27 @@ public sealed class SceneExtraDebugger : BaseDebugger
 
             if (string.IsNullOrEmpty(gameObjectSearchPatternInvalidMessage))
             {
-                Type type = AppDomain.CurrentDomain.GetAssemblies()
-                                     .Select(a => a.GetType(gameObjectSearch, false, true))
-                                     .FirstOrDefault(t => t != null);
-                if (type != null)
+                if (gameObjectSearch.StartsWith("t:"))
                 {
-                    List<GameObject> gameObjects = Resources.FindObjectsOfTypeAll<GameObject>()
-                                                            .Where(g => g.GetComponent(type))
-                                                            .ToList();
-
-                    gameObjectResult = gameObjects;
+                    Type type = AppDomain.CurrentDomain.GetAssemblies()
+                                         .Select(a => a.GetType(gameObjectSearch.Substring(2), false, true))
+                                         .FirstOrDefault(t => t != null);
+                    if (type != null)
+                    {
+                        List<GameObject> gameObjects = Resources.FindObjectsOfTypeAll<GameObject>()
+                                                                .Where(g => g.GetComponent(type))
+                                                                .ToList();
+                        gameObjectResults = gameObjects;
+                    }
+                    else
+                    {
+                        GUILayout.Label($"There is no component named \"{gameObjectSearch.Substring(2)}\"", "error");
+                    }
                 }
                 else
                 {
-                    gameObjectResult = Resources.FindObjectsOfTypeAll<GameObject>().Where(go => Regex.IsMatch(go.name, gameObjectSearch, RegexOptions.IgnoreCase)).OrderBy(go => go.name).ToList();
+                    gameObjectResults.Clear();
+                    gameObjectResults = Resources.FindObjectsOfTypeAll<GameObject>().Where(go => Regex.IsMatch(go.name, gameObjectSearch, RegexOptions.IgnoreCase)).OrderBy(go => go.name).ToList();
                 }
 
                 gameObjectSearchCache = gameObjectSearch;
@@ -180,7 +194,7 @@ public sealed class SceneExtraDebugger : BaseDebugger
     {
         if (Input.GetKeyDown(RAY_CAST_KEY))
         {
-            gameObjectSearchIsSearching = false;
+            gameObjectSearching = false;
             rayCastingEnabled = !rayCastingEnabled;
 
             gameObjectSearch = rayCastingEnabled ? "Ray casting is running" : string.Empty;
@@ -188,19 +202,20 @@ public sealed class SceneExtraDebugger : BaseDebugger
 
         if (rayCastingEnabled)
         {
-            gameObjectResult.Clear();
+            gameObjectResults.Clear();
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit[] hits = Physics.RaycastAll(ray, map.DimensionsInMeters.X, int.MaxValue);
 
             foreach (RaycastHit hit in hits)
             {
-                if (hit.transform.gameObject == Player.main.gameObject) // We want to ignore the player because of the buoyancy results in flickering of the entry
+                GameObject hitObject = hit.transform.gameObject;
+                if (gameObjectResults.Contains(hitObject) || hitObject == Player.main.gameObject) // We want to ignore the player because of the buoyancy results in flickering of the entry
                 {
                     continue;
                 }
 
-                gameObjectResult.Add(hit.transform.gameObject);
+                gameObjectResults.Add(hitObject);
             }
         }
     }

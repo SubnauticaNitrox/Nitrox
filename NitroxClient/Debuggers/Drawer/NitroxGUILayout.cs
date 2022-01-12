@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace NitroxClient.Debuggers.Drawer;
 
-// Reference https://gist.github.com/Seneral/31161381f993a4a06c59bf12576cabd
+// Reference https://gist.github.com/Seneral/31161381f993a4a06c59bf12576cabd8#file-rteditorgui-cs
 public static class NitroxGUILayout
 {
     private static int activeConvertibleField = -1;
