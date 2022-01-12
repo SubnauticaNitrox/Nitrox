@@ -162,7 +162,8 @@ namespace NitroxServer.GameLogic
                     new List<NitroxTechType>(),
                     Array.Empty<string>(),
                     new List<EquippedItemData>(),
-                    new List<EquippedItemData>()
+                    new List<EquippedItemData>(),
+                    new HashSet<string>()
                 );
                 allPlayersByName[playerContext.PlayerName] = player;
             }
