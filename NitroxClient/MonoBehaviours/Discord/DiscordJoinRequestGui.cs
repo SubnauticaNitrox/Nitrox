@@ -1,86 +1,84 @@
 ﻿using System.Collections;
 using NitroxClient.Helpers.DiscordGameSDK;
-using NitroxClient.MonoBehaviours.DiscordRP;
 using NitroxClient.Unity.Helper;
-using NitroxModel_Subnautica.Helper;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 
-namespace NitroxClient.MonoBehaviours.Gui.MainMenu;
+namespace NitroxClient.MonoBehaviours.Discord;
 
-public class DiscordJoinRequestGui : MonoBehaviour
+public class DiscordJoinRequestGui : uGUI_InputGroup
 {
-    public User User;
-
     private const int EXPIRE_TIME = 30;
-    private Rect windowRect = new(Screen.width - 260, 10, 250, 125);
-    private Texture2D avatar;
 
-    public void Start()
+    private static DiscordJoinRequestGui instance;
+    private User user;
+
+    private static Image profilePicture;
+
+    private static GameObject pressToFocus;
+    private static GameObject pressButtons;
+
+    public static IEnumerator SpawnGui(User user)
     {
-        StartCoroutine(LoadAvatar(User.Id, User.Avatar));
+        yield return AssetBundleLoader.LoadUIAsset("discordjoinrequest", false, guiGameObject =>
+        {
+            instance = guiGameObject.AddComponent<DiscordJoinRequestGui>();
+            instance.user = user;
+
+            profilePicture = guiGameObject.FindChild("ProfilePicture").GetComponent<Image>();
+
+            pressToFocus = guiGameObject.FindChild("PressToFocus");
+            pressToFocus.FindChild("PressToFocusLabel").GetComponent<Text>().text = Language.main.Get("Nitrox_DiscordPressToFocus");
+            pressToFocus.SetActive(true);
+
+            pressButtons = guiGameObject.FindChild("PressButtons");
+            pressButtons.SetActive(false);
+
+            Text[] buttonTexts = pressButtons.GetComponentsInChildren<Text>(true);
+            buttonTexts[0].text = Language.main.Get("Nitrox_DiscordAccept");
+            buttonTexts[1].text = Language.main.Get("Nitrox_DiscordDecline");
+
+            Button[] buttons = pressButtons.GetComponentsInChildren<Button>(true);
+            buttons[0].onClick.AddListener(instance.AcceptInvite);
+            buttons[1].onClick.AddListener(instance.DeclineInvite);
+
+            Text[] userTexts = guiGameObject.FindChild("UpperText").GetComponentsInChildren<Text>();
+            userTexts[0].text = $"{user.Username}#{user.Discriminator}";
+            userTexts[1].text = Language.main.Get("Nitrox_DiscordRequestText");
+        });
+
+        yield return LoadAvatar(user.Id, user.Avatar);
+    }
+
+    private void Start()
+    {
         StartCoroutine(OnRequestExpired());
     }
 
-    public void OnGUI()
-    {
-        windowRect = GUILayout.Window(0, windowRect, DrawDiscordRequestWindow, "Server join request from Discord");
-    }
-
-    private static GUISkin GetGUISkin()
-    {
-        GUISkin guiSkin = GUI.skin;
-        guiSkin.label.fontSize = 14;
-        guiSkin.label.alignment = TextAnchor.MiddleLeft;
-        guiSkin.label.stretchHeight = true;
-        guiSkin.label.fixedWidth = 100;
-        guiSkin.label.fixedHeight = 70;
-        guiSkin.label.margin = new RectOffset(7, 7, 2, 2);
-        guiSkin.label.richText = true;
-        guiSkin.button.fontSize = 14;
-        return guiSkin;
-    }
-
-    private void DrawDiscordRequestWindow(int windowID)
-    {
-        GUISkinUtils.RenderWithSkin(GetGUISkin(), () =>
-        {
-            using (new GUILayout.VerticalScope("Box"))
-            {
-                using (new GUILayout.HorizontalScope())
-                {
-                    GUILayout.Label(avatar);
-                    GUILayout.Label($"<b>{User.Username}</b> wants to join your server.");
-                }
-
-                using (new GUILayout.HorizontalScope())
-                {
-                    if (GUILayout.Button("Accept"))
-                    {
-                        CloseWindow(ActivityJoinRequestReply.Yes);
-                    }
-
-                    if (GUILayout.Button("Deny"))
-                    {
-                        CloseWindow(ActivityJoinRequestReply.No);
-                    }
-                }
-            }
-        });
-    }
+    private void AcceptInvite() => CloseWindow(ActivityJoinRequestReply.Yes);
+    private void DeclineInvite() => CloseWindow(ActivityJoinRequestReply.No);
 
     private void CloseWindow(ActivityJoinRequestReply reply)
     {
-        DiscordClient.RespondJoinRequest(User.Id, reply);
+        DiscordClient.RespondJoinRequest(user.Id, reply);
         Destroy(this);
     }
 
-    private IEnumerator LoadAvatar(long id, string avatarID)
+    public static void Select()
     {
-        UnityWebRequest avatarUrl = UnityWebRequestTexture.GetTexture($"https://cdn.discordapp.com/avatars/{id}/{avatarID}.png?size=64");
+        if (instance)
+        {
+            instance.Select(false);
+        }
+    }
+
+    private static IEnumerator LoadAvatar(long id, string avatarID)
+    {
+        UnityWebRequest avatarUrl = UnityWebRequestTexture.GetTexture($"https://cdn.discordapp.com/avatars/{id}/{avatarID}.png");
         yield return avatarUrl.SendWebRequest();
 
-        avatar = ((DownloadHandlerTexture)avatarUrl.downloadHandler).texture;
+        Texture2D avatar = ((DownloadHandlerTexture)avatarUrl.downloadHandler).texture;
 
         if (avatar == null || avatar.height < 64)
         {
@@ -90,8 +88,7 @@ public class DiscordJoinRequestGui : MonoBehaviour
             avatar = ((DownloadHandlerTexture)standardAvatarUrl.downloadHandler).texture;
         }
 
-        TextureScaler.Scale(avatar, 64, 64);
-        yield return null;
+        profilePicture.sprite = Sprite.Create(avatar, new Rect(0, 0, 64, 64), new Vector2(0.5f, 0.5f));
     }
 
     private IEnumerator OnRequestExpired()

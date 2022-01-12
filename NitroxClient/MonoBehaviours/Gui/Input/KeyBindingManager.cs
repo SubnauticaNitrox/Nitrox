@@ -17,7 +17,8 @@ namespace NitroxClient.MonoBehaviours.Gui.Input
             KeyboardKeyBindings = new List<KeyBinding>
             {
                 // new bindings should not be set to a value equivalent to a pre-existing GameInput.Button enum or another custom binding
-                new KeyBinding(CHAT_KEY_VALUE, CHAT_KEY_LABEL, GameInput.Device.Keyboard, new DefaultKeyBinding("Y", GameInput.BindingSet.Primary), new ChatKeyBindingAction())
+                new(45, "Chat", GameInput.Device.Keyboard, new DefaultKeyBinding("Y", GameInput.BindingSet.Primary), new ChatKeyBindingAction()),
+                new(46, "Discord Focus", GameInput.Device.Keyboard, new DefaultKeyBinding("F", GameInput.BindingSet.Primary), new DiscordFocusBindingAction())
             };
         }
 

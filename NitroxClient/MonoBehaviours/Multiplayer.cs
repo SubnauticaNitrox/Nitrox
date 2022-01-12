@@ -10,7 +10,7 @@ using NitroxClient.GameLogic.ChatUI;
 using NitroxClient.GameLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.PlayerModel.ColorSwap;
 using NitroxClient.Helpers;
-using NitroxClient.MonoBehaviours.DiscordRP;
+using NitroxClient.MonoBehaviours.Discord;
 using NitroxClient.MonoBehaviours.Gui.InGame;
 using NitroxClient.MonoBehaviours.Gui.MainMenu;
 using NitroxModel.Core;
@@ -165,7 +165,7 @@ namespace NitroxClient.MonoBehaviours
             PlayerManager remotePlayerManager = NitroxServiceLocator.LocateService<PlayerManager>();
 
             LoadingScreenVersionText.DisableWarningText();
-            DiscordClient.InitializeRPInGame(Main.multiplayerSession.AuthenticationContext.Username, remotePlayerManager.GetTotalPlayerCount(), Main.multiplayerSession.SessionPolicy.MaxConnections, Main.multiplayerSession.IpAddress, Main.multiplayerSession.ServerPort);
+            DiscordClient.InitializeRPInGame(Main.multiplayerSession.AuthenticationContext.Username, remotePlayerManager.GetTotalPlayerCount(), Main.multiplayerSession.SessionPolicy.MaxConnections);
             NitroxServiceLocator.LocateService<PlayerChatManager>().LoadChatKeyHint();
         }
 

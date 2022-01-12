@@ -1,4 +1,4 @@
-﻿using NitroxClient.MonoBehaviours.DiscordRP;
+﻿using NitroxClient.MonoBehaviours.Discord;
 using NitroxClient.Unity.Helper;
 using UnityEngine;
 using UnityEngine.SceneManagement;

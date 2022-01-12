@@ -4,7 +4,7 @@ using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerModel.Abstract;
 using NitroxClient.MonoBehaviours;
-using NitroxClient.MonoBehaviours.DiscordRP;
+using NitroxClient.MonoBehaviours.Discord;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
