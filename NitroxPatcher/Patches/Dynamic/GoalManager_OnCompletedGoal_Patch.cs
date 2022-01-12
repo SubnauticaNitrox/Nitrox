@@ -30,6 +30,5 @@ public class GoalManager_OnCompletedGoal_Patch : NitroxPatch, IDynamicPatch
     public override void Patch(Harmony harmony)
     {
         PatchMultiple(harmony, TARGET_METHOD, prefix: true, postfix: true);
-        PatchPostfix(harmony, TARGET_METHOD);
     }
 }
