@@ -1,7 +1,10 @@
 ﻿using System.Linq;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.Helpers.DiscordGameSDK;
 using NitroxClient.MonoBehaviours.Gui.MainMenu;
 using NitroxModel;
+using NitroxModel.Core;
+using NitroxModel.Packets;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -27,12 +30,13 @@ public class DiscordClient : MonoBehaviour
 
         main = this;
         DontDestroyOnLoad(gameObject);
-        discord = new Helpers.DiscordGameSDK.Discord(CLIENT_ID, 0);
+
+        discord = new Helpers.DiscordGameSDK.Discord(CLIENT_ID, (ulong)CreateFlags.NoRequireDiscord);
+        discord.SetLogHook(Helpers.DiscordGameSDK.LogLevel.Debug, (level, message) => Log.Write((NitroxModel.Logger.LogLevel)level, "[Discord] " + message));
         activityManager = discord.GetActivityManager();
         activityManager.RegisterSteam((uint)GameInfo.Subnautica.SteamAppId);
         activityManager.OnActivityJoinRequest += ActivityJoinRequest;
         activityManager.OnActivityJoin += ActivityJoin;
-        discord.SetLogHook(Helpers.DiscordGameSDK.LogLevel.Debug, (level, message) => Log.Write((NitroxModel.Logger.LogLevel)level, "[Discord] " + message));
 
         activity = new Activity();
     }
@@ -45,10 +49,10 @@ public class DiscordClient : MonoBehaviour
 
     private void Update()
     {
-        discord.RunCallbacks();
+        discord?.RunCallbacks();
     }
 
-    private static void ActivityJoin(string secret)
+    private void ActivityJoin(string secret)
     {
         Log.Info("[Discord] Joining Server");
         if (SceneManager.GetActiveScene().name != "StartScreen" || !MainMenuMultiplayerPanel.Main)
@@ -78,6 +82,13 @@ public class DiscordClient : MonoBehaviour
         }
     }
 
+    public static void InitializeRPMenu()
+    {
+        activity.State = "In menu";
+        activity.Assets.LargeImage = "icon";
+        UpdateActivity();
+    }
+
     public static void InitializeRPInGame(string username, int playerCount, int maxConnections)
     {
         activity.State = "In game";
@@ -86,13 +97,8 @@ public class DiscordClient : MonoBehaviour
         activity.Party.Size.CurrentSize = playerCount;
         activity.Party.Size.MaxSize = maxConnections;
         UpdateActivity();
-    }
 
-    public static void InitializeRPMenu()
-    {
-        activity.State = "In menu";
-        activity.Assets.LargeImage = "icon";
-        UpdateActivity();
+        NitroxServiceLocator.LocateService<IPacketSender>().Send(new DiscordRequestIP(string.Empty));
     }
 
     public static void UpdateIpPort(string ipPort)
