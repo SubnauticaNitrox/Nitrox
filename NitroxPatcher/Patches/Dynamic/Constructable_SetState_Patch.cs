@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using HarmonyLib;
+using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
@@ -29,6 +30,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 NitroxId id = (NitroxId)opId.Value;
                 Log.Debug($"Setting ghost id via Constructable_SetState_Patch {id}");
                 NitroxEntity.SetNewId(__instance.gameObject, id);
+                Building.DestroyedGhostsIds.Add(id);
             }
         }
 

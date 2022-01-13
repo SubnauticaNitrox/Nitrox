@@ -1,5 +1,6 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.Bases;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors
@@ -15,7 +16,11 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(ConstructionCompleted completedPacket)
         {
-            Log.Debug("Processing ConstructionCompleted " + completedPacket.PieceId + " " + completedPacket.BaseId);
+            Log.Debug($"Processing ConstructionCompleted [PieceId: {completedPacket.PieceId}, BaseId: {completedPacket.BaseId}, Bypass: {completedPacket.BypassExistingNitroxId}]");
+            if (completedPacket.BypassExistingNitroxId.HasValue)
+            {
+                ThrottledBuilder.main.DestroyedGhostsIds.Add(completedPacket.BypassExistingNitroxId.Value);
+            }
             buildEventQueue.EnqueueConstructionCompleted(completedPacket.PieceId, completedPacket.BaseId);
         }
     }

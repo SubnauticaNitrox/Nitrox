@@ -1,4 +1,5 @@
-﻿using NitroxClient.Communication.Abstract;
+﻿using System.Collections.Generic;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Bases.Spawning.BasePiece;
 using NitroxClient.GameLogic.Bases.Spawning.Furniture;
 using NitroxClient.GameLogic.Helper;
@@ -24,6 +25,8 @@ namespace NitroxClient.GameLogic
         private readonly RotationMetadataFactory rotationMetadataFactory;
 
         private float timeSinceLastConstructionChangeEvent;
+
+        public static List<NitroxId> DestroyedGhostsIds = new();
 
         public Building(IPacketSender packetSender, RotationMetadataFactory rotationMetadataFactory)
         {
@@ -137,6 +140,7 @@ namespace NitroxClient.GameLogic
             NitroxId id = NitroxEntity.GetId(ghost);
 
             Log.Info($"Construction complete on {id} {ghost.name}");
+            Optional<NitroxId> bypassExistingNitroxId = Optional.Empty;
 
             if (opConstructedBase.HasValue)
             {
@@ -172,6 +176,15 @@ namespace NitroxClient.GameLogic
                 {
                     bool isNewBasePiece = !child.GetComponent<NitroxEntity>() && child.GetComponent<BaseDeconstructable>();
 
+                    // The problem is about the NitroxEntity that is not deleted from the ghost object (cf. Constructable_SetState_Patch)
+                    // When you destroy an object, rebuilding the same one will make it keep its old NitroxId, which breaks the system
+                    if (!isNewBasePiece && child.TryGetComponent(out NitroxEntity nitroxEntity) && DestroyedGhostsIds.Contains(nitroxEntity.Id))
+                    {
+                        DestroyedGhostsIds.Remove(nitroxEntity.Id);
+                        isNewBasePiece = true;
+                        bypassExistingNitroxId = nitroxEntity.Id;
+                    }
+
                     if (isNewBasePiece)
                     {
                         finishedPiece = child.gameObject;
@@ -199,7 +212,7 @@ namespace NitroxClient.GameLogic
 
             Log.Info($"Construction Completed {id} in base {baseId}");
 
-            ConstructionCompleted constructionCompleted = new ConstructionCompleted(id, baseId);
+            ConstructionCompleted constructionCompleted = new (id, baseId, bypassExistingNitroxId);
             packetSender.Send(constructionCompleted);
         }
 

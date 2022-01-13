@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.Bases.Spawning.BasePiece;
@@ -32,6 +33,8 @@ namespace NitroxClient.MonoBehaviours
         public event EventHandler QueueDrained;
         private BuildThrottlingQueue buildEvents;
         private IPacketSender packetSender;
+
+        public List<NitroxId> DestroyedGhostsIds = new();
 
         public void Start()
         {
@@ -213,6 +216,16 @@ namespace NitroxClient.MonoBehaviours
                 foreach (Transform child in cellTransform)
                 {
                     bool isNewBasePiece = !child.GetComponent<NitroxEntity>() && child.GetComponent<BaseDeconstructable>();
+
+                    if (child.TryGetComponent(out NitroxEntity nitroxEntity))
+                    {
+                        if (DestroyedGhostsIds.Contains(nitroxEntity.Id))
+                        {
+                            DestroyedGhostsIds.Remove(nitroxEntity.Id);
+                            isNewBasePiece = true;
+                            Log.Debug($"[ThrottledBuilder] Found bypass for {nitroxEntity.Id}, isNewBasePiece: {isNewBasePiece}, finishedPiece will be: {child.name}");
+                        }
+                    }
 
                     if (isNewBasePiece)
                     {
