@@ -25,6 +25,7 @@ namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
             [TechType.BaseCorridorT] = 1,
             [TechType.BaseCorridorX] = 1,
             [TechType.BasePipeConnector] = 1,
+            [TechType.BaseConnector] = 1,
 
             // Reinforce fortifications to ensure good hull integrity
             [TechType.BaseReinforcement] = 2,
