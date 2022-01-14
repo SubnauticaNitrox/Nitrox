@@ -25,6 +25,9 @@ namespace NitroxModel.MultiplayerSession
 
         [Description("Another user is currently joining the server.")]
         ENQUEUED_IN_JOIN_QUEUE = 1 << 5,
+
+        [Description("The player name is invalid, Please try to avoid special characters.")]
+        INCORRECT_USERNAME = 1 << 6
     }
 
     public static class MultiplayerSessionReservationStateExtensions
