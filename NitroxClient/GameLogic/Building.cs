@@ -26,9 +26,7 @@ namespace NitroxClient.GameLogic
 
         private float timeSinceLastConstructionChangeEvent;
 
-        public static List<NitroxId> DestroyedGhostsIds = new();
-
-        public Building(IPacketSender packetSender, RotationMetadataFactory rotationMetadataFactory)
+       public Building(IPacketSender packetSender, RotationMetadataFactory rotationMetadataFactory)
         {
             this.packetSender = packetSender;
             this.rotationMetadataFactory = rotationMetadataFactory;
@@ -140,7 +138,6 @@ namespace NitroxClient.GameLogic
             NitroxId id = NitroxEntity.GetId(ghost);
 
             Log.Info($"Construction complete on {id} {ghost.name}");
-            Optional<NitroxId> bypassExistingNitroxId = Optional.Empty;
 
             if (opConstructedBase.HasValue)
             {
@@ -169,21 +166,34 @@ namespace NitroxClient.GameLogic
                 }
 
                 GameObject finishedPiece = null;
-
+                
                 // There can be multiple objects in a cell (such as a corridor with hatches built into it)
                 // we look for a object that is able to be deconstructed that hasn't been tagged yet.
                 foreach (Transform child in cellTransform)
                 {
                     bool isNewBasePiece = !child.GetComponent<NitroxEntity>() && child.GetComponent<BaseDeconstructable>();
 
+                    // TornacTODO: some parts are colliding with environment so they don't finish placing
+
                     // The problem is about the NitroxEntity that is not deleted from the ghost object (cf. Constructable_SetState_Patch)
                     // When you destroy an object, rebuilding the same one will make it keep its old NitroxId, which breaks the system
-                    if (!isNewBasePiece && child.TryGetComponent(out NitroxEntity nitroxEntity) && DestroyedGhostsIds.Contains(nitroxEntity.Id))
+                    if (!isNewBasePiece && child.TryGetComponent(out NitroxEntity nitroxEntity) && id == nitroxEntity.Id)
                     {
-                        DestroyedGhostsIds.Remove(nitroxEntity.Id);
                         isNewBasePiece = true;
-                        bypassExistingNitroxId = nitroxEntity.Id;
                     }
+
+                    // TODO: remove these debug lines when merging
+                    string printed = $"Found child, isNewBasePiece: {isNewBasePiece} [Name: {child.name}";
+                    if (child.TryGetComponent(out NitroxEntity entity))
+                    {
+                        printed += $", NitroxEntity: {entity.Id}";
+                    }
+                    if (child.TryGetComponent(out BaseDeconstructable baseDeconstructable))
+                    {
+                        printed += $", BaseDeconstructable: {baseDeconstructable}";
+                    }
+                    printed += "]";
+                    Log.Debug(printed);
 
                     if (isNewBasePiece)
                     {
@@ -212,7 +222,7 @@ namespace NitroxClient.GameLogic
 
             Log.Info($"Construction Completed {id} in base {baseId}");
 
-            ConstructionCompleted constructionCompleted = new (id, baseId, bypassExistingNitroxId);
+            ConstructionCompleted constructionCompleted = new (id, baseId);
             packetSender.Send(constructionCompleted);
         }
 

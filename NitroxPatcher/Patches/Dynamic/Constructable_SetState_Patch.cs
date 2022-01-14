@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
+using NitroxClient.GameLogic.Bases;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
@@ -25,12 +26,12 @@ namespace NitroxPatcher.Patches.Dynamic
 
             if (opId.HasValue)
             {
-                Add(TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE_GUID, null);
+                Remove(TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE_GUID);
 
                 NitroxId id = (NitroxId)opId.Value;
-                Log.Debug($"Setting ghost id via Constructable_SetState_Patch {id}");
+                // TornacTODO: Check this gameobject to see why it can't be removed its nitrox entity
+                Log.Debug($"Setting ghost id via Constructable_SetState_Patch {id} of GameObject: {__instance.gameObject}");
                 NitroxEntity.SetNewId(__instance.gameObject, id);
-                Building.DestroyedGhostsIds.Add(id);
             }
         }
 

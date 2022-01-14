@@ -34,8 +34,6 @@ namespace NitroxClient.MonoBehaviours
         private BuildThrottlingQueue buildEvents;
         private IPacketSender packetSender;
 
-        public List<NitroxId> DestroyedGhostsIds = new();
-
         public void Start()
         {
             main = this;
@@ -217,14 +215,23 @@ namespace NitroxClient.MonoBehaviours
                 {
                     bool isNewBasePiece = !child.GetComponent<NitroxEntity>() && child.GetComponent<BaseDeconstructable>();
 
-                    if (child.TryGetComponent(out NitroxEntity nitroxEntity))
+                    // TODO: remove these debug lines when merging
+                    string printed = $"Found child : [Name: {child.name}";
+                    if (child.TryGetComponent(out NitroxEntity entity))
                     {
-                        if (DestroyedGhostsIds.Contains(nitroxEntity.Id))
-                        {
-                            DestroyedGhostsIds.Remove(nitroxEntity.Id);
-                            isNewBasePiece = true;
-                            Log.Debug($"[ThrottledBuilder] Found bypass for {nitroxEntity.Id}, isNewBasePiece: {isNewBasePiece}, finishedPiece will be: {child.name}");
-                        }
+                        printed += $", NitroxEntity: {entity.Id}";
+                    }
+                    if (child.TryGetComponent(out BaseDeconstructable baseDeconstructable))
+                    {
+                        printed += $", BaseDeconstructable: {baseDeconstructable}";
+                    }
+                    printed += "]";
+                    Log.Debug(printed);
+
+                    if (!isNewBasePiece && child.TryGetComponent(out NitroxEntity nitroxEntity) && constructionCompleted.PieceId == nitroxEntity.Id)
+                    {
+                        Log.Debug("[ThrottledBuilder] TEST FOUND");
+                        isNewBasePiece = true;
                     }
 
                     if (isNewBasePiece)
@@ -294,13 +301,12 @@ namespace NitroxClient.MonoBehaviours
                 baseDeconstructable.Deconstruct();
 
                 // After we have begun the deconstructing for a base piece, we need to transfer the id
-                Optional<object> opGhost = TransientLocalObjectManager.Get(TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE_GHOST);
+                Optional<object> opGhost = Get(TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE_GHOST);
 
-                if (opGhost.HasValue)
+                if (opGhost.HasValue && opGhost.Value is Component component)
                 {
-                    GameObject ghost = (GameObject)opGhost.Value;
+                    NitroxEntity.SetNewId(component.gameObject, amountChanged.Id);
                     Destroy(constructing);
-                    NitroxEntity.SetNewId(ghost, amountChanged.Id);
                 }
                 else
                 {

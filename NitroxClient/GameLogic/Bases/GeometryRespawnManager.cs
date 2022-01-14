@@ -14,6 +14,7 @@ namespace NitroxClient.GameLogic.Bases
     public class GeometryRespawnManager
     {
         public static readonly Dictionary<string, NitroxId> NitroxIdByObjectKey = new();
+        public static readonly HashSet<NitroxId> NitroxIdsToIgnore = new();
 
         public void GeometryClearedForBase(Base baseObj)
         {
@@ -39,7 +40,7 @@ namespace NitroxClient.GameLogic.Bases
                             if (child.gameObject.GetComponent<NitroxEntity>() != null)
                             {
                                 NitroxId id = NitroxEntity.GetId(child.gameObject);
-                                string key = getObjectKey(child.gameObject);
+                                string key = GetObjectKey(child.gameObject);
                                 NitroxIdByObjectKey[key] = id;
 
                                 Log.Debug("Clearing Base Geometry, storing id for later lookup: " + key + " " + id);
@@ -52,7 +53,7 @@ namespace NitroxClient.GameLogic.Bases
 
         public void BaseObjectRespawned(GameObject gameObject)
         {
-            string key = getObjectKey(gameObject);
+            string key = GetObjectKey(gameObject);
             UpdateBasePieceIdIfPossible(gameObject, key);
         }
 
@@ -68,13 +69,19 @@ namespace NitroxClient.GameLogic.Bases
         {
             if (NitroxIdByObjectKey.TryGetValue(key, out NitroxId id))
             {
-                Log.Debug("When respawning geometry, found face-based id to copy to new object: " + key + " " + id);
-                NitroxEntity.SetNewId(gameObject, id);
                 NitroxIdByObjectKey.Remove(key);
+                if (NitroxIdsToIgnore.Contains(id))
+                {
+                    Log.Debug($"When respawning geometry, found an ignored face-based id [Key: {key}, Id: {id}]");
+                    NitroxIdsToIgnore.Remove(id);
+                    return;
+                }
+                Log.Debug($"When respawning geometry, found face-based id to copy to new object [Key: {key}, Id: {id}]");
+                NitroxEntity.SetNewId(gameObject, id);
             }
         }
 
-        private string getObjectKey(GameObject gameObject)
+        public string GetObjectKey(GameObject gameObject)
         {
             BaseDeconstructable deconstructable = gameObject.GetComponentInChildren<BaseDeconstructable>();
 
