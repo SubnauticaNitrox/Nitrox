@@ -1,4 +1,5 @@
 ﻿using NitroxModel.DataStructures.Unity;
+using NitroxModel.Helper;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
@@ -18,20 +19,12 @@ public class PlayFMODAssetProcessor : AuthenticatedPacketProcessor<PlayFMODAsset
     {
         foreach (Player player in playerManager.GetConnectedPlayers())
         {
-            float distance = NitroxVector3.Distance(player.Position, packet.Position);
+            float distance = player.Position.Distance(packet.Position);
             if (player != sendingPlayer && (packet.IsGlobal || player.SubRootId.Equals(sendingPlayer.SubRootId)) && distance <= packet.Radius)
             {
-                packet.Volume = CalculateVolume(distance, packet.Radius, packet.Volume);
+                packet.Volume = PhysicsHelper.CalculateVolume(distance, packet.Radius, packet.Volume);
                 player.SendPacket(packet);
             }
         }
-    }
-
-    /// <summary>
-    ///     Non realistic volume calculation but enough for us
-    /// </summary>
-    public static float CalculateVolume(float distance, float radius, float volume)
-    {
-        return (1 - distance / radius) * volume;
     }
 }

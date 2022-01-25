@@ -123,6 +123,11 @@ namespace NitroxModel.DataStructures.Unity
             return Mathf.Sqrt(num1 * num1 + num2 * num2 + num3 * num3);
         }
 
+        public float Distance(NitroxVector3 rhs)
+        {
+            return Distance(this, rhs);
+        }
+
         public float Magnitude => Mathf.Sqrt(X * X + Y * Y + Z * Z);
 
         public override string ToString()
