@@ -621,7 +621,7 @@ event:/sub/exo/jets_empty;false;false;0
 event:/sub/exo/jets_loop;true;true;50
 event:/sub/exo/jump;true;true;50
 event:/sub/exo/land;true;true;50
-event:/sub/exo/step;true;true;50
+event:/sub/exo/step;false;false;50
 event:/sub/exo/undock_exo_cyclops;false;false;0
 event:/sub/exo/undock_exo_moonpool;false;false;0
 event:/sub/exo/welcome;false;false;0

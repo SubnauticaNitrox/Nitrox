@@ -1,5 +1,4 @@
 ﻿using NitroxClient.Unity.Smoothing;
-using NitroxModel.Helper;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours
@@ -24,7 +23,6 @@ namespace NitroxClient.MonoBehaviours
             GetComponent<Rigidbody>().freezeRotation = false;
             exosuit.SetIKEnabled(true);
             exosuit.thrustIntensity = 0;
-            exosuit.ambienceSound.Play();
             base.Enter();
         }
 
@@ -34,7 +32,6 @@ namespace NitroxClient.MonoBehaviours
             exosuit.SetIKEnabled(false);
             exosuit.loopingJetSound.Stop();
             exosuit.fxcontrol.Stop(0);
-            exosuit.ambienceSound.Stop();
             base.Exit();
         }
 
