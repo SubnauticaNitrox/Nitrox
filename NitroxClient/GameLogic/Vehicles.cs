@@ -351,6 +351,21 @@ namespace NitroxClient.GameLogic
 
             VehicleChildObjectIdentifierHelper.SetInteractiveChildrenIds(gameObject, interactiveChildIdentifiers);
 
+            // TODO: Remove this when merging
+            // Testing instructions:
+            // Spawn an exosuit or a seamoth, leave the server then rejoin
+            // If you disable the fix (comment the "Exit()" in Vehicle_OnPilotModeEnd_Patch), you will see that there's the vehicle stuck bug
+            // Enable back the fix, then when you come back, if you join for the first time you will have the stuck bug for the vehicle, but as soon as you leave it and enter it again, the bug will be gone
+            switch (techType)
+            {
+                case TechType.Seamoth:
+                    gameObject.EnsureComponent<MultiplayerSeaMoth>();
+                    break;
+                case TechType.Exosuit:
+                    gameObject.EnsureComponent<MultiplayerExosuit>();
+                    break;
+            }
+
             // Send event after everything is created            
             if (VehicleCreated != null)
             {

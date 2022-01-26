@@ -28,7 +28,7 @@ namespace NitroxClient.MonoBehaviours
             base.Enter();
         }
 
-        internal override void Exit()
+        public override void Exit()
         {
             GetComponent<Rigidbody>().freezeRotation = true;
             exosuit.SetIKEnabled(false);
