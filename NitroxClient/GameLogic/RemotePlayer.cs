@@ -38,6 +38,10 @@ namespace NitroxClient.GameLogic
         public EscapePod EscapePod { get; private set; }
         public PilotingChair PilotingChair { get; private set; }
 
+        public readonly Event<RemotePlayer> PlayerDeathEvent = new();
+
+        public readonly Event<RemotePlayer> PlayerDisconnectEvent = new();
+
         public RemotePlayer(GameObject playerBody, PlayerContext playerContext, List<TechType> equippedTechTypes, List<Pickupable> inventoryItems, PlayerModelManager modelManager)
         {
             PlayerContext = playerContext;
