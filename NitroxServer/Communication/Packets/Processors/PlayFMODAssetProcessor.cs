@@ -16,7 +16,6 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(PlayFMODAsset packet, Player sendingPlayer)
         {
-            Log.Debug("[PlayFMODAssetProcessor] - " + packet);
             foreach (Player player in playerManager.GetConnectedPlayers())
             {
                 float distance = NitroxVector3.Distance(player.Position, packet.Position);
