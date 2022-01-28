@@ -1,6 +1,8 @@
 ﻿using NitroxClient.MonoBehaviours;
+using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Helper;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
@@ -16,22 +18,21 @@ namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
         {
             bool builtLadderOnFloor = finishedPiece.name.Contains("Bottom");
             int searchDirection = builtLadderOnFloor ? -1 : 1;
-            bool shouldSearch = true;
-
-            Int3 cellToSearch;
-            Optional<GameObject> otherLadderPiece;
+            
+            Int3 cellToSearch = Int3.zero;
+            Optional<GameObject> otherLadderPiece = Optional.Empty;
             int searchOffset = searchDirection;
-            do
+            int maxY = NitroxServiceLocator.LocateService<IMap>().DimensionsInBatches.Y;
+            for (int i = 0; i < maxY; i++)
             {
                 cellToSearch = new Int3(latestCell.x, latestCell.y + searchOffset, latestCell.z);
 
-                otherLadderPiece = FindSecondLadderPiece(latestBase, cellToSearch, out bool shouldKeepSearching);
-                if (otherLadderPiece.HasValue || !shouldKeepSearching)
+                if (!FindSecondLadderPiece(latestBase, cellToSearch, out otherLadderPiece) || otherLadderPiece.HasValue)
                 {
-                    shouldSearch = false;
+                    break;
                 }
                 searchOffset += searchDirection;
-            } while (shouldSearch);
+            }
 
             if (otherLadderPiece.HasValue)
             {
@@ -47,35 +48,35 @@ namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
             }
         }
 
-        private Optional<GameObject> FindSecondLadderPiece(Base latestBase, Int3 cellToSearch, out bool shouldKeepSearching)
+        private bool FindSecondLadderPiece(Base latestBase, Int3 cellToSearch, out Optional<GameObject> piece)
         {
             Transform cellTransform = latestBase.GetCellObject(cellToSearch);
-            shouldKeepSearching = false;
+            piece = Optional.Empty;
             if (!cellTransform)
             {
-                return Optional.Empty;
+                return false;
             }
             foreach (Transform child in cellTransform)
             {
                 NitroxEntity id = child.GetComponent<NitroxEntity>();
                 BaseDeconstructable baseDeconstructable = child.GetComponent<BaseDeconstructable>();
                 bool isNewBasePiece = id == null && baseDeconstructable != null;
-                
                 if (isNewBasePiece)
                 {
                     TechType techType = baseDeconstructable.recipe;
                     if (techType == TechType.BaseLadder)
                     {
-                        return Optional.Of(child.gameObject);
+                        piece = Optional.Of(child.gameObject);
+                        return true;
                     }
                 }
                 if (child.name.Contains("ConnectorLadder"))
                 {
-                    shouldKeepSearching = true;
+                    return true;
                 }
             }
 
-            return Optional.Empty;
+            return false;
         }
     }
 }

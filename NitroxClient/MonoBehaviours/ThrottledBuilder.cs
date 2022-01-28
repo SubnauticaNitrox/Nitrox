@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.Bases.Spawning.BasePiece;
@@ -189,7 +188,7 @@ namespace NitroxClient.MonoBehaviours
 
                 constructableBase.constructedAmount = 1f;
                 constructableBase.SetState(true, true);
-
+                
                 if (!latestBase)
                 {
                     Optional<object> opConstructedBase = TransientLocalObjectManager.Get(TransientObjectType.BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT);
