@@ -27,6 +27,7 @@ namespace NitroxPatcher.Patches.Dynamic
                     EntitySignMetadata entitySignMetadata = new(__instance.text, __instance.colorIndex, __instance.scaleIndex, __instance.elementsState, __instance.IsBackground());
                     Resolve<Entities>().BroadcastMetadataUpdate(id, entitySignMetadata);
                     break;
+                case TechType.Sign:
                 case TechType.SmallLocker:
                     // On wall
                     SignMetadata signMetadata = new(__instance.text, __instance.colorIndex, __instance.scaleIndex, __instance.elementsState, __instance.IsBackground());
