@@ -29,6 +29,7 @@
       <Reference Include="Serilog.Sinks.Map">
         <HintPath>..\Nitrox.Assets.Subnautica\Serilog.Sinks.Map.dll</HintPath>
       </Reference>
+      <Reference Include="System.Net.Http" />
     </ItemGroup>
 
 </Project>
