@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 
 namespace NitroxLauncher.Models
 {
@@ -20,7 +21,7 @@ namespace NitroxLauncher.Models
 
         public NitroxBlog(string title, DateTime date, string url, string image)
         {
-            Title = title;
+            Title = WebUtility.HtmlDecode(title);
             Date = date;
             Url = url;
             Image = image;
