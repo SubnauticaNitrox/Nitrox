@@ -318,5 +318,12 @@ namespace NitroxServer.GameLogic.Entities
                 newList.Add(entity);
             }
         }
+
+        public void RemoveEntity(NitroxId entityId)
+        {
+            entitiesById.Remove(entityId);
+            globalRootEntitiesById.Remove(entityId);
+            // Should maybe also remove from phasingEntitiesByAbsoluteCell
+        }
     }
 }
