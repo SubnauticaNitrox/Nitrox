@@ -561,16 +561,23 @@ namespace NitroxClient.MonoBehaviours.Overrides
             }
         }
 
-        // Token: 0x06002BA5 RID: 11173 RVA: 0x00104864 File Offset: 0x00102A64
+        // Token: 0x06002E52 RID: 11858 RVA: 0x00102B84 File Offset: 0x00100D84
         public static void GetRootObjects(List<Collider> colliders, List<GameObject> results)
         {
             results.Clear();
             for (int i = 0; i < colliders.Count; i++)
             {
-                Collider collider = colliders[i];
-                GameObject gameObject = collider.gameObject;
-                GameObject entityRoot = UWE.Utils.GetEntityRoot(gameObject);
-                gameObject = ((!(entityRoot != null)) ? gameObject : entityRoot);
+                GameObject gameObject = colliders[i].gameObject;
+                GameObject gameObject2 = UWE.Utils.GetEntityRoot(gameObject);
+                if (gameObject2 == null)
+                {
+                    SceneObjectIdentifier componentInParent = gameObject.GetComponentInParent<SceneObjectIdentifier>();
+                    if (componentInParent != null)
+                    {
+                        gameObject2 = componentInParent.gameObject;
+                    }
+                }
+                gameObject = ((gameObject2 != null) ? gameObject2 : gameObject);
                 if (!results.Contains(gameObject))
                 {
                     results.Add(gameObject);
