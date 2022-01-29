@@ -88,11 +88,14 @@ public sealed class SceneExtraDebugger : BaseDebugger
                     }
 
                     GameObject child = gameObjectResults[index];
-                    using (new GUILayout.VerticalScope("box"))
+                    if (child)
                     {
-                        if (GUILayout.Button(child.GetHierarchyPath(), child.transform.childCount > 0 ? "bold" : "label"))
+                        using (new GUILayout.VerticalScope("box"))
                         {
-                            sceneDebugger.UpdateSelectedObject(child);
+                            if (GUILayout.Button(child.GetHierarchyPath(), child.transform.childCount > 0 ? "bold" : "label"))
+                            {
+                                sceneDebugger.UpdateSelectedObject(child);
+                            }
                         }
                     }
                 }
@@ -177,7 +180,6 @@ public sealed class SceneExtraDebugger : BaseDebugger
                 }
                 else
                 {
-                    gameObjectResults.Clear();
                     gameObjectResults = Resources.FindObjectsOfTypeAll<GameObject>().Where(go => Regex.IsMatch(go.name, gameObjectSearch, RegexOptions.IgnoreCase)).OrderBy(go => go.name).ToList();
                 }
 
