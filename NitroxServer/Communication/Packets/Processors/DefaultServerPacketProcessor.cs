@@ -22,7 +22,8 @@ namespace NitroxServer.Communication.Packets.Processors
             typeof(PlayFMODAsset),
             typeof(PlayFMODCustomEmitter),
             typeof(PlayFMODCustomLoopingEmitter),
-            typeof(PlayFMODStudioEmitter)
+            typeof(PlayFMODStudioEmitter),
+            typeof(PlayerCinematicControllerCall)
         };
 
         public DefaultServerPacketProcessor(PlayerManager playerManager)
