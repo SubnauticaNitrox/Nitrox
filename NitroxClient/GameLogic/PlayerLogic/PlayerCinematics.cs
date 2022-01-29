@@ -2,7 +2,7 @@
 using NitroxModel.DataStructures;
 using NitroxModel.Packets;
 
-namespace NitroxClient.GameLogic.PlayerLogic.PlayerAnimation;
+namespace NitroxClient.GameLogic.PlayerLogic;
 
 public class PlayerCinematics
 {

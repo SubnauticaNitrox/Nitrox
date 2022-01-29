@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.GameLogic.PlayerLogic.PlayerAnimation;
+using NitroxClient.GameLogic.PlayerLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.Overrides;
 using NitroxClient.Unity.Helper;

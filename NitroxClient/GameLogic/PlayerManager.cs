@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.GameLogic.PlayerModel;
-using NitroxClient.GameLogic.PlayerModel.Abstract;
+using NitroxClient.GameLogic.PlayerLogic.PlayerModel;
+using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.Discord;
 using NitroxModel.DataStructures;
