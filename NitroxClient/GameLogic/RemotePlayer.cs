@@ -6,6 +6,7 @@ using NitroxClient.GameLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerModel.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
+using NitroxModel.Core;
 using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
 using UnityEngine;
@@ -19,6 +20,7 @@ namespace NitroxClient.GameLogic
         private static readonly int animatorPlayerIn = Animator.StringToHash("player_in");
 
         private readonly PlayerModelManager playerModelManager;
+        private readonly FMODSystem fmodSystem;
         private readonly HashSet<TechType> equipment;
 
         public PlayerContext PlayerContext { get; }
@@ -39,8 +41,9 @@ namespace NitroxClient.GameLogic
         public EscapePod EscapePod { get; private set; }
         public PilotingChair PilotingChair { get; private set; }
 
-        public RemotePlayer(GameObject playerBody, PlayerContext playerContext, List<TechType> equippedTechTypes, List<Pickupable> inventoryItems, PlayerModelManager modelManager, FMODSystem fmodSystem)
+        public RemotePlayer(GameObject playerBody, PlayerContext playerContext, List<TechType> equippedTechTypes, List<Pickupable> inventoryItems, PlayerModelManager modelManager)
         {
+            fmodSystem = NitroxServiceLocator.LocateService<FMODSystem>();
             PlayerContext = playerContext;
 
             Body = playerBody;
@@ -275,7 +278,7 @@ namespace NitroxClient.GameLogic
             FMOD_CustomEmitter bubblesCustomEmitter = Body.AddComponent<FMOD_CustomEmitter>();
             GameObject ownBubblesGO = Player.main.GetComponentInChildren<PlayerBreathBubbles>().gameObject;
             bubblesCustomEmitter.asset = ownBubblesGO.GetComponent<FMOD_CustomEmitter>().asset;
-            if(fmodSystem.HasSoundData(bubblesCustomEmitter.asset.path, out SoundData soundData))
+            if (fmodSystem.TryGetSoundData(bubblesCustomEmitter.asset.path, out SoundData soundData) && soundData.IsWhitelisted)
             {
                 bubblesEmitterController.AddEmitter(bubblesCustomEmitter.asset.path, bubblesCustomEmitter, soundData.SoundRadius);
                 Log.Debug($"Successfully set up the bubbles emitter of player {PlayerContext.PlayerName}");

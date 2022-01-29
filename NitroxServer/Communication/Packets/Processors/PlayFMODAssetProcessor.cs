@@ -20,7 +20,9 @@ public class PlayFMODAssetProcessor : AuthenticatedPacketProcessor<PlayFMODAsset
         foreach (Player player in playerManager.GetConnectedPlayers())
         {
             float distance = player.Position.Distance(packet.Position);
-            if (player != sendingPlayer && (packet.IsGlobal || player.SubRootId.Equals(sendingPlayer.SubRootId)) && distance <= packet.Radius)
+            if (player != sendingPlayer &&
+                (packet.IsGlobal || player.SubRootId.Equals(sendingPlayer.SubRootId)) &&
+                distance <= packet.Radius)
             {
                 packet.Volume = PhysicsHelper.CalculateVolume(distance, packet.Radius, packet.Volume);
                 player.SendPacket(packet);

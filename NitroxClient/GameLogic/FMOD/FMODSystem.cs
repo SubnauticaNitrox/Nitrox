@@ -50,12 +50,12 @@ namespace NitroxClient.GameLogic.FMOD
 
         public bool IsWhitelisted(string path)
         {
-            return HasSoundData(path, out SoundData soundData) && soundData.IsWhitelisted;
+            return TryGetSoundData(path, out SoundData soundData) && soundData.IsWhitelisted;
         }
 
         public bool IsWhitelisted(string path, out bool isGlobal, out float radius)
         {
-            if (HasSoundData(path, out SoundData soundData))
+            if (TryGetSoundData(path, out SoundData soundData))
             {
                 isGlobal = soundData.IsGlobal;
                 radius = soundData.SoundRadius;
@@ -67,7 +67,7 @@ namespace NitroxClient.GameLogic.FMOD
             return false;
         }
 
-        public bool HasSoundData(string path, out SoundData soundData)
+        public bool TryGetSoundData(string path, out SoundData soundData)
         {
             if (assetWhitelist.TryGetValue(path, out SoundData value))
             {
@@ -100,7 +100,7 @@ namespace NitroxClient.GameLogic.FMOD
 
         public void PlayEventInstance(NitroxId id, string assetPath, bool play, NitroxVector3 position, float volume, float radius, bool isGlobal)
         {
-            packetSender.Send(new PlayFMODEventInstance(id, assetPath, play, position, volume, radius, isGlobal));
+            packetSender.Send(new PlayFMODEventInstance(id, play, assetPath, position, volume, radius, isGlobal));
         }
 
         public Dictionary<string, SoundData> SoundDataList => assetWhitelist;
