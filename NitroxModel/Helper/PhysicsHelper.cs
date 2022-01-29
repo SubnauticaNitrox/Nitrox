@@ -7,6 +7,10 @@ public class PhysicsHelper
     /// </summary>
     public static float CalculateVolume(float distance, float radius, float volume)
     {
-        return (1 - distance / radius) * volume;
+        if (0f <= distance && distance < radius)
+        {
+            return (1f - distance / radius) * volume;
+        }
+        return 0f;
     }
 }
