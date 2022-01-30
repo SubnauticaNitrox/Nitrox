@@ -34,6 +34,8 @@ namespace NitroxClient.GameLogic
         public string PlayerName => multiplayerSession.AuthenticationContext.Username;
         public PlayerSettings PlayerSettings => multiplayerSession.PlayerSettings;
 
+        public bool FreecamEnabled = false;
+
         public LocalPlayer(IMultiplayerSession multiplayerSession, IPacketSender packetSender)
         {
             this.multiplayerSession = multiplayerSession;
