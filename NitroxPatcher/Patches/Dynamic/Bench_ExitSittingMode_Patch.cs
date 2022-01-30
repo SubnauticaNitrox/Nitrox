@@ -14,13 +14,9 @@ namespace NitroxPatcher.Patches.Dynamic
     {
         private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Bench t) => t.ExitSittingMode(default, default));
 
-        public static bool Prefix()
+        public static void Prefix(ref bool __runOriginal)
         {
-            if (Resolve<PlayerChatManager>().IsChatSelected || DevConsole.instance.selected || Resolve<LocalPlayer>().FreecamEnabled)
-            {
-                return false;
-            }
-            return true;
+            __runOriginal = !Resolve<PlayerChatManager>().IsChatSelected && !DevConsole.instance.selected && !Resolve<LocalPlayer>().FreecamEnabled;
         }
 
         public static void Postfix(Bench __instance, bool __runOriginal)
