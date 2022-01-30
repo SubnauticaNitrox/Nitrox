@@ -1,6 +1,6 @@
-﻿using System.Linq;
+using System.Linq;
+using DiscordGameSDKWrapper;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.Helpers.DiscordGameSDK;
 using NitroxClient.MonoBehaviours.Gui.MainMenu;
 using NitroxModel;
 using NitroxModel.Core;
@@ -15,7 +15,7 @@ public class DiscordClient : MonoBehaviour
     private const long CLIENT_ID = 405122994348752896;
 
     private static DiscordClient main;
-    private static Helpers.DiscordGameSDK.Discord discord;
+    private static DiscordGameSDKWrapper.Discord discord;
     private static ActivityManager activityManager;
     private static Activity activity;
     private static bool showingWindow;
@@ -31,9 +31,11 @@ public class DiscordClient : MonoBehaviour
         main = this;
         DontDestroyOnLoad(gameObject);
 
-        discord = new Helpers.DiscordGameSDK.Discord(CLIENT_ID, (ulong)CreateFlags.NoRequireDiscord);
-        discord.SetLogHook(Helpers.DiscordGameSDK.LogLevel.Debug, (level, message) => Log.Write((NitroxModel.Logger.LogLevel)level, "[Discord] " + message));
+        discord = new DiscordGameSDKWrapper.Discord(CLIENT_ID, (ulong)CreateFlags.NoRequireDiscord);
+        discord.SetLogHook(DiscordGameSDKWrapper.LogLevel.Debug, (level, message) => Log.Write((NitroxModel.Logger.LogLevel)level, "[Discord] " + message));
+
         activityManager = discord.GetActivityManager();
+
         activityManager.RegisterSteam((uint)GameInfo.Subnautica.SteamAppId);
         activityManager.OnActivityJoinRequest += ActivityJoinRequest;
         activityManager.OnActivityJoin += ActivityJoin;

@@ -1,5 +1,5 @@
-﻿using System.Collections;
-using NitroxClient.Helpers.DiscordGameSDK;
+using System.Collections;
+using DiscordGameSDKWrapper;
 using NitroxClient.Unity.Helper;
 using UnityEngine;
 using UnityEngine.Networking;
