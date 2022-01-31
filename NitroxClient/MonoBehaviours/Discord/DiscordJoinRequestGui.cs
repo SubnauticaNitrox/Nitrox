@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using DiscordGameSDKWrapper;
 using NitroxClient.Unity.Helper;
 using UnityEngine;
@@ -30,6 +30,8 @@ public class DiscordJoinRequestGui : uGUI_InputGroup
 
             pressToFocus = guiGameObject.FindChild("PressToFocus");
             pressToFocus.FindChild("PressToFocusLabel").GetComponent<Text>().text = Language.main.Get("Nitrox_DiscordPressToFocus");
+
+            pressToFocus.FindChild("KeyBindings").FindChild("KeyPressSecond").GetComponent<Text>().text = GameInput.GetBinding(GameInput.Device.Keyboard, (GameInput.Button)46, GameInput.BindingSet.Primary);
             pressToFocus.SetActive(true);
 
             pressButtons = guiGameObject.FindChild("PressButtons");
