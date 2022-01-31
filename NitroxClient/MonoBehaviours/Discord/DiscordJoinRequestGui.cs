@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using DiscordGameSDKWrapper;
 using NitroxClient.Unity.Helper;
 using UnityEngine;
@@ -9,30 +9,31 @@ namespace NitroxClient.MonoBehaviours.Discord;
 
 public class DiscordJoinRequestGui : uGUI_InputGroup
 {
-    private const int EXPIRE_TIME = 30;
+    private const int EXPIRE_TIME = 45;
 
     private static DiscordJoinRequestGui instance;
-    private User user;
+    private static User user;
 
     private static Image profilePicture;
-
     private static GameObject pressToFocus;
     private static GameObject pressButtons;
 
-    public static IEnumerator SpawnGui(User user)
+    public static IEnumerator SpawnGui(User requestingUser)
     {
+        user = requestingUser;
+
         yield return AssetBundleLoader.LoadUIAsset("discordjoinrequest", false, guiGameObject =>
         {
             instance = guiGameObject.AddComponent<DiscordJoinRequestGui>();
-            instance.user = user;
 
             profilePicture = guiGameObject.FindChild("ProfilePicture").GetComponent<Image>();
 
             pressToFocus = guiGameObject.FindChild("PressToFocus");
-            pressToFocus.FindChild("PressToFocusLabel").GetComponent<Text>().text = Language.main.Get("Nitrox_DiscordPressToFocus");
-
-            pressToFocus.FindChild("KeyBindings").FindChild("KeyPressSecond").GetComponent<Text>().text = GameInput.GetBinding(GameInput.Device.Keyboard, (GameInput.Button)46, GameInput.BindingSet.Primary);
+            Text[] texts = pressToFocus.GetComponentsInChildren<Text>();
+            texts[0].text = Language.main.Get("Nitrox_DiscordPressToFocus");
+            texts[3].text = GameInput.GetBinding(GameInput.Device.Keyboard, (GameInput.Button)46, GameInput.BindingSet.Primary);
             pressToFocus.SetActive(true);
+
 
             pressButtons = guiGameObject.FindChild("PressButtons");
             pressButtons.SetActive(false);
@@ -64,13 +65,15 @@ public class DiscordJoinRequestGui : uGUI_InputGroup
     private void CloseWindow(ActivityJoinRequestReply reply)
     {
         DiscordClient.RespondJoinRequest(user.Id, reply);
-        Destroy(this);
+        DestroyImmediate(gameObject);
     }
 
     public static void Select()
     {
         if (instance)
         {
+            pressToFocus.SetActive(false);
+            pressButtons.SetActive(true);
             instance.Select(false);
         }
     }
@@ -90,7 +93,7 @@ public class DiscordJoinRequestGui : uGUI_InputGroup
             avatar = ((DownloadHandlerTexture)standardAvatarUrl.downloadHandler).texture;
         }
 
-        profilePicture.sprite = Sprite.Create(avatar, new Rect(0, 0, 64, 64), new Vector2(0.5f, 0.5f));
+        profilePicture.sprite = Sprite.Create(avatar, new Rect(0, 0, 128, 128), new Vector2(0.5f, 0.5f));
     }
 
     private IEnumerator OnRequestExpired()

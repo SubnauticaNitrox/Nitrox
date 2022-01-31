@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using DiscordGameSDKWrapper;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours.Gui.MainMenu;
@@ -122,15 +122,24 @@ public class DiscordClient : MonoBehaviour
         {
             if (result != Result.Ok)
             {
-                Log.Error("[Discord] Updating Activity failed");
+                Log.Error($"[Discord] {result}: Updating Activity failed");
             }
         });
     }
 
     public static void RespondJoinRequest(long userID, ActivityJoinRequestReply reply)
     {
-        Log.Info($"[Discord] Responded with {reply} to JoinRequest: {userID}");
         showingWindow = false;
-        activityManager.SendRequestReply(userID, reply, _ => { });
+        activityManager.SendRequestReply(userID, reply, (result) =>
+        {
+            if (result == Result.Ok)
+            {
+                Log.Info($"[Discord] Responded successfully {reply}  to {userID}");
+            }
+            else
+            {
+                Log.Error($"[Discord] {result}: Failed to send join response");
+            }
+        });
     }
 }
