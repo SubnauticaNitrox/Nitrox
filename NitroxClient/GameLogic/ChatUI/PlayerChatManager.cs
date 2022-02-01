@@ -19,6 +19,11 @@ namespace NitroxClient.GameLogic.ChatUI
         private const string CHAT_LOG_ASSET = "chatlog";
         private const string CHAT_KEY_HINT_ASSET = "chatkeyhint";
 
+        public bool IsChatSelected
+        {
+            get => PlayerChat.IsReady && playerChat.selected;
+        }
+
         public PlayerChatManager(IMultiplayerSession multiplayerSession)
         {
             this.multiplayerSession = multiplayerSession;
