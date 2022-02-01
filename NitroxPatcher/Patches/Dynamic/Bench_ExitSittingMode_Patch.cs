@@ -16,7 +16,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Prefix(ref bool __runOriginal)
         {
-            __runOriginal = !Resolve<PlayerChatManager>().IsChatSelected && !DevConsole.instance.selected && !Resolve<LocalPlayer>().FreecamEnabled;
+            __runOriginal = !Resolve<PlayerChatManager>().IsChatSelected && !DevConsole.instance.selected;
         }
 
         public static void Postfix(Bench __instance, bool __runOriginal)

@@ -122,7 +122,7 @@ namespace NitroxClient.MonoBehaviours
                     }
                 }
             }
-            else if (sub != null && Player.main.isPiloting && !localPlayer.FreecamEnabled)
+            else if (sub != null && Player.main.isPiloting)
             {
                 id = NitroxEntity.GetId(sub.gameObject);
                 position = sub.gameObject.transform.position;
