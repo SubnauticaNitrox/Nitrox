@@ -38,7 +38,7 @@ namespace NitroxClient.MonoBehaviours
             }
         }
 
-        internal override void Exit()
+        public override void Exit()
         {
             seamoth.bubbles.Stop();
             base.Exit();
