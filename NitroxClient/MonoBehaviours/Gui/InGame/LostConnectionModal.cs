@@ -25,7 +25,7 @@ namespace NitroxClient.MonoBehaviours.Gui.InGame
             FreezeTime.Begin("NitroxDisconnected");
             StartCoroutine(Show_Impl());
             // Inspired by LoadingScreenVersionText.cs
-            lostConnectionText = MakeLostConnectionText("No longer connected to the server");
+            lostConnectionText = MakeLostConnectionText(Language.main.Get("Nitrox_LostConnectionWarn"));
         }
 
         private static void InitSubWindow()
