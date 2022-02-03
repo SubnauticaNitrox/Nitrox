@@ -19,7 +19,11 @@ namespace NitroxClient.GameLogic.Helper
             BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT,
 
             LATEST_DECONSTRUCTED_BASE_PIECE_GHOST,
-            LATEST_DECONSTRUCTED_BASE_PIECE_GUID
+            LATEST_DECONSTRUCTED_BASE_PIECE_GUID,
+
+            LATER_CONSTRUCTED_BASE,
+            LATER_OBJECT_LATEST_BASE,
+            LATER_OBJECT_LATEST_CELL,
         }
 
         public static Dictionary<TransientObjectType, object> localObjectsById = new Dictionary<TransientObjectType, object>();
