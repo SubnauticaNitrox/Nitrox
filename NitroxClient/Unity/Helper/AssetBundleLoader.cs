@@ -1,47 +1,69 @@
 ﻿using System;
 using System.Collections;
 using System.IO;
-using System.Linq;
 using NitroxModel.Helper;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-namespace NitroxClient.Unity.Helper
+namespace NitroxClient.Unity.Helper;
+
+public static class AssetBundleLoader
 {
-    public class AssetBundleLoader
+    private static readonly string assetRootFolder = NitroxUser.AssetsPath;
+
+    private static bool firstTime = true;
+
+    private static IEnumerator LoadAssetBundle(string bundleName, Action<AssetBundle> callback = null)
     {
-        private static readonly string assetRootFolder = NitroxUser.AssetsPath;
-
-        public static IEnumerator LoadAsset(string name)
+        if (firstTime)
         {
-            AssetBundleCreateRequest assetRequest = AssetBundle.LoadFromFileAsync(Path.Combine(assetRootFolder, name));
-            if (assetRequest == null)
-            {
-                Log.Error("Failed to load AssetBundle!");
-                yield break;
-            }
-            yield return new WaitUntil(() => assetRequest.isDone);
-
-            string sceneName = assetRequest.assetBundle.GetAllScenePaths().First();
-            Log.Debug($"Trying to load scene: {sceneName}");
-            yield return SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
-
+            firstTime = false;
+            yield return LoadAssetBundle("sharedassets");
         }
 
-        public static IEnumerator LoadUIAsset(string name, string canvasObjectName, bool hideUI = false, Action<GameObject> callback = null)
+        AssetBundleCreateRequest assetRequest = AssetBundle.LoadFromFileAsync(Path.Combine(assetRootFolder, bundleName));
+        if (assetRequest == null)
         {
-            yield return LoadAsset(name);
-
-            GameObject assetCanvas = GameObject.Find(canvasObjectName);
-            Transform assetRoot = assetCanvas.transform.GetChild(0);
-            if (hideUI)
-            {
-                assetRoot.GetComponent<CanvasGroup>().alpha = 0;
-            }
-            assetRoot.SetParent(uGUI.main.screenCanvas.transform, false);
-            UnityEngine.Object.Destroy(assetCanvas);
-
-            callback?.Invoke(assetRoot.gameObject);
+            Log.Error($"Failed to load AssetBundle: {bundleName}");
+            yield break;
         }
+
+        yield return assetRequest;
+
+        callback?.Invoke(assetRequest.assetBundle);
+    }
+
+    public static IEnumerator LoadUIAsset(string bundleName, bool hideUI, Action<GameObject> callback)
+    {
+        if (firstTime)
+        {
+            firstTime = false;
+            yield return LoadAssetBundle("sharedassets");
+        }
+
+        AssetBundleCreateRequest assetRequest = AssetBundle.LoadFromFileAsync(Path.Combine(assetRootFolder, bundleName));
+        if (assetRequest == null)
+        {
+            Log.Error($"Failed to load AssetBundle: {bundleName}");
+            yield break;
+        }
+        yield return assetRequest;
+
+        AssetBundleRequest fetchAssetRequest = assetRequest.assetBundle.LoadAssetAsync<GameObject>(bundleName);
+        yield return fetchAssetRequest;
+
+        GameObject asset = UnityEngine.Object.Instantiate(fetchAssetRequest.asset, uGUI.main.screenCanvas.transform, false) as GameObject;
+
+        if (!asset)
+        {
+            Log.Error($"Instantiated assetBundle ({bundleName}) but gameObject is null.");
+            yield break;
+        }
+
+        if (hideUI && asset.TryGetComponent(out CanvasGroup canvasGroup))
+        {
+            canvasGroup.alpha = 0;
+        }
+
+        callback.Invoke(asset);
     }
 }

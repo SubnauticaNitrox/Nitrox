@@ -41,5 +41,9 @@
 "Nitrox_WaitingUserInput": "Waiting for user input...",
 "Nitrox_LaunchGame": "Launching game...",
 "Nitrox_SilencedChatNotif": "Chat is now muted",
-"Nitrox_CommandNotAvailable": "This command is not available in Nitrox"
+"Nitrox_CommandNotAvailable": "This command is not available in Nitrox",
+"Nitrox_DiscordAccept": "Accept",
+"Nitrox_DiscordDecline": "Decline",
+"Nitrox_DiscordPressToFocus": "Press to unlock",
+"Nitrox_DiscordRequestText": "Requested to join your session"
 }

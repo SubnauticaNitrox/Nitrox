@@ -16,8 +16,6 @@ namespace NitroxClient.GameLogic.ChatUI
         private readonly IMultiplayerSession multiplayerSession;
 
         private const char SERVER_COMMAND_PREFIX = '/';
-        private const string CHAT_LOG_ASSET = "chatlog";
-        private const string CHAT_KEY_HINT_ASSET = "chatkeyhint";
 
         public bool IsChatSelected
         {
@@ -100,7 +98,7 @@ namespace NitroxClient.GameLogic.ChatUI
 
         private IEnumerator LoadChatLogAsset()
         {
-            yield return AssetBundleLoader.LoadUIAsset(CHAT_LOG_ASSET, "PlayerChatCanvas", true, playerChatGameObject =>
+            yield return AssetBundleLoader.LoadUIAsset("chatlog", true, playerChatGameObject =>
             {
                 playerChat = playerChatGameObject.AddComponent<PlayerChat>();
             });
@@ -112,7 +110,7 @@ namespace NitroxClient.GameLogic.ChatUI
         {
             if (!NitroxPrefs.ChatUsed.Value)
             {
-                Player.main.StartCoroutine(AssetBundleLoader.LoadUIAsset(CHAT_KEY_HINT_ASSET, "ChatKeyCanvas", false, chatKeyHintGameObject =>
+                Player.main.StartCoroutine(AssetBundleLoader.LoadUIAsset("chatkeyhint", false, chatKeyHintGameObject =>
                 {
                     chatKeyHint = chatKeyHintGameObject;
                 }));
