@@ -1,6 +1,6 @@
 ﻿namespace NitroxModel.Helper;
 
-public class PhysicsHelper
+public static class SoundHelper
 {
     /// <summary>
     ///     Non realistic volume calculation but enough for us

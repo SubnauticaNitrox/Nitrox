@@ -71,7 +71,7 @@ public class FootstepSounds_OnStep_Patch : NitroxPatch, IDynamicPatch
     {
         float radius = stepSoundData?.SoundRadius ?? 50f;
         float distance = Vector3.Distance(xform.position, Player.main.transform.position);
-        volume = PhysicsHelper.CalculateVolume(distance, radius, 1f);
+        volume = SoundHelper.CalculateVolume(distance, radius, 1f);
     }
 
     public override void Patch(Harmony harmony)

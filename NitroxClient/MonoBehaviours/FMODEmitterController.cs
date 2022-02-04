@@ -60,19 +60,18 @@ namespace NitroxClient.MonoBehaviours
 
         public void AddEventInstance(string path, EventInstance eventInstance, NitroxId emitterId)
         {
-            if (!eventInstances.ContainsKey(path))
+            if (!eventInstances.TryGetValue(path, out Dictionary<NitroxId, EventInstance> instances))
             {
-                eventInstances.Add(path, new Dictionary<NitroxId, EventInstance>());
+                eventInstances.Add(path, instances = new Dictionary<NitroxId, EventInstance>());
             }
 
-            if (!eventInstances[path].ContainsKey(emitterId))
-            {
-                eventInstances[path].Add(emitterId, eventInstance);
-            }
-            else
+            if (instances.ContainsKey(emitterId))
             {
                 Log.Warn($"[FMODEmitterController] eventInstances of path {path} already contains {emitterId}");
+                return;
             }
+
+            instances.Add(emitterId, eventInstance);
         }
 
         public void PlayCustomEmitter(string path) => customEmitters[path]?.Play();

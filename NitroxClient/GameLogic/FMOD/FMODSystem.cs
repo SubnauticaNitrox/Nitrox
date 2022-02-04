@@ -69,9 +69,8 @@ namespace NitroxClient.GameLogic.FMOD
 
         public bool TryGetSoundData(string path, out SoundData soundData)
         {
-            if (assetWhitelist.TryGetValue(path, out SoundData value))
+            if (assetWhitelist.TryGetValue(path, out soundData))
             {
-                soundData = value;
                 return true;
             }
             soundData = default;

@@ -24,7 +24,7 @@ public class PlayFMODAssetProcessor : AuthenticatedPacketProcessor<PlayFMODAsset
                 (packet.IsGlobal || player.SubRootId.Equals(sendingPlayer.SubRootId)) &&
                 distance <= packet.Radius)
             {
-                packet.Volume = PhysicsHelper.CalculateVolume(distance, packet.Radius, packet.Volume);
+                packet.Volume = SoundHelper.CalculateVolume(distance, packet.Radius, packet.Volume);
                 player.SendPacket(packet);
             }
         }

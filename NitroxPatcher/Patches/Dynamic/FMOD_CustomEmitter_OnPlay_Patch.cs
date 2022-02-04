@@ -21,33 +21,34 @@ public class FMOD_CustomEmitter_OnPlay_Patch : NitroxPatch, IDynamicPatch
 
     public static void Postfix(FMOD_CustomEmitter __instance)
     {
-        if (fmodSystem.IsWhitelisted(__instance.asset.path, out bool isGlobal, out float radius))
+        if (!fmodSystem.IsWhitelisted(__instance.asset.path, out bool isGlobal, out float radius))
         {
-            EventInstance evt = __instance.GetEventInstance();
-            evt.getDescription(out EventDescription description);
-            evt.getVolume(out float volume, out float _);
-            description.is3D(out bool is3D);
+            return;
+        }
+        EventInstance evt = __instance.GetEventInstance();
+        evt.getDescription(out EventDescription description);
+        evt.getVolume(out float volume, out float _);
+        description.is3D(out bool is3D);
 
-            if (!__instance.TryGetComponent(out NitroxEntity nitroxEntity))
-            {
-                nitroxEntity = __instance.GetComponentInParent<NitroxEntity>();
-            }
+        if (!__instance.TryGetComponent(out NitroxEntity nitroxEntity))
+        {
+            nitroxEntity = __instance.GetComponentInParent<NitroxEntity>();
+        }
 
-            if (nitroxEntity)
+        if (nitroxEntity)
+        {
+            if (is3D)
             {
-                if (is3D)
-                {
-                    fmodSystem.PlayCustomEmitter(nitroxEntity.Id, __instance.asset.path, true);
-                }
-                else
-                {
-                    fmodSystem.PlayEventInstance(nitroxEntity.Id, __instance.asset.path, true, __instance.transform.position.ToDto(), volume, radius, isGlobal);
-                }
+                fmodSystem.PlayCustomEmitter(nitroxEntity.Id, __instance.asset.path, true);
             }
             else
             {
-                fmodSystem.PlayAsset(__instance.asset.path, __instance.transform.position.ToDto(), volume, radius, isGlobal);
+                fmodSystem.PlayEventInstance(nitroxEntity.Id, __instance.asset.path, true, __instance.transform.position.ToDto(), volume, radius, isGlobal);
             }
+        }
+        else
+        {
+            fmodSystem.PlayAsset(__instance.asset.path, __instance.transform.position.ToDto(), volume, radius, isGlobal);
         }
     }
 

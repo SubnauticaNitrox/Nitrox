@@ -16,28 +16,29 @@ public class FMOD_CustomEmitter_OnStop_Patch : NitroxPatch, IDynamicPatch
 
     public static void Postfix(FMOD_CustomEmitter __instance)
     {
-        if (fmodSystem.IsWhitelisted(__instance.asset.path, out bool isGlobal, out float radius))
+        if (!fmodSystem.IsWhitelisted(__instance.asset.path, out bool isGlobal, out float radius))
         {
-            EventInstance evt = __instance.GetEventInstance();
-            evt.getDescription(out EventDescription description);
-            evt.getVolume(out float volume, out float _);
-            description.is3D(out bool is3D);
+            return;
+        }
+        EventInstance evt = __instance.GetEventInstance();
+        evt.getDescription(out EventDescription description);
+        evt.getVolume(out float volume, out float _);
+        description.is3D(out bool is3D);
 
-            if (!__instance.TryGetComponent(out NitroxEntity nitroxEntity))
+        if (!__instance.TryGetComponent(out NitroxEntity nitroxEntity))
+        {
+            nitroxEntity = __instance.GetComponentInParent<NitroxEntity>();
+        }
+
+        if (nitroxEntity)
+        {
+            if (is3D)
             {
-                nitroxEntity = __instance.GetComponentInParent<NitroxEntity>();
+                fmodSystem.PlayCustomEmitter(nitroxEntity.Id, __instance.asset.path, false);
             }
-
-            if (nitroxEntity)
+            else
             {
-                if (is3D)
-                {
-                    fmodSystem.PlayCustomEmitter(nitroxEntity.Id, __instance.asset.path, false);
-                }
-                else
-                {
-                    fmodSystem.PlayEventInstance(nitroxEntity.Id, __instance.asset.path, false, __instance.transform.position.ToDto(), volume, radius, isGlobal);
-                }
+                fmodSystem.PlayEventInstance(nitroxEntity.Id, __instance.asset.path, false, __instance.transform.position.ToDto(), volume, radius, isGlobal);
             }
         }
     }
