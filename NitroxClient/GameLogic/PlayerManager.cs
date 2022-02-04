@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.GameLogic.FMOD;
 using NitroxClient.GameLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerModel.Abstract;
 using NitroxClient.MonoBehaviours;
