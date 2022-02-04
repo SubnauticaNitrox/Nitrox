@@ -1,5 +1,5 @@
 {
-"version": 3,
+"version": 4,
 // Main menu
 "Nitrox_Multiplayer": "Multiplayer",
 "Nitrox_AddServer": "Aggiungi un server",
@@ -18,7 +18,7 @@
 "Nitrox_EnterName": "Nome giocatore",
 "Nitrox_SubmitPassword": "Conferma",
 "Nitrox_MultiplayerLoaded": "Client Multiplayer caricato...",
-"Nitrox_StreamerSettings": "Modalit‡ Streamer",
+"Nitrox_StreamerSettings": "Modalit√† Streamer",
 "Nitrox_SilenceChat": "Disattiva la chat",
 "Nitrox_HideIp": "Nascondere gli indirizzi IP",
 // In game menu
@@ -32,7 +32,7 @@
 "Nitrox_UnableToConnect": "Impossibile contattare il server ",
 "Nitrox_StartServer": "Per entrare nel tuo server locale devi prima avviarlo da Nitrox Launcher",
 "Nitrox_FirewallInterfering": "Sembrerebbe che il firewall stia interferendo",
-"Nitrox_InvalidUserName": "Per favore inserisce un nome valido!\n\n Non puÚ contenere spazi o caratteri ambigui\n Caratteri consentiti : A-Z a-z 0-9 _ . -\nLunghezza : [3, 25]",
+"Nitrox_InvalidUserName": "Per favore inserisce un nome valido!\n\n Non pu√≤ contenere spazi o caratteri ambigui\n Caratteri consentiti : A-Z a-z 0-9 _ . -\nLunghezza : [3, 25]",
 "Nitrox_RequestingSessionPolicy": "Sto richiedendo le impostazioni della sessione...",
 "Nitrox_RejectedSessionPolicy": "Richiesta rifiutata...",
 "Nitrox_DisconnectedSession": "Disconnesso dal server",
@@ -40,5 +40,6 @@
 "Nitrox_WaitingPassword": "In attesa della password per il server...",
 "Nitrox_WaitingUserInput": "In attesa dell'inserimento dal parte dell'utente...",
 "Nitrox_LaunchGame": "Caricamento...",
-"Nitrox_SilencedChatNotif": "La chat Ë ora silenziata"
+"Nitrox_SilencedChatNotif": "La chat √® ora silenziata",
+"Nitrox_CommandNotAvailable": "Questo comando non √® disponibile con Nitrox"
 }

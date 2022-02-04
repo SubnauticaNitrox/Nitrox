@@ -74,7 +74,7 @@ namespace NitroxClient.MonoBehaviours
             enabled = true;
         }
 
-        internal virtual void Exit()
+        public virtual void Exit()
         {
             enabled = false;
         }

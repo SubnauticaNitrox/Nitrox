@@ -25,6 +25,9 @@ namespace NitroxModel.MultiplayerSession
 
         [Description("Another user is currently joining the server.")]
         ENQUEUED_IN_JOIN_QUEUE = 1 << 5,
+
+        [Description("The player name is invalid, It must not contain any space or doubtful characters\n Allowed characters : A-Z a-z 0-9 _ . -\nLength : [3, 25]")]
+        INCORRECT_USERNAME = 1 << 6
     }
 
     public static class MultiplayerSessionReservationStateExtensions
@@ -36,7 +39,7 @@ namespace NitroxModel.MultiplayerSession
 
         public static string Describe(this MultiplayerSessionReservationState currentState)
         {
-            StringBuilder descriptionBuilder = new StringBuilder();
+            StringBuilder descriptionBuilder = new();
 
             foreach (string reservationStateName in Enum.GetNames(typeof(MultiplayerSessionReservationState)))
             {
