@@ -3,7 +3,7 @@ using NitroxModel.Helper;
 
 namespace NitroxClient.MonoBehaviours
 {
-    class MultiplayerCyclops : MultiplayerVehicleControl<SubControl>
+    class MultiplayerCyclops : MultiplayerVehicleControl
     {
         private ISubTurnHandler[] subTurnHandlers;
         private ISubThrottleHandler[] subThrottleHandlers;
@@ -13,9 +13,12 @@ namespace NitroxClient.MonoBehaviours
 
         protected override void Awake()
         {
-            SteeringControl = GetComponent<SubControl>();
-            subTurnHandlers = (ISubTurnHandler[])SteeringControl.ReflectionGet("turnHandlers");
-            subThrottleHandlers = (ISubThrottleHandler[])SteeringControl.ReflectionGet("throttleHandlers");
+            SubControl subControl = GetComponent<SubControl>();
+            WheelYawSetter = value => subControl.steeringWheelYaw = value;
+            WheelPitchSetter = value => subControl.steeringWheelPitch = value;
+            
+            subTurnHandlers = subControl.turnHandlers;
+            subThrottleHandlers = subControl.throttleHandlers;
             base.Awake();
         }
 

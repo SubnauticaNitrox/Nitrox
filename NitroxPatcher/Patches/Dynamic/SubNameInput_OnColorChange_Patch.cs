@@ -1,8 +1,8 @@
 ﻿using System.Reflection;
 using HarmonyLib;
-using NitroxClient.Communication.Abstract;
+using NitroxClient.Helpers;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Core;
+using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
@@ -13,34 +13,48 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class SubNameInput_OnColorChange_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly MethodInfo TARGET_METHOD = typeof(SubNameInput).GetMethod("OnColorChange", BindingFlags.Public | BindingFlags.Instance);
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((SubNameInput t) => t.OnColorChange(default(ColorChangeEventData)));
 
         public static void Postfix(SubNameInput __instance, ColorChangeEventData eventData)
         {
-            SubName subname = (SubName)__instance.ReflectionGet("target");
-            if (subname != null)
+            SubName subname = __instance.target;
+            if (subname)
             {
                 GameObject parentVehicle;
-                Vehicle vehicle = subname.GetComponentInParent<Vehicle>();
-                SubRoot subRoot = subname.GetComponentInParent<SubRoot>();
-                Rocket rocket = subname.GetComponentInParent<Rocket>();
+                NitroxId controllerId = null;
 
-                if (vehicle)
+                if (subname.TryGetComponent(out Vehicle vehicle))
                 {
                     parentVehicle = vehicle.gameObject;
+
+                    GameObject baseCell = __instance.gameObject.RequireComponentInParent<BaseCell>().gameObject;
+                    GameObject moonpool = baseCell.RequireComponentInChildren<BaseFoundationPiece>().gameObject;
+
+                    controllerId = NitroxEntity.GetId(moonpool);
                 }
-                else if (rocket)
+                else if (subname.TryGetComponentInParent(out SubRoot subRoot))
                 {
+                    parentVehicle = subRoot.gameObject;
+                }
+                else if (subname.TryGetComponentInParent(out Rocket rocket))
+                {
+                    // For some reason only the rocket has a full functioning ghost with a different NitroxId when spawning/constructing, so we are ignoring it.
+                    if (rocket.TryGetComponentInChildren(out VFXConstructing constructing) && !constructing.isDone)
+                    {
+                        return;
+                    }
+
                     parentVehicle = rocket.gameObject;
                 }
                 else
                 {
-                    parentVehicle = subRoot.gameObject;
+                    Log.Error($"[SubNameInput_OnColorChange_Patch] The GameObject {subname.gameObject.name} doesn't have a Vehicle/SubRoot/Rocket component.");
+                    return;
                 }
 
-                NitroxId id = NitroxEntity.GetId(parentVehicle);
-                VehicleColorChange packet = new VehicleColorChange(__instance.SelectedColorIndex, id, eventData.hsb.ToDto(), eventData.color.ToDto());
-                NitroxServiceLocator.LocateService<IPacketSender>().Send(packet);
+                NitroxId vehicleId = NitroxEntity.GetId(parentVehicle);
+                VehicleColorChange packet = new(__instance.SelectedColorIndex, controllerId, vehicleId, eventData.hsb.ToDto(), eventData.color.ToDto());
+                Resolve<ThrottledPacketSender>().SendThrottled(packet);
             }
         }
 

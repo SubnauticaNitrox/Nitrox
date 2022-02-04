@@ -20,7 +20,7 @@ namespace NitroxClient.Communication.Packets.Processors
             ItemGoalTracker.OnConstruct(packet.CurrentStageTech);
 
             RocketConstructor rocketConstructor = gameObjectRocket.RequireComponentInChildren<RocketConstructor>(true);
-            rocketConstructor.ReflectionCall("SendBuildBots", false, false, build);
+            rocketConstructor.SendBuildBots(build);
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
@@ -14,8 +13,7 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class IncubatorEgg_HatchNow_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(IncubatorEgg);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("HatchNow", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((IncubatorEgg t) => t.HatchNow());
 
         public static bool Prefix(IncubatorEgg __instance)
         {
@@ -31,8 +29,7 @@ namespace NitroxPatcher.Patches.Dynamic
             egg.fxControl.Play();
             Utils.PlayFMODAsset(egg.hatchSound, egg.transform, 30f);
 
-            string animParameter = (string)egg.ReflectionGet("animParameter");
-            SafeAnimator.SetBool(egg.animationController.eggAnimator, animParameter, true);
+            SafeAnimator.SetBool(egg.animationController.eggAnimator, egg.animParameter, true);
         }
 
         private static void SpawnBabiesIfSimulating(IncubatorEgg egg)
@@ -51,7 +48,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
                 NitroxId babyId = NitroxEntity.GetId(baby);
 
-                Entity entity = new Entity(baby.transform.position.ToDto(), baby.transform.rotation.ToDto(), baby.transform.localScale.ToDto(), TechType.SeaEmperorBaby.ToDto(), 3, "09883a6c-9e78-4bbf-9561-9fa6e49ce766", true, babyId, null);
+                Entity entity = new(baby.transform.position.ToDto(), baby.transform.rotation.ToDto(), baby.transform.localScale.ToDto(), TechType.SeaEmperorBaby.ToDto(), 3, "09883a6c-9e78-4bbf-9561-9fa6e49ce766", true, babyId, null);
                 NitroxServiceLocator.LocateService<Entities>().BroadcastEntitySpawnedByClient(entity);
             }
         }

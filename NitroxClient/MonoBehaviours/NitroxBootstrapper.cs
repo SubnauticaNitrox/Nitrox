@@ -1,5 +1,5 @@
-﻿using NitroxClient.MonoBehaviours.Gui.MainMenu;
-using NitroxModel.Logger;
+﻿using NitroxClient.MonoBehaviours.Discord;
+using NitroxClient.MonoBehaviours.Gui.MainMenu;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours
@@ -13,6 +13,7 @@ namespace NitroxClient.MonoBehaviours
             Instance = this;
             gameObject.AddComponent<SceneCleanerPreserve>();
             gameObject.AddComponent<MainMenuMods>();
+            gameObject.AddComponent<DiscordClient>();
 
 #if DEBUG
             EnableDeveloperFeatures();

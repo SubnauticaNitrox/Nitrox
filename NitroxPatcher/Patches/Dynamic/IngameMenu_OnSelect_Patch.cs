@@ -2,13 +2,14 @@
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
+using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
     public class IngameMenu_OnSelect_Patch : NitroxPatch, IDynamicPatch
     {
-        private static readonly MethodInfo targetMethod = typeof(IngameMenu).GetMethod("OnSelect");
-        private static readonly MethodInfo GameModeUtilsIsPermadeathMethod = typeof(GameModeUtils).GetMethod("IsPermadeath", BindingFlags.Public | BindingFlags.Static);
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((IngameMenu t) => t.OnSelect(default(bool)));
+        private static readonly MethodInfo IS_PERMA_DEATH_METHOD = Reflect.Method(() => GameModeUtils.IsPermadeath());
 
         public static void Postfix()
         {
@@ -40,7 +41,7 @@ namespace NitroxPatcher.Patches.Dynamic
              */
             foreach (CodeInstruction instruction in instructions)
             {
-                if (GameModeUtilsIsPermadeathMethod.Equals(instruction.operand))
+                if (IS_PERMA_DEATH_METHOD.Equals(instruction.operand))
                 {
                     yield return new CodeInstruction(OpCodes.Ret);
                     break;
@@ -52,8 +53,8 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public override void Patch(Harmony harmony)
         {
-            PatchTranspiler(harmony, targetMethod);
-            PatchPostfix(harmony, targetMethod);
+            PatchTranspiler(harmony, TARGET_METHOD);
+            PatchPostfix(harmony, TARGET_METHOD);
         }
     }
 }

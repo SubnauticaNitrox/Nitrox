@@ -9,10 +9,9 @@ using NitroxClient.GameLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.PlayerModel.ColorSwap;
 using NitroxClient.GameLogic.PlayerModel.ColorSwap.Strategy;
 using NitroxClient.GameLogic.PlayerPreferences;
+using NitroxClient.GameLogic.Settings;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
-using NitroxModel.Helper;
-using NitroxModel.Logger;
 using NitroxModel.MultiplayerSession;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
@@ -48,6 +47,8 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         private bool passwordEntered;
         private string serverPassword = string.Empty;
 
+        public string MenuName => joinServerMenu.AliveOrNull()?.name ?? throw new Exception("Menu not yet initialized");
+
         public void Setup(GameObject saveGameMenu)
         {
             saveGameMenuPrototype = saveGameMenu;
@@ -68,7 +69,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             serverPort = port;
 
             //Set Server IP in info label
-            lowerDetailTextGameObject.GetComponent<Text>().text = $"{Language.main.Get("Nitrox_JoinServerIpAddress")}\n{serverIp}";
+            lowerDetailTextGameObject.GetComponent<Text>().text = $"{Language.main.Get("Nitrox_JoinServerIpAddress")}\n{(NitroxPrefs.HideIp.Value ? "****" : serverIp)}";
 
             //Initialize elements from preferences
             activePlayerPreference = preferencesManager.GetPreference(serverIp);
@@ -246,7 +247,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                     preferencesManager.Save();
 
 #pragma warning disable CS0618 // God Damn it UWE...
-                    IEnumerator startNewGame = (IEnumerator)uGUI_MainMenu.main.ReflectionCall("StartNewGame", false, false, GameMode.Survival);
+                    IEnumerator startNewGame = uGUI_MainMenu.main.StartNewGame(GameMode.Survival);
 #pragma warning restore CS0618 // God damn it UWE...
                     StartCoroutine(startNewGame);
                     LoadingScreenVersionText.Initialize();
@@ -290,7 +291,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             });
         }
 
-        private void StopMultiplayerClient()
+        public void StopMultiplayerClient()
         {
             if (!multiplayerClient)
             {

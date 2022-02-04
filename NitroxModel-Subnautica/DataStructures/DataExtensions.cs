@@ -2,6 +2,7 @@
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Unity;
+using NitroxModel.Packets;
 using UnityEngine;
 
 namespace NitroxModel_Subnautica.DataStructures
@@ -96,6 +97,30 @@ namespace NitroxModel_Subnautica.DataStructures
                 result[i] = v[i].ToUnity();
             }
             return result;
+        }
+
+        public static StoryEventSend.EventType ToDto(this Story.GoalType goalType)
+        {
+            return goalType switch
+            {
+                Story.GoalType.PDA => StoryEventSend.EventType.PDA,
+                Story.GoalType.Radio => StoryEventSend.EventType.RADIO,
+                Story.GoalType.Encyclopedia => StoryEventSend.EventType.ENCYCLOPEDIA,
+                Story.GoalType.Story => StoryEventSend.EventType.STORY,
+                _ => throw new ArgumentException("The provided Story.GoalType doesn't correspond to a StoryEventSend.EventType"),
+            };
+        }
+
+        public static Story.GoalType ToUnity(this StoryEventSend.EventType eventType)
+        {
+            return eventType switch
+            {
+                StoryEventSend.EventType.PDA => Story.GoalType.PDA,
+                StoryEventSend.EventType.RADIO => Story.GoalType.Radio,
+                StoryEventSend.EventType.ENCYCLOPEDIA => Story.GoalType.Encyclopedia,
+                StoryEventSend.EventType.STORY => Story.GoalType.Story,
+                _ => throw new ArgumentException("The provided StoryEventSend.EventType doesn't correspond to a Story.GoalType")
+            };
         }
     }
 }

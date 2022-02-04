@@ -1,28 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.CompilerServices;
+using System.Text;
 using System.Windows;
 using System.Windows.Input;
-using NitroxLauncher.Events;
+using NitroxLauncher.Models;
+using NitroxLauncher.Models.Events;
 
 namespace NitroxLauncher.Pages
 {
-    public partial class ServerConsolePage : PageBase, INotifyPropertyChanged
+    public partial class ServerConsolePage : PageBase
     {
-        private readonly List<string> commandLinesHistory = new List<string>();
-        private int commandHistoryIndex;
+        private readonly List<string> commandLinesHistory = new();
+        private readonly StringBuilder serverOutput = new("");
         private string commandInputText;
-        private string serverOutput = string.Empty;
+        private int commandHistoryIndex;
 
         public string ServerOutput
         {
-            get => serverOutput;
+            get => serverOutput.ToString();
             set
             {
-                serverOutput = value;
+                serverOutput.AppendLine(value);
                 OnPropertyChanged();
                 Dispatcher?.BeginInvoke(new Action(() => ConsoleWindowScrollView.ScrollToEnd()));
             }
@@ -65,24 +65,13 @@ namespace NitroxLauncher.Pages
         {
             InitializeComponent();
 
-            LauncherLogic.Instance.ServerStarted += ServerStarted;
-            LauncherLogic.Instance.ServerDataReceived += ServerDataReceived;
+            LauncherLogic.Server.ServerStarted += ServerStarted;
+            LauncherLogic.Server.ServerDataReceived += ServerDataReceived;
 
             Loaded += (sender, args) =>
             {
                 CommandInput.Focus();
             };
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        /// <summary>
-        ///     Raises this object's PropertyChanged event.
-        /// </summary>
-        /// <param name="propertyName">The property that has a new value.</param>
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         private void ServerStarted(object sender, ServerStartEventArgs e)
@@ -94,19 +83,20 @@ namespace NitroxLauncher.Pages
         {
             // TODO: Change to virtualized textboxes per line.
             // This sucks for performance reasons. Every string concat in .NET will create a NEW string in memory.
-            ServerOutput += e.Data + Environment.NewLine;
+            ServerOutput = e.Data;
         }
 
         private void SendCommandInputToServer()
         {
-            LauncherLogic.Instance.SendServerCommand(CommandInputText);
-            ServerOutput += CommandInputText + Environment.NewLine;
+            ServerOutput = CommandInputText;
+            LauncherLogic.Server.SendServerCommand(CommandInputText);
 
             // Deduplication of command history
             if (!string.IsNullOrWhiteSpace(CommandInputText) && CommandInputText != commandLinesHistory.LastOrDefault())
             {
                 commandLinesHistory.Add(CommandInputText);
             }
+
             HideCommandHistory();
         }
 
@@ -123,9 +113,7 @@ namespace NitroxLauncher.Pages
         private void StopButton_Click(object sender, RoutedEventArgs e)
         {
             // Suggest referencing NitroxServer.ConsoleCommands.ExitCommand.name, but the class is internal
-            LauncherLogic.Instance.SendServerCommand("stop");
-            ServerOutput += $"stop{Environment.NewLine}";
-
+            LauncherLogic.Server.SendServerCommand("stop");
             commandLinesHistory.Add("stop");
             HideCommandHistory();
         }
@@ -139,24 +127,23 @@ namespace NitroxLauncher.Pages
                 case Key.Enter:
                     SendCommandInputToServer();
                     break;
+
                 case Key.Escape:
                     HideCommandHistory();
                     break;
+
                 case Key.Up:
                     CommandHistoryIndex--;
                     break;
+
                 case Key.Down:
                     CommandHistoryIndex++;
                     break;
+
                 default:
                     e.Handled = false;
                     break;
             }
-        }
-
-        private void PART_VerticalScrollBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-
         }
     }
 }

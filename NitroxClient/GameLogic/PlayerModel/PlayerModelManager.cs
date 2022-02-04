@@ -83,14 +83,8 @@ namespace NitroxClient.GameLogic.PlayerModel
             GameObject pingTabGameObject = pdaScreenGameObject.transform.Find("Content/PingManagerTab").gameObject;
             uGUI_PingTab pingTab = pingTabGameObject.GetComponent<uGUI_PingTab>();
 
-            MethodInfo updateEntities = typeof(uGUI_PingTab).GetMethod("UpdateEntries", BindingFlags.NonPublic | BindingFlags.Instance);
-            updateEntities.Invoke(pingTab,
-                new object[]
-                {
-                });
-
-            FieldInfo pingTabEntriesField = typeof(uGUI_PingTab).GetField("entries", BindingFlags.NonPublic | BindingFlags.Instance);
-            Dictionary<int, uGUI_PingEntry> pingEntries = (Dictionary<int, uGUI_PingEntry>)pingTabEntriesField.GetValue(pingTab);
+            pingTab.UpdateEntries();
+            Dictionary<int, uGUI_PingEntry> pingEntries = pingTab.entries;
             uGUI_PingEntry pingEntry = pingEntries[ping.GetInstanceID()];
             pingEntry.icon.color = player.PlayerSettings.PlayerColor.ToUnity();
 
@@ -107,17 +101,12 @@ namespace NitroxClient.GameLogic.PlayerModel
         {
             uGUI_Pings pings = Object.FindObjectOfType<uGUI_Pings>();
 
-            MethodInfo setColor = typeof(uGUI_Pings).GetMethod("OnColor", BindingFlags.NonPublic | BindingFlags.Instance);
-            setColor.Invoke(pings,
-                new object[]
-                {
-                    ping.GetInstanceID(), player.PlayerSettings.PlayerColor.ToUnity()
-                });
+            pings.OnColor(ping.GetInstanceID(), player.PlayerSettings.PlayerColor.ToUnity());
         }
 
         private static IEnumerator ApplyPlayerColor(INitroxPlayer player, IEnumerable<IColorSwapManager> colorSwapManagers)
         {
-            ColorSwapAsyncOperation swapOperation = new ColorSwapAsyncOperation(player, colorSwapManagers);
+            ColorSwapAsyncOperation swapOperation = new(player, colorSwapManagers);
             swapOperation.BeginColorSwap();
 
             while (!swapOperation.IsColorSwapComplete())

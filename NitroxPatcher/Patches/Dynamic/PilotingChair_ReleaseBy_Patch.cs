@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
@@ -11,8 +10,7 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class PilotingChair_ReleaseBy_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(PilotingChair);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("ReleaseBy", BindingFlags.Public | BindingFlags.Instance);
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((PilotingChair t) => t.ReleaseBy(default(Player)));
 
         public static void Postfix(PilotingChair __instance)
         {

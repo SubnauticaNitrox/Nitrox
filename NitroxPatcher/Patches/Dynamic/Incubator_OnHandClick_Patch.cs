@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.HUD;
@@ -8,6 +7,7 @@ using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
+using NitroxModel.Helper;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic
@@ -16,8 +16,7 @@ namespace NitroxPatcher.Patches.Dynamic
     // to hatch the eggs using the enzymes.
     public class Incubator_OnHandClick_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(Incubator);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("OnHandClick", BindingFlags.Public | BindingFlags.Instance);
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Incubator t) => t.OnHandClick(default(GUIHand)));
 
         private static bool skipPrefix = false;
 
@@ -37,8 +36,8 @@ namespace NitroxPatcher.Patches.Dynamic
                 GameObject platform = __instance.gameObject.transform.parent.gameObject;
                 NitroxId id = NitroxEntity.GetId(platform);
 
-                HandInteraction<Incubator> context = new HandInteraction<Incubator>(__instance, hand);
-                LockRequest<HandInteraction<Incubator>> lockRequest = new LockRequest<HandInteraction<Incubator>>(id, SimulationLockType.EXCLUSIVE, ReceivedSimulationLockResponse, context);
+                HandInteraction<Incubator> context = new(__instance, hand);
+                LockRequest<HandInteraction<Incubator>> lockRequest = new(id, SimulationLockType.EXCLUSIVE, ReceivedSimulationLockResponse, context);
 
                 simulationOwnership.RequestSimulationLock(lockRequest);
             }
@@ -50,13 +49,13 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             if (lockAquired)
             {
-                IncubatorMetadata metadata = new IncubatorMetadata(true, true);
+                IncubatorMetadata metadata = new(true, true);
 
                 Entities entities = NitroxServiceLocator.LocateService<Entities>();
                 entities.BroadcastMetadataUpdate(id, metadata);
 
                 skipPrefix = true;
-                TARGET_METHOD.Invoke(context.Target, new[] { context.GuiHand });
+                context.Target.OnHandClick(context.GuiHand);
                 skipPrefix = false;
             }
             else

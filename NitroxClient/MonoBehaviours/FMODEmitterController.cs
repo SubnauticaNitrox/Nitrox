@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Reflection;
 using FMOD.Studio;
 using FMODUnity;
-using NitroxModel.Logger;
 using UnityEngine;
 #pragma warning disable 618
 
@@ -10,12 +8,9 @@ namespace NitroxClient.MonoBehaviours
 {
     public class FMODEmitterController : MonoBehaviour
     {
-        private static readonly FieldInfo studioEmitterEvtField = typeof(FMOD_StudioEventEmitter).GetField("evt", BindingFlags.NonPublic | BindingFlags.Instance);
-        private static readonly FieldInfo timeLastStopSoundField = typeof(FMOD_CustomLoopingEmitter).GetField("timeLastStopSound", BindingFlags.NonPublic | BindingFlags.Instance);
-
-        private readonly Dictionary<string, FMOD_CustomEmitter> customEmitters = new Dictionary<string, FMOD_CustomEmitter>();
-        private readonly Dictionary<string, KeyValuePair<FMOD_CustomLoopingEmitter, float>> loopingEmitters = new Dictionary<string, KeyValuePair<FMOD_CustomLoopingEmitter, float>>();
-        private readonly Dictionary<string, FMOD_StudioEventEmitter> studioEmitters = new Dictionary<string, FMOD_StudioEventEmitter>();
+        private readonly Dictionary<string, FMOD_CustomEmitter> customEmitters = new();
+        private readonly Dictionary<string, KeyValuePair<FMOD_CustomLoopingEmitter, float>> loopingEmitters = new();
+        private readonly Dictionary<string, FMOD_StudioEventEmitter> studioEmitters = new();
 
         public void AddEmitter(string path, FMOD_CustomEmitter customEmitter, float radius)
         {
@@ -48,10 +43,10 @@ namespace NitroxClient.MonoBehaviours
         {
             if (!customEmitters.ContainsKey(path))
             {
-                EventInstance evt = (EventInstance)studioEmitterEvtField.GetValue(studioEmitter);
+                EventInstance evt = studioEmitter.evt;
                 evt.setProperty(EVENT_PROPERTY.MINIMUM_DISTANCE, 1f);
                 evt.setProperty(EVENT_PROPERTY.MAXIMUM_DISTANCE, radius);
-                studioEmitterEvtField.SetValue(studioEmitter, evt);
+                studioEmitter.evt = evt;
 
                 studioEmitters.Add(path, studioEmitter);
             }
@@ -77,7 +72,7 @@ namespace NitroxClient.MonoBehaviours
             eventInstance.setProperty(EVENT_PROPERTY.MAXIMUM_DISTANCE, loopingEmitters[path].Value);
             eventInstance.start();
             eventInstance.release();
-            timeLastStopSoundField.SetValue(loopingEmitter, Time.time);
+            loopingEmitter.timeLastStopSound = Time.time;
         }
     }
 }

@@ -1,15 +1,14 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
+using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
     public class MedicalCabinet_OnHandClick_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(MedicalCabinet);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("OnHandClick", BindingFlags.Public | BindingFlags.Instance);
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((MedicalCabinet t) => t.OnHandClick(default(GUIHand)));
 
         public static void Postfix(MedicalCabinet __instance)
         {

@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using NitroxModel.Logger;
 
 namespace NitroxModel.Serialization
 {
@@ -32,7 +31,7 @@ namespace NitroxModel.Serialization
                 Dictionary<string, MemberInfo> typeCachedDict = GetTypeCacheDictionary();
                 using StreamReader reader = new(new FileStream(FileName, FileMode.Open), Encoding.UTF8);
 
-                HashSet<MemberInfo> unserializedMembers = typeCachedDict.Values.ToHashSet();
+                HashSet<MemberInfo> unserializedMembers = new HashSet<MemberInfo>(typeCachedDict.Values);
                 char[] lineSeparator = { '=' };
                 int lineNum = 0;
                 string readLine;
@@ -102,27 +101,33 @@ namespace NitroxModel.Serialization
             {
                 Type type = GetType();
                 Dictionary<string, MemberInfo> typeCachedDict = GetTypeCacheDictionary();
-
-                using StreamWriter stream = new(new FileStream(FileName, FileMode.OpenOrCreate), Encoding.UTF8);
-                WritePropertyDescription(type, stream);
-
-                foreach (string name in typeCachedDict.Keys)
+                try
                 {
-                    MemberInfo member = typeCachedDict[name];
+                    using StreamWriter stream = new(new FileStream(FileName, FileMode.Create), Encoding.UTF8);
+                    WritePropertyDescription(type, stream);
 
-                    FieldInfo field = member as FieldInfo;
-                    if (field != null)
+                    foreach (string name in typeCachedDict.Keys)
                     {
-                        WritePropertyDescription(member, stream);
-                        WriteProperty(field, field.GetValue(this), stream);
-                    }
+                        MemberInfo member = typeCachedDict[name];
 
-                    PropertyInfo property = member as PropertyInfo;
-                    if (property != null)
-                    {
-                        WritePropertyDescription(member, stream);
-                        WriteProperty(property, property.GetValue(this), stream);
+                        FieldInfo field = member as FieldInfo;
+                        if (field != null)
+                        {
+                            WritePropertyDescription(member, stream);
+                            WriteProperty(field, field.GetValue(this), stream);
+                        }
+
+                        PropertyInfo property = member as PropertyInfo;
+                        if (property != null)
+                        {
+                            WritePropertyDescription(member, stream);
+                            WriteProperty(property, property.GetValue(this), stream);
+                        }
                     }
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    Log.Error($"Config file {FileName} exists but is a hidden file and cannot be modified, config file will not be updated. Please make file accessible");
                 }
             }
         }

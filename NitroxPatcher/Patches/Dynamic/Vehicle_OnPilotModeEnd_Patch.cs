@@ -1,25 +1,27 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Core;
 using NitroxModel.DataStructures;
+using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
     public class Vehicle_OnPilotModeEnd_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(Vehicle);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("OnPilotModeEnd", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Vehicle t) => t.OnPilotModeEnd());
 
         public static void Prefix(Vehicle __instance)
         {
-            NitroxServiceLocator.LocateService<Vehicles>().BroadcastOnPilotModeChanged(__instance, false);
+            Resolve<Vehicles>().BroadcastOnPilotModeChanged(__instance, false);
+            // Fixes instances of vehicles stuck on nothing by forcing the workaround (let another player enter and leave the vehicle)
+            if (__instance.TryGetComponent(out MultiplayerVehicleControl mvc))
+            {
+                mvc.Exit();
+            }
 
             NitroxId id = NitroxEntity.GetId(__instance.gameObject);
-            SimulationOwnership simulationOwnership = NitroxServiceLocator.LocateService<SimulationOwnership>();
-            simulationOwnership.RequestSimulationLock(id, SimulationLockType.TRANSIENT);
+            Resolve<SimulationOwnership>().RequestSimulationLock(id, SimulationLockType.TRANSIENT);
         }
 
         public override void Patch(Harmony harmony)

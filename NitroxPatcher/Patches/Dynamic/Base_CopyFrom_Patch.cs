@@ -1,13 +1,13 @@
 ﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Logger;
+using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
     class Base_CopyFrom_Patch : NitroxPatch, IDynamicPatch
     {
-        public readonly MethodInfo METHOD = typeof(Base).GetMethod(nameof(Base.CopyFrom), BindingFlags.Public | BindingFlags.Instance);
+        public readonly MethodInfo TARGET_METHOD = Reflect.Method((Base t) => t.CopyFrom(default(Base), default(Int3.Bounds), default(Int3)));
 
         public static void Prefix(Base __instance, Base sourceBase)
         {
@@ -27,7 +27,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public override void Patch(Harmony harmony)
         {
-            PatchPrefix(harmony, METHOD);
+            PatchPrefix(harmony, TARGET_METHOD);
         }
     }
 }

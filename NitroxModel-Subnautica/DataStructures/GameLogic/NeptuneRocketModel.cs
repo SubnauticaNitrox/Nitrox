@@ -19,7 +19,7 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
         public bool ElevatorUp { get; set; }
 
         [ProtoMember(3)]
-        public ThreadSafeCollection<PreflightCheck> PreflightChecks { get; set; }
+        public ThreadSafeList<PreflightCheck> PreflightChecks { get; set; } = new();
 
         protected NeptuneRocketModel()
         {
@@ -31,7 +31,7 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
         {
             CurrentStage = 0;
             ElevatorUp = false;
-            PreflightChecks = new ThreadSafeCollection<PreflightCheck>();
+            PreflightChecks = new ThreadSafeList<PreflightCheck>();
         }
 
         public override string ToString()

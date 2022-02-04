@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using NitroxModel.DataStructures;
-using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets;
 using NitroxServer.GameLogic;
@@ -55,21 +54,10 @@ namespace NitroxServer.Communication
                     playerManager.SendPacketToAllPlayers(ownershipChange);
                 }
             }
-        }
-
-        protected void BeginPortForward(int port)
-        {
-            PortForward.TryOpenPortAsync(port, TimeSpan.FromSeconds(20)).ContinueWith(task =>
+            else
             {
-                if (task.Result)
-                {
-                    Log.Info($"Server port {port} UDP has been automatically opened on your router (expires in 1 day)");
-                }
-                else
-                {
-                    Log.Warn(PortForward.GetError(port) ?? $"Failed to port forward {port} UDP through UPnP");
-                }
-            }).ConfigureAwait(false);
+                playerManager.NonPlayerDisconnected(connection);
+            }
         }
 
         protected void ProcessIncomingData(NitroxConnection connection, Packet packet)

@@ -6,8 +6,6 @@ using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
-using NitroxModel.Helper;
-using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures.GameLogic;
 using NitroxModel_Subnautica.Packets;
@@ -45,7 +43,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
             LiveMixin subHealth = subRoot.gameObject.RequireComponent<LiveMixin>();
 
-            float oldHPPercent = (float)subRoot.ReflectionGet("oldHPPercent");
+            float oldHPPercent = subRoot.oldHPPercent;
 
             // Client side noises. Not necessary for keeping the health synced
             if (subHealth.GetHealthFraction() < 0.5f && oldHPPercent >= 0.5f)
@@ -60,7 +58,7 @@ namespace NitroxClient.Communication.Packets.Processors
             using (packetSender.Suppress<CyclopsDamage>())
             {
                 // Not necessary, but used by above code whenever damage is done
-                subRoot.ReflectionSet("oldHPPercent", subHealth.GetHealthFraction());
+                subRoot.oldHPPercent = subHealth.GetHealthFraction();
 
                 // Apply the actual health changes
                 subRoot.gameObject.RequireComponent<LiveMixin>().health = packet.SubHealth;
@@ -75,7 +73,7 @@ namespace NitroxClient.Communication.Packets.Processors
         private void SetActiveDamagePoints(SubRoot cyclops, int[] damagePointIndexes)
         {
             CyclopsExternalDamageManager damageManager = cyclops.gameObject.RequireComponentInChildren<CyclopsExternalDamageManager>();
-            List<CyclopsDamagePoint> unusedDamagePoints = (List<CyclopsDamagePoint>)damageManager.ReflectionGet("unusedDamagePoints");
+            List<CyclopsDamagePoint> unusedDamagePoints = damageManager.unusedDamagePoints;
 
             // CyclopsExternalDamageManager.damagePoints is an unchanged list. It will never have items added/removed from it. Since packet.DamagePointIndexes is also an array
             // generated in an ordered manner, we can match them without worrying about unordered items.
@@ -132,9 +130,9 @@ namespace NitroxClient.Communication.Packets.Processors
 
             // unusedDamagePoints is checked against damagePoints to determine if there's enough damage points. Failing to set the new list
             // of unusedDamagePoints will cause random DamagePoints to appear.
-            damageManager.ReflectionSet("unusedDamagePoints", unusedDamagePoints);
+            damageManager.unusedDamagePoints = unusedDamagePoints;
             // Visual update only to show the water leaking through the window and various hull points based on missing health.
-            damageManager.ReflectionCall("ToggleLeakPointsBasedOnDamage", false, false, null);
+            damageManager.ToggleLeakPointsBasedOnDamage();
         }
 
         /// <summary>
@@ -143,7 +141,7 @@ namespace NitroxClient.Communication.Packets.Processors
         private void SetActiveRoomFires(SubRoot subRoot, CyclopsFireData[] roomFires)
         {
             SubFire subFire = subRoot.gameObject.RequireComponent<SubFire>();
-            Dictionary<CyclopsRooms, SubFire.RoomFire> roomFiresDict = (Dictionary<CyclopsRooms, SubFire.RoomFire>)subFire.ReflectionGet("roomFires");
+            Dictionary<CyclopsRooms, SubFire.RoomFire> roomFiresDict = subFire.roomFires;
             NitroxId subRootId = NitroxEntity.GetId(subRoot.gameObject);
             CyclopsFireData fireNode = null;
 

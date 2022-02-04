@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxModel.Logger;
+using NitroxClient.GameLogic;
+using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 
@@ -27,7 +30,16 @@ namespace NitroxClient.Communication.Packets.Processors
 
                 if (PDAScanner.GetPartialEntryByKey(techType, out PDAScanner.Entry entry))
                 {
-                    if (packet.Unlocked > entry.unlocked)
+                    if (packet.Unlocked == entry.unlocked)
+                    {
+                        // Add the entry as a cached progress
+                        if (!PDAManagerEntry.CachedEntries.TryGetValue(packet.TechType, out PDAProgressEntry pdaProgressEntry))
+                        {
+                            PDAManagerEntry.CachedEntries.Add(packet.TechType, pdaProgressEntry = new PDAProgressEntry(packet.TechType, new Dictionary<NitroxId, float>()));
+                        }
+                        pdaProgressEntry.Entries[packet.NitroxId] = packet.Progress;
+                    }
+                    else if (packet.Unlocked > entry.unlocked)
                     {
                         Log.Info($"PDAEntryProgress Update For TechType:{techType} Old:{entry.unlocked} New:{packet.Unlocked}");
                         entry.unlocked = packet.Unlocked;

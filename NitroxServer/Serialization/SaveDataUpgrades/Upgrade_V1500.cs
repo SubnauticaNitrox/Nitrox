@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Logger;
 using NitroxServer.Serialization.Upgrade;
 
 namespace NitroxServer.Serialization.SaveDataUpgrades

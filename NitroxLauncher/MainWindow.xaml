@@ -1,143 +1,36 @@
-﻿<Window x:Class="NitroxLauncher.MainWindow"
+﻿<!-- TODO: Proper window resize -->
+<Window x:Class="NitroxLauncher.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:NitroxLauncher"
+        xmlns:converters="clr-namespace:NitroxLauncher.Models.Converters"
+        xmlns:props="clr-namespace:NitroxLauncher.Models.Properties"
         mc:Ignorable="d"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
-        Title="Nitrox Launcher" Height="623" MinHeight="642" MaxHeight="642" Width="1024" MinWidth="1024" MaxWidth="946"
-        WindowStyle="None" WindowStartupLocation="CenterScreen" ResizeMode="CanResize" Icon="{StaticResource NitroxImage}"
-        Closing="OnClosing" Background="#FF28292C">
+        Title="Nitrox Launcher" Height="642" MinHeight="642" Width="1024" MinWidth="1024" 
+        WindowStyle="None" WindowStartupLocation="CenterScreen"
+        Closing="OnClosing"
+        Background="Black">
+
     <Window.Resources>
+        <BitmapImage x:Key="SidebarNitroxLogo" UriSource="pack://application:,,,/Images/nitroxLogo.png" />
 
-        <Style x:Key="ScrollThumbs" TargetType="{x:Type Thumb}">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate>
-                        <Grid x:Name="Grid">
-                            <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" 
-                                           Height="Auto" Fill="Transparent" Panel.ZIndex="9999"/>
-                            <Border x:Name="Rectangle1" CornerRadius="3" HorizontalAlignment="Stretch" 
-                                        VerticalAlignment="Stretch" Width="Auto" Height="Auto" 
-                                        Background="{TemplateBinding Background}" Margin="0,6" Panel.ZIndex="9999"/>
-                        </Grid>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="Tag" Value="Horizontal">
-                                <Setter TargetName="Rectangle1" Property="Width" Value="Auto"/>
-                                <Setter TargetName="Rectangle1" Property="Height" Value="7"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
+        <BitmapImage x:Key="SideBarPlayIcon" UriSource="pack://application:,,,/Images/material-design-icons/play.png" />
+        <BitmapImage x:Key="SideBarServerIcon" UriSource="pack://application:,,,/Images/material-design-icons/server.png" />
+        <BitmapImage x:Key="SidebarLibraryIcon" UriSource="pack://application:,,,/Images/material-design-icons/library.png" />
 
-        <!--SCROLLBARS-->
-        <Style x:Key="{x:Type ScrollBar}" TargetType="{x:Type ScrollBar}">
-            <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
-            <Setter Property="Foreground" Value="#26FFFFFF"/>
-            <Setter Property="Background" Value="{x:Null}"/>
-            <Setter Property="Width" Value="6"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ScrollBar}"> 
-                        <Grid x:Name="GridRoot" Width="6" Background="{x:Null}">
-                            <Track x:Name="PART_Track" Grid.Row="0" IsDirectionReversed="true" Focusable="False">
-                                <Track.Thumb>
-                                    <Thumb x:Name="Thumb" Background="{TemplateBinding Foreground}" 
-                                               Style="{DynamicResource ScrollThumbs}"/>
-                                </Track.Thumb>
-                                <Track.IncreaseRepeatButton>
-                                    <RepeatButton x:Name="PageUp" Command="ScrollBar.PageDownCommand" Opacity="0" Focusable="False"/>
-                                </Track.IncreaseRepeatButton>
-                                <Track.DecreaseRepeatButton>
-                                    <RepeatButton x:Name="PageDown" Command="ScrollBar.PageUpCommand" Opacity="0" Focusable="False"/>
-                                </Track.DecreaseRepeatButton>
-                            </Track>
-                        </Grid>
+        <BitmapImage x:Key="SidebarBlogIcon" UriSource="pack://application:,,,/Images/material-design-icons/blog.png" />
+        <BitmapImage x:Key="SidebarCommunityIcon" UriSource="pack://application:,,,/Images/material-design-icons/community.png" />
 
-                        <ControlTemplate.Triggers>
-                            <Trigger SourceName="Thumb" Property="IsMouseOver" Value="true">
-                                <Setter Value="#3FFFFFFF" 
-                                            TargetName="Thumb" Property="Background"/>
-                            </Trigger>
-                            <Trigger SourceName="Thumb" Property="IsDragging" Value="true">
-                                <Setter Value="{DynamicResource DarkBrush}" TargetName="Thumb" Property="Background"/>
-                            </Trigger>
+        <BitmapImage x:Key="SideBarUpdateIcon" UriSource="pack://application:,,,/Images/material-design-icons/download.png" />
+        <BitmapImage x:Key="SideBarUpdateDotIcon" UriSource="pack://application:,,,/Images/material-design-icons/downloadDot.png" />
+        <BitmapImage x:Key="SideBarOptionsIcon" UriSource="pack://application:,,,/Images/material-design-icons/options.png" />
 
-                            <Trigger Property="IsEnabled" Value="false">
-                                <Setter TargetName="Thumb" Property="Visibility" Value="Collapsed"/>
-                            </Trigger>
-                            <Trigger Property="Orientation" Value="Horizontal">
-                                <Setter TargetName="GridRoot" Property="LayoutTransform">
-                                    <Setter.Value>
-                                        <RotateTransform Angle="-90"/>
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter TargetName="PART_Track" Property="LayoutTransform">
-                                    <Setter.Value>
-                                        <RotateTransform Angle="-90"/>
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter Property="Width" Value="Auto"/>
-                                <Setter Property="Height" Value="12"/>
-                                <Setter TargetName="Thumb" Property="Tag" Value="Horizontal"/>
-                                <Setter TargetName="PageDown" Property="Command" Value="ScrollBar.PageLeftCommand"/>
-                                <Setter TargetName="PageUp" Property="Command" Value="ScrollBar.PageRightCommand"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style x:Key="CloseButton" TargetType="{x:Type Button}">
-            <Setter Property="OverridesDefaultStyle" Value="True" />
-            <Setter Property="FontWeight" Value="Normal" />
-            <Setter Property="HorizontalAlignment" Value="Center" />
-            <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="FontSize" Value="18" />
-            <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="Foreground" Value="#BFFFFFFF" />
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="BorderBrush" Value="Black" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Button}">
-                        <Border Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#EB5757" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-        <BitmapImage x:Key="SideBarPlayIcon" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/Images/play.png"/>
-        <BitmapImage x:Key="SideBarServerIcon" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/Images/server.png"/>
-        <BitmapImage x:Key="SideBarOptionsIcon" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/Images/options.png"/>
-        <ControlTemplate x:Key="ScrollViewerMainframe" TargetType="{x:Type ScrollViewer}">
-            <Grid x:Name="Grid" Background="{TemplateBinding Background}">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <Rectangle x:Name="Corner" Grid.Column="1" Fill="#3FFFFFFF" Grid.Row="1"/>
-                <ScrollContentPresenter x:Name="PART_ScrollContentPresenter" CanContentScroll="{TemplateBinding CanContentScroll}" CanHorizontallyScroll="False" CanVerticallyScroll="False" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" Grid.Column="0" Margin="{TemplateBinding Padding}" Grid.Row="0"/>
-                <ScrollBar x:Name="PART_VerticalScrollBar" AutomationProperties.AutomationId="VerticalScrollBar" Cursor="Arrow" Grid.Column="1" Maximum="{TemplateBinding ScrollableHeight}" Minimum="0" Grid.Row="0" Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" Value="{Binding VerticalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" ViewportSize="{TemplateBinding ViewportHeight}" Background="#14FFFFFF" BorderBrush="#00000000" Width="14"/>
-                <ScrollBar x:Name="PART_HorizontalScrollBar" AutomationProperties.AutomationId="HorizontalScrollBar" Cursor="Arrow" Grid.Column="0" Maximum="{TemplateBinding ScrollableWidth}" Minimum="0" Orientation="Horizontal" Grid.Row="1" Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" Value="{Binding HorizontalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" ViewportSize="{TemplateBinding ViewportWidth}"/>
-            </Grid>
-        </ControlTemplate>
-
+        <BitmapImage x:Key="ExitImage" UriSource="pack://application:,,,/Images/material-design-icons/close-w-10.png" />
+        <BitmapImage x:Key="MaxImage" UriSource="pack://application:,,,/Images/material-design-icons/max-w-10.png" />
+        <BitmapImage x:Key="RestoreImage" UriSource="pack://application:,,,/Images/material-design-icons/restore-w-10.png" />
+        <BitmapImage x:Key="MinimizeImage" UriSource="pack://application:,,,/Images/material-design-icons/min-w-10.png" />
     </Window.Resources>
 
     <WindowChrome.WindowChrome>
@@ -150,72 +43,94 @@
 
     <Grid Margin="0">
         <Grid.RowDefinitions>
-            <RowDefinition Height="22" />
+            <RowDefinition Height="22"/>
             <RowDefinition />
         </Grid.RowDefinitions>
 
-
-
-        <Grid Grid.Row="0" Background="#1F1F22" >
-            <Grid.RowDefinitions>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition  />
-            </Grid.ColumnDefinitions>
-
-            <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,437,0"/>
-            <Button Margin="0,0,34,0" HorizontalAlignment="Right" VerticalAlignment="Stretch" Click="Minimze_Click" WindowChrome.IsHitTestVisibleInChrome="True" Width="32">
-                <Image Height="16" Width="16" Source="{StaticResource MinimizeImage}" Stretch="None" />
-            </Button>
-            <Button HorizontalAlignment="Right" VerticalAlignment="Stretch" Click="Close_Click" WindowChrome.IsHitTestVisibleInChrome="True" Width="32" Style="{DynamicResource CloseButton}">
-                <Image Source="{StaticResource ExitImage}" Stretch="None" />
-            </Button>
+        <Grid Grid.Row="0" Background="Transparent" Panel.ZIndex="100" HorizontalAlignment="Right" >
+            <Grid>
+                <Grid Panel.ZIndex="100">
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Width="46" Click="Minimze_Click" WindowChrome.IsHitTestVisibleInChrome="True" VerticalAlignment="Stretch">
+                            <Image Height="10" Width="10" Source="{StaticResource MinimizeImage}" Stretch="Fill" />
+                        </Button>
+                        <Button Width="46" x:Name="RestoreButton" Click="Restore_Click"  Visibility="Collapsed" WindowChrome.IsHitTestVisibleInChrome="True" VerticalAlignment="Stretch">
+                            <Image Height="10" Width="10" Source="{StaticResource RestoreImage}" Stretch="Fill" />
+                        </Button>
+                        <Button Width="46" Click="Close_Click" WindowChrome.IsHitTestVisibleInChrome="True" Style="{DynamicResource CloseButton}" VerticalAlignment="Stretch">
+                            <Image Height="10" Width="10" Source="{StaticResource ExitImage}" Stretch="Fill" />
+                        </Button>
+                    </StackPanel>
+                </Grid>
+                <Border CornerRadius="0,0,0,6"  Margin="0,0,0,0" Padding="22,22,22,0" VerticalAlignment="Top" Background="#7F000000"></Border>
+            </Grid>
         </Grid>
 
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="1" Margin="0,-22,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="250" />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
 
-            <Grid HorizontalAlignment="Stretch" Background="#1F1F22" Style="{StaticResource MainNavigationGrid}"  >
-
+            <Grid HorizontalAlignment="Stretch" x:Name="SideBarPanel" Background="#151516" Style="{StaticResource MainNavigationGrid}"  >
                 <Grid.RowDefinitions>
                     <RowDefinition Height="533" />
                 </Grid.RowDefinitions>
+                
                 <!-- Make sure the navigation items align vertically with the "NITROX" header. -->
+                <Image Margin="32,42,131,473" Source="{StaticResource SidebarNitroxLogo}" Stretch="Fill"/>
 
-                <Image Margin="32,32,131,483" Source="nitroxLogo.png" Stretch="Fill"/>
-
-                <StackPanel Margin="32,82,0,286" x:Name="SideBarPanel" HorizontalAlignment="Left" Width="196">
-                    <Button Click="ButtonNavigation_Click" Tag="{StaticResource LaunchGamePage}" ToolTip="Play the game" BorderBrush="#00000000" >
+                <StackPanel Margin="32,108,0,0" HorizontalAlignment="Left" Width="196" VerticalAlignment="Top">
+                    <TextBlock HorizontalAlignment="Left" FontSize="10" Foreground="#7FFFFFFF" Margin="0,0,0,4" FontWeight="Bold"><Run Text="PLAY"/></TextBlock>
+                    <Button x:Name="NavPlayGamePageButton" Click="ButtonNavigation_Click" Tag="{StaticResource LaunchGamePage}" ToolTip="Play the game" BorderBrush="#00000000" props:ButtonProperties.Selected="True">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Image Source="{DynamicResource SideBarPlayIcon}" Width="24px" Height="24px" />
+                            <Image Source="{StaticResource SideBarPlayIcon}" Width="24px" Height="24px" />
                             <TextBlock FontSize="16" Margin="12,0,0,0" VerticalAlignment="Center">Play game</TextBlock>
                         </StackPanel>
                     </Button>
-                    <Button Click="ButtonNavigation_Click" Tag="{StaticResource ServerPage}" ToolTip="Configure server options" BorderBrush="#00000000">
+
+                    <Button Click="ButtonNavigation_Click" Tag="{StaticResource ServerPage}" ToolTip="Configure and start the server" BorderBrush="#00000000">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Image Source="{DynamicResource SideBarServerIcon}" Width="24px" Height="24px" />
+                            <Image Source="{StaticResource SideBarServerIcon}" Width="24px" Height="24px" />
                             <TextBlock FontSize="16" Margin="12,0,0,0" VerticalAlignment="Center">Server</TextBlock>
                         </StackPanel>
                     </Button>
-                    <Button Click="ButtonNavigation_Click" Tag="{StaticResource OptionPage}" ToolTip="Launcher settings" BorderBrush="#00000000">
+
+                    <TextBlock HorizontalAlignment="Left" FontSize="10" Foreground="#7FFFFFFF" Margin="0,22,0,4" Text="EXPLORE" FontWeight="Bold"/>
+                    <Button Click="ButtonNavigation_Click" Tag="{StaticResource CommunityPage}" ToolTip="Join the Nitrox community" BorderBrush="#00000000">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Image Source="{DynamicResource SideBarOptionsIcon}" Width="24px" Height="24px" />
-                            <TextBlock FontSize="16" Margin="12,0,0,0" VerticalAlignment="Center">Settings</TextBlock>
+                            <Image Source="{DynamicResource SidebarCommunityIcon}" Width="24px" Height="24px" />
+                            <TextBlock FontSize="16" Margin="12,0,0,0" VerticalAlignment="Center">Community</TextBlock>
+                        </StackPanel>
+                    </Button>
+                    
+                    <Button Click="ButtonNavigation_Click" Tag="{StaticResource BlogPage}" ToolTip="Read the latest from the Dev Blog" BorderBrush="#00000000">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Image Source="{DynamicResource SidebarBlogIcon}" Width="24px" Height="24px" />
+                            <TextBlock FontSize="16" Margin="12,0,0,0" VerticalAlignment="Center">Blog</TextBlock>
                         </StackPanel>
                     </Button>
                 </StackPanel>
-                <StackPanel HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="32,555,0,-60" Height="39" Width="196">
-                    <TextBlock Margin="0,0,0,8" FontSize="10" Foreground="#7FFFFFFF">NITROX RELEASE</TextBlock>
-                    <TextBlock Margin="0,0,3,0" x:Name="NitroxVersionLabel" Foreground="White" Text="{Binding Version}" />
-                </StackPanel>
 
+                <StackPanel HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="32,0,0,-82" Height="87" Width="196">
+                    <Button Click="ButtonNavigation_Click" Tag="{StaticResource UpdatePage}" ToolTip="Check for Updates" BorderBrush="#00000000">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Image Source="{Binding UpdateAvailable, Converter={converters:UpdateToIconConverter}, FallbackValue={StaticResource SideBarUpdateIcon}}" Width="24px" Height="24px" />
+                            <TextBlock FontSize="16" Margin="12,0,0,0" VerticalAlignment="Center">Updates</TextBlock>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Click="ButtonNavigation_Click" Tag="{StaticResource OptionPage}" ToolTip="Launcher options" BorderBrush="#00000000">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Image Source="{StaticResource SideBarOptionsIcon}" Width="24px" Height="24px" />
+                            <TextBlock FontSize="16" Margin="12,0,0,0" VerticalAlignment="Center">Options</TextBlock>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
             </Grid>
-            <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Grid.Column="1" Template="{DynamicResource ScrollViewerMainframe}" x:Name="ScrollViewerMainframe">
-                <Frame Grid.Column="1" Background="#28292C" x:Name="MainFrame" NavigationUIVisibility="Hidden" Content="{Binding FrameContent}" Width="766" />
+            
+            <ScrollViewer Background="Black" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Grid.Column="1" Template="{DynamicResource ScrollViewerMainframe}" x:Name="ScrollViewerMainframe">
+                <Frame Grid.Column="1" Background="Black" x:Name="MainFrame" NavigationUIVisibility="Hidden" Content="{Binding FrameContent}" Width="766" />
             </ScrollViewer>
         </Grid>
     </Grid>

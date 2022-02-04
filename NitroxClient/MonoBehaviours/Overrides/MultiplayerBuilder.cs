@@ -4,8 +4,6 @@
 using System.Collections.Generic;
 using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper;
-using NitroxModel.Logger;
 using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation;
 using NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation.Metadata;
@@ -223,56 +221,47 @@ namespace NitroxClient.MonoBehaviours.Overrides
             {
                 Log.Error("Was unable to apply rotation metadata - " + component.GetType() + " did not match " + rotationMetadata.GhostType);
             }
-            else if (component is BaseAddCorridorGhost)
+            else if (component is BaseAddCorridorGhost corridor)
             {
                 Log.Info("Placing BaseAddCorridorGhost Rotation Metadata");
 
-                CorridorRotationMetadata corridorRotationMetadata = (rotationMetadata as CorridorRotationMetadata);
-                BaseAddCorridorGhost corridor = (component as BaseAddCorridorGhost);
-                corridor.ReflectionSet("rotation", corridorRotationMetadata.Rotation);
+                CorridorRotationMetadata corridorRotationMetadata = (CorridorRotationMetadata)rotationMetadata;
+                corridor.rotation = corridorRotationMetadata.Rotation;
 
-                int corridorType = (int)corridor.ReflectionCall("CalculateCorridorType");
-                Base ghostBase = (Base)corridor.ReflectionGet("ghostBase");
-                ghostBase.SetCorridor(Int3.zero, corridorType, corridor.isGlass);
-                corridor.ReflectionCall("RebuildGhostGeometry");
+                int corridorType = corridor.CalculateCorridorType();
+                corridor.ghostBase.SetCorridor(Int3.zero, corridorType, corridor.isGlass);
+                corridor.RebuildGhostGeometry();
             }
-            else if (component is BaseAddMapRoomGhost)
+            else if (component is BaseAddMapRoomGhost mapRoom)
             {
                 Log.Info("Placing MapRoomRotationMetadata Rotation Metadata");
 
-                MapRoomRotationMetadata mapRoomRotationMetadata = (rotationMetadata as MapRoomRotationMetadata);
-                BaseAddMapRoomGhost mapRoom = (component as BaseAddMapRoomGhost);
-                mapRoom.ReflectionSet("cellType", mapRoomRotationMetadata.CellType);
-                mapRoom.ReflectionSet("connectionMask", mapRoomRotationMetadata.ConnectionMask);
+                MapRoomRotationMetadata mapRoomRotationMetadata = (MapRoomRotationMetadata)rotationMetadata;
+                mapRoom.cellType = (Base.CellType)mapRoomRotationMetadata.CellType;
+                mapRoom.connectionMask = mapRoomRotationMetadata.ConnectionMask;
 
-                Base ghostBase = (Base)mapRoom.ReflectionGet("ghostBase");
-
-                ghostBase.SetCell(Int3.zero, (Base.CellType)mapRoomRotationMetadata.CellType);
-                mapRoom.ReflectionCall("RebuildGhostGeometry");
+                mapRoom.ghostBase.SetCell(Int3.zero, (Base.CellType)mapRoomRotationMetadata.CellType);
+                mapRoom.RebuildGhostGeometry();
             }
-            else if (component is BaseAddModuleGhost)
+            else if (component is BaseAddModuleGhost ghost)
             {
-                BaseModuleRotationMetadata baseModuleRotationMetadata = (rotationMetadata as BaseModuleRotationMetadata);
-                BaseAddModuleGhost module = (component as BaseAddModuleGhost);
+                BaseModuleRotationMetadata baseModuleRotationMetadata = (BaseModuleRotationMetadata)rotationMetadata;
 
-                module.anchoredFace = new Base.Face(baseModuleRotationMetadata.Cell.ToUnity(), (Base.Direction)baseModuleRotationMetadata.Direction);
-                module.ReflectionCall("RebuildGhostGeometry");
+                ghost.anchoredFace = new Base.Face(baseModuleRotationMetadata.Cell.ToUnity(), (Base.Direction)baseModuleRotationMetadata.Direction);
+                ghost.RebuildGhostGeometry();
             }
-            else if (component is BaseAddFaceGhost)
+            else if (component is BaseAddFaceGhost faceGhost)
             {
-                AnchoredFaceRotationMetadata baseModuleRotationMetadata = (rotationMetadata as AnchoredFaceRotationMetadata);
-                BaseAddFaceGhost faceGhost = (component as BaseAddFaceGhost);
+                AnchoredFaceRotationMetadata baseModuleRotationMetadata = (AnchoredFaceRotationMetadata)rotationMetadata;
                 Log.Info("Applying BaseAddFaceGhost " + baseModuleRotationMetadata);
 
-
-                Base.Face face = new Base.Face(baseModuleRotationMetadata.Cell.ToUnity(), (Base.Direction)baseModuleRotationMetadata.Direction);
+                Base.Face face = new(baseModuleRotationMetadata.Cell.ToUnity(), (Base.Direction)baseModuleRotationMetadata.Direction);
                 faceGhost.anchoredFace = face;
-
-                Base ghostBase = (Base)faceGhost.ReflectionGet("ghostBase");
+                
                 Base.FaceType faceType = (Base.FaceType)baseModuleRotationMetadata.FaceType;
-                ghostBase.SetFace(face, faceType);
+                faceGhost.ghostBase.SetFace(face, faceType);
 
-                faceGhost.ReflectionCall("RebuildGhostGeometry");
+                faceGhost.RebuildGhostGeometry();
             }
         }
 
@@ -370,7 +359,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
 
                 if (targetBase != null)
                 {
-                    component.ReflectionSet("targetBase", targetBase);
+                    component.targetBase = targetBase;
                     componentInParent.transform.SetParent(targetBase.transform, true);
                 }
                 else

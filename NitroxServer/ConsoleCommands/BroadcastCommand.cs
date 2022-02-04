@@ -11,7 +11,7 @@ namespace NitroxServer.ConsoleCommands
 
         public BroadcastCommand() : base("broadcast", Perms.MODERATOR, "Broadcasts a message on the server")
         {
-            AddParameter(new TypeString("message", true));
+            AddParameter(new TypeString("message", true, "The message to be broadcast"));
 
             AllowedArgOverflow = true;
         }

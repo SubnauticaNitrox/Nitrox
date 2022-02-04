@@ -1,7 +1,6 @@
 ﻿using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
-using NitroxModel.Logger;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece

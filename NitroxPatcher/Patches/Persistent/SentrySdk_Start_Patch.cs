@@ -1,13 +1,12 @@
-using System;
 using System.Reflection;
 using HarmonyLib;
+using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Persistent
 {
     internal class SentrySdk_Start_Patch : NitroxPatch, IPersistentPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(SentrySdk);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("Start", BindingFlags.Public | BindingFlags.Instance);
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((SentrySdk t) => t.Start());
 
         public static bool Prefix(SentrySdk __instance)
         {

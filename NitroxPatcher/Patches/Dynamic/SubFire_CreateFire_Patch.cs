@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
@@ -17,8 +16,7 @@ namespace NitroxPatcher.Patches.Dynamic
     /// </summary>
     internal class SubFire_CreateFire_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(SubFire);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("CreateFire", BindingFlags.Instance | BindingFlags.Public);
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((SubFire t) => t.CreateFire(default(SubFire.RoomFire)));
 
         public static bool Prefix(SubFire __instance, SubFire.RoomFire startInRoom, out bool __state)
         {
@@ -36,17 +34,14 @@ namespace NitroxPatcher.Patches.Dynamic
             // We can easily find where it is because it'll be the only Transform in SubFire.availableNodes with a childCount > 0
             if (__state)
             {
-                List<Transform> availableNodes = (List<Transform>)__instance.ReflectionGet("availableNodes");
-                Dictionary<CyclopsRooms, SubFire.RoomFire> roomFiresDict = (Dictionary<CyclopsRooms, SubFire.RoomFire>)__instance.ReflectionGet("roomFires");
-
                 Fires fires = NitroxServiceLocator.LocateService<Fires>();
-                foreach (Transform transform in availableNodes)
+                foreach (Transform transform in __instance.availableNodes)
                 {
                     if (transform.childCount > 0)
                     {
-                        int nodeIndex = Array.IndexOf(roomFiresDict[startInRoom.roomLinks.room].spawnNodes, transform);
+                        int nodeIndex = Array.IndexOf(__instance.roomFires[startInRoom.roomLinks.room].spawnNodes, transform);
                         Fire fire = transform.GetComponentInChildren<Fire>();
-                        fires.OnCreate(transform.GetComponentInChildren<Fire>(), startInRoom, nodeIndex);
+                        fires.OnCreate(fire, startInRoom, nodeIndex);
                         return;
                     }
                 }

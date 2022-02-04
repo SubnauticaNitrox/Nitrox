@@ -2,7 +2,6 @@
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Buildings.Metadata;
-using NitroxModel.Logger;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Bases.Metadata

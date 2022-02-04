@@ -5,7 +5,6 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Threading;
-using NitroxModel.Logger;
 using NitroxModel.Platforms.OS.MacOS;
 using NitroxModel.Platforms.OS.Unix;
 using NitroxModel.Platforms.OS.Windows;
@@ -243,6 +242,22 @@ namespace NitroxModel.Platforms.OS.Shared
                 }
             }
             return true;
+        }
+
+
+        public bool IsWritable(string directory)
+        {
+            string randFileName = Path.GetRandomFileName();
+            try
+            {
+                File.Create(Path.Combine(directory, randFileName)).Close();
+                File.Delete(Path.Combine(directory, randFileName));
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public abstract bool SetFullAccessToCurrentUser(string directory);

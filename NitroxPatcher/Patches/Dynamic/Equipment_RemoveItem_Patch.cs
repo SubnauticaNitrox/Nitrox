@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
 using NitroxClient.GameLogic;
+using NitroxModel.Helper;
+using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
     public class Equipment_RemoveItem_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(Equipment);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("RemoveItem", BindingFlags.Public | BindingFlags.Instance, null, new Type[] { typeof(string), typeof(bool), typeof(bool) }, null);
+        public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Equipment t) => t.RemoveItem(default(string), default(bool), default(bool)));
 
         public static readonly OpCode INJECTION_OPCODE = OpCodes.Stloc_1;
 
@@ -27,11 +27,11 @@ namespace NitroxPatcher.Patches.Dynamic
                      */
                     yield return TranspilerHelper.LocateService<EquipmentSlots>();
                     yield return new CodeInstruction(OpCodes.Ldloc_0);
-                    yield return new CodeInstruction(OpCodes.Callvirt, typeof(InventoryItem).GetMethod("get_item", BindingFlags.Instance | BindingFlags.Public));
+                    yield return new CodeInstruction(OpCodes.Callvirt, Reflect.Property((InventoryItem t) => t.item).GetMethod);
                     yield return new CodeInstruction(OpCodes.Ldarg_0);
-                    yield return new CodeInstruction(OpCodes.Call, TARGET_CLASS.GetMethod("get_owner", BindingFlags.Public | BindingFlags.Instance));
+                    yield return new CodeInstruction(OpCodes.Call, Reflect.Property((Equipment t) => t.owner).GetMethod);
                     yield return new CodeInstruction(OpCodes.Ldarg_1);
-                    yield return new CodeInstruction(OpCodes.Callvirt, typeof(EquipmentSlots).GetMethod("BroadcastUnequip", BindingFlags.Public | BindingFlags.Instance));
+                    yield return new CodeInstruction(OpCodes.Callvirt, Reflect.Method((EquipmentSlots t) => t.BroadcastUnequip(default(Pickupable), default(GameObject), default(string))));
                 }
             }
         }

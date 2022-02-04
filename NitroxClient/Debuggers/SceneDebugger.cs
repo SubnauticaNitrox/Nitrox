@@ -11,7 +11,6 @@ using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
-using NitroxModel.Logger;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;

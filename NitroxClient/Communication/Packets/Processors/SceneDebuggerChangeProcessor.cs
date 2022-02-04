@@ -2,7 +2,6 @@
 using System.Reflection;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxModel.Logger;
 using NitroxModel.Packets;
 using UnityEngine;
 

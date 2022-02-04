@@ -4,12 +4,13 @@ using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession.ConnectionState;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
+using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
     public class ItemsContainer_NotifyRemoveItem_Patch : NitroxPatch, IDynamicPatch
     {
-        private static readonly MethodInfo targetMethod = typeof(ItemsContainer).GetMethod("NotifyRemoveItem", BindingFlags.NonPublic | BindingFlags.Instance, null, new[] { typeof(InventoryItem) }, null);
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((ItemsContainer t) => t.NotifyRemoveItem(default(InventoryItem)));
 
         private static IMultiplayerSession sessionManager;
 
@@ -24,7 +25,7 @@ namespace NitroxPatcher.Patches.Dynamic
         public override void Patch(Harmony harmony)
         {
             sessionManager = NitroxServiceLocator.LocateService<IMultiplayerSession>();
-            PatchPostfix(harmony, targetMethod);
+            PatchPostfix(harmony, TARGET_METHOD);
         }
     }
 }

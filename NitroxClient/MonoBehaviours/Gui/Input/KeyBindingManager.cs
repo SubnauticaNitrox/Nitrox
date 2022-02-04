@@ -9,15 +9,13 @@ namespace NitroxClient.MonoBehaviours.Gui.Input
     {
         public List<KeyBinding> KeyboardKeyBindings { get; }
 
-        private const int CHAT_KEY_VALUE = 45;
-        private const string CHAT_KEY_LABEL = "Chat";
-
         public KeyBindingManager()
         {
             KeyboardKeyBindings = new List<KeyBinding>
             {
                 // new bindings should not be set to a value equivalent to a pre-existing GameInput.Button enum or another custom binding
-                new KeyBinding(CHAT_KEY_VALUE, CHAT_KEY_LABEL, GameInput.Device.Keyboard, new DefaultKeyBinding("Y", GameInput.BindingSet.Primary), new ChatKeyBindingAction())
+                new(45, "Chat", GameInput.Device.Keyboard, new DefaultKeyBinding("Y", GameInput.BindingSet.Primary), new ChatKeyBindingAction()),
+                new(46, "Focus Discord (Alt +)", GameInput.Device.Keyboard, new DefaultKeyBinding("F", GameInput.BindingSet.Primary), new DiscordFocusBindingAction())
             };
         }
 

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reflection;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.Bases.Spawning.BasePiece;
@@ -12,7 +11,6 @@ using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
-using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
@@ -164,12 +162,8 @@ namespace NitroxClient.MonoBehaviours
 
             NitroxEntity.SetNewId(gameObject, basePiece.Id);
 
-            /**
-             * Manually call start to initialize the object as we may need to interact with it within the same frame.
-             */
-            MethodInfo startCrafting = typeof(Constructable).GetMethod("Start", BindingFlags.NonPublic | BindingFlags.Instance);
-            Validate.NotNull(startCrafting);
-            startCrafting.Invoke(constructable, new object[] { });
+            // Manually call start to initialize the object as we may need to interact with it within the same frame.
+            constructable.Start();
         }
 
         private void ConstructionCompleted(ConstructionCompletedEvent constructionCompleted)

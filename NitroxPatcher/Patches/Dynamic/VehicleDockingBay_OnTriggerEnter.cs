@@ -1,32 +1,29 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
-using NitroxModel.Logger;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
     class VehicleDockingBay_OnTriggerEnter : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(VehicleDockingBay);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("OnTriggerEnter", BindingFlags.NonPublic | BindingFlags.Instance);
-        private static Vehicle prevInterpolatingVehicle = null;
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((VehicleDockingBay t) => t.OnTriggerEnter(default(Collider)));
+        private static Vehicle prevInterpolatingVehicle;
 
         public static bool Prefix(VehicleDockingBay __instance, Collider other)
         {
             Vehicle vehicle = other.GetComponentInParent<Vehicle>();
-            prevInterpolatingVehicle = (Vehicle)__instance.ReflectionGet("interpolatingVehicle");
+            prevInterpolatingVehicle = __instance.interpolatingVehicle;
             return vehicle == null || NitroxServiceLocator.LocateService<SimulationOwnership>().HasAnyLockType(NitroxEntity.GetId(vehicle.gameObject));
         }
 
         public static void Postfix(VehicleDockingBay __instance)
         {
-            Vehicle interpolatingVehicle = (Vehicle)__instance.ReflectionGet("interpolatingVehicle");
+            Vehicle interpolatingVehicle = __instance.interpolatingVehicle;
             // Only send data, when interpolatingVehicle changes to avoid multiple packages send
             if (!interpolatingVehicle || interpolatingVehicle == prevInterpolatingVehicle)
             {

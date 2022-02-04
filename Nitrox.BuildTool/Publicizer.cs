@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using Mono.Cecil;
 
-namespace BuildTool
+namespace Nitrox.BuildTool
 {
     public static class Publicizer
     {

@@ -4,6 +4,7 @@ using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
+using NitroxModel.Helper;
 using NitroxModel_Subnautica.Packets;
 using UnityEngine;
 
@@ -11,7 +12,7 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class Rocket_CallElevator_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly MethodInfo TARGET_METHOD = typeof(Rocket).GetMethod("CallElevator", BindingFlags.Public | BindingFlags.Instance);
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Rocket t) => t.CallElevator(default(bool)));
 
         public static void Prefix(Rocket __instance, out Rocket.RocketElevatorStates __state)
         {

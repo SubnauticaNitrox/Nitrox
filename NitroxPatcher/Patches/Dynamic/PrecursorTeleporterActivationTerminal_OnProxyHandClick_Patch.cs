@@ -5,19 +5,20 @@ using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
+using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
     class PrecursorTeleporterActivationTerminal_OnProxyHandClick_Patch : NitroxPatch, IDynamicPatch
     {
-        private static readonly MethodInfo TARGET_METHOD = typeof(PrecursorTeleporterActivationTerminal).GetMethod(nameof(PrecursorTeleporterActivationTerminal.OnProxyHandClick), BindingFlags.Public | BindingFlags.Instance);
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((PrecursorTeleporterActivationTerminal t) => t.OnProxyHandClick(default(GUIHand)));
 
         public static void Postfix(PrecursorTeleporterActivationTerminal __instance)
         {
             if (__instance.unlocked)
             {
                 NitroxId id = NitroxEntity.GetId(__instance.gameObject);
-                PrecursorTeleporterActivationTerminalMetadata precursorTeleporterActivationTerminalMetadata = new PrecursorTeleporterActivationTerminalMetadata(__instance.unlocked);
+                PrecursorTeleporterActivationTerminalMetadata precursorTeleporterActivationTerminalMetadata = new(__instance.unlocked);
 
                 Entities entities = NitroxServiceLocator.LocateService<Entities>();
                 entities.BroadcastMetadataUpdate(id, precursorTeleporterActivationTerminalMetadata);

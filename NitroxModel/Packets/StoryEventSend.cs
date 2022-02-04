@@ -20,8 +20,9 @@ namespace NitroxModel.Packets
             RADIO,
             ENCYCLOPEDIA,
             STORY,
+            GOAL_UNLOCK,
             EXTRA,
-            GOAL_UNLOCK
+            PDA_EXTRA,
         }
     }
 }

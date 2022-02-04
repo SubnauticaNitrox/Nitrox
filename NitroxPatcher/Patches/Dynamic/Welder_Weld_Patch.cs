@@ -8,20 +8,19 @@ using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
-using NitroxModel.Logger;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
     class Welder_Weld_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly MethodInfo TARGET_METHOD = typeof(Welder).GetMethod("Weld", BindingFlags.Instance | BindingFlags.NonPublic);
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Welder t) => t.Weld());
 
-        public static readonly OpCode INJECTION_OPCODE = OpCodes.Call;
-        public static readonly object INJECTION_OPERAND = typeof(Welder_Weld_Patch).GetMethod("AddHealthOverride", BindingFlags.Static | BindingFlags.Public);
+        private static readonly OpCode INJECTION_OPCODE = OpCodes.Call;
+        private static readonly object INJECTION_OPERAND = Reflect.Method(() => AddHealthOverride(default(LiveMixin), default(float), default(Welder)));
 
-        public static readonly OpCode SWAP_INSTRUCTION_OPCODE = OpCodes.Callvirt;
-        public static readonly MethodInfo SWAP_INSTRUCTION_OPERAND = typeof(LiveMixin).GetMethod("AddHealth", BindingFlags.Public | BindingFlags.Instance);
-        public static Welder RESPONSE_WELDER = null;
+        private static readonly OpCode SWAP_INSTRUCTION_OPCODE = OpCodes.Callvirt;
+        private static readonly MethodInfo SWAP_INSTRUCTION_OPERAND = Reflect.Method((LiveMixin t) => t.AddHealth(default(float)));
+        private static readonly Welder RESPONSE_WELDER = null;
 
         public static bool Prefix()
         {

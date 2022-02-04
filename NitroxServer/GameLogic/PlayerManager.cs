@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
+using NitroxModel.Logger;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
 using NitroxServer.Communication;
@@ -19,7 +22,12 @@ namespace NitroxServer.GameLogic
         private readonly ThreadSafeDictionary<string, Player> allPlayersByName;
         private readonly ThreadSafeDictionary<NitroxConnection, ConnectionAssets> assetsByConnection = new();
         private readonly ThreadSafeDictionary<string, PlayerContext> reservations = new();
-        private readonly ThreadSafeCollection<string> reservedPlayerNames = new ThreadSafeCollection<string>(new HashSet<string> { "Player" }); // "Player" is often used to identify the local player and should not be used by any user
+        private readonly ThreadSafeSet<string> reservedPlayerNames = new("Player"); // "Player" is often used to identify the local player and should not be used by any user
+
+        private ThreadSafeQueue<KeyValuePair<NitroxConnection, MultiplayerSessionReservationRequest>> JoinQueue { get; set; } = new();
+        private bool PlayerCurrentlyJoining { get; set; }
+
+        private Timer initialSyncTimer;
 
         private readonly ServerConfig serverConfig;
         private ushort currentPlayerId;
@@ -48,21 +56,44 @@ namespace NitroxServer.GameLogic
             AuthenticationContext authenticationContext,
             string correlationId)
         {
-            if (!string.IsNullOrEmpty(serverConfig.ServerPassword) && (!authenticationContext.ServerPassword.HasValue || authenticationContext.ServerPassword.Value != serverConfig.ServerPassword))
-            {
-                MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.AUTHENTICATION_FAILED;
-                return new MultiplayerSessionReservation(correlationId, rejectedState);
-            }
-
             if (reservedPlayerNames.Count >= serverConfig.MaxConnections)
             {
                 MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.SERVER_PLAYER_CAPACITY_REACHED;
                 return new MultiplayerSessionReservation(correlationId, rejectedState);
             }
 
+            if (!string.IsNullOrEmpty(serverConfig.ServerPassword) && (!authenticationContext.ServerPassword.HasValue || authenticationContext.ServerPassword.Value != serverConfig.ServerPassword))
+            {
+                MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.AUTHENTICATION_FAILED;
+                return new MultiplayerSessionReservation(correlationId, rejectedState);
+            }
+
+            //https://regex101.com/r/eTWiEs/2/
+            if (!Regex.IsMatch(authenticationContext.Username, @"^[a-zA-Z0-9._-]{3,25}$"))
+            {
+                MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.INCORRECT_USERNAME;
+                return new MultiplayerSessionReservation(correlationId, rejectedState);
+            }
+
+            if (PlayerCurrentlyJoining)
+            {
+                if (JoinQueue.Any(pair => ReferenceEquals(pair.Key, connection)))
+                {
+                    // Don't enqueue the request if there is already another enqueued request by the same user
+                    return new MultiplayerSessionReservation(correlationId, MultiplayerSessionReservationState.REJECTED);
+                }
+                
+                JoinQueue.Enqueue(new KeyValuePair<NitroxConnection, MultiplayerSessionReservationRequest>(
+                                      connection,
+                                      new MultiplayerSessionReservationRequest(correlationId, playerSettings, authenticationContext)));
+
+                return new MultiplayerSessionReservation(correlationId, MultiplayerSessionReservationState.ENQUEUED_IN_JOIN_QUEUE);
+            }
+
             string playerName = authenticationContext.Username;
+
             allPlayersByName.TryGetValue(playerName, out Player player);
-            if ((player?.IsPermaDeath == true) && serverConfig.IsHardcore)
+            if (player?.IsPermaDeath == true && serverConfig.IsHardcore)
             {
                 MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.HARDCORE_PLAYER_DEAD;
                 return new MultiplayerSessionReservation(correlationId, rejectedState);
@@ -82,18 +113,37 @@ namespace NitroxServer.GameLogic
                 reservedPlayerNames.Add(playerName);
             }
 
-
             bool hasSeenPlayerBefore = player != null;
             ushort playerId = hasSeenPlayerBefore ? player.Id : ++currentPlayerId;
             NitroxId playerNitroxId = hasSeenPlayerBefore ? player.GameObjectId : new NitroxId();
 
-            PlayerContext playerContext = new PlayerContext(playerName, playerId, playerNitroxId, !hasSeenPlayerBefore, playerSettings);
+            PlayerContext playerContext = new(playerName, playerId, playerNitroxId, !hasSeenPlayerBefore, playerSettings);
             string reservationKey = Guid.NewGuid().ToString();
 
             reservations.Add(reservationKey, playerContext);
             assetPackage.ReservationKey = reservationKey;
 
+            PlayerCurrentlyJoining = true;
+
+            initialSyncTimer = new Timer(state =>
+            {
+                player.SendPacket(new PlayerKicked("An error occured while loading, Initial sync took too long to complete"));
+                PlayerDisconnected(player.Connection);
+                SendPacketToOtherPlayers(new Disconnect(player.Id), player);
+
+                FinishProcessingReservation();
+            });
+
+            // Starts the timer, using the server config option as the due time and with intervals disabled
+            initialSyncTimer.Change(serverConfig.InitialSyncTimeout, Timeout.Infinite);
+
             return new MultiplayerSessionReservation(correlationId, playerId, reservationKey);
+        }
+
+        public void NonPlayerDisconnected(NitroxConnection connection)
+        {
+            // Remove any requests sent by the connection from the join queue
+            JoinQueue = new(JoinQueue.Where(pair => !Equals(pair.Key, connection)));
         }
 
         public Player PlayerConnected(NitroxConnection connection, string reservationKey, out bool wasBrandNewPlayer)
@@ -120,7 +170,8 @@ namespace NitroxServer.GameLogic
                     new List<NitroxTechType>(),
                     Array.Empty<string>(),
                     new List<EquippedItemData>(),
-                    new List<EquippedItemData>()
+                    new List<EquippedItemData>(),
+                    new HashSet<string>()
                 );
                 allPlayersByName[playerContext.PlayerName] = player;
             }
@@ -164,10 +215,33 @@ namespace NitroxServer.GameLogic
 
             assetsByConnection.Remove(connection);
 
-            if (ConnectedPlayers().Count() == 0)
+            if (!ConnectedPlayers().Any())
             {
                 Server.Instance.PauseServer();
                 Server.Instance.Save();
+            }
+        }
+
+        public void FinishProcessingReservation()
+        {
+            initialSyncTimer.Dispose();
+            PlayerCurrentlyJoining = false;
+
+            Log.Info($"Finished processing reservation. Remaining requests: {JoinQueue.Count}");
+
+            // Tell next client that it can start joining.
+            if (JoinQueue.Count > 0)
+            {
+                KeyValuePair<NitroxConnection, MultiplayerSessionReservationRequest> keyValuePair = JoinQueue.Dequeue();
+                NitroxConnection requestConnection = keyValuePair.Key;
+                MultiplayerSessionReservationRequest reservationRequest = keyValuePair.Value;
+
+                MultiplayerSessionReservation reservation = ReservePlayerContext(requestConnection,
+                reservationRequest.PlayerSettings,
+                reservationRequest.AuthenticationContext,
+                reservationRequest.CorrelationId);
+
+                requestConnection.SendPacket(reservation);
             }
         }
 

@@ -8,8 +8,8 @@ namespace NitroxServer.ConsoleCommands
     {
         public PromoteCommand() : base("promote", Perms.MODERATOR, "Sets specific permissions to a user")
         {
-            AddParameter(new TypePlayer("name", true));
-            AddParameter(new TypeEnum<Perms>("perms", true));
+            AddParameter(new TypePlayer("name", true, "The username to change the permissions of"));
+            AddParameter(new TypeEnum<Perms>("perms", true, "Permission level"));
         }
 
         protected override void Execute(CallArgs args)

@@ -1,17 +1,16 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
+using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
     public class Creature_ChooseBestAction_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(Creature);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("ChooseBestAction", BindingFlags.NonPublic | BindingFlags.Instance);
+        public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Creature t) => t.ChooseBestAction());
 
         private static CreatureAction previousAction;
 
@@ -21,7 +20,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
             if (NitroxServiceLocator.LocateService<SimulationOwnership>().HasAnyLockType(id))
             {
-                previousAction = (CreatureAction)typeof(Creature).GetField("prevBestAction", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(__instance);
+                previousAction = __instance.prevBestAction;
                 return true;
             }
 

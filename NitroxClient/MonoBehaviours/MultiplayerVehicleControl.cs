@@ -1,7 +1,6 @@
-﻿using System.Reflection;
+﻿using System;
 using NitroxClient.GameLogic;
 using NitroxClient.Unity.Smoothing;
-using NitroxModel.Helper;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours
@@ -18,6 +17,8 @@ namespace NitroxClient.MonoBehaviours
         protected SmoothVector SmoothVelocity;
         protected SmoothRotation SmoothRotation;
         protected SmoothVector SmoothAngularVelocity;
+        protected Action<float> WheelYawSetter;
+        protected Action<float> WheelPitchSetter;
 
         protected virtual void Awake()
         {
@@ -42,6 +43,9 @@ namespace NitroxClient.MonoBehaviours
             SmoothRotation.FixedUpdate();
             SmoothAngularVelocity.FixedUpdate();
             rigidbody.angularVelocity = MovementHelper.GetCorrectedAngularVelocity(SmoothRotation.Current, SmoothAngularVelocity.Current, gameObject, PlayerMovement.BROADCAST_INTERVAL);
+            
+            WheelYawSetter(SmoothYaw.SmoothValue);
+            WheelPitchSetter(SmoothPitch.SmoothValue);
         }
 
         internal void SetPositionVelocityRotation(Vector3 remotePosition, Vector3 remoteVelocity, Quaternion remoteRotation, Vector3 remoteAngularVelocity)
@@ -70,29 +74,11 @@ namespace NitroxClient.MonoBehaviours
             enabled = true;
         }
 
-        internal virtual void Exit()
+        public virtual void Exit()
         {
             enabled = false;
         }
 
         internal abstract void SetThrottle(bool isOn);
-    }
-
-    public abstract class MultiplayerVehicleControl<T> : MultiplayerVehicleControl
-    {
-
-        private readonly FieldInfo steeringWheelYaw = ReflectionHelper.GetField<T>("steeringWheelYaw");
-        private readonly FieldInfo steeringWheelPitch = ReflectionHelper.GetField<T>("steeringWheelPitch");
-
-        protected T SteeringControl;
-
-        protected override void FixedUpdate()
-        {
-            base.FixedUpdate();
-
-            SteeringControl.ReflectionSet(steeringWheelYaw, SmoothYaw.SmoothValue);
-            SteeringControl.ReflectionSet(steeringWheelPitch, SmoothPitch.SmoothValue);
-
-        }
     }
 }

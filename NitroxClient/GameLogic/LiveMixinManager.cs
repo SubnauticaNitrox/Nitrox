@@ -3,8 +3,6 @@ using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper;
-using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
@@ -52,8 +50,8 @@ namespace NitroxClient.GameLogic
 
                 if (vehicleDockingBay && dealerVehicle)
                 {
-                    if (vehicleDockingBay.GetDockedVehicle() == dealerVehicle || (Vehicle)vehicleDockingBay.ReflectionGet("interpolatingVehicle") == dealerVehicle
-                        || (Vehicle)vehicleDockingBay.ReflectionGet("nearbyVehicle") == dealerVehicle)
+                    if (vehicleDockingBay.GetDockedVehicle() == dealerVehicle || vehicleDockingBay.interpolatingVehicle == dealerVehicle
+                        || vehicleDockingBay.nearbyVehicle == dealerVehicle)
                     {
                         Log.Debug($"Dealer {dealer} is vehicle and currently docked or nearby {reciever}, do not harm it!");
                         return false;

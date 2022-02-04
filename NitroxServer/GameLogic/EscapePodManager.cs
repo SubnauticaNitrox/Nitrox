@@ -11,7 +11,7 @@ namespace NitroxServer.GameLogic
     {
         public const int ESCAPE_POD_X_OFFSET = 40;
 
-        public ThreadSafeCollection<EscapePodModel> EscapePods { get; }
+        public ThreadSafeList<EscapePodModel> EscapePods { get; }
         private readonly ThreadSafeDictionary<ushort, EscapePodModel> escapePodsByPlayerId = new ThreadSafeDictionary<ushort, EscapePodModel>();
         private EscapePodModel podForNextPlayer;
         private readonly string seed;
@@ -20,7 +20,7 @@ namespace NitroxServer.GameLogic
 
         public EscapePodManager(List<EscapePodModel> escapePods, RandomStartGenerator randomStart, string seed)
         {
-            EscapePods = new ThreadSafeCollection<EscapePodModel>(escapePods);
+            EscapePods = new ThreadSafeList<EscapePodModel>(escapePods);
 
             this.seed = seed;
             this.randomStart = randomStart;

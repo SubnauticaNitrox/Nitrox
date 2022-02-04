@@ -1,5 +1,4 @@
 ﻿using NitroxModel.DataStructures.Util;
-using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.ConsoleCommands.Processor;

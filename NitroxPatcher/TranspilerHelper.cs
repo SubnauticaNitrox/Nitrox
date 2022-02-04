@@ -6,13 +6,14 @@ using System.Reflection.Emit;
 using HarmonyLib;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
+using NitroxModel.Helper;
 
 namespace NitroxPatcher
 {
-    static class TranspilerHelper
+    internal static class TranspilerHelper
     {
         private static readonly MethodInfo serviceLocator = typeof(NitroxServiceLocator)
-            .GetMethod("LocateService", BindingFlags.Static | BindingFlags.Public, null, new Type[] { }, null);
+            .GetMethod(nameof(NitroxServiceLocator.LocateService), BindingFlags.Static | BindingFlags.Public, null, new Type[] { }, null);
 
         public static CodeInstruction LocateService<T>()
         {
@@ -32,7 +33,7 @@ namespace NitroxPatcher
         /// <returns></returns>
         public static IEnumerable<CodeInstruction> IsMultiplayer(Label jmpLabel, ILGenerator generator)
         {
-            yield return new CodeInstruction(OpCodes.Callvirt, typeof(Multiplayer).GetProperty("Active", BindingFlags.Public | BindingFlags.Static).GetGetMethod());
+            yield return new CodeInstruction(OpCodes.Callvirt,  Reflect.Property(() => Multiplayer.Active).GetMethod);
             yield return new CodeInstruction(OpCodes.Brfalse, jmpLabel); // If false jump to the end of the code block
         }
 
@@ -44,7 +45,7 @@ namespace NitroxPatcher
         /// <returns></returns>
         public static IEnumerable<CodeInstruction> IsNotMultiplayer(Label jmpLabel, ILGenerator generator)
         {
-            yield return new CodeInstruction(OpCodes.Callvirt, typeof(Multiplayer).GetProperty("Active", BindingFlags.Public | BindingFlags.Static).GetGetMethod());
+            yield return new CodeInstruction(OpCodes.Callvirt, Reflect.Property(() => Multiplayer.Active).GetMethod);
             yield return new CodeInstruction(OpCodes.Brtrue, jmpLabel); // If true jump to the end of the code block
         }
 

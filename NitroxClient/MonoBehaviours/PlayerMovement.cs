@@ -3,7 +3,7 @@ using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper;
+using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.Helper;
 using UnityEngine;
 
@@ -50,6 +50,11 @@ namespace NitroxClient.MonoBehaviours
                     currentPosition = undoVehicleAngle * currentPosition;
                     bodyRotation = undoVehicleAngle * bodyRotation;
                     aimingRotation = undoVehicleAngle * aimingRotation;
+                    if (Player.main.isPiloting && subRoot.isCyclops)
+                    {
+                        // In case you're driving the cyclops, the currentPosition is the real position of the player, so we need to send it to the server
+                        vehicle.Value.DriverPosition = currentPosition.ToDto();
+                    }
                 }
 
                 localPlayer.UpdateLocation(currentPosition, playerVelocity, bodyRotation, aimingRotation, vehicle);
@@ -85,8 +90,8 @@ namespace NitroxClient.MonoBehaviours
                 angularVelocity = rigidbody.angularVelocity;
 
                 // Required because vehicle is either a SeaMoth or an Exosuit, both types which can't see the fields either.
-                steeringWheelYaw = (float)vehicle.ReflectionGet<Vehicle, Vehicle>("steeringWheelYaw");
-                steeringWheelPitch = (float)vehicle.ReflectionGet<Vehicle, Vehicle>("steeringWheelPitch");
+                steeringWheelYaw = vehicle.steeringWheelYaw;
+                steeringWheelPitch = vehicle.steeringWheelPitch;
 
                 // Vehicles (or the SeaMoth at least) do not have special throttle animations. Instead, these animations are always playing because the player can't even see them (unlike the cyclops which has cameras).
                 // So, we need to hack in and try to figure out when thrust needs to be applied.
@@ -102,10 +107,10 @@ namespace NitroxClient.MonoBehaviours
                         Exosuit exosuit = vehicle as Exosuit;
                         if (exosuit)
                         {
-                            appliedThrottle = (bool)exosuit.ReflectionGet("_jetsActive") && (float)exosuit.ReflectionGet("thrustPower") > 0f;
+                            appliedThrottle = exosuit._jetsActive && exosuit.thrustPower > 0f;
 
-                            Transform leftAim = (Transform)exosuit.ReflectionGet("aimTargetLeft", true);
-                            Transform rightAim = (Transform)exosuit.ReflectionGet("aimTargetRight", true);
+                            Transform leftAim = exosuit.aimTargetLeft;
+                            Transform rightAim = exosuit.aimTargetRight;
 
                             Vector3 eulerAngles = exosuit.transform.eulerAngles;
                             eulerAngles.x = MainCamera.camera.transform.eulerAngles.x;
@@ -128,9 +133,9 @@ namespace NitroxClient.MonoBehaviours
                 techType = TechType.Cyclops;
 
                 SubControl subControl = sub.GetComponent<SubControl>();
-                steeringWheelYaw = (float)subControl.ReflectionGet("steeringWheelYaw");
-                steeringWheelPitch = (float)subControl.ReflectionGet("steeringWheelPitch");
-                appliedThrottle = subControl.appliedThrottle && (bool)subControl.ReflectionGet("canAccel");
+                steeringWheelYaw = subControl.steeringWheelYaw;
+                steeringWheelPitch = subControl.steeringWheelPitch;
+                appliedThrottle = subControl.appliedThrottle && subControl.canAccel;
             }
             else
             {

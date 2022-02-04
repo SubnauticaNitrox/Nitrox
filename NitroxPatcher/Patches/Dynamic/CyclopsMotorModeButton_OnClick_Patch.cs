@@ -1,10 +1,8 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
-using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 
@@ -12,17 +10,16 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class CyclopsMotorModeButton_OnClick_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(CyclopsMotorModeButton);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("OnClick", BindingFlags.Public | BindingFlags.Instance);
+        public static readonly MethodInfo TARGET_METHOD = Reflect.Method((CyclopsMotorModeButton t) => t.OnClick());
 
         public static bool Prefix(CyclopsMotorModeButton __instance, out bool __state)
         {
-            SubRoot cyclops = (SubRoot)__instance.ReflectionGet("subRoot");
+            SubRoot cyclops = __instance.subRoot;
             if (cyclops != null && cyclops == Player.main.currentSub)
             {
                 CyclopsHelmHUDManager cyclops_HUD = cyclops.gameObject.RequireComponentInChildren<CyclopsHelmHUDManager>();
                 // To show the Cyclops HUD every time "hudActive" have to be true. "hornObject" is a good indicator to check if the player piloting the cyclops.
-                if ((bool)cyclops_HUD.ReflectionGet("hudActive"))
+                if (cyclops_HUD.hudActive)
                 {
                     __state = cyclops_HUD.hornObject.activeSelf;
                     return cyclops_HUD.hornObject.activeSelf;
@@ -37,9 +34,9 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             if (__state)
             {
-                SubRoot cyclops = (SubRoot)__instance.ReflectionGet("subRoot");
+                SubRoot cyclops = __instance.subRoot;
                 NitroxId id = NitroxEntity.GetId(cyclops.gameObject);
-                NitroxServiceLocator.LocateService<Cyclops>().BroadcastChangeEngineMode(id, __instance.motorModeIndex);
+                Resolve<Cyclops>().BroadcastChangeEngineMode(id, __instance.motorModeIndex);
             }
         }
 

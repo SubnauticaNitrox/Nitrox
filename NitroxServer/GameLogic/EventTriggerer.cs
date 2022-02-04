@@ -2,57 +2,77 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Timers;
-using NitroxModel.Logger;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 
 namespace NitroxServer.GameLogic
 {
     public class EventTriggerer
     {
-        private readonly Dictionary<string, Timer> eventTimers = new();
+        internal readonly Dictionary<string, Timer> eventTimers = new();
         private readonly Stopwatch stopWatch = new();
         private readonly PlayerManager playerManager;
 
-        public double ElapsedTime;
-        public double AuroraExplosionTime;
+        public readonly double AuroraExplosionTimeMs;
+
+        private double elapsedTimeOutsideStopWatchMs;
+
+        public double ElapsedTimeMs
+        {
+            get => stopWatch.ElapsedMilliseconds + elapsedTimeOutsideStopWatchMs;
+            internal set
+            {
+                foreach (Timer timer in eventTimers.Values)
+                {
+                    timer.Interval = Math.Max(1, timer.Interval - (value - ElapsedTimeMs));
+                }
+                elapsedTimeOutsideStopWatchMs = value - stopWatch.ElapsedMilliseconds;
+            }
+        }
+
+        public double ElapsedSeconds
+        {
+            get => ElapsedTimeMs * 0.001;
+            private set => ElapsedTimeMs = value * 1000;
+        }
+
+        // Using ceiling because days count start at 1 and not 0
+        public int Day
+        {
+            get => (int) Math.Ceiling(ElapsedTimeMs / TimeSpan.FromMinutes(20).TotalMilliseconds);
+        }
 
         public EventTriggerer(PlayerManager playerManager, double elapsedTime, double? auroraExplosionTime)
         {
             this.playerManager = playerManager;
-            SetupEventTimers(elapsedTime, auroraExplosionTime);
-        }
+            // Default time in Base SN is 480s
+            elapsedTimeOutsideStopWatchMs = elapsedTime == 0 ? TimeSpan.FromMinutes(8).TotalMilliseconds : elapsedTime;
 
-        private void SetupEventTimers(double elapsedTime, double? auroraExplosionTime)
-        {
-            // eventually this should be on a better timer so it can be saved, paused, etc
-            Log.Debug("Event Triggerer started!");
+            Log.Debug($"Event Triggerer started! ElapsedTime={Math.Floor(ElapsedSeconds)}s");
 
-            ElapsedTime = elapsedTime;
-            if (auroraExplosionTime.HasValue)
-            {
-                AuroraExplosionTime = auroraExplosionTime.Value;
-            }
-            else
-            {
-                AuroraExplosionTime = RandomNumber(2.3d, 4d) * 1200d * 1000d; //Time.deltaTime returns seconds so we need to multiply 1000
-            }
+            // The timer interval is in milliseconds, and so the AuroraExplosionTime should be
+            AuroraExplosionTimeMs = auroraExplosionTime ?? elapsedTimeOutsideStopWatchMs + RandomNumber(2.3d, 4d) * 1200d * 1000d;
 
-            CreateTimer(AuroraExplosionTime * 0.2d - ElapsedTime, StoryEventSend.EventType.PDA, "Story_AuroraWarning1");
-            CreateTimer(AuroraExplosionTime * 0.5d - ElapsedTime, StoryEventSend.EventType.PDA, "Story_AuroraWarning2");
-            CreateTimer(AuroraExplosionTime * 0.8d - ElapsedTime, StoryEventSend.EventType.PDA, "Story_AuroraWarning3");
-            CreateTimer(AuroraExplosionTime - ElapsedTime, StoryEventSend.EventType.PDA, "Story_AuroraWarning4");
-            CreateTimer(AuroraExplosionTime + 24000 - ElapsedTime, StoryEventSend.EventType.EXTRA, "Story_AuroraExplosion");
-            //like the timers, except we can see how much time has passed
+            CreateTimer(AuroraExplosionTimeMs * 0.2d - ElapsedTimeMs, StoryEventSend.EventType.PDA_EXTRA, "Story_AuroraWarning1");
+            CreateTimer(AuroraExplosionTimeMs * 0.5d - ElapsedTimeMs, StoryEventSend.EventType.PDA_EXTRA, "Story_AuroraWarning2");
+            CreateTimer(AuroraExplosionTimeMs * 0.8d - ElapsedTimeMs, StoryEventSend.EventType.PDA_EXTRA, "Story_AuroraWarning3");
+            // Story_AuroraWarning4 and Story_AuroraExplosion must occur at the same time
+            CreateTimer(AuroraExplosionTimeMs - ElapsedTimeMs, StoryEventSend.EventType.PDA_EXTRA, "Story_AuroraWarning4");
+            CreateTimer(AuroraExplosionTimeMs - ElapsedTimeMs, StoryEventSend.EventType.EXTRA, "Story_AuroraExplosion");
 
             stopWatch.Start();
         }
 
-        private Timer CreateTimer(double time, StoryEventSend.EventType eventType, string key)
+        /// <summary>
+        /// When starting the server, if some events already happened, the time parameter will be &lt; 0
+        /// in which case we don't want to create the timer
+        /// </summary>
+        /// <param name="time">In milliseconds</param>
+        private void CreateTimer(double time, StoryEventSend.EventType eventType, string key)
         {
-            //if timeOffset goes past the time
             if (time <= 0)
             {
-                return null;
+                return;
             }
 
             Timer timer = new()
@@ -63,30 +83,18 @@ namespace NitroxServer.GameLogic
             };
             timer.Elapsed += delegate
             {
+                eventTimers.Remove(key);
                 Log.Info($"Triggering event type {eventType} at time {time} with param {key}");
                 playerManager.SendPacketToAllPlayers(new StoryEventSend(eventType, key));
             };
 
-            if (!eventTimers.ContainsKey(key))
-            {
-                eventTimers.Add(key, timer);
-            }
-            return timer;
+            eventTimers.Add(key, timer);
         }
 
         private double RandomNumber(double min, double max)
         {
             Random random = new Random();
             return random.NextDouble() * (max - min) + min;
-        }
-
-        public double GetRealElapsedTime()
-        {
-            if (stopWatch == null)
-            {
-                return ElapsedTime;
-            }
-            return stopWatch.ElapsedMilliseconds + ElapsedTime;
         }
 
         public void StartWorldTime()
@@ -118,6 +126,44 @@ namespace NitroxServer.GameLogic
             {
                 eventTimer.Stop();
             }
+        }
+
+        /// <summary>
+        /// Send the current time (in seconds) to all players or only one player
+        /// </summary>
+        public void SendCurrentTimePacket(bool initialSync, Optional<Player> player)
+        {
+            if (player.HasValue)
+            {
+                player.Value.SendPacket(new TimeChange(ElapsedSeconds, initialSync));
+            }
+            else
+            {
+                playerManager.SendPacketToAllPlayers(new TimeChange(ElapsedSeconds, initialSync));
+            }
+        }
+
+        public void ChangeTime(TimeModification type)
+        {
+            switch (type)
+            {
+                case TimeModification.DAY:
+                    ElapsedTimeMs += 1200000.0 - ElapsedTimeMs % 1200000.0 + 600000.0;
+                    break;
+                case TimeModification.NIGHT:
+                    ElapsedTimeMs += 1200000.0 - ElapsedTimeMs % 1200000.0;
+                    break;
+                case TimeModification.SKIP:
+                    ElapsedTimeMs += 600000.0 - ElapsedTimeMs % 600000.0;
+                    break;
+            }
+
+            SendCurrentTimePacket(false, Optional.Empty);
+        }
+
+        public enum TimeModification
+        {
+            DAY, NIGHT, SKIP
         }
     }
 }

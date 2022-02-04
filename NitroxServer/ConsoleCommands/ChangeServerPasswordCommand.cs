@@ -1,5 +1,4 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Logger;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
 using NitroxServer.Serialization;
@@ -12,7 +11,7 @@ namespace NitroxServer.ConsoleCommands
 
         public ChangeServerPasswordCommand(ServerConfig serverConfig) : base("changeserverpassword", Perms.ADMIN, "Changes server password. Clear it without argument")
         {
-            AddParameter(new TypeString("password", false));
+            AddParameter(new TypeString("password", false, "The new server password"));
 
             this.serverConfig = serverConfig;
         }

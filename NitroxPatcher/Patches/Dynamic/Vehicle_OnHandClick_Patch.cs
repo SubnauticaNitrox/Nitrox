@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.HUD;
@@ -7,16 +6,15 @@ using NitroxClient.GameLogic.Simulation;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
-using NitroxModel.Logger;
+using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
     public class Vehicle_OnHandClick_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(Vehicle);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("OnHandClick", BindingFlags.Public | BindingFlags.Instance);
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Vehicle t) => t.OnHandClick(default(GUIHand)));
 
-        private static bool skipPrefix = false;
+        private static bool skipPrefix;
 
         public static bool Prefix(Vehicle __instance, GUIHand hand)
         {
@@ -35,8 +33,8 @@ namespace NitroxPatcher.Patches.Dynamic
                 return true;
             }
 
-            HandInteraction<Vehicle> context = new HandInteraction<Vehicle>(__instance, hand);
-            LockRequest<HandInteraction<Vehicle>> lockRequest = new LockRequest<HandInteraction<Vehicle>>(id, SimulationLockType.EXCLUSIVE, ReceivedSimulationLockResponse, context);
+            HandInteraction<Vehicle> context = new(__instance, hand);
+            LockRequest<HandInteraction<Vehicle>> lockRequest = new(id, SimulationLockType.EXCLUSIVE, ReceivedSimulationLockResponse, context);
 
             simulationOwnership.RequestSimulationLock(lockRequest);
 
@@ -50,7 +48,7 @@ namespace NitroxPatcher.Patches.Dynamic
             if (lockAquired)
             {
                 skipPrefix = true;
-                TARGET_METHOD.Invoke(vehicle, new[] { context.GuiHand });
+                vehicle.OnHandClick(context.GuiHand);
                 skipPrefix = false;
             }
             else

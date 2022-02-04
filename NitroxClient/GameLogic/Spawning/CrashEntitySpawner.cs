@@ -20,7 +20,7 @@ namespace NitroxClient.GameLogic.Spawning
                 GameObject gameObject = Object.Instantiate(crashHome.crashPrefab, Vector3.zero, Quaternion.Euler(-90f, 0f, 0f));
                 gameObject.transform.SetParent(crashHome.transform, false);
                 NitroxEntity.SetNewId(gameObject, entity.Id);
-                crashHome.ReflectionSet("crash", gameObject.GetComponent<Crash>());
+                crashHome.crash = gameObject.GetComponent<Crash>();
             }
 
             return Optional.Empty;

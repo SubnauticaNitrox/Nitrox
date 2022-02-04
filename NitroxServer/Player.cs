@@ -12,12 +12,12 @@ namespace NitroxServer
 {
     public class Player : IProcessorContext
     {
-        private readonly ThreadSafeCollection<EquippedItemData> equippedItems;
-        private readonly ThreadSafeCollection<EquippedItemData> modules;
-        private readonly ThreadSafeCollection<AbsoluteEntityCell> visibleCells;
+        private readonly ThreadSafeList<EquippedItemData> equippedItems;
+        private readonly ThreadSafeList<EquippedItemData> modules;
+        private readonly ThreadSafeSet<AbsoluteEntityCell> visibleCells;
 
-        public ThreadSafeCollection<NitroxTechType> UsedItems { get; }
-        public ThreadSafeCollection<string> QuickSlotsBinding { get; set; }
+        public ThreadSafeList<NitroxTechType> UsedItems { get; }
+        public ThreadSafeList<string> QuickSlotsBinding { get; set; }
 
         public NitroxConnection Connection { get; set; }
         public PlayerSettings PlayerSettings => PlayerContext.PlayerSettings;
@@ -32,11 +32,12 @@ namespace NitroxServer
         public PlayerStatsData Stats { get; set; }
         public NitroxVector3? LastStoredPosition { get; set; }
         public Optional<NitroxId> LastStoredSubRootID { get; set; }
+        public ThreadSafeSet<string> CompletedGoals { get; }
 
         public Player(ushort id, string name, bool isPermaDeath, PlayerContext playerContext, NitroxConnection connection,
                       NitroxVector3 position, NitroxId playerId, Optional<NitroxId> subRootId, Perms perms, PlayerStatsData stats,
                       IEnumerable<NitroxTechType> usedItems, IEnumerable<string> quickSlotsBinding,
-                      IEnumerable<EquippedItemData> equippedItems, IEnumerable<EquippedItemData> modules)
+                      IEnumerable<EquippedItemData> equippedItems, IEnumerable<EquippedItemData> modules, HashSet<string> completedGoals)
         {
             Id = id;
             Name = name;
@@ -50,11 +51,12 @@ namespace NitroxServer
             Stats = stats;
             LastStoredPosition = null;
             LastStoredSubRootID = Optional.Empty;
-            UsedItems = new ThreadSafeCollection<NitroxTechType>(usedItems);
-            QuickSlotsBinding = new ThreadSafeCollection<string>(quickSlotsBinding);
-            this.equippedItems = new ThreadSafeCollection<EquippedItemData>(equippedItems);
-            this.modules = new ThreadSafeCollection<EquippedItemData>(modules);
-            visibleCells = new ThreadSafeCollection<AbsoluteEntityCell>(new HashSet<AbsoluteEntityCell>(), false);
+            UsedItems = new ThreadSafeList<NitroxTechType>(usedItems);
+            QuickSlotsBinding = new ThreadSafeList<string>(quickSlotsBinding);
+            this.equippedItems = new ThreadSafeList<EquippedItemData>(equippedItems);
+            this.modules = new ThreadSafeList<EquippedItemData>(modules);
+            visibleCells = new ThreadSafeSet<AbsoluteEntityCell>();
+            CompletedGoals = new ThreadSafeSet<string>(completedGoals);
         }
 
         public static bool operator ==(Player left, Player right)

@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
-using NitroxModel.Helper;
-using NitroxModel.Logger;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Bases
@@ -15,11 +13,11 @@ namespace NitroxClient.GameLogic.Bases
      */
     public class GeometryRespawnManager
     {
-        public static Dictionary<string, NitroxId> NitroxIdByObjectKey = new Dictionary<string, NitroxId>();
+        public static readonly Dictionary<string, NitroxId> NitroxIdByObjectKey = new();
 
         public void GeometryClearedForBase(Base baseObj)
         {
-            Transform[] cellObjects = (Transform[])baseObj.ReflectionGet("cellObjects");
+            Transform[] cellObjects = baseObj.cellObjects;
 
             if (cellObjects == null)
             {
