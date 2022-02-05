@@ -30,19 +30,24 @@ namespace NitroxClient.MonoBehaviours
             {
                 time = 0;
 
+                // Freecam does disable main camera control
+                if (!MainCameraControl.main.isActiveAndEnabled)
+                {
+                    return;
+                }
+
                 Vector3 currentPosition = Player.main.transform.position;
                 Vector3 playerVelocity = Player.main.playerController.velocity;
 
                 // IDEA: possibly only CameraRotation is of interest, because bodyrotation is extracted from that.
-                // WARN: Using camera rotation may be dangerous, when the drone is used for instance (but then movement packets shouldn't be sent either so it's not even relevant...)
-
                 Quaternion bodyRotation = MainCameraControl.main.viewModel.transform.rotation;
                 Quaternion aimingRotation = Player.main.camRoot.GetAimingTransform().rotation;
 
                 Optional<VehicleMovementData> vehicle = GetVehicleMovement();
                 SubRoot subRoot = Player.main.GetCurrentSub();
+
                 // If in a subroot the position will be relative to the subroot
-                if (subRoot != null && !subRoot.isBase)
+                if (subRoot && !subRoot.isBase)
                 {
                     // Rotate relative player position relative to the subroot (else there are problems with respawning)
                     Quaternion undoVehicleAngle = subRoot.transform.rotation.GetInverse();
@@ -50,6 +55,7 @@ namespace NitroxClient.MonoBehaviours
                     currentPosition = undoVehicleAngle * currentPosition;
                     bodyRotation = undoVehicleAngle * bodyRotation;
                     aimingRotation = undoVehicleAngle * aimingRotation;
+
                     if (Player.main.isPiloting && subRoot.isCyclops)
                     {
                         // In case you're driving the cyclops, the currentPosition is the real position of the player, so we need to send it to the server
@@ -72,12 +78,12 @@ namespace NitroxClient.MonoBehaviours
             Vector3 velocity;
             Vector3 angularVelocity;
             TechType techType;
-            float steeringWheelYaw = 0f, steeringWheelPitch = 0f;
             bool appliedThrottle = false;
-            Vector3 leftArmPosition = new Vector3(0, 0, 0);
-            Vector3 rightArmPosition = new Vector3(0, 0, 0);
+            Vector3 leftArmPosition = new(0, 0, 0);
+            Vector3 rightArmPosition = new(0, 0, 0);
+            float steeringWheelYaw = 0f, steeringWheelPitch = 0f;
 
-            if (vehicle != null)
+            if (vehicle)
             {
                 id = NitroxEntity.GetId(vehicle.gameObject);
                 position = vehicle.gameObject.transform.position;
@@ -122,7 +128,7 @@ namespace NitroxClient.MonoBehaviours
                     }
                 }
             }
-            else if (sub != null && Player.main.isPiloting)
+            else if (sub && Player.main.isPiloting)
             {
                 id = NitroxEntity.GetId(sub.gameObject);
                 position = sub.gameObject.transform.position;
@@ -142,18 +148,21 @@ namespace NitroxClient.MonoBehaviours
                 return Optional.Empty;
             }
 
-            VehicleMovementData model = VehicleMovementFactory.GetVehicleMovementData(techType,
-                                                                                        id,
-                                                                                        position,
-                                                                                        rotation,
-                                                                                        velocity,
-                                                                                        angularVelocity,
-                                                                                        steeringWheelYaw,
-                                                                                        steeringWheelPitch,
-                                                                                        appliedThrottle,
-                                                                                        leftArmPosition,
-                                                                                        rightArmPosition);
-            return Optional.Of(model);
+            return Optional.Of(
+                    VehicleMovementFactory.GetVehicleMovementData(
+                        techType,
+                        id,
+                        position,
+                        rotation,
+                        velocity,
+                        angularVelocity,
+                        steeringWheelYaw,
+                        steeringWheelPitch,
+                        appliedThrottle,
+                        leftArmPosition,
+                        rightArmPosition
+                    )
+            );
         }
     }
 }
