@@ -73,9 +73,12 @@ namespace NitroxModel.Platforms.Store
                 throw new PlatformException(Instance, "Timeout reached while waiting for platform to start. Try again once platform has finished loading.", ex);
             }
 
+            string pathToSteamExe = GetExeFile();
+            launchArguments = "-applaunch " + steamAppId.ToString() + " -nitrox " + NitroxUser.LauncherPath + " " + launchArguments; // revise launchArguments with -applaunch and -nitrox
+
             return ProcessEx.Start(
-                    pathToGameExe,
-                    new[] { ("SteamGameId", steamAppId.ToString()), ("SteamAppID", steamAppId.ToString()), (NitroxUser.LAUNCHER_PATH_ENV_KEY, NitroxUser.LauncherPath) },
+                    pathToSteamExe,
+                    new[] { ("SteamGameId", steamAppId.ToString()), ("SteamAppID", steamAppId.ToString()) },
                     Path.GetDirectoryName(pathToGameExe),
                     launchArguments
             );
