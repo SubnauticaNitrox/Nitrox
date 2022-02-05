@@ -85,8 +85,8 @@ namespace NitroxClient.GameLogic
             playerModelManager.RegisterEquipmentVisibilityHandler(PlayerModel);
             UpdateEquipmentVisibility();
 
-            // Add a FMODEmitterController to it so that it can play the bubbles effect
-            SetupBubblesEmitter(fmodSystem);
+            // Add a FMODEmitterController to it so that it can play the bubbles effect            
+            SetupPlayerSounds(fmodSystem);
 
             ErrorMessage.AddMessage($"{PlayerName} joined the game.");
         }
@@ -272,16 +272,49 @@ namespace NitroxClient.GameLogic
             playerModelManager.UpdateEquipmentVisibility(new ReadOnlyCollection<TechType>(equipment.ToList()));
         }
 
-        private void SetupBubblesEmitter(FMODSystem fmodSystem)
+        private void SetupPlayerSounds(FMODSystem fmodSystem)
         {
-            FMODEmitterController bubblesEmitterController = Body.AddComponent<FMODEmitterController>();
-            FMOD_CustomEmitter bubblesCustomEmitter = Body.AddComponent<FMOD_CustomEmitter>();
+            GameObject remotePlayerSoundsGO = new("RemotePlayerSounds");
+            FMODEmitterController emitterController = Body.AddComponent<FMODEmitterController>();
+            SetupBubblesEmitter(fmodSystem, emitterController, remotePlayerSoundsGO);
+            SetupBreathingEmitter(fmodSystem, emitterController, remotePlayerSoundsGO);
+            SetupStartFreediveSplashEmitter(fmodSystem, emitterController, remotePlayerSoundsGO);
+            remotePlayerSoundsGO.transform.SetParent(Body.transform);
+        }
+
+        private void SetupBubblesEmitter(FMODSystem fmodSystem, FMODEmitterController emitterController, GameObject parent)
+        {
+            FMOD_CustomEmitter bubblesCustomEmitter = parent.AddComponent<FMOD_CustomEmitter>();
             GameObject ownBubblesGO = Player.main.GetComponentInChildren<PlayerBreathBubbles>().gameObject;
             bubblesCustomEmitter.asset = ownBubblesGO.GetComponent<FMOD_CustomEmitter>().asset;
             if (fmodSystem.TryGetSoundData(bubblesCustomEmitter.asset.path, out SoundData soundData) && soundData.IsWhitelisted)
             {
-                bubblesEmitterController.AddEmitter(bubblesCustomEmitter.asset.path, bubblesCustomEmitter, soundData.SoundRadius);
+                emitterController.AddEmitter(bubblesCustomEmitter.asset.path, bubblesCustomEmitter, soundData.SoundRadius);
                 Log.Debug($"Successfully set up the bubbles emitter of player {PlayerContext.PlayerName}");
+            }
+        }
+
+        private void SetupBreathingEmitter(FMODSystem fmodSystem, FMODEmitterController emitterController, GameObject parent)
+        {
+            FMOD_CustomEmitter breathingSoundCustomEmitter = parent.AddComponent<FMOD_CustomEmitter>();
+            BreathingSound breathingSound = Player.main.GetComponentInChildren<BreathingSound>();
+            breathingSoundCustomEmitter.asset = breathingSound.loopingBreathingSound.asset;
+            if (fmodSystem.TryGetSoundData(breathingSoundCustomEmitter.asset.path, out SoundData soundData) && soundData.IsWhitelisted)
+            {
+                emitterController.AddEmitter(breathingSoundCustomEmitter.asset.path, breathingSoundCustomEmitter, soundData.SoundRadius);
+                Log.Debug($"Successfully set up the breathing emitter of player {PlayerContext.PlayerName}");
+            }
+        }
+
+        private void SetupStartFreediveSplashEmitter(FMODSystem fmodSystem, FMODEmitterController emitterController, GameObject parent)
+        {
+            FMOD_CustomEmitter freediveStartCustomEmitter = parent.AddComponent<FMOD_CustomEmitter>();
+            WaterAmbience waterAmbience = Player.main.GetComponentInChildren<WaterAmbience>();
+            freediveStartCustomEmitter.asset = waterAmbience.diveStartSplash.asset;
+            if (fmodSystem.TryGetSoundData(freediveStartCustomEmitter.asset.path, out SoundData soundData) && soundData.IsWhitelisted)
+            {
+                emitterController.AddEmitter(freediveStartCustomEmitter.asset.path, freediveStartCustomEmitter, soundData.SoundRadius);
+                Log.Debug($"Successfully set up the freedive splash emitter of player {PlayerContext.PlayerName}");
             }
         }
     }
