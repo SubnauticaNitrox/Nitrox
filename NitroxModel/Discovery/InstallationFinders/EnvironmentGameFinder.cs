@@ -5,13 +5,13 @@ using System.IO;
 namespace NitroxModel.Discovery.InstallationFinders
 {
     /// <summary>
-    ///     Trying to find the path in environment variables by the key SubnauticaInstallationPath that contains the installation directory of Subnautica.
+    ///     Trying to find the path in environment variables by the key SUBNAUTICA_INSTALLATION_PATH that contains the installation directory of Subnautica.
     /// </summary>
     public class EnvironmentGameFinder : IFindGameInstallation
     {
         public string FindGame(IList<string> errors = null)
         {
-            string path = Environment.GetEnvironmentVariable("SubnauticaInstallationPath");
+            string path = Environment.GetEnvironmentVariable("SUBNAUTICA_INSTALLATION_PATH");
             if (string.IsNullOrEmpty(path))
             {
                 errors?.Add(@"Configured game path was found empty. Please enter the path to the Subnautica installation.");
