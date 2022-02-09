@@ -16,6 +16,11 @@ namespace NitroxServer.GameLogic.Items
             inventoryItemsById = new ThreadSafeDictionary<NitroxId, ItemData>(inventoryItems.ToDictionary(item => item.ItemId), false);
             storageSlotItemsByContainerId = new ThreadSafeDictionary<NitroxId, ItemData>(storageSlotItems.ToDictionary(item => item.ContainerId), false);
             modulesById = new ThreadSafeDictionary<NitroxId, EquippedItemData>(modules.ToDictionary(module => module.ItemId), false);
+            Log.Debug($"Create InventoryManager with {modules.Count} modules");
+            foreach (EquippedItemData module in modules)
+            {
+                Log.Debug($"Module {module.ItemId} in container {module.ContainerId} with slot {module.Slot}");
+            }
         }
 
         public void InventoryItemAdded(ItemData itemData)
@@ -52,6 +57,7 @@ namespace NitroxServer.GameLogic.Items
         public void ModuleAdded(EquippedItemData itemData)
         {
             modulesById[itemData.ItemId] = itemData;
+            Log.Debug($"Received module {itemData.ItemId} to container {itemData.ContainerId} and slot {itemData.Slot}. Total modules: {modulesById.Count}");
         }
 
         public bool ModuleRemoved(NitroxId ownerId)
