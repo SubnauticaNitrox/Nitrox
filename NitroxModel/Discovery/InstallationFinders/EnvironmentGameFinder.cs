@@ -1,8 +1,8 @@
-﻿namespace NitroxModel.Discovery.InstallationFinders;
-
 using System;
 using System.Collections.Generic;
 using System.IO;
+
+namespace NitroxModel.Discovery.InstallationFinders;
 
 /// <summary>
 ///     Trying to find the path in environment variables by the key SUBNAUTICA_INSTALLATION_PATH that contains the installation directory of Subnautica.
