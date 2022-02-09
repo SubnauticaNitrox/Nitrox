@@ -607,7 +607,7 @@ event:/sub/drone/motor_loop;false;false;0
 event:/sub/exo/claw_hit_fish;true;true;20
 event:/sub/exo/claw_hit_terain;true;true;20
 event:/sub/exo/claw_pickup;true;true;20
-event:/sub/exo/claw_punch;true;true;20
+event:/sub/exo/claw_punch;false;false;20
 event:/sub/exo/dock_exo_cyclops;false;false;0
 event:/sub/exo/dock_exo_moonpool;false;false;0
 event:/sub/exo/drill_hit_loop;true;true;20
@@ -618,7 +618,7 @@ event:/sub/exo/hook_loop;true;true;20
 event:/sub/exo/hook_shoot;true;true;20
 event:/sub/exo/interior_loop;false;false;0
 event:/sub/exo/jets_empty;false;false;0
-event:/sub/exo/jets_loop;true;true;50
+event:/sub/exo/jets_loop;false;false;50
 event:/sub/exo/jump;true;true;50
 event:/sub/exo/land;true;true;50
 event:/sub/exo/step;false;false;50
