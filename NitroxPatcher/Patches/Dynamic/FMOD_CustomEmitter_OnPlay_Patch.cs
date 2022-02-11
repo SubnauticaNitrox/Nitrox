@@ -12,7 +12,6 @@ public class FMOD_CustomEmitter_OnPlay_Patch : NitroxPatch, IDynamicPatch
 {
     private static readonly MethodInfo TARGET_METHOD = Reflect.Method((FMOD_CustomEmitter t) => t.OnPlay());
 
-
     public static void Postfix(FMOD_CustomEmitter __instance)
     {
         if (!Resolve<FMODSystem>().IsWhitelisted(__instance.asset.path, out bool isGlobal, out float radius))
@@ -48,6 +47,6 @@ public class FMOD_CustomEmitter_OnPlay_Patch : NitroxPatch, IDynamicPatch
 
     public override void Patch(Harmony harmony)
     {
-        PatchMultiple(harmony, TARGET_METHOD, prefix: true, postfix: true);
+        PatchPostfix(harmony, TARGET_METHOD);
     }
 }
