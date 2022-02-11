@@ -11,8 +11,26 @@ namespace NitroxPatcher.Patches.Dynamic
     {
         private static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => FMODUWE.PlayOneShotImpl(default(string), default(Vector3), default(float)));
 
-        public static void Postfix(string eventPath, Vector3 position, float volume)
+        public static void Prefix(string eventPath, Vector3 position, ref bool __runOriginal)
         {
+            if (Resolve<FMODSystem>().TryGetSoundData(eventPath, out SoundData soundData))
+            {
+                if (Vector3.Distance(Player.main.transform.position, position) >= soundData.SoundRadius)
+                {
+                    __runOriginal = false;
+                    return;
+                }
+            }
+            __runOriginal = true;
+        }
+
+        public static void Postfix(string eventPath, Vector3 position, float volume, bool __runOriginal)
+        {
+            if (!__runOriginal)
+            {
+                return;
+            }
+
             if (Resolve<FMODSystem>().IsWhitelisted(eventPath, out bool isGlobal, out float radius))
             {
                 Resolve<FMODSystem>().PlayAsset(eventPath, position.ToDto(), volume, radius, isGlobal);
@@ -21,7 +39,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public override void Patch(Harmony harmony)
         {
-            PatchMultiple(harmony, TARGET_METHOD, prefix:true, postfix:true);
+            PatchMultiple(harmony, TARGET_METHOD, prefix: true, postfix: true);
         }
     }
 }
