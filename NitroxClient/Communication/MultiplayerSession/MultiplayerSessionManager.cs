@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession.ConnectionState;
@@ -13,7 +13,7 @@ namespace NitroxClient.Communication.MultiplayerSession
 {
     public class MultiplayerSessionManager : IMultiplayerSession, IMultiplayerSessionConnectionContext
     {
-        private readonly HashSet<Type> suppressedPacketsTypes = new HashSet<Type>();
+        internal readonly HashSet<Type> suppressedPacketsTypes = new();
 
         public IClient Client { get; }
         public string IpAddress { get; private set; }
@@ -123,6 +123,16 @@ namespace NitroxClient.Communication.MultiplayerSession
         public PacketSuppressor<T> Suppress<T>()
         {
             return new PacketSuppressor<T>(suppressedPacketsTypes);
+        }
+
+        public SoundPacketSuppressor SuppressSounds()
+        {
+            return new SoundPacketSuppressor(suppressedPacketsTypes);
+        }
+
+        public PacketUnsuppressor<T> Unsuppress<T>()
+        {
+            return new PacketUnsuppressor<T> (suppressedPacketsTypes);
         }
 
         public void UpdateConnectionState(IMultiplayerSessionConnectionState sessionConnectionState)

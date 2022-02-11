@@ -15,5 +15,9 @@ namespace NitroxClient.Communication.Abstract
         bool IsPacketSuppressed(Type packetType);
 
         PacketSuppressor<T> Suppress<T>();
+
+        SoundPacketSuppressor SuppressSounds();
+
+        PacketUnsuppressor<T> Unsuppress<T>();
     }
 }

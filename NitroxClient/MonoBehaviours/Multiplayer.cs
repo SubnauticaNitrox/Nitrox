@@ -26,6 +26,7 @@ namespace NitroxClient.MonoBehaviours
         public static Multiplayer Main;
 
         private IMultiplayerSession multiplayerSession;
+        private IPacketSender packetSender;
         private PacketReceiver packetReceiver;
         private ThrottledPacketSender throttledPacketSender;
         public bool InitialSyncCompleted { get; set; }
@@ -77,6 +78,7 @@ namespace NitroxClient.MonoBehaviours
             Log.InGame(Language.main.Get("Nitrox_MultiplayerLoaded"));
 
             multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
+            packetSender = NitroxServiceLocator.LocateService<IPacketSender>();
             packetReceiver = NitroxServiceLocator.LocateService<PacketReceiver>();
             throttledPacketSender = NitroxServiceLocator.LocateService<ThrottledPacketSender>();
 
@@ -106,7 +108,12 @@ namespace NitroxClient.MonoBehaviours
                     Type packetProcessorType = clientPacketProcessorType.MakeGenericType(packetType);
 
                     PacketProcessor processor = (PacketProcessor)NitroxServiceLocator.LocateService(packetProcessorType);
-                    processor.ProcessPacket(packet, null);
+
+                    // Incoming packets may trigger new sounds that we don't want to spread over the network
+                    using (packetSender.SuppressSounds())
+                    {
+                        processor.ProcessPacket(packet, null);
+                    }
                 }
                 catch (Exception ex)
                 {
