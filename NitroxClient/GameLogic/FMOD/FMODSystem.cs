@@ -43,11 +43,6 @@ namespace NitroxClient.GameLogic.FMOD
             }
         }
 
-        public static FMODSuppressor SuppressSounds()
-        {
-            return new FMODSuppressor();
-        }
-
         public bool IsWhitelisted(string path)
         {
             return TryGetSoundData(path, out SoundData soundData) && soundData.IsWhitelisted;
