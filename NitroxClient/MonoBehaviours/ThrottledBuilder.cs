@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.Bases.Spawning.BasePiece;
@@ -31,7 +32,6 @@ namespace NitroxClient.MonoBehaviours
         public event EventHandler QueueDrained;
         private BuildThrottlingQueue buildEvents;
         private IPacketSender packetSender;
-        private readonly MethodInfo constructableStartMethod = typeof(Constructable).GetMethod("Start", BindingFlags.NonPublic | BindingFlags.Instance);
 
         public void Start()
         {
