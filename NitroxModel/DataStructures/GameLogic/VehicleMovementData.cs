@@ -35,6 +35,9 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoMember(9)]
         public bool AppliedThrottle { get; }
 
+        [ProtoMember(10)]
+        public NitroxVector3? DriverPosition { get; set; }
+
         protected VehicleMovementData()
         {
             // Constructor for serialization. Has to be "protected" for json serialization.

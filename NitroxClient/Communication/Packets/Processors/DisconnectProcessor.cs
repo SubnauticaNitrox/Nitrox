@@ -2,7 +2,6 @@
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.HUD;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Logger;
 using NitroxModel.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors

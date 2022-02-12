@@ -1,6 +1,4 @@
 ﻿using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
-using NitroxModel.Helper;
-using NitroxModel.Logger;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.Metadata
@@ -19,7 +17,7 @@ namespace NitroxClient.GameLogic.Spawning.Metadata
 
             if (laseredObject && door._sealed)
             {
-                laseredObject.ReflectionSet("lastCutValue", door.openedAmount);
+                laseredObject.lastCutValue = door.openedAmount;
                 laseredObject.ActivateFX();
             }
         }

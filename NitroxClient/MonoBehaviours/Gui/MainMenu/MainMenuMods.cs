@@ -1,4 +1,4 @@
-﻿using NitroxClient.MonoBehaviours.DiscordRP;
+﻿using NitroxClient.MonoBehaviours.Discord;
 using NitroxClient.Unity.Helper;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -26,7 +26,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             {
                 rightSide = MainMenuRightSide.main;
                 MultiplayerMenuMods();
-                DiscordRPController.Main.InitializeMenu();
+                DiscordClient.InitializeRPMenu();
             }
         }
 

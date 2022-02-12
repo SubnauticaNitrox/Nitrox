@@ -4,15 +4,14 @@ using HarmonyLib;
 using NitroxClient.GameLogic.FMOD;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
+using NitroxModel.Helper;
 using NitroxModel_Subnautica.DataStructures;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
     public class FMOD_CustomEmitter_OnPlay_Patch : NitroxPatch, IDynamicPatch
     {
-        private static FMODSystem fmodSystem;
-
-        private static readonly MethodInfo targetMethod = typeof(FMOD_CustomEmitter).GetMethod("OnPlay", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((FMOD_CustomEmitter t) => t.OnPlay());
 
         public static bool Prefix()
         {
@@ -21,7 +20,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(FMOD_CustomEmitter __instance)
         {
-            if (fmodSystem.IsWhitelisted(__instance.asset.path, out bool isGlobal, out float radius))
+            if (Resolve<FMODSystem>().IsWhitelisted(__instance.asset.path, out bool isGlobal, out float radius))
             {
                 __instance.GetEventInstance().getDescription(out EventDescription description);
                 description.is3D(out bool is3D);
@@ -35,21 +34,20 @@ namespace NitroxPatcher.Patches.Dynamic
                     }
                     if (nitroxEntity)
                     {
-                        fmodSystem.PlayCustomEmitter(nitroxEntity.Id, __instance.asset.path, true);
+                        Resolve<FMODSystem>().PlayCustomEmitter(nitroxEntity.Id, __instance.asset.path, true);
                     }
                 }
                 else
                 {
                     __instance.GetEventInstance().getVolume(out float volume, out float _);
-                    fmodSystem.PlayAsset(__instance.asset.path, __instance.transform.position.ToDto(), volume, radius, isGlobal);
+                    Resolve<FMODSystem>().PlayAsset(__instance.asset.path, __instance.transform.position.ToDto(), volume, radius, isGlobal);
                 }
             }
         }
 
         public override void Patch(Harmony harmony)
         {
-            fmodSystem = NitroxServiceLocator.LocateService<FMODSystem>();
-            PatchMultiple(harmony, targetMethod, prefix:true, postfix:true);
+            PatchMultiple(harmony, TARGET_METHOD, prefix:true, postfix:true);
         }
 
     }

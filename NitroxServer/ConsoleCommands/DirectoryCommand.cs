@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Logger;
 using NitroxServer.ConsoleCommands.Abstract;
 
 namespace NitroxServer.ConsoleCommands

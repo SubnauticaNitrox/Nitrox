@@ -12,7 +12,7 @@ namespace NitroxModel.Core
 
         public static void InitializeDependencyContainer(params IAutoFacRegistrar[] registrars)
         {
-            ContainerBuilder builder = new ContainerBuilder();
+            ContainerBuilder builder = new();
             foreach (IAutoFacRegistrar registrar in registrars)
             {
                 registrar.RegisterDependencies(builder);
@@ -94,6 +94,25 @@ namespace NitroxModel.Core
             if (CurrentLifetimeScope == null)
             {
                 throw new InvalidOperationException("You must begin a new lifetime scope before resolving dependencies.");
+            }
+        }
+
+        /// <summary>
+        ///     Generic static class to cache type with very fast lookups. Only use for singleton types.
+        /// </summary>
+        /// <typeparam name="T">Type in the cache, should be singleton.</typeparam>
+        public static class Cache<T> where T : class
+        {
+            private static T value;
+            public static T Value => value ??= LocateService<T>();
+            public static T ValuePrelifetime => value ??= LocateServicePreLifetime<T>();
+
+            /// <summary>
+            ///     Invalidates the cache for type <see cref="T"/>. The next <see cref="Value"/> access will request from <see cref="NitroxServiceLocator"/> again.
+            /// </summary>
+            public static void Invalidate()
+            {
+                value = null;
             }
         }
     }

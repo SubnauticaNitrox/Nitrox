@@ -7,8 +7,6 @@ using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper;
-using NitroxModel.Logger;
 using NitroxModel.Packets;
 using UnityEngine;
 
@@ -52,16 +50,16 @@ namespace NitroxClient.GameLogic.InitialSync
                         if (opEquipment.HasValue)
                         {
                             Equipment equipment = opEquipment.Value;
-                            InventoryItem inventoryItem = new InventoryItem(pickupable);
+                            InventoryItem inventoryItem = new(pickupable);
                             inventoryItem.container = equipment;
                             inventoryItem.item.Reparent(equipment.tr);
 
-                            Dictionary<string, InventoryItem> itemsBySlot = (Dictionary<string, InventoryItem>)equipment.ReflectionGet("equipment");
+                            Dictionary<string, InventoryItem> itemsBySlot = equipment.equipment;
                             itemsBySlot[equippedItem.Slot] = inventoryItem;
 
-                            equipment.ReflectionCall("UpdateCount", false, false, new object[] { pickupable.GetTechType(), true });
+                            equipment.UpdateCount(pickupable.GetTechType(), true);
                             Equipment.SendEquipmentEvent(pickupable, 0, owner, equippedItem.Slot);
-                            equipment.ReflectionCall("NotifyEquip", false, false, new object[] { equippedItem.Slot, inventoryItem });
+                            equipment.NotifyEquip(equippedItem.Slot, inventoryItem);
                         }
                         else
                         {

@@ -5,17 +5,18 @@ using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
+using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
     class StarshipDoor_OnDoorToggle_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly MethodInfo TARGET_METHOD = typeof(StarshipDoor).GetMethod("OnDoorToggle", BindingFlags.Instance | BindingFlags.NonPublic);
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((StarshipDoor t) => t.OnDoorToggle());
 
         public static void Postfix(StarshipDoor __instance)
         {
             NitroxId id = NitroxEntity.GetId(__instance.gameObject);
-            StarshipDoorMetadata starshipDoorMetadata = new StarshipDoorMetadata(__instance.doorLocked, __instance.doorOpen);
+            StarshipDoorMetadata starshipDoorMetadata = new(__instance.doorLocked, __instance.doorOpen);
             Entities entities = NitroxServiceLocator.LocateService<Entities>();
 
             entities.BroadcastMetadataUpdate(id, starshipDoorMetadata);

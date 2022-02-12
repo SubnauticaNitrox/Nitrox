@@ -22,7 +22,7 @@ namespace NitroxServer.Communication.Packets.Processors
 
             if (player.Id == packet.PlayerId)
             {
-                player.Position = packet.Position;
+                player.Position = packet.VehicleMovementData.DriverPosition ?? packet.Position;
             }
 
             playerManager.SendPacketToOtherPlayers(packet, player);

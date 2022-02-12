@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours
 {
-    public class MultiplayerSeaMoth : MultiplayerVehicleControl<Vehicle>
+    public class MultiplayerSeaMoth : MultiplayerVehicleControl
     {
         private bool lastThrottle;
         private SeaMoth seamoth;
@@ -17,7 +17,10 @@ namespace NitroxClient.MonoBehaviours
 
         protected override void Awake()
         {
-            SteeringControl = seamoth = GetComponent<SeaMoth>();
+            seamoth = GetComponent<SeaMoth>();
+            WheelYawSetter = value => seamoth.steeringWheelYaw = value;
+            WheelPitchSetter = value => seamoth.steeringWheelPitch = value;
+            
             SetUpSound();
             base.Awake();
         }
@@ -35,7 +38,7 @@ namespace NitroxClient.MonoBehaviours
             }
         }
 
-        internal override void Exit()
+        public override void Exit()
         {
             seamoth.bubbles.Stop();
             base.Exit();

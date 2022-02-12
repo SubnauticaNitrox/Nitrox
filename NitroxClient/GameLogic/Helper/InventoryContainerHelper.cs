@@ -5,8 +5,6 @@ using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper;
-using NitroxModel.Logger;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Helper
@@ -30,8 +28,7 @@ namespace NitroxClient.GameLogic.Helper
             BaseBioReactor baseBioReactor = owner.GetComponentInChildren<BaseBioReactor>();
             if (baseBioReactor)
             {
-                ItemsContainer container = (ItemsContainer)baseBioReactor.ReflectionGetProperty("container");
-                return Optional.Of(container);
+                return Optional.Of(baseBioReactor.container);
             }
             if (owner.name == "Player")
             {

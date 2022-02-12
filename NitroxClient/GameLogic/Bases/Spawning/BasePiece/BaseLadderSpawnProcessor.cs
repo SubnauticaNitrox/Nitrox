@@ -1,8 +1,6 @@
 ﻿using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper;
-using NitroxModel.Logger;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
@@ -47,8 +45,7 @@ namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
 
                 if (isNewBasePiece)
                 {
-                    TechType techType = (TechType)baseDeconstructable.ReflectionGet("recipe");
-
+                    TechType techType = baseDeconstructable.recipe;
                     if (techType == TechType.BaseLadder)
                     {
                         return Optional.Of(child.gameObject);

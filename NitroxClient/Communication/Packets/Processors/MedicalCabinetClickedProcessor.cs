@@ -19,16 +19,16 @@ namespace NitroxClient.Communication.Packets.Processors
             cabinet.hasMedKit = packet.HasMedKit;
             cabinet.timeSpawnMedKit = packet.NextSpawnTime;
 
-            bool isDoorOpen = (bool)cabinet.ReflectionGet("doorOpen");
+            bool isDoorOpen = cabinet.doorOpen;
             bool doorChangedState = isDoorOpen != packet.DoorOpen;
 
             if (doorChangedState)
             {
-                cabinet.Invoke("ToggleDoorState", 0f);
+                cabinet.Invoke(nameof(MedicalCabinet.ToggleDoorState), 0f);
             }
             else if (medkitPickedUp)
             {
-                cabinet.Invoke("ToggleDoorState", 1.8f);
+                cabinet.Invoke(nameof(MedicalCabinet.ToggleDoorState), 1.8f);
             }
         }
     }

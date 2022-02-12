@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Reflection;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxModel.Packets;
@@ -17,25 +16,9 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(PDALogEntryAdd packet)
         {
-            using (packetSender.Suppress<PDALogEntryAddProcessor>())
+            using (packetSender.Suppress<PDALogEntryAdd>())
             {
-                Dictionary<string, PDALog.Entry> entries = (Dictionary<string, PDALog.Entry>)(typeof(PDALog).GetField("entries", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null));
-
-                if (!entries.ContainsKey(packet.Key))
-                {
-
-                    if (!PDALog.GetEntryData(packet.Key, out PDALog.EntryData entryData))
-                    {
-                        entryData = new PDALog.EntryData();
-                        entryData.key = packet.Key;
-                        entryData.type = PDALog.EntryType.Invalid;
-                    }
-
-                    PDALog.Entry entry = new PDALog.Entry();
-                    entry.data = entryData;
-                    entry.timestamp = packet.Timestamp;
-                    entries.Add(entryData.key, entry);
-                }
+                PDALog.Add(packet.Key);
             }
         }
     }

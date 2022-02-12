@@ -4,7 +4,6 @@ using FMOD.Studio;
 using FMODUnity;
 using NitroxClient.GameLogic.FMOD;
 using NitroxClient.Unity.Helper;
-using NitroxModel.Logger;
 using UnityEngine;
 #pragma warning disable 618
 

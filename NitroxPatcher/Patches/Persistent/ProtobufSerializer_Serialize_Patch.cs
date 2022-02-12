@@ -5,13 +5,13 @@ using HarmonyLib;
 using NitroxClient.Helpers;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
+using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Persistent
 {
     public class ProtobufSerializer_Serialize_Patch : NitroxPatch, IPersistentPatch
     {
-        private static readonly Type TARGET_TYPE = typeof(ProtobufSerializer);
-        private static readonly MethodInfo TARGET_METHOD = TARGET_TYPE.GetMethod("Serialize", BindingFlags.Instance | BindingFlags.NonPublic);
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((ProtobufSerializer t) => t.Serialize(default(Stream), default(object), default(Type)));
 
         /// <summary>
         ///     This patch is in a hot path so it needs this optimization.
@@ -20,7 +20,7 @@ namespace NitroxPatcher.Patches.Persistent
 
         public static bool Prefix(Stream stream, object source, Type type)
         {
-            if (Multiplayer.Active && serializer.NitroxTypes.TryGetValue(type, out int key))
+            if (Multiplayer.Active && serializer.NitroxTypes.ContainsKey(type))
             {
                 serializer.Serialize(stream, source);
                 return false;

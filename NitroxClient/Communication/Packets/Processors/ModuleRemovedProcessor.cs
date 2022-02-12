@@ -4,8 +4,6 @@ using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper;
-using NitroxModel.Logger;
 using NitroxModel.Packets;
 using UnityEngine;
 
@@ -28,13 +26,13 @@ namespace NitroxClient.Communication.Packets.Processors
             GameObject item = NitroxEntity.RequireObjectFrom(packet.ItemId);
             Pickupable pickupable = item.RequireComponent<Pickupable>();
             Equipment equipment = opEquipment.Value;
-            Dictionary<string, InventoryItem> itemsBySlot = (Dictionary<string, InventoryItem>)equipment.ReflectionGet("equipment");
+            Dictionary<string, InventoryItem> itemsBySlot = equipment.equipment;
             InventoryItem inventoryItem = itemsBySlot[packet.Slot];
             itemsBySlot[packet.Slot] = null;
 
-            equipment.ReflectionCall("UpdateCount", false, false, pickupable.GetTechType(), false);
+            equipment.UpdateCount(pickupable.GetTechType(), false);
             Equipment.SendEquipmentEvent(pickupable, UNEQUIP_EVENT_TYPE_ID, owner, packet.Slot);
-            equipment.ReflectionCall("NotifyUnequip", false, false, packet.Slot, inventoryItem);
+            equipment.NotifyUnequip(packet.Slot, inventoryItem);
 
             UnityEngine.Object.Destroy(item);
         }

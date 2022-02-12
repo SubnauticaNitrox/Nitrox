@@ -6,10 +6,12 @@ namespace NitroxModel.Packets
     public class TimeChange : Packet
     {
         public double CurrentTime { get; }
+        public bool InitialSync { get; }
 
-        public TimeChange(double currentTime)
+        public TimeChange(double currentTime, bool initialSync)
         {
             CurrentTime = currentTime;
+            InitialSync = initialSync;
         }
     }
 }

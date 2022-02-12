@@ -1,16 +1,15 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
+using NitroxModel.Helper;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
     public class Pickupable_Drop_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(Pickupable);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("Drop", BindingFlags.Public | BindingFlags.Instance, null, new Type[] { typeof(Vector3), typeof(Vector3), typeof(bool) }, null);
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Pickupable t) => t.Drop(default(Vector3), default(Vector3), default(bool)));
 
         public static void Postfix(Pickupable __instance, Vector3 dropPosition)
         {

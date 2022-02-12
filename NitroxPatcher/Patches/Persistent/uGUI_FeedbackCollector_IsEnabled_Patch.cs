@@ -1,11 +1,13 @@
 ﻿using System.Reflection;
 using HarmonyLib;
+using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Persistent
 {
     public class uGUI_FeedbackCollector_IsEnabled_Patch : NitroxPatch, IPersistentPatch
     {
-        public static readonly MethodInfo TARGET_METHOD = typeof(uGUI_FeedbackCollector).GetMethod("IsEnabled", BindingFlags.Public | BindingFlags.Instance);
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((uGUI_FeedbackCollector t) => t.IsEnabled());
+        
         public static bool Prefix(ref bool __result)
         {
             __result = false;

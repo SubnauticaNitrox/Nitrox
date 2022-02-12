@@ -9,7 +9,9 @@ namespace NitroxServer.Serialization
     public class ServerConfig : NitroxConfig<ServerConfig>
     {
         private int maxConnectionsSetting = 100;
-        
+
+        private int initialSyncTimeoutSetting = 300000;
+
         [PropertyDescription("Set to true to Cache entities for the whole map on next run. \nWARNING! Will make server load take longer on the cache run but players will gain a performance boost when entering new areas.")]
         public bool CreateFullEntityCache = false;
 
@@ -28,12 +30,7 @@ namespace NitroxServer.Serialization
         public int ServerPort
         {
             get => portSetting;
-
-            set
-            {
-                Validate.IsTrue(value > 1024, "Server Port must be greater than 1024");
-                portSetting = value;
-            }
+            set => portSetting = value;
         }
 
         [PropertyDescription("Measured in milliseconds")]
@@ -66,6 +63,17 @@ namespace NitroxServer.Serialization
             }
         }
 
+        public int InitialSyncTimeout
+        {
+            get => initialSyncTimeoutSetting;
+
+            set
+            {
+                Validate.IsTrue(value > 30000, "InitialSyncTimeout must be greater than 30 seconds");
+                initialSyncTimeoutSetting = value;
+            }
+        }
+
         public bool DisableConsole { get; set; }
 
         public bool DisableAutoSave { get; set; }
@@ -89,7 +97,7 @@ namespace NitroxServer.Serialization
         public ServerGameMode GameMode { get; set; } = ServerGameMode.SURVIVAL;
 
         [PropertyDescription("Possible values:", typeof(ServerSerializerMode))]
-        public ServerSerializerMode SerializerMode { get; set; } = ServerSerializerMode.PROTOBUF;
+        public ServerSerializerMode SerializerMode { get; set; } = ServerSerializerMode.JSON;
 
         [PropertyDescription("Possible values:", typeof(Perms))]
         public Perms DefaultPlayerPerm { get; set; } = Perms.PLAYER;

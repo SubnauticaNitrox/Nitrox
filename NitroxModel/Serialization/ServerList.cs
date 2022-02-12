@@ -21,12 +21,12 @@ namespace NitroxModel.Serialization
             get
             {
                 ServerList list = new();
-                list.Add(new Entry("local server", "127.0.0.1", DEFAULT_PORT));
+                list.Add(new Entry("Your server", "127.0.0.1", DEFAULT_PORT));
                 return list;
             }
         }
 
-        public static string DefaultFile => Path.Combine(NitroxAppData.Instance.LauncherPath, SERVERS_FILE_NAME);
+        public static string DefaultFile => Path.Combine(NitroxUser.LauncherPath, SERVERS_FILE_NAME);
 
         public IEnumerable<Entry> Entries => entries;
 
@@ -94,7 +94,6 @@ namespace NitroxModel.Serialization
             {
                 Validate.String(name);
                 Validate.NotNull(address);
-                Validate.IsTrue(port is >= 1024 and <= ushort.MaxValue);
 
                 Name = name.Trim();
                 Address = address.Trim();

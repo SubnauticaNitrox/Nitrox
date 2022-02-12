@@ -10,16 +10,22 @@ namespace NitroxServer.Communication.Packets.Processors
     {
         private readonly PlayerManager playerManager;
         private readonly PDAStateData pdaState;
+        private readonly ScheduleKeeper scheduleKeeper;
 
-        public PDALogEntryAddProcessor(PlayerManager playerManager, PDAStateData pdaState)
+        public PDALogEntryAddProcessor(PlayerManager playerManager, PDAStateData pdaState, ScheduleKeeper scheduleKeeper)
         {
             this.playerManager = playerManager;
             this.pdaState = pdaState;
+            this.scheduleKeeper = scheduleKeeper;
         }
 
         public override void Process(PDALogEntryAdd packet, Player player)
         {
             pdaState.AddPDALogEntry(new PDALogEntry(packet.Key, packet.Timestamp));
+            if (scheduleKeeper.ContainsScheduledGoal(packet.Key))
+            {
+                scheduleKeeper.UnScheduleGoal(packet.Key);
+            }
             playerManager.SendPacketToOtherPlayers(packet, player);
         }
     }

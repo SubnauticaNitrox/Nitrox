@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Reflection;
 using System.Threading.Tasks;
+using NitroxModel.Helper;
 using NitroxModel.Platforms.OS.Shared;
 using NitroxModel.Platforms.OS.Windows.Internal;
 using NitroxModel.Platforms.Store.Exceptions;
@@ -15,12 +15,12 @@ namespace NitroxModel.Platforms.Store
         private static Steam instance;
         public static Steam Instance => instance ??= new Steam();
 
+        public string Name => nameof(Steam);
+
         public bool OwnsGame(string gameDirectory)
         {
             return File.Exists(Path.Combine(gameDirectory, "steam_api64.dll"));
         }
-
-        public string Name => nameof(Steam);
 
         public async Task<ProcessEx> StartPlatformAsync()
         {
@@ -58,7 +58,7 @@ namespace NitroxModel.Platforms.Store
             return File.Exists(exe) ? Path.GetFullPath(exe) : null;
         }
 
-        public async Task<ProcessEx> StartGameAsync(string pathToGameExe, int steamAppId)
+        public async Task<ProcessEx> StartGameAsync(string pathToGameExe, int steamAppId, string launchArguments)
         {
             try
             {
@@ -73,9 +73,11 @@ namespace NitroxModel.Platforms.Store
                 throw new PlatformException(Instance, "Timeout reached while waiting for platform to start. Try again once platform has finished loading.", ex);
             }
 
-            return ProcessEx.Start(pathToGameExe,
-                                   new[] { ("SteamGameId", steamAppId.ToString()), ("SteamAppID", steamAppId.ToString()), ("NITROX_LAUNCHER_PATH", Path.GetDirectoryName(Assembly.GetEntryAssembly().Location)), },
-                                   Path.GetDirectoryName(pathToGameExe)
+            return ProcessEx.Start(
+                    pathToGameExe,
+                    new[] { ("SteamGameId", steamAppId.ToString()), ("SteamAppID", steamAppId.ToString()), (NitroxUser.LAUNCHER_PATH_ENV_KEY, NitroxUser.LauncherPath) },
+                    Path.GetDirectoryName(pathToGameExe),
+                    launchArguments
             );
         }
     }

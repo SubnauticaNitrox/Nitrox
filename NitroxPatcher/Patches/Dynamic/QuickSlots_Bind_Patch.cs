@@ -3,12 +3,13 @@ using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
+using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
     public class QuickSlots_Bind_Patch : NitroxPatch, IDynamicPatch
     {
-        private static readonly MethodInfo targetMethod = typeof(QuickSlots).GetMethod(nameof(QuickSlots.Bind), BindingFlags.Public | BindingFlags.Instance);
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((QuickSlots t) => t.Bind(default(int), default(InventoryItem)));
         private static LocalPlayer player;
 
         public static void Postfix(QuickSlots __instance)
@@ -27,7 +28,7 @@ namespace NitroxPatcher.Patches.Dynamic
         public override void Patch(Harmony harmony)
         {
             player = NitroxServiceLocator.LocateService<LocalPlayer>();
-            PatchPostfix(harmony, targetMethod);
+            PatchPostfix(harmony, TARGET_METHOD);
         }
     }
 }

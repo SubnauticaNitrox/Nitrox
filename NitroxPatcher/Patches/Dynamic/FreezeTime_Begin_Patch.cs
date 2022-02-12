@@ -1,22 +1,17 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using HarmonyLib;
+using NitroxModel.Helper;
 using UWE;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
     public class FreezeTime_Begin_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(FreezeTime);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("Begin", BindingFlags.Public | BindingFlags.Static);
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => FreezeTime.Begin(default(string), default(bool)));
 
         public static bool Prefix(string userId, bool dontPauseSound)
         {
-            if (userId.Equals("FeedbackPanel"))
-            {
-                return true;
-            }
-            return false;
+            return userId.Equals("FeedbackPanel");
         }
 
         public override void Patch(Harmony harmony)

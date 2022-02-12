@@ -1,31 +1,35 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Reflection;
 using HarmonyLib;
+using NitroxModel.Helper;
 using UnityEngine;
 
-namespace NitroxPatcher.Patches.Dynamic
+namespace NitroxPatcher.Patches.Dynamic;
+
+public class IngameMenu_QuitGameAsync_Patch : NitroxPatch, IDynamicPatch
 {
-    class IngameMenu_QuitGameAsync_Patch : NitroxPatch, IDynamicPatch
+    internal static readonly MethodInfo targetMethod = Reflect.Method((IngameMenu t) => t.QuitGameAsync(default));
+
+    internal static readonly object triggerOperand = Reflect.Property(() => SaveLoadManager.main).GetMethod;
+    internal static readonly object injectionOperand = Reflect.Method(() => Application.Quit());
+
+    public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
-        public static readonly Type TARGET_CLASS = typeof(IngameMenu);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("QuitGameAsync");
-
-        public static bool Prefix(bool quitToDesktop)
+        foreach (CodeInstruction instruction in instructions)
         {
-            if (!quitToDesktop)
+            if (instruction.operand != null && instruction.operand.Equals(triggerOperand))
             {
-                UWE.Utils.lockCursor = false;
+                instruction.operand = injectionOperand;
+                yield return instruction;
+                break;
             }
-            else
-            {
-                Application.Quit();
-            }
-            return false;
-        }
 
-        public override void Patch(Harmony harmony)
-        {
-            PatchPrefix(harmony, TARGET_METHOD);
+            yield return instruction;
         }
+    }
+
+    public override void Patch(Harmony harmony)
+    {
+        PatchTranspiler(harmony, targetMethod);
     }
 }

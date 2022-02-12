@@ -2,7 +2,6 @@
 using System.Linq;
 using NitroxClient.Debuggers;
 using NitroxModel.Core;
-using NitroxModel.Logger;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 

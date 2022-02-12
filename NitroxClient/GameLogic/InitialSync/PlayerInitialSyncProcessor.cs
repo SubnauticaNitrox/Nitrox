@@ -1,9 +1,9 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel.Server;
 using UnityEngine;
@@ -22,18 +22,22 @@ namespace NitroxClient.GameLogic.InitialSync
         public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
         {
             SetPlayerGameObjectId(packet.PlayerGameObjectId);
-            waitScreenItem.SetProgress(0.25f);
+            waitScreenItem.SetProgress(0.2f);
             yield return null;
 
             AddStartingItemsToPlayer(packet.FirstTimeConnecting);
-            waitScreenItem.SetProgress(0.5f);
+            waitScreenItem.SetProgress(0.4f);
             yield return null;
 
             SetPlayerStats(packet.PlayerStatsData);
-            waitScreenItem.SetProgress(0.75f);
+            waitScreenItem.SetProgress(0.6f);
             yield return null;
 
             SetPlayerGameMode(packet.GameMode);
+            waitScreenItem.SetProgress(0.8f);
+            yield return null;
+
+            SetPlayerCompletedGoals(packet.CompletedGoals);
             waitScreenItem.SetProgress(1f);
             yield return null;
         }
@@ -82,6 +86,12 @@ namespace NitroxClient.GameLogic.InitialSync
         {
             Log.Info($"Received initial sync packet with gamemode {gameMode}");
             GameModeUtils.SetGameMode((GameModeOption)(int)gameMode, GameModeOption.None);
+        }
+
+        private void SetPlayerCompletedGoals(ISet<string> completedGoals)
+        {
+            GoalManager.main.completedGoalNames.AddRange(completedGoals);
+            PlayerWorldArrows.main.completedCustomGoals.AddRange(completedGoals);
         }
     }
 }

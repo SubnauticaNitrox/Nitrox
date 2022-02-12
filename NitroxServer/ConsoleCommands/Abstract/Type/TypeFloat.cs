@@ -4,7 +4,7 @@ namespace NitroxServer.ConsoleCommands.Abstract.Type
 {
     public class TypeFloat : Parameter<float>, IParameter<object>
     {
-        public TypeFloat(string name, bool isRequired) : base(name, isRequired) { }
+        public TypeFloat(string name, bool isRequired, string description) : base(name, isRequired, description) { }
 
         public override bool IsValid(string arg)
         {

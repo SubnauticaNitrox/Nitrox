@@ -1,23 +1,21 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using HarmonyLib;
+using NitroxModel.Helper;
 
-namespace NitroxPatcher.Patches.Dynamic
+namespace NitroxPatcher.Patches.Dynamic;
+
+public class IngameMenu_QuitSubscreen_Patch : NitroxPatch, IDynamicPatch
 {
-    public class IngameMenu_QuitSubscreen_Patch : NitroxPatch, IDynamicPatch
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((IngameMenu t) => t.QuitSubscreen());
+
+    public static bool Prefix()
     {
-        public static readonly Type TARGET_CLASS = typeof(IngameMenu);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("QuitSubscreen");
+        IngameMenu.main.QuitGame(false);
+        return false;
+    }
 
-        public static bool Prefix()
-        {
-            IngameMenu.main.QuitGame(false);
-            return false;
-        }
-
-        public override void Patch(Harmony harmony)
-        {
-            PatchPrefix(harmony, TARGET_METHOD);
-        }
+    public override void Patch(Harmony harmony)
+    {
+        PatchPrefix(harmony, TARGET_METHOD);
     }
 }

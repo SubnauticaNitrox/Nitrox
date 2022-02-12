@@ -4,11 +4,10 @@ using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerModel.Abstract;
 using NitroxClient.MonoBehaviours;
-using NitroxClient.MonoBehaviours.DiscordRP;
+using NitroxClient.MonoBehaviours.Discord;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
-using NitroxModel.Logger;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
 using UnityEngine;
@@ -91,7 +90,7 @@ namespace NitroxClient.GameLogic
 
             playersById.Add(remotePlayer.PlayerId, remotePlayer);
 
-            DiscordRPController.Main.UpdatePlayerCount(GetTotalPlayerCount());
+            DiscordClient.UpdatePartySize(GetTotalPlayerCount());
 
             return remotePlayer;
         }
@@ -106,7 +105,7 @@ namespace NitroxClient.GameLogic
                     opPlayer.Value.Destroy();
                 }
                 playersById.Remove(playerId);
-                DiscordRPController.Main.UpdatePlayerCount(GetTotalPlayerCount());
+                DiscordClient.UpdatePartySize(GetTotalPlayerCount());
             }
         }
 

@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using NitroxModel.Helper;
-using NitroxModel.Logger;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
@@ -35,8 +33,7 @@ namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
 
         public static void RunSpawnProcessor(BaseDeconstructable baseDeconstructable, Base latestBase, Int3 latestCell, GameObject finishedPiece)
         {
-            TechType techType = (TechType)baseDeconstructable.ReflectionGet("recipe");
-
+            TechType techType = baseDeconstructable.recipe;
             if (processorsByType.TryGetValue(techType, out BasePieceSpawnProcessor processor))
             {
                 Log.Info($"Found custom BasePieceSpawnProcessor for {techType}");

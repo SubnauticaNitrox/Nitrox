@@ -6,7 +6,6 @@ using NitroxClient.GameLogic.PlayerModel.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Helper;
-using NitroxModel.Logger;
 using NitroxModel.MultiplayerSession;
 using UnityEngine;
 using UWE;
@@ -199,7 +198,7 @@ namespace NitroxClient.GameLogic
                     Detach();
                     ArmsController.SetWorldIKTarget(null, null);
 
-                    Vehicle.GetComponent<MultiplayerVehicleControl<Vehicle>>().Exit();
+                    Vehicle.GetComponent<MultiplayerVehicleControl>().Exit();
                 }
 
                 if (newVehicle)
@@ -209,7 +208,7 @@ namespace NitroxClient.GameLogic
                     Attach(newVehicle.playerPosition.transform);
                     ArmsController.SetWorldIKTarget(newVehicle.leftHandPlug, newVehicle.rightHandPlug);
 
-                    newVehicle.GetComponent<MultiplayerVehicleControl<Vehicle>>().Enter();
+                    newVehicle.GetComponent<MultiplayerVehicleControl>().Enter();
                 }
 
                 RigidBody.isKinematic = newVehicle;

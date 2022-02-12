@@ -1,5 +1,4 @@
-﻿using NitroxModel.Logger;
-using NitroxModel_Subnautica.Packets;
+﻿using NitroxModel_Subnautica.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
 

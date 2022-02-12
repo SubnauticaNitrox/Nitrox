@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
-using NitroxClient.GameLogic.Helper;
 using NitroxModel.Helper;
 using UnityEngine;
 using static NitroxClient.GameLogic.Helper.TransientLocalObjectManager;
@@ -12,11 +10,10 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class ConstructorInput_OnCraftingBegin_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(ConstructorInput);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("OnCraftingBegin", BindingFlags.NonPublic | BindingFlags.Instance);
+        public static readonly MethodInfo TARGET_METHOD = Reflect.Method((ConstructorInput t) => t.OnCraftingBegin(default(TechType), default(float)));
 
         public static readonly OpCode INJECTION_OPCODE = OpCodes.Callvirt;
-        public static readonly object INJECTION_OPERAND = typeof(Constructor).GetMethod("SendBuildBots", BindingFlags.Public | BindingFlags.Instance, null, new Type[] { typeof(GameObject) }, null);
+        public static readonly object INJECTION_OPERAND = Reflect.Method((Constructor t) => t.SendBuildBots(default(GameObject)));
 
         public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
         {
@@ -33,7 +30,7 @@ namespace NitroxPatcher.Patches.Dynamic
                      */
                     yield return new CodeInstruction(OpCodes.Ldc_I4_0);
                     yield return original.Ldloc<GameObject>(0);
-                    yield return new CodeInstruction(OpCodes.Call, typeof(TransientLocalObjectManager).GetMethod("Add", BindingFlags.Static | BindingFlags.Public, null, new Type[] { TransientObjectType.CONSTRUCTOR_INPUT_CRAFTED_GAMEOBJECT.GetType(), typeof(object) }, null));
+                    yield return new CodeInstruction(OpCodes.Call, Reflect.Method(() => Add(default(TransientObjectType), default(object))));
                 }
             }
         }

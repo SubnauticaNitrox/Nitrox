@@ -5,7 +5,7 @@ namespace NitroxServer.ConsoleCommands.Abstract.Type
 {
     public class TypeEnum<T> : Parameter<object> where T : struct, Enum
     {
-        public TypeEnum(string name, bool required) : base(name, required)
+        public TypeEnum(string name, bool required, string description) : base(name, required, description)
         {
             Validate.IsTrue(typeof(T).IsEnum, $"Type {typeof(T).FullName} isn't an enum");
         }
@@ -19,6 +19,11 @@ namespace NitroxServer.ConsoleCommands.Abstract.Type
         {
             Validate.IsTrue(Enum.TryParse(arg, true, out T value), "Unknown value received");
             return value;
+        }
+
+        public override string GetDescription()
+        {
+            return $"{base.GetDescription()} (values: {string.Join(", ", Enum.GetNames(typeof(T)))})";
         }
     }
 }

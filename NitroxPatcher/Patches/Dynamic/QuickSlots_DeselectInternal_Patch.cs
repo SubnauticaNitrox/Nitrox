@@ -4,13 +4,14 @@ using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
+using NitroxModel.Helper;
 using NitroxModel.Packets;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
     public class QuickSlots_DeselectInternal_Patch : NitroxPatch, IDynamicPatch
     {
-        private static readonly MethodInfo targetMethod = typeof(QuickSlots).GetMethod("DeselectInternal", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((QuickSlots t) => t.DeselectInternal());
         private static LocalPlayer player;
 
         public static void Prefix(InventoryItem ____heldItem)
@@ -28,7 +29,7 @@ namespace NitroxPatcher.Patches.Dynamic
         public override void Patch(Harmony harmony)
         {
             player = NitroxServiceLocator.LocateService<LocalPlayer>();
-            PatchPrefix(harmony, targetMethod);
+            PatchPrefix(harmony, TARGET_METHOD);
         }
     }
 }

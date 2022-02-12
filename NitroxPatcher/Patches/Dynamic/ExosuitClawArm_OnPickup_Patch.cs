@@ -1,16 +1,14 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
-using NitroxModel.Logger;
+using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
     public class ExosuitClawArm_OnPickup_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(ExosuitClawArm);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("OnPickup");
+        public static readonly MethodInfo TARGET_METHOD = Reflect.Method((ExosuitClawArm t) => t.OnPickup());
 
         public static bool Prefix(ExosuitClawArm __instance)
         {

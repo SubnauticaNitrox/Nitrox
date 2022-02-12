@@ -1,16 +1,15 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic.Bases;
 using NitroxModel.Core;
+using NitroxModel.Helper;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
     public class Base_SpawnPiece_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(Base);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("SpawnPiece", BindingFlags.NonPublic | BindingFlags.Instance, null, new Type[] { typeof(Base).GetNestedType("Piece", BindingFlags.NonPublic | BindingFlags.Instance), typeof(Int3), typeof(Quaternion), typeof(Base.Direction?) }, null);
+        public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Base t) => t.SpawnPiece(default(Base.Piece), default(Int3), default(Quaternion), default(Base.Direction?)));
 
         /**
          * This function is called directly after the game clears all base pieces (to update

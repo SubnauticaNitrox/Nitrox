@@ -20,7 +20,7 @@ namespace NitroxModel.Discovery
         /// </summary>
         private readonly IFindGameInstallation[] finders = {
             new GameInCurrentDirectoryFinder(),
-            new ConfigFileGameFinder(),
+            new ConfigGameFinder(),
             new SteamGameRegistryFinder(),
             new EpicGamesInstallationFinder(),
             new DiscordGameFinder()

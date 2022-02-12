@@ -101,6 +101,7 @@ namespace NitroxModel.Platforms.OS.Windows.Internal
                 int => RegistryValueKind.DWord,
                 long => RegistryValueKind.QWord,
                 byte[] => RegistryValueKind.Binary,
+                string => RegistryValueKind.String,
                 _ => null
             };
             // If regKey already exists and we don't know how to parse the value, use existing kind.
@@ -158,6 +159,12 @@ namespace NitroxModel.Platforms.OS.Windows.Internal
                                 {
                                     while (!token.IsCancellationRequested)
                                     {
+                                        // If regkey didn't exist yet it might later.
+                                        if (baseKey == null)
+                                        {
+                                            (baseKey, valueKey) = GetKey(pathWithKey, false);
+                                        }
+                                        
                                         if (!Test(baseKey, valueKey, predicate))
                                         {
                                             await Task.Delay(100, token);
@@ -169,7 +176,7 @@ namespace NitroxModel.Platforms.OS.Windows.Internal
                                 }
                                 finally
                                 {
-                                    baseKey.Dispose();
+                                    baseKey?.Dispose();
                                 }
                             },
                             token);

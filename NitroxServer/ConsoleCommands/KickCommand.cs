@@ -16,8 +16,8 @@ namespace NitroxServer.ConsoleCommands
 
         public KickCommand(PlayerManager playerManager, EntitySimulation entitySimulation) : base("kick", Perms.MODERATOR, "Kicks a player from the server")
         {
-            AddParameter(new TypePlayer("name", true));
-            AddParameter(new TypeString("reason", false));
+            AddParameter(new TypePlayer("name", true, "Name of the player to kick"));
+            AddParameter(new TypeString("reason", false, "Reason for kicking the player"));
 
             AllowedArgOverflow = true;
 

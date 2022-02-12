@@ -23,7 +23,7 @@ namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
         {
             NitroxId reactorId = NitroxEntity.GetId(finishedPiece);
             BaseBioReactorGeometry bioReactor = finishedPiece.RequireComponent<BaseBioReactorGeometry>();
-            GameObject bioReactorModule = ((BaseBioReactor)bioReactor.ReflectionCall("GetModule")).gameObject;
+            GameObject bioReactorModule = bioReactor.GetModule().gameObject;
 
             NitroxId moduleId = reactorId.Increment();
             NitroxEntity.SetNewId(bioReactorModule, moduleId);

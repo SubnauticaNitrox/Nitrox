@@ -28,7 +28,7 @@ namespace NitroxServer.GameLogic.Entities
                     if (entitiesById.TryGetValue(entity.ParentId, out Entity parent))
                     {
                         parent.ChildEntities.Add(entity);
-                        entity.Transform.SetParent(parent.Transform);
+                        entity.Transform.SetParent(parent.Transform, false);
                     }
                 }
             }

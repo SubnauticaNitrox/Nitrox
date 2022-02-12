@@ -1,20 +1,18 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
+using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
     class VehicleDockingBay_OnUndockingComplete_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(VehicleDockingBay);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("OnUndockingComplete", BindingFlags.Public | BindingFlags.Instance);
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((VehicleDockingBay t) => t.OnUndockingComplete(default(Player)));
 
         public static void Prefix(VehicleDockingBay __instance, Player player)
         {
             Vehicle vehicle = __instance.GetDockedVehicle();
-
             NitroxServiceLocator.LocateService<Vehicles>().BroadcastVehicleUndocking(__instance, vehicle, false);
         }
 

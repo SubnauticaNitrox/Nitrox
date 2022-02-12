@@ -2,8 +2,6 @@
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper;
-using NitroxModel.Logger;
 using NitroxModel_Subnautica.Packets;
 using UnityEngine;
 
@@ -24,14 +22,14 @@ namespace NitroxClient.Communication.Packets.Processors
 
                 SubRoot subRoot = cyclops.Value.RequireComponent<SubRoot>();
 
-                cyclops.Value.RequireComponent<LiveMixin>().ReflectionSet("health", 0f, true, false);
+                cyclops.Value.RequireComponent<LiveMixin>().health = 0f;
                 cyclops.Value.RequireComponent<LiveMixin>().Kill();
 
                 // Copied from SubRoot.OnTakeDamage(DamageInfo info)
                 subRoot.voiceNotificationManager.ClearQueue();
                 subRoot.voiceNotificationManager.PlayVoiceNotification(subRoot.abandonShipNotification, false, true);
-                subRoot.Invoke("PowerDownCyclops", 13f);
-                subRoot.Invoke("DestroyCyclopsSubRoot", 18f);
+                subRoot.Invoke(nameof(SubRoot.PowerDownCyclops), 13f);
+                subRoot.Invoke(nameof(SubRoot.DestroyCyclopsSubRoot), 18f);
                 float num = Vector3.Distance(subRoot.transform.position, Player.main.transform.position);
                 if (num < 20f)
                 {

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.HUD;
@@ -7,17 +6,16 @@ using NitroxClient.GameLogic.Simulation;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
-using NitroxModel.Logger;
+using NitroxModel.Helper;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
     public class PropulsionCannon_GrabObject_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(PropulsionCannon);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("GrabObject", BindingFlags.Public | BindingFlags.Instance);
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((PropulsionCannon t) => t.GrabObject(default(GameObject)));
 
-        private static bool skipPrefixPatch = false;
+        private static bool skipPrefixPatch;
 
         public static bool Prefix(PropulsionCannon __instance, GameObject target)
         {
@@ -36,8 +34,8 @@ namespace NitroxPatcher.Patches.Dynamic
                 return true;
             }
 
-            PropulsionGrab context = new PropulsionGrab(__instance, target);
-            LockRequest<PropulsionGrab> lockRequest = new LockRequest<PropulsionGrab>(id, SimulationLockType.EXCLUSIVE, ReceivedSimulationLockResponse, context);
+            PropulsionGrab context = new(__instance, target);
+            LockRequest<PropulsionGrab> lockRequest = new(id, SimulationLockType.EXCLUSIVE, ReceivedSimulationLockResponse, context);
 
             simulationOwnership.RequestSimulationLock(lockRequest);
 

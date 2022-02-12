@@ -1,16 +1,15 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.Communication.Abstract;
 using NitroxModel.Core;
+using NitroxModel.Helper;
 using NitroxModel.Packets;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
     class Bed_EnterInUseMode_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(Bed);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("EnterInUseMode", BindingFlags.Instance | BindingFlags.NonPublic);
+        public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Bed t) => t.EnterInUseMode(default(Player)));
 
         public static void Postfix()
         {
