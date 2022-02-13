@@ -91,8 +91,8 @@ namespace NitroxServer.GameLogic
             }
 
             string playerName = authenticationContext.Username;
-            allPlayersByName.TryGetValue(playerName, out Player player)
-            
+
+            allPlayersByName.TryGetValue(playerName, out Player player);
             if (player?.IsPermaDeath == true && serverConfig.IsHardcore)
             {
                 MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.HARDCORE_PLAYER_DEAD;
@@ -127,14 +127,13 @@ namespace NitroxServer.GameLogic
 
             initialSyncTimer = new Timer(state =>
             {
-                if (player != null)
+                if (player != null) // player can cancel the joining process before this timer elapses
                 {
                     player.SendPacket(new PlayerKicked("An error occured while loading, Initial sync took too long to complete"));
                     PlayerDisconnected(player.Connection);
                     SendPacketToOtherPlayers(new Disconnect(player.Id), player);
-
-                    FinishProcessingReservation();
                 }
+                FinishProcessingReservation();
             });
 
             // Starts the timer, using the server config option as the due time and with intervals disabled
