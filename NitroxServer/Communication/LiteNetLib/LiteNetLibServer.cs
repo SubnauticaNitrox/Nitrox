@@ -73,6 +73,7 @@ namespace NitroxServer.Communication.LiteNetLib
 
         public override void Stop()
         {
+            playerManager.SendPacketToAllPlayers(new ServerStopped());
             server.Stop();
             if (useUpnpPortForwarding)
             {

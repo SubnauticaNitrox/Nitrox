@@ -29,6 +29,7 @@
 "Nitrox_LostConnection": "Lost connection to game Server",
 "Nitrox_PlayerKicked": "You've been kicked from the server",
 "Nitrox_LostConnectionWarn": "No longer connected to the server",
+"Nitrox_ServerStopped": "Server stopped",
 // In game logging
 "Nitrox_UnableToConnect": "Unable to contact the remote server at:",
 "Nitrox_StartServer": "Start your server first to join your self-hosted world",

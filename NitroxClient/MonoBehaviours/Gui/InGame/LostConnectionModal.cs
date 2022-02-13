@@ -19,6 +19,22 @@ namespace NitroxClient.MonoBehaviours.Gui.InGame
 
         private static GameObject loadingTextGameObject => uGUI.main.loading.loadingText.gameObject;
         private static uGUI_TextFade lostConnectionText;
+        private static Text text;
+
+        private bool serverStopped;
+        public static bool ServerStopped
+        {
+            set
+            {
+                Instance.serverStopped = value;
+                if (text)
+                {
+                    text.text = modalText;
+                }
+            }
+            get => Instance.serverStopped;
+        }
+        private static string modalText => Language.main.Get(ServerStopped ? "Nitrox_ServerStopped" : "Nitrox_LostConnection");
 
         public void Show()
         {
@@ -49,7 +65,8 @@ namespace NitroxClient.MonoBehaviours.Gui.InGame
 
                 GameObject header = lostConnectionSubWindow.FindChild("Header"); //Message Object
 
-                header.GetComponent<Text>().text = Language.main.Get("Nitrox_LostConnection");
+                text = header.GetComponent<Text>();
+                text.text = modalText;
 
                 RectTransform messageTransform = header.GetComponent<RectTransform>();
                 messageTransform.sizeDelta = new Vector2(700, 195);
