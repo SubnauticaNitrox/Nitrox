@@ -50,7 +50,7 @@ namespace NitroxModel.Logger
                          string consoleTemplate = isConsoleApp switch
                          {
                              false => $"[{{Timestamp:HH:mm:ss.fff}}] {{{nameof(PlayerName)}:l}}[{{Level:u3}}] {{Message}}{{NewLine}}{{Exception}}",
-                             _ => "[{Timestamp:HH:mm:ss.fff}] {Message}{NewLine}{Exception}"
+                             _ => "[{Timestamp:HH:mm:ss.fff}] [{{Level:u3}}] {Message}{NewLine}{Exception}"
                          };
 
                          if (asyncConsoleWriter)
