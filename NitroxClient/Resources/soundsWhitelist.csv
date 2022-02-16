@@ -265,8 +265,8 @@ event:/player/adviseSelfScan;false;false;0
 event:/player/aurora_warning_1;false;false;0
 event:/player/aurora_warning_2;false;false;0
 event:/player/aurora_warning_3;false;false;0
-event:/player/breathing;true;false;20
-event:/player/bubbles;true;false;20
+event:/player/breathing;false;false;20
+event:/player/bubbles;false;false;20
 event:/player/cold_damage;true;false;20
 event:/player/coughing;true;false;20
 event:/player/cube terminal_close;false;false;0
