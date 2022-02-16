@@ -27,7 +27,7 @@ namespace NitroxClient.Unity.Helper
         public static T RequireComponent<T>(this GameObject o) where T : Component
         {
             T component = o.GetComponent<T>();
-            Validate.NotNull(component, $"{o.name} did not have a component of type {typeof(T)}");
+            Validate.IsTrue(component, $"{o.name} did not have a component of type {typeof(T)}");
 
             return component;
         }
@@ -35,7 +35,7 @@ namespace NitroxClient.Unity.Helper
         public static T RequireComponentInChildren<T>(this GameObject o, bool includeInactive = false) where T : Component
         {
             T component = o.GetComponentInChildren<T>(includeInactive);
-            Validate.NotNull(component, $"{o.name} did not have a component of type {typeof(T)} in its children");
+            Validate.IsTrue(component, $"{o.name} did not have a component of type {typeof(T)} in its children");
 
             return component;
         }
@@ -43,7 +43,7 @@ namespace NitroxClient.Unity.Helper
         public static T RequireComponentInParent<T>(this GameObject o) where T : Component
         {
             T component = o.GetComponentInParent<T>();
-            Validate.NotNull(component, $"{o.name} did not have a component of type {typeof(T)} in its parent");
+            Validate.IsTrue(component, $"{o.name} did not have a component of type {typeof(T)} in its parent");
 
             return component;
         }
@@ -74,7 +74,7 @@ namespace NitroxClient.Unity.Helper
         public static GameObject RequireGameObject(string name)
         {
             GameObject go = GameObject.Find(name);
-            Validate.NotNull(go, "No global GameObject found with " + name + "!");
+            Validate.IsTrue(go, "No global GameObject found with " + name + "!");
 
             return go;
         }

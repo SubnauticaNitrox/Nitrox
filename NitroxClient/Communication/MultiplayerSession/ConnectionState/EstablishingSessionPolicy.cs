@@ -1,6 +1,7 @@
 ﻿using System;
 using NitroxClient.Communication.Abstract;
 using NitroxModel.Helper;
+using NitroxModel.Packets.Exceptions;
 
 namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
 {
@@ -50,7 +51,10 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
 
         private void SessionPolicyPacketCorrelation(IMultiplayerSessionConnectionContext sessionConnectionContext)
         {
-            Validate.PacketCorrelation(sessionConnectionContext.SessionPolicy, policyRequestCorrelationId);
+            if (!policyRequestCorrelationId.Equals(sessionConnectionContext.SessionPolicy.CorrelationId))
+            {
+                throw new UncorrelatedPacketException(sessionConnectionContext.SessionPolicy, policyRequestCorrelationId);
+            }
         }
 
         private void AwaitReservationCredentials(IMultiplayerSessionConnectionContext sessionConnectionContext)

@@ -2,6 +2,7 @@
 using NitroxClient.Communication.Abstract;
 using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
+using NitroxModel.Packets.Exceptions;
 
 namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
 {
@@ -62,7 +63,10 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
 
         private void ReservationPacketIsCorrelated(IMultiplayerSessionConnectionContext sessionConnectionContext)
         {
-            Validate.PacketCorrelation(sessionConnectionContext.Reservation, reservationCorrelationId);
+            if (!reservationCorrelationId.Equals(sessionConnectionContext.Reservation.CorrelationId))
+            {
+                throw new UncorrelatedPacketException(sessionConnectionContext.Reservation, reservationCorrelationId);
+            }
         }
     }
 }
