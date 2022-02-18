@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using NitroxModel.Discovery;
 using NitroxModel.Platforms.OS.Shared;
 using NitroxModel.Platforms.Store.Interfaces;
 
@@ -12,11 +13,12 @@ namespace NitroxModel.Platforms.Store
         public static MSStore Instance => instance ??= new MSStore();
 
         public string Name => "Microsoft Store";
+        public Platform platform => Platform.MICROSOFT;
 
         public bool OwnsGame(string gameDirectory)
         {
             bool isLocalAppData = Path.GetFullPath(gameDirectory).StartsWith(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Packages"), StringComparison.InvariantCultureIgnoreCase);
-            return isLocalAppData;
+            return isLocalAppData || File.Exists(Path.Combine(gameDirectory, "appxmanifest.xml"));
         }
 
         public async Task<ProcessEx> StartPlatformAsync()

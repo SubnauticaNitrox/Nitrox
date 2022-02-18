@@ -1,26 +1,26 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using NitroxModel.Discovery;
 using NitroxModel.Helper;
 using NitroxModel.Platforms.OS.Shared;
 using NitroxModel.Platforms.Store.Interfaces;
 
 namespace NitroxModel.Platforms.Store
 {
-    /// <summary>
-    ///     Epic games store.
-    /// </summary>
-    public sealed class Egs : IGamePlatform
+    public sealed class EpicGames : IGamePlatform
     {
-        private static Egs instance;
-        public static Egs Instance => instance ??= new Egs();
+        private static EpicGames instance;
+        public static EpicGames Instance => instance ??= new EpicGames();
+
+        public string Name => "Epic Games Store";
+        public Platform platform => Platform.EPIC;
 
         public bool OwnsGame(string gameDirectory)
         {
-            return Directory.Exists(Path.Combine(gameDirectory, ".egstore"));
+            string path = Path.Combine(gameDirectory, ".egstore");
+            return Directory.Exists(path) && Directory.GetFiles(path).Length > 1;
         }
-
-        public string Name => "Epic Games Store";
 
         public async Task<ProcessEx> StartPlatformAsync()
         {

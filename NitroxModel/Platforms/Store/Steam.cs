@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
+using NitroxModel.Discovery;
 using NitroxModel.Helper;
 using NitroxModel.Platforms.OS.Shared;
 using NitroxModel.Platforms.OS.Windows.Internal;
@@ -16,10 +17,11 @@ namespace NitroxModel.Platforms.Store
         public static Steam Instance => instance ??= new Steam();
 
         public string Name => nameof(Steam);
+        public Platform platform => Platform.STEAM;
 
         public bool OwnsGame(string gameDirectory)
         {
-            return File.Exists(Path.Combine(gameDirectory, "steam_api64.dll"));
+            return File.Exists(Path.Combine(gameDirectory, "steam_api64.dll")) || File.Exists(Path.Combine(gameDirectory, "Subnautica_Data", "Plugins", "CSteamworks.dll"));
         }
 
         public async Task<ProcessEx> StartPlatformAsync()

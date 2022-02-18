@@ -3,6 +3,7 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using NitroxLauncher.Properties;
 using NitroxModel.Discovery;
+using NitroxModel.Platforms.Store;
 
 namespace NitroxLauncher
 {
@@ -53,7 +54,7 @@ namespace NitroxLauncher
             {
                 // Ensures the path looks alright (no mixed / and \ path separators)
                 subnauticaPath = Path.GetFullPath(value);
-                SubnauticaPlatform = PlatformDetection.GetPlatform(subnauticaPath);
+                subnauticaPlatform = GamePlatforms.GetPlatformByGameDir(subnauticaPath)?.platform ?? Platform.NONE;
                 OnPropertyChanged();
             }
         }
