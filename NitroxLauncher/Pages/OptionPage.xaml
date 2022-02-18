@@ -113,7 +113,6 @@
                                     <Style.Triggers>
                                         <Trigger Property="IsMouseOver" Value="True">
                                             <Trigger.Setters>
-
                                                 <Setter Property="Effect">
                                                     <Setter.Value>
                                                         <DropShadowEffect ShadowDepth="0" Color="White" Opacity="1" BlurRadius="20" />
