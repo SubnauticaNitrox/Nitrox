@@ -712,7 +712,7 @@ event:/sub_module/fabricator/fabricator_click;false;false;0
 event:/sub_module/fabricator/menu_up;false;false;0
 event:/sub_module/fabricator/negative;false;false;0
 event:/sub_module/fabricator/open;true;false;20
-event:/sub_module/first_aid/spawn;true;false;20
+event:/sub_module/first_aid/spawn;false;false;20
 event:/sub_module/workbench/close;true;false;20
 event:/sub_module/workbench/open;true;false;20
 event:/tools/airbladder/airbladder_deflate;false;false;0
