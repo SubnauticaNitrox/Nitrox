@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using NitroxModel.Discovery;
 using NitroxModel.Helper;
 using NitroxModel.Platforms.OS.Shared;
 using NitroxModel.Platforms.Store.Interfaces;
@@ -13,10 +14,11 @@ namespace NitroxModel.Platforms.Store
         public static Discord Instance => instance ??= new Discord();
 
         public string Name => nameof(Discord);
+        public Platform platform => Platform.DISCORD;
 
         public bool OwnsGame(string gameDirectory)
         {
-            return File.Exists(Path.Combine(Directory.GetParent(gameDirectory)?.FullName ?? "", "journal.sqlite"));
+            return File.Exists(Path.Combine(Directory.GetParent(gameDirectory)?.FullName ?? "..", "journal.sqlite"));
         }
 
         public async Task<ProcessEx> StartPlatformAsync()

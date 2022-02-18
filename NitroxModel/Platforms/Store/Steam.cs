@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
+using NitroxModel.Discovery;
 using NitroxModel.Helper;
 using NitroxModel.Platforms.OS.Shared;
 using NitroxModel.Platforms.OS.Windows.Internal;
@@ -16,6 +17,7 @@ namespace NitroxModel.Platforms.Store
         public static Steam Instance => instance ??= new Steam();
 
         public string Name => nameof(Steam);
+        public Platform platform => Platform.STEAM;
 
         public bool OwnsGame(string gameDirectory)
         {
