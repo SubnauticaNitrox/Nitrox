@@ -1,34 +1,43 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
+﻿using NitroxClient.Communication.Abstract;
+using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxClient.GameLogic.FMOD;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
-using NitroxModel.Helper;
 using NitroxModel.Packets;
 using UnityEngine;
 
-namespace NitroxClient.Communication.Packets.Processors
+namespace NitroxClient.Communication.Packets.Processors;
+
+public class MedicalCabinetClickedProcessor : ClientPacketProcessor<MedicalCabinetClicked>
 {
-    public class MedicalCabinetClickedProcessor : ClientPacketProcessor<MedicalCabinetClicked>
+    private readonly IPacketSender packetSender;
+
+    public MedicalCabinetClickedProcessor(IPacketSender packetSender)
     {
-        public override void Process(MedicalCabinetClicked packet)
+        this.packetSender = packetSender;
+    }
+
+    public override void Process(MedicalCabinetClicked packet)
+    {
+        GameObject gameObject = NitroxEntity.RequireObjectFrom(packet.Id);
+        MedicalCabinet cabinet = gameObject.RequireComponent<MedicalCabinet>();
+
+        bool medkitPickedUp = !packet.HasMedKit && cabinet.hasMedKit;
+        bool doorChangedState = cabinet.doorOpen != packet.DoorOpen;
+
+        cabinet.hasMedKit = packet.HasMedKit;
+        cabinet.timeSpawnMedKit = packet.NextSpawnTime;
+
+        using (packetSender.Suppress<PlayFMODCustomEmitter>())
+        using (FMODSystem.SuppressSounds())
         {
-            GameObject gameObject = NitroxEntity.RequireObjectFrom(packet.Id);
-            MedicalCabinet cabinet = gameObject.RequireComponent<MedicalCabinet>();
-
-            bool medkitPickedUp = !packet.HasMedKit && cabinet.hasMedKit;
-
-            cabinet.hasMedKit = packet.HasMedKit;
-            cabinet.timeSpawnMedKit = packet.NextSpawnTime;
-
-            bool isDoorOpen = cabinet.doorOpen;
-            bool doorChangedState = isDoorOpen != packet.DoorOpen;
-
             if (doorChangedState)
             {
                 cabinet.Invoke(nameof(MedicalCabinet.ToggleDoorState), 0f);
             }
             else if (medkitPickedUp)
             {
-                cabinet.Invoke(nameof(MedicalCabinet.ToggleDoorState), 1.8f);
+                cabinet.Invoke(nameof(MedicalCabinet.ToggleDoorState), 2f);
             }
         }
     }

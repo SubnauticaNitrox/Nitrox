@@ -92,7 +92,10 @@ namespace NitroxModel.Serialization
 
             public Entry(string name, string address, int port)
             {
-                Validate.String(name);
+                if (string.IsNullOrWhiteSpace(name))
+                {
+                    throw new ArgumentException("name in ServerList.Entry constructor can't be null or whitespace");
+                }
                 Validate.NotNull(address);
 
                 Name = name.Trim();
