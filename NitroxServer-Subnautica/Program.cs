@@ -287,7 +287,7 @@ public class Program
 
     private static bool ConsoleEventCallback(int eventType)
     {
-        if (eventType == 2) // close
+        if (eventType >= 2) // close, logoff, or shutdown
         {
             StopServer();
         }
@@ -297,7 +297,8 @@ public class Program
 
     private static void OnCtrlCPressed(object sender, ConsoleCancelEventArgs e)
     {
-        StopServer();
+        // Prevents process from terminating
+        e.Cancel = true;
     }
 
     private static void StopServer()
