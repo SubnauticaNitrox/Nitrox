@@ -144,14 +144,14 @@ public class SceneDebugger : BaseDebugger
 
                     if (isLoaded)
                     {
-                        if (!isDDOLScene && GUILayout.Button("Load", "loadScene"))
+                        if (!isDDOLScene && GUILayout.Button("Unload", "loadScene"))
                         {
                             SceneManager.UnloadSceneAsync(i);
                         }
                     }
                     else
                     {
-                        if (!isDDOLScene && GUILayout.Button("Unload", "loadScene"))
+                        if (!isDDOLScene && GUILayout.Button("Load", "loadScene"))
                         {
                             SceneManager.LoadSceneAsync(i);
                         }

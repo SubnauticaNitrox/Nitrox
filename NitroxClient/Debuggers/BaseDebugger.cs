@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -17,6 +17,7 @@ namespace NitroxClient.Debuggers
         public readonly bool HotkeyAltRequired;
         public readonly bool HotkeyControlRequired;
         public readonly bool HotkeyShiftRequired;
+        public readonly string HotkeyString;
         public readonly GUISkinCreationOptions SkinCreationOptions;
 
         /// <summary>
@@ -50,6 +51,7 @@ namespace NitroxClient.Debuggers
             HotkeyAltRequired = alt;
             HotkeyShiftRequired = shift;
             HotkeyControlRequired = control;
+            HotkeyString = Hotkey == KeyCode.None ? "None" : $"{(HotkeyControlRequired ? "CTRL+" : "")}{(HotkeyAltRequired ? "ALT+" : "")}{(HotkeyShiftRequired ? "SHIFT+" : "")}{Hotkey}";
             SkinCreationOptions = skinOptions;
 
             if (string.IsNullOrEmpty(debuggerName))
@@ -86,11 +88,6 @@ namespace NitroxClient.Debuggers
             DebuggerTab tab = new(name, render);
             tabs.Add(tab.Name, tab);
             return tab;
-        }
-
-        public string GetHotkeyString()
-        {
-            return Hotkey == KeyCode.None ? "" : $"{(HotkeyControlRequired ? "CTRL+" : "")}{(HotkeyAltRequired ? "ALT+" : "")}{(HotkeyShiftRequired ? "SHIFT+" : "")}{Hotkey}";
         }
 
         protected Optional<DebuggerTab> GetTab(string name)
