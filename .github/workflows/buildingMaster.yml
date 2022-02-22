@@ -1,0 +1,28 @@
+name: Building Master
+on: 
+  push:
+
+jobs:
+  setup:
+    runs-on: [self-hosted, linux]
+    if: github.repository_owner == 'SubnauticaNitrox'
+    steps:
+    - name: Checking out repository
+      uses: actions/checkout@v3
+    - name: Reference Subnautica installation
+      run: |
+        export SUBNAUTICA_INSTALLATION_PATH=~/Subnautica/
+    - name: Run Nitrox.BuildTool
+      run: dotnet run --project ./Nitrox.BuildTool/Nitrox.BuildTool.csproj
+    - name: Install dependencies for Nitrox
+      run: dotnet restore
+
+  build:
+    needs: setup
+    runs-on: [self-hosted, linux]
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
+    steps:
+    - name: Build
+      run: dotnet build Nitrox.sln -c ${{ matrix.configuration }} --no-restore

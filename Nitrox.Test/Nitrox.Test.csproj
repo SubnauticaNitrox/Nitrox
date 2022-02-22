@@ -22,7 +22,7 @@
     <ProjectReference Include="..\NitroxServer\NitroxServer.csproj" />
   </ItemGroup>
 
-  <Target Name="MoveNitroxAssetsToTestOutput" AfterTargets="Build" Condition="'$(OS)' == 'Windows_NT'">
+  <Target Name="MoveNitroxAssetsToTestOutput" AfterTargets="Build">
     <ItemGroup>
       <NitroxSubnauticaAssets Include="..\Nitrox.Assets.Subnautica\**\*." />
     </ItemGroup>

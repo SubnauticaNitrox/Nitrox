@@ -1,0 +1,47 @@
+name: Building Pull Request
+on: 
+  pull_request:
+
+jobs:
+  setup:
+    runs-on: [self-hosted, linux]
+    if: github.repository_owner == 'SubnauticaNitrox'
+    steps:
+    - name: Checking out repository
+      uses: actions/checkout@v3
+    - name: Reference Subnautica installation
+      run: |
+        export SUBNAUTICA_INSTALLATION_PATH=~/Subnautica/
+    - name: Run Nitrox.BuildTool
+      run: dotnet run --project ./Nitrox.BuildTool/Nitrox.BuildTool.csproj
+    - name: Install dependencies for Nitrox
+      run: dotnet restore
+
+  build:
+    needs: setup
+    runs-on: [self-hosted, linux]
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
+    steps:
+    - name: Build
+      run: dotnet build Nitrox.sln -c ${{ matrix.configuration }} --no-restore
+
+  # test:
+  #   needs: build
+  #   runs-on: [self-hosted, linux]
+  #   steps:
+  #   - name: Run Tests
+  #     continue-on-error: true
+  #     run: dotnet test Nitrox.Test/bin/Debug/Nitrox.Test.dll --logger trx --no-build --results-directory "TestResults"
+  #   - name: Upload Test Results
+  #     uses: actions/upload-artifact@v2
+  #     if: success() || failure()
+  #     with:
+  #       name: test-results
+  #       path: 'TestResults/*.trx'
+  #   - name: Upload Build Output
+  #     uses: actions/upload-artifact@v2
+  #     with:
+  #       name: build-output
+  #       path: 'NitroxLauncher/bin/Debug'

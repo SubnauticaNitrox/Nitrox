@@ -5,6 +5,7 @@
 # Subnautica Nitrox
 An open-source, multiplayer modification for the game <a href="https://unknownworlds.com/subnautica/">Subnautica</a>.
 
+[![Master](https://github.com/SubnauticaNitrox/Nitrox/workflows/Building%20Master/badge.svg?event=push)](https://github.com/SubnauticaNitrox/Nitrox/actions?query=workflow%3A%22Building+Master%22+event%3Apush)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/SubnauticaNitrox/Nitrox)](https://github.com/SubnauticaNitrox/Nitrox/releases)
 [![Discord](https://img.shields.io/discord/525437013403631617?logo=discord&logoColor=white)](https://discord.gg/E8B4X9s)
