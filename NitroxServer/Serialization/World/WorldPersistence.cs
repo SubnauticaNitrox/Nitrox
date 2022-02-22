@@ -218,13 +218,6 @@ namespace NitroxServer.Serialization.World
         {
             SaveFileVersion saveFileVersion = Serializer.Deserialize<SaveFileVersion>(Path.Combine(saveDir, $"Version{FileEnding}"));
 
-            // SaveFileVersion structure was updated in V1.5.0.0
-            // This can be removed with V1.6.0.0 or later
-            if (File.ReadAllText(Path.Combine(saveDir, $"Version{FileEnding}")).Contains("BaseDataVersion"))
-            {
-                saveFileVersion = new SaveFileVersion(new Version(1, 4, 0, 0));
-            }
-
             if (saveFileVersion.Version == NitroxEnvironment.Version)
             {
                 return;
