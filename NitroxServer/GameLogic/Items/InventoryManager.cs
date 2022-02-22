@@ -13,9 +13,55 @@ namespace NitroxServer.GameLogic.Items
 
         public InventoryManager(List<ItemData> inventoryItems, List<ItemData> storageSlotItems, List<EquippedItemData> modules)
         {
-            inventoryItemsById = new ThreadSafeDictionary<NitroxId, ItemData>(inventoryItems.ToDictionary(item => item.ItemId), false);
-            storageSlotItemsByContainerId = new ThreadSafeDictionary<NitroxId, ItemData>(storageSlotItems.ToDictionary(item => item.ContainerId), false);
-            modulesById = new ThreadSafeDictionary<NitroxId, EquippedItemData>(modules.ToDictionary(module => module.ItemId), false);
+            try
+            {
+                inventoryItemsById = new ThreadSafeDictionary<NitroxId, ItemData>(inventoryItems.ToDictionary(item => item.ItemId), false);
+            }
+            catch (System.ArgumentException ae)
+            {
+                printDuplicates("inventory items", inventoryItems);
+
+                throw ae;
+            }
+
+            try
+            {
+                storageSlotItemsByContainerId = new ThreadSafeDictionary<NitroxId, ItemData>(storageSlotItems.ToDictionary(item => item.ContainerId), false);
+            }
+            catch (System.ArgumentException ae)
+            {
+                printDuplicates("storage slot items", storageSlotItems);
+
+                throw ae;
+            }
+
+            try
+            {
+              modulesById = new ThreadSafeDictionary<NitroxId, EquippedItemData>(modules.ToDictionary(module => module.ItemId), false);
+            }
+            catch (System.ArgumentException ae)
+            {
+                printDuplicates("modules", modules);
+
+                throw ae;
+            }
+        }
+
+        private void printDuplicates<T>(string listName, List<T> list) where T: ItemData
+        {
+            Log.Error($"Duplicate {listName}:");
+
+            list
+                .GroupBy(item => item.ItemId)
+                .Where(item => item.Count() > 1)
+                .ToList().ForEach(items =>
+                {
+                    Log.Error(items.Key + " (" + items.Count() + "):");
+                    foreach (ItemData item in items.ToList())
+                    {
+                        Log.Error(item.ToString());
+                    };
+                });
         }
 
         public void InventoryItemAdded(ItemData itemData)

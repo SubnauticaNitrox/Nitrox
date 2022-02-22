@@ -26,7 +26,7 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public override string ToString()
         {
-            return "[EquippedItemData ContainerGuid: " + ContainerId + "Id: " + ItemId + " Slot: " + Slot + " TechType: " + TechType + "]";
+            return "[EquippedItemData ContainerGuid: " + ContainerId + " Id: " + ItemId + " Slot: " + Slot + " TechType: " + TechType + "]";
         }
     }
 }
