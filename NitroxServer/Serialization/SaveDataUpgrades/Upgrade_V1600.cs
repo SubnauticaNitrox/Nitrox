@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
+using NitroxModel.DataStructures;
 using NitroxServer.Serialization.Upgrade;
 
 namespace NitroxServer.Serialization.SaveDataUpgrades
@@ -30,6 +31,19 @@ namespace NitroxServer.Serialization.SaveDataUpgrades
                 }
             }
             data["GameData"]["PDAState"]["PdaLog"] = new JArray(cleanPdaLog);
+
+            Dictionary<string, JToken> modules = new();
+            foreach (JToken moduleEntry in data["InventoryData"]["Modules"])
+            {
+                JToken itemId = moduleEntry["ItemId"];
+                if (modules.ContainsKey(itemId.ToString()))
+                {
+                    itemId = new NitroxId().ToString();
+                    moduleEntry["ItemId"] = itemId;
+                }
+                modules.Add(itemId.ToString(), moduleEntry);
+            }
+            data["InventoryData"]["Modules"] = new JArray(modules.Values);
 
             data.Property("ServerStartTime")?.Remove();
         }
