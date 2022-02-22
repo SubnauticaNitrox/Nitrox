@@ -1,7 +1,7 @@
 <Project InitialTargets="PrepareForModding">
     <!-- Set default properties for all projects (can be overridden per project) -->
     <PropertyGroup>
-        <Version>1.6.0.0</Version>
+        <Version>1.6.0.1</Version>
         <LangVersion>10</LangVersion>
         <TestLibrary>false</TestLibrary>
         <NitroxLibrary>false</NitroxLibrary>
