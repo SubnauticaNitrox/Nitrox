@@ -18,7 +18,7 @@ namespace NitroxServer.ConsoleCommands
             targetPlayer.Permissions = Perms.PLAYER;
 
             // Need to notify him so that he no longer shows admin stuff on client (which would in any way stop working)
-            targetPlayer.SendPacket(new OpPlayer(false));
+            targetPlayer.SendPacket(new PermsChanged(targetPlayer.Permissions));
             SendMessage(targetPlayer, "You were demoted to PLAYER");
             SendMessage(args.Sender, $"Updated {targetPlayer.Name}\'s permissions to PLAYER");
         }

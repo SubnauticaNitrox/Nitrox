@@ -18,7 +18,7 @@ namespace NitroxServer.ConsoleCommands
             targetPlayer.Permissions = Perms.ADMIN;
 
             // We need to notify this player that he can show all the admin-related stuff
-            targetPlayer.SendPacket(new OpPlayer(true));
+            targetPlayer.SendPacket(new PermsChanged(targetPlayer.Permissions));
             SendMessage(targetPlayer, "You were promoted to ADMIN");
             SendMessage(args.Sender, $"Updated {targetPlayer.Name}\'s permissions to ADMIN");
         }
