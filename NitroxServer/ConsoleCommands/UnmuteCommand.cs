@@ -13,7 +13,7 @@ namespace NitroxServer.ConsoleCommands
         public UnmuteCommand(PlayerManager playerManager) : base("unmute", Perms.MODERATOR, "Removes a mute from a player")
         {
             this.playerManager = playerManager;
-            AddParameter(new TypePlayer("name", true, "Username to unmute"));
+            AddParameter(new TypePlayer("name", true, "Player to unmute"));
         }
 
         protected override void Execute(CallArgs args)
@@ -32,8 +32,14 @@ namespace NitroxServer.ConsoleCommands
                 return;
             }
 
-            targetPlayer.Muted = false;
-            playerManager.SendPacketToAllPlayers(new MutePlayer(targetPlayer.Id, targetPlayer.Muted));
+            if (!targetPlayer.IsMuted)
+            {
+                SendMessage(args.Sender, $"{targetPlayer.Name} is already unmuted");
+                return;
+            }
+
+            targetPlayer.IsMuted = false;
+            playerManager.SendPacketToAllPlayers(new MutePlayer(targetPlayer.Id, targetPlayer.IsMuted));
             SendMessage(targetPlayer, "You're no longer muted");
             SendMessage(args.Sender, $"Unmuted {targetPlayer.Name}");
         }

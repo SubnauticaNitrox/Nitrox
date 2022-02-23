@@ -13,7 +13,7 @@ namespace NitroxServer.ConsoleCommands
         public MuteCommand(PlayerManager playerManager) : base("mute", Perms.MODERATOR, "Prevents a user from chatting")
         {
             this.playerManager = playerManager;
-            AddParameter(new TypePlayer("name", true, "Username of the player to mute"));
+            AddParameter(new TypePlayer("name", true, "Player to mute"));
         }
 
         protected override void Execute(CallArgs args)
@@ -32,8 +32,14 @@ namespace NitroxServer.ConsoleCommands
                 return;
             }
 
-            targetPlayer.Muted = true;
-            playerManager.SendPacketToAllPlayers(new MutePlayer(targetPlayer.Id, targetPlayer.Muted));
+            if (targetPlayer.IsMuted)
+            {
+                SendMessage(args.Sender, $"{targetPlayer.Name} is already muted");
+                return;
+            }
+
+            targetPlayer.IsMuted = true;
+            playerManager.SendPacketToAllPlayers(new MutePlayer(targetPlayer.Id, targetPlayer.IsMuted));
             SendMessage(targetPlayer, "You're now muted");
             SendMessage(args.Sender, $"Muted {targetPlayer.Name}");
         }
