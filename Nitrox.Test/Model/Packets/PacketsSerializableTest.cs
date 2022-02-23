@@ -25,7 +25,7 @@ namespace NitroxTest.Model.Packets
                 return;
             }
 
-            Assert.IsFalse(!t.IsSerializable && !t.IsInterface && !Packet.IsTypeSerializable(t), $"Type {t} is not serializable!");
+            Assert.IsTrue(t.IsSerializable || t.IsInterface || t == typeof(SerializationInfo) || Packet.IsTypeSerializable(t), $"Type {t} is not serializable!");
 
             visitedTypes.Add(t);
 

@@ -32,9 +32,13 @@ namespace NitroxServer.GameLogic
         public void TestTimeSkip()
         {
             EventTriggerer eventTriggerer = new(null, 480.0, null);
+            eventTriggerer.PauseEventTimers();
+            eventTriggerer.PauseWorldTime();
+
             double interval = eventTriggerer.eventTimers["Story_AuroraExplosion"].Interval;
             eventTriggerer.ElapsedTimeMs += TimeSpan.FromMinutes(40).TotalMilliseconds;
             Assert.AreEqual(interval - TimeSpan.FromMinutes(40).TotalMilliseconds, eventTriggerer.eventTimers["Story_AuroraExplosion"].Interval);
+
             interval = eventTriggerer.eventTimers["Story_AuroraExplosion"].Interval;
             eventTriggerer.ElapsedTimeMs += TimeSpan.FromMinutes(2).TotalMilliseconds;
             Assert.AreEqual(interval - TimeSpan.FromMinutes(2).TotalMilliseconds, eventTriggerer.eventTimers["Story_AuroraExplosion"].Interval);
