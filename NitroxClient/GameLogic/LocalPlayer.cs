@@ -32,6 +32,7 @@ namespace NitroxClient.GameLogic
         public GameObject BodyPrototype => bodyPrototype.Value;
 
         public string PlayerName => multiplayerSession.AuthenticationContext.Username;
+        public ushort PlayerId => multiplayerSession.Reservation.PlayerId;
         public PlayerSettings PlayerSettings => multiplayerSession.PlayerSettings;
 
         public LocalPlayer(IMultiplayerSession multiplayerSession, IPacketSender packetSender)

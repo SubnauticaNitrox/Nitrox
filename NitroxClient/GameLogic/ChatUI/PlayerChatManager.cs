@@ -89,9 +89,8 @@ namespace NitroxClient.GameLogic.ChatUI
                 return;
             }
 
-            // Chat message
+            // Chat message, we shouldn't add the message to the local chat but instead let the server tell us if this message is added or not
             multiplayerSession.Send(new ChatMessage(multiplayerSession.Reservation.PlayerId, trimmedInput));
-            playerChat.WriteLogEntry(multiplayerSession.AuthenticationContext.Username, playerChat.InputText, multiplayerSession.PlayerSettings.PlayerColor.ToUnity());
             playerChat.InputText = "";
             playerChat.Select();
         }

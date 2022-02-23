@@ -131,7 +131,7 @@ namespace NitroxServer.ConsoleCommands.Abstract
         public static void SendMessage(Optional<Player> player, string message)
         {
             SendMessageToPlayer(player, message);
-            Log.Info(message);
+            Log.Info($"{(player.HasValue ? $"=> {player.Value.Name}: ": "")}{message}");
         }
 
         /// <summary>
