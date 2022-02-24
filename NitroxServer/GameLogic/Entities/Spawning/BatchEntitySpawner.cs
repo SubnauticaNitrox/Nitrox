@@ -28,6 +28,12 @@ namespace NitroxServer.GameLogic.Entities.Spawning
         private readonly object emptyBatchesLock = new object();
         private HashSet<NitroxInt3> parsedBatches;
 
+        /// <summary>
+        /// Should not be modified without testing (a good way is "goto wreck13" and look around the wreck)
+        /// 0.1 seemed to be a bit low and 0.3 seemed to be too much
+        /// </summary>
+        private const float LUCK_INDICATOR = 0.2f;
+
         public List<NitroxInt3> SerializableParsedBatches
         {
             get
@@ -110,11 +116,13 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             return entities;
         }
 
+        // This method generates the prefabs according to "luck", though, with the current probabilities of spawning certain prefabs, you may never see them more than once after visiting every single wreck
+        // Which is why we introduce the LUCK_INDICATOR to make everything more frequent and therefore the least likely to appear will finally spawn
         private IEnumerable<Entity> SpawnEntitiesUsingRandomDistribution(EntitySpawnPoint entitySpawnPoint, List<UwePrefab> prefabs, DeterministicBatchGenerator deterministicBatchGenerator, Entity parentEntity = null)
         {
             List<UwePrefab> allowedPrefabs = FilterAllowedPrefabs(prefabs, entitySpawnPoint);
 
-            float rollingProbabilityDensity = allowedPrefabs.Sum(prefab => prefab.Probability / entitySpawnPoint.Density);
+            float rollingProbabilityDensity = allowedPrefabs.Sum(prefab => (prefab.Probability + LUCK_INDICATOR) / entitySpawnPoint.Density);
 
             if (rollingProbabilityDensity <= 0)
             {
@@ -136,7 +144,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                     return false;
                 }
 
-                float probabilityDensity = prefab.Probability / entitySpawnPoint.Density;
+                float probabilityDensity = (prefab.Probability + LUCK_INDICATOR) / entitySpawnPoint.Density;
 
                 rollingProbability += probabilityDensity;
 
