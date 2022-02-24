@@ -70,12 +70,14 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel
             PingInstance ping = signalBase.GetComponent<PingInstance>();
             ping.SetLabel("Player " + player.PlayerName);
             ping.pingType = PingType.Signal;
+            // ping will be moved to the player list tab
+            ping.displayPingInManager = false;
 
-            UpdateLocalPlayerPda(player, ping);
+            UpdateLocalPlayerPda();
             SetInGamePingColor(player, ping);
         }
 
-        private static void UpdateLocalPlayerPda(INitroxPlayer player, PingInstance ping)
+        private static void UpdateLocalPlayerPda()
         {
             PDA localPlayerPda = Player.main.GetPDA();
             GameObject pdaScreenGameObject = localPlayerPda.ui.gameObject;
@@ -83,12 +85,6 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel
             uGUI_PingTab pingTab = pingTabGameObject.GetComponent<uGUI_PingTab>();
 
             pingTab.UpdateEntries();
-            Dictionary<int, uGUI_PingEntry> pingEntries = pingTab.entries;
-            uGUI_PingEntry pingEntry = pingEntries[ping.GetInstanceID()];
-            pingEntry.icon.color = player.PlayerSettings.PlayerColor.ToUnity();
-
-            GameObject pingEntryGameObject = pingEntry.gameObject;
-            pingEntryGameObject.transform.Find("ColorToggle").gameObject.SetActive(false);
 
             if (!localPlayerPda.isInUse)
             {

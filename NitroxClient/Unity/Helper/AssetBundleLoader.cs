@@ -12,7 +12,7 @@ public static class AssetBundleLoader
 
     private static bool firstTime = true;
 
-    private static IEnumerator LoadAssetBundle(string bundleName, Action<AssetBundle> callback = null)
+    public static IEnumerator LoadAssetBundle(string bundleName, Action<AssetBundle> callback = null)
     {
         if (firstTime)
         {

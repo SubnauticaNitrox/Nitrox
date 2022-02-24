@@ -34,7 +34,8 @@ namespace NitroxClient.GameLogic
         public string PlayerName => multiplayerSession.AuthenticationContext.Username;
         public ushort PlayerId => multiplayerSession.Reservation.PlayerId;
         public PlayerSettings PlayerSettings => multiplayerSession.PlayerSettings;
-
+        public Perms Permissions;
+        
         public LocalPlayer(IMultiplayerSession multiplayerSession, IPacketSender packetSender)
         {
             this.multiplayerSession = multiplayerSession;
@@ -42,6 +43,7 @@ namespace NitroxClient.GameLogic
             body = new Lazy<GameObject>(() => Player.main.RequireGameObject("body"));
             playerModel = new Lazy<GameObject>(() => Body.RequireGameObject("player_view"));
             bodyPrototype = new Lazy<GameObject>(CreateBodyPrototype);
+            Permissions = Perms.PLAYER;
         }
 
         public void BroadcastStats(float oxygen, float maxOxygen, float health, float food, float water, float infectionAmount)
