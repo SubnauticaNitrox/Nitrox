@@ -105,8 +105,26 @@
 
                         <Rectangle Grid.Column="1" Width="24" Height="24" Margin="10,0,0,0">
                             <Rectangle.Fill>
-                                <VisualBrush Visual="{StaticResource InformationIcon}" />
+                                <VisualBrush Visual="{StaticResource InformationIcon}" AutoLayoutContent="True" />
                             </Rectangle.Fill>
+
+                            <Rectangle.Style>
+                                <Style TargetType="Rectangle">
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Trigger.Setters>
+                                                <Setter Property="Effect">
+                                                    <Setter.Value>
+                                                        <DropShadowEffect ShadowDepth="0" Color="White" Opacity="1" BlurRadius="20" />
+                                                    </Setter.Value>
+                                                </Setter>
+                                                
+                                                <Setter Property="Cursor" Value="Hand" />
+                                            </Trigger.Setters>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Rectangle.Style>
 
                             <Rectangle.ToolTip>
                                 <StackPanel>
@@ -122,7 +140,7 @@
 
                                     <Border BorderBrush="Silver" BorderThickness="0,1,0,0" Margin="0,8" />
 
-                                    <TextBlock FontStyle="Italic">Contact our support for more informations</TextBlock>
+                                    <TextBlock FontStyle="Italic">Contact our support for more information</TextBlock>
                                 </StackPanel>
                             </Rectangle.ToolTip>
                         </Rectangle>

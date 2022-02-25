@@ -119,10 +119,27 @@ namespace NitroxClient.GameLogic
             NitroxEntity.SetNewId(radio.gameObject, model.RadioId);
 
             DamageEscapePod(model.Damaged, model.RadioDamaged);
+            FixStartMethods(escapePod);
 
             SURPRESS_ESCAPE_POD_AWAKE_METHOD = false;
 
             return escapePod;
+        }
+
+        /// <summary>
+        /// Start() isn't executed for the EscapePod and children (Why? Idk, maybe because it's a scene...) so we call the components here where we have patches in Start.
+        /// </summary>
+        private static void FixStartMethods(GameObject escapePod)
+        {
+            foreach (FMOD_CustomEmitter customEmitter in escapePod.GetComponentsInChildren<FMOD_CustomEmitter>())
+            {
+                customEmitter.Start();
+            }
+
+            foreach (FMOD_StudioEventEmitter studioEventEmitter in escapePod.GetComponentsInChildren<FMOD_StudioEventEmitter>())
+            {
+                studioEventEmitter.Start();
+            }
         }
 
         public void DamageEscapePod(bool damage, bool radio)
