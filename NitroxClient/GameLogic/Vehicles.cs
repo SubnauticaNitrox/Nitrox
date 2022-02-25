@@ -460,7 +460,10 @@ namespace NitroxClient.GameLogic
 
             if (subRoot is BaseRoot)
             {
-                dockId = NitroxEntity.GetId(dockingBay.GetComponentInParent<BaseDeconstructable>().gameObject);
+                // Means we're looking for a moonpool that's inside a base, tho we can't use this subroot as we want to look for the moonpool and not the base
+                // BaseMoonpool(Clone)/Launchbay_cinematic/DockBottom
+                Transform moonpoolParent = dockingBay.transform.parent.parent;
+                dockId = NitroxEntity.GetId(moonpoolParent.gameObject);
             }
             else // cyclops
             {
@@ -482,9 +485,11 @@ namespace NitroxClient.GameLogic
         {
             NitroxId dockId;
 
+            // Same things as for BroadcastVehicleDocking
             if (dockingBay.GetSubRoot() is BaseRoot)
             {
-                dockId = NitroxEntity.GetId(dockingBay.GetComponentInParent<BaseRoot>().gameObject);
+                Transform moonpoolParent = dockingBay.transform.parent.parent;
+                dockId = NitroxEntity.GetId(moonpoolParent.gameObject);
             }
             else if (dockingBay.GetSubRoot() is SubRoot)
             {
