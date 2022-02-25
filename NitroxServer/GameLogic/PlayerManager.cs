@@ -127,7 +127,11 @@ namespace NitroxServer.GameLogic
 
             initialSyncTimer = new Timer(state =>
             {
-                if (player != null) // player can cancel the joining process before this timer elapses
+                if (player == null) // player can cancel the joining process before this timer elapses
+                {
+                    Log.Error("Player was nulled while joining");
+                }
+                else
                 {
                     player.SendPacket(new PlayerKicked("An error occured while loading, Initial sync took too long to complete"));
                     PlayerDisconnected(player.Connection);
