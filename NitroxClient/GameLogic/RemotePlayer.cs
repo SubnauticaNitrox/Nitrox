@@ -264,5 +264,6 @@ namespace NitroxClient.GameLogic
         {
             playerModelManager.UpdateEquipmentVisibility(new ReadOnlyCollection<TechType>(equipment.ToList()));
         }
+
     }
 }

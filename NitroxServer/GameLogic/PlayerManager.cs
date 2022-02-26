@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
@@ -55,9 +56,22 @@ namespace NitroxServer.GameLogic
             AuthenticationContext authenticationContext,
             string correlationId)
         {
+            if (reservedPlayerNames.Count >= serverConfig.MaxConnections)
+            {
+                MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.SERVER_PLAYER_CAPACITY_REACHED;
+                return new MultiplayerSessionReservation(correlationId, rejectedState);
+            }
+
             if (!string.IsNullOrEmpty(serverConfig.ServerPassword) && (!authenticationContext.ServerPassword.HasValue || authenticationContext.ServerPassword.Value != serverConfig.ServerPassword))
             {
                 MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.AUTHENTICATION_FAILED;
+                return new MultiplayerSessionReservation(correlationId, rejectedState);
+            }
+
+            //https://regex101.com/r/eTWiEs/2/
+            if (!Regex.IsMatch(authenticationContext.Username, @"^[a-zA-Z0-9._-]{3,25}$"))
+            {
+                MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.INCORRECT_USERNAME;
                 return new MultiplayerSessionReservation(correlationId, rejectedState);
             }
 
@@ -76,13 +90,8 @@ namespace NitroxServer.GameLogic
                 return new MultiplayerSessionReservation(correlationId, MultiplayerSessionReservationState.ENQUEUED_IN_JOIN_QUEUE);
             }
 
-            if (reservedPlayerNames.Count >= serverConfig.MaxConnections)
-            {
-                MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.SERVER_PLAYER_CAPACITY_REACHED;
-                return new MultiplayerSessionReservation(correlationId, rejectedState);
-            }
-
             string playerName = authenticationContext.Username;
+
             allPlayersByName.TryGetValue(playerName, out Player player);
             if (player?.IsPermaDeath == true && serverConfig.IsHardcore)
             {
@@ -108,7 +117,7 @@ namespace NitroxServer.GameLogic
             ushort playerId = hasSeenPlayerBefore ? player.Id : ++currentPlayerId;
             NitroxId playerNitroxId = hasSeenPlayerBefore ? player.GameObjectId : new NitroxId();
 
-            PlayerContext playerContext = new PlayerContext(playerName, playerId, playerNitroxId, !hasSeenPlayerBefore, playerSettings);
+            PlayerContext playerContext = new(playerName, playerId, playerNitroxId, !hasSeenPlayerBefore, playerSettings);
             string reservationKey = Guid.NewGuid().ToString();
 
             reservations.Add(reservationKey, playerContext);
@@ -118,9 +127,8 @@ namespace NitroxServer.GameLogic
 
             initialSyncTimer = new Timer(state =>
             {
-                player.SendPacket(new PlayerKicked("Took too long for initial sync to complete"));
+                player.SendPacket(new PlayerKicked("An error occured while loading, Initial sync took too long to complete"));
                 PlayerDisconnected(player.Connection);
-
                 SendPacketToOtherPlayers(new Disconnect(player.Id), player);
 
                 FinishProcessingReservation();

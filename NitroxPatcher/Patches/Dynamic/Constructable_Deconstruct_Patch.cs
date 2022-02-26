@@ -13,7 +13,8 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(Constructable __instance, bool __result)
         {
-            if (__result && __instance.constructedAmount <= 0f)
+            if (!__result) return;
+            if (__instance.constructedAmount <= 0f)
             {
                 Resolve<Building>().DeconstructionComplete(__instance.gameObject);
                 Log.Debug("Finished deconstructing, now removing ghost NitroxEntity");
@@ -24,7 +25,7 @@ namespace NitroxPatcher.Patches.Dynamic
                     Log.Debug($"Added ghost to ignore list: {nitroxEntity.Id}");
                 }
             }
-            else if (!__instance._constructed && __instance.constructedAmount > 0)
+            else
             {
                 Resolve<Building>().ChangeConstructionAmount(__instance.gameObject, __instance.constructedAmount);
             }

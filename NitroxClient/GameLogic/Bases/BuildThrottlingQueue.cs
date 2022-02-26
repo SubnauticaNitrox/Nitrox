@@ -27,7 +27,7 @@ namespace NitroxClient.GameLogic.Bases
 
         public void EnqueueBasePiecePlaced(BasePiece basePiece)
         {
-            Log.Info($"Enqueuing base piece to be placed - TechType: {basePiece.TechType}, Id: {basePiece.Id}, ParentId: {basePiece.ParentId.OrElse(null)}, BuildIndex: {basePiece.BuildIndex}");
+            Log.Info($"Enqueuing base piece to be placed - TechType: {basePiece.TechType}, Id: {basePiece.Id}, ParentId: {basePiece.ParentId.OrNull()}, BuildIndex: {basePiece.BuildIndex}");
             Enqueue(new BasePiecePlacedEvent(basePiece));
         }
 

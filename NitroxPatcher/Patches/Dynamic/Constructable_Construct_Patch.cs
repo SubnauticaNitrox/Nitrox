@@ -1,9 +1,12 @@
 ﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
+using NitroxModel.Logger;
+using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
@@ -13,22 +16,32 @@ namespace NitroxPatcher.Patches.Dynamic
 
         private static Base lastTargetBase;
         private static Int3 lastTargetBaseOffset;
+        private static Base.Face lastFace;
 
         public static bool Prefix(Constructable __instance)
         {
-            if (!__instance._constructed && __instance.constructedAmount < 1.0f)
+            if (__instance.constructed)
             {
-                NitroxServiceLocator.LocateService<Building>().ChangeConstructionAmount(__instance.gameObject, __instance.constructedAmount);
+                return true;
             }
-
+            
             // If we are constructing a base piece then we'll want to store all of the BaseGhost information
             // as it will not be available when the construction hits 100%
-            BaseGhost baseGhost = __instance.gameObject.GetComponentInChildren<BaseGhost>();
-
-            if (baseGhost != null && baseGhost.TargetBase)
+            if (__instance is ConstructableBase constructableBase)
             {
-                lastTargetBase = baseGhost.TargetBase.GetComponent<Base>();
-                lastTargetBaseOffset = baseGhost.TargetOffset;
+                BaseGhost baseGhost = constructableBase.gameObject.GetComponentInChildren<BaseGhost>();
+                if (baseGhost != null)
+                {
+                    lastTargetBase = baseGhost.TargetBase;
+                    lastTargetBaseOffset = baseGhost.TargetOffset;
+                }
+
+                lastFace = baseGhost switch
+                {
+                    BaseAddFaceGhost { anchoredFace: { } } baseAddFaceGhost => baseAddFaceGhost.anchoredFace.Value,
+                    BaseAddModuleGhost { anchoredFace: { } } baseAddModuleGhost => baseAddModuleGhost.anchoredFace.Value,
+                    _ => lastFace
+                };
             }
             else
             {
@@ -41,9 +54,12 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(Constructable __instance, bool __result)
         {
-            if (__result && __instance.constructedAmount >= 1.0f)
+            if (!__result) return;
+
+            NitroxServiceLocator.LocateService<Building>().ChangeConstructionAmount(__instance.gameObject, __instance.constructedAmount);
+            if (__instance._constructed)
             {
-                NitroxServiceLocator.LocateService<Building>().ConstructionComplete(__instance.gameObject, Optional.OfNullable(lastTargetBase), lastTargetBaseOffset);
+                NitroxServiceLocator.LocateService<Building>().ConstructionComplete(__instance.gameObject, Optional.OfNullable(lastTargetBase), lastTargetBaseOffset, lastFace);
             }
         }
 

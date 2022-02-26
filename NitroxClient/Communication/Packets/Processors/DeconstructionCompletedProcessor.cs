@@ -11,8 +11,15 @@ namespace NitroxClient.Communication.Packets.Processors
         public override void Process(DeconstructionCompleted packet)
         {
             GameObject deconstructing = NitroxEntity.RequireObjectFrom(packet.Id);
-            UnityEngine.Object.Destroy(deconstructing);
-
+            if (deconstructing.TryGetComponent(out Constructable constructable))
+            {
+                constructable.constructedAmount = 0;
+                constructable.Deconstruct();
+            }
+            else
+            {
+                UnityEngine.Object.Destroy(deconstructing);
+            }
             GeometryRespawnManager.NitroxIdsToIgnore.Add(packet.Id);
             Log.Debug($"[DeconstructionCompletedProcessor] added NitroxId to ignore list {packet.Id}");
         }

@@ -26,7 +26,7 @@ namespace NitroxClient.GameLogic.Helper
             LATER_OBJECT_LATEST_CELL,
         }
 
-        public static Dictionary<TransientObjectType, object> localObjectsById = new Dictionary<TransientObjectType, object>();
+        private static readonly Dictionary<TransientObjectType, object> localObjectsById = new();
 
         public static void Add(TransientObjectType key, object o)
         {

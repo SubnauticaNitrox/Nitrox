@@ -129,5 +129,6 @@ namespace NitroxClient.MonoBehaviours
         {
             gameObjectsById[Id] = gameObject;
         }
+
     }
 }

@@ -81,7 +81,7 @@ namespace NitroxServer.GameLogic.Players
                 Id = player.Id,
                 SpawnPosition = player.Position,
                 CurrentStats = player.Stats,
-                SubRootId = player.SubRootId.OrElse(null),
+                SubRootId = player.SubRootId.OrNull(),
                 Permissions = player.Permissions,
                 NitroxId = player.GameObjectId,
                 IsPermaDeath = player.IsPermaDeath,
