@@ -455,20 +455,8 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastVehicleDocking(VehicleDockingBay dockingBay, Vehicle vehicle)
         {
-            SubRoot subRoot = dockingBay.GetSubRoot();
-            NitroxId dockId;
+            NitroxId dockId = NitroxEntity.GetId(dockingBay.gameObject);
 
-            if (subRoot is BaseRoot)
-            {
-                // Means we're looking for a moonpool that's inside a base, tho we can't use this subroot as we want to look for the moonpool and not the base
-                // BaseMoonpool(Clone)/Launchbay_cinematic/DockBottom
-                Transform moonpoolParent = dockingBay.transform.parent.parent;
-                dockId = NitroxEntity.GetId(moonpoolParent.gameObject);
-            }
-            else // cyclops
-            {
-                dockId = NitroxEntity.GetId(subRoot.gameObject);
-            }
 
             NitroxId vehicleId = NitroxEntity.GetId(vehicle.gameObject);
             ushort playerId = multiplayerSession.Reservation.PlayerId;
@@ -483,22 +471,7 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastVehicleUndocking(VehicleDockingBay dockingBay, Vehicle vehicle, bool undockingStart)
         {
-            NitroxId dockId;
-
-            // Same things as for BroadcastVehicleDocking
-            if (dockingBay.GetSubRoot() is BaseRoot)
-            {
-                Transform moonpoolParent = dockingBay.transform.parent.parent;
-                dockId = NitroxEntity.GetId(moonpoolParent.gameObject);
-            }
-            else if (dockingBay.GetSubRoot() is SubRoot)
-            {
-                dockId = NitroxEntity.GetId(dockingBay.GetSubRoot().gameObject);
-            }
-            else
-            {
-                dockId = NitroxEntity.GetId(dockingBay.GetComponentInParent<ConstructableBase>().gameObject);
-            }
+            NitroxId dockId = NitroxEntity.GetId(dockingBay.gameObject);
 
             NitroxId vehicleId = NitroxEntity.GetId(vehicle.gameObject);
             ushort playerId = multiplayerSession.Reservation.PlayerId;
