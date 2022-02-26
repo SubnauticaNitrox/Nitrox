@@ -7,6 +7,7 @@ using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.DataStructures.GameLogic.Entities;
 using NitroxModel_Subnautica.Helper;
 using NitroxServer;
+using NitroxServer.GameLogic.Entities;
 using NitroxServer.GameLogic.Entities.Spawning;
 using NitroxServer.Serialization;
 using NitroxServer_Subnautica.GameLogic.Entities;
@@ -36,6 +37,7 @@ namespace NitroxServer_Subnautica
                             .SingleInstance();
 
             containerBuilder.RegisterType<SubnauticaEntitySpawnPointFactory>().As<EntitySpawnPointFactory>().SingleInstance();
+            containerBuilder.RegisterType<SubnauticaEntityHelper>().As<EntityHelper>().SingleInstance();
 
             ResourceAssets resourceAssets = ResourceAssetsParser.Parse();
 

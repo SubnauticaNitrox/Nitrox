@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
+using NitroxServer.GameLogic.Unlockables;
 using NitroxServer.Serialization;
 using NitroxServer.Serialization.Resources.Datastructures;
 
@@ -14,6 +16,8 @@ namespace NitroxServer.GameLogic.Entities.Spawning
     public class BatchEntitySpawner : IEntitySpawner
     {
         private readonly BatchCellsParser batchCellsParser;
+        private readonly PDAStateData pdaStateData;
+        private readonly EntityHelper entityHelper;
 
         private readonly Dictionary<NitroxTechType, IEntityBootstrapper> customBootstrappersByTechType;
         private readonly HashSet<NitroxInt3> emptyBatches = new HashSet<NitroxInt3>();
@@ -32,7 +36,9 @@ namespace NitroxServer.GameLogic.Entities.Spawning
         /// Should not be modified without testing (a good way is "goto wreck13" and look around the wreck)
         /// 0.1 seemed to be a bit low and 0.3 seemed to be too much
         /// </summary>
-        private const float LUCK_INDICATOR = 0.2f;
+        private const float FRAGMENT_LUCK_INDICATOR = 0.2f;
+        private const float DEFAULT_LUCK_INDICATOR = 0.1f;
+        public bool CreateFullEntityCache;
 
         public List<NitroxInt3> SerializableParsedBatches
         {
@@ -63,7 +69,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
         }
 
         public BatchEntitySpawner(EntitySpawnPointFactory entitySpawnPointFactory, UweWorldEntityFactory worldEntityFactory, UwePrefabFactory prefabFactory, List<NitroxInt3> loadedPreviousParsed, ServerProtoBufSerializer serializer,
-                                  Dictionary<NitroxTechType, IEntityBootstrapper> customBootstrappersByTechType, Dictionary<string, PrefabPlaceholdersGroupAsset> prefabPlaceholderGroupsbyClassId, string seed)
+                                  Dictionary<NitroxTechType, IEntityBootstrapper> customBootstrappersByTechType, Dictionary<string, PrefabPlaceholdersGroupAsset> prefabPlaceholderGroupsbyClassId, string seed, PDAStateData pdaStateData)
         {
             parsedBatches = new HashSet<NitroxInt3>(loadedPreviousParsed);
             this.worldEntityFactory = worldEntityFactory;
@@ -72,6 +78,8 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             this.prefabPlaceholderGroupsbyClassId = prefabPlaceholderGroupsbyClassId;
             this.seed = seed;
             batchCellsParser = new BatchCellsParser(entitySpawnPointFactory, serializer);
+            this.pdaStateData = pdaStateData;
+            entityHelper = NitroxServiceLocator.LocateService<EntityHelper>();
         }
 
         public List<Entity> LoadUnspawnedEntities(NitroxInt3 batchId, bool fullCacheCreation = false)
@@ -121,8 +129,13 @@ namespace NitroxServer.GameLogic.Entities.Spawning
         private IEnumerable<Entity> SpawnEntitiesUsingRandomDistribution(EntitySpawnPoint entitySpawnPoint, List<UwePrefab> prefabs, DeterministicBatchGenerator deterministicBatchGenerator, Entity parentEntity = null)
         {
             List<UwePrefab> allowedPrefabs = FilterAllowedPrefabs(prefabs, entitySpawnPoint);
+            // If CreateFullEntityCache, there's no point in adapting the prefabs spawn rate because all of them will spawn at the same time
+            if (!CreateFullEntityCache)
+            {
+                RecalculateProbabilities(allowedPrefabs);
+            }
 
-            float rollingProbabilityDensity = allowedPrefabs.Sum(prefab => (prefab.Probability + LUCK_INDICATOR) / entitySpawnPoint.Density);
+            float rollingProbabilityDensity = allowedPrefabs.Sum(prefab => prefab.Probability / entitySpawnPoint.Density);
 
             if (rollingProbabilityDensity <= 0)
             {
@@ -144,7 +157,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                     return false;
                 }
 
-                float probabilityDensity = (prefab.Probability + LUCK_INDICATOR) / entitySpawnPoint.Density;
+                float probabilityDensity = prefab.Probability / entitySpawnPoint.Density;
 
                 rollingProbability += probabilityDensity;
 
@@ -197,6 +210,34 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             }
 
             return allowedPrefabs;
+        }
+
+        private void RecalculateProbabilities(List<UwePrefab> uwePrefabs)
+        {
+            for (int i = 0; i < uwePrefabs.Count; i++)
+            {
+                UwePrefab prefab = uwePrefabs[i];
+                // If the prefab is a fragment, we'll adjust its probability
+                if (prefab.PrefabPath.Contains("/Fragments/"))
+                {
+                    // If we already learned the blueprint in question, we don't want its fragments to appear anymore
+                    if (entityHelper.TryGetTechTypeForClassId(prefab.ClassId, out NitroxTechType techType) &&
+                        pdaStateData.UnlockedTechTypes.Contains(techType))
+                    {
+                        uwePrefabs.RemoveAt(i);
+                    }
+                    else
+                    {
+                        // in the case we can still learn the blueprint, we should increase the spawn rate because by default it's way too low
+                        prefab.Probability += FRAGMENT_LUCK_INDICATOR;
+                    }
+                }
+                else
+                {
+                    // by default, the spawn rate of other prefabs is too low, we increase it by a constant
+                    prefab.Probability += DEFAULT_LUCK_INDICATOR;
+                }
+            }
         }
 
         private IEnumerable<Entity> SpawnEntitiesStaticly(EntitySpawnPoint entitySpawnPoint, DeterministicBatchGenerator deterministicBatchGenerator, Entity parentEntity = null)

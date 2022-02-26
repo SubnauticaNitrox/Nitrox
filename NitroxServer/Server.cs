@@ -121,6 +121,7 @@ namespace NitroxServer
             {
                 if (serverConfig.CreateFullEntityCache)
                 {
+                    entityManager.CreateFullEntityCache = true;
                     Log.Info("Starting to load all batches up front.");
                     Log.Info("This can take up to several minutes and you can't join until it's completed.");
                     Log.Info($"{entityManager.GetAllEntities().Count} entities already cached");

@@ -22,6 +22,15 @@ namespace NitroxServer.GameLogic.Entities
 
         private readonly BatchEntitySpawner batchEntitySpawner;
 
+        // EntityManager is a bridge between Server and BatchEntitySpawner, thus we need some property like this to acknowledge the real state of CreateFullEntityCache
+        public bool CreateFullEntityCache
+        {
+            set
+            {
+                batchEntitySpawner.CreateFullEntityCache = value;
+            }
+        }
+
         public EntityManager(List<Entity> entities, BatchEntitySpawner batchEntitySpawner)
         {
             entitiesById = entities.ToDictionary(entity => entity.Id);

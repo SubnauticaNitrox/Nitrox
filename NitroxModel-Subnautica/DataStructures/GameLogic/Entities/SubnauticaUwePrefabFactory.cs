@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Threading;
 using LitJson;
 using NitroxModel.DataStructures.GameLogic.Entities;
+using NitroxModel.Logger;
 using static LootDistributionData;
 
 namespace NitroxModel_Subnautica.DataStructures.GameLogic.Entities
@@ -26,15 +27,22 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic.Entities
                 return prefabs;
             }
 
-
             BiomeType biomeType = (BiomeType)Enum.Parse(typeof(BiomeType), biome);
 
             if (lootDistributionData.GetBiomeLoot(biomeType, out DstData dstData))
             {
                 foreach (PrefabData prefabData in dstData.prefabs)
                 {
-                    UwePrefab prefab = new UwePrefab(prefabData.classId, prefabData.probability, prefabData.count);
-                    prefabs.Add(prefab);
+                    // We also want to know the prefabPath which is only available there
+                    if (lootDistributionData.srcDistribution.TryGetValue(prefabData.classId, out SrcData srcData))
+                    {
+                        UwePrefab prefab = new(prefabData.classId, prefabData.probability, prefabData.count, srcData.prefabPath);
+                        prefabs.Add(prefab);
+                    }
+                    else
+                    {
+                        Log.WarnOnce($"PrefabData of classId {prefabData.classId} doesn't have a source data");
+                    }
                 }
             }
 

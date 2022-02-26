@@ -203,7 +203,8 @@ namespace NitroxServer.Serialization.World
                 protoBufSerializer,
                 NitroxServiceLocator.LocateService<Dictionary<NitroxTechType, IEntityBootstrapper>>(),
                 NitroxServiceLocator.LocateService<Dictionary<string, PrefabPlaceholdersGroupAsset>>(),
-                world.Seed
+                world.Seed,
+                pWorldData.WorldData.GameData.PDAState
             );
 
             world.EntityManager = new EntityManager(pWorldData.EntityData.Entities, world.BatchEntitySpawner);
