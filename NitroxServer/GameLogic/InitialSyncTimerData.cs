@@ -8,12 +8,25 @@ using NitroxServer.Communication;
 
 namespace NitroxServer.GameLogic
 {
+    /// <summary>
+    /// Contains data used in InitialSyncTimer callback
+    /// 
+    /// For use with <see cref="System.Threading.Timer"/>
+    /// </summary>
     internal class InitialSyncTimerData
     {
+        public readonly NitroxConnection Connection;
+        public readonly AuthenticationContext Context;
+        public readonly int MaxCounter;
+
+        /// <summary>
+        /// Keeps track of how many times the timer has elapsed
+        /// </summary>
         public int Counter = 0;
-        public NitroxConnection Connection;
-        public AuthenticationContext Context;
-        public int MaxCounter;
+
+        /// <summary>
+        /// Set to true if disposing the timer
+        /// </summary>
         public bool Disposing = false;
 
         public InitialSyncTimerData(NitroxConnection connection, AuthenticationContext context, int initialSyncTimeout)
