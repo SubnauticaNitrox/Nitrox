@@ -248,8 +248,6 @@ namespace NitroxServer.GameLogic
                 Server.Instance.PauseServer();
                 Server.Instance.Save();
             }
-
-
         }
 
         public void FinishProcessingReservation()
