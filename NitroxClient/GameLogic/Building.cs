@@ -157,24 +157,12 @@ namespace NitroxClient.GameLogic
                     latestCell = latestBase.WorldToGrid(ghost.transform.position);
                 }
                 
-                // This is the way the game uses find the final object if the built part is an internal face part like a window, reinforcement, bio-reactor, etc.
-                if (lastTargetFace != default(Base.Face))
-                {
-                    cellTransform = latestBase.GetCellObject(lastTargetFace.cell);
-
-                    Log.Debug($"Looking for {ghost.name} in cell {latestCell+lastTargetFace.cell} using face");
-                    if (cellTransform != null)
-                    {
-                        placedPiece = FindFinishedPiece(cellTransform);
-                    }
-                }
-
-                if (placedPiece == null && latestCell != default(Int3))
+                if (latestCell != default(Int3))
                 {
                     cellTransform = latestBase.GetCellObject(latestCell);
                     if (cellTransform != null)
                     {
-                        Log.Debug($"Looking for {ghost.name} in cell {latestCell} using latestCell");
+                        Log.Debug($"Looking for {ghost.name} in cell {latestBase.GetCell(latestCell)} at {latestCell} using latestCell");
                         placedPiece = FindFinishedPiece(cellTransform);
                     }
                 }
@@ -184,12 +172,12 @@ namespace NitroxClient.GameLogic
                 // however, there may still be pieces were the ghost base's target offset is authoritative due to incorrect game object positioning.
                 if (placedPiece == null)
                 {
-                    latestCell = latestBase.WorldToGrid(ghost.gameObject.transform.position);
-                    cellTransform = latestBase.GetCellObject(latestCell);
+                    Int3 position = latestBase.WorldToGrid(ghost.gameObject.transform.position);
+                    cellTransform = latestBase.GetCellObject(position);       
 
                     Validate.NotNull(cellTransform, "Unable to find cell transform at " + latestCell);
-                        Log.Debug($"Looking for {ghost.name} in cell {latestCell} using constructable position");
-                        placedPiece = FindFinishedPiece(cellTransform);
+                    Log.Debug($"Looking for {ghost.name} in cell {latestBase.GetCell(position)} at {position} using constructable position");
+                    placedPiece = FindFinishedPiece(cellTransform);
                 }
                 
                 Validate.NotNull(placedPiece, $"Could not find finished piece in cell {latestCell}");

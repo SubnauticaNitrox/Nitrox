@@ -91,19 +91,13 @@ namespace NitroxClient.MonoBehaviours.Overrides
 
                 bool flag;
                 BaseGhost baseGhost = ghostModel.GetComponent<BaseGhost>();
-                if (RotationMetadata.HasValue)
-                {
-                    baseGhost.targetBase = ParentBase != null ? ParentBase.GetComponent<Base>(): null;
-                    flag = UpdatePlacement(baseGhost, componentInParent, RotationMetadata.Value);
-                    componentInParent.SetGhostVisible(flag);
-                }
-                else
-                {
-                    Log.Debug($"Rotational Metadata not found for {baseGhost.GetType()}. This should be corrected so we can stop using camera positioning!");
-                    baseGhost.UpdatePlacement(GetAimTransform(), componentInParent.placeMaxDistance, out bool positionFound, out flag, componentInParent);
-                    componentInParent.SetGhostVisible(!positionFound);
-                }
+                bool flag2 = UpdatePlacement(baseGhost,GetAimTransform(), componentInParent.placeMaxDistance, out bool positionFound, out flag, componentInParent);
+                componentInParent.SetGhostVisible(positionFound);
 
+                if (flag2 && RotationMetadata.HasValue)
+                {                
+                    ApplyRotationMetadata(baseGhost, RotationMetadata.Value);
+                }
                 if (flag)
                 {
                     renderers = MaterialExtensions.AssignMaterial(ghostModel, ghostStructureMaterial);
@@ -116,17 +110,19 @@ namespace NitroxClient.MonoBehaviours.Overrides
             ghostModelTransform.localScale = ghostModelScale;
         }
 
-        private static bool UpdatePlacement(BaseGhost baseGhost, ConstructableBase constructableBase, BuilderMetadata builderMetadata)
+        private static bool UpdatePlacement(BaseGhost baseGhost, Transform camera, float placeMaxDistance, out bool positionFound, out bool flag, ConstructableBase componentInParent)
         {
-            bool flag2 = constructableBase.UpdateGhostModel(GetAimTransform(), ghostModel, default, out bool flag, constructableBase);
-
-            if (flag)
-            {                
-                ApplyRotationMetadata(baseGhost, builderMetadata);
-                renderers = MaterialExtensions.AssignMaterial(ghostModel, ghostStructureMaterial);
-                InitBounds(ghostModel);
+            bool flag2;
+            switch (baseGhost)
+            {
+                
+                
+                default:
+                    flag2 = baseGhost.UpdatePlacement(camera, placeMaxDistance, out positionFound, out flag, componentInParent);
+                    break; 
             }
 
+            Log.Debug($"{baseGhost.GetType()} - positionFound: {positionFound} - flag: {flag} - flag2: {flag2}");
             return flag2;
         }
 
