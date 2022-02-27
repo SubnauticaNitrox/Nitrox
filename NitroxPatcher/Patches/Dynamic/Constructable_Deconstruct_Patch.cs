@@ -16,14 +16,16 @@ namespace NitroxPatcher.Patches.Dynamic
             if (!__result) return;
             if (__instance.constructedAmount <= 0f)
             {
+                if (!__instance.TryGetComponent(out NitroxEntity nitroxEntity))
+                {
+                    return;
+                }
+
                 Resolve<Building>().DeconstructionComplete(__instance.gameObject);
                 Log.Debug("Finished deconstructing, now removing ghost NitroxEntity");
 
-                if (__instance.TryGetComponent(out NitroxEntity nitroxEntity))
-                {
-                    GeometryRespawnManager.NitroxIdsToIgnore.Add(nitroxEntity.Id);
-                    Log.Debug($"Added ghost to ignore list: {nitroxEntity.Id}");
-                }
+                GeometryRespawnManager.NitroxIdsToIgnore.Add(nitroxEntity.Id);
+                Log.Debug($"Added ghost to ignore list: {nitroxEntity.Id}");
             }
             else
             {
