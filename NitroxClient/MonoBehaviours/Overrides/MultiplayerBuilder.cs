@@ -116,126 +116,62 @@ namespace NitroxClient.MonoBehaviours.Overrides
             ghostModelTransform.localScale = ghostModelScale;
         }
 
-        private static bool UpdatePlacement(BaseGhost baseGhost, ConstructableBase constructableBase, BuilderMetadata rotationMetadata)
+        private static bool UpdatePlacement(BaseGhost baseGhost, ConstructableBase constructableBase, BuilderMetadata builderMetadata)
         {
-            Log.Info($"Attempting to Apply {baseGhost.GetType()} - {rotationMetadata}");
+            bool flag2 = constructableBase.UpdateGhostModel(GetAimTransform(), ghostModel, default, out bool flag, constructableBase);
+
+            if (flag)
+            {                
+                ApplyRotationMetadata(baseGhost, builderMetadata);
+                renderers = MaterialExtensions.AssignMaterial(ghostModel, ghostStructureMaterial);
+                InitBounds(ghostModel);
+            }
+
+            return flag2;
+        }
+
+        private static void ApplyRotationMetadata(BaseGhost baseGhost, BuilderMetadata builderMetadata)
+        {
             switch (baseGhost)
             {
-                case BaseAddCorridorGhost corridor when rotationMetadata is CorridorBuilderMetadata corridorBuilderMetadata:
+                case BaseAddCorridorGhost corridor when builderMetadata is CorridorBuilderMetadata corridorRotationMetadata:
                 {
-                    return HandleCorridorPlacementPosition(constructableBase, corridor, corridorBuilderMetadata);
-                }
-                case BaseAddMapRoomGhost mapRoom when rotationMetadata is MapRoomBuilderMetadata mapRoomBuilderMetadata:
-                {
-                    return HandleMapRoomPlacementPosition(constructableBase, mapRoom, mapRoomBuilderMetadata);
-                }
-                case BaseAddModuleGhost baseAddModuleGhost when rotationMetadata is BaseModuleBuilderMetadata baseModuleBuilderMetadata:
-                {
-                    return HandleModulePlacementPosition(constructableBase, baseAddModuleGhost, baseModuleBuilderMetadata);
-                }
-                case BaseAddFaceGhost baseAddFaceGhost when rotationMetadata is AnchoredFaceBuilderMetadata anchoredFaceBuilderMetadata:
-                {
-                    return HandleFacePlacementPosition(constructableBase, anchoredFaceBuilderMetadata, baseAddFaceGhost);
-                }
-            }
-
-            Log.Error($"Was unable to apply rotation metadata for {baseGhost.GetType()} - {rotationMetadata}");
-            return false;
-        }
-
-        private static bool HandleCorridorPlacementPosition(Component constructableBase, BaseAddCorridorGhost corridor, CorridorBuilderMetadata corridorBuilderMetadata)
-        {
-            if (corridorBuilderMetadata.HasTargetBase)
-            {
-                Int3 cell = corridorBuilderMetadata.Cell.ToUnity();
-                if (corridor.targetOffset != cell)
-                {
-                    corridor.targetOffset = cell;
+                    corridor.rotation = corridorRotationMetadata.Rotation;
+                    int corridorType = corridor.CalculateCorridorType();
+                    corridor.ghostBase.SetCorridor(Int3.zero, corridorType, corridor.isGlass);
                     corridor.RebuildGhostGeometry();
+                    break;
                 }
-                Transform transform = constructableBase.transform;
-                transform.position = corridor.targetBase.GridToWorld(cell);
-                transform.rotation = corridor.targetBase.transform.rotation;
+                case BaseAddMapRoomGhost mapRoom when builderMetadata is MapRoomBuilderMetadata mapRoomRotationMetadata:
+                {
+                    mapRoom.cellType = (Base.CellType)mapRoomRotationMetadata.CellType;
+                    mapRoom.connectionMask = mapRoomRotationMetadata.ConnectionMask;
+
+                    mapRoom.ghostBase.SetCell(Int3.zero, (Base.CellType)mapRoomRotationMetadata.CellType);
+                    mapRoom.RebuildGhostGeometry();
+                    break;
+                }
+                case BaseAddModuleGhost ghost when builderMetadata is BaseModuleBuilderMetadata baseModuleRotationMetadata:
+                {
+                    ghost.anchoredFace = new Base.Face(baseModuleRotationMetadata.Cell.ToUnity(), (Base.Direction)baseModuleRotationMetadata.Direction);
+                    ghost.RebuildGhostGeometry();
+                    break;
+                }
+                case BaseAddFaceGhost faceGhost when builderMetadata is AnchoredFaceBuilderMetadata baseModuleRotationMetadata:
+                {
+                    Base.Face face = new(baseModuleRotationMetadata.Cell.ToUnity(), (Base.Direction)baseModuleRotationMetadata.Direction);
+                    faceGhost.anchoredFace = face;
+                
+                    Base.FaceType faceType = (Base.FaceType)baseModuleRotationMetadata.FaceType;
+                    faceGhost.ghostBase.SetFace(face, faceType);
+
+                    faceGhost.RebuildGhostGeometry();
+                    break;
+                }
+                default:
+                    Log.Error($"Was unable to apply rotation metadata for {baseGhost.GetType()} and {builderMetadata}");
+                    break;
             }
-            else
-            {
-                    constructableBase.transform.position = corridorBuilderMetadata.Position.ToUnity();
-                    corridor.targetOffset = Int3.zero;
-            }
-            corridor.rotation = corridorBuilderMetadata.Rotation;
-            int corridorType = corridor.CalculateCorridorType();
-            corridor.ghostBase.SetCorridor(Int3.zero, corridorType, corridor.isGlass);
-            corridor.RebuildGhostGeometry();
-            return true;
-        }
-
-        private static bool HandleMapRoomPlacementPosition(ConstructableBase constructableBase, BaseAddMapRoomGhost mapRoom, MapRoomBuilderMetadata mapRoomBuilderMetadata)
-        {
-            mapRoom.cellType = (Base.CellType) mapRoomBuilderMetadata.CellType;
-            mapRoom.connectionMask = mapRoomBuilderMetadata.ConnectionMask;
-
-            mapRoom.ghostBase.SetCell(Int3.zero, (Base.CellType) mapRoomBuilderMetadata.CellType);
-            mapRoom.RebuildGhostGeometry();
-            return true;
-        }
-
-        private static bool HandleModulePlacementPosition(ConstructableBase constructableBase, BaseAddModuleGhost baseAddModuleGhost, BaseModuleBuilderMetadata baseModuleBuilderMetadata)
-        {
-            Base.Face face = new Base.Face(baseModuleBuilderMetadata.Cell.ToUnity(), (Base.Direction) baseModuleBuilderMetadata.Direction);
-            Int3 @int = baseAddModuleGhost.targetBase.NormalizeCell(face.cell);
-            Base.CellType cell = baseAddModuleGhost.targetBase.GetCell(@int);
-            Int3 v = Base.CellSize[(int) cell];
-            Int3.Bounds a = new Int3.Bounds(face.cell, face.cell);
-            Int3.Bounds b = new Int3.Bounds(@int, @int + v - 1);
-            Int3.Bounds sourceRange = Int3.Bounds.Union(a, b);
-            baseAddModuleGhost.UpdateSize(sourceRange.size);
-            Base.Face face2 = new Base.Face(face.cell - baseAddModuleGhost.targetBase.GetAnchor(), face.direction);
-            if (baseAddModuleGhost.anchoredFace == null || baseAddModuleGhost.anchoredFace.Value != face2)
-            {
-                baseAddModuleGhost.anchoredFace = face2;
-                baseAddModuleGhost.ghostBase.CopyFrom(baseAddModuleGhost.targetBase, sourceRange, sourceRange.mins * -1);
-                baseAddModuleGhost.ghostBase.ClearMasks();
-                Int3 cell2 = face.cell - @int;
-                Base.Face face3 = new Base.Face(cell2, face.direction);
-                baseAddModuleGhost.ghostBase.SetFaceMask(face3, true);
-                baseAddModuleGhost.ghostBase.SetFace(face3, baseAddModuleGhost.faceType);
-                baseAddModuleGhost.RebuildGhostGeometry();
-            }
-
-            Transform transform = constructableBase.transform;
-            transform.position = baseAddModuleGhost.targetBase.GridToWorld(@int);
-            transform.rotation = baseAddModuleGhost.targetBase.transform.rotation;
-
-            return true;
-        }
-
-        private static bool HandleFacePlacementPosition(Component constructableBase, AnchoredFaceBuilderMetadata anchoredFaceBuilderMetadata, BaseAddFaceGhost baseAddFaceGhost)
-        {
-            Base.Face face = new Base.Face(anchoredFaceBuilderMetadata.Cell.ToUnity(), (Base.Direction) anchoredFaceBuilderMetadata.Direction);
-            Int3 @int = baseAddFaceGhost.targetBase.NormalizeCell(face.cell);
-            Base.CellType cell = baseAddFaceGhost.targetBase.GetCell(@int);
-            Int3 v = Base.CellSize[(int) cell];
-            Int3.Bounds a = new Int3.Bounds(face.cell, face.cell);
-            Int3.Bounds b = new Int3.Bounds(@int, @int + v - 1);
-            Int3.Bounds sourceRange = Int3.Bounds.Union(a, b);
-            baseAddFaceGhost.UpdateSize(sourceRange.size);
-            Base.Face face2 = new Base.Face(face.cell - baseAddFaceGhost.targetBase.GetAnchor(), face.direction);
-            if (baseAddFaceGhost.anchoredFace == null || baseAddFaceGhost.anchoredFace.Value != face2)
-            {
-                baseAddFaceGhost.anchoredFace = face2;
-                baseAddFaceGhost.ghostBase.CopyFrom(baseAddFaceGhost.targetBase, sourceRange, sourceRange.mins * -1);
-                baseAddFaceGhost.ghostBase.ClearMasks();
-                Int3 cell2 = face.cell - @int;
-                Base.Face face3 = new Base.Face(cell2, face.direction);
-                baseAddFaceGhost.ghostBase.SetFaceMask(face3, true);
-                baseAddFaceGhost.ghostBase.SetFace(face3, baseAddFaceGhost.faceType);
-                baseAddFaceGhost.RebuildGhostGeometry();
-            }
-
-            Transform transform = constructableBase.transform;
-            transform.position = baseAddFaceGhost.targetBase.GridToWorld(@int);
-            transform.rotation = baseAddFaceGhost.targetBase.transform.rotation;
-            return true;
         }
 
         public static ConstructableBase TryPlaceBase(GameObject targetBaseGameObject)

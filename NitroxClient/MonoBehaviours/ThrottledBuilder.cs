@@ -219,39 +219,24 @@ namespace NitroxClient.MonoBehaviours
                     latestCell = latestBase.WorldToGrid(constructing.transform.position);
                 }
                 
-                // This is the way the game uses find the final object if the built part is an internal face part like a window, reinforcement, bio-reactor, etc.
                 if (lastFace != default(Base.Face))
                 {
                     cellTransform = latestBase.GetCellObject(latestCell+lastFace.cell);
 
                     if (cellTransform != null)
                     {
-                        Log.Debug($"Looking for {constructing.name} in cell {lastFace.cell} using Face");
+                        Log.Debug($"Looking for {constructing.name} in cell {latestBase.GetCell(latestCell+lastFace.cell)} at {latestCell+lastFace.cell} using Face");
                         placedPeice = FindFinishedPiece(cellTransform);
                     }
                 }
 
                 if (placedPeice == null && latestCell != default(Int3))
                 {
-                    cellTransform = latestBase.GetCellObject(latestCell);
-                    if (cellTransform != null)
-                    {
-                        Log.Debug($"Looking for {constructing.name} in cell {latestCell} using latestCell");
-                        placedPeice = FindFinishedPiece(cellTransform);
-                    }
-                }
-
-                // This check ensures that the latestCell actually leads us to the correct entity.  The lastTargetBaseOffset is unreliable as the base shape
-                // can change which makes the target offset change. It may be possible to fully deprecate lastTargetBaseOffset and only rely on GetClosestCell; 
-                // however, there may still be pieces were the ghost base's target offset is authoratitive due to incorrect game object positioning.
-                if (placedPeice == null)
-                {
-                    latestCell = latestBase.WorldToGrid(constructing.gameObject.transform.position);
-                    cellTransform = latestBase.GetCellObject(latestCell);
-
+                    cellTransform = latestBase.GetCellObject(latestCell);                        
                     Validate.NotNull(cellTransform, "Unable to find cell transform at " + latestCell);
-                        Log.Debug($"Looking for {constructing.name} in cell {latestCell} using constructable cell");
-                        placedPeice = FindFinishedPiece(cellTransform);
+
+                    Log.Debug($"Looking for {constructing.name} in cell {latestBase.GetCell(latestCell)} at {latestCell} using latestCell");
+                    placedPeice = FindFinishedPiece(cellTransform);
                 }
                 
                 Validate.NotNull(placedPeice, $"Could not find placed Peice in cell {latestCell} when constructing {constructionCompleted.PieceId}");
@@ -304,10 +289,6 @@ namespace NitroxClient.MonoBehaviours
                 {
                     Log.Debug($"{child.name} <--------- isNewBasePiece");
                     return child.gameObject;
-                }
-                else
-                {
-                    Log.Debug($"{child.name}");
                 }
             }
 
