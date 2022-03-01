@@ -14,12 +14,16 @@ namespace NitroxServer.GameLogic
         [JsonProperty, ProtoMember(2)]
         public double? AuroraExplosionTime { get; set; }
 
+        [JsonProperty, ProtoMember(3)]
+        public double? AuroraWarningTime { get; set; }
+
         public static StoryTimingData From(EventTriggerer eventTriggerer)
         {
             return new StoryTimingData
             {
                 ElapsedTime = eventTriggerer.ElapsedTimeMs,
-                AuroraExplosionTime = eventTriggerer.AuroraExplosionTimeMs
+                AuroraExplosionTime = eventTriggerer.AuroraExplosionTimeMs,
+                AuroraWarningTime = eventTriggerer.AuroraWarningTimeMs,
             };
         }
     }
