@@ -31,7 +31,9 @@ namespace NitroxClient.MonoBehaviours
                 time = 0;
 
                 // Freecam does disable main camera control
-                if (!MainCameraControl.main.isActiveAndEnabled)
+                // But it's also disabled when driving the cyclops through a cyclops camera (content.activeSelf is only true when controlling through a cyclops camera)
+                if (!MainCameraControl.main.isActiveAndEnabled &&
+                    !uGUI_CameraCyclops.main.content.activeSelf)
                 {
                     return;
                 }
