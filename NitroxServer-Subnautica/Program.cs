@@ -297,8 +297,8 @@ public class Program
 
     private static void OnCtrlCPressed(object sender, ConsoleCancelEventArgs e)
     {
-        // Prevents process from terminating
-        e.Cancel = true;
+        e.Cancel = true; // Prevents process from terminating
+        Console.Write("\r" + new string(' ', Console.WindowWidth - 1) + "\r"); // Clears current line
     }
 
     private static void StopServer()
