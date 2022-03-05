@@ -137,8 +137,9 @@ namespace NitroxClient.MonoBehaviours
             gameObject.AddComponent<ThrottledBuilder>();
 
             // UI.
+            gameObject.AddComponent<KickedModal>();
             gameObject.AddComponent<LostConnectionModal>();
-            gameObject.AddComponent<PlayerKickedModal>();
+            gameObject.AddComponent<ServerStoppedModal>();
         }
 
         public void StopCurrentSession()

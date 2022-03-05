@@ -8,10 +8,6 @@ public class ServerStoppedProcessor : ClientPacketProcessor<ServerStopped>
 {
     public override void Process(ServerStopped packet)
     {
-        // This packet is just meant to tell the modal to modify its message
-        if (LostConnectionModal.Instance)
-        {
-            LostConnectionModal.ServerStopped = true;
-        }
+        Modal.Get<ServerStoppedModal>()?.Show();
     }
 }

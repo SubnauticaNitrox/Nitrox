@@ -88,10 +88,7 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
 
         private void Disconnected(NetPeer peer, DisconnectInfo disconnectInfo)
         {
-            if (LostConnectionModal.Instance)
-            {
-                LostConnectionModal.Instance.Show();
-            }
+            Modal.Get<LostConnectionModal>()?.Show();
             IsConnected = false;
             Log.Info("Disconnected from server");
         }
