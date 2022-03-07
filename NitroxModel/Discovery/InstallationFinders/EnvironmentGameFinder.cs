@@ -14,7 +14,7 @@ public class EnvironmentGameFinder : IFindGameInstallation
         string path = Environment.GetEnvironmentVariable("SUBNAUTICA_INSTALLATION_PATH");
         if (string.IsNullOrEmpty(path))
         {
-            errors?.Add(@"Configured game path was found empty. Please enter the path to the Subnautica installation.");
+            errors?.Add(@"Configured game path with environment variable SUBNAUTICA_INSTALLATION_PATH was found empty.");
             return null;
         }
 
