@@ -14,13 +14,14 @@ public class IngameMenu_OnDeselect_Patch : NitroxPatch, IDynamicPatch
 
     // OnDeselect happens when you deselect the modal (by clicking outside or pressing escape)
     // Therefore, if we prevent it from happening it certain cases, it will force the user to click one of the buttons of the modal
-    public static bool Prefix(IngameMenu __instance)
+    public static bool Prefix()
     {
         // Cancel if the modal is set to be non-avoidable (IsAvoidable) and if it's not the modal that wants to close itself (IsAvoidableBypass)
-        if (Modal.TryGetByName(__instance.currentScreen.name, out Modal modal) && !modal.IsAvoidable && !modal.IsAvoidableBypass)
+        if (Modal.CurrentModal && !Modal.CurrentModal.IsAvoidable && !Modal.CurrentModal.IsAvoidableBypass)
         {
             return false;
         }
+        Modal.CurrentModal = null;
         return true;
     }
 

@@ -17,6 +17,10 @@ public abstract class Modal : MonoBehaviour
     /// Get a Modal by its type at any time (static)
     /// </summary>
     public static Dictionary<Type, Modal> Modals = new();
+    /// <summary>
+    /// Current modal that is visible on the screen
+    /// </summary>
+    public static Modal CurrentModal;
 
     private GameObject modalSubWindow;
     private Text text;
@@ -26,7 +30,7 @@ public abstract class Modal : MonoBehaviour
     public string ModalText { get; set; }
 
     /// <summary>
-    /// By default (true), clicking outside of the modal or pressing escape makes it possible to dismiss it
+    /// Makes it possible to dismiss the modal by clicking outside of the modal or pressing escape (default false).
     /// </summary>
     public bool IsAvoidable { get; init; }
     public bool HideNoButton { get; init; }
@@ -68,6 +72,8 @@ public abstract class Modal : MonoBehaviour
         {
             FreezeTime.Begin($"Nitrox{SubWindowName}Freeze");
         }
+        CurrentModal?.Hide();
+        CurrentModal = this;
         StartCoroutine(Show_Impl());
     }
 
@@ -76,6 +82,7 @@ public abstract class Modal : MonoBehaviour
     /// </summary>
     public void Hide()
     {
+        CurrentModal = null;
         if (FreezeGame)
         {
             FreezeTime.End($"Nitrox{SubWindowName}Freeze");
@@ -112,7 +119,6 @@ public abstract class Modal : MonoBehaviour
             RectTransform main = modalSubWindow.GetComponent<RectTransform>();
             main.sizeDelta = new Vector2(700, 195);
 
-
             RectTransform messageTransform = modalSubWindow.FindChild("Header").GetComponent<RectTransform>();
             messageTransform.sizeDelta = new Vector2(700, 195);
          }
@@ -145,20 +151,17 @@ public abstract class Modal : MonoBehaviour
             return;
         }
 
-        Button noButton = buttonNoObject.GetComponent<Button>();
-        noButton.onClick = new Button.ButtonClickedEvent();
-        noButton.onClick.AddListener(() => { ClickNo(); });
-        buttonNoObject.GetComponentInChildren<Text>().text = NoButtonText;
+        if (buttonNoObject)
+        {
+            Button noButton = buttonNoObject.GetComponent<Button>();
+            noButton.onClick = new Button.ButtonClickedEvent();
+            noButton.onClick.AddListener(() => { ClickNo(); });
+            buttonNoObject.GetComponentInChildren<Text>().text = NoButtonText;
+        }
     }
 
-    public virtual void ClickYes()
-    {
-        Hide();
-    }
-    public virtual void ClickNo()
-    {
-        Hide();
-    }
+    public virtual void ClickYes() { }
+    public virtual void ClickNo() { }
 
     private IEnumerator Show_Impl()
     {
@@ -183,12 +186,5 @@ public abstract class Modal : MonoBehaviour
         }
         // No need to add entry in dictionary as it's done in constructor
         return Multiplayer.Main.gameObject.AddComponent<T>();
-    }
-
-    public static bool TryGetByName(string name, out Modal modal)
-    {
-        modal = default;
-        string fullType = $"{typeof(Modal).Namespace}.{name}";
-        return Type.GetType(fullType) != null && Modals.TryGetValue(Type.GetType(fullType), out modal);
     }
 }
