@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using LiteNetLib;
 using LiteNetLib.Utils;
 using Mono.Nat;
@@ -74,6 +75,8 @@ namespace NitroxServer.Communication.LiteNetLib
         public override void Stop()
         {
             playerManager.SendPacketToAllPlayers(new ServerStopped());
+            // We want every player to receive this packet
+            Thread.Sleep(500);
             server.Stop();
             if (useUpnpPortForwarding)
             {
