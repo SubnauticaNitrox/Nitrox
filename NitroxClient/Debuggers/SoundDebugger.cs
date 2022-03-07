@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using FMOD.Studio;
 using FMODUnity;
 using NitroxClient.GameLogic.FMOD;
@@ -9,6 +10,7 @@ using UnityEngine;
 
 namespace NitroxClient.Debuggers
 {
+    [ExcludeFromCodeCoverage]
     public class SoundDebugger : BaseDebugger
     {
         private readonly Dictionary<string, SoundData> assetList;
@@ -22,7 +24,7 @@ namespace NitroxClient.Debuggers
         private bool displayIsGlobal;
         private bool displayWithRadius;
 
-        public SoundDebugger(FMODSystem fmodSystem) : base(700, null, KeyCode.S, true, false, true, GUISkinCreationOptions.DERIVEDCOPY)
+        public SoundDebugger(FMODSystem fmodSystem) : base(700, null, KeyCode.F, true, false, false, GUISkinCreationOptions.DERIVEDCOPY)
         {
             assetList = fmodSystem.SoundDataList;
             ActiveTab = AddTab("Sounds", RenderTabAllSounds);

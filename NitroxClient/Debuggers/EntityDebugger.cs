@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using UnityEngine;
 
 namespace NitroxClient.Debuggers
 {
+    [ExcludeFromCodeCoverage]
     public class EntityDebugger : BaseDebugger
     {
         private static Color labelBgColor = new Color(0.2f, 0.2f, 0.2f, 0.5f);
