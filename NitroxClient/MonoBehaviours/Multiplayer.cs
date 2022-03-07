@@ -11,7 +11,6 @@ using NitroxClient.GameLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.PlayerModel.ColorSwap;
 using NitroxClient.Helpers;
 using NitroxClient.MonoBehaviours.Discord;
-using NitroxClient.MonoBehaviours.Gui.InGame;
 using NitroxClient.MonoBehaviours.Gui.MainMenu;
 using NitroxModel.Core;
 using NitroxModel.Packets;
@@ -135,11 +134,6 @@ namespace NitroxClient.MonoBehaviours
             gameObject.AddComponent<PlayerStatsBroadcaster>();
             gameObject.AddComponent<EntityPositionBroadcaster>();
             gameObject.AddComponent<ThrottledBuilder>();
-
-            // UI.
-            gameObject.AddComponent<KickedModal>();
-            gameObject.AddComponent<LostConnectionModal>();
-            gameObject.AddComponent<ServerStoppedModal>();
         }
 
         public void StopCurrentSession()
