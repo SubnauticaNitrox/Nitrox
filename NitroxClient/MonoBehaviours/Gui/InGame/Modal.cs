@@ -17,42 +17,46 @@ public abstract class Modal : MonoBehaviour
     /// Get a Modal by its type at any time (static)
     /// </summary>
     public static Dictionary<Type, Modal> Modals = new();
-    /// <summary>
-    /// Get a Modal by its SubWindowName at any time (static)
-    /// </summary>
-    public static Dictionary<string, Modal> ModalsPerSubWindowName = new();
 
     private GameObject modalSubWindow;
     private Text text;
 
     // All the properties that will be overriden by new instances that inherit this class
-    public abstract string SubWindowName { get; }
-    public abstract string ModalText { get; set; }
+    public string SubWindowName { get; init; }
+    public string ModalText { get; set; }
 
     /// <summary>
     /// By default (true), clicking outside of the modal or pressing escape makes it possible to dismiss it
     /// </summary>
-    public abstract bool IsAvoidable { get; }
-    public abstract bool HideNoButton { get; }
+    public bool IsAvoidable { get; init; }
+    public bool HideNoButton { get; init; }
 
-    public abstract string YesButtonText { get; }
-    public abstract string NoButtonText { get; }
+    public string YesButtonText { get; init; }
+    public string NoButtonText { get; init; }
 
-    public abstract bool FreezeGame { get; }
+    public bool FreezeGame { get; init; }
 
     // Is useful for calling IngameMenu::OnDeselect() from a modal class (in Hide() for example)
     public bool IsAvoidableBypass = false;
 
-    public Modal()
+    public Modal(string yesButtonText = "YES", bool hideNoButton = true, string noButtonText = "NO", string modalText = "", bool isAvoidable = false, bool freezeGame = false)
     {
         Type type = GetType();
         if (Modals.ContainsKey(type))
         {
             throw new NotSupportedException($"You cannot set two modals to have the same Type");
         }
+
+        SubWindowName = GetType().Name;
+        YesButtonText = yesButtonText;
+        HideNoButton = hideNoButton;
+        NoButtonText = noButtonText;
+        ModalText = modalText;
+        IsAvoidable = isAvoidable;
+        FreezeGame = freezeGame;
+
         Log.Debug($"Registered Modal {SubWindowName} of type {type}");
         Modals.Add(type, this);
-        ModalsPerSubWindowName[SubWindowName] = this;
     }
 
     /// <summary>
@@ -60,7 +64,10 @@ public abstract class Modal : MonoBehaviour
     /// </summary>
     public void Show()
     {
-        FreezeTime.Begin($"Nitrox{SubWindowName}");
+        if (FreezeGame)
+        {
+            FreezeTime.Begin($"Nitrox{SubWindowName}Freeze");
+        }
         StartCoroutine(Show_Impl());
     }
 
@@ -69,16 +76,19 @@ public abstract class Modal : MonoBehaviour
     /// </summary>
     public void Hide()
     {
-        FreezeTime.End($"Nitrox{SubWindowName}");
-        if (!IsAvoidable)
+        if (FreezeGame)
+        {
+            FreezeTime.End($"Nitrox{SubWindowName}Freeze");
+        }
+        if (IsAvoidable)
+        {
+            IngameMenu.main.OnDeselect();
+        }
+        else
         {
             IsAvoidableBypass = true;
             IngameMenu.main.OnDeselect();
             IsAvoidableBypass = false;
-        }
-        else
-        {
-            IngameMenu.main.OnDeselect();
         }
     }
 
@@ -128,9 +138,9 @@ public abstract class Modal : MonoBehaviour
         yesButton.onClick.AddListener(() => { ClickYes(); });
         buttonYesObject.GetComponentInChildren<Text>().text = YesButtonText;
 
-        if (HideNoButton && buttonNoObject)
+        if (HideNoButton)
         {
-            DestroyImmediate(buttonNoObject);
+            Destroy(buttonNoObject);
             buttonYesObject.transform.position = new Vector3(modalSubWindow.transform.position.x / 2, buttonYesObject.transform.position.y, buttonYesObject.transform.position.z); // Center Button
             return;
         }
@@ -141,30 +151,44 @@ public abstract class Modal : MonoBehaviour
         buttonNoObject.GetComponentInChildren<Text>().text = NoButtonText;
     }
 
-    public abstract void ClickYes();
-    public abstract void ClickNo();
+    public virtual void ClickYes()
+    {
+        Hide();
+    }
+    public virtual void ClickNo()
+    {
+        Hide();
+    }
 
     private IEnumerator Show_Impl()
     {
         // Execute frame-by-frame to allow UI scripts to initialize.
         InitSubWindow();
-        yield return null;
+        yield return new WaitForEndOfFrame();
         IngameMenu.main.Open();
-        yield return null;
+        yield return new WaitForEndOfFrame();
         IngameMenu.main.ChangeSubscreen(SubWindowName);
     }
 
     /// <summary>
-    /// Lets you get any existing Modal that was registered by its Type
+    /// Lets you get any existing Modal by its Type
     /// </summary>
     /// <typeparam name="T">The type of the modal to get</typeparam>
-    /// <returns>The class of the modal or null if it wasn't found</returns>
+    /// <returns>An existing instance of the modal if it already exists, else, a new one</returns>
     public static T Get<T>() where T : Modal
     {
         if (Modals.TryGetValue(typeof(T), out Modal modal))
         {
             return (T)modal;
         }
-        return null;
+        // No need to add entry in dictionary as it's done in constructor
+        return Multiplayer.Main.gameObject.AddComponent<T>();
+    }
+
+    public static bool TryGetByName(string name, out Modal modal)
+    {
+        modal = default;
+        string fullType = $"{typeof(Modal).Namespace}.{name}";
+        return Type.GetType(fullType) != null && Modals.TryGetValue(Type.GetType(fullType), out modal);
     }
 }

@@ -1,7 +1,13 @@
 ﻿namespace NitroxClient.MonoBehaviours.Gui.InGame;
 
-public class ServerStoppedModal : KickedModal
+public class ServerStoppedModal : Modal
 {
-    public override string SubWindowName => "ServerStoppedModal";
-    public override string ModalText => Language.main.Get("Nitrox_ServerStopped");
+    public ServerStoppedModal() : base(yesButtonText: "OK", modalText: Language.main.Get("Nitrox_ServerStopped"), freezeGame: true)
+    {
+    }
+
+    public override void ClickYes()
+    {
+        IngameMenu.main.QuitGame(false);
+    }
 }

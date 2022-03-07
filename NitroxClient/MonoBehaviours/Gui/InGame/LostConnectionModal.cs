@@ -1,11 +1,16 @@
-﻿namespace NitroxClient.MonoBehaviours.Gui.InGame
+﻿namespace NitroxClient.MonoBehaviours.Gui.InGame;
+
+/// <summary>
+///     Extends the IngameMenu with a disconnect popup.
+/// </summary>
+public class LostConnectionModal : Modal
 {
-    /// <summary>
-    ///     Extends the IngameMenu with a disconnect popup.
-    /// </summary>
-    public class LostConnectionModal : KickedModal
+    public LostConnectionModal() : base(yesButtonText: "OK", modalText: Language.main.Get("Nitrox_LostConnection"), freezeGame: true)
     {
-        public override string SubWindowName => "LostConnectionModal";
-        public override string ModalText => Language.main.Get("Nitrox_LostConnection");
+    }
+
+    public override void ClickYes()
+    {
+        IngameMenu.main.QuitGame(false);
     }
 }
