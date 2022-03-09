@@ -12,6 +12,7 @@ public class AuroraExplodeNowProcessor : ClientPacketProcessor<AuroraExplodeNow>
     {
         this.pdaManagerEntry = pdaManagerEntry;
     }
+
     public override void Process(AuroraExplodeNow packet)
     {
         pdaManagerEntry.AuroraExplosionTriggered = true;

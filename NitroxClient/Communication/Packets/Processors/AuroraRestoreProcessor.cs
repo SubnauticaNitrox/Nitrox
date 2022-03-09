@@ -12,6 +12,7 @@ public class AuroraRestoreProcessor : ClientPacketProcessor<AuroraRestore>
     {
         this.pdaManagerEntry = pdaManagerEntry;
     }
+
     public override void Process(AuroraRestore packet)
     {
         pdaManagerEntry.AuroraExplosionTriggered = false;

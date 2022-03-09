@@ -26,11 +26,13 @@ public class CrashedShipExploder_OnConsoleCommand_Patch : NitroxPatch, IDynamicP
     {
         return false;
     }
+
     public static bool PrefixExplodeShip()
     {
         Resolve<IPacketSender>().Send(new ServerCommand("aurora explode"));
         return false;
     }
+
     public static bool PrefixRestoreShip()
     {
         Resolve<IPacketSender>().Send(new ServerCommand("aurora restore"));
