@@ -83,6 +83,11 @@ namespace NitroxServer.GameLogic
         private void CreateEventTimers()
         {
             double ExplosionCycleDuration = AuroraExplosionTimeMs - AuroraWarningTimeMs;
+            // If aurora's warning is set to later than explosion's time, we don't want to create any timer
+            if (ExplosionCycleDuration > 0)
+            {
+                return;
+            }
             double TimePassedSinceWarning = ElapsedTimeMs - AuroraWarningTimeMs;
             CreateTimer(ExplosionCycleDuration * 0.2d - TimePassedSinceWarning, StoryEventSend.EventType.PDA_EXTRA, "Story_AuroraWarning1");
             CreateTimer(ExplosionCycleDuration * 0.5d - TimePassedSinceWarning, StoryEventSend.EventType.PDA_EXTRA, "Story_AuroraWarning2");
