@@ -8,8 +8,7 @@ using UWE;
 namespace NitroxClient.MonoBehaviours.Gui.InGame;
 
 /// <summary>
-/// Open a dialog box on the middle of the screen at any time.
-/// The components also need to be added in Multiplayer::InitMonoBehaviours()
+/// Base class for Modal components, which are dialog boxes that appear in the middle of the screen
 /// </summary>
 public abstract class Modal : MonoBehaviour
 {
