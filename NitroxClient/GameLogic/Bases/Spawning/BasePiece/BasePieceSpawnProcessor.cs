@@ -53,6 +53,8 @@ namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
             }
         }
 
+        // Each time an element is built in a base, all the geometries are rebuilt and therefore the modifications done in the SpawnProcessors are erased
+        // Thus, we need to reapply them each time we rebuild the geometry
         public static void ReRunSpawnProcessor(GameObject finishedPiece, NitroxId nitroxId)
         {
             if (spawnProcessorsApplied.TryGetValue(nitroxId, out BasePieceSpawnInfos basePieceSpawnInfos))
@@ -61,7 +63,7 @@ namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
             }
         }
 
-        class BasePieceSpawnInfos
+        internal struct BasePieceSpawnInfos
         {
             public TechType TechType;
             public Base LatestBase;
