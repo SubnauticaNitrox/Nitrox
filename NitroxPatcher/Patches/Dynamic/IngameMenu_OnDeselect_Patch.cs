@@ -17,7 +17,7 @@ public class IngameMenu_OnDeselect_Patch : NitroxPatch, IDynamicPatch
     public static bool Prefix()
     {
         // Cancel if the modal is set to be non-avoidable (IsAvoidable) and if it's not the modal that wants to close itself (IsAvoidableBypass)
-        if (Modal.CurrentModal && !Modal.CurrentModal.IsAvoidable && !Modal.CurrentModal.IsAvoidableBypass)
+        if (Modal.CurrentModal != null && !Modal.CurrentModal.IsAvoidable && !Modal.CurrentModal.IsAvoidableBypass)
         {
             return false;
         }

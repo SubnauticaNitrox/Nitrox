@@ -10,7 +10,7 @@ namespace NitroxClient.MonoBehaviours.Gui.InGame;
 /// <summary>
 /// Base class for Modal components, which are dialog boxes that appear in the middle of the screen
 /// </summary>
-public abstract class Modal : MonoBehaviour
+public abstract class Modal
 {
     /// <summary>
     /// Get a Modal by its type at any time (static)
@@ -73,7 +73,7 @@ public abstract class Modal : MonoBehaviour
         }
         CurrentModal?.Hide();
         CurrentModal = this;
-        StartCoroutine(Show_Impl());
+        CoroutineHost.StartCoroutine(Show_Impl());
     }
 
     /// <summary>
@@ -111,7 +111,7 @@ public abstract class Modal : MonoBehaviour
         if (!modalSubWindow)
         {
             GameObject derivedSubWindow = IngameMenu.main.transform.Find("QuitConfirmation").gameObject;
-            modalSubWindow = Instantiate(derivedSubWindow, IngameMenu.main.transform, false);
+            modalSubWindow = UnityEngine.Object.Instantiate(derivedSubWindow, IngameMenu.main.transform, false);
             modalSubWindow.name = SubWindowName;
 
             // Styling.
@@ -145,7 +145,7 @@ public abstract class Modal : MonoBehaviour
 
         if (HideNoButton)
         {
-            Destroy(buttonNoObject);
+            UnityEngine.Object.Destroy(buttonNoObject);
             buttonYesObject.transform.position = new Vector3(modalSubWindow.transform.position.x / 2, buttonYesObject.transform.position.y, buttonYesObject.transform.position.z); // Center Button
             return;
         }
@@ -184,6 +184,6 @@ public abstract class Modal : MonoBehaviour
             return (T)modal;
         }
         // No need to add entry in dictionary as it's done in constructor
-        return Multiplayer.Main.gameObject.AddComponent<T>();
+        return (T)Activator.CreateInstance(typeof(T));
     }
 }
