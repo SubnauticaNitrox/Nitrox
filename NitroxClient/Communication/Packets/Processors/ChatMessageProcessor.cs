@@ -41,7 +41,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         private void LogClientMessage(ChatMessage message)
         {
-            // The message can come from either us or another player
+            // The message can come from either the local player or other players
             string playerName;
             NitroxColor color;
             if (localPlayer.PlayerId == message.PlayerId)
