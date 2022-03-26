@@ -5,7 +5,7 @@ using System.Linq;
 using LitJson;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Nitrox.Test.Patcher.Patches
+namespace NitroxPatcher.Patches.Persistent
 {
     [TestClass]
     public class Language_LoadLanguageFile_PatchTest

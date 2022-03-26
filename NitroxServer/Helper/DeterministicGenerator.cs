@@ -1,20 +1,25 @@
 ﻿using System;
 using NitroxModel.DataStructures;
 
-namespace NitroxServer.GameLogic.Entities.Spawning
+namespace NitroxServer.Helper
 {
-    public class DeterministicBatchGenerator
+    public class DeterministicGenerator
     {
         private readonly Random random;
 
-        public DeterministicBatchGenerator(string seed, NitroxInt3 batchId)
+        public DeterministicGenerator(string worldSeed, object reference)
         {
-            random = new Random(seed.GetHashCode() + batchId.GetHashCode());
+            random = new Random(worldSeed.GetHashCode() + reference.GetHashCode());
         }
 
         public double NextDouble()
         {
             return random.NextDouble();
+        }
+
+        public double NextDouble(double min, double max)
+        {
+            return random.NextDouble() * (max - min) + min;
         }
 
         public int NextInt(int min, int max)

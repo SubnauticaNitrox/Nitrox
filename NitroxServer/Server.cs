@@ -218,8 +218,7 @@ namespace NitroxServer
         public void PauseServer()
         {
             DisablePeriodicSaving();
-            world.EventTriggerer.PauseWorldTime();
-            world.EventTriggerer.PauseEventTimers();
+            world.EventTriggerer.PauseWorld();
             Log.Info("Server has paused, waiting for players to connect");
         }
 
@@ -229,8 +228,7 @@ namespace NitroxServer
             {
                 EnablePeriodicSaving();
             }
-            world.EventTriggerer.StartWorldTime();
-            world.EventTriggerer.StartEventTimers();
+            world.EventTriggerer.StartWorld();
             Log.Info("Server has resumed");
         }
     }
