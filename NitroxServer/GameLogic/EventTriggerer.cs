@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Timers;
 using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using NitroxServer.Helper;
 using NitroxServer.GameLogic.Unlockables;
@@ -24,7 +23,7 @@ namespace NitroxServer.GameLogic
         private string seed;
 
         public double AuroraExplosionTimeMs;
-        // Necessary to calculate correctly the timers' duration
+        // Necessary to calculate the timers correctly
         public double AuroraWarningTimeMs;
 
         private double elapsedTimeOutsideStopWatchMs;
@@ -68,7 +67,6 @@ namespace NitroxServer.GameLogic
             this.seed = seed;
             // Default time in Base SN is 480s
             elapsedTimeOutsideStopWatchMs = elapsedTime == 0 ? TimeSpan.FromSeconds(480).TotalMilliseconds : elapsedTime;
-            // The timer interval is in milliseconds, and so the AuroraExplosionTime should be
             AuroraExplosionTimeMs = auroraExplosionTime ?? GenerateDeterministicAuroraTime(seed);
             AuroraWarningTimeMs = auroraWarningTime ?? ElapsedTimeMs;
             CreateEventTimers();
@@ -126,7 +124,7 @@ namespace NitroxServer.GameLogic
         }
 
         /// <summary>
-        /// Tell the players to start Aurora's explosion event
+        /// Tells the players to start Aurora's explosion event
         /// </summary>
         /// <param name="cooldown">Wether we should make Aurora explode instantly or after a short countdown</param>
         public void ExplodeAurora(bool cooldown)
@@ -150,7 +148,7 @@ namespace NitroxServer.GameLogic
         }
 
         /// <summary>
-        /// Tell the players to start Aurora's restoration event
+        /// Tells the players to start Aurora's restoration event
         /// </summary>
         public void RestoreAurora()
         {
@@ -184,7 +182,7 @@ namespace NitroxServer.GameLogic
         }
 
         /// <summary>
-        /// Calculate the time at which we'll send last packets to trigger Aurora's explosion
+        /// Calculate the future Aurora's explosion time in a deterministic manner
         /// </summary>
         private double GenerateDeterministicAuroraTime(string seed)
         {
@@ -194,7 +192,7 @@ namespace NitroxServer.GameLogic
         }
 
         /// <summary>
-        /// Makes every event timer start again
+        /// Restarts every event timer
         /// </summary>
         public void StartWorld()
         {
@@ -206,7 +204,7 @@ namespace NitroxServer.GameLogic
         }
 
         /// <summary>
-        /// Makes every event timer pause
+        /// Pauses every event timer
         /// </summary>
         public void PauseWorld()
         {
@@ -218,7 +216,7 @@ namespace NitroxServer.GameLogic
         }
 
         /// <summary>
-        /// Lets an estimation fo the time before aurora explosion
+        /// Calculates the time before the aurora explosion
         /// </summary>
         /// <returns>The time in minutes before aurora explodes or -1 if it already exploded</returns>
         private double GetMinutesBeforeAuroraExplosion()
@@ -229,7 +227,7 @@ namespace NitroxServer.GameLogic
         /// <summary>
         /// Makes a nice status for the summary command for example
         /// </summary>
-        public string GetAuroraState()
+        public string GetAuroraStateSummary()
         {
             double minutesBeforeExplosion = GetMinutesBeforeAuroraExplosion();
             if (minutesBeforeExplosion < 0)
