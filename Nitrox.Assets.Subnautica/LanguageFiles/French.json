@@ -1,5 +1,5 @@
 ﻿{
-"version": 4,
+"version": 5,
 // Main menu
 "Nitrox_Multiplayer": "Multijoueur",
 "Nitrox_AddServer": "Ajouter un serveur",
@@ -28,6 +28,8 @@
 "Nitrox_SyncingWorld": "Synchronisation du monde multijoueur",
 "Nitrox_LostConnection": "Connexion au serveur perdue",
 "Nitrox_PlayerKicked": "Vous avez été exclu du serveur",
+"Nitrox_LostConnectionWarn": "Vous n'êtes plus connecté au serveur",
+"Nitrox_ServerStopped": "Serveur éteint",
 // In game logging
 "Nitrox_UnableToConnect": "Impossible de se connecter au serveur :",
 "Nitrox_StartServer": "Veuillez démarrer votre serveur pour rejoindre votre monde",
