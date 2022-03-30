@@ -50,6 +50,11 @@ namespace NitroxServer.Communication.LiteNetLib
                 PortForwardAsync((ushort)portNumber).ConfigureAwait(false);
             }
 
+            if (useLANDiscovery)
+            {
+                LANDiscoveryServer.Start();
+            }
+
             return true;
         }
 
@@ -81,6 +86,11 @@ namespace NitroxServer.Communication.LiteNetLib
             if (useUpnpPortForwarding)
             {
                 NatHelper.DeletePortMappingAsync((ushort)portNumber, Protocol.Udp).ConfigureAwait(false).GetAwaiter().GetResult();
+            }
+
+            if (useLANDiscovery)
+            {
+                LANDiscoveryServer.Stop();
             }
         }
 
