@@ -8,6 +8,7 @@ using System.Net.Sockets;
 using System.Reflection;
 using System.Security.Principal;
 using System.Windows;
+using ToastNotifications.Messages.Error;
 using WindowsFirewallHelper;
 using WindowsFirewallHelper.Addresses;
 using WindowsFirewallHelper.FirewallRules;
@@ -66,9 +67,16 @@ namespace NitroxLauncher.Models.Utils
 
         internal static void CheckFirewallRules()
         {
-            CheckClientFirewallRules();
-            CheckServerFirewallRules();
-            CheckHamachiFirewallRules();
+            try
+            {
+                CheckClientFirewallRules();
+                CheckServerFirewallRules();
+                CheckHamachiFirewallRules();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                MessageBox.Show("There was a problem configuring the Windows firewall. Try restarting the launcher as administrator or manually adding firewall rules for Nitrox programs.");
+            }
         }
 
         private static void CheckServerFirewallRules()
