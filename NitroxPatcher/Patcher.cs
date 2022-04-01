@@ -26,9 +26,6 @@ internal static class Patcher
 
     private static readonly Harmony harmony = new("com.nitroxmod.harmony");
     private static bool isApplied;
-    // We use a list of previously used instances because container resolves empty instances of the patches.
-    // Thus, the unpatching won't work with new instances (it will be looking for an empty list of activePatches)
-    private static readonly List<IDynamicPatch> dynamicPatches = new();
 
     /// <summary>
     ///     Applies all the dynamic patches defined in Patches namespace.
@@ -49,7 +46,6 @@ internal static class Patcher
             try
             {
                 patch.Patch(harmony);
-                dynamicPatches.Add(patch);
             }
             catch (Exception e)
             {
@@ -74,13 +70,10 @@ internal static class Patcher
             return;
         }
 
-        // To restore the patches, we use the list of the patch instances that were used in the Apply() method
-        // because only these instances contain the informations that are necessary to be unpatched
-        foreach (IDynamicPatch patch in dynamicPatches)
+        foreach (IDynamicPatch patch in container.Resolve<IDynamicPatch[]>())
         {
             patch.Restore(harmony);
         }
-        dynamicPatches.Clear();
 
         isApplied = false;
     }
