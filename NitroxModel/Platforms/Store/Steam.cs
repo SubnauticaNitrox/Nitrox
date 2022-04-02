@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.Win32;
 using NitroxModel.Discovery;
 using NitroxModel.Helper;
 using NitroxModel.Platforms.OS.Shared;
@@ -26,7 +27,7 @@ namespace NitroxModel.Platforms.Store
 
         public async Task<ProcessEx> StartPlatformAsync()
         {
-            ProcessEx steam = ProcessEx.GetFirstProcess("steam", p => p.MainModuleDirectory != null && File.Exists(Path.Combine(p.MainModuleDirectory, "steamclient.dll")));
+            ProcessEx steam = ProcessEx.GetFirstProcess("steam", p => p.MainModuleDirectory != null && File.Exists(Path.Combine(p.MainModuleDirectory, "steamclient.dll"))); 
             if (steam != null)
             {
                 return steam;
@@ -62,17 +63,25 @@ namespace NitroxModel.Platforms.Store
 
         public async Task<ProcessEx> StartGameAsync(string pathToGameExe, int steamAppId, string launchArguments)
         {
-            try
+            
+            //Check if the launcher is running in Wine: Check if HKEY_LOCAL_MACHINE\Software\Wine key exists.
+            RegistryKey wineKey = Registry.LocalMachine.OpenSubKey(@"Software\Wine");
+
+            //function StartPlatformAsync() doesn't detect Steam on Linux properly, skip it if running in wine
+            if (wineKey == null)
             {
-                using ProcessEx steam = await StartPlatformAsync();
-                if (steam == null)
+                try
                 {
-                    throw new PlatformException(Instance, "Steam is not running and could not be found.");
+                    using ProcessEx steam = await StartPlatformAsync();
+                    if (steam == null)
+                    {
+                        throw new PlatformException(Instance, "Steam is not running and could not be found.");
+                    }
                 }
-            }
-            catch (OperationCanceledException ex)
-            {
-                throw new PlatformException(Instance, "Timeout reached while waiting for platform to start. Try again once platform has finished loading.", ex);
+                catch (OperationCanceledException ex)
+                {
+                    throw new PlatformException(Instance, "Timeout reached while waiting for platform to start. Try again once platform has finished loading.", ex);
+                }
             }
 
             return ProcessEx.Start(
