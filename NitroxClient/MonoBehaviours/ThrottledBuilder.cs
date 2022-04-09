@@ -220,7 +220,7 @@ namespace NitroxClient.MonoBehaviours
                     }
                 }
                 
-                if (placedPiece == null )
+                if (!placedPiece)
                 {
                     Int3 position = latestBase.WorldToGrid(constructableBase.transform.position);
                     cellTransform = latestBase.GetCellObject(position);                        
