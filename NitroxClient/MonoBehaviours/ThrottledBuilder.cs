@@ -213,7 +213,7 @@ namespace NitroxClient.MonoBehaviours
                 {
                     cellTransform = latestBase.GetCellObject(latestCell);
 
-                    if (cellTransform != null)
+                    if (cellTransform)
                     {
                         Log.Debug($"Looking for {constructing.name} in cell {latestBase.GetCell(latestCell)} at {latestCell} using latestCell");
                         placedPiece = FindFinishedPiece(cellTransform);
