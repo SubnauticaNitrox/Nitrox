@@ -41,7 +41,7 @@ namespace NitroxServer_Subnautica.Serialization
             MetaType movementData = Model.Add(typeof(VehicleMovementData), false);
             movementData.AddSubType(100, typeof(ExosuitMovementData));
 
-            MetaType rotationData = Model.Add(typeof(BuilderMetadata), false);
+            MetaType builderMetadata = Model.Add(typeof(BuilderMetadata), false);
             rotationData.AddSubType(50, typeof(CorridorBuilderMetadata));
             rotationData.AddSubType(60, typeof(MapRoomBuilderMetadata));
             rotationData.AddSubType(70, typeof(BaseModuleBuilderMetadata));
