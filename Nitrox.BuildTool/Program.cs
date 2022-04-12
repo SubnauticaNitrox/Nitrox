@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using NitroxModel.Discovery;
+using NitroxModel.Platforms.OS.Shared;
 
 namespace Nitrox.BuildTool
 {
@@ -31,9 +34,11 @@ namespace Nitrox.BuildTool
                 Exit((eventArgs.ExceptionObject as Exception)?.HResult ?? 1);
             };
 
+            ConfiguredTaskAwaitable litenetlibRepo = Task.Run(() => EnsureGitDependency("https://github.com/RevenantX/LiteNetLib.git", "LiteNetLib")).ConfigureAwait(false);
             GameInstallData game = await Task.Factory.StartNew(EnsureGame).ConfigureAwait(false);
             Console.WriteLine($"Found game at {game.InstallDir}");
             await Task.Factory.StartNew(() => EnsurePublicizedAssemblies(game)).ConfigureAwait(false);
+            await litenetlibRepo;
 
             Exit();
         }
@@ -91,6 +96,18 @@ namespace Nitrox.BuildTool
             {
                 Console.WriteLine($"Publicized dll: {publicizedDll}");
             }
+        }
+
+        private static void EnsureGitDependency(string repoUrl, string projectName)
+        {
+            if (File.Exists($@"repositories\{projectName}\{projectName}\bin\Release\{projectName}.dll"))
+            {
+                Console.WriteLine($"Repository: {repoUrl} already downloaded and built");
+                return;
+            }
+            
+            FileSystem.Instance.ShellExecute($"git clone \"{repoUrl}\" && dotnet build {projectName} --configuration Release", "repositories");
+            Console.WriteLine($"Project {projectName} downloaded and built");
         }
     }
 }

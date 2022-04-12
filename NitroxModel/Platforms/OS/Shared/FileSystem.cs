@@ -60,6 +60,24 @@ namespace NitroxModel.Platforms.OS.Shared
             return process;
         }
 
+        public void ShellExecute(string command, string workDir = null)
+        {
+            using Process process = new();
+            process.StartInfo.UseShellExecute = false;
+            // Suppress text output by redirecting it away from main console window.
+            process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.RedirectStandardError = true;
+            process.StartInfo.FileName = "cmd.exe";
+            process.StartInfo.Arguments = $"/C {command}";
+            if (!string.IsNullOrWhiteSpace(workDir))
+            {
+                workDir = Path.GetFullPath(workDir);
+                Directory.CreateDirectory(workDir);
+                process.StartInfo.WorkingDirectory = workDir;
+            }
+            process.Start();
+        }
+
         /// <summary>
         ///     Gets the full path to a file or program. Searches the PATH environment variables if file could not be found
         ///     relatively. Returns null if not found.

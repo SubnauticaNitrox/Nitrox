@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net472</TargetFramework>
@@ -7,7 +7,6 @@
 
     <ItemGroup>
         <PackageReference Include="Autofac" Version="4.9.4" />
-        <PackageReference Include="LiteNetLib" Version="0.8.3.1" />
         <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
         <PackageReference Include="Mono.Nat" Version="3.0.2" />
         <PackageReference Include="Serilog" Version="2.10.0" />
@@ -28,6 +27,9 @@
       </Reference>
       <Reference Include="Serilog.Sinks.Map">
         <HintPath>..\Nitrox.Assets.Subnautica\Serilog.Sinks.Map.dll</HintPath>
+      </Reference>
+      <Reference Include="LiteNetLib">
+        <HintPath>$(BuildToolRepos)LiteNetLib\LiteNetLib\bin\Release\LiteNetLib.dll</HintPath>
       </Reference>
       <Reference Include="System.Net.Http" />
     </ItemGroup>
