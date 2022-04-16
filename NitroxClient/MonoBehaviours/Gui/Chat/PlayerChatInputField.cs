@@ -82,7 +82,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
 
             if (selected)
             {
-                if (InputField.text != "")
+                if (string.IsNullOrEmpty(InputField.text))
                 {
                     ResetTimer();
                     if (UnityEngine.Input.GetKey(KeyCode.Return))
