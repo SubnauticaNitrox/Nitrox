@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 using HarmonyLib;
@@ -10,50 +11,69 @@ namespace NitroxPatcher.Patches.Persistent;
 
 public class Language_LoadLanguageFile_Patch : NitroxPatch, IPersistentPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Language t) => t.LoadLanguageFile(default));
+    private static readonly MethodInfo targetMethod = Reflect.Method((Language t) => t.LoadLanguageFile(default));
+
+    private static readonly Dictionary<string, Tuple<string, string>> languageToIsoCode = new(); // First Tuple item is region specific (en-US), second isn't (en)
 
     public static void Postfix(string language, Dictionary<string, string> ___strings)
     {
-        string[] files = {
-            Path.Combine(NitroxUser.LauncherPath, "LanguageFiles", "English.json"), // Using English as fallback.
-            Path.Combine(NitroxUser.LauncherPath, "LanguageFiles", $"{language}.json")
-        };
-
-        foreach (string file in files)
+        if (TryLoadLanguageFile(languageToIsoCode[language].Item1, ___strings))
         {
-            if (!File.Exists(file))
-            {
-                Log.Warn($"No language file was found for at {file}. Using English as fallback");
-                continue;
-            }
+            return;
+        }
 
-            JsonData json;
-            using (StreamReader streamReader = new(file))
-            {
-                try
-                {
-                    json = JsonMapper.ToObject(streamReader);
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex, $"Error while reading language file {language}.json");
-                    return;
-                }
-            }
+        if (TryLoadLanguageFile(languageToIsoCode[language].Item2, ___strings))
+        {
+            return;
+        }
+
+        Log.Warn($"No language file was found for {language}. Using English as fallback");
+        TryLoadLanguageFile("en", ___strings);
+    }
+
+    private static bool TryLoadLanguageFile(string fileName, IDictionary<string, string> strings)
+    {
+        string filePath = Path.Combine(NitroxUser.LauncherPath, "LanguageFiles", $"{fileName}.json");
+
+        if (!File.Exists(filePath))
+        {
+            return false;
+        }
+
+        using StreamReader streamReader = new(filePath);
+        try
+        {
+            JsonData json = JsonMapper.ToObject(streamReader);
 
             foreach (string key in json.Keys)
             {
-                if (json[key].IsString)
+                JsonData jsonKey = json[key];
+                if (jsonKey.IsString)
                 {
-                    ___strings[key] = (string)json[key];
+                    strings[key] = (string)jsonKey;
                 }
             }
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, $"Error while reading language file {fileName}.json");
         }
 
+        return false;
     }
 
     public override void Patch(Harmony harmony)
     {
-        PatchPostfix(harmony, TARGET_METHOD);
+        foreach (CultureInfo culture in CultureInfo.GetCultures(CultureTypes.NeutralCultures | CultureTypes.SpecificCultures))
+        {
+            if (!languageToIsoCode.ContainsKey(culture.EnglishName) && !string.IsNullOrEmpty(culture.Name))
+            {
+                languageToIsoCode.Add(culture.EnglishName, new Tuple<string, string>(culture.Name, culture.TwoLetterISOLanguageName));
+            }
+        }
+
+        PatchPostfix(harmony, targetMethod);
     }
 }
