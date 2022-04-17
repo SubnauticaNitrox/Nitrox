@@ -29,6 +29,8 @@ public class Language_LoadLanguageFile_Patch : NitroxPatch, IPersistentPatch
 
         Log.Warn($"No language file was found for {language}. Using English as fallback");
         TryLoadLanguageFile("en", ___strings);
+
+        Language.main.ParseMetaData();
     }
 
     private static bool TryLoadLanguageFile(string fileName, IDictionary<string, string> strings)
