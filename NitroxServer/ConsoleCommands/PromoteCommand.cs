@@ -29,7 +29,7 @@ namespace NitroxServer.ConsoleCommands
             {
                 targetPlayer.Permissions = permissions;
 
-                targetPlayer.SendPacket(new PermsChanged(targetPlayer.Permissions));
+                // TODO: Send a packet to the player to acknowledge the permision level change
                 SendMessage(args.Sender, $"Updated {targetPlayer.Name}\'s permissions to {permissions}");
                 SendMessageToPlayer(targetPlayer, $"You've been promoted to {permissions}");
             }

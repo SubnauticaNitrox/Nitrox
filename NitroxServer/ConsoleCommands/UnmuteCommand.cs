@@ -39,7 +39,7 @@ namespace NitroxServer.ConsoleCommands
             }
 
             targetPlayer.IsMuted = false;
-            playerManager.SendPacketToAllPlayers(new MutePlayer(targetPlayer.Id, targetPlayer.IsMuted));
+            // TODO: Send a packet to all players to acknowledge the unmuted player
             SendMessage(targetPlayer, "You're no longer muted");
             SendMessage(args.Sender, $"Unmuted {targetPlayer.Name}");
         }
