@@ -130,11 +130,7 @@ namespace NitroxServer.ConsoleCommands.Abstract
         public static void SendMessage(Optional<Player> player, string message)
         {
             SendMessageToPlayer(player, message);
-            if (player.HasValue)
-            {
-                Log.Info($"=> {player.Value.Name}: {message}");
-            }
-            else
+            if (!player.HasValue)
             {
                 Log.Info(message);
             }
@@ -147,7 +143,7 @@ namespace NitroxServer.ConsoleCommands.Abstract
         {
             PlayerManager playerManager = NitroxServiceLocator.LocateService<PlayerManager>();
             playerManager.SendPacketToAllPlayers(new ChatMessage(ChatMessage.SERVER_ID, message));
-            Log.Info($"=> everyone: {message}");
+            Log.Info($"[BROADCAST] {message}");
         }
     }
 }
