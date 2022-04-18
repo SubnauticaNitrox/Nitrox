@@ -3,6 +3,7 @@
     "Nitrox_AddServer_AddressDescription": "Host:",
     "Nitrox_AddServer_AddressPlaceholder": "Vložte IP nebo adresu serveru",
     "Nitrox_AddServer_Confirm": "Vytvoření serveru",
+    "Nitrox_AddServer_CreatedSuccessful": "",
     "Nitrox_AddServer_InvalidInput": "Váš vstup je neplatný. Zkontrolujte, zda jsou vyplněna všechna textová pole.",
     "Nitrox_AddServer_NameDescription": "Jméno:",
     "Nitrox_AddServer_NamePlaceholder": "Vložte jméno serveru",
