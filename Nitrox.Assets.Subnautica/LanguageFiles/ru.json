@@ -3,6 +3,7 @@
     "Nitrox_AddServer_AddressDescription": "Хост:",
     "Nitrox_AddServer_AddressPlaceholder": "Введите IP-адрес или адрес сервера",
     "Nitrox_AddServer_Confirm": "Создать сервер",
+    "Nitrox_AddServer_CreatedSuccessful": "",
     "Nitrox_AddServer_InvalidInput": "Введенные вами данные недействительны. Пожалуйста, проверьте, все ли текстовые поля заполнены.",
     "Nitrox_AddServer_NameDescription": "Имя:",
     "Nitrox_AddServer_NamePlaceholder": "Введите имя сервера",
