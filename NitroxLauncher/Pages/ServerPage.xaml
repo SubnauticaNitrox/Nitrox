@@ -10,7 +10,7 @@
                 Title="Server Page">
 
     <local:PageBase.Resources>
-        <BitmapImage x:Key="ServerIllustration" UriSource="pack://application:,,,/images/serverIllustration.png"/>
+        <BitmapImage x:Key="ServerIllustration" UriSource="pack://application:,,,/Assets/Images/serverIllustration.png"/>
     </local:PageBase.Resources>
 
     <Grid Margin="32,0">

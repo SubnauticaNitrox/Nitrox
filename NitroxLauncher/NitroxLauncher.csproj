@@ -17,7 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Resource Include="Images\**">
+      <Resource Include="Assets\Images\**">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Resource>
     </ItemGroup>
