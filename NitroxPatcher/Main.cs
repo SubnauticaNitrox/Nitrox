@@ -12,6 +12,10 @@ namespace NitroxPatcher;
 
 public static class Main
 {
+    /// <summary>
+    ///     Lazily (i.e. when called, unlike immediately on class load) gets the path to the Nitrox Launcher folder.
+    ///     This path can be anywhere on the system because it's placed somewhere the user likes.
+    /// </summary>
     private static readonly Lazy<string> nitroxLauncherDir = new(() =>
     {
         // Get path from command args.
@@ -66,10 +70,16 @@ public static class Main
         Init();
     }
 
+    /// <summary>
+    ///     This method must not be inlined since the AppDomain dependency resolve will be triggered when the JIT compiles this method. If it's inlined it will cause dependencies to
+    ///     resolve in <see cref="Execute" /> *before* the dependency resolve listener is applied.
+    /// </summary>
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
     [MethodImpl(MethodImplOptions.NoInlining)]
     private static void Init()
     {
         Log.Setup(inGameLogger: new SubnauticaInGameLogger(), useConsoleLogging: false);
+        // Capture unity errors to be logged by our logging framework.
         Application.logMessageReceived += (condition, stackTrace, type) =>
         {
             switch (type)
@@ -105,6 +115,11 @@ public static class Main
         }
     }
 
+    /// <summary>
+    /// Nitrox DLL location resolver.
+    /// <p/>
+    /// Required to load the files from the Nitrox Launcher subfolder which would otherwise not be found.
+    /// </summary>
     private static Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)
     {
         string dllFileName = args.Name.Split(',')[0];
