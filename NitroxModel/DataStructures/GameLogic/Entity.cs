@@ -29,9 +29,7 @@ namespace NitroxModel.DataStructures.GameLogic
         ///     Gets the prefab class id assigned by Unity Engine. This is a unique <see cref="Guid"/>. 
         /// </summary>
         /// <remarks>
-        ///     A prefab is a Unity Engine object that acts as a blueprint to instantiate Game Objects.
-        ///     Game developers use prefabs to create similar copies of game objects in the scene/world as opposed to manually attaching
-        ///     the required components to each game object when similar behaviour is required.
+        ///     <a href="https://docs.unity3d.com/Manual/Prefabs.html">What is a prefab?</a>
         /// </remarks>
         [ProtoMember(5)]
         public string ClassId { get; set; }
