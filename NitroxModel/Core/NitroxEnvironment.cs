@@ -3,6 +3,9 @@ using System.Reflection;
 
 namespace NitroxModel.Helper
 {
+    /// <summary>
+    ///     Environment helper for getting meta data about where and how Nitrox is running.
+    /// </summary>
     public static class NitroxEnvironment
     {
         public static readonly Version Version = Assembly.GetAssembly(typeof(NitroxEnvironment)).GetName().Version;

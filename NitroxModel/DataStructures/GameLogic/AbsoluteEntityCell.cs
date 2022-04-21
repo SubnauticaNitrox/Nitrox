@@ -16,6 +16,9 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoMember(2)]
         public NitroxInt3 CellId { get; }
 
+        /// <summary>
+        ///     Abstract elevation of the cell.
+        /// </summary>
         [ProtoMember(3)]
         public int Level { get; }
 

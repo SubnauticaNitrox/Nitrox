@@ -25,6 +25,14 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoMember(4)]
         public int Level { get; set; }
 
+        /// <summary>
+        ///     Gets the prefab class id assigned by Unity Engine. This is a unique <see cref="Guid"/>. 
+        /// </summary>
+        /// <remarks>
+        ///     A prefab is a Unity Engine object that acts as a blueprint to instantiate Game Objects.
+        ///     Game developers use prefabs to create similar copies of game objects in the scene/world as opposed to manually attaching
+        ///     the required components to each game object when similar behaviour is required.
+        /// </remarks>
         [ProtoMember(5)]
         public string ClassId { get; set; }
 
@@ -55,9 +63,11 @@ namespace NitroxModel.DataStructures.GameLogic
 
         [ProtoMember(11)]
         public EntityMetadata Metadata { get; set; }
-
-        // If set, this entity already exists as a gameobject in the world (maybe as a child of a prefab we already spawned).  This
-        // id can be used to find the object and update the corresponding id.
+        
+        /// <summary>
+        ///     If set, this entity already exists as a gameobject in the world (maybe as a child of a prefab we already spawned).
+        ///     This id can be used to find the object and update the corresponding id.
+        /// </summary>
         [ProtoMember(12)]
         public int? ExistingGameObjectChildIndex { get; set; }
 

@@ -4,10 +4,9 @@ using ProtoBufNet;
 
 namespace NitroxModel.DataStructures
 {
-    /*
-     * NitroxInt3 model to allow NitroxModel to be decoupled from Assembly-csharp-firstpass
-     * as it is common between subnautica and below zero.
-     */
+    /// <summary>
+    ///     Model to allow <see cref="NitroxModel"/> to be decoupled from Assembly-csharp-firstpass (i.e. game code).
+    /// </summary>
     [Serializable]
     [ProtoContract]
     public struct NitroxInt3 : IEquatable<NitroxInt3>
