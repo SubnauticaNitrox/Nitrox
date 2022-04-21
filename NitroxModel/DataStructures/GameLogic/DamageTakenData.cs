@@ -16,7 +16,6 @@ namespace NitroxModel.DataStructures.GameLogic
         public override string ToString()
         {
             return $"DamageTakenData: Position: {Position}, DamageType: {DamageType}, DealerId: {DealerId}";
-
         }
     }
 }

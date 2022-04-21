@@ -1,6 +1,8 @@
 ﻿namespace NitroxModel.Constants
 {
-    // Required for consistent values across LANDiscoveryClient and LANDiscoveryServer
+    /// <summary>
+    ///     Shared values across LANDiscoveryClient, in NitroxClient project and LANDiscoveryServer in NitroxServer project.
+    /// </summary>
     public static class LANDiscoveryConstants
     {
         public static readonly int[] BROADCAST_PORTS = { 1467, 8710, 16723, 3813, 9704 }; // Randomly generated
