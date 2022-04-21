@@ -8,12 +8,14 @@ namespace NitroxPatcher.Patches;
 
 /// <summary>
 ///     Base class for declaring a patch using <see cref="Harmony" />.
-///     Implement either <see cref="IDynamicPatch" /> if your patch is unloadable or <see cref="IPersistentPatch" /> if it isn't.
-///     Either one or more of the following patch types are possible in one <see cref="NitroxPatch"/>:
+///     Implement either <see cref="IDynamicPatch" /> if your patch is unloadable or <see cref="IPersistentPatch" /> if it isn't.<br />
+///     Either one or more of the following patch types are possible in one <see cref="NitroxPatch"/>:<br />
+///     - Prefix patch, use <see cref="PatchPrefix" /><br />
+///     - Postfix patch, use <see cref="PatchPostfix" /><br />
+///     - Transpiler patch, use <see cref="PatchTranspiler" /><br />
+///     - Finalizer patch, use <see cref="PatchFinalizer" /><br />
 ///     <p />
-///     - Prefix patch, use <see cref="PatchPrefix" />: https://harmony.pardeike.net/articles/patching-prefix.html<br />
-///     - Postfix patch, use <see cref="PatchPostfix" />: https://harmony.pardeike.net/articles/patching-postfix.html<br />
-///     - Transpiler patch, use <see cref="PatchTranspiler" />: https://harmony.pardeike.net/articles/patching-transpiler.html
+///     Documentation for patching can be found under https://harmony.pardeike.net/articles/patching.html and https://github.com/BepInEx/HarmonyX/wiki/Difference-between-Harmony-and-HarmonyX
 /// </summary>
 public abstract class NitroxPatch : INitroxPatch
 {
