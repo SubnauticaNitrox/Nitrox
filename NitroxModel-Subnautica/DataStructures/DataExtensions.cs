@@ -7,6 +7,14 @@ using UnityEngine;
 
 namespace NitroxModel_Subnautica.DataStructures
 {
+    /// <summary>
+    ///     Contains extension methods for converting Unity types to Nitrox types and vice versa.
+    ///     This is necessary to allow the server to work without a dependency on game models while still being able to represent game models.
+    /// </summary>
+    /// <remarks>
+    ///     The abbreviation "DTO" means Data Transfer Object which is a common term used in REST APIs.
+    ///     Its purpose is to be a serializable type and to transfer the least amount of data necessary per request (e.g. API call). 
+    /// </remarks>
     public static class DataExtensions
     {
         public static Int3 ToUnity(this NitroxInt3 v)
