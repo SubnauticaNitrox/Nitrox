@@ -69,9 +69,8 @@ namespace NitroxLauncher.Models.Utils
         {
             try
             {
-                CheckClientFirewallRules();
-                CheckServerFirewallRules();
-                CheckHamachiFirewallRules();
+                CheckFirewallRules(FirewallDirection.Inbound);
+                CheckFirewallRules(FirewallDirection.Outbound);
             }
             catch (UnauthorizedAccessException)
             {
@@ -79,23 +78,28 @@ namespace NitroxLauncher.Models.Utils
             }
         }
 
-        private static void CheckServerFirewallRules()
+        internal static void CheckFirewallRules(FirewallDirection direction)
         {
-            string serverRuleName = "nitroxserver-subnautica.exe";
+            CheckClientFirewallRules(direction);
+            CheckServerFirewallRules(direction);
+            CheckHamachiFirewallRules(direction);
+        }
+
+        private static void CheckServerFirewallRules(FirewallDirection direction)
+        {
             string serverPath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), ServerLogic.SERVER_EXECUTABLE);
 
-            AddExclusiveFirewallRule(serverRuleName, serverPath);
+            AddExclusiveFirewallRule(serverPath, serverPath, direction);
         }
 
-        private static void CheckClientFirewallRules()
+        private static void CheckClientFirewallRules(FirewallDirection direction)
         {
-            string clientRuleName = "Subnautica";
             string clientPath = Path.Combine(LauncherLogic.Config.SubnauticaPath, "Subnautica.exe");
 
-            AddExclusiveFirewallRule(clientRuleName, clientPath);
+            AddExclusiveFirewallRule(clientPath, clientPath, direction);
         }
 
-        private static void CheckHamachiFirewallRules()
+        private static void CheckHamachiFirewallRules(FirewallDirection direction)
         {
             static IPAddress GetHamachiAddress()
             {
@@ -116,6 +120,8 @@ namespace NitroxLauncher.Models.Utils
                 return null;
             }
 
+            const string NAME = "HamachiNitrox";
+
             if (GetHamachiAddress() == null || !FirewallWASRule.IsLocallySupported)
             {
                 return;
@@ -123,13 +129,13 @@ namespace NitroxLauncher.Models.Utils
 
             foreach (IFirewallRule firewallRule in FirewallManager.Instance.Rules)
             {
-                if (firewallRule.Name == "Hamachi")
+                if (firewallRule.Name == NAME)
                 {
                     return;
                 }
             }
 
-            FirewallWASRule rule = new("Hamachi", FirewallAction.Allow, FirewallDirection.Inbound, FirewallManager.Instance.GetActiveProfile().Type)
+            FirewallWASRule rule = new(NAME, FirewallAction.Allow, direction, FirewallManager.Instance.GetActiveProfile().Type)
             {
                 Description = "Ignore Hamachi network",
                 Protocol = FirewallProtocol.Any,
@@ -140,20 +146,21 @@ namespace NitroxLauncher.Models.Utils
             FirewallManager.Instance.Rules.Add(rule);
         }
 
-        private static void AddExclusiveFirewallRule(string name, string filePath)
+        private static void AddExclusiveFirewallRule(string name, string filePath, FirewallDirection direction)
         {
-            if (!FirewallRuleExists(name))
+            if (!FirewallRuleExists(name, direction))
             {
-                AddFirewallRule(name, filePath);
+                AddFirewallRule(name, filePath, direction);
             }
         }
 
-        private static bool FirewallRuleExists(string name) => FirewallManager.Instance.Rules.Any(rule => rule.FriendlyName == name);
+        private static bool FirewallRuleExists(string name, FirewallDirection direction) => FirewallManager.Instance.Rules.Any(
+            rule => rule.FriendlyName == name && rule.Direction == direction);
 
-        private static void AddFirewallRule(string name, string filePath)
+        private static void AddFirewallRule(string name, string filePath, FirewallDirection direction)
         {
             IFirewallRule rule = FirewallManager.Instance.CreateApplicationRule(name, FirewallAction.Allow, filePath);
-            rule.Direction = FirewallDirection.Inbound;
+            rule.Direction = direction;
             rule.Protocol = FirewallProtocol.Any;
             rule.IsEnable = true;
 
