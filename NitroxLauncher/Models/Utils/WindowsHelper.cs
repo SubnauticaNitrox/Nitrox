@@ -81,16 +81,11 @@ namespace NitroxLauncher.Models.Utils
             }
             catch (UnauthorizedAccessException)
             {
-                if (!Settings.Default.FirewallWarningShown)
-                {
-                    Settings.Default.FirewallWarningShown = true;
-                    Settings.Default.Save();
-                    MessageBox.Show("Try restarting the launcher as administrator or manually adding firewall rules for Nitrox programs. This warning won't be shown again.", "Error adding Windows Firewall rules", MessageBoxButton.OK, MessageBoxImage.Warning);
-                }
+                MessageBox.Show("Try restarting the launcher as administrator or manually adding firewall rules for Nitrox programs. This warning won't be shown again.", "Error adding Windows Firewall rules", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
-        internal static void CheckFirewallRules(FirewallDirection direction)
+        private static void CheckFirewallRules(FirewallDirection direction)
         {
             CheckClientFirewallRules(direction);
             CheckServerFirewallRules(direction);
@@ -162,13 +157,13 @@ namespace NitroxLauncher.Models.Utils
             {
                 throw new FileNotFoundException("Unable to add firewall rule to non-existent program", filePath);
             }
-            if (!FirewallRuleExists(name, direction))
+            if (!FirewallRuleExists(name, filePath, direction))
             {
                 AddFirewallRule(name, filePath, direction);
             }
         }
 
-        private static bool FirewallRuleExists(string name, FirewallDirection direction) => FirewallManager.Instance.Rules.Any(rule => rule.FriendlyName == name && rule.Direction == direction);
+        private static bool FirewallRuleExists(string name, string programPath, FirewallDirection direction) => FirewallManager.Instance.Rules.Any(rule => rule.FriendlyName == name && rule.Direction == direction && (programPath?.Equals(rule.ApplicationName, StringComparison.InvariantCultureIgnoreCase) ?? true));
 
         private static void AddFirewallRule(string name, string filePath, FirewallDirection direction)
         {

@@ -46,17 +46,5 @@ namespace NitroxLauncher.Properties {
                 this["LaunchArgs"] = value;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool FirewallWarningShown {
-            get {
-                return ((bool)(this["FirewallWarningShown"]));
-            }
-            set {
-                this["FirewallWarningShown"] = value;
-            }
-        }
     }
 }

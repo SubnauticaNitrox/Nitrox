@@ -8,8 +8,5 @@
     <Setting Name="LaunchArgs" Type="System.String" Scope="User">
       <Value Profile="(Default)">-vrmode none</Value>
     </Setting>
-    <Setting Name="FirewallWarningShown" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>  
   </Settings>
 </SettingsFile>
