@@ -12,12 +12,15 @@ using WindowsFirewallHelper;
 using WindowsFirewallHelper.Addresses;
 using WindowsFirewallHelper.FirewallRules;
 using NitroxLauncher.Properties;
+using NitroxModel;
 
 namespace NitroxLauncher.Models.Utils
 {
     internal static class WindowsHelper
     {
         public static string ProgramFileDirectory = Environment.ExpandEnvironmentVariables("%ProgramW6432%");
+
+        private const string HAMACHI_FIREWALL_RULE_NAME = "HamachiNitrox";
 
         internal static bool IsAppRunningInAdmin()
         {
@@ -103,7 +106,7 @@ namespace NitroxLauncher.Models.Utils
 
         private static void CheckClientFirewallRules(FirewallDirection direction)
         {
-            string clientPath = Path.Combine(LauncherLogic.Config.SubnauticaPath, "Subnautica.exe");
+            string clientPath = Path.Combine(LauncherLogic.Config.SubnauticaPath, GameInfo.Subnautica.ExeName);
 
             AddExclusiveFirewallRule(Path.GetFileName(clientPath), clientPath, direction);
         }
@@ -129,8 +132,6 @@ namespace NitroxLauncher.Models.Utils
                 return null;
             }
 
-            const string NAME = "HamachiNitrox";
-
             if (GetHamachiAddress() == null || !FirewallWASRule.IsLocallySupported)
             {
                 return;
@@ -138,13 +139,13 @@ namespace NitroxLauncher.Models.Utils
 
             foreach (IFirewallRule firewallRule in FirewallManager.Instance.Rules)
             {
-                if (firewallRule.Name == NAME)
+                if (firewallRule.Name == HAMACHI_FIREWALL_RULE_NAME)
                 {
                     return;
                 }
             }
 
-            FirewallWASRule rule = new(NAME, FirewallAction.Allow, direction, FirewallManager.Instance.GetActiveProfile().Type)
+            FirewallWASRule rule = new(HAMACHI_FIREWALL_RULE_NAME, FirewallAction.Allow, direction, FirewallManager.Instance.GetActiveProfile().Type)
             {
                 Description = "Ignore Hamachi network",
                 Protocol = FirewallProtocol.Any,
