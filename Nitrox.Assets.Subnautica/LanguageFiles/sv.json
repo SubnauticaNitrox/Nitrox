@@ -88,6 +88,7 @@
     "Nitrox_UnableToConnect": "Det går inte att ansluta till fjärrservern på:",
     "Nitrox_Unmute": "Slå på ljudet för {PLAYER}",
     "Nitrox_UnmuteQuestion": "Avbryta ljudet av {PLAYER}?",
+    "Nitrox_UnmutedPlayer": "",
     "Nitrox_Waiting": "Väntar att gå med i kö…",
     "Nitrox_WaitingPassword": "Väntar på inmatning av serverlösenord…",
     "Nitrox_WaitingUserInput": "Väntar på användarinmatning…",
