@@ -12,7 +12,7 @@
     "Nitrox_DiscordDecline": "Decline",
     "Nitrox_DiscordPressToFocus": "Press to unlock",
     "Nitrox_DiscordRequestText": "Requested to join your session",
-    "Nitrox_EnterName": "Player Name",
+    "Nitrox_EnterName": "Enter your player name",
     "Nitrox_FirewallInterfering": "Seems like your firewall settings are interfering",
     "Nitrox_HideIp": "Hide IP addresses",
     "Nitrox_InvalidUserName": "Please enter a valid player name.\n\nIt can not contain any space or dubious characters\nAllowed characters : A-Z a-z 0-9 _ . -\nLength: [3, 25]",
