@@ -32,7 +32,7 @@ namespace NitroxClient.GameLogic.InitialSync
             waitScreenItem.SetProgress(0.5f);
             yield return null;
 
-            SetKnownTech(packet.PDAData.KnownTechTypes);
+            SetKnownTech(packet.PDAData.KnownTechTypes, packet.PDAData.AnalyzedTechTypes);
             waitScreenItem.SetProgress(0.67f);
             yield return null;
 
@@ -89,16 +89,20 @@ namespace NitroxClient.GameLogic.InitialSync
             Log.Debug($"PDAEntryPartial: New added: {entries.Count}, Total: {partial.Count}");
         }
 
-        private void SetKnownTech(List<NitroxTechType> techTypes)
+        private void SetKnownTech(List<NitroxTechType> knownTech, List<NitroxTechType> analyzedTech)
         {
-            Log.Info($"Received initial sync packet with {techTypes.Count} known tech types");
+            Log.Info($"Received initial sync packet with {knownTech.Count} KnownTech.knownTech types and {analyzedTech.Count} KnownTech.analyzedTech types.");
 
             using (packetSender.Suppress<KnownTechEntryAdd>())
             {
-                foreach (NitroxTechType techType in techTypes)
+                foreach (NitroxTechType techType in knownTech)
                 {
-                    HashSet<TechType> complete = PDAScanner.complete;
                     KnownTech.Add(techType.ToUnity(), false);
+                }
+
+                foreach (NitroxTechType techType in analyzedTech)
+                {
+                    KnownTech.Analyze(techType.ToUnity(), false);
                 }
             }
         }

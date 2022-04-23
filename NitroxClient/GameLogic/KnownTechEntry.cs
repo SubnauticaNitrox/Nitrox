@@ -1,6 +1,7 @@
 ﻿using NitroxClient.Communication.Abstract;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
+using UnityEngine;
 
 namespace NitroxClient.GameLogic
 {
@@ -13,10 +14,14 @@ namespace NitroxClient.GameLogic
             this.packetSender = packetSender;
         }
 
-        public void Add(TechType techType, bool verbose)
+        public void AddKnown(TechType techType, bool verbose)
         {
-            KnownTechEntryAdd EntryAdd = new KnownTechEntryAdd(techType.ToDto(), verbose);
-            packetSender.Send(EntryAdd);
+            packetSender.Send(new KnownTechEntryAdd(KnownTechEntryAdd.EntryCategory.KNOWN, techType.ToDto(), verbose));
+        }
+
+        public void AddAnalyzed(TechType techType, bool verbose)
+        {
+            packetSender.Send(new KnownTechEntryAdd(KnownTechEntryAdd.EntryCategory.ANALYZED, techType.ToDto(), verbose));
         }
     }
 }

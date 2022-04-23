@@ -11,18 +11,28 @@ namespace NitroxServer.GameLogic.Unlockables
     [ProtoContract, JsonObject(MemberSerialization.OptIn)]
     public class PDAStateData
     {
+        //Populates the Scan tool unlocked/partial unlock states.
         [JsonProperty, ProtoMember(1)]
         public ThreadSafeList<NitroxTechType> UnlockedTechTypes { get; } = new ThreadSafeList<NitroxTechType>();
-
-        [JsonProperty, ProtoMember(2)]
-        public ThreadSafeList<NitroxTechType> KnownTechTypes { get; } = new ThreadSafeList<NitroxTechType>();
-
-        [JsonProperty, ProtoMember(3)]
-        public ThreadSafeList<string> EncyclopediaEntries { get; } = new ThreadSafeList<string>();
 
         [JsonProperty, ProtoMember(4)]
         public ThreadSafeDictionary<NitroxTechType, PDAEntry> PartiallyUnlockedByTechType { get; set; } = new ThreadSafeDictionary<NitroxTechType, PDAEntry>();
 
+        //Populates the KnownTech construct which powers the popup shown to the user when a new TechType is discovered ("New Creature Discovered!")
+        //The KnownTech construct uses both KnownTech.knownTech and KnownTech.analyzedTech
+        // KnownTech.analyzedTech - Tech items that you find in the world and acquire. They often show a notification saying you found/learned about them. (Fish, Resources, etc)
+        // KnownTech.knownTech - Tech items that you learn about after fulfilling a requirement. Often times, discovering a new KnownTech.analyzedTech item will provide 1 or more KnownTech.knownTech items. (Peeper -> CookedPeeper)
+        [JsonProperty, ProtoMember(2)]
+        public ThreadSafeList<NitroxTechType> KnownTechTypes { get; } = new ThreadSafeList<NitroxTechType>();
+
+        [JsonProperty, ProtoMember(7)]
+        public ThreadSafeList<NitroxTechType> AnalyzedTechTypes { get; } = new ThreadSafeList<NitroxTechType>();
+
+        //Populates the entries that show up the the PDA's Encyclopedia
+        [JsonProperty, ProtoMember(3)]
+        public ThreadSafeList<string> EncyclopediaEntries { get; } = new ThreadSafeList<string>();
+
+        //Populates the log of story events present in the PDA
         [JsonProperty, ProtoMember(5)]
         public ThreadSafeList<PDALogEntry> PdaLog { get; } = new ThreadSafeList<PDALogEntry>();
 
@@ -52,6 +62,18 @@ namespace NitroxServer.GameLogic.Unlockables
             else
             {
                 Log.Debug($"There was an attempt of adding a duplicated entry in the KnownTechTypes: [{techType.Name}]");
+            }
+        }
+
+        public void AddAnalyzedTechType(NitroxTechType techType)
+        {
+            if (!AnalyzedTechTypes.Contains(techType))
+            {
+                AnalyzedTechTypes.Add(techType);
+            }
+            else
+            {
+                Log.Debug($"There was an attempt of adding a duplicated entry in the AnalyzedTechTypes: [{techType.Name}]");
             }
         }
 
@@ -110,6 +132,7 @@ namespace NitroxServer.GameLogic.Unlockables
         {
             return new InitialPDAData(new List<NitroxTechType>(UnlockedTechTypes),
                 new List<NitroxTechType>(KnownTechTypes),
+                new List<NitroxTechType>(AnalyzedTechTypes),
                 new List<string>(EncyclopediaEntries),
                 new List<PDAEntry>(PartiallyUnlockedByTechType.Values),
                 new List<PDALogEntry>(PdaLog),
