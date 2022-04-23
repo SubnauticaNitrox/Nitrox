@@ -8,10 +8,10 @@ using System.Net.Sockets;
 using System.Reflection;
 using System.Security.Principal;
 using System.Windows;
-using ToastNotifications.Messages.Error;
 using WindowsFirewallHelper;
 using WindowsFirewallHelper.Addresses;
 using WindowsFirewallHelper.FirewallRules;
+using NitroxLauncher.Properties;
 
 namespace NitroxLauncher.Models.Utils
 {
@@ -72,9 +72,18 @@ namespace NitroxLauncher.Models.Utils
                 CheckFirewallRules(FirewallDirection.Inbound);
                 CheckFirewallRules(FirewallDirection.Outbound);
             }
+            catch (FileNotFoundException ex)
+            {
+                Log.Warn($"Tried to add firewall rule for program that does not exist: {ex.FileName}");
+            }
             catch (UnauthorizedAccessException)
             {
-                MessageBox.Show("There was a problem configuring the Windows firewall. Try restarting the launcher as administrator or manually adding firewall rules for Nitrox programs.");
+                if (!Settings.Default.FirewallWarningShown)
+                {
+                    Settings.Default.FirewallWarningShown = true;
+                    Settings.Default.Save();
+                    MessageBox.Show("Try restarting the launcher as administrator or manually adding firewall rules for Nitrox programs. This warning won't be shown again.", "Error adding Windows Firewall rules", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
             }
         }
 
@@ -89,14 +98,14 @@ namespace NitroxLauncher.Models.Utils
         {
             string serverPath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), ServerLogic.SERVER_EXECUTABLE);
 
-            AddExclusiveFirewallRule(serverPath, serverPath, direction);
+            AddExclusiveFirewallRule(Path.GetFileName(serverPath), serverPath, direction);
         }
 
         private static void CheckClientFirewallRules(FirewallDirection direction)
         {
             string clientPath = Path.Combine(LauncherLogic.Config.SubnauticaPath, "Subnautica.exe");
 
-            AddExclusiveFirewallRule(clientPath, clientPath, direction);
+            AddExclusiveFirewallRule(Path.GetFileName(clientPath), clientPath, direction);
         }
 
         private static void CheckHamachiFirewallRules(FirewallDirection direction)
@@ -148,14 +157,17 @@ namespace NitroxLauncher.Models.Utils
 
         private static void AddExclusiveFirewallRule(string name, string filePath, FirewallDirection direction)
         {
+            if (!File.Exists(filePath))
+            {
+                throw new FileNotFoundException("Unable to add firewall rule to non-existent program", filePath);
+            }
             if (!FirewallRuleExists(name, direction))
             {
                 AddFirewallRule(name, filePath, direction);
             }
         }
 
-        private static bool FirewallRuleExists(string name, FirewallDirection direction) => FirewallManager.Instance.Rules.Any(
-            rule => rule.FriendlyName == name && rule.Direction == direction);
+        private static bool FirewallRuleExists(string name, FirewallDirection direction) => FirewallManager.Instance.Rules.Any(rule => rule.FriendlyName == name && rule.Direction == direction);
 
         private static void AddFirewallRule(string name, string filePath, FirewallDirection direction)
         {
