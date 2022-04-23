@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using HarmonyLib;
 using LitJson;
@@ -68,12 +69,20 @@ public class Language_LoadLanguageFile_Patch : NitroxPatch, IPersistentPatch
 
     public override void Patch(Harmony harmony)
     {
-        foreach (CultureInfo culture in CultureInfo.GetCultures(CultureTypes.NeutralCultures | CultureTypes.SpecificCultures))
+        List<string> existingLanguageNames = Directory.EnumerateFiles(SNUtils.InsideUnmanaged("LanguageFiles"), "*.json").Select(Path.GetFileNameWithoutExtension).ToList();
+
+        foreach (CultureInfo culture in CultureInfo.GetCultures(CultureTypes.AllCultures))
         {
-            if (!languageToIsoCode.ContainsKey(culture.EnglishName) && !string.IsNullOrEmpty(culture.Name))
+            if (!languageToIsoCode.ContainsKey(culture.EnglishName) && !string.IsNullOrEmpty(culture.Name) && existingLanguageNames.Contains(culture.EnglishName))
             {
                 languageToIsoCode.Add(culture.EnglishName, new Tuple<string, string>(culture.Name, culture.TwoLetterISOLanguageName));
             }
+        }
+
+        // This language isn't registered in CultureInfo
+        if (existingLanguageNames.Contains("Spanish (Latin America)"))
+        {
+            languageToIsoCode.Add("Spanish (Latin America)", new Tuple<string, string>("es-419", "es"));
         }
 
         PatchPostfix(harmony, targetMethod);
