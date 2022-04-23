@@ -11,7 +11,6 @@ using System.Windows;
 using WindowsFirewallHelper;
 using WindowsFirewallHelper.Addresses;
 using WindowsFirewallHelper.FirewallRules;
-using NitroxLauncher.Properties;
 using NitroxModel;
 
 namespace NitroxLauncher.Models.Utils
