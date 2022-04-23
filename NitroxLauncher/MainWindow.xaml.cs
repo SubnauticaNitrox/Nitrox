@@ -105,7 +105,7 @@ namespace NitroxLauncher
                 }
             };
 
-            logic.SetTargetedSubnauticaPath(GameInstallationFinder.Instance.FindGame())
+            logic.SetTargetedSubnauticaPath(NitroxUser.SubnauticaPath)
                  .ContinueWith(task =>
                  {
                      if (GameInstallationFinder.IsSubnauticaDirectory(task.Result))

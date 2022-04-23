@@ -3,6 +3,7 @@ using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using NitroxModel.Discovery;
+using NitroxModel.Helper;
 
 namespace Nitrox.BuildTool
 {
@@ -71,7 +72,7 @@ namespace Nitrox.BuildTool
                 throw new Exception(error);
             }
 
-            game ??= new GameInstallData(GameInstallationFinder.Instance.FindGame());
+            game ??= new GameInstallData(NitroxUser.SubnauticaPath);
             game.TrySave(cacheFile);
             return game;
         }
