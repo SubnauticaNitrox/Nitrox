@@ -1,9 +1,9 @@
 ﻿{
     "Nitrox_AddServer": "Ajouter un serveur",
     "Nitrox_AddServerAdd": "Ajouter",
-    "Nitrox_AddServerHost": "Hôte :",
+    "Nitrox_AddServerHost": "Hôte :",
     "Nitrox_AddServerName": "Nom :",
-    "Nitrox_AddServerPort": "Port :",
+    "Nitrox_AddServerPort": "Port :",
     "Nitrox_Cancel": "Annuler",
     "Nitrox_CommandNotAvailable": "Cette commande n'est pas disponible avec Nitrox",
     "Nitrox_ConnectTo": "Connexion à",
