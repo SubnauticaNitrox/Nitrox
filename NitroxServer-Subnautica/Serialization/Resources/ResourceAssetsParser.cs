@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using AssetsTools.NET;
 using NitroxModel.Discovery;
+using NitroxModel.Helper;
 using NitroxServer.Serialization.Resources.Datastructures;
 using NitroxServer_Subnautica.Serialization.Resources.Parsers;
 using NitroxServer_Subnautica.Serialization.Resources.Parsers.Images;
@@ -116,11 +117,10 @@ namespace NitroxServer_Subnautica.Serialization.Resources
 
         private static string FindDirectoryContainingResourceAssets()
         {
-            List<string> errors = new List<string>();
-            string subnauticaPath = GameInstallationFinder.Instance.FindGame(errors);
-            if (subnauticaPath == null)
+            string subnauticaPath = NitroxUser.SubnauticaPath;
+            if (string.IsNullOrEmpty(subnauticaPath))
             {
-                throw new DirectoryNotFoundException($"Could not locate Subnautica installation directory:{Environment.NewLine}{string.Join(Environment.NewLine, errors)}");
+                throw new DirectoryNotFoundException($"Could not locate Subnautica installation directory for resource parsing.");
             }
 
             if (File.Exists(Path.Combine(subnauticaPath, "Subnautica_Data", "resources.assets")))
