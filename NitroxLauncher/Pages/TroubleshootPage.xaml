@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:NitroxLauncher.Models"
+      xmlns:uc="clr-namespace:NitroxLauncher.Pages.UserControls"
       xmlns:pages="clr-namespace:NitroxLauncher.Pages"
       DataContext="{Binding RelativeSource={RelativeSource Self}}"
       mc:Ignorable="d" 
@@ -11,24 +12,127 @@
       d:DesignWidth="800"
       Title="TroubleshootPage">
 
-    <Grid Margin="32,0" Height="800" VerticalAlignment="Top">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
+    <local:PageBase.Resources>
+        <BitmapImage x:Key="RetryIcon" UriSource="pack://application:,,,/Assets/Images/troubleshoot-icons/retry-2x.png" />
+        <BitmapImage x:Key="AntivirusIcon" UriSource="pack://application:,,,/Assets/Images/troubleshoot-icons/anti-virus-2x.png" />
+        <BitmapImage x:Key="PermissionsIcon" UriSource="pack://application:,,,/Assets/Images/troubleshoot-icons/file-2x.png" />
+        <BitmapImage x:Key="FirewallIcon" UriSource="pack://application:,,,/Assets/Images/troubleshoot-icons/firewall-2x.png" />
+        <BitmapImage x:Key="NetworkIcon" UriSource="pack://application:,,,/Assets/Images/troubleshoot-icons/wifi-2x.png" />
+        <BitmapImage x:Key="StateOKIcon" UriSource="pack://application:,,,/Assets/Images/troubleshoot-icons/state-ok-2x.png" />
+        <BitmapImage x:Key="StateKOIcon" UriSource="pack://application:,,,/Assets/Images/troubleshoot-icons/state-ko-2x.png" />
+        <BitmapImage x:Key="StateUnknownIcon" UriSource="pack://application:,,,/Assets/Images/troubleshoot-icons/state-unknown-2x.png" />
+    </local:PageBase.Resources>
 
+    <Grid Margin="32,0" Height="800" VerticalAlignment="Top">
         <Grid.RowDefinitions>
             <RowDefinition Height="106"/>
             <RowDefinition Height="252"/>
-            <RowDefinition Height="100*"/>
+            <RowDefinition Height="100"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" Grid.ColumnSpan="5">
-            <TextBlock FontSize="32" Foreground="White" TextWrapping="Wrap" Margin="0" VerticalAlignment="Bottom" FontWeight="Bold"><Run Text="Troubleshoot"/></TextBlock>
+        <!-- Title -->
+        <Grid Grid.Row="0">
+            <TextBlock FontSize="32" Foreground="White" TextWrapping="Wrap" Margin="0" VerticalAlignment="Bottom" FontWeight="Bold" Text="Troubleshoot"/>
         </Grid>
+
+        <!-- Check modules -->
+        <Grid Grid.Row="1" Margin="0,20,0,0">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="130*" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" FontFamily="Inter" FontSize="14" Foreground="White" TextWrapping="Wrap" HorizontalAlignment="Center" FontWeight="Regular" Text="Current Network Status" />
+
+            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                <TextBlock x:Name="NetworkPreState" FontFamily="Inter" FontSize="24" Foreground="White" TextWrapping="Wrap" Margin="0" HorizontalAlignment="Center" FontWeight="Bold" Text="Network needs"/>
+                <TextBlock x:Name="NetworkState" FontFamily="Inter" FontSize="24" Foreground="#EA574D" TextWrapping="Wrap" Margin="5,0,0,0" HorizontalAlignment="Center" FontWeight="Bold" Text="attention"/>
+
+                <Button HorizontalAlignment="Center" VerticalAlignment="Center" Margin="8,0,0,0">
+                    <Image Source="{StaticResource RetryIcon}" Width="17" Height="17" />
+                </Button>
+            </StackPanel>
+
+            <Grid Grid.Row="3">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="56" />
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="56" />
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="56" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Image Source="{StaticResource FirewallIcon}" Width="102" Height="29" Margin="5" />
+                    <TextBlock FontFamily="Inter" FontSize="14" Foreground="White" Margin="0,0,0,5" TextWrapping="Wrap" FontWeight="Regular" HorizontalAlignment="Center" Text="Firewall"/>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0">
+                        <Image Source="{StaticResource StateOKIcon}" Width="10" Height="10" Margin="0,0,5,0" />
+                        <TextBlock FontFamily="Inter" FontSize="10" Foreground="White" TextWrapping="Wrap" FontWeight="Regular" HorizontalAlignment="Center" Text="OK"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <Rectangle Grid.Column="1" Height="1" Width="56" Stroke="White" Opacity="0.4"/>
+
+                <StackPanel Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Image Source="{StaticResource NetworkIcon}" Width="102" Height="29" Margin="5" />
+                    <TextBlock FontFamily="Inter" FontSize="14" Foreground="White" Margin="0,0,0,5" TextWrapping="Wrap" FontWeight="Regular" HorizontalAlignment="Center" Text="Network"/>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0">
+                        <Image Source="{StaticResource StateOKIcon}" Width="10" Height="10" Margin="0,0,5,0" />
+                        <TextBlock FontFamily="Inter" FontSize="10" Foreground="White" TextWrapping="Wrap" FontWeight="Regular" HorizontalAlignment="Center" Text="OK"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <Rectangle Grid.Column="3" Height="1" Width="56" Stroke="White" Opacity="0.4"/>
+
+                <StackPanel Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Image Source="{StaticResource PermissionsIcon}" Width="102" Height="29" Margin="5" />
+                    <TextBlock FontFamily="Inter" FontSize="14" Foreground="White" Margin="0,0,0,5" TextWrapping="Wrap" FontWeight="Regular" HorizontalAlignment="Center" Text="Permissions"/>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0">
+                        <Image Source="{StaticResource StateOKIcon}" Width="10" Height="10" Margin="0,0,5,0" />
+                        <TextBlock FontFamily="Inter" FontSize="10" Foreground="White" TextWrapping="Wrap" FontWeight="Regular" HorizontalAlignment="Center" Text="OK"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <Rectangle Grid.Column="5" Height="1" Width="56" Stroke="White" Opacity="0.4"/>
+
+                <StackPanel Grid.Column="6" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Image Source="{StaticResource AntivirusIcon}" Width="102" Height="29" Margin="5" />
+                    <TextBlock FontFamily="Inter" FontSize="14" Foreground="White" Margin="0,0,0,5" TextWrapping="Wrap" FontWeight="Regular" HorizontalAlignment="Center" Text="Anti-virus"/>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0">
+                        <Image Source="{StaticResource StateKOIcon}" Width="10" Height="10" Margin="0,0,5,0" />
+                        <TextBlock FontFamily="Inter" FontSize="10" Foreground="White" TextWrapping="Wrap" FontWeight="Regular" HorizontalAlignment="Center" Text="Error"/>
+                    </StackPanel>
+                </StackPanel>
+
+            </Grid>
+            
+        </Grid>
+
+        <!-- Diagnostics -->
+        <StackPanel Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Button Style="{StaticResource LargeButton}" Background="#FF007BFF" Width="180" Height="25" BorderBrush="#66FFFFFF"
+                                ToolTip="Save launch arguments" FontWeight="Regular" FontSize="14"
+                                Foreground="White" Margin="15,0,0,0" Content="Start diagnostics" />
+        </StackPanel>
+        
+        <!-- Others -->
+
+        <StackPanel Grid.Row="3">
+            <Separator />
+
+            <TextBlock Margin="0,10,0,0" FontSize="32" Foreground="White" TextWrapping="Wrap" VerticalAlignment="Bottom" FontWeight="Regular" Text="WIP"/>
+        </StackPanel>
 
     </Grid>
 

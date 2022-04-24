@@ -18,6 +18,8 @@
             <BitmapImage x:Key="StoreEpic" UriSource="pack://application:,,,/Assets/Images/store-icons/epic-2x.png" />
             <BitmapImage x:Key="StoreXbox" UriSource="pack://application:,,,/Assets/Images/store-icons/xbox-2x.png" />
             <BitmapImage x:Key="StoreDiscord" UriSource="pack://application:,,,/Assets/Images/store-icons/discord-2x.png" />
+            <BitmapImage x:Key="StorePirated" UriSource="pack://application:,,,/Assets/Images/store-icons/pirated-2x.png" />
+            <BitmapImage x:Key="StoreMissing" UriSource="pack://application:,,,/Assets/Images/store-icons/missing-2x.png" />
 
             <!-- Pages -->
             <pages:LaunchGamePage x:Key="LaunchGamePage" Background="#000000"/>
@@ -28,6 +30,7 @@
             <pages:BlogPage x:Key="BlogPage" Background="#000000"/>
             <pages:UpdatePage x:Key="UpdatePage" Background="#000000"/>
             <pages:LibraryPage x:Key="LibraryPage" Background="#000000"/>
+            <pages:TroubleshootPage x:Key="TroubleshootPage" Background="#000000"/>
 
             <!-- Styles -->
             <Style x:Key="SocialButton" TargetType="TextBlock">

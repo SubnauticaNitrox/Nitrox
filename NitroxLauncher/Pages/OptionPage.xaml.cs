@@ -71,6 +71,8 @@ namespace NitroxLauncher.Pages
 
         private void OnChangeArguments_Click(object sender, RoutedEventArgs e)
         {
+            LauncherLogic.Instance.NavigateTo(typeof(TroubleshootPage));
+
             if (ArgumentsTextbox.Text == SubnauticaLaunchArguments)
             {
                 return;
