@@ -18,21 +18,25 @@ namespace NitroxServer.GameLogic.Unlockables
         [JsonProperty, ProtoMember(4)]
         public ThreadSafeDictionary<NitroxTechType, PDAEntry> PartiallyUnlockedByTechType { get; set; } = new ThreadSafeDictionary<NitroxTechType, PDAEntry>();
 
-        //Populates the KnownTech construct which powers the popup shown to the user when a new TechType is discovered ("New Creature Discovered!")
-        //The KnownTech construct uses both KnownTech.knownTech and KnownTech.analyzedTech
-        // KnownTech.analyzedTech - Tech items that you find in the world and acquire. They often show a notification saying you found/learned about them. (Fish, Resources, etc)
-        // KnownTech.knownTech - Tech items that you learn about after fulfilling a requirement. Often times, discovering a new KnownTech.analyzedTech item will provide 1 or more KnownTech.knownTech items. (Peeper -> CookedPeeper)
+        /// <summary>
+        /// Gets or sets the KnownTech construct which powers the popup shown to the user when a new TechType is discovered ("New Creature Discovered!")
+        /// The KnownTech construct uses both <see cref='NitroxModel.Packets.KnownTechEntryAdd.EntryCategory.KNOWN'>KnownTech.knownTech</see> and <see cref='NitroxModel.Packets.KnownTechEntryAdd.EntryCategory.ANALYZED'>KnownTech.analyzedTech</see>
+        /// </summary>
         [JsonProperty, ProtoMember(2)]
         public ThreadSafeList<NitroxTechType> KnownTechTypes { get; } = new ThreadSafeList<NitroxTechType>();
 
         [JsonProperty, ProtoMember(7)]
         public ThreadSafeList<NitroxTechType> AnalyzedTechTypes { get; } = new ThreadSafeList<NitroxTechType>();
 
-        //Populates the entries that show up the the PDA's Encyclopedia
+        /// <summary>
+        /// Gets or sets the entries that show up the the PDA's Encyclopedia
+        /// </summary>
         [JsonProperty, ProtoMember(3)]
         public ThreadSafeList<string> EncyclopediaEntries { get; } = new ThreadSafeList<string>();
 
-        //Populates the log of story events present in the PDA
+        /// <summary>
+        /// Gets or sets the log of story events present in the PDA
+        /// </summary>
         [JsonProperty, ProtoMember(5)]
         public ThreadSafeList<PDALogEntry> PdaLog { get; } = new ThreadSafeList<PDALogEntry>();
 

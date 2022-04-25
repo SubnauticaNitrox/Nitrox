@@ -14,7 +14,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Prefix(KnownTech.AnalysisTech analysis, bool verbose)
         {
-            NitroxServiceLocator.LocateService<KnownTechEntry>().AddAnalyzed(analysis.techType, verbose);
+            Resolve<KnownTechEntry>().AddAnalyzed(analysis.techType, verbose);
         }
 
         public override void Patch(Harmony harmony)

@@ -13,7 +13,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Prefix(TechType techType, bool verbose)
         {
-            NitroxServiceLocator.LocateService<KnownTechEntry>().AddKnown(techType, verbose);
+            Resolve<KnownTechEntry>().AddKnown(techType, verbose);
         }
 
         public override void Patch(Harmony harmony)
