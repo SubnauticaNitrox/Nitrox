@@ -11,7 +11,9 @@ namespace NitroxServer.GameLogic.Unlockables
     [ProtoContract, JsonObject(MemberSerialization.OptIn)]
     public class PDAStateData
     {
-        //Populates the Scan tool unlocked/partial unlock states.
+        /// <summary>
+        /// Gets or sets the scan tool unlocked/partial unlock states.
+        /// </summary>
         [JsonProperty, ProtoMember(1)]
         public ThreadSafeList<NitroxTechType> UnlockedTechTypes { get; } = new ThreadSafeList<NitroxTechType>();
 
