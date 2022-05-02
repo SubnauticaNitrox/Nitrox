@@ -51,6 +51,11 @@ namespace Nitrox.BuildTool
         {
             static bool ValidateUnityGame(GameInstallData game, out string error)
             {
+                if (string.IsNullOrWhiteSpace(game.InstallDir))
+                {
+                    error = $"Path to game is not found: '{game.InstallDir}'";
+                    return false;
+                }
                 if (!File.Exists(Path.Combine(game.InstallDir, "UnityPlayer.dll")))
                 {
                     error = $"Game at: '{game.InstallDir}' is not a Unity game";
@@ -67,9 +72,18 @@ namespace Nitrox.BuildTool
             }
 
             string cacheFile = Path.Combine(GeneratedOutputDir, "game.props");
-            if (GameInstallData.TryFrom(cacheFile, out GameInstallData game) && !ValidateUnityGame(game, out string error))
+            if (GameInstallData.TryFrom(cacheFile, out GameInstallData game))
             {
-                throw new Exception(error);
+                // Retry if the saved path is invalid
+                if (!Directory.Exists(game.InstallDir))
+                {
+                    game = new GameInstallData(NitroxUser.SubnauticaPath);
+                }
+                
+                if (!ValidateUnityGame(game, out string error))
+                {
+                    throw new Exception(error);
+                }
             }
 
             game ??= new GameInstallData(NitroxUser.SubnauticaPath);
