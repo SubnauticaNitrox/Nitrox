@@ -102,6 +102,22 @@
                     </Style>
                 </Style.Resources>
             </Style>
+            
+            <!-- vv WORLD LISTING BUTTON vv -->
+            <Style TargetType="Button" x:Key="WorldListingButton" BasedOn="{StaticResource {x:Type Button}}">
+                <Setter Property="OverridesDefaultStyle" Value="True" />
+                <!--<Setter Property="Width" Value="684" />-->
+                <Setter Property="Height" Value="83" />
+                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                <Style.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="4" />
+                        <Setter Property="BorderThickness" Value="10" />
+                        <Setter Property="BorderBrush" Value="#151516" />
+                    </Style>
+                </Style.Resources>
+
+            </Style>
 
             <Style x:Key="CloseButton" TargetType="{x:Type Button}">
                 <Setter Property="OverridesDefaultStyle" Value="True" />

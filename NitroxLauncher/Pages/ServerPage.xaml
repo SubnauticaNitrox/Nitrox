@@ -5,64 +5,163 @@
                 xmlns:local="clr-namespace:NitroxLauncher.Models"
                 x:Class="NitroxLauncher.Pages.ServerPage"
                 mc:Ignorable="d"
-                d:DesignHeight="800" d:DesignWidth="800"
+                d:DesignHeight="642" d:DesignWidth="780"
                 DataContext="{Binding RelativeSource={RelativeSource Self}}"
                 Title="Server Page">
 
     <local:PageBase.Resources>
         <BitmapImage x:Key="ServerIllustration" UriSource="pack://application:,,,/images/serverIllustration.png"/>
+        <BitmapImage x:Key="TrashcanButton" UriSource="pack://application:,,,/images/material-design-icons/trashcan_icon.png"/>
+        <BitmapImage x:Key="AddServerButton" UriSource="pack://application:,,,/images/material-design-icons/add_server.png"/>
+        <BitmapImage x:Key="GoBackButton" UriSource="pack://application:,,,/images/material-design-icons/go_back.png"/>
+        <BitmapImage x:Key="SwitchSlider" UriSource="pack://application:,,,/images/material-design-icons/switch_slider.png"/>
     </local:PageBase.Resources>
 
-    <Grid Margin="32,0">
+    <Grid Margin="0" HorizontalAlignment="Center">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
             <RowDefinition Height="106"/>
             <RowDefinition Height="37"/>
-            <RowDefinition Height="380*"/>
-            <RowDefinition Height="249*"/>
-            <RowDefinition Height="8*"/>
+            <RowDefinition Height="499"/>
+            <!--<RowDefinition Height="8*"/>-->
         </Grid.RowDefinitions>
 
+        <!-- REMOVE IMAGE IF UNUSED -->
+        <!--<Image Source="{StaticResource ServerIllustration}" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center" Width="217" Height="156" Margin="0,0,0,0"></Image>-->
+
+        <!-- ROW 1 - TITLE TEXT -->
         <Grid>
-            <TextBlock FontSize="32" Foreground="White" TextWrapping="Wrap" Margin="0" VerticalAlignment="Bottom" FontWeight="Bold" Text="Nitrox server"/>
+            <TextBlock FontSize="32" Foreground="White" Margin="32 0 0 0" TextWrapping="Wrap" VerticalAlignment="Bottom" FontWeight="Bold" Text="Nitrox server"/>
+
+            <!-- DOCKED/EXTERNAL SERVER OPTION -->
+            <StackPanel VerticalAlignment="Top" Margin="520,54,35,0">
+                <RadioButton x:Name="RBIsDocked" GroupName="ServerType" Content="Docked console" Margin="5" Click="RBServer_Clicked" />
+                <RadioButton x:Name="RBIsExternal" GroupName="ServerType" Content="External console" Margin="5" Click="RBServer_Clicked" />
+            </StackPanel>
         </Grid>
 
-        <Grid Grid.Row="1" Grid.ColumnSpan="2">
-            <TextBlock FontSize="14" Foreground="#BFFFFFFF" TextAlignment="Left" VerticalAlignment="Top" Margin="0,12,0,0" >
+        <!-- ROW 2 - TITLE SUBTEXT -->
+        <Grid Grid.Row="1">
+            <TextBlock FontSize="14" Foreground="#BFFFFFFF" TextAlignment="Left" VerticalAlignment="Top" Margin="32 12 0 0">
                     Welcome to your Nitrox server! For more information please refer to the <Hyperlink NavigateUri="https://on.rux.gg/nitrox-wiki" RequestNavigate="OnRequestNavigate" ToolTip="Open Nitrox guide website">Wiki</Hyperlink>
             </TextBlock>
+
+
         </Grid>
 
-        <Grid Grid.Row="2" Grid.ColumnSpan="2">
-            <Image Source="{StaticResource ServerIllustration}" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center" Width="420" Height="218"></Image>
-        </Grid>
+        <!-- ROW 3 - SELECTION PANES -->
+        <Grid Grid.Row="2">
 
-        <Grid Grid.Column="0" Margin="0,0,8,8" Grid.Row="3" Grid.ColumnSpan="2" Height="128" VerticalAlignment="Bottom">
-            <Border CornerRadius="12" Background="#151516" Padding="22" Margin="0,0,0,22" Height="106" VerticalAlignment="Bottom">
-                <Grid VerticalAlignment="Center">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="210" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="308" />
-                    </Grid.ColumnDefinitions>
 
-                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                        <RadioButton x:Name="RBIsDocked" GroupName="ServerType" Content="Docked console" Margin="5" Click="RBServer_Clicked" />
-                        <RadioButton x:Name="RBIsExternal" GroupName="ServerType" Content="External console" Margin="5" Click="RBServer_Clicked" />
-                    </StackPanel>
+            <!-- WORLD SELECTION PANE (In view by default - Margin="32") -->
+            <Border CornerRadius="12" Background="#151516" Margin="32">
 
-                    <Button Style="{StaticResource LargeButton}" Click="StartServer_Click" ToolTip="Start the server with chosen options" Background="#FF007BFF" HorizontalAlignment="Stretch" Width="Auto" Grid.Column="2" Height="62">
+                <Grid Margin="16 0 16 16">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="60"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="40"/>
+                        </Grid.ColumnDefinitions>
+
+
+                        <TextBlock Grid.Column="1" Text="Your Worlds" Foreground="White" VerticalAlignment="Center" FontSize="30" HorizontalAlignment="Center" FontWeight="Bold"/>
+                        <Button Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="Add a new world">
+                            <Image Source="{StaticResource AddServerButton}" Stretch="Uniform"  Width="40" Height="40"></Image>
+                        </Button>
+                    </Grid>
+
+                    <!-- World List - NOTE: NEED TO MAKE THIS PANEL SCROLLABLE -->
+                    <Border Grid.Row="1"  CornerRadius="12" Background="Black">
+                        <!-- Start Stacking Worlds -->
                         <StackPanel>
-                            <TextBlock HorizontalAlignment="Center" FontSize="16" FontWeight="Bold" Text="START SERVER" />
-                            <TextBlock HorizontalAlignment="Center" FontSize="10" Text="{Binding StartButtonSubtitle, Mode=OneTime, FallbackValue='NITROX'}" />
+                            <!-- World Listing 1 -->
+                            <Border Height="83" Width="Auto" Background="#FF151516" CornerRadius="4" Margin="10">
+
+                                <Grid Width="Auto">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="10"/>
+                                        <ColumnDefinition Width="83"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Start Server Button -->
+                                    <Button Style="{StaticResource WorldListingButton}" ToolTip="Select this world" Foreground="White" Height="83" HorizontalAlignment="Stretch" Width="Auto">
+                                        <Border Width="Auto" HorizontalAlignment="Stretch">
+                                            <Grid HorizontalAlignment="Stretch">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition/>
+                                                    <ColumnDefinition/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <!-- World Name -->
+                                                <TextBlock Grid.Column="0" FontSize="20" Foreground="White" Text="Server Name" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+
+                                                <!-- World Data -->
+                                                <StackPanel Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                                    <TextBlock FontSize="10" Text="{Binding StartButtonSubtitle, FallbackValue=Gamemode, Mode=OneTime}" Foreground="White" HorizontalAlignment="Right" Margin="0 0 10 0"/>
+                                                    <TextBlock FontSize="10" Text="{Binding StartButtonSubtitle, FallbackValue=Version, Mode=OneTime}" Foreground="White" HorizontalAlignment="Right" Margin="0 42 10 0"/>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Border>
+                                    </Button>
+
+                                    <!-- Separator -->
+                                    <Border Grid.Column="1" Background="Black"/>
+
+                                    <!-- Delete World Button -->
+                                    <Button Grid.Column="2" ToolTip="Delete this world" Height="83" Width="83">
+                                        <Image Source="{StaticResource TrashcanButton}" Stretch="Uniform"  Width="30" Height="30"></Image>
+                                    </Button>
+                                </Grid>
+                            </Border>
+
                         </StackPanel>
+                    </Border>
+
+                </Grid>
+
+            </Border>
+
+            <!-- WORLD OPTIONS PANE (Out of view by default - Margin="814,32,0,0") -->
+            <Border CornerRadius="30" Background="#151516" Width="742" Padding="22" Margin="814,32,0,0"  Height="598" VerticalAlignment="Top" HorizontalAlignment="Left">
+                <Grid Height="62" VerticalAlignment="Bottom" HorizontalAlignment="Center" Width="500" Margin="0,0,0,0">
+
+                    <!-- START SERVER BUTTON -->
+                    <Button Style="{StaticResource LargeButton}" Click="StartServer_Click" ToolTip="Start the server with chosen options" Background="#FF007BFF" Width="500" Height="62" Margin="0,0,0,0" >
+                        <Grid Width="279">
+                            <!-- Grid Definitions -->
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="4*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Column 1: Restore Backup Button -->
+                            <Button Style="{StaticResource LargeButton}" Click="RestoreBackup_Click" BorderBrush="Black" Height="55" Margin="5,0" VerticalAlignment="Center">
+                                <TextBox Text="Restore a Backup" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            </Button>
+
+                            <!-- Column 2: Start Server Text -->
+                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" FontSize="16" FontWeight="Bold" Text="START SERVER" />
+
+                            <!-- Column 3: Version Number -->
+                            <TextBlock HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Column="2" FontSize="7" Text="Version Num" />
+
+                        </Grid>
                     </Button>
                 </Grid>
             </Border>
+
+
         </Grid>
 
     </Grid>
