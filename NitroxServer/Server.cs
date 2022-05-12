@@ -59,6 +59,7 @@ namespace NitroxServer
                 // Note for later additions: order these lines by their length
                 StringBuilder builder = new("\n");
                 builder.AppendLine($" - Save location: {Path.GetFullPath(serverConfig.SaveName)}");
+                builder.AppendLine($" - Aurora's state: {world.EventTriggerer.GetAuroraStateSummary()}");
                 builder.AppendLine($" - Current time: day {world.EventTriggerer.Day} ({Math.Floor(world.EventTriggerer.ElapsedSeconds)}s)");
                 builder.AppendLine($" - Scheduled goals stored: {world.GameData.StoryGoals.ScheduledGoals.Count}");
                 builder.AppendLine($" - Story goals completed: {world.GameData.StoryGoals.CompletedGoals.Count}");

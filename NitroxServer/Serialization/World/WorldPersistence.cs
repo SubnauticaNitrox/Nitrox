@@ -191,7 +191,7 @@ namespace NitroxServer.Serialization.World
                 Seed = seed
             };
 
-            world.EventTriggerer = new EventTriggerer(world.PlayerManager, seed, pWorldData.WorldData.GameData.StoryTiming.ElapsedTime, pWorldData.WorldData.GameData.StoryTiming.AuroraExplosionTime);
+            world.EventTriggerer = new EventTriggerer(world.PlayerManager, pWorldData.WorldData.GameData.PDAState, pWorldData.WorldData.GameData.StoryGoals, seed, pWorldData.WorldData.GameData.StoryTiming.ElapsedTime, pWorldData.WorldData.GameData.StoryTiming.AuroraExplosionTime, pWorldData.WorldData.GameData.StoryTiming.AuroraWarningTime);
             world.VehicleManager = new VehicleManager(pWorldData.WorldData.VehicleData.Vehicles, world.InventoryManager);
             world.ScheduleKeeper = new ScheduleKeeper(pWorldData.WorldData.GameData.PDAState, pWorldData.WorldData.GameData.StoryGoals, world.EventTriggerer, world.PlayerManager);
 

@@ -118,6 +118,8 @@ namespace NitroxServer.Serialization
         public PlayerStatsData DefaultPlayerStats => new(DefaultOxygenValue, DefaultMaxOxygenValue, DefaultHealthValue, DefaultHungerValue, DefaultThirstValue, DefaultInfectionValue);
         [PropertyDescription("If set to true, the server will try to open port on your router via UPnP")]
         public bool AutoPortForward { get; set; } = true;
+        [PropertyDescription("Determines whether the server will listen for and reply to LAN discovery requests.")]
+        public bool LANDiscoveryEnabled { get; set; } = true;
 
         public static ServerConfig Load()
         {

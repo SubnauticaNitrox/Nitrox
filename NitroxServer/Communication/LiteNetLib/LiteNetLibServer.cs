@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using LiteNetLib;
 using LiteNetLib.Utils;
 using Mono.Nat;
@@ -49,6 +50,11 @@ namespace NitroxServer.Communication.LiteNetLib
                 PortForwardAsync((ushort)portNumber).ConfigureAwait(false);
             }
 
+            if (useLANDiscovery)
+            {
+                LANDiscoveryServer.Start();
+            }
+
             return true;
         }
 
@@ -73,10 +79,18 @@ namespace NitroxServer.Communication.LiteNetLib
 
         public override void Stop()
         {
+            playerManager.SendPacketToAllPlayers(new ServerStopped());
+            // We want every player to receive this packet
+            Thread.Sleep(500);
             server.Stop();
             if (useUpnpPortForwarding)
             {
                 NatHelper.DeletePortMappingAsync((ushort)portNumber, Protocol.Udp).ConfigureAwait(false).GetAwaiter().GetResult();
+            }
+
+            if (useLANDiscovery)
+            {
+                LANDiscoveryServer.Stop();
             }
         }
 

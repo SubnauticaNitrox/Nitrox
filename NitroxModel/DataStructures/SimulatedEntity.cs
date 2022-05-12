@@ -2,9 +2,16 @@
 
 namespace NitroxModel.DataStructures
 {
+    /// <summary>
+    ///     A simulated entity that is tracked by the Nitrox server so that it knows which connected game client owns (and simulates) the entity.
+    ///     See <see cref="SimulationLockType"/> for more information. 
+    /// </summary>
     [Serializable]
     public class SimulatedEntity
     {
+        /// <summary>
+        ///     True if entity isn't static (e.g. welded to world).
+        /// </summary>
         public bool ChangesPosition { get; }
         public NitroxId Id { get; }
         public ushort PlayerId { get; }
