@@ -5,7 +5,7 @@
                 xmlns:local="clr-namespace:NitroxLauncher.Models"
                 x:Class="NitroxLauncher.Pages.ServerPage"
                 mc:Ignorable="d"
-                d:DesignHeight="642" d:DesignWidth="780"
+                d:DesignHeight="642" d:DesignWidth="750"
                 DataContext="{Binding RelativeSource={RelativeSource Self}}"
                 Title="Server Page">
 
@@ -15,6 +15,32 @@
         <BitmapImage x:Key="AddServerButton" UriSource="pack://application:,,,/images/material-design-icons/add_server.png"/>
         <BitmapImage x:Key="GoBackButton" UriSource="pack://application:,,,/images/material-design-icons/go_back.png"/>
         <BitmapImage x:Key="SwitchSlider" UriSource="pack://application:,,,/images/material-design-icons/switch_slider.png"/>
+        
+        <Storyboard x:Key="WorldSelectedAnimation">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="WorldSelectionPane" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00.2000000" Value="-866"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="WorldSettingsPane" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00.2000000" Value="-866"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+
+        <Storyboard x:Key="GoBackAnimation">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="WorldSelectionPane" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
+                <EasingDoubleKeyFrame KeyTime="0" Value="-866"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="WorldSettingsPane" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
+                <EasingDoubleKeyFrame KeyTime="0" Value="-866"/>
+            </DoubleAnimationUsingKeyFrames>
+            
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="WorldSelectionPane" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00.2000000" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="WorldSettingsPane" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00.2000000" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+
     </local:PageBase.Resources>
 
     <Grid Margin="0" HorizontalAlignment="Center">
@@ -26,38 +52,37 @@
             <RowDefinition Height="106"/>
             <RowDefinition Height="37"/>
             <RowDefinition Height="499"/>
-            <!--<RowDefinition Height="8*"/>-->
         </Grid.RowDefinitions>
 
-        <!-- REMOVE IMAGE IF UNUSED -->
-        <!--<Image Source="{StaticResource ServerIllustration}" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center" Width="217" Height="156" Margin="0,0,0,0"></Image>-->
+        <!-- REMOVE THIS IMAGE IF UNUSED -->
+        <!--<Image Source="{StaticResource ServerIllustration}" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center" Width="217" Height="156" Margin="0,0,0,0"/>-->
 
         <!-- ROW 1 - TITLE TEXT -->
-        <Grid>
-            <TextBlock FontSize="32" Foreground="White" Margin="32 0 0 0" TextWrapping="Wrap" VerticalAlignment="Bottom" FontWeight="Bold" Text="Nitrox server"/>
-
-            <!-- DOCKED/EXTERNAL SERVER OPTION -->
-            <StackPanel VerticalAlignment="Top" Margin="520,54,35,0">
-                <RadioButton x:Name="RBIsDocked" GroupName="ServerType" Content="Docked console" Margin="5" Click="RBServer_Clicked" />
-                <RadioButton x:Name="RBIsExternal" GroupName="ServerType" Content="External console" Margin="5" Click="RBServer_Clicked" />
-            </StackPanel>
-        </Grid>
+        <TextBlock FontSize="32" Foreground="White" Margin="32 0 0 0" TextWrapping="Wrap" VerticalAlignment="Bottom" FontWeight="Bold" Text="Nitrox server"/>
 
         <!-- ROW 2 - TITLE SUBTEXT -->
         <Grid Grid.Row="1">
             <TextBlock FontSize="14" Foreground="#BFFFFFFF" TextAlignment="Left" VerticalAlignment="Top" Margin="32 12 0 0">
-                    Welcome to your Nitrox server! For more information please refer to the <Hyperlink NavigateUri="https://on.rux.gg/nitrox-wiki" RequestNavigate="OnRequestNavigate" ToolTip="Open Nitrox guide website">Wiki</Hyperlink>
+                    Welcome to your Nitrox server! For more information, please refer to the <Hyperlink NavigateUri="https://on.rux.gg/nitrox-wiki" RequestNavigate="OnRequestNavigate" ToolTip="Open Nitrox guide website">Wiki</Hyperlink>
             </TextBlock>
 
 
         </Grid>
 
         <!-- ROW 3 - SELECTION PANES -->
-        <Grid Grid.Row="2">
+        <Grid Grid.Row="2" Width="2442" HorizontalAlignment="Center">
 
+            <!-- WORLD SELECTION PANE (In view: Margin="866 32 866 32" | Out of view: Margin="0 32 1732 32") PANE WIDTH: 710?? -->
+            <Border CornerRadius="12" Background="#151516" Margin="866 32 866 32" x:Name="WorldSelectionPane" RenderTransformOrigin="0.5,0.5">
+                <Border.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Border.RenderTransform>
 
-            <!-- WORLD SELECTION PANE (In view by default - Margin="32") -->
-            <Border CornerRadius="12" Background="#151516" Margin="32">
 
                 <Grid Margin="16 0 16 16">
                     <Grid.RowDefinitions>
@@ -75,7 +100,14 @@
 
                         <TextBlock Grid.Column="1" Text="Your Worlds" Foreground="White" VerticalAlignment="Center" FontSize="30" HorizontalAlignment="Center" FontWeight="Bold"/>
                         <Button Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="Add a new world">
-                            <Image Source="{StaticResource AddServerButton}" Stretch="Uniform"  Width="40" Height="40"></Image>
+                            <!-- Slide the panes to the left when the button is clicked -->
+                            <Button.Triggers>
+                                <EventTrigger RoutedEvent="Button.Click" >
+                                    <BeginStoryboard  Storyboard="{StaticResource WorldSelectedAnimation}"/>
+                                </EventTrigger>
+                            </Button.Triggers>
+
+                            <Image Source="{StaticResource AddServerButton}" Stretch="Uniform"  Width="40" Height="40"/>
                         </Button>
                     </Grid>
 
@@ -85,7 +117,6 @@
                         <StackPanel>
                             <!-- World Listing 1 -->
                             <Border Height="83" Width="Auto" Background="#FF151516" CornerRadius="4" Margin="10">
-
                                 <Grid Width="Auto">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
@@ -93,25 +124,25 @@
                                         <ColumnDefinition Width="83"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <!-- Start Server Button -->
-                                    <Button Style="{StaticResource WorldListingButton}" ToolTip="Select this world" Foreground="White" Height="83" HorizontalAlignment="Stretch" Width="Auto">
-                                        <Border Width="Auto" HorizontalAlignment="Stretch">
-                                            <Grid HorizontalAlignment="Stretch">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition/>
-                                                    <ColumnDefinition/>
-                                                </Grid.ColumnDefinitions>
+                                    <!-- Select World Button -->
+                                    <Button x:Name="WorldSelectBtn" Style="{StaticResource WorldListingButton}" ToolTip="Select this world" Foreground="White" Height="83" HorizontalAlignment="Stretch" Width="Auto">
+                                        <!-- Slide the panes to the left when the button is clicked -->
+                                        <Button.Triggers>
+                                            <EventTrigger RoutedEvent="Button.Click" >
+                                                <BeginStoryboard  Storyboard="{StaticResource WorldSelectedAnimation}"/>
+                                            </EventTrigger>
+                                        </Button.Triggers>
 
-                                                <!-- World Name -->
-                                                <TextBlock Grid.Column="0" FontSize="20" Foreground="White" Text="Server Name" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                        <DockPanel LastChildFill = "True" Height="83" Width="565" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                                            <!-- World Name -->
+                                            <TextBlock DockPanel.Dock = "Left" FontSize="20" Foreground="White" Text="World Name" VerticalAlignment="Center" Margin="20 0 0 0"/>
 
-                                                <!-- World Data -->
-                                                <StackPanel Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center">
-                                                    <TextBlock FontSize="10" Text="{Binding StartButtonSubtitle, FallbackValue=Gamemode, Mode=OneTime}" Foreground="White" HorizontalAlignment="Right" Margin="0 0 10 0"/>
-                                                    <TextBlock FontSize="10" Text="{Binding StartButtonSubtitle, FallbackValue=Version, Mode=OneTime}" Foreground="White" HorizontalAlignment="Right" Margin="0 42 10 0"/>
-                                                </StackPanel>
-                                            </Grid>
-                                        </Border>
+                                            <!-- World Data -->
+                                            <DockPanel DockPanel.Dock = "Right" LastChildFill = "True" Grid.Column="1" Margin="0 10 10 10">
+                                                <TextBlock DockPanel.Dock = "Top" HorizontalAlignment="Right" FontSize="10" Text="{Binding StartButtonSubtitle, FallbackValue=Gamemode, Mode=OneTime}" Foreground="White"/>
+                                                <TextBlock DockPanel.Dock = "Bottom" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="10" Text="{Binding StartButtonSubtitle, FallbackValue=Version, Mode=OneTime}" Foreground="White"/>
+                                            </DockPanel>
+                                        </DockPanel>
                                     </Button>
 
                                     <!-- Separator -->
@@ -119,49 +150,96 @@
 
                                     <!-- Delete World Button -->
                                     <Button Grid.Column="2" ToolTip="Delete this world" Height="83" Width="83">
-                                        <Image Source="{StaticResource TrashcanButton}" Stretch="Uniform"  Width="30" Height="30"></Image>
+                                        <Image Source="{StaticResource TrashcanButton}" Stretch="Uniform"  Width="30" Height="30"/>
                                     </Button>
                                 </Grid>
                             </Border>
-
                         </StackPanel>
                     </Border>
-
                 </Grid>
-
             </Border>
 
-            <!-- WORLD OPTIONS PANE (Out of view by default - Margin="814,32,0,0") -->
-            <Border CornerRadius="30" Background="#151516" Width="742" Padding="22" Margin="814,32,0,0"  Height="598" VerticalAlignment="Top" HorizontalAlignment="Left">
-                <Grid Height="62" VerticalAlignment="Bottom" HorizontalAlignment="Center" Width="500" Margin="0,0,0,0">
+            <!-- WORLD OPTIONS PANE (Out of view: Margin="1732 32 0 32" | In view: Margin="866 32 866 32") PANE WIDTH: 710?? -->
+            <Grid Margin="1732 32 0 32" x:Name="WorldSettingsPane" RenderTransformOrigin="0.5,0.5">
+                <Grid.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Grid.RenderTransform>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
 
-                    <!-- START SERVER BUTTON -->
-                    <Button Style="{StaticResource LargeButton}" Click="StartServer_Click" ToolTip="Start the server with chosen options" Background="#FF007BFF" Width="500" Height="62" Margin="0,0,0,0" >
-                        <Grid Width="279">
-                            <!-- Grid Definitions -->
+                <!-- WORLD OPTIONS -->
+                <Border CornerRadius="12" Background="#151516" Margin="0,0,0,32">
+                    <Grid Margin="16 0 16 16">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="60"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0">
                             <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="40"/>
                                 <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="4*"/>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="40"/>
                             </Grid.ColumnDefinitions>
 
-                            <!-- Column 1: Restore Backup Button -->
-                            <Button Style="{StaticResource LargeButton}" Click="RestoreBackup_Click" BorderBrush="Black" Height="55" Margin="5,0" VerticalAlignment="Center">
-                                <TextBox Text="Restore a Backup" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            <Button Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="Select a different world">
+                                <!-- Slide the panes to the right when the button is clicked -->
+                                <Button.Triggers>
+                                    <EventTrigger RoutedEvent="Button.Click" >
+                                        <BeginStoryboard  Storyboard="{StaticResource GoBackAnimation}"/>
+                                    </EventTrigger>
+                                </Button.Triggers>
+
+                                <Image Source="{StaticResource GoBackButton}" Stretch="Uniform"  Width="40" Height="40"/>
                             </Button>
-
-                            <!-- Column 2: Start Server Text -->
-                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" FontSize="16" FontWeight="Bold" Text="START SERVER" />
-
-                            <!-- Column 3: Version Number -->
-                            <TextBlock HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Column="2" FontSize="7" Text="Version Num" />
+                            <TextBlock Grid.Column="1" Text="World Settings" Foreground="White" VerticalAlignment="Center" FontSize="30" HorizontalAlignment="Center" FontWeight="Bold"/>
 
                         </Grid>
-                    </Button>
-                </Grid>
-            </Border>
 
+                        <!-- World List - NOTE: NEED TO MAKE THIS PANEL SCROLLABLE -->
+                        <Border Grid.Row="1"  CornerRadius="12" Background="Black"/>
+                        
+                    </Grid>
+                </Border>
 
+                <!-- START SERVER BUTTON -->
+                <Button Grid.Row="1" Style="{StaticResource LargeButton}" Click="StartServer_Click" ToolTip="Start the server with chosen options" Background="#FF007BFF" Height="62" HorizontalAlignment="Stretch" Margin="0,0,0,0" Width="710" >
+                    <Grid Width="700" Height="53">
+                        
+                        <!-- Grid Definitions -->
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Column 1: Restore Backup Button (WIP) (HOW THE HELL DO I ADD AN OUTLINE TO THIS BUTTON D:< ) -->
+                        <!--<Button Style="{StaticResource LargeButton}" Click="RestoreBackup_Click" HorizontalAlignment="Left" Height="40" Width="123" Margin="10,0,0,0" ToolTip="Restore one of your backups">
+                            <TextBlock Text="Restore a Backup" VerticalAlignment="Center" FontSize="12" TextAlignment="Center"/>
+                        </Button>-->
+
+                        <!-- Column 2: Start Server Text -->
+                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" FontSize="16" FontWeight="Bold" Text="START SERVER" />
+
+                        <!-- Column 3: Version Number and External/Docked Console Checkbox -->
+                        <DockPanel Grid.Column="2">
+                            <TextBlock DockPanel.Dock = "Top" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="12" Text="Version Number" />
+                            <StackPanel DockPanel.Dock = "Bottom" HorizontalAlignment="Right" VerticalAlignment="Bottom" Orientation="Horizontal">
+                                <TextBlock FontSize="12" Text="Display Server Console Externally: "/>
+                                <CheckBox x:Name="CBIsExternal" Checked="CBServer_Clicked" IsChecked="True" ToolTip="Check if you want to display the console in a separate CMD Window"/>
+                            </StackPanel>
+                        </DockPanel>
+
+                    </Grid>
+                </Button>
+            </Grid>
         </Grid>
 
     </Grid>

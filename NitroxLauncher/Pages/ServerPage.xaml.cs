@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Controls;
 using NitroxLauncher.Models;
 
 namespace NitroxLauncher.Pages
@@ -13,38 +14,46 @@ namespace NitroxLauncher.Pages
         {
             InitializeComponent();
 
-            RBIsDocked.IsChecked = !IsServerExternal;
-            RBIsExternal.IsChecked = IsServerExternal;
+            // If the "Display Server Console Externally" Checkbox is checked, set value to true
+            if (CBIsExternal.IsChecked == true)
+            {
+                CBIsExternal.IsChecked = IsServerExternal;
+            }
+            else
+            {
+                CBIsExternal.IsChecked = !IsServerExternal;
+            }
+            
+            
         }
 
         private void StartServer_Click(object sender, RoutedEventArgs e)
         {
-            
-            try
+            // If the "Start Server button" is selected and not the "Display Server Console Externally" Checkbox, then start the server
+            if (!(e.OriginalSource is CheckBox))
             {
-                LauncherLogic.Server.StartServer(RBIsExternal.IsChecked == true);
+                try
+                {
+                    LauncherLogic.Server.StartServer(CBIsExternal.IsChecked == true);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
         }
 
-        private void RBServer_Clicked(object sender, RoutedEventArgs e)
+        private void CBServer_Clicked(object sender, RoutedEventArgs e)
         {
-            LauncherLogic.Config.IsExternalServer = RBIsExternal.IsChecked ?? true;
+            LauncherLogic.Config.IsExternalServer = CBIsExternal.IsChecked ?? true;
         }
 
-        private void RBIsDocked_Checked(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        // Restore Backup Button (NEW)
+        /* Restore Backup Button (WIP)
         private void RestoreBackup_Click(object sender, RoutedEventArgs e)
         {
-            e.Handled = true; // PUT THIS LINE IN THE CODE TO PREVENT THE OUTER BUTTON FROM BEING ACTIVATED
+            //e.Handled = true; // PUT THIS LINE IN THE CODE TO PREVENT THE OUTER BUTTON FROM BEING ACTIVATED IF BUTTON IS IMBEDDED IN ANOTHER BUTTON
 
         }
+        */
     }
 }
