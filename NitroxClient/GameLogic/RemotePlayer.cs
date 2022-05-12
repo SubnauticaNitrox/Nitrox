@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using NitroxClient.GameLogic.PlayerModel;
-using NitroxClient.GameLogic.PlayerModel.Abstract;
+using NitroxClient.GameLogic.PlayerLogic.PlayerModel;
+using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Helper;
@@ -37,6 +37,10 @@ namespace NitroxClient.GameLogic
         public SubRoot SubRoot { get; private set; }
         public EscapePod EscapePod { get; private set; }
         public PilotingChair PilotingChair { get; private set; }
+
+        public readonly Event<RemotePlayer> PlayerDeathEvent = new();
+
+        public readonly Event<RemotePlayer> PlayerDisconnectEvent = new();
 
         public RemotePlayer(GameObject playerBody, PlayerContext playerContext, List<TechType> equippedTechTypes, List<Pickupable> inventoryItems, PlayerModelManager modelManager)
         {

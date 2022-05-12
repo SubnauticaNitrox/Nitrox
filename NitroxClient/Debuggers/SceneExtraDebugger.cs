@@ -92,7 +92,7 @@ public sealed class SceneExtraDebugger : BaseDebugger
                     {
                         using (new GUILayout.VerticalScope("box"))
                         {
-                            if (GUILayout.Button(child.GetHierarchyPath(), child.transform.childCount > 0 ? "bold" : "label"))
+                            if (GUILayout.Button(child.GetFullHierarchyPath(), child.transform.childCount > 0 ? "bold" : "label"))
                             {
                                 sceneDebugger.UpdateSelectedObject(child);
                             }

@@ -13,14 +13,14 @@ public class NitroxDebugManager : MonoBehaviour
 {
     private const KeyCode ENABLE_DEBUGGER_HOTKEY = KeyCode.F7;
 
-    private readonly List<BaseDebugger> debuggers;
+    private List<BaseDebugger> debuggers;
     private readonly HashSet<BaseDebugger> prevActiveDebuggers = new();
 
     private bool showDebuggerList;
     private bool isDebugging;
     private Rect windowRect;
 
-    private NitroxDebugManager()
+    private void Awake()
     {
         debuggers = NitroxServiceLocator.LocateServicePreLifetime<IEnumerable<BaseDebugger>>().ToList();
     }

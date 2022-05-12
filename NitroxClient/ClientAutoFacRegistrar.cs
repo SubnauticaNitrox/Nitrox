@@ -16,9 +16,10 @@ using NitroxClient.GameLogic.ChatUI;
 using NitroxClient.GameLogic.FMOD;
 using NitroxClient.GameLogic.HUD;
 using NitroxClient.GameLogic.InitialSync.Base;
-using NitroxClient.GameLogic.PlayerModel;
-using NitroxClient.GameLogic.PlayerModel.Abstract;
-using NitroxClient.GameLogic.PlayerPreferences;
+using NitroxClient.GameLogic.PlayerLogic;
+using NitroxClient.GameLogic.PlayerLogic.PlayerModel;
+using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
+using NitroxClient.GameLogic.PlayerLogic.PlayerPreferences;
 using NitroxClient.GameLogic.Settings;
 using NitroxClient.Helpers;
 using NitroxClient.Map;
@@ -140,6 +141,7 @@ namespace NitroxClient
             containerBuilder.RegisterType<LiveMixinManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<NitroxSettingsManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<ThrottledPacketSender>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<PlayerCinematics>().InstancePerLifetimeScope();
         }
 
         private void RegisterPacketProcessors(ContainerBuilder containerBuilder)
