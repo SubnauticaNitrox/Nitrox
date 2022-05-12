@@ -48,6 +48,16 @@ namespace NitroxLauncher.Pages
             LauncherLogic.Config.IsExternalServer = CBIsExternal.IsChecked ?? true;
         }
 
+        private void RBGamemode_Clicked(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void AdvancedSettings_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
         /* Restore Backup Button (WIP)
         private void RestoreBackup_Click(object sender, RoutedEventArgs e)
         {

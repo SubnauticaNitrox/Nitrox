@@ -102,22 +102,6 @@
                     </Style>
                 </Style.Resources>
             </Style>
-            
-            <!-- vv WORLD LISTING BUTTON vv -->
-            <Style TargetType="Button" x:Key="WorldListingButton" BasedOn="{StaticResource {x:Type Button}}">
-                <Setter Property="OverridesDefaultStyle" Value="True" />
-                <!--<Setter Property="Width" Value="684" />-->
-                <Setter Property="Height" Value="83" />
-                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                <Style.Resources>
-                    <Style TargetType="Border">
-                        <Setter Property="CornerRadius" Value="4" />
-                        <Setter Property="BorderThickness" Value="10" />
-                        <Setter Property="BorderBrush" Value="#151516" />
-                    </Style>
-                </Style.Resources>
-
-            </Style>
 
             <Style x:Key="CloseButton" TargetType="{x:Type Button}">
                 <Setter Property="OverridesDefaultStyle" Value="True" />
@@ -145,6 +129,65 @@
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
+            </Style>
+
+            <Style TargetType="Button" x:Key="WorldListingButton" BasedOn="{StaticResource {x:Type Button}}">
+                <Setter Property="OverridesDefaultStyle" Value="True" />
+                <!--<Setter Property="Width" Value="684" />-->
+                <Setter Property="Height" Value="83" />
+                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                <Style.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="4" />
+                        <Setter Property="BorderThickness" Value="10" />
+                        <Setter Property="BorderBrush" Value="#151516" />
+                    </Style>
+                </Style.Resources>
+
+            </Style>
+            
+            <Style TargetType="RadioButton" x:Key="WorldGamemodeButton" BasedOn="{StaticResource {x:Type RadioButton}}">
+
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="RadioButton">
+
+                            <BulletDecorator>
+                                <Border x:Name="BackgroundBorder" Height="50" Width="140" Background="#151516" BorderBrush="#151516">
+                                    <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                </Border>
+                            </BulletDecorator>
+
+                            <!-- Interactive behavior for the buttons -->
+                            <ControlTemplate.Triggers>
+
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Opacity" Value="0.75" />
+                                </Trigger>
+
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Cursor" Value="Hand" />
+                                </Trigger>
+
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter Property="Foreground" Value="White"/>
+                                    <Setter Property="FontWeight" Value="DemiBold"/>
+                                    <Setter TargetName="BackgroundBorder" Property="BorderBrush" Value="#FF007BFF"/>
+                                </Trigger>
+
+                            </ControlTemplate.Triggers>
+                            
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+
+                <Style.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="12" />
+                        <Setter Property="BorderThickness" Value="2" />
+                    </Style>
+                </Style.Resources>
+
             </Style>
 
             <!--SCROLLBARS-->

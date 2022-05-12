@@ -15,7 +15,7 @@
         <BitmapImage x:Key="AddServerButton" UriSource="pack://application:,,,/images/material-design-icons/add_server.png"/>
         <BitmapImage x:Key="GoBackButton" UriSource="pack://application:,,,/images/material-design-icons/go_back.png"/>
         <BitmapImage x:Key="SwitchSlider" UriSource="pack://application:,,,/images/material-design-icons/switch_slider.png"/>
-        
+
         <Storyboard x:Key="WorldSelectedAnimation">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="WorldSelectionPane" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
                 <EasingDoubleKeyFrame KeyTime="00:00:00.2000000" Value="-866"/>
@@ -32,7 +32,7 @@
             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="WorldSettingsPane" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
                 <EasingDoubleKeyFrame KeyTime="0" Value="-866"/>
             </DoubleAnimationUsingKeyFrames>
-            
+
             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="WorldSelectionPane" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
                 <EasingDoubleKeyFrame KeyTime="00:00:00.2000000" Value="0"/>
             </DoubleAnimationUsingKeyFrames>
@@ -169,6 +169,7 @@
                         <TranslateTransform/>
                     </TransformGroup>
                 </Grid.RenderTransform>
+
                 <Grid.RowDefinitions>
                     <RowDefinition/>
                     <RowDefinition Height="Auto"/>
@@ -182,6 +183,7 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
 
+                        <!-- Pane Header -->
                         <Grid Grid.Row="0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="40"/>
@@ -197,22 +199,209 @@
                                     </EventTrigger>
                                 </Button.Triggers>
 
-                                <Image Source="{StaticResource GoBackButton}" Stretch="Uniform"  Width="40" Height="40"/>
+                                <Image Source="{StaticResource GoBackButton}" Stretch="Uniform" Width="40" Height="40"/>
                             </Button>
                             <TextBlock Grid.Column="1" Text="World Settings" Foreground="White" VerticalAlignment="Center" FontSize="30" HorizontalAlignment="Center" FontWeight="Bold"/>
-
                         </Grid>
 
-                        <!-- World List - NOTE: NEED TO MAKE THIS PANEL SCROLLABLE -->
-                        <Border Grid.Row="1"  CornerRadius="12" Background="Black"/>
-                        
+                        <!-- World Settings Pane -->
+                        <Border Grid.Row="1"  CornerRadius="12" Background="Black">
+                            <Grid Margin="25">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="1.3*"/>
+                                    <RowDefinition Height="2*"/>
+                                </Grid.RowDefinitions>
+
+                                <!-- World Name and Seed (1st Row) -->
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1.5*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Name -->
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <TextBlock Text="Name:  " Foreground="White" FontSize="20" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        <Border BorderBrush ="#333437" Background="#333437" BorderThickness="1" CornerRadius="8" Margin="0">
+                                            <TextBox Grid.Column="0" x:Name="WorldNameTextbox"
+                                                FontSize="18" MaxLines="1"
+                                                Foreground="#8A8A8A" TextAlignment="Left"
+                                                Background="{x:Null}" BorderBrush="{x:Null}"
+                                                Margin="13,4,13,4" SelectionBrush="#FF36383A"
+                                                VerticalAlignment="Center" BorderThickness="0"
+                                                CaretBrush="White" Width="250" MaxLength="25" Text="My World">
+
+                                                <!-- TODO: Make text font color turn white when text box is being edited (The commented-out code below doesn't seem to do it) -->
+                                                <!--<TextBox.Style>
+                                                    <Style TargetType="TextBox">
+                                                        <Style.Triggers>
+                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                <Setter Property="Foreground" Value="White"/>
+                                                            </Trigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBox.Style>-->
+
+                                            </TextBox>
+                                        </Border>
+                                    </StackPanel>
+
+                                    <!-- Seed -->
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center"  HorizontalAlignment="Right">
+                                        <TextBlock Text="Seed:  " Foreground="White" FontSize="20" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        <Border BorderBrush ="#333437" Background="#333437" BorderThickness="1" CornerRadius="8" Margin="0">
+                                            <TextBox Grid.Column="0" x:Name="WorldSeedTextbox"
+                                                FontSize="18" MaxLines="1" FontStyle="Italic"
+                                                Foreground="#8A8A8A" TextAlignment="Left"
+                                                Background="{x:Null}" BorderBrush="{x:Null}"
+                                                Margin="13,4,13,4" SelectionBrush="#FF36383A"
+                                                VerticalAlignment="Center" BorderThickness="0" CaretBrush="White" Width="155" MaxLength="10"/>
+                                        </Border>
+                                        <!--<TextBox Width="150"/>-->
+                                    </StackPanel>
+                                </Grid>
+
+                                <!-- World Gamemode -->
+                                <Grid Grid.Row="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="2.5*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- "Gamemode" Title -->
+                                    <TextBlock Text="Gamemode: " Foreground="White" FontSize="20" FontWeight="SemiBold" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+
+                                    <!-- Gamemode Tiles -->
+                                    <Grid Grid.Column="1">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <!-- Freedom Mode Button -->
+                                        <RadioButton Style="{StaticResource WorldGamemodeButton}" x:Name="RBFreedom" GroupName="ServerGamemode" Click="RBGamemode_Clicked" HorizontalAlignment="Left" VerticalAlignment="Center" ToolTip="Set the World Gamemode to Freedom Mode">
+                                            <TextBlock Text="Freedom" FontSize="18"/>
+                                        </RadioButton>
+
+                                        <!-- Survival Mode Button -->
+                                        <RadioButton Style="{StaticResource WorldGamemodeButton}" x:Name="RBSurvival" GroupName="ServerGamemode" Click="RBGamemode_Clicked" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" IsChecked="True" ToolTip="Set the World Gamemode to Survival Mode">
+                                            <TextBlock Text="Survival" FontSize="18"/>
+                                        </RadioButton>
+
+                                        <!-- Creative Mode Button -->
+                                        <RadioButton Style="{StaticResource WorldGamemodeButton}" x:Name="RBCreative" GroupName="ServerGamemode" Click="RBGamemode_Clicked" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="2" ToolTip="Set the World Gamemode to Creative Mode">
+                                            <TextBlock Text="Creative" FontSize="18"/>
+                                        </RadioButton>
+
+                                    </Grid>
+                                </Grid>
+
+                                <!-- World Options Pane -->
+                                <Grid Grid.Row="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="2.5*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- "Game Options" Title -->
+                                    <TextBlock Text="Game Options: " Foreground="White" FontSize="20" FontWeight="SemiBold" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+
+                                    <!-- Options Pane -->
+                                    <Border Grid.Column="1" CornerRadius="12" Background="#151516">
+                                        <Grid Margin="5">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="2.5*"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="3"/>
+                                                <ColumnDefinition Width="2.5*"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="*"/>
+                                                <RowDefinition Height="*"/>
+                                                <RowDefinition Height="*"/>
+                                            </Grid.RowDefinitions>
+
+                                            <!-- Column Seperator -->
+                                            <Border Grid.Column="2" Grid.RowSpan="3" Background="Black"/>
+
+                                            <!-- Row 1 -->
+                                            <TextBlock Grid.Column="0" Text="Enable Cheats" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
+                                            
+                                            <!-- TODO: Make the switch a checkbox and redesign it to look the way it does right now, and change the opacity values of the dots based on the checkbox's state -->
+                                            <!--<CheckBox Grid.Column="1">
+                                                <Grid>-->
+                                                    <Image Grid.Column="1" Source="{StaticResource SwitchSlider}" Stretch="Uniform" Width="Auto" Height="Auto" Margin="5 0 10 0"/>
+                                                    <Border Grid.Column="1" Background="Green" Height="18" Width="18" Margin="30.5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Opacity="1">
+                                                        <Border.Style>
+                                                            <Style TargetType="Border">
+                                                                <Setter Property="CornerRadius" Value="100" />
+                                                            </Style>
+                                                        </Border.Style>
+                                                    </Border>
+                                                    <Border Grid.Column="1" Background="Red" Height="18" Width="18" Margin="9.1,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Opacity="0">
+                                                        <Border.Style>
+                                                            <Style TargetType="Border">
+                                                                <Setter Property="CornerRadius" Value="100" />
+                                                            </Style>
+                                                        </Border.Style>
+                                                    </Border>
+                                                <!--</Grid>
+                                            </CheckBox>-->
+
+                                            <TextBlock Grid.Column="3" Text="Enable PvP" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
+
+                                            <!-- Row 2 -->
+                                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Auto Portforward" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
+
+                                            <TextBlock Grid.Row="1" Grid.Column="3" Text="Load Full World" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
+
+                                            <!-- Row 3 -->
+                                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Server Port" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
+                                            <Border Grid.Row="2" Grid.Column="1" BorderBrush ="Black" Background="Black" BorderThickness="1" CornerRadius="8" Margin="5 5 10 5">
+                                                <TextBox Grid.Column="0" x:Name="WorldPortTextbox"
+                                                    FontSize="12" MaxLines="1"
+                                                    Foreground="#8A8A8A" TextAlignment="Center"
+                                                    Background="{x:Null}" BorderBrush="{x:Null}"
+                                                    Margin="4" SelectionBrush="#FF36383A"
+                                                    VerticalAlignment="Center" BorderThickness="0"
+                                                    CaretBrush="White" Width="Auto" MaxLength="5" Text="11000">
+
+                                                    <!-- TODO: Validate input to be in the valid port ranges -->
+
+                                                    <!-- TODO: Make text font color turn white when text box is being edited (The commented-out code below doesn't seem to do it) -->
+                                                    <!--<TextBox.Style>
+                                                    <Style TargetType="TextBox">
+                                                        <Style.Triggers>
+                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                <Setter Property="Foreground" Value="White"/>
+                                                            </Trigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBox.Style>-->
+
+                                                </TextBox>
+                                            </Border>
+
+                                            <Button Style="{StaticResource LargeButton}" Click="AdvancedSettings_Click" ToolTip="See the advanced settings" Grid.Row="2" Grid.Column="3" Content="Advanced Settings" Foreground="White" FontSize="15" Grid.ColumnSpan="2" Background="#FF007BFF" Height="Auto" Width="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10 5 5 5"/>
+
+                                        </Grid>
+                                    </Border>
+
+                                </Grid>
+                            </Grid>
+                        </Border>
+
                     </Grid>
                 </Border>
 
                 <!-- START SERVER BUTTON -->
                 <Button Grid.Row="1" Style="{StaticResource LargeButton}" Click="StartServer_Click" ToolTip="Start the server with chosen options" Background="#FF007BFF" Height="62" HorizontalAlignment="Stretch" Margin="0,0,0,0" Width="710" >
                     <Grid Width="700" Height="53">
-                        
+
                         <!-- Grid Definitions -->
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -220,7 +409,7 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <!-- Column 1: Restore Backup Button (WIP) (HOW THE HELL DO I ADD AN OUTLINE TO THIS BUTTON D:< ) -->
+                        <!-- Column 1: (TODO) Restore Backup Button -->
                         <!--<Button Style="{StaticResource LargeButton}" Click="RestoreBackup_Click" HorizontalAlignment="Left" Height="40" Width="123" Margin="10,0,0,0" ToolTip="Restore one of your backups">
                             <TextBlock Text="Restore a Backup" VerticalAlignment="Center" FontSize="12" TextAlignment="Center"/>
                         </Button>-->
