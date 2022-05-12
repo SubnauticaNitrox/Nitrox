@@ -6,14 +6,19 @@ namespace NitroxClient.MonoBehaviours.Overrides;
 
 public class MultiplayerCinematicController : MonoBehaviour
 {
-    private PlayerCinematicController playerController;
-    private CinematicControllerPrefab controllerPrefab;
     private readonly Dictionary<ushort, RemotePlayerCinematicController> controllerByPlayerId = new();
-    private readonly List<MultiplayerCinematicController> multiplayerControllerSameAnimator = new(); // MCCs with the same Animator to reset state if needed.
+
+    /// <summary>
+    ///     MCCs with the same Animator to reset state if needed.
+    /// </summary>
+    private readonly List<MultiplayerCinematicController> multiplayerControllerSameAnimator = new();
+
+    private CinematicControllerPrefab controllerPrefab;
+    private PlayerCinematicController playerController;
 
     public void CallStartCinematicMode(RemotePlayer player)
     {
-        if (!playerController.cinematicModeActive) // CHeck if local player is occupying the animator.
+        if (!playerController.cinematicModeActive) // Check if local player is occupying the animator.
         {
             GetController(player).StartCinematicMode(player);
         }
@@ -21,7 +26,7 @@ public class MultiplayerCinematicController : MonoBehaviour
 
     public void CallCinematicModeEnd(RemotePlayer player)
     {
-        if (!playerController.cinematicModeActive) // CHeck if local player is occupying the animator.
+        if (!playerController.cinematicModeActive) // Check if local player is occupying the animator.
         {
             GetController(player).OnPlayerCinematicModeEnd();
         }

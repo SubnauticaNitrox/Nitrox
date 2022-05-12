@@ -66,10 +66,7 @@ public class RemotePlayerCinematicController : MonoBehaviour, IManagedUpdateBeha
 
     private State state
     {
-        get
-        {
-            return _state;
-        }
+        get => _state;
         set
         {
             timeStateChanged = Time.time;
@@ -79,10 +76,7 @@ public class RemotePlayerCinematicController : MonoBehaviour, IManagedUpdateBeha
 
     public bool animState
     {
-        get
-        {
-            return _animState;
-        }
+        get => _animState;
         private set
         {
             if (value == _animState)
@@ -92,7 +86,7 @@ public class RemotePlayerCinematicController : MonoBehaviour, IManagedUpdateBeha
 
             if (debug)
             {
-                Debug.Log("setting cinematic controller " + gameObject.name + " to: " + value);
+                Debug.Log($"setting cinematic controller {gameObject.name} to: {value}");
             }
 
             _animState = value;
@@ -128,7 +122,7 @@ public class RemotePlayerCinematicController : MonoBehaviour, IManagedUpdateBeha
 
     public string GetProfileTag()
     {
-        return "RemotePlayerCinematicController";
+        return nameof(RemotePlayerCinematicController);
     }
 
     public void SetPlayer(RemotePlayer setplayer)
@@ -183,9 +177,9 @@ public class RemotePlayerCinematicController : MonoBehaviour, IManagedUpdateBeha
             animator.SetBool(paramaterName, vrAnimationMode);
         }
 
-        for (int i = 0; i < animParamReceivers.Length; i++)
+        foreach (GameObject animatedObject in animParamReceivers)
         {
-            animParamReceivers[i].GetComponent<IAnimParamReceiver>()?.ForwardAnimationParameterBool(paramaterName, vrAnimationMode);
+            animatedObject.GetComponent<IAnimParamReceiver>()?.ForwardAnimationParameterBool(paramaterName, vrAnimationMode);
         }
     }
 
@@ -219,7 +213,7 @@ public class RemotePlayerCinematicController : MonoBehaviour, IManagedUpdateBeha
 
         if (informGameObject != null)
         {
-            informGameObject.SendMessage("OnPlayerCinematicModeEnd", this, SendMessageOptions.DontRequireReceiver);
+            informGameObject.SendMessage(nameof(CinematicModeTriggerBase.OnPlayerCinematicModeEnd), this, SendMessageOptions.DontRequireReceiver);
         }
     }
 
@@ -227,7 +221,7 @@ public class RemotePlayerCinematicController : MonoBehaviour, IManagedUpdateBeha
     {
         if (debug)
         {
-            Debug.Log(gameObject.name + ".StartCinematicMode");
+            Debug.Log($"{gameObject.name}.StartCinematicMode");
         }
 
         if (!cinematicModeActive)
@@ -237,7 +231,7 @@ public class RemotePlayerCinematicController : MonoBehaviour, IManagedUpdateBeha
             {
                 if (debug)
                 {
-                    Debug.Log(gameObject.name + " skip cinematic");
+                    Debug.Log($"{gameObject.name} skip cinematic");
                 }
 
                 SkipCinematic(setplayer);
@@ -255,7 +249,7 @@ public class RemotePlayerCinematicController : MonoBehaviour, IManagedUpdateBeha
             state = State.In;
             if (informGameObject != null)
             {
-                informGameObject.SendMessage("OnPlayerCinematicModeStart", this, SendMessageOptions.DontRequireReceiver);
+                informGameObject.SendMessage(nameof(DockedVehicleHandTarget.OnPlayerCinematicModeStart), this, SendMessageOptions.DontRequireReceiver);
             }
 
             if (player != null)
@@ -281,7 +275,7 @@ public class RemotePlayerCinematicController : MonoBehaviour, IManagedUpdateBeha
 
             if (debug)
             {
-                Debug.Log(gameObject.name + " successfully started cinematic");
+                Debug.Log($"{gameObject.name} successfully started cinematic");
             }
 
             if (cinematicModeCount == 0)
@@ -293,7 +287,7 @@ public class RemotePlayerCinematicController : MonoBehaviour, IManagedUpdateBeha
         }
         else if (debug)
         {
-            Debug.Log(gameObject.name + " cinematic already active!");
+            Debug.Log($"{gameObject.name} cinematic already active!");
         }
     }
 
@@ -346,7 +340,7 @@ public class RemotePlayerCinematicController : MonoBehaviour, IManagedUpdateBeha
         if (informGameObject != null)
         {
             onCinematicModeEndCall = true;
-            informGameObject.SendMessage("OnPlayerCinematicModeEnd", this, SendMessageOptions.DontRequireReceiver);
+            informGameObject.SendMessage(nameof(DockedVehicleHandTarget.OnPlayerCinematicModeEnd), this, SendMessageOptions.DontRequireReceiver);
             onCinematicModeEndCall = false;
         }
     }
@@ -366,25 +360,25 @@ public class RemotePlayerCinematicController : MonoBehaviour, IManagedUpdateBeha
         }
 
         float num = Time.time - timeStateChanged;
-        float num2 = 0f;
+        float timedOutScalar;
         Transform transform = null;
         if (player != null)
         {
             transform = player.Body.GetComponent<Transform>();
         }
 
-        bool flag = !GameOptions.GetVrAnimationMode();
+        bool isVrAnimationMode = !GameOptions.GetVrAnimationMode();
         switch (state)
         {
             case State.In:
-                num2 = ((interpolationTime != 0f && flag) ? Mathf.Clamp01(num / interpolationTime) : 1f);
+                timedOutScalar = interpolationTime != 0f && isVrAnimationMode ? Mathf.Clamp01(num / interpolationTime) : 1f;
                 if (player != null)
                 {
-                    transform.position = Vector3.Lerp(playerFromPosition, animatedTransform.position, num2);
-                    transform.rotation = Quaternion.Slerp(playerFromRotation, animatedTransform.rotation, num2);
+                    transform.position = Vector3.Lerp(playerFromPosition, animatedTransform.position, timedOutScalar);
+                    transform.rotation = Quaternion.Slerp(playerFromRotation, animatedTransform.rotation, timedOutScalar);
                 }
 
-                if (num2 == 1f)
+                if (timedOutScalar == 1f)
                 {
                     state = State.Update;
                     animState = true;
@@ -408,14 +402,14 @@ public class RemotePlayerCinematicController : MonoBehaviour, IManagedUpdateBeha
 
                 break;
             case State.Out:
-                num2 = ((interpolationTimeOut != 0f && flag) ? Mathf.Clamp01(num / interpolationTimeOut) : 1f);
+                timedOutScalar = interpolationTimeOut != 0f && isVrAnimationMode ? Mathf.Clamp01(num / interpolationTimeOut) : 1f;
                 if (player != null)
                 {
-                    transform.position = Vector3.Lerp(playerFromPosition, endTransform.position, num2);
-                    transform.rotation = Quaternion.Slerp(playerFromRotation, endTransform.rotation, num2);
+                    transform.position = Vector3.Lerp(playerFromPosition, endTransform.position, timedOutScalar);
+                    transform.rotation = Quaternion.Slerp(playerFromRotation, endTransform.rotation, timedOutScalar);
                 }
 
-                if (num2 == 1f)
+                if (timedOutScalar == 1f)
                 {
                     EndCinematicMode();
                 }
