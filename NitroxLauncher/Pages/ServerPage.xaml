@@ -14,7 +14,6 @@
         <BitmapImage x:Key="TrashcanButton" UriSource="pack://application:,,,/images/material-design-icons/trashcan_icon.png"/>
         <BitmapImage x:Key="AddServerButton" UriSource="pack://application:,,,/images/material-design-icons/add_server.png"/>
         <BitmapImage x:Key="GoBackButton" UriSource="pack://application:,,,/images/material-design-icons/go_back.png"/>
-        <BitmapImage x:Key="SwitchSlider" UriSource="pack://application:,,,/images/material-design-icons/switch_slider.png"/>
 
         <Storyboard x:Key="WorldSelectedAnimation">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="WorldSelectionPane" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
@@ -72,7 +71,7 @@
         <!-- ROW 3 - SELECTION PANES -->
         <Grid Grid.Row="2" Width="2442" HorizontalAlignment="Center">
 
-            <!-- WORLD SELECTION PANE (In view: Margin="866 32 866 32" | Out of view: Margin="0 32 1732 32") PANE WIDTH: 710?? -->
+            <!-- WORLD SELECTION PANE (In view: Margin="866 32 866 32" | Out of view: Margin="0 32 1732 32") PANE WIDTH: 710 -->
             <Border CornerRadius="12" Background="#151516" Margin="866 32 866 32" x:Name="WorldSelectionPane" RenderTransformOrigin="0.5,0.5">
                 <Border.RenderTransform>
                     <TransformGroup>
@@ -99,7 +98,7 @@
 
 
                         <TextBlock Grid.Column="1" Text="Your Worlds" Foreground="White" VerticalAlignment="Center" FontSize="30" HorizontalAlignment="Center" FontWeight="Bold"/>
-                        <Button Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="Add a new world">
+                        <Button Grid.Column="2" x:Name="AddWorldBtn" Click="AddWorld_Click" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="Add a new world">
                             <!-- Slide the panes to the left when the button is clicked -->
                             <Button.Triggers>
                                 <EventTrigger RoutedEvent="Button.Click" >
@@ -159,7 +158,7 @@
                 </Grid>
             </Border>
 
-            <!-- WORLD OPTIONS PANE (Out of view: Margin="1732 32 0 32" | In view: Margin="866 32 866 32") PANE WIDTH: 710?? -->
+            <!-- WORLD OPTIONS PANE (Out of view: Margin="1732 32 0 32" | In view: Margin="866 32 866 32") PANE WIDTH: 710 -->
             <Grid Margin="1732 32 0 32" x:Name="WorldSettingsPane" RenderTransformOrigin="0.5,0.5">
                 <Grid.RenderTransform>
                     <TransformGroup>
@@ -258,7 +257,6 @@
                                                 Margin="13,4,13,4" SelectionBrush="#FF36383A"
                                                 VerticalAlignment="Center" BorderThickness="0" CaretBrush="White" Width="155" MaxLength="10"/>
                                         </Border>
-                                        <!--<TextBox Width="150"/>-->
                                     </StackPanel>
                                 </Grid>
 
@@ -330,34 +328,17 @@
 
                                             <!-- Row 1 -->
                                             <TextBlock Grid.Column="0" Text="Enable Cheats" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
-                                            
-                                            <!-- TODO: Make the switch a checkbox and redesign it to look the way it does right now, and change the opacity values of the dots based on the checkbox's state -->
-                                            <!--<CheckBox Grid.Column="1">
-                                                <Grid>-->
-                                                    <Image Grid.Column="1" Source="{StaticResource SwitchSlider}" Stretch="Uniform" Width="Auto" Height="Auto" Margin="5 0 10 0"/>
-                                                    <Border Grid.Column="1" Background="Green" Height="18" Width="18" Margin="30.5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Opacity="1">
-                                                        <Border.Style>
-                                                            <Style TargetType="Border">
-                                                                <Setter Property="CornerRadius" Value="100" />
-                                                            </Style>
-                                                        </Border.Style>
-                                                    </Border>
-                                                    <Border Grid.Column="1" Background="Red" Height="18" Width="18" Margin="9.1,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Opacity="0">
-                                                        <Border.Style>
-                                                            <Style TargetType="Border">
-                                                                <Setter Property="CornerRadius" Value="100" />
-                                                            </Style>
-                                                        </Border.Style>
-                                                    </Border>
-                                                <!--</Grid>
-                                            </CheckBox>-->
+                                            <CheckBox Style="{StaticResource OptionSwitch}" Grid.Column="1" Margin="5 5 10 5" x:Name="CBCheats" Checked="CBCheats_Enabled" IsChecked="True" ToolTip="Click to enable the use of commands in game (RECOMMENDED FOR NITROX)"/>
 
                                             <TextBlock Grid.Column="3" Text="Enable PvP" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
+                                            <CheckBox Style="{StaticResource OptionSwitch}" Grid.Column="4" Margin="5 5 10 5" x:Name="CBPvP" Checked="CBPvP_Enabled" IsChecked="True" ToolTip="Click to enable Player vs. Player"/>
 
                                             <!-- Row 2 -->
                                             <TextBlock Grid.Row="1" Grid.Column="0" Text="Auto Portforward" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
+                                            <CheckBox Style="{StaticResource OptionSwitch}" Grid.Row="1" Grid.Column="1" Margin="5 5 10 5" x:Name="CBAutoPortForward" Checked="CBAutoPortForward_Enabled" IsChecked="True" ToolTip="Click to enable automatic Port Forwarding using UPnP (NOTE: Not all routers support this functionality)"/>
 
                                             <TextBlock Grid.Row="1" Grid.Column="3" Text="Load Full World" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
+                                            <CheckBox Style="{StaticResource OptionSwitch}" Grid.Row="1" Grid.Column="4" Margin="5 5 10 5" x:Name="CBCreateFullEntityCache" Checked="CBCreateFullEntityCache_Enabled" IsChecked="False" ToolTip="Click to enable the server to fully load the world's entity cache at startup (NOTE: Server will take longer to start up)"/>
 
                                             <!-- Row 3 -->
                                             <TextBlock Grid.Row="2" Grid.Column="0" Text="Server Port" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
@@ -386,15 +367,13 @@
                                                 </TextBox>
                                             </Border>
 
-                                            <Button Style="{StaticResource LargeButton}" Click="AdvancedSettings_Click" ToolTip="See the advanced settings" Grid.Row="2" Grid.Column="3" Content="Advanced Settings" Foreground="White" FontSize="15" Grid.ColumnSpan="2" Background="#FF007BFF" Height="Auto" Width="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10 5 5 5"/>
+                                            <Button Style="{StaticResource LargeButton}" Click="AdvancedSettings_Click" ToolTip="See the advanced settings" Grid.Row="2" Grid.Column="3" Content="Advanced Settings" Foreground="White" FontSize="15" Grid.ColumnSpan="2" Background="#FF007BFF" Height="Auto" Width="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10 5"/>
 
                                         </Grid>
                                     </Border>
-
                                 </Grid>
                             </Grid>
                         </Border>
-
                     </Grid>
                 </Border>
 

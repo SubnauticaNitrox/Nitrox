@@ -2,6 +2,9 @@
 using System.Windows;
 using System.Windows.Controls;
 using NitroxLauncher.Models;
+using NitroxModel.Core;
+using NitroxServer.Serialization;
+using NitroxServer.Serialization.World;
 
 namespace NitroxLauncher.Pages
 {
@@ -9,6 +12,11 @@ namespace NitroxLauncher.Pages
     {
         public string StartButtonSubtitle => $"NITROX {LauncherLogic.ReleasePhase} {LauncherLogic.Version}";
         private bool IsServerExternal => LauncherLogic.Config.IsExternalServer;
+        public string PathToSubnautica => LauncherLogic.Config.SubnauticaPath;
+
+        // Variables for server config manipulation
+        public IServerSerializer Serializer { get; private set; }
+        private string FileEnding => Serializer?.FileEnding ?? "";
 
         public ServerPage()
         {
@@ -48,7 +56,33 @@ namespace NitroxLauncher.Pages
             LauncherLogic.Config.IsExternalServer = CBIsExternal.IsChecked ?? true;
         }
 
+        private void AddWorld_Click(object sender, RoutedEventArgs e)
+        {
+            //Note: DOES NOT WORK v
+            //NitroxServiceLocator.LocateService<WorldPersistence>().CreateFreshWorld();
+        }
+
         private void RBGamemode_Clicked(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void CBCheats_Enabled(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void CBPvP_Enabled(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void CBAutoPortForward_Enabled(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void CBCreateFullEntityCache_Enabled(object sender, RoutedEventArgs e)
         {
 
         }

@@ -154,6 +154,12 @@
 
                             <BulletDecorator>
                                 <Border x:Name="BackgroundBorder" Height="50" Width="140" Background="#151516" BorderBrush="#151516">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Setter Property="CornerRadius" Value="12" />
+                                            <Setter Property="BorderThickness" Value="2" />
+                                        </Style>
+                                    </Border.Style>
                                     <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                 </Border>
                             </BulletDecorator>
@@ -163,9 +169,6 @@
 
                                 <Trigger Property="IsMouseOver" Value="True">
                                     <Setter Property="Opacity" Value="0.75" />
-                                </Trigger>
-
-                                <Trigger Property="IsMouseOver" Value="True">
                                     <Setter Property="Cursor" Value="Hand" />
                                 </Trigger>
 
@@ -176,20 +179,75 @@
                                 </Trigger>
 
                             </ControlTemplate.Triggers>
-                            
+
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
-
-                <Style.Resources>
-                    <Style TargetType="Border">
-                        <Setter Property="CornerRadius" Value="12" />
-                        <Setter Property="BorderThickness" Value="2" />
-                    </Style>
-                </Style.Resources>
-
             </Style>
 
+            <Style TargetType="CheckBox" x:Key="OptionSwitch" BasedOn="{StaticResource {x:Type CheckBox}}">
+
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="CheckBox">
+
+                            <BulletDecorator>
+                                <Border Background="Black">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Setter Property="CornerRadius" Value="12" />
+                                        </Style>
+                                    </Border.Style>
+
+                                    <Grid>
+                                        <Border Background="#151516" Height="5" Width="30">
+                                            <Border.Style>
+                                                <Style TargetType="Border">
+                                                    <Setter Property="CornerRadius" Value="3" />
+                                                </Style>
+                                            </Border.Style>
+                                        </Border>
+
+                                        <Border x:Name="DisabledDot" Background="Red" Height="18" Width="18" Margin="0 0 22 0" Opacity="1">
+                                            <Border.Style>
+                                                <Style TargetType="Border">
+                                                    <Setter Property="CornerRadius" Value="10" />
+                                                </Style>
+                                            </Border.Style>
+                                        </Border>
+
+                                        <Border x:Name="EnabledDot" Background="Green" Height="18" Width="18" Margin="22 0 0 0" Opacity="0">
+                                            <Border.Style>
+                                                <Style TargetType="Border">
+                                                    <Setter Property="CornerRadius" Value="10" />
+                                                </Style>
+                                            </Border.Style>
+                                        </Border>
+                                    </Grid>
+                                </Border>
+                            </BulletDecorator>
+
+                            <!-- Interactive behavior for the buttons -->
+                            <ControlTemplate.Triggers>
+
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Opacity" Value="0.75" />
+                                    <Setter Property="Cursor" Value="Hand" />
+                                </Trigger>
+                                
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter TargetName="EnabledDot" Property="Opacity" Value="1"/>
+                                    <Setter TargetName="DisabledDot" Property="Opacity" Value="0"/>
+                                </Trigger>
+
+                            </ControlTemplate.Triggers>
+
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            
+            
             <!--SCROLLBARS-->
             <!-- TODO: MacOS style vertical scrollbar -->
             <Style x:Key="ScrollThumbs" TargetType="{x:Type Thumb}">
