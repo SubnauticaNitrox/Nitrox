@@ -7,6 +7,7 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
 using NitroxServer.GameLogic.Entities;
 using NitroxServer.Serialization;
@@ -51,30 +52,30 @@ namespace NitroxServer
             };
         }
 
-        public string SaveSummary
+        public string GetSaveSummary(Perms viewerPerms = Perms.CONSOLE)
         {
-            get
+            // TODO: Extend summary with more useful save file data
+            // Note for later additions: order these lines by their length
+            StringBuilder builder = new("\n");
+            if (viewerPerms is Perms.CONSOLE)
             {
-                // TODO: Extend summary with more useful save file data
-                // Note for later additions: order these lines by their length
-                StringBuilder builder = new("\n");
                 builder.AppendLine($" - Save location: {Path.GetFullPath(serverConfig.SaveName)}");
-                builder.AppendLine($" - Aurora's state: {world.EventTriggerer.GetAuroraStateSummary()}");
-                builder.AppendLine($" - Current time: day {world.EventTriggerer.Day} ({Math.Floor(world.EventTriggerer.ElapsedSeconds)}s)");
-                builder.AppendLine($" - Scheduled goals stored: {world.GameData.StoryGoals.ScheduledGoals.Count}");
-                builder.AppendLine($" - Story goals completed: {world.GameData.StoryGoals.CompletedGoals.Count}");
-                builder.AppendLine($" - Radio messages stored: {world.GameData.StoryGoals.RadioQueue.Count}");
-                builder.AppendLine($" - World gamemode: {serverConfig.GameMode}");
-                builder.AppendLine($" - Story goals unlocked: {world.GameData.StoryGoals.GoalUnlocks.Count}");
-                builder.AppendLine($" - Encyclopedia entries: {world.GameData.PDAState.EncyclopediaEntries.Count}");
-                builder.AppendLine($" - Storage slot items: {world.InventoryManager.GetAllStorageSlotItems().Count}");
-                builder.AppendLine($" - Inventory items: {world.InventoryManager.GetAllInventoryItems().Count}");
-                builder.AppendLine($" - Progress tech: {world.GameData.PDAState.CachedProgress.Count}");
-                builder.AppendLine($" - Known tech: {world.GameData.PDAState.KnownTechTypes.Count}");
-                builder.AppendLine($" - Vehicles: {world.VehicleManager.GetVehicles().Count()}");
-                
-                return builder.ToString();
             }
+            builder.AppendLine($" - Aurora's state: {world.EventTriggerer.GetAuroraStateSummary()}");
+            builder.AppendLine($" - Current time: day {world.EventTriggerer.Day} ({Math.Floor(world.EventTriggerer.ElapsedSeconds)}s)");
+            builder.AppendLine($" - Scheduled goals stored: {world.GameData.StoryGoals.ScheduledGoals.Count}");
+            builder.AppendLine($" - Story goals completed: {world.GameData.StoryGoals.CompletedGoals.Count}");
+            builder.AppendLine($" - Radio messages stored: {world.GameData.StoryGoals.RadioQueue.Count}");
+            builder.AppendLine($" - World gamemode: {serverConfig.GameMode}");
+            builder.AppendLine($" - Story goals unlocked: {world.GameData.StoryGoals.GoalUnlocks.Count}");
+            builder.AppendLine($" - Encyclopedia entries: {world.GameData.PDAState.EncyclopediaEntries.Count}");
+            builder.AppendLine($" - Storage slot items: {world.InventoryManager.GetAllStorageSlotItems().Count}");
+            builder.AppendLine($" - Inventory items: {world.InventoryManager.GetAllInventoryItems().Count}");
+            builder.AppendLine($" - Progress tech: {world.GameData.PDAState.CachedProgress.Count}");
+            builder.AppendLine($" - Known tech: {world.GameData.PDAState.KnownTechTypes.Count}");
+            builder.AppendLine($" - Vehicles: {world.VehicleManager.GetVehicles().Count()}");
+                
+            return builder.ToString();
         }
 
         public void Save()
@@ -147,7 +148,7 @@ namespace NitroxServer
             Log.InfoSensitive("Server Password: {password}", string.IsNullOrEmpty(serverConfig.ServerPassword) ? "None. Public Server." : serverConfig.ServerPassword);
             Log.InfoSensitive("Admin Password: {password}", serverConfig.AdminPassword);
             Log.Info($"Autosave: {(serverConfig.DisableAutoSave ? "DISABLED" : $"ENABLED ({serverConfig.SaveInterval / 60000} min)")}");
-            Log.Info($"Loaded save\n{SaveSummary}");
+            Log.Info($"Loaded save\n{GetSaveSummary()}");
 
             PauseServer();
 
