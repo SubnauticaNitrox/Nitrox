@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using NitroxLauncher.Models;
@@ -32,14 +33,31 @@ namespace NitroxLauncher.Pages
         public ServerPage()
         {
             InitializeComponent();
-            
+
+            List<World_Listing> WorldListing = new();
+
+            WorldListing.Add(new World_Listing() { WorldName = "Survival w/ friends", WorldGamemode = "Survival", WorldVersion = "v1.6.0.0" });
+            WorldListing.Add(new World_Listing() { WorldName = "My World 1", WorldGamemode = "Freedom", WorldVersion = "v1.5.0.2" });
+            WorldListing.Add(new World_Listing() { WorldName = "v1.7 pre-release test", WorldGamemode = "Freedom", WorldVersion = "v1.7.0.0" });
+            WorldListing.Add(new World_Listing() { WorldName = "Old World", WorldGamemode = "Survival", WorldVersion = "v1.3.0.0" });
+            WorldListing.Add(new World_Listing() { WorldName = "Creative Mode", WorldGamemode = "Creative", WorldVersion = "v1.6.0.0" });
+            WorldListing.Add(new World_Listing() { WorldName = "v1.6.0.1 testing", WorldGamemode = "Freedom", WorldVersion = "v1.6.0.1" });
+
+            WorldListingContainer.ItemsSource = WorldListing;
+
             // If the "Display Server Console Externally" Checkbox is checked, set value to true
             if (CBIsExternal.IsChecked == true)
             {
                 CBIsExternal.IsChecked = IsServerExternal;
             }
-            
-            
+
+        }
+
+        public class World_Listing
+        {
+            public string WorldName { get; set; }
+            public string WorldGamemode { get; set; }
+            public string WorldVersion { get; set; }
         }
 
         private void StartServer_Click(object sender, RoutedEventArgs e)
