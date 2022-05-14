@@ -11,17 +11,28 @@ namespace NitroxLauncher.Pages
     public partial class ServerPage : PageBase
     {
         public string StartButtonSubtitle => $"NITROX {LauncherLogic.ReleasePhase} {LauncherLogic.Version}";
-        private bool IsServerExternal => LauncherLogic.Config.IsExternalServer;
+        public bool IsServerExternal
+        {
+            get => LauncherLogic.Config.IsExternalServer;
+            set => LauncherLogic.Config.IsExternalServer = value;
+        }
         public string PathToSubnautica => LauncherLogic.Config.SubnauticaPath;
+        //private readonly ServerConfig serverConfig;                 // Taken from Server.cs (DOESN'T WORK, Troubleshoot this)
 
         // Variables for server config manipulation
         public IServerSerializer Serializer { get; private set; }
         private string FileEnding => Serializer?.FileEnding ?? "";
 
+        public bool enableCheatsValue => true;
+        public bool enablePvPValue => true;
+        public bool enableAutoPortForwardValue => true;
+        public bool enableFullEntityCacheValue => false;
+        public int serverPort => 11000;//serverConfig?.ServerPort ?? -1;    // Taken from Server.cs (DOESN'T WORK: Displays -1)
+
         public ServerPage()
         {
             InitializeComponent();
-
+            
             // If the "Display Server Console Externally" Checkbox is checked, set value to true
             if (CBIsExternal.IsChecked == true)
             {
@@ -51,10 +62,10 @@ namespace NitroxLauncher.Pages
             }
         }
 
-        private void CBServer_Clicked(object sender, RoutedEventArgs e)
-        {
-            LauncherLogic.Config.IsExternalServer = CBIsExternal.IsChecked ?? true;
-        }
+        //private void CBServer_Clicked(object sender, RoutedEventArgs e)
+        //{
+        //    IsServerExternal = CBIsExternal.IsChecked ?? true;
+        //}
 
         private void AddWorld_Click(object sender, RoutedEventArgs e)
         {
@@ -69,7 +80,7 @@ namespace NitroxLauncher.Pages
 
         private void CBCheats_Enabled(object sender, RoutedEventArgs e)
         {
-
+            //enableCheatsValue = CBCheats.IsChecked;
         }
 
         private void CBPvP_Enabled(object sender, RoutedEventArgs e)

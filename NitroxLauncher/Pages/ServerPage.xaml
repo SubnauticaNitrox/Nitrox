@@ -328,17 +328,17 @@
 
                                             <!-- Row 1 -->
                                             <TextBlock Grid.Column="0" Text="Enable Cheats" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
-                                            <CheckBox Style="{StaticResource OptionSwitch}" Grid.Column="1" Margin="5 5 10 5" x:Name="CBCheats" Checked="CBCheats_Enabled" IsChecked="True" ToolTip="Click to enable the use of commands in game (RECOMMENDED FOR NITROX)"/>
+                                            <CheckBox Style="{StaticResource OptionSwitch}" Grid.Column="1" Margin="5 5 10 5" x:Name="CBCheats" Checked="CBCheats_Enabled" IsChecked="{Binding enableCheatsValue, Mode=OneWay, FallbackValue='True'}" ToolTip="Click to enable the use of commands in game (RECOMMENDED FOR NITROX)"/>
 
                                             <TextBlock Grid.Column="3" Text="Enable PvP" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
-                                            <CheckBox Style="{StaticResource OptionSwitch}" Grid.Column="4" Margin="5 5 10 5" x:Name="CBPvP" Checked="CBPvP_Enabled" IsChecked="True" ToolTip="Click to enable Player vs. Player"/>
+                                            <CheckBox Style="{StaticResource OptionSwitch}" Grid.Column="4" Margin="5 5 10 5" x:Name="CBPvP" Checked="CBPvP_Enabled" IsChecked="{Binding enablePvPValue, Mode=OneWay, FallbackValue='True'}" ToolTip="Click to enable Player vs. Player"/>
 
                                             <!-- Row 2 -->
                                             <TextBlock Grid.Row="1" Grid.Column="0" Text="Auto Portforward" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
-                                            <CheckBox Style="{StaticResource OptionSwitch}" Grid.Row="1" Grid.Column="1" Margin="5 5 10 5" x:Name="CBAutoPortForward" Checked="CBAutoPortForward_Enabled" IsChecked="True" ToolTip="Click to enable automatic Port Forwarding using UPnP (NOTE: Not all routers support this functionality)"/>
+                                            <CheckBox Style="{StaticResource OptionSwitch}" Grid.Row="1" Grid.Column="1" Margin="5 5 10 5" x:Name="CBAutoPortForward" Checked="CBAutoPortForward_Enabled" IsChecked="{Binding enableAutoPortForwardValue, Mode=OneWay, FallbackValue='True'}" ToolTip="Click to enable automatic Port Forwarding using UPnP (NOTE: Not all routers support this functionality)"/>
 
                                             <TextBlock Grid.Row="1" Grid.Column="3" Text="Load Full World" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
-                                            <CheckBox Style="{StaticResource OptionSwitch}" Grid.Row="1" Grid.Column="4" Margin="5 5 10 5" x:Name="CBCreateFullEntityCache" Checked="CBCreateFullEntityCache_Enabled" IsChecked="False" ToolTip="Click to enable the server to fully load the world's entity cache at startup (NOTE: Server will take longer to start up)"/>
+                                            <CheckBox Style="{StaticResource OptionSwitch}" Grid.Row="1" Grid.Column="4" Margin="5 5 10 5" x:Name="CBCreateFullEntityCache" Checked="CBCreateFullEntityCache_Enabled" IsChecked="{Binding enableFullEntityCacheValue, Mode=OneWay, FallbackValue='False'}" ToolTip="Click to enable the server to fully load the world's entity cache at startup (NOTE: Server will take longer to start up)"/>
 
                                             <!-- Row 3 -->
                                             <TextBlock Grid.Row="2" Grid.Column="0" Text="Server Port" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
@@ -349,7 +349,7 @@
                                                     Background="{x:Null}" BorderBrush="{x:Null}"
                                                     Margin="4" SelectionBrush="#FF36383A"
                                                     VerticalAlignment="Center" BorderThickness="0"
-                                                    CaretBrush="White" Width="Auto" MaxLength="5" Text="11000">
+                                                    CaretBrush="White" Width="Auto" MaxLength="5" Text="{Binding serverPort, Mode=OneWay, FallbackValue='11000'}">
 
                                                     <!-- TODO: Validate input to be in the valid port ranges -->
 
@@ -401,7 +401,7 @@
                             <TextBlock DockPanel.Dock = "Top" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="12" Text="Version Number" />
                             <StackPanel DockPanel.Dock = "Bottom" HorizontalAlignment="Right" VerticalAlignment="Bottom" Orientation="Horizontal">
                                 <TextBlock FontSize="12" Text="Display Server Console Externally: "/>
-                                <CheckBox x:Name="CBIsExternal" Checked="CBServer_Clicked" IsChecked="True" ToolTip="Check if you want to display the console in a separate CMD Window"/>
+                                <CheckBox x:Name="CBIsExternal" IsChecked="{Binding IsServerExternal}" ToolTip="Check if you want to display the console in a separate CMD Window"/>
                             </StackPanel>
                         </DockPanel>
 
