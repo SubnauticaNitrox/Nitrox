@@ -38,10 +38,6 @@ namespace NitroxLauncher.Pages
             {
                 CBIsExternal.IsChecked = IsServerExternal;
             }
-            else
-            {
-                CBIsExternal.IsChecked = !IsServerExternal;
-            }
             
             
         }
