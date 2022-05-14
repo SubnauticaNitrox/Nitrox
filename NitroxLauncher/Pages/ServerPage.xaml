@@ -7,7 +7,7 @@
                 mc:Ignorable="d"
                 d:DesignHeight="642" d:DesignWidth="750"
                 DataContext="{Binding RelativeSource={RelativeSource Self}}"
-                Title="Server Page">
+                Title="Server Page" xmlns:pages="clr-namespace:NitroxLauncher.Pages">
 
     <local:PageBase.Resources>
         <BitmapImage x:Key="ServerIllustration" UriSource="pack://application:,,,/images/serverIllustration.png"/>
@@ -110,10 +110,22 @@
                         </Button>
                     </Grid>
 
-                    <!-- World List - NOTE: NEED TO MAKE THIS PANEL SCROLLABLE -->
+                    <!-- World List -->
                     <Border Grid.Row="1" CornerRadius="12" Background="Black">
-
                         <ListView Name="WorldListingContainer" Background="{x:Null}" BorderBrush="{x:Null}" Margin="5" HorizontalContentAlignment="Stretch">
+                            <!-- TEMPORARY - View server listing buttons in Intellisense window -->
+                            <d:ListView.ItemsSource>
+                                <x:Array Type="pages:World_Listing">
+                                    <pages:World_Listing WorldName = "Survival w/ friends" WorldGamemode = "Survival" WorldVersion = "v1.6.0.0"/>
+                                    <pages:World_Listing WorldName = "My World 1" WorldGamemode = "Freedom" WorldVersion = "v1.5.0.2"/>
+                                    <pages:World_Listing WorldName = "My World 1" WorldGamemode = "Freedom" WorldVersion = "v1.5.0.2"/>
+                                    <!--<pages:World_Listing WorldName = "v1.7 pre-release test" WorldGamemode = "Freedom" WorldVersion = "v1.7.0.0"/>
+                                    <pages:World_Listing WorldName = "Old World" WorldGamemode = "Survival" WorldVersion = "v1.3.0.0"/>
+                                    <pages:World_Listing WorldName = "Creative Mode" WorldGamemode = "Creative" WorldVersion = "v1.6.0.0"/>
+                                    <pages:World_Listing WorldName = "v1.6.0.1 testing" WorldGamemode = "Freedom" WorldVersion = "v1.6.0.1"/>-->
+                                </x:Array>
+                            </d:ListView.ItemsSource>
+
                             <ListView.ItemContainerStyle>
                                 <Style TargetType="ListViewItem">
                                     <Setter Property="Focusable" Value="False"/>
@@ -126,51 +138,68 @@
                                 </Style>
                             </ListView.ItemContainerStyle>
 
+                            <!-- Template for World Listing Buttons -->
                             <ListView.ItemTemplate>
                                 <DataTemplate>
-                                    <!-- Start Stacking Worlds -->
-                                    <StackPanel Margin="0 3">
-                                        <!-- World Listing 1 -->
-                                        <Border Height="83" Width="Auto" Background="#FF151516" CornerRadius="4">
-                                            <Grid Width="Auto">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="*"/>
-                                                    <ColumnDefinition Width="10"/>
-                                                    <ColumnDefinition Width="83"/>
-                                                </Grid.ColumnDefinitions>
+                                    <Border Height="83" Width="Auto" Background="#FF151516" CornerRadius="7" Margin="0 3">
+                                        <Grid Width="Auto">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="10"/>
+                                                <ColumnDefinition Width="{Binding Height, RelativeSource={RelativeSource AncestorType=Border}}"/>
+                                            </Grid.ColumnDefinitions>
 
-                                                <!-- Select World Button -->
-                                                <Button x:Name="WorldSelectBtn" Style="{StaticResource WorldListingButton}" ToolTip="Select this world" Foreground="White" Height="83" HorizontalAlignment="Stretch" Width="Auto"  HorizontalContentAlignment="Stretch">
-                                                    <!-- Slide the panes to the left when the button is clicked -->
-                                                    <Button.Triggers>
-                                                        <EventTrigger RoutedEvent="Button.Click" >
-                                                            <BeginStoryboard  Storyboard="{StaticResource WorldSelectedAnimation}"/>
-                                                        </EventTrigger>
-                                                    </Button.Triggers>
+                                            <!-- Select World Button -->
+                                            <Button x:Name="WorldSelectBtn" Style="{StaticResource WorldListingButton}" ToolTip="Select this world" Foreground="White" Height="83" HorizontalAlignment="Stretch" Width="Auto" HorizontalContentAlignment="Stretch">
+                                                <!-- Slide the panes to the left when the button is clicked -->
+                                                <Button.Triggers>
+                                                    <EventTrigger RoutedEvent="Button.Click" >
+                                                        <BeginStoryboard  Storyboard="{StaticResource WorldSelectedAnimation}"/>
+                                                    </EventTrigger>
+                                                </Button.Triggers>
 
-                                                    <!-- TODO: Make the width of this DockPanel to adjust automatically instead of being hardcoded. Things might look weird when the list becomes scrollable - Width="561" w/o scrollbar, Width="550?" w/ scrollbar -->
-                                                    <DockPanel LastChildFill = "True" Height="83" HorizontalAlignment="Stretch" VerticalAlignment="Center">
-                                                        <!-- World Name -->
+                                                <!-- TODO: Make the width of this DockPanel to adjust automatically instead of being hardcoded. Things might look weird when the list becomes scrollable - Width="561" w/o scrollbar, Width="550?" w/ scrollbar -->
+                                                <DockPanel Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Button}}" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Button}}" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+                                                    <!--<Grid.ColumnDefinitions>
+                                                        <ColumnDefinition/>
+                                                        <ColumnDefinition/>
+                                                    </Grid.ColumnDefinitions>-->
+
+                                                    <!-- World Name -->
+                                                    <TextBlock Grid.Column="0" FontSize="20" Foreground="White" Text="{Binding WorldName, FallbackValue=WorldName, Mode=OneTime}" VerticalAlignment="Center" HorizontalAlignment="Left"  Margin="20 0 0 0"/>
+
+                                                    <!-- World Data -->
+                                                    <DockPanel Grid.Column="1" LastChildFill = "True" Margin="0 10 10 10" HorizontalAlignment="Right">
+                                                        <TextBlock DockPanel.Dock = "Top" HorizontalAlignment="Right" FontSize="10" Text="{Binding World, FallbackValue=Gamemode, Mode=OneTime}" Foreground="White"/>
+                                                        <TextBlock DockPanel.Dock = "Bottom" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="10" Text="{Binding WorldVersion, FallbackValue=Version, Mode=OneTime}" Foreground="White"/>
+                                                    </DockPanel>
+                                                </DockPanel>
+
+                                                <!--<DockPanel LastChildFill="True" Height="83" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                                                        -->
+                                                <!-- World Name -->
+                                                <!--
                                                         <TextBlock DockPanel.Dock = "Left" FontSize="20" Foreground="White" Text="{Binding WorldName, FallbackValue=WorldName, Mode=OneTime}" VerticalAlignment="Center" Margin="20 0 0 0"/>
 
-                                                        <!-- World Data -->
+                                                        -->
+                                                <!-- World Data -->
+                                                <!--
                                                         <DockPanel DockPanel.Dock = "Right" LastChildFill = "True" Grid.Column="1" Margin="0 10 10 10" HorizontalAlignment="Stretch">
                                                             <TextBlock DockPanel.Dock = "Top" HorizontalAlignment="Right" FontSize="10" Text="{Binding World, FallbackValue=Gamemode, Mode=OneTime}" Foreground="White"/>
                                                             <TextBlock DockPanel.Dock = "Bottom" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="10" Text="{Binding WorldVersion, FallbackValue=Version, Mode=OneTime}" Foreground="White"/>
                                                         </DockPanel>
-                                                    </DockPanel>
-                                                </Button>
+                                                    </DockPanel>-->
+                                            </Button>
 
-                                                <!-- Separator -->
-                                                <Border Grid.Column="1" Background="Black"/>
+                                            <!-- Separator -->
+                                            <Border Grid.Column="1" Background="Black"/>
 
-                                                <!-- Delete World Button -->
-                                                <Button Grid.Column="2" ToolTip="Delete this world" Height="83" Width="83">
-                                                    <Image Source="{StaticResource TrashcanButton}" Stretch="Uniform"  Width="30" Height="30"/>
-                                                </Button>
-                                            </Grid>
-                                        </Border>
-                                    </StackPanel>
+                                            <!-- Delete World Button -->
+                                            <Button Grid.Column="2" ToolTip="Delete this world" Height="{Binding Height, RelativeSource={RelativeSource AncestorType=Border}}" Width="{Binding Height, RelativeSource={RelativeSource AncestorType=Border}}">
+                                                <Image Source="{StaticResource TrashcanButton}" Stretch="Uniform"  Width="30" Height="30"/>
+                                            </Button>
+                                        </Grid>
+                                    </Border>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>

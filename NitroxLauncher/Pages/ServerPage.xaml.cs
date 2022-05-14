@@ -53,13 +53,6 @@ namespace NitroxLauncher.Pages
 
         }
 
-        public class World_Listing
-        {
-            public string WorldName { get; set; }
-            public string WorldGamemode { get; set; }
-            public string WorldVersion { get; set; }
-        }
-
         private void StartServer_Click(object sender, RoutedEventArgs e)
         {
             // If the "Start Server button" is selected and not the "Display Server Console Externally" Checkbox, then start the server
@@ -125,4 +118,13 @@ namespace NitroxLauncher.Pages
         }
         */
     }
+
+
+    public class World_Listing
+    {
+        public string WorldName { get; set; }
+        public string WorldGamemode { get; set; }
+        public string WorldVersion { get; set; }
+    }
+
 }
