@@ -34,6 +34,9 @@ namespace NitroxClient.GameLogic.Bases
         public void EnqueueConstructionCompleted(NitroxId id, NitroxId baseId)
         {
             Log.Info($"Enqueuing item to have construction completed - Id: {id}");
+
+            // Make sure clients get the completed construction amount
+            EnqueueAmountChanged(id, 1);
             Enqueue(new ConstructionCompletedEvent(id, baseId));
         }
 
