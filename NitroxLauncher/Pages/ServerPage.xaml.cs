@@ -24,6 +24,11 @@ namespace NitroxLauncher.Pages
         public IServerSerializer Serializer { get; private set; }
         private string FileEnding => Serializer?.FileEnding ?? "";
 
+        public string selectedWorldName => "My World";
+        public string selectedWorldSeed => "QTUJNDGRBK";
+        public string selectedWorldVersion => "v1.6.0.1";
+
+
         public bool enableCheatsValue => true;
         public bool enablePvPValue => true;
         public bool enableAutoPortForwardValue => true;
