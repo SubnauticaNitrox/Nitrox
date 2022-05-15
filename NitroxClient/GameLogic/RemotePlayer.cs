@@ -84,6 +84,7 @@ namespace NitroxClient.GameLogic
             playerModelManager.BeginApplyPlayerColor(this);
             playerModelManager.RegisterEquipmentVisibilityHandler(PlayerModel);
             UpdateEquipmentVisibility();
+            SetupSkyAppliers();
 
             ErrorMessage.AddMessage($"{PlayerName} joined the game.");
         }
@@ -161,6 +162,7 @@ namespace NitroxClient.GameLogic
         {
             if (SubRoot != newSubRoot)
             {
+                SkyEnvironmentChanged.Broadcast(Body, newSubRoot);
                 if (newSubRoot)
                 {
                     Attach(newSubRoot.transform, true);
@@ -267,6 +269,20 @@ namespace NitroxClient.GameLogic
         private void UpdateEquipmentVisibility()
         {
             playerModelManager.UpdateEquipmentVisibility(new ReadOnlyCollection<TechType>(equipment.ToList()));
+        }
+
+        /// <summary>
+        /// Allows the remote player model to have its lightings dynamicly adjusted
+        /// </summary>
+        private void SetupSkyAppliers()
+        {
+            // SkyAppliers are the components that apply the light effects on gameobjects
+            SkyApplier skyApplier = Body.AddComponent<SkyApplier>();
+            skyApplier.anchorSky = Skies.Auto;
+            skyApplier.emissiveFromPower = false;
+            skyApplier.dynamic = true;
+            skyApplier.renderers = Body.GetComponentsInChildren<SkinnedMeshRenderer>(true);
+            Log.Debug($"Successfully setup Sky Appliers on {PlayerName}");
         }
     }
 }
