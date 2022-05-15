@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace NitroxLauncher.Models.Troubleshoot
+namespace NitroxLauncher.Models.Troubleshoot.Abstract
 {
     public enum TroubleshootStatus
     {

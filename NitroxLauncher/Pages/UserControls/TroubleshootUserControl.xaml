@@ -5,17 +5,18 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:NitroxLauncher.Pages.UserControls"
              xmlns:models="clr-namespace:NitroxLauncher.Models"
+             xmlns:converters="clr-namespace:NitroxLauncher.Models.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              DataContext="{Binding RelativeSource={RelativeSource Self}}">
     
     <StackPanel Grid.Column="6" HorizontalAlignment="Center" VerticalAlignment="Center">
-        <Image Source="{Binding ModuleImage}" Width="102" Height="29" Margin="5" />
+        <Image Source="{Binding ModuleImage, Mode=OneWay}" Width="102" Height="29" Margin="5" />
         <TextBlock FontFamily="Inter" FontSize="14" Foreground="White" Margin="0,0,0,5" TextWrapping="Wrap" FontWeight="Regular" HorizontalAlignment="Center" Text="{Binding Module.Name, FallbackValue='Unknown Module'}"/>
 
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0">
-            <!--<Image Source="{StaticResource StateKOIcon}" Width="10" Height="10" Margin="0,0,5,0" />-->
-            <TextBlock FontFamily="Inter" FontSize="10" Foreground="White" TextWrapping="Wrap" FontWeight="Regular" HorizontalAlignment="Center" Text="Error"/>
+            <Image Source="{Binding Module.Status, Converter={converters:TroubleshootStatusToIconConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Width="10" Height="10" Margin="0,0,5,0" />
+            <TextBlock FontFamily="Inter" FontSize="10" Foreground="White" TextWrapping="Wrap" FontWeight="Regular" HorizontalAlignment="Center" Text="{Binding Module.StatusCode, Mode=OneWay, FallbackValue='Initializing...'}"/>
         </StackPanel>
     </StackPanel>
     

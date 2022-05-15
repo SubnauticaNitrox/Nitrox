@@ -46,12 +46,16 @@
                 <RowDefinition Height="130*" />
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" FontFamily="Inter" FontSize="14" Foreground="White" TextWrapping="Wrap" HorizontalAlignment="Center" FontWeight="Regular" Text="Current Network Status" />
+            <TextBlock Grid.Row="0" FontFamily="Inter" FontSize="14" Foreground="White" TextWrapping="Wrap" HorizontalAlignment="Center" FontWeight="Regular" Text="Current Status" />
 
             <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
-                <TextBlock x:Name="NetworkPreState" FontFamily="Inter" FontSize="24" Foreground="White" TextWrapping="Wrap" Margin="0" HorizontalAlignment="Center" FontWeight="Bold" Text="Network needs"/>
-                <TextBlock x:Name="NetworkState" FontFamily="Inter" FontSize="24" Foreground="#EA574D" TextWrapping="Wrap" Margin="5,0,0,0" HorizontalAlignment="Center" FontWeight="Bold" Text="attention"/>
 
+                <TextBlock FontFamily="Inter" FontSize="24" Foreground="White" TextWrapping="Wrap" Margin="0" HorizontalAlignment="Center" FontWeight="Bold">
+                    <Run x:Name="Run_Modules"></Run>
+                    <Run x:Name="Run_StateVerb">Waiting for</Run>
+                    <Run x:Name="Run_State" Foreground="DarkGoldenrod" FontWeight="Bold">diagnostics</Run>
+                </TextBlock>
+                
                 <Button HorizontalAlignment="Center" VerticalAlignment="Center" Margin="8,0,0,0">
                     <Image Source="{StaticResource RetryIcon}" Width="17" Height="17" />
                 </Button>
@@ -69,51 +73,19 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
 
-                <StackPanel Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <Image Source="{StaticResource FirewallIcon}" Width="102" Height="29" Margin="5" />
-                    <TextBlock FontFamily="Inter" FontSize="14" Foreground="White" Margin="0,0,0,5" TextWrapping="Wrap" FontWeight="Regular" HorizontalAlignment="Center" Text="Firewall"/>
-
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0">
-                        <Image Source="{StaticResource StateOKIcon}" Width="10" Height="10" Margin="0,0,5,0" />
-                        <TextBlock FontFamily="Inter" FontSize="10" Foreground="White" TextWrapping="Wrap" FontWeight="Regular" HorizontalAlignment="Center" Text="OK"/>
-                    </StackPanel>
-                </StackPanel>
+                <uc:TroubleshootUserControl x:Name="UC_FirewallModule" Grid.Column="0" Module="{x:Static pages:TroubleshootPage.Firewall}" ModuleImage="{StaticResource FirewallIcon}" />
 
                 <Rectangle Grid.Column="1" Height="1" Width="56" Stroke="White" Opacity="0.4"/>
 
-                <StackPanel Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <Image Source="{StaticResource NetworkIcon}" Width="102" Height="29" Margin="5" />
-                    <TextBlock FontFamily="Inter" FontSize="14" Foreground="White" Margin="0,0,0,5" TextWrapping="Wrap" FontWeight="Regular" HorizontalAlignment="Center" Text="Network"/>
-
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0">
-                        <Image Source="{StaticResource StateOKIcon}" Width="10" Height="10" Margin="0,0,5,0" />
-                        <TextBlock FontFamily="Inter" FontSize="10" Foreground="White" TextWrapping="Wrap" FontWeight="Regular" HorizontalAlignment="Center" Text="OK"/>
-                    </StackPanel>
-                </StackPanel>
+                <uc:TroubleshootUserControl x:Name="UC_NetworkModule" Grid.Column="2" Module="{x:Static pages:TroubleshootPage.Network}" ModuleImage="{StaticResource NetworkIcon}" />
 
                 <Rectangle Grid.Column="3" Height="1" Width="56" Stroke="White" Opacity="0.4"/>
 
-                <StackPanel Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <Image Source="{StaticResource PermissionsIcon}" Width="102" Height="29" Margin="5" />
-                    <TextBlock FontFamily="Inter" FontSize="14" Foreground="White" Margin="0,0,0,5" TextWrapping="Wrap" FontWeight="Regular" HorizontalAlignment="Center" Text="Permissions"/>
-
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0">
-                        <Image Source="{StaticResource StateOKIcon}" Width="10" Height="10" Margin="0,0,5,0" />
-                        <TextBlock FontFamily="Inter" FontSize="10" Foreground="White" TextWrapping="Wrap" FontWeight="Regular" HorizontalAlignment="Center" Text="OK"/>
-                    </StackPanel>
-                </StackPanel>
-
+                <uc:TroubleshootUserControl x:Name="UC_PermissionsModule" Grid.Column="4" Module="{x:Static pages:TroubleshootPage.Permissions}" ModuleImage="{StaticResource PermissionsIcon}" />
+                
                 <Rectangle Grid.Column="5" Height="1" Width="56" Stroke="White" Opacity="0.4"/>
 
-                <StackPanel Grid.Column="6" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <Image Source="{StaticResource AntivirusIcon}" Width="102" Height="29" Margin="5" />
-                    <TextBlock FontFamily="Inter" FontSize="14" Foreground="White" Margin="0,0,0,5" TextWrapping="Wrap" FontWeight="Regular" HorizontalAlignment="Center" Text="Anti-virus"/>
-
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0">
-                        <Image Source="{StaticResource StateKOIcon}" Width="10" Height="10" Margin="0,0,5,0" />
-                        <TextBlock FontFamily="Inter" FontSize="10" Foreground="White" TextWrapping="Wrap" FontWeight="Regular" HorizontalAlignment="Center" Text="Error"/>
-                    </StackPanel>
-                </StackPanel>
+                <uc:TroubleshootUserControl x:Name="UC_AntivirusModule" Grid.Column="6" Module="{x:Static pages:TroubleshootPage.Antivirus}" ModuleImage="{StaticResource AntivirusIcon}" />
 
             </Grid>
             
@@ -121,9 +93,9 @@
 
         <!-- Diagnostics -->
         <StackPanel Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Button Style="{StaticResource LargeButton}" Background="#FF007BFF" Width="180" Height="25" BorderBrush="#66FFFFFF"
-                                ToolTip="Save launch arguments" FontWeight="Regular" FontSize="14"
-                                Foreground="White" Margin="15,0,0,0" Content="Start diagnostics" />
+            <Button Style="{StaticResource LargeButton}" Background="#FF007BFF" Width="180" Height="40" BorderBrush="#66FFFFFF"
+                                ToolTip="Save launch arguments" FontWeight="DemiBold" FontSize="16" Foreground="White"
+                                Content="Start diagnostics" Click="Button_Click" />
         </StackPanel>
         
         <!-- Others -->
