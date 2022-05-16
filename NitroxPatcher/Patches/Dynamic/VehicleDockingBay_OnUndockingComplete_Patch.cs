@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxModel.Core;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic
@@ -13,7 +12,7 @@ namespace NitroxPatcher.Patches.Dynamic
         public static void Prefix(VehicleDockingBay __instance, Player player)
         {
             Vehicle vehicle = __instance.GetDockedVehicle();
-            NitroxServiceLocator.LocateService<Vehicles>().BroadcastVehicleUndocking(__instance, vehicle, false);
+            Resolve<Vehicles>().BroadcastVehicleUndocking(__instance, vehicle, false);
         }
 
         public override void Patch(Harmony harmony)

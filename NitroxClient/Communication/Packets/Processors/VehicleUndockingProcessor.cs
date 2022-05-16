@@ -33,7 +33,6 @@ namespace NitroxClient.Communication.Packets.Processors
 
             using (packetSender.Suppress<VehicleUndocking>())
             {
-
                 if (packet.UndockingStart)
                 {
                     StartVehicleUndocking(packet, vehicleGo, vehicle, vehicleDockingBay);
