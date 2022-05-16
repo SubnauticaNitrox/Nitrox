@@ -276,13 +276,12 @@ namespace NitroxClient.GameLogic
         /// </summary>
         private void SetupSkyAppliers()
         {
-            // SkyAppliers are the components that apply the light effects on gameobjects
+            // SkyAppliers apply the light effects of a lighting source on a set of renderers
             SkyApplier skyApplier = Body.AddComponent<SkyApplier>();
             skyApplier.anchorSky = Skies.Auto;
             skyApplier.emissiveFromPower = false;
             skyApplier.dynamic = true;
             skyApplier.renderers = Body.GetComponentsInChildren<SkinnedMeshRenderer>(true);
-            Log.Debug($"Successfully setup Sky Appliers on {PlayerName}");
         }
     }
 }
