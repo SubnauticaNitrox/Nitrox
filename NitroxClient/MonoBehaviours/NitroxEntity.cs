@@ -62,6 +62,12 @@ namespace NitroxClient.MonoBehaviours
                    gameObject.TryGetComponent(out component);
         }
 
+        public static bool TryGetEntityFrom(GameObject gameObject, out NitroxEntity nitroxEntity)
+        {
+            nitroxEntity = null;
+            return gameObject != null && gameObject.TryGetComponent(out nitroxEntity);
+        }
+
         public static void SetNewId(GameObject gameObject, NitroxId id)
         {
             Validate.NotNull(gameObject);
@@ -123,5 +129,6 @@ namespace NitroxClient.MonoBehaviours
         {
             gameObjectsById[Id] = gameObject;
         }
+
     }
 }

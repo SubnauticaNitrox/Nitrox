@@ -25,6 +25,7 @@ namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
             [TechType.BaseCorridorT] = 1,
             [TechType.BaseCorridorX] = 1,
             [TechType.BasePipeConnector] = 1,
+            [TechType.BaseConnector] = 1,
 
             // Reinforce fortifications to ensure good hull integrity
             [TechType.BaseReinforcement] = 2,
@@ -33,14 +34,15 @@ namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
             // upgrade consoles are a faced based piece, so allow them to be prioritized aside the two above.
             [TechType.BaseUpgradeConsole] = 2,
 
+            // Ladders should always come before water parks. Else, the ladders won't spawn
+            [TechType.BaseLadder] = 3,
+            
             // Water tanks are internal and need to go before hatches because hatches can be placed on them.
-            [TechType.BaseWaterPark] = 3,
+            [TechType.BaseWaterPark] = 4,
 
             // Everything that needs a hatch should come before here.
-            [TechType.BaseHatch] = 4,
-
+            [TechType.BaseHatch] = 5,
             [TechType.BaseWindow] = 5,
-            [TechType.BaseLadder] = 5,
 
             // Place energy producing before consuming
             [TechType.SolarPanel] = 6,

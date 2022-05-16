@@ -1,7 +1,8 @@
 ﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxModel.Core;
+using NitroxClient.GameLogic.Bases;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic
@@ -12,13 +13,23 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(Constructable __instance, bool __result)
         {
-            if (__result && __instance.constructedAmount <= 0f)
+            if (!__result) return;
+            if (__instance.constructedAmount <= 0f)
             {
-                NitroxServiceLocator.LocateService<Building>().DeconstructionComplete(__instance.gameObject);
+                if (!__instance.TryGetComponent(out NitroxEntity nitroxEntity))
+                {
+                    return;
+                }
+
+                Resolve<Building>().DeconstructionComplete(__instance.gameObject);
+                Log.Debug("Finished deconstructing, now removing ghost NitroxEntity");
+
+                Resolve<GeometryRespawnManager>().NitroxIdsToIgnore.Add(nitroxEntity.Id);
+                Log.Debug($"Added ghost to ignore list: {nitroxEntity.Id}");
             }
-            else if (!__instance._constructed && __instance.constructedAmount > 0)
+            else
             {
-                NitroxServiceLocator.LocateService<Building>().ChangeConstructionAmount(__instance.gameObject, __instance.constructedAmount);
+                Resolve<Building>().ChangeConstructionAmount(__instance.gameObject, __instance.constructedAmount);
             }
         }
 

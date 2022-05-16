@@ -22,7 +22,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 return;
             }
 
-            NitroxServiceLocator.LocateService<GeometryRespawnManager>().BaseFaceRespawned(geometry.gameObject, face.cell, face.direction);
+            Resolve<GeometryRespawnManager>().BaseFaceRespawned(geometry.gameObject, face.cell, face.direction);
         }
 
         public override void Patch(Harmony harmony)

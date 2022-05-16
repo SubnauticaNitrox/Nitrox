@@ -18,12 +18,8 @@ namespace NitroxClient.GameLogic
 {
     public class Building
     {
-        private const float CONSTRUCTION_CHANGE_EVENT_COOLDOWN_PERIOD_SECONDS = 0.10f;
-
         private readonly IPacketSender packetSender;
         private readonly RotationMetadataFactory rotationMetadataFactory;
-
-        private float timeSinceLastConstructionChangeEvent;
 
         public Building(IPacketSender packetSender, RotationMetadataFactory rotationMetadataFactory)
         {
@@ -64,8 +60,8 @@ namespace NitroxClient.GameLogic
             }
 
             Vector3 placedPosition = constructableBase.gameObject.transform.position;
-            Transform camera = Camera.main.transform;
-            Optional<RotationMetadata> rotationMetadata = rotationMetadataFactory.From(baseGhost);
+            Transform camera = Camera.main!.transform;
+            Optional<BuilderMetadata> rotationMetadata = rotationMetadataFactory.From(baseGhost);
 
             BasePiece basePiece = new BasePiece(id, placedPosition.ToDto(), quaternion.ToDto(), camera.position.ToDto(), camera.rotation.ToDto(), techType.ToDto(), Optional.OfNullable(parentBaseId), false, rotationMetadata);
             PlaceBasePiece placedBasePiece = new PlaceBasePiece(basePiece);
@@ -103,7 +99,7 @@ namespace NitroxClient.GameLogic
             Vector3 position = (inCyclops) ? gameObject.transform.localPosition : itemPosition;
             Quaternion rotation = (inCyclops) ? gameObject.transform.localRotation : quaternion;
 
-            Transform camera = Camera.main.transform;
+            Transform camera = Camera.main!.transform;
             BasePiece basePiece = new BasePiece(id, position.ToDto(), rotation.ToDto(), camera.position.ToDto(), camera.rotation.ToDto(), techType.ToDto(), Optional.OfNullable(parentId), true, Optional.Empty);
             PlaceBasePiece placedBasePiece = new PlaceBasePiece(basePiece);
             packetSender.Send(placedBasePiece);
@@ -111,32 +107,22 @@ namespace NitroxClient.GameLogic
 
         public void ChangeConstructionAmount(GameObject gameObject, float amount)
         {
-            timeSinceLastConstructionChangeEvent += Time.deltaTime;
-
-            if (timeSinceLastConstructionChangeEvent < CONSTRUCTION_CHANGE_EVENT_COOLDOWN_PERIOD_SECONDS)
+            if (amount is >= 0.99f or <= 0.01f)
             {
                 return;
             }
 
-            timeSinceLastConstructionChangeEvent = 0.0f;
-
             NitroxId id = NitroxEntity.GetId(gameObject);
-
-            if (amount < 0.95f) // Construction complete event handled by function below
-            {
-                ConstructionAmountChanged amountChanged = new ConstructionAmountChanged(id, amount);
-                packetSender.Send(amountChanged);
-            }
+            ConstructionAmountChanged amountChanged = new ConstructionAmountChanged(id, amount);
+            packetSender.Send(amountChanged);
         }
 
-        public void ConstructionComplete(GameObject ghost, Optional<Base> lastTargetBase, Int3 lastTargetBaseOffset)
+        public void ConstructionComplete(GameObject ghost, Optional<Base> lastTargetBase, Int3 lastTargetBaseOffset, Base.Face lastTargetFace = default(Base.Face))
         {
             NitroxId baseId = null;
             Optional<object> opConstructedBase = TransientLocalObjectManager.Get(TransientObjectType.BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT);
 
             NitroxId id = NitroxEntity.GetId(ghost);
-
-            Log.Info($"Construction complete on {id} {ghost.name}");
 
             if (opConstructedBase.HasValue)
             {
@@ -152,41 +138,47 @@ namespace NitroxClient.GameLogic
                 Base latestBase = lastTargetBase.HasValue ? lastTargetBase.Value : ((GameObject)opConstructedBase.Value).GetComponent<Base>();
                 baseId = NitroxEntity.GetId(latestBase.gameObject);
 
-                Transform cellTransform = latestBase.GetCellObject(latestCell);
-
-                // This check ensures that the latestCell actually leads us to the correct entity.  The lastTargetBaseOffset is unreliable as the base shape
-                // can change which makes the target offset change. It may be possible to fully deprecate lastTargetBaseOffset and only rely on GetClosestCell; 
-                // however, there may still be pieces were the ghost base's target offset is authoratitive due to incorrect game object positioning.
-                if (latestCell == default(Int3) || cellTransform == null)
+                Transform cellTransform;
+                GameObject placedPiece = null;
+                
+                if (!latestBase)
                 {
-                    latestBase.GetClosestCell(ghost.transform.position, out latestCell, out Vector3 _, out float _);
-                    cellTransform = latestBase.GetCellObject(latestCell);
-                    Validate.NotNull(cellTransform, "Unable to find cell transform at " + latestCell);
-                }
-
-                GameObject finishedPiece = null;
-
-                // There can be multiple objects in a cell (such as a corridor with hatches built into it)
-                // we look for a object that is able to be deconstructed that hasn't been tagged yet.
-                foreach (Transform child in cellTransform)
-                {
-                    bool isNewBasePiece = !child.GetComponent<NitroxEntity>() && child.GetComponent<BaseDeconstructable>();
-
-                    if (isNewBasePiece)
+                    if (opConstructedBase.HasValue)
                     {
-                        finishedPiece = child.gameObject;
-                        break;
+                        latestBase = ((GameObject)opConstructedBase.Value).GetComponent<Base>();
+                    }
+
+                    Validate.NotNull(latestBase, "latestBase can not be null");
+                    latestCell = latestBase.WorldToGrid(ghost.transform.position);
+                }
+                
+                if (latestCell != default(Int3))
+                {
+                    cellTransform = latestBase.GetCellObject(latestCell);
+                    if (cellTransform != null)
+                    {
+                        placedPiece = FindFinishedPiece(cellTransform);
                     }
                 }
 
-                Validate.NotNull(finishedPiece, $"Could not find finished piece in cell {latestCell}");
+                // This check ensures that the latestCell actually leads us to the correct entity.  The lastTargetBaseOffset is unreliable as the base shape
+                // can change which makes the target offset change. It may be possible to fully deprecate lastTargetBaseOffset and only rely on GetClosestCell; 
+                // however, there may still be pieces were the ghost base's target offset is authoritative due to incorrect game object positioning.
+                if (placedPiece == null)
+                {
+                    Int3 position = latestBase.WorldToGrid(ghost.gameObject.transform.position);
+                    cellTransform = latestBase.GetCellObject(position);       
 
-                Log.Info($"Setting id to finished piece: {finishedPiece.name} {id}");
+                    Validate.NotNull(cellTransform, "Unable to find cell transform at " + latestCell);
+                    placedPiece = FindFinishedPiece(cellTransform);
+                }
+                
+                Validate.NotNull(placedPiece, $"Could not find finished piece in cell {latestCell}");
 
                 Object.Destroy(ghost);
-                NitroxEntity.SetNewId(finishedPiece, id);
+                NitroxEntity.SetNewId(placedPiece, id);
 
-                BasePieceSpawnProcessor.RunSpawnProcessor(finishedPiece.GetComponent<BaseDeconstructable>(), latestBase, latestCell, finishedPiece);
+                BasePieceSpawnProcessor.RunSpawnProcessor(placedPiece.GetComponent<BaseDeconstructable>(), latestBase, latestCell, placedPiece);
             }
             else if (ghost.TryGetComponent(out Constructable constructable))
             {
@@ -197,10 +189,25 @@ namespace NitroxClient.GameLogic
                 Log.Error($"Found ghost which is neither base piece nor a constructable: {ghost.name}");
             }
 
-            Log.Info($"Construction Completed {id} in base {baseId}");
-
             ConstructionCompleted constructionCompleted = new ConstructionCompleted(id, baseId);
             packetSender.Send(constructionCompleted);
+        }
+        
+        // There can be multiple objects in a cell (such as a corridor with hatches built into it)
+        // we look for a object that is able to be deconstructed that hasn't been tagged yet.
+        internal static GameObject FindFinishedPiece(Transform cellTransform)
+        {
+            foreach (Transform child in cellTransform)
+            {
+                bool isNewBasePiece = !child.TryGetComponent(out NitroxEntity _) && child.GetComponent<BaseDeconstructable>() && !child.name.Contains("CorridorConnector");
+                
+                if (isNewBasePiece)
+                {
+                    return child.gameObject;
+                }
+            }
+
+            return null;
         }
 
         public void DeconstructionBegin(NitroxId id)

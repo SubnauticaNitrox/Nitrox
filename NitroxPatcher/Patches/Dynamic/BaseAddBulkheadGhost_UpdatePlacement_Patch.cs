@@ -55,7 +55,7 @@ namespace NitroxPatcher.Patches.Dynamic
                     // First fetch the place we want to jump... this will be the same place as !main.currentSub.isBase
                     CodeInstruction jumpInstruction = GetJumpInstruction(instructionList, i);
 
-                    yield return new CodeInstruction(OpCodes.Call, Reflect.Property(() => MultiplayerBuilder.isPlacing).GetMethod);
+                    yield return new CodeInstruction(OpCodes.Call, Reflect.Property(() => MultiplayerBuilder.IsPlacing).GetMethod);
                     yield return new CodeInstruction(OpCodes.Brtrue_S, jumpInstruction.operand); // copy the jump location
                 }
 

@@ -242,19 +242,19 @@ namespace NitroxTest.Serialization
 
             switch (basePiece.RotationMetadata.Value)
             {
-                case AnchoredFaceRotationMetadata anchoredMetadata when basePieceAfter.RotationMetadata.Value is AnchoredFaceRotationMetadata anchoredMetadataAfter:
+                case AnchoredFaceBuilderMetadata anchoredMetadata when basePieceAfter.RotationMetadata.Value is AnchoredFaceBuilderMetadata anchoredMetadataAfter:
                     Assert.AreEqual(anchoredMetadata.Cell, anchoredMetadataAfter.Cell, $"BasePiece.RotationMetadata.Cell (AnchoredFaceRotationMetadata) is not equal while using {serverSerializers[serializerIndex]}.");
                     Assert.AreEqual(anchoredMetadata.Direction, anchoredMetadataAfter.Direction, $"BasePiece.RotationMetadata.Direction (AnchoredFaceRotationMetadata) is not equal while using {serverSerializers[serializerIndex]}.");
                     Assert.AreEqual(anchoredMetadata.FaceType, anchoredMetadataAfter.FaceType, $"BasePiece.RotationMetadata.FaceType (AnchoredFaceRotationMetadata) is not equal while using {serverSerializers[serializerIndex]}.");
                     break;
-                case BaseModuleRotationMetadata baseModuleMetadata when basePieceAfter.RotationMetadata.Value is BaseModuleRotationMetadata baseModuleMetadataAfter:
+                case BaseModuleBuilderMetadata baseModuleMetadata when basePieceAfter.RotationMetadata.Value is BaseModuleBuilderMetadata baseModuleMetadataAfter:
                     Assert.AreEqual(baseModuleMetadata.Cell, baseModuleMetadataAfter.Cell, $"BasePiece.RotationMetadata.Cell (BaseModuleRotationMetadata) is not equal while using {serverSerializers[serializerIndex]}.");
                     Assert.AreEqual(baseModuleMetadata.Direction, baseModuleMetadataAfter.Direction, $"BasePiece.RotationMetadata.Direction (BaseModuleRotationMetadata) is not equal while using {serverSerializers[serializerIndex]}.");
                     break;
-                case CorridorRotationMetadata corridorMetadata when basePieceAfter.RotationMetadata.Value is CorridorRotationMetadata corridorMetadataAfter:
+                case CorridorBuilderMetadata corridorMetadata when basePieceAfter.RotationMetadata.Value is CorridorBuilderMetadata corridorMetadataAfter:
                     Assert.AreEqual(corridorMetadata.Rotation, corridorMetadataAfter.Rotation, $"BasePiece.RotationMetadata.Rotation (CorridorRotationMetadata) is not equal while using {serverSerializers[serializerIndex]}.");
                     break;
-                case MapRoomRotationMetadata mapRoomMetadata when basePieceAfter.RotationMetadata.Value is MapRoomRotationMetadata mapRoomMetadataAfter:
+                case MapRoomBuilderMetadata mapRoomMetadata when basePieceAfter.RotationMetadata.Value is MapRoomBuilderMetadata mapRoomMetadataAfter:
                     Assert.AreEqual(mapRoomMetadata.CellType, mapRoomMetadataAfter.CellType, $"BasePiece.RotationMetadata.CellType (MapRoomRotationMetadata) is not equal while using {serverSerializers[serializerIndex]}.");
                     Assert.AreEqual(mapRoomMetadata.ConnectionMask, mapRoomMetadataAfter.ConnectionMask, $"BasePiece.RotationMetadata.ConnectionMask (MapRoomRotationMetadata) is not equal while using {serverSerializers[serializerIndex]}.");
                     break;
@@ -387,10 +387,10 @@ namespace NitroxTest.Serialization
                     },
                     PartiallyConstructedPieces = new List<BasePiece>()
                     {
-                        new BasePiece(new NitroxId(), NitroxVector3.One, NitroxQuaternion.Identity, NitroxVector3.One, NitroxQuaternion.Identity, new NitroxTechType("BasePiece2"), Optional.Empty, false, Optional<RotationMetadata>.Of(new AnchoredFaceRotationMetadata(new NitroxInt3(1,2,3), 1, 2))),
-                        new BasePiece(new NitroxId(), NitroxVector3.One, NitroxQuaternion.Identity, NitroxVector3.One, NitroxQuaternion.Identity, new NitroxTechType("BasePiece2"), Optional.Empty, false, Optional<RotationMetadata>.Of(new BaseModuleRotationMetadata(new NitroxInt3(1,2,3), 1))),
-                        new BasePiece(new NitroxId(), NitroxVector3.One, NitroxQuaternion.Identity, NitroxVector3.One, NitroxQuaternion.Identity, new NitroxTechType("BasePiece2"), Optional.Empty, false, Optional<RotationMetadata>.Of(new CorridorRotationMetadata(2))),
-                        new BasePiece(new NitroxId(), NitroxVector3.One, NitroxQuaternion.Identity, NitroxVector3.One, NitroxQuaternion.Identity, new NitroxTechType("BasePiece2"), Optional.Empty, false, Optional<RotationMetadata>.Of(new MapRoomRotationMetadata(0x20, 2)))
+                        new BasePiece(new NitroxId(), NitroxVector3.One, NitroxQuaternion.Identity, NitroxVector3.One, NitroxQuaternion.Identity, new NitroxTechType("BasePiece2"), Optional.Empty, false, Optional<BuilderMetadata>.Of(new AnchoredFaceBuilderMetadata(new NitroxInt3(1,2,3), 1, 2))),
+                        new BasePiece(new NitroxId(), NitroxVector3.One, NitroxQuaternion.Identity, NitroxVector3.One, NitroxQuaternion.Identity, new NitroxTechType("BasePiece2"), Optional.Empty, false, Optional<BuilderMetadata>.Of(new BaseModuleBuilderMetadata(new NitroxInt3(1,2,3), 1))),
+                        new BasePiece(new NitroxId(), NitroxVector3.One, NitroxQuaternion.Identity, NitroxVector3.One, NitroxQuaternion.Identity, new NitroxTechType("BasePiece2"), Optional.Empty, false, Optional<BuilderMetadata>.Of(new CorridorBuilderMetadata(new NitroxVector3(1,2,3),2, false, default))),
+                        new BasePiece(new NitroxId(), NitroxVector3.One, NitroxQuaternion.Identity, NitroxVector3.One, NitroxQuaternion.Identity, new NitroxTechType("BasePiece2"), Optional.Empty, false, Optional<BuilderMetadata>.Of(new MapRoomBuilderMetadata(0x20, 2)))
                     }
                 },
                 EntityData = new EntityData()

@@ -270,7 +270,7 @@ namespace NitroxClient.GameLogic
         {
             playerModelManager.UpdateEquipmentVisibility(new ReadOnlyCollection<TechType>(equipment.ToList()));
         }
-
+        
         /// <summary>
         /// Allows the remote player model to have its lightings dynamicly adjusted
         /// </summary>
