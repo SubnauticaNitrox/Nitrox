@@ -22,7 +22,8 @@ public class BaseLadderSpawnProcessor : BasePieceSpawnProcessor
         Int3 cellToSearch = Int3.zero;
         Optional<GameObject> otherLadderPiece = Optional.Empty;
         int searchOffset = searchDirection;
-        int maxY = NitroxServiceLocator.LocateService<IMap>().DimensionsInBatches.Y;
+        IMap map = NitroxServiceLocator.LocateService<IMap>();
+        int maxY = map.DimensionsInBatches.Y * map.BatchDimensions.Y;
         for (int i = 0; i < maxY; i++)
         {
             cellToSearch = new Int3(latestCell.x, latestCell.y + searchOffset, latestCell.z);
