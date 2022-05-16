@@ -19,7 +19,7 @@ namespace NitroxLauncher.Pages
             InitializeComponent();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void DiagnosticButton_Click(object sender, RoutedEventArgs e)
         {
             Firewall.Status = TroubleshootStatus.RUNNING;
 

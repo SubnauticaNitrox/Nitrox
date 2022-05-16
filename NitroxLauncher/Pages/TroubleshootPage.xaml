@@ -95,7 +95,7 @@
         <StackPanel Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Button Style="{StaticResource LargeButton}" Background="#FF007BFF" Width="180" Height="40" BorderBrush="#66FFFFFF"
                                 ToolTip="Save launch arguments" FontWeight="DemiBold" FontSize="16" Foreground="White"
-                                Content="Start diagnostics" Click="Button_Click" />
+                                Content="Start diagnostics" Click="DiagnosticButton_Click" />
         </StackPanel>
         
         <!-- Others -->
