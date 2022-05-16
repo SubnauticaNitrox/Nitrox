@@ -8,6 +8,7 @@ using NitroxClient.Communication.MultiplayerSession;
 using NitroxClient.Communication.NetworkingLayer.LiteNetLib;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.Debuggers;
+using NitroxClient.Debuggers.Drawer;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.Bases.Spawning.BasePiece;
@@ -15,9 +16,10 @@ using NitroxClient.GameLogic.ChatUI;
 using NitroxClient.GameLogic.FMOD;
 using NitroxClient.GameLogic.HUD;
 using NitroxClient.GameLogic.InitialSync.Base;
-using NitroxClient.GameLogic.PlayerModel;
-using NitroxClient.GameLogic.PlayerModel.Abstract;
-using NitroxClient.GameLogic.PlayerPreferences;
+using NitroxClient.GameLogic.PlayerLogic;
+using NitroxClient.GameLogic.PlayerLogic.PlayerModel;
+using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
+using NitroxClient.GameLogic.PlayerLogic.PlayerPreferences;
 using NitroxClient.GameLogic.Settings;
 using NitroxClient.Helpers;
 using NitroxClient.Map;
@@ -54,6 +56,7 @@ namespace NitroxClient
 
         private static void RegisterCoreDependencies(ContainerBuilder containerBuilder)
         {
+#if DEBUG
             containerBuilder.RegisterAssemblyTypes(currentAssembly)
                             .AssignableTo<BaseDebugger>()
                             .As<BaseDebugger>()
@@ -61,6 +64,16 @@ namespace NitroxClient
                             .AsSelf()
                             .SingleInstance();
 
+            containerBuilder.RegisterAssemblyTypes(currentAssembly)
+                            .AssignableTo<IDrawer>()
+                            .As<IDrawer>()
+                            .SingleInstance();
+
+            containerBuilder.RegisterAssemblyTypes(currentAssembly)
+                            .AssignableTo<IStructDrawer>()
+                            .As<IStructDrawer>()
+                            .SingleInstance();
+#endif
             containerBuilder.Register(c => new NitroxProtobufSerializer($"{nameof(NitroxModel)}.dll"));
 
             containerBuilder.RegisterType<UnityPreferenceStateProvider>()
@@ -123,12 +136,12 @@ namespace NitroxClient
             containerBuilder.RegisterType<ExosuitModuleEvent>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<SeamothModulesEvent>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<EscapePodManager>().InstancePerLifetimeScope();
-            containerBuilder.RegisterType<Debugger>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Fires>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<FMODSystem>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<LiveMixinManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<NitroxSettingsManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<ThrottledPacketSender>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<PlayerCinematics>().InstancePerLifetimeScope();
         }
 
         private void RegisterPacketProcessors(ContainerBuilder containerBuilder)

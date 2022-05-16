@@ -7,6 +7,7 @@ An open-source, multiplayer modification for the game <a href="https://unknownwo
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/SubnauticaNitrox/Nitrox)](https://github.com/SubnauticaNitrox/Nitrox/releases)
+[![Translation status](https://hosted.weblate.org/widgets/subnauticanitrox/-/svg-badge.svg)](https://hosted.weblate.org/engage/subnauticanitrox/)
 [![Discord](https://img.shields.io/discord/525437013403631617?logo=discord&logoColor=white)](https://discord.gg/E8B4X9s)
 
 ## FAQ
@@ -45,6 +46,12 @@ You can download the latest release of the mod on the <a href="https://nitrox.ru
 Due to the huge influx of new players for Subnautica the Issue tracker turned into a forum instead of its actual purpose. Please join the <a href="https://discord.gg/E8B4X9s">Nitrox Discord</a> to discuss any and all issues you have with Nitrox. From there we'll pick up on new issues to track.
 
 Keep in mind that your issue may already exist. Please refer to the existing issues on Discord if you want to add new information about existing issues. You can peruse the existing issues <a href="https://github.com/SubnauticaNitrox/Nitrox/issues">here on Github</a>.
+
+### Translations
+We have a translation platform for those of you who speak another language to work on translating the mod into your native language. You can get started at https://hosted.weblate.org/engage/subnauticanitrox/.
+
+You'll need to sign up to start translating to a new language, or you can suggest translations for an existing language without an account (but someone with an account will have to manually verify your suggestions). This will send an email to the address you provide. Be sure check your spam folder, as Gmail can sometimes put the emails there.
+
 
 ### How can I contribute?
 Simply submit a pull request. Full documentation can be found on the <a href="https://github.com/Sunrunner37/Nitrox/wiki">wiki tab</a>.  Feel free to join us in the <a href="https://discord.gg/E8B4X9s">Nitrox Discord channel</a>.  Make sure to check out or contributing guidelines found <a href="https://github.com/SubnauticaNitrox/Nitrox/blob/master/CONTRIBUTING.md">here</a>.

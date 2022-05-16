@@ -25,7 +25,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
             if (!model.HasValue)
             {
-                Log.Error($"{nameof(Seamoth_SubConstructionComplete_Patch)}: Could not find {nameof(CyclopsModel)} by Nitrox id {id}.\nGO containing wrong id: {__instance.GetHierarchyPath()}");
+                Log.Error($"{nameof(Seamoth_SubConstructionComplete_Patch)}: Could not find {nameof(CyclopsModel)} by Nitrox id {id}.\nGO containing wrong id: {__instance.GetFullHierarchyPath()}");
                 return false;
             }
 

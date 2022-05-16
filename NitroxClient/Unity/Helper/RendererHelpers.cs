@@ -1,4 +1,4 @@
-﻿using NitroxClient.GameLogic.PlayerModel.ColorSwap;
+﻿using NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap;
 using UnityEngine;
 
 namespace NitroxClient.Unity.Helper

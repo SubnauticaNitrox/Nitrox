@@ -50,7 +50,8 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             inputField.gameObject.AddComponent<PlayerChatInputField>().InputField = inputField;
             inputField.GetComponentInChildren<Button>().onClick.AddListener(playerChatManager.SendMessage);
 
-            backgroundImages = new[] { transform.GetChild(0).GetComponent<Image>(), transform.GetChild(1).GetComponent<Image>(), transform.GetChild(3).GetComponent<Image>() };
+            // We pick any image that's inside the chat component to have all of their opacity lowered
+            backgroundImages = transform.GetComponentsInChildren<Image>();
 
             yield return new WaitForEndOfFrame(); //Needed so Select() works on initialization
             IsReady = true;

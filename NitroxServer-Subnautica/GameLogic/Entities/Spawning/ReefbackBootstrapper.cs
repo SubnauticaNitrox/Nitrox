@@ -3,6 +3,7 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel_Subnautica.DataStructures;
 using NitroxServer.GameLogic.Entities.Spawning;
+using NitroxServer.Helper;
 using static NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers.ReefbackSpawnData;
 
 namespace NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers
@@ -19,7 +20,7 @@ namespace NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrapper
             }
         }
 
-        public void Prepare(Entity entity, Entity parentEntity, DeterministicBatchGenerator deterministicBatchGenerator)
+        public void Prepare(Entity entity, Entity parentEntity, DeterministicGenerator deterministicBatchGenerator)
         {
             for (int spawnPointCounter = 0; spawnPointCounter < LocalCreatureSpawnPoints.Count; spawnPointCounter++)
             {

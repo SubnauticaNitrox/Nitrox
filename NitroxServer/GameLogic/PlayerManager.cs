@@ -125,19 +125,47 @@ namespace NitroxServer.GameLogic
 
             PlayerCurrentlyJoining = true;
 
-            initialSyncTimer = new Timer(state =>
-            {
-                player.SendPacket(new PlayerKicked("An error occured while loading, Initial sync took too long to complete"));
-                PlayerDisconnected(player.Connection);
-                SendPacketToOtherPlayers(new Disconnect(player.Id), player);
+            InitialSyncTimerData timerData = new InitialSyncTimerData(connection, authenticationContext, serverConfig.InitialSyncTimeout);
+            initialSyncTimer = new Timer(InitialSyncTimerElapsed, timerData, 0, 200);
 
-                FinishProcessingReservation();
-            });
-
-            // Starts the timer, using the server config option as the due time and with intervals disabled
-            initialSyncTimer.Change(serverConfig.InitialSyncTimeout, Timeout.Infinite);
 
             return new MultiplayerSessionReservation(correlationId, playerId, reservationKey);
+        }
+        
+        private void InitialSyncTimerElapsed(object state)
+        {
+            if (state is InitialSyncTimerData timerData && !timerData.Disposing)
+            {
+                allPlayersByName.TryGetValue(timerData.Context.Username, out Player player);
+
+                if (timerData.Connection.State < NitroxConnectionState.Connected)
+                {
+                    if (player == null) // player can cancel the joining process before this timer elapses
+                    {
+                        Log.Error("Player was nulled while joining");
+                        PlayerDisconnected(timerData.Connection);
+                    }
+                    else
+                    {
+                        player.SendPacket(new PlayerKicked("An error occured while loading, Initial sync took too long to complete"));
+                        PlayerDisconnected(player.Connection);
+                        SendPacketToOtherPlayers(new Disconnect(player.Id), player);
+                    }
+                    timerData.Disposing = true;
+                    FinishProcessingReservation();
+                }
+
+                if (timerData.Counter >= timerData.MaxCounter)
+                {
+                    Log.Error("An unexpected Error occured during InitialSync");
+                    PlayerDisconnected(timerData.Connection);
+
+                    timerData.Disposing = true;
+                    initialSyncTimer.Dispose(); // Looped long enough to require an override
+                }
+
+                timerData.Counter++;
+            }
         }
 
         public void NonPlayerDisconnected(NitroxConnection connection)

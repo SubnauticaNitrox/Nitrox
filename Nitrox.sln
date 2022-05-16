@@ -9,6 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NitroxModel", "NitroxModel\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFolder", "SolutionFolder", "{9BFAD807-A48B-4860-BCF8-2E94FD7B6908}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
 		Directory.Build.props = Directory.Build.props
 		Directory.Build.targets = Directory.Build.targets
 	EndProjectSection

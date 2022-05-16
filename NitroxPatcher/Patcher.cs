@@ -27,6 +27,11 @@ internal static class Patcher
     private static readonly Harmony harmony = new("com.nitroxmod.harmony");
     private static bool isApplied;
 
+    /// <summary>
+    ///     Applies all the dynamic patches defined in Patches namespace.
+    ///     Persistent patches are applied when the game initializes (i.e. before main menu).
+    ///     See <see cref="Patcher.Initialize"/>.
+    /// </summary>
     public static void Apply()
     {
         Validate.NotNull(container, "No patches have been discovered yet! Run Execute() first.");
@@ -52,6 +57,8 @@ internal static class Patcher
     }
 
     /// <summary>
+    ///     Removes all the dynamic patches defined by <see cref="NitroxPatcher"/>.
+    ///     <p/>
     ///     If the player starts the main menu for the first time, or returns from a (multiplayer) session, get rid of all the
     ///     patches if applicable.
     /// </summary>

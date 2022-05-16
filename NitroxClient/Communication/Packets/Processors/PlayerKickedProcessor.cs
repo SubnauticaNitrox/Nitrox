@@ -24,7 +24,7 @@ namespace NitroxClient.Communication.Packets.Processors
             }
 
             session.Disconnect();
-            PlayerKickedModal.Instance.Show(message);
+            Modal.Get<KickedModal>()?.Show(message);
         }
     }
 }

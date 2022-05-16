@@ -59,7 +59,7 @@
                 <Grid VerticalAlignment="Top" Margin="22,18,22,0">
                     <StackPanel Orientation="Vertical" HorizontalAlignment="Left" >
                         <TextBlock Foreground="#7FFFFFFF" Text="PLAY NITROX" FontSize="10" FontWeight="Bold" />
-                        <TextBlock x:Name="NitroxVersionLabel" Foreground="White" FontSize="10" Text="{Binding Version, Mode=OneTime}" />
+                        <TextBlock x:Name="NitroxVersionLabel" Foreground="White" FontSize="10" Text="{Binding Version, Mode=OneTime, FallbackValue='PHASE x.x.x.x'}" />
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right">
@@ -97,7 +97,7 @@
             <StackPanel Margin="0,11,0,0" Grid.Column="2" HorizontalAlignment="Left" Width="545" Grid.Row="2" Grid.ColumnSpan="2">
                 <TextBlock FontSize="10" Foreground="#7FFFFFFF" Margin="0,0,0,6" FontWeight="Bold"><Run Text="DEVELOPERS"/></TextBlock>
                 <TextBlock FontSize="14" Foreground="White" Margin="0,0,0,12" TextWrapping="Wrap" LineHeight="24">
-                    <Run>Sunrunner, Killzoms, Jannify, Marijn, Measurity, MadMax, Nes, _HeN_, dartasen, CatSZekely, Garsia, RabidCrab, AquariusSidhe, Amarok, iCleeem, Tornac</Run>
+                    <Run>Sunrunner, Killzoms, Jannify, Marijn, Measurity, MadMax, Nes, _HeN_, dartasen, CatSZekely, Garsia, RabidCrab, AquariusSidhe, Amarok, iCleeem, Tornac, TwinBuilderOne</Run>
                 </TextBlock>
 
                 <TextBlock FontSize="10" Foreground="#7FFFFFFF" Margin="0,0,0,6" FontWeight="Bold"><Run Text="STAFF"/></TextBlock>

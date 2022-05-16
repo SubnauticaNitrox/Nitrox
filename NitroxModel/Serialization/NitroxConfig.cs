@@ -13,6 +13,7 @@ namespace NitroxModel.Serialization
         // ReSharper disable once StaticMemberInGenericType
         private static readonly Dictionary<string, MemberInfo> typeCache = new();
         private readonly object locker = new();
+        private readonly char[] newlineChars = Environment.NewLine.ToCharArray();
 
         public abstract string FileName { get; }
 
@@ -31,7 +32,7 @@ namespace NitroxModel.Serialization
                 Dictionary<string, MemberInfo> typeCachedDict = GetTypeCacheDictionary();
                 using StreamReader reader = new(new FileStream(FileName, FileMode.Open), Encoding.UTF8);
 
-                HashSet<MemberInfo> unserializedMembers = new HashSet<MemberInfo>(typeCachedDict.Values);
+                HashSet<MemberInfo> unserializedMembers = new(typeCachedDict.Values);
                 char[] lineSeparator = { '=' };
                 int lineNum = 0;
                 string readLine;
@@ -87,8 +88,8 @@ namespace NitroxModel.Serialization
                             value = prop.GetValue(this);
                         }
 
-                        return new { m.Name, Value = value };
-                    }).Select(m => $" - {m.Name}: {m.Value}");
+                        return $" - {m.Name}: {value}";
+                    });
 
                     Log.Warn($@"{FileName} is using default values for the missing properties:{Environment.NewLine}{string.Join(Environment.NewLine, unserializedProps)}");
                 }
@@ -221,7 +222,7 @@ namespace NitroxModel.Serialization
         private void WriteProperty<TMember>(TMember member, object value, StreamWriter stream) where TMember : MemberInfo
         {
             stream.Write(member.Name);
-            stream.Write("=");
+            stream.Write('=');
             stream.WriteLine(value);
         }
 
@@ -230,7 +231,7 @@ namespace NitroxModel.Serialization
             PropertyDescriptionAttribute attribute = member.GetCustomAttribute<PropertyDescriptionAttribute>();
             if (attribute != null)
             {
-                foreach (string line in attribute.Description.Split(Environment.NewLine.ToCharArray()))
+                foreach (string line in attribute.Description.Split(newlineChars))
                 {
                     stream.Write("# ");
                     stream.WriteLine(line);

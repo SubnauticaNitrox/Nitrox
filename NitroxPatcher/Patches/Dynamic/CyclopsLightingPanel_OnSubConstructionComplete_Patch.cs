@@ -24,7 +24,7 @@ namespace NitroxPatcher.Patches.Dynamic
             Optional<CyclopsModel> model = NitroxServiceLocator.LocateService<Vehicles>().TryGetVehicle<CyclopsModel>(id);
             if (!model.HasValue)
             {
-                Log.Error($"{nameof(CyclopsLightingPanel_OnSubConstructionComplete_Patch)}: Could not find {nameof(CyclopsModel)} by Nitrox id {id}.\nGO containing wrong id: {__instance.GetHierarchyPath()}");
+                Log.Error($"{nameof(CyclopsLightingPanel_OnSubConstructionComplete_Patch)}: Could not find {nameof(CyclopsModel)} by Nitrox id {id}.\nGO containing wrong id: {__instance.GetFullHierarchyPath()}");
                 return false;
             }
 

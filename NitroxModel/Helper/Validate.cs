@@ -50,19 +50,21 @@ public static class Validate
         }
     }
 
-    public static void IsPresent<T>(Optional<T> opt) where T : class
+    public static T IsPresent<T>(Optional<T> opt) where T : class
     {
         if (!opt.HasValue)
         {
             throw new OptionalEmptyException<T>();
         }
+        return opt.Value;
     }
 
-    public static void IsPresent<T>(Optional<T> opt, string message) where T : class
+    public static T IsPresent<T>(Optional<T> opt, string message) where T : class
     {
         if (!opt.HasValue)
         {
             throw new OptionalEmptyException<T>(message);
         }
+        return opt.Value;
     }
 }

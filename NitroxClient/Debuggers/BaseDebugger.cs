@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.Util;
@@ -8,6 +9,7 @@ using UnityEngine;
 
 namespace NitroxClient.Debuggers
 {
+    [ExcludeFromCodeCoverage]
     public abstract class BaseDebugger
     {
         public readonly string DebuggerName;
@@ -15,6 +17,7 @@ namespace NitroxClient.Debuggers
         public readonly bool HotkeyAltRequired;
         public readonly bool HotkeyControlRequired;
         public readonly bool HotkeyShiftRequired;
+        public readonly string HotkeyString;
         public readonly GUISkinCreationOptions SkinCreationOptions;
 
         /// <summary>
@@ -48,6 +51,7 @@ namespace NitroxClient.Debuggers
             HotkeyAltRequired = alt;
             HotkeyShiftRequired = shift;
             HotkeyControlRequired = control;
+            HotkeyString = Hotkey == KeyCode.None ? "None" : $"{(HotkeyControlRequired ? "CTRL+" : "")}{(HotkeyAltRequired ? "ALT+" : "")}{(HotkeyShiftRequired ? "SHIFT+" : "")}{Hotkey}";
             SkinCreationOptions = skinOptions;
 
             if (string.IsNullOrEmpty(debuggerName))
@@ -79,30 +83,14 @@ namespace NitroxClient.Debuggers
             DERIVEDCOPY
         }
 
-        public DebuggerTab AddTab(DebuggerTab tab)
+        protected DebuggerTab AddTab(string name, Action render)
         {
-            Validate.NotNull(tab);
-
+            DebuggerTab tab = new(name, render);
             tabs.Add(tab.Name, tab);
             return tab;
         }
 
-        public DebuggerTab AddTab(string name, Action render)
-        {
-            return AddTab(new DebuggerTab(name, render));
-        }
-
-        public string GetHotkeyString()
-        {
-            if (Hotkey == KeyCode.None)
-            {
-                return "";
-            }
-
-            return $"{(HotkeyControlRequired ? "CTRL+" : "")}{(HotkeyAltRequired ? "ALT+" : "")}{(HotkeyShiftRequired ? "SHIFT+" : "")}{Hotkey}";
-        }
-
-        public Optional<DebuggerTab> GetTab(string name)
+        protected Optional<DebuggerTab> GetTab(string name)
         {
             Validate.NotNull(name);
 
@@ -254,7 +242,7 @@ namespace NitroxClient.Debuggers
             });
         }
 
-        public void ResetWindowPosition()
+        public virtual void ResetWindowPosition()
         {
             WindowRect = new Rect(Screen.width / 2f - (WindowRect.width / 2), 100, WindowRect.width, WindowRect.height); //Reset position of debuggers because SN sometimes throws the windows from planet 4546B
         }

@@ -5,7 +5,6 @@ using NitroxClient.MonoBehaviours.Gui.Chat;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
-using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -89,9 +88,8 @@ namespace NitroxClient.GameLogic.ChatUI
                 return;
             }
 
-            // Chat message
+            // We shouldn't add the message to the local chat instantly but instead let the server tell us if this message is added or not
             multiplayerSession.Send(new ChatMessage(multiplayerSession.Reservation.PlayerId, trimmedInput));
-            playerChat.WriteLogEntry(multiplayerSession.AuthenticationContext.Username, playerChat.InputText, multiplayerSession.PlayerSettings.PlayerColor.ToUnity());
             playerChat.InputText = "";
             playerChat.Select();
         }

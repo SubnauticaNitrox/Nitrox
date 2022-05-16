@@ -47,7 +47,7 @@ namespace NitroxTest.Serialization
 
             worldData = GeneratePersistedWorldData();
             World world = worldPersistence.CreateWorld(worldData, ServerGameMode.CREATIVE);
-            world.EventTriggerer.ResetWorldTime();
+            world.EventTriggerer.ResetWorld();
 
             for (int index = 0; index < serverSerializers.Length; index++)
             {
@@ -59,7 +59,7 @@ namespace NitroxTest.Serialization
                 //Checking loading
                 Optional<World> worldAfter = worldPersistence.LoadFromFile(tempSaveFilePath);
                 Assert.IsTrue(worldAfter.HasValue, $"Loading saved world failed while using {serverSerializers[index]}.");
-                worldAfter.Value.EventTriggerer.ResetWorldTime();
+                worldAfter.Value.EventTriggerer.ResetWorld();
                 worldsDataAfter[index] = PersistedWorldData.From(worldAfter.Value);
             }
         }

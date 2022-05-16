@@ -5,6 +5,9 @@ using NitroxModel.Helper;
 
 namespace NitroxModel_Subnautica.Helper
 {
+    /// <summary>
+    ///     Static information about the game world loaded by Subnautica that isn't (and shouldn't) be retrievable from the game directly. 
+    /// </summary>
     public class SubnauticaMap : IMap
     {
         private const int BATCH_SIZE = 160;

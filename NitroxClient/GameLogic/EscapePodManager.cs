@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours;
+using NitroxClient.MonoBehaviours.Overrides;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
@@ -120,6 +121,13 @@ namespace NitroxClient.GameLogic
 
             DamageEscapePod(model.Damaged, model.RadioDamaged);
             FixStartMethods(escapePod);
+
+            // Start() isn't executed for the EscapePod, why? Idk, maybe because it's a scene...
+            MultiplayerCinematicReference reference = escapePod.AddComponent<MultiplayerCinematicReference>();
+            foreach (PlayerCinematicController controller in escapePod.GetComponentsInChildren<PlayerCinematicController>())
+            {
+                reference.AddController(controller);
+            }
 
             SURPRESS_ESCAPE_POD_AWAKE_METHOD = false;
 

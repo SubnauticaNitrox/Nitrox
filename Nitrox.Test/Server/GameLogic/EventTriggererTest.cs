@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NitroxModel.Helper;
 
 namespace NitroxServer.GameLogic
 {
     [TestClass]
     public class EventTriggererTest
     {
+        private readonly string seed = StringHelper.GenerateRandomString(10);
+
         [TestMethod]
         public void VerifyEventsOrder()
         {
-            EventTriggerer eventTriggerer = new(null, 0.0, null);
+            EventTriggerer eventTriggerer = new(null, null, null, seed, 0.0, null, null);
             List<string> eventsOrder = new() { "Story_AuroraWarning1", "Story_AuroraWarning2", "Story_AuroraWarning3", "Story_AuroraWarning4", "Story_AuroraExplosion" };
             List<string> eventTriggererEvents = new(eventTriggerer.eventTimers.Keys);
 
@@ -24,16 +27,15 @@ namespace NitroxServer.GameLogic
         [TestMethod]
         public void AuroraExplosionAndWarningTime()
         {
-            EventTriggerer eventTriggerer = new(null, 0.0, TimeSpan.FromMinutes(40).TotalMilliseconds);
+            EventTriggerer eventTriggerer = new(null, null, null, seed, 0.0, TimeSpan.FromMinutes(40).TotalMilliseconds, null);
             Assert.AreEqual(eventTriggerer.eventTimers["Story_AuroraWarning4"].Interval, eventTriggerer.eventTimers["Story_AuroraExplosion"].Interval);
         }
 
         [TestMethod]
         public void TestTimeSkip()
         {
-            EventTriggerer eventTriggerer = new(null, 480.0, null);
-            eventTriggerer.PauseEventTimers();
-            eventTriggerer.PauseWorldTime();
+            EventTriggerer eventTriggerer = new(null, null, null, seed, 480.0, null, null);
+            eventTriggerer.PauseWorld();
 
             double interval = eventTriggerer.eventTimers["Story_AuroraExplosion"].Interval;
             eventTriggerer.ElapsedTimeMs += TimeSpan.FromMinutes(40).TotalMilliseconds;

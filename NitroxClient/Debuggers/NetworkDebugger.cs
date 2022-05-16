@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Packets;
@@ -7,12 +8,17 @@ using UnityEngine;
 
 namespace NitroxClient.Debuggers
 {
+    [ExcludeFromCodeCoverage]
     public class NetworkDebugger : BaseDebugger, INetworkDebugger
     {
         private const int PACKET_STORED_COUNT = 100;
         private readonly Dictionary<Type, int> countByType = new Dictionary<Type, int>();
 
-        private readonly List<string> filter = new List<string> { nameof(Movement), nameof(EntityTransformUpdates), nameof(PlayerStats), nameof(CellEntities), nameof(VehicleMovement) };
+        private readonly List<string> filter = new()
+        {
+            nameof(Movement), nameof(EntityTransformUpdates), nameof(PlayerStats), nameof(CellEntities), nameof(VehicleMovement), nameof(PlayerCinematicControllerCall),
+            nameof(PlayFMODAsset), nameof(PlayFMODCustomEmitter), nameof(PlayFMODStudioEmitter),  nameof(PlayFMODCustomLoopingEmitter)
+        };
         private readonly List<PacketDebugWrapper> packets = new List<PacketDebugWrapper>(PACKET_STORED_COUNT);
 
         // vs blacklist

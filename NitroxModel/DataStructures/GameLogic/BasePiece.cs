@@ -7,6 +7,10 @@ using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
+    /// <summary>
+    ///     Represents a piece of a player's base. E.g. a window, entry/exit hatch, multi-purpose room.
+    ///     The <see cref="TechType"/> says what kind of base piece this is.
+    /// </summary>
     [Serializable]
     [ProtoContract]
     public class BasePiece

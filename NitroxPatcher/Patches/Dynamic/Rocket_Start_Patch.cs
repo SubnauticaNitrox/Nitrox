@@ -24,7 +24,7 @@ namespace NitroxPatcher.Patches.Dynamic
             Optional<NeptuneRocketModel> model = NitroxServiceLocator.LocateService<Vehicles>().TryGetVehicle<NeptuneRocketModel>(id);
             if (!model.HasValue)
             {
-                Log.Error($"{nameof(Rocket_Start_Patch)}: Could not find NeptuneRocketModel by Nitrox id {id}.\nGO containing wrong id: {__instance.GetHierarchyPath()}");
+                Log.Error($"{nameof(Rocket_Start_Patch)}: Could not find NeptuneRocketModel by Nitrox id {id}.\nGO containing wrong id: {__instance.GetFullHierarchyPath()}");
                 return false;
             }
 

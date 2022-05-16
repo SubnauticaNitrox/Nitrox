@@ -23,7 +23,8 @@ namespace NitroxModel.Discovery
             new ConfigGameFinder(),
             new SteamGameRegistryFinder(),
             new EpicGamesInstallationFinder(),
-            new DiscordGameFinder()
+            new DiscordGameFinder(),
+            new EnvironmentGameFinder()
         };
 
         public string FindGame(IList<string> errors = null)

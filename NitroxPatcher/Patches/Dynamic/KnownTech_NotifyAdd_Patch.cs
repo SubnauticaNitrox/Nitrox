@@ -3,6 +3,7 @@ using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
 using NitroxModel.Helper;
+using NitroxModel.Packets;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
@@ -12,7 +13,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Prefix(TechType techType, bool verbose)
         {
-            NitroxServiceLocator.LocateService<KnownTechEntry>().Add(techType, verbose);
+            Resolve<KnownTechEntry>().AddKnown(techType, verbose);
         }
 
         public override void Patch(Harmony harmony)

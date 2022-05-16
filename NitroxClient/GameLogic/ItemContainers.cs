@@ -39,7 +39,7 @@ namespace NitroxClient.GameLogic
 
             if (packetSender.Send(new ItemContainerAdd(itemData)))
             {
-                Log.Debug($"Sent: Added item {pickupable.GetTechType()} to container {containerTransform.gameObject.GetHierarchyPath()}");
+                Log.Debug($"Sent: Added item {pickupable.GetTechType()} to container {containerTransform.gameObject.GetFullHierarchyPath()}");
             }
         }
 
@@ -48,7 +48,7 @@ namespace NitroxClient.GameLogic
             NitroxId itemId = NitroxEntity.GetId(pickupable.gameObject);
             if (packetSender.Send(new ItemContainerRemove(InventoryContainerHelper.GetOwnerId(containerTransform), itemId)))
             {
-                Log.Debug($"Sent: Removed item {pickupable.GetTechType()} from container {containerTransform.gameObject.GetHierarchyPath()}");
+                Log.Debug($"Sent: Removed item {pickupable.GetTechType()} from container {containerTransform.gameObject.GetFullHierarchyPath()}");
             }
         }
 
@@ -63,7 +63,7 @@ namespace NitroxClient.GameLogic
             Optional<ItemsContainer> opContainer = InventoryContainerHelper.TryGetContainerByOwner(owner.Value);
             if (!opContainer.HasValue)
             {
-                Log.Error($"Could not find container field on GameObject {owner.Value.GetHierarchyPath()}");
+                Log.Error($"Could not find container field on GameObject {owner.Value.GetFullHierarchyPath()}");
                 return;
             }
 
@@ -72,7 +72,7 @@ namespace NitroxClient.GameLogic
             using (packetSender.Suppress<ItemContainerAdd>())
             {
                 container.UnsafeAdd(new InventoryItem(pickupable));
-                Log.Debug($"Received: Added item {pickupable.GetTechType()} to container {owner.Value.GetHierarchyPath()}");
+                Log.Debug($"Received: Added item {pickupable.GetTechType()} to container {owner.Value.GetFullHierarchyPath()}");
             }
         }
 
@@ -83,7 +83,7 @@ namespace NitroxClient.GameLogic
             Optional<ItemsContainer> opContainer = InventoryContainerHelper.TryGetContainerByOwner(owner);
             if (!opContainer.HasValue)
             {
-                Log.Error($"Could not find item container behaviour on object {owner.GetHierarchyPath()} with id {ownerId}");
+                Log.Error($"Could not find item container behaviour on object {owner.GetFullHierarchyPath()} with id {ownerId}");
                 return;
             }
 
@@ -92,7 +92,7 @@ namespace NitroxClient.GameLogic
             using (packetSender.Suppress<ItemContainerRemove>())
             {
                 container.RemoveItem(pickupable, true);
-                Log.Debug($"Received: Removed item {pickupable.GetTechType()} to container {owner.GetHierarchyPath()}");
+                Log.Debug($"Received: Removed item {pickupable.GetTechType()} to container {owner.GetFullHierarchyPath()}");
             }
         }
     }

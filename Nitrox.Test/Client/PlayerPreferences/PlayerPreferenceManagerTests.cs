@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NitroxClient.GameLogic.PlayerPreferences;
+using NitroxClient.GameLogic.PlayerLogic.PlayerPreferences;
 using NitroxModel.MultiplayerSession;
 using NitroxModel_Subnautica.DataStructures;
 using NSubstitute;
