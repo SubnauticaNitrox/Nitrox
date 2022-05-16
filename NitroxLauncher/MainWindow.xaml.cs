@@ -17,7 +17,7 @@ namespace NitroxLauncher
 {
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
-        public string Version => $"{LauncherLogic.RELEASE_PHASE} {LauncherLogic.Version}";
+        public string Version => $"{LauncherLogic.ReleasePhase} {LauncherLogic.Version}";
 
         public object FrameContent
         {
@@ -102,6 +102,11 @@ namespace NitroxLauncher
                 {
                     Log.Warn("Launcher may not be connected to internet");
                     LauncherNotifier.Error("Launcher may not be connected to internet");
+                }
+
+                if (!NitroxEnvironment.IsReleaseMode)
+                {
+                    LauncherNotifier.Warning("You're now using Nitrox DEV build");
                 }
             };
 
