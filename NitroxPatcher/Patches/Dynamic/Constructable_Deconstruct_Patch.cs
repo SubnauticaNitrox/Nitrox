@@ -24,7 +24,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 Resolve<Building>().DeconstructionComplete(__instance.gameObject);
                 Log.Debug("Finished deconstructing, now removing ghost NitroxEntity");
 
-                GeometryRespawnManager.NitroxIdsToIgnore.Add(nitroxEntity.Id);
+                Resolve<GeometryRespawnManager>().NitroxIdsToIgnore.Add(nitroxEntity.Id);
                 Log.Debug($"Added ghost to ignore list: {nitroxEntity.Id}");
             }
             else
