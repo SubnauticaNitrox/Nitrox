@@ -45,10 +45,8 @@ public class MultiplayerCinematicReference : MonoBehaviour
 
     public void AddController(PlayerCinematicController playerController)
     {
-        MultiplayerCinematicController controller = MultiplayerCinematicController.Initialize(playerController);
+
         MultiplayerCinematicController[] allControllers = controllerByKey.SelectMany(n => n.Value.Select(x => x.Value)).ToArray();
-        controller.AddOtherControllers(allControllers);
-        allControllers.ForEach(x => x.AddOtherControllers(new[] { controller }));
 
         if (!controllerByKey.TryGetValue(playerController.playerViewAnimationName, out Dictionary<int, MultiplayerCinematicController> controllers))
         {
@@ -56,18 +54,16 @@ public class MultiplayerCinematicReference : MonoBehaviour
             controllerByKey.Add(playerController.playerViewAnimationName, controllers);
         }
 
-        int identifier = GetCinematicControllerIdentifier(controller.gameObject, gameObject);
+        int identifier = GetCinematicControllerIdentifier(playerController.gameObject, gameObject);
 
-        if (controllers.TryGetValue(identifier, out MultiplayerCinematicController existingMvc))
+        if (controllers.ContainsKey(identifier))
         {
-            if (existingMvc == controller)
-            {
-                Log.Debug($"{controller.gameObject.GetFullHierarchyPath()} was already registered");
-                return;
-            }
-
-            throw new ArgumentException($"There was already an entry for the identifier {identifier} for {controller.gameObject.GetFullHierarchyPath()}");
+            return;
         }
+        
+        MultiplayerCinematicController controller = MultiplayerCinematicController.Initialize(playerController);
+        controller.AddOtherControllers(allControllers);
+        allControllers.ForEach(x => x.AddOtherControllers(new[] { controller }));
 
         controllers.Add(identifier, controller);
     }
