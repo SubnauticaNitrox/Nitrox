@@ -57,7 +57,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             IsReady = true;
             if (NitroxPrefs.SilenceChat.Value)
             {
-                Log.InGame(Language.main.Get("Nitrox_SilencedChatNotify"));
+                Log.InGame(Language.main.Get("Nitrox_SilencedChatNotif"));
             }
         }
 
