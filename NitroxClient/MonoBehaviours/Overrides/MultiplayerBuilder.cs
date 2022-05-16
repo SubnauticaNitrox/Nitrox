@@ -121,8 +121,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
                     flag2 = baseGhost.UpdatePlacement(camera, placeMaxDistance, out positionFound, out flag, componentInParent);
                     break; 
             }
-
-            Log.Debug($"{baseGhost.GetType()} - positionFound: {positionFound} - flag: {flag} - flag2: {flag2}");
+            
             return flag2;
         }
 

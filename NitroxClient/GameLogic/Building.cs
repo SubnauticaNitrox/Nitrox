@@ -21,10 +21,7 @@ namespace NitroxClient.GameLogic
         private readonly IPacketSender packetSender;
         private readonly RotationMetadataFactory rotationMetadataFactory;
 
-        //private const float CONSTRUCTION_CHANGE_EVENT_COOLDOWN_PERIOD_SECONDS = 0.01f;
-        //private float timeSinceLastConstructionChangeEvent;
-
-       public Building(IPacketSender packetSender, RotationMetadataFactory rotationMetadataFactory)
+        public Building(IPacketSender packetSender, RotationMetadataFactory rotationMetadataFactory)
         {
             this.packetSender = packetSender;
             this.rotationMetadataFactory = rotationMetadataFactory;
@@ -127,8 +124,6 @@ namespace NitroxClient.GameLogic
 
             NitroxId id = NitroxEntity.GetId(ghost);
 
-            Log.Debug($"Construction complete on {id} {ghost.name}");
-
             if (opConstructedBase.HasValue)
             {
                 GameObject constructedBase = (GameObject)opConstructedBase.Value;
@@ -162,7 +157,6 @@ namespace NitroxClient.GameLogic
                     cellTransform = latestBase.GetCellObject(latestCell);
                     if (cellTransform != null)
                     {
-                        Log.Debug($"Looking for {ghost.name} in cell {latestBase.GetCell(latestCell)} at {latestCell} using latestCell");
                         placedPiece = FindFinishedPiece(cellTransform);
                     }
                 }
@@ -176,13 +170,10 @@ namespace NitroxClient.GameLogic
                     cellTransform = latestBase.GetCellObject(position);       
 
                     Validate.NotNull(cellTransform, "Unable to find cell transform at " + latestCell);
-                    Log.Debug($"Looking for {ghost.name} in cell {latestBase.GetCell(position)} at {position} using constructable position");
                     placedPiece = FindFinishedPiece(cellTransform);
                 }
                 
                 Validate.NotNull(placedPiece, $"Could not find finished piece in cell {latestCell}");
-
-                Log.Debug($"Setting id to finished piece: {placedPiece.name} {id}");
 
                 Object.Destroy(ghost);
                 NitroxEntity.SetNewId(placedPiece, id);
@@ -197,8 +188,6 @@ namespace NitroxClient.GameLogic
             {
                 Log.Error($"Found ghost which is neither base piece nor a constructable: {ghost.name}");
             }
-
-            Log.Debug($"Construction Completed {id} in base {baseId}");
 
             ConstructionCompleted constructionCompleted = new ConstructionCompleted(id, baseId);
             packetSender.Send(constructionCompleted);

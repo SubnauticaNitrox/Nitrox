@@ -43,8 +43,6 @@ public class GeometryRespawnManager
                             NitroxId id = NitroxEntity.GetId(child.gameObject);
                             ObjectKey key = GetObjectKey(child.gameObject);
                             nitroxIdByObjectKey[key] = id;
-
-                            Log.Debug("Clearing Base Geometry, storing id for later lookup: " + key + " " + id);
                         }
                     }
                 }
@@ -73,11 +71,9 @@ public class GeometryRespawnManager
             nitroxIdByObjectKey.Remove(key);
             if (NitroxIdsToIgnore.Contains(id))
             {
-                Log.Debug($"When respawning geometry, found an ignored face-based id [Key: {key}, Id: {id}]");
                 NitroxIdsToIgnore.Remove(id);
                 return;
             }
-            Log.Debug($"When respawning geometry, found face-based id to copy to new object [Key: {key}, Id: {id}]");
             NitroxEntity.SetNewId(gameObject, id);
         }
     }
