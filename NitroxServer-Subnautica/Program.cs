@@ -56,7 +56,7 @@ public class Program
         AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
 
         ConfigureCultureInfo();
-        Log.Info($"Starting NitroxServer V{NitroxEnvironment.Version} for Subnautica");
+        Log.Info($"Starting NitroxServer {NitroxEnvironment.ReleasePhase} v{NitroxEnvironment.Version} for Subnautica");
 
         AppMutex.Hold(() => { Log.Info("Waiting on other Nitrox servers to initialize before starting.."); }, 120000);
         Server server;

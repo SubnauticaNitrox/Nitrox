@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using Microsoft.Win32;
+using NitroxModel.Helper;
 using NitroxModel_Subnautica.Logger;
 using UnityEngine;
 
@@ -103,7 +104,7 @@ public static class Main
             }
         };
 
-        Log.Info($"Using Nitrox version {Assembly.GetExecutingAssembly().GetName().Version} built on {File.GetCreationTimeUtc(Assembly.GetExecutingAssembly().Location)}");
+        Log.Info($"Using Nitrox {NitroxEnvironment.ReleasePhase} V{NitroxEnvironment.Version} built on {NitroxEnvironment.BuildDate}");
         try
         {
             Patcher.Initialize();
