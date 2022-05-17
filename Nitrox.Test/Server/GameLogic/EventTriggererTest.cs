@@ -45,5 +45,24 @@ namespace NitroxServer.GameLogic
             eventTriggerer.ElapsedTimeMs += TimeSpan.FromMinutes(2).TotalMilliseconds;
             Assert.AreEqual(interval - TimeSpan.FromMinutes(2).TotalMilliseconds, eventTriggerer.eventTimers["Story_AuroraExplosion"].Interval);
         }
+
+        [TestMethod]
+        public void TestAuroraEventsCalculations()
+        {
+            EventTriggerer eventTriggerer = new(null, null, null, seed, 890000, 2400000, 480000);
+            eventTriggerer.PauseWorld();
+
+            Assert.AreEqual(4, eventTriggerer.eventTimers.Count);
+
+            eventTriggerer = new(null, null, null, seed, 1500000, 2400000, 480000);
+            eventTriggerer.PauseWorld();
+
+            Assert.AreEqual(3, eventTriggerer.eventTimers.Count);
+
+            eventTriggerer = new(null, null, null, seed, 2016000, 2400000, 480000);
+            eventTriggerer.PauseWorld();
+
+            Assert.AreEqual(2, eventTriggerer.eventTimers.Count);
+        }
     }
 }
