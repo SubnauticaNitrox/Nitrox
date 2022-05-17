@@ -82,7 +82,7 @@ namespace NitroxServer.GameLogic
         {
             double ExplosionCycleDuration = AuroraExplosionTimeMs - AuroraWarningTimeMs;
             // If aurora's warning is set to later than explosion's time, we don't want to create any timer
-            if (ExplosionCycleDuration > 0)
+            if (ExplosionCycleDuration < 0)
             {
                 return;
             }
