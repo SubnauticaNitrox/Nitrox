@@ -64,15 +64,13 @@
             <TextBlock FontSize="14" Foreground="#BFFFFFFF" TextAlignment="Left" VerticalAlignment="Top" Margin="32 12 0 0">
                     Welcome to your Nitrox server! For more information, please refer to the <Hyperlink NavigateUri="https://on.rux.gg/nitrox-wiki" RequestNavigate="OnRequestNavigate" ToolTip="Open Nitrox guide website">Wiki</Hyperlink>
             </TextBlock>
-
-
         </Grid>
 
         <!-- ROW 3 - SELECTION PANES -->
         <Grid Grid.Row="2" Width="2442" HorizontalAlignment="Center">
 
             <!-- WORLD SELECTION PANE (In view: Margin="866 32 866 32" | Out of view: Margin="0 32 1732 32") PANE WIDTH: 710 -->
-            <Border CornerRadius="12" Background="#151516" Margin="866 32 866 32" x:Name="WorldSelectionPane" RenderTransformOrigin="0.5,0.5">
+            <Border CornerRadius="12" Background="#151516" Margin="866 32 866 32" x:Name="WorldSelectionPane" RenderTransformOrigin="0.5,0.5"> <!-- x:Name="WorldSelectionPane" -->
                 <Border.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform/>
@@ -81,8 +79,7 @@
                         <TranslateTransform/>
                     </TransformGroup>
                 </Border.RenderTransform>
-
-
+                
                 <Grid Margin="16 0 16 16">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="60"/>
@@ -95,22 +92,16 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="40"/>
                         </Grid.ColumnDefinitions>
-
-
+                        
                         <TextBlock Grid.Column="1" Text="Your Worlds" Foreground="White" VerticalAlignment="Center" FontSize="30" HorizontalAlignment="Center" FontWeight="Bold"/>
+                        
                         <Button Grid.Column="2" x:Name="AddWorldBtn" Click="AddWorld_Click" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="Add a new world">
-                            <!-- Slide the panes to the left when the button is clicked -->
-                            <Button.Triggers>
-                                <EventTrigger RoutedEvent="Button.Click" >
-                                    <BeginStoryboard  Storyboard="{StaticResource WorldSelectedAnimation}"/>
-                                </EventTrigger>
-                            </Button.Triggers>
-
                             <Image Source="{StaticResource AddServerButton}" Stretch="Uniform"  Width="40" Height="40"/>
                         </Button>
+                        
                     </Grid>
 
-                    <!-- World List -->
+                    <!-- World List -->     <!-- TODO: Order server listings based on the last one that was used (read times when save files were last edited) -->
                     <Border Grid.Row="1" CornerRadius="12" Background="Black">
                         <ListView Name="WorldListingContainer" Background="{x:Null}" BorderBrush="{x:Null}" Margin="5" HorizontalContentAlignment="Stretch">
                             <!-- TEMPORARY - View server listing buttons in Intellisense window -->
@@ -125,6 +116,7 @@
                                 </x:Array>
                             </d:ListView.ItemsSource>
 
+                            <!-- Fix the Scroll Bar -->
                             <ListView.Resources>
                                 <Style x:Key="{x:Type ScrollBar}" TargetType="{x:Type ScrollBar}">
                                     <Setter Property="Template">
@@ -174,6 +166,7 @@
                                                         <Setter TargetName="PageUp" Property="Command" Value="ScrollBar.PageRightCommand"/>
                                                     </Trigger>
                                                 </ControlTemplate.Triggers>
+                                                
                                             </ControlTemplate>
                                         </Setter.Value>
                                     </Setter>
@@ -191,6 +184,7 @@
                                             <Setter Property="BorderBrush" Value="Red" />
                                         </Trigger>
                                     </Style.Triggers>-->
+                                    
                                 </Style>
                             </ListView.ItemContainerStyle>
 
@@ -206,27 +200,18 @@
                                             </Grid.ColumnDefinitions>
 
                                             <!-- Select World Button -->
-                                            <Button x:Name="WorldSelectBtn" Style="{StaticResource WorldListingButton}" ToolTip="Select this world" Foreground="White" Height="83" HorizontalAlignment="Stretch" Width="Auto" HorizontalContentAlignment="Stretch">
-
-                                                <!-- Slide the panes to the left when the button is clicked -->
-                                                <Button.Triggers>
-                                                    <EventTrigger RoutedEvent="Button.Click" >
-                                                        <BeginStoryboard  Storyboard="{StaticResource WorldSelectedAnimation}"/>
-                                                    </EventTrigger>
-                                                </Button.Triggers>
-
-                                                <!-- TODO: Make the width of this DockPanel to adjust automatically instead of being hardcoded. Things might look weird when the list becomes scrollable - Width="561" w/o scrollbar, Width="550?" w/ scrollbar -->
+                                            <Button x:Name="WorldSelectBtn" Click="SelectWorld_Click" Style="{StaticResource WorldListingButton}" ToolTip="Select this world" Foreground="White" Height="83" HorizontalAlignment="Stretch" Width="Auto" HorizontalContentAlignment="Stretch">
                                                 <DockPanel Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Button}}" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Button}}" VerticalAlignment="Center" HorizontalAlignment="Stretch">
 
                                                     <!-- World Name -->
                                                     <TextBlock Grid.Column="0" FontSize="20" Foreground="White" Text="{Binding WorldName, FallbackValue=WorldName, Mode=OneTime}" VerticalAlignment="Center" HorizontalAlignment="Left"  Margin="20 0 0 0"/>
-
+                                                    
                                                     <!-- World Data -->
                                                     <DockPanel Grid.Column="1" LastChildFill = "True" Margin="0 10 10 10" HorizontalAlignment="Right">
                                                         <TextBlock DockPanel.Dock = "Top" HorizontalAlignment="Right" FontSize="10" Text="{Binding WorldGamemode, FallbackValue=Gamemode, Mode=OneTime}" Foreground="White"/>
                                                         <TextBlock DockPanel.Dock = "Bottom" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="10" Text="{Binding WorldVersion, FallbackValue=Version, Mode=OneTime}" Foreground="White"/>
                                                     </DockPanel>
-
+                                                    
                                                 </DockPanel>
                                             </Button>
 
@@ -237,6 +222,7 @@
                                             <Button Grid.Column="2" ToolTip="Delete this world" Height="{Binding Height, RelativeSource={RelativeSource AncestorType=Border}}" Width="{Binding Height, RelativeSource={RelativeSource AncestorType=Border}}">
                                                 <Image Source="{StaticResource TrashcanButton}" Stretch="Uniform"  Width="30" Height="30"/>
                                             </Button>
+                                            
                                         </Grid>
                                     </Border>
                                 </DataTemplate>
@@ -278,17 +264,12 @@
                                 <ColumnDefinition Width="40"/>
                             </Grid.ColumnDefinitions>
 
-                            <Button Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="Select a different world">
-                                <!-- Slide the panes to the right when the button is clicked -->
-                                <Button.Triggers>
-                                    <EventTrigger RoutedEvent="Button.Click" >
-                                        <BeginStoryboard  Storyboard="{StaticResource GoBackAnimation}"/>
-                                    </EventTrigger>
-                                </Button.Triggers>
-
+                            <Button Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="Select a different world" Click="GoBack_Click">
                                 <Image Source="{StaticResource GoBackButton}" Stretch="Uniform" Width="40" Height="40"/>
                             </Button>
+                            
                             <TextBlock Grid.Column="1" Text="World Settings" Foreground="White" VerticalAlignment="Center" FontSize="30" HorizontalAlignment="Center" FontWeight="Bold"/>
+                            
                         </Grid>
 
                         <!-- World Settings Pane -->
@@ -317,7 +298,7 @@
                                                 Background="{x:Null}" BorderBrush="{x:Null}"
                                                 Margin="13,4,13,4" SelectionBrush="#FF36383A"
                                                 VerticalAlignment="Center" BorderThickness="0"
-                                                CaretBrush="White" Width="250" MaxLength="25" Text="{Binding selectedWorldName, FallbackValue=MyWorld, Mode=OneTime}">
+                                                CaretBrush="White" Width="250" MaxLength="25" Text="{Binding selectedWorldName, FallbackValue=MyWorld, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}">
 
                                                 <!-- TODO: Make text font color turn white when text box is being edited (The commented-out code below doesn't seem to do it) -->
                                                 <!--<TextBox.Style>
@@ -343,7 +324,7 @@
                                                 Foreground="#8A8A8A" TextAlignment="Left"
                                                 Background="{x:Null}" BorderBrush="{x:Null}"
                                                 Margin="13,4,13,4" SelectionBrush="#FF36383A"
-                                                VerticalAlignment="Center" BorderThickness="0" CaretBrush="White" Width="155" MaxLength="10" Text="{Binding selectedWorldSeed, FallbackValue=WorldSeed, Mode=OneTime}"/>
+                                                VerticalAlignment="Center" BorderThickness="0" CaretBrush="White" Width="155" MaxLength="10" Text="{Binding selectedWorldSeed, FallbackValue=WorldSeed, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}"/>
                                         </Border>
                                     </StackPanel>
                                 </Grid>
@@ -416,17 +397,17 @@
 
                                             <!-- Row 1 -->
                                             <TextBlock Grid.Column="0" Text="Enable Cheats" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
-                                            <CheckBox Style="{StaticResource OptionSwitch}" Grid.Column="1" Margin="5 5 10 5" x:Name="CBCheats" Checked="CBCheats_Enabled" IsChecked="{Binding enableCheatsValue, Mode=OneWay, FallbackValue='True'}" ToolTip="Click to enable the use of commands in game (RECOMMENDED FOR NITROX)"/>
+                                            <CheckBox Style="{StaticResource OptionSwitch}" Grid.Column="1" Margin="5 5 10 5" x:Name="CBCheats" Checked="CBCheats_Enabled" IsChecked="{Binding enableCheatsValue, Mode=OneWay, FallbackValue='True', UpdateSourceTrigger=PropertyChanged}" ToolTip="Click to enable the use of commands in game (RECOMMENDED FOR NITROX)"/>
 
                                             <TextBlock Grid.Column="3" Text="Enable PvP" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
-                                            <CheckBox Style="{StaticResource OptionSwitch}" Grid.Column="4" Margin="5 5 10 5" x:Name="CBPvP" Checked="CBPvP_Enabled" IsChecked="{Binding enablePvPValue, Mode=OneWay, FallbackValue='True'}" ToolTip="Click to enable Player vs. Player"/>
+                                            <CheckBox Style="{StaticResource OptionSwitch}" Grid.Column="4" Margin="5 5 10 5" x:Name="CBPvP" Checked="CBPvP_Enabled" IsChecked="{Binding enablePvPValue, Mode=OneWay, FallbackValue='True', UpdateSourceTrigger=PropertyChanged}" ToolTip="Click to enable Player vs. Player"/>
 
                                             <!-- Row 2 -->
                                             <TextBlock Grid.Row="1" Grid.Column="0" Text="Auto Portforward" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
-                                            <CheckBox Style="{StaticResource OptionSwitch}" Grid.Row="1" Grid.Column="1" Margin="5 5 10 5" x:Name="CBAutoPortForward" Checked="CBAutoPortForward_Enabled" IsChecked="{Binding enableAutoPortForwardValue, Mode=OneWay, FallbackValue='True'}" ToolTip="Click to enable automatic Port Forwarding using UPnP (NOTE: Not all routers support this functionality)"/>
+                                            <CheckBox Style="{StaticResource OptionSwitch}" Grid.Row="1" Grid.Column="1" Margin="5 5 10 5" x:Name="CBAutoPortForward" Checked="CBAutoPortForward_Enabled" IsChecked="{Binding enableAutoPortForwardValue, Mode=OneWay, FallbackValue='True', UpdateSourceTrigger=PropertyChanged}" ToolTip="Click to enable automatic Port Forwarding using UPnP (NOTE: Not all routers support this functionality)"/>
 
                                             <TextBlock Grid.Row="1" Grid.Column="3" Text="Load Full World" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
-                                            <CheckBox Style="{StaticResource OptionSwitch}" Grid.Row="1" Grid.Column="4" Margin="5 5 10 5" x:Name="CBCreateFullEntityCache" Checked="CBCreateFullEntityCache_Enabled" IsChecked="{Binding enableFullEntityCacheValue, Mode=OneWay, FallbackValue='False'}" ToolTip="Click to enable the server to fully load the world's entity cache at startup (NOTE: Server will take longer to start up)"/>
+                                            <CheckBox Style="{StaticResource OptionSwitch}" Grid.Row="1" Grid.Column="4" Margin="5 5 10 5" x:Name="CBCreateFullEntityCache" Checked="CBCreateFullEntityCache_Enabled" IsChecked="{Binding enableFullEntityCacheValue, Mode=OneWay, FallbackValue='False', UpdateSourceTrigger=PropertyChanged}" ToolTip="Click to enable the server to fully load the world's entity cache at startup (NOTE: Server will take longer to start up)"/>
 
                                             <!-- Row 3 -->
                                             <TextBlock Grid.Row="2" Grid.Column="0" Text="Server Port" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
@@ -437,7 +418,7 @@
                                                     Background="{x:Null}" BorderBrush="{x:Null}"
                                                     Margin="4" SelectionBrush="#FF36383A"
                                                     VerticalAlignment="Center" BorderThickness="0"
-                                                    CaretBrush="White" Width="Auto" MaxLength="5" Text="{Binding serverPort, Mode=OneWay, FallbackValue='11000'}">
+                                                    CaretBrush="White" Width="Auto" MaxLength="5" Text="{Binding serverPort, Mode=OneWay, FallbackValue='11000', UpdateSourceTrigger=PropertyChanged}">
 
                                                     <!-- TODO: Validate input to be in the valid port ranges -->
 
@@ -486,7 +467,7 @@
 
                         <!-- Column 3: Version Number and External/Docked Console Checkbox -->
                         <DockPanel Grid.Column="2">
-                            <TextBlock DockPanel.Dock = "Top" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="12" Text="{Binding selectedWorldVersion, FallbackValue=Version, Mode=OneTime}" />
+                            <TextBlock DockPanel.Dock = "Top" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="12" Text="{Binding LauncherVersion, FallbackValue=Version, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}" />
                             <StackPanel DockPanel.Dock = "Bottom" HorizontalAlignment="Right" VerticalAlignment="Bottom" Orientation="Horizontal">
                                 <TextBlock FontSize="12" Text="Display Server Console Externally: "/>
                                 <CheckBox x:Name="CBIsExternal" IsChecked="{Binding IsServerExternal}" ToolTip="Check if you want to display the console in a separate CMD Window"/>
