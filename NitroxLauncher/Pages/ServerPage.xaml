@@ -103,7 +103,7 @@
 
                     <!-- World List -->     <!-- TODO: Order server listings based on the last one that was used (read times when save files were last edited) -->
                     <Border Grid.Row="1" CornerRadius="12" Background="Black">
-                        <ListView Name="WorldListingContainer" Background="{x:Null}" BorderBrush="{x:Null}" Margin="5" HorizontalContentAlignment="Stretch">
+                        <ListView Name="WorldListingContainer" Background="{x:Null}" BorderBrush="{x:Null}" Margin="5" HorizontalContentAlignment="Stretch" SelectionChanged="WorldListing_SelectionChanged">
                             <!-- TEMPORARY - View server listing buttons in Intellisense window -->
                             <d:ListView.ItemsSource>
                                 <x:Array Type="pages:World_Listing">
@@ -175,7 +175,16 @@
 
                             <ListView.ItemContainerStyle>
                                 <Style TargetType="ListViewItem">
-                                    <Setter Property="Focusable" Value="False"/>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsFocused" Value="True">
+                                            <!--<Setter Property="Focusable" Value="False"/>-->
+                                            
+                                            
+                                            <!--<Setter TargetName="WorldSelectBtn" Property="IsEnabled" Value="True"/>
+                                            <Setter TargetName="DeleteWorldBtn" Property="IsEnabled" Value="True"/>-->
+                                        </Trigger>
+                                    </Style.Triggers>
+                                    
                                     
                                     <!-- TODO: Get rid of or customize IsMouseOver background when hovering over world selection listing -->
                                     <!--<Style.Triggers>
@@ -200,7 +209,9 @@
                                             </Grid.ColumnDefinitions>
 
                                             <!-- Select World Button -->
-                                            <Button x:Name="WorldSelectBtn" Click="SelectWorld_Click" Style="{StaticResource WorldListingButton}" ToolTip="Select this world" Foreground="White" Height="83" HorizontalAlignment="Stretch" Width="Auto" HorizontalContentAlignment="Stretch">
+                                            <Button x:Name="WorldSelectBtn" Click="SelectWorld_Click" Style="{StaticResource WorldListingButton}" ToolTip="Select this world" Foreground="White" Height="83" HorizontalAlignment="Stretch" Width="Auto" HorizontalContentAlignment="Stretch" IsEnabled="False">
+                                                
+                                                
                                                 <DockPanel Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Button}}" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Button}}" VerticalAlignment="Center" HorizontalAlignment="Stretch">
 
                                                     <!-- World Name -->
@@ -219,7 +230,7 @@
                                             <Border Grid.Column="1" Background="Black"/>
 
                                             <!-- Delete World Button -->
-                                            <Button Grid.Column="2" ToolTip="Delete this world" Height="{Binding Height, RelativeSource={RelativeSource AncestorType=Border}}" Width="{Binding Height, RelativeSource={RelativeSource AncestorType=Border}}">
+                                            <Button Grid.Column="2" ToolTip="Delete this world" Click="DeleteWorld_Click" Height="{Binding Height, RelativeSource={RelativeSource AncestorType=Border}}" Width="{Binding Height, RelativeSource={RelativeSource AncestorType=Border}}" IsEnabled="False">
                                                 <Image Source="{StaticResource TrashcanButton}" Stretch="Uniform"  Width="30" Height="30"/>
                                             </Button>
                                             
@@ -227,11 +238,20 @@
                                     </Border>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
+
+                            <!--<ListView.Items>
+                                <Trigger ListBoxItem.Selected="" Property="IsFocused" Value="True">
+                                    <Setter TargetName="WorldSelectBtn" Property="IsEnabled" Value="True"/>
+                                    <Setter TargetName="DeleteWorldBtn" Property="IsEnabled" Value="True"/>
+                                </Trigger>
+                            </ListView.Items>-->
+
                         </ListView>
                     </Border>
                 </Grid>
             </Border>
 
+            
             <!-- WORLD OPTIONS PANE (Out of view: Margin="1732 32 0 32" | In view: Margin="866 32 866 32") PANE WIDTH: 710 -->
             <Grid Margin="1732 32 0 32" x:Name="WorldSettingsPane" RenderTransformOrigin="0.5,0.5">
                 <Grid.RenderTransform>
@@ -264,7 +284,7 @@
                                 <ColumnDefinition Width="40"/>
                             </Grid.ColumnDefinitions>
 
-                            <Button Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="Select a different world" Click="GoBack_Click">
+                            <Button Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="Save settings and select a different world" Click="GoBack_Click">
                                 <Image Source="{StaticResource GoBackButton}" Stretch="Uniform" Width="40" Height="40"/>
                             </Button>
                             
@@ -397,17 +417,17 @@
 
                                             <!-- Row 1 -->
                                             <TextBlock Grid.Column="0" Text="Enable Cheats" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
-                                            <CheckBox Style="{StaticResource OptionSwitch}" Grid.Column="1" Margin="5 5 10 5" x:Name="CBCheats" Checked="CBCheats_Enabled" IsChecked="{Binding enableCheatsValue, Mode=OneWay, FallbackValue='True', UpdateSourceTrigger=PropertyChanged}" ToolTip="Click to enable the use of commands in game (RECOMMENDED FOR NITROX)"/>
+                                            <CheckBox Style="{StaticResource OptionSwitch}" Grid.Column="1" Margin="5 5 10 5" x:Name="CBCheats" Click="CBCheats_Clicked" IsChecked="{Binding enableCheatsValue, Mode=OneWay, FallbackValue='True', UpdateSourceTrigger=PropertyChanged}" ToolTip="Click to enable the use of commands in game (RECOMMENDED FOR NITROX)"/>
 
                                             <TextBlock Grid.Column="3" Text="Enable PvP" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
-                                            <CheckBox Style="{StaticResource OptionSwitch}" Grid.Column="4" Margin="5 5 10 5" x:Name="CBPvP" Checked="CBPvP_Enabled" IsChecked="{Binding enablePvPValue, Mode=OneWay, FallbackValue='True', UpdateSourceTrigger=PropertyChanged}" ToolTip="Click to enable Player vs. Player"/>
+                                            <CheckBox Style="{StaticResource OptionSwitch}" Grid.Column="4" Margin="5 5 10 5" x:Name="CBPvP" Click="CBPvP_Clicked" IsChecked="{Binding enablePvPValue, Mode=OneWay, FallbackValue='True', UpdateSourceTrigger=PropertyChanged}" ToolTip="Click to enable Player vs. Player"/>
 
                                             <!-- Row 2 -->
                                             <TextBlock Grid.Row="1" Grid.Column="0" Text="Auto Portforward" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
-                                            <CheckBox Style="{StaticResource OptionSwitch}" Grid.Row="1" Grid.Column="1" Margin="5 5 10 5" x:Name="CBAutoPortForward" Checked="CBAutoPortForward_Enabled" IsChecked="{Binding enableAutoPortForwardValue, Mode=OneWay, FallbackValue='True', UpdateSourceTrigger=PropertyChanged}" ToolTip="Click to enable automatic Port Forwarding using UPnP (NOTE: Not all routers support this functionality)"/>
+                                            <CheckBox Style="{StaticResource OptionSwitch}" Grid.Row="1" Grid.Column="1" Margin="5 5 10 5" x:Name="CBAutoPortForward" Click="CBAutoPortForward_Clicked" IsChecked="{Binding enableAutoPortForwardValue, Mode=OneWay, FallbackValue='True', UpdateSourceTrigger=PropertyChanged}" ToolTip="Click to enable automatic Port Forwarding using UPnP (NOTE: Not all routers support this functionality)"/>
 
                                             <TextBlock Grid.Row="1" Grid.Column="3" Text="Load Full World" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
-                                            <CheckBox Style="{StaticResource OptionSwitch}" Grid.Row="1" Grid.Column="4" Margin="5 5 10 5" x:Name="CBCreateFullEntityCache" Checked="CBCreateFullEntityCache_Enabled" IsChecked="{Binding enableFullEntityCacheValue, Mode=OneWay, FallbackValue='False', UpdateSourceTrigger=PropertyChanged}" ToolTip="Click to enable the server to fully load the world's entity cache at startup (NOTE: Server will take longer to start up)"/>
+                                            <CheckBox Style="{StaticResource OptionSwitch}" Grid.Row="1" Grid.Column="4" Margin="5 5 10 5" x:Name="CBCreateFullEntityCache" Click="CBCreateFullEntityCache_Clicked" IsChecked="{Binding enableFullEntityCacheValue, Mode=OneWay, FallbackValue='False', UpdateSourceTrigger=PropertyChanged}" ToolTip="Click to enable the server to fully load the world's entity cache at startup (NOTE: Server will take longer to start up)"/>
 
                                             <!-- Row 3 -->
                                             <TextBlock Grid.Row="2" Grid.Column="0" Text="Server Port" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
@@ -467,7 +487,7 @@
 
                         <!-- Column 3: Version Number and External/Docked Console Checkbox -->
                         <DockPanel Grid.Column="2">
-                            <TextBlock DockPanel.Dock = "Top" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="12" Text="{Binding LauncherVersion, FallbackValue=Version, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}" />
+                            <TextBlock DockPanel.Dock = "Top" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="12" Text="{Binding LauncherVersion, FallbackValue=Version, Mode=OneTime}" />
                             <StackPanel DockPanel.Dock = "Bottom" HorizontalAlignment="Right" VerticalAlignment="Bottom" Orientation="Horizontal">
                                 <TextBlock FontSize="12" Text="Display Server Console Externally: "/>
                                 <CheckBox x:Name="CBIsExternal" IsChecked="{Binding IsServerExternal}" ToolTip="Check if you want to display the console in a separate CMD Window"/>

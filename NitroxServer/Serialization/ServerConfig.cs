@@ -21,7 +21,7 @@ namespace NitroxServer.Serialization
 
         private string postSaveCommandPath = string.Empty;
 
-        private string saveNameSetting = "world";
+        private string saveNameSetting = "world";   // CHANGE THIS TO BE HANDLED BY WORLD MANAGER
         public override string FileName => "server.cfg";
 
         [PropertyDescription("Leave blank for a random spawn position")]
