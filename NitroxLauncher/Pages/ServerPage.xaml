@@ -312,13 +312,13 @@
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                         <TextBlock Text="Name:  " Foreground="White" FontSize="20" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                         <Border BorderBrush ="#333437" Background="#333437" BorderThickness="1" CornerRadius="8" Margin="0">
-                                            <TextBox Grid.Column="0" x:Name="WorldNameTextbox"
+                                            <TextBox Grid.Column="0" x:Name="TBWorldName"
                                                 FontSize="18" MaxLines="1"
                                                 Foreground="#8A8A8A" TextAlignment="Left"
                                                 Background="{x:Null}" BorderBrush="{x:Null}"
                                                 Margin="13,4,13,4" SelectionBrush="#FF36383A"
                                                 VerticalAlignment="Center" BorderThickness="0"
-                                                CaretBrush="White" Width="250" MaxLength="25" Text="{Binding selectedWorldName, FallbackValue=MyWorld, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}">
+                                                CaretBrush="White" Width="250" MaxLength="25" Text="{Binding SelectedWorldName, FallbackValue=WorldName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" TextChanged="TBWorldName_Changed">
 
                                                 <!-- TODO: Make text font color turn white when text box is being edited (The commented-out code below doesn't seem to do it) -->
                                                 <!--<TextBox.Style>
@@ -339,12 +339,12 @@
                                     <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center"  HorizontalAlignment="Right">
                                         <TextBlock Text="Seed:  " Foreground="White" FontSize="20" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                         <Border BorderBrush ="#333437" Background="#333437" BorderThickness="1" CornerRadius="8" Margin="0">
-                                            <TextBox Grid.Column="0" x:Name="WorldSeedTextbox"
+                                            <TextBox Grid.Column="0" x:Name="TBWorldSeed"
                                                 FontSize="18" MaxLines="1" FontStyle="Italic"
                                                 Foreground="#8A8A8A" TextAlignment="Left"
                                                 Background="{x:Null}" BorderBrush="{x:Null}"
                                                 Margin="13,4,13,4" SelectionBrush="#FF36383A"
-                                                VerticalAlignment="Center" BorderThickness="0" CaretBrush="White" Width="155" MaxLength="10" Text="{Binding selectedWorldSeed, FallbackValue=WorldSeed, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}"/>
+                                                VerticalAlignment="Center" BorderThickness="0" CaretBrush="White" Width="155" MaxLength="10" Text="{Binding SelectedWorldSeed, FallbackValue=WorldSeed, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" TextChanged="TBWorldSeed_Changed" IsEnabled="{Binding IsNewWorld, FallbackValue=False, Mode=OneWay}"/>
                                         </Border>
                                     </StackPanel>
                                 </Grid>
@@ -417,41 +417,41 @@
 
                                             <!-- Row 1 -->
                                             <TextBlock Grid.Column="0" Text="Enable Cheats" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
-                                            <CheckBox Style="{StaticResource OptionSwitch}" Grid.Column="1" Margin="5 5 10 5" x:Name="CBCheats" Click="CBCheats_Clicked" IsChecked="{Binding enableCheatsValue, Mode=OneWay, FallbackValue='True', UpdateSourceTrigger=PropertyChanged}" ToolTip="Click to enable the use of commands in game (RECOMMENDED FOR NITROX)"/>
+                                            <CheckBox Style="{StaticResource OptionSwitch}" Grid.Column="1" Margin="5 5 10 5" x:Name="CBCheats" Click="CBCheats_Clicked" IsChecked="{Binding EnableCheatsValue, Mode=OneWay, FallbackValue='True'}" ToolTip="Click to enable the use of commands in game (RECOMMENDED FOR NITROX)"/>
 
-                                            <TextBlock Grid.Column="3" Text="Enable PvP" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
-                                            <CheckBox Style="{StaticResource OptionSwitch}" Grid.Column="4" Margin="5 5 10 5" x:Name="CBPvP" Click="CBPvP_Clicked" IsChecked="{Binding enablePvPValue, Mode=OneWay, FallbackValue='True', UpdateSourceTrigger=PropertyChanged}" ToolTip="Click to enable Player vs. Player"/>
+                                            <TextBlock Grid.Column="3" Text="LAN Discovery" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
+                                            <CheckBox Style="{StaticResource OptionSwitch}" Grid.Column="4" Margin="5 5 10 5" x:Name="CBLanDiscovery" Click="CBLanDiscovery_Clicked" IsChecked="{Binding EnableLanDiscoveryValue, Mode=OneWay, FallbackValue='True'}" ToolTip="Click to enable the server to be discovered by other computers connected to the same network."/>
 
                                             <!-- Row 2 -->
                                             <TextBlock Grid.Row="1" Grid.Column="0" Text="Auto Portforward" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
-                                            <CheckBox Style="{StaticResource OptionSwitch}" Grid.Row="1" Grid.Column="1" Margin="5 5 10 5" x:Name="CBAutoPortForward" Click="CBAutoPortForward_Clicked" IsChecked="{Binding enableAutoPortForwardValue, Mode=OneWay, FallbackValue='True', UpdateSourceTrigger=PropertyChanged}" ToolTip="Click to enable automatic Port Forwarding using UPnP (NOTE: Not all routers support this functionality)"/>
+                                            <CheckBox Style="{StaticResource OptionSwitch}" Grid.Row="1" Grid.Column="1" Margin="5 5 10 5" x:Name="CBAutoPortForward" Click="CBAutoPortForward_Clicked" IsChecked="{Binding EnableAutoPortForwardValue, Mode=OneWay, FallbackValue='True'}" ToolTip="Click to enable automatic Port Forwarding using UPnP (NOTE: Not all routers support this functionality)"/>
 
                                             <TextBlock Grid.Row="1" Grid.Column="3" Text="Load Full World" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
-                                            <CheckBox Style="{StaticResource OptionSwitch}" Grid.Row="1" Grid.Column="4" Margin="5 5 10 5" x:Name="CBCreateFullEntityCache" Click="CBCreateFullEntityCache_Clicked" IsChecked="{Binding enableFullEntityCacheValue, Mode=OneWay, FallbackValue='False', UpdateSourceTrigger=PropertyChanged}" ToolTip="Click to enable the server to fully load the world's entity cache at startup (NOTE: Server will take longer to start up)"/>
+                                            <CheckBox Style="{StaticResource OptionSwitch}" Grid.Row="1" Grid.Column="4" Margin="5 5 10 5" x:Name="CBCreateFullEntityCache" Click="CBCreateFullEntityCache_Clicked" IsChecked="{Binding EnableFullEntityCacheValue, Mode=OneWay, FallbackValue='False'}" ToolTip="Click to enable the server to fully load the world's entity cache at startup (NOTE: Server will take longer to start up)"/>
 
                                             <!-- Row 3 -->
                                             <TextBlock Grid.Row="2" Grid.Column="0" Text="Server Port" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
                                             <Border Grid.Row="2" Grid.Column="1" BorderBrush ="Black" Background="Black" BorderThickness="1" CornerRadius="8" Margin="5 5 10 5">
-                                                <TextBox Grid.Column="0" x:Name="WorldPortTextbox"
+                                                <TextBox Grid.Column="0" x:Name="TBWorldServerPort"
                                                     FontSize="12" MaxLines="1"
                                                     Foreground="#8A8A8A" TextAlignment="Center"
                                                     Background="{x:Null}" BorderBrush="{x:Null}"
                                                     Margin="4" SelectionBrush="#FF36383A"
                                                     VerticalAlignment="Center" BorderThickness="0"
-                                                    CaretBrush="White" Width="Auto" MaxLength="5" Text="{Binding serverPort, Mode=OneWay, FallbackValue='11000', UpdateSourceTrigger=PropertyChanged}">
+                                                    CaretBrush="White" Width="Auto" MaxLength="5" Text="{Binding ServerPort, Mode=OneWay, FallbackValue='11000'}" TextChanged="TBWorldServerPort_Changed">
 
-                                                    <!-- TODO: Validate input to be in the valid port ranges -->
+                                                    <!-- TODO: Validate input to be in the valid port ranges - DO IT IN C# -->
 
                                                     <!-- TODO: Make text font color turn white when text box is being edited (The commented-out code below doesn't seem to do it) -->
                                                     <!--<TextBox.Style>
-                                                    <Style TargetType="TextBox">
-                                                        <Style.Triggers>
-                                                            <Trigger Property="IsMouseOver" Value="True">
-                                                                <Setter Property="Foreground" Value="White"/>
-                                                            </Trigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </TextBox.Style>-->
+                                                        <Style TargetType="TextBox">
+                                                            <Style.Triggers>
+                                                                <Trigger Property="IsMouseOver" Value="True">
+                                                                    <Setter Property="Foreground" Value="White"/>
+                                                                </Trigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </TextBox.Style>-->
 
                                                 </TextBox>
                                             </Border>

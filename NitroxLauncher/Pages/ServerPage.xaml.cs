@@ -7,6 +7,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using NitroxLauncher.Models;
 using NitroxModel.Core;
+using NitroxModel.Server;
 using NitroxServer.Serialization;
 using NitroxServer.Serialization.World;
 
@@ -23,26 +24,27 @@ namespace NitroxLauncher.Pages
         
         public string PathToSubnautica => LauncherLogic.Config.SubnauticaPath;
         public static string SavesFolderDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Nitrox\\saves";
-        readonly System.IO.DirectoryInfo savesFolderDir = new DirectoryInfo(SavesFolderDir);
-        private readonly ServerConfig serverConfig = ServerConfig.Load();
+        readonly System.IO.DirectoryInfo savesFolderDir = new(SavesFolderDir); //add public at front
 
-        // Variables for server config manipulation
         public IServerSerializer Serializer { get; private set; }
         private string FileEnding => Serializer?.FileEnding ?? "";
 
-        public string selectedWorldName => "My World";
-        public string selectedWorldSeed => "QTUJNDGRBK";
-        public string selectedWorldVersion => "v1.6.0.1";
+        // World settings variables (TODO: REMOVE THESE)
+        private readonly ServerConfig serverConfig = ServerConfig.Load();
 
-        // THESE CAN'T BE LOCATED HERE
-        public bool enableCheatsValue => !serverConfig.DisableConsole;
-        public bool enablePvPValue => true;
-        public bool enableAutoPortForwardValue => serverConfig.AutoPortForward;
-        public bool enableFullEntityCacheValue => serverConfig.CreateFullEntityCache;
+        public string SelectedWorldName { get; set; }
+        public string SelectedWorldSeed { get; set; }
+        public string SelectedWorldVersion { get; set; }
+        public ServerGameMode SelectedWorldGamemode { get; set; }
+        public bool EnableCheatsValue { get; set; }
+        public bool EnableAutoPortForwardValue { get; set; }
+        public bool EnableFullEntityCacheValue { get; set; }
+        public bool EnableLanDiscoveryValue { get; set; }
+        public int ServerPort { get; set; }
 
-        public int serverPort => 11000;//serverConfig?.ServerPort ?? -1;    // Taken from Server.cs (DOESN'T WORK: Displays -1)
-        public int SelectedWorldIndex;
+        public bool IsNewWorld { get; set; }
 
+        public int SelectedWorldIndex { get; set; }
 
         public ServerPage()
         {
@@ -83,7 +85,7 @@ namespace NitroxLauncher.Pages
             // Bind the list data to be used in XAML
             WorldListingContainer.ItemsSource = WorldListing;
 
-            // If the "Display Server Console Externally" Checkbox is checked, set value to true
+            // If the "Display Server Console Externally" Checkbox is checked, set value to true - (Is this needed anymore?)
             if (CBIsExternal.IsChecked == true)
             {
                 CBIsExternal.IsChecked = IsServerExternal;
@@ -91,41 +93,76 @@ namespace NitroxLauncher.Pages
 
         }
         
-        //File Management
+        // File Management
         private bool ValidateSave(int saveFileNum)
         {
             bool saveValidity = false;
 
-
-
             return saveValidity;
         }
 
-        // Pane Buttons
-        private void AddWorld_Click(object sender, RoutedEventArgs e)
+        public void SaveConfigSettings()
         {
-            //enableCheatsValue = true;
-            //public bool enablePvPValue => true;
-            //public bool enableAutoPortForwardValue => true;
-            //public bool enableFullEntityCacheValue => false;
+            serverConfig.Update(c =>
+            {
+                c.SaveName = SelectedWorldName;
 
+                if (IsNewWorld == true) { c.Seed = SelectedWorldSeed; }
+
+                if (RBFreedom.IsChecked == true) { c.GameMode = ServerGameMode.FREEDOM; }
+                else if (RBSurvival.IsChecked == true) { c.GameMode = ServerGameMode.SURVIVAL; }
+                else if (RBCreative.IsChecked == true) { c.GameMode = ServerGameMode.CREATIVE; }
+
+                c.DisableConsole = !EnableCheatsValue;
+                c.AutoPortForward = EnableAutoPortForwardValue;
+                c.CreateFullEntityCache = EnableFullEntityCacheValue;
+                c.LANDiscoveryEnabled = EnableLanDiscoveryValue;
+                c.ServerPort = ServerPort;
+
+            });
+            Log.Info($"Server Config updated");
+        }
+
+        // Pane Buttons
+        public void AddWorld_Click(object sender, RoutedEventArgs e)
+        {
+            IsNewWorld = true;
+
+            ServerConfig serverConfig = ServerConfig.Load();
+
+            // THESE WOULD BE SET TO DEFAULT VALUES INSTEAD OF SERVER.CFG VALUES, BUT THEY ARE USED HERE UNTIL I CAN FIGURE OUT THE WORLD SELECTION BUTTONS
+            SelectedWorldName = serverConfig.SaveName;
+            SelectedWorldSeed = serverConfig.Seed;
+            SelectedWorldGamemode = serverConfig.GameMode;
+            EnableCheatsValue = !serverConfig.DisableConsole;
+            EnableAutoPortForwardValue = serverConfig.AutoPortForward;
+            EnableFullEntityCacheValue = serverConfig.CreateFullEntityCache;
+            EnableLanDiscoveryValue = serverConfig.LANDiscoveryEnabled;
+            ServerPort = serverConfig.ServerPort;
+
+            // Set the world settings values to the server.cfg values
+            TBWorldName.Text = SelectedWorldName;
+            TBWorldSeed.Text = SelectedWorldSeed;
+            if (SelectedWorldGamemode == ServerGameMode.FREEDOM) { RBFreedom.IsChecked = true; }
+            else if (SelectedWorldGamemode == ServerGameMode.SURVIVAL) { RBSurvival.IsChecked = true; }
+            else if (SelectedWorldGamemode == ServerGameMode.CREATIVE) { RBCreative.IsChecked = true; }
+            CBCheats.IsChecked = EnableCheatsValue;
+            CBAutoPortForward.IsChecked = EnableAutoPortForwardValue;
+            CBCreateFullEntityCache.IsChecked = EnableFullEntityCacheValue;
+            CBLanDiscovery.IsChecked = EnableLanDiscoveryValue;
+            TBWorldServerPort.Text = Convert.ToString(ServerPort);
+
+            TBWorldSeed.IsEnabled = true;
 
             Storyboard WorldSelectedAnimationStoryboard = (Storyboard)FindResource("WorldSelectedAnimation");
             WorldSelectedAnimationStoryboard.Begin();
 
-            //Note: DOES NOT WORK v
-            //NitroxServiceLocator.LocateService<WorldPersistence>().CreateFreshWorld();
         }
 
         private void GoBack_Click(object sender, RoutedEventArgs e)
         {
-            serverConfig.Update();//(c =>
-            //{
-            //    c.
-            //});
-            Log.Info($"Server Config updated");
+            SaveConfigSettings();
 
-            
             Storyboard GoBackAnimationStoryboard = (Storyboard)FindResource("GoBackAnimation");
             GoBackAnimationStoryboard.Begin();
         }
@@ -141,6 +178,9 @@ namespace NitroxLauncher.Pages
 
         private void SelectWorld_Click(object sender, RoutedEventArgs e)
         {
+            IsNewWorld = false;
+            TBWorldSeed.IsEnabled = false;
+
             Storyboard WorldSelectedAnimationStoryboard = (Storyboard)FindResource("WorldSelectedAnimation");
             WorldSelectedAnimationStoryboard.Begin();
 
@@ -152,34 +192,63 @@ namespace NitroxLauncher.Pages
 
         }
 
-        // World settings management
+        // World settings management (MAY REMOVE THESE
+
+        private void TBWorldName_Changed(object sender, TextChangedEventArgs e)
+        {
+            SelectedWorldName = TBWorldName.Text;
+            Log.Info($"World name set to {SelectedWorldName}");
+        }
+
+        private void TBWorldSeed_Changed(object sender, TextChangedEventArgs e)
+        {
+            SelectedWorldSeed = TBWorldSeed.Text;
+            Log.Info($"World seed set to {SelectedWorldSeed}");
+        }
+
         private void RBGamemode_Clicked(object sender, RoutedEventArgs e)
         {
-
+            
         }
 
         private void CBCheats_Clicked(object sender, RoutedEventArgs e)
         {
-            //enableCheatsValue = CBCheats.IsChecked;
-            serverConfig.DisableConsole = (bool)!CBCheats.IsChecked;
-            Log.Info($"DisableConsole set to {serverConfig.DisableConsole}");
+            EnableCheatsValue = (bool)CBCheats.IsChecked;
+            Log.Info($"DisableConsole set to {EnableCheatsValue}");
         }
 
-        private void CBPvP_Clicked(object sender, RoutedEventArgs e)
+        private void CBLanDiscovery_Clicked(object sender, RoutedEventArgs e)
         {
-
+            EnableLanDiscoveryValue = (bool)CBLanDiscovery.IsChecked;
+            Log.Info($"LanDiscovery set to {EnableLanDiscoveryValue}");
         }
 
         private void CBAutoPortForward_Clicked(object sender, RoutedEventArgs e)
         {
-            serverConfig.AutoPortForward = (bool)CBAutoPortForward.IsChecked;
-            Log.Info($"AutoPortForward set to {serverConfig.AutoPortForward}");
+            EnableAutoPortForwardValue = (bool)CBAutoPortForward.IsChecked;
+            Log.Info($"AutoPortForward set to {EnableAutoPortForwardValue}");
         }
 
         private void CBCreateFullEntityCache_Clicked(object sender, RoutedEventArgs e)
         {
-            serverConfig.CreateFullEntityCache = (bool)CBCreateFullEntityCache.IsChecked;
-            Log.Info($"CreateFullEntityCache set to {serverConfig.CreateFullEntityCache}");
+            EnableFullEntityCacheValue = (bool)CBCreateFullEntityCache.IsChecked;
+            Log.Info($"CreateFullEntityCache set to {EnableFullEntityCacheValue}");
+        }
+
+        // RUNS EVEN IF TEXT IS CHANGED DURING STARTUP - MUST CHANGE!!! (?)
+        private void TBWorldServerPort_Changed(object sender, TextChangedEventArgs e)
+        {
+            int ServerPortNum = 11000;
+            try
+            {
+                ServerPortNum = Convert.ToInt32(TBWorldServerPort.Text);
+            }
+            catch
+            {
+                Log.Info($"ServerPort input not valid");
+            }
+            
+            ServerPort = ServerPortNum;
         }
 
         private void AdvancedSettings_Click(object sender, RoutedEventArgs e)
@@ -190,6 +259,11 @@ namespace NitroxLauncher.Pages
         // Start server button management
         private void StartServer_Click(object sender, RoutedEventArgs e)
         {
+            SaveConfigSettings();
+
+            Storyboard GoBackAnimationStoryboard = (Storyboard)FindResource("GoBackAnimation");
+            GoBackAnimationStoryboard.Begin();
+
             // If the "Start Server button" is clicked and not the "Display Server Console Externally" Checkbox, then start the server
             if (!(e.OriginalSource is CheckBox))
             {
@@ -202,6 +276,7 @@ namespace NitroxLauncher.Pages
                     MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
+
         }
 
         /* Restore Backup Button (WIP)
