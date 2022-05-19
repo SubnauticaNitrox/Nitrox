@@ -53,9 +53,6 @@
             <RowDefinition Height="499"/>
         </Grid.RowDefinitions>
 
-        <!-- REMOVE THIS IMAGE IF UNUSED -->
-        <!--<Image Source="{StaticResource ServerIllustration}" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center" Width="217" Height="156" Margin="0,0,0,0"/>-->
-
         <!-- ROW 1 - TITLE TEXT -->
         <TextBlock FontSize="32" Foreground="White" Margin="32 0 0 0" TextWrapping="Wrap" VerticalAlignment="Bottom" FontWeight="Bold" Text="Nitrox server"/>
 
@@ -70,7 +67,7 @@
         <Grid Grid.Row="2" Width="2442" HorizontalAlignment="Center">
 
             <!-- WORLD SELECTION PANE (In view: Margin="866 32 866 32" | Out of view: Margin="0 32 1732 32") PANE WIDTH: 710 -->
-            <Border CornerRadius="12" Background="#151516" Margin="866 32 866 32" x:Name="WorldSelectionPane" RenderTransformOrigin="0.5,0.5"> <!-- x:Name="WorldSelectionPane" -->
+            <Border CornerRadius="12" Background="#151516" Margin="866 32 866 32" x:Name="WorldSelectionPane" RenderTransformOrigin="0.5,0.5">
                 <Border.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform/>
@@ -79,179 +76,185 @@
                         <TranslateTransform/>
                     </TransformGroup>
                 </Border.RenderTransform>
-                
+
                 <Grid Margin="16 0 16 16">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="60"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
+                    <!-- Pane Header -->
                     <Grid Grid.Row="0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="40"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="40"/>
                         </Grid.ColumnDefinitions>
-                        
+
                         <TextBlock Grid.Column="1" Text="Your Worlds" Foreground="White" VerticalAlignment="Center" FontSize="30" HorizontalAlignment="Center" FontWeight="Bold"/>
-                        
+
                         <Button Grid.Column="2" x:Name="AddWorldBtn" Click="AddWorld_Click" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="Add a new world">
                             <Image Source="{StaticResource AddServerButton}" Stretch="Uniform"  Width="40" Height="40"/>
                         </Button>
-                        
+
                     </Grid>
 
-                    <!-- World List -->     <!-- TODO: Order server listings based on the last one that was used (read times when save files were last edited) -->
+                    <!-- World List -->
+                    <!-- TODO: Order server listings based on the last one that was used (read times when save files were last edited) -->
                     <Border Grid.Row="1" CornerRadius="12" Background="Black">
-                        <ListView Name="WorldListingContainer" Background="{x:Null}" BorderBrush="{x:Null}" Margin="5" HorizontalContentAlignment="Stretch" SelectionChanged="WorldListing_SelectionChanged">
-                            <!-- TEMPORARY - View server listing buttons in Intellisense window -->
-                            <d:ListView.ItemsSource>
-                                <x:Array Type="pages:World_Listing">
-                                    <pages:World_Listing WorldName = "Survival w/ friends" WorldGamemode = "Survival" WorldVersion = "v1.6.0.0"/>
-                                    <pages:World_Listing WorldName = "My World 1" WorldGamemode = "Freedom" WorldVersion = "v1.5.0.2"/>
-                                    <pages:World_Listing WorldName = "v1.7 pre-release test" WorldGamemode = "Freedom" WorldVersion = "v1.7.0.0"/>
-                                    <pages:World_Listing WorldName = "Old World" WorldGamemode = "Survival" WorldVersion = "v1.3.0.0"/>
-                                    <pages:World_Listing WorldName = "Creative Mode" WorldGamemode = "Creative" WorldVersion = "v1.6.0.0"/>
-                                    <pages:World_Listing WorldName = "v1.6.0.1 testing" WorldGamemode = "Freedom" WorldVersion = "v1.6.0.1"/>
-                                </x:Array>
-                            </d:ListView.ItemsSource>
+                        <Grid>
+                            <Grid x:Name="NoWorldsBackground">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="2*"/>
+                                </Grid.RowDefinitions>
 
-                            <!-- Fix the Scroll Bar -->
-                            <ListView.Resources>
-                                <Style x:Key="{x:Type ScrollBar}" TargetType="{x:Type ScrollBar}">
-                                    <Setter Property="Template">
-                                        <Setter.Value>
-                                            <ControlTemplate TargetType="{x:Type ScrollBar}">
+                                <TextBlock Text="Looks like you don't have any worlds. Click the + button to add a new world!" Foreground="#FF515255" FontWeight="Medium" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0 0 0 40"/>
+                                <Image Grid.Row="1" Source="{StaticResource ServerIllustration}" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Top" Width="290" Margin="0 15 0 0"/>
+                            </Grid>
 
-                                                <Grid x:Name="GridRoot" Width="6" Background="{x:Null}" Margin="0 -1 0 0">
-                                                    <Track x:Name="PART_Track" Grid.Row="0" IsDirectionReversed="true" Focusable="False">
-                                                        <Track.Thumb>
-                                                            <Thumb x:Name="Thumb" Background="#26FFFFFF" Style="{DynamicResource ScrollThumbs}"/>
-                                                        </Track.Thumb>
-                                                        <Track.IncreaseRepeatButton>
-                                                            <RepeatButton x:Name="PageUp" Command="ScrollBar.PageDownCommand" Opacity="0" Focusable="False"/>
-                                                        </Track.IncreaseRepeatButton>
-                                                        <Track.DecreaseRepeatButton>
-                                                            <RepeatButton x:Name="PageDown" Command="ScrollBar.PageUpCommand" Opacity="0" Focusable="False"/>
-                                                        </Track.DecreaseRepeatButton>
-                                                    </Track>
-                                                </Grid>
+                            <ListView Name="WorldListingContainer" Background="{x:Null}" BorderBrush="{x:Null}" Margin="5" HorizontalContentAlignment="Stretch">
+                                <!-- TEMPORARY - View server listing buttons in Intellisense window -->
+                                <!--<d:ListView.ItemsSource>
+                                    <x:Array Type="pages:World_Listing">
+                                        <pages:World_Listing WorldName = "Survival w/ friends" WorldGamemode = "Survival" WorldVersion = "v1.6.0.0"/>
+                                        <pages:World_Listing WorldName = "My World 1" WorldGamemode = "Freedom" WorldVersion = "v1.5.0.2"/>
+                                        <pages:World_Listing WorldName = "v1.7 pre-release test" WorldGamemode = "Freedom" WorldVersion = "v1.7.0.0"/>
+                                        <pages:World_Listing WorldName = "Old World" WorldGamemode = "Survival" WorldVersion = "v1.3.0.0"/>
+                                        <pages:World_Listing WorldName = "Creative Mode" WorldGamemode = "Creative" WorldVersion = "v1.6.0.0"/>
+                                        <pages:World_Listing WorldName = "v1.6.0.1 testing" WorldGamemode = "Freedom" WorldVersion = "v1.6.0.1"/>
+                                    </x:Array>
+                                </d:ListView.ItemsSource>-->
 
-                                                <ControlTemplate.Triggers>
-                                                    <Trigger SourceName="Thumb" Property="IsMouseOver" Value="true">
-                                                        <Setter Value="#3FFFFFFF" TargetName="Thumb" Property="Background"/>
-                                                    </Trigger>
-                                                    <Trigger SourceName="Thumb" Property="IsDragging" Value="true">
-                                                        <Setter Value="{DynamicResource DarkBrush}" TargetName="Thumb" Property="Background"/>
-                                                    </Trigger>
+                                <!-- Fix the Scroll Bar -->
+                                <ListView.Resources>
+                                    <Style x:Key="{x:Type ScrollBar}" TargetType="{x:Type ScrollBar}">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="{x:Type ScrollBar}">
 
-                                                    <Trigger Property="IsEnabled" Value="false">
-                                                        <Setter TargetName="Thumb" Property="Visibility" Value="Collapsed"/>
-                                                    </Trigger>
-                                                    <Trigger Property="Orientation" Value="Horizontal">
-                                                        <Setter TargetName="GridRoot" Property="LayoutTransform">
-                                                            <Setter.Value>
-                                                                <RotateTransform Angle="-90"/>
-                                                            </Setter.Value>
-                                                        </Setter>
-                                                        <Setter TargetName="PART_Track" Property="LayoutTransform">
-                                                            <Setter.Value>
-                                                                <RotateTransform Angle="-90"/>
-                                                            </Setter.Value>
-                                                        </Setter>
-                                                        <Setter Property="Width" Value="Auto"/>
-                                                        <Setter Property="Height" Value="12"/>
-                                                        <Setter TargetName="Thumb" Property="Tag" Value="Horizontal"/>
-                                                        <Setter TargetName="PageDown" Property="Command" Value="ScrollBar.PageLeftCommand"/>
-                                                        <Setter TargetName="PageUp" Property="Command" Value="ScrollBar.PageRightCommand"/>
-                                                    </Trigger>
-                                                </ControlTemplate.Triggers>
-                                                
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Style>
-                            </ListView.Resources>
+                                                    <Grid x:Name="GridRoot" Width="6" Background="{x:Null}" Margin="0 -1 0 0">
+                                                        <Track x:Name="PART_Track" Grid.Row="0" IsDirectionReversed="true" Focusable="False">
+                                                            <Track.Thumb>
+                                                                <Thumb x:Name="Thumb" Background="#26FFFFFF" Style="{DynamicResource ScrollThumbs}"/>
+                                                            </Track.Thumb>
+                                                            <Track.IncreaseRepeatButton>
+                                                                <RepeatButton x:Name="PageUp" Command="ScrollBar.PageDownCommand" Opacity="0" Focusable="False"/>
+                                                            </Track.IncreaseRepeatButton>
+                                                            <Track.DecreaseRepeatButton>
+                                                                <RepeatButton x:Name="PageDown" Command="ScrollBar.PageUpCommand" Opacity="0" Focusable="False"/>
+                                                            </Track.DecreaseRepeatButton>
+                                                        </Track>
+                                                    </Grid>
 
-                            <ListView.ItemContainerStyle>
-                                <Style TargetType="ListViewItem">
-                                    <Style.Triggers>
-                                        <Trigger Property="IsFocused" Value="True">
-                                            <!--<Setter Property="Focusable" Value="False"/>-->
-                                            
-                                            
-                                            <!--<Setter TargetName="WorldSelectBtn" Property="IsEnabled" Value="True"/>
-                                            <Setter TargetName="DeleteWorldBtn" Property="IsEnabled" Value="True"/>-->
-                                        </Trigger>
-                                    </Style.Triggers>
-                                    
-                                    
-                                    <!-- TODO: Get rid of or customize IsMouseOver background when hovering over world selection listing -->
-                                    <!--<Style.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Background" Value="Blue" />
-                                            <Setter Property="BorderBrush" Value="Red" />
-                                        </Trigger>
-                                    </Style.Triggers>-->
-                                    
-                                </Style>
-                            </ListView.ItemContainerStyle>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger SourceName="Thumb" Property="IsMouseOver" Value="true">
+                                                            <Setter Value="#3FFFFFFF" TargetName="Thumb" Property="Background"/>
+                                                        </Trigger>
+                                                        <Trigger SourceName="Thumb" Property="IsDragging" Value="true">
+                                                            <Setter Value="{DynamicResource DarkBrush}" TargetName="Thumb" Property="Background"/>
+                                                        </Trigger>
 
-                            <!-- Template for World Listing Buttons -->
-                            <ListView.ItemTemplate>
-                                <DataTemplate>
-                                    <Border Height="83" Width="Auto" Background="#FF151516" CornerRadius="7" Margin="0 3">
-                                        <Grid Width="Auto">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="10"/>
-                                                <ColumnDefinition Width="{Binding Height, RelativeSource={RelativeSource AncestorType=Border}}"/>
-                                            </Grid.ColumnDefinitions>
+                                                        <Trigger Property="IsEnabled" Value="false">
+                                                            <Setter TargetName="Thumb" Property="Visibility" Value="Collapsed"/>
+                                                        </Trigger>
+                                                        <Trigger Property="Orientation" Value="Horizontal">
+                                                            <Setter TargetName="GridRoot" Property="LayoutTransform">
+                                                                <Setter.Value>
+                                                                    <RotateTransform Angle="-90"/>
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                            <Setter TargetName="PART_Track" Property="LayoutTransform">
+                                                                <Setter.Value>
+                                                                    <RotateTransform Angle="-90"/>
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                            <Setter Property="Width" Value="Auto"/>
+                                                            <Setter Property="Height" Value="12"/>
+                                                            <Setter TargetName="Thumb" Property="Tag" Value="Horizontal"/>
+                                                            <Setter TargetName="PageDown" Property="Command" Value="ScrollBar.PageLeftCommand"/>
+                                                            <Setter TargetName="PageUp" Property="Command" Value="ScrollBar.PageRightCommand"/>
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
 
-                                            <!-- Select World Button -->
-                                            <Button x:Name="WorldSelectBtn" Click="SelectWorld_Click" Style="{StaticResource WorldListingButton}" ToolTip="Select this world" Foreground="White" Height="83" HorizontalAlignment="Stretch" Width="Auto" HorizontalContentAlignment="Stretch" IsEnabled="False">
-                                                
-                                                
-                                                <DockPanel Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Button}}" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Button}}" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </ListView.Resources>
 
-                                                    <!-- World Name -->
-                                                    <TextBlock Grid.Column="0" FontSize="20" Foreground="White" Text="{Binding WorldName, FallbackValue=WorldName, Mode=OneTime}" VerticalAlignment="Center" HorizontalAlignment="Left"  Margin="20 0 0 0"/>
-                                                    
-                                                    <!-- World Data -->
-                                                    <DockPanel Grid.Column="1" LastChildFill = "True" Margin="0 10 10 10" HorizontalAlignment="Right">
-                                                        <TextBlock DockPanel.Dock = "Top" HorizontalAlignment="Right" FontSize="10" Text="{Binding WorldGamemode, FallbackValue=Gamemode, Mode=OneTime}" Foreground="White"/>
-                                                        <TextBlock DockPanel.Dock = "Bottom" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="10" Text="{Binding WorldVersion, FallbackValue=Version, Mode=OneTime}" Foreground="White"/>
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem">
+
+                                        <Style.Triggers>
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter Property="Background" Value="Blue"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+
+                                        <!-- TODO: Customize IsMouseOver background when hovering over world selection listing -->
+                                        <!--<Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="Blue" />
+                                                <Setter Property="BorderBrush" Value="Red" />
+                                            </Trigger>
+                                        </Style.Triggers>-->
+
+                                    </Style>
+                                </ListView.ItemContainerStyle>
+
+                                <!-- Template for World Listing Buttons -->
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Height="83" Width="Auto" Background="#FF151516" CornerRadius="7" Margin="0 3">
+                                            <Grid Width="Auto">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="10"/>
+                                                    <ColumnDefinition Width="{Binding Height, RelativeSource={RelativeSource AncestorType=Border}}"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <!-- Select World Button -->
+                                                <Button x:Name="WorldSelectBtn" Click="SelectWorld_Click" Style="{StaticResource WorldListingButton}" ToolTip="Select this world" Foreground="White" Height="83" HorizontalAlignment="Stretch" Width="Auto" HorizontalContentAlignment="Stretch" IsEnabled="{Binding Path=IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}">
+                                                    <!-- {Binding Path=IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}} -->
+                                                    <DockPanel Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Button}}" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Button}}" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+
+                                                        <!-- World Name -->
+                                                        <TextBlock Grid.Column="0" FontSize="20" Foreground="White" Text="{Binding WorldName, FallbackValue=WorldName, Mode=OneTime}" VerticalAlignment="Center" HorizontalAlignment="Left"  Margin="20 0 0 0"/>
+
+                                                        <!-- World Data -->
+                                                        <DockPanel Grid.Column="1" LastChildFill = "True" Margin="0 10 10 10" HorizontalAlignment="Right">
+                                                            <TextBlock DockPanel.Dock = "Top" HorizontalAlignment="Right" FontSize="10" Text="{Binding WorldGamemode, FallbackValue=Gamemode, Mode=OneTime}" Foreground="White"/>
+                                                            <TextBlock DockPanel.Dock = "Bottom" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="10" Text="{Binding WorldVersion, FallbackValue=Version, Mode=OneTime}" Foreground="White"/>
+                                                        </DockPanel>
+
                                                     </DockPanel>
-                                                    
-                                                </DockPanel>
-                                            </Button>
+                                                </Button>
 
-                                            <!-- Separator -->
-                                            <Border Grid.Column="1" Background="Black"/>
+                                                <!-- Separator -->
+                                                <Border Grid.Column="1" Background="Black"/>
 
-                                            <!-- Delete World Button -->
-                                            <Button Grid.Column="2" ToolTip="Delete this world" Click="DeleteWorld_Click" Height="{Binding Height, RelativeSource={RelativeSource AncestorType=Border}}" Width="{Binding Height, RelativeSource={RelativeSource AncestorType=Border}}" IsEnabled="False">
-                                                <Image Source="{StaticResource TrashcanButton}" Stretch="Uniform"  Width="30" Height="30"/>
-                                            </Button>
-                                            
-                                        </Grid>
-                                    </Border>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
+                                                <!-- Delete World Button -->
+                                                <Button Grid.Column="2" ToolTip="Delete this world" Click="DeleteWorld_Click" Height="{Binding Height, RelativeSource={RelativeSource AncestorType=Border}}" Width="{Binding Height, RelativeSource={RelativeSource AncestorType=Border}}" IsEnabled="{Binding Path=IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}">
+                                                    <Image Source="{StaticResource TrashcanButton}" Stretch="Uniform"  Width="30" Height="30"/>
+                                                </Button>
 
-                            <!--<ListView.Items>
-                                <Trigger ListBoxItem.Selected="" Property="IsFocused" Value="True">
-                                    <Setter TargetName="WorldSelectBtn" Property="IsEnabled" Value="True"/>
-                                    <Setter TargetName="DeleteWorldBtn" Property="IsEnabled" Value="True"/>
-                                </Trigger>
-                            </ListView.Items>-->
+                                                <!--<Grid.Triggers>
+                                                    <Trigger ListBoxItem.Selected=""
+                                                </Grid.Triggers>-->
 
-                        </ListView>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+
+                            </ListView>
+                        </Grid>
                     </Border>
                 </Grid>
             </Border>
 
-            
+
             <!-- WORLD OPTIONS PANE (Out of view: Margin="1732 32 0 32" | In view: Margin="866 32 866 32") PANE WIDTH: 710 -->
             <Grid Margin="1732 32 0 32" x:Name="WorldSettingsPane" RenderTransformOrigin="0.5,0.5">
                 <Grid.RenderTransform>
@@ -287,9 +290,9 @@
                             <Button Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="Save settings and select a different world" Click="GoBack_Click">
                                 <Image Source="{StaticResource GoBackButton}" Stretch="Uniform" Width="40" Height="40"/>
                             </Button>
-                            
+
                             <TextBlock Grid.Column="1" Text="World Settings" Foreground="White" VerticalAlignment="Center" FontSize="30" HorizontalAlignment="Center" FontWeight="Bold"/>
-                            
+
                         </Grid>
 
                         <!-- World Settings Pane -->

@@ -26,8 +26,9 @@ namespace NitroxLauncher.Pages
         public static string SavesFolderDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Nitrox\\saves";
         readonly System.IO.DirectoryInfo savesFolderDir = new(SavesFolderDir); //add public at front
 
+        // SAVE FILE ENDING VARIABLE IS NOT SET UNTIL SERVER IS RUNNING, SO THIS RETURNS AN EMPTY STRING
         public IServerSerializer Serializer { get; private set; }
-        private string FileEnding => Serializer?.FileEnding ?? "";
+        private string SaveFileEnding => Serializer?.FileEnding ?? "";
 
         // World settings variables (TODO: REMOVE THESE)
         private readonly ServerConfig serverConfig = ServerConfig.Load();
@@ -46,6 +47,8 @@ namespace NitroxLauncher.Pages
 
         public int SelectedWorldIndex { get; set; }
 
+        public List<World_Listing> WorldListing { get; set; }
+
         public ServerPage()
         {
             InitializeComponent();
@@ -61,29 +64,7 @@ namespace NitroxLauncher.Pages
                 Log.Info($"Found a \"saves\" folder at {SavesFolderDir}");
             }
 
-            // Initialize a new list
-            List<World_Listing> WorldListing = new();
-
-            // Get number of files in the "saves" folder
-            int numFiles = savesFolderDir.GetDirectories().Length;
-            Log.Info($"There are {numFiles} folders in the saves folder");
-
-            // Add each save file into the list if it's a valid save file
-            for (int i = 0; i < numFiles; ++i)
-            {
-                
-            }
-
-            // TEMPORARY - Manually added listing items for testing
-            WorldListing.Add(new World_Listing() { WorldName = "Survival w/ friends", WorldGamemode = "Survival", WorldVersion = "v1.6.0.0" });
-            WorldListing.Add(new World_Listing() { WorldName = "My World 1", WorldGamemode = "Freedom", WorldVersion = "v1.5.0.2" });
-            WorldListing.Add(new World_Listing() { WorldName = "v1.7 pre-release test", WorldGamemode = "Freedom", WorldVersion = "v1.7.0.0" });
-            WorldListing.Add(new World_Listing() { WorldName = "Old World", WorldGamemode = "Survival", WorldVersion = "v1.3.0.0" });
-            WorldListing.Add(new World_Listing() { WorldName = "Creative Mode", WorldGamemode = "Creative", WorldVersion = "v1.6.0.0" });
-            WorldListing.Add(new World_Listing() { WorldName = "v1.6.0.1 testing", WorldGamemode = "Freedom", WorldVersion = "v1.6.0.1" });
-
-            // Bind the list data to be used in XAML
-            WorldListingContainer.ItemsSource = WorldListing;
+            InitializeWorldListing();
 
             // If the "Display Server Console Externally" Checkbox is checked, set value to true - (Is this needed anymore?)
             if (CBIsExternal.IsChecked == true)
@@ -93,12 +74,82 @@ namespace NitroxLauncher.Pages
 
         }
         
+        public void InitializeWorldListing()
+        {
+            // Initialize a new list
+            WorldListing = new();
+
+            // Get number of files in the "saves" folder
+            int numFiles = savesFolderDir.GetDirectories().Length;
+            Log.Info($"There are {numFiles} folders in the saves folder");
+
+
+            // Add each save file into the list if it's a valid save file
+            if (numFiles > 0)
+            {
+                for (int i = 0; i < numFiles; ++i)
+                {
+                    if (ValidateSave(i))
+                    {
+                        WorldListing.Add(new World_Listing() { WorldName = "World " + i, WorldGamemode = "Survival " + i, WorldVersion = "v1.6.0." + i, WorldSaveNum = Convert.ToString(i) });
+                        Log.Info($"Found a valid save file at: {Path.Combine(SavesFolderDir, "save" + i)}");
+                    }
+                }
+            }
+
+            /*
+            // TEMPORARY - Manually added listing items for testing
+            WorldListing.Add(new World_Listing() { WorldName = "Survival w/ friends", WorldGamemode = "Survival", WorldVersion = "v1.6.0.0" });
+            WorldListing.Add(new World_Listing() { WorldName = "My World 1", WorldGamemode = "Freedom", WorldVersion = "v1.5.0.2" });
+            WorldListing.Add(new World_Listing() { WorldName = "v1.7 pre-release test", WorldGamemode = "Freedom", WorldVersion = "v1.7.0.0" });
+            WorldListing.Add(new World_Listing() { WorldName = "Old World", WorldGamemode = "Survival", WorldVersion = "v1.3.0.0" });
+            WorldListing.Add(new World_Listing() { WorldName = "Creative Mode", WorldGamemode = "Creative", WorldVersion = "v1.6.0.0" });
+            WorldListing.Add(new World_Listing() { WorldName = "v1.6.0.1 testing", WorldGamemode = "Freedom", WorldVersion = "v1.6.0.1" });
+            */
+
+            // Set the background of the WorldSelectionContainer to be the "No Worlds found" message and the server image if the listing has no entries
+            if (WorldListing.Count == 0)
+            {
+                NoWorldsBackground.Opacity = 1;
+            }
+            else
+            {
+                NoWorldsBackground.Opacity = 0;
+            }
+
+            // Bind the list data to be used in XAML
+            WorldListingContainer.ItemsSource = WorldListing;
+        }
+
         // File Management
         private bool ValidateSave(int saveFileNum)
         {
-            bool saveValidity = false;
+            // A save file is valid when it's named "save#", has a "server.cfg" file, and has all of the nested save file names in it
+            string saveDir = Path.Combine(SavesFolderDir, "save" + saveFileNum);
+            string serverConfigFile = Path.Combine(saveDir, "server.cfg");
 
-            return saveValidity;
+            string[] filesToCheck = {
+                "BaseData",
+                "EntityData",
+                "PlayerData",
+                "Version",
+                "WorldData"
+            };
+
+            if (!Directory.Exists(saveDir) || !File.Exists(serverConfigFile))
+            {
+                return false;
+            }
+            foreach (string file in filesToCheck)
+            {
+                if (!File.Exists(Path.Combine(saveDir, Path.ChangeExtension(file, "json"))) && !File.Exists(Path.Combine(saveDir, Path.ChangeExtension(file, "NITROX"))))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+
         }
 
         public void SaveConfigSettings()
@@ -123,14 +174,12 @@ namespace NitroxLauncher.Pages
             Log.Info($"Server Config updated");
         }
 
-        // Pane Buttons
-        public void AddWorld_Click(object sender, RoutedEventArgs e)
+        public void UpdateVisualWorldSettings(int saveFileNum)
         {
-            IsNewWorld = true;
-
+            string saveDir = Path.Combine(SavesFolderDir, "save" + saveFileNum);
             ServerConfig serverConfig = ServerConfig.Load();
 
-            // THESE WOULD BE SET TO DEFAULT VALUES INSTEAD OF SERVER.CFG VALUES, BUT THEY ARE USED HERE UNTIL I CAN FIGURE OUT THE WORLD SELECTION BUTTONS
+            // Get config file values
             SelectedWorldName = serverConfig.SaveName;
             SelectedWorldSeed = serverConfig.Seed;
             SelectedWorldGamemode = serverConfig.GameMode;
@@ -151,8 +200,18 @@ namespace NitroxLauncher.Pages
             CBCreateFullEntityCache.IsChecked = EnableFullEntityCacheValue;
             CBLanDiscovery.IsChecked = EnableLanDiscoveryValue;
             TBWorldServerPort.Text = Convert.ToString(ServerPort);
+        }
 
+        // Pane Buttons
+        public void AddWorld_Click(object sender, RoutedEventArgs e)
+        {
+            Log.Info($"Adding new world");
+            IsNewWorld = true;
             TBWorldSeed.IsEnabled = true;
+
+            SelectedWorldIndex = WorldListing.Count + 1;
+
+            UpdateVisualWorldSettings(SelectedWorldIndex);
 
             Storyboard WorldSelectedAnimationStoryboard = (Storyboard)FindResource("WorldSelectedAnimation");
             WorldSelectedAnimationStoryboard.Begin();
@@ -162,40 +221,40 @@ namespace NitroxLauncher.Pages
         private void GoBack_Click(object sender, RoutedEventArgs e)
         {
             SaveConfigSettings();
+            InitializeWorldListing();
 
             Storyboard GoBackAnimationStoryboard = (Storyboard)FindResource("GoBackAnimation");
             GoBackAnimationStoryboard.Begin();
         }
 
         // World management
-        public void WorldListing_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            
-            SelectedWorldIndex = WorldListingContainer.SelectedIndex;
-            Log.Info($"World index {SelectedWorldIndex} selected");
-
-        }
-
         private void SelectWorld_Click(object sender, RoutedEventArgs e)
         {
             IsNewWorld = false;
             TBWorldSeed.IsEnabled = false;
 
+            SelectedWorldIndex = WorldListingContainer.SelectedIndex;
+            Log.Info($"World index {SelectedWorldIndex} selected");
+
+            UpdateVisualWorldSettings(SelectedWorldIndex);
+
             Storyboard WorldSelectedAnimationStoryboard = (Storyboard)FindResource("WorldSelectedAnimation");
             WorldSelectedAnimationStoryboard.Begin();
 
-            //SelectedWorldIndex
         }
 
         private void DeleteWorld_Click(object sender, RoutedEventArgs e)
         {
+            SelectedWorldIndex = WorldListingContainer.SelectedIndex;
+            Log.Info($"Deleting world index {SelectedWorldIndex}");
+
 
         }
 
-        // World settings management (MAY REMOVE THESE
-
+        // World settings management (MAY REMOVE THESE)
         private void TBWorldName_Changed(object sender, TextChangedEventArgs e)
         {
+            // CHECK THAT THE STRING ISN'T EMPTY, OR THE LAUNCHER WILL CRASH HERE
             SelectedWorldName = TBWorldName.Text;
             Log.Info($"World name set to {SelectedWorldName}");
         }
@@ -259,14 +318,12 @@ namespace NitroxLauncher.Pages
         // Start server button management
         private void StartServer_Click(object sender, RoutedEventArgs e)
         {
-            SaveConfigSettings();
-
-            Storyboard GoBackAnimationStoryboard = (Storyboard)FindResource("GoBackAnimation");
-            GoBackAnimationStoryboard.Begin();
-
             // If the "Start Server button" is clicked and not the "Display Server Console Externally" Checkbox, then start the server
             if (!(e.OriginalSource is CheckBox))
             {
+                SaveConfigSettings();
+                InitializeWorldListing();
+
                 try
                 {
                     LauncherLogic.Server.StartServer(CBIsExternal.IsChecked == true);
@@ -275,6 +332,9 @@ namespace NitroxLauncher.Pages
                 {
                     MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
+
+                Storyboard GoBackAnimationStoryboard = (Storyboard)FindResource("GoBackAnimation");
+                GoBackAnimationStoryboard.Begin();
             }
 
         }
@@ -289,13 +349,12 @@ namespace NitroxLauncher.Pages
 
     }
 
-
     public class World_Listing
     {
         public string WorldName { get; set; }
         public string WorldGamemode { get; set; }
         public string WorldVersion { get; set; }
-        public string WorldSavePath { get; set; }
+        public string WorldSaveNum { get; set; }
     }
 
 }
