@@ -33,7 +33,7 @@ namespace NitroxServer.ConsoleCommands
             string configFile = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location) ?? "", serverConfig.FileName);
             if (!File.Exists(configFile))
             {
-                serverConfig.Serialize();
+                //serverConfig.Serialize();
             }
 
             Task.Run(async () =>
@@ -46,7 +46,7 @@ namespace NitroxServer.ConsoleCommands
                     {
                         configOpenLock.Release();
                     }
-                    serverConfig.Deserialize(); // Notifies user if deserialization failed.
+                    //serverConfig.Deserialize(); // Notifies user if deserialization failed.
                     Log.Info("If you made changes, restart the server for them to take effect.");
                 })
                 .ContinueWith(t =>

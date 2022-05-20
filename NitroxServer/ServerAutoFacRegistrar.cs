@@ -1,4 +1,6 @@
 ﻿global using NitroxModel.Logger;
+using System;
+using System.IO;
 using System.Reflection;
 using Autofac;
 using NitroxModel.Core;
@@ -29,7 +31,7 @@ namespace NitroxServer
 
         private static void RegisterCoreDependencies(ContainerBuilder containerBuilder)
         {
-            containerBuilder.Register(c => ServerConfig.Load()).SingleInstance();
+            //containerBuilder.Register(c => ServerConfig.Load(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Nitrox\\saves", serverConfig.SaveName), )).SingleInstance();
             containerBuilder.RegisterType<Server>().SingleInstance();
             containerBuilder.RegisterType<PlayerManager>().SingleInstance();
             containerBuilder.RegisterType<DefaultServerPacketProcessor>().InstancePerLifetimeScope();

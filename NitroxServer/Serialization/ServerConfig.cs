@@ -1,4 +1,6 @@
-﻿using NitroxModel.DataStructures.GameLogic;
+﻿using System;
+using System.IO;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
 using NitroxModel.Serialization;
 using NitroxModel.Server;
@@ -21,7 +23,7 @@ namespace NitroxServer.Serialization
 
         private string postSaveCommandPath = string.Empty;
 
-        private string saveNameSetting = "world";   // CHANGE THIS TO BE HANDLED BY WORLD MANAGER
+        private string saveNameSetting = "world";           // Change default name to "My World"
         public override string FileName => "server.cfg";    // REMOVE THIS LINE
 
         [PropertyDescription("Leave blank for a random spawn position")]
@@ -121,10 +123,10 @@ namespace NitroxServer.Serialization
         [PropertyDescription("Determines whether the server will listen for and reply to LAN discovery requests.")]
         public bool LANDiscoveryEnabled { get; set; } = true;
 
-        public static ServerConfig Load()
+        public static ServerConfig Load(string saveDir)
         {
             ServerConfig config = new();
-            config.Update();
+            config.Update(saveDir);
             return config;
         }
     }

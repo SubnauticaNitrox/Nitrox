@@ -1,4 +1,6 @@
-﻿using NitroxModel.DataStructures.GameLogic;
+﻿using System;
+using System.IO;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
 using NitroxServer.Serialization;
@@ -18,7 +20,7 @@ namespace NitroxServer.ConsoleCommands
 
         protected override void Execute(CallArgs args)
         {
-            serverConfig.Update(c =>
+            serverConfig.Update(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Nitrox\\saves", serverConfig.SaveName), c =>
             {
                 string newPassword = args.Get(0);
                 c.AdminPassword = newPassword;

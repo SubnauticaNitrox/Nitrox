@@ -26,12 +26,8 @@ namespace NitroxLauncher.Pages
         public static string SavesFolderDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Nitrox\\saves";
         readonly System.IO.DirectoryInfo savesFolderDir = new(SavesFolderDir); //add public at front
 
-        // SAVE FILE ENDING VARIABLE IS NOT SET UNTIL SERVER IS RUNNING, SO THIS RETURNS AN EMPTY STRING
-        public IServerSerializer Serializer { get; private set; }
-        private string SaveFileEnding => Serializer?.FileEnding ?? "";
-
         // World settings variables (TODO: REMOVE THESE)
-        private readonly ServerConfig serverConfig = ServerConfig.Load();
+        //private readonly ServerConfig serverConfig = ServerConfig.Load();
 
         public string SelectedWorldName { get; set; }
         public string SelectedWorldSeed { get; set; }
@@ -46,6 +42,7 @@ namespace NitroxLauncher.Pages
         public bool IsNewWorld { get; set; }
 
         public int SelectedWorldIndex { get; set; }
+        public string SelectedWorldDirectory { get; set; }
 
         public List<World_Listing> WorldListing { get; set; }
 
@@ -80,19 +77,27 @@ namespace NitroxLauncher.Pages
             WorldListing = new();
 
             // Get number of files in the "saves" folder
-            int numFiles = savesFolderDir.GetDirectories().Length;
-            Log.Info($"There are {numFiles} folders in the saves folder");
+            //int numFiles = savesFolderDir.GetDirectories().Length;
+            //Log.Info($"There are {numFiles} folders in the saves folder");
 
 
-            // Add each save file into the list if it's a valid save file
-            if (numFiles > 0)
+            // Add each save file into the list if it's a valid save file   -   (NEED TO FIX THIS - Save files with numbers higher than the amount of save files there are don't get read and validated)  -  IGNORE FILE NAMES
+            if (savesFolderDir.GetDirectories().Length > 0)
             {
-                for (int i = 0; i < numFiles; ++i)
+                //for (int i = 0; i < numFiles; ++i)
+                foreach (string folder in Directory.GetDirectories(SavesFolderDir))
                 {
-                    if (ValidateSave(i))
+                    if (ValidateSave(folder))
                     {
-                        WorldListing.Add(new World_Listing() { WorldName = "World " + i, WorldGamemode = "Survival " + i, WorldVersion = "v1.6.0." + i, WorldSaveNum = Convert.ToString(i) });
-                        Log.Info($"Found a valid save file at: {Path.Combine(SavesFolderDir, "save" + i)}");
+                        ServerConfig serverConfig = ServerConfig.Load(folder);
+                        WorldListing.Add(new World_Listing() 
+                        { 
+                            WorldName = serverConfig.SaveName,
+                            WorldGamemode = Convert.ToString(serverConfig.GameMode), 
+                            WorldVersion = "v1.6.0.1", // NEEDS SOME FIXING
+                            WorldSaveDir = folder
+                        });
+                        Log.Info($"Found a valid save file at: {folder}");
                     }
                 }
             }
@@ -122,10 +127,10 @@ namespace NitroxLauncher.Pages
         }
 
         // File Management
-        private bool ValidateSave(int saveFileNum)
+        private bool ValidateSave(string fileName)
         {
             // A save file is valid when it's named "save#", has a "server.cfg" file, and has all of the nested save file names in it
-            string saveDir = Path.Combine(SavesFolderDir, "save" + saveFileNum);
+            string saveDir = Path.Combine(SavesFolderDir, fileName);
             string serverConfigFile = Path.Combine(saveDir, "server.cfg");
 
             string[] filesToCheck = {
@@ -154,7 +159,8 @@ namespace NitroxLauncher.Pages
 
         public void SaveConfigSettings()
         {
-            serverConfig.Update(c =>
+            ServerConfig serverConfig = ServerConfig.Load(SelectedWorldDirectory);
+            serverConfig.Update(SelectedWorldDirectory, c =>
             {
                 c.SaveName = SelectedWorldName;
 
@@ -174,10 +180,10 @@ namespace NitroxLauncher.Pages
             Log.Info($"Server Config updated");
         }
 
-        public void UpdateVisualWorldSettings(int saveFileNum)
+        public void UpdateVisualWorldSettings()
         {
-            string saveDir = Path.Combine(SavesFolderDir, "save" + saveFileNum);
-            ServerConfig serverConfig = ServerConfig.Load();
+            //string saveDir = Path.Combine(SavesFolderDir, "save" + saveFileNum);
+            ServerConfig serverConfig = ServerConfig.Load(SelectedWorldDirectory);
 
             // Get config file values
             SelectedWorldName = serverConfig.SaveName;
@@ -209,9 +215,23 @@ namespace NitroxLauncher.Pages
             IsNewWorld = true;
             TBWorldSeed.IsEnabled = true;
 
-            SelectedWorldIndex = WorldListing.Count + 1;
+            //SelectedWorldIndex = WorldListing.Count + 1;
+            //SelectedWorldDirectory = Path.Combine(SavesFolderDir, "save" + SelectedWorldIndex);
+            string newSaveFileDir = Path.Combine(SavesFolderDir, "save0");
 
-            UpdateVisualWorldSettings(SelectedWorldIndex);
+            for (int i = 1; Directory.Exists(newSaveFileDir); i++)
+            {
+                newSaveFileDir = Path.Combine(SavesFolderDir, "save" + i);
+            }
+
+            Directory.CreateDirectory(newSaveFileDir);
+
+            SelectedWorldDirectory = newSaveFileDir;
+
+            //ServerConfig serverConfig = ServerConfig.Load(SelectedWorldDirectory);
+
+
+            UpdateVisualWorldSettings();
 
             Storyboard WorldSelectedAnimationStoryboard = (Storyboard)FindResource("WorldSelectedAnimation");
             WorldSelectedAnimationStoryboard.Begin();
@@ -236,7 +256,9 @@ namespace NitroxLauncher.Pages
             SelectedWorldIndex = WorldListingContainer.SelectedIndex;
             Log.Info($"World index {SelectedWorldIndex} selected");
 
-            UpdateVisualWorldSettings(SelectedWorldIndex);
+            SelectedWorldDirectory = WorldListing[SelectedWorldIndex].WorldSaveDir;
+
+            UpdateVisualWorldSettings();
 
             Storyboard WorldSelectedAnimationStoryboard = (Storyboard)FindResource("WorldSelectedAnimation");
             WorldSelectedAnimationStoryboard.Begin();
@@ -326,7 +348,7 @@ namespace NitroxLauncher.Pages
 
                 try
                 {
-                    LauncherLogic.Server.StartServer(CBIsExternal.IsChecked == true);
+                    LauncherLogic.Server.StartServer(CBIsExternal.IsChecked == true, SelectedWorldDirectory);
                 }
                 catch (Exception ex)
                 {
@@ -354,7 +376,7 @@ namespace NitroxLauncher.Pages
         public string WorldName { get; set; }
         public string WorldGamemode { get; set; }
         public string WorldVersion { get; set; }
-        public string WorldSaveNum { get; set; }
+        public string WorldSaveDir { get; set; }
     }
 
 }

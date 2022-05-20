@@ -1,4 +1,6 @@
-﻿using NitroxModel.DataStructures.GameLogic;
+﻿using System;
+using System.IO;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
 using NitroxModel.Server;
 using NitroxServer.ConsoleCommands.Abstract;
@@ -25,7 +27,7 @@ namespace NitroxServer.ConsoleCommands
         {
             ServerGameMode sgm = args.Get<ServerGameMode>(0);
 
-            serverConfig.Update(c =>
+            serverConfig.Update(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Nitrox\\saves", serverConfig.SaveName), c =>
             {
                 if (c.GameMode != sgm)
                 {
