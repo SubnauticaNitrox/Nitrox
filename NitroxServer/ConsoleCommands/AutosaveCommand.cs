@@ -22,7 +22,7 @@ namespace NitroxServer.ConsoleCommands
         {
             bool toggle = args.Get<bool>(0);
 
-            serverConfig.Update(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Nitrox\\saves", serverConfig.SaveName), c =>
+            serverConfig.Update(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", "saves", serverConfig.SaveName), c =>
             {
                 if (toggle)
                 {

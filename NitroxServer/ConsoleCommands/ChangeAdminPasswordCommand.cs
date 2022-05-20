@@ -20,7 +20,7 @@ namespace NitroxServer.ConsoleCommands
 
         protected override void Execute(CallArgs args)
         {
-            serverConfig.Update(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Nitrox\\saves", serverConfig.SaveName), c =>
+            serverConfig.Update(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", "saves", serverConfig.SaveName), c =>
             {
                 string newPassword = args.Get(0);
                 c.AdminPassword = newPassword;

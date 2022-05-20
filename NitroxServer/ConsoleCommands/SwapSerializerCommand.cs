@@ -26,7 +26,7 @@ namespace NitroxServer.ConsoleCommands
         {
             ServerSerializerMode serializerMode = args.Get<ServerSerializerMode>(0);
 
-            serverConfig.Update(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Nitrox\\saves", serverConfig.SaveName), c =>
+            serverConfig.Update(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", "saves", serverConfig.SaveName), c =>
             {
                 if (serializerMode != c.SerializerMode)
                 {

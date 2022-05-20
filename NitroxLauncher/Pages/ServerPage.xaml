@@ -42,7 +42,8 @@
 
     </local:PageBase.Resources>
 
-    <Grid Margin="0" HorizontalAlignment="Center">
+    <Grid>
+        <Grid Margin="0" HorizontalAlignment="Center">
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
@@ -99,8 +100,7 @@
 
                     </Grid>
 
-                    <!-- World List -->
-                    <!-- TODO: Order server listings based on the last one that was used (read times when save files were last edited) -->
+                    <!-- World List --> <!-- TODO: Order server listings based on the last one that was used (read times when save files were last edited) -->
                     <Border Grid.Row="1" CornerRadius="12" Background="Black">
                         <Grid>
                             <Grid x:Name="NoWorldsBackground">
@@ -502,6 +502,33 @@
             </Grid>
         </Grid>
 
+    </Grid>
+
+        <Grid x:Name="ConfirmationBox" Opacity="0" IsHitTestVisible="False">
+            
+            <!-- All the background to act like the "No" button when clicked -->
+            <Button Click="NoConfirmBtn_Click" Background="Black" Opacity=".5" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Grid}}" Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Grid}}" Cursor="Arrow"/>
+            
+            <Border Background="Black" Height="150" Width="300" BorderThickness="5" BorderBrush="#151516" CornerRadius="20">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <TextBlock Grid.ColumnSpan="2" Text="Are you sure you want to delete this world?" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18" TextWrapping="Wrap" TextAlignment="Center" Width="250"/>
+
+                    <Button Click="NoConfirmBtn_Click" Grid.Row="1" Style="{StaticResource LargeButton}" Background="#FF007BFF" Height="50" Width="100" VerticalAlignment="Top" Content="No"/>
+                    <Button Click="YesConfirmBtn_Click" Grid.Row="1" Grid.Column="1" Style="{StaticResource LargeButton}" Background="#151516" Height="50" Width="100" VerticalAlignment="Top" Content="Yes"/>
+                </Grid>
+            </Border>
+            
+        </Grid>
     </Grid>
 
 </local:PageBase>

@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 using System.Windows.Media.Animation;
 using NitroxLauncher.Models;
-using NitroxModel.Core;
 using NitroxModel.Server;
 using NitroxServer.Serialization;
 using NitroxServer.Serialization.World;
@@ -23,7 +21,7 @@ namespace NitroxLauncher.Pages
         }
         
         public string PathToSubnautica => LauncherLogic.Config.SubnauticaPath;
-        public static string SavesFolderDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Nitrox\\saves";
+        public static string SavesFolderDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", "saves");
         readonly System.IO.DirectoryInfo savesFolderDir = new(SavesFolderDir); //add public at front
 
         // World settings variables (TODO: REMOVE THESE)
@@ -41,7 +39,7 @@ namespace NitroxLauncher.Pages
 
         public bool IsNewWorld { get; set; }
 
-        public int SelectedWorldIndex { get; set; }
+        //public int SelectedWorldIndex { get; set; }
         public string SelectedWorldDirectory { get; set; }
 
         public List<World_Listing> WorldListing { get; set; }
@@ -90,11 +88,13 @@ namespace NitroxLauncher.Pages
                     if (ValidateSave(folder))
                     {
                         ServerConfig serverConfig = ServerConfig.Load(folder);
+
+                        //SaveFileVersion worldVersion = new ServerJsonSerializer().Deserialize<SaveFileVersion>(Path.Combine(folder, "Version.json"));
                         WorldListing.Add(new World_Listing() 
                         { 
                             WorldName = serverConfig.SaveName,
                             WorldGamemode = Convert.ToString(serverConfig.GameMode), 
-                            WorldVersion = "v1.6.0.1", // NEEDS SOME FIXING
+                            WorldVersion =  "v1.6.0.1", //VersionToString(worldVersion), NEEDS SOME FIXING
                             WorldSaveDir = folder
                         });
                         Log.Info($"Found a valid save file at: {folder}");
@@ -227,12 +227,28 @@ namespace NitroxLauncher.Pages
             Directory.CreateDirectory(newSaveFileDir);
 
             SelectedWorldDirectory = newSaveFileDir;
-
-            //ServerConfig serverConfig = ServerConfig.Load(SelectedWorldDirectory);
-
-
             UpdateVisualWorldSettings();
 
+            ServerConfig serverConfig = ServerConfig.Load(SelectedWorldDirectory);
+            
+            string[] defaultSaveFiles = {
+                "BaseData",
+                "EntityData",
+                "PlayerData",
+                "Version",
+                "WorldData"
+            };
+            string fileEnding = ".json";
+            if (serverConfig.SerializerMode == ServerSerializerMode.PROTOBUF)
+            {
+                fileEnding = ".nitrox";
+            }
+
+            foreach (string file in defaultSaveFiles)
+            {
+                File.Create(Path.Combine(newSaveFileDir, file + fileEnding));
+            }
+            
             Storyboard WorldSelectedAnimationStoryboard = (Storyboard)FindResource("WorldSelectedAnimation");
             WorldSelectedAnimationStoryboard.Begin();
 
@@ -253,10 +269,9 @@ namespace NitroxLauncher.Pages
             IsNewWorld = false;
             TBWorldSeed.IsEnabled = false;
 
-            SelectedWorldIndex = WorldListingContainer.SelectedIndex;
-            Log.Info($"World index {SelectedWorldIndex} selected");
+            Log.Info($"World index {WorldListingContainer.SelectedIndex} selected");
 
-            SelectedWorldDirectory = WorldListing[SelectedWorldIndex].WorldSaveDir;
+            SelectedWorldDirectory = WorldListing[WorldListingContainer.SelectedIndex].WorldSaveDir;
 
             UpdateVisualWorldSettings();
 
@@ -267,10 +282,26 @@ namespace NitroxLauncher.Pages
 
         private void DeleteWorld_Click(object sender, RoutedEventArgs e)
         {
-            SelectedWorldIndex = WorldListingContainer.SelectedIndex;
-            Log.Info($"Deleting world index {SelectedWorldIndex}");
+            ConfirmationBox.Opacity = 1;
+            ConfirmationBox.IsHitTestVisible = true;
+        }
 
+        private void YesConfirmBtn_Click(object sender, RoutedEventArgs e)
+        {
+            SelectedWorldDirectory = WorldListing[WorldListingContainer.SelectedIndex].WorldSaveDir;
+            Directory.Delete(SelectedWorldDirectory, true);
+            Log.Info($"Deleting world index {WorldListingContainer.SelectedIndex}");
 
+            ConfirmationBox.Opacity = 0;
+            ConfirmationBox.IsHitTestVisible = false;
+            InitializeWorldListing();
+        }
+
+        private void NoConfirmBtn_Click(object sender, RoutedEventArgs e)
+        {
+            ConfirmationBox.Opacity = 0;
+            ConfirmationBox.IsHitTestVisible = false;
+            InitializeWorldListing();
         }
 
         // World settings management (MAY REMOVE THESE)
@@ -368,6 +399,11 @@ namespace NitroxLauncher.Pages
 
         }
         */
+
+        public string VersionToString(SaveFileVersion version)
+        {
+            return $"{version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
+        }
 
     }
 
