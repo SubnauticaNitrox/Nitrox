@@ -15,9 +15,7 @@ namespace NitroxModel.Serialization
         private readonly object locker = new();
         private readonly char[] newlineChars = Environment.NewLine.ToCharArray();
 
-        public abstract string FileName { get; } // REMOVE/RENAME THIS
-
-        //public bool ConfigFileExists => File.Exists(FileName);
+        public abstract string FileName { get; }
 
         public void Deserialize(string saveDir)
         {
@@ -70,7 +68,7 @@ namespace NitroxModel.Serialization
                     }
                     else
                     {
-                        Log.Error($"Incorrect format detected on line {lineNum} in {Path.GetFullPath(FileName)}:{Environment.NewLine}{readLine}");
+                        Log.Error($"Incorrect format detected on line {lineNum} in {Path.GetFullPath(Path.Combine(saveDir, FileName))}:{Environment.NewLine}{readLine}");
                     }
                 }
 

@@ -32,6 +32,7 @@ namespace NitroxServer.Serialization.World
         private readonly ServerConfig config;
         private readonly RandomStartGenerator randomStart;
         private readonly SaveDataUpgrade[] upgrades;
+        private readonly ServerConfig serverConfig; // ERROR HERE
 
         public WorldPersistence(ServerProtoBufSerializer protoBufSerializer, ServerJsonSerializer jsonSerializer, ServerConfig config, RandomStartGenerator randomStart, SaveDataUpgrade[] upgrades)
         {
@@ -123,10 +124,10 @@ namespace NitroxServer.Serialization.World
 
             return Optional.Empty;
         }
-
+        
         public World Load()
         {
-            Optional<World> fileLoadedWorld = LoadFromFile(config.SaveName);
+            Optional <World> fileLoadedWorld = LoadFromFile(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", "saves", serverConfig.SaveName));
             if (fileLoadedWorld.HasValue)
             {
                 return fileLoadedWorld.Value;

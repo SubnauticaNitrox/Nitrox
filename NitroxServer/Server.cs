@@ -59,7 +59,7 @@ namespace NitroxServer
             StringBuilder builder = new("\n");
             if (viewerPerms is Perms.CONSOLE)
             {
-                builder.AppendLine($" - Save location: {Path.GetFullPath(serverConfig.SaveName)}");
+                builder.AppendLine($" - Save location: {Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", "saves", serverConfig.SaveName)}");
             }
             builder.AppendLine($" - Aurora's state: {world.EventTriggerer.GetAuroraStateSummary()}");
             builder.AppendLine($" - Current time: day {world.EventTriggerer.Day} ({Math.Floor(world.EventTriggerer.ElapsedSeconds)}s)");
@@ -87,7 +87,7 @@ namespace NitroxServer
 
             IsSaving = true;
 
-            bool savedSuccessfully = worldPersistence.Save(world, Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Nitrox\\saves", serverConfig.SaveName));
+            bool savedSuccessfully = worldPersistence.Save(world, Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", "saves", serverConfig.SaveName));
             if (savedSuccessfully && !string.IsNullOrWhiteSpace(serverConfig.PostSaveCommandPath))
             {
                 try

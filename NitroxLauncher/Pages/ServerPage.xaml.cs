@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
 using NitroxLauncher.Models;
+using NitroxModel.Helper;
 using NitroxModel.Server;
 using NitroxServer.Serialization;
 using NitroxServer.Serialization.World;
@@ -79,7 +80,7 @@ namespace NitroxLauncher.Pages
             //Log.Info($"There are {numFiles} folders in the saves folder");
 
 
-            // Add each save file into the list if it's a valid save file   -   (NEED TO FIX THIS - Save files with numbers higher than the amount of save files there are don't get read and validated)  -  IGNORE FILE NAMES
+            // Add each save file into the list if it's a valid save file
             if (savesFolderDir.GetDirectories().Length > 0)
             {
                 //for (int i = 0; i < numFiles; ++i)
@@ -89,12 +90,12 @@ namespace NitroxLauncher.Pages
                     {
                         ServerConfig serverConfig = ServerConfig.Load(folder);
 
-                        //SaveFileVersion worldVersion = new ServerJsonSerializer().Deserialize<SaveFileVersion>(Path.Combine(folder, "Version.json"));
+                        Version worldVersion = new ServerJsonSerializer().Deserialize<SaveFileVersion>(Path.Combine(folder, "Version.json"))?.Version ?? NitroxEnvironment.Version;
                         WorldListing.Add(new World_Listing() 
                         { 
                             WorldName = serverConfig.SaveName,
                             WorldGamemode = Convert.ToString(serverConfig.GameMode), 
-                            WorldVersion =  "v1.6.0.1", //VersionToString(worldVersion), NEEDS SOME FIXING
+                            WorldVersion =  VersionToString(worldVersion), //"v1.6.0.1", NEEDS SOME FIXING
                             WorldSaveDir = folder
                         });
                         Log.Info($"Found a valid save file at: {folder}");
@@ -400,7 +401,7 @@ namespace NitroxLauncher.Pages
         }
         */
 
-        public string VersionToString(SaveFileVersion version)
+        public string VersionToString(Version version)
         {
             return $"{version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
         }

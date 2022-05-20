@@ -20,6 +20,8 @@ namespace NitroxServer
 {
     public class ServerAutoFacRegistrar : IAutoFacRegistrar
     {
+        private static ServerConfig serverConfig; // ERROR HERE
+
         public virtual void RegisterDependencies(ContainerBuilder containerBuilder)
         {
             RegisterCoreDependencies(containerBuilder);
@@ -31,7 +33,7 @@ namespace NitroxServer
 
         private static void RegisterCoreDependencies(ContainerBuilder containerBuilder)
         {
-            //containerBuilder.Register(c => ServerConfig.Load(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", "saves", serverConfig.SaveName), )).SingleInstance();
+            containerBuilder.Register(c => ServerConfig.Load(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", "saves", serverConfig.SaveName))).SingleInstance();
             containerBuilder.RegisterType<Server>().SingleInstance();
             containerBuilder.RegisterType<PlayerManager>().SingleInstance();
             containerBuilder.RegisterType<DefaultServerPacketProcessor>().InstancePerLifetimeScope();
