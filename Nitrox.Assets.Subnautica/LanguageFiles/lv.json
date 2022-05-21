@@ -35,6 +35,7 @@
     "Nitrox_HidePing": "",
     "Nitrox_IntroUWEPresents": "",
     "Nitrox_IntroWaitingPartner": "",
+    "Nitrox_InvalidUserName": "",
     "Nitrox_Join": "",
     "Nitrox_JoinServer": "",
     "Nitrox_JoinServerPassword": "",
@@ -65,6 +66,7 @@
     "Nitrox_PlayerListTabName": "",
     "Nitrox_RejectedSessionPolicy": "",
     "Nitrox_RemotePlayerObstacle": "",
+    "Nitrox_RequestingSessionPolicy": "",
     "Nitrox_ResyncBuildings": "",
     "Nitrox_ResyncOnCooldown": "",
     "Nitrox_ResyncRequested": "",
@@ -77,6 +79,7 @@
     "Nitrox_SilencedChatNotif": "",
     "Nitrox_StartServer": "",
     "Nitrox_StreamerSettings": "",
+    "Nitrox_SyncingWorld": "",
     "Nitrox_TeleportTo": "",
     "Nitrox_TeleportToMe": "",
     "Nitrox_TeleportToMeQuestion": "",
@@ -88,5 +91,6 @@
     "Nitrox_UnmutedPlayer": "",
     "Nitrox_Waiting": "",
     "Nitrox_WaitingPassword": "",
-    "Nitrox_WaitingUserInput": ""
+    "Nitrox_WaitingUserInput": "",
+    "Nitrox_WorldSettling": ""
 }
