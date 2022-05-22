@@ -92,18 +92,24 @@
         </Grid>
 
         <!-- Diagnostics -->
-        <StackPanel Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Button Style="{StaticResource LargeButton}" Background="#FF007BFF" Width="180" Height="40" BorderBrush="#66FFFFFF"
+        <StackPanel Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
+            <Button x:Name="Button_Start" Style="{StaticResource LargeButton}" Background="#FF007BFF" Width="180" Height="40" BorderBrush="#66FFFFFF"
                                 ToolTip="Save launch arguments" FontWeight="DemiBold" FontSize="16" Foreground="White"
-                                Content="Start diagnostics" Click="DiagnosticButton_Click" />
+                                Margin="10" Content="Start diagnostics" Click="DiagnosticButton_Click" />
+
+            <Button x:Name="Button_Cancel" Style="{StaticResource LargeButton}" Background="DarkRed" Width="110" Height="40" BorderBrush="#66FFFFFF"
+                                ToolTip="Save launch arguments" FontWeight="DemiBold" FontSize="16" Foreground="White"
+                                Margin="10" Content="Cancel" Click="CancelButton_Click" />
         </StackPanel>
         
         <!-- Others -->
 
         <StackPanel Grid.Row="3">
             <Separator />
-
-            <TextBlock Margin="0,10,0,0" FontSize="32" Foreground="White" TextWrapping="Wrap" VerticalAlignment="Bottom" FontWeight="Regular" Text="WIP"/>
+            <Border Margin="0,12,0,0" Padding="22" CornerRadius="12" Background="#151516">
+                <TextBox TabIndex="0" FontFamily="{StaticResource RobotoMono}" FontSize="12" Foreground="White" x:Name="LogWindow" IsReadOnly="True"
+                             TextWrapping="Wrap" Background="Transparent" BorderBrush="#00000000" BorderThickness="0" SelectionBrush="#000078D7" Width="722" IsEnabled="False" />
+            </Border>
         </StackPanel>
 
     </Grid>

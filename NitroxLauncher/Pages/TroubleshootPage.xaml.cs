@@ -1,59 +1,99 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Threading;
 using NitroxLauncher.Models;
 using NitroxLauncher.Models.Troubleshoot;
 using NitroxLauncher.Models.Troubleshoot.Abstract;
+using NitroxLauncher.Models.Troubleshoot.Abstract.Events;
 
 namespace NitroxLauncher.Pages
 {
     public partial class TroubleshootPage : PageBase
     {
+        private readonly CancellationTokenSource cancelSource = new();
+
         public static readonly TroubleshootModule Firewall = new FirewallModule();
         public static readonly TroubleshootModule Network = new NetworkModule();
         public static readonly TroubleshootModule Permissions = new PermissionsModule();
         public static readonly TroubleshootModule Antivirus = new AntivirusModule();
 
+        private static readonly TroubleshootModule[] modules = new TroubleshootModule[]
+        {
+            Firewall,
+            Network,
+            Permissions,
+            Antivirus
+        };
+
         public TroubleshootPage()
         {
             InitializeComponent();
+
+            Loaded += (s, e) =>
+            {
+                TroubleshootModule.LogReceivedEvent += OnLogReceived;
+            };
+            
+            Unloaded += (s, e) =>
+            {
+                TroubleshootModule.LogReceivedEvent -= OnLogReceived;
+            };
+        }
+
+        public void OnLogReceived(object sender, LogSentEventArgs e)
+        {
+            LogWindow.Text += $"[{e.ModuleName}] {e.Message}{Environment.NewLine}";
         }
 
         private void DiagnosticButton_Click(object sender, RoutedEventArgs e)
         {
-            Firewall.Status = TroubleshootStatus.RUNNING;
-
-            Task.Delay(3000).ContinueWith((t) =>
+            if (sender is not Button button)
             {
-                Firewall.Status = TroubleshootStatus.OK;
-                Network.Status = TroubleshootStatus.RUNNING;
+                return;
+            }
 
-                Task.Delay(2000).ContinueWith((t) =>
+            Button_Cancel.IsEnabled = true;
+            Dispatcher.InvokeAsync(() =>
+            {
+                try
                 {
-                    Network.Status = TroubleshootStatus.OK;
-                    Permissions.Status = TroubleshootStatus.RUNNING;
-
-                    Task.Delay(2000).ContinueWith((t) =>
+                    button.IsEnabled = false;
+                    foreach (TroubleshootModule module in modules)
                     {
-                        Permissions.Status = TroubleshootStatus.KO;
-                        Antivirus.Status = TroubleshootStatus.RUNNING;
+                        module.RunDiagnostic();
+                    }
 
-                        Dispatcher.Invoke(() =>
-                        {
-                            Run_Modules.Text = "Permissions";
-                            Run_StateVerb.Text = "needs your";
-                            Run_State.Text = "attention";
-                            Run_State.Foreground = Brushes.IndianRed;
-                        });
-                        
-                        Task.Delay(1000).ContinueWith((t) =>
-                        {
-                            Antivirus.Status = TroubleshootStatus.FATAL_ERROR;
-                        });
-                    });
-                });
+                    button.IsEnabled = true;
+                }
+                catch (OperationCanceledException)
+                {
+                    button.IsEnabled = true;
+                    Button_Cancel.IsEnabled = false;
+                }
+            }, DispatcherPriority.Normal, cancelSource.Token);
+        }
 
-            });
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is not Button)
+            {
+                return;
+            }
+
+            foreach (TroubleshootModule module in modules)
+            {
+                module.Reset();
+            }
+
+            Run_StateVerb.Text = "Cancel";
+            Run_State.Text = "Cancel";
+            Run_Modules.Text = "Cancel";
+
+            cancelSource.Cancel();
         }
     }
 }

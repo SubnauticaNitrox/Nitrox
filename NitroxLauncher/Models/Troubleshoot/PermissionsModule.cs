@@ -4,11 +4,12 @@ namespace NitroxLauncher.Models.Troubleshoot
 {
     internal class PermissionsModule : TroubleshootModule
     {
-        public const string NAME = "Permissions";
+        public PermissionsModule()
+        {
+            Name = "Permissions";
+        }
 
-        public PermissionsModule() : base(NAME) { }
-
-        protected override bool? Check()
+        protected override bool Check()
         {
             throw new System.NotImplementedException();
         }
