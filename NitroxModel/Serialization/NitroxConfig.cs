@@ -28,7 +28,7 @@ namespace NitroxModel.Serialization
             {
                 Type type = GetType();
                 Dictionary<string, MemberInfo> typeCachedDict = GetTypeCacheDictionary();
-                using StreamReader reader = new(new FileStream(Path.Combine(saveDir, FileName), FileMode.Open), Encoding.UTF8);
+                using StreamReader reader = new(new FileStream(Path.Combine(saveDir, FileName), FileMode.Open, FileAccess.Read, FileShare.Read), Encoding.UTF8);
 
                 HashSet<MemberInfo> unserializedMembers = new(typeCachedDict.Values);
                 char[] lineSeparator = { '=' };
@@ -102,7 +102,7 @@ namespace NitroxModel.Serialization
                 Dictionary<string, MemberInfo> typeCachedDict = GetTypeCacheDictionary();
                 try
                 {
-                    using StreamWriter stream = new(new FileStream(Path.Combine(saveDir, FileName), FileMode.Create), Encoding.UTF8);
+                    using StreamWriter stream = new(new FileStream(Path.Combine(saveDir, FileName), FileMode.Create, FileAccess.Write), Encoding.UTF8);
                     WritePropertyDescription(type, stream);
 
                     foreach (string name in typeCachedDict.Keys)

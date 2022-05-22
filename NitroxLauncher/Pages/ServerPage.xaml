@@ -113,7 +113,7 @@
                                 <Image Grid.Row="1" Source="{StaticResource ServerIllustration}" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Top" Width="290" Margin="0 15 0 0"/>
                             </Grid>
 
-                            <ListView Name="WorldListingContainer" Background="{x:Null}" BorderBrush="{x:Null}" Margin="5" HorizontalContentAlignment="Stretch">
+                            <ListView Name="WorldListingContainer" Background="{x:Null}" BorderBrush="{x:Null}" Margin="5" HorizontalContentAlignment="Stretch" ScrollViewer.CanContentScroll="False">
                                 <!-- TEMPORARY - View server listing buttons in Intellisense window -->
                                 <!--<d:ListView.ItemsSource>
                                     <x:Array Type="pages:World_Listing">
@@ -129,6 +129,7 @@
                                 <!-- Fix the Scroll Bar -->
                                 <ListView.Resources>
                                     <Style x:Key="{x:Type ScrollBar}" TargetType="{x:Type ScrollBar}">
+                                        <!--<Setter Property="ScrollViewer.CanContentScroll" Value="False"/>-->
                                         <Setter Property="Template">
                                             <Setter.Value>
                                                 <ControlTemplate TargetType="{x:Type ScrollBar}">
@@ -215,12 +216,10 @@
                                                 </Grid.ColumnDefinitions>
 
                                                 <!-- Select World Button -->
-                                                <Button x:Name="WorldSelectBtn" Click="SelectWorld_Click" Style="{StaticResource WorldListingButton}" ToolTip="Select this world" Foreground="White" Height="83" HorizontalAlignment="Stretch" Width="Auto" HorizontalContentAlignment="Stretch" IsEnabled="{Binding Path=IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}">
-                                                    <!-- {Binding Path=IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}} -->
-                                                    <DockPanel Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Button}}" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Button}}" VerticalAlignment="Center" HorizontalAlignment="Stretch">
-
-                                                        <!-- World Name -->
-                                                        <TextBlock Grid.Column="0" FontSize="20" Foreground="White" Text="{Binding WorldName, FallbackValue=WorldName, Mode=OneTime}" VerticalAlignment="Center" HorizontalAlignment="Left"  Margin="20 0 0 0"/>
+                                                    <Button x:Name="WorldSelectBtn" Click="SelectWorld_Click" Style="{StaticResource WorldListingButton}" ToolTip="Select this world" Foreground="White" Height="83" HorizontalAlignment="Stretch" Width="Auto" HorizontalContentAlignment="Stretch" IsEnabled="{Binding Path=IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}">
+                                                        <DockPanel Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Button}}" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Button}}" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+                                                            <!-- World Name -->
+                                                        <TextBlock Grid.Column="0" FontSize="20" Foreground="White" Text="{Binding WorldName, Mode=OneTime}" VerticalAlignment="Center" HorizontalAlignment="Left"  Margin="20 0 0 0"/>
 
                                                         <!-- World Data -->
                                                         <DockPanel Grid.Column="1" LastChildFill = "True" Margin="0 10 10 10" HorizontalAlignment="Right">
@@ -321,7 +320,7 @@
                                                 Background="{x:Null}" BorderBrush="{x:Null}"
                                                 Margin="13,4,13,4" SelectionBrush="#FF36383A"
                                                 VerticalAlignment="Center" BorderThickness="0"
-                                                CaretBrush="White" Width="250" MaxLength="25" Text="{Binding SelectedWorldName, FallbackValue=WorldName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" TextChanged="TBWorldName_Changed">
+                                                CaretBrush="White" Width="250" MaxLength="25" Text="{Binding SelectedWorldName, FallbackValue=WorldName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" LostKeyboardFocus="TBWorldName_Input">
 
                                                 <!-- TODO: Make text font color turn white when text box is being edited (The commented-out code below doesn't seem to do it) -->
                                                 <!--<TextBox.Style>
@@ -347,7 +346,7 @@
                                                 Foreground="#8A8A8A" TextAlignment="Left"
                                                 Background="{x:Null}" BorderBrush="{x:Null}"
                                                 Margin="13,4,13,4" SelectionBrush="#FF36383A"
-                                                VerticalAlignment="Center" BorderThickness="0" CaretBrush="White" Width="155" MaxLength="10" Text="{Binding SelectedWorldSeed, FallbackValue=WorldSeed, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" TextChanged="TBWorldSeed_Changed" IsEnabled="{Binding IsNewWorld, FallbackValue=False, Mode=OneWay}"/>
+                                                VerticalAlignment="Center" BorderThickness="0" CaretBrush="White" Width="155" MaxLength="10" Text="{Binding SelectedWorldSeed, FallbackValue=WorldSeed, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" LostKeyboardFocus="TBWorldSeed_Input" IsEnabled="{Binding IsNewWorld, FallbackValue=False, Mode=OneWay}"/>
                                         </Border>
                                     </StackPanel>
                                 </Grid>
@@ -371,17 +370,17 @@
                                         </Grid.ColumnDefinitions>
 
                                         <!-- Freedom Mode Button -->
-                                        <RadioButton Style="{StaticResource WorldGamemodeButton}" x:Name="RBFreedom" GroupName="ServerGamemode" Click="RBGamemode_Clicked" HorizontalAlignment="Left" VerticalAlignment="Center" ToolTip="Set the World Gamemode to Freedom Mode">
+                                        <RadioButton Style="{StaticResource WorldGamemodeButton}" x:Name="RBFreedom" GroupName="ServerGamemode" HorizontalAlignment="Left" VerticalAlignment="Center" ToolTip="Set the World Gamemode to Freedom Mode">
                                             <TextBlock Text="Freedom" FontSize="18"/>
                                         </RadioButton>
 
                                         <!-- Survival Mode Button -->
-                                        <RadioButton Style="{StaticResource WorldGamemodeButton}" x:Name="RBSurvival" GroupName="ServerGamemode" Click="RBGamemode_Clicked" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" IsChecked="True" ToolTip="Set the World Gamemode to Survival Mode">
+                                        <RadioButton Style="{StaticResource WorldGamemodeButton}" x:Name="RBSurvival" GroupName="ServerGamemode" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" IsChecked="True" ToolTip="Set the World Gamemode to Survival Mode">
                                             <TextBlock Text="Survival" FontSize="18"/>
                                         </RadioButton>
 
                                         <!-- Creative Mode Button -->
-                                        <RadioButton Style="{StaticResource WorldGamemodeButton}" x:Name="RBCreative" GroupName="ServerGamemode" Click="RBGamemode_Clicked" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="2" ToolTip="Set the World Gamemode to Creative Mode">
+                                        <RadioButton Style="{StaticResource WorldGamemodeButton}" x:Name="RBCreative" GroupName="ServerGamemode" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="2" ToolTip="Set the World Gamemode to Creative Mode">
                                             <TextBlock Text="Creative" FontSize="18"/>
                                         </RadioButton>
 
@@ -441,7 +440,7 @@
                                                     Background="{x:Null}" BorderBrush="{x:Null}"
                                                     Margin="4" SelectionBrush="#FF36383A"
                                                     VerticalAlignment="Center" BorderThickness="0"
-                                                    CaretBrush="White" Width="Auto" MaxLength="5" Text="{Binding ServerPort, Mode=OneWay, FallbackValue='11000'}" TextChanged="TBWorldServerPort_Changed">
+                                                    CaretBrush="White" Width="Auto" MaxLength="5" Text="{Binding ServerPort, Mode=OneWay, FallbackValue='11000'}" LostKeyboardFocus="TBWorldServerPort_Input">
 
                                                     <!-- TODO: Validate input to be in the valid port ranges - DO IT IN C# -->
 
@@ -523,8 +522,8 @@
                     
                     <TextBlock Grid.ColumnSpan="2" Text="Are you sure you want to delete this world?" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18" TextWrapping="Wrap" TextAlignment="Center" Width="250"/>
 
-                    <Button Click="NoConfirmBtn_Click" Grid.Row="1" Style="{StaticResource LargeButton}" Background="#FF007BFF" Height="50" Width="100" VerticalAlignment="Top" Content="No"/>
-                    <Button Click="YesConfirmBtn_Click" Grid.Row="1" Grid.Column="1" Style="{StaticResource LargeButton}" Background="#151516" Height="50" Width="100" VerticalAlignment="Top" Content="Yes"/>
+                    <Button Click="YesConfirmBtn_Click" Grid.Row="1" Style="{StaticResource LargeButton}" Background="#151516" Height="50" Width="100" VerticalAlignment="Top" Content="Yes"/>
+                    <Button Click="NoConfirmBtn_Click" Grid.Row="1" Grid.Column="1" Style="{StaticResource LargeButton}" Background="#FF007BFF" Height="50" Width="100" VerticalAlignment="Top" Content="No"/>
                 </Grid>
             </Border>
             
