@@ -2,6 +2,7 @@
     "Nitrox_AddServer": "添加服务器",
     "Nitrox_AddServer_AddressDescription": "主机:",
     "Nitrox_AddServer_AddressPlaceholder": "输入服务器的IP或地址",
+    "Nitrox_AddServer_CreatedSuccessful": "",
     "Nitrox_AddServer_InvalidInput": "你的输入无效. 请检查是否所有的文本框都已填好.",
     "Nitrox_AddServer_NameDescription": "名称:",
     "Nitrox_AddServer_NamePlaceholder": "为服务器取名",
