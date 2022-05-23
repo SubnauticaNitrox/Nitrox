@@ -363,13 +363,4 @@ namespace NitroxLauncher.Pages
             return $"{version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
         }
     }
-
-    public class World_Listing
-    {
-        public string WorldName { get; set; }
-        public string WorldGamemode { get; set; }
-        public string WorldVersion { get; set; }
-        public string WorldSaveDir { get; set; }
-    }
-
 }
