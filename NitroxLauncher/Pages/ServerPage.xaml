@@ -13,6 +13,7 @@
         <BitmapImage x:Key="ServerIllustration" UriSource="pack://application:,,,/images/serverIllustration.png"/>
         <BitmapImage x:Key="TrashcanButton" UriSource="pack://application:,,,/images/material-design-icons/trashcan_icon.png"/>
         <BitmapImage x:Key="AddServerButton" UriSource="pack://application:,,,/images/material-design-icons/add_server.png"/>
+        <BitmapImage x:Key="RefreshButton" UriSource="pack://application:,,,/images/material-design-icons/refresh.png"/>
         <BitmapImage x:Key="GoBackButton" UriSource="pack://application:,,,/images/material-design-icons/go_back.png"/>
 
         <Storyboard x:Key="WorldSelectedAnimation">
@@ -91,6 +92,10 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="40"/>
                         </Grid.ColumnDefinitions>
+
+                        <Button x:Name="RefreshListingBtn" Click="RefreshListing_Click" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="Refresh the world listing">
+                            <Image Source="{StaticResource RefreshButton}" Stretch="Uniform"  Width="40" Height="40"/>
+                        </Button>
 
                         <TextBlock Grid.Column="1" Text="Your Worlds" Foreground="White" VerticalAlignment="Center" FontSize="30" HorizontalAlignment="Center" FontWeight="Bold"/>
 
@@ -310,26 +315,14 @@
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                         <TextBlock Text="Name:  " Foreground="White" FontSize="20" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                         <Border BorderBrush ="#333437" Background="#333437" BorderThickness="1" CornerRadius="8" Margin="0">
-                                            <TextBox Grid.Column="0" x:Name="TBWorldName"
+                                                <TextBox Grid.Column="0" x:Name="TBWorldName"
                                                 FontSize="18" MaxLines="1" ToolTip="Set the world name"
                                                 Foreground="#8A8A8A" TextAlignment="Left"
                                                 Background="{x:Null}" BorderBrush="{x:Null}"
                                                 Margin="13,4,13,4" SelectionBrush="#FF36383A"
                                                 VerticalAlignment="Center" BorderThickness="0"
                                                 CaretBrush="White" Width="250" MaxLength="25" Text="{Binding SelectedWorldName, FallbackValue=WorldName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" LostKeyboardFocus="TBWorldName_Input">
-
-                                                <!-- TODO: Make text font color turn white when text box is being edited (The commented-out code below doesn't seem to do it) -->
-                                                <!--<TextBox.Style>
-                                                    <Style TargetType="TextBox">
-                                                        <Style.Triggers>
-                                                            <Trigger Property="IsMouseOver" Value="True">
-                                                                <Setter Property="Foreground" Value="White"/>
-                                                            </Trigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </TextBox.Style>-->
-
-                                            </TextBox>
+                                                </TextBox>
                                         </Border>
                                     </StackPanel>
 
@@ -437,19 +430,7 @@
                                                     Margin="4" SelectionBrush="#FF36383A"
                                                     VerticalAlignment="Center" BorderThickness="0"
                                                     CaretBrush="White" Width="Auto" MaxLength="5" Text="{Binding ServerPort, Mode=OneWay, FallbackValue='11000'}" LostKeyboardFocus="TBWorldServerPort_Input">
-                                                        
-                                                    <!-- TODO: Make text font color turn white when text box is being edited (The commented-out code below doesn't seem to do it) -->
-                                                    <!--<TextBox.Style>
-                                                        <Style TargetType="TextBox">
-                                                            <Style.Triggers>
-                                                                <Trigger Property="IsMouseOver" Value="True">
-                                                                    <Setter Property="Foreground" Value="White"/>
-                                                                </Trigger>
-                                                            </Style.Triggers>
-                                                        </Style>
-                                                    </TextBox.Style>-->
-
-                                                </TextBox>
+                                                    </TextBox>
                                             </Border>
 
                                             <Button Style="{StaticResource LargeButton}" Click="AdvancedSettings_Click" ToolTip="See the advanced settings" Grid.Row="2" Grid.Column="3" Content="Advanced Settings" Foreground="White" FontSize="15" Grid.ColumnSpan="2" Background="#FF007BFF" Height="Auto" Width="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10 5"/>

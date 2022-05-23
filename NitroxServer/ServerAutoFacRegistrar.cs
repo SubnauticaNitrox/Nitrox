@@ -1,6 +1,8 @@
 ﻿global using NitroxModel.Logger;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using Autofac;
 using NitroxModel.Core;
@@ -44,7 +46,34 @@ namespace NitroxServer
                 }
                 if (saveDir == null)
                 {
-                    throw new Exception($"Server can't start without a save folder given. Command line: '{Environment.CommandLine}'");
+                    // Check if there are any save files
+                    IEnumerable<WorldManager.Listing> WorldList = WorldManager.GetSaves();
+                    if (WorldList.Any())
+                    {
+                        // Get last save file used
+                        string LastSaveAccessed = WorldList.ElementAtOrDefault(0).WorldSaveDir;
+                        if (WorldList.Count() > 1)
+                        {
+                            for (int i = 1; i < WorldList.Count(); i++)
+                            {
+                                if (File.GetLastWriteTime(Path.Combine(WorldList.ElementAtOrDefault(i).WorldSaveDir, "WorldData.json")) > File.GetLastWriteTime(LastSaveAccessed) || File.GetLastWriteTime(Path.Combine(WorldList.ElementAtOrDefault(i).WorldSaveDir, "WorldData.nitrox")) > File.GetLastWriteTime(LastSaveAccessed))
+                                {
+                                    LastSaveAccessed = WorldList.ElementAtOrDefault(i).WorldSaveDir;
+                                }
+                            }
+                        }
+                        saveDir = LastSaveAccessed;
+                    }
+                    else
+                    {
+                        // Create new save file
+                        saveDir = Path.Combine(WorldManager.SavesFolderDir, "My World");
+                        Directory.CreateDirectory(saveDir);
+                        ServerConfig serverConfig = ServerConfig.Load(saveDir);
+                        Log.Debug($"No save file was found, creating a new one...");
+                    }
+
+                    //throw new Exception($"Server can't start without a save folder given. Command line: '{Environment.CommandLine}'");
                 }
 
                 return ServerConfig.Load(saveDir);

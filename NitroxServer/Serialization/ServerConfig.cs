@@ -89,8 +89,6 @@ namespace NitroxServer.Serialization
             }
         }
 
-        //public override string SelectedWorldName => SaveName;
-
         public string ServerPassword { get; set; } = string.Empty;
 
         public string AdminPassword { get; set; } = StringHelper.GenerateRandomString(12);

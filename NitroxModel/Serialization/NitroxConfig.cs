@@ -16,11 +16,9 @@ namespace NitroxModel.Serialization
         private readonly char[] newlineChars = Environment.NewLine.ToCharArray();
 
         public abstract string FileName { get; }
-        //public abstract string SelectedWorldName { get; }
 
         public void Deserialize(string saveDir)
         {
-            //string saveDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", "saves", SelectedWorldName);
             if (!File.Exists(Path.Combine(saveDir, FileName)))
             {
                 return;
@@ -98,7 +96,6 @@ namespace NitroxModel.Serialization
 
         public void Serialize(string saveDir)
         {
-            //string saveDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", "saves", SelectedWorldName);
             lock (locker)
             {
                 Type type = GetType();

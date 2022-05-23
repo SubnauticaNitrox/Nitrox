@@ -23,8 +23,7 @@ namespace NitroxLauncher.Pages
         
         public string PathToSubnautica => LauncherLogic.Config.SubnauticaPath;
 
-        // World settings variables (TODO: REMOVE THESE)
-
+        // World settings variables
         public string SelectedWorldName { get; set; }
         public string SelectedWorldSeed { get; set; }
         public string SelectedWorldVersion { get; set; }
@@ -37,7 +36,6 @@ namespace NitroxLauncher.Pages
 
         public bool IsNewWorld { get; set; }
 
-        //public int SelectedWorldIndex { get; set; }
         public string SelectedWorldDirectory { get; set; }
         
         public ServerPage()
@@ -95,7 +93,6 @@ namespace NitroxLauncher.Pages
 
         public void UpdateVisualWorldSettings()
         {
-            //string saveDir = Path.Combine(SavesFolderDir, "save" + saveFileNum);
             ServerConfig serverConfig = ServerConfig.Load(SelectedWorldDirectory);
 
             // Get config file values
@@ -136,6 +133,11 @@ namespace NitroxLauncher.Pages
 
         }
 
+        private void RefreshListing_Click(object sender, RoutedEventArgs e)
+        {
+            InitializeWorldListing();
+        }
+        
         private void GoBack_Click(object sender, RoutedEventArgs e)
         {
             SaveConfigSettings();
@@ -332,9 +334,7 @@ namespace NitroxLauncher.Pages
             {
                 SaveConfigSettings();
                 InitializeWorldListing();
-
-                //WorldManager.SelectedWorldName = SelectedWorldName;
-
+                
                 try
                 {
                     LauncherLogic.Server.StartServer(CBIsExternal.IsChecked == true, SelectedWorldDirectory);
