@@ -31,7 +31,6 @@ namespace NitroxLauncher
             serverProcess = null;
         }
 
-        // PUT A PARAMETER HERE FOR SAVE FILE PATH!!!!!
         internal Process StartServer(bool standalone, string saveDir)
         {
             if (IsServerRunning)
@@ -51,6 +50,8 @@ namespace NitroxLauncher
                 startInfo.RedirectStandardInput = true;
                 startInfo.CreateNoWindow = true;
             }
+
+            startInfo.Arguments = $@"""{saveDir}""";
 
             serverProcess = Process.Start(startInfo);
             if (serverProcess != null)

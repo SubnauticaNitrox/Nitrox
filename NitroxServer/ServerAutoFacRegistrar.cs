@@ -20,8 +20,6 @@ namespace NitroxServer
 {
     public class ServerAutoFacRegistrar : IAutoFacRegistrar
     {
-        private static ServerConfig serverConfig; // ERROR HERE
-
         public virtual void RegisterDependencies(ContainerBuilder containerBuilder)
         {
             RegisterCoreDependencies(containerBuilder);
@@ -33,7 +31,24 @@ namespace NitroxServer
 
         private static void RegisterCoreDependencies(ContainerBuilder containerBuilder)
         {
-            containerBuilder.Register(c => ServerConfig.Load(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", "saves", serverConfig.SaveName))).SingleInstance();
+            containerBuilder.Register(c =>
+            {
+                string saveDir = null;
+                foreach (string arg in Environment.GetCommandLineArgs())
+                {
+                    if (arg.StartsWith(WorldManager.SavesFolderDir, StringComparison.OrdinalIgnoreCase) && Directory.Exists(arg))
+                    {
+                        saveDir = arg;
+                        break;
+                    }
+                }
+                if (saveDir == null)
+                {
+                    throw new Exception($"Server can't start without a save folder given. Command line: '{Environment.CommandLine}'");
+                }
+
+                return ServerConfig.Load(saveDir);
+            }).SingleInstance();
             containerBuilder.RegisterType<Server>().SingleInstance();
             containerBuilder.RegisterType<PlayerManager>().SingleInstance();
             containerBuilder.RegisterType<DefaultServerPacketProcessor>().InstancePerLifetimeScope();
