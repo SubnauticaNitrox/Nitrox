@@ -172,7 +172,7 @@ namespace NitroxLauncher.Pages
         {
             SelectedWorldDirectory = WorldManager.GetSaves().ElementAtOrDefault(WorldListingContainer.SelectedIndex)?.WorldSaveDir ?? "";
             Directory.Delete(SelectedWorldDirectory, true);
-            Log.Info($"Deleting world index {WorldListingContainer.SelectedIndex}");
+            Log.Info($"Deleting world \"{SelectedWorldName}\"");
 
             ConfirmationBox.Opacity = 0;
             ConfirmationBox.IsHitTestVisible = false;
@@ -191,6 +191,7 @@ namespace NitroxLauncher.Pages
         {
             TBWorldName.Text = TBWorldName.Text.TrimStart();
             TBWorldName.Text = TBWorldName.Text.TrimEnd();
+
             // Make sure the string isn't empty
             if (!string.IsNullOrEmpty(TBWorldName.Text))
             {
@@ -212,11 +213,10 @@ namespace NitroxLauncher.Pages
                 string newSelectedWorldDirectory = Path.Combine(Path.GetDirectoryName(SelectedWorldDirectory) ?? throw new Exception("Selected world is empty"), TBWorldName.Text);
                 if (!newSelectedWorldDirectory.Equals(SelectedWorldDirectory, StringComparison.OrdinalIgnoreCase) && Directory.Exists(newSelectedWorldDirectory))
                 {
-                    LauncherNotifier.Error($"World name '{TBWorldName.Text}' already exists");
+                    LauncherNotifier.Error($"World name \"{TBWorldName.Text}\" already exists.");
 
                     int i = 1;
                     Regex rx = new(@"\((\d+)\)$");
-                    // NEED TO CHECK THAT THE INPUTTED TEXT DOESN'T ALREADY HAVE A " (#)" AND TO INCREMENT THE NUMBER IT ALREADY HAS IF IT DOES
                     if (!rx.IsMatch(TBWorldName.Text))
                     {
                         SelectedWorldName = TBWorldName.Text + $" ({i})";
@@ -225,7 +225,7 @@ namespace NitroxLauncher.Pages
 
                     while (Directory.Exists(newSelectedWorldDirectory) && !newSelectedWorldDirectory.Equals(SelectedWorldDirectory, StringComparison.OrdinalIgnoreCase))
                     {
-                        // increment the number to the end of the name until it reaches an available filename
+                        // Increment the number to the end of the name until it reaches an available filename
                         SelectedWorldName = rx.Replace(SelectedWorldName, $"({i})", 1);
                         newSelectedWorldDirectory = Path.Combine(Path.GetDirectoryName(SelectedWorldDirectory) ?? throw new Exception("Selected world is empty"), SelectedWorldName);
                         i++;
@@ -234,17 +234,28 @@ namespace NitroxLauncher.Pages
                     TBWorldName.Text = SelectedWorldName;
                 }
                 SelectedWorldName = TBWorldName.Text;
-                Log.Info($"World name set to {SelectedWorldName}");
+                Log.Info($"World name set to \"{SelectedWorldName}\".");
             }
             else
             {
                 TBWorldName.Text = SelectedWorldName;
-                LauncherNotifier.Error($"An empty world name is not valid");
+                LauncherNotifier.Error($"An empty world name is not valid.");
             }
         }
 
         private void TBWorldSeed_Input(object sender, System.Windows.Input.KeyboardFocusChangedEventArgs e)
         {
+            TBWorldSeed.Text = TBWorldSeed.Text.TrimStart();
+            TBWorldSeed.Text = TBWorldSeed.Text.TrimEnd();
+            TBWorldSeed.Text = TBWorldSeed.Text.ToUpper();
+
+            if (TBWorldSeed.Text.Length != 10 || !Regex.IsMatch(TBWorldSeed.Text, @"^[a-zA-Z]+$"))
+            {
+                TBWorldSeed.Text = SelectedWorldSeed;
+                LauncherNotifier.Error($"World Seeds should contain 10 alphabetical characters (A-Z).");
+                return;
+            }
+            
             SelectedWorldSeed = TBWorldSeed.Text;
             Log.Info($"World seed set to {SelectedWorldSeed}");
         }
@@ -275,16 +286,36 @@ namespace NitroxLauncher.Pages
 
         private void TBWorldServerPort_Input(object sender, System.Windows.Input.KeyboardFocusChangedEventArgs e)
         {
-            int ServerPortNum = 11000;
+            TBWorldServerPort.Text = TBWorldServerPort.Text.TrimStart();
+            TBWorldServerPort.Text = TBWorldServerPort.Text.TrimEnd();
+
+            if (string.IsNullOrEmpty(TBWorldServerPort.Text))
+            {
+                TBWorldServerPort.Text = Convert.ToString(ServerPort);
+                LauncherNotifier.Error($"An empty ServerPort input is not valid.");
+                return;
+            }
+
+            int ServerPortNum;
             try
             {
                 ServerPortNum = Convert.ToInt32(TBWorldServerPort.Text);
             }
             catch
             {
-                Log.Info($"ServerPort input not valid");
+                TBWorldServerPort.Text = Convert.ToString(ServerPort);
+                LauncherNotifier.Error($"ServerPort input should only contain numbers.");
+                return;
             }
             
+            // Limit the input to numbers in between ports 1024 and 65535
+            if (ServerPortNum < 1024 || ServerPortNum > 65535)
+            {
+                TBWorldServerPort.Text = Convert.ToString(ServerPort);
+                LauncherNotifier.Error($"Only port numbers between 1024 and 65535 are allowed.");
+                return;
+            }
+
             ServerPort = ServerPortNum;
         }
 
@@ -301,6 +332,8 @@ namespace NitroxLauncher.Pages
             {
                 SaveConfigSettings();
                 InitializeWorldListing();
+
+                //WorldManager.SelectedWorldName = SelectedWorldName;
 
                 try
                 {

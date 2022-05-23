@@ -238,10 +238,6 @@
                                                     <Image Source="{StaticResource TrashcanButton}" Stretch="Uniform"  Width="30" Height="30"/>
                                                 </Button>
 
-                                                <!--<Grid.Triggers>
-                                                    <Trigger ListBoxItem.Selected=""
-                                                </Grid.Triggers>-->
-
                                             </Grid>
                                         </Border>
                                     </DataTemplate>
@@ -315,7 +311,7 @@
                                         <TextBlock Text="Name:  " Foreground="White" FontSize="20" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                         <Border BorderBrush ="#333437" Background="#333437" BorderThickness="1" CornerRadius="8" Margin="0">
                                             <TextBox Grid.Column="0" x:Name="TBWorldName"
-                                                FontSize="18" MaxLines="1"
+                                                FontSize="18" MaxLines="1" ToolTip="Set the world name"
                                                 Foreground="#8A8A8A" TextAlignment="Left"
                                                 Background="{x:Null}" BorderBrush="{x:Null}"
                                                 Margin="13,4,13,4" SelectionBrush="#FF36383A"
@@ -341,7 +337,7 @@
                                     <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center"  HorizontalAlignment="Right">
                                         <TextBlock Text="Seed:  " Foreground="White" FontSize="20" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                         <Border BorderBrush ="#333437" Background="#333437" BorderThickness="1" CornerRadius="8" Margin="0">
-                                            <TextBox Grid.Column="0" x:Name="TBWorldSeed"
+                                            <TextBox Grid.Column="0" x:Name="TBWorldSeed" ToolTip="Set the seed the world would use when created. Leave empty to generate a random seed"
                                                 FontSize="18" MaxLines="1" FontStyle="Italic"
                                                 Foreground="#8A8A8A" TextAlignment="Left"
                                                 Background="{x:Null}" BorderBrush="{x:Null}"
@@ -434,16 +430,14 @@
                                             <!-- Row 3 -->
                                             <TextBlock Grid.Row="2" Grid.Column="0" Text="Server Port" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
                                             <Border Grid.Row="2" Grid.Column="1" BorderBrush ="Black" Background="Black" BorderThickness="1" CornerRadius="8" Margin="5 5 10 5">
-                                                <TextBox Grid.Column="0" x:Name="TBWorldServerPort"
-                                                    FontSize="12" MaxLines="1"
+                                                    <TextBox Grid.Column="0" x:Name="TBWorldServerPort"
+                                                    FontSize="12" MaxLines="1" ToolTip="Set the port number that the server will use with this world. NOTE: It can be the same as every other world."
                                                     Foreground="#8A8A8A" TextAlignment="Center"
                                                     Background="{x:Null}" BorderBrush="{x:Null}"
                                                     Margin="4" SelectionBrush="#FF36383A"
                                                     VerticalAlignment="Center" BorderThickness="0"
                                                     CaretBrush="White" Width="Auto" MaxLength="5" Text="{Binding ServerPort, Mode=OneWay, FallbackValue='11000'}" LostKeyboardFocus="TBWorldServerPort_Input">
-
-                                                    <!-- TODO: Validate input to be in the valid port ranges - DO IT IN C# -->
-
+                                                        
                                                     <!-- TODO: Make text font color turn white when text box is being edited (The commented-out code below doesn't seem to do it) -->
                                                     <!--<TextBox.Style>
                                                         <Style TargetType="TextBox">
