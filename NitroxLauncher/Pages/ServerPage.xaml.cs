@@ -363,4 +363,12 @@ namespace NitroxLauncher.Pages
             return $"{version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
         }
     }
+    // Uncomment to view intellisense world listings, in addition to the commented out lines that are in the ListView in ServerPage.xaml
+    //public class World_Listing
+    //{
+    //    public string WorldName { get; set; }
+    //    public string WorldGamemode { get; set; }
+    //    public string WorldVersion { get; set; }
+    //    public string WorldSaveDir { get; set; }
+    //}
 }

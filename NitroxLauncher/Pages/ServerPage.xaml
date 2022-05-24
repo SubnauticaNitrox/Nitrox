@@ -120,7 +120,7 @@
                                 </Grid>
 
                                 <ListView Name="WorldListingContainer" Background="{x:Null}" BorderBrush="{x:Null}" Margin="5" HorizontalContentAlignment="Stretch" ScrollViewer.CanContentScroll="False">
-                                    <!-- TEMPORARY - View server listing buttons in Intellisense window -->
+                                    <!-- TEMPORARY - View server listing buttons in Intellisense window --> <!-- Must also uncomment the "World_Listing" class at the bottom of ServerPage.xaml.cs to view these in intellisense -->
                                     <!--<d:ListView.ItemsSource>
                                         <x:Array Type="pages:World_Listing">
                                             <pages:World_Listing WorldName = "Survival w/ friends" WorldGamemode = "Survival" WorldVersion = "v1.6.0.0"/>
@@ -225,7 +225,7 @@
                                                     <Button x:Name="WorldSelectBtn" Click="SelectWorld_Click" Style="{StaticResource WorldListingButton}" ToolTip="Select this world" Foreground="White" Height="83" HorizontalAlignment="Stretch" Width="Auto" HorizontalContentAlignment="Stretch" IsEnabled="{Binding Path=IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}">
                                                         <DockPanel Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Button}}" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Button}}" VerticalAlignment="Center" HorizontalAlignment="Stretch">
                                                             <!-- World Name -->
-                                                            <TextBlock Grid.Column="0" FontSize="20" Foreground="White" Text="{Binding WorldName, Mode=OneTime}" VerticalAlignment="Center" HorizontalAlignment="Left"  Margin="20 0 0 0"/>
+                                                            <TextBlock Grid.Column="0" FontSize="20" Foreground="White" Text="{Binding WorldName, Mode=OneTime}" VerticalAlignment="Center" HorizontalAlignment="Left"  Margin="20 0 0 0" MaxWidth="400"/>
 
                                                             <!-- World Data -->
                                                             <DockPanel Grid.Column="1" LastChildFill = "True" Margin="0 10 10 10" HorizontalAlignment="Right">
