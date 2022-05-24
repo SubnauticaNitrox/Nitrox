@@ -33,11 +33,12 @@ namespace NitroxServer
         public NitroxVector3? LastStoredPosition { get; set; }
         public Optional<NitroxId> LastStoredSubRootID { get; set; }
         public ThreadSafeSet<string> CompletedGoals { get; }
+        public ThreadSafeSet<string> HiddenSignalPings { get; }
 
         public Player(ushort id, string name, bool isPermaDeath, PlayerContext playerContext, NitroxConnection connection,
                       NitroxVector3 position, NitroxId playerId, Optional<NitroxId> subRootId, Perms perms, PlayerStatsData stats,
                       IEnumerable<NitroxTechType> usedItems, IEnumerable<string> quickSlotsBinding,
-                      IEnumerable<EquippedItemData> equippedItems, IEnumerable<EquippedItemData> modules, HashSet<string> completedGoals)
+                      IEnumerable<EquippedItemData> equippedItems, IEnumerable<EquippedItemData> modules, HashSet<string> completedGoals, HashSet<string> hiddenSignalPings)
         {
             Id = id;
             Name = name;
@@ -57,6 +58,7 @@ namespace NitroxServer
             this.modules = new ThreadSafeList<EquippedItemData>(modules);
             visibleCells = new ThreadSafeSet<AbsoluteEntityCell>();
             CompletedGoals = new ThreadSafeSet<string>(completedGoals);
+            HiddenSignalPings = new(hiddenSignalPings);
         }
 
         public static bool operator ==(Player left, Player right)
@@ -170,6 +172,17 @@ namespace NitroxServer
         protected bool Equals(Player other)
         {
             return Id == other.Id;
+        }
+
+        public void SetPingVisible(string pingKey, bool visibility)
+        {
+            if (visibility)
+            {
+                HiddenSignalPings.Remove(pingKey);
+                return;
+            }
+
+            HiddenSignalPings.Add(pingKey);
         }
     }
 }

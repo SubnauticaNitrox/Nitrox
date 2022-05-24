@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using NitroxModel.DataStructures;
@@ -82,7 +82,8 @@ namespace NitroxServer.Communication.Packets.Processors
                 world.EntityManager.GetGlobalRootEntities(),
                 simulations,
                 world.GameMode,
-                player.Permissions
+                player.Permissions,
+                player.HiddenSignalPings.ToHashSet()
             );
 
             player.SendPacket(new TimeChange(eventTriggerer.ElapsedSeconds, true));
