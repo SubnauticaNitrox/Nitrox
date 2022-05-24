@@ -45,234 +45,40 @@
 
     <Grid>
         <Grid Margin="0" HorizontalAlignment="Center">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="106"/>
-            <RowDefinition Height="37"/>
-            <RowDefinition Height="499"/>
-        </Grid.RowDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="106"/>
+                <RowDefinition Height="37"/>
+                <RowDefinition Height="499"/>
+            </Grid.RowDefinitions>
 
-        <!-- ROW 1 - TITLE TEXT -->
-        <TextBlock FontSize="32" Foreground="White" Margin="32 0 0 0" TextWrapping="Wrap" VerticalAlignment="Bottom" FontWeight="Bold" Text="Nitrox server"/>
+            <!-- ROW 1 - TITLE TEXT -->
+            <TextBlock FontSize="32" Foreground="White" Margin="32 0 0 0" TextWrapping="Wrap" VerticalAlignment="Bottom" FontWeight="Bold" Text="Nitrox server"/>
 
-        <!-- ROW 2 - TITLE SUBTEXT -->
-        <Grid Grid.Row="1">
-            <TextBlock FontSize="14" Foreground="#BFFFFFFF" TextAlignment="Left" VerticalAlignment="Top" Margin="32 12 0 0">
-                    Welcome to your Nitrox server! For more information, please refer to the <Hyperlink NavigateUri="https://on.rux.gg/nitrox-wiki" RequestNavigate="OnRequestNavigate" ToolTip="Open Nitrox guide website">Wiki</Hyperlink>
-            </TextBlock>
-        </Grid>
+            <!-- ROW 2 - TITLE SUBTEXT -->
+            <Grid Grid.Row="1">
+                <TextBlock FontSize="14" Foreground="#BFFFFFFF" TextAlignment="Left" VerticalAlignment="Top" Margin="32 12 0 0">
+                        Welcome to your Nitrox server! For more information, please refer to the <Hyperlink NavigateUri="https://on.rux.gg/nitrox-wiki" RequestNavigate="OnRequestNavigate" ToolTip="Open Nitrox guide website">Wiki</Hyperlink>
+                </TextBlock>
+            </Grid>
 
-        <!-- ROW 3 - SELECTION PANES -->
-        <Grid Grid.Row="2" Width="2442" HorizontalAlignment="Center">
+            <!-- ROW 3 - SELECTION PANES -->
+            <Grid Grid.Row="2" Width="2442" HorizontalAlignment="Center">
 
-            <!-- WORLD SELECTION PANE (In view: Margin="866 32 866 32" | Out of view: Margin="0 32 1732 32") PANE WIDTH: 710 -->
-            <Border CornerRadius="12" Background="#151516" Margin="866 32 866 32" x:Name="WorldSelectionPane" RenderTransformOrigin="0.5,0.5">
-                <Border.RenderTransform>
-                    <TransformGroup>
-                        <ScaleTransform/>
-                        <SkewTransform/>
-                        <RotateTransform/>
-                        <TranslateTransform/>
-                    </TransformGroup>
-                </Border.RenderTransform>
+                <!-- WORLD SELECTION PANE (In view: Margin="866 32 866 32" | Out of view: Margin="0 32 1732 32") PANE WIDTH: 710 -->
+                <Border CornerRadius="12" Background="#151516" Margin="866 32 866 32" x:Name="WorldSelectionPane" RenderTransformOrigin="0.5,0.5">
+                    <Border.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Border.RenderTransform>
 
-                <Grid Margin="16 0 16 16">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="60"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-
-                    <!-- Pane Header -->
-                    <Grid Grid.Row="0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="40"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="40"/>
-                        </Grid.ColumnDefinitions>
-
-                        <Button x:Name="RefreshListingBtn" Click="RefreshListing_Click" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="Refresh the world listing">
-                            <Image Source="{StaticResource RefreshButton}" Stretch="Uniform"  Width="40" Height="40"/>
-                        </Button>
-
-                        <TextBlock Grid.Column="1" Text="Your Worlds" Foreground="White" VerticalAlignment="Center" FontSize="30" HorizontalAlignment="Center" FontWeight="Bold"/>
-
-                        <Button Grid.Column="2" x:Name="AddWorldBtn" Click="AddWorld_Click" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="Add a new world">
-                            <Image Source="{StaticResource AddServerButton}" Stretch="Uniform"  Width="40" Height="40"/>
-                        </Button>
-
-                    </Grid>
-
-                    <!-- World List --> <!-- TODO: Order server listings based on the last one that was used (read times when save files were last edited) -->
-                    <Border Grid.Row="1" CornerRadius="12" Background="Black">
-                        <Grid>
-                            <Grid x:Name="NoWorldsBackground">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="*"/>
-                                    <RowDefinition Height="2*"/>
-                                </Grid.RowDefinitions>
-
-                                <TextBlock Text="Looks like you don't have any worlds. Click the + button to add a new world!" Foreground="#FF515255" FontWeight="Medium" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0 0 0 40"/>
-                                <Image Grid.Row="1" Source="{StaticResource ServerIllustration}" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Top" Width="290" Margin="0 15 0 0"/>
-                            </Grid>
-
-                            <ListView Name="WorldListingContainer" Background="{x:Null}" BorderBrush="{x:Null}" Margin="5" HorizontalContentAlignment="Stretch" ScrollViewer.CanContentScroll="False">
-                                <!-- TEMPORARY - View server listing buttons in Intellisense window -->
-                                <!--<d:ListView.ItemsSource>
-                                    <x:Array Type="pages:World_Listing">
-                                        <pages:World_Listing WorldName = "Survival w/ friends" WorldGamemode = "Survival" WorldVersion = "v1.6.0.0"/>
-                                        <pages:World_Listing WorldName = "My World 1" WorldGamemode = "Freedom" WorldVersion = "v1.5.0.2"/>
-                                        <pages:World_Listing WorldName = "v1.7 pre-release test" WorldGamemode = "Freedom" WorldVersion = "v1.7.0.0"/>
-                                        <pages:World_Listing WorldName = "Old World" WorldGamemode = "Survival" WorldVersion = "v1.3.0.0"/>
-                                        <pages:World_Listing WorldName = "Creative Mode" WorldGamemode = "Creative" WorldVersion = "v1.6.0.0"/>
-                                        <pages:World_Listing WorldName = "v1.6.0.1 testing" WorldGamemode = "Freedom" WorldVersion = "v1.6.0.1"/>
-                                    </x:Array>
-                                </d:ListView.ItemsSource>-->
-
-                                <!-- Fix the Scroll Bar -->
-                                <ListView.Resources>
-                                    <Style x:Key="{x:Type ScrollBar}" TargetType="{x:Type ScrollBar}">
-                                        <!--<Setter Property="ScrollViewer.CanContentScroll" Value="False"/>-->
-                                        <Setter Property="Template">
-                                            <Setter.Value>
-                                                <ControlTemplate TargetType="{x:Type ScrollBar}">
-
-                                                    <Grid x:Name="GridRoot" Width="6" Background="{x:Null}" Margin="0 -1 0 0">
-                                                        <Track x:Name="PART_Track" Grid.Row="0" IsDirectionReversed="true" Focusable="False">
-                                                            <Track.Thumb>
-                                                                <Thumb x:Name="Thumb" Background="#26FFFFFF" Style="{DynamicResource ScrollThumbs}"/>
-                                                            </Track.Thumb>
-                                                            <Track.IncreaseRepeatButton>
-                                                                <RepeatButton x:Name="PageUp" Command="ScrollBar.PageDownCommand" Opacity="0" Focusable="False"/>
-                                                            </Track.IncreaseRepeatButton>
-                                                            <Track.DecreaseRepeatButton>
-                                                                <RepeatButton x:Name="PageDown" Command="ScrollBar.PageUpCommand" Opacity="0" Focusable="False"/>
-                                                            </Track.DecreaseRepeatButton>
-                                                        </Track>
-                                                    </Grid>
-
-                                                    <ControlTemplate.Triggers>
-                                                        <Trigger SourceName="Thumb" Property="IsMouseOver" Value="true">
-                                                            <Setter Value="#3FFFFFFF" TargetName="Thumb" Property="Background"/>
-                                                        </Trigger>
-                                                        <Trigger SourceName="Thumb" Property="IsDragging" Value="true">
-                                                            <Setter Value="{DynamicResource DarkBrush}" TargetName="Thumb" Property="Background"/>
-                                                        </Trigger>
-
-                                                        <Trigger Property="IsEnabled" Value="false">
-                                                            <Setter TargetName="Thumb" Property="Visibility" Value="Collapsed"/>
-                                                        </Trigger>
-                                                        <Trigger Property="Orientation" Value="Horizontal">
-                                                            <Setter TargetName="GridRoot" Property="LayoutTransform">
-                                                                <Setter.Value>
-                                                                    <RotateTransform Angle="-90"/>
-                                                                </Setter.Value>
-                                                            </Setter>
-                                                            <Setter TargetName="PART_Track" Property="LayoutTransform">
-                                                                <Setter.Value>
-                                                                    <RotateTransform Angle="-90"/>
-                                                                </Setter.Value>
-                                                            </Setter>
-                                                            <Setter Property="Width" Value="Auto"/>
-                                                            <Setter Property="Height" Value="12"/>
-                                                            <Setter TargetName="Thumb" Property="Tag" Value="Horizontal"/>
-                                                            <Setter TargetName="PageDown" Property="Command" Value="ScrollBar.PageLeftCommand"/>
-                                                            <Setter TargetName="PageUp" Property="Command" Value="ScrollBar.PageRightCommand"/>
-                                                        </Trigger>
-                                                    </ControlTemplate.Triggers>
-
-                                                </ControlTemplate>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </Style>
-                                </ListView.Resources>
-
-                                <ListView.ItemContainerStyle>
-                                    <Style TargetType="ListViewItem">
-
-                                        <Style.Triggers>
-                                            <Trigger Property="IsSelected" Value="True">
-                                                <Setter Property="Background" Value="Blue"/>
-                                            </Trigger>
-                                        </Style.Triggers>
-
-                                        <!-- TODO: Customize IsMouseOver background when hovering over world selection listing -->
-                                        <!--<Style.Triggers>
-                                            <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter Property="Background" Value="Blue" />
-                                                <Setter Property="BorderBrush" Value="Red" />
-                                            </Trigger>
-                                        </Style.Triggers>-->
-
-                                    </Style>
-                                </ListView.ItemContainerStyle>
-
-                                <!-- Template for World Listing Buttons -->
-                                <ListView.ItemTemplate>
-                                    <DataTemplate>
-                                        <Border Height="83" Width="Auto" Background="#FF151516" CornerRadius="7" Margin="0 3">
-                                            <Grid Width="Auto">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="*"/>
-                                                    <ColumnDefinition Width="10"/>
-                                                    <ColumnDefinition Width="{Binding Height, RelativeSource={RelativeSource AncestorType=Border}}"/>
-                                                </Grid.ColumnDefinitions>
-
-                                                <!-- Select World Button -->
-                                                    <Button x:Name="WorldSelectBtn" Click="SelectWorld_Click" Style="{StaticResource WorldListingButton}" ToolTip="Select this world" Foreground="White" Height="83" HorizontalAlignment="Stretch" Width="Auto" HorizontalContentAlignment="Stretch" IsEnabled="{Binding Path=IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}">
-                                                        <DockPanel Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Button}}" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Button}}" VerticalAlignment="Center" HorizontalAlignment="Stretch">
-                                                            <!-- World Name -->
-                                                        <TextBlock Grid.Column="0" FontSize="20" Foreground="White" Text="{Binding WorldName, Mode=OneTime}" VerticalAlignment="Center" HorizontalAlignment="Left"  Margin="20 0 0 0"/>
-
-                                                        <!-- World Data -->
-                                                        <DockPanel Grid.Column="1" LastChildFill = "True" Margin="0 10 10 10" HorizontalAlignment="Right">
-                                                            <TextBlock DockPanel.Dock = "Top" HorizontalAlignment="Right" FontSize="10" Text="{Binding WorldGamemode, FallbackValue=Gamemode, Mode=OneTime}" Foreground="White"/>
-                                                            <TextBlock DockPanel.Dock = "Bottom" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="10" Text="{Binding WorldVersion, FallbackValue=Version, Mode=OneTime}" Foreground="White"/>
-                                                        </DockPanel>
-
-                                                    </DockPanel>
-                                                </Button>
-
-                                                <!-- Separator -->
-                                                <Border Grid.Column="1" Background="Black"/>
-
-                                                <!-- Delete World Button -->
-                                                <Button Grid.Column="2" ToolTip="Delete this world" Click="DeleteWorld_Click" Height="{Binding Height, RelativeSource={RelativeSource AncestorType=Border}}" Width="{Binding Height, RelativeSource={RelativeSource AncestorType=Border}}" IsEnabled="{Binding Path=IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}">
-                                                    <Image Source="{StaticResource TrashcanButton}" Stretch="Uniform"  Width="30" Height="30"/>
-                                                </Button>
-
-                                            </Grid>
-                                        </Border>
-                                    </DataTemplate>
-                                </ListView.ItemTemplate>
-
-                            </ListView>
-                        </Grid>
-                    </Border>
-                </Grid>
-            </Border>
-
-
-            <!-- WORLD OPTIONS PANE (Out of view: Margin="1732 32 0 32" | In view: Margin="866 32 866 32") PANE WIDTH: 710 -->
-            <Grid Margin="1732 32 0 32" x:Name="WorldSettingsPane" RenderTransformOrigin="0.5,0.5">
-                <Grid.RenderTransform>
-                    <TransformGroup>
-                        <ScaleTransform/>
-                        <SkewTransform/>
-                        <RotateTransform/>
-                        <TranslateTransform/>
-                    </TransformGroup>
-                </Grid.RenderTransform>
-
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-
-                <!-- WORLD OPTIONS -->
-                <Border CornerRadius="12" Background="#151516" Margin="0,0,0,32">
                     <Grid Margin="16 0 16 16">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="60"/>
@@ -287,196 +93,391 @@
                                 <ColumnDefinition Width="40"/>
                             </Grid.ColumnDefinitions>
 
-                            <Button Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="Save settings and select a different world" Click="GoBack_Click">
-                                <Image Source="{StaticResource GoBackButton}" Stretch="Uniform" Width="40" Height="40"/>
+                            <Button x:Name="RefreshListingBtn" Click="RefreshListing_Click" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="Refresh the world listing">
+                                <Image Source="{StaticResource RefreshButton}" Stretch="Uniform"  Width="40" Height="40"/>
                             </Button>
 
-                            <TextBlock Grid.Column="1" Text="World Settings" Foreground="White" VerticalAlignment="Center" FontSize="30" HorizontalAlignment="Center" FontWeight="Bold"/>
+                            <TextBlock Grid.Column="1" Text="Your Worlds" Foreground="White" VerticalAlignment="Center" FontSize="30" HorizontalAlignment="Center" FontWeight="Bold"/>
+
+                            <Button Grid.Column="2" x:Name="AddWorldBtn" Click="AddWorld_Click" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="Add a new world">
+                                <Image Source="{StaticResource AddServerButton}" Stretch="Uniform"  Width="40" Height="40"/>
+                            </Button>
 
                         </Grid>
 
-                        <!-- World Settings Pane -->
-                        <Border Grid.Row="1"  CornerRadius="12" Background="Black">
-                            <Grid Margin="25">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="1.3*"/>
-                                    <RowDefinition Height="2*"/>
-                                </Grid.RowDefinitions>
+                        <!-- World List -->
+                        <!-- TODO: Order server listings based on the last one that was used (read times when save files were last edited) -->
+                        <Border Grid.Row="1" CornerRadius="12" Background="Black">
+                            <Grid>
+                                <Grid x:Name="NoWorldsBackground">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="2*"/>
+                                    </Grid.RowDefinitions>
 
-                                <!-- World Name and Seed (1st Row) -->
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="1.5*"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <!-- Name -->
-                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                        <TextBlock Text="Name:  " Foreground="White" FontSize="20" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                        <Border BorderBrush ="#333437" Background="#333437" BorderThickness="1" CornerRadius="8" Margin="0">
-                                                <TextBox Grid.Column="0" x:Name="TBWorldName"
-                                                FontSize="18" MaxLines="1" ToolTip="Set the world name"
-                                                Foreground="#8A8A8A" TextAlignment="Left"
-                                                Background="{x:Null}" BorderBrush="{x:Null}"
-                                                Margin="13,4,13,4" SelectionBrush="#FF36383A"
-                                                VerticalAlignment="Center" BorderThickness="0"
-                                                CaretBrush="White" Width="250" MaxLength="25" Text="{Binding SelectedWorldName, FallbackValue=WorldName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" LostKeyboardFocus="TBWorldName_Input">
-                                                </TextBox>
-                                        </Border>
-                                    </StackPanel>
-
-                                    <!-- Seed -->
-                                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center"  HorizontalAlignment="Right">
-                                        <TextBlock Text="Seed:  " Foreground="White" FontSize="20" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                        <Border BorderBrush ="#333437" Background="#333437" BorderThickness="1" CornerRadius="8" Margin="0">
-                                            <TextBox Grid.Column="0" x:Name="TBWorldSeed" ToolTip="Set the seed the world would use when created. Leave empty to generate a random seed"
-                                                FontSize="18" MaxLines="1" FontStyle="Italic"
-                                                Foreground="#8A8A8A" TextAlignment="Left"
-                                                Background="{x:Null}" BorderBrush="{x:Null}"
-                                                Margin="13,4,13,4" SelectionBrush="#FF36383A"
-                                                VerticalAlignment="Center" BorderThickness="0" CaretBrush="White" Width="155" MaxLength="10" Text="{Binding SelectedWorldSeed, FallbackValue=WorldSeed, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" LostKeyboardFocus="TBWorldSeed_Input" IsEnabled="{Binding IsNewWorld, FallbackValue=False, Mode=OneWay}"/>
-                                        </Border>
-                                    </StackPanel>
+                                    <TextBlock Text="Looks like you don't have any worlds. Click the + button to add a new world!" Foreground="#FF515255" FontWeight="Medium" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0 0 0 40"/>
+                                    <Image Grid.Row="1" Source="{StaticResource ServerIllustration}" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Top" Width="290" Margin="0 15 0 0"/>
                                 </Grid>
 
-                                <!-- World Gamemode -->
-                                <Grid Grid.Row="1">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="2.5*"/>
-                                    </Grid.ColumnDefinitions>
+                                <ListView Name="WorldListingContainer" Background="{x:Null}" BorderBrush="{x:Null}" Margin="5" HorizontalContentAlignment="Stretch" ScrollViewer.CanContentScroll="False">
+                                    <!-- TEMPORARY - View server listing buttons in Intellisense window -->
+                                    <!--<d:ListView.ItemsSource>
+                                        <x:Array Type="pages:World_Listing">
+                                            <pages:World_Listing WorldName = "Survival w/ friends" WorldGamemode = "Survival" WorldVersion = "v1.6.0.0"/>
+                                            <pages:World_Listing WorldName = "My World 1" WorldGamemode = "Freedom" WorldVersion = "v1.5.0.2"/>
+                                            <pages:World_Listing WorldName = "v1.7 pre-release test" WorldGamemode = "Freedom" WorldVersion = "v1.7.0.0"/>
+                                            <pages:World_Listing WorldName = "Old World" WorldGamemode = "Survival" WorldVersion = "v1.3.0.0"/>
+                                            <pages:World_Listing WorldName = "Creative Mode" WorldGamemode = "Creative" WorldVersion = "v1.6.0.0"/>
+                                            <pages:World_Listing WorldName = "v1.6.0.1 testing" WorldGamemode = "Freedom" WorldVersion = "v1.6.0.1"/>
+                                        </x:Array>
+                                    </d:ListView.ItemsSource>-->
 
-                                    <!-- "Gamemode" Title -->
-                                    <TextBlock Text="Gamemode: " Foreground="White" FontSize="20" FontWeight="SemiBold" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                    <!-- Fix the Scroll Bar -->
+                                    <ListView.Resources>
+                                        <Style x:Key="{x:Type ScrollBar}" TargetType="{x:Type ScrollBar}">
+                                            <!--<Setter Property="ScrollViewer.CanContentScroll" Value="False"/>-->
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="{x:Type ScrollBar}">
 
-                                    <!-- Gamemode Tiles -->
-                                    <Grid Grid.Column="1">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="*"/>
-                                        </Grid.ColumnDefinitions>
+                                                        <Grid x:Name="GridRoot" Width="6" Background="{x:Null}" Margin="0 -1 0 0">
+                                                            <Track x:Name="PART_Track" Grid.Row="0" IsDirectionReversed="true" Focusable="False">
+                                                                <Track.Thumb>
+                                                                    <Thumb x:Name="Thumb" Background="#26FFFFFF" Style="{DynamicResource ScrollThumbs}"/>
+                                                                </Track.Thumb>
+                                                                <Track.IncreaseRepeatButton>
+                                                                    <RepeatButton x:Name="PageUp" Command="ScrollBar.PageDownCommand" Opacity="0" Focusable="False"/>
+                                                                </Track.IncreaseRepeatButton>
+                                                                <Track.DecreaseRepeatButton>
+                                                                    <RepeatButton x:Name="PageDown" Command="ScrollBar.PageUpCommand" Opacity="0" Focusable="False"/>
+                                                                </Track.DecreaseRepeatButton>
+                                                            </Track>
+                                                        </Grid>
 
-                                        <!-- Freedom Mode Button -->
-                                        <RadioButton Style="{StaticResource WorldGamemodeButton}" x:Name="RBFreedom" GroupName="ServerGamemode" HorizontalAlignment="Left" VerticalAlignment="Center" ToolTip="Set the World Gamemode to Freedom Mode">
-                                            <TextBlock Text="Freedom" FontSize="18"/>
-                                        </RadioButton>
+                                                        <ControlTemplate.Triggers>
+                                                            <Trigger SourceName="Thumb" Property="IsMouseOver" Value="true">
+                                                                <Setter Value="#3FFFFFFF" TargetName="Thumb" Property="Background"/>
+                                                            </Trigger>
+                                                            <Trigger SourceName="Thumb" Property="IsDragging" Value="true">
+                                                                <Setter Value="{DynamicResource DarkBrush}" TargetName="Thumb" Property="Background"/>
+                                                            </Trigger>
 
-                                        <!-- Survival Mode Button -->
-                                        <RadioButton Style="{StaticResource WorldGamemodeButton}" x:Name="RBSurvival" GroupName="ServerGamemode" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" IsChecked="True" ToolTip="Set the World Gamemode to Survival Mode">
-                                            <TextBlock Text="Survival" FontSize="18"/>
-                                        </RadioButton>
+                                                            <Trigger Property="IsEnabled" Value="false">
+                                                                <Setter TargetName="Thumb" Property="Visibility" Value="Collapsed"/>
+                                                            </Trigger>
+                                                            <Trigger Property="Orientation" Value="Horizontal">
+                                                                <Setter TargetName="GridRoot" Property="LayoutTransform">
+                                                                    <Setter.Value>
+                                                                        <RotateTransform Angle="-90"/>
+                                                                    </Setter.Value>
+                                                                </Setter>
+                                                                <Setter TargetName="PART_Track" Property="LayoutTransform">
+                                                                    <Setter.Value>
+                                                                        <RotateTransform Angle="-90"/>
+                                                                    </Setter.Value>
+                                                                </Setter>
+                                                                <Setter Property="Width" Value="Auto"/>
+                                                                <Setter Property="Height" Value="12"/>
+                                                                <Setter TargetName="Thumb" Property="Tag" Value="Horizontal"/>
+                                                                <Setter TargetName="PageDown" Property="Command" Value="ScrollBar.PageLeftCommand"/>
+                                                                <Setter TargetName="PageUp" Property="Command" Value="ScrollBar.PageRightCommand"/>
+                                                            </Trigger>
+                                                        </ControlTemplate.Triggers>
 
-                                        <!-- Creative Mode Button -->
-                                        <RadioButton Style="{StaticResource WorldGamemodeButton}" x:Name="RBCreative" GroupName="ServerGamemode" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="2" ToolTip="Set the World Gamemode to Creative Mode">
-                                            <TextBlock Text="Creative" FontSize="18"/>
-                                        </RadioButton>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </ListView.Resources>
 
-                                    </Grid>
-                                </Grid>
+                                    <ListView.ItemContainerStyle>
+                                        <Style TargetType="ListViewItem">
 
-                                <!-- World Options Pane -->
-                                <Grid Grid.Row="2">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="2.5*"/>
-                                    </Grid.ColumnDefinitions>
+                                            <Style.Triggers>
+                                                <Trigger Property="IsSelected" Value="True">
+                                                    <Setter Property="Background" Value="Blue"/>
+                                                </Trigger>
+                                            </Style.Triggers>
 
-                                    <!-- "Game Options" Title -->
-                                    <TextBlock Text="Game Options: " Foreground="White" FontSize="20" FontWeight="SemiBold" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                            <!-- TODO: Customize IsMouseOver background when hovering over world selection listing -->
+                                            <!--<Style.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background" Value="Blue" />
+                                                    <Setter Property="BorderBrush" Value="Red" />
+                                                </Trigger>
+                                            </Style.Triggers>-->
 
-                                    <!-- Options Pane -->
-                                    <Border Grid.Column="1" CornerRadius="12" Background="#151516">
-                                        <Grid Margin="5">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="2.5*"/>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="3"/>
-                                                <ColumnDefinition Width="2.5*"/>
-                                                <ColumnDefinition Width="*"/>
-                                            </Grid.ColumnDefinitions>
+                                        </Style>
+                                    </ListView.ItemContainerStyle>
 
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="*"/>
-                                                <RowDefinition Height="*"/>
-                                                <RowDefinition Height="*"/>
-                                            </Grid.RowDefinitions>
+                                    <!-- Template for World Listing Buttons -->
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Height="83" Width="Auto" Background="#FF151516" CornerRadius="7" Margin="0 3">
+                                                <Grid Width="Auto">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="10"/>
+                                                        <ColumnDefinition Width="{Binding Height, RelativeSource={RelativeSource AncestorType=Border}}"/>
+                                                    </Grid.ColumnDefinitions>
 
-                                            <!-- Column Seperator -->
-                                            <Border Grid.Column="2" Grid.RowSpan="3" Background="Black"/>
+                                                    <!-- Select World Button -->
+                                                    <Button x:Name="WorldSelectBtn" Click="SelectWorld_Click" Style="{StaticResource WorldListingButton}" ToolTip="Select this world" Foreground="White" Height="83" HorizontalAlignment="Stretch" Width="Auto" HorizontalContentAlignment="Stretch" IsEnabled="{Binding Path=IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}">
+                                                        <DockPanel Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Button}}" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Button}}" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+                                                            <!-- World Name -->
+                                                            <TextBlock Grid.Column="0" FontSize="20" Foreground="White" Text="{Binding WorldName, Mode=OneTime}" VerticalAlignment="Center" HorizontalAlignment="Left"  Margin="20 0 0 0"/>
 
-                                            <!-- Row 1 -->
-                                            <TextBlock Grid.Column="0" Text="Enable Cheats" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
-                                            <CheckBox Style="{StaticResource OptionSwitch}" Grid.Column="1" Margin="5 5 10 5" x:Name="CBCheats" Click="CBCheats_Clicked" IsChecked="{Binding EnableCheatsValue, Mode=OneWay, FallbackValue='True'}" ToolTip="Click to enable the use of commands in game (RECOMMENDED FOR NITROX)"/>
+                                                            <!-- World Data -->
+                                                            <DockPanel Grid.Column="1" LastChildFill = "True" Margin="0 10 10 10" HorizontalAlignment="Right">
+                                                                <TextBlock DockPanel.Dock = "Top" HorizontalAlignment="Right" FontSize="10" Text="{Binding WorldGamemode, FallbackValue=Gamemode, Mode=OneTime}" Foreground="White"/>
+                                                                <TextBlock DockPanel.Dock = "Bottom" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="10" Text="{Binding WorldVersion, FallbackValue=Version, Mode=OneTime}" Foreground="White"/>
+                                                            </DockPanel>
 
-                                            <TextBlock Grid.Column="3" Text="LAN Discovery" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
-                                            <CheckBox Style="{StaticResource OptionSwitch}" Grid.Column="4" Margin="5 5 10 5" x:Name="CBLanDiscovery" Click="CBLanDiscovery_Clicked" IsChecked="{Binding EnableLanDiscoveryValue, Mode=OneWay, FallbackValue='True'}" ToolTip="Click to enable the server to be discovered by other computers connected to the same network."/>
+                                                        </DockPanel>
+                                                    </Button>
 
-                                            <!-- Row 2 -->
-                                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Auto Portforward" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
-                                            <CheckBox Style="{StaticResource OptionSwitch}" Grid.Row="1" Grid.Column="1" Margin="5 5 10 5" x:Name="CBAutoPortForward" Click="CBAutoPortForward_Clicked" IsChecked="{Binding EnableAutoPortForwardValue, Mode=OneWay, FallbackValue='True'}" ToolTip="Click to enable automatic Port Forwarding using UPnP (NOTE: Not all routers support this functionality)"/>
+                                                    <!-- Separator -->
+                                                    <Border Grid.Column="1" Background="Black"/>
 
-                                            <TextBlock Grid.Row="1" Grid.Column="3" Text="Load Full World" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
-                                            <CheckBox Style="{StaticResource OptionSwitch}" Grid.Row="1" Grid.Column="4" Margin="5 5 10 5" x:Name="CBCreateFullEntityCache" Click="CBCreateFullEntityCache_Clicked" IsChecked="{Binding EnableFullEntityCacheValue, Mode=OneWay, FallbackValue='False'}" ToolTip="Click to enable the server to fully load the world's entity cache at startup (NOTE: Server will take longer to start up)"/>
+                                                    <!-- Delete World Button -->
+                                                    <Button Grid.Column="2" ToolTip="Delete this world" Click="DeleteWorld_Click" Height="{Binding Height, RelativeSource={RelativeSource AncestorType=Border}}" Width="{Binding Height, RelativeSource={RelativeSource AncestorType=Border}}" IsEnabled="{Binding Path=IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}">
+                                                        <Image Source="{StaticResource TrashcanButton}" Stretch="Uniform"  Width="30" Height="30"/>
+                                                    </Button>
 
-                                            <!-- Row 3 -->
-                                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Server Port" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
-                                            <Border Grid.Row="2" Grid.Column="1" BorderBrush ="Black" Background="Black" BorderThickness="1" CornerRadius="8" Margin="5 5 10 5">
-                                                    <TextBox Grid.Column="0" x:Name="TBWorldServerPort"
-                                                    FontSize="12" MaxLines="1" ToolTip="Set the port number that the server will use with this world. NOTE: It can be the same as every other world."
-                                                    Foreground="#8A8A8A" TextAlignment="Center"
-                                                    Background="{x:Null}" BorderBrush="{x:Null}"
-                                                    Margin="4" SelectionBrush="#FF36383A"
-                                                    VerticalAlignment="Center" BorderThickness="0"
-                                                    CaretBrush="White" Width="Auto" MaxLength="5" Text="{Binding ServerPort, Mode=OneWay, FallbackValue='11000'}" LostKeyboardFocus="TBWorldServerPort_Input">
-                                                    </TextBox>
+                                                </Grid>
                                             </Border>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
 
-                                            <Button Style="{StaticResource LargeButton}" Click="AdvancedSettings_Click" ToolTip="See the advanced settings" Grid.Row="2" Grid.Column="3" Content="Advanced Settings" Foreground="White" FontSize="15" Grid.ColumnSpan="2" Background="#FF007BFF" Height="Auto" Width="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10 5"/>
-
-                                        </Grid>
-                                    </Border>
-                                </Grid>
+                                </ListView>
                             </Grid>
                         </Border>
                     </Grid>
                 </Border>
 
-                <!-- START SERVER BUTTON -->
-                <Button Grid.Row="1" Style="{StaticResource LargeButton}" Click="StartServer_Click" ToolTip="Start the server with chosen options" Background="#FF007BFF" Height="62" HorizontalAlignment="Stretch" Margin="0,0,0,0" Width="710" >
-                    <Grid Width="700" Height="53">
 
-                        <!-- Grid Definitions -->
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
+                <!-- WORLD OPTIONS PANE (Out of view: Margin="1732 32 0 32" | In view: Margin="866 32 866 32") PANE WIDTH: 710 -->
+                <Grid Margin="1732 32 0 32" x:Name="WorldSettingsPane" RenderTransformOrigin="0.5,0.5">
+                    <Grid.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Grid.RenderTransform>
 
-                        <!-- Column 1: (TODO) Restore Backup Button -->
-                        <!--<Button Style="{StaticResource LargeButton}" Click="RestoreBackup_Click" HorizontalAlignment="Left" Height="40" Width="123" Margin="10,0,0,0" ToolTip="Restore one of your backups">
-                            <TextBlock Text="Restore a Backup" VerticalAlignment="Center" FontSize="12" TextAlignment="Center"/>
-                        </Button>-->
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
 
-                        <!-- Column 2: Start Server Text -->
-                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" FontSize="16" FontWeight="Bold" Text="START SERVER" />
+                    <!-- WORLD OPTIONS -->
+                    <Border CornerRadius="12" Background="#151516" Margin="0,0,0,32">
+                        <Grid Margin="16 0 16 16">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="60"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
 
-                        <!-- Column 3: Version Number and External/Docked Console Checkbox -->
-                        <DockPanel Grid.Column="2">
-                            <TextBlock DockPanel.Dock = "Top" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="12" Text="{Binding LauncherVersion, FallbackValue=Version, Mode=OneTime}" />
-                            <StackPanel DockPanel.Dock = "Bottom" HorizontalAlignment="Right" VerticalAlignment="Bottom" Orientation="Horizontal">
-                                <TextBlock FontSize="12" Text="Display Server Console Externally: "/>
-                                <CheckBox x:Name="CBIsExternal" IsChecked="{Binding IsServerExternal}" ToolTip="Check if you want to display the console in a separate CMD Window"/>
-                            </StackPanel>
-                        </DockPanel>
+                            <!-- Pane Header -->
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="40"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="40"/>
+                                </Grid.ColumnDefinitions>
 
-                    </Grid>
-                </Button>
+                                <Button Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="Save settings and select a different world" Click="GoBack_Click">
+                                    <Image Source="{StaticResource GoBackButton}" Stretch="Uniform" Width="40" Height="40"/>
+                                </Button>
+
+                                <TextBlock Grid.Column="1" Text="World Settings" Foreground="White" VerticalAlignment="Center" FontSize="30" HorizontalAlignment="Center" FontWeight="Bold"/>
+
+                            </Grid>
+
+                            <!-- World Settings Pane -->
+                            <Border Grid.Row="1"  CornerRadius="12" Background="Black">
+                                <Grid Margin="25">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="1.3*"/>
+                                        <RowDefinition Height="2*"/>
+                                    </Grid.RowDefinitions>
+
+                                    <!-- World Name and Seed (1st Row) -->
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1.5*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <!-- Name -->
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <TextBlock Text="Name:  " Foreground="White" FontSize="20" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            <Border BorderBrush ="#333437" Background="#333437" BorderThickness="1" CornerRadius="8" Margin="0">
+                                                <TextBox Grid.Column="0" x:Name="TBWorldName"
+                                                    FontSize="18" MaxLines="1" ToolTip="Set the world name"
+                                                    Foreground="#8A8A8A" TextAlignment="Left"
+                                                    Background="{x:Null}" BorderBrush="{x:Null}"
+                                                    Margin="13,4,13,4" SelectionBrush="#FF36383A"
+                                                    VerticalAlignment="Center" BorderThickness="0"
+                                                    CaretBrush="White" Width="250" MaxLength="25" Text="{Binding SelectedWorldName, FallbackValue=WorldName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" LostKeyboardFocus="TBWorldName_Input">
+                                                </TextBox>
+                                            </Border>
+                                        </StackPanel>
+
+                                        <!-- Seed -->
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center"  HorizontalAlignment="Right">
+                                            <TextBlock Text="Seed:  " Foreground="White" FontSize="20" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            <Border BorderBrush ="#333437" Background="#333437" BorderThickness="1" CornerRadius="8" Margin="0">
+                                                <TextBox Grid.Column="0" x:Name="TBWorldSeed" ToolTip="Set the seed the world would use when created. Leave empty to generate a random seed"
+                                                    FontSize="18" MaxLines="1" FontStyle="Italic"
+                                                    Foreground="#8A8A8A" TextAlignment="Left"
+                                                    Background="{x:Null}" BorderBrush="{x:Null}"
+                                                    Margin="13,4,13,4" SelectionBrush="#FF36383A"
+                                                    VerticalAlignment="Center" BorderThickness="0" CaretBrush="White" Width="155" MaxLength="10" Text="{Binding SelectedWorldSeed, FallbackValue=WorldSeed, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" LostKeyboardFocus="TBWorldSeed_Input" IsEnabled="{Binding IsNewWorld, FallbackValue=False, Mode=OneWay}"/>
+                                            </Border>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <!-- World Gamemode -->
+                                    <Grid Grid.Row="1">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="2.5*"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <!-- "Gamemode" Title -->
+                                        <TextBlock Text="Gamemode: " Foreground="White" FontSize="20" FontWeight="SemiBold" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+
+                                        <!-- Gamemode Tiles -->
+                                        <Grid Grid.Column="1">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <!-- Freedom Mode Button -->
+                                            <RadioButton Style="{StaticResource WorldGamemodeButton}" x:Name="RBFreedom" GroupName="ServerGamemode" HorizontalAlignment="Left" VerticalAlignment="Center" ToolTip="Set the World Gamemode to Freedom Mode">
+                                                <TextBlock Text="Freedom" FontSize="18"/>
+                                            </RadioButton>
+
+                                            <!-- Survival Mode Button -->
+                                            <RadioButton Style="{StaticResource WorldGamemodeButton}" x:Name="RBSurvival" GroupName="ServerGamemode" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" IsChecked="True" ToolTip="Set the World Gamemode to Survival Mode">
+                                                <TextBlock Text="Survival" FontSize="18"/>
+                                            </RadioButton>
+
+                                            <!-- Creative Mode Button -->
+                                            <RadioButton Style="{StaticResource WorldGamemodeButton}" x:Name="RBCreative" GroupName="ServerGamemode" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="2" ToolTip="Set the World Gamemode to Creative Mode">
+                                                <TextBlock Text="Creative" FontSize="18"/>
+                                            </RadioButton>
+
+                                        </Grid>
+                                    </Grid>
+
+                                    <!-- World Options Pane -->
+                                    <Grid Grid.Row="2">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="2.5*"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <!-- "Game Options" Title -->
+                                        <TextBlock Text="Game Options: " Foreground="White" FontSize="20" FontWeight="SemiBold" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+
+                                        <!-- Options Pane -->
+                                        <Border Grid.Column="1" CornerRadius="12" Background="#151516">
+                                            <Grid Margin="5">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="2.5*"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="3"/>
+                                                    <ColumnDefinition Width="2.5*"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="*"/>
+                                                    <RowDefinition Height="*"/>
+                                                    <RowDefinition Height="*"/>
+                                                </Grid.RowDefinitions>
+
+                                                <!-- Column Seperator -->
+                                                <Border Grid.Column="2" Grid.RowSpan="3" Background="Black"/>
+
+                                                <!-- Row 1 -->
+                                                <TextBlock Grid.Column="0" Text="Enable Cheats" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
+                                                <CheckBox Style="{StaticResource OptionSwitch}" Grid.Column="1" Margin="5 5 10 5" x:Name="CBCheats" Click="CBCheats_Clicked" IsChecked="{Binding EnableCheatsValue, Mode=OneWay, FallbackValue='True'}" ToolTip="Click to enable the use of commands in game (RECOMMENDED FOR NITROX)"/>
+
+                                                <TextBlock Grid.Column="3" Text="LAN Discovery" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
+                                                <CheckBox Style="{StaticResource OptionSwitch}" Grid.Column="4" Margin="5 5 10 5" x:Name="CBLanDiscovery" Click="CBLanDiscovery_Clicked" IsChecked="{Binding EnableLanDiscoveryValue, Mode=OneWay, FallbackValue='True'}" ToolTip="Click to enable the server to be discovered by other computers connected to the same network."/>
+
+                                                <!-- Row 2 -->
+                                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Auto Portforward" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
+                                                <CheckBox Style="{StaticResource OptionSwitch}" Grid.Row="1" Grid.Column="1" Margin="5 5 10 5" x:Name="CBAutoPortForward" Click="CBAutoPortForward_Clicked" IsChecked="{Binding EnableAutoPortForwardValue, Mode=OneWay, FallbackValue='True'}" ToolTip="Click to enable automatic Port Forwarding using UPnP (NOTE: Not all routers support this functionality)"/>
+
+                                                <TextBlock Grid.Row="1" Grid.Column="3" Text="Load Full World" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
+                                                <CheckBox Style="{StaticResource OptionSwitch}" Grid.Row="1" Grid.Column="4" Margin="5 5 10 5" x:Name="CBCreateFullEntityCache" Click="CBCreateFullEntityCache_Clicked" IsChecked="{Binding EnableFullEntityCacheValue, Mode=OneWay, FallbackValue='False'}" ToolTip="Click to enable the server to fully load the world's entity cache at startup (NOTE: Server will take longer to start up)"/>
+
+                                                <!-- Row 3 -->
+                                                <TextBlock Grid.Row="2" Grid.Column="0" Text="Server Port" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
+                                                <Border Grid.Row="2" Grid.Column="1" BorderBrush ="Black" Background="Black" BorderThickness="1" CornerRadius="8" Margin="5 5 10 5">
+                                                    <TextBox Grid.Column="0" x:Name="TBWorldServerPort"
+                                                        FontSize="12" MaxLines="1" ToolTip="Set the port number that the server will use with this world. NOTE: It can be the same as every other world."
+                                                        Foreground="#8A8A8A" TextAlignment="Center"
+                                                        Background="{x:Null}" BorderBrush="{x:Null}"
+                                                        Margin="4" SelectionBrush="#FF36383A"
+                                                        VerticalAlignment="Center" BorderThickness="0"
+                                                        CaretBrush="White" Width="Auto" MaxLength="5" Text="{Binding ServerPort, Mode=OneWay, FallbackValue='11000'}" LostKeyboardFocus="TBWorldServerPort_Input">
+                                                    </TextBox>
+                                                </Border>
+
+                                                <Button Style="{StaticResource LargeButton}" Click="AdvancedSettings_Click" ToolTip="See the advanced settings" Grid.Row="2" Grid.Column="3" Content="Advanced Settings" Foreground="White" FontSize="15" Grid.ColumnSpan="2" Background="#FF007BFF" Height="Auto" Width="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10 5"/>
+
+                                            </Grid>
+                                        </Border>
+                                    </Grid>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                    </Border>
+
+                    <!-- START SERVER BUTTON -->
+                    <Button Grid.Row="1" Style="{StaticResource LargeButton}" Click="StartServer_Click" ToolTip="Start the server with chosen options" Background="#FF007BFF" Height="62" HorizontalAlignment="Stretch" Margin="0,0,0,0" Width="710" >
+                        <Grid Width="700" Height="53">
+
+                            <!-- Grid Definitions -->
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Column 1: (TODO) Restore Backup Button -->
+                            <!--<Button Style="{StaticResource LargeButton}" Click="RestoreBackup_Click" HorizontalAlignment="Left" Height="40" Width="123" Margin="10,0,0,0" ToolTip="Restore one of your backups">
+                                <TextBlock Text="Restore a Backup" VerticalAlignment="Center" FontSize="12" TextAlignment="Center"/>
+                            </Button>-->
+
+                            <!-- Column 2: Start Server Text -->
+                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" FontSize="16" FontWeight="Bold" Text="START SERVER" />
+
+                            <!-- Column 3: Version Number and External/Docked Console Checkbox -->
+                            <DockPanel Grid.Column="2">
+                                <TextBlock DockPanel.Dock = "Top" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="12" Text="{Binding LauncherVersion, FallbackValue=Version, Mode=OneTime}" />
+                                <StackPanel DockPanel.Dock = "Bottom" HorizontalAlignment="Right" VerticalAlignment="Bottom" Orientation="Horizontal">
+                                    <TextBlock FontSize="12" Text="Display Server Console Externally: "/>
+                                    <CheckBox x:Name="CBIsExternal" IsChecked="{Binding IsServerExternal}" ToolTip="Check if you want to display the console in a separate CMD Window"/>
+                                </StackPanel>
+                            </DockPanel>
+
+                        </Grid>
+                    </Button>
+                </Grid>
             </Grid>
-        </Grid>
 
-    </Grid>
+        </Grid>
 
         <Grid x:Name="ConfirmationBox" Opacity="0" IsHitTestVisible="False">
             
