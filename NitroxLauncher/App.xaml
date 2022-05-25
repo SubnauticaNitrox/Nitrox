@@ -133,7 +133,6 @@
 
             <Style TargetType="Button" x:Key="WorldListingButton" BasedOn="{StaticResource {x:Type Button}}">
                 <Setter Property="OverridesDefaultStyle" Value="True" />
-                <!--<Setter Property="Width" Value="684" />-->
                 <Setter Property="Height" Value="83" />
                 <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                 <Style.Resources>
@@ -145,9 +144,8 @@
                 </Style.Resources>
 
             </Style>
-            
-            <Style TargetType="RadioButton" x:Key="WorldGamemodeButton" BasedOn="{StaticResource {x:Type RadioButton}}">
 
+            <Style TargetType="RadioButton" x:Key="WorldGamemodeButton" BasedOn="{StaticResource {x:Type RadioButton}}">
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="RadioButton">
@@ -185,6 +183,78 @@
                 </Setter>
             </Style>
 
+            <Style TargetType="RadioButton" x:Key="LeftServerSettingRB" BasedOn="{StaticResource {x:Type RadioButton}}">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="RadioButton">
+
+                            <BulletDecorator>
+                                <Border x:Name="BackgroundBorder" Height="50" Width="50" Background="#151516" BorderBrush="#151516">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Setter Property="CornerRadius" Value="10 0 0 10" />
+                                            <Setter Property="BorderThickness" Value="2" />
+                                        </Style>
+                                    </Border.Style>
+                                    <ContentPresenter x:Name="Content" VerticalAlignment="Center" HorizontalAlignment="Center" Opacity=".4"/>
+                                </Border>
+                            </BulletDecorator>
+                            
+                            <ControlTemplate.Triggers>
+
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Opacity" Value="0.75" />
+                                    <Setter Property="Cursor" Value="Hand" />
+                                </Trigger>
+
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter TargetName="BackgroundBorder" Property="BorderBrush" Value="#FF007BFF"/>
+                                    <Setter TargetName="Content" Property="Opacity" Value="1"/>
+                                </Trigger>
+
+                            </ControlTemplate.Triggers>
+
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style TargetType="RadioButton" x:Key="RightServerSettingRB" BasedOn="{StaticResource {x:Type RadioButton}}">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="RadioButton">
+
+                            <BulletDecorator>
+                                <Border x:Name="BackgroundBorder" Height="50" Width="50" Background="#151516" BorderBrush="#151516">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Setter Property="CornerRadius" Value="0 10 10 0" />
+                                            <Setter Property="BorderThickness" Value="2" />
+                                        </Style>
+                                    </Border.Style>
+                                    <ContentPresenter x:Name="Content" VerticalAlignment="Center" HorizontalAlignment="Center" Opacity=".4"/>
+                                </Border>
+                            </BulletDecorator>
+                            
+                            <ControlTemplate.Triggers>
+
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Opacity" Value="0.75" />
+                                    <Setter Property="Cursor" Value="Hand" />
+                                </Trigger>
+
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter TargetName="BackgroundBorder" Property="BorderBrush" Value="#FF007BFF"/>
+                                    <Setter TargetName="Content" Property="Opacity" Value="1"/>
+                                </Trigger>
+
+                            </ControlTemplate.Triggers>
+
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            
             <Style TargetType="CheckBox" x:Key="OptionSwitch" BasedOn="{StaticResource {x:Type CheckBox}}">
 
                 <Setter Property="Template">

@@ -11,7 +11,11 @@
 
     <local:PageBase.Resources>
         <BitmapImage x:Key="ServerIllustration" UriSource="pack://application:,,,/images/serverIllustration.png"/>
+        <BitmapImage x:Key="ExternalServerRB" UriSource="pack://application:,,,/images/material-design-icons/external-icon.jpg"/>
+        <BitmapImage x:Key="DockedServerRB" UriSource="pack://application:,,,/images/material-design-icons/docked-icon.png"/>
+        <BitmapImage x:Key="SettingsButton" UriSource="pack://application:,,,/images/material-design-icons/options.png"/>
         <BitmapImage x:Key="TrashcanButton" UriSource="pack://application:,,,/images/material-design-icons/trashcan_icon.png"/>
+        <BitmapImage x:Key="RestoreBackupButton" UriSource="pack://application:,,,/images/material-design-icons/restore-backup-icon.png"/>
         <BitmapImage x:Key="AddServerButton" UriSource="pack://application:,,,/images/material-design-icons/add_server.png"/>
         <BitmapImage x:Key="RefreshButton" UriSource="pack://application:,,,/images/material-design-icons/refresh.png"/>
         <BitmapImage x:Key="GoBackButton" UriSource="pack://application:,,,/images/material-design-icons/go_back.png"/>
@@ -64,12 +68,34 @@
                         Welcome to your Nitrox server! For more information, please refer to the <Hyperlink NavigateUri="https://on.rux.gg/nitrox-wiki" RequestNavigate="OnRequestNavigate" ToolTip="Open Nitrox guide website">Wiki</Hyperlink>
                 </TextBlock>
             </Grid>
+            
+            <!-- Server Launch Option Radio Buttons -->
+            <Border Grid.RowSpan="2" Background="#151516" Height="50" Width="105" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0 0 50 11" CornerRadius="10">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="5"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <RadioButton Style="{StaticResource LeftServerSettingRB}" x:Name="RBIsExternal" GroupName="ServerType" ToolTip="Set the server console to launch in a separate CMD window" Click="RBServer_Clicked">
+                        <Image Source="{StaticResource ExternalServerRB}" Stretch="Uniform"  Width="30" Height="30"/>
+                    </RadioButton>
+
+                    <Border Grid.Column="1" Background="Black"/>
+
+                    <RadioButton Grid.Column="2" Style="{StaticResource RightServerSettingRB}" x:Name="RBIsDocked" GroupName="ServerType" ToolTip="Set the server console to display within the launcher" Click="RBServer_Clicked">
+                        <Image Source="{StaticResource DockedServerRB}" Stretch="Uniform"  Width="30" Height="30"/>
+                    </RadioButton>
+
+                </Grid>
+            </Border>
 
             <!-- ROW 3 - SELECTION PANES -->
             <Grid Grid.Row="2" Width="2442" HorizontalAlignment="Center">
 
                 <!-- WORLD SELECTION PANE (In view: Margin="866 32 866 32" | Out of view: Margin="0 32 1732 32") PANE WIDTH: 710 -->
-                <Border CornerRadius="12" Background="#151516" Margin="866 32 866 32" x:Name="WorldSelectionPane" RenderTransformOrigin="0.5,0.5">
+                <Border CornerRadius="12" Background="#151516" Margin="866 16 866 32" x:Name="WorldSelectionPane" RenderTransformOrigin="0.5,0.5">
                     <Border.RenderTransform>
                         <TransformGroup>
                             <ScaleTransform/>
@@ -121,7 +147,7 @@
 
                                 <ListView Name="WorldListingContainer" Background="{x:Null}" BorderBrush="{x:Null}" Margin="5" HorizontalContentAlignment="Stretch" ScrollViewer.CanContentScroll="False">
                                     <!-- TEMPORARY - View server listing buttons in Intellisense window --> <!-- Must also uncomment the "World_Listing" class at the bottom of ServerPage.xaml.cs to view these in intellisense -->
-                                    <!--<d:ListView.ItemsSource>
+                                    <d:ListView.ItemsSource>
                                         <x:Array Type="pages:World_Listing">
                                             <pages:World_Listing WorldName = "Survival w/ friends" WorldGamemode = "Survival" WorldVersion = "v1.6.0.0"/>
                                             <pages:World_Listing WorldName = "My World 1" WorldGamemode = "Freedom" WorldVersion = "v1.5.0.2"/>
@@ -130,7 +156,7 @@
                                             <pages:World_Listing WorldName = "Creative Mode" WorldGamemode = "Creative" WorldVersion = "v1.6.0.0"/>
                                             <pages:World_Listing WorldName = "v1.6.0.1 testing" WorldGamemode = "Freedom" WorldVersion = "v1.6.0.1"/>
                                         </x:Array>
-                                    </d:ListView.ItemsSource>-->
+                                    </d:ListView.ItemsSource>
 
                                     <!-- Fix the Scroll Bar -->
                                     <ListView.Resources>
@@ -190,39 +216,19 @@
                                         </Style>
                                     </ListView.Resources>
 
-                                    <ListView.ItemContainerStyle>
-                                        <Style TargetType="ListViewItem">
-
-                                            <Style.Triggers>
-                                                <Trigger Property="IsSelected" Value="True">
-                                                    <Setter Property="Background" Value="Blue"/>
-                                                </Trigger>
-                                            </Style.Triggers>
-
-                                            <!-- TODO: Customize IsMouseOver background when hovering over world selection listing -->
-                                            <!--<Style.Triggers>
-                                                <Trigger Property="IsMouseOver" Value="True">
-                                                    <Setter Property="Background" Value="Blue" />
-                                                    <Setter Property="BorderBrush" Value="Red" />
-                                                </Trigger>
-                                            </Style.Triggers>-->
-
-                                        </Style>
-                                    </ListView.ItemContainerStyle>
-
                                     <!-- Template for World Listing Buttons -->
                                     <ListView.ItemTemplate>
                                         <DataTemplate>
-                                            <Border Height="83" Width="Auto" Background="#FF151516" CornerRadius="7" Margin="0 3">
-                                                <Grid Width="Auto">
+                                            <Border x:Name="WorldListingBorder" Height="83" Width="Auto" Background="#FF151516" CornerRadius="7" Margin="0 3">
+                                                <Grid Width="Auto" MaxWidth="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Border}}">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="*"/>
-                                                        <ColumnDefinition Width="10"/>
-                                                        <ColumnDefinition Width="{Binding Height, RelativeSource={RelativeSource AncestorType=Border}}"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="Auto"/>
                                                     </Grid.ColumnDefinitions>
-
+                                                    
                                                     <!-- Select World Button -->
-                                                    <Button x:Name="WorldSelectBtn" Click="SelectWorld_Click" Style="{StaticResource WorldListingButton}" ToolTip="Select this world" Foreground="White" Height="83" HorizontalAlignment="Stretch" Width="Auto" HorizontalContentAlignment="Stretch" IsEnabled="{Binding Path=IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}">
+                                                    <Button x:Name="WorldSelectBtn" Click="StartServer_Click" Style="{StaticResource WorldListingButton}" ToolTip="Select this world" Foreground="White" Height="83" HorizontalAlignment="Stretch" Width="Auto" HorizontalContentAlignment="Stretch" IsEnabled="{Binding Path=IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}">
                                                         <DockPanel Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Button}}" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Button}}" VerticalAlignment="Center" HorizontalAlignment="Stretch">
                                                             <!-- World Name -->
                                                             <TextBlock Grid.Column="0" FontSize="20" Foreground="White" Text="{Binding WorldName, Mode=OneTime}" VerticalAlignment="Center" HorizontalAlignment="Left"  Margin="20 0 0 0" MaxWidth="400"/>
@@ -237,16 +243,61 @@
                                                     </Button>
 
                                                     <!-- Separator -->
-                                                    <Border Grid.Column="1" Background="Black"/>
+                                                    <Border x:Name="SeparatorBox" Grid.Column="1" Background="Black" Width="0"/>
 
                                                     <!-- Delete World Button -->
-                                                    <Button Grid.Column="2" ToolTip="Delete this world" Click="DeleteWorld_Click" Height="{Binding Height, RelativeSource={RelativeSource AncestorType=Border}}" Width="{Binding Height, RelativeSource={RelativeSource AncestorType=Border}}" IsEnabled="{Binding Path=IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}">
-                                                        <Image Source="{StaticResource TrashcanButton}" Stretch="Uniform"  Width="30" Height="30"/>
-                                                    </Button>
+                                                    <Grid x:Name="WorldOptionsBox" Grid.Column="2" Height="{Binding Height, RelativeSource={RelativeSource AncestorType=Border}}" Width="0">
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition/>
+                                                            <RowDefinition Height="5"/>
+                                                            <RowDefinition/>
+                                                        </Grid.RowDefinitions>
+
+                                                        <Button ToolTip="Edit the settings of this world" Click="SelectWorld_Click" IsEnabled="{Binding Path=IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}">
+                                                            <Image Source="{StaticResource SettingsButton}" Stretch="Uniform"  Width="25" Height="25" Opacity="0.7"/>
+                                                        </Button>
+                                                        
+                                                        <Border Grid.Row="1" Background="Black"/>
+
+                                                        <Button Grid.Row="2" ToolTip="Delete this world" Click="DeleteWorld_Click" IsEnabled="{Binding Path=IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}">
+                                                            <Image Source="{StaticResource TrashcanButton}" Stretch="Uniform"  Width="25" Height="25"/>
+                                                        </Button>
+                                                    </Grid>
+                                                    
 
                                                 </Grid>
                                             </Border>
+                                            <DataTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Trigger.EnterActions>
+                                                        <BeginStoryboard>
+                                                            <Storyboard>
+                                                                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="SeparatorBox" Storyboard.TargetProperty="Width">
+                                                                    <EasingDoubleKeyFrame KeyTime="00:00:00.2000000" Value="5"/>
+                                                                </DoubleAnimationUsingKeyFrames>
+                                                                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="WorldOptionsBox" Storyboard.TargetProperty="Width">
+                                                                    <EasingDoubleKeyFrame KeyTime="00:00:00.2000000" Value="45"/>
+                                                                </DoubleAnimationUsingKeyFrames>
+                                                            </Storyboard>
+                                                        </BeginStoryboard>
+                                                    </Trigger.EnterActions>
+                                                    <Trigger.ExitActions>
+                                                        <BeginStoryboard>
+                                                            <Storyboard>
+                                                                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="SeparatorBox" Storyboard.TargetProperty="Width">
+                                                                    <EasingDoubleKeyFrame KeyTime="00:00:00.2000000" Value="0"/>
+                                                                </DoubleAnimationUsingKeyFrames>
+                                                                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="WorldOptionsBox" Storyboard.TargetProperty="Width">
+                                                                    <EasingDoubleKeyFrame KeyTime="00:00:00.2000000" Value="0"/>
+                                                                </DoubleAnimationUsingKeyFrames>
+                                                            </Storyboard>
+                                                        </BeginStoryboard>
+                                                    </Trigger.ExitActions>
+                                                </Trigger>
+                                            </DataTemplate.Triggers>
                                         </DataTemplate>
+                                        
+                                        
                                     </ListView.ItemTemplate>
 
                                 </ListView>
@@ -257,7 +308,7 @@
 
 
                 <!-- WORLD OPTIONS PANE (Out of view: Margin="1732 32 0 32" | In view: Margin="866 32 866 32") PANE WIDTH: 710 -->
-                <Grid Margin="1732 32 0 32" x:Name="WorldSettingsPane" RenderTransformOrigin="0.5,0.5">
+                <Grid Margin="1732 16 0 32" x:Name="WorldSettingsPane" RenderTransformOrigin="0.5,0.5">
                     <Grid.RenderTransform>
                         <TransformGroup>
                             <ScaleTransform/>
@@ -468,7 +519,7 @@
                                 <TextBlock DockPanel.Dock = "Top" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="12" Text="{Binding LauncherVersion, FallbackValue=Version, Mode=OneTime}" />
                                 <StackPanel DockPanel.Dock = "Bottom" HorizontalAlignment="Right" VerticalAlignment="Bottom" Orientation="Horizontal">
                                     <TextBlock FontSize="12" Text="Display Server Console Externally: "/>
-                                    <CheckBox x:Name="CBIsExternal" IsChecked="{Binding IsServerExternal}" ToolTip="Check if you want to display the console in a separate CMD Window"/>
+                                    <!--<CheckBox x:Name="CBIsExternal" IsChecked="{Binding IsServerExternal}" ToolTip="Check if you want to display the console in a separate CMD Window"/>-->
                                 </StackPanel>
                             </DockPanel>
 
@@ -481,7 +532,7 @@
 
         <Grid x:Name="ConfirmationBox" Opacity="0" IsHitTestVisible="False">
             
-            <!-- All the background to act like the "No" button when clicked -->
+            <!-- Have all of the background act like the "No" button when clicked --> 
             <Button Click="NoConfirmBtn_Click" Background="Black" Opacity=".5" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Grid}}" Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Grid}}" Cursor="Arrow"/>
             
             <Border Background="Black" Height="150" Width="300" BorderThickness="5" BorderBrush="#151516" CornerRadius="20">

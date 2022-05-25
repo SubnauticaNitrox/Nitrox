@@ -43,13 +43,15 @@ namespace NitroxLauncher.Pages
             InitializeComponent();
             InitializeWorldListing();
 
-            // If the "Display Server Console Externally" Checkbox is checked, set value to true - (Is this needed anymore?)
-            if (CBIsExternal.IsChecked == true)
-            {
-                CBIsExternal.IsChecked = IsServerExternal;
-            }
+            RBIsDocked.IsChecked = !IsServerExternal;
+            RBIsExternal.IsChecked = IsServerExternal;
         }
-        
+
+        private void RBServer_Clicked(object sender, RoutedEventArgs e)
+        {
+            LauncherLogic.Config.IsExternalServer = RBIsExternal.IsChecked ?? true;
+        }
+
         public void InitializeWorldListing()
         {
             WorldManager.Refresh();
@@ -329,24 +331,22 @@ namespace NitroxLauncher.Pages
         // Start server button management
         private void StartServer_Click(object sender, RoutedEventArgs e)
         {
-            // If the "Start Server button" is clicked and not the "Display Server Console Externally" Checkbox, then start the server
-            if (!(e.OriginalSource is CheckBox))
-            {
-                SaveConfigSettings();
-                InitializeWorldListing();
-                
-                try
-                {
-                    LauncherLogic.Server.StartServer(CBIsExternal.IsChecked == true, SelectedWorldDirectory);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
+            SelectedWorldDirectory = WorldManager.GetSaves().ElementAtOrDefault(WorldListingContainer.SelectedIndex)?.WorldSaveDir ?? "";
 
-                Storyboard GoBackAnimationStoryboard = (Storyboard)FindResource("GoBackAnimation");
-                GoBackAnimationStoryboard.Begin();
+            //SaveConfigSettings(); // Should be removed if the "Start Server" button will only be in the world selection screen
+            InitializeWorldListing();
+            
+            try
+            {
+                LauncherLogic.Server.StartServer(RBIsExternal.IsChecked == true, SelectedWorldDirectory);
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+
+            //Storyboard GoBackAnimationStoryboard = (Storyboard)FindResource("GoBackAnimation"); // Should be removed if the "Start Server" button will only be in the world selection screen
+            //GoBackAnimationStoryboard.Begin();
 
         }
 
@@ -364,11 +364,11 @@ namespace NitroxLauncher.Pages
         }
     }
     // Uncomment to view intellisense world listings, in addition to the commented out lines that are in the ListView in ServerPage.xaml
-    //public class World_Listing
-    //{
-    //    public string WorldName { get; set; }
-    //    public string WorldGamemode { get; set; }
-    //    public string WorldVersion { get; set; }
-    //    public string WorldSaveDir { get; set; }
-    //}
+    public class World_Listing
+    {
+        public string WorldName { get; set; }
+        public string WorldGamemode { get; set; }
+        public string WorldVersion { get; set; }
+        public string WorldSaveDir { get; set; }
+    }
 }
