@@ -35,6 +35,7 @@ namespace NitroxLauncher.Pages
         public int ServerPort { get; set; }
 
         public bool IsNewWorld { get; set; }
+        private bool IsInSettings { get; set; }
 
         public string SelectedWorldDirectory { get; set; }
         
@@ -142,6 +143,8 @@ namespace NitroxLauncher.Pages
         
         private void GoBack_Click(object sender, RoutedEventArgs e)
         {
+            IsNewWorld = false;
+            IsInSettings = false;
             SaveConfigSettings();
             InitializeWorldListing();
 
@@ -152,7 +155,6 @@ namespace NitroxLauncher.Pages
         // World management
         private void SelectWorld_Click(object sender, RoutedEventArgs e)
         {
-            IsNewWorld = false;
             TBWorldSeed.IsEnabled = false;
 
             Log.Info($"World index {WorldListingContainer.SelectedIndex} selected");
@@ -166,20 +168,39 @@ namespace NitroxLauncher.Pages
 
         }
 
+        // Delete world logic
         private void DeleteWorld_Click(object sender, RoutedEventArgs e)
         {
+            if (e.OriginalSource == DeleteWorldBtn)
+            {
+                IsInSettings = true;
+            }
+
             ConfirmationBox.Opacity = 1;
             ConfirmationBox.IsHitTestVisible = true;
         }
 
         private void YesConfirmBtn_Click(object sender, RoutedEventArgs e)
         {
-            SelectedWorldDirectory = WorldManager.GetSaves().ElementAtOrDefault(WorldListingContainer.SelectedIndex)?.WorldSaveDir ?? "";
+            if (!IsNewWorld)
+            {
+                SelectedWorldDirectory = WorldManager.GetSaves().ElementAtOrDefault(WorldListingContainer.SelectedIndex)?.WorldSaveDir ?? "";
+            }
+            IsNewWorld = false;
+
             Directory.Delete(SelectedWorldDirectory, true);
             Log.Info($"Deleting world \"{SelectedWorldName}\"");
 
             ConfirmationBox.Opacity = 0;
             ConfirmationBox.IsHitTestVisible = false;
+
+            if (IsInSettings)
+            {
+                Storyboard GoBackAnimationStoryboard = (Storyboard)FindResource("GoBackAnimation");
+                GoBackAnimationStoryboard.Begin();
+            }
+            IsInSettings = false;
+
             InitializeWorldListing();
         }
 
@@ -333,7 +354,13 @@ namespace NitroxLauncher.Pages
         {
             SelectedWorldDirectory = WorldManager.GetSaves().ElementAtOrDefault(WorldListingContainer.SelectedIndex)?.WorldSaveDir ?? "";
 
-            //SaveConfigSettings(); // Should be removed if the "Start Server" button will only be in the world selection screen
+            //if (e.OriginalSource == StartServerBtn)
+            //{
+            //    SaveConfigSettings();
+            //    Storyboard GoBackAnimationStoryboard = (Storyboard)FindResource("GoBackAnimation");
+            //    GoBackAnimationStoryboard.Begin();
+            //}
+
             InitializeWorldListing();
             
             try
@@ -345,18 +372,14 @@ namespace NitroxLauncher.Pages
                 MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
-            //Storyboard GoBackAnimationStoryboard = (Storyboard)FindResource("GoBackAnimation"); // Should be removed if the "Start Server" button will only be in the world selection screen
-            //GoBackAnimationStoryboard.Begin();
-
         }
 
-        /* Restore Backup Button (WIP)
+        // Restore Backup Button(WIP)
         private void RestoreBackup_Click(object sender, RoutedEventArgs e)
         {
-            //e.Handled = true; // PUT THIS LINE IN THE CODE TO PREVENT THE OUTER BUTTON FROM BEING ACTIVATED IF BUTTON IS IMBEDDED IN ANOTHER BUTTON
 
         }
-        */
+
 
         public string VersionToString(Version version)
         {

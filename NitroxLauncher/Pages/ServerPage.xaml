@@ -68,7 +68,7 @@
                         Welcome to your Nitrox server! For more information, please refer to the <Hyperlink NavigateUri="https://on.rux.gg/nitrox-wiki" RequestNavigate="OnRequestNavigate" ToolTip="Open Nitrox guide website">Wiki</Hyperlink>
                 </TextBlock>
             </Grid>
-            
+
             <!-- Server Launch Option Radio Buttons -->
             <Border Grid.RowSpan="2" Background="#151516" Height="50" Width="105" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0 0 50 11" CornerRadius="10">
                 <Grid>
@@ -94,8 +94,9 @@
             <!-- ROW 3 - SELECTION PANES -->
             <Grid Grid.Row="2" Width="2442" HorizontalAlignment="Center">
 
-                <!-- WORLD SELECTION PANE (In view: Margin="866 32 866 32" | Out of view: Margin="0 32 1732 32") PANE WIDTH: 710 -->
+                <!-- WORLD SELECTION PANE (In view: Margin="866 16 866 32" | Out of view: Margin="0 16 1732 32") PANE WIDTH: 710 -->
                 <Border CornerRadius="12" Background="#151516" Margin="866 16 866 32" x:Name="WorldSelectionPane" RenderTransformOrigin="0.5,0.5">
+                <!--<Border CornerRadius="12" Background="#151516" Margin="0 16 1732 32" x:Name="WorldSelectionPane" RenderTransformOrigin="0.5,0.5">-->
                     <Border.RenderTransform>
                         <TransformGroup>
                             <ScaleTransform/>
@@ -226,7 +227,7 @@
                                                         <ColumnDefinition Width="Auto"/>
                                                         <ColumnDefinition Width="Auto"/>
                                                     </Grid.ColumnDefinitions>
-                                                    
+
                                                     <!-- Select World Button -->
                                                     <Button x:Name="WorldSelectBtn" Click="StartServer_Click" Style="{StaticResource WorldListingButton}" ToolTip="Select this world" Foreground="White" Height="83" HorizontalAlignment="Stretch" Width="Auto" HorizontalContentAlignment="Stretch" IsEnabled="{Binding Path=IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}">
                                                         <DockPanel Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Button}}" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Button}}" VerticalAlignment="Center" HorizontalAlignment="Stretch">
@@ -245,7 +246,7 @@
                                                     <!-- Separator -->
                                                     <Border x:Name="SeparatorBox" Grid.Column="1" Background="Black" Width="0"/>
 
-                                                    <!-- Delete World Button -->
+                                                    <!-- World Options Pop-up -->
                                                     <Grid x:Name="WorldOptionsBox" Grid.Column="2" Height="{Binding Height, RelativeSource={RelativeSource AncestorType=Border}}" Width="0">
                                                         <Grid.RowDefinitions>
                                                             <RowDefinition/>
@@ -253,20 +254,25 @@
                                                             <RowDefinition/>
                                                         </Grid.RowDefinitions>
 
+                                                        <!-- World Settings Button -->
                                                         <Button ToolTip="Edit the settings of this world" Click="SelectWorld_Click" IsEnabled="{Binding Path=IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}">
                                                             <Image Source="{StaticResource SettingsButton}" Stretch="Uniform"  Width="25" Height="25" Opacity="0.7"/>
                                                         </Button>
-                                                        
+
+                                                        <!-- Separator -->
                                                         <Border Grid.Row="1" Background="Black"/>
 
+                                                        <!-- Delete World Button -->
                                                         <Button Grid.Row="2" ToolTip="Delete this world" Click="DeleteWorld_Click" IsEnabled="{Binding Path=IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}">
                                                             <Image Source="{StaticResource TrashcanButton}" Stretch="Uniform"  Width="25" Height="25"/>
                                                         </Button>
                                                     </Grid>
-                                                    
+
 
                                                 </Grid>
                                             </Border>
+
+                                            <!-- World Optins Pop-up Animation Logic -->
                                             <DataTemplate.Triggers>
                                                 <Trigger Property="IsMouseOver" Value="True">
                                                     <Trigger.EnterActions>
@@ -295,9 +301,10 @@
                                                     </Trigger.ExitActions>
                                                 </Trigger>
                                             </DataTemplate.Triggers>
+
                                         </DataTemplate>
-                                        
-                                        
+
+
                                     </ListView.ItemTemplate>
 
                                 </ListView>
@@ -307,8 +314,9 @@
                 </Border>
 
 
-                <!-- WORLD OPTIONS PANE (Out of view: Margin="1732 32 0 32" | In view: Margin="866 32 866 32") PANE WIDTH: 710 -->
+                <!-- WORLD OPTIONS PANE (Out of view: Margin="1732 16 0 32" | In view: Margin="866 16 866 32") PANE WIDTH: 710 -->
                 <Grid Margin="1732 16 0 32" x:Name="WorldSettingsPane" RenderTransformOrigin="0.5,0.5">
+                <!--<Grid Margin="866 16 866 32" x:Name="WorldSettingsPane" RenderTransformOrigin="0.5,0.5">-->
                     <Grid.RenderTransform>
                         <TransformGroup>
                             <ScaleTransform/>
@@ -324,7 +332,7 @@
                     </Grid.RowDefinitions>
 
                     <!-- WORLD OPTIONS -->
-                    <Border CornerRadius="12" Background="#151516" Margin="0,0,0,32">
+                    <Border CornerRadius="12" Background="#151516" Margin="0,0,0,16">
                         <Grid Margin="16 0 16 16">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="60"/>
@@ -495,44 +503,92 @@
                         </Grid>
                     </Border>
 
-                    <!-- START SERVER BUTTON -->
-                    <Button Grid.Row="1" Style="{StaticResource LargeButton}" Click="StartServer_Click" ToolTip="Start the server with chosen options" Background="#FF007BFF" Height="62" HorizontalAlignment="Stretch" Margin="0,0,0,0" Width="710" >
-                        <Grid Width="700" Height="53">
 
-                            <!-- Grid Definitions -->
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <!--<ColumnDefinition Width="1.5*"/>-->
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
 
-                            <!-- Column 1: (TODO) Restore Backup Button -->
-                            <!--<Button Style="{StaticResource LargeButton}" Click="RestoreBackup_Click" HorizontalAlignment="Left" Height="40" Width="123" Margin="10,0,0,0" ToolTip="Restore one of your backups">
-                                <TextBlock Text="Restore a Backup" VerticalAlignment="Center" FontSize="12" TextAlignment="Center"/>
-                            </Button>-->
 
-                            <!-- Column 2: Start Server Text -->
-                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" FontSize="16" FontWeight="Bold" Text="START SERVER" />
+                        <!-- Column 1: (TODO) Restore Backup Button -->
+                        <Button Style="{StaticResource LargeButton}" Click="RestoreBackup_Click" ToolTip="Restore a backup of your world" Background="#151516" Height="62" HorizontalAlignment="Stretch" Margin="0 0 5 0" Width="Auto" >
+                            <Grid Height="53" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Button}}">
 
-                            <!-- Column 3: Version Number and External/Docked Console Checkbox -->
-                            <DockPanel Grid.Column="2">
-                                <TextBlock DockPanel.Dock = "Top" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="12" Text="{Binding LauncherVersion, FallbackValue=Version, Mode=OneTime}" />
-                                <StackPanel DockPanel.Dock = "Bottom" HorizontalAlignment="Right" VerticalAlignment="Bottom" Orientation="Horizontal">
-                                    <TextBlock FontSize="12" Text="Display Server Console Externally: "/>
-                                    <!--<CheckBox x:Name="CBIsExternal" IsChecked="{Binding IsServerExternal}" ToolTip="Check if you want to display the console in a separate CMD Window"/>-->
-                                </StackPanel>
-                            </DockPanel>
+                                <!-- Grid Definitions -->
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="3.5*"/>
+                                </Grid.ColumnDefinitions>
 
-                        </Grid>
-                    </Button>
+                                <!-- Column 1: Delete World Icon -->
+                                <Grid Background="White" Width="30" HorizontalAlignment="Right">
+                                    <Grid.OpacityMask>
+                                        <ImageBrush ImageSource="{StaticResource RestoreBackupButton}" Stretch="Uniform"/>
+                                    </Grid.OpacityMask>
+                                </Grid>
+
+                                <!-- Column 2: Delete World Text -->
+                                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" FontSize="16" FontWeight="Bold" Text="RESTORE BACKUP" />
+
+                            </Grid>
+                        </Button>
+
+                        <!-- Column 2: START SERVER BUTTON -->
+                        <!--<Button Grid.Column="1" Style="{StaticResource LargeButton}" x:Name="StartServerBtn" Click="StartServer_Click" ToolTip="Start the server with chosen options" Background="#FF007BFF" Height="62" HorizontalAlignment="Stretch" Margin="5,0,5,0" Width="Auto" >
+                            <Grid Height="53" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Button}}">
+
+                                --><!-- Grid Definitions --><!--
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                --><!-- Column 2: Start Server Text --><!--
+                                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" FontSize="16" FontWeight="Bold" Text="START SERVER" />
+
+                                --><!-- Column 3: Version Number --><!--
+                                <TextBlock Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="12" Text="{Binding LauncherVersion, FallbackValue=Version, Mode=OneTime}" Margin="0 0 5 0" />
+
+                            </Grid>
+                        </Button>-->
+
+                        <!-- Column 3: Delete World Button -->
+                        <Button Grid.Column="2" Style="{StaticResource LargeButton}" x:Name="DeleteWorldBtn" Click="DeleteWorld_Click" ToolTip="Delete this world" Background="Red" Height="62" HorizontalAlignment="Stretch" Margin="5 0 0 0" Width="Auto" >
+                            <Grid Height="53" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Button}}">
+
+                                <!-- Grid Definitions -->
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="3.5*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Column 1: Delete World Icon -->
+                                <Grid Background="White" Width="30" HorizontalAlignment="Right">
+                                    <Grid.OpacityMask>
+                                        <ImageBrush ImageSource="{StaticResource TrashcanButton}" Stretch="Uniform"/>
+                                    </Grid.OpacityMask>
+                                </Grid>
+                                
+                                <!-- Column 2: Delete World Text -->
+                                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" FontSize="16" FontWeight="Bold" Text="DELETE WORLD" />
+
+                            </Grid>
+                        </Button>
+
+                    </Grid>
+
+
                 </Grid>
             </Grid>
 
         </Grid>
 
         <Grid x:Name="ConfirmationBox" Opacity="0" IsHitTestVisible="False">
-            
-            <!-- Have all of the background act like the "No" button when clicked --> 
+
+            <!-- Have all of the background act like the "No" button when clicked -->
             <Button Click="NoConfirmBtn_Click" Background="Black" Opacity=".5" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Grid}}" Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Grid}}" Cursor="Arrow"/>
             
             <Border Background="Black" Height="150" Width="300" BorderThickness="5" BorderBrush="#151516" CornerRadius="20">
@@ -553,7 +609,7 @@
                     <Button Click="NoConfirmBtn_Click" Grid.Row="1" Grid.Column="1" Style="{StaticResource LargeButton}" Background="#FF007BFF" Height="50" Width="100" VerticalAlignment="Top" Content="No"/>
                 </Grid>
             </Border>
-            
+
         </Grid>
     </Grid>
 

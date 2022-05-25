@@ -46,6 +46,7 @@ public static class WorldManager
                 {
                     version = new ServerJsonSerializer().Deserialize<SaveFileVersion>(stream)?.Version ?? NitroxEnvironment.Version;
                 }
+                
                 savesCache.Add(new Listing
                 {
                     WorldName = Path.GetFileName(folder),
@@ -95,7 +96,7 @@ public static class WorldManager
 
         foreach (string file in worldFiles)
         {
-            File.Create(Path.Combine(saveDir, file + fileEnding));
+            File.Create(Path.Combine(saveDir, file + fileEnding)).Close();
         }
 
         serverConfig.SaveName = name;
