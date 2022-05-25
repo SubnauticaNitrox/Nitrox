@@ -83,7 +83,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 simulations,
                 world.GameMode,
                 player.Permissions,
-                player.HiddenSignalPings.ToHashSet()
+                player.PingInstancePreferences.GetInitialData()
             );
 
             player.SendPacket(new TimeChange(eventTriggerer.ElapsedSeconds, true));

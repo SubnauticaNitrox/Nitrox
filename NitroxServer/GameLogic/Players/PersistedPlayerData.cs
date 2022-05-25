@@ -51,7 +51,7 @@ namespace NitroxServer.GameLogic.Players
         public HashSet<string> CompletedGoals { get; set; } = new HashSet<string>();
 
         [JsonProperty, ProtoMember(14)]
-        public HashSet<string> HiddenSignalPings { get; set; }
+        public PingInstancePreferences PingInstancePreferences { get; set; } = new();
 
         public Player ToPlayer()
         {
@@ -70,7 +70,7 @@ namespace NitroxServer.GameLogic.Players
                               EquippedItems,
                               Modules,
                               CompletedGoals,
-                              HiddenSignalPings);
+                              PingInstancePreferences);
         }
 
         public static PersistedPlayerData FromPlayer(Player player)
@@ -90,7 +90,7 @@ namespace NitroxServer.GameLogic.Players
                 NitroxId = player.GameObjectId,
                 IsPermaDeath = player.IsPermaDeath,
                 CompletedGoals = new(player.CompletedGoals),
-                HiddenSignalPings = new(player.HiddenSignalPings)
+                PingInstancePreferences = player.PingInstancePreferences
             };
         }
     }

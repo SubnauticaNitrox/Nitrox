@@ -7,6 +7,7 @@ using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
 using NitroxServer.Communication;
+using NitroxServer.GameLogic.Players;
 
 namespace NitroxServer
 {
@@ -33,12 +34,12 @@ namespace NitroxServer
         public NitroxVector3? LastStoredPosition { get; set; }
         public Optional<NitroxId> LastStoredSubRootID { get; set; }
         public ThreadSafeSet<string> CompletedGoals { get; }
-        public ThreadSafeSet<string> HiddenSignalPings { get; }
+        public PingInstancePreferences PingInstancePreferences { get; set; }
 
         public Player(ushort id, string name, bool isPermaDeath, PlayerContext playerContext, NitroxConnection connection,
                       NitroxVector3 position, NitroxId playerId, Optional<NitroxId> subRootId, Perms perms, PlayerStatsData stats,
                       IEnumerable<NitroxTechType> usedItems, IEnumerable<string> quickSlotsBinding,
-                      IEnumerable<EquippedItemData> equippedItems, IEnumerable<EquippedItemData> modules, HashSet<string> completedGoals, HashSet<string> hiddenSignalPings)
+                      IEnumerable<EquippedItemData> equippedItems, IEnumerable<EquippedItemData> modules, HashSet<string> completedGoals, PingInstancePreferences pingInstancePreferences)
         {
             Id = id;
             Name = name;
@@ -58,7 +59,7 @@ namespace NitroxServer
             this.modules = new ThreadSafeList<EquippedItemData>(modules);
             visibleCells = new ThreadSafeSet<AbsoluteEntityCell>();
             CompletedGoals = new ThreadSafeSet<string>(completedGoals);
-            HiddenSignalPings = new(hiddenSignalPings);
+            PingInstancePreferences  = pingInstancePreferences;
         }
 
         public static bool operator ==(Player left, Player right)
@@ -176,13 +177,26 @@ namespace NitroxServer
 
         public void SetPingVisible(string pingKey, bool visibility)
         {
+            // Default behaviour which we don't want to notice
             if (visibility)
             {
-                HiddenSignalPings.Remove(pingKey);
+                PingInstancePreferences.HiddenSignalPings.Remove(pingKey);
                 return;
             }
 
-            HiddenSignalPings.Add(pingKey);
+            PingInstancePreferences.HiddenSignalPings.Add(pingKey);
+        }
+
+        public void SetPingColor(string pingKey, int color)
+        {
+            // Default color which we don't want to notice
+            if (color == 0)
+            {
+                PingInstancePreferences.ColorPreferences.Remove(pingKey);
+                return;
+            }
+
+            PingInstancePreferences.ColorPreferences[pingKey] = color;
         }
     }
 }
