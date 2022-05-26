@@ -84,6 +84,7 @@ namespace NitroxLauncher.Pages
                 if (RBFreedom.IsChecked == true) { c.GameMode = ServerGameMode.FREEDOM; }
                 else if (RBSurvival.IsChecked == true) { c.GameMode = ServerGameMode.SURVIVAL; }
                 else if (RBCreative.IsChecked == true) { c.GameMode = ServerGameMode.CREATIVE; }
+                else if (RBHardcore.IsChecked == true) { c.GameMode = ServerGameMode.HARDCORE; }
                 c.DisableConsole = !EnableCheatsValue;
                 c.AutoPortForward = EnableAutoPortForwardValue;
                 c.CreateFullEntityCache = EnableFullEntityCacheValue;
@@ -114,6 +115,7 @@ namespace NitroxLauncher.Pages
             if (SelectedWorldGamemode == ServerGameMode.FREEDOM) { RBFreedom.IsChecked = true; }
             else if (SelectedWorldGamemode == ServerGameMode.SURVIVAL) { RBSurvival.IsChecked = true; }
             else if (SelectedWorldGamemode == ServerGameMode.CREATIVE) { RBCreative.IsChecked = true; }
+            else if (SelectedWorldGamemode == ServerGameMode.HARDCORE) { RBHardcore.IsChecked = true; }
             CBCheats.IsChecked = EnableCheatsValue;
             CBAutoPortForward.IsChecked = EnableAutoPortForwardValue;
             CBCreateFullEntityCache.IsChecked = EnableFullEntityCacheValue;
@@ -344,9 +346,9 @@ namespace NitroxLauncher.Pages
             ServerPort = ServerPortNum;
         }
 
-        private void AdvancedSettings_Click(object sender, RoutedEventArgs e)
+        private void ViewModsPlugins_Click(object sender, RoutedEventArgs e)
         {
-
+            // Redirect user to the "Mods" tab of the launcher (for future reference if mod support is added) so that they can enable/disable mods
         }
 
         // Start server button management

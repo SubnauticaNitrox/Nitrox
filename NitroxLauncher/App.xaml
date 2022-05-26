@@ -262,7 +262,7 @@
                         <ControlTemplate TargetType="CheckBox">
 
                             <BulletDecorator>
-                                <Border Background="Black">
+                                <Border Background="Black" Height="23" Width="45">
                                     <Border.Style>
                                         <Style TargetType="Border">
                                             <Setter Property="CornerRadius" Value="12" />
