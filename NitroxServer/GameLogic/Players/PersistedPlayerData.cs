@@ -51,7 +51,7 @@ namespace NitroxServer.GameLogic.Players
         public HashSet<string> CompletedGoals { get; set; } = new HashSet<string>();
 
         [JsonProperty, ProtoMember(14)]
-        public PingInstancePreferences PingInstancePreferences { get; set; } = new();
+        public Dictionary<string, PingInstancePreference> PingInstancePreferences { get; set; } = new();
 
         public Player ToPlayer()
         {

@@ -7,13 +7,6 @@ public class SignalPingPreferenceChangedProcessor : AuthenticatedPacketProcessor
 {
     public override void Process(SignalPingPreferenceChanged packet, Player player)
     {
-        if (packet.Visible.HasValue)
-        {
-            player.SetPingVisible(packet.PingKey, packet.Visible.Value);
-        }
-        if (packet.Color.HasValue)
-        {
-            player.SetPingColor(packet.PingKey, packet.Color.Value);
-        }
+        player.PingInstancePreferences[packet.PingKey] = new(packet.Color, packet.Visible);
     }
 }
