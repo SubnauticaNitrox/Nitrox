@@ -1,29 +1,37 @@
-﻿using System.Reflection;
+﻿using System.Collections.Generic;
+using System.Reflection;
 using HarmonyLib;
+using NitroxClient.GameLogic.HUD;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
+/// <summary>
+/// Provide Subnautica with the new PDA tabs' names
+/// </summary>
 public class uGUI_PDA_CacheToolbarTooltips_Patch : NitroxPatch, IDynamicPatch
 {
-
     private readonly static MethodInfo TARGET_METHOD = Reflect.Method((uGUI_PDA t) => t.CacheToolbarTooltips());
 
-    public static bool Prefix(uGUI_PDA __instance)
+    public static void Postfix(uGUI_PDA __instance)
     {
-        __instance.toolbarTooltips.Clear();
-        for (int i = 0; i < __instance.currentTabs.Count; i++)
+        // Modify the latest tooltips of the list, which are the ones for the newly created tab
+        List<NitroxPDATab> customTabs = Resolve<NitroxGuiManager>().CustomTabs;
+        for (int i = 0; i < customTabs.Count; i++)
         {
-            PDATab pdatab = __instance.currentTabs[i];
-            __instance.toolbarTooltips.Add(TooltipFactory.Label(string.Format("Tab{0}", pdatab.ToString())));
+            /* considering a list like: [a,b,c,d,e,f] (toolbarTooltips)
+             * We want to modify only the n (customTabs.Count) last elements to replace with
+             * the elements from the list [u,v,w] (customTabs)
+             * we start from the end of the list (toolbarTooltips.Count) and remove,
+             * not i but n - i, because we want to have the right order
+             */
+            int index = i + __instance.toolbarTooltips.Count - (customTabs.Count - i);
+            __instance.toolbarTooltips[index] = TooltipFactory.Label(customTabs[i].ToolbarTip());
         }
-        // Modify the last tooltip which is the one of the newly created tab in uGUI_PDA_Initialize_Patch
-        __instance.toolbarTooltips[__instance.toolbarTooltips.Count - 1] = TooltipFactory.Label(string.Format("Nitrox_PlayerListTabName"));
-        return false;
     }
 
     public override void Patch(Harmony harmony)
     {
-        PatchPrefix(harmony, TARGET_METHOD);
+        PatchPostfix(harmony, TARGET_METHOD);
     }
 }
