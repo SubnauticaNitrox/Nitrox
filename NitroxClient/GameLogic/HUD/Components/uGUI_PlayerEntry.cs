@@ -1,7 +1,9 @@
 ﻿using NitroxClient.Communication.Abstract;
+using NitroxClient.Communication.Packets.Processors;
 using NitroxClient.GameLogic.ChatUI;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
+using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
@@ -33,6 +35,15 @@ public class uGUI_PlayerEntry : uGUI_PingEntry
     public void Awake()
     {
         Language.main.OnLanguageChanged += OnLanguageOnLanguageChanged;
+        NitroxServiceLocator.LocateService<MutePlayerProcessor>().OnPlayerMuted += (playerId, muted) =>
+        {
+            if ((player is RemotePlayer remotePlayer && remotePlayer.PlayerId == playerId) ||
+                (player is LocalPlayer localPlayer && localPlayer.PlayerId == playerId))
+            {
+                RefreshMuteButton(muted);
+            }
+        };
+        NitroxServiceLocator.LocateService<PermsChangedProcessor>().OnPermissionsChanged += (perms) => RefreshButtonsVisibility();
     }
 
     public void Initialize(int id, string name)
@@ -59,11 +70,11 @@ public class uGUI_PlayerEntry : uGUI_PingEntry
 
     public void OnLanguageOnLanguageChanged()
     {
-        ShowObject.GetComponent<ButtonTooltip>().TooltipText = showPing ? Language.main.Get("Nitrox_HidePing") : Language.main.Get("Nitrox_ShowPing");
-        MuteObject.GetComponent<ButtonTooltip>().TooltipText = muted ? Language.main.Get("Nitrox_Unmute") : Language.main.Get("Nitrox_Mute");
-        KickObject.GetComponent<ButtonTooltip>().TooltipText = Language.main.Get("Nitrox_Kick");
-        TeleportToObject.GetComponent<ButtonTooltip>().TooltipText = Language.main.Get("Nitrox_TeleportTo");
-        TeleportToMeObject.GetComponent<ButtonTooltip>().TooltipText = Language.main.Get("Nitrox_TeleportToMe");
+        GetTooltip(ShowObject).TooltipText = showPing ? Language.main.Get("Nitrox_HidePing") : Language.main.Get("Nitrox_ShowPing");
+        GetTooltip(MuteObject).TooltipText = muted ? Language.main.Get("Nitrox_Unmute") : Language.main.Get("Nitrox_Mute");
+        GetTooltip(KickObject).TooltipText = Language.main.Get("Nitrox_Kick");
+        GetTooltip(TeleportToObject).TooltipText = Language.main.Get("Nitrox_TeleportTo");
+        GetTooltip(TeleportToMeObject).TooltipText = Language.main.Get("Nitrox_TeleportToMe");
     }
 
     public new void Uninitialize()
@@ -86,49 +97,38 @@ public class uGUI_PlayerEntry : uGUI_PingEntry
 
         // We need to update each button's listener wether or not they have enough perms because they may become OP during playtime
         ClearButtonListeners();
-        ShowObject.GetComponent<Toggle>().onValueChanged.AddListener(delegate (bool toggled)
+        GetToggle(ShowObject).onValueChanged.AddListener(delegate (bool toggled)
         {
             if (player is RemotePlayer remotePlayer)
             {
                 PingInstance pingInstance = remotePlayer.PlayerModel.GetComponentInChildren<PingInstance>();
                 pingInstance.SetVisible(toggled);
-                ShowObject.GetComponent<ButtonTooltip>().TooltipText = toggled ? Language.main.Get("Nitrox_HidePing") : Language.main.Get("Nitrox_ShowPing");
+                GetTooltip(ShowObject).TooltipText = toggled ? Language.main.Get("Nitrox_HidePing") : Language.main.Get("Nitrox_ShowPing");
                 visibilityIcon.sprite = toggled ? spriteVisible : spriteHidden;
             }
         });
-        MuteObject.GetComponent<Toggle>().onValueChanged.AddListener(delegate (bool toggled)
+        GetToggle(MuteObject).onValueChanged.AddListener(delegate (bool toggled)
         {
+            GetToggle(MuteObject).SetIsOnWithoutNotify(!toggled);
             if (player is RemotePlayer remotePlayer)
             {
-                MuteObject.GetComponent<ButtonTooltip>().TooltipText = toggled ? Language.main.Get("Nitrox_Unmute") : Language.main.Get("Nitrox_Mute");
-                // TODO: pass this to the MutePlayer packet processor when complement PR is merged
-                MuteObject.FindChild("Eye").GetComponent<Image>().sprite = toggled ? MutedSprite : UnmutedSprite;
-                string text = (toggled ? Language.main.Get("Nitrox_MutedPlayer") : Language.main.Get("Nitrox_UnmutedPlayer")).Replace("{PLAYER}", player.PlayerName);
                 packetSender.Send(new ServerCommand($"{(toggled ? "" : "un")}mute {player.PlayerName}"));
             }
         });
-        KickObject.GetComponent<Toggle>().onValueChanged.AddListener(delegate (bool toggled)
+        GetToggle(KickObject).onValueChanged.AddListener(delegate (bool toggled)
         {
             packetSender.Send(new ServerCommand($"kick {player.PlayerName}"));
         });
-        TeleportToObject.GetComponent<Toggle>().onValueChanged.AddListener(delegate (bool toggled)
+        GetToggle(TeleportToObject).onValueChanged.AddListener(delegate (bool toggled)
         {
             packetSender.Send(new ServerCommand($"warp {player.PlayerName}"));
         });
-        TeleportToMeObject.GetComponent<Toggle>().onValueChanged.AddListener(delegate (bool toggled)
+        GetToggle(TeleportToMeObject).onValueChanged.AddListener(delegate (bool toggled)
         {
             packetSender.Send(new ServerCommand($"warp {player.PlayerName} {localPlayer.PlayerName}"));
         });
 
-        Log.Debug($"Current perms: {localPlayer.Permissions}, {localPlayer.Permissions >= Perms.MODERATOR}");
-        // We don't want none of these buttons to appear for us
-        bool isNotLocalPlayer = player is not LocalPlayer;
-        ShowObject.SetActive(isNotLocalPlayer);
-        // The perms here should be the same as the perm each command asks for
-        MuteObject.SetActive(isNotLocalPlayer && localPlayer.Permissions >= Perms.MODERATOR);
-        KickObject.SetActive(isNotLocalPlayer && localPlayer.Permissions >= Perms.MODERATOR);
-        TeleportToObject.SetActive(isNotLocalPlayer && localPlayer.Permissions >= Perms.MODERATOR);
-        TeleportToMeObject.SetActive(isNotLocalPlayer && localPlayer.Permissions >= Perms.MODERATOR);
+        RefreshButtonsVisibility();
     }
 
     public void UpdateButtonsPosition()
@@ -153,10 +153,10 @@ public class uGUI_PlayerEntry : uGUI_PingEntry
 
     private void ClearButtonListeners()
     {
-        MuteObject.GetComponent<Toggle>().onValueChanged.RemoveAllListeners();
-        KickObject.GetComponent<Toggle>().onValueChanged.RemoveAllListeners();
-        TeleportToObject.GetComponent<Toggle>().onValueChanged.RemoveAllListeners();
-        TeleportToMeObject.GetComponent<Toggle>().onValueChanged.RemoveAllListeners();
+        GetToggle(MuteObject).onValueChanged.RemoveAllListeners();
+        GetToggle(KickObject).onValueChanged.RemoveAllListeners();
+        GetToggle(TeleportToObject).onValueChanged.RemoveAllListeners();
+        GetToggle(TeleportToMeObject).onValueChanged.RemoveAllListeners();
     }
 
     public void AssignSprites()
@@ -181,5 +181,38 @@ public class uGUI_PlayerEntry : uGUI_PingEntry
         KickObject.FindChild("Eye").GetComponent<Image>().sprite = KickSprite;
         TeleportToObject.FindChild("Eye").GetComponent<Image>().sprite = TeleportToSprite;
         TeleportToMeObject.FindChild("Eye").GetComponent<Image>().sprite = TeleportToMeSprite;
+    }
+
+    private void RefreshMuteButton(bool muted)
+    {
+        GetToggle(MuteObject).SetIsOnWithoutNotify(muted);
+        GetTooltip(MuteObject).TooltipText = muted ? Language.main.Get("Nitrox_Unmute") : Language.main.Get("Nitrox_Mute");
+        MuteObject.FindChild("Eye").GetComponent<Image>().sprite = muted ? MutedSprite : UnmutedSprite;
+    }
+
+    private void RefreshButtonsVisibility()
+    {
+        LocalPlayer localPlayer = NitroxServiceLocator.LocateService<LocalPlayer>();
+        Log.Debug($"Current perms: {localPlayer.Permissions}, {localPlayer.Permissions >= Perms.MODERATOR}");
+        
+        bool isNotLocalPlayer = !IsLocalPlayer;
+        // We don't want none of these buttons to appear for us
+        ShowObject.SetActive(isNotLocalPlayer);
+
+        // The perms here should be the same as the perm each command asks for
+        MuteObject.SetActive(isNotLocalPlayer && localPlayer.Permissions >= Perms.MODERATOR);
+        KickObject.SetActive(isNotLocalPlayer && localPlayer.Permissions >= Perms.MODERATOR);
+        TeleportToObject.SetActive(isNotLocalPlayer && localPlayer.Permissions >= Perms.MODERATOR);
+        TeleportToMeObject.SetActive(isNotLocalPlayer && localPlayer.Permissions >= Perms.MODERATOR);
+    }
+
+    private Toggle GetToggle(GameObject gameObject)
+    {
+        return gameObject.GetComponent<Toggle>();
+    }
+
+    private ButtonTooltip GetTooltip(GameObject gameObject)
+    {
+        return gameObject.GetComponent<ButtonTooltip>();
     }
 }
