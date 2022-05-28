@@ -22,4 +22,17 @@ public class PingInstancePreference
         Color = color;
         Visible = visible;
     }
+
+    public override bool Equals(object obj)
+    {
+        return obj is PingInstancePreference otherInstance && Color == otherInstance.Color && Visible == otherInstance.Visible;
+    }
+
+    public override int GetHashCode()
+    {
+        int hashCode = 295593209;
+        hashCode = hashCode * -1521134295 + Color.GetHashCode();
+        hashCode = hashCode * -1521134295 + Visible.GetHashCode();
+        return hashCode;
+    }
 }

@@ -333,7 +333,7 @@ namespace NitroxTest.Serialization
 
                     foreach (string pingKey in playerData.PingInstancePreferences.Keys)
                     {
-                        Assert.AreEqual(playerDataAfter.PingInstancePreferences[pingKey], playerDataAfter.PingInstancePreferences[pingKey], $"PlayerData.Players.PingInstancePreferences is not equal while using {serverSerializers[serializerIndex]}.");
+                        Assert.AreEqual(playerData.PingInstancePreferences[pingKey], playerDataAfter.PingInstancePreferences[pingKey], $"PlayerData.Players.PingInstancePreferences is not equal while using {serverSerializers[serializerIndex]}.");
                     }
                     Assert.AreEqual(playerData.PingInstancePreferences.Count, playerDataAfter.PingInstancePreferences.Count, $"PlayerData.Players.PingInstancePreferences is not equal while using {serverSerializers[serializerIndex]}.");
                 }
