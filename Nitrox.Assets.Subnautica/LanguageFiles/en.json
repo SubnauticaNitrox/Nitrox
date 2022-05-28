@@ -43,5 +43,15 @@
     "Nitrox_Waiting": "Waiting in join queue…",
     "Nitrox_WaitingPassword": "Waiting for server password input…",
     "Nitrox_WaitingUserInput": "Waiting for user input…",
-    "Nitrox_WorldSettling": "Awaiting World Settling"
+    "Nitrox_WorldSettling": "Awaiting World Settling",
+    "Nitrox_PlayerListTabName": "Player List",
+    "Nitrox_MutedPlayer": "Muted {PLAYER}",
+    "Nitrox_UnmutedPlayer": "Unmuted {PLAYER}",
+    "Nitrox_HidePing": "Hide Ping",
+    "Nitrox_ShowPing": "Show Ping",
+    "Nitrox_Mute": "Mute",
+    "Nitrox_Unmute": "Unmute",
+    "Nitrox_Kick": "Kick",
+    "Nitrox_TeleportTo": "Teleport to",
+    "Nitrox_TeleportToMe": "Teleport to me"
 }
