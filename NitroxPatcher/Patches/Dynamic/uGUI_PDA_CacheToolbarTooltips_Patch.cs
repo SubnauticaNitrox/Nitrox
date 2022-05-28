@@ -16,7 +16,7 @@ public class uGUI_PDA_CacheToolbarTooltips_Patch : NitroxPatch, IDynamicPatch
     public static void Postfix(uGUI_PDA __instance)
     {
         // Modify the latest tooltips of the list, which are the ones for the newly created tab
-        List<NitroxPDATab> customTabs = Resolve<NitroxGuiManager>().CustomTabs;
+        List<NitroxPDATab> customTabs = new(Resolve<NitroxGuiManager>().CustomTabs.Values);
         for (int i = 0; i < customTabs.Count; i++)
         {
             /* considering a list like: [a,b,c,d,e,f] (toolbarTooltips)

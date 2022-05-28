@@ -121,8 +121,8 @@ public class uGUI_PlayerEntry : uGUI_PingEntry
         });
 
         Log.Debug($"Current perms: {localPlayer.Permissions}, {localPlayer.Permissions >= Perms.MODERATOR}");
-        // We don't want none of these button to appear for us
-        bool isNotLocalPlayer = player is not LocalPlayer || true;
+        // We don't want none of these buttons to appear for us
+        bool isNotLocalPlayer = player is not LocalPlayer;
         ShowObject.SetActive(isNotLocalPlayer);
         // The perms here should be the same as the perm each command asks for
         MuteObject.SetActive(isNotLocalPlayer && localPlayer.Permissions >= Perms.MODERATOR);

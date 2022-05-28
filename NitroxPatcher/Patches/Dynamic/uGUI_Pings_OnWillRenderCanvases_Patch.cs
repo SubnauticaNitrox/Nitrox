@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
+using NitroxClient.GameLogic.HUD;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -50,7 +51,7 @@ public class uGUI_Pings_OnWillRenderCanvases_Patch : NitroxPatch, IDynamicPatch
         {
             return false;
         }
-        return uGUI_PDA.main.currentTabType == uGUI_PDA_Initialize_Patch.PLAYERLIST;
+        return Resolve<NitroxGuiManager>().CustomTabs.TryGetValue(uGUI_PDA.main.currentTabType, out NitroxPDATab nitroxTab) && nitroxTab.KeepPingsVisible();
     }
 
     public override void Patch(Harmony harmony)

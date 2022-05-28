@@ -4,7 +4,7 @@ namespace NitroxClient.GameLogic.HUD;
 
 public class NitroxGuiManager
 {
-    public List<NitroxPDATab> CustomTabs;
+    public Dictionary<PDATab, NitroxPDATab> CustomTabs;
     public NitroxGuiManager()
     {
         CustomTabs = new();
@@ -13,6 +13,11 @@ public class NitroxGuiManager
 
     public void RegisterCustomTabs()
     {
-        CustomTabs.Add(new PlayerListTab());
+        RegisterTab(new PlayerListTab());
+    }
+
+    private void RegisterTab(NitroxPDATab nitroxTab)
+    {
+        CustomTabs.Add(nitroxTab.PDATabId(), nitroxTab);
     }
 }
