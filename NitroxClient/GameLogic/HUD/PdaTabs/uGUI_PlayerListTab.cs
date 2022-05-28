@@ -2,13 +2,17 @@
 using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.ChatUI;
-using NitroxClient.GameLogic.PlayerModel.Abstract;
+using NitroxClient.GameLogic.HUD.Components;
+using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxModel.Core;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace NitroxClient.GameLogic.HUD;
+namespace NitroxClient.GameLogic.HUD.PdaTabs;
 
+/// <summary>
+/// The component containing a new PDA tab based on ping manager tab
+/// </summary>
 public class uGUI_PlayerListTab : uGUI_PingTab
 {
     private PlayerManager playerManager;
@@ -32,7 +36,7 @@ public class uGUI_PlayerListTab : uGUI_PingTab
         pingManagerLabel = content.FindChild("PingManagerLabel").GetComponent<Text>();
         pingCanvas = (RectTransform)content.transform.Find("ScrollView/Viewport/ScrollCanvas");
 
-        Destroy(content.FindChild("ButtonAll"));  
+        Destroy(content.FindChild("ButtonAll"));
     }
 
     public new void OnEnable()
@@ -111,7 +115,7 @@ public class uGUI_PlayerListTab : uGUI_PingTab
         {
             for (int i = 0; i < 4; i++)
             {
-                uGUI_PlayerEntry = GameObject.Instantiate<GameObject>(prefabEntry).GetComponent<uGUI_PlayerEntry>();
+                uGUI_PlayerEntry = Instantiate(prefabEntry).GetComponent<uGUI_PlayerEntry>();
                 uGUI_PlayerEntry.rectTransform.SetParent(pingCanvas, false);
                 uGUI_PlayerEntry.Uninitialize();
                 pool.Add(uGUI_PlayerEntry);
@@ -131,7 +135,7 @@ public class uGUI_PlayerListTab : uGUI_PingTab
         // We never want this to appear
         Destroy(newPrefab.FindChild("ColorToggle"));
 
-        
+
         // Need to modify the pingTab's script from uGUI_PingEntry to uGUI_PlayerEntry
         uGUI_PingEntry pingEntry = newPrefab.GetComponent<uGUI_PingEntry>();
         uGUI_PlayerEntry playerEntry = newPrefab.AddComponent<uGUI_PlayerEntry>();
@@ -143,7 +147,7 @@ public class uGUI_PlayerListTab : uGUI_PingTab
         playerEntry.id = pingEntry.id;
         playerEntry.spriteVisible = pingEntry.spriteVisible;
         playerEntry.spriteHidden = pingEntry.spriteHidden;
-        GameObject.Destroy(pingEntry);
+        Destroy(pingEntry);
 
         // Make buttons for mute, kick, tp
         Transform container = newPrefab.transform;

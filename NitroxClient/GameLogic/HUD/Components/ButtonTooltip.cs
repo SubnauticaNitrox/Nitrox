@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace NitroxClient.GameLogic.HUD;
+namespace NitroxClient.GameLogic.HUD.Components;
 
 public class ButtonTooltip : MonoBehaviour, ITooltip
 {

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
 using HarmonyLib;
-using NitroxClient.GameLogic.HUD;
+using NitroxClient.GameLogic.HUD.PdaTabs;
 using NitroxModel.Helper;
 using UnityEngine;
 
@@ -11,7 +11,7 @@ public class uGUI_PDA_Initialize_Patch : NitroxPatch, IDynamicPatch
 {
     private readonly static MethodInfo TARGET_METHOD = Reflect.Method((uGUI_PDA t) => t.Initialize());
     private static uGUI_PDATab playerListTab;
-    private static PDATab PLAYERLIST = (PDATab)8;
+    public static PDATab PLAYERLIST = (PDATab)8;
 
     public static bool Prefix(uGUI_PDA __instance)
     {

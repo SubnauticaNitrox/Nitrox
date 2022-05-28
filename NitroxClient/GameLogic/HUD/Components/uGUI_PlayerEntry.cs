@@ -1,14 +1,14 @@
 ﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.ChatUI;
 using NitroxClient.GameLogic.Helper;
-using NitroxClient.GameLogic.PlayerModel.Abstract;
+using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace NitroxClient.GameLogic.HUD;
+namespace NitroxClient.GameLogic.HUD.Components;
 
 public class uGUI_PlayerEntry : uGUI_PingEntry
 {
@@ -166,7 +166,7 @@ public class uGUI_PlayerEntry : uGUI_PingEntry
         KickSprite = AssetsHelper.MakeSpriteFromTexture("kick@68x61");
         TeleportToSprite = AssetsHelper.MakeSpriteFromTexture("teleport_to@2x");
         TeleportToMeSprite = AssetsHelper.MakeSpriteFromTexture("teleport_to_me@2x");
-        
+
         // TODO: keep looking for why the images don't fit the boxes
         Sprite oldSprite = MuteObject.FindChild("Eye").GetComponent<Image>().sprite;
         Log.Debug($"Mute: pixelsPerUnit: {oldSprite.pixelsPerUnit}, border: {oldSprite.border}, pivot: {oldSprite.pivot}, rect: {oldSprite.rect}, bounds: {oldSprite.bounds}, WxH: {oldSprite.texture.width}x{oldSprite.texture.height}");
