@@ -48,7 +48,7 @@
     </local:PageBase.Resources>
 
     <Grid>
-        <Grid Margin="0" HorizontalAlignment="Center">
+        <Grid HorizontalAlignment="Center" Grid.RowSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
@@ -434,7 +434,7 @@
                                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                                 <TextBlock Text="Name:  " Foreground="White" FontSize="20" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                                 <Border BorderBrush ="#333437" Background="#333437" BorderThickness="1" CornerRadius="8" Margin="0">
-                                                    <TextBox Grid.Column="0" x:Name="TBWorldName"
+                                                    <TextBox x:Name="TBWorldName"
                                                         FontSize="18" MaxLines="1" ToolTip="Set the world name"
                                                         Foreground="#8A8A8A" TextAlignment="Left"
                                                         Background="{x:Null}" BorderBrush="{x:Null}"
@@ -449,7 +449,7 @@
                                             <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center"  HorizontalAlignment="Right">
                                                 <TextBlock Text="Seed:  " Foreground="White" FontSize="20" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                                 <Border BorderBrush ="#333437" Background="#333437" BorderThickness="1" CornerRadius="8" Margin="0">
-                                                    <TextBox Grid.Column="0" x:Name="TBWorldSeed" ToolTip="Set the seed the world would use when created. Leave empty to generate a random seed"
+                                                    <TextBox x:Name="TBWorldSeed" ToolTip="Set the seed the world would use when created. Leave empty to generate a random seed"
                                                         FontSize="18" MaxLines="1" FontStyle="Italic"
                                                         Foreground="#8A8A8A" TextAlignment="Left"
                                                         Background="{x:Null}" BorderBrush="{x:Null}"
@@ -517,17 +517,17 @@
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="151*"/>
                                                         <ColumnDefinition Width="60*"/>
-                                                        <ColumnDefinition Width="3"/>
+                                                        <ColumnDefinition Width="2"/>
                                                         <ColumnDefinition Width="151*"/>
                                                         <ColumnDefinition Width="60*"/>
-                                                        <ColumnDefinition Width="3"/>
+                                                        <ColumnDefinition Width="2"/>
                                                         <ColumnDefinition Width="151*"/>
                                                         <ColumnDefinition Width="60*"/>
                                                     </Grid.ColumnDefinitions>
 
                                                     <Grid.RowDefinitions>
                                                         <RowDefinition Height="40"/>
-                                                        <RowDefinition Height="40"/>
+                                                        <!--<RowDefinition Height="40"/>-->
                                                     </Grid.RowDefinitions>
 
                                                     <!-- Column Seperator -->
@@ -535,7 +535,7 @@
                                                     <Border Grid.Column="5" Grid.RowSpan="3" Background="Black"/>
 
                                                     <!-- Row 1 -->
-                                                    <TextBlock Grid.Column="0" Text="Enable Cheats" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
+                                                    <TextBlock Text="Enable Cheats" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
                                                     <CheckBox Style="{StaticResource OptionSwitch}" Grid.Column="1" x:Name="CBCheats" Click="CBCheats_Clicked" IsChecked="{Binding EnableCheatsValue, Mode=OneWay, FallbackValue='True'}" ToolTip="Click to enable the use of commands in game (RECOMMENDED FOR NITROX)"/>
 
                                                     <TextBlock Grid.Column="3" Text="Max Players" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
@@ -549,23 +549,27 @@
                                                             CaretBrush="White" Width="Auto" Text="{Binding ServerPort, Mode=OneWay, FallbackValue='100'}" LostKeyboardFocus="TBWorldServerPort_Input">
                                                         </TextBox>
                                                     </Border>
-                                                    
-                                                    <TextBlock Grid.Column="6" Text="Enable Mods" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
-                                                    <CheckBox Style="{StaticResource OptionSwitch}" Grid.Column="7" x:Name="CBEnableMods" Click="CBLanDiscovery_Clicked" IsChecked="{Binding EnableLanDiscoveryValue, Mode=OneWay, FallbackValue='True'}" ToolTip="Click to enable mods on this world."/>
+
+                                                    <!-- TODO - Once Mod Support is added -->
+                                                    <!--<TextBlock Grid.Column="6" Text="Enable Mods" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
+                                                    <CheckBox Style="{StaticResource OptionSwitch}" Grid.Column="7" x:Name="CBEnableMods" Click="CBLanDiscovery_Clicked" IsChecked="{Binding EnableLanDiscoveryValue, Mode=OneWay, FallbackValue='True'}" ToolTip="Click to enable mods on this world."/>-->
 
                                                     <!-- Row 2 -->
-                                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Enable PvP" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
-                                                    <CheckBox Style="{StaticResource OptionSwitch}" Grid.Row="1" Grid.Column="1" x:Name="CBEnablePvP" Click="CBAutoPortForward_Clicked" IsChecked="{Binding EnableAutoPortForwardValue, Mode=OneWay, FallbackValue='True'}" ToolTip="Click to enable Player vs. Player."/>
+                                                    <!-- TODO - Once/If PVP is added -->
+                                                    <!--<TextBlock Grid.Row="1" Text="Enable PvP" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
+                                                    <CheckBox Style="{StaticResource OptionSwitch}" Grid.Row="1" Grid.Column="1" x:Name="CBEnablePvP" Click="CBAutoPortForward_Clicked" IsChecked="{Binding EnableAutoPortForwardValue, Mode=OneWay, FallbackValue='True'}" ToolTip="Click to enable Player vs. Player."/>-->
 
-                                                    <TextBlock Grid.Row="1" Grid.Column="3" Text="Default Perms" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
+                                                    <!-- Once other TODOs are done, change these two to < Grid.Row="1" Grid.Column="3" > -->
+                                                    <TextBlock Grid.Column="6" Text="Default Perms" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
                                                     <!--<CheckBox Style="{StaticResource OptionSwitch}" Grid.Row="1" Grid.Column="4" x:Name="DDDefaultPerms" Click="CBCreateFullEntityCache_Clicked" IsChecked="{Binding EnableFullEntityCacheValue, Mode=OneWay, FallbackValue='False'}" ToolTip="Set the permission level that new players will be assigned upon joining."/>-->
-                                                    <ComboBox Grid.Row="1" Grid.Column="4" x:Name="CBBDefaultPerms" BorderThickness="1" Height="24" Width="45" ToolTip="Set the permission level that new players will be assigned upon joining.">
+                                                    <ComboBox Grid.Column="6" Width="70" Grid.ColumnSpan="2" x:Name="CBBDefaultPerms" BorderThickness="1" Height="24" ToolTip="Set the permission level that new players will be assigned upon joining." HorizontalAlignment="Right" Margin="0 0 5.7 0">  <!-- Style="{StaticResource NewStylePls}" Width="70"-->
                                                         <ComboBoxItem Content="Player" IsSelected="True"/>
                                                         <ComboBoxItem Content="Moderator"/>
                                                         <ComboBoxItem Content="Admin"/>
                                                     </ComboBox>
 
-                                                    <Button Style="{StaticResource LargeButton}" Click="ViewModsPlugins_Click" ToolTip="View the mods and plugins you currently have installed" Grid.Row="1" Grid.Column="6" Content="View Mods/Plugins" Foreground="White" FontSize="15" Grid.ColumnSpan="2" Background="#FF007BFF" Height="23" Width="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10 0 5.7 0"/>
+                                                    <!-- TODO - Once PVP is added -->
+                                                    <!--<Button Style="{StaticResource LargeButton}" Click="ViewModsPlugins_Click" ToolTip="View the mods and plugins you currently have installed" Grid.Row="1" Grid.Column="6" Content="View Mods/Plugins" Foreground="White" FontSize="15" Grid.ColumnSpan="2" Background="#FF007BFF" Height="23" Width="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10 0 5.7 0"/>-->
 
                                                 </Grid>
                                             </Border>
@@ -587,10 +591,10 @@
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="151*"/>
                                                         <ColumnDefinition Width="60*"/>
-                                                        <ColumnDefinition Width="3"/>
+                                                        <ColumnDefinition Width="2"/>
                                                         <ColumnDefinition Width="151*"/>
                                                         <ColumnDefinition Width="60*"/>
-                                                        <ColumnDefinition Width="3"/>
+                                                        <ColumnDefinition Width="2"/>
                                                         <ColumnDefinition Width="151*"/>
                                                         <ColumnDefinition Width="60*"/>
                                                     </Grid.ColumnDefinitions>
@@ -759,10 +763,10 @@
 
         </Grid>
 
-        <Grid x:Name="ConfirmationBox" Opacity="0" IsHitTestVisible="False">
+        <Grid x:Name="ConfirmationBox" Opacity="0" IsHitTestVisible="False" Grid.RowSpan="2">
 
             <!-- Have all of the background act like the "No" button when clicked -->
-            <!--<Button Click="NoConfirmBtn_Click" Background="Black" Opacity=".5" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Grid}}" Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Grid}}" Cursor="Arrow"/>
+            <Button Click="NoConfirmBtn_Click" Background="Black" Opacity=".5" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Grid}}" Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Grid}}" Cursor="Arrow"/>
             
             <Border Background="Black" Height="150" Width="300" BorderThickness="5" BorderBrush="#151516" CornerRadius="20">
                 <Grid>
@@ -781,7 +785,7 @@
                     <Button Click="YesConfirmBtn_Click" Grid.Row="1" Style="{StaticResource LargeButton}" Background="#151516" Height="50" Width="100" VerticalAlignment="Top" Content="Yes"/>
                     <Button Click="NoConfirmBtn_Click" Grid.Row="1" Grid.Column="1" Style="{StaticResource LargeButton}" Background="#FF007BFF" Height="50" Width="100" VerticalAlignment="Top" Content="No"/>
                 </Grid>
-            </Border>-->
+            </Border>
 
         </Grid>
     </Grid>
