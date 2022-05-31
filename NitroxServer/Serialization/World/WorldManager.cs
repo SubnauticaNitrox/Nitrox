@@ -28,33 +28,53 @@ public static class WorldManager
         {
             foreach (string folder in Directory.EnumerateDirectories(SavesFolderDir))
             {
-                if (!ValidateSave(folder))
+                try
                 {
-                    continue;
-                }
+                    if (!ValidateSave(folder))
+                    {
+                        continue;
+                    }
 
-                Version version;
-                ServerConfig serverConfig = ServerConfig.Load(folder);
+                    Version version;
+                    ServerConfig serverConfig = ServerConfig.Load(folder);
 
-                string fileEnding = ".json";
-                if (serverConfig.SerializerMode == ServerSerializerMode.PROTOBUF)
-                {
-                    fileEnding = ".nitrox";
-                }
+                    string fileEnding = ".json";
+                    if (serverConfig.SerializerMode == ServerSerializerMode.PROTOBUF)
+                    {
+                        fileEnding = ".nitrox";
+                    }
 
-                using (FileStream stream = new(Path.Combine(folder, "Version" + fileEnding), FileMode.Open, FileAccess.Read, FileShare.Read))
-                {
-                    version = new ServerJsonSerializer().Deserialize<SaveFileVersion>(stream)?.Version ?? NitroxEnvironment.Version;
+                    using (FileStream stream = new(Path.Combine(folder, "Version" + fileEnding), FileMode.Open, FileAccess.Read, FileShare.Read))
+                    {
+                        if (fileEnding == ".json")
+                        {
+                            version = new ServerJsonSerializer().Deserialize<SaveFileVersion>(stream)?.Version ?? NitroxEnvironment.Version;
+                        }
+                        else
+                        {
+                            version = new ServerProtoBufSerializer().Deserialize<SaveFileVersion>(stream)?.Version ?? NitroxEnvironment.Version;
+                        }
+                    }
+
+                    bool IsValidVersion = true;
+                    if (version < new Version(1,5,0,1) || version > NitroxEnvironment.Version)
+                    {
+                        IsValidVersion = false;
+                    }
+
+                    savesCache.Add(new Listing
+                    {
+                        WorldName = Path.GetFileName(folder),
+                        WorldGamemode = Convert.ToString(serverConfig.GameMode),
+                        WorldVersion = $"v{version}",
+                        WorldSaveDir = folder,
+                        IsValidSave = IsValidVersion
+                    });
                 }
-                
-                savesCache.Add(new Listing
+                catch 
                 {
-                    WorldName = Path.GetFileName(folder),
-                    WorldGamemode = Convert.ToString(serverConfig.GameMode),
-                    WorldVersion = $"v{version}",
-                    WorldSaveDir = folder,
-                    IsValidSave = true // DO SAVENUMBER CHECK
-                });
+                    Log.Error($"World could not be processed");
+                }
             }
         }
         return savesCache;

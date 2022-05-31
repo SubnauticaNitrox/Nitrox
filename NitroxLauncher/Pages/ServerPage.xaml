@@ -381,11 +381,12 @@
                                                             <!-- World Data -->
                                                             <DockPanel Grid.Column="1" LastChildFill = "True" Margin="0 10 10 10" HorizontalAlignment="Right">
                                                                 <TextBlock DockPanel.Dock = "Top" HorizontalAlignment="Right" FontSize="10" Text="{Binding WorldGamemode, FallbackValue=Gamemode, Mode=OneTime}" Foreground="White"/>
-                                                                <TextBlock DockPanel.Dock = "Bottom" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="10" Text="{Binding WorldVersion, FallbackValue=Version, Mode=OneTime}" Foreground="White">
+                                                                <TextBlock DockPanel.Dock = "Bottom" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="10" Text="{Binding WorldVersion, FallbackValue=Version, Mode=OneTime}">
                                                                     <TextBlock.Style>
                                                                         <Style TargetType="TextBlock">
+                                                                            <Setter Property="Foreground" Value="White"/>
                                                                             <Style.Triggers>
-                                                                                <DataTrigger Binding="{Binding IsValidVersion, FallbackValue=True, Mode=OneTime}" Value="True">
+                                                                                <DataTrigger Binding="{Binding IsValidSave, FallbackValue=True, Mode=TwoWay}" Value="False">
                                                                                     <Setter Property="Foreground" Value="Red"/>
                                                                                 </DataTrigger>
                                                                             </Style.Triggers>

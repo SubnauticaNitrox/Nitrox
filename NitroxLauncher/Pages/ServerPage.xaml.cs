@@ -157,7 +157,7 @@ namespace NitroxLauncher.Pages
             CBAutoPortForward.IsChecked = EnableAutoPortForwardValue;
             TBSaveInterval.Text = Convert.ToString(SaveInterval);
             TBJoinPassword.Text = JoinPassword;
-            if (string.IsNullOrEmpty(JoinPassword)) { TBJoinPassword.IsEnabled = false; JoinPasswordTitle.Opacity = .7; }
+            if (string.IsNullOrEmpty(JoinPassword)) { TBJoinPassword.IsEnabled = false; JoinPasswordTitle.Opacity = .6; }
             TBWorldServerPort.Text = Convert.ToString(ServerPort);
             CBLanDiscovery.IsChecked = EnableLanDiscoveryValue;
         }
@@ -196,17 +196,23 @@ namespace NitroxLauncher.Pages
         // World management
         private void SelectWorld_Click(object sender, RoutedEventArgs e)
         {
-            TBWorldSeed.IsEnabled = false;
+            if (WorldManager.GetSaves().ElementAtOrDefault(WorldListingContainer.SelectedIndex).IsValidSave)
+            {
+                TBWorldSeed.IsEnabled = false;
 
-            Log.Info($"World index {WorldListingContainer.SelectedIndex} selected");
+                Log.Info($"World index {WorldListingContainer.SelectedIndex} selected");
 
-            SelectedWorldDirectory = WorldManager.GetSaves().ElementAtOrDefault(WorldListingContainer.SelectedIndex)?.WorldSaveDir ?? "";
+                SelectedWorldDirectory = WorldManager.GetSaves().ElementAtOrDefault(WorldListingContainer.SelectedIndex)?.WorldSaveDir ?? "";
 
-            UpdateVisualWorldSettings();
+                UpdateVisualWorldSettings();
 
-            Storyboard WorldSelectedAnimationStoryboard = (Storyboard)FindResource("WorldSelectedAnimation");
-            WorldSelectedAnimationStoryboard.Begin();
-
+                Storyboard WorldSelectedAnimationStoryboard = (Storyboard)FindResource("WorldSelectedAnimation");
+                WorldSelectedAnimationStoryboard.Begin();
+            }
+            else
+            {
+                LauncherNotifier.Error($"This save is not a valid version.");
+            }
         }
 
         private void DeleteWorld_Click(object sender, RoutedEventArgs e)
@@ -389,7 +395,7 @@ namespace NitroxLauncher.Pages
             else
             {
                 TBJoinPassword.Opacity = .7;
-                JoinPasswordTitle.Opacity = .7;
+                JoinPasswordTitle.Opacity = .6;
                 TBJoinPassword.IsEnabled = false;
                 JoinPassword = string.Empty;
             }
@@ -444,7 +450,7 @@ namespace NitroxLauncher.Pages
             {
                 CBEnableJoinPassword.IsChecked = false;
                 TBJoinPassword.IsEnabled = false;
-                JoinPasswordTitle.Opacity = .7;
+                JoinPasswordTitle.Opacity = .6;
             }
 
             JoinPassword = TBJoinPassword.Text;
@@ -502,15 +508,22 @@ namespace NitroxLauncher.Pages
         {
             SelectedWorldDirectory = WorldManager.GetSaves().ElementAtOrDefault(WorldListingContainer.SelectedIndex)?.WorldSaveDir ?? "";
 
-            InitializeWorldListing();
-            
-            try
+            if (WorldManager.GetSaves().ElementAtOrDefault(WorldListingContainer.SelectedIndex).IsValidSave)
             {
-                LauncherLogic.Server.StartServer(RBIsExternal.IsChecked == true, SelectedWorldDirectory);
+                InitializeWorldListing();
+
+                try
+                {
+                    LauncherLogic.Server.StartServer(RBIsExternal.IsChecked == true, SelectedWorldDirectory);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
-            catch (Exception ex)
+            else
             {
-                MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                LauncherNotifier.Error($"This save is not a valid version.");
             }
 
         }
