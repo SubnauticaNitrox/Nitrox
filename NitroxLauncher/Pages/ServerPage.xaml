@@ -832,33 +832,33 @@
                     <Grid Grid.Row="1">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
-                            <!--<ColumnDefinition Width="1.5*"/>-->
+                            <ColumnDefinition Width="3*"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
 
                         <!-- Column 1: (TODO) Restore Backup Button -->
-                        <Button Style="{StaticResource LargeButton}" Click="RestoreBackup_Click" ToolTip="Restore a backup of your world" Background="#151516" Height="62" HorizontalAlignment="Stretch" Margin="0 0 15 0" Width="Auto" >
+                        <!--<Button Style="{StaticResource LargeButton}" Click="RestoreBackup_Click" ToolTip="Restore a backup of your world" Background="#151516" Height="62" HorizontalAlignment="Stretch" Margin="0 0 15 0" Width="Auto" >
                             <Grid Height="53" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Button}}">
 
-                                <!-- Grid Definitions -->
+                                --><!-- Grid Definitions --><!--
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="3.5*"/>
                                 </Grid.ColumnDefinitions>
 
-                                <!-- Column 1: Delete World Icon -->
+                                --><!-- Column 1: Delete World Icon --><!--
                                 <Grid Background="White" Width="45" HorizontalAlignment="Right">
                                     <Grid.OpacityMask>
                                         <ImageBrush ImageSource="{StaticResource RestoreBackupButton}" Stretch="Uniform"/>
                                     </Grid.OpacityMask>
                                 </Grid>
 
-                                <!-- Column 2: Delete World Text -->
+                                --><!-- Column 2: Delete World Text --><!--
                                 <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" FontSize="16" FontWeight="Bold" Text="RESTORE BACKUP" />
 
                             </Grid>
-                        </Button>
+                        </Button>-->
 
                         <!-- Column 2: START SERVER BUTTON -->
                         <!--<Button Grid.Column="1" Style="{StaticResource LargeButton}" x:Name="StartServerBtn" Click="StartServer_Click" ToolTip="Start the server with chosen options" Background="#FF007BFF" Height="62" HorizontalAlignment="Stretch" Margin="5,0,5,0" Width="Auto" >
@@ -887,7 +887,7 @@
                         </Button>-->
 
                         <!-- Column 3: Delete World Button -->
-                        <Button Grid.Column="2" Style="{StaticResource LargeButton}" x:Name="DeleteWorldBtn" Click="DeleteWorld_Click" ToolTip="Delete this world" Background="Red" Height="62" HorizontalAlignment="Stretch" Margin="15 0 0 0" Width="Auto" >
+                        <Button Grid.Column="1" Style="{StaticResource LargeButton}" x:Name="DeleteWorldBtn" Click="DeleteWorld_Click" ToolTip="Delete this world" Background="Red" Height="62" HorizontalAlignment="Stretch" Margin="15 0 0 0" Width="Auto" >
                             <Grid Height="53" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Button}}">
 
                                 <!-- Grid Definitions -->
@@ -913,6 +913,7 @@
 
 
                 </Grid>
+                
             </Grid>
 
         </Grid>
