@@ -4,8 +4,10 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media.Animation;
 using NitroxLauncher.Models;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Server;
 using NitroxServer.Serialization;
 using NitroxServer.Serialization.World;
@@ -28,11 +30,19 @@ namespace NitroxLauncher.Pages
         public string SelectedWorldSeed { get; set; }
         public string SelectedWorldVersion { get; set; }
         public ServerGameMode SelectedWorldGamemode { get; set; }
+        // Game Options
         public bool EnableCheatsValue { get; set; }
-        public bool EnableAutoPortForwardValue { get; set; }
+        public int MaxPlayerCap { get; set; }
+        public Perms DefaultPlayerPermsValue { get; set; }
+        // Server Options
         public bool EnableFullEntityCacheValue { get; set; }
-        public bool EnableLanDiscoveryValue { get; set; }
+        public bool EnableAutosaveValue { get; set; }
+        public bool EnableJoinPasswordValue { get; set; }
+        public bool EnableAutoPortForwardValue { get; set; }
+        public int SaveInterval { get; set; }
+        public string JoinPassword { get; set; }
         public int ServerPort { get; set; }
+        public bool EnableLanDiscoveryValue { get; set; }
 
         public bool IsNewWorld { get; set; }
         private bool IsInSettings { get; set; }
@@ -85,11 +95,21 @@ namespace NitroxLauncher.Pages
                 else if (RBSurvival.IsChecked == true) { c.GameMode = ServerGameMode.SURVIVAL; }
                 else if (RBCreative.IsChecked == true) { c.GameMode = ServerGameMode.CREATIVE; }
                 else if (RBHardcore.IsChecked == true) { c.GameMode = ServerGameMode.HARDCORE; }
+
                 c.DisableConsole = !EnableCheatsValue;
-                c.AutoPortForward = EnableAutoPortForwardValue;
+                c.MaxConnections = MaxPlayerCap;
+                if (CBBDefaultPerms.SelectedIndex == 0) { c.DefaultPlayerPerm = Perms.PLAYER; }
+                else if (CBBDefaultPerms.SelectedIndex == 1) { c.DefaultPlayerPerm = Perms.MODERATOR; }
+                else if (CBBDefaultPerms.SelectedIndex == 2) { c.DefaultPlayerPerm = Perms.ADMIN; }
+
                 c.CreateFullEntityCache = EnableFullEntityCacheValue;
-                c.LANDiscoveryEnabled = EnableLanDiscoveryValue;
+                c.DisableAutoSave = !EnableAutosaveValue;
+                //c.IsPasswordRequired = EnableJoinPasswordValue;
+                c.AutoPortForward = EnableAutoPortForwardValue;
+                c.SaveInterval = SaveInterval*1000;  // Convert seconds to milliseconds
+                c.ServerPassword = JoinPassword;
                 c.ServerPort = ServerPort;
+                c.LANDiscoveryEnabled = EnableLanDiscoveryValue;
 
             });
             Log.Info($"Server Config updated");
@@ -103,11 +123,19 @@ namespace NitroxLauncher.Pages
             SelectedWorldName = Path.GetFileName(SelectedWorldDirectory);
             SelectedWorldSeed = serverConfig.Seed;
             SelectedWorldGamemode = serverConfig.GameMode;
+
             EnableCheatsValue = !serverConfig.DisableConsole;
-            EnableAutoPortForwardValue = serverConfig.AutoPortForward;
+            MaxPlayerCap = serverConfig.MaxConnections;
+            DefaultPlayerPermsValue = serverConfig.DefaultPlayerPerm;
+
             EnableFullEntityCacheValue = serverConfig.CreateFullEntityCache;
-            EnableLanDiscoveryValue = serverConfig.LANDiscoveryEnabled;
+            EnableAutosaveValue = !serverConfig.DisableAutoSave;
+            EnableJoinPasswordValue = serverConfig.IsPasswordRequired;
+            EnableAutoPortForwardValue = serverConfig.AutoPortForward;
+            SaveInterval = serverConfig.SaveInterval/1000; // Convert milliseconds to seconds
+            JoinPassword = serverConfig.ServerPassword;
             ServerPort = serverConfig.ServerPort;
+            EnableLanDiscoveryValue = serverConfig.LANDiscoveryEnabled;
 
             // Set the world settings values to the server.cfg values
             TBWorldName.Text = SelectedWorldName;
@@ -116,11 +144,22 @@ namespace NitroxLauncher.Pages
             else if (SelectedWorldGamemode == ServerGameMode.SURVIVAL) { RBSurvival.IsChecked = true; }
             else if (SelectedWorldGamemode == ServerGameMode.CREATIVE) { RBCreative.IsChecked = true; }
             else if (SelectedWorldGamemode == ServerGameMode.HARDCORE) { RBHardcore.IsChecked = true; }
+
             CBCheats.IsChecked = EnableCheatsValue;
-            CBAutoPortForward.IsChecked = EnableAutoPortForwardValue;
+            TBMaxPlayerCap.Text = Convert.ToString(MaxPlayerCap);
+            if (DefaultPlayerPermsValue == Perms.PLAYER) { CBBDefaultPerms.SelectedIndex = 0; }
+            if (DefaultPlayerPermsValue == Perms.MODERATOR) { CBBDefaultPerms.SelectedIndex = 1; }
+            if (DefaultPlayerPermsValue == Perms.ADMIN) { CBBDefaultPerms.SelectedIndex = 2; }
+
             CBCreateFullEntityCache.IsChecked = EnableFullEntityCacheValue;
-            CBLanDiscovery.IsChecked = EnableLanDiscoveryValue;
+            CBAutoSave.IsChecked = EnableAutosaveValue;
+            CBEnableJoinPassword.IsChecked = EnableJoinPasswordValue;
+            CBAutoPortForward.IsChecked = EnableAutoPortForwardValue;
+            TBSaveInterval.Text = Convert.ToString(SaveInterval);
+            TBJoinPassword.Text = JoinPassword;
+            if (string.IsNullOrEmpty(JoinPassword)) { TBJoinPassword.IsEnabled = false; JoinPasswordTitle.Opacity = .7; }
             TBWorldServerPort.Text = Convert.ToString(ServerPort);
+            CBLanDiscovery.IsChecked = EnableLanDiscoveryValue;
         }
 
         // Pane Buttons
@@ -170,7 +209,6 @@ namespace NitroxLauncher.Pages
 
         }
 
-        // Delete world logic
         private void DeleteWorld_Click(object sender, RoutedEventArgs e)
         {
             if (e.OriginalSource == DeleteWorldBtn)
@@ -261,7 +299,6 @@ namespace NitroxLauncher.Pages
                     TBWorldName.Text = SelectedWorldName;
                 }
                 SelectedWorldName = TBWorldName.Text;
-                Log.Info($"World name set to \"{SelectedWorldName}\".");
             }
             else
             {
@@ -287,28 +324,130 @@ namespace NitroxLauncher.Pages
             Log.Info($"World seed set to {SelectedWorldSeed}");
         }
 
+        // Game Options
         private void CBCheats_Clicked(object sender, RoutedEventArgs e)
         {
             EnableCheatsValue = (bool)CBCheats.IsChecked;
-            Log.Info($"DisableConsole set to {EnableCheatsValue}");
         }
 
-        private void CBLanDiscovery_Clicked(object sender, RoutedEventArgs e)
+        private void TBMaxPlayerCap_Input(object sender, System.Windows.Input.KeyboardFocusChangedEventArgs e)
         {
-            EnableLanDiscoveryValue = (bool)CBLanDiscovery.IsChecked;
-            Log.Info($"LanDiscovery set to {EnableLanDiscoveryValue}");
+            TBMaxPlayerCap.Text = TBMaxPlayerCap.Text.TrimStart();
+            TBMaxPlayerCap.Text = TBMaxPlayerCap.Text.TrimEnd();
+
+            // Validation...
+            if (string.IsNullOrEmpty(TBMaxPlayerCap.Text))
+            {
+                TBMaxPlayerCap.Text = Convert.ToString(MaxPlayerCap);
+                LauncherNotifier.Error($"An empty Max Player Cap value is not valid.");
+                return;
+            }
+
+            int MaxPlayerCapNum;
+            try
+            {
+                MaxPlayerCapNum = Convert.ToInt32(TBMaxPlayerCap.Text);
+            }
+            catch
+            {
+                TBMaxPlayerCap.Text = Convert.ToString(MaxPlayerCap);
+                LauncherNotifier.Error($"Max Player Cap input should only contain numbers.");
+                return;
+            }
+
+            // Limit save interval value to numbers greater than 0
+            if (MaxPlayerCapNum <= 0)
+            {
+                TBMaxPlayerCap.Text = Convert.ToString(MaxPlayerCap);
+                LauncherNotifier.Error($"The Max Player Cap value cannot be zero or negative.");
+                return;
+            }
+
+            MaxPlayerCap = Convert.ToInt32(TBMaxPlayerCap.Text);
+        }
+
+        // Server Options
+        private void CBCreateFullEntityCache_Clicked(object sender, RoutedEventArgs e)
+        {
+            EnableFullEntityCacheValue = (bool)CBCreateFullEntityCache.IsChecked;
+        }
+
+        private void CBAutoSave_Clicked(object sender, RoutedEventArgs e)
+        {
+            EnableAutosaveValue = (bool)CBAutoSave.IsChecked;
+        }
+
+        private void CBEnableJoinPassword_Clicked(object sender, RoutedEventArgs e)
+        {
+            if ((bool)CBEnableJoinPassword.IsChecked)
+            {
+                TBJoinPassword.Opacity = 1;
+                JoinPasswordTitle.Opacity = 1;
+                TBJoinPassword.IsEnabled = true;
+                Keyboard.Focus(TBJoinPassword);
+            }
+            else
+            {
+                TBJoinPassword.Opacity = .7;
+                JoinPasswordTitle.Opacity = .7;
+                TBJoinPassword.IsEnabled = false;
+                JoinPassword = string.Empty;
+            }
         }
 
         private void CBAutoPortForward_Clicked(object sender, RoutedEventArgs e)
         {
             EnableAutoPortForwardValue = (bool)CBAutoPortForward.IsChecked;
-            Log.Info($"AutoPortForward set to {EnableAutoPortForwardValue}");
         }
 
-        private void CBCreateFullEntityCache_Clicked(object sender, RoutedEventArgs e)
+        private void TBSaveInterval_Input(object sender, System.Windows.Input.KeyboardFocusChangedEventArgs e)
         {
-            EnableFullEntityCacheValue = (bool)CBCreateFullEntityCache.IsChecked;
-            Log.Info($"CreateFullEntityCache set to {EnableFullEntityCacheValue}");
+            TBSaveInterval.Text = TBSaveInterval.Text.TrimStart();
+            TBSaveInterval.Text = TBSaveInterval.Text.TrimEnd();
+
+            if (string.IsNullOrEmpty(TBSaveInterval.Text))
+            {
+                TBSaveInterval.Text = Convert.ToString(SaveInterval);
+                LauncherNotifier.Error($"An empty Save Interval value is not valid.");
+                return;
+            }
+
+            int SaveIntervalNum;
+            try
+            {
+                SaveIntervalNum = Convert.ToInt32(TBSaveInterval.Text);
+            }
+            catch
+            {
+                TBSaveInterval.Text = Convert.ToString(SaveInterval);
+                LauncherNotifier.Error($"Save Interval input should only contain numbers.");
+                return;
+            }
+
+            // Limit save interval value to numbers greater than 1
+            if (SaveIntervalNum < 1)
+            {
+                TBSaveInterval.Text = Convert.ToString(SaveInterval);
+                LauncherNotifier.Error($"The Save Interval value must be greater than 1.");
+                return;
+            }
+
+            SaveInterval = Convert.ToInt32(TBSaveInterval.Text);
+        }
+
+        private void TBJoinPassword_Input(object sender, System.Windows.Input.KeyboardFocusChangedEventArgs e)
+        {
+            TBJoinPassword.Text = TBJoinPassword.Text.TrimStart();
+            TBJoinPassword.Text = TBJoinPassword.Text.TrimEnd();
+
+            if (string.IsNullOrEmpty(TBJoinPassword.Text))
+            {
+                CBEnableJoinPassword.IsChecked = false;
+                TBJoinPassword.IsEnabled = false;
+                JoinPasswordTitle.Opacity = .7;
+            }
+
+            JoinPassword = TBJoinPassword.Text;
         }
 
         private void TBWorldServerPort_Input(object sender, System.Windows.Input.KeyboardFocusChangedEventArgs e)
@@ -319,7 +458,7 @@ namespace NitroxLauncher.Pages
             if (string.IsNullOrEmpty(TBWorldServerPort.Text))
             {
                 TBWorldServerPort.Text = Convert.ToString(ServerPort);
-                LauncherNotifier.Error($"An empty ServerPort input is not valid.");
+                LauncherNotifier.Error($"An empty Server Port value is not valid.");
                 return;
             }
 
@@ -331,7 +470,7 @@ namespace NitroxLauncher.Pages
             catch
             {
                 TBWorldServerPort.Text = Convert.ToString(ServerPort);
-                LauncherNotifier.Error($"ServerPort input should only contain numbers.");
+                LauncherNotifier.Error($"Server Port input should only contain numbers.");
                 return;
             }
             
@@ -346,22 +485,22 @@ namespace NitroxLauncher.Pages
             ServerPort = ServerPortNum;
         }
 
-        private void ViewModsPlugins_Click(object sender, RoutedEventArgs e)
+        private void CBLanDiscovery_Clicked(object sender, RoutedEventArgs e)
         {
-            // Redirect user to the "Mods" tab of the launcher (for future reference if mod support is added) so that they can enable/disable mods
+            EnableLanDiscoveryValue = (bool)CBLanDiscovery.IsChecked;
         }
+
+
+        // TODO
+        //private void ViewModsPlugins_Click(object sender, RoutedEventArgs e)
+        //{
+        //    // Redirect user to the "Mods" tab of the launcher (for future reference if mod support is added) so that they can enable/disable mods
+        //}
 
         // Start server button management
         private void StartServer_Click(object sender, RoutedEventArgs e)
         {
             SelectedWorldDirectory = WorldManager.GetSaves().ElementAtOrDefault(WorldListingContainer.SelectedIndex)?.WorldSaveDir ?? "";
-
-            //if (e.OriginalSource == StartServerBtn)
-            //{
-            //    SaveConfigSettings();
-            //    Storyboard GoBackAnimationStoryboard = (Storyboard)FindResource("GoBackAnimation");
-            //    GoBackAnimationStoryboard.Begin();
-            //}
 
             InitializeWorldListing();
             
@@ -387,6 +526,7 @@ namespace NitroxLauncher.Pages
         {
             return $"{version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
         }
+
     }
     // Uncomment to view intellisense world listings, in addition to the commented out lines that are in the ListView in ServerPage.xaml
     public class World_Listing
@@ -395,5 +535,6 @@ namespace NitroxLauncher.Pages
         public string WorldGamemode { get; set; }
         public string WorldVersion { get; set; }
         public string WorldSaveDir { get; set; }
+        public bool IsValidSave { get; set; }
     }
 }

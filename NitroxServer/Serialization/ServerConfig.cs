@@ -40,7 +40,7 @@ namespace NitroxServer.Serialization
 
             set
             {
-                Validate.IsTrue(value > 1000, "SaveInterval must be greater than 1000");
+                Validate.IsTrue(value >= 1000, "SaveInterval must be greater than 1000");
                 saveIntervalSetting = value;
             }
         }

@@ -7,7 +7,8 @@
                 mc:Ignorable="d"
                 d:DesignHeight="642" d:DesignWidth="750"
                 DataContext="{Binding RelativeSource={RelativeSource Self}}"
-                Title="Server Page" xmlns:pages="clr-namespace:NitroxLauncher.Pages">
+                Title="Server Page" xmlns:pages="clr-namespace:NitroxLauncher.Pages"
+                xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2">
 
     <local:PageBase.Resources>
         <BitmapImage x:Key="ServerIllustration" UriSource="pack://application:,,,/images/serverIllustration.png"/>
@@ -44,6 +45,148 @@
                 <EasingDoubleKeyFrame KeyTime="00:00:00.2000000" Value="0"/>
             </DoubleAnimationUsingKeyFrames>
         </Storyboard>
+
+        <!-- Combo Box Style -->
+        <Style x:Key="FocusVisual">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Rectangle Margin="2" StrokeDashArray="1 2" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" SnapsToDevicePixels="true" StrokeThickness="1"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <SolidColorBrush x:Key="TextBox.Static.Background" Color="Black"/>
+        
+        <SolidColorBrush x:Key="ComboBox.Static.Background" Color="Black"/>
+        <SolidColorBrush x:Key="ComboBox.Static.Border" Color="Black"/>
+        <SolidColorBrush x:Key="ComboBox.Static.Glyph" Color="#FF606060"/>
+        <SolidColorBrush x:Key="ComboBox.MouseOver.Background" Color="Black"/>
+        <SolidColorBrush x:Key="ComboBox.MouseOver.Border" Color="#FF007BFF"/>
+        <SolidColorBrush x:Key="ComboBox.MouseOver.Glyph" Color="Gainsboro"/>
+        <SolidColorBrush x:Key="ComboBox.Pressed.Background" Color="Black"/>
+        <SolidColorBrush x:Key="ComboBox.Pressed.Border" Color="#FF569DE5"/>
+        <SolidColorBrush x:Key="ComboBox.Pressed.Glyph" Color="Gainsboro"/>
+        <SolidColorBrush x:Key="ComboBox.Disabled.Background" Color="Black"/>
+        <SolidColorBrush x:Key="ComboBox.Disabled.Border" Color="#FFD9D9D9"/>
+        <SolidColorBrush x:Key="ComboBox.Disabled.Glyph" Color="#FFBFBFBF"/>
+
+        <Style x:Key="ComboBoxToggleButton" TargetType="{x:Type ToggleButton}">
+            <Setter Property="OverridesDefaultStyle" Value="true"/>
+            <Setter Property="IsTabStop" Value="false"/>
+            <Setter Property="Focusable" Value="false"/>
+            <Setter Property="ClickMode" Value="Press"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ToggleButton}">
+                        <Border x:Name="templateRoot" Background="{StaticResource ComboBox.Static.Background}" BorderBrush="{StaticResource ComboBox.Static.Border}" BorderThickness="{TemplateBinding BorderThickness}" SnapsToDevicePixels="true" CornerRadius="8">
+                            <Border x:Name="splitBorder" BorderBrush="Transparent" BorderThickness="1" HorizontalAlignment="Right" Margin="0" SnapsToDevicePixels="true" Width="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}">
+                                <Path x:Name="arrow" Data="F1 M 0,0 L 2.667,2.66665 L 5.3334,0 L 5.3334,-1.78168 L 2.6667,0.88501 L0,-1.78168 L0,0 Z" Fill="{StaticResource ComboBox.Static.Glyph}" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center"/>
+                            </Border>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Fill" TargetName="arrow" Value="{StaticResource ComboBox.MouseOver.Glyph}"/>
+                            </Trigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="true"/>
+                                    <Condition Binding="{Binding IsEditable, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}" Value="false"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Background" TargetName="templateRoot" Value="{StaticResource ComboBox.MouseOver.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="templateRoot" Value="{StaticResource ComboBox.MouseOver.Border}"/>
+                            </MultiDataTrigger>
+                            <Trigger Property="IsPressed" Value="true">
+                                <Setter Property="Fill" TargetName="arrow" Value="{StaticResource ComboBox.Pressed.Glyph}"/>
+                            </Trigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsPressed, RelativeSource={RelativeSource Self}}" Value="true"/>
+                                    <Condition Binding="{Binding IsEditable, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}" Value="false"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Background" TargetName="templateRoot" Value="{StaticResource ComboBox.Pressed.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="templateRoot" Value="{StaticResource ComboBox.Pressed.Border}"/>
+                                <!--<Setter Property="CornerRadius" TargetName="templateRoot" Value="8 8 0 0"/>-->
+                            </MultiDataTrigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Fill" TargetName="arrow" Value="{StaticResource ComboBox.Disabled.Glyph}"/>
+                            </Trigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}" Value="false"/>
+                                    <Condition Binding="{Binding IsEditable, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}" Value="false"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Background" TargetName="templateRoot" Value="{StaticResource ComboBox.Disabled.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="templateRoot" Value="{StaticResource ComboBox.Disabled.Border}"/>
+                            </MultiDataTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <Style TargetType="{x:Type ComboBox}">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+            <Setter Property="Background" Value="{StaticResource ComboBox.Static.Background}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource ComboBox.Static.Border}"/>
+            <Setter Property="Foreground" Value="#8A8A8A"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="Padding" Value="6,3,5,3"/>
+            <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
+            <Setter Property="ScrollViewer.PanningMode" Value="Both"/>
+            <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ComboBox}">
+                        <Grid x:Name="templateRoot" SnapsToDevicePixels="true">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition MinWidth="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}" Width="0"/>
+                            </Grid.ColumnDefinitions>
+                            <Popup x:Name="PART_Popup" AllowsTransparency="true" Grid.ColumnSpan="2" IsOpen="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" Margin="1" Placement="Bottom" PopupAnimation="{DynamicResource {x:Static SystemParameters.ComboBoxPopupAnimationKey}}">
+                                <theme:SystemDropShadowChrome x:Name="shadow" Color="Transparent" MinWidth="{Binding ActualWidth, ElementName=templateRoot}" MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                    <Border x:Name="dropDownBorder" Background="Black" BorderBrush="#151516" BorderThickness="1">
+                                        <ScrollViewer x:Name="DropDownScrollViewer">
+                                            <Grid x:Name="grid" RenderOptions.ClearTypeHint="Enabled">
+                                                <Canvas x:Name="canvas" HorizontalAlignment="Left" Height="0" VerticalAlignment="Top" Width="0">
+                                                    <Rectangle x:Name="opaqueRect" Fill="{Binding Background, ElementName=dropDownBorder}" Height="{Binding ActualHeight, ElementName=dropDownBorder}" Width="{Binding ActualWidth, ElementName=dropDownBorder}"/>
+                                                </Canvas>
+                                                <ItemsPresenter x:Name="ItemsPresenter" KeyboardNavigation.DirectionalNavigation="Contained" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                                            </Grid>
+                                        </ScrollViewer>
+                                    </Border>
+                                </theme:SystemDropShadowChrome>
+                            </Popup>
+                            <ToggleButton x:Name="toggleButton" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Grid.ColumnSpan="2" IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" Style="{StaticResource ComboBoxToggleButton}"/>
+                            <ContentPresenter x:Name="contentPresenter" ContentStringFormat="{TemplateBinding SelectionBoxItemStringFormat}" ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" Content="{TemplateBinding SelectionBoxItem}" ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" IsHitTestVisible="false" Margin="{TemplateBinding Padding}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="HasDropShadow" SourceName="PART_Popup" Value="true">
+                                <Setter Property="Margin" TargetName="shadow" Value="0,0,5,5"/>
+                                <Setter Property="Color" TargetName="shadow" Value="#71000000"/>
+                            </Trigger>
+                            <Trigger Property="HasItems" Value="false">
+                                <Setter Property="Height" TargetName="dropDownBorder" Value="95"/>
+                            </Trigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsGrouping" Value="true"/>
+                                    <Condition Property="VirtualizingPanel.IsVirtualizingWhenGrouping" Value="false"/>
+                                </MultiTrigger.Conditions>
+                                <Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
+                            </MultiTrigger>
+                            <Trigger Property="ScrollViewer.CanContentScroll" SourceName="DropDownScrollViewer" Value="false">
+                                <Setter Property="Canvas.Top" TargetName="opaqueRect" Value="{Binding VerticalOffset, ElementName=DropDownScrollViewer}"/>
+                                <Setter Property="Canvas.Left" TargetName="opaqueRect" Value="{Binding HorizontalOffset, ElementName=DropDownScrollViewer}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
 
     </local:PageBase.Resources>
 
@@ -151,12 +294,12 @@
                                     <!-- Must also uncomment the "World_Listing" class at the bottom of ServerPage.xaml.cs to view these in intellisense -->
                                     <d:ListView.ItemsSource>
                                         <x:Array Type="pages:World_Listing">
-                                            <pages:World_Listing WorldName = "Survival w/ friends" WorldGamemode = "Survival" WorldVersion = "v1.6.0.0"/>
-                                            <pages:World_Listing WorldName = "My World 1" WorldGamemode = "Freedom" WorldVersion = "v1.5.0.2"/>
-                                            <pages:World_Listing WorldName = "v1.7 pre-release test" WorldGamemode = "Freedom" WorldVersion = "v1.7.0.0"/>
-                                            <pages:World_Listing WorldName = "Old World" WorldGamemode = "Survival" WorldVersion = "v1.3.0.0"/>
-                                            <pages:World_Listing WorldName = "Creative Mode" WorldGamemode = "Creative" WorldVersion = "v1.6.0.0"/>
-                                            <pages:World_Listing WorldName = "v1.6.0.1 testing" WorldGamemode = "Freedom" WorldVersion = "v1.6.0.1"/>
+                                            <pages:World_Listing WorldName = "Survival w/ friends" WorldGamemode = "Survival" WorldVersion = "v1.6.0.0" IsValidSave = "True"/>
+                                            <pages:World_Listing WorldName = "My World 1" WorldGamemode = "Freedom" WorldVersion = "v1.5.0.2" IsValidSave = "True"/>
+                                            <pages:World_Listing WorldName = "v1.7 pre-release test" WorldGamemode = "Freedom" WorldVersion = "v1.7.0.0" IsValidSave = "False"/>
+                                            <pages:World_Listing WorldName = "Old World" WorldGamemode = "Survival" WorldVersion = "v1.3.0.0" IsValidSave = "False"/>
+                                            <pages:World_Listing WorldName = "Creative Mode" WorldGamemode = "Creative" WorldVersion = "v1.6.0.0" IsValidSave = "True"/>
+                                            <pages:World_Listing WorldName = "v1.6.0.1 testing" WorldGamemode = "Freedom" WorldVersion = "v1.6.0.1" IsValidSave = "True"/>
                                         </x:Array>
                                     </d:ListView.ItemsSource>
 
@@ -238,7 +381,17 @@
                                                             <!-- World Data -->
                                                             <DockPanel Grid.Column="1" LastChildFill = "True" Margin="0 10 10 10" HorizontalAlignment="Right">
                                                                 <TextBlock DockPanel.Dock = "Top" HorizontalAlignment="Right" FontSize="10" Text="{Binding WorldGamemode, FallbackValue=Gamemode, Mode=OneTime}" Foreground="White"/>
-                                                                <TextBlock DockPanel.Dock = "Bottom" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="10" Text="{Binding WorldVersion, FallbackValue=Version, Mode=OneTime}" Foreground="White"/>
+                                                                <TextBlock DockPanel.Dock = "Bottom" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="10" Text="{Binding WorldVersion, FallbackValue=Version, Mode=OneTime}" Foreground="White">
+                                                                    <TextBlock.Style>
+                                                                        <Style TargetType="TextBlock">
+                                                                            <Style.Triggers>
+                                                                                <DataTrigger Binding="{Binding IsValidVersion, FallbackValue=True, Mode=OneTime}" Value="True">
+                                                                                    <Setter Property="Foreground" Value="Red"/>
+                                                                                </DataTrigger>
+                                                                            </Style.Triggers>
+                                                                        </Style>
+                                                                    </TextBlock.Style>
+                                                                </TextBlock>
                                                             </DockPanel>
 
                                                         </DockPanel>
@@ -438,7 +591,7 @@
                                                         FontSize="18" MaxLines="1" ToolTip="Set the world name"
                                                         Foreground="#8A8A8A" TextAlignment="Left"
                                                         Background="{x:Null}" BorderBrush="{x:Null}"
-                                                        Margin="13,4,13,4" SelectionBrush="#FF36383A"
+                                                        Margin="13,4,13,4" SelectionBrush="#FF007BFF"
                                                         VerticalAlignment="Center" BorderThickness="0"
                                                         CaretBrush="White" Width="250" MaxLength="25" Text="{Binding SelectedWorldName, FallbackValue=WorldName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" LostKeyboardFocus="TBWorldName_Input">
                                                     </TextBox>
@@ -453,7 +606,7 @@
                                                         FontSize="18" MaxLines="1" FontStyle="Italic"
                                                         Foreground="#8A8A8A" TextAlignment="Left"
                                                         Background="{x:Null}" BorderBrush="{x:Null}"
-                                                        Margin="13,4,13,4" SelectionBrush="#FF36383A"
+                                                        Margin="13,4,13,4" SelectionBrush="#FF007BFF"
                                                         VerticalAlignment="Center" BorderThickness="0" CaretBrush="White" Width="155" MaxLength="10" Text="{Binding SelectedWorldSeed, FallbackValue=WorldSeed, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" LostKeyboardFocus="TBWorldSeed_Input" IsEnabled="{Binding IsNewWorld, FallbackValue=False, Mode=OneWay}"/>
                                                 </Border>
                                             </StackPanel>
@@ -544,9 +697,9 @@
                                                             FontSize="12" MaxLines="1" ToolTip="Set the max number of players that can join your world"
                                                             Foreground="#8A8A8A" TextAlignment="Center"
                                                             Background="{x:Null}" BorderBrush="{x:Null}"
-                                                            Margin="4" SelectionBrush="#FF36383A"
+                                                            Margin="4" SelectionBrush="#FF007BFF"
                                                             VerticalAlignment="Center" BorderThickness="0"
-                                                            CaretBrush="White" Width="Auto" Text="{Binding ServerPort, Mode=OneWay, FallbackValue='100'}" LostKeyboardFocus="TBWorldServerPort_Input">
+                                                            CaretBrush="White" Width="Auto" Text="{Binding MaxPlayerCap, Mode=OneWay, FallbackValue='100'}" LostKeyboardFocus="TBMaxPlayerCap_Input">
                                                         </TextBox>
                                                     </Border>
 
@@ -605,19 +758,19 @@
                                                         <RowDefinition Height="40"/>
                                                     </Grid.RowDefinitions>
 
-                                                    <!-- Column Seperator -->
+                                                    <!-- Column Seperators -->
                                                     <Border Grid.Column="2" Grid.RowSpan="3" Background="Black"/>
                                                     <Border Grid.Column="5" Grid.RowSpan="3" Background="Black"/>
 
                                                     <!-- Row 1 -->
                                                     <TextBlock Grid.Column="0" Text="Load Full World" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
-                                                    <CheckBox Style="{StaticResource OptionSwitch}" Grid.Column="1" x:Name="CBCreateFullEntityCache" Click="CBCreateFullEntityCache_Clicked" IsChecked="{Binding EnableFullEntityCacheValue, Mode=OneWay, FallbackValue='False'}" ToolTip="Click to enable the server to fully load the world's entity cache at startup (NOTE: Server will take longer to start up)"/>
+                                                    <CheckBox Style="{StaticResource OptionSwitch}" Grid.Column="1" x:Name="CBCreateFullEntityCache" Click="CBCreateFullEntityCache_Clicked" IsChecked="{Binding EnableFullEntityCacheValue, Mode=OneWay, FallbackValue='False'}" ToolTip="Click to enable the server to fully load the world's entity cache at startup (NOTE: Can reduce lag, but the server will take longer to start up)"/>
 
                                                     <TextBlock Grid.Column="3" Text="Autosave" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
-                                                    <CheckBox Style="{StaticResource OptionSwitch}" Grid.Column="4" x:Name="CBAutoSave" Click="CBLanDiscovery_Clicked" IsChecked="{Binding EnableLanDiscoveryValue, Mode=OneWay, FallbackValue='True'}" ToolTip="Click to enable the server to be discovered by other computers connected to the same network."/>
+                                                    <CheckBox Style="{StaticResource OptionSwitch}" Grid.Column="4" x:Name="CBAutoSave" Click="CBAutoSave_Clicked" IsChecked="{Binding EnableAutosaveValue, Mode=OneWay, FallbackValue='True'}" ToolTip="Click to enable the server to automatically save the world in specified time intervals."/>
 
                                                     <TextBlock Grid.Column="6" Text="Enable Password" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
-                                                    <CheckBox Style="{StaticResource OptionSwitch}" Grid.Column="7" x:Name="CBEnableJoinPassword" Click="CBLanDiscovery_Clicked" IsChecked="{Binding EnableLanDiscoveryValue, Mode=OneWay, FallbackValue='False'}" ToolTip="Click to enable the server to be discovered by other computers connected to the same network."/>
+                                                    <CheckBox Style="{StaticResource OptionSwitch}" Grid.Column="7" x:Name="CBEnableJoinPassword" Click="CBEnableJoinPassword_Clicked" IsChecked="{Binding EnableJoinPasswordValue, Mode=OneWay, FallbackValue='False'}" ToolTip="Click to enable requiring a password to join the world."/>
 
                                                     <!-- Row 2 -->
                                                     <TextBlock Grid.Row="1" Grid.Column="0" Text="Auto Portforward" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
@@ -626,26 +779,26 @@
                                                     <TextBlock Grid.Row="1" Grid.Column="3" Text="Save Interval (s)" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
                                                     <!--<CheckBox Style="{StaticResource OptionSwitch}" Grid.Row="1" Grid.Column="4" x:Name="TBSaveInterval" Click="CBCreateFullEntityCache_Clicked" IsChecked="{Binding EnableFullEntityCacheValue, Mode=OneWay, FallbackValue='False'}" ToolTip="Click to enable the server to fully load the world's entity cache at startup (NOTE: Server will take longer to start up)"/>-->
                                                     <Border  Grid.Row="1" Grid.Column="4" BorderBrush ="Black" Background="Black" BorderThickness="1" CornerRadius="8" Height="24" Width="45">
-                                                        <TextBox x:Name="TBSaveInterval"
+                                                        <TextBox x:Name="TBSaveInterval" MaxLength="7"
                                                             FontSize="12" MaxLines="1" ToolTip="Set the interval that the server saves your world (in seconds)"
                                                             Foreground="#8A8A8A" TextAlignment="Center"
                                                             Background="{x:Null}" BorderBrush="{x:Null}"
-                                                            Margin="4" SelectionBrush="#FF36383A"
+                                                            Margin="4" SelectionBrush="#FF007BFF"
                                                             VerticalAlignment="Center" BorderThickness="0"
-                                                            CaretBrush="White" Width="Auto" Text="{Binding ServerPort, Mode=OneWay, FallbackValue='120'}" LostKeyboardFocus="TBWorldServerPort_Input">
+                                                            CaretBrush="White" Width="Auto" Text="{Binding SaveInterval, Mode=OneWay, FallbackValue='120'}" LostKeyboardFocus="TBSaveInterval_Input">
                                                         </TextBox>
                                                     </Border>
 
-                                                    <TextBlock Grid.Row="1" Grid.Column="6" Text="Join Password" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
+                                                    <TextBlock Grid.Row="1" Grid.Column="6" x:Name="JoinPasswordTitle" Text="Join Password" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
                                                     <!--<CheckBox Style="{StaticResource OptionSwitch}" Grid.Row="1" Grid.Column="7" x:Name="TBJoinPassword" Click="CBCreateFullEntityCache_Clicked" IsChecked="{Binding EnableFullEntityCacheValue, Mode=OneWay, FallbackValue='False'}" ToolTip="Click to enable the server to fully load the world's entity cache at startup (NOTE: Server will take longer to start up)"/>-->
                                                     <Border Grid.Row="1" Grid.Column="6" Grid.ColumnSpan="2" BorderBrush ="Black" Background="Black" BorderThickness="1" CornerRadius="8" Height="24" Width="76" HorizontalAlignment="Right" Margin="0 0 5.7 0">
                                                         <TextBox x:Name="TBJoinPassword"
                                                             FontSize="12" MaxLines="1" ToolTip="Set the password that players will need to join your world."
-                                                            Foreground="#8A8A8A" TextAlignment="Center"
+                                                            Foreground="#8A8A8A" TextAlignment="Left"
                                                             Background="{x:Null}" BorderBrush="{x:Null}"
-                                                            Margin="4" SelectionBrush="#FF36383A"
+                                                            Margin="4" SelectionBrush="#FF007BFF"
                                                             VerticalAlignment="Center" BorderThickness="0"
-                                                            CaretBrush="White" Width="Auto" Text="{Binding ServerPort, Mode=OneWay, FallbackValue=''}" LostKeyboardFocus="TBWorldServerPort_Input">
+                                                            CaretBrush="White" Width="Auto" Text="{Binding JoinPassword, Mode=OneWay, FallbackValue=''}" LostKeyboardFocus="TBJoinPassword_Input">
                                                         </TextBox>
                                                     </Border>
 
@@ -656,7 +809,7 @@
                                                             FontSize="12" MaxLines="1" ToolTip="Set the port number that the server will use with this world. NOTE: It can be the same as every other world."
                                                             Foreground="#8A8A8A" TextAlignment="Center"
                                                             Background="{x:Null}" BorderBrush="{x:Null}"
-                                                            Margin="4" SelectionBrush="#FF36383A"
+                                                            Margin="4" SelectionBrush="#FF007BFF"
                                                             VerticalAlignment="Center" BorderThickness="0"
                                                             CaretBrush="White" Width="Auto" MaxLength="5" Text="{Binding ServerPort, Mode=OneWay, FallbackValue='11000'}" LostKeyboardFocus="TBWorldServerPort_Input">
                                                         </TextBox>

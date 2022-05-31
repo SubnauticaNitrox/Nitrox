@@ -52,7 +52,8 @@ public static class WorldManager
                     WorldName = Path.GetFileName(folder),
                     WorldGamemode = Convert.ToString(serverConfig.GameMode),
                     WorldVersion = $"v{version}",
-                    WorldSaveDir = folder
+                    WorldSaveDir = folder,
+                    IsValidSave = true // DO SAVENUMBER CHECK
                 });
             }
         }
@@ -130,5 +131,6 @@ public static class WorldManager
         public string WorldGamemode {  get; set; }
         public string WorldVersion {  get; set; }
         public string WorldSaveDir { get; set; }
+        public bool IsValidSave { get; set; }
     }
 }
