@@ -104,7 +104,6 @@ namespace NitroxLauncher.Pages
 
                 c.CreateFullEntityCache = EnableFullEntityCacheValue;
                 c.DisableAutoSave = !EnableAutosaveValue;
-                //c.IsPasswordRequired = EnableJoinPasswordValue;
                 c.AutoPortForward = EnableAutoPortForwardValue;
                 c.SaveInterval = SaveInterval*1000;  // Convert seconds to milliseconds
                 c.ServerPassword = JoinPassword;
@@ -184,10 +183,10 @@ namespace NitroxLauncher.Pages
         
         private void GoBack_Click(object sender, RoutedEventArgs e)
         {
-            IsNewWorld = false;
-            IsInSettings = false;
             SaveConfigSettings();
             InitializeWorldListing();
+            IsNewWorld = false;
+            IsInSettings = false;
 
             Storyboard GoBackAnimationStoryboard = (Storyboard)FindResource("GoBackAnimation");
             GoBackAnimationStoryboard.Begin();

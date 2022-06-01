@@ -72,6 +72,8 @@ namespace NitroxServer.Serialization.World
                 Serializer.Serialize(Path.Combine(saveDir, $"WorldData{FileEnding}"), persistedData.WorldData);
                 Serializer.Serialize(Path.Combine(saveDir, $"EntityData{FileEnding}"), persistedData.EntityData);
 
+                config.Update(saveDir, c => c.Seed = persistedData.WorldData.Seed);
+
                 Log.Info("World state saved");
                 return true;
             }
