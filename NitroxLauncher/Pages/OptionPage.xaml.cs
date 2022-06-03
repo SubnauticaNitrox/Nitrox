@@ -4,6 +4,7 @@ using System.Windows;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using NitroxLauncher.Models;
 using NitroxModel.Discovery;
+using NitroxServer.Serialization.World;
 
 namespace NitroxLauncher.Pages
 {
@@ -16,6 +17,7 @@ namespace NitroxLauncher.Pages
         public OptionPage()
         {
             InitializeComponent();
+            SaveFileLocationTextblock.Text = WorldManager.SavesFolderDir;
 
             ArgumentsTextbox.Text = SubnauticaLaunchArguments;
             if (SubnauticaLaunchArguments != LauncherConfig.DEFAULT_LAUNCH_ARGUMENTS)
@@ -96,6 +98,11 @@ namespace NitroxLauncher.Pages
         {
             OnPropertyChanged(nameof(PathToSubnautica));
             OnPropertyChanged(nameof(GamePlatform));
+        }
+
+        private void OnViewFolder_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start(WorldManager.SavesFolderDir);
         }
     }
 }

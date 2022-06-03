@@ -276,7 +276,6 @@
                         </Grid>
 
                         <!-- World List -->
-                        <!-- TODO: Order server listings based on the last one that was used (read times when save files were last edited) -->
                         <Border Grid.Row="1" CornerRadius="12" Background="Black">
                             <Grid>
                                 <Grid x:Name="NoWorldsBackground">
@@ -290,6 +289,7 @@
                                 </Grid>
 
                                 <ListView Name="WorldListingContainer" Background="{x:Null}" BorderBrush="{x:Null}" Margin="5" HorizontalContentAlignment="Stretch" ScrollViewer.CanContentScroll="False">
+                                    
                                     <!-- OPTIONAL - View server listing buttons in Intellisense window -->
                                     <d:ListView.ItemsSource>
                                         <x:Array Type="pages:World_Listing">
@@ -499,15 +499,16 @@
                                     <ColumnDefinition Width="40"/>
                                 </Grid.ColumnDefinitions>
 
+                                <!-- Go Back button -->
                                 <Button Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="Save settings and select a different world" Click="GoBack_Click">
                                     <Image Source="{StaticResource GoBackButton}" Stretch="Uniform" Width="40" Height="40"/>
                                 </Button>
 
                                 <TextBlock Grid.Column="1" Text="World Settings" Foreground="White" VerticalAlignment="Center" FontSize="30" HorizontalAlignment="Center" FontWeight="Bold"/>
 
-                                <!-- Import save file button -->
+                                <!-- Import Save File button -->
                                 <Border x:Name="ImportSaveBtnBorder" Grid.Column="1" Grid.ColumnSpan="2" Background="#FF007BFF" CornerRadius="8" Width="150" HorizontalAlignment="Right" Margin="0 14" Opacity="0">
-                                    <Button x:Name="ImportSaveBtn" Click="ImportSaveBtn_Click" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" IsEnabled="False">
+                                    <Button x:Name="ImportSaveBtn" Click="ImportSaveBtn_Click" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" IsEnabled="False" ToolTip="Import a save file">
                                         <TextBlock Text="Import a save file" FontSize="15"/>
                                     </Button>
                                 </Border>
@@ -721,9 +722,7 @@
 
                                                     <!-- Once other TODOs are done, change these two to < Grid.Row="1" Grid.Column="3" > -->
                                                     <TextBlock Grid.Column="6" Text="Default Perms" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
-                                                    <!--<CheckBox Style="{StaticResource OptionSwitch}" Grid.Row="1" Grid.Column="4" x:Name="DDDefaultPerms" Click="CBCreateFullEntityCache_Clicked" IsChecked="{Binding EnableFullEntityCacheValue, Mode=OneWay, FallbackValue='False'}" ToolTip="Set the permission level that new players will be assigned upon joining."/>-->
                                                     <ComboBox Grid.Column="6" Width="70" Grid.ColumnSpan="2" x:Name="CBBDefaultPerms" BorderThickness="1" Height="24" ToolTip="Set the permission level that new players will be assigned upon joining." HorizontalAlignment="Right" Margin="0 0 5.7 0">
-                                                        <!-- Style="{StaticResource NewStylePls}" Width="70"-->
                                                         <ComboBoxItem Content="Player" IsSelected="True"/>
                                                         <ComboBoxItem Content="Moderator"/>
                                                         <ComboBoxItem Content="Admin"/>
@@ -785,7 +784,6 @@
                                                     <CheckBox Style="{StaticResource OptionSwitch}" Grid.Row="1" Grid.Column="1" x:Name="CBAutoPortForward" Click="CBAutoPortForward_Clicked" IsChecked="{Binding EnableAutoPortForwardValue, Mode=OneWay, FallbackValue='True'}" ToolTip="Click to enable automatic Port Forwarding using UPnP (NOTE: Not all routers support this functionality)"/>
 
                                                     <TextBlock Grid.Row="1" Grid.Column="3" Text="Save Interval (s)" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
-                                                    <!--<CheckBox Style="{StaticResource OptionSwitch}" Grid.Row="1" Grid.Column="4" x:Name="TBSaveInterval" Click="CBCreateFullEntityCache_Clicked" IsChecked="{Binding EnableFullEntityCacheValue, Mode=OneWay, FallbackValue='False'}" ToolTip="Click to enable the server to fully load the world's entity cache at startup (NOTE: Server will take longer to start up)"/>-->
                                                     <Border  Grid.Row="1" Grid.Column="4" BorderBrush ="Black" Background="Black" BorderThickness="1" CornerRadius="8" Height="24" Width="45">
                                                         <TextBox x:Name="TBSaveInterval" MaxLength="7"
                                                             FontSize="12" MaxLines="1" ToolTip="Set the interval that the server saves your world (in seconds)"
@@ -798,7 +796,6 @@
                                                     </Border>
 
                                                     <TextBlock Grid.Row="1" Grid.Column="6" x:Name="JoinPasswordTitle" Text="Join Password" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
-                                                    <!--<CheckBox Style="{StaticResource OptionSwitch}" Grid.Row="1" Grid.Column="7" x:Name="TBJoinPassword" Click="CBCreateFullEntityCache_Clicked" IsChecked="{Binding EnableFullEntityCacheValue, Mode=OneWay, FallbackValue='False'}" ToolTip="Click to enable the server to fully load the world's entity cache at startup (NOTE: Server will take longer to start up)"/>-->
                                                     <Border Grid.Row="1" Grid.Column="6" Grid.ColumnSpan="2" BorderBrush ="Black" Background="Black" BorderThickness="1" CornerRadius="8" Height="24" Width="76" HorizontalAlignment="Right" Margin="0 0 5.7 0">
                                                         <TextBox x:Name="TBJoinPassword"
                                                             FontSize="12" MaxLines="1" ToolTip="Set the password that players will need to join your world."
