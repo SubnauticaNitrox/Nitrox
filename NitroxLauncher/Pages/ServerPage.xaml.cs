@@ -23,24 +23,7 @@ namespace NitroxLauncher.Pages
             set => LauncherLogic.Config.IsExternalServer = value;
         }
 
-        // World settings variables
-        public string SelectedWorldName { get; set; }
-        public string SelectedWorldSeed { get; set; }
-        public string SelectedWorldVersion { get; set; }
-        public ServerGameMode SelectedWorldGamemode { get; set; }
-        // Game Options
-        public bool EnableCheatsValue { get; set; }
-        public int MaxPlayerCap { get; set; }
-        public Perms DefaultPlayerPermsValue { get; set; }
-        // Server Options
-        public bool EnableFullEntityCacheValue { get; set; }
-        public bool EnableAutosaveValue { get; set; }
-        public bool EnableJoinPasswordValue { get; set; }
-        public bool EnableAutoPortForwardValue { get; set; }
-        public int SaveInterval { get; set; }
-        public string JoinPassword { get; set; }
-        public int ServerPort { get; set; }
-        public bool EnableLanDiscoveryValue { get; set; }
+        public ServerConfig Config;
 
         public bool IsNewWorld { get; set; }
         private bool IsInSettings { get; set; }
@@ -79,87 +62,77 @@ namespace NitroxLauncher.Pages
         public void SaveConfigSettings()
         {
             // If world name was changed, rename save folder to match it
-            string dest = Path.Combine(Path.GetDirectoryName(SelectedWorldDirectory) ?? throw new Exception("Selected world is empty"), SelectedWorldName);
+            string dest = Path.Combine(Path.GetDirectoryName(SelectedWorldDirectory) ?? throw new Exception("Selected world is empty"), TBWorldName.Text);
             if (SelectedWorldDirectory != dest)
             {
-                Directory.Move(SelectedWorldDirectory, dest+" temp"); // These two lines are need to handle names that change in
-                Directory.Move(dest+" temp", dest);                   // case, since windows still thinks of the two names as the same
+                Directory.Move(SelectedWorldDirectory, dest+" temp"); // These two lines are needed to handle names that change in capitalization,
+                Directory.Move(dest+" temp", dest);                   // since Windows still thinks of the two names as the same.
                 SelectedWorldDirectory = dest;
             }
 
-            ServerConfig serverConfig = ServerConfig.Load(SelectedWorldDirectory);
-            serverConfig.Update(SelectedWorldDirectory, c =>
+            Config = ServerConfig.Load(SelectedWorldDirectory);
+            Config.Update(SelectedWorldDirectory, c =>
             {
-                c.SaveName = SelectedWorldName;
-                if (IsNewWorld) { c.Seed = SelectedWorldSeed; }
+                c.SaveName = TBWorldName.Text;
+                if (IsNewWorld) { c.Seed = TBWorldSeed.Text; }
                 if (RBFreedom.IsChecked == true) { c.GameMode = ServerGameMode.FREEDOM; }
                 else if (RBSurvival.IsChecked == true) { c.GameMode = ServerGameMode.SURVIVAL; }
                 else if (RBCreative.IsChecked == true) { c.GameMode = ServerGameMode.CREATIVE; }
                 else if (RBHardcore.IsChecked == true) { c.GameMode = ServerGameMode.HARDCORE; }
 
-                c.DisableConsole = !EnableCheatsValue;
-                c.MaxConnections = MaxPlayerCap;
+                c.DisableConsole = !(bool)CBCheats.IsChecked;
+                c.MaxConnections = Convert.ToInt32(TBMaxPlayerCap.Text);
                 if (CBBDefaultPerms.SelectedIndex == 0) { c.DefaultPlayerPerm = Perms.PLAYER; }
                 else if (CBBDefaultPerms.SelectedIndex == 1) { c.DefaultPlayerPerm = Perms.MODERATOR; }
                 else if (CBBDefaultPerms.SelectedIndex == 2) { c.DefaultPlayerPerm = Perms.ADMIN; }
 
-                c.CreateFullEntityCache = EnableFullEntityCacheValue;
-                c.DisableAutoSave = !EnableAutosaveValue;
-                c.AutoPortForward = EnableAutoPortForwardValue;
-                c.SaveInterval = SaveInterval*1000;  // Convert seconds to milliseconds
-                c.ServerPassword = JoinPassword;
-                c.ServerPort = ServerPort;
-                c.LANDiscoveryEnabled = EnableLanDiscoveryValue;
-
+                c.CreateFullEntityCache = (bool)CBCreateFullEntityCache.IsChecked;
+                c.DisableAutoSave = !(bool)CBAutoSave.IsChecked;
+                c.AutoPortForward = (bool)CBAutoPortForward.IsChecked;
+                c.SaveInterval = Convert.ToInt32(TBSaveInterval.Text)*1000;  // Convert seconds to milliseconds
+                if ((bool)CBEnableJoinPassword.IsChecked) { c.ServerPassword = TBJoinPassword.Text; }
+                else { c.ServerPassword = string.Empty; }
+                c.ServerPort = Convert.ToInt32(TBWorldServerPort.Text);
+                c.LANDiscoveryEnabled = (bool)CBLanDiscovery.IsChecked;
             });
-            Log.Info($"Server Config updated");
+
         }
 
         public void UpdateVisualWorldSettings()
         {
-            ServerConfig serverConfig = ServerConfig.Load(SelectedWorldDirectory);
-
-            // Get config file values
-            SelectedWorldName = Path.GetFileName(SelectedWorldDirectory);
-            SelectedWorldSeed = serverConfig.Seed;
-            SelectedWorldGamemode = serverConfig.GameMode;
-
-            EnableCheatsValue = !serverConfig.DisableConsole;
-            MaxPlayerCap = serverConfig.MaxConnections;
-            DefaultPlayerPermsValue = serverConfig.DefaultPlayerPerm;
-
-            EnableFullEntityCacheValue = serverConfig.CreateFullEntityCache;
-            EnableAutosaveValue = !serverConfig.DisableAutoSave;
-            EnableJoinPasswordValue = serverConfig.IsPasswordRequired;
-            EnableAutoPortForwardValue = serverConfig.AutoPortForward;
-            SaveInterval = serverConfig.SaveInterval/1000; // Convert milliseconds to seconds
-            JoinPassword = serverConfig.ServerPassword;
-            ServerPort = serverConfig.ServerPort;
-            EnableLanDiscoveryValue = serverConfig.LANDiscoveryEnabled;
+            Config = ServerConfig.Load(SelectedWorldDirectory);
 
             // Set the world settings values to the server.cfg values
-            TBWorldName.Text = SelectedWorldName;
-            TBWorldSeed.Text = SelectedWorldSeed;
-            if (SelectedWorldGamemode == ServerGameMode.FREEDOM) { RBFreedom.IsChecked = true; }
-            else if (SelectedWorldGamemode == ServerGameMode.SURVIVAL) { RBSurvival.IsChecked = true; }
-            else if (SelectedWorldGamemode == ServerGameMode.CREATIVE) { RBCreative.IsChecked = true; }
-            else if (SelectedWorldGamemode == ServerGameMode.HARDCORE) { RBHardcore.IsChecked = true; }
+            TBWorldName.Text = Path.GetFileName(SelectedWorldDirectory);
+            TBWorldSeed.Text = Config.Seed;
+            if (Config.GameMode == ServerGameMode.FREEDOM) { RBFreedom.IsChecked = true; }
+            else if (Config.GameMode == ServerGameMode.SURVIVAL) { RBSurvival.IsChecked = true; }
+            else if (Config.GameMode == ServerGameMode.CREATIVE) { RBCreative.IsChecked = true; }
+            else if (Config.GameMode == ServerGameMode.HARDCORE) { RBHardcore.IsChecked = true; }
 
-            CBCheats.IsChecked = EnableCheatsValue;
-            TBMaxPlayerCap.Text = Convert.ToString(MaxPlayerCap);
-            if (DefaultPlayerPermsValue == Perms.PLAYER) { CBBDefaultPerms.SelectedIndex = 0; }
-            if (DefaultPlayerPermsValue == Perms.MODERATOR) { CBBDefaultPerms.SelectedIndex = 1; }
-            if (DefaultPlayerPermsValue == Perms.ADMIN) { CBBDefaultPerms.SelectedIndex = 2; }
+            CBCheats.IsChecked = !Config.DisableConsole;
+            TBMaxPlayerCap.Text = Convert.ToString(Config.MaxConnections);
+            if (Config.DefaultPlayerPerm == Perms.PLAYER) { CBBDefaultPerms.SelectedIndex = 0; }
+            if (Config.DefaultPlayerPerm == Perms.MODERATOR) { CBBDefaultPerms.SelectedIndex = 1; }
+            if (Config.DefaultPlayerPerm == Perms.ADMIN) { CBBDefaultPerms.SelectedIndex = 2; }
 
-            CBCreateFullEntityCache.IsChecked = EnableFullEntityCacheValue;
-            CBAutoSave.IsChecked = EnableAutosaveValue;
-            CBEnableJoinPassword.IsChecked = EnableJoinPasswordValue;
-            CBAutoPortForward.IsChecked = EnableAutoPortForwardValue;
-            TBSaveInterval.Text = Convert.ToString(SaveInterval);
-            TBJoinPassword.Text = JoinPassword;
-            if (string.IsNullOrEmpty(JoinPassword)) { TBJoinPassword.IsEnabled = false; JoinPasswordTitle.Opacity = .6; }
-            TBWorldServerPort.Text = Convert.ToString(ServerPort);
-            CBLanDiscovery.IsChecked = EnableLanDiscoveryValue;
+            CBCreateFullEntityCache.IsChecked = Config.CreateFullEntityCache;
+            CBAutoSave.IsChecked = !Config.DisableAutoSave;
+            CBEnableJoinPassword.IsChecked = Config.IsPasswordRequired;
+            CBAutoPortForward.IsChecked = Config.AutoPortForward;
+            TBSaveInterval.Text = Convert.ToString(Config.SaveInterval/1000); // Convert milliseconds to seconds
+            TBJoinPassword.Text = Config.ServerPassword;
+            if (string.IsNullOrEmpty(Config.ServerPassword)) { TBJoinPassword.IsEnabled = false; JoinPasswordTitle.Opacity = .6; }
+            TBWorldServerPort.Text = Convert.ToString(Config.ServerPort);
+            CBLanDiscovery.IsChecked = Config.LANDiscoveryEnabled;
+
+            if (Config.IsPasswordRequired)
+            {
+                TBJoinPassword.Opacity = 1;
+                JoinPasswordTitle.Opacity = 1;
+                TBJoinPassword.IsEnabled = true;
+            }
+
         }
 
         // Pane Buttons
@@ -390,7 +363,7 @@ namespace NitroxLauncher.Pages
             //Log.Info($"Moving \"{SelectedWorldDirectory}\" to the recycling bin at \"{recyleBinDir}\"");
             //Directory.Move(SelectedWorldDirectory, recyleBinDir);
             Directory.Delete(SelectedWorldDirectory, true);
-            Log.Info($"Deleting world \"{SelectedWorldName}\"");
+            Log.Info($"Deleting world \"{Path.GetFileName(SelectedWorldDirectory)}\"");
 
             ConfirmationBox.Opacity = 0;
             ConfirmationBox.IsHitTestVisible = false;
@@ -416,9 +389,11 @@ namespace NitroxLauncher.Pages
             InitializeWorldListing();
         }
 
-        // World settings management (MAY BE ABLE TO REMOVE SOME OF THESE)
+        // World settings management
         private void TBWorldName_Input(object sender, System.Windows.Input.KeyboardFocusChangedEventArgs e)
         {
+            string originalName = Path.GetFileName(SelectedWorldDirectory);
+
             TBWorldName.Text = TBWorldName.Text.TrimStart();
             TBWorldName.Text = TBWorldName.Text.TrimEnd();
 
@@ -449,61 +424,59 @@ namespace NitroxLauncher.Pages
                     Regex rx = new(@"\((\d+)\)$");
                     if (!rx.IsMatch(TBWorldName.Text))
                     {
-                        SelectedWorldName = TBWorldName.Text + $" ({i})";
-                        newSelectedWorldDirectory = Path.Combine(Path.GetDirectoryName(SelectedWorldDirectory) ?? throw new Exception("Selected world is empty"), SelectedWorldName);
+                        originalName = TBWorldName.Text + $" ({i})";
+                        newSelectedWorldDirectory = Path.Combine(Path.GetDirectoryName(SelectedWorldDirectory) ?? throw new Exception("Selected world is empty"), originalName);
                     }
 
                     while (Directory.Exists(newSelectedWorldDirectory) && !newSelectedWorldDirectory.Equals(SelectedWorldDirectory, StringComparison.OrdinalIgnoreCase))
                     {
                         // Increment the number to the end of the name until it reaches an available filename
-                        SelectedWorldName = rx.Replace(SelectedWorldName, $"({i})", 1);
-                        newSelectedWorldDirectory = Path.Combine(Path.GetDirectoryName(SelectedWorldDirectory) ?? throw new Exception("Selected world is empty"), SelectedWorldName);
+                        originalName = rx.Replace(originalName, $"({i})", 1);
+                        newSelectedWorldDirectory = Path.Combine(Path.GetDirectoryName(SelectedWorldDirectory) ?? throw new Exception("Selected world is empty"), originalName);
                         i++;
                     }
 
-                    TBWorldName.Text = SelectedWorldName;
+                    TBWorldName.Text = originalName;
                 }
-                SelectedWorldName = TBWorldName.Text;
+
             }
             else
             {
-                TBWorldName.Text = SelectedWorldName;
+                TBWorldName.Text = originalName;
                 LauncherNotifier.Error($"An empty world name is not valid.");
             }
         }
 
         private void TBWorldSeed_Input(object sender, System.Windows.Input.KeyboardFocusChangedEventArgs e)
         {
+            string originalSeed = Config.Seed;
+            
             TBWorldSeed.Text = TBWorldSeed.Text.TrimStart();
             TBWorldSeed.Text = TBWorldSeed.Text.TrimEnd();
             TBWorldSeed.Text = TBWorldSeed.Text.ToUpper();
 
             if (TBWorldSeed.Text.Length != 10 || !Regex.IsMatch(TBWorldSeed.Text, @"^[a-zA-Z]+$"))
             {
-                TBWorldSeed.Text = SelectedWorldSeed;
+                TBWorldSeed.Text = originalSeed;
                 LauncherNotifier.Error($"World Seeds should contain 10 alphabetical characters (A-Z).");
                 return;
             }
-            
-            SelectedWorldSeed = TBWorldSeed.Text;
-            Log.Info($"World seed set to {SelectedWorldSeed}");
+
+            originalSeed = TBWorldSeed.Text;
+            Log.Info($"World seed set to {originalSeed}");
         }
 
         // Game Options
-        private void CBCheats_Clicked(object sender, RoutedEventArgs e)
-        {
-            EnableCheatsValue = (bool)CBCheats.IsChecked;
-        }
-
         private void TBMaxPlayerCap_Input(object sender, System.Windows.Input.KeyboardFocusChangedEventArgs e)
         {
+            string originalMaxPlayerCap = Convert.ToString(Config.MaxConnections);
+
             TBMaxPlayerCap.Text = TBMaxPlayerCap.Text.TrimStart();
             TBMaxPlayerCap.Text = TBMaxPlayerCap.Text.TrimEnd();
 
-            // Validation...
             if (string.IsNullOrEmpty(TBMaxPlayerCap.Text))
             {
-                TBMaxPlayerCap.Text = Convert.ToString(MaxPlayerCap);
+                TBMaxPlayerCap.Text = originalMaxPlayerCap;
                 LauncherNotifier.Error($"An empty Max Player Cap value is not valid.");
                 return;
             }
@@ -515,7 +488,7 @@ namespace NitroxLauncher.Pages
             }
             catch
             {
-                TBMaxPlayerCap.Text = Convert.ToString(MaxPlayerCap);
+                TBMaxPlayerCap.Text = originalMaxPlayerCap;
                 LauncherNotifier.Error($"Max Player Cap input should only contain numbers.");
                 return;
             }
@@ -523,25 +496,14 @@ namespace NitroxLauncher.Pages
             // Limit save interval value to numbers greater than 0
             if (MaxPlayerCapNum <= 0)
             {
-                TBMaxPlayerCap.Text = Convert.ToString(MaxPlayerCap);
+                TBMaxPlayerCap.Text = originalMaxPlayerCap;
                 LauncherNotifier.Error($"The Max Player Cap value cannot be zero or negative.");
                 return;
             }
 
-            MaxPlayerCap = Convert.ToInt32(TBMaxPlayerCap.Text);
         }
 
         // Server Options
-        private void CBCreateFullEntityCache_Clicked(object sender, RoutedEventArgs e)
-        {
-            EnableFullEntityCacheValue = (bool)CBCreateFullEntityCache.IsChecked;
-        }
-
-        private void CBAutoSave_Clicked(object sender, RoutedEventArgs e)
-        {
-            EnableAutosaveValue = (bool)CBAutoSave.IsChecked;
-        }
-
         private void CBEnableJoinPassword_Clicked(object sender, RoutedEventArgs e)
         {
             if ((bool)CBEnableJoinPassword.IsChecked)
@@ -556,23 +518,19 @@ namespace NitroxLauncher.Pages
                 TBJoinPassword.Opacity = .7;
                 JoinPasswordTitle.Opacity = .6;
                 TBJoinPassword.IsEnabled = false;
-                JoinPassword = string.Empty;
             }
         }
-
-        private void CBAutoPortForward_Clicked(object sender, RoutedEventArgs e)
-        {
-            EnableAutoPortForwardValue = (bool)CBAutoPortForward.IsChecked;
-        }
-
+        
         private void TBSaveInterval_Input(object sender, System.Windows.Input.KeyboardFocusChangedEventArgs e)
         {
+            string originalSaveInterval = Convert.ToString(Config.SaveInterval);
+
             TBSaveInterval.Text = TBSaveInterval.Text.TrimStart();
             TBSaveInterval.Text = TBSaveInterval.Text.TrimEnd();
 
             if (string.IsNullOrEmpty(TBSaveInterval.Text))
             {
-                TBSaveInterval.Text = Convert.ToString(SaveInterval);
+                TBSaveInterval.Text = originalSaveInterval;
                 LauncherNotifier.Error($"An empty Save Interval value is not valid.");
                 return;
             }
@@ -584,7 +542,7 @@ namespace NitroxLauncher.Pages
             }
             catch
             {
-                TBSaveInterval.Text = Convert.ToString(SaveInterval);
+                TBSaveInterval.Text = originalSaveInterval;
                 LauncherNotifier.Error($"Save Interval input should only contain numbers.");
                 return;
             }
@@ -592,12 +550,11 @@ namespace NitroxLauncher.Pages
             // Limit save interval value to numbers greater than 1
             if (SaveIntervalNum < 1)
             {
-                TBSaveInterval.Text = Convert.ToString(SaveInterval);
+                TBSaveInterval.Text = originalSaveInterval;
                 LauncherNotifier.Error($"The Save Interval value must be greater than 1.");
                 return;
             }
 
-            SaveInterval = Convert.ToInt32(TBSaveInterval.Text);
         }
 
         private void TBJoinPassword_Input(object sender, System.Windows.Input.KeyboardFocusChangedEventArgs e)
@@ -612,17 +569,18 @@ namespace NitroxLauncher.Pages
                 JoinPasswordTitle.Opacity = .6;
             }
 
-            JoinPassword = TBJoinPassword.Text;
         }
 
         private void TBWorldServerPort_Input(object sender, System.Windows.Input.KeyboardFocusChangedEventArgs e)
         {
+            string originalServerPort = Convert.ToString(Config.ServerPort);
+
             TBWorldServerPort.Text = TBWorldServerPort.Text.TrimStart();
             TBWorldServerPort.Text = TBWorldServerPort.Text.TrimEnd();
 
             if (string.IsNullOrEmpty(TBWorldServerPort.Text))
             {
-                TBWorldServerPort.Text = Convert.ToString(ServerPort);
+                TBWorldServerPort.Text = originalServerPort;
                 LauncherNotifier.Error($"An empty Server Port value is not valid.");
                 return;
             }
@@ -634,7 +592,7 @@ namespace NitroxLauncher.Pages
             }
             catch
             {
-                TBWorldServerPort.Text = Convert.ToString(ServerPort);
+                TBWorldServerPort.Text = originalServerPort;
                 LauncherNotifier.Error($"Server Port input should only contain numbers.");
                 return;
             }
@@ -642,17 +600,11 @@ namespace NitroxLauncher.Pages
             // Limit the input to numbers in between ports 1024 and 65535
             if (ServerPortNum < 1024 || ServerPortNum > 65535)
             {
-                TBWorldServerPort.Text = Convert.ToString(ServerPort);
+                TBWorldServerPort.Text = originalServerPort;
                 LauncherNotifier.Error($"Only port numbers between 1024 and 65535 are allowed.");
                 return;
             }
 
-            ServerPort = ServerPortNum;
-        }
-
-        private void CBLanDiscovery_Clicked(object sender, RoutedEventArgs e)
-        {
-            EnableLanDiscoveryValue = (bool)CBLanDiscovery.IsChecked;
         }
 
         // TODO
@@ -684,11 +636,6 @@ namespace NitroxLauncher.Pages
                 LauncherNotifier.Error($"This save is an invalid version.");
             }
 
-        }
-
-        public string VersionToString(Version version)
-        {
-            return $"{version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
         }
     }
 

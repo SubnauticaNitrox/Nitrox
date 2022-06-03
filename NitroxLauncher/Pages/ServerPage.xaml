@@ -601,7 +601,7 @@
                                                         Background="{x:Null}" BorderBrush="{x:Null}"
                                                         Margin="13,4,13,4" SelectionBrush="#FF007BFF"
                                                         VerticalAlignment="Center" BorderThickness="0"
-                                                        CaretBrush="White" Width="250" MaxLength="25" Text="{Binding SelectedWorldName, FallbackValue=WorldName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" LostKeyboardFocus="TBWorldName_Input">
+                                                        CaretBrush="White" Width="250" MaxLength="25" Text="WorldName" LostKeyboardFocus="TBWorldName_Input">
                                                     </TextBox>
                                                 </Border>
                                             </StackPanel>
@@ -615,7 +615,7 @@
                                                         Foreground="#8A8A8A" TextAlignment="Left"
                                                         Background="{x:Null}" BorderBrush="{x:Null}"
                                                         Margin="13,4,13,4" SelectionBrush="#FF007BFF"
-                                                        VerticalAlignment="Center" BorderThickness="0" CaretBrush="White" Width="155" MaxLength="10" Text="{Binding SelectedWorldSeed, FallbackValue=WorldSeed, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" LostKeyboardFocus="TBWorldSeed_Input" IsEnabled="{Binding IsNewWorld, FallbackValue=False, Mode=OneWay}"/>
+                                                        VerticalAlignment="Center" BorderThickness="0" CaretBrush="White" Width="155" MaxLength="10" Text="WorldSeed" LostKeyboardFocus="TBWorldSeed_Input" IsEnabled="{Binding IsNewWorld, FallbackValue=False, Mode=OneWay}"/>
                                                 </Border>
                                             </StackPanel>
                                         </Grid>
@@ -697,7 +697,7 @@
 
                                                     <!-- Row 1 -->
                                                     <TextBlock Text="Enable Cheats" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
-                                                    <CheckBox Style="{StaticResource OptionSwitch}" Grid.Column="1" x:Name="CBCheats" Click="CBCheats_Clicked" IsChecked="{Binding EnableCheatsValue, Mode=OneWay, FallbackValue='True'}" ToolTip="Click to enable the use of commands in game (RECOMMENDED FOR NITROX)"/>
+                                                    <CheckBox Style="{StaticResource OptionSwitch}" Grid.Column="1" x:Name="CBCheats" IsChecked="True" ToolTip="Click to enable the use of commands in game (RECOMMENDED FOR NITROX)"/>
 
                                                     <TextBlock Grid.Column="3" Text="Max Players" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
                                                     <Border Grid.Column="4" BorderBrush ="Black" Background="Black" BorderThickness="1" CornerRadius="8" Height="24" Width="45">
@@ -707,7 +707,7 @@
                                                             Background="{x:Null}" BorderBrush="{x:Null}"
                                                             Margin="4" SelectionBrush="#FF007BFF"
                                                             VerticalAlignment="Center" BorderThickness="0"
-                                                            CaretBrush="White" Width="Auto" Text="{Binding MaxPlayerCap, Mode=OneWay, FallbackValue='100'}" LostKeyboardFocus="TBMaxPlayerCap_Input">
+                                                            CaretBrush="White" Width="Auto" Text="100" LostKeyboardFocus="TBMaxPlayerCap_Input">
                                                         </TextBox>
                                                     </Border>
 
@@ -771,17 +771,17 @@
 
                                                     <!-- Row 1 -->
                                                     <TextBlock Grid.Column="0" Text="Load Full World" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
-                                                    <CheckBox Style="{StaticResource OptionSwitch}" Grid.Column="1" x:Name="CBCreateFullEntityCache" Click="CBCreateFullEntityCache_Clicked" IsChecked="{Binding EnableFullEntityCacheValue, Mode=OneWay, FallbackValue='False'}" ToolTip="Click to enable the server to fully load the world's entity cache at startup (NOTE: Can reduce lag, but the server will take longer to start up)"/>
+                                                    <CheckBox Style="{StaticResource OptionSwitch}" Grid.Column="1" x:Name="CBCreateFullEntityCache" IsChecked="False" ToolTip="Click to enable the server to fully load the world's entity cache at startup (NOTE: Can reduce lag, but the server will take longer to start up)"/>
 
                                                     <TextBlock Grid.Column="3" Text="Autosave" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
-                                                    <CheckBox Style="{StaticResource OptionSwitch}" Grid.Column="4" x:Name="CBAutoSave" Click="CBAutoSave_Clicked" IsChecked="{Binding EnableAutosaveValue, Mode=OneWay, FallbackValue='True'}" ToolTip="Click to enable the server to automatically save the world in specified time intervals."/>
+                                                    <CheckBox Style="{StaticResource OptionSwitch}" Grid.Column="4" x:Name="CBAutoSave" IsChecked="True" ToolTip="Click to enable the server to automatically save the world in specified time intervals."/>
 
                                                     <TextBlock Grid.Column="6" Text="Enable Password" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
-                                                    <CheckBox Style="{StaticResource OptionSwitch}" Grid.Column="7" x:Name="CBEnableJoinPassword" Click="CBEnableJoinPassword_Clicked" IsChecked="{Binding EnableJoinPasswordValue, Mode=OneWay, FallbackValue='False'}" ToolTip="Click to enable requiring a password to join the world."/>
+                                                    <CheckBox Style="{StaticResource OptionSwitch}" Grid.Column="7" x:Name="CBEnableJoinPassword" Click="CBEnableJoinPassword_Clicked" IsChecked="False" ToolTip="Click to enable requiring a password to join the world."/>
 
                                                     <!-- Row 2 -->
                                                     <TextBlock Grid.Row="1" Grid.Column="0" Text="Auto Portforward" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
-                                                    <CheckBox Style="{StaticResource OptionSwitch}" Grid.Row="1" Grid.Column="1" x:Name="CBAutoPortForward" Click="CBAutoPortForward_Clicked" IsChecked="{Binding EnableAutoPortForwardValue, Mode=OneWay, FallbackValue='True'}" ToolTip="Click to enable automatic Port Forwarding using UPnP (NOTE: Not all routers support this functionality)"/>
+                                                    <CheckBox Style="{StaticResource OptionSwitch}" Grid.Row="1" Grid.Column="1" x:Name="CBAutoPortForward" IsChecked="True" ToolTip="Click to enable automatic Port Forwarding using UPnP (NOTE: Not all routers support this functionality)"/>
 
                                                     <TextBlock Grid.Row="1" Grid.Column="3" Text="Save Interval (s)" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
                                                     <Border  Grid.Row="1" Grid.Column="4" BorderBrush ="Black" Background="Black" BorderThickness="1" CornerRadius="8" Height="24" Width="45">
@@ -791,7 +791,7 @@
                                                             Background="{x:Null}" BorderBrush="{x:Null}"
                                                             Margin="4" SelectionBrush="#FF007BFF"
                                                             VerticalAlignment="Center" BorderThickness="0"
-                                                            CaretBrush="White" Width="Auto" Text="{Binding SaveInterval, Mode=OneWay, FallbackValue='120'}" LostKeyboardFocus="TBSaveInterval_Input">
+                                                            CaretBrush="White" Width="Auto" Text="120" LostKeyboardFocus="TBSaveInterval_Input">
                                                         </TextBox>
                                                     </Border>
 
@@ -803,7 +803,7 @@
                                                             Background="{x:Null}" BorderBrush="{x:Null}"
                                                             Margin="4" SelectionBrush="#FF007BFF"
                                                             VerticalAlignment="Center" BorderThickness="0"
-                                                            CaretBrush="White" Width="Auto" Text="{Binding JoinPassword, Mode=OneWay, FallbackValue=''}" LostKeyboardFocus="TBJoinPassword_Input">
+                                                            CaretBrush="White" Width="Auto" LostKeyboardFocus="TBJoinPassword_Input">
                                                         </TextBox>
                                                     </Border>
 
@@ -816,12 +816,12 @@
                                                             Background="{x:Null}" BorderBrush="{x:Null}"
                                                             Margin="4" SelectionBrush="#FF007BFF"
                                                             VerticalAlignment="Center" BorderThickness="0"
-                                                            CaretBrush="White" Width="Auto" MaxLength="5" Text="{Binding ServerPort, Mode=OneWay, FallbackValue='11000'}" LostKeyboardFocus="TBWorldServerPort_Input">
+                                                            CaretBrush="White" Width="Auto" MaxLength="5" Text="11000" LostKeyboardFocus="TBWorldServerPort_Input">
                                                         </TextBox>
                                                     </Border>
 
                                                     <TextBlock Grid.Row="2" Grid.Column="3" Text="LAN Discovery" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
-                                                    <CheckBox Style="{StaticResource OptionSwitch}" Grid.Row="2" Grid.Column="4" x:Name="CBLanDiscovery" Click="CBLanDiscovery_Clicked" IsChecked="{Binding EnableLanDiscoveryValue, Mode=OneWay, FallbackValue='True'}" ToolTip="Click to enable the server to be discovered by other computers connected to the same network."/>
+                                                    <CheckBox Style="{StaticResource OptionSwitch}" Grid.Row="2" Grid.Column="4" x:Name="CBLanDiscovery" IsChecked="True" ToolTip="Click to enable the server to be discovered by other computers connected to the same network."/>
 
                                                 </Grid>
                                             </Border>
@@ -969,7 +969,7 @@
                                                         Background="{x:Null}" BorderBrush="{x:Null}"
                                                         Margin="13,4,13,4" SelectionBrush="#FF007BFF"
                                                         VerticalAlignment="Center" BorderThickness="0"
-                                                        CaretBrush="White" MaxLength="25" Text="{Binding SelectedWorldName, FallbackValue=WorldName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" LostKeyboardFocus="TBImportedWorldName_Input">
+                                                        CaretBrush="White" MaxLength="25" LostKeyboardFocus="TBImportedWorldName_Input">
                         </TextBox>
                     </Border>
 
