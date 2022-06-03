@@ -30,7 +30,9 @@ public static class WorldManager
             {
                 try
                 {
-                    if (!ValidateSave(folder))
+                    // Don't add the file to the list if it doesn't validate or contain a "server.cfg" file
+                    string serverConfigFile = Path.Combine(SavesFolderDir, folder, "server.cfg");
+                    if (!ValidateSave(Path.Combine(SavesFolderDir, folder)) || !File.Exists(serverConfigFile))
                     {
                         continue;
                     }
@@ -125,24 +127,38 @@ public static class WorldManager
         return saveDir;
     }
 
-    private static bool ValidateSave(string fileName)
+    public static bool ValidateSave(string saveFileDirectory)
     {
-        // A save file is valid when it's named "save#", has a "server.cfg" file, and has all of the nested save file names in it
-        string saveDir = Path.Combine(SavesFolderDir, fileName);
-        string serverConfigFile = Path.Combine(saveDir, "server.cfg");
-        if (!Directory.Exists(saveDir) || !File.Exists(serverConfigFile))
+        // A save file is valid when it has all of the nested save file names in it
+        if (!Directory.Exists(saveFileDirectory))
         {
             return false;
         }
         foreach (string file in worldFiles)
         {
-            if (!File.Exists(Path.Combine(saveDir, Path.ChangeExtension(file, "json"))) && !File.Exists(Path.Combine(saveDir, Path.ChangeExtension(file, "NITROX"))))
+            if (!File.Exists(Path.Combine(saveFileDirectory, Path.ChangeExtension(file, "json"))) && !File.Exists(Path.Combine(saveFileDirectory, Path.ChangeExtension(file, "NITROX"))))
             {
                 return false;
             }
         }
 
         return true;
+    }
+
+    public static void CopyFilesRecursively(string sourcePath, string targetPath)
+    {
+        //foreach (string dirPath in Directory.GetDirectories(sourcePath, "*", SearchOption.AllDirectories))
+        //{
+        //    Directory.CreateDirectory(dirPath.Replace(sourcePath, targetPath));
+        //}
+
+        Directory.CreateDirectory(targetPath);
+
+        //Copy all the files & Replaces any files with the same name
+        foreach (string newPath in Directory.GetFiles(sourcePath, "*.*", SearchOption.AllDirectories))
+        {
+            File.Copy(newPath, Path.Combine(targetPath, Path.GetFileName(newPath)));
+        }
     }
 
     public class Listing

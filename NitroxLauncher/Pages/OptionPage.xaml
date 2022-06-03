@@ -45,7 +45,7 @@
                         </Grid.ColumnDefinitions>
 
                         <Image Grid.Column="0" Source="{Binding GamePlatform, Converter={converters:PlatformToIconConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, FallbackValue={StaticResource SubnauticaIcon}}"
-                               ToolTip="Welcome aboard captain !"
+                               ToolTip="Welcome aboard, Captain!"
                                Stretch="Uniform"
                                MaxHeight="50"
                                MaxWidth="64">

@@ -58,7 +58,7 @@
         </Style>
 
         <SolidColorBrush x:Key="TextBox.Static.Background" Color="Black"/>
-        
+
         <SolidColorBrush x:Key="ComboBox.Static.Background" Color="Black"/>
         <SolidColorBrush x:Key="ComboBox.Static.Border" Color="Black"/>
         <SolidColorBrush x:Key="ComboBox.Static.Glyph" Color="#FF606060"/>
@@ -125,7 +125,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        
+
         <Style TargetType="{x:Type ComboBox}">
             <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
             <Setter Property="Background" Value="{StaticResource ComboBox.Static.Background}"/>
@@ -410,7 +410,7 @@
                                                         </Grid.RowDefinitions>
 
                                                         <!-- World Settings Button -->
-                                                        <Button ToolTip="Edit the settings of this world" Click="SelectWorld_Click" IsEnabled="{Binding Path=IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}">
+                                                        <Button ToolTip="Edit the settings of this world" Click="SelectedWorldSettings_Click" IsEnabled="{Binding Path=IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}">
                                                             <Image Source="{StaticResource SettingsButton}" Stretch="Uniform"  Width="25" Height="25" Opacity="0.7"/>
                                                         </Button>
 
@@ -505,6 +505,13 @@
                                 </Button>
 
                                 <TextBlock Grid.Column="1" Text="World Settings" Foreground="White" VerticalAlignment="Center" FontSize="30" HorizontalAlignment="Center" FontWeight="Bold"/>
+
+                                <!-- Import save file button -->
+                                <Border x:Name="ImportSaveBtnBorder" Grid.Column="1" Grid.ColumnSpan="2" Background="#FF007BFF" CornerRadius="8" Width="150" HorizontalAlignment="Right" Margin="0 14" Opacity="0">
+                                    <Button x:Name="ImportSaveBtn" Click="ImportSaveBtn_Click" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" IsEnabled="False">
+                                        <TextBlock Text="Import a save file" FontSize="15"/>
+                                    </Button>
+                                </Border>
 
                             </Grid>
 
@@ -716,7 +723,8 @@
                                                     <!-- Once other TODOs are done, change these two to < Grid.Row="1" Grid.Column="3" > -->
                                                     <TextBlock Grid.Column="6" Text="Default Perms" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
                                                     <!--<CheckBox Style="{StaticResource OptionSwitch}" Grid.Row="1" Grid.Column="4" x:Name="DDDefaultPerms" Click="CBCreateFullEntityCache_Clicked" IsChecked="{Binding EnableFullEntityCacheValue, Mode=OneWay, FallbackValue='False'}" ToolTip="Set the permission level that new players will be assigned upon joining."/>-->
-                                                    <ComboBox Grid.Column="6" Width="70" Grid.ColumnSpan="2" x:Name="CBBDefaultPerms" BorderThickness="1" Height="24" ToolTip="Set the permission level that new players will be assigned upon joining." HorizontalAlignment="Right" Margin="0 0 5.7 0">  <!-- Style="{StaticResource NewStylePls}" Width="70"-->
+                                                    <ComboBox Grid.Column="6" Width="70" Grid.ColumnSpan="2" x:Name="CBBDefaultPerms" BorderThickness="1" Height="24" ToolTip="Set the permission level that new players will be assigned upon joining." HorizontalAlignment="Right" Margin="0 0 5.7 0">
+                                                        <!-- Style="{StaticResource NewStylePls}" Width="70"-->
                                                         <ComboBoxItem Content="Player" IsSelected="True"/>
                                                         <ComboBoxItem Content="Moderator"/>
                                                         <ComboBoxItem Content="Admin"/>
@@ -841,20 +849,20 @@
                         <!--<Button Style="{StaticResource LargeButton}" Click="RestoreBackup_Click" ToolTip="Restore a backup of your world" Background="#151516" Height="62" HorizontalAlignment="Stretch" Margin="0 0 15 0" Width="Auto" >
                             <Grid Height="53" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Button}}">
 
-                                --><!-- Grid Definitions --><!--
+                                --> <!-- Grid Definitions --> <!--
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="3.5*"/>
                                 </Grid.ColumnDefinitions>
 
-                                --><!-- Column 1: Delete World Icon --><!--
+                                --> <!-- Column 1: Restore Backup Icon --> <!--
                                 <Grid Background="White" Width="45" HorizontalAlignment="Right">
                                     <Grid.OpacityMask>
                                         <ImageBrush ImageSource="{StaticResource RestoreBackupButton}" Stretch="Uniform"/>
                                     </Grid.OpacityMask>
                                 </Grid>
 
-                                --><!-- Column 2: Delete World Text --><!--
+                                --> <!-- Column 2: Restore Backup Text --> <!--
                                 <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" FontSize="16" FontWeight="Bold" Text="RESTORE BACKUP" />
 
                             </Grid>
@@ -864,23 +872,17 @@
                         <!--<Button Grid.Column="1" Style="{StaticResource LargeButton}" x:Name="StartServerBtn" Click="StartServer_Click" ToolTip="Start the server with chosen options" Background="#FF007BFF" Height="62" HorizontalAlignment="Stretch" Margin="5,0,5,0" Width="Auto" >
                             <Grid Height="53" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Button}}">
 
-                                -->
-                        <!-- Grid Definitions -->
-                        <!--
+                                --> <!-- Grid Definitions --> <!--
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
 
-                                -->
-                        <!-- Column 2: Start Server Text -->
-                        <!--
+                                --> <!-- Column 2: Start Server Text --> <!--
                                 <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" FontSize="16" FontWeight="Bold" Text="START SERVER" />
 
-                                -->
-                        <!-- Column 3: Version Number -->
-                        <!--
+                                --> <!-- Column 3: Version Number --> <!--
                                 <TextBlock Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="12" Text="{Binding LauncherVersion, FallbackValue=Version, Mode=OneTime}" Margin="0 0 5 0" />
 
                             </Grid>
@@ -913,7 +915,7 @@
 
 
                 </Grid>
-                
+
             </Grid>
 
         </Grid>
@@ -922,7 +924,7 @@
 
             <!-- Have all of the background act like the "No" button when clicked -->
             <Button Click="NoConfirmBtn_Click" Background="Black" Opacity=".5" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Grid}}" Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Grid}}" Cursor="Arrow"/>
-            
+
             <Border Background="Black" Height="150" Width="300" BorderThickness="5" BorderBrush="#151516" CornerRadius="20">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -934,11 +936,49 @@
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    
+
                     <TextBlock Grid.ColumnSpan="2" Text="Are you sure you want to delete this world?" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18" TextWrapping="Wrap" TextAlignment="Center" Width="250"/>
 
                     <Button Click="YesConfirmBtn_Click" Grid.Row="1" Style="{StaticResource LargeButton}" Background="#151516" Height="50" Width="100" VerticalAlignment="Top" Content="Yes"/>
                     <Button Click="NoConfirmBtn_Click" Grid.Row="1" Grid.Column="1" Style="{StaticResource LargeButton}" Background="#FF007BFF" Height="50" Width="100" VerticalAlignment="Top" Content="No"/>
+                </Grid>
+            </Border>
+
+        </Grid>
+
+        <Grid x:Name="ImportWorldNameBox" Opacity="0" IsHitTestVisible="False" Grid.RowSpan="2">
+
+            <!-- Have all of the background act like the "Cancel" button when clicked -->
+            <Button Click="ImportedWorldNameCancelBtn_Click" Background="Black" Opacity=".5" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Grid}}" Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Grid}}" Cursor="Arrow"/>
+
+            <Border Background="Black" Height="200" Width="300" BorderThickness="5" BorderBrush="#151516" CornerRadius="20">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.ColumnSpan="2" Text="Set the name of the imported world" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18" TextWrapping="Wrap" TextAlignment="Center" Width="250"/>
+
+                    <Border Grid.ColumnSpan="2" Grid.Row="1" BorderBrush ="#333437" Background="#333437" BorderThickness="1" CornerRadius="8" Margin="0" Height="30" Width="250">
+                        <TextBox x:Name="TBImportedWorldName"
+                                                        FontSize="18" MaxLines="1" ToolTip="Set the world name"
+                                                        Foreground="#8A8A8A" TextAlignment="Left"
+                                                        Background="{x:Null}" BorderBrush="{x:Null}"
+                                                        Margin="13,4,13,4" SelectionBrush="#FF007BFF"
+                                                        VerticalAlignment="Center" BorderThickness="0"
+                                                        CaretBrush="White" MaxLength="25" Text="{Binding SelectedWorldName, FallbackValue=WorldName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" LostKeyboardFocus="TBImportedWorldName_Input">
+                        </TextBox>
+                    </Border>
+
+                    <Button Click="ImportedWorldNameCancelBtn_Click" Grid.Row="2" Style="{StaticResource LargeButton}" Background="#151516" Height="50" Width="100" VerticalAlignment="Top" Content="Cancel" ToolTip="Cancel the save file import"/>
+                    <Button x:Name="ImportedWorldNameContinueBtn" Click="ImportedWorldNameContinueBtn_Click" Grid.Row="2" Grid.Column="1" Style="{StaticResource LargeButton}" Background="#FF007BFF" Height="50" Width="100" VerticalAlignment="Top" Content="Continue" ToolTip="Import the selected save files" Opacity=".6" IsEnabled="False"/>
                 </Grid>
             </Border>
 

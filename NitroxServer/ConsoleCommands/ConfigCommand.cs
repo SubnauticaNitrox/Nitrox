@@ -7,6 +7,7 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Platforms.OS.Shared;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.Serialization;
+using NitroxServer.Serialization.World;
 
 namespace NitroxServer.ConsoleCommands
 {
@@ -29,7 +30,7 @@ namespace NitroxServer.ConsoleCommands
             }
 
             // Save config file if it doesn't exist yet.
-            string saveDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", "saves", serverConfig.SaveName);
+            string saveDir = Path.Combine(WorldManager.SavesFolderDir, serverConfig.SaveName);
             string configFile = Path.Combine(saveDir, serverConfig.FileName);
             if (!File.Exists(configFile))
             {

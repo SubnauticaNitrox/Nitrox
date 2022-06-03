@@ -1,11 +1,12 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using NitroxLauncher.Models;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Server;
@@ -48,7 +49,10 @@ namespace NitroxLauncher.Pages
         private bool IsInSettings { get; set; }
 
         public string SelectedWorldDirectory { get; set; }
-        
+        private string ImportedWorldName { get; set; }
+        private string SelectedWorldImportDirectory { get; set; }
+        private string SelectedServerCfgImportDirectory { get; set; }
+
         public ServerPage()
         {
             InitializeComponent();
@@ -168,6 +172,9 @@ namespace NitroxLauncher.Pages
             IsNewWorld = true;
             TBWorldSeed.IsEnabled = true;
 
+            ImportSaveBtnBorder.Opacity = 1;
+            ImportSaveBtn.IsEnabled = true;
+
             SelectedWorldDirectory = WorldManager.CreateEmptySave("My World");
             UpdateVisualWorldSettings();
 
@@ -188,18 +195,161 @@ namespace NitroxLauncher.Pages
             IsNewWorld = false;
             IsInSettings = false;
 
+            ImportSaveBtnBorder.Opacity = 0;
+            ImportSaveBtn.IsEnabled = false;
+
             Storyboard GoBackAnimationStoryboard = (Storyboard)FindResource("GoBackAnimation");
             GoBackAnimationStoryboard.Begin();
         }
 
+        private void ImportSaveBtn_Click(object sender, RoutedEventArgs e)
+        {
+            // Select save file
+            using (CommonOpenFileDialog dialog = new()
+            {
+                Multiselect = false,
+                InitialDirectory = System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location),
+                EnsurePathExists = true,
+                IsFolderPicker = true,
+                Title = "Select a save file to import"
+            })
+            {
+                if (dialog.ShowDialog() != CommonFileDialogResult.Ok)
+                {
+                    return;
+                }
+                SelectedWorldImportDirectory = Path.GetFullPath(dialog.FileName);
+            }
+            if (!WorldManager.ValidateSave(SelectedWorldImportDirectory))
+            {
+                // Give special warning if game save file is selected
+                if (File.Exists(Path.Combine(SelectedWorldImportDirectory, "gameinfo.json")) && File.Exists(Path.Combine(SelectedWorldImportDirectory, "global-objects.bin")) && File.Exists(Path.Combine(SelectedWorldImportDirectory, "scene-objects.bin")))
+                {
+                    LauncherNotifier.Error("Singleplayer saves cannot be imported and used by Nitrox: Save formats are incompatible.");
+                    return;
+                }
+                LauncherNotifier.Error("Invalid save file selected.");
+                return;
+            }
+
+
+            // Select server.cfg file
+            using (CommonOpenFileDialog dialog = new()
+            {
+                Multiselect = false,
+                EnsurePathExists = true,
+                Title = "Select the server.cfg file to import",
+            })
+            {
+                if (dialog.ShowDialog() != CommonFileDialogResult.Ok)
+                {
+                    return;
+                }
+                SelectedServerCfgImportDirectory = Path.GetFullPath(dialog.FileName);
+            }
+            if (Path.GetFileName(SelectedServerCfgImportDirectory) != "server.cfg")
+            {
+                LauncherNotifier.Error("Invalid file selected. Please select a valid server.cfg file");
+                return;
+            }
+
+
+            // Prompt user for save name
+            ImportedWorldName = Path.GetFileName(SelectedWorldImportDirectory);
+
+            ImportedWorldNameContinueBtn.IsEnabled = false;
+            ImportedWorldNameContinueBtn.Opacity = .6;
+            ImportWorldNameBox.Opacity = 1;
+            ImportWorldNameBox.IsHitTestVisible = true;
+            TBImportedWorldName.Text = "";
+
+        }
+
+        private void TBImportedWorldName_Input(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            TBImportedWorldName.Text = TBImportedWorldName.Text.TrimStart();
+            TBImportedWorldName.Text = TBImportedWorldName.Text.TrimEnd();
+
+            // Make sure the string isn't empty
+            if (!string.IsNullOrEmpty(TBImportedWorldName.Text))
+            {
+                // Make sure the world name is valid as a file name
+                bool isIllegalName = false;
+                char[] illegalChars = Path.GetInvalidFileNameChars();
+                for (int i = 0; !isIllegalName && i < illegalChars.Length; i++)
+                {
+                    isIllegalName = TBImportedWorldName.Text.Contains(illegalChars[i]);
+                }
+
+                if (isIllegalName)
+                {
+                    TBImportedWorldName.Text = string.Join("_", TBImportedWorldName.Text.Split(Path.GetInvalidFileNameChars()));
+                    LauncherNotifier.Error("World names cannot contain these characters: < > : \" / \\ | ? *");
+                }
+
+                // Check that name is not a duplicate if it was changed
+                string newSelectedWorldDirectory = Path.Combine(WorldManager.SavesFolderDir, TBImportedWorldName.Text);
+                if (!TBImportedWorldName.Text.Equals(ImportedWorldName, StringComparison.OrdinalIgnoreCase) && Directory.Exists(newSelectedWorldDirectory))
+                {
+                    LauncherNotifier.Error($"World name \"{TBImportedWorldName.Text}\" already exists.");
+
+                    int i = 1;
+                    Regex rx = new(@"\((\d+)\)$");
+                    if (!rx.IsMatch(TBImportedWorldName.Text))
+                    {
+                        ImportedWorldName = TBImportedWorldName.Text + $" ({i})";
+                        newSelectedWorldDirectory = Path.Combine(WorldManager.SavesFolderDir, ImportedWorldName);
+                    }
+
+                    // If save name still exists, increment the number to the end of the name until it reaches an available filename
+                    while (Directory.Exists(newSelectedWorldDirectory))
+                    {
+                        ImportedWorldName = rx.Replace(ImportedWorldName, $"({i})", 1);
+                        newSelectedWorldDirectory = Path.Combine(WorldManager.SavesFolderDir, ImportedWorldName);
+                        i++;
+                    }
+
+                    TBImportedWorldName.Text = ImportedWorldName;
+                }
+                ImportedWorldName = TBImportedWorldName.Text;
+                ImportedWorldNameContinueBtn.IsEnabled = true;
+                ImportedWorldNameContinueBtn.Opacity = 1;
+            }
+            else
+            {
+                ImportedWorldNameContinueBtn.IsEnabled = false;
+                ImportedWorldNameContinueBtn.Opacity = .6;
+            }
+        }
+
+        private void ImportedWorldNameContinueBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Directory.Delete(SelectedWorldDirectory, true); // Delete the save folder created when the add world button was clicked
+            SelectedWorldDirectory = Path.Combine(WorldManager.SavesFolderDir, ImportedWorldName);
+
+            WorldManager.CopyFilesRecursively(SelectedWorldImportDirectory, SelectedWorldDirectory);
+            File.Copy(SelectedServerCfgImportDirectory, Path.Combine(SelectedWorldDirectory, "server.cfg"));
+
+            UpdateVisualWorldSettings();
+
+            ImportSaveBtnBorder.Opacity = 0;
+            ImportSaveBtn.IsEnabled = false;
+            ImportWorldNameBox.Opacity = 0;
+            ImportWorldNameBox.IsHitTestVisible = false;
+        }
+
+        private void ImportedWorldNameCancelBtn_Click(object sender, RoutedEventArgs e)
+        {
+            ImportWorldNameBox.Opacity = 0;
+            ImportWorldNameBox.IsHitTestVisible = false;
+        }
+
         // World management
-        private void SelectWorld_Click(object sender, RoutedEventArgs e)
+        private void SelectedWorldSettings_Click(object sender, RoutedEventArgs e)
         {
             if (WorldManager.GetSaves().ElementAtOrDefault(WorldListingContainer.SelectedIndex).IsValidSave)
             {
                 TBWorldSeed.IsEnabled = false;
-
-                Log.Info($"World index {WorldListingContainer.SelectedIndex} selected");
 
                 SelectedWorldDirectory = WorldManager.GetSaves().ElementAtOrDefault(WorldListingContainer.SelectedIndex)?.WorldSaveDir ?? "";
 
@@ -213,6 +363,12 @@ namespace NitroxLauncher.Pages
                 LauncherNotifier.Error($"This save is not a valid version.");
             }
         }
+
+        // Restore Backup Button(WIP)
+        //private void RestoreBackup_Click(object sender, RoutedEventArgs e)
+        //{
+
+        //}
 
         private void DeleteWorld_Click(object sender, RoutedEventArgs e)
         {
@@ -234,6 +390,7 @@ namespace NitroxLauncher.Pages
             IsNewWorld = false;
 
             Directory.Delete(SelectedWorldDirectory, true);
+            //Directory.Move(SelectedWorldDirectory, Path.Combine("C:", "$Recycle.Bin"));
             Log.Info($"Deleting world \"{SelectedWorldName}\"");
 
             ConfirmationBox.Opacity = 0;
@@ -241,6 +398,10 @@ namespace NitroxLauncher.Pages
 
             if (IsInSettings)
             {
+                IsNewWorld = false;
+                ImportSaveBtnBorder.Opacity = 0;
+                ImportSaveBtn.IsEnabled = false;
+
                 Storyboard GoBackAnimationStoryboard = (Storyboard)FindResource("GoBackAnimation");
                 GoBackAnimationStoryboard.Begin();
             }
@@ -256,7 +417,7 @@ namespace NitroxLauncher.Pages
             InitializeWorldListing();
         }
 
-        // World settings management (MAY REMOVE THESE)
+        // World settings management (MAY BE ABLE TO REMOVE SOME OF THESE)
         private void TBWorldName_Input(object sender, System.Windows.Input.KeyboardFocusChangedEventArgs e)
         {
             TBWorldName.Text = TBWorldName.Text.TrimStart();
@@ -495,7 +656,6 @@ namespace NitroxLauncher.Pages
             EnableLanDiscoveryValue = (bool)CBLanDiscovery.IsChecked;
         }
 
-
         // TODO
         //private void ViewModsPlugins_Click(object sender, RoutedEventArgs e)
         //{
@@ -522,23 +682,15 @@ namespace NitroxLauncher.Pages
             }
             else
             {
-                LauncherNotifier.Error($"This save is not a valid version.");
+                LauncherNotifier.Error($"This save is an invalid version.");
             }
 
         }
-
-        // Restore Backup Button(WIP)
-        private void RestoreBackup_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
 
         public string VersionToString(Version version)
         {
             return $"{version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
         }
-
     }
     // Uncomment to view intellisense world listings, in addition to the commented out lines that are in the ListView in ServerPage.xaml
     public class World_Listing
