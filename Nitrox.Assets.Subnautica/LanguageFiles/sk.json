@@ -3,6 +3,7 @@
     "Nitrox_AddServer_AddressDescription": "Hostiteľ:",
     "Nitrox_AddServer_AddressPlaceholder": "Zadaj IP adresu servera",
     "Nitrox_AddServer_Confirm": "Vytvoriť server",
+    "Nitrox_AddServer_CreatedSuccessful": "",
     "Nitrox_AddServer_InvalidInput": "Tvoje údaje sú neplatné. Skontroluj, či sú vyplnené všetky textové polia.",
     "Nitrox_AddServer_NameDescription": "Názov:",
     "Nitrox_AddServer_NamePlaceholder": "Zadaj názov serveru",
