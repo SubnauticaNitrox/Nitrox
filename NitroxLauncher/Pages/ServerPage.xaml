@@ -290,8 +290,7 @@
                                 </Grid>
 
                                 <ListView Name="WorldListingContainer" Background="{x:Null}" BorderBrush="{x:Null}" Margin="5" HorizontalContentAlignment="Stretch" ScrollViewer.CanContentScroll="False">
-                                    <!-- TEMPORARY - View server listing buttons in Intellisense window -->
-                                    <!-- Must also uncomment the "World_Listing" class at the bottom of ServerPage.xaml.cs to view these in intellisense -->
+                                    <!-- OPTIONAL - View server listing buttons in Intellisense window -->
                                     <d:ListView.ItemsSource>
                                         <x:Array Type="pages:World_Listing">
                                             <pages:World_Listing WorldName = "Survival w/ friends" WorldGamemode = "Survival" WorldVersion = "v1.6.0.0" IsValidSave = "True"/>

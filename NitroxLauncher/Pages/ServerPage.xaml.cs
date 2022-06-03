@@ -17,14 +17,11 @@ namespace NitroxLauncher.Pages
 {
     public partial class ServerPage : PageBase
     {
-        public string LauncherVersion => $"{LauncherLogic.ReleasePhase} v{LauncherLogic.Version}";
         public bool IsServerExternal
         {
             get => LauncherLogic.Config.IsExternalServer;
             set => LauncherLogic.Config.IsExternalServer = value;
         }
-        
-        public string PathToSubnautica => LauncherLogic.Config.SubnauticaPath;
 
         // World settings variables
         public string SelectedWorldName { get; set; }
@@ -327,7 +324,7 @@ namespace NitroxLauncher.Pages
             Directory.Delete(SelectedWorldDirectory, true); // Delete the save folder created when the add world button was clicked
             SelectedWorldDirectory = Path.Combine(WorldManager.SavesFolderDir, ImportedWorldName);
 
-            WorldManager.CopyFilesRecursively(SelectedWorldImportDirectory, SelectedWorldDirectory);
+            WorldManager.CopyDirectory(SelectedWorldImportDirectory, SelectedWorldDirectory);
             File.Copy(SelectedServerCfgImportDirectory, Path.Combine(SelectedWorldDirectory, "server.cfg"));
 
             UpdateVisualWorldSettings();
@@ -389,8 +386,10 @@ namespace NitroxLauncher.Pages
             }
             IsNewWorld = false;
 
+            //string recyleBinDir = Path.Combine("C:\\", "$Recycle.Bin", UserPrincipal.Current.Sid.ToString());
+            //Log.Info($"Moving \"{SelectedWorldDirectory}\" to the recycling bin at \"{recyleBinDir}\"");
+            //Directory.Move(SelectedWorldDirectory, recyleBinDir);
             Directory.Delete(SelectedWorldDirectory, true);
-            //Directory.Move(SelectedWorldDirectory, Path.Combine("C:", "$Recycle.Bin"));
             Log.Info($"Deleting world \"{SelectedWorldName}\"");
 
             ConfirmationBox.Opacity = 0;
@@ -692,13 +691,13 @@ namespace NitroxLauncher.Pages
             return $"{version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
         }
     }
-    // Uncomment to view intellisense world listings, in addition to the commented out lines that are in the ListView in ServerPage.xaml
+
+    // OPTIONAL - Only used to view world listings in intellisense, in addition to the lines that are in the ListView definition in ServerPage.xaml
     public class World_Listing
     {
         public string WorldName { get; set; }
         public string WorldGamemode { get; set; }
         public string WorldVersion { get; set; }
-        public string WorldSaveDir { get; set; }
         public bool IsValidSave { get; set; }
     }
 }

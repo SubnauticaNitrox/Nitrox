@@ -70,7 +70,8 @@ public static class WorldManager
                         WorldGamemode = Convert.ToString(serverConfig.GameMode),
                         WorldVersion = $"v{version}",
                         WorldSaveDir = folder,
-                        IsValidSave = IsValidVersion
+                        IsValidSave = IsValidVersion,
+                        FileLastAccessed = File.GetLastWriteTime(Path.Combine(folder, $"WorldData{fileEnding}"))
                     });
                 }
                 catch 
@@ -78,6 +79,8 @@ public static class WorldManager
                     Log.Error($"World could not be processed");
                 }
             }
+            // Order listing based on FileLastAccessed time
+            savesCache.Sort((x,y) => y.FileLastAccessed.CompareTo(x.FileLastAccessed));
         }
         return savesCache;
     }
@@ -145,13 +148,8 @@ public static class WorldManager
         return true;
     }
 
-    public static void CopyFilesRecursively(string sourcePath, string targetPath)
+    public static void CopyDirectory(string sourcePath, string targetPath)
     {
-        //foreach (string dirPath in Directory.GetDirectories(sourcePath, "*", SearchOption.AllDirectories))
-        //{
-        //    Directory.CreateDirectory(dirPath.Replace(sourcePath, targetPath));
-        //}
-
         Directory.CreateDirectory(targetPath);
 
         //Copy all the files & Replaces any files with the same name
@@ -168,5 +166,6 @@ public static class WorldManager
         public string WorldVersion {  get; set; }
         public string WorldSaveDir { get; set; }
         public bool IsValidSave { get; set; }
+        public DateTime FileLastAccessed { get; set; }
     }
 }
