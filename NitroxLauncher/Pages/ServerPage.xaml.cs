@@ -449,24 +449,24 @@ namespace NitroxLauncher.Pages
 
         private void TBWorldSeed_Input(object sender, System.Windows.Input.KeyboardFocusChangedEventArgs e)
         {
-            string originalSeed = Config.Seed;
-            
-            TBWorldSeed.Text = TBWorldSeed.Text.TrimStart();
-            TBWorldSeed.Text = TBWorldSeed.Text.TrimEnd();
-            TBWorldSeed.Text = TBWorldSeed.Text.ToUpper();
-
-            if (TBWorldSeed.Text.Length != 10 || !Regex.IsMatch(TBWorldSeed.Text, @"^[a-zA-Z]+$"))
+            if (TBWorldSeed.Text.Length != 0)
             {
-                TBWorldSeed.Text = originalSeed;
-                LauncherNotifier.Error($"World Seeds should contain 10 alphabetical characters (A-Z).");
-                return;
-            }
+                string originalSeed = Config.Seed;
 
-            originalSeed = TBWorldSeed.Text;
-            Log.Info($"World seed set to {originalSeed}");
+                TBWorldSeed.Text = TBWorldSeed.Text.TrimStart();
+                TBWorldSeed.Text = TBWorldSeed.Text.TrimEnd();
+                TBWorldSeed.Text = TBWorldSeed.Text.ToUpper();
+
+                if (TBWorldSeed.Text.Length != 10 || !Regex.IsMatch(TBWorldSeed.Text, @"^[a-zA-Z]+$"))
+                {
+                    TBWorldSeed.Text = originalSeed;
+                    LauncherNotifier.Error($"World Seeds should contain 10 alphabetical characters (A-Z).");
+                    return;
+                }
+
+            }
         }
 
-        // Game Options
         private void TBMaxPlayerCap_Input(object sender, System.Windows.Input.KeyboardFocusChangedEventArgs e)
         {
             string originalMaxPlayerCap = Convert.ToString(Config.MaxConnections);
@@ -503,7 +503,6 @@ namespace NitroxLauncher.Pages
 
         }
 
-        // Server Options
         private void CBEnableJoinPassword_Clicked(object sender, RoutedEventArgs e)
         {
             if ((bool)CBEnableJoinPassword.IsChecked)
@@ -613,7 +612,6 @@ namespace NitroxLauncher.Pages
         //    // Redirect user to the "Mods" tab of the launcher (for future reference if mod support is added) so that they can enable/disable mods
         //}
 
-        // Start server button management
         private void StartServer_Click(object sender, RoutedEventArgs e)
         {
             SelectedWorldDirectory = WorldManager.GetSaves().ElementAtOrDefault(WorldListingContainer.SelectedIndex)?.WorldSaveDir ?? "";
