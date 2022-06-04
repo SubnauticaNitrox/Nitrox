@@ -31,7 +31,7 @@ namespace NitroxClient.Communication.Packets.Processors
             GameObject vehicleDockingBayGo = NitroxEntity.RequireObjectFrom(packet.DockId);
 
             Vehicle vehicle = vehicleGo.RequireComponent<Vehicle>();
-            VehicleDockingBay vehicleDockingBay = vehicleDockingBayGo.RequireComponentInChildren<VehicleDockingBay>();
+            VehicleDockingBay vehicleDockingBay = vehicleDockingBayGo.RequireComponent<VehicleDockingBay>();
 
             using (packetSender.Suppress<VehicleDocking>())
             {

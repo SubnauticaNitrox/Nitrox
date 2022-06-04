@@ -455,17 +455,8 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastVehicleDocking(VehicleDockingBay dockingBay, Vehicle vehicle)
         {
-            SubRoot subRoot = dockingBay.GetSubRoot();
-            NitroxId dockId;
+            NitroxId dockId = NitroxEntity.GetId(dockingBay.gameObject);
 
-            if (subRoot is BaseRoot)
-            {
-                dockId = NitroxEntity.GetId(dockingBay.GetComponentInParent<BaseDeconstructable>().gameObject);
-            }
-            else // cyclops
-            {
-                dockId = NitroxEntity.GetId(subRoot.gameObject);
-            }
 
             NitroxId vehicleId = NitroxEntity.GetId(vehicle.gameObject);
             ushort playerId = multiplayerSession.Reservation.PlayerId;
@@ -480,20 +471,7 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastVehicleUndocking(VehicleDockingBay dockingBay, Vehicle vehicle, bool undockingStart)
         {
-            NitroxId dockId;
-
-            if (dockingBay.GetSubRoot() is BaseRoot)
-            {
-                dockId = NitroxEntity.GetId(dockingBay.GetComponentInParent<BaseRoot>().gameObject);
-            }
-            else if (dockingBay.GetSubRoot() is SubRoot)
-            {
-                dockId = NitroxEntity.GetId(dockingBay.GetSubRoot().gameObject);
-            }
-            else
-            {
-                dockId = NitroxEntity.GetId(dockingBay.GetComponentInParent<ConstructableBase>().gameObject);
-            }
+            NitroxId dockId = NitroxEntity.GetId(dockingBay.gameObject);
 
             NitroxId vehicleId = NitroxEntity.GetId(vehicle.gameObject);
             ushort playerId = multiplayerSession.Reservation.PlayerId;
