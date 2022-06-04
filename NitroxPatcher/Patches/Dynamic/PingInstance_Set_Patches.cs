@@ -23,9 +23,9 @@ public class PingInstance_Set_Patches : NitroxPatch, IDynamicPatch
             return;
         }
         
-        if (PlayerPreferencesInitialSyncProcessor.TryGetKeyForPingInstance(__instance, out string pingKey, out bool isRemotePlayerPing))
+        if (PlayerPreferencesInitialSyncProcessor.TryGetKeyForPingInstance(__instance, out string pingKey, out bool _))
         {
-            UpdatePingInstancePreference(pingKey, __instance.visible, index);
+            Resolve<IPacketSender>().Send(new SignalPingPreferenceChanged(pingKey, __instance.visible, index));
         }
     }
 
@@ -37,15 +37,10 @@ public class PingInstance_Set_Patches : NitroxPatch, IDynamicPatch
             return;
         }
 
-        if (PlayerPreferencesInitialSyncProcessor.TryGetKeyForPingInstance(__instance, out string pingKey, out bool isRemotePlayerPing))
+        if (PlayerPreferencesInitialSyncProcessor.TryGetKeyForPingInstance(__instance, out string pingKey, out bool _))
         {
-            UpdatePingInstancePreference(pingKey, visible, __instance.colorIndex);
+            Resolve<IPacketSender>().Send(new SignalPingPreferenceChanged(pingKey, visible, __instance.colorIndex));
         }
-    }
-
-    private static void UpdatePingInstancePreference(string pingKey, bool visible, int color)
-    {
-        Resolve<IPacketSender>().Send(new SignalPingPreferenceChanged(pingKey, visible, color));
     }
 
     public override void Patch(Harmony harmony)

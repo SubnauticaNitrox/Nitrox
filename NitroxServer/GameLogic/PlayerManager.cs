@@ -201,7 +201,7 @@ namespace NitroxServer.GameLogic
                     new List<EquippedItemData>(),
                     new List<EquippedItemData>(),
                     new HashSet<string>(),
-                    new()
+                    new Dictionary<string, PingInstancePreference>()
                 );
                 allPlayersByName[playerContext.PlayerName] = player;
             }

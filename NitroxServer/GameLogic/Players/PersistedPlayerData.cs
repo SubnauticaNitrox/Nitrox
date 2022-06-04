@@ -90,7 +90,7 @@ namespace NitroxServer.GameLogic.Players
                 NitroxId = player.GameObjectId,
                 IsPermaDeath = player.IsPermaDeath,
                 CompletedGoals = new(player.CompletedGoals),
-                PingInstancePreferences = player.PingInstancePreferences
+                PingInstancePreferences = new(player.PingInstancePreferences)
             };
         }
     }

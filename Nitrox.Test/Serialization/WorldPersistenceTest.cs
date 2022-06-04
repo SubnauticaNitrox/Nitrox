@@ -331,11 +331,12 @@ namespace NitroxTest.Serialization
                     Assert.AreEqual(playerData.NitroxId, playerDataAfter.NitroxId, $"PlayerData.Players.NitroxId is not equal while using {serverSerializers[serializerIndex]}.");
                     Assert.AreEqual(playerData.IsPermaDeath, playerDataAfter.IsPermaDeath, $"PlayerData.Players.IsFurniture is not equal while using {serverSerializers[serializerIndex]}.");
 
+                    Assert.AreEqual(playerData.PingInstancePreferences.Count, playerDataAfter.PingInstancePreferences.Count, $"PlayerData.Players.PingInstancePreferences is not equal while using {serverSerializers[serializerIndex]}.");
                     foreach (string pingKey in playerData.PingInstancePreferences.Keys)
                     {
-                        Assert.AreEqual(playerData.PingInstancePreferences[pingKey], playerDataAfter.PingInstancePreferences[pingKey], $"PlayerData.Players.PingInstancePreferences is not equal while using {serverSerializers[serializerIndex]}.");
+                        Assert.IsTrue(playerData.PingInstancePreferences[pingKey].Color == playerDataAfter.PingInstancePreferences[pingKey].Color &&
+                                      playerData.PingInstancePreferences[pingKey].Visible == playerDataAfter.PingInstancePreferences[pingKey].Visible, $"PlayerData.Players.PingInstancePreferences is not equal while using {serverSerializers[serializerIndex]}.");
                     }
-                    Assert.AreEqual(playerData.PingInstancePreferences.Count, playerDataAfter.PingInstancePreferences.Count, $"PlayerData.Players.PingInstancePreferences is not equal while using {serverSerializers[serializerIndex]}.");
                 }
             }
         }
