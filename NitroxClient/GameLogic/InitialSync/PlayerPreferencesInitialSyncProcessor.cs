@@ -42,7 +42,7 @@ public class PlayerPreferencesInitialSyncProcessor : InitialSyncProcessor
     {
         void updateInstance(PingInstance instance)
         {
-            ModifyPingInstanceIfPossible(instance, preferences);
+            ModifyPingInstanceIfPossible(instance, preferences, () => updateInstance(instance));
             RefreshPingEntryInPDA(instance);
         }
         
@@ -53,9 +53,10 @@ public class PlayerPreferencesInitialSyncProcessor : InitialSyncProcessor
     /// <summary>
     /// Updateds the given pingInstance if it has a specified preference
     /// </summary>
-    private void ModifyPingInstanceIfPossible(PingInstance pingInstance, Dictionary<string, PingInstancePreference> preferences)
+    private void ModifyPingInstanceIfPossible(PingInstance pingInstance, Dictionary<string, PingInstancePreference> preferences, Action callback)
     {
-        if (TryGetKeyForPingInstance(pingInstance, out string pingKey, out bool isRemotePlayerPing) && preferences.TryGetValue(pingKey, out PingInstancePreference preference))
+        if (TryGetKeyForPingInstance(pingInstance, out string pingKey, out bool isRemotePlayerPing, callback)
+            && preferences.TryGetValue(pingKey, out PingInstancePreference preference))
         {
             using (packetSender.Suppress<SignalPingPreferenceChanged>())
             {
@@ -91,12 +92,18 @@ public class PlayerPreferencesInitialSyncProcessor : InitialSyncProcessor
     /// <summary>
     /// Retrieves the identifier of a PingInstance depending on its type and container
     /// </summary>
-    public static bool TryGetKeyForPingInstance(PingInstance pingInstance, out string pingKey, out bool isRemotePlayerPing)
+    public static bool TryGetKeyForPingInstance(PingInstance pingInstance, out string pingKey, out bool isRemotePlayerPing, Action failCallback = null)
     {
         isRemotePlayerPing = false;
         if (pingInstance.TryGetComponent(out SignalPing signalPing))
         {
             pingKey = signalPing.descriptionKey;
+            // Sometimes, the SignalPing will not have loaded properly so we need to postpone the key detection
+            if (pingKey == null)
+            {
+                pingInstance.StartCoroutine(DelayPingKeyDetection(failCallback));
+                return false;
+            }
             return true;
         }
         if (pingInstance.TryGetComponent(out NitroxEntity nitroxEntity))
@@ -120,6 +127,12 @@ public class PlayerPreferencesInitialSyncProcessor : InitialSyncProcessor
         Log.Warn($"Couldn't find PingInstance identifier for {pingInstance.name} under {pingInstance.transform.parent}");
         pingKey = string.Empty;
         return false;
+    }
+
+    private static IEnumerator DelayPingKeyDetection(Action delayedAction)
+    {
+        yield return new WaitForSeconds(0.5f);
+        delayedAction();
     }
 
     private static bool TryGetComponentInAscendance<T>(Transform transform, int degree, out T component)
