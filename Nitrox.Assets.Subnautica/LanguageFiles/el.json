@@ -49,6 +49,7 @@
     "Nitrox_LoadingScreenWarn": "Αναμένετε σφάλματα που θα σπάσουν το παιχνίδι",
     "Nitrox_LostConnection": "Χάθηκε η σύνδεση με τον διακομιστή του παιχνιδιού",
     "Nitrox_LostConnectionWarn": "Δεν υπάρχει σύνδεση με τον διακομιστή",
+    "Nitrox_MissingPermission": "",
     "Nitrox_Multiplayer": "Multiplayer",
     "Nitrox_MultiplayerLoaded": "Φόρτωση προγράμματος-πελάτη για πολλούς παίκτες…",
     "Nitrox_Mute": "Σίγαση {PLAYER}",
