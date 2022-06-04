@@ -180,6 +180,7 @@ namespace NitroxClient.GameLogic
         {
             if (EscapePod != newEscapePod)
             {
+                SkyEnvironmentChanged.Broadcast(Body, newEscapePod);
                 if (newEscapePod)
                 {
                     Attach(newEscapePod.transform, true);
