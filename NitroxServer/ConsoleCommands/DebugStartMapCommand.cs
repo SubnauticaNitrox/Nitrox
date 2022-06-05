@@ -5,6 +5,7 @@ using NitroxModel.DataStructures.Unity;
 using NitroxModel.Packets;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.GameLogic;
+using NitroxServer.Helper;
 
 namespace NitroxServer.ConsoleCommands
 {

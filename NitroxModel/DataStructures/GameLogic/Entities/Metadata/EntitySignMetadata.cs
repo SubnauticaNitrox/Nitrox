@@ -1,31 +1,26 @@
 ﻿using System;
-using ProtoBufNet;
+using NitroxModel.Serialization;
 
 namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 
 [Serializable]
-[ProtoContract]
+[JsonContractTransition]
 public class EntitySignMetadata : EntityMetadata
 {
-    [ProtoMember(1)]
+    [JsonMemberTransition]
     public string Text { get; set; }
 
-    [ProtoMember(2)]
+    [JsonMemberTransition]
     public int ColorIndex { get; set; }
 
-    [ProtoMember(3)]
+    [JsonMemberTransition]
     public int ScaleIndex { get; set; }
 
-    [ProtoMember(4)]
+    [JsonMemberTransition]
     public bool[] Elements { get; set; }
 
-    [ProtoMember(5)]
+    [JsonMemberTransition]
     public bool Background { get; set; }
-
-    protected EntitySignMetadata()
-    {
-        //Constructor for serialization. Has to be "protected" for json serialization.
-    }
 
     public EntitySignMetadata(string text, int colorIndex, int scaleIndex, bool[] elements, bool background)
     {
@@ -38,6 +33,6 @@ public class EntitySignMetadata : EntityMetadata
 
     public override string ToString()
     {
-        return $"[EntitySignMetadata - Text: {Text}, ColorIndex: {ColorIndex}, ScaleIndex: {ScaleIndex}, Elements: {Elements}, Background: {Background}]";
+        return $"[EntitySignMetadata - Text: {Text}, ColorIndex: {ColorIndex}, ScaleIndex: {ScaleIndex}, Elements: {string.Join("; ", Elements)}, Background: {Background}]";
     }
 }

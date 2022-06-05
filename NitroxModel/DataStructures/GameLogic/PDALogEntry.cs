@@ -1,32 +1,26 @@
 ﻿using System;
-using ProtoBufNet;
+using NitroxModel.Serialization;
 
-namespace NitroxModel.DataStructures.GameLogic
+namespace NitroxModel.DataStructures.GameLogic;
+
+[Serializable]
+[JsonContractTransition]
+public class PDALogEntry
 {
-    [Serializable]
-    [ProtoContract]
-    public class PDALogEntry
+    [JsonMemberTransition]
+    public string Key;
+
+    [JsonMemberTransition]
+    public float Timestamp;
+
+    public PDALogEntry(string key, float timestamp)
     {
-        [ProtoMember(1)]
-        public string Key;
+        Key = key;
+        Timestamp = timestamp;
+    }
 
-        [ProtoMember(2)]
-        public float Timestamp;
-
-        protected PDALogEntry()
-        {
-            // Constructor for serialization. Has to be "protected" for json serialization.
-        }
-
-        public PDALogEntry(string key, float timestamp)
-        {
-            Key = key;
-            Timestamp = timestamp;
-        }
-
-        public override string ToString()
-        {
-            return $"{nameof(Key)}: {Key}, {nameof(Timestamp)}: {Timestamp}";
-        }
+    public override string ToString()
+    {
+        return $"[PDALogEntry - Key: {Key}, Timestamp: {Timestamp}]";
     }
 }

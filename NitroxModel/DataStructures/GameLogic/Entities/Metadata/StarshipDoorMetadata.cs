@@ -1,31 +1,25 @@
 ﻿using System;
-using ProtoBufNet;
+using NitroxModel.Serialization;
 
-namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata
+namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata;
+
+[Serializable]
+[JsonContractTransition]
+public class StarshipDoorMetadata : EntityMetadata
 {
-    [Serializable]
-    [ProtoContract]
-    public class StarshipDoorMetadata : EntityMetadata
+    [JsonMemberTransition]
+    public bool DoorLocked { get; }
+    [JsonMemberTransition]
+    public bool DoorOpen { get; }
+
+    public StarshipDoorMetadata(bool doorLocked, bool doorOpen)
     {
-        [ProtoMember(1)]
-        public bool DoorLocked { get; }
-        [ProtoMember(2)]
-        public bool DoorOpen { get; }
+        DoorLocked = doorLocked;
+        DoorOpen = doorOpen;
+    }
 
-        protected StarshipDoorMetadata()
-        {
-            //Constructor for serialization. Has to be "protected" for json serialization.
-        }
-
-        public StarshipDoorMetadata(bool doorLocked, bool doorOpen)
-        {
-            DoorLocked = doorLocked;
-            DoorOpen = doorOpen;
-        }
-
-        public override string ToString()
-        {
-            return $"[StarshipDoorMetadata DoorLocked: {DoorLocked} DoorOpen: {DoorOpen}]";
-        }
+    public override string ToString()
+    {
+        return $"[StarshipDoorMetadata - DoorLocked: {DoorLocked} DoorOpen: {DoorOpen}]";
     }
 }

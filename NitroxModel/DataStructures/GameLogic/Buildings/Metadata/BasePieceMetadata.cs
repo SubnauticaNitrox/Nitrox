@@ -1,11 +1,10 @@
 ﻿using System;
-using ProtoBufNet;
+using NitroxModel.Serialization;
 
-namespace NitroxModel.DataStructures.GameLogic.Buildings.Metadata
+namespace NitroxModel.DataStructures.GameLogic.Buildings.Metadata;
+
+[Serializable]
+[JsonContractTransition]
+public abstract class BasePieceMetadata
 {
-    [Serializable]
-    [ProtoContract, ProtoInclude(50, typeof(SignMetadata))]
-    public abstract class BasePieceMetadata
-    {
-    }
 }

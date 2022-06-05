@@ -3,12 +3,10 @@ using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
-using ProtoBufNet;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
-    [ProtoContract]
     public class LiveMixinHealthChanged : Packet
     {
         public Optional<DamageTakenData> DamageTakenData;

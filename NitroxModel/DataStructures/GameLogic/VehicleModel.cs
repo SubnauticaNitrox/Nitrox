@@ -12,28 +12,20 @@ public class VehicleModel
 {
     [JsonMemberTransition]
     public NitroxTechType TechType { get; }
-
     [JsonMemberTransition]
     public NitroxId Id { get; set; }
-
     [JsonMemberTransition]
     public NitroxVector3 Position { get; set; }
-
     [JsonMemberTransition]
     public NitroxQuaternion Rotation { get; set; }
-
     [JsonMemberTransition]
     public ThreadSafeList<InteractiveChildObjectIdentifier> InteractiveChildIdentifiers { get; } = new();
-
     [JsonMemberTransition]
     public Optional<NitroxId> DockingBayId { get; set; }
-
     [JsonMemberTransition]
     public string Name { get; set; }
-
     [JsonMemberTransition]
     public NitroxVector3[] HSB { get; set; }
-
     [JsonMemberTransition]
     public float Health { get; set; }
 

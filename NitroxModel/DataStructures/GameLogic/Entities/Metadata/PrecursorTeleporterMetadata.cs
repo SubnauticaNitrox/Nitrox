@@ -1,28 +1,22 @@
 ﻿using System;
-using ProtoBufNet;
+using NitroxModel.Serialization;
 
-namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata
+namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata;
+
+[Serializable]
+[JsonContractTransition]
+public class PrecursorTeleporterMetadata : EntityMetadata
 {
-    [Serializable]
-    [ProtoContract]
-    public class PrecursorTeleporterMetadata : EntityMetadata
+    [JsonMemberTransition]
+    public bool IsOpen { get; }
+
+    public PrecursorTeleporterMetadata(bool isOpen)
     {
-        [ProtoMember(1)]
-        public bool IsOpen { get; }
+        IsOpen = isOpen;
+    }
 
-        protected PrecursorTeleporterMetadata()
-        {
-            // Constructor for serialization. Has to be "protected" for json serialization.
-        }
-
-        public PrecursorTeleporterMetadata(bool isOpen)
-        {
-            IsOpen = isOpen;
-        }
-
-        public override string ToString()
-        {
-            return "[PrecursorTeleporterMetadata isOpen: " + IsOpen + "]";
-        }
+    public override string ToString()
+    {
+        return $"[PrecursorTeleporterMetadata - IsOpen: {IsOpen}]";
     }
 }

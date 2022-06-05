@@ -1,32 +1,31 @@
 ﻿using System;
-using ProtoBufNet;
+using NitroxModel.Serialization;
 
-namespace NitroxModel.DataStructures.GameLogic
+namespace NitroxModel.DataStructures.GameLogic;
+
+[Serializable]
+[JsonContractTransition]
+public class NitroxScheduledGoal
 {
-    [Serializable]
-    [ProtoContract]
-    public class NitroxScheduledGoal
+    [JsonMemberTransition]
+    public float TimeExecute { get; set; }
+    [JsonMemberTransition]
+    public string GoalKey { get; set; }
+    [JsonMemberTransition]
+    public string GoalType { get; set; }
+
+    public static NitroxScheduledGoal From(float timeExecute, string goalKey, string goalType)
     {
-        [ProtoMember(1)]
-        public float TimeExecute { get; set; }
-        [ProtoMember(2)]
-        public string GoalKey { get; set; }
-        [ProtoMember(3)]
-        public string GoalType { get; set; }
-
-        public static NitroxScheduledGoal From(float timeExecute, string goalKey, string goalType)
+        return new NitroxScheduledGoal
         {
-            return new NitroxScheduledGoal
-            {
-                TimeExecute = timeExecute,
-                GoalKey = goalKey,
-                GoalType = goalType
-            };
-        }
+            TimeExecute = timeExecute,
+            GoalKey = goalKey,
+            GoalType = goalType
+        };
+    }
 
-        public override string ToString()
-        {
-            return $"[NitroxScheduledGoal: TimeExecute: {TimeExecute}, GoalKey: {GoalKey}, GoalType: {GoalType}]";
-        }
+    public override string ToString()
+    {
+        return $"[NitroxScheduledGoal: TimeExecute: {TimeExecute}, GoalKey: {GoalKey}, GoalType: {GoalType}]";
     }
 }

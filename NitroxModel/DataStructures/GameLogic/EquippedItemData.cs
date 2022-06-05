@@ -1,32 +1,26 @@
 ﻿using System;
-using ProtoBufNet;
+using NitroxModel.Serialization;
 
-namespace NitroxModel.DataStructures.GameLogic
+namespace NitroxModel.DataStructures.GameLogic;
+
+[Serializable]
+[JsonContractTransition]
+public class EquippedItemData : ItemData
 {
-    [Serializable]
-    [ProtoContract]
-    public class EquippedItemData : ItemData
+    [JsonMemberTransition]
+    public string Slot { get; }
+
+    [JsonMemberTransition]
+    public NitroxTechType TechType { get; }
+
+    public EquippedItemData(NitroxId containerId, NitroxId itemId, byte[] serializedData, string slot, NitroxTechType techType) : base(containerId, itemId, serializedData)
     {
-        [ProtoMember(1)]
-        public string Slot { get; }
+        Slot = slot;
+        TechType = techType;
+    }
 
-        [ProtoMember(2)]
-        public NitroxTechType TechType { get; }
-
-        protected EquippedItemData()
-        {
-            // Constructor for serialization. Has to be "protected" for json serialization.
-        }
-
-        public EquippedItemData(NitroxId containerId, NitroxId itemId, byte[] serializedData, string slot, NitroxTechType techType) : base(containerId, itemId, serializedData)
-        {
-            Slot = slot;
-            TechType = techType;
-        }
-
-        public override string ToString()
-        {
-            return "[EquippedItemData ContainerGuid: " + ContainerId + "Id: " + ItemId + " Slot: " + Slot + " TechType: " + TechType + "]";
-        }
+    public override string ToString()
+    {
+        return $"[EquippedItemData - {base.ToString()}, Slot: {Slot}, TechType: {TechType}]";
     }
 }

@@ -10,7 +10,7 @@ namespace NitroxClient.GameLogic.Spawning.Metadata
             Log.Info($"Received door metadata change for {gameObject.name} with data of {metadata}");
 
             Sealed door = gameObject.GetComponent<Sealed>();
-            door._sealed = metadata.Sealed;
+            door._sealed = metadata.IsSealed;
             door.openedAmount = metadata.OpenedAmount;
 
             LaserCutObject laseredObject = gameObject.GetComponent<LaserCutObject>();

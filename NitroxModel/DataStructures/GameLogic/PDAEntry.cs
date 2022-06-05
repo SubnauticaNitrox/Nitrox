@@ -1,31 +1,25 @@
 ﻿using System;
-using ProtoBufNet;
+using NitroxModel.Serialization;
 
-namespace NitroxModel.DataStructures.GameLogic
+namespace NitroxModel.DataStructures.GameLogic;
+
+[Serializable]
+[JsonContractTransition]
+public class PDAEntry
 {
-    [Serializable]
-    [ProtoContract]
-    public class PDAEntry
+    [JsonMemberTransition]
+    public NitroxTechType TechType { get; set; }
+
+    [JsonMemberTransition]
+    public float Progress { get; set; }
+
+    [JsonMemberTransition]
+    public int Unlocked { get; set; }
+
+    public PDAEntry(NitroxTechType techType, float progress, int unlocked)
     {
-        [ProtoMember(1)]
-        public NitroxTechType TechType { get; set; }
-
-        [ProtoMember(2)]
-        public float Progress { get; set; }
-
-        [ProtoMember(3)]
-        public int Unlocked { get; set; }
-
-        protected PDAEntry()
-        {
-            // Constructor for serialization. Has to be "protected" for json serialization.
-        }
-
-        public PDAEntry(NitroxTechType techType, float progress, int unlocked)
-        {
-            TechType = techType;
-            Progress = progress;
-            Unlocked = unlocked;
-        }
+        TechType = techType;
+        Progress = progress;
+        Unlocked = unlocked;
     }
 }

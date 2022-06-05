@@ -1,28 +1,22 @@
 ﻿using System;
-using ProtoBufNet;
+using NitroxModel.Serialization;
 
-namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata
+namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata;
+
+[Serializable]
+[JsonContractTransition]
+public class PrecursorTeleporterActivationTerminalMetadata : EntityMetadata
 {
-    [Serializable]
-    [ProtoContract]
-    public class PrecursorTeleporterActivationTerminalMetadata : EntityMetadata
+    [JsonMemberTransition]
+    public bool Unlocked { get; }
+
+    public PrecursorTeleporterActivationTerminalMetadata(bool unlocked)
     {
-        [ProtoMember(1)]
-        public bool Unlocked { get; }
+        Unlocked = unlocked;
+    }
 
-        protected PrecursorTeleporterActivationTerminalMetadata()
-        {
-            // Constructor for serialization. Has to be "protected" for json serialization.
-        }
-
-        public PrecursorTeleporterActivationTerminalMetadata(bool unlocked)
-        {
-            Unlocked = unlocked;
-        }
-
-        public override string ToString()
-        {
-            return "[PrecursorTeleporterActivationTerminalMetadata Unlocked: " + Unlocked + "]";
-        }
+    public override string ToString()
+    {
+        return $"[PrecursorTeleporterActivationTerminalMetadata - Unlocked: {Unlocked}]";
     }
 }

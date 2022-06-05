@@ -1,38 +1,30 @@
 ﻿using System;
-using ProtoBufNet;
+using NitroxModel.Serialization;
 
-namespace NitroxModel.DataStructures.GameLogic
+namespace NitroxModel.DataStructures.GameLogic;
+
+[Serializable]
+[JsonContractTransition]
+public class ItemData
 {
-    [Serializable]
-    [ProtoContract]
-    [ProtoInclude(50, typeof(EquippedItemData))]
-    [ProtoInclude(51, typeof(PlantableItemData))]
-    public class ItemData
+    [JsonMemberTransition]
+    public NitroxId ContainerId { get; }
+
+    [JsonMemberTransition]
+    public NitroxId ItemId { get; }
+
+    [JsonMemberTransition]
+    public byte[] SerializedData { get; }
+
+    public ItemData(NitroxId containerId, NitroxId itemId, byte[] serializedData)
     {
-        [ProtoMember(1)]
-        public NitroxId ContainerId { get; }
+        ContainerId = containerId;
+        ItemId = itemId;
+        SerializedData = serializedData;
+    }
 
-        [ProtoMember(2)]
-        public NitroxId ItemId { get; }
-
-        [ProtoMember(3)]
-        public byte[] SerializedData { get; }
-
-        protected ItemData()
-        {
-            // Constructor for serialization. Has to be "protected" for json serialization.
-        }
-
-        public ItemData(NitroxId containerId, NitroxId itemId, byte[] serializedData)
-        {
-            ContainerId = containerId;
-            ItemId = itemId;
-            SerializedData = serializedData;
-        }
-
-        public override string ToString()
-        {
-            return "[ItemData ContainerId: " + ContainerId + "Id: " + ItemId + "]";
-        }
+    public override string ToString()
+    {
+        return $"[ItemData - ContainerId: {ContainerId}, Id: {ItemId}, DataLenght: {SerializedData?.Length}]";
     }
 }

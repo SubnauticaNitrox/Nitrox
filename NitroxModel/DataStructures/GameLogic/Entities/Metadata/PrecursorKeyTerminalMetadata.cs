@@ -1,28 +1,22 @@
 ﻿using System;
-using ProtoBufNet;
+using NitroxModel.Serialization;
 
-namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata
+namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata;
+
+[Serializable]
+[JsonContractTransition]
+public class PrecursorKeyTerminalMetadata : EntityMetadata
 {
-    [Serializable]
-    [ProtoContract]
-    public class PrecursorKeyTerminalMetadata : EntityMetadata
+    [JsonMemberTransition]
+    public bool Slotted { get; }
+
+    public PrecursorKeyTerminalMetadata(bool slotted)
     {
-        [ProtoMember(1)]
-        public bool Slotted { get; }
+        Slotted = slotted;
+    }
 
-        protected PrecursorKeyTerminalMetadata()
-        {
-            //Constructor for serialization. Has to be "protected" for json serialization.
-        }
-
-        public PrecursorKeyTerminalMetadata(bool slotted)
-        {
-            Slotted = slotted;
-        }
-
-        public override string ToString()
-        {
-            return "[PrecursorKeyTerminalMetadata Slotted: " + Slotted + "]";
-        }
+    public override string ToString()
+    {
+        return $"[PrecursorKeyTerminalMetadata - Slotted: {Slotted}]";
     }
 }

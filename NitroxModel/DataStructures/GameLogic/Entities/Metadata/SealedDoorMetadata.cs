@@ -1,27 +1,21 @@
 ﻿using System;
-using ProtoBufNet;
+using NitroxModel.Serialization;
 
-namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata
+namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata;
+
+[Serializable]
+[JsonContractTransition]
+public class SealedDoorMetadata : EntityMetadata
 {
-    [Serializable]
-    [ProtoContract]
-    public class SealedDoorMetadata : EntityMetadata
+    [JsonMemberTransition]
+    public bool IsSealed { get; }
+
+    [JsonMemberTransition]
+    public float OpenedAmount { get; }
+
+    public SealedDoorMetadata(bool isSealed, float openedAmount)
     {
-        [ProtoMember(1)]
-        public bool Sealed { get; }
-
-        [ProtoMember(2)]
-        public float OpenedAmount { get; }
-
-        protected SealedDoorMetadata()
-        {
-            //Constructor for serialization. Has to be "protected" for json serialization.
-        }
-
-        public SealedDoorMetadata(bool Sealed, float OpenedAmount)
-        {
-            this.Sealed = Sealed;
-            this.OpenedAmount = OpenedAmount;
-        }
+        IsSealed = isSealed;
+        OpenedAmount = openedAmount;
     }
 }

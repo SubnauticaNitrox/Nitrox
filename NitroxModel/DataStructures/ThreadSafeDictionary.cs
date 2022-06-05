@@ -1,184 +1,181 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using ProtoBufNet;
+using NitroxModel.Serialization;
 
-namespace NitroxModel.DataStructures
+namespace NitroxModel.DataStructures;
+
+[DebuggerDisplay("Items = {" + nameof(Entries) + "}")]
+[JsonContractTransition]
+[Serializable]
+public class ThreadSafeDictionary<TKey, TValue> : IDictionary<TKey, TValue>
 {
-    [DebuggerDisplay("Items = {" + nameof(Entries) + "}")]
-    [ProtoContract]
-    public class ThreadSafeDictionary<TKey, TValue> : IDictionary<TKey, TValue>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    [JsonMemberTransition]
+    private readonly IDictionary<TKey, TValue> dictionary;
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private readonly object locker = new();
+        
+    public ICollection<TKey> Keys
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        [ProtoIgnore]
-        private readonly IDictionary<TKey, TValue> dictionary;
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        [ProtoIgnore]
-        private readonly object locker = new();
-
-        [ProtoIgnore]
-        public ICollection<TKey> Keys
-        {
-            get
-            {
-                lock (locker)
-                {
-                    return new List<TKey>(dictionary.Keys);
-                }
-            }
-        }
-
-        [ProtoIgnore]
-        public ICollection<TValue> Values
-        {
-            get
-            {
-                lock (locker)
-                {
-                    return new List<TValue>(dictionary.Values);
-                }
-            }
-        }
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        [ProtoIgnore]
-        public ICollection<KeyValuePair<TKey, TValue>> Entries
-        {
-            get
-            {
-                lock (locker)
-                {
-                    return dictionary.ToList();
-                }
-            }
-        }
-
-        public TValue this[TKey key]
-        {
-            get
-            {
-                lock (locker)
-                {
-                    return dictionary[key];
-                }
-            }
-            set
-            {
-                lock (locker)
-                {
-                    dictionary[key] = value;
-                }
-            }
-        }
-
-        public int Count
-        {
-            get
-            {
-                lock (locker)
-                {
-                    return dictionary.Count;
-                }
-            }
-        }
-
-        public bool IsReadOnly { get; } = false;
-
-        public ThreadSafeDictionary()
-        {
-            dictionary = new Dictionary<TKey, TValue>();
-        }
-
-        public ThreadSafeDictionary(IDictionary<TKey, TValue> dictionary, bool createCopy = true)
-        {
-            this.dictionary = createCopy ? new Dictionary<TKey, TValue>(dictionary) : dictionary;
-        }
-
-        public void Add(KeyValuePair<TKey, TValue> item)
+        get
         {
             lock (locker)
             {
-                dictionary.Add(item);
+                return new List<TKey>(dictionary.Keys);
             }
         }
-
-        public void Clear()
+    }
+        
+    public ICollection<TValue> Values
+    {
+        get
         {
             lock (locker)
             {
-                dictionary.Clear();
+                return new List<TValue>(dictionary.Values);
             }
         }
+    }
 
-        public bool Contains(KeyValuePair<TKey, TValue> item)
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    public ICollection<KeyValuePair<TKey, TValue>> Entries
+    {
+        get
         {
             lock (locker)
             {
-                return dictionary.Contains(item);
+                return dictionary.ToList();
             }
         }
+    }
 
-        public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
+    public TValue this[TKey key]
+    {
+        get
         {
             lock (locker)
             {
-                dictionary.CopyTo(array, arrayIndex);
+                return dictionary[key];
             }
         }
-
-        public bool Remove(KeyValuePair<TKey, TValue> item)
+        set
         {
             lock (locker)
             {
-                return dictionary.Remove(item);
+                dictionary[key] = value;
             }
         }
+    }
 
-        public bool ContainsKey(TKey key)
+    public int Count
+    {
+        get
         {
             lock (locker)
             {
-                return dictionary.ContainsKey(key);
+                return dictionary.Count;
             }
         }
+    }
 
-        public void Add(TKey key, TValue value)
-        {
-            lock (locker)
-            {
-                dictionary.Add(key, value);
-            }
-        }
+    public bool IsReadOnly { get; } = false;
 
-        public bool Remove(TKey key)
-        {
-            lock (locker)
-            {
-                return dictionary.Remove(key);
-            }
-        }
+    public ThreadSafeDictionary()
+    {
+        dictionary = new Dictionary<TKey, TValue>();
+    }
 
-        public bool TryGetValue(TKey key, out TValue value)
-        {
-            lock (locker)
-            {
-                return dictionary.TryGetValue(key, out value);
-            }
-        }
+    public ThreadSafeDictionary(IDictionary<TKey, TValue> dictionary, bool createCopy = true)
+    {
+        this.dictionary = createCopy ? new Dictionary<TKey, TValue>(dictionary) : dictionary;
+    }
 
-        public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
+    public void Add(KeyValuePair<TKey, TValue> item)
+    {
+        lock (locker)
         {
-            lock (locker)
-            {
-                return new Dictionary<TKey, TValue>(dictionary).GetEnumerator();
-            }
+            dictionary.Add(item);
         }
+    }
 
-        IEnumerator IEnumerable.GetEnumerator()
+    public void Clear()
+    {
+        lock (locker)
         {
-            return GetEnumerator();
+            dictionary.Clear();
         }
+    }
+
+    public bool Contains(KeyValuePair<TKey, TValue> item)
+    {
+        lock (locker)
+        {
+            return dictionary.Contains(item);
+        }
+    }
+
+    public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
+    {
+        lock (locker)
+        {
+            dictionary.CopyTo(array, arrayIndex);
+        }
+    }
+
+    public bool Remove(KeyValuePair<TKey, TValue> item)
+    {
+        lock (locker)
+        {
+            return dictionary.Remove(item);
+        }
+    }
+
+    public bool ContainsKey(TKey key)
+    {
+        lock (locker)
+        {
+            return dictionary.ContainsKey(key);
+        }
+    }
+
+    public void Add(TKey key, TValue value)
+    {
+        lock (locker)
+        {
+            dictionary.Add(key, value);
+        }
+    }
+
+    public bool Remove(TKey key)
+    {
+        lock (locker)
+        {
+            return dictionary.Remove(key);
+        }
+    }
+
+    public bool TryGetValue(TKey key, out TValue value)
+    {
+        lock (locker)
+        {
+            return dictionary.TryGetValue(key, out value);
+        }
+    }
+
+    public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
+    {
+        lock (locker)
+        {
+            return new Dictionary<TKey, TValue>(dictionary).GetEnumerator();
+        }
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
     }
 }

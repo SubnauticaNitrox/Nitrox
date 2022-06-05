@@ -1,28 +1,22 @@
 ﻿using System;
-using ProtoBufNet;
+using NitroxModel.Serialization;
 
-namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata
+namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata;
+
+[Serializable]
+[JsonContractTransition]
+public class WeldableWallPanelGenericMetadata : EntityMetadata
 {
-    [Serializable]
-    [ProtoContract]
-    public class WeldableWallPanelGenericMetadata : EntityMetadata
+    [JsonMemberTransition]
+    public float LiveMixInHealth { get; }
+
+    public WeldableWallPanelGenericMetadata(float liveMixInHealth)
     {
-        [ProtoMember(1)]
-        public float LiveMixInHealth { get; }
+        LiveMixInHealth = liveMixInHealth;
+    }
 
-        protected WeldableWallPanelGenericMetadata()
-        {
-            //Constructor for serialization. Has to be "protected" for json serialization.
-        }
-
-        public WeldableWallPanelGenericMetadata(float liveMixInHealth)
-        {
-            LiveMixInHealth = liveMixInHealth;
-        }
-
-        public override string ToString()
-        {
-            return $"[WeldableWallPanelGenericMetadata LiveMixInHealth: {LiveMixInHealth}]";
-        }
+    public override string ToString()
+    {
+        return $"[WeldableWallPanelGenericMetadata - LiveMixInHealth: {LiveMixInHealth}]";
     }
 }

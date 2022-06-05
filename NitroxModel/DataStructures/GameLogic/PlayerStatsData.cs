@@ -1,47 +1,37 @@
 ﻿using System;
-using ProtoBufNet;
+using NitroxModel.Serialization;
 
-namespace NitroxModel.DataStructures.GameLogic
+namespace NitroxModel.DataStructures.GameLogic;
+
+[Serializable]
+[JsonContractTransition]
+public class PlayerStatsData
 {
-    [Serializable]
-    [ProtoContract]
-    public class PlayerStatsData
+    [JsonMemberTransition]
+    public float Oxygen { get; }
+    [JsonMemberTransition]
+    public float MaxOxygen { get; }
+    [JsonMemberTransition]
+    public float Health { get; }
+    [JsonMemberTransition]
+    public float Food { get; }
+    [JsonMemberTransition]
+    public float Water { get; }
+    [JsonMemberTransition]
+    public float InfectionAmount { get; }
+
+    public PlayerStatsData(float oxygen, float maxOxygen, float health, float food, float water, float infectionAmount)
     {
-        [ProtoMember(1)]
-        public float Oxygen { get; }
+        Oxygen = oxygen;
+        MaxOxygen = maxOxygen;
+        Health = health;
+        Food = food;
+        Water = water;
+        InfectionAmount = infectionAmount;
+    }
 
-        [ProtoMember(2)]
-        public float MaxOxygen { get; }
-
-        [ProtoMember(3)]
-        public float Health { get; }
-
-        [ProtoMember(4)]
-        public float Food { get; }
-
-        [ProtoMember(5)]
-        public float Water { get; }
-        [ProtoMember(6)]
-        public float InfectionAmount { get; }
-
-        protected PlayerStatsData()
-        {
-            // Constructor for serialization. Has to be "protected" for json serialization.
-        }
-
-        public PlayerStatsData(float oxygen, float maxOxygen, float health, float food, float water, float infectionAmount)
-        {
-            Oxygen = oxygen;
-            MaxOxygen = maxOxygen;
-            Health = health;
-            Food = food;
-            Water = water;
-            InfectionAmount = infectionAmount;
-        }
-
-        public override string ToString()
-        {
-            return "[Oxygen: " + Oxygen + " MaxOxygen: " + MaxOxygen + " Health: " + Health + " Food: " + Food + " Water: " + Water + " InfectionAmount: " + InfectionAmount + " ]";
-        }
+    public override string ToString()
+    {
+        return $"[PlayerStatsData - Oxygen: {Oxygen}, MaxOxygen: {MaxOxygen}, Health: {Health}, Food: {Food}, Water: {Water}, InfectionAmount: {InfectionAmount}]";
     }
 }

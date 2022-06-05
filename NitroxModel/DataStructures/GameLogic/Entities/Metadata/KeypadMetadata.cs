@@ -1,28 +1,22 @@
 ﻿using System;
-using ProtoBufNet;
+using NitroxModel.Serialization;
 
-namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata
+namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata;
+
+[Serializable]
+[JsonContractTransition]
+public class KeypadMetadata : EntityMetadata
 {
-    [Serializable]
-    [ProtoContract]
-    public class KeypadMetadata : EntityMetadata
+    [JsonMemberTransition]
+    public bool Unlocked { get; }
+
+    public KeypadMetadata(bool unlocked)
     {
-        [ProtoMember(1)]
-        public bool Unlocked { get; }
+        Unlocked = unlocked;
+    }
 
-        protected KeypadMetadata()
-        {
-            // Constructor for serialization. Has to be "protected" for json serialization.
-        }
-
-        public KeypadMetadata(bool unlocked)
-        {
-            Unlocked = unlocked;
-        }
-
-        public override string ToString()
-        {
-            return "[KeypadMetadata isOpen: " + Unlocked + "]";
-        }
+    public override string ToString()
+    {
+        return $"[KeypadMetadata - Unlocked: {Unlocked}]";
     }
 }

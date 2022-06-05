@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation
 {
-    public class SubnauticaRotationMetadataFactory : RotationMetadataFactory
+    public class SubnauticaBuilderMetadataFactory : BuilderMetadataFactory
     {
         public Optional<BuilderMetadata> From(object baseGhost)
         {

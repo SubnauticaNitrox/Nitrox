@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using NitroxModel.DataStructures.Unity;
 
-namespace NitroxModel.DataStructures.GameLogic
+namespace NitroxServer.Helper
 {
     public class RandomStartGenerator
     {

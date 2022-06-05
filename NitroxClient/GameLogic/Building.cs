@@ -19,9 +19,9 @@ namespace NitroxClient.GameLogic
     public class Building
     {
         private readonly IPacketSender packetSender;
-        private readonly RotationMetadataFactory rotationMetadataFactory;
+        private readonly BuilderMetadataFactory rotationMetadataFactory;
 
-        public Building(IPacketSender packetSender, RotationMetadataFactory rotationMetadataFactory)
+        public Building(IPacketSender packetSender, BuilderMetadataFactory rotationMetadataFactory)
         {
             this.packetSender = packetSender;
             this.rotationMetadataFactory = rotationMetadataFactory;

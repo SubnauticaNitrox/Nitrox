@@ -2,101 +2,98 @@
 using System.Numerics;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
+using NitroxModel.Serialization;
 using ProtoBufNet;
 
-namespace NitroxModel.DataStructures.Unity
+namespace NitroxModel.DataStructures.Unity;
+
+[Serializable]
+[ProtoContract, JsonContractTransition]
+public class NitroxTransform
 {
-    [ProtoContract]
-    [Serializable]
-    public class NitroxTransform
+    [ProtoMember(1), JsonMemberTransition]
+    public NitroxVector3 LocalPosition;
+
+    [ProtoMember(2), JsonMemberTransition]
+    public NitroxQuaternion LocalRotation;
+
+    [ProtoMember(3), JsonMemberTransition]
+    public NitroxVector3 LocalScale;
+
+    public Matrix4x4 LocalToWorldMatrix
     {
-        [ProtoMember(1)]
-        public NitroxVector3 LocalPosition;
-
-        [ProtoMember(2)]
-        public NitroxQuaternion LocalRotation;
-
-        [ProtoMember(3)]
-        public NitroxVector3 LocalScale;
-
-        public Matrix4x4 LocalToWorldMatrix
+        get
         {
-            get
-            {
-                Matrix4x4 cachedMatrix = Matrix4x4Extension.Compose(LocalPosition, LocalRotation, LocalScale);
+            Matrix4x4 cachedMatrix = Matrix4x4Extension.Compose(LocalPosition, LocalRotation, LocalScale);
 
-                return Parent != null ? cachedMatrix * Parent.LocalToWorldMatrix : cachedMatrix;
-            }
+            return Parent != null ? cachedMatrix * Parent.LocalToWorldMatrix : cachedMatrix;
         }
+    }
 
-        public NitroxTransform Parent;
-        public Entity Entity;
+    public NitroxTransform Parent;
+    public Entity Entity;
 
-        public NitroxVector3 Position
+    public NitroxVector3 Position
+    {
+        get
         {
-            get
-            {
-                Matrix4x4 matrix = Parent?.LocalToWorldMatrix ?? Matrix4x4.Identity;
-                return matrix.Transform(LocalPosition);
-            }
-            set
-            {
-                Matrix4x4 matrix = Parent != null ? Matrix4x4Extension.Compose(value, LocalRotation, LocalScale) * Parent.LocalToWorldMatrix.Invert() : Matrix4x4Extension.Compose(value, LocalRotation, LocalScale);
-                LocalPosition = (NitroxVector3)matrix.Translation;
-            }
+            Matrix4x4 matrix = Parent?.LocalToWorldMatrix ?? Matrix4x4.Identity;
+            return matrix.Transform(LocalPosition);
         }
-        public NitroxQuaternion Rotation
+        set
         {
-            get
-            {
-                Matrix4x4 matrix = Parent?.LocalToWorldMatrix ?? Matrix4x4.Identity;
-                Matrix4x4.Decompose(matrix, out Vector3 _, out Quaternion rotation, out Vector3 _);
-
-                return (NitroxQuaternion)rotation * LocalRotation;
-            }
-            set
-            {
-                Matrix4x4 matrix = Parent != null ? Matrix4x4Extension.Compose(LocalPosition, value, LocalScale) * Parent.LocalToWorldMatrix.Invert() : Matrix4x4Extension.Compose(LocalPosition, value, LocalScale);
-                Matrix4x4.Decompose(matrix, out Vector3 _, out Quaternion rotation, out Vector3 _);
-
-                LocalRotation = (NitroxQuaternion)rotation;
-            }
+            Matrix4x4 matrix = Parent != null ? Matrix4x4Extension.Compose(value, LocalRotation, LocalScale) * Parent.LocalToWorldMatrix.Invert() : Matrix4x4Extension.Compose(value, LocalRotation, LocalScale);
+            LocalPosition = (NitroxVector3)matrix.Translation;
         }
-
-        public void SetParent(NitroxTransform parent, bool worldPositionStays = true)
+    }
+    public NitroxQuaternion Rotation
+    {
+        get
         {
-            if (!worldPositionStays)
-            {
-                Parent = parent;
-                return;
-            }
+            Matrix4x4 matrix = Parent?.LocalToWorldMatrix ?? Matrix4x4.Identity;
+            Matrix4x4.Decompose(matrix, out Vector3 _, out Quaternion rotation, out Vector3 _);
 
-            NitroxVector3 position = Position;
-            NitroxQuaternion rotation = Rotation;
+            return (NitroxQuaternion)rotation * LocalRotation;
+        }
+        set
+        {
+            Matrix4x4 matrix = Parent != null ? Matrix4x4Extension.Compose(LocalPosition, value, LocalScale) * Parent.LocalToWorldMatrix.Invert() : Matrix4x4Extension.Compose(LocalPosition, value, LocalScale);
+            Matrix4x4.Decompose(matrix, out Vector3 _, out Quaternion rotation, out Vector3 _);
 
+            LocalRotation = (NitroxQuaternion)rotation;
+        }
+    }
+
+    public void SetParent(NitroxTransform parent, bool worldPositionStays = true)
+    {
+        if (!worldPositionStays)
+        {
             Parent = parent;
-
-            Position = position;
-            Rotation = rotation;
+            return;
         }
 
-        private NitroxTransform()
-        { }
+        NitroxVector3 position = Position;
+        NitroxQuaternion rotation = Rotation;
 
-        /// <summary>
-        /// NitroxTransform is always attached to an Entity
-        /// </summary>
-        public NitroxTransform(NitroxVector3 localPosition, NitroxQuaternion localRotation, NitroxVector3 scale, Entity entity)
-        {
-            LocalPosition = localPosition;
-            LocalRotation = localRotation;
-            LocalScale = scale;
-            Entity = entity;
-        }
+        Parent = parent;
 
-        public override string ToString()
-        {
-            return $"(Position: {Position}, LocalPosition: {LocalPosition}, Rotation: {Rotation}, LocalRotation: {LocalRotation}, LocalScale: {LocalScale})";
-        }
+        Position = position;
+        Rotation = rotation;
+    }
+
+    /// <summary>
+    /// NitroxTransform is always attached to an Entity
+    /// </summary>
+    public NitroxTransform(NitroxVector3 localPosition, NitroxQuaternion localRotation, NitroxVector3 scale, Entity entity)
+    {
+        LocalPosition = localPosition;
+        LocalRotation = localRotation;
+        LocalScale = scale;
+        Entity = entity;
+    }
+
+    public override string ToString()
+    {
+        return $"(Position: {Position}, LocalPosition: {LocalPosition}, Rotation: {Rotation}, LocalRotation: {LocalRotation}, LocalScale: {LocalScale})";
     }
 }

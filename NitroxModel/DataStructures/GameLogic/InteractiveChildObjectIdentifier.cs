@@ -1,32 +1,26 @@
 ﻿using System;
-using ProtoBufNet;
+using NitroxModel.Serialization;
 
-namespace NitroxModel.DataStructures.GameLogic
+namespace NitroxModel.DataStructures.GameLogic;
+
+[Serializable]
+[JsonContractTransition]
+public class InteractiveChildObjectIdentifier
 {
-    [Serializable]
-    [ProtoContract]
-    public class InteractiveChildObjectIdentifier
+    [JsonMemberTransition]
+    public NitroxId Id { get; set; }
+
+    [JsonMemberTransition]
+    public string GameObjectNamePath { get; set; }
+
+    public InteractiveChildObjectIdentifier(NitroxId id, string gameObjectNamePath)
     {
-        [ProtoMember(1)]
-        public NitroxId Id { get; set; }
+        Id = id;
+        GameObjectNamePath = gameObjectNamePath;
+    }
 
-        [ProtoMember(2)]
-        public string GameObjectNamePath { get; set; }
-
-        protected InteractiveChildObjectIdentifier()
-        {
-            // Constructor for serialization. Has to be "protected" for json serialization.
-        }
-
-        public InteractiveChildObjectIdentifier(NitroxId id, string gameObjectNamePath)
-        {
-            Id = id;
-            GameObjectNamePath = gameObjectNamePath;
-        }
-
-        public override string ToString()
-        {
-            return "[InteractiveChildObjectIdentifier - Id: " + Id + " GameObjectNamePath: " + GameObjectNamePath + "]";
-        }
+    public override string ToString()
+    {
+        return $"[InteractiveChildObjectIdentifier - Id: {Id},GameObjectNamePath: {GameObjectNamePath}]";
     }
 }

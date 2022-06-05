@@ -96,8 +96,8 @@ namespace NitroxClient
                             .As<ILocalNitroxPlayer>()
                             .InstancePerLifetimeScope();
 
-            containerBuilder.RegisterType<SubnauticaRotationMetadataFactory>()
-                            .As<RotationMetadataFactory>()
+            containerBuilder.RegisterType<SubnauticaBuilderMetadataFactory>()
+                            .As<BuilderMetadataFactory>()
                             .InstancePerLifetimeScope();
 
             containerBuilder.RegisterType<SubnauticaMap>()
