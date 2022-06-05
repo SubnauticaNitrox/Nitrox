@@ -14,6 +14,8 @@ public class BaseLadderSpawnProcessor : BasePieceSpawnProcessor
         TechType.BaseLadder
     };
 
+    protected override bool ShouldRerunSpawnProcessor => false;
+
     protected override void SpawnPostProcess(Base latestBase, Int3 latestCell, GameObject finishedPiece)
     {
         bool builtLadderOnFloor = finishedPiece.name.Contains("Bottom");

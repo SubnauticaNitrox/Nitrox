@@ -1,7 +1,7 @@
-﻿using NitroxClient.MonoBehaviours;
+﻿using System.Collections;
+using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
-using NitroxModel.Helper;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
@@ -19,15 +19,32 @@ namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
             TechType.BaseBioReactor
         };
 
+        protected override bool ShouldRerunSpawnProcessor => true;
+
         protected override void SpawnPostProcess(Base latestBase, Int3 latestCell, GameObject finishedPiece)
         {
             NitroxId reactorId = NitroxEntity.GetId(finishedPiece);
             BaseBioReactorGeometry bioReactor = finishedPiece.RequireComponent<BaseBioReactorGeometry>();
-            GameObject bioReactorModule = bioReactor.GetModule().gameObject;
+            BaseBioReactor bioReactorModule = bioReactor.GetModule();
+            // When reruning the spawn processor, the module will not be found at first so we need to delay its detection
+            if (!bioReactorModule)
+            {
+                latestBase.StartCoroutine(DelayModuleDetection(latestBase, latestCell, finishedPiece));
+                return;
+            }
 
             NitroxId moduleId = reactorId.Increment();
-            NitroxEntity.SetNewId(bioReactorModule, moduleId);
+            NitroxEntity.SetNewId(bioReactorModule.gameObject, moduleId);
         }
 
+        private IEnumerator DelayModuleDetection(Base latestBase, Int3 latestCell, GameObject finishedPiece)
+        {
+            if (!finishedPiece)
+            {
+                yield break;
+            }
+            yield return new WaitForSeconds(0.1f);
+            SpawnPostProcess(latestBase, latestCell, finishedPiece);
+        }
     }
 }

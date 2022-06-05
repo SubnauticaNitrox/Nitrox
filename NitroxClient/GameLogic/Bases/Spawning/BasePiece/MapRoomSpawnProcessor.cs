@@ -18,6 +18,8 @@ namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
             TechType.BaseMapRoom
         };
 
+        protected override bool ShouldRerunSpawnProcessor => false;
+
         protected override void SpawnPostProcess(Base latestBase, Int3 latestCell, GameObject finishedPiece)
         {
             NitroxId mapRoomGeometryPieceId = NitroxEntity.GetId(finishedPiece);
@@ -40,7 +42,6 @@ namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
                     return child.gameObject;
                 }
             }
-
             throw new ArgumentException($"Unable to locate recently built map room with {latestBase}");
         }
     }
