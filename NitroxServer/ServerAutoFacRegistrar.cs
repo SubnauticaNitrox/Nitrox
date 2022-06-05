@@ -10,6 +10,7 @@ using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Processor;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Entities;
+using NitroxServer.Serialization;
 using NitroxServer.Serialization.Upgrade;
 using NitroxServer.Serialization.World;
 
@@ -39,6 +40,9 @@ namespace NitroxServer
 
             containerBuilder.RegisterType<LiteNetLibServer>()
                             .As<Communication.NitroxServer>()
+                            .SingleInstance();
+            containerBuilder.RegisterType<ServerJsonSerializer>()
+                            .As<ServerJsonSerializer, IServerSerializer>()
                             .SingleInstance();
         }
 

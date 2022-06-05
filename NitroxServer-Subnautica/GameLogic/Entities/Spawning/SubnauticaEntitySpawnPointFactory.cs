@@ -4,7 +4,7 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel_Subnautica.DataStructures;
 using NitroxServer.GameLogic.Entities.Spawning;
-using NitroxServer.UnityStubs;
+using NitroxServer.Serialization.Resources.UnityStubs;
 
 namespace NitroxServer_Subnautica.GameLogic.Entities.Spawning
 {

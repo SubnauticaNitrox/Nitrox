@@ -2,22 +2,20 @@
 using System.Linq;
 using Newtonsoft.Json;
 using NitroxModel.DataStructures.GameLogic;
-using ProtoBufNet;
 
-namespace NitroxServer.GameLogic.Vehicles
+namespace NitroxServer.GameLogic.Vehicles;
+
+[JsonObject(MemberSerialization.OptIn)]
+public class VehicleData
 {
-    [ProtoContract, JsonObject(MemberSerialization.OptIn)]
-    public class VehicleData
-    {
-        [JsonProperty, ProtoMember(1)]
-        public List<VehicleModel> Vehicles = new List<VehicleModel>();
+    [JsonProperty]
+    public List<VehicleModel> Vehicles = new();
 
-        public static VehicleData From(IEnumerable<VehicleModel> vehicles)
+    public static VehicleData From(IEnumerable<VehicleModel> vehicles)
+    {
+        return new VehicleData
         {
-            return new VehicleData
-            {
-                Vehicles = vehicles.ToList()
-            };
-        }
+            Vehicles = vehicles.ToList()
+        };
     }
 }

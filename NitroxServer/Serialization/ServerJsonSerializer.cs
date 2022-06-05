@@ -1,8 +1,9 @@
 ﻿using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using NitroxModel.DataStructures.JsonConverter;
 using NitroxModel.Platforms.OS.Shared;
+using NitroxModel.Server;
+using NitroxServer.Serialization.JSON;
 
 namespace NitroxServer.Serialization
 {
@@ -19,6 +20,7 @@ namespace NitroxServer.Serialization
                 Log.Error(e.ErrorContext.Error, "Json serialization error: ");
             };
 
+            serializer.MissingMemberHandling = MissingMemberHandling.Error;
             serializer.TypeNameHandling = TypeNameHandling.Auto;
             serializer.ContractResolver = new AttributeContractResolver();
             serializer.Converters.Add(new NitroxIdConverter());
@@ -28,7 +30,7 @@ namespace NitroxServer.Serialization
             serializer.Converters.Add(new StringEnumConverter());
         }
 
-        public string FileEnding => ".json";
+        public  string FileEnding => ServerSerializerMode.JSON.GetFileEnding();
 
         public void Serialize(Stream stream, object o)
         {

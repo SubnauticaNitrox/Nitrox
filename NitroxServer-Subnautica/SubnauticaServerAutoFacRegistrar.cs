@@ -9,6 +9,7 @@ using NitroxModel_Subnautica.Helper;
 using NitroxServer;
 using NitroxServer.GameLogic.Entities.Spawning;
 using NitroxServer.Serialization;
+using NitroxServer.Serialization.Resources;
 using NitroxServer_Subnautica.GameLogic.Entities;
 using NitroxServer_Subnautica.GameLogic.Entities.Spawning;
 using NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers;
@@ -24,15 +25,12 @@ namespace NitroxServer_Subnautica
             base.RegisterDependencies(containerBuilder);
 
             containerBuilder.Register(c => SimulationWhitelist.ForServerSpawned).SingleInstance();
-            containerBuilder.Register(c => new SubnauticaServerProtoBufSerializer(
+            containerBuilder.Register(c => new SubnauticaProtoBufCellParser(
                                           "Assembly-CSharp",
                                           "Assembly-CSharp-firstpass",
                                           "NitroxModel",
                                           "NitroxModel-Subnautica"))
-                            .As<ServerProtoBufSerializer, IServerSerializer>()
-                            .SingleInstance();
-            containerBuilder.Register(c => new SubnauticaServerJsonSerializer())
-                            .As<ServerJsonSerializer, IServerSerializer>()
+                            .As<ProtoBufCellParser>()
                             .SingleInstance();
 
             containerBuilder.RegisterType<SubnauticaEntitySpawnPointFactory>().As<EntitySpawnPointFactory>().SingleInstance();

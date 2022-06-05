@@ -6,14 +6,15 @@ using NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation;
 using NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation.Metadata;
 using NitroxModel_Subnautica.DataStructures.Surrogates;
 using NitroxServer.Serialization;
+using NitroxServer.Serialization.Resources;
 using ProtoBufNet.Meta;
 using UnityEngine;
 
-namespace NitroxServer_Subnautica.Serialization
+namespace NitroxServer_Subnautica.Serialization.Resources
 {
-    class SubnauticaServerProtoBufSerializer : ServerProtoBufSerializer
+    public class SubnauticaProtoBufCellParser : ProtoBufCellParser
     {
-        public SubnauticaServerProtoBufSerializer(params string[] assemblies) : base(assemblies)
+        public SubnauticaProtoBufCellParser(params string[] assemblies) : base(assemblies)
         {
             RegisterHardCodedTypes();
         }
@@ -30,7 +31,7 @@ namespace NitroxServer_Subnautica.Serialization
             Model.Add(typeof(Quaternion), false).SetSurrogate(typeof(QuaternionSurrogate));
             Model.Add(typeof(NitroxQuaternion), false).SetSurrogate(typeof(QuaternionSurrogate));
             Model.Add(typeof(Transform), false).SetSurrogate(typeof(NitroxTransform));
-            Model.Add(typeof(GameObject), false).SetSurrogate(typeof(NitroxServer.UnityStubs.GameObject));
+            Model.Add(typeof(GameObject), false).SetSurrogate(typeof(NitroxServer.Serialization.Resources.UnityStubs.GameObject));
 
             MetaType vehicleModel = Model.Add(typeof(VehicleModel), false);
             vehicleModel.AddSubType(100, typeof(ExosuitModel));

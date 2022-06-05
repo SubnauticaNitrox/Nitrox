@@ -7,8 +7,8 @@ using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
 using NitroxServer.Helper;
-using NitroxServer.Serialization;
-using NitroxServer.Serialization.Resources.Datastructures;
+using NitroxServer.Serialization.Resources;
+using NitroxServer.Serialization.Resources.DataStructures;
 
 namespace NitroxServer.GameLogic.Entities.Spawning
 {
@@ -57,7 +57,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             }
         }
 
-        public BatchEntitySpawner(EntitySpawnPointFactory entitySpawnPointFactory, UweWorldEntityFactory worldEntityFactory, UwePrefabFactory prefabFactory, List<NitroxInt3> loadedPreviousParsed, ServerProtoBufSerializer serializer,
+        public BatchEntitySpawner(EntitySpawnPointFactory entitySpawnPointFactory, UweWorldEntityFactory worldEntityFactory, UwePrefabFactory prefabFactory, List<NitroxInt3> loadedPreviousParsed, ProtoBufCellParser serializer,
                                   Dictionary<NitroxTechType, IEntityBootstrapper> customBootstrappersByTechType, Dictionary<string, PrefabPlaceholdersGroupAsset> prefabPlaceholderGroupsbyClassId, string seed)
         {
             parsedBatches = new HashSet<NitroxInt3>(loadedPreviousParsed);

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using NitroxModel.DataStructures.Util;
 using NitroxServer.GameLogic.Entities;
-using NitroxServer.Serialization.Resources.Datastructures;
+using NitroxServer.Serialization.Resources.DataStructures;
 using NitroxServer_Subnautica.Serialization.Resources.Parsers;
 using NitroxServer_Subnautica.Serialization.Resources.Parsers.Monobehaviours;
 

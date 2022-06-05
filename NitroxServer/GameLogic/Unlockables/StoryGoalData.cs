@@ -2,45 +2,43 @@
 using Newtonsoft.Json;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
-using ProtoBufNet;
 
-namespace NitroxServer.GameLogic.Unlockables
+namespace NitroxServer.GameLogic.Unlockables;
+
+[JsonObject(MemberSerialization.OptIn)]
+public class StoryGoalData
 {
-    [ProtoContract, JsonObject(MemberSerialization.OptIn)]
-    public class StoryGoalData
+    [JsonProperty]
+    public ThreadSafeSet<string> CompletedGoals { get; } = new();
+
+    [JsonProperty]
+    public ThreadSafeList<string> RadioQueue { get; } = new();
+
+    [JsonProperty]
+    public ThreadSafeSet<string> GoalUnlocks { get; } = new();
+
+    [JsonProperty]
+    public ThreadSafeList<NitroxScheduledGoal> ScheduledGoals { get; set; } = new();
+
+    public bool RemovedLatestRadioMessage()
     {
-        [JsonProperty, ProtoMember(1)]
-        public ThreadSafeSet<string> CompletedGoals { get; } = new();
-
-        [JsonProperty, ProtoMember(2)]
-        public ThreadSafeList<string> RadioQueue { get; } = new();
-
-        [JsonProperty, ProtoMember(3)]
-        public ThreadSafeSet<string> GoalUnlocks { get; } = new();
-
-        [JsonProperty, ProtoMember(4)]
-        public ThreadSafeList<NitroxScheduledGoal> ScheduledGoals { get; set; } = new();
-
-        public bool RemovedLatestRadioMessage()
+        if (RadioQueue.Count <= 0)
         {
-            if (RadioQueue.Count <= 0)
-            {
-                return false;
-            }
-
-            RadioQueue.RemoveAt(0);
-            return true;
+            return false;
         }
 
-        public static StoryGoalData From(StoryGoalData storyGoals, ScheduleKeeper scheduleKeeper)
-        {
-            storyGoals.ScheduledGoals = new ThreadSafeList<NitroxScheduledGoal>(scheduleKeeper.GetScheduledGoals());
-            return storyGoals;
-        }
+        RadioQueue.RemoveAt(0);
+        return true;
+    }
 
-        public InitialStoryGoalData GetInitialStoryGoalData(ScheduleKeeper scheduleKeeper)
-        {
-            return new InitialStoryGoalData(new List<string>(CompletedGoals), new List<string>(RadioQueue), new List<string>(GoalUnlocks), scheduleKeeper.GetScheduledGoals());
-        }
+    public static StoryGoalData From(StoryGoalData storyGoals, ScheduleKeeper scheduleKeeper)
+    {
+        storyGoals.ScheduledGoals = new ThreadSafeList<NitroxScheduledGoal>(scheduleKeeper.GetScheduledGoals());
+        return storyGoals;
+    }
+
+    public InitialStoryGoalData GetInitialStoryGoalData(ScheduleKeeper scheduleKeeper)
+    {
+        return new InitialStoryGoalData(new List<string>(CompletedGoals), new List<string>(RadioQueue), new List<string>(GoalUnlocks), scheduleKeeper.GetScheduledGoals());
     }
 }

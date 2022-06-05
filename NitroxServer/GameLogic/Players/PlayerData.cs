@@ -1,26 +1,24 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
-using ProtoBufNet;
 
-namespace NitroxServer.GameLogic.Players
+namespace NitroxServer.GameLogic.Players;
+
+[JsonObject(MemberSerialization.OptIn)]
+public class PlayerData
 {
-    [ProtoContract, JsonObject(MemberSerialization.OptIn)]
-    public class PlayerData
+    [JsonProperty]
+    public List<PersistedPlayerData> Players = new();
+
+    public List<Player> GetPlayers()
     {
-        [JsonProperty, ProtoMember(1)]
-        public List<PersistedPlayerData> Players = new List<PersistedPlayerData>();
+        return Players.Select(playerData => playerData.ToPlayer()).ToList();
+    }
 
-        public List<Player> GetPlayers()
-        {
-            return Players.Select(playerData => playerData.ToPlayer()).ToList();
-        }
+    public static PlayerData From(IEnumerable<Player> players)
+    {
+        List<PersistedPlayerData> persistedPlayers = players.Select(PersistedPlayerData.FromPlayer).ToList();
 
-        public static PlayerData From(IEnumerable<Player> players)
-        {
-            List<PersistedPlayerData> persistedPlayers = players.Select(PersistedPlayerData.FromPlayer).ToList();
-
-            return new PlayerData { Players = persistedPlayers };
-        }
+        return new PlayerData { Players = persistedPlayers };
     }
 }

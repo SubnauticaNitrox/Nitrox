@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using NitroxModel.Core;
@@ -17,42 +17,29 @@ using NitroxServer.GameLogic.Items;
 using NitroxServer.GameLogic.Players;
 using NitroxServer.GameLogic.Unlockables;
 using NitroxServer.GameLogic.Vehicles;
-using NitroxServer.Serialization.Resources.Datastructures;
+using NitroxServer.Serialization.Resources;
+using NitroxServer.Serialization.Resources.DataStructures;
 using NitroxServer.Serialization.Upgrade;
 
 namespace NitroxServer.Serialization.World
 {
     public class WorldPersistence
     {
-        public IServerSerializer Serializer { get; private set; }
-        private string FileEnding => Serializer?.FileEnding ?? "";
-
-        private readonly ServerProtoBufSerializer protoBufSerializer;
-        private readonly ServerJsonSerializer jsonSerializer;
+        internal IServerSerializer serializer { get; set; }
+        private string FileEnding => serializer?.FileEnding ?? "";
+        private readonly ProtoBufCellParser protoBufCellParser;
+        
         private readonly ServerConfig config;
         private readonly RandomStartGenerator randomStart;
         private readonly SaveDataUpgrade[] upgrades;
 
-        public WorldPersistence(ServerProtoBufSerializer protoBufSerializer, ServerJsonSerializer jsonSerializer, ServerConfig config, RandomStartGenerator randomStart, SaveDataUpgrade[] upgrades)
+        public WorldPersistence(IServerSerializer serializer, ProtoBufCellParser protoBufCellParser, ServerConfig config, RandomStartGenerator randomStart, SaveDataUpgrade[] upgrades)
         {
-            this.protoBufSerializer = protoBufSerializer;
-            this.jsonSerializer = jsonSerializer;
+            this.serializer = serializer;
+            this.protoBufCellParser = protoBufCellParser;
             this.config = config;
             this.randomStart = randomStart;
             this.upgrades = upgrades;
-
-            UpdateSerializer(config.SerializerMode);
-        }
-
-        internal void UpdateSerializer(IServerSerializer serverSerializer)
-        {
-            Validate.NotNull(serverSerializer, "Serializer cannot be null");
-            Serializer = serverSerializer;
-        }
-
-        internal void UpdateSerializer(ServerSerializerMode mode)
-        {
-            Serializer = (mode == ServerSerializerMode.PROTOBUF) ? protoBufSerializer : jsonSerializer;
         }
 
         public bool Save(World world, string saveDir)
@@ -66,11 +53,11 @@ namespace NitroxServer.Serialization.World
                     Directory.CreateDirectory(saveDir);
                 }
 
-                Serializer.Serialize(Path.Combine(saveDir, $"Version{FileEnding}"), new SaveFileVersion());
-                Serializer.Serialize(Path.Combine(saveDir, $"BaseData{FileEnding}"), persistedData.BaseData);
-                Serializer.Serialize(Path.Combine(saveDir, $"PlayerData{FileEnding}"), persistedData.PlayerData);
-                Serializer.Serialize(Path.Combine(saveDir, $"WorldData{FileEnding}"), persistedData.WorldData);
-                Serializer.Serialize(Path.Combine(saveDir, $"EntityData{FileEnding}"), persistedData.EntityData);
+                serializer.Serialize(Path.Combine(saveDir, $"Version{FileEnding}"), new SaveFileVersion());
+                serializer.Serialize(Path.Combine(saveDir, $"BaseData{FileEnding}"), persistedData.BaseData);
+                serializer.Serialize(Path.Combine(saveDir, $"PlayerData{FileEnding}"), persistedData.PlayerData);
+                serializer.Serialize(Path.Combine(saveDir, $"WorldData{FileEnding}"), persistedData.WorldData);
+                serializer.Serialize(Path.Combine(saveDir, $"EntityData{FileEnding}"), persistedData.EntityData);
 
                 config.Update(saveDir, c => c.Seed = persistedData.WorldData.Seed);
 
@@ -99,10 +86,10 @@ namespace NitroxServer.Serialization.World
 
                 UpgradeSave(saveDir);
 
-                persistedData.BaseData = Serializer.Deserialize<BaseData>(Path.Combine(saveDir, $"BaseData{FileEnding}"));
-                persistedData.PlayerData = Serializer.Deserialize<PlayerData>(Path.Combine(saveDir, $"PlayerData{FileEnding}"));
-                persistedData.WorldData = Serializer.Deserialize<WorldData>(Path.Combine(saveDir, $"WorldData{FileEnding}"));
-                persistedData.EntityData = Serializer.Deserialize<EntityData>(Path.Combine(saveDir, $"EntityData{FileEnding}"));
+                persistedData.BaseData = serializer.Deserialize<BaseData>(Path.Combine(saveDir, $"BaseData{FileEnding}"));
+                persistedData.PlayerData = serializer.Deserialize<PlayerData>(Path.Combine(saveDir, $"PlayerData{FileEnding}"));
+                persistedData.WorldData = serializer.Deserialize<WorldData>(Path.Combine(saveDir, $"WorldData{FileEnding}"));
+                persistedData.EntityData = serializer.Deserialize<EntityData>(Path.Combine(saveDir, $"EntityData{FileEnding}"));
 
                 if (!persistedData.IsValid())
                 {
@@ -206,7 +193,7 @@ namespace NitroxServer.Serialization.World
                 NitroxServiceLocator.LocateService<UweWorldEntityFactory>(),
                 NitroxServiceLocator.LocateService<UwePrefabFactory>(),
                 pWorldData.WorldData.ParsedBatchCells,
-                protoBufSerializer,
+                protoBufCellParser,
                 NitroxServiceLocator.LocateService<Dictionary<NitroxTechType, IEntityBootstrapper>>(),
                 NitroxServiceLocator.LocateService<Dictionary<string, PrefabPlaceholdersGroupAsset>>(),
                 world.Seed
@@ -222,38 +209,31 @@ namespace NitroxServer.Serialization.World
 
         private void UpgradeSave(string saveDir)
         {
-            SaveFileVersion saveFileVersion = Serializer.Deserialize<SaveFileVersion>(Path.Combine(saveDir, $"Version{FileEnding}"));
+            SaveFileVersion saveFileVersion = serializer.Deserialize<SaveFileVersion>(Path.Combine(saveDir, $"Version{FileEnding}"));
 
             if (saveFileVersion.Version == NitroxEnvironment.Version)
             {
                 return;
             }
-
-            if (config.SerializerMode == ServerSerializerMode.PROTOBUF)
+            
+            try
             {
-                Log.Info("Can't upgrade while using ProtoBuf as serializer");
-            }
-            else
-            {
-                try
+                foreach (SaveDataUpgrade upgrade in upgrades)
                 {
-                    foreach (SaveDataUpgrade upgrade in upgrades)
+                    if (upgrade.TargetVersion > saveFileVersion.Version)
                     {
-                        if (upgrade.TargetVersion > saveFileVersion.Version)
-                        {
-                            upgrade.UpgradeSaveFiles(saveDir, FileEnding);
-                        }
+                        upgrade.UpgradeSaveFiles(saveDir, FileEnding);
                     }
                 }
-                catch (Exception ex)
-                {
-                    Log.Error(ex, "Error while upgrading save file.");
-                    return;
-                }
-
-                Serializer.Serialize(Path.Combine(saveDir, $"Version{FileEnding}"), new SaveFileVersion());
-                Log.Info($"Save file was upgraded to {NitroxEnvironment.Version}");
             }
-        }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Error while upgrading save file.");
+                return;
+            }
+
+            serializer.Serialize(Path.Combine(saveDir, $"Version{FileEnding}"), new SaveFileVersion());
+            Log.Info($"Save file was upgraded to {NitroxEnvironment.Version}");
+            }
     }
 }

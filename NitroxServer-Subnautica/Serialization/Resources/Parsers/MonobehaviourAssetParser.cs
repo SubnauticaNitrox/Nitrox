@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using AssetsTools.NET;
-using NitroxServer.Serialization.Resources.Datastructures;
+using NitroxServer.Serialization.Resources.DataStructures;
 using NitroxServer_Subnautica.Serialization.Resources.Parsers.Monobehaviours;
 using static NitroxServer_Subnautica.Serialization.Resources.Parsers.MonoscriptAssetParser;
 

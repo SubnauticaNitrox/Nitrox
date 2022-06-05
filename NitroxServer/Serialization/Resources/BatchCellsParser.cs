@@ -6,13 +6,12 @@ using System.Runtime.Serialization;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Unity;
-using NitroxModel.Discovery;
 using NitroxModel.Helper;
 using NitroxServer.GameLogic.Entities.Spawning;
-using NitroxServer.UnityStubs;
+using NitroxServer.Serialization.Resources.UnityStubs;
 using ProtoBufNet;
 
-namespace NitroxServer.Serialization
+namespace NitroxServer.Serialization.Resources
 {
     /**
      * Parses the files in build18 in the format of batch-cells-x-y-z-slot-type.bin
@@ -24,10 +23,10 @@ namespace NitroxServer.Serialization
     public class BatchCellsParser
     {
         private readonly EntitySpawnPointFactory entitySpawnPointFactory;
-        private readonly ServerProtoBufSerializer serializer;
+        private readonly ProtoBufCellParser serializer;
         private readonly Dictionary<string, Type> surrogateTypes;
 
-        public BatchCellsParser(EntitySpawnPointFactory entitySpawnPointFactory, ServerProtoBufSerializer serializer)
+        public BatchCellsParser(EntitySpawnPointFactory entitySpawnPointFactory, ProtoBufCellParser serializer)
         {
             this.entitySpawnPointFactory = entitySpawnPointFactory;
             this.serializer = serializer;

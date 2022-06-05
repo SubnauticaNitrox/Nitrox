@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using NitroxModel.DataStructures.Unity;
-using NitroxServer.Serialization;
 
-namespace NitroxServer.UnityStubs
+namespace NitroxServer.Serialization.Resources.UnityStubs
 {
     public class GameObject
     {

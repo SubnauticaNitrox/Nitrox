@@ -52,7 +52,7 @@ namespace NitroxTest.Serialization
             for (int index = 0; index < serverSerializers.Length; index++)
             {
                 //Checking saving
-                worldPersistence.UpdateSerializer(serverSerializers[index]);
+                worldPersistence.serializer = serverSerializers[index];
                 Assert.IsTrue(worldPersistence.Save(world, tempSaveFilePath), $"Saving normal world failed while using {serverSerializers[index]}.");
                 Assert.IsFalse(worldPersistence.Save(null, tempSaveFilePath), $"Saving null world worked while using {serverSerializers[index]}.");
 
@@ -513,7 +513,7 @@ namespace NitroxTest.Serialization
                     {
                         Vehicles = new List<VehicleModel>()
                         {
-                            new VehicleModel(new NitroxTechType("Cyclops"), new NitroxId(), NitroxVector3.One, NitroxQuaternion.Identity, new InteractiveChildObjectIdentifier[0], Optional<NitroxId>.Of(new NitroxId()), "Super Duper Cyclops", new []{NitroxVector3.Zero, NitroxVector3.One, NitroxVector3.One}, 100)
+                            new VehicleModel(new NitroxTechType("Cyclops"), new NitroxId(), NitroxVector3.One, NitroxQuaternion.Identity, Array.Empty<InteractiveChildObjectIdentifier>(), Optional<NitroxId>.Of(new NitroxId()), "Super Duper Cyclops", new []{NitroxVector3.Zero, NitroxVector3.One, NitroxVector3.One}, 100)
                         }
                     },
                     Seed = "NITROXSEED"

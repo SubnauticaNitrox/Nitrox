@@ -2,7 +2,7 @@
 using NitroxModel.DataStructures.Util;
 using NitroxServer.GameLogic.Entities;
 
-namespace NitroxServer.Serialization.Resources.Datastructures
+namespace NitroxServer.Serialization.Resources.DataStructures
 {
     public class PrefabAsset
     {

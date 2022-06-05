@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Windows;
 using NitroxModel.Helper;
 using NitroxModel.Server;
 
@@ -46,33 +45,25 @@ public static class WorldManager
                 Version version;
                 ServerConfig serverConfig = ServerConfig.Load(folder);
 
-                string fileEnding = "json";
-                if (serverConfig.SerializerMode == ServerSerializerMode.PROTOBUF)
-                {
-                    fileEnding = "nitrox";
-                }
+                string fileEnding = serverConfig.SerializerMode.GetFileEnding();
 
-                using (FileStream stream = new(Path.Combine(folder, $"Version.{fileEnding}"), FileMode.Open, FileAccess.Read, FileShare.Read))
+                using (FileStream stream = new(Path.Combine(folder, $"Version{fileEnding}"), FileMode.Open, FileAccess.Read, FileShare.Read))
                 {
                     version = new ServerJsonSerializer().Deserialize<SaveFileVersion>(stream)?.Version ?? NitroxEnvironment.Version;
                 }
 
                 DateTime fileLastAccessedTime;
-                if (File.Exists(Path.Combine(folder, $"WorldData.{fileEnding}")))
+                if (File.Exists(Path.Combine(folder, $"WorldData{fileEnding}")))
                 {
-                    fileLastAccessedTime = File.GetLastWriteTime(Path.Combine(folder, $"WorldData.{fileEnding}"));
+                    fileLastAccessedTime = File.GetLastWriteTime(Path.Combine(folder, $"WorldData{fileEnding}"));
                 }
                 else
                 {
-                    fileLastAccessedTime = File.GetLastWriteTime(Path.Combine(folder, $"Version.{fileEnding}")); // This file was created when the save was created, so it can be used as the backup to get this write time if this is a new save (the WorldData file wouldn't exist)
+                    fileLastAccessedTime = File.GetLastWriteTime(Path.Combine(folder, $"Version{fileEnding}")); // This file was created when the save was created, so it can be used as the backup to get this write time if this is a new save (the WorldData file wouldn't exist)
                 }
 
-                // Change the paramaters here to define what save file versions are eligible for use/upgrade
-                bool isValidVersion = true;
-                if (version < new Version(1, 6, 0, 1) || version > NitroxEnvironment.Version)
-                {
-                    isValidVersion = false;
-                }
+                // Change the parameters here to define what save file versions are eligible for use/upgrade
+                bool isValidVersion = version >= new Version(1, 6, 0, 1) && version <= NitroxEnvironment.Version;
 
                 savesCache.Add(new Listing
                 {
@@ -130,13 +121,8 @@ public static class WorldManager
         Directory.CreateDirectory(saveDir);
 
         ServerConfig serverConfig = ServerConfig.Load(saveDir);
-
-        string fileEnding = "json";
-        if (serverConfig.SerializerMode == ServerSerializerMode.PROTOBUF)
-        {
-            fileEnding = "nitrox";
-        }
-        File.Create(Path.Combine(saveDir, $"Version.{fileEnding}")).Close();
+        
+        File.Create(Path.Combine(saveDir, $"Version{serverConfig.SerializerMode.GetFileEnding()}")).Close();
 
         serverConfig.SaveName = name;
 

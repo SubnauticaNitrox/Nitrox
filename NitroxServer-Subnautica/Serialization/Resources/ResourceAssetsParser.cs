@@ -4,7 +4,7 @@ using System.IO;
 using AssetsTools.NET;
 using NitroxModel.Discovery;
 using NitroxModel.Helper;
-using NitroxServer.Serialization.Resources.Datastructures;
+using NitroxServer.Serialization.Resources.DataStructures;
 using NitroxServer_Subnautica.Serialization.Resources.Parsers;
 using NitroxServer_Subnautica.Serialization.Resources.Parsers.Images;
 using NitroxServer_Subnautica.Serialization.Resources.Processing;

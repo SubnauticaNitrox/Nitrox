@@ -6,7 +6,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using AssetsTools.NET;
 using NitroxModel.DataStructures.GameLogic;
-using NitroxServer.Serialization.Resources.Datastructures;
+using NitroxServer.Serialization.Resources.DataStructures;
 
 namespace NitroxServer_Subnautica.Serialization.Resources.Parsers.Images
 {

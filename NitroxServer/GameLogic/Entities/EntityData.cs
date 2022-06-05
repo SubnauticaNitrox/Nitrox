@@ -4,18 +4,17 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
-using ProtoBufNet;
 
 namespace NitroxServer.GameLogic.Entities
 {
-    [ProtoContract, JsonObject(MemberSerialization.OptIn)]
+    [JsonObject(MemberSerialization.OptIn)]
     public class EntityData
     {
-        [JsonProperty, ProtoMember(1)]
-        public List<Entity> Entities = new List<Entity>();
+        [JsonProperty]
+        public List<Entity> Entities = new();
 
-        [ProtoAfterDeserialization]
-        private void ProtoAfterDeserialization()
+        [OnDeserialized]
+        private void JsonAfterDeserialization(StreamingContext context)
         {
             // After deserialization, we want to assign all of the 
             // children to their respective parent entities.
@@ -32,12 +31,6 @@ namespace NitroxServer.GameLogic.Entities
                     }
                 }
             }
-        }
-
-        [OnDeserialized]
-        private void JsonAfterDeserialization(StreamingContext context)
-        {
-            ProtoAfterDeserialization();
         }
 
 

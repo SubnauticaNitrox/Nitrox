@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace NitroxServer.Serialization.Resources.Datastructures
+namespace NitroxServer.Serialization.Resources.DataStructures
 {
     public class PrefabPlaceholdersGroupAsset
     {
