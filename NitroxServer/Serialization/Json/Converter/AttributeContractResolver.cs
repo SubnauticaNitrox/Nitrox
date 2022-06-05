@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using NitroxModel.Serialization;
 using ProtoBufNet;
 
 namespace NitroxServer.Serialization.Json.Converter
@@ -14,12 +15,17 @@ namespace NitroxServer.Serialization.Json.Converter
         //Using Protobuf attributes for json
         protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)
         {
-            ProtoContractAttribute protoContractAttribute = (ProtoContractAttribute) Attribute.GetCustomAttribute(type, typeof (ProtoContractAttribute));
-
-            if (protoContractAttribute != null)
+            if (Attribute.GetCustomAttribute(type, typeof (ProtoContractAttribute)) != null)
             {
                 return GetSerializableMembers(type)
                        .Where(member => member.GetCustomAttribute<ProtoMemberAttribute>() != null)
+                       .Select(member => CreateProperty(member, memberSerialization)).ToList();
+            }
+
+            if (Attribute.GetCustomAttribute(type, typeof (JsonContractTransitionAttribute)) != null)
+            {
+                return GetSerializableMembers(type)
+                       .Where(member => member.GetCustomAttribute<JsonMemberTransitionAttribute>() != null)
                        .Select(member => CreateProperty(member, memberSerialization)).ToList();
             }
 

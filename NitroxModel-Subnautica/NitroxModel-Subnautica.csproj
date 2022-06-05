@@ -7,12 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Reference Include="protobuf-net, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-        <HintPath>..\Nitrox.Assets.Subnautica\protobuf-net.dll</HintPath>
-      </Reference>
-    </ItemGroup>
-
-    <ItemGroup>
       <PackageReference Include="LitJson" Version="0.16.0" />
     </ItemGroup>
 

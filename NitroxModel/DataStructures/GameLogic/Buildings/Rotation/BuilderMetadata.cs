@@ -1,18 +1,16 @@
 ﻿using System;
-using ProtoBufNet;
+using NitroxModel.Serialization;
 
-namespace NitroxModel.DataStructures.GameLogic.Buildings.Rotation
+namespace NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
+
+[Serializable]
+[JsonContractTransition]
+public abstract class BuilderMetadata
 {
-    [Serializable]
-    [ProtoContract]
-    public abstract class BuilderMetadata
-    {
-        [ProtoIgnore]
-        public Type GhostType { get; set; }
+    public Type GhostType { get; set; }
 
-        public BuilderMetadata(Type ghostType)
-        {
-            GhostType = ghostType;
-        }
+    public BuilderMetadata(Type ghostType)
+    {
+        GhostType = ghostType;
     }
 }

@@ -1,41 +1,35 @@
 ﻿using System;
 using NitroxModel.DataStructures;
-using ProtoBufNet;
+using NitroxModel.Serialization;
 
-namespace NitroxModel_Subnautica.DataStructures.GameLogic
+namespace NitroxModel_Subnautica.DataStructures.GameLogic;
+
+[Serializable]
+[JsonContractTransition]
+public class CyclopsFireData
 {
-    [Serializable]
-    [ProtoContract]
-    public class CyclopsFireData
+    [JsonMemberTransition]
+    public NitroxId FireId { get; set; }
+
+    [JsonMemberTransition]
+    public NitroxId CyclopsId { get; set; }
+
+    [JsonMemberTransition]
+    public CyclopsRooms Room { get; set; }
+
+    [JsonMemberTransition]
+    public int NodeIndex { get; set; }
+
+    public CyclopsFireData(NitroxId fireId, NitroxId cyclopsId, CyclopsRooms room, int nodeIndex)
     {
-        [ProtoMember(1)]
-        public NitroxId FireId { get; set; }
+        FireId = fireId;
+        CyclopsId = cyclopsId;
+        Room = room;
+        NodeIndex = nodeIndex;
+    }
 
-        [ProtoMember(2)]
-        public NitroxId CyclopsId { get; set; }
-
-        [ProtoMember(3)]
-        public CyclopsRooms Room { get; set; }
-
-        [ProtoMember(4)]
-        public int NodeIndex { get; set; }
-
-        protected CyclopsFireData()
-        {
-            // Constructor for serialization. Has to be "protected" for json serialization.
-        }
-
-        public CyclopsFireData(NitroxId fireId, NitroxId cyclopsId, CyclopsRooms room, int nodeIndex)
-        {
-            FireId = fireId;
-            CyclopsId = cyclopsId;
-            Room = room;
-            NodeIndex = nodeIndex;
-        }
-
-        public override string ToString()
-        {
-            return $"[CyclopsFireData - FireId: {FireId}, CyclopsId: {CyclopsId}, Room: {Room}, FireNodeIndex: {NodeIndex}]";
-        }
+    public override string ToString()
+    {
+        return $"[CyclopsFireData - FireId: {FireId}, CyclopsId: {CyclopsId}, Room: {Room}, NodeIndex: {NodeIndex}]";
     }
 }

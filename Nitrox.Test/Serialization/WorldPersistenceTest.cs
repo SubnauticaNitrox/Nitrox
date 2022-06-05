@@ -11,6 +11,7 @@ using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Server;
+using NitroxModel_Subnautica.DataStructures.GameLogic;
 using NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation;
 using NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation.Metadata;
 using NitroxServer.GameLogic;
@@ -514,8 +515,35 @@ namespace NitroxServer.Serialization
                     {
                         Vehicles = new List<VehicleModel>()
                         {
-                            new(new NitroxTechType("Cyclops"), new NitroxId(), NitroxVector3.One, NitroxQuaternion.Identity, Array.Empty<InteractiveChildObjectIdentifier>(), Optional<NitroxId>.Of(new NitroxId()), "Super Duper Cyclops", new []{NitroxVector3.Zero, NitroxVector3.One, NitroxVector3.One}, 100),
-                            new(new NitroxTechType("Cyclops"), new NitroxId(), NitroxVector3.One, NitroxQuaternion.Identity, new[] {new InteractiveChildObjectIdentifier(new NitroxId(), "/BlablaScene/SomeBlablaContainer/BlaItem")}, Optional<NitroxId>.Of(new NitroxId()), "Super Duper Cyclops", new []{NitroxVector3.Zero, NitroxVector3.One, NitroxVector3.One}, 100)
+                            new SeamothModel(new NitroxTechType("Seamoth"), new NitroxId(), NitroxVector3.One, NitroxQuaternion.Identity, new List<InteractiveChildObjectIdentifier> {new(new NitroxId(), "/BlablaScene/SomeBlablaContainer/BlaItem")}, 
+                                             Optional<NitroxId>.Of(new NitroxId()), "Super Duper Seamoth", new []{NitroxVector3.Zero, NitroxVector3.One, NitroxVector3.One}, 4)
+                            {
+                                LightOn = false
+                            },
+                            new CyclopsModel(new NitroxTechType("Cyclops"), new NitroxId(), NitroxVector3.One, NitroxQuaternion.Identity, new List<InteractiveChildObjectIdentifier>(), 
+                                             Optional<NitroxId>.Of(new NitroxId()), "Super Duper Cyclops", new []{NitroxVector3.Zero, NitroxVector3.One, NitroxVector3.One}, 33)
+                            {
+                                FloodLightsOn = false,
+                                InternalLightsOn = false,
+                                SilentRunningOn = true,
+                                ShieldOn = true,
+                                SonarOn = true,
+                                EngineState = true,
+                                EngineMode = CyclopsMotorMode.CyclopsMotorModes.Flank
+                            },
+                            new ExosuitModel(new NitroxTechType("Cyclops"), new NitroxId(), NitroxVector3.One, NitroxQuaternion.Identity, new List<InteractiveChildObjectIdentifier> {new(new NitroxId(), "/BlablaScene/SomeBlablaContainer/BlaItem")}, 
+                                             Optional<NitroxId>.Of(new NitroxId()), "Claw 3000", new []{NitroxVector3.Zero, NitroxVector3.One, NitroxVector3.One}, 100),
+                            new NeptuneRocketModel(new NitroxTechType("Seamoth"), new NitroxId(), NitroxVector3.One, NitroxQuaternion.Identity, new List<InteractiveChildObjectIdentifier> {new(new NitroxId(), "/BlablaScene/SomeBlablaContainer/BlaItem")}, 
+                                                   Optional<NitroxId>.Of(new NitroxId()), "Mega Death Rocket", new []{NitroxVector3.Zero, NitroxVector3.One, NitroxVector3.One}, 14)
+                            {
+                                CurrentStage = 2,
+                                ElevatorUp = true,
+                                PreflightChecks = new ThreadSafeList<PreflightCheck>
+                                {
+                                    PreflightCheck.Hydraulics, 
+                                    PreflightCheck.TimeCapsule
+                                }
+                            }
                         }
                     },
                     Seed = "NITROXSEED"

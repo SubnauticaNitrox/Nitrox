@@ -8,7 +8,7 @@ namespace NitroxServer.Serialization.SaveData;
 public class EscapePodData
 {
     [JsonProperty]
-    public List<EscapePodModel> EscapePods;
+    public List<EscapePodModel> EscapePods = new();
 
     public static EscapePodData From(List<EscapePodModel> escapePods)
     {
