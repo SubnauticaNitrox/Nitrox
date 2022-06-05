@@ -1,13 +1,12 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Helper;
 using NitroxModel.Packets;
 using NitroxModel.Server;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
 using NitroxServer.GameLogic;
 using NitroxServer.Serialization;
-using NitroxServer.Serialization.World;
 
 namespace NitroxServer.ConsoleCommands
 {
@@ -28,7 +27,7 @@ namespace NitroxServer.ConsoleCommands
         {
             ServerGameMode sgm = args.Get<ServerGameMode>(0);
 
-            serverConfig.Update(Path.Combine(WorldManager.SavesFolderDir, serverConfig.SaveName), c =>
+            serverConfig.Update(Path.Combine(NitroxUser.SavesFolderDir, serverConfig.SaveName), c =>
             {
                 if (c.GameMode != sgm)
                 {

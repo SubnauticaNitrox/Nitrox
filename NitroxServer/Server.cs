@@ -9,9 +9,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
+using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Entities;
 using NitroxServer.Serialization;
-using NitroxServer.Serialization.World;
 using Timer = System.Timers.Timer;
 
 namespace NitroxServer
@@ -59,7 +59,7 @@ namespace NitroxServer
             StringBuilder builder = new("\n");
             if (viewerPerms is Perms.CONSOLE)
             {
-                builder.AppendLine($" - Save location: {Path.Combine(WorldManager.SavesFolderDir, serverConfig.SaveName)}");
+                builder.AppendLine($" - Save location: {Path.Combine(NitroxUser.SavesFolderDir, serverConfig.SaveName)}");
             }
             builder.AppendLine($" - Aurora's state: {world.EventTriggerer.GetAuroraStateSummary()}");
             builder.AppendLine($" - Current time: day {world.EventTriggerer.Day} ({Math.Floor(world.EventTriggerer.ElapsedSeconds)}s)");
@@ -83,7 +83,7 @@ namespace NitroxServer
             string saveDir = null;
             foreach (string arg in Environment.GetCommandLineArgs())
             {
-                if (arg.StartsWith(WorldManager.SavesFolderDir, StringComparison.OrdinalIgnoreCase) && Directory.Exists(arg))
+                if (arg.StartsWith(NitroxUser.SavesFolderDir, StringComparison.OrdinalIgnoreCase) && Directory.Exists(arg))
                 {
                     saveDir = arg;
                     break;
@@ -91,33 +91,17 @@ namespace NitroxServer
             }
             if (saveDir == null)
             {
-                // Check if there are any save files
-                IEnumerable<WorldManager.Listing> WorldList = WorldManager.GetSaves();
-                if (WorldList.Any())
+                saveDir = Path.Combine(NitroxUser.SavesFolderDir, "My World");
+
+                if (Directory.Exists(saveDir))
                 {
-                    // Get last save file used
-                    string lastSaveAccessed = WorldList.ElementAtOrDefault(0).WorldSaveDir;
-                    if (WorldList.Count() > 1)
-                    {
-                        for (int i = 1; i < WorldList.Count(); i++)
-                        {
-                            if (File.GetLastWriteTime(Path.Combine(WorldList.ElementAtOrDefault(i).WorldSaveDir, "WorldData.json")) > File.GetLastWriteTime(lastSaveAccessed))
-                            {
-                                lastSaveAccessed = WorldList.ElementAtOrDefault(i).WorldSaveDir;
-                            }
-                        }
-                    }
-                    saveDir = lastSaveAccessed;
+                    Log.Warn("Could find save file directory in the arguments. Using \"My World\" save profile.");
                 }
                 else
                 {
-                    // Create new save file
-                    saveDir = Path.Combine(WorldManager.SavesFolderDir, "My World");
+                    Log.Warn("Could find save file directory in the arguments. Creating fresh save files");
                     Directory.CreateDirectory(saveDir);
-                    ServerConfig serverConfig = ServerConfig.Load(saveDir);
-                    Log.Debug($"No save file was found, creating a new one...");
                 }
-
             }
 
             return ServerConfig.Load(saveDir);
@@ -132,7 +116,7 @@ namespace NitroxServer
 
             IsSaving = true;
 
-            bool savedSuccessfully = worldPersistence.Save(world, Path.Combine(WorldManager.SavesFolderDir, serverConfig.SaveName));
+            bool savedSuccessfully = worldPersistence.Save(world, Path.Combine(NitroxUser.SavesFolderDir, serverConfig.SaveName));
             if (savedSuccessfully && !string.IsNullOrWhiteSpace(serverConfig.PostSaveCommandPath))
             {
                 try

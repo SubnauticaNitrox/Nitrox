@@ -16,7 +16,7 @@ namespace NitroxServer_Subnautica.Communication.Packets.Processors
             this.playerManager = playerManager;
         }
 
-        public override void Process(CyclopsDamage packet, NitroxServer.Player simulatingPlayer)
+        public override void Process(CyclopsDamage packet, NitroxServer.GameLogic.Player simulatingPlayer)
         {
             Log.Debug("New cyclops damage from " + simulatingPlayer.Id + " " + packet);
 

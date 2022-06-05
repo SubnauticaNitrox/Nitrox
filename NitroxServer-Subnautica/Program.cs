@@ -20,7 +20,7 @@ using NitroxModel.Platforms.OS.Shared;
 using NitroxModel_Subnautica.DataStructures.GameLogic;
 using NitroxServer;
 using NitroxServer.ConsoleCommands.Processor;
-using NitroxServer.GameLogic.Vehicles;
+using NitroxServer.GameLogic;
 
 namespace NitroxServer_Subnautica;
 

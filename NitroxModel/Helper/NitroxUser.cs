@@ -81,5 +81,7 @@ namespace NitroxModel.Helper
                 return string.Empty;
             }
         }
+        
+        public static readonly string SavesFolderDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", "saves");
     }
 }

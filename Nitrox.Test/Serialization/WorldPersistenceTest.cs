@@ -13,14 +13,12 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Server;
 using NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation;
 using NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation.Metadata;
-using NitroxServer.Serialization.World.SaveData;
-using NitroxServer.Serialization.World.SaveData.Player;
-using NitroxServer.Serialization.World.SaveData.World;
-using NitroxServer.Serialization.World.SaveData.World.Game;
+using NitroxServer.GameLogic;
+using NitroxServer.Serialization.SaveData;
 using NitroxServer_Subnautica;
 using NitroxTest;
 
-namespace NitroxServer.Serialization.World
+namespace NitroxServer.Serialization
 {
     [TestClass]
     public class WorldPersistenceTest
@@ -42,7 +40,7 @@ namespace NitroxServer.Serialization.World
             tempSaveFilePath = Path.Combine(Path.GetTempPath(), "NitroxTestTempDir");
 
             worldData = GeneratePersistedSaveData();
-            GameLogic.World world = worldPersistence.CreateWorld(worldData, ServerGameMode.CREATIVE);
+            World world = worldPersistence.CreateWorld(worldData, ServerGameMode.CREATIVE);
             world.EventTriggerer.ResetWorld();
 
             for (int index = 0; index < serverSerializers.Length; index++)
@@ -53,7 +51,7 @@ namespace NitroxServer.Serialization.World
                 Assert.IsFalse(worldPersistence.Save(null, tempSaveFilePath), $"Saving null world worked while using {serverSerializers[index]}.");
 
                 //Checking loading
-                Optional<GameLogic.World> worldAfter = worldPersistence.LoadFromFile(tempSaveFilePath);
+                Optional<World> worldAfter = worldPersistence.LoadFromFile(tempSaveFilePath);
                 Assert.IsTrue(worldAfter.HasValue, $"Loading saved world failed while using {serverSerializers[index]}.");
                 worldAfter.Value.EventTriggerer.ResetWorld();
                 worldsDataAfter[index] = PersistedSaveData.From(worldAfter.Value);

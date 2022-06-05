@@ -11,8 +11,9 @@ using NitroxLauncher.Models;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Server;
 using NitroxServer.Serialization;
-using NitroxServer.Serialization.World;
 using Microsoft.VisualBasic.FileIO;
+using NitroxLauncher.Models.Utils;
+using NitroxModel.Helper;
 
 namespace NitroxLauncher.Pages
 {
@@ -593,7 +594,7 @@ namespace NitroxLauncher.Pages
                 }
 
                 // Check that name is not a duplicate if it was changed
-                string newSelectedWorldDirectory = Path.Combine(WorldManager.SavesFolderDir, TBImportedWorldName.Text);
+                string newSelectedWorldDirectory = Path.Combine(NitroxUser.SavesFolderDir, TBImportedWorldName.Text);
                 if (!TBImportedWorldName.Text.Equals(importedWorldName, StringComparison.OrdinalIgnoreCase) && Directory.Exists(newSelectedWorldDirectory))
                 {
                     if (WorldManager.ValidateSave(newSelectedWorldDirectory))
@@ -610,14 +611,14 @@ namespace NitroxLauncher.Pages
                     if (!rx.IsMatch(TBImportedWorldName.Text))
                     {
                         importedWorldName = TBImportedWorldName.Text + $" ({i})";
-                        newSelectedWorldDirectory = Path.Combine(WorldManager.SavesFolderDir, importedWorldName);
+                        newSelectedWorldDirectory = Path.Combine(NitroxUser.SavesFolderDir, importedWorldName);
                     }
 
                     // If save name still exists, increment the number to the end of the name until it reaches an available filename
                     while (Directory.Exists(newSelectedWorldDirectory))
                     {
                         importedWorldName = rx.Replace(importedWorldName, $"({i})", 1);
-                        newSelectedWorldDirectory = Path.Combine(WorldManager.SavesFolderDir, importedWorldName);
+                        newSelectedWorldDirectory = Path.Combine(NitroxUser.SavesFolderDir, importedWorldName);
                         i++;
                     }
 
@@ -658,7 +659,7 @@ namespace NitroxLauncher.Pages
                 }
                 selectedWorldImportDirectory = Path.GetFullPath(dialog.FileName);
             }
-            if (Convert.ToString(Directory.GetParent(selectedWorldImportDirectory)) == WorldManager.SavesFolderDir)
+            if (Convert.ToString(Directory.GetParent(selectedWorldImportDirectory)) == NitroxUser.SavesFolderDir)
             {
                 LauncherNotifier.Error("There is no point in importing a save file you already have in the saves directory. Please select a different save file to import.");
                 return;
@@ -753,7 +754,7 @@ namespace NitroxLauncher.Pages
                     Log.Error($"Could not move save \"{Path.GetFileName(selectedWorldDirectory)}\" to the recycling bin : {ex.GetType()} {ex.Message}");
                 }
             }
-            selectedWorldDirectory = Path.Combine(WorldManager.SavesFolderDir, importedWorldName);
+            selectedWorldDirectory = Path.Combine(NitroxUser.SavesFolderDir, importedWorldName);
 
             try
             {

@@ -11,8 +11,8 @@ using NitroxServer.ConsoleCommands.Processor;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Entities;
 using NitroxServer.Serialization;
-using NitroxServer.Serialization.Upgrade;
-using NitroxServer.Serialization.World;
+using NitroxServer.Serialization.Json;
+using NitroxServer.Serialization.SaveDataUpgrades;
 
 namespace NitroxServer
 {

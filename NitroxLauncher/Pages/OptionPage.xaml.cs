@@ -4,8 +4,9 @@ using System.IO;
 using System.Windows;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using NitroxLauncher.Models;
+using NitroxLauncher.Models.Utils;
 using NitroxModel.Discovery;
-using NitroxServer.Serialization.World;
+using NitroxModel.Helper;
 
 namespace NitroxLauncher.Pages
 {
@@ -18,7 +19,7 @@ namespace NitroxLauncher.Pages
         public OptionPage()
         {
             InitializeComponent();
-            SaveFileLocationTextblock.Text = WorldManager.SavesFolderDir;
+            SaveFileLocationTextblock.Text = NitroxUser.SavesFolderDir;
 
             ArgumentsTextbox.Text = SubnauticaLaunchArguments;
             if (SubnauticaLaunchArguments != LauncherConfig.DEFAULT_LAUNCH_ARGUMENTS)
@@ -103,7 +104,7 @@ namespace NitroxLauncher.Pages
 
         private void OnViewFolder_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start(WorldManager.SavesFolderDir)?.Dispose();
+            Process.Start(NitroxUser.SavesFolderDir)?.Dispose();
         }
     }
 }

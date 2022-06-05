@@ -1,7 +1,6 @@
 ﻿using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
-using NitroxServer.Serialization.World;
 
 namespace NitroxServer.Communication.Packets.Processors
 {

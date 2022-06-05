@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
-using NitroxServer.Serialization.Upgrade;
 
 namespace NitroxServer.Serialization.SaveDataUpgrades
 {

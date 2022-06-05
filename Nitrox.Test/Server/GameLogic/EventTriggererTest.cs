@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NitroxModel.Helper;
+using NitroxServer.GameLogic.WorldTiming;
 
 namespace NitroxServer.GameLogic
 {

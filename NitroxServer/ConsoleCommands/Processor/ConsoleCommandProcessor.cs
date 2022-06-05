@@ -5,6 +5,7 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.Exceptions;
+using NitroxServer.GameLogic;
 
 namespace NitroxServer.ConsoleCommands.Processor
 {

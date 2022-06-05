@@ -1,10 +1,9 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Helper;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
 using NitroxServer.Serialization;
-using NitroxServer.Serialization.World;
 
 namespace NitroxServer.ConsoleCommands
 {
@@ -21,7 +20,7 @@ namespace NitroxServer.ConsoleCommands
 
         protected override void Execute(CallArgs args)
         {
-            serverConfig.Update(Path.Combine(WorldManager.SavesFolderDir, serverConfig.SaveName), c =>
+            serverConfig.Update(Path.Combine(NitroxUser.SavesFolderDir, serverConfig.SaveName), c =>
             {
                 string newPassword = args.Get(0);
                 c.AdminPassword = newPassword;

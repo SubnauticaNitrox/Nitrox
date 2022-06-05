@@ -2,6 +2,7 @@
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.ConsoleCommands.Processor;
+using NitroxServer.GameLogic;
 
 namespace NitroxServer.Communication.Packets.Processors
 {

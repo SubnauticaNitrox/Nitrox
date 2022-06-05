@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
@@ -212,7 +213,7 @@ namespace NitroxServer.GameLogic.Entities
             }
         }
 
-        public void LoadAllUnspawnedEntities(System.Threading.CancellationToken token)
+        public void LoadAllUnspawnedEntities(CancellationToken token)
         {
             
             IMap map = NitroxServiceLocator.LocateService<IMap>();

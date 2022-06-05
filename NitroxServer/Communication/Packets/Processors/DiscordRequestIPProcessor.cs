@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
+using NitroxServer.GameLogic;
 using NitroxServer.Serialization;
 
 namespace NitroxServer.Communication.Packets.Processors;

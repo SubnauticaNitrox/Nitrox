@@ -3,9 +3,9 @@ using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
-using NitroxServer.Serialization.JSON;
+using NitroxServer.Serialization.Json.Converter;
 
-namespace NitroxServer.Serialization.Upgrade
+namespace NitroxServer.Serialization.SaveDataUpgrades
 {
     public abstract class SaveDataUpgrade
     {

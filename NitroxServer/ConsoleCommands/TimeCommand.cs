@@ -2,6 +2,7 @@
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
 using NitroxServer.GameLogic;
+using NitroxServer.GameLogic.WorldTiming;
 
 namespace NitroxServer.ConsoleCommands
 {

@@ -13,7 +13,7 @@ namespace NitroxServer_Subnautica.Communication.Packets.Processors
             this.playerManager = playerManager;
         }
 
-        public override void Process(CyclopsDamagePointRepaired packet, NitroxServer.Player simulatingPlayer)
+        public override void Process(CyclopsDamagePointRepaired packet, NitroxServer.GameLogic.Player simulatingPlayer)
         {
             playerManager.SendPacketToOtherPlayers(packet, simulatingPlayer);
         }
