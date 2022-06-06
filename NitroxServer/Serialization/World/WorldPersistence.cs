@@ -137,7 +137,7 @@ namespace NitroxServer.Serialization.World
             return CreateFreshWorld();
         }
 
-        public World CreateFreshWorld()
+        private World CreateFreshWorld()
         {
             PersistedWorldData pWorldData = new()
             {
