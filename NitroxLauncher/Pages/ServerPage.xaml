@@ -1114,8 +1114,8 @@
                                             </Style>
                                         </ScrollViewer.Resources>
                                     </ScrollViewer>
-                                    
-                                    <Button Grid.Column="1" Style="{StaticResource LargeButton}" x:Name="SelectImportedServerCfgBtn" Click="SelectImportedServerCfgBtn_Click" Background="#FF007BFF" Width="90" Height="35" ToolTip="Change the directory of the targeted save folder" FontSize="15" FontWeight="Bold" Content="Select" IsEnabled="False" Opacity=".6"/>
+
+                                    <Button Grid.Column="1" Style="{StaticResource LargeButton}" x:Name="SelectImportedServerCfgBtn" Click="SelectImportedServerCfgBtn_Click" Background="#FF007BFF" Width="90" Height="35" ToolTip="Select the directory of the server.cfg file you want imported with your selected save file" FontSize="15" FontWeight="Bold" Content="Select" IsEnabled="False" Opacity=".6"/>
                                 </Grid>
                             </Border>
                             
