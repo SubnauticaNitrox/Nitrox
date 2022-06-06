@@ -56,7 +56,7 @@ namespace NitroxServer
                         {
                             for (int i = 1; i < WorldList.Count(); i++)
                             {
-                                if (File.GetLastWriteTime(Path.Combine(WorldList.ElementAtOrDefault(i).WorldSaveDir, "WorldData.json")) > File.GetLastWriteTime(LastSaveAccessed) || File.GetLastWriteTime(Path.Combine(WorldList.ElementAtOrDefault(i).WorldSaveDir, "WorldData.nitrox")) > File.GetLastWriteTime(LastSaveAccessed))
+                                if (File.GetLastWriteTime(Path.Combine(WorldList.ElementAtOrDefault(i).WorldSaveDir, "WorldData.json")) > File.GetLastWriteTime(LastSaveAccessed))
                                 {
                                     LastSaveAccessed = WorldList.ElementAtOrDefault(i).WorldSaveDir;
                                 }

@@ -13,7 +13,7 @@ public static class WorldManager
 
     public static string SelectedWorldName { get; set; }
 
-    private static readonly string[] worldFiles = { "BaseData", "EntityData", "PlayerData", "Version", "WorldData" };
+    public static readonly string[] WorldFiles = { "BaseData.json", "EntityData.json", "PlayerData.json", "Version.json", "WorldData.json" };
 
     private static readonly List<Listing> savesCache = new();
 
@@ -40,22 +40,9 @@ public static class WorldManager
                     Version version;
                     ServerConfig serverConfig = ServerConfig.Load(folder);
 
-                    string fileEnding = ".json";
-                    if (serverConfig.SerializerMode == ServerSerializerMode.PROTOBUF)
+                    using (FileStream stream = new(Path.Combine(folder, "Version.json"), FileMode.Open, FileAccess.Read, FileShare.Read))
                     {
-                        fileEnding = ".nitrox";
-                    }
-
-                    using (FileStream stream = new(Path.Combine(folder, "Version" + fileEnding), FileMode.Open, FileAccess.Read, FileShare.Read))
-                    {
-                        if (fileEnding == ".json")
-                        {
-                            version = new ServerJsonSerializer().Deserialize<SaveFileVersion>(stream)?.Version ?? NitroxEnvironment.Version;
-                        }
-                        else
-                        {
-                            version = new ServerProtoBufSerializer().Deserialize<SaveFileVersion>(stream)?.Version ?? NitroxEnvironment.Version;
-                        }
+                        version = new ServerJsonSerializer().Deserialize<SaveFileVersion>(stream)?.Version ?? NitroxEnvironment.Version;
                     }
 
                     bool IsValidVersion = true;
@@ -71,7 +58,7 @@ public static class WorldManager
                         WorldVersion = $"v{version}",
                         WorldSaveDir = folder,
                         IsValidSave = IsValidVersion,
-                        FileLastAccessed = File.GetLastWriteTime(Path.Combine(folder, $"WorldData{fileEnding}"))
+                        FileLastAccessed = File.GetLastWriteTime(Path.Combine(folder, $"WorldData.json"))
                     });
                 }
                 catch 
@@ -114,15 +101,9 @@ public static class WorldManager
 
         ServerConfig serverConfig = ServerConfig.Load(saveDir);
 
-        string fileEnding = ".json";
-        if (serverConfig.SerializerMode == ServerSerializerMode.PROTOBUF)
+        foreach (string file in WorldFiles)
         {
-            fileEnding = ".nitrox";
-        }
-
-        foreach (string file in worldFiles)
-        {
-            File.Create(Path.Combine(saveDir, file + fileEnding)).Close();
+            File.Create(Path.Combine(saveDir, file)).Close();
         }
 
         serverConfig.SaveName = name;
@@ -137,26 +118,15 @@ public static class WorldManager
         {
             return false;
         }
-        foreach (string file in worldFiles)
+        foreach (string file in WorldFiles)
         {
-            if (!File.Exists(Path.Combine(saveFileDirectory, Path.ChangeExtension(file, "json"))) && !File.Exists(Path.Combine(saveFileDirectory, Path.ChangeExtension(file, "NITROX"))))
+            if (!File.Exists(Path.Combine(saveFileDirectory, file)))
             {
                 return false;
             }
         }
 
         return true;
-    }
-
-    public static void CopyDirectory(string sourcePath, string targetPath)
-    {
-        Directory.CreateDirectory(targetPath);
-
-        //Copy all the files & Replaces any files with the same name
-        foreach (string newPath in Directory.GetFiles(sourcePath, "*.*", SearchOption.AllDirectories))
-        {
-            File.Copy(newPath, Path.Combine(targetPath, Path.GetFileName(newPath)));
-        }
     }
 
     public class Listing

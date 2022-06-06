@@ -289,7 +289,7 @@
                                 </Grid>
 
                                 <ListView Name="WorldListingContainer" Background="{x:Null}" BorderBrush="{x:Null}" Margin="5" HorizontalContentAlignment="Stretch" ScrollViewer.CanContentScroll="False">
-                                    
+
                                     <!-- OPTIONAL - View server listing buttons in Intellisense window -->
                                     <d:ListView.ItemsSource>
                                         <x:Array Type="pages:World_Listing">
@@ -942,39 +942,194 @@
 
         </Grid>
 
-        <Grid x:Name="ImportWorldNameBox" Opacity="0" IsHitTestVisible="False" Grid.RowSpan="2">
+        <Grid x:Name="ImportWorldBox" Opacity="0" IsHitTestVisible="False" Grid.RowSpan="2">
 
             <!-- Have all of the background act like the "Cancel" button when clicked -->
-            <Button Click="ImportedWorldNameCancelBtn_Click" Background="Black" Opacity=".5" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Grid}}" Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Grid}}" Cursor="Arrow"/>
+            <Button Click="ImportWorldCancelBtn_Click" Background="Black" Opacity=".5" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Grid}}" Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Grid}}" Cursor="Arrow"/>
 
-            <Border Background="Black" Height="200" Width="300" BorderThickness="5" BorderBrush="#151516" CornerRadius="20">
+            <Border Background="#151516" Height="460" Width="400" CornerRadius="20">
                 <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
+                    <TextBlock Grid.ColumnSpan="2" Text="Import a save file" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="25" TextWrapping="Wrap" TextAlignment="Center" Width="250" Margin="0 13" FontWeight="Bold"/>
 
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
+                    <Border Background="Black" CornerRadius="15" Margin="10 55 10 10">
+                        <StackPanel>
 
-                    <TextBlock Grid.ColumnSpan="2" Text="Set the name of the imported world" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18" TextWrapping="Wrap" TextAlignment="Center" Width="250"/>
-
-                    <Border Grid.ColumnSpan="2" Grid.Row="1" BorderBrush ="#333437" Background="#333437" BorderThickness="1" CornerRadius="8" Margin="0" Height="30" Width="250">
-                        <TextBox x:Name="TBImportedWorldName"
+                            <Grid Margin="20 20 20 5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="World Name:" Foreground="White" VerticalAlignment="Center" FontSize="20" TextWrapping="Wrap"/>
+                                <Border Grid.Column="2" Grid.Row="1" BorderBrush ="#333437" Background="#333437" BorderThickness="1" CornerRadius="8" Margin="10 0 0 0" Height="30">
+                                    <TextBox x:Name="TBImportedWorldName"
                                                         FontSize="18" MaxLines="1" ToolTip="Set the world name"
                                                         Foreground="#8A8A8A" TextAlignment="Left"
                                                         Background="{x:Null}" BorderBrush="{x:Null}"
                                                         Margin="13,4,13,4" SelectionBrush="#FF007BFF"
                                                         VerticalAlignment="Center" BorderThickness="0"
                                                         CaretBrush="White" MaxLength="25" LostKeyboardFocus="TBImportedWorldName_Input">
-                        </TextBox>
-                    </Border>
+                                    </TextBox>
+                                </Border>
+                            </Grid>
+                            
 
-                    <Button Click="ImportedWorldNameCancelBtn_Click" Grid.Row="2" Style="{StaticResource LargeButton}" Background="#151516" Height="50" Width="100" VerticalAlignment="Top" Content="Cancel" ToolTip="Cancel the save file import"/>
-                    <Button x:Name="ImportedWorldNameContinueBtn" Click="ImportedWorldNameContinueBtn_Click" Grid.Row="2" Grid.Column="1" Style="{StaticResource LargeButton}" Background="#FF007BFF" Height="50" Width="100" VerticalAlignment="Top" Content="Continue" ToolTip="Import the selected save files" Opacity=".6" IsEnabled="False"/>
+                            <TextBlock Grid.ColumnSpan="2" Text="Select save folder" Foreground="White" VerticalAlignment="Top" FontSize="20" TextWrapping="Wrap" Margin="20 30 20 5"/>
+                            <Border Height="60" Margin="20 0" Background="#151516" CornerRadius="8">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="115"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <ScrollViewer Margin="15 0">
+                                        <TextBlock x:Name="TBSelectedSaveImportDir" Text="Select the save file to import" FontSize="12" FontStyle="Italic" Foreground="#8A8A8A" VerticalAlignment="Center" TextWrapping="Wrap"/>
+
+                                        <!-- Fix the Scroll Bar -->
+                                        <ScrollViewer.Resources>
+                                            <Style x:Key="{x:Type ScrollBar}" TargetType="{x:Type ScrollBar}">
+                                                <Setter Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate TargetType="{x:Type ScrollBar}">
+
+                                                            <Grid x:Name="GridRoot" Width="6" Background="{x:Null}">
+                                                                <Track x:Name="PART_Track" Grid.Row="0" IsDirectionReversed="true" Focusable="False">
+                                                                    <Track.Thumb>
+                                                                        <Thumb x:Name="Thumb" Background="#26FFFFFF" Style="{DynamicResource ScrollThumbs}"/>
+                                                                    </Track.Thumb>
+                                                                    <Track.IncreaseRepeatButton>
+                                                                        <RepeatButton x:Name="PageUp" Command="ScrollBar.PageDownCommand" Opacity="0" Focusable="False"/>
+                                                                    </Track.IncreaseRepeatButton>
+                                                                    <Track.DecreaseRepeatButton>
+                                                                        <RepeatButton x:Name="PageDown" Command="ScrollBar.PageUpCommand" Opacity="0" Focusable="False"/>
+                                                                    </Track.DecreaseRepeatButton>
+                                                                </Track>
+                                                            </Grid>
+
+                                                            <ControlTemplate.Triggers>
+                                                                <Trigger SourceName="Thumb" Property="IsMouseOver" Value="true">
+                                                                    <Setter Value="#3FFFFFFF" TargetName="Thumb" Property="Background"/>
+                                                                </Trigger>
+                                                                <Trigger SourceName="Thumb" Property="IsDragging" Value="true">
+                                                                    <Setter Value="{DynamicResource DarkBrush}" TargetName="Thumb" Property="Background"/>
+                                                                </Trigger>
+
+                                                                <Trigger Property="IsEnabled" Value="false">
+                                                                    <Setter TargetName="Thumb" Property="Visibility" Value="Collapsed"/>
+                                                                </Trigger>
+                                                                <Trigger Property="Orientation" Value="Horizontal">
+                                                                    <Setter TargetName="GridRoot" Property="LayoutTransform">
+                                                                        <Setter.Value>
+                                                                            <RotateTransform Angle="-90"/>
+                                                                        </Setter.Value>
+                                                                    </Setter>
+                                                                    <Setter TargetName="PART_Track" Property="LayoutTransform">
+                                                                        <Setter.Value>
+                                                                            <RotateTransform Angle="-90"/>
+                                                                        </Setter.Value>
+                                                                    </Setter>
+                                                                    <Setter Property="Width" Value="Auto"/>
+                                                                    <Setter Property="Height" Value="12"/>
+                                                                    <Setter TargetName="Thumb" Property="Tag" Value="Horizontal"/>
+                                                                    <Setter TargetName="PageDown" Property="Command" Value="ScrollBar.PageLeftCommand"/>
+                                                                    <Setter TargetName="PageUp" Property="Command" Value="ScrollBar.PageRightCommand"/>
+                                                                </Trigger>
+                                                            </ControlTemplate.Triggers>
+
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Style>
+                                        </ScrollViewer.Resources>
+                                    </ScrollViewer>
+                                    
+                                    <Button Grid.Column="1" Style="{StaticResource LargeButton}" Click="SelectImportedSaveFileBtn_Click" Background="#FF007BFF" Width="90" Height="35" ToolTip="Select the directory of the save folder you want to import" FontSize="15" FontWeight="Bold" Content="Select"/>
+                                </Grid>
+                            </Border>
+
+                            <TextBlock Grid.ColumnSpan="2" Text="Select server.cfg file" Foreground="White" VerticalAlignment="Top" FontSize="20" TextWrapping="Wrap" Margin="20 30 20 5"/>
+                            <Border Height="60" Margin="20 0" Background="#151516" CornerRadius="8">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="115"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <ScrollViewer Margin="15 0">
+                                        <TextBlock x:Name="TBSelectedServerCfgImportDir" Text="Select the server.cfg file to import" FontSize="12" FontStyle="Italic" Foreground="#8A8A8A" VerticalAlignment="Center" TextWrapping="Wrap"/>
+
+                                        <!-- Fix the Scroll Bar -->
+                                        <ScrollViewer.Resources>
+                                            <Style x:Key="{x:Type ScrollBar}" TargetType="{x:Type ScrollBar}">
+                                                <Setter Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate TargetType="{x:Type ScrollBar}">
+
+                                                            <Grid x:Name="GridRoot" Width="6" Background="{x:Null}">
+                                                                <Track x:Name="PART_Track" Grid.Row="0" IsDirectionReversed="true" Focusable="False">
+                                                                    <Track.Thumb>
+                                                                        <Thumb x:Name="Thumb" Background="#26FFFFFF" Style="{DynamicResource ScrollThumbs}"/>
+                                                                    </Track.Thumb>
+                                                                    <Track.IncreaseRepeatButton>
+                                                                        <RepeatButton x:Name="PageUp" Command="ScrollBar.PageDownCommand" Opacity="0" Focusable="False"/>
+                                                                    </Track.IncreaseRepeatButton>
+                                                                    <Track.DecreaseRepeatButton>
+                                                                        <RepeatButton x:Name="PageDown" Command="ScrollBar.PageUpCommand" Opacity="0" Focusable="False"/>
+                                                                    </Track.DecreaseRepeatButton>
+                                                                </Track>
+                                                            </Grid>
+
+                                                            <ControlTemplate.Triggers>
+                                                                <Trigger SourceName="Thumb" Property="IsMouseOver" Value="true">
+                                                                    <Setter Value="#3FFFFFFF" TargetName="Thumb" Property="Background"/>
+                                                                </Trigger>
+                                                                <Trigger SourceName="Thumb" Property="IsDragging" Value="true">
+                                                                    <Setter Value="{DynamicResource DarkBrush}" TargetName="Thumb" Property="Background"/>
+                                                                </Trigger>
+
+                                                                <Trigger Property="IsEnabled" Value="false">
+                                                                    <Setter TargetName="Thumb" Property="Visibility" Value="Collapsed"/>
+                                                                </Trigger>
+                                                                <Trigger Property="Orientation" Value="Horizontal">
+                                                                    <Setter TargetName="GridRoot" Property="LayoutTransform">
+                                                                        <Setter.Value>
+                                                                            <RotateTransform Angle="-90"/>
+                                                                        </Setter.Value>
+                                                                    </Setter>
+                                                                    <Setter TargetName="PART_Track" Property="LayoutTransform">
+                                                                        <Setter.Value>
+                                                                            <RotateTransform Angle="-90"/>
+                                                                        </Setter.Value>
+                                                                    </Setter>
+                                                                    <Setter Property="Width" Value="Auto"/>
+                                                                    <Setter Property="Height" Value="12"/>
+                                                                    <Setter TargetName="Thumb" Property="Tag" Value="Horizontal"/>
+                                                                    <Setter TargetName="PageDown" Property="Command" Value="ScrollBar.PageLeftCommand"/>
+                                                                    <Setter TargetName="PageUp" Property="Command" Value="ScrollBar.PageRightCommand"/>
+                                                                </Trigger>
+                                                            </ControlTemplate.Triggers>
+
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Style>
+                                        </ScrollViewer.Resources>
+                                    </ScrollViewer>
+                                    
+                                    <Button Grid.Column="1" Style="{StaticResource LargeButton}" x:Name="SelectImportedServerCfgBtn" Click="SelectImportedServerCfgBtn_Click" Background="#FF007BFF" Width="90" Height="35" ToolTip="Change the directory of the targeted save folder" FontSize="15" FontWeight="Bold" Content="Select" IsEnabled="False" Opacity=".6"/>
+                                </Grid>
+                            </Border>
+                            
+                            <Grid Margin="20 30">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Button Click="ImportWorldCancelBtn_Click" Style="{StaticResource LargeButton}" Background="#151516" Height="50" Width="160" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Cancel" ToolTip="Cancel the save file import"/>
+                                <Button x:Name="ImportWorldBtn" Click="ImportWorldBtn_Click" Grid.Column="1" Style="{StaticResource LargeButton}" Background="#FF007BFF" Height="50" Width="160" HorizontalAlignment="Right" VerticalAlignment="Top" Content="Import" ToolTip="Import the selected save files" Opacity=".6" IsEnabled="False"/>
+                            </Grid>
+
+                        </StackPanel>
+                    </Border>
                 </Grid>
             </Border>
 
