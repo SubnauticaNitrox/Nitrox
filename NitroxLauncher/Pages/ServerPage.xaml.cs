@@ -233,12 +233,21 @@ namespace NitroxLauncher.Pages
                 SelectedWorldDirectory = WorldManager.GetSaves().ElementAtOrDefault(WorldListingContainer.SelectedIndex)?.WorldSaveDir ?? "";
             }
             IsNewWorld = false;
-
-            //string recyleBinDir = Path.Combine("C:\\", "$Recycle.Bin", UserPrincipal.Current.Sid.ToString());
-            //Log.Info($"Moving \"{SelectedWorldDirectory}\" to the recycling bin at \"{recyleBinDir}\"");
-            //Directory.Move(SelectedWorldDirectory, recyleBinDir);
-            Directory.Delete(SelectedWorldDirectory, true);
-            Log.Info($"Deleting world \"{Path.GetFileName(SelectedWorldDirectory)}\"");
+            
+            try
+            {
+                //string recyleBinDir = Path.Combine("C:\\", "$Recycle.Bin", UserPrincipal.Current.Sid.ToString());
+                //Log.Info($"Moving \"{SelectedWorldDirectory}\" to the recycling bin at \"{recyleBinDir}\"");
+                //Directory.Move(SelectedWorldDirectory, recyleBinDir);
+                Directory.Delete(SelectedWorldDirectory, true);
+                Log.Info($"Deleting world \"{Path.GetFileName(SelectedWorldDirectory)}\"");
+                LauncherNotifier.Success($"Successfully deleted save \"{Path.GetFileName(SelectedWorldDirectory)}\".");
+            }
+            catch (Exception ex)
+            {
+                LauncherNotifier.Error("Error: Could not delete all of the files of the selected save. Try deleting the remaining files manually.");
+                Log.Error($"Could not delete save \"{Path.GetFileName(SelectedWorldDirectory)}\" : {ex.GetType()} {ex.Message}");
+            }
 
             ConfirmationBox.Opacity = 0;
             ConfirmationBox.IsHitTestVisible = false;

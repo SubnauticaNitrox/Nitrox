@@ -115,12 +115,16 @@ namespace NitroxServer.Serialization.World
             }
             catch (Exception ex)
             {
-                Log.Error($"Could not load world, creating a new one : {ex.GetType()} {ex.Message}");
+                // Check if the world was newly created using the world manager
+                if (new FileInfo(Path.Combine(saveDir, $"WorldData{FileEnding}")).Length > 0)
+                {
+                    Log.Error($"Could not load world, creating a new one : {ex.GetType()} {ex.Message}");
 
-                //Backup world if loading fails
-                string outZip = Path.Combine(saveDir, "worldBackup.zip");
-                Log.WarnSensitive("Creating a backup at {path}", Path.GetFullPath(outZip));
-                FileSystem.Instance.ZipFilesInDirectory(saveDir, outZip, $"*{FileEnding}", true);
+                    //Backup world if loading fails
+                    string outZip = Path.Combine(saveDir, "worldBackup.zip");
+                    Log.WarnSensitive("Creating a backup at {path}", Path.GetFullPath(outZip));
+                    FileSystem.Instance.ZipFilesInDirectory(saveDir, outZip, $"*{FileEnding}", true);
+                }
             }
 
             return Optional.Empty;
