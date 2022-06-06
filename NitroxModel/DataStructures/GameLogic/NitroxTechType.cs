@@ -12,7 +12,7 @@ namespace NitroxModel.DataStructures.GameLogic;
 /// </remarks>
 [Serializable]
 [JsonContractTransition]
-public class NitroxTechType
+public class NitroxTechType : IEquatable<NitroxTechType>
 {
     [JsonMemberTransition]
     public string Name { get; set; }
@@ -29,7 +29,22 @@ public class NitroxTechType
 
     public override bool Equals(object obj)
     {
-        return obj is NitroxTechType type && Name == type.Name;
+        return obj is NitroxTechType other && Equals(other);
+    }
+    
+    public bool Equals(NitroxTechType other)
+    {
+        if (ReferenceEquals(null, other))
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
+        return Name == other.Name;
     }
 
     public override int GetHashCode()

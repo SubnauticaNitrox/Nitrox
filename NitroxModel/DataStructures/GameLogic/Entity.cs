@@ -36,7 +36,8 @@ public class Entity
     ///     Keeps track if an entity was spawned by the server or a player
     ///     Server-spawned entities need to be techType white-listed to be simulated
     /// </summary>
-    [JsonMemberTransition] public bool SpawnedByServer;
+    [JsonMemberTransition] 
+    public bool SpawnedByServer { get; set; }
 
     [JsonMemberTransition]
     public NitroxId WaterParkId { get; set; }

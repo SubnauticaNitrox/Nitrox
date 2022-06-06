@@ -16,7 +16,7 @@ public class PDAStateData
     public ThreadSafeList<NitroxTechType> UnlockedTechTypes { get; } = new();
 
     [JsonProperty]
-    public ThreadSafeDictionary<NitroxTechType, PDAEntry> PartiallyUnlockedByTechType { get; set; } = new();
+    public ThreadSafeDictionary<NitroxTechType, PDAEntry> PartiallyUnlockedByTechType { get; internal set; } = new();
 
     /// <summary>
     /// Gets or sets the KnownTech construct which powers the popup shown to the user when a new TechType is discovered ("New Creature Discovered!")
@@ -41,7 +41,7 @@ public class PDAStateData
     public ThreadSafeList<PDALogEntry> PdaLog { get; } = new();
 
     [JsonProperty]
-    public ThreadSafeDictionary<NitroxTechType, PDAProgressEntry> CachedProgress { get; } = new();
+    public ThreadSafeDictionary<NitroxTechType, PDAProgressEntry> CachedProgress { get; internal set; } = new();
 
     public void UnlockedTechType(NitroxTechType techType)
     {
@@ -119,6 +119,7 @@ public class PDAStateData
             {
                 CachedProgress.Add(techType, pdaProgressEntry = new PDAProgressEntry(techType, new Dictionary<NitroxId, float>()));
             }
+
             // Prevents decreasing progress
             if (!pdaProgressEntry.Entries.ContainsKey(nitroxId) || (unlocked == pdaEntry.Unlocked && pdaProgressEntry.Entries.TryGetValue(nitroxId, out float oldProgress) && oldProgress < progress))
             {

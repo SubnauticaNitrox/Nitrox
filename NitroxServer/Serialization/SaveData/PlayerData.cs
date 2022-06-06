@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
+using NitroxServer.GameLogic;
 
 namespace NitroxServer.Serialization.SaveData;
 
@@ -10,15 +11,16 @@ public class PlayerData
     [JsonProperty]
     public List<PersistedPlayerData> Players = new();
 
-    public List<GameLogic.Player> GetPlayers()
+    public List<Player> GetPlayers()
     {
         return Players.Select(playerData => playerData.ToPlayer()).ToList();
     }
 
-    public static PlayerData From(IEnumerable<GameLogic.Player> players)
+    public static PlayerData From(IEnumerable<Player> players)
     {
-        List<PersistedPlayerData> persistedPlayers = players.Select(PersistedPlayerData.FromPlayer).ToList();
-
-        return new PlayerData { Players = persistedPlayers };
+        return new PlayerData
+        {
+            Players = players.Select(PersistedPlayerData.FromPlayer).ToList()
+        };
     }
 }
