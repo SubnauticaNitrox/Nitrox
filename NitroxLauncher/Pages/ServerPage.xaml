@@ -423,10 +423,27 @@
 
                                                     </Grid>
 
+                                                    <!-- ListViewItem Highlighting -->
+                                                    <Border Grid.ColumnSpan="3" Background="Transparent" BorderThickness="3" CornerRadius="8" Margin="-3" IsHitTestVisible="False">
+                                                        <Border.Style>
+                                                            <Style TargetType="Border">
+                                                                <Setter Property="BorderBrush" Value="Transparent"/>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}" Value="True">
+                                                                        <Setter Property="BorderBrush" Value="#FF007BFF"/>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}" Value="True">
+                                                                        <Setter Property="BorderBrush" Value="Blue"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Border.Style>
+                                                    </Border>
+
                                                 </Grid>
                                             </Border>
 
-                                            <!-- World Optins Pop-up Animation Logic -->
+                                            <!-- World Options Pop-up Animation Logic -->
                                             <DataTemplate.Triggers>
                                                 <Trigger Property="IsMouseOver" Value="True">
                                                     <Trigger.EnterActions>
@@ -458,6 +475,21 @@
 
                                         </DataTemplate>
                                     </ListView.ItemTemplate>
+
+                                    <!-- Remove the default highlight box for listviewitem selection -->
+                                    <ListView.ItemContainerStyle>
+                                        <Style TargetType="{x:Type ListViewItem}">
+                                            <Setter Property="Background" Value="Transparent"/>
+
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                                        <ContentPresenter Margin="5 2"/>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </ListView.ItemContainerStyle>
 
                                 </ListView>
                             </Grid>
@@ -728,7 +760,7 @@
                                                         <ComboBoxItem Content="Admin"/>
                                                     </ComboBox>
 
-                                                    <!-- TODO - Once PVP is added -->
+                                                    <!-- TODO - Once Mod Support is added -->
                                                     <!--<Button Style="{StaticResource LargeButton}" Click="ViewModsPlugins_Click" ToolTip="View the mods and plugins you currently have installed" Grid.Row="1" Grid.Column="6" Content="View Mods/Plugins" Foreground="White" FontSize="15" Grid.ColumnSpan="2" Background="#FF007BFF" Height="23" Width="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10 0 5.7 0"/>-->
 
                                                 </Grid>
