@@ -3,15 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NitroxModel.Helper;
-using NitroxModel.Server;
 
 namespace NitroxServer.Serialization.World;
 
 public static class WorldManager
 {
     public static readonly string SavesFolderDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", "saves");
-
-    public static string SelectedWorldName { get; set; }
 
     public static readonly string[] WorldFiles = { "BaseData.json", "EntityData.json", "PlayerData.json", "Version.json", "WorldData.json" };
 

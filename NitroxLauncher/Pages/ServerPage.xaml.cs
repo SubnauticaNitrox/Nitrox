@@ -12,6 +12,7 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Server;
 using NitroxServer.Serialization;
 using NitroxServer.Serialization.World;
+using Microsoft.VisualBasic.FileIO;
 
 namespace NitroxLauncher.Pages
 {
@@ -25,10 +26,11 @@ namespace NitroxLauncher.Pages
 
         public ServerConfig Config;
 
-        public bool IsNewWorld { get; set; }
+        private bool IsNewWorld { get; set; }
         private bool IsInSettings { get; set; }
 
-        public string SelectedWorldDirectory { get; set; }
+        private string SelectedWorldDirectory { get; set; }
+        private string WorldCurrentlyUsed { get; set; }
         private string ImportedWorldName { get; set; }
         private string SelectedWorldImportDirectory { get; set; }
         private string SelectedServerCfgImportDirectory { get; set; }
@@ -192,6 +194,12 @@ namespace NitroxLauncher.Pages
         // World management
         private void SelectedWorldSettings_Click(object sender, RoutedEventArgs e)
         {
+            if (LauncherLogic.Server.IsServerRunning && WorldCurrentlyUsed == WorldManager.GetSaves().ElementAtOrDefault(WorldListingContainer.SelectedIndex)?.WorldSaveDir)
+            {
+                LauncherNotifier.Error("This world is currently being used. Stop the server to edit the settings of this world");
+                return;
+            }
+            
             if (WorldManager.GetSaves().ElementAtOrDefault(WorldListingContainer.SelectedIndex).IsValidSave)
             {
                 TBWorldSeed.IsEnabled = false;
@@ -217,6 +225,12 @@ namespace NitroxLauncher.Pages
 
         private void DeleteWorld_Click(object sender, RoutedEventArgs e)
         {
+            if (LauncherLogic.Server.IsServerRunning && WorldCurrentlyUsed == WorldManager.GetSaves().ElementAtOrDefault(WorldListingContainer.SelectedIndex)?.WorldSaveDir)
+            {
+                LauncherNotifier.Error("This world is currently being used. Stop the server to delete this world");
+                return;
+            }
+            
             if (e.OriginalSource == DeleteWorldBtn)
             {
                 IsInSettings = true;
@@ -236,17 +250,14 @@ namespace NitroxLauncher.Pages
             
             try
             {
-                //string recyleBinDir = Path.Combine("C:\\", "$Recycle.Bin", UserPrincipal.Current.Sid.ToString());
-                //Log.Info($"Moving \"{SelectedWorldDirectory}\" to the recycling bin at \"{recyleBinDir}\"");
-                //Directory.Move(SelectedWorldDirectory, recyleBinDir);
-                Directory.Delete(SelectedWorldDirectory, true);
-                Log.Info($"Deleting world \"{Path.GetFileName(SelectedWorldDirectory)}\"");
-                LauncherNotifier.Success($"Successfully deleted save \"{Path.GetFileName(SelectedWorldDirectory)}\".");
+                FileSystem.DeleteDirectory(SelectedWorldDirectory, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
+                Log.Info($"Moving world \"{Path.GetFileName(SelectedWorldDirectory)}\" to the recyling bin.");
+                LauncherNotifier.Success($"Successfully moved save \"{Path.GetFileName(SelectedWorldDirectory)}\" to the recycling bin");
             }
             catch (Exception ex)
             {
-                LauncherNotifier.Error("Error: Could not delete all of the files of the selected save. Try deleting the remaining files manually.");
-                Log.Error($"Could not delete save \"{Path.GetFileName(SelectedWorldDirectory)}\" : {ex.GetType()} {ex.Message}");
+                LauncherNotifier.Error("Error: Could not move the selected save to the recycling bin. Try deleting any remaining files manually.");
+                Log.Error($"Could not move save \"{Path.GetFileName(SelectedWorldDirectory)}\" to the recycling bin : {ex.GetType()} {ex.Message}");
             }
 
             ConfirmationBox.Opacity = 0;
@@ -677,7 +688,15 @@ namespace NitroxLauncher.Pages
         {
             if (Directory.Exists(SelectedWorldDirectory))
             {
-                Directory.Delete(SelectedWorldDirectory, true); // Delete the save folder created when the import world button was clicked
+                try
+                {
+                    FileSystem.DeleteDirectory(SelectedWorldDirectory, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
+                }
+                catch (Exception ex)
+                {
+                    LauncherNotifier.Info("Could not delete the originally created world. You can manually delete this world separately if desired.");
+                    Log.Error($"Could not move save \"{Path.GetFileName(SelectedWorldDirectory)}\" to the recycling bin : {ex.GetType()} {ex.Message}");
+                }
             }
             SelectedWorldDirectory = Path.Combine(WorldManager.SavesFolderDir, ImportedWorldName);
 
@@ -727,16 +746,26 @@ namespace NitroxLauncher.Pages
 
             if (WorldManager.GetSaves().ElementAtOrDefault(WorldListingContainer.SelectedIndex).IsValidSave)
             {
-                InitializeWorldListing();
-
                 try
                 {
                     LauncherLogic.Server.StartServer(RBIsExternal.IsChecked == true, SelectedWorldDirectory);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    if (ex.ToString().Contains("An instance of Nitrox Server is already running"))
+                    {
+                        LauncherNotifier.Error("An instance of the Nitrox server is already running, please close it to start another server");
+                    }
+                    else
+                    {
+                        MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    return;
                 }
+
+                WorldCurrentlyUsed = SelectedWorldDirectory;
+                File.SetLastWriteTime(Path.Combine(SelectedWorldDirectory, "WorldData.json"), DateTime.Now);
+                InitializeWorldListing();
             }
             else
             {

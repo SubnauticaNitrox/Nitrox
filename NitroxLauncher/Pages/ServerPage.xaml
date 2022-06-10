@@ -1013,7 +1013,7 @@
                                         <ColumnDefinition Width="115"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <ScrollViewer Margin="15 0">
+                                    <ScrollViewer Margin="15 0 0 0">
                                         <TextBlock x:Name="TBSelectedSaveImportDir" Text="Select the save file to import" FontSize="12" FontStyle="Italic" Foreground="#8A8A8A" VerticalAlignment="Center" TextWrapping="Wrap"/>
 
                                         <!-- Fix the Scroll Bar -->
@@ -1086,7 +1086,7 @@
                                         <ColumnDefinition Width="115"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <ScrollViewer Margin="15 0">
+                                    <ScrollViewer Margin="15 0 0 0">
                                         <TextBlock x:Name="TBSelectedServerCfgImportDir" Text="Select the server.cfg file to import" FontSize="12" FontStyle="Italic" Foreground="#8A8A8A" VerticalAlignment="Center" TextWrapping="Wrap"/>
 
                                         <!-- Fix the Scroll Bar -->

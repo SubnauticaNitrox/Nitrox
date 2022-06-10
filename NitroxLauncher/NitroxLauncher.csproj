@@ -30,6 +30,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Reference Include="Microsoft.VisualBasic" />
       <Reference Include="PresentationFramework.Aero2" />
     </ItemGroup>
     
