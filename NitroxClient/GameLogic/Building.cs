@@ -157,7 +157,7 @@ namespace NitroxClient.GameLogic
                     cellTransform = latestBase.GetCellObject(latestCell);
                     if (cellTransform != null)
                     {
-                        placedPiece = FindFinishedPiece(cellTransform);
+                        placedPiece = FindFinishedPiece(cellTransform, id);
                     }
                 }
 
@@ -170,7 +170,7 @@ namespace NitroxClient.GameLogic
                     cellTransform = latestBase.GetCellObject(position);       
 
                     Validate.NotNull(cellTransform, "Unable to find cell transform at " + latestCell);
-                    placedPiece = FindFinishedPiece(cellTransform);
+                    placedPiece = FindFinishedPiece(cellTransform, id);
                 }
                 
                 Validate.NotNull(placedPiece, $"Could not find finished piece in cell {latestCell}");
@@ -195,13 +195,14 @@ namespace NitroxClient.GameLogic
         
         // There can be multiple objects in a cell (such as a corridor with hatches built into it)
         // we look for a object that is able to be deconstructed that hasn't been tagged yet.
-        internal static GameObject FindFinishedPiece(Transform cellTransform)
+        internal static GameObject FindFinishedPiece(Transform cellTransform, NitroxId pieceId)
         {
             foreach (Transform child in cellTransform)
             {
-                bool isNewBasePiece = !child.TryGetComponent(out NitroxEntity _) && child.GetComponent<BaseDeconstructable>() && !child.name.Contains("CorridorConnector");
+                bool isFinishedPiece = (!child.TryGetComponent(out NitroxEntity entity) && child.GetComponent<BaseDeconstructable>() && !child.name.Contains("CorridorConnector")) ||
+                                        entity?.Id == pieceId;
                 
-                if (isNewBasePiece)
+                if (isFinishedPiece)
                 {
                     return child.gameObject;
                 }
