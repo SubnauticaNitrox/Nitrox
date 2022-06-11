@@ -212,7 +212,7 @@ namespace NitroxClient.MonoBehaviours
 
                     if (cellTransform)
                     {
-                        placedPiece = FindFinishedPiece(cellTransform);
+                        placedPiece = FindFinishedPiece(cellTransform, constructionCompleted.PieceId);
                     }
                 }
                 
@@ -222,7 +222,7 @@ namespace NitroxClient.MonoBehaviours
                     cellTransform = latestBase.GetCellObject(position);                        
                     Validate.NotNull(cellTransform, "Unable to find cell transform at " + position);
                     
-                    placedPiece = FindFinishedPiece(cellTransform);
+                    placedPiece = FindFinishedPiece(cellTransform, constructionCompleted.PieceId);
                 }
                 
                 Validate.NotNull(placedPiece, $"Could not find placed Piece in cell {latestCell} when constructing {constructionCompleted.PieceId}");
@@ -260,12 +260,13 @@ namespace NitroxClient.MonoBehaviours
         
         // There can be multiple objects in a cell (such as a corridor with hatches built into it)
         // we look for a object that is able to be deconstructed that hasn't been tagged yet.
-        private static GameObject FindFinishedPiece(Transform cellTransform)
+        private static GameObject FindFinishedPiece(Transform cellTransform, NitroxId pieceId)
         {
             foreach (Transform child in cellTransform)
             {
-                bool isNewBasePiece = !child.TryGetComponent(out NitroxEntity _) && child.GetComponent<BaseDeconstructable>() && !child.name.Contains("CorridorConnector");
-                if (isNewBasePiece)
+                bool isFinishedPiece = (!child.TryGetComponent(out NitroxEntity entity) && child.GetComponent<BaseDeconstructable>() && !child.name.Contains("CorridorConnector")) ||
+                                        entity?.Id == pieceId;
+                if (isFinishedPiece)
                 {
                     return child.gameObject;
                 }
