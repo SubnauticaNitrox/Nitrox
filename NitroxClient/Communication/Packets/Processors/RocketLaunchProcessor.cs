@@ -26,7 +26,9 @@ public class RocketLaunchProcessor : ClientPacketProcessor<RocketLaunch>
 
         // Only launch if you're in the rocket so
         // verify if the distance to a centered point in the middle of the stage 3 of the rocket is inferior to 5.55 (pre-calculated radius)
-        if (Player.main.IsUnderwater() || Player.main.currentSub || NitroxVector3.Distance(Player.main.transform.position.ToDto(), sphereCenter.transform.position.ToDto()) > 5.55f)
+        if (Player.main.IsUnderwater() ||
+            Player.main.currentSub ||
+            NitroxVector3.Distance(Player.main.transform.position.ToDto(), sphereCenter.transform.position.ToDto()) > 5.55f)
         {
             return;
         }

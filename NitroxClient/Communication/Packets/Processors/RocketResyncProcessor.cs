@@ -17,13 +17,6 @@ public class RocketResyncProcessor : ClientPacketProcessor<RocketResync>
         CockpitSwitch[] cockpitSwitches = gameObjectRocket.GetComponentsInChildren<CockpitSwitch>(true);
         ThrowSwitch[] throwSwitches = gameObjectRocket.GetComponentsInChildren<ThrowSwitch>(true);
 
-        // TODO: REMOVE BEFORE MERGE
-        // For tests of resync, uncomment these 2 lines
-        // And in RocketLaunchProcessor on server-side, move the RocketSync packet sending outside the if so it's executed each time, and comment the line sending back the RocketLaunch packet
-        // In game, write command "forcerocketready" and click on the seat
-        // packet.PreflightChecks.Remove(PreflightCheck.PrimaryComputer);
-        // packet.PreflightChecks.Remove(PreflightCheck.Hydraulics);
-
         foreach (RocketPreflightCheckScreenElement screenElement in screenElements)
         {
             if (packet.PreflightChecks.Contains(screenElement.preflightCheck))

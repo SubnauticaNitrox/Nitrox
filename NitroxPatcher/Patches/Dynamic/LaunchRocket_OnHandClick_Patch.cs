@@ -11,7 +11,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public class LaunchRocket_OnHandClick_Patch : NitroxPatch, IDynamicPatch
 {
-    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((LaunchRocket t) => t.OnHandClick(default(GUIHand)));
+    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((LaunchRocket t) => t.OnHandClick(default));
 
     public static bool Prefix(LaunchRocket __instance)
     {
