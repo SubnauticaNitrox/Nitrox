@@ -161,23 +161,15 @@ public class uGUI_PlayerEntry : uGUI_PingEntry
 
     public void AssignSprites()
     {
-        MutedSprite = AssetsHelper.MakeSpriteFromTexture("muted@2x");
-        UnmutedSprite = AssetsHelper.MakeSpriteFromTexture("unmuted@2x");
-        KickSprite = AssetsHelper.MakeSpriteFromTexture("kick@68x61");
-        TeleportToSprite = AssetsHelper.MakeSpriteFromTexture("teleport_to@2x");
-        TeleportToMeSprite = AssetsHelper.MakeSpriteFromTexture("teleport_to_me@2x");
+        // NB: Those textures MUST be exported with a Texture Type of "Sprite (2D and UI)", else they will look blurry not matter what
+        // NB 2: Those textures for the buttons are scaled 68x61 but the image inside but not hit the borders to have a better render
+        MutedSprite = AssetsHelper.MakeSpriteFromTexture("muted@3x");
+        UnmutedSprite = AssetsHelper.MakeSpriteFromTexture("unmuted@3x");
+        KickSprite = AssetsHelper.MakeSpriteFromTexture("kick@3x");
+        TeleportToSprite = AssetsHelper.MakeSpriteFromTexture("teleport_to@3x");
+        TeleportToMeSprite = AssetsHelper.MakeSpriteFromTexture("teleport_to_me@3x");
 
-        // TODO: keep looking for why the images don't fit the boxes
-        Sprite oldSprite = MuteObject.FindChild("Eye").GetComponent<Image>().sprite;
-        Log.Debug($"Mute: pixelsPerUnit: {oldSprite.pixelsPerUnit}, border: {oldSprite.border}, pivot: {oldSprite.pivot}, rect: {oldSprite.rect}, bounds: {oldSprite.bounds}, WxH: {oldSprite.texture.width}x{oldSprite.texture.height}");
-        oldSprite = KickObject.FindChild("Eye").GetComponent<Image>().sprite;
-        Log.Debug($"Kick: pixelsPerUnit: {oldSprite.pixelsPerUnit}, border: {oldSprite.border}, pivot: {oldSprite.pivot}, rect: {oldSprite.rect}, bounds: {oldSprite.bounds}, WxH: {oldSprite.texture.width}x{oldSprite.texture.height}");
-        oldSprite = KickSprite;
-        Log.Debug($"Kick: pixelsPerUnit: {oldSprite.pixelsPerUnit}, border: {oldSprite.border}, pivot: {oldSprite.pivot}, rect: {oldSprite.rect}, bounds: {oldSprite.bounds}, WxH: {oldSprite.texture.width}x{oldSprite.texture.height}");
-        oldSprite = TeleportToSprite;
-        Log.Debug($"Kick: pixelsPerUnit: {oldSprite.pixelsPerUnit}, border: {oldSprite.border}, pivot: {oldSprite.pivot}, rect: {oldSprite.rect}, bounds: {oldSprite.bounds}, WxH: {oldSprite.texture.width}x{oldSprite.texture.height}");
-
-        MuteObject.FindChild("Eye").GetComponent<Image>().sprite = UnmutedSprite;
+        MuteObject.FindChild("Eye").GetComponent<Image>().sprite = MutedSprite;
         KickObject.FindChild("Eye").GetComponent<Image>().sprite = KickSprite;
         TeleportToObject.FindChild("Eye").GetComponent<Image>().sprite = TeleportToSprite;
         TeleportToMeObject.FindChild("Eye").GetComponent<Image>().sprite = TeleportToMeSprite;
