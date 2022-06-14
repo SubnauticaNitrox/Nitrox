@@ -26,7 +26,7 @@ public class uGUI_PDA_CacheToolbarTooltips_Patch : NitroxPatch, IDynamicPatch
              * not i but n - i, because we want to have the right order
              */
             int index = i + __instance.toolbarTooltips.Count - (customTabs.Count - i);
-            __instance.toolbarTooltips[index] = TooltipFactory.Label(customTabs[i].ToolbarTip());
+            __instance.toolbarTooltips[index] = TooltipFactory.Label(customTabs[i].ToolbarTip);
         }
     }
 

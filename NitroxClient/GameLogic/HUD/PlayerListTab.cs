@@ -7,20 +7,13 @@ public class PlayerListTab : NitroxPDATab
 {
     private uGUI_PDATab tab;
 
-    public override string ToolbarTip()
-    {
-        return "Nitrox_PlayerListTabName";
-    }
+    public override string ToolbarTip => "Nitrox_PlayerListTabName";
 
-    public override uGUI_PDATab uGUI_PDATab()
-    {
-        return tab;
-    }
+    public override string TabIconName => "player_list_tab@3x";
 
-    public override PDATab PDATabId()
-    {
-        return (PDATab)8;
-    }
+    public override uGUI_PDATab uGUI_PDATab => tab;
+
+    public override PDATab PDATabId => (PDATab)8;
 
     public override void OnInitializePDA(uGUI_PDA uGUI_PDA)
     {
@@ -40,8 +33,5 @@ public class PlayerListTab : NitroxPDATab
         tab = newTab;
     }
 
-    public override bool KeepPingsVisible()
-    {
-        return true;
-    }
+    public override bool KeepPingsVisible => true;
 }

@@ -68,7 +68,7 @@ public class uGUI_PDA_Initialize_Patch : NitroxPatch, IDynamicPatch
         // Also required to add the custom tabs here
         foreach (KeyValuePair<PDATab, NitroxPDATab> nitroxTab in Resolve<NitroxGuiManager>().CustomTabs)
         {
-            __instance.tabs.Add(nitroxTab.Key, nitroxTab.Value.uGUI_PDATab());
+            __instance.tabs.Add(nitroxTab.Key, nitroxTab.Value.uGUI_PDATab);
         }
         //
 

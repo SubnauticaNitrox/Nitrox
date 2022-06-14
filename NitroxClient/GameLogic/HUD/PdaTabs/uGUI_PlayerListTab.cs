@@ -68,7 +68,6 @@ public class uGUI_PlayerListTab : uGUI_PingTab
         {
             return;
         }
-        Log.Debug("UpdateEntries()");
         _isDirty = false;
         tempKeys.Clear();
         tempKeys.AddRange(entries.Keys);
@@ -80,7 +79,6 @@ public class uGUI_PlayerListTab : uGUI_PingTab
             {
                 // Sets up a new entry for the player
                 AddNewEntry(entry.Key, entry.Value);
-                Log.Debug($"Added player {player.PlayerName}");
             }
         }
 
@@ -134,7 +132,6 @@ public class uGUI_PlayerListTab : uGUI_PingTab
         newPrefab.name = "PlayerEntry";
         // We never want this to appear
         Destroy(newPrefab.FindChild("ColorToggle"));
-
 
         // Need to modify the pingTab's script from uGUI_PingEntry to uGUI_PlayerEntry
         uGUI_PingEntry pingEntry = newPrefab.GetComponent<uGUI_PingEntry>();
@@ -193,6 +190,7 @@ public class uGUI_PlayerListTab : uGUI_PingTab
 
     private IEnumerator DelayedPositionUpdate()
     {
+        // TODO: Find out a way to fix this
         yield return new WaitForSeconds(1);
         UpdateEntriesButtonPositions();
     }

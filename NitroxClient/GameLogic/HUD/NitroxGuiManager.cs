@@ -18,6 +18,6 @@ public class NitroxGuiManager
 
     private void RegisterTab(NitroxPDATab nitroxTab)
     {
-        CustomTabs.Add(nitroxTab.PDATabId(), nitroxTab);
+        CustomTabs.Add(nitroxTab.PDATabId, nitroxTab);
     }
 }
