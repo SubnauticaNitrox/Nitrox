@@ -21,6 +21,7 @@ using NitroxModel_Subnautica.DataStructures.GameLogic;
 using NitroxServer;
 using NitroxServer.ConsoleCommands.Processor;
 using NitroxServer.GameLogic.Vehicles;
+using NitroxServer.Serialization.World;
 
 namespace NitroxServer_Subnautica;
 
@@ -180,7 +181,17 @@ public class Program
     {
         if (e.ExceptionObject is Exception ex)
         {
-            Log.Error(ex);
+            string saveDir = null;
+            foreach (string arg in Environment.GetCommandLineArgs())
+            {
+                if (arg.StartsWith(WorldManager.SavesFolderDir, StringComparison.OrdinalIgnoreCase) && Directory.Exists(arg))
+                {
+                    saveDir = arg;
+                    break;
+                }
+            }
+            using StreamWriter errorFile = new(Path.Combine(saveDir, "ErrorLog.txt"), append: true);
+            errorFile.WriteLineAsync($"{ex.GetType()} {ex.Message}");
         }
 
         if (!Environment.UserInteractive || Console.In == StreamReader.Null)

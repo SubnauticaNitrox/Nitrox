@@ -151,6 +151,17 @@ namespace NitroxServer
             Log.Info($"Loaded save\n{GetSaveSummary()}");
 
             PauseServer();
+            
+            string saveDir = null;
+            foreach (string arg in Environment.GetCommandLineArgs())
+            {
+                if (arg.StartsWith(WorldManager.SavesFolderDir, StringComparison.OrdinalIgnoreCase) && Directory.Exists(arg))
+                {
+                    saveDir = arg;
+                    break;
+                }
+            }
+            WorldManager.BackupSave(saveDir);
 
             return true;
         }

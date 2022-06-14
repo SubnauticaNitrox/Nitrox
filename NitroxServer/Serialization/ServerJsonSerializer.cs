@@ -1,8 +1,10 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using NitroxModel.DataStructures.JsonConverter;
 using NitroxModel.Platforms.OS.Shared;
+using NitroxServer.Serialization.World;
 
 namespace NitroxServer.Serialization
 {
@@ -16,7 +18,19 @@ namespace NitroxServer.Serialization
 
             serializer.Error += delegate (object sender, Newtonsoft.Json.Serialization.ErrorEventArgs e)
             {
-                Log.Error(e.ErrorContext.Error, "Json serialization error: ");
+                //Log.Error(e.ErrorContext.Error, "Json serialization error: ");
+                string saveDir = null;
+                foreach (string arg in Environment.GetCommandLineArgs())
+                {
+                    if (arg.StartsWith(WorldManager.SavesFolderDir, StringComparison.OrdinalIgnoreCase) && Directory.Exists(arg))
+                    {
+                        saveDir = arg;
+                        break;
+                    }
+                }
+                using StreamWriter errorFile = new(Path.Combine(saveDir, "ErrorLog.txt"), append: true);
+                errorFile.WriteLineAsync($"Json serialization error: {e.ErrorContext.Error}");
+
             };
 
             serializer.TypeNameHandling = TypeNameHandling.Auto;

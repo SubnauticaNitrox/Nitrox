@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
@@ -86,6 +87,11 @@ namespace NitroxServer.Serialization.World
 
         internal Optional<World> LoadFromFile(string saveDir)
         {
+            if (File.Exists(Path.Combine(saveDir, "ErrorLog.txt")))
+            {
+                File.Delete(Path.Combine(saveDir, "ErrorLog.txt"));
+            }
+            
             if (!Directory.Exists(saveDir) || !File.Exists(Path.Combine(saveDir, $"Version{FileEnding}")))
             {
                 Log.Warn("No previous save file found, creating a new one");
@@ -118,12 +124,17 @@ namespace NitroxServer.Serialization.World
                 // Check if the world was newly created using the world manager
                 if (new FileInfo(Path.Combine(saveDir, $"WorldData{FileEnding}")).Length > 0)
                 {
-                    Log.Error($"Could not load world, creating a new one : {ex.GetType()} {ex.Message}");
+                    // Give error saying that world could not be used, and to restore a backup
+                    Log.Error($"Could not load world, please restore one of your backups to use this world.");
 
-                    //Backup world if loading fails
-                    string outZip = Path.Combine(saveDir, "worldBackup.zip");
-                    Log.WarnSensitive("Creating a backup at {path}", Path.GetFullPath(outZip));
-                    FileSystem.Instance.ZipFilesInDirectory(saveDir, outZip, $"*{FileEnding}", true);
+                    // Write a .txt file with the error
+                    using StreamWriter errorFile = new(Path.Combine(saveDir, "ErrorLog.txt"), append: true);
+                    errorFile.WriteLineAsync($"Could not load world at {saveDir} : {ex.GetType()} {ex.Message}");
+
+                    // Backup world if loading fails
+                    WorldManager.BackupSave(saveDir, true);
+
+                    throw new NotImplementedException();
                 }
             }
 
