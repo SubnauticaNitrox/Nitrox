@@ -2,6 +2,7 @@
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic.Helper;
+using NitroxClient.GameLogic.HUD;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -25,10 +26,12 @@ public class uGUI_PDA_SetTabs_Patch : NitroxPatch, IDynamicPatch
         // the last tab is the one we added in uGUI_PDA_Initialize_Patch
         if (AssetsHelper.AssetBundleLoaded)
         {
-            Atlas.Sprite oldSprite = array[num - 1];
-            Log.Debug($"Old sprite: pixelsPerUnit: {oldSprite.pixelsPerUnit}, padding: {oldSprite.padding}, size: {oldSprite.size}");
-            // array[num - 1].texture = AssetsHelper.GetTexture("player_list_tab@2x");
-            array[num - 1] = AssetsHelper.MakeAtlasSpriteFromTexture("player_list_tab@4x");
+            List<NitroxPDATab> customTabs = new(Resolve<NitroxGuiManager>().CustomTabs.Values);
+            for (int i = 0; i < customTabs.Count; i++)
+            {
+                string tabIconAssetName = customTabs[customTabs.Count - i - 1].TabIconAssetName;
+                array[array.Length - i - 1] = AssetsHelper.MakeAtlasSpriteFromTexture(tabIconAssetName);
+            }
         }
         else
         {
@@ -47,7 +50,12 @@ public class uGUI_PDA_SetTabs_Patch : NitroxPatch, IDynamicPatch
     private static void AssignSprite(uGUI_Toolbar uGUI_Toolbar)
     {
         // Last is player list tab's one
-        uGUI_Toolbar.icons.GetLast().SetForegroundSprite(AssetsHelper.MakeAtlasSpriteFromTexture("player_list_tab@2x"));
+        List<NitroxPDATab> customTabs = new(Resolve<NitroxGuiManager>().CustomTabs.Values);
+        for (int i = 0; i < customTabs.Count; i++)
+        {
+            string tabIconAssetName = customTabs[customTabs.Count - i - 1].TabIconAssetName;
+            uGUI_Toolbar.icons[uGUI_Toolbar.icons.Count - i - 1].SetForegroundSprite(AssetsHelper.MakeAtlasSpriteFromTexture(tabIconAssetName));
+        }
     }
 
     public override void Patch(Harmony harmony)

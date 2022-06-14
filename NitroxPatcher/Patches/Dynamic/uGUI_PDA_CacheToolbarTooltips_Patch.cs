@@ -21,12 +21,11 @@ public class uGUI_PDA_CacheToolbarTooltips_Patch : NitroxPatch, IDynamicPatch
         {
             /* considering a list like: [a,b,c,d,e,f] (toolbarTooltips)
              * We want to modify only the n (customTabs.Count) last elements to replace with
-             * the elements from the list [u,v,w] (customTabs)
-             * we start from the end of the list (toolbarTooltips.Count) and remove,
-             * not i but n - i, because we want to have the right order
+             * the elements from the list [u,v,w] (customTabs) in the right order so that we have [a,b,c,u,v,w].
+             * we start from the element at the end of (toolbarTooltips) and replace it with the last element of (customTabs)
              */
-            int index = i + __instance.toolbarTooltips.Count - (customTabs.Count - i);
-            __instance.toolbarTooltips[index] = TooltipFactory.Label(customTabs[i].ToolbarTip);
+            string toolbarTooltip = customTabs[customTabs.Count - i - 1].ToolbarTip;
+            __instance.toolbarTooltips[__instance.toolbarTooltips.Count - i - 1] = TooltipFactory.Label(toolbarTooltip);
         }
     }
 

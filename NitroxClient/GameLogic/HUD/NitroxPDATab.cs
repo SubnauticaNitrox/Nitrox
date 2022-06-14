@@ -10,7 +10,7 @@ public abstract class NitroxPDATab
     /// <summary>
     /// Asset name for the tab's icon sprite
     /// </summary>
-    public abstract string TabIconName { get; }
+    public abstract string TabIconAssetName { get; }
 
     /// <summary>
     /// The uGUI_PDATab component that will be used in-game
