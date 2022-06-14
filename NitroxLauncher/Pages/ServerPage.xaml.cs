@@ -235,10 +235,32 @@ namespace NitroxLauncher.Pages
         }
 
         // Restore Backup Button(WIP)
-        //private void RestoreBackup_Click(object sender, RoutedEventArgs e)
-        //{
+        private void RestoreBackupBtn_Click(object sender, RoutedEventArgs e)
+        {
+            // Initialize listing
+            WorldManager.RefreshBackups(SelectedWorldDirectory);
+            WorldBackupsContainer.ItemsSource = null;
+            WorldBackupsContainer.ItemsSource = WorldManager.GetBackups(SelectedWorldDirectory);
 
-        //}
+            // Show Backup pane
+            NoBackupsBackground.Opacity = WorldManager.GetBackups(SelectedWorldDirectory).Any() ? 0 : 1;
+            WorldBackupsBox.Opacity = 1;
+            WorldBackupsBox.IsHitTestVisible = true;
+        }
+
+        private void ConfirmRestoreBackupBtn_Click(object sender, RoutedEventArgs e)
+        {
+            WorldBackupsBox.Opacity = 0;
+            WorldBackupsBox.IsHitTestVisible = false;
+
+        }
+
+        private void RestoreBackupCancelBtn_Click(object sender, RoutedEventArgs e)
+        {
+            WorldBackupsBox.Opacity = 0;
+            WorldBackupsBox.IsHitTestVisible = false;
+
+        }
 
         private void DeleteWorld_Click(object sender, RoutedEventArgs e)
         {

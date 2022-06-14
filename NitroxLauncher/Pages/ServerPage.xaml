@@ -868,36 +868,36 @@
                     <Grid Grid.Row="1">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="3*"/>
+                            <!--<ColumnDefinition Width="3*"/>-->
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
 
-                        <!-- Column 1: (TODO) Restore Backup Button -->
-                        <!--<Button Style="{StaticResource LargeButton}" Click="RestoreBackup_Click" ToolTip="Restore a backup of your world" Background="#151516" Height="62" HorizontalAlignment="Stretch" Margin="0 0 15 0" Width="Auto" >
+                        <!-- Column 1: Restore Backup Button -->
+                        <Button Style="{StaticResource LargeButton}" Click="RestoreBackupBtn_Click" ToolTip="Restore a backup of your world" Background="#FF007BFF" Height="62" HorizontalAlignment="Stretch" Margin="0 0 15 0" Width="Auto" >
                             <Grid Height="53" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Button}}">
 
-                                --> <!-- Grid Definitions --> <!--
+                                <!--Grid Definitions-->  
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="3.5*"/>
                                 </Grid.ColumnDefinitions>
 
-                                --> <!-- Column 1: Restore Backup Icon --> <!--
+                                <!--Column 1: Restore Backup Icon-->  
                                 <Grid Background="White" Width="45" HorizontalAlignment="Right">
                                     <Grid.OpacityMask>
                                         <ImageBrush ImageSource="{StaticResource RestoreBackupButton}" Stretch="Uniform"/>
                                     </Grid.OpacityMask>
                                 </Grid>
 
-                                --> <!-- Column 2: Restore Backup Text --> <!--
+                                <!--Column 2: Restore Backup Text-->  
                                 <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" FontSize="16" FontWeight="Bold" Text="RESTORE BACKUP" />
 
                             </Grid>
-                        </Button>-->
+                        </Button>
 
                         <!-- Column 3: Delete World Button -->
-                        <Button Grid.Column="1" Style="{StaticResource LargeButton}" x:Name="DeleteWorldBtn" Click="DeleteWorld_Click" ToolTip="Delete this world" Background="Red" Height="62" HorizontalAlignment="Stretch" Margin="15 0 0 0" Width="Auto" >
+                        <Button Grid.Column="2" Style="{StaticResource LargeButton}" x:Name="DeleteWorldBtn" Click="DeleteWorld_Click" ToolTip="Delete this world" Background="Red" Height="62" HorizontalAlignment="Stretch" Margin="15 0 0 0" Width="Auto" >
                             <Grid Height="53" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Button}}">
 
                                 <!-- Grid Definitions -->
@@ -1146,6 +1146,91 @@
             </Border>
 
         </Grid>
+
+        <Grid x:Name="WorldBackupsBox" Opacity="1" IsHitTestVisible="False" Grid.RowSpan="2">
+            
+            <!-- Have all of the background act like the "No" button when clicked -->
+            <Button Click="RestoreBackupCancelBtn_Click" Background="Black" Opacity=".5" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Grid}}" Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Grid}}" Cursor="Arrow"/>
+
+            <Border Background="#151516" Height="400" Width="400" CornerRadius="20">
+                <Grid>
+                    <TextBlock Grid.ColumnSpan="2" Text="Restore a backup" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="25" TextWrapping="Wrap" TextAlignment="Center" Width="250" Margin="0 13" FontWeight="Bold"/>
+
+                    <Border Background="Black" CornerRadius="15" Margin="10 55 10 10">
+                        <Grid>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="90"/>
+                            </Grid.RowDefinitions>
+                            
+                            <TextBlock x:Name="NoBackupsBackground" Text="Looks like you don't have any backups.&#x0a;&#x0a;Backups are automatically made upon server startup." Foreground="#FF515255" FontWeight="Medium" FontSize="16" VerticalAlignment="Center" Width="300" TextWrapping="Wrap" TextAlignment="Center"/>
+                            
+                            <ListView Name="WorldBackupsContainer" Background="Transparent" BorderBrush="Transparent" Margin="14 0" ScrollViewer.CanContentScroll="False">
+
+                                <!-- Template for World Listing Buttons -->
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border x:Name="WorldListingBorder" Height="58" Width="Auto" Background="#FF151516" CornerRadius="7" Margin="0 17 0 0" ToolTip="Select this backup" Cursor="Hand">
+                                            <Grid Width="Auto" MaxWidth="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Border}}">
+
+                                                <TextBlock Grid.Column="0" FontSize="20" Foreground="White" Text="{Binding WorldName, Mode=OneTime}" VerticalAlignment="Center" HorizontalAlignment="Center" MaxWidth="400"/>
+
+                                                <!-- ListViewItem Highlighting -->
+                                                <Border Grid.ColumnSpan="3" Background="Transparent" BorderThickness="3" CornerRadius="8" Margin="-3" IsHitTestVisible="False">
+                                                    <Border.Style>
+                                                        <Style TargetType="Border">
+                                                            <Setter Property="BorderBrush" Value="Transparent"/>
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}" Value="True">
+                                                                    <Setter Property="BorderBrush" Value="#FF007BFF"/>
+                                                                </DataTrigger>
+                                                                <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}" Value="True">
+                                                                    <Setter Property="BorderBrush" Value="Blue"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Border.Style>
+                                                </Border>
+
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+
+                                <!-- Remove the default highlight box for listviewitem selection -->
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="{x:Type ListViewItem}">
+                                        <Setter Property="Background" Value="Transparent"/>
+
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                                    <ContentPresenter Margin="5 2"/>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </ListView.ItemContainerStyle>
+                                
+                            </ListView>
+                            
+                            <Grid Grid.Row="1" Margin="20 0" VerticalAlignment="Center">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Button Click="RestoreBackupCancelBtn_Click" Style="{StaticResource LargeButton}" Background="#151516" Height="50" Width="160" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Cancel" ToolTip="Cancel the save file backup restoration"/>
+                                <Button x:Name="ConfirmRestoreBackupBtn" Click="ConfirmRestoreBackupBtn_Click" Grid.Column="1" Style="{StaticResource LargeButton}" Background="#FF007BFF" Height="50" Width="160" HorizontalAlignment="Right" VerticalAlignment="Top" Content="Restore" ToolTip="Import the selected save files" Opacity=".6" IsEnabled="False"/>
+                            </Grid>
+
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Border>
+
+        </Grid>
+        
     </Grid>
 
 </local:PageBase>
