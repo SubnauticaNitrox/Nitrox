@@ -46,6 +46,12 @@ public class uGUI_PlayerEntry : uGUI_PingEntry
         NitroxServiceLocator.LocateService<PermsChangedProcessor>().OnPermissionsChanged += (perms) => RefreshButtonsVisibility();
     }
 
+    public void Start()
+    {
+        // This action must happen here, else the button will be moved
+        UpdateButtonsPosition();
+    }
+
     public void Initialize(int id, string name)
     {
         gameObject.SetActive(true);
@@ -97,6 +103,7 @@ public class uGUI_PlayerEntry : uGUI_PingEntry
 
         // We need to update each button's listener wether or not they have enough perms because they may become OP during playtime
         ClearButtonListeners();
+        // TODO: Add confirmation boxes
         GetToggle(ShowObject).onValueChanged.AddListener(delegate (bool toggled)
         {
             if (player is RemotePlayer remotePlayer)
@@ -133,20 +140,22 @@ public class uGUI_PlayerEntry : uGUI_PingEntry
 
     public void UpdateButtonsPosition()
     {
+        float offset = 540f;
+
         MuteObject.transform.localPosition = new(
-            0f,
+            0f + offset,
             MuteObject.transform.localPosition.y,
             MuteObject.transform.localPosition.z);
         KickObject.transform.localPosition = new(
-            80f,
+            80f + offset,
             KickObject.transform.localPosition.y,
             KickObject.transform.localPosition.z);
         TeleportToObject.transform.localPosition = new(
-            160f,
+            160f + offset,
             TeleportToObject.transform.localPosition.y,
             TeleportToObject.transform.localPosition.z);
         TeleportToMeObject.transform.localPosition = new(
-            240f,
+            240f + offset,
             TeleportToMeObject.transform.localPosition.y,
             TeleportToMeObject.transform.localPosition.z);
     }
@@ -185,7 +194,6 @@ public class uGUI_PlayerEntry : uGUI_PingEntry
     private void RefreshButtonsVisibility()
     {
         LocalPlayer localPlayer = NitroxServiceLocator.LocateService<LocalPlayer>();
-        Log.Debug($"Current perms: {localPlayer.Permissions}, {localPlayer.Permissions >= Perms.MODERATOR}");
         
         bool isNotLocalPlayer = !IsLocalPlayer;
         // We don't want none of these buttons to appear for us

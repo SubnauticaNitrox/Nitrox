@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.ChatUI;
 using NitroxClient.GameLogic.HUD.Components;
@@ -56,12 +55,6 @@ public class uGUI_PlayerListTab : uGUI_PingTab
         UpdateEntries();
     }
 
-    public override void Open()
-    {
-        base.Open();
-        StartCoroutine(nameof(DelayedPositionUpdate));
-    }
-
     public new void UpdateEntries()
     {
         if (!_isDirty)
@@ -101,9 +94,6 @@ public class uGUI_PlayerListTab : uGUI_PingTab
             int id = tempSort[sorted[j]].id;
             entries[id].rectTransform.SetSiblingIndex(j + 1);
         }
-
-        // SetSiblingIndex seems to break the whole thing so we need to delay the position update call
-        StartCoroutine(nameof(DelayedPositionUpdate));
     }
 
     public new uGUI_PlayerEntry GetEntry()
@@ -186,21 +176,6 @@ public class uGUI_PlayerListTab : uGUI_PingTab
         entries.Remove(playerId);
         ReleaseEntry(entry);
         _isDirty = true;
-    }
-
-    private IEnumerator DelayedPositionUpdate()
-    {
-        // TODO: Find out a way to fix this
-        yield return new WaitForSeconds(1);
-        UpdateEntriesButtonPositions();
-    }
-
-    private void UpdateEntriesButtonPositions()
-    {
-        foreach (uGUI_PlayerEntry playerEntry in entries.Values)
-        {
-            playerEntry.UpdateButtonsPosition();
-        }
     }
 
     private Dictionary<int, INitroxPlayer> players
