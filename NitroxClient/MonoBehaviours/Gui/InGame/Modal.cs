@@ -99,6 +99,11 @@ public abstract class Modal
     }
 
     /// <summary>
+    /// Called when this modal is deselected (only when pressing outside of the modal)
+    /// </summary>
+    public virtual void OnDeselect() { }
+
+    /// <summary>
     /// This creates the modal when showing it for the first time, you can't modify it afterwards
     /// </summary>
     private void InitSubWindow()
