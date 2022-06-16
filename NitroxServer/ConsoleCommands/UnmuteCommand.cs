@@ -32,14 +32,14 @@ namespace NitroxServer.ConsoleCommands
                 return;
             }
 
-            if (!targetPlayer.IsMuted)
+            if (!targetPlayer.PlayerContext.IsMuted)
             {
                 SendMessage(args.Sender, $"{targetPlayer.Name} is already unmuted");
                 return;
             }
 
-            targetPlayer.IsMuted = false;
-            playerManager.SendPacketToAllPlayers(new MutePlayer(targetPlayer.Id, targetPlayer.IsMuted));
+            targetPlayer.PlayerContext.IsMuted = false;
+            playerManager.SendPacketToAllPlayers(new MutePlayer(targetPlayer.Id, targetPlayer.PlayerContext.IsMuted));
             SendMessage(targetPlayer, "You're no longer muted");
             SendMessage(args.Sender, $"Unmuted {targetPlayer.Name}");
         }

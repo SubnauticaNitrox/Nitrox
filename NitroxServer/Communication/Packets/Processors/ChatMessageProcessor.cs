@@ -15,7 +15,7 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(ChatMessage packet, Player player)
         {
-            if (player.IsMuted)
+            if (player.PlayerContext.IsMuted)
             {
                 player.SendPacket(new ChatMessage(ChatMessage.SERVER_ID, "You're currently muted"));
                 return;

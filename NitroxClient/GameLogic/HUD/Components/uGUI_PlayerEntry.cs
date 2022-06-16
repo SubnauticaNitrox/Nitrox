@@ -3,7 +3,6 @@ using NitroxClient.Communication.Packets.Processors;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.MonoBehaviours.Gui.InGame;
-using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
@@ -20,7 +19,18 @@ public class uGUI_PlayerEntry : uGUI_PingEntry
     public string PlayerName => player?.PlayerName ?? string.Empty;
     public bool IsLocalPlayer => player is LocalPlayer;
     private bool showPing;
-    private bool muted;
+    private bool _muted;
+    private bool muted
+    {
+        get
+        {
+            if (player is RemotePlayer remotePlayer && remotePlayer.PlayerContext != null)
+            {
+                return remotePlayer.PlayerContext.IsMuted;
+            }
+            return _muted;
+        }
+    }
 
     public GameObject ShowObject;
     public GameObject MuteObject;
@@ -62,11 +72,11 @@ public class uGUI_PlayerEntry : uGUI_PingEntry
         visibilityIcon.sprite = spriteVisible;
         icon.sprite = SpriteManager.Get(SpriteManager.Group.Tab, "TabInventory");
         showPing = true;
-        muted = false;
+        _muted = false;
 
         UpdateLabel(name);
         OnLanguageOnLanguageChanged();
-        if (AssetBundleLoader.HasBundleLoaded(NitroxAssetBundle.PLAYER_LIST_TAB))
+        if (HasBundleLoaded(NitroxAssetBundle.PLAYER_LIST_TAB))
         {
             AssignSprites();
         }
@@ -102,10 +112,14 @@ public class uGUI_PlayerEntry : uGUI_PingEntry
 
         UpdateLabel(player.PlayerName);
         icon.color = player.PlayerSettings.PlayerColor.ToUnity();
+        if (newPlayer is RemotePlayer remotePlayer)
+        {
+            RefreshMuteButton(remotePlayer.PlayerContext.IsMuted);
+        }
 
         // We need to update each button's listener wether or not they have enough perms because they may become OP during playtime
         ClearButtonListeners();
-        // TODO: Add confirmation boxes
+
         GetToggle(ShowObject).onValueChanged.AddListener(delegate (bool toggled)
         {
             if (player is RemotePlayer remotePlayer)
@@ -180,7 +194,7 @@ public class uGUI_PlayerEntry : uGUI_PingEntry
         TeleportToSprite = AssetsHelper.MakeSpriteFromTexture("teleport_to@3x");
         TeleportToMeSprite = AssetsHelper.MakeSpriteFromTexture("teleport_to_me@3x");
 
-        MuteObject.FindChild("Eye").GetComponent<Image>().sprite = MutedSprite;
+        MuteObject.FindChild("Eye").GetComponent<Image>().sprite = UnmutedSprite;
         KickObject.FindChild("Eye").GetComponent<Image>().sprite = KickSprite;
         TeleportToObject.FindChild("Eye").GetComponent<Image>().sprite = TeleportToSprite;
         TeleportToMeObject.FindChild("Eye").GetComponent<Image>().sprite = TeleportToMeSprite;
