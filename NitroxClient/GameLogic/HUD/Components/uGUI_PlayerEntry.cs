@@ -1,14 +1,16 @@
 ﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors;
-using NitroxClient.GameLogic.ChatUI;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
+using NitroxClient.MonoBehaviours.Gui.InGame;
+using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 using UnityEngine.UI;
+using static NitroxClient.Unity.Helper.AssetBundleLoader;
 
 namespace NitroxClient.GameLogic.HUD.Components;
 
@@ -64,7 +66,7 @@ public class uGUI_PlayerEntry : uGUI_PingEntry
 
         UpdateLabel(name);
         OnLanguageOnLanguageChanged();
-        if (AssetsHelper.AssetBundleLoaded)
+        if (AssetBundleLoader.HasBundleLoaded(NitroxAssetBundle.PLAYER_LIST_TAB))
         {
             AssignSprites();
         }
@@ -94,7 +96,7 @@ public class uGUI_PlayerEntry : uGUI_PingEntry
         label.text = text;
     }
 
-    public void UpdateEntryForNewPlayer(INitroxPlayer newPlayer, LocalPlayer localPlayer, IPacketSender packetSender, PlayerChatManager playerChatManager)
+    public void UpdateEntryForNewPlayer(INitroxPlayer newPlayer, LocalPlayer localPlayer, IPacketSender packetSender)
     {
         player = newPlayer;
 

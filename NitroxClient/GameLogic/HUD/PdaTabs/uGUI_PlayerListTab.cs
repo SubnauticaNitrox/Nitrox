@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.GameLogic.ChatUI;
 using NitroxClient.GameLogic.HUD.Components;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxModel.Core;
@@ -16,7 +15,6 @@ public class uGUI_PlayerListTab : uGUI_PingTab
 {
     private PlayerManager playerManager;
     private LocalPlayer localPlayer;
-    private PlayerChatManager playerChatManager;
     private IPacketSender packetSender;
 
     private new Dictionary<int, uGUI_PlayerEntry> entries = new();
@@ -28,7 +26,6 @@ public class uGUI_PlayerListTab : uGUI_PingTab
         base.Awake();
         playerManager = NitroxServiceLocator.LocateService<PlayerManager>();
         localPlayer = NitroxServiceLocator.LocateService<LocalPlayer>();
-        playerChatManager = NitroxServiceLocator.LocateService<PlayerChatManager>();
         packetSender = NitroxServiceLocator.LocateService<IPacketSender>();
         // Need to reassign manually these variables and get rid of the objects we don't need
         content = gameObject.FindChild("Content");
@@ -157,7 +154,7 @@ public class uGUI_PlayerListTab : uGUI_PingTab
     {
         uGUI_PlayerEntry entry = GetEntry();
         entry.Initialize(playerId, player.PlayerName);
-        entry.UpdateEntryForNewPlayer(player, localPlayer, packetSender, playerChatManager);
+        entry.UpdateEntryForNewPlayer(player, localPlayer, packetSender);
         entries.Add(playerId, entry);
     }
 

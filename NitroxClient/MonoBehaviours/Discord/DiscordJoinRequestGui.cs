@@ -1,9 +1,10 @@
-using System.Collections;
+﻿using System.Collections;
 using DiscordGameSDKWrapper;
 using NitroxClient.Unity.Helper;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+using static NitroxClient.Unity.Helper.AssetBundleLoader;
 
 namespace NitroxClient.MonoBehaviours.Discord;
 
@@ -22,7 +23,7 @@ public class DiscordJoinRequestGui : uGUI_InputGroup
     {
         user = requestingUser;
 
-        yield return AssetBundleLoader.LoadUIAsset("discordjoinrequest", false, guiGameObject =>
+        yield return LoadUIAsset(NitroxAssetBundle.DISCORD_JOIN_REQUEST, false, guiGameObject =>
         {
             instance = guiGameObject.AddComponent<DiscordJoinRequestGui>();
 

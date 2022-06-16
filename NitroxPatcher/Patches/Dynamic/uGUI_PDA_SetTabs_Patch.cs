@@ -4,6 +4,7 @@ using HarmonyLib;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.HUD;
 using NitroxModel.Helper;
+using static NitroxClient.Unity.Helper.AssetBundleLoader;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -24,7 +25,7 @@ public class uGUI_PDA_SetTabs_Patch : NitroxPatch, IDynamicPatch
             __instance.currentTabs.Add(item);
         }
         // the last tab is the one we added in uGUI_PDA_Initialize_Patch
-        if (AssetsHelper.AssetBundleLoaded)
+        if (HasBundleLoaded(NitroxAssetBundle.PLAYER_LIST_TAB))
         {
             List<NitroxPDATab> customTabs = new(Resolve<NitroxGuiManager>().CustomTabs.Values);
             for (int i = 0; i < customTabs.Count; i++)
