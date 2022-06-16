@@ -2,7 +2,7 @@
 
 public class ServerStoppedModal : Modal
 {
-    public ServerStoppedModal() : base(yesButtonText: "OK", modalText: Language.main.Get("Nitrox_ServerStopped"), freezeGame: true)
+    public ServerStoppedModal() : base(yesButtonText: "OK", modalText: Language.main.Get("Nitrox_ServerStopped"), freezeGame: true, background: ModalBackground.RedColor())
     {
     }
 

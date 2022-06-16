@@ -5,7 +5,7 @@
 /// </summary>
 public class LostConnectionModal : Modal
 {
-    public LostConnectionModal() : base(yesButtonText: "OK", modalText: Language.main.Get("Nitrox_LostConnection"), freezeGame: true)
+    public LostConnectionModal() : base(yesButtonText: "OK", modalText: Language.main.Get("Nitrox_LostConnection"), freezeGame: true, background: ModalBackground.RedColor())
     {
     }
 

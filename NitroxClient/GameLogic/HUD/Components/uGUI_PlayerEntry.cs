@@ -130,25 +130,39 @@ public class uGUI_PlayerEntry : uGUI_PingEntry
                 visibilityIcon.sprite = toggled ? spriteVisible : spriteHidden;
             }
         });
+        // Each of those clicks involves a confirmation modal
         GetToggle(MuteObject).onValueChanged.AddListener(delegate (bool toggled)
         {
-            GetToggle(MuteObject).SetIsOnWithoutNotify(!toggled);
-            if (player is RemotePlayer remotePlayer)
+            string text = muted ? Language.main.Get("Nitrox_Unmute") : Language.main.Get("Nitrox_Mute");
+            Modal.Get<ConfirmModal>()?.Show($"{text} {player.PlayerName}?", () =>
             {
-                packetSender.Send(new ServerCommand($"{(toggled ? "" : "un")}mute {player.PlayerName}"));
-            }
+                GetToggle(MuteObject).SetIsOnWithoutNotify(!toggled);
+                if (player is RemotePlayer remotePlayer)
+                {
+                    packetSender.Send(new ServerCommand($"{(toggled ? "" : "un")}mute {player.PlayerName}"));
+                }
+            });
         });
         GetToggle(KickObject).onValueChanged.AddListener(delegate (bool toggled)
         {
-            packetSender.Send(new ServerCommand($"kick {player.PlayerName}"));
+            Modal.Get<ConfirmModal>()?.Show($"{Language.main.Get("Nitrox_Kick")} {player.PlayerName}?", () =>
+            {
+                packetSender.Send(new ServerCommand($"kick {player.PlayerName}"));
+            });
         });
         GetToggle(TeleportToObject).onValueChanged.AddListener(delegate (bool toggled)
         {
-            packetSender.Send(new ServerCommand($"warp {player.PlayerName}"));
+            Modal.Get<ConfirmModal>()?.Show($"{Language.main.Get("Nitrox_TeleportTo")} {player.PlayerName}?", () =>
+            {
+                packetSender.Send(new ServerCommand($"warp {player.PlayerName}"));
+            });
         });
         GetToggle(TeleportToMeObject).onValueChanged.AddListener(delegate (bool toggled)
         {
-            packetSender.Send(new ServerCommand($"warp {player.PlayerName} {localPlayer.PlayerName}"));
+            Modal.Get<ConfirmModal>()?.Show($"{Language.main.Get("Nitrox_TeleportToMe")} {player.PlayerName}?", () =>
+            {
+                packetSender.Send(new ServerCommand($"warp {player.PlayerName} {localPlayer.PlayerName}"));
+            });
         });
 
         RefreshButtonsVisibility();
