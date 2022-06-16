@@ -21,51 +21,62 @@ public static class WorldManager
 
     public static IEnumerable<Listing> GetSaves()
     {
-        if (!savesCache.Any())
+        if (savesCache.Any())
         {
-            foreach (string folder in Directory.EnumerateDirectories(SavesFolderDir))
-            {
-                try
-                {
-                    // Don't add the file to the list if it doesn't validate or contain a "server.cfg" file
-                    string serverConfigFile = Path.Combine(SavesFolderDir, folder, "server.cfg");
-                    if (!ValidateSave(Path.Combine(SavesFolderDir, folder)) || !File.Exists(serverConfigFile))
-                    {
-                        continue;
-                    }
-
-                    Version version;
-                    ServerConfig serverConfig = ServerConfig.Load(folder);
-
-                    using (FileStream stream = new(Path.Combine(folder, "Version.json"), FileMode.Open, FileAccess.Read, FileShare.Read))
-                    {
-                        version = new ServerJsonSerializer().Deserialize<SaveFileVersion>(stream)?.Version ?? NitroxEnvironment.Version;
-                    }
-
-                    bool IsValidVersion = true;
-                    if (version < new Version(1,5,0,1) || version > NitroxEnvironment.Version)
-                    {
-                        IsValidVersion = false;
-                    }
-
-                    savesCache.Add(new Listing
-                    {
-                        WorldName = Path.GetFileName(folder),
-                        WorldGamemode = Convert.ToString(serverConfig.GameMode),
-                        WorldVersion = $"v{version}",
-                        WorldSaveDir = folder,
-                        IsValidSave = IsValidVersion,
-                        FileLastAccessed = File.GetLastWriteTime(Path.Combine(folder, $"WorldData.json"))
-                    });
-                }
-                catch 
-                {
-                    Log.Error($"World could not be processed");
-                }
-            }
-            // Order listing based on FileLastAccessed time
-            savesCache.Sort((x,y) => y.FileLastAccessed.CompareTo(x.FileLastAccessed));
+            return savesCache;
         }
+
+        foreach (string folder in Directory.EnumerateDirectories(SavesFolderDir))
+        {
+            try
+            {
+                // Don't add the file to the list if it doesn't validate or contain a "server.cfg" file
+                string serverConfigFile = Path.Combine(folder, "server.cfg");
+                if (!ValidateSave(folder) || !File.Exists(serverConfigFile))
+                {
+                    continue;
+                }
+
+                Version version;
+                ServerConfig serverConfig = ServerConfig.Load(folder);
+
+                using (FileStream stream = new(Path.Combine(folder, "Version.json"), FileMode.Open, FileAccess.Read, FileShare.Read))
+                {
+                    version = new ServerJsonSerializer().Deserialize<SaveFileVersion>(stream)?.Version ?? NitroxEnvironment.Version;
+                }
+
+                // Change the paramaters here to define what save file versions are eligible for use/upgrade
+                bool IsValidVersion = true;
+                if (version < new Version(1, 5, 0, 1) || version > NitroxEnvironment.Version)
+                {
+                    IsValidVersion = false;
+                }
+
+                savesCache.Add(new Listing
+                {
+                    WorldName = Path.GetFileName(folder),
+                    WorldGamemode = Convert.ToString(serverConfig.GameMode),
+                    WorldVersion = $"v{version}",
+                    WorldSaveDir = folder,
+                    IsValidSave = IsValidVersion,
+                    FileLastAccessed = File.GetLastWriteTime(Path.Combine(folder, $"WorldData.json"))
+                });
+
+                // Set the server.cfg name value to the folder name
+                if (Path.GetFileName(folder) != serverConfig.SaveName)
+                {
+                    serverConfig.Update(folder, c => { c.SaveName = Path.GetFileName(folder); });
+                }
+
+            }
+            catch
+            {
+                Log.Error($"World could not be processed");
+            }
+        }
+        // Order listing based on FileLastAccessed time
+        savesCache.Sort((x, y) => y.FileLastAccessed.CompareTo(x.FileLastAccessed));
+
         return savesCache;
     }
 

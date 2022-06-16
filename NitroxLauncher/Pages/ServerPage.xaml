@@ -269,7 +269,7 @@
 
                             <TextBlock Grid.Column="1" Text="Your Worlds" Foreground="White" VerticalAlignment="Center" FontSize="30" HorizontalAlignment="Center" FontWeight="Bold"/>
 
-                            <Button Grid.Column="2" x:Name="AddWorldBtn" Click="AddWorld_Click" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="Add a new world">
+                            <Button Grid.Column="2" x:Name="AddWorldBtn" Click="AddWorld_Click" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="Add or import a new world">
                                 <Image Source="{StaticResource AddServerButton}" Stretch="Uniform"  Width="40" Height="40"/>
                             </Button>
 
@@ -284,14 +284,14 @@
                                         <RowDefinition Height="2*"/>
                                     </Grid.RowDefinitions>
 
-                                    <TextBlock Text="Looks like you don't have any worlds. Click the + button to add a new world!" Foreground="#FF515255" FontWeight="Medium" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0 0 0 40"/>
+                                    <TextBlock Text="Looks like you don't have any worlds. Click the + button to add or import a new world!" Foreground="#FF515255" FontWeight="Medium" FontSize="15" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0 0 0 40"/>
                                     <Image Grid.Row="1" Source="{StaticResource ServerIllustration}" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Top" Width="290" Margin="0 15 0 0"/>
                                 </Grid>
 
                                 <ListView Name="WorldListingContainer" Background="{x:Null}" BorderBrush="{x:Null}" Margin="5" HorizontalContentAlignment="Stretch" ScrollViewer.CanContentScroll="False">
 
                                     <!-- OPTIONAL - View server listing buttons in Intellisense window -->
-                                    <d:ListView.ItemsSource>
+                                    <!--<d:ListView.ItemsSource>
                                         <x:Array Type="pages:World_Listing">
                                             <pages:World_Listing WorldName = "Survival w/ friends" WorldGamemode = "Survival" WorldVersion = "v1.6.0.0" IsValidSave = "True"/>
                                             <pages:World_Listing WorldName = "My World 1" WorldGamemode = "Freedom" WorldVersion = "v1.5.0.2" IsValidSave = "True"/>
@@ -300,7 +300,7 @@
                                             <pages:World_Listing WorldName = "Creative Mode" WorldGamemode = "Creative" WorldVersion = "v1.6.0.0" IsValidSave = "True"/>
                                             <pages:World_Listing WorldName = "v1.6.0.1 testing" WorldGamemode = "Freedom" WorldVersion = "v1.6.0.1" IsValidSave = "True"/>
                                         </x:Array>
-                                    </d:ListView.ItemsSource>
+                                    </d:ListView.ItemsSource>-->
 
                                     <!-- Fix the Scroll Bar -->
                                     <ListView.Resources>
@@ -892,26 +892,6 @@
 
                                 --> <!-- Column 2: Restore Backup Text --> <!--
                                 <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" FontSize="16" FontWeight="Bold" Text="RESTORE BACKUP" />
-
-                            </Grid>
-                        </Button>-->
-
-                        <!-- Column 2: START SERVER BUTTON -->
-                        <!--<Button Grid.Column="1" Style="{StaticResource LargeButton}" x:Name="StartServerBtn" Click="StartServer_Click" ToolTip="Start the server with chosen options" Background="#FF007BFF" Height="62" HorizontalAlignment="Stretch" Margin="5,0,5,0" Width="Auto" >
-                            <Grid Height="53" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Button}}">
-
-                                --> <!-- Grid Definitions --> <!--
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-
-                                --> <!-- Column 2: Start Server Text --> <!--
-                                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" FontSize="16" FontWeight="Bold" Text="START SERVER" />
-
-                                --> <!-- Column 3: Version Number --> <!--
-                                <TextBlock Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="12" Text="{Binding LauncherVersion, FallbackValue=Version, Mode=OneTime}" Margin="0 0 5 0" />
 
                             </Grid>
                         </Button>-->
