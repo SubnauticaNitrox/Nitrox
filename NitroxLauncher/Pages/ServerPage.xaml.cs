@@ -207,7 +207,7 @@ namespace NitroxLauncher.Pages
                 LauncherNotifier.Error("This world is currently being used. Stop the server to edit the settings of this world");
                 return;
             }
-            else if (!Directory.Exists(SelectedWorldDirectory))
+            else if (!Directory.Exists(WorldManager.GetSaves().ElementAtOrDefault(WorldListingContainer.SelectedIndex)?.WorldSaveDir))
             {
                 LauncherNotifier.Error($"This save does not exist or is not valid.");
                 InitializeWorldListing();
@@ -772,7 +772,7 @@ namespace NitroxLauncher.Pages
                 LauncherNotifier.Error($"This save is an invalid version.");
                 return;
             }
-            else if (!Directory.Exists(SelectedWorldDirectory))
+            else if (!Directory.Exists(WorldManager.GetSaves().ElementAtOrDefault(WorldListingContainer.SelectedIndex)?.WorldSaveDir))
             {
                 LauncherNotifier.Error($"This save does not exist or is not valid.");
                 InitializeWorldListing();
