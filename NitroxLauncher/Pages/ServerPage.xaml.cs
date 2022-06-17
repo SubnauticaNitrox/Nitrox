@@ -142,7 +142,7 @@ namespace NitroxLauncher.Pages
         {
             Log.Info($"Adding new world");
             IsNewWorld = true;
-            TBWorldSeed.IsEnabled = true;
+            TBWorldSeed.IsReadOnly = false;
 
             ImportSaveBtnBorder.Opacity = 1;
             ImportSaveBtn.IsEnabled = true;
@@ -162,6 +162,11 @@ namespace NitroxLauncher.Pages
         
         private void GoBack_Click(object sender, RoutedEventArgs e)
         {
+            if (!IsNewWorld)
+            {
+                SelectedWorldDirectory = WorldManager.GetSaves().ElementAtOrDefault(WorldListingContainer.SelectedIndex)?.WorldSaveDir;
+            }
+
             if (!Directory.Exists(SelectedWorldDirectory))
             {
                 LauncherNotifier.Error($"This save does not exist or is not valid.");
@@ -219,7 +224,7 @@ namespace NitroxLauncher.Pages
                 return;
             }
 
-            TBWorldSeed.IsEnabled = false;
+            TBWorldSeed.IsReadOnly = true;
 
             SelectedWorldDirectory = WorldManager.GetSaves().ElementAtOrDefault(WorldListingContainer.SelectedIndex)?.WorldSaveDir ?? "";
 
@@ -237,6 +242,11 @@ namespace NitroxLauncher.Pages
 
         private void DeleteWorld_Click(object sender, RoutedEventArgs e)
         {
+            if (!IsNewWorld)
+            {
+                SelectedWorldDirectory = WorldManager.GetSaves().ElementAtOrDefault(WorldListingContainer.SelectedIndex)?.WorldSaveDir;
+            }
+            
             if (LauncherLogic.Server.IsServerRunning && WorldCurrentlyUsed == WorldManager.GetSaves().ElementAtOrDefault(WorldListingContainer.SelectedIndex)?.WorldSaveDir)
             {
                 LauncherNotifier.Error("This world is currently being used. Stop the server to delete this world");
@@ -374,22 +384,24 @@ namespace NitroxLauncher.Pages
 
         private void TBWorldSeed_Input(object sender, System.Windows.Input.KeyboardFocusChangedEventArgs e)
         {
-            if (TBWorldSeed.Text.Length != 0)
+            TBWorldSeed.Text = TBWorldSeed.Text.TrimStart();
+            TBWorldSeed.Text = TBWorldSeed.Text.TrimEnd();
+
+            if (!string.IsNullOrEmpty(TBWorldSeed.Text))
             {
                 string originalSeed = Config.Seed;
 
-                TBWorldSeed.Text = TBWorldSeed.Text.TrimStart();
-                TBWorldSeed.Text = TBWorldSeed.Text.TrimEnd();
                 TBWorldSeed.Text = TBWorldSeed.Text.ToUpper();
 
                 if (TBWorldSeed.Text.Length != 10 || !Regex.IsMatch(TBWorldSeed.Text, @"^[a-zA-Z]+$"))
                 {
                     TBWorldSeed.Text = originalSeed;
                     LauncherNotifier.Error($"World Seeds should contain 10 alphabetical characters (A-Z).");
-                    return;
                 }
-
             }
+
+            Config.Seed = TBWorldSeed.Text;
+            return;
         }
 
         private void TBMaxPlayerCap_Input(object sender, System.Windows.Input.KeyboardFocusChangedEventArgs e)
@@ -426,6 +438,7 @@ namespace NitroxLauncher.Pages
                 return;
             }
 
+            Config.MaxConnections = MaxPlayerCapNum;
         }
 
         private void CBEnableJoinPassword_Clicked(object sender, RoutedEventArgs e)
@@ -447,7 +460,7 @@ namespace NitroxLauncher.Pages
         
         private void TBSaveInterval_Input(object sender, System.Windows.Input.KeyboardFocusChangedEventArgs e)
         {
-            string originalSaveInterval = Convert.ToString(Config.SaveInterval);
+            string originalSaveInterval = Convert.ToString(Config.SaveInterval/1000);
 
             TBSaveInterval.Text = TBSaveInterval.Text.TrimStart();
             TBSaveInterval.Text = TBSaveInterval.Text.TrimEnd();
@@ -462,7 +475,7 @@ namespace NitroxLauncher.Pages
             int SaveIntervalNum;
             try
             {
-                SaveIntervalNum = Convert.ToInt32(TBSaveInterval.Text);
+                SaveIntervalNum = Convert.ToInt32(TBSaveInterval.Text)*1000;
             }
             catch
             {
@@ -479,6 +492,7 @@ namespace NitroxLauncher.Pages
                 return;
             }
 
+            Config.SaveInterval = SaveIntervalNum;
         }
 
         private void TBJoinPassword_Input(object sender, System.Windows.Input.KeyboardFocusChangedEventArgs e)
@@ -529,6 +543,7 @@ namespace NitroxLauncher.Pages
                 return;
             }
 
+            Config.ServerPort = ServerPortNum;
         }
 
         // TODO
@@ -751,7 +766,7 @@ namespace NitroxLauncher.Pages
             ImportSaveBtn.IsEnabled = false;
             ImportWorldBox.Opacity = 0;
             ImportWorldBox.IsHitTestVisible = false;
-            TBWorldSeed.IsEnabled = false;
+            TBWorldSeed.IsReadOnly = true;
 
             LauncherNotifier.Success("Successfully imported the selected save file");
         }

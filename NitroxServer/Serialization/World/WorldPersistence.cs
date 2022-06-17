@@ -160,11 +160,7 @@ namespace NitroxServer.Serialization.World
                     InventoryData = InventoryData.From(new List<ItemData>(), new List<ItemData>(), new List<EquippedItemData>()),
                     VehicleData = VehicleData.From(new List<VehicleModel>()),
                     ParsedBatchCells = new List<NitroxInt3>(),
-#if DEBUG
-                    Seed = "TCCBIBZXAB"
-#else
                     Seed = config.Seed
-#endif
                 }
             };
 
@@ -176,7 +172,11 @@ namespace NitroxServer.Serialization.World
             string seed = pWorldData.WorldData.Seed;
             if (string.IsNullOrWhiteSpace(seed))
             {
+#if DEBUG
+                seed = "TCCBIBZXAB";
+#else
                 seed = StringHelper.GenerateRandomString(10);
+#endif
             }
 
             Log.Info($"Loading world with seed {seed}");

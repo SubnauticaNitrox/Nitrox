@@ -409,7 +409,7 @@
                                                         </Grid.RowDefinitions>
 
                                                         <!-- World Settings Button -->
-                                                        <Button ToolTip="Edit the settings of this world" Click="SelectedWorldSettings_Click" IsEnabled="{Binding Path=IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}">
+                                                        <Button ToolTip="Edit the settings of this world" Click="SelectedWorldSettings_Click" IsEnabled="{Binding Path=IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}" Height="{Binding Height, RelativeSource={RelativeSource AncestorType=Grid}}" Width="{Binding Width, RelativeSource={RelativeSource AncestorType=Grid}}">
                                                             <Image Source="{StaticResource SettingsButton}" Stretch="Uniform"  Width="25" Height="25" Opacity="0.7"/>
                                                         </Button>
 
@@ -417,7 +417,7 @@
                                                         <Border Grid.Row="1" Background="Black"/>
 
                                                         <!-- Delete World Button -->
-                                                        <Button Grid.Row="2" ToolTip="Delete this world" Click="DeleteWorld_Click" IsEnabled="{Binding Path=IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}">
+                                                        <Button Grid.Row="2" ToolTip="Delete this world" Click="DeleteWorld_Click" IsEnabled="{Binding Path=IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}" Height="{Binding Height, RelativeSource={RelativeSource AncestorType=Grid}}" Width="{Binding Width, RelativeSource={RelativeSource AncestorType=Grid}}">
                                                             <Image Source="{StaticResource TrashcanButton}" Stretch="Uniform"  Width="25" Height="25"/>
                                                         </Button>
 
@@ -647,7 +647,7 @@
                                                         Foreground="#8A8A8A" TextAlignment="Left"
                                                         Background="{x:Null}" BorderBrush="{x:Null}"
                                                         Margin="13,4,13,4" SelectionBrush="#FF007BFF"
-                                                        VerticalAlignment="Center" BorderThickness="0" CaretBrush="White" Width="155" MaxLength="10" Text="WorldSeed" LostKeyboardFocus="TBWorldSeed_Input" IsEnabled="{Binding IsNewWorld, FallbackValue=False, Mode=OneWay}"/>
+                                                        VerticalAlignment="Center" BorderThickness="0" CaretBrush="White" Width="155" MaxLength="10" Text="WorldSeed" LostKeyboardFocus="TBWorldSeed_Input" IsReadOnly="{Binding IsNewWorld, FallbackValue=False, Mode=OneWay}"/>
                                                 </Border>
                                             </StackPanel>
                                         </Grid>
