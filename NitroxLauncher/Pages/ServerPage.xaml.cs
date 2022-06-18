@@ -13,6 +13,7 @@ using NitroxModel.Server;
 using NitroxServer.Serialization;
 using NitroxServer.Serialization.World;
 using Microsoft.VisualBasic.FileIO;
+using System.IO.Compression;
 
 namespace NitroxLauncher.Pages
 {
@@ -248,18 +249,46 @@ namespace NitroxLauncher.Pages
             WorldBackupsBox.IsHitTestVisible = true;
         }
 
+        private void WorldBackupsList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (WorldBackupsContainer.SelectedIndex != -1)
+            {
+                ConfirmRestoreBackupBtn.Opacity = 1;
+                ConfirmRestoreBackupBtn.IsEnabled = true;
+            }
+            else
+            {
+                ConfirmRestoreBackupBtn.Opacity = .6;
+                ConfirmRestoreBackupBtn.IsEnabled = false;
+            }
+        }
+
         private void ConfirmRestoreBackupBtn_Click(object sender, RoutedEventArgs e)
         {
+            try
+            {
+                foreach (string file in WorldManager.WorldFiles)
+                {
+                    File.Delete(Path.Combine(SelectedWorldDirectory, file));
+                }
+
+                ZipFile.ExtractToDirectory(WorldManager.GetBackups(SelectedWorldDirectory).ElementAtOrDefault(WorldBackupsContainer.SelectedIndex)?.WorldSaveDir, SelectedWorldDirectory);
+                LauncherNotifier.Success("Successfully restored backup");
+            }
+            catch
+            {
+                LauncherNotifier.Error("Error restoring backup");
+                return;
+            }
+
             WorldBackupsBox.Opacity = 0;
             WorldBackupsBox.IsHitTestVisible = false;
-
         }
 
         private void RestoreBackupCancelBtn_Click(object sender, RoutedEventArgs e)
         {
             WorldBackupsBox.Opacity = 0;
             WorldBackupsBox.IsHitTestVisible = false;
-
         }
 
         private void DeleteWorld_Click(object sender, RoutedEventArgs e)
@@ -845,7 +874,7 @@ namespace NitroxLauncher.Pages
             File.SetLastWriteTime(Path.Combine(SelectedWorldDirectory, "WorldData.json"), DateTime.Now);
             InitializeWorldListing();
         }
-
+        
     }
 
     // OPTIONAL - Only used to view world listings in intellisense, in addition to the lines that are in the ListView definition in ServerPage.xaml

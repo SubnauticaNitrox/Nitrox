@@ -230,17 +230,18 @@ public static class WorldManager
 
             backupsCache.Sort((x, y) => y.FileLastAccessed.CompareTo(x.FileLastAccessed));
 
-            if (backupsCache.Count > 3)
+            int maxBackups = 5;
+            if (backupsCache.Count > maxBackups)
             {
                 for (int i = 1; i < backupsCache.Count; i++)
                 {
-                    if (i > 2)
+                    if (i > maxBackups-1)
                     {
                         File.Delete(backupsCache.ElementAt(i).WorldSaveDir);
                     }
                 }
 
-                backupsCache.RemoveRange(3, backupsCache.Count - 3);
+                backupsCache.RemoveRange(3, backupsCache.Count - maxBackups);
             }
 
         }
