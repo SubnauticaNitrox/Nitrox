@@ -179,18 +179,21 @@ public class Program
 
     private static void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs e)
     {
+        string saveDir = null;
+        foreach (string arg in Environment.GetCommandLineArgs())
+        {
+            if (arg.StartsWith(WorldManager.SavesFolderDir, StringComparison.OrdinalIgnoreCase) && Directory.Exists(arg))
+            {
+                saveDir = arg;
+                break;
+            }
+        }
+        string errorLogPath = Path.Combine(saveDir, WorldManager.ErrorLogName);
+
         if (e.ExceptionObject is Exception ex)
         {
-            string saveDir = null;
-            foreach (string arg in Environment.GetCommandLineArgs())
-            {
-                if (arg.StartsWith(WorldManager.SavesFolderDir, StringComparison.OrdinalIgnoreCase) && Directory.Exists(arg))
-                {
-                    saveDir = arg;
-                    break;
-                }
-            }
-            using StreamWriter errorFile = new(Path.Combine(saveDir, "ErrorLog.txt"), append: true);
+            
+            using StreamWriter errorFile = new(errorLogPath, append: true);
             errorFile.WriteLineAsync($"{ex.GetType()} {ex.Message}");
         }
 
@@ -199,19 +202,13 @@ public class Program
             return;
         }
 
-        string mostRecentLogFile = Log.GetMostRecentLogFile();
-        if (mostRecentLogFile == null)
-        {
-            return;
-        }
-
-        Log.Info("Press L to open log file before closing. Press any other key to close . . .");
+        Log.Info("Press L to open error log file before closing. Press any other key to close . . .");
         ConsoleKeyInfo key = Console.ReadKey(true);
 
         if (key.Key == ConsoleKey.L)
         {
-            Log.Info($"Opening log file at: {mostRecentLogFile}..");
-            using Process process = FileSystem.Instance.OpenOrExecuteFile(mostRecentLogFile);
+            Log.Info($"Opening log file at: {errorLogPath}..");
+            using Process process = FileSystem.Instance.OpenOrExecuteFile(errorLogPath);
         }
 
         Environment.Exit(1);

@@ -28,7 +28,7 @@ namespace NitroxServer.Serialization
                         break;
                     }
                 }
-                using StreamWriter errorFile = new(Path.Combine(saveDir, "ErrorLog.txt"), append: true);
+                using StreamWriter errorFile = new(Path.Combine(saveDir, WorldManager.ErrorLogName), append: true);
                 errorFile.WriteLineAsync($"Json serialization error: {e.ErrorContext.Error}");
 
             };
