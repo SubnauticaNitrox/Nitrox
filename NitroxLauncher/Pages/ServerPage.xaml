@@ -1147,7 +1147,7 @@
 
         </Grid>
 
-        <Grid x:Name="WorldBackupsBox" Opacity="1" IsHitTestVisible="False" Grid.RowSpan="2">
+        <Grid x:Name="WorldBackupsBox" Opacity="0" IsHitTestVisible="False" Grid.RowSpan="2">
             
             <!-- Have all of the background act like the "No" button when clicked -->
             <Button Click="RestoreBackupCancelBtn_Click" Background="Black" Opacity=".5" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Grid}}" Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Grid}}" Cursor="Arrow"/>

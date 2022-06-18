@@ -87,9 +87,9 @@ namespace NitroxServer.Serialization.World
 
         internal Optional<World> LoadFromFile(string saveDir)
         {
-            if (File.Exists(Path.Combine(saveDir, "ErrorLog.txt")))
+            if (File.Exists(Path.Combine(saveDir, WorldManager.ErrorLogName)))
             {
-                File.Delete(Path.Combine(saveDir, "ErrorLog.txt"));
+                File.Delete(Path.Combine(saveDir, WorldManager.ErrorLogName));
             }
             
             if (!Directory.Exists(saveDir) || !File.Exists(Path.Combine(saveDir, $"Version{FileEnding}")))
@@ -128,7 +128,7 @@ namespace NitroxServer.Serialization.World
                     Log.Error($"Could not load world, please restore one of your backups to use this world.");
 
                     // Write a .txt file with the error
-                    using StreamWriter errorFile = new(Path.Combine(saveDir, "ErrorLog.txt"), append: true);
+                    using StreamWriter errorFile = new(Path.Combine(saveDir, WorldManager.ErrorLogName), append: true);
                     errorFile.WriteLineAsync($"Could not load world at {saveDir} : {ex.GetType()} {ex.Message}");
 
                     // Backup world if loading fails

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Windows;
 using NitroxModel.Helper;
@@ -13,6 +14,8 @@ public static class WorldManager
     public static readonly string SavesFolderDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", "saves");
 
     public static readonly string[] WorldFiles = { "BaseData.json", "EntityData.json", "PlayerData.json", "Version.json", "WorldData.json" };
+
+    public static readonly string ErrorLogName = "ErrorLog.txt";
 
     private static readonly List<Listing> savesCache = new();
     private static readonly List<Listing> backupsCache = new();
@@ -159,7 +162,7 @@ public static class WorldManager
         if (IsCorrupted)
         {
             outZip = Path.Combine(saveFileDirectory, "Backups", $"(CORRUPTED) {Path.GetFileName(saveFileDirectory)} Backup - {DateTime.Now:yyyy MMM dd, HHmmss}");
-            Log.InfoSensitive("Creating a backup of the corrupted save files at {path}", $"{outZip}.zip");
+            Log.WarnSensitive("Creating a backup of the corrupted save files at {path}", $"{outZip}.zip");
         }
         else
         {
@@ -174,7 +177,7 @@ public static class WorldManager
 
         if (IsCorrupted)
         {
-            File.Copy(Path.Combine(saveFileDirectory, "ErrorLog.txt"), Path.Combine(outZip, "ErrorLog.txt"));
+            File.Copy(Path.Combine(saveFileDirectory, ErrorLogName), Path.Combine(outZip, ErrorLogName));
         }
 
         FileSystem.Instance.ZipFilesInDirectory(outZip, $"{outZip}.zip");
@@ -194,18 +197,35 @@ public static class WorldManager
                 return Enumerable.Empty<Listing>();
             }
 
+            // A backup is added to the list if the compressed folder contains all the valid
+            // save files, doesn't contain an error log, and contains the name of the world.
             foreach (string file in Directory.EnumerateFiles(Path.Combine(saveFileDirectory, "Backups")))
             {
                 FileInfo fileInfo = new(file);
-                if (!fileInfo.Name.Contains("(CORRUPTED)") || fileInfo.Name.Contains($"{Path.GetFileName(saveFileDirectory)} Backup") || fileInfo.Extension == ".zip")
+
+                if (fileInfo.Extension != ".zip") { continue; }
+
+                bool isValid = true;
+                using (ZipArchive archive = ZipFile.OpenRead(file))
                 {
-                    backupsCache.Add(new Listing
+                    foreach (ZipArchiveEntry entry in archive.Entries)
                     {
-                        WorldName = $"Backup {File.GetLastWriteTime(file)}",
-                        WorldSaveDir = file,
-                        FileLastAccessed = File.GetLastWriteTime(file)
-                });
+                        if (entry.Name == ErrorLogName || !WorldFiles.Contains(entry.Name))
+                        {
+                            isValid = false;
+                            break;
+                        }
+                    }
                 }
+
+                if (!isValid || !fileInfo.Name.Contains($"{Path.GetFileName(saveFileDirectory)} Backup")) { continue; }
+
+                backupsCache.Add(new Listing
+                {
+                    WorldName = $"Backup {File.GetLastWriteTime(file)}",
+                    WorldSaveDir = file,
+                    FileLastAccessed = File.GetLastWriteTime(file)
+                });
             }
 
             backupsCache.Sort((x, y) => y.FileLastAccessed.CompareTo(x.FileLastAccessed));
