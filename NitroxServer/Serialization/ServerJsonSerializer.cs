@@ -18,7 +18,6 @@ namespace NitroxServer.Serialization
 
             serializer.Error += delegate (object sender, Newtonsoft.Json.Serialization.ErrorEventArgs e)
             {
-                //Log.Error(e.ErrorContext.Error, "Json serialization error: ");
                 string saveDir = null;
                 foreach (string arg in Environment.GetCommandLineArgs())
                 {
