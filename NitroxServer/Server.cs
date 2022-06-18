@@ -161,6 +161,8 @@ namespace NitroxServer
                     break;
                 }
             }
+
+            Save();
             WorldManager.BackupSave(saveDir);
 
             return true;
