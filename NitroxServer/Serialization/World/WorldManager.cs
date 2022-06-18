@@ -149,7 +149,7 @@ public static class WorldManager
             Directory.CreateDirectory(Path.Combine(saveFileDirectory, "Backups"));
         }
 
-        string outZip = Path.Combine(saveFileDirectory, "Backups", $"{Path.GetFileName(saveFileDirectory)} Backup - {DateTime.Now:yyyy MMM dd, HHmmss}");
+        string outZip = Path.Combine(saveFileDirectory, "Backups", $"{Path.GetFileName(saveFileDirectory)} Backup - {DateTime.Now:yyyy MMM dd, HHmm ss}");
         if (IsCorrupted)
         {
             outZip = Path.Combine(saveFileDirectory, "Backups", $"(CORRUPTED) {Path.GetFileName(saveFileDirectory)} Backup - {DateTime.Now:yyyy MMM dd, HHmmss}");
@@ -196,6 +196,7 @@ public static class WorldManager
 
                 if (fileInfo.Extension != ".zip") { continue; }
 
+                DateTime? backupWriteTime = null;
                 bool isValid = true;
                 using (ZipArchive archive = ZipFile.OpenRead(file))
                 {
@@ -206,6 +207,11 @@ public static class WorldManager
                             isValid = false;
                             break;
                         }
+
+                        if (!backupWriteTime.HasValue)
+                        {
+                            backupWriteTime = entry.LastWriteTime.DateTime;
+                        }
                     }
                 }
 
@@ -213,9 +219,9 @@ public static class WorldManager
 
                 backupsCache.Add(new Listing
                 {
-                    WorldName = $"Backup {File.GetLastWriteTime(file)}",
+                    WorldName = $"Backup {(DateTime)backupWriteTime}",
                     WorldSaveDir = file,
-                    FileLastAccessed = File.GetLastWriteTime(file)
+                    FileLastAccessed = (DateTime)backupWriteTime
                 });
             }
 
