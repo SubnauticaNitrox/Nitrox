@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
 using HarmonyLib;
-using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.HUD;
 using NitroxModel.Helper;
+using UnityEngine;
 using static NitroxClient.Unity.Helper.AssetBundleLoader;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -24,21 +24,19 @@ public class uGUI_PDA_SetTabs_Patch : NitroxPatch, IDynamicPatch
             
             __instance.currentTabs.Add(item);
         }
-        // the last tab is the one we added in uGUI_PDA_Initialize_Patch
-        if (HasBundleLoaded(NitroxAssetBundle.PLAYER_LIST_TAB))
+
+        List<NitroxPDATab> customTabs = new(Resolve<NitroxPDATabManager>().CustomTabs.Values);
+        for (int i = 0; i < customTabs.Count; i++)
         {
-            List<NitroxPDATab> customTabs = new(Resolve<NitroxGuiManager>().CustomTabs.Values);
-            for (int i = 0; i < customTabs.Count; i++)
+            string tabIconAssetName = customTabs[customTabs.Count - i - 1].TabIconAssetName;
+            if (!PDATabSprites.TryGetValue(tabIconAssetName, out Atlas.Sprite sprite))
             {
-                string tabIconAssetName = customTabs[customTabs.Count - i - 1].TabIconAssetName;
-                array[array.Length - i - 1] = AssetsHelper.MakeAtlasSpriteFromTexture(tabIconAssetName);
+                // As a placeholder, we use the normal player icon
+                SubscribeToEvent("*", () => { AssignSprite(__instance.toolbar, tabIconAssetName, array.Length - i - 1); });
+                sprite = new Atlas.Sprite(new Texture2D(100, 100));
             }
-        }
-        else
-        {
-            // As a placeholder, we use the normal player icon
-            array[num - 1] = array[0];
-            AssetsHelper.onPlayerListAssetsLoaded += () => { AssignSprite(__instance.toolbar); };
+
+            array[array.Length - i - 1] = sprite;
         }
 
         uGUI_Toolbar uGUI_Toolbar = __instance.toolbar;
@@ -48,14 +46,11 @@ public class uGUI_PDA_SetTabs_Patch : NitroxPatch, IDynamicPatch
         return false;
     }
 
-    private static void AssignSprite(uGUI_Toolbar uGUI_Toolbar)
+    private static void AssignSprite(uGUI_Toolbar uGUI_Toolbar, string tabIconAssetName, int index)
     {
-        // Last is player list tab's one
-        List<NitroxPDATab> customTabs = new(Resolve<NitroxGuiManager>().CustomTabs.Values);
-        for (int i = 0; i < customTabs.Count; i++)
+        if (PDATabSprites.TryGetValue(tabIconAssetName, out Atlas.Sprite sprite))
         {
-            string tabIconAssetName = customTabs[customTabs.Count - i - 1].TabIconAssetName;
-            uGUI_Toolbar.icons[uGUI_Toolbar.icons.Count - i - 1].SetForegroundSprite(AssetsHelper.MakeAtlasSpriteFromTexture(tabIconAssetName));
+            uGUI_Toolbar.icons[index].SetForegroundSprite(sprite);
         }
     }
 

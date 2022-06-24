@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using NitroxModel.Helper;
 using UnityEngine;
 
@@ -9,78 +10,60 @@ namespace NitroxClient.Unity.Helper;
 
 public static class AssetBundleLoader
 {
-    private static readonly string assetRootFolder = NitroxUser.AssetsPath;
+    internal static readonly string assetRootFolder = NitroxUser.AssetsPath;
 
-    // Two operations should not run at the same time
-    public static bool Working = false;
-    private readonly static HashSet<string> loadedBundles = new();
+    private readonly static Dictionary<string, LoadedAssetBundle> loadedBundles = new();
+    private readonly static Dictionary<string, AssetBundleLoadedEvent> subscribedEvents = new() { { "*", null } };
+    public static Dictionary<string, Atlas.Sprite> PDATabSprites = new();
+    private static bool loadedSharedAssets = false;
 
-    public static IEnumerator LoadAssetBundle(NitroxAssetBundle nitroxAssetBundle, Action<AssetBundle> callback = null)
+    public static IEnumerator LoadAssetBundle(string bundleName, Action<LoadedAssetBundle> callback = null)
     {
-        yield return LoadAssetBundle(nitroxAssetBundle.BundleName, callback);
-    }
-
-    public static IEnumerator LoadAssetBundle(string bundleName, Action<AssetBundle> callback = null)
-    {
-        if (HasBundleLoaded(bundleName))
+        if (IsBundleLoaded(bundleName))
         {
             yield break;
         }
-        if (Working)
+        if (!loadedSharedAssets)
         {
-            yield return new WaitUntil(() => !Working);
+            loadedSharedAssets = true;
+            yield return LoadAssetBundle(NitroxAssetBundle.SHARED_ASSETS);
         }
-        // This must also happen after the Working check because it's only when this thread will work that the previous one could be added to the loadedBundles list
-        if (HasBundleLoaded(bundleName))
-        {
-            yield break;
-        }
-
-        Working = true;
 
         AssetBundleCreateRequest assetRequest = AssetBundle.LoadFromFileAsync(Path.Combine(assetRootFolder, bundleName));
         if (assetRequest == null)
         {
             Log.Error($"Failed to load AssetBundle: {bundleName}");
-            Working = false;
             yield break;
         }
         
         yield return assetRequest;
+        AssetBundleRequest loadRequest = assetRequest.assetBundle.LoadAllAssetsAsync();
+        yield return loadRequest;
 
-        callback?.Invoke(assetRequest.assetBundle);
-        loadedBundles.Add(bundleName);
-        Working = false;
-    }
+        loadedBundles[bundleName] = new(assetRequest.assetBundle, loadRequest.allAssets.ToList());
+        callback?.Invoke(loadedBundles[bundleName]);
 
-    public static IEnumerator LoadUIAsset(NitroxAssetBundle nitroxAssetBundle, bool hideUI, Action<GameObject> callback)
-    {
-        yield return LoadUIAsset(nitroxAssetBundle.BundleName, hideUI, callback);
+        subscribedEvents.TryGetValue(bundleName, out AssetBundleLoadedEvent assetBundleLoadedEvent);
+        assetBundleLoadedEvent?.Invoke();
+        subscribedEvents["*"]?.Invoke();
     }
 
     public static IEnumerator LoadUIAsset(string bundleName, bool hideUI, Action<GameObject> callback)
     {
-        if (HasBundleLoaded(bundleName))
+        if (IsBundleLoaded(bundleName))
         {
             yield break;
         }
-        if (Working)
+        if (!loadedSharedAssets)
         {
-            yield return new WaitUntil(() => !Working);
+            loadedSharedAssets = true;
+            yield return LoadAssetBundle(NitroxAssetBundle.SHARED_ASSETS);
         }
-        // Same reason as in LoadAssetBundle
-        if (HasBundleLoaded(bundleName))
-        {
-            yield break;
-        }
-
-        Working = true;
 
         AssetBundleCreateRequest assetRequest = AssetBundle.LoadFromFileAsync(Path.Combine(assetRootFolder, bundleName));
         if (assetRequest == null)
         {
             Log.Error($"Failed to load AssetBundle: {bundleName}");
-            Working = false;
             yield break;
         }
         yield return assetRequest;
@@ -93,7 +76,6 @@ public static class AssetBundleLoader
         if (!asset)
         {
             Log.Error($"Instantiated assetBundle ({bundleName}) but gameObject is null.");
-            Working = false;
             yield break;
         }
 
@@ -101,20 +83,48 @@ public static class AssetBundleLoader
         {
             canvasGroup.alpha = 0;
         }
-
+        
+        loadedBundles[bundleName] = new (assetRequest.assetBundle, new() { asset });
         callback.Invoke(asset);
-        loadedBundles.Add(bundleName);
-        Working = false;
+
+        subscribedEvents.TryGetValue(bundleName, out AssetBundleLoadedEvent assetBundleLoadedEvent);
+        assetBundleLoadedEvent?.Invoke();
+        subscribedEvents["*"]?.Invoke();
     }
 
-    public static bool HasBundleLoaded(NitroxAssetBundle nitroxAssetBundle)
+    public static bool IsBundleLoaded(string bundleName)
     {
-        return loadedBundles.Contains(nitroxAssetBundle.BundleName);
+        return loadedBundles.ContainsKey(bundleName);
+    }
+    
+    public static bool TryGetAssetBundle(string bundleName, out LoadedAssetBundle assetBundle)
+    {
+        loadedBundles.TryGetValue(bundleName, out assetBundle);
+        return assetBundle != null;
     }
 
-    public static bool HasBundleLoaded(string bundleName)
+    public static void SubscribeToEvent(string bundleName, AssetBundleLoadedEvent callback)
     {
-        return loadedBundles.Contains(bundleName);
+        if (!subscribedEvents.TryGetValue(bundleName, out AssetBundleLoadedEvent assetBundleLoadedEvent))
+        {
+            subscribedEvents[bundleName] = callback;
+            return;
+        }
+        subscribedEvents[bundleName] += callback;
+    }
+
+    public delegate void AssetBundleLoadedEvent();
+
+    public class LoadedAssetBundle
+    {
+        public AssetBundle AssetBundle;
+        public List<UnityEngine.Object> AllAssets;
+
+        public LoadedAssetBundle(AssetBundle assetBundle, List<UnityEngine.Object> allAssets)
+        {
+            AssetBundle = assetBundle;
+            AllAssets = allAssets;
+        }
     }
 
     // Equivalent to an enum with string values
@@ -128,5 +138,10 @@ public static class AssetBundleLoader
         public static NitroxAssetBundle CHAT_LOG { get { return new NitroxAssetBundle("chatlog"); } }
         public static NitroxAssetBundle CHAT_KEY_HINT { get { return new NitroxAssetBundle("chatkeyhint"); } }
         public static NitroxAssetBundle DISCORD_JOIN_REQUEST { get { return new NitroxAssetBundle("discordjoinrequest"); } }
+
+        public static implicit operator string(NitroxAssetBundle nitroxAssetBundle)
+        {
+            return nitroxAssetBundle.BundleName;
+        }
     }
 }

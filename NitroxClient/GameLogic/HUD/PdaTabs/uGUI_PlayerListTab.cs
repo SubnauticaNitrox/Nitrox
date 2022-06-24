@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.HUD.Components;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxModel.Core;
 using UnityEngine;
 using UnityEngine.UI;
+using static NitroxClient.Unity.Helper.AssetBundleLoader;
 
 namespace NitroxClient.GameLogic.HUD.PdaTabs;
 
@@ -17,9 +19,11 @@ public class uGUI_PlayerListTab : uGUI_PingTab
     private LocalPlayer localPlayer;
     private IPacketSender packetSender;
 
-    private new Dictionary<int, uGUI_PlayerEntry> entries = new();
-    private new List<uGUI_PlayerEntry> pool = new();
-    private new Dictionary<string, uGUI_PlayerEntry> tempSort = new();
+    private readonly Dictionary<string, Sprite> assets = new();
+
+    private new Dictionary<int, uGUI_PlayerPingEntry> entries = new();
+    private new List<uGUI_PlayerPingEntry> pool = new();
+    private new Dictionary<string, uGUI_PlayerPingEntry> tempSort = new();
 
     public override void Awake()
     {
@@ -33,7 +37,37 @@ public class uGUI_PlayerListTab : uGUI_PingTab
         pingCanvas = (RectTransform)content.transform.Find("ScrollView/Viewport/ScrollCanvas");
 
         Destroy(content.FindChild("ButtonAll"));
+
+        StartCoroutine(LoadAssets());
     }
+
+    private IEnumerator LoadAssets()
+    {
+        yield return LoadAssetBundle(NitroxAssetBundle.PLAYER_LIST_TAB, loadedAssetBundle =>
+        {
+            // Must be in the callback so that the subscribed events will happen afterwards
+            foreach (Object asset in loadedAssetBundle.AllAssets)
+            {
+                if (asset is Sprite sprite)
+                {
+                    if (asset.name.Equals("player_list_tab@3x"))
+                    {
+                        PDATabSprites[asset.name] = new Atlas.Sprite(sprite);
+                    }
+                    assets.Add(asset.name, sprite);
+                }
+            }
+        });
+    }
+    public Sprite GetSprite(string assetName)
+    {
+        if (assets.TryGetValue(assetName, out Sprite sprite))
+        {
+            return sprite;
+        }
+        return Sprite.Create(new Texture2D(100, 100), new Rect(0, 0, 100, 100), new Vector2(50, 50), 100);
+    }
+
 
     public new void OnEnable()
     {
@@ -74,7 +108,7 @@ public class uGUI_PlayerListTab : uGUI_PingTab
 
         // Sort the items by alphabetical order (based on SN's code)
         tempSort.Clear();
-        foreach (KeyValuePair<int, uGUI_PlayerEntry> entry in entries)
+        foreach (KeyValuePair<int, uGUI_PlayerPingEntry> entry in entries)
         {
             if (!entry.Value.IsLocalPlayer)
             {
@@ -93,14 +127,14 @@ public class uGUI_PlayerListTab : uGUI_PingTab
         }
     }
 
-    public new uGUI_PlayerEntry GetEntry()
+    public new uGUI_PlayerPingEntry GetEntry()
     {
-        uGUI_PlayerEntry uGUI_PlayerEntry;
+        uGUI_PlayerPingEntry uGUI_PlayerEntry;
         if (pool.Count == 0)
         {
             for (int i = 0; i < 4; i++)
             {
-                uGUI_PlayerEntry = Instantiate(prefabEntry).GetComponent<uGUI_PlayerEntry>();
+                uGUI_PlayerEntry = Instantiate(prefabEntry).GetComponent<uGUI_PlayerPingEntry>();
                 uGUI_PlayerEntry.rectTransform.SetParent(pingCanvas, false);
                 uGUI_PlayerEntry.Uninitialize();
                 pool.Add(uGUI_PlayerEntry);
@@ -122,7 +156,7 @@ public class uGUI_PlayerListTab : uGUI_PingTab
 
         // Need to modify the pingTab's script from uGUI_PingEntry to uGUI_PlayerEntry
         uGUI_PingEntry pingEntry = newPrefab.GetComponent<uGUI_PingEntry>();
-        uGUI_PlayerEntry playerEntry = newPrefab.AddComponent<uGUI_PlayerEntry>();
+        uGUI_PlayerPingEntry playerEntry = newPrefab.AddComponent<uGUI_PlayerPingEntry>();
         playerEntry.visibility = pingEntry.visibility;
         playerEntry.visibilityIcon = pingEntry.visibilityIcon;
         playerEntry.icon = pingEntry.icon;
@@ -152,8 +186,8 @@ public class uGUI_PlayerListTab : uGUI_PingTab
 
     private void AddNewEntry(int playerId, INitroxPlayer player)
     {
-        uGUI_PlayerEntry entry = GetEntry();
-        entry.Initialize(playerId, player.PlayerName);
+        uGUI_PlayerPingEntry entry = GetEntry();
+        entry.Initialize(playerId, player.PlayerName, this);
         entry.UpdateEntryForNewPlayer(player, localPlayer, packetSender);
         entries.Add(playerId, entry);
     }
