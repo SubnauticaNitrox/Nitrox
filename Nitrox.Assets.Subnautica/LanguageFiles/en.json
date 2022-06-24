@@ -52,6 +52,6 @@
     "Nitrox_Mute": "Mute",
     "Nitrox_Unmute": "Unmute",
     "Nitrox_Kick": "Kick",
-    "Nitrox_TeleportTo": "Teleport to",
-    "Nitrox_TeleportToMe": "Teleport to me"
+    "Nitrox_TeleportTo": "Teleport to {PLAYER}",
+    "Nitrox_TeleportToMe": "Teleport {PLAYER} to me"
 }

@@ -52,6 +52,6 @@
     "Nitrox_Mute": "Rendre muet",
     "Nitrox_Unmute": "Entendre à nouveau",
     "Nitrox_Kick": "Exclure",
-    "Nitrox_TeleportTo": "S'y téléporter",
-    "Nitrox_TeleportToMe": "Téléporter vers moi"
+    "Nitrox_TeleportTo": "Se téléporter à {PLAYER}",
+    "Nitrox_TeleportToMe": "Téléporter {PLAYER} à moi"
 }
