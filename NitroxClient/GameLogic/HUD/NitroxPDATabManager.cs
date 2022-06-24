@@ -2,16 +2,11 @@
 
 namespace NitroxClient.GameLogic.HUD;
 
-public class NitroxGuiManager
+public class NitroxPDATabManager
 {
-    public Dictionary<PDATab, NitroxPDATab> CustomTabs;
-    public NitroxGuiManager()
-    {
-        CustomTabs = new();
-        RegisterCustomTabs();
-    }
+    public Dictionary<PDATab, NitroxPDATab> CustomTabs = new();
 
-    public void RegisterCustomTabs()
+    public NitroxPDATabManager()
     {
         RegisterTab(new PlayerListTab());
     }

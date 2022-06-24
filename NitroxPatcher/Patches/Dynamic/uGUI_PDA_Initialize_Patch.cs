@@ -25,8 +25,8 @@ public class uGUI_PDA_Initialize_Patch : NitroxPatch, IDynamicPatch
         // Initialize all the custom tabs so that they can create their required components
         // And add their "types" to the tab list
         Log.Debug($"uGUI_PDA::Initialize() from : {__instance.gameObject}");
-        Resolve<NitroxGuiManager>().CustomTabs.Values.ForEach(tab => tab.OnInitializePDA(__instance));
-        Resolve<NitroxGuiManager>().CustomTabs.Keys.ForEach(uGUI_PDA.regularTabs.Add);
+        Resolve<NitroxPDATabManager>().CustomTabs.Values.ForEach(tab => tab.OnInitializePDA(__instance));
+        Resolve<NitroxPDATabManager>().CustomTabs.Keys.ForEach(uGUI_PDA.regularTabs.Add);
         //
         
         __instance.tabs = new Dictionary<PDATab, uGUI_PDATab>(uGUI_PDA.sPDATabComparer)
@@ -66,7 +66,7 @@ public class uGUI_PDA_Initialize_Patch : NitroxPatch, IDynamicPatch
         };
 
         // Also required to add the custom tabs here
-        foreach (KeyValuePair<PDATab, NitroxPDATab> nitroxTab in Resolve<NitroxGuiManager>().CustomTabs)
+        foreach (KeyValuePair<PDATab, NitroxPDATab> nitroxTab in Resolve<NitroxPDATabManager>().CustomTabs)
         {
             __instance.tabs.Add(nitroxTab.Key, nitroxTab.Value.uGUI_PDATab);
         }

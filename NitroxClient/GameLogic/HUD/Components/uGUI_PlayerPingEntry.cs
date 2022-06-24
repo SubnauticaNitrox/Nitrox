@@ -1,6 +1,6 @@
 ﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors;
-using NitroxClient.GameLogic.Helper;
+using NitroxClient.GameLogic.HUD.PdaTabs;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.MonoBehaviours.Gui.InGame;
 using NitroxModel.Core;
@@ -13,9 +13,11 @@ using static NitroxClient.Unity.Helper.AssetBundleLoader;
 
 namespace NitroxClient.GameLogic.HUD.Components;
 
-public class uGUI_PlayerEntry : uGUI_PingEntry
+public class uGUI_PlayerPingEntry : uGUI_PingEntry
 {
+    private uGUI_PlayerListTab parent;
     private INitroxPlayer player;
+
     public string PlayerName => player?.PlayerName ?? string.Empty;
     public bool IsLocalPlayer => player is LocalPlayer;
     private bool showPing;
@@ -64,8 +66,10 @@ public class uGUI_PlayerEntry : uGUI_PingEntry
         UpdateButtonsPosition();
     }
 
-    public void Initialize(int id, string name)
+    public void Initialize(int id, string name, uGUI_PlayerListTab parent)
     {
+        this.parent = parent;
+
         gameObject.SetActive(true);
         this.id = id;
         visibility.isOn = true;
@@ -76,20 +80,20 @@ public class uGUI_PlayerEntry : uGUI_PingEntry
 
         UpdateLabel(name);
         OnLanguageOnLanguageChanged();
-        if (HasBundleLoaded(NitroxAssetBundle.PLAYER_LIST_TAB))
+        if (IsBundleLoaded(NitroxAssetBundle.PLAYER_LIST_TAB))
         {
             AssignSprites();
         }
         else
         {
-            AssetsHelper.onPlayerListAssetsLoaded += AssignSprites;
+            SubscribeToEvent(NitroxAssetBundle.PLAYER_LIST_TAB, AssignSprites);
         }
     }
 
     public void OnLanguageOnLanguageChanged()
     {
-        GetTooltip(ShowObject).TooltipText = showPing ? Language.main.Get("Nitrox_HidePing") : Language.main.Get("Nitrox_ShowPing");
-        GetTooltip(MuteObject).TooltipText = muted ? Language.main.Get("Nitrox_Unmute") : Language.main.Get("Nitrox_Mute");
+        GetTooltip(ShowObject).TooltipText = Language.main.Get(showPing ? "Nitrox_HidePing" : "Nitrox_ShowPing");
+        GetTooltip(MuteObject).TooltipText = Language.main.Get(muted ? "Nitrox_Unmute" : "Nitrox_Mute");
         GetTooltip(KickObject).TooltipText = Language.main.Get("Nitrox_Kick");
         GetTooltip(TeleportToObject).TooltipText = Language.main.Get("Nitrox_TeleportTo");
         GetTooltip(TeleportToMeObject).TooltipText = Language.main.Get("Nitrox_TeleportToMe");
@@ -126,14 +130,14 @@ public class uGUI_PlayerEntry : uGUI_PingEntry
             {
                 PingInstance pingInstance = remotePlayer.PlayerModel.GetComponentInChildren<PingInstance>();
                 pingInstance.SetVisible(toggled);
-                GetTooltip(ShowObject).TooltipText = toggled ? Language.main.Get("Nitrox_HidePing") : Language.main.Get("Nitrox_ShowPing");
+                GetTooltip(ShowObject).TooltipText = Language.main.Get(toggled ? "Nitrox_HidePing" : "Nitrox_ShowPing");
                 visibilityIcon.sprite = toggled ? spriteVisible : spriteHidden;
             }
         });
         // Each of those clicks involves a confirmation modal
         GetToggle(MuteObject).onValueChanged.AddListener(delegate (bool toggled)
         {
-            string text = muted ? Language.main.Get("Nitrox_Unmute") : Language.main.Get("Nitrox_Mute");
+            string text = Language.main.Get(muted ? "Nitrox_Unmute" : "Nitrox_Mute");
             Modal.Get<ConfirmModal>()?.Show($"{text} {player.PlayerName}?", () =>
             {
                 GetToggle(MuteObject).SetIsOnWithoutNotify(!toggled);
@@ -152,14 +156,16 @@ public class uGUI_PlayerEntry : uGUI_PingEntry
         });
         GetToggle(TeleportToObject).onValueChanged.AddListener(delegate (bool toggled)
         {
-            Modal.Get<ConfirmModal>()?.Show($"{Language.main.Get("Nitrox_TeleportTo")} {player.PlayerName}?", () =>
+            string text = Language.main.Get("Nitrox_TeleportTo").Replace("{PLAYER}", player.PlayerName);
+            Modal.Get<ConfirmModal>()?.Show($"{text}?", () =>
             {
                 packetSender.Send(new ServerCommand($"warp {player.PlayerName}"));
             });
         });
         GetToggle(TeleportToMeObject).onValueChanged.AddListener(delegate (bool toggled)
         {
-            Modal.Get<ConfirmModal>()?.Show($"{Language.main.Get("Nitrox_TeleportToMe")} {player.PlayerName}?", () =>
+            string text = Language.main.Get("Nitrox_TeleportToMe").Replace("{PLAYER}", player.PlayerName);
+            Modal.Get<ConfirmModal>()?.Show($"{text}?", () =>
             {
                 packetSender.Send(new ServerCommand($"warp {player.PlayerName} {localPlayer.PlayerName}"));
             });
@@ -202,12 +208,12 @@ public class uGUI_PlayerEntry : uGUI_PingEntry
     {
         // NB: Those textures MUST be exported with a Texture Type of "Sprite (2D and UI)", else they will look blurry not matter what
         // NB 2: Those textures for the buttons are scaled 68x61 but the image inside but not hit the borders to have a better render
-        MutedSprite = AssetsHelper.MakeSpriteFromTexture("muted@3x");
-        UnmutedSprite = AssetsHelper.MakeSpriteFromTexture("unmuted@3x");
-        KickSprite = AssetsHelper.MakeSpriteFromTexture("kick@3x");
-        TeleportToSprite = AssetsHelper.MakeSpriteFromTexture("teleport_to@3x");
-        TeleportToMeSprite = AssetsHelper.MakeSpriteFromTexture("teleport_to_me@3x");
-
+        MutedSprite = parent.GetSprite("muted@3x");
+        UnmutedSprite = parent.GetSprite("unmuted@3x");
+        KickSprite = parent.GetSprite("kick@3x");
+        TeleportToSprite = parent.GetSprite("teleport_to@3x");
+        TeleportToMeSprite = parent.GetSprite("teleport_to_me@3x");
+        
         MuteObject.FindChild("Eye").GetComponent<Image>().sprite = UnmutedSprite;
         KickObject.FindChild("Eye").GetComponent<Image>().sprite = KickSprite;
         TeleportToObject.FindChild("Eye").GetComponent<Image>().sprite = TeleportToSprite;
@@ -217,7 +223,7 @@ public class uGUI_PlayerEntry : uGUI_PingEntry
     private void RefreshMuteButton(bool muted)
     {
         GetToggle(MuteObject).SetIsOnWithoutNotify(muted);
-        GetTooltip(MuteObject).TooltipText = muted ? Language.main.Get("Nitrox_Unmute") : Language.main.Get("Nitrox_Mute");
+        GetTooltip(MuteObject).TooltipText = Language.main.Get(muted ? "Nitrox_Unmute" : "Nitrox_Mute");
         MuteObject.FindChild("Eye").GetComponent<Image>().sprite = muted ? MutedSprite : UnmutedSprite;
     }
 
@@ -225,7 +231,7 @@ public class uGUI_PlayerEntry : uGUI_PingEntry
     {
         LocalPlayer localPlayer = NitroxServiceLocator.LocateService<LocalPlayer>();
         
-        bool isNotLocalPlayer = !IsLocalPlayer;
+        bool isNotLocalPlayer = !IsLocalPlayer || true;
         // We don't want none of these buttons to appear for us
         ShowObject.SetActive(isNotLocalPlayer);
 

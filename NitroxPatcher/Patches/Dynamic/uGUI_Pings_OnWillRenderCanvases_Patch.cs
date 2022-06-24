@@ -51,7 +51,7 @@ public class uGUI_Pings_OnWillRenderCanvases_Patch : NitroxPatch, IDynamicPatch
         {
             return false;
         }
-        return Resolve<NitroxGuiManager>().CustomTabs.TryGetValue(uGUI_PDA.main.currentTabType, out NitroxPDATab nitroxTab) && nitroxTab.KeepPingsVisible;
+        return Resolve<NitroxPDATabManager>().CustomTabs.TryGetValue(uGUI_PDA.main.currentTabType, out NitroxPDATab nitroxTab) && nitroxTab.KeepPingsVisible;
     }
 
     public override void Patch(Harmony harmony)
