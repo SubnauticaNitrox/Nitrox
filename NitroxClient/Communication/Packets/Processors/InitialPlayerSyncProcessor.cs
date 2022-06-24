@@ -59,7 +59,6 @@ namespace NitroxClient.Communication.Packets.Processors
             Multiplayer.Main.InitialSyncCompleted = true;
 
             packetSender.Send(new PlayerSyncFinished());
-            AssetsHelper.Initialize();
         }
 
         private IEnumerator RunPendingProcessors()
