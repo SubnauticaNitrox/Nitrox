@@ -39,12 +39,12 @@ public abstract class Modal
 
     public bool FreezeGame { get; init; }
 
-    public ModalBackground Background { get; init; }
-    
+    public float Transparency { get; init; }
+
     // Is useful for calling IngameMenu::OnDeselect() from a modal class (in Hide() for example)
     public bool IsAvoidableBypass = false;
 
-    public Modal(string yesButtonText = "YES", bool hideNoButton = true, string noButtonText = "NO", string modalText = "", bool isAvoidable = false, bool freezeGame = false, ModalBackground background = null)
+    public Modal(string yesButtonText = "YES", bool hideNoButton = true, string noButtonText = "NO", string modalText = "", bool isAvoidable = false, bool freezeGame = false, float transparency = 0.392f)
     {
         Type type = GetType();
         if (Modals.ContainsKey(type))
@@ -59,10 +59,10 @@ public abstract class Modal
         ModalText = modalText;
         IsAvoidable = isAvoidable;
         FreezeGame = freezeGame;
+        Transparency = transparency; // 0.392 is the default transparency for Subnautica's modal
 
         Log.Debug($"Registered Modal {SubWindowName} of type {type}");
         Modals.Add(type, this);
-        Background = background ?? ModalBackground.BlueColor();
     }
 
     /// <summary>
@@ -130,39 +130,10 @@ public abstract class Modal
             messageTransform.sizeDelta = new Vector2(700, 195);
         }
 
-        if (Background.IsSameColor(ModalBackground.RedColor()))
-        {
-            uGUI_SceneConfirmation confirmation = uGUI.main.confirmation;
-            Sprite redSprite = confirmation.GetComponentInChildren<Image>().sprite;
-            modalSubWindow.GetComponent<Image>().sprite = redSprite;
-        }
-        // In the case we want a basic red or blue color we don't need to set a color
-        else if (!Background.IsSameColor(ModalBackground.BlueColor()))
-        {
-            modalSubWindow.GetComponent<Image>().sprite = GetColoredSprite();
-        }
-        modalSubWindow.GetComponent<Image>().color = Color.white.WithAlpha(Background.Color.a);
+        modalSubWindow.GetComponent<Image>().color = Color.white.WithAlpha(Transparency);
 
         // Will happen either it's initialized or not
         UpdateModal();
-    }
-
-    /// <summary>
-    /// Creates a texture from the original sprite with a different color but without using the transparency
-    /// </summary>
-    private Sprite GetColoredSprite()
-    {
-        Sprite sprite = modalSubWindow.GetComponent<Image>().sprite;
-        Texture2D newTexture = new((int)sprite.rect.width, (int)sprite.rect.height);
-        Sprite newSprite = Sprite.Create(newTexture, sprite.rect, sprite.pivot, sprite.pixelsPerUnit);
-        Color[] pixels = newSprite.texture.GetPixels();
-        for (int i = 0; i < pixels.Length; i++)
-        {
-            pixels[i] = Background.Color.WithAlpha(1.0f);
-        }
-        newSprite.texture.SetPixels(pixels);
-        newSprite.texture.Apply();
-        return newSprite;
     }
 
     /// <summary>
@@ -224,40 +195,5 @@ public abstract class Modal
         }
         // No need to add entry in dictionary as it's done in constructor
         return (T)Activator.CreateInstance(typeof(T));
-    }
-
-    public class ModalBackground
-    {
-        public Color Color;
-
-        public ModalBackground(Color color)
-        {
-            Color = color;
-        }
-
-        /// <summary>
-        /// Get default Subnautica's Blue modal background
-        /// </summary>
-        public static ModalBackground BlueColor(float transparency = 0.392f)
-        {
-            return new ModalBackground(new Color(38, 143, 225, transparency));
-        }
-
-        /// <summary>
-        /// Get default Subnautica's Red modal background
-        /// </summary>
-        public static ModalBackground RedColor(float transparency = 1.0f)
-        {
-            return new ModalBackground(Color.red.WithAlpha(transparency));
-        }
-
-        public bool IsSameColor(ModalBackground otherBackground)
-        {
-            return IsSameColor(otherBackground.Color);
-        }
-        public bool IsSameColor(Color otherColor)
-        {
-            return Color.r == otherColor.r && Color.g == otherColor.g && Color.b == otherColor.b;
-        }
     }
 }

@@ -6,7 +6,7 @@ public class ConfirmModal : Modal
 {
     private Action yesCallback;
 
-    public ConfirmModal() : base(yesButtonText: "Confirm", hideNoButton: false, noButtonText: "Cancel", isAvoidable: true, background: ModalBackground.BlueColor(0.93f))
+    public ConfirmModal() : base(yesButtonText: "Confirm", hideNoButton: false, noButtonText: "Cancel", isAvoidable: true, transparency: 0.93f)
     { }
 
     public void Show(string actionText, Action yesCallback)
