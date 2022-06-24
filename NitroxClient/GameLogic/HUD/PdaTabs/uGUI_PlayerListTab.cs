@@ -59,6 +59,7 @@ public class uGUI_PlayerListTab : uGUI_PingTab
             }
         });
     }
+    
     public Sprite GetSprite(string assetName)
     {
         if (assets.TryGetValue(assetName, out Sprite sprite))
@@ -67,7 +68,6 @@ public class uGUI_PlayerListTab : uGUI_PingTab
         }
         return Sprite.Create(new Texture2D(100, 100), new Rect(0, 0, 100, 100), new Vector2(50, 50), 100);
     }
-
 
     public new void OnEnable()
     {
