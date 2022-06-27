@@ -64,11 +64,15 @@ namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
 
         public IEnumerable<BasePieceData> OrderBasePiecesByPriority(IEnumerable<BasePieceData> inputPieces)
         {
-            return inputPieces.OrderBy(piece => piece.ParentId.HasValue) // Ensure pieces without parents go first.
+            IEnumerable<BasePieceData> orderedList = inputPieces.OrderBy(piece => piece.ParentId.HasValue) // Ensure pieces without parents go first.
                               .ThenByDescending(piece => piece.ConstructionCompleted) // Ensure completed pieces are before pending pieces
                               .ThenBy(piece => piece.IsFurniture) // Ensure base building block go before furniture
                               .ThenBy(ComputeBasePiecePriority) // Ensure remaining pieces are prioritized by above order. 
                               .ThenBy(piece => piece.BuildIndex);
+            // Ensure water parks are built in the good order, this way, the build order will never provoke errors
+            orderedList = OrderByHeight(orderedList, TechType.BaseWaterPark);
+            
+            return orderedList;
         }
 
         private int ComputeBasePiecePriority(BasePieceData basePiece)
@@ -76,6 +80,55 @@ namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
             TechType techType = basePiece.TechType.ToUnity();
 
             return piecesToPriority.TryGetValue(techType, out int position) ? position : int.MaxValue;
+        }
+
+        private List<BasePieceData> OrderByHeight(IEnumerable<BasePieceData> orderedList, TechType techType)
+        {
+            int i = 0;
+            int minIndex = -1;
+            int maxIndex = -1;
+            foreach (BasePieceData basePieceData in orderedList)
+            {
+                if (basePieceData.TechType.Equals(techType.ToDto()))
+                {
+                    if (minIndex == -1)
+                    {
+                        minIndex = i;
+                    }
+                }
+                else if (minIndex != -1 && maxIndex == -1)
+                {
+                    maxIndex = i - 1;
+                }
+                i++;
+            }
+            
+            // Verifications
+            if (minIndex == -1 && maxIndex == -1)
+            {
+                return orderedList.ToList();
+            }
+            else if (minIndex != 1 && maxIndex == -1)
+            {
+                maxIndex = orderedList.Count() - 1;
+            }
+
+            List<BasePieceData> pieces = new(orderedList);
+            List<BasePieceData> specificBasePieces = new();
+            for (int index = minIndex; index <= maxIndex; index++)
+            {
+                specificBasePieces.Add(orderedList.ElementAt(index));
+            }
+            
+            specificBasePieces = specificBasePieces.OrderBy(piece => -piece.ItemPosition.Y).ToList();
+
+            for (int index = minIndex; index <= maxIndex; index++)
+            {
+                pieces[index] = specificBasePieces[index - minIndex];
+            }
+            
+            i = 0;
+            return pieces;
         }
     }
 }
