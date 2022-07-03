@@ -110,14 +110,14 @@ public class GeometryRespawnManager
                    Equals(rotation, other.rotation);
         }
 
-        public bool Equals(Vector3 _position, Vector3 otherPosition)
+        public bool Equals(Vector3 position, Vector3 otherPosition)
         {
-            return Vector3.SqrMagnitude(_position - otherPosition) < 0.1f;
+            return Vector3.SqrMagnitude(position - otherPosition) < 0.1f;
         }
 
-        public bool Equals(Quaternion _rotation, Quaternion otherRotation)
+        public bool Equals(Quaternion rotation, Quaternion otherRotation)
         {
-            return Math.Abs(Quaternion.Angle(_rotation, otherRotation)) < 0.1f;
+            return Math.Abs(Quaternion.Angle(rotation, otherRotation)) < 0.1f;
         }
 
         public override bool Equals(object obj)

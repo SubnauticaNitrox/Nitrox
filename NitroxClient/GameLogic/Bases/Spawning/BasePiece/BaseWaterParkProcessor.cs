@@ -54,15 +54,5 @@ namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
                 Log.Debug($"BaseRoomWaterParkProcessor: Created new Waterpark {newWaterparkId} and Planter {newPlanterId}");
             }
         }
-
-        private IEnumerator DelayModuleDetection(Base latestBase, Int3 latestCell, GameObject finishedPiece)
-        {
-            if (!finishedPiece)
-            {
-                yield break;
-            }
-            yield return new WaitForSeconds(0.1f);
-            SpawnPostProcess(latestBase, latestCell, finishedPiece);
-        }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using NitroxClient.MonoBehaviours;
+﻿using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using UnityEngine;
@@ -35,16 +34,6 @@ namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
 
             NitroxId moduleId = reactorId.Increment();
             NitroxEntity.SetNewId(bioReactorModule.gameObject, moduleId);
-        }
-
-        private IEnumerator DelayModuleDetection(Base latestBase, Int3 latestCell, GameObject finishedPiece)
-        {
-            if (!finishedPiece)
-            {
-                yield break;
-            }
-            yield return new WaitForSeconds(0.1f);
-            SpawnPostProcess(latestBase, latestCell, finishedPiece);
         }
     }
 }

@@ -280,9 +280,23 @@ namespace NitroxClient.MonoBehaviours
 
         private static bool AreSameTechType(TechType actual, TechType expected)
         {
-            return actual.Equals(expected) || // normal case
-                   (actual.Equals(TechType.BaseConnector) && expected.Equals(TechType.BaseCorridor)) || // a specific case
-                   expected.ToString().Contains(actual.ToString()); // for cases like: actual = BaseCorridor but expected = BaseCorridorT
+            // Normal case
+            if (actual.Equals(expected))
+            {
+                return true;
+            }
+            // Specificity for this structure
+            if (actual.Equals(TechType.BaseConnector) && expected.Equals(TechType.BaseCorridor))
+            {
+                return true;
+            }
+            // In certain cases the actual type has one more letter than the expected type
+            // e.g. actual = BaseCorridor but expected = BaseCorridorT
+            if (expected.ToString().Contains(actual.ToString()))
+            {
+                return true;
+            }
+            return false;
         }
 
         private void LaterConstructionCompleted(LaterConstructionCompletedEvent laterConstructionCompleted)

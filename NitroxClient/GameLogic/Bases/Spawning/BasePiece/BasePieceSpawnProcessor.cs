@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -17,7 +18,7 @@ namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
         /// <summary>
         /// Some processors don't need to be rerun because the modifications they apply aren't reset when base geometry is rebuilt
         /// </summary>
-        protected abstract bool ShouldRerunSpawnProcessor { get; }
+        protected virtual bool ShouldRerunSpawnProcessor { get; }
 
         static BasePieceSpawnProcessor()
         {
@@ -70,6 +71,17 @@ namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
             {
                 RunSpawnProcessor(basePieceSpawnInfos.TechType, basePieceSpawnInfos.LatestBase, basePieceSpawnInfos.LatestCell, finishedPiece, true);
             }
+        }
+
+        // Processors may be executed before the finished piece has entirely spawned
+        protected IEnumerator DelayModuleDetection(Base latestBase, Int3 latestCell, GameObject finishedPiece)
+        {
+            if (!finishedPiece)
+            {
+                yield break;
+            }
+            yield return new WaitForSeconds(0.1f);
+            SpawnPostProcess(latestBase, latestCell, finishedPiece);
         }
 
         internal struct BasePieceSpawnInfos
