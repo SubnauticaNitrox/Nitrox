@@ -2,10 +2,8 @@
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic.HUD;
-using NitroxClient.GameLogic.HUD.PdaTabs;
 using NitroxModel.Helper;
 using UnityEngine;
-using static NitroxClient.Unity.Helper.AssetBundleLoader;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -26,15 +24,15 @@ public class uGUI_PDA_SetTabs_Patch : NitroxPatch, IDynamicPatch
             __instance.currentTabs.Add(item);
         }
 
-        List<NitroxPDATab> customTabs = new(Resolve<NitroxPDATabManager>().CustomTabs.Values);
+        NitroxPDATabManager nitroxTabManager = Resolve<NitroxPDATabManager>();
+        List<NitroxPDATab> customTabs = new(nitroxTabManager.CustomTabs.Values);
         for (int i = 0; i < customTabs.Count; i++)
         {
             string tabIconAssetName = customTabs[customTabs.Count - i - 1].TabIconAssetName;
-            if (!uGUI_PlayerListTab.PDATabSprites.TryGetValue(tabIconAssetName, out Atlas.Sprite sprite))
+            if (!nitroxTabManager.TryGetTabSprite(tabIconAssetName, out Atlas.Sprite sprite))
             {
-                // As a placeholder, we use the normal player icon
-                SubscribeToEvent("*", () => { AssignSprite(__instance.toolbar, tabIconAssetName, array.Length - i - 1); });
-                sprite = new Atlas.Sprite(new Texture2D(100, 100));
+                nitroxTabManager.SetSpriteLoadedCallback(tabIconAssetName, callbackSprite => AssignSprite(__instance.toolbar, array.Length - i - 1, callbackSprite));
+                sprite = new Atlas.Sprite(new Texture2D(100, 100)); // As a placeholder, we use the normal player icon
             }
 
             array[array.Length - i - 1] = sprite;
@@ -47,12 +45,9 @@ public class uGUI_PDA_SetTabs_Patch : NitroxPatch, IDynamicPatch
         return false;
     }
 
-    private static void AssignSprite(uGUI_Toolbar uGUI_Toolbar, string tabIconAssetName, int index)
+    private static void AssignSprite(uGUI_Toolbar toolbar, int index, Atlas.Sprite sprite)
     {
-        if (uGUI_PlayerListTab.PDATabSprites.TryGetValue(tabIconAssetName, out Atlas.Sprite sprite))
-        {
-            uGUI_Toolbar.icons[index].SetForegroundSprite(sprite);
-        }
+        toolbar.icons[index].SetForegroundSprite(sprite);
     }
 
     public override void Patch(Harmony harmony)

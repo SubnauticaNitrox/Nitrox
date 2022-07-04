@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using NitroxModel.Helper;
 using UnityEngine;
@@ -10,9 +9,7 @@ namespace NitroxClient.Unity.Helper;
 public static class AssetBundleLoader
 {
     private static readonly string assetRootFolder = NitroxUser.AssetsPath;
-    
-    private static readonly Dictionary<string, AssetBundleLoadedEvent> subscribedEvents = new() { { "*", null } };
-    
+
     private static bool loadedSharedAssets;
 
     public static IEnumerator LoadAssetBundle(NitroxAssetBundle nitroxAssetBundle)
@@ -46,10 +43,6 @@ public static class AssetBundleLoader
         }
 
         nitroxAssetBundle.LoadedAssets = loadRequest.allAssets;
-
-        subscribedEvents.TryGetValue(nitroxAssetBundle.BundleName, out AssetBundleLoadedEvent assetBundleLoadedEvent);
-        assetBundleLoadedEvent?.Invoke();
-        subscribedEvents["*"]?.Invoke();
     }
 
     public static IEnumerator LoadUIAsset(NitroxAssetBundle nitroxAssetBundle, bool hideUI)
@@ -88,28 +81,12 @@ public static class AssetBundleLoader
             canvasGroup.alpha = 0;
         }
         nitroxAssetBundle.LoadedAssets = new UnityEngine.Object[] { asset };
-
-        subscribedEvents.TryGetValue(nitroxAssetBundle.BundleName, out AssetBundleLoadedEvent assetBundleLoadedEvent);
-        assetBundleLoadedEvent?.Invoke();
-        subscribedEvents["*"]?.Invoke();
     }
 
     public static bool IsBundleLoaded(NitroxAssetBundle nitroxAssetBundle)
     {
         return nitroxAssetBundle.LoadedAssets != null && nitroxAssetBundle.LoadedAssets.Length > 0;
     }
-
-    public static void SubscribeToEvent(string bundleName, AssetBundleLoadedEvent callback)
-    {
-        if (!subscribedEvents.TryGetValue(bundleName, out AssetBundleLoadedEvent assetBundleLoadedEvent))
-        {
-            subscribedEvents[bundleName] = callback;
-            return;
-        }
-        subscribedEvents[bundleName] += callback;
-    }
-
-    public delegate void AssetBundleLoadedEvent();
 
     // ReSharper disable class StringLiteralTypo, InconsistentNaming
     public class NitroxAssetBundle

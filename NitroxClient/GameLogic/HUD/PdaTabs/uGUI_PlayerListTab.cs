@@ -15,13 +15,13 @@ namespace NitroxClient.GameLogic.HUD.PdaTabs;
 /// </summary>
 public class uGUI_PlayerListTab : uGUI_PingTab
 {
-    public static readonly Dictionary<string, Atlas.Sprite> PDATabSprites = new();
-    
+    private NitroxPDATabManager nitroxPDATabManager;
     private PlayerManager playerManager;
     private LocalPlayer localPlayer;
     private IPacketSender packetSender;
 
     private readonly Dictionary<string, Sprite> assets = new();
+    public bool FinishedLoadingAssets { get; private set; }
 
     private new Dictionary<int, uGUI_PlayerPingEntry> entries = new();
     private new List<uGUI_PlayerPingEntry> pool = new();
@@ -30,6 +30,7 @@ public class uGUI_PlayerListTab : uGUI_PingTab
     public override void Awake()
     {
         base.Awake();
+        nitroxPDATabManager = NitroxServiceLocator.LocateService<NitroxPDATabManager>();
         playerManager = NitroxServiceLocator.LocateService<PlayerManager>();
         localPlayer = NitroxServiceLocator.LocateService<LocalPlayer>();
         packetSender = NitroxServiceLocator.LocateService<IPacketSender>();
@@ -54,11 +55,13 @@ public class uGUI_PlayerListTab : uGUI_PingTab
             {
                 if (asset.name.Equals("player_list_tab@3x"))
                 {
-                    PDATabSprites[asset.name] = new Atlas.Sprite(sprite);
+                    nitroxPDATabManager.AddTabSprite(asset.name, new Atlas.Sprite(sprite));
                 }
                 assets.Add(asset.name, sprite);
             }
         }
+
+        FinishedLoadingAssets = true;
     }
     
     public Sprite GetSprite(string assetName)

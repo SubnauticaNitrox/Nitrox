@@ -1,4 +1,5 @@
-﻿using NitroxClient.Communication.Abstract;
+﻿using System.Collections;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors;
 using NitroxClient.GameLogic.HUD.PdaTabs;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
@@ -9,6 +10,7 @@ using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 using UnityEngine.UI;
+using UWE;
 using static NitroxClient.Unity.Helper.AssetBundleLoader;
 
 namespace NitroxClient.GameLogic.HUD.Components;
@@ -80,14 +82,8 @@ public class uGUI_PlayerPingEntry : uGUI_PingEntry
 
         UpdateLabel(name);
         OnLanguageOnLanguageChanged();
-        if (IsBundleLoaded(NitroxAssetBundle.PLAYER_LIST_TAB))
-        {
-            AssignSprites();
-        }
-        else
-        {
-            SubscribeToEvent(NitroxAssetBundle.PLAYER_LIST_TAB.BundleName, AssignSprites);
-        }
+
+        CoroutineHost.StartCoroutine(AssignSprites());
     }
 
     public void OnLanguageOnLanguageChanged()
@@ -204,8 +200,10 @@ public class uGUI_PlayerPingEntry : uGUI_PingEntry
         GetToggle(TeleportToMeObject).onValueChanged.RemoveAllListeners();
     }
 
-    public void AssignSprites()
+    private IEnumerator AssignSprites()
     {
+        yield return new WaitUntil(() => parent.FinishedLoadingAssets);
+        
         // NB: Those textures MUST be exported with a Texture Type of "Sprite (2D and UI)", else they will look blurry not matter what
         // NB 2: Those textures for the buttons are scaled 68x61 but the image inside but not hit the borders to have a better render
         MutedSprite = parent.GetSprite("muted@3x");
