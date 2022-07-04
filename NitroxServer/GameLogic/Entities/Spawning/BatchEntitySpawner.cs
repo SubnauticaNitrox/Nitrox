@@ -122,13 +122,13 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                 yield break;
             }
 
-            double randomNumber = deterministicBatchGenerator.NextDouble();
+            float randomNumber = (float)deterministicBatchGenerator.NextDouble();
             if (rollingProbabilityDensity > 1f)
             {
                 randomNumber *= rollingProbabilityDensity;
             }
 
-            double rollingProbability = 0;
+            float rollingProbability = 0;
 
             UwePrefab selectedPrefab = allowedPrefabs.FirstOrDefault(prefab =>
             {
@@ -402,9 +402,6 @@ namespace NitroxServer.GameLogic.Entities.Spawning
 
                         // Add the object to the child list that that is being returned by this method.
                         entities.Add(spawnableprefabEntity);
-
-                        // remove prefab from placeholder list so it is not duplicated later by mistake.
-                        spawnablePrefabs.Remove(spawnablePrefab);
                     }
                     else
                     {
