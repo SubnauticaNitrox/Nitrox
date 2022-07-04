@@ -7,6 +7,7 @@ using NitroxModel.Helper;
 using NitroxModel.Packets;
 using UnityEngine;
 using UnityEngine.UI;
+using UWE;
 using static NitroxClient.Unity.Helper.AssetBundleLoader;
 
 namespace NitroxClient.GameLogic.ChatUI
@@ -97,11 +98,11 @@ namespace NitroxClient.GameLogic.ChatUI
 
         private IEnumerator LoadChatLogAsset()
         {
-            yield return LoadUIAsset(NitroxAssetBundle.CHAT_LOG, true, playerChatGameObject =>
-            {
-                playerChat = playerChatGameObject.AddComponent<PlayerChat>();
-            });
-
+            yield return LoadUIAsset(NitroxAssetBundle.CHAT_LOG, true);
+            
+            GameObject playerChatGameObject = (GameObject)NitroxAssetBundle.CHAT_LOG.LoadedAssets[0];
+            playerChat = playerChatGameObject.AddComponent<PlayerChat>();
+            
             yield return playerChat.SetupChatComponents();
         }
 
@@ -109,10 +110,8 @@ namespace NitroxClient.GameLogic.ChatUI
         {
             if (!NitroxPrefs.ChatUsed.Value)
             {
-                Player.main.StartCoroutine(LoadUIAsset(NitroxAssetBundle.CHAT_KEY_HINT, false, chatKeyHintGameObject =>
-                {
-                    chatKeyHint = chatKeyHintGameObject;
-                }));
+                CoroutineHost.StartCoroutine(LoadUIAsset(NitroxAssetBundle.CHAT_KEY_HINT, false));
+                chatKeyHint = NitroxAssetBundle.CHAT_KEY_HINT.LoadedAssets[0] as GameObject;
             }
         }
 

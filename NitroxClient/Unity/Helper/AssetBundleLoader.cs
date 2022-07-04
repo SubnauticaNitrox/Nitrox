@@ -1,9 +1,7 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Linq;
 using NitroxModel.Helper;
 using UnityEngine;
 
@@ -15,7 +13,7 @@ public static class AssetBundleLoader
     
     private static readonly Dictionary<string, AssetBundleLoadedEvent> subscribedEvents = new() { { "*", null } };
     
-    private static bool loadedSharedAssets = false;
+    private static bool loadedSharedAssets;
 
     public static IEnumerator LoadAssetBundle(NitroxAssetBundle nitroxAssetBundle)
     {
@@ -39,6 +37,13 @@ public static class AssetBundleLoader
         yield return assetRequest;
         AssetBundleRequest loadRequest = assetRequest.assetBundle.LoadAllAssetsAsync();
         yield return loadRequest;
+        
+
+        if (loadRequest.allAssets == null || loadRequest.allAssets.Length == 0)
+        {
+            Log.Error($"Failed to load AssetBundle: {nitroxAssetBundle.BundleName}. It contained no assets");
+            yield break;
+        }
 
         nitroxAssetBundle.LoadedAssets = loadRequest.allAssets;
 
@@ -47,7 +52,7 @@ public static class AssetBundleLoader
         subscribedEvents["*"]?.Invoke();
     }
 
-    public static IEnumerator LoadUIAsset(NitroxAssetBundle nitroxAssetBundle, bool hideUI, Action<GameObject> callback)
+    public static IEnumerator LoadUIAsset(NitroxAssetBundle nitroxAssetBundle, bool hideUI)
     {
         if (IsBundleLoaded(nitroxAssetBundle))
         {
@@ -74,7 +79,7 @@ public static class AssetBundleLoader
 
         if (!asset)
         {
-            Log.Error($"Instantiated assetBundle ({nitroxAssetBundle.BundleName}) but gameObject is null.");
+            Log.Error($"Instantiated assetBundle ({nitroxAssetBundle.BundleName}) but GameObject is null.");
             yield break;
         }
 
@@ -83,7 +88,6 @@ public static class AssetBundleLoader
             canvasGroup.alpha = 0;
         }
         nitroxAssetBundle.LoadedAssets = new UnityEngine.Object[] { asset };
-        callback.Invoke(asset);
 
         subscribedEvents.TryGetValue(nitroxAssetBundle.BundleName, out AssetBundleLoadedEvent assetBundleLoadedEvent);
         assetBundleLoadedEvent?.Invoke();
