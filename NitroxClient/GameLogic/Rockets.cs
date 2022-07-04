@@ -130,7 +130,7 @@ namespace NitroxClient.GameLogic
                 player.PlayerModel.SetActive(false);
             }
 
-            ErrorMessage.AddMessage("Thanks for using Nitrox!");
+            ErrorMessage.AddMessage(Language.main.Get("Nitrox_ThankForPlaying"));
         }
     }
 }
