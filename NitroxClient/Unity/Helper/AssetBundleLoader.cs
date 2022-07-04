@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using NitroxModel.Helper;
@@ -10,16 +11,15 @@ namespace NitroxClient.Unity.Helper;
 
 public static class AssetBundleLoader
 {
-    internal static readonly string assetRootFolder = NitroxUser.AssetsPath;
-
-    private readonly static Dictionary<string, LoadedAssetBundle> loadedBundles = new();
-    private readonly static Dictionary<string, AssetBundleLoadedEvent> subscribedEvents = new() { { "*", null } };
-    public static Dictionary<string, Atlas.Sprite> PDATabSprites = new();
+    private static readonly string assetRootFolder = NitroxUser.AssetsPath;
+    
+    private static readonly Dictionary<string, AssetBundleLoadedEvent> subscribedEvents = new() { { "*", null } };
+    
     private static bool loadedSharedAssets = false;
 
-    public static IEnumerator LoadAssetBundle(string bundleName, Action<LoadedAssetBundle> callback = null)
+    public static IEnumerator LoadAssetBundle(NitroxAssetBundle nitroxAssetBundle)
     {
-        if (IsBundleLoaded(bundleName))
+        if (IsBundleLoaded(nitroxAssetBundle))
         {
             yield break;
         }
@@ -29,10 +29,10 @@ public static class AssetBundleLoader
             yield return LoadAssetBundle(NitroxAssetBundle.SHARED_ASSETS);
         }
 
-        AssetBundleCreateRequest assetRequest = AssetBundle.LoadFromFileAsync(Path.Combine(assetRootFolder, bundleName));
+        AssetBundleCreateRequest assetRequest = AssetBundle.LoadFromFileAsync(Path.Combine(assetRootFolder, nitroxAssetBundle.BundleName));
         if (assetRequest == null)
         {
-            Log.Error($"Failed to load AssetBundle: {bundleName}");
+            Log.Error($"Failed to load AssetBundle: {nitroxAssetBundle.BundleName}");
             yield break;
         }
         
@@ -40,17 +40,16 @@ public static class AssetBundleLoader
         AssetBundleRequest loadRequest = assetRequest.assetBundle.LoadAllAssetsAsync();
         yield return loadRequest;
 
-        loadedBundles[bundleName] = new(assetRequest.assetBundle, loadRequest.allAssets.ToList());
-        callback?.Invoke(loadedBundles[bundleName]);
+        nitroxAssetBundle.LoadedAssets = loadRequest.allAssets;
 
-        subscribedEvents.TryGetValue(bundleName, out AssetBundleLoadedEvent assetBundleLoadedEvent);
+        subscribedEvents.TryGetValue(nitroxAssetBundle.BundleName, out AssetBundleLoadedEvent assetBundleLoadedEvent);
         assetBundleLoadedEvent?.Invoke();
         subscribedEvents["*"]?.Invoke();
     }
 
-    public static IEnumerator LoadUIAsset(string bundleName, bool hideUI, Action<GameObject> callback)
+    public static IEnumerator LoadUIAsset(NitroxAssetBundle nitroxAssetBundle, bool hideUI, Action<GameObject> callback)
     {
-        if (IsBundleLoaded(bundleName))
+        if (IsBundleLoaded(nitroxAssetBundle))
         {
             yield break;
         }
@@ -60,22 +59,22 @@ public static class AssetBundleLoader
             yield return LoadAssetBundle(NitroxAssetBundle.SHARED_ASSETS);
         }
 
-        AssetBundleCreateRequest assetRequest = AssetBundle.LoadFromFileAsync(Path.Combine(assetRootFolder, bundleName));
+        AssetBundleCreateRequest assetRequest = AssetBundle.LoadFromFileAsync(Path.Combine(assetRootFolder, nitroxAssetBundle.BundleName));
         if (assetRequest == null)
         {
-            Log.Error($"Failed to load AssetBundle: {bundleName}");
+            Log.Error($"Failed to load AssetBundle: {nitroxAssetBundle.BundleName}");
             yield break;
         }
         yield return assetRequest;
 
-        AssetBundleRequest fetchAssetRequest = assetRequest.assetBundle.LoadAssetAsync<GameObject>(bundleName);
+        AssetBundleRequest fetchAssetRequest = assetRequest.assetBundle.LoadAssetAsync<GameObject>(nitroxAssetBundle.BundleName);
         yield return fetchAssetRequest;
 
         GameObject asset = UnityEngine.Object.Instantiate(fetchAssetRequest.asset, uGUI.main.screenCanvas.transform, false) as GameObject;
 
         if (!asset)
         {
-            Log.Error($"Instantiated assetBundle ({bundleName}) but gameObject is null.");
+            Log.Error($"Instantiated assetBundle ({nitroxAssetBundle.BundleName}) but gameObject is null.");
             yield break;
         }
 
@@ -83,24 +82,17 @@ public static class AssetBundleLoader
         {
             canvasGroup.alpha = 0;
         }
-        
-        loadedBundles[bundleName] = new (assetRequest.assetBundle, new() { asset });
+        nitroxAssetBundle.LoadedAssets = new UnityEngine.Object[] { asset };
         callback.Invoke(asset);
 
-        subscribedEvents.TryGetValue(bundleName, out AssetBundleLoadedEvent assetBundleLoadedEvent);
+        subscribedEvents.TryGetValue(nitroxAssetBundle.BundleName, out AssetBundleLoadedEvent assetBundleLoadedEvent);
         assetBundleLoadedEvent?.Invoke();
         subscribedEvents["*"]?.Invoke();
     }
 
-    public static bool IsBundleLoaded(string bundleName)
+    public static bool IsBundleLoaded(NitroxAssetBundle nitroxAssetBundle)
     {
-        return loadedBundles.ContainsKey(bundleName);
-    }
-    
-    public static bool TryGetAssetBundle(string bundleName, out LoadedAssetBundle assetBundle)
-    {
-        loadedBundles.TryGetValue(bundleName, out assetBundle);
-        return assetBundle != null;
+        return nitroxAssetBundle.LoadedAssets != null && nitroxAssetBundle.LoadedAssets.Length > 0;
     }
 
     public static void SubscribeToEvent(string bundleName, AssetBundleLoadedEvent callback)
@@ -115,33 +107,21 @@ public static class AssetBundleLoader
 
     public delegate void AssetBundleLoadedEvent();
 
-    public class LoadedAssetBundle
-    {
-        public AssetBundle AssetBundle;
-        public List<UnityEngine.Object> AllAssets;
-
-        public LoadedAssetBundle(AssetBundle assetBundle, List<UnityEngine.Object> allAssets)
-        {
-            AssetBundle = assetBundle;
-            AllAssets = allAssets;
-        }
-    }
-
-    // Equivalent to an enum with string values
+    // ReSharper disable class StringLiteralTypo, InconsistentNaming
     public class NitroxAssetBundle
     {
-        private NitroxAssetBundle(string bundleName) { BundleName = bundleName; }
-        public string BundleName { get; private set; }
+        public string BundleName { get; }
+        public UnityEngine.Object[] LoadedAssets { get; set; }
 
-        public static NitroxAssetBundle SHARED_ASSETS { get { return new NitroxAssetBundle("sharedassets"); } }
-        public static NitroxAssetBundle PLAYER_LIST_TAB { get { return new NitroxAssetBundle("playerlisttab"); } }
-        public static NitroxAssetBundle CHAT_LOG { get { return new NitroxAssetBundle("chatlog"); } }
-        public static NitroxAssetBundle CHAT_KEY_HINT { get { return new NitroxAssetBundle("chatkeyhint"); } }
-        public static NitroxAssetBundle DISCORD_JOIN_REQUEST { get { return new NitroxAssetBundle("discordjoinrequest"); } }
-
-        public static implicit operator string(NitroxAssetBundle nitroxAssetBundle)
+        private NitroxAssetBundle(string bundleName)
         {
-            return nitroxAssetBundle.BundleName;
+            BundleName = bundleName;
         }
+
+        public static readonly NitroxAssetBundle SHARED_ASSETS = new("sharedassets");
+        public static readonly NitroxAssetBundle PLAYER_LIST_TAB =  new("playerlisttab");
+        public static readonly NitroxAssetBundle CHAT_LOG =  new("chatlog");
+        public static readonly NitroxAssetBundle CHAT_KEY_HINT =  new("chatkeyhint");
+        public static readonly NitroxAssetBundle DISCORD_JOIN_REQUEST = new("discordjoinrequest");
     }
 }

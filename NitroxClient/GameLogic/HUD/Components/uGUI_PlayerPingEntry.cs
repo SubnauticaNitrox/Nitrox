@@ -86,7 +86,7 @@ public class uGUI_PlayerPingEntry : uGUI_PingEntry
         }
         else
         {
-            SubscribeToEvent(NitroxAssetBundle.PLAYER_LIST_TAB, AssignSprites);
+            SubscribeToEvent(NitroxAssetBundle.PLAYER_LIST_TAB.BundleName, AssignSprites);
         }
     }
 

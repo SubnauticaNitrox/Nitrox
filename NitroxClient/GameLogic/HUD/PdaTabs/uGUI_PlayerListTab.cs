@@ -15,6 +15,8 @@ namespace NitroxClient.GameLogic.HUD.PdaTabs;
 /// </summary>
 public class uGUI_PlayerListTab : uGUI_PingTab
 {
+    public static readonly Dictionary<string, Atlas.Sprite> PDATabSprites = new();
+    
     private PlayerManager playerManager;
     private LocalPlayer localPlayer;
     private IPacketSender packetSender;
@@ -43,21 +45,20 @@ public class uGUI_PlayerListTab : uGUI_PingTab
 
     private IEnumerator LoadAssets()
     {
-        yield return LoadAssetBundle(NitroxAssetBundle.PLAYER_LIST_TAB, loadedAssetBundle =>
+        yield return LoadAssetBundle(NitroxAssetBundle.PLAYER_LIST_TAB);
+
+        // Must be in the callback so that the subscribed events will happen afterwards
+        foreach (Object asset in NitroxAssetBundle.PLAYER_LIST_TAB.LoadedAssets)
         {
-            // Must be in the callback so that the subscribed events will happen afterwards
-            foreach (Object asset in loadedAssetBundle.AllAssets)
+            if (asset is Sprite sprite)
             {
-                if (asset is Sprite sprite)
+                if (asset.name.Equals("player_list_tab@3x"))
                 {
-                    if (asset.name.Equals("player_list_tab@3x"))
-                    {
-                        PDATabSprites[asset.name] = new Atlas.Sprite(sprite);
-                    }
-                    assets.Add(asset.name, sprite);
+                    PDATabSprites[asset.name] = new Atlas.Sprite(sprite);
                 }
+                assets.Add(asset.name, sprite);
             }
-        });
+        }
     }
     
     public Sprite GetSprite(string assetName)

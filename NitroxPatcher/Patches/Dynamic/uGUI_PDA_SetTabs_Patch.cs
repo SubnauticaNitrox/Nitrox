@@ -2,6 +2,7 @@
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic.HUD;
+using NitroxClient.GameLogic.HUD.PdaTabs;
 using NitroxModel.Helper;
 using UnityEngine;
 using static NitroxClient.Unity.Helper.AssetBundleLoader;
@@ -29,7 +30,7 @@ public class uGUI_PDA_SetTabs_Patch : NitroxPatch, IDynamicPatch
         for (int i = 0; i < customTabs.Count; i++)
         {
             string tabIconAssetName = customTabs[customTabs.Count - i - 1].TabIconAssetName;
-            if (!PDATabSprites.TryGetValue(tabIconAssetName, out Atlas.Sprite sprite))
+            if (!uGUI_PlayerListTab.PDATabSprites.TryGetValue(tabIconAssetName, out Atlas.Sprite sprite))
             {
                 // As a placeholder, we use the normal player icon
                 SubscribeToEvent("*", () => { AssignSprite(__instance.toolbar, tabIconAssetName, array.Length - i - 1); });
@@ -48,7 +49,7 @@ public class uGUI_PDA_SetTabs_Patch : NitroxPatch, IDynamicPatch
 
     private static void AssignSprite(uGUI_Toolbar uGUI_Toolbar, string tabIconAssetName, int index)
     {
-        if (PDATabSprites.TryGetValue(tabIconAssetName, out Atlas.Sprite sprite))
+        if (uGUI_PlayerListTab.PDATabSprites.TryGetValue(tabIconAssetName, out Atlas.Sprite sprite))
         {
             uGUI_Toolbar.icons[index].SetForegroundSprite(sprite);
         }
