@@ -1,11 +1,8 @@
 ﻿using System.Reflection;
 using HarmonyLib;
-using NitroxClient.Communication.Abstract;
-using NitroxClient.MonoBehaviours;
+using NitroxClient.GameLogic;
 using NitroxClient.Unity.Helper;
-using NitroxModel.DataStructures;
 using NitroxModel.Helper;
-using NitroxModel_Subnautica.Packets;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -27,8 +24,7 @@ public class LaunchRocket_OnHandClick_Patch : NitroxPatch, IDynamicPatch
         }
         // Now, instead of launching the rocket, we'll ask the server
         Rocket rocket = __instance.RequireComponentInParent<Rocket>();
-        NitroxId rocketId = NitroxEntity.GetId(rocket.gameObject);
-        Resolve<IPacketSender>().Send(new RocketLaunch(rocketId));
+        Resolve<Rockets>().RequestRocketLaunch(rocket);
         return false;
     }
 

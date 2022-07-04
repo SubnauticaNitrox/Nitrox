@@ -72,6 +72,7 @@ internal static class Patcher
 
         foreach (IDynamicPatch patch in container.Resolve<IDynamicPatch[]>())
         {
+            Log.Debug($"Restoring dynamic patch {patch.GetType().Name}");
             patch.Restore(harmony);
         }
 

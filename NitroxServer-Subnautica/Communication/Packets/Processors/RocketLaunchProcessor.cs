@@ -32,8 +32,8 @@ public class RocketLaunchProcessor : AuthenticatedPacketProcessor<RocketLaunch>
             }
             else
             {
-                // Resync the player's preflight checks
-                player.SendPacket(new RocketResync(packet.RocketId, opRocket.Value.PreflightChecks.ToList()));
+                // Resync all players' preflight checks
+                playerManager.SendPacketToAllPlayers(new RocketResync(packet.RocketId, opRocket.Value.PreflightChecks.ToList()));
             }
         }
         else
