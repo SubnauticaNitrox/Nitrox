@@ -24,7 +24,6 @@ public class uGUI_PDA_Initialize_Patch : NitroxPatch, IDynamicPatch
 
         // Initialize all the custom tabs so that they can create their required components
         // And add their "types" to the tab list
-        Log.Debug($"uGUI_PDA::Initialize() from : {__instance.gameObject}");
         Resolve<NitroxPDATabManager>().CustomTabs.Values.ForEach(tab => tab.OnInitializePDA(__instance));
         Resolve<NitroxPDATabManager>().CustomTabs.Keys.ForEach(uGUI_PDA.regularTabs.Add);
         //

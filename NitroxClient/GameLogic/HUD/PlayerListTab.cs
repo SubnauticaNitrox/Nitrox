@@ -28,7 +28,7 @@ public class PlayerListTab : NitroxPDATab
         // We add a uGUI_PlayerListTab instead of a uGUI_PingTab
         uGUI_PlayerListTab newTab = tabCopy.AddComponent<uGUI_PlayerListTab>();
         newTab.MakePrefab(pingTab.prefabEntry);
-        GameObject.Destroy(tabCopy.GetComponentInChildren<uGUI_PingTab>());
+        GameObject.Destroy(tabCopy.GetComponent<uGUI_PingTab>());
 
         tab = newTab;
     }

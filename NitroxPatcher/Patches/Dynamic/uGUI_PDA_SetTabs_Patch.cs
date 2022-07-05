@@ -32,9 +32,8 @@ public class uGUI_PDA_SetTabs_Patch : NitroxPatch, IDynamicPatch
             if (!nitroxTabManager.TryGetTabSprite(tabIconAssetName, out Atlas.Sprite sprite))
             {
                 nitroxTabManager.SetSpriteLoadedCallback(tabIconAssetName, callbackSprite => AssignSprite(__instance.toolbar, array.Length - i - 1, callbackSprite));
-                sprite = new Atlas.Sprite(new Texture2D(100, 100)); // As a placeholder, we use the normal player icon
+                sprite = new Atlas.Sprite(new Texture2D(100, 100));
             }
-
             array[array.Length - i - 1] = sprite;
         }
 

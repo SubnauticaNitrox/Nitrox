@@ -48,7 +48,6 @@ public class uGUI_PlayerListTab : uGUI_PingTab
     {
         yield return LoadAssetBundle(NitroxAssetBundle.PLAYER_LIST_TAB);
 
-        // Must be in the callback so that the subscribed events will happen afterwards
         foreach (Object asset in NitroxAssetBundle.PLAYER_LIST_TAB.LoadedAssets)
         {
             if (asset is Sprite sprite)
