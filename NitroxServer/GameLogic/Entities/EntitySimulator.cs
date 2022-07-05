@@ -102,7 +102,7 @@ namespace NitroxServer.GameLogic.Entities
                 {
                     bool isOtherPlayer = player != oldPlayer;
                     Optional<Entity> opEntity = entityManager.GetEntityById(id);
-                    Entity entity = opEntity.OrElse(null);
+                    Entity entity = opEntity.OrNull();
                     if (isOtherPlayer && (entity == null || player.CanSee(entity)) && simulationOwnershipData.TryToAcquire(id, player, DEFAULT_ENTITY_SIMULATION_LOCKTYPE))
                     {
                         Log.Info("Player " + player.Name + " has taken over simulating " + id);

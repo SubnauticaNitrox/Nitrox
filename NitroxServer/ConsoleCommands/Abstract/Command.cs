@@ -7,7 +7,6 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
-using NitroxServer.ConsoleCommands.Abstract.Type;
 using NitroxServer.GameLogic;
 
 namespace NitroxServer.ConsoleCommands.Abstract
@@ -131,7 +130,10 @@ namespace NitroxServer.ConsoleCommands.Abstract
         public static void SendMessage(Optional<Player> player, string message)
         {
             SendMessageToPlayer(player, message);
-            Log.Info(message);
+            if (!player.HasValue)
+            {
+                Log.Info(message);
+            }
         }
 
         /// <summary>
@@ -141,7 +143,7 @@ namespace NitroxServer.ConsoleCommands.Abstract
         {
             PlayerManager playerManager = NitroxServiceLocator.LocateService<PlayerManager>();
             playerManager.SendPacketToAllPlayers(new ChatMessage(ChatMessage.SERVER_ID, message));
-            Log.Info(message);
+            Log.Info($"[BROADCAST] {message}");
         }
     }
 }

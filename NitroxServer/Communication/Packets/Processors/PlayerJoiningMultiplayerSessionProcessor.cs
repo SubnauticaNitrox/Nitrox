@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using NitroxModel.DataStructures;
@@ -85,7 +85,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 player.Permissions
             );
 
-            eventTriggerer.SendCurrentTimePacket(true, player);
+            player.SendPacket(new TimeChange(eventTriggerer.ElapsedSeconds, true));
             player.SendPacket(initialPlayerSync);
         }
 

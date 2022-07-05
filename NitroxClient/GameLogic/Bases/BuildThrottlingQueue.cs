@@ -27,31 +27,31 @@ namespace NitroxClient.GameLogic.Bases
 
         public void EnqueueBasePiecePlaced(BasePiece basePiece)
         {
-            Log.Info($"Enqueuing base piece to be placed - TechType: {basePiece.TechType}, Id: {basePiece.Id}, ParentId: {basePiece.ParentId.OrElse(null)}, BuildIndex: {basePiece.BuildIndex}");
             Enqueue(new BasePiecePlacedEvent(basePiece));
         }
 
         public void EnqueueConstructionCompleted(NitroxId id, NitroxId baseId)
         {
-            Log.Info($"Enqueuing item to have construction completed - Id: {id}");
             Enqueue(new ConstructionCompletedEvent(id, baseId));
+        }
+
+        public void EnqueueLaterConstructionCompleted(NitroxId id, NitroxId baseId)
+        {
+            Enqueue(new LaterConstructionCompletedEvent(id, baseId));
         }
 
         public void EnqueueAmountChanged(NitroxId id, float amount)
         {
-            Log.Info($"Enqueuing item to have construction amount changed - Id: {id}");
             Enqueue(new ConstructionAmountChangedEvent(id, amount));
         }
 
         public void EnqueueDeconstructionBegin(NitroxId id)
         {
-            Log.Info($"Enqueuing item to have deconstruction beginning - Id: {id}");
             Enqueue(new DeconstructionBeginEvent(id));
         }
 
         public void EnqueueDeconstructionCompleted(NitroxId id)
         {
-            Log.Info($"Enqueuing item to have deconstruction completed - Id: {id}");
             Enqueue(new DeconstructionCompletedEvent(id));
         }
     }
@@ -108,6 +108,24 @@ namespace NitroxClient.GameLogic.Bases
         {
             // Completing construction changes the surrounding
             // environment... We only want to process one per frame.
+            return true;
+        }
+    }
+
+    public class LaterConstructionCompletedEvent : BuildEvent
+    {
+        public NitroxId PieceId { get; }
+        public NitroxId BaseId { get; }
+
+        public LaterConstructionCompletedEvent(NitroxId pieceId, NitroxId baseId)
+        {
+            PieceId = pieceId;
+            BaseId = baseId;
+        }
+
+        public bool RequiresFreshFrame()
+        {
+            // The purpose of this event is to wait for some internal actions to happen to mark the build as complete
             return true;
         }
     }

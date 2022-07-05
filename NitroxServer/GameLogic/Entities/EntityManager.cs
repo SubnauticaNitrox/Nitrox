@@ -13,11 +13,15 @@ namespace NitroxServer.GameLogic.Entities
     public class EntityManager
     {
         private readonly Dictionary<NitroxId, Entity> entitiesById;
-
-        // Phasing entities can disappear if you go out of range. 
+        
+        /// <summary>
+        ///     Phasing entities can disappear if you go out of range.
+        /// </summary>
         private readonly Dictionary<AbsoluteEntityCell, List<Entity>> phasingEntitiesByAbsoluteCell;
 
-        // Global root entities that are always visible.
+        /// <summary>
+        ///     Global root entities that are always visible.
+        /// </summary>
         private readonly Dictionary<NitroxId, Entity> globalRootEntitiesById;
 
         private readonly BatchEntitySpawner batchEntitySpawner;
@@ -317,6 +321,13 @@ namespace NitroxServer.GameLogic.Entities
                 List<Entity> newList = GetEntities(newCell);
                 newList.Add(entity);
             }
+        }
+
+        public void RemoveEntity(NitroxId entityId)
+        {
+            entitiesById.Remove(entityId);
+            globalRootEntitiesById.Remove(entityId);
+            // Should maybe also remove from phasingEntitiesByAbsoluteCell
         }
     }
 }

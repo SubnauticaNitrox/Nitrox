@@ -56,7 +56,7 @@ public class Program
         AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
 
         ConfigureCultureInfo();
-        Log.Info($"Starting NitroxServer V{NitroxEnvironment.Version} for Subnautica");
+        Log.Info($"Starting NitroxServer {NitroxEnvironment.ReleasePhase} v{NitroxEnvironment.Version} for Subnautica");
 
         AppMutex.Hold(() => { Log.Info("Waiting on other Nitrox servers to initialize before starting.."); }, 120000);
         Server server;
@@ -76,7 +76,7 @@ public class Program
             {
                 gameInstallDir = new Lazy<string>(() =>
                 {
-                    string gameDir = GameInstallationFinder.Instance.FindGame();
+                    string gameDir = NitroxUser.SubnauticaPath;
                     Log.Info($"Using game files from: {gameDir}");
                     return gameDir;
                 });
@@ -287,7 +287,7 @@ public class Program
 
     private static bool ConsoleEventCallback(int eventType)
     {
-        if (eventType == 2) // close
+        if (eventType >= 2) // close, logoff, or shutdown
         {
             StopServer();
         }
@@ -297,7 +297,8 @@ public class Program
 
     private static void OnCtrlCPressed(object sender, ConsoleCancelEventArgs e)
     {
-        StopServer();
+        e.Cancel = true; // Prevents process from terminating
+        Console.Write("\r" + new string(' ', Console.WindowWidth - 1) + "\r"); // Clears current line
     }
 
     private static void StopServer()

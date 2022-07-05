@@ -3,7 +3,7 @@ using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.Bases.Spawning.BasePiece;
 using NitroxClient.GameLogic.Bases.Spawning.Furniture;
-using NitroxClient.GameLogic.Helper;
+using NitroxClient.GameLogic.InitialSync;
 using NitroxClient.MonoBehaviours.Overrides;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
@@ -23,11 +23,11 @@ namespace NitroxClient.MonoBehaviours
      * changes to the surrounding environment.  This class encapsulates logic to 
      * execute build events at a throttled rate of once per frame.  All build logic
      * is contained within this class (it used to be in the individual packet processors)
-     * because we want the build logic to be re-useable.
+     * because we want the build logic to be re-usable.
      */
     public class ThrottledBuilder : MonoBehaviour
     {
-        public static ThrottledBuilder main;
+        public static ThrottledBuilder Main;
 
         public event EventHandler QueueDrained;
         private BuildThrottlingQueue buildEvents;
@@ -35,14 +35,14 @@ namespace NitroxClient.MonoBehaviours
 
         public void Start()
         {
-            main = this;
+            Main = this;
             buildEvents = NitroxServiceLocator.LocateService<BuildThrottlingQueue>();
             packetSender = NitroxServiceLocator.LocateService<IPacketSender>();
         }
 
         public void Update()
         {
-            if (LargeWorldStreamer.main == null || !LargeWorldStreamer.main.IsReady() || !LargeWorldStreamer.main.IsWorldSettled())
+            if (!LargeWorldStreamer.main || !LargeWorldStreamer.main.IsReady() || !LargeWorldStreamer.main.IsWorldSettled())
             {
                 return;
             }
@@ -53,7 +53,7 @@ namespace NitroxClient.MonoBehaviours
 
             if (queueHadItems && buildEvents.Count == 0 && QueueDrained != null)
             {
-                QueueDrained(this, new EventArgs());
+                QueueDrained(this, EventArgs.Empty);
             }
         }
 
@@ -93,74 +93,75 @@ namespace NitroxClient.MonoBehaviours
             using (packetSender.Suppress<DeconstructionCompleted>())
             using (packetSender.Suppress<BasePieceMetadataChanged>())
             {
-                if (buildEvent is BasePiecePlacedEvent)
+                switch (buildEvent)
                 {
-                    PlaceBasePiece((BasePiecePlacedEvent)buildEvent);
-                }
-                else if (buildEvent is ConstructionCompletedEvent)
-                {
-                    ConstructionCompleted((ConstructionCompletedEvent)buildEvent);
-                }
-                else if (buildEvent is ConstructionAmountChangedEvent)
-                {
-                    ConstructionAmountChanged((ConstructionAmountChangedEvent)buildEvent);
-                }
-                else if (buildEvent is DeconstructionBeginEvent)
-                {
-                    DeconstructionBegin((DeconstructionBeginEvent)buildEvent);
-                }
-                else if (buildEvent is DeconstructionCompletedEvent)
-                {
-                    DeconstructionCompleted((DeconstructionCompletedEvent)buildEvent);
+                    case BasePiecePlacedEvent @event:
+                        PlaceBasePiece(@event);
+                        break;
+                    case ConstructionCompletedEvent completedEvent:
+                        ConstructionCompleted(completedEvent);
+                        break;
+                    case LaterConstructionCompletedEvent laterConstructionCompleted:
+                        LaterConstructionCompleted(laterConstructionCompleted);
+                        break;
+                    case ConstructionAmountChangedEvent changedEvent:
+                        ConstructionAmountChanged(changedEvent);
+                        break;
+                    case DeconstructionBeginEvent beginEvent:
+                        DeconstructionBegin(beginEvent);
+                        break;
+                    case DeconstructionCompletedEvent deconstructionCompletedEvent:
+                        DeconstructionCompleted(deconstructionCompletedEvent);
+                        break;
                 }
             }
         }
 
         private void PlaceBasePiece(BasePiecePlacedEvent basePiecePlacedBuildEvent)
         {
-            Log.Debug($"BuildBasePiece - {basePiecePlacedBuildEvent.BasePiece.Id} type: {basePiecePlacedBuildEvent.BasePiece.TechType} parentId: {basePiecePlacedBuildEvent.BasePiece.ParentId.OrElse(null)}");
-
             BasePiece basePiece = basePiecePlacedBuildEvent.BasePiece;
             GameObject buildPrefab = CraftData.GetBuildPrefab(basePiece.TechType.ToUnity());
-            MultiplayerBuilder.overridePosition = basePiece.ItemPosition.ToUnity();
-            MultiplayerBuilder.overrideQuaternion = basePiece.Rotation.ToUnity();
-            MultiplayerBuilder.overrideTransform = new GameObject().transform;
-            MultiplayerBuilder.overrideTransform.position = basePiece.CameraPosition.ToUnity();
-            MultiplayerBuilder.overrideTransform.rotation = basePiece.CameraRotation.ToUnity();
-            MultiplayerBuilder.placePosition = basePiece.ItemPosition.ToUnity();
-            MultiplayerBuilder.placeRotation = basePiece.Rotation.ToUnity();
-            MultiplayerBuilder.rotationMetadata = basePiece.RotationMetadata;
-            MultiplayerBuilder.Begin(buildPrefab);
-
+            MultiplayerBuilder.OverridePosition = basePiece.ItemPosition.ToUnity();
+            MultiplayerBuilder.OverrideQuaternion = basePiece.Rotation.ToUnity();
+            MultiplayerBuilder.OverrideTransform = new GameObject().transform;
+            MultiplayerBuilder.OverrideTransform.position = basePiece.CameraPosition.ToUnity();
+            MultiplayerBuilder.OverrideTransform.rotation = basePiece.CameraRotation.ToUnity();
+            MultiplayerBuilder.PlacePosition = basePiece.ItemPosition.ToUnity();
+            MultiplayerBuilder.PlaceRotation = basePiece.Rotation.ToUnity();
+            MultiplayerBuilder.RotationMetadata = basePiece.RotationMetadata;
+            
             GameObject parentBase = null;
-
             if (basePiece.ParentId.HasValue)
             {
-                parentBase = NitroxEntity.GetObjectFrom(basePiece.ParentId.Value).OrElse(null);
+                parentBase = NitroxEntity.GetObjectFrom(basePiece.ParentId.Value).OrNull();
             }
 
+            MultiplayerBuilder.ParentBase = parentBase;
+            MultiplayerBuilder.PlaceBasePiece(buildPrefab);
+            MultiplayerBuilder.ParentBase = null;
+
             Constructable constructable;
-            GameObject gameObject;
+            GameObject gameObj;
 
             if (basePiece.IsFurniture)
             {
-                SubRoot subRoot = (parentBase != null) ? parentBase.GetComponent<SubRoot>() : null;
+                SubRoot subRoot = parentBase ? parentBase.GetComponent<SubRoot>() : null;
 
-                gameObject = MultiplayerBuilder.TryPlaceFurniture(subRoot);
-                constructable = gameObject.RequireComponentInParent<Constructable>();
+                gameObj = MultiplayerBuilder.TryPlaceFurniture(subRoot);
+                constructable = gameObj.RequireComponentInParent<Constructable>();
             }
             else
             {
                 constructable = MultiplayerBuilder.TryPlaceBase(parentBase);
-                gameObject = constructable.gameObject;
+                gameObj = constructable.gameObject;
             }
 
-            if (parentBase != null && basePiece.IsFurniture)
+            if (parentBase && basePiece.IsFurniture)
             {
-                gameObject.transform.parent = parentBase.gameObject.transform;
+                gameObj.transform.parent = parentBase.gameObject.transform;
             }
 
-            NitroxEntity.SetNewId(gameObject, basePiece.Id);
+            NitroxEntity.SetNewId(gameObj, basePiece.Id);
 
             // Manually call start to initialize the object as we may need to interact with it within the same frame.
             constructable.Start();
@@ -174,70 +175,77 @@ namespace NitroxClient.MonoBehaviours
             // Furniture just re-uses the same piece.
             if (constructing.TryGetComponent(out ConstructableBase constructableBase))
             {
-                Int3 latestCell = default(Int3);
+                Int3 latestCell = default;
                 Base latestBase = null;
 
-                // must fetch BEFORE setState or else the BaseGhost gets destroyed
-                BaseGhost baseGhost = constructing.GetComponentInChildren<BaseGhost>();
-
-                if (baseGhost)
+                // must fetch BEFORE setState as the BaseGhost gets destroyed
+                BaseGhost baseGhost = constructableBase.model.AliveOrNull()?.GetComponent<BaseGhost>();
+                if (baseGhost && baseGhost.TargetBase)
                 {
-                    latestCell = baseGhost.TargetOffset;
                     latestBase = baseGhost.TargetBase;
+                    latestCell = latestBase.WorldToGrid(baseGhost.transform.position);
                 }
 
                 constructableBase.constructedAmount = 1f;
-                constructableBase.SetState(true, true);
+                constructableBase.SetState(true);
+                
 
+                Transform cellTransform;
+                GameObject placedPiece = null;
+
+                
                 if (!latestBase)
                 {
-                    Optional<object> opConstructedBase = TransientLocalObjectManager.Get(TransientObjectType.BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT);
-                    latestBase = ((GameObject)opConstructedBase.Value).GetComponent<Base>();
+                    Optional<object> opConstructedBase = Get(TransientObjectType.BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT);
+                    if (opConstructedBase.HasValue)
+                    {
+                        latestBase = ((GameObject)opConstructedBase.Value).GetComponent<Base>();
+                    }
+
                     Validate.NotNull(latestBase, "latestBase can not be null");
+                    latestCell = latestBase!.WorldToGrid(constructing.transform.position);
                 }
-
-                Transform cellTransform = latestBase.GetCellObject(latestCell);
-
-                if (latestCell == default(Int3) || !cellTransform)
+                
+                if (latestCell != default(Int3))
                 {
-                    latestBase.GetClosestCell(constructing.gameObject.transform.position, out latestCell, out _, out _);
                     cellTransform = latestBase.GetCellObject(latestCell);
 
-                    Validate.NotNull(cellTransform, $"Must have a cell transform, one not found near {constructing.gameObject.transform.position} for latestCell {latestCell}");
-                }
-
-                GameObject finishedPiece = null;
-
-                // There can be multiple objects in a cell (such as a corridor with hatches built into it)
-                // we look for a object that is able to be deconstructed that hasn't been tagged yet.
-                foreach (Transform child in cellTransform)
-                {
-                    bool isNewBasePiece = !child.GetComponent<NitroxEntity>() && child.GetComponent<BaseDeconstructable>();
-
-                    if (isNewBasePiece)
+                    if (cellTransform)
                     {
-                        finishedPiece = child.gameObject;
-                        break;
+                        placedPiece = FindFinishedPiece(cellTransform);
                     }
                 }
-
-                Validate.NotNull(finishedPiece, $"Could not find finished piece in cell {latestCell} when constructing {constructionCompleted.PieceId}");
-
-                Log.Debug($"Construction completed on a base piece: {constructionCompleted.PieceId} {finishedPiece.name}");
-
+                
+                if (!placedPiece)
+                {
+                    Int3 position = latestBase.WorldToGrid(constructableBase.transform.position);
+                    cellTransform = latestBase.GetCellObject(position);                        
+                    Validate.NotNull(cellTransform, "Unable to find cell transform at " + position);
+                    
+                    placedPiece = FindFinishedPiece(cellTransform);
+                }
+                
+                Validate.NotNull(placedPiece, $"Could not find placed Piece in cell {latestCell} when constructing {constructionCompleted.PieceId}");
+                
+                // This destroy instruction must be executed now, else it won't be able to happen in the case the action will have a later completion
                 Destroy(constructableBase.gameObject);
-                NitroxEntity.SetNewId(finishedPiece, constructionCompleted.PieceId);
-
-                BasePieceSpawnProcessor.RunSpawnProcessor(finishedPiece.GetComponent<BaseDeconstructable>(), latestBase, latestCell, finishedPiece);
+                if (BuildingInitialSyncProcessor.LaterConstructionTechTypes.Contains(constructableBase.techType))
+                {
+                    // We need to transfer these 3 objects to the later completed event
+                    Add(TransientObjectType.LATER_CONSTRUCTED_BASE, placedPiece);
+                    Add(TransientObjectType.LATER_OBJECT_LATEST_BASE, latestBase);
+                    Add(TransientObjectType.LATER_OBJECT_LATEST_CELL, latestCell);
+                    return;
+                }
+                
+                FinishConstructionCompleted(placedPiece, latestBase, latestCell, constructionCompleted.PieceId);
             }
             else if (constructing.TryGetComponent(out Constructable constructable))
             {
                 constructable.constructedAmount = 1f;
-                constructable.SetState(true, true);
+                constructable.SetState(true);
 
                 FurnitureSpawnProcessor.RunSpawnProcessor(constructable);
-
-                Log.Debug($"Construction completed on a piece of furniture: {constructionCompleted.PieceId} {constructable.gameObject.name}");
             }
             else
             {
@@ -246,14 +254,54 @@ namespace NitroxClient.MonoBehaviours
 
             if (constructionCompleted.BaseId != null && !NitroxEntity.GetObjectFrom(constructionCompleted.BaseId).HasValue)
             {
-                Log.Debug($"Creating base: {constructionCompleted.BaseId}");
                 ConfigureNewlyConstructedBase(constructionCompleted.BaseId);
             }
+        }
+        
+        // There can be multiple objects in a cell (such as a corridor with hatches built into it)
+        // we look for a object that is able to be deconstructed that hasn't been tagged yet.
+        private static GameObject FindFinishedPiece(Transform cellTransform)
+        {
+            foreach (Transform child in cellTransform)
+            {
+                bool isNewBasePiece = !child.TryGetComponent(out NitroxEntity _) && child.GetComponent<BaseDeconstructable>() && !child.name.Contains("CorridorConnector");
+                if (isNewBasePiece)
+                {
+                    return child.gameObject;
+                }
+            }
+
+            return null;
+        }
+
+        private void LaterConstructionCompleted(LaterConstructionCompletedEvent laterConstructionCompleted)
+        {
+            GameObject placedPiece = (GameObject)Get(TransientObjectType.LATER_CONSTRUCTED_BASE);
+            Base latestBase = (Base)Get(TransientObjectType.LATER_OBJECT_LATEST_BASE);
+            Int3 latestCell = (Int3)Get(TransientObjectType.LATER_OBJECT_LATEST_CELL);
+
+            FinishConstructionCompleted(placedPiece, latestBase, latestCell, laterConstructionCompleted.PieceId);
+
+            // And just like at the end of ConstructionCompleted()
+            if (laterConstructionCompleted.BaseId != null && !NitroxEntity.GetObjectFrom(laterConstructionCompleted.BaseId).HasValue)
+            {
+                ConfigureNewlyConstructedBase(laterConstructionCompleted.BaseId);
+            }
+
+            Remove(TransientObjectType.LATER_CONSTRUCTED_BASE);
+            Remove(TransientObjectType.LATER_OBJECT_LATEST_BASE);
+            Remove(TransientObjectType.LATER_OBJECT_LATEST_CELL);
+        }
+
+        private void FinishConstructionCompleted(GameObject finishedPiece, Base latestBase, Int3 latestCell, NitroxId pieceId)
+        {
+            NitroxEntity.SetNewId(finishedPiece, pieceId);
+            BasePieceSpawnProcessor.RunSpawnProcessor(finishedPiece.GetComponent<BaseDeconstructable>(), latestBase, latestCell, finishedPiece);
         }
 
         private void ConfigureNewlyConstructedBase(NitroxId newBaseId)
         {
-            Optional<object> opNewlyCreatedBase = TransientLocalObjectManager.Get(TransientLocalObjectManager.TransientObjectType.BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT);
+            Optional<object> opNewlyCreatedBase = Get(TransientObjectType.BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT);
 
             if (opNewlyCreatedBase.HasValue)
             {
@@ -268,26 +316,23 @@ namespace NitroxClient.MonoBehaviours
 
         private void ConstructionAmountChanged(ConstructionAmountChangedEvent amountChanged)
         {
-            Log.Debug($"Processing ConstructionAmountChanged {amountChanged.Id} {amountChanged.Amount}");
-
             GameObject constructing = NitroxEntity.RequireObjectFrom(amountChanged.Id);
             BaseDeconstructable baseDeconstructable = constructing.GetComponent<BaseDeconstructable>();
 
             // Bases don't  send a deconstruct being packet.  Instead, we just make sure
             // that if we are changing the amount that we set it into deconstruction mode
             // if it still has a BaseDeconstructable object on it.
-            if (baseDeconstructable != null)
+            if (baseDeconstructable)
             {
                 baseDeconstructable.Deconstruct();
-
+                
                 // After we have begun the deconstructing for a base piece, we need to transfer the id
-                Optional<object> opGhost = TransientLocalObjectManager.Get(TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE_GHOST);
+                Optional<object> opGhost = Get(TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE_GHOST);
 
-                if (opGhost.HasValue)
+                if (opGhost.HasValue && opGhost.Value is Component component)
                 {
-                    GameObject ghost = (GameObject)opGhost.Value;
+                    NitroxEntity.SetNewId(component.gameObject, amountChanged.Id);
                     Destroy(constructing);
-                    NitroxEntity.SetNewId(ghost, amountChanged.Id);
                 }
                 else
                 {
@@ -298,7 +343,7 @@ namespace NitroxClient.MonoBehaviours
             {
                 Constructable constructable = constructing.GetComponentInChildren<Constructable>();
                 constructable.constructedAmount = amountChanged.Amount;
-                constructable.Construct();
+                constructable.UpdateMaterial();
             }
         }
 
@@ -313,7 +358,7 @@ namespace NitroxClient.MonoBehaviours
         private void DeconstructionCompleted(DeconstructionCompletedEvent completed)
         {
             GameObject deconstructing = NitroxEntity.RequireObjectFrom(completed.PieceId);
-            UnityEngine.Object.Destroy(deconstructing);
+            Destroy(deconstructing);
         }
     }
 }

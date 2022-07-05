@@ -4,9 +4,12 @@ using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
-    /*
-     * Shim tech type model to bridge the gap between original subnautica and BZ
-     */
+    /// <summary>
+    ///     TechType is the enum used in Subnautica for defining all the spawnable objects in the world. This includes food, enemies and bases.
+    /// </summary>
+    /// <remarks>
+    ///     Shim tech type model to bridge the gap between original subnautica and BZ.
+    /// </remarks>
     [ProtoContract]
     [Serializable]
     public class NitroxTechType

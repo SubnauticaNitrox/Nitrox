@@ -15,8 +15,13 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(ChatMessage packet, Player player)
         {
-            Log.Info(string.Format("<{0}>: {1}", player.Name, packet.Text));
-            playerManager.SendPacketToOtherPlayers(packet, player);
+            if (player.IsMuted)
+            {
+                player.SendPacket(new ChatMessage(ChatMessage.SERVER_ID, "You're currently muted"));
+                return;
+            }
+            Log.Info($"<{player.Name}>: {packet.Text}");
+            playerManager.SendPacketToAllPlayers(packet);
         }
     }
 }

@@ -1,52 +1,53 @@
 ﻿using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
+using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation.Metadata;
+using UnityEngine;
 
 namespace NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation
 {
     public class SubnauticaRotationMetadataFactory : RotationMetadataFactory
     {
-        public Optional<RotationMetadata> From(object baseGhost)
+        public Optional<BuilderMetadata> From(object baseGhost)
         {
-            RotationMetadata rotationMetadata = null;
+            BuilderMetadata builderMetadata = null;
 
-            if (baseGhost is BaseAddCorridorGhost)
+            switch (baseGhost)
             {
-                BaseAddCorridorGhost corridorGhost = baseGhost as BaseAddCorridorGhost;
-                int rotation = (int)corridorGhost.rotation;
-                rotationMetadata = new CorridorRotationMetadata(rotation);
-            }
-            else if (baseGhost is BaseAddMapRoomGhost)
-            {
-                BaseAddMapRoomGhost mapRoomGhost = baseGhost as BaseAddMapRoomGhost;
-                Base.CellType cellType = mapRoomGhost.cellType;
-                int connectionMask = mapRoomGhost.connectionMask;
-                rotationMetadata = new MapRoomRotationMetadata((byte)cellType, connectionMask);
-            }
-            else if (baseGhost is BaseAddModuleGhost)
-            {
-                BaseAddModuleGhost module = baseGhost as BaseAddModuleGhost;
-
-                Int3 cell = module.anchoredFace.Value.cell;
-                int direction = (int)module.anchoredFace.Value.direction;
-
-                rotationMetadata = new BaseModuleRotationMetadata(cell.ToDto(), direction);
-            }
-            else if (baseGhost is BaseAddFaceGhost)
-            {
-                BaseAddFaceGhost faceGhost = baseGhost as BaseAddFaceGhost;
-
-                if (faceGhost.anchoredFace.HasValue)
+                case BaseAddCorridorGhost corridorGhost:
                 {
-                    Base.Face anchoredFace = faceGhost.anchoredFace.Value;
-
-                    rotationMetadata = new AnchoredFaceRotationMetadata(anchoredFace.cell.ToDto(), (int)anchoredFace.direction, (int)faceGhost.faceType);
+                    int rotation = corridorGhost.rotation;
+                    Vector3 position = corridorGhost.GetComponentInParent<ConstructableBase>().transform.position;
+                    bool hasTargetBase = corridorGhost.targetBase != null;
+                    Int3 targetCell = hasTargetBase ? corridorGhost.targetBase.WorldToGrid(position): default;
+                    builderMetadata = new CorridorBuilderMetadata(position.ToDto(), rotation, hasTargetBase, targetCell.ToDto());
+                    break;
                 }
+                case BaseAddMapRoomGhost mapRoomGhost:
+                {
+                    Base.CellType cellType = mapRoomGhost.cellType;
+                    int connectionMask = mapRoomGhost.connectionMask;
+                    builderMetadata = new MapRoomBuilderMetadata((byte)cellType, connectionMask);
+                    break;
+                }
+                case BaseAddModuleGhost module:
+                {
+                    Int3 cell = module.anchoredFace!.Value.cell;
+                    int direction = (int)module.anchoredFace.Value.direction;
 
+                    builderMetadata = new BaseModuleBuilderMetadata(cell.ToDto(), direction);
+                    break;
+                }
+                case BaseAddFaceGhost faceGhost:
+                {
+                    Base.Face anchoredFace = faceGhost.anchoredFace!.Value;
+                    builderMetadata = new AnchoredFaceBuilderMetadata(anchoredFace.cell.ToDto(), (int)anchoredFace.direction, (int)faceGhost.faceType);
+                    break;
+                }
             }
 
-            return Optional.OfNullable(rotationMetadata);
+            return Optional.OfNullable(builderMetadata);
         }
     }
 }

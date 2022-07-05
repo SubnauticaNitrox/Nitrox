@@ -191,7 +191,7 @@ namespace NitroxServer.Serialization.World
                 Seed = seed
             };
 
-            world.EventTriggerer = new EventTriggerer(world.PlayerManager, pWorldData.WorldData.GameData.StoryTiming.ElapsedTime, pWorldData.WorldData.GameData.StoryTiming.AuroraExplosionTime);
+            world.EventTriggerer = new EventTriggerer(world.PlayerManager, pWorldData.WorldData.GameData.PDAState, pWorldData.WorldData.GameData.StoryGoals, seed, pWorldData.WorldData.GameData.StoryTiming.ElapsedTime, pWorldData.WorldData.GameData.StoryTiming.AuroraExplosionTime, pWorldData.WorldData.GameData.StoryTiming.AuroraWarningTime);
             world.VehicleManager = new VehicleManager(pWorldData.WorldData.VehicleData.Vehicles, world.InventoryManager);
             world.ScheduleKeeper = new ScheduleKeeper(pWorldData.WorldData.GameData.PDAState, pWorldData.WorldData.GameData.StoryGoals, world.EventTriggerer, world.PlayerManager);
 
@@ -217,13 +217,6 @@ namespace NitroxServer.Serialization.World
         private void UpgradeSave(string saveDir)
         {
             SaveFileVersion saveFileVersion = Serializer.Deserialize<SaveFileVersion>(Path.Combine(saveDir, $"Version{FileEnding}"));
-
-            // SaveFileVersion structure was updated in V1.5.0.0
-            // This can be removed with V1.6.0.0 or later
-            if (File.ReadAllText(Path.Combine(saveDir, $"Version{FileEnding}")).Contains("BaseDataVersion"))
-            {
-                saveFileVersion = new SaveFileVersion(new Version(1, 4, 0, 0));
-            }
 
             if (saveFileVersion.Version == NitroxEnvironment.Version)
             {

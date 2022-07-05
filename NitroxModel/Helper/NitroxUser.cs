@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using NitroxModel.Discovery;
 using NitroxModel.Platforms.OS.Windows.Internal;
 
 namespace NitroxModel.Helper
@@ -10,7 +11,7 @@ namespace NitroxModel.Helper
     {
         public const string LAUNCHER_PATH_ENV_KEY = "NITROX_LAUNCHER_PATH";
         private const string PREFERRED_GAMEPATH_REGKEY = @"SOFTWARE\Nitrox\PreferredGamePath";
-        private static string launcherPath;
+        private static string launcherPath, subnauticaPath;
 
         private static readonly IEnumerable<Func<string>> launcherPathDataSources = new List<Func<string>>
         {
@@ -57,6 +58,28 @@ namespace NitroxModel.Helper
         {
             get => RegistryEx.Read<string>(PREFERRED_GAMEPATH_REGKEY);
             set => RegistryEx.Write(PREFERRED_GAMEPATH_REGKEY, value);
+        }
+
+        public static string SubnauticaPath
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(subnauticaPath))
+                {
+                    return subnauticaPath;
+                }
+
+                List<string> errors = new();
+                string path = GameInstallationFinder.Instance.FindGame(errors);
+
+                if (!string.IsNullOrWhiteSpace(path) && Directory.Exists(path))
+                {
+                    return subnauticaPath = path;
+                }
+
+                Log.Error($"Could not locate Subnautica installation directory: {Environment.NewLine}{string.Join(Environment.NewLine, errors)}");
+                return string.Empty;
+            }
         }
     }
 }

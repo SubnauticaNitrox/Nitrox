@@ -1,4 +1,5 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Packets;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
 
@@ -27,6 +28,8 @@ namespace NitroxServer.ConsoleCommands
             if (args.IsConsole || permissions < args.Sender.Value.Permissions)
             {
                 targetPlayer.Permissions = permissions;
+
+                // TODO: Send a packet to the player to acknowledge the permision level change
                 SendMessage(args.Sender, $"Updated {targetPlayer.Name}\'s permissions to {permissions}");
                 SendMessageToPlayer(targetPlayer, $"You've been promoted to {permissions}");
             }

@@ -7,6 +7,14 @@ using UnityEngine;
 
 namespace NitroxModel_Subnautica.DataStructures
 {
+    /// <summary>
+    ///     Contains extension methods for converting Unity types to Nitrox types and vice versa.
+    ///     This is necessary to allow the server to work without a dependency on game models while still being able to represent game models.
+    /// </summary>
+    /// <remarks>
+    ///     The abbreviation "DTO" means Data Transfer Object which is a common term used in REST APIs.
+    ///     Its purpose is to be a serializable type and to transfer the least amount of data necessary per request (e.g. API call). 
+    /// </remarks>
     public static class DataExtensions
     {
         public static Int3 ToUnity(this NitroxInt3 v)
@@ -27,6 +35,16 @@ namespace NitroxModel_Subnautica.DataStructures
         public static Vector3 ToUnity(this NitroxVector3 v)
         {
             return new Vector3(v.X, v.Y, v.Z);
+        }
+
+        public static NitroxVector4 ToDto(this Vector4 v)
+        {
+            return new NitroxVector4(v.x, v.y, v.z, v.w);
+        }
+
+        public static Vector4 ToUnity(this NitroxVector4 v)
+        {
+            return new Vector4(v.X, v.Y, v.Z, v.W);
         }
 
         public static NitroxTechType ToDto(this TechType v)
@@ -73,7 +91,7 @@ namespace NitroxModel_Subnautica.DataStructures
         {
             if (v == null)
             {
-                return new NitroxVector3[0];
+                return Array.Empty<NitroxVector3>();
             }
 
             NitroxVector3[] result = new NitroxVector3[v.Length];
@@ -88,7 +106,7 @@ namespace NitroxModel_Subnautica.DataStructures
         {
             if (v == null)
             {
-                return new Vector3[0];
+                return Array.Empty<Vector3>();
             }
 
             Vector3[] result = new Vector3[v.Length];

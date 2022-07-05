@@ -1,4 +1,5 @@
-﻿using NitroxModel.Packets;
+﻿using System;
+using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Unlockables;
@@ -18,9 +19,21 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(KnownTechEntryAdd packet, Player player)
         {
-            pdaStateData.AddKnownTechType(packet.TechType);
+            switch (packet.Category)
+            {
+                case KnownTechEntryAdd.EntryCategory.KNOWN:
+                    pdaStateData.AddKnownTechType(packet.TechType);
+                    break;
+                case KnownTechEntryAdd.EntryCategory.ANALYZED:
+                    pdaStateData.AddAnalyzedTechType(packet.TechType);
+                    break;
+                default:
+                    string categoryName = Enum.GetName(typeof(KnownTechEntryAdd.EntryCategory), packet.Category);
+                    Log.Error("Received an unknown category type for KnownTechEntryAdd packet: " + categoryName);
+                    break;
+            }
+
             playerManager.SendPacketToOtherPlayers(packet, player);
         }
     }
-
 }

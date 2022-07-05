@@ -76,7 +76,7 @@ namespace NitroxClient.GameLogic
 
             if (LifeChanged < 0)
             {
-                DamageTakenData damageTakenData = opDamageTakenData.OrElse(null);
+                DamageTakenData damageTakenData = opDamageTakenData.OrNull();
                 Optional<GameObject> opDealer = damageTakenData.DealerId.HasValue ? NitroxEntity.GetObjectFrom(damageTakenData.DealerId.Value) : Optional.Empty;
                 GameObject dealer = opDealer.HasValue ? opDealer.Value : null;
                 if (!dealer && damageTakenData.DealerId.HasValue)

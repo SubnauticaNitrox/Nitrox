@@ -11,7 +11,7 @@ namespace NitroxLauncher.Pages
     {
         public string PlatformToolTip => GamePlatform.GetAttribute<DescriptionAttribute>()?.Description ?? "Unknown";
         public Platform GamePlatform => LauncherLogic.Config.SubnauticaPlatform;
-        public string Version => LauncherLogic.Version;
+        public string Version => $"{LauncherLogic.ReleasePhase} {LauncherLogic.Version}";
 
         public LaunchGamePage()
         {

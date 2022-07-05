@@ -7,6 +7,10 @@ using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
+    /// <summary>
+    ///     Represents a piece of a player's base. E.g. a window, entry/exit hatch, multi-purpose room.
+    ///     The <see cref="TechType"/> says what kind of base piece this is.
+    /// </summary>
     [Serializable]
     [ProtoContract]
     public class BasePiece
@@ -45,7 +49,7 @@ namespace NitroxModel.DataStructures.GameLogic
         public NitroxId BaseId { get; set; }
 
         [ProtoMember(12, DynamicType = true)]
-        public Optional<RotationMetadata> RotationMetadata { get; set; }
+        public Optional<BuilderMetadata> RotationMetadata { get; set; }
 
         [ProtoMember(13, DynamicType = true)]
         public Optional<BasePieceMetadata> Metadata { get; set; }
@@ -60,7 +64,7 @@ namespace NitroxModel.DataStructures.GameLogic
             Metadata = Optional.Empty;
         }
 
-        public BasePiece(NitroxId id, NitroxVector3 itemPosition, NitroxQuaternion rotation, NitroxVector3 cameraPosition, NitroxQuaternion cameraRotation, NitroxTechType techType, Optional<NitroxId> parentId, bool isFurniture, Optional<RotationMetadata> rotationMetadata)
+        public BasePiece(NitroxId id, NitroxVector3 itemPosition, NitroxQuaternion rotation, NitroxVector3 cameraPosition, NitroxQuaternion cameraRotation, NitroxTechType techType, Optional<NitroxId> parentId, bool isFurniture, Optional<BuilderMetadata> rotationMetadata)
         {
             Id = id;
             ItemPosition = itemPosition;
@@ -76,7 +80,7 @@ namespace NitroxModel.DataStructures.GameLogic
             Metadata = Optional.Empty;
         }
 
-        public BasePiece(NitroxId id, NitroxVector3 itemPosition, NitroxQuaternion rotation, NitroxVector3 cameraPosition, NitroxQuaternion cameraRotation, NitroxTechType techType, Optional<NitroxId> parentId, bool isFurniture, Optional<RotationMetadata> rotationMetadata, Optional<BasePieceMetadata> metadata) : this(id, itemPosition, rotation, cameraPosition, cameraRotation, techType, parentId, isFurniture, rotationMetadata)
+        public BasePiece(NitroxId id, NitroxVector3 itemPosition, NitroxQuaternion rotation, NitroxVector3 cameraPosition, NitroxQuaternion cameraRotation, NitroxTechType techType, Optional<NitroxId> parentId, bool isFurniture, Optional<BuilderMetadata> rotationMetadata, Optional<BasePieceMetadata> metadata) : this(id, itemPosition, rotation, cameraPosition, cameraRotation, techType, parentId, isFurniture, rotationMetadata)
         {
             Metadata = metadata;
         }

@@ -6,6 +6,7 @@
         <Nullable>disable</Nullable>
         <UseWPF>true</UseWPF>
         <ApplicationIcon>icon.ico</ApplicationIcon>
+		<DisableFastUpToDateCheck>True</DisableFastUpToDateCheck>
     </PropertyGroup>
 
     <ItemGroup>
@@ -14,6 +15,7 @@
       <PackageReference Include="ToastNotifications" Version="2.5.1" />
       <PackageReference Include="ToastNotifications.Messages" Version="2.5.1" />
       <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
+      <PackageReference Include="WindowsFirewallHelper" Version="2.1.4.81" />
     </ItemGroup>
 
     <ItemGroup>

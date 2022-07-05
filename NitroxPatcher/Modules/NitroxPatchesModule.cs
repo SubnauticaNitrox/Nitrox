@@ -1,23 +1,24 @@
 ﻿using System.Reflection;
 using Autofac;
 using NitroxPatcher.Patches;
-using Module = Autofac.Module;
 
-namespace NitroxPatcher.Modules
+namespace NitroxPatcher.Modules;
+
+/// <summary>
+///     Simple Dependency Injection (DI) container for registering the patch classes with AutoFac.
+/// </summary>
+public class NitroxPatchesModule : Autofac.Module
 {
-    public class NitroxPatchesModule : Module
+    protected override void Load(ContainerBuilder builder)
     {
-        protected override void Load(ContainerBuilder builder)
-        {
-            builder
-                .RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
-                .AssignableTo<IPersistentPatch>()
-                .AsImplementedInterfaces();
+        builder
+            .RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
+            .AssignableTo<IPersistentPatch>()
+            .AsImplementedInterfaces();
 
-            builder
-                .RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
-                .AssignableTo<IDynamicPatch>()
-                .AsImplementedInterfaces();
-        }
+        builder
+            .RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
+            .AssignableTo<IDynamicPatch>()
+            .AsImplementedInterfaces();
     }
 }

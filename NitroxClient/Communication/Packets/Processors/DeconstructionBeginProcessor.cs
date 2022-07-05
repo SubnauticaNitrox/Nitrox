@@ -31,7 +31,6 @@ namespace NitroxClient.Communication.Packets.Processors
                 if (baseDeconstructable != null)
                 {
                     TransientLocalObjectManager.Add(TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE_GUID, packet.Id);
-
                     baseDeconstructable.Deconstruct();
                 }
                 else if (constructable != null)

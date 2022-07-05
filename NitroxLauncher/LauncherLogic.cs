@@ -23,13 +23,12 @@ namespace NitroxLauncher
 {
     internal class LauncherLogic : IDisposable
     {
-        public static string Version => Assembly.GetAssembly(typeof(Extensions)).GetName().Version.ToString();
+        public static string ReleasePhase => NitroxEnvironment.ReleasePhase.ToUpper();
+        public static string Version => NitroxEnvironment.Version.ToString();
 
         public static LauncherLogic Instance { get; private set; }
         public static LauncherConfig Config { get; private set; }
         public static ServerLogic Server { get; private set; }
-
-        public const string RELEASE_PHASE = "ALPHA";
 
         private NitroxEntryPatch nitroxEntryPatch;
         private ProcessEx gameProcess;
@@ -84,6 +83,18 @@ namespace NitroxLauncher
                 }
 
             }, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
+        }
+
+        [Conditional("RELEASE")]
+        public async void ConfigureFirewall()
+        {
+            Task task = Task.Run(() => WindowsHelper.CheckFirewallRules());
+            await task;
+
+            if (task.Exception != null)
+            {
+                MessageBox.Show($"An error occurred configuring the firewall: {task.Exception}");
+            }
         }
 
         public async Task<string> SetTargetedSubnauticaPath(string path)

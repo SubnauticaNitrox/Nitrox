@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession.ConnectionState;
@@ -51,7 +51,8 @@ namespace NitroxClient.Communication.MultiplayerSession
         {
             SessionPolicy = policy;
             NitroxConsole.DisableConsole = SessionPolicy.DisableConsole;
-            Version localVersion = typeof(Extensions).Assembly.GetName().Version;
+            Version localVersion = NitroxEnvironment.Version;
+
             localVersion = new Version(localVersion.Major, localVersion.Minor);
             switch (localVersion.CompareTo(SessionPolicy.NitroxVersionAllowed))
             {
@@ -141,6 +142,7 @@ namespace NitroxClient.Communication.MultiplayerSession
             if (sessionConnectionState.CurrentStage == MultiplayerSessionConnectionStage.SESSION_RESERVED)
             {
                 Log.PlayerName = username;
+                LANDiscoveryClient.EndSearching();
             }
         }
 

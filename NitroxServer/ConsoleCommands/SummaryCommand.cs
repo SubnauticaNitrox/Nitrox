@@ -16,7 +16,8 @@ namespace NitroxServer.ConsoleCommands
 
         protected override void Execute(CallArgs args)
         {
-            SendMessage(args.Sender, server.SaveSummary);
+            Perms viewerPerms = args.Sender.OrNull()?.Permissions ?? Perms.PLAYER;
+            SendMessage(args.Sender, server.GetSaveSummary(viewerPerms));
         }
     }
 }

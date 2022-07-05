@@ -92,68 +92,36 @@ namespace NitroxClient.Unity.Helper
             {
                 return obj;
             }
+
             return null;
         }
 
-        public static string GetHierarchyPath(this GameObject obj)
+        public static string GetFullHierarchyPath(this Component component)
         {
-            if (!obj)
+            return component ? $"{component.gameObject.GetFullHierarchyPath()} -> {component.GetType().Name}.cs" : "";
+        }
+
+        public static string GetHierarchyPath(this GameObject go, GameObject end)
+        {
+            if (!go || go == end)
             {
                 return "";
             }
 
-            return GetHierarchyPathBuilder(obj, new StringBuilder());
-        }
-
-        public static string GetHierarchyPath(this Component component)
-        {
-            if (!component)
+            if (!go.transform.parent)
             {
-                return "";
+                return go.name;
             }
 
-            // Append component name
-            StringBuilder builder = new StringBuilder();
-            builder.Insert(0, component.name);
-            builder.Insert(0, ".");
-
-            // Append path of GameObject hierarchy
-            return GetHierarchyPathBuilder(component.gameObject, builder);
-        }
-
-        private static string GetHierarchyPathBuilder(this GameObject obj, StringBuilder builder)
-        {
-            Transform parent = obj.transform;
-
-            while (parent)
+            StringBuilder sb = new(go.name);
+            for (GameObject gameObject = go.transform.parent.gameObject;
+                 gameObject && gameObject != end;
+                 gameObject = gameObject.transform.parent ? gameObject.transform.parent.gameObject : null)
             {
-                builder.Insert(0, parent.name);
-                builder.Insert(0, "/");
-                parent = parent.transform.parent;
+                sb.Insert(0, $"{gameObject.name}/");
             }
 
-            return builder.ToString();
-        }
-
-        public static string GetFullName(this GameObject obj)
-        {
-            Stack<string> stack = new Stack<string>();
-            Transform transform = obj.transform;
-
-            while (transform)
-            {
-                stack.Push(transform.name);
-                transform = transform.parent;
-            }
-
-            StringBuilder stringBuilder = new StringBuilder();
-
-            while (stack.Count > 0)
-            {
-                stringBuilder.AppendFormat("/{0}", stack.Pop());
-            }
-
-            return stringBuilder.ToString();
+            return sb.ToString();
         }
     }
 }

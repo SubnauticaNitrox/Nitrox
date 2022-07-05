@@ -24,7 +24,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 return;
             }
 
-            NitroxServiceLocator.LocateService<GeometryRespawnManager>().BaseObjectRespawned(__result.gameObject);
+            Resolve<GeometryRespawnManager>().BaseObjectRespawned(__result.gameObject);
         }
 
         public override void Patch(Harmony harmony)
