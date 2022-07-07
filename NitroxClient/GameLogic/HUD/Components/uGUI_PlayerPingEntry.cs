@@ -11,7 +11,6 @@ using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 using UnityEngine.UI;
 using UWE;
-using static NitroxClient.Unity.Helper.AssetBundleLoader;
 
 namespace NitroxClient.GameLogic.HUD.Components;
 
@@ -50,7 +49,6 @@ public class uGUI_PlayerPingEntry : uGUI_PingEntry
 
     public void Awake()
     {
-        Language.main.OnLanguageChanged += OnLanguageOnLanguageChanged;
         NitroxServiceLocator.LocateService<MutePlayerProcessor>().OnPlayerMuted += (playerId, muted) =>
         {
             if ((player is RemotePlayer remotePlayer && remotePlayer.PlayerId == playerId) ||
@@ -66,6 +64,8 @@ public class uGUI_PlayerPingEntry : uGUI_PingEntry
     {
         // This action must happen here, else the button will be moved
         UpdateButtonsPosition();
+        // We trigger it at least once so that the localizations are updated with the PlayerName
+        OnLanguageChanged();
     }
 
     public void Initialize(int id, string name, uGUI_PlayerListTab parent)
@@ -81,18 +81,18 @@ public class uGUI_PlayerPingEntry : uGUI_PingEntry
         _muted = false;
 
         UpdateLabel(name);
-        OnLanguageOnLanguageChanged();
+        OnLanguageChanged();
 
         CoroutineHost.StartCoroutine(AssignSprites());
     }
 
-    public void OnLanguageOnLanguageChanged()
+    public void OnLanguageChanged()
     {
         GetTooltip(ShowObject).TooltipText = Language.main.Get(showPing ? "Nitrox_HidePing" : "Nitrox_ShowPing");
         GetTooltip(MuteObject).TooltipText = Language.main.Get(muted ? "Nitrox_Unmute" : "Nitrox_Mute");
         GetTooltip(KickObject).TooltipText = Language.main.Get("Nitrox_Kick");
-        GetTooltip(TeleportToObject).TooltipText = Language.main.Get("Nitrox_TeleportTo");
-        GetTooltip(TeleportToMeObject).TooltipText = Language.main.Get("Nitrox_TeleportToMe");
+        GetTooltip(TeleportToObject).TooltipText = Language.main.Get("Nitrox_TeleportTo").Replace("{PLAYER}", PlayerName);
+        GetTooltip(TeleportToMeObject).TooltipText = Language.main.Get("Nitrox_TeleportToMe").Replace("{PLAYER}", PlayerName);
     }
 
     public new void Uninitialize()
