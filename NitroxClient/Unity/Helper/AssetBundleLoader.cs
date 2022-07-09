@@ -12,7 +12,7 @@ public static class AssetBundleLoader
 
     private static bool loadedSharedAssets;
 
-    public static IEnumerator LoadAssetBundle(NitroxAssetBundle nitroxAssetBundle)
+    private static IEnumerator LoadAssetBundle(NitroxAssetBundle nitroxAssetBundle)
     {
         if (IsBundleLoaded(nitroxAssetBundle))
         {
@@ -21,18 +21,31 @@ public static class AssetBundleLoader
         if (!loadedSharedAssets)
         {
             loadedSharedAssets = true;
-            yield return LoadAssetBundle(NitroxAssetBundle.SHARED_ASSETS);
+            yield return LoadAllAssets(NitroxAssetBundle.SHARED_ASSETS);
         }
 
-        AssetBundleCreateRequest assetRequest = AssetBundle.LoadFromFileAsync(Path.Combine(assetRootFolder, nitroxAssetBundle.BundleName));
-        if (assetRequest == null)
+        AssetBundleCreateRequest assetRequest;
+        using (Stream stream = File.Open(Path.Combine(assetRootFolder, nitroxAssetBundle.BundleName), FileMode.Open, FileAccess.Read, FileShare.Read))
         {
-            Log.Error($"Failed to load AssetBundle: {nitroxAssetBundle.BundleName}");
-            yield break;
+            assetRequest = AssetBundle.LoadFromStreamAsync(stream);
+            
+            if (assetRequest == null)
+            {
+                Log.Error($"Failed to load AssetBundle: {nitroxAssetBundle.BundleName}");
+                yield break;
+            }
+
+            yield return assetRequest;
         }
         
-        yield return assetRequest;
-        AssetBundleRequest loadRequest = assetRequest.assetBundle.LoadAllAssetsAsync();
+        nitroxAssetBundle.AssetBundle = assetRequest.assetBundle;
+    }
+    
+    public static IEnumerator LoadAllAssets(NitroxAssetBundle nitroxAssetBundle)
+    {
+        yield return LoadAssetBundle(nitroxAssetBundle);
+        
+        AssetBundleRequest loadRequest = nitroxAssetBundle.AssetBundle.LoadAllAssetsAsync();
         yield return loadRequest;
         
 
@@ -47,25 +60,9 @@ public static class AssetBundleLoader
 
     public static IEnumerator LoadUIAsset(NitroxAssetBundle nitroxAssetBundle, bool hideUI)
     {
-        if (IsBundleLoaded(nitroxAssetBundle))
-        {
-            yield break;
-        }
-        if (!loadedSharedAssets)
-        {
-            loadedSharedAssets = true;
-            yield return LoadAssetBundle(NitroxAssetBundle.SHARED_ASSETS);
-        }
+        yield return LoadAssetBundle(nitroxAssetBundle);
 
-        AssetBundleCreateRequest assetRequest = AssetBundle.LoadFromFileAsync(Path.Combine(assetRootFolder, nitroxAssetBundle.BundleName));
-        if (assetRequest == null)
-        {
-            Log.Error($"Failed to load AssetBundle: {nitroxAssetBundle.BundleName}");
-            yield break;
-        }
-        yield return assetRequest;
-
-        AssetBundleRequest fetchAssetRequest = assetRequest.assetBundle.LoadAssetAsync<GameObject>(nitroxAssetBundle.BundleName);
+        AssetBundleRequest fetchAssetRequest = nitroxAssetBundle.AssetBundle.LoadAssetAsync<GameObject>(nitroxAssetBundle.BundleName);
         yield return fetchAssetRequest;
 
         GameObject asset = UnityEngine.Object.Instantiate(fetchAssetRequest.asset, uGUI.main.screenCanvas.transform, false) as GameObject;
@@ -92,6 +89,7 @@ public static class AssetBundleLoader
     public class NitroxAssetBundle
     {
         public string BundleName { get; }
+        public AssetBundle AssetBundle { get; set; }
         public UnityEngine.Object[] LoadedAssets { get; set; }
 
         private NitroxAssetBundle(string bundleName)
