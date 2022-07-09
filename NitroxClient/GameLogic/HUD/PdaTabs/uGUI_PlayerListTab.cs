@@ -38,15 +38,13 @@ public class uGUI_PlayerListTab : uGUI_PingTab
         content = gameObject.FindChild("Content");
         pingManagerLabel = content.FindChild("PingManagerLabel").GetComponent<Text>();
         pingCanvas = (RectTransform)content.transform.Find("ScrollView/Viewport/ScrollCanvas");
-
-        Destroy(content.FindChild("ButtonAll"));
-
-        StartCoroutine(LoadAssets());
     }
 
-    private IEnumerator LoadAssets()
+    private IEnumerator Start()
     {
-        yield return LoadAssetBundle(NitroxAssetBundle.PLAYER_LIST_TAB);
+        Destroy(content.FindChild("ButtonAll"));
+
+        yield return LoadAllAssets(NitroxAssetBundle.PLAYER_LIST_TAB);
 
         foreach (Object asset in NitroxAssetBundle.PLAYER_LIST_TAB.LoadedAssets)
         {
