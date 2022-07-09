@@ -10,6 +10,8 @@ public class PlayerListTab : NitroxPDATab
     public override string ToolbarTip => "Nitrox_PlayerListTabName";
 
     public override string TabIconAssetName => "player_list_tab@3x";
+    
+    public override PDATab FallbackTabIcon => PDATab.Inventory;
 
     public override uGUI_PDATab uGUI_PDATab => tab;
 

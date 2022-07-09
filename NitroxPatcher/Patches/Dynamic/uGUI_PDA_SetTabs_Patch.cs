@@ -3,7 +3,6 @@ using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic.HUD;
 using NitroxModel.Helper;
-using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -28,13 +27,18 @@ public class uGUI_PDA_SetTabs_Patch : NitroxPatch, IDynamicPatch
         List<NitroxPDATab> customTabs = new(nitroxTabManager.CustomTabs.Values);
         for (int i = 0; i < customTabs.Count; i++)
         {
-            string tabIconAssetName = customTabs[customTabs.Count - i - 1].TabIconAssetName;
+            // Array index must be fixed so that the callback is executed with its precise value
+            int arrayIndex = array.Length - i - 1;
+            int tabIndex = customTabs.Count - i - 1;
+
+            string tabIconAssetName = customTabs[tabIndex].TabIconAssetName;
             if (!nitroxTabManager.TryGetTabSprite(tabIconAssetName, out Atlas.Sprite sprite))
             {
-                nitroxTabManager.SetSpriteLoadedCallback(tabIconAssetName, callbackSprite => AssignSprite(__instance.toolbar, array.Length - i - 1, callbackSprite));
-                sprite = new Atlas.Sprite(new Texture2D(100, 100));
+                nitroxTabManager.SetSpriteLoadedCallback(tabIconAssetName, callbackSprite => AssignSprite(__instance.toolbar, arrayIndex, callbackSprite));
+                // Take the fallback icon from another tab
+                sprite = SpriteManager.Get(SpriteManager.Group.Tab, $"Tab{customTabs[tabIndex].FallbackTabIcon}");
             }
-            array[array.Length - i - 1] = sprite;
+            array[arrayIndex] = sprite;
         }
 
         uGUI_Toolbar uGUI_Toolbar = __instance.toolbar;

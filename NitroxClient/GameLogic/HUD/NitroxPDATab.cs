@@ -13,6 +13,11 @@ public abstract class NitroxPDATab
     public abstract string TabIconAssetName { get; }
 
     /// <summary>
+    /// Base game tab from which we will take the icon as a placeholder
+    /// </summary>
+    public abstract PDATab FallbackTabIcon { get; }
+
+    /// <summary>
     /// The uGUI_PDATab component that will be used in-game
     /// </summary>
     public abstract uGUI_PDATab uGUI_PDATab { get;}
