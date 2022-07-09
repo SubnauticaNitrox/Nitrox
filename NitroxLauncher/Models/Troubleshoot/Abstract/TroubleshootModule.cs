@@ -49,7 +49,9 @@ namespace NitroxLauncher.Models.Troubleshoot.Abstract
 
         protected void EmitLog(string message) => LogReceivedEvent?.Invoke(this, new(Name, message));
         protected void EmitLog(object message) => EmitLog(message?.ToString() ?? string.Empty);
+
         protected void EmitStatus(TroubleshootStatus oldStatus, TroubleshootStatus newStatus) => StatusChangedEvent?.Invoke(this, new(Name, oldStatus, newStatus));
+        protected void EmitStatus(TroubleshootStatus newStatus) => StatusChangedEvent?.Invoke(this, new(Name, status, newStatus));
 
         protected abstract bool Check();
 

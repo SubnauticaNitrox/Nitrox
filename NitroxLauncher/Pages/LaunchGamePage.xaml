@@ -60,7 +60,6 @@
                 <Grid VerticalAlignment="Top" Margin="22,18,22,0">
                     <StackPanel Orientation="Vertical" HorizontalAlignment="Left" >
                         <TextBlock Foreground="#7FFFFFFF" Text="PLAY NITROX" FontSize="10" FontWeight="Bold" />
-                        <TextBlock x:Name="NitroxVersionLabel" Foreground="White" FontSize="10" Text="{Binding Version, Mode=OneTime, FallbackValue='x.x.x.x'}" />
                         <TextBlock x:Name="NitroxVersionLabel" Foreground="White" FontSize="10" Text="{Binding Version, Mode=OneTime, FallbackValue='PHASE x.x.x.x'}" />
                     </StackPanel>
 

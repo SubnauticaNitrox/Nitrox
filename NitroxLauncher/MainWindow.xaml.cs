@@ -123,7 +123,6 @@ namespace NitroxLauncher
                      }
 
                      logic.CheckNitroxVersion();
-                     logic.ConfigureFirewall();
                  }, CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.FromCurrentSynchronizationContext());
         }
 

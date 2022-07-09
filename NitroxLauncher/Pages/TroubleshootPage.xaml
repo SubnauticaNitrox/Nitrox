@@ -107,8 +107,11 @@
         <StackPanel Grid.Row="3">
             <Separator />
             <Border Margin="0,12,0,0" Padding="22" CornerRadius="12" Background="#151516">
-                <TextBox TabIndex="0" FontFamily="{StaticResource RobotoMono}" FontSize="12" Foreground="White" x:Name="LogWindow" IsReadOnly="True"
-                             TextWrapping="Wrap" Background="Transparent" BorderBrush="#00000000" BorderThickness="0" SelectionBrush="#000078D7" Width="722" IsEnabled="False" />
+                <ScrollViewer>
+                    <TextBox TabIndex="0" FontFamily="{StaticResource RobotoMono}" FontSize="12" Foreground="White" x:Name="LogWindow" IsReadOnly="True" 
+                             TextWrapping="Wrap" Background="Transparent" BorderBrush="#00000000" BorderThickness="0" SelectionBrush="#000078D7" Width="722" IsEnabled="False"
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" />
+                </ScrollViewer>
             </Border>
         </StackPanel>
 

@@ -14,7 +14,7 @@ namespace NitroxLauncher.Pages
 {
     public partial class TroubleshootPage : PageBase
     {
-        private readonly CancellationTokenSource cancelSource = new();
+        private CancellationTokenSource cancelSource = new();
 
         public static readonly TroubleshootModule Firewall = new FirewallModule();
         public static readonly TroubleshootModule Network = new NetworkModule();
@@ -56,44 +56,68 @@ namespace NitroxLauncher.Pages
                 return;
             }
 
-            Button_Cancel.IsEnabled = true;
+            if (!button.IsEnabled)
+            {
+                return;
+            }
+
+            button.Visibility = Visibility.Hidden;
+            button.IsEnabled = false;
+
             Dispatcher.InvokeAsync(() =>
             {
+                Button_Cancel.Visibility = Visibility.Visible;
+                Button_Cancel.IsEnabled = true;
+
                 try
                 {
-                    button.IsEnabled = false;
                     foreach (TroubleshootModule module in modules)
                     {
                         module.RunDiagnostic();
                     }
 
-                    button.IsEnabled = true;
+                    Button_Cancel.Visibility = Visibility.Hidden;
+                    Button_Cancel.IsEnabled = false;
+
+                    Button_Start.Visibility = Visibility.Visible;
+                    Button_Start.IsEnabled = true;
                 }
                 catch (OperationCanceledException)
                 {
-                    button.IsEnabled = true;
-                    Button_Cancel.IsEnabled = false;
+                    LauncherNotifier.Error("Unable to launch diagnostic");
                 }
             }, DispatcherPriority.Normal, cancelSource.Token);
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is not Button)
+            if (sender is not Button button)
             {
                 return;
             }
+
+            if (!button.IsEnabled)
+            {
+                return;
+            }
+
+            button.Visibility = Visibility.Hidden;
+            button.IsEnabled = false;
 
             foreach (TroubleshootModule module in modules)
             {
                 module.Reset();
             }
 
-            Run_StateVerb.Text = "Cancel";
-            Run_State.Text = "Cancel";
+            Run_StateVerb.Text = "";
+            Run_State.Text = "";
             Run_Modules.Text = "Cancel";
 
             cancelSource.Cancel();
+            cancelSource = new CancellationTokenSource();
+
+            Button_Start.Visibility = Visibility.Visible;
+            Button_Start.IsEnabled = true;
         }
     }
 }

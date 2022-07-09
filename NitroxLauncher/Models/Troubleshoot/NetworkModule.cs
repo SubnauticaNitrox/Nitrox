@@ -1,10 +1,14 @@
 ﻿using System.Net.NetworkInformation;
 using NitroxLauncher.Models.Troubleshoot.Abstract;
+using NitroxModel.Helper;
 
 namespace NitroxLauncher.Models.Troubleshoot
 {
     internal class NetworkModule : TroubleshootModule
     {
+        public const string HAMACHI_ADAPTER_NAME = "Hamachi";
+        public const string RADMIN_ADAPTER_NAME = "Radmin";
+
         public NetworkModule()
         {
             Name = "Network";
@@ -24,12 +28,13 @@ namespace NitroxLauncher.Models.Troubleshoot
             NetworkInterface[] interfaces = NetworkInterface.GetAllNetworkInterfaces();
             foreach (NetworkInterface iface in interfaces)
             {
-                if (iface.Name.Contains("Hamachi"))
+                if (iface.Name.Contains(HAMACHI_ADAPTER_NAME))
                 {
                     EmitLog($"Found hamachi adapter : STATUS {iface.OperationalStatus}");
+                    EmitLog($"Hamachi adress : ");
                 }
 
-                if (iface.Name.Contains("Radmin"))
+                if (iface.Name.Contains(RADMIN_ADAPTER_NAME))
                 {
                     EmitLog($"Found Radmin adapter : STATUS {iface.OperationalStatus}");
                 }
@@ -43,7 +48,16 @@ namespace NitroxLauncher.Models.Troubleshoot
                 }
             }
 
+            /*
+            string localIp = NetHelper.GetLanIp()?.ToString() ?? "Unknown";
+            string wanIp = NetHelper.GetWanIpAsync().Result?.ToString() ?? "Unknown";
+            string hamachiIp = NetHelper.GetHamachiIp()?.ToString() ?? "Unknown";
+
+            EmitLog($"Local : {localIp}, WAN: {wanIp}, Hamachi: {hamachiIp}");
+            */
+
             return true;
         }
+
     }
 }
