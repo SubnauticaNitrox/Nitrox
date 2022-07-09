@@ -211,8 +211,9 @@ public class uGUI_PlayerPingEntry : uGUI_PingEntry
         KickSprite = parent.GetSprite("kick@3x");
         TeleportToSprite = parent.GetSprite("teleport_to@3x");
         TeleportToMeSprite = parent.GetSprite("teleport_to_me@3x");
-        
-        MuteObject.FindChild("Eye").GetComponent<Image>().sprite = UnmutedSprite;
+
+        bool muted = player is RemotePlayer remotePlayer && remotePlayer.PlayerContext.IsMuted;
+        MuteObject.FindChild("Eye").GetComponent<Image>().sprite = muted ? MutedSprite : UnmutedSprite;
         KickObject.FindChild("Eye").GetComponent<Image>().sprite = KickSprite;
         TeleportToObject.FindChild("Eye").GetComponent<Image>().sprite = TeleportToSprite;
         TeleportToMeObject.FindChild("Eye").GetComponent<Image>().sprite = TeleportToMeSprite;
@@ -229,7 +230,7 @@ public class uGUI_PlayerPingEntry : uGUI_PingEntry
     {
         LocalPlayer localPlayer = NitroxServiceLocator.LocateService<LocalPlayer>();
         
-        bool isNotLocalPlayer = !IsLocalPlayer || true;
+        bool isNotLocalPlayer = !IsLocalPlayer;
         // We don't want none of these buttons to appear for us
         ShowObject.SetActive(isNotLocalPlayer);
 
