@@ -73,7 +73,6 @@ namespace NitroxServer
                         Log.Debug($"No save file was found, creating a new one...");
                     }
 
-                    //throw new Exception($"Server can't start without a save folder given. Command line: '{Environment.CommandLine}'");
                 }
 
                 return ServerConfig.Load(saveDir);
