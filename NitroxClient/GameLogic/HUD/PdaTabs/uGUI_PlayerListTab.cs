@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.HUD.Components;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
@@ -97,6 +98,10 @@ public class uGUI_PlayerListTab : uGUI_PingTab
         _isDirty = false;
         tempKeys.Clear();
         tempKeys.AddRange(entries.Keys);
+
+        Dictionary<int, INitroxPlayer> players = playerManager.GetAll().ToDictionary<RemotePlayer, int, INitroxPlayer>(player => player.PlayerId, player => player);
+        players.Add(localPlayer.PlayerId, localPlayer);
+
         foreach (KeyValuePair<int, INitroxPlayer> entry in players)
         {
             int key = entry.Key;
@@ -209,19 +214,5 @@ public class uGUI_PlayerListTab : uGUI_PingTab
         entries.Remove(playerId);
         ReleaseEntry(entry);
         _isDirty = true;
-    }
-
-    private Dictionary<int, INitroxPlayer> players
-    {
-        get
-        {
-            Dictionary<int, INitroxPlayer> players = new();
-            foreach (RemotePlayer player in playerManager.GetAll())
-            {
-                players.Add(player.PlayerId, player);
-            }
-            players.Add(localPlayer.PlayerId, localPlayer);
-            return players;
-        }
     }
 }

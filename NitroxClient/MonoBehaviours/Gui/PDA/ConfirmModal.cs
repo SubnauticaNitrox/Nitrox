@@ -18,10 +18,7 @@ public class ConfirmModal : Modal
 
     public override void ClickYes()
     {
-        if (yesCallback != null)
-        {
-            yesCallback();
-        }
+        yesCallback?.Invoke();
         Hide();
         OnDeselect();
     }

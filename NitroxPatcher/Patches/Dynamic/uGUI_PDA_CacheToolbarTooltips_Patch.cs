@@ -11,7 +11,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// </summary>
 public class uGUI_PDA_CacheToolbarTooltips_Patch : NitroxPatch, IDynamicPatch
 {
-    private readonly static MethodInfo TARGET_METHOD = Reflect.Method((uGUI_PDA t) => t.CacheToolbarTooltips());
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((uGUI_PDA t) => t.CacheToolbarTooltips());
 
     public static void Postfix(uGUI_PDA __instance)
     {

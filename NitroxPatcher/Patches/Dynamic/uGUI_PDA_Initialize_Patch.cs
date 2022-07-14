@@ -11,7 +11,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// </summary>
 public class uGUI_PDA_Initialize_Patch : NitroxPatch, IDynamicPatch
 {
-    private readonly static MethodInfo TARGET_METHOD = Reflect.Method((uGUI_PDA t) => t.Initialize());
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((uGUI_PDA t) => t.Initialize());
 
     // Added stuff is surrounded by comments
     public static bool Prefix(uGUI_PDA __instance)
@@ -30,38 +30,14 @@ public class uGUI_PDA_Initialize_Patch : NitroxPatch, IDynamicPatch
         
         __instance.tabs = new Dictionary<PDATab, uGUI_PDATab>(uGUI_PDA.sPDATabComparer)
         {
-            {
-                PDATab.Intro,
-                __instance.tabIntro
-            },
-            {
-                PDATab.Inventory,
-                __instance.tabInventory
-            },
-            {
-                PDATab.Journal,
-                __instance.tabJournal
-            },
-            {
-                PDATab.Ping,
-                __instance.tabPing
-            },
-            {
-                PDATab.Gallery,
-                __instance.tabGallery
-            },
-            {
-                PDATab.Log,
-                __instance.tabLog
-            },
-            {
-                PDATab.Encyclopedia,
-                __instance.tabEncyclopedia
-            },
-            {
-                PDATab.TimeCapsule,
-                __instance.tabTimeCapsule
-            }
+            { PDATab.Intro, __instance.tabIntro },
+            { PDATab.Inventory, __instance.tabInventory },
+            { PDATab.Journal, __instance.tabJournal },
+            { PDATab.Ping, __instance.tabPing },
+            { PDATab.Gallery, __instance.tabGallery },
+            { PDATab.Log, __instance.tabLog },
+            { PDATab.Encyclopedia, __instance.tabEncyclopedia },
+            { PDATab.TimeCapsule, __instance.tabTimeCapsule }
         };
 
         // Also required to add the custom tabs here

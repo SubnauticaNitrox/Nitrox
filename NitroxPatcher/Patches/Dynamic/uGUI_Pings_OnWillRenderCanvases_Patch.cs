@@ -13,7 +13,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// </summary>
 public class uGUI_Pings_OnWillRenderCanvases_Patch : NitroxPatch, IDynamicPatch
 {
-    private static MethodInfo TARGET_METHOD = Reflect.Method((uGUI_Pings t) => t.OnWillRenderCanvases());
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((uGUI_Pings t) => t.OnWillRenderCanvases());
 
     private static readonly OpCode INJECTION_OPCODE = OpCodes.Call;
     private static readonly object INJECTION_OPERAND = Reflect.Method((uGUI_Pings t) => t.IsVisibleNow());
@@ -24,9 +24,8 @@ public class uGUI_Pings_OnWillRenderCanvases_Patch : NitroxPatch, IDynamicPatch
 
         List<CodeInstruction> instructionList = instructions.ToList();
 
-        for (int i = 0; i < instructionList.Count; i++)
+        foreach (CodeInstruction instruction in instructionList)
         {
-            CodeInstruction instruction = instructionList[i];
             if (instruction.opcode.Equals(INJECTION_OPCODE) && instruction.operand.Equals(INJECTION_OPERAND))
             {
                 /*

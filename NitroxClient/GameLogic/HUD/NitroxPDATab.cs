@@ -22,6 +22,9 @@ public abstract class NitroxPDATab
     /// </summary>
     public abstract uGUI_PDATab uGUI_PDATab { get;}
 
+    /// <summary>
+    /// Should be a new int value that isn't currently used by default game (>7) nor by another custom tab
+    /// </summary>
     public abstract PDATab PDATabId { get; }
 
     /// <summary>

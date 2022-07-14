@@ -8,7 +8,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public class uGUI_PDA_SetTabs_Patch : NitroxPatch, IDynamicPatch
 {
-    private readonly static MethodInfo TARGET_METHOD = Reflect.Method((uGUI_PDA t) => t.SetTabs(default));
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((uGUI_PDA t) => t.SetTabs(default));
 
     public static bool Prefix(uGUI_PDA __instance, List<PDATab> tabs)
     {
