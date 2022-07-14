@@ -22,7 +22,7 @@ public class uGUI_PlayerPingEntry : uGUI_PingEntry
     public string PlayerName => player?.PlayerName ?? string.Empty;
     public bool IsLocalPlayer => player is LocalPlayer;
     private bool showPing;
-    private bool _muted;
+
     private bool muted
     {
         get
@@ -31,7 +31,8 @@ public class uGUI_PlayerPingEntry : uGUI_PingEntry
             {
                 return remotePlayer.PlayerContext.IsMuted;
             }
-            return _muted;
+            // By default we don't care about the local state
+            return false;
         }
     }
 
@@ -49,12 +50,11 @@ public class uGUI_PlayerPingEntry : uGUI_PingEntry
 
     public void Awake()
     {
-        NitroxServiceLocator.LocateService<MutePlayerProcessor>().OnPlayerMuted += (playerId, muted) =>
+        NitroxServiceLocator.LocateService<MutePlayerProcessor>().OnPlayerMuted += (playerId, _) =>
         {
-            if ((player is RemotePlayer remotePlayer && remotePlayer.PlayerId == playerId) ||
-                (player is LocalPlayer localPlayer && localPlayer.PlayerId == playerId))
+            if (player is RemotePlayer remotePlayer && remotePlayer.PlayerId == playerId)
             {
-                RefreshMuteButton(muted);
+                RefreshMuteButton();
             }
         };
         NitroxServiceLocator.LocateService<PermsChangedProcessor>().OnPermissionsChanged += (perms) => RefreshButtonsVisibility();
@@ -70,15 +70,14 @@ public class uGUI_PlayerPingEntry : uGUI_PingEntry
 
     public void Initialize(int id, string name, uGUI_PlayerListTab parent)
     {
+        this.id = id;
         this.parent = parent;
 
         gameObject.SetActive(true);
-        this.id = id;
         visibility.isOn = true;
         visibilityIcon.sprite = spriteVisible;
         icon.sprite = SpriteManager.Get(SpriteManager.Group.Tab, "TabInventory");
         showPing = true;
-        _muted = false;
 
         UpdateLabel(name);
         OnLanguageChanged();
@@ -88,11 +87,11 @@ public class uGUI_PlayerPingEntry : uGUI_PingEntry
 
     public void OnLanguageChanged()
     {
-        GetTooltip(ShowObject).TooltipText = Language.main.Get(showPing ? "Nitrox_HidePing" : "Nitrox_ShowPing");
-        GetTooltip(MuteObject).TooltipText = Language.main.Get(muted ? "Nitrox_Unmute" : "Nitrox_Mute");
-        GetTooltip(KickObject).TooltipText = Language.main.Get("Nitrox_Kick");
-        GetTooltip(TeleportToObject).TooltipText = Language.main.Get("Nitrox_TeleportTo").Replace("{PLAYER}", PlayerName);
-        GetTooltip(TeleportToMeObject).TooltipText = Language.main.Get("Nitrox_TeleportToMe").Replace("{PLAYER}", PlayerName);
+        GetTooltip(ShowObject).TooltipText = GetLocalizedText(showPing ? "Nitrox_HidePing" : "Nitrox_ShowPing");
+        GetTooltip(MuteObject).TooltipText = GetLocalizedText(muted ? "Nitrox_Unmute" : "Nitrox_Mute");
+        GetTooltip(KickObject).TooltipText = GetLocalizedText("Nitrox_Kick");
+        GetTooltip(TeleportToObject).TooltipText = GetLocalizedText("Nitrox_TeleportTo");
+        GetTooltip(TeleportToMeObject).TooltipText = GetLocalizedText("Nitrox_TeleportToMe");
     }
 
     public new void Uninitialize()
@@ -112,12 +111,9 @@ public class uGUI_PlayerPingEntry : uGUI_PingEntry
 
         UpdateLabel(player.PlayerName);
         icon.color = player.PlayerSettings.PlayerColor.ToUnity();
-        if (newPlayer is RemotePlayer remotePlayer)
-        {
-            RefreshMuteButton(remotePlayer.PlayerContext.IsMuted);
-        }
+        RefreshMuteButton();
 
-        // We need to update each button's listener wether or not they have enough perms because they may become OP during playtime
+        // We need to update each button's listener whether or not they have enough perms because they may become OP during playtime
         ClearButtonListeners();
 
         GetToggle(ShowObject).onValueChanged.AddListener(delegate (bool toggled)
@@ -126,15 +122,14 @@ public class uGUI_PlayerPingEntry : uGUI_PingEntry
             {
                 PingInstance pingInstance = remotePlayer.PlayerModel.GetComponentInChildren<PingInstance>();
                 pingInstance.SetVisible(toggled);
-                GetTooltip(ShowObject).TooltipText = Language.main.Get(toggled ? "Nitrox_HidePing" : "Nitrox_ShowPing");
+                GetTooltip(ShowObject).TooltipText = GetLocalizedText(toggled ? "Nitrox_HidePing" : "Nitrox_ShowPing");
                 visibilityIcon.sprite = toggled ? spriteVisible : spriteHidden;
             }
         });
         // Each of those clicks involves a confirmation modal
         GetToggle(MuteObject).onValueChanged.AddListener(delegate (bool toggled)
         {
-            string text = Language.main.Get(muted ? "Nitrox_Unmute" : "Nitrox_Mute");
-            Modal.Get<ConfirmModal>()?.Show($"{text} {player.PlayerName}?", () =>
+            Modal.Get<ConfirmModal>()?.Show(GetLocalizedText(muted ? "Nitrox_Unmute" : "Nitrox_Mute", true), () =>
             {
                 GetToggle(MuteObject).SetIsOnWithoutNotify(!toggled);
                 if (player is RemotePlayer remotePlayer)
@@ -145,23 +140,21 @@ public class uGUI_PlayerPingEntry : uGUI_PingEntry
         });
         GetToggle(KickObject).onValueChanged.AddListener(delegate (bool toggled)
         {
-            Modal.Get<ConfirmModal>()?.Show($"{Language.main.Get("Nitrox_Kick")} {player.PlayerName}?", () =>
+            Modal.Get<ConfirmModal>()?.Show(GetLocalizedText("Nitrox_Kick", true), () =>
             {
                 packetSender.Send(new ServerCommand($"kick {player.PlayerName}"));
             });
         });
         GetToggle(TeleportToObject).onValueChanged.AddListener(delegate (bool toggled)
         {
-            string text = Language.main.Get("Nitrox_TeleportTo").Replace("{PLAYER}", player.PlayerName);
-            Modal.Get<ConfirmModal>()?.Show($"{text}?", () =>
+            Modal.Get<ConfirmModal>()?.Show(GetLocalizedText("Nitrox_TeleportTo", true), () =>
             {
                 packetSender.Send(new ServerCommand($"warp {player.PlayerName}"));
             });
         });
         GetToggle(TeleportToMeObject).onValueChanged.AddListener(delegate (bool toggled)
         {
-            string text = Language.main.Get("Nitrox_TeleportToMe").Replace("{PLAYER}", player.PlayerName);
-            Modal.Get<ConfirmModal>()?.Show($"{text}?", () =>
+            Modal.Get<ConfirmModal>()?.Show(GetLocalizedText("Nitrox_TeleportToMe", true), () =>
             {
                 packetSender.Send(new ServerCommand($"warp {player.PlayerName} {localPlayer.PlayerName}"));
             });
@@ -170,26 +163,34 @@ public class uGUI_PlayerPingEntry : uGUI_PingEntry
         RefreshButtonsVisibility();
     }
 
+    private string GetLocalizedText(string key, bool isQuestion = false)
+    {
+        string text = Language.main.Get(key).Replace("{PLAYER}", PlayerName);
+        if (isQuestion)
+        {
+            text = Language.main.Get("Nitrox_Question").Replace("{MESSAGE}", text);
+        }
+        return text;
+    }
+
     public void UpdateButtonsPosition()
     {
-        float offset = 540f;
+        const float OFFSET = 540f;
+        Vector3 mutePosition = MuteObject.transform.localPosition;
+        mutePosition = new(0f + OFFSET, mutePosition.y, mutePosition.z);
+        MuteObject.transform.localPosition = mutePosition;
 
-        MuteObject.transform.localPosition = new(
-            0f + offset,
-            MuteObject.transform.localPosition.y,
-            MuteObject.transform.localPosition.z);
-        KickObject.transform.localPosition = new(
-            80f + offset,
-            KickObject.transform.localPosition.y,
-            KickObject.transform.localPosition.z);
-        TeleportToObject.transform.localPosition = new(
-            160f + offset,
-            TeleportToObject.transform.localPosition.y,
-            TeleportToObject.transform.localPosition.z);
-        TeleportToMeObject.transform.localPosition = new(
-            240f + offset,
-            TeleportToMeObject.transform.localPosition.y,
-            TeleportToMeObject.transform.localPosition.z);
+        Vector3 kickPosition = KickObject.transform.localPosition;
+        kickPosition = new(80f + OFFSET, kickPosition.y, kickPosition.z);
+        KickObject.transform.localPosition = kickPosition;
+
+        Vector3 teleportToPosition = TeleportToObject.transform.localPosition;
+        teleportToPosition = new(160f + OFFSET, teleportToPosition.y, teleportToPosition.z);
+        TeleportToObject.transform.localPosition = teleportToPosition;
+
+        Vector3 teleportToMePosition = TeleportToMeObject.transform.localPosition;
+        teleportToMePosition = new(240f + OFFSET, teleportToMePosition.y, teleportToMePosition.z);
+        TeleportToMeObject.transform.localPosition = teleportToMePosition;
     }
 
     private void ClearButtonListeners()
@@ -212,17 +213,16 @@ public class uGUI_PlayerPingEntry : uGUI_PingEntry
         TeleportToSprite = parent.GetSprite("teleport_to@3x");
         TeleportToMeSprite = parent.GetSprite("teleport_to_me@3x");
 
-        bool muted = player is RemotePlayer remotePlayer && remotePlayer.PlayerContext.IsMuted;
         MuteObject.FindChild("Eye").GetComponent<Image>().sprite = muted ? MutedSprite : UnmutedSprite;
         KickObject.FindChild("Eye").GetComponent<Image>().sprite = KickSprite;
         TeleportToObject.FindChild("Eye").GetComponent<Image>().sprite = TeleportToSprite;
         TeleportToMeObject.FindChild("Eye").GetComponent<Image>().sprite = TeleportToMeSprite;
     }
 
-    private void RefreshMuteButton(bool muted)
+    private void RefreshMuteButton()
     {
         GetToggle(MuteObject).SetIsOnWithoutNotify(muted);
-        GetTooltip(MuteObject).TooltipText = Language.main.Get(muted ? "Nitrox_Unmute" : "Nitrox_Mute");
+        GetTooltip(MuteObject).TooltipText = GetLocalizedText(muted ? "Nitrox_Unmute" : "Nitrox_Mute");
         MuteObject.FindChild("Eye").GetComponent<Image>().sprite = muted ? MutedSprite : UnmutedSprite;
     }
 
@@ -231,7 +231,7 @@ public class uGUI_PlayerPingEntry : uGUI_PingEntry
         LocalPlayer localPlayer = NitroxServiceLocator.LocateService<LocalPlayer>();
         
         bool isNotLocalPlayer = !IsLocalPlayer;
-        // We don't want none of these buttons to appear for us
+        // We don't want any control buttons to appear for the local player
         ShowObject.SetActive(isNotLocalPlayer);
 
         // The perms here should be the same as the perm each command asks for

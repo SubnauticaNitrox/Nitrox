@@ -49,9 +49,10 @@
     "Nitrox_UnmutedPlayer": "Unmuted {PLAYER}",
     "Nitrox_HidePing": "Hide Ping",
     "Nitrox_ShowPing": "Show Ping",
-    "Nitrox_Mute": "Mute",
-    "Nitrox_Unmute": "Unmute",
-    "Nitrox_Kick": "Kick",
+    "Nitrox_Mute": "Mute {PLAYER}",
+    "Nitrox_Unmute": "Unmute {PLAYER}",
+    "Nitrox_Kick": "Kick {PLAYER}",
     "Nitrox_TeleportTo": "Teleport to {PLAYER}",
-    "Nitrox_TeleportToMe": "Teleport {PLAYER} to me"
+    "Nitrox_TeleportToMe": "Teleport {PLAYER} to me",
+    "Nitrox_Question": "{MESSAGE}?"
 }
