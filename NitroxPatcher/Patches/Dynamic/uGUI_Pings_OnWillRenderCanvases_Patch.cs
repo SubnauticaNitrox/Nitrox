@@ -13,10 +13,10 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// </summary>
 public class uGUI_Pings_OnWillRenderCanvases_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((uGUI_Pings t) => t.OnWillRenderCanvases());
+    internal static readonly MethodInfo TARGET_METHOD = Reflect.Method((uGUI_Pings t) => t.OnWillRenderCanvases());
 
-    private static readonly OpCode INJECTION_OPCODE = OpCodes.Call;
-    private static readonly object INJECTION_OPERAND = Reflect.Method((uGUI_Pings t) => t.IsVisibleNow());
+    internal static readonly OpCode INJECTION_OPCODE = OpCodes.Call;
+    internal static readonly object INJECTION_OPERAND = Reflect.Method((uGUI_Pings t) => t.IsVisibleNow());
 
     public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
     {
