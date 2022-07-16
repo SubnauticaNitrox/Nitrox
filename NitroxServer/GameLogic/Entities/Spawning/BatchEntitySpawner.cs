@@ -395,6 +395,11 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                             {
                                 parent.ChildEntities.Add(possibleEntity);
                             }
+                            else
+                            {
+                                // Without the "continue;" lots of entities as fragments will stop spawning (#1779)
+                                continue;
+                            }
                         }
 
                         // Setup any children this object may have attached to it.
