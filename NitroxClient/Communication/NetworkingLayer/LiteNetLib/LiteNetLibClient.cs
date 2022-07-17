@@ -82,8 +82,9 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
 
         private void Connected(NetPeer peer)
         {
-            connectedEvent.Set();
+            // IsConnected must happen before Set() so that its state is noticed WHEN we unblock the thread (cf. connectedEvent.WaitOne(...))
             IsConnected = true;
+            connectedEvent.Set();
             Log.Info("Connected to server");
         }
 
