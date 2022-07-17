@@ -73,6 +73,8 @@ namespace NitroxClient.Communication
             client = null;
             broadcastTimer = null;
             pollTimer = null;
+            // Important to reset the callbacks here so they don't stack each time a new discovery starts
+            ServerFound = null;
 
             discoveredServers.Clear();
         }

@@ -70,7 +70,10 @@ namespace NitroxModel.Serialization
             using StreamWriter writer = new(new FileStream(file, FileMode.Create, FileAccess.Write));
             foreach (Entry entry in entries)
             {
-                writer.WriteLine(entry.ToString());
+                if (!entry.IsLan)
+                {
+                    writer.WriteLine(entry.ToString());
+                }
             }
         }
 
@@ -84,13 +87,25 @@ namespace NitroxModel.Serialization
             entries.RemoveAt(index);
         }
 
+        public void CleanLanServers()
+        {
+            for (int i = entries.Count - 1; i >= 0; i--)
+            {
+                if (entries[i].IsLan)
+                {
+                    entries.RemoveAt(i);
+                }
+            }
+        }
+
         public class Entry
         {
             public string Name { get; }
             public string Address { get; }
             public int Port { get; }
+            public bool IsLan { get; }
 
-            public Entry(string name, string address, int port)
+            public Entry(string name, string address, int port, bool isLan = false)
             {
                 if (string.IsNullOrWhiteSpace(name))
                 {
@@ -101,13 +116,14 @@ namespace NitroxModel.Serialization
                 Name = name.Trim();
                 Address = address.Trim();
                 Port = port;
+                IsLan = isLan;
             }
 
-            public Entry(string name, IPAddress address, int port) : this(name, address.ToString(), port)
+            public Entry(string name, IPAddress address, int port, bool isLan = false) : this(name, address.ToString(), port, isLan)
             {
             }
 
-            public Entry(string name, string address, string port) : this(name, address, int.Parse(port))
+            public Entry(string name, string address, string port, bool isLan = false) : this(name, address, int.Parse(port), isLan)
             {
             }
 
