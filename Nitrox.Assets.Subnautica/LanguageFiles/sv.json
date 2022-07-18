@@ -38,10 +38,10 @@
     "Nitrox_StartServer": "Starta din server först för kunna ansluta till din egen värld",
     "Nitrox_StreamerSettings": "Streamerläge",
     "Nitrox_SubmitPassword": "Skicka in",
-    "Nitrox_SyncingWorld": "Synkronisera Multiplayer Värd",
+    "Nitrox_SyncingWorld": "Synkroniserar Multiplayer Värld…",
     "Nitrox_UnableToConnect": "Det går inte att ansluta till fjärrservern på:",
     "Nitrox_Waiting": "Väntar att gå med i kö…",
     "Nitrox_WaitingPassword": "Väntar på inmatning av serverlösenord…",
     "Nitrox_WaitingUserInput": "Väntar på användarinmatning…",
-    "Nitrox_WorldSettling": "Väntar på världsupplösning"
+    "Nitrox_WorldSettling": "Väntar på världsupplösning…"
 }

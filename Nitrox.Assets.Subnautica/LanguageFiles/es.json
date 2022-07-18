@@ -38,10 +38,10 @@
     "Nitrox_StartServer": "Inicie su servidor para alcanzar a su mundo",
     "Nitrox_StreamerSettings": "Modo streamer",
     "Nitrox_SubmitPassword": "Enviar contraseña",
-    "Nitrox_SyncingWorld": "Sincronización del mundo multijugador",
+    "Nitrox_SyncingWorld": "Sincronización del mundo multijugador…",
     "Nitrox_UnableToConnect": "Error al conectar con el servidor :",
     "Nitrox_Waiting": "Esperando en cola para unirse…",
     "Nitrox_WaitingPassword": "Esperando contraseña…",
     "Nitrox_WaitingUserInput": "Esperando información del jugador…",
-    "Nitrox_WorldSettling": "Cargando mundo"
+    "Nitrox_WorldSettling": "Cargando mundo…"
 }

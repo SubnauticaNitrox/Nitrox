@@ -36,10 +36,10 @@
     "Nitrox_StartServer": "Inicie o seu servidor primeiro para se juntar ao seu mundo auto-hospedado",
     "Nitrox_StreamerSettings": "Modo streamer",
     "Nitrox_SubmitPassword": "Enviar",
-    "Nitrox_SyncingWorld": "Sincronizando Mundo Multijogador",
+    "Nitrox_SyncingWorld": "Sincronizando Mundo Multijogador…",
     "Nitrox_UnableToConnect": "Nao e possivel entrar em contato com o servidor remoto em:",
     "Nitrox_Waiting": "Esperando na fila de entrada…",
     "Nitrox_WaitingPassword": "Aguardando entrada de senha do servidor…",
     "Nitrox_WaitingUserInput": "Aguardando entrada do usuaio…",
-    "Nitrox_WorldSettling": "Aguardando o estabelecimento do mundo"
+    "Nitrox_WorldSettling": "Aguardando o estabelecimento do mundo…"
 }

@@ -38,10 +38,10 @@
     "Nitrox_StartServer": "서버를 먼저 시작하여 자체 호스트에 참여",
     "Nitrox_StreamerSettings": "방송 모드",
     "Nitrox_SubmitPassword": "제출",
-    "Nitrox_SyncingWorld": "멀티플레이어 세계 동기화",
+    "Nitrox_SyncingWorld": "멀티플레이어 세계 동기화…",
     "Nitrox_UnableToConnect": "원격 서버에 연결할 수 없음:",
     "Nitrox_Waiting": "접속 대기 중…",
     "Nitrox_WaitingPassword": "서버 비밀번호 입력을 기다리는 중…",
     "Nitrox_WaitingUserInput": "유저 입력을 기다리는 중…",
-    "Nitrox_WorldSettling": "세계 정착 대기 중"
+    "Nitrox_WorldSettling": "세계 정착 대기 중…"
 }

@@ -15,7 +15,7 @@
     "Nitrox_EnterName": "Имя игрока",
     "Nitrox_FirewallInterfering": "Некорректные настройки брандмауэра",
     "Nitrox_HideIp": "Скрыть IP-адреса",
-    "Nitrox_InvalidUserName": "Пожалуйста введите корректное имя!\n\nДоступные символы: A-Z a-z 0-9 _ . -\nДлинна: [3, 25]",
+    "Nitrox_InvalidUserName": "Пожалуйста введите корректное имя!\n\nОн не может содержать пробелов или сомнительных символов\nДоступные символы: A-Z a-z 0-9 _ . -\nДлинна: [3, 25]",
     "Nitrox_Join": "Войти",
     "Nitrox_JoinServerFailed": "Не удаётся подключится к серверу",
     "Nitrox_JoinServerIpAddress": "IP сервера",
@@ -36,10 +36,10 @@
     "Nitrox_StartServer": "Сначала запустите свой сервер, чтобы присоединиться к вашему автономному миру",
     "Nitrox_StreamerSettings": "Режим стримера",
     "Nitrox_SubmitPassword": "Принять",
-    "Nitrox_SyncingWorld": "Синхронизация мира",
+    "Nitrox_SyncingWorld": "Синхронизация мира…",
     "Nitrox_UnableToConnect": "Невозможно связаться с сервером по адресу:",
     "Nitrox_Waiting": "Ожидание в очереди на подключение…",
     "Nitrox_WaitingPassword": "Ожидание ввода пароля сервера…",
     "Nitrox_WaitingUserInput": "Ожидание ввода данных пользователем…",
-    "Nitrox_WorldSettling": "Ожидание настроек сервера"
+    "Nitrox_WorldSettling": "Ожидание настроек сервера…"
 }

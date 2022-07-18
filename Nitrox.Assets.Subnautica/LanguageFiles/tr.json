@@ -15,7 +15,7 @@
     "Nitrox_EnterName": "Oyuncu adınızı girin",
     "Nitrox_FirewallInterfering": "Güvenlik duvarı ayarları düzgün yapılmamış görünüyor",
     "Nitrox_HideIp": "IP adreslerini gizle",
-    "Nitrox_InvalidUserName": "Lütfen geçerli bir kullanıcı adı girin.\n\nBoşluk ve özel karakter içermemelidir\nİzin verilen karakterler: A-Z a-z 0-9 _ . -\nUzunluk: [3, 25]",
+    "Nitrox_InvalidUserName": "Lütfen geçerli bir kullanıcı adı girin.\n\nBoşluk veya özel karakter içermemelidir\nİzin verilen karakterler: A-Z a-z 0-9 _ . -\nUzunluk: [3, 25]",
     "Nitrox_Join": "Katıl",
     "Nitrox_JoinServerFailed": "Sunucuya bağlanılamadı",
     "Nitrox_JoinServerIpAddress": "Sunucu IP'si",
@@ -38,10 +38,10 @@
     "Nitrox_StartServer": "Kendi dünyanıza katılmak için önce sunucu başlatmalısınız",
     "Nitrox_StreamerSettings": "Yayıncı modu",
     "Nitrox_SubmitPassword": "Gönder",
-    "Nitrox_SyncingWorld": "Dünya Eşzamanlanıyor",
+    "Nitrox_SyncingWorld": "Dünya Eşzamanlanıyor…",
     "Nitrox_UnableToConnect": "Bu uzak sunucu ile iletişim kurulamıyor:",
     "Nitrox_Waiting": "Katılma kuyruğunda bekleniyor…",
     "Nitrox_WaitingPassword": "Sunucu parolası girilmesi bekleniyor…",
     "Nitrox_WaitingUserInput": "Kullanıcı adı girilmesi bekleniyor…",
-    "Nitrox_WorldSettling": "Dünya Yerleşimi Bekleniyor"
+    "Nitrox_WorldSettling": "Dünya Yerleşimi Bekleniyor…"
 }

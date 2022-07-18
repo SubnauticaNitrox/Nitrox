@@ -38,10 +38,10 @@
     "Nitrox_StartServer": "Спершу запустіть свій сервер, щоб приєднатися до самостійно розміщеного світу",
     "Nitrox_StreamerSettings": "Режим стримера",
     "Nitrox_SubmitPassword": "Прийняти",
-    "Nitrox_SyncingWorld": "Синхронізація багатокористувацького світу",
+    "Nitrox_SyncingWorld": "Синхронізація багатокористувацького світу…",
     "Nitrox_UnableToConnect": "Не вдається зв'язатися з віддаленим сервером за адресою:",
     "Nitrox_Waiting": "Очікування в черзі на приєднання…",
     "Nitrox_WaitingPassword": "Очікування введення пароля сервера…",
     "Nitrox_WaitingUserInput": "Очікування на введення даних користувача…",
-    "Nitrox_WorldSettling": "Очікування на стабілізацію світу"
+    "Nitrox_WorldSettling": "Очікування на стабілізацію світу…"
 }
