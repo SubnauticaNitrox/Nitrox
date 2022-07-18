@@ -1,1 +1,18 @@
-{}
+{
+    "Nitrox_AddServer": "Legg til tjener",
+    "Nitrox_AddServerAdd": "Legg til",
+    "Nitrox_AddServerHost": "Vert:",
+    "Nitrox_AddServerName": "Navn:",
+    "Nitrox_AddServerPort": "Port:",
+    "Nitrox_Cancel": "Avbryt",
+    "Nitrox_CommandNotAvailable": "Denne kommandoen er ikke tilgjengelig i Nitrox",
+    "Nitrox_ConnectTo": "Koble til",
+    "Nitrox_DisconnectedSession": "Frakoblet fra tjener",
+    "Nitrox_DiscordAccept": "Godta",
+    "Nitrox_DiscordDecline": "Avslå",
+    "Nitrox_DiscordPressToFocus": "Trykk for å låse opp",
+    "Nitrox_DiscordRequestText": "Forespurte deltagelse i din økt",
+    "Nitrox_EnterName": "Skriv inn spillernavnet ditt",
+    "Nitrox_FirewallInterfering": "Der ser ut til at brannmursinnstillingene ikke går overens",
+    "Nitrox_HideIp": "Skjul IP-adresser"
+}
