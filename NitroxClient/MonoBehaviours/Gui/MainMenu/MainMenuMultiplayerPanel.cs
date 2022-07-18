@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 using NitroxClient.Communication;
 using NitroxClient.GameLogic.Settings;
 using NitroxClient.Unity.Helper;
@@ -46,7 +47,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
             CreateButton(translationKey: "Nitrox_AddServer", clickEvent: ShowAddServerWindow, disableTranslation: false);
             LoadSavedServers();
-            FindLANServers();
+            _ = FindLANServersAsync();
         }
 
         private void CreateButton(string translationKey, UnityAction clickEvent, bool disableTranslation)
@@ -65,7 +66,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             multiplayerButtonButton.onClick.AddListener(clickEvent);
         }
 
-        private void CreateServerButton(string text, string joinIp, string joinPort, bool isLan = false)
+        private void CreateServerButton(string text, string joinIp, string joinPort, bool isReadOnly = false)
         {
             GameObject multiplayerButtonInst = Instantiate(multiplayerButton, savedGameAreaContent, false);
             multiplayerButtonInst.name = (savedGameAreaContent.childCount - 1).ToString();
@@ -81,8 +82,8 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 OpenJoinServerMenu(joinIp, joinPort);
             });
 
-            // Probably temporary solution but we don't want LAN servers to be deleted
-            if (!isLan)
+            // We don't want servers that are discovered automatically to be deleted
+            if (!isReadOnly)
             {
                 GameObject delete = Instantiate(deleteButtonRef, multiplayerButtonInst.transform, false);
                 Button deleteButtonButton = delete.GetComponent<Button>();
@@ -138,25 +139,27 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         private void LoadSavedServers()
         {
+            ServerList.Refresh();
             foreach (ServerList.Entry entry in ServerList.Instance.Entries)
             {
                 CreateServerButton(MakeButtonText(entry.Name, entry.Address, entry.Port), $"{entry.Address}", $"{entry.Port}");
             }
         }
 
-        private void FindLANServers()
+        private async Task FindLANServersAsync()
         {
-            LANDiscoveryClient.BeginSearching();
-            LANDiscoveryClient.ServerFound += (serverEndPoint) =>
+            void AddButton(IPEndPoint serverEndPoint)
             {
-                // Whatever we insert here is not important because it won't ever be used
-                // It's simply important that have the server registered so that there's no issue when deleting one based on an index
-                ServerList.Instance.Add(new("LAN Server", $"{serverEndPoint.Address}", $"{serverEndPoint.Port}", true));
+                // Add ServerList entry to keep indices in sync with servers UI, to enable removal by index
+                ServerList.Instance.Add(new("LAN Server", $"{serverEndPoint.Address}", $"{serverEndPoint.Port}", false));
                 CreateServerButton(MakeButtonText("LAN Server", serverEndPoint.Address, serverEndPoint.Port), $"{serverEndPoint.Address}", $"{serverEndPoint.Port}", true);
-            };
+            }
+
+            LANDiscoveryClient.ServerFound += AddButton;
+            await LANDiscoveryClient.SearchAsync();
+            LANDiscoveryClient.ServerFound -= AddButton;
         }
 
-        // Two functions meant to regroup the same behaviour
         private string MakeButtonText(string serverName, object address, object port)
         {
             return $"{Language.main.Get("Nitrox_ConnectTo")} <b>{serverName}</b>\n{HideIfNecessary(address)}:{HideIfNecessary(port)}";
@@ -317,11 +320,9 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 Destroy(child.gameObject);
             }
 
-            ServerList.Instance.CleanLanServers();
-
             CreateButton(translationKey: "Nitrox_AddServer", clickEvent: ShowAddServerWindow, disableTranslation: false);
             LoadSavedServers();
-            FindLANServers();
+            _ = FindLANServersAsync();
         }
     }
 }

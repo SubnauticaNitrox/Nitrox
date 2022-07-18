@@ -141,7 +141,6 @@ namespace NitroxClient.Communication.MultiplayerSession
             if (sessionConnectionState.CurrentStage == MultiplayerSessionConnectionStage.SESSION_RESERVED)
             {
                 Log.PlayerName = username;
-                LANDiscoveryClient.EndSearching();
             }
         }
 

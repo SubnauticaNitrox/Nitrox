@@ -14,7 +14,7 @@ namespace NitroxModel.Serialization
         public const int DEFAULT_PORT = 11000;
         private static ServerList instance;
         private readonly List<Entry> entries = new();
-        public static ServerList Instance => instance ??= From(DefaultFile);
+        public static ServerList Instance => instance ??= Refresh();
 
         private static ServerList Default
         {
@@ -29,6 +29,11 @@ namespace NitroxModel.Serialization
         public static string DefaultFile => Path.Combine(NitroxUser.LauncherPath, SERVERS_FILE_NAME);
 
         public IEnumerable<Entry> Entries => entries;
+
+        public static ServerList Refresh()
+        {
+            return instance = From(DefaultFile);
+        }
 
         public static ServerList From(string file = null)
         {
@@ -70,7 +75,7 @@ namespace NitroxModel.Serialization
             using StreamWriter writer = new(new FileStream(file, FileMode.Create, FileAccess.Write));
             foreach (Entry entry in entries)
             {
-                if (!entry.IsLan)
+                if (entry.Persist)
                 {
                     writer.WriteLine(entry.ToString());
                 }
@@ -87,25 +92,18 @@ namespace NitroxModel.Serialization
             entries.RemoveAt(index);
         }
 
-        public void CleanLanServers()
-        {
-            for (int i = entries.Count - 1; i >= 0; i--)
-            {
-                if (entries[i].IsLan)
-                {
-                    entries.RemoveAt(i);
-                }
-            }
-        }
-
         public class Entry
         {
             public string Name { get; }
             public string Address { get; }
             public int Port { get; }
-            public bool IsLan { get; }
 
-            public Entry(string name, string address, int port, bool isLan = false)
+            /// <summary>
+            ///     If true, entry will be saved to storage.
+            /// </summary>
+            public bool Persist { get; }
+
+            public Entry(string name, string address, int port, bool persist = true)
             {
                 if (string.IsNullOrWhiteSpace(name))
                 {
@@ -116,14 +114,14 @@ namespace NitroxModel.Serialization
                 Name = name.Trim();
                 Address = address.Trim();
                 Port = port;
-                IsLan = isLan;
+                Persist = persist;
             }
 
-            public Entry(string name, IPAddress address, int port, bool isLan = false) : this(name, address.ToString(), port, isLan)
+            public Entry(string name, IPAddress address, int port, bool persist = true) : this(name, address.ToString(), port, persist)
             {
             }
 
-            public Entry(string name, string address, string port, bool isLan = false) : this(name, address, int.Parse(port), isLan)
+            public Entry(string name, string address, string port, bool persist = true) : this(name, address, int.Parse(port), persist)
             {
             }
 
