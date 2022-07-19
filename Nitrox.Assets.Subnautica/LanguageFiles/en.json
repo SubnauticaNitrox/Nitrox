@@ -50,9 +50,13 @@
     "Nitrox_HidePing": "Hide Ping",
     "Nitrox_ShowPing": "Show Ping",
     "Nitrox_Mute": "Mute {PLAYER}",
+    "Nitrox_MuteQuestion": "Mute {PLAYER}?",
     "Nitrox_Unmute": "Unmute {PLAYER}",
+    "Nitrox_UnmuteQuestion": "Unmute {PLAYER}?",
     "Nitrox_Kick": "Kick {PLAYER}",
+    "Nitrox_KickQuestion": "Kick {PLAYER}?",
     "Nitrox_TeleportTo": "Teleport to {PLAYER}",
+    "Nitrox_TeleportToQuestion": "Teleport to {PLAYER}?",
     "Nitrox_TeleportToMe": "Teleport {PLAYER} to me",
-    "Nitrox_Question": "{MESSAGE}?"
+    "Nitrox_TeleportToMeQuestion": "Teleport {PLAYER} to me?"
 }

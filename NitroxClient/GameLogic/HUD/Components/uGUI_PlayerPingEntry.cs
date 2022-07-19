@@ -165,12 +165,7 @@ public class uGUI_PlayerPingEntry : uGUI_PingEntry
 
     private string GetLocalizedText(string key, bool isQuestion = false)
     {
-        string text = Language.main.Get(key).Replace("{PLAYER}", PlayerName);
-        if (isQuestion)
-        {
-            text = Language.main.Get("Nitrox_Question").Replace("{MESSAGE}", text);
-        }
-        return text;
+        return Language.main.Get(isQuestion ? $"{key}Question" : key).Replace("{PLAYER}", PlayerName);
     }
 
     public void UpdateButtonsPosition()

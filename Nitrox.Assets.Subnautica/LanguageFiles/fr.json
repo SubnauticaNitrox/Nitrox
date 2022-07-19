@@ -50,9 +50,13 @@
     "Nitrox_HidePing": "Montrer le signal",
     "Nitrox_ShowPing": "Cacher le signal",
     "Nitrox_Mute": "Rendre muet {PLAYER}",
+    "Nitrox_MuteQuestion": "Rendre muet {PLAYER} ?",
     "Nitrox_Unmute": "Entendre à nouveau {PLAYER}",
+    "Nitrox_UnmuteQuestion": "Entendre à nouveau {PLAYER} ?",
     "Nitrox_Kick": "Exclure {PLAYER}",
+    "Nitrox_KickQuestion": "Exclure {PLAYER} ?",
     "Nitrox_TeleportTo": "Se téléporter à {PLAYER}",
+    "Nitrox_TeleportToQuestion": "Se téléporter à {PLAYER} ?",
     "Nitrox_TeleportToMe": "Téléporter {PLAYER} à moi",
-    "Nitrox_Question": "{MESSAGE} ?"
+    "Nitrox_TeleportToMeQuestion": "Téléporter {PLAYER} à moi ?"
 }
