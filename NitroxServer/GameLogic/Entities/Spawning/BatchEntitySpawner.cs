@@ -407,6 +407,9 @@ namespace NitroxServer.GameLogic.Entities.Spawning
 
                         // Add the object to the child list that that is being returned by this method.
                         entities.Add(spawnableprefabEntity);
+
+                        // remove prefab from placeholder list so it is not duplicated later by mistake.
+                        spawnablePrefabs.Remove(spawnablePrefab);
                     }
                     else
                     {
