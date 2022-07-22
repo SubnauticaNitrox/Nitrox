@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Runtime.InteropServices;
 using NitroxModel.Platforms.OS.Windows.Internal;
 
 namespace NitroxModel.Discovery.InstallationFinders
@@ -10,7 +11,16 @@ namespace NitroxModel.Discovery.InstallationFinders
     {
         public string FindGame(IList<string> errors = null)
         {
-            string steamPath = RegistryEx.Read<string>(@"Software\\Valve\\Steam\SteamPath");
+            string steamPath = "";
+            //TODO: handle other OSes
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                // steam is ALWAYS installed to the user's folder on linux
+                steamPath = Path.Combine(Environment.GetEnvironmentVariable("HOME"), ".local", "share", "Steam");
+            } else {
+                steamPath = RegistryEx.Read<string>(@"Software\\Valve\\Steam\SteamPath");
+            }
+
             if (string.IsNullOrEmpty(steamPath))
             {
                 errors?.Add("It appears you don't have Steam installed.");
