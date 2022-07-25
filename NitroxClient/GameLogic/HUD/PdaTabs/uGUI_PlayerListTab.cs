@@ -24,9 +24,9 @@ public class uGUI_PlayerListTab : uGUI_PingTab
     private readonly Dictionary<string, Sprite> assets = new();
     public bool FinishedLoadingAssets { get; private set; }
 
-    private new Dictionary<int, uGUI_PlayerPingEntry> entries = new();
-    private new List<uGUI_PlayerPingEntry> pool = new();
-    private new Dictionary<string, uGUI_PlayerPingEntry> tempSort = new();
+    private new readonly Dictionary<int, uGUI_PlayerPingEntry> entries = new();
+    private new readonly List<uGUI_PlayerPingEntry> pool = new();
+    private new readonly Dictionary<string, uGUI_PlayerPingEntry> tempSort = new();
 
     public override void Awake()
     {
@@ -104,9 +104,7 @@ public class uGUI_PlayerListTab : uGUI_PingTab
 
         foreach (KeyValuePair<int, INitroxPlayer> entry in players)
         {
-            int key = entry.Key;
-            INitroxPlayer player = entry.Value;
-            if (!entries.ContainsKey(key))
+            if (!entries.ContainsKey(entry.Key))
             {
                 // Sets up a new entry for the player
                 AddNewEntry(entry.Key, entry.Value);

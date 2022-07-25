@@ -25,19 +25,18 @@ public class uGUI_PDA_SetTabs_Patch : NitroxPatch, IDynamicPatch
             {
                 /*
                  * Insert
-                 * uGUI_PDA_Initialize_Patch.SetupNitroxIcons(this, tabs, array);
+                 * uGUI_PDA_Initialize_Patch.SetupNitroxIcons(this, array);
                  * right before
                  * uGUI_Toolbar uGUI_Toolbar = this.toolbar;
                  */
                 yield return new CodeInstruction(OpCodes.Ldarg_0);
-                yield return new CodeInstruction(OpCodes.Ldarg_1);
                 yield return new CodeInstruction(OpCodes.Ldloc_1);
-                yield return new CodeInstruction(OpCodes.Call, Reflect.Method(() => SetupNitroxIcons(default, default, default)));
+                yield return new CodeInstruction(OpCodes.Call, Reflect.Method(() => SetupNitroxIcons(default, default)));
             }
         }
     }
 
-    public static void SetupNitroxIcons(uGUI_PDA __instance, List<PDATab> tabs, Atlas.Sprite[] array)
+    public static void SetupNitroxIcons(uGUI_PDA __instance, Atlas.Sprite[] array)
     {
         NitroxPDATabManager nitroxTabManager = Resolve<NitroxPDATabManager>();
         List<NitroxPDATab> customTabs = new(nitroxTabManager.CustomTabs.Values);

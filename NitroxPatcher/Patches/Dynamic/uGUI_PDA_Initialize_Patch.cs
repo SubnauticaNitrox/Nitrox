@@ -9,7 +9,7 @@ using NitroxModel.Helper;
 namespace NitroxPatcher.Patches.Dynamic;
 
 /// <summary>
-/// Add custom tabs to the 
+/// Add custom tabs to the PDA by injecting them in the regular list before the actual initialization.
 /// </summary>
 public class uGUI_PDA_Initialize_Patch : NitroxPatch, IDynamicPatch
 {
