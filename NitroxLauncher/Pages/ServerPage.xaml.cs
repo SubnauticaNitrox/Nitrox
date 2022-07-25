@@ -738,37 +738,45 @@ namespace NitroxLauncher.Pages
             }
             SelectedWorldDirectory = Path.Combine(WorldManager.SavesFolderDir, ImportedWorldName);
 
-            // Create save folder
-            Directory.CreateDirectory(SelectedWorldDirectory);
-
-            // Copy over targeted server.cfg file and ensure its serializer is set to JSON to prevent future errors
-            File.Copy(SelectedServerCfgImportDirectory, Path.Combine(SelectedWorldDirectory, "server.cfg"));
-            ServerConfig importedServerConfig = ServerConfig.Load(Path.Combine(SelectedWorldDirectory));
-            if (importedServerConfig.SerializerMode != ServerSerializerMode.JSON)
+            try
             {
-                importedServerConfig.Update(SelectedWorldDirectory, c =>
+                // Create save folder
+                Directory.CreateDirectory(SelectedWorldDirectory);
+
+                // Copy over targeted server.cfg file and ensure its serializer is set to JSON to prevent future errors
+                FileSystem.CopyFile(SelectedServerCfgImportDirectory, Path.Combine(SelectedWorldDirectory, "server.cfg"));
+                ServerConfig importedServerConfig = ServerConfig.Load(Path.Combine(SelectedWorldDirectory));
+                if (importedServerConfig.SerializerMode != ServerSerializerMode.JSON)
                 {
-                    c.SerializerMode = ServerSerializerMode.JSON;
-                });
-            }
+                    importedServerConfig.Update(SelectedWorldDirectory, c =>
+                    {
+                        c.SerializerMode = ServerSerializerMode.JSON;
+                    });
+                }
 
-            // Copy over specific save files from within the targeted folder
-            foreach (string file in WorldManager.WorldFiles)
+                // Copy over specific save files from within the targeted folder
+                foreach (string file in WorldManager.WorldFiles)
+                {
+                    string targetFileDir = Path.Combine(SelectedWorldDirectory, file);
+                    FileSystem.CopyFile(Path.Combine(SelectedWorldImportDirectory, file), targetFileDir);
+                    File.SetLastWriteTime(targetFileDir, DateTime.Now);
+                }
+
+                UpdateVisualWorldSettings();
+
+                ImportSaveBtnBorder.Opacity = 0;
+                ImportSaveBtn.IsEnabled = false;
+                ImportWorldBox.Opacity = 0;
+                ImportWorldBox.IsHitTestVisible = false;
+                TBWorldSeed.IsReadOnly = true;
+
+                LauncherNotifier.Success("Successfully imported the selected save file");
+            }
+            catch (Exception ex)
             {
-                string targetFileDir = Path.Combine(SelectedWorldDirectory, file);
-                File.Copy(Path.Combine(SelectedWorldImportDirectory, file), targetFileDir);
-                File.SetLastWriteTime(targetFileDir, DateTime.Now);
+                LauncherNotifier.Error("Failed to import the selected save file");
+                Log.Error($"Could not import save \"{Path.GetFileName(SelectedWorldDirectory)}\" : {ex.GetType()} {ex.Message}");
             }
-
-            UpdateVisualWorldSettings();
-
-            ImportSaveBtnBorder.Opacity = 0;
-            ImportSaveBtn.IsEnabled = false;
-            ImportWorldBox.Opacity = 0;
-            ImportWorldBox.IsHitTestVisible = false;
-            TBWorldSeed.IsReadOnly = true;
-
-            LauncherNotifier.Success("Successfully imported the selected save file");
         }
 
         private void ImportWorldCancelBtn_Click(object sender, RoutedEventArgs e)

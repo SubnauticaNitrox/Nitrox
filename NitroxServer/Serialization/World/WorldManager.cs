@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Windows;
 using NitroxModel.Helper;
 
 namespace NitroxServer.Serialization.World;
@@ -16,7 +17,15 @@ public static class WorldManager
 
     static WorldManager()
     {
-        Directory.CreateDirectory(SavesFolderDir);
+        try
+        {
+            Directory.CreateDirectory(SavesFolderDir);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            return;
+        }
     }
 
     public static IEnumerable<Listing> GetSaves()
