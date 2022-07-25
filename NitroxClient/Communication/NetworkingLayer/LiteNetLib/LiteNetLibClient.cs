@@ -3,7 +3,6 @@ using LiteNetLib;
 using LiteNetLib.Utils;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Debuggers;
-using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.Gui.InGame;
 using NitroxModel.Networking;
 using NitroxModel.Packets;
@@ -82,19 +81,14 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
 
         private void Connected(NetPeer peer)
         {
-            // IsConnected must happen before Set() so that its state is noticed WHEN we unblock the thread (cf. connectedEvent.WaitOne(...))
-            IsConnected = true;
             connectedEvent.Set();
+            IsConnected = true;
             Log.Info("Connected to server");
         }
 
         private void Disconnected(NetPeer peer, DisconnectInfo disconnectInfo)
         {
-            // Check must happen before IsConnected is set to false, so that it doesn't send an exception when we aren't even ingame
-            if (Multiplayer.Active)
-            {
-                Modal.Get<LostConnectionModal>()?.Show();
-            }
+            Modal.Get<LostConnectionModal>()?.Show();
             IsConnected = false;
             Log.Info("Disconnected from server");
         }

@@ -122,13 +122,13 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                 yield break;
             }
 
-            float randomNumber = (float)deterministicBatchGenerator.NextDouble();
+            double randomNumber = deterministicBatchGenerator.NextDouble();
             if (rollingProbabilityDensity > 1f)
             {
                 randomNumber *= rollingProbabilityDensity;
             }
 
-            float rollingProbability = 0;
+            double rollingProbability = 0;
 
             UwePrefab selectedPrefab = allowedPrefabs.FirstOrDefault(prefab =>
             {
@@ -394,11 +394,6 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                             if (possibleEntity != null)
                             {
                                 parent.ChildEntities.Add(possibleEntity);
-                            }
-                            else
-                            {
-                                // Without the "continue;" lots of entities as fragments will stop spawning (#1779)
-                                continue;
                             }
                         }
 

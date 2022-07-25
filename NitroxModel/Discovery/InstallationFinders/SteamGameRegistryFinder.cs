@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using NitroxModel.Platforms.OS.Windows.Internal;
 
@@ -11,35 +10,19 @@ namespace NitroxModel.Discovery.InstallationFinders
     {
         public string FindGame(IList<string> errors = null)
         {
-            string steamPath = "";
-            //TODO: handle other OSes
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            {
-                // steam is ALWAYS installed to the user's folder on linux
-                string homePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-                if (!string.IsNullOrWhiteSpace(homePath))
-                {
-                    steamPath = Path.Combine(homePath, ".local", "share", "Steam");
-                }
-                else
-                {
-                    errors?.Add("User HOME is not defined.");
-                }
-            }
-            else
-            {
-                steamPath = RegistryEx.Read<string>(@"Software\\Valve\\Steam\SteamPath");
-            }
+            string steamPath = RegistryEx.Read<string>(@"Software\\Valve\\Steam\SteamPath");
             if (string.IsNullOrEmpty(steamPath))
             {
                 errors?.Add("It appears you don't have Steam installed.");
                 return null;
             }
+
             string appsPath = Path.Combine(steamPath, "steamapps");
             if (File.Exists(Path.Combine(appsPath, $"appmanifest_{GameInfo.Subnautica.SteamAppId}.acf")))
             {
                 return Path.Combine(appsPath, "common", GameInfo.Subnautica.Name);
             }
+
             string path = SearchAllInstallations(Path.Combine(appsPath, "libraryfolders.vdf"), GameInfo.Subnautica.SteamAppId, GameInfo.Subnautica.Name);
             if (string.IsNullOrEmpty(path))
             {
@@ -54,7 +37,8 @@ namespace NitroxModel.Discovery.InstallationFinders
         }
 
         /// <summary>
-        ///     Finds game install directory by iterating through all the steam game libraries configured, matching the given appid.
+        ///     Finds game install directory by iterating through all the steam game libraries configured and finding the appid
+        ///     that matches <see cref="GameInfo.Subnautica.SteamAppId" />.
         /// </summary>
         private static string SearchAllInstallations(string libraryFolders, int appid, string gameName)
         {
@@ -64,10 +48,10 @@ namespace NitroxModel.Discovery.InstallationFinders
             }
 
             StreamReader file = new(libraryFolders);
-            char[] trimChars = { ' ', '\t' };
-            while (file.ReadLine() is { } line)
+            string line;
+            while ((line = file.ReadLine()) != null)
             {
-                line = Regex.Unescape(line.Trim(trimChars));
+                line = Regex.Unescape(line.Trim().Trim('\t'));
                 Match regMatch = Regex.Match(line, "\"(.*)\"\t*\"(.*)\"");
                 string key = regMatch.Groups[1].Value;
                 // New format (about 2021-07-16) uses "path" key instead of steam-library-index as key. If either, it could be steam game path.
@@ -79,7 +63,7 @@ namespace NitroxModel.Discovery.InstallationFinders
 
                 if (File.Exists(Path.Combine(value, "steamapps", $"appmanifest_{appid}.acf")))
                 {
-                    return Path.Combine(value, "steamapps", "common", gameName);
+                    return Path.Combine(value, "steamapps/common", gameName);
                 }
             }
 

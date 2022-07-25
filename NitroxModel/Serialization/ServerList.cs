@@ -14,7 +14,7 @@ namespace NitroxModel.Serialization
         public const int DEFAULT_PORT = 11000;
         private static ServerList instance;
         private readonly List<Entry> entries = new();
-        public static ServerList Instance => instance ??= Refresh();
+        public static ServerList Instance => instance ??= From(DefaultFile);
 
         private static ServerList Default
         {
@@ -29,11 +29,6 @@ namespace NitroxModel.Serialization
         public static string DefaultFile => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", SERVERS_FILE_NAME);
 
         public IEnumerable<Entry> Entries => entries;
-
-        public static ServerList Refresh()
-        {
-            return instance = From(DefaultFile);
-        }
 
         public static ServerList From(string file = null)
         {
@@ -75,10 +70,7 @@ namespace NitroxModel.Serialization
             using StreamWriter writer = new(new FileStream(file, FileMode.Create, FileAccess.Write));
             foreach (Entry entry in entries)
             {
-                if (entry.Persist)
-                {
-                    writer.WriteLine(entry.ToString());
-                }
+                writer.WriteLine(entry.ToString());
             }
         }
 
@@ -98,12 +90,7 @@ namespace NitroxModel.Serialization
             public string Address { get; }
             public int Port { get; }
 
-            /// <summary>
-            ///     If true, entry will be saved to storage.
-            /// </summary>
-            public bool Persist { get; }
-
-            public Entry(string name, string address, int port, bool persist = true)
+            public Entry(string name, string address, int port)
             {
                 if (string.IsNullOrWhiteSpace(name))
                 {
@@ -114,14 +101,13 @@ namespace NitroxModel.Serialization
                 Name = name.Trim();
                 Address = address.Trim();
                 Port = port;
-                Persist = persist;
             }
 
-            public Entry(string name, IPAddress address, int port, bool persist = true) : this(name, address.ToString(), port, persist)
+            public Entry(string name, IPAddress address, int port) : this(name, address.ToString(), port)
             {
             }
 
-            public Entry(string name, string address, string port, bool persist = true) : this(name, address, int.Parse(port), persist)
+            public Entry(string name, string address, string port) : this(name, address, int.Parse(port))
             {
             }
 
