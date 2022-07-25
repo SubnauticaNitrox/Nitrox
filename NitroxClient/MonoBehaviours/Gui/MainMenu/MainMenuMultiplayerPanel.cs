@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 using NitroxClient.Communication;
 using NitroxClient.GameLogic.Settings;
 using NitroxClient.Unity.Helper;
@@ -46,7 +47,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
             CreateButton(translationKey: "Nitrox_AddServer", clickEvent: ShowAddServerWindow, disableTranslation: false);
             LoadSavedServers();
-            FindLANServers();
+            _ = FindLANServersAsync();
         }
 
         private void CreateButton(string translationKey, UnityAction clickEvent, bool disableTranslation)
@@ -65,7 +66,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             multiplayerButtonButton.onClick.AddListener(clickEvent);
         }
 
-        private void CreateServerButton(string text, string joinIp, string joinPort)
+        private void CreateServerButton(string text, string joinIp, string joinPort, bool isReadOnly = false)
         {
             GameObject multiplayerButtonInst = Instantiate(multiplayerButton, savedGameAreaContent, false);
             multiplayerButtonInst.name = (savedGameAreaContent.childCount - 1).ToString();
@@ -81,15 +82,19 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 OpenJoinServerMenu(joinIp, joinPort);
             });
 
-            GameObject delete = Instantiate(deleteButtonRef, multiplayerButtonInst.transform, false);
-            Button deleteButtonButton = delete.GetComponent<Button>();
-            deleteButtonButton.onClick = new Button.ButtonClickedEvent();
-            deleteButtonButton.onClick.AddListener(() =>
+            // We don't want servers that are discovered automatically to be deleted
+            if (!isReadOnly)
             {
-                ServerList.Instance.RemoveAt(multiplayerButtonInst.transform.GetSiblingIndex() - 1);
-                ServerList.Instance.Save();
-                Destroy(multiplayerButtonInst);
-            });
+                GameObject delete = Instantiate(deleteButtonRef, multiplayerButtonInst.transform, false);
+                Button deleteButtonButton = delete.GetComponent<Button>();
+                deleteButtonButton.onClick = new Button.ButtonClickedEvent();
+                deleteButtonButton.onClick.AddListener(() =>
+                {
+                    ServerList.Instance.RemoveAt(multiplayerButtonInst.transform.GetSiblingIndex() - 1);
+                    ServerList.Instance.Save();
+                    Destroy(multiplayerButtonInst);
+                });
+            }
         }
 
         public static void OpenJoinServerMenu(string serverIp, string serverPort)
@@ -134,20 +139,34 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         private void LoadSavedServers()
         {
+            ServerList.Refresh();
             foreach (ServerList.Entry entry in ServerList.Instance.Entries)
             {
-                CreateServerButton($"{Language.main.Get("Nitrox_ConnectTo")} <b>{entry.Name}</b>\n{(NitroxPrefs.HideIp.Value ? "****" : entry.Address)}:{(NitroxPrefs.HideIp.Value ? "****" : entry.Port)}", entry.Address.ToString(), entry.Port.ToString());
+                CreateServerButton(MakeButtonText(entry.Name, entry.Address, entry.Port), $"{entry.Address}", $"{entry.Port}");
             }
         }
 
-        private void FindLANServers()
+        private async Task FindLANServersAsync()
         {
-            LANDiscoveryClient.BeginSearching();
-            LANDiscoveryClient.ServerFound += (serverEndPoint) =>
+            void AddButton(IPEndPoint serverEndPoint)
             {
-                // mostly copied from LoadSavedServers()
-                CreateServerButton($"{Language.main.Get("Nitrox_ConnectTo")} <b>LAN Server</b>\n{(NitroxPrefs.HideIp.Value ? "****" : serverEndPoint.Address)}:{(NitroxPrefs.HideIp.Value ? "****" : serverEndPoint.Port)}", serverEndPoint.Address.ToString(), serverEndPoint.Port.ToString());
-            };
+                // Add ServerList entry to keep indices in sync with servers UI, to enable removal by index
+                ServerList.Instance.Add(new("LAN Server", $"{serverEndPoint.Address}", $"{serverEndPoint.Port}", false));
+                CreateServerButton(MakeButtonText("LAN Server", serverEndPoint.Address, serverEndPoint.Port), $"{serverEndPoint.Address}", $"{serverEndPoint.Port}", true);
+            }
+
+            LANDiscoveryClient.ServerFound += AddButton;
+            await LANDiscoveryClient.SearchAsync();
+            LANDiscoveryClient.ServerFound -= AddButton;
+        }
+
+        private string MakeButtonText(string serverName, object address, object port)
+        {
+            return $"{Language.main.Get("Nitrox_ConnectTo")} <b>{serverName}</b>\n{HideIfNecessary(address)}:{HideIfNecessary(port)}";
+        }
+        private static string HideIfNecessary(object text)
+        {
+            return NitroxPrefs.HideIp.Value ? "****" : $"{text}";
         }
 
         private static IPEndPoint ResolveIPEndPoint(string serverIp, string serverPort)
@@ -195,7 +214,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             serverPortInput = serverPortInput.Trim();
             ServerList.Instance.Add(new ServerList.Entry(serverNameInput, serverHostInput, serverPortInput));
             ServerList.Instance.Save();
-            CreateServerButton($"{Language.main.Get("Nitrox_ConnectTo")} <b>{serverNameInput}</b>\n{(NitroxPrefs.HideIp.Value ? "****" : serverHostInput)}:{(NitroxPrefs.HideIp.Value ? "****" : serverPortInput)}", serverHostInput, serverPortInput);
+            CreateServerButton(MakeButtonText(serverNameInput, serverHostInput, serverPortInput), serverHostInput, serverPortInput);
             HideAddServerWindow();
         }
 
@@ -303,7 +322,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
             CreateButton(translationKey: "Nitrox_AddServer", clickEvent: ShowAddServerWindow, disableTranslation: false);
             LoadSavedServers();
-            FindLANServers();
+            _ = FindLANServersAsync();
         }
     }
 }
