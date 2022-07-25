@@ -30,7 +30,7 @@ public static class WorldManager
 
     public static IEnumerable<Listing> GetSaves()
     {
-        if (savesCache.Any())
+        if (savesCache.Count != 0)
         {
             return savesCache;
         }
@@ -56,7 +56,7 @@ public static class WorldManager
 
                 // Change the paramaters here to define what save file versions are eligible for use/upgrade
                 bool IsValidVersion = true;
-                if (version < new Version(1, 5, 0, 1) || version > NitroxEnvironment.Version)
+                if (version < new Version(1, 6, 0, 0) || version > NitroxEnvironment.Version)
                 {
                     IsValidVersion = false;
                 }
