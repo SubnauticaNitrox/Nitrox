@@ -24,7 +24,7 @@
     "Nitrox_JoiningSession": "Betrete Mehrspieler-Welt",
     "Nitrox_LaunchGame": "Starte das Spiel…",
     "Nitrox_LoadingScreenWarn": "Spiel brechende Fehler sind zu erwarten",
-    "Nitrox_LostConnection": "Die Verbindung zum Server wurde unterbrochen",
+    "Nitrox_LostConnection": "Die Verbindung zum Spiel-Server wurde unterbrochen",
     "Nitrox_LostConnectionWarn": "Nicht länger Verbunden mit dem Server",
     "Nitrox_Multiplayer": "Mehrspieler",
     "Nitrox_MultiplayerLoaded": "Mehrspieler-Anwendung wurde gestartet…",
@@ -38,10 +38,10 @@
     "Nitrox_StartServer": "Bitte starte zuerst den Server um deine selbst gehostete Welt zu betreten",
     "Nitrox_StreamerSettings": "Streamer Einstellungen",
     "Nitrox_SubmitPassword": "Bestätigen",
-    "Nitrox_SyncingWorld": "Synchronisiere Mehrspieler-Welt",
+    "Nitrox_SyncingWorld": "Synchronisiere Mehrspieler-Welt…",
     "Nitrox_UnableToConnect": "Der Server kann unter folgender Adresse nicht erreicht werden:",
     "Nitrox_Waiting": "Warte in der Beitrittswarteschlange…",
     "Nitrox_WaitingPassword": "Warte auf Eingabe des Server Passworts…",
     "Nitrox_WaitingUserInput": "Warte auf Nutzereingaben…",
-    "Nitrox_WorldSettling": "Warte auf vollständige Ladung der Welt"
+    "Nitrox_WorldSettling": "Warte auf das Laden der Welt…"
 }
