@@ -22,6 +22,9 @@ namespace NitroxClient.GameLogic
         private readonly PlayerModelManager playerModelManager;
         private readonly Dictionary<ushort, RemotePlayer> playersById = new Dictionary<ushort, RemotePlayer>();
 
+        public OnCreate onCreate;
+        public OnRemove onRemove;
+
         public PlayerManager(IPacketSender packetSender, ILocalNitroxPlayer localPlayer, PlayerModelManager playerModelManager)
         {
             this.packetSender = packetSender;
@@ -91,6 +94,7 @@ namespace NitroxClient.GameLogic
             playersById.Add(remotePlayer.PlayerId, remotePlayer);
 
             DiscordClient.UpdatePartySize(GetTotalPlayerCount());
+            onCreate(remotePlayer.PlayerId, remotePlayer);
 
             return remotePlayer;
         }
@@ -106,6 +110,7 @@ namespace NitroxClient.GameLogic
                 }
                 playersById.Remove(playerId);
                 DiscordClient.UpdatePartySize(GetTotalPlayerCount());
+                onRemove(playerId, opPlayer.Value);
             }
         }
 
@@ -120,5 +125,8 @@ namespace NitroxClient.GameLogic
         {
             return playersById.Count + 1; //Multiplayer-player(s) + you
         }
+
+        public delegate void OnCreate(ushort playerId, RemotePlayer remotePlayer);
+        public delegate void OnRemove(ushort playerId, RemotePlayer remotePlayer);
     }
 }

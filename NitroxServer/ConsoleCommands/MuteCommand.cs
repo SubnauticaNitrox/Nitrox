@@ -32,14 +32,14 @@ namespace NitroxServer.ConsoleCommands
                 return;
             }
 
-            if (targetPlayer.IsMuted)
+            if (targetPlayer.PlayerContext.IsMuted)
             {
                 SendMessage(args.Sender, $"{targetPlayer.Name} is already muted");
                 return;
             }
 
-            targetPlayer.IsMuted = true;
-            // TODO: Send a packet to all players to acknowledge the muted player
+            targetPlayer.PlayerContext.IsMuted = true;
+            playerManager.SendPacketToAllPlayers(new MutePlayer(targetPlayer.Id, targetPlayer.PlayerContext.IsMuted));
             SendMessage(targetPlayer, "You're now muted");
             SendMessage(args.Sender, $"Muted {targetPlayer.Name}");
         }
