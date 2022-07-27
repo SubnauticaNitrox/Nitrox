@@ -43,5 +43,20 @@
     "Nitrox_Waiting": "En attente dans la file de connexion…",
     "Nitrox_WaitingPassword": "En attente du mot de passe…",
     "Nitrox_WaitingUserInput": "En attente des informations du joueur…",
-    "Nitrox_WorldSettling": "Chargement du monde"
+    "Nitrox_WorldSettling": "Chargement du monde",
+    "Nitrox_PlayerListTabName": "Liste des joueurs",
+    "Nitrox_MutedPlayer": "{PLAYER} est maintenant muet",
+    "Nitrox_UnmutedPlayer": "{PLAYER} n'est plus muet",
+    "Nitrox_HidePing": "Montrer le signal",
+    "Nitrox_ShowPing": "Cacher le signal",
+    "Nitrox_Mute": "Rendre muet {PLAYER}",
+    "Nitrox_MuteQuestion": "Rendre muet {PLAYER} ?",
+    "Nitrox_Unmute": "Entendre à nouveau {PLAYER}",
+    "Nitrox_UnmuteQuestion": "Entendre à nouveau {PLAYER} ?",
+    "Nitrox_Kick": "Exclure {PLAYER}",
+    "Nitrox_KickQuestion": "Exclure {PLAYER} ?",
+    "Nitrox_TeleportTo": "Se téléporter à {PLAYER}",
+    "Nitrox_TeleportToQuestion": "Se téléporter à {PLAYER} ?",
+    "Nitrox_TeleportToMe": "Téléporter {PLAYER} à moi",
+    "Nitrox_TeleportToMeQuestion": "Téléporter {PLAYER} à moi ?"
 }
