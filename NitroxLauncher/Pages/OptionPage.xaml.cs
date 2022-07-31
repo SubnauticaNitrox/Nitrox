@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using Microsoft.WindowsAPICodePack.Dialogs;
@@ -102,7 +103,7 @@ namespace NitroxLauncher.Pages
 
         private void OnViewFolder_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start(WorldManager.SavesFolderDir);
+            Process.Start(WorldManager.SavesFolderDir)?.Dispose();
         }
     }
 }

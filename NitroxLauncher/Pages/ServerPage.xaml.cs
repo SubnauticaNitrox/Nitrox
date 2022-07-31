@@ -610,7 +610,7 @@ namespace NitroxLauncher.Pages
                 ImportedWorldName = TBImportedWorldName.Text;
 
                 // Enable the "Import" button if user has selected a save file and a server.cfg file
-                if (!string.IsNullOrEmpty(SelectedWorldImportDirectory) && !string.IsNullOrEmpty(SelectedServerCfgImportDirectory)/*TBSelectedServerCfgImportDir.Text != "Select the server.cfg file to import"*/)
+                if (!string.IsNullOrEmpty(SelectedWorldImportDirectory) && !string.IsNullOrEmpty(SelectedServerCfgImportDirectory))
                 {
                     ImportWorldBtn.IsEnabled = true;
                     ImportWorldBtn.Opacity = 1;
@@ -653,7 +653,7 @@ namespace NitroxLauncher.Pages
                 {
                     LauncherNotifier.Error("Singleplayer saves cannot be imported and used by Nitrox: Save formats are incompatible.");
                 }
-                else if (File.Exists(Path.Combine(SelectedWorldImportDirectory, "WorldData.nitrox")))
+                else if (File.Exists(Path.Combine(SelectedWorldImportDirectory, "WorldData.nitrox")) && !File.Exists(Path.Combine(SelectedWorldImportDirectory, "WorldData.json")))
                 {
                     LauncherNotifier.Error("Protobuf saves are no longer supported and cannot be imported. Please run the \"swapserializer json\" command on server of the previous Nitrox version you used to change it to JSON.");
                 }
@@ -755,11 +755,18 @@ namespace NitroxLauncher.Pages
                 }
 
                 // Copy over specific save files from within the targeted folder
-                foreach (string file in WorldManager.WorldFiles)
+                foreach (string file in Directory.EnumerateFiles(SelectedWorldImportDirectory))
                 {
-                    string targetFileDir = Path.Combine(SelectedWorldDirectory, file);
-                    FileSystem.CopyFile(Path.Combine(SelectedWorldImportDirectory, file), targetFileDir);
-                    File.SetLastWriteTime(targetFileDir, DateTime.Now);
+                    string targetFileDir = Path.Combine(SelectedWorldImportDirectory, file);
+                    string destFileDir = Path.Combine(SelectedWorldDirectory, Path.GetFileName(file));
+
+                    if (Path.GetExtension(targetFileDir) != ".json"/* && Path.GetExtension(targetFileDir) != ".nitrox"*/)
+                    {
+                        continue;
+                    }
+
+                    FileSystem.CopyFile(targetFileDir, destFileDir);
+                    File.SetLastWriteTime(destFileDir, DateTime.Now);
                 }
 
                 UpdateVisualWorldSettings();
@@ -774,7 +781,7 @@ namespace NitroxLauncher.Pages
             }
             catch (Exception ex)
             {
-                LauncherNotifier.Error("Failed to import the selected save file");
+                LauncherNotifier.Error("Failed to import the selected save file. Please check your log for details.");
                 Log.Error($"Could not import save \"{Path.GetFileName(SelectedWorldDirectory)}\" : {ex.GetType()} {ex.Message}");
             }
         }
@@ -819,8 +826,12 @@ namespace NitroxLauncher.Pages
                 return;
             }
 
+            if (File.Exists(Path.Combine(SelectedWorldDirectory, "WorldData.json")))
+            {
+                File.SetLastWriteTime(Path.Combine(SelectedWorldDirectory, "WorldData.json"), DateTime.Now);
+            }
+            
             WorldCurrentlyUsed = SelectedWorldDirectory;
-            File.SetLastWriteTime(Path.Combine(SelectedWorldDirectory, "WorldData.json"), DateTime.Now);
             InitializeWorldListing();
         }
 
