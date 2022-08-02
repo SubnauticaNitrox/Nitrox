@@ -78,6 +78,51 @@ namespace NitroxServer
             return builder.ToString();
         }
 
+        public static ServerConfig ServerStart()
+        {
+            string saveDir = null;
+            foreach (string arg in Environment.GetCommandLineArgs())
+            {
+                if (arg.StartsWith(WorldManager.SavesFolderDir, StringComparison.OrdinalIgnoreCase) && Directory.Exists(arg))
+                {
+                    saveDir = arg;
+                    break;
+                }
+            }
+            if (saveDir == null)
+            {
+                // Check if there are any save files
+                IEnumerable<WorldManager.Listing> WorldList = WorldManager.GetSaves();
+                if (WorldList.Any())
+                {
+                    // Get last save file used
+                    string LastSaveAccessed = WorldList.ElementAtOrDefault(0).WorldSaveDir;
+                    if (WorldList.Count() > 1)
+                    {
+                        for (int i = 1; i < WorldList.Count(); i++)
+                        {
+                            if (File.GetLastWriteTime(Path.Combine(WorldList.ElementAtOrDefault(i).WorldSaveDir, "WorldData.json")) > File.GetLastWriteTime(LastSaveAccessed))
+                            {
+                                LastSaveAccessed = WorldList.ElementAtOrDefault(i).WorldSaveDir;
+                            }
+                        }
+                    }
+                    saveDir = LastSaveAccessed;
+                }
+                else
+                {
+                    // Create new save file
+                    saveDir = Path.Combine(WorldManager.SavesFolderDir, "My World");
+                    Directory.CreateDirectory(saveDir);
+                    ServerConfig serverConfig = ServerConfig.Load(saveDir);
+                    Log.Debug($"No save file was found, creating a new one...");
+                }
+
+            }
+
+            return ServerConfig.Load(saveDir);
+        }
+
         public void Save()
         {
             if (IsSaving)

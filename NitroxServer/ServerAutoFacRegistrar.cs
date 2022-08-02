@@ -1,8 +1,4 @@
 ﻿global using NitroxModel.Logger;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Reflection;
 using Autofac;
 using NitroxModel.Core;
@@ -14,7 +10,6 @@ using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Processor;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Entities;
-using NitroxServer.Serialization;
 using NitroxServer.Serialization.Upgrade;
 using NitroxServer.Serialization.World;
 
@@ -33,50 +28,7 @@ namespace NitroxServer
 
         private static void RegisterCoreDependencies(ContainerBuilder containerBuilder)
         {
-            containerBuilder.Register(c =>
-            {
-                string saveDir = null;
-                foreach (string arg in Environment.GetCommandLineArgs())
-                {
-                    if (arg.StartsWith(WorldManager.SavesFolderDir, StringComparison.OrdinalIgnoreCase) && Directory.Exists(arg))
-                    {
-                        saveDir = arg;
-                        break;
-                    }
-                }
-                if (saveDir == null)
-                {
-                    // Check if there are any save files
-                    IEnumerable<WorldManager.Listing> WorldList = WorldManager.GetSaves();
-                    if (WorldList.Any())
-                    {
-                        // Get last save file used
-                        string LastSaveAccessed = WorldList.ElementAtOrDefault(0).WorldSaveDir;
-                        if (WorldList.Count() > 1)
-                        {
-                            for (int i = 1; i < WorldList.Count(); i++)
-                            {
-                                if (File.GetLastWriteTime(Path.Combine(WorldList.ElementAtOrDefault(i).WorldSaveDir, "WorldData.json")) > File.GetLastWriteTime(LastSaveAccessed))
-                                {
-                                    LastSaveAccessed = WorldList.ElementAtOrDefault(i).WorldSaveDir;
-                                }
-                            }
-                        }
-                        saveDir = LastSaveAccessed;
-                    }
-                    else
-                    {
-                        // Create new save file
-                        saveDir = Path.Combine(WorldManager.SavesFolderDir, "My World");
-                        Directory.CreateDirectory(saveDir);
-                        ServerConfig serverConfig = ServerConfig.Load(saveDir);
-                        Log.Debug($"No save file was found, creating a new one...");
-                    }
-
-                }
-
-                return ServerConfig.Load(saveDir);
-            }).SingleInstance();
+            containerBuilder.Register(c => Server.ServerStart()).SingleInstance();
             containerBuilder.RegisterType<Server>().SingleInstance();
             containerBuilder.RegisterType<PlayerManager>().SingleInstance();
             containerBuilder.RegisterType<DefaultServerPacketProcessor>().InstancePerLifetimeScope();
