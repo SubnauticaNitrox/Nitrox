@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Windows;
 using NitroxModel.Helper;
 using NitroxModel.Server;
@@ -157,7 +156,7 @@ public static class WorldManager
             return false;
         }
 
-        if (!File.Exists(Path.Combine(saveFileDirectory, $"Version.json"))/* && !File.Exists(Path.Combine(saveFileDirectory, $"Version.nitrox"))*/)
+        if (!File.Exists(Path.Combine(saveFileDirectory, $"Version.json")))
         {
             return false;
         }
