@@ -30,7 +30,7 @@ namespace NitroxLauncher.Pages
         private bool IsInSettings { get; set; }
 
         private string SelectedWorldDirectory { get; set; }
-        private string WorldCurrentlyUsed { get; set; }
+        private string WorldDirCurrentlyUsed { get; set; }
         private string ImportedWorldName { get; set; }
         private string SelectedWorldImportDirectory { get; set; }
         private string SelectedServerCfgImportDirectory { get; set; }
@@ -82,20 +82,20 @@ namespace NitroxLauncher.Pages
                 else if (RBCreative.IsChecked == true) { c.GameMode = ServerGameMode.CREATIVE; }
                 else if (RBHardcore.IsChecked == true) { c.GameMode = ServerGameMode.HARDCORE; }
 
-                c.DisableConsole = !(bool)CBCheats.IsChecked;
+                c.DisableConsole = !CBCheats.IsChecked ?? c.DisableConsole;
                 c.MaxConnections = Convert.ToInt32(TBMaxPlayerCap.Text);
                 if (CBBDefaultPerms.SelectedIndex == 0) { c.DefaultPlayerPerm = Perms.PLAYER; }
                 else if (CBBDefaultPerms.SelectedIndex == 1) { c.DefaultPlayerPerm = Perms.MODERATOR; }
                 else if (CBBDefaultPerms.SelectedIndex == 2) { c.DefaultPlayerPerm = Perms.ADMIN; }
 
-                c.CreateFullEntityCache = (bool)CBCreateFullEntityCache.IsChecked;
-                c.DisableAutoSave = !(bool)CBAutoSave.IsChecked;
-                c.AutoPortForward = (bool)CBAutoPortForward.IsChecked;
+                c.CreateFullEntityCache = CBCreateFullEntityCache.IsChecked ?? c.CreateFullEntityCache;
+                c.DisableAutoSave = !CBAutoSave.IsChecked ?? c.DisableAutoSave;
+                c.AutoPortForward = CBAutoPortForward.IsChecked ?? c.AutoPortForward;
                 c.SaveInterval = Convert.ToInt32(TBSaveInterval.Text)*1000;  // Convert seconds to milliseconds
                 if ((bool)CBEnableJoinPassword.IsChecked) { c.ServerPassword = TBJoinPassword.Text; }
                 else { c.ServerPassword = string.Empty; }
                 c.ServerPort = Convert.ToInt32(TBWorldServerPort.Text);
-                c.LANDiscoveryEnabled = (bool)CBLanDiscovery.IsChecked;
+                c.LANDiscoveryEnabled = CBLanDiscovery.IsChecked ?? c.LANDiscoveryEnabled;
             });
 
         }
@@ -207,7 +207,7 @@ namespace NitroxLauncher.Pages
         // World management
         private void SelectedWorldSettings_Click(object sender, RoutedEventArgs e)
         {
-            if (LauncherLogic.Server.IsServerRunning && WorldCurrentlyUsed == WorldManager.GetSaves().ElementAtOrDefault(WorldListingContainer.SelectedIndex)?.WorldSaveDir)
+            if (LauncherLogic.Server.IsServerRunning && WorldDirCurrentlyUsed == WorldManager.GetSaves().ElementAtOrDefault(WorldListingContainer.SelectedIndex)?.WorldSaveDir)
             {
                 LauncherNotifier.Error("This world is currently being used. Stop the server to edit the settings of this world");
                 return;
@@ -234,11 +234,11 @@ namespace NitroxLauncher.Pages
             WorldSelectedAnimationStoryboard.Begin();
         }
 
-        // Restore Backup Button(WIP)
-        //private void RestoreBackup_Click(object sender, RoutedEventArgs e)
-        //{
-
-        //}
+        // Restore Backup Button (TODO)
+        private void RestoreBackup_Click(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
 
         private void DeleteWorld_Click(object sender, RoutedEventArgs e)
         {
@@ -247,7 +247,7 @@ namespace NitroxLauncher.Pages
                 SelectedWorldDirectory = WorldManager.GetSaves().ElementAtOrDefault(WorldListingContainer.SelectedIndex)?.WorldSaveDir;
             }
             
-            if (LauncherLogic.Server.IsServerRunning && WorldCurrentlyUsed == WorldManager.GetSaves().ElementAtOrDefault(WorldListingContainer.SelectedIndex)?.WorldSaveDir)
+            if (LauncherLogic.Server.IsServerRunning && WorldDirCurrentlyUsed == WorldManager.GetSaves().ElementAtOrDefault(WorldListingContainer.SelectedIndex)?.WorldSaveDir)
             {
                 LauncherNotifier.Error("This world is currently being used. Stop the server to delete this world");
                 return;
@@ -547,10 +547,12 @@ namespace NitroxLauncher.Pages
         }
 
         // TODO
-        //private void ViewModsPlugins_Click(object sender, RoutedEventArgs e)
-        //{
-        //    // Redirect user to the "Mods" tab of the launcher (for future reference if mod support is added) so that they can enable/disable mods
-        //}
+        private void ViewModsPlugins_Click(object sender, RoutedEventArgs e)
+        {
+            // Redirect user to the "Mods/Plugins" tab of the launcher (for future reference if mod support is added) so that they can enable/disable mods
+
+            throw new NotImplementedException();
+        }
 
         // Save File Import
         private void TBImportedWorldName_Input(object sender, KeyboardFocusChangedEventArgs e)
@@ -831,7 +833,7 @@ namespace NitroxLauncher.Pages
                 File.SetLastWriteTime(Path.Combine(SelectedWorldDirectory, "WorldData.json"), DateTime.Now);
             }
             
-            WorldCurrentlyUsed = SelectedWorldDirectory;
+            WorldDirCurrentlyUsed = SelectedWorldDirectory;
             InitializeWorldListing();
         }
 

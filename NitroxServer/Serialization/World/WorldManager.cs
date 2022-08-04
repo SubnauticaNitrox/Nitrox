@@ -21,8 +21,8 @@ public static class WorldManager
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            return;
+            Log.Error(ex, "Couldn't create \"saves\" folder");
+            throw new Exception(ex.ToString());
         }
     }
 

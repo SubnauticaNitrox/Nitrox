@@ -633,7 +633,7 @@
                                                         Background="{x:Null}" BorderBrush="{x:Null}"
                                                         Margin="13,4,13,4" SelectionBrush="#FF007BFF"
                                                         VerticalAlignment="Center" BorderThickness="0"
-                                                        CaretBrush="White" Width="250" MaxLength="25" Text="WorldName" LostKeyboardFocus="TBWorldName_Input">
+                                                        CaretBrush="White" Width="250" MaxLength="44" Text="WorldName" LostKeyboardFocus="TBWorldName_Input">
                                                     </TextBox>
                                                 </Border>
                                             </StackPanel>

@@ -78,7 +78,7 @@ namespace NitroxServer
             return builder.ToString();
         }
 
-        public static ServerConfig ServerStart()
+        public static ServerConfig ServerStartHandler()
         {
             string saveDir = null;
             foreach (string arg in Environment.GetCommandLineArgs())

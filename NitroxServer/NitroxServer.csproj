@@ -14,7 +14,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Reference Include="PresentationFramework" />
       <Reference Include="protobuf-net, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
         <HintPath>..\Nitrox.Assets.Subnautica\protobuf-net.dll</HintPath>
       </Reference>
