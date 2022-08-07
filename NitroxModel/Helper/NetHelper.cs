@@ -15,8 +15,7 @@ namespace NitroxModel.Helper
 {
     public static class NetHelper
     {
-        private static readonly ReadOnlyCollection<string> privateNetworks =
-            new(new[]
+        private static readonly string[] privateNetworks =
             {
                 "10.0.0.0/8", 
                 "127.0.0.0/8", 
@@ -24,7 +23,7 @@ namespace NitroxModel.Helper
                 "192.0.0.0/24 ", 
                 "192.168.0.0/16", 
                 "198.18.0.0/15",
-            });
+            };
 
         private static IPAddress wanIpCache;
         private static IPAddress lanIpCache;
