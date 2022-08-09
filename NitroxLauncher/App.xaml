@@ -29,7 +29,7 @@
             <pages:CommunityPage x:Key="CommunityPage" Background="#000000"/>
             <pages:BlogPage x:Key="BlogPage" Background="#000000"/>
             <pages:UpdatePage x:Key="UpdatePage" Background="#000000"/>
-            <pages:LibraryPage x:Key="LibraryPage" Background="#000000"/>
+            <pages:FAQPage x:Key="FAQPage" Background="#000000"/>
             <pages:TroubleshootPage x:Key="TroubleshootPage" Background="#000000"/>
 
             <!-- Styles -->
@@ -215,6 +215,8 @@
                     </Setter.Value>
                 </Setter>
             </Style>
+
+            
 
             <ControlTemplate x:Key="ScrollViewerMainframe" TargetType="{x:Type ScrollViewer}">
                 <Grid x:Name="Grid" Background="{TemplateBinding Background}" Margin="0">

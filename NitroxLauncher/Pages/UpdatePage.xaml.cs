@@ -21,7 +21,7 @@ namespace NitroxLauncher.Pages
 
             Changelogs.ItemsSource = nitroxChangelogs;
 
-            Dispatcher?.BeginInvoke(new Action(async () =>
+            Dispatcher?.InvokeAsync(async () =>
             {
                 try
                 {
@@ -36,7 +36,7 @@ namespace NitroxLauncher.Pages
                 {
                     Log.Error(ex, "Error while trying to display nitrox changelogs");
                 }
-            }));
+            });
 
             Loaded += (s, e) =>
             {

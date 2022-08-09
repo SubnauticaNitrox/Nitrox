@@ -14,7 +14,7 @@ namespace NitroxLauncher.Pages
 {
     public partial class TroubleshootPage : PageBase
     {
-        private CancellationTokenSource cancelSource = new();
+        private DispatcherOperation dispatcherOperation;
 
         public static readonly TroubleshootModule Firewall = new FirewallModule();
         public static readonly TroubleshootModule Network = new NetworkModule();
@@ -64,7 +64,7 @@ namespace NitroxLauncher.Pages
             button.Visibility = Visibility.Hidden;
             button.IsEnabled = false;
 
-            Dispatcher.InvokeAsync(() =>
+            dispatcherOperation = Dispatcher.InvokeAsync(new Action(() =>
             {
                 Button_Cancel.Visibility = Visibility.Visible;
                 Button_Cancel.IsEnabled = true;
@@ -82,11 +82,12 @@ namespace NitroxLauncher.Pages
                     Button_Start.Visibility = Visibility.Visible;
                     Button_Start.IsEnabled = true;
                 }
-                catch (OperationCanceledException)
+                catch (Exception)
                 {
                     LauncherNotifier.Error("Unable to launch diagnostic");
+                    dispatcherOperation.Abort();
                 }
-            }, DispatcherPriority.Normal, cancelSource.Token);
+            }));
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
@@ -113,8 +114,7 @@ namespace NitroxLauncher.Pages
             Run_State.Text = "";
             Run_Modules.Text = "Cancel";
 
-            cancelSource.Cancel();
-            cancelSource = new CancellationTokenSource();
+            dispatcherOperation?.Abort();
 
             Button_Start.Visibility = Visibility.Visible;
             Button_Start.IsEnabled = true;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using System.Threading;
 using NitroxLauncher.Models.Troubleshoot.Abstract;
 using NitroxLauncher.Models.Utils;
 using NitroxModel;
@@ -23,6 +24,7 @@ namespace NitroxLauncher.Models.Troubleshoot
 
         protected override bool Check()
         {
+            Thread.Sleep(5000);
             int steps = 0;
 
             try
