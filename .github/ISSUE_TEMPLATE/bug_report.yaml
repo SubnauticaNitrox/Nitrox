@@ -34,7 +34,7 @@ body:
   - type: dropdown
     id: store_type
     attributes:
-      label: On which platform did you bought Subnautica?
+      label: On which platform did you buy Subnautica?
       description: Please select your platform/store with which you are normally starting Subnautica.
       options:
         - Steam
