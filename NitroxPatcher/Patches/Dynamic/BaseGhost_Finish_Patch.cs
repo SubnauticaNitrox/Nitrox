@@ -29,7 +29,7 @@ namespace NitroxPatcher.Patches.Dynamic
                      * TransientLocalObjectManager.Add(TransientLocalObjectManager.TransientObjectType.BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT, gameObject);
                      */
                     yield return new CodeInstruction(OpCodes.Ldc_I4_1);
-                    yield return original.Ldloc<GameObject>(1);
+                    yield return original.Ldloc<GameObject>(0);
                     yield return new CodeInstruction(OpCodes.Call, Reflect.Method(() => Add(default(TransientObjectType), default(object))));
                 }
             }

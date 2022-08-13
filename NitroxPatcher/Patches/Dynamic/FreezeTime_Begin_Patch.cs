@@ -10,7 +10,7 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class FreezeTime_Begin_Patch : NitroxPatch, IDynamicPatch
     {
-        private static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => FreezeTime.Begin(default(string), default(bool)));
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => FreezeTime.Begin(default(FreezeTime.Id)));
 
         // We don't want to prevent from freezing the game if the opened modal wants to freeze the game
         public static bool Prefix(string userId)

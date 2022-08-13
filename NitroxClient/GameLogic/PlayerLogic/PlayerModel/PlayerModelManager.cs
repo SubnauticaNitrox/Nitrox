@@ -96,7 +96,7 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel
         {
             uGUI_Pings pings = Object.FindObjectOfType<uGUI_Pings>();
 
-            pings.OnColor(ping.GetInstanceID(), player.PlayerSettings.PlayerColor.ToUnity());
+            pings.OnColor(ping.Id, player.PlayerSettings.PlayerColor.ToUnity());
         }
 
         private static IEnumerator ApplyPlayerColor(INitroxPlayer player, IEnumerable<IColorSwapManager> colorSwapManagers)

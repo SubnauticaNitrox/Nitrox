@@ -10,7 +10,7 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class Creature_ChooseBestAction_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Creature t) => t.ChooseBestAction());
+        public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Creature t) => t.ChooseBestAction(default(float)));
 
         private static CreatureAction previousAction;
 

@@ -1,11 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
 using NitroxModel.DataStructures.Util;
 using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation;
 using NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation.Metadata;
 using UnityEngine;
+using UnityEngine.ResourceManagement.AsyncOperations;
 using UWE;
+using static AddressablesUtility;
 
 namespace NitroxClient.MonoBehaviours.Overrides
 {
@@ -54,7 +57,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 ghostModelPosition = Vector3.zero;
                 ghostModelRotation = Quaternion.identity;
                 ghostModelScale = Vector3.one;
-                renderers = MaterialExtensions.AssignMaterial(ghostModel, ghostStructureMaterial);
+                renderers = MaterialExtensions.AssignMaterial(ghostModel, ghostStructureMaterial, true);
                 InitBounds(ghostModel);
             }
             else
@@ -73,9 +76,12 @@ namespace NitroxClient.MonoBehaviours.Overrides
                     Object.Destroy(collider);
                 }
 
-                renderers = MaterialExtensions.AssignMaterial(ghostModel, ghostStructureMaterial);
-                SetupRenderers(ghostModel, Player.main.IsInSub());
-                CreatePowerPreview();
+                renderers = MaterialExtensions.AssignMaterial(ghostModel, ghostStructureMaterial, true);
+                string poweredPrefabName = CraftData.GetPoweredPrefabName(constructableTechType);
+                if (!string.IsNullOrEmpty(poweredPrefabName))
+                {
+                    CoroutineHost.StartCoroutine(CreatePowerPreviewAsync(ghostModel, poweredPrefabName));
+                }
                 InitBounds(prefab);
             }
         }
@@ -203,7 +209,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
             {
                 case BaseAddCorridorGhost corridor when builderMetadata is CorridorBuilderMetadata corridorRotationMetadata:
                 {
-                    corridor.rotation = corridorRotationMetadata.Rotation;
+                    Builder.lastRotation = corridorRotationMetadata.Rotation;
                     int corridorType = corridor.CalculateCorridorType();
                     corridor.ghostBase.SetCorridor(Int3.zero, corridorType, corridor.isGlass);
                     corridor.RebuildGhostGeometry();
@@ -211,8 +217,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 }
                 case BaseAddMapRoomGhost mapRoom when builderMetadata is MapRoomBuilderMetadata mapRoomRotationMetadata:
                 {
-                    mapRoom.cellType = (Base.CellType)mapRoomRotationMetadata.CellType;
-                    mapRoom.connectionMask = mapRoomRotationMetadata.ConnectionMask;
+                    Builder.lastRotation = mapRoomRotationMetadata.Rotation;
 
                     mapRoom.ghostBase.SetCell(Int3.zero, (Base.CellType)mapRoomRotationMetadata.CellType);
                     mapRoom.RebuildGhostGeometry();
@@ -234,7 +239,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
                     faceGhost.anchoredFace = face;
                 
                     Base.FaceType faceType = (Base.FaceType)baseModuleRotationMetadata.FaceType;
-                    faceGhost.ghostBase.SetFace(face, faceType);
+                    faceGhost.ghostBase.SetFaceType(face, faceType);
 
                     faceGhost.RebuildGhostGeometry();
                     break;
@@ -480,44 +485,38 @@ namespace NitroxClient.MonoBehaviours.Overrides
             Utils.SetLayerRecursively(gameObject, newLayer);
         }
 
-        private static void CreatePowerPreview()
+        private static IEnumerator CreatePowerPreviewAsync(GameObject ghostModel, string poweredPrefabName)
         {
-            GameObject gameObject = null;
-            string poweredPrefabName = CraftData.GetPoweredPrefabName(constructableTechType);
-            if (poweredPrefabName != string.Empty)
+            AsyncOperationHandle<GameObject> loadRequest = AddressablesUtility.LoadAsync<GameObject>(poweredPrefabName);
+            yield return loadRequest;
+            GameObject result = loadRequest.Result;
+            if (result != null)
             {
-#pragma warning disable CS0618
-                //Ignore warning to use an async method when we need sync.
-                gameObject = PrefabDatabase.GetPrefabForFilename(poweredPrefabName);
-#pragma warning restore CS0618
-            }
-
-            if (gameObject == null)
-            {
-                return;
-            }
-
-            PowerRelay component = gameObject.GetComponent<PowerRelay>();
-            if (component.powerFX != null && component.powerFX.attachPoint != null)
-            {
-                PowerFX powerFX = ghostModel.AddComponent<PowerFX>();
-                powerFX.attachPoint = new GameObject
+                PowerRelay component = result.GetComponent<PowerRelay>();
+                if (component.powerFX != null && component.powerFX.attachPoint != null)
                 {
-                    transform =
+                    ghostModel.AddComponent<PowerFX>().attachPoint = new GameObject
                     {
-                        parent = ghostModel.transform,
-                        localPosition = component.powerFX.attachPoint.localPosition
-                    }
-                }.transform;
+                        transform =
+                        {
+                            parent = ghostModel.transform,
+                            localPosition = component.powerFX.attachPoint.localPosition
+                        }
+                    }.transform;
+                }
+                PowerRelay powerRelay = ghostModel.AddComponent<PowerRelay>();
+                powerRelay.powerSystemPreviewPrefab = component.powerSystemPreviewPrefab;
+                powerRelay.maxOutboundDistance = component.maxOutboundDistance;
+                powerRelay.dontConnectToRelays = component.dontConnectToRelays;
+                if (component.internalPowerSource != null)
+                {
+                    PowerSource powerSource = ghostModel.AddComponent<PowerSource>();
+                    powerSource.maxPower = 0f;
+                    powerRelay.internalPowerSource = powerSource;
+                }
             }
-
-            PowerRelay powerRelay = ghostModel.AddComponent<PowerRelay>();
-            powerRelay.maxOutboundDistance = component.maxOutboundDistance;
-            powerRelay.dontConnectToRelays = component.dontConnectToRelays;
-            if (component.internalPowerSource != null)
-            {
-                powerRelay.internalPowerSource = ghostModel.AddComponent<PowerSource>();
-            }
+            AddressablesUtility.QueueRelease<GameObject>(ref loadRequest);
+            yield break;
         }
 
         public static Vector3 OverridePosition;

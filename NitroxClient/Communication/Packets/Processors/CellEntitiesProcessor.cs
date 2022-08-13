@@ -15,7 +15,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(CellEntities packet)
         {
-            entities.Spawn(packet.Entities);
+            entities.SpawnAsync(packet.Entities);
         }
     }
 }

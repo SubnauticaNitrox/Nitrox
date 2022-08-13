@@ -9,7 +9,7 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class Constructable_Deconstruct_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Constructable t) => t.Deconstruct());
+        public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Constructable t) => t.DeconstructAsync(default(IOut<bool>), default(IOut<string>)));
 
         public static void Postfix(Constructable __instance, bool __result)
         {

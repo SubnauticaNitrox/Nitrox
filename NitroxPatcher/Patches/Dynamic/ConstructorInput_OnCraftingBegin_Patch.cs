@@ -10,7 +10,9 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class ConstructorInput_OnCraftingBegin_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly MethodInfo TARGET_METHOD = Reflect.Method((ConstructorInput t) => t.OnCraftingBegin(default(TechType), default(float)));
+        public static readonly MethodInfo TARGET_METHOD_ORIGINAL = Reflect.Method((ConstructorInput t) => t.OnCraftingBeginAsync(default(TechType), default(float)));
+        public static readonly MethodInfo TARGET_METHOD = AccessTools.EnumeratorMoveNext(TARGET_METHOD_ORIGINAL);
+
 
         public static readonly OpCode INJECTION_OPCODE = OpCodes.Callvirt;
         public static readonly object INJECTION_OPERAND = Reflect.Method((Constructor t) => t.SendBuildBots(default(GameObject)));

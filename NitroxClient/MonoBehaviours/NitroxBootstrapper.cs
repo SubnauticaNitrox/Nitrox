@@ -25,7 +25,7 @@ namespace NitroxClient.MonoBehaviours
         private void EnableDeveloperFeatures()
         {
             Log.Info("Enabling developer console.");
-            DevConsole.disableConsole = false;
+            PlatformUtils.SetDevToolsEnabled(true);
             Application.runInBackground = true;
             Log.Info($"Unity run in background set to \"{Application.runInBackground}\"");
         }

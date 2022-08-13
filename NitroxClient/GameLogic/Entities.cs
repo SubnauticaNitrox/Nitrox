@@ -1,3 +1,4 @@
+﻿using System.Collections;
 using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Spawning;
@@ -62,7 +63,7 @@ namespace NitroxClient.GameLogic
             packetSender.Send(new EntitySpawnedByClient(entity));
         }
 
-        public void Spawn(List<Entity> entities)
+        public IEnumerator SpawnAsync(List<Entity> entities)
         {
             foreach (Entity entity in entities)
             {
@@ -78,16 +79,17 @@ namespace NitroxClient.GameLogic
                 }
                 else
                 {
+                    Optional<GameObject> parent = null;
                     try
                     {
-                        Optional<GameObject> parent = NitroxEntity.GetObjectFrom(entity.ParentId);
-                        Spawn(entity, parent);
-                        SpawnAnyPendingChildren(entity);
+                        parent = NitroxEntity.GetObjectFrom(entity.ParentId);
                     }
                     catch (OptionalEmptyException<GameObject> e)
                     {
-                        Log.Error($"Failed to spawn Entity {entity.Id}, a {entity.TechType}: {e.Message}");
+                        Log.Error($"Failed to get Entity {entity.Id}, a {entity.TechType}: {e.Message}");
                     }
+                    yield return SpawnAsync(entity, parent);
+                    yield return SpawnAnyPendingChildrenAsync(entity);
                 }
             }
         }
@@ -111,14 +113,17 @@ namespace NitroxClient.GameLogic
             return entityCell;
         }
 
-        private void Spawn(Entity entity, Optional<GameObject> parent)
+        private IEnumerator SpawnAsync(Entity entity, Optional<GameObject> parent)
         {
             alreadySpawnedIds.Add(entity.Id);
 
             EntityCell cellRoot = EnsureCell(entity);
 
             IEntitySpawner entitySpawner = entitySpawnerResolver.ResolveEntitySpawner(entity);
-            Optional<GameObject> gameObject = entitySpawner.Spawn(entity, parent, cellRoot);
+            TaskResult<Optional<GameObject>> gameObjectTaskResult = new TaskResult<Optional<GameObject>>();
+            yield return entitySpawner.SpawnAsync(entity, parent, cellRoot, gameObjectTaskResult);
+
+            Optional<GameObject> gameObject = gameObjectTaskResult.Get();
 
             if (!entitySpawner.SpawnsOwnChildren())
             {
@@ -126,13 +131,13 @@ namespace NitroxClient.GameLogic
                 {
                     if (!WasSpawnedByServer(childEntity.Id))
                     {
-                        Spawn(childEntity, gameObject);
+                        SpawnAsync(childEntity, gameObject);
                     }
                 }
             }
         }
 
-        private void SpawnAnyPendingChildren(Entity entity)
+        private IEnumerator SpawnAnyPendingChildrenAsync(Entity entity)
         {
             if (pendingParentEntitiesByParentId.TryGetValue(entity.Id, out List<Entity> pendingEntities))
             {
@@ -140,7 +145,7 @@ namespace NitroxClient.GameLogic
 
                 foreach (Entity child in pendingEntities)
                 {
-                    Spawn(entity, parent);
+                    yield return SpawnAsync(entity, parent);
                 }
 
                 pendingParentEntitiesByParentId.Remove(entity.Id);

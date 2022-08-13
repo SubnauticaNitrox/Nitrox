@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections;
+using System.IO;
 using System.Reflection;
 using UnityEngine;
 
@@ -36,12 +37,30 @@ namespace NitroxClient.GameLogic.Helper
 
             using (MemoryStream memoryStream = new MemoryStream(bytes))
             {
-                gameObject = Serializer.DeserializeObjectTree(memoryStream, 0);
+                CoroutineTask<GameObject> gameObjectTask = Serializer.DeserializeObjectTreeAsync(memoryStream, false, false, 0);
+                completeTask(gameObjectTask);
+                gameObject = gameObjectTask.GetResult();
             }
 
             BLOCK_HAND_PLACED_DESERIALIZATION = true;
 
             return gameObject;
+        }
+
+        // Since this class is used synchronously in so many places, we'll just exhaust the enumerator for now to retrieve the result.
+        private static void completeTask(IEnumerator gameObjectTask)
+        {
+            while (gameObjectTask.MoveNext())
+            {
+                if (gameObjectTask.Current is IEnumerator subroutine)
+                {
+                    completeTask(subroutine);
+                }
+                else if (gameObjectTask.Current is System.Object)
+                {
+                    return;
+                }
+            }
         }
 
         /// <summary>

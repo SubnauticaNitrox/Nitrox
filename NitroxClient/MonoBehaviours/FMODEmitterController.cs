@@ -58,7 +58,7 @@ namespace NitroxClient.MonoBehaviours
         }
 
         public void PlayCustomEmitter(string path) => customEmitters[path].AliveOrNull()?.Play();
-        public void ParamCustomEmitter(string path, int paramIndex, float value) => customEmitters[path].AliveOrNull()?.SetParameterValue(paramIndex, value);
+        public void ParamCustomEmitter(string path, string paramString, float value) => customEmitters[path].AliveOrNull()?.SetParameterValue(paramString, value);
         public void StopCustomEmitter(string path) => customEmitters[path].AliveOrNull()?.Stop();
 
         public void PlayStudioEmitter(string path) => studioEmitters[path].AliveOrNull()?.PlayUI();

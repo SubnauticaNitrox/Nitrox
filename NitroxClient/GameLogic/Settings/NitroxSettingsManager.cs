@@ -57,6 +57,7 @@ namespace NitroxClient.GameLogic.Settings
             public readonly float SliderMinValue;
             public readonly float SliderMaxValue;
             public readonly float SliderDefaultValue;
+            public readonly float SliderStep;
 
             // List specifics
             public readonly string[] ListItems;
@@ -74,11 +75,12 @@ namespace NitroxClient.GameLogic.Settings
             public Setting(string label, NitroxPref nitroxPref, UnityAction<bool> callback) : this(SettingType.TOGGLE, label, nitroxPref, callback) { }
 
             /// <summary>Constructor for a Slider setting</summary>
-            public Setting(string label, NitroxPref nitroxPref, UnityAction<float> callback, float sliderMinValue, float sliderMaxValue, float sliderDefaultValue) : this(SettingType.SLIDER, label, nitroxPref, callback)
+            public Setting(string label, NitroxPref nitroxPref, UnityAction<float> callback, float sliderMinValue, float sliderMaxValue, float sliderDefaultValue, float sliderStep) : this(SettingType.SLIDER, label, nitroxPref, callback)
             {
                 SliderMinValue = sliderMinValue;
                 SliderMaxValue = sliderMaxValue;
                 SliderDefaultValue = sliderDefaultValue;
+                SliderStep = sliderStep;
             }
 
             /// <summary>Constructor for a List setting</summary>

@@ -1,4 +1,5 @@
-﻿using NitroxModel.DataStructures.GameLogic;
+﻿using System.Collections;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using UnityEngine;
@@ -14,31 +15,39 @@ namespace NitroxClient.GameLogic.Spawning
             this.defaultSpawner = defaultSpawner;
         }
 
-        public Optional<GameObject> Spawn(Entity entity, Optional<GameObject> parent, EntityCell cellRoot)
+        public IEnumerator SpawnAsync(Entity entity, Optional<GameObject> parent, EntityCell cellRoot, TaskResult<Optional<GameObject>> result)
         {
-            Optional<GameObject> reefback = defaultSpawner.Spawn(entity, parent, cellRoot);
+            TaskResult<Optional<GameObject>> reefbackTaskResult = new();
+            yield return defaultSpawner.SpawnAsync(entity, parent, cellRoot, reefbackTaskResult);
+            Optional<GameObject> reefback = reefbackTaskResult.Get();
             if (!reefback.HasValue)
             {
-                return Optional.Empty;
+                result.Set(Optional.Empty);
+                yield break;
             }
             ReefbackLife life = reefback.Value.GetComponent<ReefbackLife>();
             if (life == null)
             {
-                return Optional.Empty;
+                result.Set(Optional.Empty);
+                yield break;
             }
 
             life.initialized = true;
             life.SpawnPlants();
             foreach (Entity childEntity in entity.ChildEntities)
             {
-                Optional<GameObject> child = defaultSpawner.Spawn(childEntity, reefback, cellRoot);
+                TaskResult<Optional<GameObject>> childTaskResult = new();
+                yield return defaultSpawner.SpawnAsync(childEntity, reefback, cellRoot, childTaskResult);
+
+                Optional<GameObject> child = childTaskResult.Get();
                 if (child.HasValue)
                 {
                     child.Value.AddComponent<ReefbackCreature>();
                 }
             }
 
-            return Optional.Empty;
+            result.Set(Optional.Empty);
+            yield break;
         }
 
         public bool SpawnsOwnChildren()

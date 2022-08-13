@@ -54,7 +54,9 @@ namespace NitroxPatcher.Patches.Dynamic
             }
             else
             {
-                HandReticle.main.SetInteractText("Another player is using this vehicle!");
+                //TODO: Check if this should be Hand
+                HandReticle.main.SetText(HandReticle.TextType.Hand, "Another player is using this vehicle!", false, GameInput.Button.None);
+                HandReticle.main.SetText(HandReticle.TextType.HandSubscript, string.Empty, false, GameInput.Button.None);
                 HandReticle.main.SetIcon(HandReticle.IconType.HandDeny, 1f);
                 context.Target.isValidHandTarget = false;
             }

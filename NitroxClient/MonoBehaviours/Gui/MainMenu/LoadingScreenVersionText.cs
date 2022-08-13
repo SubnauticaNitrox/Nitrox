@@ -1,4 +1,5 @@
 ﻿using NitroxModel.Helper;
+using TMPro;
 using UnityEngine;
 using UnityEngine.XR;
 
@@ -6,7 +7,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 {
     public class LoadingScreenVersionText
     {
-        private static GameObject loadingTextGameObject => uGUI.main.loading.loadingText.gameObject;
+        private static GameObject loadingTextGameObject => uGUI.main.confirmation.description.linkedTextComponent.gameObject;
 
         private static uGUI_TextFade loadingScreenWarning;
         private static uGUI_TextFade versionText;
@@ -24,7 +25,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
             uGUI_TextFade textFade = gameObject.GetComponent<uGUI_TextFade>();
             textFade.SetText(text);
-            textFade.SetAlignment(TextAnchor.UpperRight);
+            textFade.SetAlignment(TextAlignmentOptions.TopRight);
             textFade.FadeIn(1f, null);
 
             return textFade;

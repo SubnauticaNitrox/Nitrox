@@ -6,12 +6,21 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="HarmonyX" Version="2.5.4" />
+      <PackageReference Include="HarmonyX" Version="2.6.0" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\NitroxClient\NitroxClient.csproj" />
       <ProjectReference Include="..\NitroxModel-Subnautica\NitroxModel-Subnautica.csproj" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <Reference Include="FMODUnity">
+          <HintPath>$(GameManagedDir)\FMODUnity.dll</HintPath>
+        </Reference>
+        <Reference Include="Sentry">
+          <HintPath>$(GameManagedDir)\Sentry.dll</HintPath>
+        </Reference>
     </ItemGroup>
 
 </Project>

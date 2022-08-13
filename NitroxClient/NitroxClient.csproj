@@ -10,9 +10,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Reference Include="iTween">
-            <HintPath>$(GameManagedDir)\iTween.dll</HintPath>
-            <Private>false</Private>
+        <Reference Include="FMODUnity">
+          <HintPath>$(GameManagedDir)\FMODUnity.dll</HintPath>
         </Reference>
         <Reference Include="LitJson">
             <HintPath>$(GameManagedDir)\LitJson.dll</HintPath>
@@ -20,6 +19,12 @@
         </Reference>
         <Reference Include="protobuf-net, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
             <HintPath>..\Nitrox.Assets.Subnautica\protobuf-net.dll</HintPath>
+        </Reference>
+        <Reference Include="Unity.ResourceManager">
+          <HintPath>$(GameManagedDir)\Unity.ResourceManager.dll</HintPath>
+        </Reference>
+        <Reference Include="Unity.TextMeshPro">
+          <HintPath>$(GameManagedDir)\Unity.TextMeshPro.dll</HintPath>
         </Reference>
     </ItemGroup>
 

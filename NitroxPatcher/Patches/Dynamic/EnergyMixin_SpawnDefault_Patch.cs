@@ -6,7 +6,7 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     class EnergyMixin_SpawnDefault_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly MethodInfo TARGET_METHOD = Reflect.Method((EnergyMixin t) => t.SpawnDefault(default(float)));
+        public static readonly MethodInfo TARGET_METHOD = Reflect.Method((EnergyMixin t) => t.SpawnDefaultAsync(default(float), default(TaskResult<bool>)));
 
         public static bool Prefix(EnergyMixin __instance)
         {
