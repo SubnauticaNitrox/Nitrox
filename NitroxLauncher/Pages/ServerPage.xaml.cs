@@ -84,15 +84,22 @@ namespace NitroxLauncher.Pages
 
                 c.DisableConsole = !CBCheats.IsChecked ?? c.DisableConsole;
                 c.MaxConnections = Convert.ToInt32(TBMaxPlayerCap.Text);
-                if (CBBDefaultPerms.SelectedIndex == 0) { c.DefaultPlayerPerm = Perms.PLAYER; }
-                else if (CBBDefaultPerms.SelectedIndex == 1) { c.DefaultPlayerPerm = Perms.MODERATOR; }
-                else if (CBBDefaultPerms.SelectedIndex == 2) { c.DefaultPlayerPerm = Perms.ADMIN; }
+                c.DefaultPlayerPerm = CBBDefaultPerms.SelectedIndex switch
+                {
+                    0 => Perms.PLAYER,
+                    1 => Perms.MODERATOR,
+                    2 => Perms.ADMIN,
+                    _ => c.DefaultPlayerPerm
+                };
 
                 c.CreateFullEntityCache = CBCreateFullEntityCache.IsChecked ?? c.CreateFullEntityCache;
                 c.DisableAutoSave = !CBAutoSave.IsChecked ?? c.DisableAutoSave;
                 c.AutoPortForward = CBAutoPortForward.IsChecked ?? c.AutoPortForward;
                 c.SaveInterval = Convert.ToInt32(TBSaveInterval.Text)*1000;  // Convert seconds to milliseconds
-                if ((bool)CBEnableJoinPassword.IsChecked) { c.ServerPassword = TBJoinPassword.Text; }
+                if (CBEnableJoinPassword.IsChecked ?? false)
+                {
+                    c.ServerPassword = TBJoinPassword.Text;
+                }
                 else { c.ServerPassword = string.Empty; }
                 c.ServerPort = Convert.ToInt32(TBWorldServerPort.Text);
                 c.LANDiscoveryEnabled = CBLanDiscovery.IsChecked ?? c.LANDiscoveryEnabled;
@@ -107,16 +114,31 @@ namespace NitroxLauncher.Pages
             // Set the world settings values to the server.cfg values
             TBWorldName.Text = Path.GetFileName(SelectedWorldDirectory);
             TBWorldSeed.Text = Config.Seed;
-            if (Config.GameMode == ServerGameMode.FREEDOM) { RBFreedom.IsChecked = true; }
-            else if (Config.GameMode == ServerGameMode.SURVIVAL) { RBSurvival.IsChecked = true; }
-            else if (Config.GameMode == ServerGameMode.CREATIVE) { RBCreative.IsChecked = true; }
-            else if (Config.GameMode == ServerGameMode.HARDCORE) { RBHardcore.IsChecked = true; }
+            switch (Config.GameMode)
+            {
+                case ServerGameMode.FREEDOM:
+                    RBFreedom.IsChecked = true;
+                    break;
+                case ServerGameMode.SURVIVAL:
+                    RBSurvival.IsChecked = true;
+                    break;
+                case ServerGameMode.CREATIVE:
+                    RBCreative.IsChecked = true;
+                    break;
+                case ServerGameMode.HARDCORE:
+                    RBHardcore.IsChecked = true;
+                    break;
+            }
 
             CBCheats.IsChecked = !Config.DisableConsole;
             TBMaxPlayerCap.Text = Convert.ToString(Config.MaxConnections);
-            if (Config.DefaultPlayerPerm == Perms.PLAYER) { CBBDefaultPerms.SelectedIndex = 0; }
-            if (Config.DefaultPlayerPerm == Perms.MODERATOR) { CBBDefaultPerms.SelectedIndex = 1; }
-            if (Config.DefaultPlayerPerm == Perms.ADMIN) { CBBDefaultPerms.SelectedIndex = 2; }
+            CBBDefaultPerms.SelectedIndex = Config.DefaultPlayerPerm switch
+            {
+                Perms.PLAYER => 0,
+                Perms.MODERATOR => 1,
+                Perms.ADMIN => 2,
+                _ => CBBDefaultPerms.SelectedIndex
+            };
 
             CBCreateFullEntityCache.IsChecked = Config.CreateFullEntityCache;
             CBAutoSave.IsChecked = !Config.DisableAutoSave;
@@ -401,7 +423,6 @@ namespace NitroxLauncher.Pages
             }
 
             Config.Seed = TBWorldSeed.Text;
-            return;
         }
 
         private void TBMaxPlayerCap_Input(object sender, System.Windows.Input.KeyboardFocusChangedEventArgs e)
@@ -443,7 +464,7 @@ namespace NitroxLauncher.Pages
 
         private void CBEnableJoinPassword_Clicked(object sender, RoutedEventArgs e)
         {
-            if ((bool)CBEnableJoinPassword.IsChecked)
+            if (CBEnableJoinPassword.IsChecked ?? false)
             {
                 TBJoinPassword.Opacity = 1;
                 JoinPasswordTitle.Opacity = 1;
@@ -546,11 +567,9 @@ namespace NitroxLauncher.Pages
             Config.ServerPort = ServerPortNum;
         }
 
-        // TODO
+        // TODO: Redirect user to the "Mods/Plugins" tab of the launcher (for future reference if mod support is added) so that they can enable/disable mods
         private void ViewModsPlugins_Click(object sender, RoutedEventArgs e)
         {
-            // Redirect user to the "Mods/Plugins" tab of the launcher (for future reference if mod support is added) so that they can enable/disable mods
-
             throw new NotImplementedException();
         }
 
@@ -840,7 +859,7 @@ namespace NitroxLauncher.Pages
     }
 
     // OPTIONAL - Only used to view world listings in intellisense, in addition to the lines that are in the ListView definition in ServerPage.xaml
-    public class World_Listing
+    public class WorldListing
     {
         public string WorldName { get; set; }
         public string WorldGamemode { get; set; }
