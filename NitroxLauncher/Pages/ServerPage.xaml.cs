@@ -570,7 +570,7 @@ namespace NitroxLauncher.Pages
         }
 
         // Save File Import
-        private void TBImportedWorldName_Input(object sender, KeyboardFocusChangedEventArgs e)
+        private void TBImportedWorldName_Input(object sender, KeyboardFocusChangedEventArgs e) // UX TODO: Set this textbox to be the same as the original world name
         {
             TBImportedWorldName.Text = TBImportedWorldName.Text.TrimStart();
             TBImportedWorldName.Text = TBImportedWorldName.Text.TrimEnd();
@@ -816,7 +816,7 @@ namespace NitroxLauncher.Pages
             {
                 selectedWorldDirectory = WorldManager.GetSaves().ElementAtOrDefault(WorldListingContainer.SelectedIndex)?.WorldSaveDir ?? "";
 
-                if (!WorldManager.GetSaves().ElementAtOrDefault(WorldListingContainer.SelectedIndex).IsValidSave) // TODO: Handle world selection before starting the server for better UX
+                if (!WorldManager.GetSaves().ElementAtOrDefault(WorldListingContainer.SelectedIndex).IsValidSave) // UX TODO: Handle world selection before starting the server for better UX
                 {
                     LauncherNotifier.Error($"This save is an invalid version.");
                     return;
