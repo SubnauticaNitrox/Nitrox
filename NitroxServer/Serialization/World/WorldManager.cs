@@ -68,10 +68,10 @@ public static class WorldManager
                 }
 
                 // Change the paramaters here to define what save file versions are eligible for use/upgrade
-                bool IsValidVersion = true;
+                bool isValidVersion = true;
                 if (version < new Version(1, 6, 0, 0) || version > NitroxEnvironment.Version)
                 {
-                    IsValidVersion = false;
+                    isValidVersion = false;
                 }
 
                 savesCache.Add(new Listing
@@ -80,7 +80,7 @@ public static class WorldManager
                     WorldGamemode = Convert.ToString(serverConfig.GameMode),
                     WorldVersion = $"v{version}",
                     WorldSaveDir = folder,
-                    IsValidSave = IsValidVersion,
+                    IsValidSave = isValidVersion,
                     FileLastAccessed = fileLastAccessedTime
                 });
 

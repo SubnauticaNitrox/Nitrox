@@ -292,13 +292,13 @@
 
                                     <!-- OPTIONAL - View server listing buttons in Intellisense window -->
                                     <d:ListView.ItemsSource>
-                                        <x:Array Type="pages:World_Listing">
-                                            <pages:World_Listing WorldName = "Survival w/ friends" WorldGamemode = "Survival" WorldVersion = "v1.6.0.0" IsValidSave = "True"/>
-                                            <pages:World_Listing WorldName = "My World 1" WorldGamemode = "Freedom" WorldVersion = "v1.5.0.2" IsValidSave = "True"/>
-                                            <pages:World_Listing WorldName = "v1.7 pre-release test" WorldGamemode = "Freedom" WorldVersion = "v1.7.0.0" IsValidSave = "False"/>
-                                            <pages:World_Listing WorldName = "Old World" WorldGamemode = "Survival" WorldVersion = "v1.3.0.0" IsValidSave = "False"/>
-                                            <pages:World_Listing WorldName = "Creative Mode" WorldGamemode = "Creative" WorldVersion = "v1.6.0.0" IsValidSave = "True"/>
-                                            <pages:World_Listing WorldName = "v1.6.0.1 testing" WorldGamemode = "Freedom" WorldVersion = "v1.6.0.1" IsValidSave = "True"/>
+                                        <x:Array Type="pages:WorldListing">
+                                            <pages:WorldListing WorldName = "Survival w/ friends" WorldGamemode = "Survival" WorldVersion = "v1.6.0.0" IsValidSave = "True"/>
+                                            <pages:WorldListing WorldName = "My World 1" WorldGamemode = "Freedom" WorldVersion = "v1.5.0.2" IsValidSave = "True"/>
+                                            <pages:WorldListing WorldName = "v1.7 pre-release test" WorldGamemode = "Freedom" WorldVersion = "v1.7.0.0" IsValidSave = "False"/>
+                                            <pages:WorldListing WorldName = "Old World" WorldGamemode = "Survival" WorldVersion = "v1.3.0.0" IsValidSave = "False"/>
+                                            <pages:WorldListing WorldName = "Creative Mode" WorldGamemode = "Creative" WorldVersion = "v1.6.0.0" IsValidSave = "True"/>
+                                            <pages:WorldListing WorldName = "v1.6.0.1 testing" WorldGamemode = "Freedom" WorldVersion = "v1.6.0.1" IsValidSave = "True"/>
                                         </x:Array>
                                     </d:ListView.ItemsSource>
 
@@ -647,7 +647,7 @@
                                                         Foreground="#8A8A8A" TextAlignment="Left"
                                                         Background="{x:Null}" BorderBrush="{x:Null}"
                                                         Margin="13,4,13,4" SelectionBrush="#FF007BFF"
-                                                        VerticalAlignment="Center" BorderThickness="0" CaretBrush="White" Width="155" MaxLength="10" Text="WorldSeed" LostKeyboardFocus="TBWorldSeed_Input" IsReadOnly="{Binding IsNewWorld, FallbackValue=False, Mode=OneWay}"/>
+                                                        VerticalAlignment="Center" BorderThickness="0" CaretBrush="White" Width="155" MaxLength="10" Text="WorldSeed" LostKeyboardFocus="TBWorldSeed_Input" IsReadOnly="{Binding isNewWorld, FallbackValue=False, Mode=OneWay}"/>
                                                 </Border>
                                             </StackPanel>
                                         </Grid>
