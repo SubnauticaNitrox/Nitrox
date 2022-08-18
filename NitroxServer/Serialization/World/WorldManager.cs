@@ -69,7 +69,7 @@ public static class WorldManager
 
                 // Change the paramaters here to define what save file versions are eligible for use/upgrade
                 bool isValidVersion = true;
-                if (version < new Version(1, 6, 0, 0) || version > NitroxEnvironment.Version)
+                if (version < new Version(1, 6, 0, 1) || version > NitroxEnvironment.Version)
                 {
                     isValidVersion = false;
                 }

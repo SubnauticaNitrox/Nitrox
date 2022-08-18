@@ -818,7 +818,7 @@ namespace NitroxLauncher.Pages
 
                 if (!WorldManager.GetSaves().ElementAtOrDefault(WorldListingContainer.SelectedIndex).IsValidSave) // UX TODO: Handle world selection before starting the server for better UX
                 {
-                    LauncherNotifier.Error($"This save is an invalid version.");
+                    LauncherNotifier.Error($"This save is of an unsupported version of Nitrox.");
                     return;
                 }
                 else if (!Directory.Exists(WorldManager.GetSaves().ElementAtOrDefault(WorldListingContainer.SelectedIndex)?.WorldSaveDir))
