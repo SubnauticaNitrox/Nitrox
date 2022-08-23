@@ -8,13 +8,6 @@
     <ItemGroup>
         <PackageReference Include="Autofac" Version="4.9.4" />
         <PackageReference Include="LiteNetLib" Version="0.8.3.1" />
-        <PackageReference Include="Microsoft.CodeAnalysis" Version="4.2.0">
-          <PrivateAssets>all</PrivateAssets>
-        </PackageReference>
-        <PackageReference Include="Microsoft.Net.Compilers" Version="4.2.0">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
         <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
         <PackageReference Include="Mono.Nat" Version="3.0.2" />
         <PackageReference Include="Serilog" Version="2.10.0" />
