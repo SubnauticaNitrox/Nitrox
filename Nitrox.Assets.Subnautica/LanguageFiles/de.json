@@ -50,7 +50,7 @@
     "Nitrox_TeleportTo": "Zu {PLAYER} teleportieren",
     "Nitrox_TeleportToMe": "{PLAYER} zu mir teleportieren",
     "Nitrox_TeleportToMeQuestion": "{PLAYER} zu mir teleportieren?",
-    "Nitrox_TeleportToQuestion": "Zu {PLAYER} teleportieren?",
+    "Nitrox_TeleportToQuestion": "Zum {PLAYER} teleportieren?",
     "Nitrox_UnableToConnect": "Der Server kann unter folgender Adresse nicht erreicht werden:",
     "Nitrox_Unmute": "{PLAYER} laut schalten",
     "Nitrox_UnmuteQuestion": "{PLAYER} laut schalten?",
