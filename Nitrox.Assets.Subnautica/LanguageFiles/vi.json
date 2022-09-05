@@ -11,5 +11,6 @@
     "Nitrox_DiscordAccept": "Chấp nhận",
     "Nitrox_DiscordDecline": "Từ chối",
     "Nitrox_DiscordPressToFocus": "Bấm để mở khóa",
-    "Nitrox_DiscordRequestText": "yêu cầu tham gia server"
+    "Nitrox_DiscordRequestText": "yêu cầu tham gia server",
+    "Nitrox_FirewallInterfering": "Seems like your firewall settings are interfering"
 }
