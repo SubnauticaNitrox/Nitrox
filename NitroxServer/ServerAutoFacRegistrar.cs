@@ -10,7 +10,6 @@ using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Processor;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Entities;
-using NitroxServer.Serialization;
 using NitroxServer.Serialization.Upgrade;
 using NitroxServer.Serialization.World;
 
@@ -29,7 +28,7 @@ namespace NitroxServer
 
         private static void RegisterCoreDependencies(ContainerBuilder containerBuilder)
         {
-            containerBuilder.Register(c => ServerConfig.Load()).SingleInstance();
+            containerBuilder.Register(c => Server.ServerStartHandler()).SingleInstance();
             containerBuilder.RegisterType<Server>().SingleInstance();
             containerBuilder.RegisterType<PlayerManager>().SingleInstance();
             containerBuilder.RegisterType<DefaultServerPacketProcessor>().InstancePerLifetimeScope();

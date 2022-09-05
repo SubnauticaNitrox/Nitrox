@@ -28,6 +28,11 @@
       <ProjectReference Include="..\NitroxPatcher\NitroxPatcher.csproj" />
       <ProjectReference Include="..\NitroxServer-Subnautica\NitroxServer-Subnautica.csproj" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="Microsoft.VisualBasic" />
+      <Reference Include="PresentationFramework.Aero2" />
+    </ItemGroup>
     
     <!-- Move assets from Subnautica assets to launcher.
          TODO: Try fix this as a project reference to Nitrox.Assets.Subnautica that will copy the files on build automatically. -->

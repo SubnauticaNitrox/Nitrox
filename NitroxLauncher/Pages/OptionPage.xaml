@@ -6,7 +6,7 @@
                          xmlns:local="clr-namespace:NitroxLauncher.Models"
                          xmlns:converters="clr-namespace:NitroxLauncher.Models.Converters"
                          mc:Ignorable="d"
-                         d:DesignHeight="470" d:DesignWidth="719"
+                         d:DesignHeight="650" d:DesignWidth="719"
                          DataContext="{Binding RelativeSource={RelativeSource Self}}"
                          Title="OptionPage">
 
@@ -18,8 +18,9 @@
         <Grid Margin="32,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="106" />
-                <RowDefinition Height="200" />
-                <RowDefinition Height="200*" />
+                <RowDefinition Height="190" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="0">
@@ -45,7 +46,7 @@
                         </Grid.ColumnDefinitions>
 
                         <Image Grid.Column="0" Source="{Binding GamePlatform, Converter={converters:PlatformToIconConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, FallbackValue={StaticResource SubnauticaIcon}}"
-                               ToolTip="Welcome aboard captain !"
+                               ToolTip="Welcome aboard, Captain!"
                                Stretch="Uniform"
                                MaxHeight="50"
                                MaxWidth="64">
@@ -68,7 +69,7 @@
                 </Border>
             </StackPanel>
 
-            <StackPanel Grid.Row="2" Margin="0,22,0,0">
+            <StackPanel Grid.Row="2" Margin="0,20,0,0">
                 <TextBlock FontSize="20" Foreground="#7FFFFFFF" TextWrapping="Wrap" Margin="0" VerticalAlignment="Top" FontWeight="Bold" HorizontalAlignment="Left" Text="Subnautica Launch Arguments"/>
 
                 <TextBlock FontSize="12" Foreground="#FFFFFF" TextWrapping="Wrap" FontWeight="Regular" VerticalAlignment="Top" HorizontalAlignment="Left">
@@ -149,6 +150,32 @@
                                 Background="#FF007BFF" Width="120" Height="38" BorderBrush="#66FFFFFF"
                                 ToolTip="Save launch arguments" FontWeight="Bold" FontSize="14"
                                 Foreground="White" Margin="15,0,0,0" Content="Apply" />
+
+                    </Grid>
+                </Border>
+
+            </StackPanel>
+
+            <StackPanel Grid.Row="3" Margin="0,20,0,0">
+                <TextBlock FontSize="20" Foreground="#7FFFFFFF" TextWrapping="Wrap" Margin="0" VerticalAlignment="Top" FontWeight="Bold" HorizontalAlignment="Left" Text="Save File Location"/>
+
+                <TextBlock FontSize="12" Foreground="#FFFFFF" TextWrapping="Wrap" FontWeight="Regular" VerticalAlignment="Top" HorizontalAlignment="Left">
+                    <Run Text="This is the location where your save files are stored" />
+                </TextBlock>
+
+                <Border Margin="0,12,0,0" Padding="22 15" CornerRadius="12" Background="#151516">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="262*"/>
+                            <ColumnDefinition Width="108*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock x:Name="SaveFileLocationTextblock" FontSize="15" Foreground="#BFFFFFFF" VerticalAlignment="Center" Text="Unknown path"/>
+
+                        <Button Grid.Column="2" HorizontalAlignment="Right" Style="{StaticResource LargeButton}" Click="OnViewFolder_Click"
+                                Background="#FF007BFF" Width="120" Height="38" BorderBrush="#66FFFFFF"
+                                ToolTip="Open saves folder" FontWeight="Bold" FontSize="14"
+                                Foreground="White" Margin="15,0,0,0" Content="Open" />
 
                     </Grid>
                 </Border>
