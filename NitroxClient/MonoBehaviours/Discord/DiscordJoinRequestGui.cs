@@ -93,7 +93,7 @@ public class DiscordJoinRequestGui : uGUI_InputGroup
             avatar = ((DownloadHandlerTexture)standardAvatarUrl.downloadHandler).texture;
         }
 
-        profilePicture.sprite = Sprite.Create(avatar, new Rect(0, 0, 128, 128), new Vector2(0.5f, 0.5f));
+        profilePicture.sprite = Sprite.Create(avatar, new UnityEngine.Rect(0, 0, 128, 128), new Vector2(0.5f, 0.5f));
     }
 
     private IEnumerator OnRequestExpired()
