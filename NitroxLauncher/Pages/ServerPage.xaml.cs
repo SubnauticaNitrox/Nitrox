@@ -26,7 +26,7 @@ namespace NitroxLauncher.Pages
 
         public ServerConfig Config;
 
-        private bool isNewWorld { get; set; }
+        public bool IsNewWorld { get; private set; }
         private bool isInSettings { get; set; }
 
         private string selectedWorldDirectory { get; set; }
@@ -76,7 +76,7 @@ namespace NitroxLauncher.Pages
             Config.Update(selectedWorldDirectory, c =>
             {
                 c.SaveName = TBWorldName.Text;
-                if (isNewWorld) { c.Seed = TBWorldSeed.Text; }
+                if (IsNewWorld) { c.Seed = TBWorldSeed.Text; }
                 if (RBFreedom.IsChecked == true) { c.GameMode = ServerGameMode.FREEDOM; }
                 else if (RBSurvival.IsChecked == true) { c.GameMode = ServerGameMode.SURVIVAL; }
                 else if (RBCreative.IsChecked == true) { c.GameMode = ServerGameMode.CREATIVE; }
@@ -160,7 +160,7 @@ namespace NitroxLauncher.Pages
         public void AddWorld_Click(object sender, RoutedEventArgs e)
         {
             Log.Info($"Adding new world");
-            isNewWorld = true;
+            IsNewWorld = true;
             TBWorldSeed.IsReadOnly = false;
 
             ImportSaveBtnBorder.Opacity = 1;
@@ -181,7 +181,7 @@ namespace NitroxLauncher.Pages
         
         private void GoBack_Click(object sender, RoutedEventArgs e)
         {
-            if (!isNewWorld)
+            if (!IsNewWorld)
             {
                 selectedWorldDirectory = WorldManager.GetSaves().ElementAtOrDefault(WorldListingContainer.SelectedIndex)?.WorldSaveDir;
             }
@@ -195,7 +195,7 @@ namespace NitroxLauncher.Pages
             {
                 SaveConfigSettings();
                 InitializeWorldListing();
-                isNewWorld = false;
+                IsNewWorld = false;
                 isInSettings = false;
 
                 ImportSaveBtnBorder.Opacity = 0;
@@ -261,7 +261,7 @@ namespace NitroxLauncher.Pages
 
         private void DeleteWorld_Click(object sender, RoutedEventArgs e)
         {
-            if (!isNewWorld)
+            if (!IsNewWorld)
             {
                 selectedWorldDirectory = WorldManager.GetSaves().ElementAtOrDefault(WorldListingContainer.SelectedIndex)?.WorldSaveDir;
             }
@@ -294,11 +294,11 @@ namespace NitroxLauncher.Pages
 
         private void YesConfirmBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (!isNewWorld)
+            if (!IsNewWorld)
             {
                 selectedWorldDirectory = WorldManager.GetSaves().ElementAtOrDefault(WorldListingContainer.SelectedIndex)?.WorldSaveDir ?? "";
             }
-            isNewWorld = false;
+            IsNewWorld = false;
             
             try
             {
@@ -317,7 +317,7 @@ namespace NitroxLauncher.Pages
 
             if (isInSettings)
             {
-                isNewWorld = false;
+                IsNewWorld = false;
                 ImportSaveBtnBorder.Opacity = 0;
                 ImportSaveBtn.IsEnabled = false;
 

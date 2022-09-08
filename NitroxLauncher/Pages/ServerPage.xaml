@@ -647,7 +647,7 @@
                                                         Foreground="#8A8A8A" TextAlignment="Left"
                                                         Background="{x:Null}" BorderBrush="{x:Null}"
                                                         Margin="13,4,13,4" SelectionBrush="#FF007BFF"
-                                                        VerticalAlignment="Center" BorderThickness="0" CaretBrush="White" Width="155" MaxLength="10" Text="WorldSeed" LostKeyboardFocus="TBWorldSeed_Input" IsReadOnly="{Binding isNewWorld, FallbackValue=False, Mode=OneWay}"/>
+                                                        VerticalAlignment="Center" BorderThickness="0" CaretBrush="White" Width="155" MaxLength="10" Text="WorldSeed" LostKeyboardFocus="TBWorldSeed_Input" IsReadOnly="{Binding IsNewWorld, FallbackValue=False, Mode=OneWay}"/>
                                                 </Border>
                                             </StackPanel>
                                         </Grid>
