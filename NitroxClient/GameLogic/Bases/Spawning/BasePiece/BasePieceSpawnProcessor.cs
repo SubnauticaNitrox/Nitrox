@@ -6,6 +6,7 @@ using System.Reflection;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using UnityEngine;
+using UWE;
 
 namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
 {
@@ -73,8 +74,13 @@ namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
             }
         }
 
+        protected void DelayModuleDetection(Base latestBase, Int3 latestCell, GameObject finishedPiece)
+        {
+            latestBase.StartCoroutine(DelayedModuleDetection(latestBase, latestCell, finishedPiece));
+        }
+
         // Processors may be executed before the finished piece has entirely spawned
-        protected IEnumerator DelayModuleDetection(Base latestBase, Int3 latestCell, GameObject finishedPiece)
+        protected IEnumerator DelayedModuleDetection(Base latestBase, Int3 latestCell, GameObject finishedPiece)
         {
             if (!finishedPiece)
             {

@@ -28,7 +28,7 @@ namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
             // When reruning the spawn processor, the module will not be found at first so we need to delay its detection
             if (!bioReactorModule)
             {
-                latestBase.StartCoroutine(DelayModuleDetection(latestBase, latestCell, finishedPiece));
+                DelayModuleDetection(latestBase, latestCell, finishedPiece);
                 return;
             }
 

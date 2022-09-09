@@ -127,7 +127,6 @@ namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
                 pieces[index] = specificBasePieces[index - minIndex];
             }
             
-            i = 0;
             return pieces;
         }
     }

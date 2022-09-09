@@ -21,7 +21,7 @@ namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
         protected override void SpawnPostProcess(Base latestBase, Int3 latestCell, GameObject finishedPiece)
         {
             NitroxId mapRoomGeometryPieceId = NitroxEntity.GetId(finishedPiece);
-            GameObject mapRoomFunctionality = FindUntaggedMapRoomFunctionality(latestBase);
+            GameObject mapRoomFunctionality = FindMapRoomFunctionality(latestBase, finishedPiece);
 
             NitroxId mapRoomFunctionalityId = mapRoomGeometryPieceId.Increment();
             NitroxEntity.SetNewId(mapRoomFunctionality, mapRoomFunctionalityId);
@@ -31,13 +31,20 @@ namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
             NitroxEntity.SetNewId(mapRoomModules, mapRoomModulesId);
         }
 
-        private static GameObject FindUntaggedMapRoomFunctionality(Base latestBase)
+        private static GameObject FindMapRoomFunctionality(Base latestBase, GameObject finishedPiece)
         {
             foreach (Transform child in latestBase.transform)
             {
-                if (child.GetComponent<MapRoomFunctionality>() && !child.GetComponent<NitroxEntity>())
+                MapRoomFunctionality mapRoomFunctionality = child.GetComponent<MapRoomFunctionality>();
+                if (mapRoomFunctionality && !child.GetComponent<NitroxEntity>())
                 {
-                    return child.gameObject;
+                    // Because we lack a direct link between the piece and the MapRoomFunctionality, we need another way of associating them
+                    Int3 @int = latestBase.NormalizeCell(latestBase.WorldToGrid(mapRoomFunctionality.transform.position));
+                    Int3 current = latestBase.NormalizeCell(latestBase.WorldToGrid(finishedPiece.transform.position));
+                    if (@int == @current)
+                    {
+                        return child.gameObject;
+                    }
                 }
             }
             throw new ArgumentException($"Unable to locate recently built map room with {latestBase}");
