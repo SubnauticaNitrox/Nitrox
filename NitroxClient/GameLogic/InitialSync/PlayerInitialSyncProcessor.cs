@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxClient.MonoBehaviours;
+using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
@@ -21,25 +22,34 @@ namespace NitroxClient.GameLogic.InitialSync
 
         public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
         {
+            SetPlayerPermissions(packet.Permissions);
+            waitScreenItem.SetProgress(0.17f);
+            yield return null;
+
             SetPlayerGameObjectId(packet.PlayerGameObjectId);
-            waitScreenItem.SetProgress(0.2f);
+            waitScreenItem.SetProgress(0.33f);
             yield return null;
 
             AddStartingItemsToPlayer(packet.FirstTimeConnecting);
-            waitScreenItem.SetProgress(0.4f);
+            waitScreenItem.SetProgress(0.5f);
             yield return null;
 
             SetPlayerStats(packet.PlayerStatsData);
-            waitScreenItem.SetProgress(0.6f);
+            waitScreenItem.SetProgress(0.66f);
             yield return null;
 
             SetPlayerGameMode(packet.GameMode);
-            waitScreenItem.SetProgress(0.8f);
+            waitScreenItem.SetProgress(0.83f);
             yield return null;
 
             SetPlayerCompletedGoals(packet.CompletedGoals);
             waitScreenItem.SetProgress(1f);
             yield return null;
+        }
+
+        private void SetPlayerPermissions(Perms permissions)
+        {
+            NitroxServiceLocator.LocateService<LocalPlayer>().Permissions = permissions;
         }
 
         private void SetPlayerGameObjectId(NitroxId id)

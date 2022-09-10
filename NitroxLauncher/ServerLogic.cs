@@ -31,7 +31,7 @@ namespace NitroxLauncher
             serverProcess = null;
         }
 
-        internal Process StartServer(bool standalone)
+        internal Process StartServer(bool standalone, string saveDir)
         {
             if (IsServerRunning)
             {
@@ -50,6 +50,8 @@ namespace NitroxLauncher
                 startInfo.RedirectStandardInput = true;
                 startInfo.CreateNoWindow = true;
             }
+
+            startInfo.Arguments = $@"""{saveDir}""";
 
             serverProcess = Process.Start(startInfo);
             if (serverProcess != null)

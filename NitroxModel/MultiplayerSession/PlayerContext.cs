@@ -11,14 +11,16 @@ namespace NitroxModel.MultiplayerSession
         public NitroxId PlayerNitroxId { get; }
         public bool WasBrandNewPlayer { get; }
         public PlayerSettings PlayerSettings { get; }
+        public bool IsMuted { get; set; }
 
-        public PlayerContext(string playerName, ushort playerId, NitroxId playerNitroxId, bool wasBrandNewPlayer, PlayerSettings playerSettings)
+        public PlayerContext(string playerName, ushort playerId, NitroxId playerNitroxId, bool wasBrandNewPlayer, PlayerSettings playerSettings, bool isMuted)
         {
             PlayerName = playerName;
             PlayerId = playerId;
             PlayerNitroxId = playerNitroxId;
             WasBrandNewPlayer = wasBrandNewPlayer;
             PlayerSettings = playerSettings;
+            IsMuted = isMuted;
         }
 
         public override string ToString()

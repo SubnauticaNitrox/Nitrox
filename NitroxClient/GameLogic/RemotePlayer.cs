@@ -180,6 +180,7 @@ namespace NitroxClient.GameLogic
         {
             if (EscapePod != newEscapePod)
             {
+                SkyEnvironmentChanged.Broadcast(Body, newEscapePod);
                 if (newEscapePod)
                 {
                     Attach(newEscapePod.transform, true);
@@ -203,7 +204,7 @@ namespace NitroxClient.GameLogic
 
                     Detach();
                     ArmsController.SetWorldIKTarget(null, null);
-
+                    
                     Vehicle.GetComponent<MultiplayerVehicleControl>().Exit();
                 }
 
@@ -214,7 +215,18 @@ namespace NitroxClient.GameLogic
                     Attach(newVehicle.playerPosition.transform);
                     ArmsController.SetWorldIKTarget(newVehicle.leftHandPlug, newVehicle.rightHandPlug);
 
-                    newVehicle.GetComponent<MultiplayerVehicleControl>().Enter();
+                    // From here, a basic issue can happen.
+                    // When a vehicle is docked since we joined a game and another player undocks him before the local player does, no MultiplayerVehicleControl can be found on the vehicle because they are only created when receiving VehicleMovement packets
+                    // Therefore we need to make sure that the MultiplayerVehicleControl component exists before using it
+                    switch (newVehicle)
+                    {
+                        case SeaMoth:
+                            newVehicle.gameObject.EnsureComponent<MultiplayerSeaMoth>().Enter();
+                            break;
+                        case Exosuit:
+                            newVehicle.gameObject.EnsureComponent<MultiplayerExosuit>().Enter();
+                            break;
+                    }
                 }
 
                 RigidBody.isKinematic = newVehicle;

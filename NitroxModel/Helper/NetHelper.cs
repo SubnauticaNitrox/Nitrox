@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
@@ -13,6 +15,16 @@ namespace NitroxModel.Helper
 {
     public static class NetHelper
     {
+        private static readonly string[] privateNetworks =
+            {
+                "10.0.0.0/8", 
+                "127.0.0.0/8", 
+                "172.16.0.0/12", 
+                "192.0.0.0/24 ", 
+                "192.168.0.0/16", 
+                "198.18.0.0/15",
+            };
+
         private static IPAddress wanIpCache;
         private static IPAddress lanIpCache;
         private static readonly object wanIpLock = new();
@@ -69,7 +81,7 @@ namespace NitroxModel.Helper
 
             IPAddress ip = await NatHelper.GetExternalIpAsync();
 #if RELEASE
-            if (ip == null)
+            if (ip == null || ip.IsPrivate())
             {
                 Regex regex = new(@"(?:[0-2]??[0-9]{1,2}\.){3}[0-2]??[0-9]+", RegexOptions.Compiled);
                 string[] sites =
@@ -123,6 +135,32 @@ namespace NitroxModel.Helper
                 }
             }
             return null;
+        }
+
+        /// <summary>
+        ///     Returns true if the given IP address is reserved for private networks.
+        /// </summary>
+        public static bool IsPrivate(this IPAddress address)
+        {
+            static bool IsInRange(IPAddress ipAddress, string mask)
+            {
+                string[] parts = mask.Split('/');
+
+                int ipNum = BitConverter.ToInt32(ipAddress.GetAddressBytes(), 0);
+                int cidrAddress = BitConverter.ToInt32(IPAddress.Parse(parts[0]).GetAddressBytes(), 0);
+                int cidrMask = IPAddress.HostToNetworkOrder(-1 << (32 - int.Parse(parts[1])));
+
+                return (ipNum & cidrMask) == (cidrAddress & cidrMask);
+            }
+
+            foreach (string privateSubnet in privateNetworks)
+            {
+                if (IsInRange(address, privateSubnet))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

@@ -168,6 +168,20 @@ namespace NitroxClient.GameLogic
             }
         }
 
+        public void SetupChildrenIds(NitroxId id)
+        {
+            GameObject cyclops = NitroxEntity.RequireObjectFrom(id);
+            NitroxId vehicleDockingBayId = id.Increment();
+            if (cyclops.TryGetComponentInChildren(out VehicleDockingBay dockingBay))
+            {
+                NitroxEntity.SetNewId(dockingBay.gameObject, vehicleDockingBayId);
+            }
+            else
+            {
+                Log.Warn($"Didn't find a VehicleDockingBay in Cyclops {id}");
+            }
+        }
+
         public void ChangeSilentRunning(NitroxId id, bool isOn)
         {
             GameObject cyclops = NitroxEntity.RequireObjectFrom(id);
@@ -302,6 +316,7 @@ namespace NitroxClient.GameLogic
             SetFloodLighting(cyclopsModel.Id, cyclopsModel.FloodLightsOn);
             ToggleEngineState(cyclopsModel.Id, cyclopsModel.EngineState, false, true);
             ChangeEngineMode(cyclopsModel.Id, cyclopsModel.EngineMode);
+            SetupChildrenIds(cyclopsModel.Id);
         }
 
         // Will be called at a later, because it is needed that the modules are installed and may need power to not immediatly be shut off

@@ -17,6 +17,7 @@ using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UWE;
 
 namespace NitroxClient.MonoBehaviours
 {
@@ -161,7 +162,7 @@ namespace NitroxClient.MonoBehaviours
 
             LoadingScreenVersionText.DisableWarningText();
             DiscordClient.InitializeRPInGame(Main.multiplayerSession.AuthenticationContext.Username, remotePlayerManager.GetTotalPlayerCount(), Main.multiplayerSession.SessionPolicy.MaxConnections);
-            NitroxServiceLocator.LocateService<PlayerChatManager>().LoadChatKeyHint();
+            CoroutineHost.StartCoroutine(NitroxServiceLocator.LocateService<PlayerChatManager>().LoadChatKeyHint());
         }
 
         private void OnConsoleCommand_execute(NotificationCenter.Notification n)

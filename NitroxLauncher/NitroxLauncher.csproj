@@ -25,19 +25,13 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="Assets\Images\troubleshoot-icons\retry-2x.png" />
-      <None Remove="Assets\Images\troubleshoot-icons\state-ko-2x.png" />
-      <None Remove="Assets\Images\troubleshoot-icons\state-ok-2x.png" />
-      <None Remove="Assets\Images\troubleshoot-icons\state-pending-2x.png" />
-      <None Remove="Assets\Images\troubleshoot-icons\state-unknown-2x.png" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\NitroxPatcher\NitroxPatcher.csproj" />
       <ProjectReference Include="..\NitroxServer-Subnautica\NitroxServer-Subnautica.csproj" />
     </ItemGroup>
 
     <ItemGroup>
+      <Reference Include="Microsoft.VisualBasic" />
+      <Reference Include="PresentationFramework.Aero2" />
       <Reference Include="System.Management" />
     </ItemGroup>
     

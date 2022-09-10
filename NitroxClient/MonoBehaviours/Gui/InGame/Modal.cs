@@ -39,10 +39,12 @@ public abstract class Modal
 
     public bool FreezeGame { get; init; }
 
+    public float Transparency { get; init; }
+
     // Is useful for calling IngameMenu::OnDeselect() from a modal class (in Hide() for example)
     public bool IsAvoidableBypass = false;
 
-    public Modal(string yesButtonText = "YES", bool hideNoButton = true, string noButtonText = "NO", string modalText = "", bool isAvoidable = false, bool freezeGame = false)
+    public Modal(string yesButtonText = "YES", bool hideNoButton = true, string noButtonText = "NO", string modalText = "", bool isAvoidable = false, bool freezeGame = false, float transparency = 0.392f)
     {
         Type type = GetType();
         if (Modals.ContainsKey(type))
@@ -57,6 +59,7 @@ public abstract class Modal
         ModalText = modalText;
         IsAvoidable = isAvoidable;
         FreezeGame = freezeGame;
+        Transparency = transparency; // 0.392 is the default transparency for Subnautica's modal
 
         Log.Debug($"Registered Modal {SubWindowName} of type {type}");
         Modals.Add(type, this);
@@ -99,6 +102,11 @@ public abstract class Modal
     }
 
     /// <summary>
+    /// Called when this modal is deselected (only when pressing outside of the modal)
+    /// </summary>
+    public virtual void OnDeselect() { }
+
+    /// <summary>
     /// This creates the modal when showing it for the first time, you can't modify it afterwards
     /// </summary>
     private void InitSubWindow()
@@ -120,7 +128,9 @@ public abstract class Modal
 
             RectTransform messageTransform = modalSubWindow.FindChild("Header").GetComponent<RectTransform>();
             messageTransform.sizeDelta = new Vector2(700, 195);
-         }
+        }
+
+        modalSubWindow.GetComponent<Image>().color = Color.white.WithAlpha(Transparency);
 
         // Will happen either it's initialized or not
         UpdateModal();

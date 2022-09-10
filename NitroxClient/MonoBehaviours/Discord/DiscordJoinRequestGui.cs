@@ -1,9 +1,9 @@
-using System.Collections;
+﻿using System.Collections;
 using DiscordGameSDKWrapper;
-using NitroxClient.Unity.Helper;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+using static NitroxClient.Unity.Helper.AssetBundleLoader;
 
 namespace NitroxClient.MonoBehaviours.Discord;
 
@@ -22,34 +22,34 @@ public class DiscordJoinRequestGui : uGUI_InputGroup
     {
         user = requestingUser;
 
-        yield return AssetBundleLoader.LoadUIAsset("discordjoinrequest", false, guiGameObject =>
-        {
-            instance = guiGameObject.AddComponent<DiscordJoinRequestGui>();
+        yield return LoadUIAsset(NitroxAssetBundle.DISCORD_JOIN_REQUEST, false);
 
-            profilePicture = guiGameObject.FindChild("ProfilePicture").GetComponent<Image>();
+        GameObject guiGameObject = (GameObject)NitroxAssetBundle.DISCORD_JOIN_REQUEST.LoadedAssets[0];
 
-            pressToFocus = guiGameObject.FindChild("PressToFocus");
-            Text[] texts = pressToFocus.GetComponentsInChildren<Text>();
-            texts[0].text = Language.main.Get("Nitrox_DiscordPressToFocus");
-            texts[3].text = GameInput.GetBinding(GameInput.Device.Keyboard, (GameInput.Button)46, GameInput.BindingSet.Primary);
-            pressToFocus.SetActive(true);
+        instance = guiGameObject.AddComponent<DiscordJoinRequestGui>();
 
+        profilePicture = guiGameObject.FindChild("ProfilePicture").GetComponent<Image>();
 
-            pressButtons = guiGameObject.FindChild("PressButtons");
-            pressButtons.SetActive(false);
+        pressToFocus = guiGameObject.FindChild("PressToFocus");
+        Text[] texts = pressToFocus.GetComponentsInChildren<Text>();
+        texts[0].text = Language.main.Get("Nitrox_DiscordPressToFocus");
+        texts[3].text = GameInput.GetBinding(GameInput.Device.Keyboard, (GameInput.Button)46, GameInput.BindingSet.Primary);
+        pressToFocus.SetActive(true);
 
-            Text[] buttonTexts = pressButtons.GetComponentsInChildren<Text>(true);
-            buttonTexts[0].text = Language.main.Get("Nitrox_DiscordAccept");
-            buttonTexts[1].text = Language.main.Get("Nitrox_DiscordDecline");
+        pressButtons = guiGameObject.FindChild("PressButtons");
+        pressButtons.SetActive(false);
 
-            Button[] buttons = pressButtons.GetComponentsInChildren<Button>(true);
-            buttons[0].onClick.AddListener(instance.AcceptInvite);
-            buttons[1].onClick.AddListener(instance.DeclineInvite);
+        Text[] buttonTexts = pressButtons.GetComponentsInChildren<Text>(true);
+        buttonTexts[0].text = Language.main.Get("Nitrox_DiscordAccept");
+        buttonTexts[1].text = Language.main.Get("Nitrox_DiscordDecline");
 
-            Text[] userTexts = guiGameObject.FindChild("UpperText").GetComponentsInChildren<Text>();
-            userTexts[0].text = $"{user.Username}#{user.Discriminator}";
-            userTexts[1].text = Language.main.Get("Nitrox_DiscordRequestText");
-        });
+        Button[] buttons = pressButtons.GetComponentsInChildren<Button>(true);
+        buttons[0].onClick.AddListener(instance.AcceptInvite);
+        buttons[1].onClick.AddListener(instance.DeclineInvite);
+
+        Text[] userTexts = guiGameObject.FindChild("UpperText").GetComponentsInChildren<Text>();
+        userTexts[0].text = $"{user.Username}#{user.Discriminator}";
+        userTexts[1].text = Language.main.Get("Nitrox_DiscordRequestText");
 
         yield return LoadAvatar(user.Id, user.Avatar);
     }
@@ -85,7 +85,7 @@ public class DiscordJoinRequestGui : uGUI_InputGroup
 
         Texture2D avatar = ((DownloadHandlerTexture)avatarUrl.downloadHandler).texture;
 
-        if (avatar == null || avatar.height < 64)
+        if (!avatar || avatar.height < 64)
         {
             UnityWebRequest standardAvatarUrl = UnityWebRequestTexture.GetTexture("https://discordapp.com/assets/6debd47ed13483642cf09e832ed0bc1b.png");
             yield return standardAvatarUrl.SendWebRequest();
@@ -93,7 +93,7 @@ public class DiscordJoinRequestGui : uGUI_InputGroup
             avatar = ((DownloadHandlerTexture)standardAvatarUrl.downloadHandler).texture;
         }
 
-        profilePicture.sprite = Sprite.Create(avatar, new Rect(0, 0, 128, 128), new Vector2(0.5f, 0.5f));
+        profilePicture.sprite = Sprite.Create(avatar, new UnityEngine.Rect(0, 0, 128, 128), new Vector2(0.5f, 0.5f));
     }
 
     private IEnumerator OnRequestExpired()
