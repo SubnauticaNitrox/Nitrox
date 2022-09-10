@@ -89,16 +89,52 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 transform.position = PlacePosition;
                 transform.rotation = PlaceRotation;
 
-                bool flag;
+                bool geometryChanged = false;
+                bool result = false;
+                bool positionFound = false;
+
                 BaseGhost baseGhost = ghostModel.GetComponent<BaseGhost>();
-                bool flag2 = UpdatePlacement(baseGhost,GetAimTransform(), componentInParent.placeMaxDistance, out bool positionFound, out flag, componentInParent);
+
+                // When you try to build a hatch onto a MapRoom when it is already linked to something (on the other side), it will end up in a bug because this room works weirdly for parts directly built on it
+                // Therefore, this is a fix for both this issue and any other similar issue that would occur anywhere else.
+                // NB: This can only be a fix and works as a backup plan if the placement didn't work at first 
+                if (RotationMetadata.HasValue && RotationMetadata.Value is AnchoredFaceBuilderMetadata metadata && baseGhost is BaseAddFaceGhost faceGhost)
+                {
+                    // The issue happens inside BaseAddFaceGhost.UpdatePlacement, the face is wrongly detected by "targetBase.PickFace(camera, out face)" and it can't adjust itself with the following lines
+                    // Therefore, what we do is skip the whole "targetBase.CanSetFace" part because we consider that if the information of building this piece here was issued, then it is in fact possible
+
+                    // First we force the detection of targetBase which is only set when using UpdatePlacement
+                    result = UpdatePlacement(baseGhost, GetAimTransform(), componentInParent.placeMaxDistance, out positionFound, out geometryChanged, componentInParent);
+                    // We only want to apply the fix if the placement is not already valid and if we have a valid base
+                    if (!result)
+                    {
+                        if (faceGhost.targetBase)
+                        {
+                            Base.Face face = new(metadata.Cell.ToUnity(), (Base.Direction)metadata.Direction);
+                            face.cell += metadata.Anchor.ToUnity();
+                            // We just skip the first part of the code and run the rest, which is a part that can't be ignored
+                            result = ForceFaceGhostUpdatePlacement(faceGhost, face, out positionFound, out geometryChanged, componentInParent);
+                        }
+                        else
+                        {
+                            // With future plans, we may want to delete the part from here or try more things so that it doesn't corrupt the whole base
+                            Log.Warn("Couldn't find a valid target base for a ghost, it won't be placed correctly");
+                        }
+                    }
+                }
+
+                // We don't need to check it if we already know the placement is valid
+                if (!result)
+                {
+                    result = UpdatePlacement(baseGhost,GetAimTransform(), componentInParent.placeMaxDistance, out positionFound, out geometryChanged, componentInParent);
+                }
                 componentInParent.SetGhostVisible(positionFound);
 
-                if (flag2 && RotationMetadata.HasValue)
-                {                
+                if (result && RotationMetadata.HasValue)
+                {
                     ApplyRotationMetadata(baseGhost, RotationMetadata.Value);
                 }
-                if (flag)
+                if (geometryChanged)
                 {
                     renderers = MaterialExtensions.AssignMaterial(ghostModel, ghostStructureMaterial);
                     InitBounds(ghostModel);
@@ -110,23 +146,62 @@ namespace NitroxClient.MonoBehaviours.Overrides
             ghostModelTransform.localScale = ghostModelScale;
         }
 
+        /// <summary>
+        /// BaseAddFaceGhost.UpdatePlacement's code after the "targetBase.CanSetFace" block
+        /// </summary>
+        private static bool ForceFaceGhostUpdatePlacement(BaseAddFaceGhost faceGhost, Base.Face face, out bool positionFound, out bool geometryChanged, ConstructableBase ghostModelParentConstructableBase)
+        {
+            Int3 @int = faceGhost.targetBase.NormalizeCell(face.cell);
+            Base.CellType cell = faceGhost.targetBase.GetCell(@int);
+            Int3 v = Base.CellSize[(int)cell];
+            Int3.Bounds a = new Int3.Bounds(face.cell, face.cell);
+            Int3.Bounds b = new Int3.Bounds(@int, @int + v - 1);
+            Int3.Bounds bounds = Int3.Bounds.Union(a, b);
+            geometryChanged = faceGhost.UpdateSize(bounds.size);
+            Base.Face face2 = new Base.Face(face.cell - faceGhost.targetBase.GetAnchor(), face.direction);
+            if (faceGhost.anchoredFace == null || faceGhost.anchoredFace.Value != face2)
+            {
+                faceGhost.anchoredFace = new Base.Face?(face2);
+                faceGhost.ghostBase.CopyFrom(faceGhost.targetBase, bounds, bounds.mins * -1);
+                faceGhost.ghostBase.ClearMasks();
+                Int3 cell2 = face.cell - @int;
+                Base.Face face3 = new Base.Face(cell2, face.direction);
+                faceGhost.ghostBase.SetFaceMask(face3, true);
+                faceGhost.ghostBase.SetFace(face3, faceGhost.faceType);
+                faceGhost.RebuildGhostGeometry();
+                geometryChanged = true;
+            }
+            ghostModelParentConstructableBase.transform.position = faceGhost.targetBase.GridToWorld(@int);
+            ghostModelParentConstructableBase.transform.rotation = faceGhost.targetBase.transform.rotation;
+            positionFound = true;
+            foreach (Int3 cell3 in bounds)
+            {
+                if (faceGhost.targetBase.IsCellUnderConstruction(cell3))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         private static bool UpdatePlacement(BaseGhost baseGhost, Transform camera, float placeMaxDistance, out bool positionFound, out bool flag, ConstructableBase componentInParent)
         {
             bool flag2;
             switch (baseGhost)
             {
-                
-                
                 default:
                     flag2 = baseGhost.UpdatePlacement(camera, placeMaxDistance, out positionFound, out flag, componentInParent);
-                    break; 
+                    Log.Debug($"faceGhost: {positionFound}, {flag}");
+                    break;
             }
-            
+
+            Log.Debug($"Returned: {flag2}");
             return flag2;
         }
 
         private static void ApplyRotationMetadata(BaseGhost baseGhost, BuilderMetadata builderMetadata)
         {
+            Log.Debug($"Found BaseGhost of type: {baseGhost.GetType()}, {baseGhost}");
             switch (baseGhost)
             {
                 case BaseAddCorridorGhost corridor when builderMetadata is CorridorBuilderMetadata corridorRotationMetadata:
@@ -154,7 +229,12 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 }
                 case BaseAddFaceGhost faceGhost when builderMetadata is AnchoredFaceBuilderMetadata baseModuleRotationMetadata:
                 {
+                    Log.Debug($"Applying AnchoredFaceBuilderMetadata: {baseModuleRotationMetadata}");
                     Base.Face face = new(baseModuleRotationMetadata.Cell.ToUnity(), (Base.Direction)baseModuleRotationMetadata.Direction);
+                    if (faceGhost.targetBase.GetAnchor() != baseModuleRotationMetadata.Anchor.ToUnity())
+                    {
+                        face.cell += baseModuleRotationMetadata.Anchor.ToUnity();
+                    }
                     faceGhost.anchoredFace = face;
                 
                     Base.FaceType faceType = (Base.FaceType)baseModuleRotationMetadata.FaceType;
