@@ -191,17 +191,14 @@ namespace NitroxClient.MonoBehaviours.Overrides
             {
                 default:
                     flag2 = baseGhost.UpdatePlacement(camera, placeMaxDistance, out positionFound, out flag, componentInParent);
-                    Log.Debug($"faceGhost: {positionFound}, {flag}");
                     break;
             }
 
-            Log.Debug($"Returned: {flag2}");
             return flag2;
         }
 
         private static void ApplyRotationMetadata(BaseGhost baseGhost, BuilderMetadata builderMetadata)
         {
-            Log.Debug($"Found BaseGhost of type: {baseGhost.GetType()}, {baseGhost}");
             switch (baseGhost)
             {
                 case BaseAddCorridorGhost corridor when builderMetadata is CorridorBuilderMetadata corridorRotationMetadata:
@@ -229,7 +226,6 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 }
                 case BaseAddFaceGhost faceGhost when builderMetadata is AnchoredFaceBuilderMetadata baseModuleRotationMetadata:
                 {
-                    Log.Debug($"Applying AnchoredFaceBuilderMetadata: {baseModuleRotationMetadata}");
                     Base.Face face = new(baseModuleRotationMetadata.Cell.ToUnity(), (Base.Direction)baseModuleRotationMetadata.Direction);
                     if (faceGhost.targetBase.GetAnchor() != baseModuleRotationMetadata.Anchor.ToUnity())
                     {
