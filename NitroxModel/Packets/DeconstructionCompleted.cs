@@ -7,10 +7,12 @@ namespace NitroxModel.Packets
     public class DeconstructionCompleted : Packet
     {
         public NitroxId Id { get; }
+        public bool Absolute { get; }
 
-        public DeconstructionCompleted(NitroxId id)
+        public DeconstructionCompleted(NitroxId id, bool absolute = false)
         {
             Id = id;
+            Absolute = absolute;
         }
     }
 }
