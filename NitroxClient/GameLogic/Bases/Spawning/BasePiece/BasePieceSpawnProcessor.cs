@@ -87,6 +87,11 @@ namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
                 yield break;
             }
             yield return new WaitForSeconds(0.1f);
+            if (!latestBase || !finishedPiece)
+            {
+                // Happens that multiple delayed coroutine will be there at the same time so we just stop minding about them to let the newer do their job
+                yield break;
+            }
             SpawnPostProcess(latestBase, latestCell, finishedPiece);
         }
 
