@@ -61,3 +61,6 @@ We do not accept donations to the mod.  Those wishing to give money can do so he
 
 ### Why the name 'Nitrox'?
 Nitrox is an alternative air mixture, used by scuba divers, to achieve longer bottom times. As a mod, it will provide a new dimension of gameplay to extend your enjoyment.
+
+### Is this for cracked Nitrox?
+While this is nitrox for cracked, I recommend if your going to play this game a fair bit. you buy the game off steam please.
