@@ -6,7 +6,6 @@ using System.Reflection;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using UnityEngine;
-using UWE;
 
 namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
 {
@@ -57,7 +56,6 @@ namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
         {
             if (processorsByType.TryGetValue(techType, out BasePieceSpawnProcessor processor) && (!isReRun || processor.ShouldRerunSpawnProcessor))
             {
-                Log.Info($"Found custom BasePieceSpawnProcessor for {techType}");
                 processor.SpawnPostProcess(latestBase, latestCell, finishedPiece);
                 return true;
             }
