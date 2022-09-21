@@ -6,14 +6,13 @@ using System.Linq;
 using System.Windows;
 using NitroxModel.Helper;
 using NitroxModel.Platforms.OS.Shared;
+using NitroxModel.Server;
 
 namespace NitroxServer.Serialization.World;
 
 public static class WorldManager
 {
     public static readonly string SavesFolderDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", "saves");
-
-    public static readonly string[] WorldFiles = { "BaseData.json", "EntityData.json", "PlayerData.json", "Version.json", "WorldData.json" };
 
     public static readonly string ErrorLogName = "ErrorLog.txt";
 
@@ -28,8 +27,8 @@ public static class WorldManager
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            return;
+            Log.Error(ex, "Couldn't create \"saves\" folder");
+            throw new Exception(ex.ToString());
         }
     }
 
@@ -44,9 +43,8 @@ public static class WorldManager
         {
             try
             {
-                // Don't add the file to the list if it doesn't validate or contain a "server.cfg" file
-                string serverConfigFile = Path.Combine(folder, "server.cfg");
-                if (!ValidateSave(folder) || !File.Exists(serverConfigFile))
+                // Don't add the file to the list if it doesn't validate
+                if (!ValidateSave(folder))
                 {
                     continue;
                 }
@@ -54,16 +52,32 @@ public static class WorldManager
                 Version version;
                 ServerConfig serverConfig = ServerConfig.Load(folder);
 
-                using (FileStream stream = new(Path.Combine(folder, "Version.json"), FileMode.Open, FileAccess.Read, FileShare.Read))
+                string fileEnding = "json";
+                if (serverConfig.SerializerMode == ServerSerializerMode.PROTOBUF)
+                {
+                    fileEnding = "nitrox";
+                }
+
+                using (FileStream stream = new(Path.Combine(folder, $"Version.{fileEnding}"), FileMode.Open, FileAccess.Read, FileShare.Read))
                 {
                     version = new ServerJsonSerializer().Deserialize<SaveFileVersion>(stream)?.Version ?? NitroxEnvironment.Version;
                 }
 
-                // Change the paramaters here to define what save file versions are eligible for use/upgrade
-                bool IsValidVersion = true;
-                if (version < new Version(1, 6, 0, 0) || version > NitroxEnvironment.Version)
+                DateTime fileLastAccessedTime;
+                if (File.Exists(Path.Combine(folder, $"WorldData.{fileEnding}")))
                 {
-                    IsValidVersion = false;
+                    fileLastAccessedTime = File.GetLastWriteTime(Path.Combine(folder, $"WorldData.{fileEnding}"));
+                }
+                else
+                {
+                    fileLastAccessedTime = File.GetLastWriteTime(Path.Combine(folder, $"Version.{fileEnding}")); // This file was created when the save was created, so it can be used as the backup to get this write time if this is a new save (the WorldData file wouldn't exist)
+                }
+
+                // Change the paramaters here to define what save file versions are eligible for use/upgrade
+                bool isValidVersion = true;
+                if (version < new Version(1, 6, 0, 1) || version > NitroxEnvironment.Version)
+                {
+                    isValidVersion = false;
                 }
 
                 savesCache.Add(new Listing
@@ -72,8 +86,8 @@ public static class WorldManager
                     WorldGamemode = Convert.ToString(serverConfig.GameMode),
                     WorldVersion = $"v{version}",
                     WorldSaveDir = folder,
-                    IsValidSave = IsValidVersion,
-                    FileLastAccessed = File.GetLastWriteTime(Path.Combine(folder, $"WorldData.json"))
+                    IsValidSave = isValidVersion,
+                    FileLastAccessed = fileLastAccessedTime
                 });
 
                 // Set the server.cfg name value to the folder name
@@ -85,7 +99,7 @@ public static class WorldManager
             }
             catch
             {
-                Log.Error($"World could not be processed");
+                Log.Error($"World \"{folder}\" could not be processed");
             }
         }
         // Order listing based on FileLastAccessed time
@@ -123,29 +137,34 @@ public static class WorldManager
 
         ServerConfig serverConfig = ServerConfig.Load(saveDir);
 
-        foreach (string file in WorldFiles)
+        string fileEnding = "json";
+        if (serverConfig.SerializerMode == ServerSerializerMode.PROTOBUF)
         {
-            File.Create(Path.Combine(saveDir, file)).Close();
+            fileEnding = "nitrox";
         }
+        File.Create(Path.Combine(saveDir, $"Version.{fileEnding}")).Close();
 
         serverConfig.SaveName = name;
 
         return saveDir;
     }
 
-    public static bool ValidateSave(string saveFileDirectory)
+    public static bool ValidateSave(string saveFileDirectory, bool isImporting = false)
     {
-        // A save file is valid when it has all of the nested save file names in it
         if (!Directory.Exists(saveFileDirectory))
         {
             return false;
         }
-        foreach (string file in WorldFiles)
+
+        // A save file is valid when it has a server.cfg file in it (if not importing a file) and if it has at least a Version.(ext) save file in it
+        if (isImporting && !File.Exists(Path.Combine(saveFileDirectory, "server.cfg")))
         {
-            if (!File.Exists(Path.Combine(saveFileDirectory, file)))
-            {
-                return false;
-            }
+            return false;
+        }
+
+        if (!File.Exists(Path.Combine(saveFileDirectory, $"Version.json")))
+        {
+            return false;
         }
 
         return true;

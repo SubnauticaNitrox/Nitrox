@@ -38,10 +38,10 @@
     "Nitrox_StartServer": "Najpierw uruchom serwer aby dołączyć do swojego świata",
     "Nitrox_StreamerSettings": "Tryb Streamera",
     "Nitrox_SubmitPassword": "Potwierdź",
-    "Nitrox_SyncingWorld": "Synchronizacja świata",
+    "Nitrox_SyncingWorld": "Synchronizacja świata…",
     "Nitrox_UnableToConnect": "Nie można połączyć się ze zdalnym serwerem:",
     "Nitrox_Waiting": "Oczekiwanie w kolejce do dołączenia…",
     "Nitrox_WaitingPassword": "Oczekiwanie na wprowadzenie hasła do serwera…",
     "Nitrox_WaitingUserInput": "Oczekiwanie na dane od użytkownika…",
-    "Nitrox_WorldSettling": "Oczekiwanie na osadzenie świata"
+    "Nitrox_WorldSettling": "Oczekiwanie na osadzenie świata…"
 }

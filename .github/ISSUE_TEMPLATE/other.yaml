@@ -1,0 +1,13 @@
+name: Other
+description: Something else?
+title: "Please write an informative title"
+labels: []
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the issue
+      description: |
+        Please describe the issue you want to report in as much detail as possible.
+    validations:
+      required: true

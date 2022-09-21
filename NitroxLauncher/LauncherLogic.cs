@@ -197,7 +197,7 @@ namespace NitroxLauncher
 
             if (Config.IsPirated)
             {
-                throw new Exception("Aarrr ! Nitrox walked the plank :(");
+                throw new Exception("Aarrr! Nitrox walked the plank :(");
             }
 
 #if RELEASE

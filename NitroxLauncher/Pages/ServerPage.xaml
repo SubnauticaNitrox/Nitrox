@@ -267,7 +267,7 @@
                                 <Image Source="{StaticResource RefreshButton}" Stretch="Uniform"  Width="40" Height="40"/>
                             </Button>
 
-                            <TextBlock Grid.Column="1" Text="Your Worlds" Foreground="White" VerticalAlignment="Center" FontSize="30" HorizontalAlignment="Center" FontWeight="Bold"/>
+                            <TextBlock Grid.Column="1" Text="Your Worlds" Foreground="White" VerticalAlignment="Center" FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"/>
 
                             <Button Grid.Column="2" x:Name="AddWorldBtn" Click="AddWorld_Click" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="Add or import a new world">
                                 <Image Source="{StaticResource AddServerButton}" Stretch="Uniform"  Width="40" Height="40"/>
@@ -291,16 +291,16 @@
                                 <ListView Name="WorldListingContainer" Background="{x:Null}" BorderBrush="{x:Null}" Margin="5" HorizontalContentAlignment="Stretch" ScrollViewer.CanContentScroll="False">
 
                                     <!-- OPTIONAL - View server listing buttons in Intellisense window -->
-                                    <!--<d:ListView.ItemsSource>
-                                        <x:Array Type="pages:World_Listing">
-                                            <pages:World_Listing WorldName = "Survival w/ friends" WorldGamemode = "Survival" WorldVersion = "v1.6.0.0" IsValidSave = "True"/>
-                                            <pages:World_Listing WorldName = "My World 1" WorldGamemode = "Freedom" WorldVersion = "v1.5.0.2" IsValidSave = "True"/>
-                                            <pages:World_Listing WorldName = "v1.7 pre-release test" WorldGamemode = "Freedom" WorldVersion = "v1.7.0.0" IsValidSave = "False"/>
-                                            <pages:World_Listing WorldName = "Old World" WorldGamemode = "Survival" WorldVersion = "v1.3.0.0" IsValidSave = "False"/>
-                                            <pages:World_Listing WorldName = "Creative Mode" WorldGamemode = "Creative" WorldVersion = "v1.6.0.0" IsValidSave = "True"/>
-                                            <pages:World_Listing WorldName = "v1.6.0.1 testing" WorldGamemode = "Freedom" WorldVersion = "v1.6.0.1" IsValidSave = "True"/>
+                                    <d:ListView.ItemsSource>
+                                        <x:Array Type="pages:WorldListing">
+                                            <pages:WorldListing WorldName = "Survival w/ friends" WorldGamemode = "Survival" WorldVersion = "v1.6.0.0" IsValidSave = "True"/>
+                                            <pages:WorldListing WorldName = "My World 1" WorldGamemode = "Freedom" WorldVersion = "v1.5.0.2" IsValidSave = "True"/>
+                                            <pages:WorldListing WorldName = "v1.7 pre-release test" WorldGamemode = "Freedom" WorldVersion = "v1.7.0.0" IsValidSave = "False"/>
+                                            <pages:WorldListing WorldName = "Old World" WorldGamemode = "Survival" WorldVersion = "v1.3.0.0" IsValidSave = "False"/>
+                                            <pages:WorldListing WorldName = "Creative Mode" WorldGamemode = "Creative" WorldVersion = "v1.6.0.0" IsValidSave = "True"/>
+                                            <pages:WorldListing WorldName = "v1.6.0.1 testing" WorldGamemode = "Freedom" WorldVersion = "v1.6.0.1" IsValidSave = "True"/>
                                         </x:Array>
-                                    </d:ListView.ItemsSource>-->
+                                    </d:ListView.ItemsSource>
 
                                     <!-- Fix the Scroll Bar -->
                                     <ListView.Resources>
@@ -375,7 +375,7 @@
                                                     <Button x:Name="WorldSelectBtn" Click="StartServer_Click" Style="{StaticResource WorldListingButton}" ToolTip="Select this world" Foreground="White" Height="83" HorizontalAlignment="Stretch" Width="Auto" HorizontalContentAlignment="Stretch" IsEnabled="{Binding Path=IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}">
                                                         <DockPanel Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Button}}" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Button}}" VerticalAlignment="Center" HorizontalAlignment="Stretch">
                                                             <!-- World Name -->
-                                                            <TextBlock Grid.Column="0" FontSize="20" Foreground="White" Text="{Binding WorldName, Mode=OneTime}" VerticalAlignment="Center" HorizontalAlignment="Left"  Margin="20 0 0 0" MaxWidth="400"/>
+                                                            <TextBlock Grid.Column="0" FontSize="16" Foreground="White" Text="{Binding WorldName, Mode=OneTime}" VerticalAlignment="Center" HorizontalAlignment="Left"  Margin="20 0 0 0" MaxWidth="400"/>
 
                                                             <!-- World Data -->
                                                             <DockPanel Grid.Column="1" LastChildFill = "True" Margin="0 10 10 10" HorizontalAlignment="Right">
@@ -536,7 +536,7 @@
                                     <Image Source="{StaticResource GoBackButton}" Stretch="Uniform" Width="40" Height="40"/>
                                 </Button>
 
-                                <TextBlock Grid.Column="1" Text="World Settings" Foreground="White" VerticalAlignment="Center" FontSize="30" HorizontalAlignment="Center" FontWeight="Bold"/>
+                                <TextBlock Grid.Column="1" Text="World Settings" Foreground="White" VerticalAlignment="Center" FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"/>
 
                                 <!-- Import Save File button -->
                                 <Border x:Name="ImportSaveBtnBorder" Grid.Column="1" Grid.ColumnSpan="2" Background="#FF007BFF" CornerRadius="8" Width="150" HorizontalAlignment="Right" Margin="0 14" Opacity="0">
@@ -633,7 +633,7 @@
                                                         Background="{x:Null}" BorderBrush="{x:Null}"
                                                         Margin="13,4,13,4" SelectionBrush="#FF007BFF"
                                                         VerticalAlignment="Center" BorderThickness="0"
-                                                        CaretBrush="White" Width="250" MaxLength="25" Text="WorldName" LostKeyboardFocus="TBWorldName_Input">
+                                                        CaretBrush="White" Width="250" MaxLength="44" Text="WorldName" LostKeyboardFocus="TBWorldName_Input">
                                                     </TextBox>
                                                 </Border>
                                             </StackPanel>
@@ -868,7 +868,7 @@
                     <Grid Grid.Row="1">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
-                            <!--<ColumnDefinition Width="3*"/>-->
+                            <ColumnDefinition Width="3*"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 

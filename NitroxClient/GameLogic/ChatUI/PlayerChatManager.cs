@@ -2,11 +2,12 @@
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Settings;
 using NitroxClient.MonoBehaviours.Gui.Chat;
-using NitroxClient.Unity.Helper;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
 using UnityEngine;
 using UnityEngine.UI;
+using UWE;
+using static NitroxClient.Unity.Helper.AssetBundleLoader;
 
 namespace NitroxClient.GameLogic.ChatUI
 {
@@ -27,7 +28,7 @@ namespace NitroxClient.GameLogic.ChatUI
 
             if (NitroxEnvironment.IsNormal) //Testing would fail because it's trying to access runtime MonoBehaviours.
             {
-                Player.main.StartCoroutine(LoadChatLogAsset());
+                CoroutineHost.StartCoroutine(LoadChatLogAsset());
             }
         }
 
@@ -96,22 +97,20 @@ namespace NitroxClient.GameLogic.ChatUI
 
         private IEnumerator LoadChatLogAsset()
         {
-            yield return AssetBundleLoader.LoadUIAsset("chatlog", true, playerChatGameObject =>
-            {
-                playerChat = playerChatGameObject.AddComponent<PlayerChat>();
-            });
-
+            yield return LoadUIAsset(NitroxAssetBundle.CHAT_LOG, true);
+            
+            GameObject playerChatGameObject = (GameObject)NitroxAssetBundle.CHAT_LOG.LoadedAssets[0];
+            playerChat = playerChatGameObject.AddComponent<PlayerChat>();
+            
             yield return playerChat.SetupChatComponents();
         }
 
-        public void LoadChatKeyHint()
+        public IEnumerator LoadChatKeyHint()
         {
             if (!NitroxPrefs.ChatUsed.Value)
             {
-                Player.main.StartCoroutine(AssetBundleLoader.LoadUIAsset("chatkeyhint", false, chatKeyHintGameObject =>
-                {
-                    chatKeyHint = chatKeyHintGameObject;
-                }));
+                yield return LoadUIAsset(NitroxAssetBundle.CHAT_KEY_HINT, false);
+                chatKeyHint = NitroxAssetBundle.CHAT_KEY_HINT.LoadedAssets[0] as GameObject;
             }
         }
 
