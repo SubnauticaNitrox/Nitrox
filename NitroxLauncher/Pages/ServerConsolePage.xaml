@@ -10,8 +10,8 @@
                          Title="ServerConsolePage" Width="766" Height="592">
 
     <local:PageBase.Resources>
-        <BitmapImage x:Key="StopWhiteIcon" UriSource="pack://application:,,,/Images/material-design-icons/baseline_stop_white_24dp.png" />
-        <BitmapImage x:Key="SendWhiteIcon" UriSource="pack://application:,,,/Images/material-design-icons/baseline_send_white_24dp.png" />
+        <BitmapImage x:Key="StopWhiteIcon" UriSource="pack://application:,,,/Assets/Images/material-design-icons/baseline_stop_white_24dp.png" />
+        <BitmapImage x:Key="SendWhiteIcon" UriSource="pack://application:,,,/Assets/Images/material-design-icons/baseline_send_white_24dp.png" />
 
         <Style TargetType="{x:Type Button}">
             <Setter Property="OverridesDefaultStyle" Value="True" />

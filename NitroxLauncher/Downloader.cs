@@ -166,7 +166,7 @@ namespace NitroxLauncher
 
             try
             {
-                return await request.GetResponseAsync();
+                return await request.GetResponseAsync().ConfigureAwait(false);
             }
             catch (Exception ex)
             {

@@ -14,23 +14,23 @@
         Background="Black">
 
     <Window.Resources>
-        <BitmapImage x:Key="SidebarNitroxLogo" UriSource="pack://application:,,,/Images/nitroxLogo.png" />
+        <BitmapImage x:Key="SidebarNitroxLogo" UriSource="pack://application:,,,/Assets/Images/nitroxLogo.png" />
 
-        <BitmapImage x:Key="SideBarPlayIcon" UriSource="pack://application:,,,/Images/material-design-icons/play.png" />
-        <BitmapImage x:Key="SideBarServerIcon" UriSource="pack://application:,,,/Images/material-design-icons/server.png" />
-        <BitmapImage x:Key="SidebarLibraryIcon" UriSource="pack://application:,,,/Images/material-design-icons/library.png" />
+        <BitmapImage x:Key="SideBarPlayIcon" UriSource="pack://application:,,,/Assets/Images/material-design-icons/play.png" />
+        <BitmapImage x:Key="SideBarServerIcon" UriSource="pack://application:,,,/Assets/Images/material-design-icons/server.png" />
+        <BitmapImage x:Key="SidebarLibraryIcon" UriSource="pack://application:,,,/Assets/Images/material-design-icons/library.png" />
 
-        <BitmapImage x:Key="SidebarBlogIcon" UriSource="pack://application:,,,/Images/material-design-icons/blog.png" />
-        <BitmapImage x:Key="SidebarCommunityIcon" UriSource="pack://application:,,,/Images/material-design-icons/community.png" />
+        <BitmapImage x:Key="SidebarBlogIcon" UriSource="pack://application:,,,/Assets/Images/material-design-icons/blog.png" />
+        <BitmapImage x:Key="SidebarCommunityIcon" UriSource="pack://application:,,,/Assets/Images/material-design-icons/community.png" />
 
-        <BitmapImage x:Key="SideBarUpdateIcon" UriSource="pack://application:,,,/Images/material-design-icons/download.png" />
-        <BitmapImage x:Key="SideBarUpdateDotIcon" UriSource="pack://application:,,,/Images/material-design-icons/downloadDot.png" />
-        <BitmapImage x:Key="SideBarOptionsIcon" UriSource="pack://application:,,,/Images/material-design-icons/options.png" />
+        <BitmapImage x:Key="SideBarUpdateIcon" UriSource="pack://application:,,,/Assets/Images/material-design-icons/download.png" />
+        <BitmapImage x:Key="SideBarUpdateDotIcon" UriSource="pack://application:,,,/Assets/Images/material-design-icons/downloadDot.png" />
+        <BitmapImage x:Key="SideBarOptionsIcon" UriSource="pack://application:,,,/Assets/Images/material-design-icons/options.png" />
 
-        <BitmapImage x:Key="ExitImage" UriSource="pack://application:,,,/Images/material-design-icons/close-w-10.png" />
-        <BitmapImage x:Key="MaxImage" UriSource="pack://application:,,,/Images/material-design-icons/max-w-10.png" />
-        <BitmapImage x:Key="RestoreImage" UriSource="pack://application:,,,/Images/material-design-icons/restore-w-10.png" />
-        <BitmapImage x:Key="MinimizeImage" UriSource="pack://application:,,,/Images/material-design-icons/min-w-10.png" />
+        <BitmapImage x:Key="ExitImage" UriSource="pack://application:,,,/Assets/Images/material-design-icons/close-w-10.png" />
+        <BitmapImage x:Key="MaxImage" UriSource="pack://application:,,,/Assets/Images/material-design-icons/max-w-10.png" />
+        <BitmapImage x:Key="RestoreImage" UriSource="pack://application:,,,/Assets/Images/material-design-icons/restore-w-10.png" />
+        <BitmapImage x:Key="MinimizeImage" UriSource="pack://application:,,,/Assets/Images/material-design-icons/min-w-10.png" />
     </Window.Resources>
 
     <WindowChrome.WindowChrome>

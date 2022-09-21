@@ -11,15 +11,15 @@
                 xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2">
 
     <local:PageBase.Resources>
-        <BitmapImage x:Key="ServerIllustration" UriSource="pack://application:,,,/images/serverIllustration.png"/>
-        <BitmapImage x:Key="ExternalServerRB" UriSource="pack://application:,,,/images/material-design-icons/external-icon.jpg"/>
-        <BitmapImage x:Key="DockedServerRB" UriSource="pack://application:,,,/images/material-design-icons/docked-icon.png"/>
-        <BitmapImage x:Key="SettingsButton" UriSource="pack://application:,,,/images/material-design-icons/options.png"/>
-        <BitmapImage x:Key="TrashcanButton" UriSource="pack://application:,,,/images/material-design-icons/trashcan_icon.png"/>
-        <BitmapImage x:Key="RestoreBackupButton" UriSource="pack://application:,,,/images/material-design-icons/restore-backup-icon.png"/>
-        <BitmapImage x:Key="AddServerButton" UriSource="pack://application:,,,/images/material-design-icons/add_server.png"/>
-        <BitmapImage x:Key="RefreshButton" UriSource="pack://application:,,,/images/material-design-icons/refresh.png"/>
-        <BitmapImage x:Key="GoBackButton" UriSource="pack://application:,,,/images/material-design-icons/go_back.png"/>
+        <BitmapImage x:Key="ServerIllustration" UriSource="pack://application:,,,/Assets/Images/serverIllustration.png"/>
+        <BitmapImage x:Key="ExternalServerRB" UriSource="pack://application:,,,/Assets/Images/material-design-icons/external-icon.jpg"/>
+        <BitmapImage x:Key="DockedServerRB" UriSource="pack://application:,,,/Assets/Images/material-design-icons/docked-icon.png"/>
+        <BitmapImage x:Key="SettingsButton" UriSource="pack://application:,,,/Assets/Images/material-design-icons/options.png"/>
+        <BitmapImage x:Key="TrashcanButton" UriSource="pack://application:,,,/Assets/Images/material-design-icons/trashcan_icon.png"/>
+        <BitmapImage x:Key="RestoreBackupButton" UriSource="pack://application:,,,/Assets/Images/material-design-icons/restore-backup-icon.png"/>
+        <BitmapImage x:Key="AddServerButton" UriSource="pack://application:,,,/Assets/Images/material-design-icons/add_server.png"/>
+        <BitmapImage x:Key="RefreshButton" UriSource="pack://application:,,,/Assets/Images/material-design-icons/refresh.png"/>
+        <BitmapImage x:Key="GoBackButton" UriSource="pack://application:,,,/Assets/Images/material-design-icons/go_back.png"/>
 
         <Storyboard x:Key="WorldSelectedAnimation">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="WorldSelectionPane" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">

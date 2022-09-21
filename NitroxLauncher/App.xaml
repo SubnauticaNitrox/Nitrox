@@ -8,16 +8,16 @@
     <Application.Resources>
         <ResourceDictionary>
             <!-- Fonts -->
-            <FontFamily x:Key="OpenSans">pack://application:,,,/Fonts/#OpenSans</FontFamily>
-            <FontFamily x:Key="RobotoMono">pack://application:,,,/Fonts/#Roboto Mono</FontFamily>
-            <FontFamily x:Key="Inter">pack://application:,,,/Fonts/#Inter</FontFamily>
-            <FontFamily x:Key="DefaultFont">pack://application:,,,/Fonts/#Inter</FontFamily>
+            <FontFamily x:Key="OpenSans">pack://application:,,,/Assets/Fonts/#OpenSans</FontFamily>
+            <FontFamily x:Key="RobotoMono">pack://application:,,,/Assets/Fonts/#Roboto Mono</FontFamily>
+            <FontFamily x:Key="Inter">pack://application:,,,/Assets/Fonts/#Inter</FontFamily>
+            <FontFamily x:Key="DefaultFont">pack://application:,,,/Assets/Fonts/#Inter</FontFamily>
 
             <!-- Platforms icons -->
-            <BitmapImage x:Key="StoreSteam" UriSource="pack://application:,,,/Images/store-icons/steam-2x.png" />
-            <BitmapImage x:Key="StoreEpic" UriSource="pack://application:,,,/Images/store-icons/epic-2x.png" />
-            <BitmapImage x:Key="StoreXbox" UriSource="pack://application:,,,/Images/store-icons/xbox-2x.png" />
-            <BitmapImage x:Key="StoreDiscord" UriSource="pack://application:,,,/Images/store-icons/discord-2x.png" />
+            <BitmapImage x:Key="StoreSteam" UriSource="pack://application:,,,/Assets/Images/store-icons/steam-2x.png" />
+            <BitmapImage x:Key="StoreEpic" UriSource="pack://application:,,,/Assets/Images/store-icons/epic-2x.png" />
+            <BitmapImage x:Key="StoreXbox" UriSource="pack://application:,,,/Assets/Images/store-icons/xbox-2x.png" />
+            <BitmapImage x:Key="StoreDiscord" UriSource="pack://application:,,,/Assets/Images/store-icons/discord-2x.png" />
 
             <!-- Pages -->
             <pages:LaunchGamePage x:Key="LaunchGamePage" Background="#000000"/>
