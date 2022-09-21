@@ -5,21 +5,21 @@
                 xmlns:local="clr-namespace:NitroxLauncher.Models"
                 x:Class="NitroxLauncher.Pages.ServerPage"
                 mc:Ignorable="d"
-                d:DesignHeight="642" d:DesignWidth="750"
+                d:DesignHeight="650" d:DesignWidth="750"
                 DataContext="{Binding RelativeSource={RelativeSource Self}}"
                 Title="Server Page" xmlns:pages="clr-namespace:NitroxLauncher.Pages"
                 xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2">
 
     <local:PageBase.Resources>
         <BitmapImage x:Key="ServerIllustration" UriSource="pack://application:,,,/Assets/Images/serverIllustration.png"/>
-        <BitmapImage x:Key="ExternalServerRB" UriSource="pack://application:,,,/Assets/Images/material-design-icons/external-icon.jpg"/>
-        <BitmapImage x:Key="DockedServerRB" UriSource="pack://application:,,,/Assets/Images/material-design-icons/docked-icon.png"/>
-        <BitmapImage x:Key="SettingsButton" UriSource="pack://application:,,,/Assets/Images/material-design-icons/options.png"/>
-        <BitmapImage x:Key="TrashcanButton" UriSource="pack://application:,,,/Assets/Images/material-design-icons/trashcan_icon.png"/>
-        <BitmapImage x:Key="RestoreBackupButton" UriSource="pack://application:,,,/Assets/Images/material-design-icons/restore-backup-icon.png"/>
-        <BitmapImage x:Key="AddServerButton" UriSource="pack://application:,,,/Assets/Images/material-design-icons/add_server.png"/>
-        <BitmapImage x:Key="RefreshButton" UriSource="pack://application:,,,/Assets/Images/material-design-icons/refresh.png"/>
-        <BitmapImage x:Key="GoBackButton" UriSource="pack://application:,,,/Assets/Images/material-design-icons/go_back.png"/>
+        <BitmapImage x:Key="ExternalServerRB" UriSource="pack://application:,,,/Assets/Images/world-manager/window-external-2x.png"/>
+        <BitmapImage x:Key="DockedServerRB" UriSource="pack://application:,,,/Assets/Images/world-manager/window-launcher-2x.png"/>
+        <BitmapImage x:Key="SettingsButton" UriSource="pack://application:,,,/Assets/Images/world-manager/details-horizontal-2x.png"/>
+        <BitmapImage x:Key="TrashcanButton" UriSource="pack://application:,,,/Assets/Images/world-manager/delete-2x.png"/>
+        <BitmapImage x:Key="RestoreBackupButton" UriSource="pack://application:,,,/Assets/Images/world-manager/import-2x.png"/>
+        <BitmapImage x:Key="AddServerButton" UriSource="pack://application:,,,/Assets/Images/world-manager/plus-2x.png"/>
+        <BitmapImage x:Key="RefreshButton" UriSource="pack://application:,,,/Assets/Images/world-manager/reload-2x.png"/>
+        <BitmapImage x:Key="GoBackButton" UriSource="pack://application:,,,/Assets/Images/world-manager/back-2x.png"/>
 
         <Storyboard x:Key="WorldSelectedAnimation">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="WorldSelectionPane" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
@@ -191,7 +191,7 @@
     </local:PageBase.Resources>
 
     <Grid>
-        <Grid HorizontalAlignment="Center" Grid.RowSpan="2">
+        <Grid HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
@@ -264,13 +264,13 @@
                             </Grid.ColumnDefinitions>
 
                             <Button x:Name="RefreshListingBtn" Click="RefreshListing_Click" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="Refresh the world listing">
-                                <Image Source="{StaticResource RefreshButton}" Stretch="Uniform"  Width="40" Height="40"/>
+                                <Image Source="{StaticResource RefreshButton}" Width="18" Height="18" />
                             </Button>
 
                             <TextBlock Grid.Column="1" Text="Your Worlds" Foreground="White" VerticalAlignment="Center" FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"/>
 
                             <Button Grid.Column="2" x:Name="AddWorldBtn" Click="AddWorld_Click" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="Add or import a new world">
-                                <Image Source="{StaticResource AddServerButton}" Stretch="Uniform"  Width="40" Height="40"/>
+                                <Image Source="{StaticResource AddServerButton}" Width="24" Height="24"/>
                             </Button>
 
                         </Grid>
