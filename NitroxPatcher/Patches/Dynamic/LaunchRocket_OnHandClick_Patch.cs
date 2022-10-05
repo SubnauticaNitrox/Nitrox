@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿using System.Collections.Generic;
+using System.Reflection;
+using System.Reflection.Emit;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.Unity.Helper;
@@ -8,28 +10,47 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public class LaunchRocket_OnHandClick_Patch : NitroxPatch, IDynamicPatch
 {
-    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((LaunchRocket t) => t.OnHandClick(default));
+    internal static readonly MethodInfo TARGET_METHOD = Reflect.Method((LaunchRocket t) => t.OnHandClick(default));
 
-    public static bool Prefix(LaunchRocket __instance)
+    internal static readonly OpCode INJECTION_OPCODE = OpCodes.Call;
+    internal static readonly object INJECTION_OPERAND = Reflect.Method(() => LaunchRocket.SetLaunchStarted());
+    
+    public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
     {
-        // Copied code from the method itself
-        if (!__instance.IsRocketReady() || LaunchRocket.launchStarted)
+        Validate.NotNull(INJECTION_OPERAND);
+        /* We replace
+         * 
+         * LaunchRocket.SetLaunchStarted();
+         * 
+         * by
+         * 
+         * LaunchRocket_OnHandClick_Patch.RequestRocketLaunch()
+         * return; (by just removing the following instructions)
+         */
+        foreach (CodeInstruction instruction in instructions)
         {
-            return false;
+            if (instruction.opcode.Equals(INJECTION_OPCODE) && instruction.operand.Equals(INJECTION_OPERAND))
+            {
+                // We must transfer the labels from the previous instruction
+                CodeInstruction loadInstruction = new(OpCodes.Ldarg_0);
+                loadInstruction.labels = instruction.labels;
+                yield return loadInstruction;
+                yield return new(OpCodes.Call, Reflect.Method(() => RequestRocketLaunch(default)));
+                yield return new(OpCodes.Ret);
+                break;
+            }
+            yield return instruction;
         }
-        if (!StoryGoalCustomEventHandler.main.gunDisabled && !__instance.forcedRocketReady)
-        {
-            __instance.gunNotDisabled.Play();
-            return false;
-        }
-        // Now, instead of launching the rocket, we'll ask the server
-        Rocket rocket = __instance.RequireComponentInParent<Rocket>();
+    }
+
+    public static void RequestRocketLaunch(LaunchRocket launchRocket)
+    {
+        Rocket rocket = launchRocket.RequireComponentInParent<Rocket>();
         Resolve<Rockets>().RequestRocketLaunch(rocket);
-        return false;
     }
 
     public override void Patch(Harmony harmony)
     {
-        PatchPrefix(harmony, TARGET_METHOD);
+        PatchTranspiler(harmony, TARGET_METHOD);
     }
 }
