@@ -58,5 +58,6 @@
     "Nitrox_Waiting": "Waiting in join queue…",
     "Nitrox_WaitingPassword": "Waiting for server password input…",
     "Nitrox_WaitingUserInput": "Waiting for user input…",
-    "Nitrox_WorldSettling": "Awaiting World Settling…"
+    "Nitrox_WorldSettling": "Awaiting World Settling…",
+    "Nitrox_ThankForPlaying": "Thanks for using Nitrox!"
 }

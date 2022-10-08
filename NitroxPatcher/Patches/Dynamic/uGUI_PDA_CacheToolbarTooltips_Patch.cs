@@ -24,6 +24,11 @@ public class uGUI_PDA_CacheToolbarTooltips_Patch : NitroxPatch, IDynamicPatch
              * the elements from the list [u,v,w] (customTabs) in the right order so that we have [a,b,c,u,v,w].
              * we start from the element at the end of (toolbarTooltips) and replace it with the last element of (customTabs)
              */
+            // We verify that the index is valid (if the toolbarTooltips list is empty)
+            if (__instance.toolbarTooltips.Count - i - 1 < 0 || __instance.toolbarTooltips.Count - i - 1 >= __instance.toolbarTooltips.Count)
+            {
+                continue;
+            }
             string toolbarTooltip = customTabs[customTabs.Count - i - 1].ToolbarTip;
             __instance.toolbarTooltips[__instance.toolbarTooltips.Count - i - 1] = TooltipFactory.Label(toolbarTooltip);
         }
