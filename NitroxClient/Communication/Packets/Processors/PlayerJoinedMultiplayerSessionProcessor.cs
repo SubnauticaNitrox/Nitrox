@@ -37,7 +37,8 @@ namespace NitroxClient.Communication.Packets.Processors
                     continue;
                 }
 
-                Pickupable pickupable = item.GetComponent<Pickupable>().Initialize();
+                Pickupable pickupable = item.GetComponent<Pickupable>();
+                pickupable.Initialize();
                 pickupable.SetVisible(false);
                 items.Add(pickupable);
             }

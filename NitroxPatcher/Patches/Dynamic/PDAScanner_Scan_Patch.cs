@@ -28,7 +28,6 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             Validate.NotNull(INJECTION_OPERAND);
             Validate.NotNull(INJECTION_OPERAND_2);
-            bool shouldInject = false;
 
             foreach (CodeInstruction instruction in instructions)
             {
@@ -36,15 +35,6 @@ namespace NitroxPatcher.Patches.Dynamic
 
                 if (instruction.opcode.Equals(INJECTION_OPCODE) && instruction.operand.Equals(INJECTION_OPERAND))
                 {
-                    shouldInject = true;
-                    continue;
-                }
-                if (shouldInject)
-                {
-                    /*
-                     * ResourceTracker::UpdateFragments()
-                     * >> PDAScanner_Scan_Patch.Callback();
-                     */
                     yield return new CodeInstruction(OpCodes.Call, Reflect.Method(() => Callback()));
                 }
                 if (instruction.opcode.Equals(INJECTION_OPCODE_2) && instruction.operand.Equals(INJECTION_OPERAND_2))
