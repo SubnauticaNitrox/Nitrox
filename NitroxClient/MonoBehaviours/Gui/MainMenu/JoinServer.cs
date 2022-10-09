@@ -16,6 +16,7 @@ using NitroxModel.Core;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.MultiplayerSession;
 using NitroxModel_Subnautica.DataStructures;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -71,7 +72,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             serverPort = port;
 
             //Set Server IP in info label
-            lowerDetailTextGameObject.GetComponent<Text>().text = $"{Language.main.Get("Nitrox_JoinServerIpAddress")}\n{(NitroxPrefs.HideIp.Value ? "****" : serverIp)}";
+            lowerDetailTextGameObject.GetComponent<TextMeshProUGUI>().text = $"{Language.main.Get("Nitrox_JoinServerIpAddress")}\n{(NitroxPrefs.HideIp.Value ? "****" : serverIp)}";
 
             //Initialize elements from preferences
             activePlayerPreference = preferencesManager.GetPreference(serverIp);
@@ -361,7 +362,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
             RectTransform cancelButtonTransform = (RectTransform)cancelButtonGameObject.transform;
             GameObject cancelButtonTextGameObject = cancelButtonTransform.RequireGameObject("Text");
-            cancelButtonTextGameObject.GetComponent<Text>().text = Language.main.Get("Nitrox_Cancel");
+            cancelButtonTextGameObject.GetComponent<TextMeshProUGUI>().text = Language.main.Get("Nitrox_Cancel");
 
             cancelButtonTransform.sizeDelta = new Vector2(cancelButtonTransform.rect.width * 0.85f, cancelButtonTransform.rect.height);
             cancelButtonTransform.anchoredPosition = new Vector2(
@@ -378,7 +379,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             joinButtonTransform.Rotate(Vector3.forward * -180);
 
             GameObject joinButtonTextGameObject = joinButtonTransform.RequireGameObject("Text");
-            joinButtonTextGameObject.GetComponent<Text>().text = Language.main.Get("Nitrox_Join");
+            joinButtonTextGameObject.GetComponent<TextMeshProUGUI>().text = Language.main.Get("Nitrox_Join");
 
             //Flip the text so it is no longer upside down after flipping the button.
             RectTransform joinButtonTextRectTransform = (RectTransform)joinButtonTextGameObject.transform;
@@ -484,7 +485,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 baseTabSelectedColorImage.rectTransform.anchoredPosition.x + baseTabTextTransform.rect.width / 2f + 22f,
                 baseTabSelectedColorImage.rectTransform.anchoredPosition.y);
 
-            baseTabTextGameObject.GetComponent<Text>().text = Language.main.Get("Nitrox_PlayerColor");
+            baseTabTextGameObject.GetComponent<TextMeshProUGUI>().text = Language.main.Get("Nitrox_PlayerColor");
 
             //This resizes the actual Image that outlines all of the UI elements.
             GameObject baseTabBackgroundGameObject = baseTabTransform.RequireGameObject("Background");
@@ -518,9 +519,9 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
             //The text element is right-aligned by default and needs to be centered for our purposes
             lowerDetailTextGameObject = lowerDetailRectTransform.RequireGameObject("Text");
-            Text lowerDetailText = lowerDetailTextGameObject.GetComponent<Text>();
-            lowerDetailText.resizeTextForBestFit = true;
-            lowerDetailText.alignment = TextAnchor.MiddleCenter;
+            TextMeshProUGUI lowerDetailText = lowerDetailTextGameObject.GetComponent<TextMeshProUGUI>();
+            lowerDetailText.autoSizeTextContainer = true;
+            lowerDetailText.alignment = TextAlignmentOptions.Center;
 
             RectTransform lowerDetailTextRectTransform = (RectTransform)lowerDetailTextGameObject.transform;
             lowerDetailTextRectTransform.anchorMin = new Vector2(0.5f, 0.5f);
@@ -543,7 +544,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             playerNameInputField.selectionColor = Color.white;
 
             GameObject inputFieldPlaceholder = inputFieldRectTransform.RequireGameObject("Placeholder");
-            inputFieldPlaceholder.GetComponent<Text>().text = Language.main.Get("Nitrox_EnterName");
+            inputFieldPlaceholder.GetComponent<TextMeshProUGUI>().text = Language.main.Get("Nitrox_EnterName");
         }
 
         //This is the "service" that manages the click and drag events on the color picture RectTransform.
