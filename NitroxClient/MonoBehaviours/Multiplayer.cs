@@ -117,7 +117,6 @@ namespace NitroxClient.MonoBehaviours
 
         public IEnumerator StartSession()
         {
-            DevConsole.RegisterConsoleCommand(this, "execute");
             OnBeforeMultiplayerStart?.Invoke();
             yield return StartCoroutine(InitializeLocalPlayerState());
             multiplayerSession.JoinSession();
@@ -163,14 +162,6 @@ namespace NitroxClient.MonoBehaviours
             LoadingScreenVersionText.DisableWarningText();
             DiscordClient.InitializeRPInGame(Main.multiplayerSession.AuthenticationContext.Username, remotePlayerManager.GetTotalPlayerCount(), Main.multiplayerSession.SessionPolicy.MaxConnections);
             CoroutineHost.StartCoroutine(NitroxServiceLocator.LocateService<PlayerChatManager>().LoadChatKeyHint());
-        }
-
-        private void OnConsoleCommand_execute(NotificationCenter.Notification n)
-        {
-            string[] args = new string[n.data.Values.Count];
-            n.data.Values.CopyTo(args, 0);
-
-            NitroxServiceLocator.LocateService<IPacketSender>().Send(new ServerCommand(args));
         }
 
         private IEnumerator InitializeLocalPlayerState()
