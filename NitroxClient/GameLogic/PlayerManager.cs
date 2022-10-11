@@ -117,7 +117,6 @@ namespace NitroxClient.GameLogic
 
         private GameObject CloneLocalPlayerBodyPrototype()
         {
-            Log.Info("Cloning local body prototype");
             GameObject clone = Object.Instantiate(localPlayer.BodyPrototype, Multiplayer.Main.transform, false);
             clone.SetActive(true);
             return clone;
