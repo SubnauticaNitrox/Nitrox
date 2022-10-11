@@ -5,7 +5,9 @@ using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours.Gui.MainMenu;
 using NitroxModel;
 using NitroxModel.Core;
+using NitroxModel.Helper;
 using NitroxModel.Packets;
+using NitroxModel.Platforms.Store;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -45,9 +47,12 @@ public class DiscordClient : MonoBehaviour
             activityManager.OnActivityJoinRequest += ActivityJoinRequest;
             activityManager.OnActivityJoin += ActivityJoin;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            Log.Error("[Discord] Unable to register Steam");
+            if (NitroxUser.GamePlatform is Steam)
+            {
+                Log.Error("[Discord] Unable to register Steam");
+            }
         }
 
         activity = new Activity();

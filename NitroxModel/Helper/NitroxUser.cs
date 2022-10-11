@@ -4,6 +4,8 @@ using System.IO;
 using System.Reflection;
 using NitroxModel.Discovery;
 using NitroxModel.Platforms.OS.Windows.Internal;
+using NitroxModel.Platforms.Store;
+using NitroxModel.Platforms.Store.Interfaces;
 
 namespace NitroxModel.Helper
 {
@@ -81,5 +83,8 @@ namespace NitroxModel.Helper
                 return string.Empty;
             }
         }
+
+        private static IGamePlatform gamePlatform;
+        public static IGamePlatform GamePlatform => gamePlatform ??= GamePlatforms.GetPlatformByGameDir(SubnauticaPath);
     }
 }
