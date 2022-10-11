@@ -47,7 +47,7 @@ public class DiscordClient : MonoBehaviour
         }
         catch (Exception ex)
         {
-            Log.Error("[Discord] Unable to register Steam");
+            Log.Warn($"[Discord] Unable to register Steam : {ex.Message}");
         }
 
         activity = new Activity();
@@ -70,7 +70,7 @@ public class DiscordClient : MonoBehaviour
 
         if (SceneManager.GetActiveScene().name != "StartScreen" || !MainMenuMultiplayerPanel.Main)
         {
-            Log.InGame("Please press on the \"Multiplayer\" in the MainMenu if you want to join a session.");
+            Log.InGame(Language.main.Get("Nitrox_DiscordMultiplayerMenu"));
             Log.Warn("[Discord] Can't join a server outside of the main-menu.");
             return;
         }
@@ -91,21 +91,21 @@ public class DiscordClient : MonoBehaviour
         }
         else
         {
-            Log.Info("[Discord] Request window is already active.");
+            Log.Warn("[Discord] Request window is already active.");
         }
     }
 
     public static void InitializeRPMenu()
     {
-        activity.State = "Lurking in menu";
+        activity.State = Language.main.Get("Nitrox_DiscordMainMenuState");
         activity.Assets.LargeImage = "icon";
         UpdateActivity();
     }
 
     public static void InitializeRPInGame(string username, int playerCount, int maxConnections)
     {
-        activity.State = "Diving into the abyss";
-        activity.Details = $"Playing as {username}";
+        activity.State = Language.main.Get("Nitrox_DiscordInGameState");
+        activity.Details = Language.main.Get("Nitrox_DiscordInGame").Replace("{PLAYER}", username);
         activity.Timestamps.Start = 0;
         activity.Party.Size.CurrentSize = playerCount;
         activity.Party.Size.MaxSize = maxConnections;
@@ -145,12 +145,11 @@ public class DiscordClient : MonoBehaviour
         {
             if (result == Result.Ok)
             {
-                Log.InGame("[Discord] Sending confirmation to user");
                 Log.Info($"[Discord] Responded successfully {reply} to {userID}");
             }
             else
             {
-                Log.InGame("[Discord] Failed to send join response");
+                Log.InGame($"[Discord] {Language.main.Get("Nitrox_Failure")}");
                 Log.Error($"[Discord] {result}: Failed to send join response");
             }
         });

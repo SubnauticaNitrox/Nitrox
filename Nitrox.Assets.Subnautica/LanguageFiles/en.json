@@ -12,6 +12,10 @@
     "Nitrox_DiscordDecline": "Decline",
     "Nitrox_DiscordPressToFocus": "Press to unlock",
     "Nitrox_DiscordRequestText": "Requested to join your session",
+    "Nitrox_DiscordMultiplayerMenu": "Please press on the Multiplayer button in the MainMenu if you want to join a session",
+    "Nitrox_DiscordMainMenuState": "Lurking in menu",
+    "Nitrox_DiscordInGameState": "Diving into the abyss",
+    "Nitrox_DiscordInGame": "Playing as {PLAYER}",
     "Nitrox_EnterName": "Enter your player name",
     "Nitrox_FirewallInterfering": "Seems like your firewall settings are interfering",
     "Nitrox_HideIp": "Hide IP addresses",
@@ -59,5 +63,6 @@
     "Nitrox_WaitingPassword": "Waiting for server password input…",
     "Nitrox_WaitingUserInput": "Waiting for user input…",
     "Nitrox_WorldSettling": "Awaiting World Settling…",
-    "Nitrox_ThankForPlaying": "Thanks for using Nitrox!"
+    "Nitrox_ThankForPlaying": "Thanks for using Nitrox!",
+    "Nitrox_Failure": "An error occured"
 }
