@@ -14,7 +14,7 @@ namespace NitroxModel.Platforms.Store
         public static Discord Instance => instance ??= new Discord();
 
         public string Name => nameof(Discord);
-        public Platform platform => Platform.DISCORD;
+        public Platform Platform => Platform.DISCORD;
 
         public bool OwnsGame(string gameDirectory)
         {

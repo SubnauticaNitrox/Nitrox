@@ -99,13 +99,12 @@ namespace NitroxLauncher
 
         public async Task<string> SetTargetedSubnauticaPath(string path)
         {
-            if (Config.SubnauticaPath == path || !Directory.Exists(path))
+            if ((string.IsNullOrWhiteSpace(Config.SubnauticaPath) && Config.SubnauticaPath == path) || !Directory.Exists(path))
             {
                 return null;
             }
 
             Config.SubnauticaPath = path;
-
             if (lastFindSubnauticaTask != null)
             {
                 await lastFindSubnauticaTask;
@@ -158,16 +157,16 @@ namespace NitroxLauncher
                     page = typeof(ServerConsolePage);
                 }
 
-                if (Application.Current.MainWindow != null)
+                if (Application.Current.MainWindow is MainWindow window)
                 {
-                    ((MainWindow)Application.Current.MainWindow).FrameContent = Application.Current.FindResource(page.Name);
+                    window.FrameContent = Application.Current.FindResource(page.Name);
                 }
             }
         }
 
         public void NavigateTo<TPage>() where TPage : Page => NavigateTo(typeof(TPage));
 
-        public bool NavigationIsOn<TPage>() where TPage : Page => Application.Current.MainWindow is MainWindow window && window.FrameContent is TPage;
+        public bool NavigationIsOn<TPage>() where TPage : Page => Application.Current.MainWindow is MainWindow { FrameContent: TPage };
 
         internal async Task StartSingleplayerAsync()
         {
@@ -195,7 +194,7 @@ namespace NitroxLauncher
                 throw new Exception("Location of Subnautica is unknown. Set the path to it in settings.");
             }
 
-            if (Config.IsPirated)
+            if (PirateDetection.HasTriggered)
             {
                 throw new Exception("Aarrr! Nitrox walked the plank :(");
             }

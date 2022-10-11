@@ -75,7 +75,7 @@ public class Program
             {
                 gameInstallDir = new Lazy<string>(() =>
                 {
-                    string gameDir = NitroxUser.SubnauticaPath;
+                    string gameDir = NitroxUser.GamePath;
                     Log.Info($"Using game files from: {gameDir}");
                     return gameDir;
                 });
