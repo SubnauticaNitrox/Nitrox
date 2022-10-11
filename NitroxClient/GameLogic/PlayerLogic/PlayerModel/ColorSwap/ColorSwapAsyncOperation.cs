@@ -25,8 +25,6 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
 
         public void UpdateIndex(string indexKey, Color[] pixels)
         {
-            Log.Info($"[TEXTURE] : Updated INDEX k: {indexKey} v: {pixels.ToDto()}");
-
             lock (texturePixelIndexes)
             {
                 if (texturePixelIndexes.ContainsKey(indexKey))
