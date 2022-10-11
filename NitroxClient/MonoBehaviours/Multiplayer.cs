@@ -178,9 +178,11 @@ namespace NitroxClient.MonoBehaviours
             ILocalNitroxPlayer localPlayer = NitroxServiceLocator.LocateService<ILocalNitroxPlayer>();
             IEnumerable<IColorSwapManager> colorSwapManagers = NitroxServiceLocator.LocateService<IEnumerable<IColorSwapManager>>();
 
+            GameObject body = localPlayer.BodyPrototype;
+            Log.Info($"Init body prototype {body.name}");
+
             ColorSwapAsyncOperation swapOperation = new ColorSwapAsyncOperation(localPlayer, colorSwapManagers).BeginColorSwap();
             yield return new WaitUntil(() => swapOperation.IsColorSwapComplete());
-
             swapOperation.ApplySwappedColors();
 
             // UWE developers added noisy logging for non-whitelisted components during serialization.

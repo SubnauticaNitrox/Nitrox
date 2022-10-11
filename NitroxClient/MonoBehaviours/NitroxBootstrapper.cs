@@ -17,9 +17,8 @@ namespace NitroxClient.MonoBehaviours
 
 #if DEBUG
             EnableDeveloperFeatures();
-#endif
-
             CreateDebugger();
+#endif
         }
 
         private void EnableDeveloperFeatures()
