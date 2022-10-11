@@ -24,19 +24,6 @@
       </Resource>
     </ItemGroup>
 
-    <ItemGroup>
-      <None Remove="Assets\Images\world-manager\back-2x.png" />
-      <None Remove="Assets\Images\world-manager\cog-2x.png" />
-      <None Remove="Assets\Images\world-manager\delete-2x.png" />
-      <None Remove="Assets\Images\world-manager\details-horizontal-2x.png" />
-      <None Remove="Assets\Images\world-manager\details-vertical-2x.png" />
-      <None Remove="Assets\Images\world-manager\export-2x.png" />
-      <None Remove="Assets\Images\world-manager\import-2x.png" />
-      <None Remove="Assets\Images\world-manager\plus-2x.png" />
-      <None Remove="Assets\Images\world-manager\reload-2x.png" />
-      <None Remove="Assets\Images\world-manager\window-external-2x.png" />
-      <None Remove="Assets\Images\world-manager\window-launcher-2x.png" />
-    </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\NitroxPatcher\NitroxPatcher.csproj" />
@@ -46,12 +33,6 @@
     <ItemGroup>
       <Reference Include="Microsoft.VisualBasic" />
       <Reference Include="PresentationFramework.Aero2" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Resource Update="Assets\Images\old\icon.ico">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </Resource>
     </ItemGroup>
     
     <!-- Move assets from Subnautica assets to launcher.

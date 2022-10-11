@@ -268,17 +268,7 @@ namespace NitroxLauncher.Pages
             {
                 LauncherNotifier.Error($"This save does not exist or is not valid.");
                 InitializeWorldListing();
-                if (e.OriginalSource == DeleteWorldBtn)
-                {
-                    Storyboard GoBackAnimationStoryboard = (Storyboard)FindResource("GoBackAnimation");
-                    GoBackAnimationStoryboard.Begin();
-                }
                 return;
-            }
-
-            if (e.OriginalSource == DeleteWorldBtn)
-            {
-                isInSettings = true;
             }
 
             ConfirmationBox.Opacity = 1;

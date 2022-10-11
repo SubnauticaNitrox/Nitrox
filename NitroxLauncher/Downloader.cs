@@ -32,6 +32,15 @@ namespace NitroxLauncher
             {
                 using WebResponse response = await GetResponseFromCache(BLOGS_URL);
 
+#if DEBUG
+                if (response == null)
+                {
+                    Log.Error($"{nameof(Downloader)} : Error while fetching nitrox blogs from {BLOGS_URL}");
+                    LauncherNotifier.Error("Unable to fetch nitrox blogs");
+                    return blogs;
+                }
+#endif
+
                 if (response.IsFromCache)
                 {
                     Log.Info("Fetched nitrox blogs from the local cache");
@@ -166,7 +175,7 @@ namespace NitroxLauncher
 
             try
             {
-                return await request.GetResponseAsync().ConfigureAwait(false);
+                return await request.GetResponseAsync();
             }
             catch (Exception ex)
             {

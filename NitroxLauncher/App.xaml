@@ -29,6 +29,8 @@
             <pages:UpdatePage x:Key="UpdatePage" Background="#000000"/>
             <pages:LibraryPage x:Key="LibraryPage" Background="#000000"/>
 
+            <SolidColorBrush x:Key="DarkBrush" Color="#8f8f8f" />
+            
             <!-- Styles -->
             <Style x:Key="SocialButton" TargetType="TextBlock">
                 <Setter Property="OpacityMask">
