@@ -51,8 +51,7 @@ namespace NitroxServer.Serialization
 
         public void ParseFile(NitroxInt3 batchId, string pathPrefix, string prefix, string suffix, List<EntitySpawnPoint> spawnPoints)
         {
-            string subnauticaPath = NitroxUser.SubnauticaPath;
-
+            string subnauticaPath = NitroxUser.GamePath;
             if (string.IsNullOrEmpty(subnauticaPath))
             {
                 return;

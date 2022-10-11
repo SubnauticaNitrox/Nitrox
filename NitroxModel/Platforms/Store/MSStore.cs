@@ -13,7 +13,7 @@ namespace NitroxModel.Platforms.Store
         public static MSStore Instance => instance ??= new MSStore();
 
         public string Name => "Microsoft Store";
-        public Platform platform => Platform.MICROSOFT;
+        public Platform Platform => Platform.MICROSOFT;
 
         public bool OwnsGame(string gameDirectory)
         {

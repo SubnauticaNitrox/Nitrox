@@ -70,9 +70,6 @@ namespace NitroxLauncher
                 // This pirate detection subscriber is immediately invoked if pirate has been detected right now.
                 PirateDetection.PirateDetected += (o, eventArgs) =>
                 {
-                    LauncherLogic.Config.SubnauticaPlatform = Platform.PIRATED;
-                    LauncherLogic.Config.IsPirated = true;
-
                     LauncherNotifier.Info("Nitrox does not support pirated version of Subnautica");
                     LauncherNotifier.Info("Yo ho ho, Ahoy matey! Ye be a pirate!");
 
@@ -110,7 +107,7 @@ namespace NitroxLauncher
                 }
             };
 
-            logic.SetTargetedSubnauticaPath(NitroxUser.SubnauticaPath)
+            logic.SetTargetedSubnauticaPath(NitroxUser.GamePath)
                  .ContinueWith(task =>
                  {
                      if (GameInstallationFinder.IsSubnauticaDirectory(task.Result))
