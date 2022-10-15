@@ -159,7 +159,7 @@ namespace NitroxClient
                 .RegisterAssemblyTypes(currentAssembly)
                 .AssignableTo<IColorSwapManager>()
                 .As<IColorSwapManager>()
-                .InstancePerLifetimeScope();
+                .SingleInstance();
         }
 
         private void RegisterInitialSyncProcessors(ContainerBuilder containerBuilder)
