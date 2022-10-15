@@ -53,11 +53,9 @@ public class Base_SetFace_Patch : NitroxPatch, IDynamicPatch
 
         if (replaced)
         {
-            // TOREMOVE: Log.Debug($"SetFace({face},{faceType}) {oldFaceType} replaced index: {index}");
             GameObject faceObject = FindFaceObject(__instance, face, oldFaceType);
             if (faceObject)
             {
-                // TOREMOVE: Log.Debug($"Found an object corresponding to the face: {faceObject.name}");
                 if (NitroxEntity.TryGetEntityFrom(faceObject, out NitroxEntity entity))
                 {
                     // To make sure we don't accidentally delete some part, we'll add another check
@@ -73,13 +71,9 @@ public class Base_SetFace_Patch : NitroxPatch, IDynamicPatch
 
     private static GameObject FindFaceObject(Base @base, Base.Face face, Base.FaceType faceType, bool retry = true)
     {
-        // TOREMOVE: Log.Debug($"FindFaceObject({face},{retry})");
-        // TOREMOVE: Log.Debug($"Base's anchor: {@base.GetAnchor()}");
-
         // Pretty much the same loop as in Base.BindCellObjects but we need to do it this way
         foreach (BaseCell baseCell in @base.GetComponentsInChildren<BaseCell>(true))
         {
-            // TOREMOVE: Log.Debug($"Looking inside baseCell: {baseCell.name}");
             if (baseCell.transform.parent == @base.transform)
             {
                 Int3 @int = @base.WorldToGrid(baseCell.transform.position);
@@ -90,7 +84,6 @@ public class Base_SetFace_Patch : NitroxPatch, IDynamicPatch
                 }
                 foreach (BaseDeconstructable deconstructable in baseCell.GetComponentsInChildren<BaseDeconstructable>(true))
                 {
-                    // TOREMOVE: Log.Debug($"Found BaseDeconstructable: {deconstructable.name}, face: {deconstructable.face}, bounds: {deconstructable.bounds}");
                     if (deconstructable.face.HasValue &&
                         deconstructable.face.Value == face &&
                         deconstructable.faceType == faceType)
@@ -103,7 +96,6 @@ public class Base_SetFace_Patch : NitroxPatch, IDynamicPatch
 
         if (retry)
         {
-            // TOREMOVE: Log.Debug("FindFaceObject failed, will retry with the adjacent face");
             // If we don't get it the first try (probably because the face direction is West or South), we'll just retry once with the adjacent cell
             return FindFaceObject(@base, new(Base.GetAdjacent(face.cell, face.direction), face.direction), faceType, false);
         }
