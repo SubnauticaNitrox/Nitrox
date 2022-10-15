@@ -97,6 +97,18 @@ namespace NitroxServer.GameLogic.Bases
             }
         }
 
+        public void BasePieceForceDeconstruct(NitroxId id)
+        {
+            lock (completedBasePieceHistory)
+            {
+                BasePiece basePiece = completedBasePieceHistory.Find(piece => piece.Id == id);
+                if (basePiece != null)
+                {
+                    completedBasePieceHistory.Remove(basePiece);
+                }
+            }
+        }
+
         public void BasePieceDeconstructionBegin(NitroxId id)
         {
             BasePiece basePiece;

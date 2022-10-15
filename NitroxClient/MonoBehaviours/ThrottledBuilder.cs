@@ -212,19 +212,19 @@ namespace NitroxClient.MonoBehaviours
 
                     if (cellTransform)
                     {
-                        placedPiece = FindFinishedPiece(cellTransform);
+                        placedPiece = FindFinishedPiece(cellTransform, constructionCompleted.PieceId, constructableBase.techType);
                     }
                 }
                 
                 if (!placedPiece)
                 {
                     Int3 position = latestBase.WorldToGrid(constructableBase.transform.position);
-                    cellTransform = latestBase.GetCellObject(position);                        
+                    cellTransform = latestBase.GetCellObject(position);
                     Validate.NotNull(cellTransform, "Unable to find cell transform at " + position);
                     
-                    placedPiece = FindFinishedPiece(cellTransform);
+                    placedPiece = FindFinishedPiece(cellTransform, constructionCompleted.PieceId, constructableBase.techType);
                 }
-                
+
                 Validate.NotNull(placedPiece, $"Could not find placed Piece in cell {latestCell} when constructing {constructionCompleted.PieceId}");
                 
                 // This destroy instruction must be executed now, else it won't be able to happen in the case the action will have a later completion
@@ -257,21 +257,46 @@ namespace NitroxClient.MonoBehaviours
                 ConfigureNewlyConstructedBase(constructionCompleted.BaseId);
             }
         }
-        
+
         // There can be multiple objects in a cell (such as a corridor with hatches built into it)
         // we look for a object that is able to be deconstructed that hasn't been tagged yet.
-        private static GameObject FindFinishedPiece(Transform cellTransform)
+        // NB: The object in question MUST have the expected tech type so that this won't tag a wrong piece (e.g. BaseWaterPark hatches)
+        internal static GameObject FindFinishedPiece(Transform cellTransform, NitroxId pieceId, TechType techType)
         {
             foreach (Transform child in cellTransform)
             {
-                bool isNewBasePiece = !child.TryGetComponent(out NitroxEntity _) && child.GetComponent<BaseDeconstructable>() && !child.name.Contains("CorridorConnector");
-                if (isNewBasePiece)
+                bool isFinishedPiece = (!child.TryGetComponent(out NitroxEntity entity) && child.TryGetComponent(out BaseDeconstructable baseDeconstructable) && AreSameTechType(baseDeconstructable.recipe, techType) &&
+                                        !child.name.Contains("CorridorConnector")) ||
+                                        entity?.Id == pieceId;
+
+                if (isFinishedPiece)
                 {
                     return child.gameObject;
                 }
             }
 
             return null;
+        }
+
+        private static bool AreSameTechType(TechType actual, TechType expected)
+        {
+            // Normal case
+            if (actual.Equals(expected))
+            {
+                return true;
+            }
+            // Specificity for this structure
+            if (actual.Equals(TechType.BaseConnector) && expected.Equals(TechType.BaseCorridor))
+            {
+                return true;
+            }
+            // In certain cases the actual type has one more letter than the expected type
+            // e.g. actual = BaseCorridor but expected = BaseCorridorT
+            if (expected.ToString().Contains(actual.ToString()))
+            {
+                return true;
+            }
+            return false;
         }
 
         private void LaterConstructionCompleted(LaterConstructionCompletedEvent laterConstructionCompleted)
