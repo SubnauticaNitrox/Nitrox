@@ -5,21 +5,21 @@
                 xmlns:local="clr-namespace:NitroxLauncher.Models"
                 x:Class="NitroxLauncher.Pages.ServerPage"
                 mc:Ignorable="d"
-                d:DesignHeight="642" d:DesignWidth="750"
+                d:DesignHeight="650" d:DesignWidth="750"
                 DataContext="{Binding RelativeSource={RelativeSource Self}}"
                 Title="Server Page" xmlns:pages="clr-namespace:NitroxLauncher.Pages"
                 xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2">
 
     <local:PageBase.Resources>
-        <BitmapImage x:Key="ServerIllustration" UriSource="pack://application:,,,/images/serverIllustration.png"/>
-        <BitmapImage x:Key="ExternalServerRB" UriSource="pack://application:,,,/images/material-design-icons/external-icon.jpg"/>
-        <BitmapImage x:Key="DockedServerRB" UriSource="pack://application:,,,/images/material-design-icons/docked-icon.png"/>
-        <BitmapImage x:Key="SettingsButton" UriSource="pack://application:,,,/images/material-design-icons/options.png"/>
-        <BitmapImage x:Key="TrashcanButton" UriSource="pack://application:,,,/images/material-design-icons/trashcan_icon.png"/>
-        <BitmapImage x:Key="RestoreBackupButton" UriSource="pack://application:,,,/images/material-design-icons/restore-backup-icon.png"/>
-        <BitmapImage x:Key="AddServerButton" UriSource="pack://application:,,,/images/material-design-icons/add_server.png"/>
-        <BitmapImage x:Key="RefreshButton" UriSource="pack://application:,,,/images/material-design-icons/refresh.png"/>
-        <BitmapImage x:Key="GoBackButton" UriSource="pack://application:,,,/images/material-design-icons/go_back.png"/>
+        <BitmapImage x:Key="ServerIllustration" UriSource="pack://application:,,,/Assets/Images/serverIllustration.png"/>
+        <BitmapImage x:Key="ExternalServerRB" UriSource="pack://application:,,,/Assets/Images/world-manager/window-external-2x.png"/>
+        <BitmapImage x:Key="DockedServerRB" UriSource="pack://application:,,,/Assets/Images/world-manager/window-launcher-2x.png"/>
+        <BitmapImage x:Key="SettingsButton" UriSource="pack://application:,,,/Assets/Images/world-manager/details-horizontal-2x.png"/>
+        <BitmapImage x:Key="TrashcanButton" UriSource="pack://application:,,,/Assets/Images/world-manager/delete-2x.png"/>
+        <BitmapImage x:Key="RestoreBackupButton" UriSource="pack://application:,,,/Assets/Images/world-manager/import-2x.png"/>
+        <BitmapImage x:Key="AddServerButton" UriSource="pack://application:,,,/Assets/Images/world-manager/plus-2x.png"/>
+        <BitmapImage x:Key="RefreshButton" UriSource="pack://application:,,,/Assets/Images/world-manager/reload-2x.png"/>
+        <BitmapImage x:Key="GoBackButton" UriSource="pack://application:,,,/Assets/Images/world-manager/back-2x.png"/>
 
         <Storyboard x:Key="WorldSelectedAnimation">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="WorldSelectionPane" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
@@ -63,7 +63,7 @@
         <SolidColorBrush x:Key="ComboBox.Static.Border" Color="Black"/>
         <SolidColorBrush x:Key="ComboBox.Static.Glyph" Color="#FF606060"/>
         <SolidColorBrush x:Key="ComboBox.MouseOver.Background" Color="Black"/>
-        <SolidColorBrush x:Key="ComboBox.MouseOver.Border" Color="#FF007BFF"/>
+        <SolidColorBrush x:Key="ComboBox.MouseOver.Border" Color="#FF569DE5"/>
         <SolidColorBrush x:Key="ComboBox.MouseOver.Glyph" Color="Gainsboro"/>
         <SolidColorBrush x:Key="ComboBox.Pressed.Background" Color="Black"/>
         <SolidColorBrush x:Key="ComboBox.Pressed.Border" Color="#FF569DE5"/>
@@ -191,7 +191,7 @@
     </local:PageBase.Resources>
 
     <Grid>
-        <Grid HorizontalAlignment="Center" Grid.RowSpan="2">
+        <Grid HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
@@ -222,13 +222,13 @@
                     </Grid.ColumnDefinitions>
 
                     <RadioButton Style="{StaticResource LeftServerSettingRB}" x:Name="RBIsExternal" GroupName="ServerType" ToolTip="Set the server console to launch in a separate CMD window" Click="RBServer_Clicked">
-                        <Image Source="{StaticResource ExternalServerRB}" Stretch="Uniform"  Width="30" Height="30"/>
+                        <Image Source="{StaticResource ExternalServerRB}" Width="24" Height="24"/>
                     </RadioButton>
 
                     <Border Grid.Column="1" Background="Black"/>
 
                     <RadioButton Grid.Column="2" Style="{StaticResource RightServerSettingRB}" x:Name="RBIsDocked" GroupName="ServerType" ToolTip="Set the server console to display within the launcher" Click="RBServer_Clicked">
-                        <Image Source="{StaticResource DockedServerRB}" Stretch="Uniform"  Width="30" Height="30"/>
+                        <Image Source="{StaticResource DockedServerRB}" Width="24" Height="24"/>
                     </RadioButton>
 
                 </Grid>
@@ -239,7 +239,6 @@
 
                 <!-- WORLD SELECTION PANE (In view: Margin="866 16 866 32" | Out of view: Margin="0 16 1732 32") PANE WIDTH: 710 -->
                 <Border CornerRadius="12" Background="#151516" Margin="866 16 866 32" x:Name="WorldSelectionPane" RenderTransformOrigin="0.5,0.5">
-                <!--<Border CornerRadius="12" Background="#151516" Margin="0 16 1732 32" x:Name="WorldSelectionPane" RenderTransformOrigin="0.5,0.5">-->
                     <Border.RenderTransform>
                         <TransformGroup>
                             <ScaleTransform/>
@@ -264,13 +263,13 @@
                             </Grid.ColumnDefinitions>
 
                             <Button x:Name="RefreshListingBtn" Click="RefreshListing_Click" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="Refresh the world listing">
-                                <Image Source="{StaticResource RefreshButton}" Stretch="Uniform"  Width="40" Height="40"/>
+                                <Image Source="{StaticResource RefreshButton}" Width="18" Height="18" />
                             </Button>
 
                             <TextBlock Grid.Column="1" Text="Your Worlds" Foreground="White" VerticalAlignment="Center" FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"/>
 
                             <Button Grid.Column="2" x:Name="AddWorldBtn" Click="AddWorld_Click" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="Add or import a new world">
-                                <Image Source="{StaticResource AddServerButton}" Stretch="Uniform"  Width="40" Height="40"/>
+                                <Image Source="{StaticResource AddServerButton}" Width="24" Height="24"/>
                             </Button>
 
                         </Grid>
@@ -404,13 +403,13 @@
                                                     <Grid x:Name="WorldOptionsBox" Grid.Column="2" Height="{Binding Height, RelativeSource={RelativeSource AncestorType=Border}}" Width="0">
                                                         <Grid.RowDefinitions>
                                                             <RowDefinition/>
-                                                            <RowDefinition Height="5"/>
+                                                            <RowDefinition Height="2"/>
                                                             <RowDefinition/>
                                                         </Grid.RowDefinitions>
 
                                                         <!-- World Settings Button -->
                                                         <Button ToolTip="Edit the settings of this world" Click="SelectedWorldSettings_Click" IsEnabled="{Binding Path=IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}" Height="{Binding Height, RelativeSource={RelativeSource AncestorType=Grid}}" Width="{Binding Width, RelativeSource={RelativeSource AncestorType=Grid}}">
-                                                            <Image Source="{StaticResource SettingsButton}" Stretch="Uniform"  Width="25" Height="25" Opacity="0.7"/>
+                                                            <Image Source="{StaticResource SettingsButton}" Width="20" Height="20"/>
                                                         </Button>
 
                                                         <!-- Separator -->
@@ -418,7 +417,7 @@
 
                                                         <!-- Delete World Button -->
                                                         <Button Grid.Row="2" ToolTip="Delete this world" Click="DeleteWorld_Click" IsEnabled="{Binding Path=IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}" Height="{Binding Height, RelativeSource={RelativeSource AncestorType=Grid}}" Width="{Binding Width, RelativeSource={RelativeSource AncestorType=Grid}}">
-                                                            <Image Source="{StaticResource TrashcanButton}" Stretch="Uniform"  Width="25" Height="25"/>
+                                                            <Image Source="{StaticResource TrashcanButton}" Width="20" Height="20"/>
                                                         </Button>
 
                                                     </Grid>
@@ -428,12 +427,13 @@
                                                         <Border.Style>
                                                             <Style TargetType="Border">
                                                                 <Setter Property="BorderBrush" Value="Transparent"/>
+                                                                <Setter Property="BorderThickness" Value="1"/>
                                                                 <Style.Triggers>
                                                                     <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}" Value="True">
                                                                         <Setter Property="BorderBrush" Value="#FF007BFF"/>
                                                                     </DataTrigger>
                                                                     <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}" Value="True">
-                                                                        <Setter Property="BorderBrush" Value="Blue"/>
+                                                                        <Setter Property="BorderBrush" Value="#FF007BFF"/>
                                                                     </DataTrigger>
                                                                 </Style.Triggers>
                                                             </Style>
@@ -450,10 +450,10 @@
                                                         <BeginStoryboard>
                                                             <Storyboard>
                                                                 <DoubleAnimationUsingKeyFrames Storyboard.TargetName="SeparatorBox" Storyboard.TargetProperty="Width">
-                                                                    <EasingDoubleKeyFrame KeyTime="00:00:00.2000000" Value="5"/>
+                                                                    <EasingDoubleKeyFrame KeyTime="00:00:00.2000000" Value="2"/>
                                                                 </DoubleAnimationUsingKeyFrames>
                                                                 <DoubleAnimationUsingKeyFrames Storyboard.TargetName="WorldOptionsBox" Storyboard.TargetProperty="Width">
-                                                                    <EasingDoubleKeyFrame KeyTime="00:00:00.2000000" Value="45"/>
+                                                                    <EasingDoubleKeyFrame KeyTime="00:00:00.2000000" Value="40"/>
                                                                 </DoubleAnimationUsingKeyFrames>
                                                             </Storyboard>
                                                         </BeginStoryboard>
@@ -511,8 +511,7 @@
                     </Grid.RenderTransform>
 
                     <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
                     <!-- WORLD OPTIONS -->
@@ -533,14 +532,14 @@
 
                                 <!-- Go Back button -->
                                 <Button Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="Save settings and select a different world" Click="GoBack_Click">
-                                    <Image Source="{StaticResource GoBackButton}" Stretch="Uniform" Width="40" Height="40"/>
+                                    <Image Source="{StaticResource GoBackButton}" Width="18" Height="18"/>
                                 </Button>
 
                                 <TextBlock Grid.Column="1" Text="World Settings" Foreground="White" VerticalAlignment="Center" FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"/>
 
                                 <!-- Import Save File button -->
                                 <Border x:Name="ImportSaveBtnBorder" Grid.Column="1" Grid.ColumnSpan="2" Background="#FF007BFF" CornerRadius="8" Width="150" HorizontalAlignment="Right" Margin="0 14" Opacity="0">
-                                    <Button x:Name="ImportSaveBtn" Click="ImportSaveBtn_Click" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" IsEnabled="False" ToolTip="Import a save file">
+                                    <Button x:Name="ImportSaveBtn" Click="ImportSaveBtn_Click" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" IsEnabled="False" ToolTip="Import a save file" Cursor="Hand">
                                         <TextBlock Text="Import a save file" FontSize="15"/>
                                     </Button>
                                 </Border>
@@ -617,39 +616,46 @@
                                         </Grid.RowDefinitions>
 
                                         <!-- World Name and Seed (1st Row) -->
-                                        <Grid Margin="0 0 0 10" VerticalAlignment="Top">
+                                        <Grid Margin="0 0 0 10">
+
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="1.4*"/>
-                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="100" />
+                                                <ColumnDefinition Width="300"/>
+                                                <ColumnDefinition />
                                             </Grid.ColumnDefinitions>
 
-                                            <!-- Name -->
-                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                                <TextBlock Text="Name:  " Foreground="White" FontSize="20" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                <Border BorderBrush ="#333437" Background="#333437" BorderThickness="1" CornerRadius="8" Margin="0">
-                                                    <TextBox x:Name="TBWorldName"
-                                                        FontSize="18" MaxLines="1" ToolTip="Set the world name"
-                                                        Foreground="#8A8A8A" TextAlignment="Left"
-                                                        Background="{x:Null}" BorderBrush="{x:Null}"
-                                                        Margin="13,4,13,4" SelectionBrush="#FF007BFF"
-                                                        VerticalAlignment="Center" BorderThickness="0"
-                                                        CaretBrush="White" Width="250" MaxLength="44" Text="WorldName" LostKeyboardFocus="TBWorldName_Input">
-                                                    </TextBox>
-                                                </Border>
-                                            </StackPanel>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="30"/>
+                                                <RowDefinition Height="15" />
+                                                <RowDefinition Height="30"/>
+                                            </Grid.RowDefinitions>
 
-                                            <!-- Seed -->
-                                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center"  HorizontalAlignment="Right">
-                                                <TextBlock Text="Seed:  " Foreground="White" FontSize="20" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                <Border BorderBrush ="#333437" Background="#333437" BorderThickness="1" CornerRadius="8" Margin="0">
-                                                    <TextBox x:Name="TBWorldSeed" ToolTip="Set the seed the world would use when created. Leave empty to generate a random seed"
-                                                        FontSize="18" MaxLines="1" FontStyle="Italic"
+                                            <!-- Row 0 -->
+                                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Name" Foreground="White" FontSize="20" FontWeight="SemiBold" />
+
+                                            <Border Grid.Row="0" Grid.Column="1" BorderBrush="#333437" Width="280" HorizontalAlignment="Left" Background="#333437" BorderThickness="1" CornerRadius="5">
+                                                <TextBox x:Name="TBWorldName"
+                                                        ToolTip="Set the world name"
+                                                        FontSize="18" MaxLines="1" TextAlignment="Left"
+                                                        Foreground="#8A8A8A" SelectionBrush="#FF007BFF"
+                                                        Background="{x:Null}" BorderBrush="{x:Null}"
+                                                        Margin="13,4,13,4" 
+                                                        VerticalAlignment="Center" BorderThickness="0"
+                                                        CaretBrush="White" MaxLength="40" Text="World name" LostKeyboardFocus="TBWorldName_Input">
+                                                </TextBox>
+                                            </Border>
+
+                                            <!-- Row 2 -->
+                                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Seed" Foreground="White" FontSize="20" FontWeight="SemiBold"/>
+                                            <Border Grid.Row="2" Grid.Column="1" Width="140" BorderBrush="#333437" HorizontalAlignment="Left" Background="#333437" BorderThickness="1" CornerRadius="5">
+                                                <TextBox x:Name="TBWorldSeed"
+                                                        ToolTip="Set the seed the world would use when created. Leave empty to generate a random seed"
+                                                        FontSize="18" MaxLines="1"
                                                         Foreground="#8A8A8A" TextAlignment="Left"
                                                         Background="{x:Null}" BorderBrush="{x:Null}"
                                                         Margin="13,4,13,4" SelectionBrush="#FF007BFF"
-                                                        VerticalAlignment="Center" BorderThickness="0" CaretBrush="White" Width="155" MaxLength="10" Text="WorldSeed" LostKeyboardFocus="TBWorldSeed_Input" IsReadOnly="{Binding IsNewWorld, FallbackValue=False, Mode=OneWay}"/>
-                                                </Border>
-                                            </StackPanel>
+                                                        VerticalAlignment="Center" BorderThickness="0" CaretBrush="White" MaxLength="10" LostKeyboardFocus="TBWorldSeed_Input" IsReadOnly="{Binding IsNewWorld, FallbackValue=False, Mode=OneWay}"/>
+                                            </Border>
                                         </Grid>
 
                                         <!-- World Gamemode -->
@@ -863,64 +869,6 @@
                             </Border>
                         </Grid>
                     </Border>
-
-
-                    <Grid Grid.Row="1">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="3*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-
-
-                        <!-- Column 1: (TODO) Restore Backup Button -->
-                        <!--<Button Style="{StaticResource LargeButton}" Click="RestoreBackup_Click" ToolTip="Restore a backup of your world" Background="#151516" Height="62" HorizontalAlignment="Stretch" Margin="0 0 15 0" Width="Auto" >
-                            <Grid Height="53" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Button}}">
-
-                                --> <!-- Grid Definitions --> <!--
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="3.5*"/>
-                                </Grid.ColumnDefinitions>
-
-                                --> <!-- Column 1: Restore Backup Icon --> <!--
-                                <Grid Background="White" Width="45" HorizontalAlignment="Right">
-                                    <Grid.OpacityMask>
-                                        <ImageBrush ImageSource="{StaticResource RestoreBackupButton}" Stretch="Uniform"/>
-                                    </Grid.OpacityMask>
-                                </Grid>
-
-                                --> <!-- Column 2: Restore Backup Text --> <!--
-                                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" FontSize="16" FontWeight="Bold" Text="RESTORE BACKUP" />
-
-                            </Grid>
-                        </Button>-->
-
-                        <!-- Column 3: Delete World Button -->
-                        <Button Grid.Column="1" Style="{StaticResource LargeButton}" x:Name="DeleteWorldBtn" Click="DeleteWorld_Click" ToolTip="Delete this world" Background="Red" Height="62" HorizontalAlignment="Stretch" Margin="15 0 0 0" Width="Auto" >
-                            <Grid Height="53" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Button}}">
-
-                                <!-- Grid Definitions -->
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="3.5*"/>
-                                </Grid.ColumnDefinitions>
-
-                                <!-- Column 1: Delete World Icon -->
-                                <Grid Background="White" Width="30" HorizontalAlignment="Right">
-                                    <Grid.OpacityMask>
-                                        <ImageBrush ImageSource="{StaticResource TrashcanButton}" Stretch="Uniform"/>
-                                    </Grid.OpacityMask>
-                                </Grid>
-
-                                <!-- Column 2: Delete World Text -->
-                                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" FontSize="16" FontWeight="Bold" Text="DELETE WORLD" />
-
-                            </Grid>
-                        </Button>
-
-                    </Grid>
-
 
                 </Grid>
 

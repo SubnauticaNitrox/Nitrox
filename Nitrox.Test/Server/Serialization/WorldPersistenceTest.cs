@@ -386,9 +386,9 @@ namespace NitroxServer.Serialization
                     },
                     PartiallyConstructedPieces = new List<BasePiece>()
                     {
-                        new BasePiece(new NitroxId(), NitroxVector3.One, NitroxQuaternion.Identity, NitroxVector3.One, NitroxQuaternion.Identity, new NitroxTechType("BasePiece2"), Optional.Empty, false, Optional<BuilderMetadata>.Of(new AnchoredFaceBuilderMetadata(new NitroxInt3(1,2,3), 1, 2))),
+                        new BasePiece(new NitroxId(), NitroxVector3.One, NitroxQuaternion.Identity, NitroxVector3.One, NitroxQuaternion.Identity, new NitroxTechType("BasePiece2"), Optional.Empty, false, Optional<BuilderMetadata>.Of(new AnchoredFaceBuilderMetadata(new NitroxInt3(1,2,3), 1, 2, new NitroxInt3(0,1,2)))),
                         new BasePiece(new NitroxId(), NitroxVector3.One, NitroxQuaternion.Identity, NitroxVector3.One, NitroxQuaternion.Identity, new NitroxTechType("BasePiece2"), Optional.Empty, false, Optional<BuilderMetadata>.Of(new BaseModuleBuilderMetadata(new NitroxInt3(1,2,3), 1))),
-                        new BasePiece(new NitroxId(), NitroxVector3.One, NitroxQuaternion.Identity, NitroxVector3.One, NitroxQuaternion.Identity, new NitroxTechType("BasePiece2"), Optional.Empty, false, Optional<BuilderMetadata>.Of(new CorridorBuilderMetadata(new NitroxVector3(1,2,3),2, false, default))),
+                        new BasePiece(new NitroxId(), NitroxVector3.One, NitroxQuaternion.Identity, NitroxVector3.One, NitroxQuaternion.Identity, new NitroxTechType("BasePiece2"), Optional.Empty, false, Optional<BuilderMetadata>.Of(new CorridorBuilderMetadata(new NitroxVector3(1,2,3),2, false, new NitroxInt3(4,5,6)))),
                         new BasePiece(new NitroxId(), NitroxVector3.One, NitroxQuaternion.Identity, NitroxVector3.One, NitroxQuaternion.Identity, new NitroxTechType("BasePiece2"), Optional.Empty, false, Optional<BuilderMetadata>.Of(new MapRoomBuilderMetadata(0x20, 2)))
                     }
                 },

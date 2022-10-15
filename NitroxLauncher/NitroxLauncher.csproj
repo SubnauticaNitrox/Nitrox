@@ -19,10 +19,11 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Resource Include="Images\**">
+      <Resource Include="Assets\Images\**">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Resource>
     </ItemGroup>
+
 
     <ItemGroup>
       <ProjectReference Include="..\NitroxPatcher\NitroxPatcher.csproj" />

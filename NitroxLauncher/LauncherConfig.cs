@@ -1,9 +1,7 @@
 ﻿using System.ComponentModel;
-using System.IO;
 using System.Runtime.CompilerServices;
 using NitroxLauncher.Properties;
-using NitroxModel.Discovery;
-using NitroxModel.Platforms.Store;
+using NitroxModel.Helper;
 
 namespace NitroxLauncher
 {
@@ -21,40 +19,14 @@ namespace NitroxLauncher
             }
         }
 
-        // Is subnautica a pirated version
-        private bool isPirated = false;
-        public bool IsPirated
-        {
-            get => isPirated;
-            set
-            {
-                isPirated = value;
-                OnPropertyChanged();
-            }
-        }
-
-        // Subnautica game platform (Epic, Steam, MS, ...)
-        private Platform subnauticaPlatform = Platform.NONE;
-        public Platform SubnauticaPlatform
-        {
-            get => subnauticaPlatform;
-            set
-            {
-                subnauticaPlatform = value;
-                OnPropertyChanged();
-            }
-        }
-
         // Subnautica game files path
-        private string subnauticaPath = string.Empty;
         public string SubnauticaPath
         {
-            get => subnauticaPath;
+            get => NitroxUser.GamePath;
             set
             {
                 // Ensures the path looks alright (no mixed / and \ path separators)
-                subnauticaPath = Path.GetFullPath(value);
-                subnauticaPlatform = GamePlatforms.GetPlatformByGameDir(subnauticaPath)?.platform ?? Platform.NONE;
+                NitroxUser.GamePath = value;
                 OnPropertyChanged();
             }
         }
