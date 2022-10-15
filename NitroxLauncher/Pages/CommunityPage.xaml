@@ -12,11 +12,11 @@
       Title="CommunityPage">
 
     <local:PageBase.Resources>
-        <BitmapImage x:Key="CommunityHeader" UriSource="pack://application:,,,/Images/communityHeader.png" />
-        <BitmapImage x:Key="SocialDiscordIcon" UriSource="pack://application:,,,/Images/social/discordIco.png" />
-        <BitmapImage x:Key="SocialRedditIcon" UriSource="pack://application:,,,/Images/social/redditIco.png" />
-        <BitmapImage x:Key="SocialTwitterIcon" UriSource="pack://application:,,,/Images/social/twitterIco.png" />
-        <BitmapImage x:Key="SocialGithubIcon" UriSource="pack://application:,,,/Images/social/githubIco.png" />
+        <BitmapImage x:Key="CommunityHeader" UriSource="pack://application:,,,/Assets/Images/communityHeader.png" />
+        <BitmapImage x:Key="SocialDiscordIcon" UriSource="pack://application:,,,/Assets/Images/social/discordIco.png" />
+        <BitmapImage x:Key="SocialRedditIcon" UriSource="pack://application:,,,/Assets/Images/social/redditIco.png" />
+        <BitmapImage x:Key="SocialTwitterIcon" UriSource="pack://application:,,,/Assets/Images/social/twitterIco.png" />
+        <BitmapImage x:Key="SocialGithubIcon" UriSource="pack://application:,,,/Assets/Images/social/githubIco.png" />
     </local:PageBase.Resources>
 
     <Grid Margin="32,0" Height="800" VerticalAlignment="Top">

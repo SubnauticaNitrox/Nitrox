@@ -6,13 +6,13 @@ namespace NitroxLauncher.Models
     [Serializable]
     internal class NitroxBlog
     {
-        public string Title { get; set; }
+        public string Title { get; }
 
-        public DateTime Date { get; set; }
+        public DateTime Date { get; }
 
-        public string Url { get; set; }
+        public string Url { get; }
 
-        public string Image { get; set; }
+        public string Image { get; }
 
         protected NitroxBlog()
         {
