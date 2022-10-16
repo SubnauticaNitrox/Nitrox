@@ -7,6 +7,17 @@ namespace NitroxModel.DataStructures.Util
     [TestClass]
     public class OptionalTest
     {
+        /// <summary>
+        ///     These optional additions should be in <see cref="OptionalHasValueDynamicChecks"/> test method but MSTest
+        ///     reuses instances which causes <see cref="Optional{T}.HasValue">Optional{T}.HasValue</see> to be called before the new conditions are added.
+        /// </summary>
+        [TestInitialize]
+        public static void Init()
+        {
+            Optional.ApplyHasValueCondition<Base>(v => v.GetType() == typeof(A) || v.Threshold > 200); // Cheat: allow check if type A to do more complex tests on Optional<T>.HasValue
+            Optional.ApplyHasValueCondition<A>(v => v.Threshold <= 200);
+        }
+        
         [TestMethod]
         public void OptionalGet()
         {
@@ -62,9 +73,6 @@ namespace NitroxModel.DataStructures.Util
         [TestMethod]
         public void OptionalHasValueDynamicChecks()
         {
-            Optional.ApplyHasValueCondition<Base>(v => v.GetType() == typeof(A) || v.Threshold > 200); // Cheat: allow check if type A to do more complex tests on Optional<T>.HasValue
-            Optional.ApplyHasValueCondition<A>(v => v.Threshold <= 200);
-
             Optional<Base> opBase = Optional.Of(new Base());
             opBase.HasValue.Should().BeTrue();
             opBase.Value.Threshold.Should().Be(202);
