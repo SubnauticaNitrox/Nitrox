@@ -8,10 +8,9 @@ using System.Runtime.Serialization.Formatters.Binary;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NitroxModel.DataStructures.Surrogates;
-using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures.Surrogates;
 
-namespace NitroxTest.Model.Packets
+namespace NitroxModel.Packets
 {
     [TestClass]
     public class PacketsSerializableTest
