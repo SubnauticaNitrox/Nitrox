@@ -5,7 +5,7 @@ namespace NitroxModel.Helper
 {
     public static class PirateDetection
     {
-        private static bool HasTriggered { get; set; }
+        public static bool HasTriggered { get; private set; }
 
         /// <summary>
         ///     Event that calls subscribers if the pirate detection triggered successfully.

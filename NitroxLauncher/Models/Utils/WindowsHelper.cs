@@ -12,6 +12,7 @@ using WindowsFirewallHelper;
 using WindowsFirewallHelper.Addresses;
 using WindowsFirewallHelper.FirewallRules;
 using NitroxModel;
+using NitroxModel.Helper;
 
 namespace NitroxLauncher.Models.Utils
 {
@@ -100,7 +101,7 @@ namespace NitroxLauncher.Models.Utils
 
         private static void CheckClientFirewallRules(FirewallDirection direction)
         {
-            string clientPath = Path.Combine(LauncherLogic.Config.SubnauticaPath, GameInfo.Subnautica.ExeName);
+            string clientPath = Path.Combine(NitroxUser.GamePath, GameInfo.Subnautica.ExeName);
 
             AddExclusiveFirewallRule(Path.GetFileName(clientPath), clientPath, direction);
         }

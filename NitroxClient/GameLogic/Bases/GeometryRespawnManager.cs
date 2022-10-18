@@ -29,23 +29,18 @@ public class GeometryRespawnManager
 
         foreach (Transform cellObject in cellObjects)
         {
-            if (cellObject != null)
+            if (!cellObject)
             {
-                for (int i = 0; i < cellObject.childCount; i++)
-                {
-                    Transform child = cellObject.GetChild(i);
+                continue;
+            }
 
-                    if (child != null && child.gameObject != null)
-                    {
-                        // Ensure there is already a nitrox id, we don't want to go creating one
-                        // which happens if you call GetId directly and it is missing.
-                        if (child.gameObject.GetComponent<NitroxEntity>() != null)
-                        {
-                            NitroxId id = NitroxEntity.GetId(child.gameObject);
-                            ObjectKey key = GetObjectKey(child.gameObject);
-                            nitroxIdByObjectKey[key] = id;
-                        }
-                    }
+            foreach (Transform child in cellObject)
+            {
+                // We only want to save NitroxIds
+                if (child.gameObject.TryGetComponent(out NitroxEntity nitroxEntity))
+                {
+                    ObjectKey key = GetObjectKey(child.gameObject);
+                    nitroxIdByObjectKey[key] = nitroxEntity.Id;
                 }
             }
         }
@@ -61,7 +56,10 @@ public class GeometryRespawnManager
     {
         // face based pieces are handled a bit differently on respawn as the BaseDeconstructable is not
         // yet attached to the game object.  So we'll pass in the known fields instead.
-        ObjectKey key = new(gameObject.name, gameObject.transform.position, faceCell, direction);
+        ObjectKey key = new(gameObject.name,
+                            gameObject.transform.parent.position,
+                            gameObject.transform.localPosition,
+                            gameObject.transform.localRotation);
         UpdateBasePieceIdIfPossible(gameObject, key);
     }
 
@@ -81,44 +79,45 @@ public class GeometryRespawnManager
         }
     }
 
-    private static ObjectKey GetObjectKey(GameObject gameObject)
+    public static ObjectKey GetObjectKey(GameObject gameObject)
     {
-        BaseDeconstructable deconstructable = gameObject.GetComponentInChildren<BaseDeconstructable>();
-
-        Int3 faceCell = default(Int3);
-        Base.Direction? faceDirection = null;
-
-        if (deconstructable && deconstructable.face.HasValue)
-        {
-            Base.Face face = deconstructable.face.Value;
-            faceCell = face.cell;
-            faceDirection = face.direction;
-        }
-        
-        return new ObjectKey(gameObject.name, gameObject.transform.position, faceCell, faceDirection);
+        return new ObjectKey(gameObject.name,
+                             gameObject.transform.parent.position,
+                             gameObject.transform.localPosition,
+                             gameObject.transform.localRotation);
     }
 
-    private readonly struct ObjectKey : IEquatable<ObjectKey>
+    public readonly struct ObjectKey : IEquatable<ObjectKey>
     {
         private readonly string name;
+        private readonly Vector3 parentCellPosition;
         private readonly Vector3 position;
-        private readonly Int3 faceCell;
-        private readonly Base.Direction? direction;
+        private readonly Quaternion rotation;
 
-        public ObjectKey(string name, Vector3 position, Int3 faceCell, Base.Direction? direction)
+        public ObjectKey(string name, Vector3 parentCellPosition, Vector3 position, Quaternion rotation)
         {
             this.name = name;
+            this.parentCellPosition = parentCellPosition;
             this.position = position;
-            this.faceCell = faceCell;
-            this.direction = direction;
+            this.rotation = rotation;
         }
-        
+
         public bool Equals(ObjectKey other)
         {
-            return name == other.name && 
-                   position.Equals(other.position) && 
-                   faceCell.Equals(other.faceCell) && 
-                   direction == other.direction;
+            return name == other.name &&
+                   Equals(parentCellPosition, other.parentCellPosition) &&
+                   Equals(position, other.position) &&
+                   Equals(rotation, other.rotation);
+        }
+
+        public bool Equals(Vector3 position, Vector3 otherPosition)
+        {
+            return Vector3.SqrMagnitude(position - otherPosition) < 0.1f;
+        }
+
+        public bool Equals(Quaternion rotation, Quaternion otherRotation)
+        {
+            return Math.Abs(Quaternion.Angle(rotation, otherRotation)) < 0.1f;
         }
 
         public override bool Equals(object obj)
@@ -131,11 +130,16 @@ public class GeometryRespawnManager
             unchecked
             {
                 int hashCode = (name != null ? name.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ parentCellPosition.GetHashCode();
                 hashCode = (hashCode * 397) ^ position.GetHashCode();
-                hashCode = (hashCode * 397) ^ faceCell.GetHashCode();
-                hashCode = (hashCode * 397) ^ direction.GetHashCode();
+                hashCode = (hashCode * 397) ^ rotation.GetHashCode();
                 return hashCode;
             }
+        }
+
+        public override string ToString()
+        {
+            return $"[Name: {name}, Position: {position}, Rotation: {rotation}]";
         }
     }
 }

@@ -11,7 +11,7 @@
                          Title="OptionPage">
 
     <local:PageBase.Resources>
-        <BitmapImage x:Key="SubnauticaIcon" UriSource="pack://application:,,,/images/subnauticaIcon.png"/>
+        <BitmapImage x:Key="SubnauticaIcon" UriSource="pack://application:,,,/Assets/Images/subnauticaIcon.png"/>
     </local:PageBase.Resources>
 
     <Grid>

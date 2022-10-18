@@ -1,7 +1,5 @@
 ﻿using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
-using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper;
 using NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation.Metadata;
 using UnityEngine;
 
@@ -42,7 +40,7 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation
                 case BaseAddFaceGhost faceGhost:
                 {
                     Base.Face anchoredFace = faceGhost.anchoredFace!.Value;
-                    builderMetadata = new AnchoredFaceBuilderMetadata(anchoredFace.cell.ToDto(), (int)anchoredFace.direction, (int)faceGhost.faceType);
+                    builderMetadata = new AnchoredFaceBuilderMetadata(anchoredFace.cell.ToDto(), (int)anchoredFace.direction, (int)faceGhost.faceType, faceGhost.targetBase.GetAnchor().ToDto());
                     break;
                 }
             }

@@ -132,7 +132,7 @@ namespace NitroxClient.GameLogic
 
             // For base pieces, we must switch the id from the ghost to the newly constructed piece.
             // Furniture just uses the same game object as the ghost for the final product.
-            if (ghost.GetComponent<ConstructableBase>())
+            if (ghost.TryGetComponent(out ConstructableBase constructableBase))
             {
                 Int3 latestCell = lastTargetBaseOffset;
                 Base latestBase = lastTargetBase.HasValue ? lastTargetBase.Value : ((GameObject)opConstructedBase.Value).GetComponent<Base>();
@@ -157,7 +157,7 @@ namespace NitroxClient.GameLogic
                     cellTransform = latestBase.GetCellObject(latestCell);
                     if (cellTransform != null)
                     {
-                        placedPiece = FindFinishedPiece(cellTransform);
+                        placedPiece = ThrottledBuilder.FindFinishedPiece(cellTransform, id, constructableBase.techType);
                     }
                 }
 
@@ -170,7 +170,7 @@ namespace NitroxClient.GameLogic
                     cellTransform = latestBase.GetCellObject(position);       
 
                     Validate.NotNull(cellTransform, "Unable to find cell transform at " + latestCell);
-                    placedPiece = FindFinishedPiece(cellTransform);
+                    placedPiece = ThrottledBuilder.FindFinishedPiece(cellTransform, id, constructableBase.techType);
                 }
                 
                 Validate.NotNull(placedPiece, $"Could not find finished piece in cell {latestCell}");
@@ -192,23 +192,7 @@ namespace NitroxClient.GameLogic
             ConstructionCompleted constructionCompleted = new ConstructionCompleted(id, baseId);
             packetSender.Send(constructionCompleted);
         }
-        
-        // There can be multiple objects in a cell (such as a corridor with hatches built into it)
-        // we look for a object that is able to be deconstructed that hasn't been tagged yet.
-        internal static GameObject FindFinishedPiece(Transform cellTransform)
-        {
-            foreach (Transform child in cellTransform)
-            {
-                bool isNewBasePiece = !child.TryGetComponent(out NitroxEntity _) && child.GetComponent<BaseDeconstructable>() && !child.name.Contains("CorridorConnector");
-                
-                if (isNewBasePiece)
-                {
-                    return child.gameObject;
-                }
-            }
 
-            return null;
-        }
 
         public void DeconstructionBegin(NitroxId id)
         {

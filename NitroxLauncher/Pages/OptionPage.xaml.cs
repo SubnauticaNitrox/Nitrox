@@ -5,14 +5,15 @@ using System.Windows;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using NitroxLauncher.Models;
 using NitroxModel.Discovery;
+using NitroxModel.Helper;
 using NitroxServer.Serialization.World;
 
 namespace NitroxLauncher.Pages
 {
     public partial class OptionPage : PageBase
     {
-        public Platform GamePlatform => LauncherLogic.Config.SubnauticaPlatform;
-        public string PathToSubnautica => LauncherLogic.Config.SubnauticaPath;
+        public Platform GamePlatform => NitroxUser.GamePlatform?.Platform ?? Platform.NONE;
+        public string PathToSubnautica => NitroxUser.GamePath;
         public string SubnauticaLaunchArguments => LauncherLogic.Config.SubnauticaLaunchArguments;
 
         public OptionPage()

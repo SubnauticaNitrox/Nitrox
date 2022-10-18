@@ -38,6 +38,12 @@ public class uGUI_PDA_SetTabs_Patch : NitroxPatch, IDynamicPatch
 
     public static void SetupNitroxIcons(uGUI_PDA __instance, Atlas.Sprite[] array)
     {
+        // In the case SetTabs is used with a null value (from TimeCapsule for example)
+        if (array.Length == 0)
+        {
+            return;
+        }
+
         NitroxPDATabManager nitroxTabManager = Resolve<NitroxPDATabManager>();
         List<NitroxPDATab> customTabs = new(nitroxTabManager.CustomTabs.Values);
         for (int i = 0; i < customTabs.Count; i++)
@@ -59,7 +65,10 @@ public class uGUI_PDA_SetTabs_Patch : NitroxPatch, IDynamicPatch
 
     private static void AssignSprite(uGUI_Toolbar toolbar, int index, Atlas.Sprite sprite)
     {
-        toolbar.icons[index].SetForegroundSprite(sprite);
+        if (index < toolbar.icons.Count)
+        {
+            toolbar.icons[index].SetForegroundSprite(sprite);
+        }
     }
 
     public override void Patch(Harmony harmony)

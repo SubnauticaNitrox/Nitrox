@@ -18,15 +18,9 @@ namespace NitroxLauncher.Pages
 {
     public partial class ServerPage : PageBase
     {
-        public bool IsServerExternal
-        {
-            get => LauncherLogic.Config.IsExternalServer;
-            set => LauncherLogic.Config.IsExternalServer = value;
-        }
-
         public ServerConfig Config;
 
-        private bool isNewWorld { get; set; }
+        public bool IsNewWorld { get; private set; }
         private bool isInSettings { get; set; }
 
         private string selectedWorldDirectory { get; set; }
@@ -38,10 +32,10 @@ namespace NitroxLauncher.Pages
         public ServerPage()
         {
             InitializeComponent();
-            InitializeWorldListing();
 
-            RBIsDocked.IsChecked = !IsServerExternal;
-            RBIsExternal.IsChecked = IsServerExternal;
+            InitializeWorldListing();
+            RBIsDocked.IsChecked = !LauncherLogic.Config.IsExternalServer;
+            RBIsExternal.IsChecked = LauncherLogic.Config.IsExternalServer;
         }
 
         private void RBServer_Clicked(object sender, RoutedEventArgs e)
@@ -55,7 +49,6 @@ namespace NitroxLauncher.Pages
 
             NoWorldsBackground.Opacity = WorldManager.GetSaves().Any() ? 0 : 1;
 
-            // Bind the list data to be used in XAML
             WorldListingContainer.ItemsSource = null;
             WorldListingContainer.ItemsSource = WorldManager.GetSaves();
         }
@@ -76,7 +69,7 @@ namespace NitroxLauncher.Pages
             Config.Update(selectedWorldDirectory, c =>
             {
                 c.SaveName = TBWorldName.Text;
-                if (isNewWorld) { c.Seed = TBWorldSeed.Text; }
+                if (IsNewWorld) { c.Seed = TBWorldSeed.Text; }
                 if (RBFreedom.IsChecked == true) { c.GameMode = ServerGameMode.FREEDOM; }
                 else if (RBSurvival.IsChecked == true) { c.GameMode = ServerGameMode.SURVIVAL; }
                 else if (RBCreative.IsChecked == true) { c.GameMode = ServerGameMode.CREATIVE; }
@@ -160,7 +153,7 @@ namespace NitroxLauncher.Pages
         public void AddWorld_Click(object sender, RoutedEventArgs e)
         {
             Log.Info($"Adding new world");
-            isNewWorld = true;
+            IsNewWorld = true;
             TBWorldSeed.IsReadOnly = false;
 
             ImportSaveBtnBorder.Opacity = 1;
@@ -181,7 +174,7 @@ namespace NitroxLauncher.Pages
         
         private void GoBack_Click(object sender, RoutedEventArgs e)
         {
-            if (!isNewWorld)
+            if (!IsNewWorld)
             {
                 selectedWorldDirectory = WorldManager.GetSaves().ElementAtOrDefault(WorldListingContainer.SelectedIndex)?.WorldSaveDir;
             }
@@ -195,7 +188,7 @@ namespace NitroxLauncher.Pages
             {
                 SaveConfigSettings();
                 InitializeWorldListing();
-                isNewWorld = false;
+                IsNewWorld = false;
                 isInSettings = false;
 
                 ImportSaveBtnBorder.Opacity = 0;
@@ -261,7 +254,7 @@ namespace NitroxLauncher.Pages
 
         private void DeleteWorld_Click(object sender, RoutedEventArgs e)
         {
-            if (!isNewWorld)
+            if (!IsNewWorld)
             {
                 selectedWorldDirectory = WorldManager.GetSaves().ElementAtOrDefault(WorldListingContainer.SelectedIndex)?.WorldSaveDir;
             }
@@ -275,17 +268,7 @@ namespace NitroxLauncher.Pages
             {
                 LauncherNotifier.Error($"This save does not exist or is not valid.");
                 InitializeWorldListing();
-                if (e.OriginalSource == DeleteWorldBtn)
-                {
-                    Storyboard GoBackAnimationStoryboard = (Storyboard)FindResource("GoBackAnimation");
-                    GoBackAnimationStoryboard.Begin();
-                }
                 return;
-            }
-
-            if (e.OriginalSource == DeleteWorldBtn)
-            {
-                isInSettings = true;
             }
 
             ConfirmationBox.Opacity = 1;
@@ -294,11 +277,11 @@ namespace NitroxLauncher.Pages
 
         private void YesConfirmBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (!isNewWorld)
+            if (!IsNewWorld)
             {
                 selectedWorldDirectory = WorldManager.GetSaves().ElementAtOrDefault(WorldListingContainer.SelectedIndex)?.WorldSaveDir ?? "";
             }
-            isNewWorld = false;
+            IsNewWorld = false;
             
             try
             {
@@ -317,7 +300,7 @@ namespace NitroxLauncher.Pages
 
             if (isInSettings)
             {
-                isNewWorld = false;
+                IsNewWorld = false;
                 ImportSaveBtnBorder.Opacity = 0;
                 ImportSaveBtn.IsEnabled = false;
 
@@ -862,12 +845,20 @@ namespace NitroxLauncher.Pages
 
     }
 
-    // OPTIONAL - Only used to view world listings in intellisense, in addition to the lines that are in the ListView definition in ServerPage.xaml
-    public class WorldListing
+    [Serializable]
+    internal class WorldListing
     {
         public string WorldName { get; set; }
+
         public string WorldGamemode { get; set; }
+
         public string WorldVersion { get; set; }
+
         public bool IsValidSave { get; set; }
+
+        public override string ToString()
+        {
+            return $"[{nameof(WorldListing)}: WorldName: {WorldName}, WorldGamemode: {WorldGamemode}, WorldVersion: {WorldVersion}, IsValidSave: {IsValidSave}]";
+        }
     }
 }

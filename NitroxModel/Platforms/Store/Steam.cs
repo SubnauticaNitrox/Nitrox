@@ -17,7 +17,7 @@ namespace NitroxModel.Platforms.Store
         public static Steam Instance => instance ??= new Steam();
 
         public string Name => nameof(Steam);
-        public Platform platform => Platform.STEAM;
+        public Platform Platform => Platform.STEAM;
 
         public bool OwnsGame(string gameDirectory)
         {
