@@ -123,5 +123,20 @@ namespace NitroxClient.Unity.Helper
 
             return sb.ToString();
         }
+
+        public static bool TryGetComponentInAscendance<T>(this Transform transform, int degree, out T component)
+        {
+            while (degree > 0)
+            {
+                if (!transform.parent)
+                {
+                    component = default;
+                    return false;
+                }
+                transform = transform.parent;
+                degree--;
+            }
+            return transform.TryGetComponent(out component);
+        }
     }
 }

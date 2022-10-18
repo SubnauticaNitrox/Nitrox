@@ -330,6 +330,13 @@ namespace NitroxServer.Serialization
                     Assert.AreEqual(playerData.Permissions, playerDataAfter.Permissions, $"PlayerData.Players.Permissions is not equal while using {serverSerializers[serializerIndex]}.");
                     Assert.AreEqual(playerData.NitroxId, playerDataAfter.NitroxId, $"PlayerData.Players.NitroxId is not equal while using {serverSerializers[serializerIndex]}.");
                     Assert.AreEqual(playerData.IsPermaDeath, playerDataAfter.IsPermaDeath, $"PlayerData.Players.IsFurniture is not equal while using {serverSerializers[serializerIndex]}.");
+
+                    Assert.AreEqual(playerData.PingInstancePreferences.Count, playerDataAfter.PingInstancePreferences.Count, $"PlayerData.Players.PingInstancePreferences is not equal while using {serverSerializers[serializerIndex]}.");
+                    foreach (string pingKey in playerData.PingInstancePreferences.Keys)
+                    {
+                        Assert.AreEqual(playerData.PingInstancePreferences[pingKey].Color, playerDataAfter.PingInstancePreferences[pingKey].Color, $"PlayerData.Players.PingInstancePreferences.Color is not equal while using {serverSerializers[serializerIndex]}.");
+                        Assert.AreEqual(playerData.PingInstancePreferences[pingKey].Visible, playerDataAfter.PingInstancePreferences[pingKey].Visible, $"PlayerData.Players.PingInstancePreferences.Visible is not equal while using {serverSerializers[serializerIndex]}.");
+                    }
                 }
             }
         }
@@ -417,7 +424,8 @@ namespace NitroxServer.Serialization
                             UsedItems = new List<NitroxTechType>(0),
                             QuickSlotsBinding = new List<string>(0),
                             EquippedItems = new List<EquippedItemData>(0),
-                            Modules = new List<EquippedItemData>(0)
+                            Modules = new List<EquippedItemData>(0),
+                            PingInstancePreferences = new()
                         },
                         new PersistedPlayerData()
                         {
@@ -439,6 +447,10 @@ namespace NitroxServer.Serialization
                             Modules = new List<EquippedItemData>()
                             {
                                 new EquippedItemData(new NitroxId(), new NitroxId(), new byte[]{0x35, 0xD0}, "Module1", new NitroxTechType("Compass"))
+                            },
+                            PingInstancePreferences = new(){
+                                { "eda14b58-cfe0-4a56-aa4a-47942567d897", new(0, false) },
+                                { "Signal_Lifepod12", new(4, true) }
                             }
                         }
                     }

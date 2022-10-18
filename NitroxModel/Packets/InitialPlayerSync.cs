@@ -35,6 +35,7 @@ namespace NitroxModel.Packets
         public List<NitroxId> InitialSimulationOwnerships { get; }
         public ServerGameMode GameMode { get; }
         public Perms Permissions { get; }
+        public Dictionary<string, PingInstancePreference> Preferences { get; }
 
         public InitialPlayerSync(NitroxId playerGameObjectId,
             bool firstTimeConnecting,
@@ -58,7 +59,8 @@ namespace NitroxModel.Packets
             IEnumerable<Entity> globalRootEntities,
             IEnumerable<NitroxId> initialSimulationOwnerships,
             ServerGameMode gameMode,
-            Perms perms)
+            Perms perms,
+            Dictionary<string, PingInstancePreference> preferences)
         {
             EscapePodsData = escapePodsData.ToList();
             AssignedEscapePodId = assignedEscapePodId;
@@ -83,6 +85,7 @@ namespace NitroxModel.Packets
             InitialSimulationOwnerships = initialSimulationOwnerships.ToList();
             GameMode = gameMode;
             Permissions = perms;
+            Preferences = preferences;
         }
     }
 }

@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Packets;
@@ -98,7 +97,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         private bool IsWaitingToRun(Type processor)
         {
-            return (alreadyRan.Contains(processor) == false);
+            return alreadyRan.Contains(processor) == false;
         }
 
         private string GetRemainingProcessorsText()
