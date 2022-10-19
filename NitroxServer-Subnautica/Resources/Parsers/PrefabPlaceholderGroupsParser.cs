@@ -243,6 +243,14 @@ public class PrefabPlaceholderGroupsParser
             }
         }
 
+        Optional<string> prefabPlaceholderId = Optional.Empty;
+        AssetFileInfo prefabPlaceholderInfo = amInst.GetMonoBehaviourFromGameObject(assetFileInst, rootGameObjectInfo, "PrefabPlaceholder");
+        if (prefabPlaceholderInfo != null)
+        {
+            AssetTypeValueField prefabIdentifier = amInst.GetBaseField(assetFileInst, prefabPlaceholderInfo);
+            prefabPlaceholderId = Optional.Of(prefabIdentifier["prefabClassId"].AsString);
+        }
+        
         NitroxEntitySlot nitroxEntitySlot = null;
         AssetFileInfo entitySlotInfo = amInst.GetMonoBehaviourFromGameObject(assetFileInst, rootGameObjectInfo, "EntitySlot");
         if (entitySlotInfo != null)
@@ -280,7 +288,7 @@ public class PrefabPlaceholderGroupsParser
             children.Add(CachePrefabAsset(amInst, assetFileInst, childGameObjectExt.info, childGameObjectValue, string.Empty));
         }
 
-        PrefabAsset prefabAsset = new(gameObjectName, classId, transformAsset, children, Optional.OfNullable(nitroxEntitySlot));
+        PrefabAsset prefabAsset = new(gameObjectName, classId, transformAsset, children, Optional.OfNullable(nitroxEntitySlot), prefabPlaceholderId);
 
         if (isRoot)
         {
