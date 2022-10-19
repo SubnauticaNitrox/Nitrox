@@ -8,6 +8,7 @@ using AddressablesTools;
 using AddressablesTools.Catalog;
 using AssetsTools.NET;
 using AssetsTools.NET.Extra;
+using Mono.Cecil;
 using NitroxModel.DataStructures.Util;
 using NitroxServer_Subnautica.Resources.Parsers.Helper;
 using NitroxServer.GameLogic.Entities;
@@ -58,6 +59,11 @@ public class PrefabPlaceholderGroupsParser
         //Dictionary<string, PrefabPlaceholdersGroupAsset> prefabPlaceholderGroupsByGroupClassId = GetPrefabPlaceholderGroupAssetsByGroupClassId(prefabPlaceholdersGroupPaths, loadAddressableCatalog);
         ConcurrentDictionary<string, PrefabPlaceholdersGroupAsset> prefabPlaceholderGroupsByGroupClassId = GetPrefabPlaceholderGroupAssetsByGroupClassId(prefabPlaceholdersGroupPaths, loadAddressableCatalog);
         am.UnloadAll(true);
+        
+        foreach (KeyValuePair<string,AssemblyDefinition> pair in am.monoTempGenerator.loadedAssemblies)
+        {
+            pair.Value.Dispose();
+        }
         
         return prefabPlaceholderGroupsByGroupClassId.ToDictionary(kvp => kvp.Key, kvp => kvp.Value, EqualityComparer<string>.Default);;
     }

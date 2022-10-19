@@ -21,7 +21,6 @@ public static class ResourceAssetsParser
             LootDistributionsJson = new EntityDistributionsParser().ParseFile(),
             PrefabPlaceholderGroupsByGroupClassId = new PrefabPlaceholderGroupsParser().ParseFile(),
             NitroxRandom = new RandomStartParser().ParseFile()
-            
         };
         AssetParser.Dispose();
         
