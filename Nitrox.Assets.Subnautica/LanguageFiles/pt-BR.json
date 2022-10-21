@@ -33,7 +33,7 @@
     "Nitrox_MultiplayerLoaded": "Cliente multijogador carregado…",
     "Nitrox_Mute": "Mutar {PLAYER}",
     "Nitrox_MuteQuestion": "Mutar {PLAYER}?",
-    "Nitrox_MutedPlayer": "Mutado {PLAYER}",
+    "Nitrox_MutedPlayer": "Mutou {PLAYER}",
     "Nitrox_PlayerColor": "Cor do jogador",
     "Nitrox_PlayerKicked": "Você foi expulso do servidor",
     "Nitrox_PlayerListTabName": "Lista de jogadores",
@@ -50,7 +50,7 @@
     "Nitrox_TeleportTo": "Teletransporte para {PLAYER}",
     "Nitrox_TeleportToMe": "Teleporte {PLAYER} para mim",
     "Nitrox_TeleportToMeQuestion": "Teleportar {PLAYER} para mim?",
-    "Nitrox_TeleportToQuestion": "Teleportar para {PLAYER} ?",
+    "Nitrox_TeleportToQuestion": "Teleportar para {PLAYER}?",
     "Nitrox_UnableToConnect": "Não foi possível conectar com o Servidor remoto:",
     "Nitrox_Unmute": "Desmutar {PLAYER}",
     "Nitrox_UnmuteQuestion": "Desmutar {PLAYER}?",
@@ -58,5 +58,5 @@
     "Nitrox_Waiting": "Aguardando na fila de entrada…",
     "Nitrox_WaitingPassword": "Aguardando senha do servidor…",
     "Nitrox_WaitingUserInput": "Aguardando informações do usuário…",
-    "Nitrox_WorldSettling": "Aguardando formação do mapa…"
+    "Nitrox_WorldSettling": "Aguardando Formação do Mapa…"
 }
