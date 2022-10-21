@@ -55,7 +55,7 @@
     "Nitrox_TeleportTo": "Teleport to {PLAYER}",
     "Nitrox_TeleportToMe": "Teleport {PLAYER} to me",
     "Nitrox_TeleportToMeQuestion": "Teleport {PLAYER} to me ?",
-    "Nitrox_TeleportToQuestion": "Teleport to {PLAYER} ?",
+    "Nitrox_TeleportToQuestion": "Teleport to {PLAYER}?",
     "Nitrox_ThankForPlaying": "Thanks for using Nitrox!",
     "Nitrox_UnableToConnect": "Unable to contact the remote server at:",
     "Nitrox_Unmute": "Unmute {PLAYER}",
