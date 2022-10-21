@@ -1,5 +1,5 @@
 {
-    "Nitrox_AddServer": "Agregar Servidor",
+    "Nitrox_AddServer": "Añadir Servidor",
     "Nitrox_AddServerAdd": "Añadir",
     "Nitrox_AddServerHost": "Anfitrión:",
     "Nitrox_AddServerName": "Nombre:",
@@ -58,11 +58,11 @@
     "Nitrox_TeleportToQuestion": "¿Teletransportarse a {PLAYER}?",
     "Nitrox_ThankForPlaying": "Gracias por usar Nitrox!",
     "Nitrox_UnableToConnect": "No se pudo contactar al servidor remoto en:",
-    "Nitrox_Unmute": "Desmutear a {PLAYER}",
-    "Nitrox_UnmuteQuestion": "Desmutear a {PLAYER}?",
+    "Nitrox_Unmute": "Dejar de silenciar a {PLAYER}",
+    "Nitrox_UnmuteQuestion": "¿Dejar de silenciar a {PLAYER}?",
     "Nitrox_UnmutedPlayer": "Dejaste de silenciar a {PLAYER}",
     "Nitrox_Waiting": "Esperando en cola para unirse…",
-    "Nitrox_WaitingPassword": "Esperando a que la contraseña del servidor sea ingresada…",
+    "Nitrox_WaitingPassword": "Esperando el ingreso de la contraseña del servidor…",
     "Nitrox_WaitingUserInput": "Esperando a que el usuario escriba…",
     "Nitrox_WorldSettling": "Esperando Asentamiento del mundo…"
 }
