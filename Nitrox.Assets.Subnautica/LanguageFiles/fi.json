@@ -5,7 +5,7 @@
     "Nitrox_AddServerName": "Nimi:",
     "Nitrox_AddServerPort": "Portti:",
     "Nitrox_Cancel": "Hylkää",
-    "Nitrox_CommandNotAvailable": "Tämä komento ei ole saatavilla Nitroxissa",
+    "Nitrox_CommandNotAvailable": "Tämä komento ei ola saatavilla Nitroxissa.",
     "Nitrox_ConnectTo": "Yhdistä",
     "Nitrox_DisconnectedSession": "Yhteys palvelimeen on katkaistu",
     "Nitrox_DiscordAccept": "Hyväksy",
