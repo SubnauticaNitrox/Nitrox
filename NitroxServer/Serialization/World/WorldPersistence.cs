@@ -17,7 +17,7 @@ using NitroxServer.GameLogic.Items;
 using NitroxServer.GameLogic.Players;
 using NitroxServer.GameLogic.Unlockables;
 using NitroxServer.GameLogic.Vehicles;
-using NitroxServer.Serialization.Resources.Datastructures;
+using NitroxServer.Resources;
 using NitroxServer.Serialization.Upgrade;
 
 namespace NitroxServer.Serialization.World

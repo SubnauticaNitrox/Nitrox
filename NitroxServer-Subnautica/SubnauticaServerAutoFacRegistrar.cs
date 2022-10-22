@@ -12,8 +12,8 @@ using NitroxServer.Serialization;
 using NitroxServer_Subnautica.GameLogic.Entities;
 using NitroxServer_Subnautica.GameLogic.Entities.Spawning;
 using NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers;
+using NitroxServer_Subnautica.Resources;
 using NitroxServer_Subnautica.Serialization;
-using NitroxServer_Subnautica.Serialization.Resources;
 
 namespace NitroxServer_Subnautica
 {
