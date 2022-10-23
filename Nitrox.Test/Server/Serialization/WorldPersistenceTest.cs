@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nitrox.Test;
+using NitroxModel_Subnautica.DataStructures.GameLogic;
 using NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation;
 using NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation.Metadata;
 using NitroxModel.Core;
@@ -504,11 +506,11 @@ namespace NitroxServer.Serialization
                     {
                         InventoryItems = new List<ItemData>()
                         {
-                            new ItemData(new NitroxId(), new NitroxId(), new byte[]{ 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 })
+                            new BasicItemData(new NitroxId(), new NitroxId(), new byte[]{ 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 })
                         },
                         StorageSlotItems = new List<ItemData>()
                         {
-                            new ItemData(new NitroxId(), new NitroxId(), new byte[]{ 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21 })
+                            new BasicItemData(new NitroxId(), new NitroxId(), new byte[]{ 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21 })
                         },
                         Modules = new List<EquippedItemData>()
                         {
@@ -524,7 +526,7 @@ namespace NitroxServer.Serialization
                     {
                         Vehicles = new List<VehicleModel>()
                         {
-                            new VehicleModel(new NitroxTechType("Cyclops"), new NitroxId(), NitroxVector3.One, NitroxQuaternion.Identity, new InteractiveChildObjectIdentifier[0], Optional<NitroxId>.Of(new NitroxId()), "Super Duper Cyclops", new []{NitroxVector3.Zero, NitroxVector3.One, NitroxVector3.One}, 100)
+                            new CyclopsModel(new NitroxTechType("Cyclops"), new NitroxId(), NitroxVector3.One, NitroxQuaternion.Identity, Array.Empty<InteractiveChildObjectIdentifier>().ToList(), Optional<NitroxId>.Of(new NitroxId()), "Super Duper Cyclops", new []{NitroxVector3.Zero, NitroxVector3.One, NitroxVector3.One}, 100)
                         }
                     },
                     Seed = "NITROXSEED"

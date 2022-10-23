@@ -7,7 +7,7 @@ namespace NitroxModel.DataStructures.GameLogic
 {
     [Serializable]
     [ProtoContract]
-    public class VehicleMovementData
+    public abstract class VehicleMovementData
     {
         [ProtoMember(1)]
         public NitroxTechType TechType { get; }

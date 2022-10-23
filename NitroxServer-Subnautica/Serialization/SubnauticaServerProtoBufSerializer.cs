@@ -39,7 +39,8 @@ namespace NitroxServer_Subnautica.Serialization
             vehicleModel.AddSubType(400, typeof(NeptuneRocketModel));
 
             MetaType movementData = Model.Add(typeof(VehicleMovementData), false);
-            movementData.AddSubType(100, typeof(ExosuitMovementData));
+            movementData.AddSubType(100, typeof(BasicVehicleMovementData));
+            movementData.AddSubType(200, typeof(ExosuitMovementData));
 
             MetaType builderMetadata = Model.Add(typeof(BuilderMetadata), false);
             builderMetadata.AddSubType(50, typeof(CorridorBuilderMetadata));
