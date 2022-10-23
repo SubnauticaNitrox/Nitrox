@@ -82,7 +82,7 @@ namespace NitroxClient.GameLogic
             ItemAttachPoint = PlayerModel.transform.Find(PlayerEquipmentConstants.ITEM_ATTACH_POINT_GAME_OBJECT_NAME);
 
             playerModelManager = modelManager;
-            playerModelManager.AttachPing(this);
+            CoroutineUtils.StartCoroutineSmart(playerModelManager.AttachPing(this));
             playerModelManager.BeginApplyPlayerColor(this);
             playerModelManager.RegisterEquipmentVisibilityHandler(PlayerModel);
             UpdateEquipmentVisibility();
