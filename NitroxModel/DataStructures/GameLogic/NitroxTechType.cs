@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using BinaryPack.Attributes;
 using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic
@@ -15,8 +16,9 @@ namespace NitroxModel.DataStructures.GameLogic
     public class NitroxTechType
     {
         [ProtoMember(1)]
-        public string Name { get; set; }
+        public string Name { get; }
 
+        [IgnoreConstructor]
         protected NitroxTechType()
         {
             // Constructor for serialization. Has to be "protected" for json serialization.

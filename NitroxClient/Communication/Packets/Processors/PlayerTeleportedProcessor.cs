@@ -16,7 +16,7 @@ namespace NitroxClient.Communication.Packets.Processors
             {
                 if (NitroxEntity.TryGetComponentFrom(packet.SubRootID.Value, out SubRoot subRoot))
                 {
-                    //Reversing calculations from PlayerMovement.Update()
+                    //Reversing calculations from PlayerMovementBroadcaster.Update()
                     Vector3 position = subRoot.transform.rotation * packet.DestinationTo.ToUnity();
                     position += subRoot.transform.position;
 

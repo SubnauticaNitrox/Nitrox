@@ -1,58 +1,72 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
-using LZ4;
-using NitroxModel.DataStructures.Surrogates;
+using BinaryPack.Attributes;
 using NitroxModel.Networking;
+using BinaryConverter = BinaryPack.BinaryConverter;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public abstract class Packet
     {
-        private static readonly SurrogateSelector surrogateSelector;
-        private static readonly StreamingContext streamingContext;
-        private static readonly BinaryFormatter serializer;
-
-        private static readonly string[] blacklistedAssemblies = { "NLog" };
-
         private static readonly Dictionary<Type, PropertyInfo[]> cachedPropertiesByType = new();
         private static readonly StringBuilder toStringBuilder = new();
 
-        static Packet()
+        public static void InitSerializer()
         {
-            surrogateSelector = new SurrogateSelector();
-            streamingContext = new StreamingContext(StreamingContextStates.All); // Our surrogates can be safely used in every context.
-            IEnumerable<Type> types = AppDomain.CurrentDomain.GetAssemblies()
-                                               .Where(assembly => !blacklistedAssemblies.Contains(assembly.GetName().Name))
-                                               .SelectMany(a => a.GetTypes()
-                                                                 .Where(t =>
-                                                                            t.BaseType != null &&
-                                                                            t.BaseType.IsGenericType &&
-                                                                            t.BaseType.GetGenericTypeDefinition() == typeof(SerializationSurrogate<>) &&
-                                                                            t.IsClass &&
-                                                                            !t.IsAbstract));
-
-            foreach (Type type in types)
+            static IEnumerable<Type> FindTypesInModelAssemblies()
             {
-                ISerializationSurrogate surrogate = (ISerializationSurrogate)Activator.CreateInstance(type);
-                Type surrogatedType = type.BaseType.GetGenericArguments()[0];
-                surrogateSelector.AddSurrogate(surrogatedType, streamingContext, surrogate);
-
-                Log.Debug($"Added surrogate {surrogate.GetType().Name} for type {surrogatedType}");
+                return AppDomain.CurrentDomain.GetAssemblies()
+                                              .Where(assembly => new string[] { "NitroxModel", "NitroxModel-Subnautica" }
+                                                                 .Contains(assembly.GetName().Name))
+                                              .SelectMany(assembly =>
+                                              {
+                                                  try
+                                                  {
+                                                      return assembly.GetTypes();
+                                                  }
+                                                  catch (ReflectionTypeLoadException e)
+                                                  {
+                                                      return e.Types.Where(t => t != null);
+                                                  }
+                                              });
             }
 
-            // For completeness, we could pass a StreamingContextStates.CrossComputer.
-            serializer = new BinaryFormatter(surrogateSelector, streamingContext);
+            static IEnumerable<Type> FindUnionBaseTypes() => FindTypesInModelAssemblies()
+                .Where(t => t.IsAbstract && !t.IsSealed && (!t.BaseType?.IsAbstract ?? true) && !t.ContainsGenericParameters);
+
+            foreach (Type type in FindUnionBaseTypes())
+            {
+                BinaryConverter.RegisterUnion(type, FindTypesInModelAssemblies()
+                    .Where(t => type.IsAssignableFrom(t) && !t.IsAbstract && !t.IsInterface)
+                    .OrderByDescending(t =>
+                    {
+                        Type current = t;
+                        int levels = 0;
+
+                        while (current != type && current != null)
+                        {
+                            current = current.BaseType;
+                            levels++;
+                        }
+
+                        return levels;
+                    })
+                    .ThenBy(t => t.FullName)
+                    .ToArray());
+            }
+
+            // This will initialize the processor for Wrapper which will initialize all the others
+            _ = BinaryConverter.Serialize(new Wrapper());
         }
 
+        [IgnoredMember]
         public NitroxDeliveryMethod.DeliveryMethod DeliveryMethod { get; protected set; } = NitroxDeliveryMethod.DeliveryMethod.RELIABLE_ORDERED;
+        [IgnoredMember]
         public UdpChannelId UdpChannel { get; protected set; } = UdpChannelId.DEFAULT;
 
         public enum UdpChannelId
@@ -65,25 +79,12 @@ namespace NitroxModel.Packets
 
         public byte[] Serialize()
         {
-            using MemoryStream ms = new MemoryStream();
-            using LZ4Stream lz4Stream = new LZ4Stream(ms, LZ4StreamMode.Compress);
-            serializer.Serialize(lz4Stream, this);
-            return ms.ToArray();
+            return BinaryConverter.Serialize(new Wrapper(this));
         }
 
         public static Packet Deserialize(byte[] data)
         {
-            using Stream stream = new MemoryStream(data);
-            using LZ4Stream lz4Stream = new LZ4Stream(stream, LZ4StreamMode.Decompress);
-            return (Packet)serializer.Deserialize(lz4Stream);
-        }
-
-        public static bool IsTypeSerializable(Type type)
-        {
-            // We have our own surrogates to (de)serialize types that are not marked [Serializable]
-            // This code is very similar to how serializability is checked in:
-            // System.Runtime.Serialization.Formatters.Binary.BinaryCommon.CheckSerializable
-            return serializer.SurrogateSelector.GetSurrogate(type, Packet.serializer.Context, out ISurrogateSelector _) != null;
+            return BinaryConverter.Deserialize<Wrapper>(data).Packet;
         }
 
         public WrapperPacket ToWrapperPacket()
@@ -120,6 +121,25 @@ namespace NitroxModel.Packets
             toStringBuilder.Append("]");
 
             return toStringBuilder.ToString();
+        }
+
+        /// <summary>
+        ///     Wrapper which is used to serialize packets in BinaryPack.
+        ///     We cannot serialize Packets directly because
+        ///     <p>
+        ///     1) We will not know what type to deserialize to and
+        ///     2) The root object must have a callable constructor so it can't be abstract
+        ///     </p>
+        ///     This type solves both problems and only adds a single byte to the data.
+        /// </summary>
+        public readonly struct Wrapper
+        {
+            public Packet Packet { get; init; } = null;
+
+            public Wrapper(Packet packet)
+            {
+                Packet = packet;
+            }
         }
     }
 }

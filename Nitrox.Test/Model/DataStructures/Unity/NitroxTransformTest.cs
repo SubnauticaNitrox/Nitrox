@@ -8,11 +8,11 @@ namespace NitroxModel.DataStructures.Unity
     {
         private const float TOLERANCE = 0.00005f;
 
-        private static readonly NitroxTransform root = new NitroxTransform(new NitroxVector3(1, 1, 1), NitroxQuaternion.FromEuler(0, 0, 0), new NitroxVector3(1, 1, 1), null);
-        private static readonly NitroxTransform child1 = new NitroxTransform(new NitroxVector3(5, 3, -6), NitroxQuaternion.FromEuler(30, 0, 10), new NitroxVector3(2, 2, 2), null);
-        private static readonly NitroxTransform child2 = new NitroxTransform(new NitroxVector3(11, 0, -0.5f), NitroxQuaternion.FromEuler(180, 30, 80), new NitroxVector3(0.5f, 0.5f, 0.5f), null);
-        private static readonly NitroxTransform grandchild1 = new NitroxTransform(new NitroxVector3(13, 8, 15), NitroxQuaternion.FromEuler(-50, 5, 10), new NitroxVector3(1, 1, 1), null);
-        private static readonly NitroxTransform grandchild2 = new NitroxTransform(new NitroxVector3(3, 18, -5), NitroxQuaternion.FromEuler(-5, 15, 1), new NitroxVector3(10, 10, 10), null);
+        private static readonly NitroxTransform root = new NitroxTransform(new NitroxVector3(1, 1, 1), NitroxQuaternion.FromEuler(0, 0, 0), new NitroxVector3(1, 1, 1));
+        private static readonly NitroxTransform child1 = new NitroxTransform(new NitroxVector3(5, 3, -6), NitroxQuaternion.FromEuler(30, 0, 10), new NitroxVector3(2, 2, 2));
+        private static readonly NitroxTransform child2 = new NitroxTransform(new NitroxVector3(11, 0, -0.5f), NitroxQuaternion.FromEuler(180, 30, 80), new NitroxVector3(0.5f, 0.5f, 0.5f));
+        private static readonly NitroxTransform grandchild1 = new NitroxTransform(new NitroxVector3(13, 8, 15), NitroxQuaternion.FromEuler(-50, 5, 10), new NitroxVector3(1, 1, 1));
+        private static readonly NitroxTransform grandchild2 = new NitroxTransform(new NitroxVector3(3, 18, -5), NitroxQuaternion.FromEuler(-5, 15, 1), new NitroxVector3(10, 10, 10));
 
         [ClassInitialize]
         public static void Setup(TestContext testContext)
@@ -73,8 +73,8 @@ namespace NitroxModel.DataStructures.Unity
             NitroxVector3 afterChildGlobalPosition = new NitroxVector3(379.541f, 109.6675f, -167.4466f);
             NitroxQuaternion afterChildGlobalRotation = NitroxQuaternion.FromEuler(17.81689f, 187.7957f, 151.9425f);
 
-            NitroxTransform grandchild3 = new NitroxTransform(beforeLocalPosition, beforeRotation, new NitroxVector3(2.5f, 2.5f, 2.5f), null);
-            NitroxTransform grandgrandchild1 = new NitroxTransform(beforeChildLocalPosition, beforeChildRotation, new NitroxVector3(1, 1, 1), null);
+            NitroxTransform grandchild3 = new NitroxTransform(beforeLocalPosition, beforeRotation, new NitroxVector3(2.5f, 2.5f, 2.5f));
+            NitroxTransform grandgrandchild1 = new NitroxTransform(beforeChildLocalPosition, beforeChildRotation, new NitroxVector3(1, 1, 1));
 
             grandgrandchild1.SetParent(grandchild3, false);
             grandchild3.SetParent(child1, true);

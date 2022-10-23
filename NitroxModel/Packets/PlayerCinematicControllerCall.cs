@@ -6,7 +6,7 @@ namespace NitroxModel.Packets;
 [Serializable]
 public class PlayerCinematicControllerCall : Packet
 {
-    public ushort PlayerId { get; set; }
+    public ushort PlayerId { get; }
     public NitroxId ControllerID { get; }
     public int ControllerNameHash { get; }
     public string Key { get; }

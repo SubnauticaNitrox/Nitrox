@@ -1,4 +1,5 @@
 ﻿using System;
+using BinaryPack.Attributes;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Unity;
@@ -16,6 +17,7 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
         [ProtoMember(2)]
         public NitroxVector3 RightAimTarget { get; }
 
+        [IgnoreConstructor]
         protected ExosuitMovementData()
         {
             // Constructor for serialization. Has to be "protected" for json serialization.

@@ -12,6 +12,7 @@ using NitroxClient.GameLogic.PlayerLogic.PlayerPreferences;
 using NitroxClient.GameLogic.Settings;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.MultiplayerSession;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
@@ -216,7 +217,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             }
             preferencesManager.SetPreference(serverIp, new PlayerPreference(playerName, colorPicker.currentColor));
 
-            AuthenticationContext authenticationContext = passwordEntered ? new AuthenticationContext(playerName, serverPassword) : new AuthenticationContext(playerName);
+            AuthenticationContext authenticationContext = new AuthenticationContext(playerName, passwordEntered ? Optional.Of(serverPassword) : Optional.Empty);
 
             multiplayerSession.RequestSessionReservation(new PlayerSettings(colorPicker.currentColor.ToDto()), authenticationContext);
         }

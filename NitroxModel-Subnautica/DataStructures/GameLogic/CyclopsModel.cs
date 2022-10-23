@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using BinaryPack.Attributes;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Unity;
@@ -33,6 +34,7 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
         [ProtoMember(7)]
         public CyclopsMotorMode.CyclopsMotorModes EngineMode { get; set; }
 
+        [IgnoreConstructor]
         protected CyclopsModel()
         {
             // Constructor for serialization. Has to be "protected" for json serialization.
@@ -48,6 +50,35 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
             SonarOn = false;
             EngineState = false;
             EngineMode = CyclopsMotorMode.CyclopsMotorModes.Standard;
+        }
+
+        /// <remarks>Used for deserialization</remarks>
+        public CyclopsModel(
+            NitroxTechType techType,
+            NitroxId id,
+            NitroxVector3 position,
+            NitroxQuaternion rotation,
+            ThreadSafeList<InteractiveChildObjectIdentifier> interactiveChildIdentifiers,
+            Optional<NitroxId> dockingBayId,
+            string name,
+            NitroxVector3[] hsb,
+            float health,
+            bool floodLightsOn,
+            bool internalLightsOn,
+            bool silentRunningOn,
+            bool shieldOn,
+            bool sonarOn,
+            bool engineState,
+            CyclopsMotorMode.CyclopsMotorModes engineMode)
+            : base(techType, id, position, rotation, interactiveChildIdentifiers, dockingBayId, name, hsb, health)
+        {
+            FloodLightsOn = floodLightsOn;
+            InternalLightsOn = internalLightsOn;
+            SilentRunningOn = silentRunningOn;
+            ShieldOn = shieldOn;
+            SonarOn = sonarOn;
+            EngineState = engineState;
+            EngineMode = engineMode;
         }
 
         public override string ToString()

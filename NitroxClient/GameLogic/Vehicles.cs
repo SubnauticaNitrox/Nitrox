@@ -6,6 +6,9 @@ using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
+using NitroxModel_Subnautica.DataStructures;
+using NitroxModel_Subnautica.DataStructures.GameLogic;
+using NitroxModel_Subnautica.Helper;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
@@ -13,9 +16,6 @@ using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
-using NitroxModel_Subnautica.DataStructures;
-using NitroxModel_Subnautica.DataStructures.GameLogic;
-using NitroxModel_Subnautica.Helper;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic
@@ -464,9 +464,9 @@ namespace NitroxClient.GameLogic
             VehicleDocking packet = new VehicleDocking(vehicleId, dockId, playerId);
             packetSender.Send(packet);
 
-            PacketSuppressor<Movement> movementSuppressor = packetSender.Suppress<Movement>();
+            PacketSuppressor<PlayerMovement> playerMovementSuppressor = packetSender.Suppress<PlayerMovement>();
             PacketSuppressor<VehicleMovement> vehicleMovementSuppressor = packetSender.Suppress<VehicleMovement>();
-            vehicle.StartCoroutine(AllowMovementPacketsAfterDockingAnimation(movementSuppressor, vehicleMovementSuppressor));
+            vehicle.StartCoroutine(AllowMovementPacketsAfterDockingAnimation(playerMovementSuppressor, vehicleMovementSuppressor));
         }
 
         public void BroadcastVehicleUndocking(VehicleDockingBay dockingBay, Vehicle vehicle, bool undockingStart)
@@ -476,7 +476,7 @@ namespace NitroxClient.GameLogic
             NitroxId vehicleId = NitroxEntity.GetId(vehicle.gameObject);
             ushort playerId = multiplayerSession.Reservation.PlayerId;
 
-            PacketSuppressor<Movement> movementSuppressor = packetSender.Suppress<Movement>();
+            PacketSuppressor<PlayerMovement> movementSuppressor = packetSender.Suppress<PlayerMovement>();
             PacketSuppressor<VehicleMovement> vehicleMovementSuppressor = packetSender.Suppress<VehicleMovement>();
             if (!undockingStart)
             {
@@ -501,10 +501,10 @@ namespace NitroxClient.GameLogic
                 place until after the player exits the vehicle.  This causes the player body to strech to
                 the current cyclops position.
         */
-        public IEnumerator AllowMovementPacketsAfterDockingAnimation(PacketSuppressor<Movement> movementSuppressor, PacketSuppressor<VehicleMovement> vehicleMovementSuppressor)
+        public IEnumerator AllowMovementPacketsAfterDockingAnimation(PacketSuppressor<PlayerMovement> playerMovementSuppressor, PacketSuppressor<VehicleMovement> vehicleMovementSuppressor)
         {
             yield return new WaitForSeconds(3.0f);
-            movementSuppressor.Dispose();
+            playerMovementSuppressor.Dispose();
             vehicleMovementSuppressor.Dispose();
         }
 

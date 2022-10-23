@@ -1,4 +1,5 @@
 ﻿using System;
+using BinaryPack.Attributes;
 using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic.Buildings.Metadata
@@ -8,20 +9,21 @@ namespace NitroxModel.DataStructures.GameLogic.Buildings.Metadata
     public class SignMetadata : BasePieceMetadata
     {
         [ProtoMember(1)]
-        public string Text { get; set; }
+        public string Text { get; }
 
         [ProtoMember(2)]
-        public int ColorIndex { get; set; }
+        public int ColorIndex { get; }
 
         [ProtoMember(3)]
-        public int ScaleIndex { get; set; }
+        public int ScaleIndex { get; }
 
         [ProtoMember(4)]
-        public bool[] Elements { get; set; }
+        public bool[] Elements { get; }
 
         [ProtoMember(5)]
-        public bool Background { get; set; }
+        public bool Background { get; }
 
+        [IgnoreConstructor]
         protected SignMetadata()
         {
             //Constructor for serialization. Has to be "protected" for json serialization.

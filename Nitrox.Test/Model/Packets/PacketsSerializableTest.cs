@@ -1,94 +1,90 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
-using FluentAssertions;
+using AutoBogus;
+using BinaryPack.Attributes;
+using KellermanSoftware.CompareNetObjects;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NitroxModel.DataStructures.Surrogates;
-using NitroxModel_Subnautica.DataStructures.Surrogates;
+using Nitrox.Test.Helper.Serialization;
 
 namespace NitroxModel.Packets
 {
     [TestClass]
     public class PacketsSerializableTest
     {
-        private readonly HashSet<Type> visitedTypes = new HashSet<Type>();
+        static Assembly subnauticaModelAssembly;
 
-        private void IsSerializable(Type t)
+        [TestInitialize]
+        public void Initialize()
         {
-            if (visitedTypes.Contains(t))
-            {
-                return;
-            }
-
-            Assert.IsTrue(t.IsSerializable || t.IsInterface || t == typeof(SerializationInfo) || Packet.IsTypeSerializable(t), $"Type {t} is not serializable!");
-
-            visitedTypes.Add(t);
-
-            // Recursively check all properties and fields, because IsSerializable only checks if the current type is a primitive or has the [Serializable] attribute.
-            t.GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public).Select(tt => tt.FieldType).ForEach(IsSerializable);
+            subnauticaModelAssembly = AppDomain.CurrentDomain.Load(AssemblyName.GetAssemblyName("NitroxModel-Subnautica.dll"));
         }
 
         [TestMethod]
-        public void AllPacketsAreSerializable()
+        public void InitSerializerTest()
         {
-            foreach (Type packetType in typeof(Packet).Assembly.GetTypes()
-                .Where(p => typeof(Packet).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract)
-                .ToList())
-            {
-                IsSerializable(packetType);
-            }
+            Packet.InitSerializer();
         }
 
         [TestMethod]
         public void PacketSerializationTest()
         {
-            SurrogateSelector surrogateSelector = new SurrogateSelector();
-            StreamingContext streamingContext = new StreamingContext(StreamingContextStates.All); // Our surrogates can be safely used in every context.
+            IEnumerable<Type> types = typeof(Packet).Assembly.GetTypes().Concat(subnauticaModelAssembly.GetTypes());
+            Dictionary<Type, Type[]> subtypesByBaseType = types
+                .Where(type => type.IsAbstract && !type.IsSealed && !type.ContainsGenericParameters && type != typeof(Packet))
+                .ToDictionary(type => type, type => types.Where(t => type.IsAssignableFrom(t) && !t.IsAbstract && !t.IsInterface).ToArray());
 
-            Type[] types = typeof(Vector3Surrogate).Assembly
-                .GetTypes();
+            List<Packet> packets = new();
 
-            IEnumerable<Type> surrogates = types.Where(t =>
-                                                       t.BaseType != null &&
-                                                       t.BaseType.IsGenericType &&
-                                                       t.BaseType.GetGenericTypeDefinition() == typeof(SerializationSurrogate<>) &&
-                                                       t.IsClass &&
-                                                       !t.IsAbstract);
-            foreach (Type type in surrogates)
+            foreach (Type type in types.Where(p => typeof(Packet).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract))
             {
-                ISerializationSurrogate surrogate = (ISerializationSurrogate)Activator.CreateInstance(type);
-                Type surrogatedType = type.BaseType?.GetGenericArguments()[0];
-                surrogatedType.Should().NotBeNull();
-                surrogateSelector.AddSurrogate(surrogatedType, streamingContext, surrogate);
+                Dictionary<Type, Type[]> subtypesDict = subtypesByBaseType.ToDictionary(pair => pair.Key, pair => pair.Value);
+                object faker = typeof(NitroxAutoFaker<,>).MakeGenericType(type, typeof(PacketAutoBinder))
+                    .GetConstructor(new Type[] { typeof(Dictionary<Type, Type[]>), typeof(PacketAutoBinder) })
+                    .Invoke(new object[] { subtypesDict, new PacketAutoBinder(subtypesDict) });
+
+                if (subtypesByBaseType.ContainsKey(type))
+                {
+                    for (int i = 0; i < subtypesByBaseType[type].Length; i++)
+                    {
+                        Packet packet = (Packet)typeof(AutoFaker<>).MakeGenericType(subtypesByBaseType[type][i])
+                        .GetMethod(nameof(AutoFaker<object>.Generate), new[] { typeof(string) })
+                        .Invoke(faker, new object[] { null });
+                        packets.Add(packet);
+                    }
+                }
+                else
+                {
+                    Packet packet = (Packet)typeof(AutoFaker<>).MakeGenericType(type)
+                    .GetMethod(nameof(AutoFaker<object>.Generate), new[] { typeof(string) })
+                    .Invoke(faker, new object[] { null });
+                    packets.Add(packet);
+                }
             }
 
-            // For completeness, we could pass a StreamingContextStates.CrossComputer.
-            BinaryFormatter serializer = new BinaryFormatter(surrogateSelector, streamingContext);
+            Packet.InitSerializer();
+            bool failed = false;
 
-            Stream stream = new MemoryStream();
-
-            Type testedType = null;
-            List<Packet> packets = new List<Packet>();
-
-            foreach (Type type in typeof(Packet).Assembly.GetTypes()
-            .Where(p => typeof(Packet).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract))
-            {
-                testedType = type;
-                packets.Add((Packet)FormatterServices.GetUninitializedObject(type));
-            }
+            CompareLogic logic = new();
+            logic.Config.SkipInvalidIndexers = true;
+            logic.Config.AttributesToIgnore.Add(typeof(IgnoredMemberAttribute));
 
             foreach (Packet packet in packets)
             {
-                testedType = packet.GetType();
-                serializer.Serialize(stream, packet);
-                stream.Flush();
-                stream.Position = 0;
-                serializer.Deserialize(stream);
-                stream.Position = 0;
+                Packet deserialized = Packet.Deserialize(packet.Serialize());
+
+                ComparisonResult result = logic.Compare(packet, deserialized);
+                if (!result.AreEqual)
+                {
+                    failed = true;
+                    Console.WriteLine($"Differences found:\n{result.DifferencesString}");
+                }
+            }
+
+            if (failed)
+            {
+                Assert.Fail("Error: one or more differences were found.");
             }
         }
     }

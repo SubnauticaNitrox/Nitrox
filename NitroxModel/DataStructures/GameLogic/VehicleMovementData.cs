@@ -1,4 +1,5 @@
 ﻿using System;
+using BinaryPack.Attributes;
 using NitroxModel.DataStructures.Unity;
 using ProtoBufNet;
 
@@ -38,12 +39,13 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoMember(10)]
         public NitroxVector3? DriverPosition { get; set; }
 
+        [IgnoreConstructor]
         protected VehicleMovementData()
         {
             // Constructor for serialization. Has to be "protected" for json serialization.
         }
 
-        public VehicleMovementData(NitroxTechType techType, NitroxId id, NitroxVector3 position, NitroxQuaternion rotation, NitroxVector3 velocity, NitroxVector3 angularVelocity, float steeringWheelYaw, float steeringWheelPitch, bool appliedThrottle)
+        public VehicleMovementData(NitroxTechType techType, NitroxId id, NitroxVector3 position, NitroxQuaternion rotation, NitroxVector3 velocity, NitroxVector3 angularVelocity, float steeringWheelYaw, float steeringWheelPitch, bool appliedThrottle, NitroxVector3? driverPosition = null)
         {
             TechType = techType;
             Id = id;
@@ -54,6 +56,7 @@ namespace NitroxModel.DataStructures.GameLogic
             SteeringWheelYaw = steeringWheelYaw;
             SteeringWheelPitch = steeringWheelPitch;
             AppliedThrottle = appliedThrottle;
+            DriverPosition = driverPosition;
         }
 
         public VehicleMovementData(NitroxTechType techType, NitroxId id, NitroxVector3 position, NitroxQuaternion rotation)

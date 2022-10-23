@@ -1,4 +1,5 @@
 ﻿using System;
+using BinaryPack.Attributes;
 using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic
@@ -18,6 +19,7 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoMember(3)]
         public byte[] SerializedData { get; }
 
+        [IgnoreConstructor]
         protected ItemData()
         {
             // Constructor for serialization. Has to be "protected" for json serialization.

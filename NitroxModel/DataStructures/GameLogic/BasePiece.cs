@@ -1,4 +1,5 @@
 ﻿using System;
+using BinaryPack.Attributes;
 using NitroxModel.DataStructures.GameLogic.Buildings.Metadata;
 using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
 using NitroxModel.DataStructures.Unity;
@@ -57,6 +58,7 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoMember(14, DynamicType = true)]
         public int BuildIndex { get; set; }
 
+        [IgnoreConstructor]
         protected BasePiece()
         {
             ParentId = Optional.Empty;
@@ -83,6 +85,39 @@ namespace NitroxModel.DataStructures.GameLogic
         public BasePiece(NitroxId id, NitroxVector3 itemPosition, NitroxQuaternion rotation, NitroxVector3 cameraPosition, NitroxQuaternion cameraRotation, NitroxTechType techType, Optional<NitroxId> parentId, bool isFurniture, Optional<BuilderMetadata> rotationMetadata, Optional<BasePieceMetadata> metadata) : this(id, itemPosition, rotation, cameraPosition, cameraRotation, techType, parentId, isFurniture, rotationMetadata)
         {
             Metadata = metadata;
+        }
+
+        /// <remarks>Used for deserialization</remarks>
+        public BasePiece(
+            NitroxId id,
+            NitroxVector3 itemPosition,
+            NitroxQuaternion rotation,
+            NitroxTechType techType,
+            Optional<NitroxId> parentId,
+            NitroxVector3 cameraPosition,
+            NitroxQuaternion cameraRotation,
+            float constructionAmount,
+            bool constructionCompleted,
+            bool isFurniture,
+            NitroxId baseId,
+            Optional<BuilderMetadata> rotationMetadata,
+            Optional<BasePieceMetadata> metadata,
+            int buildIndex)
+        {
+            Id = id;
+            ItemPosition = itemPosition;
+            Rotation = rotation;
+            TechType = techType;
+            ParentId = parentId;
+            CameraPosition = cameraPosition;
+            CameraRotation = cameraRotation;
+            ConstructionAmount = constructionAmount;
+            ConstructionCompleted = constructionCompleted;
+            IsFurniture = isFurniture;
+            BaseId = baseId;
+            RotationMetadata = rotationMetadata;
+            Metadata = metadata;
+            BuildIndex = buildIndex;
         }
 
         public override string ToString()

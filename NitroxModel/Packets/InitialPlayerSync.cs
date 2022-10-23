@@ -26,7 +26,7 @@ namespace NitroxModel.Packets
         public bool FirstTimeConnecting { get; }
         public InitialPDAData PDAData { get; }
         public InitialStoryGoalData StoryGoalData { get; }
-        public HashSet<string> CompletedGoals { get; }
+        public ICollection<string> CompletedGoals { get; }
         public NitroxVector3 PlayerSpawnData { get; }
         public Optional<NitroxId> PlayerSubRootId { get; }
         public PlayerStatsData PlayerStatsData { get; }
@@ -51,7 +51,7 @@ namespace NitroxModel.Packets
             IEnumerable<string> quickSlotsBinding,
             InitialPDAData pdaData,
             InitialStoryGoalData storyGoalData,
-            HashSet<string> completedGoals,
+            ICollection<string> completedGoals,
             NitroxVector3 playerSpawnData,
             Optional<NitroxId> playerSubRootId,
             PlayerStatsData playerStatsData,
@@ -85,6 +85,58 @@ namespace NitroxModel.Packets
             InitialSimulationOwnerships = initialSimulationOwnerships.ToList();
             GameMode = gameMode;
             Permissions = perms;
+            Preferences = preferences;
+        }
+
+        /// <remarks>Used for deserialization</remarks>
+        public InitialPlayerSync(NitroxId playerGameObjectId,
+            bool firstTimeConnecting,
+            List<EscapePodModel> escapePodsData,
+            NitroxId assignedEscapePodId,
+            List<EquippedItemData> equippedItems,
+            List<EquippedItemData> modules,
+            List<BasePiece> basePieces,
+            List<VehicleModel> vehicles,
+            List<ItemData> inventoryItems,
+            List<ItemData> storageSlotItems,
+            List<NitroxTechType> usedItems,
+            List<string> quickSlotsBinding,
+            InitialPDAData pdaData,
+            InitialStoryGoalData storyGoalData,
+            ICollection<string> completedGoals,
+            NitroxVector3 playerSpawnData,
+            Optional<NitroxId> playerSubRootId,
+            PlayerStatsData playerStatsData,
+            List<InitialRemotePlayerData> remotePlayerData,
+            List<Entity> globalRootEntities,
+            List<NitroxId> initialSimulationOwnerships,
+            ServerGameMode gameMode,
+            Perms permissions,
+            Dictionary<string, PingInstancePreference> preferences)
+        {
+            EscapePodsData = escapePodsData;
+            AssignedEscapePodId = assignedEscapePodId;
+            PlayerGameObjectId = playerGameObjectId;
+            FirstTimeConnecting = firstTimeConnecting;
+            EquippedItems = equippedItems;
+            Modules = modules;
+            BasePieces = basePieces;
+            Vehicles = vehicles;
+            InventoryItems = inventoryItems;
+            StorageSlotItems = storageSlotItems;
+            UsedItems = usedItems;
+            QuickSlotsBinding = quickSlotsBinding;
+            PDAData = pdaData;
+            StoryGoalData = storyGoalData;
+            CompletedGoals = completedGoals;
+            PlayerSpawnData = playerSpawnData;
+            PlayerSubRootId = playerSubRootId;
+            PlayerStatsData = playerStatsData;
+            RemotePlayerData = remotePlayerData;
+            GlobalRootEntities = globalRootEntities;
+            InitialSimulationOwnerships = initialSimulationOwnerships;
+            GameMode = gameMode;
+            Permissions = permissions;
             Preferences = preferences;
         }
     }

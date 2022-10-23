@@ -129,7 +129,7 @@ namespace NitroxClient.MonoBehaviours
         {
             // Gameplay.
             gameObject.AddComponent<AnimationSender>();
-            gameObject.AddComponent<PlayerMovement>();
+            gameObject.AddComponent<PlayerMovementBroadcaster>();
             gameObject.AddComponent<PlayerDeathBroadcaster>();
             gameObject.AddComponent<PlayerStatsBroadcaster>();
             gameObject.AddComponent<EntityPositionBroadcaster>();

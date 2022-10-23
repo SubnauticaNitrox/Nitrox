@@ -11,11 +11,11 @@ namespace NitroxModel.Packets
     [ProtoContract]
     public class LiveMixinHealthChanged : Packet
     {
-        public Optional<DamageTakenData> DamageTakenData;
         public NitroxTechType TechType { get; }
         public NitroxId Id { get; set; }
         public float LifeChanged { get; set; }
         public float TotalHealth { get; }
+        public Optional<DamageTakenData> DamageTakenData { get; }
 
         public LiveMixinHealthChanged(NitroxTechType techType, NitroxId id, float lifeChanged, float totalHealth)
         {
@@ -38,6 +38,16 @@ namespace NitroxModel.Packets
                 DamageType = damageType,
                 DealerId = dealerId
             };
+        }
+
+        /// <remarks>Used for deserialization</remarks>
+        public LiveMixinHealthChanged(Optional<DamageTakenData> damageTakenData, NitroxTechType techType, NitroxId id, float lifeChanged, float totalHealth)
+        {
+            TechType = techType;
+            Id = id;
+            LifeChanged = lifeChanged;
+            TotalHealth = totalHealth;
+            DamageTakenData = damageTakenData;
         }
     }
 }

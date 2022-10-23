@@ -13,7 +13,7 @@ namespace NitroxServer.Communication.Packets.Processors
         private readonly HashSet<Type> loggingPacketBlackList = new()
         {
             typeof(AnimationChangeEvent),
-            typeof(Movement),
+            typeof(PlayerMovement),
             typeof(VehicleMovement),
             typeof(ItemPosition),
             typeof(PlayerStats),

@@ -74,7 +74,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 player.QuickSlotsBinding,
                 world.GameData.PDAState.GetInitialPDAData(),
                 world.GameData.StoryGoals.GetInitialStoryGoalData(scheduleKeeper),
-                new HashSet<string>(player.CompletedGoals),
+                player.CompletedGoals,
                 player.Position,
                 player.SubRootId,
                 player.Stats,

@@ -1,4 +1,5 @@
 ﻿using System;
+using BinaryPack.Attributes;
 using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata
@@ -12,6 +13,7 @@ namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata
         [ProtoMember(2)]
         public bool DoorOpen { get; }
 
+        [IgnoreConstructor]
         protected StarshipDoorMetadata()
         {
             //Constructor for serialization. Has to be "protected" for json serialization.
