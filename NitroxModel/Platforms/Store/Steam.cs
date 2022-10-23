@@ -26,6 +26,7 @@ namespace NitroxModel.Platforms.Store
 
         public async Task<ProcessEx> StartPlatformAsync()
         {
+            // If steam is already running, do not start it.
             ProcessEx steam = ProcessEx.GetFirstProcess("steam", p => p.MainModuleDirectory != null && File.Exists(Path.Combine(p.MainModuleDirectory, "steamclient.dll")));
             if (steam != null)
             {
@@ -46,10 +47,16 @@ namespace NitroxModel.Platforms.Store
                 Arguments = "-silent" // Don't show Steam window
             }));
 
-            // Wait for Steam to get ready.
+            // Wait for Steam to get ready. Steam will update the PID and set the ActiveUser to 0 while starting. Once UI is loaded it will update ActiveUser to > 0 value.
             await RegistryEx.CompareAsync<int>(@"SOFTWARE\Valve\Steam\ActiveProcess\pid",
                                                v => v == steam.Id,
                                                TimeSpan.FromSeconds(45));
+            await RegistryEx.CompareAsync<int>(@"SOFTWARE\Valve\Steam\ActiveProcess\ActiveUser",
+                                               v => v == 0,
+                                               TimeSpan.FromSeconds(20));
+            await RegistryEx.CompareAsync<int>(@"SOFTWARE\Valve\Steam\ActiveProcess\ActiveUser",
+                                               v => v > 0,
+                                               TimeSpan.FromSeconds(20));
             return steam;
         }
 
