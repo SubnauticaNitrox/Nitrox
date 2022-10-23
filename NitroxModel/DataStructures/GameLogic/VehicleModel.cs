@@ -12,7 +12,7 @@ namespace NitroxModel.DataStructures.GameLogic
     public class VehicleModel
     {
         [ProtoMember(1)]
-        public NitroxTechType TechType { get; }
+        public NitroxTechType TechType { get; set; }
 
         [ProtoMember(2)]
         public NitroxId Id { get; set; }
