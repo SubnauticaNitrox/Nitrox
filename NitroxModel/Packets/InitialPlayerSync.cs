@@ -11,9 +11,9 @@ namespace NitroxModel.Packets
 {
     [Serializable]
     public class InitialPlayerSync : Packet
-    {
-        public NitroxId AssignedEscapePodId;
+    { 
         public List<EscapePodModel> EscapePodsData { get; }
+        public NitroxId AssignedEscapePodId { get; }
         public List<EquippedItemData> EquippedItems { get; }
         public List<EquippedItemData> Modules { get; }
         public List<BasePiece> BasePieces { get; }
@@ -89,8 +89,7 @@ namespace NitroxModel.Packets
         }
 
         /// <remarks>Used for deserialization</remarks>
-        public InitialPlayerSync(NitroxId playerGameObjectId,
-            bool firstTimeConnecting,
+        public InitialPlayerSync(
             List<EscapePodModel> escapePodsData,
             NitroxId assignedEscapePodId,
             List<EquippedItemData> equippedItems,
@@ -101,6 +100,8 @@ namespace NitroxModel.Packets
             List<ItemData> storageSlotItems,
             List<NitroxTechType> usedItems,
             List<string> quickSlotsBinding,
+            NitroxId playerGameObjectId,
+            bool firstTimeConnecting,
             InitialPDAData pdaData,
             InitialStoryGoalData storyGoalData,
             ICollection<string> completedGoals,
