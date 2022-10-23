@@ -2,83 +2,90 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using AutoBogus;
 using BinaryPack.Attributes;
 using KellermanSoftware.CompareNetObjects;
+using KellermanSoftware.CompareNetObjects.TypeComparers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nitrox.Test.Helper.Serialization;
+using NitroxModel.DataStructures;
 
-namespace NitroxModel.Packets
+namespace NitroxModel.Packets;
+
+[TestClass]
+public class PacketsSerializableTest
 {
-    [TestClass]
-    public class PacketsSerializableTest
+    private static Assembly subnauticaModelAssembly;
+
+    [TestInitialize]
+    public void Initialize()
     {
-        static Assembly subnauticaModelAssembly;
+        subnauticaModelAssembly = AppDomain.CurrentDomain.Load(AssemblyName.GetAssemblyName("NitroxModel-Subnautica.dll"));
+    }
 
-        [TestInitialize]
-        public void Initialize()
+    [TestMethod]
+    public void InitSerializerTest()
+    {
+        Packet.InitSerializer();
+    }
+
+    [TestMethod]
+    public void PacketSerializationTest()
+    {
+        IEnumerable<Type> types = typeof(Packet).Assembly.GetTypes().Concat(subnauticaModelAssembly.GetTypes());
+        Dictionary<Type, Type[]> subtypesByBaseType = types
+                                                      .Where(type => type.IsAbstract && !type.IsSealed && !type.ContainsGenericParameters && type != typeof(Packet))
+                                                      .ToDictionary(type => type, type => types.Where(t => type.IsAssignableFrom(t) && !t.IsAbstract && !t.IsInterface).ToArray());
+        IEnumerable<Type> packetTypes = types.Where(p => typeof(Packet).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract);
+
+
+        // We want to ignore packets with no members when using ShouldNotCompare
+        PacketAutoBinder binder = new(subtypesByBaseType);
+        Type[] emptyPackets = packetTypes.Where(x => binder.GetMembers(x).Count == 0 || 
+                                                     binder.GetMembers(x).All(m => m.Value.GetMemberType().IsEnum))
+                                         .ToArray();
+
+        // We generate two different versions of each packet to verify comparison is actually working
+        List<Tuple<Packet, Packet>> generatedPackets = new();
+
+        foreach (Type type in packetTypes)
         {
-            subnauticaModelAssembly = AppDomain.CurrentDomain.Load(AssemblyName.GetAssemblyName("NitroxModel-Subnautica.dll"));
-        }
+            NitroxAutoFakerNonGeneric faker = new(type, subtypesByBaseType, binder);
 
-        [TestMethod]
-        public void InitSerializerTest()
-        {
-            Packet.InitSerializer();
-        }
-
-        [TestMethod]
-        public void PacketSerializationTest()
-        {
-            IEnumerable<Type> types = typeof(Packet).Assembly.GetTypes().Concat(subnauticaModelAssembly.GetTypes());
-            Dictionary<Type, Type[]> subtypesByBaseType = types
-                .Where(type => type.IsAbstract && !type.IsSealed && !type.ContainsGenericParameters && type != typeof(Packet))
-                .ToDictionary(type => type, type => types.Where(t => type.IsAssignableFrom(t) && !t.IsAbstract && !t.IsInterface).ToArray());
-
-            List<Packet> packets = new();
-
-            foreach (Type type in types.Where(p => typeof(Packet).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract))
+            if (subtypesByBaseType.ContainsKey(type))
             {
-                Dictionary<Type, Type[]> subtypesDict = subtypesByBaseType.ToDictionary(pair => pair.Key, pair => pair.Value);
-                NitroxAutoFakerNonGeneric faker = new(type, subtypesDict, new PacketAutoBinder(subtypesDict));
-
-                if (subtypesByBaseType.ContainsKey(type))
+                for (int i = 0; i < subtypesByBaseType[type].Length; i++)
                 {
-                    for (int i = 0; i < subtypesByBaseType[type].Length; i++)
-                    {
-                        Packet packet = faker.Generate<Packet>(subtypesByBaseType[type][i]);
-                        packets.Add(packet);
-                    }
-                }
-                else
-                {
-                    Packet packet = faker.Generate<Packet>(type);
-                    packets.Add(packet);
+                    Packet packet = faker.Generate<Packet>(subtypesByBaseType[type][i]);
+                    Packet packet2 = faker.Generate<Packet>(subtypesByBaseType[type][i]);
+                    generatedPackets.Add(new Tuple<Packet, Packet>(packet, packet2));
                 }
             }
-
-            Packet.InitSerializer();
-            bool failed = false;
-
-            CompareLogic logic = new();
-            logic.Config.SkipInvalidIndexers = true;
-            logic.Config.AttributesToIgnore.Add(typeof(IgnoredMemberAttribute));
-
-            foreach (Packet packet in packets)
+            else
             {
-                Packet deserialized = Packet.Deserialize(packet.Serialize());
-
-                ComparisonResult result = logic.Compare(packet, deserialized);
-                if (!result.AreEqual)
-                {
-                    failed = true;
-                    Console.WriteLine($"Differences found:\n{result.DifferencesString}");
-                }
+                Packet packet = faker.Generate<Packet>(type);
+                Packet packet2 = faker.Generate<Packet>(type);
+                generatedPackets.Add(new Tuple<Packet, Packet>(packet, packet2));
             }
+        }
 
-            if (failed)
+        Packet.InitSerializer();
+
+        
+        
+        ComparisonConfig config = new();
+        config.SkipInvalidIndexers = true;
+        config.AttributesToIgnore.Add(typeof(IgnoredMemberAttribute));
+        config.CustomComparers.Add(new CustomComparer<NitroxId, NitroxId>((id1, id2) => id1.Equals(id2)));
+
+        foreach (Tuple<Packet, Packet> packet in generatedPackets)
+        {
+            Packet deserialized = Packet.Deserialize(packet.Item1.Serialize());
+
+            packet.Item1.ShouldCompare(deserialized, $"with {packet.Item1.GetType()}", config);
+
+            if (!emptyPackets.Contains(packet.Item1.GetType()))
             {
-                Assert.Fail("Error: one or more differences were found.");
+                packet.Item2.ShouldNotCompare(deserialized, $"with {packet.Item1.GetType()}", config);
             }
         }
     }

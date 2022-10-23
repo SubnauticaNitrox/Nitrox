@@ -8,7 +8,7 @@ namespace NitroxModel.Packets
     [Serializable]
     public class EntityTransformUpdates : Packet
     {
-        public List<EntityTransformUpdate> Updates { get; }
+        public List<EntityTransformUpdate> Updates { get; set; }
 
         public EntityTransformUpdates()
         {
