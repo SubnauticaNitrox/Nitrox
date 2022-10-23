@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using BinaryPack;
 using BinaryPack.Attributes;
 using NitroxModel.Networking;
-using BinaryConverter = BinaryPack.BinaryConverter;
 
 namespace NitroxModel.Packets
 {
@@ -15,57 +15,62 @@ namespace NitroxModel.Packets
     {
         private static readonly Dictionary<Type, PropertyInfo[]> cachedPropertiesByType = new();
         private static readonly StringBuilder toStringBuilder = new();
+        private static readonly object lockObject = new();
 
         public static void InitSerializer()
         {
-            static IEnumerable<Type> FindTypesInModelAssemblies()
+            lock (lockObject)
             {
-                return AppDomain.CurrentDomain.GetAssemblies()
-                                              .Where(assembly => new string[] { "NitroxModel", "NitroxModel-Subnautica" }
-                                                                 .Contains(assembly.GetName().Name))
-                                              .SelectMany(assembly =>
-                                              {
-                                                  try
-                                                  {
-                                                      return assembly.GetTypes();
-                                                  }
-                                                  catch (ReflectionTypeLoadException e)
-                                                  {
-                                                      return e.Types.Where(t => t != null);
-                                                  }
-                                              });
+                static IEnumerable<Type> FindTypesInModelAssemblies()
+                {
+                    return AppDomain.CurrentDomain.GetAssemblies()
+                                    .Where(assembly => new[] { "NitroxModel", "NitroxModel-Subnautica" }
+                                               .Contains(assembly.GetName().Name))
+                                    .SelectMany(assembly =>
+                                    {
+                                        try
+                                        {
+                                            return assembly.GetTypes();
+                                        }
+                                        catch (ReflectionTypeLoadException e)
+                                        {
+                                            return e.Types.Where(t => t != null);
+                                        }
+                                    });
+                }
+
+                static IEnumerable<Type> FindUnionBaseTypes() => FindTypesInModelAssemblies()
+                    .Where(t => t.IsAbstract && !t.IsSealed && (!t.BaseType?.IsAbstract ?? true) && !t.ContainsGenericParameters);
+
+                foreach (Type type in FindUnionBaseTypes())
+                {
+                    BinaryConverter.RegisterUnion(type, FindTypesInModelAssemblies()
+                                                        .Where(t => type.IsAssignableFrom(t) && !t.IsAbstract && !t.IsInterface)
+                                                        .OrderByDescending(t =>
+                                                        {
+                                                            Type current = t;
+                                                            int levels = 0;
+
+                                                            while (current != type && current != null)
+                                                            {
+                                                                current = current.BaseType;
+                                                                levels++;
+                                                            }
+
+                                                            return levels;
+                                                        })
+                                                        .ThenBy(t => t.FullName)
+                                                        .ToArray());
+                }
+
+                // This will initialize the processor for Wrapper which will initialize all the others
+                _ = BinaryConverter.Serialize(new Wrapper());
             }
-
-            static IEnumerable<Type> FindUnionBaseTypes() => FindTypesInModelAssemblies()
-                .Where(t => t.IsAbstract && !t.IsSealed && (!t.BaseType?.IsAbstract ?? true) && !t.ContainsGenericParameters);
-
-            foreach (Type type in FindUnionBaseTypes())
-            {
-                BinaryConverter.RegisterUnion(type, FindTypesInModelAssemblies()
-                    .Where(t => type.IsAssignableFrom(t) && !t.IsAbstract && !t.IsInterface)
-                    .OrderByDescending(t =>
-                    {
-                        Type current = t;
-                        int levels = 0;
-
-                        while (current != type && current != null)
-                        {
-                            current = current.BaseType;
-                            levels++;
-                        }
-
-                        return levels;
-                    })
-                    .ThenBy(t => t.FullName)
-                    .ToArray());
-            }
-
-            // This will initialize the processor for Wrapper which will initialize all the others
-            _ = BinaryConverter.Serialize(new Wrapper());
         }
 
         [IgnoredMember]
         public NitroxDeliveryMethod.DeliveryMethod DeliveryMethod { get; protected set; } = NitroxDeliveryMethod.DeliveryMethod.RELIABLE_ORDERED;
+
         [IgnoredMember]
         public UdpChannelId UdpChannel { get; protected set; } = UdpChannelId.DEFAULT;
 
@@ -117,6 +122,7 @@ namespace NitroxModel.Packets
                     toStringBuilder.Append($"{property.Name}: {propertyValue}, ");
                 }
             }
+
             toStringBuilder.Remove(toStringBuilder.Length - 2, 2);
             toStringBuilder.Append("]");
 
