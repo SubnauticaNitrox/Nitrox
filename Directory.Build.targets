@@ -4,6 +4,18 @@
         <When Condition="'$(UnityModLibrary)' == 'true' or '$(TestLibrary)' == 'true'">
             <!-- UnityEngine libraries to include -->
             <ItemGroup>
+			    <Reference Include="Unity.Addressables">
+                    <HintPath>$(GameManagedDir)\Unity.Addressables.dll</HintPath>
+                    <Private>$(TestLibrary)</Private>
+                </Reference>
+                <Reference Include="Unity.ResourceManager">
+                    <HintPath>$(GameManagedDir)\Unity.ResourceManager.dll</HintPath>
+                    <Private>$(TestLibrary)</Private>
+                </Reference>
+			    <Reference Include="Unity.TextMeshPro">
+                    <HintPath>$(GameManagedDir)\Unity.TextMeshPro.dll</HintPath>
+                    <Private>$(TestLibrary)</Private>
+                </Reference>
                 <Reference Include="Unity.Timeline">
                     <HintPath>$(GameManagedDir)\Unity.Timeline.dll</HintPath>
                     <Private>$(TestLibrary)</Private>
@@ -66,10 +78,6 @@
                 </Reference>
                 <Reference Include="UnityEngine.DSPGraphModule">
                     <HintPath>$(GameManagedDir)\UnityEngine.DSPGraphModule.dll</HintPath>
-                    <Private>$(TestLibrary)</Private>
-                </Reference>
-                <Reference Include="UnityEngine.FileSystemHttpModule">
-                    <HintPath>$(GameManagedDir)\UnityEngine.FileSystemHttpModule.dll</HintPath>
                     <Private>$(TestLibrary)</Private>
                 </Reference>
                 <Reference Include="UnityEngine.GameCenterModule">
