@@ -40,25 +40,19 @@ namespace NitroxModel.Packets
             foreach (Type type in types.Where(p => typeof(Packet).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract))
             {
                 Dictionary<Type, Type[]> subtypesDict = subtypesByBaseType.ToDictionary(pair => pair.Key, pair => pair.Value);
-                object faker = typeof(NitroxAutoFaker<,>).MakeGenericType(type, typeof(PacketAutoBinder))
-                    .GetConstructor(new Type[] { typeof(Dictionary<Type, Type[]>), typeof(PacketAutoBinder) })
-                    .Invoke(new object[] { subtypesDict, new PacketAutoBinder(subtypesDict) });
+                NitroxAutoFakerNonGeneric faker = new(type, subtypesDict, new PacketAutoBinder(subtypesDict));
 
                 if (subtypesByBaseType.ContainsKey(type))
                 {
                     for (int i = 0; i < subtypesByBaseType[type].Length; i++)
                     {
-                        Packet packet = (Packet)typeof(AutoFaker<>).MakeGenericType(subtypesByBaseType[type][i])
-                        .GetMethod(nameof(AutoFaker<object>.Generate), new[] { typeof(string) })
-                        .Invoke(faker, new object[] { null });
+                        Packet packet = faker.Generate<Packet>(subtypesByBaseType[type][i]);
                         packets.Add(packet);
                     }
                 }
                 else
                 {
-                    Packet packet = (Packet)typeof(AutoFaker<>).MakeGenericType(type)
-                    .GetMethod(nameof(AutoFaker<object>.Generate), new[] { typeof(string) })
-                    .Invoke(faker, new object[] { null });
+                    Packet packet = faker.Generate<Packet>(type);
                     packets.Add(packet);
                 }
             }
