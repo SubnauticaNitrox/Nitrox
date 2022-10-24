@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Windows;
 using NitroxModel.Helper;
 using NitroxModel.Server;
 
@@ -64,15 +63,13 @@ public static class WorldManager
                 }
                 else
                 {
-                    fileLastAccessedTime = File.GetLastWriteTime(Path.Combine(folder, $"Version.{fileEnding}")); // This file was created when the save was created, so it can be used as the backup to get this write time if this is a new save (the WorldData file wouldn't exist)
+                    fileLastAccessedTime =
+                        File.GetLastWriteTime(
+                            Path.Combine(folder, $"Version.{fileEnding}")); // This file was created when the save was created, so it can be used as the backup to get this write time if this is a new save (the WorldData file wouldn't exist)
                 }
 
                 // Change the paramaters here to define what save file versions are eligible for use/upgrade
-                bool isValidVersion = true;
-                if (version < new Version(1, 6, 0, 1) || version > NitroxEnvironment.Version)
-                {
-                    isValidVersion = false;
-                }
+                bool isValidVersion = version >= new Version(1, 6, 0, 1) && version <= NitroxEnvironment.Version;
 
                 savesCache.Add(new Listing
                 {
@@ -89,7 +86,6 @@ public static class WorldManager
                 {
                     serverConfig.Update(folder, c => { c.SaveName = Path.GetFileName(folder); });
                 }
-
             }
             catch
             {
@@ -156,7 +152,7 @@ public static class WorldManager
             return false;
         }
 
-        if (!File.Exists(Path.Combine(saveFileDirectory, $"Version.json")))
+        if (!File.Exists(Path.Combine(saveFileDirectory, "Version.json")))
         {
             return false;
         }
@@ -167,8 +163,8 @@ public static class WorldManager
     public class Listing
     {
         public string WorldName { get; set; }
-        public string WorldGamemode {  get; set; }
-        public string WorldVersion {  get; set; }
+        public string WorldGamemode { get; set; }
+        public string WorldVersion { get; set; }
         public string WorldSaveDir { get; set; }
         public bool IsValidSave { get; set; }
         public DateTime FileLastAccessed { get; set; }
