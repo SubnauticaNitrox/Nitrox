@@ -1,5 +1,6 @@
 ﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
+using NitroxClient.GameLogic.PlayerLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
@@ -21,6 +22,12 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastItemAdd(Pickupable pickupable, Transform containerTransform)
         {
+            // We don't want to broadcast that event if it's from another player's inventory
+            if (containerTransform.GetComponentInParent<RemotePlayerIdentifier>(true))
+            {
+                return;
+            }
+
             NitroxId itemId = NitroxEntity.GetId(pickupable.gameObject);
             byte[] bytes = SerializationHelper.GetBytesWithoutParent(pickupable.gameObject);
             NitroxId ownerId = InventoryContainerHelper.GetOwnerId(containerTransform);
@@ -45,6 +52,12 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastItemRemoval(Pickupable pickupable, Transform containerTransform)
         {
+            // We don't want to broadcast that event if it's from another player's inventory
+            if (containerTransform.GetComponentInParent<RemotePlayerIdentifier>(true))
+            {
+                return;
+            }
+            
             NitroxId itemId = NitroxEntity.GetId(pickupable.gameObject);
             if (packetSender.Send(new ItemContainerRemove(InventoryContainerHelper.GetOwnerId(containerTransform), itemId)))
             {
