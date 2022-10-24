@@ -2,12 +2,11 @@
 using HarmonyLib;
 using NitroxClient.GameLogic.PlayerLogic;
 using NitroxModel.Helper;
-using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
 /// <summary>
-/// Before a base gets destroyed, we eventually remove any remote player that would be inside so that their GameObjects don't get destroyed
+/// Before a base gets destroyed, we eventually detach/exit any remote player's object that would be inside so that their GameObjects don't get destroyed
 /// </summary>
 public class Base_OnPreDestroy_Patch : NitroxPatch, IDynamicPatch
 {
@@ -18,7 +17,6 @@ public class Base_OnPreDestroy_Patch : NitroxPatch, IDynamicPatch
         foreach (RemotePlayerIdentifier remotePlayerIdentifier in __instance.GetComponentsInChildren<RemotePlayerIdentifier>(true))
         {
             remotePlayerIdentifier.RemotePlayer.Detach();
-            SkyEnvironmentChanged.Broadcast(remotePlayerIdentifier.RemotePlayer.Body, (GameObject)null);
         }
     }
 

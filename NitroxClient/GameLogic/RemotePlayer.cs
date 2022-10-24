@@ -100,11 +100,13 @@ namespace NitroxClient.GameLogic
             {
                 UWE.Utils.ZeroTransform(Body);
             }
+            SkyEnvironmentChanged.Broadcast(Body, transform);
         }
 
         public void Detach()
         {
             Body.transform.SetParent(null);
+            SkyEnvironmentChanged.Broadcast(Body, (GameObject)null);
         }
 
         public void UpdatePosition(Vector3 position, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation)
@@ -165,7 +167,6 @@ namespace NitroxClient.GameLogic
         {
             if (SubRoot != newSubRoot)
             {
-                SkyEnvironmentChanged.Broadcast(Body, newSubRoot);
                 if (newSubRoot)
                 {
                     Attach(newSubRoot.transform, true);
@@ -183,7 +184,6 @@ namespace NitroxClient.GameLogic
         {
             if (EscapePod != newEscapePod)
             {
-                SkyEnvironmentChanged.Broadcast(Body, newEscapePod);
                 if (newEscapePod)
                 {
                     Attach(newEscapePod.transform, true);
@@ -248,9 +248,8 @@ namespace NitroxClient.GameLogic
             Object.DestroyImmediate(Body);
         }
 
-        public void UpdateAnimation(AnimChangeType type, AnimChangeState state)
+        public void UpdateAnimationAndCollider(AnimChangeType type, AnimChangeState state)
         {
-            UpdateCollider(type, state);
             switch (type)
             {
                 case AnimChangeType.UNDERWATER:
@@ -261,6 +260,18 @@ namespace NitroxClient.GameLogic
                     AnimationController["bench_sit"] = state == AnimChangeState.ON;
                     AnimationController["bench_stand_up"] = state == AnimChangeState.OFF;
                     break;
+            }
+
+            // Change two parameters of the collider depending on the state of the player
+            if (AnimationController["is_underwater"])
+            {
+                Collider.center = new(0f, -0.3f, 0f);
+                Collider.height = 0.5f;
+            }
+            else
+            {
+                Collider.center = new(0f, -0.8f, 0f);
+                Collider.height = 1.5f;
             }
         }
 
@@ -307,22 +318,9 @@ namespace NitroxClient.GameLogic
                 Collider.contactOffset = refCollider.contactOffset;
                 Collider.isTrigger = true;
             }
-        }
-
-        /// <summary>
-        /// Change two parameters of the collider depending on the state of the player
-        /// </summary>
-        private void UpdateCollider(AnimChangeType type, AnimChangeState state)
-        {
-            if (type == AnimChangeType.UNDERWATER && state == AnimChangeState.ON)
-            {
-                Collider.center = new(0f, -0.3f, 0f);
-                Collider.height = 0.5f;
-            }
             else
             {
-                Collider.center = new(0f, -0.8f, 0f);
-                Collider.height = 1.5f;
+                Log.Warn("The main collider of the main Player couldn't be found or is not a CapsuleCollider. Collisions for the RemotePlayer won't be created");
             }
         }
 

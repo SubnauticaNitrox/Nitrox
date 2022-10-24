@@ -8,7 +8,7 @@ using UnityEngine;
 namespace NitroxPatcher.Patches.Dynamic;
 
 /// <summary>
-/// When looking for an EntityRoot, we want to make sure that the player can be recognized as one
+/// When looking for an EntityRoot, we want to make sure that remote players can be recognized as one.
 /// </summary>
 public class Utils_GetEntityRoot_Patch : NitroxPatch, IDynamicPatch
 {
@@ -19,8 +19,9 @@ public class Utils_GetEntityRoot_Patch : NitroxPatch, IDynamicPatch
         if (go.TryGetComponent(out RemotePlayerIdentifier remotePlayerIdentifier) || go.TryGetComponentInParent(out remotePlayerIdentifier))
         {
             __result = remotePlayerIdentifier.gameObject;
+            return false;
         }
-        return __result == null;
+        return true;
     }
 
     public override void Patch(Harmony harmony)
