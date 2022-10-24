@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using NitroxClient.GameLogic.PlayerLogic;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.MonoBehaviours;
@@ -24,6 +25,7 @@ namespace NitroxClient.GameLogic
         public GameObject Body { get; }
         public GameObject PlayerModel { get; }
         public Rigidbody RigidBody { get; }
+        public CapsuleCollider Collider { get; private set; }
         public ArmsController ArmsController { get; }
         public AnimationController AnimationController { get; }
         public ItemsContainer Inventory { get; }
@@ -84,6 +86,7 @@ namespace NitroxClient.GameLogic
             playerModelManager.BeginApplyPlayerColor(this);
             playerModelManager.RegisterEquipmentVisibilityHandler(PlayerModel);
             UpdateEquipmentVisibility();
+            SetupBody();
             SetupSkyAppliers();
 
             ErrorMessage.AddMessage($"{PlayerName} joined the game.");
@@ -247,6 +250,7 @@ namespace NitroxClient.GameLogic
 
         public void UpdateAnimation(AnimChangeType type, AnimChangeState state)
         {
+            UpdateCollider(type, state);
             switch (type)
             {
                 case AnimChangeType.UNDERWATER:
@@ -283,6 +287,45 @@ namespace NitroxClient.GameLogic
             playerModelManager.UpdateEquipmentVisibility(new ReadOnlyCollection<TechType>(equipment.ToList()));
         }
         
+        /// <summary>
+        /// Makes the RemotePlayer recognizable as an obstacle for buildings.
+        /// </summary>
+        private void SetupBody()
+        {
+            RemotePlayerIdentifier identifier = Body.AddComponent<RemotePlayerIdentifier>();
+            identifier.RemotePlayer = this;
+            
+            if (Player.mainCollider is CapsuleCollider refCollider)
+            {
+                // This layer lets us have a collider as a trigger without preventing its detection as an obstacle
+                Body.layer = LayerID.Useable;
+                Collider = Body.AddComponent<CapsuleCollider>();
+                
+                Collider.center = Vector3.zero;
+                Collider.radius = refCollider.radius;
+                Collider.direction = refCollider.direction;
+                Collider.contactOffset = refCollider.contactOffset;
+                Collider.isTrigger = true;
+            }
+        }
+
+        /// <summary>
+        /// Change two parameters of the collider depending on the state of the player
+        /// </summary>
+        private void UpdateCollider(AnimChangeType type, AnimChangeState state)
+        {
+            if (type == AnimChangeType.UNDERWATER && state == AnimChangeState.ON)
+            {
+                Collider.center = new(0f, -0.3f, 0f);
+                Collider.height = 0.5f;
+            }
+            else
+            {
+                Collider.center = new(0f, -0.8f, 0f);
+                Collider.height = 1.5f;
+            }
+        }
+
         /// <summary>
         /// Allows the remote player model to have its lightings dynamicly adjusted
         /// </summary>
