@@ -147,7 +147,6 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             }
 
             colorPicker.onColorChange.RemoveListener(OnColorChange);
-
             isSubscribed = false;
         }
 
@@ -201,7 +200,6 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         private void OnCancelClick()
         {
             StopMultiplayerClient();
-            rightSideMainMenu.OpenGroup("Multiplayer");
             Hide();
         }
 
