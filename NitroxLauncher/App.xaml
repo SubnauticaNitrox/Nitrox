@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:ap="clr-namespace:NitroxLauncher.Models.Properties"
              xmlns:pages="clr-namespace:NitroxLauncher.Pages" xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2"
+             xmlns:converters="clr-namespace:NitroxLauncher.Models.Converters"
              StartupUri="MainWindow.xaml" DispatcherUnhandledException="Application_DispatcherUnhandledException">
 
     <Application.Resources>
@@ -320,7 +321,6 @@
             </Style>
             
             <!--SCROLLBARS-->
-            <!-- TODO: MacOS style vertical scrollbar -->
             <Style x:Key="ScrollThumbs" TargetType="{x:Type Thumb}">
                 <Setter Property="Template">
                     <Setter.Value>
@@ -351,7 +351,7 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type ScrollBar}">
-                            <Grid x:Name="GridRoot" Width="6" Background="{x:Null}" Margin="0,20,0,0">
+                            <Grid x:Name="GridRoot" Width="6" Background="{x:Null}">
                                 <Track x:Name="PART_Track" Grid.Row="0" IsDirectionReversed="true" Focusable="False">
                                     <Track.Thumb>
                                         <Thumb x:Name="Thumb" Background="{TemplateBinding Foreground}" 
@@ -367,9 +367,14 @@
                             </Grid>
 
                             <ControlTemplate.Triggers>
+                                <!-- If the scrollbar is directly on the window: add a top margin to not overlap with exit button -->
+                                <DataTrigger Binding="{Binding Path=., ConverterParameter={x:Type Window}, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={converters:ObjectIsInstanceOfTypeConverter}}"
+                                             Value="True">
+                                    <Setter Property="Margin" Value="0 20 0 0" />
+                                </DataTrigger>
+                                
                                 <Trigger SourceName="Thumb" Property="IsMouseOver" Value="true">
-                                    <Setter Value="#3FFFFFFF" 
-                                            TargetName="Thumb" Property="Background"/>
+                                    <Setter Value="#3FFFFFFF" TargetName="Thumb" Property="Background"/>
                                 </Trigger>
                                 <Trigger SourceName="Thumb" Property="IsDragging" Value="true">
                                     <Setter Value="{DynamicResource DarkBrush}" TargetName="Thumb" Property="Background"/>
