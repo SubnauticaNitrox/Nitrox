@@ -1,4 +1,5 @@
-﻿using NitroxModel.MultiplayerSession;
+﻿using System.Threading.Tasks;
+using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
 
 namespace NitroxClient.Communication.Abstract
@@ -10,7 +11,7 @@ namespace NitroxClient.Communication.Abstract
         IMultiplayerSessionConnectionState CurrentState { get; }
         event MultiplayerSessionConnectionStateChangedEventHandler ConnectionStateChanged;
 
-        void Connect(string ipAddress, int port);
+        Task ConnectAsync(string ipAddress, int port);
         void ProcessSessionPolicy(MultiplayerSessionPolicy policy);
         void RequestSessionReservation(PlayerSettings playerSettings, AuthenticationContext authenticationContext);
         void ProcessReservationResponsePacket(MultiplayerSessionReservation reservation);

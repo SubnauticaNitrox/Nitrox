@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nitrox.Test.Client.Communication.MultiplayerSession;
@@ -18,7 +19,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             IClient serverClient = Substitute.For<IClient>();
             serverClient.IsConnected.Returns(false);
             serverClient
-                .When(client => client.Start(Arg.Any<string>(), TestConstants.TEST_SERVER_PORT))
+                .When(client => client.StartAsync(Arg.Any<string>(), TestConstants.TEST_SERVER_PORT))
                 .Do(info => serverClient.IsConnected.Returns(true));
 
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
@@ -28,7 +29,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             Disconnected connectionState = new Disconnected();
 
             // Act
-            connectionState.NegotiateReservation(connectionContext);
+            connectionState.NegotiateReservationAsync(connectionContext);
 
             // Assert
             serverClient.IsConnected.Should().BeTrue();
@@ -41,7 +42,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             IClient serverClient = Substitute.For<IClient>();
             serverClient.IsConnected.Returns(false);
             serverClient
-                .When(client => client.Start(Arg.Any<string>(), TestConstants.TEST_SERVER_PORT))
+                .When(client => client.StartAsync(Arg.Any<string>(), TestConstants.TEST_SERVER_PORT))
                 .Do(info => serverClient.IsConnected.Returns(true));
 
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
@@ -51,7 +52,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             Disconnected connectionState = new Disconnected();
 
             // Act
-            connectionState.NegotiateReservation(connectionContext);
+            connectionState.NegotiateReservationAsync(connectionContext);
 
             // Assert
             serverClient.Received().Send(Arg.Any<MultiplayerSessionPolicyRequest>());
@@ -64,7 +65,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             IClient serverClient = Substitute.For<IClient>();
             serverClient.IsConnected.Returns(false);
             serverClient
-                .When(client => client.Start(Arg.Any<string>(), TestConstants.TEST_SERVER_PORT))
+                .When(client => client.StartAsync(Arg.Any<string>(), TestConstants.TEST_SERVER_PORT))
                 .Do(info => serverClient.IsConnected.Returns(true));
 
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
@@ -74,14 +75,14 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             Disconnected connectionState = new Disconnected();
 
             // Act
-            connectionState.NegotiateReservation(connectionContext);
+            connectionState.NegotiateReservationAsync(connectionContext);
 
             // Assert
             connectionContext.Received().UpdateConnectionState(Arg.Any<EstablishingSessionPolicy>());
         }
 
         [TestMethod]
-        public void NegotiateShouldThrowInvalidOperationExceptionWhenClientIsNull()
+        public async Task NegotiateShouldThrowInvalidOperationExceptionWhenClientIsNull()
         {
             // Arrange
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
@@ -91,14 +92,14 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             Disconnected connectionState = new Disconnected();
 
             // Act
-            Action action = () => connectionState.NegotiateReservation(connectionContext);
+            Func<Task> action = async () => await connectionState.NegotiateReservationAsync(connectionContext);
 
             // Assert
-            action.Should().Throw<InvalidOperationException>();
+            await action.Should().ThrowAsync<InvalidOperationException>();
         }
 
         [TestMethod]
-        public void NegotiateShouldThrowInvalidOperationExceptionWhenIpAddressIsNull()
+        public async Task NegotiateShouldThrowInvalidOperationExceptionWhenIpAddressIsNull()
         {
             // Arrange
             IClient client = Substitute.For<IClient>();
@@ -109,10 +110,10 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             Disconnected connectionState = new Disconnected();
 
             // Act
-            Action action = () => connectionState.NegotiateReservation(connectionContext);
+            Func<Task> action = async () => await connectionState.NegotiateReservationAsync(connectionContext);
 
             // Assert
-            action.Should().Throw<InvalidOperationException>();
+            await action.Should().ThrowAsync<InvalidOperationException>();
         }
 
         [TestMethod]

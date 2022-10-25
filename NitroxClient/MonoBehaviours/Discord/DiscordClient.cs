@@ -83,7 +83,7 @@ public class DiscordClient : MonoBehaviour
         string[] splitSecret = secret.Split(':');
         string ip = string.Join(":", splitSecret.Take(splitSecret.Length - 1));
         string port = splitSecret.Last();
-        MainMenuMultiplayerPanel.OpenJoinServerMenu(ip, port);
+        _ = MainMenuMultiplayerPanel.OpenJoinServerMenuAsync(ip, port);
     }
 
     private void ActivityJoinRequest(ref User user)
