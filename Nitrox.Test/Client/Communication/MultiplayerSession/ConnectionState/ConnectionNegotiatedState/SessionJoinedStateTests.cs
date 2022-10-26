@@ -17,7 +17,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             SessionJoined connectionState = new SessionJoined();
 
             // Act
-            Action action = () => connectionState.NegotiateReservation(connectionContext);
+            Action action = () => connectionState.NegotiateReservationAsync(connectionContext);
 
             // Assert
             action.Should().Throw<InvalidOperationException>();

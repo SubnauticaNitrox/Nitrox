@@ -48,12 +48,12 @@ namespace NitroxClient.Communication.MultiplayerSession
 
         public event MultiplayerSessionConnectionStateChangedEventHandler ConnectionStateChanged;
 
-        public void Connect(string ipAddress, int port)
+        public async Task ConnectAsync(string ipAddress, int port)
         {
             IpAddress = ipAddress;
             ServerPort = port;
             initSerializerTask.Wait();
-            CurrentState.NegotiateReservation(this);
+            await CurrentState.NegotiateReservationAsync(this);
         }
 
         public void ProcessSessionPolicy(MultiplayerSessionPolicy policy)
@@ -74,7 +74,7 @@ namespace NitroxClient.Communication.MultiplayerSession
                     return;
             }
 
-            CurrentState.NegotiateReservation(this);
+            CurrentState.NegotiateReservationAsync(this);
         }
 
         public void RequestSessionReservation(PlayerSettings playerSettings, AuthenticationContext authenticationContext)
@@ -88,7 +88,7 @@ namespace NitroxClient.Communication.MultiplayerSession
 
             PlayerSettings = playerSettings;
             AuthenticationContext = authenticationContext;
-            CurrentState.NegotiateReservation(this);
+            CurrentState.NegotiateReservationAsync(this);
         }
 
         public void ProcessReservationResponsePacket(MultiplayerSessionReservation reservation)
@@ -100,7 +100,7 @@ namespace NitroxClient.Communication.MultiplayerSession
             }
 
             Reservation = reservation;
-            CurrentState.NegotiateReservation(this);
+            CurrentState.NegotiateReservationAsync(this);
         }
 
         public void JoinSession()

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Exceptions;
 using NitroxClient.Communication.MultiplayerSession;
@@ -59,7 +60,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             Hide();
         }
 
-        public void Show(string ip, int port)
+        public async Task ShowAsync(string ip, int port)
         {
             NitroxServiceLocator.BeginNewLifetimeScope();
             multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
@@ -82,7 +83,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
             playerNameInputField.text = activePlayerPreference.PlayerName;
 
-            StartMultiplayerClient();
+            await StartMultiplayerClientAsync();
         }
 
         private void Hide()
@@ -147,7 +148,6 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             }
 
             colorPicker.onColorChange.RemoveListener(OnColorChange);
-
             isSubscribed = false;
         }
 
@@ -166,7 +166,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             playerNameInputField.ActivateInputField();
         }
 
-        private void StartMultiplayerClient()
+        private async Task StartMultiplayerClientAsync()
         {
             if (multiplayerClient == null)
             {
@@ -177,7 +177,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
             try
             {
-                multiplayerSession.Connect(serverIp, serverPort);
+                await multiplayerSession.ConnectAsync(serverIp, serverPort);
             }
             catch (ClientConnectionFailedException)
             {
@@ -201,7 +201,6 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         private void OnCancelClick()
         {
             StopMultiplayerClient();
-            rightSideMainMenu.OpenGroup("Multiplayer");
             Hide();
         }
 
@@ -267,7 +266,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                         () =>
                         {
                             multiplayerSession.Disconnect();
-                            multiplayerSession.Connect(serverIp, serverPort);
+                            multiplayerSession.ConnectAsync(serverIp, serverPort);
                         });
                     break;
 

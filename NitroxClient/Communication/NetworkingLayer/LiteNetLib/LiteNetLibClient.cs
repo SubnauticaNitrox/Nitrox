@@ -1,4 +1,5 @@
 ﻿using System.Threading;
+using System.Threading.Tasks;
 using LiteNetLib;
 using LiteNetLib.Utils;
 using NitroxClient.Communication.Abstract;
@@ -27,7 +28,7 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
             this.networkDebugger = networkDebugger;
         }
 
-        public void Start(string ipAddress, int serverPort)
+        public async Task StartAsync(string ipAddress, int serverPort)
         {
             Log.Info("Initializing LiteNetLibClient...");
 
@@ -49,8 +50,11 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
 #endif
             };
 
-            client.Start();
-            client.Connect(ipAddress, serverPort, "nitrox");
+            await Task.Run(() =>
+            {
+                client.Start();
+                client.Connect(ipAddress, serverPort, "nitrox");
+            });
 
             connectedEvent.WaitOne(2000);
             connectedEvent.Reset();

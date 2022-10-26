@@ -1,1 +1,8 @@
-{}
+{
+    "Nitrox_AddServer": "Dodaj Server",
+    "Nitrox_AddServerAdd": "Dodaj",
+    "Nitrox_AddServerHost": "Host:",
+    "Nitrox_AddServerName": "Ime:",
+    "Nitrox_AddServerPort": "Port:",
+    "Nitrox_Cancel": "Poništi"
+}

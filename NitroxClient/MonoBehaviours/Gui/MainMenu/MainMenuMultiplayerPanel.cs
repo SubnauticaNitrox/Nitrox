@@ -8,6 +8,7 @@ using NitroxClient.Unity.Helper;
 using NitroxModel.Serialization;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace NitroxClient.MonoBehaviours.Gui.MainMenu
@@ -21,7 +22,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         private GameObject deleteButtonRef;
         private GameObject multiplayerButton;
         private Transform savedGameAreaContent;
-        public JoinServer JoinServer;
+        public JoinServer JoinServer { get; private set; }
 
         private string serverHostInput;
         private string serverNameInput;
@@ -29,6 +30,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         private bool shouldFocus;
         private bool showingAddServer;
+        private bool isJoining;
 
         public void Setup(GameObject loadedMultiplayer, GameObject savedGames)
         {
@@ -76,10 +78,21 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             Destroy(txt.GetComponent<TranslationLiveUpdate>());
             Button multiplayerButtonButton = multiplayerButtonInst.RequireTransform("NewGameButton").GetComponent<Button>();
             multiplayerButtonButton.onClick = new Button.ButtonClickedEvent();
-            multiplayerButtonButton.onClick.AddListener(() =>
+            multiplayerButtonButton.onClick.AddListener(async () =>
             {
+                if (isJoining)
+                {
+                    // Do not attempt to join multiple servers.
+                    return;
+                }
+                isJoining = true;
+                
                 txt.GetComponent<Text>().color = prevTextColor; // Visual fix for black text after click (hover state still active)
-                OpenJoinServerMenu(joinIp, joinPort);
+                await OpenJoinServerMenuAsync(joinIp, joinPort)
+                    .ContinueWith(t =>
+                    {
+                        isJoining = false;
+                    });
             });
 
             // We don't want servers that are discovered automatically to be deleted
@@ -97,7 +110,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             }
         }
 
-        public static void OpenJoinServerMenu(string serverIp, string serverPort)
+        public static async Task OpenJoinServerMenuAsync(string serverIp, string serverPort)
         {
             if (Main == null)
             {
@@ -111,7 +124,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 return;
             }
 
-            Main.JoinServer.Show(endpoint.Address.ToString(), endpoint.Port);
+            await Main.JoinServer.ShowAsync(endpoint.Address.ToString(), endpoint.Port);
         }
 
         private void ShowAddServerWindow()
