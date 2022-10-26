@@ -1,1 +1,21 @@
-{}
+{
+    "Nitrox_AddServer": "Pridėti tinklą",
+    "Nitrox_AddServerAdd": "Pridėti",
+    "Nitrox_AddServerHost": "Sukurti:",
+    "Nitrox_AddServerName": "Vardas",
+    "Nitrox_Cancel": "Atšaukti",
+    "Nitrox_CommandNotAvailable": "Ši komanda Nitrox papildinyje nepasiekiama",
+    "Nitrox_ConnectTo": "Prisijungti prie",
+    "Nitrox_DisconnectedSession": "Atsijungti",
+    "Nitrox_DiscordAccept": "Sutikti",
+    "Nitrox_DiscordDecline": "Atšaukti",
+    "Nitrox_DiscordPressToFocus": "Spauskite kad atrakinti",
+    "Nitrox_DiscordRequestText": "Prašo leidimo prisijungti",
+    "Nitrox_EnterName": "Įveskite savo žaidėjo vardą",
+    "Nitrox_FirewallInterfering": "Atrodo kad, jūsų apsaugos nustatymai trukdo",
+    "Nitrox_HideIp": "Slėpti IP adresus",
+    "Nitrox_HidePing": "Slėpti Ping",
+    "Nitrox_InvalidUserName": "Prašome įvesti veikianti slapyvardį.\n\nJame negali būti tarpų arba  kitokių ženklų.\nLeistini simboliai:A-Z a-z 0-9 _ . -\nIlgis: [3, 25]",
+    "Nitrox_Join": "Prisijungti",
+    "Nitrox_JoinServerFailed": "Ivyko klaida"
+}

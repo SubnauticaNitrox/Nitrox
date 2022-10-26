@@ -15,6 +15,7 @@
     "Nitrox_EnterName": "Speler Naam",
     "Nitrox_FirewallInterfering": "Het lijkt erop dat je firewall instellingen het netwerk onderbreken",
     "Nitrox_HideIp": "IPs verschuilen",
+    "Nitrox_HidePing": "Ping Verbergen",
     "Nitrox_InvalidUserName": "Voer een geldige spelernaam in !\n\n Het mag geen spatie of speciale karakters bevatten\n Toegestane karakters : A-Z a-z 0-9 _ . -\nLengte : [3, 25]",
     "Nitrox_Join": "Meedoen",
     "Nitrox_JoinServerFailed": "Kan niet verbinden met server",
