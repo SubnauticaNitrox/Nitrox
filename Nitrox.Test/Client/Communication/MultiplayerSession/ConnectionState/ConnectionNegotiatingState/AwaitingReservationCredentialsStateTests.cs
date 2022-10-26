@@ -27,7 +27,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             AwaitingReservationCredentials connectionState = new AwaitingReservationCredentials();
 
             // Act
-            connectionState.NegotiateReservation(connectionContext);
+            connectionState.NegotiateReservationAsync(connectionContext);
 
             // Assert
             serverClient.Received().Send(Arg.Any<MultiplayerSessionReservationRequest>());
@@ -48,7 +48,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             AwaitingReservationCredentials connectionState = new AwaitingReservationCredentials();
 
             // Act
-            connectionState.NegotiateReservation(connectionContext);
+            connectionState.NegotiateReservationAsync(connectionContext);
 
             // Assert
             connectionContext.Received().UpdateConnectionState(Arg.Any<AwaitingSessionReservation>());
@@ -68,7 +68,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             AwaitingReservationCredentials connectionState = new AwaitingReservationCredentials();
 
             // Act
-            Action action = () => connectionState.NegotiateReservation(connectionContext);
+            Action action = () => connectionState.NegotiateReservationAsync(connectionContext);
 
             // Assert
             action.Should().Throw<InvalidOperationException>();
@@ -88,7 +88,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             AwaitingReservationCredentials connectionState = new AwaitingReservationCredentials();
 
             // Act
-            Action action = () => connectionState.NegotiateReservation(connectionContext);
+            Action action = () => connectionState.NegotiateReservationAsync(connectionContext);
 
             // Assert
             action.Should().Throw<InvalidOperationException>();

@@ -45,7 +45,7 @@ namespace NitroxClient.Communication.MultiplayerSession
             IMultiplayerSession multiplayerSession = new MultiplayerSessionManager(client, TestConstants.TEST_CONNECTION_STATE);
 
             // Act
-            multiplayerSession.Connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_SERVER_PORT);
+            multiplayerSession.ConnectAsync(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_SERVER_PORT);
 
             // Assert
             multiplayerSession.IpAddress.Should().Be(TestConstants.TEST_IP_ADDRESS);

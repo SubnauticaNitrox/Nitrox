@@ -22,7 +22,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             EstablishingSessionPolicy connectionState = new EstablishingSessionPolicy(TestConstants.TEST_CORRELATION_ID);
 
             // Act
-            connectionState.NegotiateReservation(connectionContext);
+            connectionState.NegotiateReservationAsync(connectionContext);
 
             // Assert
             connectionContext.Received().UpdateConnectionState(Arg.Any<AwaitingReservationCredentials>());
@@ -38,7 +38,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             EstablishingSessionPolicy connectionState = new EstablishingSessionPolicy(TestConstants.TEST_CORRELATION_ID);
 
             // Act
-            connectionState.NegotiateReservation(connectionContext);
+            connectionState.NegotiateReservationAsync(connectionContext);
 
             // Assert
             connectionContext.Received().UpdateConnectionState(Arg.Any<AwaitingReservationCredentials>());
@@ -54,7 +54,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             EstablishingSessionPolicy connectionState = new EstablishingSessionPolicy(TestConstants.TEST_CORRELATION_ID);
 
             // Act
-            Action action = () => connectionState.NegotiateReservation(connectionContext);
+            Action action = () => connectionState.NegotiateReservationAsync(connectionContext);
 
             // Assert
             action.Should().Throw<UncorrelatedPacketException>();
@@ -70,7 +70,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             EstablishingSessionPolicy connectionState = new EstablishingSessionPolicy(TestConstants.TEST_CORRELATION_ID);
 
             // Act
-            Action action = () => connectionState.NegotiateReservation(connectionContext);
+            Action action = () => connectionState.NegotiateReservationAsync(connectionContext);
 
             // Assert
             action.Should().Throw<InvalidOperationException>();
