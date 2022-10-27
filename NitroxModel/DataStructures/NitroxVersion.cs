@@ -18,7 +18,7 @@ public readonly struct NitroxVersion : IComparable<NitroxVersion>
         Minor = minor;
     }
 
-    public NitroxVersion(int major, int minor)
+    public NitroxVersion(int major, int minor) : this((ushort)major, (ushort)minor)
     {
         if (major is < 0 or > ushort.MaxValue)
         {
@@ -28,9 +28,6 @@ public readonly struct NitroxVersion : IComparable<NitroxVersion>
         {
             throw new ArgumentOutOfRangeException(nameof(minor));
         }
-
-        Major = (ushort) major;
-        Minor = (ushort) minor;
     }
 
     public int CompareTo(NitroxVersion other)
