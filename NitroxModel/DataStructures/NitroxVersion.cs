@@ -7,23 +7,30 @@ namespace NitroxModel.DataStructures;
 /// </summary>
 public readonly struct NitroxVersion : IComparable<NitroxVersion>
 {
-    public int Major { get; init; }
+    public ushort Major { get; init; }
 
-    public int Minor { get; init; }
+    public ushort Minor { get; init; }
+
+
+    public NitroxVersion(ushort major, ushort minor)
+    {
+        Major = major;
+        Minor = minor;
+    }
 
     public NitroxVersion(int major, int minor)
     {
-        if (major < 0)
+        if (major is < 0 or > ushort.MaxValue)
         {
             throw new ArgumentOutOfRangeException(nameof(major));
         }
-        if (minor < 0)
+        if (minor is < 0 or > ushort.MaxValue)
         {
             throw new ArgumentOutOfRangeException(nameof(minor));
         }
 
-        Major = major;
-        Minor = minor;
+        Major = (ushort) major;
+        Minor = (ushort) minor;
     }
 
     public int CompareTo(NitroxVersion other)
