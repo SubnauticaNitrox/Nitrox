@@ -18,7 +18,7 @@ namespace NitroxClient.Communication.MultiplayerSession
 
         static MultiplayerSessionManager()
         {
-            initSerializerTask = Task.Factory.StartNew(() => Packet.InitSerializer());
+            initSerializerTask = Task.Run(Packet.InitSerializer);
         }
 
         private readonly HashSet<Type> suppressedPacketsTypes = new HashSet<Type>();
@@ -52,7 +52,7 @@ namespace NitroxClient.Communication.MultiplayerSession
         {
             IpAddress = ipAddress;
             ServerPort = port;
-            initSerializerTask.Wait();
+            await initSerializerTask;
             await CurrentState.NegotiateReservationAsync(this);
         }
 
