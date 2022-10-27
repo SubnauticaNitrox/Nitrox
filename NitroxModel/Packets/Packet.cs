@@ -24,7 +24,7 @@ namespace NitroxModel.Packets
                 static IEnumerable<Type> FindTypesInModelAssemblies()
                 {
                     return AppDomain.CurrentDomain.GetAssemblies()
-                                    .Where(assembly => new[] { "NitroxModel", "NitroxModel-Subnautica" }
+                                    .Where(assembly => new[] { nameof(NitroxModel), "NitroxModel-Subnautica" }
                                                .Contains(assembly.GetName().Name))
                                     .SelectMany(assembly =>
                                     {
