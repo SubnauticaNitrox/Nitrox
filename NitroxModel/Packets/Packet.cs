@@ -19,29 +19,29 @@ namespace NitroxModel.Packets
 
         public static void InitSerializer()
         {
+            static IEnumerable<Type> FindTypesInModelAssemblies()
+            {
+                return AppDomain.CurrentDomain.GetAssemblies()
+                                .Where(assembly => new[] { nameof(NitroxModel), "NitroxModel-Subnautica" }
+                                           .Contains(assembly.GetName().Name))
+                                .SelectMany(assembly =>
+                                {
+                                    try
+                                    {
+                                        return assembly.GetTypes();
+                                    }
+                                    catch (ReflectionTypeLoadException e)
+                                    {
+                                        return e.Types.Where(t => t != null);
+                                    }
+                                });
+            }
+            
+            static IEnumerable<Type> FindUnionBaseTypes() => FindTypesInModelAssemblies()
+                .Where(t => t.IsAbstract && !t.IsSealed && (!t.BaseType?.IsAbstract ?? true) && !t.ContainsGenericParameters);
+            
             lock (lockObject)
             {
-                static IEnumerable<Type> FindTypesInModelAssemblies()
-                {
-                    return AppDomain.CurrentDomain.GetAssemblies()
-                                    .Where(assembly => new[] { nameof(NitroxModel), "NitroxModel-Subnautica" }
-                                               .Contains(assembly.GetName().Name))
-                                    .SelectMany(assembly =>
-                                    {
-                                        try
-                                        {
-                                            return assembly.GetTypes();
-                                        }
-                                        catch (ReflectionTypeLoadException e)
-                                        {
-                                            return e.Types.Where(t => t != null);
-                                        }
-                                    });
-                }
-
-                static IEnumerable<Type> FindUnionBaseTypes() => FindTypesInModelAssemblies()
-                    .Where(t => t.IsAbstract && !t.IsSealed && (!t.BaseType?.IsAbstract ?? true) && !t.ContainsGenericParameters);
-
                 foreach (Type type in FindUnionBaseTypes())
                 {
                     BinaryConverter.RegisterUnion(type, FindTypesInModelAssemblies()
