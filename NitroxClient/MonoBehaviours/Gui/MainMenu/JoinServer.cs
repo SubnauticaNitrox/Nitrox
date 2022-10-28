@@ -105,7 +105,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             }
             else if (UnityEngine.Input.GetKeyDown(KeyCode.Escape))
             {
-                OnCancelClick();
+                OnCancelClick(true);
             }
         }
 
@@ -193,13 +193,17 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                         Log.InGame(Language.main.Get("Nitrox_FirewallInterfering"));
                     }
                 }
-                OnCancelClick();
+                OnCancelClick(false);
             }
         }
 
-        private void OnCancelClick()
+        private void OnCancelClick(bool returnToMpMenu)
         {
             StopMultiplayerClient();
+            if (returnToMpMenu)
+            {
+                rightSideMainMenu.OpenGroup("Multiplayer");
+            }
             Hide();
         }
 
@@ -349,7 +353,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
             //Click events
             Button cancelButton = cancelButtonGameObject.GetComponent<Button>();
-            cancelButton.onClick.AddListener(OnCancelClick);
+            cancelButton.onClick.AddListener(() => OnCancelClick(true));
 
             Button joinButton = joinButtonGameObject.GetComponent<Button>();
             joinButton.onClick.AddListener(OnJoinClick);
@@ -622,7 +626,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                         if (GUILayout.Button(Language.main.Get("Nitrox_Cancel")))
                         {
                             HidePasswordWindow();
-                            OnCancelClick();
+                            OnCancelClick(true);
                         }
                     }
                 });
