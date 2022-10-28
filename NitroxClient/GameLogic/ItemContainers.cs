@@ -99,12 +99,15 @@ namespace NitroxClient.GameLogic
                 Log.Error($"Could not find item container behaviour on object {owner.GetFullHierarchyPath()} with id {ownerId}");
                 return;
             }
-
             ItemsContainer container = opContainer.Value;
             Pickupable pickupable = item.RequireComponent<Pickupable>();
             using (packetSender.Suppress<ItemContainerRemove>())
             {
-                container.RemoveItem(pickupable, true);
+                if (container.RemoveItem(pickupable, true) && container._label.StartsWith("NitroxInventoryStorage_"))
+                {
+                    // If we don't destroy the item here, it will stay forever in the remote player's inventory
+                    Object.Destroy(item);
+                }
                 Log.Debug($"Received: Removed item {pickupable.GetTechType()} to container {owner.GetFullHierarchyPath()}");
             }
         }
