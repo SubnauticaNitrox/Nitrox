@@ -19,11 +19,9 @@ namespace NitroxServer.ConsoleCommands
         protected override void Execute(CallArgs args)
         {
             List<string> cmdsText;
-
             if (args.IsConsole)
             {
                 cmdsText = GetHelpText(Perms.CONSOLE, false, args.IsValid(0) ? args.Get<string>(0) : null);
-
                 foreach (string cmdText in cmdsText)
                 {
                     Log.Info(cmdText);
@@ -42,6 +40,11 @@ namespace NitroxServer.ConsoleCommands
 
         private List<string> GetHelpText(Perms permThreshold, bool cropText, string singleCommand)
         {
+            static bool CanExecuteAndProcess(Command cmd, Perms perms)
+            {
+                return cmd.CanExecute(perms) && !(perms == Perms.CONSOLE && cmd.Flags.HasFlag(PermsFlag.NO_CONSOLE));
+            }
+            
             //Runtime query to avoid circular dependencies
             IEnumerable<Command> commands = NitroxServiceLocator.LocateService<IEnumerable<Command>>();
             if (singleCommand != null && !commands.Any(cmd => cmd.Name.Equals(singleCommand)))
@@ -50,7 +53,7 @@ namespace NitroxServer.ConsoleCommands
             }
             List<string> cmdsText = new();
             cmdsText.Add(singleCommand != null ? $"=== Showing help for {singleCommand} ===" : "=== Showing command list ===");
-            cmdsText.AddRange(commands.Where(cmd => cmd.CanExecute(permThreshold) && (singleCommand == null || cmd.Name.Equals(singleCommand)))
+            cmdsText.AddRange(commands.Where(cmd => CanExecuteAndProcess(cmd, permThreshold) && (singleCommand == null || cmd.Name.Equals(singleCommand)))
                                              .OrderByDescending(cmd => cmd.Name)
                                              .Select(cmd => cmd.ToHelpText(singleCommand != null, cropText)));
             return cmdsText;
