@@ -41,7 +41,7 @@ namespace NitroxClient.GameLogic
             }
             else
             {
-                itemData = new ItemData(ownerId, itemId, bytes);
+                itemData = new BasicItemData(ownerId, itemId, bytes);
             }
 
             if (packetSender.Send(new ItemContainerAdd(itemData)))

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession.ConnectionState;
 using NitroxClient.GameLogic;
+using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
@@ -13,6 +14,13 @@ namespace NitroxClient.Communication.MultiplayerSession
 {
     public class MultiplayerSessionManager : IMultiplayerSession, IMultiplayerSessionConnectionContext
     {
+        private static readonly Task initSerializerTask;
+
+        static MultiplayerSessionManager()
+        {
+            initSerializerTask = Task.Run(Packet.InitSerializer);
+        }
+
         private readonly HashSet<Type> suppressedPacketsTypes = new HashSet<Type>();
 
         public IClient Client { get; }
@@ -44,6 +52,7 @@ namespace NitroxClient.Communication.MultiplayerSession
         {
             IpAddress = ipAddress;
             ServerPort = port;
+            await initSerializerTask;
             await CurrentState.NegotiateReservationAsync(this);
         }
 
@@ -52,9 +61,8 @@ namespace NitroxClient.Communication.MultiplayerSession
             SessionPolicy = policy;
             NitroxConsole.DisableConsole = SessionPolicy.DisableConsole;
             Version localVersion = NitroxEnvironment.Version;
-
-            localVersion = new Version(localVersion.Major, localVersion.Minor);
-            switch (localVersion.CompareTo(SessionPolicy.NitroxVersionAllowed))
+            NitroxVersion nitroxVersion = new(localVersion.Major, localVersion.Minor);
+            switch (nitroxVersion.CompareTo(SessionPolicy.NitroxVersionAllowed))
             {
                 case -1:
                     Log.InGame($"Your Nitrox installation is out of date. Server: {SessionPolicy.NitroxVersionAllowed}, Yours: {localVersion}.");

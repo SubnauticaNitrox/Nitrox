@@ -1,4 +1,5 @@
 ﻿using System;
+using BinaryPack.Attributes;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
 using ProtoBufNet;
@@ -21,15 +22,16 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation.Met
         [ProtoMember(4)]
         public NitroxInt3 Anchor { get; set; }
 
-        protected AnchoredFaceBuilderMetadata() : base(typeof(BaseAddFaceGhost))
+        [IgnoreConstructor]
+        protected AnchoredFaceBuilderMetadata()
         {
             // Constructor for serialization. Has to be "protected" for json serialization.
         }
 
-        public AnchoredFaceBuilderMetadata(NitroxInt3 cell, int faceDirection, int faceType, NitroxInt3 anchor) : base(typeof(BaseAddFaceGhost))
+        public AnchoredFaceBuilderMetadata(NitroxInt3 cell, int direction, int faceType, NitroxInt3 anchor)
         {
             Cell = cell;
-            Direction = faceDirection;
+            Direction = direction;
             FaceType = faceType;
             Anchor = anchor;
         }

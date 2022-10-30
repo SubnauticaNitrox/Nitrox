@@ -101,7 +101,7 @@ namespace NitroxClient.GameLogic.InitialSync
             GameModeUtils.SetGameMode((GameModeOption)(int)gameMode, GameModeOption.None);
         }
 
-        private void SetPlayerCompletedGoals(ISet<string> completedGoals)
+        private void SetPlayerCompletedGoals(IEnumerable<string> completedGoals)
         {
             GoalManager.main.completedGoalNames.AddRange(completedGoals);
             PlayerWorldArrows.main.completedCustomGoals.AddRange(completedGoals);

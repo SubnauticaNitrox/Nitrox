@@ -3,10 +3,10 @@ using HarmonyLib;
 using NitroxClient.Helpers;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
+using NitroxModel_Subnautica.DataStructures;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
-using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic
@@ -53,7 +53,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 }
 
                 NitroxId vehicleId = NitroxEntity.GetId(parentVehicle);
-                VehicleColorChange packet = new(__instance.SelectedColorIndex, controllerId, vehicleId, eventData.hsb.ToDto(), eventData.color.ToDto());
+                VehicleColorChange packet = new(controllerId, vehicleId, __instance.SelectedColorIndex, eventData.hsb.ToDto(), eventData.color.ToDto());
                 Resolve<ThrottledPacketSender>().SendThrottled(packet);
             }
         }

@@ -28,7 +28,7 @@ namespace NitroxClient.GameLogic
             NitroxId itemId = NitroxEntity.GetId(item.item.gameObject);
             byte[] bytes = SerializationHelper.GetBytesWithoutParent(item.item.gameObject);
 
-            ItemData itemData = new(id, itemId, bytes);
+            BasicItemData itemData = new(id, itemId, bytes);
             StorageSlotItemAdd add = new(itemData);
             packetSender.Send(add);
         }

@@ -17,7 +17,7 @@ namespace NitroxClient.Communication.Packets.Processors
                 // Cyclops is using a local position system inside it's subroot
                 if (subRoot.isCyclops)
                 {
-                    // Reversing calculations from PlayerMovement.Update()
+                    // Reversing calculations from PlayerMovementBroadcaster.Update()
                     Vector3 position = (subRoot.transform.rotation * packet.DestinationTo.ToUnity()) + subRoot.transform.position;
 
                     Player.main.SetPosition(position);

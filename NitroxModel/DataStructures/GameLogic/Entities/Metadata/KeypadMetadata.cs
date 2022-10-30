@@ -1,4 +1,5 @@
 ﻿using System;
+using BinaryPack.Attributes;
 using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata
@@ -10,6 +11,7 @@ namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata
         [ProtoMember(1)]
         public bool Unlocked { get; }
 
+        [IgnoreConstructor]
         protected KeypadMetadata()
         {
             // Constructor for serialization. Has to be "protected" for json serialization.
