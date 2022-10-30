@@ -10,7 +10,7 @@ indent_style = space
 csharp_new_line_before_members_in_object_initializers = false
 
 [*.{proj, csproj, targets}]
-indent_size = 2
+indent_size = 4
 insert_final_newline = true
 
 [App.config]
