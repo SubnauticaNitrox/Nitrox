@@ -64,5 +64,6 @@
     "Nitrox_Waiting": "Waiting in join queue…",
     "Nitrox_WaitingPassword": "Waiting for server password input…",
     "Nitrox_WaitingUserInput": "Waiting for user input…",
-    "Nitrox_WorldSettling": "Awaiting World Settling…"
+    "Nitrox_WorldSettling": "Awaiting World Settling…",
+    "Nitrox_RemotePlayerObstacle": "Another player's either inside or too close to the deconstructable target."
 }
