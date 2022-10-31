@@ -42,15 +42,12 @@ namespace NitroxServer.ConsoleCommands.Processor
             {
                 return;
             }
-
             string[] parts = msg.Split(splitChar, StringSplitOptions.RemoveEmptyEntries);
-
             if (!commands.TryGetValue(parts[0], out Command command))
             {
                 Command.SendMessage(sender, $"Command not found: {parts[0]}");
                 return;
             }
-
             if (!sender.HasValue && command.Flags.HasFlag(PermsFlag.NO_CONSOLE))
             {
                 Log.Error("This command cannot be used by CONSOLE");
