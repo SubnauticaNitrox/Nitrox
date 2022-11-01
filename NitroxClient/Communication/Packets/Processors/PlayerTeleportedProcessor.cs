@@ -1,8 +1,10 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxClient.GameLogic.InitialSync;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
+using UWE;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -27,8 +29,11 @@ namespace NitroxClient.Communication.Packets.Processors
 
                 Player.main.SetCurrentSub(subRoot);
             }
-
+            
             Player.main.SetPosition(packet.DestinationTo.ToUnity());
+            // Freeze the player while he's loading its new position
+            Player.main.cinematicModeActive = true;
+            CoroutineHost.StartCoroutine(PlayerPositionInitialSyncProcessor.WaitForWorldLoad());
         }
     }
 }

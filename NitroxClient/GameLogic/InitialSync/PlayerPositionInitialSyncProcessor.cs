@@ -48,6 +48,7 @@ namespace NitroxClient.GameLogic.InitialSync
             Optional<NitroxId> subRootId = packet.PlayerSubRootId;
             if (!subRootId.HasValue)
             {
+                yield return WaitForWorldLoad();
                 yield break;
             }
 
@@ -55,12 +56,14 @@ namespace NitroxClient.GameLogic.InitialSync
             if (!sub.HasValue)
             {
                 Log.Error("Could not spawn player into subroot with id: " + subRootId.Value);
+                yield return WaitForWorldLoad();
                 yield break;
             }
 
             if (!sub.Value.TryGetComponent(out SubRoot subRoot))
             {
                 Log.Debug("SubRootId-GameObject has no SubRoot component, so it's assumed to be the EscapePod");
+                yield return WaitForWorldLoad();
                 yield break;
             }
 
@@ -68,6 +71,7 @@ namespace NitroxClient.GameLogic.InitialSync
             Player.main.SetCurrentSub(subRoot);
             if (subRoot.isBase)
             {
+                // If the player's in a base, we don't need to wait for the world to load
                 yield break;
             }
             Transform rootTransform = subRoot.transform;
@@ -75,12 +79,18 @@ namespace NitroxClient.GameLogic.InitialSync
             position = vehicleAngle * position;
             position = position + rootTransform.position;
             Player.main.SetPosition(position);
+            yield return WaitForWorldLoad();
+        }
+
+        public static IEnumerator WaitForWorldLoad()
+        {
             // Let some time for the map loading
             yield return new WaitForSeconds(1f);
             while (!LargeWorldStreamer.main.IsWorldSettled())
             {
                 yield return CoroutineUtils.waitForNextFrame;
             }
+            Player.main.cinematicModeActive = false;
         }
     }
 }
