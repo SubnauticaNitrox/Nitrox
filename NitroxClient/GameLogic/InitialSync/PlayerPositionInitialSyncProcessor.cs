@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxClient.MonoBehaviours;
@@ -8,6 +7,8 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
+using UWE;
+using Math = System.Math;
 
 namespace NitroxClient.GameLogic.InitialSync
 {
@@ -27,6 +28,9 @@ namespace NitroxClient.GameLogic.InitialSync
 
         public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
         {
+            // We freeze the player so that he doesn't fall before the cells around him have loaded
+            Player.main.cinematicModeActive = true;
+
             Vector3 position = packet.PlayerSpawnData.ToUnity();
             if (Math.Abs(position.x) < 0.0002 && Math.Abs(position.y) < 0.0002 && Math.Abs(position.z) < 0.0002)
             {
@@ -71,6 +75,12 @@ namespace NitroxClient.GameLogic.InitialSync
             position = vehicleAngle * position;
             position = position + rootTransform.position;
             Player.main.SetPosition(position);
+            // Let some time for the map loading
+            yield return new WaitForSeconds(1f);
+            while (!LargeWorldStreamer.main.IsWorldSettled())
+            {
+                yield return CoroutineUtils.waitForNextFrame;
+            }
         }
     }
 }
