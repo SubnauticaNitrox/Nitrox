@@ -52,6 +52,8 @@ namespace NitroxClient.GameLogic.InitialSync
                 IEnumerable<BasePiece> prioritizedBasePieces = basePieceSpawnPrioritizer.OrderBasePiecesByPriority(basePieces);
                 QueueUpPieces(prioritizedBasePieces);
                 ThrottledBuilder.Main.QueueDrained += FinishedCompletedBuildings;
+                // We multiply the number of basePieces by 2 because each base piece has a total of two build events enqueued
+                ThrottledBuilder.Main.QueueLengthChanged += (sender, eventArgs) => { UpdateProgress(basePieces.Count * 2, waitScreenItem); };
             }
 
             yield return new WaitUntil(() => completed);
@@ -87,6 +89,12 @@ namespace NitroxClient.GameLogic.InitialSync
         {
             ThrottledBuilder.Main.QueueDrained -= FinishedCompletedBuildings;
             completed = true;
+        }
+
+        private void UpdateProgress(int totalPieces, WaitScreen.ManualWaitItem waitScreenItem)
+        {
+            waitScreenItem.SetProgress(totalPieces - buildEventQueue.Count, totalPieces);
+            WaitScreen.main.Update();
         }
     }
 }

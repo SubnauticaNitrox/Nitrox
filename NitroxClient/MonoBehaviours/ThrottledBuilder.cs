@@ -30,6 +30,7 @@ namespace NitroxClient.MonoBehaviours
         public static ThrottledBuilder Main;
 
         public event EventHandler QueueDrained;
+        public event EventHandler QueueLengthChanged;
         private BuildThrottlingQueue buildEvents;
         private IPacketSender packetSender;
 
@@ -69,6 +70,7 @@ namespace NitroxClient.MonoBehaviours
                 try
                 {
                     ActionBuildEvent(nextEvent);
+                    QueueLengthChanged(this, new EventArgs());
                 }
                 catch (Exception ex)
                 {
