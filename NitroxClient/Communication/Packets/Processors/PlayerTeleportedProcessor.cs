@@ -1,15 +1,21 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic.InitialSync;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 using UWE;
+using Terrain = NitroxClient.GameLogic.Terrain;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
     public class PlayerTeleportedProcessor : ClientPacketProcessor<PlayerTeleported>
     {
+        private readonly Terrain terrain;
+        public PlayerTeleportedProcessor(Terrain terrain)
+        {
+            this.terrain = terrain;
+        }
+
         public override void Process(PlayerTeleported packet)
         {
             Player.main.OnPlayerPositionCheat();
@@ -33,7 +39,7 @@ namespace NitroxClient.Communication.Packets.Processors
             Player.main.SetPosition(packet.DestinationTo.ToUnity());
             // Freeze the player while he's loading its new position
             Player.main.cinematicModeActive = true;
-            CoroutineHost.StartCoroutine(PlayerPositionInitialSyncProcessor.WaitForWorldLoad());
+            CoroutineHost.StartCoroutine(terrain.WaitForWorldLoad());
         }
     }
 }

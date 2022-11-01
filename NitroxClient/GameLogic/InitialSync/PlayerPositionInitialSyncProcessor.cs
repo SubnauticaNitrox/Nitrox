@@ -7,7 +7,6 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
-using UWE;
 using Math = System.Math;
 
 namespace NitroxClient.GameLogic.InitialSync
@@ -15,10 +14,12 @@ namespace NitroxClient.GameLogic.InitialSync
     public class PlayerPositionInitialSyncProcessor : InitialSyncProcessor
     {
         private readonly IPacketSender packetSender;
+        private readonly Terrain terrain;
 
-        public PlayerPositionInitialSyncProcessor(IPacketSender packetSender)
+        public PlayerPositionInitialSyncProcessor(IPacketSender packetSender, Terrain terrain)
         {
             this.packetSender = packetSender;
+            this.terrain = terrain;
 
             DependentProcessors.Add(typeof(PlayerInitialSyncProcessor)); // Make sure the player is configured
             DependentProcessors.Add(typeof(BuildingInitialSyncProcessor)); // Players can be spawned in buildings
@@ -48,7 +49,7 @@ namespace NitroxClient.GameLogic.InitialSync
             Optional<NitroxId> subRootId = packet.PlayerSubRootId;
             if (!subRootId.HasValue)
             {
-                yield return WaitForWorldLoad();
+                yield return terrain.WaitForWorldLoad();
                 yield break;
             }
 
@@ -56,14 +57,14 @@ namespace NitroxClient.GameLogic.InitialSync
             if (!sub.HasValue)
             {
                 Log.Error("Could not spawn player into subroot with id: " + subRootId.Value);
-                yield return WaitForWorldLoad();
+                yield return terrain.WaitForWorldLoad();
                 yield break;
             }
 
             if (!sub.Value.TryGetComponent(out SubRoot subRoot))
             {
                 Log.Debug("SubRootId-GameObject has no SubRoot component, so it's assumed to be the EscapePod");
-                yield return WaitForWorldLoad();
+                yield return terrain.WaitForWorldLoad();
                 yield break;
             }
 
@@ -79,18 +80,7 @@ namespace NitroxClient.GameLogic.InitialSync
             position = vehicleAngle * position;
             position = position + rootTransform.position;
             Player.main.SetPosition(position);
-            yield return WaitForWorldLoad();
-        }
-
-        public static IEnumerator WaitForWorldLoad()
-        {
-            // Let some time for the map loading
-            yield return new WaitForSeconds(1f);
-            while (!LargeWorldStreamer.main.IsWorldSettled())
-            {
-                yield return CoroutineUtils.waitForNextFrame;
-            }
-            Player.main.cinematicModeActive = false;
+            yield return terrain.WaitForWorldLoad();
         }
     }
 }
