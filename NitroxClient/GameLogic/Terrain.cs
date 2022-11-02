@@ -95,7 +95,10 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        public IEnumerator WaitForWorldLoad()
+        /// <summary>
+        /// Forces world streamer's to load the terrain around the MainCamera and waits until it's done to unfreeze the player.
+        /// </summary>
+        public static IEnumerator WaitForWorldLoad()
         {
             // In WorldStreamer.CreateStreamers() three coroutines are created to constantly call UpdateCenter() on the streamers
             // We force these updates so that the world streamer gets busy instantly
