@@ -7,14 +7,10 @@ namespace NitroxModel.Packets
     public class VehicleDestroyed : Packet
     {
         public NitroxId Id { get; }
-        public string PlayerName { get; }
-        public bool GetPilotingMode { get; }
 
-        public VehicleDestroyed(NitroxId id, string playerName, bool getPilotingMode)
+        public VehicleDestroyed(NitroxId id)
         {
             Id = id;
-            PlayerName = playerName;
-            GetPilotingMode = getPilotingMode;
         }
     }
 }

@@ -240,6 +240,17 @@ namespace NitroxClient.GameLogic
                 AnimationController["in_exosuit"] = AnimationController["using_mechsuit"] = newVehicle is Exosuit;
             }
         }
+        
+        /// <summary>
+        /// Drops the remote player, swimming where he is
+        /// </summary>
+        public void ResetStates()
+        {
+            SetVehicle(null);
+            SetSubRoot(null);
+            SetPilotingChair(null);
+            AnimationController.UpdatePlayerAnimations = true;
+        }
 
         public void Destroy()
         {
