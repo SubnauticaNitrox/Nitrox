@@ -2,21 +2,22 @@
 using NitroxModel.DataStructures;
 using NitroxModel.Packets;
 
-namespace NitroxModel_Subnautica.Packets
+namespace NitroxModel_Subnautica.Packets;
+
+[Serializable]
+public class CyclopsDestroyed : Packet
 {
-    [Serializable]
-    public class CyclopsDestroyed : Packet
+    public NitroxId Id { get; }
+    public bool Instantly { get; }
+
+    public CyclopsDestroyed(NitroxId id, bool instantly)
     {
-        public NitroxId Id { get; }
+        Id = id;
+        Instantly = instantly;
+    }
 
-        public CyclopsDestroyed(NitroxId id)
-        {
-            Id = id;
-        }
-
-        public override string ToString()
-        {
-            return $"[CyclopsDestroyed - Id: {Id}]";
-        }
+    public override string ToString()
+    {
+        return $"[CyclopsDestroyed - Id: {Id}, Instantly: {Instantly}]";
     }
 }

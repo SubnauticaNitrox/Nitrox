@@ -407,12 +407,6 @@ namespace NitroxClient.GameLogic
                 CyclopsDamage packet = new(subId, subRoot.GetComponent<LiveMixin>().health, subRoot.damageManager.subLiveMixin.health, subRoot.GetComponent<SubFire>().liveMixin.health, damagePointIndexes, firePoints, damageInfo);
                 packetSender.Send(packet);
             }
-            else
-            {
-                // RIP
-                CyclopsDestroyed packet = new(subId);
-                packetSender.Send(packet);
-            }
         }
 
         /// <summary>

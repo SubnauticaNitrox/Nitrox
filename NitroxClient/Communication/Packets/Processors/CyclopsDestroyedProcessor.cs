@@ -5,41 +5,33 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel_Subnautica.Packets;
 using UnityEngine;
 
-namespace NitroxClient.Communication.Packets.Processors
+namespace NitroxClient.Communication.Packets.Processors;
+
+public class CyclopsDestroyedProcessor : ClientPacketProcessor<CyclopsDestroyed>
 {
-    public class CyclopsDestroyedProcessor : ClientPacketProcessor<CyclopsDestroyed>
+    public override void Process(CyclopsDestroyed packet)
     {
-        public override void Process(CyclopsDestroyed packet)
+        Optional<GameObject> cyclops = NitroxEntity.GetObjectFrom(packet.Id);
+        if (!cyclops.HasValue)
         {
-            Optional<GameObject> cyclops = NitroxEntity.GetObjectFrom(packet.Id);
-
-            // Despite me telling it to kill itself when I call LiveMixin.TakeDamage with massive damage, it doesn't seem to trigger like it should. 
-            // To get around this problem, I manually set the health to 0, then call for Kill(). Since Kill() does not trigger the necessary events, I do
-            // it all manually below. At least this way I can make the screen shake hard enough to cause motion sickness, or disable it if I wanted to.
-            if (cyclops.HasValue)
-            {
-                Log.Debug("[CyclopsDestroyedProcessor Id: " + packet.Id + "]");
-
-                SubRoot subRoot = cyclops.Value.RequireComponent<SubRoot>();
-
-                cyclops.Value.RequireComponent<LiveMixin>().health = 0f;
-                cyclops.Value.RequireComponent<LiveMixin>().Kill();
-
-                // Copied from SubRoot.OnTakeDamage(DamageInfo info)
-                subRoot.voiceNotificationManager.ClearQueue();
-                subRoot.voiceNotificationManager.PlayVoiceNotification(subRoot.abandonShipNotification, false, true);
-                subRoot.Invoke(nameof(SubRoot.PowerDownCyclops), 13f);
-                subRoot.Invoke(nameof(SubRoot.DestroyCyclopsSubRoot), 18f);
-                float num = Vector3.Distance(subRoot.transform.position, Player.main.transform.position);
-                if (num < 20f)
-                {
-                    MainCameraControl.main.ShakeCamera(1.5f, 20f, MainCameraControl.ShakeMode.Linear, 1f);
-                }
-                if (subRoot.damageManager != null)
-                {
-                    subRoot.damageManager.SendMessage("OnTakeDamage", null, SendMessageOptions.DontRequireReceiver);
-                }
-            }
+            return;
         }
+        if (packet.Instantly)
+        {
+            cyclops.Value.RequireComponent<CyclopsDestructionEvent>().DestroyCyclops();
+            return;
+        }
+        
+        SubRoot subRoot = cyclops.Value.RequireComponent<SubRoot>();
+        if (subRoot.live.health > 0f)
+        {
+            // oldHPPercent must be in the interval [0; 0.25[ because else, SubRoot.OnTakeDamage will end up in the wrong else condition
+            subRoot.oldHPPercent = 0f;
+            subRoot.live.health = 0f;
+            subRoot.live.Kill();
+        }
+
+        // We use a specific DamageType so that the Prefix on this method will accept this call
+        subRoot.OnTakeDamage(new() { type = (DamageType)100 });
     }
 }

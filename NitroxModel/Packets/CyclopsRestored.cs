@@ -4,11 +4,11 @@ using NitroxModel.DataStructures;
 namespace NitroxModel.Packets;
 
 [Serializable]
-public class VehicleDestroyed : Packet
+public class CyclopsRestored : Packet
 {
     public NitroxId Id { get; }
 
-    public VehicleDestroyed(NitroxId id)
+    public CyclopsRestored(NitroxId id)
     {
         Id = id;
     }
