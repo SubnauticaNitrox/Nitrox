@@ -13,8 +13,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix()
         {
-            IPacketSender packetSender = NitroxServiceLocator.LocateService<IPacketSender>();
-            packetSender.Send(new BedEnter());
+            SendPacket<BedEnter>(new());
         }
 
         public override void Patch(Harmony harmony)

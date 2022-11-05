@@ -22,16 +22,13 @@ public class PlayFMODStudioEventEmitterProcessor : ClientPacketProcessor<PlayFMO
         GameObject soundSource = NitroxEntity.RequireObjectFrom(packet.Id);
         FMODEmitterController fmodEmitterController = soundSource.RequireComponent<FMODEmitterController>();
 
-        using (packetSender.Suppress<PlayFMODStudioEmitter>())
+        if (packet.Play)
         {
-            if (packet.Play)
-            {
-                fmodEmitterController.PlayStudioEmitter(packet.AssetPath);
-            }
-            else
-            {
-                fmodEmitterController.StopStudioEmitter(packet.AssetPath, packet.AllowFadeout);
-            }
+            fmodEmitterController.PlayStudioEmitter(packet.AssetPath);
+        }
+        else
+        {
+            fmodEmitterController.StopStudioEmitter(packet.AssetPath, packet.AllowFadeout);
         }
     }
 }

@@ -3,6 +3,7 @@ using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
 using NitroxModel.Helper;
+using NitroxModel.Packets;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
@@ -12,7 +13,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Prefix(string key)
         {
-            NitroxServiceLocator.LocateService<PDAEncyclopediaEntry>().Add(key);
+            SendPacket<PDAEncyclopediaEntryAdd>(new(key));
         }
 
         public override void Patch(Harmony harmony)

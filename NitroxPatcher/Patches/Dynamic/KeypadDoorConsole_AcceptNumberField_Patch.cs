@@ -18,7 +18,7 @@ namespace NitroxPatcher.Patches.Dynamic
             NitroxId id = NitroxEntity.GetId(__instance.gameObject);
             KeypadMetadata keypadMetadata = new(__instance.unlocked);
 
-            Entities entities = NitroxServiceLocator.LocateService<Entities>();
+            Entities entities = Resolve<Entities>();
             entities.BroadcastMetadataUpdate(id, keypadMetadata);
         }
 

@@ -35,7 +35,7 @@ namespace NitroxClient.GameLogic
             {
                 Transform aimingTransform = Player.main.camRoot.GetAimingTransform();
                 SeamothModulesAction changed = new SeamothModulesAction(techType.ToDto(), slotID, id, aimingTransform.forward.ToDto(), aimingTransform.rotation.ToDto());
-                packetSender.Send(changed);
+                packetSender.SendIfGameCode(changed);
             }
         }
 
@@ -46,7 +46,7 @@ namespace NitroxClient.GameLogic
             {
                 Transform aimingTransform = Player.main.camRoot.GetAimingTransform();
                 SeamothModulesAction changed = new SeamothModulesAction(techType.ToDto(), slotID, id, aimingTransform.forward.ToDto(), aimingTransform.rotation.ToDto());
-                packetSender.Send(changed);
+                packetSender.SendIfGameCode(changed);
             }
         }
     }

@@ -22,7 +22,7 @@ namespace NitroxPatcher.Patches.Dynamic
             }
 
             NitroxId id = NitroxEntity.GetId(grabbed);
-            SimulationOwnership simulationOwnership = NitroxServiceLocator.LocateService<SimulationOwnership>();
+            SimulationOwnership simulationOwnership = Resolve<SimulationOwnership>();
 
             // Request to be downgraded to a transient lock so we can still simulate the positioning.
             simulationOwnership.RequestSimulationLock(id, SimulationLockType.TRANSIENT);

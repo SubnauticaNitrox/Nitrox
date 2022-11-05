@@ -29,7 +29,7 @@ namespace NitroxClient.GameLogic
             if (creatureAction != null)
             {
                 CreatureActionChanged actionChanged = new CreatureActionChanged(id, creatureAction);
-                packetSender.Send(actionChanged);
+                packetSender.SendIfGameCode(actionChanged);
             }
         }
     }

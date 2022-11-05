@@ -44,7 +44,7 @@ namespace NitroxClient.GameLogic
                 itemData = new BasicItemData(ownerId, itemId, bytes);
             }
 
-            if (packetSender.Send(new ItemContainerAdd(itemData)))
+            if (packetSender.SendIfGameCode(new ItemContainerAdd(itemData)))
             {
                 Log.Debug($"Sent: Added item {pickupable.GetTechType()} to container {containerTransform.gameObject.GetFullHierarchyPath()}");
             }
@@ -59,7 +59,7 @@ namespace NitroxClient.GameLogic
             }
             
             NitroxId itemId = NitroxEntity.GetId(pickupable.gameObject);
-            if (packetSender.Send(new ItemContainerRemove(InventoryContainerHelper.GetOwnerId(containerTransform), itemId)))
+            if (packetSender.SendIfGameCode(new ItemContainerRemove(InventoryContainerHelper.GetOwnerId(containerTransform), itemId)))
             {
                 Log.Debug($"Sent: Removed item {pickupable.GetTechType()} from container {containerTransform.gameObject.GetFullHierarchyPath()}");
             }
@@ -82,11 +82,8 @@ namespace NitroxClient.GameLogic
 
             ItemsContainer container = opContainer.Value;
             Pickupable pickupable = item.RequireComponent<Pickupable>();
-            using (packetSender.Suppress<ItemContainerAdd>())
-            {
-                container.UnsafeAdd(new InventoryItem(pickupable));
-                Log.Debug($"Received: Added item {pickupable.GetTechType()} to container {owner.Value.GetFullHierarchyPath()}");
-            }
+            container.UnsafeAdd(new InventoryItem(pickupable));
+            Log.Debug($"Received: Added item {pickupable.GetTechType()} to container {owner.Value.GetFullHierarchyPath()}");
         }
 
         public void RemoveItem(NitroxId ownerId, NitroxId itemId)
@@ -101,15 +98,12 @@ namespace NitroxClient.GameLogic
             }
             ItemsContainer container = opContainer.Value;
             Pickupable pickupable = item.RequireComponent<Pickupable>();
-            using (packetSender.Suppress<ItemContainerRemove>())
+            if (container.RemoveItem(pickupable, true) && container._label.StartsWith("NitroxInventoryStorage_"))
             {
-                if (container.RemoveItem(pickupable, true) && container._label.StartsWith("NitroxInventoryStorage_"))
-                {
-                    // If we don't destroy the item here, it will stay forever in the remote player's inventory
-                    Object.Destroy(item);
-                }
-                Log.Debug($"Received: Removed item {pickupable.GetTechType()} to container {owner.GetFullHierarchyPath()}");
+                // If we don't destroy the item here, it will stay forever in the remote player's inventory
+                Object.Destroy(item);
             }
+            Log.Debug($"Received: Removed item {pickupable.GetTechType()} to container {owner.GetFullHierarchyPath()}");
         }
     }
 }

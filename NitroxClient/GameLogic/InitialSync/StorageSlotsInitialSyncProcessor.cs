@@ -33,29 +33,26 @@ namespace NitroxClient.GameLogic.InitialSync
         {
             int storageSlotsSynced = 0;
 
-            HashSet<NitroxId> onlinePlayers = new HashSet<NitroxId> { packet.PlayerGameObjectId };
+            HashSet<NitroxId> onlinePlayers = new() { packet.PlayerGameObjectId };
             onlinePlayers.AddRange(packet.RemotePlayerData.Select(playerData => playerData.PlayerContext.PlayerNitroxId));
 
             // Removes any batteries which are in inventories from offline players
             List<ItemData> currentlyIgnoredItems = packet.InventoryItems.Where(item => !onlinePlayers.Any(player => player.Equals(item.ContainerId))).ToList();
             packet.StorageSlotItems.RemoveAll(storageItem => currentlyIgnoredItems.Any(ignoredItem => ignoredItem.ItemId.Equals(storageItem.ContainerId)));
 
-            using (packetSender.Suppress<StorageSlotItemAdd>())
+            foreach (ItemData itemData in packet.StorageSlotItems)
             {
-                foreach (ItemData itemData in packet.StorageSlotItems)
-                {
-                    waitScreenItem.SetProgress(storageSlotsSynced, packet.StorageSlotItems.Count);
+                waitScreenItem.SetProgress(storageSlotsSynced, packet.StorageSlotItems.Count);
 
-                    GameObject item = SerializationHelper.GetGameObject(itemData.SerializedData);
+                GameObject item = SerializationHelper.GetGameObject(itemData.SerializedData);
 
-                    Log.Debug($"Initial StorageSlot item data for {item.name} giving to container {itemData.ContainerId}");
+                Log.Debug($"Initial StorageSlot item data for {item.name} giving to container {itemData.ContainerId}");
 
-                    NitroxEntity.SetNewId(item, itemData.ItemId);
-                    slots.AddItem(item, itemData.ContainerId, true);
+                NitroxEntity.SetNewId(item, itemData.ItemId);
+                slots.AddItem(item, itemData.ContainerId, true);
 
-                    storageSlotsSynced++;
-                    yield return null;
-                }
+                storageSlotsSynced++;
+                yield return null;
             }
         }
     }

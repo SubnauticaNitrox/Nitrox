@@ -12,7 +12,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(ConstructorInput __instance, TechType techType, float duration)
         {
-            NitroxServiceLocator.LocateService<MobileVehicleBay>().BeginCrafting(__instance.constructor.gameObject, techType, duration);
+            Resolve<MobileVehicleBay>().BeginCrafting(__instance.constructor.gameObject, techType, duration);
         }
 
         public override void Patch(Harmony harmony)

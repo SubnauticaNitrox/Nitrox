@@ -25,19 +25,16 @@ namespace NitroxClient.GameLogic.InitialSync
         public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
         {
             int totalSyncedVehicles = 0;
-            int nonCyclopsVehicleCount = packet.Vehicles.Where(v => v.TechType.ToUnity() != TechType.Cyclops).Count();
+            int nonCyclopsVehicleCount = packet.Vehicles.Count(v => v.TechType.ToUnity() != TechType.Cyclops);
 
             foreach (VehicleModel vehicle in packet.Vehicles)
             {
                 if (vehicle.TechType.ToUnity() != TechType.Cyclops)
                 {
-                    using (packetSender.Suppress<VehicleDocking>())
-                    {
-                        waitScreenItem.SetProgress(totalSyncedVehicles, nonCyclopsVehicleCount);
-                        vehicles.CreateVehicle(vehicle);
-                        totalSyncedVehicles++;
-                        yield return null;
-                    }
+                    waitScreenItem.SetProgress(totalSyncedVehicles, nonCyclopsVehicleCount);
+                    vehicles.CreateVehicle(vehicle);
+                    totalSyncedVehicles++;
+                    yield return null;
                 }
             }
 

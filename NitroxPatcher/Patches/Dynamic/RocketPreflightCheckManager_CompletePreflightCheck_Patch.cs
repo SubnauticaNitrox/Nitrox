@@ -18,7 +18,7 @@ namespace NitroxPatcher.Patches.Dynamic
             Rocket rocket = __instance.gameObject.RequireComponentInParent<Rocket>();
             NitroxId id = NitroxEntity.GetId(rocket.gameObject);
 
-            NitroxServiceLocator.LocateService<Rockets>().CompletePreflightCheck(id, completeCheck);
+            Resolve<Rockets>().CompletePreflightCheck(id, completeCheck);
         }
 
         public override void Patch(Harmony harmony)

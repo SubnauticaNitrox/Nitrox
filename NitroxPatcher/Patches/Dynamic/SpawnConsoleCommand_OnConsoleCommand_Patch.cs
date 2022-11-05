@@ -43,7 +43,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Callback(GameObject gameObject)
         {
-            NitroxServiceLocator.LocateService<NitroxConsole>().Spawn(gameObject);
+            Resolve<NitroxConsole>().Spawn(gameObject);
         }
 
         public override void Patch(Harmony harmony)

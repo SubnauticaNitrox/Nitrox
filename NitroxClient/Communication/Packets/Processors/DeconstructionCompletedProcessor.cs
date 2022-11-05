@@ -23,10 +23,7 @@ public class DeconstructionCompletedProcessor : ClientPacketProcessor<Deconstruc
         if (deconstructing.TryGetComponent(out Constructable constructable))
         {
             constructable.constructedAmount = 0;
-            using (packetSender.Suppress<DeconstructionCompleted>())
-            {
-                constructable.Deconstruct();
-            }
+            constructable.Deconstruct();
         }
         else
         {

@@ -23,7 +23,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 return true;
             }
 
-            SimulationOwnership simulationOwnership = NitroxServiceLocator.LocateService<SimulationOwnership>();
+            SimulationOwnership simulationOwnership = Resolve<SimulationOwnership>();
 
             SubRoot subRoot = __instance.GetComponentInParent<SubRoot>();
             Validate.NotNull(subRoot, "PilotingChair cannot find it's corresponding SubRoot!");

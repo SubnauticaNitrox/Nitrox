@@ -23,7 +23,7 @@ public class GoalManager_OnCompletedGoal_Patch : NitroxPatch, IDynamicPatch
         // and was successfully added to the completed goals
         if (__state && GoalManager.main.completedGoalNames.Contains(goalIdentifier))
         {
-            Resolve<IPacketSender>().Send(new GoalCompleted(goalIdentifier));
+            SendPacket<GoalCompleted>(new(goalIdentifier));
         }
     }
 

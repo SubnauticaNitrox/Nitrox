@@ -13,8 +13,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static bool Prefix()
         {
-            IPacketSender packetSender = NitroxServiceLocator.LocateService<IPacketSender>();
-            packetSender.Send(new ServerCommand("time night"));
+            SendPacket<ServerCommand>(new("time night"));
             return false;
         }
 

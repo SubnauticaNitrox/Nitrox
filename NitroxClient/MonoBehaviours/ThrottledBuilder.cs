@@ -86,34 +86,26 @@ namespace NitroxClient.MonoBehaviours
 
         private void ActionBuildEvent(BuildEvent buildEvent)
         {
-            using (packetSender.Suppress<ConstructionAmountChanged>())
-            using (packetSender.Suppress<ConstructionCompleted>())
-            using (packetSender.Suppress<PlaceBasePiece>())
-            using (packetSender.Suppress<DeconstructionBegin>())
-            using (packetSender.Suppress<DeconstructionCompleted>())
-            using (packetSender.Suppress<BasePieceMetadataChanged>())
+            switch (buildEvent)
             {
-                switch (buildEvent)
-                {
-                    case BasePiecePlacedEvent @event:
-                        PlaceBasePiece(@event);
-                        break;
-                    case ConstructionCompletedEvent completedEvent:
-                        ConstructionCompleted(completedEvent);
-                        break;
-                    case LaterConstructionCompletedEvent laterConstructionCompleted:
-                        LaterConstructionCompleted(laterConstructionCompleted);
-                        break;
-                    case ConstructionAmountChangedEvent changedEvent:
-                        ConstructionAmountChanged(changedEvent);
-                        break;
-                    case DeconstructionBeginEvent beginEvent:
-                        DeconstructionBegin(beginEvent);
-                        break;
-                    case DeconstructionCompletedEvent deconstructionCompletedEvent:
-                        DeconstructionCompleted(deconstructionCompletedEvent);
-                        break;
-                }
+                case BasePiecePlacedEvent @event:
+                    PlaceBasePiece(@event);
+                    break;
+                case ConstructionCompletedEvent completedEvent:
+                    ConstructionCompleted(completedEvent);
+                    break;
+                case LaterConstructionCompletedEvent laterConstructionCompleted:
+                    LaterConstructionCompleted(laterConstructionCompleted);
+                    break;
+                case ConstructionAmountChangedEvent changedEvent:
+                    ConstructionAmountChanged(changedEvent);
+                    break;
+                case DeconstructionBeginEvent beginEvent:
+                    DeconstructionBegin(beginEvent);
+                    break;
+                case DeconstructionCompletedEvent deconstructionCompletedEvent:
+                    DeconstructionCompleted(deconstructionCompletedEvent);
+                    break;
             }
         }
 

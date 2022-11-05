@@ -40,65 +40,62 @@ namespace NitroxClient.GameLogic.InitialSync
         {
             int totalItemDataSynced = 0;
 
-            using (packetSender.Suppress<ItemContainerAdd>())
+            ItemGoalTracker itemGoalTracker = (ItemGoalTracker)itemGoalTrackerMainField.GetValue(null);
+            Dictionary<TechType, List<ItemGoal>> goals = (Dictionary<TechType, List<ItemGoal>>)itemGoalTrackerGoalsField.GetValue(itemGoalTracker);
+
+            foreach (ItemData itemData in packet.InventoryItems)
             {
-                ItemGoalTracker itemGoalTracker = (ItemGoalTracker)itemGoalTrackerMainField.GetValue(null);
-                Dictionary<TechType, List<ItemGoal>> goals = (Dictionary<TechType, List<ItemGoal>>)itemGoalTrackerGoalsField.GetValue(itemGoalTracker);
+                waitScreenItem.SetProgress(totalItemDataSynced, packet.InventoryItems.Count);
 
-                foreach (ItemData itemData in packet.InventoryItems)
+                GameObject item;
+
+                try
                 {
-                    waitScreenItem.SetProgress(totalItemDataSynced, packet.InventoryItems.Count);
-
-                    GameObject item;
-
-                    try
-                    {
-                        item = SerializationHelper.GetGameObject(itemData.SerializedData);
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error(ex, $"Error deserializing item data. Id: {itemData.ItemId}");
-                        continue;
-                    }
-
-                    Log.Debug($"Initial item data for {item.name} giving to container {itemData.ContainerId}");
-
-                    Pickupable pickupable = item.GetComponent<Pickupable>();
-                    Validate.NotNull(pickupable);
-
-                    if (itemData.ContainerId == packet.PlayerGameObjectId)
-                    {
-                        goals.Remove(pickupable.GetTechType());  // Remove notification goal event from item player has in any container
-
-                        ItemsContainer container = Inventory.Get().container;
-                        InventoryItem inventoryItem = new InventoryItem(pickupable) { container = container };
-                        inventoryItem.item.Reparent(container.tr);
-
-                        container.UnsafeAdd(inventoryItem);
-                    }
-                    else if (NitroxEntity.TryGetObjectFrom(itemData.ContainerId, out GameObject containerOwner))
-                    {
-                        Optional<ItemsContainer> opContainer = InventoryContainerHelper.TryGetContainerByOwner(containerOwner);
-                        Validate.IsPresent(opContainer);
-                        opContainer.Value.UnsafeAdd(new InventoryItem(pickupable));
-
-                        ContainerAddItemPostProcessor postProcessor = ContainerAddItemPostProcessor.From(item);
-                        postProcessor.process(item, itemData);
-                    }
-
-                    totalItemDataSynced++;
-                    yield return null;
+                    item = SerializationHelper.GetGameObject(itemData.SerializedData);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex, $"Error deserializing item data. Id: {itemData.ItemId}");
+                    continue;
                 }
 
-                foreach (NitroxTechType usedItem in packet.UsedItems)
+                Log.Debug($"Initial item data for {item.name} giving to container {itemData.ContainerId}");
+
+                Pickupable pickupable = item.GetComponent<Pickupable>();
+                Validate.NotNull(pickupable);
+
+                if (itemData.ContainerId == packet.PlayerGameObjectId)
                 {
-                    Player.main.AddUsedTool(usedItem.ToUnity());
+                    goals.Remove(pickupable.GetTechType());  // Remove notification goal event from item player has in any container
+
+                    ItemsContainer container = Inventory.Get().container;
+                    InventoryItem inventoryItem = new InventoryItem(pickupable) { container = container };
+                    inventoryItem.item.Reparent(container.tr);
+
+                    container.UnsafeAdd(inventoryItem);
+                }
+                else if (NitroxEntity.TryGetObjectFrom(itemData.ContainerId, out GameObject containerOwner))
+                {
+                    Optional<ItemsContainer> opContainer = InventoryContainerHelper.TryGetContainerByOwner(containerOwner);
+                    Validate.IsPresent(opContainer);
+                    opContainer.Value.UnsafeAdd(new InventoryItem(pickupable));
+
+                    ContainerAddItemPostProcessor postProcessor = ContainerAddItemPostProcessor.From(item);
+                    postProcessor.process(item, itemData);
                 }
 
-                string[] quickSlotsBinding = packet.QuickSlotsBinding.ToArray();
-                Inventory.main.serializedQuickSlots = quickSlotsBinding;
-                Inventory.main.quickSlots.RestoreBinding(quickSlotsBinding);
+                totalItemDataSynced++;
+                yield return null;
             }
+
+            foreach (NitroxTechType usedItem in packet.UsedItems)
+            {
+                Player.main.AddUsedTool(usedItem.ToUnity());
+            }
+
+            string[] quickSlotsBinding = packet.QuickSlotsBinding.ToArray();
+            Inventory.main.serializedQuickSlots = quickSlotsBinding;
+            Inventory.main.quickSlots.RestoreBinding(quickSlotsBinding);
 
             Log.Info($"Received initial sync with {totalItemDataSynced} inventory items");
         }

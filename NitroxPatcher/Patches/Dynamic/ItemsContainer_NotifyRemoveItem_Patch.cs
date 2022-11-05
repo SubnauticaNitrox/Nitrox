@@ -18,13 +18,13 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             if (item != null && sessionManager.CurrentState.GetType() != typeof(Disconnected))
             {
-                NitroxServiceLocator.LocateService<ItemContainers>().BroadcastItemRemoval(item.item, __instance.tr);
+                Resolve<ItemContainers>().BroadcastItemRemoval(item.item, __instance.tr);
             }
         }
 
         public override void Patch(Harmony harmony)
         {
-            sessionManager = NitroxServiceLocator.LocateService<IMultiplayerSession>();
+            sessionManager = Resolve<IMultiplayerSession>();
             PatchPostfix(harmony, TARGET_METHOD);
         }
     }

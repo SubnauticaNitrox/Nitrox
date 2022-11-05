@@ -20,7 +20,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static bool Prefix(SubFire __instance, SubFire.RoomFire startInRoom, out bool __state)
         {
-            __state = NitroxServiceLocator.LocateService<SimulationOwnership>().HasAnyLockType(NitroxEntity.GetId(__instance.subRoot.gameObject));
+            __state = Resolve<SimulationOwnership>().HasAnyLockType(NitroxEntity.GetId(__instance.subRoot.gameObject));
 
             // Block any new fires if this player is not the owner
             return __state;
@@ -34,7 +34,7 @@ namespace NitroxPatcher.Patches.Dynamic
             // We can easily find where it is because it'll be the only Transform in SubFire.availableNodes with a childCount > 0
             if (__state)
             {
-                Fires fires = NitroxServiceLocator.LocateService<Fires>();
+                Fires fires = Resolve<Fires>();
                 foreach (Transform transform in __instance.availableNodes)
                 {
                     if (transform.childCount > 0)

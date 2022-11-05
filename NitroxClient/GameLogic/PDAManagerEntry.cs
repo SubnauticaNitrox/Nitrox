@@ -9,35 +9,13 @@ namespace NitroxClient.GameLogic
 {
     public class PDAManagerEntry
     {
-        private readonly IPacketSender packetSender;
         public static Dictionary<NitroxTechType, PDAProgressEntry> CachedEntries { get; set; }
 
         public bool AuroraExplosionTriggered;
 
-        public PDAManagerEntry(IPacketSender packetSender)
+        public PDAManagerEntry()
         {
-            this.packetSender = packetSender;
             AuroraExplosionTriggered = false;
-        }
-
-        public void Add(PDAScanner.Entry entry)
-        {
-            packetSender.Send(new PDAEntryAdd(entry.techType.ToDto(), entry.progress, entry.unlocked));
-        }
-
-        public void Progress(PDAScanner.Entry entry, NitroxId nitroxId)
-        {
-            packetSender.Send(new PDAEntryProgress(entry.techType.ToDto(), entry.progress, entry.unlocked, nitroxId));
-        }
-
-        public void Remove(PDAScanner.Entry entry)
-        {
-            packetSender.Send(new PDAEntryRemove(entry.techType.ToDto()));
-        }
-
-        public void LogAdd(PDALog.Entry entry)
-        {
-            packetSender.Send(new PDALogEntryAdd(entry.data.key, entry.timestamp));
         }
     }
 }

@@ -59,24 +59,24 @@ namespace NitroxClient.GameLogic
                 movement = new PlayerMovement(multiplayerSession.Reservation.PlayerId, location.ToDto(), velocity.ToDto(), bodyRotation.ToDto(), aimingRotation.ToDto());
             }
 
-            packetSender.Send(movement);
+            packetSender.SendIfGameCode(movement);
         }
 
-        public void AnimationChange(AnimChangeType type, AnimChangeState state) => packetSender.Send(new AnimationChangeEvent(multiplayerSession.Reservation.PlayerId, (int)type, (int)state));
+        public void AnimationChange(AnimChangeType type, AnimChangeState state) => packetSender.SendIfGameCode(new AnimationChangeEvent(multiplayerSession.Reservation.PlayerId, (int)type, (int)state));
 
-        public void BroadcastStats(float oxygen, float maxOxygen, float health, float food, float water, float infectionAmount) => packetSender.Send(new PlayerStats(multiplayerSession.Reservation.PlayerId, oxygen, maxOxygen, health, food, water, infectionAmount));
+        public void BroadcastStats(float oxygen, float maxOxygen, float health, float food, float water, float infectionAmount) => packetSender.SendIfGameCode(new PlayerStats(multiplayerSession.Reservation.PlayerId, oxygen, maxOxygen, health, food, water, infectionAmount));
 
-        public void BroadcastDeath(Vector3 deathPosition) => packetSender.Send(new PlayerDeathEvent(multiplayerSession.Reservation.PlayerId, deathPosition.ToDto()));
+        public void BroadcastDeath(Vector3 deathPosition) => packetSender.SendIfGameCode(new PlayerDeathEvent(multiplayerSession.Reservation.PlayerId, deathPosition.ToDto()));
 
-        public void BroadcastSubrootChange(Optional<NitroxId> subrootId) => packetSender.Send(new SubRootChanged(multiplayerSession.Reservation.PlayerId, subrootId));
+        public void BroadcastSubrootChange(Optional<NitroxId> subrootId) => packetSender.SendIfGameCode(new SubRootChanged(multiplayerSession.Reservation.PlayerId, subrootId));
 
-        public void BroadcastEscapePodChange(Optional<NitroxId> escapePodId) => packetSender.Send(new EscapePodChanged(multiplayerSession.Reservation.PlayerId, escapePodId));
+        public void BroadcastEscapePodChange(Optional<NitroxId> escapePodId) => packetSender.SendIfGameCode(new EscapePodChanged(multiplayerSession.Reservation.PlayerId, escapePodId));
 
-        public void BroadcastWeld(NitroxId id, float healthAdded) => packetSender.Send(new WeldAction(id, healthAdded));
+        public void BroadcastWeld(NitroxId id, float healthAdded) => packetSender.SendIfGameCode(new WeldAction(id, healthAdded));
 
-        public void BroadcastHeldItemChanged(NitroxId itemId, PlayerHeldItemChanged.ChangeType techType, NitroxTechType isFirstTime) => packetSender.Send(new PlayerHeldItemChanged(multiplayerSession.Reservation.PlayerId, itemId, techType, isFirstTime));
+        public void BroadcastHeldItemChanged(NitroxId itemId, PlayerHeldItemChanged.ChangeType techType, NitroxTechType isFirstTime) => packetSender.SendIfGameCode(new PlayerHeldItemChanged(multiplayerSession.Reservation.PlayerId, itemId, techType, isFirstTime));
 
-        public void BroadcastQuickSlotsBindingChanged(List<string> binding) => packetSender.Send(new PlayerQuickSlotsBindingChanged(binding));
+        public void BroadcastQuickSlotsBindingChanged(List<string> binding) => packetSender.SendIfGameCode(new PlayerQuickSlotsBindingChanged(binding));
 
         private GameObject CreateBodyPrototype()
         {
@@ -95,10 +95,7 @@ namespace NitroxClient.GameLogic
             {
                 if (!child.gameObject.name.Contains("attach1_"))
                 {
-                    using (packetSender.Suppress<ItemContainerRemove>())
-                    {
-                        Object.DestroyImmediate(child.gameObject);
-                    }
+                    Object.DestroyImmediate(child.gameObject);
                 }
             }
 

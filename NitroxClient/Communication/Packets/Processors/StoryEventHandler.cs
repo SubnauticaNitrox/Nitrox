@@ -26,11 +26,7 @@ namespace NitroxClient.Communication.Packets.Processors
                 case StoryEventSend.EventType.RADIO:
                 case StoryEventSend.EventType.ENCYCLOPEDIA:
                 case StoryEventSend.EventType.STORY:
-                    using (packetSender.Suppress<StoryEventSend>())
-                    using (packetSender.Suppress<PDALogEntryAdd>())
-                    {
-                        StoryGoal.Execute(packet.Key, packet.Type.ToUnity());
-                    }
+                    StoryGoal.Execute(packet.Key, packet.Type.ToUnity());
                     break;
                 case StoryEventSend.EventType.EXTRA:
                     ExecuteExtraEvent(packet.Key);

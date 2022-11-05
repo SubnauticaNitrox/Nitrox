@@ -22,7 +22,7 @@ namespace NitroxPatcher.Patches.Dynamic
             {
                 GameObject gameObject = __instance.transform.parent.gameObject;
                 NitroxId id = NitroxEntity.GetId(gameObject);
-                SeamothModel model = NitroxServiceLocator.LocateService<Vehicles>().GetVehicles<SeamothModel>(id);
+                SeamothModel model = Resolve<Vehicles>().GetVehicle<SeamothModel>(id);
                 return model.LightOn == __instance.lightsActive;
             }
 

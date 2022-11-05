@@ -15,11 +15,11 @@ public class PlayerCinematics
 
     public void StartCinematicMode(ushort playerId, NitroxId controllerID, int controllerNameHash, string key)
     {
-        packetSender.Send(new PlayerCinematicControllerCall(playerId, controllerID, controllerNameHash, key, true));
+        packetSender.SendIfGameCode(new PlayerCinematicControllerCall(playerId, controllerID, controllerNameHash, key, true));
     }
 
     public void EndCinematicMode(ushort playerId, NitroxId controllerID, int controllerNameHash, string key)
     {
-        packetSender.Send(new PlayerCinematicControllerCall(playerId, controllerID, controllerNameHash, key, false));
+        packetSender.SendIfGameCode(new PlayerCinematicControllerCall(playerId, controllerID, controllerNameHash, key, false));
     }
 }

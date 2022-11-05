@@ -8,10 +8,13 @@ namespace NitroxClient.Communication.Abstract
         /// <summary>
         ///     Sends the packet. Returns true if packet was not suppressed.
         /// </summary>
-        /// <param name="packet">The packet to send.</param>
-        /// <returns>True if not suppressed and actually sent.</returns>
-        bool Send(Packet packet);
+        void Send<T>(T packet) where T : Packet;
 
+        /// <summary>
+        ///     Sends the packet if it originated from UWE code (or if patched in), unless game code was called by Nitrox.
+        /// </summary>
+        bool SendIfGameCode<T>(T packet) where T : Packet;
+        
         bool IsPacketSuppressed(Type packetType);
 
         PacketSuppressor<T> Suppress<T>();

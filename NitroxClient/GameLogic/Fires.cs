@@ -44,7 +44,7 @@ namespace NitroxClient.GameLogic
             NitroxId subRootId = NitroxEntity.GetId(fire.fireSubRoot.gameObject);
 
             CyclopsFireCreated packet = new CyclopsFireCreated(NitroxEntity.GetId(fire.gameObject), subRootId, room.roomLinks.room, nodeIndex);
-            packetSender.Send(packet);
+            packetSender.SendIfGameCode(packet);
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace NitroxClient.GameLogic
                     fireDouseAmount[fireId] = 0;
 
                     FireDoused packet = new FireDoused(fireId, douseAmount);
-                    packetSender.Send(packet);
+                    packetSender.SendIfGameCode(packet);
                 }
             }
         }

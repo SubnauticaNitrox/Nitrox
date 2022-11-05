@@ -4,7 +4,6 @@ using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Packets;
 using UnityEngine;
-using static NitroxClient.GameLogic.Helper.TransientLocalObjectManager;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -26,17 +25,14 @@ namespace NitroxClient.Communication.Packets.Processors
             Constructable constructable = deconstructing.GetComponent<Constructable>();
             BaseDeconstructable baseDeconstructable = deconstructing.GetComponent<BaseDeconstructable>();
 
-            using (packetSender.Suppress<DeconstructionBegin>())
+            if (baseDeconstructable != null)
             {
-                if (baseDeconstructable != null)
-                {
-                    TransientLocalObjectManager.Add(TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE_GUID, packet.Id);
-                    baseDeconstructable.Deconstruct();
-                }
-                else if (constructable != null)
-                {
-                    constructable.SetState(false, false);
-                }
+                TransientLocalObjectManager.Add(TransientLocalObjectManager.TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE_GUID, packet.Id);
+                baseDeconstructable.Deconstruct();
+            }
+            else if (constructable != null)
+            {
+                constructable.SetState(false, false);
             }
         }
     }

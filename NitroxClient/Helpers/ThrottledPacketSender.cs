@@ -24,7 +24,7 @@ namespace NitroxClient.Helpers
                     continue;
                 }
 
-                if (packetSender.Send(throttledPacket.Packet))
+                if (packetSender.SendIfGameCode(throttledPacket.Packet))
                 {
                     throttledPacket.WasSend = true;
                 }
@@ -34,7 +34,6 @@ namespace NitroxClient.Helpers
         public bool SendThrottled(Packet packet, float throttleTime = 0.1f)
         {
             Type packetType = packet.GetType();
-
             if (packetSender.IsPacketSuppressed(packetType))
             {
                 return false;

@@ -12,7 +12,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Prefix(Vehicle __instance)
         {
-            NitroxServiceLocator.LocateService<Vehicles>().BroadcastOnPilotModeChanged(__instance, true);
+            Resolve<Vehicles>().BroadcastOnPilotModeChanged(__instance, true);
         }
 
         public override void Patch(Harmony harmony)

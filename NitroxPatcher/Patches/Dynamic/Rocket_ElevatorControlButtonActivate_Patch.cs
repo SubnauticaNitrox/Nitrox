@@ -24,12 +24,11 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             if (__state != __instance.elevatorState)
             {
-                Rockets rocket = NitroxServiceLocator.LocateService<Rockets>();
                 GameObject gameObject = __instance.gameObject;
                 NitroxId id = NitroxEntity.GetId(gameObject);
 
                 bool isGoingUp = __instance.elevatorState == RocketElevatorStates.Up || __instance.elevatorState == RocketElevatorStates.AtTop;
-                rocket.CallElevator(id, RocketElevatorPanel.INTERNAL_PANEL, isGoingUp);
+                Resolve<Rockets>().CallElevator(id, RocketElevatorPanel.INTERNAL_PANEL, isGoingUp);
             }
         }
 

@@ -24,7 +24,7 @@ namespace NitroxClient.GameLogic
         public void SpawnedArm(Exosuit exosuit)
         {
             NitroxId id = NitroxEntity.GetId(exosuit.gameObject);
-            ExosuitModel exosuitModel = vehicles.GetVehicles<ExosuitModel>(id);
+            ExosuitModel exosuitModel = vehicles.GetVehicle<ExosuitModel>(id);
 
             IExosuitArm rightArm = exosuit.rightArm;
             IExosuitArm leftArm = exosuit.leftArm;
@@ -102,14 +102,14 @@ namespace NitroxClient.GameLogic
         {
             NitroxId id = NitroxEntity.GetId(exosuitArm.GetGameObject());
             ExosuitArmActionPacket packet = new ExosuitArmActionPacket(techType, id, armAction, opVector, opRotation);
-            packetSender.Send(packet);
+            packetSender.SendIfGameCode(packet);
         }
 
         public void BroadcastArmAction(TechType techType, IExosuitArm exosuitArm, ExosuitArmAction armAction)
         {
             NitroxId id = NitroxEntity.GetId(exosuitArm.GetGameObject());
             ExosuitArmActionPacket packet = new ExosuitArmActionPacket(techType, id, armAction, null, null);
-            packetSender.Send(packet);
+            packetSender.SendIfGameCode(packet);
         }
 
         public void UseGrappling(ExosuitGrapplingArm grapplingArm, ExosuitArmAction armAction, Vector3? opHitVector)

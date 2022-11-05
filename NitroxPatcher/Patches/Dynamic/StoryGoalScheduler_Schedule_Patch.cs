@@ -11,7 +11,6 @@ namespace NitroxPatcher.Patches.Dynamic
     public class StoryGoalScheduler_Schedule_Patch : NitroxPatch, IDynamicPatch
     {
         private static readonly MethodInfo TARGET_METHOD = Reflect.Method((StoryGoalScheduler t) => t.Schedule(default(StoryGoal)));
-        private static readonly IPacketSender packetSender = Resolve<IPacketSender>();
 
         // __state is a bool made to prevent duplicated entries, if it's false, then it should be skipped
         public static bool Prefix(StoryGoal goal, out bool __state)
@@ -32,7 +31,7 @@ namespace NitroxPatcher.Patches.Dynamic
             }
 
             float timeExecute = StoryGoalScheduler.main.schedule.GetLast().timeExecute;
-            packetSender.Send(new Schedule(timeExecute, goal.key, goal.goalType.ToString()));
+            SendPacket<Schedule>(new(timeExecute, goal.key, goal.goalType.ToString()));
         }
 
         public override void Patch(Harmony harmony)

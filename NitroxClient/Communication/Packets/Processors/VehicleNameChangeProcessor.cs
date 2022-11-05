@@ -1,5 +1,4 @@
-﻿using NitroxClient.Communication.Abstract;
-using NitroxClient.Communication.Packets.Processors.Abstract;
+﻿using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Packets;
@@ -9,13 +8,6 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class VehicleNameChangeProcessor : ClientPacketProcessor<VehicleNameChange>
     {
-        private readonly IPacketSender packetSender;
-
-        public VehicleNameChangeProcessor(IPacketSender packetSender)
-        {
-            this.packetSender = packetSender;
-        }
-
         public override void Process(VehicleNameChange namePacket)
         {
             SubNameInput subNameInput;
@@ -33,18 +25,15 @@ namespace NitroxClient.Communication.Packets.Processors
                 subNameInput = vehicleObject.GetComponentInChildren<SubNameInput>();
             }
 
-            using (packetSender.Suppress<VehicleNameChange>())
+            if (subNameInput && subNameInput.target)
             {
-                if (subNameInput && subNameInput.target)
-                {
-                    // OnColorChange calls these two methods, in order to update the vehicle name on the ingame panel:
-                    subNameInput.target.SetName(namePacket.Name);
-                    subNameInput.SetName(namePacket.Name);
-                }
-                else
-                {
-                    Log.Error($"[VehicleNameChangeProcessor] SubNameInput or targeted SubName is null with {namePacket}.");
-                }
+                // OnColorChange calls these two methods, in order to update the vehicle name on the ingame panel:
+                subNameInput.target.SetName(namePacket.Name);
+                subNameInput.SetName(namePacket.Name);
+            }
+            else
+            {
+                Log.Error($"[VehicleNameChangeProcessor] SubNameInput or targeted SubName is null with {namePacket}.");
             }
         }
     }

@@ -21,7 +21,7 @@ namespace NitroxPatcher.Patches.Dynamic
             // Suppress powered on if a seamoth´s default is set to false            
             GameObject gameObject = __instance.gameObject;
             NitroxId id = NitroxEntity.GetId(gameObject);
-            Optional<SeamothModel> model = NitroxServiceLocator.LocateService<Vehicles>().TryGetVehicle<SeamothModel>(id);
+            Optional<SeamothModel> model = Resolve<Vehicles>().TryGetVehicle<SeamothModel>(id);
 
             if (!model.HasValue)
             {

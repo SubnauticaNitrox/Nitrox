@@ -16,12 +16,12 @@ namespace NitroxClient.GameLogic
 
         public void AddKnown(TechType techType, bool verbose)
         {
-            packetSender.Send(new KnownTechEntryAdd(KnownTechEntryAdd.EntryCategory.KNOWN, techType.ToDto(), verbose));
+            packetSender.SendIfGameCode(new KnownTechEntryAdd(KnownTechEntryAdd.EntryCategory.KNOWN, techType.ToDto(), verbose));
         }
 
         public void AddAnalyzed(TechType techType, bool verbose)
         {
-            packetSender.Send(new KnownTechEntryAdd(KnownTechEntryAdd.EntryCategory.ANALYZED, techType.ToDto(), verbose));
+            packetSender.SendIfGameCode(new KnownTechEntryAdd(KnownTechEntryAdd.EntryCategory.ANALYZED, techType.ToDto(), verbose));
         }
     }
 }

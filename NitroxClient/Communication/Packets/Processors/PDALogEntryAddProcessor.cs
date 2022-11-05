@@ -16,10 +16,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(PDALogEntryAdd packet)
         {
-            using (packetSender.Suppress<PDALogEntryAdd>())
-            {
-                PDALog.Add(packet.Key);
-            }
+            PDALog.Add(packet.Key);
         }
     }
 }

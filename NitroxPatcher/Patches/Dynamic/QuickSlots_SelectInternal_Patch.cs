@@ -41,7 +41,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public override void Patch(Harmony harmony)
         {
-            player = NitroxServiceLocator.LocateService<LocalPlayer>();
+            player = Resolve<LocalPlayer>();
             PatchMultiple(harmony, TARGET_METHOD, prefix:true, postfix:true);
         }
     }

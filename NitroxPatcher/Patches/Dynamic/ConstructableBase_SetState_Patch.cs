@@ -49,7 +49,7 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             if (NitroxEntity.TryGetEntityFrom(gameObject, out NitroxEntity nitroxEntity))
             {
-                Resolve<IPacketSender>().Send(new EntityDestroy(nitroxEntity.Id));
+                SendPacket<EntityDestroy>(new(nitroxEntity.Id));
             }
         }
 

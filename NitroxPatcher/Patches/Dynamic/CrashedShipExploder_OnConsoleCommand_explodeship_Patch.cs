@@ -17,7 +17,7 @@ public class CrashedShipExploder_OnConsoleCommand_Patch : NitroxPatch, IDynamicP
 
     public static bool PrefixCountdownShip()
     {
-        Resolve<IPacketSender>().Send(new ServerCommand("aurora countdown"));
+        SendPacket(new ServerCommand("aurora countdown"));
         return false;
     }
 
@@ -29,13 +29,13 @@ public class CrashedShipExploder_OnConsoleCommand_Patch : NitroxPatch, IDynamicP
 
     public static bool PrefixExplodeShip()
     {
-        Resolve<IPacketSender>().Send(new ServerCommand("aurora explode"));
+        SendPacket<ServerCommand>(new("aurora explode"));
         return false;
     }
 
     public static bool PrefixRestoreShip()
     {
-        Resolve<IPacketSender>().Send(new ServerCommand("aurora restore"));
+        SendPacket<ServerCommand>(new("aurora restore"));
         return false;
     }
 

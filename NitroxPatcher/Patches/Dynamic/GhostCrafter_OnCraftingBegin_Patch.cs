@@ -12,7 +12,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(GhostCrafter __instance, TechType techType, float duration)
         {
-            NitroxServiceLocator.LocateService<Crafting>().GhostCrafterCrafingStarted(__instance.gameObject, techType, duration);
+            Resolve<Crafting>().GhostCrafterCrafingStarted(__instance.gameObject, techType, duration);
         }
 
         public override void Patch(Harmony harmony)

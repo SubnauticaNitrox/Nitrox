@@ -17,7 +17,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 //For now only broadcast, if it is a vehicle
                 if (__instance.gameObject.GetComponent<Vehicle>() || __instance.gameObject.GetComponentInParent<Vehicle>() || __instance.gameObject.GetComponentInParent<SubRoot>())
                 {
-                    NitroxServiceLocator.LocateService<StorageSlots>().BroadcastItemAdd(item, __instance.gameObject);
+                    Resolve<StorageSlots>().BroadcastItemAdd(item, __instance.gameObject);
                 }
 
             }

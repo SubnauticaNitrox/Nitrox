@@ -12,7 +12,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static bool Prefix(Pickupable __instance)
         {
-            NitroxServiceLocator.LocateService<Item>().PickedUp(__instance.gameObject, __instance.GetTechType());
+            Resolve<Item>().PickedUp(__instance.gameObject, __instance.GetTechType());
             return true;
         }
 

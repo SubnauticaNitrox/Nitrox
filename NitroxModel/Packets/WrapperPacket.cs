@@ -9,7 +9,7 @@
      */
     public class WrapperPacket
     {
-        public byte[] packetData { get; set; }
+        public byte[] PacketData { get; set; }
 
         public WrapperPacket()
         {
@@ -17,7 +17,7 @@
 
         public WrapperPacket(byte[] packetData)
         {
-            this.packetData = packetData;
+            PacketData = packetData;
         }
     }
 }

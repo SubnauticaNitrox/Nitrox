@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace NitroxClient.Communication
 {
-    public class PacketSuppressor<T> : IDisposable
+    public readonly struct PacketSuppressor<T> : IDisposable
     {
         private readonly HashSet<Type> suppressedPacketTypes;
 

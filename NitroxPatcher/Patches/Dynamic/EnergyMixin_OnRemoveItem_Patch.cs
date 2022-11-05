@@ -19,7 +19,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 // and therefore don't need to be synchronized this way
                 if (__instance.gameObject.GetComponent<Vehicle>() || __instance.gameObject.GetComponentInParent<Vehicle>() || __instance.gameObject.GetComponentInParent<SubRoot>())
                 {
-                    NitroxServiceLocator.LocateService<StorageSlots>().BroadcastItemRemoval(__instance.gameObject);
+                    Resolve<StorageSlots>().BroadcastItemRemoval(__instance.gameObject);
                 }
             }
         }

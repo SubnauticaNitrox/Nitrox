@@ -18,7 +18,7 @@ namespace NitroxPatcher.Patches.Dynamic
             Validate.NotNull(subRoot, "PilotingChair cannot find it's corresponding SubRoot!");
             NitroxId id = NitroxEntity.GetId(subRoot.gameObject);
 
-            SimulationOwnership simulationOwnership = NitroxServiceLocator.LocateService<SimulationOwnership>();
+            SimulationOwnership simulationOwnership = Resolve<SimulationOwnership>();
 
             // Request to be downgraded to a transient lock so we can still simulate the positioning.
             simulationOwnership.RequestSimulationLock(id, SimulationLockType.TRANSIENT);

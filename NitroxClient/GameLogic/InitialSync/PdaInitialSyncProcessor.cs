@@ -49,12 +49,9 @@ namespace NitroxClient.GameLogic.InitialSync
         {
             Log.Info($"Received initial sync packet with {entries.Count} encyclopedia entries");
 
-            using (packetSender.Suppress<PDAEncyclopediaEntryAdd>())
+            foreach (string entry in entries)
             {
-                foreach (string entry in entries)
-                {
-                    PDAEncyclopedia.Add(entry, false);
-                }
+                PDAEncyclopedia.Add(entry, false);
             }
         }
 
@@ -93,17 +90,14 @@ namespace NitroxClient.GameLogic.InitialSync
         {
             Log.Info($"Received initial sync packet with {knownTech.Count} KnownTech.knownTech types and {analyzedTech.Count} KnownTech.analyzedTech types.");
 
-            using (packetSender.Suppress<KnownTechEntryAdd>())
+            foreach (NitroxTechType techType in knownTech)
             {
-                foreach (NitroxTechType techType in knownTech)
-                {
-                    KnownTech.Add(techType.ToUnity(), false);
-                }
+                KnownTech.Add(techType.ToUnity(), false);
+            }
 
-                foreach (NitroxTechType techType in analyzedTech)
-                {
-                    KnownTech.Analyze(techType.ToUnity(), false);
-                }
+            foreach (NitroxTechType techType in analyzedTech)
+            {
+                KnownTech.Analyze(techType.ToUnity(), false);
             }
         }
 
@@ -111,27 +105,23 @@ namespace NitroxClient.GameLogic.InitialSync
         {
             Log.Info($"Received initial sync packet with {logEntries.Count} pda log entries");
 
-            using (packetSender.Suppress<PDALogEntryAdd>())
+            Dictionary<string, PDALog.Entry> entries = PDALog.entries;
+            foreach (PDALogEntry logEntry in logEntries)
             {
-                Dictionary<string, PDALog.Entry> entries = PDALog.entries;
-
-                foreach (PDALogEntry logEntry in logEntries)
+                if (logEntry.Key == null || entries.ContainsKey(logEntry.Key))
                 {
-                    if (logEntry.Key != null && !entries.ContainsKey(logEntry.Key))
-                    {
-                        if (PDALog.GetEntryData(logEntry.Key, out PDALog.EntryData entryData))
-                        {
-                            PDALog.Entry entry = new PDALog.Entry();
-                            entry.data = entryData;
-                            entry.timestamp = logEntry.Timestamp;
-                            entries.Add(entryData.key, entry);
-
-                            if (entryData.key == "Story_AuroraWarning4")
-                            {
-                                CrashedShipExploder.main.SwapModels(true);
-                            }
-                        }
-                    }
+                    continue;
+                }
+                if (!PDALog.GetEntryData(logEntry.Key, out PDALog.EntryData entryData))
+                {
+                    continue;
+                }
+                    
+                PDALog.Entry entry = new() { data = entryData, timestamp = logEntry.Timestamp };
+                entries.Add(entryData.key, entry);
+                if (entryData.key == "Story_AuroraWarning4")
+                {
+                    CrashedShipExploder.main.SwapModels(true);
                 }
             }
         }

@@ -51,8 +51,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 }
 
                 NitroxId vehicleId = NitroxEntity.GetId(parentVehicle);
-                VehicleNameChange packet = new(controllerId, vehicleId, subname.GetName());
-                Resolve<IPacketSender>().Send(packet);
+                SendPacket<VehicleNameChange>(new(controllerId, vehicleId, subname.GetName()));
             }
         }
 

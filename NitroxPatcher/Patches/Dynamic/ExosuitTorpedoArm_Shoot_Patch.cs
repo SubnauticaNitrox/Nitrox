@@ -26,7 +26,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 {
                     Log.Error("Exosuit torpedo arm siloTransform is not first or second silo " + NitroxEntity.GetId(__instance.gameObject));
                 }
-                NitroxServiceLocator.LocateService<ExosuitModuleEvent>().BroadcastArmAction(TechType.ExosuitTorpedoArmModule,
+                Resolve<ExosuitModuleEvent>().BroadcastArmAction(TechType.ExosuitTorpedoArmModule,
                     __instance,
                     action,
                     Player.main.camRoot.GetAimingTransform().forward,

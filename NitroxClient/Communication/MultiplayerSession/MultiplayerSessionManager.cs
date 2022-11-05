@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession.ConnectionState;
@@ -116,17 +119,51 @@ namespace NitroxClient.Communication.MultiplayerSession
             }
         }
 
-        public bool Send(Packet packet)
+        public void Send<T>(T packet) where T : Packet
         {
-            Type packetType = packet.GetType();
-            if (!suppressedPacketsTypes.Contains(packetType))
-            {
-                Client.Send(packet);
-                return true;
-            }
-            return false;
+            Client.Send(packet);
         }
-
+        
+        public bool SendIfGameCode<T>(T packet) where T : Packet
+        {
+            static bool HasOriginModAndSentByInjectedCode(in StackFrame[] frames)
+            {
+                // Root caller is last stack frame, so start from the end.
+                int i = frames.Length - 1;
+                // Ignore Unity interjecting itself into iterators.
+                if (frames.ElementAtOrDefault(i)?.GetMethod().Name == "InvokeMoveNext" && frames.ElementAtOrDefault(i - 1)?.GetMethod().Name == "MoveNext")
+                {
+                    i -= 2;
+                }
+                if (!frames.ElementAtOrDefault(i)?.GetMethod().DeclaringType?.Assembly.GetName().Name.StartsWith("NitroxClient", StringComparison.OrdinalIgnoreCase) ?? false)
+                {
+                    return false;
+                }
+                // Call stack is started by Nitrox, check if packet was sent via injected code. If so, suppress packet.
+                while (--i >= 0)
+                {
+                    if (frames[i].GetMethod().DeclaringType?.Name.EndsWith("_Patch") ?? false)
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            
+            StackFrame[] frames = new StackTrace(1, false).GetFrames() ?? Array.Empty<StackFrame>();
+            if (HasOriginModAndSentByInjectedCode(in frames))
+            {
+                return false;
+            }
+            if (suppressedPacketsTypes.Contains(typeof(T)))
+            {
+                return false;
+            }
+            
+            Client.Send(packet);
+            return true;
+        }
+        
         public bool IsPacketSuppressed(Type packetType) => suppressedPacketsTypes.Contains(packetType);
 
         public PacketSuppressor<T> Suppress<T>()

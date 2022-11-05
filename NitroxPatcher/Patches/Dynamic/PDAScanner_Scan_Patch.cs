@@ -4,12 +4,15 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
+using NitroxModel_Subnautica.DataStructures;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
+using NitroxModel.Packets;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic
@@ -61,7 +64,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 // A lot of fragments are virtual entities (spawned by placeholders in the world).  Sometimes the server only knows the id
                 // of the placeholder and not the virtual entity. TODO: we will need to propagate deterministic ids to children entities for
                 // these virtual entities.
-                NitroxServiceLocator.LocateService<Item>().PickedUp(PDAScanner.scanTarget.gameObject, techType);
+                Resolve<Item>().PickedUp(PDAScanner.scanTarget.gameObject, techType);
             }
         }
 
@@ -69,15 +72,14 @@ namespace NitroxPatcher.Patches.Dynamic
         public const int PACKET_SENDING_RATE = 500;
         public const int LAST_PACKET_SEND_DELAY = 2000;
 
-        public static readonly PDAManagerEntry PDAManagerEntry = NitroxServiceLocator.LocateService<PDAManagerEntry>();
-        public static Dictionary<NitroxId, ThrottledEntry> ThrottlingEntries = new Dictionary<NitroxId, ThrottledEntry>();
+        public static readonly Dictionary<NitroxId, ThrottledEntry> ThrottlingEntries = new();
 
         public class ThrottledEntry
         {
-            public TechType EntryTechType;
-            public NitroxId Id;
+            public readonly TechType EntryTechType;
+            public readonly NitroxId Id;
             public DateTimeOffset LatestProgressTime, LatestPacketSendTime;
-            public PDAScanner.Entry Entry;
+            public readonly PDAScanner.Entry Entry;
             public Coroutine LastProgressThrottler;
             public bool Unlocked;
 
@@ -135,7 +137,8 @@ namespace NitroxPatcher.Patches.Dynamic
             throttledEntry.GetEntry();
             if (!throttledEntry.Unlocked && !PDAScanner.ContainsCompleteEntry(throttledEntry.EntryTechType))
             {
-                PDAManagerEntry.Progress(throttledEntry.Entry, throttledEntry.Id);
+                PDAScanner.Entry entry = throttledEntry.Entry;
+                SendPacket<PDAEntryProgress>(new (entry.techType.ToDto(), entry.progress, entry.unlocked, throttledEntry.Id));
             }
 
             // No need to keep this in memory
@@ -174,7 +177,7 @@ namespace NitroxPatcher.Patches.Dynamic
                     return;
                 }
 
-                NitroxTechType nitroxTechType = new NitroxTechType(scanTarget.techType.ToString());
+                NitroxTechType nitroxTechType = new(scanTarget.techType.ToString());
                 // This should not occur all the time because it only takes effect one time per entity
                 // Then it occurs when someone else already scanned the entity
                 // Check if the entry is already in the partial list, and then, change the progress
@@ -197,7 +200,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 }
 
                 throttledEntry.Update(Now, Now, scanTarget.progress);
-                PDAManagerEntry.Progress(throttledEntry.GetEntry(), nitroxId);
+                SendPacket<PDAEntryProgress>(new(scannerEntry.techType.ToDto(), scannerEntry.progress, scannerEntry.unlocked, nitroxId));
             }
         }
 

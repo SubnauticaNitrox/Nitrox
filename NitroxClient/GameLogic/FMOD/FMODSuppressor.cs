@@ -2,7 +2,7 @@
 
 namespace NitroxClient.GameLogic.FMOD
 {
-    public class FMODSuppressor : IDisposable
+    public readonly struct FMODSuppressor : IDisposable
     {
         public static bool SuppressFMODEvents;
 

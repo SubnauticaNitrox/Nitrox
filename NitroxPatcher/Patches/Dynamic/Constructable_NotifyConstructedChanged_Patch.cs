@@ -40,7 +40,7 @@ namespace NitroxPatcher.Patches.Dynamic
                     Log.Debug($"Deconstructing furniture with id: {id}");
                 }
 
-                NitroxServiceLocator.LocateService<Building>().DeconstructionBegin(id);
+                Resolve<Building>().DeconstructionBegin(id);
             }
         }
         public override void Patch(Harmony harmony)

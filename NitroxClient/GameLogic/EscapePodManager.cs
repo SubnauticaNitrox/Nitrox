@@ -103,10 +103,7 @@ namespace NitroxClient.GameLogic
 
             StorageContainer storageContainer = escapePod.RequireComponentInChildren<StorageContainer>();
 
-            using (packetSender.Suppress<ItemContainerRemove>())
-            {
-                storageContainer.container.Clear();
-            }
+            storageContainer.container.Clear();
 
             NitroxEntity.SetNewId(storageContainer.gameObject, model.StorageContainerId);
 
@@ -205,7 +202,7 @@ namespace NitroxClient.GameLogic
             if (id != null)
             {
                 EscapePodRepair repair = new EscapePodRepair(id);
-                packetSender.Send(repair);
+                packetSender.SendIfGameCode(repair);
             }
             else
             {
@@ -233,7 +230,7 @@ namespace NitroxClient.GameLogic
             NitroxId id = NitroxEntity.GetId(radio.gameObject);
 
             EscapePodRadioRepair repair = new EscapePodRadioRepair(id);
-            packetSender.Send(repair);
+            packetSender.SendIfGameCode(repair);
         }
     }
 }

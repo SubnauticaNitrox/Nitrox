@@ -46,7 +46,7 @@ namespace NitroxClient.GameLogic
                     model.Value.CurrentStage = 5;
                 }
 
-                packetSender.Send(new RocketStageUpdate(id, model.Value.CurrentStage, currentStageTech));
+                packetSender.SendIfGameCode(new RocketStageUpdate(id, model.Value.CurrentStage, currentStageTech));
             }
             else
             {
@@ -61,7 +61,7 @@ namespace NitroxClient.GameLogic
             if (model.HasValue)
             {
                 model.Value.PreflightChecks?.Add(preflightCheck);
-                packetSender.Send(new RocketPreflightComplete(id, preflightCheck));
+                packetSender.SendIfGameCode(new RocketPreflightComplete(id, preflightCheck));
             }
             else
             {
@@ -76,7 +76,7 @@ namespace NitroxClient.GameLogic
             if (model.HasValue)
             {
                 model.Value.ElevatorUp = up;
-                packetSender.Send(new RocketElevatorCall(id, panel, up));
+                packetSender.SendIfGameCode(new RocketElevatorCall(id, panel, up));
             }
             else
             {
@@ -88,7 +88,7 @@ namespace NitroxClient.GameLogic
         {
             if (NitroxEntity.TryGetEntityFrom(rocket.gameObject, out NitroxEntity entity))
             {
-                packetSender.Send(new RocketLaunch(entity.Id));
+                packetSender.SendIfGameCode(new RocketLaunch(entity.Id));
             }
             else
             {

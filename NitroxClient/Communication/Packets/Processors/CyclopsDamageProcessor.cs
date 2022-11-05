@@ -31,18 +31,10 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             SubRoot subRoot = NitroxEntity.RequireObjectFrom(packet.Id).GetComponent<SubRoot>();
 
-            using (packetSender.Suppress<CyclopsDamagePointRepaired>())
-            {
-                SetActiveDamagePoints(subRoot, packet.DamagePointIndexes);
-            }
-
-            using (packetSender.Suppress<FireDoused>())
-            {
-                SetActiveRoomFires(subRoot, packet.RoomFires);
-            }
+            SetActiveDamagePoints(subRoot, packet.DamagePointIndexes);
+            SetActiveRoomFires(subRoot, packet.RoomFires);
 
             LiveMixin subHealth = subRoot.gameObject.RequireComponent<LiveMixin>();
-
             float oldHPPercent = subRoot.oldHPPercent;
 
             // Client side noises. Not necessary for keeping the health synced
@@ -55,16 +47,13 @@ namespace NitroxClient.Communication.Packets.Processors
                 subRoot.voiceNotificationManager.PlayVoiceNotification(subRoot.hullCriticalNotification, true, false);
             }
 
-            using (packetSender.Suppress<CyclopsDamage>())
-            {
-                // Not necessary, but used by above code whenever damage is done
-                subRoot.oldHPPercent = subHealth.GetHealthFraction();
+            // Not necessary, but used by above code whenever damage is done
+            subRoot.oldHPPercent = subHealth.GetHealthFraction();
 
-                // Apply the actual health changes
-                subRoot.gameObject.RequireComponent<LiveMixin>().health = packet.SubHealth;
-                subRoot.gameObject.RequireComponentInChildren<CyclopsExternalDamageManager>().subLiveMixin.health = packet.DamageManagerHealth;
-                subRoot.gameObject.RequireComponent<SubFire>().liveMixin.health = packet.SubFireHealth;
-            }
+            // Apply the actual health changes
+            subRoot.gameObject.RequireComponent<LiveMixin>().health = packet.SubHealth;
+            subRoot.gameObject.RequireComponentInChildren<CyclopsExternalDamageManager>().subLiveMixin.health = packet.DamageManagerHealth;
+            subRoot.gameObject.RequireComponent<SubFire>().liveMixin.health = packet.SubFireHealth;
         }
 
         /// <summary>

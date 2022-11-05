@@ -30,7 +30,7 @@ namespace NitroxClient.GameLogic
 
             BasicItemData itemData = new(id, itemId, bytes);
             StorageSlotItemAdd add = new(itemData);
-            packetSender.Send(add);
+            packetSender.SendIfGameCode(add);
         }
 
         public void BroadcastItemRemoval(GameObject gameObject)
@@ -38,7 +38,7 @@ namespace NitroxClient.GameLogic
             NitroxId id = NitroxEntity.GetId(gameObject);
 
             StorageSlotItemRemove slotItemRemove = new(id);
-            packetSender.Send(slotItemRemove);
+            packetSender.SendIfGameCode(slotItemRemove);
         }
 
         public void AddItem(GameObject item, NitroxId containerId, bool silent = false)
@@ -68,10 +68,7 @@ namespace NitroxClient.GameLogic
                     allowedToPlaySounds = mixin.allowedToPlaySounds;
                     mixin.allowedToPlaySounds = !silent;
                 }
-                using (packetSender.Suppress<StorageSlotItemAdd>())
-                {
-                    slot.AddItem(new InventoryItem(pickupable));
-                }
+                slot.AddItem(new InventoryItem(pickupable));
                 if (silent)
                 {
                     mixin.allowedToPlaySounds = allowedToPlaySounds;
@@ -97,10 +94,7 @@ namespace NitroxClient.GameLogic
                     allowedToPlaySounds = mixin.allowedToPlaySounds;
                     mixin.allowedToPlaySounds = !silent;
                 }
-                using (packetSender.Suppress<StorageSlotItemRemove>())
-                {
-                    slot.RemoveItem();
-                }
+                slot.RemoveItem();
                 if (silent)
                 {
                     mixin.allowedToPlaySounds = allowedToPlaySounds;
@@ -115,7 +109,7 @@ namespace NitroxClient.GameLogic
         public void EnergyMixinValueChanged(NitroxId ownerId, float amount, ItemData batteryData)
         {
             EnergyMixinValueChanged batteryChanged = new(ownerId, amount, batteryData);
-            packetSender.Send(batteryChanged);
+            packetSender.SendIfGameCode(batteryChanged);
         }
 
     }

@@ -1,8 +1,10 @@
 ﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
+using NitroxModel_Subnautica.DataStructures;
 using NitroxModel.Core;
 using NitroxModel.Helper;
+using NitroxModel.Packets;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
@@ -14,7 +16,7 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             if (entry != null)
             {
-                NitroxServiceLocator.LocateService<PDAManagerEntry>().Remove(entry);
+                SendPacket<PDAEntryRemove>(new(entry.techType.ToDto()));
             }
         }
 

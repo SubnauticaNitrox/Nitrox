@@ -15,7 +15,6 @@ namespace NitroxClient.GameLogic.InitialSync
 {
     public class BuildingInitialSyncProcessor : InitialSyncProcessor
     {
-        private readonly IPacketSender packetSender;
         private readonly BuildThrottlingQueue buildEventQueue;
         private readonly BasePieceSpawnPrioritizer basePieceSpawnPrioritizer;
 
@@ -27,9 +26,8 @@ namespace NitroxClient.GameLogic.InitialSync
          */
         public static readonly List<TechType> LaterConstructionTechTypes = new() { TechType.BaseWaterPark };
 
-        public BuildingInitialSyncProcessor(IPacketSender packetSender, BuildThrottlingQueue buildEventQueue, BasePieceSpawnPrioritizer basePieceSpawnPrioritizer)
+        public BuildingInitialSyncProcessor(BuildThrottlingQueue buildEventQueue, BasePieceSpawnPrioritizer basePieceSpawnPrioritizer)
         {
-            this.packetSender = packetSender;
             this.buildEventQueue = buildEventQueue;
             this.basePieceSpawnPrioritizer = basePieceSpawnPrioritizer;
 
@@ -59,26 +57,21 @@ namespace NitroxClient.GameLogic.InitialSync
 
         private void QueueUpPieces(IEnumerable<BasePiece> basePieces)
         {
-            using (packetSender.Suppress<ConstructionAmountChanged>())
-            using (packetSender.Suppress<ConstructionCompleted>())
-            using (packetSender.Suppress<PlaceBasePiece>())
+            foreach (BasePiece basePiece in basePieces)
             {
-                foreach (BasePiece basePiece in basePieces)
-                {
-                    buildEventQueue.EnqueueBasePiecePlaced(basePiece);
+                buildEventQueue.EnqueueBasePiecePlaced(basePiece);
 
-                    if (basePiece.ConstructionCompleted)
+                if (basePiece.ConstructionCompleted)
+                {
+                    buildEventQueue.EnqueueConstructionCompleted(basePiece.Id, basePiece.BaseId);
+                    if (LaterConstructionTechTypes.Contains(basePiece.TechType.ToUnity()))
                     {
-                        buildEventQueue.EnqueueConstructionCompleted(basePiece.Id, basePiece.BaseId);
-                        if (LaterConstructionTechTypes.Contains(basePiece.TechType.ToUnity()))
-                        {
-                            buildEventQueue.EnqueueLaterConstructionCompleted(basePiece.Id, basePiece.BaseId);
-                        }
+                        buildEventQueue.EnqueueLaterConstructionCompleted(basePiece.Id, basePiece.BaseId);
                     }
-                    else
-                    {
-                        buildEventQueue.EnqueueAmountChanged(basePiece.Id, basePiece.ConstructionAmount);
-                    }
+                }
+                else
+                {
+                    buildEventQueue.EnqueueAmountChanged(basePiece.Id, basePiece.ConstructionAmount);
                 }
             }
         }

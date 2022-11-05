@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
 using HarmonyLib;
+using NitroxClient.Communication.Abstract;
 using NitroxModel.Core;
 using NitroxModel.Helper;
+using NitroxModel.Packets;
 
 namespace NitroxPatcher.Patches;
 
@@ -53,6 +55,11 @@ public abstract class NitroxPatch : INitroxPatch
     protected static T Resolve<T>(bool prelifeTime = false) where T : class
     {
         return prelifeTime ? NitroxServiceLocator.Cache<T>.ValuePrelifetime : NitroxServiceLocator.Cache<T>.Value;
+    }
+
+    protected static bool SendPacket<T>(T packet) where T : Packet
+    {
+        return Resolve<IPacketSender>().SendIfGameCode(packet);
     }
 
     protected void PatchFinalizer(Harmony harmony, MethodBase targetMethod, string finalizerMethod = "Finalizer")

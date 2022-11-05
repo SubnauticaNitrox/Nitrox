@@ -30,7 +30,7 @@ namespace NitroxPatcher.Patches.Dynamic
             // Request a simulation lock on the incubator so that we can authoritatively spawn the resulting creatures 
             if (__instance.powered && !__instance.hatched && Inventory.main.container.Contains(TechType.HatchingEnzymes))
             {
-                SimulationOwnership simulationOwnership = NitroxServiceLocator.LocateService<SimulationOwnership>();
+                SimulationOwnership simulationOwnership = Resolve<SimulationOwnership>();
 
                 // the server only knows about the the main incubator platform which is the direct parent
                 GameObject platform = __instance.gameObject.transform.parent.gameObject;
@@ -51,7 +51,7 @@ namespace NitroxPatcher.Patches.Dynamic
             {
                 IncubatorMetadata metadata = new(true, true);
 
-                Entities entities = NitroxServiceLocator.LocateService<Entities>();
+                Entities entities = Resolve<Entities>();
                 entities.BroadcastMetadataUpdate(id, metadata);
 
                 skipPrefix = true;

@@ -38,21 +38,18 @@ namespace NitroxClient.Communication.Packets.Processors
                 subNameInput = vehicleObject.GetComponentInChildren<SubNameInput>();
             }
 
-            using (packetSender.Suppress<VehicleColorChange>())
+            if (subNameInput && subNameInput.target)
             {
-                if (subNameInput && subNameInput.target)
-                {
-                    // Switch to the currently selected tab
-                    subNameInput.SetSelected(colorPacket.Index);
+                // Switch to the currently selected tab
+                subNameInput.SetSelected(colorPacket.Index);
 
-                    // OnColorChange calls these two methods, in order to update the vehicle color and the color+text on the ingame panel, respectively:
-                    subNameInput.target.SetColor(colorPacket.Index, colorPacket.HSB.ToUnity(), colorPacket.Color.ToUnity());
-                    subNameInput.SetColor(colorPacket.Index, colorPacket.Color.ToUnity());
-                }
-                else
-                {
-                    Log.Error($"[VehicleColorChangeProcessor] SubNameInput or targeted SubName is null with {colorPacket}.");
-                }
+                // OnColorChange calls these two methods, in order to update the vehicle color and the color+text on the ingame panel, respectively:
+                subNameInput.target.SetColor(colorPacket.Index, colorPacket.HSB.ToUnity(), colorPacket.Color.ToUnity());
+                subNameInput.SetColor(colorPacket.Index, colorPacket.Color.ToUnity());
+            }
+            else
+            {
+                Log.Error($"[VehicleColorChangeProcessor] SubNameInput or targeted SubName is null with {colorPacket}.");
             }
         }
     }

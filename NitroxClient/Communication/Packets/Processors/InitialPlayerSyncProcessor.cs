@@ -13,7 +13,7 @@ namespace NitroxClient.Communication.Packets.Processors
     {
         private readonly IPacketSender packetSender;
         private readonly HashSet<InitialSyncProcessor> processors;
-        private readonly HashSet<Type> alreadyRan = new HashSet<Type>();
+        private readonly HashSet<Type> alreadyRan = new();
         private InitialPlayerSync packet;
 
         private WaitScreen.ManualWaitItem loadingMultiplayerWaitItem;
@@ -38,21 +38,17 @@ namespace NitroxClient.Communication.Packets.Processors
 
         private IEnumerator ProcessInitialSyncPacket(object sender, EventArgs eventArgs)
         {
-            // Some packets should not fire during game session join but only afterwards so that initialized/spawned game objects don't trigger packet sending again. 
-            using (packetSender.Suppress<PingRenamed>())
+            bool moreProcessorsToRun;
+            do
             {
-                bool moreProcessorsToRun;
-                do
-                {
-                    yield return Multiplayer.Main.StartCoroutine(RunPendingProcessors());
+                yield return RunPendingProcessors();
 
-                    moreProcessorsToRun = alreadyRan.Count < processors.Count;
-                    if (moreProcessorsToRun && processorsRanLastCycle == 0)
-                    {
-                        throw new Exception("Detected circular dependencies in initial packet sync between: " + GetRemainingProcessorsText());
-                    }
-                } while (moreProcessorsToRun);
-            }
+                moreProcessorsToRun = alreadyRan.Count < processors.Count;
+                if (moreProcessorsToRun && processorsRanLastCycle == 0)
+                {
+                    throw new Exception("Detected circular dependencies in initial packet sync between: " + GetRemainingProcessorsText());
+                }
+            } while (moreProcessorsToRun);
 
             WaitScreen.Remove(loadingMultiplayerWaitItem);
             Multiplayer.Main.InitialSyncCompleted = true;

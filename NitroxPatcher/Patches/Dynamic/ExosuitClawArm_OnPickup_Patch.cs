@@ -19,12 +19,12 @@ namespace NitroxPatcher.Patches.Dynamic
                 PickPrefab component = componentInParent.GetActiveTarget().GetComponent<PickPrefab>();
                 if (pickupable != null && pickupable.isPickupable && componentInParent.storageContainer.container.HasRoomFor(pickupable))
                 {
-                    NitroxServiceLocator.LocateService<Item>().PickedUp(pickupable.gameObject, pickupable.GetTechType());
+                    Resolve<Item>().PickedUp(pickupable.gameObject, pickupable.GetTechType());
                 }
                 else if (component != null)
                 {
                     Log.Debug("Delete Pickprefab for exosuit claw arm");
-                    NitroxServiceLocator.LocateService<Item>().PickedUp(component.gameObject, component.pickTech);
+                    Resolve<Item>().PickedUp(component.gameObject, component.pickTech);
                 }
             }
             return true;

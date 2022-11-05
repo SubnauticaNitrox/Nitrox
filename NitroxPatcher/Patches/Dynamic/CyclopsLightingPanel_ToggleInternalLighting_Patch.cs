@@ -23,7 +23,7 @@ namespace NitroxPatcher.Patches.Dynamic
             if (__state != __instance.lightingOn)
             {
                 NitroxId id = NitroxEntity.GetId(__instance.cyclopsRoot.gameObject);
-                NitroxServiceLocator.LocateService<Cyclops>().BroadcastToggleInternalLight(id, __instance.lightingOn);
+                Resolve<Cyclops>().BroadcastToggleInternalLight(id, __instance.lightingOn);
             }
         }
 

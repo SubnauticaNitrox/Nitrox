@@ -25,7 +25,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 NitroxId id = NitroxEntity.GetId(platform);
                 IncubatorMetadata metadata = new(true, false);
 
-                Entities entities = NitroxServiceLocator.LocateService<Entities>();
+                Entities entities = Resolve<Entities>();
                 entities.BroadcastMetadataUpdate(id, metadata);
             }
         }

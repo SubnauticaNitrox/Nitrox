@@ -17,7 +17,7 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             if (__result)
             {
-                NitroxServiceLocator.LocateService<ExosuitModuleEvent>().BroadcastClawUse(__instance, ___cooldownTime);
+                Resolve<ExosuitModuleEvent>().BroadcastClawUse(__instance, ___cooldownTime);
             }
         }
 

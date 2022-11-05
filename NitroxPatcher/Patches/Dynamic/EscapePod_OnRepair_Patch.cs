@@ -12,7 +12,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static bool Prefix(EscapePod __instance)
         {
-            NitroxServiceLocator.LocateService<EscapePodManager>().OnRepairedByMe(__instance);
+            Resolve<EscapePodManager>().OnRepairedByMe(__instance);
             return true;
         }
 

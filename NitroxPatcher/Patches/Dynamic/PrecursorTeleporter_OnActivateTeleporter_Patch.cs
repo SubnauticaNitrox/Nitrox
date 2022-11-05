@@ -18,8 +18,7 @@ namespace NitroxPatcher.Patches.Dynamic
             NitroxId id = NitroxEntity.GetId(__instance.gameObject);
             PrecursorTeleporterMetadata precursorTeleporterMetadata = new(__instance.isOpen);
 
-            Entities entities = NitroxServiceLocator.LocateService<Entities>();
-            entities.BroadcastMetadataUpdate(id, precursorTeleporterMetadata);
+            Resolve<Entities>().BroadcastMetadataUpdate(id, precursorTeleporterMetadata);
         }
 
         public override void Patch(Harmony harmony)

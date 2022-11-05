@@ -14,7 +14,7 @@ namespace NitroxPatcher.Patches.Dynamic
         public static void Prefix()
         {
             // TODO: Remove this patch after fixing that no MP resources are left on disconnect. So that we can return to main menu.
-            IMultiplayerSession multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
+            IMultiplayerSession multiplayerSession = Resolve<IMultiplayerSession>();
             multiplayerSession.Disconnect();
             Application.Quit();
         }

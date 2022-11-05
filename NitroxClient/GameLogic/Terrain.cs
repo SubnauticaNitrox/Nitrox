@@ -18,8 +18,8 @@ namespace NitroxClient.GameLogic
         private bool cellsPendingSync;
         private float timeWhenCellsBecameOutOfSync;
 
-        private List<AbsoluteEntityCell> added = new List<AbsoluteEntityCell>();
-        private List<AbsoluteEntityCell> removed = new List<AbsoluteEntityCell>();
+        private readonly List<AbsoluteEntityCell> added = new();
+        private readonly List<AbsoluteEntityCell> removed = new();
 
         public Terrain(IMultiplayerSession multiplayerSession, IPacketSender packetSender, VisibleCells visibleCells)
         {
@@ -81,7 +81,7 @@ namespace NitroxClient.GameLogic
                 if (elapsed >= 0.1)
                 {
                     CellVisibilityChanged cellsChanged = new CellVisibilityChanged(multiplayerSession.Reservation.PlayerId, added.ToArray(), removed.ToArray());
-                    packetSender.Send(cellsChanged);
+                    packetSender.SendIfGameCode(cellsChanged);
 
                     added.Clear();
                     removed.Clear();

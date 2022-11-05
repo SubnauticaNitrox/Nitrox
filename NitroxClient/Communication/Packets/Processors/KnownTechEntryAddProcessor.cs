@@ -17,21 +17,18 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(KnownTechEntryAdd packet)
         {
-            using (packetSender.Suppress<KnownTechEntryAdd>())
+            switch (packet.Category)
             {
-                switch (packet.Category)
-                {
-                    case KnownTechEntryAdd.EntryCategory.KNOWN:
-                        KnownTech.Add(packet.TechType.ToUnity(), packet.Verbose);
-                        break;
-                    case KnownTechEntryAdd.EntryCategory.ANALYZED:
-                        KnownTech.Analyze(packet.TechType.ToUnity(), packet.Verbose);
-                        break;
-                    default:
-                        string categoryName = Enum.GetName(typeof(KnownTechEntryAdd.EntryCategory), packet.Category);
-                        Log.Error("Received an unknown category type for KnownTechEntryAdd packet: " + categoryName);
-                        break;
-                }
+                case KnownTechEntryAdd.EntryCategory.KNOWN:
+                    KnownTech.Add(packet.TechType.ToUnity(), packet.Verbose);
+                    break;
+                case KnownTechEntryAdd.EntryCategory.ANALYZED:
+                    KnownTech.Analyze(packet.TechType.ToUnity(), packet.Verbose);
+                    break;
+                default:
+                    string categoryName = Enum.GetName(typeof(KnownTechEntryAdd.EntryCategory), packet.Category);
+                    Log.Error("Received an unknown category type for KnownTechEntryAdd packet: " + categoryName);
+                    break;
             }
         }
     }

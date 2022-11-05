@@ -25,7 +25,7 @@ namespace NitroxPatcher.Patches.Dynamic
             // while the sub is not changed. This will prevent that
             if (__instance.GetCurrentSub() != sub)
             {
-                NitroxServiceLocator.LocateService<LocalPlayer>().BroadcastSubrootChange(Optional.OfNullable(subId));
+                Resolve<LocalPlayer>().BroadcastSubrootChange(Optional.OfNullable(subId));
             }
         }
 

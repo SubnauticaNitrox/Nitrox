@@ -18,7 +18,7 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             NitroxId id = NitroxEntity.GetId(__instance.gameObject);
 
-            if (NitroxServiceLocator.LocateService<SimulationOwnership>().HasAnyLockType(id))
+            if (Resolve<SimulationOwnership>().HasAnyLockType(id))
             {
                 previousAction = __instance.prevBestAction;
                 return true;
@@ -33,7 +33,7 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             NitroxId id = NitroxEntity.GetId(__instance.gameObject);
 
-            if (NitroxServiceLocator.LocateService<SimulationOwnership>().HasAnyLockType(id))
+            if (Resolve<SimulationOwnership>().HasAnyLockType(id))
             {
                 if (previousAction != __result)
                 {

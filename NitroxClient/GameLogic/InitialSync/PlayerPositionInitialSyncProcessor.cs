@@ -35,10 +35,7 @@ namespace NitroxClient.GameLogic.InitialSync
             Player.main.SetPosition(position);
 
             // Player.Update is setting SubRootID to null after Player position is set
-            using (packetSender.Suppress<EscapePodChanged>())
-            {
-                Player.main.ValidateEscapePod();
-            }
+            Player.main.ValidateEscapePod();
 
             // Player position is relative to a subroot if in a subroot
             Optional<NitroxId> subRootId = packet.PlayerSubRootId;

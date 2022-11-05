@@ -29,51 +29,48 @@ namespace NitroxClient.GameLogic.InitialSync
         {
             int totalEquippedItemsDone = 0;
 
-            using (packetSender.Suppress<ItemContainerAdd>())
+            foreach (EquippedItemData equippedItem in packet.EquippedItems)
             {
-                foreach (EquippedItemData equippedItem in packet.EquippedItems)
+                waitScreenItem.SetProgress(totalEquippedItemsDone, packet.EquippedItems.Count);
+
+                GameObject gameObject = SerializationHelper.GetGameObject(equippedItem.SerializedData);
+                NitroxEntity.SetNewId(gameObject, equippedItem.ItemId);
+
+                Pickupable pickupable = gameObject.RequireComponent<Pickupable>();
+                Optional<GameObject> opGameObject = NitroxEntity.GetObjectFrom(equippedItem.ContainerId);
+
+                if (opGameObject.HasValue)
                 {
-                    waitScreenItem.SetProgress(totalEquippedItemsDone, packet.EquippedItems.Count);
+                    GameObject owner = opGameObject.Value;
 
-                    GameObject gameObject = SerializationHelper.GetGameObject(equippedItem.SerializedData);
-                    NitroxEntity.SetNewId(gameObject, equippedItem.ItemId);
+                    Optional<Equipment> opEquipment = EquipmentHelper.FindEquipmentComponent(owner);
 
-                    Pickupable pickupable = gameObject.RequireComponent<Pickupable>();
-                    Optional<GameObject> opGameObject = NitroxEntity.GetObjectFrom(equippedItem.ContainerId);
-
-                    if (opGameObject.HasValue)
+                    if (opEquipment.HasValue)
                     {
-                        GameObject owner = opGameObject.Value;
+                        Equipment equipment = opEquipment.Value;
+                        InventoryItem inventoryItem = new(pickupable);
+                        inventoryItem.container = equipment;
+                        inventoryItem.item.Reparent(equipment.tr);
 
-                        Optional<Equipment> opEquipment = EquipmentHelper.FindEquipmentComponent(owner);
+                        Dictionary<string, InventoryItem> itemsBySlot = equipment.equipment;
+                        itemsBySlot[equippedItem.Slot] = inventoryItem;
 
-                        if (opEquipment.HasValue)
-                        {
-                            Equipment equipment = opEquipment.Value;
-                            InventoryItem inventoryItem = new(pickupable);
-                            inventoryItem.container = equipment;
-                            inventoryItem.item.Reparent(equipment.tr);
-
-                            Dictionary<string, InventoryItem> itemsBySlot = equipment.equipment;
-                            itemsBySlot[equippedItem.Slot] = inventoryItem;
-
-                            equipment.UpdateCount(pickupable.GetTechType(), true);
-                            Equipment.SendEquipmentEvent(pickupable, 0, owner, equippedItem.Slot);
-                            equipment.NotifyEquip(equippedItem.Slot, inventoryItem);
-                        }
-                        else
-                        {
-                            Log.Info("Could not find equipment type for " + gameObject.name);
-                        }
+                        equipment.UpdateCount(pickupable.GetTechType(), true);
+                        Equipment.SendEquipmentEvent(pickupable, 0, owner, equippedItem.Slot);
+                        equipment.NotifyEquip(equippedItem.Slot, inventoryItem);
                     }
                     else
                     {
-                        Log.Info("Could not find Container for " + gameObject.name);
+                        Log.Info("Could not find equipment type for " + gameObject.name);
                     }
-
-                    totalEquippedItemsDone++;
-                    yield return null;
                 }
+                else
+                {
+                    Log.Info("Could not find Container for " + gameObject.name);
+                }
+
+                totalEquippedItemsDone++;
+                yield return null;
             }
 
             Log.Info("Recieved initial sync with " + totalEquippedItemsDone + " pieces of equipped items");

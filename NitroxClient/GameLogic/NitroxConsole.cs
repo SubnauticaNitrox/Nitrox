@@ -61,7 +61,7 @@ namespace NitroxClient.GameLogic
             vehicles.AddVehicle(vehicleModel);
 
             Log.Debug($"Spawning vehicle {vehicleModel.TechType} with id {vehicleModel.Id} at {vehicleModel.Position}");
-            packetSender.Send(vehicleSpawned);
+            packetSender.SendIfGameCode(vehicleSpawned);
 
             vehicles.SpawnDefaultBatteries(vehicleModel);
         }

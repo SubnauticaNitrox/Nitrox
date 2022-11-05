@@ -57,12 +57,10 @@ public abstract class NitroxAutoBinderBase : AutoBinder
     public override void PopulateInstance<TType>(object instance, AutoGenerateContext context, IEnumerable<MemberInfo> members = null)
     {
         Type type = typeof(TType);
-
         if (type.IsAbstract)
         {
             return;
         }
-
         if (instance == null)
         {
             return;
@@ -70,7 +68,7 @@ public abstract class NitroxAutoBinderBase : AutoBinder
 
         // Avoids type mismatch that would only populate inherited members
         typeof(NitroxAutoBinderBase).GetMethod(nameof(PopulateInstanceBase), BindingFlags.NonPublic | BindingFlags.Instance)
-            .MakeGenericMethod(instance.GetType()).Invoke(this, new object[] { instance, context, members });
+            .MakeGenericMethod(instance.GetType()).Invoke(this, new[] { instance, context, members });
     }
 
     // Weird reflection bypass

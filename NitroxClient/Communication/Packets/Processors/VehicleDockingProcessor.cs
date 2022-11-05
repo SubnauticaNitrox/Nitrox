@@ -33,12 +33,10 @@ namespace NitroxClient.Communication.Packets.Processors
             Vehicle vehicle = vehicleGo.RequireComponent<Vehicle>();
             VehicleDockingBay vehicleDockingBay = vehicleDockingBayGo.RequireComponent<VehicleDockingBay>();
 
-            using (packetSender.Suppress<VehicleDocking>())
-            {
-                Log.Debug($"Set vehicle docked for {vehicleDockingBay.gameObject.name}");
-                vehicle.GetComponent<MultiplayerVehicleControl>().SetPositionVelocityRotation(vehicle.transform.position, Vector3.zero, vehicle.transform.rotation, Vector3.zero);
-                vehicle.GetComponent<MultiplayerVehicleControl>().Exit();
-            }
+            Log.Debug($"Set vehicle docked for {vehicleDockingBay.gameObject.name}");
+            MultiplayerVehicleControl mpVehicleController = vehicle.GetComponent<MultiplayerVehicleControl>();
+            mpVehicleController.SetPositionVelocityRotation(vehicle.transform.position, Vector3.zero, vehicle.transform.rotation, Vector3.zero);
+            mpVehicleController.Exit();
             vehicle.StartCoroutine(DelayAnimationAndDisablePiloting(vehicle, vehicleDockingBay, packet.VehicleId, packet.PlayerId));
         }
 

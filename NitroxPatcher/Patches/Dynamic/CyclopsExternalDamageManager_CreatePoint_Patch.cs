@@ -14,7 +14,7 @@ namespace NitroxPatcher.Patches.Dynamic
         public static bool Prefix(CyclopsExternalDamageManager __instance, out bool __state)
         {
             // Block from creating points if they aren't the owner of the sub
-            __state = NitroxServiceLocator.LocateService<SimulationOwnership>().HasAnyLockType(NitroxEntity.GetId(__instance.subRoot.gameObject));
+            __state = Resolve<SimulationOwnership>().HasAnyLockType(NitroxEntity.GetId(__instance.subRoot.gameObject));
 
             return __state;
         }
@@ -23,7 +23,7 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             if (__state)
             {
-                NitroxServiceLocator.LocateService<Cyclops>().OnCreateDamagePoint(__instance.subRoot);
+                Resolve<Cyclops>().OnCreateDamagePoint(__instance.subRoot);
             }
         }
 

@@ -20,14 +20,14 @@ namespace NitroxClient.GameLogic
         {
             NitroxId crafterId = NitroxEntity.GetId(crafter);
             GhostCrafterBeginCrafting ghostCrafterBeginCrafting = new(crafterId, techType.ToDto(), duration);
-            packetSender.Send(ghostCrafterBeginCrafting);
+            packetSender.SendIfGameCode(ghostCrafterBeginCrafting);
         }
 
         public void GhostCrafterItemPickedUp(GameObject gameObject, TechType techType)
         {
             NitroxId crafterId = NitroxEntity.GetId(gameObject);
             GhostCrafterItemPickup ghostCrafterItemPickup = new(crafterId, techType.ToDto());
-            packetSender.Send(ghostCrafterItemPickup);
+            packetSender.SendIfGameCode(ghostCrafterItemPickup);
         }
     }
 }

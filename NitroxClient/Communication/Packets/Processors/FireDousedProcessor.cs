@@ -23,11 +23,7 @@ namespace NitroxClient.Communication.Packets.Processors
         public override void Process(FireDoused packet)
         {
             GameObject fireGameObject = NitroxEntity.RequireObjectFrom(packet.Id);
-
-            using (packetSender.Suppress<FireDoused>())
-            {
-                fireGameObject.RequireComponent<Fire>().Douse(packet.DouseAmount);
-            }
+            fireGameObject.RequireComponent<Fire>().Douse(packet.DouseAmount);
         }
     }
 }

@@ -12,7 +12,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static bool Prefix(EntityCell __instance)
         {
-            NitroxServiceLocator.LocateService<Terrain>().CellLoaded(__instance.BatchId, __instance.CellId, __instance.Level);
+            Resolve<Terrain>().CellLoaded(__instance.BatchId, __instance.CellId, __instance.Level);
 
             return true;
         }

@@ -56,10 +56,10 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             if (!__result) return;
 
-            NitroxServiceLocator.LocateService<Building>().ChangeConstructionAmount(__instance.gameObject, __instance.constructedAmount);
+            Resolve<Building>().ChangeConstructionAmount(__instance.gameObject, __instance.constructedAmount);
             if (__instance._constructed)
             {
-                NitroxServiceLocator.LocateService<Building>().ConstructionComplete(__instance.gameObject, Optional.OfNullable(lastTargetBase), lastTargetBaseOffset, lastFace);
+                Resolve<Building>().ConstructionComplete(__instance.gameObject, Optional.OfNullable(lastTargetBase), lastTargetBaseOffset, lastFace);
             }
         }
 

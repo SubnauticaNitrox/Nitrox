@@ -23,11 +23,7 @@ namespace NitroxClient.Communication.Packets.Processors
             if (target.HasValue)
             {
                 EnergyMixin energyMixin = target.Value.RequireComponent<EnergyMixin>();
-
-                using (packetSender.Suppress<EnergyMixinValueChanged>())
-                {
-                    energyMixin.ModifyCharge(energyMixinPacket.Value - energyMixin.charge);
-                }
+                energyMixin.ModifyCharge(energyMixinPacket.Value - energyMixin.charge);
             }
         }
     }

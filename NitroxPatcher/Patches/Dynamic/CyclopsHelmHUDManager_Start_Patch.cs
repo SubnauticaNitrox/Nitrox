@@ -13,7 +13,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(CyclopsHelmHUDManager __instance)
         {
-            CyclopsModel cyclops = Resolve<Vehicles>().GetVehicles<CyclopsModel>(NitroxEntity.GetId(__instance.subRoot.gameObject));
+            CyclopsModel cyclops = Resolve<Vehicles>().GetVehicle<CyclopsModel>(NitroxEntity.GetId(__instance.subRoot.gameObject));
             __instance.hudActive = true;
             __instance.engineToggleAnimator.SetTrigger(cyclops.EngineState ? "EngineOn" : "EngineOff");
         }

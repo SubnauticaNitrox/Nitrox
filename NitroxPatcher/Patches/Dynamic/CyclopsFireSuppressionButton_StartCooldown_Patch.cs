@@ -20,7 +20,7 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             SubRoot cyclops = __instance.subRoot;
             NitroxId id = NitroxEntity.GetId(cyclops.gameObject);
-            NitroxServiceLocator.LocateService<Cyclops>().BroadcastActivateFireSuppression(id);
+            Resolve<Cyclops>().BroadcastActivateFireSuppression(id);
         }
 
         public override void Patch(Harmony harmony)

@@ -21,7 +21,7 @@ namespace NitroxClient.GameLogic
             bool doorOpen = medicalCabinet.doorOpen;
 
             MedicalCabinetClicked cabinetClicked = new(id, doorOpen, medicalCabinet.hasMedKit, medicalCabinet.timeSpawnMedKit);
-            packetSender.Send(cabinetClicked);
+            packetSender.SendIfGameCode(cabinetClicked);
         }
     }
 }

@@ -12,13 +12,11 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class VehicleUndockingProcessor : ClientPacketProcessor<VehicleUndocking>
     {
-        private readonly IPacketSender packetSender;
         private readonly Vehicles vehicles;
         private readonly PlayerManager remotePlayerManager;
 
-        public VehicleUndockingProcessor(IPacketSender packetSender, Vehicles vehicles, PlayerManager playerManager)
+        public VehicleUndockingProcessor(Vehicles vehicles, PlayerManager playerManager)
         {
-            this.packetSender = packetSender;
             this.vehicles = vehicles;
             remotePlayerManager = playerManager;
         }
@@ -30,17 +28,14 @@ namespace NitroxClient.Communication.Packets.Processors
 
             Vehicle vehicle = vehicleGo.RequireComponent<Vehicle>();
             VehicleDockingBay vehicleDockingBay = vehicleDockingBayGo.RequireComponent<VehicleDockingBay>();
-
-            using (packetSender.Suppress<VehicleUndocking>())
+            
+            if (packet.UndockingStart)
             {
-                if (packet.UndockingStart)
-                {
-                    StartVehicleUndocking(packet, vehicleGo, vehicle, vehicleDockingBay);
-                }
-                else
-                {
-                    FinishVehicleUndocking(packet, vehicle, vehicleDockingBay);
-                }
+                StartVehicleUndocking(packet, vehicleGo, vehicle, vehicleDockingBay);
+            }
+            else
+            {
+                FinishVehicleUndocking(packet, vehicle, vehicleDockingBay);
             }
         }
 

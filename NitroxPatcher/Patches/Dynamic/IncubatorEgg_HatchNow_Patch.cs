@@ -34,7 +34,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         private static void SpawnBabiesIfSimulating(IncubatorEgg egg)
         {
-            SimulationOwnership simulationOwnership = NitroxServiceLocator.LocateService<SimulationOwnership>();
+            SimulationOwnership simulationOwnership = Resolve<SimulationOwnership>();
 
             NitroxEntity serverKnownParent = egg.GetComponentInParent<NitroxEntity>();
             Validate.NotNull(serverKnownParent, "Could not find a server known parent for incubator egg");
@@ -49,7 +49,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 NitroxId babyId = NitroxEntity.GetId(baby);
 
                 Entity entity = new(baby.transform.position.ToDto(), baby.transform.rotation.ToDto(), baby.transform.localScale.ToDto(), TechType.SeaEmperorBaby.ToDto(), 3, "09883a6c-9e78-4bbf-9561-9fa6e49ce766", true, babyId, null);
-                NitroxServiceLocator.LocateService<Entities>().BroadcastEntitySpawnedByClient(entity);
+                Resolve<Entities>().BroadcastEntitySpawnedByClient(entity);
             }
         }
 

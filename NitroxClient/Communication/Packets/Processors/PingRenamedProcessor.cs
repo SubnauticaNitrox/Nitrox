@@ -40,11 +40,8 @@ namespace NitroxClient.Communication.Packets.Processors
                 return;
             }
 
-            using (sender.Suppress<PingRenamed>())
-            {
-                beacon.beaconLabel.SetLabel(packet.Name);
-                Log.Debug($"Received ping rename: '{packet.Name}' on object '{obj.Value.GetFullHierarchyPath()}' with Nitrox id: '{packet.Id}'");
-            }
+            beacon.beaconLabel.SetLabel(packet.Name);
+            Log.Debug($"Received ping rename: '{packet.Name}' on object '{obj.Value.GetFullHierarchyPath()}' with Nitrox id: '{packet.Id}'");
         }
     }
 }

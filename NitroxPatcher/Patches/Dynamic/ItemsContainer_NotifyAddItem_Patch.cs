@@ -14,7 +14,7 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             if (item != null)
             {
-                NitroxServiceLocator.LocateService<ItemContainers>().BroadcastItemAdd(item.item, __instance.tr);
+                Resolve<ItemContainers>().BroadcastItemAdd(item.item, __instance.tr);
             }
         }
 

@@ -1,6 +1,5 @@
 ﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic.FMOD;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Packets;
@@ -28,17 +27,13 @@ public class MedicalCabinetClickedProcessor : ClientPacketProcessor<MedicalCabin
         cabinet.hasMedKit = packet.HasMedKit;
         cabinet.timeSpawnMedKit = packet.NextSpawnTime;
 
-        using (packetSender.Suppress<PlayFMODCustomEmitter>())
-        using (FMODSystem.SuppressSounds())
+        if (doorChangedState)
         {
-            if (doorChangedState)
-            {
-                cabinet.Invoke(nameof(MedicalCabinet.ToggleDoorState), 0f);
-            }
-            else if (medkitPickedUp)
-            {
-                cabinet.Invoke(nameof(MedicalCabinet.ToggleDoorState), 2f);
-            }
+            cabinet.Invoke(nameof(MedicalCabinet.ToggleDoorState), 0f);
+        }
+        else if (medkitPickedUp)
+        {
+            cabinet.Invoke(nameof(MedicalCabinet.ToggleDoorState), 2f);
         }
     }
 }

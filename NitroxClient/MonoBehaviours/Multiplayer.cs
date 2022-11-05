@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession;
@@ -19,12 +20,18 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UWE;
 
+
 namespace NitroxClient.MonoBehaviours
 {
     public class Multiplayer : MonoBehaviour
     {
         public static Multiplayer Main;
 
+        /// <summary>
+        ///     <see cref="Type.MakeGenericType"/> is called for every packet which allocates for the params argument.
+        ///     This array is reused to reduce memory garbage. If, in the future, it needs to be thread-safe then wrap it in <see cref="ThreadLocal{T}"/>.
+        /// </summary>
+        private readonly Type[] makeGenericParamsSharedArray = new Type[1];
         private IMultiplayerSession multiplayerSession;
         private PacketReceiver packetReceiver;
         private ThrottledPacketSender throttledPacketSender;
@@ -96,14 +103,14 @@ namespace NitroxClient.MonoBehaviours
         public void ProcessPackets()
         {
             Queue<Packet> packets = packetReceiver.GetReceivedPackets();
-
             foreach (Packet packet in packets)
             {
                 try
                 {
                     Type clientPacketProcessorType = typeof(ClientPacketProcessor<>);
                     Type packetType = packet.GetType();
-                    Type packetProcessorType = clientPacketProcessorType.MakeGenericType(packetType);
+                    makeGenericParamsSharedArray[0] = packetType;
+                    Type packetProcessorType = clientPacketProcessorType.MakeGenericType(makeGenericParamsSharedArray);
 
                     PacketProcessor processor = (PacketProcessor)NitroxServiceLocator.LocateService(packetProcessorType);
                     processor.ProcessPacket(packet, null);
@@ -118,7 +125,7 @@ namespace NitroxClient.MonoBehaviours
         public IEnumerator StartSession()
         {
             OnBeforeMultiplayerStart?.Invoke();
-            yield return StartCoroutine(InitializeLocalPlayerState());
+            yield return InitializeLocalPlayerState();
             multiplayerSession.JoinSession();
             InitMonoBehaviours();
             Utils.SetContinueMode(true);

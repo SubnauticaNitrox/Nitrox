@@ -19,7 +19,7 @@ namespace NitroxPatcher.Patches.Dynamic
             {
                 NitroxId id = NitroxEntity.GetId(__instance.gameObject);
                 WeldableWallPanelGenericMetadata weldableWallPanelGenericMetadata = new(__instance.liveMixin.health);
-                Entities entities = NitroxServiceLocator.LocateService<Entities>();
+                Entities entities = Resolve<Entities>();
 
                 entities.BroadcastMetadataUpdate(id, weldableWallPanelGenericMetadata);
             }

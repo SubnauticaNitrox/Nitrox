@@ -330,7 +330,7 @@ namespace NitroxClient.GameLogic
                 target.GetComponent<LiveMixin>().health = health;
 
                 // Set internal and external lights via runtime query to avoid circular dependencies
-                NitroxServiceLocator.LocateService<Cyclops>().SetAllModes(GetVehicles<CyclopsModel>(id));
+                NitroxServiceLocator.LocateService<Cyclops>().SetAllModes(GetVehicle<CyclopsModel>(id));
             }
             else if (techType == TechType.RocketBase)
             {
@@ -421,34 +421,31 @@ namespace NitroxClient.GameLogic
             LocalPlayer localPlayer = NitroxServiceLocator.LocateService<LocalPlayer>();
 
             VehicleCreated vehicleCreated = new VehicleCreated(vehicle, localPlayer.PlayerName);
-            packetSender.Send(vehicleCreated);
+            packetSender.SendIfGameCode(vehicleCreated);
         }
 
         public void BroadcastDestroyedVehicle(Vehicle vehicle)
         {
-            using (packetSender.Suppress<VehicleOnPilotModeChanged>())
+            NitroxId id = NitroxEntity.GetId(vehicle.gameObject);
+            LocalPlayer localPlayer = NitroxServiceLocator.LocateService<LocalPlayer>();
+
+            VehicleDestroyed vehicleDestroyed = new VehicleDestroyed(id, localPlayer.PlayerName, vehicle.GetPilotingMode());
+            packetSender.SendIfGameCode(vehicleDestroyed);
+
+            // If there is a pilotId then there is a remote player.  We must
+            // detach the remote player before destroying the game object.
+            if (!string.IsNullOrEmpty(vehicle.pilotId))
             {
-                NitroxId id = NitroxEntity.GetId(vehicle.gameObject);
-                LocalPlayer localPlayer = NitroxServiceLocator.LocateService<LocalPlayer>();
+                ushort pilot = ushort.Parse(vehicle.pilotId);
+                Optional<RemotePlayer> remotePilot = playerManager.Find(pilot);
 
-                VehicleDestroyed vehicleDestroyed = new VehicleDestroyed(id, localPlayer.PlayerName, vehicle.GetPilotingMode());
-                packetSender.Send(vehicleDestroyed);
-
-                // If there is a pilotId then there is a remote player.  We must
-                // detach the remote player before destroying the game object.
-                if (!string.IsNullOrEmpty(vehicle.pilotId))
+                if (remotePilot.HasValue)
                 {
-                    ushort pilot = ushort.Parse(vehicle.pilotId);
-                    Optional<RemotePlayer> remotePilot = playerManager.Find(pilot);
-
-                    if (remotePilot.HasValue)
-                    {
-                        RemotePlayer remotePlayer = remotePilot.Value;
-                        remotePlayer.SetVehicle(null);
-                        remotePlayer.SetSubRoot(null);
-                        remotePlayer.SetPilotingChair(null);
-                        remotePlayer.AnimationController.UpdatePlayerAnimations = true;
-                    }
+                    RemotePlayer remotePlayer = remotePilot.Value;
+                    remotePlayer.SetVehicle(null);
+                    remotePlayer.SetSubRoot(null);
+                    remotePlayer.SetPilotingChair(null);
+                    remotePlayer.AnimationController.UpdatePlayerAnimations = true;
                 }
             }
         }
@@ -461,8 +458,8 @@ namespace NitroxClient.GameLogic
             NitroxId vehicleId = NitroxEntity.GetId(vehicle.gameObject);
             ushort playerId = multiplayerSession.Reservation.PlayerId;
 
-            VehicleDocking packet = new VehicleDocking(vehicleId, dockId, playerId);
-            packetSender.Send(packet);
+            VehicleDocking packet = new(vehicleId, dockId, playerId);
+            packetSender.SendIfGameCode(packet);
 
             PacketSuppressor<PlayerMovement> playerMovementSuppressor = packetSender.Suppress<PlayerMovement>();
             PacketSuppressor<VehicleMovement> vehicleMovementSuppressor = packetSender.Suppress<VehicleMovement>();
@@ -484,8 +481,8 @@ namespace NitroxClient.GameLogic
                 vehicleMovementSuppressor.Dispose();
             }
 
-            VehicleUndocking packet = new VehicleUndocking(vehicleId, dockId, playerId, undockingStart);
-            packetSender.Send(packet);
+            VehicleUndocking packet = new(vehicleId, dockId, playerId, undockingStart);
+            packetSender.SendIfGameCode(packet);
         }
 
         /*
@@ -515,7 +512,7 @@ namespace NitroxClient.GameLogic
             VehicleMovementData vehicleMovementData = new BasicVehicleMovementData(vehicleModel.TechType, vehicleModel.Id, gameObject.transform.position.ToDto(), gameObject.transform.rotation.ToDto());
             ushort playerId = ushort.MaxValue;
 
-            packetSender.Send(new VehicleMovement(playerId, vehicleMovementData));
+            packetSender.SendIfGameCode(new VehicleMovement(playerId, vehicleMovementData));
         }
 
         public void BroadcastOnPilotModeChanged(Vehicle vehicle, bool isPiloting)
@@ -523,7 +520,7 @@ namespace NitroxClient.GameLogic
             ushort playerId = multiplayerSession.Reservation.PlayerId;
 
             VehicleOnPilotModeChanged packet = new VehicleOnPilotModeChanged(NitroxEntity.GetId(vehicle.gameObject), playerId, isPiloting);
-            packetSender.Send(packet);
+            packetSender.SendIfGameCode(packet);
         }
 
         public void SetOnPilotMode(NitroxId vehicleId, ushort playerId, bool isPiloting)
@@ -567,7 +564,7 @@ namespace NitroxClient.GameLogic
             return vehiclesById.Remove(id);
         }
 
-        public T GetVehicles<T>(NitroxId vehicleId) where T : VehicleModel
+        public T GetVehicle<T>(NitroxId vehicleId) where T : VehicleModel
         {
             return (T)vehiclesById[vehicleId];
         }

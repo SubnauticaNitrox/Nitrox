@@ -23,7 +23,7 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             if (__state != __instance.elevatorState)
             {
-                Rockets rocket = NitroxServiceLocator.LocateService<Rockets>();
+                Rockets rocket = Resolve<Rockets>();
                 GameObject gameObject = __instance.gameObject;
                 NitroxId id = NitroxEntity.GetId(gameObject);
 

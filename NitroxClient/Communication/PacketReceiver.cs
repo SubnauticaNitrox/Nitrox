@@ -4,7 +4,6 @@ using NitroxModel.Packets;
 
 namespace NitroxClient.Communication
 {
-    // TODO: Spinlocks don't seem to be necessary here, but I don't know for certain.
     public class PacketReceiver
     {
         private readonly INetworkDebugger networkDebugger;
@@ -27,8 +26,7 @@ namespace NitroxClient.Communication
 
         public Queue<Packet> GetReceivedPackets()
         {
-            Queue<Packet> packets = new Queue<Packet>();
-
+            Queue<Packet> packets = new();
             lock (receivedPackets)
             {
                 while (receivedPackets.Count > 0)
@@ -36,7 +34,6 @@ namespace NitroxClient.Communication
                     packets.Enqueue(receivedPackets.Dequeue());
                 }
             }
-
             return packets;
         }
     }

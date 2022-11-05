@@ -12,9 +12,6 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class PlayerHeldItemChangedProcessor : ClientPacketProcessor<PlayerHeldItemChanged>
     {
-        private readonly FieldInfo inventoryItemFromPickupable = typeof(Pickupable).GetField("inventoryItem", BindingFlags.NonPublic | BindingFlags.Instance);
-        private readonly MethodInfo setHandIK = typeof(PlayerTool).GetMethod("SetHandIKTargetsEnabled", BindingFlags.NonPublic | BindingFlags.Instance);
-
         private int defaultLayer;
         private int viewModelLayer;
         private readonly PlayerManager playerManager;
@@ -46,7 +43,7 @@ namespace NitroxClient.Communication.Packets.Processors
             Pickupable pickupable = opItem.Value.GetComponent<Pickupable>();
             Validate.IsTrue(pickupable);
 
-            InventoryItem inventoryItem = (InventoryItem)inventoryItemFromPickupable.GetValue(pickupable);
+            InventoryItem inventoryItem = pickupable.inventoryItem;
             Validate.NotNull(inventoryItem);
 
             ItemsContainer inventory = opPlayer.Value.Inventory;
@@ -69,7 +66,7 @@ namespace NitroxClient.Communication.Packets.Processors
                     }
                     tool.GetComponent<Rigidbody>().isKinematic = true;
                     opItem.Value.SetActive(true);
-                    setHandIK.Invoke(tool, new object[] { true });
+                    tool.SetHandIKTargetsEnabled(true);
                     SafeAnimator.SetBool(opPlayer.Value.ArmsController.GetComponent<Animator>(), $"holding_{tool.animToolName}", true);
                     opPlayer.Value.AnimationController["using_tool_first"] = packet.IsFirstTime == null;
 

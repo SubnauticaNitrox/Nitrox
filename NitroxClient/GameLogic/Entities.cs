@@ -49,17 +49,17 @@ namespace NitroxClient.GameLogic
                 }
             }
 
-            packetSender.Send(update);
+            packetSender.SendIfGameCode(update);
         }
 
         public void BroadcastMetadataUpdate(NitroxId id, EntityMetadata metadata)
         {
-            packetSender.Send(new EntityMetadataUpdate(id, metadata));
+            packetSender.SendIfGameCode(new EntityMetadataUpdate(id, metadata));
         }
 
         public void BroadcastEntitySpawnedByClient(Entity entity)
         {
-            packetSender.Send(new EntitySpawnedByClient(entity));
+            packetSender.SendIfGameCode(new EntitySpawnedByClient(entity));
         }
 
         public void Spawn(List<Entity> entities)

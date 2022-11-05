@@ -60,7 +60,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public override void Patch(Harmony harmony)
         {
-            fmodSystem = NitroxServiceLocator.LocateService<FMODSystem>();
+            fmodSystem = Resolve<FMODSystem>();
             PatchPrefix(harmony, TARGET_METHOD);
         }
     }

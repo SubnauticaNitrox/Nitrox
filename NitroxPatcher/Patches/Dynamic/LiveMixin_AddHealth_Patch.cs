@@ -1,10 +1,13 @@
 ﻿using System.Reflection;
 using HarmonyLib;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
+using NitroxModel_Subnautica.DataStructures;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
+using NitroxModel.Packets;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
@@ -16,8 +19,7 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             __state = null;
 
-            LiveMixinManager liveMixinManager = NitroxServiceLocator.LocateService<LiveMixinManager>();
-
+            LiveMixinManager liveMixinManager = Resolve<LiveMixinManager>();
             if (!liveMixinManager.IsWhitelistedUpdateType(__instance))
             {
                 return true; // everyone should process this locally
@@ -36,12 +38,12 @@ namespace NitroxPatcher.Patches.Dynamic
             {
                 // Let others know if we have a lock on this entity
                 NitroxId id = NitroxEntity.GetId(__instance.gameObject);
-                bool hasLock = NitroxServiceLocator.LocateService<SimulationOwnership>().HasAnyLockType(id);
+                bool hasLock = Resolve<SimulationOwnership>().HasAnyLockType(id);
 
                 if (hasLock)
                 {
                     TechType techType = CraftData.GetTechType(__instance.gameObject);
-                    NitroxServiceLocator.LocateService<LiveMixinManager>().BroadcastAddHealth(techType, id, healthBack, __instance.health);
+                    Resolve<IPacketSender>().SendIfGameCode<LiveMixinHealthChanged>(new(techType.ToDto(), id, healthBack, __instance.health));
                 }
             }
         }

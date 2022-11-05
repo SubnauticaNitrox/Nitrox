@@ -52,7 +52,7 @@ public class Base_CopyFrom_Patch : NitroxPatch, IDynamicPatch
             if (!NitroxEntity.TryGetObjectFrom(id, out GameObject faceObject) || !faceObject || !faceObject.transform.parent)
             {
                 // We can assume that the object was successfully deleted from now
-                Resolve<IPacketSender>().Send(new DeconstructionCompleted(id, true));
+                SendPacket<DeconstructionCompleted>(new(id, true));
                 Log.Debug($"Face object with the id {id} was successfully deleted");
             }
             else

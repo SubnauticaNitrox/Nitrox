@@ -42,7 +42,7 @@ namespace NitroxClient.GameLogic
             {
                 List<InteractiveChildObjectIdentifier> childIdentifiers = VehicleChildObjectIdentifierHelper.ExtractInteractiveChildren(owner);
                 VehicleChildUpdate vehicleChildInteractiveData = new VehicleChildUpdate(ownerId, childIdentifiers);
-                packetSender.Send(vehicleChildInteractiveData);
+                packetSender.SendIfGameCode(vehicleChildInteractiveData);
             }
 
             Transform parent = pickupable.gameObject.transform.parent;
@@ -55,20 +55,15 @@ namespace NitroxClient.GameLogic
             if (player != null)
             {
                 PlayerEquipmentAdded equipmentAdded = new PlayerEquipmentAdded(techType.ToDto(), equippedItem);
-                packetSender.Send(equipmentAdded);
+                packetSender.SendIfGameCode(equipmentAdded);
                 pickupable.gameObject.transform.SetParent(parent);
 
                 return;
             }
 
-            bool playerModule = true;
-            if (ApplicableEquipmentTypes.Contains(Equipment.GetSlotType(slot)))
-            {
-                playerModule = false;
-            }
-
-            ModuleAdded moduleAdded = new ModuleAdded(equippedItem, playerModule);
-            packetSender.Send(moduleAdded);
+            bool playerModule = !ApplicableEquipmentTypes.Contains(Equipment.GetSlotType(slot));
+            ModuleAdded moduleAdded = new(equippedItem, playerModule);
+            packetSender.SendIfGameCode(moduleAdded);
             pickupable.gameObject.transform.SetParent(parent);
         }
 
@@ -81,7 +76,7 @@ namespace NitroxClient.GameLogic
             {
                 TechType techType = pickupable.GetTechType();
                 PlayerEquipmentRemoved equipmentAdded = new PlayerEquipmentRemoved(techType.ToDto(), itemId);
-                packetSender.Send(equipmentAdded);
+                packetSender.SendIfGameCode(equipmentAdded);
 
                 return;
             }
@@ -91,17 +86,13 @@ namespace NitroxClient.GameLogic
             {
                 List<InteractiveChildObjectIdentifier> childIdentifiers = VehicleChildObjectIdentifierHelper.ExtractInteractiveChildren(owner);
                 VehicleChildUpdate vehicleChildInteractiveData = new VehicleChildUpdate(ownerId, childIdentifiers);
-                packetSender.Send(vehicleChildInteractiveData);
+                packetSender.SendIfGameCode(vehicleChildInteractiveData);
             }
 
-            bool playerModule = true;
-            if (ApplicableEquipmentTypes.Contains(Equipment.GetSlotType(slot)))
-            {
-                playerModule = false;
-            }
+            bool playerModule = !ApplicableEquipmentTypes.Contains(Equipment.GetSlotType(slot));
 
             ModuleRemoved moduleRemoved = new ModuleRemoved(ownerId, slot, itemId, playerModule);
-            packetSender.Send(moduleRemoved);
+            packetSender.SendIfGameCode(moduleRemoved);
         }
 
         public void AddItems(List<EquippedItemData> equippedItems)

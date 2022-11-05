@@ -12,7 +12,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(MedicalCabinet __instance)
         {
-            NitroxServiceLocator.LocateService<MedkitFabricator>().Clicked(__instance);
+            Resolve<MedkitFabricator>().Clicked(__instance);
         }
 
         public override void Patch(Harmony harmony)

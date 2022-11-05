@@ -24,7 +24,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 return true;
             }
 
-            SimulationOwnership simulationOwnership = NitroxServiceLocator.LocateService<SimulationOwnership>();
+            SimulationOwnership simulationOwnership = Resolve<SimulationOwnership>();
             NitroxId id = NitroxEntity.GetId(vehicle.gameObject);
 
             if (simulationOwnership.HasExclusiveLock(id))
@@ -46,7 +46,7 @@ namespace NitroxPatcher.Patches.Dynamic
             if (lockAquired)
             {
                 VehicleDockingBay dockingBay = context.Target.dockingBay;
-                NitroxServiceLocator.LocateService<Vehicles>().BroadcastVehicleUndocking(dockingBay, dockingBay.GetDockedVehicle(), true);
+                Resolve<Vehicles>().BroadcastVehicleUndocking(dockingBay, dockingBay.GetDockedVehicle(), true);
 
                 skipPrefix = true;
                 context.Target.OnHandClick(context.GuiHand);

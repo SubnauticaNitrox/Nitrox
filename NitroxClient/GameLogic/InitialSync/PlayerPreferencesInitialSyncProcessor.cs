@@ -62,15 +62,12 @@ public class PlayerPreferencesInitialSyncProcessor : InitialSyncProcessor
             return;
         }
         
-        using (packetSender.Suppress<SignalPingPreferenceChanged>())
+        // We don't want to set the color for a remote player's signal
+        if (!isRemotePlayerPing)
         {
-            // We don't want to set the color for a remote player's signal
-            if (!isRemotePlayerPing)
-            {
-                pingInstance.SetColor(preference.Color);
-            }
-            pingInstance.SetVisible(preference.Visible);
+            pingInstance.SetColor(preference.Color);
         }
+        pingInstance.SetVisible(preference.Visible);
     }
 
     // Right after initial sync modifications, uGUI_PingEntry elements don't show their updated state

@@ -14,11 +14,11 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             if (!__instance.livemixin.IsAlive() || __instance.IsExtinguished())
             {
-                NitroxServiceLocator.LocateService<Fires>().OnDouse(__instance, 10000);
+                Resolve<Fires>().OnDouse(__instance, 10000);
             }
             else
             {
-                NitroxServiceLocator.LocateService<Fires>().OnDouse(__instance, amount);
+                Resolve<Fires>().OnDouse(__instance, amount);
             }
         }
 

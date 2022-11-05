@@ -65,7 +65,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 float newHealth = Math.Min(live.health + addHealth, live.maxHealth);
                 result = newHealth - num;
 
-                SimulationOwnership simulationOwnership = NitroxServiceLocator.LocateService<SimulationOwnership>();
+                SimulationOwnership simulationOwnership = Resolve<SimulationOwnership>();
                 NitroxId id = NitroxEntity.GetId(live.gameObject);
 
                 // For now, we only control the LiveMixin for vehicles (not even repair nodes at a cyclops)
@@ -81,7 +81,7 @@ namespace NitroxPatcher.Patches.Dynamic
                     {
                         // Another player simulates this entity. Send the weld info
                         Log.Debug($"Broadcast weld action for {id}");
-                        NitroxServiceLocator.LocateService<LocalPlayer>().BroadcastWeld(id, addHealth);
+                        Resolve<LocalPlayer>().BroadcastWeld(id, addHealth);
                     }
                 }
                 else

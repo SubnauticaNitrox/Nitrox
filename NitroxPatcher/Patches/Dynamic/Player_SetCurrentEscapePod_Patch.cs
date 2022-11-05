@@ -21,7 +21,7 @@ namespace NitroxPatcher.Patches.Dynamic
             {
                 podId = NitroxEntity.GetId(value.gameObject);
             }
-            NitroxServiceLocator.LocateService<LocalPlayer>().BroadcastEscapePodChange(Optional.OfNullable(podId));
+            Resolve<LocalPlayer>().BroadcastEscapePodChange(Optional.OfNullable(podId));
         }
 
         public override void Patch(Harmony harmony)

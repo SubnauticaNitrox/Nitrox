@@ -26,7 +26,7 @@ namespace NitroxPatcher.Patches.Dynamic
                     NitroxId instanceId = NitroxEntity.GetId(__instance.gameObject);
                     BasicItemData batteryData = new(instanceId, NitroxEntity.GetId(battery), SerializationHelper.GetBytes(battery));
 
-                    NitroxServiceLocator.LocateService<StorageSlots>().EnergyMixinValueChanged(instanceId, __instance.charge, batteryData);
+                    Resolve<StorageSlots>().EnergyMixinValueChanged(instanceId, __instance.charge, batteryData);
                 }
             }
         }

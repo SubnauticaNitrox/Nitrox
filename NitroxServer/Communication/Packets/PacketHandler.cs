@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
@@ -11,6 +12,7 @@ namespace NitroxServer.Communication.Packets
 {
     public class PacketHandler
     {
+        private readonly ThreadLocal<Type[]> makeGenericParamsSharedArray = new(() => new Type[1]);
         private readonly PlayerManager playerManager;
         private readonly DefaultServerPacketProcessor defaultServerPacketProcessor;
 
@@ -36,8 +38,8 @@ namespace NitroxServer.Communication.Packets
         private void ProcessAuthenticated(Packet packet, Player player)
         {
             Type serverPacketProcessorType = typeof(AuthenticatedPacketProcessor<>);
-            Type packetType = packet.GetType();
-            Type packetProcessorType = serverPacketProcessorType.MakeGenericType(packetType);
+            makeGenericParamsSharedArray.Value[0] = packet.GetType();
+            Type packetProcessorType = serverPacketProcessorType.MakeGenericType(makeGenericParamsSharedArray.Value);
 
             Optional<object> opProcessor = NitroxServiceLocator.LocateOptionalService(packetProcessorType);
 
@@ -57,8 +59,8 @@ namespace NitroxServer.Communication.Packets
             try
             {
                 Type serverPacketProcessorType = typeof(UnauthenticatedPacketProcessor<>);
-                Type packetType = packet.GetType();
-                Type packetProcessorType = serverPacketProcessorType.MakeGenericType(packetType);
+                makeGenericParamsSharedArray.Value[0] = packet.GetType();
+                Type packetProcessorType = serverPacketProcessorType.MakeGenericType(makeGenericParamsSharedArray.Value);
 
                 PacketProcessor processor = (PacketProcessor)NitroxServiceLocator.LocateService(packetProcessorType);
                 processor.ProcessPacket(packet, connection);

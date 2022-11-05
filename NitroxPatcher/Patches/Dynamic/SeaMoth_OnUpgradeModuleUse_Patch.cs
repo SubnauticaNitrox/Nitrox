@@ -14,7 +14,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static bool Prefix(SeaMoth __instance, TechType techType, int slotID, out PacketSuppressor<ItemContainerRemove> __state)
         {
-            __state = null;
+            __state = default;
 
             switch (techType)
             {
@@ -32,7 +32,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(PacketSuppressor<ItemContainerRemove> __state)
         {
-            __state?.Dispose();
+            __state.Dispose();
         }
 
         public override void Patch(Harmony harmony)

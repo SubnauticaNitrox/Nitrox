@@ -25,8 +25,8 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public override void Patch(Harmony harmony)
         {
-            localPlayer = NitroxServiceLocator.LocateService<LocalPlayer>();
-            simulationOwnership = NitroxServiceLocator.LocateService<SimulationOwnership>();
+            localPlayer = Resolve<LocalPlayer>();
+            simulationOwnership = Resolve<SimulationOwnership>();
             PatchPostfix(harmony, TARGET_METHOD);
         }
     }

@@ -128,7 +128,7 @@ namespace NitroxServer.Communication.LiteNetLib
         private void OnPacketReceived(WrapperPacket wrapperPacket, NetPeer peer)
         {
             NitroxConnection connection = GetConnection(peer.Id);
-            Packet packet = Packet.Deserialize(wrapperPacket.packetData);
+            Packet packet = Packet.Deserialize(wrapperPacket.PacketData);
             ProcessIncomingData(connection, packet);
         }
 

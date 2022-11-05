@@ -21,7 +21,7 @@ namespace NitroxClient.GameLogic
         public void UpdatePosition(NitroxId id, Vector3 location, Quaternion rotation)
         {
             ItemPosition itemPosition = new ItemPosition(id, location.ToDto(), rotation.ToDto());
-            packetSender.Send(itemPosition);
+            packetSender.SendIfGameCode(itemPosition);
         }
 
         public void PickedUp(GameObject gameObject, TechType techType)
@@ -35,7 +35,7 @@ namespace NitroxClient.GameLogic
             Log.Info("PickedUp " + id + " " + techType);
 
             PickupItem pickupItem = new PickupItem(itemPosition.ToDto(), id, techType.ToDto());
-            packetSender.Send(pickupItem);
+            packetSender.SendIfGameCode(pickupItem);
         }
 
         public void Dropped(GameObject gameObject, TechType techType, Vector3 dropPosition)
@@ -50,7 +50,7 @@ namespace NitroxClient.GameLogic
             Log.Debug("Dropping item with id: " + id);
 
             DroppedItem droppedItem = new DroppedItem(id, waterparkId, techType.ToDto(), dropPosition.ToDto(), gameObject.transform.rotation.ToDto(), bytes);
-            packetSender.Send(droppedItem);
+            packetSender.SendIfGameCode(droppedItem);
         }
 
         private void RemoveAnyRemoteControl(GameObject gameObject)
