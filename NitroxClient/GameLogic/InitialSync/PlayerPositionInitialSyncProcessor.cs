@@ -31,11 +31,12 @@ namespace NitroxClient.GameLogic.InitialSync
             Player.main.cinematicModeActive = true;
 
             Vector3 position = packet.PlayerSpawnData.ToUnity();
+            Quaternion rotation = packet.PlayerSpawnRotation.ToUnity();
             if (Math.Abs(position.x) < 0.0002 && Math.Abs(position.y) < 0.0002 && Math.Abs(position.z) < 0.0002)
             {
                 position = Player.mainObject.transform.position;
             }
-            Player.main.SetPosition(position);
+            Player.main.SetPosition(position, rotation);
 
             // Player.Update is setting SubRootID to null after Player position is set
             using (packetSender.Suppress<EscapePodChanged>())
@@ -77,7 +78,7 @@ namespace NitroxClient.GameLogic.InitialSync
             Quaternion vehicleAngle = rootTransform.rotation;
             position = vehicleAngle * position;
             position = position + rootTransform.position;
-            Player.main.SetPosition(position);
+            Player.main.SetPosition(position, rotation * vehicleAngle);
             yield return Terrain.WaitForWorldLoad();
         }
     }
