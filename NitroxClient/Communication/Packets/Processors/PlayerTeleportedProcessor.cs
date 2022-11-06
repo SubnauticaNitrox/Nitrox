@@ -1,4 +1,5 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
+﻿using System;
+using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
@@ -33,6 +34,13 @@ public class PlayerTeleportedProcessor : ClientPacketProcessor<PlayerTeleported>
         Player.main.SetPosition(packet.DestinationTo.ToUnity());
         // Freeze the player while he's loading its new position
         Player.main.cinematicModeActive = true;
-        CoroutineHost.StartCoroutine(Terrain.WaitForWorldLoad());
+        try
+        {
+            CoroutineHost.StartCoroutine(Terrain.WaitForWorldLoad());
+        } catch (Exception e)
+        {
+            Player.main.cinematicModeActive = false;
+            Log.Warn($"Something wrong happened while waiting for the terrain to load.\n{e}");
+        }
     }
 }
