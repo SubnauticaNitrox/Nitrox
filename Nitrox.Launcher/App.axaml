@@ -26,14 +26,31 @@
             <Setter Property="Height" Value="24" />
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="Source" Value="{Binding NavHeaderImage, Converter={converters:BitmapAssetValueConverter}}" />
+            <Setter Property="Source" Value="/Assets/Images/nitroxLogo.png" />
         </Style>
         <Style Selector="Image.icon">
             <Setter Property="Width" Value="24" />
             <Setter Property="Height" Value="24" />
         </Style>
-        <Style Selector="Border.big">
+        <Style Selector="design|NitroxButton">
+            <Setter Property="Padding" Value="4" />
+            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="Background" Value="#15FFFFFF" />
+            <Setter Property="Child">
+                <Template>
+                    <StackPanel DataContext="{Binding RelativeSource={RelativeSource AncestorType=design:NitroxButton}}">
+                        <TextBlock FontSize="16" Foreground="White" FontWeight="600" VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding Text}" />
+                        <TextBlock FontSize="10" Opacity="0.5" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding Caption}" />
+                    </StackPanel>
+                </Template>
+            </Setter>
+        </Style>
+        <Style Selector="design|NitroxButton.primary">
+            <Setter Property="Background" Value="#007BFF" />
+        </Style>
+        <Style Selector="design|NitroxButton.big">
             <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="Padding" Value="10" />
         </Style>
         <Style Selector="Border.nav">
             <Setter Property="Background" Value="#151516" />

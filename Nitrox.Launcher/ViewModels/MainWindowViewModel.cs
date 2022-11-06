@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Windows.Input;
-using Nitrox.Launcher.Models;
 using Nitrox.Launcher.Models.Design;
 using ReactiveUI;
 
@@ -8,7 +6,6 @@ namespace Nitrox.Launcher.ViewModels;
 
 public class MainWindowViewModel : ReactiveObject, IScreen
 {
-    public string NavHeaderImage => "/Assets/Images/nitroxLogo.png";
     public RoutingState Router { get; } = new();
     public List<INavigationItem> NavigationHeaderItems { get; }
     public List<INavigationItem> NavigationFooterItems { get; }
@@ -28,7 +25,7 @@ public class MainWindowViewModel : ReactiveObject, IScreen
             {
                 ToolTipText = "Configure and start the server",
                 Icon = "/Assets/Images/material-design-icons/server.png",
-                ClickCommand = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(new PlayViewModel(this)))
+                ClickCommand = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(new EmptyServersViewModel(this)))
             },
             new NavigationItem("Library")
             {

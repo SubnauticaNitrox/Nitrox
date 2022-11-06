@@ -25,7 +25,7 @@ public class BitmapAssetValueConverter : MarkupExtension, IValueConverter
         {
             throw new NotSupportedException();
         }
-        if (assetCache.TryGetValue(rawUri, out Bitmap bitmap))
+        if (assetCache.TryGetValue(rawUri, out Bitmap? bitmap))
         {
             return bitmap;
         }

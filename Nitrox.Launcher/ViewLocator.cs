@@ -10,6 +10,7 @@ public class AppViewLocator : IViewLocator
     public IViewFor ResolveView<T>(T viewModel, string? contract = null) => viewModel switch
     {
         PlayViewModel context => new PlayView { DataContext = context },
+        EmptyServersViewModel context => new EmptyServersView { DataContext = context },
         _ => throw new ArgumentOutOfRangeException(nameof(viewModel))
     };
 }
