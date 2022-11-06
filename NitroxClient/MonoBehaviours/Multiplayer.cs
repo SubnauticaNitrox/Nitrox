@@ -36,6 +36,7 @@ namespace NitroxClient.MonoBehaviours
         public static bool Active => Main != null && Main.multiplayerSession.Client.IsConnected;
 
         public static event Action OnBeforeMultiplayerStart;
+        public static event Action OnLoadingCompleted;
         public static event Action OnAfterMultiplayerEnd;
 
         public static void SubnauticaLoadingCompleted()
@@ -162,6 +163,16 @@ namespace NitroxClient.MonoBehaviours
             LoadingScreenVersionText.DisableWarningText();
             DiscordClient.InitializeRPInGame(Main.multiplayerSession.AuthenticationContext.Username, remotePlayerManager.GetTotalPlayerCount(), Main.multiplayerSession.SessionPolicy.MaxConnections);
             CoroutineHost.StartCoroutine(NitroxServiceLocator.LocateService<PlayerChatManager>().LoadChatKeyHint());
+
+            // Here's a place where we don't want errors to stop the code, so we rather continue without handling callbacks than prevent Subnautica from finishing loading
+            try
+            {
+                OnLoadingCompleted?.Invoke();
+            }
+            catch (Exception e)
+            {
+                Log.Warn($"An error occured when calling OnLoadingCompleted callbacks :\n{e}");
+            }
         }
 
         private IEnumerator InitializeLocalPlayerState()
