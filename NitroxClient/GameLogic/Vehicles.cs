@@ -458,51 +458,17 @@ namespace NitroxClient.GameLogic
             NitroxId vehicleId = NitroxEntity.GetId(vehicle.gameObject);
             ushort playerId = multiplayerSession.Reservation.PlayerId;
 
-            VehicleDocking packet = new(vehicleId, dockId, playerId);
-            packetSender.SendIfGameCode(packet);
-
-            PacketSuppressor<PlayerMovement> playerMovementSuppressor = packetSender.Suppress<PlayerMovement>();
-            PacketSuppressor<VehicleMovement> vehicleMovementSuppressor = packetSender.Suppress<VehicleMovement>();
-            vehicle.StartCoroutine(AllowMovementPacketsAfterDockingAnimation(playerMovementSuppressor, vehicleMovementSuppressor));
+            packetSender.SendIfGameCode<VehicleDocking>(new(vehicleId, dockId, playerId));
         }
 
-        public void BroadcastVehicleUndocking(VehicleDockingBay dockingBay, Vehicle vehicle, bool undockingStart)
+        public void BroadcastVehicleUndocking(VehicleDockingBay dockingBay, Vehicle vehicle, bool isUndockStarting)
         {
-            NitroxId dockId = NitroxEntity.GetId(dockingBay.gameObject);
-
-            NitroxId vehicleId = NitroxEntity.GetId(vehicle.gameObject);
             ushort playerId = multiplayerSession.Reservation.PlayerId;
 
-            PacketSuppressor<PlayerMovement> movementSuppressor = packetSender.Suppress<PlayerMovement>();
-            PacketSuppressor<VehicleMovement> vehicleMovementSuppressor = packetSender.Suppress<VehicleMovement>();
-            if (!undockingStart)
-            {
-                movementSuppressor.Dispose();
-                vehicleMovementSuppressor.Dispose();
-            }
-
-            VehicleUndocking packet = new(vehicleId, dockId, playerId, undockingStart);
+            NitroxId dockId = NitroxEntity.GetId(dockingBay.gameObject);
+            NitroxId vehicleId = NitroxEntity.GetId(vehicle.gameObject);
+            VehicleUndocking packet = new(vehicleId, dockId, playerId, isUndockStarting);
             packetSender.SendIfGameCode(packet);
-        }
-
-        /*
-         A poorly timed movement packet will cause major problems when docking because the remote 
-         player will think that the player is no longer in a vehicle.  Unfortunetly, the game calls
-         the vehicle exit code before the animation completes so we need to suppress any side affects.
-         Two thing we want to protect against:
-
-             1) If a movement packet is received when docking, the player might exit the vehicle early
-                and it will show them sitting outside the vehicle during the docking animation.
-
-             2) If a movement packet is received when undocking, the player game object will be stuck in
-                place until after the player exits the vehicle.  This causes the player body to strech to
-                the current cyclops position.
-        */
-        public IEnumerator AllowMovementPacketsAfterDockingAnimation(PacketSuppressor<PlayerMovement> playerMovementSuppressor, PacketSuppressor<VehicleMovement> vehicleMovementSuppressor)
-        {
-            yield return new WaitForSeconds(3.0f);
-            playerMovementSuppressor.Dispose();
-            vehicleMovementSuppressor.Dispose();
         }
 
         public IEnumerator UpdateVehiclePositionAfterSpawn(VehicleModel vehicleModel, GameObject gameObject, float cooldown)
@@ -512,15 +478,13 @@ namespace NitroxClient.GameLogic
             VehicleMovementData vehicleMovementData = new BasicVehicleMovementData(vehicleModel.TechType, vehicleModel.Id, gameObject.transform.position.ToDto(), gameObject.transform.rotation.ToDto());
             ushort playerId = ushort.MaxValue;
 
-            packetSender.SendIfGameCode(new VehicleMovement(playerId, vehicleMovementData));
+            packetSender.Send(new VehicleMovement(playerId, vehicleMovementData));
         }
 
         public void BroadcastOnPilotModeChanged(Vehicle vehicle, bool isPiloting)
         {
             ushort playerId = multiplayerSession.Reservation.PlayerId;
-
-            VehicleOnPilotModeChanged packet = new VehicleOnPilotModeChanged(NitroxEntity.GetId(vehicle.gameObject), playerId, isPiloting);
-            packetSender.SendIfGameCode(packet);
+            packetSender.SendIfGameCode<VehicleOnPilotModeChanged>(new(NitroxEntity.GetId(vehicle.gameObject), playerId, isPiloting));
         }
 
         public void SetOnPilotMode(NitroxId vehicleId, ushort playerId, bool isPiloting)

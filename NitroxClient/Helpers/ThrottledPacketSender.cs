@@ -34,11 +34,6 @@ namespace NitroxClient.Helpers
         public bool SendThrottled(Packet packet, float throttleTime = 0.1f)
         {
             Type packetType = packet.GetType();
-            if (packetSender.IsPacketSuppressed(packetType))
-            {
-                return false;
-            }
-
             if (throttledPackets.TryGetValue(packetType, out ThrottledPacket throttledPacket))
             {
                 throttledPacket.ReplacePacket(packet, throttleTime);
@@ -46,7 +41,7 @@ namespace NitroxClient.Helpers
             }
 
             throttledPackets.Add(packetType, new ThrottledPacket(packet, throttleTime));
-            packetSender.Send(packet);
+            packetSender.SendIfGameCode(packet);
             return true;
         }
 

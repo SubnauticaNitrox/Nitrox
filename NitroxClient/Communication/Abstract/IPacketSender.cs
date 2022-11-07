@@ -1,5 +1,4 @@
-﻿using System;
-using NitroxModel.Packets;
+﻿using NitroxModel.Packets;
 
 namespace NitroxClient.Communication.Abstract
 {
@@ -11,12 +10,9 @@ namespace NitroxClient.Communication.Abstract
         void Send<T>(T packet) where T : Packet;
 
         /// <summary>
-        ///     Sends the packet if it originated from UWE code (or if patched in), unless game code was called by Nitrox.
+        ///     Sends the packet if the call stack originated from UWE code.
+        ///     If the game code was called by Nitrox, triggering a packet send in injected code, no packet is send.
         /// </summary>
         bool SendIfGameCode<T>(T packet) where T : Packet;
-        
-        bool IsPacketSuppressed(Type packetType);
-
-        PacketSuppressor<T> Suppress<T>();
     }
 }

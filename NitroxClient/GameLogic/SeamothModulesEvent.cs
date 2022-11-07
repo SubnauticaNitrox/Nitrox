@@ -34,7 +34,7 @@ namespace NitroxClient.GameLogic
             if (torpedoType != null) // Dont send packet if torpedo storage is empty
             {
                 Transform aimingTransform = Player.main.camRoot.GetAimingTransform();
-                SeamothModulesAction changed = new SeamothModulesAction(techType.ToDto(), slotID, id, aimingTransform.forward.ToDto(), aimingTransform.rotation.ToDto());
+                SeamothModulesAction changed = new(techType.ToDto(), slotID, id, aimingTransform.forward.ToDto(), aimingTransform.rotation.ToDto());
                 packetSender.SendIfGameCode(changed);
             }
         }

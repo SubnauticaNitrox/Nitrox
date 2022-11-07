@@ -24,8 +24,6 @@ namespace NitroxClient.Communication.MultiplayerSession
             initSerializerTask = Task.Run(Packet.InitSerializer);
         }
 
-        private readonly HashSet<Type> suppressedPacketsTypes = new HashSet<Type>();
-
         public IClient Client { get; }
         public string IpAddress { get; private set; }
         public int ServerPort { get; private set; }
@@ -135,11 +133,12 @@ namespace NitroxClient.Communication.MultiplayerSession
                 {
                     i -= 2;
                 }
+                // Did we cause this code to run?
                 if (!frames.ElementAtOrDefault(i)?.GetMethod().DeclaringType?.Assembly.GetName().Name.StartsWith("NitroxClient", StringComparison.OrdinalIgnoreCase) ?? false)
                 {
                     return false;
                 }
-                // Call stack is started by Nitrox, check if packet was sent via injected code. If so, suppress packet.
+                // Call stack is started by Nitrox, check if packet was sent via/passing injected code. If so, suppress packet.
                 while (--i >= 0)
                 {
                     if (frames[i].GetMethod().DeclaringType?.Name.EndsWith("_Patch") ?? false)
@@ -155,22 +154,11 @@ namespace NitroxClient.Communication.MultiplayerSession
             {
                 return false;
             }
-            if (suppressedPacketsTypes.Contains(typeof(T)))
-            {
-                return false;
-            }
-            
+
             Client.Send(packet);
             return true;
         }
         
-        public bool IsPacketSuppressed(Type packetType) => suppressedPacketsTypes.Contains(packetType);
-
-        public PacketSuppressor<T> Suppress<T>()
-        {
-            return new PacketSuppressor<T>(suppressedPacketsTypes);
-        }
-
         public void UpdateConnectionState(IMultiplayerSessionConnectionState sessionConnectionState)
         {
             Validate.NotNull(sessionConnectionState);

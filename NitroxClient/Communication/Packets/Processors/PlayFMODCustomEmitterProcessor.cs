@@ -9,14 +9,6 @@ namespace NitroxClient.Communication.Packets.Processors;
 
 public class PlayFMODCustomEmitterProcessor : ClientPacketProcessor<PlayFMODCustomEmitter>
 {
-    private readonly IPacketSender packetSender;
-
-    public PlayFMODCustomEmitterProcessor(IPacketSender packetSender)
-    {
-        this.packetSender = packetSender;
-    }
-
-
     public override void Process(PlayFMODCustomEmitter packet)
     {
         GameObject soundSource = NitroxEntity.RequireObjectFrom(packet.Id);
