@@ -23,17 +23,15 @@ namespace NitroxClient.GameLogic
         public static bool SURPRESS_ESCAPE_POD_AWAKE_METHOD;
 
         private readonly IPacketSender packetSender;
-        private readonly IMultiplayerSession multiplayerSession;
 
         private readonly Vector3 playerSpawnRelativeToEscapePodPosition = new Vector3(0.9f, 2.1f, 0);
         private readonly Dictionary<NitroxId, GameObject> escapePodsById = new Dictionary<NitroxId, GameObject>();
 
         public NitroxId MyEscapePodId;
 
-        public EscapePodManager(IPacketSender packetSender, IMultiplayerSession multiplayerSession)
+        public EscapePodManager(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
-            this.multiplayerSession = multiplayerSession;
         }
 
         public void AssignPlayerToEscapePod(EscapePodModel escapePod, bool firstTimeSpawning)
@@ -54,8 +52,9 @@ namespace NitroxClient.GameLogic
                 Log.Error("Escape pod did not have a rigid body!");
             }
 
-            Player.main.transform.position = EscapePod.main.playerSpawn.position;
-            Player.main.transform.rotation = EscapePod.main.playerSpawn.rotation;
+            Transform playerTransform = Player.main.transform;
+            playerTransform.position = EscapePod.main.playerSpawn.position;
+            playerTransform.rotation = EscapePod.main.playerSpawn.rotation;
             if (firstTimeSpawning)
             {
                 Player.main.currentEscapePod = EscapePod.main;

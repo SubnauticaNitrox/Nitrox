@@ -72,7 +72,7 @@ namespace NitroxClient.GameLogic
 
             Transform inventoryTransform = new GameObject("Inventory").transform;
             inventoryTransform.SetParent(Body.transform);
-            Inventory = new ItemsContainer(6, 8, inventoryTransform, "NitroxInventoryStorage_" + PlayerName, null);
+            Inventory = new ItemsContainer(6, 8, inventoryTransform, ItemContainers.NITROX_INVENTORY_STORAGE_LABEL + PlayerName, null);
             foreach (Pickupable item in inventoryItems)
             {
                 Inventory.UnsafeAdd(new InventoryItem(item));

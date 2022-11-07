@@ -13,6 +13,7 @@ namespace NitroxClient.GameLogic
 {
     public class ItemContainers
     {
+        public const string NITROX_INVENTORY_STORAGE_LABEL = "NitroxInventoryStorage_";
         private readonly IPacketSender packetSender;
 
         public ItemContainers(IPacketSender packetSender)
@@ -98,7 +99,7 @@ namespace NitroxClient.GameLogic
             }
             ItemsContainer container = opContainer.Value;
             Pickupable pickupable = item.RequireComponent<Pickupable>();
-            if (container.RemoveItem(pickupable, true) && container._label.StartsWith("NitroxInventoryStorage_"))
+            if (container.RemoveItem(pickupable, true) && container._label.StartsWith(NITROX_INVENTORY_STORAGE_LABEL))
             {
                 // If we don't destroy the item here, it will stay forever in the remote player's inventory
                 Object.Destroy(item);

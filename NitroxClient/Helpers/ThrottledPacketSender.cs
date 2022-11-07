@@ -7,7 +7,7 @@ namespace NitroxClient.Helpers
 {
     public class ThrottledPacketSender
     {
-        private readonly Dictionary<Type, ThrottledPacket> throttledPackets = new Dictionary<Type, ThrottledPacket>();
+        private readonly Dictionary<Type, ThrottledPacket> throttledPackets = new();
         private readonly IPacketSender packetSender;
 
         public ThrottledPacketSender(IPacketSender packetSender)
@@ -40,8 +40,12 @@ namespace NitroxClient.Helpers
                 return true;
             }
 
-            throttledPackets.Add(packetType, new ThrottledPacket(packet, throttleTime));
-            packetSender.SendIfGameCode(packet);
+            throttledPacket = new ThrottledPacket(packet, throttleTime);
+            if (packetSender.SendIfGameCode(packet))
+            {
+                // Add it for future throttling against this packet type.
+                throttledPackets.Add(packetType, throttledPacket);
+            }
             return true;
         }
 
