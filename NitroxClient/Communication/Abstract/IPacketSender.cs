@@ -5,7 +5,7 @@ namespace NitroxClient.Communication.Abstract
     public interface IPacketSender
     {
         /// <summary>
-        ///     Sends the packet. Returns true if packet was not suppressed.
+        ///     Sends the packet.
         /// </summary>
         void Send<T>(T packet) where T : Packet;
 
