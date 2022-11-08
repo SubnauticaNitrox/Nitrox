@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession.ConnectionState;
 using NitroxClient.GameLogic;
+using NitroxModel;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
@@ -141,7 +140,7 @@ namespace NitroxClient.Communication.MultiplayerSession
                 // Call stack is started by Nitrox, check if packet was sent via/passing injected code. If so, suppress packet.
                 while (--i >= 0)
                 {
-                    if (frames[i].GetMethod().DeclaringType?.Name.EndsWith("_Patch") ?? false)
+                    if (typeof(IPatch).IsAssignableFrom(frames[i].GetMethod().DeclaringType))
                     {
                         return true;
                     }
