@@ -33,10 +33,4 @@
     <ItemGroup>
         <UpToDateCheckInput Remove="Assets\Images\**" />
     </ItemGroup>
-    <ItemGroup>
-      <Compile Update="Views\EmptyServersView.axaml.cs">
-        <DependentUpon>ServerView.axaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
-    </ItemGroup>
 </Project>

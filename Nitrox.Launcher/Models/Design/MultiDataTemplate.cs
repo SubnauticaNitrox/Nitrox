@@ -4,6 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Markup.Xaml.Templates;
 using Avalonia.Metadata;
+using JetBrains.Annotations;
 
 namespace Nitrox.Launcher.Models.Design;
 
@@ -13,11 +14,12 @@ namespace Nitrox.Launcher.Models.Design;
 public class MultiDataTemplate : AvaloniaList<DataTemplate>, IDataTemplate
 {
     [Content]
+    [UsedImplicitly]
     public List<DataTemplate> Content { get; set; } = new();
     
     public bool Match(object data)
     {
-        if (data is not INavigationItem navItem)
+        if (data is not INavigationItem)
         {
             return false;
         }

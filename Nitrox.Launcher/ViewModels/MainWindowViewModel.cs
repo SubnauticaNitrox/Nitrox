@@ -25,7 +25,7 @@ public class MainWindowViewModel : ReactiveObject, IScreen
             {
                 ToolTipText = "Configure and start the server",
                 Icon = "/Assets/Images/material-design-icons/server.png",
-                ClickCommand = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(new EmptyServersViewModel(this)))
+                ClickCommand = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(new ServersViewModel(this)))
             },
             new NavigationItem("Library")
             {

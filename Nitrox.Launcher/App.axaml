@@ -7,12 +7,17 @@
         <FluentTheme Mode="Light"/>
         <Style Selector="TextBlock">
             <Setter Property="Foreground" Value="#FFFFFF" />
+            <Setter Property="TextWrapping" Value="Wrap" />
         </Style>
         <Style Selector="Button">
             <Setter Property="Foreground" Value="#FFFFFF" />
         </Style>
         <Style Selector="ToolTip">
             <Setter Property="Background" Value="#FFFFFF" />
+        </Style>
+        <Style Selector="TextBlock.header">
+            <Setter Property="FontSize" Value="32" />
+            <Setter Property="FontWeight" Value="600" />
         </Style>
         <Style Selector="ToolTip Border">
             <Setter Property="Opacity" Value="0.85" />
@@ -32,25 +37,53 @@
             <Setter Property="Width" Value="24" />
             <Setter Property="Height" Value="24" />
         </Style>
-        <Style Selector="design|NitroxButton">
-            <Setter Property="Padding" Value="4" />
+        <Style Selector="Button.nitrox">
+            <Setter Property="Padding" Value="16 8.73" />
             <Setter Property="CornerRadius" Value="4" />
             <Setter Property="Background" Value="#15FFFFFF" />
-            <Setter Property="Child">
-                <Template>
-                    <StackPanel DataContext="{Binding RelativeSource={RelativeSource AncestorType=design:NitroxButton}}">
-                        <TextBlock FontSize="16" Foreground="White" FontWeight="600" VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding Text}" />
-                        <TextBlock FontSize="10" Opacity="0.5" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding Caption}" />
-                    </StackPanel>
-                </Template>
+            <Setter Property="Content">
+                <Setter.Value>
+                    <Template>
+                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <TextBlock Text="{Binding (design:NitroxAttached.Text), RelativeSource={RelativeSource AncestorType=Button}}" />
+                            <TextBlock FontSize="10" Opacity="0.5" Text="{Binding (design:NitroxAttached.Subtext), RelativeSource={RelativeSource AncestorType=Button}}" />
+                        </StackPanel>
+                    </Template>
+                </Setter.Value>
             </Setter>
         </Style>
-        <Style Selector="design|NitroxButton.primary">
+        <Style Selector="Button.nitrox /template/ ContentPresenter">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.15" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="Button.nitrox:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType=Button}}" />
+            <Setter Property="Opacity" Value="0.4" />
+        </Style>
+        <Style Selector="Button.nitrox TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="Button.nitrox.primary">
             <Setter Property="Background" Value="#007BFF" />
         </Style>
-        <Style Selector="design|NitroxButton.big">
+        <Style Selector="Button.nitrox.abort">
+            <Setter Property="Background" Value="#FF005C" />
+        </Style>
+        <Style Selector="Button.nitrox TextBlock:nth-child(1)">
+            <Setter Property="FontSize" Value="14" />
+        </Style>
+        <Style Selector="Button.nitrox.big">
             <Setter Property="CornerRadius" Value="8" />
             <Setter Property="Padding" Value="10" />
+            <Setter Property="Height" Value="62" />
+        </Style>
+        <Style Selector="Button.nitrox.big TextBlock:nth-child(1)">
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontWeight" Value="600" />
         </Style>
         <Style Selector="Border.nav">
             <Setter Property="Background" Value="#151516" />
@@ -60,6 +93,7 @@
             <Setter Property="Background" Value="#000000" />
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
             <Setter Property="VerticalContentAlignment" Value="Stretch" />
+            <Setter Property="Padding" Value="34 45"></Setter>
         </Style>
         <Style Selector="Border.nav ItemsControl">
             <Setter Property="ItemsPanel">
@@ -84,6 +118,34 @@
                     </design:MultiDataTemplate>
                 </Setter.Value>
             </Setter>
+        </Style>
+        <Style Selector="Border.serverEntry">
+            <Setter Property="Background" Value="#151516" />
+            <Setter Property="CornerRadius" Value="12" />
+            <Setter Property="Margin" Value="0 26" />
+            <Setter Property="Padding" Value="22 20" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="Height" Value="96" />
+        </Style>
+        <Style Selector="Border.serverEntry StackPanel.description > :is(Control)">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="6 0" />
+        </Style>
+        <Style Selector="Border.serverEntry StackPanel.description > :is(Control):nth-child(1)">
+            <Setter Property="Margin" Value="0 0 6 0" />
+        </Style>
+        <Style Selector="Border.serverEntry StackPanel.description > :is(Control):nth-last-child(1)">
+            <Setter Property="Margin" Value="6 0 0 0" />
+        </Style>
+        <Style Selector="Border.serverEntry StackPanel.description Ellipse">
+            <Setter Property="Height" Value="6" />
+            <Setter Property="Width" Value="6" />
+        </Style>
+        <Style Selector="Border.serverEntry StackPanel.description TextBlock">
+            <Setter Property="Opacity" Value="0.5" />
+        </Style>
+        <Style Selector=".actions > :is(Control)">
+            <Setter Property="Margin" Value="8 0 0 0"></Setter>
         </Style>
     </Application.Styles>
 </Application>
