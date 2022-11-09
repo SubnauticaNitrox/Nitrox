@@ -22,6 +22,7 @@ public abstract class RoutableViewModelBase : ReactiveObject, IRoutableViewModel
     }
 
     public IScreen HostScreen { get; }
+    protected MainWindowViewModel MainViewModel => (MainWindowViewModel)HostScreen;
 
     protected RoutableViewModelBase(IScreen hostScreen)
     {

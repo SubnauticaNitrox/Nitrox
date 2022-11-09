@@ -14,7 +14,7 @@
             <TextBlock FontSize="32" TextAlignment="Center" FontWeight="600">No servers here yet</TextBlock>
             <TextBlock Margin="0 10 0 0" FontSize="16" TextAlignment="Center">Create a new server to start hosting your Subnautica Multiplayer world.</TextBlock>
         
-            <Button Classes="nitrox primary big" Width="350" Margin="0 40 0 0" design:NitroxAttached.Text="CREATE NEW SERVER" design:NitroxAttached.Subtext="MULTIPLAYER" HorizontalAlignment="Center" />
+            <Button Classes="nitrox primary big" Command="{Binding CreateServerCommand}" Width="350" Margin="0 40 0 0" design:NitroxAttached.Text="CREATE NEW SERVER" design:NitroxAttached.Subtext="MULTIPLAYER" HorizontalAlignment="Center" />
         </StackPanel>
         
         <!-- If there are servers: -->

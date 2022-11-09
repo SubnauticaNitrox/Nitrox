@@ -11,6 +11,7 @@
         Title="Nitrox Launcher"
         Icon="/Assets/Images/nitroxIco.png"
         FontFamily="/Assets/Fonts/Inter-Black.ttf"
+        WindowStartupLocation="CenterScreen"
         Width="1000" Height="600"
         MinWidth="600" MinHeight="400">
     <Grid>
