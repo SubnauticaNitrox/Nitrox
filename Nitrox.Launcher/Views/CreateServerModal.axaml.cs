@@ -11,6 +11,7 @@ namespace Nitrox.Launcher.Views
         {
             this.WhenActivated(d =>
             {
+                d(ViewModel!.BackCommand.Subscribe(Close));
                 d(ViewModel!.CreateServerCommand.Subscribe(Close));
             });
             InitializeComponent();

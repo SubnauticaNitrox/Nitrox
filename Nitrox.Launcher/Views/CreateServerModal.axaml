@@ -27,8 +27,8 @@
         </StackPanel>
         <ContentControl VerticalAlignment="Bottom" Background="#ECECEC" Height="80" Padding="24 0">
             <Panel>
-                <Button Content="Back" HorizontalAlignment="Left" />
-                <Button Command="{Binding CreateServerCommand}" Classes="nitrox primary" Content="Create" HorizontalAlignment="Right" />
+                <Button HotKey="{Binding BackHotkey}" Command="{Binding BackCommand}" Content="Back" HorizontalAlignment="Left" />
+                <Button HotKey="{Binding CreateHotkey}" Command="{Binding CreateServerCommand}" Classes="nitrox primary" Content="Create" HorizontalAlignment="Right" />
             </Panel>
         </ContentControl>
     </Panel>
