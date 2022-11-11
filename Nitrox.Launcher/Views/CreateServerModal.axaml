@@ -3,6 +3,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModels="clr-namespace:Nitrox.Launcher.ViewModels"
+        xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Nitrox.Launcher.Views.CreateServerModal"
         d:DataContext="{Binding RelativeSource={RelativeSource AncestorType=viewModels:CreateServerViewModel}}"
@@ -16,7 +17,7 @@
     <Panel>
         <StackPanel>
             <TextBlock Text="SERVER NAME" />
-            <TextBox Text="{Binding Name}" />
+            <TextBox design:NitroxAttached.Focus="" Text="{Binding Name}" />
             <TextBlock Text="GAMEMODE" />
             <StackPanel Orientation="Horizontal">
                 <RadioButton GroupName="gamemode" Content="Freedom" />
