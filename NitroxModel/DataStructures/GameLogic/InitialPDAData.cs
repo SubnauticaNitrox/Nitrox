@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using BinaryPack.Attributes;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
@@ -15,6 +16,7 @@ namespace NitroxModel.DataStructures.GameLogic
         public List<PDALogEntry> PDALogEntries { get; set; }
         public List<PDAProgressEntry> CachedProgress { get; set; }
 
+        [IgnoreConstructor]
         protected InitialPDAData()
         {
             //Constructor for serialization. Has to be "protected" for json serialization.

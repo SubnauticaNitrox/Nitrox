@@ -1,4 +1,5 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
+﻿using NitroxClient.Communication.Abstract;
+using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Packets;
@@ -9,10 +10,12 @@ namespace NitroxClient.Communication.Packets.Processors;
 public class DeconstructionCompletedProcessor : ClientPacketProcessor<DeconstructionCompleted>
 {
     private readonly GeometryRespawnManager geometryRespawnManager;
+    private readonly IPacketSender packetSender;
 
-    public DeconstructionCompletedProcessor(GeometryRespawnManager geometryRespawnManager)
+    public DeconstructionCompletedProcessor(GeometryRespawnManager geometryRespawnManager, IPacketSender packetSender)
     {
         this.geometryRespawnManager = geometryRespawnManager;
+        this.packetSender = packetSender;
     }
     public override void Process(DeconstructionCompleted packet)
     {
@@ -20,7 +23,10 @@ public class DeconstructionCompletedProcessor : ClientPacketProcessor<Deconstruc
         if (deconstructing.TryGetComponent(out Constructable constructable))
         {
             constructable.constructedAmount = 0;
-            constructable.Deconstruct();
+            using (packetSender.Suppress<DeconstructionCompleted>())
+            {
+                constructable.Deconstruct();
+            }
         }
         else
         {

@@ -9,9 +9,9 @@ namespace NitroxModel.Packets
         public NitroxId PieceId { get; }
         public NitroxId BaseId { get; }
 
-        public ConstructionCompleted(NitroxId id, NitroxId baseId)
+        public ConstructionCompleted(NitroxId pieceId, NitroxId baseId)
         {
-            PieceId = id;
+            PieceId = pieceId;
             BaseId = baseId;
         }
     }

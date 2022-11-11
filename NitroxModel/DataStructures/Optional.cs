@@ -40,12 +40,9 @@ namespace NitroxModel.DataStructures.Util
                 if (isObj || filter.Key.IsAssignableFrom(type))
                 {
                     // Only create the list in memory when required.
-                    if (valueChecks == null)
-                    {
-                        valueChecks = new List<Func<object, bool>>();
-                    }
+                    valueChecks ??= new List<Func<object, bool>>();
 
-                    // Exclude check for Optional<object> if the type doesn't match the type of the filter (because it'll always fail anyway be null for `o as T`) 
+                    // Exclude check for Optional<object> if the type doesn't match the type of the filter (because it'll always be null for `o as T`) 
                     valueChecks.Add(isObj ? o => !filter.Key.IsInstanceOfType(o) || filter.Value(o) : filter.Value);
                 }
             }
@@ -160,8 +157,8 @@ namespace NitroxModel.DataStructures.Util
 
     public static class Optional
     {
-        internal static Dictionary<Type, Func<object, bool>> ValueConditions = new Dictionary<Type, Func<object, bool>>();
-        public static OptionalEmpty Empty { get; } = new OptionalEmpty();
+        internal static readonly Dictionary<Type, Func<object, bool>> ValueConditions = new();
+        public static OptionalEmpty Empty { get; } = new();
 
         public static Optional<T> Of<T>(T value) where T : class => Optional<T>.Of(value);
         public static Optional<T> OfNullable<T>(T value) where T : class => Optional<T>.OfNullable(value);

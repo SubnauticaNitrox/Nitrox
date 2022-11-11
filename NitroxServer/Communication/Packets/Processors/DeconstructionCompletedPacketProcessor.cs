@@ -18,6 +18,12 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(DeconstructionCompleted packet, Player player)
         {
+            if (packet.Absolute)
+            {
+                // In this case we don't want to notify other clients as they already processed the modifications on their own
+                baseManager.BasePieceForceDeconstruct(packet.Id);
+                return;
+            }
             baseManager.BasePieceDeconstructionCompleted(packet.Id);
             playerManager.SendPacketToOtherPlayers(packet, player);
         }

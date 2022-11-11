@@ -12,6 +12,8 @@ public class BaseMoonpoolSpawnProcessor : BasePieceSpawnProcessor
         TechType.BaseMoonpool
     };
 
+    protected override bool ShouldRerunSpawnProcessor => true;
+
     protected override void SpawnPostProcess(Base latestBase, Int3 latestCell, GameObject finishedPiece)
     {
         NitroxId moonpoolId = NitroxEntity.GetId(finishedPiece);

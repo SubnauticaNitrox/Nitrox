@@ -90,6 +90,9 @@ namespace NitroxClient.GameLogic.InitialSync
                     Player.main.infectionRevealed = true;
                 }
             }
+            // We need to start it at least once for everything that's in the PDA to load
+            Player.main.GetPDA().Open(PDATab.Inventory);
+            Player.main.GetPDA().Close();
         }
 
         private void SetPlayerGameMode(ServerGameMode gameMode)
@@ -98,7 +101,7 @@ namespace NitroxClient.GameLogic.InitialSync
             GameModeUtils.SetGameMode((GameModeOption)(int)gameMode, GameModeOption.None);
         }
 
-        private void SetPlayerCompletedGoals(ISet<string> completedGoals)
+        private void SetPlayerCompletedGoals(IEnumerable<string> completedGoals)
         {
             GoalManager.main.completedGoalNames.AddRange(completedGoals);
             PlayerWorldArrows.main.completedCustomGoals.AddRange(completedGoals);

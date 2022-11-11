@@ -33,11 +33,12 @@ namespace NitroxServer
         public NitroxVector3? LastStoredPosition { get; set; }
         public Optional<NitroxId> LastStoredSubRootID { get; set; }
         public ThreadSafeSet<string> CompletedGoals { get; }
+        public ThreadSafeDictionary<string, PingInstancePreference> PingInstancePreferences { get; set; }
 
         public Player(ushort id, string name, bool isPermaDeath, PlayerContext playerContext, NitroxConnection connection,
                       NitroxVector3 position, NitroxId playerId, Optional<NitroxId> subRootId, Perms perms, PlayerStatsData stats,
                       IEnumerable<NitroxTechType> usedItems, IEnumerable<string> quickSlotsBinding,
-                      IEnumerable<EquippedItemData> equippedItems, IEnumerable<EquippedItemData> modules, HashSet<string> completedGoals)
+                      IEnumerable<EquippedItemData> equippedItems, IEnumerable<EquippedItemData> modules, HashSet<string> completedGoals, IDictionary<string, PingInstancePreference> pingInstancePreferences)
         {
             Id = id;
             Name = name;
@@ -57,6 +58,7 @@ namespace NitroxServer
             this.modules = new ThreadSafeList<EquippedItemData>(modules);
             visibleCells = new ThreadSafeSet<AbsoluteEntityCell>();
             CompletedGoals = new ThreadSafeSet<string>(completedGoals);
+            PingInstancePreferences = new(pingInstancePreferences);
         }
 
         public static bool operator ==(Player left, Player right)

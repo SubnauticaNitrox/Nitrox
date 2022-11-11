@@ -13,15 +13,17 @@ namespace NitroxModel.DataStructures.GameLogic
         public string GoalKey { get; set; }
         [ProtoMember(3)]
         public string GoalType { get; set; }
+        
+        public NitroxScheduledGoal(float timeExecute, string goalKey, string goalType)
+        {
+            TimeExecute = timeExecute;
+            GoalKey = goalKey;
+            GoalType = goalType;
+        }
 
         public static NitroxScheduledGoal From(float timeExecute, string goalKey, string goalType)
         {
-            return new NitroxScheduledGoal
-            {
-                TimeExecute = timeExecute,
-                GoalKey = goalKey,
-                GoalType = goalType
-            };
+            return new NitroxScheduledGoal(timeExecute, goalKey, goalType);
         }
 
         public override string ToString()

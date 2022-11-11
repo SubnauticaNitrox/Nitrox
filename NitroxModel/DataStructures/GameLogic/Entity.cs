@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
+using BinaryPack.Attributes;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures.Unity;
 using ProtoBufNet;
@@ -61,7 +61,7 @@ namespace NitroxModel.DataStructures.GameLogic
 
         [ProtoMember(11)]
         public EntityMetadata Metadata { get; set; }
-        
+
         /// <summary>
         ///     If set, this entity already exists as a gameobject in the world (maybe as a child of a prefab we already spawned).
         ///     This id can be used to find the object and update the corresponding id.
@@ -71,6 +71,7 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public List<Entity> ChildEntities { get; set; } = new List<Entity>();
 
+        [IgnoreConstructor]
         protected Entity()
         {
             // Constructor for serialization. Has to be "protected" for json serialization.
@@ -78,7 +79,7 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public Entity(NitroxVector3 localPosition, NitroxQuaternion localRotation, NitroxVector3 scale, NitroxTechType techType, int level, string classId, bool spawnedByServer, NitroxId id, int? existingGameObjectChildIndex, Entity parentEntity = null)
         {
-            Transform = new NitroxTransform(localPosition, localRotation, scale, this);
+            Transform = new NitroxTransform(localPosition, localRotation, scale);
             TechType = techType;
             Id = id;
             Level = level;
@@ -99,7 +100,7 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public Entity(NitroxVector3 localPosition, NitroxQuaternion localRotation, NitroxVector3 scale, NitroxTechType techType, int level, string classId, bool spawnedByServer, NitroxId waterParkId, byte[] serializedGameObject, bool existsInGlobalRoot, NitroxId id)
         {
-            Transform = new NitroxTransform(localPosition, localRotation, scale, this);
+            Transform = new NitroxTransform(localPosition, localRotation, scale);
             TechType = techType;
             Id = id;
             Level = level;
@@ -111,21 +112,27 @@ namespace NitroxModel.DataStructures.GameLogic
             ExistingGameObjectChildIndex = null;
         }
 
+        /// <remarks>Used for deserialization</remarks>
+        public Entity(NitroxTransform transform, NitroxTechType techType, NitroxId id, int level, string classId, bool spawnedByServer, NitroxId waterParkId, byte[] serializedGameObject, bool existsInGlobalRoot, NitroxId parentId, EntityMetadata metadata, int? existingGameObjectChildIndex, List<Entity> childEntities)
+        {
+            Transform = transform;
+            TechType = techType;
+            Id = id;
+            Level = level;
+            ClassId = classId;
+            SpawnedByServer = spawnedByServer;
+            WaterParkId = waterParkId;
+            SerializedGameObject = serializedGameObject;
+            ExistsInGlobalRoot = existsInGlobalRoot;
+            ParentId = parentId;
+            Metadata = metadata;
+            ExistingGameObjectChildIndex = existingGameObjectChildIndex;
+            ChildEntities = childEntities;
+        }
+
         public override string ToString()
         {
-            return "[Entity Transform: " + Transform + " TechType: " + TechType + " Id: " + Id + " Level: " + Level + " classId: " + ClassId + " ChildEntities: " + string.Join(",\n ", ChildEntities) + " SpawnedByServer: " + SpawnedByServer + " ExistingGameObjectChildIndex: " + ExistingGameObjectChildIndex + "]";
-        }
-
-        [ProtoAfterDeserialization]
-        private void ProtoAfterDeserialization()
-        {
-            Transform.Entity = this;
-        }
-
-        [OnDeserialized]
-        private void JsonAfterDeserialization(StreamingContext context)
-        {
-            ProtoAfterDeserialization();
+            return $"[Entity\n Transform: {Transform}\n TechType: {TechType}\n Id: {Id}\n Level: {Level}\n ClassId: {ClassId}\n ChildEntities: {string.Join(",\n ", ChildEntities)}\n SpawnedByServer: {SpawnedByServer}\n ExistingGameObjectChildIndex: {ExistingGameObjectChildIndex}]";
         }
     }
 }

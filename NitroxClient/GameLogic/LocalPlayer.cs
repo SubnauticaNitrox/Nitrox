@@ -5,12 +5,12 @@ using NitroxClient.GameLogic.PlayerLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
+using NitroxModel_Subnautica.DataStructures;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
-using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 using UnityEngine.Rendering;
 using Object = UnityEngine.Object;
@@ -34,6 +34,7 @@ namespace NitroxClient.GameLogic
         public string PlayerName => multiplayerSession.AuthenticationContext.Username;
         public ushort PlayerId => multiplayerSession.Reservation.PlayerId;
         public PlayerSettings PlayerSettings => multiplayerSession.PlayerSettings;
+
         public Perms Permissions;
         
         public LocalPlayer(IMultiplayerSession multiplayerSession, IPacketSender packetSender)
@@ -46,12 +47,6 @@ namespace NitroxClient.GameLogic
             Permissions = Perms.PLAYER;
         }
 
-        public void BroadcastStats(float oxygen, float maxOxygen, float health, float food, float water, float infectionAmount)
-        {
-            PlayerStats playerStats = new PlayerStats(multiplayerSession.Reservation.PlayerId, oxygen, maxOxygen, health, food, water, infectionAmount);
-            packetSender.Send(playerStats);
-        }
-
         public void UpdateLocation(Vector3 location, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation, Optional<VehicleMovementData> vehicle)
         {
             Movement movement;
@@ -61,50 +56,27 @@ namespace NitroxClient.GameLogic
             }
             else
             {
-                movement = new Movement(multiplayerSession.Reservation.PlayerId, location.ToDto(), velocity.ToDto(), bodyRotation.ToDto(), aimingRotation.ToDto());
+                movement = new PlayerMovement(multiplayerSession.Reservation.PlayerId, location.ToDto(), velocity.ToDto(), bodyRotation.ToDto(), aimingRotation.ToDto());
             }
 
             packetSender.Send(movement);
         }
 
-        public void AnimationChange(AnimChangeType type, AnimChangeState state)
-        {
-            AnimationChangeEvent animEvent = new AnimationChangeEvent(multiplayerSession.Reservation.PlayerId, (int)type, (int)state);
-            packetSender.Send(animEvent);
-        }
+        public void AnimationChange(AnimChangeType type, AnimChangeState state) => packetSender.Send(new AnimationChangeEvent(multiplayerSession.Reservation.PlayerId, (int)type, (int)state));
 
-        public void BroadcastDeath(Vector3 deathPosition)
-        {
-            PlayerDeathEvent playerDeath = new PlayerDeathEvent(multiplayerSession.Reservation.PlayerId, deathPosition.ToDto());
-            packetSender.Send(playerDeath);
-        }
+        public void BroadcastStats(float oxygen, float maxOxygen, float health, float food, float water, float infectionAmount) => packetSender.Send(new PlayerStats(multiplayerSession.Reservation.PlayerId, oxygen, maxOxygen, health, food, water, infectionAmount));
 
-        public void BroadcastSubrootChange(Optional<NitroxId> subrootId)
-        {
-            SubRootChanged packet = new SubRootChanged(multiplayerSession.Reservation.PlayerId, subrootId);
-            packetSender.Send(packet);
-        }
-        public void BroadcastEscapePodChange(Optional<NitroxId> escapePodId)
-        {
-            EscapePodChanged packet = new EscapePodChanged(multiplayerSession.Reservation.PlayerId, escapePodId);
-            packetSender.Send(packet);
-        }
+        public void BroadcastDeath(Vector3 deathPosition) => packetSender.Send(new PlayerDeathEvent(multiplayerSession.Reservation.PlayerId, deathPosition.ToDto()));
 
-        public void BroadcastWeld(NitroxId id, float healthAdded)
-        {
-            WeldAction packet = new WeldAction(id, healthAdded);
-            packetSender.Send(packet);
-        }
+        public void BroadcastSubrootChange(Optional<NitroxId> subrootId) => packetSender.Send(new SubRootChanged(multiplayerSession.Reservation.PlayerId, subrootId));
 
-        public void BroadcastHeldItemChanged(NitroxId itemId, PlayerHeldItemChanged.ChangeType techType, NitroxTechType isFirstTime)
-        {
-            packetSender.Send(new PlayerHeldItemChanged(multiplayerSession.Reservation.PlayerId, itemId, techType, isFirstTime));
-        }
+        public void BroadcastEscapePodChange(Optional<NitroxId> escapePodId) => packetSender.Send(new EscapePodChanged(multiplayerSession.Reservation.PlayerId, escapePodId));
 
-        public void BroadcastQuickSlotsBindingChanged(List<string> binding)
-        {
-            packetSender.Send(new PlayerQuickSlotsBindingChanged(binding));
-        }
+        public void BroadcastWeld(NitroxId id, float healthAdded) => packetSender.Send(new WeldAction(id, healthAdded));
+
+        public void BroadcastHeldItemChanged(NitroxId itemId, PlayerHeldItemChanged.ChangeType techType, NitroxTechType isFirstTime) => packetSender.Send(new PlayerHeldItemChanged(multiplayerSession.Reservation.PlayerId, itemId, techType, isFirstTime));
+
+        public void BroadcastQuickSlotsBindingChanged(List<string> binding) => packetSender.Send(new PlayerQuickSlotsBindingChanged(binding));
 
         private GameObject CreateBodyPrototype()
         {
@@ -112,7 +84,7 @@ namespace NitroxClient.GameLogic
 
             // Cheap fix for showing head, much easier since male_geo contains many different heads
             prototype.GetComponentInParent<Player>().head.shadowCastingMode = ShadowCastingMode.On;
-            GameObject clone = Object.Instantiate(prototype, Multiplayer.Main.transform);
+            GameObject clone = Object.Instantiate(prototype, Multiplayer.Main.transform, false);
             prototype.GetComponentInParent<Player>().head.shadowCastingMode = ShadowCastingMode.ShadowsOnly;
 
             clone.SetActive(false);

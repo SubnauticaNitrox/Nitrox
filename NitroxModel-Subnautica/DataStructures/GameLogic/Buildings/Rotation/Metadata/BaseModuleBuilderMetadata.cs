@@ -1,9 +1,10 @@
 ﻿using System;
+using BinaryPack.Attributes;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
 using ProtoBufNet;
 
-namespace NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation
+namespace NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation.Metadata
 {
     [Serializable]
     [ProtoContract]
@@ -16,12 +17,13 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation
         [ProtoMember(2)]
         public int Direction { get; set; }
 
-        protected BaseModuleBuilderMetadata() : base(typeof(BaseAddModuleGhost))
+        [IgnoreConstructor]
+        protected BaseModuleBuilderMetadata()
         {
             // Constructor for serialization. Has to be "protected" for json serialization.
         }
 
-        public BaseModuleBuilderMetadata(NitroxInt3 cell, int direction) : base(typeof(BaseAddModuleGhost))
+        public BaseModuleBuilderMetadata(NitroxInt3 cell, int direction)
         {
             Cell = cell;
             Direction = direction;

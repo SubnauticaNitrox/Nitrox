@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using BinaryPack.Attributes;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.MultiplayerSession;
@@ -14,6 +15,7 @@ namespace NitroxModel.DataStructures.GameLogic
         public Optional<NitroxId> SubRootId { get; }
         public List<NitroxTechType> EquippedTechTypes { get; }
 
+        [IgnoreConstructor]
         protected InitialRemotePlayerData()
         {
             // Constructor for serialization. Has to be "protected" for json serialization.

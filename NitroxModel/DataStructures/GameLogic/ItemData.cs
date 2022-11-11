@@ -1,13 +1,15 @@
 ﻿using System;
+using BinaryPack.Attributes;
 using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
     [Serializable]
     [ProtoContract]
-    [ProtoInclude(50, typeof(EquippedItemData))]
-    [ProtoInclude(51, typeof(PlantableItemData))]
-    public class ItemData
+    [ProtoInclude(50, typeof(BasicItemData))]
+    [ProtoInclude(51, typeof(EquippedItemData))]
+    [ProtoInclude(52, typeof(PlantableItemData))]
+    public abstract class ItemData
     {
         [ProtoMember(1)]
         public NitroxId ContainerId { get; }
@@ -18,6 +20,7 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoMember(3)]
         public byte[] SerializedData { get; }
 
+        [IgnoreConstructor]
         protected ItemData()
         {
             // Constructor for serialization. Has to be "protected" for json serialization.
@@ -32,7 +35,7 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public override string ToString()
         {
-            return "[ItemData ContainerId: " + ContainerId + "Id: " + ItemId + "]";
+            return $"[ItemData - ContainerId: {ContainerId}, Id: {ItemId}]";
         }
     }
 }

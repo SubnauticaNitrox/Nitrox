@@ -56,7 +56,7 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
 
             rebreatherRenderer.material.SetTexture("_MainTex", rebreatherRenderer.material.mainTexture);
             rebreatherRenderer.material.SetTexture("_SpecTex", rebreatherRenderer.material.mainTexture);
-            rebreatherRenderer.material.SetTexture("_BumpMap", rebreatherRenderer.material.GetTexture("player_mask_01_normal"));
+            rebreatherRenderer.material.SetTexture("_BumpMap", rebreatherRenderer.material.GetTexture("_BumpMap"));
 
             rebreatherRenderer.materials[2].shader = marmosetShader;
             rebreatherRenderer.materials[2].shaderKeywords = new List<string>

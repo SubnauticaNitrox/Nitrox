@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Exceptions;
 using NitroxClient.Communication.MultiplayerSession;
@@ -12,6 +13,7 @@ using NitroxClient.GameLogic.PlayerLogic.PlayerPreferences;
 using NitroxClient.GameLogic.Settings;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.MultiplayerSession;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
@@ -58,7 +60,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             Hide();
         }
 
-        public void Show(string ip, int port)
+        public async Task ShowAsync(string ip, int port)
         {
             NitroxServiceLocator.BeginNewLifetimeScope();
             multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
@@ -81,7 +83,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
             playerNameInputField.text = activePlayerPreference.PlayerName;
 
-            StartMultiplayerClient();
+            await StartMultiplayerClientAsync();
         }
 
         private void Hide()
@@ -104,7 +106,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             }
             else if (UnityEngine.Input.GetKeyDown(KeyCode.Escape))
             {
-                OnCancelClick();
+                OnCancelClick(true);
             }
         }
 
@@ -146,7 +148,6 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             }
 
             colorPicker.onColorChange.RemoveListener(OnColorChange);
-
             isSubscribed = false;
         }
 
@@ -165,7 +166,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             playerNameInputField.ActivateInputField();
         }
 
-        private void StartMultiplayerClient()
+        private async Task StartMultiplayerClientAsync()
         {
             if (multiplayerClient == null)
             {
@@ -176,7 +177,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
             try
             {
-                multiplayerSession.Connect(serverIp, serverPort);
+                await multiplayerSession.ConnectAsync(serverIp, serverPort);
             }
             catch (ClientConnectionFailedException)
             {
@@ -193,14 +194,17 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                         Log.InGame(Language.main.Get("Nitrox_FirewallInterfering"));
                     }
                 }
-                OnCancelClick();
+                OnCancelClick(false);
             }
         }
 
-        private void OnCancelClick()
+        private void OnCancelClick(bool returnToMpMenu)
         {
             StopMultiplayerClient();
-            rightSideMainMenu.OpenGroup("Multiplayer");
+            if (returnToMpMenu)
+            {
+                rightSideMainMenu.OpenGroup("Multiplayer");
+            }
             Hide();
         }
 
@@ -216,7 +220,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             }
             preferencesManager.SetPreference(serverIp, new PlayerPreference(playerName, colorPicker.currentColor));
 
-            AuthenticationContext authenticationContext = passwordEntered ? new AuthenticationContext(playerName, serverPassword) : new AuthenticationContext(playerName);
+            AuthenticationContext authenticationContext = new AuthenticationContext(playerName, passwordEntered ? Optional.Of(serverPassword) : Optional.Empty);
 
             multiplayerSession.RequestSessionReservation(new PlayerSettings(colorPicker.currentColor.ToDto()), authenticationContext);
         }
@@ -266,7 +270,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                         () =>
                         {
                             multiplayerSession.Disconnect();
-                            multiplayerSession.Connect(serverIp, serverPort);
+                            multiplayerSession.ConnectAsync(serverIp, serverPort);
                         });
                     break;
 
@@ -350,7 +354,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
             //Click events
             Button cancelButton = cancelButtonGameObject.GetComponent<Button>();
-            cancelButton.onClick.AddListener(OnCancelClick);
+            cancelButton.onClick.AddListener(() => OnCancelClick(true));
 
             Button joinButton = joinButtonGameObject.GetComponent<Button>();
             joinButton.onClick.AddListener(OnJoinClick);
@@ -623,7 +627,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                         if (GUILayout.Button(Language.main.Get("Nitrox_Cancel")))
                         {
                             HidePasswordWindow();
-                            OnCancelClick();
+                            OnCancelClick(true);
                         }
                     }
                 });

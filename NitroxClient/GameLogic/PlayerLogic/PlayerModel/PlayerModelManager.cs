@@ -102,13 +102,9 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel
         private static IEnumerator ApplyPlayerColor(INitroxPlayer player, IEnumerable<IColorSwapManager> colorSwapManagers)
         {
             ColorSwapAsyncOperation swapOperation = new(player, colorSwapManagers);
+
             swapOperation.BeginColorSwap();
-
-            while (!swapOperation.IsColorSwapComplete())
-            {
-                yield return new WaitForSeconds(0.1f);
-            }
-
+            yield return new WaitUntil(() => swapOperation.IsColorSwapComplete());
             swapOperation.ApplySwappedColors();
         }
     }

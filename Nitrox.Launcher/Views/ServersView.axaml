@@ -1,0 +1,64 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:viewModels="clr-namespace:Nitrox.Launcher.ViewModels"
+             xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
+             xmlns:launcher="clr-namespace:Nitrox.Launcher"
+             x:Class="Nitrox.Launcher.Views.ServersView"
+             d:DataContext="{Binding RelativeSource={RelativeSource AncestorType=viewModels:ServersViewModel}}">
+    
+    <Grid>
+        <!-- If no servers defined:-->
+        <StackPanel IsVisible="{Binding !Servers.Count}" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Image Source="/Assets/Images/serverIllustration.png" Stretch="None" Margin="0 0 0 73" />
+            <TextBlock FontSize="32" TextAlignment="Center" FontWeight="600">No servers here yet</TextBlock>
+            <TextBlock Margin="0 10 0 0" FontSize="16" TextAlignment="Center">Create a new server to start hosting your Subnautica Multiplayer world.</TextBlock>
+        
+            <Button Classes="nitrox primary big" Command="{Binding CreateServerCommand}" Width="350" Margin="0 40 0 0" design:NitroxAttached.Text="CREATE NEW SERVER" design:NitroxAttached.Subtext="MULTIPLAYER" HorizontalAlignment="Center" />
+        </StackPanel>
+        
+        <!-- If there are servers: -->
+        <StackPanel IsVisible="{Binding Servers.Count}">
+            <TextBlock Classes="header" Text="Servers" />
+            <TextBlock Margin="0 0 0 14" Text="Welcome to your Subnautica multiplayer server. For additional information and to learn more about hosting a server refer to the Nitrox Wiki." />
+            <ItemsControl Items="{Binding Servers}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Classes="serverEntry">
+                            <DockPanel VerticalAlignment="Center">
+                                <Image DockPanel.Dock="Left" Source="/Assets/Images/subnauticaIcon.png" />
+                                <StackPanel DockPanel.Dock="Left" Margin="16 0" VerticalAlignment="Center">
+                                    <TextBlock FontSize="16" FontWeight="600" Text="{Binding Name}" />
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Classes="description">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Ellipse Margin="0 0 6 0" Fill="#38C149" IsVisible="{Binding IsOnline}" />
+                                            <Ellipse Margin="0 0 6 0" Fill="#FF5E57" IsVisible="{Binding !IsOnline}" />
+                                            <TextBlock IsVisible="{Binding IsOnline}" Text="Online" />
+                                            <TextBlock IsVisible="{Binding !IsOnline}" Text="Offline" />
+                                        </StackPanel>
+                                        <TextBlock Text="{Binding GameMode}" />
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding Players}" />
+                                            <TextBlock Text="/" />
+                                            <TextBlock Text="{Binding MaxPlayers}" />
+                                            <TextBlock Margin="6 0 0 0" Text="playing" />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </StackPanel>
+                                <StackPanel Classes="actions" DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right">
+                                    <Button IsVisible="{Binding IsOnline}" Classes="nitrox abort" design:NitroxAttached.Text="Stop" Command="{Binding StopCommand}" />
+                                    <Button Classes="nitrox primary" design:NitroxAttached.Text="Manage" Command="{Binding ManageCommand}" />
+                                </StackPanel>
+                            </DockPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+    </Grid>
+</UserControl>

@@ -4,13 +4,14 @@ using System.Windows;
 using NitroxLauncher.Models;
 using NitroxModel;
 using NitroxModel.Discovery;
+using NitroxModel.Helper;
 
 namespace NitroxLauncher.Pages
 {
     public partial class LaunchGamePage : PageBase
     {
         public string PlatformToolTip => GamePlatform.GetAttribute<DescriptionAttribute>()?.Description ?? "Unknown";
-        public Platform GamePlatform => LauncherLogic.Config.SubnauticaPlatform;
+        public Platform GamePlatform => NitroxUser.GamePlatform?.Platform ?? Platform.NONE;
         public string Version => $"{LauncherLogic.ReleasePhase} {LauncherLogic.Version}";
 
         public LaunchGamePage()

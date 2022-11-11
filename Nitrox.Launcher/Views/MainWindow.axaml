@@ -1,0 +1,52 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:rxui="clr-namespace:Avalonia.ReactiveUI;assembly=Avalonia.ReactiveUI"
+        xmlns:app="clr-namespace:Nitrox.Launcher"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="Nitrox.Launcher.Views.MainWindow"
+        d:DataContext="{Binding RelativeSource={RelativeSource AncestorType=vm:MainWindowViewModel}}"
+        Title="Nitrox Launcher"
+        Icon="/Assets/Images/nitroxIco.png"
+        FontFamily="/Assets/Fonts/Inter-Black.ttf"
+        WindowStartupLocation="CenterScreen"
+        Width="1000" Height="600"
+        MinWidth="600" MinHeight="400">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="274" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        
+        <!-- Left side -->
+        <Border Grid.Column="0" Classes="nav">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="60" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+        
+                <!-- The "NITROX" header. -->
+                <Image Grid.Row="0" Classes="header" />
+                <!-- Navigation items -->
+                <ItemsControl Grid.Row="1" Items="{Binding NavigationHeaderItems}" />
+                <ItemsControl Grid.Row="1" Items="{Binding NavigationFooterItems}" VerticalAlignment="Bottom" Margin="0 0 0 20" />
+            </Grid>
+        </Border>
+        
+        <!-- Right side -->
+        <rxui:RoutedViewHost Grid.Column="1" Classes="content" Router="{Binding Router}" PageTransition="{x:Null}">
+            <rxui:RoutedViewHost.DefaultContent>
+                <TextBlock Text="Default content" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </rxui:RoutedViewHost.DefaultContent>
+            <rxui:RoutedViewHost.ViewLocator>
+                <app:AppViewLocator />
+            </rxui:RoutedViewHost.ViewLocator>
+        </rxui:RoutedViewHost>
+    </Grid>
+</Window>

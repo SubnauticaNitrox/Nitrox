@@ -1,4 +1,5 @@
 ﻿using System;
+using BinaryPack.Attributes;
 using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic
@@ -13,6 +14,7 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoMember(2)]
         public string GameObjectNamePath { get; set; }
 
+        [IgnoreConstructor]
         protected InteractiveChildObjectIdentifier()
         {
             // Constructor for serialization. Has to be "protected" for json serialization.

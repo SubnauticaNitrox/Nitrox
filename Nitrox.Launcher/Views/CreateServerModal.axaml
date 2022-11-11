@@ -1,0 +1,36 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:Nitrox.Launcher.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="Nitrox.Launcher.Views.CreateServerModal"
+        d:DataContext="{Binding RelativeSource={RelativeSource AncestorType=viewModels:CreateServerViewModel}}"
+        WindowStartupLocation="CenterOwner"
+        Width="458" Height="352"
+        Title="Create a server">
+    <Window.Styles>
+        <Style Selector="TextBlock">
+            <Setter Property="Foreground" Value="#000000" />
+        </Style>
+    </Window.Styles>
+    <Panel>
+        <StackPanel>
+            <TextBlock Text="SERVER NAME" />
+            <TextBox Text="{Binding Name}" />
+            <TextBlock Text="GAMEMODE" />
+            <StackPanel Orientation="Horizontal">
+                <RadioButton GroupName="gamemode" Content="Freedom" />
+                <RadioButton GroupName="gamemode" Content="Creative" />
+                <RadioButton IsChecked="True" GroupName="gamemode" Content="Survival" />
+                <RadioButton GroupName="gamemode" Content="Hardcode" />
+            </StackPanel>
+        </StackPanel>
+        <ContentControl VerticalAlignment="Bottom" Background="#ECECEC" Height="80" Padding="24 0">
+            <Panel>
+                <Button Content="Back" HorizontalAlignment="Left" />
+                <Button Command="{Binding CreateServerCommand}" Classes="nitrox primary" Content="Create" HorizontalAlignment="Right" />
+            </Panel>
+        </ContentControl>
+    </Panel>
+</Window>

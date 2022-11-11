@@ -12,7 +12,7 @@
       Title="UpdatePage">
 
     <local:PageBase.Resources>
-        <BitmapImage x:Key="NitroxIcon" UriSource="pack://application:,,,/Images/nitroxIco.png" />
+        <BitmapImage x:Key="NitroxIcon" UriSource="pack://application:,,,/Assets/Images/nitroxIco.png" />
     </local:PageBase.Resources>
 
     <Grid Margin="32,0">

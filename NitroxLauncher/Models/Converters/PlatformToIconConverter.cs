@@ -13,17 +13,17 @@ namespace NitroxLauncher.Models.Converters
         {
             if (value is not Platform platform)
             {
-                return "pack://application:,,,/Images/store-icons/missing-2x.png";
+                return "pack://application:,,,/Assets/Images/store-icons/missing-2x.png";
             }
 
             return platform switch
             {
-                Platform.EPIC => "pack://application:,,,/Images/store-icons/epic-2x.png",
-                Platform.STEAM => "pack://application:,,,/Images/store-icons/steam-2x.png",
-                Platform.MICROSOFT => "pack://application:,,,/Images/store-icons/xbox-2x.png",
-                Platform.PIRATED => "pack://application:,,,/Images/store-icons/pirated-2x.png",
-                Platform.DISCORD => "pack://application:,,,/Images/store-icons/discord-2x.png",
-                _ => "pack://application:,,,/Images/store-icons/missing-2x.png",
+                Platform.EPIC => "pack://application:,,,/Assets/Images/store-icons/epic-2x.png",
+                Platform.STEAM => "pack://application:,,,/Assets/Images/store-icons/steam-2x.png",
+                Platform.MICROSOFT => "pack://application:,,,/Assets/Images/store-icons/xbox-2x.png",
+                Platform.PIRATED => "pack://application:,,,/Assets/Images/store-icons/pirated-2x.png",
+                Platform.DISCORD => "pack://application:,,,/Assets/Images/store-icons/discord-2x.png",
+                _ => "pack://application:,,,/Assets/Images/store-icons/missing-2x.png",
             };
         }
 

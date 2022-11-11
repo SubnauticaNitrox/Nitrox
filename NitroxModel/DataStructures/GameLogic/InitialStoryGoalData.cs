@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using BinaryPack.Attributes;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
@@ -11,6 +12,7 @@ namespace NitroxModel.DataStructures.GameLogic
         public List<string> GoalUnlocks { get; set; }
         public List<NitroxScheduledGoal> ScheduledGoals { get; set; }
 
+        [IgnoreConstructor]
         protected InitialStoryGoalData()
         {
             // Constructor for serialization. Has to be "protected" for json serialization.

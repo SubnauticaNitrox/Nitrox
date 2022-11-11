@@ -9,6 +9,6 @@ namespace NitroxClient.GameLogic.InitialSync.Base
     {
         public abstract IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem);
 
-        public List<Type> DependentProcessors { get; } = new List<Type>();
+        public List<Type> DependentProcessors { get; } = new();
     }
 }
