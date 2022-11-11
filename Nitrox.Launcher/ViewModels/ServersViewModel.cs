@@ -1,5 +1,4 @@
-﻿using System.Reactive.Linq;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using Avalonia.Collections;
 using Nitrox.Launcher.ViewModels.Abstract;
 using ReactiveUI;
@@ -15,12 +14,10 @@ namespace Nitrox.Launcher.ViewModels
         {
             CreateServerCommand = ReactiveCommand.CreateFromTask(async () =>
             {
-                CreateServerViewModel serverCreator = new();
-                CreateServerViewModel? result = await MainViewModel.ShowDialog.Handle(serverCreator);
+                CreateServerViewModel? result = await ShowDialogAsync(MainViewModel.CreateServerDialog);
                 if (result == null)
                 {
                     return;
-                    
                 }
                 Servers.Add(new ServerEntry
                 {
@@ -33,7 +30,7 @@ namespace Nitrox.Launcher.ViewModels
 
         public class ServerEntry : ReactiveObject
         {
-            public string Name { get; set; }
+            public string Name { get; set; } = "";
             private bool isOnline;
 
             public bool IsOnline

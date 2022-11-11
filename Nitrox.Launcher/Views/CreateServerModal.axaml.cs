@@ -1,12 +1,11 @@
 using System;
-using Avalonia.Markup.Xaml;
-using Avalonia.ReactiveUI;
 using Nitrox.Launcher.ViewModels;
+using Nitrox.Launcher.Views.Abstract;
 using ReactiveUI;
 
 namespace Nitrox.Launcher.Views
 {
-    public partial class CreateServerModal : ReactiveWindow<CreateServerViewModel>
+    public partial class CreateServerModal : ModalBase<CreateServerViewModel>
     {
         public CreateServerModal()
         {
@@ -14,7 +13,7 @@ namespace Nitrox.Launcher.Views
             {
                 d(ViewModel!.CreateServerCommand.Subscribe(Close));
             });
-            AvaloniaXamlLoader.Load(this);
+            InitializeComponent();
         }
     }
 }

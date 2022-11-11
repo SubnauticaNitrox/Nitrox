@@ -1,28 +1,15 @@
-using System.Threading.Tasks;
 using Avalonia.Markup.Xaml;
-using Avalonia.ReactiveUI;
 using Nitrox.Launcher.ViewModels;
-using ReactiveUI;
+using Nitrox.Launcher.Views.Abstract;
 
 namespace Nitrox.Launcher.Views
 {
-    public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
+    public partial class MainWindow : WindowBase<MainWindowViewModel>
     {
         public MainWindow()
         {
-            this.WhenActivated(d =>
-            {
-                // TODO: Handle disposables
-                d(ViewModel!.ShowDialog.RegisterHandler(DoShowDialogAsync));
-            });
+            RegisterModal<CreateServerModal, CreateServerViewModel>(() => ViewModel!.CreateServerDialog);
             AvaloniaXamlLoader.Load(this);
-        }
-        
-        private async Task DoShowDialogAsync(InteractionContext<CreateServerViewModel, CreateServerViewModel?> interaction)
-        {
-            CreateServerModal dialog = new() { DataContext = interaction.Input };
-            CreateServerViewModel? result = await dialog.ShowDialog<CreateServerViewModel?>(this);
-            interaction.SetOutput(result);
         }
     }
 }

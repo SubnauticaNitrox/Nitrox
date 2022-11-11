@@ -6,7 +6,6 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Nitrox.Launcher.Views.CreateServerModal"
         d:DataContext="{Binding RelativeSource={RelativeSource AncestorType=viewModels:CreateServerViewModel}}"
-        WindowStartupLocation="CenterOwner"
         Width="458" Height="352"
         Title="Create a server">
     <Window.Styles>
