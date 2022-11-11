@@ -16,7 +16,7 @@ public class NitroxDebugManager : MonoBehaviour
     private List<BaseDebugger> debuggers;
     private readonly HashSet<BaseDebugger> prevActiveDebuggers = new();
 
-    private bool showDebuggerList;
+    private bool showDebuggerList = true;
     private bool isDebugging;
     private Rect windowRect;
 
@@ -111,10 +111,10 @@ public class NitroxDebugManager : MonoBehaviour
                 }
             }
             if (showDebuggerList)
-            {
+            {                
                 foreach (BaseDebugger debugger in debuggers)
-                {
-                    debugger.Enabled = GUILayout.Toggle(debugger.Enabled, $"{debugger.DebuggerName} debugger{debugger.HotkeyString}");
+                {                    
+                    debugger.Enabled = GUILayout.Toggle(debugger.Enabled, $"{debugger.DebuggerName} debugger ({debugger.HotkeyString})");
                 }
             }
         }
