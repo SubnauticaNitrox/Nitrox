@@ -138,9 +138,17 @@ namespace NitroxClient.GameLogic
             {
                 PilotingChair = newPilotingChair;
 
-                Validate.NotNull(SubRoot, "Player changed PilotingChair but is not in SubRoot!");
+                MultiplayerCyclops mpCyclops = null;
 
-                MultiplayerCyclops mpCyclops = SubRoot.GetComponent<MultiplayerCyclops>();
+                // For unexpected and expected cases, for example when a player is driving a cyclops but the cyclops is destroyed
+                if (!SubRoot)
+                {
+                    Log.Error("Player changed PilotingChair but is not in SubRoot!");
+                }
+                else
+                {
+                    mpCyclops = SubRoot.GetComponent<MultiplayerCyclops>();
+                }
 
                 if (PilotingChair)
                 {
@@ -155,8 +163,11 @@ namespace NitroxClient.GameLogic
                     SetSubRoot(SubRoot);
                     ArmsController.SetWorldIKTarget(null, null);
 
-                    mpCyclops.CurrentPlayer = null;
-                    mpCyclops.Exit();
+                    if (mpCyclops)
+                    {
+                        mpCyclops.CurrentPlayer = null;
+                        mpCyclops.Exit();
+                    }
                 }
 
                 RigidBody.isKinematic = AnimationController["cyclops_steering"] = newPilotingChair != null;
@@ -248,7 +259,6 @@ namespace NitroxClient.GameLogic
         {
             SetVehicle(null);
             SetSubRoot(null);
-            SetPilotingChair(null);
             AnimationController.UpdatePlayerAnimations = true;
         }
 
