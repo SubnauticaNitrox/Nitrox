@@ -7,6 +7,7 @@ namespace Nitrox.Launcher.ViewModels;
 public class MainWindowViewModel : ReactiveObject, IScreen
 {
     public Interaction<CreateServerViewModel, CreateServerViewModel?> CreateServerDialog { get; } = new();
+    public Interaction<ErrorViewModel, ErrorViewModel?> ErrorDialog { get; } = new();
     public RoutingState Router { get; } = new();
     public List<INavigationItem> NavigationHeaderItems { get; }
     public List<INavigationItem> NavigationFooterItems { get; }

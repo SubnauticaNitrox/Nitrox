@@ -7,7 +7,7 @@ namespace Nitrox.Launcher;
 
 public class AppViewLocator : IViewLocator
 {
-    public IViewFor ResolveView<T>(T viewModel, string? contract = null) => viewModel switch
+    public IViewFor ResolveView<T>(T? viewModel, string? contract = null) => viewModel switch
     {
         PlayViewModel context => new PlayView { DataContext = context },
         ServersViewModel context => new ServersView { DataContext = context },

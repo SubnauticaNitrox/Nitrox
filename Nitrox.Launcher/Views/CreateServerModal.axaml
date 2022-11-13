@@ -7,30 +7,29 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Nitrox.Launcher.Views.CreateServerModal"
         d:DataContext="{Binding RelativeSource={RelativeSource AncestorType=viewModels:CreateServerViewModel}}"
-        Width="458" Height="352"
+        SizeToContent="WidthAndHeight"
+        SystemDecorations="None"
         Title="Create a server">
     <Window.Styles>
         <Style Selector="TextBlock">
-            <Setter Property="Foreground" Value="#000000" />
+            <Setter Property="Foreground" Value="Black" />
         </Style>
     </Window.Styles>
-    <Panel>
-        <StackPanel>
-            <TextBlock Text="SERVER NAME" />
-            <TextBox design:NitroxAttached.Focus="" Text="{Binding Name}" />
-            <TextBlock Text="GAMEMODE" />
-            <StackPanel Orientation="Horizontal">
-                <RadioButton GroupName="gamemode" Content="Freedom" />
-                <RadioButton GroupName="gamemode" Content="Creative" />
-                <RadioButton IsChecked="True" GroupName="gamemode" Content="Survival" />
-                <RadioButton GroupName="gamemode" Content="Hardcode" />
-            </StackPanel>
+    <StackPanel>
+        <TextBlock Text="SERVER NAME" />
+        <TextBox design:NitroxAttached.Focus="" Text="{Binding Name}" />
+        <TextBlock Text="GAMEMODE" />
+        <StackPanel Orientation="Horizontal">
+            <RadioButton GroupName="gamemode" Content="Freedom" />
+            <RadioButton GroupName="gamemode" Content="Creative" />
+            <RadioButton IsChecked="True" GroupName="gamemode" Content="Survival" />
+            <RadioButton GroupName="gamemode" Content="Hardcode" />
         </StackPanel>
-        <ContentControl VerticalAlignment="Bottom" Background="#ECECEC" Height="80" Padding="24 0">
+        <ContentControl VerticalAlignment="Bottom" Background="#ECECEC" Padding="24 20">
             <Panel>
-                <Button HotKey="{Binding BackHotkey}" Command="{Binding BackCommand}" Content="Back" HorizontalAlignment="Left" />
-                <Button HotKey="{Binding CreateHotkey}" Command="{Binding CreateServerCommand}" Classes="nitrox primary" Content="Create" HorizontalAlignment="Right" />
+                <Button Classes="nitrox" HotKey="{Binding BackHotkey}" Command="{Binding BackCommand}" Content="Back" HorizontalAlignment="Left" />
+                <Button Classes="nitrox primary" HotKey="{Binding CreateHotkey}" Command="{Binding CreateServerCommand}" Content="Create" HorizontalAlignment="Right" />
             </Panel>
         </ContentControl>
-    </Panel>
+    </StackPanel>
 </Window>

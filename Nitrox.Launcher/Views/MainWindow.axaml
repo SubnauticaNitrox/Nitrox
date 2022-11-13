@@ -9,7 +9,6 @@
         x:Class="Nitrox.Launcher.Views.MainWindow"
         d:DataContext="{Binding RelativeSource={RelativeSource AncestorType=vm:MainWindowViewModel}}"
         Title="Nitrox Launcher"
-        Icon="/Assets/Images/nitroxIco.png"
         FontFamily="/Assets/Fonts/Inter-Black.ttf"
         WindowStartupLocation="CenterScreen"
         Width="1000" Height="600"

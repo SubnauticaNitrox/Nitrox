@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -13,7 +14,6 @@ namespace Nitrox.Launcher.Models.Design;
 public class NitroxAttached : AvaloniaObject
 {
     public static readonly AttachedProperty<string> TextProperty = AvaloniaProperty.RegisterAttached<NitroxAttached, Interactive, string>("Text");
-
     public static readonly AttachedProperty<string> SubtextProperty = AvaloniaProperty.RegisterAttached<NitroxAttached, Interactive, string>("Subtext");
     public static readonly AttachedProperty<object> FocusProperty = AvaloniaProperty.RegisterAttached<NitroxAttached, Interactive, object>("Focus");
 
@@ -23,6 +23,10 @@ public class NitroxAttached : AvaloniaObject
 
     public static void SetText(AvaloniaObject element, string value)
     {
+        if (element is not Button button || !button.Classes.Contains("nitrox"))
+        {
+            throw new NotSupportedException($@"Button must have class ""nitrox"" to support attached property ""{nameof(TextProperty)}"".");
+        }
         element.SetValue(TextProperty, value);
     }
 
@@ -33,6 +37,10 @@ public class NitroxAttached : AvaloniaObject
 
     public static void SetSubtext(AvaloniaObject element, string value)
     {
+        if (element is not Button button || !button.Classes.Contains("nitrox"))
+        {
+            throw new NotSupportedException($@"Button must have class ""nitrox"" to support attached property ""{nameof(SubtextProperty)}"".");
+        }
         element.SetValue(SubtextProperty, value);
     }
 
@@ -51,23 +59,27 @@ public class NitroxAttached : AvaloniaObject
     /// </summary>
     public static void SetFocus(IAvaloniaObject obj, object value)
     {
+        static async void TryFocusButton(Button btn)
+        {
+            int retries = 200;
+            do
+            {
+                btn.Focus();
+                await Task.Delay(10);
+            } while (!btn.IsFocused && retries-- > 0);
+        }
+
         if (obj is Button button)
         {
-            async void TryFocusButton()
-            {
-                int retries = 200;
-                do
-                {
-                    button.Focus();
-                    await Task.Delay(10);
-                } while (!button.IsFocused && retries-- > 0);
-            }
-
-            Dispatcher.UIThread.Post(TryFocusButton);
+            Dispatcher.UIThread.Post(() => TryFocusButton(button));
         }
         else if (obj is IInputElement input)
         {
             Dispatcher.UIThread.Post(() => FocusManager.Instance?.Focus(input, NavigationMethod.Directional));
+        }
+        else
+        {
+            throw new NotSupportedException($@"Element {obj} must be a {nameof(Button)} or {nameof(IInputElement)} to support attached property ""{nameof(FocusProperty)}""");
         }
         obj.SetValue(FocusProperty, value);
     }

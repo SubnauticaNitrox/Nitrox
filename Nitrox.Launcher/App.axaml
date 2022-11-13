@@ -5,6 +5,9 @@
              x:Class="Nitrox.Launcher.App">
     <Application.Styles>
         <FluentTheme Mode="Light"/>
+        <Style Selector="Window">
+            <Setter Property="Icon" Value="/Assets/Images/nitroxIco.png" />
+        </Style>
         <Style Selector="TextBlock">
             <Setter Property="Foreground" Value="#FFFFFF" />
             <Setter Property="TextWrapping" Value="Wrap" />
@@ -45,8 +48,8 @@
                 <Setter.Value>
                     <Template>
                         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                            <TextBlock Text="{Binding (design:NitroxAttached.Text), RelativeSource={RelativeSource AncestorType=Button}}" />
-                            <TextBlock FontSize="10" Opacity="0.5" Text="{Binding (design:NitroxAttached.Subtext), RelativeSource={RelativeSource AncestorType=Button}}" />
+                            <TextBlock Text="{Binding (design:NitroxAttached.Text), RelativeSource={RelativeSource AncestorType=Button}}" HorizontalAlignment="Center" />
+                            <TextBlock FontSize="10" Opacity="0.5" Text="{Binding (design:NitroxAttached.Subtext), RelativeSource={RelativeSource AncestorType=Button}}" HorizontalAlignment="Center" />
                         </StackPanel>
                     </Template>
                 </Setter.Value>
@@ -61,17 +64,16 @@
             </Setter>
         </Style>
         <Style Selector="Button.nitrox:pointerover /template/ ContentPresenter">
+            <Setter Property="TextBlock.Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
             <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType=Button}}" />
-            <Setter Property="Opacity" Value="0.4" />
-        </Style>
-        <Style Selector="Button.nitrox TextBlock">
-            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="Opacity" Value="0.6" />
         </Style>
         <Style Selector="Button.nitrox.primary">
             <Setter Property="Background" Value="#007BFF" />
         </Style>
         <Style Selector="Button.nitrox.primary:disabled /template/ ContentPresenter">
             <!-- TODO: Nice disabled style (loading indicator?) -->
+            <Setter Property="TextBlock.Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
             <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType=Button}}" />
             <Setter Property="Opacity" Value="0.15" />
         </Style>
@@ -79,7 +81,7 @@
             <Setter Property="Background" Value="#FF005C" />
         </Style>
         <Style Selector="Button.nitrox TextBlock:nth-child(1)">
-            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontSize" Value="24" />
         </Style>
         <Style Selector="Button.nitrox.big">
             <Setter Property="CornerRadius" Value="8" />

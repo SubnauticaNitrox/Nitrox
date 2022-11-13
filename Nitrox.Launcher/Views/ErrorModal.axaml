@@ -1,0 +1,21 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:Nitrox.Launcher.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="Nitrox.Launcher.Views.ErrorModal"
+        d:DataContext="{Binding RelativeSource={RelativeSource AncestorType=viewModels:ErrorViewModel}}"
+        SizeToContent="WidthAndHeight"
+        CanResize="False"
+        Title="{Binding ErrorTitle}">
+    <StackPanel>
+        <TextBlock Padding="5" Foreground="#ff0011" Text="{Binding ErrorText}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+        <ContentControl VerticalAlignment="Bottom" Background="#ECECEC" Padding="24 20">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Classes="actions">
+                <Button Classes="nitrox" HotKey="{Binding CopyToClipboardHotkey}" Command="{Binding CopyToClipboardCommand}" Content="Copy to clipboard" />
+                <Button Classes="nitrox primary" HotKey="{Binding OkHotkey}" Command="{Binding OkCommand}" Content="OK" />
+            </StackPanel>
+        </ContentControl>
+    </StackPanel>
+</Window>
