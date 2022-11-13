@@ -8,6 +8,9 @@ namespace NitroxModel_Subnautica.Packets;
 public class CyclopsDestroyed : Packet
 {
     public NitroxId Id { get; }
+    /// <summary>
+    /// Whether the cyclops was destroyed by a command or not
+    /// </summary>
     public bool Instantly { get; }
 
     public CyclopsDestroyed(NitroxId id, bool instantly)
