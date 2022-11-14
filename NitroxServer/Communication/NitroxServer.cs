@@ -11,6 +11,11 @@ namespace NitroxServer.Communication
 {
     public abstract class NitroxServer
     {
+        static NitroxServer()
+        {
+            Packet.InitSerializer();
+        }
+
         protected readonly int portNumber;
         protected readonly int maxConnections;
         protected readonly bool useUpnpPortForwarding;

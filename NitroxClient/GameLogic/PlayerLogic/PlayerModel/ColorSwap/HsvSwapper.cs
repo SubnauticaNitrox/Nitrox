@@ -6,6 +6,7 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap
     public class HsvSwapper
     {
         private readonly IColorSwapStrategy colorSwapStrategy;
+
         private ColorValueRange alphaValueRange;
         private ColorValueRange hueValueRange;
         private ColorValueRange saturationValueRange;

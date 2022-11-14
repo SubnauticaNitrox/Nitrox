@@ -1,4 +1,5 @@
 ﻿using System;
+using BinaryPack.Attributes;
 using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata
@@ -13,6 +14,7 @@ namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata
         [ProtoMember(2)]
         public bool Hatched { get; }
 
+        [IgnoreConstructor]
         protected IncubatorMetadata()
         {
             //Constructor for serialization. Has to be "protected" for json serialization.

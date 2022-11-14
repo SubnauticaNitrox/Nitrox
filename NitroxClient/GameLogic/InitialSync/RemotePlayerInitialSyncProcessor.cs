@@ -39,7 +39,7 @@ namespace NitroxClient.GameLogic.InitialSync
 
                 if (!IsSwimming(playerData.Position.ToUnity(), playerData.SubRootId))
                 {
-                    player.UpdateAnimation(AnimChangeType.UNDERWATER, AnimChangeState.OFF);
+                    player.UpdateAnimationAndCollider(AnimChangeType.UNDERWATER, AnimChangeState.OFF);
                 }
                 remotePlayersSynced++;
                 yield return null;

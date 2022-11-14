@@ -17,5 +17,13 @@ namespace NitroxModel.Packets
             VehicleId = vehicleId;
             Name = name;
         }
+
+        //// <remarks>Used for deserialization</remarks>
+        public VehicleNameChange(Optional<NitroxId> parentId, NitroxId vehicleId, string name)
+        {
+            ParentId = parentId;
+            VehicleId = vehicleId;
+            Name = name;
+        }
     }
 }

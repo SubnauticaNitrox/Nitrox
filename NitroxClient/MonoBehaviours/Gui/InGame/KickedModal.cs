@@ -3,7 +3,7 @@
 public class KickedModal : Modal
 {
     // When disconnected from the server, we don't want to keep playing
-    public KickedModal() : base(yesButtonText: "OK", freezeGame: true)
+    public KickedModal() : base(yesButtonText: "OK", freezeGame: true, transparency: 1.0f)
     {
     }
 

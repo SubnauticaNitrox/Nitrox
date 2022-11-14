@@ -1,7 +1,10 @@
-﻿using NitroxModel.DataStructures.GameLogic;
+﻿using System;
+using System.IO;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
 using NitroxServer.Serialization;
+using NitroxServer.Serialization.World;
 
 namespace NitroxServer.ConsoleCommands
 {
@@ -20,7 +23,7 @@ namespace NitroxServer.ConsoleCommands
         {
             bool toggle = args.Get<bool>(0);
 
-            serverConfig.Update(c =>
+            serverConfig.Update(Path.Combine(WorldManager.SavesFolderDir, serverConfig.SaveName), c =>
             {
                 if (toggle)
                 {

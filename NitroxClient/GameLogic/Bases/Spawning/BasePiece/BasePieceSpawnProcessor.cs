@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -14,6 +15,10 @@ namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
         private static readonly Dictionary<NitroxId, BasePieceSpawnInfos> spawnProcessorsApplied = new();
 
         protected abstract TechType[] ApplicableTechTypes { get; }
+        /// <summary>
+        /// Some processors don't need to be rerun because the modifications they apply aren't reset when base geometry is rebuilt
+        /// </summary>
+        protected virtual bool ShouldRerunSpawnProcessor { get; }
 
         static BasePieceSpawnProcessor()
         {
@@ -37,20 +42,24 @@ namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
         public static void RunSpawnProcessor(BaseDeconstructable baseDeconstructable, Base latestBase, Int3 latestCell, GameObject finishedPiece)
         {
             TechType techType = baseDeconstructable.recipe;
-            if (finishedPiece.TryGetComponent(out NitroxEntity nitroxEntity))
+            
+            if (RunSpawnProcessor(techType, latestBase, latestCell, finishedPiece))
             {
-                spawnProcessorsApplied[nitroxEntity.Id] = new BasePieceSpawnInfos(techType, latestBase, latestCell);
+                if (finishedPiece.TryGetComponent(out NitroxEntity nitroxEntity))
+                {
+                    spawnProcessorsApplied[nitroxEntity.Id] = new BasePieceSpawnInfos(techType, latestBase, latestCell);
+                }
             }
-            RunSpawnProcessor(techType, latestBase, latestCell, finishedPiece);
         }
 
-        private static void RunSpawnProcessor(TechType techType, Base latestBase, Int3 latestCell, GameObject finishedPiece)
+        private static bool RunSpawnProcessor(TechType techType, Base latestBase, Int3 latestCell, GameObject finishedPiece, bool isReRun = false)
         {
-            if (processorsByType.TryGetValue(techType, out BasePieceSpawnProcessor processor))
+            if (processorsByType.TryGetValue(techType, out BasePieceSpawnProcessor processor) && (!isReRun || processor.ShouldRerunSpawnProcessor))
             {
-                Log.Info($"Found custom BasePieceSpawnProcessor for {techType}");
                 processor.SpawnPostProcess(latestBase, latestCell, finishedPiece);
+                return true;
             }
+            return false;
         }
 
         // Each time an element is built in a base, all the geometries are rebuilt and therefore the modifications done in the SpawnProcessors are erased
@@ -59,8 +68,29 @@ namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
         {
             if (spawnProcessorsApplied.TryGetValue(nitroxId, out BasePieceSpawnInfos basePieceSpawnInfos))
             {
-                RunSpawnProcessor(basePieceSpawnInfos.TechType, basePieceSpawnInfos.LatestBase, basePieceSpawnInfos.LatestCell, finishedPiece);
+                RunSpawnProcessor(basePieceSpawnInfos.TechType, basePieceSpawnInfos.LatestBase, basePieceSpawnInfos.LatestCell, finishedPiece, true);
             }
+        }
+
+        protected void DelayModuleDetection(Base latestBase, Int3 latestCell, GameObject finishedPiece)
+        {
+            latestBase.StartCoroutine(DelayedModuleDetection(latestBase, latestCell, finishedPiece));
+        }
+
+        // Processors may be executed before the finished piece has entirely spawned
+        protected IEnumerator DelayedModuleDetection(Base latestBase, Int3 latestCell, GameObject finishedPiece)
+        {
+            if (!finishedPiece)
+            {
+                yield break;
+            }
+            yield return new WaitForSeconds(0.1f);
+            if (!latestBase || !finishedPiece)
+            {
+                // Happens that multiple delayed coroutine will be there at the same time so we just stop minding about them to let the newer do their job
+                yield break;
+            }
+            SpawnPostProcess(latestBase, latestCell, finishedPiece);
         }
 
         internal struct BasePieceSpawnInfos

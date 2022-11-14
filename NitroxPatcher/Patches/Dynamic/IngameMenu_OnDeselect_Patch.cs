@@ -21,6 +21,10 @@ public class IngameMenu_OnDeselect_Patch : NitroxPatch, IDynamicPatch
         {
             return false;
         }
+        if (Modal.CurrentModal != null)
+        {
+            Modal.CurrentModal.OnDeselect();
+        }
         Modal.CurrentModal = null;
         return true;
     }

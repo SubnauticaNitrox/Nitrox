@@ -13,8 +13,7 @@ namespace NitroxModel_Subnautica.DataStructures.Surrogates
 
         protected override NitroxTechType SetObjectData(NitroxTechType techType, SerializationInfo info)
         {
-            techType.Name = info.GetString("name");
-            return techType;
+            return new NitroxTechType(info.GetString("name"));
         }
     }
 }

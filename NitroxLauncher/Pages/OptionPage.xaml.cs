@@ -1,21 +1,25 @@
 ﻿using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using NitroxLauncher.Models;
 using NitroxModel.Discovery;
+using NitroxModel.Helper;
+using NitroxServer.Serialization.World;
 
 namespace NitroxLauncher.Pages
 {
     public partial class OptionPage : PageBase
     {
-        public Platform GamePlatform => LauncherLogic.Config.SubnauticaPlatform;
-        public string PathToSubnautica => LauncherLogic.Config.SubnauticaPath;
+        public Platform GamePlatform => NitroxUser.GamePlatform?.Platform ?? Platform.NONE;
+        public string PathToSubnautica => NitroxUser.GamePath;
         public string SubnauticaLaunchArguments => LauncherLogic.Config.SubnauticaLaunchArguments;
 
         public OptionPage()
         {
             InitializeComponent();
+            SaveFileLocationTextblock.Text = WorldManager.SavesFolderDir;
 
             ArgumentsTextbox.Text = SubnauticaLaunchArguments;
             if (SubnauticaLaunchArguments != LauncherConfig.DEFAULT_LAUNCH_ARGUMENTS)
@@ -96,6 +100,11 @@ namespace NitroxLauncher.Pages
         {
             OnPropertyChanged(nameof(PathToSubnautica));
             OnPropertyChanged(nameof(GamePlatform));
+        }
+
+        private void OnViewFolder_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start(WorldManager.SavesFolderDir)?.Dispose();
         }
     }
 }

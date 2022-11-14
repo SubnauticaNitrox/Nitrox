@@ -17,6 +17,7 @@ using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UWE;
 
 namespace NitroxClient.MonoBehaviours
 {
@@ -116,7 +117,6 @@ namespace NitroxClient.MonoBehaviours
 
         public IEnumerator StartSession()
         {
-            DevConsole.RegisterConsoleCommand(this, "execute");
             OnBeforeMultiplayerStart?.Invoke();
             yield return StartCoroutine(InitializeLocalPlayerState());
             multiplayerSession.JoinSession();
@@ -129,7 +129,7 @@ namespace NitroxClient.MonoBehaviours
         {
             // Gameplay.
             gameObject.AddComponent<AnimationSender>();
-            gameObject.AddComponent<PlayerMovement>();
+            gameObject.AddComponent<PlayerMovementBroadcaster>();
             gameObject.AddComponent<PlayerDeathBroadcaster>();
             gameObject.AddComponent<PlayerStatsBroadcaster>();
             gameObject.AddComponent<EntityPositionBroadcaster>();
@@ -161,15 +161,7 @@ namespace NitroxClient.MonoBehaviours
 
             LoadingScreenVersionText.DisableWarningText();
             DiscordClient.InitializeRPInGame(Main.multiplayerSession.AuthenticationContext.Username, remotePlayerManager.GetTotalPlayerCount(), Main.multiplayerSession.SessionPolicy.MaxConnections);
-            NitroxServiceLocator.LocateService<PlayerChatManager>().LoadChatKeyHint();
-        }
-
-        private void OnConsoleCommand_execute(NotificationCenter.Notification n)
-        {
-            string[] args = new string[n.data.Values.Count];
-            n.data.Values.CopyTo(args, 0);
-
-            NitroxServiceLocator.LocateService<IPacketSender>().Send(new ServerCommand(args));
+            CoroutineHost.StartCoroutine(NitroxServiceLocator.LocateService<PlayerChatManager>().LoadChatKeyHint());
         }
 
         private IEnumerator InitializeLocalPlayerState()
@@ -177,9 +169,12 @@ namespace NitroxClient.MonoBehaviours
             ILocalNitroxPlayer localPlayer = NitroxServiceLocator.LocateService<ILocalNitroxPlayer>();
             IEnumerable<IColorSwapManager> colorSwapManagers = NitroxServiceLocator.LocateService<IEnumerable<IColorSwapManager>>();
 
+            // This is used to init the lazy GameObject in order to create a real default Body Prototype for other players
+            GameObject body = localPlayer.BodyPrototype;
+            Log.Info($"Init body prototype {body.name}");
+
             ColorSwapAsyncOperation swapOperation = new ColorSwapAsyncOperation(localPlayer, colorSwapManagers).BeginColorSwap();
             yield return new WaitUntil(() => swapOperation.IsColorSwapComplete());
-
             swapOperation.ApplySwappedColors();
 
             // UWE developers added noisy logging for non-whitelisted components during serialization.

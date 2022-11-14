@@ -37,5 +37,10 @@ namespace NitroxServer.Serialization.World
             Build = version.Build;
             Revision = version.Revision;
         }
+
+        public override string ToString()
+        {
+            return $"{Major}.{Minor}.{Build}.{Revision}";
+        }
     }
 }

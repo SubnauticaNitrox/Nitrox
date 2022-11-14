@@ -3,7 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 
-namespace NitroxTest
+namespace Nitrox.Test
 {
     [TestClass]
     public class SetupAssemblyInitializer

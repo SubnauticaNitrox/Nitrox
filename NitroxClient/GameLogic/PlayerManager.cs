@@ -22,6 +22,9 @@ namespace NitroxClient.GameLogic
         private readonly PlayerModelManager playerModelManager;
         private readonly Dictionary<ushort, RemotePlayer> playersById = new Dictionary<ushort, RemotePlayer>();
 
+        public OnCreate onCreate;
+        public OnRemove onRemove;
+
         public PlayerManager(IPacketSender packetSender, ILocalNitroxPlayer localPlayer, PlayerModelManager playerModelManager)
         {
             this.packetSender = packetSender;
@@ -64,6 +67,7 @@ namespace NitroxClient.GameLogic
 
             GameObject remotePlayerBody = CloneLocalPlayerBodyPrototype();
             RemotePlayer remotePlayer;
+
             using (packetSender.Suppress<ItemContainerAdd>())
             {
                 remotePlayer = new RemotePlayer(remotePlayerBody, playerContext, equippedTechTypes, inventoryItems, playerModelManager);
@@ -89,9 +93,10 @@ namespace NitroxClient.GameLogic
             }
 
             playersById.Add(remotePlayer.PlayerId, remotePlayer);
+            onCreate(remotePlayer.PlayerId, remotePlayer);
 
             DiscordClient.UpdatePartySize(GetTotalPlayerCount());
-
+            
             return remotePlayer;
         }
 
@@ -105,13 +110,14 @@ namespace NitroxClient.GameLogic
                     opPlayer.Value.Destroy();
                 }
                 playersById.Remove(playerId);
+                onRemove(playerId, opPlayer.Value);
                 DiscordClient.UpdatePartySize(GetTotalPlayerCount());
             }
         }
 
         private GameObject CloneLocalPlayerBodyPrototype()
         {
-            GameObject clone = Object.Instantiate(localPlayer.BodyPrototype);
+            GameObject clone = Object.Instantiate(localPlayer.BodyPrototype, Multiplayer.Main.transform, false);
             clone.SetActive(true);
             return clone;
         }
@@ -120,5 +126,8 @@ namespace NitroxClient.GameLogic
         {
             return playersById.Count + 1; //Multiplayer-player(s) + you
         }
+
+        public delegate void OnCreate(ushort playerId, RemotePlayer remotePlayer);
+        public delegate void OnRemove(ushort playerId, RemotePlayer remotePlayer);
     }
 }

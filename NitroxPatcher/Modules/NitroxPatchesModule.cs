@@ -14,11 +14,11 @@ public class NitroxPatchesModule : Autofac.Module
         builder
             .RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
             .AssignableTo<IPersistentPatch>()
-            .AsImplementedInterfaces();
+            .AsImplementedInterfaces().SingleInstance();
 
         builder
             .RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
             .AssignableTo<IDynamicPatch>()
-            .AsImplementedInterfaces();
+            .AsImplementedInterfaces().SingleInstance();
     }
 }

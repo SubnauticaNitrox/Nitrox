@@ -1,4 +1,5 @@
 ﻿using System;
+using BinaryPack.Attributes;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.Helper;
@@ -19,8 +20,9 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoMember(3)]
         public int Level { get; }
 
-        private static IMap map = NitroxServiceLocator.LocateService<IMap>();
-        private NitroxInt3 BatchPosition => BatchId * map.BatchSize - map.BatchDimensionCenter;
+        private static readonly Lazy<IMap> map = new(() => NitroxServiceLocator.LocateService<IMap>());
+
+        private NitroxInt3 BatchPosition => BatchId * map.Value.BatchSize - map.Value.BatchDimensionCenter;
         public NitroxInt3 Position => BatchPosition + CellId * GetCellSize();
 
         public NitroxInt3 Center
@@ -32,6 +34,7 @@ namespace NitroxModel.DataStructures.GameLogic
             }
         }
 
+        [IgnoreConstructor]
         protected AbsoluteEntityCell()
         {
             // Constructor for serialization. Has to be "protected" for json serialization.
@@ -48,7 +51,7 @@ namespace NitroxModel.DataStructures.GameLogic
         {
             Level = level;
 
-            NitroxVector3 localPosition = (worldSpace + map.BatchDimensionCenter) / map.BatchSize;
+            NitroxVector3 localPosition = (worldSpace + map.Value.BatchDimensionCenter) / map.Value.BatchSize;
             BatchId = NitroxInt3.Floor(localPosition);
 
             NitroxVector3 cell = (localPosition - BatchId) * GetCellsPerBlock();
@@ -121,7 +124,7 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public NitroxInt3 GetCellSize()
         {
-            return GetCellSize(map.BatchDimensions);
+            return GetCellSize(map.Value.BatchDimensions);
         }
 
         public NitroxInt3 GetCellSize(NitroxInt3 blocksPerBatch)

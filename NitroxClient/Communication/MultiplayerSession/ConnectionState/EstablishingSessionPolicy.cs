@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using NitroxClient.Communication.Abstract;
 using NitroxModel.Helper;
 using NitroxModel.Packets.Exceptions;
@@ -7,7 +8,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
 {
     public class EstablishingSessionPolicy : ConnectionNegotiatingState
     {
-        private string policyRequestCorrelationId;
+        private readonly string policyRequestCorrelationId;
 
         public EstablishingSessionPolicy(string policyRequestCorrelationId)
         {
@@ -17,7 +18,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
 
         public override MultiplayerSessionConnectionStage CurrentStage => MultiplayerSessionConnectionStage.ESTABLISHING_SERVER_POLICY;
 
-        public override void NegotiateReservation(IMultiplayerSessionConnectionContext sessionConnectionContext)
+        public override Task NegotiateReservationAsync(IMultiplayerSessionConnectionContext sessionConnectionContext)
         {
             try
             {
@@ -29,6 +30,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
                 Disconnect(sessionConnectionContext);
                 throw;
             }
+            return Task.CompletedTask;
         }
 
         private void ValidateState(IMultiplayerSessionConnectionContext sessionConnectionContext)

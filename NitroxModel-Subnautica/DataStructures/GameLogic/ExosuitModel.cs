@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using BinaryPack.Attributes;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Unity;
@@ -18,6 +19,7 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
         [ProtoMember(2)]
         public NitroxId RightArmId { get; }
 
+        [IgnoreConstructor]
         protected ExosuitModel()
         {
             // Constructor for serialization. Has to be "protected" for json serialization.
@@ -28,6 +30,25 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
         {
             LeftArmId = new NitroxId();
             RightArmId = new NitroxId();
+        }
+
+        /// <remarks>Used for deserialization</remarks>
+        public ExosuitModel(
+            NitroxTechType techType,
+            NitroxId id,
+            NitroxVector3 position,
+            NitroxQuaternion rotation,
+            ThreadSafeList<InteractiveChildObjectIdentifier> interactiveChildIdentifiers,
+            Optional<NitroxId> dockingBayId,
+            string name,
+            NitroxVector3[] hsb,
+            float health,
+            NitroxId leftArmId,
+            NitroxId rightArmId)
+            : base(techType, id, position, rotation, interactiveChildIdentifiers, dockingBayId, name, hsb, health)
+        {
+            LeftArmId = leftArmId;
+            RightArmId = rightArmId;
         }
 
         public override string ToString()

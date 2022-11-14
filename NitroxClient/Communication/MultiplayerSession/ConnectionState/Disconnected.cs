@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Exceptions;
 using NitroxModel.Helper;
@@ -8,21 +9,17 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
 {
     public class Disconnected : IMultiplayerSessionConnectionState
     {
-        private object stateLock = new object();
         public MultiplayerSessionConnectionStage CurrentStage => MultiplayerSessionConnectionStage.DISCONNECTED;
 
-        public void NegotiateReservation(IMultiplayerSessionConnectionContext sessionConnectionContext)
+        public async Task NegotiateReservationAsync(IMultiplayerSessionConnectionContext sessionConnectionContext)
         {
-            lock (stateLock)
-            {
-                ValidateState(sessionConnectionContext);
+            ValidateState(sessionConnectionContext);
 
-                IClient client = sessionConnectionContext.Client;
-                string ipAddress = sessionConnectionContext.IpAddress;
-                int port = sessionConnectionContext.ServerPort;
-                StartClient(ipAddress, client, port);
-                EstablishSessionPolicy(sessionConnectionContext, client);
-            }
+            IClient client = sessionConnectionContext.Client;
+            string ipAddress = sessionConnectionContext.IpAddress;
+            int port = sessionConnectionContext.ServerPort;
+            await StartClientAsync(ipAddress, client, port);
+            EstablishSessionPolicy(sessionConnectionContext, client);
         }
 
         private void ValidateState(IMultiplayerSessionConnectionContext sessionConnectionContext)
@@ -51,11 +48,11 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             }
         }
 
-        private static void StartClient(string ipAddress, IClient client, int port)
+        private static async Task StartClientAsync(string ipAddress, IClient client, int port)
         {
             if (!client.IsConnected)
             {
-                client.Start(ipAddress, port);
+                await client.StartAsync(ipAddress, port);
 
                 if (!client.IsConnected)
                 {

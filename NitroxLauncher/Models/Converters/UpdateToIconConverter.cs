@@ -12,13 +12,13 @@ namespace NitroxLauncher.Models.Converters
         {
             if (value is not bool boolean)
             {
-                return "pack://application:,,,/Images/material-design-icons/download.png";
+                return "pack://application:,,,/Assets/Images/material-design-icons/download.png";
             }
 
             return boolean switch
             {
-                true => "pack://application:,,,/Images/material-design-icons/downloadDot.png",
-                false => "pack://application:,,,/Images/material-design-icons/download.png"
+                true => "pack://application:,,,/Assets/Images/material-design-icons/downloadDot.png",
+                false => "pack://application:,,,/Assets/Images/material-design-icons/download.png"
             };
         }
 
