@@ -18,7 +18,7 @@ public class CyclopsDestructionEvent_OnConsoleCommand_Patch : NitroxPatch, IDyna
 
     public static bool PrefixRestore()
     {
-        ErrorMessage.AddWarning("Cyclops restoring is not available in Nitrox");
+        ErrorMessage.AddWarning(Language.main.Get("Nitrox_CommandNotAvailable"));
         return false;
     }
 
@@ -32,6 +32,7 @@ public class CyclopsDestructionEvent_OnConsoleCommand_Patch : NitroxPatch, IDyna
 
         NitroxId id = NitroxEntity.GetId(__instance.gameObject);
         Resolve<IPacketSender>().Send(new CyclopsDestroyed(id, true));
+        // This packet is necessary for the server to acknowledge that the cyclops was destroyed
         Resolve<IPacketSender>().Send(new LiveMixinHealthChanged(TechType.Cyclops.ToDto(), id, -1500, 0, __instance.transform.position.ToDto(), 100, Optional.Empty));        
         return true;
     }
