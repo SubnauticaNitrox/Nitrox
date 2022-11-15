@@ -3,10 +3,7 @@ using HarmonyLib;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
-using NitroxModel.Packets;
-using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.Packets;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -32,8 +29,6 @@ public class CyclopsDestructionEvent_OnConsoleCommand_Patch : NitroxPatch, IDyna
 
         NitroxId id = NitroxEntity.GetId(__instance.gameObject);
         Resolve<IPacketSender>().Send(new CyclopsDestroyed(id, true));
-        // This packet is necessary for the server to acknowledge that the cyclops was destroyed
-        Resolve<IPacketSender>().Send(new LiveMixinHealthChanged(TechType.Cyclops.ToDto(), id, -1500, 0, __instance.transform.position.ToDto(), 100, Optional.Empty));        
         return true;
     }
 
