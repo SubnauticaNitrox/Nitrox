@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.RegularExpressions;
+using NitroxClient.Debuggers.Drawer;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Helper;
@@ -31,6 +32,10 @@ public sealed class SceneExtraDebugger : BaseDebugger
     private Vector2 hierarchyScrollPos;
 
     private readonly Lazy<Texture> arrowTexture, circleTexture;
+
+    private const int PAGE_BUTTON_WIDTH = 100;
+    private int searchPage;
+    private int resultsPerPage = 30;
 
     public SceneExtraDebugger(SceneDebugger sceneDebugger, IMap map) : base(350, "Scene Tools", KeyCode.S, true, false, true, GUISkinCreationOptions.DERIVEDCOPY)
     {
@@ -76,27 +81,73 @@ public sealed class SceneExtraDebugger : BaseDebugger
         {
             if (gameObjectResults.Count > 0)
             {
-                using GUILayout.ScrollViewScope scroll = new(hierarchyScrollPos);
-                hierarchyScrollPos = scroll.scrollPosition;
+                GUILayout.Label($" Found {gameObjectResults.Count} results.");
 
-                for (int index = 0; index < gameObjectResults.Count; index++)
+                using (GUILayout.ScrollViewScope scroll = new(hierarchyScrollPos))
                 {
-                    if (index > 30)
-                    {
-                        GUILayout.Label($"There are {gameObjectResults.Count - index} more results which aren't displayed", "fillMessage");
-                        break;
-                    }
+                    hierarchyScrollPos = scroll.scrollPosition;
 
-                    GameObject child = gameObjectResults[index];
-                    if (child)
+                    int startIndex = resultsPerPage * searchPage;
+                    for (int index = startIndex; index < gameObjectResults.Count; index++)
                     {
-                        using (new GUILayout.VerticalScope("box"))
+                        if (index > startIndex + resultsPerPage)
                         {
-                            if (GUILayout.Button(child.GetFullHierarchyPath(), child.transform.childCount > 0 ? "bold" : "label"))
+                            break;
+                        }
+
+                        GameObject child = gameObjectResults[index];
+                        if (child)
+                        {
+                            using (new GUILayout.VerticalScope("box"))
                             {
-                                sceneDebugger.UpdateSelectedObject(child);
+                                if (GUILayout.Button(child.GetFullHierarchyPath(), child.transform.childCount > 0 ? "bold" : "label"))
+                                {
+                                    sceneDebugger.UpdateSelectedObject(child);
+                                }
                             }
                         }
+                    }
+                }
+
+                // Pagination of search results if necessary
+                if (gameObjectResults.Count > resultsPerPage)
+                {
+                    using (new GUILayout.HorizontalScope("box"))
+                    {
+                        // Only enable the back button if we can go back
+                        GUI.enabled = searchPage > 0;
+                        if (GUILayout.Button("<", GUILayout.Width(PAGE_BUTTON_WIDTH)))
+                        {
+                            searchPage--;
+                            hierarchyScrollPos = Vector2.zero;
+                            if (searchPage < 0)
+                            {
+                                searchPage = 0;
+                            }
+                        }
+                        GUI.enabled = true;
+
+                        // Get the maximum page number based on the size of the results
+                        int maxPage = gameObjectResults.Count / resultsPerPage;
+
+                        GUILayout.FlexibleSpace();
+                        GUILayout.Label("Page " + (searchPage + 1) + " of " + (maxPage + 1), GUILayout.ExpandHeight(true));
+                        GUILayout.FlexibleSpace();
+
+                        // Only enable the next button if we can go forward
+                        GUI.enabled = maxPage > searchPage;
+                        if (GUILayout.Button(">", GUILayout.Width(PAGE_BUTTON_WIDTH)))
+                        {
+                            searchPage++;
+                            hierarchyScrollPos = Vector2.zero;
+                            if (searchPage > maxPage)
+                            {
+                                searchPage = maxPage;
+                            }
+                        }
+
+                        // Re-enable the GUI for anyone who comes after us
+                        GUI.enabled = true;
                     }
                 }
             }
@@ -130,12 +181,15 @@ public sealed class SceneExtraDebugger : BaseDebugger
                 if (GUILayout.Button("Search", "button", GUILayout.Width(80)))
                 {
                     gameObjectSearching = true;
+                    searchPage = 0;
+                    hierarchyScrollPos = Vector2.zero;
                 }
 
                 if (GUILayout.Button("X", "button", GUILayout.Width(30)))
                 {
                     gameObjectSearching = false;
                     gameObjectSearch = string.Empty;
+                    gameObjectSearchCache = string.Empty;
                     gameObjectResults.Clear();
                 }
                 else if (Event.current.isKey && Event.current.keyCode == KeyCode.Return)
@@ -180,7 +234,9 @@ public sealed class SceneExtraDebugger : BaseDebugger
                 }
                 else
                 {
-                    gameObjectResults = Resources.FindObjectsOfTypeAll<GameObject>().Where(go => Regex.IsMatch(go.name, gameObjectSearch, RegexOptions.IgnoreCase)).OrderBy(go => go.name).ToList();
+                    gameObjectResults = Resources.FindObjectsOfTypeAll<GameObject>().
+                                        Where(go => Regex.IsMatch(go.name, gameObjectSearch, RegexOptions.IgnoreCase)).
+                                        OrderBy(go => go.name).ToList();
                 }
 
                 gameObjectSearchCache = gameObjectSearch;
