@@ -4,8 +4,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using NitroxClient.Debuggers.Drawer;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
@@ -33,14 +31,6 @@ public class SceneDebugger : BaseDebugger
     private readonly Dictionary<int, bool> componentsVisibilityByID = new();
     private readonly Dictionary<int, FieldInfo[]> cachedFieldsByComponentID = new();
     private readonly Dictionary<int, MethodInfo[]> cachedMethodsByComponentID = new();
-
-    // The search text for the filter
-    private string searchText = string.Empty;
-    private bool shouldSearchAgain;
-    private IList<GameObject> filteredObjects;
-    private bool isSearching;
-    private string currentSearchItem;
-    private CancellationTokenSource searchTaskCancelTokenSource;
 
     public SceneDebugger(IEnumerable<IDrawer> drawers, IEnumerable<IStructDrawer> structDrawers) : base(650, null, KeyCode.S, true, false, false, GUISkinCreationOptions.DERIVEDCOPY)
     {
@@ -208,7 +198,8 @@ public class SceneDebugger : BaseDebugger
         {
             if (selectedScene.IsValid())
             {
-                // Get the entire list of gameobject that could potentially be shown
+                using GUILayout.ScrollViewScope scroll = new(hierarchyScrollPos);
+                hierarchyScrollPos = scroll.scrollPosition;
                 List<GameObject> showObjects = new();
                 if (!SelectedObject)
                 {
@@ -222,73 +213,7 @@ public class SceneDebugger : BaseDebugger
                     }
                 }
 
-                // This filter uses IndexOf instead of Contains for case-insensitive matching. This results in a small performance boost
-                // by not having to do .ToUpper or .ToLower on every string, which would create tons of garbage to collect.
-                bool filter(GameObject go, string searchText)
-                {
-                    if (searchTaskCancelTokenSource.IsCancellationRequested)
-                    {
-                        currentSearchItem = string.Empty;
-                        return false;
-                    }
-
-                    currentSearchItem = go.name;
-                    // Search the name of the selected gameobject
-                    return go.name.IndexOf(searchText, StringComparison.OrdinalIgnoreCase) > -1 ||
-                    go.GetComponents<Component>().Any(c => c.GetType().Name.IndexOf(searchText, StringComparison.OrdinalIgnoreCase) > -1) ||                        // Search the name of the child gameobjects.
-                    go.GetComponentsInChildren<Transform>().Any(t => t.gameObject != go && filter(t.gameObject, searchText));
-                }
-
-
-                // Searchbar
-                using (new GUILayout.VerticalScope("box"))
-                {
-                    using (new GUILayout.HorizontalScope())
-                    {                        
-                        searchText = GUILayout.TextField(searchText);
-
-                        // This button is used for both clearing the text and
-                        // cancelling any running search.
-                        if (GUILayout.Button("X", GUILayout.Width(30)))
-                        {
-                            searchText = string.Empty;
-                            searchTaskCancelTokenSource.Cancel();
-                        }
-
-                        // If there's no search text, then show all items
-                        if (string.IsNullOrEmpty(searchText))
-                        {
-                            filteredObjects = showObjects;
-                        }
-                    }
-
-                    // Disable the search button while a search is running
-                    GUI.enabled = !isSearching;
-                    // If we click the search bar, filter down the list
-                    if (GUILayout.Button("Search") || shouldSearchAgain)
-                    {
-                        shouldSearchAgain = false;
-                        isSearching = true;
-                        searchTaskCancelTokenSource = new CancellationTokenSource();
-                        Task.Run(() =>
-                        {
-                            filteredObjects = showObjects.Where(go => filter(go, searchText)).ToList();
-                            isSearching = false;
-                            currentSearchItem = string.Empty;
-                        }, searchTaskCancelTokenSource.Token);
-                    }
-                    // Make sure to re-enable the GUI for everyone else
-                    GUI.enabled = true;
-
-                    // Display some sort of indication to the user that we haven't just frozen up
-                    GUILayout.Label("Current Search Item: " + currentSearchItem);                    
-                }
-
-                // The search results scroll area
-                using GUILayout.ScrollViewScope scroll = new(hierarchyScrollPos);
-                hierarchyScrollPos = scroll.scrollPosition;
-
-                foreach (GameObject child in filteredObjects.OrderBy(go => go.name))
+                foreach (GameObject child in showObjects)
                 {
                     if (GUILayout.Button(child.name, child.transform.childCount > 0 ? "bold" : "label"))
                     {
@@ -515,10 +440,6 @@ public class SceneDebugger : BaseDebugger
 
         SelectedObject = item;
         selectedComponentID = default;
-        
-        // Cancel any running search and reset
-        searchTaskCancelTokenSource.Cancel();
-        shouldSearchAgain = true;        
     }
 
     public void JumpToComponent(Component item)
