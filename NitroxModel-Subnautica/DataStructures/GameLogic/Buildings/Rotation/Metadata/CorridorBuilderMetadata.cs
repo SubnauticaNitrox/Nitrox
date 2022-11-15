@@ -1,10 +1,11 @@
 ﻿using System;
+using BinaryPack.Attributes;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
 using NitroxModel.DataStructures.Unity;
 using ProtoBufNet;
 
-namespace NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation
+namespace NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation.Metadata
 {
     [Serializable]
     [ProtoContract]
@@ -25,17 +26,18 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation
         [ProtoMember(4)]
         public NitroxInt3 Cell { get; set; }
 
-        protected CorridorBuilderMetadata() : base(typeof(BaseAddCorridorGhost))
+        [IgnoreConstructor]
+        protected CorridorBuilderMetadata()
         {
             // Constructor for serialization. Has to be "protected" for json serialization.
         }
 
-        public CorridorBuilderMetadata(NitroxVector3 position, int rotation, bool hasTargetBase, NitroxInt3 targetCell) : base(typeof(BaseAddCorridorGhost))
+        public CorridorBuilderMetadata(NitroxVector3 position, int rotation, bool hasTargetBase, NitroxInt3 cell)
         {
             Position = position;
             Rotation = rotation;
             HasTargetBase = hasTargetBase;
-            Cell = targetCell;
+            Cell = cell;
         }
 
         public override string ToString()

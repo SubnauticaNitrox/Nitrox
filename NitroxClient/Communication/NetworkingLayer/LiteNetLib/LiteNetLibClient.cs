@@ -1,8 +1,10 @@
 ﻿using System.Threading;
+using System.Threading.Tasks;
 using LiteNetLib;
 using LiteNetLib.Utils;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Debuggers;
+using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.Gui.InGame;
 using NitroxModel.Networking;
 using NitroxModel.Packets;
@@ -26,7 +28,7 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
             this.networkDebugger = networkDebugger;
         }
 
-        public void Start(string ipAddress, int serverPort)
+        public async Task StartAsync(string ipAddress, int serverPort)
         {
             Log.Info("Initializing LiteNetLibClient...");
 
@@ -48,8 +50,11 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
 #endif
             };
 
-            client.Start();
-            client.Connect(ipAddress, serverPort, "nitrox");
+            await Task.Run(() =>
+            {
+                client.Start();
+                client.Connect(ipAddress, serverPort, "nitrox");
+            });
 
             connectedEvent.WaitOne(2000);
             connectedEvent.Reset();
@@ -81,14 +86,19 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
 
         private void Connected(NetPeer peer)
         {
-            connectedEvent.Set();
+            // IsConnected must happen before Set() so that its state is noticed WHEN we unblock the thread (cf. connectedEvent.WaitOne(...))
             IsConnected = true;
+            connectedEvent.Set();
             Log.Info("Connected to server");
         }
 
         private void Disconnected(NetPeer peer, DisconnectInfo disconnectInfo)
         {
-            Modal.Get<LostConnectionModal>()?.Show();
+            // Check must happen before IsConnected is set to false, so that it doesn't send an exception when we aren't even ingame
+            if (Multiplayer.Active)
+            {
+                Modal.Get<LostConnectionModal>()?.Show();
+            }
             IsConnected = false;
             Log.Info("Disconnected from server");
         }

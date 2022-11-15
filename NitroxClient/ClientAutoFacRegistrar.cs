@@ -142,6 +142,7 @@ namespace NitroxClient
             containerBuilder.RegisterType<NitroxSettingsManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<ThrottledPacketSender>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<PlayerCinematics>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<NitroxPDATabManager>().InstancePerLifetimeScope();
         }
 
         private void RegisterPacketProcessors(ContainerBuilder containerBuilder)
@@ -158,7 +159,7 @@ namespace NitroxClient
                 .RegisterAssemblyTypes(currentAssembly)
                 .AssignableTo<IColorSwapManager>()
                 .As<IColorSwapManager>()
-                .InstancePerLifetimeScope();
+                .SingleInstance();
         }
 
         private void RegisterInitialSyncProcessors(ContainerBuilder containerBuilder)

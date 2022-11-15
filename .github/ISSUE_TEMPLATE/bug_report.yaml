@@ -1,0 +1,75 @@
+name: Bug Report
+description: File a bug or crash report
+title: "Please write an informative title describing the bug in a few words"
+labels: ["Type: bug", "Status: to verify"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        # This no place to seek help with installation or connection problems. For that visit our [Discord](https://discord.com/invite/E8B4X9s).
+        ## Thanks for filling out a bug report. Please be sure that a similar issue wasn't already created by searching [here](https://github.com/SubnauticaNitrox/Nitrox/issues) with general keywords. If it's a new issue please fill out as much detail as possible.
+        
+  - type: dropdown
+    id: nitrox_version
+    attributes:
+      label: Are you on the latest version of Nitrox?
+      description: If not, you should try updating first.
+      options:
+        - Yes, I'm on the latest release of Nitrox.
+        - Yes, I'm on the latest commit of the repo (only for experts).
+        - No, I need to download a newer version and try again.
+    validations:
+      required: true
+  - type: dropdown
+    id: os_type
+    attributes:
+      label: Which OS are you playing on?
+      description: Please select your Operation System from the dropdown.
+      options:
+        - Windows
+        - Linux (currently not supported, don't file any reports if your are using this)
+        - MacOS (currently not supported, don't file any reports if your are using this)
+    validations:
+      required: true
+  - type: dropdown
+    id: store_type
+    attributes:
+      label: On which platform did you buy Subnautica?
+      description: Please select your platform/store with which you are normally starting Subnautica.
+      options:
+        - Steam
+        - Epic
+        - MS-Store/Windows Store (currently not supported, don't file any reports if your are using this)
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: what_happened
+    attributes:
+      label: Describe the issue.
+      description: What happened? Should something else have happened instead?
+      placeholder: Tell us what you saw! 
+    validations:
+      required: true
+  - type: textarea
+    id: steps_to_reproduce
+    attributes:
+      label: Describe the steps you took to encounter the bug.
+      description: How did it happened? Please provide steps to reproduce the bug if possible. Did the bug disappear with slightly altered steps?
+      placeholder: Tell us what you did! 
+    validations:
+      required: false
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      description: |
+        Please upload your game logs if possible. The logs are located next to the launcher in a folder called "Nitrox Logs".
+        Upload the most recent "game-XXXXXXXX.log" and if you hosted the server also "server-XXXXXXXX.log" to [Pastbin](https://pastebin.com/).
+        After you created a paste for both files post their links into this box.
+      placeholder: |
+        For example:
+        Game: https://pastebin.com/qFxU2dz7
+        Server: https://pastebin.com/X4tBdE2R
+    validations:
+      required: false

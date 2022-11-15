@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using BinaryPack.Attributes;
 using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic
@@ -17,6 +18,7 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoMember(2)]
         public Dictionary<NitroxId, float> Entries { get; set; }
 
+        [IgnoreConstructor]
         protected PDAProgressEntry()
         {
             // Constructor for serialization. Has to be "protected" for json serialization.

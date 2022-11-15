@@ -1,15 +1,14 @@
 ﻿using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NitroxClient;
-using NitroxClient.Communication;
+using Nitrox.Test;
+using Nitrox.Test.Client.Communication;
 using NitroxClient.Map;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.Packets;
-using NitroxTest.Model;
 
-namespace NitroxTest.Client.Communication
+namespace NitroxClient.Communication
 {
     [TestClass]
     public class DeferredPacketReceiverTest

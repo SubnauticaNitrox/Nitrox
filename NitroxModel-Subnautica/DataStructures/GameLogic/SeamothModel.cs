@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using BinaryPack.Attributes;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Unity;
@@ -15,6 +16,7 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
         [ProtoMember(1)]
         public bool LightOn { get; set; }
 
+        [IgnoreConstructor]
         protected SeamothModel()
         {
             // Constructor for serialization. Has to be "protected" for json serialization.
@@ -24,6 +26,23 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
             : base(techType, id, position, rotation, interactiveChildIdentifiers, dockingBayId, name, hsb, health)
         {
             LightOn = true;
+        }
+
+        /// <remarks>Used for deserialization</remarks>
+        public SeamothModel(
+            NitroxTechType techType,
+            NitroxId id,
+            NitroxVector3 position,
+            NitroxQuaternion rotation,
+            ThreadSafeList<InteractiveChildObjectIdentifier> interactiveChildIdentifiers,
+            Optional<NitroxId> dockingBayId,
+            string name,
+            NitroxVector3[] hsb,
+            float health,
+            bool lightOn)
+            : base(techType, id, position, rotation, interactiveChildIdentifiers, dockingBayId, name, hsb, health)
+        {
+            LightOn = lightOn;
         }
 
         public override string ToString()

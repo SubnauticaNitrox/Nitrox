@@ -77,7 +77,7 @@ namespace Nitrox.BuildTool
                 // Retry if the saved path is invalid
                 if (!Directory.Exists(game.InstallDir))
                 {
-                    game = new GameInstallData(NitroxUser.SubnauticaPath);
+                    game = new GameInstallData(NitroxUser.GamePath);
                 }
                 
                 if (!ValidateUnityGame(game, out string error))
@@ -86,7 +86,7 @@ namespace Nitrox.BuildTool
                 }
             }
 
-            game ??= new GameInstallData(NitroxUser.SubnauticaPath);
+            game ??= new GameInstallData(NitroxUser.GamePath);
             game.TrySave(cacheFile);
             return game;
         }

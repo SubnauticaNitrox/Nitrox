@@ -19,14 +19,20 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Resource Include="Images\**">
+      <Resource Include="Assets\Images\**">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Resource>
     </ItemGroup>
 
+
     <ItemGroup>
       <ProjectReference Include="..\NitroxPatcher\NitroxPatcher.csproj" />
       <ProjectReference Include="..\NitroxServer-Subnautica\NitroxServer-Subnautica.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="Microsoft.VisualBasic" />
+      <Reference Include="PresentationFramework.Aero2" />
     </ItemGroup>
     
     <!-- Move assets from Subnautica assets to launcher.

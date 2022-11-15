@@ -50,6 +50,9 @@ namespace NitroxServer.GameLogic.Players
         [JsonProperty, ProtoMember(13)]
         public HashSet<string> CompletedGoals { get; set; } = new HashSet<string>();
 
+        [JsonProperty, ProtoMember(14)]
+        public Dictionary<string, PingInstancePreference> PingInstancePreferences { get; set; } = new();
+
         public Player ToPlayer()
         {
             return new Player(Id,
@@ -66,7 +69,8 @@ namespace NitroxServer.GameLogic.Players
                               QuickSlotsBinding,
                               EquippedItems,
                               Modules,
-                              CompletedGoals);
+                              CompletedGoals,
+                              PingInstancePreferences);
         }
 
         public static PersistedPlayerData FromPlayer(Player player)
@@ -85,7 +89,8 @@ namespace NitroxServer.GameLogic.Players
                 Permissions = player.Permissions,
                 NitroxId = player.GameObjectId,
                 IsPermaDeath = player.IsPermaDeath,
-                CompletedGoals = new HashSet<string>(player.CompletedGoals)
+                CompletedGoals = new(player.CompletedGoals),
+                PingInstancePreferences = new(player.PingInstancePreferences)
             };
         }
     }

@@ -3,7 +3,7 @@ using NitroxClient.Debuggers;
 using NitroxModel.Core;
 using NSubstitute;
 
-namespace NitroxTest
+namespace Nitrox.Test
 {
     public class TestAutoFacRegistrar : IAutoFacRegistrar
     {

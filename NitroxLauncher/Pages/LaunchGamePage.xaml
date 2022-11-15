@@ -11,9 +11,10 @@
                 Title="Launch Game" Height="1020">
 
     <local:PageBase.Resources>
-        <BitmapImage x:Key="PlayGameImage" UriSource="pack://application:,,,/Images/PlayGameImage.png" />
-        <BitmapImage x:Key="SubnauticaMainImage" UriSource="pack://application:,,,/Images/SubnauticaMain.png" />
-        <BitmapImage x:Key="NitroxGallery" UriSource="pack://application:,,,/Images/NitroxGallery.png" />
+        <BitmapImage x:Key="PlayGameImage" UriSource="pack://application:,,,/Assets/Images/PlayGameImage.png" />
+        <BitmapImage x:Key="SubnauticaMainImage" UriSource="pack://application:,,,/Assets/Images/SubnauticaMain.png" />
+        <BitmapImage x:Key="NitroxGallery" UriSource="pack://application:,,,/Assets/Images/NitroxGallery.png" />
+        <BitmapImage x:Key="PlayBoxImage" UriSource="pack://application:,,,/Assets/Images/PlayBoxImage.png" />
     </local:PageBase.Resources>
 
     <Grid >
@@ -53,7 +54,7 @@
 
             <StackPanel Orientation="Vertical" Grid.Column="3" Margin="0" Height="203" VerticalAlignment="Top">
                 <StackPanel.Background>
-                    <ImageBrush ImageSource="/NitroxLauncher;component/Images/PlayBoxImage.png"/>
+                    <ImageBrush ImageSource="{StaticResource PlayBoxImage}"/>
                 </StackPanel.Background>
 
                 <Grid VerticalAlignment="Top" Margin="22,18,22,0">

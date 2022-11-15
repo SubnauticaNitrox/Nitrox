@@ -97,7 +97,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         private bool IsWaitingToRun(Type processor)
         {
-            return (alreadyRan.Contains(processor) == false);
+            return alreadyRan.Contains(processor) == false;
         }
 
         private string GetRemainingProcessorsText()

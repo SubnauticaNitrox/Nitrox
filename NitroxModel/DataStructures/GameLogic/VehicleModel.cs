@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using BinaryPack.Attributes;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
 using ProtoBufNet;
@@ -8,10 +9,10 @@ namespace NitroxModel.DataStructures.GameLogic
 {
     [Serializable]
     [ProtoContract]
-    public class VehicleModel
+    public abstract class VehicleModel
     {
         [ProtoMember(1)]
-        public NitroxTechType TechType { get; }
+        public NitroxTechType TechType { get; set; }
 
         [ProtoMember(2)]
         public NitroxId Id { get; set; }
@@ -37,6 +38,7 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoMember(9)]
         public float Health { get; set; }
 
+        [IgnoreConstructor]
         protected VehicleModel()
         {
             // Constructor for serialization. Has to be "protected" for json serialization.
@@ -52,6 +54,20 @@ namespace NitroxModel.DataStructures.GameLogic
             Position = position;
             Rotation = rotation;
             InteractiveChildIdentifiers = new ThreadSafeList<InteractiveChildObjectIdentifier>(interactiveChildIdentifiers);
+            DockingBayId = dockingBayId;
+            Name = name;
+            HSB = hsb;
+            Health = health;
+        }
+
+        /// <remarks>Used for deserialization</remarks>
+        public VehicleModel(NitroxTechType techType, NitroxId id, NitroxVector3 position, NitroxQuaternion rotation, ThreadSafeList<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, NitroxVector3[] hsb, float health)
+        {
+            TechType = techType;
+            Id = id;
+            Position = position;
+            Rotation = rotation;
+            InteractiveChildIdentifiers = interactiveChildIdentifiers;
             DockingBayId = dockingBayId;
             Name = name;
             HSB = hsb;

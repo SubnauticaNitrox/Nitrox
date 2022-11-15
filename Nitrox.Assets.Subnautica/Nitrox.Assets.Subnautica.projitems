@@ -8,6 +8,4 @@
   <PropertyGroup Label="Configuration">
     <Import_RootNamespace>Nitrox.Assets.Subnautica</Import_RootNamespace>
   </PropertyGroup>
-  <ItemGroup>
-  </ItemGroup>
 </Project>

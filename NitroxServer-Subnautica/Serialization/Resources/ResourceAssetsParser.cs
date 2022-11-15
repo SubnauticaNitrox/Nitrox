@@ -117,7 +117,7 @@ namespace NitroxServer_Subnautica.Serialization.Resources
 
         private static string FindDirectoryContainingResourceAssets()
         {
-            string subnauticaPath = NitroxUser.SubnauticaPath;
+            string subnauticaPath = NitroxUser.GamePath;
             if (string.IsNullOrEmpty(subnauticaPath))
             {
                 throw new DirectoryNotFoundException($"Could not locate Subnautica installation directory for resource parsing.");

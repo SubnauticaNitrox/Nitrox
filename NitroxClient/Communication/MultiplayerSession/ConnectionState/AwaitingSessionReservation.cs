@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using NitroxClient.Communication.Abstract;
 using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
@@ -8,7 +9,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
 {
     public class AwaitingSessionReservation : ConnectionNegotiatingState
     {
-        private string reservationCorrelationId;
+        private readonly string reservationCorrelationId;
 
         public AwaitingSessionReservation(string reservationCorrelationId)
         {
@@ -18,7 +19,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
 
         public override MultiplayerSessionConnectionStage CurrentStage => MultiplayerSessionConnectionStage.AWAITING_SESSION_RESERVATION;
 
-        public override void NegotiateReservation(IMultiplayerSessionConnectionContext sessionConnectionContext)
+        public override Task NegotiateReservationAsync(IMultiplayerSessionConnectionContext sessionConnectionContext)
         {
             try
             {
@@ -30,6 +31,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
                 Disconnect(sessionConnectionContext);
                 throw;
             }
+            return Task.CompletedTask;
         }
 
         private static void HandleReservation(IMultiplayerSessionConnectionContext sessionConnectionContext)

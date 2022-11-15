@@ -1,11 +1,13 @@
-﻿using NitroxClient.Communication.MultiplayerSession;
+﻿using System.Threading.Tasks;
+using NitroxClient.Communication.MultiplayerSession;
 
 namespace NitroxClient.Communication.Abstract
 {
     public interface IMultiplayerSessionConnectionState
     {
         MultiplayerSessionConnectionStage CurrentStage { get; }
-        void NegotiateReservation(IMultiplayerSessionConnectionContext sessionConnectionContext);
+        
+        Task NegotiateReservationAsync(IMultiplayerSessionConnectionContext sessionConnectionContext);
         void JoinSession(IMultiplayerSessionConnectionContext sessionConnectionContext);
         void Disconnect(IMultiplayerSessionConnectionContext sessionConnectionContext);
     }

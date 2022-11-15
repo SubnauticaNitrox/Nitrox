@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Platforms.OS.Shared;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.Serialization;
+using NitroxServer.Serialization.World;
 
 namespace NitroxServer.ConsoleCommands
 {
@@ -30,10 +30,11 @@ namespace NitroxServer.ConsoleCommands
             }
 
             // Save config file if it doesn't exist yet.
-            string configFile = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location) ?? "", serverConfig.FileName);
+            string saveDir = Path.Combine(WorldManager.SavesFolderDir, serverConfig.SaveName);
+            string configFile = Path.Combine(saveDir, serverConfig.FileName);
             if (!File.Exists(configFile))
             {
-                serverConfig.Serialize();
+                serverConfig.Serialize(configFile);
             }
 
             Task.Run(async () =>
@@ -46,7 +47,7 @@ namespace NitroxServer.ConsoleCommands
                     {
                         configOpenLock.Release();
                     }
-                    serverConfig.Deserialize(); // Notifies user if deserialization failed.
+                    serverConfig.Deserialize(saveDir); // Notifies user if deserialization failed.
                     Log.Info("If you made changes, restart the server for them to take effect.");
                 })
                 .ContinueWith(t =>
