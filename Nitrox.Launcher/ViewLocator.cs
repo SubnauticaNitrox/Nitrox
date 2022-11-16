@@ -10,7 +10,7 @@ namespace Nitrox.Launcher;
 public class AppViewLocator : IViewLocator
 {
     private static readonly Type[] assemblyTypes = Assembly.GetExecutingAssembly().GetTypes();
-    private static readonly Dictionary<Type, Func<IRoutableView>> viewModelToViewMapFactoryCache = new();
+    private static readonly Dictionary<Type, Func<IRoutableView>> viewModelToViewFactoryCache = new();
 
     /// <summary>
     ///     <inheritdoc cref="IViewLocator.ResolveView{T}" />
@@ -28,7 +28,7 @@ public class AppViewLocator : IViewLocator
 
         // If view factory is cached, return the view via this creator.
         IRoutableView view;
-        if (viewModelToViewMapFactoryCache.TryGetValue(viewModelType, out Func<IRoutableView>? viewFactory))
+        if (viewModelToViewFactoryCache.TryGetValue(viewModelType, out Func<IRoutableView>? viewFactory))
         {
             view = viewFactory();
             view.DataContext = viewModel;
@@ -45,7 +45,7 @@ public class AppViewLocator : IViewLocator
             throw new Exception($"Unable to create instance of view {targetBaseViewType}");
         }
         view.DataContext = viewModel;
-        viewModelToViewMapFactoryCache.Add(viewModelType, viewFactory);
+        viewModelToViewFactoryCache.Add(viewModelType, viewFactory);
         return view;
     }
 }
