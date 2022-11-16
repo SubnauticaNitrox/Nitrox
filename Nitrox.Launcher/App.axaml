@@ -81,7 +81,7 @@
             <Setter Property="Background" Value="#FF005C" />
         </Style>
         <Style Selector="Button.nitrox TextBlock:nth-child(1)">
-            <Setter Property="FontSize" Value="24" />
+            <Setter Property="FontSize" Value="14" />
         </Style>
         <Style Selector="Button.nitrox.big">
             <Setter Property="CornerRadius" Value="8" />
