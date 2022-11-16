@@ -49,6 +49,7 @@
             <Setter Property="FontSize" Value="12" />
         </Style>
         <Style Selector="Panel.titleBar">
+            <Setter Property="Cursor" Value="Hand" />
             <Setter Property="ZIndex" Value="100" />
             <Setter Property="Height" Value="24" />
             <Setter Property="Background" Value="Transparent" />
