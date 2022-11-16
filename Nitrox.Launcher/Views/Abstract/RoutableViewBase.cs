@@ -5,7 +5,7 @@ using ReactiveUI;
 
 namespace Nitrox.Launcher.Views.Abstract;
 
-public abstract class RoutableViewBase<TViewModel> : ReactiveUserControl<TViewModel> where TViewModel : RoutableViewModelBase
+public abstract class RoutableViewBase<TViewModel> : ReactiveUserControl<TViewModel>, IRoutableView where TViewModel : RoutableViewModelBase
 {
     protected RoutableViewBase()
     {
