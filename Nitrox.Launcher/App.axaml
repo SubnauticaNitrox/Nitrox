@@ -3,6 +3,7 @@
              xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
              xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
              xmlns:markdownElements="clr-namespace:ColorTextBlock.Avalonia;assembly=ColorTextBlock.Avalonia"
+             xmlns:markdown="clr-namespace:Markdown.Avalonia;assembly=Markdown.Avalonia"
              x:Class="Nitrox.Launcher.App">
     <Application.Resources>
         <Styles x:Key="NitroxMarkDownStyle">
@@ -106,6 +107,15 @@
             <Setter Property="FontSize" Value="16" />
             <Setter Property="FontWeight" Value="600" />
         </Style>
+        <Style Selector="markdown|MarkdownScrollViewer.nitrox markdownElements|CTextBlock">
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="Foreground" Value="#FFFFFF" />
+        </Style>
+        <Style Selector="markdown|MarkdownScrollViewer.nitrox markdownElements|CHyperlink">
+            <Setter Property="IsUnderline" Value="False" />
+            <Setter Property="Foreground" Value="#007BFF" />
+            <Setter Property="HoverForeground" Value="#007BFF" />
+        </Style>
         <Style Selector="Border.nav">
             <Setter Property="Background" Value="#151516" />
             <Setter Property="Padding" Value="34 0 0 0" />
@@ -143,7 +153,7 @@
         <Style Selector="Border.serverEntry">
             <Setter Property="Background" Value="#151516" />
             <Setter Property="CornerRadius" Value="12" />
-            <Setter Property="Margin" Value="0 26" />
+            <Setter Property="Margin" Value="0 13" />
             <Setter Property="Padding" Value="22 20" />
             <Setter Property="HorizontalAlignment" Value="Stretch" />
             <Setter Property="Height" Value="96" />

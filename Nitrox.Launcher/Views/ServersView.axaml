@@ -8,7 +8,7 @@
              x:Class="Nitrox.Launcher.Views.ServersView"
              d:DataContext="{Binding RelativeSource={RelativeSource AncestorType=viewModels:ServersViewModel}}">
     
-    <Grid>
+    <Panel>
         <!-- If no servers defined:-->
         <StackPanel IsVisible="{Binding !Servers.Count}" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Image Source="/Assets/Images/serverIllustration.png" Stretch="None" Margin="0 0 0 73" />
@@ -19,53 +19,60 @@
         </StackPanel>
         
         <!-- If there are servers: -->
-        <StackPanel IsVisible="{Binding Servers.Count}">
-            <TextBlock Classes="header" Text="Servers" />
-            <markdown:MarkdownScrollViewer Margin="0 0 0 14" Styles="{StaticResource NitroxMarkDownStyle}">
-                Welcome to your Subnautica multiplayer server. For additional information and to learn more about hosting a server refer to the [Nitrox Wiki](https://nitrox.rux.gg/wiki/article/run-and-host-nitrox-subnautica-server).
-            </markdown:MarkdownScrollViewer>
-            <ItemsControl Items="{Binding Servers}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Border Classes="serverEntry">
-                            <DockPanel VerticalAlignment="Center">
-                                <Image DockPanel.Dock="Left" Source="/Assets/Images/subnauticaIcon.png" />
-                                <StackPanel DockPanel.Dock="Left" Margin="16 0" VerticalAlignment="Center">
-                                    <TextBlock FontSize="16" FontWeight="600" Text="{Binding Name}" />
-                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Classes="description">
-                                        <Panel>
-                                            <StackPanel Orientation="Horizontal" IsVisible="{Binding IsOnline}">
-                                                <Ellipse Margin="0 0 6 0" Fill="#38C149" />
-                                                <TextBlock IsVisible="{Binding IsOnline}" Text="Online" />    
+        <Panel IsVisible="{Binding Servers.Count}">
+            <StackPanel VerticalAlignment="Stretch">
+                <TextBlock Classes="header" Text="Servers" />
+                <markdown:MarkdownScrollViewer Classes="nitrox" Margin="0 0 0 14">
+                    Welcome to your Subnautica multiplayer server. For additional information and to learn more about hosting a server refer to the [Nitrox Wiki](https://nitrox.rux.gg/wiki/article/run-and-host-nitrox-subnautica-server).
+                </markdown:MarkdownScrollViewer>
+                <ItemsControl Items="{Binding Servers}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Classes="serverEntry">
+                                <DockPanel VerticalAlignment="Center">
+                                    <Border CornerRadius="12" ClipToBounds="True">
+                                        <Image DockPanel.Dock="Left" Source="/Assets/Images/subnauticaIcon.png" />
+                                    </Border>
+                                    <StackPanel DockPanel.Dock="Left" Margin="16 0" VerticalAlignment="Center">
+                                        <TextBlock FontSize="16" FontWeight="600" Text="{Binding Name}" />
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Classes="description">
+                                            <Panel>
+                                                <StackPanel Orientation="Horizontal" IsVisible="{Binding IsOnline}">
+                                                    <Ellipse Margin="0 0 6 0" Fill="#38C149" />
+                                                    <TextBlock IsVisible="{Binding IsOnline}" Text="Online" />    
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal" IsVisible="{Binding !IsOnline}">
+                                                    <Ellipse Margin="0 0 6 0" Fill="#FF5E57" />
+                                                    <TextBlock IsVisible="{Binding !IsOnline}" Text="Offline" />    
+                                                </StackPanel>
+                                            </Panel>
+                                            <TextBlock Text="{Binding GameMode}" />
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="{Binding Players}" />
+                                                <TextBlock Text="/" />
+                                                <TextBlock Text="{Binding MaxPlayers}" />
+                                                <TextBlock Margin="6 0 0 0" Text="playing" />
                                             </StackPanel>
-                                            <StackPanel Orientation="Horizontal" IsVisible="{Binding !IsOnline}">
-                                                <Ellipse Margin="0 0 6 0" Fill="#FF5E57" />
-                                                <TextBlock IsVisible="{Binding !IsOnline}" Text="Offline" />    
-                                            </StackPanel>
-                                        </Panel>
-                                        <TextBlock Text="{Binding GameMode}" />
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="{Binding Players}" />
-                                            <TextBlock Text="/" />
-                                            <TextBlock Text="{Binding MaxPlayers}" />
-                                            <TextBlock Margin="6 0 0 0" Text="playing" />
                                         </StackPanel>
                                     </StackPanel>
-                                </StackPanel>
-                                <StackPanel Classes="actions" DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right">
-                                    <Button IsVisible="{Binding IsOnline}" Classes="nitrox abort" design:NitroxAttached.Text="Stop" Command="{Binding StopCommand}" />
-                                    <Button Classes="nitrox primary" design:NitroxAttached.Text="Manage" Command="{Binding ManageCommand}" />
-                                </StackPanel>
-                            </DockPanel>
-                        </Border>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </StackPanel>
-    </Grid>
+                                    <StackPanel Classes="actions" DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right">
+                                        <Button IsVisible="{Binding IsOnline}" Classes="nitrox abort" design:NitroxAttached.Text="Stop" Command="{Binding StopCommand}" />
+                                        <Button Classes="nitrox primary" design:NitroxAttached.Text="Manage" Command="{Binding ManageCommand}" />
+                                    </StackPanel>
+                                </DockPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+            <Border CornerRadius="12" Background="#151516" Height="96" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
+                <Button Classes="nitrox primary big" HorizontalAlignment="Center" VerticalAlignment="Center" Width="262" Height="48" design:NitroxAttached.Text="CREATE NEW SERVER" Command="{Binding CreateServerCommand}" />
+            </Border>
+        </Panel>
+    </Panel>
 </UserControl>
