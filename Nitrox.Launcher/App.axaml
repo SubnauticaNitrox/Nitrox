@@ -2,9 +2,23 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
              xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
+             xmlns:markdownElements="clr-namespace:ColorTextBlock.Avalonia;assembly=ColorTextBlock.Avalonia"
              x:Class="Nitrox.Launcher.App">
+    <Application.Resources>
+        <Styles x:Key="NitroxMarkDownStyle">
+            <Style Selector="markdownElements|CTextBlock">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="Foreground" Value="#FFFFFF" />
+            </Style>
+            <Style Selector="markdownElements|CHyperlink">
+                <Setter Property="IsUnderline" Value="False" />
+                <Setter Property="Foreground" Value="#007BFF" />
+                <Setter Property="HoverForeground" Value="#007BFF" />
+            </Style>
+        </Styles>
+    </Application.Resources>
     <Application.Styles>
-        <FluentTheme Mode="Light"/>
+        <FluentTheme Mode="Light" />
         <Style Selector="Window">
             <Setter Property="Icon" Value="/Assets/Images/nitroxIco.png" />
         </Style>
@@ -27,7 +41,7 @@
         </Style>
         <Style Selector="ToolTip TextBlock">
             <Setter Property="Foreground" Value="#000000" />
-            <Setter Property="FontSize" Value="12"></Setter>
+            <Setter Property="FontSize" Value="12" />
         </Style>
         <Style Selector="Image.header">
             <Setter Property="Width" Value="108" />
@@ -100,7 +114,7 @@
             <Setter Property="Background" Value="#000000" />
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
             <Setter Property="VerticalContentAlignment" Value="Stretch" />
-            <Setter Property="Padding" Value="34 45"></Setter>
+            <Setter Property="Padding" Value="34 45" />
         </Style>
         <Style Selector="Border.nav ItemsControl">
             <Setter Property="ItemsPanel">
@@ -152,7 +166,7 @@
             <Setter Property="Opacity" Value="0.5" />
         </Style>
         <Style Selector=".actions > :is(Control)">
-            <Setter Property="Margin" Value="8 0 0 0"></Setter>
+            <Setter Property="Margin" Value="8 0 0 0" />
         </Style>
     </Application.Styles>
 </Application>

@@ -4,6 +4,7 @@
              xmlns:viewModels="clr-namespace:Nitrox.Launcher.ViewModels"
              xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
              xmlns:launcher="clr-namespace:Nitrox.Launcher"
+             xmlns:markdown="clr-namespace:Markdown.Avalonia;assembly=Markdown.Avalonia"
              x:Class="Nitrox.Launcher.Views.ServersView"
              d:DataContext="{Binding RelativeSource={RelativeSource AncestorType=viewModels:ServersViewModel}}">
     
@@ -20,7 +21,9 @@
         <!-- If there are servers: -->
         <StackPanel IsVisible="{Binding Servers.Count}">
             <TextBlock Classes="header" Text="Servers" />
-            <TextBlock Margin="0 0 0 14" Text="Welcome to your Subnautica multiplayer server. For additional information and to learn more about hosting a server refer to the Nitrox Wiki." />
+            <markdown:MarkdownScrollViewer Margin="0 0 0 14" Styles="{StaticResource NitroxMarkDownStyle}">
+                Welcome to your Subnautica multiplayer server. For additional information and to learn more about hosting a server refer to the [Nitrox Wiki](https://nitrox.rux.gg/wiki/article/run-and-host-nitrox-subnautica-server).
+            </markdown:MarkdownScrollViewer>
             <ItemsControl Items="{Binding Servers}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
