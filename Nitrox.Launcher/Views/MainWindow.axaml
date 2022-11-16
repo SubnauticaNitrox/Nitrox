@@ -13,41 +13,48 @@
         WindowStartupLocation="CenterScreen"
         Width="1000" Height="600"
         MinWidth="800" MinHeight="600">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="274" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+    <Panel>
+        <!-- Title bar -->
+        <Panel Classes="titleBar" PointerPressed="TitleBar_OnPointerPressed">
+            <ItemsControl Items="{Binding TitleBarItems}" />
+        </Panel>
         
-        <!-- Left side -->
-        <Border Grid.Column="0" Classes="nav">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="80" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="274" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
         
-                <!-- The "NITROX" header. -->
-                <Image Grid.Row="0" Classes="header" />
-                <!-- Navigation items -->
-                <Panel Grid.Row="1">
-                    <ItemsControl Items="{Binding NavigationHeaderItems}" />
-                    <ItemsControl Items="{Binding NavigationFooterItems}" VerticalAlignment="Bottom" Margin="0 0 0 20" />
-                </Panel>
-            </Grid>
-        </Border>
+            <!-- Left side -->
+            <Border Grid.Column="0" Classes="nav">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="80" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
         
-        <!-- Right side -->
-        <rxui:RoutedViewHost Grid.Column="1" Classes="content" Router="{Binding Router}" PageTransition="{x:Null}">
-            <rxui:RoutedViewHost.DefaultContent>
-                <TextBlock Text="Default content" HorizontalAlignment="Center" VerticalAlignment="Center" />
-            </rxui:RoutedViewHost.DefaultContent>
-            <rxui:RoutedViewHost.ViewLocator>
-                <app:AppViewLocator />
-            </rxui:RoutedViewHost.ViewLocator>
-        </rxui:RoutedViewHost>
-    </Grid>
+                    <!-- The "NITROX" header. -->
+                    <Image Grid.Row="0" Classes="header" />
+                    <!-- Navigation items -->
+                    <Panel Grid.Row="1">
+                        <ItemsControl Items="{Binding NavigationHeaderItems}" />
+                        <ItemsControl Items="{Binding NavigationFooterItems}" VerticalAlignment="Bottom" Margin="0 0 0 20" />
+                    </Panel>
+                </Grid>
+            </Border>
+        
+            <!-- Right side -->
+            <rxui:RoutedViewHost Grid.Column="1" Classes="content" Router="{Binding Router}" PageTransition="{x:Null}">
+                <rxui:RoutedViewHost.DefaultContent>
+                    <TextBlock Text="Default content" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </rxui:RoutedViewHost.DefaultContent>
+                <rxui:RoutedViewHost.ViewLocator>
+                    <app:AppViewLocator />
+                </rxui:RoutedViewHost.ViewLocator>
+            </rxui:RoutedViewHost>
+        </Grid>
+    </Panel>
 </Window>

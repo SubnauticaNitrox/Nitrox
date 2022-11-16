@@ -1,19 +1,54 @@
 ﻿using System.Collections.Generic;
+using Avalonia.Controls;
 using Nitrox.Launcher.Models.Design;
+using Nitrox.Launcher.ViewModels.Abstract;
 using ReactiveUI;
 
 namespace Nitrox.Launcher.ViewModels;
 
-public class MainWindowViewModel : ReactiveObject, IScreen
+public class MainWindowViewModel : ViewModelBase, IScreen
 {
     public Interaction<CreateServerViewModel, CreateServerViewModel?> CreateServerDialog { get; } = new();
     public Interaction<ErrorViewModel, ErrorViewModel?> ErrorDialog { get; } = new();
     public RoutingState Router { get; } = new();
     public List<INavigationItem> NavigationHeaderItems { get; }
     public List<INavigationItem> NavigationFooterItems { get; }
+    public List<TitleBarItem> TitleBarItems { get; }
 
     public MainWindowViewModel()
     {
+        TitleBarItem maximizeControl = new()
+        {
+            Icon = "/Assets/Images/material-design-icons/max-w-10.png"
+        };
+        maximizeControl.Command = ReactiveCommand.Create(() =>
+        {
+            if (MainWindow.WindowState == WindowState.Normal)
+            {
+                MainWindow.WindowState = WindowState.Maximized;
+                maximizeControl.Icon = "/Assets/Images/material-design-icons/restore-w-10.png";
+            }
+            else
+            {
+                MainWindow.WindowState = WindowState.Normal;
+                maximizeControl.Icon = "/Assets/Images/material-design-icons/max-w-10.png";
+            }
+        });
+        TitleBarItems = new List<TitleBarItem>
+        {
+            new()
+            {
+                Command = ReactiveCommand.Create(() => MainWindow.WindowState = WindowState.Minimized),
+                Icon = "/Assets/Images/material-design-icons/min-w-10.png"
+            },
+            maximizeControl,
+            new()
+            {
+                Command = ReactiveCommand.Create(() => MainWindow.Close()),
+                Icon = "/Assets/Images/material-design-icons/close-w-10.png"
+            }
+        };
+        
         NavigationHeaderItems = new List<INavigationItem>
         {
             new NavigationHeader("PLAY"),

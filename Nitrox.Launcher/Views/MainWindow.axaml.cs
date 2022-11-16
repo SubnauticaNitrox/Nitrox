@@ -4,6 +4,7 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.ViewModels;
 using Nitrox.Launcher.Views.Abstract;
@@ -64,6 +65,11 @@ namespace Nitrox.Launcher.Views
             handledExceptions.Add(ex);
             
             await ViewModel!.ErrorDialog.Handle(new(ex));
+        }
+
+        private void TitleBar_OnPointerPressed(object? sender, PointerPressedEventArgs e)
+        {
+            BeginMoveDrag(e);
         }
     }
 }
