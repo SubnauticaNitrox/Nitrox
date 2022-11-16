@@ -38,12 +38,16 @@
                                 <StackPanel DockPanel.Dock="Left" Margin="16 0" VerticalAlignment="Center">
                                     <TextBlock FontSize="16" FontWeight="600" Text="{Binding Name}" />
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Classes="description">
-                                        <StackPanel Orientation="Horizontal">
-                                            <Ellipse Margin="0 0 6 0" Fill="#38C149" IsVisible="{Binding IsOnline}" />
-                                            <Ellipse Margin="0 0 6 0" Fill="#FF5E57" IsVisible="{Binding !IsOnline}" />
-                                            <TextBlock IsVisible="{Binding IsOnline}" Text="Online" />
-                                            <TextBlock IsVisible="{Binding !IsOnline}" Text="Offline" />
-                                        </StackPanel>
+                                        <Panel>
+                                            <StackPanel Orientation="Horizontal" IsVisible="{Binding IsOnline}">
+                                                <Ellipse Margin="0 0 6 0" Fill="#38C149" />
+                                                <TextBlock IsVisible="{Binding IsOnline}" Text="Online" />    
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" IsVisible="{Binding !IsOnline}">
+                                                <Ellipse Margin="0 0 6 0" Fill="#FF5E57" />
+                                                <TextBlock IsVisible="{Binding !IsOnline}" Text="Offline" />    
+                                            </StackPanel>
+                                        </Panel>
                                         <TextBlock Text="{Binding GameMode}" />
                                         <StackPanel Orientation="Horizontal">
                                             <TextBlock Text="{Binding Players}" />
