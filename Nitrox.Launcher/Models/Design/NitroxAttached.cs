@@ -16,6 +16,7 @@ public class NitroxAttached : AvaloniaObject
     public static readonly AttachedProperty<string> TextProperty = AvaloniaProperty.RegisterAttached<NitroxAttached, Interactive, string>("Text");
     public static readonly AttachedProperty<string> SubtextProperty = AvaloniaProperty.RegisterAttached<NitroxAttached, Interactive, string>("Subtext");
     public static readonly AttachedProperty<object> FocusProperty = AvaloniaProperty.RegisterAttached<NitroxAttached, Interactive, object>("Focus");
+    public static readonly AttachedProperty<bool> SelectedProperty = AvaloniaProperty.RegisterAttached<NitroxAttached, Interactive, bool>("Selected");
 
     static NitroxAttached()
     {
@@ -82,5 +83,15 @@ public class NitroxAttached : AvaloniaObject
             throw new NotSupportedException($@"Element {obj} must be a {nameof(Button)} or {nameof(IInputElement)} to support attached property ""{nameof(FocusProperty)}""");
         }
         obj.SetValue(FocusProperty, value);
+    }
+    
+    public static bool GetSelected(AvaloniaObject element)
+    {
+        return element.GetValue(SelectedProperty);
+    }
+
+    public static void SetSelected(IAvaloniaObject obj, bool value)
+    {
+        obj.SetValue(SelectedProperty, value);
     }
 }

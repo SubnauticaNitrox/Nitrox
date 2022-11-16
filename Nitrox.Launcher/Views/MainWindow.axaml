@@ -26,15 +26,17 @@
         <Border Grid.Column="0" Classes="nav">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="60" />
+                    <RowDefinition Height="80" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
         
                 <!-- The "NITROX" header. -->
                 <Image Grid.Row="0" Classes="header" />
                 <!-- Navigation items -->
-                <ItemsControl Grid.Row="1" Items="{Binding NavigationHeaderItems}" />
-                <ItemsControl Grid.Row="1" Items="{Binding NavigationFooterItems}" VerticalAlignment="Bottom" Margin="0 0 0 20" />
+                <Panel Grid.Row="1">
+                    <ItemsControl Items="{Binding NavigationHeaderItems}" />
+                    <ItemsControl Items="{Binding NavigationFooterItems}" VerticalAlignment="Bottom" Margin="0 0 0 20" />
+                </Panel>
             </Grid>
         </Border>
         

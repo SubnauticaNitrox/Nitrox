@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using Avalonia.Markup.Xaml;
+using Avalonia.Controls;
+using Nitrox.Launcher.Models.Design;
 using Nitrox.Launcher.ViewModels;
 using Nitrox.Launcher.Views.Abstract;
 using ReactiveUI;
@@ -35,8 +36,23 @@ namespace Nitrox.Launcher.Views
             
             RegisterModal<ErrorModal, ErrorViewModel>(() => ViewModel!.ErrorDialog);
             RegisterModal<CreateServerModal, CreateServerViewModel>(() => ViewModel!.CreateServerDialog);
+
+            this.WhenActivated(d =>
+            {
+                // Set clicked nav item as selected (and deselect the others).
+                Button? lastClickedNav = null;
+                d(Button.ClickEvent.Raised.Subscribe(tuple =>
+                {
+                    if (tuple.Item2.Source is Button btn && btn.Classes.Contains("nav"))
+                    {
+                        lastClickedNav?.SetValue(NitroxAttached.SelectedProperty, false);
+                        lastClickedNav = btn;
+                        btn.SetValue(NitroxAttached.SelectedProperty, true);
+                    }
+                }));
+            });
             
-            AvaloniaXamlLoader.Load(this);
+            InitializeComponent();
         }
 
         private async void UnhandledExceptionHandler(Exception ex)

@@ -48,12 +48,15 @@
             <Setter Property="Width" Value="108" />
             <Setter Property="Height" Value="24" />
             <Setter Property="HorizontalAlignment" Value="Left" />
-            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Bottom" />
             <Setter Property="Source" Value="/Assets/Images/nitroxLogo.png" />
         </Style>
         <Style Selector="Image.icon">
             <Setter Property="Width" Value="24" />
             <Setter Property="Height" Value="24" />
+            <Setter Property="Margin" Value="0 0 12 0" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
         <Style Selector="Button.nitrox">
             <Setter Property="Padding" Value="16 8.73" />
@@ -116,15 +119,42 @@
             <Setter Property="Foreground" Value="#007BFF" />
             <Setter Property="HoverForeground" Value="#007BFF" />
         </Style>
-        <Style Selector="Border.nav">
-            <Setter Property="Background" Value="#151516" />
-            <Setter Property="Padding" Value="34 0 0 0" />
-        </Style>
         <Style Selector="ContentControl.content">
             <Setter Property="Background" Value="#000000" />
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
             <Setter Property="VerticalContentAlignment" Value="Stretch" />
             <Setter Property="Padding" Value="34 45" />
+        </Style>
+        <Style Selector="Border.nav">
+            <Setter Property="Background" Value="#151516" />
+        </Style>
+        <Style Selector="Border.nav Image.header">
+            <Setter Property="Margin" Value="34 0 0 20" />
+        </Style>
+        <Style Selector="Border.nav TextBlock.header">
+            <Setter Property="FontSize" Value="10" />
+            <Setter Property="Margin" Value="34 20 0 10" />
+            <Setter Property="Opacity" Value="0.5" />
+        </Style>
+        <Style Selector="Border.nav Button.nav">
+            <Setter Property="CornerRadius" Value="0" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="34 10 10 10" />
+            <!-- Scale button to max horizontal so user can more easily click the navigation. -->
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Opacity" Value="0.5" />
+            <Setter Property="ToolTip.Placement" Value="Pointer" />
+        </Style>
+        <Style Selector="Border.nav Button.nav:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType=Button}}" />
+        </Style>
+        <Style Selector="Border.nav Button.nav:pressed /template/ ContentPresenter">
+            <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType=Button}}" />
+        </Style>
+        <Style Selector="Border.nav Button.nav[(design|NitroxAttached.Selected)=True]">
+            <Setter Property="Opacity" Value="1" />
         </Style>
         <Style Selector="Border.nav ItemsControl">
             <Setter Property="ItemsPanel">
@@ -138,13 +168,15 @@
                 <Setter.Value>
                     <design:MultiDataTemplate>
                         <DataTemplate DataType="{x:Type design:NavigationHeader}">
-                            <TextBlock Margin="0 20 0 10" FontSize="10" Text="{Binding Text}" />
+                            <TextBlock Classes="header" Text="{Binding Text}" />
                         </DataTemplate>
                         <DataTemplate DataType="{x:Type design:NavigationItem}">
-                            <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom">
-                                <Image Source="{Binding Icon, Converter={converters:BitmapAssetValueConverter}}" Classes="icon" />
-                                <Button FontSize="16" Content="{Binding Text}" Command="{Binding ClickCommand}" ToolTip.Placement="Pointer" ToolTip.Tip="{Binding ToolTipText}" />
-                            </StackPanel>
+                            <Button Classes="nav" Command="{Binding ClickCommand}" ToolTip.Tip="{Binding ToolTipText}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Classes="icon" Source="{Binding Icon, Converter={converters:BitmapAssetValueConverter}}" />
+                                    <TextBlock FontSize="16" Text="{Binding Text}" />
+                                </StackPanel>
+                            </Button>
                         </DataTemplate>
                     </design:MultiDataTemplate>
                 </Setter.Value>
