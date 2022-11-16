@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
@@ -11,6 +12,8 @@ namespace Nitrox.Launcher.Views
 {
     public partial class MainWindow : WindowBase<MainWindowViewModel>
     {
+        private readonly HashSet<Exception> handledExceptions = new();
+        
         public MainWindow()
         {
             // Handle thrown exceptions so they aren't hidden.
@@ -38,6 +41,12 @@ namespace Nitrox.Launcher.Views
 
         private async void UnhandledExceptionHandler(Exception ex)
         {
+            if (handledExceptions.Contains(ex))
+            {
+                return;
+            }
+            handledExceptions.Add(ex);
+            
             await ViewModel!.ErrorDialog.Handle(new(ex));
         }
     }
