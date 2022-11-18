@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
 using UnityEngine;
 
 namespace NitroxClient.Debuggers.Drawer;
@@ -76,16 +77,16 @@ public static class NitroxGUILayout
                 activeConvertibleFieldLastValue = value;
                 break;
             case false when recorded: // Lost focus this frame
-            {
-                activeConvertibleField = -1;
-                if (parsed)
                 {
+                    activeConvertibleField = -1;
+                    if (parsed)
+                    {
+                        break;
+                    }
+
+                    value = TryParseIConvertible(value, strValue, out IConvertible newValue) ? newValue : activeConvertibleFieldLastValue;
                     break;
                 }
-
-                value = TryParseIConvertible(value, strValue, out IConvertible newValue) ? newValue : activeConvertibleFieldLastValue;
-                break;
-            }
         }
 
         return value;
@@ -147,11 +148,61 @@ public static class NitroxGUILayout
 
     public static T EnumPopup<T>(T selected, float buttonWidth = VALUE_WIDTH) where T : Enum
     {
-        //TODO: Implement selecting of Enum in new window
-        Color oldColor = GUI.backgroundColor;
-        GUI.backgroundColor = Color.cyan;
-        GUILayout.Button(selected.ToString(), GUILayout.MaxWidth(buttonWidth));
-        GUI.backgroundColor = oldColor;
+        string[] enumNames = Enum.GetNames(typeof(T));
+        // Enums can be bit flags. If this is the case, we need to support toggling the bits
+        if (typeof(T).CustomAttributes.Select(a => a.AttributeType).Contains(typeof(FlagsAttribute)))
+        {
+            bool IsFlagSet(T value, T flag)
+            {
+                long lValue = Convert.ToInt64(value);
+                long lFlag = Convert.ToInt64(flag);
+                return (lValue & lFlag) != 0;
+            };
+
+            T SetFlags(T value, T flags, bool toggle)
+            {
+                long lValue = Convert.ToInt64(value);
+                long lFlag = Convert.ToInt64(flags);
+                if (toggle)
+                {
+                    lValue |= lFlag;
+                }
+                else
+                {
+                    lValue &= (~lFlag);
+                }
+                
+                if (lFlag == 0)
+                {
+                    lValue = 0;
+                }
+
+                return (T)Enum.ToObject(typeof(T), lValue);
+            };
+
+            T[] enumValues = Enum.GetValues(typeof(T)).Cast<T>().ToArray();
+
+            using (new GUILayout.VerticalScope())
+            {
+                for (int i = 0; i < enumValues.Length; i++)
+                {
+                    T enumValue = enumValues[i];
+                    string enumName = enumNames[i];
+
+                    bool isFlagSet = IsFlagSet(selected, enumValue);
+
+                    selected = SetFlags(selected, enumValue, GUILayout.Toggle(isFlagSet, enumName, "Button", GUILayout.Width(buttonWidth)));
+                }
+            }
+
+        }
+        else
+        {
+            // Normal enum, only picks one value
+            int selectedIndex = Array.IndexOf(enumNames, selected.ToString());
+            selectedIndex = GUILayout.SelectionGrid(selectedIndex, enumNames, 1, GUILayout.Width(buttonWidth));
+            return (T)Enum.Parse(typeof(T), enumNames[selectedIndex]);
+        }
         return selected;
     }
 

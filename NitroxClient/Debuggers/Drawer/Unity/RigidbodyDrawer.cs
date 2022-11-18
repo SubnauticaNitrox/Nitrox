@@ -38,15 +38,46 @@ namespace NitroxClient.Debuggers.Drawer.Unity
                 rb.angularDrag = NitroxGUILayout.FloatField(rb.angularDrag, VALUE_MAX_WIDTH);
             }
 
-            rb.useGravity = GUILayout.Toggle(rb.useGravity, "Use Gravity", GUILayout.Width(LABEL_WIDTH));
+            using (new GUILayout.HorizontalScope())
+            {
+                GUILayout.Label("Use Gravity");
+                NitroxGUILayout.Separator();
+                rb.useGravity = NitroxGUILayout.BoolField(rb.useGravity);
+            }
 
-            rb.isKinematic = GUILayout.Toggle(rb.isKinematic, "Is Kinematic", GUILayout.Width(LABEL_WIDTH));
+            using (new GUILayout.HorizontalScope())
+            {
+                GUILayout.Label("Is Kinematic");
+                NitroxGUILayout.Separator();
+                rb.isKinematic = NitroxGUILayout.BoolField(rb.isKinematic);
+            }
 
-            rb.interpolation = NitroxGUILayout.EnumPopup(rb.interpolation, LABEL_WIDTH);
+            GUILayout.Space(10);
 
-            rb.collisionDetectionMode = NitroxGUILayout.EnumPopup(rb.collisionDetectionMode, LABEL_WIDTH);
+            using (new GUILayout.HorizontalScope())
+            {
+                GUILayout.Label("Interpolate", GUILayout.Width(LABEL_WIDTH));
+                NitroxGUILayout.Separator();
+                rb.interpolation = NitroxGUILayout.EnumPopup(rb.interpolation, VALUE_MAX_WIDTH);
+            }
 
-            rb.freezeRotation = GUILayout.Toggle(rb.freezeRotation, "Freeze Rotation", GUILayout.Width(LABEL_WIDTH));
+            GUILayout.Space(10);
+
+            using (new GUILayout.HorizontalScope())
+            {
+                GUILayout.Label("Collision Detection", GUILayout.Width(LABEL_WIDTH));
+                NitroxGUILayout.Separator();
+                rb.collisionDetectionMode = NitroxGUILayout.EnumPopup(rb.collisionDetectionMode, VALUE_MAX_WIDTH);
+            }
+
+            GUILayout.Space(10);
+
+            using (new GUILayout.HorizontalScope())
+            {
+                GUILayout.Label("Freeze Rotation");
+                NitroxGUILayout.Separator();
+                rb.freezeRotation = NitroxGUILayout.BoolField(rb.freezeRotation);
+            }
 
             using (new GUILayout.HorizontalScope())
             {
