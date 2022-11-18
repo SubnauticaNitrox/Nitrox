@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.RegularExpressions;
-using NitroxClient.Debuggers.Drawer;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Helper;
@@ -34,7 +33,7 @@ public sealed class SceneExtraDebugger : BaseDebugger
     private readonly Lazy<Texture> arrowTexture, circleTexture;
 
     private const int PAGE_BUTTON_WIDTH = 100;
-    private int searchPage;
+    private int searchPageIndex;
     private int resultsPerPage = 30;
 
     public SceneExtraDebugger(SceneDebugger sceneDebugger, IMap map) : base(350, "Scene Tools", KeyCode.S, true, false, true, GUISkinCreationOptions.DERIVEDCOPY)
@@ -87,14 +86,16 @@ public sealed class SceneExtraDebugger : BaseDebugger
                 {
                     hierarchyScrollPos = scroll.scrollPosition;
 
-                    int startIndex = resultsPerPage * searchPage;
-                    for (int index = startIndex; index < gameObjectResults.Count; index++)
-                    {
-                        if (index > startIndex + resultsPerPage)
-                        {
-                            break;
-                        }
+                    int startIndex = resultsPerPage * searchPageIndex;
+                    int endIndex = startIndex + resultsPerPage;
 
+                    if (endIndex > gameObjectResults.Count)
+                    {
+                        endIndex = gameObjectResults.Count;
+                    }
+
+                    for (int index = startIndex; index < endIndex; index++)
+                    {
                         GameObject child = gameObjectResults[index];
                         if (child)
                         {
@@ -109,20 +110,25 @@ public sealed class SceneExtraDebugger : BaseDebugger
                     }
                 }
 
+                // Needed to push the pagination buttons
+                // down to the bottom when the scroll
+                // view doesn't have enough height
+                GUILayout.FlexibleSpace();
+
                 // Pagination of search results if necessary
                 if (gameObjectResults.Count > resultsPerPage)
                 {
                     using (new GUILayout.HorizontalScope("box"))
                     {
                         // Only enable the back button if we can go back
-                        GUI.enabled = searchPage > 0;
+                        GUI.enabled = searchPageIndex > 0;
                         if (GUILayout.Button("<", GUILayout.Width(PAGE_BUTTON_WIDTH)))
                         {
-                            searchPage--;
+                            searchPageIndex--;
                             hierarchyScrollPos = Vector2.zero;
-                            if (searchPage < 0)
+                            if (searchPageIndex < 0)
                             {
-                                searchPage = 0;
+                                searchPageIndex = 0;
                             }
                         }
                         GUI.enabled = true;
@@ -131,18 +137,18 @@ public sealed class SceneExtraDebugger : BaseDebugger
                         int maxPage = gameObjectResults.Count / resultsPerPage;
 
                         GUILayout.FlexibleSpace();
-                        GUILayout.Label("Page " + (searchPage + 1) + " of " + (maxPage + 1), GUILayout.ExpandHeight(true));
+                        GUILayout.Label($"Page {searchPageIndex + 1} of {maxPage + 1}", GUILayout.ExpandHeight(true));
                         GUILayout.FlexibleSpace();
 
                         // Only enable the next button if we can go forward
-                        GUI.enabled = maxPage > searchPage;
+                        GUI.enabled = maxPage > searchPageIndex;
                         if (GUILayout.Button(">", GUILayout.Width(PAGE_BUTTON_WIDTH)))
                         {
-                            searchPage++;
+                            searchPageIndex++;
                             hierarchyScrollPos = Vector2.zero;
-                            if (searchPage > maxPage)
+                            if (searchPageIndex > maxPage)
                             {
-                                searchPage = maxPage;
+                                searchPageIndex = maxPage;
                             }
                         }
 
@@ -181,7 +187,7 @@ public sealed class SceneExtraDebugger : BaseDebugger
                 if (GUILayout.Button("Search", "button", GUILayout.Width(80)))
                 {
                     gameObjectSearching = true;
-                    searchPage = 0;
+                    searchPageIndex = 0;
                     hierarchyScrollPos = Vector2.zero;
                 }
 
@@ -240,6 +246,7 @@ public sealed class SceneExtraDebugger : BaseDebugger
                 }
 
                 gameObjectSearchCache = gameObjectSearch;
+                searchPageIndex = 0;
             }
             else
             {
