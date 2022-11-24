@@ -55,6 +55,24 @@ public class NitroxId : ISerializable, IEquatable<NitroxId>
         info.AddValue("id", guid.ToByteArray());
     }
 
+    public static bool operator ==(NitroxId id1, NitroxId id2)
+    {
+        if (id1 is null)
+        {
+            if (id2 is null)
+            {
+                return true;
+            }
+            return false;
+        }
+        return id1.Equals(id2);
+    }
+
+    public static bool operator !=(NitroxId id1, NitroxId id2)
+    {
+        return !(id1 == id2);
+    }
+
     public override bool Equals(object obj)
     {
         if (ReferenceEquals(null, obj))
