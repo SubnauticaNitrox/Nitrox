@@ -121,7 +121,7 @@ namespace NitroxServer
 
         public void RemoveModule(NitroxId id)
         {
-            modules.RemoveAll(item => item.ItemId == id);
+            modules.RemoveAll(item => item.ItemId.Equals(id));
         }
 
         public List<EquippedItemData> GetModules()
@@ -136,7 +136,7 @@ namespace NitroxServer
 
         public void RemoveEquipment(NitroxId id)
         {
-            equippedItems.RemoveAll(item => item.ItemId == id);
+            equippedItems.RemoveAll(item => item.ItemId.Equals(id));
         }
 
         public List<EquippedItemData> GetEquipment()

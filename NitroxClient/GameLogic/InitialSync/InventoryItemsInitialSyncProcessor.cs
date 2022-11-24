@@ -66,7 +66,7 @@ namespace NitroxClient.GameLogic.InitialSync
                     Pickupable pickupable = item.GetComponent<Pickupable>();
                     Validate.NotNull(pickupable);
 
-                    if (itemData.ContainerId == packet.PlayerGameObjectId)
+                    if (itemData.ContainerId.Equals(packet.PlayerGameObjectId))
                     {
                         goals.Remove(pickupable.GetTechType());  // Remove notification goal event from item player has in any container
 
