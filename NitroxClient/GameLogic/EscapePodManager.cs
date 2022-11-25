@@ -89,7 +89,7 @@ namespace NitroxClient.GameLogic
 
             GameObject escapePod;
 
-            if (model.Id == MyEscapePodId)
+            if (model.Id.Equals(MyEscapePodId))
             {
                 escapePod = EscapePod.main.gameObject;
             }
@@ -195,7 +195,7 @@ namespace NitroxClient.GameLogic
 
             foreach (KeyValuePair<NitroxId, GameObject> dict in escapePodsById)
             {
-                if (NitroxEntity.GetId(dict.Value) == NitroxEntity.GetId(pod.gameObject))
+                if (NitroxEntity.GetId(dict.Value).Equals(NitroxEntity.GetId(pod.gameObject)))
                 {
                     id = dict.Key; // we're looking for serverside id here
                     break;
