@@ -52,24 +52,6 @@ public class VectorDrawer : IStructDrawer
         }
     }
 
-    /// <summary>
-    /// Draws a read-only vector3.
-    /// </summary>
-    /// <param name="vector3">The vector to draw.</param>
-    /// <param name="maxWidth">The max width of the drawn label</param>
-    public static void DrawVector3Label(Vector3 vector3, float maxWidth = MAX_WIDTH)
-    {
-        float valueWidth = maxWidth / 3 - 5;
-        using (new GUILayout.HorizontalScope(GUILayout.MaxWidth(maxWidth)))
-        {
-            GUILayout.Label(vector3.x.ToString(), GUILayout.Width(valueWidth));
-            NitroxGUILayout.Separator();
-            GUILayout.Label(vector3.y.ToString(), GUILayout.Width(valueWidth));
-            NitroxGUILayout.Separator();
-            GUILayout.Label(vector3.z.ToString(), GUILayout.Width(valueWidth));
-        }
-    }
-
     public static Vector4 DrawVector4(Vector4 vector4, float maxWidth = MAX_WIDTH)
     {
         float valueWidth = maxWidth / 4 - 6;
