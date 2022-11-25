@@ -83,14 +83,14 @@ namespace NitroxClient.Debuggers.Drawer.Unity
             {
                 GUILayout.Label("Velocity", NitroxGUILayout.DrawerLabel, GUILayout.Width(LABEL_WIDTH));
                 NitroxGUILayout.Separator();
-                rb.velocity = VectorDrawer.DrawVector3(rb.velocity, VALUE_MAX_WIDTH);
+                VectorDrawer.DrawVector3Label(rb.velocity, VALUE_MAX_WIDTH);
             }
 
             using (new GUILayout.HorizontalScope())
             {
                 GUILayout.Label("Angular Velocity", NitroxGUILayout.DrawerLabel, GUILayout.Width(LABEL_WIDTH));
                 NitroxGUILayout.Separator();
-                rb.angularVelocity = VectorDrawer.DrawVector3(rb.angularVelocity, VALUE_MAX_WIDTH);
+                VectorDrawer.DrawVector3Label(rb.angularVelocity, VALUE_MAX_WIDTH);
             }
         }
     }
