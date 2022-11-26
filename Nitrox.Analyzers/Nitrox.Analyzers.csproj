@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <!-- Analyzers MUST target netstandard2.0, do not update unless Microsoft (MSDN) says it's possible. -->
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 

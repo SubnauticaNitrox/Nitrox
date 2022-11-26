@@ -14,7 +14,7 @@ public sealed class UnitySkippedObjectLifetimeAnalyzer : DiagnosticAnalyzer
 {
     private const string ANALYZER_ID = nameof(UnitySkippedObjectLifetimeAnalyzer);
 
-    private static readonly DiagnosticDescriptor rule = new(ANALYZER_ID, "Tests that Unity object lifetime is not ignored", "'?.' on type {0} derives from 'UnityEngine.Object' which bypasses the Unity object lifetime check, use AliveOrNull instead",
+    private static readonly DiagnosticDescriptor rule = new(ANALYZER_ID, "Tests that Unity object lifetime is not ignored", "'?.' is invalid on type {0} as it derives from 'UnityEngine.Object', bypassing the Unity object lifetime check",
                                                             "Usage", DiagnosticSeverity.Error, true, "Tests that Unity object lifetime checks are not ignored.");
 
     /// <summary>
