@@ -30,6 +30,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nitrox.Test", "Nitrox.Test\
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Nitrox.Assets.Subnautica", "Nitrox.Assets.Subnautica\Nitrox.Assets.Subnautica.shproj", "{79E92B6D-5D25-4254-AC9F-FA9A1CD3CBC6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nitrox.Analyzers", "Nitrox.Analyzers\Nitrox.Analyzers.csproj", "{EB99BD64-EF43-4B06-BBFB-EB5DFA96E55D}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Nitrox.Assets.Subnautica\Nitrox.Assets.Subnautica.projitems*{79e92b6d-5d25-4254-ac9f-fa9a1cd3cbc6}*SharedItemsImports = 13
@@ -75,6 +77,10 @@ Global
 		{E4D8C360-34E4-4BE6-909F-3791DD9169B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E4D8C360-34E4-4BE6-909F-3791DD9169B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E4D8C360-34E4-4BE6-909F-3791DD9169B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB99BD64-EF43-4B06-BBFB-EB5DFA96E55D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB99BD64-EF43-4B06-BBFB-EB5DFA96E55D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB99BD64-EF43-4B06-BBFB-EB5DFA96E55D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB99BD64-EF43-4B06-BBFB-EB5DFA96E55D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

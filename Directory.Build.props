@@ -17,7 +17,7 @@
         <EnableNETAnalyzers>true</EnableNETAnalyzers>
     </PropertyGroup>
     
-    <PropertyGroup Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(MSBuildProjectName), '^Nitrox.*$'))">
+    <PropertyGroup Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(MSBuildProjectName), '^Nitrox.*$')) and '$(MSBuildProjectName)' != 'Nitrox.Analyzers'">
         <NitroxLibrary>true</NitroxLibrary>
     </PropertyGroup>
     <PropertyGroup Condition="'$(NitroxLibrary)' == 'true' and '$(MSBuildProjectName)' != 'NitroxModel' and '$(MSBuildProjectName)' != 'NitroxServer' and '$(MSBuildProjectName)' != 'Nitrox.BuildTool'">
@@ -27,6 +27,15 @@
         <TestLibrary>true</TestLibrary>
     </PropertyGroup>
 
+    <!-- Include our analyzer and code gen library to all Nitrox projects -->
+    <Choose>
+        <When Condition="'$(NitroxLibrary)' == 'true'">
+            <ItemGroup>
+                <ProjectReference Include="..\Nitrox.Analyzers\Nitrox.Analyzers.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+            </ItemGroup>
+        </When>
+    </Choose>
+    
     <!-- Include default project references to all other "Nitrox*" projects -->
     <Choose>
         <When Condition="'$(UnityModLibrary)' == 'true'">
