@@ -1,8 +1,10 @@
-﻿using System.Collections.Immutable;
+﻿extern alias JB;
+using System.Collections.Immutable;
 using System.Composition;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using JB::JetBrains.Annotations;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
@@ -15,12 +17,15 @@ using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 namespace Nitrox.Analyzers.Fixers;
 
 [Shared]
+[UsedImplicitly]
 [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(UnitySkippedObjectLifetimeFixProvider))]
 public sealed class UnitySkippedObjectLifetimeFixProvider : CodeFixProvider
 {
     private const string ALIVE_OR_NULL_REQUIRED_USING_NAME = "NitroxClient.Unity.Helper";
     private static readonly IdentifierNameSyntax aliveOrNull = IdentifierName("AliveOrNull");
     public override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(UnitySkippedObjectLifetimeAnalyzer.CONDITIONAL_ACCESS_DIAGNOSTIC_ID);
+
+    public override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
 
     public override async Task RegisterCodeFixesAsync(CodeFixContext context)
     {
@@ -29,9 +34,7 @@ public sealed class UnitySkippedObjectLifetimeFixProvider : CodeFixProvider
                                        .ConfigureAwait(false);
         Diagnostic diagnostic = context.Diagnostics.First();
         TextSpan diagnosticSpan = diagnostic.Location.SourceSpan;
-        ConditionalAccessExpressionSyntax declaration = root!.FindToken(diagnosticSpan.Start)
-                                                             .Parent!
-                                                             .AncestorsAndSelf()
+        ConditionalAccessExpressionSyntax declaration = root!.FindToken(diagnosticSpan.Start).Parent!.AncestorsAndSelf()
                                                              .OfType<ConditionalAccessExpressionSyntax>()
                                                              .First();
         context.RegisterCodeFix(
@@ -50,7 +53,7 @@ public sealed class UnitySkippedObjectLifetimeFixProvider : CodeFixProvider
         {
             return document;
         }
-        
+
         // 1. Wrap expression with an invocation to AliveOrNull, this will cause AliveOrNull to be called before the conditional access.
         InvocationExpressionSyntax wrappedExpression = InvocationExpression(MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, declaration.Expression, aliveOrNull));
         SyntaxNode newDeclaration = declaration.ReplaceNode(declaration.Expression, wrappedExpression);
