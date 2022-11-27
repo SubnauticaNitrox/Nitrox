@@ -38,8 +38,6 @@ namespace NitroxClient.GameLogic.InitialSync
             }
             Player.main.SetPosition(position, rotation);
 
-            PositionMaintainer updater = Player.mainObject.AddComponent<PositionMaintainer>();
-
             // Player.Update is setting SubRootID to null after Player position is set
             using (packetSender.Suppress<EscapePodChanged>())
             {
@@ -83,76 +81,7 @@ namespace NitroxClient.GameLogic.InitialSync
             // "position" is a relative position and "positionInVehicle" an absolute position
             Vector3 positionInVehicle = vehicleAngle * position + rootTransform.position;
             Player.main.SetPosition(positionInVehicle, rotation * vehicleAngle);
-
-            if (subRoot.isCyclops)
-            {
-                updater.Initialize(subRoot, position, rotation);
-                updater.SetEnabled(true);
-
-                void DisableComponent()
-                {
-                    updater.SetEnabled(false);
-                    updater.Deinitialize();
-                    Multiplayer.OnLoadingCompleted -= DisableComponent;
-                }
-
-                Multiplayer.OnLoadingCompleted += DisableComponent;
-            }
-            else
-            {
-                Player.main.cinematicModeActive = false;
-            }
-        }
-        
-        /// <summary>
-        /// Maintains the local player at certain relative location inside a subRoot, even if it moves.
-        /// </summary>
-        public class PositionMaintainer : MonoBehaviour
-        {
-            private SubRoot subRoot;
-            private Vector3 position;
-            private Quaternion rotation;
-
-            public void Initialize(SubRoot subRoot, Vector3 position, Quaternion rotation)
-            {
-                this.subRoot = subRoot;
-                this.position = position;
-                this.rotation = rotation;
-            }
-
-            public void Deinitialize()
-            {
-                subRoot = null;
-                position = default;
-                rotation = default;
-            }
-
-            public void LateUpdate()
-            {
-                if (!subRoot)
-                {
-                    return;
-                }
-                Player.main.SetPosition(CalculatePosition(), CalculateRotation());
-            }
-
-            public void SetEnabled(bool state)
-            {
-                Player.main.cinematicModeActive = state;
-                enabled = state;
-            }
-
-            public Vector3 CalculatePosition()
-            {
-                Transform rootTransform = subRoot.transform;
-                Quaternion vehicleAngle = rootTransform.rotation;
-                return vehicleAngle * position + rootTransform.position;
-            }
-
-            public Quaternion CalculateRotation()
-            {
-                return subRoot.transform.rotation * rotation;
-            }
+            Player.main.cinematicModeActive = false;
         }
     }
 }
