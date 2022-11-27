@@ -3,6 +3,7 @@
     <PropertyGroup>
         <Version>1.6.0.1</Version>
         <LangVersion>10</LangVersion>
+        <NitroxProject>false</NitroxProject>
         <TestLibrary>false</TestLibrary>
         <NitroxLibrary>false</NitroxLibrary>
         <UnityModLibrary>false</UnityModLibrary>
