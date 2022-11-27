@@ -375,8 +375,8 @@ public class SceneDebugger : BaseDebugger
                         case double:
                             field.SetValue(target, NitroxGUILayout.ConvertibleField((IConvertible)fieldValue));
                             break;
-                        case Enum enumValue:
-                            NitroxGUILayout.EnumPopup(enumValue);
+                        case Enum enumValue:                            
+                            field.SetValue(target, NitroxGUILayout.EnumPopup(enumValue));
                             break;
                         default:
                             GUILayout.TextArea(fieldValue.ToString(), "options");

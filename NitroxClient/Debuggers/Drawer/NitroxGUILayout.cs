@@ -146,20 +146,44 @@ public static class NitroxGUILayout
         return Math.Max(minValue, Math.Min(maxValue, FloatField(value, valueWidth)));
     }
 
+    /// <summary>
+    /// Displays an enum of an unknown type.
+    /// </summary>
+    /// <param name="selected">The selected enum value.</param>
+    /// <param name="buttonWidth">The button width</param>
+    /// <returns>The newly selected enum value.</returns>
+    public static Enum EnumPopup(Enum selected, float buttonWidth = VALUE_WIDTH)
+    {
+        return EnumPopupInternal(selected, buttonWidth);        
+    }
+
     public static T EnumPopup<T>(T selected, float buttonWidth = VALUE_WIDTH) where T : Enum
     {
-        string[] enumNames = Enum.GetNames(typeof(T));
+        return (T)EnumPopupInternal(selected, buttonWidth);
+    }
+
+    /// <summary>
+    /// Displays an enum of a known type.
+    /// </summary>
+    /// <param name="selected">The selected enum value.</param>
+    /// <param name="buttonWidth">The button width.</param>
+    /// <returns>The newly selected enum value.</returns>
+    private static Enum EnumPopupInternal(Enum selected, float buttonWidth = VALUE_WIDTH)
+    {
+        Type enumType = selected.GetType();
+        string[] enumNames = Enum.GetNames(enumType);
+
         // Enums can be bit flags. If this is the case, we need to support toggling the bits
-        if (typeof(T).CustomAttributes.Select(a => a.AttributeType).Contains(typeof(FlagsAttribute)))
+        if (enumType.CustomAttributes.Select(a => a.AttributeType).Contains(typeof(FlagsAttribute)))
         {
-            bool IsFlagSet(T value, T flag)
+            bool IsFlagSet<T>(T value, T flag)
             {
                 long lValue = Convert.ToInt64(value);
                 long lFlag = Convert.ToInt64(flag);
                 return (lValue & lFlag) != 0;
             };
 
-            T SetFlags(T value, T flags, bool toggle)
+            T SetFlags<T>(T value, T flags, bool toggle)
             {
                 long lValue = Convert.ToInt64(value);
                 long lFlag = Convert.ToInt64(flags);
@@ -171,7 +195,7 @@ public static class NitroxGUILayout
                 {
                     lValue &= (~lFlag);
                 }
-                
+
                 if (lFlag == 0)
                 {
                     lValue = 0;
@@ -180,13 +204,13 @@ public static class NitroxGUILayout
                 return (T)Enum.ToObject(typeof(T), lValue);
             };
 
-            T[] enumValues = Enum.GetValues(typeof(T)).Cast<T>().ToArray();
+            Enum[] enumValues = Enum.GetValues(enumType).Cast<Enum>().ToArray();
 
             using (new GUILayout.VerticalScope())
             {
                 for (int i = 0; i < enumValues.Length; i++)
                 {
-                    T enumValue = enumValues[i];
+                    Enum enumValue = enumValues[i];
                     string enumName = enumNames[i];
 
                     bool isFlagSet = IsFlagSet(selected, enumValue);
@@ -201,7 +225,7 @@ public static class NitroxGUILayout
             // Normal enum, only picks one value
             int selectedIndex = Array.IndexOf(enumNames, selected.ToString());
             selectedIndex = GUILayout.SelectionGrid(selectedIndex, enumNames, 1, GUILayout.Width(buttonWidth));
-            return (T)Enum.Parse(typeof(T), enumNames[selectedIndex]);
+            return (Enum)Enum.Parse(enumType, enumNames[selectedIndex]);
         }
         return selected;
     }
