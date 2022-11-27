@@ -2,7 +2,6 @@ root = true
 # See the documentation for reference:
 # https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference
 
-
 [*]
 indent_style = space
 
@@ -34,7 +33,7 @@ csharp_new_line_between_query_expression_clauses = true
 # Indentation
 csharp_indent_case_contents = true
 csharp_indent_switch_labels = true
-csharp_indent_labels = false
+csharp_indent_labels = flush_left
 
 # Spacing
 csharp_space_after_cast = false
