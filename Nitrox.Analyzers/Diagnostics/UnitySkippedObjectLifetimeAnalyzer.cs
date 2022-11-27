@@ -15,27 +15,38 @@ public sealed class UnitySkippedObjectLifetimeAnalyzer : DiagnosticAnalyzer
 {
     public const string CONDITIONAL_ACCESS_DIAGNOSTIC_ID = nameof(UnitySkippedObjectLifetimeAnalyzer) + "001";
     public const string IS_NULL_DIAGNOSTIC_ID = nameof(UnitySkippedObjectLifetimeAnalyzer) + "002";
+    public const string NULL_COALESCE_DIAGNOSTIC_ID = nameof(UnitySkippedObjectLifetimeAnalyzer) + "003";
+    private const string RULE_TITLE = "Tests that Unity object lifetime is not ignored";
+    private const string RULE_DESCRIPTION = "Tests that Unity object lifetime checks are not ignored.";
 
     private static readonly DiagnosticDescriptor conditionalAccessRule = new(CONDITIONAL_ACCESS_DIAGNOSTIC_ID,
-                                                                             "Tests that Unity object lifetime is not ignored",
+                                                                             RULE_TITLE,
                                                                              "'?.' is invalid on type '{0}' as it derives from 'UnityEngine.Object', bypassing the Unity object lifetime check",
                                                                              "Usage",
                                                                              DiagnosticSeverity.Error,
                                                                              true,
-                                                                             "Tests that Unity object lifetime checks are not ignored.");
+                                                                             RULE_DESCRIPTION);
 
     private static readonly DiagnosticDescriptor isNullRule = new(IS_NULL_DIAGNOSTIC_ID,
-                                                                  "Tests that Unity object lifetime is not ignored",
+                                                                  RULE_TITLE,
                                                                   "'is null' is invalid on type '{0}' as it derives from 'UnityEngine.Object', bypassing the Unity object lifetime check",
                                                                   "Usage",
                                                                   DiagnosticSeverity.Error,
                                                                   true,
-                                                                  "Tests that Unity object lifetime checks are not ignored.");
+                                                                  RULE_DESCRIPTION);
+
+    private static readonly DiagnosticDescriptor nullCoalesceRule = new(NULL_COALESCE_DIAGNOSTIC_ID,
+                                                                        RULE_TITLE,
+                                                                        "'??' is invalid on type '{0}' as it derives from 'UnityEngine.Object', bypassing the Unity object lifetime check",
+                                                                        "Usage",
+                                                                        DiagnosticSeverity.Error,
+                                                                        true,
+                                                                        RULE_DESCRIPTION);
 
     /// <summary>
     ///     Gets the list of rules of supported diagnostics.
     /// </summary>
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(conditionalAccessRule, isNullRule);
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(conditionalAccessRule, isNullRule, nullCoalesceRule);
 
     /// <summary>
     ///     Initializes the analyzer by registering on symbol occurrence in the targeted code.
@@ -47,6 +58,7 @@ public sealed class UnitySkippedObjectLifetimeAnalyzer : DiagnosticAnalyzer
 
         context.RegisterSyntaxNodeAction(AnalyzeIsNullNode, SyntaxKind.IsPatternExpression);
         context.RegisterSyntaxNodeAction(AnalyzeConditionalAccessNode, SyntaxKind.ConditionalAccessExpression);
+        context.RegisterSyntaxNodeAction(AnalyzeCoalesceNode, SyntaxKind.CoalesceExpression);
     }
 
     private void AnalyzeIsNullNode(SyntaxNodeAnalysisContext context)
@@ -62,13 +74,10 @@ public sealed class UnitySkippedObjectLifetimeAnalyzer : DiagnosticAnalyzer
             return;
         }
         // Is it on a UnityEngine.Object?
-        ITypeSymbol originSymbol = context.SemanticModel.GetTypeInfo(expression.Expression).Type;
-        ITypeSymbol unityObjectSymbol = ExtractUnityObject(originSymbol);
-        if (unityObjectSymbol == null)
+        if (IsUnityObjectExpression(context, expression.Expression, out ITypeSymbol originSymbol))
         {
-            return;
+            context.ReportDiagnostic(Diagnostic.Create(isNullRule, constantPattern.GetLocation(), originSymbol!.Name));
         }
-        context.ReportDiagnostic(Diagnostic.Create(isNullRule, constantPattern.GetLocation(), originSymbol!.Name));
     }
 
     private void AnalyzeConditionalAccessNode(SyntaxNodeAnalysisContext context)
@@ -79,36 +88,48 @@ public sealed class UnitySkippedObjectLifetimeAnalyzer : DiagnosticAnalyzer
         }
 
         ConditionalAccessExpressionSyntax expression = (ConditionalAccessExpressionSyntax)context.Node;
-        ITypeSymbol originSymbol = context.SemanticModel.GetTypeInfo(expression.Expression).Type;
-        ITypeSymbol unityObjectSymbol = ExtractUnityObject(originSymbol);
-        if (unityObjectSymbol == null || IsFixedWithAliveOrNull(context, expression))
+        if (IsUnityObjectExpression(context, expression.Expression, out ITypeSymbol originSymbol) && !IsFixedWithAliveOrNull(context, expression))
         {
-            return;
+            context.ReportDiagnostic(Diagnostic.Create(conditionalAccessRule, context.Node.GetLocation(), originSymbol!.Name));
         }
-        context.ReportDiagnostic(Diagnostic.Create(conditionalAccessRule, context.Node.GetLocation(), originSymbol!.Name));
     }
 
-    private bool IsUnityObject(ITypeSymbol symbol)
+    private void AnalyzeCoalesceNode(SyntaxNodeAnalysisContext context)
     {
-        string name = symbol.ToDisplayString();
-        return name is "UnityEngine.GameObject" or "UnityEngine.Object";
+        BinaryExpressionSyntax expression = (BinaryExpressionSyntax)context.Node;
+        if (IsUnityObjectExpression(context, expression.Left, out ITypeSymbol originSymbol))
+        {
+            context.ReportDiagnostic(Diagnostic.Create(nullCoalesceRule, context.Node.GetLocation(), originSymbol!.Name));
+        }
     }
 
-    private ITypeSymbol ExtractUnityObject(ITypeSymbol typeSymbol)
+    private bool IsUnityObjectExpression(SyntaxNodeAnalysisContext context, ExpressionSyntax possibleUnityAccessExpression, out ITypeSymbol unityAccessSymbol)
     {
-        if (IsUnityObject(typeSymbol))
+        static bool IsUnityObject(ITypeSymbol symbol)
         {
-            return typeSymbol;
+            string name = symbol.ToDisplayString();
+            return name is "UnityEngine.GameObject" or "UnityEngine.Object";
         }
-        ITypeSymbol baseType = typeSymbol;
-        while (baseType?.BaseType != null)
+
+        static ITypeSymbol ExtractUnityObject(ITypeSymbol typeSymbol)
         {
-            baseType = baseType.BaseType;
-            if (IsUnityObject(baseType))
+            if (IsUnityObject(typeSymbol))
             {
-                return baseType;
+                return typeSymbol;
             }
+            ITypeSymbol baseType = typeSymbol;
+            while (baseType?.BaseType != null)
+            {
+                baseType = baseType.BaseType;
+                if (IsUnityObject(baseType))
+                {
+                    return baseType;
+                }
+            }
+            return null;
         }
-        return null;
+
+        unityAccessSymbol = context.SemanticModel.GetTypeInfo(possibleUnityAccessExpression).Type;
+        return ExtractUnityObject(unityAccessSymbol) != null;
     }
 }
