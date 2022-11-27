@@ -1,6 +1,7 @@
-﻿using System;
+﻿extern alias JB;
+using System;
 using System.Runtime.CompilerServices;
-using JetBrains.Annotations;
+using JB::JetBrains.Annotations;
 using NitroxModel.DataStructures.Util;
 
 namespace NitroxModel.Helper;
