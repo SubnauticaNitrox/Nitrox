@@ -16,13 +16,21 @@ public sealed class UnitySkippedObjectLifetimeAnalyzer : DiagnosticAnalyzer
     public const string CONDITIONAL_ACCESS_DIAGNOSTIC_ID = nameof(UnitySkippedObjectLifetimeAnalyzer) + "001";
     public const string IS_NULL_DIAGNOSTIC_ID = nameof(UnitySkippedObjectLifetimeAnalyzer) + "002";
 
-    private static readonly DiagnosticDescriptor conditionalAccessRule = new(CONDITIONAL_ACCESS_DIAGNOSTIC_ID, "Tests that Unity object lifetime is not ignored",
-                                                                             "'?.' is invalid on type {0} as it derives from 'UnityEngine.Object', bypassing the Unity object lifetime check",
-                                                                             "Usage", DiagnosticSeverity.Error, true, "Tests that Unity object lifetime checks are not ignored.");
+    private static readonly DiagnosticDescriptor conditionalAccessRule = new(CONDITIONAL_ACCESS_DIAGNOSTIC_ID,
+                                                                             "Tests that Unity object lifetime is not ignored",
+                                                                             "'?.' is invalid on type '{0}' as it derives from 'UnityEngine.Object', bypassing the Unity object lifetime check",
+                                                                             "Usage",
+                                                                             DiagnosticSeverity.Error,
+                                                                             true,
+                                                                             "Tests that Unity object lifetime checks are not ignored.");
 
-    private static readonly DiagnosticDescriptor isNullRule = new(IS_NULL_DIAGNOSTIC_ID, "Tests that Unity object lifetime is not ignored",
-                                                                  "'is null' is invalid on type {0} as it derives from 'UnityEngine.Object', bypassing the Unity object lifetime check",
-                                                                  "Usage", DiagnosticSeverity.Error, true, "Tests that Unity object lifetime checks are not ignored.");
+    private static readonly DiagnosticDescriptor isNullRule = new(IS_NULL_DIAGNOSTIC_ID,
+                                                                  "Tests that Unity object lifetime is not ignored",
+                                                                  "'is null' is invalid on type '{0}' as it derives from 'UnityEngine.Object', bypassing the Unity object lifetime check",
+                                                                  "Usage",
+                                                                  DiagnosticSeverity.Error,
+                                                                  true,
+                                                                  "Tests that Unity object lifetime checks are not ignored.");
 
     /// <summary>
     ///     Gets the list of rules of supported diagnostics.
@@ -65,10 +73,15 @@ public sealed class UnitySkippedObjectLifetimeAnalyzer : DiagnosticAnalyzer
 
     private void AnalyzeConditionalAccessNode(SyntaxNodeAnalysisContext context)
     {
+        static bool IsFixedWithAliveOrNull(SyntaxNodeAnalysisContext context, ConditionalAccessExpressionSyntax expression)
+        {
+            return (context.SemanticModel.GetSymbolInfo(expression.Expression).Symbol as IMethodSymbol)?.Name == "AliveOrNull";
+        }
+
         ConditionalAccessExpressionSyntax expression = (ConditionalAccessExpressionSyntax)context.Node;
         ITypeSymbol originSymbol = context.SemanticModel.GetTypeInfo(expression.Expression).Type;
         ITypeSymbol unityObjectSymbol = ExtractUnityObject(originSymbol);
-        if (unityObjectSymbol == null || (context.SemanticModel.GetSymbolInfo(expression.Expression).Symbol as IMethodSymbol)?.Name == "AliveOrNull")
+        if (unityObjectSymbol == null || IsFixedWithAliveOrNull(context, expression))
         {
             return;
         }
