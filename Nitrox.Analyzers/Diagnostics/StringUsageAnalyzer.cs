@@ -64,7 +64,7 @@ public sealed class StringUsageAnalyzer : DiagnosticAnalyzer
         }
 
         BinaryExpressionSyntax expression = (BinaryExpressionSyntax)context.Node;
-        // Deduplication warnings on the whole concat expression.
+        // Deduplicate warnings. Only left most '+' of the expression should be handled here.
         if (IsLeftMostNodeInConcat(expression.Parent))
         {
             return;
