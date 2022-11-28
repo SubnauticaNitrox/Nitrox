@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Immutable;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text.Json;
 using Microsoft.CodeAnalysis;
@@ -14,7 +13,6 @@ namespace Nitrox.Analyzers.Diagnostics;
 ///     Tests that requested localization keys exist in the English localization file.
 /// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-[SuppressMessage("MicrosoftCodeAnalysisPerformance", "RS1012:Start action has no registered actions")]
 public sealed class LocalizationAnalyzer : DiagnosticAnalyzer
 {
     public const string INVALID_LOCALIZATION_KEY_DIAGNOSTIC_ID = nameof(LocalizationAnalyzer) + "001";
@@ -46,9 +44,11 @@ public sealed class LocalizationAnalyzer : DiagnosticAnalyzer
         context.RegisterCompilationStartAction(startContext =>
         {
             startContext.Options.AnalyzerConfigOptionsProvider.GlobalOptions.TryGetValue("build_property.projectdir", out string projectDir);
-            LocalizationHelper.Load(projectDir);
+            if (LocalizationHelper.Load(projectDir))
+            {
+                startContext.RegisterSyntaxNodeAction(AnalyzeStringNode, SyntaxKind.StringLiteralExpression);
+            }
         });
-        context.RegisterSyntaxNodeAction(AnalyzeStringNode, SyntaxKind.StringLiteralExpression);
     }
 
     /// <summary>
@@ -56,10 +56,6 @@ public sealed class LocalizationAnalyzer : DiagnosticAnalyzer
     /// </summary>
     private void AnalyzeStringNode(SyntaxNodeAnalysisContext context)
     {
-        if (LocalizationHelper.IsEmpty)
-        {
-            return;
-        }
         LiteralExpressionSyntax expression = (LiteralExpressionSyntax)context.Node;
         if (expression.Parent is not ArgumentSyntax argument)
         {
@@ -129,16 +125,16 @@ public sealed class LocalizationAnalyzer : DiagnosticAnalyzer
             }
         }
 
-        public static void Load(string projectDir)
+        public static bool Load(string projectDir)
         {
             if (string.IsNullOrWhiteSpace(projectDir))
             {
-                return;
+                return false;
             }
             string solutionDir = Directory.GetParent(projectDir)?.Parent?.FullName;
             if (!Directory.Exists(solutionDir))
             {
-                return;
+                return false;
             }
 
             lock (locker)
@@ -146,12 +142,13 @@ public sealed class LocalizationAnalyzer : DiagnosticAnalyzer
                 EnglishLocalizationFileName = Path.Combine(solutionDir, relativePathFromSolutionDirToEnglishLanguageFile);
                 if (!File.Exists(EnglishLocalizationFileName))
                 {
-                    return;
+                    return false;
                 }
 
                 using FileStream stream = File.OpenRead(EnglishLocalizationFileName);
                 EnglishLocalization = JsonSerializer.Deserialize<ImmutableDictionary<string, string>>(stream);
             }
+            return true;
         }
     }
 }
