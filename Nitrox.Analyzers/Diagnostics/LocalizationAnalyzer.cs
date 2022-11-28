@@ -20,7 +20,7 @@ public sealed class LocalizationAnalyzer : DiagnosticAnalyzer
     private const string NITROX_LOCALIZATION_PREFIX = "Nitrox_";
     private static readonly string relativePathFromSolutionDirToEnglishLanguageFile = Path.Combine("Nitrox.Assets.Subnautica", "LanguageFiles", "en.json");
 
-    private static readonly DiagnosticDescriptor invalidLocalizationKey = new(INVALID_LOCALIZATION_KEY_DIAGNOSTIC_ID,
+    private static readonly DiagnosticDescriptor invalidLocalizationKeyRule = new(INVALID_LOCALIZATION_KEY_DIAGNOSTIC_ID,
                                                                               "Tests localization usages are valid",
                                                                               "Localization key '{0}' does not exist in '{1}'",
                                                                               "Usage",
@@ -31,7 +31,7 @@ public sealed class LocalizationAnalyzer : DiagnosticAnalyzer
     /// <summary>
     ///     Gets the list of rules of supported diagnostics.
     /// </summary>
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(invalidLocalizationKey);
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(invalidLocalizationKeyRule);
 
     /// <summary>
     ///     Initializes the analyzer by registering on symbol occurrence in the targeted code.
@@ -83,7 +83,7 @@ public sealed class LocalizationAnalyzer : DiagnosticAnalyzer
         {
             return;
         }
-        context.ReportDiagnostic(Diagnostic.Create(invalidLocalizationKey, context.Node.GetLocation(), stringValue, LocalizationHelper.FileName));
+        context.ReportDiagnostic(Diagnostic.Create(invalidLocalizationKeyRule, context.Node.GetLocation(), stringValue, LocalizationHelper.FileName));
     }
 
     /// <summary>
