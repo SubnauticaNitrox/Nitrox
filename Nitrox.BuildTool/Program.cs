@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -34,7 +35,7 @@ namespace Nitrox.BuildTool
 
             GameInstallData game = await Task.Factory.StartNew(EnsureGame).ConfigureAwait(false);
             Console.WriteLine($"Found game at {game.InstallDir}");
-            await Task.Factory.StartNew(() => EnsurePublicizedAssemblies(game)).ConfigureAwait(false);
+            await EnsurePublicizedAssembliesAsync(game).ConfigureAwait(false);
 
             Exit();
         }
@@ -91,7 +92,7 @@ namespace Nitrox.BuildTool
             return game;
         }
 
-        private static void EnsurePublicizedAssemblies(GameInstallData game)
+        private static async Task EnsurePublicizedAssembliesAsync(GameInstallData game)
         {
             if (Directory.Exists(Path.Combine(GeneratedOutputDir, "publicized_assemblies")))
             {
@@ -100,12 +101,9 @@ namespace Nitrox.BuildTool
             }
 
             string[] dllsToPublicize = Directory.GetFiles(game.ManagedDllsDir, "Assembly-*.dll");
-            foreach (string publicizedDll in Publicizer.Execute(dllsToPublicize,
-                                                                "",
-                                                                Path.Combine(GeneratedOutputDir, "publicized_assemblies")))
-            {
-                Console.WriteLine($"Publicized dll: {publicizedDll}");
-            }
+            Stopwatch sw = Stopwatch.StartNew();
+            await Publicizer.PublicizeAsync(dllsToPublicize, "", Path.Combine(GeneratedOutputDir, "publicized_assemblies"));
+            Console.WriteLine($"Publicized {dllsToPublicize.Length} DLL(s) in {Math.Round(sw.Elapsed.TotalSeconds, 2)}s");
         }
     }
 }
