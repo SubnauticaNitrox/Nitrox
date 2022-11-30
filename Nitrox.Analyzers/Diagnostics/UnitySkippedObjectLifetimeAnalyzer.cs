@@ -3,6 +3,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
+using Nitrox.Analyzers.Extensions;
 
 namespace Nitrox.Analyzers.Diagnostics;
 
@@ -13,6 +14,8 @@ namespace Nitrox.Analyzers.Diagnostics;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class UnitySkippedObjectLifetimeAnalyzer : DiagnosticAnalyzer
 {
+    public const string FIX_FUNCTION_NAME = "AliveOrNull";
+    public const string FIX_FUNCTION_NAMESPACE = "NitroxClient.Unity.Helper";
     public const string CONDITIONAL_ACCESS_DIAGNOSTIC_ID = nameof(UnitySkippedObjectLifetimeAnalyzer) + "001";
     public const string IS_NULL_DIAGNOSTIC_ID = nameof(UnitySkippedObjectLifetimeAnalyzer) + "002";
     public const string NULL_COALESCE_DIAGNOSTIC_ID = nameof(UnitySkippedObjectLifetimeAnalyzer) + "003";
@@ -84,7 +87,7 @@ public sealed class UnitySkippedObjectLifetimeAnalyzer : DiagnosticAnalyzer
     {
         static bool IsFixedWithAliveOrNull(SyntaxNodeAnalysisContext context, ConditionalAccessExpressionSyntax expression)
         {
-            return (context.SemanticModel.GetSymbolInfo(expression.Expression).Symbol as IMethodSymbol)?.Name == "AliveOrNull";
+            return (context.SemanticModel.GetSymbolInfo(expression.Expression).Symbol as IMethodSymbol)?.Name == FIX_FUNCTION_NAME;
         }
 
         ConditionalAccessExpressionSyntax expression = (ConditionalAccessExpressionSyntax)context.Node;
@@ -103,33 +106,9 @@ public sealed class UnitySkippedObjectLifetimeAnalyzer : DiagnosticAnalyzer
         }
     }
 
-    private bool IsUnityObjectExpression(SyntaxNodeAnalysisContext context, ExpressionSyntax possibleUnityAccessExpression, out ITypeSymbol unityAccessSymbol)
+    private bool IsUnityObjectExpression(SyntaxNodeAnalysisContext context, ExpressionSyntax possibleUnityAccessExpression, out ITypeSymbol possibleUnitySymbol)
     {
-        static bool IsUnityObject(ITypeSymbol symbol)
-        {
-            string name = symbol.ToDisplayString();
-            return name is "UnityEngine.GameObject" or "UnityEngine.Object";
-        }
-
-        static ITypeSymbol ExtractUnityObject(ITypeSymbol typeSymbol)
-        {
-            if (IsUnityObject(typeSymbol))
-            {
-                return typeSymbol;
-            }
-            ITypeSymbol baseType = typeSymbol;
-            while (baseType?.BaseType != null)
-            {
-                baseType = baseType.BaseType;
-                if (IsUnityObject(baseType))
-                {
-                    return baseType;
-                }
-            }
-            return null;
-        }
-
-        unityAccessSymbol = context.SemanticModel.GetTypeInfo(possibleUnityAccessExpression).Type;
-        return ExtractUnityObject(unityAccessSymbol) != null;
+        possibleUnitySymbol = context.SemanticModel.GetTypeInfo(possibleUnityAccessExpression).Type;
+        return possibleUnitySymbol.IsType("Object", "UnityEngine");
     }
 }

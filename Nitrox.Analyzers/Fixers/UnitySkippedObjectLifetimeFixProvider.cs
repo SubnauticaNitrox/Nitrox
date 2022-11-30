@@ -21,8 +21,7 @@ namespace Nitrox.Analyzers.Fixers;
 [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(UnitySkippedObjectLifetimeFixProvider))]
 public sealed class UnitySkippedObjectLifetimeFixProvider : CodeFixProvider
 {
-    private const string ALIVE_OR_NULL_REQUIRED_USING_NAME = "NitroxClient.Unity.Helper";
-    private static readonly IdentifierNameSyntax aliveOrNull = IdentifierName("AliveOrNull");
+    private static readonly IdentifierNameSyntax aliveOrNull = IdentifierName(UnitySkippedObjectLifetimeAnalyzer.FIX_FUNCTION_NAME);
     public override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(UnitySkippedObjectLifetimeAnalyzer.CONDITIONAL_ACCESS_DIAGNOSTIC_ID);
 
     public override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
@@ -60,9 +59,9 @@ public sealed class UnitySkippedObjectLifetimeFixProvider : CodeFixProvider
         root = root!.ReplaceNode(declaration, newDeclaration);
         // 2. Ensure using statement for extension method .AliveOrNull().
         // This is done after the "AliveOrNull" wrap because the declaration instance can't be found when root instance updates.
-        if (root is CompilationUnitSyntax compilationRoot && compilationRoot.Usings.All(u => u.Name.ToString() != ALIVE_OR_NULL_REQUIRED_USING_NAME))
+        if (root is CompilationUnitSyntax compilationRoot && compilationRoot.Usings.All(u => u.Name.ToString() != UnitySkippedObjectLifetimeAnalyzer.FIX_FUNCTION_NAMESPACE))
         {
-            root = compilationRoot.AddUsings(UsingDirective(IdentifierName(ALIVE_OR_NULL_REQUIRED_USING_NAME)));
+            root = compilationRoot.AddUsings(UsingDirective(aliveOrNull));
         }
 
         // Replace the old document with the new.
