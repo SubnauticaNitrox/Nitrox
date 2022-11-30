@@ -15,7 +15,7 @@ namespace Nitrox.Analyzers.Diagnostics;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class LocalizationAnalyzer : DiagnosticAnalyzer
 {
-    public const string INVALID_LOCALIZATION_KEY_DIAGNOSTIC_ID = nameof(LocalizationAnalyzer) + "001";
+    public const string INVALID_LOCALIZATION_KEY_DIAGNOSTIC_ID = $"{nameof(LocalizationAnalyzer)}001";
 
     private const string NITROX_LOCALIZATION_PREFIX = "Nitrox_";
     private static readonly string relativePathFromSolutionDirToEnglishLanguageFile = Path.Combine("Nitrox.Assets.Subnautica", "LanguageFiles", "en.json");

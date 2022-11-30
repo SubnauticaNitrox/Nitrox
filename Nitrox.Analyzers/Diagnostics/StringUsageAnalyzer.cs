@@ -9,7 +9,7 @@ namespace Nitrox.Analyzers.Diagnostics;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class StringUsageAnalyzer : DiagnosticAnalyzer
 {
-    public const string PREFER_INTERPOLATED_STRING_DIAGNOSTIC_ID = nameof(StringUsageAnalyzer) + "001";
+    public const string PREFER_INTERPOLATED_STRING_DIAGNOSTIC_ID = $"{nameof(StringUsageAnalyzer)}001";
 
     private static readonly DiagnosticDescriptor preferInterpolatedStringRule = new(PREFER_INTERPOLATED_STRING_DIAGNOSTIC_ID,
                                                                               "Prefer interpolated string over string concat",

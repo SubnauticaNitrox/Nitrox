@@ -16,9 +16,9 @@ public sealed class UnitySkippedObjectLifetimeAnalyzer : DiagnosticAnalyzer
 {
     public const string FIX_FUNCTION_NAME = "AliveOrNull";
     public const string FIX_FUNCTION_NAMESPACE = "NitroxClient.Unity.Helper";
-    public const string CONDITIONAL_ACCESS_DIAGNOSTIC_ID = nameof(UnitySkippedObjectLifetimeAnalyzer) + "001";
-    public const string IS_NULL_DIAGNOSTIC_ID = nameof(UnitySkippedObjectLifetimeAnalyzer) + "002";
-    public const string NULL_COALESCE_DIAGNOSTIC_ID = nameof(UnitySkippedObjectLifetimeAnalyzer) + "003";
+    public const string CONDITIONAL_ACCESS_DIAGNOSTIC_ID = $"{nameof(UnitySkippedObjectLifetimeAnalyzer)}001";
+    public const string IS_NULL_DIAGNOSTIC_ID = $"{nameof(UnitySkippedObjectLifetimeAnalyzer)}002";
+    public const string NULL_COALESCE_DIAGNOSTIC_ID = $"{nameof(UnitySkippedObjectLifetimeAnalyzer)}003";
     private const string RULE_TITLE = "Tests that Unity object lifetime is not ignored";
     private const string RULE_DESCRIPTION = "Tests that Unity object lifetime checks are not ignored.";
 
