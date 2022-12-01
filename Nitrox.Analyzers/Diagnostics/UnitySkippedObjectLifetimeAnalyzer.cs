@@ -59,12 +59,21 @@ public sealed class UnitySkippedObjectLifetimeAnalyzer : DiagnosticAnalyzer
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
         context.EnableConcurrentExecution();
 
-        context.RegisterSyntaxNodeAction(AnalyzeIsNullNode, SyntaxKind.IsPatternExpression);
-        context.RegisterSyntaxNodeAction(AnalyzeConditionalAccessNode, SyntaxKind.ConditionalAccessExpression);
-        context.RegisterSyntaxNodeAction(AnalyzeCoalesceNode, SyntaxKind.CoalesceExpression);
+        context.RegisterCompilationStartAction(compStartContext =>
+        {
+            INamedTypeSymbol unityObjectTypeSymbol = compStartContext.Compilation.GetTypeByMetadataName("UnityEngine.Object");
+            if (unityObjectTypeSymbol == null)
+            {
+                return;
+            }
+            
+            compStartContext.RegisterSyntaxNodeAction(c => AnalyzeIsNullNode(c, unityObjectTypeSymbol), SyntaxKind.IsPatternExpression);
+            compStartContext.RegisterSyntaxNodeAction(c => AnalyzeConditionalAccessNode(c, unityObjectTypeSymbol), SyntaxKind.ConditionalAccessExpression);
+            compStartContext.RegisterSyntaxNodeAction(c => AnalyzeCoalesceNode(c, unityObjectTypeSymbol), SyntaxKind.CoalesceExpression);
+        });
     }
 
-    private void AnalyzeIsNullNode(SyntaxNodeAnalysisContext context)
+    private void AnalyzeIsNullNode(SyntaxNodeAnalysisContext context, ITypeSymbol unityObjectSymbol)
     {
         IsPatternExpressionSyntax expression = (IsPatternExpressionSyntax)context.Node;
         // Is this a "is null" check?
@@ -77,13 +86,13 @@ public sealed class UnitySkippedObjectLifetimeAnalyzer : DiagnosticAnalyzer
             return;
         }
         // Is it on a UnityEngine.Object?
-        if (IsUnityObjectExpression(context, expression.Expression, out ITypeSymbol originSymbol))
+        if (IsUnityObjectExpression(context, expression.Expression, unityObjectSymbol, out ITypeSymbol originSymbol))
         {
             context.ReportDiagnostic(Diagnostic.Create(isNullRule, constantPattern.GetLocation(), originSymbol!.Name));
         }
     }
 
-    private void AnalyzeConditionalAccessNode(SyntaxNodeAnalysisContext context)
+    private void AnalyzeConditionalAccessNode(SyntaxNodeAnalysisContext context, ITypeSymbol unityObjectSymbol)
     {
         static bool IsFixedWithAliveOrNull(SyntaxNodeAnalysisContext context, ConditionalAccessExpressionSyntax expression)
         {
@@ -91,24 +100,24 @@ public sealed class UnitySkippedObjectLifetimeAnalyzer : DiagnosticAnalyzer
         }
 
         ConditionalAccessExpressionSyntax expression = (ConditionalAccessExpressionSyntax)context.Node;
-        if (IsUnityObjectExpression(context, expression.Expression, out ITypeSymbol originSymbol) && !IsFixedWithAliveOrNull(context, expression))
+        if (IsUnityObjectExpression(context, expression.Expression, unityObjectSymbol, out ITypeSymbol originSymbol) && !IsFixedWithAliveOrNull(context, expression))
         {
             context.ReportDiagnostic(Diagnostic.Create(conditionalAccessRule, context.Node.GetLocation(), originSymbol!.Name));
         }
     }
 
-    private void AnalyzeCoalesceNode(SyntaxNodeAnalysisContext context)
+    private void AnalyzeCoalesceNode(SyntaxNodeAnalysisContext context, ITypeSymbol unityObjectSymbol)
     {
         BinaryExpressionSyntax expression = (BinaryExpressionSyntax)context.Node;
-        if (IsUnityObjectExpression(context, expression.Left, out ITypeSymbol originSymbol))
+        if (IsUnityObjectExpression(context, expression.Left, unityObjectSymbol, out ITypeSymbol originSymbol))
         {
             context.ReportDiagnostic(Diagnostic.Create(nullCoalesceRule, context.Node.GetLocation(), originSymbol!.Name));
         }
     }
 
-    private bool IsUnityObjectExpression(SyntaxNodeAnalysisContext context, ExpressionSyntax possibleUnityAccessExpression, out ITypeSymbol possibleUnitySymbol)
+    private bool IsUnityObjectExpression(SyntaxNodeAnalysisContext context, ExpressionSyntax possibleUnityAccessExpression, ITypeSymbol compareSymbol, out ITypeSymbol possibleUnitySymbol)
     {
         possibleUnitySymbol = context.SemanticModel.GetTypeInfo(possibleUnityAccessExpression).Type;
-        return possibleUnitySymbol.IsType("Object", "UnityEngine");
+        return possibleUnitySymbol.IsType(compareSymbol);
     }
 }

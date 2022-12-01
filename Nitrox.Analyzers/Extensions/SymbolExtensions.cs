@@ -4,19 +4,21 @@ namespace Nitrox.Analyzers.Extensions;
 
 public static class SymbolExtensions
 {
-    /// <summary>
-    ///     Returns true if symbol points to a type that is (or inherits from) the given namespace and type.
-    /// </summary>
-    public static bool IsType(this ITypeSymbol symbol, string typeName, string fullNamespace)
+    public static bool IsType(this ITypeSymbol symbol, SemanticModel semanticModel, string fullyQualifiedTypeName)
     {
-        if (symbol.Name == typeName && symbol.ContainingNamespace.Name == fullNamespace)
+        return symbol.IsType(semanticModel.Compilation.GetTypeByMetadataName(fullyQualifiedTypeName));
+    }
+
+    public static bool IsType(this ITypeSymbol symbol, ITypeSymbol targetingSymbol)
+    {
+        if (SymbolEqualityComparer.Default.Equals(symbol, targetingSymbol))
         {
             return true;
         }
         while (symbol.BaseType is { } baseTypeSymbol)
         {
             symbol = baseTypeSymbol;
-            if (symbol.Name == typeName && symbol.ContainingNamespace.Name == fullNamespace)
+            if (SymbolEqualityComparer.Default.Equals(symbol, targetingSymbol))
             {
                 return true;
             }
