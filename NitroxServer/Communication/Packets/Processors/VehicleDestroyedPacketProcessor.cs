@@ -9,19 +9,16 @@ public class VehicleDestroyedPacketProcessor : AuthenticatedPacketProcessor<Vehi
 {
     private readonly PlayerManager playerManager;
     private readonly VehicleManager vehicleManager;
-    private readonly SimulationOwnershipData simulationOwnershipData;
 
-    public VehicleDestroyedPacketProcessor(PlayerManager playerManager, VehicleManager vehicleManager, SimulationOwnershipData simulationOwnershipData)
+    public VehicleDestroyedPacketProcessor(PlayerManager playerManager, VehicleManager vehicleManager)
     {
         this.playerManager = playerManager;
         this.vehicleManager = vehicleManager;
-        this.simulationOwnershipData = simulationOwnershipData;
     }
 
     public override void Process(VehicleDestroyed packet, Player player)
     {
         vehicleManager.RemoveVehicle(packet.Id);
         playerManager.SendPacketToOtherPlayers(packet, player);
-        simulationOwnershipData.RevokeOwnerOfId(packet.Id);
     }
 }
