@@ -24,12 +24,16 @@ namespace NitroxClient.Debuggers.Drawer.Unity
                 rb.mass = NitroxGUILayout.FloatField(rb.mass, VALUE_MAX_WIDTH);
             }
 
+            GUILayout.Space(10);
+
             using (new GUILayout.HorizontalScope())
             {
                 GUILayout.Label("Drag", NitroxGUILayout.DrawerLabel, GUILayout.Width(LABEL_WIDTH));
                 NitroxGUILayout.Separator();
                 rb.drag = NitroxGUILayout.FloatField(rb.drag, VALUE_MAX_WIDTH);
             }
+
+            GUILayout.Space(10);
 
             using (new GUILayout.HorizontalScope())
             {
@@ -38,12 +42,16 @@ namespace NitroxClient.Debuggers.Drawer.Unity
                 rb.angularDrag = NitroxGUILayout.FloatField(rb.angularDrag, VALUE_MAX_WIDTH);
             }
 
+            GUILayout.Space(10);
+
             using (new GUILayout.HorizontalScope())
             {
                 GUILayout.Label("Use Gravity");
                 NitroxGUILayout.Separator();
                 rb.useGravity = NitroxGUILayout.BoolField(rb.useGravity);
             }
+
+            GUILayout.Space(10);
 
             using (new GUILayout.HorizontalScope())
             {
@@ -58,7 +66,7 @@ namespace NitroxClient.Debuggers.Drawer.Unity
             {
                 GUILayout.Label("Interpolate", GUILayout.Width(LABEL_WIDTH));
                 NitroxGUILayout.Separator();
-                rb.interpolation = NitroxGUILayout.EnumPopup(rb.interpolation, VALUE_MAX_WIDTH);
+                rb.interpolation = NitroxGUILayout.EnumPopup(rb.interpolation, NitroxGUILayout.VALUE_WIDTH);
             }
 
             GUILayout.Space(10);
@@ -67,7 +75,7 @@ namespace NitroxClient.Debuggers.Drawer.Unity
             {
                 GUILayout.Label("Collision Detection", GUILayout.Width(LABEL_WIDTH));
                 NitroxGUILayout.Separator();
-                rb.collisionDetectionMode = NitroxGUILayout.EnumPopup(rb.collisionDetectionMode, VALUE_MAX_WIDTH);
+                rb.collisionDetectionMode = NitroxGUILayout.EnumPopup(rb.collisionDetectionMode, NitroxGUILayout.VALUE_WIDTH);
             }
 
             GUILayout.Space(10);
@@ -79,12 +87,16 @@ namespace NitroxClient.Debuggers.Drawer.Unity
                 rb.freezeRotation = NitroxGUILayout.BoolField(rb.freezeRotation);
             }
 
+            GUILayout.Space(10);
+
             using (new GUILayout.HorizontalScope())
             {
                 GUILayout.Label("Velocity", NitroxGUILayout.DrawerLabel, GUILayout.Width(LABEL_WIDTH));
                 NitroxGUILayout.Separator();
                 VectorDrawer.DrawVector3(rb.velocity, VALUE_MAX_WIDTH);
             }
+
+            GUILayout.Space(10);
 
             using (new GUILayout.HorizontalScope())
             {
