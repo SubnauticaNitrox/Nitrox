@@ -9,6 +9,8 @@ namespace NitroxClient.Communication.Packets.Processors;
 
 public class CyclopsDestroyedProcessor : ClientPacketProcessor<CyclopsDestroyed>
 {
+    public const DamageType DAMAGE_TYPE_RUN_ORIGINAL = (DamageType)100;
+    
     public override void Process(CyclopsDestroyed packet)
     {
         Optional<GameObject> cyclops = NitroxEntity.GetObjectFrom(packet.Id);
@@ -32,6 +34,6 @@ public class CyclopsDestroyedProcessor : ClientPacketProcessor<CyclopsDestroyed>
         }
 
         // We use a specific DamageType so that the Prefix on this method will accept this call
-        subRoot.OnTakeDamage(new() { type = (DamageType)100 });
+        subRoot.OnTakeDamage(new() { type = DAMAGE_TYPE_RUN_ORIGINAL });
     }
 }
