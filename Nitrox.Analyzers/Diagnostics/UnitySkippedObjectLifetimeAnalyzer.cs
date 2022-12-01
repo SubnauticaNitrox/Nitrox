@@ -66,7 +66,7 @@ public sealed class UnitySkippedObjectLifetimeAnalyzer : DiagnosticAnalyzer
             {
                 return;
             }
-            
+
             compStartContext.RegisterSyntaxNodeAction(c => AnalyzeIsNullNode(c, unityObjectTypeSymbol), SyntaxKind.IsPatternExpression);
             compStartContext.RegisterSyntaxNodeAction(c => AnalyzeConditionalAccessNode(c, unityObjectTypeSymbol), SyntaxKind.ConditionalAccessExpression);
             compStartContext.RegisterSyntaxNodeAction(c => AnalyzeCoalesceNode(c, unityObjectTypeSymbol), SyntaxKind.CoalesceExpression);

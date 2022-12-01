@@ -21,12 +21,12 @@ public sealed class LocalizationAnalyzer : DiagnosticAnalyzer
     private static readonly string relativePathFromSolutionDirToEnglishLanguageFile = Path.Combine("Nitrox.Assets.Subnautica", "LanguageFiles", "en.json");
 
     private static readonly DiagnosticDescriptor invalidLocalizationKeyRule = new(INVALID_LOCALIZATION_KEY_DIAGNOSTIC_ID,
-                                                                              "Tests localization usages are valid",
-                                                                              "Localization key '{0}' does not exist in '{1}'",
-                                                                              "Usage",
-                                                                              DiagnosticSeverity.Warning,
-                                                                              true,
-                                                                              "Tests that requested localization keys exist in the English localization file");
+                                                                                  "Tests localization usages are valid",
+                                                                                  "Localization key '{0}' does not exist in '{1}'",
+                                                                                  "Usage",
+                                                                                  DiagnosticSeverity.Warning,
+                                                                                  true,
+                                                                                  "Tests that requested localization keys exist in the English localization file");
 
     /// <summary>
     ///     Gets the list of rules of supported diagnostics.

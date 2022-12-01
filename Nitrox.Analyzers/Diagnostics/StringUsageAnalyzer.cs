@@ -12,12 +12,12 @@ public sealed class StringUsageAnalyzer : DiagnosticAnalyzer
     public const string PREFER_INTERPOLATED_STRING_DIAGNOSTIC_ID = $"{nameof(StringUsageAnalyzer)}001";
 
     private static readonly DiagnosticDescriptor preferInterpolatedStringRule = new(PREFER_INTERPOLATED_STRING_DIAGNOSTIC_ID,
-                                                                              "Prefer interpolated string over string concat",
-                                                                              "String concat can be turned into interpolated string",
-                                                                              "Usage",
-                                                                              DiagnosticSeverity.Warning,
-                                                                              true,
-                                                                              "Prefer interpolated string over concatenating strings");
+                                                                                    "Prefer interpolated string over string concat",
+                                                                                    "String concat can be turned into interpolated string",
+                                                                                    "Usage",
+                                                                                    DiagnosticSeverity.Warning,
+                                                                                    true,
+                                                                                    "Prefer interpolated string over concatenating strings");
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(preferInterpolatedStringRule);
 
