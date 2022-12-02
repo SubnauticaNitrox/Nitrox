@@ -6,6 +6,7 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
+using WorldStreaming;
 
 namespace NitroxClient.GameLogic
 {
@@ -92,6 +93,23 @@ namespace NitroxClient.GameLogic
 
                 yield return new WaitForSeconds(0.05f);
             }
+        }
+
+        /// <summary>
+        /// Forces world streamer's to load the terrain around the MainCamera and waits until it's done to unfreeze the player.
+        /// </summary>
+        public static IEnumerator WaitForWorldLoad()
+        {
+            // In WorldStreamer.CreateStreamers() three coroutines are created to constantly call UpdateCenter() on the streamers
+            // We force these updates so that the world streamer gets busy instantly
+            WorldStreamer streamerV2 = LargeWorldStreamer.main.streamerV2;
+            streamerV2.UpdateStreamingCenter(MainCamera.camera.transform.position);
+            streamerV2.octreesStreamer.UpdateCenter(streamerV2.streamingCenter);
+            streamerV2.lowDetailOctreesStreamer.UpdateCenter(streamerV2.streamingCenter);
+            streamerV2.clipmapStreamer.UpdateCenter(streamerV2.streamingCenter);
+
+            yield return new WaitUntil(() => LargeWorldStreamer.main.IsWorldSettled());
+            Player.main.cinematicModeActive = false;
         }
     }
 }

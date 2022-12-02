@@ -76,6 +76,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 world.GameData.StoryGoals.GetInitialStoryGoalData(scheduleKeeper),
                 player.CompletedGoals,
                 player.Position,
+                player.Rotation,
                 player.SubRootId,
                 player.Stats,
                 GetRemotePlayerData(player),

@@ -26,6 +26,7 @@ namespace NitroxServer
         public string Name { get; }
         public bool IsPermaDeath { get; set; }
         public NitroxVector3 Position { get; set; }
+        public NitroxQuaternion Rotation { get; set; }
         public NitroxId GameObjectId { get; }
         public Optional<NitroxId> SubRootId { get; set; }
         public Perms Permissions { get; set; }
@@ -36,7 +37,7 @@ namespace NitroxServer
         public ThreadSafeDictionary<string, PingInstancePreference> PingInstancePreferences { get; set; }
 
         public Player(ushort id, string name, bool isPermaDeath, PlayerContext playerContext, NitroxConnection connection,
-                      NitroxVector3 position, NitroxId playerId, Optional<NitroxId> subRootId, Perms perms, PlayerStatsData stats,
+                      NitroxVector3 position, NitroxQuaternion rotation, NitroxId playerId, Optional<NitroxId> subRootId, Perms perms, PlayerStatsData stats,
                       IEnumerable<NitroxTechType> usedItems, IEnumerable<string> quickSlotsBinding,
                       IEnumerable<EquippedItemData> equippedItems, IEnumerable<EquippedItemData> modules, HashSet<string> completedGoals, IDictionary<string, PingInstancePreference> pingInstancePreferences)
         {
@@ -46,6 +47,7 @@ namespace NitroxServer
             PlayerContext = playerContext;
             Connection = connection;
             Position = position;
+            Rotation = rotation;
             SubRootId = subRootId;
             GameObjectId = playerId;
             Permissions = perms;
