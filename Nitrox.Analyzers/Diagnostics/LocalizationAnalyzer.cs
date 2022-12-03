@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
-using System.Text.Json;
+using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -19,6 +20,7 @@ public sealed class LocalizationAnalyzer : DiagnosticAnalyzer
 
     private const string NITROX_LOCALIZATION_PREFIX = "Nitrox_";
     private static readonly string relativePathFromSolutionDirToEnglishLanguageFile = Path.Combine("Nitrox.Assets.Subnautica", "LanguageFiles", "en.json");
+    private static readonly Regex localizationParseRegex = new(@"^\s*""([^""]+)""\s*:\s*""([^""]+)""", RegexOptions.Compiled | RegexOptions.Multiline);
 
     private static readonly DiagnosticDescriptor invalidLocalizationKeyRule = new(INVALID_LOCALIZATION_KEY_DIAGNOSTIC_ID,
                                                                                   "Tests localization usages are valid",
@@ -137,6 +139,7 @@ public sealed class LocalizationAnalyzer : DiagnosticAnalyzer
                 return false;
             }
 
+            string enJson;
             lock (locker)
             {
                 EnglishLocalizationFileName = Path.Combine(solutionDir, relativePathFromSolutionDirToEnglishLanguageFile);
@@ -145,8 +148,17 @@ public sealed class LocalizationAnalyzer : DiagnosticAnalyzer
                     return false;
                 }
 
-                using FileStream stream = File.OpenRead(EnglishLocalizationFileName);
-                EnglishLocalization = JsonSerializer.Deserialize<ImmutableDictionary<string, string>>(stream);
+                enJson = File.ReadAllText(EnglishLocalizationFileName);
+            }
+            // Parse localization JSON to dictionary for lookup.
+            Dictionary<string, string> keyValue = new();
+            foreach (Match match in localizationParseRegex.Matches(enJson))
+            {
+                keyValue.Add(match.Groups[1].Value, match.Groups[2].Value);
+            }
+            lock (locker)
+            {
+                EnglishLocalization = keyValue.ToImmutableDictionary();
             }
             return true;
         }
