@@ -17,6 +17,7 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
 using UnityEngine;
+using NitroxClient.GameLogic.PlayerLogic;
 
 namespace NitroxClient.GameLogic
 {
@@ -358,28 +359,13 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        public void DestroyVehicle(NitroxId id, bool isPiloting)
+        public void DestroyVehicle(NitroxId id)
         {
             Optional<GameObject> Object = NitroxEntity.GetObjectFrom(id);
             if (Object.HasValue)
             {
                 GameObject go = Object.Value;
                 Vehicle vehicle = go.RequireComponent<Vehicle>();
-
-                if (isPiloting) //Check Remote Object Have Player inside
-                {
-                    ushort pilot = ushort.Parse(vehicle.pilotId);
-                    Optional<RemotePlayer> remotePilot = playerManager.Find(pilot);
-
-                    if (remotePilot.HasValue) // Get Remote Player Inside == vehicle.pilotId  Remove From Vehicle Before Destroy
-                    {
-                        RemotePlayer remotePlayer = remotePilot.Value;
-                        remotePlayer.SetVehicle(null);
-                        remotePlayer.SetSubRoot(null);
-                        remotePlayer.SetPilotingChair(null);
-                        remotePlayer.AnimationController.UpdatePlayerAnimations = true;
-                    }
-                }
 
                 if (vehicle.GetPilotingMode()) //Check Local Object Have Player inside
                 {
@@ -390,6 +376,10 @@ namespace NitroxClient.GameLogic
                         Player.main.ToNormalMode(false);
                         Player.main.transform.parent = null;
                     }
+                }
+                foreach (RemotePlayerIdentifier identifier in vehicle.GetComponentsInChildren<RemotePlayerIdentifier>(true))
+                {
+                    identifier.RemotePlayer.ResetStates();
                 }
 
                 //Destroy vehicle
@@ -429,27 +419,9 @@ namespace NitroxClient.GameLogic
             using (packetSender.Suppress<VehicleOnPilotModeChanged>())
             {
                 NitroxId id = NitroxEntity.GetId(vehicle.gameObject);
-                LocalPlayer localPlayer = NitroxServiceLocator.LocateService<LocalPlayer>();
 
-                VehicleDestroyed vehicleDestroyed = new VehicleDestroyed(id, localPlayer.PlayerName, vehicle.GetPilotingMode());
+                VehicleDestroyed vehicleDestroyed = new(id);
                 packetSender.Send(vehicleDestroyed);
-
-                // If there is a pilotId then there is a remote player.  We must
-                // detach the remote player before destroying the game object.
-                if (!string.IsNullOrEmpty(vehicle.pilotId))
-                {
-                    ushort pilot = ushort.Parse(vehicle.pilotId);
-                    Optional<RemotePlayer> remotePilot = playerManager.Find(pilot);
-
-                    if (remotePilot.HasValue)
-                    {
-                        RemotePlayer remotePlayer = remotePilot.Value;
-                        remotePlayer.SetVehicle(null);
-                        remotePlayer.SetSubRoot(null);
-                        remotePlayer.SetPilotingChair(null);
-                        remotePlayer.AnimationController.UpdatePlayerAnimations = true;
-                    }
-                }
             }
         }
 
