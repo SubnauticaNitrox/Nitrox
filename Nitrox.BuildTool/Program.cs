@@ -80,7 +80,7 @@ namespace Nitrox.BuildTool
                 {
                     game = new GameInstallData(NitroxUser.GamePath);
                 }
-                
+
                 if (!ValidateUnityGame(game, out string error))
                 {
                     throw new Exception(error);
@@ -94,6 +94,8 @@ namespace Nitrox.BuildTool
 
         private static async Task EnsurePublicizedAssembliesAsync(GameInstallData game)
         {
+            static void LogReceived(object sender, string message) => Console.WriteLine(message);
+
             if (Directory.Exists(Path.Combine(GeneratedOutputDir, "publicized_assemblies")))
             {
                 Console.WriteLine("Assemblies are already publicized.");
@@ -101,8 +103,18 @@ namespace Nitrox.BuildTool
             }
 
             string[] dllsToPublicize = Directory.GetFiles(game.ManagedDllsDir, "Assembly-*.dll");
+            Publicizer.LogReceived += LogReceived;
             Stopwatch sw = Stopwatch.StartNew();
-            await Publicizer.PublicizeAsync(dllsToPublicize, "", Path.Combine(GeneratedOutputDir, "publicized_assemblies"));
+            try
+            {
+                await Publicizer.PublicizeAsync(dllsToPublicize, "", Path.Combine(GeneratedOutputDir, "publicized_assemblies"));
+            }
+            catch (Exception)
+            {
+                sw.Stop();
+                Publicizer.LogReceived -= LogReceived;
+                throw;
+            }
             Console.WriteLine($"Publicized {dllsToPublicize.Length} DLL(s) in {Math.Round(sw.Elapsed.TotalSeconds, 2)}s");
         }
     }

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -9,17 +11,20 @@ namespace Nitrox.BuildTool;
 
 public static class Publicizer
 {
+    public static event EventHandler<string> LogReceived;
+
     public static async Task PublicizeAsync(IEnumerable<string> files, string outputSuffix = "", string outputPath = null)
     {
-        static void ExecuteSingle(string file, ReaderParameters readerParams, string outputSuffix, string outputPath)
+        static int ExecuteSingle(string file, ReaderParameters readerParams, string outputSuffix, string outputPath)
         {
             using AssemblyDefinition assemblyDef = AssemblyDefinition.ReadAssembly(file, readerParams);
             string outputName = $"{Path.GetFileNameWithoutExtension(file)}{outputSuffix}{Path.GetExtension(file)}";
             string outputFile = Path.Combine(outputPath!, outputName);
             PublicizeAssemblyDefinition(assemblyDef);
             assemblyDef.Write(outputFile);
+            return assemblyDef.MainModule.Types.Count;
         }
-        
+
         // Ensure target directory exists.
         if (string.IsNullOrWhiteSpace(outputPath))
         {
@@ -33,20 +38,38 @@ public static class Publicizer
         // Create dependency resolve for cecil (needed to write dlls that have other dependencies).
         DefaultAssemblyResolver resolver = new();
         ReaderParameters assemblyReaderParams = new() { AssemblyResolver = resolver };
-        
-        // Run publicizer in parallel for each Assembly Definition.
-        List<Task> assemblyPublicizeTask = new();
-        foreach (string file in files)
+        // Setup assembly resolver for cecil first, to prevent race condition while another assembly is read.
+        string[] fileArray = files as string[] ?? files.ToArray();
+        foreach (string file in fileArray)
         {
             if (!File.Exists(file))
             {
                 throw new FileNotFoundException("Dll to publicize not found", file);
             }
-            
+
             resolver.AddSearchDirectory(Path.GetDirectoryName(file));
-            assemblyPublicizeTask.Add(Task.Run(() => ExecuteSingle(file, assemblyReaderParams, outputSuffix, outputPath)));
         }
-        await Task.WhenAll(assemblyPublicizeTask);
+        // Run publicizer in parallel for each Assembly Definition.
+        List<Task> assemblyPublicizeTasks = new();
+        foreach (string file in fileArray)
+        {
+            assemblyPublicizeTasks.Add(Task.Run(() =>
+            {
+                Stopwatch sw = Stopwatch.StartNew();
+                int typeCount;
+                try
+                {
+                    typeCount = ExecuteSingle(file, assemblyReaderParams, outputSuffix, outputPath);
+                }
+                catch (Exception)
+                {
+                    sw.Stop();
+                    throw;
+                }
+                OnLogReceived($"Publicized '{file}' with {typeCount} types in {Math.Round(sw.Elapsed.TotalSeconds, 2)}s");
+            }));
+        }
+        await Task.WhenAll(assemblyPublicizeTasks);
     }
 
     private static void PublicizeAssemblyDefinition(AssemblyDefinition assembly)
@@ -75,7 +98,7 @@ public static class Publicizer
             {
                 continue;
             }
-        
+
             // Publicize type and nested types.
             if (type.IsNested)
             {
@@ -101,5 +124,10 @@ public static class Publicizer
                 field.IsPublic = true;
             }
         }
+    }
+
+    private static void OnLogReceived(string message)
+    {
+        LogReceived?.Invoke(null, message);
     }
 }
