@@ -269,7 +269,7 @@ namespace NitroxClient.GameLogic
                 RemotePlayer playerInstance = player.Value;
                 playerInstance.SetVehicle(vehicle);
                 playerInstance.SetSubRoot(subRoot);
-                playerInstance.SetPilotingChair(subRoot?.GetComponentInChildren<PilotingChair>());
+                playerInstance.SetPilotingChair(subRoot.AliveOrNull()?.GetComponentInChildren<PilotingChair>());
                 playerInstance.AnimationController.UpdatePlayerAnimations = false;
             }
         }
@@ -308,13 +308,13 @@ namespace NitroxClient.GameLogic
                 if (!string.IsNullOrEmpty(name))
                 {
                     vehicle.vehicleName = name;
-                    vehicle.subName?.DeserializeName(vehicle.vehicleName);
+                    vehicle.subName.AliveOrNull()?.DeserializeName(vehicle.vehicleName);
                 }
 
                 if (hsb != null)
                 {
                     vehicle.vehicleColors = hsb;
-                    vehicle.subName?.DeserializeColors(hsb);
+                    vehicle.subName.AliveOrNull()?.DeserializeColors(hsb);
                 }
 
                 vehicle.GetComponent<LiveMixin>().health = health;
@@ -340,13 +340,13 @@ namespace NitroxClient.GameLogic
                 if (!string.IsNullOrEmpty(name))
                 {
                     rocket.rocketName = name;
-                    rocket.subName?.DeserializeName(name);
+                    rocket.subName.AliveOrNull()?.DeserializeName(name);
                 }
 
                 if (hsb != null)
                 {
                     rocket.rocketColors = hsb;
-                    rocket.subName?.DeserializeColors(hsb);
+                    rocket.subName.AliveOrNull()?.DeserializeColors(hsb);
                 }
             }
 

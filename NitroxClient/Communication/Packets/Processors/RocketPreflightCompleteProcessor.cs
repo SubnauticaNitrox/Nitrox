@@ -3,6 +3,7 @@ using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxModel_Subnautica.Packets;
 using UnityEngine;
+using NitroxClient.Unity.Helper;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -54,7 +55,7 @@ namespace NitroxClient.Communication.Packets.Processors
                     {
                         if (!throwSwitch.completed && throwSwitch.preflightCheck == packet.FlightCheck)
                         {
-                            throwSwitch.animator?.SetTrigger("Throw");
+                            throwSwitch.animator.AliveOrNull()?.SetTrigger("Throw");
                             throwSwitch.completed = true;
                             CompletePreflightCheck(throwSwitch.preflightCheckSwitch);
                             throwSwitch.cinematicTrigger.showIconOnHandHover = false;
@@ -72,7 +73,7 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             using (packetSender.Suppress<RocketPreflightComplete>())
             {
-                preflightCheckSwitch.preflightCheckManager?.CompletePreflightCheck(preflightCheckSwitch.preflightCheck);   
+                preflightCheckSwitch.preflightCheckManager.AliveOrNull()?.CompletePreflightCheck(preflightCheckSwitch.preflightCheck);   
             }
         }
     }
