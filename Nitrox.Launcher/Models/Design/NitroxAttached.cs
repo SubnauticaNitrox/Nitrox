@@ -13,10 +13,17 @@ namespace Nitrox.Launcher.Models.Design;
 /// </summary>
 public class NitroxAttached : AvaloniaObject
 {
+    public enum ThemeOption
+    {
+        DARK,
+        LIGHT
+    }
+
     public static readonly AttachedProperty<string> TextProperty = AvaloniaProperty.RegisterAttached<NitroxAttached, Interactive, string>("Text");
     public static readonly AttachedProperty<string> SubtextProperty = AvaloniaProperty.RegisterAttached<NitroxAttached, Interactive, string>("Subtext");
     public static readonly AttachedProperty<object> FocusProperty = AvaloniaProperty.RegisterAttached<NitroxAttached, Interactive, object>("Focus");
     public static readonly AttachedProperty<bool> SelectedProperty = AvaloniaProperty.RegisterAttached<NitroxAttached, Interactive, bool>("Selected");
+    public static readonly AttachedProperty<ThemeOption> ThemeProperty = AvaloniaProperty.RegisterAttached<NitroxAttached, Interactive, ThemeOption>("Theme", inherits: true, defaultValue: ThemeOption.DARK);
 
     static NitroxAttached()
     {
@@ -31,10 +38,7 @@ public class NitroxAttached : AvaloniaObject
         element.SetValue(TextProperty, value);
     }
 
-    public static string GetText(AvaloniaObject element)
-    {
-        return element.GetValue(TextProperty);
-    }
+    public static string GetText(AvaloniaObject element) => element.GetValue(TextProperty);
 
     public static void SetSubtext(AvaloniaObject element, string value)
     {
@@ -45,15 +49,9 @@ public class NitroxAttached : AvaloniaObject
         element.SetValue(SubtextProperty, value);
     }
 
-    public static string GetSubtext(AvaloniaObject element)
-    {
-        return element.GetValue(SubtextProperty);
-    }
+    public static string GetSubtext(AvaloniaObject element) => element.GetValue(SubtextProperty);
 
-    public static object GetFocus(IAvaloniaObject obj)
-    {
-        return obj.GetValue(FocusProperty);
-    }
+    public static object GetFocus(IAvaloniaObject obj) => obj.GetValue(FocusProperty);
 
     /// <summary>
     ///     Sets the focus to this control when view is loaded.
@@ -84,14 +82,15 @@ public class NitroxAttached : AvaloniaObject
         }
         obj.SetValue(FocusProperty, value);
     }
-    
-    public static bool GetSelected(AvaloniaObject element)
-    {
-        return element.GetValue(SelectedProperty);
-    }
 
-    public static void SetSelected(IAvaloniaObject obj, bool value)
-    {
-        obj.SetValue(SelectedProperty, value);
-    }
+    public static bool GetSelected(AvaloniaObject element) => element.GetValue(SelectedProperty);
+
+    public static void SetSelected(IAvaloniaObject obj, bool value) => obj.SetValue(SelectedProperty, value);
+
+    public static ThemeOption GetTheme(IAvaloniaObject avaloniaObject) => avaloniaObject.GetValue(ThemeProperty);
+
+    /// <summary>
+    ///     Sets the theme of the current visual and its children to the given theme.
+    /// </summary>
+    public static void SetTheme(IAvaloniaObject avaloniaObject, ThemeOption value) => avaloniaObject.SetValue(ThemeProperty, value);
 }

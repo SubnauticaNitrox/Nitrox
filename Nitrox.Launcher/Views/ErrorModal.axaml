@@ -12,7 +12,7 @@
     <StackPanel>
         <TextBlock Padding="5" Foreground="#ff0011" Text="{Binding ErrorText}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
         <ContentControl VerticalAlignment="Bottom" Background="#ECECEC" Padding="24 20">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Classes="actions">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
                 <Button Classes="nitrox" HotKey="{Binding CopyToClipboardHotkey}" Command="{Binding CopyToClipboardCommand}" Content="Copy to clipboard" />
                 <Button Classes="nitrox primary" HotKey="{Binding OkHotkey}" Command="{Binding OkCommand}" Content="OK" />
             </StackPanel>

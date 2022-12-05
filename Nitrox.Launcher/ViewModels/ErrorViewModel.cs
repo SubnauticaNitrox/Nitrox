@@ -5,11 +5,10 @@ using Avalonia;
 using Avalonia.Input;
 using Nitrox.Launcher.ViewModels.Abstract;
 using ReactiveUI;
-using ReactiveUI.Validation.Helpers;
 
 namespace Nitrox.Launcher.ViewModels;
 
-public class ErrorViewModel : ReactiveValidationObject, IModalViewModel
+public class ErrorViewModel : ModalViewModelBase
 {
     public ReactiveCommand<Unit, Unit> OkCommand { get; } = ReactiveCommand.Create(() => { });
     public ReactiveCommand<Unit, Unit> CopyToClipboardCommand { get; }

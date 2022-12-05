@@ -1,0 +1,26 @@
+<!-- Style exclusively used for popup modals. Modals have inverted theme (white instead of black) -->
+<Styles xmlns="https://github.com/avaloniaui">
+    <Style Selector="TextBlock.header">
+        <Setter Property="FontSize" Value="24" />
+        <Setter Property="FontWeight" Value="800" />
+    </Style>
+    <Style Selector=":is(Panel).container">
+        <Setter Property="Margin" Value="24" />
+    </Style>
+    <Style Selector=".container > :is(Layoutable)">
+        <Setter Property="Margin" Value="0 0 0 26" />
+    </Style>
+    <Style Selector=".container > :is(Layoutable):nth-last-child(1)">
+        <Setter Property="Margin" Value="0" />
+    </Style>
+    <Style Selector=".container > :is(Layoutable) > TextBlock:nth-child(1)">
+        <Setter Property="FontSize" Value="10" />
+        <Setter Property="FontWeight" Value="700" />
+        <Setter Property="Foreground" Value="#202225" />
+        <Setter Property="Margin" Value="0 0 0 11" />
+    </Style>
+    <Style Selector=":is(TemplatedControl).footer">
+        <Setter Property="Background" Value="#ECECEC" />
+        <Setter Property="Padding" Value="24 20" />
+    </Style>
+</Styles>

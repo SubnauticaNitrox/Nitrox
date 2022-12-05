@@ -1,0 +1,75 @@
+<Styles xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design">
+    <Design.PreviewWith>
+        <Panel Background="Cornflowerblue">
+            <StackPanel Margin="10" Spacing="10">
+                <StackPanel design:NitroxAttached.Theme="LIGHT" Background="#FFFFFF" HorizontalAlignment="Center">
+                    <Button Content="Normal button" />
+                    <Button Classes="primary" Content="Primary button" />
+                </StackPanel>
+                <StackPanel design:NitroxAttached.Theme="DARK" Background="#000000" HorizontalAlignment="Center">
+                    <Button Content="Normal button" />
+                    <Button Classes="primary" Content="Primary button" />
+                    <Button Classes="primary big" Content="Primary button BIG" design:NitroxAttached.Subtext="Bla" />
+                </StackPanel>
+            </StackPanel>
+        </Panel>
+    </Design.PreviewWith>
+    
+    <Style Selector="Button">
+        <Setter Property="Padding" Value="16 8.73" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Background" Value="#0CFFFFFF" />
+        <Setter Property="Foreground" Value="#FFFFFF" />
+        <Setter Property="Content">
+            <Setter.Value>
+                <Template>
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <TextBlock Text="{Binding (design:NitroxAttached.Text), RelativeSource={RelativeSource AncestorType=Button}}" HorizontalAlignment="Center" />
+                        <TextBlock FontSize="10" Opacity="0.5" Text="{Binding (design:NitroxAttached.Subtext), RelativeSource={RelativeSource AncestorType=Button}}" HorizontalAlignment="Center" />
+                    </StackPanel>
+                </Template>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style Selector="Button[(design|NitroxAttached.Theme)=LIGHT]">
+        <Setter Property="Foreground" Value="#000000" />
+    </Style>
+    <Style Selector="Button /template/ ContentPresenter">
+        <Setter Property="Opacity" Value="1" />
+        <Setter Property="Transitions">
+            <Transitions>
+                <DoubleTransition Property="Opacity" Duration="0:0:0.15" />
+            </Transitions>
+        </Setter>
+    </Style>
+    <Style Selector="Button:pointerover /template/ ContentPresenter">
+        <Setter Property="TextBlock.Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
+        <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType=Button}}" />
+        <Setter Property="Opacity" Value="0.6" />
+    </Style>
+    <Style Selector="Button.primary">
+        <Setter Property="Background" Value="#007BFF" />
+        <Setter Property="Foreground" Value="#FFFFFF" />
+    </Style>
+    <Style Selector="Button.primary:disabled /template/ ContentPresenter">
+        <!-- TODO: Nice disabled style (loading indicator?) -->
+        <Setter Property="TextBlock.Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
+        <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType=Button}}" />
+        <Setter Property="Opacity" Value="0.15" />
+    </Style>
+    <Style Selector="Button.abort">
+        <Setter Property="Background" Value="#FF005C" />
+    </Style>
+    
+    <Style Selector="Button.big">
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Padding" Value="10" />
+        <Setter Property="Height" Value="62" />
+    </Style>
+    <Style Selector="Button.big TextBlock:nth-child(1)">
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="FontWeight" Value="600" />
+    </Style>
+</Styles>

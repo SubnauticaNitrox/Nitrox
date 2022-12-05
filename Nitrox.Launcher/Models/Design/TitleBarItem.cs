@@ -23,6 +23,6 @@ public class TitleBarItem : ReactiveObject
     public TitleBarItem()
     {
         icon = "";
-        Command = ReactiveCommand.Create(() => { });
+        command = ReactiveCommand.Create(() => { });
     }
 }

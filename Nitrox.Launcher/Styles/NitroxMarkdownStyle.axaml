@@ -1,0 +1,28 @@
+<Styles xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:markdownElements="clr-namespace:ColorTextBlock.Avalonia;assembly=ColorTextBlock.Avalonia"
+             xmlns:markdown="clr-namespace:Markdown.Avalonia;assembly=Markdown.Avalonia">
+    <Styles.Resources>
+        <Styles x:Key="NitroxMarkDownStyle">
+            <Style Selector="markdownElements|CTextBlock">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="Foreground" Value="#FFFFFF" />
+            </Style>
+            <Style Selector="markdownElements|CHyperlink">
+                <Setter Property="IsUnderline" Value="False" />
+                <Setter Property="Foreground" Value="#007BFF" />
+                <Setter Property="HoverForeground" Value="#007BFF" />
+            </Style>
+        </Styles>
+    </Styles.Resources>
+    
+    <Style Selector="markdown|MarkdownScrollViewer.nitrox markdownElements|CTextBlock">
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="Foreground" Value="#FFFFFF" />
+    </Style>
+    <Style Selector="markdown|MarkdownScrollViewer.nitrox markdownElements|CHyperlink">
+        <Setter Property="IsUnderline" Value="False" />
+        <Setter Property="Foreground" Value="#007BFF" />
+        <Setter Property="HoverForeground" Value="#007BFF" />
+    </Style>
+</Styles>

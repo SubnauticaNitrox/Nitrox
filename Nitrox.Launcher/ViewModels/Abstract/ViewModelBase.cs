@@ -25,7 +25,7 @@ public class ViewModelBase : ReactiveObject
     /// <summary>
     ///     Shows the dialog (interaction) and returns the result when it closes.
     /// </summary>
-    protected async Task<TModalViewModel?> ShowDialogAsync<TModalViewModel>(Interaction<TModalViewModel, TModalViewModel?> interaction) where TModalViewModel : IModalViewModel, new()
+    protected async Task<TModalViewModel?> ShowDialogAsync<TModalViewModel>(Interaction<TModalViewModel, TModalViewModel?> interaction) where TModalViewModel : ModalViewModelBase, new()
     {
         return await interaction.Handle(new());
     }

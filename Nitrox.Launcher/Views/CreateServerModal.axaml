@@ -7,25 +7,32 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Nitrox.Launcher.Views.CreateServerModal"
         d:DataContext="{Binding RelativeSource={RelativeSource AncestorType=viewModels:CreateServerViewModel}}"
-        SizeToContent="WidthAndHeight"
+        design:NitroxAttached.Theme="LIGHT"
         SystemDecorations="None"
+        SizeToContent="WidthAndHeight"
+        CanResize="False"
         Title="Create a server">
     <Window.Styles>
-        <Style Selector="TextBlock">
-            <Setter Property="Foreground" Value="Black" />
-        </Style>
+        <StyleInclude Source="/Styles/ModalStyle.axaml" />
     </Window.Styles>
     <StackPanel>
-        <TextBlock Text="SERVER NAME" />
-        <TextBox design:NitroxAttached.Focus="" Text="{Binding Name}" />
-        <TextBlock Text="GAMEMODE" />
-        <StackPanel Orientation="Horizontal">
-            <RadioButton GroupName="gamemode" Content="Freedom" />
-            <RadioButton GroupName="gamemode" Content="Creative" />
-            <RadioButton IsChecked="True" GroupName="gamemode" Content="Survival" />
-            <RadioButton GroupName="gamemode" Content="Hardcode" />
+        <StackPanel Classes="container">
+            <TextBlock Text="Create a server" Classes="header" />
+            <StackPanel>
+                <TextBlock Text="SERVER NAME" />
+                <TextBox design:NitroxAttached.Focus="" Watermark="My server" Text="{Binding Name}" />
+            </StackPanel>
+            <StackPanel>
+                <TextBlock Text="GAMEMODE" />
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <RadioButton Classes="nitrox" GroupName="gamemode" Content="Freedom" />
+                    <RadioButton Classes="nitrox" GroupName="gamemode" Content="Creative" />
+                    <RadioButton Classes="nitrox" GroupName="gamemode" Content="Survival" IsChecked="True" />
+                    <RadioButton Classes="nitrox" GroupName="gamemode" Content="Hardcode" />
+                </StackPanel>
+            </StackPanel>
         </StackPanel>
-        <ContentControl VerticalAlignment="Bottom" Background="#ECECEC" Padding="24 20">
+        <ContentControl Classes="footer">
             <Panel>
                 <Button Classes="nitrox" HotKey="{Binding BackHotkey}" Command="{Binding BackCommand}" Content="Back" HorizontalAlignment="Left" />
                 <Button Classes="nitrox primary" HotKey="{Binding CreateHotkey}" Command="{Binding CreateServerCommand}" Content="Create" HorizontalAlignment="Right" />

@@ -2,22 +2,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
              xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
-             xmlns:markdownElements="clr-namespace:ColorTextBlock.Avalonia;assembly=ColorTextBlock.Avalonia"
-             xmlns:markdown="clr-namespace:Markdown.Avalonia;assembly=Markdown.Avalonia"
              x:Class="Nitrox.Launcher.App">
-    <Application.Resources>
-        <Styles x:Key="NitroxMarkDownStyle">
-            <Style Selector="markdownElements|CTextBlock">
-                <Setter Property="FontSize" Value="16" />
-                <Setter Property="Foreground" Value="#FFFFFF" />
-            </Style>
-            <Style Selector="markdownElements|CHyperlink">
-                <Setter Property="IsUnderline" Value="False" />
-                <Setter Property="Foreground" Value="#007BFF" />
-                <Setter Property="HoverForeground" Value="#007BFF" />
-            </Style>
-        </Styles>
-    </Application.Resources>
+    <!-- See original style here (to know what to override): 
+        https://github.com/AvaloniaUI/Avalonia/tree/release/0.10.8/src/Avalonia.Themes.Fluent/Controls -->
     <Application.Styles>
         <FluentTheme Mode="Light" />
         <Style Selector="Window">
@@ -27,19 +14,55 @@
             <Setter Property="ExtendClientAreaToDecorationsHint" Value="True" />
             <Setter Property="ExtendClientAreaTitleBarHeightHint" Value="-99" />
         </Style>
+        <Style Selector="Window[(design|NitroxAttached.Theme)=LIGHT]">
+            <Setter Property="Background" Value="#FFFFFF" />
+        </Style>
+        <Style Selector="Window[(design|NitroxAttached.Theme)=DARK]">
+            <Setter Property="Background" Value="#000000" />
+        </Style>
+
         <Style Selector="TextBlock">
-            <Setter Property="Foreground" Value="#FFFFFF" />
             <Setter Property="TextWrapping" Value="Wrap" />
         </Style>
-        <Style Selector="Button">
-            <Setter Property="Foreground" Value="#FFFFFF" />
+        <Style Selector="TextBlock[(design|NitroxAttached.Theme)=LIGHT]">
+            <Setter Property="Foreground" Value="#000000" />
         </Style>
-        <Style Selector="ToolTip">
-            <Setter Property="Background" Value="#FFFFFF" />
+        <Style Selector="TextBlock[(design|NitroxAttached.Theme)=DARK]">
+            <Setter Property="Foreground" Value="#FFFFFF" />
         </Style>
         <Style Selector="TextBlock.header">
             <Setter Property="FontSize" Value="32" />
             <Setter Property="FontWeight" Value="600" />
+        </Style>
+
+        <Style Selector="TextBox">
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="Padding" Value="14" />
+            <Setter Property="Foreground" Value="#000000" />
+            <Setter Property="Background" Value="#ECECEC" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+        <Style Selector="TextBox[(design|NitroxAttached.Theme)=LIGHT]">
+            <Setter Property="Background" Value="#ECECEC" />
+        </Style>
+        <Style Selector="TextBox[(design|NitroxAttached.Theme)=DARK]">
+            <Setter Property="Background" Value="#1f1f1f" />
+        </Style>
+        <Style Selector="TextBox /template/ Border">
+            <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType=TextBox}}" />
+            <Setter Property="CornerRadius" Value="{Binding CornerRadius, RelativeSource={RelativeSource AncestorType=TextBox}}" />
+            <Setter Property="BorderThickness" Value="{Binding BorderThickness, RelativeSource={RelativeSource AncestorType=TextBox}}" />
+        </Style>
+
+        <Style Selector="Button[(design|NitroxAttached.Theme)=LIGHT]">
+            <Setter Property="Foreground" Value="#000000" />
+        </Style>
+        <Style Selector="Button[(design|NitroxAttached.Theme)=DARK]">
+            <Setter Property="Foreground" Value="#FFFFFF" />
+        </Style>
+
+        <Style Selector="ToolTip">
+            <Setter Property="Background" Value="#FFFFFF" />
         </Style>
         <Style Selector="ToolTip Border">
             <Setter Property="Opacity" Value="0.85" />
@@ -48,6 +71,7 @@
             <Setter Property="Foreground" Value="#000000" />
             <Setter Property="FontSize" Value="12" />
         </Style>
+
         <Style Selector="Panel.titleBar">
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="ZIndex" Value="100" />
@@ -98,6 +122,7 @@
             <Setter Property="Height" Value="10" />
             <Setter Property="IsHitTestVisible" Value="False" />
         </Style>
+
         <Style Selector="Image.header">
             <Setter Property="Width" Value="108" />
             <Setter Property="Height" Value="24" />
@@ -112,130 +137,14 @@
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
-        <Style Selector="Button.nitrox">
-            <Setter Property="Padding" Value="16 8.73" />
-            <Setter Property="CornerRadius" Value="4" />
-            <Setter Property="Background" Value="#15FFFFFF" />
-            <Setter Property="Content">
-                <Setter.Value>
-                    <Template>
-                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                            <TextBlock Text="{Binding (design:NitroxAttached.Text), RelativeSource={RelativeSource AncestorType=Button}}" HorizontalAlignment="Center" />
-                            <TextBlock FontSize="10" Opacity="0.5" Text="{Binding (design:NitroxAttached.Subtext), RelativeSource={RelativeSource AncestorType=Button}}" HorizontalAlignment="Center" />
-                        </StackPanel>
-                    </Template>
-                </Setter.Value>
-            </Setter>
-        </Style>
-        <Style Selector="Button.nitrox /template/ ContentPresenter">
-            <Setter Property="Opacity" Value="1" />
-            <Setter Property="Transitions">
-                <Transitions>
-                    <DoubleTransition Property="Opacity" Duration="0:0:0.15" />
-                </Transitions>
-            </Setter>
-        </Style>
-        <Style Selector="Button.nitrox:pointerover /template/ ContentPresenter">
-            <Setter Property="TextBlock.Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
-            <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType=Button}}" />
-            <Setter Property="Opacity" Value="0.6" />
-        </Style>
-        <Style Selector="Button.nitrox.primary">
-            <Setter Property="Background" Value="#007BFF" />
-        </Style>
-        <Style Selector="Button.nitrox.primary:disabled /template/ ContentPresenter">
-            <!-- TODO: Nice disabled style (loading indicator?) -->
-            <Setter Property="TextBlock.Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
-            <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType=Button}}" />
-            <Setter Property="Opacity" Value="0.15" />
-        </Style>
-        <Style Selector="Button.nitrox.abort">
-            <Setter Property="Background" Value="#FF005C" />
-        </Style>
-        <Style Selector="Button.nitrox TextBlock:nth-child(1)">
-            <Setter Property="FontSize" Value="14" />
-        </Style>
-        <Style Selector="Button.nitrox.big">
-            <Setter Property="CornerRadius" Value="8" />
-            <Setter Property="Padding" Value="10" />
-            <Setter Property="Height" Value="62" />
-        </Style>
-        <Style Selector="Button.nitrox.big TextBlock:nth-child(1)">
-            <Setter Property="FontSize" Value="16" />
-            <Setter Property="FontWeight" Value="600" />
-        </Style>
-        <Style Selector="markdown|MarkdownScrollViewer.nitrox markdownElements|CTextBlock">
-            <Setter Property="FontSize" Value="16" />
-            <Setter Property="Foreground" Value="#FFFFFF" />
-        </Style>
-        <Style Selector="markdown|MarkdownScrollViewer.nitrox markdownElements|CHyperlink">
-            <Setter Property="IsUnderline" Value="False" />
-            <Setter Property="Foreground" Value="#007BFF" />
-            <Setter Property="HoverForeground" Value="#007BFF" />
-        </Style>
+
         <Style Selector="ContentControl.content">
-            <Setter Property="Background" Value="#000000" />
+            <Setter Property="Background" Value="#00000000" />
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
             <Setter Property="VerticalContentAlignment" Value="Stretch" />
             <Setter Property="Padding" Value="34 45" />
         </Style>
-        <Style Selector="Border.nav">
-            <Setter Property="Background" Value="#151516" />
-        </Style>
-        <Style Selector="Border.nav Image.header">
-            <Setter Property="Margin" Value="34 0 0 20" />
-        </Style>
-        <Style Selector="Border.nav TextBlock.header">
-            <Setter Property="FontSize" Value="10" />
-            <Setter Property="Margin" Value="34 20 0 10" />
-            <Setter Property="Opacity" Value="0.5" />
-        </Style>
-        <Style Selector="Border.nav Button.nav">
-            <Setter Property="CornerRadius" Value="0" />
-            <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="Padding" Value="34 10 10 10" />
-            <!-- Scale button to max horizontal so user can more easily click the navigation. -->
-            <Setter Property="HorizontalAlignment" Value="Stretch" />
-            <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="Opacity" Value="0.5" />
-            <Setter Property="ToolTip.Placement" Value="Pointer" />
-        </Style>
-        <Style Selector="Border.nav Button.nav:pointerover /template/ ContentPresenter">
-            <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType=Button}}" />
-        </Style>
-        <Style Selector="Border.nav Button.nav:pressed /template/ ContentPresenter">
-            <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType=Button}}" />
-        </Style>
-        <Style Selector="Border.nav Button.nav[(design|NitroxAttached.Selected)=True]">
-            <Setter Property="Opacity" Value="1" />
-        </Style>
-        <Style Selector="Border.nav ItemsControl">
-            <Setter Property="ItemsPanel">
-                <Setter.Value>
-                    <ItemsPanelTemplate>
-                        <StackPanel />
-                    </ItemsPanelTemplate>
-                </Setter.Value>
-            </Setter>
-            <Setter Property="ItemTemplate">
-                <Setter.Value>
-                    <design:MultiDataTemplate>
-                        <DataTemplate DataType="{x:Type design:NavigationHeader}">
-                            <TextBlock Classes="header" Text="{Binding Text}" />
-                        </DataTemplate>
-                        <DataTemplate DataType="{x:Type design:NavigationItem}">
-                            <Button Classes="nav" Command="{Binding ClickCommand}" ToolTip.Tip="{Binding ToolTipText}">
-                                <StackPanel Orientation="Horizontal">
-                                    <Image Classes="icon" Source="{Binding Icon, Converter={converters:BitmapAssetValueConverter}}" />
-                                    <TextBlock FontSize="16" Text="{Binding Text}" />
-                                </StackPanel>
-                            </Button>
-                        </DataTemplate>
-                    </design:MultiDataTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
+
         <Style Selector="Border.serverEntry">
             <Setter Property="Background" Value="#151516" />
             <Setter Property="CornerRadius" Value="12" />
@@ -261,8 +170,10 @@
         <Style Selector="Border.serverEntry StackPanel.description TextBlock">
             <Setter Property="Opacity" Value="0.5" />
         </Style>
-        <Style Selector=".actions > :is(Control)">
-            <Setter Property="Margin" Value="8 0 0 0" />
-        </Style>
+
+        <StyleInclude Source="/Styles/NavigationStyle.axaml" />
+        <StyleInclude Source="/Styles/NitroxButtonStyle.axaml" />
+        <StyleInclude Source="/Styles/NitroxRadioButtonStyle.axaml" />
+        <StyleInclude Source="/Styles/NitroxMarkdownStyle.axaml" />
     </Application.Styles>
 </Application>

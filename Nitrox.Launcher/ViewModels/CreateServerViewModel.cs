@@ -3,11 +3,10 @@ using Avalonia.Input;
 using Nitrox.Launcher.ViewModels.Abstract;
 using ReactiveUI;
 using ReactiveUI.Validation.Extensions;
-using ReactiveUI.Validation.Helpers;
 
 namespace Nitrox.Launcher.ViewModels;
 
-public class CreateServerViewModel : ReactiveValidationObject, IModalViewModel
+public class CreateServerViewModel : ModalViewModelBase
 {
     private string name = "";
     public ReactiveCommand<Unit, CreateServerViewModel> CreateServerCommand { get; }

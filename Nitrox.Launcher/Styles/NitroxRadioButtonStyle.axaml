@@ -1,0 +1,36 @@
+<!-- Style exclusively used for popup modals. -->
+<Styles xmlns="https://github.com/avaloniaui">
+    <!-- Radiobutton style (selectively-)copied from https://github.com/AvaloniaUI/Avalonia/blob/release/0.10.8/src/Avalonia.Themes.Fluent/Controls/RadioButton.xaml -->
+    <Style Selector="RadioButton.nitrox">
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="BorderBrush" Value="#D1D1D1" />
+        <Setter Property="Padding" Value="14 16" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Name="RootBorder"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}">
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                      TextBlock.Foreground="{TemplateBinding Foreground}"
+                                      Margin="{TemplateBinding Padding}"
+                                      HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+    <Style Selector="RadioButton.nitrox:pressed /template/ Border#RootBorder">
+        <Setter Property="BorderBrush" Value="#007BFF" />
+    </Style>
+    <Style Selector="RadioButton.nitrox:pointerover /template/ Border#RootBorder">
+        <Setter Property="BorderBrush" Value="#007BFF" />
+    </Style>
+    <Style Selector="RadioButton.nitrox:checked /template/ Border#RootBorder">
+        <Setter Property="BorderBrush" Value="#007BFF" />
+    </Style>
+</Styles>

@@ -1,0 +1,62 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
+        xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters">
+    <Style Selector="Border.nav[(design|NitroxAttached.Theme)=DARK]">
+        <Setter Property="Background" Value="#151516" />
+    </Style>
+    <Style Selector="Border.nav Image.header">
+        <Setter Property="Margin" Value="34 0 0 20" />
+    </Style>
+    <Style Selector="Border.nav TextBlock.header">
+        <Setter Property="FontSize" Value="10" />
+        <Setter Property="Margin" Value="34 20 0 10" />
+        <Setter Property="Opacity" Value="0.5" />
+    </Style>
+    <Style Selector="Border.nav Button.nav">
+        <Setter Property="CornerRadius" Value="0" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="34 10 10 10" />
+        <!-- Scale button to max horizontal so user can more easily click the navigation. -->
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Opacity" Value="0.5" />
+        <Setter Property="ToolTip.Placement" Value="Pointer" />
+    </Style>
+    <Style Selector="Border.nav Button.nav:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType=Button}}" />
+    </Style>
+    <Style Selector="Border.nav Button.nav:pressed /template/ ContentPresenter">
+        <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType=Button}}" />
+    </Style>
+    <Style Selector="Border.nav Button.nav[(design|NitroxAttached.Selected)=True]">
+        <Setter Property="Opacity" Value="1" />
+    </Style>
+    <Style Selector="Border.nav ItemsControl">
+        <Setter Property="ItemsPanel">
+            <Setter.Value>
+                <ItemsPanelTemplate>
+                    <StackPanel />
+                </ItemsPanelTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ItemTemplate">
+            <Setter.Value>
+                <design:MultiDataTemplate>
+                    <DataTemplate DataType="{x:Type design:NavigationHeader}">
+                        <TextBlock Classes="header" Text="{Binding Text}" />
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type design:NavigationItem}">
+                        <Button Classes="nav" Command="{Binding ClickCommand}" ToolTip.Tip="{Binding ToolTipText}">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Classes="icon" Source="{Binding Icon, Converter={converters:BitmapAssetValueConverter}}" />
+                                <TextBlock FontSize="16" Text="{Binding Text}" />
+                            </StackPanel>
+                        </Button>
+                    </DataTemplate>
+                </design:MultiDataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</Styles>
