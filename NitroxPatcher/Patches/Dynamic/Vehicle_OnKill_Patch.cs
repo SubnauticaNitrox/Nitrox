@@ -1,8 +1,8 @@
 ﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
+using NitroxClient.GameLogic.PlayerLogic;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 
@@ -15,7 +15,15 @@ namespace NitroxPatcher.Patches.Dynamic
         public static void Prefix(Vehicle __instance)
         {
             NitroxId id = NitroxEntity.GetId(__instance.gameObject);
-            NitroxServiceLocator.LocateService<SimulationOwnership>().StopSimulatingEntity(id);
+            if (Resolve<SimulationOwnership>().HasExclusiveLock(id))
+            {
+                Resolve<SimulationOwnership>().StopSimulatingEntity(id);
+                Resolve<Vehicles>().BroadcastDestroyedVehicle(__instance);
+            }
+            foreach (RemotePlayerIdentifier identifier in __instance.GetComponentsInChildren<RemotePlayerIdentifier>(true))
+            {
+                identifier.RemotePlayer.ResetStates();
+            }
         }
 
         public override void Patch(Harmony harmony)

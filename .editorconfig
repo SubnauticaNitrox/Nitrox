@@ -2,7 +2,6 @@ root = true
 # See the documentation for reference:
 # https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference
 
-
 [*]
 indent_style = space
 
@@ -34,7 +33,7 @@ csharp_new_line_between_query_expression_clauses = true
 # Indentation
 csharp_indent_case_contents = true
 csharp_indent_switch_labels = true
-csharp_indent_labels = false
+csharp_indent_labels = flush_left
 
 # Spacing
 csharp_space_after_cast = false
@@ -67,13 +66,13 @@ dotnet_style_collection_initializer = true:warning
 dotnet_style_coalesce_expression = true:suggestion # Prefer a ?? b
 dotnet_style_null_propagation = false:warning # Do not prefer foo?.bar
 
-# Implicit and explicity styles (disallow use of `var` - types have to be specified explicitly)
+# Implicit and explicit styles (disallow use of `var` - types have to be specified explicitly)
 csharp_style_var_for_built_in_types = false:warning
 csharp_style_var_when_type_is_apparent = false:warning
 csharp_style_var_elsewhere = false:warning
 
 # Expression-bodied members
-csharp_style_expression_bodied_methods = false:none
+csharp_style_expression_bodied_methods = when_on_single_line:none
 
 # Null checking preferences
 csharp_style_conditional_delegate_call = false:warning # Do not prefer foo?.Invoke(bar); over if (foo != null) { foo(bar); }, with all it's newlines.

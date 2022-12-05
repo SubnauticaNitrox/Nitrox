@@ -57,13 +57,13 @@ namespace NitroxServer.GameLogic
 
         public void RepairEscapePod(NitroxId id)
         {
-            EscapePodModel escapePod = EscapePods.Find(ep => ep.Id == id);
+            EscapePodModel escapePod = EscapePods.Find(ep => ep.Id.Equals(id));
             escapePod.Damaged = false;
         }
 
         public void RepairEscapePodRadio(NitroxId id)
         {
-            EscapePodModel escapePod = EscapePods.Find(ep => ep.RadioId == id);
+            EscapePodModel escapePod = EscapePods.Find(ep => ep.RadioId.Equals(id));
             escapePod.RadioDamaged = false;
         }
 

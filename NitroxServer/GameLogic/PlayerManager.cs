@@ -192,6 +192,7 @@ namespace NitroxServer.GameLogic
                     playerContext,
                     connection,
                     NitroxVector3.Zero,
+                    NitroxQuaternion.Identity,
                     playerContext.PlayerNitroxId,
                     Optional.Empty,
                     serverConfig.DefaultPlayerPerm,

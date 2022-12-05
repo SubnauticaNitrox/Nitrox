@@ -383,36 +383,29 @@ namespace NitroxClient.GameLogic
         {
             NitroxId subId = NitroxEntity.GetId(subRoot.gameObject);
             LiveMixin subHealth = subRoot.gameObject.RequireComponent<LiveMixin>();
-
-            if (subHealth.health > 0)
+            if (subHealth.health <= 0)
             {
-                CyclopsDamageInfoData damageInfo = null;
-
-                if (info.HasValue)
-                {
-                    DamageInfo damage = info.Value;
-                    // Source of the damage. Used if the damage done to the Cyclops was not calculated on other clients. Currently it's just used to figure out what sounds and
-                    // visual effects should be used.
-                    CyclopsDamageInfoData serializedDamageInfo = new CyclopsDamageInfoData(subId,
-                        damage.dealer != null ? NitroxEntity.GetId(damage.dealer) : null,
-                        damage.originalDamage,
-                        damage.damage,
-                        damage.position,
-                        damage.type);
-                }
-
-                int[] damagePointIndexes = GetActiveDamagePoints(subRoot).ToArray();
-                CyclopsFireData[] firePoints = GetActiveRoomFires(subRoot.GetComponent<SubFire>()).ToArray();
-
-                CyclopsDamage packet = new(subId, subRoot.GetComponent<LiveMixin>().health, subRoot.damageManager.subLiveMixin.health, subRoot.GetComponent<SubFire>().liveMixin.health, damagePointIndexes, firePoints, damageInfo);
-                packetSender.Send(packet);
+                return;
             }
-            else
+            CyclopsDamageInfoData damageInfo = null;
+            if (info.HasValue)
             {
-                // RIP
-                CyclopsDestroyed packet = new(subId);
-                packetSender.Send(packet);
+                DamageInfo damage = info.Value;
+                // Source of the damage. Used if the damage done to the Cyclops was not calculated on other clients. Currently it's just used to figure out what sounds and
+                // visual effects should be used.
+                damageInfo = new CyclopsDamageInfoData(subId,
+                                                       damage.dealer != null ? NitroxEntity.GetId(damage.dealer) : null,
+                                                       damage.originalDamage,
+                                                       damage.damage,
+                                                       damage.position,
+                                                       damage.type);
             }
+
+            int[] damagePointIndexes = GetActiveDamagePoints(subRoot).ToArray();
+            CyclopsFireData[] firePoints = GetActiveRoomFires(subRoot.GetComponent<SubFire>()).ToArray();
+
+            CyclopsDamage packet = new(subId, subRoot.GetComponent<LiveMixin>().health, subRoot.damageManager.subLiveMixin.health, subRoot.GetComponent<SubFire>().liveMixin.health, damagePointIndexes, firePoints, damageInfo);
+            packetSender.Send(packet);
         }
 
         /// <summary>
@@ -436,9 +429,7 @@ namespace NitroxClient.GameLogic
         private IEnumerable<CyclopsFireData> GetActiveRoomFires(SubFire subFire)
         {
             NitroxId subRootId = NitroxEntity.GetId(subFire.subRoot.gameObject);
-            Dictionary<CyclopsRooms, SubFire.RoomFire> roomFires = subFire.roomFires;
-
-            foreach (KeyValuePair<CyclopsRooms, SubFire.RoomFire> roomFire in roomFires)
+            foreach (KeyValuePair<CyclopsRooms, SubFire.RoomFire> roomFire in subFire.roomFires)
             {
                 for (int i = 0; i < roomFire.Value.spawnNodes.Length; i++)
                 {

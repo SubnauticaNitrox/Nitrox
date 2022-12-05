@@ -11,7 +11,7 @@
       Title="BlogPage">
 
     <local:PageBase.Resources>
-        <BitmapImage x:Key="VinesImage" UriSource="pack://application:,,,/Assets/Images/Vines.png" />
+        <BitmapImage x:Key="VinesImage" UriSource="pack://application:,,,/Assets/Images/blog/vines.png" />
     </local:PageBase.Resources>
 
     <Grid Margin="32,0">

@@ -20,6 +20,7 @@ namespace NitroxClient.GameLogic.InitialSync
         private readonly BasePieceSpawnPrioritizer basePieceSpawnPrioritizer;
 
         private bool completed;
+        private int latestCount = 0;
 
         /*
          * Certain objects like water parks need a frame to process internal stuff that will spawn or rebuild some parts of it
@@ -53,8 +54,12 @@ namespace NitroxClient.GameLogic.InitialSync
                 QueueUpPieces(prioritizedBasePieces);
                 ThrottledBuilder.Main.QueueDrained += FinishedCompletedBuildings;
             }
+            int totalPieces = buildEventQueue.Count;
 
-            yield return new WaitUntil(() => completed);
+            yield return new WaitUntil(() => {
+                UpdateProgress(totalPieces, waitScreenItem);
+                return completed;
+            });
         }
 
         private void QueueUpPieces(IEnumerable<BasePiece> basePieces)
@@ -85,8 +90,18 @@ namespace NitroxClient.GameLogic.InitialSync
 
         private void FinishedCompletedBuildings(object sender, EventArgs eventArgs)
         {
-            ThrottledBuilder.Main.QueueDrained -= FinishedCompletedBuildings;
             completed = true;
+        }
+
+        private void UpdateProgress(int totalPieces, WaitScreen.ManualWaitItem waitScreenItem)
+        {
+            if (latestCount == buildEventQueue.Count)
+            {
+                return;
+            }
+            latestCount = buildEventQueue.Count;
+            waitScreenItem.SetProgress(totalPieces - buildEventQueue.Count, totalPieces);
+            WaitScreen.main.Update();
         }
     }
 }

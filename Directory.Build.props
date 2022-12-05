@@ -3,6 +3,7 @@
     <PropertyGroup>
         <Version>1.6.0.1</Version>
         <LangVersion>10</LangVersion>
+        <NitroxProject>false</NitroxProject>
         <TestLibrary>false</TestLibrary>
         <NitroxLibrary>false</NitroxLibrary>
         <UnityModLibrary>false</UnityModLibrary>
@@ -18,6 +19,9 @@
     </PropertyGroup>
     
     <PropertyGroup Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(MSBuildProjectName), '^Nitrox.*$'))">
+        <NitroxProject>true</NitroxProject>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(NitroxProject)' == 'true' and '$(MSBuildProjectName)' != 'Nitrox.Analyzers'">
         <NitroxLibrary>true</NitroxLibrary>
     </PropertyGroup>
     <PropertyGroup Condition="'$(NitroxLibrary)' == 'true' and '$(MSBuildProjectName)' != 'NitroxModel' and '$(MSBuildProjectName)' != 'NitroxServer' and '$(MSBuildProjectName)' != 'Nitrox.BuildTool' and '$(MSBuildProjectName)' != 'Nitrox.Launcher'">
@@ -27,6 +31,26 @@
         <TestLibrary>true</TestLibrary>
     </PropertyGroup>
 
+    <!-- Shared dependencies for all Nitrox.* projects -->
+    <Choose>
+        <When Condition="'$(NitroxProject)' == 'true'">
+            <ItemGroup>
+                <PackageReference Include="JetBrains.Annotations" Version="2022.3.1">
+                    <Aliases>JB</Aliases>
+                </PackageReference>
+            </ItemGroup>
+        </When>
+    </Choose>
+    
+    <!-- Include our analyzer and code gen library to all Nitrox projects -->
+    <Choose>
+        <When Condition="'$(NitroxLibrary)' == 'true'">
+            <ItemGroup>
+                <ProjectReference Include="..\Nitrox.Analyzers\Nitrox.Analyzers.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+            </ItemGroup>
+        </When>
+    </Choose>
+    
     <!-- Include default project references to all other "Nitrox*" projects -->
     <Choose>
         <When Condition="'$(UnityModLibrary)' == 'true'">

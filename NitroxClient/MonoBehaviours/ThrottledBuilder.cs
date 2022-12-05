@@ -267,7 +267,7 @@ namespace NitroxClient.MonoBehaviours
             {
                 bool isFinishedPiece = (!child.TryGetComponent(out NitroxEntity entity) && child.TryGetComponent(out BaseDeconstructable baseDeconstructable) && AreSameTechType(baseDeconstructable.recipe, techType) &&
                                         !child.name.Contains("CorridorConnector")) ||
-                                        entity?.Id == pieceId;
+                                        (entity && entity.Id.Equals(pieceId));
 
                 if (isFinishedPiece)
                 {

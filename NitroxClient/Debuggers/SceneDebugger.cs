@@ -31,6 +31,7 @@ public class SceneDebugger : BaseDebugger
     private readonly Dictionary<int, bool> componentsVisibilityByID = new();
     private readonly Dictionary<int, FieldInfo[]> cachedFieldsByComponentID = new();
     private readonly Dictionary<int, MethodInfo[]> cachedMethodsByComponentID = new();
+    private readonly Dictionary<int, IDictionary<Type, bool>> enumVisibilityByComponentIDAndEnumType = new();
 
     public SceneDebugger(IEnumerable<IDrawer> drawers, IEnumerable<IStructDrawer> structDrawers) : base(650, null, KeyCode.S, true, false, false, GUISkinCreationOptions.DERIVEDCOPY)
     {
@@ -339,27 +340,29 @@ public class SceneDebugger : BaseDebugger
                 }
                 else
                 {
+                    GUILayout.FlexibleSpace();
+
                     switch (fieldValue)
                     {
                         case null:
-                            GUILayout.Box("Field is null");
+                            GUILayout.Box("Field is null", GUILayout.Width(NitroxGUILayout.VALUE_WIDTH));
                             break;
                         case ScriptableObject scriptableObject:
-                            if (GUILayout.Button(field.Name))
+                            if (GUILayout.Button(field.Name, GUILayout.Width(NitroxGUILayout.VALUE_WIDTH)))
                             {
                                 DrawFields(scriptableObject);
                             }
 
                             break;
                         case GameObject gameObject:
-                            if (GUILayout.Button(field.Name))
+                            if (GUILayout.Button(field.Name, GUILayout.Width(NitroxGUILayout.VALUE_WIDTH)))
                             {
                                 UpdateSelectedObject(gameObject);
                             }
 
                             break;
                         case bool boolValue:
-                            if (GUILayout.Button(boolValue.ToString()))
+                            if (GUILayout.Button(boolValue.ToString(), GUILayout.Width(NitroxGUILayout.VALUE_WIDTH)))
                             {
                                 field.SetValue(target, !boolValue);
                             }
@@ -376,12 +379,60 @@ public class SceneDebugger : BaseDebugger
                             field.SetValue(target, NitroxGUILayout.ConvertibleField((IConvertible)fieldValue));
                             break;
                         case Enum enumValue:
-                            NitroxGUILayout.EnumPopup(enumValue);
+                            DrawEnum(target, field, enumValue);
                             break;
                         default:
-                            GUILayout.TextArea(fieldValue.ToString(), "options");
+                            GUILayout.TextArea(fieldValue.ToString(), "options", GUILayout.Width(NitroxGUILayout.VALUE_WIDTH));
                             break;
                     }
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Draws an enum field on a component.
+    /// </summary>
+    /// <param name="target">The target containing the field.</param>
+    /// <param name="field">The enum field</param>
+    /// <param name="enumValue">The selected enum value.</param>
+    private void DrawEnum(UnityEngine.Object target, FieldInfo field, Enum enumValue)
+    {
+        // This is the first time enountering this target type
+        if (!enumVisibilityByComponentIDAndEnumType.TryGetValue(target.GetInstanceID(), out IDictionary<Type, bool> enumVisibilityByType))
+        {
+            // Add an empty subdictionary, it will be handled by the statement below.
+            enumVisibilityByType = new Dictionary<Type, bool>();
+            enumVisibilityByComponentIDAndEnumType.Add(target.GetInstanceID(), enumVisibilityByType);
+        }
+
+        // This is the first time we are encountering this enum type on this component
+        if (!enumVisibilityByType.TryGetValue(field.FieldType, out _))
+        {
+            enumVisibilityByType.Add(field.FieldType, false);
+        }
+
+        using (new GUILayout.VerticalScope())
+        {
+            using (new GUILayout.HorizontalScope())
+            {
+                GUILayout.FlexibleSpace();
+
+                // Toggle the visibility and save it in the subdictionary
+                if (GUILayout.Button("Show / Hide", GUILayout.Width(NitroxGUILayout.VALUE_WIDTH)))
+                {
+                    enumVisibilityByType[field.FieldType] = !enumVisibilityByType[field.FieldType];
+                }
+            }
+
+            // Show the enum list.
+            if (enumVisibilityByType[field.FieldType])
+            {
+                GUILayout.Space(5);
+                using (new GUILayout.HorizontalScope())
+                {
+                    GUILayout.FlexibleSpace();
+                    field.SetValue(target, NitroxGUILayout.EnumPopup(enumValue, 250));
                 }
             }
         }

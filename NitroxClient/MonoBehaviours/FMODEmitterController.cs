@@ -2,6 +2,7 @@
 using FMOD.Studio;
 using FMODUnity;
 using UnityEngine;
+using NitroxClient.Unity.Helper;
 #pragma warning disable 618
 
 namespace NitroxClient.MonoBehaviours
@@ -56,12 +57,12 @@ namespace NitroxClient.MonoBehaviours
             }
         }
 
-        public void PlayCustomEmitter(string path) => customEmitters[path]?.Play();
-        public void ParamCustomEmitter(string path, int paramIndex, float value) => customEmitters[path]?.SetParameterValue(paramIndex, value);
-        public void StopCustomEmitter(string path) => customEmitters[path]?.Stop();
+        public void PlayCustomEmitter(string path) => customEmitters[path].AliveOrNull()?.Play();
+        public void ParamCustomEmitter(string path, int paramIndex, float value) => customEmitters[path].AliveOrNull()?.SetParameterValue(paramIndex, value);
+        public void StopCustomEmitter(string path) => customEmitters[path].AliveOrNull()?.Stop();
 
-        public void PlayStudioEmitter(string path) => studioEmitters[path]?.PlayUI();
-        public void StopStudioEmitter(string path, bool allowFadeout) => studioEmitters[path]?.Stop(allowFadeout);
+        public void PlayStudioEmitter(string path) => studioEmitters[path].AliveOrNull()?.PlayUI();
+        public void StopStudioEmitter(string path, bool allowFadeout) => studioEmitters[path].AliveOrNull()?.Stop(allowFadeout);
 
         public void PlayCustomLoopingEmitter(string path)
         {

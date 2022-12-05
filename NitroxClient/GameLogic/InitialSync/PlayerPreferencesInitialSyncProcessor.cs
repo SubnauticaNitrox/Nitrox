@@ -29,6 +29,7 @@ public class PlayerPreferencesInitialSyncProcessor : InitialSyncProcessor
             typeof(EscapePodInitialSyncProcessor),
             typeof(RemotePlayerInitialSyncProcessor),
             typeof(BuildingInitialSyncProcessor),
+            typeof(VehicleInitialSyncProcessor),
         });
     }
 

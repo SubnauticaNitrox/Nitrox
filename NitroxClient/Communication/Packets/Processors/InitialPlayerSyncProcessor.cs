@@ -57,6 +57,10 @@ namespace NitroxClient.Communication.Packets.Processors
             WaitScreen.Remove(loadingMultiplayerWaitItem);
             Multiplayer.Main.InitialSyncCompleted = true;
 
+            // When the player finishes loading, we can take back his invincibility
+            Player.main.liveMixin.invincible = false;
+            Player.main.UnfreezeStats();
+
             packetSender.Send(new PlayerSyncFinished());
         }
 

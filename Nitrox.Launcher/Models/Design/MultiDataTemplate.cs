@@ -1,12 +1,15 @@
-﻿using System.Collections.Generic;
+﻿extern alias JB;
+using System.Collections.Generic;
 using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Markup.Xaml.Templates;
 using Avalonia.Metadata;
-using JetBrains.Annotations;
+using JB::JetBrains.Annotations;
 
 namespace Nitrox.Launcher.Models.Design;
+
+extern alias JB;
 
 /// <summary>
 ///     Selects a <see cref="DataTemplate"/> based on its <see cref="DataTemplate.DataType"/>.

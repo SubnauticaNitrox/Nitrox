@@ -28,6 +28,7 @@ namespace NitroxModel.Packets
         public InitialStoryGoalData StoryGoalData { get; }
         public ICollection<string> CompletedGoals { get; }
         public NitroxVector3 PlayerSpawnData { get; }
+        public NitroxQuaternion PlayerSpawnRotation { get; }
         public Optional<NitroxId> PlayerSubRootId { get; }
         public PlayerStatsData PlayerStatsData { get; }
         public List<InitialRemotePlayerData> RemotePlayerData { get; }
@@ -53,6 +54,7 @@ namespace NitroxModel.Packets
             InitialStoryGoalData storyGoalData,
             ICollection<string> completedGoals,
             NitroxVector3 playerSpawnData,
+            NitroxQuaternion playerSpawnRotation,
             Optional<NitroxId> playerSubRootId,
             PlayerStatsData playerStatsData,
             IEnumerable<InitialRemotePlayerData> remotePlayerData,
@@ -78,6 +80,7 @@ namespace NitroxModel.Packets
             StoryGoalData = storyGoalData;
             CompletedGoals = completedGoals;
             PlayerSpawnData = playerSpawnData;
+            PlayerSpawnRotation = playerSpawnRotation;
             PlayerSubRootId = playerSubRootId;
             PlayerStatsData = playerStatsData;
             RemotePlayerData = remotePlayerData.ToList();
@@ -106,6 +109,7 @@ namespace NitroxModel.Packets
             InitialStoryGoalData storyGoalData,
             ICollection<string> completedGoals,
             NitroxVector3 playerSpawnData,
+            NitroxQuaternion playerSpawnRotation,
             Optional<NitroxId> playerSubRootId,
             PlayerStatsData playerStatsData,
             List<InitialRemotePlayerData> remotePlayerData,
@@ -131,6 +135,7 @@ namespace NitroxModel.Packets
             StoryGoalData = storyGoalData;
             CompletedGoals = completedGoals;
             PlayerSpawnData = playerSpawnData;
+            PlayerSpawnRotation = playerSpawnRotation;
             PlayerSubRootId = playerSubRootId;
             PlayerStatsData = playerStatsData;
             RemotePlayerData = remotePlayerData;
