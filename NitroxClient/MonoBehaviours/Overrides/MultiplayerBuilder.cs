@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using FMODUnity;
 using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
 using NitroxModel.DataStructures.Util;
 using NitroxModel_Subnautica.DataStructures;
@@ -173,7 +174,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 Int3 cell2 = face.cell - @int;
                 Base.Face face3 = new Base.Face(cell2, face.direction);
                 faceGhost.ghostBase.SetFaceMask(face3, true);
-                faceGhost.ghostBase.SetFace(face3, faceGhost.faceType);
+                faceGhost.ghostBase.SetFaceType(face3, faceGhost.faceType);
                 faceGhost.RebuildGhostGeometry();
                 geometryChanged = true;
             }
@@ -254,7 +255,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
         {
 #pragma warning disable CS0618
             //Disabling warning as we dont have the FModAsset to use instead.
-            Utils.PlayEnvSound(PLACE_SOUND, ghostModel.transform.position);
+            RuntimeManager.PlayOneShot(PLACE_SOUND, ghostModel.transform.position);
 #pragma warning restore CS0618
             ConstructableBase componentInParent = ghostModel.GetComponentInParent<ConstructableBase>();
             BaseGhost component = ghostModel.GetComponent<BaseGhost>();
@@ -297,7 +298,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
         {
 #pragma warning disable CS0618
             //Disabling warning as we dont have the FModAsset to use instead.
-            Utils.PlayEnvSound(PLACE_SOUND, ghostModel.transform.position);
+            RuntimeManager.PlayOneShot(PLACE_SOUND, ghostModel.transform.position);
 #pragma warning restore CS0618
 
             GameObject gameObject = Object.Instantiate<GameObject>(prefab);
@@ -323,7 +324,6 @@ namespace NitroxClient.MonoBehaviours.Overrides
             expr138.rotation = PlaceRotation;
             Constructable componentInParent3 = gameObject.GetComponentInParent<Constructable>();
             componentInParent3.SetState(false);
-            Utils.SetLayerRecursively(gameObject, LayerMask.NameToLayer((!flag) ? "Interior" : "Default"));
             if (ghostModel != null)
             {
                 Object.Destroy(ghostModel);
@@ -369,7 +369,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 }
 
                 aaBounds.extents = (a - vector) * 0.5f;
-                aaBounds.center = vector + AABounds.extents;
+                aaBounds.center = vector + aaBounds.extents;
             }
         }
 
@@ -379,44 +379,47 @@ namespace NitroxClient.MonoBehaviours.Overrides
             {
                 results.Clear();
             }
-
             if (target == null)
             {
                 return;
             }
-
-            ConstructableBounds[] componentsInChildren = target.GetComponentsInChildren<ConstructableBounds>();
-            foreach (ConstructableBounds constructableBounds in componentsInChildren)
+            using (ListPool<ConstructableBounds> listPool = Pool<ListPool<ConstructableBounds>>.Get())
             {
-                OrientedBounds localBounds = constructableBounds.bounds;
-                OrientedBounds orientedBounds = OrientedBounds.ToWorldBounds(constructableBounds.transform, localBounds);
-                if (transform != null)
+                List<ConstructableBounds> list = listPool.list;
+                target.GetComponentsInChildren<ConstructableBounds>(true, list);
+                foreach (ConstructableBounds constructableBounds in list)
                 {
-                    orientedBounds = OrientedBounds.ToLocalBounds(transform, orientedBounds);
+                    OrientedBounds localBounds = constructableBounds.bounds;
+                    OrientedBounds orientedBounds = OrientedBounds.ToWorldBounds(constructableBounds.transform, localBounds);
+                    if (transform != null)
+                    {
+                        orientedBounds = OrientedBounds.ToLocalBounds(transform, orientedBounds);
+                    }
+                    results.Add(orientedBounds);
                 }
-
-                results.Add(orientedBounds);
             }
-        }
-
-        public static bool CheckSpace(Vector3 position, Quaternion rotation, Vector3 extents, int layerMask, Collider allowedCollider)
-        {
-            if (extents.x <= 0f || extents.y <= 0f || extents.z <= 0f)
-            {
-                return true;
-            }
-
-            int num = Physics.OverlapBoxNonAlloc(position, extents, sColliders, rotation, layerMask, QueryTriggerInteraction.Ignore);
-            return num == 0 || (num == 1 && sColliders[0] == allowedCollider);
+            results.Sort();
         }
 
         public static bool CheckSpace(Vector3 position, Quaternion rotation, List<OrientedBounds> localBounds, int layerMask, Collider allowedCollider)
         {
+            bool result;
+            using (ListPool<GameObject> listPool = Pool<ListPool<GameObject>>.Get())
+            {
+                List<GameObject> list = listPool.list;
+                CheckSpace(position, rotation, localBounds, layerMask, allowedCollider, list);
+                result = (list.Count == 0);
+            }
+            return result;
+        }
+
+        public static void CheckSpace(Vector3 position, Quaternion rotation, List<OrientedBounds> localBounds, int layerMask, Collider allowedCollider, List<GameObject> obstacles)
+        {
+            obstacles.Clear();
             if (rotation.IsDistinguishedIdentity())
             {
                 rotation = Quaternion.identity;
             }
-
             for (int i = 0; i < localBounds.Count; i++)
             {
                 OrientedBounds orientedBounds = localBounds[i];
@@ -424,27 +427,36 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 {
                     orientedBounds.rotation = Quaternion.identity;
                 }
-
                 orientedBounds.position = position + rotation * orientedBounds.position;
                 orientedBounds.rotation = rotation * orientedBounds.rotation;
-                if (!CheckSpace(orientedBounds.position, orientedBounds.rotation, orientedBounds.extents, layerMask, allowedCollider))
+                if (orientedBounds.extents.x > 0f && orientedBounds.extents.y > 0f && orientedBounds.extents.z > 0f)
                 {
-                    return false;
+                    GetOverlappedColliders(orientedBounds.position, orientedBounds.rotation, orientedBounds.extents, layerMask, QueryTriggerInteraction.Ignore, Builder.sCollidersList);
+                    if (allowedCollider != null)
+                    {
+                        for (int j = sCollidersList.Count - 1; j >= 0; j--)
+                        {
+                            if (sCollidersList[j] == allowedCollider)
+                            {
+                                sCollidersList.RemoveAt(j);
+                            }
+                        }
+                    }
+                    GetRootObjects(sCollidersList, obstacles);
+                    sCollidersList.Clear();
                 }
             }
-
-            return true;
         }
 
-        public static void GetOverlappedColliders(Vector3 position, Quaternion rotation, Vector3 extents, List<Collider> results)
+        public static void GetOverlappedColliders(Vector3 position, Quaternion rotation, Vector3 extents, int layerMask, QueryTriggerInteraction trigger, List<Collider> results)
         {
             results.Clear();
-            int num = UWE.Utils.OverlapBoxIntoSharedBuffer(position, extents, rotation, -1, QueryTriggerInteraction.Collide);
+            int num = UWE.Utils.OverlapBoxIntoSharedBuffer(position, extents, rotation, layerMask, trigger);
             for (int i = 0; i < num; i++)
             {
                 Collider collider = UWE.Utils.sharedColliderBuffer[i];
                 GameObject gameObject = collider.gameObject;
-                if (!collider.isTrigger || gameObject.layer == LayerID.Useable)
+                if (!collider.isTrigger || gameObject.layer == LayerID.Useable || gameObject.CompareTag(Builder.denyBuildingTag))
                 {
                     results.Add(collider);
                 }
@@ -453,20 +465,29 @@ namespace NitroxClient.MonoBehaviours.Overrides
 
         public static void GetRootObjects(List<Collider> colliders, List<GameObject> results)
         {
-            results.Clear();
             for (int i = 0; i < colliders.Count; i++)
             {
                 GameObject gameObject = colliders[i].gameObject;
-                GameObject gameObject2 = UWE.Utils.GetEntityRoot(gameObject);
-                if (gameObject2 == null)
+                Transform transform = gameObject.transform;
+                while (transform != null)
                 {
-                    SceneObjectIdentifier componentInParent = gameObject.GetComponentInParent<SceneObjectIdentifier>();
-                    if (componentInParent != null)
+                    if (transform.GetComponent<IBaseModuleGeometry>() != null)
                     {
-                        gameObject2 = componentInParent.gameObject;
+                        gameObject = transform.gameObject;
+                        break;
                     }
+                    if (transform.GetComponent<PrefabIdentifier>() != null)
+                    {
+                        gameObject = transform.gameObject;
+                        break;
+                    }
+                    if (transform.GetComponent<SceneObjectIdentifier>() != null)
+                    {
+                        gameObject = transform.gameObject;
+                        break;
+                    }
+                    transform = transform.parent;
                 }
-                gameObject = ((gameObject2 != null) ? gameObject2 : gameObject);
                 if (!results.Contains(gameObject))
                 {
                     results.Add(gameObject);
@@ -527,7 +548,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
 
         private static readonly Color placeColorAllow = new Color(0f, 1f, 0f, 1f);
 
-        private static readonly Collider[] sColliders = new Collider[2];
+        private static readonly List<Collider> sCollidersList = new List<Collider>();
 
         private static GameObject prefab;
 

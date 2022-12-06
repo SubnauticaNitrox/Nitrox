@@ -6,9 +6,9 @@ using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-public class Base_SetFace_Patch : NitroxPatch, IDynamicPatch
+public class Base_SetFaceType_Patch : NitroxPatch, IDynamicPatch
 {
-    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Base t) => t.SetFace(default, default));
+    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Base t) => t.SetFaceType(default, default));
 
     public static void Prefix(Base __instance, Base.Face face, Base.FaceType faceType)
     {
