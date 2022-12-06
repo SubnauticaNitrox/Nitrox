@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Unity;
@@ -25,9 +27,7 @@ namespace NitroxServer.GameLogic
         private readonly ThreadSafeSet<string> reservedPlayerNames = new("Player"); // "Player" is often used to identify the local player and should not be used by any user
 
         private ThreadSafeQueue<KeyValuePair<NitroxConnection, MultiplayerSessionReservationRequest>> JoinQueue { get; set; } = new();
-        private bool PlayerCurrentlyJoining { get; set; }
-
-        private Timer initialSyncTimer;
+        public Action SyncFinishedCallback { get; private set; }
 
         private readonly ServerConfig serverConfig;
         private ushort currentPlayerId;
@@ -38,6 +38,8 @@ namespace NitroxServer.GameLogic
             currentPlayerId = players.Count == 0 ? (ushort)0 : players.Max(x => x.Id);
 
             this.serverConfig = serverConfig;
+
+            _ = JoinQueueLoop();
         }
 
         public List<Player> GetConnectedPlayers()
@@ -54,7 +56,8 @@ namespace NitroxServer.GameLogic
             NitroxConnection connection,
             PlayerSettings playerSettings,
             AuthenticationContext authenticationContext,
-            string correlationId)
+            string correlationId, 
+            bool ignoreJoinQueue = false)
         {
             if (reservedPlayerNames.Count >= serverConfig.MaxConnections)
             {
@@ -75,7 +78,7 @@ namespace NitroxServer.GameLogic
                 return new MultiplayerSessionReservation(correlationId, rejectedState);
             }
 
-            if (PlayerCurrentlyJoining)
+            if (!ignoreJoinQueue)
             {
                 if (JoinQueue.Any(pair => ReferenceEquals(pair.Key, connection)))
                 {
@@ -124,48 +127,67 @@ namespace NitroxServer.GameLogic
             reservations.Add(reservationKey, playerContext);
             assetPackage.ReservationKey = reservationKey;
 
-            PlayerCurrentlyJoining = true;
-
-            InitialSyncTimerData timerData = new InitialSyncTimerData(connection, authenticationContext, serverConfig.InitialSyncTimeout);
-            initialSyncTimer = new Timer(InitialSyncTimerElapsed, timerData, 0, 200);
-
-
             return new MultiplayerSessionReservation(correlationId, playerId, reservationKey);
         }
-        
-        private void InitialSyncTimerElapsed(object state)
+
+        private async Task JoinQueueLoop()
         {
-            if (state is InitialSyncTimerData timerData && !timerData.Disposing)
+            while (true)
             {
-                allPlayersByName.TryGetValue(timerData.Context.Username, out Player player);
-
-                if (timerData.Connection.State < NitroxConnectionState.Connected)
+                try
                 {
-                    if (player == null) // player can cancel the joining process before this timer elapses
+                    while (!JoinQueue.Any())
                     {
-                        Log.Error("Player was nulled while joining");
-                        PlayerDisconnected(timerData.Connection);
+                        await Task.Delay(10);
                     }
-                    else
-                    {
-                        player.SendPacket(new PlayerKicked("An error occured while loading, Initial sync took too long to complete"));
-                        PlayerDisconnected(player.Connection);
-                        SendPacketToOtherPlayers(new Disconnect(player.Id), player);
-                    }
-                    timerData.Disposing = true;
-                    FinishProcessingReservation();
-                }
 
-                if (timerData.Counter >= timerData.MaxCounter)
+                    var pair = JoinQueue.Dequeue();
+                    NitroxConnection connection = pair.Key;
+                    MultiplayerSessionReservationRequest request = pair.Value;
+
+
+                    MultiplayerSessionReservation reservation = ReservePlayerContext(connection,
+                        request.PlayerSettings,
+                        request.AuthenticationContext,
+                        request.CorrelationId, 
+                        ignoreJoinQueue: true);
+
+                    connection.SendPacket(reservation);
+
+                    CancellationTokenSource source = new();
+
+                    Task timerTask = Task.Run(() =>
+                    {
+                        Task.Delay(serverConfig.InitialSyncTimeout).Wait(source.Token);
+
+                        Log.Info("Timer expired");
+
+                        SyncFinishedCallback = null;
+
+                        allPlayersByName.TryGetValue(request.AuthenticationContext.Username, out Player player);
+                        player?.SendPacket(new PlayerKicked("An error occured while loading, initial sync took too long to complete"));
+                        PlayerDisconnected(connection);
+                    });
+
+                    SyncFinishedCallback = () =>
+                    {
+                        source.Cancel();
+                        Log.Info($"Player {request.AuthenticationContext.Username} joined successfully. Remaining requests: {JoinQueue.Count}");
+                    };
+
+                    try
+                    {
+                        await timerTask;
+                    }
+                    catch (TaskCanceledException)
+                    {
+                        Log.Info("Timer cancelled");
+                    }
+                }
+                catch (Exception e)
                 {
-                    Log.Error("An unexpected Error occured during InitialSync");
-                    PlayerDisconnected(timerData.Connection);
-
-                    timerData.Disposing = true;
-                    initialSyncTimer.Dispose(); // Looped long enough to require an override
+                    Log.Error($"Unexpected error during player connection: {e}");
                 }
-
-                timerData.Counter++;
             }
         }
 
@@ -250,29 +272,6 @@ namespace NitroxServer.GameLogic
             {
                 Server.Instance.PauseServer();
                 Server.Instance.Save();
-            }
-        }
-
-        public void FinishProcessingReservation()
-        {
-            initialSyncTimer.Dispose();
-            PlayerCurrentlyJoining = false;
-
-            Log.Info($"Finished processing reservation. Remaining requests: {JoinQueue.Count}");
-
-            // Tell next client that it can start joining.
-            if (JoinQueue.Count > 0)
-            {
-                KeyValuePair<NitroxConnection, MultiplayerSessionReservationRequest> keyValuePair = JoinQueue.Dequeue();
-                NitroxConnection requestConnection = keyValuePair.Key;
-                MultiplayerSessionReservationRequest reservationRequest = keyValuePair.Value;
-
-                MultiplayerSessionReservation reservation = ReservePlayerContext(requestConnection,
-                reservationRequest.PlayerSettings,
-                reservationRequest.AuthenticationContext,
-                reservationRequest.CorrelationId);
-
-                requestConnection.SendPacket(reservation);
             }
         }
 
