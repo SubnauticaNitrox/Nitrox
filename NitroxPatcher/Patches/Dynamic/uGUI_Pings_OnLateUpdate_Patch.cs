@@ -11,9 +11,9 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// <summary>
 /// Decide whether or not we want to render the pings on the screen
 /// </summary>
-public class uGUI_Pings_OnWillRenderCanvases_Patch : NitroxPatch, IDynamicPatch
+public class uGUI_Pings_OnLateUpdate_Patch : NitroxPatch, IDynamicPatch
 {
-    internal static readonly MethodInfo TARGET_METHOD = Reflect.Method((uGUI_Pings t) => t.OnWillRenderCanvases());
+    internal static readonly MethodInfo TARGET_METHOD = Reflect.Method((uGUI_Pings t) => t.OnLateUpdate());
 
     internal static readonly OpCode INJECTION_OPCODE = OpCodes.Call;
     internal static readonly object INJECTION_OPERAND = Reflect.Method((uGUI_Pings t) => t.IsVisibleNow());
@@ -32,7 +32,7 @@ public class uGUI_Pings_OnWillRenderCanvases_Patch : NitroxPatch, IDynamicPatch
                  * Replace
                  * bool flag = this.IsVisibleNow();
                  * by
-                 * bool flag = uGUI_Pings_OnWillRenderCanvases_Patch.IsVisible(this);
+                 * bool flag = uGUI_Pings_OnLateUpdate_Patch.IsVisible(this);
                  */
                 instruction.operand = Reflect.Method(() => IsVisible(default));
             }
