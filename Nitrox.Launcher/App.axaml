@@ -20,7 +20,7 @@
         <Style Selector="Window[(design|NitroxAttached.Theme)=DARK]">
             <Setter Property="Background" Value="#000000" />
         </Style>
-
+        
         <Style Selector="TextBlock">
             <Setter Property="TextWrapping" Value="Wrap" />
         </Style>
@@ -34,7 +34,7 @@
             <Setter Property="FontSize" Value="32" />
             <Setter Property="FontWeight" Value="600" />
         </Style>
-
+        
         <Style Selector="TextBox">
             <Setter Property="CornerRadius" Value="8" />
             <Setter Property="Padding" Value="14" />
@@ -71,7 +71,7 @@
             <Setter Property="Foreground" Value="#000000" />
             <Setter Property="FontSize" Value="12" />
         </Style>
-
+        
         <Style Selector="Panel.titleBar">
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="ZIndex" Value="100" />
@@ -122,7 +122,7 @@
             <Setter Property="Height" Value="10" />
             <Setter Property="IsHitTestVisible" Value="False" />
         </Style>
-
+        
         <Style Selector="Image.header">
             <Setter Property="Width" Value="108" />
             <Setter Property="Height" Value="24" />
@@ -137,14 +137,14 @@
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
-
+        
         <Style Selector="ContentControl.content">
             <Setter Property="Background" Value="#00000000" />
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
             <Setter Property="VerticalContentAlignment" Value="Stretch" />
             <Setter Property="Padding" Value="34 45" />
         </Style>
-
+        
         <Style Selector="Border.serverEntry">
             <Setter Property="Background" Value="#151516" />
             <Setter Property="CornerRadius" Value="12" />
@@ -170,9 +170,9 @@
         <Style Selector="Border.serverEntry StackPanel.description TextBlock">
             <Setter Property="Opacity" Value="0.5" />
         </Style>
-
+        
         <StyleInclude Source="/Styles/NavigationStyle.axaml" />
-        <StyleInclude Source="/Styles/NitroxButtonStyle.axaml" />
+        <StyleInclude Source="/Styles/ButtonStyle.axaml" />
         <StyleInclude Source="/Styles/NitroxRadioButtonStyle.axaml" />
         <StyleInclude Source="/Styles/NitroxMarkdownStyle.axaml" />
     </Application.Styles>
