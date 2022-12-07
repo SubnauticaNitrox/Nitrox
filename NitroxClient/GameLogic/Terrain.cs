@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Map;
@@ -103,10 +104,14 @@ namespace NitroxClient.GameLogic
             // In WorldStreamer.CreateStreamers() three coroutines are created to constantly call UpdateCenter() on the streamers
             // We force these updates so that the world streamer gets busy instantly
             WorldStreamer streamerV2 = LargeWorldStreamer.main.streamerV2;
-            streamerV2.UpdateStreamingCenter(MainCamera.camera.transform.position);
-            streamerV2.octreesStreamer.UpdateCenter(streamerV2.streamingCenter);
-            streamerV2.lowDetailOctreesStreamer.UpdateCenter(streamerV2.streamingCenter);
-            streamerV2.clipmapStreamer.UpdateCenter(streamerV2.streamingCenter);
+            // Sometimes, the world streamers can't find any cells to load and will throw an error, in which case we just skip the cell loading
+            try
+            {
+                streamerV2.UpdateStreamingCenter(MainCamera.camera.transform.position);
+                streamerV2.octreesStreamer.UpdateCenter(streamerV2.streamingCenter);
+                streamerV2.lowDetailOctreesStreamer.UpdateCenter(streamerV2.streamingCenter);
+                streamerV2.clipmapStreamer.UpdateCenter(streamerV2.streamingCenter);
+            } catch (Exception) { }
 
             yield return new WaitUntil(() => LargeWorldStreamer.main.IsWorldSettled());
             Player.main.cinematicModeActive = false;
