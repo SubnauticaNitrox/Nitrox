@@ -21,7 +21,8 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public override void Patch(Harmony harmony)
         {
-            PatchPrefix(harmony, TARGET_METHOD);
+            //TODO: Fix this patch to the new freezetime - it might not be needed anymore
+            //PatchPrefix(harmony, TARGET_METHOD);
         }
     }
 }

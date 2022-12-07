@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 namespace NitroxClient.GameLogic.PlayerLogic;
 
@@ -11,6 +11,8 @@ namespace NitroxClient.GameLogic.PlayerLogic;
 public class RemotePlayerIdentifier : MonoBehaviour, IObstacle
 {
     public RemotePlayer RemotePlayer;
+
+    public bool IsDeconstructionObstacle() => false;
 
     public bool CanDeconstruct(out string reason)
     {
