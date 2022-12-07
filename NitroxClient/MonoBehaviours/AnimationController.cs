@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using NitroxClient.GameLogic;
+using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours
 {
@@ -7,6 +8,7 @@ namespace NitroxClient.MonoBehaviours
     {
         private const float SMOOTHING_SPEED = 4f;
         private Animator animator;
+        private RemotePlayer remotePlayer;
 
         public bool UpdatePlayerAnimations { get; set; } = true;
         public Quaternion AimingRotation { get; set; }
@@ -21,6 +23,23 @@ namespace NitroxClient.MonoBehaviours
             animator = GetComponent<Animator>();
 
             this["is_underwater"] = true;
+        }
+
+        public void Initialize(RemotePlayer remotePlayer)
+        {
+            this.remotePlayer = remotePlayer;
+            remotePlayer.PlayerDeathEvent.AddHandler(this, Reset);
+        }
+
+        public void OnDestroy()
+        {
+            remotePlayer?.PlayerDeathEvent.RemoveHandler(this, Reset);
+        }
+
+        private void Reset(RemotePlayer remotePlayer)
+        {
+            animator.Rebind();
+            animator.Update(0);
         }
 
         public void FixedUpdate()
