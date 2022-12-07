@@ -93,7 +93,7 @@ namespace NitroxClient.GameLogic
             }
 
             playersById.Add(remotePlayer.PlayerId, remotePlayer);
-            onCreate(remotePlayer.PlayerId, remotePlayer);
+            onCreate(remotePlayer.PlayerId.ToString(), remotePlayer);
 
             DiscordClient.UpdatePartySize(GetTotalPlayerCount());
             
@@ -110,7 +110,7 @@ namespace NitroxClient.GameLogic
                     opPlayer.Value.Destroy();
                 }
                 playersById.Remove(playerId);
-                onRemove(playerId, opPlayer.Value);
+                onRemove(playerId.ToString(), opPlayer.Value);
                 DiscordClient.UpdatePartySize(GetTotalPlayerCount());
             }
         }
@@ -127,7 +127,7 @@ namespace NitroxClient.GameLogic
             return playersById.Count + 1; //Multiplayer-player(s) + you
         }
 
-        public delegate void OnCreate(ushort playerId, RemotePlayer remotePlayer);
-        public delegate void OnRemove(ushort playerId, RemotePlayer remotePlayer);
+        public delegate void OnCreate(string playerId, RemotePlayer remotePlayer);
+        public delegate void OnRemove(string playerId, RemotePlayer remotePlayer);
     }
 }

@@ -14,7 +14,7 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment
         }
         public void UpdateEquipmentVisibility(ReadOnlyCollection<TechType> currentEquipment)
         {
-            bool bodyVisible = currentEquipment.Contains(TechType.Stillsuit);
+            bool bodyVisible = currentEquipment.Contains(TechType.WaterFiltrationSuit);
 
             stillSuit.SetActive(bodyVisible);
         }

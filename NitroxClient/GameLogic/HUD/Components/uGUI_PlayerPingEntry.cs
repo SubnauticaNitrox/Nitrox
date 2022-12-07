@@ -68,7 +68,7 @@ public class uGUI_PlayerPingEntry : uGUI_PingEntry
         OnLanguageChanged();
     }
 
-    public void Initialize(int id, string name, uGUI_PlayerListTab parent)
+    public void Initialize(string id, string name, uGUI_PlayerListTab parent)
     {
         this.id = id;
         this.parent = parent;
@@ -76,7 +76,7 @@ public class uGUI_PlayerPingEntry : uGUI_PingEntry
         gameObject.SetActive(true);
         visibility.isOn = true;
         visibilityIcon.sprite = spriteVisible;
-        icon.sprite = SpriteManager.Get(SpriteManager.Group.Tab, "TabInventory");
+        icon.SetForegroundSprite(SpriteManager.Get(SpriteManager.Group.Tab, "TabInventory"));
         showPing = true;
 
         UpdateLabel(name);

@@ -131,13 +131,15 @@ namespace NitroxClient.GameLogic
                     + " NodeIndex: " + fireData.NodeIndex
                     + "]");
             }
-            GameObject gameObject = component.SpawnManual();
-            Fire componentInChildren = gameObject.GetComponentInChildren<Fire>();
-            if (componentInChildren)
+            component.SpawnManual(delegate (GameObject fireGO)
             {
-                componentInChildren.fireSubRoot = subFire.subRoot;
-                NitroxEntity.SetNewId(componentInChildren.gameObject, fireData.FireId);
-            }
+                Fire componentInChildren = fireGO.GetComponentInChildren<Fire>();
+                if (componentInChildren)
+                {
+                    componentInChildren.fireSubRoot = subFire.subRoot;
+                    NitroxEntity.SetNewId(componentInChildren.gameObject, fireData.FireId);
+                }
+            });
 
             subFire.roomFires = roomFiresDict;
             subFire.availableNodes = availableNodes;

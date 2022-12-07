@@ -1,4 +1,4 @@
-﻿using NitroxClient.GameLogic;
+using NitroxClient.GameLogic;
 using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.Helper;
 using NitroxModel.Core;
@@ -107,7 +107,7 @@ public class PlayerMovementBroadcaster : MonoBehaviour
             {
                 if (techType == TechType.Seamoth)
                 {
-                    bool flag = vehicle.transform.position.y < Ocean.main.GetOceanLevel() && vehicle.transform.position.y < vehicle.worldForces.waterDepth && !vehicle.precursorOutOfWater;
+                    bool flag = vehicle.transform.position.y < Ocean.GetOceanLevel() && vehicle.transform.position.y < vehicle.worldForces.waterDepth && !vehicle.precursorOutOfWater;
                     appliedThrottle = flag && GameInput.GetMoveDirection().sqrMagnitude > .1f;
                 }
                 else if (techType == TechType.Exosuit)

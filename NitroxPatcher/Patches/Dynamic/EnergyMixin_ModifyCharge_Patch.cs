@@ -18,7 +18,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(EnergyMixin __instance, float __result)
         {
-            GameObject battery = __instance.GetBattery();
+            GameObject battery = __instance.GetBatteryGameObject();
             if (battery)
             {
                 if (Math.Abs(Math.Floor(__instance.charge) - Math.Floor(__instance.charge - __result)) > 0.0) //Send package if power changed to next natural number

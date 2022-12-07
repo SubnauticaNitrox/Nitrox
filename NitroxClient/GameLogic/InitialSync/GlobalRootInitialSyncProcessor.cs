@@ -16,8 +16,7 @@ namespace NitroxClient.GameLogic.InitialSync
         public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
         {
             Log.Info("Received initial sync packet with " + packet.GlobalRootEntities.Count + " global root entities");
-            entities.Spawn(packet.GlobalRootEntities);
-            yield return null;
+            yield return entities.SpawnAsync(packet.GlobalRootEntities);
         }
     }
 }

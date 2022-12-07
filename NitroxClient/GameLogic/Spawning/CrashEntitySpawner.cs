@@ -1,4 +1,5 @@
-﻿using NitroxClient.MonoBehaviours;
+﻿using System.Collections;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
@@ -11,7 +12,7 @@ namespace NitroxClient.GameLogic.Spawning
         /**
          * Crash fish are spawned by the CrashHome in the Monobehaviours Start method
          */
-        public Optional<GameObject> Spawn(Entity entity, Optional<GameObject> parent, EntityCell cellRoot)
+        public IEnumerator SpawnAsync(Entity entity, Optional<GameObject> parent, EntityCell cellRoot, TaskResult<Optional<GameObject>> result)
         {
             if (parent.HasValue)
             {
@@ -23,7 +24,8 @@ namespace NitroxClient.GameLogic.Spawning
                 crashHome.crash = gameObject.GetComponent<Crash>();
             }
 
-            return Optional.Empty;
+            result.Set(Optional.Empty);
+            yield break;
         }
 
         public bool SpawnsOwnChildren()

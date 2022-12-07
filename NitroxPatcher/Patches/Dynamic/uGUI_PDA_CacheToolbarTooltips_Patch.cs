@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
+using System.Text;
 using HarmonyLib;
 using NitroxClient.GameLogic.HUD;
 using NitroxModel.Helper;
@@ -30,7 +31,9 @@ public class uGUI_PDA_CacheToolbarTooltips_Patch : NitroxPatch, IDynamicPatch
                 continue;
             }
             string toolbarTooltip = customTabs[customTabs.Count - i - 1].ToolbarTip;
-            __instance.toolbarTooltips[__instance.toolbarTooltips.Count - i - 1] = TooltipFactory.Label(toolbarTooltip);
+            StringBuilder stringBuilder = new();
+            TooltipFactory.Label(toolbarTooltip, stringBuilder);
+            __instance.toolbarTooltips[__instance.toolbarTooltips.Count - i - 1] = stringBuilder.ToString();
         }
     }
 

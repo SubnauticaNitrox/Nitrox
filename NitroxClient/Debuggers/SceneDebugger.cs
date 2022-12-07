@@ -117,19 +117,11 @@ public class SceneDebugger : BaseDebugger
         using (new GUILayout.VerticalScope("box"))
         {
             GUILayout.Label("All scenes", "header");
-            for (int i = 0; i < SceneManager.sceneCountInBuildSettings + 1; i++)
+            int maxSceneCount = Math.Max(SceneManager.sceneCount, SceneManager.sceneCountInBuildSettings);
+            for (int i = 0; i < maxSceneCount + 1; i++)
             {
-                Scene currentScene;
-                string path = "";
-                if (i == SceneManager.sceneCountInBuildSettings)
-                {
-                    currentScene = NitroxBootstrapper.Instance.gameObject.scene; // bit of a hack
-                }
-                else
-                {
-                    currentScene = SceneManager.GetSceneByBuildIndex(i);
-                    path = SceneUtility.GetScenePathByBuildIndex(i);
-                }
+                // Getting the DontDestroyOnLoad though the NitroxBootstrapper instance
+                Scene currentScene = i == maxSceneCount ? NitroxBootstrapper.Instance.gameObject.scene : SceneManager.GetSceneAt(i);
 
                 bool isSelected = selectedScene.IsValid() && currentScene == selectedScene;
                 bool isLoaded = currentScene.isLoaded;
@@ -137,7 +129,7 @@ public class SceneDebugger : BaseDebugger
 
                 using (new GUILayout.HorizontalScope("box"))
                 {
-                    if (GUILayout.Button($"{(isSelected ? ">> " : "")}{i}: {(isDDOLScene ? currentScene.name : path.TruncateLeft(35))}", isLoaded ? "sceneLoaded" : "label"))
+                    if (GUILayout.Button($"{(isSelected ? ">> " : "")}{i}: {(isDDOLScene ? currentScene.name : currentScene.path.TruncateLeft(35))}", isLoaded ? "sceneLoaded" : "label"))
                     {
                         selectedScene = currentScene;
                         ActiveTab = GetTab("Hierarchy").Value;

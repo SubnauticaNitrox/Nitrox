@@ -1,7 +1,8 @@
-﻿using NitroxClient.Communication.Abstract;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.MonoBehaviours;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using UnityEngine;
 
@@ -25,7 +26,9 @@ public class DeconstructionCompletedProcessor : ClientPacketProcessor<Deconstruc
             constructable.constructedAmount = 0;
             using (packetSender.Suppress<DeconstructionCompleted>())
             {
-                constructable.Deconstruct();
+                TaskResult<bool> result = new ();
+                TaskResult<string> reason = new ();
+                constructable.DeconstructAsync(result, reason);
             }
         }
         else
