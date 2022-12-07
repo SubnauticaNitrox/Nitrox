@@ -1,5 +1,4 @@
-﻿using System.IO;
-using NitroxModel.DataStructures.GameLogic;
+﻿using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Server;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
@@ -25,7 +24,7 @@ namespace NitroxServer.ConsoleCommands
         {
             ServerSerializerMode serializerMode = args.Get<ServerSerializerMode>(0);
 
-            serverConfig.Update(Path.Combine(WorldManager.SavesFolderDir, serverConfig.SaveName), c =>
+            serverConfig.Update(c =>
             {
                 if (serializerMode != c.SerializerMode)
                 {

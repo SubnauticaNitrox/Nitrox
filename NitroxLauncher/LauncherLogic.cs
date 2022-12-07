@@ -196,7 +196,7 @@ namespace NitroxLauncher
 
             if (PirateDetection.HasTriggered)
             {
-                throw new Exception("Aarrr! Nitrox walked the plank :(");
+                throw new Exception("Aarrr ! Nitrox walked the plank :(");
             }
 
 #if RELEASE

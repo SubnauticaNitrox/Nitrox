@@ -6,7 +6,7 @@ namespace NitroxServer.ConsoleCommands
 {
     internal class StopCommand : Command
     {
-        public override IEnumerable<string> Aliases { get; } = new[] { "exit", "halt", "quit", "close" };
+        public override IEnumerable<string> Aliases { get; } = new[] { "exit", "halt", "quit" };
 
         public StopCommand() : base("stop", Perms.ADMIN, "Stops the server")
         {

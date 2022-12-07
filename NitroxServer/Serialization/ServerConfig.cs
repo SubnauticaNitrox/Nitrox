@@ -21,7 +21,7 @@ namespace NitroxServer.Serialization
 
         private string postSaveCommandPath = string.Empty;
 
-        private string saveNameSetting = "My World";
+        private string saveNameSetting = "world";
         public override string FileName => "server.cfg";
 
         [PropertyDescription("Leave blank for a random spawn position")]
@@ -40,7 +40,7 @@ namespace NitroxServer.Serialization
 
             set
             {
-                Validate.IsTrue(value >= 1000, "SaveInterval must be greater than 1000");
+                Validate.IsTrue(value > 1000, "SaveInterval must be greater than 1000");
                 saveIntervalSetting = value;
             }
         }
@@ -121,10 +121,10 @@ namespace NitroxServer.Serialization
         [PropertyDescription("Determines whether the server will listen for and reply to LAN discovery requests.")]
         public bool LANDiscoveryEnabled { get; set; } = true;
 
-        public static ServerConfig Load(string saveDir)
+        public static ServerConfig Load()
         {
             ServerConfig config = new();
-            config.Update(saveDir);
+            config.Update();
             return config;
         }
     }
