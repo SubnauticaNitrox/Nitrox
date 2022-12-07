@@ -18,6 +18,12 @@ namespace NitroxLauncher.Pages
 {
     public partial class ServerPage : PageBase
     {
+        public bool IsServerExternal
+        {
+            get => LauncherLogic.Config.IsExternalServer;
+            set => LauncherLogic.Config.IsExternalServer = value;
+        }
+
         public ServerConfig Config;
 
         public bool IsNewWorld { get; private set; }
@@ -32,10 +38,10 @@ namespace NitroxLauncher.Pages
         public ServerPage()
         {
             InitializeComponent();
-
             InitializeWorldListing();
-            RBIsDocked.IsChecked = !LauncherLogic.Config.IsExternalServer;
-            RBIsExternal.IsChecked = LauncherLogic.Config.IsExternalServer;
+
+            RBIsDocked.IsChecked = !IsServerExternal;
+            RBIsExternal.IsChecked = IsServerExternal;
         }
 
         private void RBServer_Clicked(object sender, RoutedEventArgs e)
@@ -49,6 +55,7 @@ namespace NitroxLauncher.Pages
 
             NoWorldsBackground.Opacity = WorldManager.GetSaves().Any() ? 0 : 1;
 
+            // Bind the list data to be used in XAML
             WorldListingContainer.ItemsSource = null;
             WorldListingContainer.ItemsSource = WorldManager.GetSaves();
         }
@@ -268,7 +275,17 @@ namespace NitroxLauncher.Pages
             {
                 LauncherNotifier.Error($"This save does not exist or is not valid.");
                 InitializeWorldListing();
+                if (e.OriginalSource == DeleteWorldBtn)
+                {
+                    Storyboard GoBackAnimationStoryboard = (Storyboard)FindResource("GoBackAnimation");
+                    GoBackAnimationStoryboard.Begin();
+                }
                 return;
+            }
+
+            if (e.OriginalSource == DeleteWorldBtn)
+            {
+                isInSettings = true;
             }
 
             ConfirmationBox.Opacity = 1;
@@ -845,20 +862,12 @@ namespace NitroxLauncher.Pages
 
     }
 
-    [Serializable]
-    internal class WorldListing
+    // OPTIONAL - Only used to view world listings in intellisense, in addition to the lines that are in the ListView definition in ServerPage.xaml
+    public class WorldListing
     {
         public string WorldName { get; set; }
-
         public string WorldGamemode { get; set; }
-
         public string WorldVersion { get; set; }
-
         public bool IsValidSave { get; set; }
-
-        public override string ToString()
-        {
-            return $"[{nameof(WorldListing)}: WorldName: {WorldName}, WorldGamemode: {WorldGamemode}, WorldVersion: {WorldVersion}, IsValidSave: {IsValidSave}]";
-        }
     }
 }

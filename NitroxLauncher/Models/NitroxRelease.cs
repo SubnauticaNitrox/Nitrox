@@ -5,13 +5,13 @@ namespace NitroxLauncher.Models
     [Serializable]
     internal class NitroxRelease
     {
-        public string Url { get; }
+        public string Url { get; set; }
 
-        public string Version { get; }
+        public string Version { get; set; }
 
-        public string FileSize { get; }
+        public string FileSize { get; set; }
 
-        public string Md5 { get; }
+        public string Md5 { get; set; }
 
         protected NitroxRelease()
         {

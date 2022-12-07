@@ -5,11 +5,11 @@ namespace NitroxLauncher.Models
     [Serializable]
     internal class NitroxChangelog
     {
-        public string Version { get; }
+        public string Version { get; set; }
 
-        public DateTime Released { get; }
+        public DateTime Released { get; set; }
 
-        public string PatchNotes { get; }
+        public string PatchNotes { get; set; }
 
         protected NitroxChangelog()
         {
