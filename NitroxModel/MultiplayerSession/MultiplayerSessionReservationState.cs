@@ -23,11 +23,8 @@ namespace NitroxModel.MultiplayerSession
         [Description("The server is using hardcore gamemode, player is dead.")]
         HARDCORE_PLAYER_DEAD = 1 << 4,
 
-        [Description("Another user is currently joining the server.")]
-        ENQUEUED_IN_JOIN_QUEUE = 1 << 5,
-
         [Description("The player name is invalid, It must not contain any space or doubtful characters\n Allowed characters : A-Z a-z 0-9 _ . -\nLength : [3, 25]")]
-        INCORRECT_USERNAME = 1 << 6
+        INCORRECT_USERNAME = 1 << 5
     }
 
     public static class MultiplayerSessionReservationStateExtensions

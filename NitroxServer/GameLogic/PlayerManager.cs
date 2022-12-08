@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,28 +14,32 @@ using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
 using NitroxServer.Communication;
 using NitroxServer.Serialization;
+using NitroxServer.Serialization.World;
 
 namespace NitroxServer.GameLogic
 {
     // TODO: These methods are a little chunky. Need to look at refactoring just to clean them up and get them around 30 lines a piece.
     public class PlayerManager
     {
+        private readonly World world;
+
         private readonly ThreadSafeDictionary<string, Player> allPlayersByName;
         private readonly ThreadSafeDictionary<NitroxConnection, ConnectionAssets> assetsByConnection = new();
         private readonly ThreadSafeDictionary<string, PlayerContext> reservations = new();
         private readonly ThreadSafeSet<string> reservedPlayerNames = new("Player"); // "Player" is often used to identify the local player and should not be used by any user
 
-        private ThreadSafeQueue<KeyValuePair<NitroxConnection, MultiplayerSessionReservationRequest>> JoinQueue { get; set; } = new();
+        private ThreadSafeQueue<(NitroxConnection, string)> JoinQueue { get; set; } = new();
         public Action SyncFinishedCallback { get; private set; }
 
         private readonly ServerConfig serverConfig;
         private ushort currentPlayerId;
 
-        public PlayerManager(List<Player> players, ServerConfig serverConfig)
+        public PlayerManager(List<Player> players, World world, ServerConfig serverConfig)
         {
             allPlayersByName = new ThreadSafeDictionary<string, Player>(players.ToDictionary(x => x.Name), false);
             currentPlayerId = players.Count == 0 ? (ushort)0 : players.Max(x => x.Id);
 
+            this.world = world;
             this.serverConfig = serverConfig;
 
             _ = JoinQueueLoop();
@@ -50,12 +55,16 @@ namespace NitroxServer.GameLogic
             return allPlayersByName.Values;
         }
 
+        public IEnumerable<NitroxConnection> GetQueuedPlayers()
+        {
+            return JoinQueue.Select(tuple => tuple.Item1);
+        }
+
         public MultiplayerSessionReservation ReservePlayerContext(
             NitroxConnection connection,
             PlayerSettings playerSettings,
             AuthenticationContext authenticationContext,
-            string correlationId, 
-            bool ignoreJoinQueue = false)
+            string correlationId)
         {
             if (reservedPlayerNames.Count >= serverConfig.MaxConnections)
             {
@@ -74,21 +83,6 @@ namespace NitroxServer.GameLogic
             {
                 MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.INCORRECT_USERNAME;
                 return new MultiplayerSessionReservation(correlationId, rejectedState);
-            }
-
-            if (!ignoreJoinQueue)
-            {
-                if (JoinQueue.Any(pair => ReferenceEquals(pair.Key, connection)))
-                {
-                    // Don't enqueue the request if there is already another enqueued request by the same user
-                    return new MultiplayerSessionReservation(correlationId, MultiplayerSessionReservationState.REJECTED);
-                }
-                
-                JoinQueue.Enqueue(new KeyValuePair<NitroxConnection, MultiplayerSessionReservationRequest>(
-                                      connection,
-                                      new MultiplayerSessionReservationRequest(correlationId, playerSettings, authenticationContext)));
-
-                return new MultiplayerSessionReservation(correlationId, MultiplayerSessionReservationState.ENQUEUED_IN_JOIN_QUEUE);
             }
 
             string playerName = authenticationContext.Username;
@@ -132,6 +126,8 @@ namespace NitroxServer.GameLogic
         {
             const int REFRESH_DELAY = 10;
 
+            string GetLogName(NitroxConnection connection) => assetsByConnection.TryGetValue(connection, out ConnectionAssets assets) ? assets.Player.Name : $"at {connection.Endpoint}";
+
             while (true)
             {
                 try
@@ -141,18 +137,9 @@ namespace NitroxServer.GameLogic
                         await Task.Delay(REFRESH_DELAY);
                     }
 
-                    var pair = JoinQueue.Dequeue();
-                    NitroxConnection connection = pair.Key;
-                    MultiplayerSessionReservationRequest request = pair.Value;
+                    (NitroxConnection connection, string reservationKey) = JoinQueue.Dequeue();
 
-
-                    MultiplayerSessionReservation reservation = ReservePlayerContext(connection,
-                        request.PlayerSettings,
-                        request.AuthenticationContext,
-                        request.CorrelationId, 
-                        ignoreJoinQueue: true);
-
-                    connection.SendPacket(reservation);
+                    SendInitialSync(connection, reservationKey);
 
                     CancellationTokenSource source = new(serverConfig.InitialSyncTimeout);
                     bool syncFinished = false;
@@ -188,19 +175,18 @@ namespace NitroxServer.GameLogic
 
                         if (task.IsCanceled || !task.Result)
                         {
-                            Log.Info($"Inital sync timed out for player {request.AuthenticationContext.Username}");
+                            Log.Info($"Inital sync timed out for player {GetLogName(connection)}");
                             SyncFinishedCallback = null;
 
-                            allPlayersByName.TryGetValue(request.AuthenticationContext.Username, out Player player);
                             if (connection.State == NitroxConnectionState.Connected)
                             {
-                                connection.SendPacket(new PlayerKicked("An error occured while loading, initial sync took too long to complete"));
+                                connection.SendPacket(new PlayerSyncTimeout());
                             }
                             PlayerDisconnected(connection);
                         }
                         else
                         {
-                            Log.Info($"Player {request.AuthenticationContext.Username} joined successfully. Remaining requests: {JoinQueue.Count}");
+                            Log.Info($"Player {GetLogName(connection)} joined successfully. Remaining requests: {JoinQueue.Count}");
                         }
                     });
                 }
@@ -211,10 +197,119 @@ namespace NitroxServer.GameLogic
             }
         }
 
+        public void AddToJoinQueue(NitroxConnection connection, string reservationKey)
+        {
+            JoinQueue.Enqueue((connection, reservationKey));
+        }
+
+        private void SendInitialSync(NitroxConnection connection, string reservationKey)
+        {
+            List<InitialRemotePlayerData> GetRemotePlayerData(Player player)
+            {
+                List<InitialRemotePlayerData> playerData = new();
+
+                foreach (Player otherPlayer in GetConnectedPlayers())
+                {
+                    if (!player.Equals(otherPlayer))
+                    {
+                        List<EquippedItemData> equippedItems = otherPlayer.GetEquipment();
+                        List<NitroxTechType> techTypes = equippedItems.Select(equippedItem => equippedItem.TechType).ToList();
+
+                        InitialRemotePlayerData remotePlayer = new(otherPlayer.PlayerContext, otherPlayer.Position, otherPlayer.SubRootId, techTypes);
+                        playerData.Add(remotePlayer);
+                    }
+                }
+
+                return playerData;
+            }
+
+            List<EquippedItemData> GetAllModules(ICollection<EquippedItemData> globalModules, List<EquippedItemData> playerModules)
+            {
+                List<EquippedItemData> modulesToSync = new();
+                modulesToSync.AddRange(globalModules);
+                modulesToSync.AddRange(playerModules);
+                return modulesToSync;
+            }
+
+            List<ItemData> GetInventoryItems(NitroxId playerID)
+            {
+                List<ItemData> inventoryItems = world.InventoryManager.GetAllInventoryItems().Where(item => item.ContainerId.Equals(playerID)).ToList();
+
+                for (int index = 0; index < inventoryItems.Count; index++) //Also add batteries from tools to inventory items.
+                {
+                    inventoryItems.AddRange(world.InventoryManager.GetAllStorageSlotItems().Where(item => item.ContainerId.Equals(inventoryItems[index].ItemId)));
+                }
+
+                return inventoryItems;
+            }
+
+            Player player = PlayerConnected(connection, reservationKey, out bool wasBrandNewPlayer);
+
+            NitroxId assignedEscapePodId = world.EscapePodManager.AssignPlayerToEscapePod(player.Id, out Optional<EscapePodModel> newlyCreatedEscapePod);
+            if (newlyCreatedEscapePod.HasValue)
+            {
+                AddEscapePod addEscapePod = new(newlyCreatedEscapePod.Value);
+                SendPacketToOtherPlayers(addEscapePod, player);
+            }
+
+            List<EquippedItemData> equippedItems = player.GetEquipment();
+            List<NitroxTechType> techTypes = equippedItems.Select(equippedItem => equippedItem.TechType).ToList();
+            List<ItemData> inventoryItems = GetInventoryItems(player.GameObjectId);
+
+            PlayerJoinedMultiplayerSession playerJoinedPacket = new(player.PlayerContext, player.SubRootId, techTypes, inventoryItems);
+            SendPacketToOtherPlayers(playerJoinedPacket, player);
+
+            // Make players on localhost admin by default.
+            if (IPAddress.IsLoopback(connection.Endpoint.Address))
+            {
+                player.Permissions = Perms.ADMIN;
+            }
+
+            List<NitroxId> simulations = world.EntitySimulation.AssignGlobalRootEntities(player).ToList();
+            IEnumerable<VehicleModel> vehicles = world.VehicleManager.GetVehicles();
+            foreach (VehicleModel vehicle in vehicles)
+            {
+                if (world.SimulationOwnershipData.TryToAcquire(vehicle.Id, player, SimulationLockType.TRANSIENT))
+                {
+                    simulations.Add(vehicle.Id);
+                }
+            }
+
+            InitialPlayerSync initialPlayerSync = new(player.GameObjectId,
+                wasBrandNewPlayer,
+                world.EscapePodManager.GetEscapePods(),
+            assignedEscapePodId,
+            equippedItems,
+                GetAllModules(world.InventoryManager.GetAllModules(), player.GetModules()),
+                world.BaseManager.GetBasePiecesForNewlyConnectedPlayer(),
+            vehicles,
+                world.InventoryManager.GetAllInventoryItems(),
+                world.InventoryManager.GetAllStorageSlotItems(),
+                player.UsedItems,
+            player.QuickSlotsBinding,
+                world.GameData.PDAState.GetInitialPDAData(),
+                world.GameData.StoryGoals.GetInitialStoryGoalData(world.ScheduleKeeper),
+                player.CompletedGoals,
+                player.Position,
+                player.Rotation,
+                player.SubRootId,
+                player.Stats,
+            GetRemotePlayerData(player),
+                world.EntityManager.GetGlobalRootEntities(),
+                simulations,
+                world.GameMode,
+                player.Permissions,
+                player.PingInstancePreferences.ToDictionary(m => m.Key, m => m.Value)
+            );
+
+            player.SendPacket(new TimeChange(world.EventTriggerer.ElapsedSeconds, true));
+            player.SendPacket(initialPlayerSync);
+        }
+
         public void NonPlayerDisconnected(NitroxConnection connection)
         {
             // Remove any requests sent by the connection from the join queue
-            JoinQueue = new(JoinQueue.Where(pair => !Equals(pair.Key, connection)));
+            JoinQueue = new(JoinQueue.Where(tuple => !Equals(tuple.Item1, connection)));
         }
 
         public Player PlayerConnected(NitroxConnection connection, string reservationKey, out bool wasBrandNewPlayer)

@@ -93,12 +93,6 @@ namespace NitroxClient.Communication.MultiplayerSession
 
         public void ProcessReservationResponsePacket(MultiplayerSessionReservation reservation)
         {
-            if (reservation.ReservationState == MultiplayerSessionReservationState.ENQUEUED_IN_JOIN_QUEUE)
-            {
-                Log.InGame(Language.main.Get("Nitrox_Waiting"));
-                return;
-            }
-
             Reservation = reservation;
             CurrentState.NegotiateReservationAsync(this);
         }
