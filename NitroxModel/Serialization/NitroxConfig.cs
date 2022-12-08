@@ -17,9 +17,11 @@ namespace NitroxModel.Serialization
 
         public abstract string FileName { get; }
 
-        public void Deserialize(string saveDir)
+        public bool ConfigFileExists => File.Exists(FileName);
+
+        public void Deserialize()
         {
-            if (!File.Exists(Path.Combine(saveDir, FileName)))
+            if (!ConfigFileExists)
             {
                 return;
             }
@@ -28,7 +30,7 @@ namespace NitroxModel.Serialization
             {
                 Type type = GetType();
                 Dictionary<string, MemberInfo> typeCachedDict = GetTypeCacheDictionary();
-                using StreamReader reader = new(new FileStream(Path.Combine(saveDir, FileName), FileMode.Open, FileAccess.Read, FileShare.Read), Encoding.UTF8);
+                using StreamReader reader = new(new FileStream(FileName, FileMode.Open), Encoding.UTF8);
 
                 HashSet<MemberInfo> unserializedMembers = new(typeCachedDict.Values);
                 char[] lineSeparator = { '=' };
@@ -68,7 +70,7 @@ namespace NitroxModel.Serialization
                     }
                     else
                     {
-                        Log.Error($"Incorrect format detected on line {lineNum} in {Path.GetFullPath(Path.Combine(saveDir, FileName))}:{Environment.NewLine}{readLine}");
+                        Log.Error($"Incorrect format detected on line {lineNum} in {Path.GetFullPath(FileName)}:{Environment.NewLine}{readLine}");
                     }
                 }
 
@@ -94,7 +96,7 @@ namespace NitroxModel.Serialization
             }
         }
 
-        public void Serialize(string saveDir)
+        public void Serialize()
         {
             lock (locker)
             {
@@ -102,7 +104,7 @@ namespace NitroxModel.Serialization
                 Dictionary<string, MemberInfo> typeCachedDict = GetTypeCacheDictionary();
                 try
                 {
-                    using StreamWriter stream = new(new FileStream(Path.Combine(saveDir, FileName), FileMode.Create, FileAccess.Write), Encoding.UTF8);
+                    using StreamWriter stream = new(new FileStream(FileName, FileMode.Create), Encoding.UTF8);
                     WritePropertyDescription(type, stream);
 
                     foreach (string name in typeCachedDict.Keys)
@@ -135,16 +137,16 @@ namespace NitroxModel.Serialization
         ///     Ensures updates are properly persisted to the backing config file without overwriting user edits.
         /// </summary>
         /// <param name="config"></param>
-        public void Update(string saveDir, Action<T> config = null)
+        public void Update(Action<T> config = null)
         {
             try
             {
-                Deserialize(saveDir);
+                Deserialize();
                 config?.Invoke(this as T);
             }
             finally
             {
-                Serialize(saveDir);
+                Serialize();
             }
         }
 
