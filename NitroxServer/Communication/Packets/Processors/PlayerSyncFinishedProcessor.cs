@@ -15,7 +15,7 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(PlayerSyncFinished packet, Player player)
         {
-            playerManager.SyncFinishedCallback();
+            playerManager.SyncFinishedCallback?.Invoke();
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,7 +9,6 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
-using NitroxModel.Logger;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
 using NitroxServer.Communication;
@@ -132,13 +130,15 @@ namespace NitroxServer.GameLogic
 
         private async Task JoinQueueLoop()
         {
+            const int REFRESH_DELAY = 10;
+
             while (true)
             {
                 try
                 {
                     while (!JoinQueue.Any())
                     {
-                        await Task.Delay(10);
+                        await Task.Delay(REFRESH_DELAY);
                     }
 
                     var pair = JoinQueue.Dequeue();
@@ -154,35 +154,55 @@ namespace NitroxServer.GameLogic
 
                     connection.SendPacket(reservation);
 
-                    CancellationTokenSource source = new();
-
-                    Task timerTask = Task.Run(() =>
-                    {
-                        Task.Delay(serverConfig.InitialSyncTimeout).Wait(source.Token);
-
-                        Log.Info("Timer expired");
-
-                        SyncFinishedCallback = null;
-
-                        allPlayersByName.TryGetValue(request.AuthenticationContext.Username, out Player player);
-                        player?.SendPacket(new PlayerKicked("An error occured while loading, initial sync took too long to complete"));
-                        PlayerDisconnected(connection);
-                    });
+                    CancellationTokenSource source = new(serverConfig.InitialSyncTimeout);
+                    bool syncFinished = false;
 
                     SyncFinishedCallback = () =>
                     {
-                        source.Cancel();
-                        Log.Info($"Player {request.AuthenticationContext.Username} joined successfully. Remaining requests: {JoinQueue.Count}");
+                        syncFinished = true;
                     };
 
-                    try
+                    await Task.Run(() =>
                     {
-                        await timerTask;
-                    }
-                    catch (TaskCanceledException)
+                        while (!source.IsCancellationRequested)
+                        {
+                            if (syncFinished)
+                            {
+                                return true;
+                            }
+                            else
+                            {
+                                Task.Delay(REFRESH_DELAY).Wait();
+                            }
+                        }
+
+                        return false;
+                    
+                    // We use ContinueWith to avoid having to try/catch a TaskCanceledException
+                    }).ContinueWith(task =>
                     {
-                        Log.Info("Timer cancelled");
-                    }
+                        if (task.IsFaulted)
+                        {
+                            throw task.Exception;
+                        }
+
+                        if (task.IsCanceled || !task.Result)
+                        {
+                            Log.Info($"Inital sync timed out for player {request.AuthenticationContext.Username}");
+                            SyncFinishedCallback = null;
+
+                            allPlayersByName.TryGetValue(request.AuthenticationContext.Username, out Player player);
+                            if (connection.State == NitroxConnectionState.Connected)
+                            {
+                                connection.SendPacket(new PlayerKicked("An error occured while loading, initial sync took too long to complete"));
+                            }
+                            PlayerDisconnected(connection);
+                        }
+                        else
+                        {
+                            Log.Info($"Player {request.AuthenticationContext.Username} joined successfully. Remaining requests: {JoinQueue.Count}");
+                        }
+                    });
                 }
                 catch (Exception e)
                 {
