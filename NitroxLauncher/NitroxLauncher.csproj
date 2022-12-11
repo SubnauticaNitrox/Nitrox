@@ -1,6 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
+        <!-- JetBrains Rider IDE does not analyze properly for this project if LangVersion is not set (it ignores Directory.Build.props) -->
+        <LangVersion>$(LangVersion)</LangVersion>
         <OutputType>WinExe</OutputType>
         <TargetFramework>net472</TargetFramework>
         <Nullable>disable</Nullable>
