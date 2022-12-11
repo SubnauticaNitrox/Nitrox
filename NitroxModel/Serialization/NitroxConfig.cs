@@ -23,7 +23,7 @@ namespace NitroxModel.Serialization
             config.Update(saveDir);
             return config;
         }
-        
+
         public void Deserialize(string saveDir)
         {
             if (!File.Exists(Path.Combine(saveDir, FileName)))
@@ -141,18 +141,9 @@ namespace NitroxModel.Serialization
         /// <summary>
         ///     Ensures updates are properly persisted to the backing config file without overwriting user edits.
         /// </summary>
-        /// <param name="config"></param>
-        public void Update(string saveDir, Action<T> config = null)
+        public UpdateDiposable Update(string saveDir)
         {
-            try
-            {
-                Deserialize(saveDir);
-                config?.Invoke(this as T);
-            }
-            finally
-            {
-                Serialize(saveDir);
-            }
+            return new UpdateDiposable(this, saveDir);
         }
 
         private static Dictionary<string, MemberInfo> GetTypeCacheDictionary()
@@ -242,6 +233,21 @@ namespace NitroxModel.Serialization
                     stream.WriteLine(line);
                 }
             }
+        }
+
+        public struct UpdateDiposable : IDisposable
+        {
+            private string SaveDir { get; }
+            private NitroxConfig<T> Config { get; }
+
+            public UpdateDiposable(NitroxConfig<T> config, string saveDir)
+            {
+                config.Deserialize(saveDir);
+                SaveDir = saveDir;
+                Config = config;
+            }
+
+            public void Dispose() => Config.Serialize(SaveDir);
         }
     }
 }

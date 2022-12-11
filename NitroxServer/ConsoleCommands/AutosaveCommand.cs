@@ -23,21 +23,21 @@ namespace NitroxServer.ConsoleCommands
         {
             bool toggle = args.Get<bool>(0);
 
-            serverConfig.Update(Path.Combine(WorldManager.SavesFolderDir, serverConfig.SaveName), c =>
+            using (serverConfig.Update(Path.Combine(WorldManager.SavesFolderDir, serverConfig.SaveName)))
             {
                 if (toggle)
                 {
-                    c.DisableAutoSave = false;
+                    serverConfig.DisableAutoSave = false;
                     Server.Instance.EnablePeriodicSaving();
                     SendMessage(args.Sender, "Enabled periodical saving");
                 }
                 else
                 {
-                    c.DisableAutoSave = true;
+                    serverConfig.DisableAutoSave = true;
                     Server.Instance.DisablePeriodicSaving();
                     SendMessage(args.Sender, "Disabled periodical saving");
                 }
-            });
+            }
         }
     }
 }

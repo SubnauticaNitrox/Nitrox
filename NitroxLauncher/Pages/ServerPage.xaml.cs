@@ -67,36 +67,36 @@ namespace NitroxLauncher.Pages
             }
 
             Config = ServerConfig.Load(SelectedWorldDirectory);
-            Config.Update(SelectedWorldDirectory, c =>
+            using (Config.Update(SelectedWorldDirectory))
             {
-                c.SaveName = TBWorldName.Text;
-                if (IsNewWorld) { c.Seed = TBWorldSeed.Text; }
-                if (RBFreedom.IsChecked == true) { c.GameMode = ServerGameMode.FREEDOM; }
-                else if (RBSurvival.IsChecked == true) { c.GameMode = ServerGameMode.SURVIVAL; }
-                else if (RBCreative.IsChecked == true) { c.GameMode = ServerGameMode.CREATIVE; }
-                else if (RBHardcore.IsChecked == true) { c.GameMode = ServerGameMode.HARDCORE; }
+                Config.SaveName = TBWorldName.Text;
+                if (IsNewWorld) { Config.Seed = TBWorldSeed.Text; }
+                if (RBFreedom.IsChecked == true) { Config.GameMode = ServerGameMode.FREEDOM; }
+                else if (RBSurvival.IsChecked == true) { Config.GameMode = ServerGameMode.SURVIVAL; }
+                else if (RBCreative.IsChecked == true) { Config.GameMode = ServerGameMode.CREATIVE; }
+                else if (RBHardcore.IsChecked == true) { Config.GameMode = ServerGameMode.HARDCORE; }
 
-                c.DisableConsole = !CBCheats.IsChecked ?? c.DisableConsole;
-                c.MaxConnections = Convert.ToInt32(TBMaxPlayerCap.Text);
-                c.DefaultPlayerPerm = CBBDefaultPerms.SelectedIndex switch
+                Config.DisableConsole = !CBCheats.IsChecked ?? Config.DisableConsole;
+                Config.MaxConnections = Convert.ToInt32(TBMaxPlayerCap.Text);
+                Config.DefaultPlayerPerm = CBBDefaultPerms.SelectedIndex switch
                 {
                     0 => Perms.PLAYER,
                     1 => Perms.MODERATOR,
                     2 => Perms.ADMIN,
-                    _ => c.DefaultPlayerPerm
+                    _ => Config.DefaultPlayerPerm
                 };
-                c.CreateFullEntityCache = CBCreateFullEntityCache.IsChecked ?? c.CreateFullEntityCache;
-                c.DisableAutoSave = !CBAutoSave.IsChecked ?? c.DisableAutoSave;
-                c.AutoPortForward = CBAutoPortForward.IsChecked ?? c.AutoPortForward;
-                c.SaveInterval = Convert.ToInt32(TBSaveInterval.Text)*1000;  // Convert seconds to milliseconds
+                Config.CreateFullEntityCache = CBCreateFullEntityCache.IsChecked ?? Config.CreateFullEntityCache;
+                Config.DisableAutoSave = !CBAutoSave.IsChecked ?? Config.DisableAutoSave;
+                Config.AutoPortForward = CBAutoPortForward.IsChecked ?? Config.AutoPortForward;
+                Config.SaveInterval = Convert.ToInt32(TBSaveInterval.Text)*1000;  // Convert seconds to milliseconds
                 if (CBEnableJoinPassword.IsChecked ?? false)
                 {
-                    c.ServerPassword = TBJoinPassword.Text;
+                    Config.ServerPassword = TBJoinPassword.Text;
                 }
-                else { c.ServerPassword = string.Empty; }
-                c.ServerPort = Convert.ToInt32(TBWorldServerPort.Text);
-                c.LANDiscoveryEnabled = CBLanDiscovery.IsChecked ?? c.LANDiscoveryEnabled;
-            });
+                else { Config.ServerPassword = string.Empty; }
+                Config.ServerPort = Convert.ToInt32(TBWorldServerPort.Text);
+                Config.LANDiscoveryEnabled = CBLanDiscovery.IsChecked ?? Config.LANDiscoveryEnabled;
+            }
 
         }
 
@@ -748,10 +748,10 @@ namespace NitroxLauncher.Pages
                 ServerConfig importedServerConfig = ServerConfig.Load(Path.Combine(SelectedWorldDirectory));
                 if (importedServerConfig.SerializerMode != ServerSerializerMode.JSON)
                 {
-                    importedServerConfig.Update(SelectedWorldDirectory, c =>
+                    using (importedServerConfig.Update(SelectedWorldDirectory))
                     {
-                        c.SerializerMode = ServerSerializerMode.JSON;
-                    });
+                        importedServerConfig.SerializerMode = ServerSerializerMode.JSON;
+                    }
                 }
 
                 // Copy over specific save files from within the targeted folder

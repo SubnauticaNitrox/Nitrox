@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxServer.ConsoleCommands.Abstract;
@@ -42,7 +41,7 @@ namespace NitroxServer.ConsoleCommands.Processor
             {
                 return;
             }
-            string[] parts = msg.Split(splitChar, StringSplitOptions.RemoveEmptyEntries);
+            Span<string> parts = msg.Split(splitChar, StringSplitOptions.RemoveEmptyEntries);
             if (!commands.TryGetValue(parts[0], out Command command))
             {
                 Command.SendMessage(sender, $"Command not found: {parts[0]}");
@@ -56,7 +55,7 @@ namespace NitroxServer.ConsoleCommands.Processor
 
             if (command.CanExecute(permissions))
             {
-                command.TryExecute(sender, parts.Skip(1).ToArray());
+                command.TryExecute(sender, parts[1..]);
             }
             else
             {

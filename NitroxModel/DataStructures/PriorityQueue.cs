@@ -138,18 +138,18 @@ namespace NitroxModel.DataStructures
             int count = priorityChains.Count;
             if (count > 0)
             {
-                if (priority == (int)priorityChains.Keys[0])
+                if (priority == priorityChains.Keys[0])
                 {
                     chain = priorityChains.Values[0];
                 }
-                else if (priority == (int)priorityChains.Keys[count - 1])
+                else if (priority == priorityChains.Keys[count - 1])
                 {
                     chain = priorityChains.Values[count - 1];
                 }
-                else if ((priority > (int)priorityChains.Keys[0]) &&
-                        (priority < (int)priorityChains.Keys[count - 1]))
+                else if (priority > priorityChains.Keys[0] &&
+                        priority < priorityChains.Keys[count - 1])
                 {
-                    priorityChains.TryGetValue((int)priority, out chain);
+                    priorityChains.TryGetValue(priority, out chain);
                 }
             }
 
@@ -165,7 +165,7 @@ namespace NitroxModel.DataStructures
                     chain = new PriorityChain<T>(priority);
                 }
 
-                priorityChains.Add((int)priority, chain);
+                priorityChains.Add(priority, chain);
             }
 
             return chain;
@@ -287,13 +287,13 @@ namespace NitroxModel.DataStructures
             item.Chain.Count--;
             if (item.Chain.Count == 0)
             {
-                if (item.Chain.Priority == (int)priorityChains.Keys[priorityChains.Count - 1])
+                if (item.Chain.Priority == priorityChains.Keys[priorityChains.Count - 1])
                 {
                     priorityChains.RemoveAt(priorityChains.Count - 1);
                 }
                 else
                 {
-                    priorityChains.Remove((int)item.Chain.Priority);
+                    priorityChains.Remove(item.Chain.Priority);
                 }
 
                 if (cacheReusableChains.Count < 10)

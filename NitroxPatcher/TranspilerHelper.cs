@@ -22,7 +22,7 @@ namespace NitroxPatcher
 
         private static IEnumerable<LocalVariableInfo> GetMatchingLocalVariables<T>(MethodBase method)
         {
-            return method.GetMethodBody()?.LocalVariables.Where(v => v.LocalType == typeof(T)) ?? new LocalVariableInfo[0];
+            return method.GetMethodBody()?.LocalVariables.Where(v => v.LocalType == typeof(T)) ?? Array.Empty<LocalVariableInfo>();
         }
 
         /// <summary>

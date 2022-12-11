@@ -84,7 +84,10 @@ public static class WorldManager
                 // Set the server.cfg name value to the folder name
                 if (Path.GetFileName(folder) != serverConfig.SaveName)
                 {
-                    serverConfig.Update(folder, c => { c.SaveName = Path.GetFileName(folder); });
+                    using (serverConfig.Update(folder))
+                    {
+                        serverConfig.SaveName = Path.GetFileName(folder);
+                    }
                 }
             }
             catch
