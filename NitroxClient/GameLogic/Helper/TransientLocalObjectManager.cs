@@ -48,7 +48,7 @@ namespace NitroxClient.GameLogic.Helper
         {
             if (!localObjectsById.TryGetValue(key, out object obj))
             {
-                throw new Exception("Did not have an entry for key: " + key);
+                throw new Exception($"Did not have an entry for key: {key}");
             }
 
             return (T)obj;

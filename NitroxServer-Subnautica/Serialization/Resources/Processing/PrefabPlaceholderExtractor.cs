@@ -101,7 +101,7 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Processing
                 }
             }
 
-            throw new Exception("No transform found for " + gameObjectAsset.Identifier);
+            throw new Exception($"No transform found for {gameObjectAsset.Identifier}");
         }
     }
 }

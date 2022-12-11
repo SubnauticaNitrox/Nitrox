@@ -29,7 +29,7 @@ namespace NitroxServer.Communication.Packets.Processors
                     break;
                 default:
                     string categoryName = Enum.GetName(typeof(KnownTechEntryAdd.EntryCategory), packet.Category);
-                    Log.Error("Received an unknown category type for KnownTechEntryAdd packet: " + categoryName);
+                    Log.Error($"Received an unknown category type for KnownTechEntryAdd packet: {categoryName}");
                     break;
             }
 

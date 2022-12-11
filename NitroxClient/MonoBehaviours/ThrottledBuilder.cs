@@ -220,7 +220,7 @@ namespace NitroxClient.MonoBehaviours
                 {
                     Int3 position = latestBase.WorldToGrid(constructableBase.transform.position);
                     cellTransform = latestBase.GetCellObject(position);
-                    Validate.NotNull(cellTransform, "Unable to find cell transform at " + position);
+                    Validate.NotNull(cellTransform, $"Unable to find cell transform at {position}");
                     
                     placedPiece = FindFinishedPiece(cellTransform, constructionCompleted.PieceId, constructableBase.techType);
                 }

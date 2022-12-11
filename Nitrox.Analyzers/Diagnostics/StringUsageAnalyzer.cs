@@ -56,16 +56,16 @@ public sealed class StringUsageAnalyzer : DiagnosticAnalyzer
             {
                 case BinaryExpressionSyntax:
                 case InterpolatedStringContentSyntax:
-                    return true;
+                    return false;
                 case ParenthesizedExpressionSyntax:
                     return IsLeftMostNodeInConcat(node.Parent);
             }
-            return false;
+            return true;
         }
 
         BinaryExpressionSyntax expression = (BinaryExpressionSyntax)context.Node;
         // Deduplicate warnings. Only left most '+' of the expression should be handled here.
-        if (IsLeftMostNodeInConcat(expression.Parent))
+        if (!IsLeftMostNodeInConcat(expression.Parent))
         {
             return;
         }

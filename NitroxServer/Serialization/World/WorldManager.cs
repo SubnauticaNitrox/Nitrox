@@ -84,7 +84,10 @@ public static class WorldManager
                 // Set the server.cfg name value to the folder name
                 if (Path.GetFileName(folder) != serverConfig.SaveName)
                 {
-                    serverConfig.Update(folder, c => { c.SaveName = Path.GetFileName(folder); });
+                    using (serverConfig.Update(folder))
+                    {
+                        serverConfig.SaveName = Path.GetFileName(folder);
+                    }
                 }
             }
             catch
@@ -116,7 +119,7 @@ public static class WorldManager
             while (Directory.Exists(saveDir))
             {
                 // Add a number to the end of the name
-                newSelectedWorldName = name + $" ({i})";
+                newSelectedWorldName = $"{name} ({i})";
                 saveDir = Path.Combine(SavesFolderDir, newSelectedWorldName);
                 i++;
             }

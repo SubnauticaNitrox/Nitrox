@@ -28,7 +28,7 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public override string ToString()
         {
-            return "[InteractiveChildObjectIdentifier - Id: " + Id + " GameObjectNamePath: " + GameObjectNamePath + "]";
+            return $"[InteractiveChildObjectIdentifier - Id: {Id} GameObjectNamePath: {GameObjectNamePath}]";
         }
     }
 }

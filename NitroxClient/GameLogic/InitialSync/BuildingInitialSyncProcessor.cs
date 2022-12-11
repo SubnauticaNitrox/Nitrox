@@ -42,7 +42,7 @@ namespace NitroxClient.GameLogic.InitialSync
             completed = false;
 
             List<BasePiece> basePieces = packet.BasePieces;
-            Log.Info("Received initial sync packet with " + basePieces.Count + " base pieces");
+            Log.Info($"Received initial sync packet with {basePieces.Count} base pieces");
 
             if (basePieces.Count == 0)
             {

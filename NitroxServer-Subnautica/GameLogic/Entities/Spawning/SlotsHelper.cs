@@ -24,7 +24,7 @@ namespace NitroxServer_Subnautica.GameLogic.Entities.Spawning
                 return ConvertSlotTypes(((EntitySlotData)entitySlot).allowedTypes);
             }
 
-            throw new System.Exception("Unknown EntitySlotType " + entitySlot.GetType());
+            throw new System.Exception($"Unknown EntitySlotType {entitySlot.GetType()}");
         }
 
         public static List<EntitySlot.Type> ConvertSlotTypes(EntitySlotData.EntitySlotType entitySlotType)

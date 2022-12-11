@@ -91,7 +91,7 @@ public static class Main
                     string toWrite = condition;
                     if (!string.IsNullOrWhiteSpace(stackTrace))
                     {
-                        toWrite += Environment.NewLine + stackTrace;
+                        toWrite += $"{Environment.NewLine}{stackTrace}";
                     }
                     Log.ErrorUnity(toWrite.Trim(newLineChars));
                     break;

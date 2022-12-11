@@ -49,7 +49,7 @@ namespace NitroxClient.Communication.Packets.Processors
                     moreProcessorsToRun = alreadyRan.Count < processors.Count;
                     if (moreProcessorsToRun && processorsRanLastCycle == 0)
                     {
-                        throw new Exception("Detected circular dependencies in initial packet sync between: " + GetRemainingProcessorsText());
+                        throw new Exception($"Detected circular dependencies in initial packet sync between: {GetRemainingProcessorsText()}");
                     }
                 } while (moreProcessorsToRun);
             }
@@ -74,12 +74,12 @@ namespace NitroxClient.Communication.Packets.Processors
                 {
                     loadingMultiplayerWaitItem.SetProgress(cumulativeProcessorsRan, processors.Count);
 
-                    Log.Info("Running " + processor.GetType());
+                    Log.Info($"Running {processor.GetType()}");
                     alreadyRan.Add(processor.GetType());
                     processorsRanLastCycle++;
                     cumulativeProcessorsRan++;
 
-                    subWaitScreenItem = WaitScreen.Add("Running " + processor.GetType().Name);
+                    subWaitScreenItem = WaitScreen.Add($"Running {processor.GetType().Name}");
                     yield return Multiplayer.Main.StartCoroutine(processor.Process(packet, subWaitScreenItem));
                     WaitScreen.Remove(subWaitScreenItem);
                 }
@@ -112,7 +112,7 @@ namespace NitroxClient.Communication.Packets.Processors
             {
                 if (IsWaitingToRun(processor.GetType()))
                 {
-                    remaining += " " + processor.GetType();
+                    remaining += $" {processor.GetType()}";
                 }
             }
 

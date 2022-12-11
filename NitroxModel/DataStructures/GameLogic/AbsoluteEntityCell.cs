@@ -91,7 +91,7 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public override string ToString()
         {
-            return "[AbsoluteEntityCell Position: " + Position + " BatchId: " + BatchId + " CellId: " + CellId + " Level: " + Level + " ]";
+            return $"[AbsoluteEntityCell Position: {Position} BatchId: {BatchId} CellId: {CellId} Level: {Level} ]";
         }
 
         public override bool Equals(object obj)
