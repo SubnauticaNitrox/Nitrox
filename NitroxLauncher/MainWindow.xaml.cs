@@ -85,9 +85,16 @@ namespace NitroxLauncher
 
                     FrameContent = webBrowser;
 
-                    string embed =
-                        $"<html><head><meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"/></head><body><iframe width=\"{webBrowser.Width - 24}\" height=\"{webBrowser.Height - 24}\" src=\"{{0}}\"frameborder = \"0\" allow = \"autoplay; encrypted-media\" allowfullscreen></iframe></body></html>";
-                    webBrowser.NavigateToString(string.Format(embed, "https://www.youtube.com/embed/i8ju_10NkGY?autoplay=1&loop=1&showinfo=0&controls=0"));
+                    webBrowser.NavigateToString($"""
+                    <html>
+                        <head>
+                            <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+                        </head>
+                        <body>
+                            <iframe width="{webBrowser.Width - 24}" height="{webBrowser.Height - 24}" src="https://www.youtube.com/embed/i8ju_10NkGY?autoplay=1&loop=1&showinfo=0&controls=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                        </body>
+                    </html>
+                    """);
                     SideBarPanel.Visibility = Visibility.Hidden;
                 };
 
