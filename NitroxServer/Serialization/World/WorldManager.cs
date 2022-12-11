@@ -116,7 +116,7 @@ public static class WorldManager
             while (Directory.Exists(saveDir))
             {
                 // Add a number to the end of the name
-                newSelectedWorldName = name + $" ({i})";
+                newSelectedWorldName = $"{name} ({i})";
                 saveDir = Path.Combine(SavesFolderDir, newSelectedWorldName);
                 i++;
             }

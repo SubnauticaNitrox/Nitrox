@@ -44,7 +44,7 @@ namespace NitroxClient.Communication.Packets.Processors
                     exosuitModuleEvent.UseTorpedo(gameObject.GetComponent<ExosuitTorpedoArm>(), packet.ArmAction, packet.OpVector, packet.OpRotation);
                     break;
                 default:
-                    Log.Error("Got an arm tech that is not handled: " + packet.TechType + " with action: " + packet.ArmAction + " for id " + packet.ArmId);
+                    Log.Error($"Got an arm tech that is not handled: {packet.TechType} with action: {packet.ArmAction} for id {packet.ArmId}");
                     break;
             }
 

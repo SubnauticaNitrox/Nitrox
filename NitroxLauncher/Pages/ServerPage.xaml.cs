@@ -61,8 +61,8 @@ namespace NitroxLauncher.Pages
             string dest = Path.Combine(Path.GetDirectoryName(SelectedWorldDirectory) ?? throw new Exception("Selected world is empty"), TBWorldName.Text);
             if (SelectedWorldDirectory != dest)
             {
-                Directory.Move(SelectedWorldDirectory, dest+" temp"); // These two lines are needed to handle names that change in capitalization,
-                Directory.Move(dest+" temp", dest);                   // since Windows still thinks of the two names as the same.
+                Directory.Move(SelectedWorldDirectory, $"{dest} temp"); // These two lines are needed to handle names that change in capitalization,
+                Directory.Move($"{dest} temp", dest); // since Windows still thinks of the two names as the same.
                 SelectedWorldDirectory = dest;
             }
 
@@ -368,7 +368,7 @@ namespace NitroxLauncher.Pages
                 Regex rx = new(@"\((\d+)\)$");
                 if (!rx.IsMatch(TBWorldName.Text))
                 {
-                    originalName = TBWorldName.Text + $" ({i})";
+                    originalName = $"{TBWorldName.Text} ({i})";
                     newSelectedWorldDirectory = Path.Combine(Path.GetDirectoryName(SelectedWorldDirectory) ?? throw new Exception("Selected world is empty"), originalName);
                 }
 
@@ -592,7 +592,7 @@ namespace NitroxLauncher.Pages
                     Regex rx = new(@"\((\d+)\)$");
                     if (!rx.IsMatch(TBImportedWorldName.Text))
                     {
-                        ImportedWorldName = TBImportedWorldName.Text + $" ({i})";
+                        ImportedWorldName = $"{TBImportedWorldName.Text} ({i})";
                         newSelectedWorldDirectory = Path.Combine(WorldManager.SavesFolderDir, ImportedWorldName);
                     }
 

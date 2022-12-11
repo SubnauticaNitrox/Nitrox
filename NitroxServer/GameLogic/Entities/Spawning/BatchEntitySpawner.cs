@@ -94,7 +94,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             }
             else if(!fullCacheCreation)
             {
-                Log.Info("Spawning " + entities.Count + " entities from " + spawnPoints.Count + " spawn points in batch " + batchId);
+                Log.Info($"Spawning {entities.Count} entities from {spawnPoints.Count} spawn points in batch {batchId}");
             }
 
             for (int x = 0; x < entities.Count; x++) // Throws on duplicate Entities already but nice to know which ones
@@ -103,7 +103,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                 {
                     if (entities[x] == entities[y] && x != y)
                     {
-                        Log.Error("Duplicate Entity detected! " + entities[x]);
+                        Log.Error($"Duplicate Entity detected! {entities[x]}");
                     }
                 }
             }

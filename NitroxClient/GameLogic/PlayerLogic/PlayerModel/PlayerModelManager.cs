@@ -64,11 +64,11 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel
         public void AttachPing(INitroxPlayer player)
         {
             GameObject signalBase = Object.Instantiate(SignalBasePrototype, player.PlayerModel.transform, false);
-            signalBase.name = "signal" + player.PlayerName;
+            signalBase.name = $"signal{player.PlayerName}";
             signalBase.SetActive(true);
 
             PingInstance ping = signalBase.GetComponent<PingInstance>();
-            ping.SetLabel("Player " + player.PlayerName);
+            ping.SetLabel($"Player {player.PlayerName}");
             ping.pingType = PingType.Signal;
             // ping will be moved to the player list tab
             ping.displayPingInManager = false;

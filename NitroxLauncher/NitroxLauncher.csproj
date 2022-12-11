@@ -6,7 +6,7 @@
         <Nullable>disable</Nullable>
         <UseWPF>true</UseWPF>
         <ApplicationIcon>icon.ico</ApplicationIcon>
-		<DisableFastUpToDateCheck>True</DisableFastUpToDateCheck>
+        <DisableFastUpToDateCheck>True</DisableFastUpToDateCheck>
     </PropertyGroup>
 
     <ItemGroup>

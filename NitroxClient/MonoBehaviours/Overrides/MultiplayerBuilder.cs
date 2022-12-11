@@ -273,7 +273,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 }
                 else
                 {
-                    Log.Error("Could not find base component on the given game object: " + targetBaseGameObject.name);
+                    Log.Error($"Could not find base component on the given game object: {targetBaseGameObject.name}");
                 }
             }
 

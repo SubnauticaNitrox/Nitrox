@@ -8,7 +8,7 @@ using System.Text;
 
 namespace NitroxModel.Serialization
 {
-    public abstract class NitroxConfig<T> where T : NitroxConfig<T>
+    public abstract class NitroxConfig<T> where T : NitroxConfig<T>, new()
     {
         // ReSharper disable once StaticMemberInGenericType
         private static readonly Dictionary<string, MemberInfo> typeCache = new();
@@ -17,6 +17,13 @@ namespace NitroxModel.Serialization
 
         public abstract string FileName { get; }
 
+        public static T Load(string saveDir)
+        {
+            T config = new();
+            config.Update(saveDir);
+            return config;
+        }
+        
         public void Deserialize(string saveDir)
         {
             if (!File.Exists(Path.Combine(saveDir, FileName)))
