@@ -22,10 +22,6 @@ public class MultiDataTemplate : AvaloniaList<DataTemplate>, IDataTemplate
     
     public bool Match(object data)
     {
-        if (data is not INavigationItem)
-        {
-            return false;
-        }
         foreach (DataTemplate template in Content)
         {
             if (template.DataType.IsInstanceOfType(data))
