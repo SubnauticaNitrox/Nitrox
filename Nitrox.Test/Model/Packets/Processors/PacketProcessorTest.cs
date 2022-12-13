@@ -77,10 +77,7 @@ namespace NitroxModel.Packets.Processors
             int both = packetTypes.Count;
             Assert.AreEqual(processors.Count(),
                 both,
-                "Not all(Un) AuthenticatedPacketProcessors have been discovered by the runtime code " +
-                $"(auth + unauth: {both} out of {processors.Count()}). " + // this is a small patch to keep this alive a little longer until its put out of its misery
-                "Perhaps the runtime matching code is too strict, or a processor does not derive from ClientPacketProcessor " +
-                "(and will hence not be detected).");
+                $"Not all(Un) AuthenticatedPacketProcessors have been discovered by the runtime code (auth + unauth: {both} out of {processors.Count()}). Perhaps the runtime matching code is too strict, or a processor does not derive from ClientPacketProcessor (and will hence not be detected).");
         }
 
         [TestMethod]

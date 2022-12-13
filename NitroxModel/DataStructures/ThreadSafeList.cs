@@ -9,7 +9,7 @@ using ProtoBufNet;
 
 namespace NitroxModel.DataStructures
 {
-    [DebuggerDisplay("Items = {" + nameof(list) + "}")]
+    [DebuggerDisplay($"Items = {{{nameof(list)}}}")]
     [ProtoContract]
     [Serializable]
     public class ThreadSafeList<T> : IList<T>

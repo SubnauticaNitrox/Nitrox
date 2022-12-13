@@ -169,7 +169,7 @@ namespace NitroxClient.GameLogic
                     Int3 position = latestBase.WorldToGrid(ghost.gameObject.transform.position);
                     cellTransform = latestBase.GetCellObject(position);       
 
-                    Validate.NotNull(cellTransform, "Unable to find cell transform at " + latestCell);
+                    Validate.NotNull(cellTransform, $"Unable to find cell transform at {latestCell}");
                     placedPiece = ThrottledBuilder.FindFinishedPiece(cellTransform, id, constructableBase.techType);
                 }
                 

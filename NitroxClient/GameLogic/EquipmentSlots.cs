@@ -113,7 +113,7 @@ namespace NitroxClient.GameLogic
                 GameObject gameObject = SerializationHelper.GetGameObject(equippedItem.SerializedData);
                 NitroxEntity.SetNewId(gameObject, equippedItem.ItemId);
 
-                Log.Info("EquipmentSlots/Modules: Received item add request " + gameObject.name + " for container " + equippedItem.ContainerId);
+                Log.Info($"EquipmentSlots/Modules: Received item add request {gameObject.name} for container {equippedItem.ContainerId}");
 
                 Pickupable pickupable = gameObject.RequireComponent<Pickupable>();
                 Optional<GameObject> opGameObject = NitroxEntity.GetObjectFrom(equippedItem.ContainerId);
@@ -140,12 +140,12 @@ namespace NitroxClient.GameLogic
                     }
                     else
                     {
-                        Log.Info("Could not find equipment type for " + gameObject.name);
+                        Log.Info($"Could not find equipment type for {gameObject.name}");
                     }
                 }
                 else
                 {
-                    Log.Info("Could not find Container for " + gameObject.name);
+                    Log.Info($"Could not find Container for {gameObject.name}");
                 }
             }
         }

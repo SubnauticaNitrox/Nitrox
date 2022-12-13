@@ -49,7 +49,7 @@ namespace NitroxClient.Debuggers
                     screenPos.y >= 0 && screenPos.y < Screen.height)
                 {
                     GUIStyle style = GUI.skin.label;
-                    GUIContent textContent = new GUIContent("ID " + id.ToString() + "   NAME " + gameObject.name);
+                    GUIContent textContent = new($"ID {id}   NAME {gameObject.name}");
                     Vector2 size = style.CalcSize(textContent);
                     size += new Vector2(10f, 0f); //for box edges
 

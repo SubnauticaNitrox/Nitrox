@@ -58,7 +58,7 @@ namespace NitroxClient.Unity.Helper
 
             if (!child)
             {
-                throw new ArgumentNullException(tf + " does not contain \"" + name + "\"");
+                throw new ArgumentNullException($@"{tf} does not contain ""{name}""");
             }
 
             return child;
@@ -74,7 +74,7 @@ namespace NitroxClient.Unity.Helper
         public static GameObject RequireGameObject(string name)
         {
             GameObject go = GameObject.Find(name);
-            Validate.IsTrue(go, "No global GameObject found with " + name + "!");
+            Validate.IsTrue(go, $"No global GameObject found with {name}!");
 
             return go;
         }

@@ -43,7 +43,7 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public override string ToString()
         {
-            return "[Oxygen: " + Oxygen + " MaxOxygen: " + MaxOxygen + " Health: " + Health + " Food: " + Food + " Water: " + Water + " InfectionAmount: " + InfectionAmount + " ]";
+            return $"[Oxygen: {Oxygen} MaxOxygen: {MaxOxygen} Health: {Health} Food: {Food} Water: {Water} InfectionAmount: {InfectionAmount} ]";
         }
     }
 }

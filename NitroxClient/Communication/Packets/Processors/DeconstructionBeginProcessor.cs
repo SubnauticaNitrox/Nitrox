@@ -19,7 +19,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(DeconstructionBegin packet)
         {
-            Log.Info("Received deconstruction packet for id: " + packet.Id);
+            Log.Info($"Received deconstruction packet for id: {packet.Id}");
 
             GameObject deconstructing = NitroxEntity.RequireObjectFrom(packet.Id);
 

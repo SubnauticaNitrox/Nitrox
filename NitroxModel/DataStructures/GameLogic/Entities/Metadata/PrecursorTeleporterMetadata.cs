@@ -24,7 +24,7 @@ namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata
 
         public override string ToString()
         {
-            return "[PrecursorTeleporterMetadata isOpen: " + IsOpen + "]";
+            return $"[PrecursorTeleporterMetadata isOpen: {IsOpen}]";
         }
     }
 }

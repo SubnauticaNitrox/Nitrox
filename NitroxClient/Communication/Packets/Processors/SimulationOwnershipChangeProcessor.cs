@@ -43,7 +43,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
                     if (simulationOwnershipManager.HasExclusiveLock(simulatedEntity.Id))
                     {
-                        Log.Warn("The server has forcibly revoked an exlusive lock - this may cause undefined behaviour.  GUID: " + simulatedEntity.Id);
+                        Log.Warn($"The server has forcibly revoked an exlusive lock - this may cause undefined behaviour.  GUID: {simulatedEntity.Id}");
                     }
 
                     simulationOwnershipManager.StopSimulatingEntity(simulatedEntity.Id);
