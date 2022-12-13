@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
              xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
+             xmlns:system="clr-namespace:System;assembly=System.Runtime"
              x:Class="Nitrox.Launcher.App">
     <!-- See original style here (to know what to override): 
         https://github.com/AvaloniaUI/Avalonia/tree/release/0.10.8/src/Avalonia.Themes.Fluent/Controls -->
@@ -14,25 +15,18 @@
             <Setter Property="ExtendClientAreaToDecorationsHint" Value="True" />
             <Setter Property="ExtendClientAreaTitleBarHeightHint" Value="-99" />
         </Style>
-        <Style Selector="Window[(design|NitroxAttached.Theme)=LIGHT]">
-            <Setter Property="Background" Value="#FFFFFF" />
-        </Style>
-        <Style Selector="Window[(design|NitroxAttached.Theme)=DARK]">
-            <Setter Property="Background" Value="#000000" />
-        </Style>
+
         
         <Style Selector="TextBlock">
             <Setter Property="TextWrapping" Value="Wrap" />
         </Style>
-        <Style Selector="TextBlock[(design|NitroxAttached.Theme)=LIGHT]">
-            <Setter Property="Foreground" Value="#000000" />
-        </Style>
-        <Style Selector="TextBlock[(design|NitroxAttached.Theme)=DARK]">
-            <Setter Property="Foreground" Value="#FFFFFF" />
-        </Style>
         <Style Selector="TextBlock.header">
             <Setter Property="FontSize" Value="32" />
             <Setter Property="FontWeight" Value="600" />
+        </Style>
+        <Style Selector="TextBlock.modalHeader">
+            <Setter Property="FontSize" Value="24" />
+            <Setter Property="FontWeight" Value="800" />
         </Style>
         
         <Style Selector="TextBox">
@@ -42,23 +36,16 @@
             <Setter Property="Background" Value="#ECECEC" />
             <Setter Property="BorderThickness" Value="0" />
         </Style>
-        <Style Selector="TextBox[(design|NitroxAttached.Theme)=LIGHT]">
-            <Setter Property="Background" Value="#ECECEC" />
-        </Style>
-        <Style Selector="TextBox[(design|NitroxAttached.Theme)=DARK]">
-            <Setter Property="Background" Value="#1f1f1f" />
-        </Style>
+
         <Style Selector="TextBox /template/ Border">
             <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType=TextBox}}" />
             <Setter Property="CornerRadius" Value="{Binding CornerRadius, RelativeSource={RelativeSource AncestorType=TextBox}}" />
             <Setter Property="BorderThickness" Value="{Binding BorderThickness, RelativeSource={RelativeSource AncestorType=TextBox}}" />
         </Style>
-
-        <Style Selector="Button[(design|NitroxAttached.Theme)=LIGHT]">
-            <Setter Property="Foreground" Value="#000000" />
-        </Style>
-        <Style Selector="Button[(design|NitroxAttached.Theme)=DARK]">
-            <Setter Property="Foreground" Value="#FFFFFF" />
+        
+        <Style Selector=":is(TemplatedControl).footer">
+            <Setter Property="Background" Value="#ECECEC" />
+            <Setter Property="Padding" Value="24 20" />
         </Style>
 
         <Style Selector="ToolTip">
@@ -70,6 +57,22 @@
         <Style Selector="ToolTip TextBlock">
             <Setter Property="Foreground" Value="#000000" />
             <Setter Property="FontSize" Value="12" />
+        </Style>
+        
+        <Style Selector=":is(Panel).form">
+            <Setter Property="Margin" Value="24" />
+        </Style>
+        <Style Selector=".form > :is(Layoutable)">
+            <Setter Property="Margin" Value="0 0 0 26" />
+        </Style>
+        <Style Selector=".form > :is(Layoutable):nth-last-child(1)">
+            <Setter Property="Margin" Value="0" />
+        </Style>
+        <Style Selector=".form > :is(Layoutable) > TextBlock:nth-child(1)">
+            <Setter Property="FontSize" Value="10" />
+            <Setter Property="FontWeight" Value="700" />
+            <Setter Property="Foreground" Value="#202225" />
+            <Setter Property="Margin" Value="0 0 0 11" />
         </Style>
         
         <Style Selector="Panel.titleBar">
@@ -170,10 +173,12 @@
         <Style Selector="Border.serverEntry StackPanel.description TextBlock">
             <Setter Property="Opacity" Value="0.5" />
         </Style>
-        
-        <StyleInclude Source="/Styles/NavigationStyle.axaml" />
+
+        <StyleInclude Source="/Styles/ThemingStyle.axaml" />
         <StyleInclude Source="/Styles/ButtonStyle.axaml" />
+        <StyleInclude Source="/Styles/NavigationStyle.axaml" />
         <StyleInclude Source="/Styles/NitroxRadioButtonStyle.axaml" />
         <StyleInclude Source="/Styles/NitroxMarkdownStyle.axaml" />
+        <StyleInclude Source="/Styles/RadioButtonGroupStyle.axaml" />
     </Application.Styles>
 </Application>

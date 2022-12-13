@@ -1,0 +1,80 @@
+<Styles xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
+             xmlns:models="clr-namespace:Nitrox.Launcher.Models"
+             xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
+             xmlns:system="clr-namespace:System;assembly=System.Runtime"
+             xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Design.Controls">
+    <Design.PreviewWith>
+        <Panel Background="Cornflowerblue">
+            <StackPanel Margin="10" Spacing="10">
+                <Border Padding="10" Background="#000000" design:NitroxAttached.Theme="DARK">
+                    <controls:RadioButtonGroup Classes="radioGroup" Enum="{x:Type models:GameMode}" />
+                </Border>
+                <Border Padding="10" Background="#FFFFFF" design:NitroxAttached.Theme="LIGHT">
+                    <controls:RadioButtonGroup Classes="radioGroup" Enum="{x:Type models:GameMode}" />
+                </Border>
+            </StackPanel>
+        </Panel>
+    </Design.PreviewWith>
+    
+    <!-- Base style without theme -->
+    <Style Selector="ItemsControl.radioGroup">
+        <Setter Property="ItemsPanel">
+            <ItemsPanelTemplate>
+                <StackPanel Spacing="8" Orientation="Horizontal" />
+            </ItemsPanelTemplate>
+        </Setter>
+        <Setter Property="ItemTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <Button Name="ItemContainer" 
+                            CornerRadius="8" 
+                            BorderThickness="2" 
+                            Padding="14 16" 
+                            Tag="{Binding}" 
+                            Command="{Binding ItemClickCommand, RelativeSource={RelativeSource AncestorType=controls:RadioButtonGroup}}" 
+                            CommandParameter="{Binding $self}">
+                        <design:NitroxAttached.Selected>
+                            <MultiBinding Converter="{converters:EqualityConverter}">
+                                <Binding/>
+                                <Binding Path="SelectedItem" RelativeSource="{RelativeSource AncestorType=controls:RadioButtonGroup}" />
+                            </MultiBinding>
+                        </design:NitroxAttached.Selected>
+                        <TextBlock Name="Text" Text="{Binding Converter={converters:ToStringConverter}}" />
+                    </Button>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style Selector="ItemsControl.radioGroup Button#ItemContainer /template/ ContentPresenter">
+        <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType=Button}}" />
+    </Style>
+    <Style Selector="ItemsControl.radioGroup Button#ItemContainer:pointerover /template/ ContentPresenter">
+        <Setter Property="BorderBrush" Value="{Binding BorderBrush, RelativeSource={RelativeSource AncestorType=Button}}" />
+    </Style>
+    
+    <!-- Theming -->
+    <Style Selector="ItemsControl.radioGroup Button#ItemContainer[(design|NitroxAttached.Theme)=LIGHT]">
+        <Setter Property="Background" Value="#FFFFFF" />
+        <Setter Property="BorderBrush" Value="#D1D1D1" />
+    </Style>
+    <Style Selector="ItemsControl.radioGroup Button#ItemContainer[(design|NitroxAttached.Theme)=DARK]">
+        <Setter Property="Background" Value="#000000" />
+        <Setter Property="BorderBrush" Value="#323232" />
+    </Style>
+    <Style Selector="ItemsControl.radioGroup TextBlock#Text[(design|NitroxAttached.Theme)=LIGHT]">
+        <Setter Property="Foreground" Value="#000000" />
+    </Style>
+    <Style Selector="ItemsControl.radioGroup TextBlock#Text[(design|NitroxAttached.Theme)=DARK]">
+        <Setter Property="Foreground" Value="#FFFFFF" />
+    </Style>
+    
+    <!-- Events -->
+    <Style Selector="ItemsControl.radioGroup Button#ItemContainer:pointerover">
+        <Setter Property="BorderBrush" Value="#007BFF" />
+    </Style>
+    <Style Selector="ItemsControl.radioGroup Button#ItemContainer[(design|NitroxAttached.Selected)=true]">
+        <Setter Property="BorderBrush" Value="#007BFF" />
+    </Style>
+</Styles>

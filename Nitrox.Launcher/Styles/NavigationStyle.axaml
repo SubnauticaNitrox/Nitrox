@@ -34,13 +34,6 @@
         <Setter Property="Opacity" Value="1" />
     </Style>
     <Style Selector="Border.nav ItemsControl">
-        <Setter Property="ItemsPanel">
-            <Setter.Value>
-                <ItemsPanelTemplate>
-                    <StackPanel />
-                </ItemsPanelTemplate>
-            </Setter.Value>
-        </Setter>
         <Setter Property="ItemTemplate">
             <Setter.Value>
                 <design:MultiDataTemplate>

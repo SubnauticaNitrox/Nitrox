@@ -4,13 +4,12 @@ using System.Globalization;
 using System.Reflection;
 using Avalonia;
 using Avalonia.Data.Converters;
-using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 
 namespace Nitrox.Launcher.Models.Converters;
 
-public class BitmapAssetValueConverter : MarkupExtension, IValueConverter
+public class BitmapAssetValueConverter : BaseConverter<BitmapAssetValueConverter>, IValueConverter
 {
     private static readonly string assemblyName = Assembly.GetEntryAssembly()?.GetName().Name ?? throw new Exception("Unable to get Assembly name");
     private static readonly Dictionary<string, Bitmap> assetCache = new();
@@ -56,9 +55,5 @@ public class BitmapAssetValueConverter : MarkupExtension, IValueConverter
     {
         throw new NotSupportedException();
     }
-
-    public override object ProvideValue(IServiceProvider serviceProvider)
-    {
-        return this;
-    }
 }
+

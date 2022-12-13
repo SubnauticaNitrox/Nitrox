@@ -1,5 +1,6 @@
 ﻿using System.Windows.Input;
 using Avalonia.Collections;
+using Nitrox.Launcher.Models;
 using Nitrox.Launcher.ViewModels.Abstract;
 using ReactiveUI;
 
@@ -19,26 +20,24 @@ namespace Nitrox.Launcher.ViewModels
                 {
                     return;
                 }
-                Servers.Add(new ServerEntry
-                {
-                    Name = result.Name
-                });
+                Servers.Add(new ServerEntry { Name = result.Name, GameMode = result.SelectedGameMode });
             });
-            
+
             // TODO: Load servers from file
         }
 
         public class ServerEntry : ReactiveObject
         {
-            public string Name { get; set; } = "";
             private bool isOnline;
+            public string Name { get; set; } = "";
 
             public bool IsOnline
             {
                 get => isOnline;
                 set => this.RaiseAndSetIfChanged(ref isOnline, value);
             }
-            public string GameMode { get; set; } = "Survival";
+
+            public GameMode GameMode { get; set; }
             public int Players { get; set; }
             public int MaxPlayers { get; set; } = 100;
             public ICommand StopCommand { get; }

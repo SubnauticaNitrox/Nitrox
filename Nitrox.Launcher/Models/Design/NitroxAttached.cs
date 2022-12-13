@@ -13,12 +13,6 @@ namespace Nitrox.Launcher.Models.Design;
 /// </summary>
 public class NitroxAttached : AvaloniaObject
 {
-    public enum ThemeOption
-    {
-        DARK,
-        LIGHT
-    }
-
     public static readonly AttachedProperty<string> TextProperty = AvaloniaProperty.RegisterAttached<NitroxAttached, Interactive, string>("Text");
     public static readonly AttachedProperty<string> SubtextProperty = AvaloniaProperty.RegisterAttached<NitroxAttached, Interactive, string>("Subtext");
     public static readonly AttachedProperty<object> FocusProperty = AvaloniaProperty.RegisterAttached<NitroxAttached, Interactive, object>("Focus");
@@ -31,9 +25,9 @@ public class NitroxAttached : AvaloniaObject
 
     public static void SetText(AvaloniaObject element, string value)
     {
-        if (element is not Button button || !button.Classes.Contains("nitrox"))
+        if (element is not Button)
         {
-            throw new NotSupportedException($@"Button must have class ""nitrox"" to support attached property ""{nameof(TextProperty)}"".");
+            throw new NotSupportedException($@"Attached property ""{nameof(TextProperty)}"" is only supported on buttons.");
         }
         element.SetValue(TextProperty, value);
     }
@@ -42,9 +36,9 @@ public class NitroxAttached : AvaloniaObject
 
     public static void SetSubtext(AvaloniaObject element, string value)
     {
-        if (element is not Button button || !button.Classes.Contains("nitrox"))
+        if (element is not Button)
         {
-            throw new NotSupportedException($@"Button must have class ""nitrox"" to support attached property ""{nameof(SubtextProperty)}"".");
+            throw new NotSupportedException($@"Attached property ""{nameof(SubtextProperty)}"" is only supported on buttons.");
         }
         element.SetValue(SubtextProperty, value);
     }

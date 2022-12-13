@@ -6,18 +6,18 @@
             <StackPanel Margin="10" Spacing="10">
                 <StackPanel design:NitroxAttached.Theme="LIGHT" Background="#FFFFFF" HorizontalAlignment="Center">
                     <Button Content="Normal button" />
-                    <Button Classes="primary" Content="Primary button" />
+                    <Button Classes="nitrox primary" Content="Primary button" />
                 </StackPanel>
                 <StackPanel design:NitroxAttached.Theme="DARK" Background="#000000" HorizontalAlignment="Center">
                     <Button Content="Normal button" />
-                    <Button Classes="primary" Content="Primary button" />
-                    <Button Classes="primary big" Content="Primary button BIG" design:NitroxAttached.Subtext="Bla" />
+                    <Button Classes="nitrox primary" Content="Primary button" />
+                    <Button Classes="nitrox primary big" Content="Primary button BIG" design:NitroxAttached.Subtext="Bla" />
                 </StackPanel>
             </StackPanel>
         </Panel>
     </Design.PreviewWith>
     
-    <Style Selector="Button">
+    <Style Selector="Button.nitrox">
         <Setter Property="Padding" Value="16 8.73" />
         <Setter Property="CornerRadius" Value="4" />
         <Setter Property="Background" Value="#0CFFFFFF" />
@@ -33,10 +33,10 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <Style Selector="Button[(design|NitroxAttached.Theme)=LIGHT]">
+    <Style Selector="Button.nitrox[(design|NitroxAttached.Theme)=LIGHT]">
         <Setter Property="Foreground" Value="#000000" />
     </Style>
-    <Style Selector="Button /template/ ContentPresenter">
+    <Style Selector="Button.nitrox /template/ ContentPresenter">
         <Setter Property="Opacity" Value="1" />
         <Setter Property="Transitions">
             <Transitions>
@@ -44,7 +44,7 @@
             </Transitions>
         </Setter>
     </Style>
-    <Style Selector="Button:pointerover /template/ ContentPresenter">
+    <Style Selector="Button.nitrox:pointerover /template/ ContentPresenter">
         <Setter Property="TextBlock.Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
         <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType=Button}}" />
         <Setter Property="Opacity" Value="0.6" />

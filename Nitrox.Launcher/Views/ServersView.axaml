@@ -5,6 +5,7 @@
              xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
              xmlns:launcher="clr-namespace:Nitrox.Launcher"
              xmlns:markdown="clr-namespace:Markdown.Avalonia;assembly=Markdown.Avalonia"
+             xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
              x:Class="Nitrox.Launcher.Views.ServersView"
              d:DataContext="{Binding RelativeSource={RelativeSource AncestorType=viewModels:ServersViewModel}}">
     
@@ -51,7 +52,7 @@
                                                     <TextBlock IsVisible="{Binding !IsOnline}" Text="Offline" />    
                                                 </StackPanel>
                                             </Panel>
-                                            <TextBlock Text="{Binding GameMode}" />
+                                            <TextBlock Text="{Binding GameMode, Converter={converters:ToStringConverter}}" />
                                             <StackPanel Orientation="Horizontal">
                                                 <TextBlock Text="{Binding Players}" />
                                                 <TextBlock Text="/" />
@@ -61,7 +62,7 @@
                                         </StackPanel>
                                     </StackPanel>
                                     <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
-                                        <Button IsVisible="{Binding IsOnline}" Classes="nitrox abort" design:NitroxAttached.Text="Stop" Command="{Binding StopCommand}" />
+                                        <Button Classes="nitrox abort" IsVisible="{Binding IsOnline}" design:NitroxAttached.Text="Stop" Command="{Binding StopCommand}" />
                                         <Button Classes="nitrox primary" design:NitroxAttached.Text="Manage" Command="{Binding ManageCommand}" />
                                     </StackPanel>
                                 </DockPanel>
