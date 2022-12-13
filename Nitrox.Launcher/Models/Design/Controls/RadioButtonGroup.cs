@@ -15,7 +15,6 @@ public class RadioButtonGroup : ItemsControl, IStyleable
     public static readonly DirectProperty<RadioButtonGroup, ReactiveCommand<Button, Unit>> ItemClickCommandProperty =
         AvaloniaProperty.RegisterDirect<RadioButtonGroup, ReactiveCommand<Button, Unit>>(nameof(ItemClickCommand), o => o.ItemClickCommand, (o, v) => o.ItemClickCommand = v);
 
-    private object? defaultValue;
     private Type? @enum;
     private ReactiveCommand<Button, Unit> itemClickCommand;
     Type IStyleable.StyleKey => typeof(ItemsControl);
