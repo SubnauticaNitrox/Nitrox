@@ -6,7 +6,7 @@ using ReactiveUI;
 
 namespace Nitrox.Launcher.Views.Abstract;
 
-public class WindowBase<TViewModal> : ReactiveWindow<TViewModal> where TViewModal : class
+public abstract class WindowBase<TViewModal> : ReactiveWindow<TViewModal> where TViewModal : class
 {
     /// <summary>
     ///     Registers a modal that will be owned by this window where the input and output data of the modal is the same <see cref="TModalViewModel"/>.

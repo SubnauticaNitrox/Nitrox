@@ -7,6 +7,7 @@ namespace Nitrox.Launcher.ViewModels.Abstract;
 
 public abstract class RoutableViewModelBase : ViewModelBase, IRoutableViewModel
 {
+
     /// <summary>
     ///     Gets the unique URL for the view.
     /// </summary>

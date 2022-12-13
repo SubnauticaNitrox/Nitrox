@@ -10,16 +10,6 @@
              d:DataContext="{Binding RelativeSource={RelativeSource AncestorType=viewModels:ServersViewModel}}">
     
     <Panel>
-        <!-- If no servers defined:-->
-        <StackPanel IsVisible="{Binding !Servers.Count}" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Image Source="/Assets/Images/serverIllustration.png" Stretch="None" Margin="0 0 0 73" />
-            <TextBlock FontSize="32" TextAlignment="Center" FontWeight="600">No servers here yet</TextBlock>
-            <TextBlock Margin="0 10 0 0" FontSize="16" TextAlignment="Center">Create a new server to start hosting your Subnautica Multiplayer world.</TextBlock>
-        
-            <Button design:NitroxAttached.Focus="" Classes="nitrox primary big" Command="{Binding CreateServerCommand}" Width="350" Margin="0 40 0 0" design:NitroxAttached.Text="CREATE NEW SERVER" design:NitroxAttached.Subtext="MULTIPLAYER" HorizontalAlignment="Center" />
-        </StackPanel>
-        
-        <!-- If there are servers: -->
         <Panel IsVisible="{Binding Servers.Count}">
             <StackPanel VerticalAlignment="Stretch">
                 <TextBlock Classes="header" Text="Servers" />

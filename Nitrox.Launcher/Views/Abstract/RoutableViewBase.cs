@@ -5,7 +5,8 @@ using ReactiveUI;
 
 namespace Nitrox.Launcher.Views.Abstract;
 
-public abstract class RoutableViewBase<TViewModel> : ReactiveUserControl<TViewModel>, IRoutableView where TViewModel : RoutableViewModelBase
+public abstract class RoutableViewBase<TViewModel> : ReactiveUserControl<TViewModel>, IRoutableView
+    where TViewModel : RoutableViewModelBase
 {
     protected RoutableViewBase()
     {
@@ -14,3 +15,4 @@ public abstract class RoutableViewBase<TViewModel> : ReactiveUserControl<TViewMo
 
     protected abstract void RegisterDispose(Action<IDisposable> disposables);
 }
+

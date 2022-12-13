@@ -54,7 +54,7 @@
                     <TextBlock Text="Default content" HorizontalAlignment="Center" VerticalAlignment="Center" />
                 </rxui:RoutedViewHost.DefaultContent>
                 <rxui:RoutedViewHost.ViewLocator>
-                    <app:AppViewLocator />
+                    <app:Locator />
                 </rxui:RoutedViewHost.ViewLocator>
             </rxui:RoutedViewHost>
         </Grid>
