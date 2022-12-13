@@ -72,7 +72,7 @@ public class PlayerModelManager
         signalBase.SetActive(true);
 
         PingInstance ping = signalBase.GetComponent<PingInstance>();
-        ping.SetLabel("Player " + player.PlayerName);
+        ping.SetLabel($"Player {player.PlayerName}");
         ping.pingType = PingType.Signal;
         // ping will be moved to the player list tab
         ping.displayPingInManager = false;

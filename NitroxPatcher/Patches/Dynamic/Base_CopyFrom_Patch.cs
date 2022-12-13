@@ -29,7 +29,7 @@ public class Base_CopyFrom_Patch : NitroxPatch, IDynamicPatch
         // there is still a pending edge case when a base converts to a BaseGhost for deconstruction.
         if (entity != null && __instance.gameObject.name != "BaseGhost")
         {
-            Log.Debug("Transfering base id : " + entity.Id + " from " + sourceBase.name + " to " + __instance.name);
+            Log.Debug($"Transferring base id : {entity.Id} from {sourceBase.name} to {__instance.name}");
             NitroxEntity.SetNewId(__instance.gameObject, entity.Id);
         }
 

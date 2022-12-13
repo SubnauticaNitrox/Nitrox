@@ -55,7 +55,7 @@ namespace NitroxModel.Platforms.OS.Shared
             process.StartInfo.RedirectStandardOutput = true;
             process.StartInfo.RedirectStandardError = true;
             process.StartInfo.FileName = editorProgram;
-            process.StartInfo.Arguments = $@"{(arguments.Length > 0 ? arguments + " " : "")}""{file}""";
+            process.StartInfo.Arguments = $@"{(arguments.Length > 0 ? $"{arguments} " : "")}""{file}""";
             process.Start();
             return process;
         }

@@ -9,7 +9,7 @@ indent_style = space
 resharper_wrap_object_and_collection_initializer_style = chop_if_long
 
 [*.{proj, csproj, targets}]
-indent_size = 2
+indent_size = 4
 insert_final_newline = true
 
 [App.config]

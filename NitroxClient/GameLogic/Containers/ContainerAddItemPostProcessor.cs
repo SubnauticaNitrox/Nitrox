@@ -37,7 +37,7 @@ namespace NitroxClient.GameLogic.Containers
                 {
                     if (item.GetComponent(type))
                     {
-                        Log.Info("Found custom ContainerAddItemPostProcessor for " + type);
+                        Log.Info($"Found custom ContainerAddItemPostProcessor for {type}");
                         return processor;
                     }
                 }

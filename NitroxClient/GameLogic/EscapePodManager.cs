@@ -185,7 +185,7 @@ namespace NitroxClient.GameLogic
             }
             else
             {
-                Log.Warn("No escape pod to be repaired by id " + id);
+                Log.Warn($"No escape pod to be repaired by id {id}");
             }
         }
 

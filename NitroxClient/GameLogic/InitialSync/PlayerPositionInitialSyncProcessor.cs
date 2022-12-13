@@ -55,7 +55,7 @@ namespace NitroxClient.GameLogic.InitialSync
             Optional<GameObject> sub = NitroxEntity.GetObjectFrom(subRootId.Value);
             if (!sub.HasValue)
             {
-                Log.Error("Could not spawn player into subroot with id: " + subRootId.Value);
+                Log.Error($"Could not spawn player into subroot with id: {subRootId.Value}");
                 yield return Terrain.WaitForWorldLoad();
                 yield break;
             }

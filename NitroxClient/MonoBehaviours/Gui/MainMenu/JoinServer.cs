@@ -182,7 +182,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             }
             catch (ClientConnectionFailedException)
             {
-                Log.InGameSensitive(Language.main.Get("Nitrox_UnableToConnect") + " {ip}:{port}", serverIp, serverPort);
+                Log.InGameSensitive($"{Language.main.Get("Nitrox_UnableToConnect")} {{ip}}:{{port}}", serverIp, serverPort);
 
                 if (serverIp.Equals("127.0.0.1"))
                 {

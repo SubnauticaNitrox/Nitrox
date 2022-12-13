@@ -25,20 +25,19 @@ namespace NitroxServer.ConsoleCommands
         {
             ServerSerializerMode serializerMode = args.Get<ServerSerializerMode>(0);
 
-            serverConfig.Update(Path.Combine(WorldManager.SavesFolderDir, serverConfig.SaveName), c =>
+            using (serverConfig.Update(Path.Combine(WorldManager.SavesFolderDir, serverConfig.SaveName)))
             {
-                if (serializerMode != c.SerializerMode)
+                if (serializerMode != serverConfig.SerializerMode)
                 {
-                    c.SerializerMode = serializerMode;
-
+                    serverConfig.SerializerMode = serializerMode;
                     worldPersistence.UpdateSerializer(serializerMode);
-                    SendMessage(args.Sender, $"Server save format swapped to {c.SerializerMode}");
+                    SendMessage(args.Sender, $"Server save format swapped to {serverConfig.SerializerMode}");
                 }
                 else
                 {
                     SendMessage(args.Sender, "Server is already using this save format");
                 }
-            });
+            }
         }
     }
 }

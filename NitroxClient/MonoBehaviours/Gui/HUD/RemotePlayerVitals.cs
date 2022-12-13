@@ -129,7 +129,7 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
                     newBar.color = HEALTH_BAR_COLOR;
                     newBar.borderColor = HEALTH_BAR_BORDER_COLOR;
                     cloned.transform.localPosition = new Vector3(-0.075f, 0.35f, 0f);
-                    cloned.name = playerName + "'s Health";
+                    cloned.name = $"{playerName}'s Health";
                     cloned.RequireTransform("Icon").localRotation = Quaternion.Euler(0f, 0f, 0f);
                     Destroy(cloned.GetComponent<uGUI_HealthBar>());
                     cloned.transform.localScale = new Vector3(0.0007f, 0.0007f, 0.0007f);
@@ -138,7 +138,7 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
                     newBar.color = OXYGEN_BAR_COLOR;
                     newBar.borderColor = OXYGEN_BAR_BORDER_COLOR;
                     cloned.transform.localPosition = new Vector3(-0.025f, 0.35f, 0f);
-                    cloned.name = playerName + "'s Oxygen";
+                    cloned.name = $"{playerName}'s Oxygen";
                     cloned.RequireTransform("OxygenTextLabel").localRotation = Quaternion.Euler(0f, 270f, 0f);
                     Destroy(cloned.GetComponent<uGUI_OxygenBar>());
                     cloned.transform.localScale = new Vector3(0.0003f, 0.0003f, 0.0003f);
@@ -147,7 +147,7 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
                     newBar.color = FOOD_BAR_COLOR;
                     newBar.borderColor = FOOD_BAR_BORDER_COLOR;
                     cloned.transform.localPosition = new Vector3(0.025f, 0.35f, 0f);
-                    cloned.name = playerName + "'s Food";
+                    cloned.name = $"{playerName}'s Food";
                     cloned.RequireTransform("Icon").localRotation = Quaternion.Euler(0f, 0f, 0f);
                     Destroy(cloned.GetComponent<uGUI_FoodBar>());
                     cloned.transform.localScale = new Vector3(0.0007f, 0.0007f, 0.0007f);
@@ -156,13 +156,13 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
                     newBar.color = WATER_BAR_COLOR;
                     newBar.borderColor = WATER_BAR_BORDER_COLOR;
                     cloned.transform.localPosition = new Vector3(0.075f, 0.35f, 0f);
-                    cloned.name = playerName + "'s Water";
+                    cloned.name = $"{playerName}'s Water";
                     cloned.RequireTransform("Icon").localRotation = Quaternion.Euler(0f, 0f, 0f);
                     Destroy(cloned.GetComponent<uGUI_WaterBar>());
                     cloned.transform.localScale = new Vector3(0.0007f, 0.0007f, 0.0007f);
                     break;
                 default:
-                    Log.Info("Unhandled bar type: " + type);
+                    Log.Info($"Unhandled bar type: {type}");
                     break;
             }
 

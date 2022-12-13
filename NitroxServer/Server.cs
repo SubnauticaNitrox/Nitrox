@@ -61,19 +61,26 @@ namespace NitroxServer
             {
                 builder.AppendLine($" - Save location: {Path.Combine(WorldManager.SavesFolderDir, serverConfig.SaveName)}");
             }
-            builder.AppendLine($" - Aurora's state: {world.EventTriggerer.GetAuroraStateSummary()}");
-            builder.AppendLine($" - Current time: day {world.EventTriggerer.Day} ({Math.Floor(world.EventTriggerer.ElapsedSeconds)}s)");
-            builder.AppendLine($" - Scheduled goals stored: {world.GameData.StoryGoals.ScheduledGoals.Count}");
-            builder.AppendLine($" - Story goals completed: {world.GameData.StoryGoals.CompletedGoals.Count}");
-            builder.AppendLine($" - Radio messages stored: {world.GameData.StoryGoals.RadioQueue.Count}");
-            builder.AppendLine($" - World gamemode: {serverConfig.GameMode}");
-            builder.AppendLine($" - Story goals unlocked: {world.GameData.StoryGoals.GoalUnlocks.Count}");
-            builder.AppendLine($" - Encyclopedia entries: {world.GameData.PDAState.EncyclopediaEntries.Count}");
-            builder.AppendLine($" - Storage slot items: {world.InventoryManager.GetAllStorageSlotItems().Count}");
-            builder.AppendLine($" - Inventory items: {world.InventoryManager.GetAllInventoryItems().Count}");
-            builder.AppendLine($" - Progress tech: {world.GameData.PDAState.CachedProgress.Count}");
-            builder.AppendLine($" - Known tech: {world.GameData.PDAState.KnownTechTypes.Count}");
-            builder.AppendLine($" - Vehicles: {world.VehicleManager.GetVehicles().Count()}");
+            builder.AppendLine($"""
+             - Aurora's state: {world.EventTriggerer.GetAuroraStateSummary()}
+             - Current time: day {world.EventTriggerer.Day} ({Math.Floor(world.EventTriggerer.ElapsedSeconds)}s)
+             - Scheduled goals stored: {world.GameData.StoryGoals.ScheduledGoals.Count}
+             - Story goals completed: {world.GameData.StoryGoals.CompletedGoals.Count}
+             - Radio messages stored: {world.GameData.StoryGoals.RadioQueue.Count}
+             - Radio messages stored: {world.GameData.StoryGoals.RadioQueue.Count}
+             - Radio messages stored: {world.GameData.StoryGoals.RadioQueue.Count}
+             - Radio messages stored: {world.GameData.StoryGoals.RadioQueue.Count}
+             - Radio messages stored: {world.GameData.StoryGoals.RadioQueue.Count}
+             - Radio messages stored: {world.GameData.StoryGoals.RadioQueue.Count}
+             - World gamemode: {serverConfig.GameMode}
+             - Story goals unlocked: {world.GameData.StoryGoals.GoalUnlocks.Count}
+             - Encyclopedia entries: {world.GameData.PDAState.EncyclopediaEntries.Count}
+             - Storage slot items: {world.InventoryManager.GetAllStorageSlotItems().Count}
+             - Inventory items: {world.InventoryManager.GetAllInventoryItems().Count}
+             - Progress tech: {world.GameData.PDAState.CachedProgress.Count}
+             - Known tech: {world.GameData.PDAState.KnownTechTypes.Count}
+             - Vehicles: {world.VehicleManager.GetVehicles().Count()}
+            """);
                 
             return builder.ToString();
         }

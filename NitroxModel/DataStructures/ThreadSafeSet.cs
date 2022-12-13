@@ -6,7 +6,7 @@ using ProtoBufNet;
 
 namespace NitroxModel.DataStructures
 {
-    [DebuggerDisplay("Items = {" + nameof(set) + "}")]
+    [DebuggerDisplay($"Items = {{{nameof(set)}}}")]
     [ProtoContract]
     [Serializable]
     public class ThreadSafeSet<T> : ISet<T>
