@@ -48,7 +48,7 @@ public class uGUI_PlayerPingEntry : uGUI_PingEntry
     public Sprite TeleportToSprite;
     public Sprite TeleportToMeSprite;
 
-    public void Awake()
+    public new void Awake()
     {
         NitroxServiceLocator.LocateService<MutePlayerProcessor>().OnPlayerMuted += (playerId, _) =>
         {

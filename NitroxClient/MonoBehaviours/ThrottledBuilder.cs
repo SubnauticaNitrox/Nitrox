@@ -71,7 +71,7 @@ namespace NitroxClient.MonoBehaviours
                 }
                 catch (Exception ex)
                 {
-                    Log.Error("Error processing buildEvent in ThrottledBuilder" + ex);
+                    Log.Error($"Error processing buildEvent in ThrottledBuilder{ex}");
                 }
 
                 if (currentEvent.RequiresFreshFrame() || buildEvents.NextEventRequiresFreshFrame())

@@ -92,7 +92,7 @@ public class uGUI_PlayerListTab : uGUI_PingTab
         entries.Values.ForEach(entry => entry.OnLanguageChanged());
     }
 
-    public new void LateUpdate()
+    public void LateUpdate()
     {
         UpdateEntries();
     }
@@ -138,7 +138,7 @@ public class uGUI_PlayerListTab : uGUI_PingTab
         }
     }
 
-    public new uGUI_PlayerPingEntry GetEntry()
+    public uGUI_PlayerPingEntry GetEntry()
     {
         uGUI_PlayerPingEntry uGUI_PlayerEntry;
         if (pool.pool.Count == 0)
