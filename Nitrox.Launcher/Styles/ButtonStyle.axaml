@@ -5,13 +5,13 @@
         <Panel Background="Cornflowerblue">
             <StackPanel Margin="10" Spacing="10">
                 <StackPanel design:NitroxAttached.Theme="LIGHT" Background="#FFFFFF" HorizontalAlignment="Center">
-                    <Button Content="Normal button" />
-                    <Button Classes="nitrox primary" Content="Primary button" />
+                    <Button Classes="nitrox" design:NitroxAttached.Text="Normal button" HorizontalAlignment="Stretch" />
+                    <Button Classes="nitrox primary" design:NitroxAttached.Text="Primary button" HorizontalAlignment="Stretch" />
                 </StackPanel>
                 <StackPanel design:NitroxAttached.Theme="DARK" Background="#000000" HorizontalAlignment="Center">
-                    <Button Content="Normal button" />
-                    <Button Classes="nitrox primary" Content="Primary button" />
-                    <Button Classes="nitrox primary big" Content="Primary button BIG" design:NitroxAttached.Subtext="Bla" />
+                    <Button Classes="nitrox" design:NitroxAttached.Text="Normal button" HorizontalAlignment="Stretch" />
+                    <Button Classes="nitrox primary" design:NitroxAttached.Text="Primary button" HorizontalAlignment="Stretch" />
+                    <Button Classes="nitrox primary big" design:NitroxAttached.Text="Primary Button Big" design:NitroxAttached.Subtext="Some sub text" />
                 </StackPanel>
             </StackPanel>
         </Panel>
@@ -20,14 +20,12 @@
     <Style Selector="Button.nitrox">
         <Setter Property="Padding" Value="16 8.73" />
         <Setter Property="CornerRadius" Value="4" />
-        <Setter Property="Background" Value="#0CFFFFFF" />
-        <Setter Property="Foreground" Value="#FFFFFF" />
         <Setter Property="Content">
             <Setter.Value>
                 <Template>
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                        <TextBlock Text="{Binding (design:NitroxAttached.Text), RelativeSource={RelativeSource AncestorType=Button}}" HorizontalAlignment="Center" />
-                        <TextBlock FontSize="10" Opacity="0.5" Text="{Binding (design:NitroxAttached.Subtext), RelativeSource={RelativeSource AncestorType=Button}}" HorizontalAlignment="Center" />
+                        <TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Text="{Binding (design:NitroxAttached.Text), RelativeSource={RelativeSource AncestorType=Button}}" HorizontalAlignment="Center" />
+                        <TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" FontSize="10" Opacity="0.5" Text="{Binding (design:NitroxAttached.Subtext), RelativeSource={RelativeSource AncestorType=Button}}" HorizontalAlignment="Center" />
                     </StackPanel>
                 </Template>
             </Setter.Value>
@@ -35,6 +33,9 @@
     </Style>
     <Style Selector="Button.nitrox[(design|NitroxAttached.Theme)=LIGHT]">
         <Setter Property="Foreground" Value="#000000" />
+    </Style>
+    <Style Selector="Button.nitrox[(design|NitroxAttached.Theme)=DARK]">
+        <Setter Property="Foreground" Value="#FFFFFF" />
     </Style>
     <Style Selector="Button.nitrox /template/ ContentPresenter">
         <Setter Property="Opacity" Value="1" />
