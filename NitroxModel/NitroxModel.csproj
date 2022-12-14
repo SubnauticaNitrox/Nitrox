@@ -7,24 +7,24 @@
 
     <!-- .NET Framework polyfills for modern C# lang support -->
     <ItemGroup>
-        <PackageReference Include="IndexRange" Version="1.0.2"/>
-        <PackageReference Include="System.Memory" Version="4.5.5"/>
+        <PackageReference Include="IndexRange" Version="1.0.2" />
+        <PackageReference Include="System.Memory" Version="4.5.5" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Autofac" Version="4.9.4"/>
-        <PackageReference Include="LiteNetLib" Version="0.8.3.1"/>
-        <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0"/>
-        <PackageReference Include="Mono.Nat" Version="3.0.2"/>
-        <PackageReference Include="Nitrox.BinaryPack" Version="1.0.1"/>
-        <PackageReference Include="Serilog" Version="2.10.0"/>
-        <PackageReference Include="Serilog.Sinks.Async" Version="1.5.0"/>
-        <PackageReference Include="Serilog.Sinks.File" Version="5.0.0"/>
-        <PackageReference Include="System.Drawing.Common" Version="6.0.0"/>
-        <PackageReference Include="System.IO.Compression" Version="4.3.0"/>
-        <PackageReference Include="System.IO.FileSystem.AccessControl" Version="5.0.0"/>
-        <PackageReference Include="System.Numerics.Vectors" Version="4.5.0"/>
-        <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0"/>
+        <PackageReference Include="Autofac" Version="4.9.4" />
+        <PackageReference Include="LiteNetLib" Version="0.8.3.1" />
+        <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
+        <PackageReference Include="Mono.Nat" Version="3.0.2" />
+        <PackageReference Include="Nitrox.BinaryPack" Version="1.0.1" />
+        <PackageReference Include="Serilog" Version="2.10.0" />
+        <PackageReference Include="Serilog.Sinks.Async" Version="1.5.0" />
+        <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+        <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
+        <PackageReference Include="System.IO.Compression" Version="4.3.0" />
+        <PackageReference Include="System.IO.FileSystem.AccessControl" Version="5.0.0" />
+        <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
+        <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
     </ItemGroup>
 
     <ItemGroup>
