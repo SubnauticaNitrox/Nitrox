@@ -16,6 +16,7 @@
         <ImplicitUsings>disable</ImplicitUsings>
         <PathMap>$(MSBuildProjectDirectory)=$(MSBuildProjectName)</PathMap>
         <EnableNETAnalyzers>true</EnableNETAnalyzers>
+        <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     </PropertyGroup>
     
     <PropertyGroup Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(MSBuildProjectName), '^Nitrox.*$'))">

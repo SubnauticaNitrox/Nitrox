@@ -211,7 +211,7 @@ namespace NitroxLauncher
             try
             {
                 File.Copy(
-                    Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? "", initDllName),
+                    Path.Combine(Path.GetDirectoryName(AppContext.BaseDirectory) ?? "", initDllName),
                     Path.Combine(Config.SubnauticaPath, "Subnautica_Data", "Managed", initDllName),
                     true
                 );

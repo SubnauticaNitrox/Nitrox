@@ -28,7 +28,7 @@ public static class Publicizer
         // Ensure target directory exists.
         if (string.IsNullOrWhiteSpace(outputPath))
         {
-            outputPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            outputPath = Path.GetDirectoryName(AppContext.BaseDirectory);
         }
         if (!string.IsNullOrWhiteSpace(outputPath))
         {

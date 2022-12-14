@@ -629,7 +629,7 @@ namespace NitroxLauncher.Pages
             using (CommonOpenFileDialog dialog = new()
             {
                 Multiselect = false,
-                InitialDirectory = System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location),
+                InitialDirectory = Path.GetDirectoryName(AppContext.BaseDirectory),
                 EnsurePathExists = true,
                 IsFolderPicker = true,
                 Title = "Select the save file to import"

@@ -60,6 +60,7 @@ public static class Main
             return;
         }
 
+        Console.WriteLine($"Nitrox is loading from: {nitroxLauncherDir.Value}");
         Environment.SetEnvironmentVariable("NITROX_LAUNCHER_PATH", nitroxLauncherDir.Value);
 
         Init();
@@ -130,10 +131,7 @@ public static class Main
             dllPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), dllFileName);
         }
 
-        if (!File.Exists(dllPath))
-        {
-            Console.WriteLine($"Nitrox dll missing: {dllPath}");
-        }
+        Console.WriteLine(!File.Exists(dllPath) ? $"Nitrox dll missing: {dllPath}" : $"Nitrox DLL: {dllPath}");
         return Assembly.LoadFile(dllPath);
     }
 }

@@ -16,7 +16,7 @@ namespace Nitrox.BuildTool
     public static class Program
     {
         private static readonly Lazy<string> processDir =
-            new(() => Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location ?? Directory.GetCurrentDirectory()));
+            new(() => Path.GetDirectoryName(AppContext.BaseDirectory ?? Directory.GetCurrentDirectory()));
 
         public static string ProcessDir => processDir.Value;
 

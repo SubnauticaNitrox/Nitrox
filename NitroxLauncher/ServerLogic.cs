@@ -38,7 +38,7 @@ namespace NitroxLauncher
                 throw new Exception("An instance of Nitrox Server is already running");
             }
 
-            string launcherDir = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+            string launcherDir = Path.GetDirectoryName(AppContext.BaseDirectory);
             string serverPath = Path.Combine(launcherDir, SERVER_EXECUTABLE);
             ProcessStartInfo startInfo = new(serverPath);
             startInfo.WorkingDirectory = launcherDir;

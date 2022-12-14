@@ -5,6 +5,8 @@
         <LangVersion>$(LangVersion)</LangVersion>
         <OutputType>WinExe</OutputType>
         <TargetFramework>net6.0-windows</TargetFramework>
+        <SelfContained>true</SelfContained>
+        <PublishReadyToRun>true</PublishReadyToRun>
         <Nullable>disable</Nullable>
         <UseWPF>true</UseWPF>
         <ApplicationIcon>icon.ico</ApplicationIcon>

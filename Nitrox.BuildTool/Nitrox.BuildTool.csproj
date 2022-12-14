@@ -6,6 +6,7 @@
         <Nullable>disable</Nullable>
         <OutputPath>bin\</OutputPath>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <SelfContained>true</SelfContained>
     </PropertyGroup>
 
     <ItemGroup>

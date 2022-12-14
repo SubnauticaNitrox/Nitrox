@@ -215,7 +215,7 @@ public class Program
         }
 
         // Load DLLs where this program (exe) is located
-        string dllPath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location) ?? "", dllFileName);
+        string dllPath = Path.Combine(Path.GetDirectoryName(AppContext.BaseDirectory) ?? "", dllFileName);
         // Prefer to use Newtonsoft dll from game instead of our own due to protobuf issues. TODO: Remove when we do our own deserialization of game data instead of using the game's protobuf.
         if (dllPath.IndexOf("Newtonsoft.Json.dll", StringComparison.OrdinalIgnoreCase) >= 0 || !File.Exists(dllPath))
         {

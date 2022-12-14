@@ -46,7 +46,7 @@ namespace NitroxLauncher.Models.Utils
                     try
                     {
                         // Setting up start info of the new process of the same application
-                        ProcessStartInfo processStartInfo = new(Assembly.GetEntryAssembly().Location);
+                        ProcessStartInfo processStartInfo = new(AppContext.BaseDirectory);
 
                         // Using operating shell and setting the ProcessStartInfo.Verb to “runas” will let it run as admin
                         processStartInfo.UseShellExecute = true;
@@ -94,7 +94,7 @@ namespace NitroxLauncher.Models.Utils
 
         private static void CheckServerFirewallRules(FirewallDirection direction)
         {
-            string serverPath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), ServerLogic.SERVER_EXECUTABLE);
+            string serverPath = Path.Combine(Path.GetDirectoryName(AppContext.BaseDirectory), ServerLogic.SERVER_EXECUTABLE);
 
             AddExclusiveFirewallRule(Path.GetFileName(serverPath), serverPath, direction);
         }
