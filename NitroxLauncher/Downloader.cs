@@ -148,12 +148,10 @@ namespace NitroxLauncher
             {
                 MaxAge = TimeSpan.FromDays(1)
             };
-            HttpRequestMessage request = new(HttpMethod.Get, url);
-            request.Headers.Add("Content-Type", "application/json");
 
             try
             {
-                return await client.SendAsync(request);
+                return await client.GetAsync(url);
             }
             catch (Exception ex)
             {
