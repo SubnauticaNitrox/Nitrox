@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Platforms.OS.Shared;
 using NitroxServer.ConsoleCommands.Abstract;
 
 namespace NitroxServer.ConsoleCommands
@@ -27,7 +27,7 @@ namespace NitroxServer.ConsoleCommands
             }
 
             Log.InfoSensitive("Opening directory {path}", path);
-            Process.Start(path);
+            FileSystem.Instance.OpenFolder(path);
         }
     }
 }

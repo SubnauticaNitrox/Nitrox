@@ -60,6 +60,16 @@ namespace NitroxModel.Platforms.OS.Shared
             return process;
         }
 
+        public virtual void OpenFolder(string folder)
+        {
+            using Process proc = Process.Start(new ProcessStartInfo
+            {
+                FileName = folder,
+                UseShellExecute = true,
+                Verb = "open"
+            });
+        }
+
         /// <summary>
         ///     Gets the full path to a file or program. Searches the PATH environment variables if file could not be found
         ///     relatively. Returns null if not found.
