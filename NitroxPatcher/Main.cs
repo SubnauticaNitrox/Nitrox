@@ -37,15 +37,7 @@ public static class Main
             return envPath;
         }
 
-        // Get path from windows registry.
-        using RegistryKey nitroxRegKey = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Nitrox");
-        if (nitroxRegKey == null)
-        {
-            return null;
-        }
-
-        string path = nitroxRegKey.GetValue("LauncherPath") as string;
-        return Directory.Exists(path) ? path : null;
+        return null;
     });
 
     private static readonly char[] newLineChars = Environment.NewLine.ToCharArray();
@@ -56,6 +48,7 @@ public static class Main
     ///     Use the <see cref="Init" /> method or later before using dependency code.
     /// </summary>
     [UsedImplicitly]
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public static void Execute()
     {
         AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
@@ -131,7 +124,7 @@ public static class Main
         }
 
         // Load DLLs where Nitrox launcher is first, if not found, use Subnautica's DLLs.
-        string dllPath = Path.Combine(nitroxLauncherDir.Value, "lib", dllFileName);
+        string dllPath = Path.Combine(nitroxLauncherDir.Value, dllFileName);
         if (!File.Exists(dllPath))
         {
             dllPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), dllFileName);

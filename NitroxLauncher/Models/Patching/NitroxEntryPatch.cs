@@ -25,7 +25,7 @@ namespace NitroxLauncher.Models.Patching
         private const string NITROX_EXECUTE_INSTRUCTION = "System.Void NitroxPatcher.Main::Execute()";
 
         private readonly Func<string> subnauticaBasePathFunc;
-        private string subnauticaManagedPath => Path.Combine(subnauticaBasePathFunc(), "Subnautica_Data", "Managed");
+        private string SubnauticaManagedPath => Path.Combine(subnauticaBasePathFunc(), "Subnautica_Data", "Managed");
 
         public bool IsApplied => IsPatchApplied();
 
@@ -36,9 +36,9 @@ namespace NitroxLauncher.Models.Patching
 
         public void Apply()
         {
-            string assemblyCSharp = Path.Combine(subnauticaManagedPath, GAME_ASSEMBLY_NAME);
-            string nitroxPatcherPath = Path.Combine(subnauticaManagedPath, NITROX_ASSEMBLY_NAME);
-            string modifiedAssemblyCSharp = Path.Combine(subnauticaManagedPath, GAME_ASSEMBLY_MODIFIED_NAME);
+            string assemblyCSharp = Path.Combine(SubnauticaManagedPath, GAME_ASSEMBLY_NAME);
+            string nitroxPatcherPath = Path.Combine(SubnauticaManagedPath, NITROX_ASSEMBLY_NAME);
+            string modifiedAssemblyCSharp = Path.Combine(SubnauticaManagedPath, GAME_ASSEMBLY_MODIFIED_NAME);
 
             if (File.Exists(modifiedAssemblyCSharp))
             {
@@ -93,8 +93,8 @@ namespace NitroxLauncher.Models.Patching
 
         public void Remove()
         {
-            string assemblyCSharp = Path.Combine(subnauticaManagedPath, GAME_ASSEMBLY_NAME);
-            string modifiedAssemblyCSharp = Path.Combine(subnauticaManagedPath, GAME_ASSEMBLY_MODIFIED_NAME);
+            string assemblyCSharp = Path.Combine(SubnauticaManagedPath, GAME_ASSEMBLY_NAME);
+            string modifiedAssemblyCSharp = Path.Combine(SubnauticaManagedPath, GAME_ASSEMBLY_MODIFIED_NAME);
 
             using (ModuleDefMD module = ModuleDefMD.Load(assemblyCSharp))
             {
@@ -135,7 +135,7 @@ namespace NitroxLauncher.Models.Patching
 
         private bool IsPatchApplied()
         {
-            string gameInputPath = Path.Combine(subnauticaManagedPath, GAME_ASSEMBLY_NAME);
+            string gameInputPath = Path.Combine(SubnauticaManagedPath, GAME_ASSEMBLY_NAME);
 
             using (ModuleDefMD module = ModuleDefMD.Load(gameInputPath))
             {

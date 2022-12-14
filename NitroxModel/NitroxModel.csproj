@@ -37,5 +37,8 @@
         <Reference Include="Serilog.Sinks.Map">
             <HintPath>..\Nitrox.Assets.Subnautica\Serilog.Sinks.Map.dll</HintPath>
         </Reference>
+        <Reference Include="Microsoft.Win32.Registry">
+            <HintPath>..\Nitrox.Assets.Subnautica\Microsoft.Win32.Registry.dll</HintPath>
+        </Reference>
     </ItemGroup>
 </Project>

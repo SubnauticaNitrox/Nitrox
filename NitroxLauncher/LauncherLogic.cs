@@ -82,13 +82,13 @@ namespace NitroxLauncher
                     });
                 }
 
-            }, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
+            }, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap();
         }
 
         [Conditional("RELEASE")]
         public async void ConfigureFirewall()
         {
-            Task task = Task.Run(() => WindowsHelper.CheckFirewallRules());
+            Task task = Task.Run(static () => WindowsHelper.CheckFirewallRules());
             await task;
 
             if (task.Exception != null)
@@ -211,7 +211,7 @@ namespace NitroxLauncher
             try
             {
                 File.Copy(
-                    Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? "", "lib", initDllName),
+                    Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? "", initDllName),
                     Path.Combine(Config.SubnauticaPath, "Subnautica_Data", "Managed", initDllName),
                     true
                 );
@@ -260,27 +260,6 @@ namespace NitroxLauncher
             };
 
             return game ?? throw new Exception($"Unable to start game through {platform.Name}");
-        }
-
-        private void OnSubnauticaExited(object sender, EventArgs e)
-        {
-            try
-            {
-                nitroxEntryPatch.Remove();
-                Log.Info("Finished removing patches!");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                Log.Error(ex);
-            }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
