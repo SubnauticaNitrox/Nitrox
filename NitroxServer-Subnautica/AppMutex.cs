@@ -10,8 +10,8 @@ namespace NitroxServer_Subnautica
 {
     public static class AppMutex
     {
-        private static readonly SemaphoreSlim mutexReleaseGate = new SemaphoreSlim(1);
-        private static readonly SemaphoreSlim callerGate = new SemaphoreSlim(1);
+        private static readonly SemaphoreSlim mutexReleaseGate = new(1);
+        private static readonly SemaphoreSlim callerGate = new(1);
 
         public static void Hold(Action onWaitingForMutex = null, int timeoutInMs = 5000)
         {
@@ -24,14 +24,9 @@ namespace NitroxServer_Subnautica
                 bool first = true;
                 string appGuid = ((GuidAttribute)Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(GuidAttribute), false).GetValue(0)).Value;
                 string mutexId = $@"Global\{{{appGuid}}}";
-                MutexAccessRule allowEveryoneRule = new MutexAccessRule(new SecurityIdentifier(WellKnownSidType.WorldSid, null),
-                                                                        MutexRights.FullControl,
-                                                                        AccessControlType.Allow
-                );
-                MutexSecurity securitySettings = new MutexSecurity();
-                securitySettings.AddAccessRule(allowEveryoneRule);
 
-                Mutex mutex = new Mutex(false, mutexId, out bool _, securitySettings);
+
+                Mutex mutex = new(false, mutexId, out bool _);
                 try
                 {
                     try

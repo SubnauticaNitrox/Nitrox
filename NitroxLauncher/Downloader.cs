@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Cache;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -30,43 +32,34 @@ namespace NitroxLauncher
 
             try
             {
-                using WebResponse response = await GetResponseFromCache(BLOGS_URL);
-
+                using HttpResponseMessage response = await GetResponseFromCache(BLOGS_URL);
 #if DEBUG
-                if (response == null)
+                if (!response.IsSuccessStatusCode)
                 {
                     Log.Error($"{nameof(Downloader)} : Error while fetching nitrox blogs from {BLOGS_URL}");
-                    LauncherNotifier.Error("Unable to fetch nitrox blogs");
+                    LauncherNotifier.Error($"Unable to fetch nitrox blogs - {response.StatusCode}");
                     return blogs;
                 }
 #endif
 
-                if (response.IsFromCache)
-                {
-                    Log.Info("Fetched nitrox blogs from the local cache");
-                }
+                string json = await response.Content.ReadAsStringAsync();
+                JsonData data = JsonMapper.ToObject(json);
 
-                using (StreamReader sr = new(response.GetResponseStream()))
+                // TODO : Add a json schema validator 
+                for (int i = 0; i < data.Count; i++)
                 {
-                    string json = sr.ReadToEnd();
-                    JsonData data = JsonMapper.ToObject(json);
+                    string released = (string)data[i]["date"];
+                    string url = (string)data[i]["link"];
+                    string title = (string)data[i]["title"]["rendered"];
+                    string image = (string)data[i]["jetpack_featured_media_url"];
 
-                    // TODO : Add a json schema validator 
-                    for (int i = 0; i < data.Count; i++)
+                    if (!DateTime.TryParse(released, out DateTime dateTime))
                     {
-                        string released = (string)data[i]["date"];
-                        string url = (string)data[i]["link"];
-                        string title = (string)data[i]["title"]["rendered"];
-                        string image = (string)data[i]["jetpack_featured_media_url"];
-
-                        if (!DateTime.TryParse(released, out DateTime dateTime))
-                        {
-                            dateTime = DateTime.UtcNow;
-                            Log.Error($"Error while trying to parse release time ({released}) of blog {url}");
-                        }
-
-                        blogs.Add(new NitroxBlog(title, dateTime, url, image));
+                        dateTime = DateTime.UtcNow;
+                        Log.Error($"Error while trying to parse release time ({released}) of blog {url}");
                     }
+
+                    blogs.Add(new NitroxBlog(title, dateTime, url, image));
                 }
             }
             catch (Exception ex)
@@ -85,40 +78,32 @@ namespace NitroxLauncher
             try
             {
                 //https://developer.wordpress.org/rest-api/reference/posts/#arguments
-                using WebResponse response = await GetResponseFromCache(CHANGELOGS_URL);
+                using HttpResponseMessage response = await GetResponseFromCache(CHANGELOGS_URL);
 
-                if (response.IsFromCache)
+                string json = await response.Content.ReadAsStringAsync();
+                StringBuilder builder = new();
+                JsonData data = JsonMapper.ToObject(json);
+
+                // TODO : Add a json schema validator 
+                for (int i = 0; i < data.Count; i++)
                 {
-                    Log.Info("Fetched nitrox changelogs from the local cache");
-                }
+                    string version = (string)data[i]["version"];
+                    string released = (string)data[i]["released"];
+                    JsonData patchnotes = data[i]["patchnotes"];
 
-                using (StreamReader sr = new(response.GetResponseStream()))
-                {
-                    string json = sr.ReadToEnd();
-                    StringBuilder builder = new();
-                    JsonData data = JsonMapper.ToObject(json);
-
-                    // TODO : Add a json schema validator 
-                    for (int i = 0; i < data.Count; i++)
+                    if (!DateTime.TryParse(released, out DateTime dateTime))
                     {
-                        string version = (string)data[i]["version"];
-                        string released = (string)data[i]["released"];
-                        JsonData patchnotes = data[i]["patchnotes"];
-
-                        if (!DateTime.TryParse(released, out DateTime dateTime))
-                        {
-                            dateTime = DateTime.UtcNow;
-                            Log.Error($"Error while trying to parse release time ({released}) of nitrox v{version}");
-                        }
-
-                        builder.Clear();
-                        for (int j = 0; j < patchnotes.Count; j++)
-                        {
-                            builder.AppendLine($"• {(string)patchnotes[j]}");
-                        }
-
-                        changelogs.Add(new NitroxChangelog(version, dateTime, builder.ToString()));
+                        dateTime = DateTime.UtcNow;
+                        Log.Error($"Error while trying to parse release time ({released}) of nitrox v{version}");
                     }
+
+                    builder.Clear();
+                    for (int j = 0; j < patchnotes.Count; j++)
+                    {
+                        builder.AppendLine($"• {(string)patchnotes[j]}");
+                    }
+
+                    changelogs.Add(new NitroxChangelog(version, dateTime, builder.ToString()));
                 }
             }
             catch (Exception ex)
@@ -134,23 +119,13 @@ namespace NitroxLauncher
         {
             try
             {
-                using WebResponse response = await GetResponseFromCache(LATEST_VERSION_URL);
-
-                if (response.IsFromCache)
+                using HttpResponseMessage response = await GetResponseFromCache(LATEST_VERSION_URL);
+                string json = await response.Content.ReadAsStringAsync();
+                Regex rx = new(@"""version"":""([^""]*)""");
+                Match match = rx.Match(json);
+                if (match.Success && match.Groups.Count > 1)
                 {
-                    Log.Info("Fetched nitrox version from the local cache");
-                }
-
-                using (StreamReader sr = new(response.GetResponseStream()))
-                {
-                    string json = await sr.ReadToEndAsync();
-                    Regex rx = new(@"""version"":""([^""]*)""");
-                    Match match = rx.Match(json);
-
-                    if (match.Success && match.Groups.Count > 1)
-                    {
-                        return new Version(match.Groups[1].Value);
-                    }
+                    return new Version(match.Groups[1].Value);
                 }
             }
             catch (Exception ex)
@@ -162,20 +137,23 @@ namespace NitroxLauncher
             return new Version();
         }
 
-        private static async Task<WebResponse> GetResponseFromCache(string url)
+        private static async Task<HttpResponseMessage> GetResponseFromCache(string url)
         {
             Log.Info($"Trying to request data from {url}");
 
-            HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
-            request.Method = "GET";
-            request.UserAgent = "NitroxLauncher";
-            request.ContentType = "application/json";
-            request.CachePolicy = cachePolicy;
-            request.Timeout = 5000;
+            using HttpClient client = new();
+            client.Timeout = TimeSpan.FromSeconds(5);
+            client.DefaultRequestHeaders.UserAgent.TryParseAdd("NitroxLauncher");
+            client.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue
+            {
+                MaxAge = TimeSpan.FromDays(1)
+            };
+            HttpRequestMessage request = new(HttpMethod.Get, url);
+            request.Headers.Add("Content-Type", "application/json");
 
             try
             {
-                return await request.GetResponseAsync();
+                return await client.SendAsync(request);
             }
             catch (Exception ex)
             {

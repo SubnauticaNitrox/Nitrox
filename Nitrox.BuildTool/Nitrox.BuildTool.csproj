@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net472</TargetFramework>
+        <TargetFrameworks>net6.0;netstandard2.0</TargetFrameworks>
         <OutputType>Exe</OutputType>
         <Nullable>disable</Nullable>
         <OutputPath>bin\</OutputPath>

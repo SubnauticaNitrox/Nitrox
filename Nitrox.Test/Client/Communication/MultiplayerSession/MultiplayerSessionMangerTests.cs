@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using FluentAssertions.Events;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nitrox.Test.Client.Communication.MultiplayerSession;
 using NitroxClient.Communication.Abstract;
@@ -98,22 +97,6 @@ namespace NitroxClient.Communication.MultiplayerSession
 
             // Assert
             multiplayerSession.Reservation.Should().Be(successfulReservation);
-        }
-
-        [TestMethod]
-        public void UpdateStateShouldRaiseEvent()
-        {
-            // Arrange
-            IClient client = Substitute.For<IClient>();
-            IMultiplayerSession multiplayerSession = new MultiplayerSessionManager(client);
-            IMultiplayerSessionConnectionContext connectionContext = (IMultiplayerSessionConnectionContext)multiplayerSession;
-            IMonitor<IMultiplayerSession> monitor = multiplayerSession.Monitor();
-
-            // Act
-            connectionContext.UpdateConnectionState(TestConstants.TEST_CONNECTION_STATE);
-
-            // Assert
-            monitor.Should().Raise("ConnectionStateChanged");
         }
     }
 }

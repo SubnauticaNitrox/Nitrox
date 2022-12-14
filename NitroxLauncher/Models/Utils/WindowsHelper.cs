@@ -46,7 +46,7 @@ namespace NitroxLauncher.Models.Utils
                     try
                     {
                         // Setting up start info of the new process of the same application
-                        ProcessStartInfo processStartInfo = new(Assembly.GetEntryAssembly().CodeBase);
+                        ProcessStartInfo processStartInfo = new(Assembly.GetEntryAssembly().Location);
 
                         // Using operating shell and setting the ProcessStartInfo.Verb to “runas” will let it run as admin
                         processStartInfo.UseShellExecute = true;
