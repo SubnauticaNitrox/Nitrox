@@ -9,9 +9,10 @@ namespace NitroxClient.GameLogic.HUD.Components;
 public class ButtonTooltip : MonoBehaviour, ITooltip
 {
     public string TooltipText { get; set; }
+    public bool showTooltipOnDrag => false;
 
-    public void GetTooltip(out string tooltipText, List<TooltipIcon> tooltipIcons)
+    public void GetTooltip(TooltipData tooltip)
     {
-        tooltipText = TooltipText;
+        tooltip.prefix.Append(TooltipText);
     }
 }

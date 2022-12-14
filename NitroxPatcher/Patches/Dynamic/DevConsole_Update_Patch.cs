@@ -8,7 +8,7 @@ namespace NitroxPatcher.Patches.Dynamic
     {
         public static void Prefix()
         {
-            DevConsole.disableConsole = NitroxConsole.DisableConsole;
+            PlatformUtils.SetDevToolsEnabled(!NitroxConsole.DisableConsole);
         }
 
         public override void Patch(Harmony harmony)

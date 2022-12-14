@@ -1,4 +1,5 @@
-﻿using NitroxClient.GameLogic.Spawning.Metadata;
+﻿using System.Collections;
+using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
@@ -13,17 +14,19 @@ namespace NitroxClient.GameLogic.Spawning
      */
     public class ExistingGameObjectSpawner : IEntitySpawner
     {
-        public Optional<GameObject> Spawn(Entity entity, Optional<GameObject> parent, EntityCell cellRoot)
+        public IEnumerator SpawnAsync(Entity entity, Optional<GameObject> parent, EntityCell cellRoot, TaskResult<Optional<GameObject>> result)
         {
             if (!parent.HasValue)
             {
-                return Optional.Empty;
+                result.Set(Optional.Empty);
+                yield break;
             }
 
             if (parent.Value.transform.childCount - 1 < entity.ExistingGameObjectChildIndex.Value)
             {
                 Log.Error($"Parent {parent.Value} did not have a child at index {entity.ExistingGameObjectChildIndex.Value}");
-                return Optional.Empty;
+                result.Set(Optional.Empty);
+                yield break;
             }
 
             GameObject gameObject = parent.Value.transform.GetChild(entity.ExistingGameObjectChildIndex.Value).gameObject;
@@ -37,7 +40,8 @@ namespace NitroxClient.GameLogic.Spawning
                 metadataProcessor.Value.ProcessMetadata(gameObject, entity.Metadata);
             }
 
-            return Optional.Of(gameObject);
+            result.Set(Optional.Of(gameObject));
+            yield break;
         }
 
         public bool SpawnsOwnChildren()

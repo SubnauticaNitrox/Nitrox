@@ -5,6 +5,7 @@ using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.HUD.Components;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxModel.Core;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using static NitroxClient.Unity.Helper.AssetBundleLoader;
@@ -24,8 +25,8 @@ public class uGUI_PlayerListTab : uGUI_PingTab
     private readonly Dictionary<string, Sprite> assets = new();
     public bool FinishedLoadingAssets { get; private set; }
 
-    private new readonly Dictionary<int, uGUI_PlayerPingEntry> entries = new();
-    private new readonly List<uGUI_PlayerPingEntry> pool = new();
+    private new readonly Dictionary<string, uGUI_PlayerPingEntry> entries = new();
+    private PrefabPool<uGUI_PlayerPingEntry> pool;
     private new readonly Dictionary<string, uGUI_PlayerPingEntry> tempSort = new();
 
     public override void Awake()
@@ -36,14 +37,21 @@ public class uGUI_PlayerListTab : uGUI_PingTab
         localPlayer = NitroxServiceLocator.LocateService<LocalPlayer>();
         packetSender = NitroxServiceLocator.LocateService<IPacketSender>();
         // Need to reassign manually these variables and get rid of the objects we don't need
-        content = gameObject.FindChild("Content");
-        pingManagerLabel = content.FindChild("PingManagerLabel").GetComponent<Text>();
+        content = gameObject.FindChild("Content").GetComponent<CanvasGroup>();
+        pingManagerLabel = gameObject.FindChild("PingManagerLabel").GetComponent<TextMeshProUGUI>();
         pingCanvas = (RectTransform)content.transform.Find("ScrollView/Viewport/ScrollCanvas");
+        pool = new PrefabPool<uGUI_PlayerPingEntry>(prefabEntry, pingCanvas, 8, 4, delegate (uGUI_PlayerPingEntry entry)
+        {
+            entry.Uninitialize();
+        }, delegate (uGUI_PlayerPingEntry entry)
+        {
+            entry.Uninitialize();
+        });
     }
 
     private IEnumerator Start()
     {
-        Destroy(content.FindChild("ButtonAll"));
+        Destroy(gameObject.FindChild("ButtonAll"));
 
         yield return LoadAllAssets(NitroxAssetBundle.PLAYER_LIST_TAB);
 
@@ -84,7 +92,7 @@ public class uGUI_PlayerListTab : uGUI_PingTab
         entries.Values.ForEach(entry => entry.OnLanguageChanged());
     }
 
-    public new void LateUpdate()
+    public void LateUpdate()
     {
         UpdateEntries();
     }
@@ -96,13 +104,11 @@ public class uGUI_PlayerListTab : uGUI_PingTab
             return;
         }
         _isDirty = false;
-        tempKeys.Clear();
-        tempKeys.AddRange(entries.Keys);
 
-        Dictionary<int, INitroxPlayer> players = playerManager.GetAll().ToDictionary<RemotePlayer, int, INitroxPlayer>(player => player.PlayerId, player => player);
-        players.Add(localPlayer.PlayerId, localPlayer);
+        Dictionary<string, INitroxPlayer> players = playerManager.GetAll().ToDictionary<RemotePlayer, string, INitroxPlayer>(player => player.PlayerId.ToString(), player => player);
+        players.Add(localPlayer.PlayerId.ToString(), localPlayer);
 
-        foreach (KeyValuePair<int, INitroxPlayer> entry in players)
+        foreach (KeyValuePair<string, INitroxPlayer> entry in players)
         {
             if (!entries.ContainsKey(entry.Key))
             {
@@ -113,7 +119,7 @@ public class uGUI_PlayerListTab : uGUI_PingTab
 
         // Sort the items by alphabetical order (based on SN's code)
         tempSort.Clear();
-        foreach (KeyValuePair<int, uGUI_PlayerPingEntry> entry in entries)
+        foreach (KeyValuePair<string, uGUI_PlayerPingEntry> entry in entries)
         {
             if (!entry.Value.IsLocalPlayer)
             {
@@ -124,30 +130,30 @@ public class uGUI_PlayerListTab : uGUI_PingTab
         List<string> sorted = new(tempSort.Keys);
         sorted.Sort();
 
-        entries[localPlayer.PlayerId].rectTransform.SetSiblingIndex(0);
+        entries[localPlayer.PlayerId.ToString()].rectTransform.SetSiblingIndex(0);
         for (int j = 0; j < sorted.Count; j++)
         {
-            int id = tempSort[sorted[j]].id;
+            string id = tempSort[sorted[j]].id;
             entries[id].rectTransform.SetSiblingIndex(j + 1);
         }
     }
 
-    public new uGUI_PlayerPingEntry GetEntry()
+    public uGUI_PlayerPingEntry GetEntry()
     {
         uGUI_PlayerPingEntry uGUI_PlayerEntry;
-        if (pool.Count == 0)
+        if (pool.pool.Count == 0)
         {
             for (int i = 0; i < 4; i++)
             {
                 uGUI_PlayerEntry = Instantiate(prefabEntry).GetComponent<uGUI_PlayerPingEntry>();
                 uGUI_PlayerEntry.rectTransform.SetParent(pingCanvas, false);
                 uGUI_PlayerEntry.Uninitialize();
-                pool.Add(uGUI_PlayerEntry);
+                pool.pool.Add(uGUI_PlayerEntry);
             }
         }
-        int index = pool.Count - 1;
-        uGUI_PlayerEntry = pool[index];
-        pool.RemoveAt(index);
+        int index = pool.pool.Count - 1;
+        uGUI_PlayerEntry = pool.pool[index];
+        pool.pool.RemoveAt(index);
         return uGUI_PlayerEntry;
     }
 
@@ -189,7 +195,7 @@ public class uGUI_PlayerListTab : uGUI_PingTab
         prefabEntry = newPrefab;
     }
 
-    private void AddNewEntry(int playerId, INitroxPlayer player)
+    private void AddNewEntry(string playerId, INitroxPlayer player)
     {
         uGUI_PlayerPingEntry entry = GetEntry();
         entry.Initialize(playerId, player.PlayerName, this);
@@ -197,20 +203,20 @@ public class uGUI_PlayerListTab : uGUI_PingTab
         entries.Add(playerId, entry);
     }
 
-    private void OnAdd(ushort playerId, RemotePlayer remotePlayer)
+    private void OnAdd(string playerId, RemotePlayer remotePlayer)
     {
         _isDirty = true;
     }
 
-    private void OnRemove(ushort playerId, RemotePlayer remotePlayers)
+    private void OnRemove(string playerId, RemotePlayer remotePlayers)
     {
         if (!entries.ContainsKey(playerId))
         {
             return;
         }
-        uGUI_PingEntry entry = entries[playerId];
+        uGUI_PlayerPingEntry entry = entries[playerId];
         entries.Remove(playerId);
-        ReleaseEntry(entry);
+        pool.Release(entry);
         _isDirty = true;
     }
 }

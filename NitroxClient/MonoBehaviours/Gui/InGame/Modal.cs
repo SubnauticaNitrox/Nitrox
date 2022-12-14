@@ -72,7 +72,7 @@ public abstract class Modal
     {
         if (FreezeGame)
         {
-            FreezeTime.Begin($"Nitrox{SubWindowName}Freeze");
+            FreezeTime.Begin(FreezeTime.Id.IngameMenu);
         }
         CurrentModal?.Hide();
         CurrentModal = this;
@@ -87,7 +87,7 @@ public abstract class Modal
         CurrentModal = null;
         if (FreezeGame)
         {
-            FreezeTime.End($"Nitrox{SubWindowName}Freeze");
+            FreezeTime.End(FreezeTime.Id.IngameMenu);
         }
         if (IsAvoidable)
         {

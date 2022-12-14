@@ -21,7 +21,7 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment
         {
             bool headVisible = !currentEquipment.Contains(TechType.RadiationHelmet) && !currentEquipment.Contains(TechType.Rebreather);
             bool bodyVisible = !currentEquipment.Contains(TechType.RadiationSuit) &&
-                               !currentEquipment.Contains(TechType.Stillsuit) &&
+                               !currentEquipment.Contains(TechType.WaterFiltrationSuit) &&
                                !currentEquipment.Contains(TechType.ReinforcedDiveSuit);
             bool handsVisible = !currentEquipment.Contains(TechType.RadiationGloves) && !currentEquipment.Contains(TechType.ReinforcedGloves);
 

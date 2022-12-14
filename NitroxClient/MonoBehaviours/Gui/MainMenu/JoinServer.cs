@@ -16,6 +16,7 @@ using NitroxModel.Core;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.MultiplayerSession;
 using NitroxModel_Subnautica.DataStructures;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -71,7 +72,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             serverPort = port;
 
             //Set Server IP in info label
-            lowerDetailTextGameObject.GetComponent<Text>().text = $"{Language.main.Get("Nitrox_JoinServerIpAddress")}\n{(NitroxPrefs.HideIp.Value ? "****" : serverIp)}";
+            lowerDetailTextGameObject.GetComponent<TextMeshProUGUI>().text = $"{Language.main.Get("Nitrox_JoinServerIpAddress")}\n{(NitroxPrefs.HideIp.Value ? "****" : serverIp)}";
 
             //Initialize elements from preferences
             activePlayerPreference = preferencesManager.GetPreference(serverIp);
@@ -314,23 +315,28 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         //This method merges the cloned color picker element with the existing template for menus that appear in the "right side" region of the main menu.
         private void InitializeJoinMenu()
         {
-            colorPickerPanelPrototype = Resources.Load<GameObject>("WorldEntities/Tools/RocketBase").RequireGameObject("Base/BuildTerminal/GUIScreen/CustomizeScreen/Panel/");
-            rightSideMainMenu = MainMenuRightSide.main;
+            AddressablesUtility.LoadAsync<GameObject>("Assets/Prefabs/Base/GeneratorPieces/BaseMoonpoolUpgradeConsole.prefab").Completed += (x) =>
+            //AddressablesUtility.LoadAsync<GameObject>("Assets/AddressableResources/WorldEntities/Tools/RocketBase.prefab").Completed += (x) =>
+            {
+                colorPickerPanelPrototype = x.Result.RequireGameObject("EditScreen/Active");
+                //colorPickerPanelPrototype = x.Result.RequireGameObject("Base/BuildTerminal/GUIScreen/CustomizeScreen/Panel/");
+                rightSideMainMenu = MainMenuRightSide.main;
 
-            joinServerMenu = CloneSaveGameMenuPrototype();
+                joinServerMenu = CloneSaveGameMenuPrototype();
 
-            joinServerMenu.transform.SetParent(rightSideMainMenu.transform, false);
-            rightSideMainMenu.groups.Add(joinServerMenu.GetComponent<MainMenuGroup>());
+                joinServerMenu.transform.SetParent(rightSideMainMenu.transform, false);
+                rightSideMainMenu.groups.Add(joinServerMenu.GetComponent<MainMenuGroup>());
 
-            //Not sure what is up with this menu, but we have to use the RectTransform of the Image component as the parent for our color picker panel.
-            //Most of the UI elements seem to vanish behind this Image otherwise.
-            joinServerBackground = joinServerMenu.GetComponent<Image>().rectTransform;
-            joinServerBackground.anchorMin = new Vector2(0.5f, 0.5f);
-            joinServerBackground.anchorMax = new Vector2(0.5f, 0.5f);
-            joinServerBackground.pivot = new Vector2(0.5f, 0.5f);
-            joinServerBackground.anchoredPosition = new Vector2(joinServerBackground.anchoredPosition.x, 5f);
+                //Not sure what is up with this menu, but we have to use the RectTransform of the Image component as the parent for our color picker panel.
+                //Most of the UI elements seem to vanish behind this Image otherwise.
+                joinServerBackground = joinServerMenu.GetComponent<Image>().rectTransform;
+                joinServerBackground.anchorMin = new Vector2(0.5f, 0.5f);
+                joinServerBackground.anchorMax = new Vector2(0.5f, 0.5f);
+                joinServerBackground.pivot = new Vector2(0.5f, 0.5f);
+                joinServerBackground.anchoredPosition = new Vector2(joinServerBackground.anchoredPosition.x, 5f);
 
-            InitializePlayerSettingsPanel();
+                InitializePlayerSettingsPanel();
+            };
         }
 
         //This configures and re-positions the elements on the default "ColorGreyscale" menu to suite our purposes now.
@@ -361,7 +367,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
             RectTransform cancelButtonTransform = (RectTransform)cancelButtonGameObject.transform;
             GameObject cancelButtonTextGameObject = cancelButtonTransform.RequireGameObject("Text");
-            cancelButtonTextGameObject.GetComponent<Text>().text = Language.main.Get("Nitrox_Cancel");
+            cancelButtonTextGameObject.GetComponent<TextMeshProUGUI>().text = Language.main.Get("Nitrox_Cancel");
 
             cancelButtonTransform.sizeDelta = new Vector2(cancelButtonTransform.rect.width * 0.85f, cancelButtonTransform.rect.height);
             cancelButtonTransform.anchoredPosition = new Vector2(
@@ -378,7 +384,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             joinButtonTransform.Rotate(Vector3.forward * -180);
 
             GameObject joinButtonTextGameObject = joinButtonTransform.RequireGameObject("Text");
-            joinButtonTextGameObject.GetComponent<Text>().text = Language.main.Get("Nitrox_Join");
+            joinButtonTextGameObject.GetComponent<TextMeshProUGUI>().text = Language.main.Get("Nitrox_Join");
 
             //Flip the text so it is no longer upside down after flipping the button.
             RectTransform joinButtonTextRectTransform = (RectTransform)joinButtonTextGameObject.transform;
@@ -408,9 +414,8 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             GameObject baseTab = playerSettingsPanel.RequireGameObject("BaseTab");
             GameObject serverNameLabel = playerSettingsPanel.RequireGameObject("Name Label");
             GameObject stripe1Tab = playerSettingsPanel.RequireGameObject("Stripe1Tab");
-            GameObject stripe2Tab = playerSettingsPanel.RequireGameObject("Stripe2Tab");
+            GameObject interiorTab = playerSettingsPanel.RequireGameObject("InteriorTab");
             GameObject nameTab = playerSettingsPanel.RequireGameObject("NameTab");
-            GameObject frontOverlay = playerSettingsPanel.RequireGameObject("FrontOverlay");
             GameObject colorLabel = playerSettingsPanel.RequireGameObject("Color Label");
 
             //Enables pointer events that are a required for the uGUI_ColorPicker to work.
@@ -425,15 +430,10 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             Destroy(playerSettingsPanel.GetComponent<Image>());
             Destroy(baseTab.GetComponent<Button>());
             Destroy(stripe1Tab);
-            Destroy(stripe2Tab);
+            Destroy(interiorTab);
             Destroy(nameTab);
             Destroy(colorLabel);
             Destroy(serverNameLabel);
-
-            //We can't just destroy the game object for some reason. The image still hangs around.
-            //Destruction of the actual overlay game object is done for good measure.
-            Destroy(frontOverlay.GetComponent<Image>());
-            Destroy(frontOverlay);
         }
 
         //This panel acts as the parent of all other UI elements on the menu. It is parented by the cloned "SaveGame" menu.
@@ -484,7 +484,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 baseTabSelectedColorImage.rectTransform.anchoredPosition.x + baseTabTextTransform.rect.width / 2f + 22f,
                 baseTabSelectedColorImage.rectTransform.anchoredPosition.y);
 
-            baseTabTextGameObject.GetComponent<Text>().text = Language.main.Get("Nitrox_PlayerColor");
+            baseTabTextGameObject.GetComponent<TextMeshProUGUI>().text = Language.main.Get("Nitrox_PlayerColor");
 
             //This resizes the actual Image that outlines all of the UI elements.
             GameObject baseTabBackgroundGameObject = baseTabTransform.RequireGameObject("Background");
@@ -518,9 +518,9 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
             //The text element is right-aligned by default and needs to be centered for our purposes
             lowerDetailTextGameObject = lowerDetailRectTransform.RequireGameObject("Text");
-            Text lowerDetailText = lowerDetailTextGameObject.GetComponent<Text>();
-            lowerDetailText.resizeTextForBestFit = true;
-            lowerDetailText.alignment = TextAnchor.MiddleCenter;
+            TextMeshProUGUI lowerDetailText = lowerDetailTextGameObject.GetComponent<TextMeshProUGUI>();
+            lowerDetailText.autoSizeTextContainer = true;
+            lowerDetailText.alignment = TextAlignmentOptions.Center;
 
             RectTransform lowerDetailTextRectTransform = (RectTransform)lowerDetailTextGameObject.transform;
             lowerDetailTextRectTransform.anchorMin = new Vector2(0.5f, 0.5f);
@@ -543,7 +543,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             playerNameInputField.selectionColor = Color.white;
 
             GameObject inputFieldPlaceholder = inputFieldRectTransform.RequireGameObject("Placeholder");
-            inputFieldPlaceholder.GetComponent<Text>().text = Language.main.Get("Nitrox_EnterName");
+            inputFieldPlaceholder.GetComponent<TextMeshProUGUI>().text = Language.main.Get("Nitrox_EnterName");
         }
 
         //This is the "service" that manages the click and drag events on the color picture RectTransform.

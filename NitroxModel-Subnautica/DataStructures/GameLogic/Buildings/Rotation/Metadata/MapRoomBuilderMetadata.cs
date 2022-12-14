@@ -15,7 +15,7 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation.Met
         public byte CellType { get; set; }
 
         [ProtoMember(2)]
-        public int ConnectionMask { get; set; }
+        public int Rotation { get; set; }
 
         [IgnoreConstructor]
         protected MapRoomBuilderMetadata()
@@ -23,15 +23,15 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation.Met
             // Constructor for serialization. Has to be "protected" for json serialization.
         }
 
-        public MapRoomBuilderMetadata(byte cellType, int connectionMask)
+        public MapRoomBuilderMetadata(byte cellType, int rotation)
         {
             CellType = cellType;
-            ConnectionMask = connectionMask;
+            Rotation = rotation;
         }
 
         public override string ToString()
         {
-            return $"[MapRoomRotationMetadata - CellType: {CellType}, ConnectionMask: {ConnectionMask}]";
+            return $"[MapRoomRotationMetadata - CellType: {CellType}, Rotation: {Rotation}]";
         }
     }
 }
