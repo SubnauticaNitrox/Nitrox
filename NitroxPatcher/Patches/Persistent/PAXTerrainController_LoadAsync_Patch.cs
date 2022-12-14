@@ -28,7 +28,7 @@ namespace NitroxPatcher.Patches.Persistent
                 if (instrList[i].opcode == OpCodes.Switch)
                 {
                     List<Label> labels = ((Label[])instruction.operand).ToList(); // removing unneccessary labels
-                    labels.RemoveRange(3, 5);
+                    labels.RemoveRange(4, 5);
                     yield return new CodeInstruction(instruction.opcode, labels.ToArray());
                 }
                 else if (instruction.opcode == OpCodes.Brtrue || instruction.opcode == OpCodes.Brtrue_S)

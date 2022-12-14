@@ -54,7 +54,6 @@ namespace NitroxClient.MonoBehaviours
         public static IEnumerator LoadAsync()
         {
             WaitScreen.ManualWaitItem worldSettleItem = WaitScreen.Add(Language.main.Get("Nitrox_WorldSettling"));
-            WaitScreen.ShowImmediately();
 
             yield return new WaitUntil(() => LargeWorldStreamer.main != null &&
                                              LargeWorldStreamer.main.land != null &&
@@ -153,8 +152,9 @@ namespace NitroxClient.MonoBehaviours
 
         private static void SetLoadingComplete()
         {
-            PAXTerrainController.main.isWorking = false;
-            WaitScreen.main.Hide();
+            WaitScreen.main.isWaiting = false;
+            WaitScreen.main.stageProgress.Clear();
+            FreezeTime.End(FreezeTime.Id.WaitScreen);
             WaitScreen.main.items.Clear();
 
             PlayerManager remotePlayerManager = NitroxServiceLocator.LocateService<PlayerManager>();

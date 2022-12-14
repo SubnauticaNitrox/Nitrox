@@ -9,7 +9,7 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class Base_SpawnPiece_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Base t) => t.SpawnPiece(default(Base.Piece), default(Int3), default(Quaternion), default(Base.Direction?)));
+        public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Base t) => t.SpawnPiece(default(Base.Piece), default(Int3), default(Quaternion), default(Base.Direction?), default(BaseDeconstructable)));
 
         /**
          * This function is called directly after the game clears all base pieces (to update

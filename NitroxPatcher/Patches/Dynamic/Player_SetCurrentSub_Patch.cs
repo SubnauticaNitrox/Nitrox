@@ -11,7 +11,7 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class Player_SetCurrentSub_Patch : NitroxPatch, IDynamicPatch
     {
-        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Player t) => t.SetCurrentSub(default(SubRoot)));
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Player t) => t.SetCurrentSub(default(SubRoot), default(bool)));
 
         public static void Prefix(Player __instance, SubRoot sub)
         {

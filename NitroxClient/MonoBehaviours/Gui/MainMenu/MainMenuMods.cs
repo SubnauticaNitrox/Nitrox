@@ -1,5 +1,6 @@
 ﻿using NitroxClient.MonoBehaviours.Discord;
 using NitroxClient.Unity.Helper;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -37,7 +38,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             showLoadedMultiplayer.name = "ButtonMultiplayer";
             showLoadedMultiplayer.transform.SetSiblingIndex(3);
 
-            Text buttonText = showLoadedMultiplayer.RequireGameObject("Circle/Bar/Text").GetComponent<Text>();
+            TextMeshProUGUI buttonText = showLoadedMultiplayer.RequireGameObject("Circle/Bar/Text").GetComponent<TextMeshProUGUI>();
             buttonText.text = Language.main.Get("Nitrox_Multiplayer");
             buttonText.GetComponent<TranslationLiveUpdate>().translationKey = "Nitrox_Multiplayer";
 
@@ -50,7 +51,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             GameObject loadedMultiplayer = Instantiate(savedGamesRef, rightSide.transform);
             loadedMultiplayer.name = "Multiplayer";
             Transform header = loadedMultiplayer.RequireTransform("Header");
-            header.GetComponent<Text>().text = Language.main.Get("Nitrox_Multiplayer");
+            header.GetComponent<TextMeshProUGUI>().text = Language.main.Get("Nitrox_Multiplayer");
             header.GetComponent<TranslationLiveUpdate>().translationKey = "Nitrox_Multiplayer";
             Destroy(loadedMultiplayer.RequireGameObject("Scroll View/Viewport/SavedGameAreaContent/NewGame"));
             Destroy(loadedMultiplayer.GetComponent<MainMenuLoadPanel>());

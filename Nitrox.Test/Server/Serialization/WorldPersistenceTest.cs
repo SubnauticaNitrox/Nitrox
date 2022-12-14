@@ -257,7 +257,7 @@ namespace NitroxServer.Serialization
                     break;
                 case MapRoomBuilderMetadata mapRoomMetadata when basePieceAfter.RotationMetadata.Value is MapRoomBuilderMetadata mapRoomMetadataAfter:
                     Assert.AreEqual(mapRoomMetadata.CellType, mapRoomMetadataAfter.CellType, $"BasePiece.RotationMetadata.CellType (MapRoomRotationMetadata) is not equal while using {serverSerializers[serializerIndex]}.");
-                    Assert.AreEqual(mapRoomMetadata.ConnectionMask, mapRoomMetadataAfter.ConnectionMask, $"BasePiece.RotationMetadata.ConnectionMask (MapRoomRotationMetadata) is not equal while using {serverSerializers[serializerIndex]}.");
+                    Assert.AreEqual(mapRoomMetadata.Rotation, mapRoomMetadataAfter.Rotation, $"BasePiece.RotationMetadata.Rotation (MapRoomRotationMetadata) is not equal while using {serverSerializers[serializerIndex]}.");
                     break;
                 case null when basePieceAfter.RotationMetadata.Value is null:
                     break;

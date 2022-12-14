@@ -30,7 +30,7 @@ namespace NitroxClient.GameLogic.InitialSync
             waitScreenItem.SetProgress(0.33f);
             yield return null;
 
-            AddStartingItemsToPlayer(packet.FirstTimeConnecting);
+            yield return AddStartingItemsToPlayer(packet.FirstTimeConnecting);
             waitScreenItem.SetProgress(0.5f);
             yield return null;
 
@@ -58,15 +58,17 @@ namespace NitroxClient.GameLogic.InitialSync
             Log.Info($"Received initial sync player GameObject Id: {id}");
         }
 
-        private void AddStartingItemsToPlayer(bool firstTimeConnecting)
+        private IEnumerator AddStartingItemsToPlayer(bool firstTimeConnecting)
         {
             if (firstTimeConnecting)
             {
                 foreach (TechType techType in LootSpawner.main.GetEscapePodStorageTechTypes())
                 {
-                    GameObject gameObject = CraftData.InstantiateFromPrefab(techType, false);
+                    TaskResult<GameObject> result = new TaskResult<GameObject>();
+                    yield return CraftData.InstantiateFromPrefabAsync(techType, result, false);
+                    GameObject gameObject = result.Get();
                     Pickupable pickupable = gameObject.GetComponent<Pickupable>();
-                    pickupable = pickupable.Initialize();
+                    pickupable.Initialize();
                     itemContainers.AddItem(pickupable.gameObject, NitroxEntity.GetId(Player.main.gameObject));
                     itemContainers.BroadcastItemAdd(pickupable, Inventory.main.container.tr);
                 }

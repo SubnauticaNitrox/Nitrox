@@ -89,7 +89,7 @@ namespace NitroxClient.GameLogic.InitialSync
                 }
             }
             // Player can be above ocean level.
-            float oceanLevel = Ocean.main.GetOceanLevel();
+            float oceanLevel = Ocean.GetOceanLevel();
             return playerPosition.y < oceanLevel;
         }
     }

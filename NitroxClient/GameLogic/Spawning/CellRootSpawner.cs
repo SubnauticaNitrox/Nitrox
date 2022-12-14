@@ -1,4 +1,5 @@
-﻿using NitroxClient.MonoBehaviours;
+﻿using System.Collections;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
@@ -8,7 +9,7 @@ namespace NitroxClient.GameLogic.Spawning
 {
     public class CellRootSpawner : IEntitySpawner
     {
-        public Optional<GameObject> Spawn(Entity entity, Optional<GameObject> parent, EntityCell cellRoot)
+        public IEnumerator SpawnAsync(Entity entity, Optional<GameObject> parent, EntityCell cellRoot, TaskResult<Optional<GameObject>> result)
         {
             NitroxInt3 cellId = entity.AbsoluteEntityCell.CellId;
             NitroxInt3 batchId = entity.AbsoluteEntityCell.BatchId;
@@ -19,7 +20,8 @@ namespace NitroxClient.GameLogic.Spawning
 
             LargeWorldStreamer.main.cellManager.QueueForAwake(cellRoot);
 
-            return Optional.OfNullable(cellRoot.liveRoot);
+            result.Set(Optional.OfNullable(cellRoot.liveRoot));
+            yield break;
         }
 
         public bool SpawnsOwnChildren()
