@@ -15,7 +15,7 @@ public class ColorDrawer : IStructDrawer
         return target switch
         {
             Color color => Draw(color),
-            Color32 color32 => Draw(color32),
+            Color32 color32 => (Color32) Draw(color32),
             _ => null
         };
     }
