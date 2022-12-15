@@ -27,7 +27,7 @@ namespace NitroxServer.ConsoleCommands
             }
 
             Log.InfoSensitive("Opening directory {path}", path);
-            FileSystem.Instance.OpenFolder(path);
+            FileSystem.Instance.Open(path);
         }
     }
 }

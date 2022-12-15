@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Threading;
 using NitroxModel.Helper;
 using Serilog;
+using Serilog.Configuration;
 using Serilog.Context;
 using Serilog.Core;
 using Serilog.Events;
@@ -36,7 +37,7 @@ namespace NitroxModel.Logger
                 throw new Exception($"{nameof(Log)} setup should only be executed once.");
             }
             isSetup = true;
-            
+
             PlayerName = "";
             logger = new LoggerConfiguration()
                      .MinimumLevel.Debug()
@@ -65,16 +66,7 @@ namespace NitroxModel.Logger
                      .WriteTo.Logger(cnf => cnf
                                             .Enrich.FromLogContext()
                                             .WriteTo
-#if DEBUG
-                                            .Map(nameof(PlayerName), "", (playerName, sinkCnf) => sinkCnf.Async(a => a.File(Path.Combine(LogDirectory, $"{GetLogFileName()}{playerName}-.log"),
-#else
-                                            .Async((a => a.File(Path.Combine(LogDirectory, $"{GetLogFileName()}-.log"),
-#endif
-                                                                                                                            outputTemplate: "[{Timestamp:HH:mm:ss.fff}] [{Level:u3}{IsUnity}] {Message}{NewLine}{Exception}",
-                                                                                                                            rollingInterval: RollingInterval.Day,
-                                                                                                                            retainedFileCountLimit: 10,
-                                                                                                                            fileSizeLimitBytes: 200000000, // 200MB
-                                                                                                                            shared: true))))
+                                            .SetupFileSink())
                      .WriteTo.Logger(cnf =>
                      {
                          if (inGameLogger == null)
@@ -87,6 +79,30 @@ namespace NitroxModel.Logger
                      })
                      .CreateLogger();
         }
+
+        private static LoggerConfiguration SetupFileSink(this LoggerSinkConfiguration sinkConfig)
+        {
+#if DEBUG
+            string targetFile2 = Path.Combine(LogDirectory, $"{GetLogFileName()}.log");
+            Console.WriteLine($"Logging to: {targetFile2}");
+            
+            return sinkConfig.Map(nameof(PlayerName), "", (playerName, sinkCnf) => sinkCnf.Async(a =>
+            {
+                string targetFile = Path.Combine(LogDirectory, $"{GetLogFileName()}{playerName}-.log");
+                Console.WriteLine($"Logging to: {targetFile}");
+                a.File(targetFile);
+            }));
+#else
+            return sinkConfig.Async(a => a.File(Path.Combine(LogDirectory, $"{GetLogFileName()}-.log"),
+
+                                                                                                               outputTemplate: "[{Timestamp:HH:mm:ss.fff}] [{Level:u3}{IsUnity}] {Message}{NewLine}{Exception}",
+                                                                                                               rollingInterval: RollingInterval.Day,
+                                                                                                               retainedFileCountLimit: 10,
+                                                                                                               fileSizeLimitBytes: 200000000, // 200MB
+                                                                                                               shared: true));
+#endif
+        }
+        
 
         [Conditional("DEBUG")]
         public static void Debug(string message)
@@ -145,7 +161,7 @@ namespace NitroxModel.Logger
             {
                 return;
             }
-            
+
             Warn(message);
             logOnceCache.Add(hash);
         }

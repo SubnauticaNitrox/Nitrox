@@ -1,6 +1,7 @@
 ﻿extern alias JB;
 global using NitroxModel.Logger;
 using System;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -99,7 +100,7 @@ public static class Main
             }
         };
 
-        Log.Info($"Using Nitrox {NitroxEnvironment.ReleasePhase} V{NitroxEnvironment.Version} built on {NitroxEnvironment.BuildDate}");
+        Log.Info($"Using Nitrox {NitroxEnvironment.ReleasePhase} V{NitroxEnvironment.Version} built on {NitroxEnvironment.BuildDate.ToString(@"yyyy-MM-dd HH\:mm\:ss", CultureInfo.InvariantCulture)}");
         try
         {
             Patcher.Initialize();

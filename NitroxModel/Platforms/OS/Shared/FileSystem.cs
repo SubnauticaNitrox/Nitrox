@@ -60,11 +60,11 @@ namespace NitroxModel.Platforms.OS.Shared
             return process;
         }
 
-        public virtual void OpenFolder(string folder)
+        public virtual void Open(string folderOrUrl)
         {
             using Process proc = Process.Start(new ProcessStartInfo
             {
-                FileName = folder,
+                FileName = folderOrUrl,
                 UseShellExecute = true,
                 Verb = "open"
             });

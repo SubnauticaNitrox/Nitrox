@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel;
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Windows.Controls;
 using System.Windows.Navigation;
+using NitroxModel.Platforms.OS.Shared;
 
 namespace NitroxLauncher.Models
 {
@@ -15,7 +15,7 @@ namespace NitroxLauncher.Models
         /// </summary>
         protected void OnRequestNavigate(object sender, RequestNavigateEventArgs e)
         {
-            Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
+            FileSystem.Instance.Open(e.Uri.AbsoluteUri);
             e.Handled = true;
         }
 
