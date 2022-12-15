@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using FMOD.Studio;
@@ -24,7 +24,7 @@ namespace NitroxClient.Debuggers
         private bool displayIsGlobal;
         private bool displayWithRadius;
 
-        public SoundDebugger(FMODSystem fmodSystem) : base(700, null, KeyCode.F, true, false, false, GUISkinCreationOptions.DERIVEDCOPY)
+        public SoundDebugger(FMODSystem fmodSystem) : base(700, null, KeyCode.F, true, false, false, GUISkinCreationOptions.DERIVEDCOPY, 750f)
         {
             assetList = fmodSystem.SoundDataList;
             ActiveTab = AddTab("Sounds", RenderTabAllSounds);
