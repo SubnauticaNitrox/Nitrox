@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -36,7 +36,20 @@ public sealed class SceneExtraDebugger : BaseDebugger
     private int searchPageIndex;
     private int resultsPerPage = 30;
 
-    public SceneExtraDebugger(SceneDebugger sceneDebugger, IMap map) : base(350, "Scene Tools", KeyCode.S, true, false, true, GUISkinCreationOptions.DERIVEDCOPY)
+    public override bool Enabled
+    {
+        get => base.Enabled;
+        set
+        {
+            base.Enabled = value;
+            if (value)
+            {
+                MoveOverlappingSceneDebugger();
+            }
+        }
+    }
+
+    public SceneExtraDebugger(SceneDebugger sceneDebugger, IMap map) : base(350, "Scene Tools", KeyCode.S, true, false, true, GUISkinCreationOptions.DERIVEDCOPY, 700)
     {
         this.sceneDebugger = sceneDebugger;
         this.map = map;
@@ -76,7 +89,7 @@ public sealed class SceneExtraDebugger : BaseDebugger
         GettingRayCastResults();
         GettingSearchbarResults();
 
-        using (new GUILayout.VerticalScope("box", GUILayout.MinHeight(425)))
+        using (new GUILayout.VerticalScope("box", GUILayout.MinHeight(600)))
         {
             if (gameObjectResults.Count > 0)
             {
@@ -288,8 +301,28 @@ public sealed class SceneExtraDebugger : BaseDebugger
     public override void ResetWindowPosition()
     {
         base.ResetWindowPosition();
-        WindowRect.x += sceneDebugger.WindowRect.width / 2f + WindowRect.width / 2f; // Altered position to align on the right side of the SceneDebugger
+        // Align to the right side of the SceneDebugger
+        WindowRect.x = sceneDebugger.WindowRect.x + sceneDebugger.WindowRect.width;
         WindowRect.y = sceneDebugger.WindowRect.y;
+        
+        float exceedWidth = WindowRect.x + WindowRect.width - Screen.width;
+        if (exceedWidth > 0f)
+        {
+            WindowRect.x -= exceedWidth;
+        }
+        MoveOverlappingSceneDebugger();
+    }
+
+    /// <summary>
+    /// Move the scene debugger if it's overlapping with the extra scene debugger (if they can both hold in the available space)
+    /// </summary>
+    private void MoveOverlappingSceneDebugger()
+    {
+        if (sceneDebugger.WindowRect.width + WindowRect.width < Screen.width && // verify that debuggers can hold at the same time in the screen
+            sceneDebugger.WindowRect.x + sceneDebugger.WindowRect.width + WindowRect.width > Screen.width) // verify that debuggers are really overlapping
+        {
+            sceneDebugger.WindowRect.x = Screen.width - WindowRect.width - sceneDebugger.WindowRect.width;
+        }
     }
 
     private void UpdateSelectedObjectMarker(Transform selectedTransform)
