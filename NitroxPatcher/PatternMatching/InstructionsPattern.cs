@@ -97,9 +97,9 @@ public class InstructionsPattern : IEnumerable<InstructionPattern>
         for (int i = 0; i < il.Length; i++)
         {
             yield return il[i];
-            if (insertOperations.ContainsKey(i))
+            if (insertOperations.TryGetValue(i, out IEnumerable<CodeInstruction> inserts))
             {
-                foreach (CodeInstruction newInstruction in insertOperations[i])
+                foreach (CodeInstruction newInstruction in inserts)
                 {
                     yield return newInstruction;
                 }
