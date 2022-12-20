@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Newtonsoft.Json.Linq;
 using NitroxServer.Serialization.Upgrade;
 
@@ -26,6 +26,12 @@ namespace NitroxServer.Serialization.SaveDataUpgrades
                     case "NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation.CorridorRotationMetadata, NitroxModel-Subnautica":
                         typeToken = "NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation.Metadata.CorridorBuilderMetadata, NitroxModel-Subnautica";
                         break;
+                    case "NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation.BaseModuleRotationMetadata, NitroxModel-Subnautica":
+                        typeToken = "NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation.Metadata.BaseModuleBuilderMetadata, NitroxModel-Subnautica";
+                        break;
+                    case "NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation.MapRoomRotationMetadata, NitroxModel-Subnautica":
+                        typeToken = "NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation.Metadata.MapRoomBuilderMetadata, NitroxModel-Subnautica";
+                        break;
                 }
                 piece["RotationMetadata"]["value"]["$type"] = typeToken;
             }
@@ -44,6 +50,12 @@ namespace NitroxServer.Serialization.SaveDataUpgrades
                         break;
                     case "NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation.CorridorRotationMetadata, NitroxModel-Subnautica":
                         typeToken = "NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation.Metadata.CorridorBuilderMetadata, NitroxModel-Subnautica";
+                        break;
+                    case "NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation.BaseModuleRotationMetadata, NitroxModel-Subnautica":
+                        typeToken = "NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation.Metadata.BaseModuleBuilderMetadata, NitroxModel-Subnautica";
+                        break;
+                    case "NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation.MapRoomRotationMetadata, NitroxModel-Subnautica":
+                        typeToken = "NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation.Metadata.MapRoomBuilderMetadata, NitroxModel-Subnautica";
                         break;
                 }
                 piece["RotationMetadata"]["value"]["$type"] = typeToken;
