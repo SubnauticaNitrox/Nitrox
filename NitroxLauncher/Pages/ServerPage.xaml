@@ -8,7 +8,7 @@
                 d:DesignHeight="650" d:DesignWidth="750"
                 DataContext="{Binding RelativeSource={RelativeSource Self}}"
                 Title="Server Page" xmlns:pages="clr-namespace:NitroxLauncher.Pages"
-                xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2">
+                xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero">
 
     <local:PageBase.Resources>
         <BitmapImage x:Key="ServerIllustration" UriSource="pack://application:,,,/Assets/Images/serverIllustration.png"/>
