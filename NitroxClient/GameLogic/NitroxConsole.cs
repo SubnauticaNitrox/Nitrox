@@ -12,7 +12,7 @@ namespace NitroxClient.GameLogic
 {
     public class NitroxConsole
     {
-        public static bool DisableConsole = true;
+        public static bool DisableConsole { get; set; } = true;
 
         private readonly IPacketSender packetSender;
         private readonly Vehicles vehicles;

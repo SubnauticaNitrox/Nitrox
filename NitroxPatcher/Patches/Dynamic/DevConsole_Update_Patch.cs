@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
 using HarmonyLib;
-using NitroxClient.GameLogic;
 using NitroxModel.Helper;
 using NitroxPatcher.PatternMatching;
 using UnityEngine;
@@ -28,14 +27,6 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static readonly MethodInfo TargetMethod = Reflect.Method((DevConsole t) => t.Update());
 
-        /// <summary>
-        ///     Prevent console from opening if server wants it disabled.
-        /// </summary>
-        public static void Prefix()
-        {
-            PlatformUtils.SetDevToolsEnabled(!NitroxConsole.DisableConsole);
-        }
-
         public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions) => instructions
             .Transform(devConsoleSetStateTruePattern, (label, instruction) =>
             {
@@ -49,7 +40,6 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public override void Patch(Harmony harmony)
         {
-            PatchPrefix(harmony, TargetMethod);
             PatchTranspiler(harmony, TargetMethod);
         }
     }
