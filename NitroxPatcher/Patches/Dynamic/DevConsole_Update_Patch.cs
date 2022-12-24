@@ -13,7 +13,7 @@ namespace NitroxPatcher.Patches.Dynamic
         /// <summary>
         ///     Pattern to keep DevConsole disabled when enter is pressed.
         /// </summary>
-        private static readonly InstructionsPattern devConsoleSetStateTruePattern = new()
+        public static readonly InstructionsPattern DevConsoleSetStateTruePattern = new()
         {
             InstructionPattern.Call(nameof(Input), nameof(Input.GetKeyDown)),
             Brfalse,
@@ -28,7 +28,7 @@ namespace NitroxPatcher.Patches.Dynamic
         public static readonly MethodInfo TargetMethod = Reflect.Method((DevConsole t) => t.Update());
 
         public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions) => instructions
-            .Transform(devConsoleSetStateTruePattern, (label, instruction) =>
+            .Transform(DevConsoleSetStateTruePattern, (label, instruction) =>
             {
                 switch (label)
                 {
