@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
+using NitroxClient.GameLogic;
+using NitroxModel.Core;
 using NitroxModel.Helper;
 using UnityEngine;
 using static NitroxClient.GameLogic.Helper.TransientLocalObjectManager;
+using static VFXParticlesPool;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
@@ -28,13 +31,20 @@ namespace NitroxPatcher.Patches.Dynamic
                 if (instruction.opcode.Equals(INJECTION_OPCODE) && instruction.operand.Equals(INJECTION_OPERAND))
                 {
                     /*
-                     * TransientLocalObjectManager.Add(TransientLocalObjectManager.TransientObjectType.CONSTRUCTOR_INPUT_CRAFTED_GAMEOBJECT, gameObject);
+                     * Callback(constructor, gameObject, techType, duration);
                      */
-                    yield return new CodeInstruction(OpCodes.Ldc_I4_0);
+                    yield return original.Ldloc<ConstructorInput>(0);
                     yield return original.Ldloc<GameObject>(0);
-                    yield return new CodeInstruction(OpCodes.Call, Reflect.Method(() => Add(default(TransientObjectType), default(object))));
+                    yield return original.Ldloc<TechType>(0);
+                    yield return original.Ldloc<float>(0);
+                    yield return new CodeInstruction(OpCodes.Call, Reflect.Method(() => Callback(default, default, default, default)));
                 }
             }
+        }
+
+        public static void Callback(ConstructorInput constructor, GameObject constructedObject, TechType techType, float duration)
+        {
+            NitroxServiceLocator.LocateService<MobileVehicleBay>().BeginCrafting(constructor, constructedObject, techType, duration);
         }
 
         public override void Patch(Harmony harmony)
