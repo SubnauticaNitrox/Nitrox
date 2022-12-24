@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Spawning;
@@ -79,15 +79,7 @@ namespace NitroxClient.GameLogic
                 }
                 else
                 {
-                    Optional<GameObject> parent = null;
-                    try
-                    {
-                        parent = NitroxEntity.GetObjectFrom(entity.ParentId);
-                    }
-                    catch (OptionalEmptyException<GameObject> e)
-                    {
-                        Log.Error($"Failed to get Entity {entity.Id}, a {entity.TechType}: {e.Message}");
-                    }
+                    Optional<GameObject> parent = NitroxEntity.GetObjectFrom(entity.ParentId);
                     yield return SpawnAsync(entity, parent);
                     yield return SpawnAnyPendingChildrenAsync(entity);
                 }

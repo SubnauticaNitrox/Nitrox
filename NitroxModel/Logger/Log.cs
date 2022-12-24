@@ -33,7 +33,8 @@ namespace NitroxModel.Logger
         {
             if (isSetup)
             {
-                throw new Exception($"{nameof(Log)} setup should only be executed once.");
+                Log.Warn($"{nameof(Log)} setup should only be executed once.");
+                return;
             }
             isSetup = true;
             

@@ -72,6 +72,7 @@ public class PlayerModelManager
         signalBase.SetActive(true);
 
         PingInstance ping = signalBase.GetComponent<PingInstance>();
+        ping.Initialize();
         ping.SetLabel($"Player {player.PlayerName}");
         ping.pingType = PingType.Signal;
         // ping will be moved to the player list tab
@@ -85,7 +86,7 @@ public class PlayerModelManager
     {
         PDA localPlayerPda = Player.main.GetPDA();
         GameObject pdaScreenGameObject = localPlayerPda.ui.gameObject;
-        GameObject pingTabGameObject = pdaScreenGameObject.transform.Find("Content/PingManagerTab").gameObject;
+        GameObject pingTabGameObject = pdaScreenGameObject.transform.Find("Content/PingTab").gameObject;
         uGUI_PingTab pingTab = pingTabGameObject.GetComponent<uGUI_PingTab>();
 
         pingTab.UpdateEntries();
