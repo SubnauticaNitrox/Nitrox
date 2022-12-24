@@ -78,23 +78,7 @@ public class PlayerModelManager
         // ping will be moved to the player list tab
         ping.displayPingInManager = false;
 
-        UpdateLocalPlayerPda();
         SetInGamePingColor(player, ping);
-    }
-
-    private static void UpdateLocalPlayerPda()
-    {
-        PDA localPlayerPda = Player.main.GetPDA();
-        GameObject pdaScreenGameObject = localPlayerPda.ui.gameObject;
-        GameObject pingTabGameObject = pdaScreenGameObject.transform.Find("Content/PingTab").gameObject;
-        uGUI_PingTab pingTab = pingTabGameObject.GetComponent<uGUI_PingTab>();
-
-        pingTab.UpdateEntries();
-
-        if (!localPlayerPda.isInUse)
-        {
-            pdaScreenGameObject.gameObject.SetActive(false);
-        }
     }
 
     private static void SetInGamePingColor(INitroxPlayer player, PingInstance ping)
