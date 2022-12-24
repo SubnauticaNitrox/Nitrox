@@ -88,12 +88,54 @@ namespace NitroxLauncher
         [Conditional("RELEASE")]
         public async void ConfigureFirewall()
         {
-            Task task = Task.Run(() => WindowsHelper.CheckFirewallRules());
-            await task;
+            Log.Info($"Using {Environment.OSVersion}");
 
-            if (task.Exception != null)
+            if (Environment.OSVersion.Platform != PlatformID.Win32NT)
             {
-                MessageBox.Show($"An error occurred configuring the firewall: {task.Exception}");
+                return;
+            }
+
+            /**
+                This feature won't work in older windows version and will crash the launcher instantly
+                
+                Windows Vista : 6.0
+                Windows 7 : 6.1
+                Windows 8 : 6.2, Windows 8.1 : 6.3
+                Windows 10/11 : 10.0
+            **/
+            if (Environment.OSVersion.Version.Major <= 6)
+            {
+                return;
+            }
+
+            CancellationTokenSource cancellationTokenSource = new();
+            Task task = Task.Run(() => WindowsHelper.CheckFirewallRules(), cancellationTokenSource.Token);
+
+            try
+            {
+                cancellationTokenSource.CancelAfter(millisecondsDelay: 10000);
+
+                await task.ConfigureAwait(false);
+
+                if (task.Exception != null)
+                {
+                    throw task.Exception;
+                }
+            }
+            catch (OperationCanceledException ex)
+            {
+                Log.Error(ex, "Firewall configuration took way too long");
+                LauncherNotifier.Error("Unable to configure firewall rules");
+            }
+            catch (AggregateException ex)
+            {
+                ex.Flatten().InnerExceptions.ForEach(exception => Log.Error(exception));
+                LauncherNotifier.Error("Unable to configure firewall rules");
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Fatal error while configuring firewall");
+                LauncherNotifier.Error("Fatal error while configuring firewall");
             }
         }
 
