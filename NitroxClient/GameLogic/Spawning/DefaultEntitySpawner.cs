@@ -57,11 +57,9 @@ namespace NitroxClient.GameLogic.Spawning
 
         IEnumerator CreateGameObject(TechType techType, string classId, TaskResult<GameObject> result)
         {
-            GameObject prefab = null;
-
             IPrefabRequest prefabCoroutine = PrefabDatabase.GetPrefabAsync(classId);
             yield return prefabCoroutine;
-            prefabCoroutine.TryGetPrefab(out prefab);
+            prefabCoroutine.TryGetPrefab(out GameObject prefab);
 
             if (prefab == null)
             {
