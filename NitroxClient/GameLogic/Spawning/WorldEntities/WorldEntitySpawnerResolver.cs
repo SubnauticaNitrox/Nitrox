@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel_Subnautica.DataStructures;
+using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.WorldEntities
 {
@@ -8,6 +9,7 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities
     {
         private readonly DefaultWorldEntitySpawner defaultEntitySpawner = new DefaultWorldEntitySpawner();
         private readonly CellRootSpawner cellRootSpawner = new CellRootSpawner();
+        private readonly PlaceholderGroupWorldEntitySpawner prefabWorldEntitySpawner;
         
         private readonly Dictionary<TechType, IWorldEntitySpawner> customSpawnersByTechType = new Dictionary<TechType, IWorldEntitySpawner>();
 
@@ -15,6 +17,7 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities
         {            
             customSpawnersByTechType[TechType.Crash] = new CrashEntitySpawner();
             customSpawnersByTechType[TechType.Reefback] = new ReefbackWorldEntitySpawner(defaultEntitySpawner);
+            prefabWorldEntitySpawner = new PlaceholderGroupWorldEntitySpawner(defaultEntitySpawner);
         }
 
         public IWorldEntitySpawner ResolveEntitySpawner(WorldEntity entity)
@@ -24,11 +27,24 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities
                 return cellRootSpawner;
             }
 
+            if (entity.ClassId == "7e5d948c-9bf5-4b3d-8f71-9d7cbcf84991")
+            {
+                Log.Debug("Have Wreck1");
+            }
+            if (entity.IsPrefab)
+            {
+                Log.Debug("Selecting custom spawner");
+                Log.Debug($"Is assignable {typeof(PlaceholderGroupWorldEntity).IsAssignableFrom(entity.GetType())}");
+                Log.Debug($"Is instance {typeof(PlaceholderGroupWorldEntity).IsInstanceOfType(entity)}");
+                Log.Debug($"Is {entity is PlaceholderGroupWorldEntity}");
+                return prefabWorldEntitySpawner;
+            }
+            
             TechType techType = entity.TechType.ToUnity();
 
-            if (customSpawnersByTechType.ContainsKey(techType))
+            if (customSpawnersByTechType.TryGetValue(techType, out IWorldEntitySpawner value))
             {
-                return customSpawnersByTechType[techType];
+                return value;
             }
 
             return defaultEntitySpawner;

@@ -47,7 +47,7 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities
             result.Set(Optional.Of(gameObject));
         }
 
-        IEnumerator CreateGameObject(TechType techType, string classId, TaskResult<GameObject> result)
+        static IEnumerator CreateGameObject(TechType techType, string classId, TaskResult<GameObject> result)
         {
             IPrefabRequest prefabCoroutine = PrefabDatabase.GetPrefabAsync(classId);
             yield return prefabCoroutine;
