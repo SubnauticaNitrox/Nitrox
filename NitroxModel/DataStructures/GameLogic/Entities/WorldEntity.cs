@@ -66,7 +66,7 @@ namespace NitroxModel.DataStructures.GameLogic.Entities
 
                 if (parentEntity is WorldEntity weParent)
                 {
-                    Transform.SetParent(weParent.Transform);
+                    Transform.SetParent(weParent.Transform, false);
                 }
             }
         }

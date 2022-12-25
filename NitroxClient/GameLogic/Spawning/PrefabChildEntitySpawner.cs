@@ -17,7 +17,6 @@ namespace NitroxClient.GameLogic.Spawning
             {
                 Log.Error($"Parent {parent} did not have a child at index {entity.ExistingGameObjectChildIndex}");
 
-                // prevent any further calls for children as we can't find this object.
                 result.Set(Optional.Empty);
                 yield break;
             }
@@ -29,6 +28,7 @@ namespace NitroxClient.GameLogic.Spawning
             result.Set(Optional.OfNullable(gameObject));
             yield break;
         }
+
         public override bool SpawnsOwnChildren(PrefabChildEntity entity)
         {
             return false;

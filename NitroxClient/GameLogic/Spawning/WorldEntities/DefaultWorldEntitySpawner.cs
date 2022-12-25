@@ -10,7 +10,6 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities
 {
     public class DefaultWorldEntitySpawner : IWorldEntitySpawner
     {
-
         public IEnumerator SpawnAsync(WorldEntity entity, Optional<GameObject> parent, EntityCell cellRoot, TaskResult<Optional<GameObject>> result)
         {
             TechType techType = entity.TechType.ToUnity();

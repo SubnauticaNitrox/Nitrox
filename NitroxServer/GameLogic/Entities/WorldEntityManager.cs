@@ -200,7 +200,7 @@ namespace NitroxServer.GameLogic.Entities
 
                                         if (opEnt.HasValue && opEnt.Value is WorldEntity worldParent)
                                         {
-                                            worldEntity.Transform.SetParent(worldParent.Transform);
+                                            worldEntity.Transform.SetParent(worldParent.Transform, false);
                                         }
                                         else if (!opEnt.HasValue)
                                         {
@@ -249,7 +249,7 @@ namespace NitroxServer.GameLogic.Entities
 
                             if (opEnt.HasValue && opEnt.Value is WorldEntity parentWorldEntity)
                             {
-                                entity.Transform.SetParent(parentWorldEntity.Transform);
+                                entity.Transform.SetParent(parentWorldEntity.Transform, false);
                             }
                             else if (!opEnt.HasValue)
                             {

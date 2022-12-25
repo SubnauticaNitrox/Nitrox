@@ -66,7 +66,7 @@ namespace NitroxClient.GameLogic
                 {
                     UpdatePosition(entity);
                 }
-                else if (entity.ParentId != null)
+                else if (entity.ParentId != null && !WasAlreadySpawned(entity.ParentId))
                 {
                     AddPendingParentEntity(entity);
                 }
@@ -118,7 +118,7 @@ namespace NitroxClient.GameLogic
                 {
                     if (!WasAlreadySpawned(child.Id))
                     {
-                        yield return SpawnAsync(entity);
+                        yield return SpawnAsync(child);
                     }
                 }
 
@@ -130,8 +130,6 @@ namespace NitroxClient.GameLogic
 
         private void UpdatePosition(WorldEntity entity)
         {
-            LargeWorldStreamer.main.cellManager.UnloadBatchCells(entity.AbsoluteEntityCell.CellId.ToUnity()); // Just in case
-
             Optional<GameObject> opGameObject = NitroxEntity.GetObjectFrom(entity.Id);
 
             if (!opGameObject.HasValue)
@@ -144,7 +142,7 @@ namespace NitroxClient.GameLogic
 
             opGameObject.Value.transform.position = entity.Transform.Position.ToUnity();
             opGameObject.Value.transform.rotation = entity.Transform.Rotation.ToUnity();
-            opGameObject.Value.transform.localScale = entity.Transform.LocalScale.ToUnity();            
+            opGameObject.Value.transform.localScale = entity.Transform.LocalScale.ToUnity();
         }
 
         private void AddPendingParentEntity(Entity entity)
