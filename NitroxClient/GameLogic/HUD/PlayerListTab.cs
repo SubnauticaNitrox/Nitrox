@@ -27,10 +27,12 @@ public class PlayerListTab : NitroxPDATab
         GameObject tabCopy = GameObject.Instantiate(pingTabObject, pdaScreen.transform.Find("Content"));
         tabCopy.name = "PlayerListTab";
 
-        // We add a uGUI_PlayerListTab instead of a uGUI_PingTab
+        // Set the tab inactive to suppress the uGUI_PlayerListTab awake().  We first need to set the 
+        // prefab, which is used inside the awake method and the base class awake method.
+        tabCopy.SetActive(false);
         uGUI_PlayerListTab newTab = tabCopy.AddComponent<uGUI_PlayerListTab>();
         newTab.MakePrefab(pingTab.prefabEntry);
-        GameObject.Destroy(tabCopy.GetComponent<uGUI_PingTab>());
+        tabCopy.SetActive(true);
 
         tab = newTab;
     }

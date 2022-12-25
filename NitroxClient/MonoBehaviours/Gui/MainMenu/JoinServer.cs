@@ -6,660 +6,360 @@ using System.Threading.Tasks;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Exceptions;
 using NitroxClient.Communication.MultiplayerSession;
-using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
-using NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap;
-using NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap.Strategy;
 using NitroxClient.GameLogic.PlayerLogic.PlayerPreferences;
-using NitroxClient.GameLogic.Settings;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.MultiplayerSession;
 using NitroxModel_Subnautica.DataStructures;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
-namespace NitroxClient.MonoBehaviours.Gui.MainMenu
+namespace NitroxClient.MonoBehaviours.Gui.MainMenu;
+
+public class JoinServer : MonoBehaviour
 {
-    public class JoinServer : MonoBehaviour
+    private readonly JoinServerJoinWindow joinWindow = new();
+    private PlayerPreferenceManager preferencesManager;
+    private PlayerPreference activePlayerPreference;
+    private IMultiplayerSession multiplayerSession;
+
+    private Rect serverPasswordWindowRect = new(Screen.width / 2 - 250, 200, 500, 200);
+
+    private GameObject multiplayerClient;
+
+    private string serverIp;
+    private int serverPort;
+
+    private bool shouldFocus;
+    private bool showingPasswordWindow;
+    private bool passwordEntered;
+    private string serverPassword = string.Empty;
+
+    private GameObject joinServerMenu;
+    public string MenuName => joinServerMenu.AliveOrNull()?.name ?? throw new Exception("Menu not yet initialized");
+
+    public void Setup(GameObject saveGameMenu)
     {
-        private GameObject colorPickerPanelPrototype;
-        private GameObject saveGameMenuPrototype;
-        private MainMenuRightSide rightSideMainMenu;
+        JoinServerServerList.InitializeServerList(saveGameMenu, out joinServerMenu, out RectTransform joinServerBackground);
+        UWE.CoroutineUtils.StartCoroutineSmart(joinWindow.Initialize(joinServerBackground, OnJoinClick, () => OnCancelClick(true)));
 
-        private Rect serverPasswordWindowRect = new Rect(Screen.width / 2 - 250, 200, 500, 200);
-        private PlayerPreferenceManager preferencesManager;
-        private PlayerPreference activePlayerPreference;
-        private IMultiplayerSession multiplayerSession;
+        DontDestroyOnLoad(gameObject);
+        Hide();
+    }
 
-        private GameObject joinServerMenu;
-        private GameObject multiplayerClient;
-        private GameObject playerSettingsPanel;
-        private GameObject lowerDetailTextGameObject;
-        private uGUI_InputField playerNameInputField;
-        private uGUI_ColorPicker colorPicker;
-        private RectTransform joinServerBackground;
+    public async Task ShowAsync(string ip, int port)
+    {
+        NitroxServiceLocator.BeginNewLifetimeScope();
+        multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
+        preferencesManager = NitroxServiceLocator.LocateService<PlayerPreferenceManager>();
 
-        private string serverIp;
-        private int serverPort;
+        await joinWindow.IsReady();
 
-        private bool isSubscribed;
-        private bool shouldFocus;
-        private bool showingPasswordWindow;
-        private bool passwordEntered;
-        private string serverPassword = string.Empty;
+        gameObject.SetActive(true);
+        serverIp = ip;
+        serverPort = port;
 
-        public string MenuName => joinServerMenu.AliveOrNull()?.name ?? throw new Exception("Menu not yet initialized");
+        //Set Server IP in info label
+        joinWindow.SetIP(serverIp);
 
-        public void Setup(GameObject saveGameMenu)
+        //Initialize elements from preferences
+        activePlayerPreference = preferencesManager.GetPreference(serverIp);
+        joinWindow.SubscribeColorChanged();
+
+        // HSV => Hue Saturation Value, HSB => Hue Saturation Brightness
+        Color.RGBToHSV(activePlayerPreference.PreferredColor(), out float hue, out _, out float brightness);
+        joinWindow.SetHSB(new Vector3(hue, 1f, brightness));
+
+        joinWindow.PlayerName = activePlayerPreference.PlayerName;
+
+        await StartMultiplayerClientAsync();
+    }
+
+    private void Hide()
+    {
+        joinWindow.UnsubscribeColorChanged();
+        gameObject.SetActive(false);
+    }
+
+    private void Update()
+    {
+        if (multiplayerSession.CurrentState.CurrentStage != MultiplayerSessionConnectionStage.AWAITING_RESERVATION_CREDENTIALS ||
+            gameObject.GetComponent<MainMenuNotification>())
         {
-            saveGameMenuPrototype = saveGameMenu;
-            InitializeJoinMenu();
-
-            DontDestroyOnLoad(gameObject);
-            Hide();
+            return;
         }
 
-        public async Task ShowAsync(string ip, int port)
+        if (UnityEngine.Input.GetKeyDown(KeyCode.Return))
         {
-            NitroxServiceLocator.BeginNewLifetimeScope();
-            multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
-            preferencesManager = NitroxServiceLocator.LocateService<PlayerPreferenceManager>();
+            OnJoinClick();
+        }
+        else if (UnityEngine.Input.GetKeyDown(KeyCode.Escape))
+        {
+            OnCancelClick(true);
+        }
+    }
 
-            gameObject.SetActive(true);
-            serverIp = ip;
-            serverPort = port;
+    private void OnGUI()
+    {
+        if (showingPasswordWindow)
+        {
+            serverPasswordWindowRect = GUILayout.Window(
+                GUIUtility.GetControlID(FocusType.Keyboard),
+                serverPasswordWindowRect,
+                DoServerPasswordWindow,
+                Language.main.Get("Nitrox_JoinServerPasswordHeader")
+            );
+        }
+    }
 
-            //Set Server IP in info label
-            lowerDetailTextGameObject.GetComponent<TextMeshProUGUI>().text = $"{Language.main.Get("Nitrox_JoinServerIpAddress")}\n{(NitroxPrefs.HideIp.Value ? "****" : serverIp)}";
+    private void OnDestroy()
+    {
+        joinWindow.UnsubscribeColorChanged();
+    }
 
-            //Initialize elements from preferences
-            activePlayerPreference = preferencesManager.GetPreference(serverIp);
-            SubscribeColorChanged();
+    private void FocusPlayerNameTextBox()
+    {
+        joinWindow.ActivateInputField();
+    }
 
-            // HSV => Hue Saturation Value, HSB => Hue Saturation Brightness
-            Color.RGBToHSV(activePlayerPreference.PreferredColor(), out float hue, out _, out float brightness);
-            colorPicker.SetHSB(new Vector3(hue, 1f, brightness));
-
-            playerNameInputField.text = activePlayerPreference.PlayerName;
-
-            await StartMultiplayerClientAsync();
+    private async System.Threading.Tasks.Task StartMultiplayerClientAsync()
+    {
+        if (!multiplayerClient)
+        {
+            multiplayerClient = new GameObject("Multiplayer Client");
+            multiplayerClient.AddComponent<Multiplayer>();
+            multiplayerSession.ConnectionStateChanged += SessionConnectionStateChangedHandler;
         }
 
-        private void Hide()
+        try
         {
-            UnsubscribeColorChanged();
-            gameObject.SetActive(false);
+            await multiplayerSession.ConnectAsync(serverIp, serverPort);
         }
-
-        private void Update()
+        catch (ClientConnectionFailedException)
         {
-            if (multiplayerSession.CurrentState.CurrentStage != MultiplayerSessionConnectionStage.AWAITING_RESERVATION_CREDENTIALS ||
-                gameObject.GetComponent<MainMenuNotification>() != null)
+            Log.InGameSensitive($"{Language.main.Get("Nitrox_UnableToConnect")} {{ip}}:{{port}}", serverIp, serverPort);
+
+            if (serverIp.Equals("127.0.0.1"))
             {
-                return;
-            }
-
-            if (UnityEngine.Input.GetKeyDown(KeyCode.Return))
-            {
-                OnJoinClick();
-            }
-            else if (UnityEngine.Input.GetKeyDown(KeyCode.Escape))
-            {
-                OnCancelClick(true);
-            }
-        }
-
-        private void OnGUI()
-        {
-            if (showingPasswordWindow)
-            {
-                serverPasswordWindowRect = GUILayout.Window(
-                    GUIUtility.GetControlID(FocusType.Keyboard),
-                    serverPasswordWindowRect,
-                    DoServerPasswordWindow,
-                    Language.main.Get("Nitrox_JoinServerPasswordHeader")
-                );
-            }
-        }
-
-        private void OnDestroy()
-        {
-            UnsubscribeColorChanged();
-        }
-
-        private void SubscribeColorChanged()
-        {
-            if (isSubscribed)
-            {
-                return;
-            }
-
-            colorPicker.onColorChange.AddListener(OnColorChange);
-
-            isSubscribed = true;
-        }
-
-        private void UnsubscribeColorChanged()
-        {
-            if (!playerSettingsPanel || !isSubscribed)
-            {
-                return;
-            }
-
-            colorPicker.onColorChange.RemoveListener(OnColorChange);
-            isSubscribed = false;
-        }
-
-        private void OnColorChange(ColorChangeEventData eventData)
-        {
-            Color selectedColor = eventData.color;
-
-            GameObject selectedColorGameObject = playerSettingsPanel.RequireGameObject("BaseTab/SelectedColor");
-
-            Image baseTabSelectedColorImage = selectedColorGameObject.GetComponent<Image>();
-            baseTabSelectedColorImage.color = selectedColor;
-        }
-
-        private void FocusPlayerNameTextbox()
-        {
-            playerNameInputField.ActivateInputField();
-        }
-
-        private async Task StartMultiplayerClientAsync()
-        {
-            if (multiplayerClient == null)
-            {
-                multiplayerClient = new GameObject("Multiplayer Client");
-                multiplayerClient.AddComponent<Multiplayer>();
-                multiplayerSession.ConnectionStateChanged += SessionConnectionStateChangedHandler;
-            }
-
-            try
-            {
-                await multiplayerSession.ConnectAsync(serverIp, serverPort);
-            }
-            catch (ClientConnectionFailedException)
-            {
-                Log.InGameSensitive($"{Language.main.Get("Nitrox_UnableToConnect")} {{ip}}:{{port}}", serverIp, serverPort);
-
-                if (serverIp.Equals("127.0.0.1"))
+                if (Process.GetProcessesByName("NitroxServer-Subnautica").Length == 0)
                 {
-                    if (Process.GetProcessesByName("NitroxServer-Subnautica").Length == 0)
-                    {
-                        Log.InGame(Language.main.Get("Nitrox_StartServer"));
-                    }
-                    else
-                    {
-                        Log.InGame(Language.main.Get("Nitrox_FirewallInterfering"));
-                    }
+                    Log.InGame(Language.main.Get("Nitrox_StartServer"));
                 }
-                OnCancelClick(false);
+                else
+                {
+                    Log.InGame(Language.main.Get("Nitrox_FirewallInterfering"));
+                }
             }
+
+            OnCancelClick(false);
+        }
+    }
+
+    private void OnCancelClick(bool returnToMpMenu)
+    {
+        StopMultiplayerClient();
+        if (returnToMpMenu)
+        {
+            MainMenuRightSide.main.OpenGroup("Multiplayer");
         }
 
-        private void OnCancelClick(bool returnToMpMenu)
+        Hide();
+    }
+
+    private void OnJoinClick()
+    {
+        string playerName = joinWindow.PlayerName;
+
+        //https://regex101.com/r/eTWiEs/2/
+        if (!Regex.IsMatch(playerName, @"^[a-zA-Z0-9._-]{3,25}$"))
         {
-            StopMultiplayerClient();
-            if (returnToMpMenu)
-            {
-                rightSideMainMenu.OpenGroup("Multiplayer");
-            }
-            Hide();
+            NotifyUser(Language.main.Get("Nitrox_InvalidUserName"));
+            return;
         }
 
-        private void OnJoinClick()
+        preferencesManager.SetPreference(serverIp, new PlayerPreference(playerName, joinWindow.GetCurrentColor()));
+
+        AuthenticationContext authenticationContext = new(playerName, passwordEntered ? Optional.Of(serverPassword) : Optional.Empty);
+
+        multiplayerSession.RequestSessionReservation(new PlayerSettings(joinWindow.GetCurrentColor().ToDto()), authenticationContext);
+    }
+
+    private void SessionConnectionStateChangedHandler(IMultiplayerSessionConnectionState state)
+    {
+        switch (state.CurrentStage)
         {
-            string playerName = playerNameInputField.text;
+            case MultiplayerSessionConnectionStage.ESTABLISHING_SERVER_POLICY:
+                Log.InGame(Language.main.Get("Nitrox_RequestingSessionPolicy"));
+                break;
 
-            //https://regex101.com/r/eTWiEs/2/
-            if (!Regex.IsMatch(playerName, @"^[a-zA-Z0-9._-]{3,25}$"))
-            {
-                NotifyUser(Language.main.Get("Nitrox_InvalidUserName"));
-                return;
-            }
-            preferencesManager.SetPreference(serverIp, new PlayerPreference(playerName, colorPicker.currentColor));
+            case MultiplayerSessionConnectionStage.AWAITING_RESERVATION_CREDENTIALS:
+                if (multiplayerSession.SessionPolicy.RequiresServerPassword)
+                {
+                    Log.InGame(Language.main.Get("Nitrox_WaitingPassword"));
+                    showingPasswordWindow = true;
+                    shouldFocus = true;
+                }
 
-            AuthenticationContext authenticationContext = new AuthenticationContext(playerName, passwordEntered ? Optional.Of(serverPassword) : Optional.Empty);
+                Log.InGame(Language.main.Get("Nitrox_WaitingUserInput"));
+                MainMenuRightSide.main.OpenGroup("Join Server");
+                FocusPlayerNameTextBox();
+                break;
 
-            multiplayerSession.RequestSessionReservation(new PlayerSettings(colorPicker.currentColor.ToDto()), authenticationContext);
-        }
-
-        private void SessionConnectionStateChangedHandler(IMultiplayerSessionConnectionState state)
-        {
-            switch (state.CurrentStage)
-            {
-                case MultiplayerSessionConnectionStage.ESTABLISHING_SERVER_POLICY:
-                    Log.InGame(Language.main.Get("Nitrox_RequestingSessionPolicy"));
-                    break;
-
-                case MultiplayerSessionConnectionStage.AWAITING_RESERVATION_CREDENTIALS:
-                    if (multiplayerSession.SessionPolicy.RequiresServerPassword)
-                    {
-                        Log.InGame(Language.main.Get("Nitrox_WaitingPassword"));
-                        showingPasswordWindow = true;
-                        shouldFocus = true;
-                    }
-                    Log.InGame(Language.main.Get("Nitrox_WaitingUserInput"));
-                    rightSideMainMenu.OpenGroup("Join Server");
-                    FocusPlayerNameTextbox();
-                    break;
-
-                case MultiplayerSessionConnectionStage.SESSION_RESERVED:
-                    Log.InGame(Language.main.Get("Nitrox_LaunchGame"));
-                    multiplayerSession.ConnectionStateChanged -= SessionConnectionStateChangedHandler;
-                    preferencesManager.Save();
+            case MultiplayerSessionConnectionStage.SESSION_RESERVED:
+                Log.InGame(Language.main.Get("Nitrox_LaunchGame"));
+                multiplayerSession.ConnectionStateChanged -= SessionConnectionStateChangedHandler;
+                preferencesManager.Save();
 
 #pragma warning disable CS0618 // God Damn it UWE...
-                    IEnumerator startNewGame = uGUI_MainMenu.main.StartNewGame(GameMode.Survival);
+                Multiplayer.SubnauticaLoadingStarted();
+                IEnumerator startNewGame = uGUI_MainMenu.main.StartNewGame(GameMode.Survival);
 #pragma warning restore CS0618 // God damn it UWE...
-                    StartCoroutine(startNewGame);
-                    LoadingScreenVersionText.Initialize();
+                StartCoroutine(startNewGame);
+                LoadingScreenVersionText.Initialize();
 
-                    break;
+                break;
 
-                case MultiplayerSessionConnectionStage.SESSION_RESERVATION_REJECTED:
-                    Log.InGame(Language.main.Get("Nitrox_RejectedSessionPolicy"));
+            case MultiplayerSessionConnectionStage.SESSION_RESERVATION_REJECTED:
+                Log.InGame(Language.main.Get("Nitrox_RejectedSessionPolicy"));
 
-                    MultiplayerSessionReservationState reservationState = multiplayerSession.Reservation.ReservationState;
+                MultiplayerSessionReservationState reservationState = multiplayerSession.Reservation.ReservationState;
 
-                    string reservationRejectionNotification = reservationState.Describe();
+                string reservationRejectionNotification = reservationState.Describe();
 
-                    NotifyUser(
-                        reservationRejectionNotification,
-                        () =>
-                        {
-                            multiplayerSession.Disconnect();
-                            multiplayerSession.ConnectAsync(serverIp, serverPort);
-                        });
-                    break;
-
-                case MultiplayerSessionConnectionStage.DISCONNECTED:
-                    Log.Info(Language.main.Get("Nitrox_DisconnectedSession"));
-                    break;
-            }
-        }
-
-        private void NotifyUser(string notificationMessage, Action continuationAction = null)
-        {
-            if (gameObject.GetComponent<MainMenuNotification>() != null)
-            {
-                return;
-            }
-
-            MainMenuNotification notificationDialog = gameObject.AddComponent<MainMenuNotification>();
-            notificationDialog.ShowNotification(notificationMessage, () =>
-            {
-                continuationAction?.Invoke();
-                Destroy(gameObject.GetComponent<MainMenuNotification>(), 0.0001f);
-            });
-        }
-
-        public void StopMultiplayerClient()
-        {
-            if (!multiplayerClient)
-            {
-                return;
-            }
-
-            Multiplayer.Main.StopCurrentSession();
-            Destroy(multiplayerClient);
-            multiplayerClient = null;
-            if (multiplayerSession != null)
-            {
-                multiplayerSession.ConnectionStateChanged -= SessionConnectionStateChangedHandler;
-            }
-        }
-
-        //This method merges the cloned color picker element with the existing template for menus that appear in the "right side" region of the main menu.
-        private void InitializeJoinMenu()
-        {
-            AddressablesUtility.LoadAsync<GameObject>("Assets/Prefabs/Base/GeneratorPieces/BaseMoonpoolUpgradeConsole.prefab").Completed += (x) =>
-            //AddressablesUtility.LoadAsync<GameObject>("Assets/AddressableResources/WorldEntities/Tools/RocketBase.prefab").Completed += (x) =>
-            {
-                colorPickerPanelPrototype = x.Result.RequireGameObject("EditScreen/Active");
-                //colorPickerPanelPrototype = x.Result.RequireGameObject("Base/BuildTerminal/GUIScreen/CustomizeScreen/Panel/");
-                rightSideMainMenu = MainMenuRightSide.main;
-
-                joinServerMenu = CloneSaveGameMenuPrototype();
-
-                joinServerMenu.transform.SetParent(rightSideMainMenu.transform, false);
-                rightSideMainMenu.groups.Add(joinServerMenu.GetComponent<MainMenuGroup>());
-
-                //Not sure what is up with this menu, but we have to use the RectTransform of the Image component as the parent for our color picker panel.
-                //Most of the UI elements seem to vanish behind this Image otherwise.
-                joinServerBackground = joinServerMenu.GetComponent<Image>().rectTransform;
-                joinServerBackground.anchorMin = new Vector2(0.5f, 0.5f);
-                joinServerBackground.anchorMax = new Vector2(0.5f, 0.5f);
-                joinServerBackground.pivot = new Vector2(0.5f, 0.5f);
-                joinServerBackground.anchoredPosition = new Vector2(joinServerBackground.anchoredPosition.x, 5f);
-
-                InitializePlayerSettingsPanel();
-            };
-        }
-
-        //This configures and re-positions the elements on the default "ColorGreyscale" menu to suite our purposes now.
-        private void InitializePlayerSettingsPanel()
-        {
-            InstantiateColorPickerPanelPrototype();
-            InitializePlayerSettingsPanelElement();
-            InitializeBaseTabElement();
-            InitializeLowerDetailElement();
-            InitializePlayerNameInputElement();
-            InitializeColorPickerComponent();
-            InitializeColorPickerElement();
-            InitializeButtonElements();
-        }
-
-        //Join and Cancel buttons
-        private void InitializeButtonElements()
-        {
-            GameObject cancelButtonGameObject = playerSettingsPanel.RequireGameObject("Button");
-            GameObject joinButtonGameObject = Instantiate(cancelButtonGameObject, playerSettingsPanel.transform, false);
-
-            //Click events
-            Button cancelButton = cancelButtonGameObject.GetComponent<Button>();
-            cancelButton.onClick.AddListener(() => OnCancelClick(true));
-
-            Button joinButton = joinButtonGameObject.GetComponent<Button>();
-            joinButton.onClick.AddListener(OnJoinClick);
-
-            RectTransform cancelButtonTransform = (RectTransform)cancelButtonGameObject.transform;
-            GameObject cancelButtonTextGameObject = cancelButtonTransform.RequireGameObject("Text");
-            cancelButtonTextGameObject.GetComponent<TextMeshProUGUI>().text = Language.main.Get("Nitrox_Cancel");
-
-            cancelButtonTransform.sizeDelta = new Vector2(cancelButtonTransform.rect.width * 0.85f, cancelButtonTransform.rect.height);
-            cancelButtonTransform.anchoredPosition = new Vector2(
-                -1f * joinServerBackground.rect.width / 2f + cancelButtonTransform.rect.width / 2f,
-                -1f * (joinServerBackground.rect.height / 2f) + cancelButtonTransform.rect.height / 2f + 3f);
-
-            RectTransform joinButtonTransform = (RectTransform)joinButtonGameObject.transform;
-            joinButtonTransform.anchoredPosition = new Vector2(
-                joinServerBackground.rect.width / 2f - joinButtonTransform.rect.width / 2f + 20f,
-                -1f * (joinServerBackground.rect.height / 2f) + joinButtonTransform.rect.height / 2f + 3f);
-
-            //Flip the button over
-            joinButtonTransform.sizeDelta = new Vector2(joinButtonTransform.rect.width * 0.85f, joinButtonTransform.rect.height);
-            joinButtonTransform.Rotate(Vector3.forward * -180);
-
-            GameObject joinButtonTextGameObject = joinButtonTransform.RequireGameObject("Text");
-            joinButtonTextGameObject.GetComponent<TextMeshProUGUI>().text = Language.main.Get("Nitrox_Join");
-
-            //Flip the text so it is no longer upside down after flipping the button.
-            RectTransform joinButtonTextRectTransform = (RectTransform)joinButtonTextGameObject.transform;
-            joinButtonTextRectTransform.Rotate(Vector3.forward * -180);
-        }
-
-        private GameObject CloneSaveGameMenuPrototype()
-        {
-            joinServerMenu = Instantiate(saveGameMenuPrototype);
-            Destroy(joinServerMenu.RequireGameObject("Header"));
-            Destroy(joinServerMenu.RequireGameObject("Scroll View"));
-            Destroy(joinServerMenu.GetComponent<LayoutGroup>());
-            Destroy(joinServerMenu.GetComponent<MainMenuLoadPanel>());
-            joinServerMenu.GetAllComponentsInChildren<LayoutGroup>().ForEach(Destroy);
-
-            //We cannot register click events on child transforms if they are being captured here.
-            joinServerMenu.GetComponent<CanvasGroup>().blocksRaycasts = false;
-            joinServerMenu.name = "Join Server";
-
-            return joinServerMenu;
-        }
-
-        private void InstantiateColorPickerPanelPrototype()
-        {
-            //Create a clone of the RocketBase color picker panel.
-            playerSettingsPanel = Instantiate(colorPickerPanelPrototype);
-            GameObject baseTab = playerSettingsPanel.RequireGameObject("BaseTab");
-            GameObject serverNameLabel = playerSettingsPanel.RequireGameObject("Name Label");
-            GameObject stripe1Tab = playerSettingsPanel.RequireGameObject("Stripe1Tab");
-            GameObject interiorTab = playerSettingsPanel.RequireGameObject("InteriorTab");
-            GameObject nameTab = playerSettingsPanel.RequireGameObject("NameTab");
-            GameObject colorLabel = playerSettingsPanel.RequireGameObject("Color Label");
-
-            //Enables pointer events that are a required for the uGUI_ColorPicker to work.
-            CanvasGroup colorPickerCanvasGroup = playerSettingsPanel.AddComponent<CanvasGroup>();
-            colorPickerCanvasGroup.blocksRaycasts = true;
-            colorPickerCanvasGroup.ignoreParentGroups = true;
-            colorPickerCanvasGroup.interactable = true;
-
-            //Destroy everything that we know we will not be using.
-            Destroy(playerSettingsPanel.transform.parent);
-            Destroy(playerSettingsPanel.GetComponent<uGUI_NavigableControlGrid>());
-            Destroy(playerSettingsPanel.GetComponent<Image>());
-            Destroy(baseTab.GetComponent<Button>());
-            Destroy(stripe1Tab);
-            Destroy(interiorTab);
-            Destroy(nameTab);
-            Destroy(colorLabel);
-            Destroy(serverNameLabel);
-        }
-
-        //This panel acts as the parent of all other UI elements on the menu. It is parented by the cloned "SaveGame" menu.
-        private void InitializePlayerSettingsPanelElement()
-        {
-            playerSettingsPanel.SetActive(true);
-
-            RectTransform playerSettingsPanelTransform = (RectTransform)playerSettingsPanel.transform;
-            playerSettingsPanelTransform.SetParent(joinServerBackground, false);
-            playerSettingsPanelTransform.anchorMin = new Vector2(0f, 0f);
-            playerSettingsPanelTransform.anchorMax = new Vector2(1f, 1f);
-            playerSettingsPanelTransform.pivot = new Vector2(0.5f, 0.5f);
-        }
-
-        //The base tab is the outline surrounding the color picker, as well as teh "Player Color" label and associated "Selected Color" image.
-        private void InitializeBaseTabElement()
-        {
-            GameObject baseTab = playerSettingsPanel.RequireGameObject("BaseTab");
-
-            //Re-position the border
-            RectTransform baseTabTransform = (RectTransform)baseTab.transform;
-            baseTabTransform.anchoredPosition = new Vector2(0.5f, 0.5f);
-            baseTabTransform.anchorMin = new Vector2(0.5f, 0.5f);
-            baseTabTransform.anchorMax = new Vector2(0.5f, 0.5f);
-            baseTabTransform.pivot = new Vector2(0.5f, 0.5f);
-
-            //Resize the border to match the new parent. Capture the original width so we can make adjustments to child controls later
-            //because the existing elements all have some really weird anchor settings the prevent them from moving automatically.
-            float originalBaseTabWidth = baseTabTransform.rect.width;
-            baseTabTransform.sizeDelta = new Vector2(joinServerBackground.rect.width, baseTabTransform.rect.height);
-
-            //Move the SelectedColor element over to the right enough to match the shrinkage of the base tab.
-            GameObject baseTabSelectedColor = baseTabTransform.RequireGameObject("SelectedColor");
-            Image baseTabSelectedColorImage = baseTabSelectedColor.GetComponent<Image>();
-            baseTabSelectedColorImage.rectTransform.anchoredPosition = new Vector2(
-                baseTabSelectedColorImage.rectTransform.anchoredPosition.x + (originalBaseTabWidth - baseTabTransform.rect.width) / 2,
-                baseTabSelectedColorImage.rectTransform.anchoredPosition.y);
-
-            //Place the "Player Color" label to the right of the SelectedColor image and shrink it to fit the new tab region.
-            GameObject baseTabTextGameObject = baseTabTransform.RequireGameObject("Text");
-            RectTransform baseTabTextTransform = (RectTransform)baseTabTextGameObject.transform;
-            baseTabTextTransform.anchorMin = new Vector2(0.5f, 0.5f);
-            baseTabTextTransform.anchorMax = new Vector2(0.5f, 0.5f);
-            baseTabTextTransform.pivot = new Vector2(0.5f, 0.5f);
-            baseTabTextTransform.sizeDelta = new Vector2(80, 35);
-
-            baseTabTextTransform.anchoredPosition = new Vector2(
-                baseTabSelectedColorImage.rectTransform.anchoredPosition.x + baseTabTextTransform.rect.width / 2f + 22f,
-                baseTabSelectedColorImage.rectTransform.anchoredPosition.y);
-
-            baseTabTextGameObject.GetComponent<TextMeshProUGUI>().text = Language.main.Get("Nitrox_PlayerColor");
-
-            //This resizes the actual Image that outlines all of the UI elements.
-            GameObject baseTabBackgroundGameObject = baseTabTransform.RequireGameObject("Background");
-            Image baseTabBackgroundImage = baseTabBackgroundGameObject.GetComponent<Image>();
-            baseTabBackgroundImage.rectTransform.sizeDelta = new Vector2(joinServerBackground.rect.width, baseTabTransform.rect.height);
-
-            //This removes the extra "tabs" from the base texture.
-            Texture2D newBaseTabTexture = baseTabBackgroundImage.sprite.texture.Clone();
-            TextureBlock textureBlock = new TextureBlock(3, 3, 160, (int)(baseTabBackgroundImage.sprite.textureRect.height - 71f));
-            IColorSwapStrategy alphaChannelSwapper = new AlphaChannelSwapper(0f);
-            HsvSwapper baseTabBackgroundSwapper = new HsvSwapper(alphaChannelSwapper);
-            baseTabBackgroundSwapper.SetHueRange(185f, 215f);
-            baseTabBackgroundSwapper.SetAlphaRange(0f, 175f);
-            newBaseTabTexture.SwapTextureColors(baseTabBackgroundSwapper, textureBlock);
-            baseTabBackgroundImage.sprite = Sprite.Create(newBaseTabTexture, new Rect(baseTabBackgroundImage.sprite.textureRect), new Vector2(0f, 0f));
-        }
-
-        //The LowerDetail is the region that displays the current Server IP and the graphic that appears beneath it.
-        private void InitializeLowerDetailElement()
-        {
-            GameObject lowerDetail = playerSettingsPanel.RequireGameObject("LowerDetail");
-
-            //We use this as a reference point for positioning the LowerDetail element.
-            RectTransform baseTabTextTransform = (RectTransform)playerSettingsPanel.RequireTransform("BaseTab/Text");
-
-            RectTransform lowerDetailRectTransform = (RectTransform)lowerDetail.transform;
-            lowerDetailRectTransform.anchorMin = new Vector2(0.5f, 0.5f);
-            lowerDetailRectTransform.anchorMax = new Vector2(0.5f, 0.5f);
-            lowerDetailRectTransform.pivot = new Vector2(0.5f, 0.5f);
-            lowerDetailRectTransform.anchoredPosition = new Vector2(baseTabTextTransform.anchoredPosition.x - 24f, baseTabTextTransform.anchoredPosition.y - 61.4f);
-
-            //The text element is right-aligned by default and needs to be centered for our purposes
-            lowerDetailTextGameObject = lowerDetailRectTransform.RequireGameObject("Text");
-            TextMeshProUGUI lowerDetailText = lowerDetailTextGameObject.GetComponent<TextMeshProUGUI>();
-            lowerDetailText.autoSizeTextContainer = true;
-            lowerDetailText.alignment = TextAlignmentOptions.Center;
-
-            RectTransform lowerDetailTextRectTransform = (RectTransform)lowerDetailTextGameObject.transform;
-            lowerDetailTextRectTransform.anchorMin = new Vector2(0.5f, 0.5f);
-            lowerDetailTextRectTransform.anchorMax = new Vector2(0.5f, 0.5f);
-            lowerDetailTextRectTransform.pivot = new Vector2(0.5f, 0.5f);
-            lowerDetailTextRectTransform.anchoredPosition = new Vector2(0, 0);
-
-            //Delete the pixels under the IP
-            Destroy(lowerDetail.RequireGameObject("Pixels"));
-        }
-
-        //Player name text box
-        private void InitializePlayerNameInputElement()
-        {
-            GameObject playerNameInputFieldGameObject = playerSettingsPanel.RequireGameObject("InputField");
-            RectTransform inputFieldRectTransform = (RectTransform)playerNameInputFieldGameObject.transform;
-            inputFieldRectTransform.anchoredPosition = new Vector2(inputFieldRectTransform.anchoredPosition.x, inputFieldRectTransform.anchoredPosition.y - 15f);
-
-            playerNameInputField = playerNameInputFieldGameObject.GetComponent<uGUI_InputField>();
-            playerNameInputField.selectionColor = Color.white;
-
-            GameObject inputFieldPlaceholder = inputFieldRectTransform.RequireGameObject("Placeholder");
-            inputFieldPlaceholder.GetComponent<TextMeshProUGUI>().text = Language.main.Get("Nitrox_EnterName");
-        }
-
-        //This is the "service" that manages the click and drag events on the color picture RectTransform.
-        private void InitializeColorPickerComponent()
-        {
-            colorPicker = playerSettingsPanel.GetComponentInChildren<uGUI_ColorPicker>();
-            colorPicker.onColorChange.RemoveAllListeners();
-
-            //Don't let users apply a greyscale just yet. We have not quality tested the existing recoloring solution to know if it will behave as expected.
-            colorPicker.saturationSlider.gameObject.SetActive(false);
-            colorPicker.SetSaturation(1f);
-        }
-
-        //This the the actual color picker that renders on the screen.
-        private void InitializeColorPickerElement()
-        {
-            GameObject colorPickerGameObject = playerSettingsPanel.RequireGameObject("ColorPicker");
-            RectTransform colorPickerGameObjectTransform = (RectTransform)colorPickerGameObject.transform;
-            colorPickerGameObjectTransform.anchorMin = new Vector2(0f, 0f);
-            colorPickerGameObjectTransform.anchorMax = new Vector2(1f, 1f);
-            colorPickerGameObjectTransform.pivot = new Vector2(0.5f, 0.5f);
-            colorPickerGameObjectTransform.anchoredPosition = new Vector2(40f, 0f);
-        }
-
-        private static GUISkin GetGUISkin()
-        {
-            return GUISkinUtils.RegisterDerivedOnce("menus.serverPassword",
-                                                    s =>
-                                                    {
-                                                        s.textField.fontSize = 14;
-                                                        s.textField.richText = false;
-                                                        s.textField.alignment = TextAnchor.MiddleLeft;
-                                                        s.textField.wordWrap = true;
-                                                        s.textField.stretchHeight = true;
-                                                        s.textField.padding = new RectOffset(10, 10, 5, 5);
-
-                                                        s.label.fontSize = 14;
-                                                        s.label.alignment = TextAnchor.MiddleRight;
-                                                        s.label.stretchHeight = true;
-                                                        s.label.fixedWidth = 80; //change this when adding new labels that need more space.
-
-                                                        s.button.fontSize = 14;
-                                                        s.button.stretchHeight = true;
-                                                    });
-        }
-
-        private void DoServerPasswordWindow(int windowId)
-        {
-            Event e = Event.current;
-            if (e.isKey)
-            {
-                switch (e.keyCode)
-                {
-                    case KeyCode.Return:
-                        OnSubmitPasswordButtonClicked();
-                        break;
-                    case KeyCode.Escape:
-                        OnCancelButtonClicked();
-                        break;
-                }
-            }
-
-            GUISkinUtils.RenderWithSkin(GetGUISkin(),
-                () =>
-                {
-                    using (new GUILayout.VerticalScope("Box"))
+                NotifyUser(
+                    reservationRejectionNotification,
+                    () =>
                     {
-                        using (new GUILayout.HorizontalScope())
-                        {
-                            GUILayout.Label(Language.main.Get("Nitrox_JoinServerPassword"));
-                            GUI.SetNextControlName("serverPasswordField");
-                            serverPassword = GUILayout.TextField(serverPassword);
-                        }
+                        multiplayerSession.Disconnect();
+                        multiplayerSession.ConnectAsync(serverIp, serverPort);
+                    });
+                break;
 
-                        if (GUILayout.Button(Language.main.Get("Nitrox_SubmitPassword")))
-                        {
-                            HidePasswordWindow();
-                            OnSubmitPasswordButtonClicked();
-                        }
+            case MultiplayerSessionConnectionStage.DISCONNECTED:
+                Log.Info(Language.main.Get("Nitrox_DisconnectedSession"));
+                break;
+        }
+    }
 
-                        if (GUILayout.Button(Language.main.Get("Nitrox_Cancel")))
-                        {
-                            HidePasswordWindow();
-                            OnCancelClick(true);
-                        }
-                    }
-                });
+    private void NotifyUser(string notificationMessage, Action continuationAction = null)
+    {
+        if (gameObject.GetComponent<MainMenuNotification>())
+        {
+            return;
+        }
 
-            if (shouldFocus)
+        MainMenuNotification notificationDialog = gameObject.AddComponent<MainMenuNotification>();
+        notificationDialog.ShowNotification(notificationMessage, () =>
+        {
+            continuationAction?.Invoke();
+            Destroy(gameObject.GetComponent<MainMenuNotification>(), 0.0001f);
+        });
+    }
+
+    public void StopMultiplayerClient()
+    {
+        if (!multiplayerClient)
+        {
+            return;
+        }
+
+        Multiplayer.Main.StopCurrentSession();
+        Destroy(multiplayerClient);
+        multiplayerClient = null;
+        if (multiplayerSession != null)
+        {
+            multiplayerSession.ConnectionStateChanged -= SessionConnectionStateChangedHandler;
+        }
+    }
+
+    private void DoServerPasswordWindow(int windowId)
+    {
+        GUISkin GetGUISkin() => GUISkinUtils.RegisterDerivedOnce("menus.serverPassword",
+                                                                 s =>
+                                                                 {
+                                                                     s.textField.fontSize = 14;
+                                                                     s.textField.richText = false;
+                                                                     s.textField.alignment = TextAnchor.MiddleLeft;
+                                                                     s.textField.wordWrap = true;
+                                                                     s.textField.stretchHeight = true;
+                                                                     s.textField.padding = new RectOffset(10, 10, 5, 5);
+
+                                                                     s.label.fontSize = 14;
+                                                                     s.label.alignment = TextAnchor.MiddleRight;
+                                                                     s.label.stretchHeight = true;
+                                                                     s.label.fixedWidth = 80; //change this when adding new labels that need more space.
+
+                                                                     s.button.fontSize = 14;
+                                                                     s.button.stretchHeight = true;
+                                                                 });
+
+        Event e = Event.current;
+        if (e.isKey)
+        {
+            switch (e.keyCode)
             {
-                GUI.FocusControl("serverPasswordField");
-                shouldFocus = false;
+                case KeyCode.Return:
+                    OnSubmitPasswordButtonClicked();
+                    break;
+                case KeyCode.Escape:
+                    OnCancelButtonClicked();
+                    break;
             }
         }
 
-        private void OnSubmitPasswordButtonClicked()
-        {
-            SubmitPassword();
-            HidePasswordWindow();
-        }
+        GUISkinUtils.RenderWithSkin(GetGUISkin(),
+                                    () =>
+                                    {
+                                        using (new GUILayout.VerticalScope("Box"))
+                                        {
+                                            using (new GUILayout.HorizontalScope())
+                                            {
+                                                GUILayout.Label(Language.main.Get("Nitrox_JoinServerPassword"));
+                                                GUI.SetNextControlName("serverPasswordField");
+                                                serverPassword = GUILayout.TextField(serverPassword);
+                                            }
 
-        private void SubmitPassword()
-        {
-            passwordEntered = true;
-        }
+                                            if (GUILayout.Button(Language.main.Get("Nitrox_SubmitPassword")))
+                                            {
+                                                HidePasswordWindow();
+                                                OnSubmitPasswordButtonClicked();
+                                            }
 
-        private void OnCancelButtonClicked()
-        {
-            multiplayerSession.Disconnect();
-            HidePasswordWindow();
-        }
+                                            if (GUILayout.Button(Language.main.Get("Nitrox_Cancel")))
+                                            {
+                                                HidePasswordWindow();
+                                                OnCancelClick(true);
+                                            }
+                                        }
+                                    });
 
-        private void HidePasswordWindow()
+        if (shouldFocus)
         {
-            showingPasswordWindow = false;
+            GUI.FocusControl("serverPasswordField");
             shouldFocus = false;
         }
+    }
+
+    private void OnSubmitPasswordButtonClicked()
+    {
+        SubmitPassword();
+        HidePasswordWindow();
+    }
+
+    private void SubmitPassword()
+    {
+        passwordEntered = true;
+    }
+
+    private void OnCancelButtonClicked()
+    {
+        multiplayerSession.Disconnect();
+        HidePasswordWindow();
+    }
+
+    private void HidePasswordWindow()
+    {
+        showingPasswordWindow = false;
+        shouldFocus = false;
     }
 }

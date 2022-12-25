@@ -38,8 +38,10 @@ public class uGUI_PlayerListTab : uGUI_PingTab
         packetSender = NitroxServiceLocator.LocateService<IPacketSender>();
         // Need to reassign manually these variables and get rid of the objects we don't need
         content = gameObject.FindChild("Content").GetComponent<CanvasGroup>();
-        pingManagerLabel = gameObject.FindChild("PingManagerLabel").GetComponent<TextMeshProUGUI>();
+        pingManagerLabel = gameObject.GetComponentInChildren<TextMeshProUGUI>();
+        scrollRect = gameObject.GetComponentInChildren<ScrollRect>();
         pingCanvas = (RectTransform)content.transform.Find("ScrollView/Viewport/ScrollCanvas");
+
         pool = new PrefabPool<uGUI_PlayerPingEntry>(prefabEntry, pingCanvas, 8, 4, delegate (uGUI_PlayerPingEntry entry)
         {
             entry.Uninitialize();
