@@ -74,7 +74,6 @@ public class uGUI_PlayerPingEntry : uGUI_PingEntry
         this.parent = parent;
 
         gameObject.SetActive(true);
-        visibility.isOn = true;
         visibilityIcon.sprite = spriteVisible;
         icon.SetForegroundSprite(SpriteManager.Get(SpriteManager.Group.Tab, "TabInventory"));
         showPing = true;

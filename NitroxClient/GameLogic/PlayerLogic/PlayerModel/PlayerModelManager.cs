@@ -72,28 +72,13 @@ public class PlayerModelManager
         signalBase.SetActive(true);
 
         PingInstance ping = signalBase.GetComponent<PingInstance>();
+        ping.Initialize();
         ping.SetLabel($"Player {player.PlayerName}");
         ping.pingType = PingType.Signal;
         // ping will be moved to the player list tab
         ping.displayPingInManager = false;
 
-        UpdateLocalPlayerPda();
         SetInGamePingColor(player, ping);
-    }
-
-    private static void UpdateLocalPlayerPda()
-    {
-        PDA localPlayerPda = Player.main.GetPDA();
-        GameObject pdaScreenGameObject = localPlayerPda.ui.gameObject;
-        GameObject pingTabGameObject = pdaScreenGameObject.transform.Find("Content/PingManagerTab").gameObject;
-        uGUI_PingTab pingTab = pingTabGameObject.GetComponent<uGUI_PingTab>();
-
-        pingTab.UpdateEntries();
-
-        if (!localPlayerPda.isInUse)
-        {
-            pdaScreenGameObject.gameObject.SetActive(false);
-        }
     }
 
     private static void SetInGamePingColor(INitroxPlayer player, PingInstance ping)

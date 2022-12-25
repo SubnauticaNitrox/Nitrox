@@ -38,6 +38,11 @@ namespace NitroxClient.MonoBehaviours
         public static event Action OnBeforeMultiplayerStart;
         public static event Action OnAfterMultiplayerEnd;
 
+        public static void SubnauticaLoadingStarted()
+        {
+            OnBeforeMultiplayerStart?.Invoke();
+        }
+
         public static void SubnauticaLoadingCompleted()
         {
             if (Active)
@@ -116,7 +121,6 @@ namespace NitroxClient.MonoBehaviours
 
         public IEnumerator StartSession()
         {
-            OnBeforeMultiplayerStart?.Invoke();
             yield return StartCoroutine(InitializeLocalPlayerState());
             multiplayerSession.JoinSession();
             InitMonoBehaviours();

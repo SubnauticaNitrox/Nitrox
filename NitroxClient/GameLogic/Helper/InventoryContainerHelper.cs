@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Text.RegularExpressions;
+using NitroxClient.GameLogic.PlayerLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
@@ -34,7 +35,7 @@ namespace NitroxClient.GameLogic.Helper
             {
                 return Optional.Of(Inventory.Get().container);
             }
-            if (owner.GetComponentInChildren<PingInstance>().GetLabel().StartsWith("Player "))
+            if (owner.GetComponent<RemotePlayerIdentifier>())
             {
                 if (playerManager == null)
                 {

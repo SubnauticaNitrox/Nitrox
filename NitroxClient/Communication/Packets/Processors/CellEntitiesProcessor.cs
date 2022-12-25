@@ -1,6 +1,7 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxModel.Packets;
+using UWE;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -15,7 +16,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(CellEntities packet)
         {
-            entities.SpawnAsync(packet.Entities);
+            CoroutineHost.StartCoroutine(entities.SpawnAsync(packet.Entities));
         }
     }
 }

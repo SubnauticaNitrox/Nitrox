@@ -211,6 +211,7 @@ public class JoinServer : MonoBehaviour
                 preferencesManager.Save();
 
 #pragma warning disable CS0618 // God Damn it UWE...
+                Multiplayer.SubnauticaLoadingStarted();
                 IEnumerator startNewGame = uGUI_MainMenu.main.StartNewGame(GameMode.Survival);
 #pragma warning restore CS0618 // God damn it UWE...
                 StartCoroutine(startNewGame);
