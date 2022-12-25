@@ -78,6 +78,7 @@ namespace NitroxModel.Helper
                 string path = GameInstallationFinder.Instance.FindGame(errors);
                 if (!string.IsNullOrWhiteSpace(path) && Directory.Exists(path))
                 {
+                    GamePlatform = GamePlatforms.GetPlatformByGameDir(path);
                     return gamePath = path;
                 }
 

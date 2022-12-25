@@ -54,13 +54,13 @@ namespace NitroxServer
 
         public string GetSaveSummary(Perms viewerPerms = Perms.CONSOLE)
         {
-            // TODO: Extend summary with more useful save file data
-            // Note for later additions: order these lines by their length
             StringBuilder builder = new("\n");
+
             if (viewerPerms is Perms.CONSOLE)
             {
                 builder.AppendLine($" - Save location: {Path.GetFullPath(serverConfig.SaveName)}");
             }
+
             builder.AppendLine($" - Aurora's state: {world.EventTriggerer.GetAuroraStateSummary()}");
             builder.AppendLine($" - Current time: day {world.EventTriggerer.Day} ({Math.Floor(world.EventTriggerer.ElapsedSeconds)}s)");
             builder.AppendLine($" - Scheduled goals stored: {world.GameData.StoryGoals.ScheduledGoals.Count}");
