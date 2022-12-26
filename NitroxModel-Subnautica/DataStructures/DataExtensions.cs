@@ -164,5 +164,15 @@ namespace NitroxModel_Subnautica.DataStructures
         {
             return new() { techType = entry.TechType.ToUnity(), unlocked = entry.Unlocked };
         }
+
+        public static Base.Face ToUnity(this NitroxBaseFace baseFace)
+        {
+            return new(baseFace.Cell.ToUnity(), (Base.Direction)baseFace.Direction);
+        }
+
+        public static NitroxBaseFace ToDto(this Base.Face face)
+        {
+            return new(face.cell.ToDto(), (int)face.direction);
+        }
     }
 }
