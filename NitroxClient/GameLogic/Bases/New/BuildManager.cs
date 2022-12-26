@@ -164,6 +164,7 @@ public static class NitroxBuild
 
             Constructable constructable = moduleObject.GetComponent<Constructable>();
             constructable.SetIsInside(savedModule.IsInside);
+            // TODO: If IsInside is false, maybe set a null environment
             SkyEnvironmentChanged.Send(moduleObject, moduleObject.GetComponentInParent<SubRoot>(true));
             constructable.constructedAmount = savedModule.ConstructedAmount;
             constructable.SetState(savedModule.ConstructedAmount >= 1f, false);
