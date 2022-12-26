@@ -30,7 +30,7 @@ namespace NitroxServer.Serialization.World
             {
                 BaseData = BaseData.From(world.BaseManager.GetPartiallyConstructedPieces(), world.BaseManager.GetCompletedBasePieceHistory()),
                 PlayerData = PlayerData.From(world.PlayerManager.GetAllPlayers()),
-                EntityData = EntityData.From(world.EntityManager.GetAllEntities()),
+                EntityData = EntityData.From(world.EntityRegistry.GetAllEntities()),
                 WorldData =
                 {
                     ParsedBatchCells = world.BatchEntitySpawner.SerializableParsedBatches,

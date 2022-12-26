@@ -1,18 +1,17 @@
 ﻿using System.Collections;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper;
 using UnityEngine;
 
-namespace NitroxClient.GameLogic.Spawning
+namespace NitroxClient.GameLogic.Spawning.WorldEntities
 {
-    public class CrashEntitySpawner : IEntitySpawner
+    public class CrashEntitySpawner : IWorldEntitySpawner
     {
         /**
          * Crash fish are spawned by the CrashHome in the Monobehaviours Start method
          */
-        public IEnumerator SpawnAsync(Entity entity, Optional<GameObject> parent, EntityCell cellRoot, TaskResult<Optional<GameObject>> result)
+        public IEnumerator SpawnAsync(WorldEntity entity, Optional<GameObject> parent, EntityCell cellRoot, TaskResult<Optional<GameObject>> result)
         {
             if (parent.HasValue)
             {

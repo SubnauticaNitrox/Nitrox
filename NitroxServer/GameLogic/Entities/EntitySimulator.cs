@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
 
 namespace NitroxServer.GameLogic.Entities
@@ -11,14 +12,16 @@ namespace NitroxServer.GameLogic.Entities
     {
         private const SimulationLockType DEFAULT_ENTITY_SIMULATION_LOCKTYPE = SimulationLockType.TRANSIENT;
 
-        private readonly EntityManager entityManager;
+        private readonly EntityRegistry entityRegistry;
+        private readonly WorldEntityManager worldEntityManager;
         private readonly PlayerManager playerManager;
         private readonly HashSet<NitroxTechType> serverSpawnedSimulationWhiteList;
         private readonly SimulationOwnershipData simulationOwnershipData;
 
-        public EntitySimulation(EntityManager entityManager, SimulationOwnershipData simulationOwnershipData, PlayerManager playerManager, HashSet<NitroxTechType> serverSpawnedSimulationWhiteList)
+        public EntitySimulation(EntityRegistry entityRegistry, WorldEntityManager worldEntityManager, SimulationOwnershipData simulationOwnershipData, PlayerManager playerManager, HashSet<NitroxTechType> serverSpawnedSimulationWhiteList)
         {
-            this.entityManager = entityManager;
+            this.entityRegistry = entityRegistry;
+            this.worldEntityManager = worldEntityManager;
             this.simulationOwnershipData = simulationOwnershipData;
             this.playerManager = playerManager;
             this.serverSpawnedSimulationWhiteList = serverSpawnedSimulationWhiteList;
@@ -30,7 +33,7 @@ namespace NitroxServer.GameLogic.Entities
 
             AssignLoadedCellEntitySimulation(player, added, ownershipChanges);
 
-            List<Entity> revokedEntities = RevokeForCells(player, removed);
+            List<WorldEntity> revokedEntities = RevokeForCells(player, removed);
             AssignEntitiesToNewPlayers(player, revokedEntities, ownershipChanges);
 
             return ownershipChanges;
@@ -58,9 +61,9 @@ namespace NitroxServer.GameLogic.Entities
 
         public IEnumerable<NitroxId> AssignGlobalRootEntities(Player player)
         {
-            List<Entity> globalRootEntities = entityManager.GetGlobalRootEntities();
-            IEnumerable<Entity> entities = globalRootEntities.Where(entity => simulationOwnershipData.TryToAcquire(entity.Id, player, SimulationLockType.TRANSIENT));
-            foreach (Entity entity in entities)
+            List<WorldEntity> globalRootEntities = worldEntityManager.GetGlobalRootEntities();
+            IEnumerable<WorldEntity> entities = globalRootEntities.Where(entity => simulationOwnershipData.TryToAcquire(entity.Id, player, SimulationLockType.TRANSIENT));
+            foreach (WorldEntity entity in entities)
             {
                 yield return entity.Id;
             }
@@ -76,9 +79,9 @@ namespace NitroxServer.GameLogic.Entities
             }
         }
 
-        private void AssignEntitiesToNewPlayers(Player oldPlayer, List<Entity> entities, List<SimulatedEntity> ownershipChanges)
+        private void AssignEntitiesToNewPlayers(Player oldPlayer, List<WorldEntity> entities, List<SimulatedEntity> ownershipChanges)
         {
-            foreach (Entity entity in entities)
+            foreach (WorldEntity entity in entities)
             {
                 foreach (Player player in playerManager.GetConnectedPlayers())
                 {
@@ -87,7 +90,11 @@ namespace NitroxServer.GameLogic.Entities
                     if (isOtherPlayer && player.CanSee(entity) && simulationOwnershipData.TryToAcquire(entity.Id, player, DEFAULT_ENTITY_SIMULATION_LOCKTYPE))
                     {
                         Log.Info($"Player {player.Name} has taken over simulating {entity.Id}");
-                        ownershipChanges.Add(new SimulatedEntity(entity.Id, player.Id, true, DEFAULT_ENTITY_SIMULATION_LOCKTYPE));
+
+                        bool isSpawnedByServerAndWhitelisted = entity.SpawnedByServer && serverSpawnedSimulationWhiteList.Contains(entity.TechType);
+                        bool doesEntityMove = isSpawnedByServerAndWhitelisted || !entity.SpawnedByServer;
+
+                        ownershipChanges.Add(new SimulatedEntity(entity.Id, player.Id, doesEntityMove, DEFAULT_ENTITY_SIMULATION_LOCKTYPE));
                         break;
                     }
                 }
@@ -101,8 +108,10 @@ namespace NitroxServer.GameLogic.Entities
                 foreach (Player player in playerManager.GetConnectedPlayers())
                 {
                     bool isOtherPlayer = player != oldPlayer;
-                    Optional<Entity> opEntity = entityManager.GetEntityById(id);
+
+                    Optional<Entity> opEntity = entityRegistry.GetEntityById(id);
                     Entity entity = opEntity.OrNull();
+
                     if (isOtherPlayer && (entity == null || player.CanSee(entity)) && simulationOwnershipData.TryToAcquire(id, player, DEFAULT_ENTITY_SIMULATION_LOCKTYPE))
                     {
                         Log.Info($"Player {player.Name} has taken over simulating {id}");
@@ -119,7 +128,7 @@ namespace NitroxServer.GameLogic.Entities
 
             foreach (AbsoluteEntityCell cell in added)
             {
-                List<Entity> entities = entityManager.GetEntities(cell);
+                List<WorldEntity> entities = worldEntityManager.GetEntities(cell);
                 assignedEntities.AddRange(
                     entities.Where(entity =>
                     {
@@ -132,12 +141,12 @@ namespace NitroxServer.GameLogic.Entities
             return assignedEntities;
         }
 
-        private List<Entity> RevokeForCells(Player player, AbsoluteEntityCell[] removed)
+        private List<WorldEntity> RevokeForCells(Player player, AbsoluteEntityCell[] removed)
         {
-            List<Entity> revokedEntities = new List<Entity>();
+            List<WorldEntity> revokedEntities = new List<WorldEntity>();
             foreach (AbsoluteEntityCell cell in removed)
             {
-                List<Entity> entities = entityManager.GetEntities(cell);
+                List<WorldEntity> entities = worldEntityManager.GetEntities(cell);
                 revokedEntities.AddRange(entities.Where(entity => entity.Level <= cell.Level && simulationOwnershipData.RevokeIfOwner(entity.Id, player)));
             }
 

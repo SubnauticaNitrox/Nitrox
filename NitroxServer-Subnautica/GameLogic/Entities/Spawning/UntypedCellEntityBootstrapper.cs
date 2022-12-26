@@ -1,4 +1,4 @@
-﻿using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxServer.GameLogic.Entities.Spawning;
 using NitroxServer.Helper;
 
@@ -15,7 +15,7 @@ public class UntypedCellEntityBootstrapper : IEntityBootstrapper
     /// </summary>
     private readonly string cellRootClassId = "55d7ab35-de97-4d95-af6c-ac8d03bb54ca";
 
-    public void Prepare(Entity entity, Entity parentEntity, DeterministicGenerator deterministicBatchGenerator)
+    public void Prepare(WorldEntity entity, WorldEntity parentEntity, DeterministicGenerator deterministicBatchGenerator)
     {
         bool hasCellRootAsParent = parentEntity != null && parentEntity.ClassId == cellRootClassId;
 

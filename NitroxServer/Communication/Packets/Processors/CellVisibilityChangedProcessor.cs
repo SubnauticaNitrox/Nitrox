@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
+using System.Linq;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
@@ -10,13 +12,13 @@ namespace NitroxServer.Communication.Packets.Processors
 {
     class CellVisibilityChangedProcessor : AuthenticatedPacketProcessor<CellVisibilityChanged>
     {
-        private readonly EntityManager entityManager;
+        private readonly WorldEntityManager worldEntityManager;
         private readonly EntitySimulation entitySimulation;
         private readonly PlayerManager playerManager;
 
-        public CellVisibilityChangedProcessor(EntityManager entityManager, EntitySimulation entitySimulation, PlayerManager playerManager)
+        public CellVisibilityChangedProcessor(WorldEntityManager worldEntityManager, EntitySimulation entitySimulation, PlayerManager playerManager)
         {
-            this.entityManager = entityManager;
+            this.worldEntityManager = worldEntityManager;
             this.entitySimulation = entitySimulation;
             this.playerManager = playerManager;
         }
@@ -34,11 +36,11 @@ namespace NitroxServer.Communication.Packets.Processors
 
         private void SendNewlyVisibleEntities(Player player, AbsoluteEntityCell[] visibleCells)
         {
-            List<Entity> newlyVisibleEntities = entityManager.GetVisibleEntities(visibleCells);
+            List<WorldEntity> newlyVisibleEntities = worldEntityManager.GetVisibleEntities(visibleCells);
 
             if (newlyVisibleEntities.Count > 0)
             {
-                CellEntities cellEntities = new CellEntities(newlyVisibleEntities);
+                CellEntities cellEntities = new CellEntities(newlyVisibleEntities.Cast<Entity>().ToList());
                 player.SendPacket(cellEntities);
             }
         }

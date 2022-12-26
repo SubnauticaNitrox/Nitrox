@@ -215,10 +215,12 @@ namespace NitroxServer.Serialization.World
                 world.Seed
             );
 
-            world.EntityManager = new EntityManager(pWorldData.EntityData.Entities, world.BatchEntitySpawner);
+            world.EntityRegistry = new EntityRegistry(pWorldData.EntityData.Entities);
+
+            world.WorldEntityManager = new WorldEntityManager(world.EntityRegistry, world.BatchEntitySpawner);
 
             HashSet<NitroxTechType> serverSpawnedSimulationWhiteList = NitroxServiceLocator.LocateService<HashSet<NitroxTechType>>();
-            world.EntitySimulation = new EntitySimulation(world.EntityManager, world.SimulationOwnershipData, world.PlayerManager, serverSpawnedSimulationWhiteList);
+            world.EntitySimulation = new EntitySimulation(world.EntityRegistry, world.WorldEntityManager, world.SimulationOwnershipData, world.PlayerManager, serverSpawnedSimulationWhiteList);
 
             return world;
         }
