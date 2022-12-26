@@ -82,6 +82,19 @@ public class Program
                 });
             }
 
+            if (NitroxUser.IsNewestSubnautica.GetValueOrDefault(false))
+            {
+                Log.Error("Due to Subnautica's recent update \"Living Large\", Nitrox is currently not compatible. However you can still use older version of Subnautica in order to play Nitrox. You can do so by following these steps");
+                
+                if (NitroxUser.GamePlatform?.Platform == Platform.STEAM)
+                {
+                    Log.Warn("ENSURE NITROX AND SUBNAUTICA ARE CLOSED BEFORE PROCEEDING!");
+                    Log.Warn("Changing Subnautica to Legacy Build on STEAM:\n1. Right click Subnautica in Steam\n2. Click Properties\n3. Click Betas\n4. Select Legacy - Public legacy builds\n5. Close it out and let Steam download and install the Legacy version of Subnautica\n6. Run Subnautica through Steam (It will say \"Subnautica [legacy]\" in your library if you did it right)\n7. Launch Subnautica through Nitrox to play.");
+                }
+
+                throw new Exception("Unable to start server, Nitrox isn't compatible with this Subnautica version");
+            }
+
             NitroxServiceLocator.InitializeDependencyContainer(new SubnauticaServerAutoFacRegistrar());
             NitroxServiceLocator.BeginNewLifetimeScope();
 

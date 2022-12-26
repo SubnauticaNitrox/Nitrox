@@ -78,6 +78,7 @@ namespace NitroxModel.Helper
                 string path = GameInstallationFinder.Instance.FindGame(errors);
                 if (!string.IsNullOrWhiteSpace(path) && Directory.Exists(path))
                 {
+                    GamePlatform = GamePlatforms.GetPlatformByGameDir(path);
                     return gamePath = path;
                 }
 
@@ -98,6 +99,32 @@ namespace NitroxModel.Helper
                 // Ensures the path looks alright (no mixed / and \ path separators)
                 gamePath = Path.GetFullPath(value);
                 GamePlatform = GamePlatforms.GetPlatformByGameDir(gamePath);
+            }
+        }
+
+        public static bool? IsNewestSubnautica
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(GamePath))
+                {
+                    return null;
+                }
+
+                string streamingAssetsFolder = Path.Combine(GamePath, "Subnautica_Data", "StreamingAssets");
+                string aaFolder = Path.Combine(streamingAssetsFolder, "aa");
+
+                if (!Directory.Exists(streamingAssetsFolder)) {
+                    // Probably authorization exception
+                    return null;
+                }
+
+                if (File.Exists(Path.Combine(aaFolder, "catalog.json")) && File.Exists(Path.Combine(aaFolder, "settings.json")))
+                {
+                    return true;
+                }
+
+                return false;
             }
         }
     }
