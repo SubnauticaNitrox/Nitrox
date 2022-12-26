@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using HarmonyLib;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
@@ -34,6 +34,6 @@ public class Constructable_SetState_Patch : NitroxPatch, IDynamicPatch
 
     public override void Patch(Harmony harmony)
     {
-        PatchPostfix(harmony, TARGET_METHOD);
+        //PatchPostfix(harmony, TARGET_METHOD);
     }
 }

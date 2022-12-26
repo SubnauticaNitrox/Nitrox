@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
@@ -62,7 +62,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public override void Patch(Harmony harmony)
         {
-            PatchMultiple(harmony, TARGET_METHOD, prefix:true, postfix:true);
+            //PatchMultiple(harmony, TARGET_METHOD, prefix:true, postfix:true);
         }
     }
 }

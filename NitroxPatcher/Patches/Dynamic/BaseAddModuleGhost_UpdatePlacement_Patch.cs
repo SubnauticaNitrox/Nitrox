@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -63,7 +63,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public override void Patch(Harmony harmony)
         {
-            PatchTranspiler(harmony, TARGET_METHOD);
+            //PatchTranspiler(harmony, TARGET_METHOD);
         }
 
         private static CodeInstruction GetJumpInstruction(List<CodeInstruction> instructions, int startingIndex)

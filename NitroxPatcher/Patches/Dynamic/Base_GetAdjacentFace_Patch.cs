@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using HarmonyLib;
 using NitroxClient.MonoBehaviours.Overrides;
 using NitroxModel_Subnautica.DataStructures;
@@ -31,7 +31,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public override void Patch(Harmony harmony)
         {
-            PatchPrefix(harmony, METHOD);
+            //PatchPrefix(harmony, METHOD);
         }
     }
 }

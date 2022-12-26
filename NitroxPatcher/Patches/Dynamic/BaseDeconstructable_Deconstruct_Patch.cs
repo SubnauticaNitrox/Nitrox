@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
@@ -41,7 +41,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public override void Patch(Harmony harmony)
         {
-            PatchTranspiler(harmony, TARGET_METHOD);
+            //PatchTranspiler(harmony, TARGET_METHOD);
         }
     }
 }

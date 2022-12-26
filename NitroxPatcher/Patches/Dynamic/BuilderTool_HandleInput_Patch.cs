@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
@@ -42,6 +42,6 @@ public class BuilderTool_HandleInput_Patch : NitroxPatch, IDynamicPatch
 
     public override void Patch(Harmony harmony)
     {
-        PatchTranspiler(harmony, TARGET_METHOD);
+        //PatchTranspiler(harmony, TARGET_METHOD);
     }
 }

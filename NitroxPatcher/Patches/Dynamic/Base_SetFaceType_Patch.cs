@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using HarmonyLib;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Helper;
@@ -104,6 +104,6 @@ public class Base_SetFaceType_Patch : NitroxPatch, IDynamicPatch
 
     public override void Patch(Harmony harmony)
     {
-        PatchPrefix(harmony, TARGET_METHOD);
+        //PatchPrefix(harmony, TARGET_METHOD);
     }
 }
