@@ -46,9 +46,6 @@ namespace NitroxModel.DataStructures.GameLogic.Entities
         [ProtoMember(6)]
         public bool ExistsInGlobalRoot { get; set; }
         
-        [ProtoMember(7)]
-        public bool IsPrefab { get; set; }
-
         [IgnoreConstructor]
         protected WorldEntity()
         {
@@ -78,7 +75,7 @@ namespace NitroxModel.DataStructures.GameLogic.Entities
         }
 
         /// <remarks>Used for deserialization</remarks>
-        public WorldEntity(NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId waterParkId, bool existsInGlobalRoot, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities, bool isPrefab)
+        public WorldEntity(NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId waterParkId, bool existsInGlobalRoot, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
         {
             Id = id;
             TechType = techType;
@@ -91,7 +88,6 @@ namespace NitroxModel.DataStructures.GameLogic.Entities
             SpawnedByServer = spawnedByServer;
             WaterParkId = waterParkId;
             ExistsInGlobalRoot = existsInGlobalRoot;
-            IsPrefab = isPrefab;
         }
 
         public override string ToString()

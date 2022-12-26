@@ -29,8 +29,9 @@ namespace NitroxClient.GameLogic
         {
             this.packetSender = packetSender;
 
-            entitySpawnersByType[typeof(WorldEntity)] = new WorldEntitySpawner();
             entitySpawnersByType[typeof(PrefabChildEntity)] = new PrefabChildEntitySpawner();
+            entitySpawnersByType[typeof(WorldEntity)] = new WorldEntitySpawner();
+            entitySpawnersByType[typeof(PlaceholderGroupWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
         }
 
         public void BroadcastTransforms(Dictionary<NitroxId, GameObject> gameObjectsById)

@@ -54,13 +54,12 @@ public class PlaceholderGroupWorldEntity : WorldEntity
         SpawnedByServer = worldEntity.SpawnedByServer;
         WaterParkId = worldEntity.WaterParkId;
         ExistsInGlobalRoot = worldEntity.ExistsInGlobalRoot;
-        IsPrefab = true;
         PrefabPlaceholders = prefabPlaceholders;
     }
     
     
     /// <remarks>Used for deserialization</remarks>
-    public PlaceholderGroupWorldEntity(NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId waterParkId, bool existsInGlobalRoot, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities, bool isPrefab, PrefabPlaceholder[] prefabPlaceholders)
+    public PlaceholderGroupWorldEntity(NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId waterParkId, bool existsInGlobalRoot, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities, PrefabPlaceholder[] prefabPlaceholders)
     {
         Id = id;
         TechType = techType;
@@ -73,7 +72,6 @@ public class PlaceholderGroupWorldEntity : WorldEntity
         SpawnedByServer = spawnedByServer;
         WaterParkId = waterParkId;
         ExistsInGlobalRoot = existsInGlobalRoot;
-        IsPrefab = isPrefab;
         PrefabPlaceholders = prefabPlaceholders;
     }
 }

@@ -1,23 +1,22 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.GameLogic.Entities;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class CellEntities : Packet
     {
-        public List<WorldEntity> Entities { get; }
+        public List<Entity> Entities { get; }
 
-        public CellEntities(List<WorldEntity> entities)
+        public CellEntities(List<Entity> entities)
         {
             Entities = entities;
         }
 
-        public CellEntities(WorldEntity entity)
+        public CellEntities(Entity entity)
         {
-            Entities = new List<WorldEntity>
+            Entities = new List<Entity>
             {
                 entity
             };
