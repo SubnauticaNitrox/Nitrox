@@ -128,8 +128,6 @@ namespace NitroxClient.GameLogic
 
         private void UpdatePosition(WorldEntity entity)
         {
-            LargeWorldStreamer.main.cellManager.UnloadBatchCells(entity.AbsoluteEntityCell.CellId.ToUnity()); // Just in case
-
             Optional<GameObject> opGameObject = NitroxEntity.GetObjectFrom(entity.Id);
 
             if (!opGameObject.HasValue)
