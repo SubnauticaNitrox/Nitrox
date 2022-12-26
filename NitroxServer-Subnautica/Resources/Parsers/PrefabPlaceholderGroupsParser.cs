@@ -42,20 +42,19 @@ public class PrefabPlaceholderGroupsParser
     {
         // Get all prefab-classIds linked to the (partial) bundle path
         Dictionary<string, string> prefabDatabase = LoadPrefabDatabase(prefabDatabasePath);
-        am.UnloadAll();
 
-        // Loading all prefabs by their classId and the path + paths of dependencies for each
+        // Loading all prefabs by their classId and file paths (first the path to the prefab then the dependencies)
         Dictionary<string, string[]> loadAddressableCatalog = LoadAddressableCatalog(prefabDatabase);
-        am.UnloadAll();
 
-        // Filter out all prefabs with a PrefabPlaceholdersGroups component in the root
+        // Select only prefabs with a PrefabPlaceholdersGroups component in the root ans link them with their dependencyPaths
         ConcurrentDictionary<string, string[]> prefabPlaceholdersGroupPaths = GetAllPrefabPlaceholdersGroupsFast(loadAddressableCatalog);
         am.UnloadAll();
 
-        // Get all needed data for the filtered prefabPlaceholdersGroups to construct PrefabPlaceholdersGroupAssets and add them to the dictionary by classId
-        ConcurrentDictionary<string, PrefabPlaceholdersGroupAsset> prefabPlaceholderGroupsByGroupClassId = GetPrefabPlaceholderGroupAssetsByGroupClassId(prefabPlaceholdersGroupPaths, loadAddressableCatalog);
+        // Get all needed data for the filtered PrefabPlaceholdersGroups to construct PrefabPlaceholdersGroupAssets and add them to the dictionary by classId
+        ConcurrentDictionary<string, PrefabPlaceholdersGroupAsset> prefabPlaceholderGroupsByGroupClassId = GetPrefabPlaceholderGroupAssetsByGroupClassId(prefabPlaceholdersGroupPaths);
         am.UnloadAll(true);
 
+        // Dispose assemblies to release lock
         foreach (KeyValuePair<string, AssemblyDefinition> pair in am.monoTempGenerator.loadedAssemblies)
         {
             pair.Value.Dispose();
@@ -162,7 +161,7 @@ public class PrefabPlaceholderGroupsParser
         return prefabPlaceholdersGroupPaths;
     }
 
-    private ConcurrentDictionary<string, PrefabPlaceholdersGroupAsset> GetPrefabPlaceholderGroupAssetsByGroupClassId(ConcurrentDictionary<string, string[]> prefabPlaceholdersGroupPaths, Dictionary<string, string[]> loadAddressableCatalog)
+    private ConcurrentDictionary<string, PrefabPlaceholdersGroupAsset> GetPrefabPlaceholderGroupAssetsByGroupClassId(ConcurrentDictionary<string, string[]> prefabPlaceholdersGroupPaths)
     {
         ConcurrentDictionary<string, PrefabPlaceholdersGroupAsset> prefabPlaceholderGroupsByGroupClassId = new();
 
@@ -224,6 +223,5 @@ public class PrefabPlaceholderGroupsParser
 
         prefabPlaceholdersClassIdByGroupClassId.TryAdd(classId, prefabPlaceholdersArray);
         return prefabPlaceholdersArray;
-
     }
 }
