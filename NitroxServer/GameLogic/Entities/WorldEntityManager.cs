@@ -8,6 +8,7 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxServer.GameLogic.Entities.Spawning;
 using NitroxModel.DataStructures.GameLogic.Entities;
+using NitroxServer.Resources;
 
 namespace NitroxServer.GameLogic.Entities
 {
@@ -210,6 +211,15 @@ namespace NitroxServer.GameLogic.Entities
 
                                     List<WorldEntity> entitiesInCell = GetEntities(worldEntity.AbsoluteEntityCell);
                                     entitiesInCell.Add(worldEntity);
+                                }
+
+                                if(entity is PlaceholderGroupWorldEntity placeholderGroupEntity)
+                                {
+                                    foreach(Entity child in placeholderGroupEntity.ChildEntities)
+                                    {
+                                        entityRegistry.AddEntity(child);
+                                        totalEntites++;
+                                    }
                                 }
 
                                 entityRegistry.AddEntity(entity);

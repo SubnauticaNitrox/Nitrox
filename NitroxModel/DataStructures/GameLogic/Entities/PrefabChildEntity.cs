@@ -1,6 +1,5 @@
 using System;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
-using NitroxModel.DataStructures.Unity;
 using System.Collections.Generic;
 using ProtoBufNet;
 using BinaryPack.Attributes;

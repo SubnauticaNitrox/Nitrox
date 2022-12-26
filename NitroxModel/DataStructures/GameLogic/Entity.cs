@@ -11,6 +11,7 @@ namespace NitroxModel.DataStructures.GameLogic
     [ProtoContract]
     [ProtoInclude(50, typeof(WorldEntity))]
     [ProtoInclude(60, typeof(PrefabChildEntity))]
+    [ProtoInclude(70, typeof(PrefabPlaceholderEntity))]
     public abstract class Entity
     {
         [ProtoMember(1)]

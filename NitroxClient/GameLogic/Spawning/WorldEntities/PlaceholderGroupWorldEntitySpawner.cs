@@ -1,5 +1,7 @@
 using System.Collections;
+using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.MonoBehaviours;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
 using UnityEngine;
@@ -35,22 +37,38 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities
             
             PrefabPlaceholdersGroup prefabPlaceholderGroup = prefabPlaceholderGroupGameObject.Value.GetComponent<PrefabPlaceholdersGroup>();
 
-            for (int index = 0; index < placeholderGroupEntity.PrefabPlaceholders.Length; index++)
+            for (int index = 0; index < placeholderGroupEntity.ChildEntities.Count; index++)
             {
-                NitroxModel.DataStructures.GameLogic.Entities.PrefabPlaceholder placeholder = placeholderGroupEntity.PrefabPlaceholders[index];
-                if (placeholder == null) //Entity was picked up or removed
+                Entity child = placeholderGroupEntity.ChildEntities[index];
+
+                if (child == null) //Entity was picked up or removed
                 {
                     continue;
                 }
 
-                PrefabPlaceholder prefabPlaceholder = prefabPlaceholderGroup.prefabPlaceholders[index];
+                if (child is PrefabPlaceholderEntity placeholder)
+                {
+                    PrefabPlaceholder prefabPlaceholder = prefabPlaceholderGroup.prefabPlaceholders[index];
 
-                IPrefabRequest prefabCoroutine = PrefabDatabase.GetPrefabAsync(prefabPlaceholder.prefabClassId);
-                yield return prefabCoroutine;
-                prefabCoroutine.TryGetPrefab(out GameObject prefab);
-                GameObject gameObject = Utils.SpawnZeroedAt(prefab, prefabPlaceholder.transform, true);
+                    IPrefabRequest prefabCoroutine = PrefabDatabase.GetPrefabAsync(prefabPlaceholder.prefabClassId);
+                    yield return prefabCoroutine;
+                    prefabCoroutine.TryGetPrefab(out GameObject prefab);
+                    GameObject gameObject = Utils.SpawnZeroedAt(prefab, prefabPlaceholder.transform, true);
 
-                NitroxEntity.SetNewId(gameObject, placeholder.Id);
+                    NitroxEntity.SetNewId(gameObject, placeholder.Id);
+
+                    Optional<EntityMetadataProcessor> metadataProcessor = EntityMetadataProcessor.FromMetaData(entity.Metadata);
+
+                    if (metadataProcessor.HasValue)
+                    {
+                        metadataProcessor.Value.ProcessMetadata(gameObject, placeholder.Metadata);
+                    }
+                }
+                else
+                {
+                    Log.Debug($"Unhandled child type {child}");
+                    continue;
+                }
             }
         }
 

@@ -232,8 +232,6 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                 spawnedEntity.ChildEntities = SpawnEntities(entitySpawnPoint.Children, deterministicBatchGenerator, spawnedEntity);
             }
 
-
-
             if (customBootstrappersByTechType.TryGetValue(techType, out IEntityBootstrapper bootstrapper))
             {
                 bootstrapper.Prepare(spawnedEntity, parentEntity, deterministicBatchGenerator);
@@ -302,14 +300,14 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                 return false;
             }
 
-            PrefabPlaceholder[] prefabPlaceholders = new PrefabPlaceholder[group.PrefabPlaceholders.Length];
+            List<PrefabPlaceholderEntity> placeholders = new();
 
             for (int i = 0; i < group.PrefabPlaceholders.Length; i++)
             {
-                prefabPlaceholders[i] = new PrefabPlaceholder(deterministicBatchGenerator.NextId(), group.PrefabPlaceholders[i]);
+                placeholders.Add(new PrefabPlaceholderEntity(deterministicBatchGenerator.NextId(), group.PrefabPlaceholders[i], new NitroxTechType("None"), null, entity.Id, new List<Entity>()));
             }
 
-            entity = new PlaceholderGroupWorldEntity(entity, prefabPlaceholders);
+            entity = new PlaceholderGroupWorldEntity(entity, placeholders);
 
             return true;
         }
