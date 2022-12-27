@@ -13,9 +13,16 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(CyclopsHelmHUDManager __instance)
         {
-            CyclopsModel cyclops = Resolve<Vehicles>().GetVehicles<CyclopsModel>(NitroxEntity.GetId(__instance.subRoot.gameObject));
-            __instance.hudActive = true;
-            __instance.engineToggleAnimator.SetTrigger(cyclops.EngineState ? "EngineOn" : "EngineOff");
+            NitroxEntity entity = __instance.GetComponent<NitroxEntity>();
+
+            // This patch is invoked by an additive cyclops scene at the beginning.  This just loads the cylops prefabs and stuff but
+            // doesn't represent an actual construction event. Only sync with the cyclops model when we have a tagged nitrox entity.
+            if (entity)
+            {
+                CyclopsModel cyclops = Resolve<Vehicles>().GetVehicles<CyclopsModel>(entity.Id);
+                __instance.hudActive = true;
+                __instance.engineToggleAnimator.SetTrigger(cyclops.EngineState ? "EngineOn" : "EngineOff");
+            }
         }
 
         public override void Patch(Harmony harmony)

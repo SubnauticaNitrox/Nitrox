@@ -47,10 +47,11 @@ namespace NitroxClient.GameLogic
         {
             if (VehicleHelper.IsVehicle(techType))
             {
+                UnityEngine.Component.DestroyImmediate(gameObject.GetComponent<NitroxEntity>()); // template has pre-existing NitroxEntity, remove.
+                NitroxId constructedObjectId = NitroxEntity.GetId(gameObject);
                 List<InteractiveChildObjectIdentifier> childIdentifiers = VehicleChildObjectIdentifierHelper.ExtractInteractiveChildren(gameObject);
                 Optional<Vehicle> opvehicle = Optional.OfNullable(gameObject.GetComponent<Vehicle>());
 
-                NitroxId constructedObjectId = NitroxEntity.GetId(gameObject);
                 NitroxVector3[] hsb = VehicleHelper.GetPrimalDefaultColours();
                 string name = string.Empty;
                 float health = 200f;
@@ -77,14 +78,12 @@ namespace NitroxClient.GameLogic
                 { //Cyclops
                     try
                     {
-                        GameObject target = NitroxEntity.RequireObjectFrom(constructedObjectId);
-                        SubNameInput subNameInput = target.RequireComponentInChildren<SubNameInput>();
-                        SubName subNameTarget = subNameInput.target;
+                        SubName subName = gameObject.RequireComponentInChildren<SubName>(true);
 
-                        name = subNameTarget.GetName();
-                        hsb = subNameTarget.AliveOrNull()?.GetColors().ToDto();
+                        name = subName.GetName();
+                        hsb = subName.AliveOrNull()?.GetColors().ToDto();
 
-                        Optional<LiveMixin> livemixin = Optional.OfNullable(target.GetComponent<LiveMixin>());
+                        Optional<LiveMixin> livemixin = Optional.OfNullable(gameObject.GetComponent<LiveMixin>());
 
                         if (livemixin.HasValue)
                         {

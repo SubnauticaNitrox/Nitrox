@@ -6,8 +6,6 @@ using NitroxClient.GameLogic;
 using NitroxModel.Core;
 using NitroxModel.Helper;
 using UnityEngine;
-using static NitroxClient.GameLogic.Helper.TransientLocalObjectManager;
-using static VFXParticlesPool;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
@@ -16,9 +14,8 @@ namespace NitroxPatcher.Patches.Dynamic
         public static readonly MethodInfo TARGET_METHOD_ORIGINAL = Reflect.Method((ConstructorInput t) => t.OnCraftingBeginAsync(default(TechType), default(float)));
         public static readonly MethodInfo TARGET_METHOD = AccessTools.EnumeratorMoveNext(TARGET_METHOD_ORIGINAL);
 
-
-        public static readonly OpCode INJECTION_OPCODE = OpCodes.Callvirt;
-        public static readonly object INJECTION_OPERAND = Reflect.Method((Constructor t) => t.SendBuildBots(default(GameObject)));
+        public static readonly OpCode INJECTION_OPCODE = OpCodes.Call;
+        public static readonly object INJECTION_OPERAND = Reflect.Method(() => CrafterLogic.NotifyCraftEnd(default(GameObject), default(TechType)));
 
         public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
         {
@@ -35,8 +32,10 @@ namespace NitroxPatcher.Patches.Dynamic
                      */
                     yield return original.Ldloc<ConstructorInput>(0);
                     yield return original.Ldloc<GameObject>(0);
-                    yield return original.Ldloc<TechType>(0);
-                    yield return original.Ldloc<float>(0);
+                    yield return new CodeInstruction(OpCodes.Ldarg_0);
+                    yield return new CodeInstruction(OpCodes.Ldfld, TARGET_METHOD.DeclaringType.GetField("techType", BindingFlags.Instance | BindingFlags.Public));
+                    yield return new CodeInstruction(OpCodes.Ldarg_0);
+                    yield return new CodeInstruction(OpCodes.Ldfld, TARGET_METHOD.DeclaringType.GetField("duration", BindingFlags.Instance | BindingFlags.Public));
                     yield return new CodeInstruction(OpCodes.Call, Reflect.Method(() => Callback(default, default, default, default)));
                 }
             }

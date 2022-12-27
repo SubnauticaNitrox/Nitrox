@@ -26,14 +26,10 @@ namespace NitroxClient.GameLogic
 
             Log.Debug($"Building item from constructor with id: {constructorId}");
 
-            List<InteractiveChildObjectIdentifier> childIdentifiers = VehicleChildObjectIdentifierHelper.ExtractInteractiveChildren(constructedObject);
-
             VehicleModel vehicleModel = vehicles.BuildVehicleModelFrom(constructedObject, techType);
             vehicles.AddVehicle(vehicleModel);
 
             packetSender.Send(new ConstructorBeginCrafting(vehicleModel, constructorId, duration));
-
-            vehicles.SpawnDefaultBatteries(constructedObject, childIdentifiers);
 
             MonoBehaviour monoBehaviour = constructor.GetComponent<MonoBehaviour>();
             //We want to store the fallen position of the object to avoid flying object on reload 
