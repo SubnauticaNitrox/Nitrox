@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata
@@ -15,6 +15,7 @@ namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata
     [ProtoInclude(120, typeof(WeldableWallPanelGenericMetadata))]
     [ProtoInclude(130, typeof(IncubatorMetadata))]
     [ProtoInclude(140, typeof(EntitySignMetadata))]
+    [ProtoInclude(150, typeof(ConstructorMetadata))]
     public abstract class EntityMetadata
     {
     }

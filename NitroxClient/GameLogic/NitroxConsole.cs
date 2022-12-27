@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxModel.DataStructures.GameLogic;
@@ -76,7 +76,7 @@ namespace NitroxClient.GameLogic
             if (opitem.HasValue)
             {
                 Log.Debug($"Spawning item {opitem.Value.GetTechName()} at {gameObject.transform.position}");
-                item.Dropped(gameObject, opitem.Value.GetTechType(), gameObject.transform.position);
+                item.Dropped(gameObject, opitem.Value.GetTechType());
             }
         }
     }

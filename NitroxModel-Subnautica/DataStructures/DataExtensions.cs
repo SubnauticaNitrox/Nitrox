@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Unity;
@@ -75,6 +75,12 @@ namespace NitroxModel_Subnautica.DataStructures
         public static Color ToUnity(this NitroxColor v)
         {
             return new Color(v.R, v.G, v.B, v.A);
+        }
+        public static NitroxTransform ToDto(this Transform transform)
+        {
+            return new NitroxTransform(transform.localPosition.ToDto(),
+                                       transform.localRotation.ToDto(),
+                                       transform.localScale.ToDto());
         }
 
         public static NitroxColor[] ToDto(this Color[] v)

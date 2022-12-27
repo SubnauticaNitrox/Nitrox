@@ -1,21 +1,28 @@
-﻿using NitroxClient.Communication.Abstract;
-using NitroxClient.GameLogic.Helper;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
+using NitroxModel.DataStructures.GameLogic.Entities;
+using System.Collections.Generic;
+using NitroxModel.Helper;
+using NitroxClient.GameLogic.Spawning.Metadata.Extractor;
+using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxClient.GameLogic
 {
     public class Item
     {
         private readonly IPacketSender packetSender;
+        private readonly IMap map;
 
-        public Item(IPacketSender packetSender)
+        public Item(IPacketSender packetSender, IMap map)
         {
             this.packetSender = packetSender;
+            this.map = map;
         }
 
         public void UpdatePosition(NitroxId id, Vector3 location, Quaternion rotation)
@@ -38,19 +45,23 @@ namespace NitroxClient.GameLogic
             packetSender.Send(pickupItem);
         }
 
-        public void Dropped(GameObject gameObject, TechType techType, Vector3 dropPosition)
+        public void Dropped(GameObject gameObject, TechType techType)
         {
             // there is a theoretical possibility of a stray remote tracking packet that re-adds the monobehavior, this is purely a safety call.
             RemoveAnyRemoteControl(gameObject);
 
             Optional<NitroxId> waterparkId = GetCurrentWaterParkId();
             NitroxId id = NitroxEntity.GetId(gameObject);
-            byte[] bytes = SerializationHelper.GetBytesWithoutParent(gameObject);
+            Optional<EntityMetadata> metadata = EntityMetadataExtractor.Extract(gameObject);
 
             Log.Debug($"Dropping item with id: {id}");
 
-            DroppedItem droppedItem = new DroppedItem(id, waterparkId, techType.ToDto(), dropPosition.ToDto(), gameObject.transform.rotation.ToDto(), bytes);
-            packetSender.Send(droppedItem);
+            bool inGlobalRoot = map.GlobalRootTechTypes.Contains(techType.ToDto());
+            string classId = gameObject.GetComponent<PrefabIdentifier>().ClassId;
+            WorldEntity droppedItem = new WorldEntity(gameObject.transform.ToDto(), 0, classId, inGlobalRoot, waterparkId.OrNull(), false, id, techType.ToDto(), metadata.OrNull(), null, new List<Entity>());
+
+            EntitySpawnedByClient spawnedPacket = new EntitySpawnedByClient(droppedItem);
+            packetSender.Send(spawnedPacket);
         }
 
         private void RemoveAnyRemoteControl(GameObject gameObject)
