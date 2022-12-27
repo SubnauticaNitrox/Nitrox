@@ -43,7 +43,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Callback(ConstructorInput constructor, GameObject constructedObject, TechType techType, float duration)
         {
-            NitroxServiceLocator.LocateService<MobileVehicleBay>().BeginCrafting(constructor, constructedObject, techType, duration);
+            Resolve<MobileVehicleBay>().BeginCrafting(constructor, constructedObject, techType, duration);
         }
 
         public override void Patch(Harmony harmony)
