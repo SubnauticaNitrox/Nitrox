@@ -2,7 +2,6 @@ using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 
@@ -18,8 +17,7 @@ public class Constructor_Deploy_Patch : NitroxPatch, IDynamicPatch
         if(value != __instance.deployed)
         {
             NitroxId id = NitroxEntity.GetId(__instance.gameObject);
-            Entities entities = NitroxServiceLocator.LocateService<Entities>();
-            entities.EntityMetadataChanged(__instance, id);
+            Resolve<Entities>().EntityMetadataChanged(__instance, id);
         }
     }
 
@@ -28,5 +26,3 @@ public class Constructor_Deploy_Patch : NitroxPatch, IDynamicPatch
         PatchPrefix(harmony, TARGET_METHOD);
     }
 }
-
-

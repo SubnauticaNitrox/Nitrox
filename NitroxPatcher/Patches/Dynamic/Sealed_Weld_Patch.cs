@@ -2,7 +2,6 @@ using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 
@@ -15,7 +14,7 @@ namespace NitroxPatcher.Patches.Dynamic
         public static void Postfix(Sealed __instance)
         {
             NitroxId id = NitroxEntity.GetId(__instance.gameObject);
-            NitroxServiceLocator.LocateService<Entities>().EntityMetadataChanged(__instance, id);
+            Resolve<Entities>().EntityMetadataChanged(__instance, id);
         }
 
         public override void Patch(Harmony harmony)

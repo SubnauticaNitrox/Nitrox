@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
+using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures.Util;
 using UnityEngine;
@@ -28,13 +28,8 @@ public abstract class EntityMetadataExtractor
 
     static EntityMetadataExtractor()
     {
-        processors = Assembly.GetExecutingAssembly()
-                             .GetTypes()
-                             .Where(t => typeof(EntityMetadataExtractor).IsAssignableFrom(t) &&
-                                    t.IsClass && !t.IsAbstract)
-                             .Select(Activator.CreateInstance)
-                             .Cast<EntityMetadataExtractor>()
-                             .ToDictionary(p => p.GetType().BaseType.GetGenericArguments()[0]);    
+        processors = NitroxServiceLocator.LocateService<IEnumerable<EntityMetadataExtractor>>()
+                                         .ToDictionary(p => p.GetType().BaseType.GetGenericArguments()[0]);    
     }
 
     public static Optional<EntityMetadata> Extract(object o)
