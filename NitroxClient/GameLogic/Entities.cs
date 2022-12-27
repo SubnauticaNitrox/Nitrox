@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Spawning;
 using NitroxClient.GameLogic.Spawning.Metadata;
+using NitroxClient.GameLogic.Spawning.Metadata.Extractor;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
@@ -47,6 +48,16 @@ namespace NitroxClient.GameLogic
             }
 
             packetSender.Send(update);
+        }
+
+        public void EntityMetadataChanged(UnityEngine.Object o, NitroxId id)
+        {
+            Optional<EntityMetadata> metadata = EntityMetadataExtractor.Extract(o);
+
+            if (metadata.HasValue)
+            {
+                BroadcastMetadataUpdate(id, metadata.Value);
+            }
         }
 
         public void BroadcastMetadataUpdate(NitroxId id, EntityMetadata metadata)

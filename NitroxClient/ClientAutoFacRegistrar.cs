@@ -21,6 +21,7 @@ using NitroxClient.GameLogic.PlayerLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.PlayerLogic.PlayerPreferences;
 using NitroxClient.GameLogic.Settings;
+using NitroxClient.GameLogic.Spawning.Metadata.Extractor;
 using NitroxClient.Helpers;
 using NitroxClient.Map;
 using NitroxModel.Core;
@@ -103,6 +104,12 @@ namespace NitroxClient
             containerBuilder.RegisterType<SubnauticaMap>()
                             .As<IMap>()
                             .InstancePerLifetimeScope();
+
+            containerBuilder.RegisterAssemblyTypes(currentAssembly)
+                            .AssignableTo<EntityMetadataExtractor>()
+                            .As<EntityMetadataExtractor>()
+                            .AsSelf()
+                            .SingleInstance();
 
             containerBuilder.RegisterType<PlayerManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<PlayerModelManager>().InstancePerLifetimeScope();
