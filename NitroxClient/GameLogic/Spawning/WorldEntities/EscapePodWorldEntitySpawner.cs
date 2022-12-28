@@ -97,7 +97,7 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities
             Validate.NotNull(childEntity);
 
             T childComponent = escapePod.RequireComponentInChildren<T>();
-            UnityEngine.Component.DestroyImmediate(escapePod.GetComponent<NitroxEntity>()); // template has pre-existing NitroxEntity, remove.
+            UnityEngine.Component.DestroyImmediate(childComponent.GetComponent<NitroxEntity>()); // template has pre-existing NitroxEntity, remove.
             NitroxEntity.SetNewId(childComponent.gameObject, childEntity.Id);
             EntityMetadataProcessor.ApplyMetadata(childComponent.gameObject, childEntity.Metadata);
 
