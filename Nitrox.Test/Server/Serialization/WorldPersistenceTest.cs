@@ -186,31 +186,6 @@ namespace NitroxServer.Serialization
         }
 
         [TestMethod]
-        public void EscapePodDataTest()
-        {
-            for (int serializerIndex = 0; serializerIndex < worldsDataAfter.Length; serializerIndex++)
-            {
-                PersistedWorldData worldDataAfter = worldsDataAfter[serializerIndex];
-                Assert.AreEqual(worldData.WorldData.EscapePodData.EscapePods.Count, worldDataAfter.WorldData.EscapePodData.EscapePods.Count, $"WorldData.EscapePodData.EscapePods.Count is not equal while using {serverSerializers[serializerIndex]}.");
-                for (int index = 0; index < worldData.WorldData.EscapePodData.EscapePods.Count; index++)
-                {
-                    EscapePodModel escapePod = worldData.WorldData.EscapePodData.EscapePods[index];
-                    EscapePodModel escapePodAfter = worldDataAfter.WorldData.EscapePodData.EscapePods[index];
-
-                    Assert.AreEqual(escapePod.Id, escapePodAfter.Id, $"WorldData.EscapePodData.EscapePods.Id is not equal while using {serverSerializers[serializerIndex]}.");
-                    Assert.AreEqual(escapePod.Location, escapePodAfter.Location, $"WorldData.EscapePodData.EscapePods.Location is not equal while using {serverSerializers[serializerIndex]}.");
-                    Assert.AreEqual(escapePod.FabricatorId, escapePodAfter.FabricatorId, $"WorldData.EscapePodData.EscapePods.FabricatorId is not equal while using {serverSerializers[serializerIndex]}.");
-                    Assert.AreEqual(escapePod.MedicalFabricatorId, escapePodAfter.MedicalFabricatorId, $"WorldData.EscapePodData.EscapePods.MedicalFabricatorId is not equal while using {serverSerializers[serializerIndex]}.");
-                    Assert.AreEqual(escapePod.StorageContainerId, escapePodAfter.StorageContainerId, $"WorldData.EscapePodData.EscapePods.StorageContainerId is not equal while using {serverSerializers[serializerIndex]}.");
-                    Assert.AreEqual(escapePod.RadioId, escapePodAfter.RadioId, $"WorldData.EscapePodData.EscapePods.RadioId is not equal while using {serverSerializers[serializerIndex]}.");
-                    Assert.IsTrue(escapePod.AssignedPlayers.SequenceEqual(escapePodAfter.AssignedPlayers), $"WorldData.EscapePodData.EscapePods.AssignedPlayers is not equal while using {serverSerializers[serializerIndex]}.");
-                    Assert.AreEqual(escapePod.Damaged, escapePodAfter.Damaged, $"WorldData.EscapePodData.EscapePods.Damaged is not equal while using {serverSerializers[serializerIndex]}.");
-                    Assert.AreEqual(escapePod.RadioDamaged, escapePodAfter.RadioDamaged, $"WorldData.EscapePodData.EscapePods.RadioDamaged is not equal while using {serverSerializers[serializerIndex]}.");
-                }
-            }
-        }
-
-        [TestMethod]
         public void BaseDataTest()
         {
             for (int serializerIndex = 0; serializerIndex < worldsDataAfter.Length; serializerIndex++)
@@ -457,24 +432,6 @@ namespace NitroxServer.Serialization
                 },
                 WorldData = new WorldData()
                 {
-                    EscapePodData = new EscapePodData()
-                    {
-                        EscapePods = new List<EscapePodModel>()
-                        {
-                            new EscapePodModel()
-                            {
-                                AssignedPlayers = new List<ushort> { 1, 2 },
-                                Damaged = true,
-                                RadioDamaged = true,
-                                Location = NitroxVector3.Zero,
-                                Id = new NitroxId(),
-                                FabricatorId = new NitroxId(),
-                                MedicalFabricatorId = new NitroxId(),
-                                RadioId = new NitroxId(),
-                                StorageContainerId = new NitroxId()
-                            }
-                        }
-                    },
                     GameData = new GameData()
                     {
                         PDAState = new PDAStateData()

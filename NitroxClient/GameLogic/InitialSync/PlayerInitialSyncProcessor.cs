@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxClient.MonoBehaviours;
@@ -13,6 +13,8 @@ namespace NitroxClient.GameLogic.InitialSync
 {
     public class PlayerInitialSyncProcessor : InitialSyncProcessor
     {
+        private static readonly Vector3 spawnRelativeToEscapePod = new Vector3(0.9f, 2.1f, 0);
+
         private readonly ItemContainers itemContainers;
 
         public PlayerInitialSyncProcessor(ItemContainers itemContainers)
@@ -27,7 +29,11 @@ namespace NitroxClient.GameLogic.InitialSync
             yield return null;
 
             SetPlayerGameObjectId(packet.PlayerGameObjectId);
-            waitScreenItem.SetProgress(0.33f);
+            waitScreenItem.SetProgress(0.20f);
+            yield return null;
+
+            AttachPlayerToEscapePod(packet.AssignedEscapePodId);
+            waitScreenItem.SetProgress(0.40f);
             yield return null;
 
             yield return AddStartingItemsToPlayer(packet.FirstTimeConnecting);
@@ -56,6 +62,19 @@ namespace NitroxClient.GameLogic.InitialSync
         {
             NitroxEntity.SetNewId(Player.mainObject, id);
             Log.Info($"Received initial sync player GameObject Id: {id}");
+        }
+
+        private void AttachPlayerToEscapePod(NitroxId escapePodId)
+        {
+            GameObject escapePod = NitroxEntity.RequireObjectFrom(escapePodId);
+
+            EscapePod.main.transform.position = escapePod.transform.position;
+            EscapePod.main.playerSpawn.position = escapePod.transform.position + spawnRelativeToEscapePod;
+
+            Player.main.transform.position = EscapePod.main.playerSpawn.position;
+            Player.main.transform.rotation = EscapePod.main.playerSpawn.rotation;
+
+            Player.main.currentEscapePod = escapePod.GetComponent<EscapePod>();
         }
 
         private IEnumerator AddStartingItemsToPlayer(bool firstTimeConnecting)

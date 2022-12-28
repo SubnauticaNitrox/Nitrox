@@ -16,6 +16,7 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities
         {            
             customSpawnersByTechType[TechType.Crash] = new CrashEntitySpawner();
             customSpawnersByTechType[TechType.Reefback] = new ReefbackWorldEntitySpawner(defaultEntitySpawner);
+            customSpawnersByTechType[TechType.EscapePod] = new EscapePodWorldEntitySpawner();
             prefabWorldEntitySpawner = new PlaceholderGroupWorldEntitySpawner(defaultEntitySpawner);
         }
 
