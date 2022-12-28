@@ -55,6 +55,7 @@ namespace NitroxClient.GameLogic
 
             RigidBody = Body.AddComponent<Rigidbody>();
             RigidBody.useGravity = false;
+            RigidBody.interpolation = RigidbodyInterpolation.Interpolate;
 
             NitroxEntity.SetNewId(Body, playerContext.PlayerNitroxId);
 

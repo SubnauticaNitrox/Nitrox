@@ -11,7 +11,7 @@ namespace NitroxClient.MonoBehaviours;
 
 public class PlayerMovementBroadcaster : MonoBehaviour
 {
-    public const float BROADCAST_INTERVAL = 0.05f;
+    public const float BROADCAST_INTERVAL = 0.12f;
     private LocalPlayer localPlayer;
 
     private float time;
