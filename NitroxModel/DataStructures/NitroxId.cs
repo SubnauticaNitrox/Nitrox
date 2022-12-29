@@ -12,7 +12,7 @@ namespace NitroxModel.DataStructures;
 /// </summary>
 [ProtoContract]
 [Serializable]
-public class NitroxId : ISerializable, IEquatable<NitroxId>
+public class NitroxId : ISerializable, IEquatable<NitroxId>, IComparable<NitroxId>
 {
     [ProtoMember(1)]
     [SerializableMember]
@@ -126,4 +126,18 @@ public class NitroxId : ISerializable, IEquatable<NitroxId>
         return new NitroxId(nextGuid);
     }
 
+    public int CompareTo(NitroxId other)
+    {
+        if (ReferenceEquals(this, other))
+        {
+            return 0;
+        }
+
+        if (ReferenceEquals(null, other))
+        {
+            return 1;
+        }
+
+        return guid.CompareTo(other.guid);
+    }
 }

@@ -7,13 +7,16 @@ namespace Nitrox.Test.Helper;
 
 public static class AssertHelper
 {
-    public static void IsListEqual<TSource>(IList<TSource> first, IList<TSource> second, Action<TSource, TSource> assertComparer)
+    public static void IsListEqual<TSource>(IOrderedEnumerable<TSource> first, IOrderedEnumerable<TSource> second, Action<TSource, TSource> assertComparer)
     {
-        Assert.AreEqual(first.Count, second.Count);
+        List<TSource> firstList = first.ToList();
+        List<TSource> secondList = second.ToList();
 
-        for (int index = 0; index < first.Count; index++)
+        Assert.AreEqual(firstList.Count, secondList.Count);
+
+        for (int index = 0; index < firstList.Count; index++)
         {
-            assertComparer(first[index], second[index]);
+            assertComparer(firstList[index], secondList[index]);
         }
     }
 
@@ -24,10 +27,8 @@ public static class AssertHelper
         for (int index = 0; index < first.Count; index++)
         {
             KeyValuePair<TKey, TValue> firstKeyValuePair = first.ElementAt(index);
-            KeyValuePair<TKey, TValue> secondKeyValuePair = first.ElementAt(index);
-
-            Assert.AreEqual(firstKeyValuePair.Key, secondKeyValuePair.Key);
-            Assert.AreEqual(firstKeyValuePair.Value, secondKeyValuePair.Value);
+            Assert.IsTrue(second.TryGetValue(firstKeyValuePair.Key, out TValue secondValue), $"Second dictionary didn't contain {firstKeyValuePair.Key}");
+            Assert.AreEqual(firstKeyValuePair.Value, secondValue, $"Values didn't match with the same key: {firstKeyValuePair.Key}");
         }
     }
 
@@ -37,7 +38,10 @@ public static class AssertHelper
 
         for (int index = 0; index < first.Count; index++)
         {
-            assertComparer(first.ElementAt(index), second.ElementAt(index));
+            KeyValuePair<TKey, TValue> firstKeyValuePair = first.ElementAt(index);
+            Assert.IsTrue(second.TryGetValue(firstKeyValuePair.Key, out TValue secondValue), $"Second dictionary didn't contain {firstKeyValuePair.Key}");
+
+            assertComparer(firstKeyValuePair, new KeyValuePair<TKey, TValue>(firstKeyValuePair.Key, secondValue));
         }
     }
 }

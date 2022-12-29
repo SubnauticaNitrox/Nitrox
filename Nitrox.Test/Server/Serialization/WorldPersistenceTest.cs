@@ -78,14 +78,14 @@ public class WorldPersistenceTest
     [DataTestMethod, DynamicWorldDataAfter]
     public void VehicleDataTest(PersistedWorldData worldDataAfter, string serializerName)
     {
-        AssertHelper.IsListEqual(worldData.WorldData.VehicleData.Vehicles, worldDataAfter.WorldData.VehicleData.Vehicles, (vehicleModel, vehicleModelAfter) =>
+        AssertHelper.IsListEqual(worldData.WorldData.VehicleData.Vehicles.OrderBy(x => x.Id), worldDataAfter.WorldData.VehicleData.Vehicles.OrderBy(x => x.Id), (vehicleModel, vehicleModelAfter) =>
         {
             Assert.AreEqual(vehicleModel.TechType, vehicleModelAfter.TechType);
             Assert.AreEqual(vehicleModel.Id, vehicleModelAfter.Id);
             Assert.AreEqual(vehicleModel.Position, vehicleModelAfter.Position);
             Assert.AreEqual(vehicleModel.Rotation, vehicleModelAfter.Rotation);
 
-            AssertHelper.IsListEqual(vehicleModel.InteractiveChildIdentifiers, vehicleModelAfter.InteractiveChildIdentifiers, (childIdentifier, childIdentifierAfter) =>
+            AssertHelper.IsListEqual(vehicleModel.InteractiveChildIdentifiers.OrderBy(x => x.Id), vehicleModelAfter.InteractiveChildIdentifiers.OrderBy(x => x.Id), (childIdentifier, childIdentifierAfter) =>
             {
                 Assert.AreEqual(childIdentifier.Id, childIdentifierAfter.Id);
                 Assert.AreEqual(childIdentifier.GameObjectNamePath, childIdentifierAfter.GameObjectNamePath);
@@ -102,9 +102,9 @@ public class WorldPersistenceTest
     [DataTestMethod, DynamicWorldDataAfter]
     public void InventoryDataTest(PersistedWorldData worldDataAfter, string serializerName)
     {
-        AssertHelper.IsListEqual(worldData.WorldData.InventoryData.InventoryItems, worldDataAfter.WorldData.InventoryData.InventoryItems, ItemDataTest);
-        AssertHelper.IsListEqual(worldData.WorldData.InventoryData.StorageSlotItems, worldDataAfter.WorldData.InventoryData.StorageSlotItems, ItemDataTest);
-        AssertHelper.IsListEqual(worldData.WorldData.InventoryData.Modules, worldDataAfter.WorldData.InventoryData.Modules, ItemDataTest);
+        AssertHelper.IsListEqual(worldData.WorldData.InventoryData.InventoryItems.OrderBy(x => x.ItemId), worldDataAfter.WorldData.InventoryData.InventoryItems.OrderBy(x => x.ItemId), ItemDataTest);
+        AssertHelper.IsListEqual(worldData.WorldData.InventoryData.StorageSlotItems.OrderBy(x => x.ItemId), worldDataAfter.WorldData.InventoryData.StorageSlotItems.OrderBy(x => x.ItemId), ItemDataTest);
+        AssertHelper.IsListEqual(worldData.WorldData.InventoryData.Modules.OrderBy(x => x.ItemId), worldDataAfter.WorldData.InventoryData.Modules.OrderBy(x => x.ItemId), ItemDataTest);
     }
 
     private static void ItemDataTest(ItemData itemData, ItemData itemDataAfter)
@@ -154,7 +154,7 @@ public class WorldPersistenceTest
         Assert.IsTrue(pdaState.AnalyzedTechTypes.SequenceEqual(pdaStateAfter.AnalyzedTechTypes));
         Assert.IsTrue(pdaState.EncyclopediaEntries.SequenceEqual(pdaStateAfter.EncyclopediaEntries));
 
-        AssertHelper.IsListEqual(pdaState.PdaLog, pdaStateAfter.PdaLog, (entry, entryAfter) =>
+        AssertHelper.IsListEqual(pdaState.PdaLog.OrderBy(x => x.Key), pdaStateAfter.PdaLog.OrderBy(x => x.Key), (entry, entryAfter) =>
         {
             Assert.AreEqual(entry.Key, entryAfter.Key);
             Assert.AreEqual(entry.Timestamp, entryAfter.Timestamp);
@@ -186,7 +186,7 @@ public class WorldPersistenceTest
     [DataTestMethod, DynamicWorldDataAfter]
     public void EscapePodDataTest(PersistedWorldData worldDataAfter, string serializerName)
     {
-        AssertHelper.IsListEqual(worldData.WorldData.EscapePodData.EscapePods, worldDataAfter.WorldData.EscapePodData.EscapePods, (escapePod, escapePodAfter) =>
+        AssertHelper.IsListEqual(worldData.WorldData.EscapePodData.EscapePods.OrderBy(x => x.Id), worldDataAfter.WorldData.EscapePodData.EscapePods.OrderBy(x => x.Id), (escapePod, escapePodAfter) =>
         {
             Assert.AreEqual(escapePod.Id, escapePodAfter.Id);
             Assert.AreEqual(escapePod.Location, escapePodAfter.Location);
@@ -203,8 +203,8 @@ public class WorldPersistenceTest
     [DataTestMethod, DynamicWorldDataAfter]
     public void BaseDataTest(PersistedWorldData worldDataAfter, string serializerName)
     {
-        AssertHelper.IsListEqual(worldData.BaseData.PartiallyConstructedPieces, worldDataAfter.BaseData.PartiallyConstructedPieces, BasePieceTest);
-        AssertHelper.IsListEqual(worldData.BaseData.CompletedBasePieceHistory, worldDataAfter.BaseData.CompletedBasePieceHistory, BasePieceTest);
+        AssertHelper.IsListEqual(worldData.BaseData.PartiallyConstructedPieces.OrderBy(x => x.Id), worldDataAfter.BaseData.PartiallyConstructedPieces.OrderBy(x => x.Id), BasePieceTest);
+        AssertHelper.IsListEqual(worldData.BaseData.CompletedBasePieceHistory.OrderBy(x => x.Id), worldDataAfter.BaseData.CompletedBasePieceHistory.OrderBy(x => x.Id), BasePieceTest);
     }
 
     private static void BasePieceTest(BasePiece basePiece, BasePiece basePieceAfter)
@@ -272,14 +272,14 @@ public class WorldPersistenceTest
     [DataTestMethod, DynamicWorldDataAfter]
     public void PlayerDataTest(PersistedWorldData worldDataAfter, string serializerName)
     {
-        AssertHelper.IsListEqual(worldData.PlayerData.Players, worldDataAfter.PlayerData.Players, (playerData, playerDataAfter) =>
+        AssertHelper.IsListEqual(worldData.PlayerData.Players.OrderBy(x => x.Id), worldDataAfter.PlayerData.Players.OrderBy(x => x.Id), (playerData, playerDataAfter) =>
         {
             Assert.AreEqual(playerData.Name, playerDataAfter.Name);
 
             Assert.IsTrue(playerData.UsedItems.SequenceEqual(playerDataAfter.UsedItems));
             Assert.IsTrue(playerData.QuickSlotsBinding.SequenceEqual(playerDataAfter.QuickSlotsBinding));
-            AssertHelper.IsListEqual(playerData.EquippedItems, playerDataAfter.EquippedItems, ItemDataTest);
-            AssertHelper.IsListEqual(playerData.Modules, playerDataAfter.Modules, ItemDataTest);
+            AssertHelper.IsListEqual(playerData.EquippedItems.OrderBy(x => x.ItemId), playerDataAfter.EquippedItems.OrderBy(x => x.ItemId), ItemDataTest);
+            AssertHelper.IsListEqual(playerData.Modules.OrderBy(x => x.ItemId), playerDataAfter.Modules.OrderBy(x => x.ItemId), ItemDataTest);
 
             Assert.AreEqual(playerData.Id, playerDataAfter.Id);
             Assert.AreEqual(playerData.SpawnPosition, playerDataAfter.SpawnPosition);
@@ -311,7 +311,7 @@ public class WorldPersistenceTest
     [DataTestMethod, DynamicWorldDataAfter]
     public void EntityDataTest(PersistedWorldData worldDataAfter, string serializerName)
     {
-        AssertHelper.IsListEqual(worldData.EntityData.Entities, worldDataAfter.EntityData.Entities, EntityTest);
+        AssertHelper.IsListEqual(worldData.EntityData.Entities.OrderBy(x => x.Id), worldDataAfter.EntityData.Entities.OrderBy(x => x.Id), EntityTest);
     }
 
     private static void EntityTest(Entity entity, Entity entityAfter)
@@ -389,7 +389,7 @@ public class WorldPersistenceTest
                 break;
         }
 
-        AssertHelper.IsListEqual(entity.ChildEntities, entityAfter.ChildEntities, EntityTest);
+        AssertHelper.IsListEqual(entity.ChildEntities.OrderBy(x => x.Id), entityAfter.ChildEntities.OrderBy(x => x.Id), EntityTest);
     }
 
     [ClassCleanup]
