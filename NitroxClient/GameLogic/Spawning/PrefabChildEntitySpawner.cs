@@ -15,8 +15,7 @@ namespace NitroxClient.GameLogic.Spawning
             GameObject parent = NitroxEntity.RequireObjectFrom(entity.ParentId);
             PrefabIdentifier prefab = parent.GetAllComponentsInChildren<PrefabIdentifier>()
                                             .Where(prefab => prefab.classId == entity.ClassId)
-                                            .Skip(entity.ComponentIndex)
-                                            .First();
+                                            .ElementAt(entity.ComponentIndex);
 
             if (prefab)
             {
