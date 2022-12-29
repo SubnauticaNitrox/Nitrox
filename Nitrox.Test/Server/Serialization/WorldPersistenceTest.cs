@@ -184,23 +184,6 @@ public class WorldPersistenceTest
     }
 
     [DataTestMethod, DynamicWorldDataAfter]
-    public void EscapePodDataTest(PersistedWorldData worldDataAfter, string serializerName)
-    {
-        AssertHelper.IsListEqual(worldData.WorldData.EscapePodData.EscapePods.OrderBy(x => x.Id), worldDataAfter.WorldData.EscapePodData.EscapePods.OrderBy(x => x.Id), (escapePod, escapePodAfter) =>
-        {
-            Assert.AreEqual(escapePod.Id, escapePodAfter.Id);
-            Assert.AreEqual(escapePod.Location, escapePodAfter.Location);
-            Assert.AreEqual(escapePod.FabricatorId, escapePodAfter.FabricatorId);
-            Assert.AreEqual(escapePod.MedicalFabricatorId, escapePodAfter.MedicalFabricatorId);
-            Assert.AreEqual(escapePod.StorageContainerId, escapePodAfter.StorageContainerId);
-            Assert.AreEqual(escapePod.RadioId, escapePodAfter.RadioId);
-            Assert.IsTrue(escapePod.AssignedPlayers.SequenceEqual(escapePodAfter.AssignedPlayers));
-            Assert.AreEqual(escapePod.Damaged, escapePodAfter.Damaged);
-            Assert.AreEqual(escapePod.RadioDamaged, escapePodAfter.RadioDamaged);
-        });
-    }
-
-    [DataTestMethod, DynamicWorldDataAfter]
     public void BaseDataTest(PersistedWorldData worldDataAfter, string serializerName)
     {
         AssertHelper.IsListEqual(worldData.BaseData.PartiallyConstructedPieces.OrderBy(x => x.Id), worldDataAfter.BaseData.PartiallyConstructedPieces.OrderBy(x => x.Id), BasePieceTest);
@@ -359,6 +342,9 @@ public class WorldPersistenceTest
             case ConstructorMetadata metadata when entityAfter.Metadata is ConstructorMetadata metadataAfter:
                 Assert.AreEqual(metadata.Deployed, metadataAfter.Deployed);
                 break;
+            case RepairedComponentMetadata metadata when entityAfter.Metadata is RepairedComponentMetadata metadataAfter:
+                Assert.AreEqual(metadata.TechType, metadataAfter.TechType);
+                break;
             case null when entityAfter.Metadata is null:
                 break;
             default:
@@ -377,6 +363,18 @@ public class WorldPersistenceTest
                 Assert.AreEqual(worldEntity.SpawnedByServer, worldEntityAfter.SpawnedByServer);
                 Assert.AreEqual(worldEntity.WaterParkId, worldEntityAfter.WaterParkId);
                 Assert.AreEqual(worldEntity.ExistsInGlobalRoot, worldEntityAfter.ExistsInGlobalRoot);
+                
+                switch (worldEntity)
+                {
+                    case EscapePodWorldEntity escapePodWorldEntity when worldEntityAfter is EscapePodWorldEntity escapePodWorldEntityAfter:
+                        Assert.AreEqual(escapePodWorldEntity.Damaged, escapePodWorldEntityAfter.Damaged);
+                        Assert.IsTrue(escapePodWorldEntity.Players.SequenceEqual(escapePodWorldEntityAfter.Players));
+                        break;
+                    default:
+                        Assert.AreEqual(worldEntity.GetType(), worldEntityAfter.GetType());
+                        break;
+                }
+
                 break;
             case PrefabChildEntity prefabChildEntity when entityAfter is PrefabChildEntity prefabChildEntityAfter:
                 Assert.AreEqual(prefabChildEntity.ExistingGameObjectChildIndex, prefabChildEntityAfter.ExistingGameObjectChildIndex);
@@ -432,8 +430,14 @@ public class WorldPersistenceTest
                 {
                     Entities = new List<Entity>()
                     {
+                        new PrefabChildEntity(1, new NitroxId(), new NitroxTechType("Radio"), null, new NitroxId(), new List<Entity>()),
+                        new PrefabPlaceholderEntity(new NitroxId(), new NitroxTechType("Bulkhead"), new NitroxId()),
                         new WorldEntity(NitroxVector3.Zero, NitroxQuaternion.Identity, NitroxVector3.One, new NitroxTechType("Peeper"), 1, "PeeperClass", false, new NitroxId(), null, false, new NitroxId()),
-                        new WorldEntity(NitroxVector3.One, NitroxQuaternion.Identity, NitroxVector3.One, new NitroxTechType("Peeper"), 1, "PeeperClass", false, new NitroxId(), null, true, new NitroxId())
+                        new PlaceholderGroupWorldEntity(new WorldEntity(NitroxVector3.Zero, NitroxQuaternion.Identity, NitroxVector3.One, NitroxTechType.None, 1, "Wreck1", false, new NitroxId(), null, false, new NitroxId()), new List<PrefabPlaceholderEntity>()
+                        {
+                            new(new NitroxId(), new NitroxTechType("Door"), new NitroxId())
+                        }),
+                        new EscapePodWorldEntity(NitroxVector3.One, new NitroxId(), new RepairedComponentMetadata(new NitroxTechType("Radio")))
                     }
                 },
             PlayerData = new PlayerData()
@@ -480,24 +484,6 @@ public class WorldPersistenceTest
             },
             WorldData = new WorldData()
             {
-                EscapePodData = new EscapePodData()
-                {
-                    EscapePods = new List<EscapePodModel>()
-                    {
-                        new EscapePodModel()
-                        {
-                            AssignedPlayers = new List<ushort> { 1, 2 },
-                            Damaged = true,
-                            RadioDamaged = true,
-                            Location = NitroxVector3.Zero,
-                            Id = new NitroxId(),
-                            FabricatorId = new NitroxId(),
-                            MedicalFabricatorId = new NitroxId(),
-                            RadioId = new NitroxId(),
-                            StorageContainerId = new NitroxId()
-                        }
-                    }
-                },
                 GameData = new GameData()
                 {
                     PDAState = new PDAStateData()
