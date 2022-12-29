@@ -28,8 +28,7 @@ public class PlayerMovementBroadcaster : MonoBehaviour
     public void FixedUpdate()
     {
         // Throttle location broadcasts to not run on every physics tick.
-        locationBroadcastSkipCounter++;
-        if (locationBroadcastSkipCounter < LOCATION_BROADCAST_TICK_SKIPS)
+        if (locationBroadcastSkipCounter++ < LOCATION_BROADCAST_TICK_SKIPS)
         {
             return;
         }
