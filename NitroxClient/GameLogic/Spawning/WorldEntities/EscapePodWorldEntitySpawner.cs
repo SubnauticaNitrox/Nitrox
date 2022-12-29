@@ -55,7 +55,6 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities
             Rigidbody rigidbody = escapePod.GetComponent<Rigidbody>();
             if (rigidbody != null)
             {
-                Log.Debug("Freezing escape pod rigidbody");
                 rigidbody.constraints = RigidbodyConstraints.FreezeAll;
             }
             else

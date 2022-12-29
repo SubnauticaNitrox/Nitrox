@@ -25,27 +25,27 @@ namespace NitroxClient.GameLogic.InitialSync
         public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
         {
             SetPlayerPermissions(packet.Permissions);
-            waitScreenItem.SetProgress(0.17f);
+            waitScreenItem.SetProgress(0.14f);
             yield return null;
 
             SetPlayerGameObjectId(packet.PlayerGameObjectId);
-            waitScreenItem.SetProgress(0.20f);
+            waitScreenItem.SetProgress(0.29f);
             yield return null;
 
             AttachPlayerToEscapePod(packet.AssignedEscapePodId);
-            waitScreenItem.SetProgress(0.40f);
+            waitScreenItem.SetProgress(0.43f);
             yield return null;
 
             yield return AddStartingItemsToPlayer(packet.FirstTimeConnecting);
-            waitScreenItem.SetProgress(0.5f);
+            waitScreenItem.SetProgress(0.57f);
             yield return null;
 
             SetPlayerStats(packet.PlayerStatsData);
-            waitScreenItem.SetProgress(0.66f);
+            waitScreenItem.SetProgress(0.72f);
             yield return null;
 
             SetPlayerGameMode(packet.GameMode);
-            waitScreenItem.SetProgress(0.83f);
+            waitScreenItem.SetProgress(0.86f);
             yield return null;
 
             SetPlayerCompletedGoals(packet.CompletedGoals);

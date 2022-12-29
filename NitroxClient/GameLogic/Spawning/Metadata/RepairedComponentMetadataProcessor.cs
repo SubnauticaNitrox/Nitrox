@@ -7,8 +7,6 @@ public class RepairedComponentMetadataProcessor : GenericEntityMetadataProcessor
 {
     public override void ProcessMetadata(GameObject gameObject, RepairedComponentMetadata metadata)
     {
-        Log.Info("RepairedComponentMetadataProcessor");
-
         Radio radio = gameObject.GetComponent<Radio>();
 
         if (radio)
