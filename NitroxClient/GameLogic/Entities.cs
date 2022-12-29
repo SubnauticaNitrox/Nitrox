@@ -71,13 +71,16 @@ namespace NitroxClient.GameLogic
             packetSender.Send(new EntitySpawnedByClient(entity));
         }
 
-        public IEnumerator SpawnAsync(List<WorldEntity> entities)
+        public IEnumerator SpawnAsync(List<Entity> entities)
         {
-            foreach (WorldEntity entity in entities)
+            foreach (Entity entity in entities)
             {
                 if (WasAlreadySpawned(entity.Id))
                 {
-                    UpdatePosition(entity);
+                    if (entity is WorldEntity worldEntity)
+                    {
+                        UpdatePosition(worldEntity);
+                    }
                 }
                 else if (entity.ParentId != null && !WasAlreadySpawned(entity.ParentId))
                 {
@@ -91,7 +94,7 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        private IEnumerator SpawnAsync(WorldEntity entity)
+        private IEnumerator SpawnAsync(Entity entity)
         {
             alreadySpawnedIds.Add(entity.Id);
 
@@ -103,22 +106,24 @@ namespace NitroxClient.GameLogic
 
             if (gameObject.HasValue)
             {
+                yield return AwaitAnyRequiredEntitySetup(gameObject.Value);
+
                 EntityMetadataProcessor.ApplyMetadata(gameObject.Value, entity.Metadata);
             }
 
             if (!entitySpawner.SpawnsOwnChildren(entity))
             {
-                foreach (WorldEntity childEntity in entity.ChildEntities)
+                foreach (Entity childEntity in entity.ChildEntities)
                 {
                     if (!WasAlreadySpawned(childEntity.Id))
                     {
-                        SpawnAsync(childEntity);
+                        yield return SpawnAsync(childEntity);
                     }
                 }
             }
         }
 
-        private IEnumerator SpawnAnyPendingChildrenAsync(WorldEntity entity)
+        private IEnumerator SpawnAnyPendingChildrenAsync(Entity entity)
         {
             if (pendingParentEntitiesByParentId.TryGetValue(entity.Id, out List<Entity> pendingEntities))
             {
@@ -160,6 +165,24 @@ namespace NitroxClient.GameLogic
             }
 
             pendingEntities.Add(entity);
+        }
+
+        // Nitrox uses entity spawners to generate the various gameObjects in the world. These spawners are invoked using 
+        // IEnumerator (async) and levarage async Prefab/CraftData instantiation functions.  However, even though these
+        // functions are successful, it doesn't mean the entity is fully setup.  Subnautica is known to spawn coroutines 
+        // in the start() method of objects to spawn prefabs or other objects. An example is anything with a battery, 
+        // which gets configured after the fact.  In most cases, Nitrox needs to wait for objets to be fully spawned in 
+        // order to setup ids.  Historically we would persist metadata and use a patch to later tag the item, which gets
+        // messy.  This function will allow us wait on any type of instantiation necessary; this can be optimized later
+        // to move on to other spawning and come back when this item is ready.  
+        private IEnumerator AwaitAnyRequiredEntitySetup(GameObject gameObject)
+        {
+            EnergyMixin energyMixin = gameObject.GetComponent<EnergyMixin>();
+
+            if (energyMixin)
+            {
+                yield return new WaitUntil(() => energyMixin.battery != null);
+            }
         }
 
         public bool WasAlreadySpawned(NitroxId id) => alreadySpawnedIds.Contains(id);

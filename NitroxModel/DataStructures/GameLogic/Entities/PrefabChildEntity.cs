@@ -18,7 +18,10 @@ namespace NitroxModel.DataStructures.GameLogic.Entities
     public class PrefabChildEntity : Entity
     {       
         [ProtoMember(1)]
-        public int ExistingGameObjectChildIndex { get; set; }
+        public int ComponentIndex { get; set; }
+
+        [ProtoMember(2)]
+        public string ClassId { get; set; }
 
         [IgnoreConstructor]
         protected PrefabChildEntity()
@@ -26,23 +29,31 @@ namespace NitroxModel.DataStructures.GameLogic.Entities
             // Constructor for serialization. Has to be "protected" for json serialization.
         }
 
-        public PrefabChildEntity(NitroxId id, NitroxTechType techType, int existingGameObjectChildIndex, Entity parent)
+        public PrefabChildEntity(NitroxId id, string classId, NitroxTechType techType, int componentIndex, EntityMetadata metadata, NitroxId parentId)
         {
             Id = id;
             TechType = techType;
-            ExistingGameObjectChildIndex = existingGameObjectChildIndex;
-            ParentId = parent.Id;
+            ComponentIndex = componentIndex;
+            ParentId = parentId;
+            ClassId = classId;
+            Metadata = metadata;
         }
 
         /// <remarks>Used for deserialization</remarks>
-        public PrefabChildEntity(int existingGameObjectChildIndex, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
+        public PrefabChildEntity(int componentIndex, string classId, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
         {
-            ExistingGameObjectChildIndex = existingGameObjectChildIndex;
+            ComponentIndex = componentIndex;
+            ClassId = classId;
             Id = id;
             TechType = techType;
             Metadata = metadata;
             ParentId = parentId;
             ChildEntities = childEntities;
+        }
+
+        public override string ToString()
+        {
+            return $"[PrefabChildEntity ComponentIndex: {ComponentIndex} ClassId: {ClassId} {base.ToString()}]";
         }
     }
 }

@@ -342,6 +342,12 @@ public class WorldPersistenceTest
             case ConstructorMetadata metadata when entityAfter.Metadata is ConstructorMetadata metadataAfter:
                 Assert.AreEqual(metadata.Deployed, metadataAfter.Deployed);
                 break;
+            case FlashlightMetadata metadata when entityAfter.Metadata is FlashlightMetadata metadataAfter:
+                Assert.AreEqual(metadata.On, metadataAfter.On);
+                break;
+            case BatteryMetadata metadata when entityAfter.Metadata is BatteryMetadata metadataAfter:
+                Assert.AreEqual(metadata.Charge, metadataAfter.Charge);
+                break;
             case RepairedComponentMetadata metadata when entityAfter.Metadata is RepairedComponentMetadata metadataAfter:
                 Assert.AreEqual(metadata.TechType, metadataAfter.TechType);
                 break;
@@ -377,7 +383,8 @@ public class WorldPersistenceTest
 
                 break;
             case PrefabChildEntity prefabChildEntity when entityAfter is PrefabChildEntity prefabChildEntityAfter:
-                Assert.AreEqual(prefabChildEntity.ExistingGameObjectChildIndex, prefabChildEntityAfter.ExistingGameObjectChildIndex);
+                Assert.AreEqual(prefabChildEntity.ComponentIndex, prefabChildEntityAfter.ComponentIndex);
+                Assert.AreEqual(prefabChildEntity.ClassId, prefabChildEntityAfter.ClassId);
                 break;
             case PrefabPlaceholderEntity prefabPlaceholderEntity when entityAfter is PrefabPlaceholderEntity prefabPlaceholderEntityAfter:
                 Assert.AreEqual(prefabPlaceholderEntity.ClassId, prefabPlaceholderEntityAfter.ClassId);
@@ -430,7 +437,7 @@ public class WorldPersistenceTest
                 {
                     Entities = new List<Entity>()
                     {
-                        new PrefabChildEntity(1, new NitroxId(), new NitroxTechType("Radio"), null, new NitroxId(), new List<Entity>()),
+                        new PrefabChildEntity(new NitroxId(), "pretty class id", new NitroxTechType("Radio"), 1, null, new NitroxId()),
                         new PrefabPlaceholderEntity(new NitroxId(), new NitroxTechType("Bulkhead"), new NitroxId()),
                         new WorldEntity(NitroxVector3.Zero, NitroxQuaternion.Identity, NitroxVector3.One, new NitroxTechType("Peeper"), 1, "PeeperClass", false, new NitroxId(), null, false, new NitroxId()),
                         new PlaceholderGroupWorldEntity(new WorldEntity(NitroxVector3.Zero, NitroxQuaternion.Identity, NitroxVector3.One, NitroxTechType.None, 1, "Wreck1", false, new NitroxId(), null, false, new NitroxId()), new List<PrefabPlaceholderEntity>()
