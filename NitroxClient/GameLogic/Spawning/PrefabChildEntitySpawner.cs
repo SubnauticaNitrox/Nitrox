@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
@@ -8,24 +9,26 @@ namespace NitroxClient.GameLogic.Spawning
 {
     public class PrefabChildEntitySpawner : EntitySpawner<PrefabChildEntity>
     {
-        // When we first encounter a PrefabChildEntity, we simply need to assign it the right id matching the server
+        // When we encounter a PrefabChildEntity, we need to assign the id to a prefab with the same class id and index.
         public override IEnumerator SpawnAsync(PrefabChildEntity entity, TaskResult<Optional<GameObject>> result)
         {
             GameObject parent = NitroxEntity.RequireObjectFrom(entity.ParentId);
+            PrefabIdentifier prefab = parent.GetAllComponentsInChildren<PrefabIdentifier>()
+                                            .Where(prefab => prefab.classId == entity.ClassId)
+                                            .Skip(entity.ComponentIndex)
+                                            .First();
 
-            if (parent.transform.childCount - 1 < entity.ExistingGameObjectChildIndex)
+            if (prefab)
             {
-                Log.Error($"Parent {parent} did not have a child at index {entity.ExistingGameObjectChildIndex}");
-
+                NitroxEntity.SetNewId(prefab.gameObject, entity.Id);
+                result.Set(Optional.OfNullable(prefab.gameObject));
+            }
+            else
+            {
+                Log.Error($"Unable to find prefab for: {entity}");
                 result.Set(Optional.Empty);
-                yield break;
             }
 
-            GameObject gameObject = parent.transform.GetChild(entity.ExistingGameObjectChildIndex).gameObject;
-
-            NitroxEntity.SetNewId(gameObject, entity.Id);
-
-            result.Set(Optional.OfNullable(gameObject));
             yield break;
         }
  
