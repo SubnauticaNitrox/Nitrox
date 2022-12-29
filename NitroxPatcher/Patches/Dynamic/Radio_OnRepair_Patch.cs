@@ -1,8 +1,11 @@
-﻿using System.Reflection;
+using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxModel.Core;
+using NitroxClient.MonoBehaviours;
+using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.Helper;
+using NitroxModel_Subnautica.DataStructures;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
@@ -12,7 +15,8 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static bool Prefix(Radio __instance)
         {
-            NitroxServiceLocator.LocateService<EscapePodManager>().OnRadioRepairedByMe(__instance);
+            NitroxId id = NitroxEntity.GetId(__instance.gameObject);
+            Resolve<Entities>().BroadcastMetadataUpdate(id, new RepairedComponentMetadata(TechType.Radio.ToDto()));
             return true;
         }
 

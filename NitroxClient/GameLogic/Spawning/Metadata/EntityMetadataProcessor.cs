@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures.Util;
 using UnityEngine;
@@ -41,6 +42,16 @@ namespace NitroxClient.GameLogic.Spawning.Metadata
             }
 
             return Optional.Empty;
+        }
+
+        public static void ApplyMetadata(GameObject gameObject, EntityMetadata metadata)
+        {
+            Optional<EntityMetadataProcessor> metadataProcessor = EntityMetadataProcessor.FromMetaData(metadata);
+
+            if (metadataProcessor.HasValue)
+            {
+                metadataProcessor.Value.ProcessMetadata(gameObject, metadata);
+            }
         }
     }
 }
