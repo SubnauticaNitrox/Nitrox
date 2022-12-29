@@ -126,8 +126,8 @@ namespace NitroxClient.GameLogic
                 bodyRotation = vehicleAngle * bodyRotation;
                 aimingRotation = vehicleAngle * aimingRotation;
             }
-            RigidBody.velocity = AnimationController.Velocity = MovementHelper.GetCorrectedVelocity(position, velocity, Body, Time.fixedDeltaTime);
-            RigidBody.angularVelocity = MovementHelper.GetCorrectedAngularVelocity(bodyRotation, Vector3.zero, Body, Time.fixedDeltaTime);
+            RigidBody.velocity = AnimationController.Velocity = MovementHelper.GetCorrectedVelocity(position, velocity, Body, Time.fixedDeltaTime * (PlayerMovementBroadcaster.LOCATION_BROADCAST_TICK_SKIPS + 1));
+            RigidBody.angularVelocity = MovementHelper.GetCorrectedAngularVelocity(bodyRotation, Vector3.zero, Body, Time.fixedDeltaTime * (PlayerMovementBroadcaster.LOCATION_BROADCAST_TICK_SKIPS + 1));
 
             AnimationController.AimingRotation = aimingRotation;
             AnimationController.UpdatePlayerAnimations = true;
