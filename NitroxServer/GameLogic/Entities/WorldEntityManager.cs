@@ -30,8 +30,7 @@ namespace NitroxServer.GameLogic.Entities
 
         public WorldEntityManager(EntityRegistry entityRegistry, BatchEntitySpawner batchEntitySpawner)
         {
-            List<Entity> entities = entityRegistry.GetAllEntities();
-            List<WorldEntity> worldEntities = entities.OfType<WorldEntity>().ToList();
+            List<WorldEntity> worldEntities = entityRegistry.GetEntities<WorldEntity>();
 
             globalRootEntitiesById = worldEntities.Where(entity => entity.ExistsInGlobalRoot)
                                                   .ToDictionary(entity => entity.Id);

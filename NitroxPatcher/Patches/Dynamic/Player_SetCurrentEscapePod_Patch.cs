@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
@@ -17,10 +17,11 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             NitroxId podId = null;
 
-            if (value != null)
+            if (value && value.GetComponent<NitroxEntity>() != null)
             {
                 podId = NitroxEntity.GetId(value.gameObject);
             }
+
             NitroxServiceLocator.LocateService<LocalPlayer>().BroadcastEscapePodChange(Optional.OfNullable(podId));
         }
 

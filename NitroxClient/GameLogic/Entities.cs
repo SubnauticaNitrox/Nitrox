@@ -33,6 +33,7 @@ namespace NitroxClient.GameLogic
             entitySpawnersByType[typeof(PrefabChildEntity)] = new PrefabChildEntitySpawner();
             entitySpawnersByType[typeof(WorldEntity)] = new WorldEntitySpawner();
             entitySpawnersByType[typeof(PlaceholderGroupWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
+            entitySpawnersByType[typeof(EscapePodWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
         }
 
         public void BroadcastTransforms(Dictionary<NitroxId, GameObject> gameObjectsById)
@@ -102,12 +103,7 @@ namespace NitroxClient.GameLogic
 
             if (gameObject.HasValue)
             {
-                Optional<EntityMetadataProcessor> metadataProcessor = EntityMetadataProcessor.FromMetaData(entity.Metadata);
-
-                if (metadataProcessor.HasValue)
-                {
-                    metadataProcessor.Value.ProcessMetadata(gameObject.Value, entity.Metadata);
-                }
+                EntityMetadataProcessor.ApplyMetadata(gameObject.Value, entity.Metadata);
             }
 
             if (!entitySpawner.SpawnsOwnChildren(entity))

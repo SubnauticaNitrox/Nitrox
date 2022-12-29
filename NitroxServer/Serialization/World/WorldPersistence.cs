@@ -153,7 +153,6 @@ namespace NitroxServer.Serialization.World
                 PlayerData = PlayerData.From(new List<Player>()),
                 WorldData = new WorldData()
                 {
-                    EscapePodData = EscapePodData.From(new List<EscapePodModel>()),
                     GameData = new GameData
                     {
                         PDAState = new PDAStateData(),
@@ -184,6 +183,9 @@ namespace NitroxServer.Serialization.World
 
             Log.Info($"Loading world with seed {seed}");
 
+            EntityRegistry entityRegistry = NitroxServiceLocator.LocateService<EntityRegistry>();
+            entityRegistry.AddEntities(pWorldData.EntityData.Entities);
+
             World world = new()
             {
                 SimulationOwnershipData = new SimulationOwnershipData(),
@@ -193,7 +195,9 @@ namespace NitroxServer.Serialization.World
 
                 InventoryManager = new InventoryManager(pWorldData.WorldData.InventoryData.InventoryItems, pWorldData.WorldData.InventoryData.StorageSlotItems, pWorldData.WorldData.InventoryData.Modules),
 
-                EscapePodManager = new EscapePodManager(pWorldData.WorldData.EscapePodData.EscapePods, randomStart, seed),
+                EscapePodManager = new EscapePodManager(entityRegistry, randomStart, seed),
+
+                EntityRegistry = entityRegistry,
 
                 GameData = pWorldData.WorldData.GameData,
                 GameMode = gameMode,
@@ -214,8 +218,6 @@ namespace NitroxServer.Serialization.World
                 NitroxServiceLocator.LocateService<Dictionary<string, PrefabPlaceholdersGroupAsset>>(),
                 world.Seed
             );
-
-            world.EntityRegistry = new EntityRegistry(pWorldData.EntityData.Entities);
 
             world.WorldEntityManager = new WorldEntityManager(world.EntityRegistry, world.BatchEntitySpawner);
 

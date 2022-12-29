@@ -10,12 +10,7 @@ namespace NitroxServer.GameLogic.Entities
 {
     public class EntityRegistry
     {
-        private readonly ConcurrentDictionary<NitroxId, Entity> entitiesById;
-
-        public EntityRegistry(List<Entity> entities)
-        {
-            entitiesById = new(entities.Select(e => new KeyValuePair<NitroxId, Entity>(e.Id, e)));
-        }
+        private readonly ConcurrentDictionary<NitroxId, Entity> entitiesById = new();
 
         public Optional<Entity> GetEntityById(NitroxId id)
         {
@@ -45,6 +40,11 @@ namespace NitroxServer.GameLogic.Entities
                                 .ToList();
         }
 
+        public List<T> GetEntities<T>()
+        {
+            return entitiesById.Values.OfType<T>().ToList();
+        }
+
         public void AddEntity(Entity entity)
         {
             if (!entitiesById.TryAdd(entity.Id, entity))
@@ -53,6 +53,7 @@ namespace NitroxServer.GameLogic.Entities
                 Log.Error(new InvalidOperationException(), $"Trying to add duplicate entity {entity.Id}");
             }
         }
+
         public void AddEntities(List<Entity> entities)
         {
             foreach(Entity entity in entities)

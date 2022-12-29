@@ -26,7 +26,6 @@ public class PlayerPreferencesInitialSyncProcessor : InitialSyncProcessor
             typeof(GlobalRootInitialSyncProcessor),
             typeof(StoryGoalInitialSyncProcessor),
             typeof(PdaInitialSyncProcessor),
-            typeof(EscapePodInitialSyncProcessor),
             typeof(RemotePlayerInitialSyncProcessor),
             typeof(BuildingInitialSyncProcessor),
             typeof(VehicleInitialSyncProcessor),

@@ -13,7 +13,6 @@ namespace NitroxModel.Packets
     [Serializable]
     public class InitialPlayerSync : Packet
     { 
-        public List<EscapePodModel> EscapePodsData { get; }
         public NitroxId AssignedEscapePodId { get; }
         public List<EquippedItemData> EquippedItems { get; }
         public List<EquippedItemData> Modules { get; }
@@ -33,7 +32,7 @@ namespace NitroxModel.Packets
         public Optional<NitroxId> PlayerSubRootId { get; }
         public PlayerStatsData PlayerStatsData { get; }
         public List<InitialRemotePlayerData> RemotePlayerData { get; }
-        public List<WorldEntity> GlobalRootEntities { get; }
+        public List<Entity> GlobalRootEntities { get; }
         public List<NitroxId> InitialSimulationOwnerships { get; }
         public ServerGameMode GameMode { get; }
         public Perms Permissions { get; }
@@ -41,7 +40,6 @@ namespace NitroxModel.Packets
 
         public InitialPlayerSync(NitroxId playerGameObjectId,
             bool firstTimeConnecting,
-            IEnumerable<EscapePodModel> escapePodsData,
             NitroxId assignedEscapePodId,
             IEnumerable<EquippedItemData> equipment,
             IEnumerable<EquippedItemData> modules,
@@ -59,13 +57,12 @@ namespace NitroxModel.Packets
             Optional<NitroxId> playerSubRootId,
             PlayerStatsData playerStatsData,
             IEnumerable<InitialRemotePlayerData> remotePlayerData,
-            IEnumerable<WorldEntity> globalRootEntities,
+            IEnumerable<Entity> globalRootEntities,
             IEnumerable<NitroxId> initialSimulationOwnerships,
             ServerGameMode gameMode,
             Perms perms,
             Dictionary<string, PingInstancePreference> preferences)
         {
-            EscapePodsData = escapePodsData.ToList();
             AssignedEscapePodId = assignedEscapePodId;
             PlayerGameObjectId = playerGameObjectId;
             FirstTimeConnecting = firstTimeConnecting;
@@ -94,7 +91,6 @@ namespace NitroxModel.Packets
 
         /// <remarks>Used for deserialization</remarks>
         public InitialPlayerSync(
-            List<EscapePodModel> escapePodsData,
             NitroxId assignedEscapePodId,
             List<EquippedItemData> equippedItems,
             List<EquippedItemData> modules,
@@ -114,13 +110,12 @@ namespace NitroxModel.Packets
             Optional<NitroxId> playerSubRootId,
             PlayerStatsData playerStatsData,
             List<InitialRemotePlayerData> remotePlayerData,
-            List<WorldEntity> globalRootEntities,
+            List<Entity> globalRootEntities,
             List<NitroxId> initialSimulationOwnerships,
             ServerGameMode gameMode,
             Perms permissions,
             Dictionary<string, PingInstancePreference> preferences)
         {
-            EscapePodsData = escapePodsData;
             AssignedEscapePodId = assignedEscapePodId;
             PlayerGameObjectId = playerGameObjectId;
             FirstTimeConnecting = firstTimeConnecting;
