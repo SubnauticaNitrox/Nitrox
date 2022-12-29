@@ -223,21 +223,14 @@ public class Program
             dllPath = Path.Combine(gameInstallDir.Value, "Subnautica_Data", "Managed", dllFileName);
         }
 
-        // Return cached assembly
+        // If available, return cached assembly
         if (resolvedAssemblyCache.TryGetValue(dllPath, out Assembly val))
         {
             return val;
         }
-
         // Read assemblies as bytes as to not lock the file so that Nitrox can patch assemblies while server is running.
-        using (FileStream stream = new(dllPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-        using (MemoryStream mstream = new())
-        {
-            stream.CopyTo(mstream);
-            Assembly assembly = Assembly.Load(mstream.ToArray());
-            resolvedAssemblyCache[dllPath] = assembly;
-            return assembly;
-        }
+        Assembly assembly = Assembly.Load(File.ReadAllBytes(dllPath));
+        return resolvedAssemblyCache[dllPath] = assembly;
     }
 
     /**
