@@ -19,16 +19,16 @@ public class SavedBase
 
 public class SavedBuild
 {
-    public string NitroxId;
+    public NitroxId NitroxId;
     public NitroxVector3 Position;
     public NitroxQuaternion Rotation;
     public NitroxVector3 LocalScale;
 
     public SavedBase Base;
 
-    public SavedInteriorPiece[] InteriorPieces;
-    public SavedModule[] Modules;
-    public SavedGhost[] Ghosts;
+    public List<SavedInteriorPiece> InteriorPieces;
+    public List<SavedModule> Modules;
+    public List<SavedGhost> Ghosts;
 }
 
 public class SavedGlobalRoot
@@ -48,7 +48,7 @@ public class SavedInteriorPiece
 public class SavedModule
 {
     public string ClassId;
-    public string NitroxId;
+    public NitroxId NitroxId;
     public NitroxVector3 Position;
     public NitroxQuaternion Rotation;
     public NitroxVector3 LocalScale;
