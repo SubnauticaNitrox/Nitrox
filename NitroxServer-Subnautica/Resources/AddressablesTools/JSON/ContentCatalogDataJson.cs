@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace AddressablesTools.JSON
+﻿namespace AddressablesTools.JSON
 {
 #pragma warning disable IDE1006
     internal class ContentCatalogDataJson

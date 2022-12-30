@@ -1,5 +1,4 @@
 ﻿using NitroxClient.Unity.Smoothing;
-using NitroxModel.Helper;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours

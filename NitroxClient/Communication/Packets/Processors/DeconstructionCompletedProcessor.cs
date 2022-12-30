@@ -2,7 +2,6 @@ using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using UnityEngine;
 

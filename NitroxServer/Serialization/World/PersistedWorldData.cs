@@ -1,5 +1,4 @@
 using Newtonsoft.Json;
-using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Bases;
 using NitroxServer.GameLogic.Entities;
 using NitroxServer.GameLogic.Items;

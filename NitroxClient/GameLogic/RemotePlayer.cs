@@ -6,7 +6,6 @@ using NitroxClient.GameLogic.PlayerLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
-using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
 using UnityEngine;
 using UWE;
