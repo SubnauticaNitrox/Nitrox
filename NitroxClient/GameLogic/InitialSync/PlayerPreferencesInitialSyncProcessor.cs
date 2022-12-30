@@ -138,7 +138,7 @@ public class PlayerPreferencesInitialSyncProcessor : InitialSyncProcessor
 
     private static IEnumerator DelayPingKeyDetection(Action delayedAction)
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return Yielders.WaitForHalfSecond;
         delayedAction();
     }
 }

@@ -475,7 +475,7 @@ namespace NitroxClient.GameLogic
         */
         public IEnumerator AllowMovementPacketsAfterDockingAnimation(PacketSuppressor<PlayerMovement> playerMovementSuppressor, PacketSuppressor<VehicleMovement> vehicleMovementSuppressor)
         {
-            yield return new WaitForSeconds(3.0f);
+            yield return Yielders.WaitFor3Seconds;
             playerMovementSuppressor.Dispose();
             vehicleMovementSuppressor.Dispose();
         }
