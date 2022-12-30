@@ -200,7 +200,7 @@ public static class NitroxBuild
 
     public static IEnumerator RestoreGhost(Transform parent, SavedGhost savedGhost)
     {
-        Log.Debug($"Restoring ghost {savedGhost}");
+        Log.Debug($"Restoring ghost {NitroxGhost.ToString(savedGhost)}");
         IPrefabRequest request = PrefabDatabase.GetPrefabAsync(savedGhost.ClassId);
         yield return request;
         if (!request.TryGetPrefab(out GameObject prefab))
@@ -230,10 +230,13 @@ public static class NitroxBuild
         // TODO: Fix black ghost
         // Necessary to wait for BaseGhost.Start()
         yield return null;
-        
+
         savedGhost.Base.ApplyTo(ghostBase);
         ghostBase.OnProtoDeserialize(null);
-        Array.Clear(ghostBase.cellObjects, 0, ghostBase.cellObjects.Length);
+        if (ghostBase.cellObjects != null)
+        {
+            Array.Clear(ghostBase.cellObjects, 0, ghostBase.cellObjects.Length);
+        }
         ghostBase.FinishDeserialization();
         
         if (isInBase)
