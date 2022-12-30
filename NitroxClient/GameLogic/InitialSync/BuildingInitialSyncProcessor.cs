@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Bases;
+using NitroxClient.GameLogic.Bases.New;
 using NitroxClient.GameLogic.Bases.Spawning.BasePiece;
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxClient.MonoBehaviours;
@@ -38,6 +39,18 @@ namespace NitroxClient.GameLogic.InitialSync
 
         public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
         {
+            yield return BuildingTester.Main.IsAvailable();
+
+            ErrorMessage.AddMessage("Loading base");
+            Log.Debug("Start");
+            DateTimeOffset begin = DateTimeOffset.Now;
+            Log.Debug($"Loading {NitroxGlobalRoot.ToString(packet.SavedGlobalRoot)}");
+            yield return BuildingTester.Main.LoadGlobalRootAsync(packet.SavedGlobalRoot);
+            DateTimeOffset end = DateTimeOffset.Now;
+            Log.Debug("End");
+            ErrorMessage.AddMessage($"Finished loading base, took {(end - begin).TotalMilliseconds}ms");
+            yield break;
+
             completed = false;
 
             List<BasePiece> basePieces = packet.BasePieces;
