@@ -5,7 +5,7 @@ using NitroxServer.GameLogic.Bases;
 
 namespace NitroxServer.Communication.Packets.Processors;
 
-// TODO: Finish up this whole class
+// TODO: Remove the serialized object before sending them back to the clients that should only be receiving lighter packets
 public abstract class BuildingProcessor<T> : AuthenticatedPacketProcessor<T> where T : Packet
 {
     internal readonly BuildingManager buildingManager;
@@ -55,7 +55,10 @@ public class ModifyConstructedAmountProcessor : BuildingProcessor<ModifyConstruc
 
     public override void Process(ModifyConstructedAmount packet, Player player)
     {
-        base.Process(packet, player);
+        if (buildingManager.ModifyConstructedAmount(packet))
+        {
+            base.Process(packet, player);
+        }
     }
 }
 
@@ -65,7 +68,10 @@ public class PlaceBaseProcessor : BuildingProcessor<PlaceBase>
 
     public override void Process(PlaceBase packet, Player player)
     {
-        base.Process(packet, player);
+        if (buildingManager.AddBase(packet))
+        {
+            base.Process(packet, player);
+        }
     }
 }
 
@@ -75,7 +81,10 @@ public class UpdateBaseProcessor : BuildingProcessor<UpdateBase>
 
     public override void Process(UpdateBase packet, Player player)
     {
-        base.Process(packet, player);
+        if (buildingManager.UpdateBase(packet))
+        {
+            base.Process(packet, player);
+        }
     }
 }
 
@@ -85,7 +94,10 @@ public class BaseDeconstructedProcessor : BuildingProcessor<BaseDeconstructed>
 
     public override void Process(BaseDeconstructed packet, Player player)
     {
-        base.Process(packet, player);
+        if (buildingManager.ReplaceBaseByGhost(packet))
+        {
+            base.Process(packet, player);
+        }
     }
 }
 
@@ -95,6 +107,9 @@ public class PieceDeconstructedProcessor : BuildingProcessor<PieceDeconstructed>
 
     public override void Process(PieceDeconstructed packet, Player player)
     {
-        base.Process(packet, player);
+        if (buildingManager.ReplacePieceByGhost(packet))
+        {
+            base.Process(packet, player);
+        }
     }
 }
