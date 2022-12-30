@@ -1,15 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using BinaryPack.Attributes;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures.Unity;
-using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic.Entities;
 
 [Serializable]
-[ProtoContract]
+[DataContract]
 public class PlaceholderGroupWorldEntity : WorldEntity
 {
     [IgnoreConstructor]

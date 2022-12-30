@@ -1,37 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using BinaryPack.Attributes;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
-using ProtoBufNet;
 
 namespace NitroxModel_Subnautica.DataStructures.GameLogic
 {
     [Serializable]
-    [ProtoContract]
+    [DataContract]
     public class CyclopsModel : VehicleModel
     {
-        [ProtoMember(1)]
+        [DataMember(Order = 1)]
         public bool FloodLightsOn { get; set; }
 
-        [ProtoMember(2)]
+        [DataMember(Order = 2)]
         public bool InternalLightsOn { get; set; }
 
-        [ProtoMember(3)]
+        [DataMember(Order = 3)]
         public bool SilentRunningOn { get; set; }
 
-        [ProtoMember(4)]
+        [DataMember(Order = 4)]
         public bool ShieldOn { get; set; }
 
-        [ProtoMember(5)]
+        [DataMember(Order = 5)]
         public bool SonarOn { get; set; }
 
-        [ProtoMember(6)]
+        [DataMember(Order = 6)]
         public bool EngineState { get; set; }
 
-        [ProtoMember(7)]
+        [DataMember(Order = 7)]
         public CyclopsMotorMode.CyclopsMotorModes EngineMode { get; set; }
 
         [IgnoreConstructor]

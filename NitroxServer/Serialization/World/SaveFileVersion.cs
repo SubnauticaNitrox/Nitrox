@@ -1,23 +1,22 @@
 ﻿using System;
-using Newtonsoft.Json;
+using System.Runtime.Serialization;
 using NitroxModel.Helper;
-using ProtoBufNet;
 
 namespace NitroxServer.Serialization.World
 {
-    [ProtoContract, JsonObject(MemberSerialization.OptIn)]
+    [DataContract]
     public class SaveFileVersion
     {
-        [JsonProperty, ProtoMember(1)]
+        [DataMember(Order = 1)]
         public readonly int Major;
 
-        [JsonProperty, ProtoMember(2)]
+        [DataMember(Order = 2)]
         public readonly int Minor;
 
-        [JsonProperty, ProtoMember(3)]
+        [DataMember(Order = 3)]
         public readonly int Build;
 
-        [JsonProperty, ProtoMember(4)]
+        [DataMember(Order = 4)]
         public readonly int Revision;
 
         public Version Version => new Version(Major, Minor, Build, Revision);

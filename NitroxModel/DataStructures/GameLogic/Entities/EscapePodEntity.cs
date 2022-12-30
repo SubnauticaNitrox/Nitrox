@@ -2,20 +2,20 @@ using System;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures.Unity;
 using System.Collections.Generic;
-using ProtoBufNet;
+using System.Runtime.Serialization;
 using BinaryPack.Attributes;
 
 namespace NitroxModel.DataStructures.GameLogic.Entities
 {
 
     [Serializable]
-    [ProtoContract]
+    [DataContract]
     public class EscapePodWorldEntity : WorldEntity
     {
-        [ProtoMember(1)]
+        [DataMember(Order = 1)]
         public bool Damaged { get; set; }
 
-        [ProtoMember(2)]
+        [DataMember(Order = 2)]
         public List<ushort> Players { get; set; }
 
         [IgnoreConstructor]

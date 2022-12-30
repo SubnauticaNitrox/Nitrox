@@ -1,20 +1,20 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using BinaryPack.Attributes;
-using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
     [Serializable]
-    [ProtoContract]
+    [DataContract]
     public class PDAEntry
     {
-        [ProtoMember(1)]
+        [DataMember(Order = 1)]
         public NitroxTechType TechType { get; set; }
 
-        [ProtoMember(2)]
+        [DataMember(Order = 2)]
         public float Progress { get; set; }
 
-        [ProtoMember(3)]
+        [DataMember(Order = 3)]
         public int Unlocked { get; set; }
 
         [IgnoreConstructor]

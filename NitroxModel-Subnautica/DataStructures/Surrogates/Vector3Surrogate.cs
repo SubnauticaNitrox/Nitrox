@@ -1,21 +1,20 @@
 ﻿using System.Runtime.Serialization;
 using NitroxModel.DataStructures.Surrogates;
 using NitroxModel.DataStructures.Unity;
-using ProtoBuf;
 using UnityEngine;
 
 namespace NitroxModel_Subnautica.DataStructures.Surrogates
 {
-    [ProtoContract]
+    [DataContract]
     public class Vector3Surrogate : SerializationSurrogate<Vector3>
     {
-        [ProtoMember(1)]
+        [DataMember(Order = 1)]
         public float X { get; private set; }
 
-        [ProtoMember(2)]
+        [DataMember(Order = 2)]
         public float Y { get; private set; }
 
-        [ProtoMember(3)]
+        [DataMember(Order = 3)]
         public float Z { get; private set; }
 
         protected override void GetObjectData(Vector3 vector3, SerializationInfo info)

@@ -1,10 +1,11 @@
 using System;
+using System.Runtime.Serialization;
 using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata
 {
     [Serializable]
-    [ProtoContract]
+    [DataContract]
     [ProtoInclude(50, typeof(KeypadMetadata))]
     [ProtoInclude(60, typeof(SealedDoorMetadata))]
     [ProtoInclude(70, typeof(PrecursorDoorwayMetadata))]

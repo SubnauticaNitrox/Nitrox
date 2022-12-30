@@ -1,17 +1,17 @@
 ﻿using System;
-using ProtoBufNet;
+using System.Runtime.Serialization;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
     [Serializable]
-    [ProtoContract]
+    [DataContract]
     public class NitroxScheduledGoal
     {
-        [ProtoMember(1)]
+        [DataMember(Order = 1)]
         public float TimeExecute { get; set; }
-        [ProtoMember(2)]
+        [DataMember(Order = 2)]
         public string GoalKey { get; set; }
-        [ProtoMember(3)]
+        [DataMember(Order = 3)]
         public string GoalType { get; set; }
         
         public NitroxScheduledGoal(float timeExecute, string goalKey, string goalType)
