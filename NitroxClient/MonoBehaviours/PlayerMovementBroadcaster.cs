@@ -18,7 +18,7 @@ public class PlayerMovementBroadcaster : MonoBehaviour
     public const int LOCATION_BROADCAST_TICK_SKIPS = 1;
 
     private LocalPlayer localPlayer;
-    private int locationBroadcastSkipCounter;
+    private int locationBroadcastSkipThreshold = LOCATION_BROADCAST_TICK_SKIPS;
 
     public void Awake()
     {
@@ -28,12 +28,12 @@ public class PlayerMovementBroadcaster : MonoBehaviour
     public void FixedUpdate()
     {
         // Throttle location broadcasts to not run on every physics tick.
-        if (locationBroadcastSkipCounter++ < LOCATION_BROADCAST_TICK_SKIPS)
+        if (locationBroadcastSkipThreshold-- > 0)
         {
             return;
         }
-        // Reset counter.
-        locationBroadcastSkipCounter = 0;
+        // Reset skip threshold.
+        locationBroadcastSkipThreshold = LOCATION_BROADCAST_TICK_SKIPS;
 
         // Freecam does disable main camera control
         // But it's also disabled when driving the cyclops through a cyclops camera (content.activeSelf is only true when controlling through a cyclops camera)
