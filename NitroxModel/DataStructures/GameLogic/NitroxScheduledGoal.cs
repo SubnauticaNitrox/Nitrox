@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.Serialization;
+using BinaryPack.Attributes;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
@@ -13,6 +14,12 @@ namespace NitroxModel.DataStructures.GameLogic
         public string GoalKey { get; set; }
         [DataMember(Order = 3)]
         public string GoalType { get; set; }
+        
+        [IgnoreConstructor]
+        protected NitroxScheduledGoal()
+        {
+            // Constructor for serialization. Has to be "protected" for json serialization.
+        }
         
         public NitroxScheduledGoal(float timeExecute, string goalKey, string goalType)
         {
