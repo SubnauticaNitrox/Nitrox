@@ -102,14 +102,14 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastTakeDamage(TechType techType, NitroxId id, float originalDamage, Vector3 position, DamageType damageType, Optional<NitroxId> dealerId, float totalHealth)
         {
-            LiveMixinHealthChanged packet = new LiveMixinHealthChanged(techType.ToDto(), id, -originalDamage, totalHealth, position.ToDto(), (ushort)damageType, dealerId);
-            multiplayerSession.Send(packet);
+            LiveMixinHealthChanged packet = new(techType.ToDto(), id, -originalDamage, totalHealth, position.ToDto(), (ushort)damageType, dealerId);
+            multiplayerSession.SendIfGameCode(packet);
         }
 
         public void BroadcastAddHealth(TechType techType, NitroxId id, float healthAdded, float totalHealth)
         {
-            LiveMixinHealthChanged packet = new LiveMixinHealthChanged(techType.ToDto(), id, healthAdded, totalHealth);
-            multiplayerSession.Send(packet);
+            LiveMixinHealthChanged packet = new(techType.ToDto(), id, healthAdded, totalHealth);
+            multiplayerSession.SendIfGameCode(packet);
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using HarmonyLib;
-using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
@@ -28,7 +27,7 @@ public class CyclopsDestructionEvent_OnConsoleCommand_Patch : NitroxPatch, IDyna
         }
 
         NitroxId id = NitroxEntity.GetId(__instance.gameObject);
-        Resolve<IPacketSender>().Send(new CyclopsDestroyed(id, true));
+        SendPacket<CyclopsDestroyed>(new(id, true));
         return true;
     }
 

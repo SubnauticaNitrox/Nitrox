@@ -127,7 +127,7 @@ namespace NitroxClient.Communication.MultiplayerSession
             {
                 // Root caller is last stack frame, so start from the end.
                 int i = frames.Length - 1;
-                // Ignore Unity interjecting itself into iterators.
+                // Ignore Unity iterator frames.
                 if (frames.ElementAtOrDefault(i)?.GetMethod().Name == "InvokeMoveNext" && frames.ElementAtOrDefault(i - 1)?.GetMethod().Name == "MoveNext")
                 {
                     i -= 2;
@@ -137,7 +137,7 @@ namespace NitroxClient.Communication.MultiplayerSession
                 {
                     return false;
                 }
-                // Call stack is started by Nitrox, check if packet was sent via/passing injected code. If so, suppress packet.
+                // Nitrox called it. If this packet occurred via injected code we need to suppress to prevent feedback cascades between client<->server.
                 while (--i >= 0)
                 {
                     if (typeof(IPatch).IsAssignableFrom(frames[i].GetMethod().DeclaringType))

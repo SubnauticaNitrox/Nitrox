@@ -38,7 +38,7 @@ namespace NitroxPatcher.Patches.Dynamic
             {
                 // Let others know if we have a lock on this entity
                 NitroxId id = NitroxEntity.GetId(__instance.gameObject);
-                bool hasLock = NitroxServiceLocator.LocateService<SimulationOwnership>().HasAnyLockType(id);
+                bool hasLock = Resolve<SimulationOwnership>().HasAnyLockType(id);
 
                 if (hasLock)
                 {
@@ -50,7 +50,7 @@ namespace NitroxPatcher.Patches.Dynamic
                         dealerId = NitroxEntity.GetId(dealer);
                     }
 
-                    NitroxServiceLocator.LocateService<LiveMixinManager>().BroadcastTakeDamage(techType, id, originalDamage, position, type, dealerId, __instance.health);
+                    Resolve<LiveMixinManager>().BroadcastTakeDamage(techType, id, originalDamage, position, type, dealerId, __instance.health);
                 }
             }
         }
