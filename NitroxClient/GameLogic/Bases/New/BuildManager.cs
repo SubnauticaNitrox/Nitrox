@@ -56,7 +56,7 @@ public static class NitroxBuild
         SavedBuild savedBuild = new();
         if (NitroxEntity.TryGetEntityFrom(targetBase.gameObject, out NitroxEntity entity))
         {
-            savedBuild.NitroxId = $"{entity.Id}";
+            savedBuild.NitroxId = entity.Id;
         }
 
         savedBuild.Position = targetBase.transform.position.ToDto();
@@ -65,11 +65,30 @@ public static class NitroxBuild
 
         savedBuild.Base = NitroxBase.From(targetBase);
 
-        savedBuild.InteriorPieces = SaveInteriorPieces(targetBase).ToArray();
-        savedBuild.Modules = SaveModules(targetBase.transform).ToArray();
-        savedBuild.Ghosts = SaveGhosts(targetBase.transform).ToArray();
+        savedBuild.InteriorPieces = SaveInteriorPieces(targetBase);
+        savedBuild.Modules = SaveModules(targetBase.transform);
+        savedBuild.Ghosts = SaveGhosts(targetBase.transform);
 
         return savedBuild;
+    }
+    public static IEnumerator CreateBuild(SavedBuild savedBuild)
+    {
+        GameObject newBase = UnityEngine.Object.Instantiate(BaseGhost._basePrefab, LargeWorldStreamer.main.globalRoot.transform, savedBuild.Position.ToUnity(), savedBuild.Rotation.ToUnity(), savedBuild.LocalScale.ToUnity(), false);
+        if (LargeWorld.main)
+        {
+            LargeWorld.main.streamer.cellManager.RegisterEntity(newBase);
+        }
+        Base @base = newBase.GetComponent<Base>();
+        if (!@base)
+        {
+            Log.Debug("No Base component found");
+            yield break;
+        }
+        yield return savedBuild.ApplyToAsync(@base);
+        newBase.SetActive(true);
+        yield return savedBuild.RestoreGhosts(@base);
+        @base.OnProtoDeserialize(null);
+        @base.FinishDeserialization();
     }
 
     private static List<SavedInteriorPiece> SaveInteriorPieces(Base targetBase)
@@ -113,11 +132,7 @@ public static class NitroxBuild
 
     public static void ApplyTo(this SavedBuild savedBuild, Base @base)
     {
-        if (Guid.TryParse(savedBuild.NitroxId, out Guid id))
-        {
-            NitroxEntity.SetNewId(@base.gameObject, new(id));
-        }
-
+        NitroxEntity.SetNewId(@base.gameObject, savedBuild.NitroxId);
         savedBuild.Base.ApplyTo(@base);
     }
 
@@ -143,32 +158,38 @@ public static class NitroxBuild
         }
     }
 
+    public static IEnumerator RestoreModule(Transform parent, SavedModule savedModule)
+    {
+        Log.Debug($"Restoring module {savedModule.ClassId}");
+        IPrefabRequest request = PrefabDatabase.GetPrefabAsync(savedModule.ClassId);
+        yield return request;
+        if (!request.TryGetPrefab(out GameObject prefab))
+        {
+            Log.Debug($"Couldn't find a prefab for module of ClassId {savedModule.ClassId}");
+            yield break;
+        }
+        GameObject moduleObject = GameObject.Instantiate(prefab);
+        Transform moduleTransform = moduleObject.transform;
+        moduleTransform.parent = parent;
+        moduleTransform.localPosition = savedModule.Position.ToUnity();
+        moduleTransform.localRotation = savedModule.Rotation.ToUnity();
+        moduleTransform.localScale = savedModule.LocalScale.ToUnity();
+
+        Constructable constructable = moduleObject.GetComponent<Constructable>();
+        constructable.SetIsInside(savedModule.IsInside);
+        // TODO: If IsInside is false, maybe set a null environment
+        SkyEnvironmentChanged.Send(moduleObject, moduleObject.GetComponentInParent<SubRoot>(true));
+        constructable.constructedAmount = savedModule.ConstructedAmount;
+        constructable.SetState(savedModule.ConstructedAmount >= 1f, false);
+        constructable.UpdateMaterial();
+        NitroxEntity.SetNewId(moduleObject, savedModule.NitroxId);
+    }
+
     public static IEnumerator RestoreModules(Transform parent, IList<SavedModule> modules)
     {
         foreach (SavedModule savedModule in modules)
         {
-            Log.Debug($"Restoring module {savedModule.ClassId}");
-            IPrefabRequest request = PrefabDatabase.GetPrefabAsync(savedModule.ClassId);
-            yield return request;
-            if (!request.TryGetPrefab(out GameObject prefab))
-            {
-                Log.Debug($"Couldn't find a prefab for module of ClassId {savedModule.ClassId}");
-                continue;
-            }
-            GameObject moduleObject = GameObject.Instantiate(prefab);
-            Transform moduleTransform = moduleObject.transform;
-            moduleTransform.parent = parent;
-            moduleTransform.localPosition = savedModule.Position.ToUnity();
-            moduleTransform.localRotation = savedModule.Rotation.ToUnity();
-            moduleTransform.localScale = savedModule.LocalScale.ToUnity();
-
-            Constructable constructable = moduleObject.GetComponent<Constructable>();
-            constructable.SetIsInside(savedModule.IsInside);
-            // TODO: If IsInside is false, maybe set a null environment
-            SkyEnvironmentChanged.Send(moduleObject, moduleObject.GetComponentInParent<SubRoot>(true));
-            constructable.constructedAmount = savedModule.ConstructedAmount;
-            constructable.SetState(savedModule.ConstructedAmount >= 1f, false);
-            constructable.UpdateMaterial();
+            yield return RestoreModule(parent, savedModule);
         }
     }
 
@@ -177,77 +198,79 @@ public static class NitroxBuild
         yield return RestoreModules(@base.transform, savedBuild.Modules);
     }
 
+    public static IEnumerator RestoreGhost(Transform parent, SavedGhost savedGhost)
+    {
+        Log.Debug($"Restoring ghost {savedGhost}");
+        IPrefabRequest request = PrefabDatabase.GetPrefabAsync(savedGhost.ClassId);
+        yield return request;
+        if (!request.TryGetPrefab(out GameObject prefab))
+        {
+            Log.Debug($"Couldn't find a prefab for module of ClassId {savedGhost.ClassId}");
+            yield break;
+        }
+        bool isInBase = parent.TryGetComponent(out Base @base);
+
+        GameObject ghostObject = GameObject.Instantiate(prefab);
+        Transform ghostTransform = ghostObject.transform;
+        savedGhost.MoveTransform(ghostTransform);
+
+        ConstructableBase constructableBase = ghostObject.GetComponent<ConstructableBase>();
+        GameObject ghostModel = constructableBase.model;
+        BaseGhost baseGhost = ghostModel.GetComponent<BaseGhost>();
+        Base ghostBase = ghostModel.GetComponent<Base>();
+        bool isBaseDeconstructable = ghostObject.name.Equals("BaseDeconstructable(Clone)");
+        if (isBaseDeconstructable && savedGhost.TechType != null)
+        {
+            constructableBase.techType = savedGhost.TechType.ToUnity();
+        }
+
+        baseGhost.SetupGhost();
+        NitroxGhostMetadata.ApplyMetadataToGhost(baseGhost, savedGhost.Metadata);
+
+        // TODO: Fix black ghost
+        // Necessary to wait for BaseGhost.Start()
+        yield return null;
+        
+        savedGhost.Base.ApplyTo(ghostBase);
+        ghostBase.OnProtoDeserialize(null);
+        Array.Clear(ghostBase.cellObjects, 0, ghostBase.cellObjects.Length);
+        ghostBase.FinishDeserialization();
+        
+        if (isInBase)
+        {
+            @base.SetPlacementGhost(baseGhost);
+            baseGhost.targetBase = @base;
+        }
+        else
+        {
+            ghostTransform.parent = parent;
+        }
+
+        Log.Debug(NitroxBase.From(ghostBase));
+        if (!isBaseDeconstructable)
+        {
+            baseGhost.Place();
+        }
+
+        if (isInBase)
+        {
+            ghostTransform.parent = parent;
+            savedGhost.MoveTransform(ghostTransform);
+        }
+
+        constructableBase.constructedAmount = savedGhost.ConstructedAmount;
+        constructableBase.SetState(false, false);
+        constructableBase.UpdateMaterial();
+
+        NitroxEntity.SetNewId(ghostObject, savedGhost.NitroxId);
+    }
+
     public static IEnumerator RestoreGhosts(Transform parent, IList<SavedGhost> ghosts)
     {
         // TODO: Fix ghost visual glitch (probably a duplicate model)
         foreach (SavedGhost savedGhost in ghosts)
         {
-            Log.Debug($"Restoring ghost {savedGhost.ClassId}");
-            IPrefabRequest request = PrefabDatabase.GetPrefabAsync(savedGhost.ClassId);
-            yield return request;
-            if (!request.TryGetPrefab(out GameObject prefab))
-            {
-                Log.Debug($"Couldn't find a prefab for module of ClassId {savedGhost.ClassId}");
-                continue;
-            }
-            bool isInBase = parent.TryGetComponent(out Base @base);
-
-            GameObject ghostObject = GameObject.Instantiate(prefab);
-            Transform ghostTransform = ghostObject.transform;
-            savedGhost.MoveTransform(ghostTransform);
-
-            ConstructableBase constructableBase = ghostObject.GetComponent<ConstructableBase>();
-            GameObject ghostModel = constructableBase.model;
-            BaseGhost baseGhost = ghostModel.GetComponent<BaseGhost>();
-            Base ghostBase = ghostModel.GetComponent<Base>();
-
-            bool isBaseDeconstructable = ghostObject.name.Equals("BaseDeconstructable(Clone)");
-            if (isBaseDeconstructable && savedGhost.TechType != null)
-            {
-                constructableBase.techType = savedGhost.TechType.ToUnity();
-            }
-
-            baseGhost.SetupGhost();
-            NitroxGhostMetadata.ApplyMetadataToGhost(baseGhost, savedGhost.Metadata);
-
-            // Necessary to wait for BaseGhost.Start()
-            yield return null;
-
-            foreach (Renderer renderer in constructableBase.ghostRenderers)
-            {
-                Log.Debug($"{renderer.name} (under {renderer.transform.parent.name}) bounds: {renderer.bounds}");
-            }
-
-            if (isInBase)
-            {
-                @base.SetPlacementGhost(baseGhost);
-                baseGhost.targetBase = @base;
-            }
-            else
-            {
-                ghostTransform.parent = parent;
-            }
-
-            savedGhost.Base.ApplyTo(ghostBase);
-            ghostBase.OnProtoDeserialize(null);
-            ghostBase.FinishDeserialization();
-
-            Log.Debug($"{NitroxBase.From(ghostBase)}");
-
-            if (!isBaseDeconstructable)
-            {
-                baseGhost.Place();
-            }
-
-            if (isInBase)
-            {
-                ghostTransform.parent = parent;
-                savedGhost.MoveTransform(ghostTransform);
-            }
-
-            constructableBase.constructedAmount = savedGhost.ConstructedAmount;
-            constructableBase.SetState(false, false);
-            constructableBase.UpdateMaterial();
+            yield return RestoreGhost(parent, savedGhost);
         }
     }
 
@@ -434,7 +457,7 @@ public static class NitroxModule
 
         if (NitroxEntity.TryGetEntityFrom(constructable.gameObject, out NitroxEntity entity))
         {
-            savedModule.NitroxId = $"{entity.Id}";
+            savedModule.NitroxId = entity.Id;
         }
         savedModule.Position = constructable.transform.localPosition.ToDto();
         savedModule.Rotation = constructable.transform.localRotation.ToDto();

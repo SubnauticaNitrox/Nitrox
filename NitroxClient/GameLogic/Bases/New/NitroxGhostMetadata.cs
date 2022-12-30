@@ -5,30 +5,30 @@ namespace NitroxClient.GameLogic.Bases.New;
 
 public static class NitroxGhostMetadata
 {
-    public static T From<T>(BaseGhost baseGhost) where T : NitroxModel.DataStructures.GameLogic.Buildings.New.Metadata.GhostMetadata, new()
+    public static T From<T>(BaseGhost baseGhost) where T : GhostMetadata, new()
     {
         T metadata = new();
         metadata.TargetOffset = baseGhost.targetOffset.ToDto();
         return metadata;
     }
 
-    public static void ApplyTo(this NitroxModel.DataStructures.GameLogic.Buildings.New.Metadata.GhostMetadata ghostMetadata, BaseGhost baseGhost)
+    public static void ApplyTo(this GhostMetadata ghostMetadata, BaseGhost baseGhost)
     {
         baseGhost.targetOffset = ghostMetadata.TargetOffset.ToUnity();
     }
 
-    public static NitroxModel.DataStructures.GameLogic.Buildings.New.Metadata.GhostMetadata GetMetadataForGhost(BaseGhost baseGhost)
+    public static GhostMetadata GetMetadataForGhost(BaseGhost baseGhost)
     {
-        NitroxModel.DataStructures.GameLogic.Buildings.New.Metadata.GhostMetadata metadata = baseGhost switch
+        GhostMetadata metadata = baseGhost switch
         {
             BaseAddWaterPark or BaseAddPartitionDoorGhost or BaseAddModuleGhost or BaseAddFaceGhost => NitroxBaseAnchoredFaceGhostMetadata.From(baseGhost),
             BaseAddPartitionGhost => NitroxBaseAnchoredCellGhostMetadata.From(baseGhost),
-            _ => From<NitroxModel.DataStructures.GameLogic.Buildings.New.Metadata.GhostMetadata>(baseGhost),
+            _ => From<BasicGhostMetadata>(baseGhost),
         };
         return metadata;
     }
 
-    public static void ApplyMetadataToGhost(BaseGhost baseGhost, NitroxModel.DataStructures.GameLogic.Buildings.New.Metadata.GhostMetadata ghostMetadata)
+    public static void ApplyMetadataToGhost(BaseGhost baseGhost, GhostMetadata ghostMetadata)
     {
         switch (baseGhost)
         {
