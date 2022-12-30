@@ -4,6 +4,7 @@ using System.IO;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.GameLogic.Buildings.New;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
@@ -69,6 +70,7 @@ namespace NitroxServer.Serialization.World
                 Serializer.Serialize(Path.Combine(saveDir, $"PlayerData{FileEnding}"), persistedData.PlayerData);
                 Serializer.Serialize(Path.Combine(saveDir, $"WorldData{FileEnding}"), persistedData.WorldData);
                 Serializer.Serialize(Path.Combine(saveDir, $"EntityData{FileEnding}"), persistedData.EntityData);
+                Serializer.Serialize(Path.Combine(saveDir, $"SavedGlobalRoot{FileEnding}"), persistedData.SavedGlobalRoot);
 
                 using (config.Update(saveDir))
                 {
@@ -116,8 +118,9 @@ namespace NitroxServer.Serialization.World
                     BaseData = Serializer.Deserialize<BaseData>(Path.Combine(saveDir, $"BaseData{FileEnding}")),
                     PlayerData = Serializer.Deserialize<PlayerData>(Path.Combine(saveDir, $"PlayerData{FileEnding}")),
                     WorldData = Serializer.Deserialize<WorldData>(Path.Combine(saveDir, $"WorldData{FileEnding}")),
-                    EntityData = Serializer.Deserialize<EntityData>(Path.Combine(saveDir, $"EntityData{FileEnding}"))
-                };
+                    EntityData = Serializer.Deserialize<EntityData>(Path.Combine(saveDir, $"EntityData{FileEnding}")),
+                    SavedGlobalRoot = Serializer.Deserialize<SavedGlobalRoot>(Path.Combine(saveDir, $"SavedGlobalRoot{FileEnding}"))
+            };
 
                 if (!persistedData.IsValid())
                 {
@@ -171,7 +174,8 @@ namespace NitroxServer.Serialization.World
                     },
                     ParsedBatchCells = new List<NitroxInt3>(),
                     Seed = config.Seed
-                }
+                },
+                SavedGlobalRoot = new() { Builds = new(), Modules = new(), Ghosts = new() }
             };
 
             return CreateWorld(pWorldData, config.GameMode);
@@ -200,6 +204,7 @@ namespace NitroxServer.Serialization.World
                 PlayerManager = new PlayerManager(pWorldData.PlayerData.GetPlayers(), config),
 
                 BaseManager = new BaseManager(pWorldData.BaseData.PartiallyConstructedPieces, pWorldData.BaseData.CompletedBasePieceHistory),
+                BuildingManager = new(pWorldData.SavedGlobalRoot),
 
                 EscapePodManager = new EscapePodManager(entityRegistry, randomStart, seed),
 

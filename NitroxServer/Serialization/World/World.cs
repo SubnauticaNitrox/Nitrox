@@ -18,6 +18,9 @@ namespace NitroxServer.Serialization.World
         public EntityRegistry EntityRegistry { get; set; }
         public WorldEntityManager WorldEntityManager { get; set; }
         public BaseManager BaseManager { get; set; }
+        public BuildingManager BuildingManager { get; set; }
+        public StoryManager StoryManager { get; set; }
+        public VehicleManager VehicleManager { get; set; }
         public StoryManager StoryManager { get; set; }
         public GameData GameData { get; set; }
         public ServerGameMode GameMode { get; set; }
