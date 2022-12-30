@@ -296,11 +296,18 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
         }
 
         // If deconstruction was ordered by BuildingTester, then we simply take the provided id
+        if (BuildingTester.Main.TempId != null)
+        {
+            NitroxEntity.SetNewId(constructableBase.gameObject, BuildingTester.Main.TempId);
+            // We don't need to go any further
+            return;
+        }
         // Else, if it's a local client deconstruction, we generate a new one
-        NitroxId pieceId = BuildingTester.Main.TempId ?? new();
+        NitroxId pieceId = new();
         NitroxEntity.SetNewId(constructableBase.gameObject, pieceId);
 
-        PieceDeconstructed pieceDeconstructed = new(baseEntity.Id, pieceId, baseDeconstructable.recipe.ToDto(), baseDeconstructable.face?.ToDto(), (int)baseDeconstructable.faceType, baseCell.cell.ToDto());
+        BuildPieceIdentifier pieceIdentifier = new(baseDeconstructable.recipe.ToDto(), baseDeconstructable.face?.ToDto(), (int)baseDeconstructable.faceType, baseCell.cell.ToDto());
+        PieceDeconstructed pieceDeconstructed = new(baseEntity.Id, pieceId, pieceIdentifier, NitroxGhost.From(constructableBase));
         Log.Debug($"Base is not empty, sending packet {pieceDeconstructed}");
 
         Resolve<IPacketSender>().Send(pieceDeconstructed);

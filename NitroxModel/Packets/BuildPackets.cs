@@ -1,5 +1,4 @@
 using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Buildings.New;
 
 namespace NitroxModel.Packets;
@@ -100,7 +99,7 @@ public sealed class BaseDeconstructed : Packet
 
     public override string ToString()
     {
-        return $"BaseDeconstructed [FormerBaseId: {FormerBaseId}, SavedGhost: {ReplacerGhost}]";
+        return $"BaseDeconstructed [FormerBaseId: {FormerBaseId}, ReplacerGhost: {ReplacerGhost}]";
     }
 }
 
@@ -108,23 +107,19 @@ public sealed class PieceDeconstructed : Packet
 {
     public NitroxId BaseId;
     public NitroxId PieceId;
-    public NitroxTechType Recipe;
-    public NitroxBaseFace? BaseFace;
-    public int FaceType;
-    public NitroxInt3 BaseCell;
+    public BuildPieceIdentifier BuildPieceIdentifier;
+    public SavedGhost ReplacerGhost;
 
-    public PieceDeconstructed(NitroxId baseId, NitroxId pieceId, NitroxTechType recipe, NitroxBaseFace? baseFace, int faceType, NitroxInt3 baseCell)
+    public PieceDeconstructed(NitroxId baseId, NitroxId pieceId, BuildPieceIdentifier buildPieceIdentifier, SavedGhost replacerGhost)
     {
         BaseId = baseId;
         PieceId = pieceId;
-        Recipe = recipe;
-        BaseFace = baseFace;
-        FaceType = faceType;
-        BaseCell = baseCell;
+        BuildPieceIdentifier = buildPieceIdentifier;
+        ReplacerGhost = replacerGhost;
     }
 
     public override string ToString()
     {
-        return $"PieceDeconstructed [FormerBaseId: {BaseId}, Recipe: {Recipe}, BaseFace: {BaseFace}, FaceType: {FaceType}, BaseCell: {BaseCell}]";
+        return $"PieceDeconstructed [BaseId: {BaseId}, PieceId: {PieceId}, PieceIdentifier: {BuildPieceIdentifier}, ReplacerGhost: {ReplacerGhost}]";
     }
 }
