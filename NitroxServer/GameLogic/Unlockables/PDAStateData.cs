@@ -15,32 +15,32 @@ namespace NitroxServer.GameLogic.Unlockables
         [DataMember(Order = 1)]
         public ThreadSafeList<NitroxTechType> UnlockedTechTypes { get; } = new ThreadSafeList<NitroxTechType>();
 
-        [DataMember(Order = 4)]
+        [DataMember(Order = 2)]
         public ThreadSafeDictionary<NitroxTechType, PDAEntry> PartiallyUnlockedByTechType { get; set; } = new ThreadSafeDictionary<NitroxTechType, PDAEntry>();
 
         /// <summary>
         /// Gets or sets the KnownTech construct which powers the popup shown to the user when a new TechType is discovered ("New Creature Discovered!")
         /// The KnownTech construct uses both <see cref='NitroxModel.Packets.KnownTechEntryAdd.EntryCategory.KNOWN'>KnownTech.knownTech</see> and <see cref='NitroxModel.Packets.KnownTechEntryAdd.EntryCategory.ANALYZED'>KnownTech.analyzedTech</see>
         /// </summary>
-        [DataMember(Order = 2)]
+        [DataMember(Order = 3)]
         public ThreadSafeList<NitroxTechType> KnownTechTypes { get; } = new ThreadSafeList<NitroxTechType>();
 
-        [DataMember(Order = 7)]
+        [DataMember(Order = 4)]
         public ThreadSafeList<NitroxTechType> AnalyzedTechTypes { get; } = new ThreadSafeList<NitroxTechType>();
 
         /// <summary>
         /// Gets or sets the entries that show up the the PDA's Encyclopedia
         /// </summary>
-        [DataMember(Order = 3)]
+        [DataMember(Order = 5)]
         public ThreadSafeList<string> EncyclopediaEntries { get; } = new ThreadSafeList<string>();
 
         /// <summary>
         /// Gets or sets the log of story events present in the PDA
         /// </summary>
-        [DataMember(Order = 5)]
+        [DataMember(Order = 6)]
         public ThreadSafeList<PDALogEntry> PdaLog { get; } = new ThreadSafeList<PDALogEntry>();
 
-        [DataMember(Order = 6)]
+        [DataMember(Order = 7)]
         public ThreadSafeDictionary<NitroxTechType, PDAProgressEntry> CachedProgress { get; } = new ThreadSafeDictionary<NitroxTechType, PDAProgressEntry>();
 
         public void UnlockedTechType(NitroxTechType techType)

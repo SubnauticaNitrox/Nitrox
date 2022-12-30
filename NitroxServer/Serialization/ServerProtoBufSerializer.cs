@@ -10,7 +10,6 @@ namespace NitroxServer.Serialization;
 
 public class ServerProtoBufSerializer : IServerSerializer
 {
-    private static readonly object[] emptyArray = Array.Empty<object>();
     protected RuntimeTypeModel Model { get; } = TypeModel.Create();
 
     public ServerProtoBufSerializer(params string[] assemblies)
@@ -59,14 +58,14 @@ public class ServerProtoBufSerializer : IServerSerializer
 
     private void RegisterAssemblyClasses(string assemblyName)
     {
+        bool HasNitroxDataContract(Type type) => type.GetCustomAttributes(typeof(DataContractAttribute), false).Length > 0;
+        bool HasNitroxProtoBuf(Type type) => type.GetCustomAttributes(typeof(ProtoContractAttribute), false).Length > 0;
+        
         foreach (Type type in Assembly.Load(assemblyName).GetTypes())
         {
             try
             {
-                bool hasNitroxProtoBuf = type.GetCustomAttributes(typeof(ProtoContractAttribute), false).Length > 0;
-                bool hasNitroxDataContract = type.GetCustomAttributes(typeof(DataContractAttribute), false).Length > 0;
-
-                if (hasNitroxProtoBuf || hasNitroxDataContract)
+                if (HasNitroxDataContract(type) || HasNitroxProtoBuf(type))
                 {
                     // As of the latest protobuf update they will automatically register detected attributes.
                     Model.Add(type, true);
@@ -89,7 +88,7 @@ public class ServerProtoBufSerializer : IServerSerializer
     {
         foreach (object o in type.GetCustomAttributes(false))
         {
-            if (o.GetType().ToString().Contains("ProtoContractAttribute"))
+            if (o.GetType().ToString().Contains(nameof(ProtoContractAttribute)))
             {
                 return true;
             }
@@ -110,9 +109,9 @@ public class ServerProtoBufSerializer : IServerSerializer
             foreach (object customAttribute in property.GetCustomAttributes(false))
             {
                 Type attributeType = customAttribute.GetType();
-                if (attributeType.ToString().Contains("ProtoMemberAttribute"))
+                if (attributeType.ToString().Contains(nameof(ProtoMemberAttribute)))
                 {
-                    int tag = (int)attributeType.GetProperty("Tag", BindingFlags.Public | BindingFlags.Instance).GetValue(customAttribute, emptyArray);
+                    int tag = (int)attributeType.GetProperty(nameof(ProtoMemberAttribute.Tag), BindingFlags.Public | BindingFlags.Instance).GetValue(customAttribute, Array.Empty<object>());
                     Model[type].Add(tag, property.Name);
                 }
             }
