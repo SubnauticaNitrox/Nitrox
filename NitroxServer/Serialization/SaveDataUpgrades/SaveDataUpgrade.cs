@@ -3,7 +3,7 @@ using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
-using NitroxModel.DataStructures.JsonConverter;
+using NitroxServer.Serialization.Json;
 
 namespace NitroxServer.Serialization.Upgrade
 {
