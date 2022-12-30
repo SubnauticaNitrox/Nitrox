@@ -2,9 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
-using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
@@ -12,7 +10,6 @@ using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Buildings.New;
 using NitroxModel.Helper;
-using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
@@ -36,8 +33,8 @@ public class BuildingTester : MonoBehaviour
 
     public void Start()
     {
-        packetSender = NitroxServiceLocator.LocateService<IPacketSender>();
         Main = this;
+        packetSender = NitroxServiceLocator.LocateService<IPacketSender>();
         BuildQueue = new();
         serializer = new();
         serializer.NullValueHandling = NullValueHandling.Ignore;
@@ -195,19 +192,20 @@ public class BuildingTester : MonoBehaviour
             Log.Debug("Couldn't find the parentBase");
             yield break;
         }
-        Transform cellObject = @base.GetCellObject(pieceDeconstructed.BaseCell.ToUnity());
+        BuildPieceIdentifier pieceIdentifier = pieceDeconstructed.BuildPieceIdentifier;
+        Transform cellObject = @base.GetCellObject(pieceIdentifier.BaseCell.ToUnity());
         if (!cellObject)
         {
-            Log.Debug($"Couldn't find cell object {pieceDeconstructed.BaseCell} when destructing piece {pieceDeconstructed}");
+            Log.Debug($"Couldn't find cell object {pieceIdentifier.BaseCell} when destructing piece {pieceDeconstructed}");
             yield break;
         }
         BaseDeconstructable[] deconstructableChildren = cellObject.GetComponentsInChildren<BaseDeconstructable>(true);
         foreach (BaseDeconstructable baseDeconstructable in deconstructableChildren)
         {
-            if (baseDeconstructable.recipe != pieceDeconstructed.Recipe.ToUnity() ||
-                (int)baseDeconstructable.faceType != pieceDeconstructed.FaceType ||
-                baseDeconstructable.face.HasValue != pieceDeconstructed.BaseFace.HasValue ||
-                (baseDeconstructable.face != null && baseDeconstructable.face.Value != pieceDeconstructed.BaseFace.Value.ToUnity()))
+            if (baseDeconstructable.recipe != pieceIdentifier.Recipe.ToUnity() ||
+                (int)baseDeconstructable.faceType != pieceIdentifier.FaceType ||
+                baseDeconstructable.face.HasValue != pieceIdentifier.BaseFace.HasValue ||
+                (baseDeconstructable.face != null && baseDeconstructable.face.Value != pieceIdentifier.BaseFace.Value.ToUnity()))
             {
                 continue;
             }
@@ -250,6 +248,12 @@ public class BuildingTester : MonoBehaviour
             transform = LargeWorldStreamer.main.globalRoot.transform;
         }
         return transform;
+    }
+
+    public IEnumerator IsAvailable()
+    {
+        yield return new WaitUntil(LargeWorldStreamer.main.IsWorldSettled);
+        yield return Base.InitializeAsync();
     }
 
     // TODO: Remove Legacy singleplayer testing code
@@ -308,7 +312,7 @@ public class BuildingTester : MonoBehaviour
         }
     }
 
-    private IEnumerator LoadGlobalRootAsync(SavedGlobalRoot savedGlobalRoot)
+    public IEnumerator LoadGlobalRootAsync(SavedGlobalRoot savedGlobalRoot)
     {
         DateTimeOffset beginTime = DateTimeOffset.Now;
         foreach (SavedBuild build in savedGlobalRoot.Builds)
