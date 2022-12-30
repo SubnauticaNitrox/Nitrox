@@ -1,22 +1,20 @@
-﻿using NitroxClient.Communication.Abstract;
-using NitroxClient.Communication.Packets.Processors.Abstract;
+﻿using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxModel.Packets;
 
-namespace NitroxClient.Communication.Packets.Processors
+namespace NitroxClient.Communication.Packets.Processors;
+
+public class VehicleDestroyedProcessor : ClientPacketProcessor<VehicleDestroyed>
 {
-    public class VehicleDestroyedProcessor : ClientPacketProcessor<VehicleDestroyed>
+    private readonly Vehicles vehicles;
+
+    public VehicleDestroyedProcessor(Vehicles vehicles)
     {
-        private readonly Vehicles vehicles;
+        this.vehicles = vehicles;
+    }
 
-        public VehicleDestroyedProcessor(Vehicles vehicles)
-        {
-            this.vehicles = vehicles;
-        }
-
-        public override void Process(VehicleDestroyed packet)
-        {
-            vehicles.DestroyVehicle(packet.Id, packet.GetPilotingMode);
-        }
+    public override void Process(VehicleDestroyed packet)
+    {
+        vehicles.DestroyVehicle(packet.Id);
     }
 }

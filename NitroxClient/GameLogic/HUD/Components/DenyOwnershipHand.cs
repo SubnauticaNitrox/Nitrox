@@ -12,7 +12,9 @@ namespace NitroxClient.GameLogic.HUD.Components
 
         void Update()
         {
-            HandReticle.main.SetInteractText("Another player is interacting with that object.");
+            //TODO: Check if this should be Hand
+            HandReticle.main.SetText(HandReticle.TextType.Hand, "Another player is interacting with that object.", false, GameInput.Button.None);
+            HandReticle.main.SetText(HandReticle.TextType.HandSubscript, string.Empty, false, GameInput.Button.None);
             HandReticle.main.SetIcon(HandReticle.IconType.HandDeny, 1f);
         }
     }

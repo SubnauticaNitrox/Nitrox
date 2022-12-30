@@ -29,6 +29,8 @@ namespace NitroxModel.DataStructures.GameLogic
             Name = name;
         }
 
+        public static NitroxTechType None { get; } = new NitroxTechType("None");
+
         public override string ToString()
         {
             return Name;

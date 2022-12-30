@@ -48,7 +48,7 @@ public class uGUI_PlayerPingEntry : uGUI_PingEntry
     public Sprite TeleportToSprite;
     public Sprite TeleportToMeSprite;
 
-    public void Awake()
+    public new void Awake()
     {
         NitroxServiceLocator.LocateService<MutePlayerProcessor>().OnPlayerMuted += (playerId, _) =>
         {
@@ -68,15 +68,14 @@ public class uGUI_PlayerPingEntry : uGUI_PingEntry
         OnLanguageChanged();
     }
 
-    public void Initialize(int id, string name, uGUI_PlayerListTab parent)
+    public void Initialize(string id, string name, uGUI_PlayerListTab parent)
     {
         this.id = id;
         this.parent = parent;
 
         gameObject.SetActive(true);
-        visibility.isOn = true;
         visibilityIcon.sprite = spriteVisible;
-        icon.sprite = SpriteManager.Get(SpriteManager.Group.Tab, "TabInventory");
+        icon.SetForegroundSprite(SpriteManager.Get(SpriteManager.Group.Tab, "TabInventory"));
         showPing = true;
 
         UpdateLabel(name);

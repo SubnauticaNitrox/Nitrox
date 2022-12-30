@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Unity;
+using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
@@ -26,6 +27,7 @@ namespace NitroxServer
         public string Name { get; }
         public bool IsPermaDeath { get; set; }
         public NitroxVector3 Position { get; set; }
+        public NitroxQuaternion Rotation { get; set; }
         public NitroxId GameObjectId { get; }
         public Optional<NitroxId> SubRootId { get; set; }
         public Perms Permissions { get; set; }
@@ -36,7 +38,7 @@ namespace NitroxServer
         public ThreadSafeDictionary<string, PingInstancePreference> PingInstancePreferences { get; set; }
 
         public Player(ushort id, string name, bool isPermaDeath, PlayerContext playerContext, NitroxConnection connection,
-                      NitroxVector3 position, NitroxId playerId, Optional<NitroxId> subRootId, Perms perms, PlayerStatsData stats,
+                      NitroxVector3 position, NitroxQuaternion rotation, NitroxId playerId, Optional<NitroxId> subRootId, Perms perms, PlayerStatsData stats,
                       IEnumerable<NitroxTechType> usedItems, IEnumerable<string> quickSlotsBinding,
                       IEnumerable<EquippedItemData> equippedItems, IEnumerable<EquippedItemData> modules, HashSet<string> completedGoals, IDictionary<string, PingInstancePreference> pingInstancePreferences)
         {
@@ -46,6 +48,7 @@ namespace NitroxServer
             PlayerContext = playerContext;
             Connection = connection;
             Position = position;
+            Rotation = rotation;
             SubRootId = subRootId;
             GameObjectId = playerId;
             Permissions = perms;
@@ -121,7 +124,7 @@ namespace NitroxServer
 
         public void RemoveModule(NitroxId id)
         {
-            modules.RemoveAll(item => item.ItemId == id);
+            modules.RemoveAll(item => item.ItemId.Equals(id));
         }
 
         public List<EquippedItemData> GetModules()
@@ -136,7 +139,7 @@ namespace NitroxServer
 
         public void RemoveEquipment(NitroxId id)
         {
-            equippedItems.RemoveAll(item => item.ItemId == id);
+            equippedItems.RemoveAll(item => item.ItemId.Equals(id));
         }
 
         public List<EquippedItemData> GetEquipment()
@@ -146,7 +149,13 @@ namespace NitroxServer
 
         public bool CanSee(Entity entity)
         {
-            return entity.ExistsInGlobalRoot || HasCellLoaded(entity.AbsoluteEntityCell);
+            if (entity is WorldEntity worldEntity)
+            {
+                return worldEntity.ExistsInGlobalRoot || HasCellLoaded(worldEntity.AbsoluteEntityCell);
+            }
+
+            // Assume all other entity types are in global root
+            return true;
         }
 
         public void SendPacket(Packet packet)

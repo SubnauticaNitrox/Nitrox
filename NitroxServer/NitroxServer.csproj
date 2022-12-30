@@ -6,17 +6,17 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\NitroxModel\NitroxModel.csproj" />
+        <ProjectReference Include="..\NitroxModel\NitroxModel.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+        <PackageReference Include="Newtonsoft.Json" Version="12.0.3"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Reference Include="protobuf-net, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-        <HintPath>..\Nitrox.Assets.Subnautica\protobuf-net.dll</HintPath>
-      </Reference>
+        <Reference Include="protobuf-net, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+            <HintPath>..\Nitrox.Assets.Subnautica\protobuf-net.dll</HintPath>
+        </Reference>
     </ItemGroup>
 
 </Project>

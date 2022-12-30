@@ -26,9 +26,9 @@ public class PlayerPreferencesInitialSyncProcessor : InitialSyncProcessor
             typeof(GlobalRootInitialSyncProcessor),
             typeof(StoryGoalInitialSyncProcessor),
             typeof(PdaInitialSyncProcessor),
-            typeof(EscapePodInitialSyncProcessor),
             typeof(RemotePlayerInitialSyncProcessor),
             typeof(BuildingInitialSyncProcessor),
+            typeof(VehicleInitialSyncProcessor),
         });
     }
 
@@ -47,7 +47,7 @@ public class PlayerPreferencesInitialSyncProcessor : InitialSyncProcessor
             RefreshPingEntryInPDA(instance);
         }
         
-        PingManager.onAdd += (id, instance) => UpdateInstance(instance);
+        PingManager.onAdd += (instance) => UpdateInstance(instance);
         GameObject.FindObjectsOfType<PingInstance>().ForEach(UpdateInstance);
     }
 
@@ -78,7 +78,7 @@ public class PlayerPreferencesInitialSyncProcessor : InitialSyncProcessor
             return;
         }
         uGUI_PingTab pingTab = pdaTab as uGUI_PingTab;
-        if (pingTab && pingTab.entries.TryGetValue(pingInstance.GetInstanceID(), out uGUI_PingEntry pingEntry))
+        if (pingTab && pingTab.entries.TryGetValue(pingInstance.Id, out uGUI_PingEntry pingEntry))
         {
             pingEntry.SetColor(pingInstance.colorIndex);
             pingEntry.SetVisible(pingInstance.visible);

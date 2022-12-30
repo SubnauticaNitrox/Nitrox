@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Autofac;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
@@ -7,13 +7,14 @@ using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.DataStructures.GameLogic.Entities;
 using NitroxModel_Subnautica.Helper;
 using NitroxServer;
+using NitroxServer.GameLogic.Entities;
 using NitroxServer.GameLogic.Entities.Spawning;
 using NitroxServer.Serialization;
 using NitroxServer_Subnautica.GameLogic.Entities;
 using NitroxServer_Subnautica.GameLogic.Entities.Spawning;
 using NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers;
+using NitroxServer_Subnautica.Resources;
 using NitroxServer_Subnautica.Serialization;
-using NitroxServer_Subnautica.Serialization.Resources;
 
 namespace NitroxServer_Subnautica
 {
@@ -55,6 +56,7 @@ namespace NitroxServer_Subnautica
             }).SingleInstance();
 
             containerBuilder.RegisterType<SubnauticaMap>().As<IMap>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<EntityRegistry>().AsSelf().InstancePerLifetimeScope();
         }
     }
 }

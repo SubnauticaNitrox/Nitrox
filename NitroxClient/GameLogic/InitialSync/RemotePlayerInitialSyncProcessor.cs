@@ -21,7 +21,7 @@ namespace NitroxClient.GameLogic.InitialSync
             this.remotePlayerManager = remotePlayerManager;
 
             DependentProcessors.Add(typeof(BuildingInitialSyncProcessor)); // Remote players can be spawned inside buildings.
-            DependentProcessors.Add(typeof(EscapePodInitialSyncProcessor)); // Remote players can be spawned inside the escape pod.
+            DependentProcessors.Add(typeof(GlobalRootInitialSyncProcessor)); // remote Players can be spawned in entities in the global root (such as vehicles/escape pod)
             DependentProcessors.Add(typeof(VehicleInitialSyncProcessor)); // Remote players can be piloting vehicles.
         }
 
@@ -89,7 +89,7 @@ namespace NitroxClient.GameLogic.InitialSync
                 }
             }
             // Player can be above ocean level.
-            float oceanLevel = Ocean.main.GetOceanLevel();
+            float oceanLevel = Ocean.GetOceanLevel();
             return playerPosition.y < oceanLevel;
         }
     }

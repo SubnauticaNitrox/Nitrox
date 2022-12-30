@@ -39,10 +39,10 @@ namespace NitroxClient.GameLogic
             }
             catch (Exception e)
             {
-                Log.Warn("Got error setting arm GameObjects. This is probably due to docking sync and can be ignored\nErromessage: " + e.Message + "\n" + e.StackTrace);
+                Log.Warn($"Got error setting arm GameObjects. This is probably due to docking sync and can be ignored\nErromessage: {e.Message}\n{e.StackTrace}");
             }
 
-            Log.Debug("Spawn exosuit arms for: " + id);
+            Log.Debug($"Spawn exosuit arms for: {id}");
         }
 
         public void BroadcastClawUse(ExosuitClawArm clawArm, float cooldown)
@@ -94,7 +94,7 @@ namespace NitroxClient.GameLogic
             }
             else
             {
-                Log.Error("Drill arm got an arm action he should not get: " + armAction);
+                Log.Error($"Drill arm got an arm action he should not get: {armAction}");
             }
         }
 
@@ -147,7 +147,7 @@ namespace NitroxClient.GameLogic
             }
             else
             {
-                Log.Error("Grappling arm got an arm action he should not get: " + armAction);
+                Log.Error($"Grappling arm got an arm action he should not get: {armAction}");
             }
         }
 
@@ -208,7 +208,7 @@ namespace NitroxClient.GameLogic
             }
             else
             {
-                Log.Error("Torpedo arm got an arm action he should not get: " + armAction);
+                Log.Error($"Torpedo arm got an arm action he should not get: {armAction}");
             }
         }
 

@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using HarmonyLib;
-using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.InitialSync;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
@@ -29,17 +28,17 @@ public class PingInstance_Set_Patches : NitroxPatch, IDynamicPatch
         }
     }
 
-    public static void PrefixVisible(PingInstance __instance, bool visible)
+    public static void PrefixVisible(PingInstance __instance, bool value)
     {
         // Only notice server if there's a change on client-side
-        if (__instance.visible == visible)
+        if (__instance.visible == value)
         {
             return;
         }
 
         if (PlayerPreferencesInitialSyncProcessor.TryGetKeyForPingInstance(__instance, out string pingKey, out bool _))
         {
-            SendPacket<SignalPingPreferenceChanged>(new(pingKey, visible, __instance.colorIndex));
+            SendPacket<SignalPingPreferenceChanged>(new(pingKey, value, __instance.colorIndex));
         }
     }
 

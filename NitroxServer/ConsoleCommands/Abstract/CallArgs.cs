@@ -1,20 +1,20 @@
-﻿using System.Linq;
+﻿using System;
 using NitroxModel.DataStructures.Util;
 
 namespace NitroxServer.ConsoleCommands.Abstract
 {
     public abstract partial class Command
     {
-        public sealed class CallArgs
+        public ref struct CallArgs
         {
             public Command Command { get; }
-            public string[] Args { get; }
             public Optional<Player> Sender { get; }
+            public Span<string> Args { get; }
 
             public bool IsConsole => !Sender.HasValue;
             public string SenderName => Sender.HasValue ? Sender.Value.Name : "SERVER";
 
-            public CallArgs(Command command, Optional<Player> sender, string[] args)
+            public CallArgs(Command command, Optional<Player> sender, Span<string> args)
             {
                 Command = command;
                 Sender = sender;
@@ -31,7 +31,7 @@ namespace NitroxServer.ConsoleCommands.Abstract
                 // TODO: Proper argument capture/parse instead of this argument join hack
                 if (Args.Length > 0)
                 {
-                    return string.Join(" ", Args.Skip(startIndex));
+                    return string.Join(" ", Args.Slice(startIndex).ToArray());
                 }
 
                 return string.Empty;

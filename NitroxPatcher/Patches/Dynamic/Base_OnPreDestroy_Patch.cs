@@ -16,7 +16,7 @@ public class Base_OnPreDestroy_Patch : NitroxPatch, IDynamicPatch
     {
         foreach (RemotePlayerIdentifier remotePlayerIdentifier in __instance.GetComponentsInChildren<RemotePlayerIdentifier>(true))
         {
-            remotePlayerIdentifier.RemotePlayer.Detach();
+            remotePlayerIdentifier.RemotePlayer.ResetStates();
         }
     }
 

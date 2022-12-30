@@ -1,6 +1,6 @@
-﻿using System.Reflection;
+using System.Reflection;
 using HarmonyLib;
-using NitroxClient.GameLogic;
+using NitroxClient.GameLogic.Spawning.WorldEntities;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic
@@ -11,7 +11,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static bool Prefix(EscapePod __instance)
         {
-            return !EscapePodManager.SURPRESS_ESCAPE_POD_AWAKE_METHOD;
+            return !EscapePodWorldEntitySpawner.SURPRESS_ESCAPE_POD_AWAKE_METHOD;
         }
 
         public override void Patch(Harmony harmony)

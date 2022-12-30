@@ -44,7 +44,7 @@ namespace NitroxServer.ConsoleCommands.Abstract
 
         protected abstract void Execute(CallArgs args);
 
-        public void TryExecute(Optional<Player> sender, string[] args)
+        public void TryExecute(Optional<Player> sender, Span<string> args)
         {
             if (args.Length < required)
             {

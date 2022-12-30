@@ -1,9 +1,10 @@
-﻿global using NitroxModel.Logger;
+﻿extern alias JB;
+global using NitroxModel.Logger;
 using System;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using JetBrains.Annotations;
+using JB::JetBrains.Annotations;
 using Microsoft.Win32;
 using NitroxModel.Helper;
 using NitroxModel_Subnautica.Logger;
@@ -90,7 +91,7 @@ public static class Main
                     string toWrite = condition;
                     if (!string.IsNullOrWhiteSpace(stackTrace))
                     {
-                        toWrite += Environment.NewLine + stackTrace;
+                        toWrite += $"{Environment.NewLine}{stackTrace}";
                     }
                     Log.ErrorUnity(toWrite.Trim(newLineChars));
                     break;

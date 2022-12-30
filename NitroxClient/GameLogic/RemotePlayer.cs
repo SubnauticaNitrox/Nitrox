@@ -6,7 +6,6 @@ using NitroxClient.GameLogic.PlayerLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
-using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
 using UnityEngine;
 using UWE;
@@ -72,7 +71,7 @@ namespace NitroxClient.GameLogic
 
             Transform inventoryTransform = new GameObject("Inventory").transform;
             inventoryTransform.SetParent(Body.transform);
-            Inventory = new ItemsContainer(6, 8, inventoryTransform, ItemContainers.NITROX_INVENTORY_STORAGE_LABEL + PlayerName, null);
+            Inventory = new ItemsContainer(6, 8, inventoryTransform, $"{ItemContainers.NITROX_INVENTORY_STORAGE_LABEL}{PlayerName}", null);
             foreach (Pickupable item in inventoryItems)
             {
                 Inventory.UnsafeAdd(new InventoryItem(item));
@@ -82,7 +81,7 @@ namespace NitroxClient.GameLogic
             ItemAttachPoint = PlayerModel.transform.Find(PlayerEquipmentConstants.ITEM_ATTACH_POINT_GAME_OBJECT_NAME);
 
             playerModelManager = modelManager;
-            playerModelManager.AttachPing(this);
+            CoroutineUtils.StartCoroutineSmart(playerModelManager.AttachPing(this));
             playerModelManager.BeginApplyPlayerColor(this);
             playerModelManager.RegisterEquipmentVisibilityHandler(PlayerModel);
             UpdateEquipmentVisibility();
@@ -138,9 +137,17 @@ namespace NitroxClient.GameLogic
             {
                 PilotingChair = newPilotingChair;
 
-                Validate.NotNull(SubRoot, "Player changed PilotingChair but is not in SubRoot!");
+                MultiplayerCyclops mpCyclops = null;
 
-                MultiplayerCyclops mpCyclops = SubRoot.GetComponent<MultiplayerCyclops>();
+                // For unexpected and expected cases, for example when a player is driving a cyclops but the cyclops is destroyed
+                if (!SubRoot)
+                {
+                    Log.Error("Player changed PilotingChair but is not in SubRoot!");
+                }
+                else
+                {
+                    mpCyclops = SubRoot.GetComponent<MultiplayerCyclops>();
+                }
 
                 if (PilotingChair)
                 {
@@ -155,8 +162,11 @@ namespace NitroxClient.GameLogic
                     SetSubRoot(SubRoot);
                     ArmsController.SetWorldIKTarget(null, null);
 
-                    mpCyclops.CurrentPlayer = null;
-                    mpCyclops.Exit();
+                    if (mpCyclops)
+                    {
+                        mpCyclops.CurrentPlayer = null;
+                        mpCyclops.Exit();
+                    }
                 }
 
                 RigidBody.isKinematic = AnimationController["cyclops_steering"] = newPilotingChair != null;
@@ -239,6 +249,16 @@ namespace NitroxClient.GameLogic
                 AnimationController["in_seamoth"] = newVehicle is SeaMoth;
                 AnimationController["in_exosuit"] = AnimationController["using_mechsuit"] = newVehicle is Exosuit;
             }
+        }
+        
+        /// <summary>
+        /// Drops the remote player, swimming where he is
+        /// </summary>
+        public void ResetStates()
+        {
+            SetVehicle(null);
+            SetSubRoot(null);
+            AnimationController.UpdatePlayerAnimations = true;
         }
 
         public void Destroy()

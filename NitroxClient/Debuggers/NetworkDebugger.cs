@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -27,7 +27,7 @@ namespace NitroxClient.Debuggers
         private Vector2 scrollPosition;
         private int sentCount;
 
-        public NetworkDebugger() : base(600, null, KeyCode.N, true, false, false, GUISkinCreationOptions.DERIVEDCOPY)
+        public NetworkDebugger() : base(600, null, KeyCode.N, true, false, false, GUISkinCreationOptions.DERIVEDCOPY, 330)
         {
             ActiveTab = AddTab("All", RenderTabPackets);
             AddTab("Sent", RenderTabSentPackets);

@@ -19,7 +19,7 @@ namespace NitroxClient.Communication.Packets.Processors
             Optional<Equipment> opEquipment = EquipmentHelper.FindEquipmentComponent(owner);
             if (!opEquipment.HasValue)
             {
-                Log.Error("Could not find equipment type for " + owner.name);
+                Log.Error($"Could not find equipment type for {owner.name}");
                 return;
             }
 

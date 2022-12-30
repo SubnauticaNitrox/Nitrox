@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Bases;
 using NitroxServer.GameLogic.Entities;
@@ -30,14 +30,13 @@ namespace NitroxServer.Serialization.World
             {
                 BaseData = BaseData.From(world.BaseManager.GetPartiallyConstructedPieces(), world.BaseManager.GetCompletedBasePieceHistory()),
                 PlayerData = PlayerData.From(world.PlayerManager.GetAllPlayers()),
-                EntityData = EntityData.From(world.EntityManager.GetAllEntities()),
+                EntityData = EntityData.From(world.EntityRegistry.GetAllEntities()),
                 WorldData =
                 {
                     ParsedBatchCells = world.BatchEntitySpawner.SerializableParsedBatches,
                     VehicleData = VehicleData.From(world.VehicleManager.GetVehicles()),
                     InventoryData = InventoryData.From(world.InventoryManager.GetAllInventoryItems(), world.InventoryManager.GetAllStorageSlotItems(), world.InventoryManager.GetAllModules()),
                     GameData = GameData.From(world.GameData.PDAState, world.GameData.StoryGoals, world.ScheduleKeeper, world.EventTriggerer),
-                    EscapePodData = EscapePodData.From(world.EscapePodManager.GetEscapePods()),
                     Seed = world.Seed
                 }
             };

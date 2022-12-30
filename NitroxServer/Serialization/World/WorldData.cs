@@ -1,8 +1,6 @@
-﻿using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using NitroxModel.DataStructures;
-using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Bases;
 using NitroxServer.GameLogic.Items;
 using NitroxServer.GameLogic.Vehicles;
@@ -26,9 +24,6 @@ namespace NitroxServer.Serialization.World
         public GameData GameData { get; set; }
 
         [JsonProperty, ProtoMember(5)]
-        public EscapePodData EscapePodData { get; set; }
-
-        [JsonProperty, ProtoMember(6)]
         public string Seed { get; set; }
 
         public bool IsValid()
@@ -36,8 +31,7 @@ namespace NitroxServer.Serialization.World
             return ParsedBatchCells != null && // Always returns false on empty saves (sometimes also if never entered the ocean)
                    VehicleData != null &&
                    InventoryData != null &&
-                   GameData != null &&
-                   EscapePodData != null;
+                   GameData != null;
         }
     }
 }

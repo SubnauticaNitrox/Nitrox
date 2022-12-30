@@ -1,4 +1,4 @@
-﻿using NitroxModel.Packets;
+using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic.Entities;
 
@@ -6,16 +6,16 @@ namespace NitroxServer.Communication.Packets.Processors
 {
     public class EntityDestroyPacketProcessor : AuthenticatedPacketProcessor<EntityDestroy>
     {
-        private readonly EntityManager entityManager;
+        private readonly EntityRegistry entityRegistry;
 
-        public EntityDestroyPacketProcessor(EntityManager entityManager)
+        public EntityDestroyPacketProcessor(EntityRegistry entityRegistry)
         {
-            this.entityManager = entityManager;
+            this.entityRegistry = entityRegistry;
         }
 
         public override void Process(EntityDestroy packet, Player player)
         {
-            entityManager.RemoveEntity(packet.EntityId);
+            entityRegistry.RemoveEntity(packet.EntityId);
         }
     }
 }

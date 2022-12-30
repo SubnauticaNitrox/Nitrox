@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Text.RegularExpressions;
+using NitroxClient.GameLogic.PlayerLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
@@ -34,7 +35,7 @@ namespace NitroxClient.GameLogic.Helper
             {
                 return Optional.Of(Inventory.Get().container);
             }
-            if (owner.GetComponentInChildren<PingInstance>().GetLabel().StartsWith("Player "))
+            if (owner.GetComponent<RemotePlayerIdentifier>())
             {
                 if (playerManager == null)
                 {
@@ -48,7 +49,7 @@ namespace NitroxClient.GameLogic.Helper
                 }
             }
 
-            Log.Debug("Couldn't resolve container from gameObject: " + owner.name);
+            Log.Debug($"Couldn't resolve container from gameObject: {owner.name}");
 
             return Optional.Empty;
         }
@@ -59,10 +60,10 @@ namespace NitroxClient.GameLogic.Helper
             if (Regex.IsMatch(ownerTransform.gameObject.name, @"Locker0([0-9])StorageRoot$", RegexOptions.IgnoreCase))
             {
                 string lockerId = ownerTransform.gameObject.name.Substring(7, 1);
-                GameObject locker = ownerTransform.parent.gameObject.FindChild("submarine_locker_01_0" + lockerId);
+                GameObject locker = ownerTransform.parent.gameObject.FindChild($"submarine_locker_01_0{lockerId}");
                 if (!locker)
                 {
-                    throw new Exception("Could not find Locker Object: submarine_locker_01_0" + lockerId);
+                    throw new Exception($"Could not find Locker Object: submarine_locker_01_0{lockerId}");
                 }
                 StorageContainer storageContainer = locker.GetComponentInChildren<StorageContainer>();
                 if (!storageContainer)

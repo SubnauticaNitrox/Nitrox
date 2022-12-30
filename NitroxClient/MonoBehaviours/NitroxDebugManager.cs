@@ -114,7 +114,7 @@ public class NitroxDebugManager : MonoBehaviour
             {
                 foreach (BaseDebugger debugger in debuggers)
                 {
-                    debugger.Enabled = GUILayout.Toggle(debugger.Enabled, $"{debugger.DebuggerName} debugger{debugger.HotkeyString}");
+                    debugger.Enabled = GUILayout.Toggle(debugger.Enabled, $"{debugger.DebuggerName} debugger ({debugger.HotkeyString})");
                 }
             }
         }

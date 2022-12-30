@@ -27,7 +27,7 @@ namespace NitroxPatcher.Patches.Persistent
                             __instance.AddToggleOption(tabIndex, setting.Label, setting.GetValue<bool>(), (UnityAction<bool>)setting.Callback);
                             break;
                         case NitroxSettingsManager.SettingType.SLIDER:
-                            __instance.AddSliderOption(tabIndex, setting.Label, setting.GetValue<float>(), setting.SliderMinValue, setting.SliderMaxValue, setting.SliderDefaultValue, (UnityAction<float>)setting.Callback);
+                            __instance.AddSliderOption(tabIndex, setting.Label, setting.GetValue<float>(), setting.SliderMinValue, setting.SliderMaxValue, setting.SliderDefaultValue, setting.SliderStep, (UnityAction<float>)setting.Callback, SliderLabelMode.Percent, "0");
                             break;
                         case NitroxSettingsManager.SettingType.LIST:
                             __instance.AddChoiceOption(tabIndex, setting.Label, setting.ListItems, setting.GetValue<int>(), (UnityAction<int>)setting.Callback);

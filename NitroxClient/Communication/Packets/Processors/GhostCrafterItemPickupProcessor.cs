@@ -19,7 +19,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
                 if (crafterLogic.numCrafted == 0)
                 {
-                    crafterLogic.Reset();
+                    crafterLogic.ResetCrafter();
                 }
             }
         }

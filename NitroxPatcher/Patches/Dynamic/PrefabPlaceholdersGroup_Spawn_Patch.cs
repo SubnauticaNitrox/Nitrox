@@ -6,7 +6,7 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class PrefabPlaceholdersGroup_Spawn_Patch : NitroxPatch, IDynamicPatch
     {
-        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((PrefabPlaceholdersGroup t) => t.Spawn(default(bool), default(bool)));
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((PrefabPlaceholdersGroup t) => t.Spawn());
 
         public static bool Prefix()
         {

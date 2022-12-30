@@ -2,12 +2,12 @@
 using NitroxClient.MonoBehaviours;
 using NitroxModel_Subnautica.Packets;
 using UnityEngine;
+using NitroxClient.Unity.Helper;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
     public class RocketPreflightCompleteProcessor : ClientPacketProcessor<RocketPreflightComplete>
     {
-
         public override void Process(RocketPreflightComplete packet)
         {
             GameObject gameObjectRocket = NitroxEntity.RequireObjectFrom(packet.Id);
@@ -47,7 +47,7 @@ namespace NitroxClient.Communication.Packets.Processors
                     {
                         if (!throwSwitch.completed && throwSwitch.preflightCheck == packet.FlightCheck)
                         {
-                            throwSwitch.animator?.SetTrigger("Throw");
+                            throwSwitch.animator.AliveOrNull()?.SetTrigger("Throw");
                             throwSwitch.completed = true;
                             CompletePreflightCheck(throwSwitch.preflightCheckSwitch);
                             throwSwitch.cinematicTrigger.showIconOnHandHover = false;
@@ -63,7 +63,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         private void CompletePreflightCheck(PreflightCheckSwitch preflightCheckSwitch)
         {
-            preflightCheckSwitch.preflightCheckManager?.CompletePreflightCheck(preflightCheckSwitch.preflightCheck);
+            preflightCheckSwitch.preflightCheckManager.AliveOrNull()?.CompletePreflightCheck(preflightCheckSwitch.preflightCheck);
         }
     }
 }

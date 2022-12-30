@@ -6,10 +6,12 @@ using NitroxClient.Communication;
 using NitroxClient.GameLogic.Settings;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Serialization;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 {
@@ -56,7 +58,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         {
             GameObject multiplayerButtonInst = Instantiate(multiplayerButton, savedGameAreaContent, false);
             Transform txt = multiplayerButtonInst.RequireTransform("NewGameButton/Text");
-            txt.GetComponent<Text>().text = translationKey;
+            txt.GetComponent<TextMeshProUGUI>().text = translationKey;
 
             if (disableTranslation)
             {
@@ -73,8 +75,8 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             GameObject multiplayerButtonInst = Instantiate(multiplayerButton, savedGameAreaContent, false);
             multiplayerButtonInst.name = (savedGameAreaContent.childCount - 1).ToString();
             Transform txt = multiplayerButtonInst.RequireTransform("NewGameButton/Text");
-            txt.GetComponent<Text>().text = text;
-            Color prevTextColor = txt.GetComponent<Text>().color;
+            txt.GetComponent<TextMeshProUGUI>().text = text;
+            Color prevTextColor = txt.GetComponent<TextMeshProUGUI>().color;
             Destroy(txt.GetComponent<TranslationLiveUpdate>());
             Button multiplayerButtonButton = multiplayerButtonInst.RequireTransform("NewGameButton").GetComponent<Button>();
             multiplayerButtonButton.onClick = new Button.ButtonClickedEvent();
@@ -87,7 +89,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 }
                 isJoining = true;
                 
-                txt.GetComponent<Text>().color = prevTextColor; // Visual fix for black text after click (hover state still active)
+                txt.GetComponent<TextMeshProUGUI>().color = prevTextColor; // Visual fix for black text after click (hover state still active)
                 await OpenJoinServerMenuAsync(joinIp, joinPort)
                     .ContinueWith(t =>
                     {

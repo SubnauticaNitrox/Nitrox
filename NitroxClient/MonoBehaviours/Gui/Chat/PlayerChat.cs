@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.GameLogic.ChatUI;
@@ -73,7 +74,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             if (entries.Count != 0 && entries.Last().PlayerName == playerName)
             {
                 chatLogEntry = entries.Last();
-                chatLogEntry.MessageText += "\n" + message;
+                chatLogEntry.MessageText += $"{Environment.NewLine}{message}";
                 chatLogEntry.UpdateTime();
                 chatLogEntryObject = chatLogEntry.EntryObject;
             }

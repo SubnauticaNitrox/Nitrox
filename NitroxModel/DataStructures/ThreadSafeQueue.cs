@@ -6,7 +6,7 @@ using ProtoBufNet;
 
 namespace NitroxModel.DataStructures
 {
-    [DebuggerDisplay("Items = {" + nameof(queue) + "}")]
+    [DebuggerDisplay($"Items = {{{nameof(queue)}}}")]
     [ProtoContract]
     [Serializable]
     public class ThreadSafeQueue<T> : IReadOnlyCollection<T>

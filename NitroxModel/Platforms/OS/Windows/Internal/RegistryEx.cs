@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Win32;
@@ -197,19 +196,19 @@ namespace NitroxModel.Platforms.OS.Windows.Internal
             path = path.Trim();
 
             // Parse path to get the registry key instance and the name of the . 
-            string[] parts = path.Split(Path.DirectorySeparatorChar);
-            string[] partsWithoutHive;
+            Span<string> parts = path.Split(Path.DirectorySeparatorChar);
+            Span<string> partsWithoutHive;
             RegistryHive hive = RegistryHive.CurrentUser;
             string regPathWithoutHiveOrKey;
             if (path.IndexOf("Computer", StringComparison.OrdinalIgnoreCase) < 0)
             {
-                partsWithoutHive = parts.TakeUntilLast().ToArray();
-                regPathWithoutHiveOrKey = string.Join(Path.DirectorySeparatorChar.ToString(), partsWithoutHive);
+                partsWithoutHive = parts[..^1];
+                regPathWithoutHiveOrKey = string.Join(Path.DirectorySeparatorChar.ToString(), partsWithoutHive.ToArray());
             }
             else
             {
-                partsWithoutHive = parts.Skip(2).TakeUntilLast().ToArray();
-                regPathWithoutHiveOrKey = string.Join(Path.DirectorySeparatorChar.ToString(), partsWithoutHive);
+                partsWithoutHive = parts[2..^1];
+                regPathWithoutHiveOrKey = string.Join(Path.DirectorySeparatorChar.ToString(), partsWithoutHive.ToArray());
                 hive = parts[1].ToLowerInvariant() switch
                 {
                     "hkey_classes_root" => RegistryHive.ClassesRoot,
@@ -237,7 +236,7 @@ namespace NitroxModel.Platforms.OS.Windows.Internal
                 }
             }
 
-            return (key, parts[parts.Length - 1]);
+            return (key, parts[^1]);
         }
     }
 }

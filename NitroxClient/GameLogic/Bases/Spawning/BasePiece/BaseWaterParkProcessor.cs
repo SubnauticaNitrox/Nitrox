@@ -24,14 +24,14 @@ namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
         {
             NitroxId pieceId = NitroxEntity.GetId(finishedPiece);
 
-            WaterParkPiece waterParkPiece = finishedPiece.GetComponent<WaterParkPiece>();
+            WaterParkGeometry waterParkPiece = finishedPiece.GetComponent<WaterParkGeometry>();
             if (!waterParkPiece)
             {
                 // The BaseWater has multiple base pieces, but only one of them (the bottom) contains the WaterParkPiece component...
                 return;
             }
 
-            WaterPark waterPark = waterParkPiece.GetWaterParkModule();
+            WaterPark waterPark = waterParkPiece.GetModule();
             // When reruning the spawn processor, the module will not be found at first so we need to delay its detection
             if (!waterPark)
             {

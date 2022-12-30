@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
@@ -30,11 +31,12 @@ namespace NitroxServer.Communication.Packets.Processors
         {
             Player player = playerManager.PlayerConnected(connection, packet.ReservationKey, out bool wasBrandNewPlayer);
 
-            NitroxId assignedEscapePodId = world.EscapePodManager.AssignPlayerToEscapePod(player.Id, out Optional<EscapePodModel> newlyCreatedEscapePod);
+            NitroxId assignedEscapePodId = world.EscapePodManager.AssignPlayerToEscapePod(player.Id, out Optional<EscapePodWorldEntity> newlyCreatedEscapePod);
+
             if (newlyCreatedEscapePod.HasValue)
             {
-                AddEscapePod addEscapePod = new(newlyCreatedEscapePod.Value);
-                playerManager.SendPacketToOtherPlayers(addEscapePod, player);
+                CellEntities spawnNewEscapePod = new(newlyCreatedEscapePod.Value);
+                playerManager.SendPacketToOtherPlayers(spawnNewEscapePod, player);
             }
 
             List<EquippedItemData> equippedItems = player.GetEquipment();
@@ -62,7 +64,6 @@ namespace NitroxServer.Communication.Packets.Processors
 
             InitialPlayerSync initialPlayerSync = new(player.GameObjectId,
                 wasBrandNewPlayer,
-                world.EscapePodManager.GetEscapePods(),
                 assignedEscapePodId,
                 equippedItems,
                 GetAllModules(world.InventoryManager.GetAllModules(), player.GetModules()),
@@ -76,10 +77,11 @@ namespace NitroxServer.Communication.Packets.Processors
                 world.GameData.StoryGoals.GetInitialStoryGoalData(scheduleKeeper),
                 player.CompletedGoals,
                 player.Position,
+                player.Rotation,
                 player.SubRootId,
                 player.Stats,
                 GetRemotePlayerData(player),
-                world.EntityManager.GetGlobalRootEntities(),
+                world.WorldEntityManager.GetGlobalRootEntities(),
                 simulations,
                 world.GameMode,
                 player.Permissions,

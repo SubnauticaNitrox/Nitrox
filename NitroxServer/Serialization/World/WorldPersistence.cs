@@ -17,7 +17,7 @@ using NitroxServer.GameLogic.Items;
 using NitroxServer.GameLogic.Players;
 using NitroxServer.GameLogic.Unlockables;
 using NitroxServer.GameLogic.Vehicles;
-using NitroxServer.Serialization.Resources.Datastructures;
+using NitroxServer.Resources;
 using NitroxServer.Serialization.Upgrade;
 
 namespace NitroxServer.Serialization.World
@@ -72,7 +72,10 @@ namespace NitroxServer.Serialization.World
                 Serializer.Serialize(Path.Combine(saveDir, $"WorldData{FileEnding}"), persistedData.WorldData);
                 Serializer.Serialize(Path.Combine(saveDir, $"EntityData{FileEnding}"), persistedData.EntityData);
 
-                config.Update(saveDir, c => c.Seed = persistedData.WorldData.Seed);
+                using (config.Update(saveDir))
+                {
+                    config.Seed = persistedData.WorldData.Seed;
+                }
 
                 Log.Info("World state saved");
                 return true;
@@ -150,7 +153,6 @@ namespace NitroxServer.Serialization.World
                 PlayerData = PlayerData.From(new List<Player>()),
                 WorldData = new WorldData()
                 {
-                    EscapePodData = EscapePodData.From(new List<EscapePodModel>()),
                     GameData = new GameData
                     {
                         PDAState = new PDAStateData(),
@@ -181,6 +183,9 @@ namespace NitroxServer.Serialization.World
 
             Log.Info($"Loading world with seed {seed}");
 
+            EntityRegistry entityRegistry = NitroxServiceLocator.LocateService<EntityRegistry>();
+            entityRegistry.AddEntities(pWorldData.EntityData.Entities);
+
             World world = new()
             {
                 SimulationOwnershipData = new SimulationOwnershipData(),
@@ -190,7 +195,9 @@ namespace NitroxServer.Serialization.World
 
                 InventoryManager = new InventoryManager(pWorldData.WorldData.InventoryData.InventoryItems, pWorldData.WorldData.InventoryData.StorageSlotItems, pWorldData.WorldData.InventoryData.Modules),
 
-                EscapePodManager = new EscapePodManager(pWorldData.WorldData.EscapePodData.EscapePods, randomStart, seed),
+                EscapePodManager = new EscapePodManager(entityRegistry, randomStart, seed),
+
+                EntityRegistry = entityRegistry,
 
                 GameData = pWorldData.WorldData.GameData,
                 GameMode = gameMode,
@@ -198,7 +205,7 @@ namespace NitroxServer.Serialization.World
             };
 
             world.EventTriggerer = new EventTriggerer(world.PlayerManager, pWorldData.WorldData.GameData.PDAState, pWorldData.WorldData.GameData.StoryGoals, seed, pWorldData.WorldData.GameData.StoryTiming.ElapsedTime, pWorldData.WorldData.GameData.StoryTiming.AuroraExplosionTime, pWorldData.WorldData.GameData.StoryTiming.AuroraWarningTime);
-            world.VehicleManager = new VehicleManager(pWorldData.WorldData.VehicleData.Vehicles, world.InventoryManager);
+            world.VehicleManager = new VehicleManager(pWorldData.WorldData.VehicleData.Vehicles, world.InventoryManager, world.SimulationOwnershipData);
             world.ScheduleKeeper = new ScheduleKeeper(pWorldData.WorldData.GameData.PDAState, pWorldData.WorldData.GameData.StoryGoals, world.EventTriggerer, world.PlayerManager);
 
             world.BatchEntitySpawner = new BatchEntitySpawner(
@@ -212,10 +219,10 @@ namespace NitroxServer.Serialization.World
                 world.Seed
             );
 
-            world.EntityManager = new EntityManager(pWorldData.EntityData.Entities, world.BatchEntitySpawner);
+            world.WorldEntityManager = new WorldEntityManager(world.EntityRegistry, world.BatchEntitySpawner);
 
             HashSet<NitroxTechType> serverSpawnedSimulationWhiteList = NitroxServiceLocator.LocateService<HashSet<NitroxTechType>>();
-            world.EntitySimulation = new EntitySimulation(world.EntityManager, world.SimulationOwnershipData, world.PlayerManager, serverSpawnedSimulationWhiteList);
+            world.EntitySimulation = new EntitySimulation(world.EntityRegistry, world.WorldEntityManager, world.SimulationOwnershipData, world.PlayerManager, serverSpawnedSimulationWhiteList);
 
             return world;
         }

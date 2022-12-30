@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
+using NitroxClient.Communication.Packets.Processors;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Packets;
@@ -96,10 +97,7 @@ namespace NitroxClient.GameLogic
 
                 if (NitroxEntity.GetId(existingFire.gameObject) != fireData.CyclopsId)
                 {
-                    Log.Error("[Fires.Create Fire already exists at node index " + fireData.NodeIndex
-                        + "! Replacing existing Fire Id " + NitroxEntity.GetId(existingFire.gameObject)
-                        + " with Id " + fireData.CyclopsId
-                        + "]");
+                    Log.Error($"[Fires.Create Fire already exists at node index {fireData.NodeIndex}! Replacing existing Fire Id {NitroxEntity.GetId(existingFire.gameObject)} with Id {fireData.CyclopsId}]");
 
                     NitroxEntity.SetNewId(existingFire.gameObject, fireData.CyclopsId);
                 }
@@ -124,20 +122,17 @@ namespace NitroxClient.GameLogic
             }
             else
             {
-                Log.Error("[FireCreatedProcessor Cannot create new Cyclops fire! PrefabSpawn component could not be found in fire node!"
-                    + " Fire Id: " + fireData.FireId
-                    + " SubRoot Id: " + fireData.CyclopsId
-                    + " Room: " + fireData.Room
-                    + " NodeIndex: " + fireData.NodeIndex
-                    + "]");
+                Log.Error($"[{nameof(CyclopsFireCreatedProcessor)} Cannot create new Cyclops fire! PrefabSpawn component could not be found in fire node! Fire Id: {fireData.FireId} SubRoot Id: {fireData.CyclopsId} Room: {fireData.Room} NodeIndex: {fireData.NodeIndex}]");
             }
-            GameObject gameObject = component.SpawnManual();
-            Fire componentInChildren = gameObject.GetComponentInChildren<Fire>();
-            if (componentInChildren)
+            component.SpawnManual(delegate (GameObject fireGO)
             {
-                componentInChildren.fireSubRoot = subFire.subRoot;
-                NitroxEntity.SetNewId(componentInChildren.gameObject, fireData.FireId);
-            }
+                Fire componentInChildren = fireGO.GetComponentInChildren<Fire>();
+                if (componentInChildren)
+                {
+                    componentInChildren.fireSubRoot = subFire.subRoot;
+                    NitroxEntity.SetNewId(componentInChildren.gameObject, fireData.FireId);
+                }
+            });
 
             subFire.roomFires = roomFiresDict;
             subFire.availableNodes = availableNodes;

@@ -11,12 +11,14 @@ namespace NitroxServer.GameLogic.Vehicles
     public class VehicleManager
     {
         private readonly InventoryManager inventoryManager;
+        private readonly SimulationOwnershipData simulationOwnershipData;
         private readonly ThreadSafeDictionary<NitroxId, VehicleModel> vehiclesById;
 
-        public VehicleManager(List<VehicleModel> vehicles, InventoryManager inventoryManager)
+        public VehicleManager(List<VehicleModel> vehicles, InventoryManager inventoryManager, SimulationOwnershipData simulationOwnershipData)
         {
             vehiclesById = new ThreadSafeDictionary<NitroxId, VehicleModel>(vehicles.ToDictionary(vehicle => vehicle.Id), false);
             this.inventoryManager = inventoryManager;
+            this.simulationOwnershipData = simulationOwnershipData;
         }
 
         public IEnumerable<VehicleModel> GetVehicles()
@@ -95,6 +97,7 @@ namespace NitroxServer.GameLogic.Vehicles
 
         public void RemoveVehicle(NitroxId id)
         {
+            simulationOwnershipData.RevokeOwnerOfId(id);
             RemoveItemsFromVehicle(id);
             vehiclesById.Remove(id);
         }

@@ -23,7 +23,9 @@ public class DeconstructionCompletedProcessor : ClientPacketProcessor<Deconstruc
         if (deconstructing.TryGetComponent(out Constructable constructable))
         {
             constructable.constructedAmount = 0;
-            constructable.Deconstruct();
+            TaskResult<bool> result = new ();
+            TaskResult<string> reason = new ();
+            constructable.DeconstructAsync(result, reason);
         }
         else
         {

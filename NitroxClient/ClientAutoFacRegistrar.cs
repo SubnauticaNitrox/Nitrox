@@ -21,6 +21,7 @@ using NitroxClient.GameLogic.PlayerLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.PlayerLogic.PlayerPreferences;
 using NitroxClient.GameLogic.Settings;
+using NitroxClient.GameLogic.Spawning.Metadata.Extractor;
 using NitroxClient.Helpers;
 using NitroxClient.Map;
 using NitroxModel.Core;
@@ -104,6 +105,12 @@ namespace NitroxClient
                             .As<IMap>()
                             .InstancePerLifetimeScope();
 
+            containerBuilder.RegisterAssemblyTypes(currentAssembly)
+                            .AssignableTo<EntityMetadataExtractor>()
+                            .As<EntityMetadataExtractor>()
+                            .AsSelf()
+                            .SingleInstance();
+
             containerBuilder.RegisterType<PlayerManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<PlayerModelManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<PlayerVitalsManager>().InstancePerLifetimeScope();
@@ -135,7 +142,6 @@ namespace NitroxClient
             containerBuilder.RegisterType<KnownTechEntry>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<ExosuitModuleEvent>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<SeamothModulesEvent>().InstancePerLifetimeScope();
-            containerBuilder.RegisterType<EscapePodManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Fires>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<FMODSystem>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<LiveMixinManager>().InstancePerLifetimeScope();

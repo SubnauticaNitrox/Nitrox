@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -24,6 +24,7 @@ using NitroxServer.GameLogic.Players;
 using NitroxServer.GameLogic.Unlockables;
 using NitroxServer.GameLogic.Vehicles;
 using NitroxServer.Serialization.World;
+using NitroxModel.DataStructures.GameLogic.Entities;
 
 namespace NitroxServer.Serialization
 {
@@ -185,31 +186,6 @@ namespace NitroxServer.Serialization
         }
 
         [TestMethod]
-        public void EscapePodDataTest()
-        {
-            for (int serializerIndex = 0; serializerIndex < worldsDataAfter.Length; serializerIndex++)
-            {
-                PersistedWorldData worldDataAfter = worldsDataAfter[serializerIndex];
-                Assert.AreEqual(worldData.WorldData.EscapePodData.EscapePods.Count, worldDataAfter.WorldData.EscapePodData.EscapePods.Count, $"WorldData.EscapePodData.EscapePods.Count is not equal while using {serverSerializers[serializerIndex]}.");
-                for (int index = 0; index < worldData.WorldData.EscapePodData.EscapePods.Count; index++)
-                {
-                    EscapePodModel escapePod = worldData.WorldData.EscapePodData.EscapePods[index];
-                    EscapePodModel escapePodAfter = worldDataAfter.WorldData.EscapePodData.EscapePods[index];
-
-                    Assert.AreEqual(escapePod.Id, escapePodAfter.Id, $"WorldData.EscapePodData.EscapePods.Id is not equal while using {serverSerializers[serializerIndex]}.");
-                    Assert.AreEqual(escapePod.Location, escapePodAfter.Location, $"WorldData.EscapePodData.EscapePods.Location is not equal while using {serverSerializers[serializerIndex]}.");
-                    Assert.AreEqual(escapePod.FabricatorId, escapePodAfter.FabricatorId, $"WorldData.EscapePodData.EscapePods.FabricatorId is not equal while using {serverSerializers[serializerIndex]}.");
-                    Assert.AreEqual(escapePod.MedicalFabricatorId, escapePodAfter.MedicalFabricatorId, $"WorldData.EscapePodData.EscapePods.MedicalFabricatorId is not equal while using {serverSerializers[serializerIndex]}.");
-                    Assert.AreEqual(escapePod.StorageContainerId, escapePodAfter.StorageContainerId, $"WorldData.EscapePodData.EscapePods.StorageContainerId is not equal while using {serverSerializers[serializerIndex]}.");
-                    Assert.AreEqual(escapePod.RadioId, escapePodAfter.RadioId, $"WorldData.EscapePodData.EscapePods.RadioId is not equal while using {serverSerializers[serializerIndex]}.");
-                    Assert.IsTrue(escapePod.AssignedPlayers.SequenceEqual(escapePodAfter.AssignedPlayers), $"WorldData.EscapePodData.EscapePods.AssignedPlayers is not equal while using {serverSerializers[serializerIndex]}.");
-                    Assert.AreEqual(escapePod.Damaged, escapePodAfter.Damaged, $"WorldData.EscapePodData.EscapePods.Damaged is not equal while using {serverSerializers[serializerIndex]}.");
-                    Assert.AreEqual(escapePod.RadioDamaged, escapePodAfter.RadioDamaged, $"WorldData.EscapePodData.EscapePods.RadioDamaged is not equal while using {serverSerializers[serializerIndex]}.");
-                }
-            }
-        }
-
-        [TestMethod]
         public void BaseDataTest()
         {
             for (int serializerIndex = 0; serializerIndex < worldsDataAfter.Length; serializerIndex++)
@@ -257,7 +233,7 @@ namespace NitroxServer.Serialization
                     break;
                 case MapRoomBuilderMetadata mapRoomMetadata when basePieceAfter.RotationMetadata.Value is MapRoomBuilderMetadata mapRoomMetadataAfter:
                     Assert.AreEqual(mapRoomMetadata.CellType, mapRoomMetadataAfter.CellType, $"BasePiece.RotationMetadata.CellType (MapRoomRotationMetadata) is not equal while using {serverSerializers[serializerIndex]}.");
-                    Assert.AreEqual(mapRoomMetadata.ConnectionMask, mapRoomMetadataAfter.ConnectionMask, $"BasePiece.RotationMetadata.ConnectionMask (MapRoomRotationMetadata) is not equal while using {serverSerializers[serializerIndex]}.");
+                    Assert.AreEqual(mapRoomMetadata.Rotation, mapRoomMetadataAfter.Rotation, $"BasePiece.RotationMetadata.Rotation (MapRoomRotationMetadata) is not equal while using {serverSerializers[serializerIndex]}.");
                     break;
                 case null when basePieceAfter.RotationMetadata.Value is null:
                     break;
@@ -351,8 +327,8 @@ namespace NitroxServer.Serialization
                 PersistedWorldData worldDataAfter = worldsDataAfter[serializerIndex];
                 for (int index = 0; index < worldData.EntityData.Entities.Count; index++)
                 {
-                    Entity entity = worldData.EntityData.Entities[index];
-                    Entity entityAfter = worldDataAfter.EntityData.Entities[index];
+                    WorldEntity entity = (WorldEntity)worldData.EntityData.Entities[index];
+                    WorldEntity entityAfter = (WorldEntity)worldDataAfter.EntityData.Entities[index];
 
                     Assert.AreEqual(entity.Transform.LocalPosition, entityAfter.Transform.LocalPosition, $"EntityData.Entities.Transform.LocalPosition is not equal while using {serverSerializers[serializerIndex]}.");
                     Assert.AreEqual(entity.Transform.LocalRotation, entityAfter.Transform.LocalRotation, $"EntityData.Entities.Transform.LocalRotation is not equal while using {serverSerializers[serializerIndex]}.");
@@ -362,12 +338,9 @@ namespace NitroxServer.Serialization
                     Assert.AreEqual(entity.Level, entityAfter.Level, $"EntityData.Entities.Level is not equal while using {serverSerializers[serializerIndex]}.");
                     Assert.AreEqual(entity.ClassId, entityAfter.ClassId, $"EntityData.Entities.ClassId is not equal while using {serverSerializers[serializerIndex]}.");
                     Assert.AreEqual(entity.SpawnedByServer, entityAfter.SpawnedByServer, $"EntityData.Entities.SpawnedByServer is not equal while using {serverSerializers[serializerIndex]}.");
-                    Assert.AreEqual(entity.WaterParkId, entityAfter.WaterParkId, $"EntityData.Entities.WaterParkId is not equal while using {serverSerializers[serializerIndex]}.");
-                    Assert.IsTrue(entity.SerializedGameObject.SequenceEqual(entityAfter.SerializedGameObject), $"EntityData.Entities.SerializedGameObject is not equal while using {serverSerializers[serializerIndex]}.");
-                    Assert.AreEqual(entity.ExistsInGlobalRoot, entityAfter.ExistsInGlobalRoot, $"EntityData.Entities.ExistsInGlobalRoot is not equal while using {serverSerializers[serializerIndex]}.");
+                    Assert.AreEqual(entity.WaterParkId, entityAfter.WaterParkId, $"EntityData.Entities.WaterParkId is not equal while using {serverSerializers[serializerIndex]}.");Assert.AreEqual(entity.ExistsInGlobalRoot, entityAfter.ExistsInGlobalRoot, $"EntityData.Entities.ExistsInGlobalRoot is not equal while using {serverSerializers[serializerIndex]}.");
                     Assert.AreEqual(entity.ParentId, entityAfter.ParentId, $"EntityData.Entities.ParentId is not equal while using {serverSerializers[serializerIndex]}.");
                     Assert.AreEqual(entity.Metadata, entityAfter.Metadata, $"EntityData.Entities.Metadata is not equal while using {serverSerializers[serializerIndex]}.");
-                    Assert.AreEqual(entity.ExistingGameObjectChildIndex, entityAfter.ExistingGameObjectChildIndex, "EntityData.Entities.ExistingGameObjectChildIndex is not equal while using {serverSerializers[serializerIndex]}.");
                 }
             }
         }
@@ -405,8 +378,8 @@ namespace NitroxServer.Serialization
                 {
                     Entities = new List<Entity>()
                     {
-                        new Entity(NitroxVector3.Zero, NitroxQuaternion.Identity, NitroxVector3.One, new NitroxTechType("Peeper"), 1, "PeeperClass", false, new NitroxId(), new byte[]{ 0x10, 0x14, 0x0, 0x2, 0x2, 0x2, 0x2 }, false, new NitroxId()),
-                        new Entity(NitroxVector3.One, NitroxQuaternion.Identity, NitroxVector3.One, new NitroxTechType("Peeper"), 1, "PeeperClass", false, new NitroxId(), new byte[]{ 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }, true, new NitroxId())
+                        new WorldEntity(NitroxVector3.Zero, NitroxQuaternion.Identity, NitroxVector3.One, new NitroxTechType("Peeper"), 1, "PeeperClass", false, new NitroxId(), null, false, new NitroxId()),
+                        new WorldEntity(NitroxVector3.One, NitroxQuaternion.Identity, NitroxVector3.One, new NitroxTechType("Peeper"), 1, "PeeperClass", false, new NitroxId(), null, true, new NitroxId())
                     }
                 },
                 PlayerData = new PlayerData()
@@ -459,24 +432,6 @@ namespace NitroxServer.Serialization
                 },
                 WorldData = new WorldData()
                 {
-                    EscapePodData = new EscapePodData()
-                    {
-                        EscapePods = new List<EscapePodModel>()
-                        {
-                            new EscapePodModel()
-                            {
-                                AssignedPlayers = new List<ushort> { 1, 2 },
-                                Damaged = true,
-                                RadioDamaged = true,
-                                Location = NitroxVector3.Zero,
-                                Id = new NitroxId(),
-                                FabricatorId = new NitroxId(),
-                                MedicalFabricatorId = new NitroxId(),
-                                RadioId = new NitroxId(),
-                                StorageContainerId = new NitroxId()
-                            }
-                        }
-                    },
                     GameData = new GameData()
                     {
                         PDAState = new PDAStateData()

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
 using UnityEngine;
 
 namespace NitroxClient.Debuggers.Drawer;
@@ -76,16 +77,16 @@ public static class NitroxGUILayout
                 activeConvertibleFieldLastValue = value;
                 break;
             case false when recorded: // Lost focus this frame
-            {
-                activeConvertibleField = -1;
-                if (parsed)
                 {
+                    activeConvertibleField = -1;
+                    if (parsed)
+                    {
+                        break;
+                    }
+
+                    value = TryParseIConvertible(value, strValue, out IConvertible newValue) ? newValue : activeConvertibleFieldLastValue;
                     break;
                 }
-
-                value = TryParseIConvertible(value, strValue, out IConvertible newValue) ? newValue : activeConvertibleFieldLastValue;
-                break;
-            }
         }
 
         return value;
@@ -145,13 +146,87 @@ public static class NitroxGUILayout
         return Math.Max(minValue, Math.Min(maxValue, FloatField(value, valueWidth)));
     }
 
+    /// <summary>
+    /// Displays an enum of an unknown type.
+    /// </summary>
+    /// <param name="selected">The selected enum value.</param>
+    /// <param name="buttonWidth">The button width</param>
+    /// <returns>The newly selected enum value.</returns>
+    public static Enum EnumPopup(Enum selected, float buttonWidth = VALUE_WIDTH)
+    {
+        return EnumPopupInternal(selected, buttonWidth);        
+    }
+
     public static T EnumPopup<T>(T selected, float buttonWidth = VALUE_WIDTH) where T : Enum
     {
-        //TODO: Implement selecting of Enum in new window
-        Color oldColor = GUI.backgroundColor;
-        GUI.backgroundColor = Color.cyan;
-        GUILayout.Button(selected.ToString(), GUILayout.MaxWidth(buttonWidth));
-        GUI.backgroundColor = oldColor;
+        return (T)EnumPopupInternal(selected, buttonWidth);
+    }
+
+    /// <summary>
+    /// Displays an enum of a known type.
+    /// </summary>
+    /// <param name="selected">The selected enum value.</param>
+    /// <param name="buttonWidth">The button width.</param>
+    /// <returns>The newly selected enum value.</returns>
+    private static Enum EnumPopupInternal(Enum selected, float buttonWidth = VALUE_WIDTH)
+    {
+        Type enumType = selected.GetType();
+        string[] enumNames = Enum.GetNames(enumType);
+
+        // Enums can be bit flags. If this is the case, we need to support toggling the bits
+        if (enumType.CustomAttributes.Select(a => a.AttributeType).Contains(typeof(FlagsAttribute)))
+        {
+            bool IsFlagSet<T>(T value, T flag)
+            {
+                long lValue = Convert.ToInt64(value);
+                long lFlag = Convert.ToInt64(flag);
+                return (lValue & lFlag) != 0;
+            };
+
+            T SetFlags<T>(T value, T flags, bool toggle)
+            {
+                long lValue = Convert.ToInt64(value);
+                long lFlag = Convert.ToInt64(flags);
+                if (toggle)
+                {
+                    lValue |= lFlag;
+                }
+                else
+                {
+                    lValue &= (~lFlag);
+                }
+
+                if (lFlag == 0)
+                {
+                    lValue = 0;
+                }
+
+                return (T)Enum.ToObject(typeof(T), lValue);
+            };
+
+            Enum[] enumValues = Enum.GetValues(enumType).Cast<Enum>().ToArray();
+
+            using (new GUILayout.VerticalScope())
+            {
+                for (int i = 0; i < enumValues.Length; i++)
+                {
+                    Enum enumValue = enumValues[i];
+                    string enumName = enumNames[i];
+
+                    bool isFlagSet = IsFlagSet(selected, enumValue);
+
+                    selected = SetFlags(selected, enumValue, GUILayout.Toggle(isFlagSet, enumName, "Button", GUILayout.Width(buttonWidth)));
+                }
+            }
+
+        }
+        else
+        {
+            // Normal enum, only picks one value
+            int selectedIndex = Array.IndexOf(enumNames, selected.ToString());
+            selectedIndex = GUILayout.SelectionGrid(selectedIndex, enumNames, 1, GUILayout.Width(buttonWidth));
+            return (Enum)Enum.Parse(enumType, enumNames[selectedIndex]);
+        }
         return selected;
     }
 

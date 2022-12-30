@@ -2,7 +2,6 @@
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
@@ -17,10 +16,11 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             NitroxId podId = null;
 
-            if (value != null)
+            if (value && value.GetComponent<NitroxEntity>() != null)
             {
                 podId = NitroxEntity.GetId(value.gameObject);
             }
+
             Resolve<LocalPlayer>().BroadcastEscapePodChange(Optional.OfNullable(podId));
         }
 

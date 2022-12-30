@@ -47,7 +47,7 @@ namespace NitroxClient.GameLogic
 
             if (!owner.HasValue)
             {
-                Log.Error("Could not place " + item.name + " in storageSlot container with id " + containerId);
+                Log.Error($"Could not place {item.name} in storageSlot container with id {containerId}");
                 return;
             }
 
@@ -102,7 +102,7 @@ namespace NitroxClient.GameLogic
             }
             else
             {
-                Log.Error("Removing storage slot item: Could not find storage slot field on object " + owner.name);
+                Log.Error($"Removing storage slot item: Could not find storage slot field on object {owner.name}");
             }
         }
 

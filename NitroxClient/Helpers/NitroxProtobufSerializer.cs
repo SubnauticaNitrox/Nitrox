@@ -28,8 +28,7 @@ namespace NitroxClient.Helpers
 
             foreach (Type type in Assembly.GetExecutingAssembly().GetTypes())
             {
-                bool hasUweProtobuf = (type.GetCustomAttributes(typeof(ProtoContractAttribute), true).Length > 0);
-
+                bool hasUweProtobuf = type.GetCustomAttributes(typeof(ProtoContractAttribute), true).Length > 0;
                 if (hasUweProtobuf)
                 {
                     AddType(type);

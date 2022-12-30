@@ -54,7 +54,7 @@ namespace NitroxClient.Unity.Helper
             }
             foreach (Transform child in gameObject.transform)
             {
-                TravelDown(child.gameObject, listComponents, linePrefix + "|  ");
+                TravelDown(child.gameObject, listComponents, $"{linePrefix}|  ");
             }
         }
 

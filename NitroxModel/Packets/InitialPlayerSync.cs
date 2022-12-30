@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Unity;
+using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Server;
 
@@ -12,7 +13,6 @@ namespace NitroxModel.Packets
     [Serializable]
     public class InitialPlayerSync : Packet
     { 
-        public List<EscapePodModel> EscapePodsData { get; }
         public NitroxId AssignedEscapePodId { get; }
         public List<EquippedItemData> EquippedItems { get; }
         public List<EquippedItemData> Modules { get; }
@@ -28,6 +28,7 @@ namespace NitroxModel.Packets
         public InitialStoryGoalData StoryGoalData { get; }
         public ICollection<string> CompletedGoals { get; }
         public NitroxVector3 PlayerSpawnData { get; }
+        public NitroxQuaternion PlayerSpawnRotation { get; }
         public Optional<NitroxId> PlayerSubRootId { get; }
         public PlayerStatsData PlayerStatsData { get; }
         public List<InitialRemotePlayerData> RemotePlayerData { get; }
@@ -39,7 +40,6 @@ namespace NitroxModel.Packets
 
         public InitialPlayerSync(NitroxId playerGameObjectId,
             bool firstTimeConnecting,
-            IEnumerable<EscapePodModel> escapePodsData,
             NitroxId assignedEscapePodId,
             IEnumerable<EquippedItemData> equipment,
             IEnumerable<EquippedItemData> modules,
@@ -53,6 +53,7 @@ namespace NitroxModel.Packets
             InitialStoryGoalData storyGoalData,
             ICollection<string> completedGoals,
             NitroxVector3 playerSpawnData,
+            NitroxQuaternion playerSpawnRotation,
             Optional<NitroxId> playerSubRootId,
             PlayerStatsData playerStatsData,
             IEnumerable<InitialRemotePlayerData> remotePlayerData,
@@ -62,7 +63,6 @@ namespace NitroxModel.Packets
             Perms perms,
             Dictionary<string, PingInstancePreference> preferences)
         {
-            EscapePodsData = escapePodsData.ToList();
             AssignedEscapePodId = assignedEscapePodId;
             PlayerGameObjectId = playerGameObjectId;
             FirstTimeConnecting = firstTimeConnecting;
@@ -78,6 +78,7 @@ namespace NitroxModel.Packets
             StoryGoalData = storyGoalData;
             CompletedGoals = completedGoals;
             PlayerSpawnData = playerSpawnData;
+            PlayerSpawnRotation = playerSpawnRotation;
             PlayerSubRootId = playerSubRootId;
             PlayerStatsData = playerStatsData;
             RemotePlayerData = remotePlayerData.ToList();
@@ -90,7 +91,6 @@ namespace NitroxModel.Packets
 
         /// <remarks>Used for deserialization</remarks>
         public InitialPlayerSync(
-            List<EscapePodModel> escapePodsData,
             NitroxId assignedEscapePodId,
             List<EquippedItemData> equippedItems,
             List<EquippedItemData> modules,
@@ -106,6 +106,7 @@ namespace NitroxModel.Packets
             InitialStoryGoalData storyGoalData,
             ICollection<string> completedGoals,
             NitroxVector3 playerSpawnData,
+            NitroxQuaternion playerSpawnRotation,
             Optional<NitroxId> playerSubRootId,
             PlayerStatsData playerStatsData,
             List<InitialRemotePlayerData> remotePlayerData,
@@ -115,7 +116,6 @@ namespace NitroxModel.Packets
             Perms permissions,
             Dictionary<string, PingInstancePreference> preferences)
         {
-            EscapePodsData = escapePodsData;
             AssignedEscapePodId = assignedEscapePodId;
             PlayerGameObjectId = playerGameObjectId;
             FirstTimeConnecting = firstTimeConnecting;
@@ -131,6 +131,7 @@ namespace NitroxModel.Packets
             StoryGoalData = storyGoalData;
             CompletedGoals = completedGoals;
             PlayerSpawnData = playerSpawnData;
+            PlayerSpawnRotation = playerSpawnRotation;
             PlayerSubRootId = playerSubRootId;
             PlayerStatsData = playerStatsData;
             RemotePlayerData = remotePlayerData;

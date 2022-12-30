@@ -51,7 +51,7 @@ namespace NitroxClient.GameLogic
 
         public void ReceivedSimulationLockResponse(NitroxId id, bool lockAquired, SimulationLockType lockType)
         {
-            Log.Info("Received lock response, id: " + id + " " + lockAquired + " " + lockType);
+            Log.Info($"Received lock response, id: {id} {lockAquired} {lockType}");
 
             if (lockAquired)
             {

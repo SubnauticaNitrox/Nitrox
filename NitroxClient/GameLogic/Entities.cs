@@ -1,12 +1,16 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Spawning;
+using NitroxClient.GameLogic.Spawning.Metadata;
+using NitroxClient.GameLogic.Spawning.Metadata.Extractor;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
@@ -17,24 +21,19 @@ namespace NitroxClient.GameLogic
     {
         private readonly IPacketSender packetSender;
 
-        private readonly EntitySpawnerResolver entitySpawnerResolver = new EntitySpawnerResolver();
-
         private readonly HashSet<NitroxId> alreadySpawnedIds = new HashSet<NitroxId>();
-        private readonly Dictionary<Int3, BatchCells> batchCellsById;
         private readonly Dictionary<NitroxId, List<Entity>> pendingParentEntitiesByParentId = new Dictionary<NitroxId, List<Entity>>();
+
+        private readonly Dictionary<Type, IEntitySpawner> entitySpawnersByType = new Dictionary<Type, IEntitySpawner>();
 
         public Entities(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
 
-            if (NitroxEnvironment.IsNormal) //Testing would fail because it's trying to access runtime UWE resources.
-            {
-                batchCellsById = LargeWorldStreamer.main.cellManager.batch2cells;
-            }
-            else
-            {
-                batchCellsById = new Dictionary<Int3, BatchCells>();
-            }
+            entitySpawnersByType[typeof(PrefabChildEntity)] = new PrefabChildEntitySpawner();
+            entitySpawnersByType[typeof(WorldEntity)] = new WorldEntitySpawner();
+            entitySpawnersByType[typeof(PlaceholderGroupWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
+            entitySpawnersByType[typeof(EscapePodWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
         }
 
         public void BroadcastTransforms(Dictionary<NitroxId, GameObject> gameObjectsById)
@@ -52,102 +51,95 @@ namespace NitroxClient.GameLogic
             packetSender.SendIfGameCode(update);
         }
 
+        public void EntityMetadataChanged(UnityEngine.Object o, NitroxId id)
+        {
+            Optional<EntityMetadata> metadata = EntityMetadataExtractor.Extract(o);
+
+            if (metadata.HasValue)
+            {
+                BroadcastMetadataUpdate(id, metadata.Value);
+            }
+        }
+
         public void BroadcastMetadataUpdate(NitroxId id, EntityMetadata metadata)
         {
             packetSender.SendIfGameCode(new EntityMetadataUpdate(id, metadata));
         }
 
-        public void BroadcastEntitySpawnedByClient(Entity entity)
+        public void BroadcastEntitySpawnedByClient(WorldEntity entity)
         {
             packetSender.SendIfGameCode(new EntitySpawnedByClient(entity));
         }
 
-        public void Spawn(List<Entity> entities)
+        public IEnumerator SpawnAsync(List<Entity> entities)
         {
             foreach (Entity entity in entities)
             {
-                LargeWorldStreamer.main.cellManager.UnloadBatchCells(entity.AbsoluteEntityCell.CellId.ToUnity()); // Just in case
-
-                if (WasSpawnedByServer(entity.Id))
+                if (WasAlreadySpawned(entity.Id))
                 {
-                    UpdatePosition(entity);
+                    if (entity is WorldEntity worldEntity)
+                    {
+                        UpdatePosition(worldEntity);
+                    }
                 }
-                else if (entity.ParentId != null && !WasSpawnedByServer(entity.ParentId))
+                else if (entity.ParentId != null && !WasAlreadySpawned(entity.ParentId))
                 {
                     AddPendingParentEntity(entity);
                 }
                 else
                 {
-                    try
-                    {
-                        Optional<GameObject> parent = NitroxEntity.GetObjectFrom(entity.ParentId);
-                        Spawn(entity, parent);
-                        SpawnAnyPendingChildren(entity);
-                    }
-                    catch (OptionalEmptyException<GameObject> e)
-                    {
-                        Log.Error($"Failed to spawn Entity {entity.Id}, a {entity.TechType}: {e.Message}");
-                    }
+                    yield return SpawnAsync(entity);
+                    yield return SpawnAnyPendingChildrenAsync(entity);
                 }
             }
         }
 
-        private EntityCell EnsureCell(Entity entity)
-        {
-            EntityCell entityCell;
-
-            Int3 batchId = entity.AbsoluteEntityCell.BatchId.ToUnity();
-            Int3 cellId = entity.AbsoluteEntityCell.CellId.ToUnity();
-
-            if (!batchCellsById.TryGetValue(batchId, out BatchCells batchCells))
-            {
-                batchCells = LargeWorldStreamer.main.cellManager.InitializeBatchCells(batchId);
-            }
-
-            entityCell = batchCells.EnsureCell(cellId, entity.AbsoluteEntityCell.Level);
-
-            entityCell.EnsureRoot();
-
-            return entityCell;
-        }
-
-        private void Spawn(Entity entity, Optional<GameObject> parent)
+        private IEnumerator SpawnAsync(Entity entity)
         {
             alreadySpawnedIds.Add(entity.Id);
 
-            EntityCell cellRoot = EnsureCell(entity);
+            IEntitySpawner entitySpawner = entitySpawnersByType[entity.GetType()];
 
-            IEntitySpawner entitySpawner = entitySpawnerResolver.ResolveEntitySpawner(entity);
-            Optional<GameObject> gameObject = entitySpawner.Spawn(entity, parent, cellRoot);
+            TaskResult<Optional<GameObject>> gameObjectTaskResult = new TaskResult<Optional<GameObject>>();
+            yield return entitySpawner.SpawnAsync(entity, gameObjectTaskResult);
+            Optional<GameObject> gameObject = gameObjectTaskResult.Get();
 
-            if (!entitySpawner.SpawnsOwnChildren())
+            if (gameObject.HasValue)
+            {
+                yield return AwaitAnyRequiredEntitySetup(gameObject.Value);
+
+                EntityMetadataProcessor.ApplyMetadata(gameObject.Value, entity.Metadata);
+            }
+
+            if (!entitySpawner.SpawnsOwnChildren(entity))
             {
                 foreach (Entity childEntity in entity.ChildEntities)
                 {
-                    if (!WasSpawnedByServer(childEntity.Id))
+                    if (!WasAlreadySpawned(childEntity.Id))
                     {
-                        Spawn(childEntity, gameObject);
+                        yield return SpawnAsync(childEntity);
                     }
                 }
             }
         }
 
-        private void SpawnAnyPendingChildren(Entity entity)
+        private IEnumerator SpawnAnyPendingChildrenAsync(Entity entity)
         {
             if (pendingParentEntitiesByParentId.TryGetValue(entity.Id, out List<Entity> pendingEntities))
             {
-                Optional<GameObject> parent = NitroxEntity.GetObjectFrom(entity.Id);
-
-                foreach (Entity child in pendingEntities)
+                foreach (WorldEntity child in pendingEntities)
                 {
-                    Spawn(entity, parent);
+                    if (!WasAlreadySpawned(child.Id))
+                    {
+                        yield return SpawnAsync(child);
+                    }
                 }
 
                 pendingParentEntitiesByParentId.Remove(entity.Id);
             }
         }
 
-        private void UpdatePosition(Entity entity)
+        private void UpdatePosition(WorldEntity entity)
         {
             Optional<GameObject> opGameObject = NitroxEntity.GetObjectFrom(entity.Id);
 
@@ -161,7 +153,7 @@ namespace NitroxClient.GameLogic
 
             opGameObject.Value.transform.position = entity.Transform.Position.ToUnity();
             opGameObject.Value.transform.rotation = entity.Transform.Rotation.ToUnity();
-            opGameObject.Value.transform.localScale = entity.Transform.LocalScale.ToUnity();
+            opGameObject.Value.transform.localScale = entity.Transform.LocalScale.ToUnity();            
         }
 
         private void AddPendingParentEntity(Entity entity)
@@ -175,7 +167,25 @@ namespace NitroxClient.GameLogic
             pendingEntities.Add(entity);
         }
 
-        public bool WasSpawnedByServer(NitroxId id) => alreadySpawnedIds.Contains(id);
+        // Nitrox uses entity spawners to generate the various gameObjects in the world. These spawners are invoked using 
+        // IEnumerator (async) and levarage async Prefab/CraftData instantiation functions.  However, even though these
+        // functions are successful, it doesn't mean the entity is fully setup.  Subnautica is known to spawn coroutines 
+        // in the start() method of objects to spawn prefabs or other objects. An example is anything with a battery, 
+        // which gets configured after the fact.  In most cases, Nitrox needs to wait for objets to be fully spawned in 
+        // order to setup ids.  Historically we would persist metadata and use a patch to later tag the item, which gets
+        // messy.  This function will allow us wait on any type of instantiation necessary; this can be optimized later
+        // to move on to other spawning and come back when this item is ready.  
+        private IEnumerator AwaitAnyRequiredEntitySetup(GameObject gameObject)
+        {
+            EnergyMixin energyMixin = gameObject.GetComponent<EnergyMixin>();
+
+            if (energyMixin)
+            {
+                yield return new WaitUntil(() => energyMixin.battery != null);
+            }
+        }
+
+        public bool WasAlreadySpawned(NitroxId id) => alreadySpawnedIds.Contains(id);
 
         public bool RemoveEntity(NitroxId id) => alreadySpawnedIds.Remove(id);
     }

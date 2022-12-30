@@ -1,124 +1,133 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using Mono.Cecil;
 
-namespace Nitrox.BuildTool
+namespace Nitrox.BuildTool;
+
+public static class Publicizer
 {
-    public static class Publicizer
+    public static event EventHandler<string> LogReceived;
+
+    public static async Task PublicizeAsync(IEnumerable<string> files, string outputSuffix = "", string outputPath = null)
     {
-        public static IEnumerable<string> Execute(IEnumerable<string> files, string outputSuffix = "", string outputPath = null)
+        static int ExecuteSingle(string file, ReaderParameters readerParams, string outputSuffix, string outputPath)
         {
-            // Ensure target directory exists.
-            if (string.IsNullOrWhiteSpace(outputPath))
+            using AssemblyDefinition assemblyDef = AssemblyDefinition.ReadAssembly(file, readerParams);
+            string outputName = $"{Path.GetFileNameWithoutExtension(file)}{outputSuffix}{Path.GetExtension(file)}";
+            string outputFile = Path.Combine(outputPath!, outputName);
+            PublicizeAssemblyDefinition(assemblyDef);
+            assemblyDef.Write(outputFile);
+            return assemblyDef.MainModule.Types.Count;
+        }
+
+        // Ensure target directory exists.
+        if (string.IsNullOrWhiteSpace(outputPath))
+        {
+            outputPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        }
+        if (!string.IsNullOrWhiteSpace(outputPath))
+        {
+            Directory.CreateDirectory(outputPath);
+        }
+
+        // Create dependency resolve for cecil (needed to write dlls that have other dependencies).
+        DefaultAssemblyResolver resolver = new();
+        ReaderParameters assemblyReaderParams = new() { AssemblyResolver = resolver };
+        // Setup assembly resolver for cecil first, to prevent race condition while another assembly is read.
+        string[] fileArray = files as string[] ?? files.ToArray();
+        foreach (string file in fileArray)
+        {
+            if (!File.Exists(file))
             {
-                outputPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            }
-            if (!string.IsNullOrWhiteSpace(outputPath))
-            {
-                Directory.CreateDirectory(outputPath);
+                throw new FileNotFoundException("Dll to publicize not found", file);
             }
 
-            // Create dependency resolve for cecil (needed to write dlls that have other dependencies).
-            DefaultAssemblyResolver resolver = new();
-
-            foreach (string file in files)
+            resolver.AddSearchDirectory(Path.GetDirectoryName(file));
+        }
+        // Run publicizer in parallel for each Assembly Definition.
+        List<Task> assemblyPublicizeTasks = new();
+        foreach (string file in fileArray)
+        {
+            assemblyPublicizeTasks.Add(Task.Run(() =>
             {
-                if (!File.Exists(file))
+                Stopwatch sw = Stopwatch.StartNew();
+                int typeCount;
+                try
                 {
-                    throw new FileNotFoundException("Dll to publicize not found", file);
+                    typeCount = ExecuteSingle(file, assemblyReaderParams, outputSuffix, outputPath);
                 }
-                resolver.AddSearchDirectory(Path.GetDirectoryName(file));
+                catch (Exception)
+                {
+                    sw.Stop();
+                    throw;
+                }
+                OnLogReceived($"Publicized '{file}' with {typeCount} types in {Math.Round(sw.Elapsed.TotalSeconds, 2)}s");
+            }));
+        }
+        await Task.WhenAll(assemblyPublicizeTasks);
+    }
 
-                string outputName = $"{Path.GetFileNameWithoutExtension(file)}{outputSuffix}{Path.GetExtension(file)}";
-                string outputFile = Path.Combine(outputPath, outputName);
-                Publicize(file, resolver).Write(outputFile);
-                yield return outputFile;
+    private static void PublicizeAssemblyDefinition(AssemblyDefinition assembly)
+    {
+        static IEnumerable<TypeDefinition> GetAllNestedTypes(IEnumerable<TypeDefinition> types)
+        {
+            TypeDefinition[] typesArray = types as TypeDefinition[] ?? types.ToArray();
+            foreach (TypeDefinition type in typesArray)
+            {
+                yield return type;
+                foreach (TypeDefinition nestedType in GetAllNestedTypes(type.NestedTypes))
+                {
+                    yield return nestedType;
+                }
             }
         }
 
-        public static IEnumerable<FieldDefinition> FilterBackingEventFields(List<TypeDefinition> allTypes)
+        PublicizeTypes(GetAllNestedTypes(assembly.MainModule.Types));
+    }
+
+    private static void PublicizeTypes(IEnumerable<TypeDefinition> types)
+    {
+        foreach (TypeDefinition type in types)
         {
-            List<string> eventNames = allTypes.SelectMany(t => t.Events)
-                                              .Select(eventDefinition => eventDefinition.Name)
-                                              .ToList();
-
-            return allTypes.SelectMany(x => x.Fields)
-                           .Where(fieldDefinition => !eventNames.Contains(fieldDefinition.Name));
-        }
-
-        /// <summary>
-        ///     Method which returns all Types of the given module, including nested ones (recursively).
-        /// </summary>
-        /// <param name="moduleDefinition">.NET module to search through for types.</param>
-        /// <returns>Types found in module.</returns>
-        public static IEnumerable<TypeDefinition> GetAllTypes(ModuleDefinition moduleDefinition) => GetAllNestedTypes(moduleDefinition.Types);
-
-        private static AssemblyDefinition Publicize(string file, BaseAssemblyResolver dllResolver)
-        {
-            AssemblyDefinition assembly = AssemblyDefinition.ReadAssembly(file,
-                                                                          new ReaderParameters
-                                                                          {
-                                                                              AssemblyResolver = dllResolver
-                                                                          });
-            List<TypeDefinition> allTypes = GetAllTypes(assembly.MainModule).ToList();
-            foreach (TypeDefinition type in allTypes)
+            if (type == null)
             {
-                if (type == null)
+                continue;
+            }
+
+            // Publicize type and nested types.
+            if (type.IsNested)
+            {
+                type.IsNestedPublic = true;
+            }
+            else
+            {
+                type.IsPublic = true;
+            }
+            // Publicize methods on type.
+            foreach (MethodDefinition method in type.Methods)
+            {
+                method.IsPublic = true;
+            }
+            // Publicize fields (excludes fields if they would cause name conflicts on a type).
+            HashSet<string> eventNames = new(type.Events.Select(eventDefinition => eventDefinition.Name));
+            foreach (FieldDefinition field in type.Fields)
+            {
+                if (eventNames.Contains(field.Name))
                 {
                     continue;
                 }
-                
-                // Publicize type and nested types.
-                if (!type.IsPublic || !type.IsNestedPublic)
-                {
-                    if (type.IsNested)
-                    {
-                        type.IsNestedPublic = true;
-                    }
-                    else
-                    {
-                        type.IsPublic = true;
-                    }
-                }
-                // Publicize methods on type.
-                foreach (MethodDefinition method in type.Methods)
-                {
-                    if (!method?.IsPublic ?? false)
-                    {
-                        method.IsPublic = true;
-                    }
-                }
+                field.IsPublic = true;
             }
-            
-            // Publicize all fields (excludes fields if they would cause name conflicts on a type).
-            foreach (FieldDefinition field in FilterBackingEventFields(allTypes))
-            {
-                if (!field?.IsPublic ?? false)
-                {
-                    field.IsPublic = true;
-                }
-            }
-
-            return assembly;
         }
+    }
 
-        /// <summary>
-        ///     Recursive method to get all nested types. Use <see cref="GetAllTypes(ModuleDefinition)" />
-        /// </summary>
-        /// <param name="typeDefinitions"></param>
-        /// <returns></returns>
-        private static IEnumerable<TypeDefinition> GetAllNestedTypes(IEnumerable<TypeDefinition> typeDefinitions)
-        {
-            IEnumerable<TypeDefinition> defs = typeDefinitions as TypeDefinition[] ?? typeDefinitions.ToArray();
-            if (!defs.Any())
-            {
-                return Array.Empty<TypeDefinition>();
-            }
-            
-            return defs.Concat(GetAllNestedTypes(defs.SelectMany(t => t.NestedTypes)));
-        }
+    private static void OnLogReceived(string message)
+    {
+        LogReceived?.Invoke(null, message);
     }
 }

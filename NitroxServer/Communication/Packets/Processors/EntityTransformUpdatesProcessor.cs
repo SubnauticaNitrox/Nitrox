@@ -12,12 +12,12 @@ namespace NitroxServer.Communication.Packets.Processors
     class EntityTransformUpdatesProcessor : AuthenticatedPacketProcessor<EntityTransformUpdates>
     {
         private readonly PlayerManager playerManager;
-        private readonly EntityManager entityManager;
+        private readonly WorldEntityManager worldEntityManager;
 
-        public EntityTransformUpdatesProcessor(PlayerManager playerManager, EntityManager entityManager)
+        public EntityTransformUpdatesProcessor(PlayerManager playerManager, WorldEntityManager worldEntityManager)
         {
             this.playerManager = playerManager;
-            this.entityManager = entityManager;
+            this.worldEntityManager = worldEntityManager;
         }
 
         public override void Process(EntityTransformUpdates packet, Player simulatingPlayer)
@@ -46,7 +46,7 @@ namespace NitroxServer.Communication.Packets.Processors
         {
             foreach (EntityTransformUpdate update in updates)
             {
-                Optional<AbsoluteEntityCell> currentCell = entityManager.UpdateEntityPosition(update.Id, update.Position, update.Rotation);
+                Optional<AbsoluteEntityCell> currentCell = worldEntityManager.UpdateEntityPosition(update.Id, update.Position, update.Rotation);
 
                 if (!currentCell.HasValue)
                 {

@@ -16,6 +16,7 @@ namespace NitroxServer.Communication.Packets.Processors
         public override void Process(PlayerMovement packet, Player player)
         {
             player.Position = packet.Position;
+            player.Rotation = packet.BodyRotation;
             playerManager.SendPacketToOtherPlayers(packet, player);
         }
     }

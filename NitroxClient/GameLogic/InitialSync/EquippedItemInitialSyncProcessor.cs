@@ -61,19 +61,19 @@ namespace NitroxClient.GameLogic.InitialSync
                     }
                     else
                     {
-                        Log.Info("Could not find equipment type for " + gameObject.name);
+                        Log.Info($"Could not find equipment type for {gameObject.name}");
                     }
                 }
                 else
                 {
-                    Log.Info("Could not find Container for " + gameObject.name);
+                    Log.Info($"Could not find Container for {gameObject.name}");
                 }
 
                 totalEquippedItemsDone++;
                 yield return null;
             }
 
-            Log.Info("Recieved initial sync with " + totalEquippedItemsDone + " pieces of equipped items");
+            Log.Info($"Recieved initial sync with {totalEquippedItemsDone} pieces of equipped items");
         }
     }
 }

@@ -38,7 +38,7 @@ namespace NitroxClient.GameLogic.InitialSync
                 }
             }
 
-            Log.Info("Recieved initial sync with " + totalSyncedVehicles + " non-cyclops vehicles");
+            Log.Info($"Received initial sync with {totalSyncedVehicles} non-cyclops vehicles");
         }
     }
 }

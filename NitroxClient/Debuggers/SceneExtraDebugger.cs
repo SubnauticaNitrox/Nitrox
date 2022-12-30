@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -32,7 +32,24 @@ public sealed class SceneExtraDebugger : BaseDebugger
 
     private readonly Lazy<Texture> arrowTexture, circleTexture;
 
-    public SceneExtraDebugger(SceneDebugger sceneDebugger, IMap map) : base(350, "Scene Tools", KeyCode.S, true, false, true, GUISkinCreationOptions.DERIVEDCOPY)
+    private const int PAGE_BUTTON_WIDTH = 100;
+    private int searchPageIndex;
+    private int resultsPerPage = 30;
+
+    public override bool Enabled
+    {
+        get => base.Enabled;
+        set
+        {
+            base.Enabled = value;
+            if (value)
+            {
+                MoveOverlappingSceneDebugger();
+            }
+        }
+    }
+
+    public SceneExtraDebugger(SceneDebugger sceneDebugger, IMap map) : base(350, "Scene Tools", KeyCode.S, true, false, true, GUISkinCreationOptions.DERIVEDCOPY, 700)
     {
         this.sceneDebugger = sceneDebugger;
         this.map = map;
@@ -72,31 +89,84 @@ public sealed class SceneExtraDebugger : BaseDebugger
         GettingRayCastResults();
         GettingSearchbarResults();
 
-        using (new GUILayout.VerticalScope("box", GUILayout.MinHeight(425)))
+        using (new GUILayout.VerticalScope("box", GUILayout.MinHeight(600)))
         {
             if (gameObjectResults.Count > 0)
             {
-                using GUILayout.ScrollViewScope scroll = new(hierarchyScrollPos);
-                hierarchyScrollPos = scroll.scrollPosition;
+                GUILayout.Label($" Found {gameObjectResults.Count} results.");
 
-                for (int index = 0; index < gameObjectResults.Count; index++)
+                using (GUILayout.ScrollViewScope scroll = new(hierarchyScrollPos))
                 {
-                    if (index > 30)
+                    hierarchyScrollPos = scroll.scrollPosition;
+
+                    int startIndex = resultsPerPage * searchPageIndex;
+                    int endIndex = startIndex + resultsPerPage;
+
+                    if (endIndex > gameObjectResults.Count)
                     {
-                        GUILayout.Label($"There are {gameObjectResults.Count - index} more results which aren't displayed", "fillMessage");
-                        break;
+                        endIndex = gameObjectResults.Count;
                     }
 
-                    GameObject child = gameObjectResults[index];
-                    if (child)
+                    for (int index = startIndex; index < endIndex; index++)
                     {
-                        using (new GUILayout.VerticalScope("box"))
+                        GameObject child = gameObjectResults[index];
+                        if (child)
                         {
-                            if (GUILayout.Button(child.GetFullHierarchyPath(), child.transform.childCount > 0 ? "bold" : "label"))
+                            using (new GUILayout.VerticalScope("box"))
                             {
-                                sceneDebugger.UpdateSelectedObject(child);
+                                if (GUILayout.Button(child.GetFullHierarchyPath(), child.transform.childCount > 0 ? "bold" : "label"))
+                                {
+                                    sceneDebugger.UpdateSelectedObject(child);
+                                }
                             }
                         }
+                    }
+                }
+
+                // Needed to push the pagination buttons
+                // down to the bottom when the scroll
+                // view doesn't have enough height
+                GUILayout.FlexibleSpace();
+
+                // Pagination of search results if necessary
+                if (gameObjectResults.Count > resultsPerPage)
+                {
+                    using (new GUILayout.HorizontalScope("box"))
+                    {
+                        // Only enable the back button if we can go back
+                        GUI.enabled = searchPageIndex > 0;
+                        if (GUILayout.Button("<", GUILayout.Width(PAGE_BUTTON_WIDTH)))
+                        {
+                            searchPageIndex--;
+                            hierarchyScrollPos = Vector2.zero;
+                            if (searchPageIndex < 0)
+                            {
+                                searchPageIndex = 0;
+                            }
+                        }
+                        GUI.enabled = true;
+
+                        // Get the maximum page number based on the size of the results
+                        int maxPage = gameObjectResults.Count / resultsPerPage;
+
+                        GUILayout.FlexibleSpace();
+                        GUILayout.Label($"Page {searchPageIndex + 1} of {maxPage + 1}", GUILayout.ExpandHeight(true));
+                        GUILayout.FlexibleSpace();
+
+                        // Only enable the next button if we can go forward
+                        GUI.enabled = maxPage > searchPageIndex;
+                        if (GUILayout.Button(">", GUILayout.Width(PAGE_BUTTON_WIDTH)))
+                        {
+                            searchPageIndex++;
+                            hierarchyScrollPos = Vector2.zero;
+                            if (searchPageIndex > maxPage)
+                            {
+                                searchPageIndex = maxPage;
+                            }
+                        }
+
+                        // Re-enable the GUI for anyone who comes after us
+                        GUI.enabled = true;
                     }
                 }
             }
@@ -130,12 +200,15 @@ public sealed class SceneExtraDebugger : BaseDebugger
                 if (GUILayout.Button("Search", "button", GUILayout.Width(80)))
                 {
                     gameObjectSearching = true;
+                    searchPageIndex = 0;
+                    hierarchyScrollPos = Vector2.zero;
                 }
 
                 if (GUILayout.Button("X", "button", GUILayout.Width(30)))
                 {
                     gameObjectSearching = false;
                     gameObjectSearch = string.Empty;
+                    gameObjectSearchCache = string.Empty;
                     gameObjectResults.Clear();
                 }
                 else if (Event.current.isKey && Event.current.keyCode == KeyCode.Return)
@@ -180,10 +253,13 @@ public sealed class SceneExtraDebugger : BaseDebugger
                 }
                 else
                 {
-                    gameObjectResults = Resources.FindObjectsOfTypeAll<GameObject>().Where(go => Regex.IsMatch(go.name, gameObjectSearch, RegexOptions.IgnoreCase)).OrderBy(go => go.name).ToList();
+                    gameObjectResults = Resources.FindObjectsOfTypeAll<GameObject>().
+                                        Where(go => Regex.IsMatch(go.name, gameObjectSearch, RegexOptions.IgnoreCase)).
+                                        OrderBy(go => go.name).ToList();
                 }
 
                 gameObjectSearchCache = gameObjectSearch;
+                searchPageIndex = 0;
             }
             else
             {
@@ -225,8 +301,28 @@ public sealed class SceneExtraDebugger : BaseDebugger
     public override void ResetWindowPosition()
     {
         base.ResetWindowPosition();
-        WindowRect.x += sceneDebugger.WindowRect.width / 2f + WindowRect.width / 2f; // Altered position to align on the right side of the SceneDebugger
+        // Align to the right side of the SceneDebugger
+        WindowRect.x = sceneDebugger.WindowRect.x + sceneDebugger.WindowRect.width;
         WindowRect.y = sceneDebugger.WindowRect.y;
+        
+        float exceedWidth = WindowRect.x + WindowRect.width - Screen.width;
+        if (exceedWidth > 0f)
+        {
+            WindowRect.x -= exceedWidth;
+        }
+        MoveOverlappingSceneDebugger();
+    }
+
+    /// <summary>
+    /// Move the scene debugger if it's overlapping with the extra scene debugger (if they can both hold in the available space)
+    /// </summary>
+    private void MoveOverlappingSceneDebugger()
+    {
+        if (sceneDebugger.WindowRect.width + WindowRect.width < Screen.width && // verify that debuggers can hold at the same time in the screen
+            sceneDebugger.WindowRect.x + sceneDebugger.WindowRect.width + WindowRect.width > Screen.width) // verify that debuggers are really overlapping
+        {
+            sceneDebugger.WindowRect.x = Screen.width - WindowRect.width - sceneDebugger.WindowRect.width;
+        }
     }
 
     private void UpdateSelectedObjectMarker(Transform selectedTransform)

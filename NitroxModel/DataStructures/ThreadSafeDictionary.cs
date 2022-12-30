@@ -6,7 +6,7 @@ using ProtoBufNet;
 
 namespace NitroxModel.DataStructures
 {
-    [DebuggerDisplay("Items = {" + nameof(Entries) + "}")]
+    [DebuggerDisplay($"Items = {{{nameof(Entries)}}}")]
     [ProtoContract]
     public class ThreadSafeDictionary<TKey, TValue> : IDictionary<TKey, TValue>
     {
