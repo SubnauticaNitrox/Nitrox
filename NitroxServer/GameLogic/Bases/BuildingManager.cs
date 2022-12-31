@@ -25,6 +25,7 @@ public class BuildingManager
     internal readonly ThreadSafeDictionary<NitroxId, SavedGhost> Ghosts = new();
 
     private readonly ThreadSafeDictionary<NitroxId, NitroxGhost> allGhosts = new();
+    private readonly ThreadSafeDictionary<NitroxId, NitroxModule> allModules = new();
 
     public BuildingManager(SavedGlobalRoot previousData)
     {
@@ -37,10 +38,15 @@ public class BuildingManager
             {
                 allGhosts.Add(savedGhost.NitroxId, new(savedBuild, savedGhost));
             }
+            foreach (SavedModule savedModule in savedBuild.Modules)
+            {
+                allModules.Add(savedModule.NitroxId, new(savedBuild, savedModule));
+            }
         }
         foreach (SavedModule savedModule in previousData.Modules)
         {
             Modules.Add(savedModule.NitroxId, savedModule);
+            allModules.Add(savedModule.NitroxId, new(null, savedModule));
         }
         foreach (SavedGhost savedGhost in previousData.Ghosts)
         {
@@ -105,6 +111,7 @@ public class BuildingManager
                         return false;
                     }
                     savedBuild.Modules.Add(placeModule.SavedModule);
+                    allModules.Add(placeModule.SavedModule.NitroxId, new(savedBuild, placeModule.SavedModule));
                     return true;
                 }
                 else
@@ -123,15 +130,16 @@ public class BuildingManager
                 return false;
             }
             Modules.Add(placeModule.SavedModule.NitroxId, placeModule.SavedModule);
+            allModules.Add(placeModule.SavedModule.NitroxId, new(null, placeModule.SavedModule));
             return true;
         }
     }
 
     public bool ModifyConstructedAmount(ModifyConstructedAmount modifyConstructedAmount)
     {
-        lock (Ghosts)
+        lock (Builds)
         {
-            lock (Builds)
+            lock (Ghosts)
             {
                 if (allGhosts.TryGetValue(modifyConstructedAmount.GhostId, out NitroxGhost nitroxGhost))
                 {
@@ -152,24 +160,29 @@ public class BuildingManager
                     return true;
                 }
             }
-        }
-
-        lock (Modules)
-        {
-            if (!Modules.TryGetValue(modifyConstructedAmount.GhostId, out SavedModule savedModule))
+            lock (Modules)
             {
-                Log.Error($"Trying to modify the constructed amount of a non-registered object ({modifyConstructedAmount.GhostId})");
-                return false;
+                if (!allModules.TryGetValue(modifyConstructedAmount.GhostId, out NitroxModule nitroxModule))
+                {
+                    Log.Error($"Trying to modify the constructed amount of a non-registered object ({modifyConstructedAmount.GhostId})");
+                    return false;
+                }
+                if (modifyConstructedAmount.ConstructedAmount == 0f)
+                {
+                    if (nitroxModule.Parent != null)
+                    {
+                        nitroxModule.Parent.Modules.Remove(nitroxModule.SavedModule);
+                    }
+                    else
+                    {
+                        Modules.Remove(modifyConstructedAmount.GhostId);
+                    }
+                    allModules.Remove(modifyConstructedAmount.GhostId);
+                    return true;
+                }
+                nitroxModule.SavedModule.ConstructedAmount = modifyConstructedAmount.ConstructedAmount;
+                return true;
             }
-            if (modifyConstructedAmount.ConstructedAmount == 0f)
-            {
-                Modules.Remove(modifyConstructedAmount.GhostId);
-            }
-            else
-            {
-                savedModule.ConstructedAmount = modifyConstructedAmount.ConstructedAmount;
-            }
-            return true;
         }
     }
 
@@ -201,7 +214,7 @@ public class BuildingManager
     {
         lock (Ghosts)
         {
-            if (!Ghosts.ContainsKey(updateBase.FormerGhostId))
+            if (!allGhosts.ContainsKey(updateBase.FormerGhostId))
             {
                 Log.Error($"Tring to place a base from a non-registered ghost ({updateBase.FormerGhostId})");
                 return false;
@@ -279,6 +292,18 @@ public class BuildingManager
         {
             Parent = parent;
             SavedGhost = savedGhost;
+        }
+    }
+
+    class NitroxModule
+    {
+        public SavedBuild Parent;
+        public SavedModule SavedModule;
+
+        public NitroxModule(SavedBuild parent, SavedModule savedModule)
+        {
+            Parent = parent;
+            SavedModule = savedModule;
         }
     }
 }
