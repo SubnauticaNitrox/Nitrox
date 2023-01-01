@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using NitroxModel.DataStructures.GameLogic;
 
-namespace NitroxModel.DataStructures.JsonConverter
+namespace NitroxServer.Serialization.Json
 {
     public class TechTypeConverter : JsonConverter<NitroxTechType>
     {

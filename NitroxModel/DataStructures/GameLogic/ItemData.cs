@@ -1,23 +1,24 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using BinaryPack.Attributes;
 using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
     [Serializable]
-    [ProtoContract]
+    [DataContract]
     [ProtoInclude(50, typeof(BasicItemData))]
     [ProtoInclude(51, typeof(EquippedItemData))]
     [ProtoInclude(52, typeof(PlantableItemData))]
     public abstract class ItemData
     {
-        [ProtoMember(1)]
+        [DataMember(Order = 1)]
         public NitroxId ContainerId { get; }
 
-        [ProtoMember(2)]
+        [DataMember(Order = 2)]
         public NitroxId ItemId { get; }
 
-        [ProtoMember(3)]
+        [DataMember(Order = 3)]
         public byte[] SerializedData { get; }
 
         [IgnoreConstructor]

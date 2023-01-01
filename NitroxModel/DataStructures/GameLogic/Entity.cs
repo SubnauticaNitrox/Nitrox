@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using BinaryPack.Attributes;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
@@ -8,25 +9,25 @@ using ProtoBufNet;
 namespace NitroxModel.DataStructures.GameLogic
 {
     [Serializable]
-    [ProtoContract]
+    [DataContract]
     [ProtoInclude(50, typeof(WorldEntity))]
     [ProtoInclude(60, typeof(PrefabChildEntity))]
     [ProtoInclude(70, typeof(PrefabPlaceholderEntity))]
     public abstract class Entity
     {
-        [ProtoMember(1)]
+        [DataMember(Order = 1)]
         public NitroxId Id { get; set; }
 
-        [ProtoMember(2)]
+        [DataMember(Order = 2)]
         public NitroxTechType TechType { get; set; }
 
-        [ProtoMember(3)]
+        [DataMember(Order = 3)]
         public EntityMetadata Metadata { get; set; }
 
-        [ProtoMember(4)]
+        [DataMember(Order = 4)]
         public NitroxId ParentId { get; set; }
 
-        [ProtoMember(5)]
+        [DataMember(Order = 5)]
         public List<Entity> ChildEntities { get; set; } = new List<Entity>();
 
         [IgnoreConstructor]

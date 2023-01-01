@@ -9,9 +9,7 @@ using NitroxModel.Serialization;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 {

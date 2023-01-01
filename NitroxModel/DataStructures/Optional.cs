@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
-using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.Util
 {
@@ -16,7 +15,7 @@ namespace NitroxModel.DataStructures.Util
     /// </remarks>
     /// <typeparam name="T"></typeparam>
     [Serializable]
-    [ProtoContract]
+    [DataContract]
     public struct Optional<T> : ISerializable where T : class
     {
         private delegate bool HasValueDelegate(T value);
@@ -75,7 +74,7 @@ namespace NitroxModel.DataStructures.Util
             return valueChecksForT(value);
         };
 
-        [ProtoMember(1)]
+        [DataMember(Order = 1)]
         public T Value { get; private set; }
 
         public bool HasValue => valueChecksForT(Value);

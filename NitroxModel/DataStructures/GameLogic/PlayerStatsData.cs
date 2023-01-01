@@ -1,28 +1,28 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using BinaryPack.Attributes;
-using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
     [Serializable]
-    [ProtoContract]
+    [DataContract]
     public class PlayerStatsData
     {
-        [ProtoMember(1)]
+        [DataMember(Order = 1)]
         public float Oxygen { get; }
 
-        [ProtoMember(2)]
+        [DataMember(Order = 2)]
         public float MaxOxygen { get; }
 
-        [ProtoMember(3)]
+        [DataMember(Order = 3)]
         public float Health { get; }
 
-        [ProtoMember(4)]
+        [DataMember(Order = 4)]
         public float Food { get; }
 
-        [ProtoMember(5)]
+        [DataMember(Order = 5)]
         public float Water { get; }
-        [ProtoMember(6)]
+        [DataMember(Order = 6)]
         public float InfectionAmount { get; }
 
         [IgnoreConstructor]

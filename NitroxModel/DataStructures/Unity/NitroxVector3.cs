@@ -1,21 +1,21 @@
 ﻿using System;
 using System.Numerics;
+using System.Runtime.Serialization;
 using NitroxModel.Helper;
-using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.Unity
 {
-    [ProtoContract]
+    [DataContract]
     [Serializable]
     public struct NitroxVector3 : IEquatable<NitroxVector3>
     {
-        [ProtoMember(1)]
+        [DataMember(Order = 1)]
         public float X;
 
-        [ProtoMember(2)]
+        [DataMember(Order = 2)]
         public float Y;
 
-        [ProtoMember(3)]
+        [DataMember(Order = 3)]
         public float Z;
 
         public NitroxVector3(float x, float y, float z)

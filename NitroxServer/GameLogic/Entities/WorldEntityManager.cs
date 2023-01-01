@@ -8,7 +8,6 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxServer.GameLogic.Entities.Spawning;
 using NitroxModel.DataStructures.GameLogic.Entities;
-using NitroxServer.Resources;
 
 namespace NitroxServer.GameLogic.Entities
 {

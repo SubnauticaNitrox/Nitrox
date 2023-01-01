@@ -1,22 +1,22 @@
 ﻿using System;
-using ProtoBufNet;
+using System.Runtime.Serialization;
 
 namespace NitroxModel.DataStructures.Unity
 {
-    [ProtoContract]
+    [DataContract]
     [Serializable]
     public struct NitroxColor
     {
-        [ProtoMember(1)]
+        [DataMember(Order = 1)]
         public float R { get; private set; }
 
-        [ProtoMember(2)]
+        [DataMember(Order = 2)]
         public float G { get; private set; }
 
-        [ProtoMember(3)]
+        [DataMember(Order = 3)]
         public float B { get; private set; }
 
-        [ProtoMember(4)]
+        [DataMember(Order = 4)]
         public float A { get; private set; }
 
         public NitroxColor(float r, float g, float b, float a = 1)

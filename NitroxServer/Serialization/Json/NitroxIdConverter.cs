@@ -1,7 +1,8 @@
 ﻿using System;
 using Newtonsoft.Json;
+using NitroxModel.DataStructures;
 
-namespace NitroxModel.DataStructures.JsonConverter
+namespace NitroxServer.Serialization.Json
 {
     public class NitroxIdConverter : JsonConverter<NitroxId>
     {

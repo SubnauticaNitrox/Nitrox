@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
-using ProtoBuf;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours
 {
     [Serializable]
-    [ProtoContract]
+    [DataContract]
     public class NitroxEntity : MonoBehaviour, IProtoTreeEventListener
     {
         private static Dictionary<NitroxId, GameObject> gameObjectsById = new Dictionary<NitroxId, GameObject>();
 
-        [ProtoMember(1)]
+        [DataMember(Order = 1)]
         public NitroxId Id;
 
         private NitroxEntity() // Default for Proto

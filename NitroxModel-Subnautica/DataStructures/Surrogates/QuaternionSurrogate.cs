@@ -1,24 +1,23 @@
 ﻿using System.Runtime.Serialization;
 using NitroxModel.DataStructures.Surrogates;
 using NitroxModel.DataStructures.Unity;
-using ProtoBuf;
 using UnityEngine;
 
 namespace NitroxModel_Subnautica.DataStructures.Surrogates
 {
-    [ProtoContract]
+    [DataContract]
     public class QuaternionSurrogate : SerializationSurrogate<Quaternion>
     {
-        [ProtoMember(1)]
+        [DataMember(Order = 1)]
         public float X { get; private set; }
 
-        [ProtoMember(2)]
+        [DataMember(Order = 2)]
         public float Y { get; private set; }
 
-        [ProtoMember(3)]
+        [DataMember(Order = 3)]
         public float Z { get; private set; }
 
-        [ProtoMember(4)]
+        [DataMember(Order = 4)]
         public float W { get; private set; }
 
         protected override void GetObjectData(Quaternion quaternion, SerializationInfo info)

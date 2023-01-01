@@ -1,7 +1,6 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
-using NitroxModel.Helper;
 using NitroxModel_Subnautica.Packets;
 using Story;
 using UnityEngine;
