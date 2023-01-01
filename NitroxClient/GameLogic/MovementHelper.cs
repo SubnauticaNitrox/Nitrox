@@ -31,7 +31,7 @@ namespace NitroxClient.GameLogic
 
         public static Vector3 GetCorrectedVelocity(Vector3 remotePosition, Vector3 remoteVelocity, GameObject gameObject, float correctionTime)
         {
-            Vector3 difference = (remotePosition - gameObject.transform.position);
+            Vector3 difference = remotePosition - gameObject.transform.position;
             Vector3 velocityToMakeUpDifference = difference / correctionTime;
 
             float distance = difference.magnitude;

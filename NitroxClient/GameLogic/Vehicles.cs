@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
@@ -25,20 +24,16 @@ namespace NitroxClient.GameLogic
     public class Vehicles
     {
         private readonly IPacketSender packetSender;
-        private readonly PlayerManager playerManager;
         private readonly IMultiplayerSession multiplayerSession;
-        private readonly SimulationOwnership simulationOwnership;
         private readonly Dictionary<NitroxId, VehicleModel> vehiclesById;
 
         public delegate void VehicleCreatedHandler(GameObject gameObject);
         public event VehicleCreatedHandler VehicleCreated;
 
-        public Vehicles(IPacketSender packetSender, PlayerManager playerManager, IMultiplayerSession multiplayerSession, SimulationOwnership simulationOwnership)
+        public Vehicles(IPacketSender packetSender, IMultiplayerSession multiplayerSession, SimulationOwnership simulationOwnership)
         {
             this.packetSender = packetSender;
-            this.playerManager = playerManager;
             this.multiplayerSession = multiplayerSession;
-            this.simulationOwnership = simulationOwnership;
             vehiclesById = new Dictionary<NitroxId, VehicleModel>();
         }
 
