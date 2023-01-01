@@ -13,8 +13,6 @@ namespace NitroxClient.GameLogic.InitialSync
 {
     public class PlayerInitialSyncProcessor : InitialSyncProcessor
     {
-        private static readonly Vector3 spawnRelativeToEscapePod = new Vector3(0.9f, 2.1f, 0);
-
         private readonly Item item;
         private readonly ItemContainers itemContainers;
 
@@ -27,27 +25,23 @@ namespace NitroxClient.GameLogic.InitialSync
         public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
         {
             SetPlayerPermissions(packet.Permissions);
-            waitScreenItem.SetProgress(0.14f);
+            waitScreenItem.SetProgress(0.16f);
             yield return null;
 
             SetPlayerGameObjectId(packet.PlayerGameObjectId);
-            waitScreenItem.SetProgress(0.29f);
-            yield return null;
-
-            AttachPlayerToEscapePod(packet.AssignedEscapePodId);
-            waitScreenItem.SetProgress(0.43f);
+            waitScreenItem.SetProgress(0.33f);
             yield return null;
 
             yield return AddStartingItemsToPlayer(packet.FirstTimeConnecting);
-            waitScreenItem.SetProgress(0.57f);
+            waitScreenItem.SetProgress(0.50f);
             yield return null;
 
             SetPlayerStats(packet.PlayerStatsData);
-            waitScreenItem.SetProgress(0.72f);
+            waitScreenItem.SetProgress(0.66f);
             yield return null;
 
             SetPlayerGameMode(packet.GameMode);
-            waitScreenItem.SetProgress(0.86f);
+            waitScreenItem.SetProgress(0.83f);
             yield return null;
 
             SetPlayerCompletedGoals(packet.CompletedGoals);
@@ -64,19 +58,6 @@ namespace NitroxClient.GameLogic.InitialSync
         {
             NitroxEntity.SetNewId(Player.mainObject, id);
             Log.Info($"Received initial sync player GameObject Id: {id}");
-        }
-
-        private void AttachPlayerToEscapePod(NitroxId escapePodId)
-        {
-            GameObject escapePod = NitroxEntity.RequireObjectFrom(escapePodId);
-
-            EscapePod.main.transform.position = escapePod.transform.position;
-            EscapePod.main.playerSpawn.position = escapePod.transform.position + spawnRelativeToEscapePod;
-
-            Player.main.transform.position = EscapePod.main.playerSpawn.position;
-            Player.main.transform.rotation = EscapePod.main.playerSpawn.rotation;
-
-            Player.main.currentEscapePod = escapePod.GetComponent<EscapePod>();
         }
 
         private IEnumerator AddStartingItemsToPlayer(bool firstTimeConnecting)

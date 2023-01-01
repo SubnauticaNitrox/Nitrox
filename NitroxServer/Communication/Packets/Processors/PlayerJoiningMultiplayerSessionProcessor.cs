@@ -4,10 +4,12 @@ using System.Net;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
+using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
+using NitroxServer.GameLogic.Entities;
 using NitroxServer.Serialization.World;
 
 namespace NitroxServer.Communication.Packets.Processors
@@ -18,19 +20,20 @@ namespace NitroxServer.Communication.Packets.Processors
         private readonly ScheduleKeeper scheduleKeeper;
         private readonly EventTriggerer eventTriggerer;
         private readonly World world;
+        private readonly EntityRegistry entityRegistry;
 
-        public PlayerJoiningMultiplayerSessionProcessor(ScheduleKeeper scheduleKeeper, EventTriggerer eventTriggerer, PlayerManager playerManager, World world)
+        public PlayerJoiningMultiplayerSessionProcessor(ScheduleKeeper scheduleKeeper, EventTriggerer eventTriggerer, PlayerManager playerManager, World world, EntityRegistry entityRegistry)
         {
             this.scheduleKeeper = scheduleKeeper;
             this.eventTriggerer = eventTriggerer;
             this.playerManager = playerManager;
             this.world = world;
+            this.entityRegistry = entityRegistry;
         }
 
         public override void Process(PlayerJoiningMultiplayerSession packet, NitroxConnection connection)
         {
             Player player = playerManager.PlayerConnected(connection, packet.ReservationKey, out bool wasBrandNewPlayer);
-
             NitroxId assignedEscapePodId = world.EscapePodManager.AssignPlayerToEscapePod(player.Id, out Optional<EscapePodWorldEntity> newlyCreatedEscapePod);
 
             if (newlyCreatedEscapePod.HasValue)
@@ -59,6 +62,11 @@ namespace NitroxServer.Communication.Packets.Processors
                 {
                     simulations.Add(vehicle.Id);
                 }
+            }
+
+            if (wasBrandNewPlayer)
+            {
+                SetupPlayerEntity(player);
             }
 
             InitialPlayerSync initialPlayerSync = new(player.GameObjectId,
@@ -115,6 +123,15 @@ namespace NitroxServer.Communication.Packets.Processors
             modulesToSync.AddRange(globalModules);
             modulesToSync.AddRange(playerModules);
             return modulesToSync;
+        }
+
+        private void SetupPlayerEntity(Player player)
+        {
+            NitroxTransform transform = new(player.Position, player.Rotation, NitroxVector3.One);
+
+            PlayerWorldEntity playerEntity = new PlayerWorldEntity(transform, 0, null, false, null, true, player.GameObjectId, NitroxTechType.None, null, null, new List<Entity>());
+            entityRegistry.AddEntity(playerEntity);
+            world.WorldEntityManager.TrackEntityInTheWorld(playerEntity);
         }
     }
 }

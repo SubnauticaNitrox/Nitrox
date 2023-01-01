@@ -4,35 +4,34 @@ using System.Collections.Generic;
 using BinaryPack.Attributes;
 using System.Runtime.Serialization;
 
-namespace NitroxModel.DataStructures.GameLogic.Entities
+namespace NitroxModel.DataStructures.GameLogic.Entities;
+
+[Serializable]
+[DataContract]
+public class InventoryEntity : Entity
 {
-    [Serializable]
-    [DataContract]
-    public class InventoryEntity : Entity
+    [DataMember(Order = 1)]
+    public int ComponentIndex { get; set; }
+
+    [IgnoreConstructor]
+    protected InventoryEntity()
     {
-        [DataMember(Order = 1)]
-        public int ComponentIndex { get; set; }
+        // Constructor for serialization. Has to be "protected" for json serialization.
+    }
 
-        [IgnoreConstructor]
-        protected InventoryEntity()
-        {
-            // Constructor for serialization. Has to be "protected" for json serialization.
-        }
+    /// <remarks>Used for deserialization</remarks>
+    public InventoryEntity(int componentIndex, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
+    {
+        ComponentIndex = componentIndex;
+        Id = id;
+        TechType = techType;
+        Metadata = metadata;
+        ParentId = parentId;
+        ChildEntities = childEntities;
+    }
 
-        /// <remarks>Used for deserialization</remarks>
-        public InventoryEntity(int componentIndex, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
-        {
-            ComponentIndex = componentIndex;
-            Id = id;
-            TechType = techType;
-            Metadata = metadata;
-            ParentId = parentId;
-            ChildEntities = childEntities;
-        }
-
-        public override string ToString()
-        {
-            return $"[StorageContainerEntity {base.ToString()}]";
-        }
+    public override string ToString()
+    {
+        return $"[StorageContainerEntity {base.ToString()}]";
     }
 }

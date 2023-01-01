@@ -60,11 +60,12 @@ namespace NitroxServer.GameLogic.Entities
             {
                 Entity current = entitiesById[entity.Id];
 
-                if (entitiesById.TryUpdate(entity.Id, entity, current))
-                {
-                    Log.Error(new InvalidOperationException(), $"Could not add or update item {entity.Id} current: {current} new: {entity}");
-                }
+                entitiesById.TryUpdate(entity.Id, entity, current);
+
+                RemoveFromParent(current);
             }
+
+            AddToParent(entity);
         }
 
         public void AddEntities(List<Entity> entities)
@@ -81,5 +82,34 @@ namespace NitroxServer.GameLogic.Entities
 
             return Optional.OfNullable(entity);
         }
+
+        public void AddToParent(Entity entity)
+        {
+            if (entity.ParentId != null)
+            {
+                Optional<Entity> parent = GetEntityById(entity.ParentId);
+
+                if (parent.HasValue)
+                {
+                    parent.Value.ChildEntities.Add(entity);
+                }
+            }
+        }
+
+        public void RemoveFromParent(Entity entity)
+        {
+            if (entity.ParentId != null)
+            {
+                Optional<Entity> parent = GetEntityById(entity.ParentId);
+
+                if (parent.HasValue)
+                {
+                    parent.Value.ChildEntities.Remove(entity);
+                }
+
+                entity.ParentId = null;
+            }
+        }
+
     }
 }

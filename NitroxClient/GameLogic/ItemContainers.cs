@@ -55,7 +55,7 @@ namespace NitroxClient.GameLogic
             ItemsContainer container = opContainer.Value;
             Pickupable pickupable = item.RequireComponent<Pickupable>();
             
-            using (packetSender.Suppress<EntitySpawnedByClient>())
+            using (packetSender.Suppress<EntityReparented>())
             {
                 container.UnsafeAdd(new InventoryItem(pickupable));
                 Log.Debug($"Received: Added item {pickupable.GetTechType()} to container {owner.Value.GetFullHierarchyPath()}");
