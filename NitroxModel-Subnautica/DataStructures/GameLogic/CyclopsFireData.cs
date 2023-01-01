@@ -1,23 +1,23 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using NitroxModel.DataStructures;
-using ProtoBufNet;
 
 namespace NitroxModel_Subnautica.DataStructures.GameLogic
 {
     [Serializable]
-    [ProtoContract]
+    [DataContract]
     public class CyclopsFireData
     {
-        [ProtoMember(1)]
+        [DataMember(Order = 1)]
         public NitroxId FireId { get; set; }
 
-        [ProtoMember(2)]
+        [DataMember(Order = 2)]
         public NitroxId CyclopsId { get; set; }
 
-        [ProtoMember(3)]
+        [DataMember(Order = 3)]
         public CyclopsRooms Room { get; set; }
 
-        [ProtoMember(4)]
+        [DataMember(Order = 4)]
         public int NodeIndex { get; set; }
 
         protected CyclopsFireData()

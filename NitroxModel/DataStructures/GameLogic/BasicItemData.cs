@@ -1,11 +1,11 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using BinaryPack.Attributes;
-using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic;
 
 [Serializable]
-[ProtoContract]
+[DataContract]
 public class BasicItemData : ItemData
 {
     [IgnoreConstructor]

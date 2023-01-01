@@ -1,14 +1,14 @@
 using System;
+using System.Runtime.Serialization;
 using BinaryPack.Attributes;
-using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 
 [Serializable]
-[ProtoContract]
+[DataContract]
 public class BatteryMetadata : EntityMetadata
 {
-    [ProtoMember(1)]
+    [DataMember(Order = 1)]
     public float Charge { get; }
 
     [IgnoreConstructor]
@@ -27,4 +27,3 @@ public class BatteryMetadata : EntityMetadata
         return $"[BatteryMetadata Charge: {Charge}]";
     }
 }
-

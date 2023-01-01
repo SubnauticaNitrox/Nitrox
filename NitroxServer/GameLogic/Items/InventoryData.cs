@@ -1,21 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
+using System.Runtime.Serialization;
 using NitroxModel.DataStructures.GameLogic;
-using ProtoBufNet;
 
 namespace NitroxServer.GameLogic.Items
 {
-    [ProtoContract, JsonObject(MemberSerialization.OptIn)]
+    [DataContract]
     public class InventoryData
     {
-        [JsonProperty, ProtoMember(1)]
+        [DataMember(Order = 1)]
         public List<ItemData> InventoryItems = new List<ItemData>();
 
-        [JsonProperty, ProtoMember(2)]
+        [DataMember(Order = 2)]
         public List<ItemData> StorageSlotItems = new List<ItemData>();
 
-        [JsonProperty, ProtoMember(3)]
+        [DataMember(Order = 3)]
         public List<EquippedItemData> Modules { get; set; } = new List<EquippedItemData>();
 
         public static InventoryData From(IEnumerable<ItemData> inventoryItems, IEnumerable<ItemData> storageSlotItems, IEnumerable<EquippedItemData> modules)

@@ -6,7 +6,6 @@ using NitroxClient.GameLogic.PlayerLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
-using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
 using UnityEngine;
 using UWE;
@@ -55,6 +54,7 @@ namespace NitroxClient.GameLogic
 
             RigidBody = Body.AddComponent<Rigidbody>();
             RigidBody.useGravity = false;
+            RigidBody.interpolation = RigidbodyInterpolation.Interpolate;
 
             NitroxEntity.SetNewId(Body, playerContext.PlayerNitroxId);
 
@@ -125,8 +125,8 @@ namespace NitroxClient.GameLogic
                 bodyRotation = vehicleAngle * bodyRotation;
                 aimingRotation = vehicleAngle * aimingRotation;
             }
-            RigidBody.velocity = AnimationController.Velocity = MovementHelper.GetCorrectedVelocity(position, velocity, Body, PlayerMovementBroadcaster.BROADCAST_INTERVAL);
-            RigidBody.angularVelocity = MovementHelper.GetCorrectedAngularVelocity(bodyRotation, Vector3.zero, Body, PlayerMovementBroadcaster.BROADCAST_INTERVAL);
+            RigidBody.velocity = AnimationController.Velocity = MovementHelper.GetCorrectedVelocity(position, velocity, Body, Time.fixedDeltaTime * (PlayerMovementBroadcaster.LOCATION_BROADCAST_TICK_SKIPS + 1));
+            RigidBody.angularVelocity = MovementHelper.GetCorrectedAngularVelocity(bodyRotation, Vector3.zero, Body, Time.fixedDeltaTime * (PlayerMovementBroadcaster.LOCATION_BROADCAST_TICK_SKIPS + 1));
 
             AnimationController.AimingRotation = aimingRotation;
             AnimationController.UpdatePlayerAnimations = true;

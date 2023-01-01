@@ -1,20 +1,20 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using BinaryPack.Attributes;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Unity;
-using ProtoBufNet;
 
 namespace NitroxModel_Subnautica.DataStructures.GameLogic
 {
     [Serializable]
-    [ProtoContract]
+    [DataContract]
     public class ExosuitMovementData : VehicleMovementData
     {
-        [ProtoMember(1)]
+        [DataMember(Order = 1)]
         public NitroxVector3 LeftAimTarget { get; }
 
-        [ProtoMember(2)]
+        [DataMember(Order = 2)]
         public NitroxVector3 RightAimTarget { get; }
 
         [IgnoreConstructor]

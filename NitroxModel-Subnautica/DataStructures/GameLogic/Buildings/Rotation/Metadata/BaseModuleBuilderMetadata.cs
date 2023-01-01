@@ -1,20 +1,20 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using BinaryPack.Attributes;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
-using ProtoBufNet;
 
 namespace NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation.Metadata
 {
     [Serializable]
-    [ProtoContract]
+    [DataContract]
     public class BaseModuleBuilderMetadata : BuilderMetadata
     {
         // Base modules anchor based on a face.  This can be constructed via these two attributes.
-        [ProtoMember(1)]
+        [DataMember(Order = 1)]
         public NitroxInt3 Cell { get; set; }
 
-        [ProtoMember(2)]
+        [DataMember(Order = 2)]
         public int Direction { get; set; }
 
         [IgnoreConstructor]

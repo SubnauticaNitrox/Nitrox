@@ -1,10 +1,4 @@
-﻿using AddressablesTools.JSON;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-
-namespace AddressablesTools.Catalog
+﻿namespace AddressablesTools.Catalog
 {
     public class ResourceLocation
     {

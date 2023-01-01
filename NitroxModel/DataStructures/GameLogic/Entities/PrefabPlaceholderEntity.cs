@@ -1,16 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using BinaryPack.Attributes;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
-using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic.Entities
 {
     [Serializable]
-    [ProtoContract]
+    [DataContract]
     public class PrefabPlaceholderEntity : Entity
     {
-        [ProtoMember(1)]
+        [DataMember(Order = 1)]
         public string ClassId { get; set; }
 
         [IgnoreConstructor]

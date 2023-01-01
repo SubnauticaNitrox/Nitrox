@@ -64,6 +64,7 @@ namespace NitroxPatcher.Patches.Dynamic
         // Both in milliseconds
         public const int PACKET_SENDING_RATE = 500;
         public const int LAST_PACKET_SEND_DELAY = 2000;
+        private static readonly WaitForSeconds lastPacketSendDelay = new(LAST_PACKET_SEND_DELAY / 1000f);
 
         public static readonly PDAManagerEntry PDAManagerEntry = NitroxServiceLocator.LocateService<PDAManagerEntry>();
         public static Dictionary<NitroxId, ThrottledEntry> ThrottlingEntries = new Dictionary<NitroxId, ThrottledEntry>();
@@ -124,7 +125,7 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             do
             {
-                yield return new WaitForSeconds(LAST_PACKET_SEND_DELAY / 1000);
+                yield return lastPacketSendDelay;
             }
             while (DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() < throttledEntry.LatestProgressTime.ToUnixTimeMilliseconds() + LAST_PACKET_SEND_DELAY);
             

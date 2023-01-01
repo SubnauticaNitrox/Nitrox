@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using BinaryPack.Attributes;
-using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
@@ -9,13 +9,13 @@ namespace NitroxModel.DataStructures.GameLogic
     ///     Entity tech progress. Stores per unique scannable entity.
     /// </summary>
     [Serializable]
-    [ProtoContract]
+    [DataContract]
     public class PDAProgressEntry
     {
-        [ProtoMember(1)]
+        [DataMember(Order = 1)]
         public NitroxTechType TechType { get; set; }
 
-        [ProtoMember(2)]
+        [DataMember(Order = 2)]
         public Dictionary<NitroxId, float> Entries { get; set; }
 
         [IgnoreConstructor]

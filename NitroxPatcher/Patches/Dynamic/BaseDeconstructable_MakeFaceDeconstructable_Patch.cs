@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic.Bases;
-using NitroxModel.Core;
 using NitroxModel.Helper;
 using UnityEngine;
 

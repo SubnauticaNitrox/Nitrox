@@ -1,11 +1,11 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using NitroxModel.DataStructures.Unity;
-using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic;
 
 [Serializable]
-[ProtoContract]
+[DataContract]
 public class BasicVehicleMovementData : VehicleMovementData
 {
     public BasicVehicleMovementData(NitroxTechType techType, NitroxId id, NitroxVector3 position, NitroxQuaternion rotation) : 

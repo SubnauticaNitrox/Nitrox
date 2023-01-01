@@ -3,18 +3,17 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 using BinaryPack.Attributes;
-using ProtoBufNet;
 
 namespace NitroxModel.DataStructures;
 
 /// <summary>
 ///     Used to reference a Unity GameObject and makes it possible to synchronize a GameObject between connected players.
 /// </summary>
-[ProtoContract]
 [Serializable]
+[DataContract]
 public class NitroxId : ISerializable, IEquatable<NitroxId>, IComparable<NitroxId>
 {
-    [ProtoMember(1)]
+    [DataMember(Order = 1)]
     [SerializableMember]
     private Guid guid { get; init; }
 

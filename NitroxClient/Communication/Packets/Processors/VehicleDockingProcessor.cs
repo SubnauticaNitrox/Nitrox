@@ -44,12 +44,12 @@ namespace NitroxClient.Communication.Packets.Processors
 
         IEnumerator DelayAnimationAndDisablePiloting(Vehicle vehicle, VehicleDockingBay vehicleDockingBay, NitroxId vehicleId, ushort playerId)
         {
-            yield return new WaitForSeconds(1.0f);
+            yield return Yielders.WaitFor1Second;
             // DockVehicle sets the rigid body kinematic of the vehicle to true, we don't want that behaviour
             // Therefore disable kinematic (again) to remove the bouncing behavior
             vehicleDockingBay.DockVehicle(vehicle);
             vehicle.useRigidbody.isKinematic = false;
-            yield return new WaitForSeconds(2.0f);
+            yield return Yielders.WaitFor2Seconds;
             vehicles.SetOnPilotMode(vehicleId, playerId, false);
             if (!vehicle.docked)
             {

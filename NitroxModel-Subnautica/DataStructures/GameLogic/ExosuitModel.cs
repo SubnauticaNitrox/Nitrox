@@ -1,22 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using BinaryPack.Attributes;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
-using ProtoBufNet;
 
 namespace NitroxModel_Subnautica.DataStructures.GameLogic
 {
     [Serializable]
-    [ProtoContract]
+    [DataContract]
     public class ExosuitModel : VehicleModel
     {
-        [ProtoMember(1)]
+        [DataMember(Order = 1)]
         public NitroxId LeftArmId { get; }
 
-        [ProtoMember(2)]
+        [DataMember(Order = 2)]
         public NitroxId RightArmId { get; }
 
         [IgnoreConstructor]
@@ -57,4 +57,3 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
         }
     }
 }
-

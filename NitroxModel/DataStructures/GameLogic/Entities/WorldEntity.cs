@@ -3,6 +3,7 @@ using ProtoBufNet;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using BinaryPack.Attributes;
 
 namespace NitroxModel.DataStructures.GameLogic.Entities
@@ -12,17 +13,17 @@ namespace NitroxModel.DataStructures.GameLogic.Entities
      * or something that phases out with the clip map manager.
      */
     [Serializable]
-    [ProtoContract]
+    [DataContract]
     [ProtoInclude(10, typeof(PlaceholderGroupWorldEntity))]
     [ProtoInclude(20, typeof(EscapePodWorldEntity))]
     public class WorldEntity : Entity
     {
         public AbsoluteEntityCell AbsoluteEntityCell => new AbsoluteEntityCell(Transform.Position, Level);
 
-        [ProtoMember(1)]
+        [DataMember(Order = 1)]
         public NitroxTransform Transform { get; set; }
 
-        [ProtoMember(2)]
+        [DataMember(Order = 2)]
         public int Level { get; set; }
 
         /// <summary>
@@ -31,20 +32,20 @@ namespace NitroxModel.DataStructures.GameLogic.Entities
         /// <remarks>
         ///     <a href="https://docs.unity3d.com/Manual/Prefabs.html">What is a prefab?</a>
         /// </remarks>
-        [ProtoMember(3)]
+        [DataMember(Order = 3)]
         public string ClassId { get; set; }
 
         /// <summary>
         ///     Keeps track if an entity was spawned by the server or a player
         ///     Server-spawned entities need to be techType white-listed to be simulated
         /// </summary>
-        [ProtoMember(4)]
+        [DataMember(Order = 4)]
         public bool SpawnedByServer;
 
-        [ProtoMember(5)]
+        [DataMember(Order = 5)]
         public NitroxId WaterParkId { get; set; }
 
-        [ProtoMember(6)]
+        [DataMember(Order = 6)]
         public bool ExistsInGlobalRoot { get; set; }
         
         [IgnoreConstructor]

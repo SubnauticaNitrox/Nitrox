@@ -1,14 +1,14 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using BinaryPack.Attributes;
-using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
     [Serializable]
-    [ProtoContract]
+    [DataContract]
     public class PlantableItemData : ItemData
     {
-        [ProtoMember(1)]
+        [DataMember(Order = 1)]
         public double PlantedGameTime { get; }
 
         [IgnoreConstructor]

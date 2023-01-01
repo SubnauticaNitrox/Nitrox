@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using BinaryPack.Attributes;
-using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic;
 
@@ -11,11 +11,11 @@ namespace NitroxModel.DataStructures.GameLogic;
 /// <remarks>
 ///     Shim tech type model to bridge the gap between original subnautica and BZ.
 /// </remarks>
-[ProtoContract]
 [Serializable]
+[DataContract]
 public class NitroxTechType : IEquatable<NitroxTechType>
 {
-    [ProtoMember(1)]
+    [DataMember(Order = 1)]
     public string Name { get; }
 
     [IgnoreConstructor]
@@ -23,6 +23,7 @@ public class NitroxTechType : IEquatable<NitroxTechType>
     {
         // Constructor for serialization. Has to be "protected" for json serialization.
     }
+
 
     public NitroxTechType(string name)
     {
