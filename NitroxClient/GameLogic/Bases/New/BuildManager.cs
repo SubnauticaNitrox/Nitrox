@@ -11,9 +11,31 @@ using UWE;
 
 namespace NitroxClient.GameLogic.Bases.New;
 
-public class BuildManager
+public static class BuildManager
 {
-    
+    public static bool TryGetIdentifier(BaseDeconstructable baseDeconstructable, out BuildPieceIdentifier identifier, BaseCell baseCell = null, Base.Face? baseFace = null)
+    {
+        // It is unimaginable to have a BaseDeconstructable that is not child of a BaseCell
+        if (!baseCell && !baseDeconstructable.TryGetComponentInParent(out baseCell))
+        {
+            identifier = new();
+            return false;
+        }
+
+        identifier = GetIdentifier(baseDeconstructable, baseCell, baseFace);
+        return true;
+    }
+
+    public static BuildPieceIdentifier GetIdentifier(BaseDeconstructable baseDeconstructable, BaseCell baseCell, Base.Face? baseFace = null)
+    {
+        return new()
+        {
+            Recipe = baseDeconstructable.recipe.ToDto(),
+            BaseFace = baseFace?.ToDto() ?? baseDeconstructable.face?.ToDto(),
+            BaseCell = baseCell.cell.ToDto(),
+            PiecePoint = baseDeconstructable.deconstructedBase.WorldToGrid(baseDeconstructable.transform.position).ToDto()
+        };
+    }
 }
 
 
