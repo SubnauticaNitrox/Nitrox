@@ -165,7 +165,12 @@ public class WorldPersistenceTest
         Assert.IsTrue(storyGoal.CompletedGoals.SequenceEqual(storyGoalAfter.CompletedGoals));
         Assert.IsTrue(storyGoal.RadioQueue.SequenceEqual(storyGoalAfter.RadioQueue));
         Assert.IsTrue(storyGoal.GoalUnlocks.SequenceEqual(storyGoalAfter.GoalUnlocks));
-        Assert.IsTrue(storyGoal.ScheduledGoals.SequenceEqual(storyGoalAfter.ScheduledGoals));
+        AssertHelper.IsListEqual(storyGoal.ScheduledGoals.OrderBy(x => x.GoalKey), storyGoalAfter.ScheduledGoals.OrderBy(x => x.GoalKey), (scheduledGoal, scheduledGoalAfter) =>
+        {
+            Assert.AreEqual(scheduledGoal.TimeExecute, scheduledGoalAfter.TimeExecute);
+            Assert.AreEqual(scheduledGoal.GoalKey, scheduledGoalAfter.GoalKey);
+            Assert.AreEqual(scheduledGoal.GoalType, scheduledGoalAfter.GoalType);
+        });
     }
 
     private static void StoryTimingTest(StoryTimingData storyTiming, StoryTimingData storyTimingAfter)
@@ -305,6 +310,9 @@ public class WorldPersistenceTest
                 Assert.AreEqual(metadata.OpenedAmount, metadataAfter.OpenedAmount);
                 break;
             case PrecursorDoorwayMetadata metadata when entityAfter.Metadata is PrecursorDoorwayMetadata metadataAfter:
+                Assert.AreEqual(metadata.IsOpen, metadataAfter.IsOpen);
+                break;
+            case PrecursorTeleporterMetadata metadata when entityAfter.Metadata is PrecursorTeleporterMetadata metadataAfter:
                 Assert.AreEqual(metadata.IsOpen, metadataAfter.IsOpen);
                 break;
             case PrecursorKeyTerminalMetadata metadata when entityAfter.Metadata is PrecursorKeyTerminalMetadata metadataAfter:

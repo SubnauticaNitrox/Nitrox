@@ -56,7 +56,7 @@ namespace NitroxServer.GameLogic
 
         private EscapePodWorldEntity CreateNewEscapePod()
         {
-            EscapePodWorldEntity escapePod = new EscapePodWorldEntity(GetStartPosition(), new NitroxId(), null);
+            EscapePodWorldEntity escapePod = new EscapePodWorldEntity(GetStartPosition(), new NitroxId());
 
             escapePod.ChildEntities.Add(new PrefabPlaceholderEntity(new NitroxId(), new NitroxTechType("Radio"), escapePod.Id));
             escapePod.ChildEntities.Add(new PrefabPlaceholderEntity(new NitroxId(), new NitroxTechType("MedicalCabinet"), escapePod.Id));

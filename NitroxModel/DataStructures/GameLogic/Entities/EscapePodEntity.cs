@@ -23,11 +23,17 @@ namespace NitroxModel.DataStructures.GameLogic.Entities
         {
             // Constructor for serialization. Has to be "protected" for json serialization.
         }
-
-        public EscapePodWorldEntity(NitroxVector3 position, NitroxId id, EntityMetadata metadata)
+        
+        public EscapePodWorldEntity(NitroxVector3 position, NitroxId id, EntityMetadata metadata, bool damaged, List<ushort> players) : this(position, id)
+        {
+            Damaged = damaged;
+            Players = players;
+        }
+                
+        public EscapePodWorldEntity(NitroxVector3 position, NitroxId id)
         {
             Id = id;
-            Metadata = metadata;
+            Metadata = null;
             Transform = new NitroxTransform(position, NitroxQuaternion.Identity, NitroxVector3.Zero);
             Players = new List<ushort>();
             Level = 0;
