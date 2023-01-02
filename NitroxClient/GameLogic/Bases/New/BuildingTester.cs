@@ -29,13 +29,20 @@ public class BuildingTester : MonoBehaviour
     public int Slot = 0;
     private JsonSerializer serializer;
     public string SavePath = Path.Combine(NitroxUser.LauncherPath, "SavedBases");
+    
     public NitroxId TempId;
+    public Dictionary<NitroxId, DateTimeOffset> BasesCooldown;
+    /// <summary>
+    /// Time in milliseconds before local player can build on a base that was modified by another player
+    /// </summary>
+    private const int MULTIPLAYER_BUILD_COOLDOWN = 2000;
 
     public void Start()
     {
         Main = this;
         packetSender = NitroxServiceLocator.LocateService<IPacketSender>();
         BuildQueue = new();
+        BasesCooldown = new();
         serializer = new();
         serializer.NullValueHandling = NullValueHandling.Ignore;
         serializer.TypeNameHandling = TypeNameHandling.Auto;
@@ -44,15 +51,20 @@ public class BuildingTester : MonoBehaviour
 
     public void Update()
     {
-        bool flag = BuildQueue.Count > 0 && !working;
-        if (flag)
+        if (BuildQueue.Count > 0 && !working)
         {
             working = true;
+            /*DateTimeOffset now = DateTimeOffset.Now;
+            foreach (KeyValuePair<NitroxId, DateTimeOffset> cooldown in BasesCooldown.Where(entry => (now - entry.Value).TotalMilliseconds >= MULTIPLAYER_BUILD_COOLDOWN).ToList())
+            {
+                BasesCooldown.Remove(cooldown.Key);
+            }*/
+
             StartCoroutine(TreatBuildCommand(BuildQueue.Dequeue()));
         }
     }
 
-    public IEnumerator TreatBuildCommand(object buildCommand)
+    private IEnumerator TreatBuildCommand(object buildCommand)
     {
         switch (buildCommand)
         {
@@ -97,18 +109,21 @@ public class BuildingTester : MonoBehaviour
     {
         Transform parent = GetParentOrGlobalRoot(placeGhost.ParentId);
         yield return NitroxBuild.RestoreGhost(parent, placeGhost.SavedGhost);
+        BasesCooldown[placeGhost.SavedGhost.NitroxId] = DateTimeOffset.Now;
     }
 
     public IEnumerator BuildModule(PlaceModule placeModule)
     {
         Transform parent = GetParentOrGlobalRoot(placeModule.ParentId);
         yield return NitroxBuild.RestoreModule(parent, placeModule.SavedModule);
+        BasesCooldown[placeModule.SavedModule.NitroxId] = DateTimeOffset.Now;
     }
 
     public IEnumerator ProgressConstruction(ModifyConstructedAmount modifyConstructedAmount)
     {
         if (NitroxEntity.TryGetComponentFrom(modifyConstructedAmount.GhostId, out Constructable constructable))
         {
+            BasesCooldown[modifyConstructedAmount.GhostId] = DateTimeOffset.Now;
             if (modifyConstructedAmount.ConstructedAmount == 0f)
             {
                 constructable.constructedAmount = 0f;
@@ -135,35 +150,42 @@ public class BuildingTester : MonoBehaviour
             BaseGhost baseGhost = constructableBase.model.GetComponent<BaseGhost>();
             constructableBase.SetState(true, true);
             NitroxEntity.SetNewId(baseGhost.targetBase.gameObject, placeBase.FormerGhostId);
+            BasesCooldown[placeBase.FormerGhostId] = DateTimeOffset.Now;
             yield break;
         }
-        yield return NitroxBuild.CreateBuild(placeBase.SavedBuild);
+        // yield return NitroxBuild.CreateBuild(placeBase.SavedBuild);
+        // TODO: Ask for resync
     }
 
     public IEnumerator UpdatePlacedBase(UpdateBase updateBase)
     {
+        // Is probably useless check but can probably be useful for desync detection
         if (!NitroxEntity.TryGetComponentFrom(updateBase.BaseId, out Base parentBase))
         {
             Log.Debug("Couldn't find the parentBase");
+            // TODO: Ask for resync
             yield break;
         }
         if (NitroxEntity.TryGetComponentFrom(updateBase.FormerGhostId, out ConstructableBase constructableBase))
         {
             constructableBase.SetState(true, true);
+            BasesCooldown[updateBase.BaseId] = DateTimeOffset.Now;
             yield break;
         }
-        Log.Debug("Not ok, rebuilding the whole base");
+        // TODO: Ask for resync
+        /* Log.Debug("Not ok, rebuilding the whole base");
         parentBase.ghosts.ForEach(Destroy);
         yield return null;
         yield return updateBase.SavedBuild.ApplyToAsync(parentBase);
         yield return updateBase.SavedBuild.RestoreGhosts(parentBase);
-        RefreshBase(parentBase);
+        RefreshBase(parentBase);*/
     }
 
     public IEnumerator DeconstructBase(BaseDeconstructed baseDeconstructed)
     {
         if (!NitroxEntity.TryGetObjectFrom(baseDeconstructed.FormerBaseId, out GameObject baseObject))
         {
+            // TODO: Ask for resync
             Log.Debug("Couldn't find the parentBase");
             yield break;
         }
@@ -178,11 +200,13 @@ public class BuildingTester : MonoBehaviour
             {
                 deconstructableChildren[0].Deconstruct();
             }
+            BasesCooldown[baseDeconstructed.FormerBaseId] = DateTimeOffset.Now;
             yield break;
         }
-        UnityEngine.Object.Destroy(baseObject);
+        // TODO: Ask for resync
+        /*UnityEngine.Object.Destroy(baseObject);
         yield return null;
-        yield return NitroxBuild.RestoreGhost(LargeWorldStreamer.main.globalRoot.transform, baseDeconstructed.ReplacerGhost);
+        yield return NitroxBuild.RestoreGhost(LargeWorldStreamer.main.globalRoot.transform, baseDeconstructed.ReplacerGhost);*/
     }
 
     public IEnumerator DeconstructPiece(PieceDeconstructed pieceDeconstructed)
@@ -200,12 +224,10 @@ public class BuildingTester : MonoBehaviour
             yield break;
         }
         BaseDeconstructable[] deconstructableChildren = cellObject.GetComponentsInChildren<BaseDeconstructable>(true);
+        // TODO: Fix this
         foreach (BaseDeconstructable baseDeconstructable in deconstructableChildren)
         {
-            if (baseDeconstructable.recipe != pieceIdentifier.Recipe.ToUnity() ||
-                (int)baseDeconstructable.faceType != pieceIdentifier.FaceType ||
-                baseDeconstructable.face.HasValue != pieceIdentifier.BaseFace.HasValue ||
-                (baseDeconstructable.face != null && baseDeconstructable.face.Value != pieceIdentifier.BaseFace.Value.ToUnity()))
+            if (!BuildManager.TryGetIdentifier(baseDeconstructable, out BuildPieceIdentifier identifier) || !identifier.Equals(pieceIdentifier))
             {
                 continue;
             }
@@ -217,8 +239,11 @@ public class BuildingTester : MonoBehaviour
                 baseDeconstructable.Deconstruct();
                 TempId = null;
             }
+            BasesCooldown[pieceDeconstructed.PieceId] = DateTimeOffset.Now;
+            BasesCooldown[pieceDeconstructed.BaseId] = DateTimeOffset.Now;
             break;
         }
+        // TODO: Ask for resync
     }
 
     private void RefreshBase(Base @base)
