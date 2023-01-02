@@ -1,27 +1,27 @@
-using ProtoBufNet;
+using System.Runtime.Serialization;
 
 namespace NitroxModel.DataStructures.GameLogic.Buildings.New.Metadata;
 
-[ProtoContract]
+[DataContract]
 public abstract class GhostMetadata
 {
-    [ProtoMember(1)]
+    [DataMember(Order = 1)]
     public NitroxInt3 TargetOffset;
 }
 
-[ProtoContract]
+[DataContract]
 public class BasicGhostMetadata : GhostMetadata { }
 
-[ProtoContract]
+[DataContract]
 public class BaseAnchoredFaceGhostMetadata : GhostMetadata
 {
-    [ProtoMember(1)]
+    [DataMember(Order = 1)]
     public NitroxBaseFace? AnchoredFace;
 }
 
-[ProtoContract]
+[DataContract]
 public class BaseAnchoredCellGhostMetadata : GhostMetadata
 {
-    [ProtoMember(1)]
+    [DataMember(Order = 1)]
     public NitroxInt3? AnchoredCell;
 }

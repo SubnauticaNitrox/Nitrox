@@ -1,131 +1,131 @@
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using NitroxModel.DataStructures.GameLogic.Buildings.New.Metadata;
 using NitroxModel.DataStructures.Unity;
-using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic.Buildings.New;
 
 // TODO: Verify if LocalScale is necessary
 
-[ProtoContract]
+[DataContract]
 public class SavedBase
 {
-    [ProtoMember(1)]
+    [DataMember(Order = 1)]
     public NitroxInt3 BaseShape;
 
-    [ProtoMember(2)]
+    [DataMember(Order = 2)]
     public int[] Faces;
 
-    [ProtoMember(3)]
+    [DataMember(Order = 3)]
     public int[] Cells;
 
-    [ProtoMember(4)]
+    [DataMember(Order = 4)]
     public byte[] Links;
 
-    [ProtoMember(5)]
+    [DataMember(Order = 5)]
     public NitroxInt3 CellOffset;
 
-    [ProtoMember(6)]
+    [DataMember(Order = 6)]
     public byte[] Masks;
 
-    [ProtoMember(7)]
+    [DataMember(Order = 7)]
     public int[] IsGlass;
 
-    [ProtoMember(8)]
+    [DataMember(Order = 8)]
     public NitroxInt3 Anchor;
 }
 
-[ProtoContract]
+[DataContract]
 public class SavedBuild
 {
-    [ProtoMember(1)]
+    [DataMember(Order = 1)]
     public NitroxId NitroxId;
 
-    [ProtoMember(2)]
+    [DataMember(Order = 2)]
     public NitroxVector3 Position;
 
-    [ProtoMember(3)]
+    [DataMember(Order = 3)]
     public NitroxQuaternion Rotation;
 
-    [ProtoMember(4)]
+    [DataMember(Order = 4)]
     public NitroxVector3 LocalScale;
 
-    [ProtoMember(5)]
+    [DataMember(Order = 5)]
     public SavedBase Base;
 
-    [ProtoMember(6)]
+    [DataMember(Order = 6)]
     public List<SavedInteriorPiece> InteriorPieces = new();
 
-    [ProtoMember(7)]
+    [DataMember(Order = 7)]
     public List<SavedModule> Modules = new();
 
-    [ProtoMember(8)]
+    [DataMember(Order = 8)]
     public List<SavedGhost> Ghosts = new();
 }
 
-[ProtoContract]
+[DataContract]
 public class SavedGlobalRoot
 {
-    [ProtoMember(1)]
+    [DataMember(Order = 1)]
     public List<SavedBuild> Builds = new();
     
-    [ProtoMember(2)]
+    [DataMember(Order = 2)]
     public List<SavedModule> Modules = new();
     
-    [ProtoMember(3)]
+    [DataMember(Order = 3)]
     public List<SavedGhost> Ghosts = new();
 }
 
-[ProtoContract]
+[DataContract]
 public class SavedInteriorPiece
 {
-    [ProtoMember(1)]
+    [DataMember(Order = 1)]
     public string ClassId;
 
-    [ProtoMember(2)]
+    [DataMember(Order = 2)]
     public NitroxBaseFace BaseFace;
 
-    [ProtoMember(3)]
+    [DataMember(Order = 3)]
     public float Constructed;
 }
 
-[ProtoContract]
+[DataContract]
 public class SavedModule
 {
-    [ProtoMember(1)]
+    [DataMember(Order = 1)]
     public string ClassId;
 
-    [ProtoMember(2)]
+    [DataMember(Order = 2)]
     public NitroxId NitroxId;
 
-    [ProtoMember(3)]
+    [DataMember(Order = 3)]
     public NitroxVector3 Position;
 
-    [ProtoMember(4)]
+    [DataMember(Order = 4)]
     public NitroxQuaternion Rotation;
 
-    [ProtoMember(5)]
+    [DataMember(Order = 5)]
     public NitroxVector3 LocalScale;
 
-    [ProtoMember(6)]
+    [DataMember(Order = 6)]
     public float ConstructedAmount;
 
-    [ProtoMember(7)]
+    [DataMember(Order = 7)]
     public bool IsInside;
 }
 
-[ProtoContract]
+[DataContract]
 public class SavedGhost : SavedModule
 {
-    [ProtoMember(1)]
+    [DataMember(Order = 1)]
     public NitroxBaseFace BaseFace;
 
-    [ProtoMember(2)]
+    [DataMember(Order = 2)]
     public SavedBase Base;
 
-    [ProtoMember(3)]
+    [DataMember(Order = 3)]
     public GhostMetadata Metadata;
 
-    [ProtoMember(4)]
+    [DataMember(Order = 4)]
     public NitroxTechType TechType;
 }

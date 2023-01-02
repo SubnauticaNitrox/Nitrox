@@ -1,15 +1,15 @@
 using System;
-using ProtoBufNet;
+using System.Runtime.Serialization;
 
 namespace NitroxModel.DataStructures;
 
-[Serializable, ProtoContract]
+[Serializable, DataContract]
 public struct NitroxBaseFace : IEquatable<NitroxBaseFace>
 {
-    [ProtoMember(1)]
+    [DataMember(Order = 1)]
     public NitroxInt3 Cell;
 
-    [ProtoMember(2)]
+    [DataMember(Order = 2)]
     public int Direction;
 
     public NitroxBaseFace(NitroxInt3 cell, int direction)
