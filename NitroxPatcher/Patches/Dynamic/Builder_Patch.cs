@@ -20,11 +20,13 @@ namespace NitroxPatcher.Patches.Dynamic;
 internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
 {
     // TODO: Secure the system, for example: you can't build on a base on which another player built less than 3 seconds ago
-    // idea for it: Try to get the cooldown system on buildings and use it for this purpose
+    // idea for it: when an action is applied on a base from another player, you can't build on it for 2 seconds
     internal static MethodInfo TARGET_METHOD_TRYPLACE = Reflect.Method(() => Builder.TryPlace());
     internal static MethodInfo TARGET_METHOD_DECONSTRUCT = Reflect.Method((BaseDeconstructable t) => t.Deconstruct());
     internal static MethodInfo TARGET_METHOD_CONSTRUCT = Reflect.Method((Constructable t) => t.Construct());
     internal static MethodInfo TARGET_METHOD_DECONSTRUCT_ASYNC = AccessTools.EnumeratorMoveNext(Reflect.Method((Constructable t) => t.DeconstructAsync(default, default)));
+    internal static MethodInfo TARGET_METHOD_DECONSTRUCTION_ALLOWED = typeof(BaseDeconstructable).GetMethod(nameof(BaseDeconstructable.DeconstructionAllowed), BindingFlags.Public | BindingFlags.Instance, null, new[] { typeof(string).MakeByRefType() }, null);
+    internal static MethodInfo TARGET_METHOD_TOOL_CONSTRUCT = Reflect.Method((BuilderTool t) => t.Construct(default, default, default));
 
     private static Base.Face? cachedBaseFace;
 
@@ -316,6 +318,28 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
         Resolve<IPacketSender>().Send(pieceDeconstructed);
     }
 
+    public static void PostfixDeconstructionAllowed(BaseDeconstructable __instance, ref bool __result, ref string reason)
+    {
+        if (__result && __instance.TryGetComponentInParent(out NitroxEntity parentId) &&
+            BuildingTester.Main && BuildingTester.Main.BasesCooldown.ContainsKey(parentId.Id))
+        {
+            __result = false;
+            // TODO: Add a cooldown so that the message is not actually spammed (or maybe we don't care)
+            // TODO: Localize this string (same for below)
+            reason = "You can't modify a base that was recently updated by another player";
+        }
+    }
+
+    public static bool PrefixToolConstruct(Constructable c)
+    {
+        if (c.TryGetComponent(out NitroxEntity parentId) &&
+            BuildingTester.Main && BuildingTester.Main.BasesCooldown.ContainsKey(parentId.Id))
+        {
+            ErrorMessage.AddMessage("You can't modify a base that was recently updated by another player");
+            return false;
+        }
+        return true;
+    }
 
     public static void PrefixBaseDeconstruct(BaseDeconstructable __instance)
     {
@@ -327,6 +351,8 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
         PatchTranspiler(harmony, TARGET_METHOD_TRYPLACE, nameof(TranspilerTryplace));
         PatchTranspiler(harmony, TARGET_METHOD_CONSTRUCT, nameof(TranspilerConstruct));
         PatchTranspiler(harmony, TARGET_METHOD_DECONSTRUCT_ASYNC, nameof(TranspilerDeconstructAsync));
+        PatchPostfix(harmony, TARGET_METHOD_DECONSTRUCTION_ALLOWED, nameof(PostfixDeconstructionAllowed));
+        PatchPrefix(harmony, TARGET_METHOD_TOOL_CONSTRUCT, nameof(PrefixToolConstruct));
         PatchMultiple(harmony, TARGET_METHOD_DECONSTRUCT, prefixMethod: nameof(PrefixBaseDeconstruct), transpilerMethod: nameof(TranspilerBaseDeconstruct));
     }
 }
