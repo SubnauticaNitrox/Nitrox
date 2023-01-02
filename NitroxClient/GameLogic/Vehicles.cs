@@ -259,6 +259,7 @@ namespace NitroxClient.GameLogic
                 }
             }
 
+            // TODO: REMOVE THIS; Set the vehicle/subroot/chair in appropriate patches and packet send - Fixing it with movement packets will have unfortunate timing with animations (like vehicle docking). Same applies to RemotePlayer.UpdatePosition. 
             if (player.HasValue)
             {
                 RemotePlayer playerInstance = player.Value;

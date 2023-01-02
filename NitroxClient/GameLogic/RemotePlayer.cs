@@ -114,6 +114,7 @@ namespace NitroxClient.GameLogic
             Body.SetActive(true);
 
             // When receiving movement packets, a player can not be controlling a vehicle (they can walk through subroots though).
+            // TODO: REMOVE THIS - SetVehicle/SetPilotChair should not be done by movement packets but by enter/exit of respective vehicle to prevent race conditions during animations. Same applies to Vehicles.UpdateVehiclePosition.
             SetVehicle(null);
             SetPilotingChair(null);
             // If in a subroot the position will be relative to the subroot
