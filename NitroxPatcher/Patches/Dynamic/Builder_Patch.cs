@@ -10,7 +10,6 @@ using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Buildings.New;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
-using NitroxModel_Subnautica.DataStructures;
 using NitroxPatcher.PatternMatching;
 using UnityEngine;
 using UWE;
@@ -26,6 +25,8 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
     internal static MethodInfo TARGET_METHOD_DECONSTRUCT = Reflect.Method((BaseDeconstructable t) => t.Deconstruct());
     internal static MethodInfo TARGET_METHOD_CONSTRUCT = Reflect.Method((Constructable t) => t.Construct());
     internal static MethodInfo TARGET_METHOD_DECONSTRUCT_ASYNC = AccessTools.EnumeratorMoveNext(Reflect.Method((Constructable t) => t.DeconstructAsync(default, default)));
+
+    private static Base.Face? cachedBaseFace;
 
     // Place ghost
     public static readonly InstructionsPattern AddInstructionPattern1 = new()
@@ -174,6 +175,8 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
             return null;
         });
 
+    //
+
     public static void GhostCreated(Constructable constructable)
     {
         GameObject ghostObject = constructable.gameObject;
@@ -305,12 +308,18 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
         // Else, if it's a local client deconstruction, we generate a new one
         NitroxId pieceId = new();
         NitroxEntity.SetNewId(constructableBase.gameObject, pieceId);
-
-        BuildPieceIdentifier pieceIdentifier = new(baseDeconstructable.recipe.ToDto(), baseDeconstructable.face?.ToDto(), (int)baseDeconstructable.faceType, baseCell.cell.ToDto());
+        
+        BuildPieceIdentifier pieceIdentifier = BuildManager.GetIdentifier(baseDeconstructable, baseCell, cachedBaseFace);
         PieceDeconstructed pieceDeconstructed = new(baseEntity.Id, pieceId, pieceIdentifier, NitroxGhost.From(constructableBase));
         Log.Debug($"Base is not empty, sending packet {pieceDeconstructed}");
 
         Resolve<IPacketSender>().Send(pieceDeconstructed);
+    }
+
+
+    public static void PrefixBaseDeconstruct(BaseDeconstructable __instance)
+    {
+        cachedBaseFace = __instance.face;
     }
 
     public override void Patch(Harmony harmony)
@@ -318,6 +327,6 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
         PatchTranspiler(harmony, TARGET_METHOD_TRYPLACE, nameof(TranspilerTryplace));
         PatchTranspiler(harmony, TARGET_METHOD_CONSTRUCT, nameof(TranspilerConstruct));
         PatchTranspiler(harmony, TARGET_METHOD_DECONSTRUCT_ASYNC, nameof(TranspilerDeconstructAsync));
-        PatchTranspiler(harmony, TARGET_METHOD_DECONSTRUCT, nameof(TranspilerBaseDeconstruct));
+        PatchMultiple(harmony, TARGET_METHOD_DECONSTRUCT, prefixMethod: nameof(PrefixBaseDeconstruct), transpilerMethod: nameof(TranspilerBaseDeconstruct));
     }
 }
