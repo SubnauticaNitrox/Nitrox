@@ -6,34 +6,26 @@ using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nitrox.Test;
 using Nitrox.Test.Helper;
-using NitroxModel_Subnautica.DataStructures.GameLogic;
+using Nitrox.Test.Helper.Serialization;
 using NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation.Metadata;
+using NitroxModel_Subnautica.Logger;
 using NitroxModel.Core;
-using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Buildings.Metadata;
-using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
-using NitroxModel.DataStructures.Unity;
-using NitroxModel.DataStructures.Util;
-using NitroxModel.Server;
 using NitroxServer_Subnautica;
 using NitroxServer.GameLogic;
-using NitroxServer.GameLogic.Bases;
-using NitroxServer.GameLogic.Entities;
-using NitroxServer.GameLogic.Items;
-using NitroxServer.GameLogic.Players;
 using NitroxServer.GameLogic.Unlockables;
-using NitroxServer.GameLogic.Vehicles;
 using NitroxServer.Serialization.World;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
+using NitroxModel.Packets;
 
 namespace NitroxServer.Serialization;
 
 [TestClass]
 public class WorldPersistenceTest
 {
-    private static string tempSaveFilePath;
+    private static readonly string tempSaveFilePath = Path.Combine(Path.GetTempPath(), "NitroxTestTempDir");
     private static PersistedWorldData worldData;
     public static PersistedWorldData[] WorldsDataAfter { get; private set; }
     public static IServerSerializer[] ServerSerializers { get; private set; }
@@ -47,24 +39,24 @@ public class WorldPersistenceTest
         WorldPersistence worldPersistence = NitroxServiceLocator.LocateService<WorldPersistence>();
         ServerSerializers = NitroxServiceLocator.LocateService<IServerSerializer[]>();
         WorldsDataAfter = new PersistedWorldData[ServerSerializers.Length];
-        tempSaveFilePath = Path.Combine(Path.GetTempPath(), "NitroxTestTempDir");
 
-        worldData = GeneratePersistedWorldData();
-        World.World world = worldPersistence.CreateWorld(worldData, ServerGameMode.CREATIVE);
-        world.EventTriggerer.ResetWorld();
+        Assembly[] assemblies = { typeof(Packet).Assembly, typeof(SubnauticaInGameLogger).Assembly, typeof(ServerAutoFacRegistrar).Assembly, typeof(SubnauticaServerAutoFacRegistrar).Assembly };
+        List<Type> types = assemblies.SelectMany(a => a.GetTypes()).Where(t => t.GetTypeInfo().IsDefined(typeof(SerializableAttribute), true) &&
+                                                                               t.Namespace != null && !t.Namespace.Contains("Packets")).ToList(); // Filter out not needed Packets
+        Dictionary<Type, Type[]> subtypesByAbstractBaseType = NitroxAutoBinderBase.GetAllAbstractMembers(types, Array.Empty<Type>());
+
+        NitroxAutoFaker<PersistedWorldData, WorldPersistenceAutoBinder> faker = new(subtypesByAbstractBaseType, new WorldPersistenceAutoBinder(subtypesByAbstractBaseType));
+        worldData = faker.Generate();
 
         for (int index = 0; index < ServerSerializers.Length; index++)
         {
             //Checking saving
             worldPersistence.UpdateSerializer(ServerSerializers[index]);
-            Assert.IsTrue(worldPersistence.Save(world, tempSaveFilePath), $"Saving normal world failed while using {ServerSerializers[index]}.");
-            Assert.IsFalse(worldPersistence.Save(null, tempSaveFilePath), $"Saving null world worked while using {ServerSerializers[index]}.");
+            Assert.IsTrue(worldPersistence.Save(worldData, tempSaveFilePath), $"Saving normal world failed while using {ServerSerializers[index]}.");
 
             //Checking loading
-            Optional<World.World> worldAfter = worldPersistence.LoadFromFile(tempSaveFilePath);
-            Assert.IsTrue(worldAfter.HasValue, $"Loading saved world failed while using {ServerSerializers[index]}.");
-            worldAfter.Value.EventTriggerer.ResetWorld();
-            WorldsDataAfter[index] = PersistedWorldData.From(worldAfter.Value);
+            WorldsDataAfter[index] = worldPersistence.LoadDataFromPath(tempSaveFilePath);
+            Assert.IsNotNull(WorldsDataAfter[index], $"Loading saved world failed while using {ServerSerializers[index]}.");
         }
     }
 
@@ -405,133 +397,6 @@ public class WorldPersistenceTest
         {
             Directory.Delete(tempSaveFilePath, true);
         }
-    }
-
-    private static PersistedWorldData GeneratePersistedWorldData()
-    {
-        return new PersistedWorldData()
-        {
-            BaseData =
-                new BaseData()
-                {
-                    CompletedBasePieceHistory =
-                        new List<BasePiece>()
-                        {
-                            new BasePiece(new NitroxId(), NitroxVector3.Zero, NitroxQuaternion.Identity, NitroxVector3.Zero, NitroxQuaternion.Identity, new NitroxTechType("BasePiece1"), Optional<NitroxId>.Of(new NitroxId()), false,
-                                          Optional.Empty, Optional<BasePieceMetadata>.Of(new SignMetadata("ExampleText", 1, 2, new[] { true, false }, true)))
-                        },
-                    PartiallyConstructedPieces = new List<BasePiece>()
-                    {
-                        new BasePiece(new NitroxId(), NitroxVector3.One, NitroxQuaternion.Identity, NitroxVector3.One, NitroxQuaternion.Identity, new NitroxTechType("BasePiece2"), Optional.Empty, false,
-                                      Optional<BuilderMetadata>.Of(new AnchoredFaceBuilderMetadata(new NitroxInt3(1, 2, 3), 1, 2, new NitroxInt3(0, 1, 2)))),
-                        new BasePiece(new NitroxId(), NitroxVector3.One, NitroxQuaternion.Identity, NitroxVector3.One, NitroxQuaternion.Identity, new NitroxTechType("BasePiece2"), Optional.Empty, false,
-                                      Optional<BuilderMetadata>.Of(new BaseModuleBuilderMetadata(new NitroxInt3(1, 2, 3), 1))),
-                        new BasePiece(new NitroxId(), NitroxVector3.One, NitroxQuaternion.Identity, NitroxVector3.One, NitroxQuaternion.Identity, new NitroxTechType("BasePiece2"), Optional.Empty, false,
-                                      Optional<BuilderMetadata>.Of(new CorridorBuilderMetadata(new NitroxVector3(1, 2, 3), 2, false, new NitroxInt3(4, 5, 6)))),
-                        new BasePiece(new NitroxId(), NitroxVector3.One, NitroxQuaternion.Identity, NitroxVector3.One, NitroxQuaternion.Identity, new NitroxTechType("BasePiece2"), Optional.Empty, false,
-                                      Optional<BuilderMetadata>.Of(new MapRoomBuilderMetadata(0x20, 2)))
-                    }
-                },
-            EntityData =
-                new EntityData()
-                {
-                    Entities = new List<Entity>()
-                    {
-                        new PrefabChildEntity(new NitroxId(), "pretty class id", new NitroxTechType("Radio"), 1, null, new NitroxId()),
-                        new PrefabPlaceholderEntity(new NitroxId(), new NitroxTechType("Bulkhead"), new NitroxId()),
-                        new WorldEntity(NitroxVector3.Zero, NitroxQuaternion.Identity, NitroxVector3.One, new NitroxTechType("Peeper"), 1, "PeeperClass", false, new NitroxId(), null, false, new NitroxId()),
-                        new PlaceholderGroupWorldEntity(new WorldEntity(NitroxVector3.Zero, NitroxQuaternion.Identity, NitroxVector3.One, NitroxTechType.None, 1, "Wreck1", false, new NitroxId(), null, false, new NitroxId()), new List<PrefabPlaceholderEntity>()
-                        {
-                            new(new NitroxId(), new NitroxTechType("Door"), new NitroxId())
-                        }),
-                        new EscapePodWorldEntity(NitroxVector3.One, new NitroxId(), new RepairedComponentMetadata(new NitroxTechType("Radio")))
-                    }
-                },
-            PlayerData = new PlayerData()
-            {
-                Players = new List<PersistedPlayerData>()
-                {
-                    new PersistedPlayerData()
-                    {
-                        NitroxId = new NitroxId(),
-                        Id = 1,
-                        Name = "Test1",
-                        IsPermaDeath = false,
-                        Permissions = Perms.ADMIN,
-                        SpawnPosition = NitroxVector3.Zero,
-                        SubRootId = null,
-                        CurrentStats = new PlayerStatsData(45, 45, 40, 39, 28, 1),
-                        UsedItems = new List<NitroxTechType>(0),
-                        QuickSlotsBinding = new List<string>(0),
-                        EquippedItems = new List<EquippedItemData>(0),
-                        Modules = new List<EquippedItemData>(0),
-                        PingInstancePreferences = new()
-                    },
-                    new PersistedPlayerData()
-                    {
-                        NitroxId = new NitroxId(),
-                        Id = 2,
-                        Name = "Test2",
-                        IsPermaDeath = true,
-                        Permissions = Perms.PLAYER,
-                        SpawnPosition = NitroxVector3.One,
-                        SubRootId = new NitroxId(),
-                        CurrentStats = new PlayerStatsData(40, 40, 30, 29, 28, 0),
-                        UsedItems = new List<NitroxTechType> { new NitroxTechType("Knife"), new NitroxTechType("Flashlight") },
-                        QuickSlotsBinding = new List<string> { "Test1", "Test2" },
-                        EquippedItems = new List<EquippedItemData>
-                        {
-                            new EquippedItemData(new NitroxId(), new NitroxId(), new byte[] { 0x30, 0x40 }, "Slot3", new NitroxTechType("Flashlight")),
-                            new EquippedItemData(new NitroxId(), new NitroxId(), new byte[] { 0x50, 0x9D }, "Slot4", new NitroxTechType("Knife"))
-                        },
-                        Modules = new List<EquippedItemData>() { new EquippedItemData(new NitroxId(), new NitroxId(), new byte[] { 0x35, 0xD0 }, "Module1", new NitroxTechType("Compass")) },
-                        PingInstancePreferences = new() { { "eda14b58-cfe0-4a56-aa4a-47942567d897", new(0, false) }, { "Signal_Lifepod12", new(4, true) } }
-                    }
-                }
-            },
-            WorldData = new WorldData()
-            {
-                GameData = new GameData()
-                {
-                    PDAState = new PDAStateData()
-                    {
-                        EncyclopediaEntries = { "TestEntry1", "TestEntry2" },
-                        KnownTechTypes = { new NitroxTechType("Knife") },
-                        PartiallyUnlockedByTechType = new ThreadSafeDictionary<NitroxTechType, PDAEntry>() { new KeyValuePair<NitroxTechType, PDAEntry>(new NitroxTechType("Moonpool"), new PDAEntry(new NitroxTechType("Moonpool"), 50f, 2)) },
-                        PdaLog = { new PDALogEntry("key1", 1.1234f) },
-                        UnlockedTechTypes = { new NitroxTechType("base") }
-                    },
-                    StoryGoals = new StoryGoalData()
-                    {
-                        CompletedGoals = { "Goal1", "Goal2" },
-                        GoalUnlocks = { "Goal3", "Goal4" },
-                        RadioQueue = { "Queue1" }
-                    },
-                    StoryTiming = new StoryTimingData()
-                    {
-                        ElapsedTime = 10,
-                        AuroraExplosionTime = 10000,
-                        AuroraWarningTime = 20
-                    },
-                },
-                InventoryData = new InventoryData()
-                {
-                    InventoryItems = new List<ItemData>() { new BasicItemData(new NitroxId(), new NitroxId(), new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }) },
-                    StorageSlotItems = new List<ItemData>() { new BasicItemData(new NitroxId(), new NitroxId(), new byte[] { 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21 }) },
-                    Modules = new List<EquippedItemData>() { new EquippedItemData(new NitroxId(), new NitroxId(), new byte[] { 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21 }, "Slot1", new NitroxTechType("")) }
-                },
-                ParsedBatchCells = new List<NitroxInt3>() { new NitroxInt3(10, 1, 10), new NitroxInt3(15, 4, 12) },
-                VehicleData = new VehicleData()
-                {
-                    Vehicles = new List<VehicleModel>()
-                    {
-                        new CyclopsModel(new NitroxTechType("Cyclops"), new NitroxId(), NitroxVector3.One, NitroxQuaternion.Identity, Array.Empty<InteractiveChildObjectIdentifier>(), Optional<NitroxId>.Of(new NitroxId()), "Super Duper Cyclops",
-                                         new[] { NitroxVector3.Zero, NitroxVector3.One, NitroxVector3.One }, 100)
-                    }
-                },
-                Seed = "NITROXSEED"
-            }
-        };
     }
 }
 

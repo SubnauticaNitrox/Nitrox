@@ -31,11 +31,11 @@ public class PacketsSerializableTest
     [TestMethod]
     public void PacketSerializationTest()
     {
-        IEnumerable<Type> types = typeof(Packet).Assembly.GetTypes().Concat(subnauticaModelAssembly.GetTypes());
-        Dictionary<Type, Type[]> subtypesByBaseType = types
-                                                      .Where(type => type.IsAbstract && !type.IsSealed && !type.ContainsGenericParameters && type != typeof(Packet))
-                                                      .ToDictionary(type => type, type => types.Where(t => type.IsAssignableFrom(t) && !t.IsAbstract && !t.IsInterface).ToArray());
-        IEnumerable<Type> packetTypes = types.Where(p => typeof(Packet).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract);
+
+        List<Type> types = new []{typeof(Packet).Assembly, subnauticaModelAssembly}.SelectMany(a => a.GetTypes()).ToList();
+        
+        Dictionary<Type, Type[]> subtypesByBaseType = NitroxAutoBinderBase.GetAllAbstractMembers(types, new List<Type>() {typeof(Packet)});
+        List<Type> packetTypes = types.Where(p => typeof(Packet).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract).ToList();
 
 
         // We want to ignore packets with no members when using ShouldNotCompare
