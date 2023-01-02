@@ -3,7 +3,6 @@ using FMOD.Studio;
 using HarmonyLib;
 using NitroxClient.GameLogic.FMOD;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Core;
 using NitroxModel.Helper;
 using NitroxModel_Subnautica.DataStructures;
 

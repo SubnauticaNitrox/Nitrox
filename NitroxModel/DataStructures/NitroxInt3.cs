@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using NitroxModel.DataStructures.Unity;
-using ProtoBufNet;
 
 namespace NitroxModel.DataStructures
 {
@@ -8,16 +8,16 @@ namespace NitroxModel.DataStructures
     ///     Model to allow <see cref="NitroxModel"/> to be decoupled from Assembly-csharp-firstpass (i.e. game code).
     /// </summary>
     [Serializable]
-    [ProtoContract]
+    [DataContract]
     public struct NitroxInt3 : IEquatable<NitroxInt3>
     {
-        [ProtoMember(1)]
+        [DataMember(Order = 1)]
         public int X { get; set; }
 
-        [ProtoMember(2)]
+        [DataMember(Order = 2)]
         public int Y { get; set; }
 
-        [ProtoMember(3)]
+        [DataMember(Order = 3)]
         public int Z { get; set; }
 
         public NitroxInt3(int x, int y, int z)

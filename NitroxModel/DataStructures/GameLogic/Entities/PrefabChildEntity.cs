@@ -1,7 +1,7 @@
 using System;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using System.Collections.Generic;
-using ProtoBufNet;
+using System.Runtime.Serialization;
 using BinaryPack.Attributes;
 
 namespace NitroxModel.DataStructures.GameLogic.Entities
@@ -14,13 +14,13 @@ namespace NitroxModel.DataStructures.GameLogic.Entities
      * to a root WorldEntity.
      */
     [Serializable]
-    [ProtoContract]
+    [DataContract]
     public class PrefabChildEntity : Entity
     {       
-        [ProtoMember(1)]
+        [DataMember(Order = 1)]
         public int ComponentIndex { get; set; }
 
-        [ProtoMember(2)]
+        [DataMember(Order = 2)]
         public string ClassId { get; set; }
 
         [IgnoreConstructor]

@@ -5,7 +5,6 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nitrox.Test;
 using NitroxModel_Subnautica.DataStructures.GameLogic;
-using NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation;
 using NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation.Metadata;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;

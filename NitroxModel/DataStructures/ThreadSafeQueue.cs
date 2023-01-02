@@ -2,21 +2,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using ProtoBufNet;
+using System.Runtime.Serialization;
 
 namespace NitroxModel.DataStructures
 {
     [DebuggerDisplay($"Items = {{{nameof(queue)}}}")]
-    [ProtoContract]
+    [DataContract]
     [Serializable]
     public class ThreadSafeQueue<T> : IReadOnlyCollection<T>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        [ProtoIgnore]
+        [IgnoreDataMember]
         private readonly object locker = new();
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        [ProtoMember(1)]
+        [DataMember(Order = 1)]
         private readonly Queue<T> queue;
 
         public int Count

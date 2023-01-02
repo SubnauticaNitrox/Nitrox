@@ -1,23 +1,23 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using BinaryPack.Attributes;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.Helper;
-using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
     [Serializable]
-    [ProtoContract]
+    [DataContract]
     public class AbsoluteEntityCell
     {
-        [ProtoMember(1)]
+        [DataMember(Order = 1)]
         public NitroxInt3 BatchId { get; }
 
-        [ProtoMember(2)]
+        [DataMember(Order = 2)]
         public NitroxInt3 CellId { get; }
 
-        [ProtoMember(3)]
+        [DataMember(Order = 3)]
         public int Level { get; }
 
         private static readonly Lazy<IMap> map = new(() => NitroxServiceLocator.LocateService<IMap>());

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using NitroxClient.Communication.Abstract;
-using NitroxClient.GameLogic.Helper;
+﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;

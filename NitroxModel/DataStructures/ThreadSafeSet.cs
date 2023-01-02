@@ -2,12 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using ProtoBufNet;
+using System.Runtime.Serialization;
 
 namespace NitroxModel.DataStructures
 {
     [DebuggerDisplay($"Items = {{{nameof(set)}}}")]
-    [ProtoContract]
+    [DataContract]
     [Serializable]
     public class ThreadSafeSet<T> : ISet<T>
     {
@@ -15,10 +15,12 @@ namespace NitroxModel.DataStructures
         ///     Using a lock object instead of ReaderWriterLockSlim because to overhead of the latter is ~5x and
         ///     we don't run long write operations anywhere in this class.
         /// </summary>
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)] [ProtoIgnore]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [IgnoreDataMember]
         private readonly object locker = new();
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)] [ProtoMember(1)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DataMember(Order = 1)]
         private readonly HashSet<T> set;
 
         public ThreadSafeSet()

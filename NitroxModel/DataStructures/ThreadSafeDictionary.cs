@@ -2,23 +2,23 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using ProtoBufNet;
+using System.Runtime.Serialization;
 
 namespace NitroxModel.DataStructures
 {
     [DebuggerDisplay($"Items = {{{nameof(Entries)}}}")]
-    [ProtoContract]
+    [DataContract]
     public class ThreadSafeDictionary<TKey, TValue> : IDictionary<TKey, TValue>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        [ProtoIgnore]
+        [IgnoreDataMember]
         private readonly IDictionary<TKey, TValue> dictionary;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        [ProtoIgnore]
+        [IgnoreDataMember]
         private readonly object locker = new();
 
-        [ProtoIgnore]
+        [IgnoreDataMember]
         public ICollection<TKey> Keys
         {
             get
@@ -30,7 +30,7 @@ namespace NitroxModel.DataStructures
             }
         }
 
-        [ProtoIgnore]
+        [IgnoreDataMember]
         public ICollection<TValue> Values
         {
             get
@@ -43,7 +43,7 @@ namespace NitroxModel.DataStructures
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        [ProtoIgnore]
+        [IgnoreDataMember]
         public ICollection<KeyValuePair<TKey, TValue>> Entries
         {
             get

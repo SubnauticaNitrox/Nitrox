@@ -2,7 +2,6 @@
 using HarmonyLib;
 using NitroxClient.MonoBehaviours.Overrides;
 using NitroxModel_Subnautica.DataStructures;
-using NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation;
 using NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation.Metadata;
 
 namespace NitroxPatcher.Patches.Dynamic

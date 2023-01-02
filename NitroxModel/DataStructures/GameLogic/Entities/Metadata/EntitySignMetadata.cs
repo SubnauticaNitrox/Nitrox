@@ -1,26 +1,26 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using BinaryPack.Attributes;
-using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 
 [Serializable]
-[ProtoContract]
+[DataContract]
 public class EntitySignMetadata : EntityMetadata
 {
-    [ProtoMember(1)]
+    [DataMember(Order = 1)]
     public string Text { get; }
 
-    [ProtoMember(2)]
+    [DataMember(Order = 2)]
     public int ColorIndex { get; }
 
-    [ProtoMember(3)]
+    [DataMember(Order = 3)]
     public int ScaleIndex { get; }
 
-    [ProtoMember(4)]
+    [DataMember(Order = 4)]
     public bool[] Elements { get; }
 
-    [ProtoMember(5)]
+    [DataMember(Order = 5)]
     public bool Background { get; }
 
     [IgnoreConstructor]

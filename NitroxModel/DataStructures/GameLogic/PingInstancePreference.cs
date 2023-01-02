@@ -1,16 +1,17 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using BinaryPack.Attributes;
-using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic;
 
-[Serializable, ProtoContract]
+[Serializable]
+[DataContract]
 public class PingInstancePreference
 {
-    [ProtoMember(1)]
+    [DataMember(Order = 1)]
     public int Color { get; set; }
 
-    [ProtoMember(2)]
+    [DataMember(Order = 2)]
     public bool Visible { get; set; }
 
     [IgnoreConstructor]

@@ -13,7 +13,7 @@ namespace NitroxClient.GameLogic
     /// <summary>
     /// Handles all of the <see cref="Fire"/>s in the game. Currently, the only known Fire spawning is in <see cref="SubFire.CreateFire(SubFire.RoomFire)"/>. The
     /// fires in the Aurora come loaded with the map and do not grow in size. If we want to create a Fire spawning mechanic outside of Cyclops fires, it should be
-    /// added to <see cref="Fires.Create(string, Optional{string}, Optional{CyclopsRooms}, Optional{int})"/>. Fire dousing goes by Id and does not need to be 
+    /// added to <see cref="Fires.Create(CyclopsFireData)"/>. Fire dousing goes by Id and does not need to be 
     /// modified
     /// </summary>
     public class Fires
@@ -38,7 +38,7 @@ namespace NitroxClient.GameLogic
 
         /// <summary>
         /// Triggered when <see cref="SubFire.CreateFire(SubFire.RoomFire)"/> is executed. To create a new fire manually, 
-        /// call <see cref="Create(string, Optional{string}, Optional{CyclopsRooms}, Optional{int})"/>
+        /// call <see cref="Create(CyclopsFireData)"/>
         /// </summary>
         public void OnCreate(Fire fire, SubFire.RoomFire room, int nodeIndex)
         {
@@ -78,11 +78,6 @@ namespace NitroxClient.GameLogic
         /// <summary>
         /// Create a new <see cref="Fire"/>. Majority of code copied from <see cref="SubFire.CreateFire(SubFire.RoomFire)"/>. Currently does not support Fires created outside of a Cyclops
         /// </summary>
-        /// <param name="fireGuid">Id of the Fire. Used for identification when dousing the fire</param>
-        /// <param name="subRootGuid">Id of the Cyclops <see cref="SubRoot"/></param>
-        /// <param name="room">The room the Fire will be spawned in</param>
-        /// <param name="spawnNodeIndex">Each <see cref="CyclopsRooms"/> has multiple static Fire spawn points called spawnNodes. If the wrong index is provided,
-        ///     the clients will see fires in different places from the owner</param>
         public void Create(CyclopsFireData fireData)
         {
             SubFire subFire = NitroxEntity.RequireObjectFrom(fireData.CyclopsId).GetComponent<SubRoot>().damageManager.subFire;

@@ -1,42 +1,42 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using BinaryPack.Attributes;
 using NitroxModel.DataStructures.Unity;
-using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
     [Serializable]
-    [ProtoContract]
+    [DataContract]
     public abstract class VehicleMovementData
     {
-        [ProtoMember(1)]
+        [DataMember(Order = 1)]
         public NitroxTechType TechType { get; }
 
-        [ProtoMember(2)]
+        [DataMember(Order = 2)]
         public NitroxId Id { get; set; }
 
-        [ProtoMember(3)]
+        [DataMember(Order = 3)]
         public NitroxVector3 Position { get; }
 
-        [ProtoMember(4)]
+        [DataMember(Order = 4)]
         public NitroxQuaternion Rotation { get; }
 
-        [ProtoMember(5)]
+        [DataMember(Order = 5)]
         public NitroxVector3 Velocity { get; }
 
-        [ProtoMember(6)]
+        [DataMember(Order = 6)]
         public NitroxVector3 AngularVelocity { get; }
 
-        [ProtoMember(7)]
+        [DataMember(Order = 7)]
         public float SteeringWheelYaw { get; }
 
-        [ProtoMember(8)]
+        [DataMember(Order = 8)]
         public float SteeringWheelPitch { get; }
 
-        [ProtoMember(9)]
+        [DataMember(Order = 9)]
         public bool AppliedThrottle { get; }
 
-        [ProtoMember(10)]
+        [DataMember(Order = 10)]
         public NitroxVector3? DriverPosition { get; set; }
 
         [IgnoreConstructor]
