@@ -1,4 +1,5 @@
 using System.Runtime.Serialization;
+using NitroxModel.DataStructures.GameLogic.Buildings.New;
 using NitroxServer.GameLogic.Bases;
 using NitroxServer.GameLogic.Entities;
 using NitroxServer.GameLogic.Players;
@@ -20,7 +21,7 @@ namespace NitroxServer.Serialization.World
         [DataMember(Order = 4)]
         public EntityData EntityData { get; set; }
 
-        [JsonProperty, ProtoMember(5)]
+        [DataMember(Order = 5)]
         public SavedGlobalRoot GlobalRootData { get; set; }
 
         public static PersistedWorldData From(World world)

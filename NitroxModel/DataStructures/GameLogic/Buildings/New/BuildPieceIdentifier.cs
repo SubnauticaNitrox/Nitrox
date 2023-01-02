@@ -1,12 +1,18 @@
 using System;
+using System.Runtime.Serialization;
 
 namespace NitroxModel.DataStructures.GameLogic.Buildings.New;
 
+[Serializable, DataContract]
 public struct BuildPieceIdentifier : IEquatable<BuildPieceIdentifier>
 {
+    [DataMember(Order = 1)]
     public NitroxTechType Recipe;
+    [DataMember(Order = 2)]
     public NitroxBaseFace? BaseFace;
+    [DataMember(Order = 3)]
     public NitroxInt3 BaseCell;
+    [DataMember(Order = 4)]
     public NitroxInt3 PiecePoint;
 
     public BuildPieceIdentifier(NitroxTechType recipe, NitroxBaseFace? baseFace, NitroxInt3 baseCell, NitroxInt3 piecePoint)
