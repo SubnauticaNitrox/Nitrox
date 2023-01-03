@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using FMODUnity;
 using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
@@ -574,7 +574,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
 
         public static Optional<BuilderMetadata> RotationMetadata;
 
-        private static readonly Material ghostStructureMaterial = new Material(Resources.Load<Material>("Materials/ghostmodel"));
+        private static readonly Material ghostStructureMaterial = new Material(Resources.Load<Material>("Materials/constructingGhost"));
 
         private static GameObject placementTarget;
 
