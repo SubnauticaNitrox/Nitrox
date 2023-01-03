@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession.ConnectionState;
@@ -17,6 +17,8 @@ namespace NitroxClient.Communication.MultiplayerSession
     public class MultiplayerSessionManager : IMultiplayerSession, IMultiplayerSessionConnectionContext
     {
         private static readonly Task initSerializerTask;
+        private static readonly Assembly nitroxClientAssembly = typeof(MultiplayerSessionManager).Assembly;
+        private static readonly Type unityIteratorClass = typeof(UnityEngine.Object).Assembly.GetType("UnityEngine.SetupCoroutine", true);
 
         static MultiplayerSessionManager()
         {
@@ -127,13 +129,13 @@ namespace NitroxClient.Communication.MultiplayerSession
             {
                 // Root caller is last stack frame, so start from the end.
                 int i = frames.Length - 1;
-                // Ignore Unity iterator frames.
-                if (frames.ElementAtOrDefault(i)?.GetMethod().Name == "InvokeMoveNext" && frames.ElementAtOrDefault(i - 1)?.GetMethod().Name == "MoveNext")
+                // Ignore the 2 frames by Unity enumerators.
+                if (i >= 0 && frames[i].GetMethod().DeclaringType == unityIteratorClass)
                 {
                     i -= 2;
                 }
                 // Did we cause this code to run?
-                if (!frames.ElementAtOrDefault(i)?.GetMethod().DeclaringType?.Assembly.GetName().Name.StartsWith("NitroxClient", StringComparison.OrdinalIgnoreCase) ?? false)
+                if (i >= 0 && frames[i].GetMethod().DeclaringType?.Assembly != nitroxClientAssembly)
                 {
                     return false;
                 }
