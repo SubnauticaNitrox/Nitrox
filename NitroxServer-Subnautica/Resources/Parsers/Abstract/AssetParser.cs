@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using AssetsTools.NET.Extra;
-using Mono.Cecil;
+using NitroxServer_Subnautica.Resources.Parsers.Helper;
 
 namespace NitroxServer_Subnautica.Resources.Parsers;
 
@@ -9,7 +8,7 @@ public abstract class AssetParser
 {
     protected static readonly string rootPath;
     protected static readonly AssetsManager assetsManager;
-    
+
     private static readonly ThreadSafeMonoCecilTempGenerator monoGen;
 
     static AssetParser()
