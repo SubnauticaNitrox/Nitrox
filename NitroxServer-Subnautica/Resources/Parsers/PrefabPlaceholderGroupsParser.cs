@@ -8,17 +8,17 @@ using AddressablesTools;
 using AddressablesTools.Catalog;
 using AssetsTools.NET;
 using AssetsTools.NET.Extra;
-using Mono.Cecil;
 using NitroxServer_Subnautica.Resources.Parsers.Helper;
 using NitroxServer.Resources;
 
 namespace NitroxServer_Subnautica.Resources.Parsers;
 
-public class PrefabPlaceholderGroupsParser
+public class PrefabPlaceholderGroupsParser : IDisposable
 {
     private readonly string prefabDatabasePath;
     private readonly string aaRootPath;
     private readonly AssetsBundleManager am;
+    private readonly ThreadSafeMonoCecilTempGenerator monoGen;
 
     public PrefabPlaceholderGroupsParser()
     {
@@ -33,7 +33,7 @@ public class PrefabPlaceholderGroupsParser
         // ReSharper disable once StringLiteralTypo
         am.LoadClassPackage("classdata.tpk");
         am.LoadClassDatabaseFromPackage("2019.4.36f1");
-        am.SetMonoTempGenerator(new MonoCecilTempGenerator(managedPath));
+        am.SetMonoTempGenerator(monoGen = new(managedPath));
     }
 
     private readonly ConcurrentDictionary<string, string[]> prefabPlaceholdersClassIdByGroupClassId = new();
@@ -48,17 +48,9 @@ public class PrefabPlaceholderGroupsParser
 
         // Select only prefabs with a PrefabPlaceholdersGroups component in the root ans link them with their dependencyPaths
         ConcurrentDictionary<string, string[]> prefabPlaceholdersGroupPaths = GetAllPrefabPlaceholdersGroupsFast(loadAddressableCatalog);
-        am.UnloadAll();
 
         // Get all needed data for the filtered PrefabPlaceholdersGroups to construct PrefabPlaceholdersGroupAssets and add them to the dictionary by classId
         ConcurrentDictionary<string, PrefabPlaceholdersGroupAsset> prefabPlaceholderGroupsByGroupClassId = GetPrefabPlaceholderGroupAssetsByGroupClassId(prefabPlaceholdersGroupPaths);
-        am.UnloadAll(true);
-
-        // Dispose assemblies to release lock
-        foreach (KeyValuePair<string, AssemblyDefinition> pair in am.monoTempGenerator.loadedAssemblies)
-        {
-            pair.Value.Dispose();
-        }
 
         return new Dictionary<string, PrefabPlaceholdersGroupAsset>(prefabPlaceholderGroupsByGroupClassId);
     }
@@ -147,7 +139,7 @@ public class PrefabPlaceholderGroupsParser
         Parallel.ForEach(loadAddressableCatalog.Skip(aaIndex), (keyValuePair) =>
         {
             AssetsBundleManager bundleManagerInst = am.Clone();
-            BundleFileInstance bundleFile = bundleManagerInst.LoadBundleFile(am.CleanBundlePath(keyValuePair.Value[0]));
+            BundleFileInstance bundleFile = bundleManagerInst.LoadBundleFile(bundleManagerInst.CleanBundlePath(keyValuePair.Value[0]));
             AssetsFileInstance assetFileInstance = bundleManagerInst.LoadAssetsFileFromBundle(bundleFile, 0);
 
             if (assetFileInstance.file.Metadata.TypeTreeTypes.Any(typeTree => typeTree.TypeId == (int)AssetClassID.MonoBehaviour && typeTree.TypeHash.data.SequenceEqual(prefabPlaceholdersGroupHash)))
@@ -223,5 +215,11 @@ public class PrefabPlaceholderGroupsParser
 
         prefabPlaceholdersClassIdByGroupClassId.TryAdd(classId, prefabPlaceholdersArray);
         return prefabPlaceholdersArray;
+    }
+
+    public void Dispose()
+    {
+        monoGen.Dispose();
+        am.UnloadAll(true);
     }
 }
