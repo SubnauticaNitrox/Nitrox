@@ -125,7 +125,7 @@ public class WorldPersistenceTest
                 Assert.AreEqual(plantableItemData.PlantedGameTime, plantableItemDataAfter.PlantedGameTime);
                 break;
             default:
-                Assert.Fail("Runtime types of ItemData where not equal");
+                Assert.Fail($"Runtime types of {nameof(ItemData)} where not equal");
                 break;
         }
     }
@@ -231,7 +231,7 @@ public class WorldPersistenceTest
             case null when basePieceAfter.RotationMetadata.Value is null:
                 break;
             default:
-                Assert.Fail("BasePiece.RotationMetadata is not equal");
+                Assert.Fail($"{nameof(BasePiece)}.{nameof(BasePiece.RotationMetadata)} is not equal");
                 break;
         }
 
@@ -247,7 +247,7 @@ public class WorldPersistenceTest
             case null when basePieceAfter.Metadata.Value is null:
                 break;
             default:
-                Assert.Fail("BasePiece.Metadata is not equal");
+                Assert.Fail($"{nameof(BasePiece)}.{nameof(BasePiece.Metadata)} is not equal");
                 break;
         }
     }
@@ -354,7 +354,7 @@ public class WorldPersistenceTest
             case null when entityAfter.Metadata is null:
                 break;
             default:
-                Assert.Fail("Runtime type of Entity.Metadata is not equal");
+                Assert.Fail($"Runtime type of {nameof(Entity)}.{nameof(Entity.Metadata)} is not equal");
                 break;
         }
 
@@ -369,7 +369,7 @@ public class WorldPersistenceTest
                 Assert.AreEqual(worldEntity.SpawnedByServer, worldEntityAfter.SpawnedByServer);
                 Assert.AreEqual(worldEntity.WaterParkId, worldEntityAfter.WaterParkId);
                 Assert.AreEqual(worldEntity.ExistsInGlobalRoot, worldEntityAfter.ExistsInGlobalRoot);
-                
+
                 switch (worldEntity)
                 {
                     case EscapePodWorldEntity escapePodWorldEntity when worldEntityAfter is EscapePodWorldEntity escapePodWorldEntityAfter:
@@ -390,7 +390,7 @@ public class WorldPersistenceTest
                 Assert.AreEqual(prefabPlaceholderEntity.ClassId, prefabPlaceholderEntityAfter.ClassId);
                 break;
             default:
-                Assert.Fail("Runtime type of Entity is not equal");
+                Assert.Fail($"Runtime type of {nameof(Entity)} is not equal");
                 break;
         }
 
