@@ -12,30 +12,35 @@ namespace NitroxModel.DataStructures.GameLogic.Entities;
 [DataContract]
 public class PlaceholderGroupWorldEntity : WorldEntity
 {
+    [DataMember(Order = 1)]
+    public Entity[] PrefabPlaceholders { get; set; }
+
+    public override List<Entity> ChildEntities => PrefabPlaceholders.Where(e => e != null).ToList();
+
     [IgnoreConstructor]
     protected PlaceholderGroupWorldEntity()
     {
         // Constructor for serialization. Has to be "protected" for json serialization.
     }
-    
-    public PlaceholderGroupWorldEntity(WorldEntity worldEntity, List<PrefabPlaceholderEntity> prefabPlaceholders)
+
+    public PlaceholderGroupWorldEntity(WorldEntity worldEntity, List<Entity> prefabPlaceholders)
     {
         Id = worldEntity.Id;
         TechType = worldEntity.TechType;
         Metadata = worldEntity.Metadata;
         ParentId = worldEntity.ParentId;
         Transform = worldEntity.Transform;
-        ChildEntities = worldEntity.ChildEntities;
         Level = worldEntity.Level;
         ClassId = worldEntity.ClassId;
         SpawnedByServer = worldEntity.SpawnedByServer;
         WaterParkId = worldEntity.WaterParkId;
         ExistsInGlobalRoot = worldEntity.ExistsInGlobalRoot;
-        ChildEntities = prefabPlaceholders.Cast<Entity>().ToList();
+
+        PrefabPlaceholders = prefabPlaceholders.ToArray();
     }
-    
+
     /// <remarks>Used for deserialization</remarks>
-    public PlaceholderGroupWorldEntity(NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId waterParkId, bool existsInGlobalRoot, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
+    public PlaceholderGroupWorldEntity(NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId waterParkId, bool existsInGlobalRoot, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities, Entity[] prefabPlaceholders)
     {
         Id = id;
         TechType = techType;
@@ -48,5 +53,6 @@ public class PlaceholderGroupWorldEntity : WorldEntity
         SpawnedByServer = spawnedByServer;
         WaterParkId = waterParkId;
         ExistsInGlobalRoot = existsInGlobalRoot;
+        PrefabPlaceholders = prefabPlaceholders;
     }
 }

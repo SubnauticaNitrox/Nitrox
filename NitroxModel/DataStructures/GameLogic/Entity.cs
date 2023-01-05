@@ -31,7 +31,7 @@ namespace NitroxModel.DataStructures.GameLogic
         public NitroxId ParentId { get; set; }
 
         [DataMember(Order = 5)]
-        public List<Entity> ChildEntities { get; set; } = new List<Entity>();
+        public virtual List<Entity> ChildEntities { get; set; } = new List<Entity>();
 
         [IgnoreConstructor]
         protected Entity()
