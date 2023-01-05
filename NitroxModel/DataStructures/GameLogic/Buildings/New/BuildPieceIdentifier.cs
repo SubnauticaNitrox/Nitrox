@@ -25,7 +25,7 @@ public struct BuildPieceIdentifier : IEquatable<BuildPieceIdentifier>
 
     public bool Equals(BuildPieceIdentifier other)
     {
-        return Recipe.Name.Equals(other.Recipe.Name) && BaseFace.Equals(other.BaseFace) && BaseCell.Equals(other.BaseCell) && PiecePoint.Equals(other.PiecePoint);
+        return Recipe.Equals(other.Recipe) && BaseFace.Equals(other.BaseFace) && BaseCell.Equals(other.BaseCell) && PiecePoint.Equals(other.PiecePoint);
     }
 
     public override bool Equals(object obj)

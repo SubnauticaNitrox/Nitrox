@@ -28,7 +28,7 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
     internal static MethodInfo TARGET_METHOD_DECONSTRUCTION_ALLOWED = typeof(BaseDeconstructable).GetMethod(nameof(BaseDeconstructable.DeconstructionAllowed), BindingFlags.Public | BindingFlags.Instance, null, new[] { typeof(string).MakeByRefType() }, null);
     internal static MethodInfo TARGET_METHOD_TOOL_CONSTRUCT = Reflect.Method((BuilderTool t) => t.Construct(default, default, default));
 
-    private static Base.Face? cachedBaseFace;
+    private static BuildPieceIdentifier cachedPieceIdentifier;
 
     // Place ghost
     public static readonly InstructionsPattern AddInstructionPattern1 = new()
@@ -311,8 +311,7 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
         NitroxId pieceId = new();
         NitroxEntity.SetNewId(constructableBase.gameObject, pieceId);
         
-        BuildPieceIdentifier pieceIdentifier = BuildManager.GetIdentifier(baseDeconstructable, baseCell, cachedBaseFace);
-        PieceDeconstructed pieceDeconstructed = new(baseEntity.Id, pieceId, pieceIdentifier, NitroxGhost.From(constructableBase));
+        PieceDeconstructed pieceDeconstructed = new(baseEntity.Id, pieceId, cachedPieceIdentifier, NitroxGhost.From(constructableBase));
         Log.Debug($"Base is not empty, sending packet {pieceDeconstructed}");
 
         Resolve<IPacketSender>().Send(pieceDeconstructed);
@@ -332,7 +331,7 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
 
     public static bool PrefixToolConstruct(Constructable c)
     {
-        if (c.TryGetComponent(out NitroxEntity parentId) &&
+        if (c.TryGetComponentInParent(out NitroxEntity parentId) &&
             BuildingTester.Main && BuildingTester.Main.BasesCooldown.ContainsKey(parentId.Id))
         {
             ErrorMessage.AddMessage("You can't modify a base that was recently updated by another player");
@@ -343,7 +342,7 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
 
     public static void PrefixBaseDeconstruct(BaseDeconstructable __instance)
     {
-        cachedBaseFace = __instance.face;
+        BuildManager.TryGetIdentifier(__instance, out cachedPieceIdentifier, null, __instance.face);
     }
 
     public override void Patch(Harmony harmony)

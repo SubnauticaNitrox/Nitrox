@@ -241,8 +241,9 @@ public class BuildingTester : MonoBehaviour
             }
             BasesCooldown[pieceDeconstructed.PieceId] = DateTimeOffset.Now;
             BasesCooldown[pieceDeconstructed.BaseId] = DateTimeOffset.Now;
-            break;
+            yield break;
         }
+        Log.Error("Couldn't find BaseDeconstructable to be destructed");
         // TODO: Ask for resync
     }
 
