@@ -11,10 +11,12 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities;
 
 public class PlaceholderGroupWorldEntitySpawner : IWorldEntitySpawner
 {
+    private readonly WorldEntitySpawnerResolver spawnerResolver;
     private readonly DefaultWorldEntitySpawner defaultSpawner;
 
-    public PlaceholderGroupWorldEntitySpawner(DefaultWorldEntitySpawner defaultSpawner)
+    public PlaceholderGroupWorldEntitySpawner(WorldEntitySpawnerResolver spawnerResolver, DefaultWorldEntitySpawner defaultSpawner)
     {
+        this.spawnerResolver = spawnerResolver;
         this.defaultSpawner = defaultSpawner;
     }
 
@@ -34,7 +36,10 @@ public class PlaceholderGroupWorldEntitySpawner : IWorldEntitySpawner
             result.Set(Optional.Empty);
             yield break;
         }
+        
+        result.Set(prefabPlaceholderGroupGameObject);
 
+        // Spawning PrefabPlaceholders
         PrefabPlaceholdersGroup prefabPlaceholderGroup = prefabPlaceholderGroupGameObject.Value.GetComponent<PrefabPlaceholdersGroup>();
 
         for (int index = 0; index < placeholderGroupEntity.PrefabPlaceholders.Length; index++)
@@ -66,15 +71,19 @@ public class PlaceholderGroupWorldEntitySpawner : IWorldEntitySpawner
             }
             else if (child is WorldEntity slotEntity)
             {
+                IWorldEntitySpawner spawner = spawnerResolver.ResolveEntitySpawner(slotEntity);
                 Optional<GameObject> slotEntityParent = Optional.Of(prefabPlaceholder.gameObject);
 
                 TaskResult<Optional<GameObject>> slotEntityTaskResult = new();
-                yield return defaultSpawner.SpawnAsync(slotEntity, slotEntityParent, cellRoot, slotEntityTaskResult);
+                yield return spawner.SpawnAsync(slotEntity, slotEntityParent, cellRoot, slotEntityTaskResult);
 
-                //Resetting local position
-                Transform slotTransform = slotEntityTaskResult.Get().Value.transform;
-                slotTransform.localPosition = Vector3.zero;
-                slotTransform.localRotation = Quaternion.identity;
+                // Resetting local position
+                if (slotEntityTaskResult.Get().HasValue)
+                {
+                    Transform slotTransform = slotEntityTaskResult.Get().Value.transform;                
+                    slotTransform.localPosition = Vector3.zero;
+                    slotTransform.localRotation = Quaternion.identity;
+                }
             }
             else
             {
