@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using AssetsTools.NET.Extra;
-using Mono.Cecil;
+using NitroxServer_Subnautica.Resources.Parsers.Helper;
 
 namespace NitroxServer_Subnautica.Resources.Parsers;
 
@@ -9,8 +8,8 @@ public abstract class AssetParser
 {
     protected static readonly string rootPath;
     protected static readonly AssetsManager assetsManager;
-    
-    private static readonly MonoCecilTempGenerator monoGenerator;
+
+    private static readonly ThreadSafeMonoCecilTempGenerator monoGen;
 
     static AssetParser()
     {
@@ -18,16 +17,12 @@ public abstract class AssetParser
         assetsManager = new AssetsManager();
         assetsManager.LoadClassPackage("classdata.tpk");
         assetsManager.LoadClassDatabaseFromPackage("2019.4.36f1");
-        monoGenerator = new MonoCecilTempGenerator(Path.Combine(rootPath, "Managed"));
-        assetsManager.SetMonoTempGenerator(monoGenerator);
+        assetsManager.SetMonoTempGenerator(monoGen = new ThreadSafeMonoCecilTempGenerator(Path.Combine(rootPath, "Managed")));
     }
 
     public static void Dispose()
     {
         assetsManager.UnloadAll(true);
-        foreach (KeyValuePair<string,AssemblyDefinition> pair in monoGenerator.loadedAssemblies)
-        {
-            pair.Value.Dispose();
-        }
+        monoGen.Dispose();
     }
 }

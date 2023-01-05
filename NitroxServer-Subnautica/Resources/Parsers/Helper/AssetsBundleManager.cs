@@ -7,7 +7,7 @@ namespace NitroxServer_Subnautica.Resources.Parsers.Helper;
 
 public class AssetsBundleManager : AssetsManager
 {
-    public MonoCecilTempGenerator monoTempGenerator;
+    private ThreadSafeMonoCecilTempGenerator monoTempGenerator;
     private readonly string aaRootPath;
     private readonly Dictionary<AssetsFileInstance, string[]> dependenciesByAssetFileInst = new();
 
@@ -109,7 +109,7 @@ public class AssetsBundleManager : AssetsManager
 
     public new void SetMonoTempGenerator(IMonoBehaviourTemplateGenerator generator)
     {
-        monoTempGenerator = (MonoCecilTempGenerator)generator;
+        monoTempGenerator = (ThreadSafeMonoCecilTempGenerator)generator;
         base.SetMonoTempGenerator(generator);
     }
     /// <summary>
@@ -129,7 +129,11 @@ public class AssetsBundleManager : AssetsManager
     /// <inheritdoc cref="AssetsManager.UnloadAll"/>
     public new void UnloadAll(bool unloadClassData = false)
     {
-        base.UnloadAll(unloadClassData);
+        if (unloadClassData)
+        {
+            monoTempGenerator.Dispose();
+        }
         dependenciesByAssetFileInst.Clear();
+        base.UnloadAll(unloadClassData);
     }
 }
