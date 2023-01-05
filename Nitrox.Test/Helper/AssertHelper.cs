@@ -9,6 +9,9 @@ public static class AssertHelper
 {
     public static void IsListEqual<TSource>(IOrderedEnumerable<TSource> first, IOrderedEnumerable<TSource> second, Action<TSource, TSource> assertComparer)
     {
+        Assert.IsNotNull(first);
+        Assert.IsNotNull(second);
+
         List<TSource> firstList = first.ToList();
         List<TSource> secondList = second.ToList();
 
@@ -22,6 +25,8 @@ public static class AssertHelper
 
     public static void IsDictionaryEqual<TKey, TValue>(IDictionary<TKey, TValue> first, IDictionary<TKey, TValue> second)
     {
+        Assert.IsNotNull(first);
+        Assert.IsNotNull(second);
         Assert.AreEqual(first.Count, second.Count);
 
         for (int index = 0; index < first.Count; index++)
@@ -34,6 +39,8 @@ public static class AssertHelper
 
     public static void IsDictionaryEqual<TKey, TValue>(IDictionary<TKey, TValue> first, IDictionary<TKey, TValue> second, Action<KeyValuePair<TKey, TValue>, KeyValuePair<TKey, TValue>> assertComparer)
     {
+        Assert.IsNotNull(first);
+        Assert.IsNotNull(second);
         Assert.AreEqual(first.Count, second.Count);
 
         for (int index = 0; index < first.Count; index++)
