@@ -102,7 +102,6 @@ public class WorldPersistenceTest
     [DataTestMethod, DynamicWorldDataAfter]
     public void InventoryDataTest(PersistedWorldData worldDataAfter, string serializerName)
     {
-        AssertHelper.IsListEqual(worldData.WorldData.InventoryData.InventoryItems.OrderBy(x => x.ItemId), worldDataAfter.WorldData.InventoryData.InventoryItems.OrderBy(x => x.ItemId), ItemDataTest);
         AssertHelper.IsListEqual(worldData.WorldData.InventoryData.StorageSlotItems.OrderBy(x => x.ItemId), worldDataAfter.WorldData.InventoryData.StorageSlotItems.OrderBy(x => x.ItemId), ItemDataTest);
         AssertHelper.IsListEqual(worldData.WorldData.InventoryData.Modules.OrderBy(x => x.ItemId), worldDataAfter.WorldData.InventoryData.Modules.OrderBy(x => x.ItemId), ItemDataTest);
     }
@@ -516,7 +515,6 @@ public class WorldPersistenceTest
                 },
                 InventoryData = new InventoryData()
                 {
-                    InventoryItems = new List<ItemData>() { new BasicItemData(new NitroxId(), new NitroxId(), new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }) },
                     StorageSlotItems = new List<ItemData>() { new BasicItemData(new NitroxId(), new NitroxId(), new byte[] { 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21 }) },
                     Modules = new List<EquippedItemData>() { new EquippedItemData(new NitroxId(), new NitroxId(), new byte[] { 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21 }, "Slot1", new NitroxTechType("")) }
                 },

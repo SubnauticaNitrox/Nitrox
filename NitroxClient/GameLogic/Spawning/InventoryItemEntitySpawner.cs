@@ -57,8 +57,6 @@ public class InventoryItemEntitySpawner : EntitySpawner<InventoryItemEntity>
             container.UnsafeAdd(new InventoryItem(pickupable));
             Log.Debug($"Received: Added item {pickupable.GetTechType()} ({entity.Id}) to container {owner.Value.GetFullHierarchyPath()}");
         }
-
-        yield break;
     }
  
     public override bool SpawnsOwnChildren(InventoryItemEntity entity)
