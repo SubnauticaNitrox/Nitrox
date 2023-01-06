@@ -68,7 +68,7 @@ namespace NitroxClient.GameLogic
             GameObject remotePlayerBody = CloneLocalPlayerBodyPrototype();
             RemotePlayer remotePlayer;
 
-            using (packetSender.Suppress<ItemContainerAdd>())
+            using (packetSender.Suppress<EntitySpawnedByClient>())
             {
                 remotePlayer = new RemotePlayer(remotePlayerBody, playerContext, equippedTechTypes, inventoryItems, playerModelManager);
             }
@@ -105,10 +105,7 @@ namespace NitroxClient.GameLogic
             Optional<RemotePlayer> opPlayer = Find(playerId);
             if (opPlayer.HasValue)
             {
-                using (packetSender.Suppress<ItemContainerRemove>())
-                {
-                    opPlayer.Value.Destroy();
-                }
+                opPlayer.Value.Destroy();                
                 playersById.Remove(playerId);
                 onRemove(playerId.ToString(), opPlayer.Value);
                 DiscordClient.UpdatePartySize(GetTotalPlayerCount());

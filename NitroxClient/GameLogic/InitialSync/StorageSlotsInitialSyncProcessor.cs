@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.Communication.Abstract;
@@ -25,7 +25,6 @@ namespace NitroxClient.GameLogic.InitialSync
             this.vehicles = vehicles;
 
             DependentProcessors.Add(typeof(VehicleInitialSyncProcessor));
-            DependentProcessors.Add(typeof(InventoryItemsInitialSyncProcessor)); // Batteries can be in a battery slots from a item
             DependentProcessors.Add(typeof(EquippedItemInitialSyncProcessor)); // Just to be sure, for cyclops mode persistence. See "Cyclops.SetAdvancedModes"
         }
 
@@ -35,10 +34,6 @@ namespace NitroxClient.GameLogic.InitialSync
 
             HashSet<NitroxId> onlinePlayers = new HashSet<NitroxId> { packet.PlayerGameObjectId };
             onlinePlayers.AddRange(packet.RemotePlayerData.Select(playerData => playerData.PlayerContext.PlayerNitroxId));
-
-            // Removes any batteries which are in inventories from offline players
-            List<ItemData> currentlyIgnoredItems = packet.InventoryItems.Where(item => !onlinePlayers.Any(player => player.Equals(item.ContainerId))).ToList();
-            packet.StorageSlotItems.RemoveAll(storageItem => currentlyIgnoredItems.Any(ignoredItem => ignoredItem.ItemId.Equals(storageItem.ContainerId)));
 
             using (packetSender.Suppress<StorageSlotItemAdd>())
             {

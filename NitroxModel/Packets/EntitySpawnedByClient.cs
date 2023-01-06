@@ -1,14 +1,14 @@
-﻿using System;
-using NitroxModel.DataStructures.GameLogic.Entities;
+using System;
+using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class EntitySpawnedByClient : Packet
     {
-        public WorldEntity Entity { get; }
+        public Entity Entity { get; }
 
-        public EntitySpawnedByClient(WorldEntity entity)
+        public EntitySpawnedByClient(Entity entity)
         {
             Entity = entity;
         }

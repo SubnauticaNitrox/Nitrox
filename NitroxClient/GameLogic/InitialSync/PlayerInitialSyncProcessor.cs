@@ -15,10 +15,12 @@ namespace NitroxClient.GameLogic.InitialSync
     {
         private static readonly Vector3 spawnRelativeToEscapePod = new Vector3(0.9f, 2.1f, 0);
 
+        private readonly Item item;
         private readonly ItemContainers itemContainers;
 
-        public PlayerInitialSyncProcessor(ItemContainers itemContainers)
+        public PlayerInitialSyncProcessor(Item item, ItemContainers itemContainers)
         {
+            this.item = item;
             this.itemContainers = itemContainers;
         }
 
@@ -88,8 +90,9 @@ namespace NitroxClient.GameLogic.InitialSync
                     GameObject gameObject = result.Get();
                     Pickupable pickupable = gameObject.GetComponent<Pickupable>();
                     pickupable.Initialize();
-                    itemContainers.AddItem(pickupable.gameObject, NitroxEntity.GetId(Player.main.gameObject));
-                    itemContainers.BroadcastItemAdd(pickupable, Inventory.main.container.tr);
+
+                    item.Created(gameObject);
+                    itemContainers.AddItem(gameObject, NitroxEntity.GetId(Player.main.gameObject));
                 }
             }
         }

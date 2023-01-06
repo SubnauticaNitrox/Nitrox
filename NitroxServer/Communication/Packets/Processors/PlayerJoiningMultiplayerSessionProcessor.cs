@@ -41,9 +41,8 @@ namespace NitroxServer.Communication.Packets.Processors
 
             List<EquippedItemData> equippedItems = player.GetEquipment();
             List<NitroxTechType> techTypes = equippedItems.Select(equippedItem => equippedItem.TechType).ToList();
-            List<ItemData> inventoryItems = GetInventoryItems(player.GameObjectId);
 
-            PlayerJoinedMultiplayerSession playerJoinedPacket = new(player.PlayerContext, player.SubRootId, techTypes, inventoryItems);
+            PlayerJoinedMultiplayerSession playerJoinedPacket = new(player.PlayerContext, player.SubRootId, techTypes);
             playerManager.SendPacketToOtherPlayers(playerJoinedPacket, player);
 
             // Make players on localhost admin by default.
@@ -69,7 +68,6 @@ namespace NitroxServer.Communication.Packets.Processors
                 GetAllModules(world.InventoryManager.GetAllModules(), player.GetModules()),
                 world.BaseManager.GetBasePiecesForNewlyConnectedPlayer(),
                 vehicles,
-                world.InventoryManager.GetAllInventoryItems(),
                 world.InventoryManager.GetAllStorageSlotItems(),
                 player.UsedItems,
                 player.QuickSlotsBinding,
@@ -117,18 +115,6 @@ namespace NitroxServer.Communication.Packets.Processors
             modulesToSync.AddRange(globalModules);
             modulesToSync.AddRange(playerModules);
             return modulesToSync;
-        }
-
-        private List<ItemData> GetInventoryItems(NitroxId playerID)
-        {
-            List<ItemData> inventoryItems = world.InventoryManager.GetAllInventoryItems().Where(item => item.ContainerId.Equals(playerID)).ToList();
-
-            for (int index = 0; index < inventoryItems.Count; index++) //Also add batteries from tools to inventory items.
-            {
-                inventoryItems.AddRange(world.InventoryManager.GetAllStorageSlotItems().Where(item => item.ContainerId.Equals(inventoryItems[index].ItemId)));
-            }
-
-            return inventoryItems;
         }
     }
 }

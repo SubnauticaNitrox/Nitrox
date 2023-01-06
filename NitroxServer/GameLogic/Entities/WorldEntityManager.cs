@@ -104,10 +104,8 @@ namespace NitroxServer.GameLogic.Entities
             return Optional.Of(newCell);
         }
 
-        public void RegisterNewEntity(WorldEntity entity)
+        public void TrackEntityInTheWorld(WorldEntity entity)
         {
-            entityRegistry.AddEntity(entity);
-
             if (entity.ExistsInGlobalRoot)
             {
                 lock (globalRootEntitiesById)

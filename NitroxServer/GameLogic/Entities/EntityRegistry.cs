@@ -54,6 +54,19 @@ namespace NitroxServer.GameLogic.Entities
             }
         }
 
+        public void AddOrUpdate(Entity entity)
+        {
+            if (!entitiesById.TryAdd(entity.Id, entity))
+            {
+                Entity current = entitiesById[entity.Id];
+
+                if (entitiesById.TryUpdate(entity.Id, entity, current))
+                {
+                    Log.Error(new InvalidOperationException(), $"Could not add or update item {entity.Id} current: {current} new: {entity}");
+                }
+            }
+        }
+
         public void AddEntities(List<Entity> entities)
         {
             foreach(Entity entity in entities)

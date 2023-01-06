@@ -12,6 +12,8 @@ using NitroxModel.Helper;
 using NitroxClient.GameLogic.Spawning.Metadata.Extractor;
 using NitroxModel.DataStructures.GameLogic;
 using System.Linq;
+using NitroxClient.GameLogic.Helper;
+using NitroxClient.Unity.Helper;
 
 namespace NitroxClient.GameLogic
 {
@@ -66,10 +68,28 @@ namespace NitroxClient.GameLogic
             packetSender.Send(spawnedPacket);
         }
 
+        // Newly created objects are always placed into the player's inventory.
+        public void Created(GameObject gameObject)
+        {
+            NitroxId itemId = NitroxEntity.GetId(gameObject);
+            string classId = gameObject.RequireComponent<PrefabIdentifier>().ClassId;
+            TechType techType = gameObject.RequireComponent<Pickupable>().GetTechType();
+            Optional<EntityMetadata> metadata = EntityMetadataExtractor.Extract(gameObject);
+            List<Entity> children = Item.GetPrefabChildren(gameObject, itemId).ToList();
+            NitroxId ownerId = NitroxEntity.GetId(Player.main.gameObject);
+
+            InventoryItemEntity inventoryItemEntity = new(itemId, classId, techType.ToDto(), metadata.OrNull(), ownerId, children);
+
+            if (packetSender.Send(new EntitySpawnedByClient(inventoryItemEntity)))
+            {
+                Log.Debug($"Creation of item {techType} into the player's inventory {inventoryItemEntity}");
+            }
+        }
+
         // This function will record any notable children of the dropped item as a PrefabChildEntity.  In this case, a 'notable' 
         // child is one that UWE has tagged with a PrefabIdentifier (class id) and has entity metadata that can be extracted. An
         // example would be recording a Battery PrefabChild inside of a Flashlight WorldEntity. 
-        private IEnumerable<Entity> GetPrefabChildren(GameObject gameObject, NitroxId parentId)
+        public static IEnumerable<Entity> GetPrefabChildren(GameObject gameObject, NitroxId parentId)
         {
             foreach(IGrouping<string, PrefabIdentifier> prefabGroup in gameObject.GetAllComponentsInChildren<PrefabIdentifier>()
                                                                                  .Where(prefab => prefab.gameObject != gameObject)
