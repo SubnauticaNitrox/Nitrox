@@ -61,10 +61,9 @@ public static class Publicizer
                 {
                     typeCount = ExecuteSingle(file, assemblyReaderParams, outputSuffix, outputPath);
                 }
-                catch (Exception)
+                finally
                 {
                     sw.Stop();
-                    throw;
                 }
                 OnLogReceived($"Publicized '{file}' with {typeCount} types in {Math.Round(sw.Elapsed.TotalSeconds, 2)}s");
             }));
