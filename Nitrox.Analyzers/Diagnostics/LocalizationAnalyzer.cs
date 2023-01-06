@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -45,10 +46,16 @@ public sealed class LocalizationAnalyzer : DiagnosticAnalyzer
 
         context.RegisterCompilationStartAction(startContext =>
         {
+            IMethodSymbol languageGetMethodSymbol = startContext.Compilation.GetTypesByMetadataName("Language").FirstOrDefault(a => a.ContainingAssembly.Name.Equals("Assembly-Csharp", StringComparison.OrdinalIgnoreCase))?.GetMembers("Get").FirstOrDefault(m => m.Kind == SymbolKind.Method) as IMethodSymbol;
+            if (languageGetMethodSymbol == null)
+            {
+                return;
+            }
+
             startContext.Options.AnalyzerConfigOptionsProvider.GlobalOptions.TryGetValue("build_property.projectdir", out string projectDir);
             if (LocalizationHelper.Load(projectDir))
             {
-                startContext.RegisterSyntaxNodeAction(AnalyzeStringNode, SyntaxKind.StringLiteralExpression);
+                startContext.RegisterSyntaxNodeAction(c => AnalyzeStringNode(c, languageGetMethodSymbol), SyntaxKind.StringLiteralExpression);
             }
         });
     }
@@ -56,7 +63,7 @@ public sealed class LocalizationAnalyzer : DiagnosticAnalyzer
     /// <summary>
     ///     Analyzes string literals in code that are passed as argument to 'Language.main.Get'.
     /// </summary>
-    private void AnalyzeStringNode(SyntaxNodeAnalysisContext context)
+    private void AnalyzeStringNode(SyntaxNodeAnalysisContext context, IMethodSymbol languageGetMethodSymbol)
     {
         LiteralExpressionSyntax expression = (LiteralExpressionSyntax)context.Node;
         if (expression.Parent is not ArgumentSyntax argument)
@@ -71,7 +78,7 @@ public sealed class LocalizationAnalyzer : DiagnosticAnalyzer
         {
             return;
         }
-        if (method is not { ContainingType.Name: "Language", Name: "Get" })
+        if (!SymbolEqualityComparer.Default.Equals(method, languageGetMethodSymbol))
         {
             return;
         }
