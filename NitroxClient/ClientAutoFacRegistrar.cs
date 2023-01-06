@@ -129,7 +129,6 @@ namespace NitroxClient
             containerBuilder.RegisterType<PDAManagerEntry>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<PDAEncyclopediaEntry>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<SimulationOwnership>().InstancePerLifetimeScope();
-            containerBuilder.RegisterType<Crafting>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Cyclops>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Rockets>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<MobileVehicleBay>().InstancePerLifetimeScope();

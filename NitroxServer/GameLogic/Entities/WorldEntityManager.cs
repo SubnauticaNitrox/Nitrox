@@ -136,7 +136,7 @@ namespace NitroxServer.GameLogic.Entities
 
         public void PickUpEntity(NitroxId id)
         {
-            Optional<Entity> entity = entityRegistry.RemoveEntity(id);
+            Optional<Entity> entity = entityRegistry.GetEntityById(id);
             
             if (entity.HasValue && entity.Value is WorldEntity worldEntity)
             {

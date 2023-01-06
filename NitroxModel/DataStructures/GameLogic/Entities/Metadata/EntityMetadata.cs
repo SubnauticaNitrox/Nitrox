@@ -20,6 +20,7 @@ namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata
     [ProtoInclude(160, typeof(FlashlightMetadata))]
     [ProtoInclude(170, typeof(BatteryMetadata))]
     [ProtoInclude(180, typeof(RepairedComponentMetadata))]
+    [ProtoInclude(190, typeof(CrafterMetadata))]
     public abstract class EntityMetadata
     {
     }
