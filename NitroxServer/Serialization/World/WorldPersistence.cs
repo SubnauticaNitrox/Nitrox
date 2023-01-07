@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using NitroxModel.Core;
@@ -159,7 +159,7 @@ namespace NitroxServer.Serialization.World
                         StoryGoals = new StoryGoalData(),
                         StoryTiming = new StoryTimingData()
                     },
-                    InventoryData = InventoryData.From(new List<ItemData>(), new List<ItemData>(), new List<EquippedItemData>()),
+                    InventoryData = InventoryData.From(new List<ItemData>(), new List<EquippedItemData>()),
                     VehicleData = VehicleData.From(new List<VehicleModel>()),
                     ParsedBatchCells = new List<NitroxInt3>(),
                     Seed = config.Seed
@@ -193,7 +193,7 @@ namespace NitroxServer.Serialization.World
 
                 BaseManager = new BaseManager(pWorldData.BaseData.PartiallyConstructedPieces, pWorldData.BaseData.CompletedBasePieceHistory),
 
-                InventoryManager = new InventoryManager(pWorldData.WorldData.InventoryData.InventoryItems, pWorldData.WorldData.InventoryData.StorageSlotItems, pWorldData.WorldData.InventoryData.Modules),
+                InventoryManager = new InventoryManager(pWorldData.WorldData.InventoryData.StorageSlotItems, pWorldData.WorldData.InventoryData.Modules),
 
                 EscapePodManager = new EscapePodManager(entityRegistry, randomStart, seed),
 

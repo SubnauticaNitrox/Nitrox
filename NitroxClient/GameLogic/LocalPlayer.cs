@@ -95,10 +95,7 @@ namespace NitroxClient.GameLogic
             {
                 if (!child.gameObject.name.Contains("attach1_"))
                 {
-                    using (packetSender.Suppress<ItemContainerRemove>())
-                    {
-                        Object.DestroyImmediate(child.gameObject);
-                    }
+                    Object.DestroyImmediate(child.gameObject);
                 }
             }
 

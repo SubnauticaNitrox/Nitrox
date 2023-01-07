@@ -54,6 +54,20 @@ namespace NitroxServer.GameLogic.Entities
             }
         }
 
+        public void AddOrUpdate(Entity entity)
+        {
+            if (!entitiesById.TryAdd(entity.Id, entity))
+            {
+                Entity current = entitiesById[entity.Id];
+
+                entitiesById.TryUpdate(entity.Id, entity, current);
+
+                RemoveFromParent(current);
+            }
+
+            AddToParent(entity);
+        }
+
         public void AddEntities(List<Entity> entities)
         {
             foreach(Entity entity in entities)
@@ -68,5 +82,34 @@ namespace NitroxServer.GameLogic.Entities
 
             return Optional.OfNullable(entity);
         }
+
+        public void AddToParent(Entity entity)
+        {
+            if (entity.ParentId != null)
+            {
+                Optional<Entity> parent = GetEntityById(entity.ParentId);
+
+                if (parent.HasValue)
+                {
+                    parent.Value.ChildEntities.Add(entity);
+                }
+            }
+        }
+
+        public void RemoveFromParent(Entity entity)
+        {
+            if (entity.ParentId != null)
+            {
+                Optional<Entity> parent = GetEntityById(entity.ParentId);
+
+                if (parent.HasValue)
+                {
+                    parent.Value.ChildEntities.Remove(entity);
+                }
+
+                entity.ParentId = null;
+            }
+        }
+
     }
 }

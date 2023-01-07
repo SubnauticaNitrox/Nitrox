@@ -11,6 +11,7 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Helper;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
@@ -21,7 +22,7 @@ namespace NitroxClient.GameLogic
     {
         private readonly IPacketSender packetSender;
 
-        private readonly HashSet<NitroxId> alreadySpawnedIds = new HashSet<NitroxId>();
+        private readonly Dictionary<NitroxId, Type> spawnedAsType = new();
         private readonly Dictionary<NitroxId, List<Entity>> pendingParentEntitiesByParentId = new Dictionary<NitroxId, List<Entity>>();
 
         private readonly Dictionary<Type, IEntitySpawner> entitySpawnersByType = new Dictionary<Type, IEntitySpawner>();
@@ -31,9 +32,12 @@ namespace NitroxClient.GameLogic
             this.packetSender = packetSender;
 
             entitySpawnersByType[typeof(PrefabChildEntity)] = new PrefabChildEntitySpawner();
+            entitySpawnersByType[typeof(InventoryEntity)] = new InventoryEntitySpawner();
+            entitySpawnersByType[typeof(InventoryItemEntity)] = new InventoryItemEntitySpawner(packetSender);
             entitySpawnersByType[typeof(WorldEntity)] = new WorldEntitySpawner();
             entitySpawnersByType[typeof(PlaceholderGroupWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
             entitySpawnersByType[typeof(EscapePodWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
+            entitySpawnersByType[typeof(PlayerWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
         }
 
         public void BroadcastTransforms(Dictionary<NitroxId, GameObject> gameObjectsById)
@@ -75,14 +79,14 @@ namespace NitroxClient.GameLogic
         {
             foreach (Entity entity in entities)
             {
-                if (WasAlreadySpawned(entity.Id))
+                if (WasAlreadySpawned(entity))
                 {
                     if (entity is WorldEntity worldEntity)
                     {
                         UpdatePosition(worldEntity);
                     }
                 }
-                else if (entity.ParentId != null && !WasAlreadySpawned(entity.ParentId))
+                else if (entity.ParentId != null && !WasParentSpawned(entity.ParentId))
                 {
                     AddPendingParentEntity(entity);
                 }
@@ -96,7 +100,7 @@ namespace NitroxClient.GameLogic
 
         private IEnumerator SpawnAsync(Entity entity)
         {
-            alreadySpawnedIds.Add(entity.Id);
+            MarkAsSpawned(entity);
 
             IEntitySpawner entitySpawner = entitySpawnersByType[entity.GetType()];
 
@@ -115,7 +119,7 @@ namespace NitroxClient.GameLogic
             {
                 foreach (Entity childEntity in entity.ChildEntities)
                 {
-                    if (!WasAlreadySpawned(childEntity.Id))
+                    if (!WasAlreadySpawned(childEntity))
                     {
                         yield return SpawnAsync(childEntity);
                     }
@@ -129,7 +133,7 @@ namespace NitroxClient.GameLogic
             {
                 foreach (WorldEntity child in pendingEntities)
                 {
-                    if (!WasAlreadySpawned(child.Id))
+                    if (!WasAlreadySpawned(child))
                     {
                         yield return SpawnAsync(child);
                     }
@@ -185,8 +189,44 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        public bool WasAlreadySpawned(NitroxId id) => alreadySpawnedIds.Contains(id);
+        // Entites can sometimes be spawned as one thing but need to be respawned later as another.  For example, a flare
+        // spawned inside an Inventory as an InventoryItemEntity can later be dropped in the world as a WorldEntity. Another
+        // example would be a base ghost that needs to be respawned a completed piece. 
+        public bool WasAlreadySpawned(Entity entity)
+        {
+            if (spawnedAsType.TryGetValue(entity.Id, out Type type))
+            {
+                return (type == entity.GetType());
+            }
 
-        public bool RemoveEntity(NitroxId id) => alreadySpawnedIds.Remove(id);
+            return false;
+        }
+
+        public bool IsKnownEntity(NitroxId id)
+        {
+            return spawnedAsType.ContainsKey(id);
+        }
+
+        public Type RequireEntityType(NitroxId id)
+        {
+            if (spawnedAsType.TryGetValue(id, out Type type))
+            {
+                return type;
+            }
+
+            throw new InvalidOperationException($"Did not have a type for {id}");
+        }
+
+        public bool WasParentSpawned(NitroxId id)
+        {
+            return spawnedAsType.ContainsKey(id);
+        }
+
+        public void MarkAsSpawned(Entity entity)
+        {
+            spawnedAsType[entity.Id] = entity.GetType();
+        }
+
+        public bool RemoveEntity(NitroxId id) => spawnedAsType.Remove(id);
     }
 }
