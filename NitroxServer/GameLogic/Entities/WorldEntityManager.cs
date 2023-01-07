@@ -134,38 +134,33 @@ namespace NitroxServer.GameLogic.Entities
             }
         }
 
-        public void PickUpEntity(NitroxId id)
-        {
-            Optional<Entity> entity = entityRegistry.GetEntityById(id);
-            
-            if (entity.HasValue && entity.Value is WorldEntity worldEntity)
+        public void PickUpEntity(WorldEntity worldEntity)
+        {            
+            if (worldEntity.ExistsInGlobalRoot)
             {
-                if (worldEntity.ExistsInGlobalRoot)
+                lock (globalRootEntitiesById)
                 {
-                    lock (globalRootEntitiesById)
+                    globalRootEntitiesById.Remove(worldEntity.Id);
+                }
+            }
+            else
+            {
+                lock (phasingEntitiesByAbsoluteCell)
+                {
+                    if (phasingEntitiesByAbsoluteCell.TryGetValue(worldEntity.AbsoluteEntityCell, out List<WorldEntity> entities))
                     {
-                        globalRootEntitiesById.Remove(id);
+                        entities.Remove(worldEntity);
                     }
                 }
-                else
-                {
-                    lock (phasingEntitiesByAbsoluteCell)
-                    {
-                        if (phasingEntitiesByAbsoluteCell.TryGetValue(worldEntity.AbsoluteEntityCell, out List<WorldEntity> entities))
-                        {
-                            entities.Remove(worldEntity);
-                        }
-                    }
-                }
+            }
 
-                if (worldEntity.ParentId != null)
-                {
-                    Optional<Entity> parent = entityRegistry.GetEntityById(worldEntity.ParentId);
+            if (worldEntity.ParentId != null)
+            {
+                Optional<Entity> parent = entityRegistry.GetEntityById(worldEntity.ParentId);
 
-                    if (parent.HasValue)
-                    {
-                        parent.Value.ChildEntities.Remove(worldEntity);
-                    }
+                if (parent.HasValue)
+                {
+                    parent.Value.ChildEntities.Remove(worldEntity);
                 }
             }
         }

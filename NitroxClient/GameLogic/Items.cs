@@ -20,11 +20,13 @@ namespace NitroxClient.GameLogic
     {
         private readonly IPacketSender packetSender;
         private readonly IMap map;
+        private readonly Entities entities;
 
-        public Items(IPacketSender packetSender, IMap map)
+        public Items(IPacketSender packetSender, IMap map, Entities entities)
         {
             this.packetSender = packetSender;
             this.map = map;
+            this.entities = entities;
         }
 
         public void UpdatePosition(NitroxId id, Vector3 location, Quaternion rotation)
@@ -39,6 +41,19 @@ namespace NitroxClient.GameLogic
             RemoveAnyRemoteControl(gameObject);
 
             NitroxId id = NitroxEntity.GetId(gameObject);
+
+            // Some picked up entities are not known by the server for several reasons.  First it can be picked up via a spawn item command.  Another
+            // example is that some obects are not 'real' objects until they are clicked and end up spawning a prefab.  For example, the fire extinguisher
+            // in the escape pod (mono: IntroFireExtinguisherHandTarget) or Creepvine seeds (mono: PickupPrefab).  When clicked, these spawn new prefabs
+            // directly into the player's inventory.  In this pickup function, we can let the server know about this by sending an EntitySpawn packet; 
+            // however, the disavantage with doing this in one place is that other players may not 'see' the action (such as picking creepvine fruit). 
+            // This may be intended for things like the fire extinguisher because it lets all players get it.  As we sync these actions, this statement
+            // will no longer be true and will no longer send a created packet. 
+            if (!entities.IsKnownEntity(id))
+            {
+                Created(gameObject);
+            }
+
             Vector3 itemPosition = gameObject.transform.position;
 
             Log.Info($"PickedUp {id} {techType}");
@@ -79,6 +94,7 @@ namespace NitroxClient.GameLogic
             NitroxId ownerId = NitroxEntity.GetId(Player.main.gameObject);
 
             InventoryItemEntity inventoryItemEntity = new(itemId, classId, techType.ToDto(), metadata.OrNull(), ownerId, children);
+            entities.MarkAsSpawned(inventoryItemEntity);
 
             if (packetSender.Send(new EntitySpawnedByClient(inventoryItemEntity)))
             {

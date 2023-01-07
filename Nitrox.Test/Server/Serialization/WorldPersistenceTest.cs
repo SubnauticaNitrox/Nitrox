@@ -450,7 +450,7 @@ public class WorldPersistenceTest
                 {
                     Entities = new List<Entity>()
                     {
-                        new PrefabChildEntity(new NitroxId(), "pretty class id", new NitroxTechType("Fabrifactor"), 1, new CrafterMetadata(new NitroxTechType("FilteredWater"), 100, 10), new NitroxId()),
+                        new PrefabChildEntity(new NitroxId(), "pretty class id", new NitroxTechType("Fabricator"), 1, new CrafterMetadata(new NitroxTechType("FilteredWater"), 100, 10), new NitroxId()),
                         new PrefabPlaceholderEntity(new NitroxId(), new NitroxTechType("Bulkhead"), new NitroxId()),
                         new WorldEntity(NitroxVector3.Zero, NitroxQuaternion.Identity, NitroxVector3.One, new NitroxTechType("Peeper"), 1, "PeeperClass", false, new NitroxId(), null, false, new NitroxId()),
                         new PlaceholderGroupWorldEntity(new WorldEntity(NitroxVector3.Zero, NitroxQuaternion.Identity, NitroxVector3.One, NitroxTechType.None, 1, "Wreck1", false, new NitroxId(), null, false, new NitroxId()), new List<PrefabPlaceholderEntity>()

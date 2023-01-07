@@ -132,6 +132,7 @@ namespace NitroxServer.Communication.Packets.Processors
             PlayerWorldEntity playerEntity = new PlayerWorldEntity(transform, 0, null, false, null, true, player.GameObjectId, NitroxTechType.None, null, null, new List<Entity>());
             entityRegistry.AddEntity(playerEntity);
             world.WorldEntityManager.TrackEntityInTheWorld(playerEntity);
+            playerManager.SendPacketToOtherPlayers(new CellEntities(playerEntity), player);
         }
     }
 }

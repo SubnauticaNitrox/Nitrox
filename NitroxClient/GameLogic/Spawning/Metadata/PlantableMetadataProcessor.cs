@@ -9,13 +9,10 @@ public class PlantableMetadataProcessor : GenericEntityMetadataProcessor<Plantab
     {
         Plantable plantable = gameObject.GetComponent<Plantable>();
 
-        if (plantable)
+        // Plantable will only have a growing plant when residing in the proper container.
+        if (plantable && plantable.growingPlant)
         {
             plantable.growingPlant.SetProgress(metadata.Progress);
-        }
-        else
-        {
-            Log.Error($"Could not find plantable on {gameObject.name}");
         }
     }
 }

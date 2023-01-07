@@ -8,6 +8,9 @@ public class PlantableMetadataExtractor : GenericEntityMetadataExtractor<Plantab
     {
         GrowingPlant growingPlant = entity.growingPlant;
 
-        return new(growingPlant.GetProgress());
+        // The growing plant will only spawn in the proper container. In other containers, just consider progress as 0.
+        float progress = (growingPlant != null) ? growingPlant.GetProgress() : 0; 
+
+        return new(progress);
     }
 }

@@ -11,6 +11,7 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Helper;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
@@ -199,6 +200,21 @@ namespace NitroxClient.GameLogic
             }
 
             return false;
+        }
+
+        public bool IsKnownEntity(NitroxId id)
+        {
+            return spawnedAsType.ContainsKey(id);
+        }
+
+        public Type RequireEntityType(NitroxId id)
+        {
+            if (spawnedAsType.TryGetValue(id, out Type type))
+            {
+                return type;
+            }
+
+            throw new InvalidOperationException($"Did not have a type for {id}");
         }
 
         public bool WasParentSpawned(NitroxId id)
