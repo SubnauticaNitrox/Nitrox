@@ -122,7 +122,7 @@ namespace NitroxClient
             containerBuilder.RegisterType<PlayerChatManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Entities>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<MedkitFabricator>().InstancePerLifetimeScope();
-            containerBuilder.RegisterType<Item>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<Items>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<EquipmentSlots>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<ItemContainers>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<StorageSlots>().InstancePerLifetimeScope();

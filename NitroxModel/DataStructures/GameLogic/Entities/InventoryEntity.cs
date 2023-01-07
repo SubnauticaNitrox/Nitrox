@@ -6,6 +6,9 @@ using System.Runtime.Serialization;
 
 namespace NitroxModel.DataStructures.GameLogic.Entities;
 
+/// <summary>
+/// Represents an object that can hold InventoryItemEntity, such as the locker in the escape pod.
+/// </summary>
 [Serializable]
 [DataContract]
 public class InventoryEntity : Entity
@@ -32,6 +35,6 @@ public class InventoryEntity : Entity
 
     public override string ToString()
     {
-        return $"[StorageContainerEntity {base.ToString()}]";
+        return $"[InventoryEntity {base.ToString()}]";
     }
 }

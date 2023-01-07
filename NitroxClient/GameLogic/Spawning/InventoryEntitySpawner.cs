@@ -22,7 +22,7 @@ public class InventoryEntitySpawner : EntitySpawner<InventoryEntity>
         }
         else
         {
-            Log.Error($"Unable to find prefab for: {entity}");
+            Log.Error($"Unable to find {nameof(StorageContainer)} for: {entity}");
             result.Set(Optional.Empty);
         }
 

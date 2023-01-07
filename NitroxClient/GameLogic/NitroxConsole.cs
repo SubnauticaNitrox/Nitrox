@@ -16,9 +16,9 @@ namespace NitroxClient.GameLogic
 
         private readonly IPacketSender packetSender;
         private readonly Vehicles vehicles;
-        private readonly Item item;
+        private readonly Items item;
 
-        public NitroxConsole(IPacketSender packetSender, Vehicles vehicles, Item item)
+        public NitroxConsole(IPacketSender packetSender, Vehicles vehicles, Items item)
         {
             this.packetSender = packetSender;
             this.vehicles = vehicles;

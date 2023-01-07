@@ -13,10 +13,10 @@ namespace NitroxClient.GameLogic.InitialSync
 {
     public class PlayerInitialSyncProcessor : InitialSyncProcessor
     {
-        private readonly Item item;
+        private readonly Items item;
         private readonly ItemContainers itemContainers;
 
-        public PlayerInitialSyncProcessor(Item item, ItemContainers itemContainers)
+        public PlayerInitialSyncProcessor(Items item, ItemContainers itemContainers)
         {
             this.item = item;
             this.itemContainers = itemContainers;

@@ -11,7 +11,7 @@ public class Pickupable_Drop_Patch : NitroxPatch, IDynamicPatch
 
     public static void Postfix(Pickupable __instance)
     {
-        Resolve<Item>().Dropped(__instance.gameObject, __instance.GetTechType());
+        Resolve<Items>().Dropped(__instance.gameObject, __instance.GetTechType());
     }
 
     public override void Patch(Harmony harmony)

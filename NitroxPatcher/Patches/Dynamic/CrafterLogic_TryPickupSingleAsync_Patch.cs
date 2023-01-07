@@ -27,8 +27,6 @@ public class CrafterLogic_TryPickupSingleAsync_Patch : NitroxPatch, IDynamicPatc
 
     public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
     {
-        Validate.NotNull(INJECTION_OPERAND);
-
         foreach (CodeInstruction instruction in instructions)
         {
             yield return instruction;
@@ -36,7 +34,7 @@ public class CrafterLogic_TryPickupSingleAsync_Patch : NitroxPatch, IDynamicPatc
             if (instruction.opcode.Equals(INJECTION_OPCODE) && instruction.operand.Equals(INJECTION_OPERAND))
             {
                 /*
-                 * Callback(this.gameObject, gameObject);
+                 * Injects:  Callback(this.gameObject, gameObject);
                  */
                 yield return original.Ldloc<CrafterLogic>();
                 yield return new CodeInstruction(OpCodes.Callvirt, COMPONENT_GAMEOBJECT_GETTER);
@@ -53,7 +51,7 @@ public class CrafterLogic_TryPickupSingleAsync_Patch : NitroxPatch, IDynamicPatc
         Resolve<Entities>().BroadcastMetadataUpdate(crafterId, new CrafterMetadata(null, DayNightCycle.main.timePassedAsFloat, 0));
 
         // Let the server know that the item has been successfully created.
-        Resolve<Item>().Created(item);
+        Resolve<Items>().Created(item);
     }
 
     public override void Patch(Harmony harmony)

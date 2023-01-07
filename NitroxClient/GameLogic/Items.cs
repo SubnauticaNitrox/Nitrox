@@ -12,17 +12,16 @@ using NitroxModel.Helper;
 using NitroxClient.GameLogic.Spawning.Metadata.Extractor;
 using NitroxModel.DataStructures.GameLogic;
 using System.Linq;
-using NitroxClient.GameLogic.Helper;
 using NitroxClient.Unity.Helper;
 
 namespace NitroxClient.GameLogic
 {
-    public class Item
+    public class Items
     {
         private readonly IPacketSender packetSender;
         private readonly IMap map;
 
-        public Item(IPacketSender packetSender, IMap map)
+        public Items(IPacketSender packetSender, IMap map)
         {
             this.packetSender = packetSender;
             this.map = map;
@@ -68,14 +67,15 @@ namespace NitroxClient.GameLogic
             packetSender.Send(spawnedPacket);
         }
 
-        // Newly created objects are always placed into the player's inventory.
         public void Created(GameObject gameObject)
         {
             NitroxId itemId = NitroxEntity.GetId(gameObject);
             string classId = gameObject.RequireComponent<PrefabIdentifier>().ClassId;
             TechType techType = gameObject.RequireComponent<Pickupable>().GetTechType();
             Optional<EntityMetadata> metadata = EntityMetadataExtractor.Extract(gameObject);
-            List<Entity> children = Item.GetPrefabChildren(gameObject, itemId).ToList();
+            List<Entity> children = GetPrefabChildren(gameObject, itemId).ToList();
+
+            // Newly created objects are always placed into the player's inventory.
             NitroxId ownerId = NitroxEntity.GetId(Player.main.gameObject);
 
             InventoryItemEntity inventoryItemEntity = new(itemId, classId, techType.ToDto(), metadata.OrNull(), ownerId, children);

@@ -1,24 +1,18 @@
 using System;
 using NitroxModel.DataStructures;
 
-namespace NitroxModel.Packets
+namespace NitroxModel.Packets;
+
+[Serializable]
+public class EntityReparented : Packet
 {
-    [Serializable]
-    public class EntityReparented : Packet
+    public NitroxId Id { get; }
+
+    public NitroxId NewParentId { get; }
+
+    public EntityReparented(NitroxId id, NitroxId newParentId)
     {
-        //make sure to update the parent
-        public NitroxId Id { get; }
-
-        public NitroxId NewParentId { get; }
-
-        public EntityReparented(NitroxId id, NitroxId newParentId)
-        {
-            Id = id;
-            NewParentId = newParentId;
-        }
-        public override string ToString()
-        {
-            return $"[EntityReparented Id: {Id} NewParentId: {NewParentId}]";
-        }
+        Id = id;
+        NewParentId = newParentId;
     }
 }

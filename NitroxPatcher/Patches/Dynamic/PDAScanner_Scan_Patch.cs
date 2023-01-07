@@ -57,7 +57,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 // A lot of fragments are virtual entities (spawned by placeholders in the world).  Sometimes the server only knows the id
                 // of the placeholder and not the virtual entity. TODO: we will need to propagate deterministic ids to children entities for
                 // these virtual entities.
-                NitroxServiceLocator.LocateService<Item>().PickedUp(PDAScanner.scanTarget.gameObject, techType);
+                NitroxServiceLocator.LocateService<Items>().PickedUp(PDAScanner.scanTarget.gameObject, techType);
             }
         }
 
