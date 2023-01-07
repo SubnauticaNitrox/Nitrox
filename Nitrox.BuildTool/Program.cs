@@ -109,11 +109,10 @@ namespace Nitrox.BuildTool
             {
                 await Publicizer.PublicizeAsync(dllsToPublicize, "", Path.Combine(GeneratedOutputDir, "publicized_assemblies"));
             }
-            catch (Exception)
+            finally
             {
                 sw.Stop();
                 Publicizer.LogReceived -= LogReceived;
-                throw;
             }
             Console.WriteLine($"Publicized {dllsToPublicize.Length} DLL(s) in {Math.Round(sw.Elapsed.TotalSeconds, 2)}s");
         }
