@@ -24,7 +24,7 @@ namespace NitroxClient.MonoBehaviours
     public class Multiplayer : MonoBehaviour
     {
         public static Multiplayer Main;
-
+        private readonly Dictionary<Type, PacketProcessor> packetProcessorCache = new();
         private IMultiplayerSession multiplayerSession;
         private PacketReceiver packetReceiver;
         private ThrottledPacketSender throttledPacketSender;
@@ -34,6 +34,27 @@ namespace NitroxClient.MonoBehaviours
         ///     True if multiplayer is loaded and client is connected to a server.
         /// </summary>
         public static bool Active => Main != null && Main.multiplayerSession.Client.IsConnected;
+
+        public void Awake()
+        {
+            multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
+            packetReceiver = NitroxServiceLocator.LocateService<PacketReceiver>();
+            throttledPacketSender = NitroxServiceLocator.LocateService<ThrottledPacketSender>();
+
+            Main = this;
+            DontDestroyOnLoad(gameObject);
+
+            Log.InGame(Language.main.Get("Nitrox_MultiplayerLoaded"));
+        }
+
+        public void Update()
+        {
+            if (multiplayerSession.CurrentState.CurrentStage != MultiplayerSessionConnectionStage.DISCONNECTED)
+            {
+                ProcessPackets();
+                throttledPacketSender.Update();
+            }
+        }
 
         public static event Action OnBeforeMultiplayerStart;
         public static event Action OnAfterMultiplayerEnd;
@@ -76,46 +97,32 @@ namespace NitroxClient.MonoBehaviours
             SetLoadingComplete();
         }
 
-        public void Awake()
-        {
-            Log.InGame(Language.main.Get("Nitrox_MultiplayerLoaded"));
-
-            multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
-            packetReceiver = NitroxServiceLocator.LocateService<PacketReceiver>();
-            throttledPacketSender = NitroxServiceLocator.LocateService<ThrottledPacketSender>();
-
-            Main = this;
-            DontDestroyOnLoad(gameObject);
-        }
-
-        public void Update()
-        {
-            if (multiplayerSession.CurrentState.CurrentStage != MultiplayerSessionConnectionStage.DISCONNECTED)
-            {
-                ProcessPackets();
-                throttledPacketSender.Update();
-            }
-        }
-
         public void ProcessPackets()
         {
-            Queue<Packet> packets = packetReceiver.GetReceivedPackets();
-
-            foreach (Packet packet in packets)
+            PacketProcessor ResolveProcessor(Packet packet)
             {
+                Type packetType = packet.GetType();
+                if (packetProcessorCache.TryGetValue(packetType, out PacketProcessor processor))
+                {
+                    return processor;
+                }
+
                 try
                 {
-                    Type clientPacketProcessorType = typeof(ClientPacketProcessor<>);
-                    Type packetType = packet.GetType();
-                    Type packetProcessorType = clientPacketProcessorType.MakeGenericType(packetType);
-
-                    PacketProcessor processor = (PacketProcessor)NitroxServiceLocator.LocateService(packetProcessorType);
-                    processor.ProcessPacket(packet, null);
+                    Type packetProcessorType = typeof(ClientPacketProcessor<>).MakeGenericType(packetType);
+                    return packetProcessorCache[packetType] = (PacketProcessor)NitroxServiceLocator.LocateService(packetProcessorType);
                 }
                 catch (Exception ex)
                 {
                     Log.Error(ex, $"Error processing packet {packet}");
                 }
+
+                return null;
+            }
+
+            foreach (Packet packet in packetReceiver.GetReceivedPackets())
+            {
+                ResolveProcessor(packet)?.ProcessPacket(packet, null);
             }
         }
 
