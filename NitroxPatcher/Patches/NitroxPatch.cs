@@ -52,7 +52,7 @@ public abstract class NitroxPatch : INitroxPatch
     /// <returns>The requested type or null if not available.</returns>
     protected static T Resolve<T>(bool prelifeTime = false) where T : class
     {
-        return prelifeTime ? NitroxServiceLocator.Cache<T>.ValuePrelifetime : NitroxServiceLocator.Cache<T>.Value;
+        return prelifeTime ? NitroxServiceLocator.Cache<T>.ValuePreLifetime : NitroxServiceLocator.Cache<T>.Value;
     }
 
     protected void PatchFinalizer(Harmony harmony, MethodBase targetMethod, string finalizerMethod = "Finalizer")
