@@ -10,12 +10,10 @@ namespace NitroxClient.Communication.Packets.Processors
     public class PlayerJoinedMultiplayerSessionProcessor : ClientPacketProcessor<PlayerJoinedMultiplayerSession>
     {
         private readonly PlayerManager playerManager;
-        private readonly Entities entities;
 
-        public PlayerJoinedMultiplayerSessionProcessor(PlayerManager playerManager, Entities entities)
+        public PlayerJoinedMultiplayerSessionProcessor(PlayerManager playerManager)
         {
             this.playerManager = playerManager;
-            this.entities = entities;
         }
 
         public override void Process(PlayerJoinedMultiplayerSession packet)
@@ -25,8 +23,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
             playerManager.Create(packet.PlayerContext);
 
-            // Ensure that we don't block spawning if this has already been spawned previously (such as a disconnect). 
-            entities.RemoveEntity(packet.PlayerContext.PlayerNitroxId);
+            Log.InGame($"{packet.PlayerContext.PlayerName} joined the game.");
         }
     }
 }

@@ -84,8 +84,6 @@ namespace NitroxClient.GameLogic
             UpdateEquipmentVisibility();
             SetupBody();
             SetupSkyAppliers();
-
-            Log.InGame($"{PlayerName} joined the game.");
         }
 
         public void Attach(Transform transform, bool keepWorldTransform = false)

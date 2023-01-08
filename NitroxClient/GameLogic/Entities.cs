@@ -228,5 +228,19 @@ namespace NitroxClient.GameLogic
         }
 
         public bool RemoveEntity(NitroxId id) => spawnedAsType.Remove(id);
+
+        /// <summary>
+        /// Allows the ability to respawn an entity and its entire hierarchy. Callers are responsible for ensuring the
+        /// entity is no longer in the world.
+        /// </summary>
+        public void RemoveEntityHierarchy(Entity entity)
+        {
+            RemoveEntity(entity.Id);
+
+            foreach (Entity child in entity.ChildEntities)
+            {
+                RemoveEntityHierarchy(child);
+            }
+        }
     }
 }

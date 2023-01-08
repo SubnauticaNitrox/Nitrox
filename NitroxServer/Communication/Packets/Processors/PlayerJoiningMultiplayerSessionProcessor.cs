@@ -134,7 +134,7 @@ namespace NitroxServer.Communication.Packets.Processors
 
             if (playerEntity.HasValue)
             {
-                playerManager.SendPacketToOtherPlayers(new CellEntities(playerEntity.Value), player);
+                playerManager.SendPacketToOtherPlayers(new CellEntities(playerEntity.Value, true), player);
             }
             else
             {

@@ -40,6 +40,8 @@ public class PlayerWorldEntitySpawner : IWorldEntitySpawner
             {
                 AttachToParent(remotePlayer.Value, parent.Value);
             }
+
+            result.Set(Optional.Of(remotePlayerBody));
         }
 
         result.Set(Optional.Empty);
