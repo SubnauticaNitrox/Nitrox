@@ -5,6 +5,7 @@ using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.MultiplayerSession;
 using NitroxModel.Server;
 
 namespace NitroxModel.Packets
@@ -29,7 +30,7 @@ namespace NitroxModel.Packets
         public NitroxQuaternion PlayerSpawnRotation { get; }
         public Optional<NitroxId> PlayerSubRootId { get; }
         public PlayerStatsData PlayerStatsData { get; }
-        public List<InitialRemotePlayerData> RemotePlayerData { get; }
+        public List<PlayerContext> OtherPlayers { get; }
         public List<Entity> GlobalRootEntities { get; }
         public List<NitroxId> InitialSimulationOwnerships { get; }
         public ServerGameMode GameMode { get; }
@@ -53,7 +54,7 @@ namespace NitroxModel.Packets
             NitroxQuaternion playerSpawnRotation,
             Optional<NitroxId> playerSubRootId,
             PlayerStatsData playerStatsData,
-            IEnumerable<InitialRemotePlayerData> remotePlayerData,
+            IEnumerable<PlayerContext> otherPlayers,
             IEnumerable<Entity> globalRootEntities,
             IEnumerable<NitroxId> initialSimulationOwnerships,
             ServerGameMode gameMode,
@@ -77,7 +78,7 @@ namespace NitroxModel.Packets
             PlayerSpawnRotation = playerSpawnRotation;
             PlayerSubRootId = playerSubRootId;
             PlayerStatsData = playerStatsData;
-            RemotePlayerData = remotePlayerData.ToList();
+            OtherPlayers = otherPlayers.ToList();
             GlobalRootEntities = globalRootEntities.ToList();
             InitialSimulationOwnerships = initialSimulationOwnerships.ToList();
             GameMode = gameMode;
@@ -104,7 +105,7 @@ namespace NitroxModel.Packets
             NitroxQuaternion playerSpawnRotation,
             Optional<NitroxId> playerSubRootId,
             PlayerStatsData playerStatsData,
-            List<InitialRemotePlayerData> remotePlayerData,
+            List<PlayerContext> otherPlayers,
             List<Entity> globalRootEntities,
             List<NitroxId> initialSimulationOwnerships,
             ServerGameMode gameMode,
@@ -128,7 +129,7 @@ namespace NitroxModel.Packets
             PlayerSpawnRotation = playerSpawnRotation;
             PlayerSubRootId = playerSubRootId;
             PlayerStatsData = playerStatsData;
-            RemotePlayerData = remotePlayerData;
+            OtherPlayers = otherPlayers;
             GlobalRootEntities = globalRootEntities;
             InitialSimulationOwnerships = initialSimulationOwnerships;
             GameMode = gameMode;

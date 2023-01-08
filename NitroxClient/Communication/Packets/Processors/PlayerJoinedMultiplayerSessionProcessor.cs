@@ -9,11 +9,13 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class PlayerJoinedMultiplayerSessionProcessor : ClientPacketProcessor<PlayerJoinedMultiplayerSession>
     {
-        private readonly PlayerManager remotePlayerManager;
+        private readonly PlayerManager playerManager;
+        private readonly Entities entities;
 
-        public PlayerJoinedMultiplayerSessionProcessor(PlayerManager remotePlayerManager)
+        public PlayerJoinedMultiplayerSessionProcessor(PlayerManager playerManager, Entities entities)
         {
-            this.remotePlayerManager = remotePlayerManager;
+            this.playerManager = playerManager;
+            this.entities = entities;
         }
 
         public override void Process(PlayerJoinedMultiplayerSession packet)
@@ -21,7 +23,10 @@ namespace NitroxClient.Communication.Packets.Processors
             List<TechType> techTypes = packet.EquippedTechTypes.Select(techType => techType.ToUnity()).ToList();
             List<Pickupable> items = new List<Pickupable>();
 
-            remotePlayerManager.Create(packet.PlayerContext, packet.SubRootId, techTypes, items);
+            playerManager.Create(packet.PlayerContext);
+
+            // Ensure that we don't block spawning if this has already been spawned previously (such as a disconnect). 
+            entities.RemoveEntity(packet.PlayerContext.PlayerNitroxId);
         }
     }
 }

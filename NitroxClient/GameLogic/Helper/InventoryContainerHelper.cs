@@ -3,7 +3,6 @@ using System.Text.RegularExpressions;
 using NitroxClient.GameLogic.PlayerLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
-using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
 using UnityEngine;
@@ -12,8 +11,6 @@ namespace NitroxClient.GameLogic.Helper
 {
     public class InventoryContainerHelper
     {
-        private static PlayerManager playerManager;
-
         public static Optional<ItemsContainer> TryGetContainerByOwner(GameObject owner)
         {
             SeamothStorageContainer seamothStorageContainer = owner.GetComponent<SeamothStorageContainer>();
@@ -35,18 +32,10 @@ namespace NitroxClient.GameLogic.Helper
             {
                 return Optional.Of(Inventory.Get().container);
             }
-            if (owner.GetComponent<RemotePlayerIdentifier>())
+            RemotePlayerIdentifier remotePlayerId = owner.GetComponent<RemotePlayerIdentifier>();
+            if (remotePlayerId)
             {
-                if (playerManager == null)
-                {
-                    playerManager = NitroxServiceLocator.LocateService<PlayerManager>();
-                }
-
-                Optional<RemotePlayer> opPlayer = playerManager.FindByName(owner.name);
-                if (opPlayer.HasValue)
-                {
-                    return Optional.Of(opPlayer.Value.Inventory);
-                }
+                return Optional.Of(remotePlayerId.RemotePlayer.Inventory);
             }
 
             Log.Debug($"Couldn't resolve container from gameObject: {owner.name}");
