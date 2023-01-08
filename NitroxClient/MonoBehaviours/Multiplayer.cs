@@ -115,7 +115,7 @@ namespace NitroxClient.MonoBehaviours
                 }
                 catch (Exception ex)
                 {
-                    Log.Error(ex, $"Error processing packet {packet}");
+                    Log.Error(ex, $"Failed to find packet processor for packet {packet}");
                 }
 
                 return null;
@@ -123,7 +123,14 @@ namespace NitroxClient.MonoBehaviours
 
             foreach (Packet packet in packetReceiver.GetReceivedPackets())
             {
-                ResolveProcessor(packet)?.ProcessPacket(packet, null);
+                try
+                {
+                    ResolveProcessor(packet)?.ProcessPacket(packet, null);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex, $"Error while processing packet {packet}");
+                }
             }
         }
 
