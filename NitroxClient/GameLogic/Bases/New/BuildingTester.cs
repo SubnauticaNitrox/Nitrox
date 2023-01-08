@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Newtonsoft.Json;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours;
@@ -51,14 +52,10 @@ public class BuildingTester : MonoBehaviour
 
     public void Update()
     {
+        CleanCooldowns();
         if (BuildQueue.Count > 0 && !working)
         {
             working = true;
-            /*DateTimeOffset now = DateTimeOffset.Now;
-            foreach (KeyValuePair<NitroxId, DateTimeOffset> cooldown in BasesCooldown.Where(entry => (now - entry.Value).TotalMilliseconds >= MULTIPLAYER_BUILD_COOLDOWN).ToList())
-            {
-                BasesCooldown.Remove(cooldown.Key);
-            }*/
 
             StartCoroutine(TreatBuildCommand(BuildQueue.Dequeue()));
         }
@@ -109,14 +106,14 @@ public class BuildingTester : MonoBehaviour
     {
         Transform parent = GetParentOrGlobalRoot(placeGhost.ParentId);
         yield return NitroxBuild.RestoreGhost(parent, placeGhost.SavedGhost);
-        BasesCooldown[placeGhost.SavedGhost.NitroxId] = DateTimeOffset.Now;
+        BasesCooldown[placeGhost.ParentId ?? placeGhost.SavedGhost.NitroxId] = DateTimeOffset.Now;
     }
 
     public IEnumerator BuildModule(PlaceModule placeModule)
     {
         Transform parent = GetParentOrGlobalRoot(placeModule.ParentId);
         yield return NitroxBuild.RestoreModule(parent, placeModule.SavedModule);
-        BasesCooldown[placeModule.SavedModule.NitroxId] = DateTimeOffset.Now;
+        BasesCooldown[placeModule.ParentId ?? placeModule.SavedModule.NitroxId] = DateTimeOffset.Now;
     }
 
     public IEnumerator ProgressConstruction(ModifyConstructedAmount modifyConstructedAmount)
@@ -129,6 +126,7 @@ public class BuildingTester : MonoBehaviour
                 constructable.constructedAmount = 0f;
                 yield return constructable.ProgressDeconstruction();
                 UnityEngine.Object.Destroy(constructable.gameObject);
+                BasesCooldown.Remove(modifyConstructedAmount.GhostId);
                 yield break;
             }
             else if (modifyConstructedAmount.ConstructedAmount == 1f)
@@ -239,7 +237,6 @@ public class BuildingTester : MonoBehaviour
                 baseDeconstructable.Deconstruct();
                 TempId = null;
             }
-            BasesCooldown[pieceDeconstructed.PieceId] = DateTimeOffset.Now;
             BasesCooldown[pieceDeconstructed.BaseId] = DateTimeOffset.Now;
             yield break;
         }
@@ -280,6 +277,13 @@ public class BuildingTester : MonoBehaviour
     {
         yield return new WaitUntil(LargeWorldStreamer.main.IsWorldSettled);
         yield return Base.InitializeAsync();
+    }
+
+    private void CleanCooldowns()
+    {
+        DateTimeOffset now = DateTimeOffset.Now;
+        List<NitroxId> keysToRemove = BasesCooldown.Where(entry => (now - entry.Value).TotalMilliseconds >= MULTIPLAYER_BUILD_COOLDOWN).Select(e => e.Key).ToList();
+        keysToRemove.ForEach(key => BasesCooldown.Remove(key));
     }
 
     // TODO: Remove Legacy singleplayer testing code
