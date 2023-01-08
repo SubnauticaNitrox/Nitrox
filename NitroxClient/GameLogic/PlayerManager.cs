@@ -1,31 +1,24 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel;
-using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.Discord;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
-using NitroxModel.Packets;
-using UnityEngine;
 
 namespace NitroxClient.GameLogic
 {
     public class PlayerManager
     {
-        private readonly IPacketSender packetSender;
         private readonly PlayerModelManager playerModelManager;
         private readonly Dictionary<ushort, RemotePlayer> playersById = new Dictionary<ushort, RemotePlayer>();
 
         public OnCreate onCreate;
         public OnRemove onRemove;
 
-        public PlayerManager(IPacketSender packetSender, PlayerModelManager playerModelManager)
+        public PlayerManager(PlayerModelManager playerModelManager)
         {
-            this.packetSender = packetSender;
             this.playerModelManager = playerModelManager;
         }
 

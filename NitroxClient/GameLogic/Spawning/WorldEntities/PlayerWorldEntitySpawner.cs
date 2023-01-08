@@ -1,6 +1,7 @@
 using System.Collections;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.MonoBehaviours;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
 using NitroxModel_Subnautica.DataStructures;
@@ -21,6 +22,15 @@ public class PlayerWorldEntitySpawner : IWorldEntitySpawner
 
     public IEnumerator SpawnAsync(WorldEntity entity, Optional<GameObject> parent, EntityCell cellRoot, TaskResult<Optional<GameObject>> result)
     {
+        NitroxId localPlayer = NitroxEntity.GetId(Player.main.gameObject);
+
+        if (localPlayer == entity.Id)
+        {
+            // No special setup for the local player.  Simply return saying it is spawned.
+            result.Set(Player.main.gameObject);
+            yield break;
+        }
+
         Optional<RemotePlayer> remotePlayer = playerManager.Find(entity.Id);
 
         // The server may send us a player entity but they are not guarenteed to be actively connected at the moment - don't spawn them.  In the
@@ -42,10 +52,10 @@ public class PlayerWorldEntitySpawner : IWorldEntitySpawner
             }
 
             result.Set(Optional.Of(remotePlayerBody));
+            yield break;
         }
 
         result.Set(Optional.Empty);
-        yield break;
     }
 
     public bool SpawnsOwnChildren()

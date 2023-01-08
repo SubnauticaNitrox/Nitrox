@@ -18,7 +18,6 @@ namespace NitroxClient.GameLogic
         private static readonly int animatorPlayerIn = Animator.StringToHash("player_in");
 
         private readonly PlayerModelManager playerModelManager;
-        private readonly HashSet<TechType> equipment = new HashSet<TechType>();
 
         public PlayerContext PlayerContext { get; }
         public GameObject Body { get; private set; }
@@ -81,7 +80,6 @@ namespace NitroxClient.GameLogic
             CoroutineUtils.StartCoroutineSmart(playerModelManager.AttachPing(this));
             playerModelManager.BeginApplyPlayerColor(this);
             playerModelManager.RegisterEquipmentVisibilityHandler(PlayerModel);
-            UpdateEquipmentVisibility();
             SetupBody();
             SetupSkyAppliers();
         }
@@ -290,27 +288,9 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        public void AddEquipment(TechType techType)
+        public void UpdateEquipmentVisibility(List<TechType> equippedItems)
         {
-            if (equipment.Contains(techType))
-            {
-                return;
-            }
-
-            equipment.Add(techType);
-
-            UpdateEquipmentVisibility();
-        }
-
-        public void RemoveEquipment(TechType techType)
-        {
-            equipment.Remove(techType);
-            UpdateEquipmentVisibility();
-        }
-
-        private void UpdateEquipmentVisibility()
-        {
-            playerModelManager.UpdateEquipmentVisibility(new ReadOnlyCollection<TechType>(equipment.ToList()));
+            playerModelManager.UpdateEquipmentVisibility(new ReadOnlyCollection<TechType>(equippedItems));
         }
         
         /// <summary>

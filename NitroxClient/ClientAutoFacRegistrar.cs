@@ -21,6 +21,7 @@ using NitroxClient.GameLogic.PlayerLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.PlayerLogic.PlayerPreferences;
 using NitroxClient.GameLogic.Settings;
+using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.GameLogic.Spawning.Metadata.Extractor;
 using NitroxClient.Helpers;
 using NitroxClient.Map;
@@ -108,6 +109,12 @@ namespace NitroxClient
             containerBuilder.RegisterAssemblyTypes(currentAssembly)
                             .AssignableTo<EntityMetadataExtractor>()
                             .As<EntityMetadataExtractor>()
+                            .AsSelf()
+                            .SingleInstance();
+
+            containerBuilder.RegisterAssemblyTypes(currentAssembly)
+                            .AssignableTo<EntityMetadataProcessor>()
+                            .As<EntityMetadataProcessor>()
                             .AsSelf()
                             .SingleInstance();
 

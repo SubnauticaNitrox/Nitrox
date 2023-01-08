@@ -108,13 +108,6 @@ namespace NitroxClient.GameLogic
             yield return entitySpawner.SpawnAsync(entity, gameObjectTaskResult);
             Optional<GameObject> gameObject = gameObjectTaskResult.Get();
 
-            if (gameObject.HasValue)
-            {
-                yield return AwaitAnyRequiredEntitySetup(gameObject.Value);
-
-                EntityMetadataProcessor.ApplyMetadata(gameObject.Value, entity.Metadata);
-            }
-
             if (!entitySpawner.SpawnsOwnChildren(entity))
             {
                 foreach (Entity childEntity in entity.ChildEntities)
@@ -124,6 +117,15 @@ namespace NitroxClient.GameLogic
                         yield return SpawnAsync(childEntity);
                     }
                 }
+            }
+
+            if (gameObject.HasValue)
+            {
+                yield return AwaitAnyRequiredEntitySetup(gameObject.Value);
+
+                // Apply entity metadat after children have been spawned.  This will allow metadata processors to
+                // interact with children if necessary (for example, PlayerMetadata which equips inventory items).
+                EntityMetadataProcessor.ApplyMetadata(gameObject.Value, entity.Metadata);
             }
         }
 
