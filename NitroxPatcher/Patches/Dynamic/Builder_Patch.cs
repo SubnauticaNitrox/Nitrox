@@ -319,7 +319,7 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
 
     public static void PostfixDeconstructionAllowed(BaseDeconstructable __instance, ref bool __result, ref string reason)
     {
-        if (__result && __instance.TryGetComponentInParent(out NitroxEntity parentId) &&
+        if (__result && __instance.deconstructedBase.TryGetComponent(out NitroxEntity parentId) &&
             BuildingTester.Main && BuildingTester.Main.BasesCooldown.ContainsKey(parentId.Id))
         {
             __result = false;
