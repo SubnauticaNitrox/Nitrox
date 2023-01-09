@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.Communication.Abstract;
@@ -32,7 +32,7 @@ namespace NitroxPatcher.Patches.Dynamic
             }
 
             float timeExecute = StoryGoalScheduler.main.schedule.GetLast().timeExecute;
-            packetSender.Send(new Schedule(timeExecute, goal.key, goal.goalType.ToString()));
+            packetSender.Send(new Schedule(timeExecute, goal.key, (int)goal.goalType));
         }
 
         public override void Patch(Harmony harmony)

@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic;
@@ -16,6 +15,7 @@ public class StoryGoalInitialSyncProcessor : InitialSyncProcessor
     {
         return new List<IEnumerator> {
             SetTimeData(packet),
+            SetupAurora(packet),
             SetRadioQueue(packet),
             SetCompletedStoryGoals(packet),
             SetGoalUnlocks(packet),
@@ -26,9 +26,14 @@ public class StoryGoalInitialSyncProcessor : InitialSyncProcessor
 
     private IEnumerator SetTimeData(InitialPlayerSync packet)
     {
-        InitialTimeData timeData = packet.InitialTimeData;
+        NitroxServiceLocator.LocateService<TimeManager>().ProcessUpdate(packet.InitialTimeData.TimePacket);
+        yield break;
+    }
 
-        NitroxServiceLocator.LocateService<TimeManager>().ProcessUpdate(timeData.TimePacket);
+    private IEnumerator SetupAurora(InitialPlayerSync packet)
+    {
+        // TODO: Separate this data from this packet
+        InitialTimeData timeData = packet.InitialTimeData;
 
         AuroraWarnings auroraWarnings = GameObject.FindObjectOfType<AuroraWarnings>();
         auroraWarnings.timeSerialized = DayNightCycle.main.timePassedAsFloat;
@@ -38,6 +43,10 @@ public class StoryGoalInitialSyncProcessor : InitialSyncProcessor
         CrashedShipExploder.main.timeToStartCountdown = timeData.CrashedShipExploderData.TimeToStartCountdown;
         CrashedShipExploder.main.timeToStartWarning = timeData.CrashedShipExploderData.TimeToStartWarning;
         CrashedShipExploder.main.OnProtoDeserialize(null);
+
+        // TODO: if (StoryGoalManager.main.IsGoalComplete(this.gunDeactivate.key))
+        StoryGoalCustomEventHandler.main.gunDisabled = false;
+
         yield break;
     }
 
@@ -88,31 +97,24 @@ public class StoryGoalInitialSyncProcessor : InitialSyncProcessor
         yield break;
     }
 
+    // Must happen after CompletedGoals
     private IEnumerator SetScheduledGoals(InitialPlayerSync packet)
     {
         List<NitroxScheduledGoal> scheduledGoals = packet.StoryGoalData.ScheduledGoals;
-
-        Dictionary<string, PDALog.Entry> entries = PDALog.entries;
-        // Need to clear some duplicated goals that might have appeared during loading and before sync
-        for (int i = StoryGoalScheduler.main.schedule.Count - 1; i >= 0; i--)
-        {
-            ScheduledGoal scheduledGoal = StoryGoalScheduler.main.schedule[i];
-            if (entries.ContainsKey(scheduledGoal.goalKey))
-            {
-                StoryGoalScheduler.main.schedule.Remove(scheduledGoal);
-            }
-        }
+        List<string> goalKeys = scheduledGoals.ConvertAll((goal) => goal.GoalKey);
 
         foreach (NitroxScheduledGoal scheduledGoal in scheduledGoals)
         {
-            ScheduledGoal goal = new ScheduledGoal();
-            goal.goalKey = scheduledGoal.GoalKey;
-            goal.goalType = (Story.GoalType)System.Enum.Parse(typeof(Story.GoalType), scheduledGoal.GoalType);
-            goal.timeExecute = scheduledGoal.TimeExecute;
-            if (goal.timeExecute >= DayNightCycle.main.timePassedAsDouble
-                && !StoryGoalScheduler.main.schedule.Any(alreadyInGoal => alreadyInGoal.goalKey == goal.goalKey)
-                && !entries.TryGetValue(goal.goalKey, out PDALog.Entry value)
-                && !StoryGoalManager.main.completedGoals.Contains(goal.goalKey))
+            // Clear duplicated goals that might have appeared during loading and before sync
+            StoryGoalScheduler.main.schedule.RemoveAll(goal => goal.goalKey == scheduledGoal.GoalKey);
+
+            ScheduledGoal goal = new()
+            {
+                goalKey = scheduledGoal.GoalKey,
+                goalType = (Story.GoalType)scheduledGoal.GoalType,
+                timeExecute = scheduledGoal.TimeExecute,
+            };
+            if (goal.timeExecute >= DayNightCycle.main.timePassedAsDouble && !StoryGoalManager.main.completedGoals.Contains(goal.goalKey))
             {
                 StoryGoalScheduler.main.schedule.Add(goal);
             }
