@@ -57,7 +57,7 @@ namespace NitroxClient.GameLogic
             packetSender.Send(update);
         }
 
-        public void EntityMetadataChanged(UnityEngine.Object o, NitroxId id)
+        public void EntityMetadataChanged(object o, NitroxId id)
         {
             Optional<EntityMetadata> metadata = EntityMetadataExtractor.Extract(o);
 

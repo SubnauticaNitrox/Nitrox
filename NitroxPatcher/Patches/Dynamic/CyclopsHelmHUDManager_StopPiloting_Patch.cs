@@ -1,7 +1,8 @@
-﻿using System.Reflection;
+using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
+using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 
@@ -15,7 +16,7 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             NitroxId id = NitroxEntity.GetId(__instance.subRoot.gameObject);
             __instance.hudActive = true;
-            Resolve<Cyclops>().BroadcastChangeSonarState(id, false);
+            NitroxServiceLocator.LocateService<Cyclops>().BroadcastMetadataChange(id);
         }
 
         public override void Patch(Harmony harmony)

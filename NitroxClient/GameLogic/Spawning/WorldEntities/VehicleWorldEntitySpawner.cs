@@ -66,6 +66,8 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
         Rigidbody rigidBody = gameObject.RequireComponent<Rigidbody>();
         rigidBody.isKinematic = false;
 
+        // Sometimes build templates, such as the cyclops, are already tagged with IDs.  Remove any that exist to retag.
+        UnityEngine.Component.DestroyImmediate(gameObject.GetComponent<NitroxEntity>());
         NitroxEntity.SetNewId(gameObject, vehicleEntity.Id);
 
         result.Set(gameObject);
@@ -87,6 +89,9 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
         Validate.IsTrue(opConstructedObject.HasValue, $"Could not find constructed object {vehicleEntity.Id} from constructor {constructor.gameObject.name}");
 
         GameObject constructedObject = (GameObject)opConstructedObject.Value;
+
+        // Sometimes build templates, such as the cyclops, are already tagged with IDs.  Remove any that exist to retag.
+        UnityEngine.Component.DestroyImmediate(constructedObject.GetComponent<NitroxEntity>());
         NitroxEntity.SetNewId(constructedObject, vehicleEntity.Id);
 
         result.Set(constructedObject);

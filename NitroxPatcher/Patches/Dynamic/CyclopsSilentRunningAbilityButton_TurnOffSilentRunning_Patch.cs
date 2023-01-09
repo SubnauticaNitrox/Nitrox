@@ -16,7 +16,7 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             NitroxId id = NitroxEntity.GetId(__instance.subRoot.gameObject);
 
-            NitroxServiceLocator.LocateService<Cyclops>().BroadcastChangeSilentRunning(id, false);
+            NitroxServiceLocator.LocateService<Cyclops>().BroadcastMetadataChange(id);
         }
 
         public override void Patch(Harmony harmony)

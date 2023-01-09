@@ -5,6 +5,7 @@ using System.Linq;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
+using static NitroxModel.Serialization.ServerList;
 
 namespace NitroxServer.GameLogic.Entities
 {
@@ -66,6 +67,7 @@ namespace NitroxServer.GameLogic.Entities
             }
 
             AddToParent(entity);
+            AddEntitiesIgnoringDuplicate(entity.ChildEntities);
         }
 
         public void AddEntities(List<Entity> entities)
@@ -74,6 +76,15 @@ namespace NitroxServer.GameLogic.Entities
             {
                 AddEntity(entity);
             }            
+        }
+
+        public void AddEntitiesIgnoringDuplicate(List<Entity> entities)
+        {
+            foreach (Entity entity in entities)
+            {
+                entitiesById.TryAdd(entity.Id, entity);
+                AddEntitiesIgnoringDuplicate(entity.ChildEntities);
+            }
         }
 
         public Optional<Entity> RemoveEntity(NitroxId id)

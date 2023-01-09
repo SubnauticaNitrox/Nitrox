@@ -15,7 +15,7 @@ namespace NitroxPatcher.Patches.Dynamic
         public static void Postfix(CyclopsSilentRunningAbilityButton __instance)
         {
             NitroxId id = NitroxEntity.GetId(__instance.subRoot.gameObject);
-            NitroxServiceLocator.LocateService<Cyclops>().BroadcastChangeSilentRunning(id, true);
+            NitroxServiceLocator.LocateService<Cyclops>().BroadcastMetadataChange(id);
         }
 
         public override void Patch(Harmony harmony)
