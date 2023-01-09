@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using NitroxClient.Communication;
@@ -480,11 +480,11 @@ namespace NitroxClient.GameLogic
             vehicleMovementSuppressor.Dispose();
         }
 
-        public IEnumerator UpdateVehiclePositionAfterSpawn(VehicleModel vehicleModel, GameObject gameObject, float cooldown)
+        public IEnumerator UpdateVehiclePositionAfterSpawn(NitroxId id, TechType techType, GameObject gameObject, float cooldown)
         {
             yield return new WaitForSeconds(cooldown);
 
-            VehicleMovementData vehicleMovementData = new BasicVehicleMovementData(vehicleModel.TechType, vehicleModel.Id, gameObject.transform.position.ToDto(), gameObject.transform.rotation.ToDto());
+            VehicleMovementData vehicleMovementData = new BasicVehicleMovementData(techType.ToDto(), id, gameObject.transform.position.ToDto(), gameObject.transform.rotation.ToDto());
             ushort playerId = ushort.MaxValue;
 
             packetSender.Send(new VehicleMovement(playerId, vehicleMovementData));

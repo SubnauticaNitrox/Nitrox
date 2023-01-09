@@ -19,7 +19,7 @@ namespace NitroxClient.GameLogic.InitialSync
             this.packetSender = packetSender;
             this.slots = slots;
 
-            DependentProcessors.Add(typeof(VehicleInitialSyncProcessor));
+            DependentProcessors.Add(typeof(GlobalRootInitialSyncProcessor)); // Storage slots can be inside vehicles in global root
             DependentProcessors.Add(typeof(EquippedItemInitialSyncProcessor)); // Just to be sure, for cyclops mode persistence. See "Cyclops.SetAdvancedModes"
         }
 
