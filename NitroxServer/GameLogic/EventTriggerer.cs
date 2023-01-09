@@ -269,13 +269,17 @@ namespace NitroxServer.GameLogic
                     break;
             }
 
-            playerManager.SendPacketToAllPlayers(new TimeChange(ElapsedSeconds, DateTimeOffset.Now.ToUnixTimeMilliseconds()));
+            playerManager.SendPacketToAllPlayers(MakeTimePacket());
+        }
+
+        public TimeChange MakeTimePacket()
+        {
+            return new(ElapsedSeconds, DateTimeOffset.Now.ToUnixTimeMilliseconds());
         }
 
         public InitialTimeData GetInitialTimeData()
         {
-            return new(new(ElapsedSeconds, DateTimeOffset.Now.ToUnixTimeMilliseconds()),
-                       new((float)AuroraExplosionTimeMs * 0.001f, (float)AuroraWarningTimeMs * 0.001f));
+            return new(MakeTimePacket(), new((float)AuroraExplosionTimeMs * 0.001f, (float)AuroraWarningTimeMs * 0.001f));
         }
 
         public enum TimeModification
