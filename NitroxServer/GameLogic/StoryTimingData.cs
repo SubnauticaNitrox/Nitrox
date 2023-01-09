@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.Serialization;
 
 namespace NitroxServer.GameLogic
@@ -8,7 +8,7 @@ namespace NitroxServer.GameLogic
     public class StoryTimingData
     {
         [DataMember(Order = 1)]
-        public double ElapsedTime { get; set; }
+        public double ElapsedSeconds { get; set; }
 
         [DataMember(Order = 2)]
         public double? AuroraExplosionTime { get; set; }
@@ -20,7 +20,7 @@ namespace NitroxServer.GameLogic
         {
             return new StoryTimingData
             {
-                ElapsedTime = eventTriggerer.ElapsedTimeMs,
+                ElapsedSeconds = eventTriggerer.ElapsedSeconds,
                 AuroraExplosionTime = eventTriggerer.AuroraExplosionTimeMs,
                 AuroraWarningTime = eventTriggerer.AuroraWarningTimeMs,
             };

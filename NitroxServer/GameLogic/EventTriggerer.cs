@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -59,17 +59,17 @@ namespace NitroxServer.GameLogic
         // Using ceiling because days count start at 1 and not 0
         public int Day => (int)Math.Ceiling(ElapsedTimeMs / TimeSpan.FromMinutes(20).TotalMilliseconds);
 
-        public EventTriggerer(PlayerManager playerManager, PDAStateData pdaStateData, StoryGoalData storyGoalData, string seed, double elapsedTime, double? auroraExplosionTime, double? auroraWarningTime)
+        public EventTriggerer(PlayerManager playerManager, PDAStateData pdaStateData, StoryGoalData storyGoalData, string seed, double elapsedSeconds, double? auroraExplosionTime, double? auroraWarningTime)
         {
             this.playerManager = playerManager;
             this.pdaStateData = pdaStateData;
             this.storyGoalData = storyGoalData;
             this.seed = seed;
             // Default time in Base SN is 480s
-            elapsedTimeOutsideStopWatchMs = elapsedTime == 0 ? TimeSpan.FromSeconds(480).TotalMilliseconds : elapsedTime;
+            elapsedTimeOutsideStopWatchMs = elapsedSeconds == 0 ? TimeSpan.FromSeconds(480).TotalMilliseconds : elapsedSeconds * 1000;
             AuroraExplosionTimeMs = auroraExplosionTime ?? GenerateDeterministicAuroraTime(seed);
             AuroraWarningTimeMs = auroraWarningTime ?? ElapsedTimeMs;
-            CreateEventTimers();
+            //CreateEventTimers();
             stopWatch.Start();
             Log.Debug($"Event Triggerer started! ElapsedTime={Math.Floor(ElapsedSeconds)}s");
             Log.Debug($"Aurora will explode in {GetMinutesBeforeAuroraExplosion()} minutes");
@@ -259,17 +259,23 @@ namespace NitroxServer.GameLogic
             switch (type)
             {
                 case TimeModification.DAY:
-                    ElapsedTimeMs += 1200000.0 - ElapsedTimeMs % 1200000.0 + 600000.0;
+                    ElapsedSeconds += 1200 - ElapsedSeconds % 1200 + 600;
                     break;
                 case TimeModification.NIGHT:
-                    ElapsedTimeMs += 1200000.0 - ElapsedTimeMs % 1200000.0;
+                    ElapsedSeconds += 1200 - ElapsedSeconds % 1200;
                     break;
                 case TimeModification.SKIP:
-                    ElapsedTimeMs += 600000.0 - ElapsedTimeMs % 600000.0;
+                    ElapsedSeconds += 600 - ElapsedSeconds % 600;
                     break;
             }
 
-            playerManager.SendPacketToAllPlayers(new TimeChange(ElapsedSeconds, false));
+            playerManager.SendPacketToAllPlayers(new TimeChange(ElapsedSeconds, DateTimeOffset.Now.ToUnixTimeMilliseconds()));
+        }
+
+        public InitialTimeData GetInitialTimeData()
+        {
+            return new(new(ElapsedSeconds, DateTimeOffset.Now.ToUnixTimeMilliseconds()),
+                       new((float)AuroraExplosionTimeMs * 0.001f, (float)AuroraWarningTimeMs * 0.001f));
         }
 
         public enum TimeModification

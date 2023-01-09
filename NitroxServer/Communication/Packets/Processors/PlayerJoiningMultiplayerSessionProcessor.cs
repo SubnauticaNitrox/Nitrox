@@ -97,10 +97,10 @@ namespace NitroxServer.Communication.Packets.Processors
                 simulations,
                 world.GameMode,
                 player.Permissions,
-                player.PingInstancePreferences.ToDictionary(m => m.Key, m => m.Value)
+                player.PingInstancePreferences.ToDictionary(m => m.Key, m => m.Value),
+                eventTriggerer.GetInitialTimeData()
             );
 
-            player.SendPacket(new TimeChange(eventTriggerer.ElapsedSeconds, true));
             player.SendPacket(initialPlayerSync);
         }
 

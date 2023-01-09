@@ -177,7 +177,7 @@ public class WorldPersistenceTest
 
     private static void StoryTimingTest(StoryTimingData storyTiming, StoryTimingData storyTimingAfter)
     {
-        Assert.AreEqual(storyTiming.ElapsedTime, storyTimingAfter.ElapsedTime);
+        Assert.AreEqual(storyTiming.ElapsedSeconds, storyTimingAfter.ElapsedSeconds);
         Assert.AreEqual(storyTiming.AuroraExplosionTime, storyTimingAfter.AuroraExplosionTime);
         Assert.AreEqual(storyTiming.AuroraWarningTime, storyTimingAfter.AuroraWarningTime);
     }
@@ -526,7 +526,7 @@ public class WorldPersistenceTest
                     },
                     StoryTiming = new StoryTimingData()
                     {
-                        ElapsedTime = 10,
+                        ElapsedSeconds = 10,
                         AuroraExplosionTime = 10000,
                         AuroraWarningTime = 20
                     },
