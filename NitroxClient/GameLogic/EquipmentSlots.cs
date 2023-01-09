@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
@@ -43,9 +43,8 @@ namespace NitroxClient.GameLogic
 
             if (techType == TechType.VehicleStorageModule)
             {
-                List<InteractiveChildObjectIdentifier> childIdentifiers = VehicleChildObjectIdentifierHelper.ExtractInteractiveChildren(owner);
-                VehicleChildUpdate vehicleChildInteractiveData = new VehicleChildUpdate(ownerId, childIdentifiers);
-                packetSender.Send(vehicleChildInteractiveData);
+                entities.EntityMetadataChanged(pickupable, ownerId);
+                return;
             }
 
             Transform parent = pickupable.gameObject.transform.parent;
@@ -86,9 +85,8 @@ namespace NitroxClient.GameLogic
 
             if (pickupable.GetTechType() == TechType.VehicleStorageModule)
             {
-                List<InteractiveChildObjectIdentifier> childIdentifiers = VehicleChildObjectIdentifierHelper.ExtractInteractiveChildren(owner);
-                VehicleChildUpdate vehicleChildInteractiveData = new VehicleChildUpdate(ownerId, childIdentifiers);
-                packetSender.Send(vehicleChildInteractiveData);
+                entities.EntityMetadataChanged(pickupable, ownerId);
+                return;
             }
 
             bool playerModule = true;

@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.Spawning;
@@ -33,6 +32,7 @@ namespace NitroxClient.GameLogic
             this.packetSender = packetSender;
 
             entitySpawnersByType[typeof(PrefabChildEntity)] = new PrefabChildEntitySpawner();
+            entitySpawnersByType[typeof(PathBasedChildEntity)] = new PathBasedChildEntitySpawner();
             entitySpawnersByType[typeof(InventoryEntity)] = new InventoryEntitySpawner();
             entitySpawnersByType[typeof(InventoryItemEntity)] = new InventoryItemEntitySpawner(packetSender);
             entitySpawnersByType[typeof(WorldEntity)] = new WorldEntitySpawner(playerManager, localPlayer);
@@ -244,35 +244,6 @@ namespace NitroxClient.GameLogic
             foreach (Entity child in entity.ChildEntities)
             {
                 RemoveEntityHierarchy(child);
-            }
-        }
-
-        // This function will record any notable children of the dropped item as a PrefabChildEntity.  In this case, a 'notable' 
-        // child is one that UWE has tagged with a PrefabIdentifier (class id) and has entity metadata that can be extracted. An
-        // example would be recording a Battery PrefabChild inside of a Flashlight WorldEntity. 
-        public static IEnumerable<Entity> GetPrefabChildren(GameObject gameObject, NitroxId parentId)
-        {
-            foreach (IGrouping<string, PrefabIdentifier> prefabGroup in gameObject.GetAllComponentsInChildren<PrefabIdentifier>()
-                                                                                 .Where(prefab => prefab.gameObject != gameObject)
-                                                                                 .GroupBy(prefab => prefab.classId))
-            {
-                int indexInGroup = 0;
-
-                foreach (PrefabIdentifier prefab in prefabGroup)
-                {
-                    Optional<EntityMetadata> metadata = EntityMetadataExtractor.Extract(prefab.gameObject);
-
-                    if (metadata.HasValue)
-                    {
-                        NitroxId id = NitroxEntity.GetId(prefab.gameObject);
-                        TechTag techTag = prefab.gameObject.GetComponent<TechTag>();
-                        TechType techType = (techTag) ? techTag.type : TechType.None;
-
-                        yield return new PrefabChildEntity(id, prefab.classId, techType.ToDto(), indexInGroup, metadata.Value, parentId);
-
-                        indexInGroup++;
-                    }
-                }
             }
         }
     }

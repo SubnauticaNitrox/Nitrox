@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using NitroxClient.Communication.Abstract;
+using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities;
@@ -37,8 +38,8 @@ namespace NitroxClient.GameLogic
             NitroxId constructorId = NitroxEntity.GetId(constructor.constructor.gameObject);
             
             VehicleWorldEntity vehicleEntity = new VehicleWorldEntity(constructorId, DayNightCycle.main.timePassedAsFloat, constructedObject.transform.ToDto(), "", false, constructedObjectId, techType.ToDto(), null);
-            vehicleEntity.ChildEntities = Entities.GetPrefabChildren(constructedObject, constructedObjectId).ToList();
-
+            vehicleEntity.ChildEntities = VehicleChildEntityHelper.ExtractChildren(constructedObject);
+                
             packetSender.Send(new EntitySpawnedByClient(vehicleEntity));
 
             MonoBehaviour monoBehaviour = constructor.GetComponent<MonoBehaviour>();
