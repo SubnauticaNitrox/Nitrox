@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic;
@@ -15,11 +17,8 @@ public class StoryGoalInitialSyncProcessor : InitialSyncProcessor
     {
         return new List<IEnumerator> {
             SetTimeData(packet),
+            SetupStoryGoalManager(packet),
             SetupAurora(packet),
-            SetRadioQueue(packet),
-            SetCompletedStoryGoals(packet),
-            SetGoalUnlocks(packet),
-            SetBiomeGoalTrackerGoals(packet),
             SetScheduledGoals(packet)
         };
     }
@@ -30,6 +29,50 @@ public class StoryGoalInitialSyncProcessor : InitialSyncProcessor
         yield break;
     }
 
+    private IEnumerator SetupStoryGoalManager(InitialPlayerSync packet)
+    {
+        List<string> completedGoals = packet.StoryGoalData.CompletedGoals;
+        List<string> radioQueue = packet.StoryGoalData.RadioQueue;
+        StoryGoalManager storyGoalManager = StoryGoalManager.main;
+
+        storyGoalManager.completedGoals.AddRange(completedGoals);
+
+        storyGoalManager.pendingRadioMessages.AddRange(radioQueue);
+        storyGoalManager.PulsePendingMessages();
+
+        // Initialize CompoundGoalTracker and OnGoalUnlockTracker and clear their already completed goals
+        storyGoalManager.OnSceneObjectsLoaded();
+        storyGoalManager.compoundGoalTracker.goals.RemoveAll(goal => completedGoals.Contains(goal.key));
+        completedGoals.ForEach(goal => storyGoalManager.onGoalUnlockTracker.goalUnlocks.Remove(goal));
+
+        // Clean LocationGoalTracker, BiomeGoalTracker and ItemGoalTracker already completed goals
+        storyGoalManager.locationGoalTracker.goals.RemoveAll(goal => completedGoals.Contains(goal.key));
+        storyGoalManager.biomeGoalTracker.goals.RemoveAll(goal => completedGoals.Contains(goal.key));
+
+        List<TechType> techTypesToRemove = new();
+        foreach (KeyValuePair<TechType, List<ItemGoal>> entry in storyGoalManager.itemGoalTracker.goals)
+        {
+            // Goals are all triggered at the same time but we don't know if some entries share certain goals
+            if (entry.Value.All(goal => completedGoals.Contains(goal.key)))
+            {
+                techTypesToRemove.Add(entry.Key);
+                continue;
+            }
+        }
+        techTypesToRemove.ForEach(techType => storyGoalManager.itemGoalTracker.goals.Remove(techType));
+
+        // TODO: Move PlayerInitialSyncProcessor.SetPlayerCompletedGoals to here
+
+        StringBuilder builder = new("Received initial sync packet with");
+        builder.AppendLine($"""
+             - Completed story goals: {completedGoals.Count}
+             - Radio queue : {radioQueue.Count}
+            """);
+        Log.Info($"{builder}");
+        yield break;
+    }
+
+    // Must happen after CompletedGoals
     private IEnumerator SetupAurora(InitialPlayerSync packet)
     {
         // TODO: Separate this data from this packet
@@ -44,56 +87,8 @@ public class StoryGoalInitialSyncProcessor : InitialSyncProcessor
         CrashedShipExploder.main.timeToStartWarning = timeData.CrashedShipExploderData.TimeToStartWarning;
         CrashedShipExploder.main.OnProtoDeserialize(null);
 
-        // TODO: if (StoryGoalManager.main.IsGoalComplete(this.gunDeactivate.key))
-        StoryGoalCustomEventHandler.main.gunDisabled = false;
+        StoryGoalCustomEventHandler.main.Awake();
 
-        yield break;
-    }
-
-    private IEnumerator SetRadioQueue(InitialPlayerSync packet)
-    {
-        List<string> radioQueue = packet.StoryGoalData.RadioQueue;
-
-        StoryGoalManager.main.pendingRadioMessages.AddRange(radioQueue);
-        StoryGoalManager.main.PulsePendingMessages();
-        Log.Info($"Radio queue: [{string.Join(", ", radioQueue.ToArray())}]");
-        yield break;
-    }
-
-    private IEnumerator SetCompletedStoryGoals(InitialPlayerSync packet)
-    {
-        List<string> storyGoalData = packet.StoryGoalData.CompletedGoals;
-        StoryGoalManager.main.completedGoals.Clear();
-        StoryGoalManager.main.completedGoals.AddRange(storyGoalData);
-
-        Log.Info($"Received initial sync packet with {storyGoalData.Count} completed story goals");
-        yield break;
-    }
-
-    private IEnumerator SetGoalUnlocks(InitialPlayerSync packet)
-    {
-        List<string> goalUnlocks = packet.StoryGoalData.GoalUnlocks;
-        foreach (string goalUnlock in goalUnlocks)
-        {
-            StoryGoalManager.main.onGoalUnlockTracker.NotifyGoalComplete(goalUnlock);
-        }
-        yield break;
-    }
-
-    private IEnumerator SetBiomeGoalTrackerGoals(InitialPlayerSync packet)
-    {
-        Dictionary<string, PDALog.Entry> entries = PDALog.entries;
-        List<BiomeGoal> goals = BiomeGoalTracker.main.goals;
-        int alreadyIn = 0;
-        for (int i = goals.Count - 1; i >= 0; i--)
-        {
-            if (entries.ContainsKey(goals[i].key))
-            {
-                goals.Remove(goals[i]);
-                alreadyIn++;
-            }
-        }
-        Log.Debug($"{alreadyIn} pda log entries were removed from the goals");
         yield break;
     }
 
