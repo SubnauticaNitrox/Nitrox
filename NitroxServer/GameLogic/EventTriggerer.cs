@@ -201,6 +201,7 @@ namespace NitroxServer.GameLogic
             {
                 eventTimer.Start();
             }
+            playerManager.SendPacketToAllPlayers(MakeTimePacket());
         }
 
         /// <summary>

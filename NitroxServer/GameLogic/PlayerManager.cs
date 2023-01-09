@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 using System.Text.RegularExpressions;
 using System.Threading;
 using NitroxModel.DataStructures;
@@ -30,16 +29,14 @@ namespace NitroxServer.GameLogic
         private Timer initialSyncTimer;
 
         private readonly ServerConfig serverConfig;
-        private readonly EventTriggerer eventTriggerer;
         private ushort currentPlayerId;
 
-        public PlayerManager(List<Player> players, ServerConfig serverConfig, EventTriggerer eventTriggerer)
+        public PlayerManager(List<Player> players, ServerConfig serverConfig)
         {
             allPlayersByName = new ThreadSafeDictionary<string, Player>(players.ToDictionary(x => x.Name), false);
             currentPlayerId = players.Count == 0 ? (ushort)0 : players.Max(x => x.Id);
 
             this.serverConfig = serverConfig;
-            this.eventTriggerer = eventTriggerer;
         }
 
         public List<Player> GetConnectedPlayers()
@@ -261,7 +258,6 @@ namespace NitroxServer.GameLogic
             if (player != null && ConnectedPlayers().Count() == 1)
             {
                 Server.Instance.ResumeServer();
-                player.SendPacket(eventTriggerer.MakeTimePacket());
             }
 
             // Tell next client that it can start joining.
