@@ -19,7 +19,7 @@ public class StoryGoalInitialSyncProcessor : InitialSyncProcessor
             SetTimeData(packet),
             SetupStoryGoalManager(packet),
             SetupTrackers(packet),
-            SetupAurora(packet),
+            SetupAuroraAndSunbeam(packet),
             RefreshWithLatestData(packet),
             SetScheduledGoals(packet)
         };
@@ -100,7 +100,7 @@ public class StoryGoalInitialSyncProcessor : InitialSyncProcessor
     }
 
     // Must happen after CompletedGoals
-    private IEnumerator SetupAurora(InitialPlayerSync packet)
+    private IEnumerator SetupAuroraAndSunbeam(InitialPlayerSync packet)
     {
         // TODO: Separate this data from this packet
         InitialTimeData timeData = packet.InitialTimeData;
@@ -114,6 +114,12 @@ public class StoryGoalInitialSyncProcessor : InitialSyncProcessor
         CrashedShipExploder.main.timeToStartWarning = timeData.CrashedShipExploderData.TimeToStartWarning;
         CrashedShipExploder.main.timeSerialized = DayNightCycle.main.timePassedAsFloat;
         CrashedShipExploder.main.OnProtoDeserialize(null);
+
+        if (timeData.SunbeamData.CountdownStartingTime != -1)
+        {
+            StoryGoalCustomEventHandler.main.countdownActive = true;
+            StoryGoalCustomEventHandler.main.countdownStartingTime = timeData.SunbeamData.CountdownStartingTime;
+        }
 
         yield break;
     }

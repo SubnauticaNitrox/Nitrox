@@ -14,15 +14,19 @@ public class InitialTimeData
     [DataMember(Order = 2)]
     public CrashedShipExploderData CrashedShipExploderData;
 
+    [DataMember(Order = 3)]
+    public SunbeamData SunbeamData;
+
     [IgnoreConstructor]
     protected InitialTimeData()
     {
         // Constructor for serialization. Has to be "protected" for json serialization.
     }
 
-    public InitialTimeData(TimeChange timePacket, CrashedShipExploderData crashedShipExploderData)
+    public InitialTimeData(TimeChange timePacket, CrashedShipExploderData crashedShipExploderData, SunbeamData sunbeamData)
     {
         TimePacket = timePacket;
         CrashedShipExploderData = crashedShipExploderData;
+        SunbeamData = sunbeamData;
     }
 }

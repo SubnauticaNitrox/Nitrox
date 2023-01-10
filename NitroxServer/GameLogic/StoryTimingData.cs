@@ -16,6 +16,10 @@ namespace NitroxServer.GameLogic
         [DataMember(Order = 3)]
         public double? AuroraWarningTime { get; set; }
 
+        [DataMember(Order = 4)]
+        public float? SunbeamCountdownStartingTime { get; set; }
+
+
         public static StoryTimingData From(EventTriggerer eventTriggerer)
         {
             return new StoryTimingData
@@ -23,6 +27,7 @@ namespace NitroxServer.GameLogic
                 ElapsedSeconds = eventTriggerer.ElapsedSeconds,
                 AuroraExplosionTime = eventTriggerer.AuroraExplosionTimeMs,
                 AuroraWarningTime = eventTriggerer.AuroraWarningTimeMs,
+                SunbeamCountdownStartingTime = eventTriggerer.SunbeamCountdownStartingTime
             };
         }
     }
