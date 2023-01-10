@@ -1,11 +1,8 @@
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
 using UnityEngine;
@@ -16,13 +13,11 @@ namespace NitroxClient.GameLogic.InitialSync
     {
         private readonly IPacketSender packetSender;
         private readonly StorageSlots slots;
-        private readonly Vehicles vehicles;
 
-        public StorageSlotsInitialSyncProcessor(IPacketSender packetSender, StorageSlots slots, Vehicles vehicles)
+        public StorageSlotsInitialSyncProcessor(IPacketSender packetSender, StorageSlots slots)
         {
             this.packetSender = packetSender;
             this.slots = slots;
-            this.vehicles = vehicles;
 
             DependentProcessors.Add(typeof(VehicleInitialSyncProcessor));
             DependentProcessors.Add(typeof(EquippedItemInitialSyncProcessor)); // Just to be sure, for cyclops mode persistence. See "Cyclops.SetAdvancedModes"
@@ -31,9 +26,6 @@ namespace NitroxClient.GameLogic.InitialSync
         public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
         {
             int storageSlotsSynced = 0;
-
-            HashSet<NitroxId> onlinePlayers = new HashSet<NitroxId> { packet.PlayerGameObjectId };
-            onlinePlayers.AddRange(packet.RemotePlayerData.Select(playerData => playerData.PlayerContext.PlayerNitroxId));
 
             using (packetSender.Suppress<StorageSlotItemAdd>())
             {

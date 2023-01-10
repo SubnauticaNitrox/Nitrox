@@ -9,11 +9,11 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class PlayerJoinedMultiplayerSessionProcessor : ClientPacketProcessor<PlayerJoinedMultiplayerSession>
     {
-        private readonly PlayerManager remotePlayerManager;
+        private readonly PlayerManager playerManager;
 
-        public PlayerJoinedMultiplayerSessionProcessor(PlayerManager remotePlayerManager)
+        public PlayerJoinedMultiplayerSessionProcessor(PlayerManager playerManager)
         {
-            this.remotePlayerManager = remotePlayerManager;
+            this.playerManager = playerManager;
         }
 
         public override void Process(PlayerJoinedMultiplayerSession packet)
@@ -21,7 +21,9 @@ namespace NitroxClient.Communication.Packets.Processors
             List<TechType> techTypes = packet.EquippedTechTypes.Select(techType => techType.ToUnity()).ToList();
             List<Pickupable> items = new List<Pickupable>();
 
-            remotePlayerManager.Create(packet.PlayerContext, packet.SubRootId, techTypes, items);
+            playerManager.Create(packet.PlayerContext);
+
+            Log.InGame($"{packet.PlayerContext.PlayerName} joined the game.");
         }
     }
 }

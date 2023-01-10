@@ -1,11 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Numerics;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
@@ -68,6 +70,10 @@ namespace NitroxServer.Communication.Packets.Processors
             {
                 SetupPlayerEntity(player);
             }
+            else
+            {
+                RespawnExistingEntity(player);
+            }
 
             InitialPlayerSync initialPlayerSync = new(player.GameObjectId,
                 wasBrandNewPlayer,
@@ -86,7 +92,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 player.Rotation,
                 player.SubRootId,
                 player.Stats,
-                GetRemotePlayerData(player),
+                GetOtherPlayers(player),
                 world.WorldEntityManager.GetGlobalRootEntities(),
                 simulations,
                 world.GameMode,
@@ -98,23 +104,10 @@ namespace NitroxServer.Communication.Packets.Processors
             player.SendPacket(initialPlayerSync);
         }
 
-        private List<InitialRemotePlayerData> GetRemotePlayerData(Player player)
+        private IEnumerable<PlayerContext> GetOtherPlayers(Player player)
         {
-            List<InitialRemotePlayerData> playerData = new();
-
-            foreach (Player otherPlayer in playerManager.GetConnectedPlayers())
-            {
-                if (!player.Equals(otherPlayer))
-                {
-                    List<EquippedItemData> equippedItems = otherPlayer.GetEquipment();
-                    List<NitroxTechType> techTypes = equippedItems.Select(equippedItem => equippedItem.TechType).ToList();
-
-                    InitialRemotePlayerData remotePlayer = new(otherPlayer.PlayerContext, otherPlayer.Position, otherPlayer.SubRootId, techTypes);
-                    playerData.Add(remotePlayer);
-                }
-            }
-
-            return playerData;
+            return playerManager.GetConnectedPlayers().Where(p => p != player)
+                                                      .Select(p => p.PlayerContext);
         }
 
         private List<EquippedItemData> GetAllModules(ICollection<EquippedItemData> globalModules, List<EquippedItemData> playerModules)
@@ -133,6 +126,20 @@ namespace NitroxServer.Communication.Packets.Processors
             entityRegistry.AddEntity(playerEntity);
             world.WorldEntityManager.TrackEntityInTheWorld(playerEntity);
             playerManager.SendPacketToOtherPlayers(new CellEntities(playerEntity), player);
+        }
+
+        private void RespawnExistingEntity(Player player)
+        {
+            Optional<Entity> playerEntity = entityRegistry.GetEntityById(player.PlayerContext.PlayerNitroxId);
+
+            if (playerEntity.HasValue)
+            {
+                playerManager.SendPacketToOtherPlayers(new CellEntities(playerEntity.Value, true), player);
+            }
+            else
+            {
+                Log.Error($"Unable to find player entity for {player.Name}");
+            }
         }
     }
 }

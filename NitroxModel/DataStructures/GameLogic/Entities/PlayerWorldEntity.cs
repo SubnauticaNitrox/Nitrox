@@ -10,7 +10,7 @@ namespace NitroxModel.DataStructures.GameLogic.Entities;
 [Serializable]
 [DataContract]
 public class PlayerWorldEntity : WorldEntity
-{       
+{
     [IgnoreConstructor]
     protected PlayerWorldEntity()
     {

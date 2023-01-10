@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
+using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.Spawning;
 using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.GameLogic.Spawning.Metadata.Extractor;
@@ -11,7 +12,6 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
@@ -27,14 +27,14 @@ namespace NitroxClient.GameLogic
 
         private readonly Dictionary<Type, IEntitySpawner> entitySpawnersByType = new Dictionary<Type, IEntitySpawner>();
 
-        public Entities(IPacketSender packetSender)
+        public Entities(IPacketSender packetSender, PlayerManager playerManager, ILocalNitroxPlayer localPlayer)
         {
             this.packetSender = packetSender;
 
             entitySpawnersByType[typeof(PrefabChildEntity)] = new PrefabChildEntitySpawner();
             entitySpawnersByType[typeof(InventoryEntity)] = new InventoryEntitySpawner();
             entitySpawnersByType[typeof(InventoryItemEntity)] = new InventoryItemEntitySpawner(packetSender);
-            entitySpawnersByType[typeof(WorldEntity)] = new WorldEntitySpawner();
+            entitySpawnersByType[typeof(WorldEntity)] = new WorldEntitySpawner(playerManager, localPlayer);
             entitySpawnersByType[typeof(PlaceholderGroupWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
             entitySpawnersByType[typeof(EscapePodWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
             entitySpawnersByType[typeof(PlayerWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
@@ -108,13 +108,6 @@ namespace NitroxClient.GameLogic
             yield return entitySpawner.SpawnAsync(entity, gameObjectTaskResult);
             Optional<GameObject> gameObject = gameObjectTaskResult.Get();
 
-            if (gameObject.HasValue)
-            {
-                yield return AwaitAnyRequiredEntitySetup(gameObject.Value);
-
-                EntityMetadataProcessor.ApplyMetadata(gameObject.Value, entity.Metadata);
-            }
-
             if (!entitySpawner.SpawnsOwnChildren(entity))
             {
                 foreach (Entity childEntity in entity.ChildEntities)
@@ -124,6 +117,15 @@ namespace NitroxClient.GameLogic
                         yield return SpawnAsync(childEntity);
                     }
                 }
+            }
+
+            if (gameObject.HasValue)
+            {
+                yield return AwaitAnyRequiredEntitySetup(gameObject.Value);
+
+                // Apply entity metadat after children have been spawned.  This will allow metadata processors to
+                // interact with children if necessary (for example, PlayerMetadata which equips inventory items).
+                EntityMetadataProcessor.ApplyMetadata(gameObject.Value, entity.Metadata);
             }
         }
 
@@ -228,5 +230,19 @@ namespace NitroxClient.GameLogic
         }
 
         public bool RemoveEntity(NitroxId id) => spawnedAsType.Remove(id);
+
+        /// <summary>
+        /// Allows the ability to respawn an entity and its entire hierarchy. Callers are responsible for ensuring the
+        /// entity is no longer in the world.
+        /// </summary>
+        public void RemoveEntityHierarchy(Entity entity)
+        {
+            RemoveEntity(entity.Id);
+
+            foreach (Entity child in entity.ChildEntities)
+            {
+                RemoveEntityHierarchy(child);
+            }
+        }
     }
 }
