@@ -20,15 +20,15 @@ public class PlayerMetadataExtractor : GenericEntityMetadataExtractor<Player, Pl
 
         List<EquippedItem> equipped = new();
 
-        foreach (KeyValuePair<string, InventoryItem> SlotWithItem in equipment.equipment)
+        foreach (KeyValuePair<string, InventoryItem> slotWithItem in equipment.equipment)
         {
-            InventoryItem item = SlotWithItem.Value;
+            InventoryItem item = slotWithItem.Value;
 
             // not every slot will always contain an item. 
             if(item != null)
             {
                 NitroxId nitroxId = NitroxEntity.GetId(item.item.gameObject);
-                equipped.Add(new EquippedItem(nitroxId, SlotWithItem.Key, item.techType.ToDto()));
+                equipped.Add(new EquippedItem(nitroxId, slotWithItem.Key, item.techType.ToDto()));
             }
         }
 

@@ -22,7 +22,7 @@ namespace NitroxClient.GameLogic.InitialSync
             {
                 waitScreenItem.SetProgress(remotePlayersSynced, packet.OtherPlayers.Count);
 
-                RemotePlayer player = remotePlayerManager.Create(otherPlayer);
+                remotePlayerManager.Create(otherPlayer);
 
                 remotePlayersSynced++;
                 yield return null;
