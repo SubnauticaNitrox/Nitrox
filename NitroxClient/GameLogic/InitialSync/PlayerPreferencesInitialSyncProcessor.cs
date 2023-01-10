@@ -26,7 +26,6 @@ public class PlayerPreferencesInitialSyncProcessor : InitialSyncProcessor
             typeof(GlobalRootInitialSyncProcessor),
             typeof(StoryGoalInitialSyncProcessor),
             typeof(PdaInitialSyncProcessor),
-            typeof(EscapePodInitialSyncProcessor),
             typeof(RemotePlayerInitialSyncProcessor),
             typeof(BuildingInitialSyncProcessor),
             typeof(VehicleInitialSyncProcessor),
@@ -139,7 +138,7 @@ public class PlayerPreferencesInitialSyncProcessor : InitialSyncProcessor
 
     private static IEnumerator DelayPingKeyDetection(Action delayedAction)
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return Yielders.WaitForHalfSecond;
         delayedAction();
     }
 }

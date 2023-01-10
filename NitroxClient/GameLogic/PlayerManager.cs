@@ -1,34 +1,24 @@
-﻿using System;
 using System.Collections.Generic;
-using NitroxClient.Communication.Abstract;
+using System.Linq;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel;
-using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
-using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.Discord;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
-using NitroxModel.Packets;
-using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace NitroxClient.GameLogic
 {
     public class PlayerManager
     {
-        private readonly IPacketSender packetSender;
-        private readonly ILocalNitroxPlayer localPlayer;
         private readonly PlayerModelManager playerModelManager;
         private readonly Dictionary<ushort, RemotePlayer> playersById = new Dictionary<ushort, RemotePlayer>();
 
         public OnCreate onCreate;
         public OnRemove onRemove;
 
-        public PlayerManager(IPacketSender packetSender, ILocalNitroxPlayer localPlayer, PlayerModelManager playerModelManager)
+        public PlayerManager(PlayerModelManager playerModelManager)
         {
-            this.packetSender = packetSender;
-            this.localPlayer = localPlayer;
             this.playerModelManager = playerModelManager;
         }
 
@@ -38,17 +28,13 @@ namespace NitroxClient.GameLogic
             return Optional.OfNullable(player);
         }
 
-        internal Optional<RemotePlayer> FindByName(string playerName)
+        public Optional<RemotePlayer> Find(NitroxId playerNitroxId)
         {
-            foreach (RemotePlayer player in playersById.Values)
-            {
-                if (player.PlayerName == playerName)
-                {
-                    return Optional.Of(player);
-                }
-            }
+            RemotePlayer remotePlayer = playersById.Select(idToPlayer => idToPlayer.Value)
+                                                   .Where(player => player.PlayerContext.PlayerNitroxId == playerNitroxId)
+                                                   .FirstOrDefault();
 
-            return Optional.Empty;
+            return Optional.OfNullable(remotePlayer);
         }
 
         internal IEnumerable<RemotePlayer> GetAll()
@@ -56,42 +42,13 @@ namespace NitroxClient.GameLogic
             return playersById.Values;
         }
 
-        public RemotePlayer Create(PlayerContext playerContext, Optional<NitroxId> subRootId, List<TechType> equippedTechTypes, List<Pickupable> inventoryItems)
+        public RemotePlayer Create(PlayerContext playerContext)
         {
             Validate.NotNull(playerContext);
+            Validate.IsFalse(playersById.ContainsKey(playerContext.PlayerId));
 
-            if (playersById.ContainsKey(playerContext.PlayerId))
-            {
-                throw new Exception("The playerId has already been used.");
-            }
-
-            GameObject remotePlayerBody = CloneLocalPlayerBodyPrototype();
-            RemotePlayer remotePlayer;
-
-            using (packetSender.Suppress<ItemContainerAdd>())
-            {
-                remotePlayer = new RemotePlayer(remotePlayerBody, playerContext, equippedTechTypes, inventoryItems, playerModelManager);
-            }
-
-            if (subRootId.HasValue)
-            {
-                Optional<GameObject> sub = NitroxEntity.GetObjectFrom(subRootId.Value);
-                if (sub.HasValue && sub.Value.TryGetComponent(out SubRoot subRoot))
-                {
-                    Log.Debug($"Found sub root for {playerContext.PlayerName}. Will add him and update animation.");
-                    remotePlayer.SetSubRoot(subRoot);
-                }
-                else if (sub.HasValue && sub.Value.TryGetComponent(out EscapePod escapePod))
-                {
-                    Log.Debug($"Found EscapePod for {playerContext.PlayerName}.");
-                    remotePlayer.SetEscapePod(escapePod);
-                }
-                else
-                {
-                    Log.Error($"Found neither SubRoot component nor EscapePod on {subRootId.Value} for {playerContext.PlayerName}.");
-                }
-            }
-
+            RemotePlayer remotePlayer = new(playerContext, playerModelManager);
+            
             playersById.Add(remotePlayer.PlayerId, remotePlayer);
             onCreate(remotePlayer.PlayerId.ToString(), remotePlayer);
 
@@ -105,21 +62,11 @@ namespace NitroxClient.GameLogic
             Optional<RemotePlayer> opPlayer = Find(playerId);
             if (opPlayer.HasValue)
             {
-                using (packetSender.Suppress<ItemContainerRemove>())
-                {
-                    opPlayer.Value.Destroy();
-                }
+                opPlayer.Value.Destroy();                
                 playersById.Remove(playerId);
                 onRemove(playerId.ToString(), opPlayer.Value);
                 DiscordClient.UpdatePartySize(GetTotalPlayerCount());
             }
-        }
-
-        private GameObject CloneLocalPlayerBodyPrototype()
-        {
-            GameObject clone = Object.Instantiate(localPlayer.BodyPrototype, Multiplayer.Main.transform, false);
-            clone.SetActive(true);
-            return clone;
         }
 
         public int GetTotalPlayerCount()

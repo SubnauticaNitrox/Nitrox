@@ -57,13 +57,14 @@ namespace NitroxPatcher.Patches.Dynamic
                 // A lot of fragments are virtual entities (spawned by placeholders in the world).  Sometimes the server only knows the id
                 // of the placeholder and not the virtual entity. TODO: we will need to propagate deterministic ids to children entities for
                 // these virtual entities.
-                NitroxServiceLocator.LocateService<Item>().PickedUp(PDAScanner.scanTarget.gameObject, techType);
+                NitroxServiceLocator.LocateService<Items>().PickedUp(PDAScanner.scanTarget.gameObject, techType);
             }
         }
 
         // Both in milliseconds
         public const int PACKET_SENDING_RATE = 500;
         public const int LAST_PACKET_SEND_DELAY = 2000;
+        private static readonly WaitForSeconds lastPacketSendDelay = new(LAST_PACKET_SEND_DELAY / 1000f);
 
         public static readonly PDAManagerEntry PDAManagerEntry = NitroxServiceLocator.LocateService<PDAManagerEntry>();
         public static Dictionary<NitroxId, ThrottledEntry> ThrottlingEntries = new Dictionary<NitroxId, ThrottledEntry>();
@@ -124,7 +125,7 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             do
             {
-                yield return new WaitForSeconds(LAST_PACKET_SEND_DELAY / 1000);
+                yield return lastPacketSendDelay;
             }
             while (DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() < throttledEntry.LatestProgressTime.ToUnixTimeMilliseconds() + LAST_PACKET_SEND_DELAY);
             

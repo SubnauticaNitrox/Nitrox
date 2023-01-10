@@ -47,9 +47,18 @@ internal static class Patcher
             {
                 patch.Patch(harmony);
             }
+            catch (HarmonyException e)
+            {
+                Exception innerMost = e;
+                while (innerMost.InnerException != null)
+                {
+                    innerMost = innerMost.InnerException;
+                }
+                Log.Error($"Error patching {patch.GetType().Name}{Environment.NewLine}{innerMost}");
+            }
             catch (Exception e)
             {
-                Log.Error($"Error patching {patch.GetType().Name}. Error: {e.Message}");
+                Log.Error($"Error patching {patch.GetType().Name}{Environment.NewLine}{e}");
             }
         }
 

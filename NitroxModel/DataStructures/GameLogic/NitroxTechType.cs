@@ -1,50 +1,79 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using BinaryPack.Attributes;
-using ProtoBufNet;
 
-namespace NitroxModel.DataStructures.GameLogic
+namespace NitroxModel.DataStructures.GameLogic;
+
+/// <summary>
+///     TechType is the enum used in Subnautica for defining all the spawnable objects in the world. This includes food, enemies and bases.
+/// </summary>
+/// <remarks>
+///     Shim tech type model to bridge the gap between original subnautica and BZ.
+/// </remarks>
+[Serializable]
+[DataContract]
+public class NitroxTechType : IEquatable<NitroxTechType>
 {
-    /// <summary>
-    ///     TechType is the enum used in Subnautica for defining all the spawnable objects in the world. This includes food, enemies and bases.
-    /// </summary>
-    /// <remarks>
-    ///     Shim tech type model to bridge the gap between original subnautica and BZ.
-    /// </remarks>
-    [ProtoContract]
-    [Serializable]
-    public class NitroxTechType
+    [DataMember(Order = 1)]
+    public string Name { get; }
+
+    [IgnoreConstructor]
+    protected NitroxTechType()
     {
-        [ProtoMember(1)]
-        public string Name { get; }
+        // Constructor for serialization. Has to be "protected" for json serialization.
+    }
 
-        [IgnoreConstructor]
-        protected NitroxTechType()
+
+    public NitroxTechType(string name)
+    {
+        Name = name;
+    }
+
+    public static NitroxTechType None { get; } = new NitroxTechType("None");
+
+    public override string ToString()
+    {
+        return Name;
+    }
+
+    public override bool Equals(object obj)
+    {
+        if (ReferenceEquals(null, obj))
         {
-            // Constructor for serialization. Has to be "protected" for json serialization.
+            return false;
         }
 
-        public NitroxTechType(string name)
+        if (ReferenceEquals(this, obj))
         {
-            Name = name;
+            return true;
         }
 
-        public override string ToString()
+        if (obj.GetType() != this.GetType())
         {
-            return Name;
+            return false;
         }
 
-        public override bool Equals(object obj)
-        {
-            NitroxTechType type = obj as NitroxTechType;
+        return Equals((NitroxTechType)obj);
+    }
 
-            return !ReferenceEquals(type, null) &&
-                   Name == type.Name;
+    public bool Equals(NitroxTechType other)
+    {
+        if (ReferenceEquals(null, other))
+        {
+            return false;
         }
 
-        public override int GetHashCode()
+        if (ReferenceEquals(this, other))
         {
-            return 539060726 + EqualityComparer<string>.Default.GetHashCode(Name);
+            return true;
         }
+
+        return Name == other.Name;
+    }
+
+    public override int GetHashCode()
+    {
+        return 539060726 + EqualityComparer<string>.Default.GetHashCode(Name);
     }
 }

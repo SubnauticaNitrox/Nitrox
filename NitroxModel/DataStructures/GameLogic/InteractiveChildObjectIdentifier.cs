@@ -1,17 +1,17 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using BinaryPack.Attributes;
-using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
     [Serializable]
-    [ProtoContract]
+    [DataContract]
     public class InteractiveChildObjectIdentifier
     {
-        [ProtoMember(1)]
+        [DataMember(Order = 1)]
         public NitroxId Id { get; set; }
 
-        [ProtoMember(2)]
+        [DataMember(Order = 2)]
         public string GameObjectNamePath { get; set; }
 
         [IgnoreConstructor]

@@ -39,10 +39,10 @@ namespace NitroxClient.MonoBehaviours
             SmoothPosition.FixedUpdate();
             SmoothVelocity.FixedUpdate();
             rigidbody.isKinematic = false; // we should maybe find a way to remove UWE's FreezeRigidBodyWhenFar component...tried removing it but caused a bunch of issues.
-            rigidbody.velocity = MovementHelper.GetCorrectedVelocity(SmoothPosition.Current, SmoothVelocity.Current, gameObject, PlayerMovementBroadcaster.BROADCAST_INTERVAL);
+            rigidbody.velocity = MovementHelper.GetCorrectedVelocity(SmoothPosition.Current, SmoothVelocity.Current, gameObject, Time.fixedDeltaTime);
             SmoothRotation.FixedUpdate();
             SmoothAngularVelocity.FixedUpdate();
-            rigidbody.angularVelocity = MovementHelper.GetCorrectedAngularVelocity(SmoothRotation.Current, SmoothAngularVelocity.Current, gameObject, PlayerMovementBroadcaster.BROADCAST_INTERVAL);
+            rigidbody.angularVelocity = MovementHelper.GetCorrectedAngularVelocity(SmoothRotation.Current, SmoothAngularVelocity.Current, gameObject, Time.fixedDeltaTime);
             
             WheelYawSetter(SmoothYaw.SmoothValue);
             WheelPitchSetter(SmoothPitch.SmoothValue);

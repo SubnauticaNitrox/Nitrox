@@ -29,7 +29,7 @@ namespace NitroxClient.GameLogic.InitialSync
         {
             int totalEquippedItemsDone = 0;
 
-            using (packetSender.Suppress<ItemContainerAdd>())
+            using (packetSender.Suppress<EntitySpawnedByClient>())
             {
                 foreach (EquippedItemData equippedItem in packet.EquippedItems)
                 {

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
-using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel.ColorSwap

@@ -1,5 +1,6 @@
-﻿using NitroxModel.DataStructures;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
@@ -10,25 +11,35 @@ namespace NitroxServer.Communication.Packets.Processors
     class EntitySpawnedByClientProcessor : AuthenticatedPacketProcessor<EntitySpawnedByClient>
     {
         private readonly PlayerManager playerManager;
-        private readonly EntityManager entityManager;
+        private readonly EntityRegistry entityRegistry;
+        private readonly WorldEntityManager worldEntityManager;
         private readonly EntitySimulation entitySimulation;
 
-        public EntitySpawnedByClientProcessor(PlayerManager playerManager, EntityManager entityManager, EntitySimulation entitySimulation)
+        public EntitySpawnedByClientProcessor(PlayerManager playerManager, EntityRegistry entityRegistry, WorldEntityManager worldEntityManager, EntitySimulation entitySimulation)
         {
             this.playerManager = playerManager;
-            this.entityManager = entityManager;
+            this.entityRegistry = entityRegistry;
+            this.worldEntityManager = worldEntityManager;
             this.entitySimulation = entitySimulation;
         }
 
         public override void Process(EntitySpawnedByClient packet, Player playerWhoSpawned)
         {
             Entity entity = packet.Entity;
-            entityManager.RegisterNewEntity(entity);
 
-            SimulatedEntity simulatedEntity = entitySimulation.AssignNewEntityToPlayer(entity, playerWhoSpawned);
+            // If the entity already exists in the registry, it is fine to update.  This is a normal case as the player
+            // may have an item in their inventory (that the registry knows about) then wants to spawn it into the world.
+            entityRegistry.AddOrUpdate(entity);
 
-            SimulationOwnershipChange ownershipChangePacket = new SimulationOwnershipChange(simulatedEntity);
-            playerManager.SendPacketToAllPlayers(ownershipChangePacket);
+            if (entity is WorldEntity worldEntity)
+            {
+                worldEntityManager.TrackEntityInTheWorld(worldEntity);
+
+                SimulatedEntity simulatedEntity = entitySimulation.AssignNewEntityToPlayer(entity, playerWhoSpawned);
+
+                SimulationOwnershipChange ownershipChangePacket = new SimulationOwnershipChange(simulatedEntity);
+                playerManager.SendPacketToAllPlayers(ownershipChangePacket);
+            }
 
             foreach (Player player in playerManager.GetConnectedPlayers())
             {

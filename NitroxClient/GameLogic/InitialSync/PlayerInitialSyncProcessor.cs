@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxClient.MonoBehaviours;
@@ -13,17 +13,19 @@ namespace NitroxClient.GameLogic.InitialSync
 {
     public class PlayerInitialSyncProcessor : InitialSyncProcessor
     {
+        private readonly Items item;
         private readonly ItemContainers itemContainers;
 
-        public PlayerInitialSyncProcessor(ItemContainers itemContainers)
+        public PlayerInitialSyncProcessor(Items item, ItemContainers itemContainers)
         {
+            this.item = item;
             this.itemContainers = itemContainers;
         }
 
         public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
         {
             SetPlayerPermissions(packet.Permissions);
-            waitScreenItem.SetProgress(0.17f);
+            waitScreenItem.SetProgress(0.16f);
             yield return null;
 
             SetPlayerGameObjectId(packet.PlayerGameObjectId);
@@ -31,7 +33,7 @@ namespace NitroxClient.GameLogic.InitialSync
             yield return null;
 
             yield return AddStartingItemsToPlayer(packet.FirstTimeConnecting);
-            waitScreenItem.SetProgress(0.5f);
+            waitScreenItem.SetProgress(0.50f);
             yield return null;
 
             SetPlayerStats(packet.PlayerStatsData);
@@ -69,8 +71,9 @@ namespace NitroxClient.GameLogic.InitialSync
                     GameObject gameObject = result.Get();
                     Pickupable pickupable = gameObject.GetComponent<Pickupable>();
                     pickupable.Initialize();
-                    itemContainers.AddItem(pickupable.gameObject, NitroxEntity.GetId(Player.main.gameObject));
-                    itemContainers.BroadcastItemAdd(pickupable, Inventory.main.container.tr);
+
+                    item.Created(gameObject);
+                    itemContainers.AddItem(gameObject, NitroxEntity.GetId(Player.main.gameObject));
                 }
             }
         }

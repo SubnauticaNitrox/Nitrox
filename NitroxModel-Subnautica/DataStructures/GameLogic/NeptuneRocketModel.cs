@@ -1,25 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using BinaryPack.Attributes;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
-using ProtoBufNet;
 
 namespace NitroxModel_Subnautica.DataStructures.GameLogic
 {
     [Serializable]
-    [ProtoContract]
+    [DataContract]
     public class NeptuneRocketModel : VehicleModel
     {
-        [ProtoMember(1)]
+        [DataMember(Order = 1)]
         public int CurrentStage { get; set; }
 
-        [ProtoMember(2)]
+        [DataMember(Order = 2)]
         public bool ElevatorUp { get; set; }
 
-        [ProtoMember(3)]
+        [DataMember(Order = 3)]
         public ThreadSafeList<PreflightCheck> PreflightChecks { get; set; } = new();
 
         [IgnoreConstructor]

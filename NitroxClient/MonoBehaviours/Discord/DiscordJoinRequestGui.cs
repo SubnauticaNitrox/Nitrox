@@ -9,7 +9,7 @@ namespace NitroxClient.MonoBehaviours.Discord;
 
 public class DiscordJoinRequestGui : uGUI_InputGroup
 {
-    private const int EXPIRE_TIME = 45;
+    private readonly WaitForSeconds expireTimeYielder = new(45);
 
     private static DiscordJoinRequestGui instance;
     private static User user;
@@ -98,7 +98,7 @@ public class DiscordJoinRequestGui : uGUI_InputGroup
 
     private IEnumerator OnRequestExpired()
     {
-        yield return new WaitForSeconds(EXPIRE_TIME);
+        yield return expireTimeYielder;
         CloseWindow(ActivityJoinRequestReply.Ignore);
     }
 }

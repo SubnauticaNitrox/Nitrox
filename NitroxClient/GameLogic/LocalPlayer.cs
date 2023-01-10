@@ -47,7 +47,7 @@ namespace NitroxClient.GameLogic
             Permissions = Perms.PLAYER;
         }
 
-        public void UpdateLocation(Vector3 location, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation, Optional<VehicleMovementData> vehicle)
+        public void BroadcastLocation(Vector3 location, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation, Optional<VehicleMovementData> vehicle)
         {
             Movement movement;
             if (vehicle.HasValue)
@@ -95,10 +95,7 @@ namespace NitroxClient.GameLogic
             {
                 if (!child.gameObject.name.Contains("attach1_"))
                 {
-                    using (packetSender.Suppress<ItemContainerRemove>())
-                    {
-                        Object.DestroyImmediate(child.gameObject);
-                    }
+                    Object.DestroyImmediate(child.gameObject);
                 }
             }
 

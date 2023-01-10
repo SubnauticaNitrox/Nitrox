@@ -27,7 +27,7 @@ namespace NitroxClient.Debuggers
 
         public bool CanDragWindow = true;
 
-        public bool Enabled;
+        public virtual bool Enabled { get; set; }
 
         public Rect WindowRect;
 
@@ -39,14 +39,19 @@ namespace NitroxClient.Debuggers
         /// </remarks>
         private readonly Dictionary<string, DebuggerTab> tabs = new Dictionary<string, DebuggerTab>();
 
-        protected BaseDebugger(int desiredWidth, string debuggerName = null, KeyCode hotkey = KeyCode.None, bool control = false, bool shift = false, bool alt = false, GUISkinCreationOptions skinOptions = GUISkinCreationOptions.DEFAULT)
+        private float maxHeight;
+
+        protected BaseDebugger(float desiredWidth, string debuggerName = null, KeyCode hotkey = KeyCode.None, bool control = false, bool shift = false, bool alt = false, GUISkinCreationOptions skinOptions = GUISkinCreationOptions.DEFAULT, float maxHeight = 1000f)
         {
+            this.maxHeight = maxHeight;
+
             if (desiredWidth < 200)
             {
                 desiredWidth = 200;
             }
 
-            WindowRect = new Rect(Screen.width / 2 - (desiredWidth / 2), 75, desiredWidth, 0); // Default position in center of screen.
+            WindowRect = new Rect(Screen.width / 2 - (desiredWidth / 2), Screen.height * 0.1f, desiredWidth, Math.Min(Screen.height * 0.8f, maxHeight)); // Default position in center of screen.
+
             Hotkey = hotkey;
             HotkeyAltRequired = alt;
             HotkeyShiftRequired = shift;
@@ -244,7 +249,7 @@ namespace NitroxClient.Debuggers
 
         public virtual void ResetWindowPosition()
         {
-            WindowRect = new Rect(Screen.width / 2f - (WindowRect.width / 2), 100, WindowRect.width, WindowRect.height); //Reset position of debuggers because SN sometimes throws the windows from planet 4546B
+            WindowRect = new Rect(Screen.width / 2f - (WindowRect.width / 2), Screen.height / 2f - (WindowRect.height / 2), WindowRect.width, Math.Min(Screen.height * 0.8f, maxHeight)); //Reset position of debuggers because SN sometimes throws the windows from planet 4546B
         }
 
         public class DebuggerTab

@@ -10,17 +10,17 @@ namespace NitroxServer.Communication.Packets.Processors
     public class EntityMetadataUpdateProcessor : AuthenticatedPacketProcessor<EntityMetadataUpdate>
     {
         private readonly PlayerManager playerManager;
-        private readonly EntityManager entityManager;
+        private readonly EntityRegistry entityRegistry;
 
-        public EntityMetadataUpdateProcessor(PlayerManager playerManager, EntityManager entityManager)
+        public EntityMetadataUpdateProcessor(PlayerManager playerManager, EntityRegistry entityRegistry)
         {
             this.playerManager = playerManager;
-            this.entityManager = entityManager;
+            this.entityRegistry = entityRegistry;
         }
 
         public override void Process(EntityMetadataUpdate packet, Player sendingPlayer)
         {
-            Optional<Entity> entity = entityManager.GetEntityById(packet.Id);
+            Optional<Entity> entity = entityRegistry.GetEntityById(packet.Id);
 
             if (entity.HasValue)
             {
@@ -37,7 +37,7 @@ namespace NitroxServer.Communication.Packets.Processors
         {
             foreach (Player player in playerManager.GetConnectedPlayers())
             {
-                bool updateVisibleToPlayer = player.CanSee(entity) || entity.ExistsInGlobalRoot;
+                bool updateVisibleToPlayer = player.CanSee(entity);
 
                 if (player != sendingPlayer && updateVisibleToPlayer)
                 {

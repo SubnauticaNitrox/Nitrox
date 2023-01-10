@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxModel.DataStructures.GameLogic;
@@ -12,13 +12,13 @@ namespace NitroxClient.GameLogic
 {
     public class NitroxConsole
     {
-        public static bool DisableConsole = true;
+        public static bool DisableConsole { get; set; } = true;
 
         private readonly IPacketSender packetSender;
         private readonly Vehicles vehicles;
-        private readonly Item item;
+        private readonly Items item;
 
-        public NitroxConsole(IPacketSender packetSender, Vehicles vehicles, Item item)
+        public NitroxConsole(IPacketSender packetSender, Vehicles vehicles, Items item)
         {
             this.packetSender = packetSender;
             this.vehicles = vehicles;
@@ -76,7 +76,7 @@ namespace NitroxClient.GameLogic
             if (opitem.HasValue)
             {
                 Log.Debug($"Spawning item {opitem.Value.GetTechName()} at {gameObject.transform.position}");
-                item.Dropped(gameObject, opitem.Value.GetTechType(), gameObject.transform.position);
+                item.Dropped(gameObject, opitem.Value.GetTechType());
             }
         }
     }

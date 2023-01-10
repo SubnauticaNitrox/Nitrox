@@ -1,7 +1,6 @@
 ﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Helper;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
@@ -19,7 +18,6 @@ namespace NitroxClient.Communication.Packets.Processors
         public override void Process(SeamothModulesAction packet)
         {
             using (packetSender.Suppress<SeamothModulesAction>())
-            using (packetSender.Suppress<ItemContainerRemove>())
             {
                 GameObject _gameObject = NitroxEntity.RequireObjectFrom(packet.Id);
                 SeaMoth seamoth = _gameObject.GetComponent<SeaMoth>();

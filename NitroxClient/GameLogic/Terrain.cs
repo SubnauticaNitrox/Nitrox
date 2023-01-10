@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Map;
+using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
@@ -37,7 +38,7 @@ namespace NitroxClient.GameLogic
 
         private IEnumerator WaitAndAddCell(Int3 batchId, Int3 cellId, int level)
         {
-            yield return new WaitForSeconds(0.5f);
+            yield return Yielders.WaitForHalfSecond;
 
             AbsoluteEntityCell cell = new AbsoluteEntityCell(batchId.ToDto(), cellId.ToDto(), level);
 
@@ -91,7 +92,7 @@ namespace NitroxClient.GameLogic
                     yield break;
                 }
 
-                yield return new WaitForSeconds(0.05f);
+                yield return null;
             }
         }
 

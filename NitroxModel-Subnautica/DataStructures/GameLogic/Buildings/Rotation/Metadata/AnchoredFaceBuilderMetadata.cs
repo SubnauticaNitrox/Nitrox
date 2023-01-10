@@ -1,25 +1,25 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using BinaryPack.Attributes;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
-using ProtoBufNet;
 
 namespace NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation.Metadata
 {
     [Serializable]
-    [ProtoContract]
+    [DataContract]
     public class AnchoredFaceBuilderMetadata : BuilderMetadata
     {
-        [ProtoMember(1)]
+        [DataMember(Order = 1)]
         public NitroxInt3 Cell { get; set; }
 
-        [ProtoMember(2)]
+        [DataMember(Order = 2)]
         public int Direction { get; set; }
 
-        [ProtoMember(3)]
+        [DataMember(Order = 3)]
         public int FaceType { get; set; }
 
-        [ProtoMember(4)]
+        [DataMember(Order = 4)]
         public NitroxInt3 Anchor { get; set; }
 
         [IgnoreConstructor]

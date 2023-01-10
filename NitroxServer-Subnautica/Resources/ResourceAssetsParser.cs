@@ -14,14 +14,17 @@ public static class ResourceAssetsParser
         {
             return resourceAssets;
         }
-        
-        resourceAssets = new ResourceAssets
+
+        using (PrefabPlaceholderGroupsParser prefabPlaceholderGroupsParser = new())
         {
-            WorldEntitiesByClassId = new WorldEntityInfoParser().ParseFile(),
-            LootDistributionsJson = new EntityDistributionsParser().ParseFile(),
-            PrefabPlaceholderGroupsByGroupClassId = new PrefabPlaceholderGroupsParser().ParseFile(),
-            NitroxRandom = new RandomStartParser().ParseFile()
-        };
+            resourceAssets = new ResourceAssets
+            {
+                WorldEntitiesByClassId = new WorldEntityInfoParser().ParseFile(),
+                LootDistributionsJson = new EntityDistributionsParser().ParseFile(),
+                PrefabPlaceholderGroupsByGroupClassId = prefabPlaceholderGroupsParser.ParseFile(),
+                NitroxRandom = new RandomStartParser().ParseFile()
+            };
+        }
         AssetParser.Dispose();
         
         ResourceAssets.ValidateMembers(resourceAssets);

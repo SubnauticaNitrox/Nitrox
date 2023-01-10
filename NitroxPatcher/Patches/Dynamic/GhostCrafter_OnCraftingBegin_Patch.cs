@@ -1,8 +1,11 @@
-﻿using System.Reflection;
+using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxModel.Core;
+using NitroxClient.MonoBehaviours;
+using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.Helper;
+using NitroxModel_Subnautica.DataStructures;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
@@ -12,7 +15,12 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(GhostCrafter __instance, TechType techType, float duration)
         {
-            NitroxServiceLocator.LocateService<Crafting>().GhostCrafterCrafingStarted(__instance.gameObject, techType, duration);
+            NitroxId crafterId = NitroxEntity.GetId(__instance.gameObject);
+            Resolve<Entities>().BroadcastMetadataUpdate(crafterId, new CrafterMetadata(techType.ToDto(), DayNightCycle.main.timePassedAsFloat, duration));
+
+            // Async request to be the person to auto-pickup the result. In the future this can be improved to lock down all crafting based on ownership
+            // but will require redoing our hooks. 
+            Resolve<SimulationOwnership>().RequestSimulationLock(crafterId, SimulationLockType.TRANSIENT);
         }
 
         public override void Patch(Harmony harmony)

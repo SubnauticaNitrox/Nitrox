@@ -12,12 +12,12 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using NitroxModel_Subnautica.DataStructures.GameLogic;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Platforms.OS.Shared;
-using NitroxModel_Subnautica.DataStructures.GameLogic;
 using NitroxServer;
 using NitroxServer.ConsoleCommands.Processor;
 using NitroxServer.GameLogic.Vehicles;
@@ -213,6 +213,11 @@ public class Program
         {
             dllFileName += ".dll";
         }
+        // If available, return cached assembly
+        if (resolvedAssemblyCache.TryGetValue(dllFileName, out Assembly val))
+        {
+            return val;
+        }
 
         // Load DLLs where this program (exe) is located
         string dllPath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location) ?? "", "lib", dllFileName);
@@ -223,21 +228,9 @@ public class Program
             dllPath = Path.Combine(gameInstallDir.Value, "Subnautica_Data", "Managed", dllFileName);
         }
 
-        // Return cached assembly
-        if (resolvedAssemblyCache.TryGetValue(dllPath, out Assembly val))
-        {
-            return val;
-        }
-
         // Read assemblies as bytes as to not lock the file so that Nitrox can patch assemblies while server is running.
-        using (FileStream stream = new(dllPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-        using (MemoryStream mstream = new())
-        {
-            stream.CopyTo(mstream);
-            Assembly assembly = Assembly.Load(mstream.ToArray());
-            resolvedAssemblyCache[dllPath] = assembly;
-            return assembly;
-        }
+        Assembly assembly = Assembly.Load(File.ReadAllBytes(dllPath));
+        return resolvedAssemblyCache[dllFileName] = assembly;
     }
 
     /**
