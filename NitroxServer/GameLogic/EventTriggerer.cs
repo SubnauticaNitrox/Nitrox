@@ -69,8 +69,6 @@ namespace NitroxServer.GameLogic
             elapsedTimeOutsideStopWatchMs = elapsedSeconds == 0 ? TimeSpan.FromSeconds(480).TotalMilliseconds : elapsedSeconds * 1000;
             AuroraExplosionTimeMs = auroraExplosionTime ?? GenerateDeterministicAuroraTime(seed);
             AuroraWarningTimeMs = auroraWarningTime ?? ElapsedTimeMs;
-            //CreateEventTimers();
-            stopWatch.Start();
             Log.Debug($"Event Triggerer started! ElapsedTime={Math.Floor(ElapsedSeconds)}s");
             Log.Debug($"Aurora will explode in {GetMinutesBeforeAuroraExplosion()} minutes");
         }
