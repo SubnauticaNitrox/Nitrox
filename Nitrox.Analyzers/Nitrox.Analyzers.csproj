@@ -13,10 +13,6 @@
 
      See this link when to upgrade: https://learn.microsoft.com/en-us/visualstudio/extensibility/roslyn-version-support?view=vs-2022
      -->
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.2.0" PrivateAssets="all" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Generators" />
+      <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.2.0" PrivateAssets="all" />
   </ItemGroup>
 </Project>
