@@ -6,6 +6,7 @@ using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.Spawning;
 using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.GameLogic.Spawning.Metadata.Extractor;
+using NitroxClient.Helpers;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
@@ -21,15 +22,17 @@ namespace NitroxClient.GameLogic
     public class Entities
     {
         private readonly IPacketSender packetSender;
+        private readonly ThrottledPacketSender throttledPacketSender;
 
         private readonly Dictionary<NitroxId, Type> spawnedAsType = new();
         private readonly Dictionary<NitroxId, List<Entity>> pendingParentEntitiesByParentId = new Dictionary<NitroxId, List<Entity>>();
 
         private readonly Dictionary<Type, IEntitySpawner> entitySpawnersByType = new Dictionary<Type, IEntitySpawner>();
 
-        public Entities(IPacketSender packetSender, PlayerManager playerManager, ILocalNitroxPlayer localPlayer)
+        public Entities(IPacketSender packetSender, ThrottledPacketSender throttledPacketSender, PlayerManager playerManager, ILocalNitroxPlayer localPlayer)
         {
             this.packetSender = packetSender;
+            this.throttledPacketSender = throttledPacketSender;
 
             entitySpawnersByType[typeof(PrefabChildEntity)] = new PrefabChildEntitySpawner();
             entitySpawnersByType[typeof(PathBasedChildEntity)] = new PathBasedChildEntitySpawner();
@@ -67,9 +70,24 @@ namespace NitroxClient.GameLogic
             }
         }
 
+        public void EntityMetadataChangedThrottled(object o, NitroxId id)
+        {
+            Optional<EntityMetadata> metadata = EntityMetadataExtractor.Extract(o);
+
+            if (metadata.HasValue)
+            {
+                BroadcastMetadataUpdateThrottled(id, metadata.Value);
+            }
+        }
+
         public void BroadcastMetadataUpdate(NitroxId id, EntityMetadata metadata)
         {
             packetSender.Send(new EntityMetadataUpdate(id, metadata));
+        }
+
+        public void BroadcastMetadataUpdateThrottled(NitroxId id, EntityMetadata metadata)
+        {
+            throttledPacketSender.SendThrottled(new EntityMetadataUpdate(id, metadata), (packet) => ((EntityMetadataUpdate)packet).Id);
         }
 
         public void BroadcastEntitySpawnedByClient(WorldEntity entity)

@@ -358,6 +358,14 @@ public class WorldPersistenceTest
                 Assert.AreEqual(metadata.TechType, metadataAfter.TechType);
                 Assert.AreEqual(metadata.StartTime, metadataAfter.StartTime);
                 break;
+            case CyclopsMetadata metadata when entityAfter.Metadata is CyclopsMetadata metadataAfter:
+                Assert.AreEqual(metadata.InternalLightsOn, metadataAfter.InternalLightsOn);
+                Assert.AreEqual(metadata.SilentRunningOn, metadataAfter.SilentRunningOn);
+                Assert.AreEqual(metadata.EngineOn, metadataAfter.EngineOn);
+                Assert.AreEqual(metadata.SonarOn, metadataAfter.SonarOn);
+                Assert.AreEqual(metadata.FloodLightsOn, metadataAfter.FloodLightsOn);
+                Assert.AreEqual(metadata.EngineMode, metadataAfter.EngineMode);
+                break;
             case null when entityAfter.Metadata is null:
                 break;
             default:
@@ -401,6 +409,13 @@ public class WorldPersistenceTest
                 break;
             case InventoryItemEntity inventoryItemEntity when entityAfter is InventoryItemEntity inventoryItemEntityAfter:
                 Assert.AreEqual(inventoryItemEntity.ClassId, inventoryItemEntityAfter.ClassId);
+                break;
+            case VehicleWorldEntity vehicleWorldEntity when entityAfter is VehicleWorldEntity vehicleWorldEntityAfter:
+                Assert.AreEqual(vehicleWorldEntity.SpawnerId, vehicleWorldEntityAfter.SpawnerId);
+                Assert.AreEqual(vehicleWorldEntity.ConstructionTime, vehicleWorldEntityAfter.ConstructionTime);
+                break;
+            case PathBasedChildEntity PathBasedChildEntity when entityAfter is PathBasedChildEntity pathBasedChildEntityAfter:
+                Assert.AreEqual(PathBasedChildEntity.Path, pathBasedChildEntityAfter.Path);
                 break;
             default:
                 Assert.Fail($"Runtime type of {nameof(Entity)} is not equal");
@@ -461,7 +476,9 @@ public class WorldPersistenceTest
                         new InventoryEntity(1, new NitroxId(), new NitroxTechType("planterbox"), null, new NitroxId(), new List<Entity>()
                         {
                             new InventoryItemEntity(new NitroxId(), "classId", new NitroxTechType("bluepalmseed"), new PlantableMetadata(0.5f), new NitroxId(), new List<Entity>())
-                        })
+                        }),
+                        new VehicleWorldEntity(new NitroxId(), 0, null, "classId", true, new NitroxId(), new NitroxTechType("seamoth"), new CyclopsMetadata(true, true, true, true, true, true, 0)),
+                        new PathBasedChildEntity("path", new NitroxId(), NitroxTechType.None, null, new NitroxId(), new List<Entity>())
                     }
                 },
             PlayerData = new PlayerData()
@@ -541,8 +558,7 @@ public class WorldPersistenceTest
                 {
                     Vehicles = new List<VehicleModel>()
                     {
-                        new CyclopsModel(new NitroxTechType("Cyclops"), new NitroxId(), NitroxVector3.One, NitroxQuaternion.Identity, Array.Empty<InteractiveChildObjectIdentifier>(), Optional<NitroxId>.Of(new NitroxId()), "Super Duper Cyclops",
-                                         new[] { NitroxVector3.Zero, NitroxVector3.One, NitroxVector3.One }, 100)
+
                     }
                 },
                 Seed = "NITROXSEED"

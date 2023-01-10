@@ -24,7 +24,8 @@ public class VehicleChildEntityHelper
         typeof(DockingBayDoor),
         typeof(CyclopsDecoyLoadingTube),
         typeof(BatterySource),
-        typeof(EnergyMixin)
+        typeof(EnergyMixin),
+        typeof(SubNameInput)
     };
 
     public static List<Entity> ExtractChildren(GameObject vehicle)

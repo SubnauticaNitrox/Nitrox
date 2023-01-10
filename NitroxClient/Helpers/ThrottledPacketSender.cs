@@ -7,7 +7,7 @@ namespace NitroxClient.Helpers
 {
     public class ThrottledPacketSender
     {
-        private readonly Dictionary<Type, ThrottledPacket> throttledPackets = new Dictionary<Type, ThrottledPacket>();
+        private readonly Dictionary<object, ThrottledPacket> throttledPackets = new();
         private readonly IPacketSender packetSender;
 
         public ThrottledPacketSender(IPacketSender packetSender)
@@ -31,7 +31,7 @@ namespace NitroxClient.Helpers
             }
         }
 
-        public bool SendThrottled(Packet packet, float throttleTime = 0.1f)
+        public bool SendThrottled(Packet packet, Func<Packet, object> dedupeMethod, float throttleTime = 0.2f)
         {
             Type packetType = packet.GetType();
 
@@ -40,13 +40,15 @@ namespace NitroxClient.Helpers
                 return false;
             }
 
-            if (throttledPackets.TryGetValue(packetType, out ThrottledPacket throttledPacket))
+            object dedupeKey = dedupeMethod.Invoke(packet);
+
+            if (throttledPackets.TryGetValue(dedupeKey, out ThrottledPacket throttledPacket))
             {
                 throttledPacket.ReplacePacket(packet, throttleTime);
                 return true;
             }
 
-            throttledPackets.Add(packetType, new ThrottledPacket(packet, throttleTime));
+            throttledPackets.Add(dedupeKey, new ThrottledPacket(packet, throttleTime));
             packetSender.Send(packet);
             return true;
         }

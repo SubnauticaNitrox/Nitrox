@@ -1,5 +1,6 @@
 using System.Collections;
 using NitroxClient.MonoBehaviours;
+using NitroxClient.MonoBehaviours.Overrides;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
@@ -47,6 +48,13 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
         {
             LightmappedPrefabs.main.RequestScenePrefab("cyclops", (go) => gameObject = go);
             yield return new WaitUntil(() => gameObject != null);
+
+            // For scene objects like cyclops, PlayerCinematicController Start() will not be called to add Cinematic reference.
+            MultiplayerCinematicReference reference = gameObject.AddComponent<MultiplayerCinematicReference>();
+            foreach (PlayerCinematicController controller in gameObject.GetComponentsInChildren<PlayerCinematicController>())
+            {
+                reference.AddController(controller);
+            }
         }
         else
         {

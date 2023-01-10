@@ -1,13 +1,11 @@
 ﻿using System.Reflection;
 using HarmonyLib;
-using NitroxClient.Helpers;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
-using NitroxModel_Subnautica.DataStructures;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
-using NitroxModel.Packets;
 using UnityEngine;
+using NitroxClient.GameLogic;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
@@ -17,6 +15,12 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(SubNameInput __instance, ColorChangeEventData eventData)
         {
+            if (!__instance.GetComponent<NitroxEntity>())
+            {
+                // prevent this patch from firing when the initial template cyclops loads (happens on game load with living large update).
+                return;
+            }
+
             SubName subname = __instance.target;
             if (subname)
             {
@@ -52,9 +56,8 @@ namespace NitroxPatcher.Patches.Dynamic
                     return;
                 }
 
-                NitroxId vehicleId = NitroxEntity.GetId(parentVehicle);
-                VehicleColorChange packet = new(controllerId, vehicleId, __instance.SelectedColorIndex, eventData.hsb.ToDto(), eventData.color.ToDto());
-                Resolve<ThrottledPacketSender>().SendThrottled(packet);
+                NitroxId subNameInputId = NitroxEntity.GetId(__instance.gameObject);
+                Resolve<Entities>().EntityMetadataChangedThrottled(__instance, subNameInputId);
             }
         }
 
