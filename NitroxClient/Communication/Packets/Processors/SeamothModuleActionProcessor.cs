@@ -1,5 +1,4 @@
-﻿using NitroxClient.Communication.Abstract;
-using NitroxClient.Communication.Packets.Processors.Abstract;
+﻿using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
@@ -22,7 +21,7 @@ namespace NitroxClient.Communication.Packets.Processors
                     float[] chargearray = seamoth.quickSlotCharge;
                     float charge = chargearray[packet.SlotID];
                     float slotCharge = seamoth.GetSlotCharge(packet.SlotID);
-                    GameObject gameObject = Utils.SpawnZeroedAt(seamoth.seamothElectricalDefensePrefab, seamoth.transform, false);
+                    GameObject gameObject = global::Utils.SpawnZeroedAt(seamoth.seamothElectricalDefensePrefab, seamoth.transform, false);
                     ElectricalDefense component = gameObject.GetComponent<ElectricalDefense>();
                     component.charge = charge;
                     component.chargeScalar = slotCharge;
@@ -30,7 +29,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
                 if (techType == TechType.SeamothTorpedoModule)
                 {
-                    Transform muzzle = packet.SlotID != seamoth.GetSlotIndex("SeamothModule1") && packet.SlotID != seamoth.GetSlotIndex("SeamothModule3") ? seamoth.torpedoTubeRight : seamoth.torpedoTubeLeft;
+                    Transform muzzle = (packet.SlotID != seamoth.GetSlotIndex("SeamothModule1") && packet.SlotID != seamoth.GetSlotIndex("SeamothModule3")) ? seamoth.torpedoTubeRight : seamoth.torpedoTubeLeft;
                     ItemsContainer storageInSlot = seamoth.GetStorageInSlot(packet.SlotID, TechType.SeamothTorpedoModule);
                     TorpedoType torpedoType = null;
 
@@ -55,7 +54,7 @@ namespace NitroxClient.Communication.Packets.Processors
             if (torpedoType != null && container.DestroyItem(torpedoType.techType))
             {
                 GameObject gameObject = Object.Instantiate(torpedoType.prefab);
-                
+
                 SeamothTorpedo component2 = gameObject.GetComponent<SeamothTorpedo>();
                 Rigidbody componentInParent = muzzle.GetComponentInParent<Rigidbody>();
                 Vector3 rhs = !(componentInParent != null) ? Vector3.zero : componentInParent.velocity;

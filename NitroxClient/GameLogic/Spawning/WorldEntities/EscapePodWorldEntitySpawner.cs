@@ -1,12 +1,9 @@
 using System.Collections;
-using System.Linq;
 using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.Overrides;
-using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 
@@ -33,7 +30,6 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities
             SURPRESS_ESCAPE_POD_AWAKE_METHOD = true;
 
             GameObject escapePod = CreateNewEscapePod(escapePodEntity);
-            SetupChildren(escapePodEntity, escapePod);
 
             SURPRESS_ESCAPE_POD_AWAKE_METHOD = false;
 
@@ -76,33 +72,6 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities
             return escapePod;
         }
 
-        private static void SetupChildren(EscapePodWorldEntity escapePodEntity, GameObject escapePod)
-        {
-            setupChild<MedicalCabinet>(TechType.MedicalCabinet, escapePodEntity, escapePod);
-            setupChild<Fabricator>(TechType.Fabricator, escapePodEntity, escapePod);
-            setupChild<Radio>(TechType.Radio, escapePodEntity, escapePod);
-
-            StorageContainer storageContainer = setupChild<StorageContainer>(TechType.SmallStorage, escapePodEntity, escapePod);
-
-            if (storageContainer.container != null)
-            {
-                storageContainer.container.Clear();
-            }
-        }
-
-        private static T setupChild<T>(TechType techType, EscapePodWorldEntity escapePodEntity, GameObject escapePod) where T : UnityEngine.Component
-        {
-            PrefabPlaceholderEntity childEntity = escapePodEntity.ChildEntities.OfType<PrefabPlaceholderEntity>().First(entity => entity.TechType.ToUnity() == techType);
-            Validate.NotNull(childEntity);
-
-            T childComponent = escapePod.RequireComponentInChildren<T>();
-            UnityEngine.Component.DestroyImmediate(childComponent.GetComponent<NitroxEntity>()); // template has pre-existing NitroxEntity, remove.
-            NitroxEntity.SetNewId(childComponent.gameObject, childEntity.Id);
-            EntityMetadataProcessor.ApplyMetadata(childComponent.gameObject, childEntity.Metadata);
-
-            return childComponent;
-        }
-
         /// <summary>
         /// Start() isn't executed for the EscapePod and children (Why? Idk, maybe because it's a scene...) so we call the components here where we have patches in Start.
         /// </summary>
@@ -121,7 +90,7 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities
 
         public bool SpawnsOwnChildren()
         {
-            return true;
+            return false;
         }
     }
 

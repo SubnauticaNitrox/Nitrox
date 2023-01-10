@@ -12,7 +12,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static bool Prefix(Pickupable __instance)
         {
-            Resolve<Item>().PickedUp(__instance.gameObject, __instance.GetTechType());
+            Resolve<Items>().PickedUp(__instance.gameObject, __instance.GetTechType());
             return true;
         }
 
@@ -22,4 +22,3 @@ namespace NitroxPatcher.Patches.Dynamic
         }
     }
 }
-

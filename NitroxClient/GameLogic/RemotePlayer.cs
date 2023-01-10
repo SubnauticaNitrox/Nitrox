@@ -18,17 +18,16 @@ namespace NitroxClient.GameLogic
         private static readonly int animatorPlayerIn = Animator.StringToHash("player_in");
 
         private readonly PlayerModelManager playerModelManager;
-        private readonly HashSet<TechType> equipment;
 
         public PlayerContext PlayerContext { get; }
-        public GameObject Body { get; }
-        public GameObject PlayerModel { get; }
-        public Rigidbody RigidBody { get; }
+        public GameObject Body { get; private set; }
+        public GameObject PlayerModel { get; private set; }
+        public Rigidbody RigidBody { get; private set; }
         public CapsuleCollider Collider { get; private set; }
-        public ArmsController ArmsController { get; }
-        public AnimationController AnimationController { get; }
-        public ItemsContainer Inventory { get; }
-        public Transform ItemAttachPoint { get; }
+        public ArmsController ArmsController { get; private set; }
+        public AnimationController AnimationController { get; private set; }
+        public ItemsContainer Inventory { get; private set; }
+        public Transform ItemAttachPoint { get; private set; }
 
         public ushort PlayerId => PlayerContext.PlayerId;
         public string PlayerName => PlayerContext.PlayerName;
@@ -43,20 +42,22 @@ namespace NitroxClient.GameLogic
 
         public readonly Event<RemotePlayer> PlayerDisconnectEvent = new();
 
-        public RemotePlayer(GameObject playerBody, PlayerContext playerContext, List<TechType> equippedTechTypes, List<Pickupable> inventoryItems, PlayerModelManager modelManager)
+        public RemotePlayer(PlayerContext playerContext, PlayerModelManager modelManager)
         {
             PlayerContext = playerContext;
+            playerModelManager = modelManager;
+        }
 
+        public void InitializeGameObject(GameObject playerBody)
+        {
             Body = playerBody;
             Body.name = PlayerName;
-
-            equipment = new HashSet<TechType>(equippedTechTypes);
 
             RigidBody = Body.AddComponent<Rigidbody>();
             RigidBody.useGravity = false;
             RigidBody.interpolation = RigidbodyInterpolation.Interpolate;
 
-            NitroxEntity.SetNewId(Body, playerContext.PlayerNitroxId);
+            NitroxEntity.SetNewId(Body, PlayerContext.PlayerNitroxId);
 
             // Get player
             PlayerModel = Body.RequireGameObject("player_view");
@@ -73,23 +74,14 @@ namespace NitroxClient.GameLogic
             Transform inventoryTransform = new GameObject("Inventory").transform;
             inventoryTransform.SetParent(Body.transform);
             Inventory = new ItemsContainer(6, 8, inventoryTransform, $"{ItemContainers.NITROX_INVENTORY_STORAGE_LABEL}{PlayerName}", null);
-            foreach (Pickupable item in inventoryItems)
-            {
-                Inventory.UnsafeAdd(new InventoryItem(item));
-                Log.Debug($"Added {item.name} to {playerContext.PlayerName}.");
-            }
 
             ItemAttachPoint = PlayerModel.transform.Find(PlayerEquipmentConstants.ITEM_ATTACH_POINT_GAME_OBJECT_NAME);
 
-            playerModelManager = modelManager;
             CoroutineUtils.StartCoroutineSmart(playerModelManager.AttachPing(this));
             playerModelManager.BeginApplyPlayerColor(this);
             playerModelManager.RegisterEquipmentVisibilityHandler(PlayerModel);
-            UpdateEquipmentVisibility();
             SetupBody();
             SetupSkyAppliers();
-
-            ErrorMessage.AddMessage($"{PlayerName} joined the game.");
         }
 
         public void Attach(Transform transform, bool keepWorldTransform = false)
@@ -219,7 +211,7 @@ namespace NitroxClient.GameLogic
 
                     Detach();
                     ArmsController.SetWorldIKTarget(null, null);
-                    
+
                     Vehicle.GetComponent<MultiplayerVehicleControl>().Exit();
                 }
 
@@ -252,7 +244,7 @@ namespace NitroxClient.GameLogic
                 AnimationController["in_exosuit"] = AnimationController["using_mechsuit"] = newVehicle is Exosuit;
             }
         }
-        
+
         /// <summary>
         /// Drops the remote player, swimming where he is
         /// </summary>
@@ -297,29 +289,11 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        public void AddEquipment(TechType techType)
+        public void UpdateEquipmentVisibility(List<TechType> equippedItems)
         {
-            if (equipment.Contains(techType))
-            {
-                return;
-            }
-
-            equipment.Add(techType);
-
-            UpdateEquipmentVisibility();
+            playerModelManager.UpdateEquipmentVisibility(new ReadOnlyCollection<TechType>(equippedItems));
         }
 
-        public void RemoveEquipment(TechType techType)
-        {
-            equipment.Remove(techType);
-            UpdateEquipmentVisibility();
-        }
-
-        private void UpdateEquipmentVisibility()
-        {
-            playerModelManager.UpdateEquipmentVisibility(new ReadOnlyCollection<TechType>(equipment.ToList()));
-        }
-        
         /// <summary>
         /// Makes the RemotePlayer recognizable as an obstacle for buildings.
         /// </summary>
@@ -327,13 +301,13 @@ namespace NitroxClient.GameLogic
         {
             RemotePlayerIdentifier identifier = Body.AddComponent<RemotePlayerIdentifier>();
             identifier.RemotePlayer = this;
-            
+
             if (Player.mainCollider is CapsuleCollider refCollider)
             {
                 // This layer lets us have a collider as a trigger without preventing its detection as an obstacle
                 Body.layer = LayerID.Useable;
                 Collider = Body.AddComponent<CapsuleCollider>();
-                
+
                 Collider.center = Vector3.zero;
                 Collider.radius = refCollider.radius;
                 Collider.direction = refCollider.direction;

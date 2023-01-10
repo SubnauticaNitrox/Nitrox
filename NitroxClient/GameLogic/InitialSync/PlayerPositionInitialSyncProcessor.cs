@@ -13,6 +13,8 @@ namespace NitroxClient.GameLogic.InitialSync
 {
     public class PlayerPositionInitialSyncProcessor : InitialSyncProcessor
     {
+        private static readonly Vector3 spawnRelativeToEscapePod = new Vector3(0.9f, 2.1f, 0);
+
         private readonly IPacketSender packetSender;
 
         public PlayerPositionInitialSyncProcessor(IPacketSender packetSender)
@@ -29,6 +31,8 @@ namespace NitroxClient.GameLogic.InitialSync
         {
             // We freeze the player so that he doesn't fall before the cells around him have loaded
             Player.main.cinematicModeActive = true;
+
+            AttachPlayerToEscapePod(packet.AssignedEscapePodId);
 
             Vector3 position = packet.PlayerSpawnData.ToUnity();
             Quaternion rotation = packet.PlayerSpawnRotation.ToUnity();
@@ -80,5 +84,19 @@ namespace NitroxClient.GameLogic.InitialSync
             Player.main.SetPosition(positionInVehicle, rotation * vehicleAngle);
             Player.main.cinematicModeActive = false;
         }
+
+        private void AttachPlayerToEscapePod(NitroxId escapePodId)
+        {
+            GameObject escapePod = NitroxEntity.RequireObjectFrom(escapePodId);
+
+            EscapePod.main.transform.position = escapePod.transform.position;
+            EscapePod.main.playerSpawn.position = escapePod.transform.position + spawnRelativeToEscapePod;
+
+            Player.main.transform.position = EscapePod.main.playerSpawn.position;
+            Player.main.transform.rotation = EscapePod.main.playerSpawn.rotation;
+
+            Player.main.currentEscapePod = escapePod.GetComponent<EscapePod>();
+        }
+
     }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
@@ -13,14 +13,12 @@ namespace NitroxModel.Packets
         public PlayerContext PlayerContext { get; }
         public Optional<NitroxId> SubRootId { get; }
         public List<NitroxTechType> EquippedTechTypes { get; }
-        public List<ItemData> InventoryItems { get; }
 
-        public PlayerJoinedMultiplayerSession(PlayerContext playerContext, Optional<NitroxId> subRootId, List<NitroxTechType> equippedTechTypes, List<ItemData> inventoryItems)
+        public PlayerJoinedMultiplayerSession(PlayerContext playerContext, Optional<NitroxId> subRootId, List<NitroxTechType> equippedTechTypes)
         {
             PlayerContext = playerContext;
             SubRootId = subRootId;
             EquippedTechTypes = equippedTechTypes;
-            InventoryItems = inventoryItems;
         }
     }
 }

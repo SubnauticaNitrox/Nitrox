@@ -36,7 +36,7 @@ namespace NitroxClient.GameLogic
         public PlayerSettings PlayerSettings => multiplayerSession.PlayerSettings;
 
         public Perms Permissions;
-        
+
         public LocalPlayer(IMultiplayerSession multiplayerSession, IPacketSender packetSender)
         {
             this.multiplayerSession = multiplayerSession;

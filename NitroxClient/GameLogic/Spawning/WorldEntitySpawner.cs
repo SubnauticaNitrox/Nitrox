@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.Spawning.WorldEntities;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic.Entities;
@@ -12,11 +13,13 @@ namespace NitroxClient.GameLogic.Spawning
 {
     public class WorldEntitySpawner : EntitySpawner<WorldEntity>
     {
-        private readonly WorldEntitySpawnerResolver worldEntitySpawnResolver = new WorldEntitySpawnerResolver();
+        private readonly WorldEntitySpawnerResolver worldEntitySpawnResolver;
         private readonly Dictionary<Int3, BatchCells> batchCellsById;
 
-        public WorldEntitySpawner()
+        public WorldEntitySpawner(PlayerManager playerManager, ILocalNitroxPlayer localPlayer)
         {
+            worldEntitySpawnResolver = new WorldEntitySpawnerResolver(playerManager, localPlayer);
+
             if (NitroxEnvironment.IsNormal)
             {
                 batchCellsById = (Dictionary<Int3, BatchCells>)LargeWorldStreamer.main.cellManager.batch2cells;

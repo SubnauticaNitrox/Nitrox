@@ -16,6 +16,7 @@ namespace NitroxModel.DataStructures.GameLogic.Entities
     [DataContract]
     [ProtoInclude(10, typeof(PlaceholderGroupWorldEntity))]
     [ProtoInclude(20, typeof(EscapePodWorldEntity))]
+    [ProtoInclude(30, typeof(PlayerWorldEntity))]
     public class WorldEntity : Entity
     {
         public AbsoluteEntityCell AbsoluteEntityCell => new AbsoluteEntityCell(Transform.Position, Level);

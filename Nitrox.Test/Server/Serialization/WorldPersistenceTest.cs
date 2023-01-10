@@ -102,7 +102,6 @@ public class WorldPersistenceTest
     [DataTestMethod, DynamicWorldDataAfter]
     public void InventoryDataTest(PersistedWorldData worldDataAfter, string serializerName)
     {
-        AssertHelper.IsListEqual(worldData.WorldData.InventoryData.InventoryItems.OrderBy(x => x.ItemId), worldDataAfter.WorldData.InventoryData.InventoryItems.OrderBy(x => x.ItemId), ItemDataTest);
         AssertHelper.IsListEqual(worldData.WorldData.InventoryData.StorageSlotItems.OrderBy(x => x.ItemId), worldDataAfter.WorldData.InventoryData.StorageSlotItems.OrderBy(x => x.ItemId), ItemDataTest);
         AssertHelper.IsListEqual(worldData.WorldData.InventoryData.Modules.OrderBy(x => x.ItemId), worldDataAfter.WorldData.InventoryData.Modules.OrderBy(x => x.ItemId), ItemDataTest);
     }
@@ -351,6 +350,14 @@ public class WorldPersistenceTest
             case RepairedComponentMetadata metadata when entityAfter.Metadata is RepairedComponentMetadata metadataAfter:
                 Assert.AreEqual(metadata.TechType, metadataAfter.TechType);
                 break;
+            case PlantableMetadata metadata when entityAfter.Metadata is PlantableMetadata metadataAfter:
+                Assert.AreEqual(metadata.Progress, metadataAfter.Progress);
+                break;
+            case CrafterMetadata metadata when entityAfter.Metadata is CrafterMetadata metadataAfter:
+                Assert.AreEqual(metadata.Duration, metadataAfter.Duration);
+                Assert.AreEqual(metadata.TechType, metadataAfter.TechType);
+                Assert.AreEqual(metadata.StartTime, metadataAfter.StartTime);
+                break;
             case null when entityAfter.Metadata is null:
                 break;
             default:
@@ -388,6 +395,12 @@ public class WorldPersistenceTest
                 break;
             case PrefabPlaceholderEntity prefabPlaceholderEntity when entityAfter is PrefabPlaceholderEntity prefabPlaceholderEntityAfter:
                 Assert.AreEqual(prefabPlaceholderEntity.ClassId, prefabPlaceholderEntityAfter.ClassId);
+                break;
+            case InventoryEntity inventoryEntity when entityAfter is InventoryEntity inventoryEntityAfter:
+                Assert.AreEqual(inventoryEntity.ComponentIndex, inventoryEntityAfter.ComponentIndex);
+                break;
+            case InventoryItemEntity inventoryItemEntity when entityAfter is InventoryItemEntity inventoryItemEntityAfter:
+                Assert.AreEqual(inventoryItemEntity.ClassId, inventoryItemEntityAfter.ClassId);
                 break;
             default:
                 Assert.Fail($"Runtime type of {nameof(Entity)} is not equal");
@@ -437,14 +450,18 @@ public class WorldPersistenceTest
                 {
                     Entities = new List<Entity>()
                     {
-                        new PrefabChildEntity(new NitroxId(), "pretty class id", new NitroxTechType("Radio"), 1, null, new NitroxId()),
+                        new PrefabChildEntity(new NitroxId(), "pretty class id", new NitroxTechType("Fabricator"), 1, new CrafterMetadata(new NitroxTechType("FilteredWater"), 100, 10), new NitroxId()),
                         new PrefabPlaceholderEntity(new NitroxId(), new NitroxTechType("Bulkhead"), new NitroxId()),
                         new WorldEntity(NitroxVector3.Zero, NitroxQuaternion.Identity, NitroxVector3.One, new NitroxTechType("Peeper"), 1, "PeeperClass", false, new NitroxId(), null, false, new NitroxId()),
                         new PlaceholderGroupWorldEntity(new WorldEntity(NitroxVector3.Zero, NitroxQuaternion.Identity, NitroxVector3.One, NitroxTechType.None, 1, "Wreck1", false, new NitroxId(), null, false, new NitroxId()), new List<PrefabPlaceholderEntity>()
                         {
                             new(new NitroxId(), new NitroxTechType("Door"), new NitroxId())
                         }),
-                        new EscapePodWorldEntity(NitroxVector3.One, new NitroxId(), new RepairedComponentMetadata(new NitroxTechType("Radio")))
+                        new EscapePodWorldEntity(NitroxVector3.One, new NitroxId(), new RepairedComponentMetadata(new NitroxTechType("Radio"))),
+                        new InventoryEntity(1, new NitroxId(), new NitroxTechType("planterbox"), null, new NitroxId(), new List<Entity>()
+                        {
+                            new InventoryItemEntity(new NitroxId(), "classId", new NitroxTechType("bluepalmseed"), new PlantableMetadata(0.5f), new NitroxId(), new List<Entity>())
+                        })
                     }
                 },
             PlayerData = new PlayerData()
@@ -516,7 +533,6 @@ public class WorldPersistenceTest
                 },
                 InventoryData = new InventoryData()
                 {
-                    InventoryItems = new List<ItemData>() { new BasicItemData(new NitroxId(), new NitroxId(), new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }) },
                     StorageSlotItems = new List<ItemData>() { new BasicItemData(new NitroxId(), new NitroxId(), new byte[] { 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21 }) },
                     Modules = new List<EquippedItemData>() { new EquippedItemData(new NitroxId(), new NitroxId(), new byte[] { 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21 }, "Slot1", new NitroxTechType("")) }
                 },

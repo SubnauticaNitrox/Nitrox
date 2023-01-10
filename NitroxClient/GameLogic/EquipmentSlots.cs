@@ -25,11 +25,14 @@ namespace NitroxClient.GameLogic
             EquipmentType.PowerCellCharger,
             EquipmentType.DecoySlot
         };
-        private readonly IPacketSender packetSender;
 
-        public EquipmentSlots(IPacketSender packetSender)
+        private readonly IPacketSender packetSender;
+        private readonly Entities entities;
+
+        public EquipmentSlots(IPacketSender packetSender, Entities entities)
         {
             this.packetSender = packetSender;
+            this.entities = entities;
         }
 
         public void BroadcastEquip(Pickupable pickupable, GameObject owner, string slot)
@@ -54,10 +57,7 @@ namespace NitroxClient.GameLogic
 
             if (player != null)
             {
-                PlayerEquipmentAdded equipmentAdded = new PlayerEquipmentAdded(techType.ToDto(), equippedItem);
-                packetSender.SendIfGameCode(equipmentAdded);
-                pickupable.gameObject.transform.SetParent(parent);
-
+                entities.EntityMetadataChanged(player, ownerId);
                 return;
             }
 
@@ -69,19 +69,16 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastUnequip(Pickupable pickupable, GameObject owner, string slot)
         {
+            NitroxId ownerId = NitroxEntity.GetId(owner);
             NitroxId itemId = NitroxEntity.GetId(pickupable.gameObject);
             Player player = owner.GetComponent<Player>();
 
             if (player != null)
             {
-                TechType techType = pickupable.GetTechType();
-                PlayerEquipmentRemoved equipmentAdded = new PlayerEquipmentRemoved(techType.ToDto(), itemId);
-                packetSender.SendIfGameCode(equipmentAdded);
-
+                entities.EntityMetadataChanged(player, ownerId);
                 return;
             }
 
-            NitroxId ownerId = NitroxEntity.GetId(owner);
             if (pickupable.GetTechType() == TechType.VehicleStorageModule)
             {
                 List<InteractiveChildObjectIdentifier> childIdentifiers = VehicleChildObjectIdentifierHelper.ExtractInteractiveChildren(owner);

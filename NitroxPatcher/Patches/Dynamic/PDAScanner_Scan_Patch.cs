@@ -26,7 +26,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static readonly OpCode INJECTION_OPCODE_2 = OpCodes.Ldsfld;
         public static readonly object INJECTION_OPERAND_2 = Reflect.Field(() => PDAScanner.cachedProgress);
-        
+
         public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
         {
             Validate.NotNull(INJECTION_OPERAND);
@@ -60,7 +60,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 // A lot of fragments are virtual entities (spawned by placeholders in the world).  Sometimes the server only knows the id
                 // of the placeholder and not the virtual entity. TODO: we will need to propagate deterministic ids to children entities for
                 // these virtual entities.
-                Resolve<Item>().PickedUp(PDAScanner.scanTarget.gameObject, techType);
+                Resolve<Items>().PickedUp(PDAScanner.scanTarget.gameObject, techType);
             }
         }
 
@@ -117,7 +117,7 @@ namespace NitroxPatcher.Patches.Dynamic
                     Unlocked = true;
                     Entry.unlocked = entry.unlocked;
                 }
-                
+
                 return Entry;
             }
         }
@@ -130,7 +130,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 yield return lastPacketSendDelay;
             }
             while (DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() < throttledEntry.LatestProgressTime.ToUnixTimeMilliseconds() + LAST_PACKET_SEND_DELAY);
-            
+
             throttledEntry.GetEntry();
             if (!throttledEntry.Unlocked && !PDAScanner.ContainsCompleteEntry(throttledEntry.EntryTechType))
             {

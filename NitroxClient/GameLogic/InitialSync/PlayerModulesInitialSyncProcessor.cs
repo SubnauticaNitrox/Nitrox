@@ -17,7 +17,6 @@ namespace NitroxClient.GameLogic.InitialSync
 
             DependentProcessors.Add(typeof(VehicleInitialSyncProcessor));
             DependentProcessors.Add(typeof(BuildingInitialSyncProcessor));
-            DependentProcessors.Add(typeof(InventoryItemsInitialSyncProcessor));
             DependentProcessors.Add(typeof(EquippedItemInitialSyncProcessor));
         }
 
