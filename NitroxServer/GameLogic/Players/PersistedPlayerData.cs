@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
@@ -50,7 +50,7 @@ public class PersistedPlayerData
     public bool IsPermaDeath { get; set; }
 
     [DataMember(Order = 14)]
-    public HashSet<string> CompletedGoals { get; set; } = new HashSet<string>();
+    public Dictionary<string, float> CompletedGoals { get; set; } = new Dictionary<string, float>();
 
     [DataMember(Order = 15)]
     public Dictionary<string, PingInstancePreference> PingInstancePreferences { get; set; } = new();

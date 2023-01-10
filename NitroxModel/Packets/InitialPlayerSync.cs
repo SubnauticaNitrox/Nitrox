@@ -25,7 +25,7 @@ namespace NitroxModel.Packets
         public bool FirstTimeConnecting { get; }
         public InitialPDAData PDAData { get; }
         public InitialStoryGoalData StoryGoalData { get; }
-        public ICollection<string> CompletedGoals { get; }
+        public Dictionary<string, float> CompletedGoals { get; }
         public NitroxVector3 PlayerSpawnData { get; }
         public NitroxQuaternion PlayerSpawnRotation { get; }
         public Optional<NitroxId> PlayerSubRootId { get; }
@@ -50,7 +50,7 @@ namespace NitroxModel.Packets
             IEnumerable<string> quickSlotsBinding,
             InitialPDAData pdaData,
             InitialStoryGoalData storyGoalData,
-            ICollection<string> completedGoals,
+            Dictionary<string, float> completedGoals,
             NitroxVector3 playerSpawnData,
             NitroxQuaternion playerSpawnRotation,
             Optional<NitroxId> playerSubRootId,
@@ -103,7 +103,7 @@ namespace NitroxModel.Packets
             bool firstTimeConnecting,
             InitialPDAData pdaData,
             InitialStoryGoalData storyGoalData,
-            ICollection<string> completedGoals,
+            Dictionary<string, float> completedGoals,
             NitroxVector3 playerSpawnData,
             NitroxQuaternion playerSpawnRotation,
             Optional<NitroxId> playerSubRootId,

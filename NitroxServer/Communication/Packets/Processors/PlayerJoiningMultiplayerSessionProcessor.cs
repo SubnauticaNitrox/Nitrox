@@ -87,7 +87,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 player.QuickSlotsBinding,
                 world.GameData.PDAState.GetInitialPDAData(),
                 world.GameData.StoryGoals.GetInitialStoryGoalData(scheduleKeeper),
-                player.CompletedGoals,
+                player.CompletedGoals.ToDictionary(m => m.Key, m => m.Value),
                 player.Position,
                 player.Rotation,
                 player.SubRootId,

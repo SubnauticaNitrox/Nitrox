@@ -18,7 +18,9 @@ public class StoryGoalInitialSyncProcessor : InitialSyncProcessor
         return new List<IEnumerator> {
             SetTimeData(packet),
             SetupStoryGoalManager(packet),
+            SetupTrackers(packet),
             SetupAurora(packet),
+            RefreshWithLatestData(packet),
             SetScheduledGoals(packet)
         };
     }
@@ -40,6 +42,40 @@ public class StoryGoalInitialSyncProcessor : InitialSyncProcessor
         storyGoalManager.pendingRadioMessages.AddRange(radioQueue);
         storyGoalManager.PulsePendingMessages();
 
+        // Restore states of GoalManager and the (tutorial) arrow system
+        foreach (KeyValuePair<string, float> entry in packet.CompletedGoals)
+        {
+            Goal entryGoal = GoalManager.main.goals.Find(goal => goal.customGoalName.Equals(entry.Key));
+            if (entryGoal != null)
+            {
+                entryGoal.SetTimeCompleted(entry.Value);
+            }
+        }
+        GoalManager.main.completedGoalNames.AddRange(packet.CompletedGoals.Keys);
+        PlayerWorldArrows.main.completedCustomGoals.AddRange(packet.CompletedGoals.Keys);
+
+        // Deactivate the current arrow if it was completed
+        if (packet.CompletedGoals.Any(goal => goal.Equals(WorldArrowManager.main.currentGoalText)))
+        {
+            WorldArrowManager.main.DeactivateArrow();
+        }
+        
+        StringBuilder builder = new();
+        builder.AppendLine($"""
+        Received initial sync packet with:
+        - Completed story goals : {completedGoals.Count}
+        - Personal goals        : {packet.CompletedGoals.Count}
+        - Radio queue           : {radioQueue.Count}
+        """);
+        Log.Info($"{builder}");
+        yield break;
+    }
+
+    private IEnumerator SetupTrackers(InitialPlayerSync packet)
+    {
+        List<string> completedGoals = packet.StoryGoalData.CompletedGoals;
+        StoryGoalManager storyGoalManager = StoryGoalManager.main;
+
         // Initialize CompoundGoalTracker and OnGoalUnlockTracker and clear their already completed goals
         storyGoalManager.OnSceneObjectsLoaded();
         storyGoalManager.compoundGoalTracker.goals.RemoveAll(goal => completedGoals.Contains(goal.key));
@@ -60,15 +96,6 @@ public class StoryGoalInitialSyncProcessor : InitialSyncProcessor
             }
         }
         techTypesToRemove.ForEach(techType => storyGoalManager.itemGoalTracker.goals.Remove(techType));
-
-        // TODO: Move PlayerInitialSyncProcessor.SetPlayerCompletedGoals to here
-
-        StringBuilder builder = new("Received initial sync packet with");
-        builder.AppendLine($"""
-             - Completed story goals: {completedGoals.Count}
-             - Radio queue : {radioQueue.Count}
-            """);
-        Log.Info($"{builder}");
         yield break;
     }
 
@@ -85,9 +112,8 @@ public class StoryGoalInitialSyncProcessor : InitialSyncProcessor
         CrashedShipExploder.main.version = 2;
         CrashedShipExploder.main.timeToStartCountdown = timeData.CrashedShipExploderData.TimeToStartCountdown;
         CrashedShipExploder.main.timeToStartWarning = timeData.CrashedShipExploderData.TimeToStartWarning;
+        CrashedShipExploder.main.timeSerialized = DayNightCycle.main.timePassedAsFloat;
         CrashedShipExploder.main.OnProtoDeserialize(null);
-
-        StoryGoalCustomEventHandler.main.Awake();
 
         yield break;
     }
@@ -115,6 +141,22 @@ public class StoryGoalInitialSyncProcessor : InitialSyncProcessor
             }
         }
 
+        yield break;
+    }
+
+    // Must happen after CompletedGoals
+    private IEnumerator RefreshWithLatestData(InitialPlayerSync packet)
+    {
+        // If those aren't set up yet, they'll initialize correctly in time
+        // Else, we need to force them to acquire the right data
+        if (StoryGoalCustomEventHandler.main)
+        {
+            StoryGoalCustomEventHandler.main.Awake();
+        }
+        if (PrecursorGunStoryEvents.main)
+        {
+            PrecursorGunStoryEvents.main.Start();
+        }
         yield break;
     }
 }
