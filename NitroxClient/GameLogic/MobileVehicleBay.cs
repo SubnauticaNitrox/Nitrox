@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
@@ -32,6 +30,9 @@ namespace NitroxClient.GameLogic
             }
 
             // Sometimes build templates, such as the cyclops, are already tagged with IDs.  Remove any that exist to retag.
+            // TODO: this seems to happen because various patches execute when the cyclops template loads (on game load). 
+            // This will leave vehicles with NitroxEntity but an empty NitroxId.  We need to chase these down and only call
+            // the code paths when the owner has a simulation lock.
             UnityEngine.Component.DestroyImmediate(constructedObject.GetComponent<NitroxEntity>());
 
             NitroxId constructedObjectId = NitroxEntity.GetId(constructedObject);
@@ -42,12 +43,7 @@ namespace NitroxClient.GameLogic
                 
             packetSender.Send(new EntitySpawnedByClient(vehicleEntity));
 
-            MonoBehaviour monoBehaviour = constructor.GetComponent<MonoBehaviour>();
-            //We want to store the fallen position of the object to avoid flying object on reload 
-            if (monoBehaviour)
-            {
-                monoBehaviour.StartCoroutine(vehicles.UpdateVehiclePositionAfterSpawn(constructedObjectId, techType, constructedObject, duration + 10.0f));
-            }
+            constructor.StartCoroutine(vehicles.UpdateVehiclePositionAfterSpawn(constructedObjectId, techType, constructedObject, duration + 10.0f));            
         }
     }
 }
