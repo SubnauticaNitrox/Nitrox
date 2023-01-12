@@ -63,6 +63,7 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
             GameObject techPrefab = techPrefabCoroutine.GetResult();
             gameObject = Utils.SpawnPrefabAt(techPrefab, null, vehicleEntity.Transform.Position.ToUnity());
             Validate.NotNull(gameObject, $"{nameof(VehicleWorldEntitySpawner)}: No prefab for tech type: {techType}");
+            gameObject.GetComponent<Vehicle>().LazyInitialize();
         }
 
         gameObject.transform.position = vehicleEntity.Transform.Position.ToUnity();
@@ -73,6 +74,8 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
         CrafterLogic.NotifyCraftEnd(gameObject, CraftData.GetTechType(gameObject));
         Rigidbody rigidBody = gameObject.RequireComponent<Rigidbody>();
         rigidBody.isKinematic = false;
+
+        yield return Yielders.WaitForEndOfFrame;
 
         // Sometimes build templates, such as the cyclops, are already tagged with IDs.  Remove any that exist to retag.
         UnityEngine.Component.DestroyImmediate(gameObject.GetComponent<NitroxEntity>());
