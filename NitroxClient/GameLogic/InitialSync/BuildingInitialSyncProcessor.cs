@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
@@ -31,8 +31,6 @@ namespace NitroxClient.GameLogic.InitialSync
         {
             this.buildEventQueue = buildEventQueue;
             this.basePieceSpawnPrioritizer = basePieceSpawnPrioritizer;
-
-            DependentProcessors.Add(typeof(CyclopsInitialAsyncProcessor));
         }
 
         public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)

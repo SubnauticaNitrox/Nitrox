@@ -17,7 +17,6 @@ namespace NitroxClient.GameLogic.InitialSync
             // inventory items to them.  Eventually, all of the below processors will become entities on their own 
             DependentProcessors.Add(typeof(PlayerInitialSyncProcessor));
             DependentProcessors.Add(typeof(RemotePlayerInitialSyncProcessor));
-            DependentProcessors.Add(typeof(VehicleInitialSyncProcessor));
             DependentProcessors.Add(typeof(BuildingInitialSyncProcessor));
         }
 

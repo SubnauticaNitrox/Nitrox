@@ -43,9 +43,8 @@ namespace NitroxClient.GameLogic
 
             if (techType == TechType.VehicleStorageModule)
             {
-                List<InteractiveChildObjectIdentifier> childIdentifiers = VehicleChildObjectIdentifierHelper.ExtractInteractiveChildren(owner);
-                VehicleChildUpdate vehicleChildInteractiveData = new VehicleChildUpdate(ownerId, childIdentifiers);
-                packetSender.SendIfGameCode(vehicleChildInteractiveData);
+                entities.EntityMetadataChanged(pickupable, ownerId);
+                return;
             }
 
             Transform parent = pickupable.gameObject.transform.parent;
@@ -81,9 +80,8 @@ namespace NitroxClient.GameLogic
 
             if (pickupable.GetTechType() == TechType.VehicleStorageModule)
             {
-                List<InteractiveChildObjectIdentifier> childIdentifiers = VehicleChildObjectIdentifierHelper.ExtractInteractiveChildren(owner);
-                VehicleChildUpdate vehicleChildInteractiveData = new VehicleChildUpdate(ownerId, childIdentifiers);
-                packetSender.SendIfGameCode(vehicleChildInteractiveData);
+                entities.EntityMetadataChanged(pickupable, ownerId);
+                return;
             }
 
             bool playerModule = !ApplicableEquipmentTypes.Contains(Equipment.GetSlotType(slot));

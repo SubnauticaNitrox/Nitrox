@@ -46,7 +46,7 @@ namespace NitroxClient.GameLogic
             // example is that some obects are not 'real' objects until they are clicked and end up spawning a prefab.  For example, the fire extinguisher
             // in the escape pod (mono: IntroFireExtinguisherHandTarget) or Creepvine seeds (mono: PickupPrefab).  When clicked, these spawn new prefabs
             // directly into the player's inventory.  In this pickup function, we can let the server know about this by sending an EntitySpawn packet;
-            // however, the disavantage with doing this in one place is that other players may not 'see' the action (such as picking creepvine fruit).
+            // however, the disadvantage with doing this in one place is that other players may not 'see' the action (such as picking creepvine fruit).
             // This may be intended for things like the fire extinguisher because it lets all players get it.  As we sync these actions, this statement
             // will no longer be true and will no longer send a created packet.
             if (!entities.IsKnownEntity(id))
@@ -102,12 +102,13 @@ namespace NitroxClient.GameLogic
             }
         }
 
+
         // This function will record any notable children of the dropped item as a PrefabChildEntity.  In this case, a 'notable'
         // child is one that UWE has tagged with a PrefabIdentifier (class id) and has entity metadata that can be extracted. An
         // example would be recording a Battery PrefabChild inside of a Flashlight WorldEntity.
         public static IEnumerable<Entity> GetPrefabChildren(GameObject gameObject, NitroxId parentId)
         {
-            foreach(IGrouping<string, PrefabIdentifier> prefabGroup in gameObject.GetAllComponentsInChildren<PrefabIdentifier>()
+            foreach (IGrouping<string, PrefabIdentifier> prefabGroup in gameObject.GetAllComponentsInChildren<PrefabIdentifier>()
                                                                                  .Where(prefab => prefab.gameObject != gameObject)
                                                                                  .GroupBy(prefab => prefab.classId))
             {
