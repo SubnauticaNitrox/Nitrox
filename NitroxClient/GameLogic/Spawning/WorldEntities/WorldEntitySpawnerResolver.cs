@@ -10,6 +10,7 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities
         private readonly DefaultWorldEntitySpawner defaultEntitySpawner = new DefaultWorldEntitySpawner();
         private readonly CellRootSpawner cellRootSpawner = new CellRootSpawner();
         private readonly PlayerWorldEntitySpawner playerWorldEntitySpawner;
+        private readonly VehicleWorldEntitySpawner vehicleWorldEntitySpawner = new VehicleWorldEntitySpawner();
         private readonly PlaceholderGroupWorldEntitySpawner prefabWorldEntitySpawner;
         
         private readonly Dictionary<TechType, IWorldEntitySpawner> customSpawnersByTechType = new Dictionary<TechType, IWorldEntitySpawner>();
@@ -38,6 +39,11 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities
             if (entity is PlayerWorldEntity)
             {
                 return playerWorldEntitySpawner;
+            }
+
+            if (entity is VehicleWorldEntity)
+            {
+                return vehicleWorldEntitySpawner;
             }
             
             TechType techType = entity.TechType.ToUnity();

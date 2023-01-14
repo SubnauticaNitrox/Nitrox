@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
@@ -22,7 +22,7 @@ namespace NitroxClient.GameLogic.InitialSync
 
             DependentProcessors.Add(typeof(PlayerInitialSyncProcessor));  // the player needs to be configured before we can equip items
             DependentProcessors.Add(typeof(RemotePlayerInitialSyncProcessor)); // remote players can also equip items
-            DependentProcessors.Add(typeof(VehicleInitialSyncProcessor)); // Equipment also includes vehicles modules
+            DependentProcessors.Add(typeof(GlobalRootInitialSyncProcessor)); // Equipment also includes vehicles modules in global root
         }
 
         public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)

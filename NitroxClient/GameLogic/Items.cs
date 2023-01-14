@@ -102,12 +102,13 @@ namespace NitroxClient.GameLogic
             }
         }
 
+
         // This function will record any notable children of the dropped item as a PrefabChildEntity.  In this case, a 'notable' 
         // child is one that UWE has tagged with a PrefabIdentifier (class id) and has entity metadata that can be extracted. An
         // example would be recording a Battery PrefabChild inside of a Flashlight WorldEntity. 
         public static IEnumerable<Entity> GetPrefabChildren(GameObject gameObject, NitroxId parentId)
         {
-            foreach(IGrouping<string, PrefabIdentifier> prefabGroup in gameObject.GetAllComponentsInChildren<PrefabIdentifier>()
+            foreach (IGrouping<string, PrefabIdentifier> prefabGroup in gameObject.GetAllComponentsInChildren<PrefabIdentifier>()
                                                                                  .Where(prefab => prefab.gameObject != gameObject)
                                                                                  .GroupBy(prefab => prefab.classId))
             {

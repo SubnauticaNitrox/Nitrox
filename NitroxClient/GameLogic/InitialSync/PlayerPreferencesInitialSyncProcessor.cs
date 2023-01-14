@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
@@ -28,7 +28,6 @@ public class PlayerPreferencesInitialSyncProcessor : InitialSyncProcessor
             typeof(PdaInitialSyncProcessor),
             typeof(RemotePlayerInitialSyncProcessor),
             typeof(BuildingInitialSyncProcessor),
-            typeof(VehicleInitialSyncProcessor),
         });
     }
 
