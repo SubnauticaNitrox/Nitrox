@@ -78,6 +78,11 @@ namespace NitroxServer.GameLogic.Entities
             }            
         }
 
+        /// <summary>
+        /// Used for situations when some children may be new but others may not be. For
+        /// example a dropped InventoryEntity turns into a WorldEntity but keeps its 
+        /// battery inside (already known). 
+        /// </summary>
         public void AddEntitiesIgnoringDuplicate(List<Entity> entities)
         {
             foreach (Entity entity in entities)

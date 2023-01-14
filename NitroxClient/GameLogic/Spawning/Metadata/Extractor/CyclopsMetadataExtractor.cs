@@ -11,8 +11,10 @@ public class CyclopsMetadataExtractor : GenericEntityMetadataExtractor<CyclopsGa
     {
         GameObject gameObject = cyclops.GameObject;
         CyclopsLightingPanel lighting = gameObject.RequireComponentInChildren<CyclopsLightingPanel>();
-        CyclopsEngineChangeState engineState = gameObject.RequireComponentInChildren<CyclopsEngineChangeState>();
         CyclopsSilentRunningAbilityButton silentRunning = gameObject.RequireComponentInChildren<CyclopsSilentRunningAbilityButton>();
+
+        CyclopsEngineChangeState engineState = gameObject.RequireComponentInChildren<CyclopsEngineChangeState>();
+        bool engineOn = engineState.motorMode.engineOn || engineState.startEngine;
 
         CyclopsShieldButton shield = gameObject.GetComponentInChildren<CyclopsShieldButton>();
         bool shieldOn = (shield) ? shield.active : false;
@@ -31,7 +33,7 @@ public class CyclopsMetadataExtractor : GenericEntityMetadataExtractor<CyclopsGa
             }
         }
 
-        return new(lighting.floodlightsOn, lighting.lightingOn, silentRunning.active, shieldOn, sonarOn, engineState.motorMode.engineOn, (int)motorMode);
+        return new(lighting.floodlightsOn, lighting.lightingOn, silentRunning.active, shieldOn, sonarOn, engineOn, (int)motorMode);
     }
 
     public struct CyclopsGameObject

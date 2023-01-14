@@ -19,8 +19,8 @@ public class SubNameInputProcessor : GenericEntityMetadataProcessor<SubNameInput
             {
                 Vector3 hsb = metadata.Colors[i].ToUnity();
                 Color color = uGUI_ColorPicker.HSBToColor(hsb);
-                subNameInput.target.SetColor(i, hsb, color);
                 subNameInput.SetColor(i, color);
+                subNameInput.target.SetColor(i, hsb, color);
             }
 
             subNameInput.SetSelected(0);

@@ -17,28 +17,16 @@ public class CyclopsMetadataProcessor : GenericEntityMetadataProcessor<CyclopsMe
 
     public override void ProcessMetadata(GameObject cyclops, CyclopsMetadata metadata)
     {
-        SetInternalLighting(cyclops, metadata.InternalLightsOn);
-        SetFloodLighting(cyclops, metadata.FloodLightsOn);
-        SetEngineMode(cyclops, (CyclopsMotorMode.CyclopsMotorModes)metadata.EngineMode);
-    }
-
-    public void SetAdvancedModes(GameObject cyclops, CyclopsMetadata metadata)
-    {
-        // We need to wait till the cyclops is powered up to start all advanced modes
-        // At this time all Equipment will be loaded into the cyclops, so we do not need other structures
-        SubRoot root = cyclops.GetComponent<SubRoot>();
-        UWE.Event<PowerRelay>.HandleFunction handleFunction = null;
-        handleFunction = _ =>
+        using (packetSender.Suppress<EntityMetadataUpdate>())
         {
+            SetInternalLighting(cyclops, metadata.InternalLightsOn);
+            SetFloodLighting(cyclops, metadata.FloodLightsOn);
+            SetEngineMode(cyclops, (CyclopsMotorMode.CyclopsMotorModes)metadata.EngineMode);
             ChangeSilentRunning(cyclops, metadata.SilentRunningOn);
             ChangeShieldMode(cyclops, metadata.ShieldOn);
             ChangeSonarMode(cyclops, metadata.SonarOn);
             SetEngineState(cyclops, metadata.EngineOn);
-
-            // After registering all modes. Remove the handler
-            root.powerRelay.powerUpEvent.RemoveHandler(root, handleFunction);
-        };
-        root.powerRelay.powerUpEvent.AddHandler(root, handleFunction);
+        }
     }
 
     private void SetInternalLighting(GameObject cyclops, bool isOn)
@@ -81,7 +69,7 @@ public class CyclopsMetadataProcessor : GenericEntityMetadataProcessor<CyclopsMe
 
     private void SetEngineState(GameObject cyclops, bool isOn)
     {
-        CyclopsEngineChangeState engineState = cyclops.RequireComponentInChildren<CyclopsEngineChangeState>();
+        CyclopsEngineChangeState engineState = cyclops.RequireComponentInChildren<CyclopsEngineChangeState>(true);
 
         if (isOn == engineState.motorMode.engineOn)
         {
@@ -108,7 +96,7 @@ public class CyclopsMetadataProcessor : GenericEntityMetadataProcessor<CyclopsMe
 
     private void SetEngineMode(GameObject cyclops, CyclopsMotorMode.CyclopsMotorModes mode)
     {
-        foreach (CyclopsMotorModeButton button in cyclops.GetComponentsInChildren<CyclopsMotorModeButton>())
+        foreach (CyclopsMotorModeButton button in cyclops.GetComponentsInChildren<CyclopsMotorModeButton>(true))
         {
             // At initial sync, this kind of processor is executed before the Start()
             if (button.subRoot == null)
@@ -122,35 +110,32 @@ public class CyclopsMetadataProcessor : GenericEntityMetadataProcessor<CyclopsMe
 
     private void ChangeSilentRunning(GameObject cyclops, bool isOn)
     {
-        CyclopsSilentRunningAbilityButton ability = cyclops.RequireComponentInChildren<CyclopsSilentRunningAbilityButton>();
+        CyclopsSilentRunningAbilityButton ability = cyclops.RequireComponentInChildren<CyclopsSilentRunningAbilityButton>(true);
 
         if (isOn == ability.active)
         {
             return;
         }
 
-        using (packetSender.Suppress<EntityMetadataUpdate>())
+        Log.Debug($"Set silent running to {isOn} for cyclops");
+        ability.active = isOn;
+        if (isOn)
         {
-            Log.Debug($"Set silent running to {isOn} for cyclops");
-            ability.active = isOn;
-            if (isOn)
-            {
-                ability.image.sprite = ability.activeSprite;
-                ability.subRoot.BroadcastMessage("RigForSilentRunning");
-                ability.InvokeRepeating(nameof(CyclopsSilentRunningAbilityButton.SilentRunningIteration), 0f, ability.silentRunningIteration);
-            }
-            else
-            {
-                ability.image.sprite = ability.inactiveSprite;
-                ability.subRoot.BroadcastMessage("SecureFromSilentRunning");
-                ability.CancelInvoke(nameof(CyclopsSilentRunningAbilityButton.SilentRunningIteration));
-            }
+            ability.image.sprite = ability.activeSprite;
+            ability.subRoot.BroadcastMessage("RigForSilentRunning");
+            ability.InvokeRepeating(nameof(CyclopsSilentRunningAbilityButton.SilentRunningIteration), 0f, ability.silentRunningIteration);
+        }
+        else
+        {
+            ability.image.sprite = ability.inactiveSprite;
+            ability.subRoot.BroadcastMessage("SecureFromSilentRunning");
+            ability.CancelInvoke(nameof(CyclopsSilentRunningAbilityButton.SilentRunningIteration));
         }
     }
 
     private void ChangeShieldMode(GameObject cyclops, bool isOn)
     {
-        CyclopsShieldButton shield = cyclops.GetComponentInChildren<CyclopsShieldButton>();
+        CyclopsShieldButton shield = cyclops.GetComponentInChildren<CyclopsShieldButton>(true);
 
         if (!shield)
         {
@@ -165,29 +150,23 @@ public class CyclopsMetadataProcessor : GenericEntityMetadataProcessor<CyclopsMe
             return;
         }
 
-        using (packetSender.Suppress<EntityMetadataUpdate>())
+        if (isOn)
         {
-            if (isOn)
-            {
-                shield.StartShield();
-            }
-            else
-            {
-                shield.StopShield();
-            }            
-        }        
+            shield.StartShield();
+        }
+        else
+        {
+            shield.StopShield();
+        } 
     }
 
     private void ChangeSonarMode(GameObject cyclops, bool isOn)
     {
-        CyclopsSonarButton sonarButton = cyclops.GetComponentInChildren<CyclopsSonarButton>();
+        CyclopsSonarButton sonarButton = cyclops.GetComponentInChildren<CyclopsSonarButton>(true);
 
         if (sonarButton && sonarButton.image)
         {
-            using (packetSender.Suppress<EntityMetadataUpdate>())
-            {
-                sonarButton.sonarActive = isOn;
-            }
+            sonarButton.sonarActive = isOn;            
         }
     }
 }

@@ -39,8 +39,8 @@ namespace NitroxClient.GameLogic
             NitroxId constructorId = NitroxEntity.GetId(constructor.constructor.gameObject);
             
             VehicleWorldEntity vehicleEntity = new VehicleWorldEntity(constructorId, DayNightCycle.main.timePassedAsFloat, constructedObject.transform.ToDto(), "", false, constructedObjectId, techType.ToDto(), null);
-            vehicleEntity.ChildEntities = VehicleChildEntityHelper.ExtractChildren(constructedObject);
-                
+            VehicleChildEntityHelper.PopulateChildren(constructedObjectId, constructedObject.GetFullHierarchyPath(), vehicleEntity.ChildEntities, constructedObject);
+
             packetSender.Send(new EntitySpawnedByClient(vehicleEntity));
 
             constructor.StartCoroutine(vehicles.UpdateVehiclePositionAfterSpawn(constructedObjectId, techType, constructedObject, duration + 10.0f));            

@@ -63,7 +63,7 @@ namespace NitroxClient.GameLogic
             NitroxId id = NitroxEntity.GetId(gameObject);
 
             VehicleWorldEntity vehicleEntity = new VehicleWorldEntity(null, DayNightCycle.main.timePassedAsFloat, gameObject.transform.ToDto(), "", false, id, techType.ToDto(), null);
-            vehicleEntity.ChildEntities = VehicleChildEntityHelper.ExtractChildren(gameObject);
+            VehicleChildEntityHelper.PopulateChildren(id, gameObject.GetFullHierarchyPath(), vehicleEntity.ChildEntities, gameObject);
 
             packetSender.Send(new EntitySpawnedByClient(vehicleEntity));
 

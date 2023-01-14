@@ -10,7 +10,7 @@ namespace NitroxClient.GameLogic.Helper;
 
 public class VehicleChildEntityHelper
 {
-    private static readonly List<Type> interactiveChildTypes = new List<Type> // we must sync ids of these types when creating vehicles (mainly cyclops)
+    private static readonly HashSet<Type> interactiveChildTypes = new HashSet<Type> // we must sync ids of these types when creating vehicles (mainly cyclops)
     {
         typeof(Openable),
         typeof(CyclopsLocker),
@@ -25,38 +25,34 @@ public class VehicleChildEntityHelper
         typeof(CyclopsDecoyLoadingTube),
         typeof(BatterySource),
         typeof(EnergyMixin),
-        typeof(SubNameInput)
+        typeof(SubNameInput),
+        typeof(WeldablePoint),
+        typeof(CyclopsVehicleStorageTerminalManager)
     };
 
-    public static List<Entity> ExtractChildren(GameObject vehicle)
+    public static void PopulateChildren(NitroxId vehicleId, string vehiclePath, List<Entity> toPopulate, GameObject current)
     {
-        NitroxId parentId = NitroxEntity.GetId(vehicle);
-        List<Entity> children = new List<Entity>();
+        string currentPath = current.GetFullHierarchyPath();
+        string relativePathName = currentPath.Replace(vehiclePath, "")
+                                             .TrimStart('/');
 
-        string constructedObjectsName = vehicle.GetFullHierarchyPath();
-
-        foreach (Type type in interactiveChildTypes)
+        if (relativePathName.Length > 0) // no need to execute for the main vehicle.
         {
-            Component[] components = vehicle.GetComponentsInChildren(type, true);
-
-            for(int i = 0; i < components.Length; i++)
+            foreach (MonoBehaviour mono in current.GetComponents<MonoBehaviour>())
             {
-                Component component = components[i];
-
-                NitroxId id = NitroxEntity.GetId(component.gameObject);
-                string componentName = component.gameObject.GetFullHierarchyPath();
-                string relativePathName = componentName.Replace(constructedObjectsName, "");
-
-                // It can happen, that the game object is the constructed object itself. This code prevents to add itself to the child objects
-                if (relativePathName.Length != 0)
+                if (interactiveChildTypes.Contains(mono.GetType()))
                 {
-                    relativePathName = relativePathName.TrimStart('/');
-                    children.Add(new PathBasedChildEntity(relativePathName, id, null, null, parentId, new List<Entity>()));
+                    // We don't to accidentally tag this game object unless we know it has an applicable mono
+                    NitroxId id = NitroxEntity.GetId(mono.gameObject);
+                    toPopulate.Add(new PathBasedChildEntity(relativePathName, id, null, null, vehicleId, new()));
                 }
-            }
+            }            
         }
 
-        return children;
+        foreach (Transform child in current.transform)
+        {
+            PopulateChildren(vehicleId, vehiclePath, toPopulate, child.gameObject);
+        }
     }
 }
 

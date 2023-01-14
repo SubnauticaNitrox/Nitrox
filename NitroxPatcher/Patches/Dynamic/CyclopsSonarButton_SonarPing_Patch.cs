@@ -25,7 +25,7 @@ namespace NitroxPatcher.Patches.Dynamic
         public static void Postfix(CyclopsSonarButton __instance)
         {
             NitroxId id = NitroxEntity.GetId(__instance.subRoot.gameObject);
-            NitroxServiceLocator.LocateService<Cyclops>().BroadcastMetadataChange(id);
+            Resolve<Cyclops>().BroadcastMetadataChange(id);
         }
 
 
