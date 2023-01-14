@@ -1,4 +1,5 @@
 using System.Collections;
+using NitroxClient.Helpers;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.Overrides;
 using NitroxClient.Unity.Helper;
@@ -48,13 +49,6 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
         {
             LightmappedPrefabs.main.RequestScenePrefab("cyclops", (go) => gameObject = go);
             yield return new WaitUntil(() => gameObject != null);
-
-            // For scene objects like cyclops, PlayerCinematicController Start() will not be called to add Cinematic reference.
-            MultiplayerCinematicReference reference = gameObject.AddComponent<MultiplayerCinematicReference>();
-            foreach (PlayerCinematicController controller in gameObject.GetComponentsInChildren<PlayerCinematicController>())
-            {
-                reference.AddController(controller);
-            }
         }
         else
         {
@@ -63,8 +57,15 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
             GameObject techPrefab = techPrefabCoroutine.GetResult();
             gameObject = Utils.SpawnPrefabAt(techPrefab, null, vehicleEntity.Transform.Position.ToUnity());
             Validate.NotNull(gameObject, $"{nameof(VehicleWorldEntitySpawner)}: No prefab for tech type: {techType}");
-            gameObject.GetComponent<Vehicle>().LazyInitialize();
+            Vehicle vehicle = gameObject.GetComponent<Vehicle>();
+
+            if(vehicle)
+            {
+                vehicle.LazyInitialize();
+            }
         }
+
+        AddCinematicControllers(gameObject);
 
         gameObject.transform.position = vehicleEntity.Transform.Position.ToUnity();
         gameObject.transform.rotation = vehicleEntity.Transform.Rotation.ToUnity();
@@ -74,6 +75,10 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
         CrafterLogic.NotifyCraftEnd(gameObject, CraftData.GetTechType(gameObject));
         Rigidbody rigidBody = gameObject.RequireComponent<Rigidbody>();
         rigidBody.isKinematic = false;
+
+        yield return Yielders.WaitForEndOfFrame;
+
+        RemoveConstructionAnimations(gameObject);
 
         yield return Yielders.WaitForEndOfFrame;
 
@@ -107,6 +112,44 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
 
         result.Set(constructedObject);
         yield break;
+    }
+
+    /// <summary>
+    ///   For scene objects like cyclops, PlayerCinematicController Start() will not be called to add Cinematic reference.
+    /// </summary>
+    private void AddCinematicControllers(GameObject gameObject)
+    {
+        if (gameObject.GetComponent<MultiplayerCinematicReference>())
+        {
+            return;
+        }
+
+        PlayerCinematicController[] controllers = gameObject.GetComponentsInChildren<PlayerCinematicController>();
+
+        if (controllers.Length == 0)
+        {
+            return;
+        }
+
+        MultiplayerCinematicReference reference = gameObject.AddComponent<MultiplayerCinematicReference>();
+
+        foreach (PlayerCinematicController controller in controllers)
+        {
+            reference.AddController(controller);
+        }
+    }
+
+    /// <summary>
+    ///  When loading in vehicles, they still briefly have their blue crafting animation playing.  Force them to stop.
+    /// </summary>
+    private void RemoveConstructionAnimations(GameObject gameObject)
+    {
+        VFXConstructing[] vfxConstructions = gameObject.GetComponentsInChildren<VFXConstructing>();
+        
+        foreach (VFXConstructing vfxConstructing in vfxConstructions)
+        {
+            vfxConstructing.EndGracefully();
+        }
     }
 
     public bool SpawnsOwnChildren()

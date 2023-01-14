@@ -25,6 +25,7 @@ namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata
     [ProtoInclude(210, typeof(CyclopsMetadata))]
     [ProtoInclude(220, typeof(SeamothMetadata))]
     [ProtoInclude(230, typeof(SubNameInputMetadata))]
+    [ProtoInclude(240, typeof(RocketMetadata))]
     public abstract class EntityMetadata
     {
     }
