@@ -59,7 +59,7 @@ namespace NitroxClient.GameLogic
                 movement = new PlayerMovement(multiplayerSession.Reservation.PlayerId, location.ToDto(), velocity.ToDto(), bodyRotation.ToDto(), aimingRotation.ToDto());
             }
 
-            packetSender.Send(movement);
+            packetSender.SendIfGameCode(movement);
         }
 
         public void AnimationChange(AnimChangeType type, AnimChangeState state) => packetSender.SendIfGameCode(new AnimationChangeEvent(multiplayerSession.Reservation.PlayerId, (int)type, (int)state));

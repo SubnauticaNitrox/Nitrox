@@ -182,7 +182,7 @@ namespace NitroxClient.GameLogic
             VehicleMovementData vehicleMovementData = new BasicVehicleMovementData(techType.ToDto(), id, gameObject.transform.position.ToDto(), gameObject.transform.rotation.ToDto());
             ushort playerId = ushort.MaxValue;
 
-            packetSender.Send(new VehicleMovement(playerId, vehicleMovementData));
+            packetSender.SendIfGameCode(new VehicleMovement(playerId, vehicleMovementData));
         }
 
         public void BroadcastOnPilotModeChanged(Vehicle vehicle, bool isPiloting)
