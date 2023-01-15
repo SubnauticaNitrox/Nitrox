@@ -3,9 +3,7 @@ using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Unity;
-using NitroxModel.DataStructures.Util;
 using NitroxModel_Subnautica.DataStructures;
-using NitroxModel_Subnautica.DataStructures.GameLogic;
 using NitroxModel_Subnautica.Packets;
 using UnityEngine;
 
@@ -22,36 +20,6 @@ namespace NitroxClient.GameLogic
             this.packetSender = packetSender;
             this.vehicles = vehicles;
             this.playerManager = playerManager;
-        }
-
-        public void CompletePreflightCheck(NitroxId id, PreflightCheck preflightCheck)
-        {
-            Optional<NeptuneRocketModel> model = vehicles.TryGetVehicle<NeptuneRocketModel>(id);
-
-            if (model.HasValue)
-            {
-                model.Value.PreflightChecks?.Add(preflightCheck);
-                packetSender.Send(new RocketPreflightComplete(id, preflightCheck));
-            }
-            else
-            {
-                Log.Error($"{nameof(Rockets.CompletePreflightCheck)}: Can't find model for rocket with id {id}");
-            }
-        }
-
-        public void CallElevator(NitroxId id, RocketElevatorPanel panel, bool up)
-        {
-            Optional<NeptuneRocketModel> model = vehicles.TryGetVehicle<NeptuneRocketModel>(id);
-
-            if (model.HasValue)
-            {
-                model.Value.ElevatorUp = up;
-                packetSender.Send(new RocketElevatorCall(id, panel, up));
-            }
-            else
-            {
-                Log.Error($"{nameof(Rockets.CallElevator)}: Can't find model for rocket with id {id}");
-            }
         }
 
         public void RequestRocketLaunch(Rocket rocket)

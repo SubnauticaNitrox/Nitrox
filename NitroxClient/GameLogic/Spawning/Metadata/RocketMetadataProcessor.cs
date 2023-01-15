@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Helpers;
@@ -49,8 +50,8 @@ public class RocketMetadataProcessor : GenericEntityMetadataProcessor<RocketMeta
 
     private void UpdateElevator(Rocket rocket, RocketMetadata metadata)
     {
-        // elevators will only be present on this model after the first construction event.
-        if (rocket.currentRocketStage > 0)
+        // elevators will only be present on this model after the gantry (p1) is built
+        if (rocket.currentRocketStage > 1)
         {
             rocket.elevatorPosition = metadata.ElevatorPosition;
             rocket.elevatorState = (RocketElevatorStates)metadata.ElevatorState;
@@ -91,11 +92,73 @@ public class RocketMetadataProcessor : GenericEntityMetadataProcessor<RocketMeta
 
     private void UpdatePreflightChecks(Rocket rocket, RocketMetadata metadata)
     {
-        //CockpitSwitch and RocketPreflightCheckScreenElement are filled based on the RocketPreflightCheckManager
-        if (rocket.currentRocketStage > 3)
+        if (rocket.currentRocketStage < 4)
         {
-            RocketPreflightCheckManager rocketPreflightCheckManager = rocket.RequireComponent<RocketPreflightCheckManager>();
-            rocketPreflightCheckManager.preflightChecks.AddRange(metadata.PreflightChecks.Select(i => (PreflightCheck)i));
+            return;
+        }
+
+        IEnumerable<PreflightCheck> completedChecks = metadata.PreflightChecks.Select(i => (PreflightCheck)i);
+
+        RocketPreflightCheckManager rocketPreflightCheckManager = rocket.RequireComponent<RocketPreflightCheckManager>();
+
+        foreach(PreflightCheck completedCheck in completedChecks)
+        {
+            if (!rocketPreflightCheckManager.preflightChecks.Contains(completedCheck))
+            {
+                CompletePreflightCheck(rocket, completedCheck);
+                rocketPreflightCheckManager.CompletePreflightCheck(completedCheck);
+            }
+        }
+    }
+
+    private void CompletePreflightCheck(Rocket rocket, PreflightCheck preflightCheck)
+    {
+        bool isCockpitCheck = (preflightCheck == PreflightCheck.LifeSupport ||
+                               preflightCheck == PreflightCheck.PrimaryComputer);
+
+        if (isCockpitCheck)
+        {
+            CompleteCockpitPreflightCheck(rocket, preflightCheck);
+        }
+        else
+        {
+            CompleteBasicPreflightCheck(rocket, preflightCheck);
+        }
+    }
+
+    private void CompleteCockpitPreflightCheck(Rocket rocket, PreflightCheck preflightCheck)
+    {
+        CockpitSwitch[] cockpitSwitches = rocket.GetComponentsInChildren<CockpitSwitch>(true);
+
+        foreach (CockpitSwitch cockpitSwitch in cockpitSwitches)
+        {
+            if (!cockpitSwitch.completed && cockpitSwitch.preflightCheck == preflightCheck)
+            {
+                cockpitSwitch.animator.SetBool("Completed", true);
+                cockpitSwitch.completed = true;
+
+                if (cockpitSwitch.collision)
+                {
+                    cockpitSwitch.collision.SetActive(false);
+                }
+            }
+        }
+    }
+    
+    private void CompleteBasicPreflightCheck(Rocket rocket, PreflightCheck preflightCheck)
+    {
+        ThrowSwitch[] throwSwitches = rocket.GetComponentsInChildren<ThrowSwitch>(true);
+
+        foreach (ThrowSwitch throwSwitch in throwSwitches)
+        {
+            if (!throwSwitch.completed && throwSwitch.preflightCheck == preflightCheck)
+            {
+                throwSwitch.animator.AliveOrNull()?.SetTrigger("Throw");
+                throwSwitch.completed = true;
+                throwSwitch.cinematicTrigger.showIconOnHandHover = false;
+                throwSwitch.triggerCollider.enabled = false;
+                throwSwitch.lamp.GetComponent<SkinnedMeshRenderer>().material = throwSwitch.completeMat;
+            }
         }
     }
 }
