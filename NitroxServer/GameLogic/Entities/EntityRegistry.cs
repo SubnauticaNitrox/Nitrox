@@ -94,7 +94,13 @@ namespace NitroxServer.GameLogic.Entities
 
         public Optional<Entity> RemoveEntity(NitroxId id)
         {
-            entitiesById.TryRemove(id, out Entity entity);
+            if (entitiesById.TryRemove(id, out Entity entity))
+            {
+                foreach (Entity child in entity.ChildEntities)
+                {
+                    RemoveEntity(child.Id);
+                }
+            }
 
             return Optional.OfNullable(entity);
         }

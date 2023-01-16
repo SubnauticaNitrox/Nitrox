@@ -113,52 +113,11 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        public void DestroyVehicle(NitroxId id)
-        {
-            Optional<GameObject> Object = NitroxEntity.GetObjectFrom(id);
-            if (Object.HasValue)
-            {
-                GameObject go = Object.Value;
-                Vehicle vehicle = go.RequireComponent<Vehicle>();
-
-                if (vehicle.GetPilotingMode()) //Check Local Object Have Player inside
-                {
-                    vehicle.OnPilotModeEnd();
-
-                    if (!Player.main.ToNormalMode(true))
-                    {
-                        Player.main.ToNormalMode(false);
-                        Player.main.transform.parent = null;
-                    }
-                }
-                foreach (RemotePlayerIdentifier identifier in vehicle.GetComponentsInChildren<RemotePlayerIdentifier>(true))
-                {
-                    identifier.RemotePlayer.ResetStates();
-                }
-
-                //Destroy vehicle
-                if (vehicle.gameObject)
-                {
-                    if (vehicle.destructionEffect)
-                    {
-                        GameObject gameObject = UnityEngine.Object.Instantiate<GameObject>(vehicle.destructionEffect);
-                        gameObject.transform.position = vehicle.transform.position;
-                        gameObject.transform.rotation = vehicle.transform.rotation;
-                    }
-
-                    UnityEngine.Object.Destroy(vehicle.gameObject);
-                    RemoveVehicle(id);
-                }
-            }
-        }
-
-        public void BroadcastDestroyedVehicle(Vehicle vehicle)
+        public void BroadcastDestroyedVehicle(NitroxId id)
         {
             using (packetSender.Suppress<VehicleOnPilotModeChanged>())
             {
-                NitroxId id = NitroxEntity.GetId(vehicle.gameObject);
-
-                VehicleDestroyed vehicleDestroyed = new(id);
+                EntityDestroyed vehicleDestroyed = new(id);
                 packetSender.Send(vehicleDestroyed);
             }
         }

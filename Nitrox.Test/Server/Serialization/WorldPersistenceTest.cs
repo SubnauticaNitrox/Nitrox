@@ -6,7 +6,6 @@ using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nitrox.Test;
 using Nitrox.Test.Helper;
-using NitroxModel_Subnautica.DataStructures.GameLogic;
 using NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation.Metadata;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
@@ -23,7 +22,6 @@ using NitroxServer.GameLogic.Entities;
 using NitroxServer.GameLogic.Items;
 using NitroxServer.GameLogic.Players;
 using NitroxServer.GameLogic.Unlockables;
-using NitroxServer.GameLogic.Vehicles;
 using NitroxServer.Serialization.World;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
@@ -73,30 +71,6 @@ public class WorldPersistenceTest
     {
         Assert.IsTrue(worldData.WorldData.ParsedBatchCells.SequenceEqual(worldDataAfter.WorldData.ParsedBatchCells));
         Assert.AreEqual(worldData.WorldData.Seed, worldDataAfter.WorldData.Seed);
-    }
-
-    [DataTestMethod, DynamicWorldDataAfter]
-    public void VehicleDataTest(PersistedWorldData worldDataAfter, string serializerName)
-    {
-        AssertHelper.IsListEqual(worldData.WorldData.VehicleData.Vehicles.OrderBy(x => x.Id), worldDataAfter.WorldData.VehicleData.Vehicles.OrderBy(x => x.Id), (vehicleModel, vehicleModelAfter) =>
-        {
-            Assert.AreEqual(vehicleModel.TechType, vehicleModelAfter.TechType);
-            Assert.AreEqual(vehicleModel.Id, vehicleModelAfter.Id);
-            Assert.AreEqual(vehicleModel.Position, vehicleModelAfter.Position);
-            Assert.AreEqual(vehicleModel.Rotation, vehicleModelAfter.Rotation);
-
-            AssertHelper.IsListEqual(vehicleModel.InteractiveChildIdentifiers.OrderBy(x => x.Id), vehicleModelAfter.InteractiveChildIdentifiers.OrderBy(x => x.Id), (childIdentifier, childIdentifierAfter) =>
-            {
-                Assert.AreEqual(childIdentifier.Id, childIdentifierAfter.Id);
-                Assert.AreEqual(childIdentifier.GameObjectNamePath, childIdentifierAfter.GameObjectNamePath);
-            });
-
-            Assert.AreEqual(vehicleModel.DockingBayId.HasValue, vehicleModelAfter.DockingBayId.HasValue);
-            Assert.AreEqual(vehicleModel.DockingBayId.Value, vehicleModelAfter.DockingBayId.Value);
-            Assert.AreEqual(vehicleModel.Name, vehicleModelAfter.Name);
-            Assert.IsTrue(vehicleModel.HSB.SequenceEqual(vehicleModelAfter.HSB));
-            Assert.AreEqual(vehicleModel.Health, vehicleModelAfter.Health);
-        });
     }
 
     [DataTestMethod, DynamicWorldDataAfter]
@@ -554,13 +528,6 @@ public class WorldPersistenceTest
                     Modules = new List<EquippedItemData>() { new EquippedItemData(new NitroxId(), new NitroxId(), new byte[] { 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21 }, "Slot1", new NitroxTechType("")) }
                 },
                 ParsedBatchCells = new List<NitroxInt3>() { new NitroxInt3(10, 1, 10), new NitroxInt3(15, 4, 12) },
-                VehicleData = new VehicleData()
-                {
-                    Vehicles = new List<VehicleModel>()
-                    {
-
-                    }
-                },
                 Seed = "NITROXSEED"
             }
         };

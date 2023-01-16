@@ -32,7 +32,6 @@ namespace NitroxServer.Serialization.World
                 WorldData =
                 {
                     ParsedBatchCells = world.BatchEntitySpawner.SerializableParsedBatches,
-                    VehicleData = VehicleData.From(world.VehicleManager.GetVehicles()),
                     InventoryData = InventoryData.From(world.InventoryManager.GetAllStorageSlotItems(), world.InventoryManager.GetAllModules()),
                     GameData = GameData.From(world.GameData.PDAState, world.GameData.StoryGoals, world.ScheduleKeeper, world.EventTriggerer),
                     Seed = world.Seed

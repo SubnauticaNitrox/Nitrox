@@ -159,5 +159,10 @@ namespace NitroxServer.GameLogic.Entities
 
             return revokedEntities;
         }
+
+        public void EntityDestroyed(NitroxId id)
+        {
+            simulationOwnershipData.RevokeOwnerOfId(id);
+        }
     }
 }

@@ -1,14 +1,14 @@
-﻿using System;
+using System;
 using NitroxModel.DataStructures;
 
 namespace NitroxModel.Packets;
 
 [Serializable]
-public class VehicleDestroyed : Packet
+public class EntityDestroyed : Packet
 {
     public NitroxId Id { get; }
 
-    public VehicleDestroyed(NitroxId id)
+    public EntityDestroyed(NitroxId id)
     {
         Id = id;
     }
