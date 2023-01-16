@@ -22,16 +22,7 @@ namespace NitroxServer_Subnautica
             Thread thread = new Thread(o =>
             {
                 bool first = true;
-                string appGuid = ((GuidAttribute)Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(GuidAttribute), false).GetValue(0)).Value;
-                string mutexId = $@"Global\{{{appGuid}}}";
-                MutexAccessRule allowEveryoneRule = new MutexAccessRule(new SecurityIdentifier(WellKnownSidType.WorldSid, null),
-                                                                        MutexRights.FullControl,
-                                                                        AccessControlType.Allow
-                );
-                MutexSecurity securitySettings = new MutexSecurity();
-                securitySettings.AddAccessRule(allowEveryoneRule);
-
-                Mutex mutex = new Mutex(false, mutexId, out bool _, securitySettings);
+                Mutex mutex = new(false, typeof(AppMutex).Assembly.FullName, out bool _);
                 try
                 {
                     try

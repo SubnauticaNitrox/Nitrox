@@ -27,6 +27,16 @@ namespace NitroxModel.Helper
                     return Path.GetDirectoryName(currentAsm.Location);
                 }
                 return null;
+            },
+            () =>
+            {
+                string currentDir = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location ?? Directory.GetCurrentDirectory()) ?? ".";
+                DirectoryInfo parentDir = new DirectoryInfo(currentDir).Parent;
+                if (File.Exists(Path.Combine(parentDir?.FullName ?? "..", "NitroxLauncher.exe")))
+                {
+                    return parentDir?.FullName;
+                }
+                return null;
             }
         };
 
