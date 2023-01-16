@@ -14,15 +14,11 @@ namespace NitroxClient.Communication.Packets.Processors
     {
         private readonly IPacketSender packetSender;
         private readonly Vehicles vehicles;
-        private readonly SimulationOwnership simulationOwnership;
-        private readonly PlayerManager remotePlayerManager;
 
-        public VehicleDockingProcessor(IPacketSender packetSender, Vehicles vehicles, SimulationOwnership simulationOwnership, PlayerManager remotePlayerManager)
+        public VehicleDockingProcessor(IPacketSender packetSender, Vehicles vehicles)
         {
             this.packetSender = packetSender;
             this.vehicles = vehicles;
-            this.simulationOwnership = simulationOwnership;
-            this.remotePlayerManager = remotePlayerManager;
         }
 
         public override void Process(VehicleDocking packet)

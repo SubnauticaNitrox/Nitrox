@@ -18,7 +18,6 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
 
     public IEnumerator SpawnAsync(WorldEntity entity, Optional<GameObject> parent, EntityCell cellRoot, TaskResult<Optional<GameObject>> result)
     { 
-        Log.Info(entity);
         VehicleWorldEntity vehicleEntity = (VehicleWorldEntity)entity;
 
         bool withinConstructorSpawnWindow = (DayNightCycle.main.timePassedAsFloat - vehicleEntity.ConstructionTime) < CONSTRUCTION_DURATION_IN_SECONDS;
@@ -37,10 +36,10 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
             }
         }
 
-        yield return SpawnInWorld(vehicleEntity, result);            
+        yield return SpawnInWorld(vehicleEntity, result, parent);            
     }
 
-    private IEnumerator SpawnInWorld(VehicleWorldEntity vehicleEntity, TaskResult<Optional<GameObject>> result)
+    private IEnumerator SpawnInWorld(VehicleWorldEntity vehicleEntity, TaskResult<Optional<GameObject>> result, Optional<GameObject> parent)
     {
         TechType techType = vehicleEntity.TechType.ToUnity();
         GameObject gameObject = null;
@@ -85,6 +84,11 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
         // Sometimes build templates, such as the cyclops, are already tagged with IDs.  Remove any that exist to retag.
         UnityEngine.Component.DestroyImmediate(gameObject.GetComponent<NitroxEntity>());
         NitroxEntity.SetNewId(gameObject, vehicleEntity.Id);
+
+        if (parent.HasValue)
+        {
+            DockVehicle(gameObject, parent.Value);
+        }
 
         result.Set(gameObject);
     }
@@ -150,6 +154,27 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
         {
             vfxConstructing.EndGracefully();
         }
+    }
+
+    private void DockVehicle(GameObject gameObject, GameObject parent)
+    {
+        Vehicle vehicle = gameObject.GetComponent<Vehicle>();
+
+        if (!vehicle)
+        {
+            Log.Info($"Could not find vehicle component on docked vehicle {gameObject.name}");
+            return;
+        }
+
+        VehicleDockingBay dockingBay = parent.GetComponentInChildren<VehicleDockingBay>();
+
+        if (!dockingBay)
+        {
+            Log.Info($"Could not find VehicleDockingBay component on dock object {parent.name}");
+            return;
+        }
+
+        dockingBay.DockVehicle(vehicle);        
     }
 
     public bool SpawnsOwnChildren()
