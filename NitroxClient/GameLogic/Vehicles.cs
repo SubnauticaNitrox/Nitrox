@@ -12,8 +12,6 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using UnityEngine;
-using NitroxClient.GameLogic.PlayerLogic;
-using UWE;
 
 namespace NitroxClient.GameLogic
 {
@@ -23,7 +21,6 @@ namespace NitroxClient.GameLogic
         private readonly PlayerManager playerManager;
         private readonly IMultiplayerSession multiplayerSession;
         private readonly SimulationOwnership simulationOwnership;
-        private readonly Dictionary<NitroxId, VehicleModel> vehiclesById;
 
         public Vehicles(IPacketSender packetSender, PlayerManager playerManager, IMultiplayerSession multiplayerSession, SimulationOwnership simulationOwnership)
         {
@@ -31,7 +28,6 @@ namespace NitroxClient.GameLogic
             this.playerManager = playerManager;
             this.multiplayerSession = multiplayerSession;
             this.simulationOwnership = simulationOwnership;
-            vehiclesById = new Dictionary<NitroxId, VehicleModel>();
         }
 
         public void UpdateVehiclePosition(VehicleMovementData vehicleModel, Optional<RemotePlayer> player)
@@ -211,22 +207,6 @@ namespace NitroxClient.GameLogic
             }
 
             vehicle.pilotId = isPiloting ? playerId.ToString() : string.Empty;
-        }
-
-        public bool RemoveVehicle(NitroxId id)
-        {
-            return vehiclesById.Remove(id);
-        }
-
-        public T GetVehicles<T>(NitroxId vehicleId) where T : VehicleModel
-        {
-            return (T)vehiclesById[vehicleId];
-        }
-
-        public Optional<T> TryGetVehicle<T>(NitroxId vehicleId) where T : VehicleModel
-        {
-            vehiclesById.TryGetValue(vehicleId, out VehicleModel vehicle);
-            return Optional.OfNullable((T)vehicle);
         }
     }
 }

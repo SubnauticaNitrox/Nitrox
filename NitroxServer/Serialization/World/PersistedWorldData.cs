@@ -3,7 +3,6 @@ using NitroxServer.GameLogic.Bases;
 using NitroxServer.GameLogic.Entities;
 using NitroxServer.GameLogic.Items;
 using NitroxServer.GameLogic.Players;
-using NitroxServer.GameLogic.Vehicles;
 
 namespace NitroxServer.Serialization.World
 {

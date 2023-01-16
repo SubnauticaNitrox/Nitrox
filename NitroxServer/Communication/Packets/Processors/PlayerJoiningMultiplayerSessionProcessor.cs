@@ -57,14 +57,6 @@ namespace NitroxServer.Communication.Packets.Processors
             }
 
             List<NitroxId> simulations = world.EntitySimulation.AssignGlobalRootEntities(player).ToList();
-            IEnumerable<VehicleModel> vehicles = world.VehicleManager.GetVehicles();
-            foreach (VehicleModel vehicle in vehicles)
-            {
-                if (world.SimulationOwnershipData.TryToAcquire(vehicle.Id, player, SimulationLockType.TRANSIENT))
-                {
-                    simulations.Add(vehicle.Id);
-                }
-            }
 
             if (wasBrandNewPlayer)
             {
@@ -81,7 +73,6 @@ namespace NitroxServer.Communication.Packets.Processors
                 equippedItems,
                 GetAllModules(world.InventoryManager.GetAllModules(), player.GetModules()),
                 world.BaseManager.GetBasePiecesForNewlyConnectedPlayer(),
-                vehicles,
                 world.InventoryManager.GetAllStorageSlotItems(),
                 player.UsedItems,
                 player.QuickSlotsBinding,

@@ -17,7 +17,6 @@ namespace NitroxModel.Packets
         public List<EquippedItemData> EquippedItems { get; }
         public List<EquippedItemData> Modules { get; }
         public List<BasePiece> BasePieces { get; }
-        public List<VehicleModel> Vehicles { get; }
         public List<ItemData> StorageSlotItems { get; }
         public List<NitroxTechType> UsedItems { get; }
         public List<string> QuickSlotsBinding { get; }
@@ -43,7 +42,6 @@ namespace NitroxModel.Packets
             IEnumerable<EquippedItemData> equipment,
             IEnumerable<EquippedItemData> modules,
             IEnumerable<BasePiece> basePieces,
-            IEnumerable<VehicleModel> vehicles,
             IEnumerable<ItemData> storageSlotItems,
             IEnumerable<NitroxTechType> usedItems,
             IEnumerable<string> quickSlotsBinding,
@@ -67,7 +65,6 @@ namespace NitroxModel.Packets
             EquippedItems = equipment.ToList();
             Modules = modules.ToList();
             BasePieces = basePieces.ToList();
-            Vehicles = vehicles.ToList();
             StorageSlotItems = storageSlotItems.ToList();
             UsedItems = usedItems.ToList();
             QuickSlotsBinding = quickSlotsBinding.ToList();
@@ -92,7 +89,6 @@ namespace NitroxModel.Packets
             List<EquippedItemData> equippedItems,
             List<EquippedItemData> modules,
             List<BasePiece> basePieces,
-            List<VehicleModel> vehicles,
             List<ItemData> storageSlotItems,
             List<NitroxTechType> usedItems,
             List<string> quickSlotsBinding,
@@ -118,7 +114,6 @@ namespace NitroxModel.Packets
             EquippedItems = equippedItems;
             Modules = modules;
             BasePieces = basePieces;
-            Vehicles = vehicles;
             StorageSlotItems = storageSlotItems;
             UsedItems = usedItems;
             QuickSlotsBinding = quickSlotsBinding;
