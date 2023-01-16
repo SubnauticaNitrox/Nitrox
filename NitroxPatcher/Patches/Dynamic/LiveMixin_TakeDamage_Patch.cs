@@ -1,9 +1,11 @@
-﻿using System.Reflection;
+using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
+using NitroxClient.GameLogic.Spawning.Metadata.Extractor;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using UnityEngine;
@@ -42,15 +44,12 @@ namespace NitroxPatcher.Patches.Dynamic
 
                 if (hasLock)
                 {
-                    TechType techType = CraftData.GetTechType(__instance.gameObject);
-                    Optional<NitroxId> dealerId = Optional.Empty;
+                    Optional<EntityMetadata> metadata = EntityMetadataExtractor.Extract(__instance.gameObject);
 
-                    if (dealer)
+                    if (metadata.HasValue)
                     {
-                        dealerId = NitroxEntity.GetId(dealer);
+                        Resolve<Entities>().BroadcastMetadataUpdate(id, metadata.Value);
                     }
-
-                    NitroxServiceLocator.LocateService<LiveMixinManager>().BroadcastTakeDamage(techType, id, originalDamage, position, type, dealerId, __instance.health);
                 }
             }
         }

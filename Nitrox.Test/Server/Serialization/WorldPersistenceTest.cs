@@ -339,6 +339,7 @@ public class WorldPersistenceTest
                 Assert.AreEqual(metadata.SonarOn, metadataAfter.SonarOn);
                 Assert.AreEqual(metadata.FloodLightsOn, metadataAfter.FloodLightsOn);
                 Assert.AreEqual(metadata.EngineMode, metadataAfter.EngineMode);
+                Assert.AreEqual(metadata.Health, metadataAfter.Health);
                 break;
             case null when entityAfter.Metadata is null:
                 break;
@@ -451,7 +452,7 @@ public class WorldPersistenceTest
                         {
                             new InventoryItemEntity(new NitroxId(), "classId", new NitroxTechType("bluepalmseed"), new PlantableMetadata(0.5f), new NitroxId(), new List<Entity>())
                         }),
-                        new VehicleWorldEntity(new NitroxId(), 0, null, "classId", true, new NitroxId(), new NitroxTechType("seamoth"), new CyclopsMetadata(true, true, true, true, true, true, 0)),
+                        new VehicleWorldEntity(new NitroxId(), 0, null, "classId", true, new NitroxId(), new NitroxTechType("seamoth"), new CyclopsMetadata(true, true, true, true, true, true, 0, 100f)),
                         new PathBasedChildEntity("path", new NitroxId(), NitroxTechType.None, null, new NitroxId(), new List<Entity>())
                     }
                 },

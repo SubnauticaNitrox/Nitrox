@@ -24,6 +24,9 @@ public class CyclopsMetadataExtractor : GenericEntityMetadataExtractor<CyclopsGa
 
         CyclopsMotorMode.CyclopsMotorModes motorMode = CyclopsMotorMode.CyclopsMotorModes.Standard;
 
+        LiveMixin liveMixin = gameObject.RequireComponentInChildren<LiveMixin>();
+        float health = liveMixin.health;
+
         foreach (CyclopsMotorModeButton button in gameObject.GetComponentsInChildren<CyclopsMotorModeButton>())
         {
             if (button.subRoot && (button.image == button.activeSprite))
@@ -33,7 +36,7 @@ public class CyclopsMetadataExtractor : GenericEntityMetadataExtractor<CyclopsGa
             }
         }
 
-        return new(lighting.floodlightsOn, lighting.lightingOn, silentRunning.active, shieldOn, sonarOn, engineOn, (int)motorMode);
+        return new(lighting.floodlightsOn, lighting.lightingOn, silentRunning.active, shieldOn, sonarOn, engineOn, (int)motorMode, health);
     }
 
     public struct CyclopsGameObject
