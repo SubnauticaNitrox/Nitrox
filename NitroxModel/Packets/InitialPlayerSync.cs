@@ -15,7 +15,6 @@ namespace NitroxModel.Packets
     { 
         public NitroxId AssignedEscapePodId { get; }
         public List<EquippedItemData> EquippedItems { get; }
-        public List<EquippedItemData> Modules { get; }
         public List<BasePiece> BasePieces { get; }
         public List<ItemData> StorageSlotItems { get; }
         public List<NitroxTechType> UsedItems { get; }
@@ -40,7 +39,6 @@ namespace NitroxModel.Packets
             bool firstTimeConnecting,
             NitroxId assignedEscapePodId,
             IEnumerable<EquippedItemData> equipment,
-            IEnumerable<EquippedItemData> modules,
             IEnumerable<BasePiece> basePieces,
             IEnumerable<ItemData> storageSlotItems,
             IEnumerable<NitroxTechType> usedItems,
@@ -63,7 +61,6 @@ namespace NitroxModel.Packets
             PlayerGameObjectId = playerGameObjectId;
             FirstTimeConnecting = firstTimeConnecting;
             EquippedItems = equipment.ToList();
-            Modules = modules.ToList();
             BasePieces = basePieces.ToList();
             StorageSlotItems = storageSlotItems.ToList();
             UsedItems = usedItems.ToList();
@@ -87,7 +84,6 @@ namespace NitroxModel.Packets
         public InitialPlayerSync(
             NitroxId assignedEscapePodId,
             List<EquippedItemData> equippedItems,
-            List<EquippedItemData> modules,
             List<BasePiece> basePieces,
             List<ItemData> storageSlotItems,
             List<NitroxTechType> usedItems,
@@ -112,7 +108,6 @@ namespace NitroxModel.Packets
             PlayerGameObjectId = playerGameObjectId;
             FirstTimeConnecting = firstTimeConnecting;
             EquippedItems = equippedItems;
-            Modules = modules;
             BasePieces = basePieces;
             StorageSlotItems = storageSlotItems;
             UsedItems = usedItems;

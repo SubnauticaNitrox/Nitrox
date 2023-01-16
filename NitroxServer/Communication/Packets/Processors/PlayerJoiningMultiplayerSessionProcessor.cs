@@ -71,7 +71,6 @@ namespace NitroxServer.Communication.Packets.Processors
                 wasBrandNewPlayer,
                 assignedEscapePodId,
                 equippedItems,
-                GetAllModules(world.InventoryManager.GetAllModules(), player.GetModules()),
                 world.BaseManager.GetBasePiecesForNewlyConnectedPlayer(),
                 world.InventoryManager.GetAllStorageSlotItems(),
                 player.UsedItems,
@@ -99,14 +98,6 @@ namespace NitroxServer.Communication.Packets.Processors
         {
             return playerManager.GetConnectedPlayers().Where(p => p != player)
                                                       .Select(p => p.PlayerContext);
-        }
-
-        private List<EquippedItemData> GetAllModules(ICollection<EquippedItemData> globalModules, List<EquippedItemData> playerModules)
-        {
-            List<EquippedItemData> modulesToSync = new();
-            modulesToSync.AddRange(globalModules);
-            modulesToSync.AddRange(playerModules);
-            return modulesToSync;
         }
 
         private void SetupPlayerEntity(Player player)

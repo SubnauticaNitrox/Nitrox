@@ -1,18 +1,22 @@
-﻿using System;
-using NitroxModel.DataStructures.GameLogic;
+using System;
+using NitroxModel.DataStructures;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class ModuleAdded : Packet
     {
-        public EquippedItemData EquippedItemData { get; }
-        public bool PlayerModule { get; }
+        public NitroxId Id { get; }
 
-        public ModuleAdded(EquippedItemData equippedItemData, bool playerModule)
+        public NitroxId ParentId { get; }
+
+        public string Slot { get; }
+
+        public ModuleAdded(NitroxId id, NitroxId parentId, string slot)
         {
-            EquippedItemData = equippedItemData;
-            PlayerModule = playerModule;
+            Id = id;
+            ParentId = parentId;
+            Slot = slot;
         }
     }
 }
