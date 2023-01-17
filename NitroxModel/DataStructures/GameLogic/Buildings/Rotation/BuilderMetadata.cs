@@ -1,10 +1,10 @@
 ﻿using System;
-using ProtoBufNet;
+using System.Runtime.Serialization;
 
 namespace NitroxModel.DataStructures.GameLogic.Buildings.Rotation
 {
     [Serializable]
-    [ProtoContract]
+    [DataContract]
     public abstract class BuilderMetadata
     {
     }

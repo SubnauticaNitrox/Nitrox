@@ -1,10 +1,15 @@
-﻿using System;
+using System;
+using System.Linq;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
+using NitroxClient.MonoBehaviours;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.Helper;
 using UnityEngine;
 
@@ -16,9 +21,9 @@ namespace NitroxClient.GameLogic
 
         private readonly IPacketSender packetSender;
         private readonly Vehicles vehicles;
-        private readonly Item item;
+        private readonly Items item;
 
-        public NitroxConsole(IPacketSender packetSender, Vehicles vehicles, Item item)
+        public NitroxConsole(IPacketSender packetSender, Vehicles vehicles, Items item)
         {
             this.packetSender = packetSender;
             this.vehicles = vehicles;
@@ -54,16 +59,15 @@ namespace NitroxClient.GameLogic
         private void SpawnVehicle(GameObject gameObject)
         {
             TechType techType = CraftData.GetTechType(gameObject);
-            VehicleModel vehicleModel = vehicles.BuildVehicleModelFrom(gameObject, techType);
-            Validate.NotNull(vehicleModel, $"Unable to sync spawned vehicle ({vehicleModel.TechType} - {vehicleModel.Id}) from devconsole");
 
-            VehicleSpawned vehicleSpawned = new VehicleSpawned(SerializationHelper.GetBytes(gameObject), vehicleModel);
-            vehicles.AddVehicle(vehicleModel);
+            NitroxId id = NitroxEntity.GetId(gameObject);
 
-            Log.Debug($"Spawning vehicle {vehicleModel.TechType} with id {vehicleModel.Id} at {vehicleModel.Position}");
-            packetSender.Send(vehicleSpawned);
+            VehicleWorldEntity vehicleEntity = new VehicleWorldEntity(null, DayNightCycle.main.timePassedAsFloat, gameObject.transform.ToDto(), "", false, id, techType.ToDto(), null);
+            vehicleEntity.ChildEntities = VehicleChildEntityHelper.ExtractChildren(gameObject);
 
-            vehicles.SpawnDefaultBatteries(vehicleModel);
+            packetSender.Send(new EntitySpawnedByClient(vehicleEntity));
+
+            Log.Debug($"Spawning vehicle {techType} with id {techType} at {gameObject.transform.position}");
         }
 
         /// <summary>
@@ -76,7 +80,7 @@ namespace NitroxClient.GameLogic
             if (opitem.HasValue)
             {
                 Log.Debug($"Spawning item {opitem.Value.GetTechName()} at {gameObject.transform.position}");
-                item.Dropped(gameObject, opitem.Value.GetTechType(), gameObject.transform.position);
+                item.Dropped(gameObject, opitem.Value.GetTechType());
             }
         }
     }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AddressablesTools.JSON
+﻿namespace AddressablesTools.JSON
 {
 #pragma warning disable IDE1006
     internal class SerializedTypeJson

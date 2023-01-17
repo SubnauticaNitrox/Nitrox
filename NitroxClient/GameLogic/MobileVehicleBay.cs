@@ -1,18 +1,18 @@
-﻿using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.Util;
+using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
-using static NitroxClient.GameLogic.Helper.TransientLocalObjectManager;
 
 namespace NitroxClient.GameLogic
 {
     public class MobileVehicleBay
     {
+        public static bool TransmitLocalSpawns { get; set; } = true;
+
         private readonly IPacketSender packetSender;
         private readonly Vehicles vehicles;
 
@@ -22,37 +22,28 @@ namespace NitroxClient.GameLogic
             this.vehicles = vehicles;
         }
 
-        public void BeginCrafting(GameObject constructor, TechType techType, float duration)
+        public void BeginCrafting(ConstructorInput constructor, GameObject constructedObject, TechType techType, float duration)
         {
-            NitroxId constructorId = NitroxEntity.GetId(constructor);
-
-            Log.Debug($"Building item from constructor with id: {constructorId}");
-
-            Optional<object> opConstructedObject = TransientLocalObjectManager.Get(TransientObjectType.CONSTRUCTOR_INPUT_CRAFTED_GAMEOBJECT);
-
-            if (opConstructedObject.HasValue)
+            if (!TransmitLocalSpawns)
             {
-                GameObject constructedObject = (GameObject)opConstructedObject.Value;
-                List<InteractiveChildObjectIdentifier> childIdentifiers = VehicleChildObjectIdentifierHelper.ExtractInteractiveChildren(constructedObject);
-
-                VehicleModel vehicleModel = vehicles.BuildVehicleModelFrom(constructedObject, techType);
-                vehicles.AddVehicle(vehicleModel);
-
-                packetSender.Send(new ConstructorBeginCrafting(vehicleModel, constructorId, duration));
-
-                vehicles.SpawnDefaultBatteries(constructedObject, childIdentifiers);
-
-                MonoBehaviour monoBehaviour = constructor.GetComponent<MonoBehaviour>();
-                //We want to store the fallen position of the object to avoid flying object on reload 
-                if (monoBehaviour)
-                {
-                    monoBehaviour.StartCoroutine(vehicles.UpdateVehiclePositionAfterSpawn(vehicleModel, constructedObject, duration + 10.0f));
-                }
+                return;
             }
-            else
-            {
-                Log.Error("Could not send packet because there wasn't a corresponding constructed object!");
-            }
+
+            // Sometimes build templates, such as the cyclops, are already tagged with IDs.  Remove any that exist to retag.
+            // TODO: this seems to happen because various patches execute when the cyclops template loads (on game load). 
+            // This will leave vehicles with NitroxEntity but an empty NitroxId.  We need to chase these down and only call
+            // the code paths when the owner has a simulation lock.
+            UnityEngine.Component.DestroyImmediate(constructedObject.GetComponent<NitroxEntity>());
+
+            NitroxId constructedObjectId = NitroxEntity.GetId(constructedObject);
+            NitroxId constructorId = NitroxEntity.GetId(constructor.constructor.gameObject);
+            
+            VehicleWorldEntity vehicleEntity = new VehicleWorldEntity(constructorId, DayNightCycle.main.timePassedAsFloat, constructedObject.transform.ToDto(), "", false, constructedObjectId, techType.ToDto(), null);
+            vehicleEntity.ChildEntities = VehicleChildEntityHelper.ExtractChildren(constructedObject);
+                
+            packetSender.Send(new EntitySpawnedByClient(vehicleEntity));
+
+            constructor.StartCoroutine(vehicles.UpdateVehiclePositionAfterSpawn(constructedObjectId, techType, constructedObject, duration + 10.0f));            
         }
     }
 }

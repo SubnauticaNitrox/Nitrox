@@ -1,22 +1,22 @@
-﻿using System;
+using System;
 using System.Numerics;
+using System.Runtime.Serialization;
 using BinaryPack.Attributes;
 using NitroxModel.Helper;
-using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.Unity
 {
-    [ProtoContract]
+    [DataContract]
     [Serializable]
     public class NitroxTransform
     {
-        [ProtoMember(1)]
+        [DataMember(Order = 1)]
         public NitroxVector3 LocalPosition;
 
-        [ProtoMember(2)]
+        [DataMember(Order = 2)]
         public NitroxQuaternion LocalRotation;
 
-        [ProtoMember(3)]
+        [DataMember(Order = 3)]
         public NitroxVector3 LocalScale;
 
         public Matrix4x4 LocalToWorldMatrix

@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
+using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures.Util;
 using UnityEngine;
@@ -12,24 +12,13 @@ namespace NitroxClient.GameLogic.Spawning.Metadata
     {
         public abstract void ProcessMetadata(GameObject gameObject, EntityMetadata metadata);
 
-        private static Dictionary<Type, Optional<EntityMetadataProcessor>> processorsByType = new Dictionary<Type, Optional<EntityMetadataProcessor>>();
+        private static readonly Dictionary<Type, Optional<EntityMetadataProcessor>> processorsByType;
 
         static EntityMetadataProcessor()
         {
-            IEnumerable<EntityMetadataProcessor> processors = Assembly.GetExecutingAssembly()
-                                                                         .GetTypes()
-                                                                         .Where(t => typeof(EntityMetadataProcessor).IsAssignableFrom(t) &&
-                                                                                     t.IsClass &&
-                                                                                     !t.IsAbstract
-                                                                               )
-                                                                         .Select(Activator.CreateInstance)
-                                                                         .Cast<EntityMetadataProcessor>();
-
-            foreach (EntityMetadataProcessor processor in processors)
-            {
-                Type metadataType = processor.GetType().BaseType.GetGenericArguments()[0];
-                processorsByType.Add(metadataType, Optional.Of(processor));
-            }
+            processorsByType = NitroxServiceLocator.LocateService<IEnumerable<EntityMetadataProcessor>>()
+                                                   .Select(x => Optional.Of(x))
+                                                   .ToDictionary(p => p.Value.GetType().BaseType.GetGenericArguments()[0]);
         }
 
         public static Optional<EntityMetadataProcessor> FromMetaData(EntityMetadata metadata)
@@ -41,6 +30,16 @@ namespace NitroxClient.GameLogic.Spawning.Metadata
             }
 
             return Optional.Empty;
+        }
+
+        public static void ApplyMetadata(GameObject gameObject, EntityMetadata metadata)
+        {
+            Optional<EntityMetadataProcessor> metadataProcessor = EntityMetadataProcessor.FromMetaData(metadata);
+
+            if (metadataProcessor.HasValue)
+            {
+                metadataProcessor.Value.ProcessMetadata(gameObject, metadata);
+            }
         }
     }
 }

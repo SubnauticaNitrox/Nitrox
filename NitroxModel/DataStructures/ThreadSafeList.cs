@@ -3,23 +3,23 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.Serialization;
 using BinaryPack.Attributes;
 using NitroxModel.Helper;
-using ProtoBufNet;
 
 namespace NitroxModel.DataStructures
 {
     [DebuggerDisplay($"Items = {{{nameof(list)}}}")]
-    [ProtoContract]
+    [DataContract]
     [Serializable]
     public class ThreadSafeList<T> : IList<T>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        [ProtoIgnore]
+        [IgnoreDataMember]
         private readonly object locker = new();
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        [ProtoMember(1)]
+        [DataMember(Order = 1)]
         [SerializableMember]
         private List<T> list;
 

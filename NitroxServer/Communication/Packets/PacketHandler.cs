@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
 using NitroxModel.Core;
-using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
 using NitroxServer.Communication.Packets.Processors;
@@ -13,6 +13,8 @@ namespace NitroxServer.Communication.Packets
     {
         private readonly PlayerManager playerManager;
         private readonly DefaultServerPacketProcessor defaultServerPacketProcessor;
+        private readonly Dictionary<Type, PacketProcessor> packetProcessorAuthCache = new();
+        private readonly Dictionary<Type, PacketProcessor> packetProcessorUnauthCache = new();
 
         public PacketHandler(PlayerManager playerManager, DefaultServerPacketProcessor packetProcessor)
         {
@@ -35,16 +37,23 @@ namespace NitroxServer.Communication.Packets
 
         private void ProcessAuthenticated(Packet packet, Player player)
         {
-            Type serverPacketProcessorType = typeof(AuthenticatedPacketProcessor<>);
             Type packetType = packet.GetType();
-            Type packetProcessorType = serverPacketProcessorType.MakeGenericType(packetType);
-
-            Optional<object> opProcessor = NitroxServiceLocator.LocateOptionalService(packetProcessorType);
-
-            if (opProcessor.HasValue)
+            if (!packetProcessorAuthCache.TryGetValue(packetType, out PacketProcessor processor))
             {
-                PacketProcessor processor = (PacketProcessor)opProcessor.Value;
-                processor.ProcessPacket(packet, player);
+                Type packetProcessorType = typeof(AuthenticatedPacketProcessor<>).MakeGenericType(packetType);
+                packetProcessorAuthCache[packetType] = processor = NitroxServiceLocator.LocateOptionalService(packetProcessorType).Value as PacketProcessor;
+            }
+
+            if (processor != null)
+            {
+                try
+                {
+                    processor.ProcessPacket(packet, player);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex, $"Error in packet processor {processor.GetType()}");
+                }
             }
             else
             {
@@ -54,18 +63,25 @@ namespace NitroxServer.Communication.Packets
 
         private void ProcessUnauthenticated(Packet packet, NitroxConnection connection)
         {
+            Type packetType = packet.GetType();
+            if (!packetProcessorUnauthCache.TryGetValue(packetType, out PacketProcessor processor))
+            {
+                Type packetProcessorType = typeof(UnauthenticatedPacketProcessor<>).MakeGenericType(packetType);
+                packetProcessorUnauthCache[packetType] = processor = NitroxServiceLocator.LocateOptionalService(packetProcessorType).Value as PacketProcessor;
+            }
+            if (processor == null)
+            {
+                Log.Warn($"Received invalid, unauthenticated packet: {packet}");
+                return;
+            }
+
             try
             {
-                Type serverPacketProcessorType = typeof(UnauthenticatedPacketProcessor<>);
-                Type packetType = packet.GetType();
-                Type packetProcessorType = serverPacketProcessorType.MakeGenericType(packetType);
-
-                PacketProcessor processor = (PacketProcessor)NitroxServiceLocator.LocateService(packetProcessorType);
                 processor.ProcessPacket(packet, connection);
             }
             catch (Exception ex)
             {
-                Log.Error(ex, $"Received invalid, unauthenticated packet: {packet}");
+                Log.Error(ex, $"Error in packet processor {processor.GetType()}");
             }
         }
     }

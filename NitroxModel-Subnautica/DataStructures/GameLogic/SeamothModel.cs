@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using BinaryPack.Attributes;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
-using ProtoBufNet;
 
 namespace NitroxModel_Subnautica.DataStructures.GameLogic
 {
     [Serializable]
-    [ProtoContract]
+    [DataContract]
     public class SeamothModel : VehicleModel
     {
-        [ProtoMember(1)]
+        [DataMember(Order = 1)]
         public bool LightOn { get; set; }
 
         [IgnoreConstructor]

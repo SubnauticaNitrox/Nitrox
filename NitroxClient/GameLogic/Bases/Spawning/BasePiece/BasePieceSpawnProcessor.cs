@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using NitroxClient.MonoBehaviours;
+using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using UnityEngine;
 
@@ -84,7 +85,7 @@ namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
             {
                 yield break;
             }
-            yield return new WaitForSeconds(0.1f);
+            yield return Yielders.WaitFor100Milliseconds;
             if (!latestBase || !finishedPiece)
             {
                 // Happens that multiple delayed coroutine will be there at the same time so we just stop minding about them to let the newer do their job

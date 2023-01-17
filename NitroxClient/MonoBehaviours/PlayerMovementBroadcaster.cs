@@ -11,62 +11,66 @@ namespace NitroxClient.MonoBehaviours;
 
 public class PlayerMovementBroadcaster : MonoBehaviour
 {
-    public const float BROADCAST_INTERVAL = 0.05f;
-    private LocalPlayer localPlayer;
+    /// <summary>
+    ///     Amount of physics updates to skip for sending location broadcasts.
+    ///     TODO: Allow servers to set this value for clients. With many clients connected to the server, a higher value can be preferred.
+    /// </summary>
+    public const int LOCATION_BROADCAST_TICK_SKIPS = 1;
 
-    private float time;
+    private LocalPlayer localPlayer;
+    private int locationBroadcastSkipThreshold = LOCATION_BROADCAST_TICK_SKIPS;
 
     public void Awake()
     {
         localPlayer = NitroxServiceLocator.LocateService<LocalPlayer>();
     }
 
-    public void Update()
+    public void FixedUpdate()
     {
-        time += Time.deltaTime;
-
-        // Only do on a specific cadence to avoid hammering server
-        if (time >= BROADCAST_INTERVAL)
+        // Throttle location broadcasts to not run on every physics tick.
+        if (locationBroadcastSkipThreshold-- > 0)
         {
-            time = 0;
-
-            // Freecam does disable main camera control
-            // But it's also disabled when driving the cyclops through a cyclops camera (content.activeSelf is only true when controlling through a cyclops camera)
-            if (!MainCameraControl.main.isActiveAndEnabled &&
-                !uGUI_CameraCyclops.main.content.activeSelf)
-            {
-                return;
-            }
-
-            Vector3 currentPosition = Player.main.transform.position;
-            Vector3 playerVelocity = Player.main.playerController.velocity;
-
-            // IDEA: possibly only CameraRotation is of interest, because bodyrotation is extracted from that.
-            Quaternion bodyRotation = MainCameraControl.main.viewModel.transform.rotation;
-            Quaternion aimingRotation = Player.main.camRoot.GetAimingTransform().rotation;
-
-            Optional<VehicleMovementData> vehicle = GetVehicleMovement();
-            SubRoot subRoot = Player.main.GetCurrentSub();
-
-            // If in a subroot the position will be relative to the subroot
-            if (subRoot && !subRoot.isBase)
-            {
-                // Rotate relative player position relative to the subroot (else there are problems with respawning)
-                Quaternion undoVehicleAngle = subRoot.transform.rotation.GetInverse();
-                currentPosition = currentPosition - subRoot.transform.position;
-                currentPosition = undoVehicleAngle * currentPosition;
-                bodyRotation = undoVehicleAngle * bodyRotation;
-                aimingRotation = undoVehicleAngle * aimingRotation;
-
-                if (Player.main.isPiloting && subRoot.isCyclops)
-                {
-                    // In case you're driving the cyclops, the currentPosition is the real position of the player, so we need to send it to the server
-                    vehicle.Value.DriverPosition = currentPosition.ToDto();
-                }
-            }
-
-            localPlayer.UpdateLocation(currentPosition, playerVelocity, bodyRotation, aimingRotation, vehicle);
+            return;
         }
+        // Reset skip threshold.
+        locationBroadcastSkipThreshold = LOCATION_BROADCAST_TICK_SKIPS;
+
+        // Freecam does disable main camera control
+        // But it's also disabled when driving the cyclops through a cyclops camera (content.activeSelf is only true when controlling through a cyclops camera)
+        if (!MainCameraControl.main.isActiveAndEnabled &&
+            !uGUI_CameraCyclops.main.content.activeSelf)
+        {
+            return;
+        }
+
+        Vector3 currentPosition = Player.main.transform.position;
+        Vector3 playerVelocity = Player.main.playerController.velocity;
+
+        // IDEA: possibly only CameraRotation is of interest, because bodyrotation is extracted from that.
+        Quaternion bodyRotation = MainCameraControl.main.viewModel.transform.rotation;
+        Quaternion aimingRotation = Player.main.camRoot.GetAimingTransform().rotation;
+
+        Optional<VehicleMovementData> vehicle = GetVehicleMovement();
+        SubRoot subRoot = Player.main.GetCurrentSub();
+
+        // If in a subroot the position will be relative to the subroot
+        if (subRoot && !subRoot.isBase)
+        {
+            // Rotate relative player position relative to the subroot (else there are problems with respawning)
+            Quaternion undoVehicleAngle = subRoot.transform.rotation.GetInverse();
+            currentPosition = currentPosition - subRoot.transform.position;
+            currentPosition = undoVehicleAngle * currentPosition;
+            bodyRotation = undoVehicleAngle * bodyRotation;
+            aimingRotation = undoVehicleAngle * aimingRotation;
+
+            if (Player.main.isPiloting && subRoot.isCyclops)
+            {
+                // In case you're driving the cyclops, the currentPosition is the real position of the player, so we need to send it to the server
+                vehicle.Value.DriverPosition = currentPosition.ToDto();
+            }
+        }
+
+        localPlayer.BroadcastLocation(currentPosition, playerVelocity, bodyRotation, aimingRotation, vehicle);
     }
 
     private Optional<VehicleMovementData> GetVehicleMovement()
@@ -167,3 +171,4 @@ public class PlayerMovementBroadcaster : MonoBehaviour
         );
     }
 }
+

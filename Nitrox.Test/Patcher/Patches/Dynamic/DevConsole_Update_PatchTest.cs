@@ -6,7 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NitroxPatcher.Patches.Dynamic;
 using NitroxTest.Patcher;
 
-namespace Nitrox.Test.Patcher.Patches.Dynamic;
+namespace NitroxPatcher.Patches.Dynamic;
 
 [TestClass]
 public class DevConsole_Update_PatchTest

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -23,7 +23,9 @@ namespace NitroxServer
         private readonly ServerConfig serverConfig;
         private readonly Timer saveTimer;
         private readonly World world;
-        private readonly EntityManager entityManager;
+        private readonly WorldEntityManager worldEntityManager;
+        private readonly EntityRegistry entityRegistry;
+
         private CancellationTokenSource serverCancelSource;
 
         public static Server Instance { get; private set; }
@@ -33,13 +35,14 @@ namespace NitroxServer
 
         public int Port => serverConfig?.ServerPort ?? -1;
 
-        public Server(WorldPersistence worldPersistence, World world, ServerConfig serverConfig, Communication.NitroxServer server, EntityManager entityManager)
+        public Server(WorldPersistence worldPersistence, World world, ServerConfig serverConfig, Communication.NitroxServer server, WorldEntityManager worldEntityManager, EntityRegistry entityRegistry)
         {
             this.worldPersistence = worldPersistence;
             this.serverConfig = serverConfig;
             this.server = server;
             this.world = world;
-            this.entityManager = entityManager;
+            this.worldEntityManager = worldEntityManager;
+            this.entityRegistry = entityRegistry;
 
             Instance = this;
 
@@ -71,7 +74,6 @@ namespace NitroxServer
              - Story goals unlocked: {world.GameData.StoryGoals.GoalUnlocks.Count}
              - Encyclopedia entries: {world.GameData.PDAState.EncyclopediaEntries.Count}
              - Storage slot items: {world.InventoryManager.GetAllStorageSlotItems().Count}
-             - Inventory items: {world.InventoryManager.GetAllInventoryItems().Count}
              - Progress tech: {world.GameData.PDAState.CachedProgress.Count}
              - Known tech: {world.GameData.PDAState.KnownTechTypes.Count}
              - Vehicles: {world.VehicleManager.GetVehicles().Count()}
@@ -172,10 +174,10 @@ namespace NitroxServer
                 {
                     Log.Info("Starting to load all batches up front.");
                     Log.Info("This can take up to several minutes and you can't join until it's completed.");
-                    Log.Info($"{entityManager.GetAllEntities().Count} entities already cached");
-                    if (entityManager.GetAllEntities().Count < 504732)
+                    Log.Info($"{entityRegistry.GetAllEntities().Count} entities already cached");
+                    if (entityRegistry.GetAllEntities().Count < 504732)
                     {
-                        entityManager.LoadAllUnspawnedEntities(serverCancelSource.Token);
+                        worldEntityManager.LoadAllUnspawnedEntities(serverCancelSource.Token);
 
                         Log.Info("Saving newly cached entities.");
                         Save();

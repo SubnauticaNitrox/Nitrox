@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
@@ -25,11 +25,14 @@ namespace NitroxClient.GameLogic
             EquipmentType.PowerCellCharger,
             EquipmentType.DecoySlot
         };
+        
         private readonly IPacketSender packetSender;
+        private readonly Entities entities;
 
-        public EquipmentSlots(IPacketSender packetSender)
+        public EquipmentSlots(IPacketSender packetSender, Entities entities)
         {
             this.packetSender = packetSender;
+            this.entities = entities;
         }
 
         public void BroadcastEquip(Pickupable pickupable, GameObject owner, string slot)
@@ -40,9 +43,8 @@ namespace NitroxClient.GameLogic
 
             if (techType == TechType.VehicleStorageModule)
             {
-                List<InteractiveChildObjectIdentifier> childIdentifiers = VehicleChildObjectIdentifierHelper.ExtractInteractiveChildren(owner);
-                VehicleChildUpdate vehicleChildInteractiveData = new VehicleChildUpdate(ownerId, childIdentifiers);
-                packetSender.Send(vehicleChildInteractiveData);
+                entities.EntityMetadataChanged(pickupable, ownerId);
+                return;
             }
 
             Transform parent = pickupable.gameObject.transform.parent;
@@ -54,10 +56,7 @@ namespace NitroxClient.GameLogic
 
             if (player != null)
             {
-                PlayerEquipmentAdded equipmentAdded = new PlayerEquipmentAdded(techType.ToDto(), equippedItem);
-                packetSender.Send(equipmentAdded);
-                pickupable.gameObject.transform.SetParent(parent);
-
+                entities.EntityMetadataChanged(player, ownerId);
                 return;
             }
 
@@ -74,24 +73,20 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastUnequip(Pickupable pickupable, GameObject owner, string slot)
         {
+            NitroxId ownerId = NitroxEntity.GetId(owner);
             NitroxId itemId = NitroxEntity.GetId(pickupable.gameObject);
             Player player = owner.GetComponent<Player>();
 
             if (player != null)
             {
-                TechType techType = pickupable.GetTechType();
-                PlayerEquipmentRemoved equipmentAdded = new PlayerEquipmentRemoved(techType.ToDto(), itemId);
-                packetSender.Send(equipmentAdded);
-
+                entities.EntityMetadataChanged(player, ownerId);
                 return;
             }
 
-            NitroxId ownerId = NitroxEntity.GetId(owner);
             if (pickupable.GetTechType() == TechType.VehicleStorageModule)
             {
-                List<InteractiveChildObjectIdentifier> childIdentifiers = VehicleChildObjectIdentifierHelper.ExtractInteractiveChildren(owner);
-                VehicleChildUpdate vehicleChildInteractiveData = new VehicleChildUpdate(ownerId, childIdentifiers);
-                packetSender.Send(vehicleChildInteractiveData);
+                entities.EntityMetadataChanged(pickupable, ownerId);
+                return;
             }
 
             bool playerModule = true;

@@ -1,41 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using BinaryPack.Attributes;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
-using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
     [Serializable]
-    [ProtoContract]
+    [DataContract]
     public abstract class VehicleModel
     {
-        [ProtoMember(1)]
+        [DataMember(Order = 1)]
         public NitroxTechType TechType { get; set; }
 
-        [ProtoMember(2)]
+        [DataMember(Order = 2)]
         public NitroxId Id { get; set; }
 
-        [ProtoMember(3)]
+        [DataMember(Order = 3)]
         public NitroxVector3 Position { get; set; }
 
-        [ProtoMember(4)]
+        [DataMember(Order = 4)]
         public NitroxQuaternion Rotation { get; set; }
 
-        [ProtoMember(5)]
+        [DataMember(Order = 5)]
         public ThreadSafeList<InteractiveChildObjectIdentifier> InteractiveChildIdentifiers { get; }
 
-        [ProtoMember(6)]
+        [DataMember(Order = 6)]
         public Optional<NitroxId> DockingBayId { get; set; }
 
-        [ProtoMember(7)]
+        [DataMember(Order = 7)]
         public string Name { get; set; }
 
-        [ProtoMember(8)]
+        [DataMember(Order = 8)]
         public NitroxVector3[] HSB { get; set; }
 
-        [ProtoMember(9)]
+        [DataMember(Order = 9)]
         public float Health { get; set; }
 
         [IgnoreConstructor]

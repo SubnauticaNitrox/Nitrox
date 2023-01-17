@@ -299,14 +299,13 @@ namespace NitroxClient.GameLogic
         private IEnumerator StartFireSuppressionSystem(SubFire fire)
         {
             fire.subRoot.voiceNotificationManager.PlayVoiceNotification(fire.subRoot.fireSupressionNotification, false, true);
-            yield return new WaitForSeconds(3f);
+            yield return Yielders.WaitFor3Seconds;
             fire.fireSuppressionActive = true;
             fire.subRoot.fireSuppressionState = true;
             fire.subRoot.BroadcastMessage("NewAlarmState", null, SendMessageOptions.DontRequireReceiver);
             fire.Invoke(nameof(SubFire.CancelFireSuppression), fire.fireSuppressionSystemDuration);
             float doorCloseDuration = 30f;
             fire.gameObject.BroadcastMessage("TemporaryLock", doorCloseDuration, SendMessageOptions.DontRequireReceiver);
-            yield break;
         }
 
 

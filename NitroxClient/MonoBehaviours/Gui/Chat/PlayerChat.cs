@@ -131,7 +131,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
                 while (canvasGroup.alpha < 1f)
                 {
                     canvasGroup.alpha += 0.01f;
-                    yield return new WaitForSeconds(0.0005f);
+                    yield return null;
                 }
             }
             else
@@ -139,7 +139,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
                 while (canvasGroup.alpha > 0f)
                 {
                     canvasGroup.alpha -= 0.01f;
-                    yield return new WaitForSeconds(0.005f);
+                    yield return null;
                 }
             }
         }

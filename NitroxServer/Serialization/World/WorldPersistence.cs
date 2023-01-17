@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using NitroxModel.Core;
@@ -153,14 +153,13 @@ namespace NitroxServer.Serialization.World
                 PlayerData = PlayerData.From(new List<Player>()),
                 WorldData = new WorldData()
                 {
-                    EscapePodData = EscapePodData.From(new List<EscapePodModel>()),
                     GameData = new GameData
                     {
                         PDAState = new PDAStateData(),
                         StoryGoals = new StoryGoalData(),
                         StoryTiming = new StoryTimingData()
                     },
-                    InventoryData = InventoryData.From(new List<ItemData>(), new List<ItemData>(), new List<EquippedItemData>()),
+                    InventoryData = InventoryData.From(new List<ItemData>(), new List<EquippedItemData>()),
                     VehicleData = VehicleData.From(new List<VehicleModel>()),
                     ParsedBatchCells = new List<NitroxInt3>(),
                     Seed = config.Seed
@@ -184,6 +183,9 @@ namespace NitroxServer.Serialization.World
 
             Log.Info($"Loading world with seed {seed}");
 
+            EntityRegistry entityRegistry = NitroxServiceLocator.LocateService<EntityRegistry>();
+            entityRegistry.AddEntities(pWorldData.EntityData.Entities);
+
             World world = new()
             {
                 SimulationOwnershipData = new SimulationOwnershipData(),
@@ -191,9 +193,11 @@ namespace NitroxServer.Serialization.World
 
                 BaseManager = new BaseManager(pWorldData.BaseData.PartiallyConstructedPieces, pWorldData.BaseData.CompletedBasePieceHistory),
 
-                InventoryManager = new InventoryManager(pWorldData.WorldData.InventoryData.InventoryItems, pWorldData.WorldData.InventoryData.StorageSlotItems, pWorldData.WorldData.InventoryData.Modules),
+                InventoryManager = new InventoryManager(pWorldData.WorldData.InventoryData.StorageSlotItems, pWorldData.WorldData.InventoryData.Modules),
 
-                EscapePodManager = new EscapePodManager(pWorldData.WorldData.EscapePodData.EscapePods, randomStart, seed),
+                EscapePodManager = new EscapePodManager(entityRegistry, randomStart, seed),
+
+                EntityRegistry = entityRegistry,
 
                 GameData = pWorldData.WorldData.GameData,
                 GameMode = gameMode,
@@ -215,10 +219,10 @@ namespace NitroxServer.Serialization.World
                 world.Seed
             );
 
-            world.EntityManager = new EntityManager(pWorldData.EntityData.Entities, world.BatchEntitySpawner);
+            world.WorldEntityManager = new WorldEntityManager(world.EntityRegistry, world.BatchEntitySpawner);
 
             HashSet<NitroxTechType> serverSpawnedSimulationWhiteList = NitroxServiceLocator.LocateService<HashSet<NitroxTechType>>();
-            world.EntitySimulation = new EntitySimulation(world.EntityManager, world.SimulationOwnershipData, world.PlayerManager, serverSpawnedSimulationWhiteList);
+            world.EntitySimulation = new EntitySimulation(world.EntityRegistry, world.WorldEntityManager, world.SimulationOwnershipData, world.PlayerManager, serverSpawnedSimulationWhiteList);
 
             return world;
         }

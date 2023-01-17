@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxModel.Packets;
@@ -15,9 +15,8 @@ namespace NitroxClient.GameLogic.InitialSync
             this.packetSender = packetSender;
             this.equipmentSlots = equipmentSlots;
 
-            DependentProcessors.Add(typeof(VehicleInitialSyncProcessor));
+            DependentProcessors.Add(typeof(GlobalRootInitialSyncProcessor)); // modules can be inside vehicles in global root
             DependentProcessors.Add(typeof(BuildingInitialSyncProcessor));
-            DependentProcessors.Add(typeof(InventoryItemsInitialSyncProcessor));
             DependentProcessors.Add(typeof(EquippedItemInitialSyncProcessor));
         }
 

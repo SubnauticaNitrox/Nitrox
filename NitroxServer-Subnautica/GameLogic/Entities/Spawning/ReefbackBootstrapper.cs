@@ -1,6 +1,6 @@
-﻿using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Unity;
+using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel_Subnautica.DataStructures;
 using NitroxServer.GameLogic.Entities.Spawning;
 using NitroxServer.Helper;
@@ -20,7 +20,7 @@ namespace NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrapper
             }
         }
 
-        public void Prepare(Entity entity, Entity parentEntity, DeterministicGenerator deterministicBatchGenerator)
+        public void Prepare(WorldEntity entity, WorldEntity parentEntity, DeterministicGenerator deterministicBatchGenerator)
         {
             for (int spawnPointCounter = 0; spawnPointCounter < LocalCreatureSpawnPoints.Count; spawnPointCounter++)
             {
@@ -39,7 +39,7 @@ namespace NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrapper
                         for (int i = 0; i < totalToSpawn; i++)
                         {
                             NitroxId id = deterministicBatchGenerator.NextId();
-                            Entity child = new Entity(localSpawnPosition, new NitroxQuaternion(0, 0, 0, 1), new NitroxVector3(1, 1, 1), creature.techType.ToDto(), entity.Level, creature.classId, true, id, null, parentEntity);
+                            WorldEntity child = new WorldEntity(localSpawnPosition, new NitroxQuaternion(0, 0, 0, 1), new NitroxVector3(1, 1, 1), creature.techType.ToDto(), entity.Level, creature.classId, true, id, parentEntity, false, null);
                             entity.ChildEntities.Add(child);
                         }
 

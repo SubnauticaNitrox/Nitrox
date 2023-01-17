@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="CheckDependenciesExist">    
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="CheckDependenciesExist">
     <Choose>
         <When Condition="'$(UnityModLibrary)' == 'true' or '$(TestLibrary)' == 'true'">
             <!-- UnityEngine libraries to include -->
             <ItemGroup>
-			    <Reference Include="Unity.Addressables">
+                <Reference Include="Newtonsoft.Json">
+                    <HintPath>$(GameManagedDir)\Newtonsoft.Json.dll</HintPath>
+                    <Private>$(TestLibrary)</Private>
+                </Reference>
+                <Reference Include="Unity.Addressables">
                     <HintPath>$(GameManagedDir)\Unity.Addressables.dll</HintPath>
                     <Private>$(TestLibrary)</Private>
                 </Reference>
@@ -12,7 +16,7 @@
                     <HintPath>$(GameManagedDir)\Unity.ResourceManager.dll</HintPath>
                     <Private>$(TestLibrary)</Private>
                 </Reference>
-			    <Reference Include="Unity.TextMeshPro">
+                <Reference Include="Unity.TextMeshPro">
                     <HintPath>$(GameManagedDir)\Unity.TextMeshPro.dll</HintPath>
                     <Private>$(TestLibrary)</Private>
                 </Reference>

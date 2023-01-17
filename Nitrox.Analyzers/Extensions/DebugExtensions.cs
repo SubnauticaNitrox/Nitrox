@@ -18,6 +18,11 @@ public static class DebugExtensions
     [Conditional("DEBUG")]
     public static void Log(this object analyzer, string message)
     {
+        if (analyzer == null)
+        {
+            return;
+        }
+
         logQueue.Enqueue((analyzer, message));
         Task.Run(() =>
         {
