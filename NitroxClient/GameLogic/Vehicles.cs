@@ -208,5 +208,21 @@ namespace NitroxClient.GameLogic
 
             vehicle.pilotId = isPiloting ? playerId.ToString() : string.Empty;
         }
+
+        /// <summary>
+        /// Subnautica pre-emptively loads a prefab of each vehicle (such as a cyclops) during the initial game load.  This allows the game to instantaniously 
+        /// use this prefab for the first constructor event.  Subsequent constructor events will use this prefab as a template.  However, this is problematic
+        /// because the template + children are now tagged with NitroxEntity because players are interacting with it. We need to remove any NitroxEntity from
+        /// the new gameObject that used the template.
+        /// </summary>
+        public static void RemoveNitroxEntityTagging(GameObject constructedObject)
+        {
+            NitroxEntity[] nitroxEntities = constructedObject.GetComponentsInChildren<NitroxEntity>(true);
+
+            foreach (NitroxEntity nitroxEntity in nitroxEntities)
+            {
+                UnityEngine.Component.DestroyImmediate(nitroxEntity);
+            }
+        }
     }
 }

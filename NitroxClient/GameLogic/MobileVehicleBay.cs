@@ -12,6 +12,7 @@ namespace NitroxClient.GameLogic
     public class MobileVehicleBay
     {
         public static bool TransmitLocalSpawns { get; set; } = true;
+        public static GameObject MostRecentlyCrafted { get; set; }
 
         private readonly IPacketSender packetSender;
         private readonly Vehicles vehicles;
@@ -24,6 +25,9 @@ namespace NitroxClient.GameLogic
 
         public void BeginCrafting(ConstructorInput constructor, GameObject constructedObject, TechType techType, float duration)
         {
+            MostRecentlyCrafted = constructedObject;
+            Vehicles.RemoveNitroxEntityTagging(constructedObject);
+
             if (!TransmitLocalSpawns)
             {
                 return;
@@ -37,7 +41,7 @@ namespace NitroxClient.GameLogic
 
             NitroxId constructedObjectId = NitroxEntity.GetId(constructedObject);
             NitroxId constructorId = NitroxEntity.GetId(constructor.constructor.gameObject);
-            
+
             VehicleWorldEntity vehicleEntity = new VehicleWorldEntity(constructorId, DayNightCycle.main.timePassedAsFloat, constructedObject.transform.ToDto(), "", false, constructedObjectId, techType.ToDto(), null);
             VehicleChildEntityHelper.PopulateChildren(constructedObjectId, constructedObject.GetFullHierarchyPath(), vehicleEntity.ChildEntities, constructedObject);
 

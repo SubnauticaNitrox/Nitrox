@@ -8,30 +8,29 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
-using static NitroxClient.GameLogic.Helper.TransientLocalObjectManager;
 
 namespace NitroxClient.GameLogic.Spawning.WorldEntities;
 
 public class VehicleWorldEntitySpawner : IWorldEntitySpawner
 {
-    private const float CONSTRUCTION_DURATION_IN_SECONDS = 10f;
-
     public IEnumerator SpawnAsync(WorldEntity entity, Optional<GameObject> parent, EntityCell cellRoot, TaskResult<Optional<GameObject>> result)
     { 
         VehicleWorldEntity vehicleEntity = (VehicleWorldEntity)entity;
 
-        bool withinConstructorSpawnWindow = (DayNightCycle.main.timePassedAsFloat - vehicleEntity.ConstructionTime) < CONSTRUCTION_DURATION_IN_SECONDS;
+        bool withinConstructorSpawnWindow = (DayNightCycle.main.timePassedAsFloat - vehicleEntity.ConstructionTime) < GetCraftDuration(vehicleEntity.TechType.ToUnity());
         Optional<GameObject> spawnerObj = NitroxEntity.GetObjectFrom(vehicleEntity.SpawnerId);
 
         if (withinConstructorSpawnWindow && spawnerObj.HasValue)
         {
             Constructor constructor = spawnerObj.Value.GetComponent<Constructor>();
+            PlayerDistanceTracker distanceTracker = spawnerObj.Value.GetComponent<PlayerDistanceTracker>();
+            bool withinDistance = (distanceTracker) ? distanceTracker._playerNearby : false;
 
-            if (constructor)
+            if (constructor && withinDistance)
             {
                 MobileVehicleBay.TransmitLocalSpawns = false;
                 yield return SpawnViaConstructor(vehicleEntity, constructor, result);
-                MobileVehicleBay.TransmitLocalSpawns = false;
+                MobileVehicleBay.TransmitLocalSpawns = true;
                 yield break;
             }
         }
@@ -46,8 +45,11 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
 
         if (techType == TechType.Cyclops)
         {
-            LightmappedPrefabs.main.RequestScenePrefab("cyclops", (go) => gameObject = go);
-            yield return new WaitUntil(() => gameObject != null);
+            GameObject prefab = null;
+            LightmappedPrefabs.main.RequestScenePrefab("cyclops", (go) => prefab = go);
+            yield return new WaitUntil(() => prefab != null);
+            SubConsoleCommand.main.OnSubPrefabLoaded(prefab);
+            gameObject = SubConsoleCommand.main.GetLastCreatedSub();
         }
         else
         {
@@ -81,8 +83,8 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
 
         yield return Yielders.WaitForEndOfFrame;
 
-        // Sometimes build templates, such as the cyclops, are already tagged with IDs.  Remove any that exist to retag.
-        UnityEngine.Component.DestroyImmediate(gameObject.GetComponent<NitroxEntity>());
+        Vehicles.RemoveNitroxEntityTagging(gameObject);
+
         NitroxEntity.SetNewId(gameObject, vehicleEntity.Id);
 
         if (parent.HasValue)
@@ -100,18 +102,15 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
             constructor.Deploy(true);
         }
 
-        float craftDuration = CONSTRUCTION_DURATION_IN_SECONDS - (DayNightCycle.main.timePassedAsFloat - vehicleEntity.ConstructionTime);
+        float craftDuration = GetCraftDuration(vehicleEntity.TechType.ToUnity()) - (DayNightCycle.main.timePassedAsFloat - vehicleEntity.ConstructionTime);
 
-        Crafter crafter = constructor.gameObject.RequireComponentInChildren<Crafter>(true);
-        crafter.OnCraftingBegin(vehicleEntity.TechType.ToUnity(), craftDuration);
+        ConstructorInput crafter = constructor.gameObject.RequireComponentInChildren<ConstructorInput>(true);
 
-        Optional<object> opConstructedObject = Get(TransientObjectType.CONSTRUCTOR_INPUT_CRAFTED_GAMEOBJECT);
-        Validate.IsTrue(opConstructedObject.HasValue, $"Could not find constructed object {vehicleEntity.Id} from constructor {constructor.gameObject.name}");
+        yield return crafter.OnCraftingBeginAsync(vehicleEntity.TechType.ToUnity(), craftDuration);
 
-        GameObject constructedObject = (GameObject)opConstructedObject.Value;
+        GameObject constructedObject = MobileVehicleBay.MostRecentlyCrafted;
+        Validate.IsTrue(constructedObject, $"Could not find constructed object from MobileVehicleBay {constructor.gameObject.name}");
 
-        // Sometimes build templates, such as the cyclops, are already tagged with IDs.  Remove any that exist to retag.
-        UnityEngine.Component.DestroyImmediate(constructedObject.GetComponent<NitroxEntity>());
         NitroxEntity.SetNewId(constructedObject, vehicleEntity.Id);
 
         result.Set(constructedObject);
@@ -180,5 +179,24 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
     public bool SpawnsOwnChildren()
     {
         return false;
+    }
+    
+    private float GetCraftDuration(TechType techType)
+    {
+        // UWE hard codes the build times into if/else logic inside ConstructorInput.Craft().
+
+        switch(techType)
+        {
+            case TechType.Seamoth:
+                return 10f;
+            case TechType.Exosuit:
+                return 10f;
+            case TechType.Cyclops:
+                return 20f;
+            case TechType.RocketBase:
+                return 25f;
+        }
+
+        return 10f;
     }
 }
