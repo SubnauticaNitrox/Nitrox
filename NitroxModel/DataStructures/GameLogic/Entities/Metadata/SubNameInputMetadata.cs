@@ -29,6 +29,6 @@ public class SubNameInputMetadata : EntityMetadata
 
     public override string ToString()
     {
-        return $"[SubNameInputMetadata Name: {Name} Colors: {Colors}]";
+        return $"[SubNameInputMetadata Name: {Name}, Colors: {Colors}]";
     }
 }

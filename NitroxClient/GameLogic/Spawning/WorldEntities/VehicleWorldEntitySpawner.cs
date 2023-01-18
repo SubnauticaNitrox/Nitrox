@@ -60,7 +60,7 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
             Validate.NotNull(gameObject, $"{nameof(VehicleWorldEntitySpawner)}: No prefab for tech type: {techType}");
             Vehicle vehicle = gameObject.GetComponent<Vehicle>();
 
-            if(vehicle)
+            if (vehicle)
             {
                 vehicle.LazyInitialize();
             }

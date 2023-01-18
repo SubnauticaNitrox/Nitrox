@@ -7,20 +7,23 @@ namespace NitroxClient.GameLogic.Spawning.Metadata;
 public class SubNameInputProcessor : GenericEntityMetadataProcessor<SubNameInputMetadata>
 {
     public override void ProcessMetadata(GameObject gameObject, SubNameInputMetadata metadata)
-    {        
+    {
         SubNameInput subNameInput = gameObject.GetComponent<SubNameInput>();
+        SubName subName = gameObject.GetComponent<SubName>();
 
-        if (subNameInput)
+        if (subNameInput && subName)
         {
-            subNameInput.SetName(metadata.Name);
-            subNameInput.target.SetName(subNameInput.name);
+            string name = metadata.Name ?? "";
+
+            subNameInput.SetName(name);
+            subName.SetName(name);
 
             for (int i = 0; i < metadata.Colors.Length; i++)
             {
                 Vector3 hsb = metadata.Colors[i].ToUnity();
                 Color color = uGUI_ColorPicker.HSBToColor(hsb);
                 subNameInput.SetColor(i, color);
-                subNameInput.target.SetColor(i, hsb, color);
+                subName.SetColor(i, hsb, color);
             }
 
             subNameInput.SetSelected(0);

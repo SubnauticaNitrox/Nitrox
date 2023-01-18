@@ -28,6 +28,6 @@ public class SeamothMetadata : EntityMetadata
 
     public override string ToString()
     {
-        return $"[SeamothMetadata LightsOn: {LightsOn} Health: {Health}]";
+        return $"[SeamothMetadata LightsOn: {LightsOn}, Health: {Health}]";
     }
 }

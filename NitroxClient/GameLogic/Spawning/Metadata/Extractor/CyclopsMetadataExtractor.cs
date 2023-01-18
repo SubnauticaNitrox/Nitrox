@@ -10,16 +10,16 @@ public class CyclopsMetadataExtractor : GenericEntityMetadataExtractor<CyclopsGa
     public override CyclopsMetadata Extract(CyclopsGameObject cyclops)
     {
         GameObject gameObject = cyclops.GameObject;
-        CyclopsLightingPanel lighting = gameObject.RequireComponentInChildren<CyclopsLightingPanel>();
-        CyclopsSilentRunningAbilityButton silentRunning = gameObject.RequireComponentInChildren<CyclopsSilentRunningAbilityButton>();
+        CyclopsLightingPanel lighting = gameObject.RequireComponentInChildren<CyclopsLightingPanel>(true);
+        CyclopsSilentRunningAbilityButton silentRunning = gameObject.RequireComponentInChildren<CyclopsSilentRunningAbilityButton>(true);
 
-        CyclopsEngineChangeState engineState = gameObject.RequireComponentInChildren<CyclopsEngineChangeState>();
+        CyclopsEngineChangeState engineState = gameObject.RequireComponentInChildren<CyclopsEngineChangeState>(true);
         bool engineOn = engineState.motorMode.engineOn || engineState.startEngine;
 
-        CyclopsShieldButton shield = gameObject.GetComponentInChildren<CyclopsShieldButton>();
+        CyclopsShieldButton shield = gameObject.GetComponentInChildren<CyclopsShieldButton>(true);
         bool shieldOn = (shield) ? shield.active : false;
 
-        CyclopsSonarButton sonarButton = gameObject.GetComponentInChildren<CyclopsSonarButton>();
+        CyclopsSonarButton sonarButton = gameObject.GetComponentInChildren<CyclopsSonarButton>(true);
         bool sonarOn = (sonarButton) ? sonarButton.active : false;
 
         CyclopsMotorMode.CyclopsMotorModes motorMode = CyclopsMotorMode.CyclopsMotorModes.Standard;
@@ -27,7 +27,7 @@ public class CyclopsMetadataExtractor : GenericEntityMetadataExtractor<CyclopsGa
         LiveMixin liveMixin = gameObject.RequireComponentInChildren<LiveMixin>();
         float health = liveMixin.health;
 
-        foreach (CyclopsMotorModeButton button in gameObject.GetComponentsInChildren<CyclopsMotorModeButton>())
+        foreach (CyclopsMotorModeButton button in gameObject.GetComponentsInChildren<CyclopsMotorModeButton>(true))
         {
             if (button.subRoot && (button.image == button.activeSprite))
             {

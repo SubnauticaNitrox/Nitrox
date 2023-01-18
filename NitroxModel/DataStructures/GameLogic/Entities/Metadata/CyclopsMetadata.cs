@@ -52,6 +52,6 @@ public class CyclopsMetadata : EntityMetadata
 
     public override string ToString()
     {
-        return $"[CyclopsMetadata FloodLightsOn: {FloodLightsOn} InternalLightsOn: {InternalLightsOn} SilentRunningOn: {SilentRunningOn} ShieldOn: {ShieldOn} SonarOn: {SonarOn} EngineOn: {EngineOn} EngineMode: {EngineMode} Health: {Health}]";
+        return $"[CyclopsMetadata FloodLightsOn: {FloodLightsOn}, InternalLightsOn: {InternalLightsOn}, SilentRunningOn: {SilentRunningOn}, ShieldOn: {ShieldOn}, SonarOn: {SonarOn}, EngineOn: {EngineOn}, EngineMode: {EngineMode}, Health: {Health}]";
     }
 }

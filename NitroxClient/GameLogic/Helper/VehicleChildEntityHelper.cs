@@ -46,7 +46,7 @@ public class VehicleChildEntityHelper
                     NitroxId id = NitroxEntity.GetId(mono.gameObject);
                     toPopulate.Add(new PathBasedChildEntity(relativePathName, id, null, null, vehicleId, new()));
                 }
-            }            
+            }
         }
 
         foreach (Transform child in current.transform)

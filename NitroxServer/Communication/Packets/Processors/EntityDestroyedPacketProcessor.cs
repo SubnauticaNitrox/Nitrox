@@ -6,46 +6,45 @@ using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Entities;
 
-namespace NitroxServer.Communication.Packets.Processors
-{
-    public class EntityDestroyedPacketProcessor : AuthenticatedPacketProcessor<EntityDestroyed>
-    {
-        private readonly PlayerManager playerManager;
-        private readonly EntityRegistry entityRegistry;
-        private readonly WorldEntityManager worldEntityManager;
-        private readonly EntitySimulation entitySimulation;
+namespace NitroxServer.Communication.Packets.Processors;
 
-        public EntityDestroyedPacketProcessor(PlayerManager playerManager, EntityRegistry entityRegistry, WorldEntityManager worldEntityManager, EntitySimulation entitySimulation)
+public class EntityDestroyedPacketProcessor : AuthenticatedPacketProcessor<EntityDestroyed>
+{
+    private readonly PlayerManager playerManager;
+    private readonly EntityRegistry entityRegistry;
+    private readonly WorldEntityManager worldEntityManager;
+    private readonly EntitySimulation entitySimulation;
+
+    public EntityDestroyedPacketProcessor(PlayerManager playerManager, EntityRegistry entityRegistry, WorldEntityManager worldEntityManager, EntitySimulation entitySimulation)
+    {
+        this.playerManager = playerManager;
+        this.entityRegistry = entityRegistry;
+        this.worldEntityManager = worldEntityManager;
+        this.entitySimulation = entitySimulation;
+    }
+
+    public override void Process(EntityDestroyed packet, Player destroyingPlayer)
+    {
+        entitySimulation.EntityDestroyed(packet.Id);
+
+        Optional<Entity> entity = entityRegistry.RemoveEntity(packet.Id);
+
+        if (!entity.HasValue)
         {
-            this.playerManager = playerManager;
-            this.entityRegistry = entityRegistry;
-            this.worldEntityManager = worldEntityManager;
-            this.entitySimulation = entitySimulation;
+            return;
         }
 
-        public override void Process(EntityDestroyed packet, Player destroyingPlayer)
+        if (entity.Value is WorldEntity worldEntity)
         {
-            entitySimulation.EntityDestroyed(packet.Id);
+            worldEntityManager.StopTrackingEntity(worldEntity);
+        }
 
-            Optional<Entity> entity = entityRegistry.RemoveEntity(packet.Id);
-
-            if (!entity.HasValue)
+        foreach (Player player in playerManager.GetConnectedPlayers())
+        {
+            bool isOtherPlayer = player != destroyingPlayer;
+            if (isOtherPlayer && player.CanSee(entity.Value))
             {
-                return;
-            }
-
-            if (entity.Value is WorldEntity worldEntity)
-            {
-                worldEntityManager.StopTrackingEntity(worldEntity);
-            }
-
-            foreach (Player player in playerManager.GetConnectedPlayers())
-            {
-                bool isOtherPlayer = player != destroyingPlayer;
-                if (isOtherPlayer && player.CanSee(entity.Value))
-                {
-                    player.SendPacket(packet);
-                }
+                player.SendPacket(packet);
             }
         }
     }
