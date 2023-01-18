@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Xml;
 using NitroxModel.Helper;
@@ -68,6 +69,10 @@ namespace NitroxModel.Discovery
         {
             static string PostfixBackslash(string text)
             {
+                // This is a windows only quirk, do not change anything on linux
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) {
+                    return text;
+                }
                 return text switch
                 {
                     null => null,

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using AssetsTools.NET;
 using AssetsTools.NET.Extra;
 
@@ -7,16 +8,23 @@ namespace NitroxServer_Subnautica.Resources.Parsers.Helper;
 
 public class AssetsBundleManager : AssetsManager
 {
-    private ThreadSafeMonoCecilTempGenerator monoTempGenerator;
     private readonly string aaRootPath;
     private readonly Dictionary<AssetsFileInstance, string[]> dependenciesByAssetFileInst = new();
+    private ThreadSafeMonoCecilTempGenerator monoTempGenerator;
 
     public AssetsBundleManager(string aaRootPath)
     {
         this.aaRootPath = aaRootPath;
     }
 
-    public string CleanBundlePath(string bundlePath) => aaRootPath + bundlePath.Substring(bundlePath.IndexOf('}') + 1);
+    public string CleanBundlePath(string bundlePath)
+    {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            bundlePath = bundlePath.Replace('\\', '/');
+        }
+        return aaRootPath + bundlePath.Substring(bundlePath.IndexOf('}') + 1);
+    }
 
     public AssetsFileInstance LoadBundleWithDependencies(string[] bundlePaths)
     {
@@ -27,35 +35,11 @@ public class AssetsBundleManager : AssetsManager
         return assetFileInstance;
     }
 
-    private AssetExternal GetExtAssetSafe(AssetsFileInstance relativeTo, AssetTypeValueField valueField)
-    {
-        string[] bundlePaths = dependenciesByAssetFileInst[relativeTo];
-        for (int i = 0; i < bundlePaths.Length; i++)
-        {
-            if (i != 0)
-            {
-                BundleFileInstance dependenciesBundleFile = LoadBundleFile(CleanBundlePath(bundlePaths[i]));
-                LoadAssetsFileFromBundle(dependenciesBundleFile, 0);
-            }
-
-            try
-            {
-                return GetExtAsset(relativeTo, valueField);
-            }
-            catch
-            {
-                // ignored
-            }
-        }
-
-        throw new InvalidOperationException("Could find AssetTypeValueField in given dependencies");
-    }
-
     /// <summary>
-    /// Copied from https://github.com/nesrak1/AssetsTools.NET#full-monobehaviour-writing-example
+    ///     Copied from https://github.com/nesrak1/AssetsTools.NET#full-monobehaviour-writing-example
     /// </summary>
-    /// <param name="inst"><see cref="AssetsFileInstance"/> instance currently used</param>
-    /// <param name="targetGameObjectValue"><see cref="AssetFileInfo"/> of the target GameObject</param>
+    /// <param name="inst"><see cref="AssetsFileInstance" /> instance currently used</param>
+    /// <param name="targetGameObjectValue"><see cref="AssetFileInfo" /> of the target GameObject</param>
     /// <param name="targetClassName">Class name of the target MonoBehaviour</param>
     public AssetFileInfo GetMonoBehaviourFromGameObject(AssetsFileInstance inst, AssetFileInfo targetGameObjectValue, string targetClassName)
     {
@@ -112,21 +96,19 @@ public class AssetsBundleManager : AssetsManager
         monoTempGenerator = (ThreadSafeMonoCecilTempGenerator)generator;
         base.SetMonoTempGenerator(generator);
     }
+
     /// <summary>
-    /// Returns a ready to use <see cref="AssetsManager"/> with loaded <see cref="AssetsManager.classDatabase"/>, <see cref="AssetsManager.classPackage"/> and <see cref="IMonoBehaviourTemplateGenerator"/>.
+    ///     Returns a ready to use <see cref="AssetsManager" /> with loaded <see cref="AssetsManager.classDatabase" />, <see cref="AssetsManager.classPackage" /> and
+    ///     <see cref="IMonoBehaviourTemplateGenerator" />.
     /// </summary>
     public AssetsBundleManager Clone()
     {
-        AssetsBundleManager bundleManagerInst = new(aaRootPath)
-        {
-            classDatabase = classDatabase, 
-            classPackage = classPackage
-        };
+        AssetsBundleManager bundleManagerInst = new(aaRootPath) { classDatabase = classDatabase, classPackage = classPackage };
         bundleManagerInst.SetMonoTempGenerator(monoTempGenerator);
         return bundleManagerInst;
     }
 
-    /// <inheritdoc cref="AssetsManager.UnloadAll"/>
+    /// <inheritdoc cref="AssetsManager.UnloadAll" />
     public new void UnloadAll(bool unloadClassData = false)
     {
         if (unloadClassData)
@@ -135,5 +117,29 @@ public class AssetsBundleManager : AssetsManager
         }
         dependenciesByAssetFileInst.Clear();
         base.UnloadAll(unloadClassData);
+    }
+
+    private AssetExternal GetExtAssetSafe(AssetsFileInstance relativeTo, AssetTypeValueField valueField)
+    {
+        string[] bundlePaths = dependenciesByAssetFileInst[relativeTo];
+        for (int i = 0; i < bundlePaths.Length; i++)
+        {
+            if (i != 0)
+            {
+                BundleFileInstance dependenciesBundleFile = LoadBundleFile(CleanBundlePath(bundlePaths[i]));
+                LoadAssetsFileFromBundle(dependenciesBundleFile, 0);
+            }
+
+            try
+            {
+                return GetExtAsset(relativeTo, valueField);
+            }
+            catch
+            {
+                // ignored
+            }
+        }
+
+        throw new InvalidOperationException("Could find AssetTypeValueField in given dependencies");
     }
 }

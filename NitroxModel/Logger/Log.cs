@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Threading;
 using NitroxModel.Helper;
 using Serilog;
+using Serilog.Configuration;
 using Serilog.Context;
 using Serilog.Core;
 using Serilog.Events;
@@ -29,66 +30,78 @@ namespace NitroxModel.Logger
 
         public static string GetMostRecentLogFile() => new DirectoryInfo(LogDirectory).GetFiles().OrderByDescending(f => f.CreationTimeUtc).FirstOrDefault()?.FullName;
 
-        public static void Setup(bool asyncConsoleWriter = false, InGameLogger inGameLogger = null, bool isConsoleApp = false, bool useConsoleLogging = true)
+        public static void Setup(bool asyncConsoleWriter = false, InGameLogger inGameLogger = null, bool isConsoleApp = false, bool useConsoleLogging = true, bool useFileLogging = true)
         {
             if (isSetup)
             {
-                Log.Warn($"{nameof(Log)} setup should only be executed once.");
+                Warn($"{nameof(Log)} setup should only be executed once.");
                 return;
             }
             isSetup = true;
-            
+ 
             PlayerName = "";
-            logger = new LoggerConfiguration()
-                     .MinimumLevel.Debug()
-                     .WriteTo.Logger(cnf =>
-                     {
-                         if (!useConsoleLogging)
-                         {
-                             return;
-                         }
+ 
+            // Configure logger and create an instance of it.
+            LoggerConfiguration loggerConfig = new LoggerConfiguration().MinimumLevel.Debug();
+            if (useConsoleLogging)
+            {
+                loggerConfig = loggerConfig.WriteTo.AppendConsoleSink(asyncConsoleWriter, isConsoleApp);
+            }
+            if (useFileLogging)
+            {
+                loggerConfig = loggerConfig.WriteTo.AppendFileSink();
+            }
+            if (inGameLogger != null)
+            {
+                loggerConfig = loggerConfig.WriteTo.AppendGameSink(inGameLogger);
+            }
+            logger = loggerConfig.CreateLogger();
+        }
 
-                         string consoleTemplate = isConsoleApp switch
-                         {
-                             false => $"[{{Timestamp:HH:mm:ss.fff}}] {{{nameof(PlayerName)}:l}}[{{Level:u3}}] {{Message}}{{NewLine}}{{Exception}}",
-                             _ => "[{Timestamp:HH:mm:ss.fff}] {Message}{NewLine}{Exception}"
-                         };
+        private static LoggerConfiguration AppendGameSink(this LoggerSinkConfiguration sinkConfig, InGameLogger inGameLogger) => sinkConfig.Logger(cnf =>
+        {
+            cnf
+                .Enrich.FromLogContext()
+                .WriteTo.Conditional(evt => evt.Properties.ContainsKey("game"), configuration => configuration.Message(inGameLogger.Log));
+        });
 
-                         if (asyncConsoleWriter)
-                         {
-                             cnf.WriteTo.Async(a => a.ColoredConsole(outputTemplate: consoleTemplate));
-                         }
-                         else
-                         {
-                             cnf.WriteTo.ColoredConsole(outputTemplate: consoleTemplate);
-                         }
-                     })
-                     .WriteTo.Logger(cnf => cnf
-                                            .Enrich.FromLogContext()
-                                            .WriteTo
+        private static LoggerConfiguration AppendFileSink(this LoggerSinkConfiguration sinkConfig)
+        {
+            return sinkConfig.Logger(cnf =>
+            {
+                cnf.Enrich.FromLogContext()
+                   .WriteTo
 #if DEBUG
-                                            .Map(nameof(PlayerName), "", (playerName, sinkCnf) => sinkCnf.Async(a => a.File(Path.Combine(LogDirectory, $"{GetLogFileName()}{playerName}-.log"),
+                   .Map(nameof(PlayerName), "", (playerName, sinkCnf) => sinkCnf.Async(a => a.File(Path.Combine(LogDirectory, $"{GetLogFileName()}{playerName}-.log"),
 #else
                                             .Async((a => a.File(Path.Combine(LogDirectory, $"{GetLogFileName()}-.log"),
 #endif
-                                                                                                                            outputTemplate: "[{Timestamp:HH:mm:ss.fff}] [{Level:u3}{IsUnity}] {Message}{NewLine}{Exception}",
-                                                                                                                            rollingInterval: RollingInterval.Day,
-                                                                                                                            retainedFileCountLimit: 10,
-                                                                                                                            fileSizeLimitBytes: 200000000, // 200MB
-                                                                                                                            shared: true))))
-                     .WriteTo.Logger(cnf =>
-                     {
-                         if (inGameLogger == null)
-                         {
-                             return;
-                         }
-                         cnf
-                             .Enrich.FromLogContext()
-                             .WriteTo.Conditional(evt => evt.Properties.ContainsKey("game"), configuration => configuration.Message(inGameLogger.Log));
-                     })
-                     .CreateLogger();
+                                                                                                   outputTemplate: "[{Timestamp:HH:mm:ss.fff}] [{Level:u3}{IsUnity}] {Message}{NewLine}{Exception}",
+                                                                                                   rollingInterval: RollingInterval.Day,
+                                                                                                   retainedFileCountLimit: 10,
+                                                                                                   fileSizeLimitBytes: 200000000, // 200MB
+                                                                                                   shared: true)));
+            });
         }
 
+        private static LoggerConfiguration AppendConsoleSink(this LoggerSinkConfiguration sinkConfig, bool makeAsync, bool useShorterTemplate) => sinkConfig.Logger(cnf =>
+        {
+            string consoleTemplate = useShorterTemplate switch
+            {
+                false => $"[{{Timestamp:HH:mm:ss.fff}}] {{{nameof(PlayerName)}:l}}[{{Level:u3}}] {{Message}}{{NewLine}}{{Exception}}",
+                _ => "[{Timestamp:HH:mm:ss.fff}] {Message}{NewLine}{Exception}"
+            };
+ 
+            if (makeAsync)
+            {
+                cnf.WriteTo.Async(a => a.ColoredConsole(outputTemplate: consoleTemplate));
+            }
+            else
+            {
+                cnf.WriteTo.ColoredConsole(outputTemplate: consoleTemplate);
+            }
+        });
+        
         [Conditional("DEBUG")]
         public static void Debug(string message)
         {

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using NitroxModel.Discovery;
 using NitroxModel.Helper;
 using NitroxModel.Platforms.OS.Shared;
+using NitroxModel.Platforms.OS.Windows;
 using NitroxModel.Platforms.OS.Windows.Internal;
 using NitroxModel.Platforms.Store.Exceptions;
 using NitroxModel.Platforms.Store.Interfaces;

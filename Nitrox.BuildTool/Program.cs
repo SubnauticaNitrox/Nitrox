@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using NitroxModel.Discovery;
 using NitroxModel.Helper;
+using NitroxModel.Logger;
 
 namespace Nitrox.BuildTool
 {
@@ -32,6 +33,7 @@ namespace Nitrox.BuildTool
 
                 Exit((eventArgs.ExceptionObject as Exception)?.HResult ?? 1);
             };
+            Log.Setup(false, null, true, true, false);
 
             GameInstallData game = await Task.Factory.StartNew(EnsureGame).ConfigureAwait(false);
             Console.WriteLine($"Found game at {game.InstallDir}");
@@ -86,7 +88,7 @@ namespace Nitrox.BuildTool
                     throw new Exception(error);
                 }
             }
-
+            
             game ??= new GameInstallData(NitroxUser.GamePath);
             game.TrySave(cacheFile);
             return game;

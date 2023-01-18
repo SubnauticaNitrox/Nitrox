@@ -23,7 +23,7 @@
         </Reference>
     </ItemGroup>
 
-  <Target Name="MoveNitroxAssetsToServerOutput" AfterTargets="Build" Condition="'$(OS)' == 'Windows_NT'">
+  <Target Name="MoveNitroxAssetsToServerOutput" AfterTargets="Build">
     <ItemGroup>
       <NitroxSubnauticaTypeTreeData Include="..\Nitrox.Assets.Subnautica\**\*.tpk" />
     </ItemGroup>

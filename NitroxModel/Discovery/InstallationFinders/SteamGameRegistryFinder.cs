@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
+using NitroxModel.Platforms.OS.Windows;
 using NitroxModel.Platforms.OS.Windows.Internal;
 
 namespace NitroxModel.Discovery.InstallationFinders

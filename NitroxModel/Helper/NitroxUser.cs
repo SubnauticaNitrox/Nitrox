@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -12,7 +13,7 @@ namespace NitroxModel.Helper
     public static class NitroxUser
     {
         public const string LAUNCHER_PATH_ENV_KEY = "NITROX_LAUNCHER_PATH";
-        private const string PREFERRED_GAMEPATH_REGKEY = @"SOFTWARE\Nitrox\PreferredGamePath";
+        private const string PREFERRED_GAMEPATH_KEY = "PreferredGamePath";
         private static string launcherPath;
         private static string gamePath;
 
@@ -59,8 +60,8 @@ namespace NitroxModel.Helper
 
         public static string PreferredGamePath
         {
-            get => RegistryEx.Read<string>(PREFERRED_GAMEPATH_REGKEY);
-            set => RegistryEx.Write(PREFERRED_GAMEPATH_REGKEY, value);
+            get => KeyValueStore.Instance.GetValue<string>(PREFERRED_GAMEPATH_KEY);
+            set => KeyValueStore.Instance.SetValue(PREFERRED_GAMEPATH_KEY, value);
         }
 
         public static IGamePlatform GamePlatform { get; private set; }
