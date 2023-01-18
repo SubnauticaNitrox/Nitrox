@@ -13,7 +13,6 @@ using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Bases;
 using NitroxServer.GameLogic.Entities;
 using NitroxServer.GameLogic.Entities.Spawning;
-using NitroxServer.GameLogic.Items;
 using NitroxServer.GameLogic.Players;
 using NitroxServer.GameLogic.Unlockables;
 using NitroxServer.Resources;
@@ -158,7 +157,6 @@ namespace NitroxServer.Serialization.World
                         StoryGoals = new StoryGoalData(),
                         StoryTiming = new StoryTimingData()
                     },
-                    InventoryData = InventoryData.From(new List<ItemData>()),
                     ParsedBatchCells = new List<NitroxInt3>(),
                     Seed = config.Seed
                 }
@@ -190,8 +188,6 @@ namespace NitroxServer.Serialization.World
                 PlayerManager = new PlayerManager(pWorldData.PlayerData.GetPlayers(), config),
 
                 BaseManager = new BaseManager(pWorldData.BaseData.PartiallyConstructedPieces, pWorldData.BaseData.CompletedBasePieceHistory),
-
-                InventoryManager = new InventoryManager(pWorldData.WorldData.InventoryData.StorageSlotItems),
 
                 EscapePodManager = new EscapePodManager(entityRegistry, randomStart, seed),
 

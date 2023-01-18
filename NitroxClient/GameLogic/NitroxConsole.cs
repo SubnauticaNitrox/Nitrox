@@ -1,13 +1,10 @@
 using System;
-using System.Linq;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.Helper;
@@ -22,12 +19,14 @@ namespace NitroxClient.GameLogic
         private readonly IPacketSender packetSender;
         private readonly Vehicles vehicles;
         private readonly Items item;
+        private readonly Entities entities;
 
-        public NitroxConsole(IPacketSender packetSender, Vehicles vehicles, Items item)
+        public NitroxConsole(IPacketSender packetSender, Vehicles vehicles, Items item, Entities entities)
         {
             this.packetSender = packetSender;
             this.vehicles = vehicles;
             this.item = item;
+            this.entities = entities;
         }
 
         //List of things that can be spawned : https://subnauticacommands.com/items
@@ -63,7 +62,7 @@ namespace NitroxClient.GameLogic
             NitroxId id = NitroxEntity.GetId(gameObject);
 
             VehicleWorldEntity vehicleEntity = new VehicleWorldEntity(null, DayNightCycle.main.timePassedAsFloat, gameObject.transform.ToLocalDto(), "", false, id, techType.ToDto(), null);
-            VehicleChildEntityHelper.PopulateChildren(id, gameObject.GetFullHierarchyPath(), vehicleEntity.ChildEntities, gameObject);
+            VehicleChildEntityHelper.PopulateChildren(id, gameObject.GetFullHierarchyPath(), vehicleEntity.ChildEntities, gameObject, entities);
 
             packetSender.Send(new EntitySpawnedByClient(vehicleEntity));
 
