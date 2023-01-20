@@ -9,15 +9,15 @@ namespace NitroxServer.Communication.Packets.Processors;
 /// </summary>
 public class SunbeamUpdateProcessor : AuthenticatedPacketProcessor<SunbeamUpdate>
 {
-    private readonly EventTriggerer eventTriggerer;
+    private readonly StoryManager storyManager;
 
-    public SunbeamUpdateProcessor(EventTriggerer eventTriggerer)
+    public SunbeamUpdateProcessor(StoryManager storyManager)
     {
-        this.eventTriggerer = eventTriggerer;
+        this.storyManager = storyManager;
     }
 
     public override void Process(SunbeamUpdate packet, Player player)
     {
-        eventTriggerer.SunbeamCountdownStartingTime = packet.CountdownStartingTime;
+        storyManager.SunbeamCountdownStartingTime = packet.CountdownStartingTime;
     }
 }

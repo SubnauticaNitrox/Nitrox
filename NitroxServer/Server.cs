@@ -65,8 +65,8 @@ namespace NitroxServer
                 builder.AppendLine($" - Save location: {Path.Combine(WorldManager.SavesFolderDir, serverConfig.SaveName)}");
             }
             builder.AppendLine($"""
-             - Aurora's state: {world.EventTriggerer.GetAuroraStateSummary()}
-             - Current time: day {world.EventTriggerer.Day} ({Math.Floor(world.EventTriggerer.ElapsedSeconds)}s)
+             - Aurora's state: {world.StoryManager.GetAuroraStateSummary()}
+             - Current time: day {world.StoryManager.Day} ({Math.Floor(world.StoryManager.ElapsedSeconds)}s)
              - Scheduled goals stored: {world.GameData.StoryGoals.ScheduledGoals.Count}
              - Story goals completed: {world.GameData.StoryGoals.CompletedGoals.Count}
              - Radio messages stored: {world.GameData.StoryGoals.RadioQueue.Count}
@@ -269,7 +269,7 @@ namespace NitroxServer
         public void PauseServer()
         {
             DisablePeriodicSaving();
-            world.EventTriggerer.PauseWorld();
+            world.StoryManager.PauseWorld();
             Log.Info("Server has paused, waiting for players to connect");
         }
 
@@ -279,7 +279,7 @@ namespace NitroxServer
             {
                 EnablePeriodicSaving();
             }
-            world.EventTriggerer.StartWorld();
+            world.StoryManager.StartWorld();
             Log.Info("Server has resumed");
         }
     }

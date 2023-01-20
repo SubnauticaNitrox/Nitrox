@@ -1,4 +1,4 @@
-﻿using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
 using NitroxServer.GameLogic;
@@ -7,13 +7,13 @@ namespace NitroxServer.ConsoleCommands
 {
     internal class TimeCommand : Command
     {
-        private readonly EventTriggerer eventTriggerer;
+        private readonly StoryManager storyManager;
 
-        public TimeCommand(EventTriggerer eventTriggerer) : base("time", Perms.MODERATOR, "Changes the map time")
+        public TimeCommand(StoryManager storyManager) : base("time", Perms.MODERATOR, "Changes the map time")
         {
             AddParameter(new TypeString("day/night", false, "Time to change to"));
 
-            this.eventTriggerer = eventTriggerer;
+            this.storyManager = storyManager;
         }
 
         protected override void Execute(CallArgs args)
@@ -23,17 +23,17 @@ namespace NitroxServer.ConsoleCommands
             switch (time?.ToLower())
             {
                 case "day":
-                    eventTriggerer.ChangeTime(EventTriggerer.TimeModification.DAY);
+                    storyManager.ChangeTime(StoryManager.TimeModification.DAY);
                     SendMessageToAllPlayers("Time set to day");
                     break;
 
                 case "night":
-                    eventTriggerer.ChangeTime(EventTriggerer.TimeModification.NIGHT);
+                    storyManager.ChangeTime(StoryManager.TimeModification.NIGHT);
                     SendMessageToAllPlayers("Time set to night");
                     break;
 
                 default:
-                    eventTriggerer.ChangeTime(EventTriggerer.TimeModification.SKIP);
+                    storyManager.ChangeTime(StoryManager.TimeModification.SKIP);
                     SendMessageToAllPlayers("Skipped time");
                     break;
             }

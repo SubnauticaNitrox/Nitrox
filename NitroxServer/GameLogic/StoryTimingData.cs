@@ -20,14 +20,14 @@ namespace NitroxServer.GameLogic
         public float? SunbeamCountdownStartingTime { get; set; }
 
 
-        public static StoryTimingData From(EventTriggerer eventTriggerer)
+        public static StoryTimingData From(StoryManager storyManager)
         {
             return new StoryTimingData
             {
-                ElapsedSeconds = eventTriggerer.ElapsedSeconds,
-                AuroraExplosionTime = eventTriggerer.AuroraExplosionTimeMs,
-                AuroraWarningTime = eventTriggerer.AuroraWarningTimeMs,
-                SunbeamCountdownStartingTime = eventTriggerer.SunbeamCountdownStartingTime
+                ElapsedSeconds = storyManager.ElapsedSeconds,
+                AuroraExplosionTime = storyManager.AuroraExplosionTimeMs,
+                AuroraWarningTime = storyManager.AuroraWarningTimeMs,
+                SunbeamCountdownStartingTime = storyManager.SunbeamCountdownStartingTime
             };
         }
     }

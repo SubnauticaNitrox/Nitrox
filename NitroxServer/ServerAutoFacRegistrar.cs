@@ -1,4 +1,4 @@
-﻿global using NitroxModel.Logger;
+global using NitroxModel.Logger;
 using System.Reflection;
 using Autofac;
 using NitroxModel.Core;
@@ -51,7 +51,7 @@ namespace NitroxServer
             containerBuilder.Register(c => c.Resolve<World>().VehicleManager).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().InventoryManager).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().PlayerManager).SingleInstance();
-            containerBuilder.Register(c => c.Resolve<World>().EventTriggerer).SingleInstance();
+            containerBuilder.Register(c => c.Resolve<World>().StoryManager).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().ScheduleKeeper).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().SimulationOwnershipData).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().WorldEntityManager).SingleInstance();

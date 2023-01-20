@@ -1,4 +1,3 @@
-﻿using System;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
@@ -26,10 +25,6 @@ namespace NitroxServer.Communication.Packets.Processors
                     break;
                 case KnownTechEntryAdd.EntryCategory.ANALYZED:
                     pdaStateData.AddAnalyzedTechType(packet.TechType);
-                    break;
-                default:
-                    string categoryName = Enum.GetName(typeof(KnownTechEntryAdd.EntryCategory), packet.Category);
-                    Log.Error($"Received an unknown category type for KnownTechEntryAdd packet: {categoryName}");
                     break;
             }
 

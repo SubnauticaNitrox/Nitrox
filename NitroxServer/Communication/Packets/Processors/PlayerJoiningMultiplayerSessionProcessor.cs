@@ -20,14 +20,14 @@ namespace NitroxServer.Communication.Packets.Processors
     {
         private readonly PlayerManager playerManager;
         private readonly ScheduleKeeper scheduleKeeper;
-        private readonly EventTriggerer eventTriggerer;
+        private readonly StoryManager storyManager;
         private readonly World world;
         private readonly EntityRegistry entityRegistry;
 
-        public PlayerJoiningMultiplayerSessionProcessor(ScheduleKeeper scheduleKeeper, EventTriggerer eventTriggerer, PlayerManager playerManager, World world, EntityRegistry entityRegistry)
+        public PlayerJoiningMultiplayerSessionProcessor(ScheduleKeeper scheduleKeeper, StoryManager storyManager, PlayerManager playerManager, World world, EntityRegistry entityRegistry)
         {
             this.scheduleKeeper = scheduleKeeper;
-            this.eventTriggerer = eventTriggerer;
+            this.storyManager = storyManager;
             this.playerManager = playerManager;
             this.world = world;
             this.entityRegistry = entityRegistry;
@@ -98,7 +98,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 world.GameMode,
                 player.Permissions,
                 player.PingInstancePreferences.ToDictionary(m => m.Key, m => m.Value),
-                eventTriggerer.GetInitialTimeData()
+                storyManager.GetInitialTimeData()
             );
 
             player.SendPacket(initialPlayerSync);

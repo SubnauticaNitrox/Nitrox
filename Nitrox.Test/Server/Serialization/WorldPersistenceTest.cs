@@ -51,7 +51,7 @@ public class WorldPersistenceTest
 
         worldData = GeneratePersistedWorldData();
         World.World world = worldPersistence.CreateWorld(worldData, ServerGameMode.CREATIVE);
-        world.EventTriggerer.ResetWorld();
+        world.StoryManager.ResetWorld();
 
         for (int index = 0; index < ServerSerializers.Length; index++)
         {
@@ -63,7 +63,7 @@ public class WorldPersistenceTest
             //Checking loading
             Optional<World.World> worldAfter = worldPersistence.LoadFromFile(tempSaveFilePath);
             Assert.IsTrue(worldAfter.HasValue, $"Loading saved world failed while using {ServerSerializers[index]}.");
-            worldAfter.Value.EventTriggerer.ResetWorld();
+            worldAfter.Value.StoryManager.ResetWorld();
             WorldsDataAfter[index] = PersistedWorldData.From(worldAfter.Value);
         }
     }

@@ -1,4 +1,4 @@
-﻿using NitroxModel.Server;
+using NitroxModel.Server;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Bases;
 using NitroxServer.GameLogic.Entities;
@@ -19,7 +19,7 @@ namespace NitroxServer.Serialization.World
         public EntityRegistry EntityRegistry { get; set; }
         public WorldEntityManager WorldEntityManager { get; set; }
         public BaseManager BaseManager { get; set; }
-        public EventTriggerer EventTriggerer { get; set; }
+        public StoryManager StoryManager { get; set; }
         public VehicleManager VehicleManager { get; set; }
         public InventoryManager InventoryManager { get; set; }
         public GameData GameData { get; set; }
