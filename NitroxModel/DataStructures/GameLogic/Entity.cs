@@ -15,7 +15,7 @@ namespace NitroxModel.DataStructures.GameLogic
     [ProtoInclude(70, typeof(PrefabPlaceholderEntity))]
     [ProtoInclude(80, typeof(InventoryEntity))]
     [ProtoInclude(90, typeof(InventoryItemEntity))]
-    [ProtoInclude(100, typeof(PathBasedChildEntity))]    
+    [ProtoInclude(100, typeof(PathBasedChildEntity))]
     public abstract class Entity
     {
         [DataMember(Order = 1)]
@@ -31,7 +31,7 @@ namespace NitroxModel.DataStructures.GameLogic
         public NitroxId ParentId { get; set; }
 
         [DataMember(Order = 5)]
-        public virtual List<Entity> ChildEntities { get; set; } = new List<Entity>();
+        public List<Entity> ChildEntities { get; set; } = new List<Entity>();
 
         [IgnoreConstructor]
         protected Entity()

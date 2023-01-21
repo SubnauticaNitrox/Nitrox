@@ -240,7 +240,7 @@ public class BatchEntitySpawner : IEntitySpawner
 
         if (parentEntity == null) // Ensures children are only returned at the top level
         {
-            // Children are yielded as well so they can be indexed at the top level (for use by simulation 
+            // Children are yielded as well so they can be indexed at the top level (for use by simulation
             // ownership and various other consumers).  The parent should always be yielded before the children
             foreach (Entity childEntity in AllChildren(spawnedEntity))
             {
@@ -305,20 +305,28 @@ public class BatchEntitySpawner : IEntitySpawner
 
         foreach (PrefabPlaceholderAsset placeholder in group.PrefabPlaceholders)
         {
-            if (placeholder.EntitySlot != null)
+            PrefabPlaceholderEntity placeholderEntity = new(deterministicBatchGenerator.NextId(), NitroxTechType.None, entity.Id);
+            placeholders.Add(placeholderEntity);
+
+            if (placeholder.EntitySlot == null)
             {
-                placeholders.Add(SpawnEntitySlotEntities(placeholder.EntitySlot, deterministicBatchGenerator, parentEntity));
+                placeholderEntity.ChildEntities.Add(new PrefabPlaceholderEntity(deterministicBatchGenerator.NextId(), placeholder.ClassId, group.TechType, placeholderEntity.Id, new List<Entity>()));
             }
             else
             {
-                placeholders.Add(new PrefabPlaceholderEntity(deterministicBatchGenerator.NextId(), placeholder.ClassId, group.TechType, null, entity.Id, new List<Entity>()));
+                Entity entitySlotNullableEntity = SpawnEntitySlotEntities(placeholder.EntitySlot, deterministicBatchGenerator, parentEntity);
+
+                if (entitySlotNullableEntity != null)
+                {
+                    placeholderEntity.ChildEntities.Add(entitySlotNullableEntity);
+                }
             }
         }
 
         entity = new PlaceholderGroupWorldEntity(entity, placeholders);
         return true;
     }
-    
+
     private Entity SpawnEntitySlotEntities(NitroxEntitySlot entitySlot, DeterministicGenerator deterministicBatchGenerator, WorldEntity parentEntity)
     {
         List<UwePrefab> prefabs = prefabFactory.GetPossiblePrefabs(entitySlot.BiomeType);
@@ -332,5 +340,5 @@ public class BatchEntitySpawner : IEntitySpawner
 
         return entities.FirstOrDefault();
     }
-    
+
 }
