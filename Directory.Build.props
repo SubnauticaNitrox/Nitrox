@@ -50,7 +50,7 @@
     <Choose>
         <When Condition="'$(NitroxLibrary)' == 'true'">
             <ItemGroup>
-                <ProjectReference Include="..\Nitrox.Analyzers\Nitrox.Analyzers.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
+                <ProjectReference Include="..\Nitrox.Analyzers\Nitrox.Analyzers.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
             </ItemGroup>
         </When>
     </Choose>
