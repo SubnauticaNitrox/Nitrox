@@ -42,8 +42,8 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic.Entities
 
         private LootDistributionData GetLootDistributionData(string lootDistributionJson)
         {
-            // LitJson uses the computers local CultureInfo when parsing the JSON files.  However,
-            // these json files were saved in en_US.  Ensure that this is done for the current thread.
+            // LitJson uses the computer's local CultureInfo when parsing the JSON files.
+            // However, these json files were saved in en_US. Ensure that this is done for the current thread.
             CultureManager.ConfigureCultureInfo();
 
             JsonMapper.RegisterImporter((double value) => Convert.ToSingle(value));
