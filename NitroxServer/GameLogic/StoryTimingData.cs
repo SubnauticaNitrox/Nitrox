@@ -16,18 +16,13 @@ namespace NitroxServer.GameLogic
         [DataMember(Order = 3)]
         public double? AuroraWarningTime { get; set; }
 
-        [DataMember(Order = 4)]
-        public float? SunbeamCountdownStartingTime { get; set; }
-
-
         public static StoryTimingData From(StoryManager storyManager)
         {
             return new StoryTimingData
             {
                 ElapsedSeconds = storyManager.ElapsedSeconds,
                 AuroraExplosionTime = storyManager.AuroraExplosionTimeMs,
-                AuroraWarningTime = storyManager.AuroraWarningTimeMs,
-                SunbeamCountdownStartingTime = storyManager.SunbeamCountdownStartingTime
+                AuroraWarningTime = storyManager.AuroraWarningTimeMs
             };
         }
     }

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Timers;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
 using NitroxServer.Helper;
@@ -25,8 +24,6 @@ public class StoryManager
     public double AuroraWarningTimeMs;
 
     private static readonly List<string> auroraEvents = new() { "Story_AuroraWarning1", "Story_AuroraWarning2", "Story_AuroraWarning3", "Story_AuroraWarning4", "Story_AuroraExplosion" };
-
-    public float SunbeamCountdownStartingTime;
 
     private double elapsedTimeOutsideStopWatchMs;
 
@@ -57,7 +54,7 @@ public class StoryManager
     // Using ceiling because days count start at 1 and not 0
     public int Day => (int)Math.Ceiling(ElapsedTimeMs / TimeSpan.FromMinutes(20).TotalMilliseconds);
 
-    public StoryManager(PlayerManager playerManager, PDAStateData pdaStateData, StoryGoalData storyGoalData, string seed, double elapsedSeconds, double? auroraExplosionTime, double? auroraWarningTime, float? sunbeamCountdownStartingTime)
+    public StoryManager(PlayerManager playerManager, PDAStateData pdaStateData, StoryGoalData storyGoalData, string seed, double elapsedSeconds, double? auroraExplosionTime, double? auroraWarningTime)
     {
         this.playerManager = playerManager;
         this.pdaStateData = pdaStateData;
@@ -67,7 +64,6 @@ public class StoryManager
         elapsedTimeOutsideStopWatchMs = elapsedSeconds == 0 ? TimeSpan.FromSeconds(480).TotalMilliseconds : elapsedSeconds * 1000;
         AuroraExplosionTimeMs = auroraExplosionTime ?? GenerateDeterministicAuroraTime(seed);
         AuroraWarningTimeMs = auroraWarningTime ?? ElapsedTimeMs;
-        SunbeamCountdownStartingTime = sunbeamCountdownStartingTime ?? -1; // We want to know whether it was set or not
     }
     /// <summary>
     /// Tells the players to start Aurora's explosion event
@@ -200,8 +196,7 @@ public class StoryManager
 
     public InitialTimeData GetInitialTimeData()
     {
-        return new(MakeTimePacket(), new((float)AuroraExplosionTimeMs * 0.001f, (float)AuroraWarningTimeMs * 0.001f),
-            new(SunbeamCountdownStartingTime));
+        return new(MakeTimePacket(), new((float)AuroraExplosionTimeMs * 0.001f, (float)AuroraWarningTimeMs * 0.001f));
     }
 
     public enum TimeModification

@@ -20,8 +20,8 @@ public class StoryGoalInitialSyncProcessor : InitialSyncProcessor
             SetupStoryGoalManager(packet),
             SetupTrackers(packet),
             SetupAuroraAndSunbeam(packet),
-            RefreshWithLatestData(packet),
-            SetScheduledGoals(packet)
+            SetScheduledGoals(packet),
+            RefreshWithLatestData()
         };
     }
 
@@ -78,6 +78,7 @@ public class StoryGoalInitialSyncProcessor : InitialSyncProcessor
 
         // Initialize CompoundGoalTracker and OnGoalUnlockTracker and clear their already completed goals
         storyGoalManager.OnSceneObjectsLoaded();
+
         storyGoalManager.compoundGoalTracker.goals.RemoveAll(goal => completedGoals.Contains(goal.key));
         completedGoals.ForEach(goal => storyGoalManager.onGoalUnlockTracker.goalUnlocks.Remove(goal));
 
@@ -115,10 +116,12 @@ public class StoryGoalInitialSyncProcessor : InitialSyncProcessor
         CrashedShipExploder.main.timeSerialized = DayNightCycle.main.timePassedAsFloat;
         CrashedShipExploder.main.OnProtoDeserialize(null);
 
-        if (timeData.SunbeamData.CountdownStartingTime != -1)
+        // Sunbeam countdown is deducted from the scheduled goal PrecursorGunAimCheck
+        NitroxScheduledGoal sunbeamCountdownGoal = packet.StoryGoalData.ScheduledGoals.Find(goal => goal.GoalKey == "PrecursorGunAimCheck");
+        if (sunbeamCountdownGoal != null)
         {
             StoryGoalCustomEventHandler.main.countdownActive = true;
-            StoryGoalCustomEventHandler.main.countdownStartingTime = timeData.SunbeamData.CountdownStartingTime;
+            StoryGoalCustomEventHandler.main.countdownStartingTime = sunbeamCountdownGoal.TimeExecute - 2370;
         }
 
         yield break;
@@ -151,7 +154,7 @@ public class StoryGoalInitialSyncProcessor : InitialSyncProcessor
     }
 
     // Must happen after CompletedGoals
-    private IEnumerator RefreshWithLatestData(InitialPlayerSync packet)
+    private IEnumerator RefreshWithLatestData()
     {
         // If those aren't set up yet, they'll initialize correctly in time
         // Else, we need to force them to acquire the right data
