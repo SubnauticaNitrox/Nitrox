@@ -11,7 +11,7 @@ namespace NitroxServer.GameLogic
         public double ElapsedSeconds { get; set; }
 
         [DataMember(Order = 2)]
-        public double? AuroraExplosionTime { get; set; }
+        public double? AuroraCountdownTime { get; set; }
 
         [DataMember(Order = 3)]
         public double? AuroraWarningTime { get; set; }
@@ -21,7 +21,7 @@ namespace NitroxServer.GameLogic
             return new StoryTimingData
             {
                 ElapsedSeconds = storyManager.ElapsedSeconds,
-                AuroraExplosionTime = storyManager.AuroraExplosionTimeMs,
+                AuroraCountdownTime = storyManager.AuroraCountdownTimeMs,
                 AuroraWarningTime = storyManager.AuroraWarningTimeMs
             };
         }

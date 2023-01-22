@@ -26,8 +26,6 @@ public class StoryGoalExecuted : Packet
         PDA,
         RADIO,
         ENCYCLOPEDIA,
-        STORY,
-        EXTRA,
-        PDA_EXTRA,
+        STORY
     }
 }

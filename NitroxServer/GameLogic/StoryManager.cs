@@ -20,7 +20,7 @@ public class StoryManager
     private readonly StoryGoalData storyGoalData;
     private string seed;
 
-    public double AuroraExplosionTimeMs;
+    public double AuroraCountdownTimeMs;
     public double AuroraWarningTimeMs;
 
     private static readonly List<string> auroraEvents = new() { "Story_AuroraWarning1", "Story_AuroraWarning2", "Story_AuroraWarning3", "Story_AuroraWarning4", "Story_AuroraExplosion" };
@@ -62,30 +62,33 @@ public class StoryManager
         this.seed = seed;
         // Default time in Base SN is 480s
         elapsedTimeOutsideStopWatchMs = elapsedSeconds == 0 ? TimeSpan.FromSeconds(480).TotalMilliseconds : elapsedSeconds * 1000;
-        AuroraExplosionTimeMs = auroraExplosionTime ?? GenerateDeterministicAuroraTime(seed);
+        AuroraCountdownTimeMs = auroraExplosionTime ?? GenerateDeterministicAuroraTime(seed);
         AuroraWarningTimeMs = auroraWarningTime ?? ElapsedTimeMs;
     }
     /// <summary>
     /// Tells the players to start Aurora's explosion event
     /// </summary>
-    /// <param name="cooldown">Wether we should make Aurora explode instantly or after a short countdown</param>
-    public void ExplodeAurora(bool cooldown)
+    /// <param name="countdown">Wether we should make Aurora explode instantly or after a short countdown</param>
+    public void ExplodeAurora(bool countdown)
     {
-        AuroraExplosionTimeMs = ElapsedTimeMs;
-        // Explode aurora with a cooldown is like default game just before aurora is about to explode
-        if (cooldown)
+        // Calculations from CrashedShipExploder.OnConsoleCommand_countdownship()
+        // We add 3 seconds to the cooldown so that players have enough time to receive the packet and process it
+        AuroraCountdownTimeMs = ElapsedTimeMs + 3000;
+        AuroraWarningTimeMs = AuroraCountdownTimeMs;
+
+        if (countdown)
         {
-            // These lines should be filled with the same informations as in the constructor
-            playerManager.SendPacketToAllPlayers(new StoryGoalExecuted("Story_AuroraWarning4", StoryGoalExecuted.EventType.PDA_EXTRA, (float)ElapsedSeconds));
-            playerManager.SendPacketToAllPlayers(new StoryGoalExecuted("Story_AuroraExplosion", StoryGoalExecuted.EventType.EXTRA, (float)ElapsedSeconds));
-            Log.Info("Started Aurora's explosion sequence");
+            Log.Info("Aurora's explosion countdown will start in 3 seconds");
         }
         else
         {
-            // This will make aurora explode instantly on clients
-            playerManager.SendPacketToAllPlayers(new AuroraExplodeNow());
-            Log.Info("Exploded Aurora");
+            // Calculations from CrashedShipExploder.OnConsoleCommand_explodeship()
+            AuroraCountdownTimeMs -= 25000;
+            AuroraWarningTimeMs -= 1000;
+            Log.Info("Aurora's explosion initiated");
         }
+
+        playerManager.SendPacketToAllPlayers(new AuroraAndTimeUpdate(GetInitialTimeData(), false));
     }
 
     /// <summary>
@@ -93,21 +96,26 @@ public class StoryManager
     /// </summary>
     public void RestoreAurora()
     {
-        AuroraExplosionTimeMs = GenerateDeterministicAuroraTime(seed) + ElapsedTimeMs;
         AuroraWarningTimeMs = ElapsedTimeMs;
+        AuroraCountdownTimeMs = GenerateDeterministicAuroraTime(seed);
+
         // We need to clear these entries from PdaLog and CompletedGoals to make sure that the client, when reconnecting, doesn't have false information
         foreach (string eventKey in auroraEvents)
         {
             pdaStateData.PdaLog.RemoveAll(entry => entry.Key == eventKey);
             storyGoalData.CompletedGoals.Remove(eventKey);
         }
-        playerManager.SendPacketToAllPlayers(new AuroraRestore());
+
+        playerManager.SendPacketToAllPlayers(new AuroraAndTimeUpdate(GetInitialTimeData(), true));
         Log.Info($"Restored Aurora, will explode again in {GetMinutesBeforeAuroraExplosion()} minutes");
     }
 
     /// <summary>
     /// Calculate the future Aurora's explosion time in a deterministic manner
     /// </summary>
+    /// <remarks>
+    /// Takes the current time into account
+    /// </remarks>
     private double GenerateDeterministicAuroraTime(string seed)
     {
         // Copied from CrashedShipExploder.SetExplodeTime() and changed from seconds to ms
@@ -138,7 +146,7 @@ public class StoryManager
     /// <returns>The time in minutes before aurora explodes or -1 if it already exploded</returns>
     private double GetMinutesBeforeAuroraExplosion()
     {
-        return AuroraExplosionTimeMs > ElapsedTimeMs ? Math.Round((AuroraExplosionTimeMs - ElapsedTimeMs) / 60000) : -1;
+        return AuroraCountdownTimeMs > ElapsedTimeMs ? Math.Round((AuroraCountdownTimeMs - ElapsedTimeMs) / 60000) : -1;
     }
 
     /// <summary>
@@ -194,9 +202,14 @@ public class StoryManager
         return new(ElapsedSeconds, DateTimeOffset.Now.ToUnixTimeMilliseconds());
     }
 
+    public CrashedShipExploderData MakeAuroraData()
+    {
+        return new((float)AuroraCountdownTimeMs * 0.001f, (float)AuroraWarningTimeMs * 0.001f);
+    }
+
     public InitialTimeData GetInitialTimeData()
     {
-        return new(MakeTimePacket(), new((float)AuroraExplosionTimeMs * 0.001f, (float)AuroraWarningTimeMs * 0.001f));
+        return new(MakeTimePacket(), MakeAuroraData());
     }
 
     public enum TimeModification

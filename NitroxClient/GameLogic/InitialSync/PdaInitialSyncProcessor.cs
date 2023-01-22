@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.Communication.Abstract;
@@ -125,11 +125,6 @@ namespace NitroxClient.GameLogic.InitialSync
                             entry.data = entryData;
                             entry.timestamp = logEntry.Timestamp;
                             entries.Add(entryData.key, entry);
-
-                            if (entryData.key == "Story_AuroraWarning4")
-                            {
-                                CrashedShipExploder.main.SwapModels(true);
-                            }
                         }
                     }
                 }

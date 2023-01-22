@@ -111,8 +111,7 @@ public class StoryGoalInitialSyncProcessor : InitialSyncProcessor
         auroraWarnings.OnProtoDeserialize(null);
 
         CrashedShipExploder.main.version = 2;
-        CrashedShipExploder.main.timeToStartCountdown = timeData.CrashedShipExploderData.TimeToStartCountdown;
-        CrashedShipExploder.main.timeToStartWarning = timeData.CrashedShipExploderData.TimeToStartWarning;
+        NitroxStoryManager.UpdateAuroraData(timeData.CrashedShipExploderData);        
         CrashedShipExploder.main.timeSerialized = DayNightCycle.main.timePassedAsFloat;
         CrashedShipExploder.main.OnProtoDeserialize(null);
 
@@ -122,6 +121,7 @@ public class StoryGoalInitialSyncProcessor : InitialSyncProcessor
         {
             StoryGoalCustomEventHandler.main.countdownActive = true;
             StoryGoalCustomEventHandler.main.countdownStartingTime = sunbeamCountdownGoal.TimeExecute - 2370;
+            // See StoryGoalCustomEventHandler.endTime for calculation (endTime - 30 seconds)
         }
 
         yield break;
