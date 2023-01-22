@@ -16,9 +16,9 @@ internal sealed class Locator : IViewLocator
     private static readonly ConcurrentDictionary<Type, RoutableViewModelBase> viewModelCache = new();
     private static readonly ConcurrentDictionary<Type, byte> attachedListeners = new();
 
-    private static MainWindow? mainWindow;
+    private static MainWindow mainWindow;
 
-    private static RoutingState? mainRouter;
+    private static RoutingState mainRouter;
 
     public static MainWindow MainWindow
     {
@@ -37,12 +37,12 @@ internal sealed class Locator : IViewLocator
         }
     }
 
-    public static RoutingState MainRouter => mainRouter ??= MainWindow.ViewModel?.Router ?? throw new Exception($"Tried to get {nameof(MainRouter)} before {nameof(Views.MainWindow)} was initialized");
+    public static RoutingState MainRouter => mainRouter ??= MainWindow.ViewModel?.Router ?? throw new Exception($"Tried to get {nameof(MainRouter)} before {nameof(Launcher.MainWindow)} was initialized");
 
     public static RoutableViewModelBase GetSharedViewModel<TModel>() where TModel : RoutableViewModelBase
     {
         Type key = typeof(TModel);
-        if (viewModelCache.TryGetValue(key, out RoutableViewModelBase? vm))
+        if (viewModelCache.TryGetValue(key, out RoutableViewModelBase vm))
         {
             return vm;
         }
@@ -52,7 +52,7 @@ internal sealed class Locator : IViewLocator
         return viewModel;
     }
 
-    public IViewFor ResolveView<T>(T? viewModel, string? contract = null)
+    public IViewFor ResolveView<T>(T viewModel, string contract = null)
     {
         AttachListenersForViewChange(viewModel);
         // If you change a condition in this switch, make sure to listen for it in the method above.
@@ -88,6 +88,3 @@ internal sealed class Locator : IViewLocator
         }
     }
 }
-
-
-

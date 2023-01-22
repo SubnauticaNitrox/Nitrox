@@ -1,13 +1,13 @@
 <Window xmlns="https://github.com/avaloniaui"
-        xmlns:rxui="clr-namespace:Avalonia.ReactiveUI;assembly=Avalonia.ReactiveUI"
-        xmlns:app="clr-namespace:Nitrox.Launcher"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:Nitrox.Launcher.ViewModels"
         xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
+        xmlns:rx="http://reactiveui.net"
+        xmlns:launcher="clr-namespace:Nitrox.Launcher"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        x:Class="Nitrox.Launcher.Views.MainWindow"
+        x:Class="Nitrox.Launcher.MainWindow"
         d:DataContext="{Binding RelativeSource={RelativeSource AncestorType=vm:MainWindowViewModel}}"
         Title="Nitrox Launcher"
         FontFamily="/Assets/Fonts/Inter-Black.ttf"
@@ -20,7 +20,7 @@
         <Panel Classes="titleBar" PointerPressed="TitleBar_OnPointerPressed">
             <ItemsControl Items="{Binding TitleBarItems}" />
         </Panel>
-        
+
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="274" />
@@ -29,7 +29,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-        
+
             <!-- Left side -->
             <Border Grid.Column="0" Classes="nav">
                 <Grid>
@@ -37,7 +37,7 @@
                         <RowDefinition Height="80" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-        
+
                     <!-- The "NITROX" header. -->
                     <Image Grid.Row="0" Classes="header" />
                     <!-- Navigation items -->
@@ -47,16 +47,16 @@
                     </Panel>
                 </Grid>
             </Border>
-        
+
             <!-- Right side -->
-            <rxui:RoutedViewHost Grid.Column="1" Classes="content" Router="{Binding Router}" PageTransition="{x:Null}">
-                <rxui:RoutedViewHost.DefaultContent>
+            <rx:RoutedViewHost Grid.Column="1" Classes="content" Router="{Binding Router}" PageTransition="{x:Null}">
+                <rx:RoutedViewHost.DefaultContent>
                     <TextBlock Text="Default content" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                </rxui:RoutedViewHost.DefaultContent>
-                <rxui:RoutedViewHost.ViewLocator>
-                    <app:Locator />
-                </rxui:RoutedViewHost.ViewLocator>
-            </rxui:RoutedViewHost>
+                </rx:RoutedViewHost.DefaultContent>
+                <rx:RoutedViewHost.ViewLocator>
+                    <launcher:Locator />
+                </rx:RoutedViewHost.ViewLocator>
+            </rx:RoutedViewHost>
         </Grid>
     </Panel>
 </Window>

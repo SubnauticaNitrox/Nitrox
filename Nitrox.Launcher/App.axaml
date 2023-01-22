@@ -2,9 +2,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
              xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
-             xmlns:system="clr-namespace:System;assembly=System.Runtime"
              x:Class="Nitrox.Launcher.App">
-    <!-- See original style here (to know what to override): 
+<!-- See original style here (to know what to override):
         https://github.com/AvaloniaUI/Avalonia/tree/release/0.10.8/src/Avalonia.Themes.Fluent/Controls -->
     <Application.Styles>
         <FluentTheme Mode="Light" />
@@ -16,7 +15,7 @@
             <Setter Property="ExtendClientAreaTitleBarHeightHint" Value="-99" />
         </Style>
 
-        
+
         <Style Selector="TextBlock">
             <Setter Property="TextWrapping" Value="Wrap" />
         </Style>
@@ -28,7 +27,7 @@
             <Setter Property="FontSize" Value="24" />
             <Setter Property="FontWeight" Value="800" />
         </Style>
-        
+
         <Style Selector="TextBox">
             <Setter Property="CornerRadius" Value="8" />
             <Setter Property="Padding" Value="14" />
@@ -42,7 +41,7 @@
             <Setter Property="CornerRadius" Value="{Binding CornerRadius, RelativeSource={RelativeSource AncestorType=TextBox}}" />
             <Setter Property="BorderThickness" Value="{Binding BorderThickness, RelativeSource={RelativeSource AncestorType=TextBox}}" />
         </Style>
-        
+
         <Style Selector=":is(TemplatedControl).footer">
             <Setter Property="Background" Value="#ECECEC" />
             <Setter Property="Padding" Value="24 20" />
@@ -58,7 +57,7 @@
             <Setter Property="Foreground" Value="#000000" />
             <Setter Property="FontSize" Value="12" />
         </Style>
-        
+
         <Style Selector=":is(Panel).form">
             <Setter Property="Margin" Value="24" />
         </Style>
@@ -74,7 +73,7 @@
             <Setter Property="Foreground" Value="#202225" />
             <Setter Property="Margin" Value="0 0 0 11" />
         </Style>
-        
+
         <Style Selector="Panel.titleBar">
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="ZIndex" Value="100" />
@@ -125,7 +124,7 @@
             <Setter Property="Height" Value="10" />
             <Setter Property="IsHitTestVisible" Value="False" />
         </Style>
-        
+
         <Style Selector="Image.header">
             <Setter Property="Width" Value="108" />
             <Setter Property="Height" Value="24" />
@@ -140,14 +139,14 @@
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
-        
+
         <Style Selector="ContentControl.content">
             <Setter Property="Background" Value="#00000000" />
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
             <Setter Property="VerticalContentAlignment" Value="Stretch" />
             <Setter Property="Padding" Value="34 45" />
         </Style>
-        
+
         <Style Selector="Border.serverEntry">
             <Setter Property="Background" Value="#151516" />
             <Setter Property="CornerRadius" Value="12" />
@@ -178,7 +177,6 @@
         <StyleInclude Source="/Styles/ButtonStyle.axaml" />
         <StyleInclude Source="/Styles/NavigationStyle.axaml" />
         <StyleInclude Source="/Styles/NitroxRadioButtonStyle.axaml" />
-        <StyleInclude Source="/Styles/NitroxMarkdownStyle.axaml" />
         <StyleInclude Source="/Styles/RadioButtonGroupStyle.axaml" />
     </Application.Styles>
 </Application>

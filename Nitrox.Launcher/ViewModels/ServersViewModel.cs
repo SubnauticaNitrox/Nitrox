@@ -15,7 +15,7 @@ namespace Nitrox.Launcher.ViewModels
         {
             CreateServerCommand = ReactiveCommand.CreateFromTask(async () =>
             {
-                CreateServerViewModel? result = await ShowDialogAsync(MainViewModel.CreateServerDialog);
+                CreateServerViewModel result = await ShowDialogAsync(MainViewModel.CreateServerDialog);
                 if (result == null)
                 {
                     return;

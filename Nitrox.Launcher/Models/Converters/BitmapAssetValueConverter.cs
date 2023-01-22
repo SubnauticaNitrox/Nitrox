@@ -14,7 +14,7 @@ public class BitmapAssetValueConverter : BaseConverter<BitmapAssetValueConverter
     private static readonly string assemblyName = Assembly.GetEntryAssembly()?.GetName().Name ?? throw new Exception("Unable to get Assembly name");
     private static readonly Dictionary<string, Bitmap> assetCache = new();
 
-    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
         if (value == null)
         {
@@ -24,7 +24,7 @@ public class BitmapAssetValueConverter : BaseConverter<BitmapAssetValueConverter
         {
             throw new NotSupportedException();
         }
-        if (assetCache.TryGetValue(rawUri, out Bitmap? bitmap))
+        if (assetCache.TryGetValue(rawUri, out Bitmap bitmap))
         {
             return bitmap;
         }
@@ -40,7 +40,7 @@ public class BitmapAssetValueConverter : BaseConverter<BitmapAssetValueConverter
             uri = new Uri($"avares://{assemblyName}{rawUri}");
         }
 
-        IAssetLoader? assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
+        IAssetLoader assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
         if (assets != null)
         {
             bitmap = new Bitmap(assets.Open(uri));
@@ -51,9 +51,8 @@ public class BitmapAssetValueConverter : BaseConverter<BitmapAssetValueConverter
         return null;
     }
 
-    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
         throw new NotSupportedException();
     }
 }
-

@@ -10,7 +10,7 @@ namespace Nitrox.Launcher.Models.Converters;
 /// </summary>
 public class ToStringConverter : BaseConverter<ToStringConverter>, IValueConverter
 {
-    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
         if (value?.GetType().IsEnum ?? false)
         {
@@ -36,9 +36,5 @@ public class ToStringConverter : BaseConverter<ToStringConverter>, IValueConvert
         }
     }
 
-    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) => throw new NotSupportedException();
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotSupportedException();
 }
-
-
-
-

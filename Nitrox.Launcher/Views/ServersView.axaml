@@ -3,19 +3,15 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:viewModels="clr-namespace:Nitrox.Launcher.ViewModels"
              xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
-             xmlns:launcher="clr-namespace:Nitrox.Launcher"
-             xmlns:markdown="clr-namespace:Markdown.Avalonia;assembly=Markdown.Avalonia"
              xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
              x:Class="Nitrox.Launcher.Views.ServersView"
              d:DataContext="{Binding RelativeSource={RelativeSource AncestorType=viewModels:ServersViewModel}}">
-    
+
     <Panel>
         <Panel IsVisible="{Binding Servers.Count}">
             <StackPanel VerticalAlignment="Stretch">
                 <TextBlock Classes="header" Text="Servers" />
-                <markdown:MarkdownScrollViewer Classes="nitrox" Margin="0 0 0 14">
-                    Welcome to your Subnautica multiplayer server. For additional information and to learn more about hosting a server refer to the [Nitrox Wiki](https://nitrox.rux.gg/wiki/article/run-and-host-nitrox-subnautica-server).
-                </markdown:MarkdownScrollViewer>
+                <TextBlock>Welcome to your Subnautica multiplayer server. For additional information and to learn more about hosting a server refer to the [Nitrox Wiki](https://nitrox.rux.gg/wiki/article/run-and-host-nitrox-subnautica-server).</TextBlock>
                 <ItemsControl Items="{Binding Servers}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
@@ -35,11 +31,11 @@
                                             <Panel>
                                                 <StackPanel Orientation="Horizontal" IsVisible="{Binding IsOnline}">
                                                     <Ellipse Margin="0 0 6 0" Fill="#38C149" />
-                                                    <TextBlock IsVisible="{Binding IsOnline}" Text="Online" />    
+                                                    <TextBlock IsVisible="{Binding IsOnline}" Text="Online" />
                                                 </StackPanel>
                                                 <StackPanel Orientation="Horizontal" IsVisible="{Binding !IsOnline}">
                                                     <Ellipse Margin="0 0 6 0" Fill="#FF5E57" />
-                                                    <TextBlock IsVisible="{Binding !IsOnline}" Text="Offline" />    
+                                                    <TextBlock IsVisible="{Binding !IsOnline}" Text="Offline" />
                                                 </StackPanel>
                                             </Panel>
                                             <TextBlock Text="{Binding GameMode, Converter={converters:ToStringConverter}}" />

@@ -81,7 +81,7 @@ public class NitroxAttached : AvaloniaObject
 
     public static void SetSelected(IAvaloniaObject obj, bool value) => obj.SetValue(SelectedProperty, value);
 
-    public static ThemeOption GetTheme(IAvaloniaObject avaloniaObject) => avaloniaObject.GetValue(ThemeProperty);
+    public static ThemeOption GetTheme(IAvaloniaObject avaloniaObject) => (ThemeOption)(avaloniaObject.GetValue(ThemeProperty) ?? ThemeOption.DARK);
 
     /// <summary>
     ///     Sets the theme of the current visual and its children to the given theme.

@@ -13,7 +13,7 @@ public class ErrorViewModel : ModalViewModelBase
     public ReactiveCommand<Unit, Unit> OkCommand { get; } = ReactiveCommand.Create(() => { });
     public ReactiveCommand<Unit, Unit> CopyToClipboardCommand { get; }
     public string ErrorTitle { get; set; }
-    public string? ErrorText { get; set; }
+    public string ErrorText { get; set; }
     public KeyGesture OkHotkey { get; } = new(Key.Return);
     public KeyGesture CopyToClipboardHotkey { get; } = new(Key.C, KeyModifiers.Control);
 

@@ -8,8 +8,8 @@ namespace Nitrox.Launcher.ViewModels;
 
 public class MainWindowViewModel : ViewModelBase, IScreen
 {
-    public Interaction<CreateServerViewModel, CreateServerViewModel?> CreateServerDialog { get; } = new();
-    public Interaction<ErrorViewModel, ErrorViewModel?> ErrorDialog { get; } = new();
+    public Interaction<CreateServerViewModel, CreateServerViewModel> CreateServerDialog { get; } = new();
+    public Interaction<ErrorViewModel, ErrorViewModel> ErrorDialog { get; } = new();
     public RoutingState Router { get; } = new();
     public List<INavigationItem> NavigationHeaderItems { get; }
     public List<INavigationItem> NavigationFooterItems { get; }
@@ -48,13 +48,13 @@ public class MainWindowViewModel : ViewModelBase, IScreen
                 Icon = "/Assets/Images/material-design-icons/close-w-10.png"
             }
         };
-        
+
         NavigationHeaderItems = new List<INavigationItem>
         {
             new NavigationHeader("PLAY"),
             new NavigationItem("Play game")
             {
-                ToolTipText = "Play the game",  
+                ToolTipText = "Play the game",
                 Icon = "/Assets/Images/material-design-icons/play.png",
                 ClickCommand = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(Locator.GetSharedViewModel<PlayViewModel>()))
             },

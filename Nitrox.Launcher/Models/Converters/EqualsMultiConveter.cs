@@ -11,14 +11,14 @@ namespace Nitrox.Launcher.Models.Converters;
 /// </summary>
 public class EqualityConverter : BaseConverter<EqualityConverter>, IMultiValueConverter, IValueConverter
 {
-    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) => throw new NotSupportedException();
-    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture) => Equals(value, parameter);
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotSupportedException();
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => Equals(value, parameter);
 
-    public object Convert(IList<object?> values, Type targetType, object? parameter, CultureInfo culture)
+    public object Convert(IList<object> values, Type targetType, object parameter, CultureInfo culture)
     {
-        foreach (object? val1 in values)
+        foreach (object val1 in values)
         {
-            foreach (object? val2 in values)
+            foreach (object val2 in values)
             {
                 if (ReferenceEquals(val1, val2))
                 {
@@ -33,9 +33,3 @@ public class EqualityConverter : BaseConverter<EqualityConverter>, IMultiValueCo
         return true;
     }
 }
-
-
-
-
-
-

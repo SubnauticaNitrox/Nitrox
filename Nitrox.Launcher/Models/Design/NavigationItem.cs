@@ -5,12 +5,12 @@ namespace Nitrox.Launcher.Models.Design;
 
 internal class NavigationItem : INavigationItem
 {
-    private readonly string? icon;
+    private readonly string icon;
     public ICommand ClickCommand { get; init; }
-    public string? ToolTipText { get; init; }
+    public string ToolTipText { get; init; }
     public string Text { get; }
 
-    public string? Icon
+    public string Icon
     {
         get => icon;
         init => icon = value ?? "";
