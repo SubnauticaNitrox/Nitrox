@@ -10,7 +10,8 @@
     <Panel>
         <StackPanel VerticalAlignment="Stretch">
             <TextBlock Classes="header" Text="Servers" />
-            <TextBlock>Welcome to your Subnautica multiplayer server. For additional information and to learn more about hosting a server refer to the [Nitrox Wiki](https://nitrox.rux.gg/wiki/article/run-and-host-nitrox-subnautica-server).</TextBlock>
+            <!-- TODO: Welcome message should be done via ViewModel binding. But for this to work we need a control that can parse markdown/rich-text as we need hyperlink support. -->
+            <TextBlock>Welcome to your Subnautica multiplayer server. For additional information and to learn more about hosting a server refer to the <TextBlock Foreground="#007BFF" Classes="link" PointerPressed="NitroxWikiTextBlock_OnPointerPressed">Nitrox Wiki</TextBlock>.</TextBlock>
             <ItemsControl Items="{Binding Servers}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>

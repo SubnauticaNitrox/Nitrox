@@ -3,8 +3,8 @@
              xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
              xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters"
              x:Class="Nitrox.Launcher.App">
-<!-- See original style here (to know what to override):
-        https://github.com/AvaloniaUI/Avalonia/tree/release/0.10.8/src/Avalonia.Themes.Fluent/Controls -->
+    <!-- See original style here (to know what to override):
+    https://github.com/AvaloniaUI/Avalonia/tree/master/src/Avalonia.Themes.Fluent/Controls -->
     <Application.Styles>
         <FluentTheme Mode="Light" />
         <Style Selector="Window">
@@ -15,10 +15,15 @@
             <Setter Property="ExtendClientAreaTitleBarHeightHint" Value="-99" />
         </Style>
 
-
         <Style Selector="TextBlock">
             <Setter Property="TextWrapping" Value="Wrap" />
         </Style>
+
+        <Style Selector="TextBlock TextBlock.link">
+            <!-- TODO: Wait for Avalonia to fix issue where foreground style is not used <Setter Property="Foreground" Value="#007BFF" /> -->
+            <Setter Property="Cursor" Value="Hand" />
+        </Style>
+
         <Style Selector="TextBlock.header">
             <Setter Property="FontSize" Value="32" />
             <Setter Property="FontWeight" Value="600" />
