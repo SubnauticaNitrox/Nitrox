@@ -140,7 +140,7 @@
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
 
-        <Style Selector="ContentControl.content">
+        <Style Selector=":is(ContentControl).content">
             <Setter Property="Background" Value="#00000000" />
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
             <Setter Property="VerticalContentAlignment" Value="Stretch" />
