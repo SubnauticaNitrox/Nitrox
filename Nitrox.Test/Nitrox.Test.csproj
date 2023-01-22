@@ -17,8 +17,9 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\NitroxClient\NitroxClient.csproj" />
-        <ProjectReference Include="..\NitroxPatcher\NitroxPatcher.csproj" />
+        <!-- NitroxClient and NitroxPatcher should be loaded as netstandard2.0 for testing only (Subnautica does not fully support netstandard2.0 APIs) -->
+        <ProjectReference Include="..\NitroxClient\NitroxClient.csproj" SetTargetFramework="TargetFramework=netstandard2.0" />
+        <ProjectReference Include="..\NitroxPatcher\NitroxPatcher.csproj" SetTargetFramework="TargetFramework=netstandard2.0" />
         <ProjectReference Include="..\NitroxServer-Subnautica\NitroxServer-Subnautica.csproj" />
         <ProjectReference Include="..\NitroxServer\NitroxServer.csproj" />
     </ItemGroup>
