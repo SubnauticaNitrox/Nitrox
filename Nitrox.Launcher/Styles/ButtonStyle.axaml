@@ -1,6 +1,6 @@
 <Styles xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design">
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design">
     <Design.PreviewWith>
         <Panel Background="Cornflowerblue">
             <StackPanel Margin="10" Spacing="10">
@@ -16,7 +16,7 @@
             </StackPanel>
         </Panel>
     </Design.PreviewWith>
-    
+
     <Style Selector="Button.nitrox">
         <Setter Property="Padding" Value="16 8.73" />
         <Setter Property="CornerRadius" Value="4" />
@@ -24,8 +24,11 @@
             <Setter.Value>
                 <Template>
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                        <TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Text="{Binding (design:NitroxAttached.Text), RelativeSource={RelativeSource AncestorType=Button}}" HorizontalAlignment="Center" />
-                        <TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" FontSize="10" Opacity="0.5" Text="{Binding (design:NitroxAttached.Subtext), RelativeSource={RelativeSource AncestorType=Button}}" HorizontalAlignment="Center" />
+                        <TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                                   Text="{Binding (design:NitroxAttached.Text), RelativeSource={RelativeSource AncestorType=Button}}" HorizontalAlignment="Center" />
+                        <TextBlock IsVisible="{Binding (design:NitroxAttached.Subtext), Converter={x:Static StringConverters.IsNotNullOrEmpty}, RelativeSource={RelativeSource AncestorType=Button}}"
+                                   Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" FontSize="10" Opacity="0.5"
+                                   Text="{Binding (design:NitroxAttached.Subtext), RelativeSource={RelativeSource AncestorType=Button}}" HorizontalAlignment="Center" />
                     </StackPanel>
                 </Template>
             </Setter.Value>
@@ -63,7 +66,7 @@
     <Style Selector="Button.abort">
         <Setter Property="Background" Value="#FF005C" />
     </Style>
-    
+
     <Style Selector="Button.big">
         <Setter Property="CornerRadius" Value="8" />
         <Setter Property="Padding" Value="10" />
