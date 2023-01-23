@@ -36,10 +36,10 @@ namespace NitroxModel.Packets
                                     }
                                 });
             }
-            
+
             static IEnumerable<Type> FindUnionBaseTypes() => FindTypesInModelAssemblies()
                 .Where(t => t.IsAbstract && !t.IsSealed && (!t.BaseType?.IsAbstract ?? true) && !t.ContainsGenericParameters);
-            
+
             lock (lockObject)
             {
                 foreach (Type type in FindUnionBaseTypes())
@@ -59,7 +59,7 @@ namespace NitroxModel.Packets
 
                                                             return levels;
                                                         })
-                                                        .ThenBy(t => t.FullName)
+                                                        .ThenBy(t => t.FullName, StringComparer.Ordinal)
                                                         .ToArray());
                 }
 

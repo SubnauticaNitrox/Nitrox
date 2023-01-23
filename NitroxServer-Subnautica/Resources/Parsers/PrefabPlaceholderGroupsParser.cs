@@ -8,6 +8,7 @@ using AddressablesTools;
 using AddressablesTools.Catalog;
 using AssetsTools.NET;
 using AssetsTools.NET.Extra;
+using NitroxModel.Helper;
 using NitroxServer_Subnautica.Resources.Parsers.Helper;
 using NitroxServer.Resources;
 
@@ -31,7 +32,7 @@ public class PrefabPlaceholderGroupsParser : IDisposable
 
         am = new AssetsBundleManager(aaRootPath);
         // ReSharper disable once StringLiteralTypo
-        am.LoadClassPackage("classdata.tpk");
+        am.LoadClassPackage(Path.Combine(NitroxUser.LauncherPath ?? "", "classdata.tpk"));
         am.LoadClassDatabaseFromPackage("2019.4.36f1");
         am.SetMonoTempGenerator(monoGen = new(managedPath));
     }

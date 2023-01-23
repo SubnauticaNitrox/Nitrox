@@ -15,7 +15,7 @@ namespace NitroxLauncher.Models
         /// </summary>
         protected void OnRequestNavigate(object sender, RequestNavigateEventArgs e)
         {
-            Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
+            Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri) { UseShellExecute = true, Verb = "open" });
             e.Handled = true;
         }
 

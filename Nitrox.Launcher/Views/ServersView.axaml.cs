@@ -19,6 +19,6 @@ public partial class ServersView : RoutableViewBase<ServersViewModel>
 
     private void NitroxWikiTextBlock_OnPointerPressed(object sender, PointerPressedEventArgs e)
     {
-        Process.Start(new ProcessStartInfo("https://nitrox.rux.gg/wiki/article/run-and-host-nitrox-subnautica-server") { UseShellExecute = true })?.Dispose();
+        Process.Start(new ProcessStartInfo("https://nitrox.rux.gg/wiki/article/run-and-host-nitrox-subnautica-server") { UseShellExecute = true, Verb = "open" })?.Dispose();
     }
 }

@@ -77,7 +77,7 @@
     <!-- Tell developer that it needs to build the Nitrox.BuildTool to fetch the game assemblies.
     "dotnet restore" should still be allowed to run to fetch NuGet packages -->
     <Target Name="PrepareForModding" AfterTargets="Restore;BeforeResolveReferences" Condition="'$(UnityModLibrary)' == 'true' and !Exists('$(BuildGenDir)publicized_assemblies')">
-        <Error Text="Run the Nitrox.BuildTool project to fetch the assemblies, before building other Nitrox projects." />
+        <Error Text="Run the Nitrox.BuildTool project (to fetch the assemblies) before building other Nitrox projects." />
     </Target>
     <!-- Include generated build properties. -->
     <Import Project="$(BuildGenDir)game.props" Condition="Exists('$(BuildGenDir)game.props')"/>
