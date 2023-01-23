@@ -66,7 +66,7 @@ internal sealed class Locator : IViewLocator
             ServersViewModel vm when vm.Servers.Any() => new ServersView(),
             ServersViewModel vm when !vm.Servers.Any() => new EmptyServersView(),
             ManageServerViewModel { Server: { } } => new ManageServerView(),
-            _ => new PlayView()
+            _ => throw new ArgumentOutOfRangeException(nameof(viewModel), viewModel, null)
         };
     }
 
