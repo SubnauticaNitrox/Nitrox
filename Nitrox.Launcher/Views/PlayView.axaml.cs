@@ -1,5 +1,4 @@
 ﻿using System;
-using Avalonia.Markup.Xaml;
 using Nitrox.Launcher.ViewModels;
 using Nitrox.Launcher.Views.Abstract;
 
@@ -9,7 +8,7 @@ public partial class PlayView : RoutableViewBase<PlayViewModel>
 {
     public PlayView()
     {
-        AvaloniaXamlLoader.Load(this);
+        InitializeComponent();
     }
 
     protected override void RegisterDispose(Action<IDisposable> disposables)

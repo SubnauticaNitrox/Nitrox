@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using Avalonia.Input;
-using Avalonia.Markup.Xaml;
 using Nitrox.Launcher.ViewModels;
 using Nitrox.Launcher.Views.Abstract;
 
@@ -11,7 +10,7 @@ public partial class ServersView : RoutableViewBase<ServersViewModel>
 {
     public ServersView()
     {
-        AvaloniaXamlLoader.Load(this);
+        InitializeComponent();
     }
 
     protected override void RegisterDispose(Action<IDisposable> disposables)
