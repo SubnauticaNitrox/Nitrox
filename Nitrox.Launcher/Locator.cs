@@ -52,6 +52,9 @@ internal sealed class Locator : IViewLocator
         return viewModel;
     }
 
+    /// <summary>
+    ///     Entry point for the <see cref="MainRouter" /> to navigate the views based on the given <see cref="RoutableViewModelBase" />.
+    /// </summary>
     public IViewFor ResolveView<T>(T viewModel, string contract = null)
     {
         AttachListenersForViewChange(viewModel);
@@ -69,7 +72,7 @@ internal sealed class Locator : IViewLocator
     ///     Any conditions used in mapping method <see cref="ResolveView{T}" /> should be listened to, so the view updates when the condition changes.
     /// </summary>
     /// <remarks>
-    ///     TODO: Use source generators to implement this method based on member access operations after ViewModel types in <see cref="ResolveView{T}"/>.
+    ///     TODO: Use source generators to implement this method based on member access operations after ViewModel types in <see cref="ResolveView{T}" />.
     /// </remarks>
     private void AttachListenersForViewChange<T>(T viewModel)
     {
