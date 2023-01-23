@@ -14,7 +14,6 @@ namespace Nitrox.Launcher;
 internal sealed class Locator : IViewLocator
 {
     private static readonly ConcurrentDictionary<Type, RoutableViewModelBase> viewModelCache = new();
-    private static readonly ConcurrentDictionary<Type, byte> attachedListeners = new();
 
     private static MainWindow mainWindow;
 
@@ -79,13 +78,6 @@ internal sealed class Locator : IViewLocator
     /// </remarks>
     private static void AttachListenersForViewChange<T>(T viewModel)
     {
-        Type vmType = viewModel?.GetType() ?? throw new Exception($"Unable to get type of {nameof(viewModel)}");
-        if (attachedListeners.ContainsKey(vmType))
-        {
-            return;
-        }
-        attachedListeners.TryAdd(vmType, 0);
-
         switch (viewModel)
         {
             case ServersViewModel vm:
