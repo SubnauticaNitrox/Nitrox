@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using System.Windows.Input;
 using ReactiveUI;
 
@@ -26,11 +27,25 @@ public class ServerEntry : ReactiveObject
     public GameMode GameMode { get; init; }
     public int Players { get; init; }
     public int MaxPlayers { get; init; } = 100;
+    public ICommand StartCommand { get; init; }
     public ICommand StopCommand { get; init; }
     public ICommand ManageCommand { get; init; }
 
     public ServerEntry()
     {
-        StopCommand = ReactiveCommand.Create(() => IsOnline = false);
+        StartCommand = ReactiveCommand.CreateFromTask(StartServer);
+        StopCommand = ReactiveCommand.CreateFromTask(StopServer);
+    }
+
+    private Task StartServer()
+    {
+        IsOnline = true;
+        return Task.CompletedTask;
+    }
+
+    private Task StopServer()
+    {
+        IsOnline = false;
+        return Task.CompletedTask;
     }
 }

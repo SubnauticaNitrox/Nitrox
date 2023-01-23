@@ -49,6 +49,7 @@
                                 </StackPanel>
                                 <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
                                     <Button Classes="nitrox abort" IsVisible="{Binding IsOnline}" design:NitroxAttached.Text="Stop" Command="{Binding StopCommand}" />
+                                    <Button Classes="nitrox" IsVisible="{Binding !IsOnline}" design:NitroxAttached.Text="Start" Command="{Binding StartCommand}" />
                                     <Button Classes="nitrox primary" design:NitroxAttached.Text="Manage" Command="{Binding ManageCommand}" CommandParameter="{Binding}" />
                                 </StackPanel>
                             </DockPanel>
