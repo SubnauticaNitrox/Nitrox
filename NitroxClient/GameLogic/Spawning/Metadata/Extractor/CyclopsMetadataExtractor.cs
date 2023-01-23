@@ -14,7 +14,8 @@ public class CyclopsMetadataExtractor : GenericEntityMetadataExtractor<CyclopsGa
         CyclopsSilentRunningAbilityButton silentRunning = gameObject.RequireComponentInChildren<CyclopsSilentRunningAbilityButton>(true);
 
         CyclopsEngineChangeState engineState = gameObject.RequireComponentInChildren<CyclopsEngineChangeState>(true);
-        bool engineOn = engineState.motorMode.engineOn || engineState.startEngine;
+        bool engineShuttingDown = (engineState.motorMode.engineOn && engineState.invalidButton);
+        bool engineOn = (engineState.startEngine || engineState.motorMode.engineOn) && !engineShuttingDown;
 
         CyclopsShieldButton shield = gameObject.GetComponentInChildren<CyclopsShieldButton>(true);
         bool shieldOn = (shield) ? shield.active : false;
@@ -22,7 +23,7 @@ public class CyclopsMetadataExtractor : GenericEntityMetadataExtractor<CyclopsGa
         CyclopsSonarButton sonarButton = gameObject.GetComponentInChildren<CyclopsSonarButton>(true);
         bool sonarOn = (sonarButton) ? sonarButton.active : false;
 
-        CyclopsMotorMode.CyclopsMotorModes motorMode = CyclopsMotorMode.CyclopsMotorModes.Standard;
+        CyclopsMotorMode.CyclopsMotorModes motorMode = engineState.motorMode.cyclopsMotorMode;
 
         LiveMixin liveMixin = gameObject.RequireComponentInChildren<LiveMixin>();
         float health = liveMixin.health;

@@ -5,7 +5,6 @@ using System.Linq;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
-using static NitroxModel.Serialization.ServerList;
 
 namespace NitroxServer.GameLogic.Entities
 {
@@ -133,5 +132,23 @@ namespace NitroxServer.GameLogic.Entities
             }
         }
 
+        public void ReparentEntity(NitroxId entityId, NitroxId newParentId)
+        {
+            Optional<Entity> opEntity = GetEntityById(entityId);
+
+            if (!opEntity.HasValue)
+            {
+                Log.Error($"Could not find entity to reparent: {entityId}");
+                return;
+            }
+
+            Entity entity = opEntity.Value;
+
+            RemoveFromParent(entity);
+
+            entity.ParentId = newParentId;
+
+            AddToParent(entity);
+        }
     }
 }

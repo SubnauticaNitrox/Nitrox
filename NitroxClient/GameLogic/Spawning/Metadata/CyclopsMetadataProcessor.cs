@@ -167,9 +167,9 @@ public class CyclopsMetadataProcessor : GenericEntityMetadataProcessor<CyclopsMe
     {
         CyclopsSonarButton sonarButton = cyclops.GetComponentInChildren<CyclopsSonarButton>(true);
 
-        if (sonarButton && sonarButton.image)
+        if (sonarButton)
         {
-            sonarButton.sonarActive = isOn;            
+            sonarButton.sonarActive = sonarButton._sonarActive;            
         }
     }
 

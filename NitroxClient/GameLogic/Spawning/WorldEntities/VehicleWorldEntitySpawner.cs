@@ -13,6 +13,11 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities;
 
 public class VehicleWorldEntitySpawner : IWorldEntitySpawner
 {
+    // The constructor has mixed results when the remote player is a long distance away.  UWE even has a built in distance tracker to ensure
+    // that they are within allowed range.  However, this range is a bit restrictive. We will allow constructor spawning up to a specified 
+    // distance - anything more will simply use world spawning (no need to play the animation anyways).
+    private const float ALLOWED_CONSTRUCTOR_DISTANCE = 100.0f;
+
     public IEnumerator SpawnAsync(WorldEntity entity, Optional<GameObject> parent, EntityCell cellRoot, TaskResult<Optional<GameObject>> result)
     { 
         VehicleWorldEntity vehicleEntity = (VehicleWorldEntity)entity;
@@ -23,8 +28,8 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
         if (withinConstructorSpawnWindow && spawnerObj.HasValue)
         {
             Constructor constructor = spawnerObj.Value.GetComponent<Constructor>();
-            PlayerDistanceTracker distanceTracker = spawnerObj.Value.GetComponent<PlayerDistanceTracker>();
-            bool withinDistance = (distanceTracker) ? distanceTracker._playerNearby : false;
+            float distance = (constructor.transform.position - Player.main.transform.position).magnitude;
+            bool withinDistance = distance <= ALLOWED_CONSTRUCTOR_DISTANCE;
 
             if (constructor && withinDistance)
             {
