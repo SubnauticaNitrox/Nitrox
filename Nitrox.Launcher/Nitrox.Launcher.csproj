@@ -24,11 +24,4 @@
         <PackageReference Include="ReactiveUI.Validation" Version="3.0.22" />
         <PackageReference Include="XamlNameReferenceGenerator" Version="1.5.1" />
     </ItemGroup>
-
-    <ItemGroup>
-      <Compile Update="MainWindow.axaml.cs">
-        <DependentUpon>MainWindow.axaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
-    </ItemGroup>
 </Project>
