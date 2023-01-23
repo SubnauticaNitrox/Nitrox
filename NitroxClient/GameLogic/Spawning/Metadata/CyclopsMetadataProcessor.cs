@@ -21,8 +21,6 @@ public class CyclopsMetadataProcessor : GenericEntityMetadataProcessor<CyclopsMe
     {
         using (packetSender.Suppress<EntityMetadataUpdate>())
         {
-            SetInternalLighting(cyclops, metadata.InternalLightsOn);
-            SetFloodLighting(cyclops, metadata.FloodLightsOn);
             SetEngineMode(cyclops, (CyclopsMotorMode.CyclopsMotorModes)metadata.EngineMode);
             ChangeSilentRunning(cyclops, metadata.SilentRunningOn);
             ChangeShieldMode(cyclops, metadata.ShieldOn);
@@ -30,44 +28,6 @@ public class CyclopsMetadataProcessor : GenericEntityMetadataProcessor<CyclopsMe
             SetEngineState(cyclops, metadata.EngineOn);
             SetHealth(cyclops, metadata.Health);
         }
-    }
-
-    private void SetInternalLighting(GameObject cyclops, bool isOn)
-    {
-        CyclopsLightingPanel lighting = cyclops.RequireComponentInChildren<CyclopsLightingPanel>();
-
-        if (lighting.lightingOn == isOn)
-        {
-            return;
-        }
-
-        using (packetSender.Suppress<EntityMetadataUpdate>())
-        {
-            lighting.lightingOn = !lighting.lightingOn;
-            lighting.cyclopsRoot.ForceLightingState(lighting.lightingOn);
-            FMODAsset asset = (!lighting.lightingOn) ? lighting.vn_lightsOff : lighting.vn_lightsOn;
-            FMODUWE.PlayOneShot(asset, lighting.transform.position, 1f);
-            lighting.UpdateLightingButtons();
-        }        
-    }
-
-    private void SetFloodLighting(GameObject cyclops, bool isOn)
-    {
-        CyclopsLightingPanel lighting = cyclops.RequireComponentInChildren<CyclopsLightingPanel>();
-
-        if (lighting.floodlightsOn == isOn)
-        {
-            return;
-        }
-
-        using (packetSender.Suppress<EntityMetadataUpdate>())
-        {
-            lighting.floodlightsOn = !lighting.floodlightsOn;
-            lighting.SetExternalLighting(lighting.floodlightsOn);
-            FMODAsset asset = !lighting.floodlightsOn ? lighting.vn_floodlightsOff : lighting.vn_floodlightsOn;
-            FMODUWE.PlayOneShot(asset, lighting.transform.position, 1f);
-            lighting.UpdateLightingButtons();
-        }        
     }
 
     private void SetEngineState(GameObject cyclops, bool isOn)

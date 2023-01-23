@@ -10,7 +10,6 @@ public class CyclopsMetadataExtractor : GenericEntityMetadataExtractor<CyclopsGa
     public override CyclopsMetadata Extract(CyclopsGameObject cyclops)
     {
         GameObject gameObject = cyclops.GameObject;
-        CyclopsLightingPanel lighting = gameObject.RequireComponentInChildren<CyclopsLightingPanel>(true);
         CyclopsSilentRunningAbilityButton silentRunning = gameObject.RequireComponentInChildren<CyclopsSilentRunningAbilityButton>(true);
 
         CyclopsEngineChangeState engineState = gameObject.RequireComponentInChildren<CyclopsEngineChangeState>(true);
@@ -37,7 +36,7 @@ public class CyclopsMetadataExtractor : GenericEntityMetadataExtractor<CyclopsGa
             }
         }
 
-        return new(lighting.floodlightsOn, lighting.lightingOn, silentRunning.active, shieldOn, sonarOn, engineOn, (int)motorMode, health);
+        return new(silentRunning.active, shieldOn, sonarOn, engineOn, (int)motorMode, health);
     }
 
     public struct CyclopsGameObject

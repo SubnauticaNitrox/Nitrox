@@ -27,7 +27,8 @@ public class VehicleChildEntityHelper
         typeof(EnergyMixin),
         typeof(SubNameInput),
         typeof(WeldablePoint),
-        typeof(CyclopsVehicleStorageTerminalManager)
+        typeof(CyclopsVehicleStorageTerminalManager),
+        typeof(CyclopsLightingPanel)
     };
 
     public static void PopulateChildren(NitroxId vehicleId, string vehiclePath, List<Entity> toPopulate, GameObject current)

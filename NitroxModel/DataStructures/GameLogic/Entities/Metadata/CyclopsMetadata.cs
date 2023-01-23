@@ -9,27 +9,21 @@ namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 public class CyclopsMetadata : EntityMetadata
 {
     [DataMember(Order = 1)]
-    public bool FloodLightsOn { get; set; }
-
-    [DataMember(Order = 2)]
-    public bool InternalLightsOn { get; set; }
-
-    [DataMember(Order = 3)]
     public bool SilentRunningOn { get; set; }
 
-    [DataMember(Order = 4)]
+    [DataMember(Order = 2)]
     public bool ShieldOn { get; set; }
 
-    [DataMember(Order = 5)]
+    [DataMember(Order = 3)]
     public bool SonarOn { get; set; }
 
-    [DataMember(Order = 6)]
+    [DataMember(Order = 4)]
     public bool EngineOn { get; set; }
 
-    [DataMember(Order = 7)]
+    [DataMember(Order = 5)]
     public int EngineMode { get; set; }
 
-    [DataMember(Order = 8)]
+    [DataMember(Order = 6)]
     public float Health { get; set; }
 
     [IgnoreConstructor]
@@ -38,10 +32,8 @@ public class CyclopsMetadata : EntityMetadata
         // Constructor for serialization. Has to be "protected" for json serialization.
     }
 
-    public CyclopsMetadata(bool floodLightsOn, bool internalLightsOn, bool silentRunningOn, bool shieldOn, bool sonarOn, bool engineOn, int engineMode, float health)
+    public CyclopsMetadata(bool silentRunningOn, bool shieldOn, bool sonarOn, bool engineOn, int engineMode, float health)
     {
-        FloodLightsOn = floodLightsOn;
-        InternalLightsOn = internalLightsOn;
         SilentRunningOn = silentRunningOn;
         ShieldOn = shieldOn;
         SonarOn = sonarOn;
@@ -52,6 +44,6 @@ public class CyclopsMetadata : EntityMetadata
 
     public override string ToString()
     {
-        return $"[CyclopsMetadata FloodLightsOn: {FloodLightsOn}, InternalLightsOn: {InternalLightsOn}, SilentRunningOn: {SilentRunningOn}, ShieldOn: {ShieldOn}, SonarOn: {SonarOn}, EngineOn: {EngineOn}, EngineMode: {EngineMode}, Health: {Health}]";
+        return $"[CyclopsMetadata SilentRunningOn: {SilentRunningOn}, ShieldOn: {ShieldOn}, SonarOn: {SonarOn}, EngineOn: {EngineOn}, EngineMode: {EngineMode}, Health: {Health}]";
     }
 }

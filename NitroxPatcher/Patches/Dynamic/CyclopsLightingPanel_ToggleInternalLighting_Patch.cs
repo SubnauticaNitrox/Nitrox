@@ -21,8 +21,8 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             if (__state != __instance.lightingOn)
             {
-                NitroxId id = NitroxEntity.GetId(__instance.cyclopsRoot.gameObject);
-                Resolve<Cyclops>().BroadcastMetadataChange(id);
+                NitroxId id = NitroxEntity.GetId(__instance.gameObject);
+                Resolve<Entities>().EntityMetadataChanged(__instance, id);
             }
         }
 
