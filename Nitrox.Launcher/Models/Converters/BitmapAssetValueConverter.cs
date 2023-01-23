@@ -9,7 +9,7 @@ using Avalonia.Platform;
 
 namespace Nitrox.Launcher.Models.Converters;
 
-public class BitmapAssetValueConverter : BaseConverter<BitmapAssetValueConverter>, IValueConverter
+public class BitmapAssetValueConverter : Converter<BitmapAssetValueConverter>, IValueConverter
 {
     private static readonly string assemblyName = Assembly.GetEntryAssembly()?.GetName().Name ?? throw new Exception("Unable to get Assembly name");
     private static readonly Dictionary<string, Bitmap> assetCache = new();
