@@ -39,31 +39,34 @@ internal sealed class Locator : IViewLocator
 
     public static RoutingState MainRouter => mainRouter ??= MainWindow.ViewModel?.Router ?? throw new Exception($"Tried to get {nameof(MainRouter)} before {nameof(Launcher.MainWindow)} was initialized");
 
-    public static RoutableViewModelBase GetSharedViewModel<TModel>() where TModel : RoutableViewModelBase
+    public static TViewModel GetSharedViewModel<TViewModel>() where TViewModel : RoutableViewModelBase
     {
-        Type key = typeof(TModel);
+        Type key = typeof(TViewModel);
         if (viewModelCache.TryGetValue(key, out RoutableViewModelBase vm))
         {
-            return vm;
+            return (TViewModel)vm;
         }
 
-        TModel viewModel = (TModel)key.GetConstructor(BindingFlags.Public | BindingFlags.Instance | BindingFlags.CreateInstance, new[] { typeof(IScreen) })!.Invoke(new[] { MainWindow.ViewModel });
-        viewModelCache.TryAdd(typeof(TModel), viewModel);
+        TViewModel viewModel = (TViewModel)key.GetConstructor(BindingFlags.Public | BindingFlags.Instance | BindingFlags.CreateInstance, new[] { typeof(IScreen) })!.Invoke(new[] { MainWindow.ViewModel });
+        viewModelCache.TryAdd(typeof(TViewModel), viewModel);
+        AttachListenersForViewChange(viewModel);
         return viewModel;
     }
 
     /// <summary>
     ///     Entry point for the <see cref="MainRouter" /> to navigate the views based on the given <see cref="RoutableViewModelBase" />.
     /// </summary>
+    /// <remarks>
+    ///     If you change a condition in this switch, make sure to listen for it in <see cref="AttachListenersForViewChange{T}" />.
+    /// </remarks>
     public IViewFor ResolveView<T>(T viewModel, string contract = null)
     {
-        AttachListenersForViewChange(viewModel);
-        // If you change a condition in this switch, make sure to listen for it in the method above.
         return viewModel switch
         {
             PlayViewModel => new PlayView(),
             ServersViewModel vm when vm.Servers.Any() => new ServersView(),
             ServersViewModel vm when !vm.Servers.Any() => new EmptyServersView(),
+            ManageServerViewModel { Server: { } } => new ManageServerView(),
             _ => new PlayView()
         };
     }
@@ -74,7 +77,7 @@ internal sealed class Locator : IViewLocator
     /// <remarks>
     ///     TODO: Use source generators to implement this method based on member access operations after ViewModel types in <see cref="ResolveView{T}" />.
     /// </remarks>
-    private void AttachListenersForViewChange<T>(T viewModel)
+    private static void AttachListenersForViewChange<T>(T viewModel)
     {
         Type vmType = viewModel?.GetType() ?? throw new Exception($"Unable to get type of {nameof(viewModel)}");
         if (attachedListeners.ContainsKey(vmType))
@@ -87,6 +90,9 @@ internal sealed class Locator : IViewLocator
         {
             case ServersViewModel vm:
                 vm.Servers.PropertyChanged += (_, _) => MainRouter.Navigate.Execute(vm);
+                break;
+            case ManageServerViewModel vm:
+                vm.PropertyChanged += (_, _) => MainRouter.Navigate.Execute(vm);
                 break;
         }
     }
