@@ -12,11 +12,7 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class BaseAddBulkheadGhost_UpdatePlacement_Patch : NitroxPatch, IDynamicPatch
     {
-        /// <summary>
-        ///     Unable to use <see cref="Reflect.Method" /> here because expression trees do not support out parameters (yet).
-        /// </summary>
-        public static readonly MethodInfo TARGET_METHOD = typeof(BaseAddBulkheadGhost).GetMethod(nameof(BaseAddBulkheadGhost.UpdatePlacement), BindingFlags.Public | BindingFlags.Instance, null,
-                                                                                                 new[] { typeof(Transform), typeof(float), typeof(bool).MakeByRefType(), typeof(bool).MakeByRefType(), typeof(ConstructableBase) }, null);
+        public static readonly MethodInfo TARGET_METHOD = Reflect.Method((BaseAddBulkheadGhost t) => t.UpdatePlacement(default(Transform), default(float), out Reflect.Ref<bool>.Field, out Reflect.Ref<bool>.Field, default(ConstructableBase)));
 
         public static readonly OpCode INJECTION_OPCODE = OpCodes.Ldsfld;
         public static readonly object INJECTION_OPERAND = Reflect.Field(() => Player.main);
@@ -35,15 +31,15 @@ namespace NitroxPatcher.Patches.Dynamic
 
             /**
              * When placing some modules in multiplayer it throws an exception because it tries to validate
-             * that the current player is in the subroot.  We want to skip over this code if we are placing 
+             * that the current player is in the subroot.  We want to skip over this code if we are placing
              * a multiplayer piece:
-             * 
+             *
              * if (main == null || main.currentSub == null || !main.currentSub.isBase)
-             * 
+             *
              * Injected code:
-             * 
+             *
              * if (!MultiplayerBuilder.isPlacing && (main == null || main.currentSub == null || !main.currentSub.isBase))
-             *    
+             *
              */
             for (int i = 0; i < instructionList.Count; i++)
             {
