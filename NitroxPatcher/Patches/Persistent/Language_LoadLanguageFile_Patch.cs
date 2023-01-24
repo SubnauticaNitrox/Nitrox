@@ -50,10 +50,10 @@ public class Language_LoadLanguageFile_Patch : NitroxPatch, IPersistentPatch
 
             foreach (string key in json.Keys)
             {
-                JsonData jsonKey = json[key];
-                if (jsonKey.IsString)
+                JsonData entry = json[key];
+                if (entry.IsString)
                 {
-                    strings[key] = (string)jsonKey;
+                    strings[key] = (string)entry;
                 }
             }
 
