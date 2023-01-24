@@ -332,13 +332,18 @@ public class WorldPersistenceTest
                 Assert.AreEqual(metadata.StartTime, metadataAfter.StartTime);
                 break;
             case CyclopsMetadata metadata when entityAfter.Metadata is CyclopsMetadata metadataAfter:
-                Assert.AreEqual(metadata.InternalLightsOn, metadataAfter.InternalLightsOn);
                 Assert.AreEqual(metadata.SilentRunningOn, metadataAfter.SilentRunningOn);
                 Assert.AreEqual(metadata.EngineOn, metadataAfter.EngineOn);
-                Assert.AreEqual(metadata.SonarOn, metadataAfter.SonarOn);
-                Assert.AreEqual(metadata.FloodLightsOn, metadataAfter.FloodLightsOn);
                 Assert.AreEqual(metadata.EngineMode, metadataAfter.EngineMode);
                 Assert.AreEqual(metadata.Health, metadataAfter.Health);
+                break;
+            case CyclopsLightingMetadata metadata when entityAfter.Metadata is CyclopsLightingMetadata metadataAfter:
+                Assert.AreEqual(metadata.InternalLightsOn, metadataAfter.InternalLightsOn);
+                Assert.AreEqual(metadata.FloodLightsOn, metadataAfter.FloodLightsOn);
+                break;
+            case FireExtinguisherHolderMetadata metadata when entityAfter.Metadata is FireExtinguisherHolderMetadata metadataAfter:
+                Assert.AreEqual(metadata.Fuel, metadataAfter.Fuel);
+                Assert.AreEqual(metadata.HasExtinguisher, metadataAfter.HasExtinguisher);
                 break;
             case null when entityAfter.Metadata is null:
                 break;
@@ -451,8 +456,9 @@ public class WorldPersistenceTest
                         {
                             new InventoryItemEntity(new NitroxId(), "classId", new NitroxTechType("bluepalmseed"), new PlantableMetadata(0.5f), new NitroxId(), new List<Entity>())
                         }),
-                        new VehicleWorldEntity(new NitroxId(), 0, null, "classId", true, new NitroxId(), new NitroxTechType("seamoth"), new CyclopsMetadata(true, true, true, true, true, true, 0, 100f)),
-                        new PathBasedChildEntity("path", new NitroxId(), NitroxTechType.None, null, new NitroxId(), new List<Entity>())
+                        new VehicleWorldEntity(new NitroxId(), 0, null, "classId", true, new NitroxId(), new NitroxTechType("seamoth"), new CyclopsMetadata(true, true, true, true, 0, 100f)),
+                        new PathBasedChildEntity("cyclops_lighting", new NitroxId(), NitroxTechType.None, new CyclopsLightingMetadata(true, true), new NitroxId(), new List<Entity>()),
+                        new PathBasedChildEntity("fire_extinguisher_holder", new NitroxId(), NitroxTechType.None, new FireExtinguisherHolderMetadata(true, 1), new NitroxId(), new List<Entity>())
                     }
                 },
             PlayerData = new PlayerData()

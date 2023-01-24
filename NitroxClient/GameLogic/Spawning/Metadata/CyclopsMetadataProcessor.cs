@@ -120,7 +120,7 @@ public class CyclopsMetadataProcessor : GenericEntityMetadataProcessor<CyclopsMe
         else
         {
             shield.StopShield();
-        } 
+        }
     }
 
     private void ChangeSonarMode(GameObject cyclops, bool isOn)
@@ -129,7 +129,7 @@ public class CyclopsMetadataProcessor : GenericEntityMetadataProcessor<CyclopsMe
 
         if (sonarButton)
         {
-            sonarButton.sonarActive = sonarButton._sonarActive;            
+            sonarButton.sonarActive = isOn;            
         }
     }
 

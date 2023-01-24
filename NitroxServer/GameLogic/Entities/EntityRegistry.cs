@@ -95,6 +95,8 @@ namespace NitroxServer.GameLogic.Entities
         {
             if (entitiesById.TryRemove(id, out Entity entity))
             {
+                RemoveFromParent(entity);
+
                 foreach (Entity child in entity.ChildEntities)
                 {
                     RemoveEntity(child.Id);

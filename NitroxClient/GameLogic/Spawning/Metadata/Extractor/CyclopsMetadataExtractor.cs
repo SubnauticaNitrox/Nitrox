@@ -20,21 +20,12 @@ public class CyclopsMetadataExtractor : GenericEntityMetadataExtractor<CyclopsGa
         bool shieldOn = (shield) ? shield.active : false;
 
         CyclopsSonarButton sonarButton = gameObject.GetComponentInChildren<CyclopsSonarButton>(true);
-        bool sonarOn = (sonarButton) ? sonarButton.active : false;
+        bool sonarOn = (sonarButton) ? sonarButton._sonarActive : false;
 
         CyclopsMotorMode.CyclopsMotorModes motorMode = engineState.motorMode.cyclopsMotorMode;
 
         LiveMixin liveMixin = gameObject.RequireComponentInChildren<LiveMixin>();
         float health = liveMixin.health;
-
-        foreach (CyclopsMotorModeButton button in gameObject.GetComponentsInChildren<CyclopsMotorModeButton>(true))
-        {
-            if (button.subRoot && (button.image == button.activeSprite))
-            {
-                motorMode = button.motorModeIndex;
-                break;
-            }
-        }
 
         return new(silentRunning.active, shieldOn, sonarOn, engineOn, (int)motorMode, health);
     }

@@ -22,8 +22,7 @@ namespace NitroxServer.GameLogic.Entities
             Dictionary<NitroxId, Entity> entitiesById = Entities.ToDictionary(entity => entity.Id);
 
             // We will re-build the child hierarchy below and want to avoid duplicates.
-            // TODO: at some point we don't want to even persist the duplicates. however,
-            // will require some rework.
+            // TODO: Rework system to no longer persist children entities because they are duplicates.
             foreach (Entity entity in Entities)
             {
                 entity.ChildEntities.Clear();
