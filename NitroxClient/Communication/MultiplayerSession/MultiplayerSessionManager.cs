@@ -122,7 +122,7 @@ namespace NitroxClient.Communication.MultiplayerSession
         {
             Client.Send(packet);
         }
-        
+
         public bool SendIfGameCode<T>(T packet) where T : Packet
         {
             static bool HasOriginModAndSentByInjectedCode(in StackFrame[] frames)
@@ -149,7 +149,7 @@ namespace NitroxClient.Communication.MultiplayerSession
                 }
                 return false;
             }
-            
+
             StackFrame[] frames = new StackTrace(1, false).GetFrames() ?? Array.Empty<StackFrame>();
             if (HasOriginModAndSentByInjectedCode(in frames))
             {
@@ -159,7 +159,7 @@ namespace NitroxClient.Communication.MultiplayerSession
             Client.Send(packet);
             return true;
         }
-        
+
         public void UpdateConnectionState(IMultiplayerSessionConnectionState sessionConnectionState)
         {
             Validate.NotNull(sessionConnectionState);
