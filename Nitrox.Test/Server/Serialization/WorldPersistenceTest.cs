@@ -281,12 +281,13 @@ public class WorldPersistenceTest
 
             Assert.IsTrue(playerData.CompletedGoals.SequenceEqual(playerDataAfter.CompletedGoals));
 
-            AssertHelper.IsDictionaryEqual(playerData.PingInstancePreferences, playerDataAfter.PingInstancePreferences, (keyValuePair, keyValuePairAfter) =>
+            AssertHelper.IsDictionaryEqual(playerData.PlayerPreferences.PingPreferences, playerDataAfter.PlayerPreferences.PingPreferences, (keyValuePair, keyValuePairAfter) =>
             {
                 Assert.AreEqual(keyValuePair.Key, keyValuePairAfter.Key);
                 Assert.AreEqual(keyValuePair.Value.Color, keyValuePairAfter.Value.Color);
                 Assert.AreEqual(keyValuePair.Value.Visible, keyValuePairAfter.Value.Visible);
             });
+            Assert.IsTrue(playerData.PlayerPreferences.PinPreferences.SequenceEqual(playerDataAfter.PlayerPreferences.PinPreferences));
         });
     }
 
@@ -482,7 +483,7 @@ public class WorldPersistenceTest
                         QuickSlotsBinding = new List<string>(0),
                         EquippedItems = new List<EquippedItemData>(0),
                         Modules = new List<EquippedItemData>(0),
-                        PingInstancePreferences = new()
+                        PlayerPreferences = new(new(), new())
                     },
                     new PersistedPlayerData()
                     {
@@ -502,7 +503,7 @@ public class WorldPersistenceTest
                             new EquippedItemData(new NitroxId(), new NitroxId(), new byte[] { 0x50, 0x9D }, "Slot4", new NitroxTechType("Knife"))
                         },
                         Modules = new List<EquippedItemData>() { new EquippedItemData(new NitroxId(), new NitroxId(), new byte[] { 0x35, 0xD0 }, "Module1", new NitroxTechType("Compass")) },
-                        PingInstancePreferences = new() { { "eda14b58-cfe0-4a56-aa4a-47942567d897", new(0, false) }, { "Signal_Lifepod12", new(4, true) } }
+                        PlayerPreferences = new(new() { { "eda14b58-cfe0-4a56-aa4a-47942567d897", new(0, false) }, { "Signal_Lifepod12", new(4, true) } }, new List<int> {2, 45, 3, 1})
                     }
                 }
             },

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
@@ -53,7 +54,7 @@ public class PersistedPlayerData
     public Dictionary<string, float> CompletedGoals { get; set; } = new Dictionary<string, float>();
 
     [DataMember(Order = 15)]
-    public Dictionary<string, PingInstancePreference> PingInstancePreferences { get; set; } = new();
+    public SubnauticaPlayerPreferences PlayerPreferences { get; set; }
 
     public Player ToPlayer()
     {
@@ -73,7 +74,8 @@ public class PersistedPlayerData
                           EquippedItems,
                           Modules,
                           CompletedGoals,
-                          PingInstancePreferences);
+                          PlayerPreferences.PingPreferences,
+                          PlayerPreferences.PinPreferences);
     }
 
     public static PersistedPlayerData FromPlayer(Player player)
@@ -94,7 +96,7 @@ public class PersistedPlayerData
             NitroxId = player.GameObjectId,
             IsPermaDeath = player.IsPermaDeath,
             CompletedGoals = new(player.CompletedGoals),
-            PingInstancePreferences = new(player.PingInstancePreferences)
+            PlayerPreferences = new(player.PingInstancePreferences.ToDictionary(m => m.Key, m => m.Value), player.PinPreferences.ToList())
         };
     }
 }

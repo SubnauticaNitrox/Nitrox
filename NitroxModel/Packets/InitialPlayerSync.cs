@@ -35,7 +35,7 @@ namespace NitroxModel.Packets
         public List<NitroxId> InitialSimulationOwnerships { get; }
         public ServerGameMode GameMode { get; }
         public Perms Permissions { get; }
-        public Dictionary<string, PingInstancePreference> Preferences { get; }
+        public SubnauticaPlayerPreferences Preferences { get; }
         public InitialTimeData InitialTimeData { get; }
 
         public InitialPlayerSync(NitroxId playerGameObjectId,
@@ -60,7 +60,7 @@ namespace NitroxModel.Packets
             IEnumerable<NitroxId> initialSimulationOwnerships,
             ServerGameMode gameMode,
             Perms perms,
-            Dictionary<string, PingInstancePreference> preferences,
+            SubnauticaPlayerPreferences preferences,
             InitialTimeData initialTimeData)
         {
             AssignedEscapePodId = assignedEscapePodId;
@@ -113,7 +113,7 @@ namespace NitroxModel.Packets
             List<NitroxId> initialSimulationOwnerships,
             ServerGameMode gameMode,
             Perms permissions,
-            Dictionary<string, PingInstancePreference> preferences,
+            SubnauticaPlayerPreferences preferences,
             InitialTimeData initialTimeData)
         {
             AssignedEscapePodId = assignedEscapePodId;
