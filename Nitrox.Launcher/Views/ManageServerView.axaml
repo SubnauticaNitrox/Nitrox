@@ -1,10 +1,16 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:viewModels="clr-namespace:Nitrox.Launcher.ViewModels"
-             x:Class="Nitrox.Launcher.Views.ManageServerView"
-             d:DataContext="{Binding RelativeSource={RelativeSource AncestorType=viewModels:ManageServerViewModel}}">
-    <StackPanel>
-        <TextBlock Text="{Binding Server.Name}" />
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:launcher="clr-namespace:Nitrox.Launcher"
+             xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="600" d:DataContext="{x:Static launcher:DesignData.ManageServerViewModel}"
+             x:Class="Nitrox.Launcher.Views.ManageServerView">
+    <StackPanel VerticalAlignment="Stretch" Classes="form">
+        <TextBlock Classes="header" Text="{Binding Server.Name}" />
+        <StackPanel>
+            <TextBlock Text="SERVER NAME" />
+            <TextBox design:NitroxAttached.Focus="" Watermark="My server" Text="{Binding Server.Name}" />
+        </StackPanel>
     </StackPanel>
 </UserControl>

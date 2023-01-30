@@ -4,11 +4,12 @@
     <Design.PreviewWith>
         <Panel Background="Cornflowerblue">
             <StackPanel Margin="10" Spacing="10">
-                <StackPanel design:NitroxAttached.Theme="LIGHT" Background="#FFFFFF" HorizontalAlignment="Center">
+                <StackPanel design:NitroxAttached.Theme="LIGHT" HorizontalAlignment="Center">
                     <Button Classes="nitrox" design:NitroxAttached.Text="Normal button" HorizontalAlignment="Stretch" />
                     <Button Classes="nitrox primary" design:NitroxAttached.Text="Primary button" HorizontalAlignment="Stretch" />
+                    <Button Classes="nitrox abort" design:NitroxAttached.Text="Abort button" HorizontalAlignment="Stretch" />
                 </StackPanel>
-                <StackPanel design:NitroxAttached.Theme="DARK" Background="#000000" HorizontalAlignment="Center">
+                <StackPanel design:NitroxAttached.Theme="DARK" HorizontalAlignment="Center">
                     <Button Classes="nitrox" design:NitroxAttached.Text="Normal button" HorizontalAlignment="Stretch" />
                     <Button Classes="nitrox primary" design:NitroxAttached.Text="Primary button" HorizontalAlignment="Stretch" />
                     <Button Classes="nitrox primary big" design:NitroxAttached.Text="Primary Button Big" design:NitroxAttached.Subtext="Some sub text" />
@@ -18,6 +19,7 @@
     </Design.PreviewWith>
 
     <Style Selector="Button.nitrox">
+        <Setter Property="Background" Value="#1EFFFFFF" />
         <Setter Property="Padding" Value="16 8.73" />
         <Setter Property="CornerRadius" Value="4" />
         <Setter Property="Content">
@@ -35,10 +37,10 @@
         </Setter>
 
         <Style Selector="^[(design|NitroxAttached.Theme)=LIGHT]">
-            <Setter Property="Foreground" Value="#000000" />
+            <Setter Property="Foreground" Value="{DynamicResource BrandBlackBrush}" />
         </Style>
         <Style Selector="^[(design|NitroxAttached.Theme)=DARK]">
-            <Setter Property="Foreground" Value="#FFFFFF" />
+            <Setter Property="Foreground" Value="{DynamicResource BrandWhiteBrush}" />
         </Style>
 
         <Style Selector="^ /template/ ContentPresenter">
@@ -58,8 +60,8 @@
     </Style>
 
     <Style Selector="Button.primary">
-        <Setter Property="Background" Value="#007BFF" />
-        <Setter Property="Foreground" Value="#FFFFFF" />
+        <Setter Property="Background" Value="{DynamicResource BrandPrimaryBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource BrandWhiteBrush}" />
 
         <Style Selector="^:disabled /template/ ContentPresenter">
             <!-- TODO: Nice disabled style (loading indicator?) -->
@@ -70,7 +72,8 @@
     </Style>
 
     <Style Selector="Button.abort">
-        <Setter Property="Background" Value="#FF005C" />
+        <Setter Property="Background" Value="{DynamicResource BrandAbortBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource BrandWhiteBrush}" />
     </Style>
 
     <Style Selector="Button.big">

@@ -1,0 +1,30 @@
+<!-- ReSharper disable once Xaml.RedundantNamespaceAlias (Rider integration of Avalonia syntax does not understand '|' character in "Selector") -->
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design">
+    <!-- Theme controls that are given by Avalonia here -->
+    <Style Selector="Window[(design|NitroxAttached.Theme)=LIGHT]">
+        <Setter Property="Background" Value="#FFFFFF" />
+    </Style>
+    <Style Selector="Window[(design|NitroxAttached.Theme)=DARK]">
+        <Setter Property="Background" Value="#000000" />
+    </Style>
+    <Style Selector="TextBlock[(design|NitroxAttached.Theme)=LIGHT]">
+        <Setter Property="Foreground" Value="#000000" />
+    </Style>
+    <Style Selector="TextBlock[(design|NitroxAttached.Theme)=DARK]">
+        <Setter Property="Foreground" Value="#FFFFFF" />
+    </Style>
+    <Style Selector="TextBox[(design|NitroxAttached.Theme)=LIGHT]">
+        <Setter Property="Background" Value="#ECECEC" />
+    </Style>
+    <Style Selector="TextBox[(design|NitroxAttached.Theme)=DARK]">
+        <Setter Property="Background" Value="#1F1F1F" />
+    </Style>
+    <Style Selector="Button[(design|NitroxAttached.Theme)=LIGHT]">
+        <Setter Property="Foreground" Value="#000000" />
+    </Style>
+    <Style Selector="Button[(design|NitroxAttached.Theme)=DARK]">
+        <Setter Property="Foreground" Value="#FFFFFF" />
+    </Style>
+</Styles>

@@ -1,0 +1,13 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Style Selector="ToolTip">
+        <Setter Property="Background" Value="#FFFFFF" />
+    </Style>
+    <Style Selector="ToolTip Border">
+        <Setter Property="Opacity" Value="0.85" />
+    </Style>
+    <Style Selector="ToolTip TextBlock">
+        <Setter Property="Foreground" Value="#000000" />
+        <Setter Property="FontSize" Value="12" />
+    </Style>
+</Styles>

@@ -1,0 +1,162 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
+        xmlns:converters="clr-namespace:Nitrox.Launcher.Models.Converters">
+    <Design.PreviewWith>
+        <Panel Background="Cornflowerblue">
+            <StackPanel Margin="10" Spacing="10">
+                <ContentControl Padding="10" Background="#FFFFFF" design:NitroxAttached.Theme="LIGHT">
+                    <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <TextBlock>Light</TextBlock>
+                        <TextBox Watermark="Enter something here.." />
+                    </StackPanel>
+                </ContentControl>
+
+                <ContentControl Padding="10" Background="#000000" design:NitroxAttached.Theme="DARK">
+                    <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <TextBlock>Dark</TextBlock>
+                        <TextBox Watermark="Enter something here.." />
+                    </StackPanel>
+                </ContentControl>
+            </StackPanel>
+        </Panel>
+    </Design.PreviewWith>
+
+    <!-- MUST BE FIRST: dynamic theme enum style should be overriden by styles below. -->
+    <StyleInclude Source="/Styles/Theme/NitroxAttachedTheme.axaml" />
+
+    <Style Selector="Window">
+        <Setter Property="Icon" Value="/Assets/Images/nitroxIco.png" />
+        <!-- Disables window border but allow resizing -->
+        <Setter Property="SystemDecorations" Value="None" />
+        <Setter Property="ExtendClientAreaToDecorationsHint" Value="True" />
+        <Setter Property="ExtendClientAreaTitleBarHeightHint" Value="-99" />
+    </Style>
+
+    <Style Selector=":is(TemplatedControl).footer">
+        <Setter Property="Background" Value="#ECECEC" />
+        <Setter Property="Padding" Value="24 20" />
+    </Style>
+
+    <Style Selector=":is(Panel).form">
+        <Setter Property="Margin" Value="24" />
+    </Style>
+    <Style Selector=".form > :is(Layoutable)">
+        <Setter Property="Margin" Value="0 0 0 26" />
+    </Style>
+    <Style Selector=".form > :is(Layoutable):nth-last-child(1)">
+        <Setter Property="Margin" Value="0" />
+    </Style>
+    <Style Selector=".form > :is(Layoutable) > TextBlock:nth-child(1)">
+        <Setter Property="FontSize" Value="10" />
+        <Setter Property="FontWeight" Value="700" />
+        <Setter Property="Foreground" Value="#202225" />
+        <Setter Property="Margin" Value="0 0 0 11" />
+    </Style>
+
+    <Style Selector="Panel.titleBar">
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="ZIndex" Value="100" />
+        <Setter Property="Height" Value="24" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+    </Style>
+    <Style Selector="Panel.titleBar > ItemsControl">
+        <Setter Property="ItemsPanel">
+            <Setter.Value>
+                <ItemsPanelTemplate>
+                    <StackPanel />
+                </ItemsPanelTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ItemTemplate">
+            <Setter.Value>
+                <DataTemplate DataType="design:TitleBarItem">
+                    <Panel>
+                        <Button Command="{Binding Command}" />
+                        <Image Source="{Binding Icon, Converter={converters:BitmapAssetValueConverter}}" />
+                    </Panel>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style Selector="Panel.titleBar StackPanel">
+        <Setter Property="Orientation" Value="Horizontal" />
+        <Setter Property="HorizontalAlignment" Value="Right" />
+    </Style>
+    <Style Selector="Panel.titleBar Button">
+        <Setter Property="Opacity" Value="0.5" />
+        <Setter Property="CornerRadius" Value="0" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Foreground" Value="#FFFFFF" />
+        <Setter Property="Background" Value="#000000" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Width" Value="46" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+    </Style>
+    <Style Selector="Panel.titleBar ContentPresenter:nth-child(1) Button">
+        <Setter Property="CornerRadius" Value="0 0 0 8" />
+    </Style>
+    <Style Selector="Panel.titleBar Image">
+        <Setter Property="Width" Value="10" />
+        <Setter Property="Height" Value="10" />
+        <Setter Property="IsHitTestVisible" Value="False" />
+    </Style>
+
+    <Style Selector="Image.header">
+        <Setter Property="Width" Value="108" />
+        <Setter Property="Height" Value="24" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Bottom" />
+        <Setter Property="Source" Value="/Assets/Images/nitroxLogo.png" />
+    </Style>
+    <Style Selector="Image.icon">
+        <Setter Property="Width" Value="24" />
+        <Setter Property="Height" Value="24" />
+        <Setter Property="Margin" Value="0 0 12 0" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+    <Style Selector=":is(ContentControl).content">
+        <Setter Property="Background" Value="#00000000" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+        <Setter Property="Padding" Value="34 45" />
+    </Style>
+
+    <Style Selector="Border.serverEntry">
+        <Setter Property="Background" Value="#151516" />
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="Margin" Value="0 13" />
+        <Setter Property="Padding" Value="22 20" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Height" Value="96" />
+    </Style>
+    <Style Selector="Border.serverEntry StackPanel.description > :is(Control)">
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Margin" Value="6 0" />
+    </Style>
+    <Style Selector="Border.serverEntry StackPanel.description > :is(Control):nth-child(1)">
+        <Setter Property="Margin" Value="0 0 6 0" />
+    </Style>
+    <Style Selector="Border.serverEntry StackPanel.description > :is(Control):nth-last-child(1)">
+        <Setter Property="Margin" Value="6 0 0 0" />
+    </Style>
+    <Style Selector="Border.serverEntry StackPanel.description Ellipse">
+        <Setter Property="Height" Value="6" />
+        <Setter Property="Width" Value="6" />
+    </Style>
+    <Style Selector="Border.serverEntry StackPanel.description TextBlock">
+        <Setter Property="Opacity" Value="0.5" />
+    </Style>
+
+    <StyleInclude Source="/Styles/Theme/TextBoxStyle.axaml" />
+    <StyleInclude Source="/Styles/Theme/ToolTipStyle.axaml" />
+    <StyleInclude Source="/Styles/Theme/TextBlockStyle.axaml" />
+    <StyleInclude Source="/Styles/Theme/ButtonStyle.axaml" />
+    <StyleInclude Source="/Styles/Theme/NavigationStyle.axaml" />
+    <StyleInclude Source="/Styles/Theme/RadioButtonGroupStyle.axaml" />
+</Styles>
