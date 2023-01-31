@@ -100,18 +100,30 @@ public static class Reflect
                     return ((NewExpression)currentExpression).Constructor;
                 case ExpressionType.Call:
                     MethodInfo method = ((MethodCallExpression)currentExpression).Method;
-                    // Expression does not know which type the MethodInfo belongs to if it's virtual.
-                    if (implementingType != null && implementingType != method.ReflectedType)
+                    if (implementingType == null)
                     {
-                        ParameterInfo[] parameters = method.GetParameters();
-                        Type[] args = new Type[parameters.Length];
-                        for (int i = 0; i < parameters.Length; i++)
-                        {
-                            args[i] = parameters[i].ParameterType;
-                        }
-                        return implementingType.GetMethod(method.Name, BINDING_FLAGS_ALL, null, args, null);
+                        return method;
                     }
-                    return method;
+                    if (implementingType == method.ReflectedType)
+                    {
+                        return method;
+                    }
+                    // If method target is an interface, lookup the implementation in the implementingType.
+                    if (method.ReflectedType?.IsInterface ?? false)
+                    {
+                        InterfaceMapping interfaceMap = implementingType.GetInterfaceMap(method.ReflectedType);
+                        int i = Array.IndexOf(interfaceMap.InterfaceMethods, method);
+                        return interfaceMap.TargetMethods[i];
+                    }
+
+                    // Expression does not know which type the MethodInfo belongs to if it's virtual; MethodInfo of base type/interface is returned instead.
+                    ParameterInfo[] parameters = method.GetParameters();
+                    Type[] args = new Type[parameters.Length];
+                    for (int i = 0; i < parameters.Length; i++)
+                    {
+                        args[i] = parameters[i].ParameterType;
+                    }
+                    return implementingType.GetMethod(method.Name, BINDING_FLAGS_ALL, null, args, null) ?? throw new Exception($"Unable to find method {method} on type {implementingType.FullName}");
                 case ExpressionType.Convert:
                 case ExpressionType.ConvertChecked:
                     currentExpression = ((UnaryExpression)currentExpression).Operand;

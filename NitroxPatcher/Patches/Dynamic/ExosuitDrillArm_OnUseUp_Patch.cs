@@ -1,17 +1,15 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
 using NitroxModel_Subnautica.Packets;
+using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
     class ExosuitDrillArm_OnUseUp_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(ExosuitDrillArm);
-        public static readonly Type TARGET_INTERFACE = typeof(IExosuitArm);
-        public static readonly MethodInfo TARGET_METHOD_INTERFACE = typeof(IExosuitArm).GetMethod(nameof(IExosuitArm.OnUseUp));
+        public static readonly MethodInfo TARGET_METHOD = Reflect.Method((ExosuitDrillArm t) => ((IExosuitArm)t).OnUseUp(out Reflect.Ref<float>.Field));
 
         public static void Prefix(ExosuitDrillArm __instance)
         {
@@ -20,11 +18,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public override void Patch(Harmony harmony)
         {
-            InterfaceMapping interfaceMap = TARGET_CLASS.GetInterfaceMap(TARGET_INTERFACE);
-            int i = Array.IndexOf(interfaceMap.InterfaceMethods, TARGET_METHOD_INTERFACE);
-            MethodInfo targetMethod = interfaceMap.TargetMethods[i];
-
-            PatchPrefix(harmony, targetMethod);
+            PatchPrefix(harmony, TARGET_METHOD);
         }
     }
 }
