@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -39,7 +39,7 @@ public static class Reflect
     /// <typeparam name="T"></typeparam>
     /// <param name="expression">The expression.</param>
     /// <returns></returns>
-    public static MethodInfo Method<T>(Expression<Action<T>> expression) where T : class
+    public static MethodInfo Method<T>(Expression<Action<T>> expression)
     {
         return (MethodInfo)GetMemberInfo(expression, typeof(T));
     }
@@ -52,7 +52,7 @@ public static class Reflect
     /// <typeparam name="TResult"></typeparam>
     /// <param name="expression">The expression.</param>
     /// <returns></returns>
-    public static MethodInfo Method<T, TResult>(Expression<Func<T, TResult>> expression) where T : class
+    public static MethodInfo Method<T, TResult>(Expression<Func<T, TResult>> expression)
     {
         return (MethodInfo)GetMemberInfo(expression, typeof(T));
     }
@@ -62,7 +62,7 @@ public static class Reflect
         return (FieldInfo)GetMemberInfo(expression);
     }
 
-    public static FieldInfo Field<T>(Expression<Func<T, object>> expression) where T : class
+    public static FieldInfo Field<T>(Expression<Func<T, object>> expression)
     {
         return (FieldInfo)GetMemberInfo(expression);
     }
@@ -72,7 +72,7 @@ public static class Reflect
         return (PropertyInfo)GetMemberInfo(expression);
     }
 
-    public static PropertyInfo Property<T>(Expression<Func<T, object>> expression) where T : class
+    public static PropertyInfo Property<T>(Expression<Func<T, object>> expression)
     {
         return (PropertyInfo)GetMemberInfo(expression);
     }
