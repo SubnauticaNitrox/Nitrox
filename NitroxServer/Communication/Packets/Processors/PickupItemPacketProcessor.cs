@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
@@ -34,16 +35,6 @@ namespace NitroxServer.Communication.Packets.Processors
                 ushort serverId = ushort.MaxValue;
                 SimulationOwnershipChange simulationOwnershipChange = new SimulationOwnershipChange(packet.Id, serverId, NitroxModel.DataStructures.SimulationLockType.TRANSIENT);
                 playerManager.SendPacketToAllPlayers(simulationOwnershipChange);
-            }
-
-            // Need to remove the cached progress entry if the object is fully scanned
-            if (pdaStateData.CachedProgress.TryGetValue(packet.TechType, out PDAProgressEntry pdaProgressEntry) && pdaProgressEntry.Entries.ContainsKey(packet.Id))
-            {
-                pdaProgressEntry.Entries.Remove(packet.Id);
-                if (pdaProgressEntry.Entries.Count == 0)
-                {
-                    pdaStateData.CachedProgress.Remove(packet.TechType);
-                }
             }
 
             // Will have the clients remove the object from their world.

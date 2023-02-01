@@ -139,31 +139,28 @@ public class WorldPersistenceTest
 
     private static void PDAStateTest(PDAStateData pdaState, PDAStateData pdaStateAfter)
     {
-        Assert.IsTrue(pdaState.UnlockedTechTypes.SequenceEqual(pdaStateAfter.UnlockedTechTypes));
-
-        AssertHelper.IsDictionaryEqual(pdaState.PartiallyUnlockedByTechType, pdaStateAfter.PartiallyUnlockedByTechType, (entry, entryAfter) =>
-        {
-            Assert.AreEqual(entry.Key, entryAfter.Key);
-            Assert.AreEqual(entry.Value.TechType, entryAfter.Value.TechType);
-            Assert.AreEqual(entry.Value.Progress, entryAfter.Value.Progress);
-            Assert.AreEqual(entry.Value.Unlocked, entryAfter.Value.Unlocked);
-        });
-
         Assert.IsTrue(pdaState.KnownTechTypes.SequenceEqual(pdaStateAfter.KnownTechTypes));
         Assert.IsTrue(pdaState.AnalyzedTechTypes.SequenceEqual(pdaStateAfter.AnalyzedTechTypes));
-        Assert.IsTrue(pdaState.EncyclopediaEntries.SequenceEqual(pdaStateAfter.EncyclopediaEntries));
-
         AssertHelper.IsListEqual(pdaState.PdaLog.OrderBy(x => x.Key), pdaStateAfter.PdaLog.OrderBy(x => x.Key), (entry, entryAfter) =>
         {
             Assert.AreEqual(entry.Key, entryAfter.Key);
             Assert.AreEqual(entry.Timestamp, entryAfter.Timestamp);
         });
+        Assert.IsTrue(pdaState.EncyclopediaEntries.SequenceEqual(pdaStateAfter.EncyclopediaEntries));
+        Assert.IsTrue(pdaState.ScannerFragments.SequenceEqual(pdaStateAfter.ScannerFragments));
+        AssertHelper.IsListEqual(pdaState.ScannerPartial.OrderBy(x => x.TechType.Name), pdaStateAfter.ScannerPartial.OrderBy(x => x.TechType.Name), (entry, entryAfter) =>
+        {
+            Assert.AreEqual(entry.TechType, entryAfter.TechType);
+            Assert.AreEqual(entry.Unlocked, entryAfter.Unlocked);
+        });
+
+        Assert.IsTrue(pdaState.ScannerComplete.SequenceEqual(pdaStateAfter.ScannerComplete));
+
 
         AssertHelper.IsDictionaryEqual(pdaState.CachedProgress, pdaStateAfter.CachedProgress, (entry, entryAfter) =>
         {
             Assert.AreEqual(entry.Key, entryAfter.Key);
-            Assert.AreEqual(entry.Value.TechType, entryAfter.Value.TechType);
-            AssertHelper.IsDictionaryEqual(entry.Value.Entries, entryAfter.Value.Entries);
+            AssertHelper.IsDictionaryEqual(entry.Value, entryAfter.Value);
         });
     }
 
@@ -513,11 +510,14 @@ public class WorldPersistenceTest
                 {
                     PDAState = new PDAStateData()
                     {
-                        EncyclopediaEntries = { "TestEntry1", "TestEntry2" },
                         KnownTechTypes = { new NitroxTechType("Knife") },
-                        PartiallyUnlockedByTechType = new ThreadSafeDictionary<NitroxTechType, PDAEntry>() { new KeyValuePair<NitroxTechType, PDAEntry>(new NitroxTechType("Moonpool"), new PDAEntry(new NitroxTechType("Moonpool"), 50f, 2)) },
+                        AnalyzedTechTypes = { new("Fragment"), new("TESSST") },
                         PdaLog = { new PDALogEntry("key1", 1.1234f) },
-                        UnlockedTechTypes = { new NitroxTechType("base") }
+                        EncyclopediaEntries = { "TestEntry1", "TestEntry2" },
+                        ScannerFragments = { new("eda14b58-cfe0-4a56-aa4a-47942567d897"), new("342deb58-cfe0-4a56-aa4a-47942567d897") },
+                        ScannerPartial = { new(new NitroxTechType("Moonpool"), 2), new(new NitroxTechType("Fragment"), 1) },
+                        ScannerComplete = { new NitroxTechType("Knife1"), new NitroxTechType("Knife2"), new NitroxTechType("Knife3") },
+                        CachedProgress = { { new NitroxTechType("Knife"), new() { { new("eda14b58-cfe0-4a56-aa4a-47942567d897"), 0.83483f } } } }
                     },
                     StoryGoals = new StoryGoalData()
                     {

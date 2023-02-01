@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using NitroxModel.DataStructures;
@@ -10,55 +10,62 @@ namespace NitroxServer.GameLogic.Unlockables
     public class PDAStateData
     {
         /// <summary>
-        /// Gets or sets the scan tool unlocked/partial unlock states.
-        /// </summary>
-        [DataMember(Order = 1)]
-        public ThreadSafeList<NitroxTechType> UnlockedTechTypes { get; } = new ThreadSafeList<NitroxTechType>();
-
-        [DataMember(Order = 2)]
-        public ThreadSafeDictionary<NitroxTechType, PDAEntry> PartiallyUnlockedByTechType { get; set; } = new ThreadSafeDictionary<NitroxTechType, PDAEntry>();
-
-        /// <summary>
         /// Gets or sets the KnownTech construct which powers the popup shown to the user when a new TechType is discovered ("New Creature Discovered!")
         /// The KnownTech construct uses both <see cref='NitroxModel.Packets.KnownTechEntryAdd.EntryCategory.KNOWN'>KnownTech.knownTech</see> and <see cref='NitroxModel.Packets.KnownTechEntryAdd.EntryCategory.ANALYZED'>KnownTech.analyzedTech</see>
         /// </summary>
-        [DataMember(Order = 3)]
+        [DataMember(Order = 1)]
         public ThreadSafeList<NitroxTechType> KnownTechTypes { get; } = new ThreadSafeList<NitroxTechType>();
-
-        [DataMember(Order = 4)]
+        
+        [DataMember(Order = 2)]
         public ThreadSafeList<NitroxTechType> AnalyzedTechTypes { get; } = new ThreadSafeList<NitroxTechType>();
-
-        /// <summary>
-        /// Gets or sets the entries that show up the the PDA's Encyclopedia
-        /// </summary>
-        [DataMember(Order = 5)]
-        public ThreadSafeList<string> EncyclopediaEntries { get; } = new ThreadSafeList<string>();
-
+        
         /// <summary>
         /// Gets or sets the log of story events present in the PDA
         /// </summary>
-        [DataMember(Order = 6)]
+        [DataMember(Order = 3)]
         public ThreadSafeList<PDALogEntry> PdaLog { get; } = new ThreadSafeList<PDALogEntry>();
+        
+        /// <summary>
+        /// Gets or sets the entries that show up the the PDA's Encyclopedia
+        /// </summary>
+        [DataMember(Order = 4)]
+        public ThreadSafeList<string> EncyclopediaEntries { get; } = new ThreadSafeList<string>();
+        
+        /// <summary>
+        /// The ids of the already scanned entities.
+        /// </summary>
+        /// <remarks>
+        /// In Subnautica, this is a Dictionary, but the value is not used, the only important thing is whether a key is stored or not.
+        /// We can therefore use it as a list.
+        /// </remarks>
+        [DataMember(Order = 5)]
+        public ThreadSafeSet<NitroxId> ScannerFragments { get; } = new();
+        
+        /// <summary>
+        /// Partially unlocked PDA entries (e.g. fragments)
+        /// </summary>
+        [DataMember(Order = 6)]
+        public ThreadSafeList<PDAEntry> ScannerPartial { get; } = new();
 
+        /// <summary>
+        /// Fully unlocked PDA entries
+        /// </summary>
         [DataMember(Order = 7)]
-        public ThreadSafeDictionary<NitroxTechType, PDAProgressEntry> CachedProgress { get; } = new ThreadSafeDictionary<NitroxTechType, PDAProgressEntry>();
+        public ThreadSafeList<NitroxTechType> ScannerComplete { get; } = new();
 
-        public void UnlockedTechType(NitroxTechType techType)
-        {
-            PartiallyUnlockedByTechType.Remove(techType);
-            CachedProgress.Remove(techType);
-            if (!UnlockedTechTypes.Contains(techType))
-            {
-                UnlockedTechTypes.Add(techType);
-            }
-            else
-            {
-                Log.Debug($"There was an attempt of adding a duplicated entry in the UnlockedTechTypes: [{techType.Name}]");
-            }
-        }
+        /// <summary>
+        /// Scanned entity's scan progress sorted by TechType.
+        /// </summary>
+        /// <remarks>
+        /// In vanilla Subnautica, scan progress is not persisted but we need to persist it to be able to send the current data to arriving players.
+        /// </remarks>
+        [DataMember(Order = 8)]
+        public ThreadSafeDictionary<NitroxTechType, ThreadSafeDictionary<NitroxId, float>> CachedProgress { get; } = new();
 
-        public void AddKnownTechType(NitroxTechType techType)
+
+        public void AddKnownTechType(NitroxTechType techType, List<NitroxTechType> partialTechTypesToRemove)
         {
+            ScannerPartial.RemoveAll(entry => partialTechTypesToRemove.Contains(entry.TechType));
             if (!KnownTechTypes.Contains(techType))
             {
                 KnownTechTypes.Add(techType);
@@ -105,42 +112,100 @@ namespace NitroxServer.GameLogic.Unlockables
             }
         }
 
-        public void EntryProgressChanged(NitroxTechType techType, float progress, int unlocked, NitroxId nitroxId)
+
+        /// <summary>
+        /// Updates the scan progress of one entity (by id) for a defined TechType
+        /// </summary>
+        /// <returns>
+        /// True if the scan progress was correctly registered/updated, false if the new progress is inferior or equals to the current progress
+        /// </returns>
+        public bool UpdateScanProgress(NitroxId id, NitroxTechType techType, float newProgress)
         {
-            if (!PartiallyUnlockedByTechType.TryGetValue(techType, out PDAEntry pdaEntry))
+            lock (CachedProgress)
             {
-                PartiallyUnlockedByTechType[techType] = pdaEntry = new PDAEntry(techType, progress, unlocked);
+                if (!CachedProgress.TryGetValue(techType, out ThreadSafeDictionary<NitroxId, float> entries))
+                {
+                    entries = CachedProgress[techType] = new() { { id, newProgress } };
+                    return true;
+                }
+                if (entries.TryGetValue(id, out float currentProgress) && newProgress <= currentProgress)
+                {
+                    return false;
+                }
+                entries[id] = newProgress;
+                return true;
             }
+        }
 
-            // Update progress for specific entity if NitroxID is provided.
-            if (nitroxId != null)
+        public void FinishScanProgress(NitroxId id, NitroxTechType techType, bool destroyed, bool fullyResearched)
+        {
+            lock (ScannerFragments)
             {
-                if (!CachedProgress.TryGetValue(techType, out PDAProgressEntry pdaProgressEntry))
+                lock (CachedProgress)
                 {
-                    CachedProgress.Add(techType, pdaProgressEntry = new PDAProgressEntry(techType, new Dictionary<NitroxId, float>()));
-                }
-                // Prevents decreasing progress
-                if (!pdaProgressEntry.Entries.ContainsKey(nitroxId) || (unlocked == pdaEntry.Unlocked && pdaProgressEntry.Entries.TryGetValue(nitroxId, out float oldProgress) && oldProgress < progress))
-                {
-                    pdaProgressEntry.Entries[nitroxId] = progress;
-                    pdaEntry.Progress = progress;
+                    if (fullyResearched)
+                    {
+                        CachedProgress.Remove(techType);
+                    }
+                    else if(CachedProgress.TryGetValue(techType, out ThreadSafeDictionary<NitroxId, float> entries) && entries.Remove(id) && entries.Count == 0)
+                    {
+                        CachedProgress.Remove(techType);
+                    }
+
+                    if (!destroyed)
+                    {
+                        ScannerFragments.Add(id);
+                    }
                 }
             }
+            
+        }
 
-            // This needs to occur after the progress update because
-            // progress update needs to know what was the old unlocked state
-            pdaEntry.Unlocked = unlocked;
+        public void UpdateEntryUnlockedProgress(NitroxTechType techType, int unlockedAmount, bool fullyResearched)
+        {
+            lock (ScannerPartial)
+            {
+                lock (ScannerComplete)
+                {
+                    if (fullyResearched)
+                    {
+                        ScannerPartial.RemoveAll(entry => entry.TechType.Equals(techType));
+                        ScannerComplete.Add(techType);
+                    }
+                    else
+                    {
+                        IEnumerable<PDAEntry> entries = ScannerPartial.Where(e => e.TechType.Equals(techType));
+                        if (entries.Any())
+                        {
+                            entries.First().Unlocked = unlockedAmount;
+                        }
+                        else
+                        {
+                            ScannerPartial.Add(new(techType, unlockedAmount));
+                        }
+                    }
+                }
+            }
         }
 
         public InitialPDAData GetInitialPDAData()
         {
-            return new InitialPDAData(new List<NitroxTechType>(UnlockedTechTypes),
-                new List<NitroxTechType>(KnownTechTypes),
-                new List<NitroxTechType>(AnalyzedTechTypes),
-                new List<string>(EncyclopediaEntries),
-                new List<PDAEntry>(PartiallyUnlockedByTechType.Values),
-                new List<PDALogEntry>(PdaLog),
-                new List<PDAProgressEntry>(CachedProgress.Values));
+            Dictionary<NitroxId, float> cachedProgress = new();
+            foreach (KeyValuePair<NitroxTechType, ThreadSafeDictionary<NitroxId, float>> entry in CachedProgress)
+            {
+                foreach (KeyValuePair<NitroxId, float> progressEntry in entry.Value)
+                {
+                    cachedProgress[progressEntry.Key] = progressEntry.Value;
+                }
+            }
+            return new(KnownTechTypes.ToList(),
+                       AnalyzedTechTypes.ToList(),
+                       PdaLog.ToList(),
+                       EncyclopediaEntries.ToList(),
+                       ScannerFragments.ToList(),
+                       ScannerPartial.ToList(),
+                       ScannerComplete.ToList(),
+                       cachedProgress);
         }
     }
 }

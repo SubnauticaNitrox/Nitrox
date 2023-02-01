@@ -146,5 +146,15 @@ namespace NitroxModel_Subnautica.DataStructures
                 _ => throw new ArgumentException("The provided StoryEventSend.EventType doesn't correspond to a Story.GoalType")
             };
         }
+
+        public static PDAEntry ToDto(this PDAScanner.Entry entry)
+        {
+            return new(entry.techType.ToDto(), entry.unlocked);
+        }
+
+        public static PDAScanner.Entry ToUnity(this PDAEntry entry)
+        {
+            return new() { techType = entry.TechType.ToUnity(), unlocked = entry.Unlocked };
+        }
     }
 }

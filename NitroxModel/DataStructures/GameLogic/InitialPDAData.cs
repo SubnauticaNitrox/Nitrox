@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using BinaryPack.Attributes;
 
@@ -7,14 +7,16 @@ namespace NitroxModel.DataStructures.GameLogic
     [Serializable]
     public class InitialPDAData
     {
-        public List<NitroxTechType> UnlockedTechTypes { get; set; }
         public List<NitroxTechType> KnownTechTypes { get; set; }
-
         public List<NitroxTechType> AnalyzedTechTypes { get; set; }
-        public List<string> EncyclopediaEntries { get; set; }
-        public List<PDAEntry> PartiallyUnlockedTechTypes { get; set; }
         public List<PDALogEntry> PDALogEntries { get; set; }
-        public List<PDAProgressEntry> CachedProgress { get; set; }
+        public List<string> EncyclopediaEntries { get; set; }
+        
+        // PDA Scanner data
+        public List<NitroxId> ScannerFragments { get; set; }
+        public List<PDAEntry> ScannerPartial { get; set; }
+        public List<NitroxTechType> ScannerComplete { get; set; }
+        public Dictionary<NitroxId, float> CachedProgress { get; set; }
 
         [IgnoreConstructor]
         protected InitialPDAData()
@@ -22,14 +24,15 @@ namespace NitroxModel.DataStructures.GameLogic
             //Constructor for serialization. Has to be "protected" for json serialization.
         }
 
-        public InitialPDAData(List<NitroxTechType> unlockedTechTypes, List<NitroxTechType> knownTechTypes, List<NitroxTechType> analyzedTechTypes, List<string> encyclopediaEntries, List<PDAEntry> partiallyUnlockedTechTypes, List<PDALogEntry> pdaLogEntries, List<PDAProgressEntry> cachedProgress)
+        public InitialPDAData(List<NitroxTechType> knownTechTypes, List<NitroxTechType> analyzedTechTypes, List<PDALogEntry> pDALogEntries, List<string> encyclopediaEntries, List<NitroxId> scannerFragments, List<PDAEntry> scannerPartial, List<NitroxTechType> scannerComplete, Dictionary<NitroxId, float> cachedProgress)
         {
-            UnlockedTechTypes = unlockedTechTypes;
             KnownTechTypes = knownTechTypes;
             AnalyzedTechTypes = analyzedTechTypes;
+            PDALogEntries = pDALogEntries;
             EncyclopediaEntries = encyclopediaEntries;
-            PartiallyUnlockedTechTypes = partiallyUnlockedTechTypes;
-            PDALogEntries = pdaLogEntries;
+            ScannerFragments = scannerFragments;
+            ScannerPartial = scannerPartial;
+            ScannerComplete = scannerComplete;
             CachedProgress = cachedProgress;
         }
     }

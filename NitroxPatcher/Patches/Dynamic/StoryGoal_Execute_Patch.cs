@@ -29,6 +29,8 @@ public class StoryGoal_Execute_Patch : NitroxPatch, IDynamicPatch
             // Moved to Postfix
             case Story.GoalType.PDA:
                 __state = true;
+                // We make sure that no PDALogEntryAdd packet is sent when PDALog.Add will be called
+                PDALog_Add_Patch.IgnoreKeys.Add(key);
                 return;
             // When story goals are executed, if they were already completed before, they will do nothing.
             // We don't want to notify the server in this situation

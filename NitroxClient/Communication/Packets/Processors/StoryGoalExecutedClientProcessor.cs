@@ -21,6 +21,7 @@ public class StoryGoalExecutedClientProcessor : ClientPacketProcessor<StoryGoalE
 
         using (packetSender.Suppress<StoryGoalExecuted>())
         using (packetSender.Suppress<PDALogEntryAdd>())
+        using (packetSender.Suppress<KnownTechEntryAdd>()) // StoryGoalManager => OnGoalUnlockTracker => UnlockBlueprintData => KnownTech.Add
         using (packetSender.Suppress<PDAEncyclopediaEntryAdd>())
         {
             StoryGoal.Execute(packet.Key, packet.Type.ToUnity());

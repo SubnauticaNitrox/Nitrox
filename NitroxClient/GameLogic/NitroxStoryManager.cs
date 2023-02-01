@@ -1,12 +1,34 @@
 using System.Collections.Generic;
+using NitroxClient.MonoBehaviours;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using Story;
+using UnityEngine;
 
 namespace NitroxClient.GameLogic;
 
 // TODO: Make it static if necessary
 public class NitroxStoryManager
 {
+    public static void ScanCompleted(NitroxId entityId, bool destroy)
+    {
+        PDAScanner.cachedProgress.Remove($"{entityId}");
+        if (NitroxEntity.TryGetObjectFrom(entityId, out GameObject scanObject))
+        {
+            // Copy the SendMessage from PDAScanner.Scan() but we don't care about the EntryData
+            scanObject.SendMessage("OnScanned", null, SendMessageOptions.DontRequireReceiver);
+            if (!destroy)
+            {
+                PDAScanner.fragments.Add($"{entityId}", 1f);
+            }
+            else
+            {
+                PDAScanner.fragments.Remove($"{entityId}");
+                GameObject.Destroy(scanObject);
+            }
+        }
+    }
+
     // TODO: Maybe move those in a common place with server-side StoryManager
     private static readonly List<string> auroraEvents = new() { "Story_AuroraWarning1", "Story_AuroraWarning2", "Story_AuroraWarning3", "Story_AuroraWarning4", "Story_AuroraExplosion" };
 
