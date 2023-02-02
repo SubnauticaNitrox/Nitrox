@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using NitroxModel.DataStructures.GameLogic;
+using NitroxServer.GameLogic;
 using NitroxModel.Helper;
 using NitroxServer.Resources;
 using UWE;

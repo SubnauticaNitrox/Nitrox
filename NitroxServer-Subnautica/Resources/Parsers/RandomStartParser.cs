@@ -1,11 +1,13 @@
-﻿using System.Drawing;
-using System.Drawing.Imaging;
+﻿using System.IO;
 using System.Runtime.InteropServices;
 using AssetsTools.NET;
 using AssetsTools.NET.Extra;
-using NitroxModel.DataStructures.GameLogic;
+using NitroxServer.GameLogic;
 using NitroxServer_Subnautica.Resources.Parsers.Abstract;
 using NitroxServer_Subnautica.Resources.Parsers.Helper;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 
 namespace NitroxServer_Subnautica.Resources.Parsers;
 
@@ -26,11 +28,8 @@ public class RandomStartParser : BundleFileParser<RandomStartGenerator>
             return null;
         }
         
-        Bitmap texture = new(textureFile.m_Width, textureFile.m_Height, textureFile.m_Width * 4, PixelFormat.Format32bppArgb,
-                             Marshal.UnsafeAddrOfPinnedArrayElement(texDat, 0));
-        texture.RotateFlip(RotateFlipType.RotateNoneFlipY);
-
+        Image<Bgra32> texture = Image.LoadPixelData<Bgra32>(texDat, textureFile.m_Width, textureFile.m_Height);
+        texture.Mutate(x => x.Flip(FlipMode.Vertical));
         return new RandomStartGenerator(texture);
-
     }
 }

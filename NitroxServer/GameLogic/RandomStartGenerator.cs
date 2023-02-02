@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using NitroxModel.DataStructures.Unity;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 
-namespace NitroxModel.DataStructures.GameLogic
+namespace NitroxServer.GameLogic
 {
     public class RandomStartGenerator
     {
-        private readonly Bitmap randomStartTexture;
+        private readonly Image<Bgra32> randomStartTexture;
 
-        public RandomStartGenerator(Bitmap randomStartTexture)
+        public RandomStartGenerator(Image<Bgra32> randomStartTexture)
         {
             this.randomStartTexture = randomStartTexture;
         }
@@ -59,9 +60,9 @@ namespace NitroxModel.DataStructures.GameLogic
             int textureX = (int)(normalizedX * (float)512);
             int textureZ = (int)(normalizedZ * (float)512);
 
-            Color pixelColor = randomStartTexture.GetPixel(textureX, textureZ);
+            Color pixelColor = randomStartTexture[textureX, textureZ];
 
-            return pixelColor.G > 127;
+            return pixelColor.ToPixel<Bgra32>().G > 127;
         }
     }
 }
