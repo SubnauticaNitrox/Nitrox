@@ -6,6 +6,8 @@
         <RootNamespace>NitroxServer_Subnautica</RootNamespace>
         <Nullable>disable</Nullable>
         <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+        <!-- OutputPath is not yet defined here... -->
+        <RunWorkingDirectory>$(MSBuildProjectDirectory)\bin\Debug\</RunWorkingDirectory>
     </PropertyGroup>
 
     <ItemGroup>
@@ -27,6 +29,7 @@
     <ItemGroup>
       <NitroxSubnauticaTypeTreeData Include="..\Nitrox.Assets.Subnautica\**\*.tpk" />
     </ItemGroup>
+
     <Copy SourceFiles="@(NitroxSubnauticaTypeTreeData)" DestinationFolder="$(TargetDir)\%(RecursiveDir)" />
   </Target>
 </Project>
