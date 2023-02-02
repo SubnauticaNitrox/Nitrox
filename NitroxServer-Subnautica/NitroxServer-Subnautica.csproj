@@ -29,7 +29,6 @@
     <ItemGroup>
       <NitroxSubnauticaTypeTreeData Include="..\Nitrox.Assets.Subnautica\**\*.tpk" />
     </ItemGroup>
-
     <Copy SourceFiles="@(NitroxSubnauticaTypeTreeData)" DestinationFolder="$(TargetDir)\%(RecursiveDir)" />
   </Target>
 </Project>
