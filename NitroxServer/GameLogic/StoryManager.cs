@@ -6,11 +6,12 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
 using NitroxServer.Helper;
 using NitroxServer.GameLogic.Unlockables;
+using System.Timers;
 
 namespace NitroxServer.GameLogic;
 
 /// <summary>
-/// Keeps track of Aurora-related events
+/// Keeps track of time and Aurora-related events.
 /// </summary>
 public class StoryManager
 {
@@ -51,8 +52,16 @@ public class StoryManager
     /// <summary>
     /// Subnautica's equivalent of days
     /// </summary>
-    // Using ceiling because days count start at 1 and not 0
+    /// <remarks>
+    /// Using ceiling because days count start at 1 and not 0.
+    /// </remarks>
     public int Day => (int)Math.Ceiling(ElapsedTimeMs / TimeSpan.FromMinutes(20).TotalMilliseconds);
+
+    public Timer ResyncTimer;
+    /// <summary>
+    /// Time in seconds between each resync packet sending.
+    /// </summary>
+    private const int RESYNC_INTERVAL = 60;
 
     public StoryManager(PlayerManager playerManager, PDAStateData pdaStateData, StoryGoalData storyGoalData, string seed, double elapsedSeconds, double? auroraExplosionTime, double? auroraWarningTime)
     {
@@ -64,7 +73,25 @@ public class StoryManager
         elapsedTimeOutsideStopWatchMs = elapsedSeconds == 0 ? TimeSpan.FromSeconds(480).TotalMilliseconds : elapsedSeconds * 1000;
         AuroraCountdownTimeMs = auroraExplosionTime ?? GenerateDeterministicAuroraTime(seed);
         AuroraWarningTimeMs = auroraWarningTime ?? ElapsedTimeMs;
+        SetupResyncInterval();
     }
+
+    /// <summary>
+    /// Creates a timer that periodically sends resync packets to players
+    /// </summary>
+    public void SetupResyncInterval()
+    {
+        ResyncTimer = new()
+        {
+            Interval = TimeSpan.FromSeconds(RESYNC_INTERVAL).TotalMilliseconds,
+            AutoReset = true
+        };
+        ResyncTimer.Elapsed += delegate
+        {
+            playerManager.SendPacketToAllPlayers(new AuroraAndTimeUpdate(GetInitialTimeData(), false));
+        };
+    }
+
     /// <summary>
     /// Tells the players to start Aurora's explosion event
     /// </summary>
@@ -129,6 +156,7 @@ public class StoryManager
     public void StartWorld()
     {
         stopWatch.Start();
+        ResyncTimer.Start();
         playerManager.SendPacketToAllPlayers(MakeTimePacket());
     }
 
@@ -138,6 +166,7 @@ public class StoryManager
     public void PauseWorld()
     {
         stopWatch.Stop();
+        ResyncTimer.Stop();
     }
 
     /// <summary>
@@ -199,7 +228,7 @@ public class StoryManager
 
     public TimeChange MakeTimePacket()
     {
-        return new(ElapsedSeconds, DateTimeOffset.Now.ToUnixTimeMilliseconds());
+        return new(ElapsedSeconds, DateTimeOffset.UtcNow.ToUnixTimeMilliseconds());
     }
 
     public CrashedShipExploderData MakeAuroraData()
