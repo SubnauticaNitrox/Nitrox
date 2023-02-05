@@ -1,5 +1,6 @@
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxModel;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using Story;
@@ -17,7 +18,7 @@ public class StoryGoalExecutedClientProcessor : ClientPacketProcessor<StoryGoalE
 
     public override void Process(StoryGoalExecuted packet)
     {
-        StoryGoalScheduler.main.schedule.RemoveAll(goal => goal.goalKey == packet.Key);
+        StoryGoalScheduler.main.schedule.RemoveAllFast(packet.Key, static (goal, packetGoalKey) => goal.goalKey == packetGoalKey);
 
         using (packetSender.Suppress<StoryGoalExecuted>())
         using (packetSender.Suppress<PDALogEntryAdd>())
