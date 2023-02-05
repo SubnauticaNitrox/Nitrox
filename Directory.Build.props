@@ -62,11 +62,6 @@
     <Choose>
         <When Condition="'$(UnityModLibrary)' == 'true'">
             <ItemGroup>
-                <!-- Require other Nitrox projects (that need game DLLs) to wait on BuildTool. -->
-                <ProjectReference Include="$(NitroxRootDir)Nitrox.BuildTool\Nitrox.BuildTool.csproj">
-                    <Name>Nitrox.BuildTool</Name>
-                    <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-                </ProjectReference>
                 <ProjectReference Include="$(NitroxRootDir)NitroxModel\NitroxModel.csproj">
                     <Name>NitroxModel</Name>
                 </ProjectReference>
