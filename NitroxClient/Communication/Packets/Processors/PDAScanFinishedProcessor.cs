@@ -1,5 +1,6 @@
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
+using NitroxModel;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 
@@ -13,19 +14,20 @@ public class PDAScanFinishedProcessor : ClientPacketProcessor<PDAScanFinished>
         {
             NitroxStoryManager.ScanCompleted(packet.Id, packet.Destroy);
         }
+        TechType packetTechType = packet.TechType.ToUnity();
         if (packet.FullyResearched)
         {
-            PDAScanner.partial.RemoveAll(entry => entry.techType.Equals(packet.TechType.ToUnity()));
-            PDAScanner.complete.Add(packet.TechType.ToUnity());
+            PDAScanner.partial.RemoveAllFast(packetTechType, static (item, techType) => item.techType == techType);
+            PDAScanner.complete.Add(packetTechType);
             return;
         }
-        if (PDAScanner.GetPartialEntryByKey(packet.TechType.ToUnity(), out PDAScanner.Entry entry))
+        if (PDAScanner.GetPartialEntryByKey(packetTechType, out PDAScanner.Entry entry))
         {
             entry.unlocked = packet.UnlockedAmount;
         }
         else
         {
-            PDAScanner.Add(packet.TechType.ToUnity(), packet.UnlockedAmount);
+            PDAScanner.Add(packetTechType, packet.UnlockedAmount);
         }
     }
 }
