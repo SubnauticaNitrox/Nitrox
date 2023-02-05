@@ -6,8 +6,6 @@
         <RootNamespace>NitroxServer_Subnautica</RootNamespace>
         <Nullable>disable</Nullable>
         <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-        <!-- OutputPath is not yet defined here... -->
-        <RunWorkingDirectory>$(MSBuildProjectDirectory)\bin\Debug\</RunWorkingDirectory>
     </PropertyGroup>
 
     <ItemGroup>
@@ -17,6 +15,7 @@
 
     <ItemGroup>
         <PackageReference Include="AssetsTools.NET" Version="3.0.0-preview1" />
+        <PackageReference Include="SixLabors.ImageSharp" Version="2.1.3"/>
     </ItemGroup>
 
     <ItemGroup>

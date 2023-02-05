@@ -1,8 +1,7 @@
-﻿using System.IO;
-using System.Runtime.InteropServices;
-using AssetsTools.NET;
+﻿using AssetsTools.NET;
 using AssetsTools.NET.Extra;
-using NitroxServer.GameLogic;
+using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Helper;
 using NitroxServer_Subnautica.Resources.Parsers.Abstract;
 using NitroxServer_Subnautica.Resources.Parsers.Helper;
 using SixLabors.ImageSharp;
@@ -23,13 +22,30 @@ public class RandomStartParser : BundleFileParser<RandomStartGenerator>
         byte[] texDat = textureFile.GetTextureData(assetFileInst);
         assetsManager.UnloadAll();
 
-        if (texDat == null || texDat.Length <= 0)
+        if (texDat is not { Length: > 0 })
         {
             return null;
         }
-        
+
         Image<Bgra32> texture = Image.LoadPixelData<Bgra32>(texDat, textureFile.m_Width, textureFile.m_Height);
         texture.Mutate(x => x.Flip(FlipMode.Vertical));
-        return new RandomStartGenerator(texture);
+        return new RandomStartGenerator(new PixelProvider(texture));
+    }
+
+    private class PixelProvider : RandomStartGenerator.IPixelProvider
+    {
+        private readonly Image<Bgra32> texture;
+
+        public PixelProvider(Image<Bgra32> texture)
+        {
+            Validate.NotNull(texture);
+            this.texture = texture;
+        }
+
+        public byte GetRed(int x, int y) => texture[x, y].R;
+
+        public byte GetGreen(int x, int y) => texture[x, y].G;
+
+        public byte GetBlue(int x, int y) => texture[x, y].B;
     }
 }
