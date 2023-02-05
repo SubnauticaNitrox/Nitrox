@@ -25,7 +25,7 @@ public class uSkyManager_SetVaryingMaterialProperties_Patch : NitroxPatch, IDyna
     {
         Ldarg_0,
         Ldfld,
-        { InstructionPattern.Call(Reflect.Property(() => UnityEngine.Time.time).GetMethod), "Modify" },
+        { Reflect.Property(() => UnityEngine.Time.time).GetMethod, "Modify" },
         Mul
     };
 
