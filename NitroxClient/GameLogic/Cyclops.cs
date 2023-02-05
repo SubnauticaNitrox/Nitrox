@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.Communication.Abstract;
@@ -19,7 +19,6 @@ namespace NitroxClient.GameLogic
         private readonly IPacketSender packetSender;
         private readonly Vehicles vehicles;
         private readonly Entities entities;
-        private static List<NitroxId> skipSonarTurnoff = new();
 
         public Cyclops(IPacketSender packetSender, Vehicles vehicles, Entities entities)
         {
@@ -186,12 +185,6 @@ namespace NitroxClient.GameLogic
                     }
                 }
             }
-        }
-
-        public bool ShouldSonarTurnoff(NitroxId cyclopsId)
-        {
-            // Return the opposite because, if we want to skip the turnoff (true), we should not turn it off (false)
-            return !skipSonarTurnoff.Contains(cyclopsId);
         }
     }
 }

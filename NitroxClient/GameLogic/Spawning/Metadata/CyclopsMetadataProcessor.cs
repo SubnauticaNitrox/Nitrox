@@ -123,13 +123,19 @@ public class CyclopsMetadataProcessor : GenericEntityMetadataProcessor<CyclopsMe
         }
     }
 
-    private void ChangeSonarMode(GameObject cyclops, bool isOn)
+    public void ChangeSonarMode(GameObject cyclops, bool isOn)
     {
         CyclopsSonarButton sonarButton = cyclops.GetComponentInChildren<CyclopsSonarButton>(true);
-
-        if (sonarButton)
+        if (sonarButton && sonarButton.sonarActive != isOn)
         {
-            sonarButton.sonarActive = isOn;            
+            if (isOn)
+            {
+                sonarButton.TurnOnSonar();
+            }
+            else
+            {
+                sonarButton.TurnOffSonar();
+            }
         }
     }
 
