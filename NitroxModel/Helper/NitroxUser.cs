@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using NitroxModel.Discovery;
-using NitroxModel.Platforms.OS.Windows.Internal;
 using NitroxModel.Platforms.Store;
 using NitroxModel.Platforms.Store.Interfaces;
 
@@ -16,6 +14,7 @@ namespace NitroxModel.Helper
         private const string PREFERRED_GAMEPATH_KEY = "PreferredGamePath";
         private static string launcherPath;
         private static string gamePath;
+        private static string currentExecutablePath;
 
         private static readonly IEnumerable<Func<string>> launcherPathDataSources = new List<Func<string>>
         {
@@ -109,6 +108,19 @@ namespace NitroxModel.Helper
                 // Ensures the path looks alright (no mixed / and \ path separators)
                 gamePath = Path.GetFullPath(value);
                 GamePlatform = GamePlatforms.GetPlatformByGameDir(gamePath);
+            }
+        }
+
+        public static string CurrentExecutablePath
+        {
+            get
+            {
+                if (!string.IsNullOrWhiteSpace(currentExecutablePath))
+                {
+                    return currentExecutablePath;
+                }
+
+                return currentExecutablePath = new Uri(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.CodeBase ?? Assembly.GetEntryAssembly()?.Location ?? ".") ?? Directory.GetCurrentDirectory()).LocalPath;
             }
         }
     }
