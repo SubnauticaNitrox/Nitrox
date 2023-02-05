@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -103,7 +104,6 @@ public class StoryGoalInitialSyncProcessor : InitialSyncProcessor
     // Must happen after CompletedGoals
     private IEnumerator SetupAuroraAndSunbeam(InitialPlayerSync packet)
     {
-        // TODO: Separate this data from this packet
         InitialTimeData timeData = packet.InitialTimeData;
 
         AuroraWarnings auroraWarnings = GameObject.FindObjectOfType<AuroraWarnings>();
@@ -116,7 +116,7 @@ public class StoryGoalInitialSyncProcessor : InitialSyncProcessor
         CrashedShipExploder.main.OnProtoDeserialize(null);
 
         // Sunbeam countdown is deducted from the scheduled goal PrecursorGunAimCheck
-        NitroxScheduledGoal sunbeamCountdownGoal = packet.StoryGoalData.ScheduledGoals.Find(goal => goal.GoalKey == "PrecursorGunAimCheck");
+        NitroxScheduledGoal sunbeamCountdownGoal = packet.StoryGoalData.ScheduledGoals.Find(goal => string.Equals(goal.GoalKey, "PrecursorGunAimCheck", StringComparison.OrdinalIgnoreCase));
         if (sunbeamCountdownGoal != null)
         {
             StoryGoalCustomEventHandler.main.countdownActive = true;

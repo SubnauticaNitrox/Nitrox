@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using BinaryPack.Attributes;
 
@@ -33,4 +34,7 @@ public class CrashedShipExploderData
         TimeToStartCountdown = timeToStartCountdown;
         TimeToStartWarning = timeToStartWarning;
     }
+
+    [NonSerialized]
+    public static readonly List<string> AuroraEvents = new() { "Story_AuroraWarning1", "Story_AuroraWarning2", "Story_AuroraWarning3", "Story_AuroraWarning4", "Story_AuroraExplosion" };
 }

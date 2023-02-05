@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
@@ -29,9 +28,6 @@ public class NitroxStoryManager
         }
     }
 
-    // TODO: Maybe move those in a common place with server-side StoryManager
-    private static readonly List<string> auroraEvents = new() { "Story_AuroraWarning1", "Story_AuroraWarning2", "Story_AuroraWarning3", "Story_AuroraWarning4", "Story_AuroraExplosion" };
-
     public static void UpdateAuroraData(CrashedShipExploderData crashedShipExploderData)
     {
         CrashedShipExploder.main.timeToStartCountdown = crashedShipExploderData.TimeToStartCountdown;
@@ -52,7 +48,7 @@ public class NitroxStoryManager
     /// </summary>
     public static void CleanAuroraEvents()
     {
-        foreach (string eventKey in auroraEvents)
+        foreach (string eventKey in CrashedShipExploderData.AuroraEvents)
         {
             StoryGoalManager.main.completedGoals.Remove(eventKey);
             PDALog.Remove(eventKey);

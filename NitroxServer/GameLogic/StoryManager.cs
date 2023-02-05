@@ -1,12 +1,11 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
 using NitroxServer.Helper;
 using NitroxServer.GameLogic.Unlockables;
 using System.Timers;
+using NitroxModel.Helper;
 
 namespace NitroxServer.GameLogic;
 
@@ -23,8 +22,6 @@ public class StoryManager
 
     public double AuroraCountdownTimeMs;
     public double AuroraWarningTimeMs;
-
-    private static readonly List<string> auroraEvents = new() { "Story_AuroraWarning1", "Story_AuroraWarning2", "Story_AuroraWarning3", "Story_AuroraWarning4", "Story_AuroraExplosion" };
 
     private double elapsedTimeOutsideStopWatchMs;
 
@@ -127,7 +124,7 @@ public class StoryManager
         AuroraCountdownTimeMs = GenerateDeterministicAuroraTime(seed);
 
         // We need to clear these entries from PdaLog and CompletedGoals to make sure that the client, when reconnecting, doesn't have false information
-        foreach (string eventKey in auroraEvents)
+        foreach (string eventKey in CrashedShipExploderData.AuroraEvents)
         {
             pdaStateData.PdaLog.RemoveAll(entry => entry.Key == eventKey);
             storyGoalData.CompletedGoals.Remove(eventKey);
@@ -148,6 +145,18 @@ public class StoryManager
         // Copied from CrashedShipExploder.SetExplodeTime() and changed from seconds to ms
         DeterministicGenerator generator = new(seed, nameof(StoryManager));
         return elapsedTimeOutsideStopWatchMs + generator.NextDouble(2.3d, 4d) * 1200d * 1000d;
+    }
+
+    /// <summary>
+    /// Clears the already completed sunbeam events to come and broadcasts it to all players.
+    /// </summary>
+    public void StartSunbeamEvent(PlaySunbeamEvent.SunbeamEvent sunbeamEvent)
+    {
+        for (int i = (int)sunbeamEvent; i < PlaySunbeamEvent.SunbeamGoals.Count; i++)
+        {
+            storyGoalData.CompletedGoals.Remove(PlaySunbeamEvent.SunbeamGoals[i]);
+        }
+        playerManager.SendPacketToAllPlayers(new PlaySunbeamEvent(sunbeamEvent));
     }
 
     /// <summary>
@@ -179,7 +188,7 @@ public class StoryManager
     }
 
     /// <summary>
-    /// Makes a nice status for the summary command for example
+    /// Makes a nice status of the aurora events for the summary command
     /// </summary>
     public string GetAuroraStateSummary()
     {
@@ -188,15 +197,26 @@ public class StoryManager
         {
             return "already exploded";
         }
-        string stateNumber = "";
-        if (auroraEvents.Count > 0)
+        // Based on AuroraWarnings.Update calculations
+        int stateNumber = 0;
+        if (ElapsedTimeMs >= AuroraCountdownTimeMs)
         {
-            // Event timer events should always have a number at last character
-            string nextEventKey = auroraEvents[0];
-            stateNumber = $" [{nextEventKey.Last()}/4]";
+            stateNumber = 4;
+        }
+        else if (ElapsedTimeMs >= Mathf.Lerp((float)AuroraWarningTimeMs, (float)AuroraCountdownTimeMs, 0.8f))
+        {
+            stateNumber = 3;
+        }
+        else if (ElapsedTimeMs >= Mathf.Lerp((float)AuroraWarningTimeMs, (float)AuroraCountdownTimeMs, 0.5f))
+        {
+            stateNumber = 2;
+        }
+        else if (ElapsedTimeMs >= Mathf.Lerp((float)AuroraWarningTimeMs, (float)AuroraCountdownTimeMs, 0.2f))
+        {
+            stateNumber = 1;
         }
         
-        return $"explodes in {minutesBeforeExplosion} minutes{stateNumber}";
+        return $"explodes in {minutesBeforeExplosion} minutes [{stateNumber}/4]";
     }
 
     internal void ResetWorld()
