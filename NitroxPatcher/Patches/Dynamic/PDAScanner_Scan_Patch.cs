@@ -126,7 +126,7 @@ public class PDAScanner_Scan_Patch : NitroxPatch, IDynamicPatch
         public bool Update(DateTimeOffset now, float throttleTime)
         {
             // We'll just remove this entry if it was fully scanned
-            if (!PDAScanner.cachedProgress.ContainsKey($"{EntityId}"))
+            if (!PDAScanner.cachedProgress.ContainsKey(EntityId.ToString()))
             {
                 return true;
             }

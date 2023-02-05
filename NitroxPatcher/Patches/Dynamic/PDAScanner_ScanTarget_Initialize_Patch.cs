@@ -17,7 +17,7 @@ public class PDAScanner_ScanTarget_Initialize_Patch : NitroxPatch, IDynamicPatch
         // We only want to set the uid if the target is supposed to have an uid (hasUID)
         if (__instance.hasUID && NitroxEntity.TryGetEntityFrom(__instance.gameObject, out NitroxEntity entity))
         {
-            __instance.uid = $"{entity.Id}";
+            __instance.uid = entity.Id.ToString();
         }
     }
 

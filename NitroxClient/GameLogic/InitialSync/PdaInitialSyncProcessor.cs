@@ -80,7 +80,7 @@ public class PdaInitialSyncProcessor : InitialSyncProcessor
         
         PDAScanner.Data data = new()
         {
-            fragments = pdaData.ScannerFragments.ToDictionary(m => $"{m}", m => 1f),
+            fragments = pdaData.ScannerFragments.ToDictionary(m => m.ToString(), m => 1f),
             partial = pdaData.ScannerPartial.Select(entry => entry.ToUnity()).ToList(),
             complete = pdaData.ScannerComplete.Select(techType => techType.ToUnity()).ToHashSet()
         };
@@ -88,7 +88,7 @@ public class PdaInitialSyncProcessor : InitialSyncProcessor
 
         foreach (KeyValuePair<NitroxId, float> progressEntry in scanProgressEntries)
         {
-            PDAScanner.cachedProgress[$"{progressEntry.Key}"] = progressEntry.Value;
+            PDAScanner.cachedProgress[progressEntry.Key.ToString()] = progressEntry.Value;
         }
         yield break;
     }

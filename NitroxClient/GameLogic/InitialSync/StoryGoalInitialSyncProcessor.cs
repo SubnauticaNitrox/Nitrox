@@ -60,15 +60,13 @@ public class StoryGoalInitialSyncProcessor : InitialSyncProcessor
         {
             WorldArrowManager.main.DeactivateArrow();
         }
-        
-        StringBuilder builder = new();
-        builder.AppendLine($"""
+
+        Log.Info($"""
         Received initial sync packet with:
         - Completed story goals : {completedGoals.Count}
         - Personal goals        : {packet.CompletedGoals.Count}
         - Radio queue           : {radioQueue.Count}
         """);
-        Log.Info($"{builder}");
         yield break;
     }
 

@@ -16,7 +16,7 @@ public class PDAScanProgressProcessor : ClientPacketProcessor<PDAScanProgress>
         }
 
         // We only want to update the current progress if the new one is greater
-        if (PDAScanner.cachedProgress.TryGetValue($"{packet.Id}", out float currentProgress))
+        if (PDAScanner.cachedProgress.TryGetValue(packet.Id.ToString(), out float currentProgress))
         {
             if (currentProgress >= packet.Progress)
             {
@@ -25,6 +25,6 @@ public class PDAScanProgressProcessor : ClientPacketProcessor<PDAScanProgress>
         }
         // We can store the progress associated to a NitroxId because in PDAScanner_ScanTarget_Initialize_Patch,
         // we set ScanTargets' id to be from their NitroxEntity if they have one
-        PDAScanner.cachedProgress[$"{packet.Id}"] = currentProgress;
+        PDAScanner.cachedProgress[packet.Id.ToString()] = currentProgress;
     }
 }
