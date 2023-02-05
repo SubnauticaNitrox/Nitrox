@@ -13,7 +13,7 @@ namespace NitroxPatcher
     internal static class TranspilerHelper
     {
         private static readonly MethodInfo serviceLocator = typeof(NitroxServiceLocator)
-            .GetMethod(nameof(NitroxServiceLocator.LocateService), BindingFlags.Static | BindingFlags.Public, null, new Type[] { }, null);
+            .GetMethod(nameof(NitroxServiceLocator.LocateService), BindingFlags.Static | BindingFlags.Public, null, Array.Empty<Type>(), null);
 
         public static CodeInstruction LocateService<T>()
         {

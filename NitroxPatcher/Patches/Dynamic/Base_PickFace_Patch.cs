@@ -3,12 +3,14 @@ using HarmonyLib;
 using NitroxClient.MonoBehaviours.Overrides;
 using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation.Metadata;
+using NitroxModel.Helper;
+using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
     class Base_PickFace_Patch : NitroxPatch, IDynamicPatch
     {
-        public readonly MethodInfo METHOD = typeof(Base).GetMethod(nameof(Base.PickFace), BindingFlags.Public | BindingFlags.Instance);
+        public readonly MethodInfo METHOD = Reflect.Method((Base t) => t.PickFace(default(Transform), out Reflect.Ref<Base.Face>.Field));
 
         public static bool Prefix(Base __instance, ref bool __result, ref Base.Face face)
         {
