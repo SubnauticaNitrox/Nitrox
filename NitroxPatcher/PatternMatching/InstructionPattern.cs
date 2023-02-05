@@ -29,6 +29,8 @@ public readonly struct InstructionPattern
 
     public static implicit operator InstructionPattern(OpCode opCode) => new() { OpCode = opCode };
     public static implicit operator InstructionPattern(OperandPattern operand) => new() { Operand = operand };
+    public static implicit operator InstructionPattern(MethodInfo method) => Call(method);
+
     public static InstructionPattern Call(string className, string methodName) => new() { OpCode = OpCodes.Call, Operand = new(className, methodName) };
 
     public static InstructionPattern Call(MethodInfo method)
