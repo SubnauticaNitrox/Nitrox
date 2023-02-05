@@ -87,7 +87,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 player.QuickSlotsBinding,
                 world.GameData.PDAState.GetInitialPDAData(),
                 world.GameData.StoryGoals.GetInitialStoryGoalData(scheduleKeeper),
-                player.CompletedGoals.ToDictionary(m => m.Key, m => m.Value),
+                new(player.CompletedGoals),
                 player.Position,
                 player.Rotation,
                 player.SubRootId,
@@ -97,7 +97,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 simulations,
                 world.GameMode,
                 player.Permissions,
-                new(player.PingInstancePreferences.ToDictionary(m => m.Key, m => m.Value), player.PinPreferences.ToList()),
+                new(new(player.PingInstancePreferences), player.PinPreferences.ToList()),
                 storyManager.GetInitialTimeData()
             );
 

@@ -9,7 +9,7 @@ public class PDAScanProgressProcessor : ClientPacketProcessor<PDAScanProgress>
     public override void Process(PDAScanProgress packet)
     {
         // Fully-scanned entity
-        if (packet.Progress == 1f)
+        if (packet.ProgressCompleted)
         {
             NitroxStoryManager.ScanCompleted(packet.Id, packet.Destroy);
             return;

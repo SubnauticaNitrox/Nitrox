@@ -36,5 +36,5 @@ public class CrashedShipExploderData
     }
 
     [NonSerialized]
-    public static readonly List<string> AuroraEvents = new() { "Story_AuroraWarning1", "Story_AuroraWarning2", "Story_AuroraWarning3", "Story_AuroraWarning4", "Story_AuroraExplosion" };
+    public static readonly IReadOnlyCollection<string> AuroraEvents = new[] { "Story_AuroraWarning1", "Story_AuroraWarning2", "Story_AuroraWarning3", "Story_AuroraWarning4", "Story_AuroraExplosion" };
 }

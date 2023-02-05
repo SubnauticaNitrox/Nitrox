@@ -7,6 +7,7 @@ namespace NitroxModel.Packets;
 [Serializable]
 public class PDAScanProgress : Packet
 {
+    public bool ProgressCompleted => Math.Abs(Progress - 1f) < 0.0005;
     public NitroxId Id { get; }
     public NitroxTechType TechType { get; }
     public float Progress { get; }

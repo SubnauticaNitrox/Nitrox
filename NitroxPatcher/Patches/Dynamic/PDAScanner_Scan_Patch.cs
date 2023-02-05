@@ -15,11 +15,12 @@ using UnityEngine;
 namespace NitroxPatcher.Patches.Dynamic;
 
 /// <summary>
-/// Broadcast scan progress and entries unlocking when they happen
+/// Broadcasts scan progress and entry unlockings when they happen.
 /// </summary>
 /// <remarks>
 /// This is the only method that needs to be tracked to sync and persist PDAScanner's data, because the other methods
-/// are either unused (found out that they have no actual calls in SN's code, just as )
+/// are either unused (found out that they have no actual calls in SN's code, just as <see cref="PDAScanner.RemoveAllEntriesWhichUnlocks"/>)
+/// or simply called automatically by other events (just as <see cref="PDAScanner.CompleteAllEntriesWhichUnlocks"/>).
 /// </remarks>
 public class PDAScanner_Scan_Patch : NitroxPatch, IDynamicPatch
 {
@@ -110,8 +111,10 @@ public class PDAScanner_Scan_Patch : NitroxPatch, IDynamicPatch
     {
         public NitroxTechType EntryTechType;
         public NitroxId EntityId;
-        public DateTimeOffset LatestPacketSendTime, LastBroadcastTime;
-        public float Progress, LastBroadcastProgress;
+        public DateTimeOffset LatestPacketSendTime;
+        public DateTimeOffset LastBroadcastTime;
+        public float Progress;
+        public float LastBroadcastProgress;
 
         public ThrottledEntry(TechType entryTechType, NitroxId entityId)
         {
@@ -132,7 +135,7 @@ public class PDAScanner_Scan_Patch : NitroxPatch, IDynamicPatch
             }
             if ((now - LastBroadcastTime).TotalMilliseconds >= throttleTime)
             {
-                if (LastBroadcastProgress == Progress)
+                if (Math.Abs(LastBroadcastProgress - Progress) < 0.0005)
                 {
                     return false;
                 }

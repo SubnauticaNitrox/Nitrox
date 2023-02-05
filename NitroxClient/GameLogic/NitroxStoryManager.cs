@@ -6,8 +6,7 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic;
 
-// TODO: Make it static if necessary
-public class NitroxStoryManager
+public static class NitroxStoryManager
 {
     public static void ScanCompleted(NitroxId entityId, bool destroy)
     {
