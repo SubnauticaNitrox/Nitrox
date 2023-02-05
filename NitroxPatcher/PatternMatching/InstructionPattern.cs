@@ -1,5 +1,8 @@
+using System;
+using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
+using NitroxModel.Helper;
 
 namespace NitroxPatcher.PatternMatching;
 
@@ -28,6 +31,14 @@ public readonly struct InstructionPattern
     public static implicit operator InstructionPattern(OperandPattern operand) => new() { Operand = operand };
     public static InstructionPattern Call(string className, string methodName) => new() { OpCode = OpCodes.Call, Operand = new(className, methodName) };
 
+    public static InstructionPattern Call(MethodInfo method)
+    {
+        Type methodDeclaringType = method.DeclaringType;
+        Validate.NotNull(methodDeclaringType);
+
+        return new() { OpCode = OpCodes.Call, Operand = new(methodDeclaringType.Name, method.Name) };
+    }
+
     public static bool operator ==(InstructionPattern pattern, CodeInstruction instruction)
     {
         if (instruction == null)
@@ -54,5 +65,3 @@ public readonly struct InstructionPattern
 
     public override string ToString() => $"{OpCode.OpCode}{(Operand != default ? $" {Operand}" : "")}{(Label != null ? $" '{Label}'" : "")}";
 }
-
-
