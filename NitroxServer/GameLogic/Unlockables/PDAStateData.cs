@@ -139,50 +139,42 @@ namespace NitroxServer.GameLogic.Unlockables
 
         public void FinishScanProgress(NitroxId id, NitroxTechType techType, bool destroyed, bool fullyResearched)
         {
-            lock (ScannerFragments)
+            lock (CachedProgress)
             {
-                lock (CachedProgress)
+                if (fullyResearched)
                 {
-                    if (fullyResearched)
-                    {
-                        CachedProgress.Remove(techType);
-                    }
-                    else if(CachedProgress.TryGetValue(techType, out ThreadSafeDictionary<NitroxId, float> entries) && entries.Remove(id) && entries.Count == 0)
-                    {
-                        CachedProgress.Remove(techType);
-                    }
-
-                    if (!destroyed)
-                    {
-                        ScannerFragments.Add(id);
-                    }
+                    CachedProgress.Remove(techType);
+                }
+                else if (CachedProgress.TryGetValue(techType, out ThreadSafeDictionary<NitroxId, float> entries) && entries.Remove(id) && entries.Count == 0)
+                {
+                    CachedProgress.Remove(techType);
                 }
             }
-            
+            if (!destroyed)
+            {
+                ScannerFragments.Add(id);
+            }            
         }
 
         public void UpdateEntryUnlockedProgress(NitroxTechType techType, int unlockedAmount, bool fullyResearched)
         {
-            lock (ScannerPartial)
+            if (fullyResearched)
             {
-                lock (ScannerComplete)
+                ScannerPartial.RemoveAll(entry => entry.TechType.Equals(techType));
+                ScannerComplete.Add(techType);
+            }
+            else
+            {
+                lock (ScannerPartial)
                 {
-                    if (fullyResearched)
+                    IEnumerable<PDAEntry> entries = ScannerPartial.Where(e => e.TechType.Equals(techType));
+                    if (entries.Any())
                     {
-                        ScannerPartial.RemoveAll(entry => entry.TechType.Equals(techType));
-                        ScannerComplete.Add(techType);
+                        entries.First().Unlocked = unlockedAmount;
                     }
                     else
                     {
-                        IEnumerable<PDAEntry> entries = ScannerPartial.Where(e => e.TechType.Equals(techType));
-                        if (entries.Any())
-                        {
-                            entries.First().Unlocked = unlockedAmount;
-                        }
-                        else
-                        {
-                            ScannerPartial.Add(new(techType, unlockedAmount));
-                        }
+                        ScannerPartial.Add(new(techType, unlockedAmount));
                     }
                 }
             }
