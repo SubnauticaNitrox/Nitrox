@@ -6,6 +6,9 @@
         <RootNamespace>NitroxServer_Subnautica</RootNamespace>
         <Nullable>disable</Nullable>
         <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+        <!-- Dotnet run starts in the project directory instead of the output directory. -->
+        <!-- OutputPath, OutputDir, TargetDir etc. aren't defined here so hardcode the path -->
+        <RunWorkingDirectory>$(MSBuildProjectDirectory)\bin\Debug</RunWorkingDirectory>
     </PropertyGroup>
 
     <ItemGroup>
@@ -30,4 +33,5 @@
     </ItemGroup>
     <Copy SourceFiles="@(NitroxSubnauticaTypeTreeData)" DestinationFolder="$(TargetDir)\%(RecursiveDir)" />
   </Target>
+
 </Project>
