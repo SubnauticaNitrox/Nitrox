@@ -14,13 +14,13 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// </summary>
 public class uSkyManager_SetVaryingMaterialProperties_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((uSkyManager t) => t.SetVaryingMaterialProperties(default));
+    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((uSkyManager t) => t.SetVaryingMaterialProperties(default));
 
     public static readonly InstructionsPattern ModifyInstructionPattern = new()
     {
         Ldarg_0,
         Ldfld,
-        { Call, "Modify" },
+        { InstructionPattern.Call(Reflect.Property(() => UnityEngine.Time.time).GetMethod), "Modify" },
         Mul
     };
 
