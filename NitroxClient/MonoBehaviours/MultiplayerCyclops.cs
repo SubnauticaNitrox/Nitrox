@@ -1,8 +1,8 @@
-﻿using NitroxClient.GameLogic;
+using NitroxClient.GameLogic;
 
 namespace NitroxClient.MonoBehaviours
 {
-    class MultiplayerCyclops : MultiplayerVehicleControl
+    public class MultiplayerCyclops : MultiplayerVehicleControl
     {
         private ISubTurnHandler[] subTurnHandlers;
         private ISubThrottleHandler[] subThrottleHandlers;

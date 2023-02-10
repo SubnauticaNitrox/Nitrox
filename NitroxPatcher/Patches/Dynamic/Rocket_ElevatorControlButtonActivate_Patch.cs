@@ -1,11 +1,9 @@
-﻿using System.Reflection;
+using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
-using NitroxModel_Subnautica.Packets;
 using UnityEngine;
 using static Rocket;
 
@@ -24,12 +22,10 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             if (__state != __instance.elevatorState)
             {
-                Rockets rocket = NitroxServiceLocator.LocateService<Rockets>();
                 GameObject gameObject = __instance.gameObject;
                 NitroxId id = NitroxEntity.GetId(gameObject);
 
-                bool isGoingUp = __instance.elevatorState == RocketElevatorStates.Up || __instance.elevatorState == RocketElevatorStates.AtTop;
-                rocket.CallElevator(id, RocketElevatorPanel.INTERNAL_PANEL, isGoingUp);
+                Resolve<Entities>().EntityMetadataChanged(__instance, id);
             }
         }
 

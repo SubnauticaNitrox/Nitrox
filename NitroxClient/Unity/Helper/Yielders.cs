@@ -8,6 +8,7 @@ namespace NitroxClient.Unity.Helper;
 public static class Yielders
 {
     public static readonly WaitForFixedUpdate WaitForFixedUpdate = new();
+    public static readonly WaitForEndOfFrame WaitForEndOfFrame = new();
     public static readonly WaitForSeconds WaitFor100Milliseconds = new(.1f);
     public static readonly WaitForSeconds WaitForHalfSecond = new(.5f);
     public static readonly WaitForSeconds WaitFor1Second = new(1);

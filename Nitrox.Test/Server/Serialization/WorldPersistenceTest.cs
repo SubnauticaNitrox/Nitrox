@@ -6,7 +6,6 @@ using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nitrox.Test;
 using Nitrox.Test.Helper;
-using NitroxModel_Subnautica.DataStructures.GameLogic;
 using NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation.Metadata;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
@@ -23,7 +22,6 @@ using NitroxServer.GameLogic.Entities;
 using NitroxServer.GameLogic.Items;
 using NitroxServer.GameLogic.Players;
 using NitroxServer.GameLogic.Unlockables;
-using NitroxServer.GameLogic.Vehicles;
 using NitroxServer.Serialization.World;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
@@ -76,34 +74,9 @@ public class WorldPersistenceTest
     }
 
     [DataTestMethod, DynamicWorldDataAfter]
-    public void VehicleDataTest(PersistedWorldData worldDataAfter, string serializerName)
-    {
-        AssertHelper.IsListEqual(worldData.WorldData.VehicleData.Vehicles.OrderBy(x => x.Id), worldDataAfter.WorldData.VehicleData.Vehicles.OrderBy(x => x.Id), (vehicleModel, vehicleModelAfter) =>
-        {
-            Assert.AreEqual(vehicleModel.TechType, vehicleModelAfter.TechType);
-            Assert.AreEqual(vehicleModel.Id, vehicleModelAfter.Id);
-            Assert.AreEqual(vehicleModel.Position, vehicleModelAfter.Position);
-            Assert.AreEqual(vehicleModel.Rotation, vehicleModelAfter.Rotation);
-
-            AssertHelper.IsListEqual(vehicleModel.InteractiveChildIdentifiers.OrderBy(x => x.Id), vehicleModelAfter.InteractiveChildIdentifiers.OrderBy(x => x.Id), (childIdentifier, childIdentifierAfter) =>
-            {
-                Assert.AreEqual(childIdentifier.Id, childIdentifierAfter.Id);
-                Assert.AreEqual(childIdentifier.GameObjectNamePath, childIdentifierAfter.GameObjectNamePath);
-            });
-
-            Assert.AreEqual(vehicleModel.DockingBayId.HasValue, vehicleModelAfter.DockingBayId.HasValue);
-            Assert.AreEqual(vehicleModel.DockingBayId.Value, vehicleModelAfter.DockingBayId.Value);
-            Assert.AreEqual(vehicleModel.Name, vehicleModelAfter.Name);
-            Assert.IsTrue(vehicleModel.HSB.SequenceEqual(vehicleModelAfter.HSB));
-            Assert.AreEqual(vehicleModel.Health, vehicleModelAfter.Health);
-        });
-    }
-
-    [DataTestMethod, DynamicWorldDataAfter]
     public void InventoryDataTest(PersistedWorldData worldDataAfter, string serializerName)
     {
         AssertHelper.IsListEqual(worldData.WorldData.InventoryData.StorageSlotItems.OrderBy(x => x.ItemId), worldDataAfter.WorldData.InventoryData.StorageSlotItems.OrderBy(x => x.ItemId), ItemDataTest);
-        AssertHelper.IsListEqual(worldData.WorldData.InventoryData.Modules.OrderBy(x => x.ItemId), worldDataAfter.WorldData.InventoryData.Modules.OrderBy(x => x.ItemId), ItemDataTest);
     }
 
     private static void ItemDataTest(ItemData itemData, ItemData itemDataAfter)
@@ -358,6 +331,20 @@ public class WorldPersistenceTest
                 Assert.AreEqual(metadata.TechType, metadataAfter.TechType);
                 Assert.AreEqual(metadata.StartTime, metadataAfter.StartTime);
                 break;
+            case CyclopsMetadata metadata when entityAfter.Metadata is CyclopsMetadata metadataAfter:
+                Assert.AreEqual(metadata.SilentRunningOn, metadataAfter.SilentRunningOn);
+                Assert.AreEqual(metadata.EngineOn, metadataAfter.EngineOn);
+                Assert.AreEqual(metadata.EngineMode, metadataAfter.EngineMode);
+                Assert.AreEqual(metadata.Health, metadataAfter.Health);
+                break;
+            case CyclopsLightingMetadata metadata when entityAfter.Metadata is CyclopsLightingMetadata metadataAfter:
+                Assert.AreEqual(metadata.InternalLightsOn, metadataAfter.InternalLightsOn);
+                Assert.AreEqual(metadata.FloodLightsOn, metadataAfter.FloodLightsOn);
+                break;
+            case FireExtinguisherHolderMetadata metadata when entityAfter.Metadata is FireExtinguisherHolderMetadata metadataAfter:
+                Assert.AreEqual(metadata.Fuel, metadataAfter.Fuel);
+                Assert.AreEqual(metadata.HasExtinguisher, metadataAfter.HasExtinguisher);
+                break;
             case null when entityAfter.Metadata is null:
                 break;
             default:
@@ -401,6 +388,13 @@ public class WorldPersistenceTest
                 break;
             case InventoryItemEntity inventoryItemEntity when entityAfter is InventoryItemEntity inventoryItemEntityAfter:
                 Assert.AreEqual(inventoryItemEntity.ClassId, inventoryItemEntityAfter.ClassId);
+                break;
+            case VehicleWorldEntity vehicleWorldEntity when entityAfter is VehicleWorldEntity vehicleWorldEntityAfter:
+                Assert.AreEqual(vehicleWorldEntity.SpawnerId, vehicleWorldEntityAfter.SpawnerId);
+                Assert.AreEqual(vehicleWorldEntity.ConstructionTime, vehicleWorldEntityAfter.ConstructionTime);
+                break;
+            case PathBasedChildEntity PathBasedChildEntity when entityAfter is PathBasedChildEntity pathBasedChildEntityAfter:
+                Assert.AreEqual(PathBasedChildEntity.Path, pathBasedChildEntityAfter.Path);
                 break;
             default:
                 Assert.Fail($"Runtime type of {nameof(Entity)} is not equal");
@@ -461,7 +455,10 @@ public class WorldPersistenceTest
                         new InventoryEntity(1, new NitroxId(), new NitroxTechType("planterbox"), null, new NitroxId(), new List<Entity>()
                         {
                             new InventoryItemEntity(new NitroxId(), "classId", new NitroxTechType("bluepalmseed"), new PlantableMetadata(0.5f), new NitroxId(), new List<Entity>())
-                        })
+                        }),
+                        new VehicleWorldEntity(new NitroxId(), 0, null, "classId", true, new NitroxId(), new NitroxTechType("seamoth"), new CyclopsMetadata(true, true, true, true, 0, 100f)),
+                        new PathBasedChildEntity("cyclops_lighting", new NitroxId(), NitroxTechType.None, new CyclopsLightingMetadata(true, true), new NitroxId(), new List<Entity>()),
+                        new PathBasedChildEntity("fire_extinguisher_holder", new NitroxId(), NitroxTechType.None, new FireExtinguisherHolderMetadata(true, 1), new NitroxId(), new List<Entity>())
                     }
                 },
             PlayerData = new PlayerData()
@@ -533,18 +530,9 @@ public class WorldPersistenceTest
                 },
                 InventoryData = new InventoryData()
                 {
-                    StorageSlotItems = new List<ItemData>() { new BasicItemData(new NitroxId(), new NitroxId(), new byte[] { 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21 }) },
-                    Modules = new List<EquippedItemData>() { new EquippedItemData(new NitroxId(), new NitroxId(), new byte[] { 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21 }, "Slot1", new NitroxTechType("")) }
+                    StorageSlotItems = new List<ItemData>() { new BasicItemData(new NitroxId(), new NitroxId(), new byte[] { 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21 }) }
                 },
                 ParsedBatchCells = new List<NitroxInt3>() { new NitroxInt3(10, 1, 10), new NitroxInt3(15, 4, 12) },
-                VehicleData = new VehicleData()
-                {
-                    Vehicles = new List<VehicleModel>()
-                    {
-                        new CyclopsModel(new NitroxTechType("Cyclops"), new NitroxId(), NitroxVector3.One, NitroxQuaternion.Identity, Array.Empty<InteractiveChildObjectIdentifier>(), Optional<NitroxId>.Of(new NitroxId()), "Super Duper Cyclops",
-                                         new[] { NitroxVector3.Zero, NitroxVector3.One, NitroxVector3.One }, 100)
-                    }
-                },
                 Seed = "NITROXSEED"
             }
         };

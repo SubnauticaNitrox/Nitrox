@@ -1,32 +1,44 @@
-﻿using NitroxModel.Packets;
+using NitroxModel.DataStructures.GameLogic.Entities;
+using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Util;
+using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
-using NitroxServer.GameLogic.Items;
+using NitroxServer.GameLogic.Entities;
 
 namespace NitroxServer.Communication.Packets.Processors
 {
     class ModuleRemovedProcessor : AuthenticatedPacketProcessor<ModuleRemoved>
     {
         private readonly PlayerManager playerManager;
-        private readonly InventoryManager inventoryManager;
+        private readonly EntityRegistry entityRegistry;
 
-        public ModuleRemovedProcessor(PlayerManager playerManager, InventoryManager inventoryManager)
+        public ModuleRemovedProcessor(PlayerManager playerManager, EntityRegistry entityRegistry)
         {
             this.playerManager = playerManager;
-            this.inventoryManager = inventoryManager;
+            this.entityRegistry = entityRegistry;
         }
 
         public override void Process(ModuleRemoved packet, Player player)
         {
-            if (packet.PlayerModule)
+            Optional<Entity> entity = entityRegistry.GetEntityById(packet.Id);
+
+            if (!entity.HasValue)
             {
-                player.RemoveModule(packet.ItemId);
+                Log.Error($"Could not find entity {packet.Id} module added to a vehicle.");
+                return;
             }
-            else
+
+            if (entity.Value is InstalledModuleEntity installedModule)
             {
-                inventoryManager.ModuleRemoved(packet.ItemId);
+                InventoryItemEntity inventoryEntity = new(installedModule.Id, installedModule.ClassId, installedModule.TechType, installedModule.Metadata, packet.NewParentId, installedModule.ChildEntities);
+
+                // Convert the world entity into an inventory item
+                entityRegistry.AddOrUpdate(inventoryEntity);
+
+                // Have other players respawn the item inside the inventory.
+                playerManager.SendPacketToOtherPlayers(new CellEntities(inventoryEntity, true), player);
             }
-            playerManager.SendPacketToOtherPlayers(packet, player);
         }
     }
 }

@@ -1,11 +1,10 @@
-﻿using System.Reflection;
+using System.Reflection;
 using HarmonyLib;
-using NitroxClient.Communication.Abstract;
+using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
-using NitroxModel.Packets;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic
@@ -16,6 +15,12 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(SubNameInput __instance)
         {
+            if (!__instance.GetComponent<NitroxEntity>())
+            {
+                // prevent this patch from firing when the initial template cyclops loads (happens on game load with living large update).
+                return;
+            }
+
             SubName subname = __instance.target;
             if (subname)
             {
@@ -50,9 +55,8 @@ namespace NitroxPatcher.Patches.Dynamic
                     return;
                 }
 
-                NitroxId vehicleId = NitroxEntity.GetId(parentVehicle);
-                VehicleNameChange packet = new(controllerId, vehicleId, subname.GetName());
-                Resolve<IPacketSender>().Send(packet);
+                NitroxId subNameInputId = NitroxEntity.GetId(__instance.gameObject);
+                Resolve<Entities>().EntityMetadataChanged(__instance, subNameInputId);
             }
         }
 
