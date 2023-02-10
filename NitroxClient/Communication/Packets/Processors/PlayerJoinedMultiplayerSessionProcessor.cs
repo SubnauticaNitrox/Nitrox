@@ -23,7 +23,9 @@ namespace NitroxClient.Communication.Packets.Processors
 
             playerManager.Create(packet.PlayerContext);
 
-            Log.InGame($"{packet.PlayerContext.PlayerName} joined the game.");
+            string PlayerJoinedText = $"{packet.PlayerContext.PlayerName} {Language.main.Get("Nitrox_PlayerJoined")}";
+            Log.InGame(PlayerJoinedText);
+
         }
     }
 }
