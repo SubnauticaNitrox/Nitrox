@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Packets;
 
 namespace NitroxServer.GameLogic.Unlockables
 {

@@ -12,16 +12,16 @@ namespace NitroxServer.GameLogic
         private readonly ThreadSafeDictionary<string, NitroxScheduledGoal> scheduledGoals = new();
         private readonly PDAStateData pdaStateData;
         private readonly StoryGoalData storyGoalData;
-        private readonly StoryManager storyManager;
+        private readonly TimeKeeper timeKeeper;
         private readonly PlayerManager playerManager;
 
-        private float ElapsedSecondsFloat => (float)storyManager.ElapsedSeconds;
+        private float ElapsedSecondsFloat => (float)timeKeeper.ElapsedSeconds;
 
-        public ScheduleKeeper(PDAStateData pdaStateData, StoryGoalData storyGoalData, StoryManager storyManager, PlayerManager playerManager)
+        public ScheduleKeeper(PDAStateData pdaStateData, StoryGoalData storyGoalData, TimeKeeper timeKeeper, PlayerManager playerManager)
         {
             this.pdaStateData = pdaStateData;
             this.storyGoalData = storyGoalData;
-            this.storyManager = storyManager;
+            this.timeKeeper = timeKeeper;
             this.playerManager = playerManager;
 
             // We still want to get a "replicated" list in memory

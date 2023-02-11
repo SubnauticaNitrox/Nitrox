@@ -34,7 +34,7 @@ namespace NitroxModel.Packets
         public ServerGameMode GameMode { get; }
         public Perms Permissions { get; }
         public SubnauticaPlayerPreferences Preferences { get; }
-        public InitialTimeData InitialTimeData { get; }
+        public TimeData TimeData { get; }
 
         public InitialPlayerSync(NitroxId playerGameObjectId,
             bool firstTimeConnecting,
@@ -57,7 +57,7 @@ namespace NitroxModel.Packets
             ServerGameMode gameMode,
             Perms perms,
             SubnauticaPlayerPreferences preferences,
-            InitialTimeData initialTimeData)
+            TimeData timeData)
         {
             AssignedEscapePodId = assignedEscapePodId;
             PlayerGameObjectId = playerGameObjectId;
@@ -80,7 +80,7 @@ namespace NitroxModel.Packets
             GameMode = gameMode;
             Permissions = perms;
             Preferences = preferences;
-            InitialTimeData = initialTimeData;
+            TimeData = timeData;
         }
 
         /// <remarks>Used for deserialization</remarks>
@@ -106,7 +106,7 @@ namespace NitroxModel.Packets
             ServerGameMode gameMode,
             Perms permissions,
             SubnauticaPlayerPreferences preferences,
-            InitialTimeData initialTimeData)
+            TimeData timeData)
         {
             AssignedEscapePodId = assignedEscapePodId;
             PlayerGameObjectId = playerGameObjectId;
@@ -129,7 +129,7 @@ namespace NitroxModel.Packets
             GameMode = gameMode;
             Permissions = permissions;
             Preferences = preferences;
-            InitialTimeData = initialTimeData;
+            TimeData = timeData;
         }
     }
 }

@@ -16,11 +16,11 @@ namespace NitroxServer.GameLogic
         [DataMember(Order = 3)]
         public double? AuroraWarningTime { get; set; }
 
-        public static StoryTimingData From(StoryManager storyManager)
+        public static StoryTimingData From(StoryManager storyManager, TimeKeeper timeKeeper)
         {
             return new StoryTimingData
             {
-                ElapsedSeconds = storyManager.ElapsedSeconds,
+                ElapsedSeconds = timeKeeper.ElapsedSeconds,
                 AuroraCountdownTime = storyManager.AuroraCountdownTimeMs,
                 AuroraWarningTime = storyManager.AuroraWarningTimeMs
             };

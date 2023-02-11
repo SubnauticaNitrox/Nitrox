@@ -75,7 +75,7 @@ public class PersistedPlayerData
                           Modules,
                           CompletedGoals,
                           PlayerPreferences.PingPreferences,
-                          PlayerPreferences.PinPreferences);
+                          PlayerPreferences.PinnedRecipePreferences);
     }
 
     public static PersistedPlayerData FromPlayer(Player player)
@@ -96,7 +96,7 @@ public class PersistedPlayerData
             NitroxId = player.GameObjectId,
             IsPermaDeath = player.IsPermaDeath,
             CompletedGoals = new(player.CompletedGoals),
-            PlayerPreferences = new(player.PingInstancePreferences.ToDictionary(m => m.Key, m => m.Value), player.PinPreferences.ToList())
+            PlayerPreferences = new(player.PingInstancePreferences.ToDictionary(m => m.Key, m => m.Value), player.PinnedRecipePreferences.ToList())
         };
     }
 }

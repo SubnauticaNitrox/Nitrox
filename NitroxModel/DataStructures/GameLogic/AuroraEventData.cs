@@ -9,7 +9,7 @@ namespace NitroxModel.DataStructures.GameLogic;
 /// Aurora events data
 /// </summary>
 [Serializable, DataContract]
-public class CrashedShipExploderData
+public class AuroraEventData
 {
     /// <summary>
     /// In-game time in seconds at which Aurora's countdown happens
@@ -24,12 +24,12 @@ public class CrashedShipExploderData
     public float TimeToStartWarning;
 
     [IgnoreConstructor]
-    protected CrashedShipExploderData()
+    protected AuroraEventData()
     {
         // Constructor for serialization. Has to be "protected" for json serialization.
     }
 
-    public CrashedShipExploderData(float timeToStartCountdown, float timeToStartWarning)
+    public AuroraEventData(float timeToStartCountdown, float timeToStartWarning)
     {
         TimeToStartCountdown = timeToStartCountdown;
         TimeToStartWarning = timeToStartWarning;

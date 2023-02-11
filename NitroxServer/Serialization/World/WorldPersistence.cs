@@ -202,8 +202,9 @@ namespace NitroxServer.Serialization.World
                 Seed = seed
             };
 
-            world.StoryManager = new StoryManager(world.PlayerManager, pWorldData.WorldData.GameData.PDAState, pWorldData.WorldData.GameData.StoryGoals, seed, pWorldData.WorldData.GameData.StoryTiming.ElapsedSeconds, pWorldData.WorldData.GameData.StoryTiming.AuroraCountdownTime, pWorldData.WorldData.GameData.StoryTiming.AuroraWarningTime);
-            world.ScheduleKeeper = new ScheduleKeeper(pWorldData.WorldData.GameData.PDAState, pWorldData.WorldData.GameData.StoryGoals, world.StoryManager, world.PlayerManager);
+            world.TimeKeeper = new(world.PlayerManager, pWorldData.WorldData.GameData.StoryTiming.ElapsedSeconds);
+            world.StoryManager = new(world.PlayerManager, pWorldData.WorldData.GameData.PDAState, pWorldData.WorldData.GameData.StoryGoals, world.TimeKeeper, seed, pWorldData.WorldData.GameData.StoryTiming.AuroraCountdownTime, pWorldData.WorldData.GameData.StoryTiming.AuroraWarningTime);
+            world.ScheduleKeeper = new ScheduleKeeper(pWorldData.WorldData.GameData.PDAState, pWorldData.WorldData.GameData.StoryGoals, world.TimeKeeper, world.PlayerManager);
 
             world.BatchEntitySpawner = new BatchEntitySpawner(
                 NitroxServiceLocator.LocateService<EntitySpawnPointFactory>(),

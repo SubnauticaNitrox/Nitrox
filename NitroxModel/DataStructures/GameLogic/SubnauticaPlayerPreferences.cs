@@ -12,7 +12,7 @@ public class SubnauticaPlayerPreferences
     public Dictionary<string, PingInstancePreference> PingPreferences { get; set; } = new();
 
     [DataMember(Order = 2)]
-    public List<int> PinPreferences { get; set; } = new();
+    public List<int> PinnedRecipePreferences { get; set; } = new();
 
     [IgnoreConstructor]
     protected SubnauticaPlayerPreferences()
@@ -20,9 +20,9 @@ public class SubnauticaPlayerPreferences
         // Constructor for serialization. Has to be "protected" for json serialization.
     }
 
-    public SubnauticaPlayerPreferences(Dictionary<string, PingInstancePreference> pingPreferences, List<int> pinPreferences)
+    public SubnauticaPlayerPreferences(Dictionary<string, PingInstancePreference> pingPreferences, List<int> pinnedRecipePreferences)
     {
         PingPreferences = pingPreferences;
-        PinPreferences = pinPreferences;
+        PinnedRecipePreferences = pinnedRecipePreferences;
     }
 }

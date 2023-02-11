@@ -23,6 +23,7 @@ public class StoryGoalExecutedProcessor : AuthenticatedPacketProcessor<StoryGoal
     public override void Process(StoryGoalExecuted packet, Player player)
     {
         Log.Debug($"Processing StoryGoalExecuted: {packet}");
+        // The switch is structure is similar to StoryGoal.Execute()
         bool added = storyGoalData.CompletedGoals.Add(packet.Key);
         switch (packet.Type)
         {
@@ -40,11 +41,8 @@ public class StoryGoalExecutedProcessor : AuthenticatedPacketProcessor<StoryGoal
                 break;
         }
 
-        if (scheduleKeeper.ContainsScheduledGoal(packet.Key))
-        {
-            scheduleKeeper.UnScheduleGoal(packet.Key);
-        }
-        
+        scheduleKeeper.UnScheduleGoal(packet.Key);
+
         playerManager.SendPacketToOtherPlayers(packet, player);
     }
 }

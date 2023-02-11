@@ -1,3 +1,4 @@
+using System;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxModel.Packets;
@@ -25,6 +26,10 @@ public class KnownTechEntryProcessorAdd : ClientPacketProcessor<KnownTechEntryAd
                     break;
                 case KnownTechEntryAdd.EntryCategory.ANALYZED:
                     KnownTech.Analyze(packet.TechType.ToUnity(), packet.Verbose);
+                    break;
+                default:
+                    string categoryName = Enum.GetName(typeof(KnownTechEntryAdd.EntryCategory), packet.Category);
+                    Log.Error($"Received an unknown category type for {nameof(KnownTechEntryAdd)} packet: {categoryName}");
                     break;
             }
         }

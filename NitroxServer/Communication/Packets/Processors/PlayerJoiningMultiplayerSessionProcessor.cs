@@ -87,8 +87,8 @@ namespace NitroxServer.Communication.Packets.Processors
                 simulations,
                 world.GameMode,
                 player.Permissions,
-                new(new(player.PingInstancePreferences), player.PinPreferences.ToList()),
-                storyManager.GetInitialTimeData()
+                new(new(player.PingInstancePreferences), player.PinnedRecipePreferences.ToList()),
+                storyManager.GetTimeData()
             );
 
             player.SendPacket(initialPlayerSync);

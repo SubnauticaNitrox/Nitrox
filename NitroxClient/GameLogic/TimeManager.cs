@@ -14,6 +14,8 @@ public class TimeManager
     /// </summary>
     private double latestRegisteredTime;
 
+    private const double DEFAULT_TIME = 480;
+
     public double CurrentTime
     {
         get
@@ -21,7 +23,7 @@ public class TimeManager
             // Unitialized state
             if (latestRegisteredTime == 0)
             {
-                return 480;
+                return DEFAULT_TIME;
             }
             return (DateTimeOffset.Now - latestRegistrationTime).TotalMilliseconds * 0.001 + latestRegisteredTime;
         }

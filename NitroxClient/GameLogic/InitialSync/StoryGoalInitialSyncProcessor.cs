@@ -28,7 +28,7 @@ public class StoryGoalInitialSyncProcessor : InitialSyncProcessor
 
     private IEnumerator SetTimeData(InitialPlayerSync packet)
     {
-        NitroxServiceLocator.LocateService<TimeManager>().ProcessUpdate(packet.InitialTimeData.TimePacket);
+        NitroxServiceLocator.LocateService<TimeManager>().ProcessUpdate(packet.TimeData.TimePacket);
         yield break;
     }
 
@@ -102,7 +102,7 @@ public class StoryGoalInitialSyncProcessor : InitialSyncProcessor
     // Must happen after CompletedGoals
     private IEnumerator SetupAuroraAndSunbeam(InitialPlayerSync packet)
     {
-        InitialTimeData timeData = packet.InitialTimeData;
+        TimeData timeData = packet.TimeData;
 
         AuroraWarnings auroraWarnings = GameObject.FindObjectOfType<AuroraWarnings>();
         auroraWarnings.timeSerialized = DayNightCycle.main.timePassedAsFloat;

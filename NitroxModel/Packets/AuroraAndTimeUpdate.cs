@@ -6,10 +6,10 @@ namespace NitroxModel.Packets;
 [Serializable]
 public class AuroraAndTimeUpdate : Packet
 {
-    public InitialTimeData InitialTimeData { get; }
+    public TimeData InitialTimeData { get; }
     public bool Restore { get; }
 
-    public AuroraAndTimeUpdate(InitialTimeData initialTimeData, bool restore)
+    public AuroraAndTimeUpdate(TimeData initialTimeData, bool restore)
     {
         InitialTimeData = initialTimeData;
         Restore = restore;

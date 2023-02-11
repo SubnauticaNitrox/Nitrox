@@ -44,7 +44,7 @@ public class PlayerPreferencesInitialSyncProcessor : InitialSyncProcessor
     {
         using (packetSender.Suppress<RecipePinned>())
         {
-            PinManager.main.Deserialize(packet.Preferences.PinPreferences.Select(techType => (TechType)techType).ToList());
+            PinManager.main.Deserialize(packet.Preferences.PinnedRecipePreferences.Select(techType => (TechType)techType).ToList());
         }
         yield break;
     }

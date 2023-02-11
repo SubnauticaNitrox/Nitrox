@@ -27,7 +27,7 @@ public static class NitroxStoryManager
         }
     }
 
-    public static void UpdateAuroraData(CrashedShipExploderData crashedShipExploderData)
+    public static void UpdateAuroraData(AuroraEventData crashedShipExploderData)
     {
         CrashedShipExploder.main.timeToStartCountdown = crashedShipExploderData.TimeToStartCountdown;
         CrashedShipExploder.main.timeToStartWarning = crashedShipExploderData.TimeToStartWarning;
@@ -47,7 +47,7 @@ public static class NitroxStoryManager
     /// </summary>
     public static void CleanAuroraEvents()
     {
-        foreach (string eventKey in CrashedShipExploderData.AuroraEvents)
+        foreach (string eventKey in AuroraEventData.AuroraEvents)
         {
             StoryGoalManager.main.completedGoals.Remove(eventKey);
             PDALog.Remove(eventKey);

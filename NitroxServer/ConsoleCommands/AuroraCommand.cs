@@ -25,13 +25,13 @@ public class AuroraCommand : Command
         switch (action.ToLower())
         {
             case "countdown":
-                storyManager.ExplodeAurora(true);
+                storyManager.BroadcastExplodeAurora(true);
                 break;
             case "restore":
-                storyManager.RestoreAurora();
+                storyManager.BroadcastRestoreAurora();
                 break;
             case "explode":
-                storyManager.ExplodeAurora(false);
+                storyManager.BroadcastExplodeAurora(false);
                 break;
             default:
                 // Same message as in the abstract class, in method TryExecute

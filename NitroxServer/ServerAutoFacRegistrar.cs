@@ -48,6 +48,7 @@ namespace NitroxServer
 
             containerBuilder.Register(c => c.Resolve<WorldPersistence>().Load()).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().BaseManager).SingleInstance();
+            containerBuilder.Register(c => c.Resolve<World>().TimeKeeper).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().InventoryManager).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().PlayerManager).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().StoryManager).SingleInstance();

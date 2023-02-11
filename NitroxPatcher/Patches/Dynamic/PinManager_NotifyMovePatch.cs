@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Reflection;
 using HarmonyLib;
@@ -19,7 +20,11 @@ public class PinManager_NotifyMove_Patch : NitroxPatch, IDynamicPatch
             return;
         }
         // We can set a throttle as big as we want because the local player is the only one concerned
-        Resolve<ThrottledPacketSender>().SendThrottled(new PinMoved(PinManager.main.pins.Select(techType => (int)techType).ToList()), 1);
+        Func<Packet, object> dedupeMethod = (packet) =>
+        {
+            return string.Join("", ((PinnedRecipeMoved)packet).RecipePins); // Makes a string of all the techtypes numbers 
+        };
+        Resolve<ThrottledPacketSender>().SendThrottled(new PinnedRecipeMoved(PinManager.main.pins.Select(techType => (int)techType).ToList()), dedupeMethod, 1f);
     }
 
     public override void Patch(Harmony harmony)

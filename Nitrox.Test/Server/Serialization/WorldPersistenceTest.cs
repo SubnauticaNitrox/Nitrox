@@ -49,7 +49,7 @@ public class WorldPersistenceTest
 
         worldData = GeneratePersistedWorldData();
         World.World world = worldPersistence.CreateWorld(worldData, ServerGameMode.CREATIVE);
-        world.StoryManager.ResetWorld();
+        world.TimeKeeper.ResetCount();
 
         for (int index = 0; index < ServerSerializers.Length; index++)
         {
@@ -61,7 +61,7 @@ public class WorldPersistenceTest
             //Checking loading
             Optional<World.World> worldAfter = worldPersistence.LoadFromFile(tempSaveFilePath);
             Assert.IsTrue(worldAfter.HasValue, $"Loading saved world failed while using {ServerSerializers[index]}.");
-            worldAfter.Value.StoryManager.ResetWorld();
+            worldAfter.Value.TimeKeeper.ResetCount();
             WorldsDataAfter[index] = PersistedWorldData.From(worldAfter.Value);
         }
     }
@@ -257,7 +257,7 @@ public class WorldPersistenceTest
                 Assert.AreEqual(keyValuePair.Value.Color, keyValuePairAfter.Value.Color);
                 Assert.AreEqual(keyValuePair.Value.Visible, keyValuePairAfter.Value.Visible);
             });
-            Assert.IsTrue(playerData.PlayerPreferences.PinPreferences.SequenceEqual(playerDataAfter.PlayerPreferences.PinPreferences));
+            Assert.IsTrue(playerData.PlayerPreferences.PinnedRecipePreferences.SequenceEqual(playerDataAfter.PlayerPreferences.PinnedRecipePreferences));
         });
     }
 

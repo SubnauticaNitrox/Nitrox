@@ -3,40 +3,39 @@ using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
 using NitroxServer.GameLogic;
 
-namespace NitroxServer.ConsoleCommands
+namespace NitroxServer.ConsoleCommands;
+
+public class TimeCommand : Command
 {
-    internal class TimeCommand : Command
+    private readonly TimeKeeper timeKeeper;
+
+    public TimeCommand(TimeKeeper timeKeeper) : base("time", Perms.MODERATOR, "Changes the map time")
     {
-        private readonly StoryManager storyManager;
+        AddParameter(new TypeString("day/night", false, "Time to change to"));
 
-        public TimeCommand(StoryManager storyManager) : base("time", Perms.MODERATOR, "Changes the map time")
+        this.timeKeeper = timeKeeper;
+    }
+
+    protected override void Execute(CallArgs args)
+    {
+        string time = args.Get(0);
+
+        switch (time?.ToLower())
         {
-            AddParameter(new TypeString("day/night", false, "Time to change to"));
+            case "day":
+                timeKeeper.ChangeTime(StoryManager.TimeModification.DAY);
+                SendMessageToAllPlayers("Time set to day");
+                break;
 
-            this.storyManager = storyManager;
-        }
+            case "night":
+                timeKeeper.ChangeTime(StoryManager.TimeModification.NIGHT);
+                SendMessageToAllPlayers("Time set to night");
+                break;
 
-        protected override void Execute(CallArgs args)
-        {
-            string time = args.Get(0);
-
-            switch (time?.ToLower())
-            {
-                case "day":
-                    storyManager.ChangeTime(StoryManager.TimeModification.DAY);
-                    SendMessageToAllPlayers("Time set to day");
-                    break;
-
-                case "night":
-                    storyManager.ChangeTime(StoryManager.TimeModification.NIGHT);
-                    SendMessageToAllPlayers("Time set to night");
-                    break;
-
-                default:
-                    storyManager.ChangeTime(StoryManager.TimeModification.SKIP);
-                    SendMessageToAllPlayers("Skipped time");
-                    break;
-            }
+            default:
+                timeKeeper.ChangeTime(StoryManager.TimeModification.SKIP);
+                SendMessageToAllPlayers("Skipped time");
+                break;
         }
     }
 }

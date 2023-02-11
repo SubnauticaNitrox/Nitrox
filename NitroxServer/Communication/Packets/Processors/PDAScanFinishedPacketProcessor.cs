@@ -1,4 +1,3 @@
-using NitroxModel.DataStructures;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
@@ -11,15 +10,13 @@ public class PDAScanFinishedPacketProcessor : AuthenticatedPacketProcessor<PDASc
 {
     private readonly PlayerManager playerManager;
     private readonly PDAStateData pdaStateData;
-    private readonly EntityRegistry entityRegistry;
-    private readonly SimulationOwnershipData simulationOwnershipData;
+    private readonly WorldEntityManager worldEntityManager;
 
-    public PDAScanFinishedPacketProcessor(PlayerManager playerManager, PDAStateData pdaStateData, EntityRegistry entityRegistry, SimulationOwnershipData simulationOwnershipData)
+    public PDAScanFinishedPacketProcessor(PlayerManager playerManager, PDAStateData pdaStateData, WorldEntityManager worldEntityManager)
     {
         this.playerManager = playerManager;
         this.pdaStateData = pdaStateData;
-        this.entityRegistry = entityRegistry;
-        this.simulationOwnershipData = simulationOwnershipData;
+        this.worldEntityManager = worldEntityManager;
     }
 
     public override void Process(PDAScanFinished packet, Player player)
@@ -28,13 +25,9 @@ public class PDAScanFinishedPacketProcessor : AuthenticatedPacketProcessor<PDASc
         pdaStateData.UpdateEntryUnlockedProgress(packet.TechType, packet.UnlockedAmount, packet.FullyResearched);
         playerManager.SendPacketToOtherPlayers(packet, player);
 
-        if (packet.Destroy)
+        if (packet.Destroy && packet.Id != null)
         {
-            entityRegistry.RemoveEntity(packet.Id);
-            if (simulationOwnershipData.RevokeOwnerOfId(packet.Id))
-            {
-                playerManager.SendPacketToAllPlayers(new SimulationOwnershipChange(packet.Id, ushort.MaxValue, SimulationLockType.TRANSIENT));
-            }
+            worldEntityManager.TryDestroyEntity(packet.Id, out _);
         }
     }
 }

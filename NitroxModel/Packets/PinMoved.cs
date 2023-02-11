@@ -4,12 +4,12 @@ using System.Collections.Generic;
 namespace NitroxModel.Packets;
 
 [Serializable]
-public class PinMoved : Packet
+public class PinnedRecipeMoved : Packet
 {
-    public List<int> Pins { get; }
+    public List<int> RecipePins { get; }
     
-    public PinMoved(List<int> pins)
+    public PinnedRecipeMoved(List<int> recipePins)
     {
-        Pins = pins;
+        RecipePins = recipePins;
     }
 }
