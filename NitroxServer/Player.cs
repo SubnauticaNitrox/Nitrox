@@ -117,6 +117,11 @@ namespace NitroxServer
             return visibleCells.Contains(cell);
         }
 
+        public void ClearVisibleCells()
+        {
+            visibleCells.Clear();
+        }
+
         public void AddModule(EquippedItemData module)
         {
             modules.Add(module);

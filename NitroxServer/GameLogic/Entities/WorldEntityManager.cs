@@ -236,7 +236,7 @@ namespace NitroxServer.GameLogic.Entities
             foreach (NitroxInt3 batchId in distinctBatchIds)
             {
                 List<Entity> spawnedEntities = batchEntitySpawner.LoadUnspawnedEntities(batchId);
-                entityRegistry.AddEntities(spawnedEntities);
+                entityRegistry.AddEntitiesIgnoringDuplicate(spawnedEntities);
 
                 List<WorldEntity> worldEntities = spawnedEntities.OfType<WorldEntity>().ToList();
 
