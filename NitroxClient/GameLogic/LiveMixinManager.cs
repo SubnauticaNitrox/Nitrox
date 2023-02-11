@@ -1,10 +1,6 @@
-﻿using NitroxClient.Communication.Abstract;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.Util;
-using NitroxModel.Packets;
-using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic
@@ -62,54 +58,32 @@ namespace NitroxClient.GameLogic
             return true;
         }
 
-        public void ProcessRemoteHealthChange(NitroxId id, float LifeChanged, Optional<DamageTakenData> opDamageTakenData, float totalHealth)
+        public void SyncRemoteHealth(LiveMixin liveMixin, float remoteHealth)
         {
-            if (simulationOwnership.HasAnyLockType(id))
+            if (liveMixin.health == remoteHealth)
             {
-                Log.Error($"Got LiveMixin change health for {id} but we have the simulation already. This should not happen!");
                 return;
             }
 
+            float difference = remoteHealth - liveMixin.health;
+
             processingRemoteHealthChange = true;
 
-            LiveMixin liveMixin = NitroxEntity.RequireObjectFrom(id).GetComponent<LiveMixin>();
-
-            if (LifeChanged < 0)
+            if (difference < 0)
             {
-                DamageTakenData damageTakenData = opDamageTakenData.OrNull();
-                Optional<GameObject> opDealer = damageTakenData.DealerId.HasValue ? NitroxEntity.GetObjectFrom(damageTakenData.DealerId.Value) : Optional.Empty;
-                GameObject dealer = opDealer.HasValue ? opDealer.Value : null;
-                if (!dealer && damageTakenData.DealerId.HasValue)
-                {
-                    Log.Warn($"Could not find entity {damageTakenData.DealerId.Value} for damage calculation. This could lead to problems.");
-                }
-                liveMixin.TakeDamage(-LifeChanged, damageTakenData.Position.ToUnity(), (DamageType)damageTakenData.DamageType, dealer);
+                liveMixin.TakeDamage(difference);
             }
             else
             {
-                liveMixin.AddHealth(LifeChanged);
+                liveMixin.AddHealth(difference);
             }
 
             processingRemoteHealthChange = false;
 
-            // Check if the health calculated by the game is the same as the calculated damage from the simulator
-            if (liveMixin.health != totalHealth)
-            {
-                Log.Warn($"Calculated health and send health for {id} do not align (Calculated: {liveMixin.health}, send:{totalHealth}). This will be correted but should be investigated");
-                liveMixin.health = totalHealth;
-            }
+            // We mainly only do the above to trigger damage effects and sounds.  After those, we sync the remote value
+            // to ensure that any floating point discrepencies aren't an issue.
+            liveMixin.health = remoteHealth;
         }
 
-        public void BroadcastTakeDamage(TechType techType, NitroxId id, float originalDamage, Vector3 position, DamageType damageType, Optional<NitroxId> dealerId, float totalHealth)
-        {
-            LiveMixinHealthChanged packet = new LiveMixinHealthChanged(techType.ToDto(), id, -originalDamage, totalHealth, position.ToDto(), (ushort)damageType, dealerId);
-            multiplayerSession.Send(packet);
-        }
-
-        public void BroadcastAddHealth(TechType techType, NitroxId id, float healthAdded, float totalHealth)
-        {
-            LiveMixinHealthChanged packet = new LiveMixinHealthChanged(techType.ToDto(), id, healthAdded, totalHealth);
-            multiplayerSession.Send(packet);
-        }
     }
 }

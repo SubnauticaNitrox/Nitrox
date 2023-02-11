@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
-using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -19,14 +18,7 @@ public class CyclopsSonarButton_Update_Patch : NitroxPatch, IDynamicPatch
     internal static readonly OpCode INJECTION_OPCODE = OpCodes.Ldsfld;
     internal static readonly object INJECTION_OPERAND = Reflect.Field(() => Player.main);
 
-    private static NitroxId currentCyclopsId;
-
-    public static void Prefix(CyclopsSonarButton __instance)
-    {
-        currentCyclopsId = NitroxEntity.GetId(__instance.subRoot.gameObject);
-    }
-
-    public static IEnumerable<CodeInstruction> Transpiler(MethodBase methodBase, IEnumerable<CodeInstruction> instructions)
+    public static IEnumerable<CodeInstruction> Transpiler(MethodBase methodBase, IEnumerable<CodeInstruction> instructions, ILGenerator il)
     {
         /* Normally in the Update()
          * if (Player.main.GetMode() == Player.Mode.Normal && this.sonarActive)
@@ -34,11 +26,15 @@ public class CyclopsSonarButton_Update_Patch : NitroxPatch, IDynamicPatch
          *     this.TurnOffSonar();
          * }
          * this part will be changed into:
-         * if (CyclopsSonarButton_Update_Patch.ShouldTurnOff() && Player.main.GetMode() == Player.Mode.Normal && this.sonarActive)
+         * if (CyclopsSonarButton_Update_Patch.ShouldTurnOff(this) && Player.main.GetMode() == Player.Mode.Normal && this.sonarActive)
          */
-        List<CodeInstruction> codeInstructions = new List<CodeInstruction>(instructions);
-        CodeInstruction callInstruction = new(OpCodes.Call, Reflect.Method(() => ShouldTurnoff()));
-        CodeInstruction brInstruction = new(OpCodes.Brfalse);
+        List<CodeInstruction> codeInstructions = new(instructions);
+        Label brLabel = il.DefineLabel();
+        CodeInstruction loadInstruction = new(OpCodes.Ldarg_0);
+        CodeInstruction callInstruction = new(OpCodes.Call, Reflect.Method(() => ShouldTurnoff(default)));
+        CodeInstruction brInstruction = new(OpCodes.Brfalse, brLabel);
+        codeInstructions.Last().labels.Add(brLabel);
+
         for (int i = 0; i < codeInstructions.Count; i++)
         {
             CodeInstruction instruction = codeInstructions[i];
@@ -49,10 +45,9 @@ public class CyclopsSonarButton_Update_Patch : NitroxPatch, IDynamicPatch
                 CodeInstruction nextBr = codeInstructions[i + 2];
 
                 // The new instruction will be the first of the if statement, so it should take the jump labels that the former first part of the statement had
-                callInstruction.labels = new List<Label>(instruction.labels);
-                instruction.labels.Clear();
-                brInstruction.operand = nextBr.operand;
+                instruction.MoveLabelsTo(loadInstruction);
 
+                yield return loadInstruction;
                 yield return callInstruction;
                 yield return brInstruction;
             }
@@ -60,14 +55,17 @@ public class CyclopsSonarButton_Update_Patch : NitroxPatch, IDynamicPatch
         }
     }
 
-    public static bool ShouldTurnoff()
+    public static bool ShouldTurnoff(CyclopsSonarButton cyclopsSonarButton)
     {
-        return Resolve<Cyclops>().ShouldSonarTurnoff(currentCyclopsId);
+        if (cyclopsSonarButton.subRoot.TryGetComponent(out MultiplayerCyclops multiplayerCyclops))
+        {
+            return !multiplayerCyclops.enabled;
+        }
+        return true;
     }
 
     public override void Patch(Harmony harmony)
     {
-        PatchMultiple(harmony, TARGET_METHOD, prefix: true, transpiler: true);
+        PatchTranspiler(harmony, TARGET_METHOD);
     }
-
 }

@@ -3,7 +3,6 @@ using NitroxServer.GameLogic.Bases;
 using NitroxServer.GameLogic.Entities;
 using NitroxServer.GameLogic.Items;
 using NitroxServer.GameLogic.Players;
-using NitroxServer.GameLogic.Vehicles;
 
 namespace NitroxServer.Serialization.World
 {
@@ -32,8 +31,7 @@ namespace NitroxServer.Serialization.World
                 WorldData =
                 {
                     ParsedBatchCells = world.BatchEntitySpawner.SerializableParsedBatches,
-                    VehicleData = VehicleData.From(world.VehicleManager.GetVehicles()),
-                    InventoryData = InventoryData.From(world.InventoryManager.GetAllStorageSlotItems(), world.InventoryManager.GetAllModules()),
+                    InventoryData = InventoryData.From(world.InventoryManager.GetAllStorageSlotItems()),
                     GameData = GameData.From(world.GameData.PDAState, world.GameData.StoryGoals, world.ScheduleKeeper, world.StoryManager),
                     Seed = world.Seed
                 }

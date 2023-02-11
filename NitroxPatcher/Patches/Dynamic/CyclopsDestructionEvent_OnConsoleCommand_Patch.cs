@@ -1,10 +1,9 @@
-﻿using System.Reflection;
+using System.Reflection;
 using HarmonyLib;
-using NitroxClient.Communication.Abstract;
+using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
-using NitroxModel_Subnautica.Packets;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -28,7 +27,7 @@ public class CyclopsDestructionEvent_OnConsoleCommand_Patch : NitroxPatch, IDyna
         }
 
         NitroxId id = NitroxEntity.GetId(__instance.gameObject);
-        Resolve<IPacketSender>().Send(new CyclopsDestroyed(id, true));
+        Resolve<Vehicles>().BroadcastDestroyedVehicle(id);
         return true;
     }
 

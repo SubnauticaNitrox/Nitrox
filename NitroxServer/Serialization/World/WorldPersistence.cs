@@ -16,7 +16,6 @@ using NitroxServer.GameLogic.Entities.Spawning;
 using NitroxServer.GameLogic.Items;
 using NitroxServer.GameLogic.Players;
 using NitroxServer.GameLogic.Unlockables;
-using NitroxServer.GameLogic.Vehicles;
 using NitroxServer.Resources;
 using NitroxServer.Serialization.Upgrade;
 
@@ -159,8 +158,7 @@ namespace NitroxServer.Serialization.World
                         StoryGoals = new StoryGoalData(),
                         StoryTiming = new StoryTimingData()
                     },
-                    InventoryData = InventoryData.From(new List<ItemData>(), new List<EquippedItemData>()),
-                    VehicleData = VehicleData.From(new List<VehicleModel>()),
+                    InventoryData = InventoryData.From(new List<ItemData>()),
                     ParsedBatchCells = new List<NitroxInt3>(),
                     Seed = config.Seed
                 }
@@ -193,7 +191,7 @@ namespace NitroxServer.Serialization.World
 
                 BaseManager = new BaseManager(pWorldData.BaseData.PartiallyConstructedPieces, pWorldData.BaseData.CompletedBasePieceHistory),
 
-                InventoryManager = new InventoryManager(pWorldData.WorldData.InventoryData.StorageSlotItems, pWorldData.WorldData.InventoryData.Modules),
+                InventoryManager = new InventoryManager(pWorldData.WorldData.InventoryData.StorageSlotItems),
 
                 EscapePodManager = new EscapePodManager(entityRegistry, randomStart, seed),
 
@@ -205,7 +203,6 @@ namespace NitroxServer.Serialization.World
             };
 
             world.StoryManager = new StoryManager(world.PlayerManager, pWorldData.WorldData.GameData.PDAState, pWorldData.WorldData.GameData.StoryGoals, seed, pWorldData.WorldData.GameData.StoryTiming.ElapsedSeconds, pWorldData.WorldData.GameData.StoryTiming.AuroraCountdownTime, pWorldData.WorldData.GameData.StoryTiming.AuroraWarningTime);
-            world.VehicleManager = new VehicleManager(pWorldData.WorldData.VehicleData.Vehicles, world.InventoryManager, world.SimulationOwnershipData);
             world.ScheduleKeeper = new ScheduleKeeper(pWorldData.WorldData.GameData.PDAState, pWorldData.WorldData.GameData.StoryGoals, world.StoryManager, world.PlayerManager);
 
             world.BatchEntitySpawner = new BatchEntitySpawner(

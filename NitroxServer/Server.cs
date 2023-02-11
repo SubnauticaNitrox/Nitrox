@@ -76,7 +76,6 @@ namespace NitroxServer
              - Storage slot items: {world.InventoryManager.GetAllStorageSlotItems().Count}
              - Progress tech: {world.GameData.PDAState.CachedProgress.Count}
              - Known tech: {world.GameData.PDAState.KnownTechTypes.Count}
-             - Vehicles: {world.VehicleManager.GetVehicles().Count()}
             """);
                 
             return builder.ToString();

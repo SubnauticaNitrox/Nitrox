@@ -20,7 +20,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
             // Async request to be the person to auto-pickup the result. In the future this can be improved to lock down all crafting based on ownership
             // but will require redoing our hooks. 
-            Resolve<SimulationOwnership>().RequestSimulationLock(crafterId, SimulationLockType.TRANSIENT);
+            Resolve<SimulationOwnership>().RequestSimulationLock(crafterId, SimulationLockType.EXCLUSIVE);
         }
 
         public override void Patch(Harmony harmony)

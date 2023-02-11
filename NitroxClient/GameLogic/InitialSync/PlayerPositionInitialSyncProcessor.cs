@@ -70,8 +70,7 @@ namespace NitroxClient.GameLogic.InitialSync
                 yield break;
             }
 
-            // If player is not swimming
-            Player.main.SetCurrentSub(subRoot);
+            Player.main.SetCurrentSub(subRoot, true);
             if (subRoot.isBase)
             {
                 // If the player's in a base, we don't need to wait for the world to load
@@ -85,6 +84,7 @@ namespace NitroxClient.GameLogic.InitialSync
             Vector3 positionInVehicle = vehicleAngle * position + rootTransform.position;
             Player.main.SetPosition(positionInVehicle, rotation * vehicleAngle);
             Player.main.cinematicModeActive = false;
+            Player.main.UpdateIsUnderwater();
         }
 
         private void AttachPlayerToEscapePod(NitroxId escapePodId)
