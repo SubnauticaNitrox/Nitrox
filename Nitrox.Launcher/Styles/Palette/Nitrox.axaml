@@ -13,5 +13,7 @@
         <!-- Notification colors -->
         <Color x:Key="BrandAbort">#FF005C</Color>
         <SolidColorBrush Color="{DynamicResource BrandAbort}" x:Key="BrandAbortBrush" />
+        <Color x:Key="BrandAbortBackground">#FFB3B3</Color>
+        <SolidColorBrush Color="{DynamicResource BrandAbortBackground}" x:Key="BrandAbortBackgroundBrush" />
     </Style.Resources>
 </Style>

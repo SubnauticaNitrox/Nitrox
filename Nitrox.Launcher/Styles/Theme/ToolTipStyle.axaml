@@ -8,6 +8,7 @@
     </Style>
     <Style Selector="ToolTip TextBlock">
         <Setter Property="Foreground" Value="#000000" />
+        <Setter Property="FontWeight" Value="600" />
         <Setter Property="FontSize" Value="12" />
     </Style>
 </Styles>

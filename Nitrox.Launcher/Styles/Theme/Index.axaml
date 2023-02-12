@@ -163,6 +163,7 @@
         <Setter Property="Opacity" Value="0.5" />
     </Style>
 
+    <StyleInclude Source="/Styles/Theme/ValidationErrorsStyle.axaml" />
     <StyleInclude Source="/Styles/Theme/TextBoxStyle.axaml" />
     <StyleInclude Source="/Styles/Theme/ToolTipStyle.axaml" />
     <StyleInclude Source="/Styles/Theme/TextBlockStyle.axaml" />
