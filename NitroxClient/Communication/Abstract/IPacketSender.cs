@@ -5,8 +5,10 @@ namespace NitroxClient.Communication.Abstract;
 
 public interface IPacketSender
 {
+    [Obsolete($"Use {nameof(IPacketSender)}.{nameof(SendIfGameCode)} instead")]
     PacketSuppressor<T> Suppress<T>();
 
+    [Obsolete($"Use {nameof(IPacketSender)}.{nameof(SendIfGameCode)} instead")]
     bool IsPacketSuppressed(Type packetType);
 
     /// <summary>

@@ -26,7 +26,8 @@ namespace NitroxClient.Communication.MultiplayerSession
             initSerializerTask = Task.Run(Packet.InitSerializer);
         }
 
-        private readonly HashSet<Type> suppressedPacketsTypes = new HashSet<Type>();
+        [Obsolete($"Use {nameof(IPacketSender)}.{nameof(SendIfGameCode)} instead")]
+        private readonly HashSet<Type> suppressedPacketsTypes = new();
 
         public IClient Client { get; }
         public string IpAddress { get; private set; }
