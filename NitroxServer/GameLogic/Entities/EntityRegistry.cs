@@ -66,6 +66,7 @@ namespace NitroxServer.GameLogic.Entities
             }
 
             AddToParent(entity);
+            AddEntitiesIgnoringDuplicate(entity.ChildEntities);
         }
 
         public void AddEntities(List<Entity> entities)
@@ -76,9 +77,31 @@ namespace NitroxServer.GameLogic.Entities
             }            
         }
 
+        /// <summary>
+        /// Used for situations when some children may be new but others may not be. For
+        /// example a dropped InventoryEntity turns into a WorldEntity but keeps its 
+        /// battery inside (already known). 
+        /// </summary>
+        public void AddEntitiesIgnoringDuplicate(List<Entity> entities)
+        {
+            foreach (Entity entity in entities)
+            {
+                entitiesById.TryAdd(entity.Id, entity);
+                AddEntitiesIgnoringDuplicate(entity.ChildEntities);
+            }
+        }
+
         public Optional<Entity> RemoveEntity(NitroxId id)
         {
-            entitiesById.TryRemove(id, out Entity entity);
+            if (entitiesById.TryRemove(id, out Entity entity))
+            {
+                RemoveFromParent(entity);
+
+                foreach (Entity child in entity.ChildEntities)
+                {
+                    RemoveEntity(child.Id);
+                }
+            }
 
             return Optional.OfNullable(entity);
         }
@@ -111,5 +134,23 @@ namespace NitroxServer.GameLogic.Entities
             }
         }
 
+        public void ReparentEntity(NitroxId entityId, NitroxId newParentId)
+        {
+            Optional<Entity> opEntity = GetEntityById(entityId);
+
+            if (!opEntity.HasValue)
+            {
+                Log.Error($"Could not find entity to reparent: {entityId}");
+                return;
+            }
+
+            Entity entity = opEntity.Value;
+
+            RemoveFromParent(entity);
+
+            entity.ParentId = newParentId;
+
+            AddToParent(entity);
+        }
     }
 }

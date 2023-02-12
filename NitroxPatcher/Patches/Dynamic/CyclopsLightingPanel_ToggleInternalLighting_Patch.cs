@@ -1,8 +1,7 @@
-﻿using System.Reflection;
+using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 
@@ -22,8 +21,8 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             if (__state != __instance.lightingOn)
             {
-                NitroxId id = NitroxEntity.GetId(__instance.cyclopsRoot.gameObject);
-                NitroxServiceLocator.LocateService<Cyclops>().BroadcastToggleInternalLight(id, __instance.lightingOn);
+                NitroxId id = NitroxEntity.GetId(__instance.gameObject);
+                Resolve<Entities>().EntityMetadataChanged(__instance, id);
             }
         }
 

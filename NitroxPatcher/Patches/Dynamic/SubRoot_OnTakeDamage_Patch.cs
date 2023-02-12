@@ -1,12 +1,10 @@
-﻿using System.Reflection;
+using System.Reflection;
 using HarmonyLib;
-using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
-using NitroxModel_Subnautica.Packets;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -21,7 +19,7 @@ public class SubRoot_OnTakeDamage_Patch : NitroxPatch, IDynamicPatch
     public static bool Prefix(SubRoot __instance, DamageInfo damageInfo)
     {
         // This is a whitelisted type of damage from CyclopsDestroyedProcessor
-        if (damageInfo.type == CyclopsDestroyedProcessor.DAMAGE_TYPE_RUN_ORIGINAL)
+        if (damageInfo.type == EntityDestroyedProcessor.DAMAGE_TYPE_RUN_ORIGINAL)
         {
             return true;
         }
@@ -31,10 +29,10 @@ public class SubRoot_OnTakeDamage_Patch : NitroxPatch, IDynamicPatch
     public static void Postfix(bool __runOriginal, SubRoot __instance, DamageInfo damageInfo)
     {
         // If we have lock on it, we'll notify the server that this cyclops must be destroyed
-        if (__runOriginal && __instance.live.health <= 0f && damageInfo.type != CyclopsDestroyedProcessor.DAMAGE_TYPE_RUN_ORIGINAL)
+        if (__runOriginal && __instance.live.health <= 0f && damageInfo.type != EntityDestroyedProcessor.DAMAGE_TYPE_RUN_ORIGINAL)
         {
             NitroxId id = NitroxEntity.GetId(__instance.gameObject);
-            Resolve<IPacketSender>().Send(new CyclopsDestroyed(id, false));
+            Resolve<Vehicles>().BroadcastDestroyedVehicle(id);
         }
     }
     

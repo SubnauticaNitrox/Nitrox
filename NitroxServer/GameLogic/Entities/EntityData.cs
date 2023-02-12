@@ -21,6 +21,13 @@ namespace NitroxServer.GameLogic.Entities
             // children to their respective parent entities.
             Dictionary<NitroxId, Entity> entitiesById = Entities.ToDictionary(entity => entity.Id);
 
+            // We will re-build the child hierarchy below and want to avoid duplicates.
+            // TODO: Rework system to no longer persist children entities because they are duplicates.
+            foreach (Entity entity in Entities)
+            {
+                entity.ChildEntities.Clear();
+            }
+
             foreach (Entity entity in Entities)
             {
                 if (entity.ParentId != null)
@@ -31,7 +38,7 @@ namespace NitroxServer.GameLogic.Entities
 
                         if (entity is WorldEntity we && parent is WorldEntity weParent)
                         {
-                            we.Transform.SetParent(weParent.Transform);
+                            we.Transform.SetParent(weParent.Transform, false);
                         }
                     }
                 }

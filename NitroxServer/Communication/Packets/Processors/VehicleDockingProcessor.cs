@@ -1,35 +1,43 @@
-﻿using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
-using NitroxServer.GameLogic.Vehicles;
+using NitroxServer.GameLogic.Entities;
 
 namespace NitroxServer.Communication.Packets.Processors
 {
     class VehicleDockingProcessor : AuthenticatedPacketProcessor<VehicleDocking>
     {
         private readonly PlayerManager playerManager;
-        private readonly VehicleManager vehicleManager;
+        private readonly EntityRegistry entityRegistry;
 
-        public VehicleDockingProcessor(PlayerManager playerManager, VehicleManager vehicleManager)
+        public VehicleDockingProcessor(PlayerManager playerManager, EntityRegistry entityRegistry)
         {
             this.playerManager = playerManager;
-            this.vehicleManager = vehicleManager;
+            this.entityRegistry = entityRegistry;
         }
 
         public override void Process(VehicleDocking packet, Player player)
         {
-            Optional<VehicleModel> vehicle = vehicleManager.GetVehicleModel(packet.VehicleId);
+            Optional<Entity> vehicle = entityRegistry.GetEntityById(packet.VehicleId);
 
             if (!vehicle.HasValue)
             {
-                Log.Error($"VehicleDocking received for vehicle id {packet.VehicleId} that does not exist!");
+                Log.Error($"Unable to find vehicle to dock {packet.VehicleId}");
                 return;
             }
 
-            VehicleModel vehicleModel = vehicle.Value;
-            vehicleModel.DockingBayId = Optional.Of(packet.DockId);
+            Optional<Entity> dock = entityRegistry.GetEntityById(packet.DockId);
+
+            if (!dock.HasValue)
+            {
+                Log.Error($"Unable to find dock {packet.DockId} for docking vehicle {packet.VehicleId}");
+                return;
+            }
+
+            vehicle.Value.ParentId = packet.DockId;
+            dock.Value.ChildEntities.Add(vehicle.Value);
 
             playerManager.SendPacketToOtherPlayers(packet, player);
         }

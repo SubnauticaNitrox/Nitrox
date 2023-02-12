@@ -1,9 +1,8 @@
-﻿using System.Reflection;
+using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
-using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 
@@ -13,17 +12,17 @@ namespace NitroxPatcher.Patches.Dynamic
     {
         private static readonly MethodInfo TARGET_METHOD = Reflect.Method((RocketPreflightCheckManager t) => t.CompletePreflightCheck(default(PreflightCheck)));
 
-        public static void Prefix(RocketPreflightCheckManager __instance, PreflightCheck completeCheck)
+        public static void Postfix(RocketPreflightCheckManager __instance)
         {
             Rocket rocket = __instance.gameObject.RequireComponentInParent<Rocket>();
             NitroxId id = NitroxEntity.GetId(rocket.gameObject);
 
-            NitroxServiceLocator.LocateService<Rockets>().CompletePreflightCheck(id, completeCheck);
+            Resolve<Entities>().EntityMetadataChanged(rocket, id);
         }
 
         public override void Patch(Harmony harmony)
         {
-            PatchPrefix(harmony, TARGET_METHOD);
+            PatchPostfix(harmony, TARGET_METHOD);
         }
     }
 }

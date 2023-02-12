@@ -282,11 +282,25 @@ namespace NitroxServer.GameLogic.Entities
             }
         }
 
-        public void RemoveEntity(NitroxId entityId)
+        public void StopTrackingEntity(WorldEntity entity)
         {
-            entityRegistry.RemoveEntity(entityId);
-            globalRootEntitiesById.Remove(entityId);
-            // Should maybe also remove from phasingEntitiesByAbsoluteCell
+            if (entity.ExistsInGlobalRoot)
+            {
+                lock (globalRootEntitiesById)
+                {
+                    globalRootEntitiesById.Remove(entity.Id);
+                }
+            }
+            else
+            {
+                lock (phasingEntitiesByAbsoluteCell)
+                {
+                    if (phasingEntitiesByAbsoluteCell.TryGetValue(entity.AbsoluteEntityCell, out List<WorldEntity> entities))
+                    {
+                        entities.Remove(entity);
+                    }
+                }
+            }
         }
     }
 }

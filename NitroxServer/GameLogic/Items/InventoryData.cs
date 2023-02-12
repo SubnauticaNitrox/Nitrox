@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using NitroxModel.DataStructures.GameLogic;
@@ -11,21 +11,17 @@ namespace NitroxServer.GameLogic.Items
         [DataMember(Order = 1)]
         public List<ItemData> StorageSlotItems = new List<ItemData>();
 
-        [DataMember(Order = 2)]
-        public List<EquippedItemData> Modules { get; set; } = new List<EquippedItemData>();
-
-        public static InventoryData From(IEnumerable<ItemData> storageSlotItems, IEnumerable<EquippedItemData> modules)
+        public static InventoryData From(IEnumerable<ItemData> storageSlotItems)
         {
             return new InventoryData
             {
-                StorageSlotItems = storageSlotItems.ToList(),
-                Modules = modules.ToList()
+                StorageSlotItems = storageSlotItems.ToList()
             };
         }
 
         public override string ToString()
         {
-            return $"[{nameof(StorageSlotItems)}: {StorageSlotItems.Count}, {nameof(Modules)}: {Modules.Count}]";
+            return $"[{nameof(StorageSlotItems)}: {StorageSlotItems.Count}]";
         }
     }
 }

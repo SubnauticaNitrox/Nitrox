@@ -12,8 +12,6 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using UnityEngine;
-using NitroxClient.GameLogic.PlayerLogic;
-using UWE;
 
 namespace NitroxClient.GameLogic
 {
@@ -23,7 +21,6 @@ namespace NitroxClient.GameLogic
         private readonly PlayerManager playerManager;
         private readonly IMultiplayerSession multiplayerSession;
         private readonly SimulationOwnership simulationOwnership;
-        private readonly Dictionary<NitroxId, VehicleModel> vehiclesById;
 
         public Vehicles(IPacketSender packetSender, PlayerManager playerManager, IMultiplayerSession multiplayerSession, SimulationOwnership simulationOwnership)
         {
@@ -31,7 +28,6 @@ namespace NitroxClient.GameLogic
             this.playerManager = playerManager;
             this.multiplayerSession = multiplayerSession;
             this.simulationOwnership = simulationOwnership;
-            vehiclesById = new Dictionary<NitroxId, VehicleModel>();
         }
 
         public void UpdateVehiclePosition(VehicleMovementData vehicleModel, Optional<RemotePlayer> player)
@@ -113,52 +109,11 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        public void DestroyVehicle(NitroxId id)
-        {
-            Optional<GameObject> Object = NitroxEntity.GetObjectFrom(id);
-            if (Object.HasValue)
-            {
-                GameObject go = Object.Value;
-                Vehicle vehicle = go.RequireComponent<Vehicle>();
-
-                if (vehicle.GetPilotingMode()) //Check Local Object Have Player inside
-                {
-                    vehicle.OnPilotModeEnd();
-
-                    if (!Player.main.ToNormalMode(true))
-                    {
-                        Player.main.ToNormalMode(false);
-                        Player.main.transform.parent = null;
-                    }
-                }
-                foreach (RemotePlayerIdentifier identifier in vehicle.GetComponentsInChildren<RemotePlayerIdentifier>(true))
-                {
-                    identifier.RemotePlayer.ResetStates();
-                }
-
-                //Destroy vehicle
-                if (vehicle.gameObject)
-                {
-                    if (vehicle.destructionEffect)
-                    {
-                        GameObject gameObject = UnityEngine.Object.Instantiate<GameObject>(vehicle.destructionEffect);
-                        gameObject.transform.position = vehicle.transform.position;
-                        gameObject.transform.rotation = vehicle.transform.rotation;
-                    }
-
-                    UnityEngine.Object.Destroy(vehicle.gameObject);
-                    RemoveVehicle(id);
-                }
-            }
-        }
-
-        public void BroadcastDestroyedVehicle(Vehicle vehicle)
+        public void BroadcastDestroyedVehicle(NitroxId id)
         {
             using (packetSender.Suppress<VehicleOnPilotModeChanged>())
             {
-                NitroxId id = NitroxEntity.GetId(vehicle.gameObject);
-
-                VehicleDestroyed vehicleDestroyed = new(id);
+                EntityDestroyed vehicleDestroyed = new(id);
                 packetSender.Send(vehicleDestroyed);
             }
         }
@@ -254,20 +209,20 @@ namespace NitroxClient.GameLogic
             vehicle.pilotId = isPiloting ? playerId.ToString() : string.Empty;
         }
 
-        public bool RemoveVehicle(NitroxId id)
+        /// <summary>
+        /// Subnautica pre-emptively loads a prefab of each vehicle (such as a cyclops) during the initial game load.  This allows the game to instantaniously 
+        /// use this prefab for the first constructor event.  Subsequent constructor events will use this prefab as a template.  However, this is problematic
+        /// because the template + children are now tagged with NitroxEntity because players are interacting with it. We need to remove any NitroxEntity from
+        /// the new gameObject that used the template.
+        /// </summary>
+        public static void RemoveNitroxEntityTagging(GameObject constructedObject)
         {
-            return vehiclesById.Remove(id);
-        }
+            NitroxEntity[] nitroxEntities = constructedObject.GetComponentsInChildren<NitroxEntity>(true);
 
-        public T GetVehicles<T>(NitroxId vehicleId) where T : VehicleModel
-        {
-            return (T)vehiclesById[vehicleId];
-        }
-
-        public Optional<T> TryGetVehicle<T>(NitroxId vehicleId) where T : VehicleModel
-        {
-            vehiclesById.TryGetValue(vehicleId, out VehicleModel vehicle);
-            return Optional.OfNullable((T)vehicle);
+            foreach (NitroxEntity nitroxEntity in nitroxEntities)
+            {
+                UnityEngine.Component.DestroyImmediate(nitroxEntity);
+            }
         }
     }
 }
