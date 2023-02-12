@@ -255,9 +255,8 @@ namespace NitroxClient.GameLogic
         }
 
         public void Destroy()
-        {   
-            string PlayerLeftGame = $"{PlayerName} {Language.main.Get("Nitrox_PlayerLeft")}";
-            ErrorMessage.AddMessage(PlayerLeftGame);
+        {
+            Log.InGame(Language.main.Get("Nitrox_PlayerLeft").Replace("{PLAYER}", PlayerName)); 
             NitroxEntity.RemoveFrom(Body);
             Object.DestroyImmediate(Body);
         }
