@@ -39,4 +39,10 @@
     <Style Selector=".form > :is(Layoutable) > TextBlock[(design|NitroxAttached.Theme)=DARK]:nth-child(1)">
         <Setter Property="Foreground" Value="#80FFFFFF" />
     </Style>
+    <Style Selector="Border#FocusBorder[(design|NitroxAttached.Theme)=LIGHT]">
+        <Setter Property="BorderBrush" Value="#40000000" />
+    </Style>
+    <Style Selector="Border#FocusBorder[(design|NitroxAttached.Theme)=DARK]">
+        <Setter Property="BorderBrush" Value="#40FFFFFF" />
+    </Style>
 </Styles>
