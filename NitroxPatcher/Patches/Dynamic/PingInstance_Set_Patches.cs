@@ -22,10 +22,10 @@ public class PingInstance_Set_Patches : NitroxPatch, IDynamicPatch
         {
             return;
         }
-        
+
         if (PlayerPreferencesInitialSyncProcessor.TryGetKeyForPingInstance(__instance, out string pingKey, out bool _))
         {
-            Resolve<IPacketSender>().Send(new SignalPingPreferenceChanged(pingKey, __instance.visible, index));
+            SendPacket(new SignalPingPreferenceChanged(pingKey, __instance.visible, index));
         }
     }
 
@@ -39,7 +39,7 @@ public class PingInstance_Set_Patches : NitroxPatch, IDynamicPatch
 
         if (PlayerPreferencesInitialSyncProcessor.TryGetKeyForPingInstance(__instance, out string pingKey, out bool _))
         {
-            Resolve<IPacketSender>().Send(new SignalPingPreferenceChanged(pingKey, value, __instance.colorIndex));
+            SendPacket(new SignalPingPreferenceChanged(pingKey, value, __instance.colorIndex));
         }
     }
 

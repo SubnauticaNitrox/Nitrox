@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Reflection;
 using System.Threading.Tasks;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession.ConnectionState;
 using NitroxClient.GameLogic;
+using NitroxModel;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
@@ -15,6 +18,8 @@ namespace NitroxClient.Communication.MultiplayerSession
     public class MultiplayerSessionManager : IMultiplayerSession, IMultiplayerSessionConnectionContext
     {
         private static readonly Task initSerializerTask;
+        private static readonly Assembly nitroxClientAssembly = typeof(MultiplayerSessionManager).Assembly;
+        private static readonly Type unityIteratorClass = typeof(UnityEngine.Object).Assembly.GetType("UnityEngine.SetupCoroutine", true);
 
         static MultiplayerSessionManager()
         {
@@ -116,17 +121,6 @@ namespace NitroxClient.Communication.MultiplayerSession
             }
         }
 
-        public bool Send(Packet packet)
-        {
-            Type packetType = packet.GetType();
-            if (!suppressedPacketsTypes.Contains(packetType))
-            {
-                Client.Send(packet);
-                return true;
-            }
-            return false;
-        }
-
         public bool IsPacketSuppressed(Type packetType) => suppressedPacketsTypes.Contains(packetType);
 
         public PacketSuppressor<T> Suppress<T>()
@@ -161,6 +155,53 @@ namespace NitroxClient.Communication.MultiplayerSession
             PlayerSettings = null;
             AuthenticationContext = null;
             Reservation = null;
+        }
+
+        public void Send<T>(T packet) where T : Packet
+        {
+            Client.Send(packet);
+        }
+
+        public bool SendIfGameCode<T>(T packet) where T : Packet
+        {
+            static bool HasOriginModAndSentByInjectedCode(in StackFrame[] frames)
+            {
+                // Root caller is last stack frame, so start from the end.
+                int i = frames.Length - 1;
+                // Ignore the 2 frames by Unity enumerators.
+                if (i >= 0 && frames[i].GetMethod().DeclaringType == unityIteratorClass)
+                {
+                    i -= 2;
+                }
+                // Did we cause this code to run?
+                if (i >= 0 && frames[i].GetMethod().DeclaringType?.Assembly != nitroxClientAssembly)
+                {
+                    return false;
+                }
+                // Nitrox called it. If this packet occurred via injected code we need to suppress to prevent feedback cascades between client<->server.
+                while (--i >= 0)
+                {
+                    if (typeof(IPatch).IsAssignableFrom(frames[i].GetMethod().DeclaringType))
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            StackFrame[] frames = new StackTrace(1, false).GetFrames() ?? Array.Empty<StackFrame>();
+            if (HasOriginModAndSentByInjectedCode(in frames))
+            {
+                return false;
+            }
+            // TODO: Remove this; only required for vehicle docking suppression, and it should be revamped.
+            if (suppressedPacketsTypes.Contains(packet.GetType()))
+            {
+                return false;
+            }
+
+            Client.Send(packet);
+            return true;
         }
     }
 }

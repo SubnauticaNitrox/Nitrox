@@ -17,7 +17,7 @@ namespace NitroxPatcher.Patches.Dynamic
             if (!StoryGoalManager.main.completedGoals.Contains(key))
             {
                 StoryEventSend packet = new(goalType.ToDto(), key);
-                Resolve<IPacketSender>().Send(packet);
+                SendPacket(packet);
             }
         }
 

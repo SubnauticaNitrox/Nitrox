@@ -24,7 +24,7 @@ namespace NitroxClient.Helpers
                     continue;
                 }
 
-                if (packetSender.Send(throttledPacket.Packet))
+                if (packetSender.SendIfGameCode(throttledPacket.Packet))
                 {
                     throttledPacket.WasSend = true;
                 }
@@ -48,8 +48,12 @@ namespace NitroxClient.Helpers
                 return true;
             }
 
+            if (!packetSender.SendIfGameCode(packet))
+            {
+                return false;
+            }
+
             throttledPackets.Add(dedupeKey, new ThrottledPacket(packet, throttleTime));
-            packetSender.Send(packet);
             return true;
         }
 

@@ -65,7 +65,7 @@ namespace NitroxClient.GameLogic
 
             BasePiece basePiece = new BasePiece(id, placedPosition.ToDto(), quaternion.ToDto(), camera.position.ToDto(), camera.rotation.ToDto(), techType.ToDto(), Optional.OfNullable(parentBaseId), false, rotationMetadata);
             PlaceBasePiece placedBasePiece = new PlaceBasePiece(basePiece);
-            packetSender.Send(placedBasePiece);
+            packetSender.SendIfGameCode(placedBasePiece);
         }
 
         public void PlaceFurniture(GameObject gameObject, TechType techType, Vector3 itemPosition, Quaternion quaternion)
@@ -102,7 +102,7 @@ namespace NitroxClient.GameLogic
             Transform camera = Camera.main!.transform;
             BasePiece basePiece = new BasePiece(id, position.ToDto(), rotation.ToDto(), camera.position.ToDto(), camera.rotation.ToDto(), techType.ToDto(), Optional.OfNullable(parentId), true, Optional.Empty);
             PlaceBasePiece placedBasePiece = new PlaceBasePiece(basePiece);
-            packetSender.Send(placedBasePiece);
+            packetSender.SendIfGameCode(placedBasePiece);
         }
 
         public void ChangeConstructionAmount(GameObject gameObject, float amount)
@@ -114,7 +114,7 @@ namespace NitroxClient.GameLogic
 
             NitroxId id = NitroxEntity.GetId(gameObject);
             ConstructionAmountChanged amountChanged = new ConstructionAmountChanged(id, amount);
-            packetSender.Send(amountChanged);
+            packetSender.SendIfGameCode(amountChanged);
         }
 
         public void ConstructionComplete(GameObject ghost, Optional<Base> lastTargetBase, Int3 lastTargetBaseOffset, Base.Face lastTargetFace = default(Base.Face))
@@ -140,7 +140,7 @@ namespace NitroxClient.GameLogic
 
                 Transform cellTransform;
                 GameObject placedPiece = null;
-                
+
                 if (!latestBase)
                 {
                     if (opConstructedBase.HasValue)
@@ -151,7 +151,7 @@ namespace NitroxClient.GameLogic
                     Validate.NotNull(latestBase, "latestBase can not be null");
                     latestCell = latestBase.WorldToGrid(ghost.transform.position);
                 }
-                
+
                 if (latestCell != default(Int3))
                 {
                     cellTransform = latestBase.GetCellObject(latestCell);
@@ -162,17 +162,17 @@ namespace NitroxClient.GameLogic
                 }
 
                 // This check ensures that the latestCell actually leads us to the correct entity.  The lastTargetBaseOffset is unreliable as the base shape
-                // can change which makes the target offset change. It may be possible to fully deprecate lastTargetBaseOffset and only rely on GetClosestCell; 
+                // can change which makes the target offset change. It may be possible to fully deprecate lastTargetBaseOffset and only rely on GetClosestCell;
                 // however, there may still be pieces were the ghost base's target offset is authoritative due to incorrect game object positioning.
                 if (placedPiece == null)
                 {
                     Int3 position = latestBase.WorldToGrid(ghost.gameObject.transform.position);
-                    cellTransform = latestBase.GetCellObject(position);       
+                    cellTransform = latestBase.GetCellObject(position);
 
                     Validate.NotNull(cellTransform, $"Unable to find cell transform at {latestCell}");
                     placedPiece = ThrottledBuilder.FindFinishedPiece(cellTransform, id, constructableBase.techType);
                 }
-                
+
                 Validate.NotNull(placedPiece, $"Could not find finished piece in cell {latestCell}");
 
                 Object.Destroy(ghost);
@@ -190,14 +190,14 @@ namespace NitroxClient.GameLogic
             }
 
             ConstructionCompleted constructionCompleted = new ConstructionCompleted(id, baseId);
-            packetSender.Send(constructionCompleted);
+            packetSender.SendIfGameCode(constructionCompleted);
         }
 
 
         public void DeconstructionBegin(NitroxId id)
         {
             DeconstructionBegin deconstructionBegin = new DeconstructionBegin(id);
-            packetSender.Send(deconstructionBegin);
+            packetSender.SendIfGameCode(deconstructionBegin);
         }
 
         public void DeconstructionComplete(GameObject gameObject)
@@ -205,9 +205,9 @@ namespace NitroxClient.GameLogic
             NitroxId id = NitroxEntity.GetId(gameObject);
 
             DeconstructionCompleted deconstructionCompleted = new DeconstructionCompleted(id);
-            packetSender.Send(deconstructionCompleted);
+            packetSender.SendIfGameCode(deconstructionCompleted);
 
-            // When deconstructed, some objects are simply hidden and potentially re-used later (such as windows). 
+            // When deconstructed, some objects are simply hidden and potentially re-used later (such as windows).
             // We want to detach the nitrox entity so a new one can potentially be attached layer
             NitroxEntity.RemoveFrom(gameObject);
         }
@@ -215,7 +215,7 @@ namespace NitroxClient.GameLogic
         public void MetadataChanged(NitroxId pieceId, BasePieceMetadata metadata)
         {
             BasePieceMetadataChanged changePacket = new BasePieceMetadataChanged(pieceId, metadata);
-            packetSender.Send(changePacket);
+            packetSender.SendIfGameCode(changePacket);
         }
     }
 }

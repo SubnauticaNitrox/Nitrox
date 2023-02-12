@@ -7,7 +7,7 @@ using UnityEngine;
 namespace NitroxClient.GameLogic
 {
     public class EquipmentSlots
-    {        
+    {
         private readonly IPacketSender packetSender;
         private readonly Entities entities;
 
@@ -32,7 +32,7 @@ namespace NitroxClient.GameLogic
             {
                 // UWE also sends module events here as they are technically equipment of the vehicles.
                 ModuleAdded moduleAdded = new(itemId, ownerId, slot);
-                packetSender.Send(moduleAdded);
+                packetSender.SendIfGameCode(moduleAdded);
             }
         }
 
@@ -50,7 +50,7 @@ namespace NitroxClient.GameLogic
             {
                 // UWE also sends module events here as they are technically equipment of the vehicles.
                 ModuleRemoved moduleRemoved = new(itemId, ownerId);
-                packetSender.Send(moduleRemoved);
+                packetSender.SendIfGameCode(moduleRemoved);
             }
         }
     }

@@ -133,7 +133,7 @@ public class uGUI_PlayerPingEntry : uGUI_PingEntry
                 GetToggle(MuteObject).SetIsOnWithoutNotify(!toggled);
                 if (player is RemotePlayer remotePlayer)
                 {
-                    packetSender.Send(new ServerCommand($"{(toggled ? "" : "un")}mute {player.PlayerName}"));
+                    packetSender.SendIfGameCode(new ServerCommand($"{(toggled ? "" : "un")}mute {player.PlayerName}"));
                 }
             });
         });
@@ -141,21 +141,21 @@ public class uGUI_PlayerPingEntry : uGUI_PingEntry
         {
             Modal.Get<ConfirmModal>()?.Show(GetLocalizedText("Nitrox_Kick", true), () =>
             {
-                packetSender.Send(new ServerCommand($"kick {player.PlayerName}"));
+                packetSender.SendIfGameCode(new ServerCommand($"kick {player.PlayerName}"));
             });
         });
         GetToggle(TeleportToObject).onValueChanged.AddListener(delegate (bool toggled)
         {
             Modal.Get<ConfirmModal>()?.Show(GetLocalizedText("Nitrox_TeleportTo", true), () =>
             {
-                packetSender.Send(new ServerCommand($"warp {player.PlayerName}"));
+                packetSender.SendIfGameCode(new ServerCommand($"warp {player.PlayerName}"));
             });
         });
         GetToggle(TeleportToMeObject).onValueChanged.AddListener(delegate (bool toggled)
         {
             Modal.Get<ConfirmModal>()?.Show(GetLocalizedText("Nitrox_TeleportToMe", true), () =>
             {
-                packetSender.Send(new ServerCommand($"warp {player.PlayerName} {localPlayer.PlayerName}"));
+                packetSender.SendIfGameCode(new ServerCommand($"warp {player.PlayerName} {localPlayer.PlayerName}"));
             });
         });
 
@@ -198,7 +198,7 @@ public class uGUI_PlayerPingEntry : uGUI_PingEntry
     private IEnumerator AssignSprites()
     {
         yield return new WaitUntil(() => parent.FinishedLoadingAssets);
-        
+
         // NB: Those textures MUST be exported with a Texture Type of "Sprite (2D and UI)", else they will look blurry not matter what
         // NB 2: Those textures for the buttons are scaled 68x61 but the image inside but not hit the borders to have a better render
         MutedSprite = parent.GetSprite("muted@3x");
@@ -223,7 +223,7 @@ public class uGUI_PlayerPingEntry : uGUI_PingEntry
     private void RefreshButtonsVisibility()
     {
         LocalPlayer localPlayer = NitroxServiceLocator.LocateService<LocalPlayer>();
-        
+
         bool isNotLocalPlayer = !IsLocalPlayer;
         // We don't want any control buttons to appear for the local player
         ShowObject.SetActive(isNotLocalPlayer);

@@ -15,7 +15,7 @@ namespace NitroxClient.GameLogic
         public void Add(string key)
         {
             PDAEncyclopediaEntryAdd EntryAdd = new PDAEncyclopediaEntryAdd(key);
-            packetSender.Send(EntryAdd);
+            packetSender.SendIfGameCode(EntryAdd);
         }
     }
 

@@ -58,7 +58,7 @@ namespace NitroxClient.GameLogic
                 }
             }
 
-            packetSender.Send(update);
+            packetSender.SendIfGameCode(update);
         }
 
         public void EntityMetadataChanged(object o, NitroxId id)
@@ -83,7 +83,7 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastMetadataUpdate(NitroxId id, EntityMetadata metadata)
         {
-            packetSender.Send(new EntityMetadataUpdate(id, metadata));
+            packetSender.SendIfGameCode(new EntityMetadataUpdate(id, metadata));
         }
 
         public void BroadcastMetadataUpdateThrottled(NitroxId id, EntityMetadata metadata)
@@ -93,7 +93,7 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastEntitySpawnedByClient(WorldEntity entity)
         {
-            packetSender.Send(new EntitySpawnedByClient(entity));
+            packetSender.SendIfGameCode(new EntitySpawnedByClient(entity));
         }
 
         public IEnumerator SpawnAsync(List<Entity> entities)
@@ -180,7 +180,7 @@ namespace NitroxClient.GameLogic
 
             opGameObject.Value.transform.position = entity.Transform.Position.ToUnity();
             opGameObject.Value.transform.rotation = entity.Transform.Rotation.ToUnity();
-            opGameObject.Value.transform.localScale = entity.Transform.LocalScale.ToUnity();            
+            opGameObject.Value.transform.localScale = entity.Transform.LocalScale.ToUnity();
         }
 
         private void AddPendingParentEntity(Entity entity)
@@ -194,14 +194,14 @@ namespace NitroxClient.GameLogic
             pendingEntities.Add(entity);
         }
 
-        // Nitrox uses entity spawners to generate the various gameObjects in the world. These spawners are invoked using 
+        // Nitrox uses entity spawners to generate the various gameObjects in the world. These spawners are invoked using
         // IEnumerator (async) and levarage async Prefab/CraftData instantiation functions.  However, even though these
-        // functions are successful, it doesn't mean the entity is fully setup.  Subnautica is known to spawn coroutines 
-        // in the start() method of objects to spawn prefabs or other objects. An example is anything with a battery, 
-        // which gets configured after the fact.  In most cases, Nitrox needs to wait for objets to be fully spawned in 
+        // functions are successful, it doesn't mean the entity is fully setup.  Subnautica is known to spawn coroutines
+        // in the start() method of objects to spawn prefabs or other objects. An example is anything with a battery,
+        // which gets configured after the fact.  In most cases, Nitrox needs to wait for objets to be fully spawned in
         // order to setup ids.  Historically we would persist metadata and use a patch to later tag the item, which gets
         // messy.  This function will allow us wait on any type of instantiation necessary; this can be optimized later
-        // to move on to other spawning and come back when this item is ready.  
+        // to move on to other spawning and come back when this item is ready.
         private IEnumerator AwaitAnyRequiredEntitySetup(GameObject gameObject)
         {
             EnergyMixin energyMixin = gameObject.GetComponent<EnergyMixin>();
@@ -214,7 +214,7 @@ namespace NitroxClient.GameLogic
 
         // Entites can sometimes be spawned as one thing but need to be respawned later as another.  For example, a flare
         // spawned inside an Inventory as an InventoryItemEntity can later be dropped in the world as a WorldEntity. Another
-        // example would be a base ghost that needs to be respawned a completed piece. 
+        // example would be a base ghost that needs to be respawned a completed piece.
         public bool WasAlreadySpawned(Entity entity)
         {
             if (spawnedAsType.TryGetValue(entity.Id, out Type type))

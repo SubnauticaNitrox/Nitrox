@@ -83,14 +83,14 @@ namespace NitroxClient.GameLogic.ChatUI
             if (trimmedInput[0] == SERVER_COMMAND_PREFIX)
             {
                 // Server command
-                multiplayerSession.Send(new ServerCommand(trimmedInput.Substring(1)));
+                multiplayerSession.SendIfGameCode(new ServerCommand(trimmedInput.Substring(1)));
                 playerChat.InputText = "";
                 playerChat.Select();
                 return;
             }
 
             // We shouldn't add the message to the local chat instantly but instead let the server tell us if this message is added or not
-            multiplayerSession.Send(new ChatMessage(multiplayerSession.Reservation.PlayerId, trimmedInput));
+            multiplayerSession.SendIfGameCode(new ChatMessage(multiplayerSession.Reservation.PlayerId, trimmedInput));
             playerChat.InputText = "";
             playerChat.Select();
         }
@@ -98,10 +98,10 @@ namespace NitroxClient.GameLogic.ChatUI
         private IEnumerator LoadChatLogAsset()
         {
             yield return LoadUIAsset(NitroxAssetBundle.CHAT_LOG, true);
-            
+
             GameObject playerChatGameObject = (GameObject)NitroxAssetBundle.CHAT_LOG.LoadedAssets[0];
             playerChat = playerChatGameObject.AddComponent<PlayerChat>();
-            
+
             yield return playerChat.SetupChatComponents();
         }
 

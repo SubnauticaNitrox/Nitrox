@@ -40,7 +40,7 @@ namespace NitroxClient.GameLogic
         public void RequestSimulationLock(NitroxId id, SimulationLockType lockType)
         {
             SimulationOwnershipRequest ownershipRequest = new SimulationOwnershipRequest(muliplayerSession.Reservation.PlayerId, id, lockType);
-            packetSender.Send(ownershipRequest);
+            packetSender.SendIfGameCode(ownershipRequest);
         }
 
         public void RequestSimulationLock(LockRequestBase lockRequest)

@@ -32,7 +32,7 @@ public class FireExtinguisherHolder_TryStoreTank_Patch : NitroxPatch, IDynamicPa
             {
                 /*
                  * Injects:  Callback(this, pickupable);
-                 * 
+                 *
                  * This needs to be done before the pickupable object is destroyed because it has necessary metadata such as the tank fuel level.
                  */
                 yield return new CodeInstruction(OpCodes.Ldarg_0);
@@ -48,7 +48,7 @@ public class FireExtinguisherHolder_TryStoreTank_Patch : NitroxPatch, IDynamicPa
         Resolve<Entities>().EntityMetadataChanged(holder, holderId);
 
         NitroxId pickupableId = NitroxEntity.GetId(pickupable.gameObject);
-        Resolve<IPacketSender>().Send(new EntityDestroyed(pickupableId));
+        SendPacket(new EntityDestroyed(pickupableId));
     }
 
     public override void Patch(Harmony harmony)
@@ -56,4 +56,3 @@ public class FireExtinguisherHolder_TryStoreTank_Patch : NitroxPatch, IDynamicPa
         PatchTranspiler(harmony, TARGET_METHOD);
     }
 }
-

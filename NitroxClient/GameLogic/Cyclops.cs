@@ -37,13 +37,13 @@ namespace NitroxClient.GameLogic
         public void BroadcastLaunchDecoy(NitroxId id)
         {
             CyclopsDecoyLaunch packet = new CyclopsDecoyLaunch(id);
-            packetSender.Send(packet);
+            packetSender.SendIfGameCode(packet);
         }
 
         public void BroadcastActivateFireSuppression(NitroxId id)
         {
             CyclopsFireSuppression packet = new CyclopsFireSuppression(id);
-            packetSender.Send(packet);
+            packetSender.SendIfGameCode(packet);
         }
 
         public void LaunchDecoy(NitroxId id)
@@ -99,8 +99,8 @@ namespace NitroxClient.GameLogic
         /// <summary>
         /// Called when the player repairs a <see cref="CyclopsDamagePoint"/>. Right now it's not possible to partially repair because it would be difficult to implement.
         /// <see cref="CyclopsDamagePoint"/>s are coupled with <see cref="LiveMixin"/>, which is used with just about anything that has health.
-        /// I would need to hook onto <see cref="LiveMixin.AddHealth(float)"/>, or maybe the repair gun event to catch when something repairs a damage point, which I don't 
-        /// believe is worth the effort. A <see cref="CyclopsDamagePoint"/> is already fully repaired in a little over a second. This can trigger sending 
+        /// I would need to hook onto <see cref="LiveMixin.AddHealth(float)"/>, or maybe the repair gun event to catch when something repairs a damage point, which I don't
+        /// believe is worth the effort. A <see cref="CyclopsDamagePoint"/> is already fully repaired in a little over a second. This can trigger sending
         /// <see cref="CyclopsDamagePointRepaired"/> and <see cref="CyclopsDamage"/> packets
         /// </summary>
         public void OnDamagePointRepaired(SubRoot subRoot, CyclopsDamagePoint damagePoint, float repairAmount)
@@ -112,7 +112,7 @@ namespace NitroxClient.GameLogic
                 if (subRoot.damageManager.damagePoints[i] == damagePoint)
                 {
                     CyclopsDamagePointRepaired packet = new(subId, i, repairAmount);
-                    packetSender.Send(packet);
+                    packetSender.SendIfGameCode(packet);
 
                     return;
                 }
@@ -148,7 +148,7 @@ namespace NitroxClient.GameLogic
             CyclopsFireData[] firePoints = GetActiveRoomFires(subRoot.GetComponent<SubFire>()).ToArray();
 
             CyclopsDamage packet = new(subId, subRoot.GetComponent<LiveMixin>().health, subRoot.damageManager.subLiveMixin.health, subRoot.GetComponent<SubFire>().liveMixin.health, damagePointIndexes, firePoints, damageInfo);
-            packetSender.Send(packet);
+            packetSender.SendIfGameCode(packet);
         }
 
         /// <summary>

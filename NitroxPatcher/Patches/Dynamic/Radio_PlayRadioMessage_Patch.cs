@@ -14,7 +14,7 @@ namespace NitroxPatcher.Patches.Dynamic
         public static void Prefix()
         {
             IPacketSender packetSender = NitroxServiceLocator.LocateService<IPacketSender>();
-            packetSender.Send(new RadioPlayPendingMessage());
+            SendPacket(new RadioPlayPendingMessage());
         }
 
         public override void Patch(Harmony harmony)

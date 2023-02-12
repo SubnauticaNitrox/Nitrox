@@ -30,7 +30,7 @@ namespace NitroxClient.GameLogic
 
             BasicItemData itemData = new(id, itemId, bytes);
             StorageSlotItemAdd add = new(itemData);
-            packetSender.Send(add);
+            packetSender.SendIfGameCode(add);
         }
 
         public void BroadcastItemRemoval(GameObject gameObject)
@@ -38,7 +38,7 @@ namespace NitroxClient.GameLogic
             NitroxId id = NitroxEntity.GetId(gameObject);
 
             StorageSlotItemRemove slotItemRemove = new(id);
-            packetSender.Send(slotItemRemove);
+            packetSender.SendIfGameCode(slotItemRemove);
         }
 
         public void AddItem(GameObject item, NitroxId containerId, bool silent = false)
@@ -115,7 +115,7 @@ namespace NitroxClient.GameLogic
         public void EnergyMixinValueChanged(NitroxId ownerId, float amount, ItemData batteryData)
         {
             EnergyMixinValueChanged batteryChanged = new(ownerId, amount, batteryData);
-            packetSender.Send(batteryChanged);
+            packetSender.SendIfGameCode(batteryChanged);
         }
 
     }

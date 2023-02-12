@@ -31,7 +31,7 @@ namespace NitroxClient.GameLogic
 
             EntityReparented reparented = new EntityReparented(itemId, InventoryContainerHelper.GetOwnerId(containerTransform));
 
-            if (packetSender.Send(reparented))
+            if (packetSender.SendIfGameCode(reparented))
             {
                 Log.Debug($"Sent: Added item ({itemId}) of type {pickupable.GetTechType()} to container {containerTransform.gameObject.GetFullHierarchyPath()}");
             }
@@ -54,7 +54,7 @@ namespace NitroxClient.GameLogic
 
             ItemsContainer container = opContainer.Value;
             Pickupable pickupable = item.RequireComponent<Pickupable>();
-            
+
             using (packetSender.Suppress<EntityReparented>())
             {
                 container.UnsafeAdd(new InventoryItem(pickupable));

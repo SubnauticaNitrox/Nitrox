@@ -16,7 +16,7 @@ namespace NitroxPatcher.Patches.Dynamic
             if (__instance.goalUnlocks.ContainsKey(completedGoal))
             {
                 StoryEventSend packet = new(StoryEventSend.EventType.GOAL_UNLOCK, completedGoal);
-                Resolve<IPacketSender>().Send(packet);
+                SendPacket(packet);
             }
         }
 

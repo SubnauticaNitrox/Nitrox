@@ -13,7 +13,7 @@ namespace NitroxClient.GameLogic
     /// <summary>
     /// Handles all of the <see cref="Fire"/>s in the game. Currently, the only known Fire spawning is in <see cref="SubFire.CreateFire(SubFire.RoomFire)"/>. The
     /// fires in the Aurora come loaded with the map and do not grow in size. If we want to create a Fire spawning mechanic outside of Cyclops fires, it should be
-    /// added to <see cref="Fires.Create(CyclopsFireData)"/>. Fire dousing goes by Id and does not need to be 
+    /// added to <see cref="Fires.Create(CyclopsFireData)"/>. Fire dousing goes by Id and does not need to be
     /// modified
     /// </summary>
     public class Fires
@@ -37,7 +37,7 @@ namespace NitroxClient.GameLogic
         }
 
         /// <summary>
-        /// Triggered when <see cref="SubFire.CreateFire(SubFire.RoomFire)"/> is executed. To create a new fire manually, 
+        /// Triggered when <see cref="SubFire.CreateFire(SubFire.RoomFire)"/> is executed. To create a new fire manually,
         /// call <see cref="Create(CyclopsFireData)"/>
         /// </summary>
         public void OnCreate(Fire fire, SubFire.RoomFire room, int nodeIndex)
@@ -45,7 +45,7 @@ namespace NitroxClient.GameLogic
             NitroxId subRootId = NitroxEntity.GetId(fire.fireSubRoot.gameObject);
 
             CyclopsFireCreated packet = new CyclopsFireCreated(NitroxEntity.GetId(fire.gameObject), subRootId, room.roomLinks.room, nodeIndex);
-            packetSender.Send(packet);
+            packetSender.SendIfGameCode(packet);
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace NitroxClient.GameLogic
                     fireDouseAmount[fireId] = 0;
 
                     FireDoused packet = new FireDoused(fireId, douseAmount);
-                    packetSender.Send(packet);
+                    packetSender.SendIfGameCode(packet);
                 }
             }
         }

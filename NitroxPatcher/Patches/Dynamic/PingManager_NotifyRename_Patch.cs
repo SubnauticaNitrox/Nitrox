@@ -22,7 +22,7 @@ namespace NitroxPatcher.Patches.Dynamic
             }
 
             PingRenamed packet = new(NitroxEntity.GetId(instance.gameObject), instance.GetLabel(), SerializationHelper.GetBytes(instance.gameObject));
-            NitroxServiceLocator.LocateService<IPacketSender>().Send(packet);
+            SendPacket(packet);
         }
 
         public override void Patch(Harmony harmony)

@@ -71,7 +71,7 @@ public class ToggleLights_SetLightsActive_Patch : NitroxPatch, IDynamicPatch
             }
             else
             {
-                Resolve<IPacketSender>().Send(new NitroxModel.Packets.ToggleLights(id, __instance.lightsActive));
+                SendPacket(new NitroxModel.Packets.ToggleLights(id, __instance.lightsActive));
             }
         }
     }
