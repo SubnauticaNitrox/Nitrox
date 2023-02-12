@@ -6,19 +6,11 @@
         <Setter Property="Padding" Value="14" />
         <Setter Property="Background" Value="#ECECEC" />
         <Setter Property="BorderThickness" Value="0" />
-
-        <Style Selector="^:focus">
-            <Setter Property="TextBlock.Foreground" Value="{DynamicResource BrandBlackBrush}" />
-        </Style>
     </Style>
 
     <Style Selector="TextBox /template/ Border">
         <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType=TextBox}}" />
         <Setter Property="CornerRadius" Value="{Binding CornerRadius, RelativeSource={RelativeSource AncestorType=TextBox}}" />
         <Setter Property="BorderThickness" Value="{Binding BorderThickness, RelativeSource={RelativeSource AncestorType=TextBox}}" />
-
-        <Style Selector="^:pointerover">
-            <Setter Property="TextBlock.Foreground" Value="{DynamicResource BrandBlackBrush}" />
-        </Style>
     </Style>
 </Styles>

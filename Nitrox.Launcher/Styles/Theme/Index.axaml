@@ -50,7 +50,6 @@
     <Style Selector=".form > :is(Layoutable) > TextBlock:nth-child(1)">
         <Setter Property="FontSize" Value="10" />
         <Setter Property="FontWeight" Value="700" />
-        <Setter Property="Foreground" Value="#202225" />
         <Setter Property="Margin" Value="0 0 0 11" />
     </Style>
 

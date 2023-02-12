@@ -17,14 +17,26 @@
     </Style>
     <Style Selector="TextBox[(design|NitroxAttached.Theme)=LIGHT]">
         <Setter Property="Background" Value="#ECECEC" />
+        <Setter Property="Foreground" Value="#000000" />
+        <Setter Property="CaretBrush" Value="#000000" />
     </Style>
     <Style Selector="TextBox[(design|NitroxAttached.Theme)=DARK]">
         <Setter Property="Background" Value="#1F1F1F" />
+        <Setter Property="Foreground" Value="#FFFFFF" />
+        <Setter Property="CaretBrush" Value="#FFFFFF" />
     </Style>
     <Style Selector="Button[(design|NitroxAttached.Theme)=LIGHT]">
         <Setter Property="Foreground" Value="#000000" />
     </Style>
     <Style Selector="Button[(design|NitroxAttached.Theme)=DARK]">
         <Setter Property="Foreground" Value="#FFFFFF" />
+    </Style>
+
+    <!-- Theme custom styles here -->
+    <Style Selector=".form > :is(Layoutable) > TextBlock[(design|NitroxAttached.Theme)=LIGHT]:nth-child(1)">
+        <Setter Property="Foreground" Value="#202225" />
+    </Style>
+    <Style Selector=".form > :is(Layoutable) > TextBlock[(design|NitroxAttached.Theme)=DARK]:nth-child(1)">
+        <Setter Property="Foreground" Value="#80FFFFFF" />
     </Style>
 </Styles>
