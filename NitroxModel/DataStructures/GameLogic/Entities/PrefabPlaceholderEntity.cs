@@ -27,6 +27,15 @@ namespace NitroxModel.DataStructures.GameLogic.Entities
             ChildEntities = new List<Entity>();
         }
 
+        public PrefabPlaceholderEntity(NitroxId id, string classId, NitroxTechType techType, NitroxId parentId, List<Entity> childEntities)
+        {
+            Id = id;
+            ClassId = classId;
+            TechType = techType;
+            ParentId = parentId;
+            ChildEntities = childEntities;
+        }
+
         /// <remarks>Used for deserialization</remarks>
         public PrefabPlaceholderEntity(NitroxId id, string classId, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
         {
