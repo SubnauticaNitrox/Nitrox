@@ -16,7 +16,7 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities
 
             TaskResult<GameObject> gameObjectResult = new();
             yield return CreateGameObject(techType, entity.ClassId, gameObjectResult);
-            
+
             GameObject gameObject = gameObjectResult.Get();
             gameObject.transform.position = entity.Transform.Position.ToUnity();
             gameObject.transform.rotation = entity.Transform.Rotation.ToUnity();
@@ -29,7 +29,7 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities
             {
                 LargeWorldEntity.Register(gameObject); // This calls SetActive on the GameObject
             }
-            else if (gameObject.GetComponent<LargeWorldEntity>() != null && gameObject.transform.parent == null)
+            else if (gameObject.GetComponent<LargeWorldEntity>() && !gameObject.transform.parent)
             {
                 gameObject.transform.SetParent(cellRoot.liveRoot.transform, true);
                 LargeWorldEntity.Register(gameObject);
@@ -53,12 +53,12 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities
             yield return prefabCoroutine;
             prefabCoroutine.TryGetPrefab(out GameObject prefab);
 
-            if (prefab == null)
+            if (!prefab)
             {
                 CoroutineTask<GameObject> techPrefabCoroutine = CraftData.GetPrefabForTechTypeAsync(techType, false);
                 yield return techPrefabCoroutine;
                 prefab = techPrefabCoroutine.GetResult();
-                if (prefab == null)
+                if (!prefab)
                 {
                     result.Set(Utils.CreateGenericLoot(techType));
                 }

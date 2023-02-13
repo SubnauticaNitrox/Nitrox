@@ -134,42 +134,12 @@ namespace NitroxServer.GameLogic.Entities
             }
         }
 
-        public void PickUpEntity(WorldEntity worldEntity)
-        {            
-            if (worldEntity.ExistsInGlobalRoot)
-            {
-                lock (globalRootEntitiesById)
-                {
-                    globalRootEntitiesById.Remove(worldEntity.Id);
-                }
-            }
-            else
-            {
-                lock (phasingEntitiesByAbsoluteCell)
-                {
-                    if (phasingEntitiesByAbsoluteCell.TryGetValue(worldEntity.AbsoluteEntityCell, out List<WorldEntity> entities))
-                    {
-                        entities.Remove(worldEntity);
-                    }
-                }
-            }
-
-            if (worldEntity.ParentId != null)
-            {
-                Optional<Entity> parent = entityRegistry.GetEntityById(worldEntity.ParentId);
-
-                if (parent.HasValue)
-                {
-                    parent.Value.ChildEntities.Remove(worldEntity);
-                }
-            }
-        }
-
         public void LoadAllUnspawnedEntities(System.Threading.CancellationToken token)
         {            
             IMap map = NitroxServiceLocator.LocateService<IMap>();
 
             int totalEntites = 0;
+
             for (int x = 0; x < map.DimensionsInBatches.X; x++)
             {
                 token.ThrowIfCancellationRequested();
@@ -177,48 +147,11 @@ namespace NitroxServer.GameLogic.Entities
                 {
                     for (int z = 0; z < map.DimensionsInBatches.Z; z++)
                     {
-                        NitroxInt3 batchId = new NitroxInt3(x, y, z);
-                        List<Entity> spawnedEntities = batchEntitySpawner.LoadUnspawnedEntities(batchId, true);
+                        int spawned = LoadFromBatch(new(x, y, z), true);
 
-                        lock (phasingEntitiesByAbsoluteCell)
-                        {
-                            foreach (Entity entity in spawnedEntities)
-                            {
-                                if(entity is WorldEntity worldEntity)
-                                {
-                                    if (entity.ParentId != null)
-                                    {
-                                        Optional<Entity> opEnt = entityRegistry.GetEntityById(entity.ParentId);
+                        Log.Debug($"Loaded {spawned} entities from batch ({x}, {y}, {z})");
 
-                                        if (opEnt.HasValue && opEnt.Value is WorldEntity worldParent)
-                                        {
-                                            worldEntity.Transform.SetParent(worldParent.Transform, false);
-                                        }
-                                        else if (!opEnt.HasValue)
-                                        {
-                                            Log.Error($"Parent not Found! Are you sure it exists? {entity.ParentId}");
-                                        }
-                                    }
-
-                                    List<WorldEntity> entitiesInCell = GetEntities(worldEntity.AbsoluteEntityCell);
-                                    entitiesInCell.Add(worldEntity);
-                                }
-
-                                if(entity is PlaceholderGroupWorldEntity placeholderGroupEntity)
-                                {
-                                    foreach(Entity child in placeholderGroupEntity.ChildEntities)
-                                    {
-                                        entityRegistry.AddEntity(child);
-                                        totalEntites++;
-                                    }
-                                }
-
-                                entityRegistry.AddEntity(entity);
-                                totalEntites++;
-                            }
-                        }
-
-                        Log.Debug($"Loaded {spawnedEntities.Count} entities from batch ({x}, {y}, {z})");
+                        totalEntites += spawned;
                     }
                 }
 
@@ -235,34 +168,43 @@ namespace NitroxServer.GameLogic.Entities
 
             foreach (NitroxInt3 batchId in distinctBatchIds)
             {
-                List<Entity> spawnedEntities = batchEntitySpawner.LoadUnspawnedEntities(batchId);
-                entityRegistry.AddEntitiesIgnoringDuplicate(spawnedEntities);
-
-                List<WorldEntity> worldEntities = spawnedEntities.OfType<WorldEntity>().ToList();
-
-                lock (phasingEntitiesByAbsoluteCell)
-                {
-                    foreach (WorldEntity entity in worldEntities)
-                    {
-                        if (entity.ParentId != null)
-                        {
-                            Optional<Entity> opEnt = entityRegistry.GetEntityById<Entity>(entity.ParentId);
-
-                            if (opEnt.HasValue && opEnt.Value is WorldEntity parentWorldEntity)
-                            {
-                                entity.Transform.SetParent(parentWorldEntity.Transform, false);
-                            }
-                            else if (!opEnt.HasValue)
-                            {
-                                Log.Error($"Parent not Found! Are you sure it exists? {entity.ParentId}");
-                            }
-                        }
-
-                        List<WorldEntity> entitiesInCell = GetEntities(entity.AbsoluteEntityCell);
-                        entitiesInCell.Add(entity);                        
-                    }                    
-                }
+                LoadFromBatch(batchId, false);
             }
+        }
+
+        private int LoadFromBatch(NitroxInt3 batchId, bool suppressLogs)
+        {
+            List<Entity> spawnedEntities = batchEntitySpawner.LoadUnspawnedEntities(batchId, suppressLogs);
+
+            List<WorldEntity> nonCellRootEntities = spawnedEntities.Where(entity => typeof(WorldEntity).IsAssignableFrom(entity.GetType()) &&
+                                                                                    entity.GetType() != typeof(CellRootEntity))
+                                                                   .Cast<WorldEntity>()
+                                                                   .ToList();
+
+            // UWE stores entities serialized with a handful of parent cell roots.  These only represent a small fraction of all possible cell
+            // roots that could exist.  There is no reason for the server to know about these and much easier to consider top-level world entities
+            // as positioned globally and not locally.  Thus, we promote cell root children to top level and throw the cell roots away. 
+            foreach (CellRootEntity cellRoot in spawnedEntities.OfType<CellRootEntity>())
+            {
+                foreach (WorldEntity worldEntity in cellRoot.ChildEntities.Cast<WorldEntity>())
+                {
+                    worldEntity.ParentId = null;
+                    worldEntity.Transform.SetParent(null, true);
+                    nonCellRootEntities.Add(worldEntity);
+                }
+
+                cellRoot.ChildEntities = new List<Entity>();
+            }
+
+            entityRegistry.AddEntitiesIgnoringDuplicate(nonCellRootEntities.Cast<Entity>().ToList());
+
+            foreach (WorldEntity entity in nonCellRootEntities)
+            {
+                List<WorldEntity> entitiesInCell = GetEntities(entity.AbsoluteEntityCell);
+                entitiesInCell.Add(entity);
+            }
+
+            return nonCellRootEntities.Count;
         }
 
         private void EntitySwitchedCells(WorldEntity entity, AbsoluteEntityCell oldCell, AbsoluteEntityCell newCell)

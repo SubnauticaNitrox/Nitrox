@@ -15,7 +15,7 @@ namespace NitroxModel.DataStructures.GameLogic
     [ProtoInclude(70, typeof(PrefabPlaceholderEntity))]
     [ProtoInclude(80, typeof(InventoryEntity))]
     [ProtoInclude(90, typeof(InventoryItemEntity))]
-    [ProtoInclude(100, typeof(PathBasedChildEntity))]    
+    [ProtoInclude(100, typeof(PathBasedChildEntity))]
     public abstract class Entity
     {
         [DataMember(Order = 1)]

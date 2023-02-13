@@ -1,14 +1,19 @@
-﻿namespace NitroxServer.Resources;
+﻿using NitroxModel.DataStructures.GameLogic;
+
+namespace NitroxServer.Resources;
 
 public class PrefabPlaceholdersGroupAsset
 {
     /// <summary>
-    /// All attached PrefabPlaceholders by their classId. Is in sync with PrefabPlaceholdersGroup.prefabPlaceholders
+    /// All attached PrefabPlaceholders. Is in sync with PrefabPlaceholdersGroup.prefabPlaceholders
     /// </summary>
-    public string[] PrefabPlaceholders { get; }
+    public PrefabPlaceholderAsset[] PrefabPlaceholders { get; }
 
-    public PrefabPlaceholdersGroupAsset(string[] prefabPlaceholders)
+    public NitroxTechType TechType { get;}
+
+    public PrefabPlaceholdersGroupAsset(PrefabPlaceholderAsset[] prefabPlaceholders, NitroxTechType techType)
     {
         PrefabPlaceholders = prefabPlaceholders;
+        TechType = techType;
     }
 }
