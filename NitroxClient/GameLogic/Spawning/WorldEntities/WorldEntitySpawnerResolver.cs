@@ -8,7 +8,6 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities;
 public class WorldEntitySpawnerResolver
 {
     private readonly DefaultWorldEntitySpawner defaultEntitySpawner = new();
-    private readonly CellRootSpawner cellRootSpawner = new();
     private readonly VehicleWorldEntitySpawner vehicleWorldEntitySpawner = new();
 
     private readonly PlaceholderGroupWorldEntitySpawner prefabWorldEntitySpawner;
@@ -27,11 +26,6 @@ public class WorldEntitySpawnerResolver
 
     public IWorldEntitySpawner ResolveEntitySpawner(WorldEntity entity)
     {
-        if (entity.ClassId == "55d7ab35-de97-4d95-af6c-ac8d03bb54ca")
-        {
-            return cellRootSpawner;
-        }
-
         if (entity is PlaceholderGroupWorldEntity)
         {
             return prefabWorldEntitySpawner;

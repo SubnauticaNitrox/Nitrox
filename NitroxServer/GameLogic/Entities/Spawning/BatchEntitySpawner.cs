@@ -214,17 +214,35 @@ public class BatchEntitySpawner : IEntitySpawner
 
     private IEnumerable<Entity> CreateEntityWithChildren(EntitySpawnPoint entitySpawnPoint, NitroxVector3 scale, NitroxTechType techType, int cellLevel, string classId, DeterministicGenerator deterministicBatchGenerator, WorldEntity parentEntity = null)
     {
-        WorldEntity spawnedEntity = new WorldEntity(entitySpawnPoint.LocalPosition,
-                                                    entitySpawnPoint.LocalRotation,
-                                                    scale,
-                                                    techType,
-                                                    cellLevel,
-                                                    classId,
-                                                    true,
-                                                    deterministicBatchGenerator.NextId(),
-                                                    parentEntity,
-                                                    false,
-                                                    null);
+        WorldEntity spawnedEntity;
+
+        if (classId == CellRootEntity.CLASS_ID)
+        {
+            spawnedEntity = new CellRootEntity(entitySpawnPoint.LocalPosition,
+                                               entitySpawnPoint.LocalRotation,
+                                               scale,
+                                               techType,
+                                               cellLevel,
+                                               classId,
+                                               true,
+                                               deterministicBatchGenerator.NextId(),
+                                               false,
+                                               null);
+        }
+        else
+        {
+            spawnedEntity = new WorldEntity(entitySpawnPoint.LocalPosition,
+                                            entitySpawnPoint.LocalRotation,
+                                            scale,
+                                            techType,
+                                            cellLevel,
+                                            classId,
+                                            true,
+                                            deterministicBatchGenerator.NextId(),
+                                            parentEntity,
+                                            false,
+                                            null);
+        }
 
         if (!TryCreatePrefabPlaceholdersGroupWithChildren(ref spawnedEntity, classId, parentEntity, deterministicBatchGenerator))
         {

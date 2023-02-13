@@ -60,9 +60,9 @@ namespace NitroxServer.GameLogic.Entities
             {
                 Entity current = entitiesById[entity.Id];
 
-                entitiesById.TryUpdate(entity.Id, entity, current);
-
                 RemoveFromParent(current);
+
+                entitiesById.TryUpdate(entity.Id, entity, current);
             }
 
             AddToParent(entity);

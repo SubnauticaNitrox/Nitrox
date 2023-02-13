@@ -65,7 +65,7 @@ namespace NitroxServer.Communication.Packets.Processors
             if (entity.Value is WorldEntity worldEntity)
             {
                 // Do not track this entity in the open world anymore.
-                worldEntityManager.PickUpEntity(worldEntity);
+                worldEntityManager.StopTrackingEntity(worldEntity);
 
                 // Convert the world entity into an inventory item
                 InventoryItemEntity inventoryItemEntity = new InventoryItemEntity(worldEntity.Id, worldEntity.ClassId, worldEntity.TechType, worldEntity.Metadata, player.GameObjectId, worldEntity.ChildEntities);

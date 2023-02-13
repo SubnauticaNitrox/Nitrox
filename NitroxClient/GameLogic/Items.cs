@@ -73,7 +73,8 @@ namespace NitroxClient.GameLogic
 
             bool inGlobalRoot = map.GlobalRootTechTypes.Contains(techType.ToDto());
             string classId = gameObject.GetComponent<PrefabIdentifier>().ClassId;
-            WorldEntity droppedItem = new WorldEntity(gameObject.transform.ToDto(), 0, classId, inGlobalRoot, waterparkId.OrNull(), false, id, techType.ToDto(), metadata.OrNull(), null, new List<Entity>());
+
+            WorldEntity droppedItem = new WorldEntity(gameObject.transform.ToWorldDto(), 0, classId, inGlobalRoot, waterparkId.OrNull(), false, id, techType.ToDto(), metadata.OrNull(), null, new List<Entity>());
             droppedItem.ChildEntities = GetPrefabChildren(gameObject, id).ToList();
 
             Log.Debug($"Dropping item: {droppedItem}");
