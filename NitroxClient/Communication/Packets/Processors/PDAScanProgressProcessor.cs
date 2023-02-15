@@ -11,7 +11,7 @@ public class PDAScanProgressProcessor : ClientPacketProcessor<PDAScanProgress>
         // Fully-scanned entity
         if (packet.ProgressCompleted)
         {
-            NitroxStoryManager.ScanCompleted(packet.Id, packet.Destroy);
+            StoryManager.ScanCompleted(packet.Id, packet.Destroy);
             return;
         }
 

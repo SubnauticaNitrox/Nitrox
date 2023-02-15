@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic;
 
-public static class NitroxStoryManager
+public static class StoryManager
 {
     public static void ScanCompleted(NitroxId entityId, bool destroy)
     {
@@ -27,10 +27,10 @@ public static class NitroxStoryManager
         }
     }
 
-    public static void UpdateAuroraData(AuroraEventData crashedShipExploderData)
+    public static void UpdateAuroraData(AuroraEventData auroraEventData)
     {
-        CrashedShipExploder.main.timeToStartCountdown = crashedShipExploderData.TimeToStartCountdown;
-        CrashedShipExploder.main.timeToStartWarning = crashedShipExploderData.TimeToStartWarning;
+        CrashedShipExploder.main.timeToStartCountdown = auroraEventData.TimeToStartCountdown;
+        CrashedShipExploder.main.timeToStartWarning = auroraEventData.TimeToStartWarning;
     }
 
     public static void RestoreAurora()
@@ -47,7 +47,7 @@ public static class NitroxStoryManager
     /// </summary>
     public static void CleanAuroraEvents()
     {
-        foreach (string eventKey in AuroraEventData.AuroraEvents)
+        foreach (string eventKey in AuroraEventData.GoalNames)
         {
             StoryGoalManager.main.completedGoals.Remove(eventKey);
             PDALog.Remove(eventKey);

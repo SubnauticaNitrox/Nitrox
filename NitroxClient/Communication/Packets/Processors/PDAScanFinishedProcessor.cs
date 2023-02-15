@@ -12,7 +12,7 @@ public class PDAScanFinishedProcessor : ClientPacketProcessor<PDAScanFinished>
     {
         if (packet.Id != null)
         {
-            NitroxStoryManager.ScanCompleted(packet.Id, packet.Destroy);
+            StoryManager.ScanCompleted(packet.Id, packet.Destroy);
         }
         TechType packetTechType = packet.TechType.ToUnity();
         if (packet.FullyResearched)

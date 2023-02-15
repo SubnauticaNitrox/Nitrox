@@ -16,6 +16,14 @@ public class TimeManager
 
     private const double DEFAULT_TIME = 480;
 
+    /// <summary>
+    ///     Calculates the current exact time from an offset (<see cref="latestRegisteredTime"/>) and the delta time between
+    ///     <see cref="DateTimeOffset.Now"/> and the offset's exact <see cref="DateTimeOffset"/> (<see cref="latestRegistrationTime"/>).
+    /// </summary>
+    /// <remarks>
+    ///     This should only be used for DayNigthCycle internal calculations so that we don't use different times during the same frame.
+    ///     Use <see cref="DayNightCycle.timePassed"/> instead to get the current frame's time.
+    /// </remarks>
     public double CurrentTime
     {
         get

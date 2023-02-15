@@ -7,11 +7,11 @@ namespace NitroxModel.DataStructures.GameLogic;
 public class TimeData
 {
     public TimeChange TimePacket;
-    public AuroraEventData CrashedShipExploderData;
+    public AuroraEventData AuroraEventData;
 
-    public TimeData(TimeChange timePacket, AuroraEventData crashedShipExploderData)
+    public TimeData(TimeChange timePacket, AuroraEventData auroraEventData)
     {
         TimePacket = timePacket;
-        CrashedShipExploderData = crashedShipExploderData;
+        AuroraEventData = auroraEventData;
     }
 }

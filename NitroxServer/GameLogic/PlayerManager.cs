@@ -255,12 +255,6 @@ namespace NitroxServer.GameLogic
 
             Log.Info($"Finished processing reservation. Remaining requests: {JoinQueue.Count}");
 
-            // If this is the first player connecting we need to restart time at this exact moment
-            if (player != null && ConnectedPlayers().Count() == 1)
-            {
-                Server.Instance.ResumeServer();
-            }
-
             // Tell next client that it can start joining.
             if (JoinQueue.Count > 0)
             {

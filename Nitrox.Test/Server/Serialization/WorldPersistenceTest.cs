@@ -249,7 +249,7 @@ public class WorldPersistenceTest
             Assert.AreEqual(playerData.NitroxId, playerDataAfter.NitroxId);
             Assert.AreEqual(playerData.IsPermaDeath, playerDataAfter.IsPermaDeath);
 
-            Assert.IsTrue(playerData.CompletedGoals.SequenceEqual(playerDataAfter.CompletedGoals));
+            Assert.IsTrue(playerData.PersonalCompletedGoalsWithTimestamp.SequenceEqual(playerDataAfter.PersonalCompletedGoalsWithTimestamp));
 
             AssertHelper.IsDictionaryEqual(playerData.PlayerPreferences.PingPreferences, playerDataAfter.PlayerPreferences.PingPreferences, (keyValuePair, keyValuePairAfter) =>
             {

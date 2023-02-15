@@ -76,7 +76,7 @@ public class StoryManager
         AuroraCountdownTimeMs = GenerateDeterministicAuroraTime(seed);
 
         // We need to clear these entries from PdaLog and CompletedGoals to make sure that the client, when reconnecting, doesn't have false information
-        foreach (string eventKey in AuroraEventData.AuroraEvents)
+        foreach (string eventKey in AuroraEventData.GoalNames)
         {
             pdaStateData.PdaLog.RemoveAll(entry => entry.Key == eventKey);
             storyGoalData.CompletedGoals.Remove(eventKey);

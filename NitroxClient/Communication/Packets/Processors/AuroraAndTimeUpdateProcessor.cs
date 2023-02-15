@@ -15,11 +15,11 @@ public class AuroraAndTimeUpdateProcessor : ClientPacketProcessor<AuroraAndTimeU
 
     public override void Process(AuroraAndTimeUpdate packet)
     {
-        timeManager.ProcessUpdate(packet.InitialTimeData.TimePacket);
-        NitroxStoryManager.UpdateAuroraData(packet.InitialTimeData.CrashedShipExploderData);
+        timeManager.ProcessUpdate(packet.TimeData.TimePacket);
+        StoryManager.UpdateAuroraData(packet.TimeData.AuroraEventData);
         if (packet.Restore)
         {
-            NitroxStoryManager.RestoreAurora();
+            StoryManager.RestoreAurora();
         }
     }
 }

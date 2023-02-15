@@ -50,8 +50,11 @@ public class PersistedPlayerData
     [DataMember(Order = 13)]
     public bool IsPermaDeath { get; set; }
 
+    /// <summary>
+    /// Those goals are unlocked individually (e.g. opening PDA, eating, picking up a fire extinguisher for the first time)
+    /// </summary>
     [DataMember(Order = 14)]
-    public Dictionary<string, float> CompletedGoals { get; set; } = new Dictionary<string, float>();
+    public Dictionary<string, float> PersonalCompletedGoalsWithTimestamp { get; set; } = new Dictionary<string, float>();
 
     [DataMember(Order = 15)]
     public SubnauticaPlayerPreferences PlayerPreferences { get; set; }
@@ -73,7 +76,7 @@ public class PersistedPlayerData
                           QuickSlotsBinding,
                           EquippedItems,
                           Modules,
-                          CompletedGoals,
+                          PersonalCompletedGoalsWithTimestamp,
                           PlayerPreferences.PingPreferences,
                           PlayerPreferences.PinnedRecipePreferences);
     }
@@ -95,7 +98,7 @@ public class PersistedPlayerData
             Permissions = player.Permissions,
             NitroxId = player.GameObjectId,
             IsPermaDeath = player.IsPermaDeath,
-            CompletedGoals = new(player.CompletedGoals),
+            PersonalCompletedGoalsWithTimestamp = new(player.PersonalCompletedGoalsWithTimestamp),
             PlayerPreferences = new(player.PingInstancePreferences.ToDictionary(m => m.Key, m => m.Value), player.PinnedRecipePreferences.ToList())
         };
     }

@@ -7,6 +7,6 @@ public class GoalCompletedProcessor : AuthenticatedPacketProcessor<GoalCompleted
 {
     public override void Process(GoalCompleted packet, Player player)
     {
-        player.CompletedGoals.Add(packet.CompletedGoal, packet.CompletionTime);
+        player.PersonalCompletedGoalsWithTimestamp.Add(packet.CompletedGoal, packet.CompletionTime);
     }
 }

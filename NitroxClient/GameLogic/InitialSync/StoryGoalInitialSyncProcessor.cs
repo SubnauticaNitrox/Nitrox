@@ -36,7 +36,9 @@ public class StoryGoalInitialSyncProcessor : InitialSyncProcessor
     {
         List<string> completedGoals = packet.StoryGoalData.CompletedGoals;
         List<string> radioQueue = packet.StoryGoalData.RadioQueue;
+        Dictionary<string, float> personalGoals = packet.StoryGoalData.PersonalCompletedGoalsWithTimestamp;
         StoryGoalManager storyGoalManager = StoryGoalManager.main;
+
 
         storyGoalManager.completedGoals.AddRange(completedGoals);
 
@@ -44,7 +46,7 @@ public class StoryGoalInitialSyncProcessor : InitialSyncProcessor
         storyGoalManager.PulsePendingMessages();
 
         // Restore states of GoalManager and the (tutorial) arrow system
-        foreach (KeyValuePair<string, float> entry in packet.CompletedGoals)
+        foreach (KeyValuePair<string, float> entry in personalGoals)
         {
             Goal entryGoal = GoalManager.main.goals.Find(goal => goal.customGoalName.Equals(entry.Key));
             if (entryGoal != null)
@@ -52,11 +54,11 @@ public class StoryGoalInitialSyncProcessor : InitialSyncProcessor
                 entryGoal.SetTimeCompleted(entry.Value);
             }
         }
-        GoalManager.main.completedGoalNames.AddRange(packet.CompletedGoals.Keys);
-        PlayerWorldArrows.main.completedCustomGoals.AddRange(packet.CompletedGoals.Keys);
+        GoalManager.main.completedGoalNames.AddRange(personalGoals.Keys);
+        PlayerWorldArrows.main.completedCustomGoals.AddRange(personalGoals.Keys);
 
         // Deactivate the current arrow if it was completed
-        if (packet.CompletedGoals.Any(goal => goal.Equals(WorldArrowManager.main.currentGoalText)))
+        if (personalGoals.Any(goal => goal.Equals(WorldArrowManager.main.currentGoalText)))
         {
             WorldArrowManager.main.DeactivateArrow();
         }
@@ -64,7 +66,7 @@ public class StoryGoalInitialSyncProcessor : InitialSyncProcessor
         Log.Info($"""
         Received initial sync packet with:
         - Completed story goals : {completedGoals.Count}
-        - Personal goals        : {packet.CompletedGoals.Count}
+        - Personal goals        : {personalGoals.Count}
         - Radio queue           : {radioQueue.Count}
         """);
         yield break;
@@ -109,7 +111,7 @@ public class StoryGoalInitialSyncProcessor : InitialSyncProcessor
         auroraWarnings.OnProtoDeserialize(null);
 
         CrashedShipExploder.main.version = 2;
-        NitroxStoryManager.UpdateAuroraData(timeData.CrashedShipExploderData);        
+        StoryManager.UpdateAuroraData(timeData.AuroraEventData);        
         CrashedShipExploder.main.timeSerialized = DayNightCycle.main.timePassedAsFloat;
         CrashedShipExploder.main.OnProtoDeserialize(null);
 
