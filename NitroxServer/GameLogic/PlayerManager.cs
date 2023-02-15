@@ -210,6 +210,9 @@ namespace NitroxServer.GameLogic
             player.PlayerContext = playerContext;
             player.Connection = connection;
 
+            // reconnecting players need to have their cell visibility refreshed
+            player.ClearVisibleCells();
+
             assetPackage.Player = player;
             assetPackage.ReservationKey = null;
             reservations.Remove(reservationKey);
