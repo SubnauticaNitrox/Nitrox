@@ -47,4 +47,9 @@ public class PlaceholderGroupWorldEntity : WorldEntity
         ParentId = parentId;
         ChildEntities = childEntities;
     }
+
+    public override string ToString()
+    {
+        return $"[PlaceholderGroupWorldEntity {base.ToString()}]";
+    }
 }

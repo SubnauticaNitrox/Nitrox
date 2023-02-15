@@ -114,7 +114,6 @@ namespace NitroxClient.GameLogic
                 else
                 {
                     yield return SpawnAsync(entity);
-                    yield return SpawnAnyPendingChildrenAsync(entity);
                 }
             }
         }
@@ -129,19 +128,13 @@ namespace NitroxClient.GameLogic
             yield return entitySpawner.SpawnAsync(entity, gameObjectTaskResult);
             Optional<GameObject> gameObject = gameObjectTaskResult.Get();
 
-            if (!entitySpawner.SpawnsOwnChildren(entity))
-            {
-                foreach (Entity childEntity in entity.ChildEntities)
-                {
-                    if (!WasAlreadySpawned(childEntity))
-                    {
-                        yield return SpawnAsync(childEntity);
-                    }
-                }
-            }
-
             if (gameObject.HasValue)
             {
+                if (!entitySpawner.SpawnsOwnChildren(entity))
+                {
+                    SpawnChildren(entity);
+                }
+
                 yield return AwaitAnyRequiredEntitySetup(gameObject.Value);
 
                 // Apply entity metadat after children have been spawned.  This will allow metadata processors to
@@ -150,8 +143,16 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        private IEnumerator SpawnAnyPendingChildrenAsync(Entity entity)
+        private IEnumerator SpawnChildren(Entity entity)
         {
+            foreach (Entity childEntity in entity.ChildEntities)
+            {
+                if (!WasAlreadySpawned(childEntity))
+                {
+                    yield return SpawnAsync(childEntity);
+                }
+            }
+
             if (pendingParentEntitiesByParentId.TryGetValue(entity.Id, out List<Entity> pendingEntities))
             {
                 foreach (WorldEntity child in pendingEntities)

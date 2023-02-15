@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic;
@@ -25,6 +26,7 @@ public class PlaceholderGroupWorldEntitySpawner : IWorldEntitySpawner
         TaskResult<Optional<GameObject>> prefabPlaceholderGroupTaskResult = new();
         yield return defaultSpawner.SpawnAsync(entity, parent, cellRoot, prefabPlaceholderGroupTaskResult);
         Optional<GameObject> prefabPlaceholderGroupGameObject = prefabPlaceholderGroupTaskResult.Get();
+
         if (!prefabPlaceholderGroupGameObject.HasValue)
         {
             result.Set(Optional.Empty);
@@ -42,52 +44,86 @@ public class PlaceholderGroupWorldEntitySpawner : IWorldEntitySpawner
         // Spawning PrefabPlaceholders
         PrefabPlaceholdersGroup prefabPlaceholderGroup = prefabPlaceholderGroupGameObject.Value.GetComponent<PrefabPlaceholdersGroup>();
 
-        for (int index = 0; index < placeholderGroupEntity.ChildEntities.Count; index++)
+        foreach (PrefabChildEntity placeholderSlot in placeholderGroupEntity.ChildEntities.Cast<PrefabChildEntity>())
         {
-            Entity placeholderSlot = placeholderGroupEntity.ChildEntities[index];
-
             if (placeholderSlot.ChildEntities.Count == 0) //Entity was a slot not spawned, picked up, or removed
             {
                 continue;
             }
 
-            PrefabPlaceholder prefabPlaceholder = prefabPlaceholderGroup.prefabPlaceholders[index];
+            PrefabPlaceholder prefabPlaceholder = prefabPlaceholderGroup.prefabPlaceholders[placeholderSlot.ComponentIndex];
 
-            switch (placeholderSlot.ChildEntities[0])
+            TaskResult<Optional<GameObject>> childResult = new();
+
+            Entity slotEntity = placeholderSlot.ChildEntities[0];
+
+            switch (slotEntity)
             {
                 case PrefabPlaceholderEntity placeholder:
-                    IPrefabRequest prefabCoroutine = PrefabDatabase.GetPrefabAsync(prefabPlaceholder.prefabClassId);
-                    yield return prefabCoroutine;
-                    prefabCoroutine.TryGetPrefab(out GameObject prefab);
-                    GameObject gameObject = Utils.SpawnZeroedAt(prefab, prefabPlaceholder.transform, true);
-
-                    NitroxEntity.SetNewId(gameObject, placeholder.Id);
-
-                    Optional<EntityMetadataProcessor> metadataProcessor = EntityMetadataProcessor.FromMetaData(entity.Metadata);
-
-                    if (metadataProcessor.HasValue)
-                    {
-                        metadataProcessor.Value.ProcessMetadata(gameObject, placeholder.Metadata);
-                    }
-
+                    yield return SpawnChildPlaceholder(prefabPlaceholder, placeholder, childResult);
                     break;
-                case WorldEntity slotEntity:
-                    IWorldEntitySpawner spawner = spawnerResolver.ResolveEntitySpawner(slotEntity);
-                    Optional<GameObject> slotEntityParent = Optional.Of(prefabPlaceholder.gameObject);
-
-                    TaskResult<Optional<GameObject>> slotEntityTaskResult = new();
-                    yield return spawner.SpawnAsync(slotEntity, slotEntityParent, cellRoot, slotEntityTaskResult);
-
-                    if (slotEntityTaskResult.value.HasValue)
-                    {
-                        // For some reasons it's not zero after spawning so we reset it here
-                        slotEntityTaskResult.value.Value.transform.localPosition = Vector3.zero;
-                    }
-
+                case WorldEntity worldEntity:
+                    yield return SpawnWorldEntityChild(worldEntity, cellRoot, Optional.Of(prefabPlaceholder.gameObject), childResult);
                     break;
                 default:
                     Log.Debug(placeholderSlot.ChildEntities.Count > 0 ? $"Unhandled child type {placeholderSlot.ChildEntities[0]}" : "Child was null");
                     break;
+            }
+
+            yield return SpawnChildren(slotEntity, childResult.value, cellRoot);
+        }
+    }
+
+    private IEnumerator SpawnChildPlaceholder(PrefabPlaceholder prefabPlaceholder, PrefabPlaceholderEntity entity, TaskResult<Optional<GameObject>> result)
+    {
+        IPrefabRequest prefabCoroutine = PrefabDatabase.GetPrefabAsync(prefabPlaceholder.prefabClassId);
+        yield return prefabCoroutine;
+        prefabCoroutine.TryGetPrefab(out GameObject prefab);
+        GameObject gameObject = Utils.SpawnZeroedAt(prefab, prefabPlaceholder.transform, true);
+
+        NitroxEntity.SetNewId(gameObject, entity.Id);
+
+        Optional<EntityMetadataProcessor> metadataProcessor = EntityMetadataProcessor.FromMetaData(entity.Metadata);
+
+        if (metadataProcessor.HasValue)
+        {
+            metadataProcessor.Value.ProcessMetadata(gameObject, entity.Metadata);
+        }
+
+        result.Set(gameObject);
+    }
+
+    private IEnumerator SpawnWorldEntityChild(WorldEntity worldEntity, EntityCell cellRoot, Optional<GameObject> parent, TaskResult<Optional<GameObject>> worldEntityResult)
+    {
+        IWorldEntitySpawner spawner = spawnerResolver.ResolveEntitySpawner(worldEntity);
+
+        yield return spawner.SpawnAsync(worldEntity, parent, cellRoot, worldEntityResult);
+
+        if (worldEntityResult.value.HasValue)
+        {
+            // For some reasons it's not zero after spawning so we reset it here
+            worldEntityResult.value.Value.transform.localPosition = Vector3.zero;
+        }
+    }
+
+    private IEnumerator SpawnChildren(Entity entity, Optional<GameObject> entityGo, EntityCell cellRoot)
+    {
+        foreach (Entity child in entity.ChildEntities)
+        {
+            TaskResult<Optional<GameObject>> childResult = new();
+
+            if (child is PlaceholderGroupWorldEntity placeholderGroup)
+            {
+                yield return SpawnAsync(placeholderGroup, entityGo, cellRoot, childResult);
+            }
+            else if(child is WorldEntity worldEntity)
+            {
+                yield return SpawnWorldEntityChild(worldEntity, cellRoot, entityGo, childResult);
+            }
+
+            if (childResult.value.HasValue)
+            {
+                SpawnChildren(child, childResult.value, cellRoot);
             }
         }
     }
