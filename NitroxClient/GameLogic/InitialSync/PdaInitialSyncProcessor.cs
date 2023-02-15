@@ -75,8 +75,6 @@ public class PdaInitialSyncProcessor : InitialSyncProcessor
     private IEnumerator RestorePDAScanner(InitialPlayerSync packet)
     {
         InitialPDAData pdaData = packet.PDAData;
-        Dictionary<NitroxId, float> scanProgressEntries = packet.PDAData.CachedProgress;
-        Log.Info($"Received initial sync packet with {scanProgressEntries.Count} cached progress entries");
         
         PDAScanner.Data data = new()
         {
@@ -85,11 +83,6 @@ public class PdaInitialSyncProcessor : InitialSyncProcessor
             complete = pdaData.ScannerComplete.Select(techType => techType.ToUnity()).ToHashSet()
         };
         PDAScanner.Deserialize(data);
-
-        foreach (KeyValuePair<NitroxId, float> progressEntry in scanProgressEntries)
-        {
-            PDAScanner.cachedProgress[progressEntry.Key.ToString()] = progressEntry.Value;
-        }
         yield break;
     }
 }

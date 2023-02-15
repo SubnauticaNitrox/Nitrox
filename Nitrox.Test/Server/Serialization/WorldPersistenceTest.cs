@@ -128,13 +128,6 @@ public class WorldPersistenceTest
         });
 
         Assert.IsTrue(pdaState.ScannerComplete.SequenceEqual(pdaStateAfter.ScannerComplete));
-
-
-        AssertHelper.IsDictionaryEqual(pdaState.CachedProgress, pdaStateAfter.CachedProgress, (entry, entryAfter) =>
-        {
-            Assert.AreEqual(entry.Key, entryAfter.Key);
-            AssertHelper.IsDictionaryEqual(entry.Value, entryAfter.Value);
-        });
     }
 
     private static void StoryGoalTest(StoryGoalData storyGoal, StoryGoalData storyGoalAfter)
@@ -513,8 +506,7 @@ public class WorldPersistenceTest
                         EncyclopediaEntries = { "TestEntry1", "TestEntry2" },
                         ScannerFragments = { new("eda14b58-cfe0-4a56-aa4a-47942567d897"), new("342deb58-cfe0-4a56-aa4a-47942567d897") },
                         ScannerPartial = { new(new NitroxTechType("Moonpool"), 2), new(new NitroxTechType("Fragment"), 1) },
-                        ScannerComplete = { new NitroxTechType("Knife1"), new NitroxTechType("Knife2"), new NitroxTechType("Knife3") },
-                        CachedProgress = { { new NitroxTechType("Knife"), new() { { new("eda14b58-cfe0-4a56-aa4a-47942567d897"), 0.83483f } } } }
+                        ScannerComplete = { new NitroxTechType("Knife1"), new NitroxTechType("Knife2"), new NitroxTechType("Knife3") }
                     },
                     StoryGoals = new StoryGoalData()
                     {

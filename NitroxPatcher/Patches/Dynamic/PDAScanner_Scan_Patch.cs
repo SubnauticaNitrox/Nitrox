@@ -15,7 +15,7 @@ using UnityEngine;
 namespace NitroxPatcher.Patches.Dynamic;
 
 /// <summary>
-/// Broadcasts scan progress and entry unlockings when they happen.
+/// Broadcasts entry progress and entry unlockings when they happen.
 /// </summary>
 /// <remarks>
 /// This is the only method that needs to be tracked to sync and persist PDAScanner's data, because the other methods
@@ -29,11 +29,6 @@ public class PDAScanner_Scan_Patch : NitroxPatch, IDynamicPatch
     internal static readonly OpCode INJECTION_OPCODE = OpCodes.Callvirt;
     internal static readonly object INJECTION_OPERAND = Reflect.Method((GameObject t) => t.SendMessage(default, default, default));
 
-    internal static readonly OpCode INJECTION_OPCODE_2 = OpCodes.Ldsfld;
-    internal static readonly object INJECTION_OPERAND_2 = Reflect.Field(() => PDAScanner.cachedProgress);
-
-    private static readonly Dictionary<string, ThrottledEntry> throttledProgressEntries = new();
-
     public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
     {
         foreach (CodeInstruction instruction in instructions)
@@ -46,10 +41,6 @@ public class PDAScanner_Scan_Patch : NitroxPatch, IDynamicPatch
                 yield return new(OpCodes.Ldloc_S, original.GetLocalVariableIndex<bool>(4));
                 yield return new(OpCodes.Call, Reflect.Method(() => Callback(default, default)));
             }
-            else if (instruction.opcode.Equals(INJECTION_OPCODE_2) && instruction.operand.Equals(INJECTION_OPERAND_2))
-            {
-                yield return new(OpCodes.Call, Reflect.Method(() => ProgressCallback()));
-            }
         }
     }
 
@@ -57,10 +48,6 @@ public class PDAScanner_Scan_Patch : NitroxPatch, IDynamicPatch
     public static void Callback(PDAScanner.Result result, bool alreadyComplete)
     {
         PDAScanner.ScanTarget scanTarget = PDAScanner.scanTarget;
-        if (scanTarget.hasUID)
-        {
-            throttledProgressEntries.Remove(scanTarget.uid);
-        }
 
         TechType techType = scanTarget.techType;
         PDAScanner.EntryData entryData = PDAScanner.GetEntryData(techType);
@@ -76,7 +63,8 @@ public class PDAScanner_Scan_Patch : NitroxPatch, IDynamicPatch
             // We want to broadcast the destruction event before the object is destroyed and corresponding scan data is invalidated.
             if (scanTarget.hasUID)
             {
-                Resolve<IPacketSender>().Send(new PDAScanProgress(new(scanTarget.uid), techType.ToDto(), 1f, result == PDAScanner.Result.Done));
+                PDAScanFinished packet = new(new(scanTarget.uid), techType.ToDto(), entryData.totalFragments, true, true, true);
+                Resolve<IPacketSender>().Send(packet);
             }
             return;
         }
@@ -103,90 +91,9 @@ public class PDAScanner_Scan_Patch : NitroxPatch, IDynamicPatch
             }
         }
     }
-    
-    // Both in milliseconds
-    private const int PACKET_SENDING_RATE = 500;
-
-    public class ThrottledEntry
-    {
-        public NitroxTechType EntryTechType;
-        public NitroxId EntityId;
-        public DateTimeOffset LatestPacketSendTime;
-        public DateTimeOffset LastBroadcastTime;
-        public float Progress;
-        public float LastBroadcastProgress;
-
-        public ThrottledEntry(TechType entryTechType, NitroxId entityId)
-        {
-            EntryTechType = entryTechType.ToDto();
-            EntityId = entityId;
-        }
-
-        /// <summary>
-        /// Broadcasts the latest packet if necessary
-        /// </summary>
-        /// <returns>True if the update</returns>
-        public bool Update(DateTimeOffset now, float throttleTime)
-        {
-            // We'll just remove this entry if it was fully scanned
-            if (!PDAScanner.cachedProgress.ContainsKey(EntityId.ToString()))
-            {
-                return true;
-            }
-            if ((now - LastBroadcastTime).TotalMilliseconds >= throttleTime)
-            {
-                if (Math.Abs(LastBroadcastProgress - Progress) < 0.0005)
-                {
-                    return false;
-                }
-                else
-                {
-                    LastBroadcastProgress = Progress;
-                    LastBroadcastTime = now;
-                    Resolve<IPacketSender>().Send(new PDAScanProgress(EntityId, EntryTechType, Progress, false));
-                }
-            }
-            return true;
-        }
-    }
-
-    private static void BroadcastThrottledProgress()
-    {
-        DateTimeOffset now = DateTimeOffset.UtcNow;
-        List<string> finishedThrottledEntryIds = new();
-        foreach (KeyValuePair<string, ThrottledEntry> entry in throttledProgressEntries)
-        {
-            if (!entry.Value.Update(now, PACKET_SENDING_RATE))
-            {
-                finishedThrottledEntryIds.Add(entry.Key);
-            }
-        }
-        finishedThrottledEntryIds.ForEach(id => throttledProgressEntries.Remove(id));
-    }
-
-    // Happens each time a progress is made when scanning an entity
-    public static void ProgressCallback()
-    {
-        PDAScanner.ScanTarget scanTarget = PDAScanner.scanTarget;
-        // We only need to manage unfinished progress of entities that actually have a NitroxEntity (special protection)
-        if (scanTarget.isPlayer || scanTarget.progress >= 1f || scanTarget.progress == 0 || !scanTarget.isValid ||
-            !scanTarget.gameObject.GetComponent<NitroxEntity>())
-        {
-            return;
-        }
-
-        if (!throttledProgressEntries.TryGetValue(scanTarget.uid, out ThrottledEntry throttledProgressEntry))
-        {
-            throttledProgressEntry = throttledProgressEntries[scanTarget.uid] = new(scanTarget.techType, new(scanTarget.uid));        
-        }
-        throttledProgressEntry.Progress = scanTarget.progress;
-    }
 
     public override void Patch(Harmony harmony)
     {
-        // If we patch multiple times, we'll want to make sure that we haven't subscribed multiple times to this event
-        ManagedUpdate.Unsubscribe(ManagedUpdate.Queue.Update, BroadcastThrottledProgress);
-        ManagedUpdate.Subscribe(ManagedUpdate.Queue.Update, BroadcastThrottledProgress);
         PatchTranspiler(harmony, TARGET_METHOD);
     }
 }

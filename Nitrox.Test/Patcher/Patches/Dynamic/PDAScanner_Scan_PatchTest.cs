@@ -14,15 +14,13 @@ public class PDAScanner_Scan_PatchTest
     public void Sanity()
     {
         Validate.NotNull(PDAScanner_Scan_Patch.INJECTION_OPERAND);
-        Validate.NotNull(PDAScanner_Scan_Patch.INJECTION_OPERAND_2);
 
         List<CodeInstruction> instructions = PatchTestHelper.GenerateDummyInstructions(100);
         instructions.Add(new CodeInstruction(PDAScanner_Scan_Patch.INJECTION_OPCODE, PDAScanner_Scan_Patch.INJECTION_OPERAND));
-        instructions.Add(new CodeInstruction(PDAScanner_Scan_Patch.INJECTION_OPCODE_2, PDAScanner_Scan_Patch.INJECTION_OPERAND_2));
 
         IEnumerable<CodeInstruction> result = PDAScanner_Scan_Patch.Transpiler(PDAScanner_Scan_Patch.TARGET_METHOD, instructions);
 
-        Assert.AreEqual(instructions.Count + 4, result.Count());
+        Assert.AreEqual(instructions.Count + 3, result.Count());
     }
 
     [TestMethod]
@@ -31,6 +29,6 @@ public class PDAScanner_Scan_PatchTest
         IEnumerable<CodeInstruction> beforeInstructions = PatchTestHelper.GetInstructionsFromMethod(PDAScanner_Scan_Patch.TARGET_METHOD);
         IEnumerable<CodeInstruction> result = PDAScanner_Scan_Patch.Transpiler(PDAScanner_Scan_Patch.TARGET_METHOD, beforeInstructions);
 
-        Assert.AreEqual(beforeInstructions.Count() + 4, result.Count());
+        Assert.AreEqual(beforeInstructions.Count() + 3, result.Count());
     }
 }

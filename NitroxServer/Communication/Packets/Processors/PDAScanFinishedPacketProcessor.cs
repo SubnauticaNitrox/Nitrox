@@ -21,13 +21,23 @@ public class PDAScanFinishedPacketProcessor : AuthenticatedPacketProcessor<PDASc
 
     public override void Process(PDAScanFinished packet, Player player)
     {
-        pdaStateData.FinishScanProgress(packet.Id, packet.TechType, packet.Destroy, packet.FullyResearched);
-        pdaStateData.UpdateEntryUnlockedProgress(packet.TechType, packet.UnlockedAmount, packet.FullyResearched);
+        if (!packet.WasAlreadyResearched)
+        {
+            pdaStateData.UpdateEntryUnlockedProgress(packet.TechType, packet.UnlockedAmount, packet.FullyResearched);
+        }
         playerManager.SendPacketToOtherPlayers(packet, player);
 
-        if (packet.Destroy && packet.Id != null)
+        
+        if (packet.Id != null)
         {
-            worldEntityManager.TryDestroyEntity(packet.Id, out _);
+            if (packet.Destroy)
+            {
+                worldEntityManager.TryDestroyEntity(packet.Id, out _);
+            }
+            else
+            {
+                pdaStateData.AddScannerFragment(packet.Id);
+            }
         }
     }
 }

@@ -16,7 +16,6 @@ namespace NitroxModel.DataStructures.GameLogic
         public List<NitroxId> ScannerFragments { get; set; }
         public List<PDAEntry> ScannerPartial { get; set; }
         public List<NitroxTechType> ScannerComplete { get; set; }
-        public Dictionary<NitroxId, float> CachedProgress { get; set; }
 
         [IgnoreConstructor]
         protected InitialPDAData()
@@ -24,7 +23,7 @@ namespace NitroxModel.DataStructures.GameLogic
             //Constructor for serialization. Has to be "protected" for json serialization.
         }
 
-        public InitialPDAData(List<NitroxTechType> knownTechTypes, List<NitroxTechType> analyzedTechTypes, List<PDALogEntry> pDALogEntries, List<string> encyclopediaEntries, List<NitroxId> scannerFragments, List<PDAEntry> scannerPartial, List<NitroxTechType> scannerComplete, Dictionary<NitroxId, float> cachedProgress)
+        public InitialPDAData(List<NitroxTechType> knownTechTypes, List<NitroxTechType> analyzedTechTypes, List<PDALogEntry> pDALogEntries, List<string> encyclopediaEntries, List<NitroxId> scannerFragments, List<PDAEntry> scannerPartial, List<NitroxTechType> scannerComplete)
         {
             KnownTechTypes = knownTechTypes;
             AnalyzedTechTypes = analyzedTechTypes;
@@ -33,7 +32,6 @@ namespace NitroxModel.DataStructures.GameLogic
             ScannerFragments = scannerFragments;
             ScannerPartial = scannerPartial;
             ScannerComplete = scannerComplete;
-            CachedProgress = cachedProgress;
         }
     }
 }

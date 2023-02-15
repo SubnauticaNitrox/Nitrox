@@ -53,16 +53,6 @@ namespace NitroxServer.GameLogic.Unlockables
         [DataMember(Order = 7)]
         public ThreadSafeList<NitroxTechType> ScannerComplete { get; } = new();
 
-        /// <summary>
-        /// Scanned entity's scan progress sorted by TechType.
-        /// </summary>
-        /// <remarks>
-        /// In vanilla Subnautica, scan progress is not persisted but we need to persist it to be able to send the current data to arriving players.
-        /// </remarks>
-        [DataMember(Order = 8)]
-        public ThreadSafeDictionary<NitroxTechType, ThreadSafeDictionary<NitroxId, float>> CachedProgress { get; } = new();
-
-
         public void AddKnownTechType(NitroxTechType techType, List<NitroxTechType> partialTechTypesToRemove)
         {
             ScannerPartial.RemoveAll(entry => partialTechTypesToRemove.Contains(entry.TechType));
@@ -112,48 +102,9 @@ namespace NitroxServer.GameLogic.Unlockables
             }
         }
 
-
-        /// <summary>
-        /// Updates the scan progress of one entity (by id) for a defined TechType
-        /// </summary>
-        /// <returns>
-        /// True if the scan progress was correctly registered/updated, false if the new progress is inferior or equals to the current progress
-        /// </returns>
-        public bool UpdateScanProgress(NitroxId id, NitroxTechType techType, float newProgress)
+        public void AddScannerFragment(NitroxId id)
         {
-            lock (CachedProgress)
-            {
-                if (!CachedProgress.TryGetValue(techType, out ThreadSafeDictionary<NitroxId, float> entries))
-                {
-                    entries = CachedProgress[techType] = new() { { id, newProgress } };
-                    return true;
-                }
-                if (entries.TryGetValue(id, out float currentProgress) && newProgress <= currentProgress)
-                {
-                    return false;
-                }
-                entries[id] = newProgress;
-                return true;
-            }
-        }
-
-        public void FinishScanProgress(NitroxId id, NitroxTechType techType, bool destroyed, bool fullyResearched)
-        {
-            lock (CachedProgress)
-            {
-                if (fullyResearched)
-                {
-                    CachedProgress.Remove(techType);
-                }
-                else if (CachedProgress.TryGetValue(techType, out ThreadSafeDictionary<NitroxId, float> entries) && entries.Remove(id) && entries.Count == 0)
-                {
-                    CachedProgress.Remove(techType);
-                }
-            }
-            if (!destroyed)
-            {
-                ScannerFragments.Add(id);
-            }            
+            ScannerFragments.Add(id);
         }
 
         public void UpdateEntryUnlockedProgress(NitroxTechType techType, int unlockedAmount, bool fullyResearched)
@@ -182,22 +133,13 @@ namespace NitroxServer.GameLogic.Unlockables
 
         public InitialPDAData GetInitialPDAData()
         {
-            Dictionary<NitroxId, float> cachedProgress = new();
-            foreach (KeyValuePair<NitroxTechType, ThreadSafeDictionary<NitroxId, float>> entry in CachedProgress)
-            {
-                foreach (KeyValuePair<NitroxId, float> progressEntry in entry.Value)
-                {
-                    cachedProgress[progressEntry.Key] = progressEntry.Value;
-                }
-            }
             return new(KnownTechTypes.ToList(),
                        AnalyzedTechTypes.ToList(),
                        PdaLog.ToList(),
                        EncyclopediaEntries.ToList(),
                        ScannerFragments.ToList(),
                        ScannerPartial.ToList(),
-                       ScannerComplete.ToList(),
-                       cachedProgress);
+                       ScannerComplete.ToList());
         }
     }
 }

@@ -14,6 +14,10 @@ public class PDAScanFinishedProcessor : ClientPacketProcessor<PDAScanFinished>
         {
             StoryManager.ScanCompleted(packet.Id, packet.Destroy);
         }
+        if (packet.WasAlreadyResearched)
+        {
+            return;
+        }
         TechType packetTechType = packet.TechType.ToUnity();
         if (packet.FullyResearched)
         {
