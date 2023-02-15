@@ -2,13 +2,14 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
+using NitroxClient.GameLogic;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
-/**
- * Entity cells will go sleep when the player gets out of range.  This needs to be reported to the server so they can lose simulation locks.
- */
+/// <summary>
+/// Entity cells will go sleep when the player gets out of range.  This needs to be reported to the server so they can lose simulation locks.
+/// </summary>
 public class EntityCell_SleepAsync_Patch : NitroxPatch, IDynamicPatch
 {
     public static readonly MethodInfo TARGET_METHOD_ORIGINAL = Reflect.Method((EntityCell t) => t.SleepAsync(default(ProtobufSerializer)));
@@ -42,7 +43,7 @@ public class EntityCell_SleepAsync_Patch : NitroxPatch, IDynamicPatch
 
     public static void Callback(EntityCell entityCell)
     {
-        Resolve<NitroxClient.GameLogic.Terrain>().CellUnloaded(entityCell.BatchId, entityCell.CellId, entityCell.Level);
+        Resolve<Terrain>().CellUnloaded(entityCell.BatchId, entityCell.CellId, entityCell.Level);
     }
 
     public override void Patch(Harmony harmony)
