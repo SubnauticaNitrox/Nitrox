@@ -18,6 +18,7 @@ namespace NitroxClient.MonoBehaviours
         private static Dictionary<NitroxId, GameObject> gameObjectsById = new Dictionary<NitroxId, GameObject>();
 
         [DataMember(Order = 1)]
+        [ProtoMember(1)]
         public NitroxId Id;
 
         private NitroxEntity() // Default for Proto
