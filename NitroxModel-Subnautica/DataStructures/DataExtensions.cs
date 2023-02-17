@@ -76,10 +76,18 @@ namespace NitroxModel_Subnautica.DataStructures
         {
             return new Color(v.R, v.G, v.B, v.A);
         }
-        public static NitroxTransform ToDto(this Transform transform)
+
+        public static NitroxTransform ToLocalDto(this Transform transform)
         {
             return new NitroxTransform(transform.localPosition.ToDto(),
                                        transform.localRotation.ToDto(),
+                                       transform.localScale.ToDto());
+        }
+
+        public static NitroxTransform ToWorldDto(this Transform transform)
+        {
+            return new NitroxTransform(transform.position.ToDto(),
+                                       transform.rotation.ToDto(),
                                        transform.localScale.ToDto());
         }
 

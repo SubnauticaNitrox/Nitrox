@@ -46,7 +46,7 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             if (lockAquired)
             {
-                EntityPositionBroadcaster.WatchEntity(id, context.GrabbedObject);
+                EntityPositionBroadcaster.WatchEntity(id);
 
                 skipPrefixPatch = true;
                 context.Cannon.GrabObject(context.GrabbedObject);

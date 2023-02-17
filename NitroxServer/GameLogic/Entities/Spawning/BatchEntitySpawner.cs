@@ -214,19 +214,37 @@ public class BatchEntitySpawner : IEntitySpawner
 
     private IEnumerable<Entity> CreateEntityWithChildren(EntitySpawnPoint entitySpawnPoint, NitroxVector3 scale, NitroxTechType techType, int cellLevel, string classId, DeterministicGenerator deterministicBatchGenerator, WorldEntity parentEntity = null)
     {
-        WorldEntity spawnedEntity = new WorldEntity(entitySpawnPoint.LocalPosition,
-                                                    entitySpawnPoint.LocalRotation,
-                                                    scale,
-                                                    techType,
-                                                    cellLevel,
-                                                    classId,
-                                                    true,
-                                                    deterministicBatchGenerator.NextId(),
-                                                    parentEntity,
-                                                    false,
-                                                    null);
+        WorldEntity spawnedEntity;
 
-        if (!TryCreatePrefabPlaceholdersGroupWithChildren(ref spawnedEntity, classId, deterministicBatchGenerator))
+        if (classId == CellRootEntity.CLASS_ID)
+        {
+            spawnedEntity = new CellRootEntity(entitySpawnPoint.LocalPosition,
+                                               entitySpawnPoint.LocalRotation,
+                                               scale,
+                                               techType,
+                                               cellLevel,
+                                               classId,
+                                               true,
+                                               deterministicBatchGenerator.NextId(),
+                                               false,
+                                               null);
+        }
+        else
+        {
+            spawnedEntity = new WorldEntity(entitySpawnPoint.LocalPosition,
+                                            entitySpawnPoint.LocalRotation,
+                                            scale,
+                                            techType,
+                                            cellLevel,
+                                            classId,
+                                            true,
+                                            deterministicBatchGenerator.NextId(),
+                                            parentEntity,
+                                            false,
+                                            null);
+        }
+
+        if (!TryCreatePrefabPlaceholdersGroupWithChildren(ref spawnedEntity, classId, parentEntity, deterministicBatchGenerator))
         {
             spawnedEntity.ChildEntities = SpawnEntities(entitySpawnPoint.Children, deterministicBatchGenerator, spawnedEntity);
         }
@@ -240,7 +258,7 @@ public class BatchEntitySpawner : IEntitySpawner
 
         if (parentEntity == null) // Ensures children are only returned at the top level
         {
-            // Children are yielded as well so they can be indexed at the top level (for use by simulation 
+            // Children are yielded as well so they can be indexed at the top level (for use by simulation
             // ownership and various other consumers).  The parent should always be yielded before the children
             foreach (Entity childEntity in AllChildren(spawnedEntity))
             {
@@ -294,21 +312,51 @@ public class BatchEntitySpawner : IEntitySpawner
     /// This is suppressed on the client so we don't get virtual entities that the server doesn't know about.
     /// </summary>
     /// <returns>If this Entity is a PrefabPlaceholdersGroup</returns>
-    private bool TryCreatePrefabPlaceholdersGroupWithChildren(ref WorldEntity entity, string classId, DeterministicGenerator deterministicBatchGenerator)
+    private bool TryCreatePrefabPlaceholdersGroupWithChildren(ref WorldEntity entity, string classId, WorldEntity parentEntity, DeterministicGenerator deterministicBatchGenerator)
     {
         if (!prefabPlaceholderGroupsByClassId.TryGetValue(classId, out PrefabPlaceholdersGroupAsset group))
         {
             return false;
         }
 
-        List<PrefabPlaceholderEntity> placeholders = new(group.PrefabPlaceholders.Length);
+        List<Entity> placeholders = new(group.PrefabPlaceholders.Length);
 
-        foreach (string placeholderClassId in group.PrefabPlaceholders)
+        foreach (PrefabPlaceholderAsset placeholder in group.PrefabPlaceholders)
         {
-            placeholders.Add(new PrefabPlaceholderEntity(deterministicBatchGenerator.NextId(), placeholderClassId, NitroxTechType.None, null, entity.Id, new List<Entity>()));
+            PrefabPlaceholderEntity placeholderEntity = new(deterministicBatchGenerator.NextId(), NitroxTechType.None, entity.Id);
+            placeholders.Add(placeholderEntity);
+
+            if (placeholder.EntitySlot == null)
+            {
+                placeholderEntity.ChildEntities.Add(new PrefabPlaceholderEntity(deterministicBatchGenerator.NextId(), placeholder.ClassId, group.TechType, placeholderEntity.Id, new List<Entity>()));
+            }
+            else
+            {
+                Entity entitySlotNullableEntity = SpawnEntitySlotEntities(placeholder.EntitySlot, deterministicBatchGenerator, parentEntity);
+
+                if (entitySlotNullableEntity != null)
+                {
+                    placeholderEntity.ChildEntities.Add(entitySlotNullableEntity);
+                }
+            }
         }
 
         entity = new PlaceholderGroupWorldEntity(entity, placeholders);
         return true;
     }
+
+    private Entity SpawnEntitySlotEntities(NitroxEntitySlot entitySlot, DeterministicGenerator deterministicBatchGenerator, WorldEntity parentEntity)
+    {
+        List<UwePrefab> prefabs = prefabFactory.GetPossiblePrefabs(entitySlot.BiomeType);
+        List<Entity> entities = new();
+
+        if (prefabs.Count > 0)
+        {
+            EntitySpawnPoint entitySpawnPoint = new EntitySpawnPoint(parentEntity.AbsoluteEntityCell, NitroxVector3.Zero, NitroxQuaternion.Identity, entitySlot.AllowedTypes.ToList(), 1f, entitySlot.BiomeType);
+            entities.AddRange(SpawnEntitiesUsingRandomDistribution(entitySpawnPoint, prefabs, deterministicBatchGenerator, parentEntity));
+        }
+
+        return entities.FirstOrDefault();
+    }
+
 }
