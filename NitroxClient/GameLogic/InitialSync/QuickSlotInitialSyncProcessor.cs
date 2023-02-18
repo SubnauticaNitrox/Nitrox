@@ -1,21 +1,16 @@
 using System.Collections;
-using NitroxClient.Communication.Abstract;
+using System.Collections.Generic;
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 
 namespace NitroxClient.GameLogic.InitialSync;
 
 public class QuickSlotInitialSyncProcessor : InitialSyncProcessor
 {
-    private readonly IPacketSender packetSender;
-
-    public QuickSlotInitialSyncProcessor(IPacketSender packetSender)
+    public QuickSlotInitialSyncProcessor()
     {
-        this.packetSender = packetSender;
-
         DependentProcessors.Add(typeof(PlayerInitialSyncProcessor));  // the player needs to be configured before we can set quick slots.
         DependentProcessors.Add(typeof(EquippedItemInitialSyncProcessor)); // we need to have the items spawned into our inventory before we can quick slot them.
     }
@@ -24,16 +19,17 @@ public class QuickSlotInitialSyncProcessor : InitialSyncProcessor
     {
         int nonEmptySlots = 0;
 
+        Dictionary<NitroxId, InventoryItem> inventoryItemsById = GetItemsById();
+ 
         for (int i = 0; i < packet.QuickSlotsBindingIds.Length; i++)
         {
             waitScreenItem.SetProgress(i, packet.QuickSlotsBindingIds.Length);
 
             NitroxId id = packet.QuickSlotsBindingIds[i];
-            Optional<InventoryItem> item = getItem(id);
 
-            if (item.HasValue)
+            if (id != null && inventoryItemsById.TryGetValue(id, out InventoryItem inventoryItem) )
             {
-                Inventory.main.quickSlots.binding[i] = item.Value;
+                Inventory.main.quickSlots.binding[i] = inventoryItem;
                 Inventory.main.quickSlots.NotifyBind(i, state: true);
             }
 
@@ -43,21 +39,19 @@ public class QuickSlotInitialSyncProcessor : InitialSyncProcessor
         Log.Info($"Recieved initial sync with {nonEmptySlots} quick slots populated with items");
     }
 
-    private Optional<InventoryItem> getItem(NitroxId id)
+    private Dictionary<NitroxId, InventoryItem> GetItemsById()
     {
-        if (id == null)
-        {
-            return Optional.Empty;
-        }
+        Dictionary<NitroxId, InventoryItem> itemsById = new();
 
         foreach (InventoryItem inventoryItem in Inventory.main.container)
         {
-            if (inventoryItem.item && id == NitroxEntity.GetId(inventoryItem.item.gameObject))
+            if (inventoryItem.item)
             {
-                return Optional.Of(inventoryItem);
+                NitroxId id = NitroxEntity.GetId(inventoryItem.item.gameObject);
+                itemsById.Add(id, inventoryItem);
             }
         }
 
-        return Optional.Empty;
+        return itemsById;
     }
 }

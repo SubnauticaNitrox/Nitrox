@@ -2,6 +2,7 @@
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
+using NitroxClient.Helpers;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel_Subnautica.DataStructures;
@@ -13,7 +14,6 @@ using NitroxModel.Packets;
 using UnityEngine;
 using UnityEngine.Rendering;
 using Object = UnityEngine.Object;
-using NitroxClient.Helpers;
 
 namespace NitroxClient.GameLogic
 {
