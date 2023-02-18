@@ -15,12 +15,14 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities
         {
             if (parent.HasValue)
             {
-                CrashHome crashHome = parent.Value.GetComponent<CrashHome>();
+                CrashHome crashHome = parent.Value.GetComponentInParent<CrashHome>();
 
                 GameObject gameObject = Object.Instantiate(crashHome.crashPrefab, Vector3.zero, Quaternion.Euler(-90f, 0f, 0f));
                 gameObject.transform.SetParent(crashHome.transform, false);
-                NitroxEntity.SetNewId(gameObject, entity.Id);
                 crashHome.crash = gameObject.GetComponent<Crash>();
+                crashHome.spawnTime = -1;
+
+                NitroxEntity.SetNewId(gameObject, entity.Id);
             }
 
             result.Set(Optional.Empty);

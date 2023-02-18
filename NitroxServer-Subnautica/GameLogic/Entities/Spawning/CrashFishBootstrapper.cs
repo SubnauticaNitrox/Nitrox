@@ -6,22 +6,25 @@ using NitroxServer.GameLogic.Entities.Spawning;
 using NitroxServer.Helper;
 using NitroxModel.DataStructures.GameLogic;
 
-namespace NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers
+namespace NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers;
+
+public class CrashFishBootstrapper : IEntityBootstrapper
 {
-    public class CrashFishBootstrapper : IEntityBootstrapper
+    public void Prepare(WorldEntity entity, DeterministicGenerator deterministicBatchGenerator)
     {
-        public void Prepare(WorldEntity entity, DeterministicGenerator deterministicBatchGenerator)
-        {
-            WorldEntity crashFish = SpawnChild(entity, deterministicBatchGenerator, TechType.Crash, "7d307502-46b7-4f86-afb0-65fe8867f893");
-            crashFish.Transform.LocalRotation = new NitroxQuaternion(-0.7071068f, 0, 0, 0.7071068f);
-            entity.ChildEntities.Add(crashFish);
-        }
+        // Crashfish are PrefabPlaceholderGroups so should always have a PrefabChildEntity in betweeen the crash and the home.
+        PrefabChildEntity placeholder = new(deterministicBatchGenerator.NextId(), null, TechType.None.ToDto(), 0, null, entity.Id);
+        entity.ChildEntities.Add(placeholder);
 
-        private WorldEntity SpawnChild(WorldEntity parentEntity, DeterministicGenerator deterministicBatchGenerator, TechType techType, string classId)
-        {
-            NitroxId id = deterministicBatchGenerator.NextId();
+        WorldEntity crashFish = SpawnChild(placeholder, deterministicBatchGenerator, TechType.Crash, "7d307502-46b7-4f86-afb0-65fe8867f893", entity.Level);
+        crashFish.Transform.LocalRotation = new NitroxQuaternion(-0.7071068f, 0, 0, 0.7071068f);
+        placeholder.ChildEntities.Add(crashFish);
+    }
 
-            return new WorldEntity(new NitroxVector3(0, 0, 0), new NitroxQuaternion(0, 0, 0, 1), new NitroxVector3(1, 1, 1), techType.ToDto(), parentEntity.Level, classId, true, id, parentEntity, false, null);
-        }
+    private WorldEntity SpawnChild(Entity parentEntity, DeterministicGenerator deterministicBatchGenerator, TechType techType, string classId, int level)
+    {
+        NitroxId id = deterministicBatchGenerator.NextId();
+
+        return new WorldEntity(NitroxVector3.Zero, NitroxQuaternion.Identity, NitroxVector3.One, techType.ToDto(), level, classId, true, id, parentEntity, false, null);
     }
 }
