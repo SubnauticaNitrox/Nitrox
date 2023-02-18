@@ -78,7 +78,7 @@ public class PersistedPlayerData
                           Modules,
                           PersonalCompletedGoalsWithTimestamp,
                           PlayerPreferences.PingPreferences,
-                          PlayerPreferences.PinnedRecipePreferences);
+                          PlayerPreferences.PinnedTechTypes);
     }
 
     public static PersistedPlayerData FromPlayer(Player player)

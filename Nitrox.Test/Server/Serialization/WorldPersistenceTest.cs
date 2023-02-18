@@ -250,7 +250,7 @@ public class WorldPersistenceTest
                 Assert.AreEqual(keyValuePair.Value.Color, keyValuePairAfter.Value.Color);
                 Assert.AreEqual(keyValuePair.Value.Visible, keyValuePairAfter.Value.Visible);
             });
-            Assert.IsTrue(playerData.PlayerPreferences.PinnedRecipePreferences.SequenceEqual(playerDataAfter.PlayerPreferences.PinnedRecipePreferences));
+            Assert.IsTrue(playerData.PlayerPreferences.PinnedTechTypes.SequenceEqual(playerDataAfter.PlayerPreferences.PinnedTechTypes));
         });
     }
 

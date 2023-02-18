@@ -11,6 +11,11 @@ namespace NitroxModel.DataStructures.GameLogic
         public List<string> RadioQueue { get; set; }
         public List<string> GoalUnlocks { get; set; }
         public List<NitroxScheduledGoal> ScheduledGoals { get; set; }
+
+        /// <remarks>
+        ///     This is the only field in this class that is very personal to the player this will be sent to.
+        ///     The other ones are shared by everyone and are related to overall story progress.
+        /// </remarks>
         public Dictionary<string, float> PersonalCompletedGoalsWithTimestamp { get; set; }
 
         [IgnoreConstructor]

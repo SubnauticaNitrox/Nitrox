@@ -4,6 +4,7 @@ using NitroxModel.Packets;
 using NitroxServer.Helper;
 using NitroxServer.GameLogic.Unlockables;
 using NitroxModel.Helper;
+using NitroxModel;
 
 namespace NitroxServer.GameLogic;
 
@@ -16,7 +17,7 @@ public class StoryManager
     private readonly PDAStateData pdaStateData;
     private readonly StoryGoalData storyGoalData;
     private readonly TimeKeeper timeKeeper;
-    private string seed;
+    private readonly string seed;
 
     /// <summary>
     /// Time at which the Aurora explosion countdown will start (last warning is sent).
@@ -102,13 +103,19 @@ public class StoryManager
     /// <summary>
     /// Clears the already completed sunbeam events to come and broadcasts it to all players along with the rescheduling of the specified sunbeam event.
     /// </summary>
-    public void StartSunbeamEvent(PlaySunbeamEvent.SunbeamEvent sunbeamEvent)
+    public void StartSunbeamEvent(string sunbeamEventKey)
     {
-        for (int i = (int)sunbeamEvent; i < PlaySunbeamEvent.SunbeamGoals.Count; i++)
+        int beginIndex = PlaySunbeamEvent.SunbeamGoals.GetIndex(sunbeamEventKey);
+        if (beginIndex == -1)
+        {
+            Log.Error($"Couldn't find the corresponding sunbeam event in {nameof(PlaySunbeamEvent.SunbeamGoals)} for key {sunbeamEventKey}");
+            return;
+        }
+        for (int i = beginIndex; i < PlaySunbeamEvent.SunbeamGoals.Length; i++)
         {
             storyGoalData.CompletedGoals.Remove(PlaySunbeamEvent.SunbeamGoals[i]);
         }
-        playerManager.SendPacketToAllPlayers(new PlaySunbeamEvent(sunbeamEvent));
+        playerManager.SendPacketToAllPlayers(new PlaySunbeamEvent(sunbeamEventKey));
     }
 
     /// <returns>Either the time in before Aurora explodes or -1 if it has already exploded.</returns>

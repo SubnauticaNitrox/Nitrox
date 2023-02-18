@@ -15,7 +15,7 @@ public class SubnauticaPlayerPreferences
     /// The int type refers to a TechType.
     /// </remarks>
     [DataMember(Order = 2)]
-    public List<int> PinnedRecipePreferences { get; set; } = new();
+    public List<int> PinnedTechTypes { get; set; } = new();
 
     [IgnoreConstructor]
     protected SubnauticaPlayerPreferences()
@@ -23,9 +23,9 @@ public class SubnauticaPlayerPreferences
         // Constructor for serialization. Has to be "protected" for json serialization.
     }
 
-    public SubnauticaPlayerPreferences(Dictionary<string, PingInstancePreference> pingPreferences, List<int> pinnedRecipePreferences)
+    public SubnauticaPlayerPreferences(Dictionary<string, PingInstancePreference> pingPreferences, List<int> pinnedTechTypes)
     {
         PingPreferences = pingPreferences;
-        PinnedRecipePreferences = pinnedRecipePreferences;
+        PinnedTechTypes = pinnedTechTypes;
     }
 }

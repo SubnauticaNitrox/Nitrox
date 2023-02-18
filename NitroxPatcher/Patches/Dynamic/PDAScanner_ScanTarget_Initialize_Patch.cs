@@ -6,7 +6,7 @@ using NitroxModel.Helper;
 namespace NitroxPatcher.Patches.Dynamic;
 
 /// <summary>
-/// Replace the internal PDAScanner use of UniqueIdentifier to NitroxEntity
+/// Replace the internal PDAScanner use of UniqueIdentifier by NitroxEntity.
 /// </summary>
 public class PDAScanner_ScanTarget_Initialize_Patch : NitroxPatch, IDynamicPatch
 {

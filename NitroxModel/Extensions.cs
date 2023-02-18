@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -37,4 +37,6 @@ public static class Extensions
             }
         }
     }
+
+    public static int GetIndex<T>(this T[] list, T itemToFind) => Array.IndexOf(list, itemToFind);
 }
