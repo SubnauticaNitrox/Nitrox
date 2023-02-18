@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
+using NitroxModel.DataStructures;
 
-namespace NitroxModel.Packets
+namespace NitroxModel.Packets;
+
+[Serializable]
+public class PlayerQuickSlotsBindingChanged : Packet
 {
-    [Serializable]
-    public class PlayerQuickSlotsBindingChanged : Packet
-    {
-        public List<string> Binding { get; }
+    public NitroxId[] SlotItemIds { get; }
 
-        public PlayerQuickSlotsBindingChanged(List<string> binding)
-        {
-            Binding = binding;
-        }
+    public PlayerQuickSlotsBindingChanged(NitroxId[] slotItemIds)
+    {
+        SlotItemIds = slotItemIds;
     }
 }
