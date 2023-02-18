@@ -32,6 +32,11 @@ public class QuickSlotInitialSyncProcessor : InitialSyncProcessor
                 Inventory.main.quickSlots.binding[i] = inventoryItem;
                 Inventory.main.quickSlots.NotifyBind(i, state: true);
             }
+            else
+            {
+                // Unbind any default stuff from equipment addition.
+                Inventory.main.quickSlots.Unbind(i);
+            }
 
             yield return null;
         }
