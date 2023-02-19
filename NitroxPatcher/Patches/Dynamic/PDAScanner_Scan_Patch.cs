@@ -1,206 +1,99 @@
-﻿using System;
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
-using NitroxClient.GameLogic;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
+using NitroxModel.Packets;
+using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 
-namespace NitroxPatcher.Patches.Dynamic
+namespace NitroxPatcher.Patches.Dynamic;
+
+/// <summary>
+/// Broadcasts entry progress and entry unlockings when they happen.
+/// </summary>
+/// <remarks>
+/// This is the only method that needs to be tracked to sync and persist PDAScanner's data, because the other methods
+/// are either unused (found out that they have no actual calls in SN's code, just as <see cref="PDAScanner.RemoveAllEntriesWhichUnlocks"/>)
+/// or simply called automatically by other events (just as <see cref="PDAScanner.CompleteAllEntriesWhichUnlocks"/>).
+/// </remarks>
+public class PDAScanner_Scan_Patch : NitroxPatch, IDynamicPatch
 {
-    public class PDAScanner_Scan_Patch : NitroxPatch, IDynamicPatch
+    internal static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => PDAScanner.Scan());
+
+    internal static readonly OpCode INJECTION_OPCODE = OpCodes.Callvirt;
+    internal static readonly object INJECTION_OPERAND = Reflect.Method((GameObject t) => t.SendMessage(default, default, default));
+
+    public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
     {
-        private static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => PDAScanner.Scan());
-
-        private static readonly OpCode INJECTION_OPCODE = OpCodes.Callvirt;
-        private static readonly object INJECTION_OPERAND = Reflect.Method((GameObject t) => t.SendMessage(default(string), default(object), default(SendMessageOptions)));
-
-        public static readonly OpCode INJECTION_OPCODE_2 = OpCodes.Ldsfld;
-        public static readonly object INJECTION_OPERAND_2 = Reflect.Field(() => PDAScanner.cachedProgress);
-        
-        public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
+        foreach (CodeInstruction instruction in instructions)
         {
-            Validate.NotNull(INJECTION_OPERAND);
-            Validate.NotNull(INJECTION_OPERAND_2);
+            yield return instruction;
 
-            foreach (CodeInstruction instruction in instructions)
+            if (instruction.opcode.Equals(INJECTION_OPCODE) && instruction.operand.Equals(INJECTION_OPERAND))
             {
-                yield return instruction;
-
-                if (instruction.opcode.Equals(INJECTION_OPCODE) && instruction.operand.Equals(INJECTION_OPERAND))
-                {
-                    yield return new CodeInstruction(OpCodes.Call, Reflect.Method(() => Callback()));
-                }
-                if (instruction.opcode.Equals(INJECTION_OPCODE_2) && instruction.operand.Equals(INJECTION_OPERAND_2))
-                {
-                    yield return new CodeInstruction(OpCodes.Call, Reflect.Method(() => ProgressCallback()));
-                }
+                yield return original.Ldloc<PDAScanner.Result>();
+                yield return new(OpCodes.Ldloc_S, original.GetLocalVariableIndex<bool>(4));
+                yield return new(OpCodes.Call, Reflect.Method(() => Callback(default, default)));
             }
         }
+    }
 
-        public static void Callback()
+    // To determine which exact path the code took, we just need those two parameters
+    public static void Callback(PDAScanner.Result result, bool alreadyComplete)
+    {
+        PDAScanner.ScanTarget scanTarget = PDAScanner.scanTarget;
+
+        TechType techType = scanTarget.techType;
+        PDAScanner.EntryData entryData = PDAScanner.GetEntryData(techType);
+        if (entryData == null || (result != PDAScanner.Result.Done && result != PDAScanner.Result.Researched))
         {
-            // When a player scans a fragment, it will be deleted from the world. We want to send out a pickup event
-            // before the object can be removed and corresponding scan data is invalidated.
-            TechType techType = PDAScanner.scanTarget.techType;
-            PDAScanner.EntryData entryData = PDAScanner.GetEntryData(techType);
-
-            // Only do this for fragments and player scans or nearby fish
-            if (entryData != null && entryData.destroyAfterScan && PDAScanner.scanTarget.gameObject && !PDAScanner.scanTarget.isPlayer)
-            {
-                // A lot of fragments are virtual entities (spawned by placeholders in the world).  Sometimes the server only knows the id
-                // of the placeholder and not the virtual entity. TODO: we will need to propagate deterministic ids to children entities for
-                // these virtual entities.
-                NitroxServiceLocator.LocateService<Items>().PickedUp(PDAScanner.scanTarget.gameObject, techType);
-            }
+            return;
         }
 
-        // Both in milliseconds
-        public const int PACKET_SENDING_RATE = 500;
-        public const int LAST_PACKET_SEND_DELAY = 2000;
-        private static readonly WaitForSeconds lastPacketSendDelay = new(LAST_PACKET_SEND_DELAY / 1000f);
-
-        public static readonly PDAManagerEntry PDAManagerEntry = NitroxServiceLocator.LocateService<PDAManagerEntry>();
-        public static Dictionary<NitroxId, ThrottledEntry> ThrottlingEntries = new Dictionary<NitroxId, ThrottledEntry>();
-
-        public class ThrottledEntry
+        // In the case the player has already fully researched the target
+        if (alreadyComplete)
         {
-            public TechType EntryTechType;
-            public NitroxId Id;
-            public DateTimeOffset LatestProgressTime, LatestPacketSendTime;
-            public PDAScanner.Entry Entry;
-            public Coroutine LastProgressThrottler;
-            public bool Unlocked;
-
-            public ThrottledEntry(TechType techType, NitroxId id, PDAScanner.Entry entry) : this(techType, id, DateTimeOffset.FromUnixTimeMilliseconds(0), DateTimeOffset.FromUnixTimeMilliseconds(0), entry)
-            { }
-
-            public ThrottledEntry(TechType techType, NitroxId id, DateTimeOffset latestProgressTime, DateTimeOffset latestPacketSendTime, PDAScanner.Entry entry)
+            // In the case that the target is destroyable, the player is given 2 titanium and the object is destroyed
+            // We want to broadcast the destruction event before the object is destroyed and corresponding scan data is invalidated.
+            if (scanTarget.hasUID)
             {
-                EntryTechType = techType;
-                Id = id;
-                LatestProgressTime = latestProgressTime;
-                LatestPacketSendTime = latestPacketSendTime;
-                Entry = entry;
+                PDAScanFinished packet = new(new(scanTarget.uid), techType.ToDto(), entryData.totalFragments, true, true, true);
+                Resolve<IPacketSender>().Send(packet);
             }
-
-            public void Update(DateTimeOffset? newLatestProgressTime, DateTimeOffset? newLatestPacketSendTime, float progress)
-            {
-                if (newLatestProgressTime.HasValue)
-                {
-                    LatestProgressTime = newLatestProgressTime.Value;
-                }
-                if (newLatestPacketSendTime.HasValue)
-                {
-                    LatestPacketSendTime = newLatestPacketSendTime.Value;
-                }
-                Entry.progress = progress;
-            }
-
-            public void StartThrottler()
-            {
-                LastProgressThrottler = Player.main.StartCoroutine(ThrottleLastProgress(this));
-            }
-
-            public PDAScanner.Entry GetEntry()
-            {
-                if (PDAScanner.GetPartialEntryByKey(EntryTechType, out PDAScanner.Entry entry) && entry.unlocked > Entry.unlocked)
-                {
-                    Unlocked = true;
-                    Entry.unlocked = entry.unlocked;
-                }
-                
-                return Entry;
-            }
+            return;
         }
-
-        // After 2 seconds without scanning, a packet will be sent with the latest progress
-        static IEnumerator ThrottleLastProgress(ThrottledEntry throttledEntry)
+        else
         {
-            do
-            {
-                yield return lastPacketSendDelay;
-            }
-            while (DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() < throttledEntry.LatestProgressTime.ToUnixTimeMilliseconds() + LAST_PACKET_SEND_DELAY);
-            
-            throttledEntry.GetEntry();
-            if (!throttledEntry.Unlocked && !PDAScanner.ContainsCompleteEntry(throttledEntry.EntryTechType))
-            {
-                PDAManagerEntry.Progress(throttledEntry.Entry, throttledEntry.Id);
-            }
+            NitroxId targetId = scanTarget.hasUID ? new(scanTarget.uid) : null;
 
-            // No need to keep this in memory
-            ThrottlingEntries.Remove(throttledEntry.Id);
-        }
-
-        // Happens each time a progress is made
-        public static void ProgressCallback()
-        {
-            PDAScanner.ScanTarget scanTarget = PDAScanner.scanTarget;
-            if (scanTarget.techType == TechType.Player)
+            // Case in which the unlocked progress is incremented
+            if (result == PDAScanner.Result.Done)
             {
-                return;
-            }
-
-            if (scanTarget.isValid && scanTarget.progress > 0f && scanTarget.gameObject.TryGetComponent(out NitroxEntity nitroxEntity))
-            {
-                // Should always be the same for the same entity
-                NitroxId nitroxId = nitroxEntity.Id;
-                DateTimeOffset Now = DateTimeOffset.UtcNow;
-
-                // Start a thread when a scanning period starts
-                if (!ThrottlingEntries.TryGetValue(nitroxId, out ThrottledEntry throttledEntry))
+                if (!PDAScanner.GetPartialEntryByKey(techType, out PDAScanner.Entry entry))
                 {
-                    ThrottlingEntries.Add(nitroxId, throttledEntry = new ThrottledEntry(scanTarget.techType, nitroxId, new PDAScanner.Entry() { techType = scanTarget.techType, progress = scanTarget.progress }));
-
-                    throttledEntry.StartThrottler();
-                }
-                PDAScanner.Entry scannerEntry = throttledEntry.GetEntry();
-
-                // Updating the progress throttling
-                throttledEntry.Update(Now, null, scanTarget.progress);
-                // Throttling the packet sending
-                if (Now.ToUnixTimeMilliseconds() < throttledEntry.LatestPacketSendTime.ToUnixTimeMilliseconds() + PACKET_SENDING_RATE)
-                {
+                    // Something wrong happened
                     return;
                 }
-
-                NitroxTechType nitroxTechType = new NitroxTechType(scanTarget.techType.ToString());
-                // This should not occur all the time because it only takes effect one time per entity
-                // Then it occurs when someone else already scanned the entity
-                // Check if the entry is already in the partial list, and then, change the progress
-                if (PDAManagerEntry.CachedEntries.TryGetValue(nitroxTechType, out PDAProgressEntry pdaProgressEntry))
-                {
-                    if (pdaProgressEntry.Entries.TryGetValue(nitroxId, out float progress))
-                    {
-                        pdaProgressEntry.Entries.Remove(nitroxId);
-                        // We'd like the progress to not decrease when two people scan the same thing at the same time
-                        if (scannerEntry.progress < progress)
-                        {
-                            PDAScanner.scanTarget.progress = progress;
-                            scannerEntry.progress = progress;
-                        }
-                        if (pdaProgressEntry.Entries.Count == 0)
-                        {
-                            PDAManagerEntry.CachedEntries.Remove(nitroxTechType);
-                        }
-                    }
-                }
-
-                throttledEntry.Update(Now, Now, scanTarget.progress);
-                PDAManagerEntry.Progress(throttledEntry.GetEntry(), nitroxId);
+                PDAScanFinished packet = new(targetId, techType.ToDto(), entry.unlocked, false, entryData.destroyAfterScan);
+                Resolve<IPacketSender>().Send(packet);
+            }
+            // Case in which the scanned entry is fully unlocked
+            else if (result == PDAScanner.Result.Researched)
+            {
+                PDAScanFinished packet = new(targetId, techType.ToDto(), entryData.totalFragments, true, entryData.destroyAfterScan);
+                Resolve<IPacketSender>().Send(packet);
             }
         }
+    }
 
-        public override void Patch(Harmony harmony)
-        {
-            PatchTranspiler(harmony, TARGET_METHOD);
-        }
+    public override void Patch(Harmony harmony)
+    {
+        PatchTranspiler(harmony, TARGET_METHOD);
     }
 }

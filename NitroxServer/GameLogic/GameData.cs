@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.Serialization;
 using NitroxServer.GameLogic.Unlockables;
 
@@ -17,13 +17,13 @@ namespace NitroxServer.GameLogic.Bases
         [DataMember(Order = 3)]
         public StoryTimingData StoryTiming { get; set; }
 
-        public static GameData From(PDAStateData pdaState, StoryGoalData storyGoals, ScheduleKeeper scheduleKeeper, EventTriggerer eventTriggerer)
+        public static GameData From(PDAStateData pdaState, StoryGoalData storyGoals, ScheduleKeeper scheduleKeeper, StoryManager storyManager, TimeKeeper timeKeeper)
         {
             return new GameData
             {
                 PDAState = pdaState,
                 StoryGoals = StoryGoalData.From(storyGoals, scheduleKeeper),
-                StoryTiming = StoryTimingData.From(eventTriggerer)
+                StoryTiming = StoryTimingData.From(storyManager, timeKeeper)
             };
         }
     }

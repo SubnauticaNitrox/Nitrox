@@ -1,33 +1,27 @@
-﻿using System;
+using System;
 using System.Runtime.Serialization;
 using BinaryPack.Attributes;
 
-namespace NitroxModel.DataStructures.GameLogic
+namespace NitroxModel.DataStructures.GameLogic;
+
+[Serializable, DataContract]
+public class PDAEntry
 {
-    [Serializable]
-    [DataContract]
-    public class PDAEntry
+    [DataMember(Order = 1)]
+    public NitroxTechType TechType { get; set; }
+
+    [DataMember(Order = 2)]
+    public int Unlocked { get; set; }
+
+    [IgnoreConstructor]
+    protected PDAEntry()
     {
-        [DataMember(Order = 1)]
-        public NitroxTechType TechType { get; set; }
+        // Constructor for serialization. Has to be "protected" for json serialization.
+    }
 
-        [DataMember(Order = 2)]
-        public float Progress { get; set; }
-
-        [DataMember(Order = 3)]
-        public int Unlocked { get; set; }
-
-        [IgnoreConstructor]
-        protected PDAEntry()
-        {
-            // Constructor for serialization. Has to be "protected" for json serialization.
-        }
-
-        public PDAEntry(NitroxTechType techType, float progress, int unlocked)
-        {
-            TechType = techType;
-            Progress = progress;
-            Unlocked = unlocked;
-        }
+    public PDAEntry(NitroxTechType techType, int unlocked)
+    {
+        TechType = techType;
+        Unlocked = unlocked;
     }
 }

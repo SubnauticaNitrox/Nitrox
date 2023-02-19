@@ -1,42 +1,41 @@
-﻿using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
 using NitroxServer.GameLogic;
 
-namespace NitroxServer.ConsoleCommands
+namespace NitroxServer.ConsoleCommands;
+
+public class TimeCommand : Command
 {
-    internal class TimeCommand : Command
+    private readonly TimeKeeper timeKeeper;
+
+    public TimeCommand(TimeKeeper timeKeeper) : base("time", Perms.MODERATOR, "Changes the map time")
     {
-        private readonly EventTriggerer eventTriggerer;
+        AddParameter(new TypeString("day/night", false, "Time to change to"));
 
-        public TimeCommand(EventTriggerer eventTriggerer) : base("time", Perms.MODERATOR, "Changes the map time")
+        this.timeKeeper = timeKeeper;
+    }
+
+    protected override void Execute(CallArgs args)
+    {
+        string time = args.Get(0);
+
+        switch (time?.ToLower())
         {
-            AddParameter(new TypeString("day/night", false, "Time to change to"));
+            case "day":
+                timeKeeper.ChangeTime(StoryManager.TimeModification.DAY);
+                SendMessageToAllPlayers("Time set to day");
+                break;
 
-            this.eventTriggerer = eventTriggerer;
-        }
+            case "night":
+                timeKeeper.ChangeTime(StoryManager.TimeModification.NIGHT);
+                SendMessageToAllPlayers("Time set to night");
+                break;
 
-        protected override void Execute(CallArgs args)
-        {
-            string time = args.Get(0);
-
-            switch (time?.ToLower())
-            {
-                case "day":
-                    eventTriggerer.ChangeTime(EventTriggerer.TimeModification.DAY);
-                    SendMessageToAllPlayers("Time set to day");
-                    break;
-
-                case "night":
-                    eventTriggerer.ChangeTime(EventTriggerer.TimeModification.NIGHT);
-                    SendMessageToAllPlayers("Time set to night");
-                    break;
-
-                default:
-                    eventTriggerer.ChangeTime(EventTriggerer.TimeModification.SKIP);
-                    SendMessageToAllPlayers("Skipped time");
-                    break;
-            }
+            default:
+                timeKeeper.ChangeTime(StoryManager.TimeModification.SKIP);
+                SendMessageToAllPlayers("Skipped time");
+                break;
         }
     }
 }

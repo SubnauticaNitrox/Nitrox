@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
 using NitroxServer.GameLogic.Unlockables;
@@ -8,19 +9,19 @@ namespace NitroxServer.GameLogic
 {
     public class ScheduleKeeper
     {
-        private readonly Dictionary<string, NitroxScheduledGoal> scheduledGoals = new();
+        private readonly ThreadSafeDictionary<string, NitroxScheduledGoal> scheduledGoals = new();
         private readonly PDAStateData pdaStateData;
         private readonly StoryGoalData storyGoalData;
-        private readonly EventTriggerer eventTriggerer;
+        private readonly TimeKeeper timeKeeper;
         private readonly PlayerManager playerManager;
 
-        private float ElapsedSecondsFloat => (float)eventTriggerer.ElapsedSeconds;
+        private float ElapsedSecondsFloat => (float)timeKeeper.ElapsedSeconds;
 
-        public ScheduleKeeper(PDAStateData pdaStateData, StoryGoalData storyGoalData, EventTriggerer eventTriggerer, PlayerManager playerManager)
+        public ScheduleKeeper(PDAStateData pdaStateData, StoryGoalData storyGoalData, TimeKeeper timeKeeper, PlayerManager playerManager)
         {
             this.pdaStateData = pdaStateData;
             this.storyGoalData = storyGoalData;
-            this.eventTriggerer = eventTriggerer;
+            this.timeKeeper = timeKeeper;
             this.playerManager = playerManager;
 
             // We still want to get a "replicated" list in memory

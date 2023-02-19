@@ -32,7 +32,7 @@ namespace NitroxServer.Serialization.World
                 {
                     ParsedBatchCells = world.BatchEntitySpawner.SerializableParsedBatches,
                     InventoryData = InventoryData.From(world.InventoryManager.GetAllStorageSlotItems()),
-                    GameData = GameData.From(world.GameData.PDAState, world.GameData.StoryGoals, world.ScheduleKeeper, world.EventTriggerer),
+                    GameData = GameData.From(world.GameData.PDAState, world.GameData.StoryGoals, world.ScheduleKeeper, world.StoryManager, world.TimeKeeper),
                     Seed = world.Seed
                 }
             };

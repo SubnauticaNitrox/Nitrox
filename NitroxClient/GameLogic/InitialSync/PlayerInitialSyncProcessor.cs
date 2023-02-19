@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
@@ -42,10 +41,6 @@ namespace NitroxClient.GameLogic.InitialSync
 
             SetPlayerGameMode(packet.GameMode);
             waitScreenItem.SetProgress(0.83f);
-            yield return null;
-
-            SetPlayerCompletedGoals(packet.CompletedGoals);
-            waitScreenItem.SetProgress(1f);
             yield return null;
         }
 
@@ -108,12 +103,6 @@ namespace NitroxClient.GameLogic.InitialSync
         {
             Log.Info($"Received initial sync packet with gamemode {gameMode}");
             GameModeUtils.SetGameMode((GameModeOption)(int)gameMode, GameModeOption.None);
-        }
-
-        private void SetPlayerCompletedGoals(IEnumerable<string> completedGoals)
-        {
-            GoalManager.main.completedGoalNames.AddRange(completedGoals);
-            PlayerWorldArrows.main.completedCustomGoals.AddRange(completedGoals);
         }
     }
 }

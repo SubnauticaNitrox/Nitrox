@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using HarmonyLib;
 using NitroxClient.Communication.Abstract;
 using NitroxModel.Helper;
@@ -24,7 +24,7 @@ public class CrashedShipExploder_OnConsoleCommand_Patch : NitroxPatch, IDynamicP
     // This command's purpose is just to show FX, we don't need to sync it
     public static bool PrefixExplodeForce()
     {
-        return false;
+        return true;
     }
 
     public static bool PrefixExplodeShip()
