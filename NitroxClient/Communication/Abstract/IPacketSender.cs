@@ -5,10 +5,15 @@ namespace NitroxClient.Communication.Abstract;
 
 public interface IPacketSender
 {
-    [Obsolete($"Use {nameof(IPacketSender)}.{nameof(SendIfGameCode)} instead")]
+    [Obsolete($"Use {nameof(IPacketSender)}.{nameof(SendIfGameCode)} instead. If already done then this call can be removed as it's handled by {nameof(SendIfGameCode)}.")]
     PacketSuppressor<T> Suppress<T>();
 
-    [Obsolete($"Use {nameof(IPacketSender)}.{nameof(SendIfGameCode)} instead")]
+    /// <summary>
+    ///     This shouldn't be used anymore.
+    ///     Packet suppression is done via <see cref="SendIfGameCode{T}" /> and will automatically suppress when appropriate using stack trace.
+    /// </summary>
+    /// <param name="packetType"></param>
+    /// <returns></returns>
     bool IsPacketSuppressed(Type packetType);
 
     /// <summary>

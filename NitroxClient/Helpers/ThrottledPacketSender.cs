@@ -27,7 +27,7 @@ public class ThrottledPacketSender
                 continue;
             }
 
-            if (!packetSender.IsPacketSuppressed(throttledPacket.Packet.GetType()))
+            if (!packetSender.SendIfGameCode(throttledPacket.Packet))
             {
                 packetSender.Send(throttledPacket.Packet);
                 throttledPacket.WasSend = true;
