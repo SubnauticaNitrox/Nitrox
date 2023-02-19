@@ -2,7 +2,6 @@
 using System.Text;
 using NitroxModel.Helper;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace NitroxClient.Unity.Helper
 {
@@ -76,23 +75,6 @@ namespace NitroxClient.Unity.Helper
             Validate.IsTrue(go, $"No global GameObject found with {name}!");
 
             return go;
-        }
-
-        /// <summary>
-        ///     Returns null if Unity has marked this object as dead.
-        /// </summary>
-        /// <param name="obj">Unity <see cref="UnityEngine.Object" /> to check if alive.</param>
-        /// <typeparam name="TObject">Type of Unity object that can be marked as either alive or dead.</typeparam>
-        /// <returns>The <see cref="UnityEngine.Object" /> if alive or null if dead.</returns>
-        public static TObject AliveOrNull<TObject>(this TObject obj) where TObject : Object
-        {
-            // Unity checks if the object is alive like this. Do NOT use == null check.
-            if (obj)
-            {
-                return obj;
-            }
-
-            return null;
         }
 
         public static string GetFullHierarchyPath(this Component component)

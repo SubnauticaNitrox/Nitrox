@@ -12,6 +12,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using Nitrox.Analyzers.Diagnostics;
+using Nitrox.Analyzers.Generators;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace Nitrox.Analyzers.Fixers;
@@ -21,7 +22,7 @@ namespace Nitrox.Analyzers.Fixers;
 [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(UnitySkippedObjectLifetimeFixProvider))]
 public sealed class UnitySkippedObjectLifetimeFixProvider : CodeFixProvider
 {
-    private static readonly IdentifierNameSyntax aliveOrNull = IdentifierName(UnitySkippedObjectLifetimeAnalyzer.FIX_FUNCTION_NAME);
+    private static readonly IdentifierNameSyntax aliveOrNull = IdentifierName(UnitySkippedObjectLifetimeHelperGenerator.FIX_FUNCTION_NAME);
     public override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(UnitySkippedObjectLifetimeAnalyzer.CONDITIONAL_ACCESS_DIAGNOSTIC_ID);
 
     public override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
@@ -53,16 +54,10 @@ public sealed class UnitySkippedObjectLifetimeFixProvider : CodeFixProvider
             return document;
         }
 
-        // 1. Wrap expression with an invocation to AliveOrNull, this will cause AliveOrNull to be called before the conditional access.
+        // Wrap expression with an invocation to AliveOrNull, this will cause AliveOrNull to be called before the conditional access.
         InvocationExpressionSyntax wrappedExpression = InvocationExpression(MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, declaration.Expression, aliveOrNull));
         SyntaxNode newDeclaration = declaration.ReplaceNode(declaration.Expression, wrappedExpression);
         root = root!.ReplaceNode(declaration, newDeclaration);
-        // 2. Ensure using statement for extension method .AliveOrNull().
-        // This is done after the "AliveOrNull" wrap because the declaration instance can't be found when root instance updates.
-        if (root is CompilationUnitSyntax compilationRoot && compilationRoot.Usings.All(u => u.Name.ToString() != UnitySkippedObjectLifetimeAnalyzer.FIX_FUNCTION_NAMESPACE))
-        {
-            root = compilationRoot.AddUsings(UsingDirective(aliveOrNull));
-        }
 
         // Replace the old document with the new.
         return document.WithSyntaxRoot(root);
