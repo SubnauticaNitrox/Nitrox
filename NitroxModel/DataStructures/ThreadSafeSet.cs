@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -56,11 +56,13 @@ namespace NitroxModel.DataStructures
 
         public bool IsReadOnly => false;
 
-        public void Add(T item)
+        void ICollection<T>.Add(T item) => Add(item);
+
+        public bool Add(T item)
         {
             lock (locker)
             {
-                set.Add(item);
+                return set.Add(item);
             }
         }
 

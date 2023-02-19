@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -79,6 +79,14 @@ namespace NitroxModel.DataStructures
             lock (locker)
             {
                 list.Add(item);
+            }
+        }
+
+        public void AddRange(IEnumerable<T> collection)
+        {
+            lock (locker)
+            {
+                list.AddRange(collection);
             }
         }
 

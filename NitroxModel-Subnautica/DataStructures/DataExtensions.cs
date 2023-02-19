@@ -131,28 +131,38 @@ namespace NitroxModel_Subnautica.DataStructures
             return result;
         }
 
-        public static StoryEventSend.EventType ToDto(this Story.GoalType goalType)
+        public static StoryGoalExecuted.EventType ToDto(this Story.GoalType goalType)
         {
             return goalType switch
             {
-                Story.GoalType.PDA => StoryEventSend.EventType.PDA,
-                Story.GoalType.Radio => StoryEventSend.EventType.RADIO,
-                Story.GoalType.Encyclopedia => StoryEventSend.EventType.ENCYCLOPEDIA,
-                Story.GoalType.Story => StoryEventSend.EventType.STORY,
+                Story.GoalType.PDA => StoryGoalExecuted.EventType.PDA,
+                Story.GoalType.Radio => StoryGoalExecuted.EventType.RADIO,
+                Story.GoalType.Encyclopedia => StoryGoalExecuted.EventType.ENCYCLOPEDIA,
+                Story.GoalType.Story => StoryGoalExecuted.EventType.STORY,
                 _ => throw new ArgumentException("The provided Story.GoalType doesn't correspond to a StoryEventSend.EventType"),
             };
         }
 
-        public static Story.GoalType ToUnity(this StoryEventSend.EventType eventType)
+        public static Story.GoalType ToUnity(this StoryGoalExecuted.EventType eventType)
         {
             return eventType switch
             {
-                StoryEventSend.EventType.PDA => Story.GoalType.PDA,
-                StoryEventSend.EventType.RADIO => Story.GoalType.Radio,
-                StoryEventSend.EventType.ENCYCLOPEDIA => Story.GoalType.Encyclopedia,
-                StoryEventSend.EventType.STORY => Story.GoalType.Story,
+                StoryGoalExecuted.EventType.PDA => Story.GoalType.PDA,
+                StoryGoalExecuted.EventType.RADIO => Story.GoalType.Radio,
+                StoryGoalExecuted.EventType.ENCYCLOPEDIA => Story.GoalType.Encyclopedia,
+                StoryGoalExecuted.EventType.STORY => Story.GoalType.Story,
                 _ => throw new ArgumentException("The provided StoryEventSend.EventType doesn't correspond to a Story.GoalType")
             };
+        }
+
+        public static PDAEntry ToDto(this PDAScanner.Entry entry)
+        {
+            return new(entry.techType.ToDto(), entry.unlocked);
+        }
+
+        public static PDAScanner.Entry ToUnity(this PDAEntry entry)
+        {
+            return new() { techType = entry.TechType.ToUnity(), unlocked = entry.Unlocked };
         }
     }
 }

@@ -1,23 +1,29 @@
-﻿using System.Reflection;
+using System.Reflection;
 using HarmonyLib;
-using NitroxClient.GameLogic;
+using NitroxClient.Communication.Abstract;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.Helper;
+using NitroxModel.Packets;
+using NitroxModel_Subnautica.DataStructures;
 
-namespace NitroxPatcher.Patches.Dynamic
+namespace NitroxPatcher.Patches.Dynamic;
+
+public class KnownTech_NotifyAnalyze_Patch : NitroxPatch, IDynamicPatch
 {
-    public class KnownTech_NotifyAnalyze_Patch : NitroxPatch, IDynamicPatch
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => KnownTech.NotifyAnalyze(default, default));
+
+    public static void Prefix(KnownTech.AnalysisTech analysis, bool verbose)
     {
-        
-        private static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => KnownTech.NotifyAnalyze(default(KnownTech.AnalysisTech), default(bool)));
-
-        public static void Prefix(KnownTech.AnalysisTech analysis, bool verbose)
+        if (!Multiplayer.Main || !Multiplayer.Main.InitialSyncCompleted)
         {
-            Resolve<KnownTechEntry>().AddAnalyzed(analysis.techType, verbose);
+            return;
         }
 
-        public override void Patch(Harmony harmony)
-        {
-            PatchPrefix(harmony, TARGET_METHOD);
-        }
+        Resolve<IPacketSender>().Send(new KnownTechEntryAdd(KnownTechEntryAdd.EntryCategory.ANALYZED, analysis.techType.ToDto(), verbose));
+    }
+
+    public override void Patch(Harmony harmony)
+    {
+        PatchPrefix(harmony, TARGET_METHOD);
     }
 }

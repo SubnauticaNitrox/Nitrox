@@ -1,6 +1,7 @@
-﻿using System.Reflection;
+using System.Reflection;
 using HarmonyLib;
 using NitroxClient.Communication.Abstract;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
 
@@ -12,6 +13,11 @@ public class GoalManager_OnCompletedGoal_Patch : NitroxPatch, IDynamicPatch
 
     public static void Prefix(string goalIdentifier, out bool __state)
     {
+        if (!Multiplayer.Main || !Multiplayer.Main.InitialSyncCompleted)
+        {
+            __state = false;
+            return;
+        }
         // Check to see if GoalManager already contains the goal.
         // __state is used to store whether it was a new goal or not.
         __state = !GoalManager.main.completedGoalNames.Contains(goalIdentifier);
@@ -23,7 +29,7 @@ public class GoalManager_OnCompletedGoal_Patch : NitroxPatch, IDynamicPatch
         // and was successfully added to the completed goals
         if (__state && GoalManager.main.completedGoalNames.Contains(goalIdentifier))
         {
-            Resolve<IPacketSender>().Send(new GoalCompleted(goalIdentifier));
+            Resolve<IPacketSender>().Send(new GoalCompleted(goalIdentifier, DayNightCycle.main.timePassedAsFloat));
         }
     }
 

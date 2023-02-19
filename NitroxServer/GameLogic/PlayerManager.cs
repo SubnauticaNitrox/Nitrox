@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -200,8 +200,9 @@ namespace NitroxServer.GameLogic
                     Array.Empty<string>(),
                     new List<EquippedItemData>(),
                     new List<EquippedItemData>(),
-                    new HashSet<string>(),
-                    new Dictionary<string, PingInstancePreference>()
+                    new Dictionary<string, float>(),
+                    new Dictionary<string, PingInstancePreference>(),
+                    new List<int>()
                 );
                 allPlayersByName[playerContext.PlayerName] = player;
             }
@@ -216,11 +217,6 @@ namespace NitroxServer.GameLogic
             assetPackage.Player = player;
             assetPackage.ReservationKey = null;
             reservations.Remove(reservationKey);
-
-            if (ConnectedPlayers().Count() == 1)
-            {
-                Server.Instance.ResumeServer();
-            }
 
             return player;
         }
@@ -255,7 +251,7 @@ namespace NitroxServer.GameLogic
             }
         }
 
-        public void FinishProcessingReservation()
+        public void FinishProcessingReservation(Player player = null)
         {
             initialSyncTimer.Dispose();
             PlayerCurrentlyJoining = false;
