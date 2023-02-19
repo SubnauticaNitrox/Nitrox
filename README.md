@@ -54,7 +54,7 @@ You'll need to sign up to start translating to a new language, or you can sugges
 
 
 ### How can I contribute?
-Simply submit a pull request. Full documentation can be found on the <a href="[https://github.com/Sunrunner37/Nitrox/wiki](https://github.com/SubnauticaNitrox/Nitrox/wiki/)">wiki tab</a>.  Feel free to join us in the <a href="https://discord.gg/E8B4X9s">Nitrox Discord channel</a>.  Make sure to check out or contributing guidelines found <a href="https://github.com/SubnauticaNitrox/Nitrox/blob/master/CONTRIBUTING.md">here</a>.
+Simply submit a pull request. Full documentation can be found on the <a href="https://github.com/SubnauticaNitrox/Nitrox/wiki">wiki tab</a>.  Feel free to join us in the <a href="https://discord.gg/E8B4X9s">Nitrox Discord channel</a>.  Make sure to check out or contributing guidelines found <a href="https://github.com/SubnauticaNitrox/Nitrox/blob/master/CONTRIBUTING.md">here</a>.
 
 ### How can I donate?
 We do not accept donations to the mod.  Those wishing to give money can do so here: https://www.doctorswithoutborders.org/
