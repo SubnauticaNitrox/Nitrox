@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours;
@@ -21,7 +21,7 @@ public class PDAEncyclopedia_Add_Patch : NitroxPatch, IDynamicPatch
         // Is null when it's a duplicate call
         if (__result != null)
         {
-            Resolve<IPacketSender>().Send(new PDAEncyclopediaEntryAdd(key, verbose));
+            SendPacket(new PDAEncyclopediaEntryAdd(key, verbose));
         }
     }
 

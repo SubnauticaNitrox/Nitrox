@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -64,7 +64,7 @@ public class PDAScanner_Scan_Patch : NitroxPatch, IDynamicPatch
             if (scanTarget.hasUID)
             {
                 PDAScanFinished packet = new(new(scanTarget.uid), techType.ToDto(), entryData.totalFragments, true, true, true);
-                Resolve<IPacketSender>().Send(packet);
+                SendPacket(packet);
             }
             return;
         }
@@ -81,13 +81,13 @@ public class PDAScanner_Scan_Patch : NitroxPatch, IDynamicPatch
                     return;
                 }
                 PDAScanFinished packet = new(targetId, techType.ToDto(), entry.unlocked, false, entryData.destroyAfterScan);
-                Resolve<IPacketSender>().Send(packet);
+                SendPacket(packet);
             }
             // Case in which the scanned entry is fully unlocked
             else if (result == PDAScanner.Result.Researched)
             {
                 PDAScanFinished packet = new(targetId, techType.ToDto(), entryData.totalFragments, true, entryData.destroyAfterScan);
-                Resolve<IPacketSender>().Send(packet);
+                SendPacket(packet);
             }
         }
     }

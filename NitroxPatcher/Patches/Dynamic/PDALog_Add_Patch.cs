@@ -20,7 +20,7 @@ public class PDALog_Add_Patch : NitroxPatch, IDynamicPatch
         {
             return;
         }
-        Resolve<IPacketSender>().Send(new PDALogEntryAdd(key, entry.timestamp));
+        SendPacket(new PDALogEntryAdd(key, entry.timestamp));
     }
 
     public override void Patch(Harmony harmony)

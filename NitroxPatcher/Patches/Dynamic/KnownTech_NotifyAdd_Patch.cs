@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using HarmonyLib;
@@ -23,7 +23,7 @@ public class KnownTech_NotifyAdd_Patch : NitroxPatch, IDynamicPatch
         List<PDAScanner.Entry> partialEntries = new();
         PDAScanner.GetPartialEntriesWhichUnlocks(techType, partialEntries, true);
 
-        Resolve<IPacketSender>().Send(new KnownTechEntryAdd(
+        SendPacket(new KnownTechEntryAdd(
             KnownTechEntryAdd.EntryCategory.KNOWN,
             techType.ToDto(),
             verbose,

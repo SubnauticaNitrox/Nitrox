@@ -17,7 +17,7 @@ public class PinManager_NotifyAdd_Patch : NitroxPatch, IDynamicPatch
         {
             return;
         }
-        Resolve<IPacketSender>().Send(new RecipePinned((int)techType, true));
+        SendPacket(new RecipePinned((int)techType, true));
     }
 
     public override void Patch(Harmony harmony)
