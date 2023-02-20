@@ -55,10 +55,19 @@ public class BuildingTester : MonoBehaviour
         CleanCooldowns();
         if (BuildQueue.Count > 0 && !working)
         {
-            working = true;
-
-            StartCoroutine(TreatBuildCommand(BuildQueue.Dequeue()));
+            working = true;            
+            StartCoroutine(SafelyTreatNextBuildCommand());
         }
+    }
+
+    private IEnumerator SafelyTreatNextBuildCommand()
+    {
+        Packet packet = BuildQueue.Dequeue();
+        yield return CoroutineHelper.SafelyYieldEnumerator(TreatBuildCommand(packet), (exception) =>
+        {
+            Log.Error($"An error happened when treating build command {packet}:\n{exception}");
+        });
+        working = false;
     }
 
     private IEnumerator TreatBuildCommand(object buildCommand)
@@ -88,9 +97,11 @@ public class BuildingTester : MonoBehaviour
                 yield return DeconstructPiece(pieceDeconstructed);
                 break;
         }
-        working = false;
     }
 
+    /// <summary>
+    /// If the next build command is also a ModifyConstructedAmount applied on the same object, we'll just skip the current one to apply the new one.
+    /// </summary>
     private void PeekNextCommand(ref ModifyConstructedAmount currentCommand)
     {
         if (BuildQueue.Count == 0 || BuildQueue.Peek() is not ModifyConstructedAmount nextCommand || !nextCommand.GhostId.Equals(currentCommand.GhostId))
