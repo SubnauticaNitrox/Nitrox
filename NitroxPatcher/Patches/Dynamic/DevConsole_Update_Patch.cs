@@ -15,14 +15,14 @@ namespace NitroxPatcher.Patches.Dynamic
         /// </summary>
         public static readonly InstructionsPattern DevConsoleSetStateTruePattern = new()
         {
-            InstructionPattern.Call(nameof(Input), nameof(Input.GetKeyDown)),
+            Reflect.Method(() => Input.GetKeyDown(default(string))),
             Brfalse,
             Ldarg_0,
             Ldfld,
             Brtrue,
             Ldarg_0,
             { Ldc_I4_1, "TrueArgument" },
-            InstructionPattern.Call(nameof(DevConsole), nameof(DevConsole.SetState))
+            Reflect.Method((DevConsole t) => t.SetState(default(bool)))
         };
 
         public static readonly MethodInfo TargetMethod = Reflect.Method((DevConsole t) => t.Update());

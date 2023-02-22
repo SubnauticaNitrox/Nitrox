@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
@@ -49,11 +50,14 @@ public class PersistedPlayerData
     [DataMember(Order = 13)]
     public bool IsPermaDeath { get; set; }
 
+    /// <summary>
+    /// Those goals are unlocked individually (e.g. opening PDA, eating, picking up a fire extinguisher for the first time)
+    /// </summary>
     [DataMember(Order = 14)]
-    public HashSet<string> CompletedGoals { get; set; } = new HashSet<string>();
+    public Dictionary<string, float> PersonalCompletedGoalsWithTimestamp { get; set; } = new Dictionary<string, float>();
 
     [DataMember(Order = 15)]
-    public Dictionary<string, PingInstancePreference> PingInstancePreferences { get; set; } = new();
+    public SubnauticaPlayerPreferences PlayerPreferences { get; set; }
 
     public Player ToPlayer()
     {
@@ -72,8 +76,9 @@ public class PersistedPlayerData
                           QuickSlotsBinding,
                           EquippedItems,
                           Modules,
-                          CompletedGoals,
-                          PingInstancePreferences);
+                          PersonalCompletedGoalsWithTimestamp,
+                          PlayerPreferences.PingPreferences,
+                          PlayerPreferences.PinnedTechTypes);
     }
 
     public static PersistedPlayerData FromPlayer(Player player)
@@ -93,8 +98,8 @@ public class PersistedPlayerData
             Permissions = player.Permissions,
             NitroxId = player.GameObjectId,
             IsPermaDeath = player.IsPermaDeath,
-            CompletedGoals = new(player.CompletedGoals),
-            PingInstancePreferences = new(player.PingInstancePreferences)
+            PersonalCompletedGoalsWithTimestamp = new(player.PersonalCompletedGoalsWithTimestamp),
+            PlayerPreferences = new(player.PingInstancePreferences.ToDictionary(m => m.Key, m => m.Value), player.PinnedRecipePreferences.ToList())
         };
     }
 }

@@ -1,17 +1,22 @@
-﻿using System;
+using System;
 
-namespace NitroxModel.Packets
+namespace NitroxModel.Packets;
+
+[Serializable]
+public class TimeChange : Packet
 {
-    [Serializable]
-    public class TimeChange : Packet
-    {
-        public double CurrentTime { get; }
-        public bool InitialSync { get; }
+    /// <summary>
+    /// Time in seconds
+    /// </summary>
+    public double CurrentTime { get; }
+    /// <summary>
+    /// Real time at which the CurrentTime was observed
+    /// </summary>
+    public long UpdateTime { get; }
 
-        public TimeChange(double currentTime, bool initialSync)
-        {
-            CurrentTime = currentTime;
-            InitialSync = initialSync;
-        }
+    public TimeChange(double currentTime, long updateTime)
+    {
+        CurrentTime = currentTime;
+        UpdateTime = updateTime;
     }
 }

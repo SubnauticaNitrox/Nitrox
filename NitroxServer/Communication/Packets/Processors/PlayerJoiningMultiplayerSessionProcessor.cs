@@ -20,14 +20,14 @@ namespace NitroxServer.Communication.Packets.Processors
     {
         private readonly PlayerManager playerManager;
         private readonly ScheduleKeeper scheduleKeeper;
-        private readonly EventTriggerer eventTriggerer;
+        private readonly StoryManager storyManager;
         private readonly World world;
         private readonly EntityRegistry entityRegistry;
 
-        public PlayerJoiningMultiplayerSessionProcessor(ScheduleKeeper scheduleKeeper, EventTriggerer eventTriggerer, PlayerManager playerManager, World world, EntityRegistry entityRegistry)
+        public PlayerJoiningMultiplayerSessionProcessor(ScheduleKeeper scheduleKeeper, StoryManager storyManager, PlayerManager playerManager, World world, EntityRegistry entityRegistry)
         {
             this.scheduleKeeper = scheduleKeeper;
-            this.eventTriggerer = eventTriggerer;
+            this.storyManager = storyManager;
             this.playerManager = playerManager;
             this.world = world;
             this.entityRegistry = entityRegistry;
@@ -76,8 +76,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 player.UsedItems,
                 player.QuickSlotsBinding,
                 world.GameData.PDAState.GetInitialPDAData(),
-                world.GameData.StoryGoals.GetInitialStoryGoalData(scheduleKeeper),
-                player.CompletedGoals,
+                world.GameData.StoryGoals.GetInitialStoryGoalData(scheduleKeeper, player),
                 player.Position,
                 player.Rotation,
                 player.SubRootId,
@@ -87,10 +86,10 @@ namespace NitroxServer.Communication.Packets.Processors
                 simulations,
                 world.GameMode,
                 player.Permissions,
-                player.PingInstancePreferences.ToDictionary(m => m.Key, m => m.Value)
+                new(new(player.PingInstancePreferences), player.PinnedRecipePreferences.ToList()),
+                storyManager.GetTimeData()
             );
 
-            player.SendPacket(new TimeChange(eventTriggerer.ElapsedSeconds, true));
             player.SendPacket(initialPlayerSync);
         }
 

@@ -49,7 +49,7 @@ public class WorldPersistenceTest
 
         worldData = GeneratePersistedWorldData();
         World.World world = worldPersistence.CreateWorld(worldData, ServerGameMode.CREATIVE);
-        world.EventTriggerer.ResetWorld();
+        world.TimeKeeper.ResetCount();
 
         for (int index = 0; index < ServerSerializers.Length; index++)
         {
@@ -61,7 +61,7 @@ public class WorldPersistenceTest
             //Checking loading
             Optional<World.World> worldAfter = worldPersistence.LoadFromFile(tempSaveFilePath);
             Assert.IsTrue(worldAfter.HasValue, $"Loading saved world failed while using {ServerSerializers[index]}.");
-            worldAfter.Value.EventTriggerer.ResetWorld();
+            worldAfter.Value.TimeKeeper.ResetCount();
             WorldsDataAfter[index] = PersistedWorldData.From(worldAfter.Value);
         }
     }
@@ -112,32 +112,22 @@ public class WorldPersistenceTest
 
     private static void PDAStateTest(PDAStateData pdaState, PDAStateData pdaStateAfter)
     {
-        Assert.IsTrue(pdaState.UnlockedTechTypes.SequenceEqual(pdaStateAfter.UnlockedTechTypes));
-
-        AssertHelper.IsDictionaryEqual(pdaState.PartiallyUnlockedByTechType, pdaStateAfter.PartiallyUnlockedByTechType, (entry, entryAfter) =>
-        {
-            Assert.AreEqual(entry.Key, entryAfter.Key);
-            Assert.AreEqual(entry.Value.TechType, entryAfter.Value.TechType);
-            Assert.AreEqual(entry.Value.Progress, entryAfter.Value.Progress);
-            Assert.AreEqual(entry.Value.Unlocked, entryAfter.Value.Unlocked);
-        });
-
         Assert.IsTrue(pdaState.KnownTechTypes.SequenceEqual(pdaStateAfter.KnownTechTypes));
         Assert.IsTrue(pdaState.AnalyzedTechTypes.SequenceEqual(pdaStateAfter.AnalyzedTechTypes));
-        Assert.IsTrue(pdaState.EncyclopediaEntries.SequenceEqual(pdaStateAfter.EncyclopediaEntries));
-
         AssertHelper.IsListEqual(pdaState.PdaLog.OrderBy(x => x.Key), pdaStateAfter.PdaLog.OrderBy(x => x.Key), (entry, entryAfter) =>
         {
             Assert.AreEqual(entry.Key, entryAfter.Key);
             Assert.AreEqual(entry.Timestamp, entryAfter.Timestamp);
         });
-
-        AssertHelper.IsDictionaryEqual(pdaState.CachedProgress, pdaStateAfter.CachedProgress, (entry, entryAfter) =>
+        Assert.IsTrue(pdaState.EncyclopediaEntries.SequenceEqual(pdaStateAfter.EncyclopediaEntries));
+        Assert.IsTrue(pdaState.ScannerFragments.SequenceEqual(pdaStateAfter.ScannerFragments));
+        AssertHelper.IsListEqual(pdaState.ScannerPartial.OrderBy(x => x.TechType.Name), pdaStateAfter.ScannerPartial.OrderBy(x => x.TechType.Name), (entry, entryAfter) =>
         {
-            Assert.AreEqual(entry.Key, entryAfter.Key);
-            Assert.AreEqual(entry.Value.TechType, entryAfter.Value.TechType);
-            AssertHelper.IsDictionaryEqual(entry.Value.Entries, entryAfter.Value.Entries);
+            Assert.AreEqual(entry.TechType, entryAfter.TechType);
+            Assert.AreEqual(entry.Unlocked, entryAfter.Unlocked);
         });
+
+        Assert.IsTrue(pdaState.ScannerComplete.SequenceEqual(pdaStateAfter.ScannerComplete));
     }
 
     private static void StoryGoalTest(StoryGoalData storyGoal, StoryGoalData storyGoalAfter)
@@ -150,8 +140,8 @@ public class WorldPersistenceTest
 
     private static void StoryTimingTest(StoryTimingData storyTiming, StoryTimingData storyTimingAfter)
     {
-        Assert.AreEqual(storyTiming.ElapsedTime, storyTimingAfter.ElapsedTime);
-        Assert.AreEqual(storyTiming.AuroraExplosionTime, storyTimingAfter.AuroraExplosionTime);
+        Assert.AreEqual(storyTiming.ElapsedSeconds, storyTimingAfter.ElapsedSeconds);
+        Assert.AreEqual(storyTiming.AuroraCountdownTime, storyTimingAfter.AuroraCountdownTime);
         Assert.AreEqual(storyTiming.AuroraWarningTime, storyTimingAfter.AuroraWarningTime);
     }
 
@@ -252,14 +242,15 @@ public class WorldPersistenceTest
             Assert.AreEqual(playerData.NitroxId, playerDataAfter.NitroxId);
             Assert.AreEqual(playerData.IsPermaDeath, playerDataAfter.IsPermaDeath);
 
-            Assert.IsTrue(playerData.CompletedGoals.SequenceEqual(playerDataAfter.CompletedGoals));
+            Assert.IsTrue(playerData.PersonalCompletedGoalsWithTimestamp.SequenceEqual(playerDataAfter.PersonalCompletedGoalsWithTimestamp));
 
-            AssertHelper.IsDictionaryEqual(playerData.PingInstancePreferences, playerDataAfter.PingInstancePreferences, (keyValuePair, keyValuePairAfter) =>
+            AssertHelper.IsDictionaryEqual(playerData.PlayerPreferences.PingPreferences, playerDataAfter.PlayerPreferences.PingPreferences, (keyValuePair, keyValuePairAfter) =>
             {
                 Assert.AreEqual(keyValuePair.Key, keyValuePairAfter.Key);
                 Assert.AreEqual(keyValuePair.Value.Color, keyValuePairAfter.Value.Color);
                 Assert.AreEqual(keyValuePair.Value.Visible, keyValuePairAfter.Value.Visible);
             });
+            Assert.IsTrue(playerData.PlayerPreferences.PinnedTechTypes.SequenceEqual(playerDataAfter.PlayerPreferences.PinnedTechTypes));
         });
     }
 
@@ -479,7 +470,7 @@ public class WorldPersistenceTest
                         QuickSlotsBinding = new List<string>(0),
                         EquippedItems = new List<EquippedItemData>(0),
                         Modules = new List<EquippedItemData>(0),
-                        PingInstancePreferences = new()
+                        PlayerPreferences = new(new(), new())
                     },
                     new PersistedPlayerData()
                     {
@@ -499,7 +490,7 @@ public class WorldPersistenceTest
                             new EquippedItemData(new NitroxId(), new NitroxId(), new byte[] { 0x50, 0x9D }, "Slot4", new NitroxTechType("Knife"))
                         },
                         Modules = new List<EquippedItemData>() { new EquippedItemData(new NitroxId(), new NitroxId(), new byte[] { 0x35, 0xD0 }, "Module1", new NitroxTechType("Compass")) },
-                        PingInstancePreferences = new() { { "eda14b58-cfe0-4a56-aa4a-47942567d897", new(0, false) }, { "Signal_Lifepod12", new(4, true) } }
+                        PlayerPreferences = new(new() { { "eda14b58-cfe0-4a56-aa4a-47942567d897", new(0, false) }, { "Signal_Lifepod12", new(4, true) } }, new List<int> {2, 45, 3, 1})
                     }
                 }
             },
@@ -509,11 +500,13 @@ public class WorldPersistenceTest
                 {
                     PDAState = new PDAStateData()
                     {
-                        EncyclopediaEntries = { "TestEntry1", "TestEntry2" },
                         KnownTechTypes = { new NitroxTechType("Knife") },
-                        PartiallyUnlockedByTechType = new ThreadSafeDictionary<NitroxTechType, PDAEntry>() { new KeyValuePair<NitroxTechType, PDAEntry>(new NitroxTechType("Moonpool"), new PDAEntry(new NitroxTechType("Moonpool"), 50f, 2)) },
+                        AnalyzedTechTypes = { new("Fragment"), new("TESSST") },
                         PdaLog = { new PDALogEntry("key1", 1.1234f) },
-                        UnlockedTechTypes = { new NitroxTechType("base") }
+                        EncyclopediaEntries = { "TestEntry1", "TestEntry2" },
+                        ScannerFragments = { new("eda14b58-cfe0-4a56-aa4a-47942567d897"), new("342deb58-cfe0-4a56-aa4a-47942567d897") },
+                        ScannerPartial = { new(new NitroxTechType("Moonpool"), 2), new(new NitroxTechType("Fragment"), 1) },
+                        ScannerComplete = { new NitroxTechType("Knife1"), new NitroxTechType("Knife2"), new NitroxTechType("Knife3") }
                     },
                     StoryGoals = new StoryGoalData()
                     {
@@ -523,8 +516,8 @@ public class WorldPersistenceTest
                     },
                     StoryTiming = new StoryTimingData()
                     {
-                        ElapsedTime = 10,
-                        AuroraExplosionTime = 10000,
+                        ElapsedSeconds = 10,
+                        AuroraCountdownTime = 10000,
                         AuroraWarningTime = 20
                     },
                 },

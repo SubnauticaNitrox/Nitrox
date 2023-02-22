@@ -14,6 +14,7 @@ namespace NitroxServer.GameLogic.Entities
     public class WorldEntityManager
     {
         private readonly EntityRegistry entityRegistry;
+        private readonly EntitySimulation entitySimulation;
 
         /// <summary>
         ///     Phasing entities can disappear if you go out of range.
@@ -243,6 +244,25 @@ namespace NitroxServer.GameLogic.Entities
                     }
                 }
             }
+        }
+
+        public bool TryDestroyEntity(NitroxId entityId, out Optional<Entity> entity)
+        {
+            entitySimulation.EntityDestroyed(entityId);
+
+            entity = entityRegistry.RemoveEntity(entityId);
+
+            if (!entity.HasValue)
+            {
+                return false;
+            }
+
+            if (entity.Value is WorldEntity worldEntity)
+            {
+                StopTrackingEntity(worldEntity);
+            }
+
+            return true;
         }
     }
 }

@@ -1,4 +1,3 @@
-using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
@@ -11,40 +10,25 @@ namespace NitroxServer.Communication.Packets.Processors;
 public class EntityDestroyedPacketProcessor : AuthenticatedPacketProcessor<EntityDestroyed>
 {
     private readonly PlayerManager playerManager;
-    private readonly EntityRegistry entityRegistry;
     private readonly WorldEntityManager worldEntityManager;
-    private readonly EntitySimulation entitySimulation;
 
-    public EntityDestroyedPacketProcessor(PlayerManager playerManager, EntityRegistry entityRegistry, WorldEntityManager worldEntityManager, EntitySimulation entitySimulation)
+    public EntityDestroyedPacketProcessor(PlayerManager playerManager, WorldEntityManager worldEntityManager)
     {
         this.playerManager = playerManager;
-        this.entityRegistry = entityRegistry;
         this.worldEntityManager = worldEntityManager;
-        this.entitySimulation = entitySimulation;
     }
 
     public override void Process(EntityDestroyed packet, Player destroyingPlayer)
     {
-        entitySimulation.EntityDestroyed(packet.Id);
-
-        Optional<Entity> entity = entityRegistry.RemoveEntity(packet.Id);
-
-        if (!entity.HasValue)
+        if (worldEntityManager.TryDestroyEntity(packet.Id, out Optional<Entity> entity))
         {
-            return;
-        }
-
-        if (entity.Value is WorldEntity worldEntity)
-        {
-            worldEntityManager.StopTrackingEntity(worldEntity);
-        }
-
-        foreach (Player player in playerManager.GetConnectedPlayers())
-        {
-            bool isOtherPlayer = player != destroyingPlayer;
-            if (isOtherPlayer && player.CanSee(entity.Value))
+            foreach (Player player in playerManager.GetConnectedPlayers())
             {
-                player.SendPacket(packet);
+                bool isOtherPlayer = player != destroyingPlayer;
+                if (isOtherPlayer && player.CanSee(entity.Value))
+                {
+                    player.SendPacket(packet);
+                }
             }
         }
     }

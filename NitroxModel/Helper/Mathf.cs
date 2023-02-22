@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace NitroxModel.Helper
 {
@@ -64,6 +64,11 @@ namespace NitroxModel.Helper
         public static float Round(float value, int digits = 0)
         {
             return (float)Math.Round(value, digits);
+        }
+
+        public static float Lerp(float a, float b, float t)
+        {
+            return a + (b - a) * t;
         }
     }
 }
