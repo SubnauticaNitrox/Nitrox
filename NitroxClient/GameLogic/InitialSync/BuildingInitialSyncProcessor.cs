@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.Bases.Spawning.BasePiece;
@@ -62,9 +63,9 @@ namespace NitroxClient.GameLogic.InitialSync
 
         private void QueueUpPieces(IEnumerable<BasePiece> basePieces)
         {
-            using (packetSender.Suppress<ConstructionAmountChanged>())
-            using (packetSender.Suppress<ConstructionCompleted>())
-            using (packetSender.Suppress<PlaceBasePiece>())
+            using (new PacketSuppressor<ConstructionAmountChanged>())
+            using (new PacketSuppressor<ConstructionCompleted>())
+            using (new PacketSuppressor<PlaceBasePiece>())
             {
                 foreach (BasePiece basePiece in basePieces)
                 {

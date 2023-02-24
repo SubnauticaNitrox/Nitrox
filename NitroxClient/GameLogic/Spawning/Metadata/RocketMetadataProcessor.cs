@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Helpers;
 using NitroxClient.Unity.Helper;
@@ -40,7 +41,7 @@ public class RocketMetadataProcessor : GenericEntityMetadataProcessor<RocketMeta
             return;
         }
 
-        using(packetSender.Suppress<EntityMetadataUpdate>())
+        using(new PacketSuppressor<EntityMetadataUpdate>())
         {
             UpdateElevator(rocket, metadata);
             UpdateStage(rocket, metadata);

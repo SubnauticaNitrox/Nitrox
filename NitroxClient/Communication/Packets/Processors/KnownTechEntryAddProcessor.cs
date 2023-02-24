@@ -17,7 +17,7 @@ public class KnownTechEntryProcessorAdd : ClientPacketProcessor<KnownTechEntryAd
 
     public override void Process(KnownTechEntryAdd packet)
     {
-        using (packetSender.Suppress<KnownTechEntryAdd>())
+        using (new PacketSuppressor<KnownTechEntryAdd>())
         {
             switch (packet.Category)
             {

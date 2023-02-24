@@ -1,3 +1,4 @@
+using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.FMOD;
 using NitroxClient.Unity.Helper;
@@ -27,7 +28,7 @@ public class SeamothMetadataProcessor : GenericEntityMetadataProcessor<SeamothMe
             Log.Error($"Could not find seamoth on {gameObject.name}");
         }
 
-        using(packetSender.Suppress<EntityMetadataUpdate>())
+        using(new PacketSuppressor<EntityMetadataUpdate>())
         {
             SetLights(seamoth, metadata.LightsOn);
             SetHealth(seamoth, metadata.Health);

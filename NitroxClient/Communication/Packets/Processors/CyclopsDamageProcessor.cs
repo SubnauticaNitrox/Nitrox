@@ -31,12 +31,12 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             SubRoot subRoot = NitroxEntity.RequireObjectFrom(packet.Id).GetComponent<SubRoot>();
 
-            using (packetSender.Suppress<CyclopsDamagePointRepaired>())
+            using (new PacketSuppressor<CyclopsDamagePointRepaired>())
             {
                 SetActiveDamagePoints(subRoot, packet.DamagePointIndexes);
             }
 
-            using (packetSender.Suppress<FireDoused>())
+            using (new PacketSuppressor<FireDoused>())
             {
                 SetActiveRoomFires(subRoot, packet.RoomFires);
             }
@@ -55,7 +55,7 @@ namespace NitroxClient.Communication.Packets.Processors
                 subRoot.voiceNotificationManager.PlayVoiceNotification(subRoot.hullCriticalNotification, true, false);
             }
 
-            using (packetSender.Suppress<CyclopsDamage>())
+            using (new PacketSuppressor<CyclopsDamage>())
             {
                 // Not necessary, but used by above code whenever damage is done
                 subRoot.oldHPPercent = subHealth.GetHealthFraction();

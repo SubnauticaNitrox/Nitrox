@@ -17,7 +17,7 @@ namespace NitroxClient.Communication.Packets.Processors
         }
         public override void Process(SeamothModulesAction packet)
         {
-            using (packetSender.Suppress<SeamothModulesAction>())
+            using (new PacketSuppressor<SeamothModulesAction>())
             {
                 GameObject _gameObject = NitroxEntity.RequireObjectFrom(packet.Id);
                 SeaMoth seamoth = _gameObject.GetComponent<SeaMoth>();
