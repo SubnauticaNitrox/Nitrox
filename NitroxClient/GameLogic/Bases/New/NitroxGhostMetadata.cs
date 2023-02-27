@@ -1,5 +1,9 @@
+using System.Collections;
+using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic.Buildings.New.Metadata;
 using NitroxModel_Subnautica.DataStructures;
+using UnityEngine;
+using UWE;
 
 namespace NitroxClient.GameLogic.Bases.New;
 
@@ -19,6 +23,12 @@ public static class NitroxGhostMetadata
 
     public static GhostMetadata GetMetadataForGhost(BaseGhost baseGhost)
     {
+        // Specific case in which a piece was deconstructed and resulted in a BaseDeconstructable with a normal BaseGhost
+        if (BuildManager.IsUnderBaseDeconstructable(baseGhost))
+        {
+            return NitroxBaseDeconstructableGhostMetadata.From(baseGhost);
+        }
+        
         GhostMetadata metadata = baseGhost switch
         {
             BaseAddWaterPark or BaseAddPartitionDoorGhost or BaseAddModuleGhost or BaseAddFaceGhost => NitroxBaseAnchoredFaceGhostMetadata.From(baseGhost),
@@ -28,8 +38,14 @@ public static class NitroxGhostMetadata
         return metadata;
     }
 
-    public static void ApplyMetadataToGhost(BaseGhost baseGhost, GhostMetadata ghostMetadata)
+    public static IEnumerator ApplyMetadataToGhost(BaseGhost baseGhost, GhostMetadata ghostMetadata, Base @base)
     {
+        if (BuildManager.IsUnderBaseDeconstructable(baseGhost, true) && ghostMetadata is BaseDeconstructableGhostMetadata deconstructableMetadata)
+        {
+            yield return deconstructableMetadata.ApplyTo(baseGhost, @base);
+            yield break;
+        }
+
         switch (baseGhost)
         {
             case BaseAddWaterPark:
@@ -52,7 +68,81 @@ public static class NitroxGhostMetadata
                 break;
         }
     }
+
+    public static void LateApplyMetadataToGhost(BaseGhost baseGhost, GhostMetadata ghostMetadata)
+    {
+        if (BuildManager.IsUnderBaseDeconstructable(baseGhost, true) && ghostMetadata is BaseDeconstructableGhostMetadata deconstructableMetadata)
+        {
+            deconstructableMetadata.LateApplyTo(baseGhost);
+        }
+    }
 }
+
+public static class NitroxBaseDeconstructableGhostMetadata
+{
+    public static BaseDeconstructableGhostMetadata From(BaseGhost baseGhost)
+    {
+        BaseDeconstructableGhostMetadata metadata = NitroxGhostMetadata.From<BaseDeconstructableGhostMetadata>(baseGhost);
+        if (baseGhost.TryGetComponentInParent(out ConstructableBase constructableBase) && constructableBase.moduleFace.HasValue)
+        {
+            metadata.ModuleFace = constructableBase.moduleFace.Value.ToDto();
+            IBaseModule baseModule = baseGhost.targetBase.GetModule(constructableBase.moduleFace.Value);
+            if (baseModule != null && (baseModule as MonoBehaviour).TryGetComponent(out PrefabIdentifier identifier))
+            {
+                metadata.ClassId = identifier.ClassId;
+            }
+        }
+        return metadata;
+    }
+
+    public static IEnumerator ApplyTo(this BaseDeconstructableGhostMetadata ghostMetadata, BaseGhost baseGhost, Base @base)
+    {
+        NitroxGhostMetadata.ApplyTo(ghostMetadata, baseGhost);
+        baseGhost.DisableGhostModelScripts();
+        if (ghostMetadata.ModuleFace.HasValue)
+        {
+            if (!baseGhost.TryGetComponentInParent(out ConstructableBase constructableBase))
+            {
+                Log.Error($"Couldn't find an interior piece's parent ConstructableBase to apply a {nameof(BaseDeconstructableGhostMetadata)} to.");
+                yield break;
+            }
+            constructableBase.moduleFace = ghostMetadata.ModuleFace.Value.ToUnity();
+            
+            IPrefabRequest request = PrefabDatabase.GetPrefabAsync(ghostMetadata.ClassId);
+            yield return request;
+            if (!request.TryGetPrefab(out GameObject prefab))
+            {
+                // Without its module, the ghost will be useless, so we delete it (like in base game)
+                GameObject.Destroy(constructableBase.gameObject);
+                Log.Error($"Couldn't find a prefab for module of interior piece of ClassId: {ghostMetadata.ClassId}");
+                yield break;
+            }
+            if (!baseGhost.targetBase)
+            {
+                baseGhost.targetBase = @base;
+            }
+            Base.Face face = ghostMetadata.ModuleFace.Value.ToUnity();
+            face.cell += baseGhost.targetBase.GetAnchor();
+            GameObject moduleObject = baseGhost.targetBase.SpawnModule(prefab, face);
+            if (!moduleObject)
+            {
+                GameObject.Destroy(constructableBase.gameObject);
+                Log.Error("Module couldn't be spawned for interior piece");
+                yield break;
+            }
+            if (moduleObject.TryGetComponent(out IBaseModule baseModule))
+            {
+                baseModule.constructed = constructableBase.constructedAmount;
+            }
+        }
+    }
+
+    public static void LateApplyTo(this BaseDeconstructableGhostMetadata _, BaseGhost baseGhost)
+    {
+        baseGhost.DisableGhostModelScripts();
+    }
+}
+
 
 public static class NitroxBaseAnchoredFaceGhostMetadata
 {

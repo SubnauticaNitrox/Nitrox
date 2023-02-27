@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Buildings.New;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
@@ -35,6 +36,124 @@ public static class BuildManager
             BaseCell = baseCell.cell.ToDto(),
             PiecePoint = baseDeconstructable.deconstructedBase.WorldToGrid(baseDeconstructable.transform.position).ToDto()
         };
+    }
+
+    public static bool TryGetModuleObject(IBaseModuleGeometry baseModuleGeometry, out GameObject geometryObject)
+    {
+        Component module = baseModuleGeometry switch
+        {
+            WaterParkGeometry waterParkGeometry => waterParkGeometry.GetModule(),
+            BaseFiltrationMachineGeometry baseFiltrationMachineGeometry => baseFiltrationMachineGeometry.GetModule(),
+            BaseUpgradeConsoleGeometry baseUpgradeConsoleGeometry => baseUpgradeConsoleGeometry.GetModule(),
+            BaseBioReactorGeometry baseBioReactorGeometry => baseBioReactorGeometry.GetModule(),
+            BaseNuclearReactorGeometry baseNuclearReactorGeometry => baseNuclearReactorGeometry.GetModule(),
+            _ => null,
+        };
+        geometryObject = module.AliveOrNull()?.gameObject;
+        return geometryObject;
+    }
+
+    public static bool TryGetGhostFace(BaseGhost baseGhost, out Base.Face face)
+    {
+        // Copied code from BaseAddModuleGhost.Finish() and BaseAddFaceGhost.Finish() to obtain the face at which the module was spawned
+        switch (baseGhost)
+        {
+            case BaseAddModuleGhost moduleGhost:
+                face = moduleGhost.anchoredFace.Value;
+                face.cell += baseGhost.targetBase.GetAnchor();
+                return true;
+            case BaseAddFaceGhost faceGhost:
+                if (faceGhost.anchoredFace.HasValue)
+                {
+                    face = faceGhost.anchoredFace.Value;
+                    face.cell += faceGhost.targetBase.GetAnchor();
+                    return true;
+                }
+                else if (BaseAddFaceGhost.FindFirstMaskedFace(faceGhost.ghostBase, out face))
+                {
+                    Vector3 point = faceGhost.ghostBase.GridToWorld(Int3.zero);
+                    faceGhost.targetOffset = faceGhost.targetBase.WorldToGrid(point);
+                    face.cell += faceGhost.targetOffset;
+                    return true;
+                }
+                break;
+            case BaseAddWaterPark waterPark:
+                if (waterPark.anchoredFace.HasValue)
+                {
+                    face = waterPark.anchoredFace.Value;
+                    return true;
+                }
+                break;
+        }
+
+        face = default;
+        return false;
+    }
+
+    public static bool TryTransferIdFromGhostToModule(BaseGhost baseGhost, NitroxId id, ConstructableBase constructableBase)
+    {
+        Log.Debug($"TryTransferIdFromGhostToModule({baseGhost},{id})");
+        Base.Face? face = null;
+        // Only two types of ghost which spawn a module
+        if ((baseGhost is BaseAddFaceGhost faceGhost && faceGhost.modulePrefab) ||
+            (baseGhost is BaseAddModuleGhost moduleGhost && moduleGhost.modulePrefab) ||
+            (baseGhost is BaseAddWaterPark))
+        {
+            if (TryGetGhostFace(baseGhost, out Base.Face ghostFace))
+            {
+                face = ghostFace;
+            }
+            else
+            {
+                Log.Error($"Couldn't find the module spawned by {baseGhost}");
+                return false;
+            }
+        }
+        // If the ghost is under a BaseDeconstructable(Clone), it may have an associated module
+        else if (IsBaseDeconstructable(constructableBase))
+        {
+            face = constructableBase.moduleFace;
+        }
+
+        if (face.HasValue)
+        {
+            IBaseModule module = baseGhost.targetBase.GetModule(face.Value);
+            if (module != null)
+            {
+                Log.Debug($"Successfully transferred NitroxEntity to {module} [{id}]");
+                NitroxEntity.SetNewId((module as Component).gameObject, id);
+                return true;
+            }
+            else
+            {
+                Log.Error("Couldn't find the module's GameObject of built interior piece when transfering its NitroxEntity to the module.");
+            }
+        }
+        else
+        {
+            Log.Error($"No face could be found for ghost {baseGhost}");
+        }
+
+        return false;
+    }
+
+    /// <remarks>
+    ///     The criteria to make sure that a ConstructableBase is one of a BaseDeconstructable is if it has a moduleFace
+    ///     because this field is only filled for the base deconstruction (<see cref="BaseDeconstructable.Deconstruct"/>, <seealso cref="ConstructableBase.LinkModule(Base.Face?)"/>).
+    /// </remarks>
+    public static bool IsBaseDeconstructable(ConstructableBase constructableBase)
+    {
+        return constructableBase.moduleFace.HasValue;
+    }
+
+    /// <remarks>
+    /// A BaseDeconstructable's ghost component is a simple BaseGhost so we need to identify it by the parent ConstructableBase instead.
+    /// </remarks>
+    /// <param name="faceAlreadyLinked">Whether <see cref="ConstructableBase.moduleFace"/> was already set or not</param>
+    public static bool IsUnderBaseDeconstructable(BaseGhost baseGhost, bool faceNotLinked = false)
+    {
+        return baseGhost.TryGetComponentInParent(out ConstructableBase constructableBase) &&
+            (IsBaseDeconstructable(constructableBase) || faceNotLinked);
     }
 }
 
@@ -118,6 +237,11 @@ public static class NitroxBuild
         List<SavedInteriorPiece> interiorPieces = new();
         foreach (IBaseModule module in targetBase.GetComponentsInChildren<IBaseModule>(true))
         {
+            // IBaseModules without a NitroxEntity are related to BaseDeconstructable and are saved with their ghost
+            if (!(module as MonoBehaviour).GetComponent<NitroxEntity>())
+            {
+                continue;
+            }
             Log.Debug($"Base module found: {module.GetType().FullName}");
             interiorPieces.Add(NitroxInteriorPiece.From(module));
         }
@@ -176,7 +300,13 @@ public static class NitroxBuild
                 Log.Debug($"Couldn't find a prefab for interior piece of ClassId {interiorPiece.ClassId}");
                 continue;
             }
-            @base.SpawnModule(prefab, new(interiorPiece.BaseFace.Cell.ToUnity() + @base.anchor, (Base.Direction)interiorPiece.BaseFace.Direction));
+            Base.Face face = interiorPiece.BaseFace.ToUnity();
+            face.cell += @base.GetAnchor();
+            GameObject moduleObject = @base.SpawnModule(prefab, face);
+            if (moduleObject)
+            {
+                NitroxEntity.SetNewId(moduleObject, interiorPiece.NitroxId);
+            }
         }
     }
 
@@ -245,13 +375,20 @@ public static class NitroxBuild
         {
             constructableBase.techType = savedGhost.TechType.ToUnity();
         }
+        constructableBase.constructedAmount = savedGhost.ConstructedAmount;
 
         baseGhost.SetupGhost();
-        NitroxGhostMetadata.ApplyMetadataToGhost(baseGhost, savedGhost.Metadata);
+
+        yield return NitroxGhostMetadata.ApplyMetadataToGhost(baseGhost, savedGhost.Metadata, @base);
 
         // TODO: Fix black ghost
         // Necessary to wait for BaseGhost.Start()
         yield return null;
+        // Verify that the metadata didn't destroy the GameObject
+        if (!ghostObject)
+        {
+            yield break;
+        }
 
         savedGhost.Base.ApplyTo(ghostBase);
         ghostBase.OnProtoDeserialize(null);
@@ -265,13 +402,14 @@ public static class NitroxBuild
         {
             @base.SetPlacementGhost(baseGhost);
             baseGhost.targetBase = @base;
+            @base.RegisterBaseGhost(baseGhost);
         }
         else
         {
             ghostTransform.parent = parent;
         }
 
-        Log.Debug(NitroxBase.From(ghostBase));
+        Log.Debug(NitroxBase.ToString(NitroxBase.From(ghostBase)));
         if (!isBaseDeconstructable)
         {
             baseGhost.Place();
@@ -283,9 +421,10 @@ public static class NitroxBuild
             savedGhost.MoveTransform(ghostTransform);
         }
 
-        constructableBase.constructedAmount = savedGhost.ConstructedAmount;
         constructableBase.SetState(false, false);
         constructableBase.UpdateMaterial();
+
+        NitroxGhostMetadata.LateApplyMetadataToGhost(baseGhost, savedGhost.Metadata);
 
         NitroxEntity.SetNewId(ghostObject, savedGhost.NitroxId);
     }
@@ -443,7 +582,17 @@ public static class NitroxInteriorPiece
             Log.Warn($"Couldn't find an identifier for the interior piece {module.GetType()}");
         }
 
+        if (NitroxEntity.TryGetEntityFrom(gameObject, out NitroxEntity entity))
+        {
+            interiorPiece.NitroxId = entity.Id;
+        }
+        else
+        {
+            Log.Warn($"Couldn't find a NitroxEntity for the interior piece {module.GetType()}");
+        }
+
         // TODO: Verify if this is necessary or not
+        // EDIT: This is most likely not
         switch (module)
         {
             case WaterPark waterPark:

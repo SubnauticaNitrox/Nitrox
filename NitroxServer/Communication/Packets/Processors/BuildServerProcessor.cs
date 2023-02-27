@@ -70,6 +70,7 @@ public class PlaceBaseProcessor : BuildingProcessor<PlaceBase>
     {
         if (buildingManager.AddBase(packet))
         {
+            packet.SavedBuild = null;
             base.Process(packet, player);
         }
     }
@@ -83,6 +84,7 @@ public class UpdateBaseProcessor : BuildingProcessor<UpdateBase>
     {
         if (buildingManager.UpdateBase(packet))
         {
+            packet.SavedBuild = null;
             base.Process(packet, player);
         }
     }
@@ -109,6 +111,7 @@ public class PieceDeconstructedProcessor : BuildingProcessor<PieceDeconstructed>
     {
         if (buildingManager.ReplacePieceByGhost(packet))
         {
+            packet.SavedBase = null;
             base.Process(packet, player);
         }
     }

@@ -190,13 +190,13 @@ public class BuildingManager
     {
         lock (Ghosts)
         {
-            if (!Ghosts.ContainsKey(placeBase.FormerGhostId))
-            {
-                Log.Error($"Trying to place a base from a non-registered ghost ({placeBase.FormerGhostId})");
-                return false;
-            }
             lock (Builds)
             {
+                if (!Ghosts.ContainsKey(placeBase.FormerGhostId))
+                {
+                    Log.Error($"Trying to place a base from a non-registered ghost ({placeBase.FormerGhostId})");
+                    return false;
+                }
                 if (Builds.ContainsKey(placeBase.FormerGhostId))
                 {
                     Log.Error($"Trying to add a new build to Global Root but another build with the same id already exists ({placeBase.FormerGhostId})");
@@ -214,13 +214,13 @@ public class BuildingManager
     {
         lock (Ghosts)
         {
-            if (!allGhosts.ContainsKey(updateBase.FormerGhostId))
-            {
-                Log.Error($"Tring to place a base from a non-registered ghost ({updateBase.FormerGhostId})");
-                return false;
-            }
             lock (Builds)
             {
+                if (!allGhosts.ContainsKey(updateBase.FormerGhostId))
+                {
+                    Log.Error($"Tring to place a base from a non-registered ghost ({updateBase.FormerGhostId})");
+                    return false;
+                }
                 if (!Builds.ContainsKey(updateBase.BaseId))
                 {
                     Log.Error($"Trying to update a non-registered build ({updateBase.BaseId})");
@@ -239,13 +239,13 @@ public class BuildingManager
     {
         lock (Builds)
         {
-            if (!Builds.ContainsKey(baseDeconstructed.FormerBaseId))
-            {
-                Log.Error($"Trying to replace a non-registered build ({baseDeconstructed.FormerBaseId})");
-                return false;
-            }
             lock (Ghosts)
             {
+                if (!Builds.ContainsKey(baseDeconstructed.FormerBaseId))
+                {
+                    Log.Error($"Trying to replace a non-registered build ({baseDeconstructed.FormerBaseId})");
+                    return false;
+                }
                 if (Ghosts.ContainsKey(baseDeconstructed.ReplacerGhost.NitroxId))
                 {
                     Log.Error($"Trying to add a ghost to Global Root but another ghost with the same id already exists ({baseDeconstructed.ReplacerGhost.NitroxId})");
@@ -263,21 +263,27 @@ public class BuildingManager
     {
         lock (Builds)
         {
-            if (!Builds.TryGetValue(pieceDeconstructed.BaseId, out SavedBuild parentBuild))
-            {
-                Log.Error($"Trying to replace a piece in a non-registered build ({pieceDeconstructed.BaseId})");
-                return false;
-            }
             lock (Ghosts)
             {
+                if (!Builds.TryGetValue(pieceDeconstructed.BaseId, out SavedBuild parentBuild))
+                {
+                    Log.Error($"Trying to replace a piece in a non-registered build ({pieceDeconstructed.BaseId})");
+                    return false;
+                }
                 if (parentBuild.Ghosts.Any(ghost => ghost.NitroxId.Equals(pieceDeconstructed.PieceId)))
                 {
                     Log.Error($"Trying to add a ghost to a build but another ghost with the same id already exists ({pieceDeconstructed.PieceId})");
                     return false;
                 }
-
+                
+                int interiorPieceIndex = parentBuild.InteriorPieces.FindIndex(interiorPiece => interiorPiece.NitroxId.Equals(pieceDeconstructed.PieceId));
+                if (interiorPieceIndex != -1)
+                {
+                    parentBuild.InteriorPieces.RemoveAt(interiorPieceIndex);
+                }
                 parentBuild.Ghosts.Add(pieceDeconstructed.ReplacerGhost);
                 allGhosts.Add(pieceDeconstructed.PieceId, new(parentBuild, pieceDeconstructed.ReplacerGhost));
+                parentBuild.Base = pieceDeconstructed.SavedBase;
                 return true;
             }
         }
