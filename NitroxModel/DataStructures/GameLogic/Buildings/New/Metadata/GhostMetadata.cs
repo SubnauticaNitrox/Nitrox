@@ -13,6 +13,16 @@ public abstract class GhostMetadata
 public class BasicGhostMetadata : GhostMetadata { }
 
 [DataContract]
+public class BaseDeconstructableGhostMetadata : GhostMetadata
+{
+    [DataMember(Order = 1)]
+    public NitroxBaseFace? ModuleFace;
+
+    [DataMember(Order = 2)]
+    public string ClassId;
+}
+
+[DataContract]
 public class BaseAnchoredFaceGhostMetadata : GhostMetadata
 {
     [DataMember(Order = 1)]

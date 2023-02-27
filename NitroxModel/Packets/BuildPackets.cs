@@ -109,13 +109,15 @@ public sealed class PieceDeconstructed : Packet
     public NitroxId PieceId;
     public BuildPieceIdentifier BuildPieceIdentifier;
     public SavedGhost ReplacerGhost;
+    public SavedBase SavedBase;
 
-    public PieceDeconstructed(NitroxId baseId, NitroxId pieceId, BuildPieceIdentifier buildPieceIdentifier, SavedGhost replacerGhost)
+    public PieceDeconstructed(NitroxId baseId, NitroxId pieceId, BuildPieceIdentifier buildPieceIdentifier, SavedGhost replacerGhost, SavedBase savedBase)
     {
         BaseId = baseId;
         PieceId = pieceId;
         BuildPieceIdentifier = buildPieceIdentifier;
         ReplacerGhost = replacerGhost;
+        SavedBase = savedBase;
     }
 
     public override string ToString()

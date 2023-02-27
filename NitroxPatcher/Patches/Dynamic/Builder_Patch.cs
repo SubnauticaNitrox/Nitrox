@@ -225,7 +225,7 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
          *   - if it's already in a base, simply update the current base
          *   - else, create a new base
          */
-        if (amount == 1.0f && constructable is ConstructableBase constructableBase)
+        if (amount == 1f && constructable is ConstructableBase constructableBase)
         {
             CoroutineHost.StartCoroutine(BroadcastObjectBuilt(constructableBase, entity));
             return;
@@ -250,13 +250,15 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
             parentBase = constructableBase.GetComponentInParent<Base>();
         }
 
+        // If a module was spawned we need to transfer the ghost id to it for further recognition
+        BuildManager.TryTransferIdFromGhostToModule(baseGhost, entity.Id, constructableBase);
+
         // Have a delay for baseGhost to be actually destroyed
         yield return null;
 
         if (parentBase)
         {
             // update existing base
-            // TODO: (for server-side) Find a way to optimize this (maybe by copying BaseGhost.Finish())
             if (!NitroxEntity.TryGetEntityFrom(parentBase.gameObject, out NitroxEntity parentEntity))
             {
                 // TODO: Probably add a resync here
@@ -264,11 +266,12 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
                 yield break;
             }
 
+            // TODO: (for server-side) Find a way to optimize this (maybe by copying BaseGhost.Finish() => Base.CopyFrom)
             Resolve<IPacketSender>().Send(new UpdateBase(parentEntity.Id, entity.Id, NitroxBuild.From(parentBase)));
         }
         else
         {
-            // create a new base   
+            // create a new base
             NitroxEntity.SetNewId(baseGhost.targetBase.gameObject, entity.Id);
 
             Resolve<IPacketSender>().Send(new PlaceBase(entity.Id, NitroxBuild.From(targetBase)));
@@ -277,10 +280,10 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
 
     public static void BaseDeconstructed(BaseDeconstructable baseDeconstructable, ConstructableBase constructableBase, Base @base, bool destroyed)
     {
-        Log.Debug("HEHEHEHA");
+        Log.Debug("BaseDeconstructed");
         if (!NitroxEntity.TryGetEntityFrom(@base.gameObject, out NitroxEntity baseEntity))
         {
-            Log.Error("Couldn't find NitroxEntity on a destructed base, which is really problematic");
+            Log.Error("Couldn't find NitroxEntity on a deconstructed base, which is really problematic");
             return;
         }
 
@@ -294,7 +297,7 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
             Resolve<IPacketSender>().Send(new BaseDeconstructed(baseEntity.Id, NitroxGhost.From(constructableBase)));
             return;
         }
-        if (!baseDeconstructable.TryGetComponentInParent(out BaseCell baseCell))
+        if (!baseDeconstructable.GetComponentInParent<BaseCell>())
         {
             Log.Error("Couldn't find a BaseCell parent to the BaseDeconstructable");
             return;
@@ -303,15 +306,39 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
         // If deconstruction was ordered by BuildingTester, then we simply take the provided id
         if (BuildingTester.Main.TempId != null)
         {
+            // If it had an attached module, we'll also delete the NitroxEntity from the said module similarly to the code below
+            if (NitroxEntity.TryGetObjectFrom(BuildingTester.Main.TempId, out GameObject moduleObject) &&
+                moduleObject.GetComponent<IBaseModule>() != null)
+            {
+                GameObject.Destroy(moduleObject.GetComponent<NitroxEntity>());
+            }
             NitroxEntity.SetNewId(constructableBase.gameObject, BuildingTester.Main.TempId);
             // We don't need to go any further
             return;
         }
+
+        NitroxId pieceId = null;
+        // If the destructed piece has an attached module, we'll transfer the NitroxEntity from it
+        if (baseDeconstructable.TryGetComponent(out IBaseModuleGeometry baseModuleGeometry))
+        {
+            if (BuildManager.TryGetModuleObject(baseModuleGeometry, out GameObject geometryObject) &&
+                NitroxEntity.TryGetEntityFrom(geometryObject, out NitroxEntity moduleEntity))
+            {
+                pieceId = moduleEntity.Id;
+                GameObject.Destroy(moduleEntity);
+                Log.Debug($"Successfully transferred NitroxEntity from module geometry {moduleEntity.Id}");
+            }
+            else
+            {
+                Log.Error("Couldn't find the module's GameObject of IBaseModuleGeometry when transfering the NitroxEntity");
+            }
+        }
+
         // Else, if it's a local client deconstruction, we generate a new one
-        NitroxId pieceId = new();
+        pieceId ??= new();
         NitroxEntity.SetNewId(constructableBase.gameObject, pieceId);
         
-        PieceDeconstructed pieceDeconstructed = new(baseEntity.Id, pieceId, cachedPieceIdentifier, NitroxGhost.From(constructableBase));
+        PieceDeconstructed pieceDeconstructed = new(baseEntity.Id, pieceId, cachedPieceIdentifier, NitroxGhost.From(constructableBase), NitroxBase.From(@base));
         Log.Debug($"Base is not empty, sending packet {pieceDeconstructed}");
 
         Resolve<IPacketSender>().Send(pieceDeconstructed);

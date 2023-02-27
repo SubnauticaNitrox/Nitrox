@@ -80,12 +80,15 @@ public class SavedGlobalRoot
 public class SavedInteriorPiece
 {
     [DataMember(Order = 1)]
-    public string ClassId;
+    public NitroxId NitroxId;
 
     [DataMember(Order = 2)]
-    public NitroxBaseFace BaseFace;
+    public string ClassId;
 
     [DataMember(Order = 3)]
+    public NitroxBaseFace BaseFace;
+
+    [DataMember(Order = 4)]
     public float Constructed;
 }
 

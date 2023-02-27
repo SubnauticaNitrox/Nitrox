@@ -136,7 +136,7 @@ public class BuildingTester : MonoBehaviour
             {
                 constructable.constructedAmount = 0f;
                 yield return constructable.ProgressDeconstruction();
-                UnityEngine.Object.Destroy(constructable.gameObject);
+                GameObject.Destroy(constructable.gameObject);
                 BasesCooldown.Remove(modifyConstructedAmount.GhostId);
                 yield break;
             }
@@ -177,8 +177,11 @@ public class BuildingTester : MonoBehaviour
         }
         if (NitroxEntity.TryGetComponentFrom(updateBase.FormerGhostId, out ConstructableBase constructableBase))
         {
+            BaseGhost baseGhost = constructableBase.model.GetComponent<BaseGhost>();
             constructableBase.SetState(true, true);
             BasesCooldown[updateBase.BaseId] = DateTimeOffset.Now;
+            // In the case the built piece was an interior piece, we'll want to transfer the id to it.
+            BuildManager.TryTransferIdFromGhostToModule(baseGhost, updateBase.FormerGhostId, constructableBase);
             yield break;
         }
         // TODO: Ask for resync
