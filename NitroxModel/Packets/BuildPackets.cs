@@ -103,7 +103,7 @@ public sealed class BaseDeconstructed : Packet
     }
 }
 
-public sealed class PieceDeconstructed : Packet
+public class PieceDeconstructed : Packet
 {
     public NitroxId BaseId;
     public NitroxId PieceId;
@@ -123,5 +123,20 @@ public sealed class PieceDeconstructed : Packet
     public override string ToString()
     {
         return $"PieceDeconstructed [BaseId: {BaseId}, PieceId: {PieceId}, PieceIdentifier: {BuildPieceIdentifier}, ReplacerGhost: {ReplacerGhost}]";
+    }
+}
+
+public class WaterParkDeconstructed : PieceDeconstructed
+{
+    public SavedInteriorPiece NewWaterPark;
+
+    public WaterParkDeconstructed(NitroxId baseId, NitroxId pieceId, BuildPieceIdentifier buildPieceIdentifier, SavedGhost replacerGhost, SavedBase savedBase, SavedInteriorPiece newWaterPark) : base(baseId, pieceId, buildPieceIdentifier, replacerGhost, savedBase)
+    {
+        NewWaterPark = newWaterPark;
+    }
+
+    public override string ToString()
+    {
+        return $"WaterParkDeconstructed [{base.ToString()}, NewWaterPark: {NewWaterPark}]";
     }
 }

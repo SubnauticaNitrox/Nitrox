@@ -38,21 +38,6 @@ public static class BuildManager
         };
     }
 
-    public static bool TryGetModuleObject(IBaseModuleGeometry baseModuleGeometry, out GameObject geometryObject)
-    {
-        Component module = baseModuleGeometry switch
-        {
-            WaterParkGeometry waterParkGeometry => waterParkGeometry.GetModule(),
-            BaseFiltrationMachineGeometry baseFiltrationMachineGeometry => baseFiltrationMachineGeometry.GetModule(),
-            BaseUpgradeConsoleGeometry baseUpgradeConsoleGeometry => baseUpgradeConsoleGeometry.GetModule(),
-            BaseBioReactorGeometry baseBioReactorGeometry => baseBioReactorGeometry.GetModule(),
-            BaseNuclearReactorGeometry baseNuclearReactorGeometry => baseNuclearReactorGeometry.GetModule(),
-            _ => null,
-        };
-        geometryObject = module.AliveOrNull()?.gameObject;
-        return geometryObject;
-    }
-
     public static bool TryGetGhostFace(BaseGhost baseGhost, out Base.Face face)
     {
         // Copied code from BaseAddModuleGhost.Finish() and BaseAddFaceGhost.Finish() to obtain the face at which the module was spawned
@@ -81,6 +66,7 @@ public static class BuildManager
                 if (waterPark.anchoredFace.HasValue)
                 {
                     face = waterPark.anchoredFace.Value;
+                    face.cell += waterPark.targetBase.GetAnchor();
                     return true;
                 }
                 break;
@@ -94,10 +80,11 @@ public static class BuildManager
     {
         Log.Debug($"TryTransferIdFromGhostToModule({baseGhost},{id})");
         Base.Face? face = null;
-        // Only two types of ghost which spawn a module
+        bool isWaterPark = baseGhost is BaseAddWaterPark;
+        // Only three types of ghost which spawn a module
         if ((baseGhost is BaseAddFaceGhost faceGhost && faceGhost.modulePrefab) ||
             (baseGhost is BaseAddModuleGhost moduleGhost && moduleGhost.modulePrefab) ||
-            (baseGhost is BaseAddWaterPark))
+            isWaterPark)
         {
             if (TryGetGhostFace(baseGhost, out Base.Face ghostFace))
             {
@@ -112,7 +99,21 @@ public static class BuildManager
         // If the ghost is under a BaseDeconstructable(Clone), it may have an associated module
         else if (IsBaseDeconstructable(constructableBase))
         {
-            face = constructableBase.moduleFace;
+            face = new(constructableBase.moduleFace.Value.cell + baseGhost.targetBase.GetAnchor(), constructableBase.moduleFace.Value.direction);
+        }
+        // Edge case that happens when a Deconstructed WaterPark is built onto another deconstructed WaterPark that has its module
+        // A new module will be created by the current Deconstructed WaterPark which is the one we'll be aiming at
+        else if (constructableBase.techType.Equals(TechType.BaseWaterPark) && !isWaterPark)
+        {
+            IBaseModuleGeometry baseModuleGeometry = constructableBase.GetComponentInChildren<IBaseModuleGeometry>(true);
+            if (baseModuleGeometry != null)
+            {
+                face = baseModuleGeometry.geometryFace;
+            }
+        }
+        else
+        {
+            return false;
         }
 
         if (face.HasValue)
@@ -120,12 +121,24 @@ public static class BuildManager
             IBaseModule module = baseGhost.targetBase.GetModule(face.Value);
             if (module != null)
             {
+                // If the WaterPark is higher than one, it means that the newly built WaterPark will be merged with one that already has a NitroxEntity
+                if (module is WaterPark waterPark && waterPark.height > 1)
+                {
+                    Log.Debug($"Found WaterPark higher than 1 {waterPark.height}, not transferring NitroxEntity to it");
+                    return true;
+                }
+
                 Log.Debug($"Successfully transferred NitroxEntity to {module} [{id}]");
                 NitroxEntity.SetNewId((module as Component).gameObject, id);
                 return true;
             }
             else
             {
+                // When a WaterPark is merged with another one, we won't find its module but we don't care about that
+                if (isWaterPark)
+                {
+                    return false;
+                }
                 Log.Error("Couldn't find the module's GameObject of built interior piece when transfering its NitroxEntity to the module.");
             }
         }
