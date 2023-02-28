@@ -116,3 +116,17 @@ public class PieceDeconstructedProcessor : BuildingProcessor<PieceDeconstructed>
         }
     }
 }
+
+public class WaterParkDeconstructedProcessor : BuildingProcessor<WaterParkDeconstructed>
+{
+    public WaterParkDeconstructedProcessor(BuildingManager buildingManager, PlayerManager playerManager) : base(buildingManager, playerManager) { }
+
+    public override void Process(WaterParkDeconstructed packet, Player player)
+    {
+        if (buildingManager.ReplacePieceByGhost(packet) && buildingManager.CreateWaterParkPiece(packet))
+        {
+            packet.SavedBase = null;
+            base.Process(packet, player);
+        }
+    }
+}

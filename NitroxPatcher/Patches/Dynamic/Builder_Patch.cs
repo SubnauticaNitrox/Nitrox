@@ -308,7 +308,8 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
         {
             // If it had an attached module, we'll also delete the NitroxEntity from the said module similarly to the code below
             if (NitroxEntity.TryGetObjectFrom(BuildingTester.Main.TempId, out GameObject moduleObject) &&
-                moduleObject.GetComponent<IBaseModule>() != null)
+                moduleObject.TryGetComponent(out IBaseModule baseModule) &&
+                constructableBase.moduleFace.HasValue && constructableBase.moduleFace.Value.Equals(baseModule.moduleFace))
             {
                 GameObject.Destroy(moduleObject.GetComponent<NitroxEntity>());
             }
@@ -319,29 +320,35 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
 
         NitroxId pieceId = null;
         // If the destructed piece has an attached module, we'll transfer the NitroxEntity from it
-        if (baseDeconstructable.TryGetComponent(out IBaseModuleGeometry baseModuleGeometry))
+        if (constructableBase.moduleFace.HasValue)
         {
-            if (BuildManager.TryGetModuleObject(baseModuleGeometry, out GameObject geometryObject) &&
-                NitroxEntity.TryGetEntityFrom(geometryObject, out NitroxEntity moduleEntity))
+            Base.Face moduleFace = constructableBase.moduleFace.Value;
+            moduleFace.cell += @base.GetAnchor();
+            IBaseModule geometryObject = @base.GetModule(moduleFace);
+            if (geometryObject != null && NitroxEntity.TryGetEntityFrom((geometryObject as MonoBehaviour).gameObject, out NitroxEntity moduleEntity))
             {
                 pieceId = moduleEntity.Id;
                 GameObject.Destroy(moduleEntity);
                 Log.Debug($"Successfully transferred NitroxEntity from module geometry {moduleEntity.Id}");
             }
-            else
-            {
-                Log.Error("Couldn't find the module's GameObject of IBaseModuleGeometry when transfering the NitroxEntity");
-            }
+        }
+        // When a BaseWaterPark doesn't have a moduleFace, it means that there's still another WaterPark so we don't need to destroy its id and it won't be an error
+        else if (!constructableBase.techType.Equals(TechType.BaseWaterPark))
+        {
+            Log.Error("Couldn't find the module's GameObject of IBaseModuleGeometry when transfering the NitroxEntity");
         }
 
         // Else, if it's a local client deconstruction, we generate a new one
         pieceId ??= new();
         NitroxEntity.SetNewId(constructableBase.gameObject, pieceId);
-        
-        PieceDeconstructed pieceDeconstructed = new(baseEntity.Id, pieceId, cachedPieceIdentifier, NitroxGhost.From(constructableBase), NitroxBase.From(@base));
+
+        PieceDeconstructed pieceDeconstructed = BuildingTester.Main.NewWaterPark == null ?
+            new PieceDeconstructed(baseEntity.Id, pieceId, cachedPieceIdentifier, NitroxGhost.From(constructableBase), NitroxBase.From(@base)) :
+            new WaterParkDeconstructed(baseEntity.Id, pieceId, cachedPieceIdentifier, NitroxGhost.From(constructableBase), NitroxBase.From(@base), BuildingTester.Main.NewWaterPark);
         Log.Debug($"Base is not empty, sending packet {pieceDeconstructed}");
 
         Resolve<IPacketSender>().Send(pieceDeconstructed);
+        BuildingTester.Main.NewWaterPark = null;
     }
 
     public static void PostfixDeconstructionAllowed(BaseDeconstructable __instance, ref bool __result, ref string reason)

@@ -289,6 +289,25 @@ public class BuildingManager
         }
     }
 
+    public bool CreateWaterParkPiece(WaterParkDeconstructed waterParkDeconstructed)
+    {
+        lock (Builds)
+        {
+            if (!Builds.TryGetValue(waterParkDeconstructed.BaseId, out SavedBuild parentBuild))
+            {
+                Log.Error($"Trying to create a WaterPark piece in a non-registered build ({waterParkDeconstructed.BaseId})");
+                return false;
+            }
+            if (parentBuild.InteriorPieces.Any(piece => piece.NitroxId.Equals(waterParkDeconstructed.NewWaterPark.NitroxId)))
+            {
+                Log.Error($"Trying to create a WaterPark piece with an already registered id ({waterParkDeconstructed.NewWaterPark.NitroxId})");
+                return false;
+            }
+            parentBuild.InteriorPieces.Add(waterParkDeconstructed.NewWaterPark);
+            return true;
+        }
+    }
+
     class NitroxGhost
     {
         public SavedBuild Parent;

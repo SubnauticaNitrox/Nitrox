@@ -32,6 +32,7 @@ public class BuildingTester : MonoBehaviour
     public string SavePath = Path.Combine(NitroxUser.LauncherPath, "SavedBases");
     
     public NitroxId TempId;
+    public SavedInteriorPiece NewWaterPark;
     public Dictionary<NitroxId, DateTimeOffset> BasesCooldown;
     /// <summary>
     /// Time in milliseconds before local player can build on a base that was modified by another player
@@ -246,10 +247,16 @@ public class BuildingTester : MonoBehaviour
             Log.Debug($"Found a BaseDeconstructable {baseDeconstructable.name}, will now deconstruct it manually");
             using (packetSender.Suppress<BaseDeconstructed>())
             using (packetSender.Suppress<PieceDeconstructed>())
+            using (packetSender.Suppress<WaterParkDeconstructed>())
             {
                 TempId = pieceDeconstructed.PieceId;
+                if (pieceDeconstructed is WaterParkDeconstructed waterParkDeconstructed)
+                {
+                    NewWaterPark = waterParkDeconstructed.NewWaterPark;
+                }
                 baseDeconstructable.Deconstruct();
                 TempId = null;
+                NewWaterPark = null;
             }
             BasesCooldown[pieceDeconstructed.BaseId] = DateTimeOffset.Now;
             yield break;

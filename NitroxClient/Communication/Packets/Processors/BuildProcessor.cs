@@ -60,3 +60,11 @@ public class PieceDeconstructedProcessor : ClientPacketProcessor<PieceDeconstruc
         BuildingTester.Main.BuildQueue.Enqueue(packet);
     }
 }
+
+public class WaterParkDeconstructedProcessor : ClientPacketProcessor<WaterParkDeconstructed>
+{
+    public override void Process(WaterParkDeconstructed packet)
+    {
+        BuildingTester.Main.BuildQueue.Enqueue(packet);
+    }
+}
