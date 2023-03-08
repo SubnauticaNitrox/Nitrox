@@ -24,7 +24,7 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             GameObject fireGameObject = NitroxEntity.RequireObjectFrom(packet.Id);
 
-            using (packetSender.Suppress<FireDoused>())
+            using (PacketSuppressor<FireDoused>.Suppress())
             {
                 fireGameObject.RequireComponent<Fire>().Douse(packet.DouseAmount);
             }

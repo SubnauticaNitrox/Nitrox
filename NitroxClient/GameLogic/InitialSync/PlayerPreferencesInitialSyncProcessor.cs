@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxClient.MonoBehaviours;
@@ -42,7 +43,7 @@ public class PlayerPreferencesInitialSyncProcessor : InitialSyncProcessor
 
     private IEnumerator UpdatePins(InitialPlayerSync packet)
     {
-        using (packetSender.Suppress<RecipePinned>())
+        using (PacketSuppressor<RecipePinned>.Suppress())
         {
             PinManager.main.Deserialize(packet.Preferences.PinnedTechTypes.Select(techType => (TechType)techType).ToList());
         }
@@ -57,7 +58,7 @@ public class PlayerPreferencesInitialSyncProcessor : InitialSyncProcessor
             ModifyPingInstanceIfPossible(instance, pingPreferences, () => UpdateInstance(instance));
             RefreshPingEntryInPDA(instance);
         }
-        
+
         PingManager.onAdd += UpdateInstance;
         GameObject.FindObjectsOfType<PingInstance>().ForEach(UpdateInstance);
         yield break;
@@ -73,8 +74,8 @@ public class PlayerPreferencesInitialSyncProcessor : InitialSyncProcessor
         {
             return;
         }
-        
-        using (packetSender.Suppress<SignalPingPreferenceChanged>())
+
+        using (PacketSuppressor<SignalPingPreferenceChanged>.Suppress())
         {
             // We don't want to set the color for a remote player's signal
             if (!isRemotePlayerPing)

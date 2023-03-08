@@ -22,7 +22,7 @@ public class PlayFMODStudioEventEmitterProcessor : ClientPacketProcessor<PlayFMO
         GameObject soundSource = NitroxEntity.RequireObjectFrom(packet.Id);
         FMODEmitterController fmodEmitterController = soundSource.RequireComponent<FMODEmitterController>();
 
-        using (packetSender.Suppress<PlayFMODStudioEmitter>())
+        using (PacketSuppressor<PlayFMODStudioEmitter>.Suppress())
         {
             if (packet.Play)
             {

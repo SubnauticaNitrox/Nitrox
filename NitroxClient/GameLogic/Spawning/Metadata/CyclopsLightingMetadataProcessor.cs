@@ -1,3 +1,4 @@
+using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
@@ -19,7 +20,7 @@ public class CyclopsLightingMetadataProcessor : GenericEntityMetadataProcessor<C
     {
         CyclopsLightingPanel lighting = gameObject.RequireComponentInChildren<CyclopsLightingPanel>(true);
 
-        using (packetSender.Suppress<EntityMetadataUpdate>())
+        using (PacketSuppressor<EntityMetadataUpdate>.Suppress())
         {
             SetInternalLighting(lighting, metadata.InternalLightsOn);
             SetFloodLighting(lighting, metadata.FloodLightsOn);

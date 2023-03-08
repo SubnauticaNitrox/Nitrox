@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.Bases.Spawning.BasePiece;
@@ -21,7 +22,7 @@ namespace NitroxClient.MonoBehaviours
 {
     /**
      * Build events normally can not happen within the same frame as they can cause
-     * changes to the surrounding environment.  This class encapsulates logic to 
+     * changes to the surrounding environment.  This class encapsulates logic to
      * execute build events at a throttled rate of once per frame.  All build logic
      * is contained within this class (it used to be in the individual packet processors)
      * because we want the build logic to be re-usable.
@@ -92,12 +93,12 @@ namespace NitroxClient.MonoBehaviours
 
         private IEnumerator ActionBuildEvent(BuildEvent buildEvent)
         {
-            using (packetSender.Suppress<ConstructionAmountChanged>())
-            using (packetSender.Suppress<ConstructionCompleted>())
-            using (packetSender.Suppress<PlaceBasePiece>())
-            using (packetSender.Suppress<DeconstructionBegin>())
-            using (packetSender.Suppress<DeconstructionCompleted>())
-            using (packetSender.Suppress<BasePieceMetadataChanged>())
+            using (PacketSuppressor<ConstructionAmountChanged>.Suppress())
+            using (PacketSuppressor<ConstructionCompleted>.Suppress())
+            using (PacketSuppressor<PlaceBasePiece>.Suppress())
+            using (PacketSuppressor<DeconstructionBegin>.Suppress())
+            using (PacketSuppressor<DeconstructionCompleted>.Suppress())
+            using (PacketSuppressor<BasePieceMetadataChanged>.Suppress())
             {
                 switch (buildEvent)
                 {
@@ -139,7 +140,7 @@ namespace NitroxClient.MonoBehaviours
             MultiplayerBuilder.PlacePosition = basePiece.ItemPosition.ToUnity();
             MultiplayerBuilder.PlaceRotation = basePiece.Rotation.ToUnity();
             MultiplayerBuilder.RotationMetadata = basePiece.RotationMetadata;
-            
+
             GameObject parentBase = null;
             if (basePiece.ParentId.HasValue)
             {
@@ -199,12 +200,12 @@ namespace NitroxClient.MonoBehaviours
 
                 constructableBase.constructedAmount = 1f;
                 constructableBase.SetState(true);
-                
+
 
                 Transform cellTransform;
                 GameObject placedPiece = null;
 
-                
+
                 if (!latestBase)
                 {
                     Optional<object> opConstructedBase = Get(TransientObjectType.BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT);
@@ -216,7 +217,7 @@ namespace NitroxClient.MonoBehaviours
                     Validate.NotNull(latestBase, "latestBase can not be null");
                     latestCell = latestBase!.WorldToGrid(constructing.transform.position);
                 }
-                
+
                 if (latestCell != default(Int3))
                 {
                     cellTransform = latestBase.GetCellObject(latestCell);
@@ -226,18 +227,18 @@ namespace NitroxClient.MonoBehaviours
                         placedPiece = FindFinishedPiece(cellTransform, constructionCompleted.PieceId, constructableBase.techType);
                     }
                 }
-                
+
                 if (!placedPiece)
                 {
                     Int3 position = latestBase.WorldToGrid(constructableBase.transform.position);
                     cellTransform = latestBase.GetCellObject(position);
                     Validate.NotNull(cellTransform, $"Unable to find cell transform at {position}");
-                    
+
                     placedPiece = FindFinishedPiece(cellTransform, constructionCompleted.PieceId, constructableBase.techType);
                 }
 
                 Validate.NotNull(placedPiece, $"Could not find placed Piece in cell {latestCell} when constructing {constructionCompleted.PieceId}");
-                
+
                 // This destroy instruction must be executed now, else it won't be able to happen in the case the action will have a later completion
                 Destroy(constructableBase.gameObject);
                 if (BuildingInitialSyncProcessor.LaterConstructionTechTypes.Contains(constructableBase.techType))
@@ -248,7 +249,7 @@ namespace NitroxClient.MonoBehaviours
                     Add(TransientObjectType.LATER_OBJECT_LATEST_CELL, latestCell);
                     return;
                 }
-                
+
                 FinishConstructionCompleted(placedPiece, latestBase, latestCell, constructionCompleted.PieceId);
             }
             else if (constructing.TryGetComponent(out Constructable constructable))
@@ -361,7 +362,7 @@ namespace NitroxClient.MonoBehaviours
             if (baseDeconstructable)
             {
                 baseDeconstructable.Deconstruct();
-                
+
                 // After we have begun the deconstructing for a base piece, we need to transfer the id
                 Optional<object> opGhost = Get(TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE_GHOST);
 

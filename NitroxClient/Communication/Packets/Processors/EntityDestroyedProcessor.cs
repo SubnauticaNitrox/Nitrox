@@ -25,7 +25,7 @@ public class EntityDestroyedProcessor : ClientPacketProcessor<EntityDestroyed>
     {
         entities.RemoveEntity(packet.Id);
 
-        using (packetSender.Suppress<EntityDestroyed>())
+        using (PacketSuppressor<EntityDestroyed>.Suppress())
         {
             if (NitroxEntity.TryGetObjectFrom(packet.Id, out GameObject gameObject))
             {

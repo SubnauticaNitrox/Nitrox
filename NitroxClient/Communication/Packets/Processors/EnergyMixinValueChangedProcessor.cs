@@ -24,7 +24,7 @@ namespace NitroxClient.Communication.Packets.Processors
             {
                 EnergyMixin energyMixin = target.Value.RequireComponent<EnergyMixin>();
 
-                using (packetSender.Suppress<EnergyMixinValueChanged>())
+                using (PacketSuppressor<EnergyMixinValueChanged>.Suppress())
                 {
                     energyMixin.ModifyCharge(energyMixinPacket.Value - energyMixin.charge);
                 }
