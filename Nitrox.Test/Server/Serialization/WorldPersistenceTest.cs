@@ -222,7 +222,7 @@ public class WorldPersistenceTest
             Assert.AreEqual(playerData.Name, playerDataAfter.Name);
 
             Assert.IsTrue(playerData.UsedItems.SequenceEqual(playerDataAfter.UsedItems));
-            Assert.IsTrue(playerData.QuickSlotsBinding.SequenceEqual(playerDataAfter.QuickSlotsBinding));
+            Assert.IsTrue(playerData.QuickSlotsBindingIds.SequenceEqual(playerDataAfter.QuickSlotsBindingIds));
             AssertHelper.IsListEqual(playerData.EquippedItems.OrderBy(x => x.ItemId), playerDataAfter.EquippedItems.OrderBy(x => x.ItemId), ItemDataTest);
             AssertHelper.IsListEqual(playerData.Modules.OrderBy(x => x.ItemId), playerDataAfter.Modules.OrderBy(x => x.ItemId), ItemDataTest);
 
@@ -467,7 +467,7 @@ public class WorldPersistenceTest
                         SubRootId = null,
                         CurrentStats = new PlayerStatsData(45, 45, 40, 39, 28, 1),
                         UsedItems = new List<NitroxTechType>(0),
-                        QuickSlotsBinding = new List<string>(0),
+                        QuickSlotsBindingIds = new NitroxId[] { new NitroxId() },
                         EquippedItems = new List<EquippedItemData>(0),
                         Modules = new List<EquippedItemData>(0),
                         PlayerPreferences = new(new(), new())
@@ -483,7 +483,7 @@ public class WorldPersistenceTest
                         SubRootId = new NitroxId(),
                         CurrentStats = new PlayerStatsData(40, 40, 30, 29, 28, 0),
                         UsedItems = new List<NitroxTechType> { new NitroxTechType("Knife"), new NitroxTechType("Flashlight") },
-                        QuickSlotsBinding = new List<string> { "Test1", "Test2" },
+                        QuickSlotsBindingIds = new NitroxId[] { new NitroxId(), new NitroxId() },
                         EquippedItems = new List<EquippedItemData>
                         {
                             new EquippedItemData(new NitroxId(), new NitroxId(), new byte[] { 0x30, 0x40 }, "Slot3", new NitroxTechType("Flashlight")),

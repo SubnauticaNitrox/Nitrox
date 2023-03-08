@@ -138,7 +138,7 @@ namespace NitroxClient.GameLogic
             {
                 if (!entitySpawner.SpawnsOwnChildren(entity))
                 {
-                    SpawnChildren(entity);
+                    yield return SpawnChildren(entity);
                 }
 
                 yield return AwaitAnyRequiredEntitySetup(gameObject.Value);

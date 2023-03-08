@@ -74,7 +74,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 world.BaseManager.GetBasePiecesForNewlyConnectedPlayer(),
                 world.InventoryManager.GetAllStorageSlotItems(),
                 player.UsedItems,
-                player.QuickSlotsBinding,
+                player.QuickSlotsBindingIds,
                 world.GameData.PDAState.GetInitialPDAData(),
                 world.GameData.StoryGoals.GetInitialStoryGoalData(scheduleKeeper, player),
                 player.Position,
