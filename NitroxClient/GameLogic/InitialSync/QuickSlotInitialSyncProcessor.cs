@@ -31,6 +31,7 @@ public class QuickSlotInitialSyncProcessor : InitialSyncProcessor
             {
                 Inventory.main.quickSlots.binding[i] = inventoryItem;
                 Inventory.main.quickSlots.NotifyBind(i, state: true);
+                nonEmptySlots++;
             }
             else
             {
@@ -41,7 +42,7 @@ public class QuickSlotInitialSyncProcessor : InitialSyncProcessor
             yield return null;
         }
 
-        Log.Info($"Recieved initial sync with {nonEmptySlots} quick slots populated with items");
+        Log.Info($"Received initial sync with {nonEmptySlots} quick slots populated with items");
     }
 
     private Dictionary<NitroxId, InventoryItem> GetItemsById()
