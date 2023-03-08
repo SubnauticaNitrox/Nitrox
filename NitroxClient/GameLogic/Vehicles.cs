@@ -111,7 +111,7 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastDestroyedVehicle(NitroxId id)
         {
-            using (new PacketSuppressor<VehicleOnPilotModeChanged>())
+            using (PacketSuppressor<VehicleOnPilotModeChanged>.Suppress())
             {
                 EntityDestroyed vehicleDestroyed = new(id);
                 packetSender.Send(vehicleDestroyed);
@@ -129,8 +129,8 @@ namespace NitroxClient.GameLogic
             VehicleDocking packet = new VehicleDocking(vehicleId, dockId, playerId);
             packetSender.Send(packet);
 
-            PacketSuppressor<PlayerMovement> playerMovementSuppressor = new();
-            PacketSuppressor<VehicleMovement> vehicleMovementSuppressor = new();
+            PacketSuppressor<PlayerMovement> playerMovementSuppressor = PacketSuppressor<PlayerMovement>.Suppress();
+            PacketSuppressor<VehicleMovement> vehicleMovementSuppressor = PacketSuppressor<VehicleMovement>.Suppress();
             vehicle.StartCoroutine(AllowMovementPacketsAfterDockingAnimation(playerMovementSuppressor, vehicleMovementSuppressor));
         }
 
@@ -141,8 +141,8 @@ namespace NitroxClient.GameLogic
             NitroxId vehicleId = NitroxEntity.GetId(vehicle.gameObject);
             ushort playerId = multiplayerSession.Reservation.PlayerId;
 
-            PacketSuppressor<PlayerMovement> movementSuppressor = new();
-            PacketSuppressor<VehicleMovement> vehicleMovementSuppressor = new();
+            PacketSuppressor<PlayerMovement> movementSuppressor = PacketSuppressor<PlayerMovement>.Suppress();
+            PacketSuppressor<VehicleMovement> vehicleMovementSuppressor = PacketSuppressor<VehicleMovement>.Suppress();
             if (!undockingStart)
             {
                 movementSuppressor.Dispose();

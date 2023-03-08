@@ -15,7 +15,7 @@ public class PDAEncyclopediaEntryAddProcessor : ClientPacketProcessor<PDAEncyclo
 
     public override void Process(PDAEncyclopediaEntryAdd packet)
     {
-        using (new PacketSuppressor<PDAEncyclopediaEntryAdd>())
+        using (PacketSuppressor<PDAEncyclopediaEntryAdd>.Suppress())
         {
             PDAEncyclopedia.Add(packet.Key, packet.Verbose);
         }

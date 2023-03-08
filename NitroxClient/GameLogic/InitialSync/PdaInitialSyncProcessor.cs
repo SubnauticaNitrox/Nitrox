@@ -37,7 +37,7 @@ public class PdaInitialSyncProcessor : InitialSyncProcessor
         HashSet<TechType> analyzedTech = packet.PDAData.AnalyzedTechTypes.Select(techType => techType.ToUnity()).ToHashSet();
         Log.Info($"Received initial sync packet with {knownTech.Count} KnownTech.knownTech types and {analyzedTech.Count} KnownTech.analyzedTech types.");
 
-        using (new PacketSuppressor<KnownTechEntryAdd>())
+        using (PacketSuppressor<KnownTechEntryAdd>.Suppress())
         {
             KnownTech.Deserialize(knownTech, analyzedTech);
         }
@@ -49,7 +49,7 @@ public class PdaInitialSyncProcessor : InitialSyncProcessor
         List<PDALogEntry> logEntries = packet.PDAData.PDALogEntries;
         Log.Info($"Received initial sync packet with {logEntries.Count} pda log entries");
 
-        using (new PacketSuppressor<PDALogEntryAdd>())
+        using (PacketSuppressor<PDALogEntryAdd>.Suppress())
         {
             // We just need the timestamp and the key because everything else is provided by PDALog.InitDataForEntries
             PDALog.Deserialize(logEntries.ToDictionary(m => m.Key, m => new PDALog.Entry() { timestamp = m.Timestamp }));
@@ -62,7 +62,7 @@ public class PdaInitialSyncProcessor : InitialSyncProcessor
         List<string> entries = packet.PDAData.EncyclopediaEntries;
         Log.Info($"Received initial sync packet with {entries.Count} encyclopedia entries");
 
-        using (new PacketSuppressor<PDAEncyclopediaEntryAdd>())
+        using (PacketSuppressor<PDAEncyclopediaEntryAdd>.Suppress())
         {
             // We don't do as in PDAEncyclopedia.Deserialize because we don't persist the entry's fields which are useless
             foreach (string entry in entries)

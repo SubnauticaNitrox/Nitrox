@@ -26,7 +26,7 @@ namespace NitroxClient.Communication.Packets.Processors
             Constructable constructable = deconstructing.GetComponent<Constructable>();
             BaseDeconstructable baseDeconstructable = deconstructing.GetComponent<BaseDeconstructable>();
 
-            using (new PacketSuppressor<DeconstructionBegin>())
+            using (PacketSuppressor<DeconstructionBegin>.Suppress())
             {
                 if (baseDeconstructable != null)
                 {

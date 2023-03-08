@@ -43,7 +43,7 @@ public class PlayerPreferencesInitialSyncProcessor : InitialSyncProcessor
 
     private IEnumerator UpdatePins(InitialPlayerSync packet)
     {
-        using (new PacketSuppressor<RecipePinned>())
+        using (PacketSuppressor<RecipePinned>.Suppress())
         {
             PinManager.main.Deserialize(packet.Preferences.PinnedTechTypes.Select(techType => (TechType)techType).ToList());
         }
@@ -75,7 +75,7 @@ public class PlayerPreferencesInitialSyncProcessor : InitialSyncProcessor
             return;
         }
 
-        using (new PacketSuppressor<SignalPingPreferenceChanged>())
+        using (PacketSuppressor<SignalPingPreferenceChanged>.Suppress())
         {
             // We don't want to set the color for a remote player's signal
             if (!isRemotePlayerPing)

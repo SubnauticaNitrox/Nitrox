@@ -23,7 +23,7 @@ public class DeconstructionCompletedProcessor : ClientPacketProcessor<Deconstruc
         if (deconstructing.TryGetComponent(out Constructable constructable))
         {
             constructable.constructedAmount = 0;
-            using (new PacketSuppressor<DeconstructionCompleted>())
+            using (PacketSuppressor<DeconstructionCompleted>.Suppress())
             {
                 TaskResult<bool> result = new ();
                 TaskResult<string> reason = new ();

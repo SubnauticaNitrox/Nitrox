@@ -93,12 +93,12 @@ namespace NitroxClient.MonoBehaviours
 
         private IEnumerator ActionBuildEvent(BuildEvent buildEvent)
         {
-            using (new PacketSuppressor<ConstructionAmountChanged>())
-            using (new PacketSuppressor<ConstructionCompleted>())
-            using (new PacketSuppressor<PlaceBasePiece>())
-            using (new PacketSuppressor<DeconstructionBegin>())
-            using (new PacketSuppressor<DeconstructionCompleted>())
-            using (new PacketSuppressor<BasePieceMetadataChanged>())
+            using (PacketSuppressor<ConstructionAmountChanged>.Suppress())
+            using (PacketSuppressor<ConstructionCompleted>.Suppress())
+            using (PacketSuppressor<PlaceBasePiece>.Suppress())
+            using (PacketSuppressor<DeconstructionBegin>.Suppress())
+            using (PacketSuppressor<DeconstructionCompleted>.Suppress())
+            using (PacketSuppressor<BasePieceMetadataChanged>.Suppress())
             {
                 switch (buildEvent)
                 {

@@ -22,8 +22,8 @@ public class PlayFMODCustomEmitterProcessor : ClientPacketProcessor<PlayFMODCust
         GameObject soundSource = NitroxEntity.RequireObjectFrom(packet.Id);
         FMODEmitterController fmodEmitterController = soundSource.RequireComponent<FMODEmitterController>();
 
-        using (new PacketSuppressor<PlayFMODCustomEmitter>())
-        using (new PacketSuppressor<PlayFMODCustomLoopingEmitter>())
+        using (PacketSuppressor<PlayFMODCustomEmitter>.Suppress())
+        using (PacketSuppressor<PlayFMODCustomLoopingEmitter>.Suppress())
         {
             if (packet.Play)
             {

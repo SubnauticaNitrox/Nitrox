@@ -53,8 +53,8 @@ public class InventoryItemEntitySpawner : EntitySpawner<InventoryItemEntity>
         Pickupable pickupable = gameObject.RequireComponent<Pickupable>();
         pickupable.Initialize();
 
-        using (new PacketSuppressor<EntityReparented>())
-        using (new PacketSuppressor<PlayerQuickSlotsBindingChanged>())
+        using (PacketSuppressor<EntityReparented>.Suppress())
+        using (PacketSuppressor<PlayerQuickSlotsBindingChanged>.Suppress())
         {
             container.UnsafeAdd(new InventoryItem(pickupable));
             Log.Debug($"Received: Added item {pickupable.GetTechType()} ({entity.Id}) to container {owner.Value.GetFullHierarchyPath()}");

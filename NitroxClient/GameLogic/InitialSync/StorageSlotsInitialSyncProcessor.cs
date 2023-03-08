@@ -28,7 +28,7 @@ namespace NitroxClient.GameLogic.InitialSync
         {
             int storageSlotsSynced = 0;
 
-            using (new PacketSuppressor<StorageSlotItemAdd>())
+            using (PacketSuppressor<StorageSlotItemAdd>.Suppress())
             {
                 foreach (ItemData itemData in packet.StorageSlotItems)
                 {

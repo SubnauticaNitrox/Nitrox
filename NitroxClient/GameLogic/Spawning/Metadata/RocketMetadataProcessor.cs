@@ -41,7 +41,7 @@ public class RocketMetadataProcessor : GenericEntityMetadataProcessor<RocketMeta
             return;
         }
 
-        using(new PacketSuppressor<EntityMetadataUpdate>())
+        using (PacketSuppressor<EntityMetadataUpdate>.Suppress())
         {
             UpdateElevator(rocket, metadata);
             UpdateStage(rocket, metadata);
@@ -77,8 +77,8 @@ public class RocketMetadataProcessor : GenericEntityMetadataProcessor<RocketMeta
 
             GameObject build = rocket.StartRocketConstruction();
 
-            // We only want to use construction bots for the last constructed stage (just in case the client is out dated by multiple stages). 
-            // For all others, just force the completion of that stage. 
+            // We only want to use construction bots for the last constructed stage (just in case the client is out dated by multiple stages).
+            // For all others, just force the completion of that stage.
             if (lastStageToBuild && allowConstructorBots)
             {
                 rocketConstructor.SendBuildBots(build);
@@ -145,7 +145,7 @@ public class RocketMetadataProcessor : GenericEntityMetadataProcessor<RocketMeta
             }
         }
     }
-    
+
     private void CompleteBasicPreflightCheck(Rocket rocket, PreflightCheck preflightCheck)
     {
         ThrowSwitch[] throwSwitches = rocket.GetComponentsInChildren<ThrowSwitch>(true);

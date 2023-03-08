@@ -69,7 +69,7 @@ namespace NitroxClient.GameLogic
                     allowedToPlaySounds = mixin.allowedToPlaySounds;
                     mixin.allowedToPlaySounds = !silent;
                 }
-                using (new PacketSuppressor<StorageSlotItemAdd>())
+                using (PacketSuppressor<StorageSlotItemAdd>.Suppress())
                 {
                     slot.AddItem(new InventoryItem(pickupable));
                 }
@@ -98,7 +98,7 @@ namespace NitroxClient.GameLogic
                     allowedToPlaySounds = mixin.allowedToPlaySounds;
                     mixin.allowedToPlaySounds = !silent;
                 }
-                using (new PacketSuppressor<StorageSlotItemRemove>())
+                using (PacketSuppressor<StorageSlotItemRemove>.Suppress())
                 {
                     slot.RemoveItem();
                 }

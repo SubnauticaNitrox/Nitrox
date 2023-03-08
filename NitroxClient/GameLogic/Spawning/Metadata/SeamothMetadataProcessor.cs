@@ -22,13 +22,12 @@ public class SeamothMetadataProcessor : GenericEntityMetadataProcessor<SeamothMe
     public override void ProcessMetadata(GameObject gameObject, SeamothMetadata metadata)
     {
         SeaMoth seamoth = gameObject.GetComponent<SeaMoth>();
-        
         if (!seamoth)
         {
             Log.Error($"Could not find seamoth on {gameObject.name}");
         }
 
-        using(new PacketSuppressor<EntityMetadataUpdate>())
+        using (PacketSuppressor<EntityMetadataUpdate>.Suppress())
         {
             SetLights(seamoth, metadata.LightsOn);
             SetHealth(seamoth, metadata.Health);

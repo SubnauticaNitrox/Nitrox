@@ -51,7 +51,7 @@ namespace NitroxClient.GameLogic
         {
             GameObject cyclops = NitroxEntity.RequireObjectFrom(id);
             CyclopsDecoyManager decoyManager = cyclops.RequireComponent<CyclopsDecoyManager>();
-            using (new PacketSuppressor<EntityMetadataUpdate>())
+            using (PacketSuppressor<EntityMetadataUpdate>.Suppress())
             {
                 decoyManager.Invoke(nameof(CyclopsDecoyManager.LaunchWithDelay), 3f);
                 decoyManager.decoyLaunchButton.UpdateText();
@@ -66,7 +66,7 @@ namespace NitroxClient.GameLogic
         {
             GameObject cyclops = NitroxEntity.RequireObjectFrom(id);
             CyclopsFireSuppressionSystemButton fireSuppButton = cyclops.RequireComponentInChildren<CyclopsFireSuppressionSystemButton>();
-            using (new PacketSuppressor<CyclopsFireSuppression>())
+            using (PacketSuppressor<CyclopsFireSuppression>.Suppress())
             {
                 // Infos from SubFire.StartSystem
                 fireSuppButton.subFire.StartCoroutine(StartFireSuppressionSystem(fireSuppButton.subFire));

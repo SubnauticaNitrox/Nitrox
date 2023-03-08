@@ -63,9 +63,9 @@ namespace NitroxClient.GameLogic.InitialSync
 
         private void QueueUpPieces(IEnumerable<BasePiece> basePieces)
         {
-            using (new PacketSuppressor<ConstructionAmountChanged>())
-            using (new PacketSuppressor<ConstructionCompleted>())
-            using (new PacketSuppressor<PlaceBasePiece>())
+            using (PacketSuppressor<ConstructionAmountChanged>.Suppress())
+            using (PacketSuppressor<ConstructionCompleted>.Suppress())
+            using (PacketSuppressor<PlaceBasePiece>.Suppress())
             {
                 foreach (BasePiece basePiece in basePieces)
                 {

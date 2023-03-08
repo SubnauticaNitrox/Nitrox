@@ -21,8 +21,8 @@ namespace NitroxClient.Communication.Packets.Processors
             GameObject gameObject = NitroxEntity.RequireObjectFrom(packet.Id);
             SubRoot cyclops = gameObject.RequireComponent<SubRoot>();
 
-            using (new PacketSuppressor<CyclopsDamage>())
-            using (new PacketSuppressor<CyclopsDamagePointRepaired>())
+            using (PacketSuppressor<CyclopsDamage>.Suppress())
+            using (PacketSuppressor<CyclopsDamagePointRepaired>.Suppress())
             {
                 cyclops.damageManager.damagePoints[packet.DamagePointIndex].liveMixin.AddHealth(packet.RepairAmount);
             }

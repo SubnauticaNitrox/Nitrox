@@ -20,7 +20,7 @@ public class CyclopsLightingMetadataProcessor : GenericEntityMetadataProcessor<C
     {
         CyclopsLightingPanel lighting = gameObject.RequireComponentInChildren<CyclopsLightingPanel>(true);
 
-        using (new PacketSuppressor<EntityMetadataUpdate>())
+        using (PacketSuppressor<EntityMetadataUpdate>.Suppress())
         {
             SetInternalLighting(lighting, metadata.InternalLightsOn);
             SetFloodLighting(lighting, metadata.FloodLightsOn);

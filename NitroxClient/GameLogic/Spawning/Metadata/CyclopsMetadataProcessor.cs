@@ -20,7 +20,7 @@ public class CyclopsMetadataProcessor : GenericEntityMetadataProcessor<CyclopsMe
 
     public override void ProcessMetadata(GameObject cyclops, CyclopsMetadata metadata)
     {
-        using (new PacketSuppressor<EntityMetadataUpdate>())
+        using (PacketSuppressor<EntityMetadataUpdate>.Suppress())
         {
             SetEngineMode(cyclops, (CyclopsMotorMode.CyclopsMotorModes)metadata.EngineMode);
             ChangeSilentRunning(cyclops, metadata.SilentRunningOn);
@@ -51,7 +51,7 @@ public class CyclopsMetadataProcessor : GenericEntityMetadataProcessor<CyclopsMe
         else
         {
             engineState.invalidButton = false;
-            using (new PacketSuppressor<EntityMetadataUpdate>())
+            using (PacketSuppressor<EntityMetadataUpdate>.Suppress())
             {
                 engineState.OnClick();
             }
