@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Security.AccessControl;
 using System.Security.Principal;
 using Microsoft.Win32;
@@ -90,5 +91,7 @@ namespace NitroxModel.Platforms.OS.Windows
                 return false;
             }
         }
+
+        public override bool IsTrustedFile(string file) => Win32Native.IsTrusted(file);
     }
 }

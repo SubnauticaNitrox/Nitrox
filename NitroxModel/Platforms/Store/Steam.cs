@@ -21,7 +21,7 @@ namespace NitroxModel.Platforms.Store
 
         public bool OwnsGame(string gameDirectory)
         {
-            return File.Exists(Path.Combine(gameDirectory, "steam_api64.dll"));
+            return File.Exists(Path.Combine(gameDirectory, "Subnautica_Data", "Plugins", "x86_64", "steam_api64.dll"));
         }
 
         public async Task<ProcessEx> StartPlatformAsync()
