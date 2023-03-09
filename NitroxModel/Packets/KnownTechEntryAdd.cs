@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxModel.Packets
@@ -24,12 +25,14 @@ namespace NitroxModel.Packets
         public NitroxTechType TechType { get; }
         public bool Verbose { get; }
         public EntryCategory Category { get; }
+        public List<NitroxTechType> PartialTechTypesToRemove { get; }
 
-        public KnownTechEntryAdd(EntryCategory category, NitroxTechType techType, bool verbose)
+        public KnownTechEntryAdd(EntryCategory category, NitroxTechType techType, bool verbose, List<NitroxTechType> partialTechTypesToRemove = null)
         {
             Category = category;
             TechType = techType;
             Verbose = verbose;
+            PartialTechTypesToRemove = partialTechTypesToRemove;
         }
     }
 }

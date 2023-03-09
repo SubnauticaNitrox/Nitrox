@@ -111,7 +111,7 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastDestroyedVehicle(NitroxId id)
         {
-            using (packetSender.Suppress<VehicleOnPilotModeChanged>())
+            using (PacketSuppressor<VehicleOnPilotModeChanged>.Suppress())
             {
                 EntityDestroyed vehicleDestroyed = new(id);
                 packetSender.Send(vehicleDestroyed);
@@ -129,8 +129,8 @@ namespace NitroxClient.GameLogic
             VehicleDocking packet = new VehicleDocking(vehicleId, dockId, playerId);
             packetSender.Send(packet);
 
-            PacketSuppressor<PlayerMovement> playerMovementSuppressor = packetSender.Suppress<PlayerMovement>();
-            PacketSuppressor<VehicleMovement> vehicleMovementSuppressor = packetSender.Suppress<VehicleMovement>();
+            PacketSuppressor<PlayerMovement> playerMovementSuppressor = PacketSuppressor<PlayerMovement>.Suppress();
+            PacketSuppressor<VehicleMovement> vehicleMovementSuppressor = PacketSuppressor<VehicleMovement>.Suppress();
             vehicle.StartCoroutine(AllowMovementPacketsAfterDockingAnimation(playerMovementSuppressor, vehicleMovementSuppressor));
         }
 
@@ -141,8 +141,8 @@ namespace NitroxClient.GameLogic
             NitroxId vehicleId = NitroxEntity.GetId(vehicle.gameObject);
             ushort playerId = multiplayerSession.Reservation.PlayerId;
 
-            PacketSuppressor<PlayerMovement> movementSuppressor = packetSender.Suppress<PlayerMovement>();
-            PacketSuppressor<VehicleMovement> vehicleMovementSuppressor = packetSender.Suppress<VehicleMovement>();
+            PacketSuppressor<PlayerMovement> movementSuppressor = PacketSuppressor<PlayerMovement>.Suppress();
+            PacketSuppressor<VehicleMovement> vehicleMovementSuppressor = PacketSuppressor<VehicleMovement>.Suppress();
             if (!undockingStart)
             {
                 movementSuppressor.Dispose();
@@ -154,7 +154,7 @@ namespace NitroxClient.GameLogic
         }
 
         /*
-         A poorly timed movement packet will cause major problems when docking because the remote 
+         A poorly timed movement packet will cause major problems when docking because the remote
          player will think that the player is no longer in a vehicle.  Unfortunetly, the game calls
          the vehicle exit code before the animation completes so we need to suppress any side affects.
          Two thing we want to protect against:
@@ -187,7 +187,7 @@ namespace NitroxClient.GameLogic
         {
             ushort playerId = multiplayerSession.Reservation.PlayerId;
 
-            VehicleOnPilotModeChanged packet = new VehicleOnPilotModeChanged(NitroxEntity.GetId(vehicle.gameObject), playerId, isPiloting);
+            VehicleOnPilotModeChanged packet = new(NitroxEntity.GetId(vehicle.gameObject), playerId, isPiloting);
             packetSender.Send(packet);
         }
 
@@ -210,7 +210,7 @@ namespace NitroxClient.GameLogic
         }
 
         /// <summary>
-        /// Subnautica pre-emptively loads a prefab of each vehicle (such as a cyclops) during the initial game load.  This allows the game to instantaniously 
+        /// Subnautica pre-emptively loads a prefab of each vehicle (such as a cyclops) during the initial game load.  This allows the game to instantaniously
         /// use this prefab for the first constructor event.  Subsequent constructor events will use this prefab as a template.  However, this is problematic
         /// because the template + children are now tagged with NitroxEntity because players are interacting with it. We need to remove any NitroxEntity from
         /// the new gameObject that used the template.
@@ -221,7 +221,7 @@ namespace NitroxClient.GameLogic
 
             foreach (NitroxEntity nitroxEntity in nitroxEntities)
             {
-                UnityEngine.Component.DestroyImmediate(nitroxEntity);
+                UnityEngine.Object.DestroyImmediate(nitroxEntity);
             }
         }
     }

@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxClient.MonoBehaviours;
@@ -31,23 +33,35 @@ public class PlayerPreferencesInitialSyncProcessor : InitialSyncProcessor
         });
     }
 
-    public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
+    public override List<IEnumerator> GetSteps(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
     {
-        UpdatePingInstancePreferences(packet.Preferences);
-        waitScreenItem.SetProgress(1f);
-        yield return null;
+        return new List<IEnumerator> {
+            UpdatePins(packet),
+            UpdatePingInstancePreferences(packet)
+        };
     }
 
-    private void UpdatePingInstancePreferences(Dictionary<string, PingInstancePreference> preferences)
+    private IEnumerator UpdatePins(InitialPlayerSync packet)
     {
+        using (PacketSuppressor<RecipePinned>.Suppress())
+        {
+            PinManager.main.Deserialize(packet.Preferences.PinnedTechTypes.Select(techType => (TechType)techType).ToList());
+        }
+        yield break;
+    }
+
+    private IEnumerator UpdatePingInstancePreferences(InitialPlayerSync packet)
+    {
+        Dictionary<string, PingInstancePreference> pingPreferences = packet.Preferences.PingPreferences;
         void UpdateInstance(PingInstance instance)
         {
-            ModifyPingInstanceIfPossible(instance, preferences, () => UpdateInstance(instance));
+            ModifyPingInstanceIfPossible(instance, pingPreferences, () => UpdateInstance(instance));
             RefreshPingEntryInPDA(instance);
         }
-        
-        PingManager.onAdd += (instance) => UpdateInstance(instance);
+
+        PingManager.onAdd += UpdateInstance;
         GameObject.FindObjectsOfType<PingInstance>().ForEach(UpdateInstance);
+        yield break;
     }
 
     /// <summary>
@@ -60,8 +74,8 @@ public class PlayerPreferencesInitialSyncProcessor : InitialSyncProcessor
         {
             return;
         }
-        
-        using (packetSender.Suppress<SignalPingPreferenceChanged>())
+
+        using (PacketSuppressor<SignalPingPreferenceChanged>.Suppress())
         {
             // We don't want to set the color for a remote player's signal
             if (!isRemotePlayerPing)
@@ -87,9 +101,6 @@ public class PlayerPreferencesInitialSyncProcessor : InitialSyncProcessor
         }
     }
 
-    
-    
-    
     /// <summary>
     /// Retrieves the identifier of a PingInstance depending on its type and container
     /// </summary>

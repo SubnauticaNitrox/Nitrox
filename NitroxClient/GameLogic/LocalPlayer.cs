@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
+using NitroxClient.Helpers;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel_Subnautica.DataStructures;
@@ -21,6 +21,7 @@ namespace NitroxClient.GameLogic
     {
         private readonly IMultiplayerSession multiplayerSession;
         private readonly IPacketSender packetSender;
+        private readonly ThrottledPacketSender throttledPacketSender;
         private readonly Lazy<GameObject> body;
         private readonly Lazy<GameObject> playerModel;
         private readonly Lazy<GameObject> bodyPrototype;
@@ -37,10 +38,11 @@ namespace NitroxClient.GameLogic
 
         public Perms Permissions;
         
-        public LocalPlayer(IMultiplayerSession multiplayerSession, IPacketSender packetSender)
+        public LocalPlayer(IMultiplayerSession multiplayerSession, IPacketSender packetSender, ThrottledPacketSender throttledPacketSender)
         {
             this.multiplayerSession = multiplayerSession;
             this.packetSender = packetSender;
+            this.throttledPacketSender = throttledPacketSender;
             body = new Lazy<GameObject>(() => Player.main.RequireGameObject("body"));
             playerModel = new Lazy<GameObject>(() => Body.RequireGameObject("player_view"));
             bodyPrototype = new Lazy<GameObject>(CreateBodyPrototype);
@@ -76,7 +78,7 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastHeldItemChanged(NitroxId itemId, PlayerHeldItemChanged.ChangeType techType, NitroxTechType isFirstTime) => packetSender.Send(new PlayerHeldItemChanged(multiplayerSession.Reservation.PlayerId, itemId, techType, isFirstTime));
 
-        public void BroadcastQuickSlotsBindingChanged(List<string> binding) => packetSender.Send(new PlayerQuickSlotsBindingChanged(binding));
+        public void BroadcastQuickSlotsBindingChanged(NitroxId[] slotItemIds) => throttledPacketSender.SendThrottled(new PlayerQuickSlotsBindingChanged(slotItemIds), (packet) => 1);
 
         private GameObject CreateBodyPrototype()
         {

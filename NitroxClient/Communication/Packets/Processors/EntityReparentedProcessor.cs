@@ -28,7 +28,7 @@ public class EntityReparentedProcessor : ClientPacketProcessor<EntityReparented>
         GameObject entity = NitroxEntity.RequireObjectFrom(packet.Id);
         GameObject newParent = NitroxEntity.RequireObjectFrom(packet.NewParentId);
 
-        using (packetSender.Suppress<EntityReparented>())
+        using (PacketSuppressor<EntityReparented>.Suppress())
         {
             Type entityType = entities.RequireEntityType(packet.Id);
 

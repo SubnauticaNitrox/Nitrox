@@ -18,6 +18,7 @@ namespace NitroxModel.DataStructures.GameLogic.Entities
     [ProtoInclude(52, typeof(EscapePodWorldEntity))]
     [ProtoInclude(53, typeof(PlayerWorldEntity))]
     [ProtoInclude(54, typeof(VehicleWorldEntity))]
+    [ProtoInclude(55, typeof(CellRootEntity))]
     public class WorldEntity : Entity
     {
         public AbsoluteEntityCell AbsoluteEntityCell => new AbsoluteEntityCell(Transform.Position, Level);

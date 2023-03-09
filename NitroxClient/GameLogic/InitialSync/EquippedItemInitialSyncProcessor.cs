@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.InitialSync.Base;
@@ -29,7 +30,7 @@ namespace NitroxClient.GameLogic.InitialSync
         {
             int totalEquippedItemsDone = 0;
 
-            using (packetSender.Suppress<EntitySpawnedByClient>())
+            using (PacketSuppressor<EntitySpawnedByClient>.Suppress())
             {
                 foreach (EquippedItemData equippedItem in packet.EquippedItems)
                 {

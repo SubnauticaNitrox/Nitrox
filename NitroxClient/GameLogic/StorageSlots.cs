@@ -1,4 +1,5 @@
-﻿using NitroxClient.Communication.Abstract;
+﻿using NitroxClient.Communication;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
@@ -68,7 +69,7 @@ namespace NitroxClient.GameLogic
                     allowedToPlaySounds = mixin.allowedToPlaySounds;
                     mixin.allowedToPlaySounds = !silent;
                 }
-                using (packetSender.Suppress<StorageSlotItemAdd>())
+                using (PacketSuppressor<StorageSlotItemAdd>.Suppress())
                 {
                     slot.AddItem(new InventoryItem(pickupable));
                 }
@@ -97,7 +98,7 @@ namespace NitroxClient.GameLogic
                     allowedToPlaySounds = mixin.allowedToPlaySounds;
                     mixin.allowedToPlaySounds = !silent;
                 }
-                using (packetSender.Suppress<StorageSlotItemRemove>())
+                using (PacketSuppressor<StorageSlotItemRemove>.Suppress())
                 {
                     slot.RemoveItem();
                 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxModel.Packets;
 
@@ -31,11 +32,9 @@ namespace NitroxClient.Helpers
             }
         }
 
-        public bool SendThrottled(Packet packet, Func<Packet, object> dedupeMethod, float throttleTime = 0.2f)
+        public bool SendThrottled<T>(T packet, Func<T, object> dedupeMethod, float throttleTime = 0.2f) where T : Packet
         {
-            Type packetType = packet.GetType();
-
-            if (packetSender.IsPacketSuppressed(packetType))
+            if (PacketSuppressor<T>.IsSuppressed)
             {
                 return false;
             }

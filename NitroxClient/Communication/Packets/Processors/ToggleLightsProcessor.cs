@@ -26,7 +26,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
             if (packet.IsOn != toggleLights.GetLightsActive())
             {
-                using (packetSender.Suppress<NitroxModel.Packets.ToggleLights>())
+                using (PacketSuppressor<NitroxModel.Packets.ToggleLights>.Suppress())
                 using (FMODSystem.SuppressSounds())
                 {
                     toggleLights.SetLightsActive(packet.IsOn);

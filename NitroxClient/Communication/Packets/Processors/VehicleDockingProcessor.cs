@@ -29,7 +29,7 @@ namespace NitroxClient.Communication.Packets.Processors
             Vehicle vehicle = vehicleGo.RequireComponent<Vehicle>();
             VehicleDockingBay vehicleDockingBay = vehicleDockingBayGo.RequireComponent<VehicleDockingBay>();
 
-            using (packetSender.Suppress<VehicleDocking>())
+            using (PacketSuppressor<VehicleDocking>.Suppress())
             {
                 Log.Debug($"Set vehicle docked for {vehicleDockingBay.gameObject.name}");
                 vehicle.GetComponent<MultiplayerVehicleControl>().SetPositionVelocityRotation(vehicle.transform.position, Vector3.zero, vehicle.transform.rotation, Vector3.zero);
