@@ -63,7 +63,7 @@ public class PlaceholderGroupWorldEntitySpawner : IWorldEntitySpawner
                     yield return SpawnChildPlaceholder(prefabPlaceholder, placeholder, childResult);
                     break;
                 case WorldEntity worldEntity:
-                    yield return SpawnWorldEntityChild(worldEntity, cellRoot, Optional.Of(prefabPlaceholder.gameObject.transform.parent.gameObject), childResult);
+                    yield return SpawnWorldEntityChild(worldEntity, cellRoot, Optional.Of(prefabPlaceholder.transform.parent.gameObject), childResult);
                     break;
                 default:
                     Log.Debug(placeholderSlot.ChildEntities.Count > 0 ? $"Unhandled child type {placeholderSlot.ChildEntities[0]}" : "Child was null");
@@ -107,7 +107,7 @@ public class PlaceholderGroupWorldEntitySpawner : IWorldEntitySpawner
             EntityMetadataProcessor.ApplyMetadata(worldEntityResult.value.Value, worldEntity.Metadata);
 
             worldEntityResult.value.Value.transform.localPosition = worldEntity.Transform.LocalPosition.ToUnity();
-            worldEntityResult.value.Value.transform.localRotation = worldEntity.Transform.Rotation.ToUnity();
+            worldEntityResult.value.Value.transform.localRotation = worldEntity.Transform.LocalRotation.ToUnity();
         }
     }
 
@@ -125,7 +125,7 @@ public class PlaceholderGroupWorldEntitySpawner : IWorldEntitySpawner
                 {
                     EntityMetadataProcessor.ApplyMetadata(childResult.value.Value, child.Metadata);
 
-                    SpawnChildren(child, childResult.value, cellRoot);
+                    yield return SpawnChildren(child, childResult.value, cellRoot);
                 }
             }
         }
