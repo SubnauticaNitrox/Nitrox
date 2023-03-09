@@ -21,6 +21,9 @@ indent_size = 4
 insert_final_newline = true
 charset = utf-8
 
+[*.g.cs]
+generated_code = true
+
 # Newlines
 csharp_new_line_before_open_brace = all
 csharp_new_line_before_else = true
