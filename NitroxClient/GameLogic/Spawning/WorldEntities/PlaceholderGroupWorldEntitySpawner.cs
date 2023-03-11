@@ -5,22 +5,13 @@ using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
+using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.WorldEntities;
 
-/// <summary>
-/// Group placeholders are unique in that the game cleans up their children each time a player moves out of its batch. In single player, the placeholders
-/// would be respawned by iterating over the placeholders - this is patched out in nitrox because we need to tag them. Due to this behavior, we need to 
-/// respawn the placeholders when the batch is reloaded.  The top level group entity will still exist in the batch; thus, we will try to load the object
-/// by ID first and if we can't find it then spawn the entity in.  
-/// </summary>
 public class PlaceholderGroupWorldEntitySpawner : IWorldEntitySpawner
 {
-    // A simple way to detect if the respawn is triggered from a batch deserialization is to tag the group with a mono that is not registered in protobuf.
-    // If the group is untagged on a subsequent call then we know to respawn children again. 
-    private class NitroxBatchRespawnDetection : MonoBehaviour { };
-
     private readonly WorldEntitySpawnerResolver spawnerResolver;
     private readonly DefaultWorldEntitySpawner defaultSpawner;
 
@@ -32,33 +23,10 @@ public class PlaceholderGroupWorldEntitySpawner : IWorldEntitySpawner
 
     public IEnumerator SpawnAsync(WorldEntity entity, Optional<GameObject> parent, EntityCell cellRoot, TaskResult<Optional<GameObject>> result)
     {
-        Optional<GameObject> prefabPlaceholderGroupGameObject = NitroxEntity.GetObjectFrom(entity.Id);
-
-        if (prefabPlaceholderGroupGameObject.HasValue)
-        {
-            /*
-             * Sometimes nested groups are not always parented correctly when deserializing.  This is likely due to UWE's prefab management, where the prefabs are not
-             * actually destroyed but deactivated and re-used. In this case, we ensure the proper parenting. 
-             */
-            if (parent.HasValue)
-            {
-                prefabPlaceholderGroupGameObject.Value.transform.SetParent(parent.Value.transform, false);
-            }
-
-            // If the respawn detection mono is still in place then the entity should still be intact. 
-            if (prefabPlaceholderGroupGameObject.Value.GetComponent<NitroxBatchRespawnDetection>())
-            {
-                result.Set(prefabPlaceholderGroupGameObject);
-                yield break;
-            }
-        }
-        else
-        {
-            TaskResult<Optional<GameObject>> prefabPlaceholderGroupTaskResult = new();
-            yield return defaultSpawner.SpawnAsync(entity, parent, cellRoot, prefabPlaceholderGroupTaskResult);
-            prefabPlaceholderGroupGameObject = prefabPlaceholderGroupTaskResult.Get();
-        }
-
+        TaskResult<Optional<GameObject>> prefabPlaceholderGroupTaskResult = new();
+        yield return defaultSpawner.SpawnAsync(entity, parent, cellRoot, prefabPlaceholderGroupTaskResult);
+        Optional<GameObject> prefabPlaceholderGroupGameObject = prefabPlaceholderGroupTaskResult.Get();
+        
         if (!prefabPlaceholderGroupGameObject.HasValue)
         {
             result.Set(Optional.Empty);
@@ -73,9 +41,7 @@ public class PlaceholderGroupWorldEntitySpawner : IWorldEntitySpawner
 
         result.Set(prefabPlaceholderGroupGameObject);
 
-        prefabPlaceholderGroupGameObject.Value.AddComponent<NitroxBatchRespawnDetection>();
-
-        // Spawning PrefabPlaceholders
+        // Spawning PrefabPlaceholders as siblings to the group
         PrefabPlaceholdersGroup prefabPlaceholderGroup = prefabPlaceholderGroupGameObject.Value.GetComponent<PrefabPlaceholdersGroup>();
 
         foreach (PrefabChildEntity placeholderSlot in placeholderGroupEntity.ChildEntities.Cast<PrefabChildEntity>())
@@ -97,7 +63,7 @@ public class PlaceholderGroupWorldEntitySpawner : IWorldEntitySpawner
                     yield return SpawnChildPlaceholder(prefabPlaceholder, placeholder, childResult);
                     break;
                 case WorldEntity worldEntity:
-                    yield return SpawnWorldEntityChild(worldEntity, cellRoot, Optional.Of(prefabPlaceholder.gameObject), childResult);
+                    yield return SpawnWorldEntityChild(worldEntity, cellRoot, Optional.Of(prefabPlaceholder.transform.parent.gameObject), childResult);
                     break;
                 default:
                     Log.Debug(placeholderSlot.ChildEntities.Count > 0 ? $"Unhandled child type {placeholderSlot.ChildEntities[0]}" : "Child was null");
@@ -119,9 +85,9 @@ public class PlaceholderGroupWorldEntitySpawner : IWorldEntitySpawner
         }
 
         GameObject gameObject = goResult.value;
-        gameObject.transform.SetParent(prefabPlaceholder.transform, false);
-        gameObject.transform.localPosition = Vector3.zero;
-        gameObject.transform.localRotation = Quaternion.identity;
+        gameObject.transform.SetParent(prefabPlaceholder.transform.parent, false);
+        gameObject.transform.localPosition = prefabPlaceholder.transform.localPosition;
+        gameObject.transform.localRotation = prefabPlaceholder.transform.localRotation;
 
         NitroxEntity.SetNewId(gameObject, entity.Id);
 
@@ -140,8 +106,8 @@ public class PlaceholderGroupWorldEntitySpawner : IWorldEntitySpawner
         {
             EntityMetadataProcessor.ApplyMetadata(worldEntityResult.value.Value, worldEntity.Metadata);
 
-            // For some reasons it's not zero after spawning so we reset it here
-            worldEntityResult.value.Value.transform.localPosition = Vector3.zero;
+            worldEntityResult.value.Value.transform.localPosition = worldEntity.Transform.LocalPosition.ToUnity();
+            worldEntityResult.value.Value.transform.localRotation = worldEntity.Transform.LocalRotation.ToUnity();
         }
     }
 
@@ -159,7 +125,7 @@ public class PlaceholderGroupWorldEntitySpawner : IWorldEntitySpawner
                 {
                     EntityMetadataProcessor.ApplyMetadata(childResult.value.Value, child.Metadata);
 
-                    SpawnChildren(child, childResult.value, cellRoot);
+                    yield return SpawnChildren(child, childResult.value, cellRoot);
                 }
             }
         }
