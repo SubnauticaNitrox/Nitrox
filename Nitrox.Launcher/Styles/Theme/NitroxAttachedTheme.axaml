@@ -45,4 +45,7 @@
     <Style Selector="Border#FocusBorder[(design|NitroxAttached.Theme)=DARK]">
         <Setter Property="BorderBrush" Value="#40FFFFFF" />
     </Style>
+    <Style Selector="ToolTip[(design|NitroxAttached.Theme)=DARK] ContentPresenter TextBlock">
+        <Setter Property="Foreground" Value="#000000" />
+    </Style>
 </Styles>
