@@ -33,7 +33,12 @@ public class ServersViewModel : RoutableViewModelBase
         {
             Name = name,
             GameMode = gameMode,
-            ManageCommand = ReactiveCommand.Create((ServerEntry server) => Locator.GetSharedViewModel<ManageServerViewModel>().Server = server)
+            ManageCommand = ReactiveCommand.Create((ServerEntry server) =>
+            {
+                ManageServerViewModel viewModel = Locator.GetSharedViewModel<ManageServerViewModel>();
+                viewModel.LoadFrom(server);
+                MainViewModel.Router.Navigate.Execute(viewModel);
+            })
         });
     }
 }

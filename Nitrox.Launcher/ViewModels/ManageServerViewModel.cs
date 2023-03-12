@@ -7,23 +7,24 @@ namespace Nitrox.Launcher.ViewModels;
 
 public class ManageServerViewModel : RoutableViewModelBase
 {
-    private ServerEntry server;
+    private string serverName;
 
     /// <summary>
     ///     When set, navigates to the <see cref="ManageServerView" />.
     /// </summary>
-    public ServerEntry Server
+    public string ServerName
     {
-        get => server;
-        set
-        {
-            this.RaisePropertyChanging();
-            server = value;
-            this.RaisePropertyChanged();
-        }
+        get => serverName;
+        set => this.RaiseAndSetIfChanged(ref serverName, value);
     }
 
     public ManageServerViewModel(IScreen hostScreen) : base(hostScreen)
     {
+        this.BindValidation();
+    }
+
+    public void LoadFrom(ServerEntry server)
+    {
+        ServerName = server.Name;
     }
 }

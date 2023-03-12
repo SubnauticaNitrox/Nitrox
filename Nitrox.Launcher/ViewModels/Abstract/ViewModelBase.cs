@@ -2,10 +2,11 @@
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using ReactiveUI;
+using ReactiveUI.Validation.Helpers;
 
 namespace Nitrox.Launcher.ViewModels.Abstract;
 
-public class ViewModelBase : ReactiveObject
+public class ViewModelBase : ReactiveValidationObject
 {
     protected Window MainWindow => Locator.MainWindow;
 

@@ -1,6 +1,4 @@
-﻿using System.IO;
-using System.Linq;
-using System.Reactive;
+﻿using System.Reactive;
 using Avalonia.Input;
 using Nitrox.Launcher.Models;
 using Nitrox.Launcher.ViewModels.Abstract;
@@ -11,7 +9,6 @@ namespace Nitrox.Launcher.ViewModels;
 
 public class CreateServerViewModel : ModalViewModelBase
 {
-    private static readonly char[] invalidPathCharacters = Path.GetInvalidFileNameChars();
 
     private string name = "";
     private GameMode selectedGameMode = GameMode.SURVIVAL;
@@ -38,7 +35,6 @@ public class CreateServerViewModel : ModalViewModelBase
         BackCommand = ReactiveCommand.Create(() => (CreateServerViewModel)null!);
         CreateServerCommand = ReactiveCommand.Create(() => this, this.IsValid());
 
-        this.ValidationRule(vm => vm.Name, s => !string.IsNullOrWhiteSpace(s), $"{nameof(Name)} shouldn't be empty.");
-        this.ValidationRule(vm => vm.Name, s => s.All(c => !invalidPathCharacters.Contains(c)), $"{nameof(Name)} shouldn't contain invalid characters.");
+        this.BindValidation();
     }
 }

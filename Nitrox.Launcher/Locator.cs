@@ -14,10 +14,9 @@ namespace Nitrox.Launcher;
 internal sealed class Locator : IViewLocator
 {
     private static readonly ConcurrentDictionary<Type, RoutableViewModelBase> viewModelCache = new();
-
     private static MainWindow mainWindow;
-
     private static RoutingState mainRouter;
+    private static IViewFor lastView;
 
     public static MainWindow MainWindow
     {
@@ -60,14 +59,22 @@ internal sealed class Locator : IViewLocator
     /// </remarks>
     public IViewFor ResolveView<T>(T viewModel, string contract = null)
     {
-        return viewModel switch
+        static Type GetViewType(T viewModel) => viewModel switch
         {
-            PlayViewModel => new PlayView(),
-            ServersViewModel vm when vm.Servers.Any() => new ServersView(),
-            ServersViewModel vm when !vm.Servers.Any() => new EmptyServersView(),
-            ManageServerViewModel { Server: { } } => new ManageServerView(),
+            PlayViewModel => typeof(PlayView),
+            ServersViewModel vm when vm.Servers.Any() => typeof(ServersView),
+            ServersViewModel vm when !vm.Servers.Any() => typeof(EmptyServersView),
+            ManageServerViewModel => typeof(ManageServerView),
             _ => throw new ArgumentOutOfRangeException(nameof(viewModel), viewModel, null)
         };
+
+        // If the view type is the same as last time, return the same instance.
+        Type newView = GetViewType(viewModel);
+        if (lastView != null && lastView.GetType() == newView)
+        {
+            return lastView;
+        }
+        return lastView = (IViewFor)Activator.CreateInstance(newView);
     }
 
     /// <summary>
@@ -82,9 +89,6 @@ internal sealed class Locator : IViewLocator
         {
             case ServersViewModel vm:
                 vm.Servers.PropertyChanged += (_, _) => MainRouter.Navigate.Execute(vm);
-                break;
-            case ManageServerViewModel vm:
-                vm.PropertyChanged += (_, _) => MainRouter.Navigate.Execute(vm);
                 break;
         }
     }
