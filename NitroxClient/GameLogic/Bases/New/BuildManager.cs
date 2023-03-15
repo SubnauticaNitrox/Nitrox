@@ -111,6 +111,12 @@ public static class BuildManager
                 face = baseModuleGeometry.geometryFace;
             }
         }
+        // Moonpools are a very specific case, we tweak them to work as modules (while they're not)
+        else if (constructableBase.techType.Equals(TechType.BaseMoonpool))
+        {
+            baseGhost.targetBase.gameObject.EnsureComponent<MoonpoolManager>().RegisterMoonpool(constructableBase.transform, id);
+            return true;
+        }
         else
         {
             return false;
@@ -223,6 +229,10 @@ public static class NitroxBuild
         savedBuild.Modules = SaveModules(targetBase.transform);
         savedBuild.Ghosts = SaveGhosts(targetBase.transform);
 
+        if (targetBase.TryGetComponent(out MoonpoolManager nitroxMoonpool))
+        {
+            savedBuild.Moonpools = nitroxMoonpool.GetSavedMoonpools();
+        }
         return savedBuild;
     }
     public static IEnumerator CreateBuild(SavedBuild savedBuild)
@@ -243,6 +253,7 @@ public static class NitroxBuild
         yield return savedBuild.RestoreGhosts(@base);
         @base.OnProtoDeserialize(null);
         @base.FinishDeserialization();
+        yield return savedBuild.RestoreMoonpools(@base);
     }
 
     private static List<SavedInteriorPiece> SaveInteriorPieces(Base targetBase)
@@ -454,6 +465,15 @@ public static class NitroxBuild
     public static IEnumerator RestoreGhosts(this SavedBuild savedBuild, Base @base)
     {
         yield return RestoreGhosts(@base.transform, savedBuild.Ghosts);
+    }
+
+    public static IEnumerator RestoreMoonpools(this SavedBuild savedBuild, Base @base)
+    {
+        MoonpoolManager moonpoolManager = @base.gameObject.EnsureComponent<MoonpoolManager>();
+        moonpoolManager.LoadSavedMoonpools(savedBuild.Moonpools);
+        moonpoolManager.OnPostRebuildGeometry(@base);
+        Log.Debug($"Restored moonpools: {moonpoolManager.GetSavedMoonpools().Count}");
+        yield break;
     }
 
     public static string ToString(this SavedBuild savedBuild)

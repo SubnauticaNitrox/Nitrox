@@ -271,6 +271,12 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
         }
         else
         {
+            // Must happen before NitroxEntity.SetNewId because else, if a moonpool was marked with the same id, this id be will unlinked from the base object
+            if (baseGhost.targetBase.TryGetComponent(out MoonpoolManager moonpoolManager))
+            {
+                moonpoolManager.LateAssignNitroxEntity(entity.Id);
+                moonpoolManager.OnPostRebuildGeometry(baseGhost.targetBase);
+            }
             // create a new base
             NitroxEntity.SetNewId(baseGhost.targetBase.gameObject, entity.Id);
 
@@ -278,6 +284,7 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
         }
     }
 
+    // TODO: Should maybe rename to PieceDeconstructed
     public static void BaseDeconstructed(BaseDeconstructable baseDeconstructable, ConstructableBase constructableBase, Base @base, bool destroyed)
     {
         Log.Debug("BaseDeconstructed");
@@ -313,6 +320,11 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
             {
                 GameObject.Destroy(moduleObject.GetComponent<NitroxEntity>());
             }
+            else if (constructableBase.techType.Equals(TechType.BaseMoonpool) && @base.TryGetComponent(out MoonpoolManager moonpoolManager))
+            {
+                moonpoolManager.DeregisterMoonpool(constructableBase.transform);
+            }
+
             NitroxEntity.SetNewId(constructableBase.gameObject, BuildingTester.Main.TempId);
             // We don't need to go any further
             return;
@@ -331,6 +343,10 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
                 GameObject.Destroy(moduleEntity);
                 Log.Debug($"Successfully transferred NitroxEntity from module geometry {moduleEntity.Id}");
             }
+        }
+        else if (constructableBase.techType.Equals(TechType.BaseMoonpool) && @base.TryGetComponent(out MoonpoolManager moonpoolManager))
+        {
+            pieceId = moonpoolManager.DeregisterMoonpool(constructableBase.transform); // pieceId can still be null
         }
         // When a BaseWaterPark doesn't have a moduleFace, it means that there's still another WaterPark so we don't need to destroy its id and it won't be an error
         else if (!constructableBase.techType.Equals(TechType.BaseWaterPark))
