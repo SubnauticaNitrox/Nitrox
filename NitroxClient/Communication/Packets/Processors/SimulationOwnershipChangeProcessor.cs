@@ -29,7 +29,7 @@ public class SimulationOwnershipChangeProcessor : ClientPacketProcessor<Simulati
                     EntityPositionBroadcaster.WatchEntity(simulatedEntity.Id);
                 }
 
-                simulationOwnershipManager.SimulateEntity(simulatedEntity.Id, SimulationLockType.TRANSIENT);
+                simulationOwnershipManager.SimulateEntity(simulatedEntity.Id, simulatedEntity.LockType);
             }
             else if (simulationOwnershipManager.HasAnyLockType(simulatedEntity.Id))
             {
