@@ -56,7 +56,7 @@ public class PlayerModelManager
         GameObject go = signalHandle.GetResult();
         go.name = "RemotePlayerSignalPrototype";
         go.transform.localScale = new Vector3(.5f, .5f, .5f);
-        go.transform.localPosition += new Vector3(0, 0.8f, 0);
+        go.transform.localPosition = new Vector3(0, 0.8f, 0);
         go.SetActive(false);
 
         result.Set(go);
