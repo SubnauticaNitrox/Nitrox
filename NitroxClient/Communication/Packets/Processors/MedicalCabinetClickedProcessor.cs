@@ -28,7 +28,7 @@ public class MedicalCabinetClickedProcessor : ClientPacketProcessor<MedicalCabin
         cabinet.hasMedKit = packet.HasMedKit;
         cabinet.timeSpawnMedKit = packet.NextSpawnTime;
 
-        using (packetSender.Suppress<PlayFMODCustomEmitter>())
+        using (PacketSuppressor<PlayFMODCustomEmitter>.Suppress())
         using (FMODSystem.SuppressSounds())
         {
             if (doorChangedState)

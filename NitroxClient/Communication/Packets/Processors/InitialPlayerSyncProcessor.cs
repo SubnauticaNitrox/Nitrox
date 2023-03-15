@@ -39,7 +39,7 @@ namespace NitroxClient.Communication.Packets.Processors
         private IEnumerator ProcessInitialSyncPacket(object sender, EventArgs eventArgs)
         {
             // Some packets should not fire during game session join but only afterwards so that initialized/spawned game objects don't trigger packet sending again. 
-            using (packetSender.Suppress<PingRenamed>())
+            using (PacketSuppressor<PingRenamed>.Suppress())
             {
                 bool moreProcessorsToRun;
                 do

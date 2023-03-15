@@ -1,3 +1,4 @@
+using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
@@ -19,7 +20,7 @@ public class CyclopsMetadataProcessor : GenericEntityMetadataProcessor<CyclopsMe
 
     public override void ProcessMetadata(GameObject cyclops, CyclopsMetadata metadata)
     {
-        using (packetSender.Suppress<EntityMetadataUpdate>())
+        using (PacketSuppressor<EntityMetadataUpdate>.Suppress())
         {
             SetEngineMode(cyclops, (CyclopsMotorMode.CyclopsMotorModes)metadata.EngineMode);
             ChangeSilentRunning(cyclops, metadata.SilentRunningOn);
@@ -50,7 +51,7 @@ public class CyclopsMetadataProcessor : GenericEntityMetadataProcessor<CyclopsMe
         else
         {
             engineState.invalidButton = false;
-            using (packetSender.Suppress<EntityMetadataUpdate>())
+            using (PacketSuppressor<EntityMetadataUpdate>.Suppress())
             {
                 engineState.OnClick();
             }

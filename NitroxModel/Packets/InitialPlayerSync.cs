@@ -18,7 +18,7 @@ namespace NitroxModel.Packets
         public List<BasePiece> BasePieces { get; }
         public List<ItemData> StorageSlotItems { get; }
         public List<NitroxTechType> UsedItems { get; }
-        public List<string> QuickSlotsBinding { get; }
+        public NitroxId[] QuickSlotsBindingIds { get; }
         public NitroxId PlayerGameObjectId { get; }
         public bool FirstTimeConnecting { get; }
         public InitialPDAData PDAData { get; }
@@ -42,7 +42,7 @@ namespace NitroxModel.Packets
             IEnumerable<BasePiece> basePieces,
             IEnumerable<ItemData> storageSlotItems,
             IEnumerable<NitroxTechType> usedItems,
-            IEnumerable<string> quickSlotsBinding,
+            NitroxId[] quickSlotsBindingIds,
             InitialPDAData pdaData,
             InitialStoryGoalData storyGoalData,
             NitroxVector3 playerSpawnData,
@@ -64,7 +64,7 @@ namespace NitroxModel.Packets
             BasePieces = basePieces.ToList();
             StorageSlotItems = storageSlotItems.ToList();
             UsedItems = usedItems.ToList();
-            QuickSlotsBinding = quickSlotsBinding.ToList();
+            QuickSlotsBindingIds = quickSlotsBindingIds;
             PDAData = pdaData;
             StoryGoalData = storyGoalData;
             PlayerSpawnData = playerSpawnData;
@@ -87,7 +87,7 @@ namespace NitroxModel.Packets
             List<BasePiece> basePieces,
             List<ItemData> storageSlotItems,
             List<NitroxTechType> usedItems,
-            List<string> quickSlotsBinding,
+            NitroxId[] quickSlotsBindingIds,
             NitroxId playerGameObjectId,
             bool firstTimeConnecting,
             InitialPDAData pdaData,
@@ -111,7 +111,7 @@ namespace NitroxModel.Packets
             BasePieces = basePieces;
             StorageSlotItems = storageSlotItems;
             UsedItems = usedItems;
-            QuickSlotsBinding = quickSlotsBinding;
+            QuickSlotsBindingIds = quickSlotsBindingIds;
             PDAData = pdaData;
             StoryGoalData = storyGoalData;
             PlayerSpawnData = playerSpawnData;

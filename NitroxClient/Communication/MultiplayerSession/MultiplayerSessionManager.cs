@@ -21,8 +21,6 @@ namespace NitroxClient.Communication.MultiplayerSession
             initSerializerTask = Task.Run(Packet.InitSerializer);
         }
 
-        private readonly HashSet<Type> suppressedPacketsTypes = new HashSet<Type>();
-
         public IClient Client { get; }
         public string IpAddress { get; private set; }
         public int ServerPort { get; private set; }
@@ -116,22 +114,14 @@ namespace NitroxClient.Communication.MultiplayerSession
             }
         }
 
-        public bool Send(Packet packet)
+        public bool Send<T>(T packet) where T : Packet
         {
-            Type packetType = packet.GetType();
-            if (!suppressedPacketsTypes.Contains(packetType))
+            if (!PacketSuppressor<T>.IsSuppressed)
             {
                 Client.Send(packet);
                 return true;
             }
             return false;
-        }
-
-        public bool IsPacketSuppressed(Type packetType) => suppressedPacketsTypes.Contains(packetType);
-
-        public PacketSuppressor<T> Suppress<T>()
-        {
-            return new PacketSuppressor<T>(suppressedPacketsTypes);
         }
 
         public void UpdateConnectionState(IMultiplayerSessionConnectionState sessionConnectionState)

@@ -31,7 +31,7 @@ namespace NitroxClient.Communication.Packets.Processors
             Vehicle vehicle = vehicleGo.RequireComponent<Vehicle>();
             VehicleDockingBay vehicleDockingBay = vehicleDockingBayGo.RequireComponent<VehicleDockingBay>();
 
-            using (packetSender.Suppress<VehicleUndocking>())
+            using (PacketSuppressor<VehicleUndocking>.Suppress())
             {
                 if (packet.UndockingStart)
                 {

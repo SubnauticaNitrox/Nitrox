@@ -1,4 +1,5 @@
 using System.Collections;
+using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.Spawning.WorldEntities;
@@ -52,13 +53,14 @@ public class InventoryItemEntitySpawner : EntitySpawner<InventoryItemEntity>
         Pickupable pickupable = gameObject.RequireComponent<Pickupable>();
         pickupable.Initialize();
 
-        using (packetSender.Suppress<EntityReparented>())
+        using (PacketSuppressor<EntityReparented>.Suppress())
+        using (PacketSuppressor<PlayerQuickSlotsBindingChanged>.Suppress())
         {
             container.UnsafeAdd(new InventoryItem(pickupable));
             Log.Debug($"Received: Added item {pickupable.GetTechType()} ({entity.Id}) to container {owner.Value.GetFullHierarchyPath()}");
         }
     }
- 
+
     public override bool SpawnsOwnChildren(InventoryItemEntity entity)
     {
         return true;

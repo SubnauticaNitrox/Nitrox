@@ -1,4 +1,5 @@
 using System.Collections;
+using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxClient.MonoBehaviours;
@@ -42,7 +43,7 @@ namespace NitroxClient.GameLogic.InitialSync
             Player.main.SetPosition(position, rotation);
 
             // Player.Update is setting SubRootID to null after Player position is set
-            using (packetSender.Suppress<EscapePodChanged>())
+            using (PacketSuppressor<EscapePodChanged>.Suppress())
             {
                 Player.main.ValidateEscapePod();
             }

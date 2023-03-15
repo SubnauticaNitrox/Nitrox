@@ -18,7 +18,7 @@ public class PersistedPlayerData
     public List<NitroxTechType> UsedItems { get; set; } = new List<NitroxTechType>();
 
     [DataMember(Order = 3)]
-    public List<string> QuickSlotsBinding { get; set; } = new List<string>();
+    public NitroxId[] QuickSlotsBindingIds { get; set; } = new NitroxId[0];
 
     [DataMember(Order = 4)]
     public List<EquippedItemData> EquippedItems { get; set; } = new List<EquippedItemData>();
@@ -73,7 +73,7 @@ public class PersistedPlayerData
                           Permissions,
                           CurrentStats,
                           UsedItems,
-                          QuickSlotsBinding,
+                          QuickSlotsBindingIds,
                           EquippedItems,
                           Modules,
                           PersonalCompletedGoalsWithTimestamp,
@@ -87,7 +87,7 @@ public class PersistedPlayerData
         {
             Name = player.Name,
             UsedItems = player.UsedItems?.ToList(),
-            QuickSlotsBinding = player.QuickSlotsBinding?.ToList(),
+            QuickSlotsBindingIds = player.QuickSlotsBindingIds,
             EquippedItems = player.GetEquipment(),
             Modules = player.GetModules(),
             Id = player.Id,

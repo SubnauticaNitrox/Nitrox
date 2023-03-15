@@ -29,8 +29,6 @@ namespace NitroxClient.GameLogic
 
         private readonly Dictionary<Type, IEntitySpawner> entitySpawnersByType = new Dictionary<Type, IEntitySpawner>();
 
-        private readonly HashSet<Type> alwaysRespawn = new();
-
         public Entities(IPacketSender packetSender, ThrottledPacketSender throttledPacketSender, PlayerManager playerManager, ILocalNitroxPlayer localPlayer)
         {
             this.packetSender = packetSender;
@@ -46,10 +44,6 @@ namespace NitroxClient.GameLogic
             entitySpawnersByType[typeof(EscapePodWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
             entitySpawnersByType[typeof(PlayerWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
             entitySpawnersByType[typeof(VehicleWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
-
-            // PlaceholderGroupWorldEntitys need to have their children respawned whenever they are deserialized in a batch.  This is due to subnautica pruning
-            // placeholder children to optimize on space.  
-            alwaysRespawn.Add(typeof(PlaceholderGroupWorldEntity));
         }
 
         public void BroadcastTransforms(Dictionary<NitroxId, GameObject> gameObjectsById)
@@ -138,7 +132,7 @@ namespace NitroxClient.GameLogic
             {
                 if (!entitySpawner.SpawnsOwnChildren(entity))
                 {
-                    SpawnChildren(entity);
+                    yield return SpawnChildren(entity);
                 }
 
                 yield return AwaitAnyRequiredEntitySetup(gameObject.Value);
@@ -226,11 +220,6 @@ namespace NitroxClient.GameLogic
         {
             if (spawnedAsType.TryGetValue(entity.Id, out Type type))
             {
-                if (alwaysRespawn.Contains(type))
-                {
-                    return false;
-                }
-
                 return (type == entity.GetType());
             }
 

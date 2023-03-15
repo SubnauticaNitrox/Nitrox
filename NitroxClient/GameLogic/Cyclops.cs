@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
@@ -50,7 +51,7 @@ namespace NitroxClient.GameLogic
         {
             GameObject cyclops = NitroxEntity.RequireObjectFrom(id);
             CyclopsDecoyManager decoyManager = cyclops.RequireComponent<CyclopsDecoyManager>();
-            using (packetSender.Suppress<EntityMetadataUpdate>())
+            using (PacketSuppressor<EntityMetadataUpdate>.Suppress())
             {
                 decoyManager.Invoke(nameof(CyclopsDecoyManager.LaunchWithDelay), 3f);
                 decoyManager.decoyLaunchButton.UpdateText();
@@ -65,7 +66,7 @@ namespace NitroxClient.GameLogic
         {
             GameObject cyclops = NitroxEntity.RequireObjectFrom(id);
             CyclopsFireSuppressionSystemButton fireSuppButton = cyclops.RequireComponentInChildren<CyclopsFireSuppressionSystemButton>();
-            using (packetSender.Suppress<CyclopsFireSuppression>())
+            using (PacketSuppressor<CyclopsFireSuppression>.Suppress())
             {
                 // Infos from SubFire.StartSystem
                 fireSuppButton.subFire.StartCoroutine(StartFireSuppressionSystem(fireSuppButton.subFire));
@@ -99,8 +100,8 @@ namespace NitroxClient.GameLogic
         /// <summary>
         /// Called when the player repairs a <see cref="CyclopsDamagePoint"/>. Right now it's not possible to partially repair because it would be difficult to implement.
         /// <see cref="CyclopsDamagePoint"/>s are coupled with <see cref="LiveMixin"/>, which is used with just about anything that has health.
-        /// I would need to hook onto <see cref="LiveMixin.AddHealth(float)"/>, or maybe the repair gun event to catch when something repairs a damage point, which I don't 
-        /// believe is worth the effort. A <see cref="CyclopsDamagePoint"/> is already fully repaired in a little over a second. This can trigger sending 
+        /// I would need to hook onto <see cref="LiveMixin.AddHealth(float)"/>, or maybe the repair gun event to catch when something repairs a damage point, which I don't
+        /// believe is worth the effort. A <see cref="CyclopsDamagePoint"/> is already fully repaired in a little over a second. This can trigger sending
         /// <see cref="CyclopsDamagePointRepaired"/> and <see cref="CyclopsDamage"/> packets
         /// </summary>
         public void OnDamagePointRepaired(SubRoot subRoot, CyclopsDamagePoint damagePoint, float repairAmount)
