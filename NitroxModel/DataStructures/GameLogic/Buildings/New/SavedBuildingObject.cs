@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using NitroxModel.DataStructures.GameLogic.Buildings.New.Metadata;
+using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Unity;
 
 namespace NitroxModel.DataStructures.GameLogic.Buildings.New;
@@ -61,6 +62,9 @@ public class SavedBuild
 
     [DataMember(Order = 8)]
     public List<SavedGhost> Ghosts = new();
+
+    [DataMember(Order = 9)]
+    public List<SavedMoonpool> Moonpools = new();
 }
 
 [DataContract]
@@ -131,4 +135,17 @@ public class SavedGhost : SavedModule
 
     [DataMember(Order = 4)]
     public NitroxTechType TechType;
+}
+
+[DataContract]
+public class SavedMoonpool
+{
+    [DataMember(Order = 1)]
+    public NitroxId NitroxId;
+
+    [DataMember(Order = 2)]
+    public NitroxId ParentId;
+
+    [DataMember(Order = 3)]
+    public NitroxInt3 Cell;
 }
