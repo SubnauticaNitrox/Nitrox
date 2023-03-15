@@ -78,6 +78,10 @@ public class PlayerModelManager
         // ping will be moved to the player list tab
         ping.displayPingInManager = false;
 
+        // SignalPing is not required for player as we don't need to display text or anchor to a specific world position
+        // we also take a dependency on the lack of signalping later to differentiate remote player pings from others.
+        Object.DestroyImmediate(signalBase.GetComponent<SignalPing>());
+
         SetInGamePingColor(player, ping);
     }
 

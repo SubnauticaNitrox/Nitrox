@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.Communication.Abstract;
@@ -165,7 +165,7 @@ public class uGUI_PlayerListTab : uGUI_PingTab
         GameObject newPrefab = Instantiate(basePrefab);
         newPrefab.name = "PlayerEntry";
         // We never want this to appear
-        Destroy(newPrefab.FindChild("ColorToggle"));
+        DestroyImmediate(newPrefab.FindChild("ColorToggle"));
 
         // Need to modify the pingTab's script from uGUI_PingEntry to uGUI_PlayerEntry
         uGUI_PingEntry pingEntry = newPrefab.GetComponent<uGUI_PingEntry>();
@@ -178,7 +178,7 @@ public class uGUI_PlayerListTab : uGUI_PingTab
         playerEntry.id = pingEntry.id;
         playerEntry.spriteVisible = pingEntry.spriteVisible;
         playerEntry.spriteHidden = pingEntry.spriteHidden;
-        Destroy(pingEntry);
+        DestroyImmediate(pingEntry);
 
         // Make buttons for mute, kick, tp
         Transform container = newPrefab.transform;
