@@ -13,9 +13,7 @@ public class GhostCrafter_OnCraftingEnd_Patch : NitroxPatch, IDynamicPatch
 
     public static bool Prefix(GhostCrafter __instance)
     {
-        NitroxId id = NitroxEntity.GetId(__instance.gameObject);
-
-        bool allowItemPickup = false;
+        NitroxId id = NitroxEntity.RequireIdFrom(__instance.gameObject);
 
         SimulationOwnership simulationOwnership = Resolve<SimulationOwnership>();
 
@@ -24,13 +22,13 @@ public class GhostCrafter_OnCraftingEnd_Patch : NitroxPatch, IDynamicPatch
         // the crafting player will intiate a lock request when pushing the craft button - OnCraftingStart().
         if (simulationOwnership.HasExclusiveLock(id))
         {
-            allowItemPickup = true;
-
             // once an item is crafted, we no longer require an exclusive lock.
             simulationOwnership.RequestSimulationLock(id, SimulationLockType.TRANSIENT);
+
+            return true;
         }
 
-        return allowItemPickup;
+        return false;
     }
 
     public override void Patch(Harmony harmony)
@@ -38,4 +36,3 @@ public class GhostCrafter_OnCraftingEnd_Patch : NitroxPatch, IDynamicPatch
         PatchPrefix(harmony, TARGET_METHOD);
     }
 }
-

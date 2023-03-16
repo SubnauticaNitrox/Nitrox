@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors;
 using NitroxClient.MonoBehaviours;
@@ -13,7 +13,7 @@ namespace NitroxClient.GameLogic
     /// <summary>
     /// Handles all of the <see cref="Fire"/>s in the game. Currently, the only known Fire spawning is in <see cref="SubFire.CreateFire(SubFire.RoomFire)"/>. The
     /// fires in the Aurora come loaded with the map and do not grow in size. If we want to create a Fire spawning mechanic outside of Cyclops fires, it should be
-    /// added to <see cref="Fires.Create(CyclopsFireData)"/>. Fire dousing goes by Id and does not need to be 
+    /// added to <see cref="Fires.Create(CyclopsFireData)"/>. Fire dousing goes by Id and does not need to be
     /// modified
     /// </summary>
     public class Fires
@@ -37,7 +37,7 @@ namespace NitroxClient.GameLogic
         }
 
         /// <summary>
-        /// Triggered when <see cref="SubFire.CreateFire(SubFire.RoomFire)"/> is executed. To create a new fire manually, 
+        /// Triggered when <see cref="SubFire.CreateFire(SubFire.RoomFire)"/> is executed. To create a new fire manually,
         /// call <see cref="Create(CyclopsFireData)"/>
         /// </summary>
         public void OnCreate(Fire fire, SubFire.RoomFire room, int nodeIndex)
@@ -90,9 +90,9 @@ namespace NitroxClient.GameLogic
             {
                 Fire existingFire = transform2.GetComponentInChildren<Fire>();
 
-                if (NitroxEntity.GetId(existingFire.gameObject) != fireData.CyclopsId)
+                if (NitroxEntity.TryGetIdFrom(existingFire.gameObject, out NitroxId existingFireId) && existingFireId != fireData.CyclopsId)
                 {
-                    Log.Error($"[Fires.Create Fire already exists at node index {fireData.NodeIndex}! Replacing existing Fire Id {NitroxEntity.GetId(existingFire.gameObject)} with Id {fireData.CyclopsId}]");
+                    Log.Error($"[Fires.Create Fire already exists at node index {fireData.NodeIndex}! Replacing existing Fire Id {existingFireId} with Id {fireData.CyclopsId}]");
 
                     NitroxEntity.SetNewId(existingFire.gameObject, fireData.CyclopsId);
                 }
@@ -111,7 +111,7 @@ namespace NitroxClient.GameLogic
             }
             roomFiresDict[fireData.Room].fireValue++;
             PrefabSpawn component = transform2.GetComponent<PrefabSpawn>();
-            if (component == null)
+            if (!component)
             {
                 return;
             }

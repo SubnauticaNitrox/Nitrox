@@ -40,17 +40,22 @@ namespace NitroxClient.GameLogic
             // We want to remove any remote tracking immediately on pickup as it can cause weird behavior like holding a ghost item still in the world.
             RemoveAnyRemoteControl(gameObject);
 
-            NitroxId id = NitroxEntity.GetId(gameObject);
+            if (!NitroxEntity.TryGetIdFrom(gameObject, out NitroxId id))
+            {
+                Log.Warn($"Found item with ({gameObject.name}) with no id, assigning a new one");
+                id = new NitroxId();
+                NitroxEntity.SetNewId(gameObject, id);
+            }
 
             EntityPositionBroadcaster.StopWatchingEntity(id);
 
             // Some picked up entities are not known by the server for several reasons.  First it can be picked up via a spawn item command.  Another
             // example is that some obects are not 'real' objects until they are clicked and end up spawning a prefab.  For example, the fire extinguisher
             // in the escape pod (mono: IntroFireExtinguisherHandTarget) or Creepvine seeds (mono: PickupPrefab).  When clicked, these spawn new prefabs
-            // directly into the player's inventory.  In this pickup function, we can let the server know about this by sending an EntitySpawn packet; 
-            // however, the disavantage with doing this in one place is that other players may not 'see' the action (such as picking creepvine fruit). 
+            // directly into the player's inventory.  In this pickup function, we can let the server know about this by sending an EntitySpawn packet;
+            // however, the disavantage with doing this in one place is that other players may not 'see' the action (such as picking creepvine fruit).
             // This may be intended for things like the fire extinguisher because it lets all players get it.  As we sync these actions, this statement
-            // will no longer be true and will no longer send a created packet. 
+            // will no longer be true and will no longer send a created packet.
             if (!entities.IsKnownEntity(id))
             {
                 Created(gameObject);
@@ -87,7 +92,16 @@ namespace NitroxClient.GameLogic
 
         public void Created(GameObject gameObject)
         {
-            NitroxId itemId = NitroxEntity.GetId(gameObject);
+            if (NitroxEntity.TryGetIdFrom(gameObject, out NitroxId itemId))
+            {
+                Log.Warn($"Tried to create item but it already has an id {gameObject.name}:{itemId}");
+            }
+            else
+            {
+                itemId = new NitroxId();
+                NitroxEntity.SetNewId(gameObject, itemId);
+            }
+
             string classId = gameObject.RequireComponent<PrefabIdentifier>().ClassId;
             TechType techType = gameObject.RequireComponent<Pickupable>().GetTechType();
             Optional<EntityMetadata> metadata = EntityMetadataExtractor.Extract(gameObject);
@@ -106,9 +120,9 @@ namespace NitroxClient.GameLogic
         }
 
 
-        // This function will record any notable children of the dropped item as a PrefabChildEntity.  In this case, a 'notable' 
+        // This function will record any notable children of the dropped item as a PrefabChildEntity.  In this case, a 'notable'
         // child is one that UWE has tagged with a PrefabIdentifier (class id) and has entity metadata that can be extracted. An
-        // example would be recording a Battery PrefabChild inside of a Flashlight WorldEntity. 
+        // example would be recording a Battery PrefabChild inside of a Flashlight WorldEntity.
         public static IEnumerable<Entity> GetPrefabChildren(GameObject gameObject, NitroxId parentId)
         {
             foreach (IGrouping<string, PrefabIdentifier> prefabGroup in gameObject.GetAllComponentsInChildren<PrefabIdentifier>()
@@ -138,7 +152,7 @@ namespace NitroxClient.GameLogic
         private void RemoveAnyRemoteControl(GameObject gameObject)
         {
             // Some items might be remotely simulated if they were dropped by other players.  We'll want to remove
-            // any remote tracking when we actively handle the item. 
+            // any remote tracking when we actively handle the item.
             RemotelyControlled remotelyControlled = gameObject.GetComponent<RemotelyControlled>();
             Object.Destroy(remotelyControlled);
         }
@@ -153,8 +167,7 @@ namespace NitroxClient.GameLogic
 
                 if (currentWaterPark != null)
                 {
-                    NitroxId waterParkId = NitroxEntity.GetId(currentWaterPark.gameObject);
-                    return Optional.Of(waterParkId);
+                    return NitroxEntity.GetOptionalIdFrom(currentWaterPark.gameObject);
                 }
             }
 

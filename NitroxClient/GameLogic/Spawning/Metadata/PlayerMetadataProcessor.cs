@@ -35,8 +35,7 @@ public class PlayerMetadataProcessor : GenericEntityMetadataProcessor<PlayerMeta
 
         foreach(EquippedItem equippedItem in metadata.EquippedItems)
         {
-            InventoryItem inventoryItem = currentItems.Where(item => equippedItem.Id == NitroxEntity.GetId(item.item.gameObject))
-                                                      .FirstOrDefault();
+            InventoryItem inventoryItem = currentItems.FirstOrDefault(item => NitroxEntity.TryGetIdFrom(item.item.gameObject, out NitroxId id) && equippedItem.Id == id);
 
             // It is OK if we don't find the item, this could be a rebroadcast and we've already equipped the item.
             if (inventoryItem != null)

@@ -20,11 +20,16 @@ public class PlayerCinematicControllerCallProcessor : ClientPacketProcessor<Play
 
     public override void Process(PlayerCinematicControllerCall packet)
     {
-        Optional<GameObject> opEntity = NitroxEntity.GetObjectFrom(packet.ControllerID);
-        Validate.IsPresent(opEntity);
+        if (!NitroxEntity.TryGetObjectFrom(packet.ControllerID, out GameObject entity))
+        {
+            return; // Entity can be not spawned yet bc async.
+        }
 
-        MultiplayerCinematicReference reference = opEntity.Value.GetComponent<MultiplayerCinematicReference>();
-        Validate.IsTrue(reference);
+        if (!entity.TryGetComponent(out MultiplayerCinematicReference reference))
+        {
+            Log.Warn($"Couldn't find {nameof(MultiplayerCinematicReference)} on {entity.name}:{packet.ControllerID}");
+            return;
+        }
 
         Optional<RemotePlayer> opPlayer = playerManager.Find(packet.PlayerId);
         Validate.IsPresent(opPlayer);
