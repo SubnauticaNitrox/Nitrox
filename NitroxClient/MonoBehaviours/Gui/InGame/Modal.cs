@@ -73,7 +73,7 @@ public abstract class Modal
     {
         if (FreezeGame)
         {
-            FreezeTime.Begin(FreezeTime.Id.IngameMenu);
+            FreezeTime.Begin(FreezeTime.Id.Quit);
         }
         CurrentModal?.Hide();
         CurrentModal = this;
