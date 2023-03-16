@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
@@ -56,7 +57,7 @@ namespace NitroxClient.MonoBehaviours
         public static Dictionary<NitroxId, GameObject> GetObjectsFrom(HashSet<NitroxId> ids)
         {
             return ids.Select(id => new KeyValuePair<NitroxId, GameObject>(id, gameObjectsById.GetOrDefault(id, null)))
-                      .Where(keyValue => keyValue.Value != null)
+                      .Where(keyValue => keyValue.Value)
                       .ToDictionary(kv => kv.Key, kv => kv.Value);
         }
 
@@ -76,16 +77,63 @@ namespace NitroxClient.MonoBehaviours
         public static bool TryGetEntityFrom(GameObject gameObject, out NitroxEntity nitroxEntity)
         {
             nitroxEntity = null;
-            return gameObject != null && gameObject.TryGetComponent(out nitroxEntity);
+            return gameObject && gameObject.TryGetComponent(out nitroxEntity);
         }
+
+        public static bool TryGetIdFrom(GameObject gameObject, out NitroxId nitroxId)
+        {
+            if (gameObject && gameObject.TryGetComponent(out NitroxEntity nitroxEntity))
+            {
+                nitroxId = nitroxEntity.Id;
+                return true;
+            }
+
+            nitroxId = null;
+            return false;
+        }
+
+        public static bool TryGetIdFrom(Component component, out NitroxId nitroxId)
+        {
+            if (component)
+            {
+                return TryGetIdFrom(component.gameObject, out nitroxId);
+            }
+
+            nitroxId = null;
+            return false;
+        }
+
+        public static Optional<NitroxId> GetOptionalIdFrom(GameObject gameObject)
+        {
+            if (gameObject && gameObject.TryGetComponent(out NitroxEntity nitroxEntity))
+            {
+                return Optional.Of(nitroxEntity.Id);
+            }
+
+            return Optional.Empty;
+        }
+
+        public static Optional<NitroxId> GetOptionalIdFrom(Component component) => component ? GetOptionalIdFrom(component.gameObject) : Optional.Empty;
+
+        public static NitroxEntity RequireEntityFrom(GameObject gameObject)
+        {
+            NitroxEntity nitroxEntity = gameObject.AliveOrNull()?.GetComponent<NitroxEntity>();
+            Validate.IsTrue(nitroxEntity);
+            return nitroxEntity;
+        }
+
+        public static NitroxEntity RequireEntityFrom(Component component) => RequireEntityFrom(component.gameObject);
+
+        public static NitroxId RequireIdFrom(GameObject gameObject) => RequireEntityFrom(gameObject).Id;
+
+        public static NitroxId RequireIdFrom(Component component) => RequireEntityFrom(component).Id;
 
         public static void SetNewId(GameObject gameObject, NitroxId id)
         {
             Validate.NotNull(gameObject);
             Validate.NotNull(id);
 
-            NitroxEntity entity = gameObject.GetComponent<NitroxEntity>();
-            if (entity != null)
+            if (gameObject.TryGetComponent(out NitroxEntity entity))
             {
                 gameObjectsById.Remove(entity.Id);
             }
@@ -96,20 +144,6 @@ namespace NitroxClient.MonoBehaviours
 
             entity.Id = id;
             gameObjectsById[id] = gameObject;
-        }
-
-        public static NitroxId GetId(GameObject gameObject)
-        {
-            NitroxEntity entity = gameObject.GetComponent<NitroxEntity>();
-            if (entity)
-            {
-                return entity.Id;
-            }
-
-            NitroxId newId = new NitroxId();
-            SetNewId(gameObject, newId);
-
-            return newId;
         }
 
         public static void RemoveFrom(GameObject gameObject)
@@ -140,6 +174,5 @@ namespace NitroxClient.MonoBehaviours
         {
             gameObjectsById[Id] = gameObject;
         }
-
     }
 }
