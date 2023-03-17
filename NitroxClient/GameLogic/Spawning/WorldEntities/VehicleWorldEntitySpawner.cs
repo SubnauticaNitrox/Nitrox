@@ -118,6 +118,8 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
 
         NitroxEntity.SetNewId(constructedObject, vehicleEntity.Id);
 
+        AddCinematicControllers(constructedObject);
+
         result.Set(constructedObject);
         yield break;
     }
