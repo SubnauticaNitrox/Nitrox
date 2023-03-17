@@ -1,15 +1,19 @@
 using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using AssetsTools.NET;
 using AssetsTools.NET.Extra;
 
 namespace NitroxServer_Subnautica.Resources.Parsers.Helper;
 
-public class AssetsBundleManager : AssetsManager
+public class AssetsBundleManager
 {
     private ThreadSafeMonoCecilTempGenerator monoTempGenerator;
     private readonly string aaRootPath;
-    private readonly Dictionary<AssetsFileInstance, string[]> dependenciesByAssetFileInst = new();
+    private readonly ConcurrentDictionary<AssetsFileInstance, string[]> dependenciesByAssetFileInst = new();
+    private readonly AssetsManager assetsManager = new();
+    private readonly ConcurrentDictionary<string, object> fileLocks = new();
+    private readonly ConcurrentDictionary<string, BundleFileInstance> bundleFileInstances = new();
+    private readonly ConcurrentDictionary<(string, int), AssetsFileInstance> fileInstances = new();
 
     public AssetsBundleManager(string aaRootPath)
     {
@@ -107,33 +111,53 @@ public class AssetsBundleManager : AssetsManager
         return transformExt.baseField;
     }
 
-    public new void SetMonoTempGenerator(IMonoBehaviourTemplateGenerator generator)
+    public void SetMonoTempGenerator(IMonoBehaviourTemplateGenerator generator)
     {
         monoTempGenerator = (ThreadSafeMonoCecilTempGenerator)generator;
-        base.SetMonoTempGenerator(generator);
-    }
-    /// <summary>
-    /// Returns a ready to use <see cref="AssetsManager"/> with loaded <see cref="AssetsManager.classDatabase"/>, <see cref="AssetsManager.classPackage"/> and <see cref="IMonoBehaviourTemplateGenerator"/>.
-    /// </summary>
-    public AssetsBundleManager Clone()
-    {
-        AssetsBundleManager bundleManagerInst = new(aaRootPath)
-        {
-            classDatabase = classDatabase, 
-            classPackage = classPackage
-        };
-        bundleManagerInst.SetMonoTempGenerator(monoTempGenerator);
-        return bundleManagerInst;
+        assetsManager.SetMonoTempGenerator(generator);
     }
 
     /// <inheritdoc cref="AssetsManager.UnloadAll"/>
-    public new void UnloadAll(bool unloadClassData = false)
+    public void UnloadAll(bool unloadClassData = false)
     {
         if (unloadClassData)
         {
             monoTempGenerator.Dispose();
         }
         dependenciesByAssetFileInst.Clear();
-        base.UnloadAll(unloadClassData);
+        assetsManager.UnloadAll(unloadClassData);
+    }
+
+    public void LoadClassPackage(string classdataTpk)
+    {
+        assetsManager.LoadClassPackage(classdataTpk);
+    }
+
+    public void LoadClassDatabaseFromPackage(string package)
+    {
+        assetsManager.LoadClassDatabaseFromPackage(package);
+    }
+
+    public BundleFileInstance LoadBundleFile(string bundleFileName) => bundleFileInstances.GetOrAdd(bundleFileName, s => assetsManager.LoadBundleFile(s));
+
+    public AssetsFileInstance LoadAssetsFileFromBundle(BundleFileInstance bundleFile, int fileIndexInBundle)
+    {
+        return fileInstances.GetOrAdd((bundleFile.path + bundleFile.name, fileIndexInBundle), _ => assetsManager.LoadAssetsFileFromBundle(bundleFile, fileIndexInBundle));
+    }
+
+    public AssetTypeValueField GetBaseField(AssetsFileInstance file, AssetFileInfo monoScriptInfo)
+    {
+        lock (fileLocks.GetOrAdd(file.path + file.name, () => new object()))
+        {
+            return assetsManager.GetBaseField(file, monoScriptInfo);
+        }
+    }
+
+    public AssetExternal GetExtAsset(AssetsFileInstance file, AssetTypeValueField prefabPlaceholderPtr, bool onlyGetInfo = false)
+    {
+        lock (fileLocks.GetOrAdd(file.path + file.name, () => new object()))
+        {
+            return assetsManager.GetExtAsset(file, prefabPlaceholderPtr, onlyGetInfo);
+        }
     }
 }

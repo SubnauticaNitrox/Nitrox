@@ -31,10 +31,13 @@ public class ThreadSafeMonoCecilTempGenerator : IMonoBehaviourTemplateGenerator,
 
     public void Dispose()
     {
-        foreach (KeyValuePair<string, AssemblyDefinition> pair in generator.loadedAssemblies)
+        lock (locker)
         {
-            pair.Value.Dispose();
+            foreach (KeyValuePair<string, AssemblyDefinition> pair in generator.loadedAssemblies)
+            {
+                pair.Value.Dispose();
+            }
+            generator.loadedAssemblies.Clear();
         }
-        generator.loadedAssemblies.Clear();
     }
 }

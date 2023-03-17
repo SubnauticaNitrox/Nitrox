@@ -52,8 +52,6 @@ public class PrefabPlaceholderGroupsParser : IDisposable
 
         // Select only prefabs with a PrefabPlaceholdersGroups component in the root ans link them with their dependencyPaths
         ConcurrentDictionary<string, string[]> prefabPlaceholdersGroupPaths = GetAllPrefabPlaceholdersGroupsFast();
-        // Do not remove: the internal cache list is slowing down the process more than loading a few assets again. There maybe is a better way in the new AssetToolsNetVersion but we need a byte to texture library bc ATNs sub-package is only for netstandard.
-        am.UnloadAll();
 
         // Get all needed data for the filtered PrefabPlaceholdersGroups to construct PrefabPlaceholdersGroupAssets and add them to the dictionary by classId
         ConcurrentDictionary<string, PrefabPlaceholdersGroupAsset> prefabPlaceholderGroupsByGroupClassId = GetPrefabPlaceholderGroupAssetsByGroupClassId(prefabPlaceholdersGroupPaths);
@@ -146,16 +144,13 @@ public class PrefabPlaceholderGroupsParser : IDisposable
 
         Parallel.ForEach(addressableCatalog.Skip(aaIndex), (keyValuePair) =>
         {
-            AssetsBundleManager bundleManagerInst = am.Clone();
-            BundleFileInstance bundleFile = bundleManagerInst.LoadBundleFile(bundleManagerInst.CleanBundlePath(keyValuePair.Value[0]));
-            AssetsFileInstance assetFileInstance = bundleManagerInst.LoadAssetsFileFromBundle(bundleFile, 0);
+            BundleFileInstance bundleFile = am.LoadBundleFile(am.CleanBundlePath(keyValuePair.Value[0]));
+            AssetsFileInstance assetFileInstance = am.LoadAssetsFileFromBundle(bundleFile, 0);
 
             if (assetFileInstance.file.Metadata.TypeTreeTypes.Any(typeTree => typeTree.TypeId == (int)AssetClassID.MonoBehaviour && typeTree.TypeHash.data.SequenceEqual(prefabPlaceholdersGroupHash)))
             {
                 prefabPlaceholdersGroupPaths.TryAdd(keyValuePair.Key, keyValuePair.Value);
             }
-
-            bundleManagerInst.UnloadAll();
         });
 
         return prefabPlaceholdersGroupPaths;
@@ -167,11 +162,9 @@ public class PrefabPlaceholderGroupsParser : IDisposable
 
         Parallel.ForEach(prefabPlaceholdersGroupPaths, (keyValuePair) =>
         {
-            AssetsBundleManager bundleManagerInst = am.Clone();
-            AssetsFileInstance assetFileInst = bundleManagerInst.LoadBundleWithDependencies(keyValuePair.Value);
+            AssetsFileInstance assetFileInst = am.LoadBundleWithDependencies(keyValuePair.Value);
 
-            PrefabPlaceholdersGroupAsset prefabPlaceholderGroup = GetAndCachePrefabPlaceholdersGroupOfBundle(bundleManagerInst, assetFileInst, keyValuePair.Key);
-            bundleManagerInst.UnloadAll();
+            PrefabPlaceholdersGroupAsset prefabPlaceholderGroup = GetAndCachePrefabPlaceholdersGroupOfBundle(am, assetFileInst, keyValuePair.Key);
 
             if (!prefabPlaceholderGroupsByGroupClassId.TryAdd(keyValuePair.Key, prefabPlaceholderGroup))
             {
