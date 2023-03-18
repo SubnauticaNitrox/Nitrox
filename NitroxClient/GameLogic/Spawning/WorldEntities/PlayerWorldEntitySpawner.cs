@@ -41,7 +41,7 @@ public class PlayerWorldEntitySpawner : IWorldEntitySpawner
 
             remotePlayer.Value.InitializeGameObject(remotePlayerBody);
             
-            if (!IsSwimming(entity.Transform.LocalPosition.ToUnity(), parent))
+            if (!IsSwimming(entity.Transform.Position.ToUnity(), parent))
             {
                 remotePlayer.Value.UpdateAnimationAndCollider(AnimChangeType.UNDERWATER, AnimChangeState.OFF);
             }
@@ -65,7 +65,7 @@ public class PlayerWorldEntitySpawner : IWorldEntitySpawner
 
     private GameObject CloneLocalPlayerBodyPrototype()
     {
-        GameObject clone = Object.Instantiate(localPlayer.BodyPrototype, Multiplayer.Main.transform, false);
+        GameObject clone = Object.Instantiate(localPlayer.BodyPrototype, null, false);
         clone.SetActive(true);
         return clone;
     }

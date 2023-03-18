@@ -42,6 +42,8 @@ namespace NitroxClient.GameLogic
 
             NitroxId id = NitroxEntity.GetId(gameObject);
 
+            EntityPositionBroadcaster.StopWatchingEntity(id);
+
             // Some picked up entities are not known by the server for several reasons.  First it can be picked up via a spawn item command.  Another
             // example is that some obects are not 'real' objects until they are clicked and end up spawning a prefab.  For example, the fire extinguisher
             // in the escape pod (mono: IntroFireExtinguisherHandTarget) or Creepvine seeds (mono: PickupPrefab).  When clicked, these spawn new prefabs
