@@ -18,7 +18,7 @@ namespace NitroxServer.GameLogic.Entities
         /// <summary>
         ///     Phasing entities can disappear if you go out of range.
         /// </summary>
-        private readonly Dictionary<NitroxInt3, List<WorldEntity>> phasingEntitiesByAbsoluteCell;
+        private readonly Dictionary<NitroxInt3, List<WorldEntity>> phasingEntitiesByBatchId;
 
         /// <summary>
         ///     Global root entities that are always visible.
@@ -34,7 +34,7 @@ namespace NitroxServer.GameLogic.Entities
             globalRootEntitiesById = worldEntities.Where(entity => entity.ExistsInGlobalRoot)
                                                   .ToDictionary(entity => entity.Id);
 
-            phasingEntitiesByAbsoluteCell = worldEntities.Where(entity => !entity.ExistsInGlobalRoot)
+            phasingEntitiesByBatchId = worldEntities.Where(entity => !entity.ExistsInGlobalRoot)
                                                          .GroupBy(entity => entity.AbsoluteEntityCell.BatchId)
                                                          .ToDictionary(group => group.Key, group => group.ToList());
             this.entityRegistry = entityRegistry;
@@ -68,11 +68,11 @@ namespace NitroxServer.GameLogic.Entities
         {
             List<WorldEntity> result;
 
-            lock (phasingEntitiesByAbsoluteCell)
+            lock (phasingEntitiesByBatchId)
             {
-                if (!phasingEntitiesByAbsoluteCell.TryGetValue(absoluteEntityCell.BatchId, out result))
+                if (!phasingEntitiesByBatchId.TryGetValue(absoluteEntityCell.BatchId, out result))
                 {
-                    result = phasingEntitiesByAbsoluteCell[absoluteEntityCell.BatchId] = new List<WorldEntity>();
+                    result = phasingEntitiesByBatchId[absoluteEntityCell.BatchId] = new List<WorldEntity>();
                 }
             }
 
@@ -122,11 +122,11 @@ namespace NitroxServer.GameLogic.Entities
             }
             else
             {
-                lock (phasingEntitiesByAbsoluteCell)
+                lock (phasingEntitiesByBatchId)
                 {
-                    if (!phasingEntitiesByAbsoluteCell.TryGetValue(entity.AbsoluteEntityCell.BatchId, out List<WorldEntity> phasingEntitiesInCell))
+                    if (!phasingEntitiesByBatchId.TryGetValue(entity.AbsoluteEntityCell.BatchId, out List<WorldEntity> phasingEntitiesInCell))
                     {
-                        phasingEntitiesInCell = phasingEntitiesByAbsoluteCell[entity.AbsoluteEntityCell.BatchId] = new List<WorldEntity>();
+                        phasingEntitiesInCell = phasingEntitiesByBatchId[entity.AbsoluteEntityCell.BatchId] = new List<WorldEntity>();
                     }
 
                     phasingEntitiesInCell.Add(entity);
@@ -214,7 +214,7 @@ namespace NitroxServer.GameLogic.Entities
                 return; // We don't care what cell a global root entity resides in.  Only phasing entities.
             }
 
-            lock (phasingEntitiesByAbsoluteCell)
+            lock (phasingEntitiesByBatchId)
             {
                 List<WorldEntity> oldList = GetEntities(oldCell);
                 oldList.Remove(entity);
@@ -235,9 +235,9 @@ namespace NitroxServer.GameLogic.Entities
             }
             else
             {
-                lock (phasingEntitiesByAbsoluteCell)
+                lock (phasingEntitiesByBatchId)
                 {
-                    if (phasingEntitiesByAbsoluteCell.TryGetValue(entity.AbsoluteEntityCell.BatchId, out List<WorldEntity> entities))
+                    if (phasingEntitiesByBatchId.TryGetValue(entity.AbsoluteEntityCell.BatchId, out List<WorldEntity> entities))
                     {
                         entities.Remove(entity);
                     }
