@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using NitroxClient.Debuggers.Drawer.Unity;
 using UnityEngine;
 
@@ -21,11 +21,18 @@ public class RectTransformDrawer : IDrawer
         }
     }
 
-    private static void DrawRectTransform(RectTransform rectTransform)
+    private void DrawRectTransform(RectTransform rectTransform)
     {
         using (new GUILayout.VerticalScope())
         {
             //TODO: Implement position display like the Unity editor
+            using (new GUILayout.HorizontalScope())
+            {
+                GUILayout.Label("Anchored Position", NitroxGUILayout.DrawerLabel, GUILayout.Width(LABEL_WIDTH));
+                NitroxGUILayout.Separator();
+                rectTransform.anchoredPosition = VectorDrawer.DrawVector2(rectTransform.anchoredPosition, VECTOR_MAX_WIDTH);
+            }
+
             using (new GUILayout.HorizontalScope())
             {
                 GUILayout.Label("Local Position", NitroxGUILayout.DrawerLabel, GUILayout.Width(LABEL_WIDTH));

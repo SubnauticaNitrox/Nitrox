@@ -1,4 +1,5 @@
-﻿using System.Collections;
+using System.Collections;
+using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors;
 using NitroxClient.GameLogic.HUD.PdaTabs;
@@ -60,9 +61,11 @@ public class uGUI_PlayerPingEntry : uGUI_PingEntry
         NitroxServiceLocator.LocateService<PermsChangedProcessor>().OnPermissionsChanged += (perms) => RefreshButtonsVisibility();
     }
 
-    public void Start()
+    public IEnumerator Start()
     {
-        // This action must happen here, else the button will be moved
+        // We must one frame so that the UI elements are initialized properly
+        yield return null;
+        // This action must happen after the yield so that they're correctly placed
         UpdateButtonsPosition();
         // We trigger it at least once so that the localizations are updated with the PlayerName
         OnLanguageChanged();
@@ -109,7 +112,8 @@ public class uGUI_PlayerPingEntry : uGUI_PingEntry
         player = newPlayer;
 
         UpdateLabel(player.PlayerName);
-        icon.color = player.PlayerSettings.PlayerColor.ToUnity();
+        Color playerColor = player.PlayerSettings.PlayerColor.ToUnity();
+        icon.SetColors(playerColor, playerColor, playerColor);
         RefreshMuteButton();
 
         // We need to update each button's listener whether or not they have enough perms because they may become OP during playtime
@@ -169,22 +173,15 @@ public class uGUI_PlayerPingEntry : uGUI_PingEntry
 
     public void UpdateButtonsPosition()
     {
-        const float OFFSET = 540f;
-        Vector3 mutePosition = MuteObject.transform.localPosition;
-        mutePosition = new(0f + OFFSET, mutePosition.y, mutePosition.z);
-        MuteObject.transform.localPosition = mutePosition;
-
-        Vector3 kickPosition = KickObject.transform.localPosition;
-        kickPosition = new(80f + OFFSET, kickPosition.y, kickPosition.z);
-        KickObject.transform.localPosition = kickPosition;
-
-        Vector3 teleportToPosition = TeleportToObject.transform.localPosition;
-        teleportToPosition = new(160f + OFFSET, teleportToPosition.y, teleportToPosition.z);
-        TeleportToObject.transform.localPosition = teleportToPosition;
-
-        Vector3 teleportToMePosition = TeleportToMeObject.transform.localPosition;
-        teleportToMePosition = new(240f + OFFSET, teleportToMePosition.y, teleportToMePosition.z);
-        TeleportToMeObject.transform.localPosition = teleportToMePosition;
+        float OFFSET = 0f;
+        List<GameObject> buttonsToAlign = new() { MuteObject, KickObject, TeleportToObject, TeleportToMeObject };
+        foreach (GameObject buttonObject in buttonsToAlign)
+        {
+            RectTransform buttonRect = buttonObject.GetComponent<RectTransform>();
+            buttonRect.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, 0f);
+            buttonRect.localPosition = new Vector2(OFFSET, 0);
+            OFFSET += 80f;
+        }
     }
 
     private void ClearButtonListeners()
