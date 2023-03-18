@@ -42,6 +42,8 @@ namespace NitroxClient.GameLogic
 
             NitroxId id = NitroxEntity.GetId(gameObject);
 
+            EntityPositionBroadcaster.StopWatchingEntity(id);
+
             // Some picked up entities are not known by the server for several reasons.  First it can be picked up via a spawn item command.  Another
             // example is that some obects are not 'real' objects until they are clicked and end up spawning a prefab.  For example, the fire extinguisher
             // in the escape pod (mono: IntroFireExtinguisherHandTarget) or Creepvine seeds (mono: PickupPrefab).  When clicked, these spawn new prefabs
@@ -73,7 +75,8 @@ namespace NitroxClient.GameLogic
 
             bool inGlobalRoot = map.GlobalRootTechTypes.Contains(techType.ToDto());
             string classId = gameObject.GetComponent<PrefabIdentifier>().ClassId;
-            WorldEntity droppedItem = new WorldEntity(gameObject.transform.ToDto(), 0, classId, inGlobalRoot, waterparkId.OrNull(), false, id, techType.ToDto(), metadata.OrNull(), null, new List<Entity>());
+
+            WorldEntity droppedItem = new WorldEntity(gameObject.transform.ToWorldDto(), 0, classId, inGlobalRoot, waterparkId.OrNull(), false, id, techType.ToDto(), metadata.OrNull(), null, new List<Entity>());
             droppedItem.ChildEntities = GetPrefabChildren(gameObject, id).ToList();
 
             Log.Debug($"Dropping item: {droppedItem}");
@@ -102,12 +105,13 @@ namespace NitroxClient.GameLogic
             }
         }
 
+
         // This function will record any notable children of the dropped item as a PrefabChildEntity.  In this case, a 'notable' 
         // child is one that UWE has tagged with a PrefabIdentifier (class id) and has entity metadata that can be extracted. An
         // example would be recording a Battery PrefabChild inside of a Flashlight WorldEntity. 
         public static IEnumerable<Entity> GetPrefabChildren(GameObject gameObject, NitroxId parentId)
         {
-            foreach(IGrouping<string, PrefabIdentifier> prefabGroup in gameObject.GetAllComponentsInChildren<PrefabIdentifier>()
+            foreach (IGrouping<string, PrefabIdentifier> prefabGroup in gameObject.GetAllComponentsInChildren<PrefabIdentifier>()
                                                                                  .Where(prefab => prefab.gameObject != gameObject)
                                                                                  .GroupBy(prefab => prefab.classId))
             {

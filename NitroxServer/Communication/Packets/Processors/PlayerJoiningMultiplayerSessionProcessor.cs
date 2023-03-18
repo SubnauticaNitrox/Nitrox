@@ -20,14 +20,14 @@ namespace NitroxServer.Communication.Packets.Processors
         private readonly PlayerManager playerManager;
 
         private readonly ScheduleKeeper scheduleKeeper;
-        private readonly EventTriggerer eventTriggerer;
+        private readonly StoryManager storyManager;
         private readonly World world;
         private readonly EntityRegistry entityRegistry;
 
-        public PlayerJoiningMultiplayerSessionProcessor(ScheduleKeeper scheduleKeeper, EventTriggerer eventTriggerer, PlayerManager playerManager, World world, EntityRegistry entityRegistry)
+        public PlayerJoiningMultiplayerSessionProcessor(ScheduleKeeper scheduleKeeper, StoryManager storyManager, PlayerManager playerManager, World world, EntityRegistry entityRegistry)
         {
             this.scheduleKeeper = scheduleKeeper;
-            this.eventTriggerer = eventTriggerer;
+            this.storyManager = storyManager;
             this.playerManager = playerManager;
             this.world = world;
             this.entityRegistry = entityRegistry;
@@ -59,14 +59,6 @@ namespace NitroxServer.Communication.Packets.Processors
             }
 
             List<NitroxId> simulations = world.EntitySimulation.AssignGlobalRootEntities(player).ToList();
-            IEnumerable<VehicleModel> vehicles = world.VehicleManager.GetVehicles();
-            foreach (VehicleModel vehicle in vehicles)
-            {
-                if (world.SimulationOwnershipData.TryToAcquire(vehicle.Id, player, SimulationLockType.TRANSIENT))
-                {
-                    simulations.Add(vehicle.Id);
-                }
-            }
 
             if (wasBrandNewPlayer)
             {
@@ -81,15 +73,12 @@ namespace NitroxServer.Communication.Packets.Processors
                 wasBrandNewPlayer,
                 assignedEscapePodId,
                 equippedItems,
-                GetAllModules(world.InventoryManager.GetAllModules(), player.GetModules()),
                 world.BaseManager.GetBasePiecesForNewlyConnectedPlayer(),
-                vehicles,
                 world.InventoryManager.GetAllStorageSlotItems(),
                 player.UsedItems,
-                player.QuickSlotsBinding,
+                player.QuickSlotsBindingIds,
                 world.GameData.PDAState.GetInitialPDAData(),
-                world.GameData.StoryGoals.GetInitialStoryGoalData(scheduleKeeper),
-                player.CompletedGoals,
+                world.GameData.StoryGoals.GetInitialStoryGoalData(scheduleKeeper, player),
                 player.Position,
                 player.Rotation,
                 player.SubRootId,
@@ -99,10 +88,10 @@ namespace NitroxServer.Communication.Packets.Processors
                 simulations,
                 world.GameMode,
                 player.Permissions,
-                player.PingInstancePreferences.ToDictionary(m => m.Key, m => m.Value)
+                new(new(player.PingInstancePreferences), player.PinnedRecipePreferences.ToList()),
+                storyManager.GetTimeData()
             );
 
-            player.SendPacket(new TimeChange(eventTriggerer.ElapsedSeconds, true));
             player.SendPacket(initialPlayerSync);
         }
 
@@ -110,14 +99,6 @@ namespace NitroxServer.Communication.Packets.Processors
         {
             return playerManager.GetConnectedPlayers().Where(p => p != player)
                                                       .Select(p => p.PlayerContext);
-        }
-
-        private List<EquippedItemData> GetAllModules(ICollection<EquippedItemData> globalModules, List<EquippedItemData> playerModules)
-        {
-            List<EquippedItemData> modulesToSync = new();
-            modulesToSync.AddRange(globalModules);
-            modulesToSync.AddRange(playerModules);
-            return modulesToSync;
         }
 
         private void SetupPlayerEntity(Player player)

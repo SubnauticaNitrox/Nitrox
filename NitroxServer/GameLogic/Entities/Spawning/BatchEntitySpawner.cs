@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using NitroxModel.DataStructures;
@@ -111,7 +111,7 @@ public class BatchEntitySpawner : IEntitySpawner
         return entities;
     }
 
-    private IEnumerable<Entity> SpawnEntitiesUsingRandomDistribution(EntitySpawnPoint entitySpawnPoint, List<UwePrefab> prefabs, DeterministicGenerator deterministicBatchGenerator, WorldEntity parentEntity = null)
+    private IEnumerable<Entity> SpawnEntitiesUsingRandomDistribution(EntitySpawnPoint entitySpawnPoint, List<UwePrefab> prefabs, DeterministicGenerator deterministicBatchGenerator, Entity parentEntity = null)
     {
         List<UwePrefab> allowedPrefabs = FilterAllowedPrefabs(prefabs, entitySpawnPoint);
 
@@ -212,19 +212,37 @@ public class BatchEntitySpawner : IEntitySpawner
         }
     }
 
-    private IEnumerable<Entity> CreateEntityWithChildren(EntitySpawnPoint entitySpawnPoint, NitroxVector3 scale, NitroxTechType techType, int cellLevel, string classId, DeterministicGenerator deterministicBatchGenerator, WorldEntity parentEntity = null)
+    private IEnumerable<Entity> CreateEntityWithChildren(EntitySpawnPoint entitySpawnPoint, NitroxVector3 scale, NitroxTechType techType, int cellLevel, string classId, DeterministicGenerator deterministicBatchGenerator, Entity parentEntity = null)
     {
-        WorldEntity spawnedEntity = new WorldEntity(entitySpawnPoint.LocalPosition,
-                                                    entitySpawnPoint.LocalRotation,
-                                                    scale,
-                                                    techType,
-                                                    cellLevel,
-                                                    classId,
-                                                    true,
-                                                    deterministicBatchGenerator.NextId(),
-                                                    parentEntity,
-                                                    false,
-                                                    null);
+        WorldEntity spawnedEntity;
+
+        if (classId == CellRootEntity.CLASS_ID)
+        {
+            spawnedEntity = new CellRootEntity(entitySpawnPoint.LocalPosition,
+                                               entitySpawnPoint.LocalRotation,
+                                               scale,
+                                               techType,
+                                               cellLevel,
+                                               classId,
+                                               true,
+                                               deterministicBatchGenerator.NextId(),
+                                               false,
+                                               null);
+        }
+        else
+        {
+            spawnedEntity = new WorldEntity(entitySpawnPoint.LocalPosition,
+                                            entitySpawnPoint.LocalRotation,
+                                            scale,
+                                            techType,
+                                            cellLevel,
+                                            classId,
+                                            true,
+                                            deterministicBatchGenerator.NextId(),
+                                            parentEntity,
+                                            false,
+                                            null);
+        }
 
         if (!TryCreatePrefabPlaceholdersGroupWithChildren(ref spawnedEntity, classId, deterministicBatchGenerator))
         {
@@ -233,14 +251,14 @@ public class BatchEntitySpawner : IEntitySpawner
 
         if (customBootstrappersByTechType.TryGetValue(techType, out IEntityBootstrapper bootstrapper))
         {
-            bootstrapper.Prepare(spawnedEntity, parentEntity, deterministicBatchGenerator);
+            bootstrapper.Prepare(spawnedEntity, deterministicBatchGenerator);
         }
 
         yield return spawnedEntity;
 
         if (parentEntity == null) // Ensures children are only returned at the top level
         {
-            // Children are yielded as well so they can be indexed at the top level (for use by simulation 
+            // Children are yielded as well so they can be indexed at the top level (for use by simulation
             // ownership and various other consumers).  The parent should always be yielded before the children
             foreach (Entity childEntity in AllChildren(spawnedEntity))
             {
@@ -301,14 +319,46 @@ public class BatchEntitySpawner : IEntitySpawner
             return false;
         }
 
-        List<PrefabPlaceholderEntity> placeholders = new(group.PrefabPlaceholders.Length);
+        List<Entity> placeholders = new(group.PrefabPlaceholders.Length);
+        entity = new PlaceholderGroupWorldEntity(entity, placeholders);
 
-        foreach (string placeholderClassId in group.PrefabPlaceholders)
+        for (int i = 0; i < group.PrefabPlaceholders.Length; i++)
         {
-            placeholders.Add(new PrefabPlaceholderEntity(deterministicBatchGenerator.NextId(), placeholderClassId, NitroxTechType.None, null, entity.Id, new List<Entity>()));
+            PrefabPlaceholderAsset placeholder = group.PrefabPlaceholders[i];
+
+            PrefabChildEntity prefabChild = new(deterministicBatchGenerator.NextId(), null, NitroxTechType.None, i, null, entity.Id);
+            placeholders.Add(prefabChild);
+
+            if (placeholder.EntitySlot == null)
+            {
+                prefabChild.ChildEntities.Add(new PrefabPlaceholderEntity(deterministicBatchGenerator.NextId(), group.TechType, prefabChild.Id));
+            }
+            else
+            {
+                Entity entitySlotNullableEntity = SpawnEntitySlotEntities(placeholder.EntitySlot, deterministicBatchGenerator, entity.AbsoluteEntityCell, prefabChild);
+
+                if (entitySlotNullableEntity != null)
+                {
+                    prefabChild.ChildEntities.Add(entitySlotNullableEntity);
+                }
+            }
         }
 
-        entity = new PlaceholderGroupWorldEntity(entity, placeholders);
         return true;
     }
+
+    private Entity SpawnEntitySlotEntities(NitroxEntitySlot entitySlot, DeterministicGenerator deterministicBatchGenerator, AbsoluteEntityCell cell, PrefabChildEntity parentEntity)
+    {
+        List<UwePrefab> prefabs = prefabFactory.GetPossiblePrefabs(entitySlot.BiomeType);
+        List<Entity> entities = new();
+
+        if (prefabs.Count > 0)
+        {
+            EntitySpawnPoint entitySpawnPoint = new EntitySpawnPoint(cell, NitroxVector3.Zero, NitroxQuaternion.Identity, entitySlot.AllowedTypes.ToList(), 1f, entitySlot.BiomeType);
+            entities.AddRange(SpawnEntitiesUsingRandomDistribution(entitySpawnPoint, prefabs, deterministicBatchGenerator, parentEntity));
+        }
+
+        return entities.FirstOrDefault();
+    }
+
 }

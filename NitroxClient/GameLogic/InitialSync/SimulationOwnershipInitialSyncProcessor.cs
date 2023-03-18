@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxModel.DataStructures;
@@ -17,8 +17,7 @@ namespace NitroxClient.GameLogic.InitialSync
             this.simulationOwnership = simulationOwnership;
 
             DependentProcessors.Add(typeof(BuildingInitialSyncProcessor));
-            DependentProcessors.Add(typeof(CyclopsInitialAsyncProcessor));
-            DependentProcessors.Add(typeof(VehicleInitialSyncProcessor));
+            DependentProcessors.Add(typeof(GlobalRootInitialSyncProcessor));
         }
 
         public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)

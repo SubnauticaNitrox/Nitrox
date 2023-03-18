@@ -38,7 +38,7 @@ Please do keep in mind that this mod is still in progressional development.
 
 We finally have reached a stage, where we feel comfortable enough to give the public easy access to the mod by providing a launcher to use on each reoccurring update.
 
-If you want to follow the development progress exactly on each pull request. Refer to the <a href="https://github.com/Sunrunner37/Nitrox/wiki">wiki tab</a> to set up a development environment where pushed updates will be synchronized automatically.
+If you want to follow the development progress exactly on each pull request. Refer to the <a href="https://github.com/SubnauticaNitrox/Nitrox/wiki">wiki tab</a> to set up a development environment where pushed updates will be synchronized automatically.
 
 You can download the latest release of the mod on the <a href="https://nitrox.rux.gg">Nitrox website</a>.
 
@@ -54,7 +54,7 @@ You'll need to sign up to start translating to a new language, or you can sugges
 
 
 ### How can I contribute?
-Simply submit a pull request. Full documentation can be found on the <a href="https://github.com/Sunrunner37/Nitrox/wiki">wiki tab</a>.  Feel free to join us in the <a href="https://discord.gg/E8B4X9s">Nitrox Discord channel</a>.  Make sure to check out or contributing guidelines found <a href="https://github.com/SubnauticaNitrox/Nitrox/blob/master/CONTRIBUTING.md">here</a>.
+Simply submit a pull request. Full documentation can be found on the <a href="https://github.com/SubnauticaNitrox/Nitrox/wiki">wiki tab</a>.  Feel free to join us in the <a href="https://discord.gg/E8B4X9s">Nitrox Discord channel</a>.  Make sure to check out or contributing guidelines found <a href="https://github.com/SubnauticaNitrox/Nitrox/blob/master/CONTRIBUTING.md">here</a>.
 
 ### How can I donate?
 We do not accept donations to the mod.  Those wishing to give money can do so here: https://www.doctorswithoutborders.org/

@@ -21,7 +21,7 @@ namespace NitroxClient.Communication.Packets.Processors
             GameObject gameObject = NitroxEntity.RequireObjectFrom(packet.Id);
             Openable openable = gameObject.RequireComponent<Openable>();
 
-            using (packetSender.Suppress<OpenableStateChanged>())
+            using (PacketSuppressor<OpenableStateChanged>.Suppress())
             {
                 openable.PlayOpenAnimation(packet.IsOpen, packet.Duration);
             }

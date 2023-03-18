@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
@@ -36,16 +37,6 @@ namespace NitroxServer.Communication.Packets.Processors
                 playerManager.SendPacketToAllPlayers(simulationOwnershipChange);
             }
 
-            // Need to remove the cached progress entry if the object is fully scanned
-            if (pdaStateData.CachedProgress.TryGetValue(packet.TechType, out PDAProgressEntry pdaProgressEntry) && pdaProgressEntry.Entries.ContainsKey(packet.Id))
-            {
-                pdaProgressEntry.Entries.Remove(packet.Id);
-                if (pdaProgressEntry.Entries.Count == 0)
-                {
-                    pdaStateData.CachedProgress.Remove(packet.TechType);
-                }
-            }
-
             // Will have the clients remove the object from their world.
             playerManager.SendPacketToOtherPlayers(packet, player);
 
@@ -65,7 +56,7 @@ namespace NitroxServer.Communication.Packets.Processors
             if (entity.Value is WorldEntity worldEntity)
             {
                 // Do not track this entity in the open world anymore.
-                worldEntityManager.PickUpEntity(worldEntity);
+                worldEntityManager.StopTrackingEntity(worldEntity);
 
                 // Convert the world entity into an inventory item
                 InventoryItemEntity inventoryItemEntity = new InventoryItemEntity(worldEntity.Id, worldEntity.ClassId, worldEntity.TechType, worldEntity.Metadata, player.GameObjectId, worldEntity.ChildEntities);

@@ -1,52 +1,61 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.Util;
 using UnityEngine;
 
-namespace NitroxClient.MonoBehaviours
+namespace NitroxClient.MonoBehaviours;
+
+public class EntityPositionBroadcaster : MonoBehaviour
 {
-    public class EntityPositionBroadcaster : MonoBehaviour
+    public static readonly float BROADCAST_INTERVAL = 0.25f;
+
+    private static HashSet<NitroxId> watchingEntityIds = new();
+    private Entities entityBroadcaster;
+
+    private float time;
+
+    public void Awake()
     {
-        public static readonly float BROADCAST_INTERVAL = 0.25f;
+        entityBroadcaster = NitroxServiceLocator.LocateService<Entities>();
+    }
 
-        private static Dictionary<NitroxId, GameObject> watchingEntitiesById = new Dictionary<NitroxId, GameObject>();
-        private Entities entityBroadcaster;
+    public void Update()
+    {
+        time += Time.deltaTime;
 
-        private float time;
-
-        public void Awake()
+        // Only do on a specific cadence to avoid hammering server
+        if (time >= BROADCAST_INTERVAL)
         {
-            entityBroadcaster = NitroxServiceLocator.LocateService<Entities>();
-        }
+            time = 0;
 
-        public void Update()
-        {
-            time += Time.deltaTime;
-
-            // Only do on a specific cadence to avoid hammering server
-            if (time >= BROADCAST_INTERVAL)
+            if (watchingEntityIds.Count > 0)
             {
-                time = 0;
-
-                if (watchingEntitiesById.Count > 0)
-                {
-                    entityBroadcaster.BroadcastTransforms(watchingEntitiesById);
-                }
+                Dictionary<NitroxId, GameObject> gameObjectsById = NitroxEntity.GetObjectsFrom(watchingEntityIds);
+                entityBroadcaster.BroadcastTransforms(gameObjectsById);
             }
         }
+    }
 
-        public static void WatchEntity(NitroxId id, GameObject gameObject)
+    public static void WatchEntity(NitroxId id)
+    {
+        watchingEntityIds.Add(id);
+
+        // The game object may not exist at this very moment (due to being spawned in async). This is OK as we will
+        // automatically start sending updates when we finally get it in the world. This behavior will also allow us
+        // to resync or respawn entities while still have broadcasting enabled without doing anything extra.
+        Optional<GameObject> gameObject = NitroxEntity.GetObjectFrom(id);
+
+        if (gameObject.HasValue)
         {
-            watchingEntitiesById[id] = gameObject;
-
-            RemotelyControlled remotelyControlled = gameObject.GetComponent<RemotelyControlled>();
+            RemotelyControlled remotelyControlled = gameObject.Value.GetComponent<RemotelyControlled>();
             Object.Destroy(remotelyControlled);
         }
+    }
 
-        public static void StopWatchingEntity(NitroxId id)
-        {
-            watchingEntitiesById.Remove(id);
-        }
+    public static void StopWatchingEntity(NitroxId id)
+    {
+        watchingEntityIds.Remove(id);
     }
 }

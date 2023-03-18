@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
@@ -36,7 +36,7 @@ namespace NitroxPatcher.Patches.Dynamic
             {
                 SubRoot cyclops = __instance.subRoot;
                 NitroxId id = NitroxEntity.GetId(cyclops.gameObject);
-                Resolve<Cyclops>().BroadcastChangeEngineMode(id, __instance.motorModeIndex);
+                Resolve<Cyclops>().BroadcastMetadataChange(id);
             }
         }
 

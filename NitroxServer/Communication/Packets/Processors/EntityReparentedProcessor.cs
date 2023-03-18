@@ -20,37 +20,7 @@ public class EntityReparentedProcessor : AuthenticatedPacketProcessor<EntityRepa
 
     public override void Process(EntityReparented packet, Player player)
     {
-        Optional<Entity> opEntity = entityRegistry.GetEntityById(packet.Id);
-
-        if (!opEntity.HasValue)
-        {
-            Log.Error($"Could not find entity to reparent: {packet}");
-            return;
-        }
-
-        Entity entity = opEntity.Value;
-        entity.ParentId = packet.NewParentId;
-
-        Optional<Entity> oldParent = entityRegistry.GetEntityById(entity.ParentId);
-
-        // old parent may not exist anymore, so don't expect it.
-        if (oldParent.HasValue)
-        {
-            oldParent.Value.ChildEntities.Remove(entity);
-        }
-
-        Optional<Entity> newParent = entityRegistry.GetEntityById(packet.NewParentId);
-
-        // old parent may not exist anymore, so don't expect it.
-        if (newParent.HasValue)
-        {
-            newParent.Value.ChildEntities.Add(entity);
-        }
-        else
-        {
-            Log.Error($"Could not find new parent to reparent an entity for: {packet}");
-        }
-
+        entityRegistry.ReparentEntity(packet.Id, packet.NewParentId);
         playerManager.SendPacketToOtherPlayers(packet, player);
     }
 }

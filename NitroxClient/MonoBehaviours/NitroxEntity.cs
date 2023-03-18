@@ -1,20 +1,24 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
+using ProtoBuf;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours
 {
     [Serializable]
     [DataContract]
+    [ProtoContract] // REQUIRED as the game serializes/deserializes phasing entities in batches when moving around the map.
     public class NitroxEntity : MonoBehaviour, IProtoTreeEventListener
     {
         private static Dictionary<NitroxId, GameObject> gameObjectsById = new Dictionary<NitroxId, GameObject>();
 
         [DataMember(Order = 1)]
+        [ProtoMember(1)]
         public NitroxId Id;
 
         private NitroxEntity() // Default for Proto
@@ -47,6 +51,13 @@ namespace NitroxClient.MonoBehaviours
 
             // Nullable incase game object is marked as destroyed
             return Optional.OfNullable(gameObject);
+        }
+
+        public static Dictionary<NitroxId, GameObject> GetObjectsFrom(HashSet<NitroxId> ids)
+        {
+            return ids.Select(id => new KeyValuePair<NitroxId, GameObject>(id, gameObjectsById.GetOrDefault(id, null)))
+                      .Where(keyValue => keyValue.Value != null)
+                      .ToDictionary(kv => kv.Key, kv => kv.Value);
         }
 
         public static bool TryGetObjectFrom(NitroxId id, out GameObject gameObject)

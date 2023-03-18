@@ -1,4 +1,4 @@
-﻿using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel_Subnautica.DataStructures.GameLogic;
@@ -30,12 +30,6 @@ namespace NitroxServer_Subnautica.Serialization
             Model.Add(typeof(NitroxQuaternion), false).SetSurrogate(typeof(QuaternionSurrogate));
             Model.Add(typeof(Transform), false).SetSurrogate(typeof(NitroxTransform));
             Model.Add(typeof(GameObject), false).SetSurrogate(typeof(NitroxServer.UnityStubs.GameObject));
-
-            MetaType vehicleModel = Model.Add(typeof(VehicleModel), false);
-            vehicleModel.AddSubType(100, typeof(ExosuitModel));
-            vehicleModel.AddSubType(200, typeof(SeamothModel));
-            vehicleModel.AddSubType(300, typeof(CyclopsModel));
-            vehicleModel.AddSubType(400, typeof(NeptuneRocketModel));
 
             MetaType movementData = Model.Add(typeof(VehicleMovementData), false);
             movementData.AddSubType(100, typeof(BasicVehicleMovementData));

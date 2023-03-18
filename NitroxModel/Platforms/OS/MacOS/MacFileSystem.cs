@@ -14,5 +14,7 @@ namespace NitroxModel.Platforms.OS.MacOS
         {
             throw new System.NotImplementedException();
         }
+
+        public override bool IsTrustedFile(string file) => throw new System.NotImplementedException();
     }
 }

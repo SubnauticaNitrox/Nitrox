@@ -1,8 +1,6 @@
-﻿using System;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
-using NitroxModel_Subnautica.DataStructures.GameLogic;
 using NitroxModel_Subnautica.Packets;
 using UnityEngine;
 
@@ -11,43 +9,14 @@ namespace NitroxClient.GameLogic
     public class ExosuitModuleEvent
     {
         private readonly IPacketSender packetSender;
-        private readonly IMultiplayerSession multiplayerSession;
-        private readonly Vehicles vehicles;
 
-        public ExosuitModuleEvent(IPacketSender packetSender, IMultiplayerSession multiplayerSession, Vehicles vehicles)
+        public ExosuitModuleEvent(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
-            this.multiplayerSession = multiplayerSession;
-            this.vehicles = vehicles;
-        }
-
-        public void SpawnedArm(Exosuit exosuit)
-        {
-            NitroxId id = NitroxEntity.GetId(exosuit.gameObject);
-            ExosuitModel exosuitModel = vehicles.GetVehicles<ExosuitModel>(id);
-
-            IExosuitArm rightArm = exosuit.rightArm;
-            IExosuitArm leftArm = exosuit.leftArm;
-
-            try
-            {
-                GameObject rightArmGameObject = rightArm.GetGameObject();
-                NitroxEntity.SetNewId(rightArmGameObject, exosuitModel.RightArmId);
-
-                GameObject leftArmGameObject = leftArm.GetGameObject();
-                NitroxEntity.SetNewId(leftArmGameObject, exosuitModel.LeftArmId);
-            }
-            catch (Exception e)
-            {
-                Log.Warn($"Got error setting arm GameObjects. This is probably due to docking sync and can be ignored\nErromessage: {e.Message}\n{e.StackTrace}");
-            }
-
-            Log.Debug($"Spawn exosuit arms for: {id}");
         }
 
         public void BroadcastClawUse(ExosuitClawArm clawArm, float cooldown)
         {
-            NitroxId id = NitroxEntity.GetId(clawArm.gameObject);
             ExosuitArmAction action;
 
             // If cooldown of claw arm matches pickup cooldown, the exosuit arm performed a pickup action
@@ -187,9 +156,7 @@ namespace NitroxClient.GameLogic
 
                 // Copied from SeamothModuleActionProcessor. We need to synchronize both methods
                 GameObject gameObject = UnityEngine.Object.Instantiate(torpedoType.prefab);
-                Transform component = gameObject.GetComponent<Transform>();
                 SeamothTorpedo component2 = gameObject.GetComponent<SeamothTorpedo>();
-                Vector3 zero = Vector3.zero;
                 Rigidbody componentInParent = silo.GetComponentInParent<Rigidbody>();
                 Vector3 rhs = (!(componentInParent != null)) ? Vector3.zero : componentInParent.velocity;
                 float speed = Vector3.Dot(forward, rhs);

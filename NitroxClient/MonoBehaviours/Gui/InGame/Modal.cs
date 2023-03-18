@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UWE;
@@ -22,7 +23,7 @@ public abstract class Modal
     public static Modal CurrentModal;
 
     private GameObject modalSubWindow;
-    private Text text;
+    private TextMeshProUGUI text;
 
     // All the properties that will be overriden by new instances that inherit this class
     public string SubWindowName { get; init; }
@@ -72,7 +73,7 @@ public abstract class Modal
     {
         if (FreezeGame)
         {
-            FreezeTime.Begin(FreezeTime.Id.IngameMenu);
+            FreezeTime.Begin(FreezeTime.Id.Quit);
         }
         CurrentModal?.Hide();
         CurrentModal = this;
@@ -141,7 +142,7 @@ public abstract class Modal
     /// </summary>
     private void UpdateModal()
     {
-        text = modalSubWindow.FindChild("Header").GetComponent<Text>();
+        text = modalSubWindow.FindChild("Header").GetComponent<TextMeshProUGUI>();
         text.text = ModalText;
 
         GameObject buttonYesObject = modalSubWindow.FindChild("ButtonYes");
@@ -151,7 +152,7 @@ public abstract class Modal
         // We need to reinitialize onClick to avoid keeping Persisted Events (which are set manually inside Unity's Editor)
         yesButton.onClick = new Button.ButtonClickedEvent();
         yesButton.onClick.AddListener(() => { ClickYes(); });
-        buttonYesObject.GetComponentInChildren<Text>().text = YesButtonText;
+        buttonYesObject.GetComponentInChildren<TextMeshProUGUI>().text = YesButtonText;
 
         if (HideNoButton)
         {
@@ -165,7 +166,7 @@ public abstract class Modal
             Button noButton = buttonNoObject.GetComponent<Button>();
             noButton.onClick = new Button.ButtonClickedEvent();
             noButton.onClick.AddListener(() => { ClickNo(); });
-            buttonNoObject.GetComponentInChildren<Text>().text = NoButtonText;
+            buttonNoObject.GetComponentInChildren<TextMeshProUGUI>().text = NoButtonText;
         }
     }
 

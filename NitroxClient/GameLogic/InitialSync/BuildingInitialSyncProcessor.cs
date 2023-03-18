@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.Bases.Spawning.BasePiece;
@@ -33,8 +34,6 @@ namespace NitroxClient.GameLogic.InitialSync
             this.packetSender = packetSender;
             this.buildEventQueue = buildEventQueue;
             this.basePieceSpawnPrioritizer = basePieceSpawnPrioritizer;
-
-            DependentProcessors.Add(typeof(CyclopsInitialAsyncProcessor));
         }
 
         public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
@@ -64,9 +63,9 @@ namespace NitroxClient.GameLogic.InitialSync
 
         private void QueueUpPieces(IEnumerable<BasePiece> basePieces)
         {
-            using (packetSender.Suppress<ConstructionAmountChanged>())
-            using (packetSender.Suppress<ConstructionCompleted>())
-            using (packetSender.Suppress<PlaceBasePiece>())
+            using (PacketSuppressor<ConstructionAmountChanged>.Suppress())
+            using (PacketSuppressor<ConstructionCompleted>.Suppress())
+            using (PacketSuppressor<PlaceBasePiece>.Suppress())
             {
                 foreach (BasePiece basePiece in basePieces)
                 {

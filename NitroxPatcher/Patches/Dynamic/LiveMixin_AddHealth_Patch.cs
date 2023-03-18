@@ -1,9 +1,12 @@
-﻿using System.Reflection;
+using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
+using NitroxClient.GameLogic.Spawning.Metadata.Extractor;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic
@@ -40,8 +43,12 @@ namespace NitroxPatcher.Patches.Dynamic
 
                 if (hasLock)
                 {
-                    TechType techType = CraftData.GetTechType(__instance.gameObject);
-                    NitroxServiceLocator.LocateService<LiveMixinManager>().BroadcastAddHealth(techType, id, healthBack, __instance.health);
+                    Optional<EntityMetadata> metadata = EntityMetadataExtractor.Extract(__instance.gameObject);
+
+                    if (metadata.HasValue)
+                    {
+                        Resolve<Entities>().BroadcastMetadataUpdate(id, metadata.Value);
+                    }
                 }
             }
         }

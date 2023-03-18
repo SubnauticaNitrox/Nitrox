@@ -6,7 +6,6 @@ using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nitrox.Test;
 using Nitrox.Test.Helper;
-using NitroxModel_Subnautica.DataStructures.GameLogic;
 using NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation.Metadata;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
@@ -23,7 +22,6 @@ using NitroxServer.GameLogic.Entities;
 using NitroxServer.GameLogic.Items;
 using NitroxServer.GameLogic.Players;
 using NitroxServer.GameLogic.Unlockables;
-using NitroxServer.GameLogic.Vehicles;
 using NitroxServer.Serialization.World;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
@@ -51,7 +49,7 @@ public class WorldPersistenceTest
 
         worldData = GeneratePersistedWorldData();
         World.World world = worldPersistence.CreateWorld(worldData, ServerGameMode.CREATIVE);
-        world.EventTriggerer.ResetWorld();
+        world.TimeKeeper.ResetCount();
 
         for (int index = 0; index < ServerSerializers.Length; index++)
         {
@@ -63,7 +61,7 @@ public class WorldPersistenceTest
             //Checking loading
             Optional<World.World> worldAfter = worldPersistence.LoadFromFile(tempSaveFilePath);
             Assert.IsTrue(worldAfter.HasValue, $"Loading saved world failed while using {ServerSerializers[index]}.");
-            worldAfter.Value.EventTriggerer.ResetWorld();
+            worldAfter.Value.TimeKeeper.ResetCount();
             WorldsDataAfter[index] = PersistedWorldData.From(worldAfter.Value);
         }
     }
@@ -76,34 +74,9 @@ public class WorldPersistenceTest
     }
 
     [DataTestMethod, DynamicWorldDataAfter]
-    public void VehicleDataTest(PersistedWorldData worldDataAfter, string serializerName)
-    {
-        AssertHelper.IsListEqual(worldData.WorldData.VehicleData.Vehicles.OrderBy(x => x.Id), worldDataAfter.WorldData.VehicleData.Vehicles.OrderBy(x => x.Id), (vehicleModel, vehicleModelAfter) =>
-        {
-            Assert.AreEqual(vehicleModel.TechType, vehicleModelAfter.TechType);
-            Assert.AreEqual(vehicleModel.Id, vehicleModelAfter.Id);
-            Assert.AreEqual(vehicleModel.Position, vehicleModelAfter.Position);
-            Assert.AreEqual(vehicleModel.Rotation, vehicleModelAfter.Rotation);
-
-            AssertHelper.IsListEqual(vehicleModel.InteractiveChildIdentifiers.OrderBy(x => x.Id), vehicleModelAfter.InteractiveChildIdentifiers.OrderBy(x => x.Id), (childIdentifier, childIdentifierAfter) =>
-            {
-                Assert.AreEqual(childIdentifier.Id, childIdentifierAfter.Id);
-                Assert.AreEqual(childIdentifier.GameObjectNamePath, childIdentifierAfter.GameObjectNamePath);
-            });
-
-            Assert.AreEqual(vehicleModel.DockingBayId.HasValue, vehicleModelAfter.DockingBayId.HasValue);
-            Assert.AreEqual(vehicleModel.DockingBayId.Value, vehicleModelAfter.DockingBayId.Value);
-            Assert.AreEqual(vehicleModel.Name, vehicleModelAfter.Name);
-            Assert.IsTrue(vehicleModel.HSB.SequenceEqual(vehicleModelAfter.HSB));
-            Assert.AreEqual(vehicleModel.Health, vehicleModelAfter.Health);
-        });
-    }
-
-    [DataTestMethod, DynamicWorldDataAfter]
     public void InventoryDataTest(PersistedWorldData worldDataAfter, string serializerName)
     {
         AssertHelper.IsListEqual(worldData.WorldData.InventoryData.StorageSlotItems.OrderBy(x => x.ItemId), worldDataAfter.WorldData.InventoryData.StorageSlotItems.OrderBy(x => x.ItemId), ItemDataTest);
-        AssertHelper.IsListEqual(worldData.WorldData.InventoryData.Modules.OrderBy(x => x.ItemId), worldDataAfter.WorldData.InventoryData.Modules.OrderBy(x => x.ItemId), ItemDataTest);
     }
 
     private static void ItemDataTest(ItemData itemData, ItemData itemDataAfter)
@@ -139,32 +112,22 @@ public class WorldPersistenceTest
 
     private static void PDAStateTest(PDAStateData pdaState, PDAStateData pdaStateAfter)
     {
-        Assert.IsTrue(pdaState.UnlockedTechTypes.SequenceEqual(pdaStateAfter.UnlockedTechTypes));
-
-        AssertHelper.IsDictionaryEqual(pdaState.PartiallyUnlockedByTechType, pdaStateAfter.PartiallyUnlockedByTechType, (entry, entryAfter) =>
-        {
-            Assert.AreEqual(entry.Key, entryAfter.Key);
-            Assert.AreEqual(entry.Value.TechType, entryAfter.Value.TechType);
-            Assert.AreEqual(entry.Value.Progress, entryAfter.Value.Progress);
-            Assert.AreEqual(entry.Value.Unlocked, entryAfter.Value.Unlocked);
-        });
-
         Assert.IsTrue(pdaState.KnownTechTypes.SequenceEqual(pdaStateAfter.KnownTechTypes));
         Assert.IsTrue(pdaState.AnalyzedTechTypes.SequenceEqual(pdaStateAfter.AnalyzedTechTypes));
-        Assert.IsTrue(pdaState.EncyclopediaEntries.SequenceEqual(pdaStateAfter.EncyclopediaEntries));
-
         AssertHelper.IsListEqual(pdaState.PdaLog.OrderBy(x => x.Key), pdaStateAfter.PdaLog.OrderBy(x => x.Key), (entry, entryAfter) =>
         {
             Assert.AreEqual(entry.Key, entryAfter.Key);
             Assert.AreEqual(entry.Timestamp, entryAfter.Timestamp);
         });
-
-        AssertHelper.IsDictionaryEqual(pdaState.CachedProgress, pdaStateAfter.CachedProgress, (entry, entryAfter) =>
+        Assert.IsTrue(pdaState.EncyclopediaEntries.SequenceEqual(pdaStateAfter.EncyclopediaEntries));
+        Assert.IsTrue(pdaState.ScannerFragments.SequenceEqual(pdaStateAfter.ScannerFragments));
+        AssertHelper.IsListEqual(pdaState.ScannerPartial.OrderBy(x => x.TechType.Name), pdaStateAfter.ScannerPartial.OrderBy(x => x.TechType.Name), (entry, entryAfter) =>
         {
-            Assert.AreEqual(entry.Key, entryAfter.Key);
-            Assert.AreEqual(entry.Value.TechType, entryAfter.Value.TechType);
-            AssertHelper.IsDictionaryEqual(entry.Value.Entries, entryAfter.Value.Entries);
+            Assert.AreEqual(entry.TechType, entryAfter.TechType);
+            Assert.AreEqual(entry.Unlocked, entryAfter.Unlocked);
         });
+
+        Assert.IsTrue(pdaState.ScannerComplete.SequenceEqual(pdaStateAfter.ScannerComplete));
     }
 
     private static void StoryGoalTest(StoryGoalData storyGoal, StoryGoalData storyGoalAfter)
@@ -177,8 +140,8 @@ public class WorldPersistenceTest
 
     private static void StoryTimingTest(StoryTimingData storyTiming, StoryTimingData storyTimingAfter)
     {
-        Assert.AreEqual(storyTiming.ElapsedTime, storyTimingAfter.ElapsedTime);
-        Assert.AreEqual(storyTiming.AuroraExplosionTime, storyTimingAfter.AuroraExplosionTime);
+        Assert.AreEqual(storyTiming.ElapsedSeconds, storyTimingAfter.ElapsedSeconds);
+        Assert.AreEqual(storyTiming.AuroraCountdownTime, storyTimingAfter.AuroraCountdownTime);
         Assert.AreEqual(storyTiming.AuroraWarningTime, storyTimingAfter.AuroraWarningTime);
     }
 
@@ -259,7 +222,7 @@ public class WorldPersistenceTest
             Assert.AreEqual(playerData.Name, playerDataAfter.Name);
 
             Assert.IsTrue(playerData.UsedItems.SequenceEqual(playerDataAfter.UsedItems));
-            Assert.IsTrue(playerData.QuickSlotsBinding.SequenceEqual(playerDataAfter.QuickSlotsBinding));
+            Assert.IsTrue(playerData.QuickSlotsBindingIds.SequenceEqual(playerDataAfter.QuickSlotsBindingIds));
             AssertHelper.IsListEqual(playerData.EquippedItems.OrderBy(x => x.ItemId), playerDataAfter.EquippedItems.OrderBy(x => x.ItemId), ItemDataTest);
             AssertHelper.IsListEqual(playerData.Modules.OrderBy(x => x.ItemId), playerDataAfter.Modules.OrderBy(x => x.ItemId), ItemDataTest);
 
@@ -279,14 +242,15 @@ public class WorldPersistenceTest
             Assert.AreEqual(playerData.NitroxId, playerDataAfter.NitroxId);
             Assert.AreEqual(playerData.IsPermaDeath, playerDataAfter.IsPermaDeath);
 
-            Assert.IsTrue(playerData.CompletedGoals.SequenceEqual(playerDataAfter.CompletedGoals));
+            Assert.IsTrue(playerData.PersonalCompletedGoalsWithTimestamp.SequenceEqual(playerDataAfter.PersonalCompletedGoalsWithTimestamp));
 
-            AssertHelper.IsDictionaryEqual(playerData.PingInstancePreferences, playerDataAfter.PingInstancePreferences, (keyValuePair, keyValuePairAfter) =>
+            AssertHelper.IsDictionaryEqual(playerData.PlayerPreferences.PingPreferences, playerDataAfter.PlayerPreferences.PingPreferences, (keyValuePair, keyValuePairAfter) =>
             {
                 Assert.AreEqual(keyValuePair.Key, keyValuePairAfter.Key);
                 Assert.AreEqual(keyValuePair.Value.Color, keyValuePairAfter.Value.Color);
                 Assert.AreEqual(keyValuePair.Value.Visible, keyValuePairAfter.Value.Visible);
             });
+            Assert.IsTrue(playerData.PlayerPreferences.PinnedTechTypes.SequenceEqual(playerDataAfter.PlayerPreferences.PinnedTechTypes));
         });
     }
 
@@ -358,6 +322,20 @@ public class WorldPersistenceTest
                 Assert.AreEqual(metadata.TechType, metadataAfter.TechType);
                 Assert.AreEqual(metadata.StartTime, metadataAfter.StartTime);
                 break;
+            case CyclopsMetadata metadata when entityAfter.Metadata is CyclopsMetadata metadataAfter:
+                Assert.AreEqual(metadata.SilentRunningOn, metadataAfter.SilentRunningOn);
+                Assert.AreEqual(metadata.EngineOn, metadataAfter.EngineOn);
+                Assert.AreEqual(metadata.EngineMode, metadataAfter.EngineMode);
+                Assert.AreEqual(metadata.Health, metadataAfter.Health);
+                break;
+            case CyclopsLightingMetadata metadata when entityAfter.Metadata is CyclopsLightingMetadata metadataAfter:
+                Assert.AreEqual(metadata.InternalLightsOn, metadataAfter.InternalLightsOn);
+                Assert.AreEqual(metadata.FloodLightsOn, metadataAfter.FloodLightsOn);
+                break;
+            case FireExtinguisherHolderMetadata metadata when entityAfter.Metadata is FireExtinguisherHolderMetadata metadataAfter:
+                Assert.AreEqual(metadata.Fuel, metadataAfter.Fuel);
+                Assert.AreEqual(metadata.HasExtinguisher, metadataAfter.HasExtinguisher);
+                break;
             case null when entityAfter.Metadata is null:
                 break;
             default:
@@ -401,6 +379,13 @@ public class WorldPersistenceTest
                 break;
             case InventoryItemEntity inventoryItemEntity when entityAfter is InventoryItemEntity inventoryItemEntityAfter:
                 Assert.AreEqual(inventoryItemEntity.ClassId, inventoryItemEntityAfter.ClassId);
+                break;
+            case VehicleWorldEntity vehicleWorldEntity when entityAfter is VehicleWorldEntity vehicleWorldEntityAfter:
+                Assert.AreEqual(vehicleWorldEntity.SpawnerId, vehicleWorldEntityAfter.SpawnerId);
+                Assert.AreEqual(vehicleWorldEntity.ConstructionTime, vehicleWorldEntityAfter.ConstructionTime);
+                break;
+            case PathBasedChildEntity PathBasedChildEntity when entityAfter is PathBasedChildEntity pathBasedChildEntityAfter:
+                Assert.AreEqual(PathBasedChildEntity.Path, pathBasedChildEntityAfter.Path);
                 break;
             default:
                 Assert.Fail($"Runtime type of {nameof(Entity)} is not equal");
@@ -453,15 +438,18 @@ public class WorldPersistenceTest
                         new PrefabChildEntity(new NitroxId(), "pretty class id", new NitroxTechType("Fabricator"), 1, new CrafterMetadata(new NitroxTechType("FilteredWater"), 100, 10), new NitroxId()),
                         new PrefabPlaceholderEntity(new NitroxId(), new NitroxTechType("Bulkhead"), new NitroxId()),
                         new WorldEntity(NitroxVector3.Zero, NitroxQuaternion.Identity, NitroxVector3.One, new NitroxTechType("Peeper"), 1, "PeeperClass", false, new NitroxId(), null, false, new NitroxId()),
-                        new PlaceholderGroupWorldEntity(new WorldEntity(NitroxVector3.Zero, NitroxQuaternion.Identity, NitroxVector3.One, NitroxTechType.None, 1, "Wreck1", false, new NitroxId(), null, false, new NitroxId()), new List<PrefabPlaceholderEntity>()
+                        new PlaceholderGroupWorldEntity(new WorldEntity(NitroxVector3.Zero, NitroxQuaternion.Identity, NitroxVector3.One, NitroxTechType.None, 1, "Wreck1", false, new NitroxId(), null, false, new NitroxId()), new List<Entity>()
                         {
-                            new(new NitroxId(), new NitroxTechType("Door"), new NitroxId())
+                            new PrefabPlaceholderEntity(new NitroxId(), new NitroxTechType("Door"), new NitroxId())
                         }),
                         new EscapePodWorldEntity(NitroxVector3.One, new NitroxId(), new RepairedComponentMetadata(new NitroxTechType("Radio"))),
                         new InventoryEntity(1, new NitroxId(), new NitroxTechType("planterbox"), null, new NitroxId(), new List<Entity>()
                         {
                             new InventoryItemEntity(new NitroxId(), "classId", new NitroxTechType("bluepalmseed"), new PlantableMetadata(0.5f), new NitroxId(), new List<Entity>())
-                        })
+                        }),
+                        new VehicleWorldEntity(new NitroxId(), 0, null, "classId", true, new NitroxId(), new NitroxTechType("seamoth"), new CyclopsMetadata(true, true, true, true, 0, 100f)),
+                        new PathBasedChildEntity("cyclops_lighting", new NitroxId(), NitroxTechType.None, new CyclopsLightingMetadata(true, true), new NitroxId(), new List<Entity>()),
+                        new PathBasedChildEntity("fire_extinguisher_holder", new NitroxId(), NitroxTechType.None, new FireExtinguisherHolderMetadata(true, 1), new NitroxId(), new List<Entity>())
                     }
                 },
             PlayerData = new PlayerData()
@@ -479,10 +467,10 @@ public class WorldPersistenceTest
                         SubRootId = null,
                         CurrentStats = new PlayerStatsData(45, 45, 40, 39, 28, 1),
                         UsedItems = new List<NitroxTechType>(0),
-                        QuickSlotsBinding = new List<string>(0),
+                        QuickSlotsBindingIds = new NitroxId[] { new NitroxId() },
                         EquippedItems = new List<EquippedItemData>(0),
                         Modules = new List<EquippedItemData>(0),
-                        PingInstancePreferences = new()
+                        PlayerPreferences = new(new(), new())
                     },
                     new PersistedPlayerData()
                     {
@@ -495,14 +483,14 @@ public class WorldPersistenceTest
                         SubRootId = new NitroxId(),
                         CurrentStats = new PlayerStatsData(40, 40, 30, 29, 28, 0),
                         UsedItems = new List<NitroxTechType> { new NitroxTechType("Knife"), new NitroxTechType("Flashlight") },
-                        QuickSlotsBinding = new List<string> { "Test1", "Test2" },
+                        QuickSlotsBindingIds = new NitroxId[] { new NitroxId(), new NitroxId() },
                         EquippedItems = new List<EquippedItemData>
                         {
                             new EquippedItemData(new NitroxId(), new NitroxId(), new byte[] { 0x30, 0x40 }, "Slot3", new NitroxTechType("Flashlight")),
                             new EquippedItemData(new NitroxId(), new NitroxId(), new byte[] { 0x50, 0x9D }, "Slot4", new NitroxTechType("Knife"))
                         },
                         Modules = new List<EquippedItemData>() { new EquippedItemData(new NitroxId(), new NitroxId(), new byte[] { 0x35, 0xD0 }, "Module1", new NitroxTechType("Compass")) },
-                        PingInstancePreferences = new() { { "eda14b58-cfe0-4a56-aa4a-47942567d897", new(0, false) }, { "Signal_Lifepod12", new(4, true) } }
+                        PlayerPreferences = new(new() { { "eda14b58-cfe0-4a56-aa4a-47942567d897", new(0, false) }, { "Signal_Lifepod12", new(4, true) } }, new List<int> {2, 45, 3, 1})
                     }
                 }
             },
@@ -512,11 +500,13 @@ public class WorldPersistenceTest
                 {
                     PDAState = new PDAStateData()
                     {
-                        EncyclopediaEntries = { "TestEntry1", "TestEntry2" },
                         KnownTechTypes = { new NitroxTechType("Knife") },
-                        PartiallyUnlockedByTechType = new ThreadSafeDictionary<NitroxTechType, PDAEntry>() { new KeyValuePair<NitroxTechType, PDAEntry>(new NitroxTechType("Moonpool"), new PDAEntry(new NitroxTechType("Moonpool"), 50f, 2)) },
+                        AnalyzedTechTypes = { new("Fragment"), new("TESSST") },
                         PdaLog = { new PDALogEntry("key1", 1.1234f) },
-                        UnlockedTechTypes = { new NitroxTechType("base") }
+                        EncyclopediaEntries = { "TestEntry1", "TestEntry2" },
+                        ScannerFragments = { new("eda14b58-cfe0-4a56-aa4a-47942567d897"), new("342deb58-cfe0-4a56-aa4a-47942567d897") },
+                        ScannerPartial = { new(new NitroxTechType("Moonpool"), 2), new(new NitroxTechType("Fragment"), 1) },
+                        ScannerComplete = { new NitroxTechType("Knife1"), new NitroxTechType("Knife2"), new NitroxTechType("Knife3") }
                     },
                     StoryGoals = new StoryGoalData()
                     {
@@ -526,25 +516,16 @@ public class WorldPersistenceTest
                     },
                     StoryTiming = new StoryTimingData()
                     {
-                        ElapsedTime = 10,
-                        AuroraExplosionTime = 10000,
+                        ElapsedSeconds = 10,
+                        AuroraCountdownTime = 10000,
                         AuroraWarningTime = 20
                     },
                 },
                 InventoryData = new InventoryData()
                 {
-                    StorageSlotItems = new List<ItemData>() { new BasicItemData(new NitroxId(), new NitroxId(), new byte[] { 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21 }) },
-                    Modules = new List<EquippedItemData>() { new EquippedItemData(new NitroxId(), new NitroxId(), new byte[] { 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21 }, "Slot1", new NitroxTechType("")) }
+                    StorageSlotItems = new List<ItemData>() { new BasicItemData(new NitroxId(), new NitroxId(), new byte[] { 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21 }) }
                 },
                 ParsedBatchCells = new List<NitroxInt3>() { new NitroxInt3(10, 1, 10), new NitroxInt3(15, 4, 12) },
-                VehicleData = new VehicleData()
-                {
-                    Vehicles = new List<VehicleModel>()
-                    {
-                        new CyclopsModel(new NitroxTechType("Cyclops"), new NitroxId(), NitroxVector3.One, NitroxQuaternion.Identity, Array.Empty<InteractiveChildObjectIdentifier>(), Optional<NitroxId>.Of(new NitroxId()), "Super Duper Cyclops",
-                                         new[] { NitroxVector3.Zero, NitroxVector3.One, NitroxVector3.One }, 100)
-                    }
-                },
                 Seed = "NITROXSEED"
             }
         };

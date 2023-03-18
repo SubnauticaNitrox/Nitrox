@@ -15,17 +15,14 @@ namespace NitroxModel.Packets
     { 
         public NitroxId AssignedEscapePodId { get; }
         public List<EquippedItemData> EquippedItems { get; }
-        public List<EquippedItemData> Modules { get; }
         public List<BasePiece> BasePieces { get; }
-        public List<VehicleModel> Vehicles { get; }
         public List<ItemData> StorageSlotItems { get; }
         public List<NitroxTechType> UsedItems { get; }
-        public List<string> QuickSlotsBinding { get; }
+        public NitroxId[] QuickSlotsBindingIds { get; }
         public NitroxId PlayerGameObjectId { get; }
         public bool FirstTimeConnecting { get; }
         public InitialPDAData PDAData { get; }
         public InitialStoryGoalData StoryGoalData { get; }
-        public ICollection<string> CompletedGoals { get; }
         public NitroxVector3 PlayerSpawnData { get; }
         public NitroxQuaternion PlayerSpawnRotation { get; }
         public Optional<NitroxId> PlayerSubRootId { get; }
@@ -35,21 +32,19 @@ namespace NitroxModel.Packets
         public List<NitroxId> InitialSimulationOwnerships { get; }
         public ServerGameMode GameMode { get; }
         public Perms Permissions { get; }
-        public Dictionary<string, PingInstancePreference> Preferences { get; }
+        public SubnauticaPlayerPreferences Preferences { get; }
+        public TimeData TimeData { get; }
 
         public InitialPlayerSync(NitroxId playerGameObjectId,
             bool firstTimeConnecting,
             NitroxId assignedEscapePodId,
             IEnumerable<EquippedItemData> equipment,
-            IEnumerable<EquippedItemData> modules,
             IEnumerable<BasePiece> basePieces,
-            IEnumerable<VehicleModel> vehicles,
             IEnumerable<ItemData> storageSlotItems,
             IEnumerable<NitroxTechType> usedItems,
-            IEnumerable<string> quickSlotsBinding,
+            NitroxId[] quickSlotsBindingIds,
             InitialPDAData pdaData,
             InitialStoryGoalData storyGoalData,
-            ICollection<string> completedGoals,
             NitroxVector3 playerSpawnData,
             NitroxQuaternion playerSpawnRotation,
             Optional<NitroxId> playerSubRootId,
@@ -59,21 +54,19 @@ namespace NitroxModel.Packets
             IEnumerable<NitroxId> initialSimulationOwnerships,
             ServerGameMode gameMode,
             Perms perms,
-            Dictionary<string, PingInstancePreference> preferences)
+            SubnauticaPlayerPreferences preferences,
+            TimeData timeData)
         {
             AssignedEscapePodId = assignedEscapePodId;
             PlayerGameObjectId = playerGameObjectId;
             FirstTimeConnecting = firstTimeConnecting;
             EquippedItems = equipment.ToList();
-            Modules = modules.ToList();
             BasePieces = basePieces.ToList();
-            Vehicles = vehicles.ToList();
             StorageSlotItems = storageSlotItems.ToList();
             UsedItems = usedItems.ToList();
-            QuickSlotsBinding = quickSlotsBinding.ToList();
+            QuickSlotsBindingIds = quickSlotsBindingIds;
             PDAData = pdaData;
             StoryGoalData = storyGoalData;
-            CompletedGoals = completedGoals;
             PlayerSpawnData = playerSpawnData;
             PlayerSpawnRotation = playerSpawnRotation;
             PlayerSubRootId = playerSubRootId;
@@ -84,23 +77,21 @@ namespace NitroxModel.Packets
             GameMode = gameMode;
             Permissions = perms;
             Preferences = preferences;
+            TimeData = timeData;
         }
 
         /// <remarks>Used for deserialization</remarks>
         public InitialPlayerSync(
             NitroxId assignedEscapePodId,
             List<EquippedItemData> equippedItems,
-            List<EquippedItemData> modules,
             List<BasePiece> basePieces,
-            List<VehicleModel> vehicles,
             List<ItemData> storageSlotItems,
             List<NitroxTechType> usedItems,
-            List<string> quickSlotsBinding,
+            NitroxId[] quickSlotsBindingIds,
             NitroxId playerGameObjectId,
             bool firstTimeConnecting,
             InitialPDAData pdaData,
             InitialStoryGoalData storyGoalData,
-            ICollection<string> completedGoals,
             NitroxVector3 playerSpawnData,
             NitroxQuaternion playerSpawnRotation,
             Optional<NitroxId> playerSubRootId,
@@ -110,21 +101,19 @@ namespace NitroxModel.Packets
             List<NitroxId> initialSimulationOwnerships,
             ServerGameMode gameMode,
             Perms permissions,
-            Dictionary<string, PingInstancePreference> preferences)
+            SubnauticaPlayerPreferences preferences,
+            TimeData timeData)
         {
             AssignedEscapePodId = assignedEscapePodId;
             PlayerGameObjectId = playerGameObjectId;
             FirstTimeConnecting = firstTimeConnecting;
             EquippedItems = equippedItems;
-            Modules = modules;
             BasePieces = basePieces;
-            Vehicles = vehicles;
             StorageSlotItems = storageSlotItems;
             UsedItems = usedItems;
-            QuickSlotsBinding = quickSlotsBinding;
+            QuickSlotsBindingIds = quickSlotsBindingIds;
             PDAData = pdaData;
             StoryGoalData = storyGoalData;
-            CompletedGoals = completedGoals;
             PlayerSpawnData = playerSpawnData;
             PlayerSpawnRotation = playerSpawnRotation;
             PlayerSubRootId = playerSubRootId;
@@ -135,6 +124,7 @@ namespace NitroxModel.Packets
             GameMode = gameMode;
             Permissions = permissions;
             Preferences = preferences;
+            TimeData = timeData;
         }
     }
 }

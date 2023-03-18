@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
@@ -36,13 +36,17 @@ namespace NitroxTest.Patcher
 
         public static IEnumerable<KeyValuePair<OpCode, object>> GetILInstructions(MethodInfo method)
         {
-            DynamicMethod dynMethod = new DynamicMethod(method.Name, method.ReturnType, method.GetParameters().Select(p => p.ParameterType).ToArray(), false);
-            return PatchProcessor.ReadMethodBody(method, dynMethod.GetILGenerator());
+            return PatchProcessor.ReadMethodBody(method, method.GetILGenerator());
         }
 
         public static IEnumerable<KeyValuePair<OpCode, object>> GetILInstructions(DynamicMethod method)
         {
             return PatchProcessor.ReadMethodBody(method, method.GetILGenerator());
+        }
+
+        public static ILGenerator GetILGenerator(this MethodInfo method)
+        {
+            return new DynamicMethod(method.Name, method.ReturnType, method.GetParameters().Types()).GetILGenerator();
         }
 
         public static void TestPattern(MethodInfo targetMethod, InstructionsPattern pattern, out IEnumerable<CodeInstruction> originalIl, out IEnumerable<CodeInstruction> transformedIl)

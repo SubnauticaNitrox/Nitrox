@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.PlayerLogic;
@@ -18,7 +18,7 @@ namespace NitroxPatcher.Patches.Dynamic
             if (Resolve<SimulationOwnership>().HasExclusiveLock(id))
             {
                 Resolve<SimulationOwnership>().StopSimulatingEntity(id);
-                Resolve<Vehicles>().BroadcastDestroyedVehicle(__instance);
+                Resolve<Vehicles>().BroadcastDestroyedVehicle(id);
             }
             foreach (RemotePlayerIdentifier identifier in __instance.GetComponentsInChildren<RemotePlayerIdentifier>(true))
             {
