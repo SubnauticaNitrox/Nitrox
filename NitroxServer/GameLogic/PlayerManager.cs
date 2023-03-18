@@ -7,12 +7,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
 using NitroxServer.Communication;
+using NitroxServer.GameLogic.Entities;
 using NitroxServer.Serialization;
 using NitroxServer.Serialization.World;
 
@@ -204,59 +206,49 @@ namespace NitroxServer.GameLogic
 
         private void SendInitialSync(NitroxConnection connection, string reservationKey)
         {
-            List<InitialRemotePlayerData> GetRemotePlayerData(Player player)
+            IEnumerable<PlayerContext> GetOtherPlayers(Player player)
             {
-                List<InitialRemotePlayerData> playerData = new();
-
-                foreach (Player otherPlayer in GetConnectedPlayers())
-                {
-                    if (!player.Equals(otherPlayer))
-                    {
-                        List<EquippedItemData> equippedItems = otherPlayer.GetEquipment();
-                        List<NitroxTechType> techTypes = equippedItems.Select(equippedItem => equippedItem.TechType).ToList();
-
-                        InitialRemotePlayerData remotePlayer = new(otherPlayer.PlayerContext, otherPlayer.Position, otherPlayer.SubRootId, techTypes);
-                        playerData.Add(remotePlayer);
-                    }
-                }
-
-                return playerData;
+                return GetConnectedPlayers().Where(p => p != player)
+                                                          .Select(p => p.PlayerContext);
             }
 
-            List<EquippedItemData> GetAllModules(ICollection<EquippedItemData> globalModules, List<EquippedItemData> playerModules)
+            void SetupPlayerEntity(Player player)
             {
-                List<EquippedItemData> modulesToSync = new();
-                modulesToSync.AddRange(globalModules);
-                modulesToSync.AddRange(playerModules);
-                return modulesToSync;
+                NitroxTransform transform = new(player.Position, player.Rotation, NitroxVector3.One);
+
+                PlayerWorldEntity playerEntity = new PlayerWorldEntity(transform, 0, null, false, null, true, player.GameObjectId, NitroxTechType.None, null, null, new List<Entity>());
+                world.EntityRegistry.AddEntity(playerEntity);
+                world.WorldEntityManager.TrackEntityInTheWorld(playerEntity);
+                SendPacketToOtherPlayers(new CellEntities(playerEntity), player);
             }
 
-            List<ItemData> GetInventoryItems(NitroxId playerID)
+            void RespawnExistingEntity(Player player)
             {
-                List<ItemData> inventoryItems = world.InventoryManager.GetAllInventoryItems().Where(item => item.ContainerId.Equals(playerID)).ToList();
+                Optional<Entity> playerEntity = world.EntityRegistry.GetEntityById(player.PlayerContext.PlayerNitroxId);
 
-                for (int index = 0; index < inventoryItems.Count; index++) //Also add batteries from tools to inventory items.
+                if (playerEntity.HasValue)
                 {
-                    inventoryItems.AddRange(world.InventoryManager.GetAllStorageSlotItems().Where(item => item.ContainerId.Equals(inventoryItems[index].ItemId)));
+                    SendPacketToOtherPlayers(new CellEntities(playerEntity.Value, true), player);
                 }
-
-                return inventoryItems;
+                else
+                {
+                    Log.Error($"Unable to find player entity for {player.Name}");
+                }
             }
 
             Player player = PlayerConnected(connection, reservationKey, out bool wasBrandNewPlayer);
+            NitroxId assignedEscapePodId = world.EscapePodManager.AssignPlayerToEscapePod(player.Id, out Optional<EscapePodWorldEntity> newlyCreatedEscapePod);
 
-            NitroxId assignedEscapePodId = world.EscapePodManager.AssignPlayerToEscapePod(player.Id, out Optional<EscapePodModel> newlyCreatedEscapePod);
             if (newlyCreatedEscapePod.HasValue)
             {
-                AddEscapePod addEscapePod = new(newlyCreatedEscapePod.Value);
-                SendPacketToOtherPlayers(addEscapePod, player);
+                CellEntities spawnNewEscapePod = new(newlyCreatedEscapePod.Value);
+                SendPacketToOtherPlayers(spawnNewEscapePod, player);
             }
 
             List<EquippedItemData> equippedItems = player.GetEquipment();
             List<NitroxTechType> techTypes = equippedItems.Select(equippedItem => equippedItem.TechType).ToList();
-            List<ItemData> inventoryItems = GetInventoryItems(player.GameObjectId);
 
-            PlayerJoinedMultiplayerSession playerJoinedPacket = new(player.PlayerContext, player.SubRootId, techTypes, inventoryItems);
+            PlayerJoinedMultiplayerSession playerJoinedPacket = new(player.PlayerContext, player.SubRootId, techTypes);
             SendPacketToOtherPlayers(playerJoinedPacket, player);
 
             // Make players on localhost admin by default.
@@ -266,43 +258,39 @@ namespace NitroxServer.GameLogic
             }
 
             List<NitroxId> simulations = world.EntitySimulation.AssignGlobalRootEntities(player).ToList();
-            IEnumerable<VehicleModel> vehicles = world.VehicleManager.GetVehicles();
-            foreach (VehicleModel vehicle in vehicles)
+
+            if (wasBrandNewPlayer)
             {
-                if (world.SimulationOwnershipData.TryToAcquire(vehicle.Id, player, SimulationLockType.TRANSIENT))
-                {
-                    simulations.Add(vehicle.Id);
-                }
+                SetupPlayerEntity(player);
+            }
+            else
+            {
+                RespawnExistingEntity(player);
             }
 
             InitialPlayerSync initialPlayerSync = new(player.GameObjectId,
                 wasBrandNewPlayer,
-                world.EscapePodManager.GetEscapePods(),
-            assignedEscapePodId,
-            equippedItems,
-                GetAllModules(world.InventoryManager.GetAllModules(), player.GetModules()),
+                assignedEscapePodId,
+                equippedItems,
                 world.BaseManager.GetBasePiecesForNewlyConnectedPlayer(),
-            vehicles,
-                world.InventoryManager.GetAllInventoryItems(),
                 world.InventoryManager.GetAllStorageSlotItems(),
                 player.UsedItems,
-            player.QuickSlotsBinding,
+                player.QuickSlotsBindingIds,
                 world.GameData.PDAState.GetInitialPDAData(),
-                world.GameData.StoryGoals.GetInitialStoryGoalData(world.ScheduleKeeper),
-                player.CompletedGoals,
+                world.GameData.StoryGoals.GetInitialStoryGoalData(world.ScheduleKeeper, player),
                 player.Position,
                 player.Rotation,
                 player.SubRootId,
                 player.Stats,
-            GetRemotePlayerData(player),
-                world.EntityManager.GetGlobalRootEntities(),
+                GetOtherPlayers(player),
+                world.WorldEntityManager.GetGlobalRootEntities(),
                 simulations,
                 world.GameMode,
                 player.Permissions,
-                player.PingInstancePreferences.ToDictionary(m => m.Key, m => m.Value)
+                new(new(player.PingInstancePreferences), player.PinnedRecipePreferences.ToList()),
+                world.StoryManager.GetTimeData()
             );
 
-            player.SendPacket(new TimeChange(world.EventTriggerer.ElapsedSeconds, true));
             player.SendPacket(initialPlayerSync);
         }
 
