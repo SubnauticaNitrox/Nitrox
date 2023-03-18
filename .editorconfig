@@ -4,6 +4,7 @@ root = true
 
 [*]
 indent_style = space
+end_of_line = lf
 
 # ReSharper properties
 resharper_wrap_object_and_collection_initializer_style = chop_if_long
