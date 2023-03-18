@@ -40,8 +40,6 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
 
             PlayerJoiningMultiplayerSession packet = new PlayerJoiningMultiplayerSession(correlationId, reservationKey);
             client.Send(packet);
-
-            Log.InGame(Language.main.Get("Nitrox_Waiting"));
         }
 
         private void ChangeState(IMultiplayerSessionConnectionContext sessionConnectionContext)

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using NitroxClient.Communication;
@@ -29,6 +29,7 @@ namespace NitroxClient.MonoBehaviours
         private PacketReceiver packetReceiver;
         private ThrottledPacketSender throttledPacketSender;
         public bool InitialSyncCompleted { get; set; }
+        public bool InsideJoinQueue { get; set; }
 
         /// <summary>
         ///     True if multiplayer is loaded and client is connected to a server.
@@ -92,6 +93,11 @@ namespace NitroxClient.MonoBehaviours
             WaitScreen.ManualWaitItem item = WaitScreen.Add(Language.main.Get("Nitrox_JoiningSession"));
             yield return Main.StartCoroutine(Main.StartSession());
             WaitScreen.Remove(item);
+
+            WaitScreen.ManualWaitItem joinQueueItem = WaitScreen.Add(Language.main.Get("Nitrox_Waiting"));
+            Main.InsideJoinQueue = true;
+            yield return new WaitUntil(() => !Main.InsideJoinQueue);
+            WaitScreen.Remove(joinQueueItem);
 
             yield return new WaitUntil(() => Main.InitialSyncCompleted);
 
