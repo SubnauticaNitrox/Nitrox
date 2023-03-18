@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using NitroxClient.Communication;
@@ -28,6 +28,8 @@ namespace NitroxClient.MonoBehaviours
         private IMultiplayerSession multiplayerSession;
         private PacketReceiver packetReceiver;
         private ThrottledPacketSender throttledPacketSender;
+        private GameLogic.Terrain terrain;
+
         public bool InitialSyncCompleted { get; set; }
 
         /// <summary>
@@ -41,6 +43,7 @@ namespace NitroxClient.MonoBehaviours
             multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
             packetReceiver = NitroxServiceLocator.LocateService<PacketReceiver>();
             throttledPacketSender = NitroxServiceLocator.LocateService<ThrottledPacketSender>();
+            terrain = NitroxServiceLocator.LocateService<GameLogic.Terrain>();
 
             Main = this;
             DontDestroyOnLoad(gameObject);
@@ -54,6 +57,11 @@ namespace NitroxClient.MonoBehaviours
             {
                 ProcessPackets();
                 throttledPacketSender.Update();
+
+                if (multiplayerSession.CurrentState.CurrentStage == MultiplayerSessionConnectionStage.SESSION_JOINED)
+                {
+                    terrain.UpdateVisibility();
+                }
             }
         }
 
