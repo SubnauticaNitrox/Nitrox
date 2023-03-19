@@ -52,7 +52,7 @@ namespace NitroxServer.GameLogic.Entities
 
             List<WorldEntity> entities = new List<WorldEntity>();
             List<WorldEntity> cellEntities = GetEntities(cell);
-            entities.AddRange(cellEntities/*.Where(entity => cell.Level <= entity.Level)*/);
+            entities.AddRange(cellEntities);
 
             return entities;
         }
