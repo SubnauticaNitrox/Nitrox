@@ -5,6 +5,7 @@ using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Packets;
 
 namespace NitroxServer.GameLogic.Entities
 {
@@ -27,16 +28,82 @@ namespace NitroxServer.GameLogic.Entities
             this.serverSpawnedSimulationWhiteList = serverSpawnedSimulationWhiteList;
         }
 
-        public List<SimulatedEntity> CalculateSimulationChangesFromCellSwitch(Player player, AbsoluteEntityCell[] added, AbsoluteEntityCell[] removed)
+        public void CalculateSimulationChangesFromCellSwitch(Player player, AbsoluteEntityCell[] added, AbsoluteEntityCell[] removed)
         {
             List<SimulatedEntity> ownershipChanges = new List<SimulatedEntity>();
+            AddCells(player, added, ownershipChanges);
+            RemoveCells(player, removed, ownershipChanges);
 
-            AssignLoadedCellEntitySimulation(player, added, ownershipChanges);
+            BroadcastSimulationChanges(ownershipChanges);
+        }
 
-            List<WorldEntity> revokedEntities = RevokeForCells(player, removed);
-            AssignEntitiesToNewPlayers(player, revokedEntities, ownershipChanges);
+        private void RemoveCells(Player player, AbsoluteEntityCell[] removed, List<SimulatedEntity> ownershipChanges)
+        {
+            foreach (NitroxInt3 removedBatch in removed.Select(abs => abs.BatchId).Distinct())
+            {
+                AbsoluteEntityCell[] batchCells = removed.Where(add => add.BatchId == removedBatch).ToArray();
+                if (worldEntityManager.IsBatchSpawned(removedBatch))
+                {
+                    List<WorldEntity> entities = worldEntityManager.GetEntities(removedBatch);
+                    List<WorldEntity> revokedEntities = RevokeForCells(player, removed, entities);
+                    AssignEntitiesToNewPlayers(player, revokedEntities, ownershipChanges);
+                }
+                else
+                {
+                    worldEntityManager.OnBatchLoad += removeEvent;
+                    void removeEvent(NitroxInt3 eventBatch)
+                    {
+                        if (removedBatch == eventBatch)
+                        {
+                            List<WorldEntity> entities = worldEntityManager.GetEntities(removedBatch);
+                            List<SimulatedEntity> localOwnershipChanges = new List<SimulatedEntity>();
+                            List<WorldEntity> revokedEntities = RevokeForCells(player, removed, entities);
+                            AssignEntitiesToNewPlayers(player, revokedEntities, localOwnershipChanges);
+                            BroadcastSimulationChanges(localOwnershipChanges);
+                            worldEntityManager.OnBatchLoad -= removeEvent;
+                        }
+                    };
+                }
+            }
+        }
 
-            return ownershipChanges;
+        private void AddCells(Player player, AbsoluteEntityCell[] added, List<SimulatedEntity> ownershipChanges)
+        {
+            foreach (NitroxInt3 addedBatch in added.Select(abs => abs.BatchId).Distinct())
+            {
+                AbsoluteEntityCell[] batchCells = added.Where(add => add.BatchId == addedBatch).ToArray();
+                if (worldEntityManager.IsBatchSpawned(addedBatch))
+                {
+                    List<WorldEntity> entities = worldEntityManager.GetEntities(addedBatch);
+                    AssignLoadedCellEntitySimulation(player, batchCells, ownershipChanges, entities);
+                }
+                else
+                {
+                    void addEvent(NitroxInt3 eventBatch)
+                    {
+                        if (addedBatch == eventBatch)
+                        {
+                            List<WorldEntity> entities = worldEntityManager.GetEntities(addedBatch);
+                            List<SimulatedEntity> localOwnershipChanges = new List<SimulatedEntity>();
+                            AssignLoadedCellEntitySimulation(player, batchCells, localOwnershipChanges, entities);
+                            BroadcastSimulationChanges(localOwnershipChanges);
+                            worldEntityManager.OnBatchLoad -= addEvent;
+                        }
+                    };
+
+                    worldEntityManager.OnBatchLoad += addEvent;
+                }
+            }
+        }
+
+        private void BroadcastSimulationChanges(List<SimulatedEntity> ownershipChanges)
+        {
+            if (ownershipChanges.Count > 0)
+            {
+                // TODO: This should be moved to `SimulationOwnership`
+                SimulationOwnershipChange ownershipChange = new SimulationOwnershipChange(ownershipChanges);
+                playerManager.SendPacketToAllPlayers(ownershipChange);
+            }
         }
 
         public List<SimulatedEntity> CalculateSimulationChangesFromPlayerDisconnect(Player player)
@@ -69,11 +136,11 @@ namespace NitroxServer.GameLogic.Entities
             }
         }
 
-        private void AssignLoadedCellEntitySimulation(Player player, AbsoluteEntityCell[] addedCells, List<SimulatedEntity> ownershipChanges)
+        private void AssignLoadedCellEntitySimulation(Player player, AbsoluteEntityCell[] addedCells, List<SimulatedEntity> ownershipChanges, List<WorldEntity> entities)
         {
-            List<Entity> entities = AssignForCells(player, addedCells);
+            List<Entity> addedEntities = AssignForCells(player, addedCells, entities);
 
-            foreach (Entity entity in entities)
+            foreach (Entity entity in addedEntities)
             {
                 ownershipChanges.Add(new SimulatedEntity(entity.Id, player.Id, true, DEFAULT_ENTITY_SIMULATION_LOCKTYPE));
             }
@@ -122,18 +189,17 @@ namespace NitroxServer.GameLogic.Entities
             }
         }
 
-        private List<Entity> AssignForCells(Player player, AbsoluteEntityCell[] added)
+        private List<Entity> AssignForCells(Player player, AbsoluteEntityCell[] added, List<WorldEntity> entities)
         {
             List<Entity> assignedEntities = new List<Entity>();
 
             foreach (AbsoluteEntityCell cell in added)
             {
-                List<WorldEntity> entities = worldEntityManager.GetEntities(cell);
                 assignedEntities.AddRange(
                     entities.Where(entity =>
                     {
                         bool isSpawnedByServerAndWhitelisted = entity.SpawnedByServer && serverSpawnedSimulationWhiteList.Contains(entity.TechType);
-                        bool isEligibleForSimulation = isSpawnedByServerAndWhitelisted || !entity.SpawnedByServer;
+                        bool isEligibleForSimulation = entity.AbsoluteEntityCell.CellId == cell.CellId && (isSpawnedByServerAndWhitelisted || !entity.SpawnedByServer);
                         return cell.Level <= entity.Level && isEligibleForSimulation && simulationOwnershipData.TryToAcquire(entity.Id, player, DEFAULT_ENTITY_SIMULATION_LOCKTYPE);
                     }));
             }
@@ -141,13 +207,12 @@ namespace NitroxServer.GameLogic.Entities
             return assignedEntities;
         }
 
-        private List<WorldEntity> RevokeForCells(Player player, AbsoluteEntityCell[] removed)
+        private List<WorldEntity> RevokeForCells(Player player, AbsoluteEntityCell[] removed, List<WorldEntity> entities)
         {
             List<WorldEntity> revokedEntities = new List<WorldEntity>();
             foreach (AbsoluteEntityCell cell in removed)
             {
-                List<WorldEntity> entities = worldEntityManager.GetEntities(cell);
-                revokedEntities.AddRange(entities.Where(entity => entity.Level <= cell.Level && simulationOwnershipData.RevokeIfOwner(entity.Id, player)));
+                revokedEntities.AddRange(entities.Where(entity => entity.Level <= cell.Level && entity.AbsoluteEntityCell == cell && simulationOwnershipData.RevokeIfOwner(entity.Id, player)));
             }
 
             return revokedEntities;

@@ -69,11 +69,19 @@ public class BatchEntitySpawner : IEntitySpawner
         batchCellsParser = new BatchCellsParser(entitySpawnPointFactory, serializer);
     }
 
+    public bool IsBatchSpawned(NitroxInt3 batchId)
+    {
+        lock (parsedBatches)
+        {
+            return parsedBatches.Contains(batchId);
+        }
+    }
+
     public List<Entity> LoadUnspawnedEntities(NitroxInt3 batchId, bool fullCacheCreation = false)
     {
         lock (parsedBatches)
         {
-            if (parsedBatches.Contains(batchId))
+            if (IsBatchSpawned(batchId))
             {
                 return new List<Entity>();
             }

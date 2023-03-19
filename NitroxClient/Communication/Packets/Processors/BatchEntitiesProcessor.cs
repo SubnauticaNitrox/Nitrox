@@ -10,16 +10,16 @@ using UWE;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
-    class CellEntitiesProcessor : ClientPacketProcessor<CellEntities>
+    class BatchEntitiesProcessor : ClientPacketProcessor<BatchEntities>
     {
         private readonly Entities entities;
 
-        public CellEntitiesProcessor(Entities entities)
+        public BatchEntitiesProcessor(Entities entities)
         {
             this.entities = entities;
         }
 
-        public override void Process(CellEntities packet)
+        public override void Process(BatchEntities packet)
         {
             if (packet.ForceRespawn)
             {

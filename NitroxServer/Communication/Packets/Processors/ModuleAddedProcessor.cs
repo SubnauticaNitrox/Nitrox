@@ -37,7 +37,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 entityRegistry.AddOrUpdate(moduleEntity);
 
                 // Have other players respawn the item inside the inventory.
-                playerManager.SendPacketToOtherPlayers(new CellEntities(moduleEntity, true), player);
+                playerManager.SendPacketToOtherPlayers(new BatchEntities(moduleEntity, true), player);
             }
         }
     }
