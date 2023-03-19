@@ -53,6 +53,11 @@ public class PlaceholderGroupWorldEntitySpawner : IWorldEntitySpawner
 
             PrefabPlaceholder prefabPlaceholder = prefabPlaceholderGroup.prefabPlaceholders[placeholderSlot.ComponentIndex];
 
+            if (!prefabPlaceholder)
+            {
+                yield return new WaitUntil(() => prefabPlaceholder);
+            }
+
             TaskResult<Optional<GameObject>> childResult = new();
 
             Entity slotEntity = placeholderSlot.ChildEntities[0];

@@ -205,9 +205,9 @@ namespace NitroxClient.GameLogic
         // to move on to other spawning and come back when this item is ready.  
         private IEnumerator AwaitAnyRequiredEntitySetup(GameObject gameObject)
         {
-            EnergyMixin energyMixin = gameObject.GetComponent<EnergyMixin>();
+            yield return new WaitUntil(() => gameObject == true);
 
-            if (energyMixin)
+            if (gameObject && gameObject.TryGetComponent(out EnergyMixin energyMixin))
             {
                 yield return new WaitUntil(() => energyMixin.battery != null);
             }
