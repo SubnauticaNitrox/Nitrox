@@ -40,7 +40,7 @@ class BatchVisibilityChangedProcessor : AuthenticatedPacketProcessor<BatchVisibi
 
             if (entitiesInBatch.Count > 0)
             {
-                BatchEntities batchEntities = new BatchEntities(entitiesInBatch.Cast<Entity>().ToList());
+                SpawnEntities batchEntities = new(entitiesInBatch.Cast<Entity>().ToList());
                 player.SendPacket(batchEntities);
             }
         }

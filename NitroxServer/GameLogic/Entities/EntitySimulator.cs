@@ -28,51 +28,51 @@ namespace NitroxServer.GameLogic.Entities
             this.serverSpawnedSimulationWhiteList = serverSpawnedSimulationWhiteList;
         }
 
-        public void BroadcastSimulationChangesForPlayerCells(Player player, AbsoluteEntityCell[] added, AbsoluteEntityCell[] removed)
+        public void BroadcastSimulationChangesForCellUpdates(Player player, AbsoluteEntityCell[] added, AbsoluteEntityCell[] removed)
         {
             List<SimulatedEntity> ownershipChanges = new();
 
-            IEnumerable<NitroxInt3> addedBatches = added.Select(abs => abs.BatchId).Distinct();
-            AddBatches(player, addedBatches, ownershipChanges);
-
-            IEnumerable<NitroxInt3> removedBatches = removed.Select(abs => abs.BatchId).Distinct();
-            RemoveBatches(player, removedBatches, ownershipChanges);
+            AddCells(player, added, ownershipChanges);
+            RemoveCells(player, removed, ownershipChanges);
 
             BroadcastSimulationChanges(ownershipChanges);
         }
 
         public void BroadcastSimulationChangesForBatchAddition(Player player, NitroxInt3 batchId)
         {
+            List<WorldEntity> entities = worldEntityManager.GetEntities(batchId);
+            List<WorldEntity> addedEntities = FilterSimulatableEntities(player, entities);
+
             List<SimulatedEntity> ownershipChanges = new();
-            AddBatches(player, new[] { batchId }, ownershipChanges);
+
+            foreach (WorldEntity entity in addedEntities)
+            {
+                ownershipChanges.Add(new SimulatedEntity(entity.Id, player.Id, true, DEFAULT_ENTITY_SIMULATION_LOCKTYPE));
+            }
+
             BroadcastSimulationChanges(ownershipChanges);
         }
 
-        private void RemoveBatches(Player player, IEnumerable<NitroxInt3> batches, List<SimulatedEntity> ownershipChanges)
+        private void RemoveCells(Player player, AbsoluteEntityCell[] removed, List<SimulatedEntity> ownershipChanges)
         {
-            foreach (NitroxInt3 removedBatch in batches)
+            foreach (AbsoluteEntityCell cell in removed)
             {
-                List<WorldEntity> entities = worldEntityManager.GetEntities(removedBatch);
+                List<WorldEntity> entities = worldEntityManager.GetEntities(cell);
                 IEnumerable<WorldEntity> revokedEntities = entities.Where(entity => !player.CanSee(entity) && simulationOwnershipData.RevokeIfOwner(entity.Id, player));
-                AssignEntitiesToNewPlayers(player, revokedEntities, ownershipChanges);
+                ReassignEntitiesToOtherPlayers(player, revokedEntities, ownershipChanges);
             }
         }
 
-        private void AddBatches(Player player, IEnumerable<NitroxInt3> batches, List<SimulatedEntity> ownershipChanges)
+        private void AddCells(Player player, AbsoluteEntityCell[] added, List<SimulatedEntity> ownershipChanges)
         {
-            foreach (NitroxInt3 addedBatch in batches)
+            foreach (AbsoluteEntityCell cell in added)
             {
-                // It is possible that we process a CellVisibility request before this batch is actually loaded.
-                // The batch can be skipped because it will again try to update simulated entities after loading.
-                if (worldEntityManager.IsBatchSpawned(addedBatch))
-                {
-                    List<WorldEntity> entities = worldEntityManager.GetEntities(addedBatch);
-                    List<WorldEntity> addedEntities = FilterSimulatableEntities(player, entities);
+                List<WorldEntity> entities = worldEntityManager.GetEntities(cell);
+                List<WorldEntity> addedEntities = FilterSimulatableEntities(player, entities);
 
-                    foreach (WorldEntity entity in addedEntities)
-                    {
-                        ownershipChanges.Add(new SimulatedEntity(entity.Id, player.Id, true, DEFAULT_ENTITY_SIMULATION_LOCKTYPE));
-                    }
+                foreach (WorldEntity entity in addedEntities)
+                {
+                    ownershipChanges.Add(new SimulatedEntity(entity.Id, player.Id, true, DEFAULT_ENTITY_SIMULATION_LOCKTYPE));
                 }
             }
         }
@@ -91,7 +91,7 @@ namespace NitroxServer.GameLogic.Entities
         {
             List<SimulatedEntity> ownershipChanges = new List<SimulatedEntity>();
 
-            List<NitroxId> revokedEntities = RevokeAll(player);
+            List<NitroxId> revokedEntities = simulationOwnershipData.RevokeAllForOwner(player);
             AssignSimulationsToNewPlayers(player, revokedEntities, ownershipChanges);
 
             return ownershipChanges;
@@ -117,7 +117,7 @@ namespace NitroxServer.GameLogic.Entities
             }
         }
 
-        private void AssignEntitiesToNewPlayers(Player oldPlayer, IEnumerable<WorldEntity> entities, List<SimulatedEntity> ownershipChanges)
+        private void ReassignEntitiesToOtherPlayers(Player oldPlayer, IEnumerable<WorldEntity> entities, List<SimulatedEntity> ownershipChanges)
         {
             foreach (WorldEntity entity in entities)
             {
@@ -164,16 +164,9 @@ namespace NitroxServer.GameLogic.Entities
         {
             return entities.Where(entity => {
                     bool isSpawnedByServerAndWhitelisted = entity.SpawnedByServer && serverSpawnedSimulationWhiteList.Contains(entity.TechType);
-                    bool isEligibleForSimulation = player.HasCellLoaded(entity.AbsoluteEntityCell) && (isSpawnedByServerAndWhitelisted || !entity.SpawnedByServer);
+                    bool isEligibleForSimulation = player.CanSee(entity) && (isSpawnedByServerAndWhitelisted || !entity.SpawnedByServer);
                     return isEligibleForSimulation && simulationOwnershipData.TryToAcquire(entity.Id, player, DEFAULT_ENTITY_SIMULATION_LOCKTYPE);
                 }).ToList();
-        }
-
-        private List<NitroxId> RevokeAll(Player player)
-        {
-            List<NitroxId> revokedEntities = simulationOwnershipData.RevokeAllForOwner(player);
-
-            return revokedEntities;
         }
 
         public void EntityDestroyed(NitroxId id)

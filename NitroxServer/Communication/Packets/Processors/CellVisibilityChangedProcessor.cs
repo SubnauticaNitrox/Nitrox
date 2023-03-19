@@ -18,7 +18,7 @@ namespace NitroxServer.Communication.Packets.Processors
             player.AddCells(packet.Added);
             player.RemoveCells(packet.Removed);
 
-            entitySimulation.BroadcastSimulationChangesForPlayerCells(player, packet.Added, packet.Removed);
+            entitySimulation.BroadcastSimulationChangesForCellUpdates(player, packet.Added, packet.Removed);
         }
     }
 }
