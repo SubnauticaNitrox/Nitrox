@@ -8,8 +8,7 @@ using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic.Entities;
 
 namespace NitroxServer.Communication.Packets.Processors;
-
-class BatchVisibilityChangedProcessor : AuthenticatedPacketProcessor<BatchVisibilityChanged>
+public class BatchVisibilityChangedProcessor : AuthenticatedPacketProcessor<BatchVisibilityChanged>
 {
     private readonly EntitySimulation entitySimulation;
     private readonly WorldEntityManager worldEntityManager;
