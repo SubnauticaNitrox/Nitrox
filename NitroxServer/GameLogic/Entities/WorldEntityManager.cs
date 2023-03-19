@@ -28,10 +28,6 @@ namespace NitroxServer.GameLogic.Entities
 
         private readonly BatchEntitySpawner batchEntitySpawner;
 
-        public delegate void BatchEventHandler(NitroxInt3 batchId);
-
-        public event BatchEventHandler OnBatchLoad;
-
         public WorldEntityManager(EntityRegistry entityRegistry, BatchEntitySpawner batchEntitySpawner)
         {
             List<WorldEntity> worldEntities = entityRegistry.GetEntities<WorldEntity>();
@@ -44,17 +40,6 @@ namespace NitroxServer.GameLogic.Entities
                                                          .ToDictionary(group => group.Key, group => group.ToList());
             this.entityRegistry = entityRegistry;
             this.batchEntitySpawner = batchEntitySpawner;
-        }
-
-        public List<WorldEntity> GetVisibleEntities(NitroxInt3 cell)
-        {
-            LoadUnspawnedEntities(cell);
-
-            List<WorldEntity> entities = new List<WorldEntity>();
-            List<WorldEntity> cellEntities = GetEntities(cell);
-            entities.AddRange(cellEntities);
-
-            return entities;
         }
 
         public List<WorldEntity> GetGlobalRootEntities()
@@ -148,7 +133,7 @@ namespace NitroxServer.GameLogic.Entities
                 {
                     for (int z = 0; z < map.DimensionsInBatches.Z; z++)
                     {
-                        int spawned = LoadFromBatch(new(x, y, z), true);
+                        int spawned = LoadUnspawnedEntities(new(x, y, z), true);
 
                         Log.Debug($"Loaded {spawned} entities from batch ({x}, {y}, {z})");
 
@@ -168,16 +153,7 @@ namespace NitroxServer.GameLogic.Entities
             return batchEntitySpawner.IsBatchSpawned(batchId);
         }
 
-        private void LoadUnspawnedEntities(NitroxInt3 batchId)
-        {
-            LoadFromBatch(batchId, false);
-            if (OnBatchLoad != null)
-            {
-                OnBatchLoad(batchId);
-            }
-        }
-
-        private int LoadFromBatch(NitroxInt3 batchId, bool suppressLogs)
+        public int LoadUnspawnedEntities(NitroxInt3 batchId, bool suppressLogs)
         {
             List<Entity> spawnedEntities = batchEntitySpawner.LoadUnspawnedEntities(batchId, suppressLogs);
 

@@ -5,36 +5,43 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
-using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Entities;
 
-namespace NitroxServer.Communication.Packets.Processors
+namespace NitroxServer.Communication.Packets.Processors;
+
+class BatchVisibilityChangedProcessor : AuthenticatedPacketProcessor<BatchVisibilityChanged>
 {
-    class BatchVisibilityChangedProcessor : AuthenticatedPacketProcessor<BatchVisibilityChanged>
+    private readonly EntitySimulation entitySimulation;
+    private readonly WorldEntityManager worldEntityManager;
+
+    public BatchVisibilityChangedProcessor(EntitySimulation entitySimulation, WorldEntityManager worldEntityManager)
     {
-        private readonly WorldEntityManager worldEntityManager;
+        this.entitySimulation = entitySimulation;
+        this.worldEntityManager = worldEntityManager;
+    }
 
-        public BatchVisibilityChangedProcessor(WorldEntityManager worldEntityManager)
-        {
-            this.worldEntityManager = worldEntityManager;
-        }
+    public override void Process(BatchVisibilityChanged packet, Player player)
+    {
+        SendBatchEntities(player, packet.Added);
+    }
 
-        public override void Process(BatchVisibilityChanged packet, Player player)
+    private void SendBatchEntities(Player player, NitroxInt3[] visibleBatches)
+    {
+        foreach (NitroxInt3 batchId in visibleBatches)
         {
-            SendNewlyVisibleEntities(player, packet.Added);
-        }
+            int count = worldEntityManager.LoadUnspawnedEntities(batchId, false);
 
-        private void SendNewlyVisibleEntities(Player player, NitroxInt3[] visibleBatches)
-        {
-            foreach (NitroxInt3 batch in visibleBatches)
+            if (count > 0)
             {
-                List<WorldEntity> newlyVisibleEntities = worldEntityManager.GetVisibleEntities(batch);
+                entitySimulation.BroadcastSimulationChangesForBatchAddition(player, batchId);
+            }
 
-                if (newlyVisibleEntities.Count > 0)
-                {
-                    BatchEntities batchEntities = new BatchEntities(newlyVisibleEntities.Cast<Entity>().ToList());
-                    player.SendPacket(batchEntities);
-                }
+            List<WorldEntity> entitiesInBatch = worldEntityManager.GetEntities(batchId);
+
+            if (entitiesInBatch.Count > 0)
+            {
+                BatchEntities batchEntities = new BatchEntities(entitiesInBatch.Cast<Entity>().ToList());
+                player.SendPacket(batchEntities);
             }
         }
     }
