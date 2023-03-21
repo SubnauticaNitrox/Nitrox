@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Linq;
 using NitroxClient.GameLogic.Spawning.Metadata;
+using NitroxClient.Helpers;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
@@ -55,7 +56,12 @@ public class PlaceholderGroupWorldEntitySpawner : IWorldEntitySpawner
 
             if (!prefabPlaceholder)
             {
-                yield return new WaitUntil(() => prefabPlaceholder);
+                yield return new WaitUntilTrueOrTime(5f, () => prefabPlaceholder);
+                if (!prefabPlaceholder)
+                {
+                    Log.Debug($"Placeholder was not found in group! ClassId: {entity.ClassId} ComponentIndex: {placeholderSlot.ComponentIndex}");
+                    continue;
+                }
             }
 
             TaskResult<Optional<GameObject>> childResult = new();
