@@ -1,4 +1,4 @@
-﻿using NitroxClient.GameLogic.HUD.PdaTabs;
+using NitroxClient.GameLogic.HUD.PdaTabs;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.HUD;
@@ -32,6 +32,7 @@ public class PlayerListTab : NitroxPDATab
         tabCopy.SetActive(false);
         uGUI_PlayerListTab newTab = tabCopy.AddComponent<uGUI_PlayerListTab>();
         newTab.MakePrefab(pingTab.prefabEntry);
+        GameObject.DestroyImmediate(tabCopy.GetComponent<uGUI_PingTab>());
         tabCopy.SetActive(true);
 
         tab = newTab;
