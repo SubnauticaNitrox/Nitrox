@@ -70,7 +70,7 @@ namespace NitroxClient.GameLogic
             RemoveAnyRemoteControl(gameObject);
 
             Optional<NitroxId> waterparkId = GetCurrentWaterParkId();
-            NitroxId id = NitroxEntity.GetId(gameObject);
+            NitroxId id = NitroxEntity.RequireIdFrom(gameObject);
             Optional<EntityMetadata> metadata = EntityMetadataExtractor.Extract(gameObject);
 
             bool inGlobalRoot = map.GlobalRootTechTypes.Contains(techType.ToDto());
@@ -94,7 +94,7 @@ namespace NitroxClient.GameLogic
             List<Entity> children = GetPrefabChildren(gameObject, itemId).ToList();
 
             // Newly created objects are always placed into the player's inventory.
-            NitroxId ownerId = NitroxEntity.GetId(Player.main.gameObject);
+            NitroxId ownerId = NitroxEntity.RequireIdFrom(Player.main.gameObject);
 
             InventoryItemEntity inventoryItemEntity = new(itemId, classId, techType.ToDto(), metadata.OrNull(), ownerId, children);
             entities.MarkAsSpawned(inventoryItemEntity);
@@ -123,7 +123,7 @@ namespace NitroxClient.GameLogic
 
                     if (metadata.HasValue)
                     {
-                        NitroxId id = NitroxEntity.GetId(prefab.gameObject);
+                        NitroxId id = NitroxEntity.RequireIdFrom(prefab.gameObject);
                         TechTag techTag = prefab.gameObject.GetComponent<TechTag>();
                         TechType techType = (techTag) ? techTag.type : TechType.None;
 

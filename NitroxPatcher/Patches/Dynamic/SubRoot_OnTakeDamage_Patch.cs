@@ -23,7 +23,7 @@ public class SubRoot_OnTakeDamage_Patch : NitroxPatch, IDynamicPatch
         {
             return true;
         }
-        return Resolve<SimulationOwnership>().HasAnyLockType(NitroxEntity.GetId(__instance.gameObject));
+        return Resolve<SimulationOwnership>().HasAnyLockType(NitroxEntity.RequireIdFrom(__instance.gameObject));
     }
 
     public static void Postfix(bool __runOriginal, SubRoot __instance, DamageInfo damageInfo)
@@ -31,11 +31,11 @@ public class SubRoot_OnTakeDamage_Patch : NitroxPatch, IDynamicPatch
         // If we have lock on it, we'll notify the server that this cyclops must be destroyed
         if (__runOriginal && __instance.live.health <= 0f && damageInfo.type != EntityDestroyedProcessor.DAMAGE_TYPE_RUN_ORIGINAL)
         {
-            NitroxId id = NitroxEntity.GetId(__instance.gameObject);
+            NitroxId id = NitroxEntity.RequireIdFrom(__instance.gameObject);
             Resolve<Vehicles>().BroadcastDestroyedVehicle(id);
         }
     }
-    
+
     public override void Patch(Harmony harmony)
     {
         PatchMultiple(harmony, TARGET_METHOD, prefix: true, postfix: true);

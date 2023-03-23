@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors;
 using NitroxClient.MonoBehaviours;
@@ -42,9 +42,9 @@ namespace NitroxClient.GameLogic
         /// </summary>
         public void OnCreate(Fire fire, SubFire.RoomFire room, int nodeIndex)
         {
-            NitroxId subRootId = NitroxEntity.GetId(fire.fireSubRoot.gameObject);
+            NitroxId subRootId = NitroxEntity.RequireIdFrom(fire.fireSubRoot.gameObject);
 
-            CyclopsFireCreated packet = new CyclopsFireCreated(NitroxEntity.GetId(fire.gameObject), subRootId, room.roomLinks.room, nodeIndex);
+            CyclopsFireCreated packet = new CyclopsFireCreated(NitroxEntity.RequireIdFrom(fire.gameObject), subRootId, room.roomLinks.room, nodeIndex);
             packetSender.Send(packet);
         }
 
@@ -53,7 +53,7 @@ namespace NitroxClient.GameLogic
         /// </summary>
         public void OnDouse(Fire fire, float douseAmount)
         {
-            NitroxId fireId = NitroxEntity.GetId(fire.gameObject);
+            NitroxId fireId = NitroxEntity.RequireIdFrom(fire.gameObject);
 
             // Temporary packet limiter
             if (!fireDouseAmount.ContainsKey(fireId))

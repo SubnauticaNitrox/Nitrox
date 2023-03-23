@@ -19,7 +19,7 @@ public class PrecursorKeyTerminal_DestroyKey_Patch : NitroxPatch, IDynamicPatch
     {
         if (__instance.keyObject)
         {
-            NitroxId id = NitroxEntity.GetId(__instance.keyObject);
+            NitroxId id = NitroxEntity.RequireIdFrom(__instance.keyObject);
             Resolve<IPacketSender>().Send(new EntityDestroyed(id));
         }
     }

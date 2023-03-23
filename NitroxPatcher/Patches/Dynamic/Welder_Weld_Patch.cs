@@ -36,7 +36,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 if (instruction.opcode.Equals(SWAP_INSTRUCTION_OPCODE) && instruction.operand.Equals(SWAP_INSTRUCTION_OPERAND))
                 {
                     /*
-                     * Swap 
+                     * Swap
                      * this.activeWeldTarget.AddHealth(this.healthPerWeld)
                      * with
                      * AddHealthOverride(Welder welder, float addHealth)
@@ -66,7 +66,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 result = newHealth - num;
 
                 SimulationOwnership simulationOwnership = NitroxServiceLocator.LocateService<SimulationOwnership>();
-                NitroxId id = NitroxEntity.GetId(live.gameObject);
+                NitroxId id = NitroxEntity.RequireIdFrom(live.gameObject);
 
                 // For now, we only control the LiveMixin for vehicles (not even repair nodes at a cyclops)
                 // If we change that, this if should be removed!

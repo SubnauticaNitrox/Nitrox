@@ -14,7 +14,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Prefix(Vehicle __instance)
         {
-            NitroxId id = NitroxEntity.GetId(__instance.gameObject);
+            NitroxId id = NitroxEntity.RequireIdFrom(__instance.gameObject);
             if (Resolve<SimulationOwnership>().HasExclusiveLock(id))
             {
                 Resolve<SimulationOwnership>().StopSimulatingEntity(id);

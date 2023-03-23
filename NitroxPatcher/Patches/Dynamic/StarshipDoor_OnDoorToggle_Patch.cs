@@ -15,7 +15,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(StarshipDoor __instance)
         {
-            NitroxId id = NitroxEntity.GetId(__instance.gameObject);
+            NitroxId id = NitroxEntity.RequireIdFrom(__instance.gameObject);
             StarshipDoorMetadata starshipDoorMetadata = new(__instance.doorLocked, __instance.doorOpen);
             Entities entities = NitroxServiceLocator.LocateService<Entities>();
 

@@ -69,14 +69,14 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastArmAction(TechType techType, IExosuitArm exosuitArm, ExosuitArmAction armAction, Vector3? opVector, Quaternion? opRotation)
         {
-            NitroxId id = NitroxEntity.GetId(exosuitArm.GetGameObject());
+            NitroxId id = NitroxEntity.RequireIdFrom(exosuitArm.GetGameObject());
             ExosuitArmActionPacket packet = new ExosuitArmActionPacket(techType, id, armAction, opVector, opRotation);
             packetSender.Send(packet);
         }
 
         public void BroadcastArmAction(TechType techType, IExosuitArm exosuitArm, ExosuitArmAction armAction)
         {
-            NitroxId id = NitroxEntity.GetId(exosuitArm.GetGameObject());
+            NitroxId id = NitroxEntity.RequireIdFrom(exosuitArm.GetGameObject());
             ExosuitArmActionPacket packet = new ExosuitArmActionPacket(techType, id, armAction, null, null);
             packetSender.Send(packet);
         }

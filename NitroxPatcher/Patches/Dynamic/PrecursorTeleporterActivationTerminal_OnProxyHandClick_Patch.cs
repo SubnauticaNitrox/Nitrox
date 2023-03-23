@@ -17,7 +17,7 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             if (__instance.unlocked)
             {
-                NitroxId id = NitroxEntity.GetId(__instance.gameObject);
+                NitroxId id = NitroxEntity.RequireIdFrom(__instance.gameObject);
                 PrecursorTeleporterActivationTerminalMetadata precursorTeleporterActivationTerminalMetadata = new(__instance.unlocked);
 
                 Entities entities = NitroxServiceLocator.LocateService<Entities>();

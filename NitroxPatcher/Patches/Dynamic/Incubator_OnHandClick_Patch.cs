@@ -27,14 +27,14 @@ namespace NitroxPatcher.Patches.Dynamic
                 return true;
             }
 
-            // Request a simulation lock on the incubator so that we can authoritatively spawn the resulting creatures 
+            // Request a simulation lock on the incubator so that we can authoritatively spawn the resulting creatures
             if (__instance.powered && !__instance.hatched && Inventory.main.container.Contains(TechType.HatchingEnzymes))
             {
                 SimulationOwnership simulationOwnership = NitroxServiceLocator.LocateService<SimulationOwnership>();
 
                 // the server only knows about the the main incubator platform which is the direct parent
                 GameObject platform = __instance.gameObject.transform.parent.gameObject;
-                NitroxId id = NitroxEntity.GetId(platform);
+                NitroxId id = NitroxEntity.RequireIdFrom(platform);
 
                 HandInteraction<Incubator> context = new(__instance, hand);
                 LockRequest<HandInteraction<Incubator>> lockRequest = new(id, SimulationLockType.EXCLUSIVE, ReceivedSimulationLockResponse, context);

@@ -15,7 +15,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(KeypadDoorConsole __instance)
         {
-            NitroxId id = NitroxEntity.GetId(__instance.gameObject);
+            NitroxId id = NitroxEntity.RequireIdFrom(__instance.gameObject);
             KeypadMetadata keypadMetadata = new(__instance.unlocked);
 
             Entities entities = NitroxServiceLocator.LocateService<Entities>();

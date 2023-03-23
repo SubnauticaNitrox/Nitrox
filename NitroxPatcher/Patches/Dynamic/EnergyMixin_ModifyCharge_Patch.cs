@@ -23,8 +23,8 @@ namespace NitroxPatcher.Patches.Dynamic
             {
                 if (Math.Abs(Math.Floor(__instance.charge) - Math.Floor(__instance.charge - __result)) > 0.0) //Send package if power changed to next natural number
                 {
-                    NitroxId instanceId = NitroxEntity.GetId(__instance.gameObject);
-                    BasicItemData batteryData = new(instanceId, NitroxEntity.GetId(battery), SerializationHelper.GetBytes(battery));
+                    NitroxId instanceId = NitroxEntity.RequireIdFrom(__instance.gameObject);
+                    BasicItemData batteryData = new(instanceId, NitroxEntity.RequireIdFrom(battery), SerializationHelper.GetBytes(battery));
 
                     NitroxServiceLocator.LocateService<StorageSlots>().EnergyMixinValueChanged(instanceId, __instance.charge, batteryData);
                 }

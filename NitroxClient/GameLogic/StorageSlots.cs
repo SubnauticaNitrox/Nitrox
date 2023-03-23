@@ -24,9 +24,9 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastItemAdd(InventoryItem item, GameObject gameObject)
         {
-            NitroxId id = NitroxEntity.GetId(gameObject);
+            NitroxId id = NitroxEntity.RequireIdFrom(gameObject);
 
-            NitroxId itemId = NitroxEntity.GetId(item.item.gameObject);
+            NitroxId itemId = NitroxEntity.RequireIdFrom(item.item.gameObject);
             byte[] bytes = SerializationHelper.GetBytesWithoutParent(item.item.gameObject);
 
             BasicItemData itemData = new(id, itemId, bytes);
@@ -36,7 +36,7 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastItemRemoval(GameObject gameObject)
         {
-            NitroxId id = NitroxEntity.GetId(gameObject);
+            NitroxId id = NitroxEntity.RequireIdFrom(gameObject);
 
             StorageSlotItemRemove slotItemRemove = new(id);
             packetSender.Send(slotItemRemove);

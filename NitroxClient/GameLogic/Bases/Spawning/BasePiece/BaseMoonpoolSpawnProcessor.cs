@@ -16,7 +16,7 @@ public class BaseMoonpoolSpawnProcessor : BasePieceSpawnProcessor
 
     protected override void SpawnPostProcess(Base latestBase, Int3 latestCell, GameObject finishedPiece)
     {
-        NitroxId moonpoolId = NitroxEntity.GetId(finishedPiece);
+        NitroxId moonpoolId = NitroxEntity.RequireIdFrom(finishedPiece);
         VehicleDockingBay dockingBay = finishedPiece.RequireComponentInChildren<VehicleDockingBay>();
 
         NitroxId dockingBayId = moonpoolId.Increment();

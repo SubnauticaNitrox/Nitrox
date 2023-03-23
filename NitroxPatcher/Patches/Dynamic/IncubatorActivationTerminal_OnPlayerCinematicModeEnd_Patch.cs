@@ -19,7 +19,7 @@ public class IncubatorActivationTerminal_OnPlayerCinematicModeEnd_Patch : Nitrox
     {
         if (__instance.crystalObject)
         {
-            NitroxId id = NitroxEntity.GetId(__instance.crystalObject);
+            NitroxId id = NitroxEntity.RequireIdFrom(__instance.crystalObject);
             Resolve<IPacketSender>().Send(new EntityDestroyed(id));
         }
     }

@@ -18,7 +18,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Prefix(BaseDeconstructable __instance)
         {
-            NitroxId id = NitroxEntity.GetId(__instance.gameObject);
+            NitroxId id = NitroxEntity.RequireIdFrom(__instance.gameObject);
             Add(TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE_GUID, id);
         }
 

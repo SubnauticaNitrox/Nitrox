@@ -35,7 +35,7 @@ namespace NitroxPatcher.Patches.Dynamic
             if (__state)
             {
                 SubRoot cyclops = __instance.subRoot;
-                NitroxId id = NitroxEntity.GetId(cyclops.gameObject);
+                NitroxId id = NitroxEntity.RequireIdFrom(cyclops.gameObject);
                 Resolve<Cyclops>().BroadcastMetadataChange(id);
             }
         }

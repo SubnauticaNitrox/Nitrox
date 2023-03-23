@@ -34,20 +34,20 @@ namespace NitroxClient.GameLogic
             }
 
             // Sometimes build templates, such as the cyclops, are already tagged with IDs.  Remove any that exist to retag.
-            // TODO: this seems to happen because various patches execute when the cyclops template loads (on game load). 
+            // TODO: this seems to happen because various patches execute when the cyclops template loads (on game load).
             // This will leave vehicles with NitroxEntity but an empty NitroxId.  We need to chase these down and only call
             // the code paths when the owner has a simulation lock.
             UnityEngine.Component.DestroyImmediate(constructedObject.GetComponent<NitroxEntity>());
 
-            NitroxId constructedObjectId = NitroxEntity.GetId(constructedObject);
-            NitroxId constructorId = NitroxEntity.GetId(constructor.constructor.gameObject);
+            NitroxId constructedObjectId = NitroxEntity.RequireIdFrom(constructedObject);
+            NitroxId constructorId = NitroxEntity.RequireIdFrom(constructor.constructor.gameObject);
 
             VehicleWorldEntity vehicleEntity = new VehicleWorldEntity(constructorId, DayNightCycle.main.timePassedAsFloat, constructedObject.transform.ToLocalDto(), "", false, constructedObjectId, techType.ToDto(), null);
             VehicleChildEntityHelper.PopulateChildren(constructedObjectId, constructedObject.GetFullHierarchyPath(), vehicleEntity.ChildEntities, constructedObject);
 
             packetSender.Send(new EntitySpawnedByClient(vehicleEntity));
 
-            constructor.StartCoroutine(vehicles.UpdateVehiclePositionAfterSpawn(constructedObjectId, techType, constructedObject, duration + 10.0f));            
+            constructor.StartCoroutine(vehicles.UpdateVehiclePositionAfterSpawn(constructedObjectId, techType, constructedObject, duration + 10.0f));
         }
     }
 }

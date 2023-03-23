@@ -1,4 +1,4 @@
-﻿using NitroxClient.Communication.Abstract;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Bases.Spawning.BasePiece;
 using NitroxClient.GameLogic.Bases.Spawning.Furniture;
 using NitroxClient.GameLogic.Helper;
@@ -34,7 +34,7 @@ namespace NitroxClient.GameLogic
                 return;
             }
 
-            NitroxId id = NitroxEntity.GetId(constructableBase.gameObject);
+            NitroxId id = NitroxEntity.RequireIdFrom(constructableBase.gameObject);
 
             NitroxId parentBaseId = null;
 
@@ -55,7 +55,7 @@ namespace NitroxClient.GameLogic
                 Base aBase = constructableBase.gameObject.GetComponentInParent<Base>();
                 if (aBase != null)
                 {
-                    parentBaseId = NitroxEntity.GetId(aBase.gameObject);
+                    parentBaseId = NitroxEntity.RequireIdFrom(aBase);
                 }
             }
 
@@ -75,7 +75,7 @@ namespace NitroxClient.GameLogic
                 return;
             }
 
-            NitroxId id = NitroxEntity.GetId(gameObject);
+            NitroxId id = NitroxEntity.RequireIdFrom(gameObject);
             NitroxId parentId = null;
 
             SubRoot sub = Player.main.currentSub;
@@ -112,7 +112,7 @@ namespace NitroxClient.GameLogic
                 return;
             }
 
-            NitroxId id = NitroxEntity.GetId(gameObject);
+            NitroxId id = NitroxEntity.RequireIdFrom(gameObject);
             ConstructionAmountChanged amountChanged = new ConstructionAmountChanged(id, amount);
             packetSender.Send(amountChanged);
         }
@@ -122,12 +122,12 @@ namespace NitroxClient.GameLogic
             NitroxId baseId = null;
             Optional<object> opConstructedBase = TransientLocalObjectManager.Get(TransientObjectType.BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT);
 
-            NitroxId id = NitroxEntity.GetId(ghost);
+            NitroxId id = NitroxEntity.RequireIdFrom(ghost);
 
             if (opConstructedBase.HasValue)
             {
                 GameObject constructedBase = (GameObject)opConstructedBase.Value;
-                baseId = NitroxEntity.GetId(constructedBase);
+                baseId = NitroxEntity.RequireIdFrom(constructedBase);
             }
 
             // For base pieces, we must switch the id from the ghost to the newly constructed piece.
@@ -136,7 +136,7 @@ namespace NitroxClient.GameLogic
             {
                 Int3 latestCell = lastTargetBaseOffset;
                 Base latestBase = lastTargetBase.HasValue ? lastTargetBase.Value : ((GameObject)opConstructedBase.Value).GetComponent<Base>();
-                baseId = NitroxEntity.GetId(latestBase.gameObject);
+                baseId = NitroxEntity.RequireIdFrom(latestBase.gameObject);
 
                 Transform cellTransform;
                 GameObject placedPiece = null;
@@ -202,7 +202,7 @@ namespace NitroxClient.GameLogic
 
         public void DeconstructionComplete(GameObject gameObject)
         {
-            NitroxId id = NitroxEntity.GetId(gameObject);
+            NitroxId id = NitroxEntity.RequireIdFrom(gameObject);
 
             DeconstructionCompleted deconstructionCompleted = new DeconstructionCompleted(id);
             packetSender.Send(deconstructionCompleted);

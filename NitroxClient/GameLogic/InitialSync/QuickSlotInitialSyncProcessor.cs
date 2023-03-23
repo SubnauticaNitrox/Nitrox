@@ -20,7 +20,7 @@ public class QuickSlotInitialSyncProcessor : InitialSyncProcessor
         int nonEmptySlots = 0;
 
         Dictionary<NitroxId, InventoryItem> inventoryItemsById = GetItemsById();
- 
+
         for (int i = 0; i < packet.QuickSlotsBindingIds.Length; i++)
         {
             waitScreenItem.SetProgress(i, packet.QuickSlotsBindingIds.Length);
@@ -53,7 +53,7 @@ public class QuickSlotInitialSyncProcessor : InitialSyncProcessor
         {
             if (inventoryItem.item)
             {
-                NitroxId id = NitroxEntity.GetId(inventoryItem.item.gameObject);
+                NitroxId id = NitroxEntity.RequireIdFrom(inventoryItem.item.gameObject);
                 itemsById.Add(id, inventoryItem);
             }
         }

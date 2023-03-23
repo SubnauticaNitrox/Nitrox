@@ -15,7 +15,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static bool Prefix(Radio __instance)
         {
-            NitroxId id = NitroxEntity.GetId(__instance.gameObject);
+            NitroxId id = NitroxEntity.RequireIdFrom(__instance.gameObject);
             Resolve<Entities>().BroadcastMetadataUpdate(id, new RepairedComponentMetadata(TechType.Radio.ToDto()));
             return true;
         }

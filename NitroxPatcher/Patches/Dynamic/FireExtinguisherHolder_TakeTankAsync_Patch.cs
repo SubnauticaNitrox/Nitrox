@@ -43,7 +43,7 @@ public class FireExtinguisherHolder_TakeTankAsync_Patch : NitroxPatch, IDynamicP
         // We force this state earlier because it'll be read by the metadata extractor
         holder.hasTank = false;
 
-        NitroxId id = NitroxEntity.GetId(holder.gameObject);
+        NitroxId id = NitroxEntity.RequireIdFrom(holder.gameObject);
         Resolve<Entities>().EntityMetadataChanged(holder, id);
     }
 
@@ -52,4 +52,3 @@ public class FireExtinguisherHolder_TakeTankAsync_Patch : NitroxPatch, IDynamicP
         PatchTranspiler(harmony, TARGET_METHOD);
     }
 }
-

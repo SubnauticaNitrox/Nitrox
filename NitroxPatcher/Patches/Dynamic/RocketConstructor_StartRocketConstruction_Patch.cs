@@ -22,7 +22,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
                 /* if (this.crafterLogic.Craft(currentStageTech, craftTime)) {
 			     *      GameObject toBuild = this.rocket.StartRocketConstruction();
-                 *  ->  RocketConstructor_StartRocketConstruction_Patch.Callback(this.rocket); 
+                 *  ->  RocketConstructor_StartRocketConstruction_Patch.Callback(this.rocket);
 			     *      ItemGoalTracker.OnConstruct(currentStageTech);
 			     *      this.SendBuildBots(toBuild);
 		         * }
@@ -38,7 +38,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         private static void Callback(Rocket rocket)
         {
-            NitroxId rocketId = NitroxEntity.GetId(rocket.gameObject);
+            NitroxId rocketId = NitroxEntity.RequireIdFrom(rocket.gameObject);
 
             Resolve<Entities>().EntityMetadataChanged(rocket, rocketId);
         }

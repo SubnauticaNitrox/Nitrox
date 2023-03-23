@@ -24,7 +24,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 return true;
             }
 
-            NitroxId id = NitroxEntity.GetId(__instance.gameObject);
+            NitroxId id = NitroxEntity.RequireIdFrom(__instance.gameObject);
 
             if (simulationOwnership.HasExclusiveLock(id))
             {

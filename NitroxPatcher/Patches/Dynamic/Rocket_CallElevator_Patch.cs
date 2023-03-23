@@ -22,7 +22,7 @@ namespace NitroxPatcher.Patches.Dynamic
             if (__state != __instance.elevatorState)
             {
                 GameObject gameObject = __instance.gameObject;
-                NitroxId id = NitroxEntity.GetId(gameObject);
+                NitroxId id = NitroxEntity.RequireIdFrom(gameObject);
 
                 Resolve<Entities>().EntityMetadataChanged(__instance, id);
             }

@@ -68,7 +68,7 @@ namespace NitroxClient.GameLogic.InitialSync
                     pickupable.Initialize();
 
                     item.Created(gameObject);
-                    itemContainers.AddItem(gameObject, NitroxEntity.GetId(Player.main.gameObject));
+                    itemContainers.AddItem(gameObject, NitroxEntity.RequireIdFrom(Player.main.gameObject));
                 }
             }
         }

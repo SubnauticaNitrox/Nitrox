@@ -20,7 +20,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 mvc.Exit();
             }
 
-            NitroxId id = NitroxEntity.GetId(__instance.gameObject);
+            NitroxId id = NitroxEntity.RequireIdFrom(__instance.gameObject);
             Resolve<SimulationOwnership>().RequestSimulationLock(id, SimulationLockType.TRANSIENT);
         }
 

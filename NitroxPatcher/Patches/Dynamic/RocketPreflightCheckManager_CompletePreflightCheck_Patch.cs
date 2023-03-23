@@ -15,7 +15,7 @@ namespace NitroxPatcher.Patches.Dynamic
         public static void Postfix(RocketPreflightCheckManager __instance)
         {
             Rocket rocket = __instance.gameObject.RequireComponentInParent<Rocket>();
-            NitroxId id = NitroxEntity.GetId(rocket.gameObject);
+            NitroxId id = NitroxEntity.RequireIdFrom(rocket.gameObject);
 
             Resolve<Entities>().EntityMetadataChanged(rocket, id);
         }

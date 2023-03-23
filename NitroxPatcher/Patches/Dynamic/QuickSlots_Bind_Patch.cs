@@ -21,7 +21,7 @@ public class QuickSlots_Bind_Patch : NitroxPatch, IDynamicPatch
 
             if (inventoryItem != null && inventoryItem.item)
             {
-                slotItemIds[i] = NitroxEntity.GetId(inventoryItem.item.gameObject);
+                slotItemIds[i] = NitroxEntity.RequireIdFrom(inventoryItem.item.gameObject);
             }
         }
 

@@ -141,7 +141,7 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             SubFire subFire = subRoot.gameObject.RequireComponent<SubFire>();
             Dictionary<CyclopsRooms, SubFire.RoomFire> roomFiresDict = subFire.roomFires;
-            NitroxId subRootId = NitroxEntity.GetId(subRoot.gameObject);
+            NitroxId subRootId = NitroxEntity.RequireIdFrom(subRoot.gameObject);
             CyclopsFireData fireNode = null;
 
             if (roomFires != null && roomFires.Length > 0)

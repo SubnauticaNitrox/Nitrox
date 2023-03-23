@@ -13,7 +13,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 /**
  * When a player is finished crafting an item, we need to let the server know we spawned the items.  We also
- * let other players know to close out the crafter and consider it empty. 
+ * let other players know to close out the crafter and consider it empty.
  */
 public class CrafterLogic_TryPickupSingleAsync_Patch : NitroxPatch, IDynamicPatch
 {
@@ -47,7 +47,7 @@ public class CrafterLogic_TryPickupSingleAsync_Patch : NitroxPatch, IDynamicPatc
     public static void Callback(GameObject crafter, GameObject item)
     {
         // Tell the other players to consider this crafter to no longer contain a tech type.
-        NitroxId crafterId = NitroxEntity.GetId(crafter.gameObject);
+        NitroxId crafterId = NitroxEntity.RequireIdFrom(crafter.gameObject);
         Resolve<Entities>().BroadcastMetadataUpdate(crafterId, new CrafterMetadata(null, DayNightCycle.main.timePassedAsFloat, 0));
 
         // Let the server know that the item has been successfully created.
@@ -59,4 +59,3 @@ public class CrafterLogic_TryPickupSingleAsync_Patch : NitroxPatch, IDynamicPatc
         PatchTranspiler(harmony, TARGET_METHOD);
     }
 }
-

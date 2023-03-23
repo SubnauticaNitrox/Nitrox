@@ -17,7 +17,7 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             if (__instance.slotted)
             {
-                NitroxId id = NitroxEntity.GetId(__instance.gameObject);
+                NitroxId id = NitroxEntity.RequireIdFrom(__instance.gameObject);
                 PrecursorKeyTerminalMetadata precursorKeyTerminalMetadata = new(__instance.slotted);
 
                 Entities entities = NitroxServiceLocator.LocateService<Entities>();

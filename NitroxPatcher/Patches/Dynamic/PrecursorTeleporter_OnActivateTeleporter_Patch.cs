@@ -15,7 +15,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(PrecursorTeleporter __instance)
         {
-            NitroxId id = NitroxEntity.GetId(__instance.gameObject);
+            NitroxId id = NitroxEntity.RequireIdFrom(__instance.gameObject);
             PrecursorTeleporterMetadata precursorTeleporterMetadata = new(__instance.isOpen);
 
             Entities entities = NitroxServiceLocator.LocateService<Entities>();

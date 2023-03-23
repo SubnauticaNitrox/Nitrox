@@ -20,7 +20,7 @@ public class Survival_Use_Patch : NitroxPatch, IDynamicPatch
     {
         if (__result && useObj)
         {
-            NitroxId id = NitroxEntity.GetId(useObj);
+            NitroxId id = NitroxEntity.RequireIdFrom(useObj);
             Resolve<IPacketSender>().Send(new EntityDestroyed(id));
         }
     }

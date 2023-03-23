@@ -7,7 +7,7 @@ using UnityEngine;
 namespace NitroxClient.GameLogic
 {
     public class EquipmentSlots
-    {        
+    {
         private readonly IPacketSender packetSender;
         private readonly Entities entities;
 
@@ -19,8 +19,8 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastEquip(Pickupable pickupable, GameObject owner, string slot)
         {
-            NitroxId ownerId = NitroxEntity.GetId(owner);
-            NitroxId itemId = NitroxEntity.GetId(pickupable.gameObject);
+            NitroxId ownerId = NitroxEntity.RequireIdFrom(owner);
+            NitroxId itemId = NitroxEntity.RequireIdFrom(pickupable.gameObject);
 
             Player player = owner.GetComponent<Player>();
 
@@ -38,8 +38,8 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastUnequip(Pickupable pickupable, GameObject owner, string slot)
         {
-            NitroxId ownerId = NitroxEntity.GetId(owner);
-            NitroxId itemId = NitroxEntity.GetId(pickupable.gameObject);
+            NitroxId ownerId = NitroxEntity.RequireIdFrom(owner);
+            NitroxId itemId = NitroxEntity.RequireIdFrom(pickupable.gameObject);
             Player player = owner.GetComponent<Player>();
 
             if (player != null)

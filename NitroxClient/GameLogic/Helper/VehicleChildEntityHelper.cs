@@ -44,7 +44,7 @@ public class VehicleChildEntityHelper
                 if (interactiveChildTypes.Contains(mono.GetType()))
                 {
                     // We don't to accidentally tag this game object unless we know it has an applicable mono
-                    NitroxId id = NitroxEntity.GetId(mono.gameObject);
+                    NitroxId id = NitroxEntity.RequireIdFrom(mono.gameObject);
                     toPopulate.Add(new PathBasedChildEntity(relativePathName, id, null, null, vehicleId, new()));
                 }
             }
@@ -56,4 +56,3 @@ public class VehicleChildEntityHelper
         }
     }
 }
-

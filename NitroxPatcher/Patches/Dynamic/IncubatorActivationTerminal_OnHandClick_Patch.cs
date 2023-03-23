@@ -22,7 +22,7 @@ namespace NitroxPatcher.Patches.Dynamic
             {
                 // the server only knows about the main incubator platform which is the direct parent
                 GameObject platform = __instance.gameObject.transform.parent.gameObject;
-                NitroxId id = NitroxEntity.GetId(platform);
+                NitroxId id = NitroxEntity.RequireIdFrom(platform);
                 IncubatorMetadata metadata = new(true, false);
 
                 Entities entities = NitroxServiceLocator.LocateService<Entities>();

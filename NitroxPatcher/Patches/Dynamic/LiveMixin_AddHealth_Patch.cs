@@ -38,7 +38,7 @@ namespace NitroxPatcher.Patches.Dynamic
             if (__state.HasValue && __state.Value != __instance.health)
             {
                 // Let others know if we have a lock on this entity
-                NitroxId id = NitroxEntity.GetId(__instance.gameObject);
+                NitroxId id = NitroxEntity.RequireIdFrom(__instance.gameObject);
                 bool hasLock = NitroxServiceLocator.LocateService<SimulationOwnership>().HasAnyLockType(id);
 
                 if (hasLock)

@@ -120,10 +120,10 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastVehicleDocking(VehicleDockingBay dockingBay, Vehicle vehicle)
         {
-            NitroxId dockId = NitroxEntity.GetId(dockingBay.gameObject);
+            NitroxId dockId = NitroxEntity.RequireIdFrom(dockingBay.gameObject);
 
 
-            NitroxId vehicleId = NitroxEntity.GetId(vehicle.gameObject);
+            NitroxId vehicleId = NitroxEntity.RequireIdFrom(vehicle.gameObject);
             ushort playerId = multiplayerSession.Reservation.PlayerId;
 
             VehicleDocking packet = new VehicleDocking(vehicleId, dockId, playerId);
@@ -136,9 +136,9 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastVehicleUndocking(VehicleDockingBay dockingBay, Vehicle vehicle, bool undockingStart)
         {
-            NitroxId dockId = NitroxEntity.GetId(dockingBay.gameObject);
+            NitroxId dockId = NitroxEntity.RequireIdFrom(dockingBay.gameObject);
 
-            NitroxId vehicleId = NitroxEntity.GetId(vehicle.gameObject);
+            NitroxId vehicleId = NitroxEntity.RequireIdFrom(vehicle.gameObject);
             ushort playerId = multiplayerSession.Reservation.PlayerId;
 
             PacketSuppressor<PlayerMovement> movementSuppressor = PacketSuppressor<PlayerMovement>.Suppress();
@@ -187,7 +187,7 @@ namespace NitroxClient.GameLogic
         {
             ushort playerId = multiplayerSession.Reservation.PlayerId;
 
-            VehicleOnPilotModeChanged packet = new(NitroxEntity.GetId(vehicle.gameObject), playerId, isPiloting);
+            VehicleOnPilotModeChanged packet = new(NitroxEntity.RequireIdFrom(vehicle.gameObject), playerId, isPiloting);
             packetSender.Send(packet);
         }
 

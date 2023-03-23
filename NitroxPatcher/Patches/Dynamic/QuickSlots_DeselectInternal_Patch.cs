@@ -19,7 +19,7 @@ namespace NitroxPatcher.Patches.Dynamic
             if (____heldItem != null && ____heldItem.item) //____heldItem.item can be null on game quitting
             {
                 Pickupable pickupable = ____heldItem.item;
-                NitroxId itemId = NitroxEntity.GetId(pickupable.gameObject);
+                NitroxId itemId = NitroxEntity.RequireIdFrom(pickupable.gameObject);
                 PlayerTool component = pickupable.GetComponent<PlayerTool>();
                 PlayerHeldItemChanged.ChangeType type = component ? PlayerHeldItemChanged.ChangeType.HOLSTER_AS_TOOL : PlayerHeldItemChanged.ChangeType.HOLSTER_AS_ITEM;
                 player.BroadcastHeldItemChanged(itemId, type, null);

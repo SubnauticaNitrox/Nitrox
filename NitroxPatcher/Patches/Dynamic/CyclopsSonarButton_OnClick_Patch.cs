@@ -13,7 +13,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(CyclopsSonarButton __instance)
         {
-            NitroxId id = NitroxEntity.GetId(__instance.subRoot.gameObject);
+            NitroxId id = NitroxEntity.RequireIdFrom(__instance.subRoot.gameObject);
             Resolve<Cyclops>().BroadcastMetadataChange(id);
         }
 

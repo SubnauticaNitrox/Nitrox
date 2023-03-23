@@ -21,7 +21,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 return;
             }
 
-            PingRenamed packet = new(NitroxEntity.GetId(instance.gameObject), instance.GetLabel(), SerializationHelper.GetBytes(instance.gameObject));
+            PingRenamed packet = new(NitroxEntity.RequireIdFrom(instance.gameObject), instance.GetLabel(), SerializationHelper.GetBytes(instance.gameObject));
             NitroxServiceLocator.LocateService<IPacketSender>().Send(packet);
         }
 

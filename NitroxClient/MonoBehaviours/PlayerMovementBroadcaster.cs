@@ -91,7 +91,7 @@ public class PlayerMovementBroadcaster : MonoBehaviour
 
         if (vehicle)
         {
-            id = NitroxEntity.GetId(vehicle.gameObject);
+            id = NitroxEntity.RequireIdFrom(vehicle.gameObject);
             position = vehicle.gameObject.transform.position;
             rotation = vehicle.gameObject.transform.rotation;
             techType = CraftData.GetTechType(vehicle.gameObject);
@@ -136,7 +136,7 @@ public class PlayerMovementBroadcaster : MonoBehaviour
         }
         else if (sub && Player.main.isPiloting)
         {
-            id = NitroxEntity.GetId(sub.gameObject);
+            id = NitroxEntity.RequireIdFrom(sub.gameObject);
             position = sub.gameObject.transform.position;
             rotation = sub.gameObject.transform.rotation;
             Rigidbody rigidbody = sub.GetComponent<Rigidbody>();
@@ -171,4 +171,3 @@ public class PlayerMovementBroadcaster : MonoBehaviour
         );
     }
 }
-

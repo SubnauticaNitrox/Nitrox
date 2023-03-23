@@ -27,7 +27,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
             SubRoot subRoot = __instance.GetComponentInParent<SubRoot>();
             Validate.NotNull(subRoot, "PilotingChair cannot find it's corresponding SubRoot!");
-            NitroxId id = NitroxEntity.GetId(subRoot.gameObject);
+            NitroxId id = NitroxEntity.RequireIdFrom(subRoot.gameObject);
 
             if (simulationOwnership.HasExclusiveLock(id))
             {

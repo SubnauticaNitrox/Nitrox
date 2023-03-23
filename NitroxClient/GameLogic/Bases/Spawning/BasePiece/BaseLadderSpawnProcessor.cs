@@ -18,7 +18,7 @@ public class BaseLadderSpawnProcessor : BasePieceSpawnProcessor
     {
         bool builtLadderOnFloor = finishedPiece.name.Contains("Bottom");
         int searchDirection = builtLadderOnFloor ? -1 : 1;
-            
+
         Int3 cellToSearch = Int3.zero;
         Optional<GameObject> otherLadderPiece = Optional.Empty;
         int searchOffset = searchDirection;
@@ -39,7 +39,7 @@ public class BaseLadderSpawnProcessor : BasePieceSpawnProcessor
         {
             // Ladders are one of the rare instances where we want to assign the same id to two different objects.
             // This happens because the ladder can be deconstructed from two locations (the top and bottom).
-            NitroxId id = NitroxEntity.GetId(finishedPiece);
+            NitroxId id = NitroxEntity.RequireIdFrom(finishedPiece);
             NitroxEntity.SetNewId(otherLadderPiece.Value, id);
             Log.Debug($"Successfully set new id to other piece: {otherLadderPiece.Value.name}, id={id}");
         }

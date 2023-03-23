@@ -26,7 +26,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
             SimulationOwnership simulationOwnership = NitroxServiceLocator.LocateService<SimulationOwnership>();
 
-            NitroxId id = NitroxEntity.GetId(target);
+            NitroxId id = NitroxEntity.RequireIdFrom(target);
 
             if (simulationOwnership.HasExclusiveLock(id))
             {

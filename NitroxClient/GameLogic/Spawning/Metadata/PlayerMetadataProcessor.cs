@@ -15,8 +15,8 @@ public class PlayerMetadataProcessor : GenericEntityMetadataProcessor<PlayerMeta
 {
     public override void ProcessMetadata(GameObject gameObject, PlayerMetadata metadata)
     {
-        NitroxId id = NitroxEntity.GetId(gameObject);
-        NitroxId localPlayerId = NitroxEntity.GetId(Player.main.gameObject);
+        NitroxId id = NitroxEntity.RequireIdFrom(gameObject);
+        NitroxId localPlayerId = NitroxEntity.RequireIdFrom(Player.main.gameObject);
 
         if (id == localPlayerId)
         {

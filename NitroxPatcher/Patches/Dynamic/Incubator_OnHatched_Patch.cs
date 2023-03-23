@@ -10,7 +10,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 /// <summary>
 /// The first step of OnHatched() is to check if the enzyme was attached, so that it can be destroyed.
-/// Before this destruction occurs, let's let the server know that the item is being deleted. 
+/// Before this destruction occurs, let's let the server know that the item is being deleted.
 /// </summary>
 public class Incubator_OnHatched_Patch : NitroxPatch, IDynamicPatch
 {
@@ -20,7 +20,7 @@ public class Incubator_OnHatched_Patch : NitroxPatch, IDynamicPatch
     {
         if (__instance.enzymesObject)
         {
-            NitroxId id = NitroxEntity.GetId(__instance.enzymesObject);
+            NitroxId id = NitroxEntity.RequireIdFrom(__instance.enzymesObject);
             Resolve<IPacketSender>().Send(new EntityDestroyed(id));
         }
     }

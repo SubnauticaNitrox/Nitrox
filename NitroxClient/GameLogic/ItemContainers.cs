@@ -28,7 +28,7 @@ namespace NitroxClient.GameLogic
                 return;
             }
 
-            NitroxId itemId = NitroxEntity.GetId(pickupable.gameObject);
+            NitroxId itemId = NitroxEntity.RequireIdFrom(pickupable.gameObject);
 
             EntityReparented reparented = new EntityReparented(itemId, InventoryContainerHelper.GetOwnerId(containerTransform));
 

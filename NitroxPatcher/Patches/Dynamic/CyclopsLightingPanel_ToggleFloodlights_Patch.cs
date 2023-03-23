@@ -21,7 +21,7 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             if (__state != __instance.floodlightsOn)
             {
-                NitroxId id = NitroxEntity.GetId(__instance.gameObject);
+                NitroxId id = NitroxEntity.RequireIdFrom(__instance.gameObject);
                 Resolve<Entities>().EntityMetadataChanged(__instance, id);
             }
         }

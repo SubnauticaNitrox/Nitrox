@@ -106,7 +106,7 @@ namespace NitroxClient.GameLogic
         /// </summary>
         public void OnDamagePointRepaired(SubRoot subRoot, CyclopsDamagePoint damagePoint, float repairAmount)
         {
-            NitroxId subId = NitroxEntity.GetId(subRoot.gameObject);
+            NitroxId subId = NitroxEntity.RequireIdFrom(subRoot.gameObject);
 
             for (int i = 0; i < subRoot.damageManager.damagePoints.Length; i++)
             {
@@ -125,7 +125,7 @@ namespace NitroxClient.GameLogic
         /// </summary>
         private void BroadcastDamageState(SubRoot subRoot, Optional<DamageInfo> info)
         {
-            NitroxId subId = NitroxEntity.GetId(subRoot.gameObject);
+            NitroxId subId = NitroxEntity.RequireIdFrom(subRoot.gameObject);
             LiveMixin subHealth = subRoot.gameObject.RequireComponent<LiveMixin>();
             if (subHealth.health <= 0)
             {
@@ -138,7 +138,7 @@ namespace NitroxClient.GameLogic
                 // Source of the damage. Used if the damage done to the Cyclops was not calculated on other clients. Currently it's just used to figure out what sounds and
                 // visual effects should be used.
                 damageInfo = new CyclopsDamageInfoData(subId,
-                                                       damage.dealer != null ? NitroxEntity.GetId(damage.dealer) : null,
+                                                       damage.dealer != null ? NitroxEntity.RequireIdFrom(damage.dealer) : null,
                                                        damage.originalDamage,
                                                        damage.damage,
                                                        damage.position,
@@ -172,14 +172,14 @@ namespace NitroxClient.GameLogic
         /// </summary>
         private IEnumerable<CyclopsFireData> GetActiveRoomFires(SubFire subFire)
         {
-            NitroxId subRootId = NitroxEntity.GetId(subFire.subRoot.gameObject);
+            NitroxId subRootId = NitroxEntity.RequireIdFrom(subFire.subRoot.gameObject);
             foreach (KeyValuePair<CyclopsRooms, SubFire.RoomFire> roomFire in subFire.roomFires)
             {
                 for (int i = 0; i < roomFire.Value.spawnNodes.Length; i++)
                 {
                     if (roomFire.Value.spawnNodes[i].childCount > 0)
                     {
-                        yield return new CyclopsFireData(NitroxEntity.GetId(roomFire.Value.spawnNodes[i].GetComponentInChildren<Fire>().gameObject),
+                        yield return new CyclopsFireData(NitroxEntity.RequireIdFrom(roomFire.Value.spawnNodes[i].GetComponentInChildren<Fire>().gameObject),
                             subRootId,
                             roomFire.Key,
                             i);
