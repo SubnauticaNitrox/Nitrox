@@ -14,24 +14,26 @@ namespace NitroxClient.GameLogic
     public class StorageSlots
     {
         private readonly IPacketSender packetSender;
-        private readonly LocalPlayer localPlayer;
 
-        public StorageSlots(IPacketSender packetSender, LocalPlayer localPlayer)
+        public StorageSlots(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
-            this.localPlayer = localPlayer;
         }
 
-        public void BroadcastItemAdd(InventoryItem item, GameObject gameObject)
+        public void BroadcastItemAdd(InventoryItem item, GameObject container)
         {
-            NitroxId id = NitroxEntity.RequireIdFrom(gameObject);
+            NitroxId containerId = NitroxEntity.RequireIdFrom(container);
 
-            NitroxId itemId = NitroxEntity.RequireIdFrom(item.item.gameObject);
+            if (!NitroxEntity.TryGetIdFrom(item.item.gameObject, out NitroxId itemId))
+            {
+                itemId = new NitroxId(); // Creating a new id for a new item
+                NitroxEntity.SetNewId(item.item.gameObject, itemId);
+            }
+
             byte[] bytes = SerializationHelper.GetBytesWithoutParent(item.item.gameObject);
 
-            BasicItemData itemData = new(id, itemId, bytes);
-            StorageSlotItemAdd add = new(itemData);
-            packetSender.Send(add);
+            BasicItemData itemData = new(containerId, itemId, bytes);
+            packetSender.Send(new StorageSlotItemAdd(itemData));
         }
 
         public void BroadcastItemRemoval(GameObject gameObject)
