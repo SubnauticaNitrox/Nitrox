@@ -157,6 +157,18 @@ namespace NitroxClient.MonoBehaviours
             }
         }
 
+        /// <summary>
+        /// Removes the <see cref="NitroxEntity"/> from the global directory and set's its <see cref="Id"/> to null.
+        /// </summary>
+        public void Remove()
+        {
+            if (Id != null)
+            {
+                gameObjectsById.Remove(Id);
+                Id = null;
+            }
+        }
+
         public void Start()
         {
             // Just in case this object comes to life via serialization
