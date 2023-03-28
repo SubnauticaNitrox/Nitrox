@@ -12,7 +12,6 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using UnityEngine;
 using NitroxModel_Subnautica.DataStructures;
-using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxClient.GameLogic
 {

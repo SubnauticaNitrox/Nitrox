@@ -13,6 +13,7 @@ using NitroxClient.GameLogic.Spawning.Metadata.Extractor;
 using NitroxModel.DataStructures.GameLogic;
 using System.Linq;
 using NitroxClient.Unity.Helper;
+using NitroxClient.GameLogic.Helper;
 
 namespace NitroxClient.GameLogic
 {
@@ -96,6 +97,8 @@ namespace NitroxClient.GameLogic
 
             InventoryItemEntity inventoryItemEntity = new(itemId, classId, techType.ToDto(), metadata.OrNull(), ownerId, children);
             entities.MarkAsSpawned(inventoryItemEntity);
+
+            BatteryChildEntityHelper.TryPopulateInstalledBattery(gameObject, inventoryItemEntity.ChildEntities, itemId);
 
             if (packetSender.Send(new EntitySpawnedByClient(inventoryItemEntity)))
             {

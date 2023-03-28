@@ -15,13 +15,6 @@ namespace NitroxClient.GameLogic.Spawning;
 
 public class InventoryItemEntitySpawner : EntitySpawner<InventoryItemEntity>
 {
-    private readonly IPacketSender packetSender;
-
-    public InventoryItemEntitySpawner(IPacketSender packetSender)
-    {
-        this.packetSender = packetSender;
-    }
-
     public override IEnumerator SpawnAsync(InventoryItemEntity entity, TaskResult<Optional<GameObject>> result)
     {
         Optional<GameObject> owner = NitroxEntity.GetObjectFrom(entity.ParentId);
@@ -59,10 +52,12 @@ public class InventoryItemEntitySpawner : EntitySpawner<InventoryItemEntity>
             container.UnsafeAdd(new InventoryItem(pickupable));
             Log.Debug($"Received: Added item {pickupable.GetTechType()} ({entity.Id}) to container {owner.Value.GetFullHierarchyPath()}");
         }
+
+        result.Set(Optional.Of(gameObject));
     }
 
     public override bool SpawnsOwnChildren(InventoryItemEntity entity)
     {
-        return true;
+        return false;
     }
 }

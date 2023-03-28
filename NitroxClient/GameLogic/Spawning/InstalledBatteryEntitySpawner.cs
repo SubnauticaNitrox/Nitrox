@@ -19,6 +19,7 @@ public class InstalledBatteryEntitySpawner : EntitySpawner<InstalledBatteryEntit
         {
             Log.Info($"Unable to find parent to install battery {entity}");
             result.Set(Optional.Empty);
+            yield break;
         }
 
         EnergyMixin energyMixin = parent.Value.GetComponent<EnergyMixin>();
@@ -27,6 +28,7 @@ public class InstalledBatteryEntitySpawner : EntitySpawner<InstalledBatteryEntit
         {
             Log.Info($"Unable to find EnergyMixin on parent to install battery {entity}");
             result.Set(Optional.Empty);
+            yield break;
         }
 
         energyMixin.Initialize();

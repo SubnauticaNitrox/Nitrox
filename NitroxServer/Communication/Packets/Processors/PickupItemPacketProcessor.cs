@@ -65,6 +65,6 @@ public class PickupItemPacketProcessor : AuthenticatedPacketProcessor<PickupItem
         entityRegistry.AddOrUpdate(inventoryItemEntity);
 
         // Have other players respawn the item inside the inventory.
-        playerManager.SendPacketToOtherPlayers(new EntitySpawnedByClient(inventoryItemEntity), player);
+        playerManager.SendPacketToOtherPlayers(new CellEntities(inventoryItemEntity, true), player);
     }
 }
