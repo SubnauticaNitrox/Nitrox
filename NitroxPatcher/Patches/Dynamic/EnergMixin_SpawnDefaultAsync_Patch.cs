@@ -17,14 +17,10 @@ public class EnergyMixin_SpawnDefaultAsync_Patch : NitroxPatch, IDynamicPatch
     public static readonly MethodInfo TARGET_METHOD_ORIGINAL = Reflect.Method((EnergyMixin t) => t.SpawnDefaultAsync(default(float), default(TaskResult<bool>)));
     public static readonly MethodInfo TARGET_METHOD = AccessTools.EnumeratorMoveNext(TARGET_METHOD_ORIGINAL);
 
-    public static readonly OpCode INJECTION_OPCODE = OpCodes.Call;
-    public static readonly object INJECTION_OPERAND = Reflect.Method(() => CrafterLogic.NotifyCraftEnd(default(GameObject), default(TechType)));
-
     public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
     {
-        Validate.NotNull(INJECTION_OPERAND);
 
-        // Blank out the method and replace with:
+        // Blanks out the generated MoveNext() and replaces it with:
         //
         //      result.set(false);
         //      return false;

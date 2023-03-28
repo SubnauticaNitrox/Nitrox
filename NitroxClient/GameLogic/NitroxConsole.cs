@@ -17,16 +17,12 @@ namespace NitroxClient.GameLogic
         public static bool DisableConsole { get; set; } = true;
 
         private readonly IPacketSender packetSender;
-        private readonly Vehicles vehicles;
         private readonly Items item;
-        private readonly Entities entities;
 
-        public NitroxConsole(IPacketSender packetSender, Vehicles vehicles, Items item, Entities entities)
+        public NitroxConsole(IPacketSender packetSender, Items item)
         {
             this.packetSender = packetSender;
-            this.vehicles = vehicles;
             this.item = item;
-            this.entities = entities;
         }
 
         //List of things that can be spawned : https://subnauticacommands.com/items
@@ -62,7 +58,7 @@ namespace NitroxClient.GameLogic
             NitroxId id = NitroxEntity.GetId(gameObject);
 
             VehicleWorldEntity vehicleEntity = new VehicleWorldEntity(null, DayNightCycle.main.timePassedAsFloat, gameObject.transform.ToLocalDto(), "", false, id, techType.ToDto(), null);
-            VehicleChildEntityHelper.PopulateChildren(id, gameObject.GetFullHierarchyPath(), vehicleEntity.ChildEntities, gameObject, entities);
+            VehicleChildEntityHelper.PopulateChildren(id, gameObject.GetFullHierarchyPath(), vehicleEntity.ChildEntities, gameObject);
 
             packetSender.Send(new EntitySpawnedByClient(vehicleEntity));
 

@@ -21,7 +21,7 @@ public class EnergyMixin_ModifyCharge_Patch : NitroxPatch, IDynamicPatch
         {
             if (Math.Abs(Math.Floor(__instance.charge) - Math.Floor(__instance.charge - __result)) > 0.0) //Send package if power changed to next natural number
             {
-                NitroxId id = NitroxEntity.GetId(__instance.gameObject);
+                NitroxId id = NitroxEntity.GetId(batteryGo);
                 Resolve<Entities>().EntityMetadataChanged(battery, id);
             }
         }

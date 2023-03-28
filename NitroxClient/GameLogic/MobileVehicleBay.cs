@@ -16,13 +16,11 @@ namespace NitroxClient.GameLogic
 
         private readonly IPacketSender packetSender;
         private readonly Vehicles vehicles;
-        private readonly Entities entities;
 
-        public MobileVehicleBay(IPacketSender packetSender, Vehicles vehicles, Entities entities)
+        public MobileVehicleBay(IPacketSender packetSender, Vehicles vehicles)
         {
             this.packetSender = packetSender;
             this.vehicles = vehicles;
-            this.entities = entities;
         }
 
         public void BeginCrafting(ConstructorInput constructor, GameObject constructedObject, TechType techType, float duration)
@@ -45,7 +43,7 @@ namespace NitroxClient.GameLogic
             NitroxId constructorId = NitroxEntity.GetId(constructor.constructor.gameObject);
 
             VehicleWorldEntity vehicleEntity = new VehicleWorldEntity(constructorId, DayNightCycle.main.timePassedAsFloat, constructedObject.transform.ToLocalDto(), "", false, constructedObjectId, techType.ToDto(), null);
-            VehicleChildEntityHelper.PopulateChildren(constructedObjectId, constructedObject.GetFullHierarchyPath(), vehicleEntity.ChildEntities, constructedObject, entities);
+            VehicleChildEntityHelper.PopulateChildren(constructedObjectId, constructedObject.GetFullHierarchyPath(), vehicleEntity.ChildEntities, constructedObject);
 
             packetSender.Send(new EntitySpawnedByClient(vehicleEntity));
 
