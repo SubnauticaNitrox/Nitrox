@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
@@ -15,7 +15,7 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities
         {
             if (parent.HasValue)
             {
-                CrashHome crashHome = parent.Value.GetComponentInParent<CrashHome>();
+                CrashHome crashHome = parent.Value.GetComponent<CrashHome>();
 
                 GameObject gameObject = Object.Instantiate(crashHome.crashPrefab, Vector3.zero, Quaternion.Euler(-90f, 0f, 0f));
                 gameObject.transform.SetParent(crashHome.transform, false);
