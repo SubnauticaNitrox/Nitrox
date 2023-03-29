@@ -22,7 +22,10 @@ namespace NitroxServer.Serialization.World
         public EntityData EntityData { get; set; }
 
         [DataMember(Order = 5)]
-        public SavedGlobalRoot GlobalRootData { get; set; }
+        public SavedGlobalRoot _GlobalRootData { get; set; }
+
+        [DataMember(Order = 6)]
+        public GlobalRootData GlobalRootData { get; set; }
 
         public static PersistedWorldData From(World world)
         {
@@ -30,14 +33,15 @@ namespace NitroxServer.Serialization.World
             {
                 BaseData = BaseData.From(world.BaseManager.GetPartiallyConstructedPieces(), world.BaseManager.GetCompletedBasePieceHistory()),
                 PlayerData = PlayerData.From(world.PlayerManager.GetAllPlayers()),
-                EntityData = EntityData.From(world.EntityRegistry.GetAllEntities()),
+                EntityData = EntityData.From(world.EntityRegistry.GetAllEntities(true)),
                 WorldData =
                 {
                     ParsedBatchCells = world.BatchEntitySpawner.SerializableParsedBatches,
                     GameData = GameData.From(world.GameData.PDAState, world.GameData.StoryGoals, world.ScheduleKeeper, world.StoryManager, world.TimeKeeper),
                     Seed = world.Seed
                 },
-                GlobalRootData = world.BuildingManager.GlobalRoot
+                _GlobalRootData = world.BuildingManager.GlobalRoot,
+                GlobalRootData = GlobalRootData.From(world.WorldEntityManager.GetGlobalRootEntities(true))
             };
         }
 
@@ -47,7 +51,8 @@ namespace NitroxServer.Serialization.World
                    BaseData != null &&
                    PlayerData != null &&
                    EntityData != null &&
-                   GlobalRootData != null;
+                   GlobalRootData != null &&
+                   _GlobalRootData != null;
         }
     }
 }

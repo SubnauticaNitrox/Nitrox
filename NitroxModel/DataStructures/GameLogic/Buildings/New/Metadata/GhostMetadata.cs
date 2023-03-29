@@ -1,18 +1,19 @@
+using System;
 using System.Runtime.Serialization;
 
 namespace NitroxModel.DataStructures.GameLogic.Buildings.New.Metadata;
 
-[DataContract]
+[Serializable, DataContract]
 public abstract class GhostMetadata
 {
     [DataMember(Order = 1)]
     public NitroxInt3 TargetOffset;
 }
 
-[DataContract]
+[Serializable, DataContract]
 public class BasicGhostMetadata : GhostMetadata { }
 
-[DataContract]
+[Serializable, DataContract]
 public class BaseDeconstructableGhostMetadata : GhostMetadata
 {
     [DataMember(Order = 1)]
@@ -22,14 +23,14 @@ public class BaseDeconstructableGhostMetadata : GhostMetadata
     public string ClassId;
 }
 
-[DataContract]
+[Serializable, DataContract]
 public class BaseAnchoredFaceGhostMetadata : GhostMetadata
 {
     [DataMember(Order = 1)]
     public NitroxBaseFace? AnchoredFace;
 }
 
-[DataContract]
+[Serializable, DataContract]
 public class BaseAnchoredCellGhostMetadata : GhostMetadata
 {
     [DataMember(Order = 1)]

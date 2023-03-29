@@ -6,6 +6,7 @@ using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Buildings.New;
+using NitroxModel.DataStructures.Util;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 using UWE;
@@ -235,7 +236,8 @@ public static class NitroxBuild
         }
         return savedBuild;
     }
-    public static IEnumerator CreateBuild(SavedBuild savedBuild)
+
+    public static IEnumerator CreateBuild(SavedBuild savedBuild, TaskResult<Optional<GameObject>> result = null)
     {
         GameObject newBase = UnityEngine.Object.Instantiate(BaseGhost._basePrefab, LargeWorldStreamer.main.globalRoot.transform, savedBuild.Position.ToUnity(), savedBuild.Rotation.ToUnity(), savedBuild.LocalScale.ToUnity(), false);
         if (LargeWorld.main)
@@ -254,6 +256,7 @@ public static class NitroxBuild
         @base.OnProtoDeserialize(null);
         @base.FinishDeserialization();
         yield return savedBuild.RestoreMoonpools(@base);
+        result?.Set(newBase);
     }
 
     private static List<SavedInteriorPiece> SaveInteriorPieces(Base targetBase)
@@ -334,7 +337,7 @@ public static class NitroxBuild
         }
     }
 
-    public static IEnumerator RestoreModule(Transform parent, SavedModule savedModule)
+    public static IEnumerator RestoreModule(Transform parent, SavedModule savedModule, TaskResult<Optional<GameObject>> result = null)
     {
         Log.Debug($"Restoring module {savedModule.ClassId}");
         IPrefabRequest request = PrefabDatabase.GetPrefabAsync(savedModule.ClassId);
@@ -359,6 +362,7 @@ public static class NitroxBuild
         constructable.SetState(savedModule.ConstructedAmount >= 1f, false);
         constructable.UpdateMaterial();
         NitroxEntity.SetNewId(moduleObject, savedModule.NitroxId);
+        result?.Set(moduleObject);
     }
 
     public static IEnumerator RestoreModules(Transform parent, IList<SavedModule> modules)
@@ -374,7 +378,7 @@ public static class NitroxBuild
         yield return RestoreModules(@base.transform, savedBuild.Modules);
     }
 
-    public static IEnumerator RestoreGhost(Transform parent, SavedGhost savedGhost)
+    public static IEnumerator RestoreGhost(Transform parent, SavedGhost savedGhost, TaskResult<Optional<GameObject>> result = null)
     {
         Log.Debug($"Restoring ghost {NitroxGhost.ToString(savedGhost)}");
         IPrefabRequest request = PrefabDatabase.GetPrefabAsync(savedGhost.ClassId);
@@ -405,7 +409,8 @@ public static class NitroxBuild
 
         yield return NitroxGhostMetadata.ApplyMetadataToGhost(baseGhost, savedGhost.Metadata, @base);
 
-        // TODO: Fix black ghost
+        // TODO: Fix hatch ghosts showing the wrong model
+        // TODO: Fix ghost visual glitch (probably a duplicate model) (black ghost)
         // Necessary to wait for BaseGhost.Start()
         yield return null;
         // Verify that the metadata didn't destroy the GameObject
@@ -451,11 +456,11 @@ public static class NitroxBuild
         NitroxGhostMetadata.LateApplyMetadataToGhost(baseGhost, savedGhost.Metadata);
 
         NitroxEntity.SetNewId(ghostObject, savedGhost.NitroxId);
+        result?.Set(ghostObject);
     }
 
     public static IEnumerator RestoreGhosts(Transform parent, IList<SavedGhost> ghosts)
     {
-        // TODO: Fix ghost visual glitch (probably a duplicate model)
         foreach (SavedGhost savedGhost in ghosts)
         {
             yield return RestoreGhost(parent, savedGhost);

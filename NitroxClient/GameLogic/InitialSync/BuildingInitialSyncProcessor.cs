@@ -40,6 +40,7 @@ namespace NitroxClient.GameLogic.InitialSync
         public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
         {
             yield return BuildingTester.Main.IsAvailable();
+            yield break;
 
             ErrorMessage.AddMessage("Loading base");
             Log.Debug("Start");

@@ -4,12 +4,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
+using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Buildings.New;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
@@ -208,8 +210,8 @@ public class BuildingTester : MonoBehaviour
         if (deconstructableChildren.Length == 1 && deconstructableChildren[0])
         {
             Log.Debug("Will only deconstruct the base manually");
-            using (packetSender.Suppress<BaseDeconstructed>())
-            using (packetSender.Suppress<PieceDeconstructed>())
+            using (new PacketSuppressor<BaseDeconstructed>())
+            using (new PacketSuppressor<PieceDeconstructed>())
             {
                 deconstructableChildren[0].Deconstruct();
             }
@@ -245,9 +247,9 @@ public class BuildingTester : MonoBehaviour
                 continue;
             }
             Log.Debug($"Found a BaseDeconstructable {baseDeconstructable.name}, will now deconstruct it manually");
-            using (packetSender.Suppress<BaseDeconstructed>())
-            using (packetSender.Suppress<PieceDeconstructed>())
-            using (packetSender.Suppress<WaterParkDeconstructed>())
+            using (new PacketSuppressor<BaseDeconstructed>())
+            using (new PacketSuppressor<PieceDeconstructed>())
+            using (new PacketSuppressor<WaterParkDeconstructed>())
             {
                 TempId = pieceDeconstructed.PieceId;
                 if (pieceDeconstructed is WaterParkDeconstructed waterParkDeconstructed)
@@ -422,10 +424,10 @@ public class BuildingTester : MonoBehaviour
         }
     }
 
-    private IEnumerator LoadBaseAsync(SavedBuild savedBuild)
+    public IEnumerator LoadBaseAsync(SavedBuild savedBuild, TaskResult<Optional<GameObject>> result = null)
     {
         DateTimeOffset beginTime = DateTimeOffset.Now;
-        yield return NitroxBuild.CreateBuild(savedBuild);
+        yield return NitroxBuild.CreateBuild(savedBuild, result);
         DateTimeOffset endTime = DateTimeOffset.Now;
         Log.Debug(string.Format("Took {0}ms to create the Base", (endTime - beginTime).TotalMilliseconds));
     }
