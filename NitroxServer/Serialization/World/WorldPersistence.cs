@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
@@ -69,8 +70,9 @@ namespace NitroxServer.Serialization.World
                 Serializer.Serialize(Path.Combine(saveDir, $"BaseData{FileEnding}"), persistedData.BaseData);
                 Serializer.Serialize(Path.Combine(saveDir, $"PlayerData{FileEnding}"), persistedData.PlayerData);
                 Serializer.Serialize(Path.Combine(saveDir, $"WorldData{FileEnding}"), persistedData.WorldData);
-                Serializer.Serialize(Path.Combine(saveDir, $"EntityData{FileEnding}"), persistedData.EntityData);
                 Serializer.Serialize(Path.Combine(saveDir, $"GlobalRootData{FileEnding}"), persistedData.GlobalRootData);
+                Serializer.Serialize(Path.Combine(saveDir, $"_GlobalRootData{FileEnding}"), persistedData._GlobalRootData);
+                Serializer.Serialize(Path.Combine(saveDir, $"EntityData{FileEnding}"), persistedData.EntityData);
 
                 using (config.Update(saveDir))
                 {
@@ -118,8 +120,9 @@ namespace NitroxServer.Serialization.World
                     BaseData = Serializer.Deserialize<BaseData>(Path.Combine(saveDir, $"BaseData{FileEnding}")),
                     PlayerData = Serializer.Deserialize<PlayerData>(Path.Combine(saveDir, $"PlayerData{FileEnding}")),
                     WorldData = Serializer.Deserialize<WorldData>(Path.Combine(saveDir, $"WorldData{FileEnding}")),
-                    EntityData = Serializer.Deserialize<EntityData>(Path.Combine(saveDir, $"EntityData{FileEnding}")),
-                    SavedGlobalRoot = Serializer.Deserialize<SavedGlobalRoot>(Path.Combine(saveDir, $"SavedGlobalRoot{FileEnding}"))
+                    GlobalRootData = Serializer.Deserialize<GlobalRootData>(Path.Combine(saveDir, $"GlobalRootData{FileEnding}")),
+                    _GlobalRootData = Serializer.Deserialize<_GlobalRootData>(Path.Combine(saveDir, $"_GlobalRootData{FileEnding}")),
+                    EntityData = Serializer.Deserialize<EntityData>(Path.Combine(saveDir, $"EntityData{FileEnding}"))
             };
 
                 if (!persistedData.IsValid())
@@ -197,6 +200,11 @@ namespace NitroxServer.Serialization.World
 
             EntityRegistry entityRegistry = NitroxServiceLocator.LocateService<EntityRegistry>();
             entityRegistry.AddEntities(pWorldData.EntityData.Entities);
+            foreach (Entity entity in pWorldData.GlobalRootData.Entities)
+            {
+                Log.Debug($"Adding GlobalRootEntity: {entity.Id} of type: {entity.GetType()}");
+            }
+            entityRegistry.AddEntitiesIgnoringDuplicate(pWorldData.GlobalRootData.Entities.Cast<Entity>());
 
             World world = new()
             {
@@ -204,7 +212,6 @@ namespace NitroxServer.Serialization.World
                 PlayerManager = new PlayerManager(pWorldData.PlayerData.GetPlayers(), config),
 
                 BaseManager = new BaseManager(pWorldData.BaseData.PartiallyConstructedPieces, pWorldData.BaseData.CompletedBasePieceHistory),
-                BuildingManager = new(pWorldData.GlobalRootData),
 
                 EscapePodManager = new EscapePodManager(entityRegistry, randomStart, seed),
 
@@ -231,6 +238,8 @@ namespace NitroxServer.Serialization.World
             );
 
             world.WorldEntityManager = new WorldEntityManager(world.EntityRegistry, world.BatchEntitySpawner);
+
+            world.BuildingManager = new(pWorldData._GlobalRootData, world.EntityRegistry, world.WorldEntityManager);
 
             HashSet<NitroxTechType> serverSpawnedSimulationWhiteList = NitroxServiceLocator.LocateService<HashSet<NitroxTechType>>();
             world.EntitySimulation = new EntitySimulation(world.EntityRegistry, world.WorldEntityManager, world.SimulationOwnershipData, world.PlayerManager, serverSpawnedSimulationWhiteList);

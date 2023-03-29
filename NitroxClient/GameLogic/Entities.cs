@@ -4,13 +4,16 @@ using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.Spawning;
+using NitroxClient.GameLogic.Spawning.Bases;
 using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.GameLogic.Spawning.Metadata.Extractor;
 using NitroxClient.Helpers;
 using NitroxClient.MonoBehaviours;
+using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
+using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
@@ -45,6 +48,9 @@ namespace NitroxClient.GameLogic
             entitySpawnersByType[typeof(EscapePodWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
             entitySpawnersByType[typeof(PlayerWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
             entitySpawnersByType[typeof(VehicleWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
+            entitySpawnersByType[typeof(BuildEntity)] = new BuildEntitySpawner(this);
+            entitySpawnersByType[typeof(ModuleEntity)] = new ModuleEntitySpawner();
+            entitySpawnersByType[typeof(GhostEntity)] = new GhostEntitySpawner();
         }
 
         public void EntityMetadataChanged(object o, NitroxId id)
@@ -82,7 +88,7 @@ namespace NitroxClient.GameLogic
             packetSender.Send(new EntitySpawnedByClient(entity));
         }
 
-        public IEnumerator SpawnAsync(List<Entity> entities)
+        public IEnumerator SpawnAsync(IEnumerable<Entity> entities)
         {
             foreach (Entity entity in entities)
             {
@@ -99,7 +105,7 @@ namespace NitroxClient.GameLogic
                 }
                 else
                 {
-                    yield return SpawnAsync(entity);
+                    yield return CoroutineHelper.SafelyYieldEnumerator(SpawnAsync(entity), Log.Error);
                 }
             }
         }

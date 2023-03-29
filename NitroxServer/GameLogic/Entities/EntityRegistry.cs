@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
 
 namespace NitroxServer.GameLogic.Entities
@@ -26,8 +27,17 @@ namespace NitroxServer.GameLogic.Entities
             return Optional.OfNullable((T)entity);
         }
 
-        public List<Entity> GetAllEntities()
+        public bool TryGetEntityById(NitroxId id, out Entity entity)
         {
+            return entitiesById.TryGetValue(id, out entity);
+        }
+
+        public List<Entity> GetAllEntities(bool exceptGlobalRoot = false)
+        {
+            if (exceptGlobalRoot)
+            {
+                return new(entitiesById.Values.Where(entity => entity is not GlobalRootEntity));
+            }
             return new List<Entity>(entitiesById.Values);            
         }
 
@@ -69,12 +79,12 @@ namespace NitroxServer.GameLogic.Entities
             AddEntitiesIgnoringDuplicate(entity.ChildEntities);
         }
 
-        public void AddEntities(List<Entity> entities)
+        public void AddEntities(IEnumerable<Entity> entities)
         {
             foreach(Entity entity in entities)
             {
                 AddEntity(entity);
-            }            
+            }
         }
 
         /// <summary>
@@ -82,7 +92,7 @@ namespace NitroxServer.GameLogic.Entities
         /// example a dropped InventoryEntity turns into a WorldEntity but keeps its 
         /// battery inside (already known). 
         /// </summary>
-        public void AddEntitiesIgnoringDuplicate(List<Entity> entities)
+        public void AddEntitiesIgnoringDuplicate(IEnumerable<Entity> entities)
         {
             foreach (Entity entity in entities)
             {

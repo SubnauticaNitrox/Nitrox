@@ -10,7 +10,6 @@ namespace NitroxModel.DataStructures.GameLogic
 {
     [Serializable]
     [DataContract]
-    [ProtoInclude(50, typeof(WorldEntity))]
     [ProtoInclude(60, typeof(PrefabChildEntity))]
     [ProtoInclude(70, typeof(PrefabPlaceholderEntity))]
     [ProtoInclude(80, typeof(InventoryEntity))]

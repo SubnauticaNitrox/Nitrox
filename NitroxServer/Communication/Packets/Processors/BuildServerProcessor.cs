@@ -68,7 +68,7 @@ public class PlaceBaseProcessor : BuildingProcessor<PlaceBase>
 
     public override void Process(PlaceBase packet, Player player)
     {
-        if (buildingManager.AddBase(packet))
+        if (buildingManager.CreateBase(packet))
         {
             packet.SavedBuild = null;
             base.Process(packet, player);
