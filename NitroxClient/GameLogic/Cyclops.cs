@@ -146,9 +146,7 @@ namespace NitroxClient.GameLogic
             }
 
             int[] damagePointIndexes = GetActiveDamagePoints(subRoot).ToArray();
-            CyclopsFireData[] firePoints = GetActiveRoomFires(subRoot.GetComponent<SubFire>()).ToArray();
-
-            CyclopsDamage packet = new(subId, subRoot.GetComponent<LiveMixin>().health, subRoot.damageManager.subLiveMixin.health, subRoot.GetComponent<SubFire>().liveMixin.health, damagePointIndexes, firePoints, damageInfo);
+            CyclopsDamage packet = new(subId, subRoot.GetComponent<LiveMixin>().health, subRoot.damageManager.subLiveMixin.health, subRoot.GetComponent<SubFire>().liveMixin.health, damagePointIndexes, damageInfo);
             packetSender.Send(packet);
         }
 
@@ -162,28 +160,6 @@ namespace NitroxClient.GameLogic
                 if (subRoot.damageManager.damagePoints[i].gameObject.activeSelf)
                 {
                     yield return i;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Get all of the index locations of all the fires on the <see cref="SubRoot"/>. <see cref="SubFire.RoomFire.spawnNodes"/> contains
-        /// a static list of all possible fire nodes.
-        /// </summary>
-        private IEnumerable<CyclopsFireData> GetActiveRoomFires(SubFire subFire)
-        {
-            NitroxId subRootId = NitroxEntity.GetId(subFire.subRoot.gameObject);
-            foreach (KeyValuePair<CyclopsRooms, SubFire.RoomFire> roomFire in subFire.roomFires)
-            {
-                for (int i = 0; i < roomFire.Value.spawnNodes.Length; i++)
-                {
-                    if (roomFire.Value.spawnNodes[i].childCount > 0)
-                    {
-                        yield return new CyclopsFireData(NitroxEntity.GetId(roomFire.Value.spawnNodes[i].GetComponentInChildren<Fire>().gameObject),
-                            subRootId,
-                            roomFire.Key,
-                            i);
-                    }
                 }
             }
         }
