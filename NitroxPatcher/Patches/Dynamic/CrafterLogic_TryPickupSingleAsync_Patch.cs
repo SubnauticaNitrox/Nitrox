@@ -50,8 +50,7 @@ public class CrafterLogic_TryPickupSingleAsync_Patch : NitroxPatch, IDynamicPatc
         NitroxId crafterId = NitroxEntity.GetId(crafter.gameObject);
         Resolve<Entities>().BroadcastMetadataUpdate(crafterId, new CrafterMetadata(null, DayNightCycle.main.timePassedAsFloat, 0));
 
-        // Let the server know that the item has been successfully created.
-        Resolve<Items>().Created(item);
+        // The Pickup() item codepath will inform the server that the item was added to the inventory.
     }
 
     public override void Patch(Harmony harmony)
