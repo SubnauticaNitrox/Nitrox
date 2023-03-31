@@ -81,7 +81,7 @@ public class BatchEntitySpawner : IEntitySpawner
     {
         lock (parsedBatches)
         {
-            if (IsBatchSpawned(batchId))
+            if (parsedBatches.Contains(batchId))
             {
                 return new List<Entity>();
             }

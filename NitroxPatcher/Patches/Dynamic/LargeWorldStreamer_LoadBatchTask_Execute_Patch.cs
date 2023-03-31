@@ -9,11 +9,9 @@ public class LargeWorldStreamer_LoadBatchTask_Execute_Patch : NitroxPatch, IDyna
 {
     public static readonly MethodInfo TARGET_METHOD = Reflect.Method((LargeWorldStreamer.LoadBatchTask t) => t.Execute());
 
-    public static bool Prefix(BatchCells ___batchCells)
+    public static void Prefix(BatchCells ___batchCells)
     {
         Resolve<Terrain>().BatchLoaded(___batchCells.batch);
-
-        return true;
     }
 
     public override void Patch(Harmony harmony)

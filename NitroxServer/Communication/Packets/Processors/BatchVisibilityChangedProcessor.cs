@@ -8,6 +8,7 @@ using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic.Entities;
 
 namespace NitroxServer.Communication.Packets.Processors;
+
 public class BatchVisibilityChangedProcessor : AuthenticatedPacketProcessor<BatchVisibilityChanged>
 {
     private readonly EntitySimulation entitySimulation;
@@ -21,12 +22,7 @@ public class BatchVisibilityChangedProcessor : AuthenticatedPacketProcessor<Batc
 
     public override void Process(BatchVisibilityChanged packet, Player player)
     {
-        SendBatchEntities(player, packet.Added);
-    }
-
-    private void SendBatchEntities(Player player, NitroxInt3[] visibleBatches)
-    {
-        foreach (NitroxInt3 batchId in visibleBatches)
+        foreach (NitroxInt3 batchId in packet.Added)
         {
             int count = worldEntityManager.LoadUnspawnedEntities(batchId, false);
 

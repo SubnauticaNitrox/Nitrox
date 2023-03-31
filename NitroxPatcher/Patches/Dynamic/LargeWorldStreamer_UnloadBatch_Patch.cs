@@ -9,11 +9,9 @@ public class LargeWorldStreamer_UnloadBatch_Patch : NitroxPatch, IDynamicPatch
 {
     public static readonly MethodInfo TARGET_METHOD = Reflect.Method((LargeWorldStreamer t) => t.UnloadBatch(default(Int3)));
 
-    public static bool Prefix(Int3 index)
+    public static void Prefix(Int3 index)
     {
         Resolve<Terrain>().BatchUnloaded(index);
-
-        return true;
     }
 
     public override void Patch(Harmony harmony)
