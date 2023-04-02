@@ -14,12 +14,10 @@ namespace NitroxModel.DataStructures.GameLogic.Entities
      */
     [Serializable]
     [DataContract]
-    [ProtoInclude(51, typeof(PlaceholderGroupWorldEntity))]
-    [ProtoInclude(52, typeof(EscapePodWorldEntity))]
-    [ProtoInclude(53, typeof(PlayerWorldEntity))]
-    [ProtoInclude(54, typeof(VehicleWorldEntity))]
-    [ProtoInclude(55, typeof(CellRootEntity))]
-    public class WorldEntity : GlobalRootEntity
+    [ProtoInclude(131, typeof(PlaceholderGroupWorldEntity))]
+    [ProtoInclude(132, typeof(CellRootEntity))]
+    [ProtoInclude(140, typeof(GlobalRootEntity))]
+    public class WorldEntity : Entity
     {
         public AbsoluteEntityCell AbsoluteEntityCell => new AbsoluteEntityCell(Transform.Position, Level);
 
@@ -44,12 +42,6 @@ namespace NitroxModel.DataStructures.GameLogic.Entities
         /// </summary>
         [DataMember(Order = 4)]
         public bool SpawnedByServer;
-
-        [DataMember(Order = 5)]
-        public NitroxId WaterParkId { get; set; }
-
-        [DataMember(Order = 6)]
-        public bool ExistsInGlobalRoot { get; set; }
         
         [IgnoreConstructor]
         protected WorldEntity()
@@ -57,7 +49,7 @@ namespace NitroxModel.DataStructures.GameLogic.Entities
             // Constructor for serialization. Has to be "protected" for json serialization.
         }
 
-        public WorldEntity(NitroxVector3 localPosition, NitroxQuaternion localRotation, NitroxVector3 scale, NitroxTechType techType, int level, string classId, bool spawnedByServer, NitroxId id, Entity parentEntity, bool existsInGlobalRoot, NitroxId waterParkId)
+        public WorldEntity(NitroxVector3 localPosition, NitroxQuaternion localRotation, NitroxVector3 scale, NitroxTechType techType, int level, string classId, bool spawnedByServer, NitroxId id, Entity parentEntity)
         {
             Transform = new NitroxTransform(localPosition, localRotation, scale);
             TechType = techType;
@@ -65,8 +57,6 @@ namespace NitroxModel.DataStructures.GameLogic.Entities
             Level = level;
             ClassId = classId;
             SpawnedByServer = spawnedByServer;
-            WaterParkId = waterParkId;
-            ExistsInGlobalRoot = existsInGlobalRoot;
 
             if (parentEntity != null)
             {
@@ -80,7 +70,7 @@ namespace NitroxModel.DataStructures.GameLogic.Entities
         }
 
         /// <remarks>Used for deserialization</remarks>
-        public WorldEntity(NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId waterParkId, bool existsInGlobalRoot, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
+        public WorldEntity(NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
         {
             Id = id;
             TechType = techType;
@@ -91,13 +81,11 @@ namespace NitroxModel.DataStructures.GameLogic.Entities
             Level = level;
             ClassId = classId;
             SpawnedByServer = spawnedByServer;
-            WaterParkId = waterParkId;
-            ExistsInGlobalRoot = existsInGlobalRoot;
         }
 
         public override string ToString()
         {
-            return $"[WorldEntity Transform: {Transform} Level: {Level} ClassId: {ClassId} SpawnedByServer: {SpawnedByServer} WaterParkId: {WaterParkId} ExistsInGlobalRoot: {ExistsInGlobalRoot} {base.ToString()}]";
+            return $"[WorldEntity Transform: {Transform} Level: {Level} ClassId: {ClassId} SpawnedByServer: {SpawnedByServer} {base.ToString()}]";
         }
     }
 }

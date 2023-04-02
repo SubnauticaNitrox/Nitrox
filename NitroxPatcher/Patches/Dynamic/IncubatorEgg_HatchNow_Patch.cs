@@ -48,7 +48,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
                 NitroxId babyId = NitroxEntity.GenerateNewId(baby);
 
-                WorldEntity entity = new WorldEntity(baby.transform.position.ToDto(), baby.transform.rotation.ToDto(), baby.transform.localScale.ToDto(), TechType.SeaEmperorBaby.ToDto(), 3, "09883a6c-9e78-4bbf-9561-9fa6e49ce766", false, babyId, null, false, null);
+                WorldEntity entity = new WorldEntity(baby.transform.position.ToDto(), baby.transform.rotation.ToDto(), baby.transform.localScale.ToDto(), TechType.SeaEmperorBaby.ToDto(), 3, "09883a6c-9e78-4bbf-9561-9fa6e49ce766", false, babyId, null);
                 NitroxServiceLocator.LocateService<Entities>().BroadcastEntitySpawnedByClient(entity);
             }
         }

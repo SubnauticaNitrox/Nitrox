@@ -1,37 +1,40 @@
-using System;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
 using BinaryPack.Attributes;
 using NitroxModel.DataStructures.GameLogic.Buildings.New;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures.Unity;
+using System;
+using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace NitroxModel.DataStructures.GameLogic.Entities.Bases;
 
 [Serializable, DataContract]
-public class BuildEntity : GlobalRootEntity
+public class MoonpoolEntity : GlobalRootEntity
 {
-    // TODO: Move SavedBuild's fields in here
+    // TODO: Move MoonpoolEntity's fields in here
     [DataMember(Order = 1)]
-    public SavedBuild SavedBuild { get; set; }
+    public SavedMoonpool SavedMoonpool { get; set; }
 
     [IgnoreConstructor]
-    protected BuildEntity()
+    protected MoonpoolEntity()
     {
         // Constructor for serialization. Has to be "protected" for json serialization.
     }
 
-    public BuildEntity(SavedBuild savedBuild)
+    public MoonpoolEntity(SavedMoonpool savedMoonpool, NitroxId parentId)
     {
-        SavedBuild = savedBuild;
-        Id = savedBuild.NitroxId;
+        SavedMoonpool = savedMoonpool;
+        Id = savedMoonpool.NitroxId;
+        ParentId = parentId;
+        //Metadata = savedMoonpool.Metadata;
+
         Transform = new();
     }
 
     /// <remarks>Used for deserialization</remarks>
-    public BuildEntity(SavedBuild savedBuild, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
+    public MoonpoolEntity(SavedMoonpool savedMoonpool, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
     {
-        SavedBuild = savedBuild;
+        SavedMoonpool = savedMoonpool;
 
         Id = id;
         TechType = techType;
@@ -46,6 +49,6 @@ public class BuildEntity : GlobalRootEntity
 
     public override string ToString()
     {
-        return $"[BuildEntity {SavedBuild}]";
+        return $"[MoonpoolEntity {SavedMoonpool}]";
     }
 }

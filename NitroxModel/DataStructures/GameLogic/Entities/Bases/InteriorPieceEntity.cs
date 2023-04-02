@@ -1,6 +1,7 @@
 using BinaryPack.Attributes;
 using NitroxModel.DataStructures.GameLogic.Buildings.New;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
+using NitroxModel.DataStructures.Unity;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -26,17 +27,24 @@ public class InteriorPieceEntity : GlobalRootEntity
         Id = savedInteriorPiece.NitroxId;
         ParentId = parentId;
         //Metadata = savedInteriorPiece.Metadata;
+
+        Transform = new();
     }
 
     /// <remarks>Used for deserialization</remarks>
-    public InteriorPieceEntity(SavedInteriorPiece savedInteriorPiece, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
+    public InteriorPieceEntity(SavedInteriorPiece savedInteriorPiece, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
     {
         SavedInteriorPiece = savedInteriorPiece;
+
         Id = id;
         TechType = techType;
         Metadata = metadata;
         ParentId = parentId;
+        Transform = transform;
         ChildEntities = childEntities;
+        Level = level;
+        ClassId = classId;
+        SpawnedByServer = spawnedByServer;
     }
 
     public override string ToString()

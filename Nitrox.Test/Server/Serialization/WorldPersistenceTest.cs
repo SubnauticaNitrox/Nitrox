@@ -17,6 +17,7 @@ using NitroxServer.GameLogic.Unlockables;
 using NitroxServer.Serialization.World;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
+using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 
 namespace NitroxServer.Serialization;
 
@@ -359,8 +360,6 @@ public class WorldPersistenceTest
                 Assert.AreEqual(worldEntity.Level, worldEntityAfter.Level);
                 Assert.AreEqual(worldEntity.ClassId, worldEntityAfter.ClassId);
                 Assert.AreEqual(worldEntity.SpawnedByServer, worldEntityAfter.SpawnedByServer);
-                Assert.AreEqual(worldEntity.WaterParkId, worldEntityAfter.WaterParkId);
-                Assert.AreEqual(worldEntity.ExistsInGlobalRoot, worldEntityAfter.ExistsInGlobalRoot);
 
                 if (worldEntity.GetType() != worldEntityAfter.GetType())
                 {
