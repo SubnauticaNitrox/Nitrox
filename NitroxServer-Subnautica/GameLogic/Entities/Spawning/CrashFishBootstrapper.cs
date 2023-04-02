@@ -25,6 +25,6 @@ public class CrashFishBootstrapper : IEntityBootstrapper
     {
         NitroxId id = deterministicBatchGenerator.NextId();
 
-        return new WorldEntity(NitroxVector3.Zero, NitroxQuaternion.Identity, NitroxVector3.One, techType.ToDto(), level, classId, true, id, parentEntity, false, null);
+        return new WorldEntity(NitroxVector3.Zero, NitroxQuaternion.Identity, NitroxVector3.One, techType.ToDto(), level, classId, true, id, parentEntity);
     }
 }

@@ -103,7 +103,7 @@ namespace NitroxServer.Communication.Packets.Processors
         {
             NitroxTransform transform = new(player.Position, player.Rotation, NitroxVector3.One);
 
-            PlayerWorldEntity playerEntity = new PlayerWorldEntity(transform, 0, null, false, null, true, player.GameObjectId, NitroxTechType.None, null, null, new List<Entity>());
+            PlayerWorldEntity playerEntity = new PlayerWorldEntity(transform, 0, null, false, player.GameObjectId, NitroxTechType.None, null, null, new List<Entity>());
             entityRegistry.AddEntity(playerEntity);
             world.WorldEntityManager.TrackEntityInTheWorld(playerEntity);
             playerManager.SendPacketToOtherPlayers(new SpawnEntities(playerEntity), player);

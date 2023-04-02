@@ -9,7 +9,7 @@ namespace NitroxModel.DataStructures.GameLogic.Entities;
 
 [Serializable]
 [DataContract]
-public class PlayerWorldEntity : WorldEntity
+public class PlayerWorldEntity : GlobalRootEntity
 {
     [IgnoreConstructor]
     protected PlayerWorldEntity()
@@ -18,7 +18,7 @@ public class PlayerWorldEntity : WorldEntity
     }
 
     /// <remarks>Used for deserialization</remarks>
-    public PlayerWorldEntity(NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId waterParkId, bool existsInGlobalRoot, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
+    public PlayerWorldEntity(NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
     {
         Id = id;
         TechType = techType;
@@ -29,8 +29,6 @@ public class PlayerWorldEntity : WorldEntity
         Level = level;
         ClassId = classId;
         SpawnedByServer = spawnedByServer;
-        WaterParkId = waterParkId;
-        ExistsInGlobalRoot = existsInGlobalRoot;
     }
 
     public override string ToString()

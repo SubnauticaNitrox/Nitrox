@@ -35,11 +35,11 @@ namespace NitroxServer.GameLogic.Entities
 
             globalRootEntitiesById = entityRegistry.GetEntities<GlobalRootEntity>().ToDictionary(entity => entity.Id);
 
-            phasingEntitiesByBatchId = worldEntities.Where(entity => !entity.ExistsInGlobalRoot)
+            phasingEntitiesByBatchId = worldEntities.Where(entity => entity is not GlobalRootEntity)
                                                     .GroupBy(entity => entity.AbsoluteEntityCell.BatchId)
                                                     .ToDictionary(group => group.Key, group => group.ToList());
 
-            phasingEntitiesByCellId = worldEntities.Where(entity => !entity.ExistsInGlobalRoot)
+            phasingEntitiesByCellId = worldEntities.Where(entity => entity is not GlobalRootEntity)
                                                    .GroupBy(entity => entity.AbsoluteEntityCell)
                                                    .ToDictionary(group => group.Key, group => group.ToList());
             this.entityRegistry = entityRegistry;
@@ -143,9 +143,9 @@ namespace NitroxServer.GameLogic.Entities
 
         public void TrackEntityInTheWorld(WorldEntity entity)
         {
-            if (entity.ExistsInGlobalRoot)
+            if (entity is GlobalRootEntity globalRootEntity)
             {
-                AddGlobalRootEntity(entity);
+                AddGlobalRootEntity(globalRootEntity);
             }
             else
             {
@@ -244,7 +244,7 @@ namespace NitroxServer.GameLogic.Entities
 
         private void EntitySwitchedCells(WorldEntity entity, AbsoluteEntityCell oldCell, AbsoluteEntityCell newCell)
         {
-            if (entity.ExistsInGlobalRoot)
+            if (entity is GlobalRootEntity)
             {
                 return; // We don't care what cell a global root entity resides in.  Only phasing entities.
             }
@@ -273,7 +273,7 @@ namespace NitroxServer.GameLogic.Entities
 
         public void StopTrackingEntity(WorldEntity entity)
         {
-            if (entity.ExistsInGlobalRoot)
+            if (entity is GlobalRootEntity)
             {
                 RemoveGlobalRootEntity(entity.Id);
             }

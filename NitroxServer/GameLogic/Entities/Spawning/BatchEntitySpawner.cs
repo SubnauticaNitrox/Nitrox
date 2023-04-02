@@ -233,9 +233,7 @@ public class BatchEntitySpawner : IEntitySpawner
                                                cellLevel,
                                                classId,
                                                true,
-                                               deterministicBatchGenerator.NextId(),
-                                               false,
-                                               null);
+                                               deterministicBatchGenerator.NextId());
         }
         else
         {
@@ -247,9 +245,7 @@ public class BatchEntitySpawner : IEntitySpawner
                                             classId,
                                             true,
                                             deterministicBatchGenerator.NextId(),
-                                            parentEntity,
-                                            false,
-                                            null);
+                                            parentEntity);
         }
 
         if (!TryCreatePrefabPlaceholdersGroupWithChildren(ref spawnedEntity, classId, deterministicBatchGenerator))

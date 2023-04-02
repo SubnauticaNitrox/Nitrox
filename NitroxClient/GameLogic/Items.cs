@@ -74,15 +74,17 @@ public class Items
         // there is a theoretical possibility of a stray remote tracking packet that re-adds the monobehavior, this is purely a safety call.
         RemoveAnyRemoteControl(gameObject);
 
-        Optional<NitroxId> waterparkId = GetCurrentWaterParkId();
-        NitroxId id = NitroxEntity.GetIdOrGenerateNew(gameObject);
-        Optional<EntityMetadata> metadata = EntityMetadataExtractor.Extract(gameObject);
-        bool inGlobalRoot = map.GlobalRootTechTypes.Contains(techType.Value.ToDto());
-        string classId = gameObject.GetComponent<PrefabIdentifier>().ClassId;
-        WorldEntity droppedItem = new(gameObject.transform.ToWorldDto(), 0, classId, inGlobalRoot, waterparkId.OrNull(), false, id, techType.Value.ToDto(), metadata.OrNull(), null, new List<Entity>())
-        {
-            ChildEntities = GetPrefabChildren(gameObject, id).ToList()
-        };
+            Optional<NitroxId> waterparkId = GetCurrentWaterParkId();
+            NitroxId id = NitroxEntity.GetIdOrGenerateNew(gameObject);
+            Optional<EntityMetadata> metadata = EntityMetadataExtractor.Extract(gameObject);
+            bool inGlobalRoot = map.GlobalRootTechTypes.Contains(techType.Value.ToDto());
+            string classId = gameObject.GetComponent<PrefabIdentifier>().ClassId;
+
+            // TODO: Manage Waterpark entity from waterparkId
+            WorldEntity droppedItem = new(gameObject.transform.ToWorldDto(), 0, classId, inGlobalRoot, id, techType.Value.ToDto(), metadata.OrNull(), null, new List<Entity>())
+            {
+                ChildEntities = GetPrefabChildren(gameObject, id).ToList()
+            };
 
         Log.Debug($"Dropping item: {droppedItem}");
         packetSender.Send(new EntitySpawnedByClient(droppedItem));

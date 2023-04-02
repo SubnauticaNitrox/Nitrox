@@ -158,7 +158,7 @@ namespace NitroxServer
         {
             if (entity is WorldEntity worldEntity)
             {
-                return worldEntity.ExistsInGlobalRoot || HasCellLoaded(worldEntity.AbsoluteEntityCell);
+                return worldEntity is GlobalRootEntity || HasCellLoaded(worldEntity.AbsoluteEntityCell);
             }
 
             // Assume all other entity types are in global root
