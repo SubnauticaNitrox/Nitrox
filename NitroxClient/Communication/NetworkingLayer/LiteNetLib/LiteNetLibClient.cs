@@ -62,8 +62,10 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
 
         public void Send(Packet packet)
         {
-            networkDebugger?.PacketSent(packet);
-            client.SendToAll(netPacketProcessor.Write(packet.ToWrapperPacket()), NitroxDeliveryMethod.ToLiteNetLib(packet.DeliveryMethod));
+            byte[] bytes = netPacketProcessor.Write(packet.ToWrapperPacket());
+
+            networkDebugger?.PacketSent(packet, bytes.Length);
+            client.SendToAll(bytes, NitroxDeliveryMethod.ToLiteNetLib(packet.DeliveryMethod));
             client.Flush();
         }
 
@@ -81,7 +83,7 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
         private void OnPacketReceived(WrapperPacket wrapperPacket, NetPeer peer)
         {
             Packet packet = Packet.Deserialize(wrapperPacket.packetData);
-            packetReceiver.PacketReceived(packet);
+            packetReceiver.PacketReceived(packet, wrapperPacket.packetData.Length);
         }
 
         private void Connected(NetPeer peer)
