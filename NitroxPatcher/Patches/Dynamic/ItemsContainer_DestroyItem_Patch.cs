@@ -1,46 +1,49 @@
 using System.Collections.Generic;
 using System.Reflection;
-using System.Reflection.Emit;
 using HarmonyLib;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
+using NitroxPatcher.PatternMatching;
+using static System.Reflection.Emit.OpCodes;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
 /// <summary>
 /// When the player crafts items the game will leverage this API to select a pickupable
 /// from their inventory and delete it.  We want to let the server know that the item
-/// was successfully deleted. 
+/// was successfully deleted.
 /// </summary>
 public class ItemsContainer_DestroyItem_Patch : NitroxPatch, IDynamicPatch
 {
     internal static readonly MethodInfo TARGET_METHOD = Reflect.Method((ItemsContainer t) => t.DestroyItem(default(TechType)));
 
-    internal static readonly OpCode INJECTION_OPCODE = OpCodes.Stloc_0;
+    private static readonly InstructionsPattern removeItemPattern = new()
+    {
+        Ldarg_0,
+        Ldarg_1,
+        { Reflect.Method((ItemsContainer container) => container.RemoveItem(default(TechType))), "NotifyServer" },
+        Stloc_0
+    };
 
     public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
     {
-        foreach (CodeInstruction instruction in instructions)
+        static IEnumerable<CodeInstruction> InsertNotifyServerCall(string label, CodeInstruction instruction)
         {
-            yield return instruction;
-
-            // Injects:
-            //   
-            //  Pickupable pickupable = this.RemoveItem(techType);
-            //  >>> Callback(pickupable);
-            //
-            if (instruction.opcode.Equals(INJECTION_OPCODE))
+            // After the call to RemoveItem we want to call our callback method
+            if (label.Equals("NotifyServer"))
             {
-                yield return new(OpCodes.Ldloc_0);
-                yield return new(OpCodes.Call, Reflect.Method(() => Callback(default)));
+                yield return new(Ldloc_0);
+                yield return new(Call, Reflect.Method(() => Callback(default)));
             }
         }
+
+        return instructions.Transform(removeItemPattern, InsertNotifyServerCall);
     }
 
-    public static void Callback(Pickupable pickupable)
+    private static void Callback(Pickupable pickupable)
     {
         if (pickupable)
         {
