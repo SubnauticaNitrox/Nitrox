@@ -23,9 +23,13 @@ namespace NitroxClient.Debuggers
 
         // vs blacklist
         private bool isWhitelist;
-        private int receivedCount;
         private Vector2 scrollPosition;
+
+        private int receivedCount;
         private int sentCount;
+
+        private uint receivedBytes;
+        private uint sentBytes;
 
         public NetworkDebugger() : base(600, null, KeyCode.N, true, false, false, GUISkinCreationOptions.DERIVEDCOPY, 330)
         {
@@ -36,16 +40,18 @@ namespace NitroxClient.Debuggers
             AddTab("Filter", RenderTabFilter);
         }
 
-        public void PacketSent(Packet packet)
+        public void PacketSent(Packet packet, int size)
         {
             AddPacket(packet, true);
             sentCount++;
+            sentBytes += (uint)size;
         }
 
-        public void PacketReceived(Packet packet)
+        public void PacketReceived(Packet packet, int size)
         {
             AddPacket(packet, false);
             receivedCount++;
+            receivedBytes += (uint)size;
         }
 
         protected override void OnSetSkin(GUISkin skin)
@@ -75,7 +81,7 @@ namespace NitroxClient.Debuggers
         {
             using (new GUILayout.VerticalScope("Box"))
             {
-                GUILayout.Label($"Sent: {sentCount} - Received: {receivedCount}");
+                RenderPacketTotals();
 
                 scrollPosition = GUILayout.BeginScrollView(scrollPosition, GUILayout.Height(300));
                 RenderPacketList(ToRender.BOTH);
@@ -87,7 +93,7 @@ namespace NitroxClient.Debuggers
         {
             using (new GUILayout.VerticalScope("Box"))
             {
-                GUILayout.Label($"Sent: {sentCount} - Received: {receivedCount}");
+                RenderPacketTotals();
 
                 scrollPosition = GUILayout.BeginScrollView(scrollPosition, GUILayout.Height(300));
                 RenderPacketList(ToRender.SENT);
@@ -99,7 +105,7 @@ namespace NitroxClient.Debuggers
         {
             using (new GUILayout.VerticalScope("Box"))
             {
-                GUILayout.Label($"Sent: {sentCount} - Received: {receivedCount}");
+                RenderPacketTotals();
 
                 scrollPosition = GUILayout.BeginScrollView(scrollPosition, GUILayout.Height(300));
                 RenderPacketList(ToRender.RECEIVED);
@@ -111,7 +117,7 @@ namespace NitroxClient.Debuggers
         {
             using (new GUILayout.VerticalScope("Box"))
             {
-                GUILayout.Label($"Sent: {sentCount} - Received: {receivedCount}");
+                RenderPacketTotals();
 
                 scrollPosition = GUILayout.BeginScrollView(scrollPosition, GUILayout.Height(300));
                 foreach (KeyValuePair<Type, int> kv in countByType.OrderBy(e => -e.Value)) // descending
@@ -126,7 +132,7 @@ namespace NitroxClient.Debuggers
         {
             using (new GUILayout.VerticalScope("Box"))
             {
-                GUILayout.Label($"Sent: {sentCount} - Received: {receivedCount}");
+                RenderPacketTotals();
                 using (new GUILayout.HorizontalScope())
                 {
                     isWhitelist = GUILayout.Toggle(isWhitelist, "Is Whitelist");
@@ -148,6 +154,11 @@ namespace NitroxClient.Debuggers
                 }
                 GUILayout.EndScrollView();
             }
+        }
+
+        private void RenderPacketTotals()
+        {
+            GUILayout.Label($"Sent: {sentCount} ({BytesToString(sentBytes)}) - Received: {receivedCount} ({BytesToString(receivedBytes)})");
         }
 
         private void RenderPacketList(ToRender toRender)
@@ -208,6 +219,17 @@ namespace NitroxClient.Debuggers
             }
         }
 
+        private static string BytesToString(uint byteCount)
+        {
+            string[] suf = { "B", "KB", "MB", "GB", "TB" };
+            if (byteCount == 0)
+                return "0" + suf[0];
+            long bytes = Math.Abs(byteCount);
+            int place = Convert.ToInt32(Math.Floor(Math.Log(bytes, 1024)));
+            double num = Math.Round(bytes / Math.Pow(1024, place), 1);
+            return (Math.Sign(byteCount) * num).ToString() + suf[place];
+        }
+
         private string PacketDirectionPrefixer(PacketDebugWrapper wrapper) => $"{(wrapper.IsSent ? "↑" : "↓")} - ";
 
         private string PacketNoopPrefixer(PacketDebugWrapper wraper) => "";
@@ -240,7 +262,7 @@ namespace NitroxClient.Debuggers
 
     public interface INetworkDebugger
     {
-        void PacketSent(Packet packet);
-        void PacketReceived(Packet packet);
+        void PacketSent(Packet packet, int size);
+        void PacketReceived(Packet packet, int size);
     }
 }
