@@ -43,10 +43,10 @@ public class SpawnOnKill_OnKill_Patch : NitroxPatch, IDynamicPatch
         return null;
     });
 
-    public static void Callback(SpawnOnKill __this, GameObject gameObject)
+    public static void Callback(SpawnOnKill spawnOnKill, GameObject gameObject)
     {
         // get the ID of the destroyed object
-        NitroxId destroyedEntityId = NitroxEntity.GetId(__this.gameObject);
+        NitroxId destroyedEntityId = NitroxEntity.GetId(spawnOnKill.gameObject);
         // Says that the entity doesn't exist anymore  --  Without this, the gameobject is not updated. It will not be pickuppable after that.
         Resolve<IPacketSender>().Send(new EntityDestroyed(destroyedEntityId));
         // Give an ID to the new game object
