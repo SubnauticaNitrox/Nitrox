@@ -29,42 +29,26 @@ public class PickupItemPacketProcessor : AuthenticatedPacketProcessor<PickupItem
         if (simulationOwnershipData.RevokeOwnerOfId(packet.Id))
         {
             ushort serverId = ushort.MaxValue;
-            SimulationOwnershipChange simulationOwnershipChange = new SimulationOwnershipChange(packet.Id, serverId, NitroxModel.DataStructures.SimulationLockType.TRANSIENT);
+            SimulationOwnershipChange simulationOwnershipChange = new SimulationOwnershipChange(packet.Id, serverId, SimulationLockType.TRANSIENT);
             playerManager.SendPacketToAllPlayers(simulationOwnershipChange);
         }
 
-        // Will have the clients remove the object from their world.
-        playerManager.SendPacketToOtherPlayers(packet, player);
+        StopTrackingExistingWorldEntity(packet.Id);
 
-        ConvertPickedUpEntityToInventoryItemEntity(packet.Id, player);
+        entityRegistry.AddOrUpdate(packet.Item);
+
+        // Have other players respawn the item inside the inventory.
+        playerManager.SendPacketToOtherPlayers(new SpawnEntities(packet.Item, true), player);
     }
 
-    private void ConvertPickedUpEntityToInventoryItemEntity(NitroxId id, Player player)
+    private void StopTrackingExistingWorldEntity(NitroxId id)
     {
-        Optional<Entity> opEntity = entityRegistry.GetEntityById(id);
+        Optional<Entity> entity = entityRegistry.GetEntityById(id);
 
-        if (!opEntity.HasValue)
-        {
-            Log.Error($"Could not find entity {id} to see if it needed InventoryItemEntity conversion");
-            return;
-        }
-
-        Entity entity = opEntity.Value;
-        string classId = null;
-
-        if (entity is WorldEntity worldEntity)
+        if (entity.HasValue && entity.Value is WorldEntity worldEntity)
         {
             // Do not track this entity in the open world anymore.
             worldEntityManager.StopTrackingEntity(worldEntity);
-
-            classId = worldEntity.ClassId;
         }
-
-        // Convert the entity into an inventory item entity
-        InventoryItemEntity inventoryItemEntity = new(entity.Id, classId, entity.TechType, entity.Metadata, player.GameObjectId, entity.ChildEntities);
-        entityRegistry.AddOrUpdate(inventoryItemEntity);
-
-        // Have other players respawn the item inside the inventory.
-        playerManager.SendPacketToOtherPlayers(new SpawnEntities(inventoryItemEntity, true), player);
     }
 }

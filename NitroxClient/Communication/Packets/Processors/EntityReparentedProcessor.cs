@@ -1,5 +1,4 @@
 using System;
-using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Helper;
@@ -15,17 +14,24 @@ namespace NitroxClient.Communication.Packets.Processors;
 public class EntityReparentedProcessor : ClientPacketProcessor<EntityReparented>
 {
     private readonly Entities entities;
-    private readonly IPacketSender packetSender;
 
-    public EntityReparentedProcessor(Entities entities, IPacketSender packetSender)
+    public EntityReparentedProcessor(Entities entities)
     {
         this.entities = entities;
-        this.packetSender = packetSender;
     }
 
     public override void Process(EntityReparented packet)
     {
-        GameObject entity = NitroxEntity.RequireObjectFrom(packet.Id);
+        Optional<GameObject> entity = NitroxEntity.GetObjectFrom(packet.Id);
+
+        if (!entity.HasValue)
+        {
+            // In some cases, the affected entity may be pending spawning or out of range.
+            // we only require the parent (in this case, the visible entity is undergoing
+            // some change that must be shown, and if not is an error).
+            return;
+        }
+
         GameObject newParent = NitroxEntity.RequireObjectFrom(packet.NewParentId);
 
         using (PacketSuppressor<EntityReparented>.Suppress())
@@ -35,11 +41,11 @@ public class EntityReparentedProcessor : ClientPacketProcessor<EntityReparented>
             // Move this to a resolver if there ends up being a lot of custom reparenting logic
             if (entityType == typeof(InventoryItemEntity))
             {
-                InventoryItemReparented(entity, newParent);
+                InventoryItemReparented(entity.Value, newParent);
             }
             else
             {
-                PerformDefaultReparenting(entity, newParent);
+                PerformDefaultReparenting(entity.Value, newParent);
             }
         }
     }
