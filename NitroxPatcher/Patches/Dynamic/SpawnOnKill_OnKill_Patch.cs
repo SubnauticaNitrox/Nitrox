@@ -31,9 +31,11 @@ public class SpawnOnKill_OnKill_Patch : NitroxPatch, IDynamicPatch
         }
 
         // get the ID of the destroyed object
-        NitroxId entityId = NitroxEntity.GetId(__instance.gameObject);
-        // Give a new ID to the new game object
-        NitroxEntity.SetNewId(gameObject, entityId);
+        NitroxId destroyedEntityId = NitroxEntity.GetId(__instance.gameObject);
+        // Says that the entity doesn't exist anymore  --  Without this, the gameobject is not updated. It will not be pickuppable after that.
+        Resolve<IPacketSender>().Send(new EntityDestroyed(destroyedEntityId));
+        // Give an ID to the new game object
+        NitroxEntity.SetNewId(gameObject, destroyedEntityId);
         // Drop the item in the game
         Resolve<Items>().Dropped(gameObject, CraftData.GetTechType(gameObject));
 
