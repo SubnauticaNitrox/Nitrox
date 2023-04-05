@@ -4,6 +4,7 @@ using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Helper;
 using NitroxClient.GameLogic;
+using NitroxModel.DataStructures;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -13,7 +14,7 @@ public class SubNameInput_OnColorChange_Patch : NitroxPatch, IDynamicPatch
 
     public static void Postfix(SubNameInput __instance)
     {
-        if (!__instance.TryGetComponent(out NitroxEntity subNameInput))
+        if (!NitroxEntity.TryGetIdFrom(__instance, out NitroxId subNameId))
         {
             // prevent this patch from firing when the initial template cyclops loads (happens on game load with living large update).
             return;
@@ -39,7 +40,7 @@ public class SubNameInput_OnColorChange_Patch : NitroxPatch, IDynamicPatch
             return;
         }
 
-        Resolve<Entities>().EntityMetadataChangedThrottled(__instance, subNameInput.Id);
+        Resolve<Entities>().EntityMetadataChangedThrottled(__instance, subNameId);
     }
 
     public override void Patch(Harmony harmony)

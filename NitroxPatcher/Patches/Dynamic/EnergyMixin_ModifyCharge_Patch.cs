@@ -19,15 +19,27 @@ namespace NitroxPatcher.Patches.Dynamic
         public static void Postfix(EnergyMixin __instance, float __result)
         {
             GameObject battery = __instance.GetBatteryGameObject();
-            if (battery)
+            if (!battery)
             {
-                if (Math.Abs(Math.Floor(__instance.charge) - Math.Floor(__instance.charge - __result)) > 0.0) //Send package if power changed to next natural number
-                {
-                    NitroxId instanceId = NitroxEntity.RequireIdFrom(__instance.gameObject);
-                    BasicItemData batteryData = new(instanceId, NitroxEntity.RequireIdFrom(battery), SerializationHelper.GetBytes(battery));
+                return;
+            }
 
-                    NitroxServiceLocator.LocateService<StorageSlots>().EnergyMixinValueChanged(instanceId, __instance.charge, batteryData);
+            if (Math.Abs(Math.Floor(__instance.charge) - Math.Floor(__instance.charge - __result)) > 0.0) //Send package if power changed to next natural number
+            {
+                if (!NitroxEntity.TryGetIdFrom(__instance.gameObject, out NitroxId instanceId))
+                {
+                    Log.Warn($"[EnergyMixin_ModifyCharge_Patch] Couldn't find an instance id on {__instance.gameObject.GetFullHierarchyPath()}");
+                    return;
                 }
+
+                if (!NitroxEntity.TryGetIdFrom(battery, out NitroxId batteryId))
+                {
+                    Log.Warn($"[EnergyMixin_ModifyCharge_Patch] Couldn't find a battery id on {battery.GetFullHierarchyPath()}");
+                    return;
+                }
+
+                BasicItemData batteryData = new(instanceId, batteryId, SerializationHelper.GetBytes(battery));
+                NitroxServiceLocator.LocateService<StorageSlots>().EnergyMixinValueChanged(instanceId, __instance.charge, batteryData);
             }
         }
 

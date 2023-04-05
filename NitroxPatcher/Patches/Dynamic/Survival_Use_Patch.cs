@@ -18,9 +18,8 @@ public class Survival_Use_Patch : NitroxPatch, IDynamicPatch
 
     public static void Postfix(bool __result, GameObject useObj)
     {
-        if (__result && useObj)
+        if (__result && useObj && NitroxEntity.TryGetIdOrWarn<Survival_Use_Patch>(useObj, out NitroxId id))
         {
-            NitroxId id = NitroxEntity.RequireIdFrom(useObj);
             Resolve<IPacketSender>().Send(new EntityDestroyed(id));
         }
     }

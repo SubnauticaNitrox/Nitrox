@@ -6,7 +6,9 @@ using System.Reflection.Emit;
 using HarmonyLib;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
+using NitroxModel.DataStructures;
 using NitroxModel.Helper;
+using UnityEngine;
 
 namespace NitroxPatcher
 {
@@ -33,7 +35,7 @@ namespace NitroxPatcher
         /// <returns></returns>
         public static IEnumerable<CodeInstruction> IsMultiplayer(Label jmpLabel, ILGenerator generator)
         {
-            yield return new CodeInstruction(OpCodes.Callvirt,  Reflect.Property(() => Multiplayer.Active).GetMethod);
+            yield return new CodeInstruction(OpCodes.Callvirt, Reflect.Property(() => Multiplayer.Active).GetMethod);
             yield return new CodeInstruction(OpCodes.Brfalse, jmpLabel); // If false jump to the end of the code block
         }
 
@@ -47,6 +49,43 @@ namespace NitroxPatcher
         {
             yield return new CodeInstruction(OpCodes.Callvirt, Reflect.Property(() => Multiplayer.Active).GetMethod);
             yield return new CodeInstruction(OpCodes.Brtrue, jmpLabel); // If true jump to the end of the code block
+        }
+
+        /// <summary>
+        /// Outputs the instructions for using <see cref="NitroxEntity.TryGetIdFrom(UnityEngine.GameObject,out NitroxModel.DataStructures.NitroxId)"/> in an if
+        /// </summary>
+        /// <param name="generator">The generator of the patch method</param>
+        /// <param name="idBuilder">An builder used for the retrieved <see cref="NitroxId"/>.</param>
+        /// <param name="errorMessage">The error message which should be displayed if the id can't be found.</param>
+        /// <param name="gameObjectGetter">Il-instructions to get the <see cref="GameObject"/> with the <see cref="NitroxEntity"/> onto the stack.</param>
+        /// <param name="codeToExecute">IL-instructions which are executed if the id could be retrieved.</param>
+        public static IEnumerable<CodeInstruction> TryGetIdOrLogError(ILGenerator generator, LocalBuilder idBuilder, string errorMessage, IEnumerable<CodeInstruction> gameObjectGetter, IEnumerable<CodeInstruction> codeToExecute)
+        {
+            Label errorMessageJump = generator.DefineLabel();
+            Label endOfManipulationJump = generator.DefineLabel();
+
+            // TryGetIdFrom()
+            foreach (CodeInstruction getterInstruction in gameObjectGetter)
+            {
+                yield return getterInstruction;
+            }
+
+            yield return Ldloc(idBuilder);
+            yield return new CodeInstruction(OpCodes.Call, Reflect.Method(() => NitroxEntity.TryGetIdFrom(default(GameObject), out Reflect.Ref<NitroxId>.Field)));
+            yield return new CodeInstruction(OpCodes.Brfalse, errorMessageJump);
+
+            // If id was found
+            foreach (CodeInstruction insertInstruction in codeToExecute)
+            {
+                yield return insertInstruction;
+            }
+            yield return new CodeInstruction(OpCodes.Br, endOfManipulationJump);
+
+            // If id was not found
+            yield return new CodeInstruction(OpCodes.Ldstr, errorMessage).WithLabels(errorMessageJump);
+            yield return new CodeInstruction(OpCodes.Call, Reflect.Method(() => Log.Error(default(string))));
+
+            yield return new CodeInstruction(OpCodes.Nop).WithLabels(endOfManipulationJump);
         }
 
         /// <summary>
@@ -116,7 +155,17 @@ namespace NitroxPatcher
             {
                 return new CodeInstruction(OpCodes.Nop);
             }
+
             return Ldloc(method.GetLocalVariableIndex<T>(i));
+        }
+
+        /// <summary>
+        /// Returns an instruction that loads the variable of <paramref name="localBuilder"/> onto the evaluation stack.
+        /// </summary>
+        /// <param name="localBuilder">The builder of the generated local variable</param>
+        public static CodeInstruction Ldloc(LocalBuilder localBuilder)
+        {
+            return Ldloc(localBuilder.LocalIndex);
         }
     }
 }

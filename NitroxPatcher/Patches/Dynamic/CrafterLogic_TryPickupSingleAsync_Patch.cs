@@ -46,9 +46,11 @@ public class CrafterLogic_TryPickupSingleAsync_Patch : NitroxPatch, IDynamicPatc
 
     public static void Callback(GameObject crafter, GameObject item)
     {
-        // Tell the other players to consider this crafter to no longer contain a tech type.
-        NitroxId crafterId = NitroxEntity.RequireIdFrom(crafter.gameObject);
-        Resolve<Entities>().BroadcastMetadataUpdate(crafterId, new CrafterMetadata(null, DayNightCycle.main.timePassedAsFloat, 0));
+        if (NitroxEntity.TryGetIdOrWarn<CrafterLogic_TryPickupSingleAsync_Patch>(crafter.gameObject, out NitroxId crafterId))
+        {
+            // Tell the other players to consider this crafter to no longer contain a tech type.
+            Resolve<Entities>().BroadcastMetadataUpdate(crafterId, new CrafterMetadata(null, DayNightCycle.main.timePassedAsFloat, 0));
+        }
 
         // Let the server know that the item has been successfully created.
         Resolve<Items>().Created(item);

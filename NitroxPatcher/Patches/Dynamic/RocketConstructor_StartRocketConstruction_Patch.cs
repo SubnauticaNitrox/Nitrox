@@ -38,9 +38,10 @@ namespace NitroxPatcher.Patches.Dynamic
 
         private static void Callback(Rocket rocket)
         {
-            NitroxId rocketId = NitroxEntity.RequireIdFrom(rocket.gameObject);
-
-            Resolve<Entities>().EntityMetadataChanged(rocket, rocketId);
+            if (NitroxEntity.TryGetIdOrWarn<RocketConstructor_StartRocketConstruction_Patch>(rocket.gameObject, out NitroxId rocketId))
+            {
+                Resolve<Entities>().EntityMetadataChanged(rocket, rocketId);
+            }
         }
 
         public override void Patch(Harmony harmony)

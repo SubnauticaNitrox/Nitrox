@@ -23,15 +23,23 @@ public class SubRoot_OnTakeDamage_Patch : NitroxPatch, IDynamicPatch
         {
             return true;
         }
-        return Resolve<SimulationOwnership>().HasAnyLockType(NitroxEntity.RequireIdFrom(__instance.gameObject));
+
+        if (!NitroxEntity.TryGetIdFrom(__instance.gameObject, out NitroxId id))
+        {
+            Log.Error($"[SubRoot_OnTakeDamage_Patch.Prefix()] Couldn't find an id on {__instance.gameObject.GetFullHierarchyPath()}");
+            return true;
+        }
+
+        return Resolve<SimulationOwnership>().HasAnyLockType(id);
     }
 
     public static void Postfix(bool __runOriginal, SubRoot __instance, DamageInfo damageInfo)
     {
         // If we have lock on it, we'll notify the server that this cyclops must be destroyed
-        if (__runOriginal && __instance.live.health <= 0f && damageInfo.type != EntityDestroyedProcessor.DAMAGE_TYPE_RUN_ORIGINAL)
+        if (__runOriginal && __instance.live.health <= 0f &&
+            damageInfo.type != EntityDestroyedProcessor.DAMAGE_TYPE_RUN_ORIGINAL &&
+            NitroxEntity.TryGetIdOrWarn<SubRoot_OnTakeDamage_Patch>(__instance.gameObject, out NitroxId id))
         {
-            NitroxId id = NitroxEntity.RequireIdFrom(__instance.gameObject);
             Resolve<Vehicles>().BroadcastDestroyedVehicle(id);
         }
     }

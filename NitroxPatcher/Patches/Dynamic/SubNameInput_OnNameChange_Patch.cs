@@ -14,7 +14,7 @@ public class SubNameInput_OnNameChange_Patch : NitroxPatch, IDynamicPatch
 
     public static void Postfix(SubNameInput __instance)
     {
-        if (!__instance.GetComponent<NitroxEntity>())
+        if (!NitroxEntity.TryGetIdFrom(__instance, out NitroxId subNameInputId))
         {
             // prevent this patch from firing when the initial template cyclops loads (happens on game load with living large update).
             return;
@@ -37,7 +37,6 @@ public class SubNameInput_OnNameChange_Patch : NitroxPatch, IDynamicPatch
                 return;
             }
 
-            NitroxId subNameInputId = NitroxEntity.RequireIdFrom(__instance.gameObject);
             Resolve<Entities>().EntityMetadataChanged(__instance, subNameInputId);
         }
     }

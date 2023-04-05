@@ -22,14 +22,10 @@ public class PlayerCinematicController_OnPlayerCinematicModeEnd_Patch : NitroxPa
             return;
         }
 
-        if (!__instance.TryGetComponent(out NitroxEntity entity))
+        if (!__instance.TryGetComponentInParent(out NitroxEntity entity))
         {
-            entity = __instance.GetComponentInParent<NitroxEntity>();
-            if (!entity)
-            {
-                Log.Warn($"[{nameof(PlayerCinematicController_OnPlayerCinematicModeEnd_Patch)}] - No NitroxEntity for \"{__instance.GetFullHierarchyPath()}\" found!");
-                return;
-            }
+            Log.Warn($"[{nameof(PlayerCinematicController_OnPlayerCinematicModeEnd_Patch)}] - No NitroxEntity for \"{__instance.GetFullHierarchyPath()}\" found!");
+            return;
         }
 
         int identifier = MultiplayerCinematicReference.GetCinematicControllerIdentifier(__instance.gameObject, entity.gameObject);

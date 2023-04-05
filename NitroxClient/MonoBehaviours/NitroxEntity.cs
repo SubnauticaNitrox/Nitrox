@@ -94,11 +94,25 @@ namespace NitroxClient.MonoBehaviours
 
         public static bool TryGetIdFrom(Component component, out NitroxId nitroxId)
         {
-            if (component)
+            if (component && component.gameObject.TryGetComponent(out NitroxEntity nitroxEntity))
             {
-                return TryGetIdFrom(component.gameObject, out nitroxId);
+                nitroxId = nitroxEntity.Id;
+                return true;
             }
 
+            nitroxId = null;
+            return false;
+        }
+
+        public static bool TryGetIdOrWarn<T>(GameObject gameObject, out NitroxId nitroxId) where T : class
+        {
+            if (gameObject && gameObject.TryGetComponent(out NitroxEntity nitroxEntity))
+            {
+                nitroxId = nitroxEntity.Id;
+                return true;
+            }
+
+            Log.Warn($"[{nameof(T)}] Couldn't find an id on {gameObject.GetFullHierarchyPath()}");
             nitroxId = null;
             return false;
         }

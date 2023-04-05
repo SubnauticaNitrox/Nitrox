@@ -17,9 +17,9 @@ public class IncubatorActivationTerminal_OnPlayerCinematicModeEnd_Patch : Nitrox
 
     public static void Prefix(IncubatorActivationTerminal __instance)
     {
-        if (__instance.crystalObject)
+        if (__instance.crystalObject &&
+            NitroxEntity.TryGetIdOrWarn<IncubatorActivationTerminal_OnPlayerCinematicModeEnd_Patch>(__instance.crystalObject, out NitroxId id))
         {
-            NitroxId id = NitroxEntity.RequireIdFrom(__instance.crystalObject);
             Resolve<IPacketSender>().Send(new EntityDestroyed(id));
         }
     }

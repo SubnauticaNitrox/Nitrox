@@ -13,11 +13,12 @@ namespace NitroxPatcher.Patches.Dynamic
     {
         private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Radio t) => t.OnRepair());
 
-        public static bool Prefix(Radio __instance)
+        public static void Prefix(Radio __instance)
         {
-            NitroxId id = NitroxEntity.RequireIdFrom(__instance.gameObject);
-            Resolve<Entities>().BroadcastMetadataUpdate(id, new RepairedComponentMetadata(TechType.Radio.ToDto()));
-            return true;
+            if (NitroxEntity.TryGetIdOrWarn<Radio_OnRepair_Patch>(__instance.gameObject, out NitroxId id))
+            {
+                Resolve<Entities>().BroadcastMetadataUpdate(id, new RepairedComponentMetadata(TechType.Radio.ToDto()));
+            }
         }
 
         public override void Patch(Harmony harmony)

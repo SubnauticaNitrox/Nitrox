@@ -20,10 +20,11 @@ namespace NitroxPatcher.Patches.Dynamic
                 return false;
             }
 
-            NitroxId id = NitroxEntity.RequireIdFrom(grabbed);
-
-            // Request to be downgraded to a transient lock so we can still simulate the positioning.
-            Resolve<SimulationOwnership>().RequestSimulationLock(id, SimulationLockType.TRANSIENT);
+            if (NitroxEntity.TryGetIdOrWarn<PropulsionCannon_ReleaseGrabbedObject_Patch>(grabbed, out NitroxId id))
+            {
+                // Request to be downgraded to a transient lock so we can still simulate the positioning.
+                Resolve<SimulationOwnership>().RequestSimulationLock(id, SimulationLockType.TRANSIENT);
+            }
 
             return true;
         }

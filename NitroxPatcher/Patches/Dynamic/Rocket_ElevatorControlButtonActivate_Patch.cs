@@ -20,11 +20,9 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(Rocket __instance, RocketElevatorStates __state)
         {
-            if (__state != __instance.elevatorState)
+            if (__state != __instance.elevatorState &&
+                NitroxEntity.TryGetIdOrWarn<Rocket_ElevatorControlButtonActivate_Patch>(__instance.gameObject, out NitroxId id))
             {
-                GameObject gameObject = __instance.gameObject;
-                NitroxId id = NitroxEntity.RequireIdFrom(gameObject);
-
                 Resolve<Entities>().EntityMetadataChanged(__instance, id);
             }
         }

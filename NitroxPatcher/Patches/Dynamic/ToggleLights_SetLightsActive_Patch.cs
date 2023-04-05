@@ -59,7 +59,10 @@ public class ToggleLights_SetLightsActive_Patch : NitroxPatch, IDynamicPatch
                 DebugUtils.PrintHierarchy(__instance.gameObject);
             }
 
-            NitroxId id = NitroxEntity.RequireIdFrom(gameObject);
+            if (NitroxEntity.TryGetIdOrWarn<ToggleLights_SetLightsActive_Patch>(gameObject, out NitroxId id))
+            {
+                return;
+            }
 
             if (type == typeof(SeaMoth))
             {

@@ -18,9 +18,8 @@ public class Incubator_OnHatched_Patch : NitroxPatch, IDynamicPatch
 
     public static void Prefix(Incubator __instance)
     {
-        if (__instance.enzymesObject)
+        if (__instance.enzymesObject && NitroxEntity.TryGetIdOrWarn<Incubator_OnHatched_Patch>(__instance.enzymesObject, out NitroxId id))
         {
-            NitroxId id = NitroxEntity.RequireIdFrom(__instance.enzymesObject);
             Resolve<IPacketSender>().Send(new EntityDestroyed(id));
         }
     }

@@ -18,9 +18,10 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(CyclopsFireSuppressionSystemButton __instance)
         {
-            SubRoot cyclops = __instance.subRoot;
-            NitroxId id = NitroxEntity.RequireIdFrom(cyclops.gameObject);
-            NitroxServiceLocator.LocateService<Cyclops>().BroadcastActivateFireSuppression(id);
+            if (NitroxEntity.TryGetIdOrWarn<CyclopsFireSuppressionButton_StartCooldown_Patch>(__instance.subRoot.gameObject, out NitroxId id))
+            {
+                NitroxServiceLocator.LocateService<Cyclops>().BroadcastActivateFireSuppression(id);
+            }
         }
 
         public override void Patch(Harmony harmony)

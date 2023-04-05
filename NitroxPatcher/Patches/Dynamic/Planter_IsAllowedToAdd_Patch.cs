@@ -14,11 +14,9 @@ public class Planter_IsAllowedToAdd_Patch : NitroxPatch, IDynamicPatch
     public static void Postfix(Pickupable pickupable, bool __result)
     {
         // When the planter accepts the new incoming seed, we want to send out metadata about what time the seed was planted.
-        if (__result)
+        if (__result && NitroxEntity.TryGetIdOrWarn<Planter_IsAllowedToAdd_Patch>(pickupable.gameObject, out NitroxId id))
         {
             Plantable plantable = pickupable.GetComponent<Plantable>();
-            NitroxId id = NitroxEntity.RequireIdFrom(plantable.gameObject);
-
             Resolve<Entities>().EntityMetadataChanged(plantable, id);
         }
     }

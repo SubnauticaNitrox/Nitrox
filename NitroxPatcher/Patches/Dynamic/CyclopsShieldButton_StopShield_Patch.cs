@@ -13,8 +13,10 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(CyclopsShieldButton __instance)
         {
-            NitroxId id = NitroxEntity.RequireIdFrom(__instance.subRoot.gameObject);
-            Resolve<Cyclops>().BroadcastMetadataChange(id);
+            if (NitroxEntity.TryGetIdOrWarn<CyclopsShieldButton_StopShield_Patch>(__instance.subRoot.gameObject, out NitroxId id))
+            {
+                Resolve<Cyclops>().BroadcastMetadataChange(id);
+            }
         }
 
         public override void Patch(Harmony harmony)

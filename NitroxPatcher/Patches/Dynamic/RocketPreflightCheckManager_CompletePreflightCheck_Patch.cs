@@ -15,9 +15,11 @@ namespace NitroxPatcher.Patches.Dynamic
         public static void Postfix(RocketPreflightCheckManager __instance)
         {
             Rocket rocket = __instance.gameObject.RequireComponentInParent<Rocket>();
-            NitroxId id = NitroxEntity.RequireIdFrom(rocket.gameObject);
 
-            Resolve<Entities>().EntityMetadataChanged(rocket, id);
+            if (NitroxEntity.TryGetIdOrWarn<RocketPreflightCheckManager_CompletePreflightCheck_Patch>(rocket.gameObject, out NitroxId id))
+            {
+                Resolve<Entities>().EntityMetadataChanged(rocket, id);
+            }
         }
 
         public override void Patch(Harmony harmony)

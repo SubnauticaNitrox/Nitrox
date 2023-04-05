@@ -17,9 +17,13 @@ namespace NitroxPatcher.Patches.Dynamic
         public static void Postfix(uGUI_SignInput __instance)
         {
             GameObject gameObject = __instance.gameObject.FindAncestor<PrefabIdentifier>().gameObject;
-            NitroxId id = NitroxEntity.RequireIdFrom(gameObject);
-            TechTag tag = gameObject.GetComponent<TechTag>();
 
+            if (!NitroxEntity.TryGetIdOrWarn<uGUI_SignInput_OnDeselect_Patch>(gameObject, out NitroxId id))
+            {
+                return;
+            }
+
+            TechTag tag = gameObject.GetComponent<TechTag>();
             switch (tag.type)
             {
                 case TechType.SmallStorage:

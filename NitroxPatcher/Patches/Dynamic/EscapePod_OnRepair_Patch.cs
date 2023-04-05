@@ -13,11 +13,12 @@ namespace NitroxPatcher.Patches.Dynamic
     {
         public static readonly MethodInfo TARGET_METHOD = Reflect.Method((EscapePod t) => t.OnRepair());
 
-        public static bool Prefix(EscapePod __instance)
+        public static void Prefix(EscapePod __instance)
         {
-            NitroxId id = NitroxEntity.RequireIdFrom(__instance.gameObject);
-            Resolve<Entities>().BroadcastMetadataUpdate(id, new RepairedComponentMetadata(TechType.EscapePod.ToDto()));
-            return true;
+            if (NitroxEntity.TryGetIdOrWarn<EscapePod_OnRepair_Patch>(__instance.gameObject, out NitroxId id))
+            {
+                Resolve<Entities>().BroadcastMetadataUpdate(id, new RepairedComponentMetadata(TechType.EscapePod.ToDto()));
+            }
         }
 
         public override void Patch(Harmony harmony)

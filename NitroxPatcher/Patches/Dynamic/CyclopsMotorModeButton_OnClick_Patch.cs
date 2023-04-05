@@ -32,10 +32,8 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(CyclopsMotorModeButton __instance, bool __state)
         {
-            if (__state)
+            if (__state && NitroxEntity.TryGetIdOrWarn<CyclopsMotorModeButton_OnClick_Patch>(__instance.subRoot.gameObject, out NitroxId id))
             {
-                SubRoot cyclops = __instance.subRoot;
-                NitroxId id = NitroxEntity.RequireIdFrom(cyclops.gameObject);
                 Resolve<Cyclops>().BroadcastMetadataChange(id);
             }
         }

@@ -13,9 +13,12 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(CyclopsHelmHUDManager __instance)
         {
-            NitroxId id = NitroxEntity.RequireIdFrom(__instance.subRoot.gameObject);
             __instance.hudActive = true;
-            Resolve<Cyclops>().BroadcastMetadataChange(id);
+
+            if (NitroxEntity.TryGetIdOrWarn<CyclopsHelmHUDManager_StopPiloting_Patch>(__instance.subRoot.gameObject, out NitroxId id))
+            {
+                Resolve<Cyclops>().BroadcastMetadataChange(id);
+            }
         }
 
         public override void Patch(Harmony harmony)

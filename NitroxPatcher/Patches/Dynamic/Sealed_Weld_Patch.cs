@@ -13,8 +13,10 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(Sealed __instance)
         {
-            NitroxId id = NitroxEntity.RequireIdFrom(__instance.gameObject);
-            Resolve<Entities>().EntityMetadataChanged(__instance, id);
+            if (NitroxEntity.TryGetIdOrWarn<Sealed_Weld_Patch>(__instance.gameObject, out NitroxId id))
+            {
+                Resolve<Entities>().EntityMetadataChanged(__instance, id);
+            }
         }
 
         public override void Patch(Harmony harmony)

@@ -26,8 +26,11 @@ public class CyclopsDestructionEvent_OnConsoleCommand_Patch : NitroxPatch, IDyna
             return false;
         }
 
-        NitroxId id = NitroxEntity.RequireIdFrom(__instance.gameObject);
-        Resolve<Vehicles>().BroadcastDestroyedVehicle(id);
+        if (NitroxEntity.TryGetIdOrWarn<CyclopsDestructionEvent_OnConsoleCommand_Patch>(__instance.gameObject, out NitroxId id))
+        {
+            Resolve<Vehicles>().BroadcastDestroyedVehicle(id);
+        }
+
         return true;
     }
 

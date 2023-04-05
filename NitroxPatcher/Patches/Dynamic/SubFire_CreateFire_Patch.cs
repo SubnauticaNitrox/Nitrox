@@ -3,7 +3,7 @@ using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Core;
+using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using UnityEngine;
 
@@ -20,7 +20,8 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static bool Prefix(SubFire __instance, SubFire.RoomFire startInRoom, out bool __state)
         {
-            __state = NitroxServiceLocator.LocateService<SimulationOwnership>().HasAnyLockType(NitroxEntity.RequireIdFrom(__instance.subRoot.gameObject));
+            __state = NitroxEntity.TryGetIdOrWarn<SubFire_CreateFire_Patch>(__instance.subRoot.gameObject, out NitroxId id) &&
+                      Resolve<SimulationOwnership>().HasAnyLockType(id);
 
             // Block any new fires if this player is not the owner
             return __state;
@@ -34,14 +35,13 @@ namespace NitroxPatcher.Patches.Dynamic
             // We can easily find where it is because it'll be the only Transform in SubFire.availableNodes with a childCount > 0
             if (__state)
             {
-                Fires fires = NitroxServiceLocator.LocateService<Fires>();
                 foreach (Transform transform in __instance.availableNodes)
                 {
                     if (transform.childCount > 0)
                     {
                         int nodeIndex = Array.IndexOf(__instance.roomFires[startInRoom.roomLinks.room].spawnNodes, transform);
                         Fire fire = transform.GetComponentInChildren<Fire>();
-                        fires.OnCreate(fire, startInRoom, nodeIndex);
+                        Resolve<Fires>().OnCreate(fire, startInRoom, nodeIndex);
                         return;
                     }
                 }

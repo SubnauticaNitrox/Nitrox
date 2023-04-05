@@ -19,9 +19,9 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(CyclopsLightingPanel __instance, bool __state)
         {
-            if (__state != __instance.lightingOn)
+            if (__state != __instance.lightingOn &&
+                NitroxEntity.TryGetIdOrWarn<CyclopsLightingPanel_ToggleInternalLighting_Patch>(__instance.gameObject, out NitroxId id))
             {
-                NitroxId id = NitroxEntity.RequireIdFrom(__instance.gameObject);
                 Resolve<Entities>().EntityMetadataChanged(__instance, id);
             }
         }

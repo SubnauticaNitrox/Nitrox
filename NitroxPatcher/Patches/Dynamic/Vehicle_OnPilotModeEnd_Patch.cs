@@ -20,8 +20,10 @@ namespace NitroxPatcher.Patches.Dynamic
                 mvc.Exit();
             }
 
-            NitroxId id = NitroxEntity.RequireIdFrom(__instance.gameObject);
-            Resolve<SimulationOwnership>().RequestSimulationLock(id, SimulationLockType.TRANSIENT);
+            if (NitroxEntity.TryGetIdOrWarn<Vehicle_OnPilotModeEnd_Patch>(__instance.gameObject, out NitroxId id))
+            {
+                Resolve<SimulationOwnership>().RequestSimulationLock(id, SimulationLockType.TRANSIENT);
+            }
         }
 
         public override void Patch(Harmony harmony)

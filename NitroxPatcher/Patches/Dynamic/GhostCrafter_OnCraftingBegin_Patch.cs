@@ -15,12 +15,14 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(GhostCrafter __instance, TechType techType, float duration)
         {
-            NitroxId crafterId = NitroxEntity.RequireIdFrom(__instance.gameObject);
-            Resolve<Entities>().BroadcastMetadataUpdate(crafterId, new CrafterMetadata(techType.ToDto(), DayNightCycle.main.timePassedAsFloat, duration));
+            if (NitroxEntity.TryGetIdOrWarn<GhostCrafter_OnCraftingBegin_Patch>(__instance.gameObject, out NitroxId crafterId))
+            {
+                Resolve<Entities>().BroadcastMetadataUpdate(crafterId, new CrafterMetadata(techType.ToDto(), DayNightCycle.main.timePassedAsFloat, duration));
 
-            // Async request to be the person to auto-pickup the result. In the future this can be improved to lock down all crafting based on ownership
-            // but will require redoing our hooks.
-            Resolve<SimulationOwnership>().RequestSimulationLock(crafterId, SimulationLockType.EXCLUSIVE);
+                // Async request to be the person to auto-pickup the result. In the future this can be improved to lock down all crafting based on ownership
+                // but will require redoing our hooks.
+                Resolve<SimulationOwnership>().RequestSimulationLock(crafterId, SimulationLockType.EXCLUSIVE);
+            }
         }
 
         public override void Patch(Harmony harmony)

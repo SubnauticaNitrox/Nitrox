@@ -36,7 +36,10 @@ namespace NitroxPatcher.Patches.Dynamic
                 else
                 {
                     // furniture, just use the same object to get the id
-                    id = NitroxEntity.RequireIdFrom(__instance.gameObject);
+                    if (!NitroxEntity.TryGetIdOrWarn<Constructable_NotifyConstructedChanged_Patch>(__instance.gameObject, out id))
+                    {
+                        return;
+                    }
                     Log.Debug($"Deconstructing furniture with id: {id}");
                 }
 
