@@ -24,27 +24,25 @@ public class EntityDestroyedProcessor : ClientPacketProcessor<EntityDestroyed>
     public override void Process(EntityDestroyed packet)
     {
         entities.RemoveEntity(packet.Id);
+        if (!NitroxEntity.TryGetObjectFrom(packet.Id, out GameObject gameObject))
+        {
+            return;
+        }
 
         using (PacketSuppressor<EntityDestroyed>.Suppress())
         {
-            if (NitroxEntity.TryGetObjectFrom(packet.Id, out GameObject gameObject))
+            // This type of check could get out of control if there are many types with custom destroy logic.  If we get a few more, move to separate processors.
+            if (gameObject.TryGetComponent(out Vehicle vehicle))
             {
-                // This type of check could get out of control if there are many types with custom destroy logic.  If we get a few more, move to separate processors.
-                Vehicle vehicle = gameObject.GetComponent<Vehicle>();
-                SubRoot subRoot = gameObject.GetComponent<SubRoot>();
-
-                if (vehicle)
-                {
-                    DestroyVehicle(vehicle);
-                }
-                else if(subRoot)
-                {
-                    DestroySubroot(subRoot);
-                }
-                else
-                {
-                    DefaultDestroyAction(gameObject);
-                }
+                DestroyVehicle(vehicle);
+            }
+            else if (gameObject.TryGetComponent(out SubRoot subRoot))
+            {
+                DestroySubroot(subRoot);
+            }
+            else
+            {
+                DefaultDestroyAction(gameObject);
             }
         }
     }
