@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NitroxTest.Patcher;
 using static NitroxPatcher.Patches.Dynamic.ItemsContainer_DestroyItem_Patch;
 
-namespace Nitrox.Test.Patcher.Patches.Dynamic;
+namespace NitroxPatcher.Patches.Dynamic;
 
 [TestClass]
 public class ItemsContainer_DestroyItem_PatchTest

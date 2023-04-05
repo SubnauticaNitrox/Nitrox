@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using FluentAssertions;
 using HarmonyLib;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NitroxPatcher.Patches.Dynamic;
 using NitroxTest.Patcher;
+using static NitroxPatcher.Patches.Dynamic.DevConsole_Update_Patch;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -14,7 +15,8 @@ public class DevConsole_Update_PatchTest
     [TestMethod]
     public void Sanity()
     {
-        PatchTestHelper.TestPattern(DevConsole_Update_Patch.TargetMethod, DevConsole_Update_Patch.DevConsoleSetStateTruePattern, out IEnumerable<CodeInstruction> originalIl, out IEnumerable<CodeInstruction> transformedIl);
-        originalIl.Count().Should().Be(transformedIl.Count());
+        ReadOnlyCollection<CodeInstruction> originalIl = PatchTestHelper.GetInstructionsFromMethod(TARGET_METHOD);
+        IEnumerable<CodeInstruction> transformedIl = Transpiler(TARGET_METHOD, originalIl);
+        originalIl.Count.Should().Be(transformedIl.Count());
     }
 }
