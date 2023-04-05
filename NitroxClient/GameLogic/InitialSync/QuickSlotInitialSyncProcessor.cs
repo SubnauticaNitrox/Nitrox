@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 
 namespace NitroxClient.GameLogic.InitialSync;
@@ -25,9 +26,9 @@ public class QuickSlotInitialSyncProcessor : InitialSyncProcessor
         {
             waitScreenItem.SetProgress(i, packet.QuickSlotsBindingIds.Length);
 
-            NitroxId id = packet.QuickSlotsBindingIds[i];
+            Optional<NitroxId> opId = packet.QuickSlotsBindingIds[i];
 
-            if (id != null && inventoryItemsById.TryGetValue(id, out InventoryItem inventoryItem) )
+            if (opId.HasValue && inventoryItemsById.TryGetValue(opId.Value, out InventoryItem inventoryItem) )
             {
                 Inventory.main.quickSlots.binding[i] = inventoryItem;
                 Inventory.main.quickSlots.NotifyBind(i, state: true);

@@ -467,7 +467,7 @@ public class WorldPersistenceTest
                         SubRootId = null,
                         CurrentStats = new PlayerStatsData(45, 45, 40, 39, 28, 1),
                         UsedItems = new List<NitroxTechType>(0),
-                        QuickSlotsBindingIds = new NitroxId[] { new NitroxId() },
+                        QuickSlotsBindingIds = new[] { Optional<NitroxId>.Of(new NitroxId()) },
                         EquippedItems = new List<EquippedItemData>(0),
                         Modules = new List<EquippedItemData>(0),
                         PlayerPreferences = new(new(), new())
@@ -483,7 +483,7 @@ public class WorldPersistenceTest
                         SubRootId = new NitroxId(),
                         CurrentStats = new PlayerStatsData(40, 40, 30, 29, 28, 0),
                         UsedItems = new List<NitroxTechType> { new NitroxTechType("Knife"), new NitroxTechType("Flashlight") },
-                        QuickSlotsBindingIds = new NitroxId[] { new NitroxId(), new NitroxId() },
+                        QuickSlotsBindingIds = new[] { Optional<NitroxId>.Of(new NitroxId()), Optional<NitroxId>.Of(new NitroxId())},
                         EquippedItems = new List<EquippedItemData>
                         {
                             new EquippedItemData(new NitroxId(), new NitroxId(), new byte[] { 0x30, 0x40 }, "Slot3", new NitroxTechType("Flashlight")),

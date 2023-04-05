@@ -37,7 +37,7 @@ namespace NitroxClient.GameLogic
         public PlayerSettings PlayerSettings => multiplayerSession.PlayerSettings;
 
         public Perms Permissions;
-        
+
         public LocalPlayer(IMultiplayerSession multiplayerSession, IPacketSender packetSender, ThrottledPacketSender throttledPacketSender)
         {
             this.multiplayerSession = multiplayerSession;
@@ -78,7 +78,7 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastHeldItemChanged(NitroxId itemId, PlayerHeldItemChanged.ChangeType techType, NitroxTechType isFirstTime) => packetSender.Send(new PlayerHeldItemChanged(multiplayerSession.Reservation.PlayerId, itemId, techType, isFirstTime));
 
-        public void BroadcastQuickSlotsBindingChanged(NitroxId[] slotItemIds) => throttledPacketSender.SendThrottled(new PlayerQuickSlotsBindingChanged(slotItemIds), (packet) => 1);
+        public void BroadcastQuickSlotsBindingChanged(Optional<NitroxId>[] slotItemIds) => throttledPacketSender.SendThrottled(new PlayerQuickSlotsBindingChanged(slotItemIds), (packet) => 1);
 
         private GameObject CreateBodyPrototype()
         {
