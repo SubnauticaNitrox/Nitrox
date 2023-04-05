@@ -59,25 +59,36 @@ namespace NitroxClient.GameLogic
             packetSender.Send(pickupItem);
         }
 
-        public void Dropped(GameObject gameObject, TechType techType)
+        /// <summary>
+        /// Tracks the object (as dropped) and notifies the server to spawn the item for other players.
+        /// </summary>
+        public void Dropped(GameObject gameObject, TechType techType = default)
         {
+            if (techType == default)
+            {
+                techType = CraftData.GetTechType(gameObject);
+                if (techType == TechType.None)
+                {
+                    Log.Error($"Could not find {nameof(TechType)} for {gameObject.name}");
+                    return;
+                }
+            }
+
             // there is a theoretical possibility of a stray remote tracking packet that re-adds the monobehavior, this is purely a safety call.
             RemoveAnyRemoteControl(gameObject);
 
             Optional<NitroxId> waterparkId = GetCurrentWaterParkId();
             NitroxId id = NitroxEntity.GetId(gameObject);
             Optional<EntityMetadata> metadata = EntityMetadataExtractor.Extract(gameObject);
-
             bool inGlobalRoot = map.GlobalRootTechTypes.Contains(techType.ToDto());
             string classId = gameObject.GetComponent<PrefabIdentifier>().ClassId;
-
-            WorldEntity droppedItem = new WorldEntity(gameObject.transform.ToWorldDto(), 0, classId, inGlobalRoot, waterparkId.OrNull(), false, id, techType.ToDto(), metadata.OrNull(), null, new List<Entity>());
-            droppedItem.ChildEntities = GetPrefabChildren(gameObject, id).ToList();
+            WorldEntity droppedItem = new(gameObject.transform.ToWorldDto(), 0, classId, inGlobalRoot, waterparkId.OrNull(), false, id, techType.ToDto(), metadata.OrNull(), null, new List<Entity>())
+            {
+                ChildEntities = GetPrefabChildren(gameObject, id).ToList()
+            };
 
             Log.Debug($"Dropping item: {droppedItem}");
-
-            EntitySpawnedByClient spawnedPacket = new EntitySpawnedByClient(droppedItem);
-            packetSender.Send(spawnedPacket);
+            packetSender.Send(new EntitySpawnedByClient(droppedItem));
         }
 
         public void Created(GameObject gameObject)
@@ -91,9 +102,9 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        // This function will record any notable children of the dropped item as a PrefabChildEntity.  In this case, a 'notable' 
+        // This function will record any notable children of the dropped item as a PrefabChildEntity.  In this case, a 'notable'
         // child is one that UWE has tagged with a PrefabIdentifier (class id) and has entity metadata that can be extracted. An
-        // example would be recording a Battery PrefabChild inside of a Flashlight WorldEntity. 
+        // example would be recording a Battery PrefabChild inside of a Flashlight WorldEntity.
         public static IEnumerable<Entity> GetPrefabChildren(GameObject gameObject, NitroxId parentId)
         {
             foreach (IGrouping<string, PrefabIdentifier> prefabGroup in gameObject.GetAllComponentsInChildren<PrefabIdentifier>()
@@ -137,12 +148,13 @@ namespace NitroxClient.GameLogic
             return inventoryItemEntity;
         }
 
+        /// <summary>
+        /// Some items might be remotely simulated if they were dropped by other players.  We'll want to remove
+        /// any remote tracking when we actively handle the item.
+        /// </summary>
         private void RemoveAnyRemoteControl(GameObject gameObject)
         {
-            // Some items might be remotely simulated if they were dropped by other players.  We'll want to remove
-            // any remote tracking when we actively handle the item. 
-            RemotelyControlled remotelyControlled = gameObject.GetComponent<RemotelyControlled>();
-            Object.Destroy(remotelyControlled);
+            Object.Destroy(gameObject.GetComponent<RemotelyControlled>());
         }
 
         private Optional<NitroxId> GetCurrentWaterParkId()
