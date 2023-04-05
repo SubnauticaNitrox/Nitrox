@@ -19,40 +19,37 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// </summary>
 public class SpawnOnKill_OnKill_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((SpawnOnKill t) => t.OnKill());
+    public static readonly MethodInfo TARGET_METHOD = Reflect.Method((SpawnOnKill t) => t.OnKill());
 
-    private static readonly InstructionsPattern OnKillPattern = new()
+    private static readonly InstructionsPattern spawnInstanceOnKillPattern = new()
     {
-        { Stloc_0, "CallbackInsertion" },
+        Reflect.Method(() => Object.Instantiate(default(GameObject), default(Vector3), default(Quaternion))),
+        { Stloc_0, "DropOnKillInstance" },
         Ldarg_0,
     };
 
-    public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions) => instructions
-    .Transform(OnKillPattern, (label, instruction) =>
+    public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
     {
-        switch (label)
+        static IEnumerable<CodeInstruction> InsertCallbackCall(string label, CodeInstruction _)
         {
-            case "CallbackInsertion":
-                return new List<CodeInstruction>
-                {
-                    new CodeInstruction(Ldarg_0),
-                    new CodeInstruction(Ldloc_0),
-                    new CodeInstruction(Call, Reflect.Method(() => Callback(default, default))),
-                };
+            switch (label)
+            {
+                case "DropOnKillInstance":
+                    yield return new(Ldarg_0);
+                    yield return new(Ldloc_0);
+                    yield return new(Call, Reflect.Method(() => Callback(default, default)));
+                    break;
+            }
         }
-        return null;
-    });
 
-    public static void Callback(SpawnOnKill spawnOnKill, GameObject gameObject)
+        return instructions.Transform(spawnInstanceOnKillPattern, InsertCallbackCall);
+    }
+
+    private static void Callback(SpawnOnKill spawnOnKill, GameObject spawningItem)
     {
-        // get the ID of the destroyed object
         NitroxId destroyedEntityId = NitroxEntity.GetId(spawnOnKill.gameObject);
-        // Says that the entity doesn't exist anymore  --  Without this, the gameobject is not updated. It will not be pickuppable after that.
         Resolve<IPacketSender>().Send(new EntityDestroyed(destroyedEntityId));
-        // Give an ID to the new game object
-        NitroxEntity.SetNewId(gameObject, destroyedEntityId);
-        // Drop the item in the game
-        Resolve<Items>().Dropped(gameObject, CraftData.GetTechType(gameObject));
+        Resolve<Items>().Dropped(spawningItem);
     }
 
     public override void Patch(Harmony harmony)
