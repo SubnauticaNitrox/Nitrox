@@ -1,13 +1,10 @@
 using System;
-using System.Linq;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.Helper;
@@ -20,13 +17,11 @@ namespace NitroxClient.GameLogic
         public static bool DisableConsole { get; set; } = true;
 
         private readonly IPacketSender packetSender;
-        private readonly Vehicles vehicles;
         private readonly Items item;
 
-        public NitroxConsole(IPacketSender packetSender, Vehicles vehicles, Items item)
+        public NitroxConsole(IPacketSender packetSender, Items item)
         {
             this.packetSender = packetSender;
-            this.vehicles = vehicles;
             this.item = item;
         }
 

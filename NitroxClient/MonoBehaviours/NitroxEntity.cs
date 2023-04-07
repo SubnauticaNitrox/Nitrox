@@ -144,7 +144,7 @@ namespace NitroxClient.MonoBehaviours
 
         public static void SetNewId(GameObject gameObject, NitroxId id)
         {
-            Validate.NotNull(gameObject);
+            Validate.IsTrue(gameObject);
             Validate.NotNull(id);
 
             if (gameObject.TryGetComponent(out NitroxEntity entity))
@@ -158,6 +158,21 @@ namespace NitroxClient.MonoBehaviours
 
             entity.Id = id;
             gameObjectsById[id] = gameObject;
+        }
+
+        public static NitroxId GetIdOrGenerateNew(GameObject gameObject)
+        {
+            Validate.IsTrue(gameObject);
+
+            if (gameObject.TryGetComponent(out NitroxEntity entity))
+            {
+                return entity.Id;
+            }
+
+            NitroxId id = new();
+            SetNewId(gameObject, id);
+            return id;
+
         }
 
         public static void RemoveFrom(GameObject gameObject)
