@@ -1,4 +1,4 @@
-﻿using NitroxClient.Communication.Abstract;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Bases.Spawning.BasePiece;
 using NitroxClient.GameLogic.Bases.Spawning.Furniture;
 using NitroxClient.GameLogic.Helper;
@@ -193,11 +193,23 @@ namespace NitroxClient.GameLogic
             packetSender.Send(constructionCompleted);
         }
 
-
         public void DeconstructionBegin(NitroxId id)
         {
             DeconstructionBegin deconstructionBegin = new DeconstructionBegin(id);
             packetSender.Send(deconstructionBegin);
+        }
+
+        public void DeconstructionBegin(GameObject gameObject)
+        {
+            if (NitroxEntity.TryGetIdFrom(gameObject, out NitroxId id))
+            {
+                DeconstructionBegin deconstructionBegin = new DeconstructionBegin(id);
+                packetSender.Send(deconstructionBegin);
+            }
+            else
+            {
+                Log.Error($"[Building.DeconstructionBegin] Couldn't find an id on {gameObject.GetFullHierarchyPath()}");
+            }
         }
 
         public void DeconstructionComplete(GameObject gameObject)
