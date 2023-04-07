@@ -22,7 +22,12 @@ public class Vehicle_OnHandClick_Patch : NitroxPatch, IDynamicPatch
             return true;
         }
 
-        if (NitroxEntity.TryGetIdOrWarn(__instance.gameObject, out NitroxId id) && Resolve<SimulationOwnership>().HasExclusiveLock(id))
+        if (!NitroxEntity.TryGetIdOrWarn(__instance.gameObject, out NitroxId id))
+        {
+            return true;
+        }
+
+        if (Resolve<SimulationOwnership>().HasExclusiveLock(id))
         {
             Log.Debug($"Already have an exclusive lock on the vehicle: {id}");
             return true;

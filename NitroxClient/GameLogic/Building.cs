@@ -1,4 +1,4 @@
-using NitroxClient.Communication.Abstract;
+﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Bases.Spawning.BasePiece;
 using NitroxClient.GameLogic.Bases.Spawning.Furniture;
 using NitroxClient.GameLogic.Helper;
@@ -34,7 +34,7 @@ namespace NitroxClient.GameLogic
                 return;
             }
 
-            NitroxId id = NitroxEntity.RequireIdFrom(constructableBase.gameObject);
+            NitroxId id = NitroxEntity.GetIdOrGenerateNew(constructableBase.gameObject);
 
             NitroxId parentBaseId = null;
 
@@ -75,7 +75,7 @@ namespace NitroxClient.GameLogic
                 return;
             }
 
-            NitroxId id = NitroxEntity.RequireIdFrom(gameObject);
+            NitroxId id = NitroxEntity.GetIdOrGenerateNew(gameObject);
             Optional<NitroxId> parentId = null;
 
             SubRoot sub = Player.main.currentSub;
