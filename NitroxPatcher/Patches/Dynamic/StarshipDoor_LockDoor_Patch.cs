@@ -14,7 +14,7 @@ public class StarshipDoor_LockDoor_Patch : NitroxPatch, IDynamicPatch
 
     public static void Prefix(StarshipDoor __instance)
     {
-        if (!__instance.doorLocked && NitroxEntity.TryGetIdOrWarn<StarshipDoor_LockDoor_Patch>(__instance.gameObject, out NitroxId id))
+        if (!__instance.doorLocked && NitroxEntity.TryGetIdOrWarn(__instance.gameObject, out NitroxId id))
         {
             StarshipDoorMetadata starshipDoorMetadata = new(__instance.doorLocked, __instance.doorOpen);
             Resolve<Entities>().BroadcastMetadataUpdate(id, starshipDoorMetadata);

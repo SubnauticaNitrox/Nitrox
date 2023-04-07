@@ -14,7 +14,7 @@ public class WeldableWallPanelGeneric_UnlockDoor_Patch : NitroxPatch, IDynamicPa
 
     public static void Postfix(WeldableWallPanelGeneric __instance)
     {
-        if (__instance.liveMixin && NitroxEntity.TryGetIdOrWarn<WeldableWallPanelGeneric_UnlockDoor_Patch>(__instance.gameObject, out NitroxId id))
+        if (__instance.liveMixin && NitroxEntity.TryGetIdOrWarn(__instance.gameObject, out NitroxId id))
         {
             WeldableWallPanelGenericMetadata weldableWallPanelGenericMetadata = new(__instance.liveMixin.health);
             Resolve<Entities>().BroadcastMetadataUpdate(id, weldableWallPanelGenericMetadata);

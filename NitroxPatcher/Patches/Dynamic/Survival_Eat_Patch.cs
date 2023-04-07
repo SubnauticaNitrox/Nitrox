@@ -18,7 +18,7 @@ public class Survival_Eat_Patch : NitroxPatch, IDynamicPatch
 
     public static void Postfix(bool __result, GameObject useObj)
     {
-        if (__result && useObj && NitroxEntity.TryGetIdOrWarn<Survival_Eat_Patch>(useObj, out NitroxId id))
+        if (__result && useObj && NitroxEntity.TryGetIdOrWarn(useObj, out NitroxId id))
         {
             Resolve<IPacketSender>().Send(new EntityDestroyed(id));
         }

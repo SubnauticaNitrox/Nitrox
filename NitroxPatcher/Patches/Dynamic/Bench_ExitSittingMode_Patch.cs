@@ -26,7 +26,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 return;
             }
 
-            if (NitroxEntity.TryGetIdOrWarn<Bench_ExitSittingMode_Patch>(__instance.gameObject, out NitroxId id))
+            if (NitroxEntity.TryGetIdOrWarn(__instance.gameObject, out NitroxId id))
             {
                 // Request to be downgraded to a transient lock so we can still simulate the positioning.
                 Resolve<SimulationOwnership>().RequestSimulationLock(id, SimulationLockType.TRANSIENT);

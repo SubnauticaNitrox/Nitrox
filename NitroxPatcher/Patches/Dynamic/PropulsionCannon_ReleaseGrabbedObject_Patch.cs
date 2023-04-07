@@ -20,7 +20,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 return false;
             }
 
-            if (NitroxEntity.TryGetIdOrWarn<PropulsionCannon_ReleaseGrabbedObject_Patch>(grabbed, out NitroxId id))
+            if (NitroxEntity.TryGetIdOrWarn(grabbed, out NitroxId id))
             {
                 // Request to be downgraded to a transient lock so we can still simulate the positioning.
                 Resolve<SimulationOwnership>().RequestSimulationLock(id, SimulationLockType.TRANSIENT);

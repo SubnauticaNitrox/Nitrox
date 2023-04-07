@@ -13,7 +13,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(Sealed __instance)
         {
-            if (NitroxEntity.TryGetIdOrWarn<Sealed_Weld_Patch>(__instance.gameObject, out NitroxId id))
+            if (NitroxEntity.TryGetIdOrWarn(__instance.gameObject, out NitroxId id))
             {
                 Resolve<Entities>().EntityMetadataChanged(__instance, id);
             }

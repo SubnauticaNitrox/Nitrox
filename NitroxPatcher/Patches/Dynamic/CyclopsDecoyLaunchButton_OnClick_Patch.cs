@@ -14,7 +14,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(CyclopsHornButton __instance)
         {
-            if (NitroxEntity.TryGetIdOrWarn<CyclopsDecoyLaunchButton_OnClick_Patch>(__instance.subRoot.gameObject, out NitroxId id))
+            if (NitroxEntity.TryGetIdOrWarn(__instance.subRoot.gameObject, out NitroxId id))
             {
                 NitroxServiceLocator.LocateService<Cyclops>().BroadcastLaunchDecoy(id);
             }

@@ -15,7 +15,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Prefix(Radio __instance)
         {
-            if (NitroxEntity.TryGetIdOrWarn<Radio_OnRepair_Patch>(__instance.gameObject, out NitroxId id))
+            if (NitroxEntity.TryGetIdOrWarn(__instance.gameObject, out NitroxId id))
             {
                 Resolve<Entities>().BroadcastMetadataUpdate(id, new RepairedComponentMetadata(TechType.Radio.ToDto()));
             }

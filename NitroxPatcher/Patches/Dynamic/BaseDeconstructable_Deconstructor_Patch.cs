@@ -19,7 +19,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Prefix(BaseDeconstructable __instance)
         {
-            if (NitroxEntity.TryGetIdOrWarn<BaseDeconstructable_Deconstructor_Patch>(__instance.gameObject, out NitroxId id))
+            if (NitroxEntity.TryGetIdOrWarn(__instance.gameObject, out NitroxId id))
             {
                 Add(TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE_GUID, id);
             }

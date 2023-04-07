@@ -15,7 +15,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(GhostCrafter __instance, TechType techType, float duration)
         {
-            if (NitroxEntity.TryGetIdOrWarn<GhostCrafter_OnCraftingBegin_Patch>(__instance.gameObject, out NitroxId crafterId))
+            if (NitroxEntity.TryGetIdOrWarn(__instance.gameObject, out NitroxId crafterId))
             {
                 Resolve<Entities>().BroadcastMetadataUpdate(crafterId, new CrafterMetadata(techType.ToDto(), DayNightCycle.main.timePassedAsFloat, duration));
 

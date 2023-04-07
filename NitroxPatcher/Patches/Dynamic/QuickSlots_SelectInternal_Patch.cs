@@ -31,7 +31,7 @@ public class QuickSlots_SelectInternal_Patch : NitroxPatch, IDynamicPatch
             return;
         }
         Pickupable pickupable = ____heldItem.item;
-        if (NitroxEntity.TryGetIdOrWarn<QuickSlots_SelectInternal_Patch>(pickupable.gameObject, out NitroxId itemId))
+        if (NitroxEntity.TryGetIdOrWarn(pickupable.gameObject, out NitroxId itemId))
         {
             PlayerTool component = pickupable.GetComponent<PlayerTool>();
             PlayerHeldItemChanged.ChangeType type = component ? PlayerHeldItemChanged.ChangeType.DRAW_AS_TOOL : PlayerHeldItemChanged.ChangeType.DRAW_AS_ITEM;

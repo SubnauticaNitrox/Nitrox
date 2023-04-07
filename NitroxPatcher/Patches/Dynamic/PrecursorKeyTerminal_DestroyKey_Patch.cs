@@ -17,7 +17,7 @@ public class PrecursorKeyTerminal_DestroyKey_Patch : NitroxPatch, IDynamicPatch
 
     public static void Prefix(PrecursorKeyTerminal __instance)
     {
-        if (__instance.keyObject && NitroxEntity.TryGetIdOrWarn<PrecursorKeyTerminal_DestroyKey_Patch>(__instance.keyObject, out NitroxId id))
+        if (__instance.keyObject && NitroxEntity.TryGetIdOrWarn(__instance.keyObject, out NitroxId id))
         {
             Resolve<IPacketSender>().Send(new EntityDestroyed(id));
         }

@@ -14,7 +14,7 @@ public class PrecursorTeleporter_OnActivateTeleporter_Patch : NitroxPatch, IDyna
 
     public static void Postfix(PrecursorTeleporter __instance)
     {
-        if (NitroxEntity.TryGetIdOrWarn<PrecursorTeleporter_OnActivateTeleporter_Patch>(__instance.gameObject, out NitroxId id))
+        if (NitroxEntity.TryGetIdOrWarn(__instance.gameObject, out NitroxId id))
         {
             PrecursorTeleporterMetadata precursorTeleporterMetadata = new(__instance.isOpen);
             Resolve<Entities>().BroadcastMetadataUpdate(id, precursorTeleporterMetadata);

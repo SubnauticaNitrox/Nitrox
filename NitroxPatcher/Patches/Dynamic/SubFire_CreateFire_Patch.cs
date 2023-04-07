@@ -20,7 +20,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static bool Prefix(SubFire __instance, SubFire.RoomFire startInRoom, out bool __state)
         {
-            __state = NitroxEntity.TryGetIdOrWarn<SubFire_CreateFire_Patch>(__instance.subRoot.gameObject, out NitroxId id) &&
+            __state = NitroxEntity.TryGetIdOrWarn(__instance.subRoot.gameObject, out NitroxId id) &&
                       Resolve<SimulationOwnership>().HasAnyLockType(id);
 
             // Block any new fires if this player is not the owner

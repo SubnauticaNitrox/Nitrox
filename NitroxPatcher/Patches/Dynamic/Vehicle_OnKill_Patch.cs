@@ -14,8 +14,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Prefix(Vehicle __instance)
         {
-            if (NitroxEntity.TryGetIdOrWarn<Vehicle_OnKill_Patch>(__instance.gameObject, out NitroxId id) &&
-                Resolve<SimulationOwnership>().HasExclusiveLock(id))
+            if (NitroxEntity.TryGetIdOrWarn(__instance.gameObject, out NitroxId id) && Resolve<SimulationOwnership>().HasExclusiveLock(id))
             {
                 Resolve<SimulationOwnership>().StopSimulatingEntity(id);
                 Resolve<Vehicles>().BroadcastDestroyedVehicle(id);

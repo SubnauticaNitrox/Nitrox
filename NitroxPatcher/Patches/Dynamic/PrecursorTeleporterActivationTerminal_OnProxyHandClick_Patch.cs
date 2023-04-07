@@ -14,8 +14,7 @@ public class PrecursorTeleporterActivationTerminal_OnProxyHandClick_Patch : Nitr
 
     public static void Postfix(PrecursorTeleporterActivationTerminal __instance)
     {
-        if (__instance.unlocked &&
-            NitroxEntity.TryGetIdOrWarn<PrecursorTeleporterActivationTerminal_OnProxyHandClick_Patch>(__instance.gameObject, out NitroxId id))
+        if (__instance.unlocked && NitroxEntity.TryGetIdOrWarn(__instance.gameObject, out NitroxId id))
         {
             PrecursorTeleporterActivationTerminalMetadata precursorTeleporterActivationTerminalMetadata = new(__instance.unlocked);
             Resolve<Entities>().BroadcastMetadataUpdate(id, precursorTeleporterActivationTerminalMetadata);

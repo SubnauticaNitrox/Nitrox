@@ -20,7 +20,7 @@ namespace NitroxPatcher.Patches.Dynamic
             Vehicle vehicle = __instance.dockingBay.GetDockedVehicle();
 
             if (skipPrefix || vehicle == null ||
-                !NitroxEntity.TryGetIdOrWarn<DockedVehicleHandTarget_OnHandClick_Patch>(vehicle.gameObject, out NitroxId id))
+                !NitroxEntity.TryGetIdOrWarn(vehicle.gameObject, out NitroxId id))
             {
                 return true;
             }

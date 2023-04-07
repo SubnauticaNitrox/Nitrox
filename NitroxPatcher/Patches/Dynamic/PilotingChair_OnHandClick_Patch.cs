@@ -25,7 +25,7 @@ public class PilotingChair_OnHandClick_Patch : NitroxPatch, IDynamicPatch
         SubRoot subRoot = __instance.GetComponentInParent<SubRoot>();
         Validate.NotNull(subRoot, "PilotingChair cannot find it's corresponding SubRoot!");
 
-        if (!NitroxEntity.TryGetIdOrWarn<PilotingChair_OnHandClick_Patch>(subRoot.gameObject, out NitroxId id))
+        if (!NitroxEntity.TryGetIdOrWarn(subRoot.gameObject, out NitroxId id))
         {
             return true;
         }

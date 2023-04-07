@@ -15,7 +15,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Prefix(EscapePod __instance)
         {
-            if (NitroxEntity.TryGetIdOrWarn<EscapePod_OnRepair_Patch>(__instance.gameObject, out NitroxId id))
+            if (NitroxEntity.TryGetIdOrWarn(__instance.gameObject, out NitroxId id))
             {
                 Resolve<Entities>().BroadcastMetadataUpdate(id, new RepairedComponentMetadata(TechType.EscapePod.ToDto()));
             }

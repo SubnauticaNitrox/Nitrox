@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
@@ -104,7 +105,8 @@ namespace NitroxClient.MonoBehaviours
             return false;
         }
 
-        public static bool TryGetIdOrWarn<T>(GameObject gameObject, out NitroxId nitroxId) where T : class
+        public static bool TryGetIdOrWarn(GameObject gameObject, out NitroxId nitroxId,
+                                          [CallerMemberName] string methodName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
         {
             if (gameObject && gameObject.TryGetComponent(out NitroxEntity nitroxEntity))
             {
@@ -112,7 +114,7 @@ namespace NitroxClient.MonoBehaviours
                 return true;
             }
 
-            Log.Warn($"[{nameof(T)}] Couldn't find an id on {gameObject.GetFullHierarchyPath()}");
+            Log.Warn($"[{filePath[(filePath.LastIndexOf("\\", StringComparison.Ordinal) + 1)..^2] + methodName}():L{lineNumber}] Couldn't find an id on {gameObject.GetFullHierarchyPath()}");
             nitroxId = null;
             return false;
         }
@@ -172,7 +174,6 @@ namespace NitroxClient.MonoBehaviours
             NitroxId id = new();
             SetNewId(gameObject, id);
             return id;
-
         }
 
         public static void RemoveFrom(GameObject gameObject)

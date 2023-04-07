@@ -15,7 +15,7 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             __instance.hudActive = true;
 
-            if (NitroxEntity.TryGetIdOrWarn<CyclopsHelmHUDManager_StopPiloting_Patch>(__instance.subRoot.gameObject, out NitroxId id))
+            if (NitroxEntity.TryGetIdOrWarn(__instance.subRoot.gameObject, out NitroxId id))
             {
                 Resolve<Cyclops>().BroadcastMetadataChange(id);
             }

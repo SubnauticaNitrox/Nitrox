@@ -16,7 +16,7 @@ public class Constructor_Deploy_Patch : NitroxPatch, IDynamicPatch
         // only trigger updates when there is a valid state change.
         if (value != __instance.deployed)
         {
-            if (NitroxEntity.TryGetIdOrWarn<Constructor_Deploy_Patch>(__instance.gameObject, out NitroxId id))
+            if (NitroxEntity.TryGetIdOrWarn(__instance.gameObject, out NitroxId id))
             {
                 Resolve<Entities>().EntityMetadataChanged(__instance, id);
             }

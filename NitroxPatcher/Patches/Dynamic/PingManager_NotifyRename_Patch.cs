@@ -21,7 +21,7 @@ public class PingManager_NotifyRename_Patch : NitroxPatch, IDynamicPatch
             return;
         }
 
-        if (NitroxEntity.TryGetIdOrWarn<PingManager_NotifyRename_Patch>(instance.gameObject, out NitroxId id))
+        if (NitroxEntity.TryGetIdOrWarn(instance.gameObject, out NitroxId id))
         {
             PingRenamed packet = new(id, instance.GetLabel(), SerializationHelper.GetBytes(instance.gameObject));
             Resolve<IPacketSender>().Send(packet);

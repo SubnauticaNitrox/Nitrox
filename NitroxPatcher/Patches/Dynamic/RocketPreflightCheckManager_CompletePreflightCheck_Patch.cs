@@ -16,7 +16,7 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             Rocket rocket = __instance.gameObject.RequireComponentInParent<Rocket>();
 
-            if (NitroxEntity.TryGetIdOrWarn<RocketPreflightCheckManager_CompletePreflightCheck_Patch>(rocket.gameObject, out NitroxId id))
+            if (NitroxEntity.TryGetIdOrWarn(rocket.gameObject, out NitroxId id))
             {
                 Resolve<Entities>().EntityMetadataChanged(rocket, id);
             }

@@ -20,7 +20,7 @@ namespace NitroxPatcher.Patches.Dynamic
         public static void Postfix(CyclopsLightingPanel __instance, bool __state)
         {
             if (__state != __instance.floodlightsOn &&
-                NitroxEntity.TryGetIdOrWarn<CyclopsLightingPanel_ToggleFloodlights_Patch>(__instance.gameObject, out NitroxId id))
+                NitroxEntity.TryGetIdOrWarn(__instance.gameObject, out NitroxId id))
             {
                 Resolve<Entities>().EntityMetadataChanged(__instance, id);
             }

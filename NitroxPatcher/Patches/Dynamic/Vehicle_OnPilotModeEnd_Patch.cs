@@ -20,7 +20,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 mvc.Exit();
             }
 
-            if (NitroxEntity.TryGetIdOrWarn<Vehicle_OnPilotModeEnd_Patch>(__instance.gameObject, out NitroxId id))
+            if (NitroxEntity.TryGetIdOrWarn(__instance.gameObject, out NitroxId id))
             {
                 Resolve<SimulationOwnership>().RequestSimulationLock(id, SimulationLockType.TRANSIENT);
             }

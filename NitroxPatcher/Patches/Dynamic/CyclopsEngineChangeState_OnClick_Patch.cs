@@ -13,7 +13,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(CyclopsEngineChangeState __instance)
         {
-            if (NitroxEntity.TryGetIdOrWarn<CyclopsEngineChangeState_OnClick_Patch>(__instance.subRoot.gameObject, out NitroxId id))
+            if (NitroxEntity.TryGetIdOrWarn(__instance.subRoot.gameObject, out NitroxId id))
             {
                 Resolve<Cyclops>().BroadcastMetadataChange(id);
             }

@@ -31,8 +31,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 return;
             }
 
-            if (NitroxEntity.TryGetIdOrWarn<VehicleDockingBay_OnTriggerEnter>(interpolatingVehicle.gameObject, out NitroxId id) &&
-                Resolve<SimulationOwnership>().HasAnyLockType(id))
+            if (NitroxEntity.TryGetIdOrWarn(interpolatingVehicle.gameObject, out NitroxId id) && Resolve<SimulationOwnership>().HasAnyLockType(id))
             {
                 Log.Debug($"Will send vehicle docking for {id}");
                 Resolve<Vehicles>().BroadcastVehicleDocking(__instance, interpolatingVehicle);

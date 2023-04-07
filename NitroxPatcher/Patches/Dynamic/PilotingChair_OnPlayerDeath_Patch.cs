@@ -16,7 +16,7 @@ public class PilotingChair_OnPlayerDeath_Patch : NitroxPatch, IDynamicPatch
         SubRoot subRoot = __instance.GetComponentInParent<SubRoot>();
         Validate.NotNull(subRoot, "PilotingChair cannot find it's corresponding SubRoot!");
 
-        if (NitroxEntity.TryGetIdOrWarn<PilotingChair_OnPlayerDeath_Patch>(subRoot.gameObject, out NitroxId id))
+        if (NitroxEntity.TryGetIdOrWarn(subRoot.gameObject, out NitroxId id))
         {
             // Request to be downgraded to a transient lock so we can still simulate the positioning.
             Resolve<SimulationOwnership>().RequestSimulationLock(id, SimulationLockType.TRANSIENT);

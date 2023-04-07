@@ -21,7 +21,7 @@ public class Bench_OnHandClick_Patch : NitroxPatch, IDynamicPatch
             return true;
         }
 
-        if (!NitroxEntity.TryGetIdOrWarn<Bench_OnHandClick_Patch>(__instance.gameObject, out NitroxId id))
+        if (!NitroxEntity.TryGetIdOrWarn(__instance.gameObject, out NitroxId id))
         {
             return true;
         }

@@ -14,7 +14,7 @@ public class PrecursorKeyTerminal_OnHandClick_Patch : NitroxPatch, IDynamicPatch
 
     public static void Postfix(PrecursorKeyTerminal __instance)
     {
-        if (__instance.slotted && NitroxEntity.TryGetIdOrWarn<PrecursorKeyTerminal_OnHandClick_Patch>(__instance.gameObject, out NitroxId id))
+        if (__instance.slotted && NitroxEntity.TryGetIdOrWarn(__instance.gameObject, out NitroxId id))
         {
             PrecursorKeyTerminalMetadata precursorKeyTerminalMetadata = new(__instance.slotted);
             Resolve<Entities>().BroadcastMetadataUpdate(id, precursorKeyTerminalMetadata);

@@ -14,7 +14,7 @@ public class PrecursorDoorway_ToggleDoor_Patch : NitroxPatch, IDynamicPatch
 
     public static void Postfix(PrecursorDoorway __instance)
     {
-        if (NitroxEntity.TryGetIdOrWarn<PrecursorDoorway_ToggleDoor_Patch>(__instance.gameObject, out NitroxId id))
+        if (NitroxEntity.TryGetIdOrWarn(__instance.gameObject, out NitroxId id))
         {
             PrecursorDoorwayMetadata precursorDoorwayMetadata = new(__instance.isOpen);
             Resolve<Entities>().BroadcastMetadataUpdate(id, precursorDoorwayMetadata);

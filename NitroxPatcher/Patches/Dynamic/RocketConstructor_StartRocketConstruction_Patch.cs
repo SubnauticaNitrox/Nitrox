@@ -38,7 +38,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         private static void Callback(Rocket rocket)
         {
-            if (NitroxEntity.TryGetIdOrWarn<RocketConstructor_StartRocketConstruction_Patch>(rocket.gameObject, out NitroxId rocketId))
+            if (NitroxEntity.TryGetIdOrWarn(rocket.gameObject, out NitroxId rocketId))
             {
                 Resolve<Entities>().EntityMetadataChanged(rocket, rocketId);
             }

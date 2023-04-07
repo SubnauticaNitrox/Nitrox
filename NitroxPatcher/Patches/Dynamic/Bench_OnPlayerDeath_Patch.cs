@@ -16,7 +16,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(Bench __instance)
         {
-            if (NitroxEntity.TryGetIdOrWarn<Bench_OnPlayerDeath_Patch>(__instance.gameObject, out NitroxId id))
+            if (NitroxEntity.TryGetIdOrWarn(__instance.gameObject, out NitroxId id))
             {
                 // Request to be downgraded to a transient lock so we can still simulate the positioning.
                 simulationOwnership.RequestSimulationLock(id, SimulationLockType.TRANSIENT);

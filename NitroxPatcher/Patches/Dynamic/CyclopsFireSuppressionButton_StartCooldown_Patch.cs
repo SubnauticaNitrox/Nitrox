@@ -18,7 +18,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(CyclopsFireSuppressionSystemButton __instance)
         {
-            if (NitroxEntity.TryGetIdOrWarn<CyclopsFireSuppressionButton_StartCooldown_Patch>(__instance.subRoot.gameObject, out NitroxId id))
+            if (NitroxEntity.TryGetIdOrWarn(__instance.subRoot.gameObject, out NitroxId id))
             {
                 NitroxServiceLocator.LocateService<Cyclops>().BroadcastActivateFireSuppression(id);
             }

@@ -14,7 +14,7 @@ public class StarshipDoor_OnDoorToggle_Patch : NitroxPatch, IDynamicPatch
 
     public static void Postfix(StarshipDoor __instance)
     {
-        if (NitroxEntity.TryGetIdOrWarn<StarshipDoor_OnDoorToggle_Patch>(__instance.gameObject, out NitroxId id))
+        if (NitroxEntity.TryGetIdOrWarn(__instance.gameObject, out NitroxId id))
         {
             StarshipDoorMetadata starshipDoorMetadata = new(__instance.doorLocked, __instance.doorOpen);
             Resolve<Entities>().BroadcastMetadataUpdate(id, starshipDoorMetadata);

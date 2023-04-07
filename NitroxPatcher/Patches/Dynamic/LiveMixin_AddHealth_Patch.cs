@@ -32,18 +32,19 @@ public class LiveMixin_AddHealth_Patch : NitroxPatch, IDynamicPatch
     public static void Postfix(float? __state, LiveMixin __instance, float healthBack)
     {
         // Did we realize a change in health?
-        if (__state.HasValue && __state.Value != __instance.health)
+        if (!__state.HasValue || __state.Value == __instance.health)
         {
-            // Let others know if we have a lock on this entity
-            if (NitroxEntity.TryGetIdOrWarn<LiveMixin_AddHealth_Patch>(__instance.gameObject, out NitroxId id) &&
-                Resolve<SimulationOwnership>().HasAnyLockType(id))
-            {
-                Optional<EntityMetadata> metadata = EntityMetadataExtractor.Extract(__instance.gameObject);
+            return;
+        }
 
-                if (metadata.HasValue)
-                {
-                    Resolve<Entities>().BroadcastMetadataUpdate(id, metadata.Value);
-                }
+        // Let others know if we have a lock on this entity
+        if (NitroxEntity.TryGetIdOrWarn(__instance.gameObject, out NitroxId id) && Resolve<SimulationOwnership>().HasAnyLockType(id))
+        {
+            Optional<EntityMetadata> metadata = EntityMetadataExtractor.Extract(__instance.gameObject);
+
+            if (metadata.HasValue)
+            {
+                Resolve<Entities>().BroadcastMetadataUpdate(id, metadata.Value);
             }
         }
     }

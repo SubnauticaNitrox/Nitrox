@@ -26,7 +26,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
             SimulationOwnership simulationOwnership = NitroxServiceLocator.LocateService<SimulationOwnership>();
 
-            if (!NitroxEntity.TryGetIdOrWarn<PropulsionCannon_GrabObject_Patch>(target, out NitroxId id))
+            if (!NitroxEntity.TryGetIdOrWarn(target, out NitroxId id))
             {
                 return true;
             }

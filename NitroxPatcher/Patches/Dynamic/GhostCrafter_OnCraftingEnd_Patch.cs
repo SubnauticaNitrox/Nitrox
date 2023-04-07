@@ -16,8 +16,7 @@ public class GhostCrafter_OnCraftingEnd_Patch : NitroxPatch, IDynamicPatch
         // The OnCraftingEnd patch is executed when crafting is complete and the item is about to be automatically
         // picked up by the nearest player.  We don't want all players to attempt to pick up the item.  Instead,
         // the crafting player will intiate a lock request when pushing the craft button - OnCraftingStart().
-        if (NitroxEntity.TryGetIdOrWarn<GhostCrafter_OnCraftingEnd_Patch>(__instance.gameObject, out NitroxId id) &&
-            Resolve<SimulationOwnership>().HasExclusiveLock(id))
+        if (NitroxEntity.TryGetIdOrWarn(__instance.gameObject, out NitroxId id) && Resolve<SimulationOwnership>().HasExclusiveLock(id))
         {
             // once an item is crafted, we no longer require an exclusive lock.
             Resolve<SimulationOwnership>().RequestSimulationLock(id, SimulationLockType.TRANSIENT);

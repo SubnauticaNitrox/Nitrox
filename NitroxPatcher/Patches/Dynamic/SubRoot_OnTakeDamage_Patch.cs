@@ -38,7 +38,7 @@ public class SubRoot_OnTakeDamage_Patch : NitroxPatch, IDynamicPatch
         // If we have lock on it, we'll notify the server that this cyclops must be destroyed
         if (__runOriginal && __instance.live.health <= 0f &&
             damageInfo.type != EntityDestroyedProcessor.DAMAGE_TYPE_RUN_ORIGINAL &&
-            NitroxEntity.TryGetIdOrWarn<SubRoot_OnTakeDamage_Patch>(__instance.gameObject, out NitroxId id))
+            NitroxEntity.TryGetIdOrWarn(__instance.gameObject, out NitroxId id))
         {
             Resolve<Vehicles>().BroadcastDestroyedVehicle(id);
         }

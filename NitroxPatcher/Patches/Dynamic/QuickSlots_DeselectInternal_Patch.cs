@@ -17,7 +17,7 @@ public class QuickSlots_DeselectInternal_Patch : NitroxPatch, IDynamicPatch
         if (____heldItem != null && ____heldItem.item) //____heldItem.item can be null on game quitting
         {
             Pickupable pickupable = ____heldItem.item;
-            if (NitroxEntity.TryGetIdOrWarn<QuickSlots_DeselectInternal_Patch>(pickupable.gameObject, out NitroxId itemId))
+            if (NitroxEntity.TryGetIdOrWarn(pickupable.gameObject, out NitroxId itemId))
             {
                 PlayerTool component = pickupable.GetComponent<PlayerTool>();
                 PlayerHeldItemChanged.ChangeType type = component ? PlayerHeldItemChanged.ChangeType.HOLSTER_AS_TOOL : PlayerHeldItemChanged.ChangeType.HOLSTER_AS_ITEM;

@@ -21,7 +21,7 @@ public class IncubatorActivationTerminal_OnHandClick_Patch : NitroxPatch, IDynam
         GameObject platform = __instance.transform.parent.gameObject;
 
         if (!__instance.incubator.powered && Inventory.main.container.Contains(TechType.PrecursorIonCrystal) &&
-            NitroxEntity.TryGetIdOrWarn<IncubatorActivationTerminal_OnHandClick_Patch>(platform, out NitroxId id))
+            NitroxEntity.TryGetIdOrWarn(platform, out NitroxId id))
         {
             IncubatorMetadata metadata = new(true, false);
             Resolve<Entities>().BroadcastMetadataUpdate(id, metadata);

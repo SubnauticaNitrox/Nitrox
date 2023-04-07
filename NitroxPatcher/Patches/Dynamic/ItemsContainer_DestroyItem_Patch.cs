@@ -45,7 +45,7 @@ public class ItemsContainer_DestroyItem_Patch : NitroxPatch, IDynamicPatch
 
     private static void Callback(Pickupable pickupable)
     {
-        if (pickupable && NitroxEntity.TryGetIdOrWarn<ItemsContainer_DestroyItem_Patch>(pickupable.gameObject, out NitroxId id))
+        if (pickupable && NitroxEntity.TryGetIdOrWarn(pickupable.gameObject, out NitroxId id))
         {
             Resolve<IPacketSender>().Send(new EntityDestroyed(id));
         }

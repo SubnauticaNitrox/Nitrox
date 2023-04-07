@@ -18,7 +18,7 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             GameObject gameObject = __instance.gameObject.FindAncestor<PrefabIdentifier>().gameObject;
 
-            if (!NitroxEntity.TryGetIdOrWarn<uGUI_SignInput_OnDeselect_Patch>(gameObject, out NitroxId id))
+            if (!NitroxEntity.TryGetIdOrWarn(gameObject, out NitroxId id))
             {
                 return;
             }

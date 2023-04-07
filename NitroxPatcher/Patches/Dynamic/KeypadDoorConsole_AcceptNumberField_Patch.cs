@@ -14,7 +14,7 @@ public class KeypadDoorConsole_AcceptNumberField_Patch : NitroxPatch, IDynamicPa
 
     public static void Postfix(KeypadDoorConsole __instance)
     {
-        if (NitroxEntity.TryGetIdOrWarn<KeypadDoorConsole_AcceptNumberField_Patch>(__instance.gameObject, out NitroxId id))
+        if (NitroxEntity.TryGetIdOrWarn(__instance.gameObject, out NitroxId id))
         {
             KeypadMetadata keypadMetadata = new(__instance.unlocked);
             Resolve<Entities>().BroadcastMetadataUpdate(id, keypadMetadata);

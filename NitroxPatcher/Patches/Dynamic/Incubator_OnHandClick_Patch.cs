@@ -32,7 +32,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
             // Request a simulation lock on the incubator so that we can authoritatively spawn the resulting creatures
             if (__instance.powered && !__instance.hatched && Inventory.main.container.Contains(TechType.HatchingEnzymes) &&
-                NitroxEntity.TryGetIdOrWarn<Incubator_OnHandClick_Patch>(platform, out NitroxId id))
+                NitroxEntity.TryGetIdOrWarn(platform, out NitroxId id))
             {
                 HandInteraction<Incubator> context = new(__instance, hand);
                 LockRequest<HandInteraction<Incubator>> lockRequest = new(id, SimulationLockType.EXCLUSIVE, ReceivedSimulationLockResponse, context);

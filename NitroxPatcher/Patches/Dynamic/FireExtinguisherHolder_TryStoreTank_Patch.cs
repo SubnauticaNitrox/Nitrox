@@ -44,12 +44,12 @@ public class FireExtinguisherHolder_TryStoreTank_Patch : NitroxPatch, IDynamicPa
 
     public static void Callback(FireExtinguisherHolder holder, Pickupable pickupable)
     {
-        if (NitroxEntity.TryGetIdOrWarn<FireExtinguisherHolder_TryStoreTank_Patch>(holder.gameObject, out NitroxId holderId))
+        if (NitroxEntity.TryGetIdOrWarn(holder.gameObject, out NitroxId holderId))
         {
             Resolve<Entities>().EntityMetadataChanged(holder, holderId);
         }
 
-        if (NitroxEntity.TryGetIdOrWarn<FireExtinguisherHolder_TryStoreTank_Patch>(pickupable.gameObject, out NitroxId pickupableId))
+        if (NitroxEntity.TryGetIdOrWarn(pickupable.gameObject, out NitroxId pickupableId))
         {
             Resolve<IPacketSender>().Send(new EntityDestroyed(pickupableId));
         }
