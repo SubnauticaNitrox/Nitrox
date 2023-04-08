@@ -34,7 +34,7 @@ public class PdaInitialSyncProcessor : InitialSyncProcessor
     private IEnumerator RestoreKnownTech(InitialPlayerSync packet)
     {
         List<TechType> knownTech = packet.PDAData.KnownTechTypes.Select(techType => techType.ToUnity()).ToList();
-        HashSet<TechType> analyzedTech = packet.PDAData.AnalyzedTechTypes.Select(techType => techType.ToUnity()).ToHashSet();
+        HashSet<TechType> analyzedTech = new(packet.PDAData.AnalyzedTechTypes.Select(techType => techType.ToUnity()));
         Log.Info($"Received initial sync packet with {knownTech.Count} KnownTech.knownTech types and {analyzedTech.Count} KnownTech.analyzedTech types.");
 
         using (PacketSuppressor<KnownTechEntryAdd>.Suppress())
@@ -81,7 +81,7 @@ public class PdaInitialSyncProcessor : InitialSyncProcessor
         {
             fragments = pdaData.ScannerFragments.ToDictionary(m => m.ToString(), m => 1f),
             partial = pdaData.ScannerPartial.Select(entry => entry.ToUnity()).ToList(),
-            complete = pdaData.ScannerComplete.Select(techType => techType.ToUnity()).ToHashSet()
+            complete = new HashSet<TechType>(pdaData.ScannerComplete.Select(techType => techType.ToUnity()))
         };
         PDAScanner.Deserialize(data);
         yield break;
