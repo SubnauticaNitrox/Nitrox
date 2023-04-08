@@ -26,7 +26,7 @@ public class QuickSlots_Bind_Patch : NitroxPatch, IDynamicPatch
             }
             else
             {
-                slotItemIds[i] = new OptionalEmpty();
+                slotItemIds[i] = Optional.Empty;
             }
         }
 
