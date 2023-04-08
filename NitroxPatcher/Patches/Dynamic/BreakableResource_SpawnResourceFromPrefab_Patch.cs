@@ -12,7 +12,6 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 using static System.Reflection.Emit.OpCodes;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -29,10 +28,6 @@ internal class BreakableResource_SpawnResourceFromPrefab_Patch : NitroxPatch, ID
         Ldc_I4_0
     };
 
-    public static readonly object INJECTION_OPERAND = Reflect.Method(() => BreakableResource.SpawnResourceFromPrefab(default, default, default));
-
-    
-
     public IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
     {
         static IEnumerable<CodeInstruction> InsertCallback(string label, CodeInstruction _)
@@ -41,7 +36,7 @@ internal class BreakableResource_SpawnResourceFromPrefab_Patch : NitroxPatch, ID
             {
                 case "Callback":
                     yield return new(Ldloc_1);
-                    yield return new(Call, Reflect.Method(() => Callback(default));
+                    yield return new(Call, Reflect.Method(() => Callback(default)));
                     break;
             }
         }
