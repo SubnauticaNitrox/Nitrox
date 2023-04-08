@@ -16,11 +16,11 @@ namespace NitroxClient.Communication
             this.networkDebugger = networkDebugger;
         }
 
-        public void PacketReceived(Packet packet, int size)
+        public void PacketReceived(Packet packet, int byteSize)
         {
             lock (receivedPackets)
             {
-                networkDebugger?.PacketReceived(packet, size);
+                networkDebugger?.PacketReceived(packet, byteSize);
                 receivedPackets.Enqueue(packet);
             }
         }
