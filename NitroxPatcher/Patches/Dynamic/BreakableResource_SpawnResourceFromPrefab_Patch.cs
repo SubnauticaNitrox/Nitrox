@@ -22,7 +22,7 @@ internal class BreakableResource_SpawnResourceFromPrefab_Patch : NitroxPatch, ID
     public static readonly MethodInfo TARGET_METHOD_ORIGINAL = Reflect.Method((BreakableResource t) => t.SpawnResourceFromPrefab(default));
     public static readonly MethodInfo TARGET_METHOD = AccessTools.EnumeratorMoveNext(TARGET_METHOD_ORIGINAL);
 
-    private static readonly InstructionsPattern injectionInstruction = new()
+    private static readonly InstructionsPattern injectionPattern = new()
     {
         Reflect.Method((Rigidbody r) => r.AddForce(default(Vector3))),
         { Ldloc_1, "Callback" },
@@ -41,10 +41,11 @@ internal class BreakableResource_SpawnResourceFromPrefab_Patch : NitroxPatch, ID
             {
                 case "Callback":
                     yield return new(Ldloc_1);
-                    yield return new(Call, Reflect.Method(() => ));
+                    yield return new(Call, Reflect.Method(() => Callback(default));
                     break;
             }
         }
+        return instructions.Transform(injectionPattern, InsertCallback);
     }
 
     private static void Callback(GameObject __instance)
