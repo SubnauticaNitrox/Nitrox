@@ -19,7 +19,6 @@ using NitroxServer_Subnautica;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Bases;
 using NitroxServer.GameLogic.Entities;
-using NitroxServer.GameLogic.Items;
 using NitroxServer.GameLogic.Players;
 using NitroxServer.GameLogic.Unlockables;
 using NitroxServer.Serialization.World;
@@ -71,12 +70,6 @@ public class WorldPersistenceTest
     {
         Assert.IsTrue(worldData.WorldData.ParsedBatchCells.SequenceEqual(worldDataAfter.WorldData.ParsedBatchCells));
         Assert.AreEqual(worldData.WorldData.Seed, worldDataAfter.WorldData.Seed);
-    }
-
-    [DataTestMethod, DynamicWorldDataAfter]
-    public void InventoryDataTest(PersistedWorldData worldDataAfter, string serializerName)
-    {
-        AssertHelper.IsListEqual(worldData.WorldData.InventoryData.StorageSlotItems.OrderBy(x => x.ItemId), worldDataAfter.WorldData.InventoryData.StorageSlotItems.OrderBy(x => x.ItemId), ItemDataTest);
     }
 
     private static void ItemDataTest(ItemData itemData, ItemData itemDataAfter)
@@ -520,10 +513,6 @@ public class WorldPersistenceTest
                         AuroraCountdownTime = 10000,
                         AuroraWarningTime = 20
                     },
-                },
-                InventoryData = new InventoryData()
-                {
-                    StorageSlotItems = new List<ItemData>() { new BasicItemData(new NitroxId(), new NitroxId(), new byte[] { 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21 }) }
                 },
                 ParsedBatchCells = new List<NitroxInt3>() { new NitroxInt3(10, 1, 10), new NitroxInt3(15, 4, 12) },
                 Seed = "NITROXSEED"

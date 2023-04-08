@@ -8,7 +8,7 @@ namespace NitroxClient.MonoBehaviours
         private ISubThrottleHandler[] subThrottleHandlers;
         private float previousAbsYaw;
 
-        internal RemotePlayer CurrentPlayer { get; set; }
+        public RemotePlayer CurrentPlayer { get; set; }
 
         protected override void Awake()
         {

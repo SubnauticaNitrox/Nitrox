@@ -37,8 +37,9 @@ namespace NitroxClient.GameLogic
             entitySpawnersByType[typeof(PrefabChildEntity)] = new PrefabChildEntitySpawner();
             entitySpawnersByType[typeof(PathBasedChildEntity)] = new PathBasedChildEntitySpawner();
             entitySpawnersByType[typeof(InstalledModuleEntity)] = new InstalledModuleEntitySpawner();
+            entitySpawnersByType[typeof(InstalledBatteryEntity)] = new InstalledBatteryEntitySpawner();
             entitySpawnersByType[typeof(InventoryEntity)] = new InventoryEntitySpawner();
-            entitySpawnersByType[typeof(InventoryItemEntity)] = new InventoryItemEntitySpawner(packetSender);
+            entitySpawnersByType[typeof(InventoryItemEntity)] = new InventoryItemEntitySpawner();
             entitySpawnersByType[typeof(WorldEntity)] = new WorldEntitySpawner(playerManager, localPlayer);
             entitySpawnersByType[typeof(PlaceholderGroupWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
             entitySpawnersByType[typeof(EscapePodWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
@@ -118,7 +119,7 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        private IEnumerator SpawnAsync(Entity entity)
+        public IEnumerator SpawnAsync(Entity entity)
         {
             MarkAsSpawned(entity);
 
@@ -135,9 +136,7 @@ namespace NitroxClient.GameLogic
                     yield return SpawnChildren(entity);
                 }
 
-                yield return AwaitAnyRequiredEntitySetup(gameObject.Value);
-
-                // Apply entity metadat after children have been spawned.  This will allow metadata processors to
+                // Apply entity metadata after children have been spawned.  This will allow metadata processors to
                 // interact with children if necessary (for example, PlayerMetadata which equips inventory items).
                 EntityMetadataProcessor.ApplyMetadata(gameObject.Value, entity.Metadata);
             }
@@ -193,24 +192,6 @@ namespace NitroxClient.GameLogic
             }
 
             pendingEntities.Add(entity);
-        }
-
-        // Nitrox uses entity spawners to generate the various gameObjects in the world. These spawners are invoked using 
-        // IEnumerator (async) and levarage async Prefab/CraftData instantiation functions.  However, even though these
-        // functions are successful, it doesn't mean the entity is fully setup.  Subnautica is known to spawn coroutines 
-        // in the start() method of objects to spawn prefabs or other objects. An example is anything with a battery, 
-        // which gets configured after the fact.  In most cases, Nitrox needs to wait for objets to be fully spawned in 
-        // order to setup ids.  Historically we would persist metadata and use a patch to later tag the item, which gets
-        // messy.  This function will allow us wait on any type of instantiation necessary; this can be optimized later
-        // to move on to other spawning and come back when this item is ready.  
-        private IEnumerator AwaitAnyRequiredEntitySetup(GameObject gameObject)
-        {
-            EnergyMixin energyMixin = gameObject.GetComponent<EnergyMixin>();
-
-            if (energyMixin)
-            {
-                yield return new WaitUntil(() => energyMixin.battery != null);
-            }
         }
 
         // Entites can sometimes be spawned as one thing but need to be respawned later as another.  For example, a flare

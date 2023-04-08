@@ -362,7 +362,7 @@ public class RemotePlayerCinematicController : MonoBehaviour, IManagedUpdateBeha
         float num = Time.time - timeStateChanged;
         float timedOutScalar;
         Transform transform = null;
-        if (player != null)
+        if (player != null && player.Body)
         {
             transform = player.Body.GetComponent<Transform>();
         }
@@ -372,7 +372,7 @@ public class RemotePlayerCinematicController : MonoBehaviour, IManagedUpdateBeha
         {
             case State.In:
                 timedOutScalar = interpolationTime != 0f && isVrAnimationMode ? Mathf.Clamp01(num / interpolationTime) : 1f;
-                if (player != null)
+                if (player != null && transform)
                 {
                     transform.position = Vector3.Lerp(playerFromPosition, animatedTransform.position, timedOutScalar);
                     transform.rotation = Quaternion.Slerp(playerFromRotation, animatedTransform.rotation, timedOutScalar);
@@ -403,7 +403,7 @@ public class RemotePlayerCinematicController : MonoBehaviour, IManagedUpdateBeha
                 break;
             case State.Out:
                 timedOutScalar = interpolationTimeOut != 0f && isVrAnimationMode ? Mathf.Clamp01(num / interpolationTimeOut) : 1f;
-                if (player != null)
+                if (player != null && transform)
                 {
                     transform.position = Vector3.Lerp(playerFromPosition, endTransform.position, timedOutScalar);
                     transform.rotation = Quaternion.Slerp(playerFromRotation, endTransform.rotation, timedOutScalar);

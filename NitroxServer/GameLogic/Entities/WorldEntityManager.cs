@@ -18,7 +18,9 @@ namespace NitroxServer.GameLogic.Entities
         /// <summary>
         ///     Phasing entities can disappear if you go out of range.
         /// </summary>
-        private readonly Dictionary<AbsoluteEntityCell, List<WorldEntity>> phasingEntitiesByAbsoluteCell;
+        private readonly Dictionary<NitroxInt3, List<WorldEntity>> phasingEntitiesByBatchId;
+
+        private readonly Dictionary<AbsoluteEntityCell, List<WorldEntity>> phasingEntitiesByCellId;
 
         /// <summary>
         ///     Global root entities that are always visible.
@@ -34,26 +36,15 @@ namespace NitroxServer.GameLogic.Entities
             globalRootEntitiesById = worldEntities.Where(entity => entity.ExistsInGlobalRoot)
                                                   .ToDictionary(entity => entity.Id);
 
-            phasingEntitiesByAbsoluteCell = worldEntities.Where(entity => !entity.ExistsInGlobalRoot)
-                                                         .GroupBy(entity => entity.AbsoluteEntityCell)
-                                                         .ToDictionary(group => group.Key, group => group.ToList());
+            phasingEntitiesByBatchId = worldEntities.Where(entity => !entity.ExistsInGlobalRoot)
+                                                    .GroupBy(entity => entity.AbsoluteEntityCell.BatchId)
+                                                    .ToDictionary(group => group.Key, group => group.ToList());
+
+            phasingEntitiesByCellId = worldEntities.Where(entity => !entity.ExistsInGlobalRoot)
+                                                   .GroupBy(entity => entity.AbsoluteEntityCell)
+                                                   .ToDictionary(group => group.Key, group => group.ToList());
             this.entityRegistry = entityRegistry;
             this.batchEntitySpawner = batchEntitySpawner;
-        }
-
-        public List<WorldEntity> GetVisibleEntities(AbsoluteEntityCell[] cells)
-        {
-            LoadUnspawnedEntities(cells);
-
-            List<WorldEntity> entities = new List<WorldEntity>();
-
-            foreach (AbsoluteEntityCell cell in cells)
-            {
-                List<WorldEntity> cellEntities = GetEntities(cell);
-                entities.AddRange(cellEntities.Where(entity => cell.Level <= entity.Level));
-            }
-
-            return entities;
         }
 
         public List<WorldEntity> GetGlobalRootEntities()
@@ -64,15 +55,30 @@ namespace NitroxServer.GameLogic.Entities
             }
         }
 
-        public List<WorldEntity> GetEntities(AbsoluteEntityCell absoluteEntityCell)
+        public List<WorldEntity> GetEntities(NitroxInt3 batchId)
         {
             List<WorldEntity> result;
 
-            lock (phasingEntitiesByAbsoluteCell)
+            lock (phasingEntitiesByBatchId)
             {
-                if (!phasingEntitiesByAbsoluteCell.TryGetValue(absoluteEntityCell, out result))
+                if (!phasingEntitiesByBatchId.TryGetValue(batchId, out result))
                 {
-                    result = phasingEntitiesByAbsoluteCell[absoluteEntityCell] = new List<WorldEntity>();
+                    result = phasingEntitiesByBatchId[batchId] = new List<WorldEntity>();
+                }
+            }
+
+            return result;
+        }
+
+        public List<WorldEntity> GetEntities(AbsoluteEntityCell cellId)
+        {
+            List<WorldEntity> result;
+
+            lock (phasingEntitiesByCellId)
+            {
+                if (!phasingEntitiesByCellId.TryGetValue(cellId, out result))
+                {
+                    result = phasingEntitiesByCellId[cellId] = new List<WorldEntity>();
                 }
             }
 
@@ -122,11 +128,21 @@ namespace NitroxServer.GameLogic.Entities
             }
             else
             {
-                lock (phasingEntitiesByAbsoluteCell)
+                lock (phasingEntitiesByBatchId)
                 {
-                    if (!phasingEntitiesByAbsoluteCell.TryGetValue(entity.AbsoluteEntityCell, out List<WorldEntity> phasingEntitiesInCell))
+                    if (!phasingEntitiesByBatchId.TryGetValue(entity.AbsoluteEntityCell.BatchId, out List<WorldEntity> phasingEntitiesInBatch))
                     {
-                        phasingEntitiesInCell = phasingEntitiesByAbsoluteCell[entity.AbsoluteEntityCell] = new List<WorldEntity>();
+                        phasingEntitiesInBatch = phasingEntitiesByBatchId[entity.AbsoluteEntityCell.BatchId] = new List<WorldEntity>();
+                    }
+
+                    phasingEntitiesInBatch.Add(entity);
+                }
+
+                lock (phasingEntitiesByCellId)
+                {
+                    if (!phasingEntitiesByCellId.TryGetValue(entity.AbsoluteEntityCell, out List<WorldEntity> phasingEntitiesInCell))
+                    {
+                        phasingEntitiesInCell = phasingEntitiesByCellId[entity.AbsoluteEntityCell] = new List<WorldEntity>();
                     }
 
                     phasingEntitiesInCell.Add(entity);
@@ -147,7 +163,7 @@ namespace NitroxServer.GameLogic.Entities
                 {
                     for (int z = 0; z < map.DimensionsInBatches.Z; z++)
                     {
-                        int spawned = LoadFromBatch(new(x, y, z), true);
+                        int spawned = LoadUnspawnedEntities(new(x, y, z), true);
 
                         Log.Debug($"Loaded {spawned} entities from batch ({x}, {y}, {z})");
 
@@ -162,17 +178,12 @@ namespace NitroxServer.GameLogic.Entities
             }
         }
 
-        private void LoadUnspawnedEntities(AbsoluteEntityCell[] cells)
+        public bool IsBatchSpawned(NitroxInt3 batchId)
         {
-            IEnumerable<NitroxInt3> distinctBatchIds = cells.Select(cell => cell.BatchId).Distinct();
-
-            foreach (NitroxInt3 batchId in distinctBatchIds)
-            {
-                LoadFromBatch(batchId, false);
-            }
+            return batchEntitySpawner.IsBatchSpawned(batchId);
         }
 
-        private int LoadFromBatch(NitroxInt3 batchId, bool suppressLogs)
+        public int LoadUnspawnedEntities(NitroxInt3 batchId, bool suppressLogs)
         {
             List<Entity> spawnedEntities = batchEntitySpawner.LoadUnspawnedEntities(batchId, suppressLogs);
 
@@ -200,6 +211,9 @@ namespace NitroxServer.GameLogic.Entities
 
             foreach (WorldEntity entity in nonCellRootEntities)
             {
+                List<WorldEntity> entitiesInBatch = GetEntities(entity.AbsoluteEntityCell.BatchId);
+                entitiesInBatch.Add(entity);
+
                 List<WorldEntity> entitiesInCell = GetEntities(entity.AbsoluteEntityCell);
                 entitiesInCell.Add(entity);
             }
@@ -214,7 +228,19 @@ namespace NitroxServer.GameLogic.Entities
                 return; // We don't care what cell a global root entity resides in.  Only phasing entities.
             }
 
-            lock (phasingEntitiesByAbsoluteCell)
+            if (oldCell.BatchId != newCell.BatchId)
+            {
+                lock (phasingEntitiesByBatchId)
+                {
+                    List<WorldEntity> oldList = GetEntities(oldCell.BatchId);
+                    oldList.Remove(entity);
+
+                    List<WorldEntity> newList = GetEntities(newCell.BatchId);
+                    newList.Add(entity);
+                }
+            }
+
+            lock (phasingEntitiesByCellId)
             {
                 List<WorldEntity> oldList = GetEntities(oldCell);
                 oldList.Remove(entity);
@@ -235,11 +261,19 @@ namespace NitroxServer.GameLogic.Entities
             }
             else
             {
-                lock (phasingEntitiesByAbsoluteCell)
+                lock (phasingEntitiesByBatchId)
                 {
-                    if (phasingEntitiesByAbsoluteCell.TryGetValue(entity.AbsoluteEntityCell, out List<WorldEntity> entities))
+                    if (phasingEntitiesByBatchId.TryGetValue(entity.AbsoluteEntityCell.BatchId, out List<WorldEntity> batchEntities))
                     {
-                        entities.Remove(entity);
+                        batchEntities.Remove(entity);
+                    }
+                }
+
+                lock (phasingEntitiesByCellId)
+                {
+                    if (phasingEntitiesByCellId.TryGetValue(entity.AbsoluteEntityCell, out List<WorldEntity> cellEntities))
+                    {
+                        cellEntities.Remove(entity);
                     }
                 }
             }

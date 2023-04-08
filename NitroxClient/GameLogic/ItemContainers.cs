@@ -2,12 +2,16 @@ using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.PlayerLogic;
+using NitroxClient.GameLogic.Spawning.Metadata.Extractor;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
+using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using UnityEngine;
+using NitroxModel_Subnautica.DataStructures;
 
 namespace NitroxClient.GameLogic
 {
@@ -61,6 +65,18 @@ namespace NitroxClient.GameLogic
                 container.UnsafeAdd(new InventoryItem(pickupable));
                 Log.Debug($"Received: Added item {pickupable.GetTechType()} to container {owner.Value.GetFullHierarchyPath()}");
             }
+        }
+
+        public void BroadcastBatteryAdd(GameObject gameObject, GameObject parent, TechType techType)
+        {
+            NitroxId id = NitroxEntity.GetId(gameObject);
+            NitroxId parentId = NitroxEntity.GetId(parent);
+            Optional<EntityMetadata> metadata = EntityMetadataExtractor.Extract(gameObject);
+
+            InstalledBatteryEntity installedBattery = new(id, techType.ToDto(), metadata.OrNull(), parentId, new());
+
+            EntitySpawnedByClient spawnedPacket = new EntitySpawnedByClient(installedBattery);
+            packetSender.Send(spawnedPacket);
         }
     }
 }

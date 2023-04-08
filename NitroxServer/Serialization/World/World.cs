@@ -3,7 +3,6 @@ using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Bases;
 using NitroxServer.GameLogic.Entities;
 using NitroxServer.GameLogic.Entities.Spawning;
-using NitroxServer.GameLogic.Items;
 
 namespace NitroxServer.Serialization.World
 {
@@ -20,7 +19,6 @@ namespace NitroxServer.Serialization.World
         public WorldEntityManager WorldEntityManager { get; set; }
         public BaseManager BaseManager { get; set; }
         public StoryManager StoryManager { get; set; }
-        public InventoryManager InventoryManager { get; set; }
         public GameData GameData { get; set; }
         public ServerGameMode GameMode { get; set; }
         public string Seed { get; set; }

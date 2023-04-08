@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using ProtoBuf;
 using ProtoBuf.Meta;
+using UnityEngine;
 
 namespace NitroxClient.Helpers
 {
@@ -12,14 +13,11 @@ namespace NitroxClient.Helpers
         public readonly RuntimeTypeModel model;
         public readonly Dictionary<Type, int> NitroxTypes = new Dictionary<Type, int>();
 
-        private readonly Dictionary<Type, int> knownTypes;
-
         protected RuntimeTypeModel Model => model;
 
         public NitroxProtobufSerializer(params string[] assemblies)
         {
             model = TypeModel.Create();
-            knownTypes = (Dictionary<Type, int>)typeof(ProtobufSerializerPrecompiled).GetField("knownTypes", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
 
             foreach (string assembly in assemblies)
             {
@@ -41,8 +39,13 @@ namespace NitroxClient.Helpers
         {
             // As of the latest protobuf update they will automatically register detected attributes.
             model.Add(type, true);
-            knownTypes[type] = int.MaxValue; // UWE precompiled is going to pass everything to us
+            ProtobufSerializerPrecompiled.knownTypes[type] = int.MaxValue; // UWE precompiled is going to pass everything to us
             NitroxTypes[type] = int.MaxValue;
+
+            if (type.IsSubclassOf(typeof(MonoBehaviour))) // Add Nitrox MonoBehaviours to the Component whitelist
+            {
+                ProtobufSerializer.componentWhitelist.Add(type.FullName);
+            }
         }
 
         public void Serialize(Stream stream, object o)

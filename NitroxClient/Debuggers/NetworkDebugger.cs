@@ -16,8 +16,8 @@ namespace NitroxClient.Debuggers
 
         private readonly List<string> filter = new()
         {
-            nameof(PlayerMovement), nameof(EntityTransformUpdates), nameof(PlayerStats), nameof(CellEntities), nameof(VehicleMovement), nameof(PlayerCinematicControllerCall),
-            nameof(PlayFMODAsset), nameof(PlayFMODCustomEmitter), nameof(PlayFMODStudioEmitter),  nameof(PlayFMODCustomLoopingEmitter)
+            nameof(PlayerMovement), nameof(EntityTransformUpdates), nameof(PlayerStats), nameof(SpawnEntities), nameof(VehicleMovement), nameof(PlayerCinematicControllerCall),
+            nameof(PlayFMODAsset), nameof(PlayFMODCustomEmitter), nameof(PlayFMODStudioEmitter), nameof(PlayFMODCustomLoopingEmitter), nameof(SimulationOwnershipChange)
         };
         private readonly List<PacketDebugWrapper> packets = new List<PacketDebugWrapper>(PACKET_STORED_COUNT);
 
