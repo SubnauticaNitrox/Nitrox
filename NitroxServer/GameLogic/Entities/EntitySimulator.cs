@@ -109,7 +109,7 @@ namespace NitroxServer.GameLogic.Entities
 
         public IEnumerable<NitroxId> AssignGlobalRootEntities(Player player)
         {
-            List<WorldEntity> globalRootEntities = new(worldEntityManager.GetGlobalRootEntities().OfType<WorldEntity>());
+            List<WorldEntity> globalRootEntities = new(worldEntityManager.GetGlobalRootEntities());
             IEnumerable<WorldEntity> entities = globalRootEntities.Where(entity => simulationOwnershipData.TryToAcquire(entity.Id, player, SimulationLockType.TRANSIENT));
             foreach (WorldEntity entity in entities)
             {

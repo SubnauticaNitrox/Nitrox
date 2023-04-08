@@ -24,7 +24,7 @@ public class GhostEntitySpawner : EntitySpawner<GhostEntity>
             yield return null;
         }
 
-        yield return NitroxBuild.RestoreGhost(LargeWorldStreamer.main.globalRoot.transform, entity.SavedGhost, result);
+        yield return NitroxBuild.RestoreGhost(LargeWorldStreamer.main.globalRoot.transform, entity, result);
     }
 
     public override bool SpawnsOwnChildren(GhostEntity entity) => true;

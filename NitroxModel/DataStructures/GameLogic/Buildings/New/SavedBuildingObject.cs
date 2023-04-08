@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using NitroxModel.DataStructures.GameLogic.Buildings.New.Metadata;
-using NitroxModel.DataStructures.GameLogic.Entities;
+using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel.DataStructures.Unity;
 
 namespace NitroxModel.DataStructures.GameLogic.Buildings.New;
@@ -71,13 +71,13 @@ public class SavedBuild
 public class SavedGlobalRoot
 {
     [DataMember(Order = 1)]
-    public List<SavedBuild> Builds = new();
+    public List<BuildEntity> Builds = new();
     
     [DataMember(Order = 2)]
-    public List<SavedModule> Modules = new();
+    public List<ModuleEntity> Modules = new();
     
     [DataMember(Order = 3)]
-    public List<SavedGhost> Ghosts = new();
+    public List<GhostEntity> Ghosts = new();
 }
 
 [DataContract]

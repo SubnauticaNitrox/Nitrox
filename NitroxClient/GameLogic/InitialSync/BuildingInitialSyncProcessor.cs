@@ -39,40 +39,7 @@ namespace NitroxClient.GameLogic.InitialSync
 
         public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
         {
-            yield return BuildingTester.Main.IsAvailable();
             yield break;
-
-            ErrorMessage.AddMessage("Loading base");
-            Log.Debug("Start");
-            DateTimeOffset begin = DateTimeOffset.Now;
-            Log.Debug($"Loading {NitroxGlobalRoot.ToString(packet.SavedGlobalRoot)}");
-            yield return BuildingTester.Main.LoadGlobalRootAsync(packet.SavedGlobalRoot);
-            DateTimeOffset end = DateTimeOffset.Now;
-            Log.Debug("End");
-            ErrorMessage.AddMessage($"Finished loading base, took {(end - begin).TotalMilliseconds}ms");
-            yield break;
-
-            completed = false;
-
-            List<BasePiece> basePieces = packet.BasePieces;
-            Log.Info($"Received initial sync packet with {basePieces.Count} base pieces");
-
-            if (basePieces.Count == 0)
-            {
-                completed = true;
-            }
-            else
-            {
-                IEnumerable<BasePiece> prioritizedBasePieces = basePieceSpawnPrioritizer.OrderBasePiecesByPriority(basePieces);
-                QueueUpPieces(prioritizedBasePieces);
-                ThrottledBuilder.Main.QueueDrained += FinishedCompletedBuildings;
-            }
-            int totalPieces = buildEventQueue.Count;
-
-            yield return new WaitUntil(() => {
-                UpdateProgress(totalPieces, waitScreenItem);
-                return completed;
-            });
         }
 
         private void QueueUpPieces(IEnumerable<BasePiece> basePieces)

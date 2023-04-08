@@ -76,7 +76,7 @@ namespace NitroxServer.GameLogic.Entities
             }
 
             AddToParent(entity);
-            AddEntitiesIgnoringDuplicate(entity.ChildEntities);
+            AddEntitiesIgnoringDuplicate(entity.ChildEntities, true);
         }
 
         public void AddEntities(IEnumerable<Entity> entities)
@@ -92,10 +92,15 @@ namespace NitroxServer.GameLogic.Entities
         /// example a dropped InventoryEntity turns into a WorldEntity but keeps its 
         /// battery inside (already known). 
         /// </summary>
-        public void AddEntitiesIgnoringDuplicate(IEnumerable<Entity> entities)
+        public void AddEntitiesIgnoringDuplicate(IEnumerable<Entity> entities, bool addOrUpdate = false)
         {
             foreach (Entity entity in entities)
             {
+                if (addOrUpdate)
+                {
+                    AddOrUpdate(entity);
+                    continue;
+                }
                 entitiesById.TryAdd(entity.Id, entity);
                 AddEntitiesIgnoringDuplicate(entity.ChildEntities);
             }

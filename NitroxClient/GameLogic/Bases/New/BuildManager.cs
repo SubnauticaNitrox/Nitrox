@@ -1,11 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Buildings.New;
+using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel.DataStructures.Util;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
@@ -71,6 +74,10 @@ public static class BuildManager
                     return true;
                 }
                 break;
+            case BaseAddMapRoomGhost mapRoomGhost:
+                // TODO: Fix MapRoom case
+                face = new(mapRoomGhost.targetOffset, Base.Direction.East);
+                return true;
         }
 
         face = default;
@@ -85,6 +92,7 @@ public static class BuildManager
         // Only three types of ghost which spawn a module
         if ((baseGhost is BaseAddFaceGhost faceGhost && faceGhost.modulePrefab) ||
             (baseGhost is BaseAddModuleGhost moduleGhost && moduleGhost.modulePrefab) ||
+            baseGhost is BaseAddMapRoomGhost mapRoomGhost ||
             isWaterPark)
         {
             if (TryGetGhostFace(baseGhost, out Base.Face ghostFace))
@@ -212,34 +220,56 @@ public static class NitroxGlobalRoot
 
 public static class NitroxBuild
 {
-    public static SavedBuild From(Base targetBase)
+    public static BuildEntity From(Base targetBase)
     {
-        SavedBuild savedBuild = new();
+        BuildEntity buildEntity = BuildEntity.MakeEmpty();
         if (NitroxEntity.TryGetEntityFrom(targetBase.gameObject, out NitroxEntity entity))
         {
-            savedBuild.NitroxId = entity.Id;
+            buildEntity.Id = entity.Id;
         }
 
-        savedBuild.Position = targetBase.transform.position.ToDto();
-        savedBuild.Rotation = targetBase.transform.rotation.ToDto();
-        savedBuild.LocalScale = targetBase.transform.localScale.ToDto();
+        buildEntity.Position = targetBase.transform.position.ToDto();
+        buildEntity.Rotation = targetBase.transform.rotation.ToDto();
+        buildEntity.LocalScale = targetBase.transform.localScale.ToDto();
 
-        savedBuild.Base = NitroxBase.From(targetBase);
-
-        savedBuild.InteriorPieces = SaveInteriorPieces(targetBase);
-        savedBuild.Modules = SaveModules(targetBase.transform);
-        savedBuild.Ghosts = SaveGhosts(targetBase.transform);
-
-        if (targetBase.TryGetComponent(out MoonpoolManager nitroxMoonpool))
-        {
-            savedBuild.Moonpools = nitroxMoonpool.GetSavedMoonpools();
-        }
-        return savedBuild;
+        buildEntity.SavedBase = NitroxBase.From(targetBase);
+        buildEntity.ChildEntities.AddRange(GetChildEntities(targetBase, entity.Id));
+        
+        return buildEntity;
     }
 
-    public static IEnumerator CreateBuild(SavedBuild savedBuild, TaskResult<Optional<GameObject>> result = null)
+    public static List<Entity> GetChildEntities(Base targetBase, NitroxId baseId)
     {
-        GameObject newBase = UnityEngine.Object.Instantiate(BaseGhost._basePrefab, LargeWorldStreamer.main.globalRoot.transform, savedBuild.Position.ToUnity(), savedBuild.Rotation.ToUnity(), savedBuild.LocalScale.ToUnity(), false);
+        List<Entity> childEntities = new();
+        foreach (InteriorPieceEntity interiorPieceEntity in SaveInteriorPieces(targetBase))
+        {
+            childEntities.Add(interiorPieceEntity);
+        }
+        foreach (ModuleEntity moduleEntity in SaveModules(targetBase.transform))
+        {
+            childEntities.Add(moduleEntity);
+        }
+        foreach (GhostEntity ghostEntity in SaveGhosts(targetBase.transform))
+        {
+            childEntities.Add(ghostEntity);
+        }
+        if (targetBase.TryGetComponent(out MoonpoolManager nitroxMoonpool))
+        {
+            foreach (MoonpoolEntity moonpoolEntity in nitroxMoonpool.GetSavedMoonpools())
+            {
+                childEntities.Add(moonpoolEntity);
+            }
+        }
+        foreach (Entity childEntity in childEntities)
+        {
+            childEntity.ParentId = baseId;
+        }
+        return childEntities;
+    }
+    
+    public static IEnumerator CreateBuild(BuildEntity buildEntity, TaskResult<Optional<GameObject>> result = null)
+    {
+        GameObject newBase = UnityEngine.Object.Instantiate(BaseGhost._basePrefab, LargeWorldStreamer.main.globalRoot.transform, buildEntity.Position.ToUnity(), buildEntity.Rotation.ToUnity(), buildEntity.LocalScale.ToUnity(), false);
         if (LargeWorld.main)
         {
             LargeWorld.main.streamer.cellManager.RegisterEntity(newBase);
@@ -250,18 +280,17 @@ public static class NitroxBuild
             Log.Debug("No Base component found");
             yield break;
         }
-        yield return savedBuild.ApplyToAsync(@base);
+        yield return buildEntity.ApplyToAsync(@base);
         newBase.SetActive(true);
-        yield return savedBuild.RestoreGhosts(@base);
+        yield return buildEntity.RestoreGhosts(@base);
         @base.OnProtoDeserialize(null);
         @base.FinishDeserialization();
-        yield return savedBuild.RestoreMoonpools(@base);
         result?.Set(newBase);
     }
 
-    private static List<SavedInteriorPiece> SaveInteriorPieces(Base targetBase)
+    private static List<InteriorPieceEntity> SaveInteriorPieces(Base targetBase)
     {
-        List<SavedInteriorPiece> interiorPieces = new();
+        List<InteriorPieceEntity> interiorPieces = new();
         foreach (IBaseModule module in targetBase.GetComponentsInChildren<IBaseModule>(true))
         {
             // IBaseModules without a NitroxEntity are related to BaseDeconstructable and are saved with their ghost
@@ -275,50 +304,50 @@ public static class NitroxBuild
         return interiorPieces;
     }
 
-    public static List<SavedModule> SaveModules(Transform parent)
+    public static List<ModuleEntity> SaveModules(Transform parent)
     {
-        List<SavedModule> savedModules = new();
+        List<ModuleEntity> moduleEntities = new();
         foreach (Transform transform in parent)
         {
             if (transform.TryGetComponent(out Constructable constructable) && constructable is not ConstructableBase)
             {
                 Log.Debug($"Constructable found: {constructable.name}");
-                savedModules.Add(NitroxModule.From(constructable));
+                moduleEntities.Add(NitroxModule.From(constructable));
             }
         }
-        return savedModules;
+        return moduleEntities;
     }
 
-    public static List<SavedGhost> SaveGhosts(Transform parent)
+    public static List<GhostEntity> SaveGhosts(Transform parent)
     {
-        List<SavedGhost> savedGhosts = new();
+        List<GhostEntity> ghostEntities = new();
         foreach (Transform transform in parent)
         {
             if (transform.TryGetComponent(out Constructable constructable) && constructable is ConstructableBase constructableBase)
             {
                 Log.Debug($"BaseConstructable found: {constructableBase.name}");
-                savedGhosts.Add(NitroxGhost.From(constructableBase));
+                ghostEntities.Add(NitroxGhost.From(constructableBase));
             }
         }
-        return savedGhosts;
+        return ghostEntities;
     }
 
-    public static void ApplyTo(this SavedBuild savedBuild, Base @base)
+    public static void ApplyTo(this BuildEntity buildEntity, Base @base)
     {
-        NitroxEntity.SetNewId(@base.gameObject, savedBuild.NitroxId);
-        savedBuild.Base.ApplyTo(@base);
+        NitroxEntity.SetNewId(@base.gameObject, buildEntity.Id);
+        buildEntity.SavedBase.ApplyTo(@base);
     }
 
-    public static IEnumerator ApplyToAsync(this SavedBuild savedBuild, Base @base)
+    public static IEnumerator ApplyToAsync(this BuildEntity buildEntity, Base @base)
     {
-        savedBuild.ApplyTo(@base);
-        yield return savedBuild.RestoreInteriorPieces(@base);
-        yield return savedBuild.RestoreModules(@base);
+        buildEntity.ApplyTo(@base);
+        yield return buildEntity.RestoreInteriorPieces(@base);
+        yield return buildEntity.RestoreModules(@base);
     }
 
-    public static IEnumerator RestoreInteriorPieces(this SavedBuild savedBuild, Base @base)
+    public static IEnumerator RestoreInteriorPieces(this BuildEntity buildEntity, Base @base)
     {
-        foreach (SavedInteriorPiece interiorPiece in savedBuild.InteriorPieces)
+        foreach (InteriorPieceEntity interiorPiece in buildEntity.ChildEntities.OfType<InteriorPieceEntity>())
         {
             IPrefabRequest request = PrefabDatabase.GetPrefabAsync(interiorPiece.ClassId);
             yield return request;
@@ -332,82 +361,82 @@ public static class NitroxBuild
             GameObject moduleObject = @base.SpawnModule(prefab, face);
             if (moduleObject)
             {
-                NitroxEntity.SetNewId(moduleObject, interiorPiece.NitroxId);
+                NitroxEntity.SetNewId(moduleObject, interiorPiece.Id);
             }
         }
     }
 
-    public static IEnumerator RestoreModule(Transform parent, SavedModule savedModule, TaskResult<Optional<GameObject>> result = null)
+    public static IEnumerator RestoreModule(Transform parent, ModuleEntity moduleEntity, TaskResult<Optional<GameObject>> result = null)
     {
-        Log.Debug($"Restoring module {savedModule.ClassId}");
-        IPrefabRequest request = PrefabDatabase.GetPrefabAsync(savedModule.ClassId);
+        Log.Debug($"Restoring module {moduleEntity.ClassId}");
+        IPrefabRequest request = PrefabDatabase.GetPrefabAsync(moduleEntity.ClassId);
         yield return request;
         if (!request.TryGetPrefab(out GameObject prefab))
         {
-            Log.Debug($"Couldn't find a prefab for module of ClassId {savedModule.ClassId}");
+            Log.Debug($"Couldn't find a prefab for module of ClassId {moduleEntity.ClassId}");
             yield break;
         }
         GameObject moduleObject = GameObject.Instantiate(prefab);
         Transform moduleTransform = moduleObject.transform;
         moduleTransform.parent = parent;
-        moduleTransform.localPosition = savedModule.Position.ToUnity();
-        moduleTransform.localRotation = savedModule.Rotation.ToUnity();
-        moduleTransform.localScale = savedModule.LocalScale.ToUnity();
+        moduleTransform.localPosition = moduleEntity.Position.ToUnity();
+        moduleTransform.localRotation = moduleEntity.Rotation.ToUnity();
+        moduleTransform.localScale = moduleEntity.LocalScale.ToUnity();
 
         Constructable constructable = moduleObject.GetComponent<Constructable>();
-        constructable.SetIsInside(savedModule.IsInside);
+        constructable.SetIsInside(moduleEntity.IsInside);
         // TODO: If IsInside is false, maybe set a null environment
         SkyEnvironmentChanged.Send(moduleObject, moduleObject.GetComponentInParent<SubRoot>(true));
-        constructable.constructedAmount = savedModule.ConstructedAmount;
-        constructable.SetState(savedModule.ConstructedAmount >= 1f, false);
+        constructable.constructedAmount = moduleEntity.ConstructedAmount;
+        constructable.SetState(moduleEntity.ConstructedAmount >= 1f, false);
         constructable.UpdateMaterial();
-        NitroxEntity.SetNewId(moduleObject, savedModule.NitroxId);
+        NitroxEntity.SetNewId(moduleObject, moduleEntity.Id);
         result?.Set(moduleObject);
     }
 
-    public static IEnumerator RestoreModules(Transform parent, IList<SavedModule> modules)
+    public static IEnumerator RestoreModules(Transform parent, IEnumerable<ModuleEntity> modules)
     {
-        foreach (SavedModule savedModule in modules)
+        foreach (ModuleEntity moduleEntity in modules)
         {
-            yield return RestoreModule(parent, savedModule);
+            yield return RestoreModule(parent, moduleEntity);
         }
     }
 
-    public static IEnumerator RestoreModules(this SavedBuild savedBuild, Base @base)
+    public static IEnumerator RestoreModules(this BuildEntity buildEntity, Base @base)
     {
-        yield return RestoreModules(@base.transform, savedBuild.Modules);
+        yield return RestoreModules(@base.transform, buildEntity.ChildEntities.OfType<ModuleEntity>());
     }
 
-    public static IEnumerator RestoreGhost(Transform parent, SavedGhost savedGhost, TaskResult<Optional<GameObject>> result = null)
+    public static IEnumerator RestoreGhost(Transform parent, GhostEntity ghostEntity, TaskResult<Optional<GameObject>> result = null)
     {
-        Log.Debug($"Restoring ghost {NitroxGhost.ToString(savedGhost)}");
-        IPrefabRequest request = PrefabDatabase.GetPrefabAsync(savedGhost.ClassId);
+        Log.Debug($"Restoring ghost {NitroxGhost.ToString(ghostEntity)}");
+        IPrefabRequest request = PrefabDatabase.GetPrefabAsync(ghostEntity.ClassId);
         yield return request;
         if (!request.TryGetPrefab(out GameObject prefab))
         {
-            Log.Debug($"Couldn't find a prefab for module of ClassId {savedGhost.ClassId}");
+            Log.Debug($"Couldn't find a prefab for module of ClassId {ghostEntity.ClassId}");
             yield break;
         }
         bool isInBase = parent.TryGetComponent(out Base @base);
 
         GameObject ghostObject = GameObject.Instantiate(prefab);
         Transform ghostTransform = ghostObject.transform;
-        savedGhost.MoveTransform(ghostTransform);
+        ghostEntity.MoveTransform(ghostTransform);
 
         ConstructableBase constructableBase = ghostObject.GetComponent<ConstructableBase>();
         GameObject ghostModel = constructableBase.model;
         BaseGhost baseGhost = ghostModel.GetComponent<BaseGhost>();
         Base ghostBase = ghostModel.GetComponent<Base>();
         bool isBaseDeconstructable = ghostObject.name.Equals("BaseDeconstructable(Clone)");
-        if (isBaseDeconstructable && savedGhost.TechType != null)
+        if (isBaseDeconstructable && ghostEntity.TechType != null)
         {
-            constructableBase.techType = savedGhost.TechType.ToUnity();
+            constructableBase.techType = ghostEntity.TechType.ToUnity();
         }
-        constructableBase.constructedAmount = savedGhost.ConstructedAmount;
+        constructableBase.constructedAmount = ghostEntity.ConstructedAmount;
 
         baseGhost.SetupGhost();
 
-        yield return NitroxGhostMetadata.ApplyMetadataToGhost(baseGhost, savedGhost.Metadata, @base);
+        yield return NitroxGhostMetadata.ApplyMetadataToGhost(baseGhost, ghostEntity.Metadata, @base);
 
         // TODO: Fix hatch ghosts showing the wrong model
         // TODO: Fix ghost visual glitch (probably a duplicate model) (black ghost)
@@ -419,7 +448,7 @@ public static class NitroxBuild
             yield break;
         }
 
-        savedGhost.Base.ApplyTo(ghostBase);
+        ghostEntity.SavedBase.ApplyTo(ghostBase);
         ghostBase.OnProtoDeserialize(null);
         if (ghostBase.cellObjects != null)
         {
@@ -447,38 +476,38 @@ public static class NitroxBuild
         if (isInBase)
         {
             ghostTransform.parent = parent;
-            savedGhost.MoveTransform(ghostTransform);
+            ghostEntity.MoveTransform(ghostTransform);
         }
 
         constructableBase.SetState(false, false);
         constructableBase.UpdateMaterial();
 
-        NitroxGhostMetadata.LateApplyMetadataToGhost(baseGhost, savedGhost.Metadata);
+        NitroxGhostMetadata.LateApplyMetadataToGhost(baseGhost, ghostEntity.Metadata);
 
-        NitroxEntity.SetNewId(ghostObject, savedGhost.NitroxId);
+        NitroxEntity.SetNewId(ghostObject, ghostEntity.Id);
         result?.Set(ghostObject);
     }
 
-    public static IEnumerator RestoreGhosts(Transform parent, IList<SavedGhost> ghosts)
+    public static IEnumerator RestoreGhosts(Transform parent, IEnumerable<GhostEntity> ghosts)
     {
-        foreach (SavedGhost savedGhost in ghosts)
+        foreach (GhostEntity ghostEntity in ghosts)
         {
-            yield return RestoreGhost(parent, savedGhost);
+            yield return RestoreGhost(parent, ghostEntity);
         }
     }
 
-    public static IEnumerator RestoreGhosts(this SavedBuild savedBuild, Base @base)
+    public static IEnumerator RestoreGhosts(this BuildEntity buildEntity, Base @base)
     {
-        yield return RestoreGhosts(@base.transform, savedBuild.Ghosts);
+        yield return RestoreGhosts(@base.transform, buildEntity.ChildEntities.OfType<GhostEntity>());
     }
 
-    public static IEnumerator RestoreMoonpools(this SavedBuild savedBuild, Base @base)
+    public static IEnumerator RestoreMoonpools(IEnumerable<MoonpoolEntity> moonpoolEntities, Base @base)
     {
         MoonpoolManager moonpoolManager = @base.gameObject.EnsureComponent<MoonpoolManager>();
-        moonpoolManager.LoadSavedMoonpools(savedBuild.Moonpools);
+        moonpoolManager.LoadMoonpools(moonpoolEntities);
+        yield return moonpoolManager.SpawnVehicles();
         moonpoolManager.OnPostRebuildGeometry(@base);
         Log.Debug($"Restored moonpools: {moonpoolManager.GetSavedMoonpools().Count}");
-        yield break;
     }
 
     public static string ToString(this SavedBuild savedBuild)
@@ -607,9 +636,9 @@ public static class NitroxBase
 
 public static class NitroxInteriorPiece
 {
-    public static SavedInteriorPiece From(IBaseModule module)
+    public static InteriorPieceEntity From(IBaseModule module)
     {
-        SavedInteriorPiece interiorPiece = new();
+        InteriorPieceEntity interiorPiece = InteriorPieceEntity.MakeEmpty();
         GameObject gameObject = (module as Component).gameObject;
         if (gameObject && gameObject.TryGetComponent(out PrefabIdentifier identifier))
         {
@@ -622,11 +651,16 @@ public static class NitroxInteriorPiece
 
         if (NitroxEntity.TryGetEntityFrom(gameObject, out NitroxEntity entity))
         {
-            interiorPiece.NitroxId = entity.Id;
+            interiorPiece.Id = entity.Id;
         }
         else
         {
             Log.Warn($"Couldn't find a NitroxEntity for the interior piece {module.GetType()}");
+        }
+        if (gameObject.TryGetComponentInParent(out Base parentBase) &&
+            NitroxEntity.TryGetEntityFrom(parentBase.gameObject, out NitroxEntity parentEntity))
+        {
+            interiorPiece.ParentId = parentEntity.Id;
         }
 
         // TODO: Verify if this is necessary or not
@@ -663,31 +697,36 @@ public static class NitroxInteriorPiece
 
 public static class NitroxModule
 {
-    public static void FillObject(this SavedModule savedModule, Constructable constructable)
+    public static void FillObject(this ModuleEntity moduleEntity, Constructable constructable)
     {
-        savedModule.ClassId = constructable.GetComponent<PrefabIdentifier>().ClassId;
+        moduleEntity.ClassId = constructable.GetComponent<PrefabIdentifier>().ClassId;
 
         if (NitroxEntity.TryGetEntityFrom(constructable.gameObject, out NitroxEntity entity))
         {
-            savedModule.NitroxId = entity.Id;
+            moduleEntity.Id = entity.Id;
         }
-        savedModule.Position = constructable.transform.localPosition.ToDto();
-        savedModule.Rotation = constructable.transform.localRotation.ToDto();
-        savedModule.LocalScale = constructable.transform.localScale.ToDto();
-        savedModule.ConstructedAmount = constructable.constructedAmount;
-        savedModule.IsInside = constructable.isInside;
+        if (constructable.TryGetComponentInParent(out Base parentBase) &&
+            NitroxEntity.TryGetEntityFrom(parentBase.gameObject, out NitroxEntity parentEntity))
+        {
+            moduleEntity.ParentId = parentEntity.Id;
+        }
+        moduleEntity.Position = constructable.transform.localPosition.ToDto();
+        moduleEntity.Rotation = constructable.transform.localRotation.ToDto();
+        moduleEntity.LocalScale = constructable.transform.localScale.ToDto();
+        moduleEntity.ConstructedAmount = constructable.constructedAmount;
+        moduleEntity.IsInside = constructable.isInside;
     }
 
-    public static void MoveTransform(this SavedModule savedModule, Transform transform)
+    public static void MoveTransform(this ModuleEntity moduleEntity, Transform transform)
     {
-        transform.localPosition = savedModule.Position.ToUnity();
-        transform.localRotation = savedModule.Rotation.ToUnity();
-        transform.localScale = savedModule.LocalScale.ToUnity();
+        transform.localPosition = moduleEntity.Position.ToUnity();
+        transform.localRotation = moduleEntity.Rotation.ToUnity();
+        transform.localScale = moduleEntity.LocalScale.ToUnity();
     }
 
-    public static SavedModule From(Constructable constructable)
+    public static ModuleEntity From(Constructable constructable)
     {
-        SavedModule module = new();
+        ModuleEntity module = ModuleEntity.MakeEmpty();
         module.FillObject(constructable);
         return module;
     }
@@ -700,9 +739,9 @@ public static class NitroxModule
 
 public static class NitroxGhost
 {
-    public static SavedGhost From(ConstructableBase constructableBase)
+    public static GhostEntity From(ConstructableBase constructableBase)
     {
-        SavedGhost ghost = new();
+        GhostEntity ghost = GhostEntity.MakeEmpty();
 
         ghost.FillObject(constructableBase);
         if (constructableBase.moduleFace.HasValue)
@@ -710,7 +749,7 @@ public static class NitroxGhost
             ghost.BaseFace = constructableBase.moduleFace.Value.ToDto();
         }
         
-        ghost.Base = NitroxBase.From(constructableBase.model.GetComponent<Base>());
+        ghost.SavedBase = NitroxBase.From(constructableBase.model.GetComponent<Base>());
         if (constructableBase.name.Equals("BaseDeconstructable(Clone)"))
         {
             ghost.TechType = constructableBase.techType.ToDto();
@@ -724,8 +763,8 @@ public static class NitroxGhost
         return ghost;
     }
 
-    public static string ToString(this SavedGhost savedGhost)
+    public static string ToString(this GhostEntity ghostEntity)
     {
-        return $"SavedGhost [ClassId: {savedGhost.ClassId}, NitroxId: {savedGhost.NitroxId}, Position: {savedGhost.Position}, Rotation: {savedGhost.Rotation}, LocalScale: {savedGhost.LocalScale}, ConstructedAmount: {savedGhost.ConstructedAmount}, IsInside: {savedGhost.IsInside}, ModuleFace: [{savedGhost.BaseFace.Cell};{savedGhost.BaseFace.Direction}]]";
+        return $"SavedGhost [ClassId: {ghostEntity.ClassId}, NitroxId: {ghostEntity.Id}, ParentId: {ghostEntity.ParentId}, Position: {ghostEntity.Position}, Rotation: {ghostEntity.Rotation}, LocalScale: {ghostEntity.LocalScale}, ConstructedAmount: {ghostEntity.ConstructedAmount}, IsInside: {ghostEntity.IsInside}, ModuleFace: [{ghostEntity.BaseFace}]]";
     }
 }

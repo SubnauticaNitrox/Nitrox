@@ -9,11 +9,13 @@ using NitroxModel.DataStructures.Unity;
 namespace NitroxModel.DataStructures.GameLogic.Entities.Bases;
 
 [Serializable, DataContract]
-public class GhostEntity : GlobalRootEntity
+public class GhostEntity : ModuleEntity
 {
-    // TODO: Move SavedGhost's fields in here
     [DataMember(Order = 1)]
-    public SavedGhost SavedGhost { get; set; }
+    public NitroxBaseFace BaseFace;
+
+    [DataMember(Order = 2)]
+    public SavedBase SavedBase;
 
     [IgnoreConstructor]
     protected GhostEntity()
@@ -21,20 +23,36 @@ public class GhostEntity : GlobalRootEntity
         // Constructor for serialization. Has to be "protected" for json serialization.
     }
 
-    public GhostEntity(SavedGhost savedGhost, NitroxId parentId = null)
+    public static new GhostEntity MakeEmpty()
     {
-        SavedGhost = savedGhost;
-        Id = savedGhost.NitroxId;
+        return new();
+    }
+
+    public GhostEntity(NitroxId id, NitroxVector3 position, NitroxQuaternion rotation, NitroxVector3 localScale, float constructedAmount, bool isInside, NitroxBaseFace baseFace, SavedBase savedBase, NitroxId parentId = null)
+    {
+        Id = id;
+        Position = position;
+        Rotation = rotation;
+        LocalScale = localScale;
+        ConstructedAmount = constructedAmount;
+        IsInside = isInside;
+        BaseFace = baseFace;
+        SavedBase = savedBase;
         ParentId = parentId;
-        //Metadata = savedGhost.Metadata;
 
         Transform = new();
     }
 
     /// <remarks>Used for deserialization</remarks>
-    public GhostEntity(SavedGhost savedGhost, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
+    public GhostEntity(NitroxVector3 position, NitroxQuaternion rotation, NitroxVector3 localScale, float constructedAmount, bool isInside, NitroxBaseFace baseFace, SavedBase savedBase, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
     {
-        SavedGhost = savedGhost;
+        Position = position;
+        Rotation = rotation;
+        LocalScale = localScale;
+        ConstructedAmount = constructedAmount;
+        IsInside = isInside;
+        BaseFace = baseFace;
+        SavedBase = savedBase;
 
         Id = id;
         TechType = techType;
@@ -49,6 +67,6 @@ public class GhostEntity : GlobalRootEntity
 
     public override string ToString()
     {
-        return $"[GhostEntity {SavedGhost}]";
+        return $"[GhostEntity Id: {Id}, ParentId: {ParentId}, ClassId: {ClassId}, Position: {Position}, Rotation: {Rotation}, LocalScale: {LocalScale}, ConstructedAmount: {ConstructedAmount}, IsInside: {IsInside}, BaseFace: [{BaseFace}], SavedBase: {SavedBase}";
     }
 }

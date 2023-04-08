@@ -1,39 +1,38 @@
 using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Buildings.New;
+using NitroxModel.DataStructures.GameLogic.Entities.Bases;
+using System.Collections.Generic;
 
 namespace NitroxModel.Packets;
 
 public sealed class PlaceGhost : Packet
 {
-    public NitroxId ParentId;
-    public SavedGhost SavedGhost;
+    public GhostEntity GhostEntity;
 
-    public PlaceGhost(NitroxId parentId, SavedGhost savedGhost)
+    public PlaceGhost(GhostEntity ghostEntity)
     {
-        ParentId = parentId;
-        SavedGhost = savedGhost;
+        GhostEntity = ghostEntity;
     }
 
     public override string ToString()
     {
-        return $"PlaceGhost [ParentId: {ParentId}, SavedGhost: {SavedGhost}]";
+        return $"PlaceGhost [GhostEntity: {GhostEntity}]";
     }
 }
 
 public sealed class PlaceModule : Packet
 {
-    public NitroxId ParentId;
-    public SavedModule SavedModule;
+    public ModuleEntity ModuleEntity;
 
-    public PlaceModule(NitroxId parentId, SavedModule savedModule)
+    public PlaceModule(ModuleEntity moduleEntity)
     {
-        ParentId = parentId;
-        SavedModule = savedModule;
+        ModuleEntity = moduleEntity;
     }
 
     public override string ToString()
     {
-        return $"PlaceModule [ParentId: {ParentId}, SavedGhost: {SavedModule}]";
+        return $"PlaceModule [ModuleEntity: {ModuleEntity}]";
     }
 }
 
@@ -54,44 +53,50 @@ public sealed class ModifyConstructedAmount : Packet
     }
 }
 
-public class PlaceBase : Packet
+public sealed class PlaceBase : Packet
 {
     public NitroxId FormerGhostId;
-    public SavedBuild SavedBuild;
+    public BuildEntity BuildEntity;
 
-    public PlaceBase(NitroxId formerGhostId, SavedBuild savedBuild)
+    public PlaceBase(NitroxId formerGhostId, BuildEntity buildEntity)
     {
         FormerGhostId = formerGhostId;
-        SavedBuild = savedBuild;
+        BuildEntity = buildEntity;
     }
 
     public override string ToString()
     {
-        return $"PlaceBase [FormerGhostId: {FormerGhostId}, SavedBuild: {SavedBuild}]";
+        return $"PlaceBase [FormerGhostId: {FormerGhostId}, BuildEntity: {BuildEntity}]";
     }
 }
 
-public sealed class UpdateBase : PlaceBase
+public sealed class UpdateBase : Packet
 {
     public NitroxId BaseId;
+    public NitroxId FormerGhostId;
+    public SavedBase SavedBase;
+    public List<Entity> ChildEntities;
 
-    public UpdateBase(NitroxId baseId, NitroxId formerGhostId, SavedBuild savedBuild) : base(formerGhostId, savedBuild)
+    public UpdateBase(NitroxId baseId, NitroxId formerGhostId, SavedBase savedBase, List<Entity> childEntities)
     {
         BaseId = baseId;
+        FormerGhostId = formerGhostId;
+        SavedBase = savedBase;
+        ChildEntities = childEntities;
     }
 
     public override string ToString()
     {
-        return $"UpdateBase [BaseId: {BaseId}, FormerGhostId: {FormerGhostId}, SavedBuild: {SavedBuild}]";
+        return $"UpdateBase [BaseId: {BaseId}, FormerGhostId: {FormerGhostId}, SavedBase: {SavedBase}]";
     }
 }
 
 public sealed class BaseDeconstructed : Packet
 {
     public NitroxId FormerBaseId;
-    public SavedGhost ReplacerGhost;
+    public GhostEntity ReplacerGhost;
 
-    public BaseDeconstructed(NitroxId formerBaseId, SavedGhost replacerGhost)
+    public BaseDeconstructed(NitroxId formerBaseId, GhostEntity replacerGhost)
     {
         FormerBaseId = formerBaseId;
         ReplacerGhost = replacerGhost;
@@ -108,10 +113,10 @@ public class PieceDeconstructed : Packet
     public NitroxId BaseId;
     public NitroxId PieceId;
     public BuildPieceIdentifier BuildPieceIdentifier;
-    public SavedGhost ReplacerGhost;
+    public GhostEntity ReplacerGhost;
     public SavedBase SavedBase;
 
-    public PieceDeconstructed(NitroxId baseId, NitroxId pieceId, BuildPieceIdentifier buildPieceIdentifier, SavedGhost replacerGhost, SavedBase savedBase)
+    public PieceDeconstructed(NitroxId baseId, NitroxId pieceId, BuildPieceIdentifier buildPieceIdentifier, GhostEntity replacerGhost, SavedBase savedBase)
     {
         BaseId = baseId;
         PieceId = pieceId;
@@ -126,11 +131,11 @@ public class PieceDeconstructed : Packet
     }
 }
 
-public class WaterParkDeconstructed : PieceDeconstructed
+public sealed class WaterParkDeconstructed : PieceDeconstructed
 {
-    public SavedInteriorPiece NewWaterPark;
+    public InteriorPieceEntity NewWaterPark;
 
-    public WaterParkDeconstructed(NitroxId baseId, NitroxId pieceId, BuildPieceIdentifier buildPieceIdentifier, SavedGhost replacerGhost, SavedBase savedBase, SavedInteriorPiece newWaterPark) : base(baseId, pieceId, buildPieceIdentifier, replacerGhost, savedBase)
+    public WaterParkDeconstructed(NitroxId baseId, NitroxId pieceId, BuildPieceIdentifier buildPieceIdentifier, GhostEntity replacerGhost, SavedBase savedBase, InteriorPieceEntity newWaterPark) : base(baseId, pieceId, buildPieceIdentifier, replacerGhost, savedBase)
     {
         NewWaterPark = newWaterPark;
     }

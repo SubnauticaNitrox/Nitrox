@@ -1,5 +1,4 @@
 using BinaryPack.Attributes;
-using NitroxModel.DataStructures.GameLogic.Buildings.New;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures.Unity;
 using System;
@@ -11,9 +10,8 @@ namespace NitroxModel.DataStructures.GameLogic.Entities.Bases;
 [Serializable, DataContract]
 public class MoonpoolEntity : GlobalRootEntity
 {
-    // TODO: Move MoonpoolEntity's fields in here
     [DataMember(Order = 1)]
-    public SavedMoonpool SavedMoonpool { get; set; }
+    public NitroxInt3 Cell;
 
     [IgnoreConstructor]
     protected MoonpoolEntity()
@@ -21,20 +19,19 @@ public class MoonpoolEntity : GlobalRootEntity
         // Constructor for serialization. Has to be "protected" for json serialization.
     }
 
-    public MoonpoolEntity(SavedMoonpool savedMoonpool, NitroxId parentId)
+    public MoonpoolEntity(NitroxId id, NitroxId parentId, NitroxInt3 cell)
     {
-        SavedMoonpool = savedMoonpool;
-        Id = savedMoonpool.NitroxId;
+        Id = id;
         ParentId = parentId;
-        //Metadata = savedMoonpool.Metadata;
+        Cell = cell;
 
         Transform = new();
     }
 
     /// <remarks>Used for deserialization</remarks>
-    public MoonpoolEntity(SavedMoonpool savedMoonpool, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
+    public MoonpoolEntity(NitroxInt3 cell, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
     {
-        SavedMoonpool = savedMoonpool;
+        Cell = cell;
 
         Id = id;
         TechType = techType;
@@ -49,6 +46,6 @@ public class MoonpoolEntity : GlobalRootEntity
 
     public override string ToString()
     {
-        return $"[MoonpoolEntity {SavedMoonpool}]";
+        return $"[MoonpoolEntity Id: {Id}, Cell: {Cell}, Children count: {ChildEntities.Count}]";
     }
 }

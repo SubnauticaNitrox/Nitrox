@@ -18,7 +18,7 @@ public class ModuleEntitySpawner : EntitySpawner<ModuleEntity>
             GameObject.Destroy(gameObject);
             yield return null;
         }
-        yield return NitroxBuild.RestoreModule(LargeWorldStreamer.main.globalRoot.transform, entity.SavedModule, result);
+        yield return NitroxBuild.RestoreModule(LargeWorldStreamer.main.globalRoot.transform, entity, result);
     }
 
     public override bool SpawnsOwnChildren(ModuleEntity entity) => true;

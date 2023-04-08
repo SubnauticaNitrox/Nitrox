@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using BinaryPack.Attributes;
-using NitroxModel.DataStructures.GameLogic.Buildings.New;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures.Unity;
 
@@ -11,9 +10,20 @@ namespace NitroxModel.DataStructures.GameLogic.Entities.Bases;
 [Serializable, DataContract]
 public class ModuleEntity : GlobalRootEntity
 {
-    // TODO: Move ModuleEntity's fields in here
     [DataMember(Order = 1)]
-    public SavedModule SavedModule { get; set; }
+    public NitroxVector3 Position;
+
+    [DataMember(Order = 2)]
+    public NitroxQuaternion Rotation;
+
+    [DataMember(Order = 3)]
+    public NitroxVector3 LocalScale;
+
+    [DataMember(Order = 4)]
+    public float ConstructedAmount;
+
+    [DataMember(Order = 5)]
+    public bool IsInside;
 
     [IgnoreConstructor]
     protected ModuleEntity()
@@ -21,19 +31,32 @@ public class ModuleEntity : GlobalRootEntity
         // Constructor for serialization. Has to be "protected" for json serialization.
     }
 
-    public ModuleEntity(SavedModule savedModule, NitroxId parentId = null)
+    public static ModuleEntity MakeEmpty()
     {
-        SavedModule = savedModule;
-        Id = savedModule.NitroxId;
+        return new();
+    }
+
+    public ModuleEntity(NitroxId id, NitroxVector3 position, NitroxQuaternion rotation, NitroxVector3 localScale, float constructedAmount, bool isInside, NitroxId parentId = null)
+    {
+        Id = id;
+        Position = position;
+        Rotation = rotation;
+        LocalScale = localScale;
+        ConstructedAmount = constructedAmount;
+        IsInside = isInside;
         ParentId = parentId;
 
         Transform = new();
     }
 
     /// <remarks>Used for deserialization</remarks>
-    public ModuleEntity(SavedModule savedModule, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
+    public ModuleEntity(NitroxVector3 position, NitroxQuaternion rotation, NitroxVector3 localScale, float constructedAmount, bool isInside, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
     {
-        SavedModule = savedModule;
+        Position = position;
+        Rotation = rotation;
+        LocalScale = localScale;
+        ConstructedAmount = constructedAmount;
+        IsInside = isInside;
 
         Id = id;
         TechType = techType;
@@ -48,6 +71,6 @@ public class ModuleEntity : GlobalRootEntity
 
     public override string ToString()
     {
-        return $"[ModuleEntity {SavedModule}]";
+        return $"[ModuleEntity Id: {Id}]";
     }
 }

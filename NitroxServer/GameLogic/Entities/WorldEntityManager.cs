@@ -118,12 +118,17 @@ namespace NitroxServer.GameLogic.Entities
             return Optional.Of(newCell);
         }
 
-        public void AddGlobalRootEntity(GlobalRootEntity entity)
+        public void AddGlobalRootEntity(GlobalRootEntity entity, bool addToRegistry = true)
         {
             lock (globalRootEntitiesById)
             {
                 if (!globalRootEntitiesById.ContainsKey(entity.Id))
                 {
+                    if (addToRegistry)
+                    {
+                        entityRegistry.AddEntity(entity);
+                        entityRegistry.AddEntitiesIgnoringDuplicate(entity.ChildEntities);
+                    }
                     globalRootEntitiesById.Add(entity.Id, entity);
                 }
                 else
@@ -133,11 +138,15 @@ namespace NitroxServer.GameLogic.Entities
             }
         }
 
-        public void RemoveGlobalRootEntity(NitroxId entityId)
+        public void RemoveGlobalRootEntity(NitroxId entityId, bool removeFromRegistry = true)
         {
             lock (globalRootEntitiesById)
             {
                 globalRootEntitiesById.Remove(entityId);
+                if (removeFromRegistry)
+                {
+                    entityRegistry.RemoveEntity(entityId);
+                }
             }
         }
 
@@ -145,7 +154,7 @@ namespace NitroxServer.GameLogic.Entities
         {
             if (entity is GlobalRootEntity globalRootEntity)
             {
-                AddGlobalRootEntity(globalRootEntity);
+                AddGlobalRootEntity(globalRootEntity, false);
             }
             else
             {
@@ -275,7 +284,7 @@ namespace NitroxServer.GameLogic.Entities
         {
             if (entity is GlobalRootEntity)
             {
-                RemoveGlobalRootEntity(entity.Id);
+                RemoveGlobalRootEntity(entity.Id, false);
             }
             else
             {
@@ -312,6 +321,18 @@ namespace NitroxServer.GameLogic.Entities
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// To avoid risking not having the same entity in <see cref="globalRootEntitiesById"/> and in EntityRegistry, we update both at the same time.
+        /// </summary>
+        public void UpdateGlobalRootEntity(GlobalRootEntity entity)
+        {
+            lock (globalRootEntitiesById)
+            {
+                entityRegistry.AddOrUpdate(entity);
+                globalRootEntitiesById[entity.Id] = entity;
+            }
         }
     }
 }

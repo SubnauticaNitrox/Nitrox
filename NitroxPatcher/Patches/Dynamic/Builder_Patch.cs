@@ -8,6 +8,7 @@ using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Buildings.New;
+using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
 using NitroxPatcher.PatternMatching;
@@ -196,16 +197,18 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
         NitroxEntity.SetNewId(ghostObject, ghostId);
         if (constructable is ConstructableBase constructableBase)
         {
-            SavedGhost ghost = NitroxGhost.From(constructableBase);
-            ghost.NitroxId = ghostId;
+            GhostEntity ghost = NitroxGhost.From(constructableBase);
+            ghost.Id = ghostId;
+            ghost.ParentId = parentId;
             Log.Debug($"Sending ghost: {ghost}");
-            Resolve<IPacketSender>().Send(new PlaceGhost(parentId, ghost));
+            Resolve<IPacketSender>().Send(new PlaceGhost(ghost));
             return;
         }
-        SavedModule module = NitroxModule.From(constructable);
-        module.NitroxId = ghostId;
+        ModuleEntity module = NitroxModule.From(constructable);
+        module.Id = ghostId;
+        module.ParentId = parentId;
         Log.Debug($"Sending module: {module}");
-        Resolve<IPacketSender>().Send(new PlaceModule(parentId, module));
+        Resolve<IPacketSender>().Send(new PlaceModule(module));
     }
 
     public static void ConstructionAmountModified(Constructable constructable)
@@ -265,9 +268,10 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
                 Log.Error("Parent base doesn't have a NitroxEntity, which is not normal");
                 yield break;
             }
+            UpdateBase updateBase = new(parentEntity.Id, entity.Id, NitroxBase.From(parentBase), NitroxBuild.GetChildEntities(parentBase, parentEntity.Id));
 
             // TODO: (for server-side) Find a way to optimize this (maybe by copying BaseGhost.Finish() => Base.CopyFrom)
-            Resolve<IPacketSender>().Send(new UpdateBase(parentEntity.Id, entity.Id, NitroxBuild.From(parentBase)));
+            Resolve<IPacketSender>().Send(updateBase);
         }
         else
         {
@@ -294,6 +298,8 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
             return;
         }
 
+        GhostEntity ghostEntity = NitroxGhost.From(constructableBase);
+        ghostEntity.Id = baseEntity.Id;
         if (destroyed)
         {
             // Base was destroyed and replaced with a simple ghost
@@ -301,7 +307,7 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
             NitroxEntity.SetNewId(constructableBase.gameObject, baseEntity.Id);
 
             Log.Debug("Base destroyed and replaced by a simple ghost");
-            Resolve<IPacketSender>().Send(new BaseDeconstructed(baseEntity.Id, NitroxGhost.From(constructableBase)));
+            Resolve<IPacketSender>().Send(new BaseDeconstructed(baseEntity.Id, ghostEntity));
             return;
         }
         if (!baseDeconstructable.GetComponentInParent<BaseCell>())
@@ -357,10 +363,12 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
         // Else, if it's a local client deconstruction, we generate a new one
         pieceId ??= new();
         NitroxEntity.SetNewId(constructableBase.gameObject, pieceId);
+        ghostEntity.Id = pieceId;
+        ghostEntity.ParentId = baseEntity.Id;
 
         PieceDeconstructed pieceDeconstructed = BuildingTester.Main.NewWaterPark == null ?
-            new PieceDeconstructed(baseEntity.Id, pieceId, cachedPieceIdentifier, NitroxGhost.From(constructableBase), NitroxBase.From(@base)) :
-            new WaterParkDeconstructed(baseEntity.Id, pieceId, cachedPieceIdentifier, NitroxGhost.From(constructableBase), NitroxBase.From(@base), BuildingTester.Main.NewWaterPark);
+            new PieceDeconstructed(baseEntity.Id, pieceId, cachedPieceIdentifier, ghostEntity, NitroxBase.From(@base)) :
+            new WaterParkDeconstructed(baseEntity.Id, pieceId, cachedPieceIdentifier, ghostEntity, NitroxBase.From(@base), BuildingTester.Main.NewWaterPark);
         Log.Debug($"Base is not empty, sending packet {pieceDeconstructed}");
 
         Resolve<IPacketSender>().Send(pieceDeconstructed);
