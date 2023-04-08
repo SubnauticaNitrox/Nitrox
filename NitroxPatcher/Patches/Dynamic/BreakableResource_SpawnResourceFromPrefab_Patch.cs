@@ -16,6 +16,9 @@ using static System.Reflection.Emit.OpCodes;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
+/// <summary>
+/// Synchronizes entities that can be broken and that will drop material, such as limestones...
+/// </summary>
 internal class BreakableResource_SpawnResourceFromPrefab_Patch : NitroxPatch, IDynamicPatch
 {
     public static readonly MethodInfo TARGET_METHOD_ORIGINAL = Reflect.Method((BreakableResource t) => t.SpawnResourceFromPrefab(default));
