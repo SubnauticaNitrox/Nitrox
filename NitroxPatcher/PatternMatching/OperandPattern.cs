@@ -1,11 +1,13 @@
+using System;
 using System.Reflection;
 using JetBrains.Annotations;
 
 namespace NitroxPatcher.PatternMatching;
 
-public readonly record struct OperandPattern(string DeclaringClassName, string MemberName)
+public readonly record struct OperandPattern(string DeclaringClassName, string MemberName, Type[] ArgumentTypes = null)
 {
     public bool IsAny => this == default;
+    public bool IsAnyArguments => ArgumentTypes == null;
 
     public static bool operator ==(OperandPattern pattern, [CanBeNull] object operand)
     {
@@ -15,8 +17,36 @@ public readonly record struct OperandPattern(string DeclaringClassName, string M
         }
         if (operand is MemberInfo member)
         {
-            return pattern.DeclaringClassName == member.DeclaringType?.Name && pattern.MemberName == member.Name;
+            if (!pattern.DeclaringClassName.Equals(member.DeclaringType?.FullName, StringComparison.OrdinalIgnoreCase) || !pattern.MemberName.Equals(member.Name, StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+            if (member is MethodInfo method)
+            {
+                if (pattern.IsAnyArguments)
+                {
+                    return true;
+                }
+
+                ParameterInfo[] parameters = method.GetParameters();
+                if (parameters.Length == pattern.ArgumentTypes.Length)
+                {
+                    for (int i = 0; i < parameters.Length; i++)
+                    {
+                        if (!parameters[i].ParameterType.IsAssignableFrom(pattern.ArgumentTypes[i]))
+                        {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+            }
+            else
+            {
+                return true;
+            }
         }
+
         return false;
     }
 
