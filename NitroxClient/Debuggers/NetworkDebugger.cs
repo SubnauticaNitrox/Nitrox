@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using NitroxClient.Unity.Helper;
+using NitroxModel;
 using NitroxModel.Packets;
 using UnityEngine;
 
@@ -40,18 +41,18 @@ namespace NitroxClient.Debuggers
             AddTab("Filter", RenderTabFilter);
         }
 
-        public void PacketSent(Packet packet, int size)
+        public void PacketSent(Packet packet, int byteSize)
         {
             AddPacket(packet, true);
             sentCount++;
-            sentBytes += (uint)size;
+            sentBytes += (uint)byteSize;
         }
 
-        public void PacketReceived(Packet packet, int size)
+        public void PacketReceived(Packet packet, int byteSize)
         {
             AddPacket(packet, false);
             receivedCount++;
-            receivedBytes += (uint)size;
+            receivedBytes += (uint)byteSize;
         }
 
         protected override void OnSetSkin(GUISkin skin)
@@ -158,7 +159,7 @@ namespace NitroxClient.Debuggers
 
         private void RenderPacketTotals()
         {
-            GUILayout.Label($"Sent: {sentCount} ({BytesToString(sentBytes)}) - Received: {receivedCount} ({BytesToString(receivedBytes)})");
+            GUILayout.Label($"Sent: {sentCount} ({sentBytes.AsByteUnitText()}) - Received: {receivedCount} ({receivedBytes.AsByteUnitText()})");
         }
 
         private void RenderPacketList(ToRender toRender)
@@ -217,17 +218,6 @@ namespace NitroxClient.Debuggers
             {
                 countByType.Add(packetType, 1);
             }
-        }
-
-        private static string BytesToString(uint byteCount)
-        {
-            string[] suf = { "B", "KB", "MB", "GB", "TB" };
-            if (byteCount == 0)
-                return "0" + suf[0];
-            long bytes = Math.Abs(byteCount);
-            int place = Convert.ToInt32(Math.Floor(Math.Log(bytes, 1024)));
-            double num = Math.Round(bytes / Math.Pow(1024, place), 1);
-            return (Math.Sign(byteCount) * num).ToString() + suf[place];
         }
 
         private string PacketDirectionPrefixer(PacketDebugWrapper wrapper) => $"{(wrapper.IsSent ? "↑" : "↓")} - ";
