@@ -11,9 +11,17 @@ namespace NitroxModel.DataStructures.GameLogic.Entities.Bases;
 [Serializable, DataContract]
 public class BuildEntity : GlobalRootEntity
 {
-    // TODO: Move SavedBuild's fields in here
     [DataMember(Order = 1)]
-    public SavedBuild SavedBuild { get; set; }
+    public NitroxVector3 Position;
+
+    [DataMember(Order = 2)]
+    public NitroxQuaternion Rotation;
+
+    [DataMember(Order = 3)]
+    public NitroxVector3 LocalScale;
+
+    [DataMember(Order = 4)]
+    public SavedBase SavedBase;
 
     [IgnoreConstructor]
     protected BuildEntity()
@@ -21,17 +29,29 @@ public class BuildEntity : GlobalRootEntity
         // Constructor for serialization. Has to be "protected" for json serialization.
     }
 
-    public BuildEntity(SavedBuild savedBuild)
+    public static BuildEntity MakeEmpty()
     {
-        SavedBuild = savedBuild;
-        Id = savedBuild.NitroxId;
+        return new();
+    }
+
+    public BuildEntity(NitroxId id, NitroxVector3 position, NitroxQuaternion rotation, NitroxVector3 localScale, SavedBase savedBase)
+    {
+        Id = id;
+        Position = position;
+        Rotation = rotation;
+        LocalScale = localScale;
+        SavedBase = savedBase;
+
         Transform = new();
     }
 
     /// <remarks>Used for deserialization</remarks>
-    public BuildEntity(SavedBuild savedBuild, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
+    public BuildEntity(SavedBase savedBase, NitroxVector3 position, NitroxQuaternion rotation, NitroxVector3 localScale, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
     {
-        SavedBuild = savedBuild;
+        SavedBase = savedBase;
+        Position = position;
+        Rotation = rotation;
+        LocalScale = localScale;
 
         Id = id;
         TechType = techType;
@@ -46,6 +66,6 @@ public class BuildEntity : GlobalRootEntity
 
     public override string ToString()
     {
-        return $"[BuildEntity {SavedBuild}]";
+        return $"[BuildEntity Id: {Id}]";
     }
 }

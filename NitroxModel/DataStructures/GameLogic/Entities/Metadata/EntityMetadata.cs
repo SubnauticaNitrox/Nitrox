@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.Serialization;
+using NitroxModel.DataStructures.GameLogic.Buildings.New.Metadata;
 using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata
@@ -29,6 +30,7 @@ namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata
     [ProtoInclude(250, typeof(CyclopsLightingMetadata))]
     [ProtoInclude(260, typeof(FireExtinguisherHolderMetadata))]
     [ProtoInclude(270, typeof(PlayerMetadata))]
+    [ProtoInclude(271, typeof(GhostMetadata))]
     public abstract class EntityMetadata
     {
     }

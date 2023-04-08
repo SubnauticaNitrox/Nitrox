@@ -71,7 +71,6 @@ namespace NitroxServer.Serialization.World
                 Serializer.Serialize(Path.Combine(saveDir, $"PlayerData{FileEnding}"), persistedData.PlayerData);
                 Serializer.Serialize(Path.Combine(saveDir, $"WorldData{FileEnding}"), persistedData.WorldData);
                 Serializer.Serialize(Path.Combine(saveDir, $"GlobalRootData{FileEnding}"), persistedData.GlobalRootData);
-                Serializer.Serialize(Path.Combine(saveDir, $"_GlobalRootData{FileEnding}"), persistedData._GlobalRootData);
                 Serializer.Serialize(Path.Combine(saveDir, $"EntityData{FileEnding}"), persistedData.EntityData);
 
                 using (config.Update(saveDir))
@@ -121,7 +120,6 @@ namespace NitroxServer.Serialization.World
                     PlayerData = Serializer.Deserialize<PlayerData>(Path.Combine(saveDir, $"PlayerData{FileEnding}")),
                     WorldData = Serializer.Deserialize<WorldData>(Path.Combine(saveDir, $"WorldData{FileEnding}")),
                     GlobalRootData = Serializer.Deserialize<GlobalRootData>(Path.Combine(saveDir, $"GlobalRootData{FileEnding}")),
-                    _GlobalRootData = Serializer.Deserialize<_GlobalRootData>(Path.Combine(saveDir, $"_GlobalRootData{FileEnding}")),
                     EntityData = Serializer.Deserialize<EntityData>(Path.Combine(saveDir, $"EntityData{FileEnding}"))
             };
 
@@ -239,7 +237,7 @@ namespace NitroxServer.Serialization.World
 
             world.WorldEntityManager = new WorldEntityManager(world.EntityRegistry, world.BatchEntitySpawner);
 
-            world.BuildingManager = new(pWorldData._GlobalRootData, world.EntityRegistry, world.WorldEntityManager);
+            world.BuildingManager = new(world.EntityRegistry, world.WorldEntityManager);
 
             HashSet<NitroxTechType> serverSpawnedSimulationWhiteList = NitroxServiceLocator.LocateService<HashSet<NitroxTechType>>();
             world.EntitySimulation = new EntitySimulation(world.EntityRegistry, world.WorldEntityManager, world.SimulationOwnershipData, world.PlayerManager, serverSpawnedSimulationWhiteList);

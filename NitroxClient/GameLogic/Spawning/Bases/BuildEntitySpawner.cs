@@ -27,8 +27,12 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
             GameObject.DestroyImmediate(gameObject);
         }
 
-        yield return BuildingTester.Main.LoadBaseAsync(entity.SavedBuild, result);
+        yield return BuildingTester.Main.LoadBaseAsync(entity, result);
         yield return entities.SpawnAsync(entity.ChildEntities.OfType<PlayerWorldEntity>());
+        if (result.value.HasValue && result.value.Value.TryGetComponent(out Base @base))
+        {
+            yield return NitroxBuild.RestoreMoonpools(entity.ChildEntities.OfType<MoonpoolEntity>(), @base);
+        }
     }
 
     public override bool SpawnsOwnChildren(BuildEntity entity) => true;

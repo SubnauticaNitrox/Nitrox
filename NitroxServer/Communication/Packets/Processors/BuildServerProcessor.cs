@@ -70,7 +70,7 @@ public class PlaceBaseProcessor : BuildingProcessor<PlaceBase>
     {
         if (buildingManager.CreateBase(packet))
         {
-            packet.SavedBuild = null;
+            packet.BuildEntity = null;
             base.Process(packet, player);
         }
     }
@@ -84,7 +84,8 @@ public class UpdateBaseProcessor : BuildingProcessor<UpdateBase>
     {
         if (buildingManager.UpdateBase(packet))
         {
-            packet.SavedBuild = null;
+            packet.SavedBase = null;
+            packet.ChildEntities = null;
             base.Process(packet, player);
         }
     }

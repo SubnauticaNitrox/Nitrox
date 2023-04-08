@@ -1,8 +1,13 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using NitroxClient.GameLogic;
 using NitroxClient.Unity.Helper;
+using NitroxModel.Core;
 using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic.Buildings.New;
+using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.GameLogic.Entities;
+using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 
@@ -16,13 +21,17 @@ namespace NitroxClient.MonoBehaviours;
 /// </remarks>
 public class MoonpoolManager : MonoBehaviour
 {
+    private Entities entities;
+
     private Base @base;
     private NitroxId baseId;
-    private Dictionary<Int3, SavedMoonpool> moonpoolsByCell;
-    private Dictionary<Int3, SavedMoonpool> shiftedMoonpools;
+    private Dictionary<Int3, MoonpoolEntity> moonpoolsByCell;
+    private Dictionary<Int3, MoonpoolEntity> shiftedMoonpools;
 
     public void Awake()
     {
+        entities = NitroxServiceLocator.LocateService<Entities>();
+
         if (!TryGetComponent(out @base))
         {
             Log.Error($"Tried adding a {nameof(MoonpoolManager)} to a GameObject that isn't a bases, deleting it.");
@@ -46,24 +55,24 @@ public class MoonpoolManager : MonoBehaviour
     public void LateAssignNitroxEntity(NitroxId baseId)
     {
         this.baseId = baseId;
-        foreach (SavedMoonpool savedMoonpool in moonpoolsByCell.Values)
+        foreach (MoonpoolEntity moonpoolEntity in moonpoolsByCell.Values)
         {
-            savedMoonpool.ParentId = baseId;
-            savedMoonpool.NitroxId = new(); // Generate a new id in case
+            moonpoolEntity.ParentId = baseId;
+            moonpoolEntity.Id = new(); // Generate a new id in case
         }
     }
 
     public void OnPostRebuildGeometry(Base _)
     {
-        foreach (KeyValuePair<Int3, SavedMoonpool> shiftedCell in shiftedMoonpools)
+        foreach (KeyValuePair<Int3, MoonpoolEntity> shiftedCell in shiftedMoonpools)
         {
             moonpoolsByCell[shiftedCell.Key] = shiftedCell.Value;
         }
         shiftedMoonpools.Clear();
 
-        foreach (KeyValuePair<Int3, SavedMoonpool> savedMoonpool in moonpoolsByCell)
+        foreach (KeyValuePair<Int3, MoonpoolEntity> moonpoolEntry in moonpoolsByCell)
         {
-            AssignNitroxEntityToMoonpool(savedMoonpool.Key, savedMoonpool.Value.NitroxId);
+            AssignNitroxEntityToMoonpool(moonpoolEntry.Key, moonpoolEntry.Value.Id);
         }
     }
 
@@ -85,32 +94,39 @@ public class MoonpoolManager : MonoBehaviour
     public void RegisterMoonpool(Transform constructableTransform, NitroxId moonpoolId)
     {
         Int3 absoluteCell = Absolute(constructableTransform.position);
-        moonpoolsByCell[absoluteCell] = new()
-        {
-            NitroxId = moonpoolId,
-            ParentId = baseId,
-            Cell = absoluteCell.ToDto(),
-        };
+        moonpoolsByCell[absoluteCell] = new(moonpoolId, baseId, absoluteCell.ToDto());
         AssignNitroxEntityToMoonpool(absoluteCell, moonpoolId);
     }
 
     public NitroxId DeregisterMoonpool(Transform constructableTransform)
     {
         Int3 absoluteCell = Absolute(constructableTransform.position);
-        if (moonpoolsByCell.TryGetValue(absoluteCell, out SavedMoonpool savedMoonpool))
+        if (moonpoolsByCell.TryGetValue(absoluteCell, out MoonpoolEntity moonpoolEntity))
         {
             moonpoolsByCell.Remove(absoluteCell);
-            return savedMoonpool.NitroxId;
+            return moonpoolEntity.Id;
         }
         return null;
     }
 
-    public void LoadSavedMoonpools(List<SavedMoonpool> savedMoonpools)
+    public void LoadMoonpools(IEnumerable<MoonpoolEntity> moonpoolEntities)
     {
         moonpoolsByCell.Clear();
-        foreach (SavedMoonpool savedMoonpool in savedMoonpools)
+        foreach (MoonpoolEntity moonpoolEntity in moonpoolEntities)
         {
-            moonpoolsByCell[savedMoonpool.Cell.ToUnity()] = savedMoonpool;
+            moonpoolsByCell[moonpoolEntity.Cell.ToUnity()] = moonpoolEntity;
+        }
+    }
+
+    public IEnumerator SpawnVehicles()
+    {
+        foreach (MoonpoolEntity moonpoolEntity in moonpoolsByCell.Values)
+        {
+            VehicleWorldEntity moonpoolVehicleEntity = moonpoolEntity.ChildEntities.OfType<VehicleWorldEntity>().FirstOrFallback(null);
+            if (moonpoolVehicleEntity != null)
+            {
+                yield return entities.SpawnAsync(new List<Entity>() { moonpoolVehicleEntity });
+            }
         }
     }
 
@@ -129,7 +145,7 @@ public class MoonpoolManager : MonoBehaviour
         return baseCell + @base.GetAnchor();
     }
 
-    public List<SavedMoonpool> GetSavedMoonpools()
+    public List<MoonpoolEntity> GetSavedMoonpools()
     {
         return moonpoolsByCell.Values.ToList();
     }
@@ -137,11 +153,11 @@ public class MoonpoolManager : MonoBehaviour
     public void PrintDebug()
     {
         Log.Debug($"MoonpoolManager's registered moonpools (anchor: {@base.GetAnchor()}):");
-        foreach (SavedMoonpool savedMoonpool in moonpoolsByCell.Values)
+        foreach (MoonpoolEntity moonpoolEntity in moonpoolsByCell.Values)
         {
-            Int3 absoluteCell = savedMoonpool.Cell.ToUnity();
-            Int3 baseCell = Relative(savedMoonpool.Cell.ToUnity());
-            Log.Debug($"AbsoluteCell: {absoluteCell}, BaseCell: {baseCell}, id: {savedMoonpool.NitroxId}");
+            Int3 absoluteCell = moonpoolEntity.Cell.ToUnity();
+            Int3 baseCell = Relative(moonpoolEntity.Cell.ToUnity());
+            Log.Debug($"AbsoluteCell: {absoluteCell}, BaseCell: {baseCell}, id: {moonpoolEntity.Id}");
         }
     }
 }

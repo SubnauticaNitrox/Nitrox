@@ -1,4 +1,5 @@
 using System.Collections;
+using NitroxClient.GameLogic.Bases.New;
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
@@ -23,6 +24,7 @@ namespace NitroxClient.GameLogic.InitialSync
 
         public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
         {
+            yield return BuildingTester.Main.IsAvailable();
             Log.Info($"Received initial sync packet with {packet.GlobalRootEntities.Count} global root entities");
             foreach (Entity entity in packet.GlobalRootEntities)
             {

@@ -3,7 +3,7 @@ using HarmonyLib;
 using NitroxClient.GameLogic.Bases.New;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic.Buildings.New;
+using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -14,7 +14,7 @@ namespace NitroxPatcher.Patches.Dynamic;
 public class WaterPark_Split_Patch : NitroxPatch, IDynamicPatch
 {
     private static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => WaterPark.Split(default, default));
-    private static SavedInteriorPiece NewWaterPark => BuildingTester.Main.NewWaterPark;
+    private static InteriorPieceEntity NewWaterPark => BuildingTester.Main.NewWaterPark;
 
     public static void Prefix(WaterPark bottomWaterPark, WaterPark topWaterPark)
     {
@@ -28,7 +28,7 @@ public class WaterPark_Split_Patch : NitroxPatch, IDynamicPatch
         }
         if (newWaterPark)
         {
-            NitroxId newId = NewWaterPark?.NitroxId ?? new();
+            NitroxId newId = NewWaterPark?.Id ?? new();
             NitroxEntity.SetNewId(newWaterPark.gameObject, newId);
             // If it was null beforehand, it means that the local player is responsible for destructing the WaterPark
             // If it was already set, it means that the local player is remotely destructing the WaterPark

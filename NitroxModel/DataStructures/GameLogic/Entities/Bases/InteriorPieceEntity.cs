@@ -1,5 +1,4 @@
 using BinaryPack.Attributes;
-using NitroxModel.DataStructures.GameLogic.Buildings.New;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures.Unity;
 using System;
@@ -11,9 +10,11 @@ namespace NitroxModel.DataStructures.GameLogic.Entities.Bases;
 [Serializable, DataContract]
 public class InteriorPieceEntity : GlobalRootEntity
 {
-    // TODO: Move InteriorPieceEntity's fields in here
     [DataMember(Order = 1)]
-    public SavedInteriorPiece SavedInteriorPiece { get; set; }
+    public NitroxBaseFace BaseFace;
+
+    [DataMember(Order = 2)]
+    public float Constructed;
 
     [IgnoreConstructor]
     protected InteriorPieceEntity()
@@ -21,20 +22,27 @@ public class InteriorPieceEntity : GlobalRootEntity
         // Constructor for serialization. Has to be "protected" for json serialization.
     }
 
-    public InteriorPieceEntity(SavedInteriorPiece savedInteriorPiece, NitroxId parentId)
+    public static InteriorPieceEntity MakeEmpty()
     {
-        SavedInteriorPiece = savedInteriorPiece;
-        Id = savedInteriorPiece.NitroxId;
+        return new();
+    }
+
+    public InteriorPieceEntity(NitroxId id, NitroxId parentId, NitroxBaseFace baseFace, float constructed)
+    {
+        Id = id;
         ParentId = parentId;
+        BaseFace = baseFace;
+        Constructed = constructed;
         //Metadata = savedInteriorPiece.Metadata;
 
         Transform = new();
     }
 
     /// <remarks>Used for deserialization</remarks>
-    public InteriorPieceEntity(SavedInteriorPiece savedInteriorPiece, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
+    public InteriorPieceEntity(NitroxBaseFace baseFace, float constructed, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
     {
-        SavedInteriorPiece = savedInteriorPiece;
+        BaseFace = baseFace;
+        Constructed = constructed;
 
         Id = id;
         TechType = techType;
@@ -49,6 +57,6 @@ public class InteriorPieceEntity : GlobalRootEntity
 
     public override string ToString()
     {
-        return $"[InteriorPieceEntity {SavedInteriorPiece}]";
+        return $"[InteriorPieceEntity BaseFace: {BaseFace}, Constructed: {Constructed}]";
     }
 }

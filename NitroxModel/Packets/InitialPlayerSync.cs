@@ -7,7 +7,6 @@ using NitroxModel.DataStructures.Unity;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Server;
-using NitroxModel.DataStructures.GameLogic.Buildings.New;
 
 namespace NitroxModel.Packets
 {
@@ -17,7 +16,6 @@ namespace NitroxModel.Packets
         public NitroxId AssignedEscapePodId { get; }
         public List<EquippedItemData> EquippedItems { get; }
         public List<BasePiece> BasePieces { get; }
-        public SavedGlobalRoot SavedGlobalRoot { get; }
         public List<NitroxTechType> UsedItems { get; }
         public Optional<NitroxId>[] QuickSlotsBindingIds { get; }
         public NitroxId PlayerGameObjectId { get; }
@@ -41,7 +39,6 @@ namespace NitroxModel.Packets
             NitroxId assignedEscapePodId,
             IEnumerable<EquippedItemData> equipment,
             IEnumerable<BasePiece> basePieces,
-            SavedGlobalRoot savedGlobalRoot,
             IEnumerable<NitroxTechType> usedItems,
             Optional<NitroxId>[] quickSlotsBindingIds,
             InitialPDAData pdaData,
@@ -63,7 +60,6 @@ namespace NitroxModel.Packets
             FirstTimeConnecting = firstTimeConnecting;
             EquippedItems = equipment.ToList();
             BasePieces = basePieces.ToList();
-            SavedGlobalRoot = savedGlobalRoot;
             UsedItems = usedItems.ToList();
             QuickSlotsBindingIds = quickSlotsBindingIds;
             PDAData = pdaData;
@@ -86,7 +82,6 @@ namespace NitroxModel.Packets
             NitroxId assignedEscapePodId,
             List<EquippedItemData> equippedItems,
             List<BasePiece> basePieces,
-            SavedGlobalRoot savedGlobalRoot,
             List<NitroxTechType> usedItems,
             Optional<NitroxId>[] quickSlotsBindingIds,
             NitroxId playerGameObjectId,
@@ -110,7 +105,6 @@ namespace NitroxModel.Packets
             FirstTimeConnecting = firstTimeConnecting;
             EquippedItems = equippedItems;
             BasePieces = basePieces;
-            SavedGlobalRoot = savedGlobalRoot;
             UsedItems = usedItems;
             QuickSlotsBindingIds = quickSlotsBindingIds;
             PDAData = pdaData;

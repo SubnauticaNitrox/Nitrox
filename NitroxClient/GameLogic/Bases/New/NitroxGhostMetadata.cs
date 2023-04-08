@@ -1,6 +1,7 @@
 using System.Collections;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic.Buildings.New.Metadata;
+using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 using UWE;
@@ -38,9 +39,14 @@ public static class NitroxGhostMetadata
         return metadata;
     }
 
-    public static IEnumerator ApplyMetadataToGhost(BaseGhost baseGhost, GhostMetadata ghostMetadata, Base @base)
+    public static IEnumerator ApplyMetadataToGhost(BaseGhost baseGhost, EntityMetadata entityMetadata, Base @base)
     {
-        if (BuildManager.IsUnderBaseDeconstructable(baseGhost, true) && ghostMetadata is BaseDeconstructableGhostMetadata deconstructableMetadata)
+        if (entityMetadata is not GhostMetadata ghostMetadata)
+        {
+            Log.Error($"Trying to apply metadata to a ghost that is not of type {nameof(GhostMetadata)} : [{entityMetadata.GetType()}]");
+            yield break;
+        }
+        if (BuildManager.IsUnderBaseDeconstructable(baseGhost, true) && entityMetadata is BaseDeconstructableGhostMetadata deconstructableMetadata)
         {
             yield return deconstructableMetadata.ApplyTo(baseGhost, @base);
             yield break;
@@ -69,9 +75,9 @@ public static class NitroxGhostMetadata
         }
     }
 
-    public static void LateApplyMetadataToGhost(BaseGhost baseGhost, GhostMetadata ghostMetadata)
+    public static void LateApplyMetadataToGhost(BaseGhost baseGhost, EntityMetadata entityMetadata)
     {
-        if (BuildManager.IsUnderBaseDeconstructable(baseGhost, true) && ghostMetadata is BaseDeconstructableGhostMetadata deconstructableMetadata)
+        if (BuildManager.IsUnderBaseDeconstructable(baseGhost, true) && entityMetadata is BaseDeconstructableGhostMetadata deconstructableMetadata)
         {
             deconstructableMetadata.LateApplyTo(baseGhost);
         }

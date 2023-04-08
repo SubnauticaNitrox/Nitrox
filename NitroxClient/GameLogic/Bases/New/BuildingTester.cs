@@ -5,12 +5,11 @@ using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 using NitroxClient.Communication;
-using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
-using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Buildings.New;
+using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
@@ -21,7 +20,6 @@ namespace NitroxClient.GameLogic.Bases.New;
 
 public class BuildingTester : MonoBehaviour
 {
-    private IPacketSender packetSender;
     public static BuildingTester Main;
 
     public Queue<Packet> BuildQueue;
@@ -34,7 +32,7 @@ public class BuildingTester : MonoBehaviour
     public string SavePath = Path.Combine(NitroxUser.LauncherPath, "SavedBases");
     
     public NitroxId TempId;
-    public SavedInteriorPiece NewWaterPark;
+    public InteriorPieceEntity NewWaterPark;
     public Dictionary<NitroxId, DateTimeOffset> BasesCooldown;
     /// <summary>
     /// Time in milliseconds before local player can build on a base that was modified by another player
@@ -44,7 +42,6 @@ public class BuildingTester : MonoBehaviour
     public void Start()
     {
         Main = this;
-        packetSender = NitroxServiceLocator.LocateService<IPacketSender>();
         BuildQueue = new();
         BasesCooldown = new();
         serializer = new();
@@ -118,16 +115,18 @@ public class BuildingTester : MonoBehaviour
 
     public IEnumerator BuildGhost(PlaceGhost placeGhost)
     {
-        Transform parent = GetParentOrGlobalRoot(placeGhost.ParentId);
-        yield return NitroxBuild.RestoreGhost(parent, placeGhost.SavedGhost);
-        BasesCooldown[placeGhost.ParentId ?? placeGhost.SavedGhost.NitroxId] = DateTimeOffset.Now;
+        GhostEntity ghostEntity = placeGhost.GhostEntity;
+        Transform parent = GetParentOrGlobalRoot(ghostEntity.ParentId);
+        yield return NitroxBuild.RestoreGhost(parent, ghostEntity);
+        BasesCooldown[ghostEntity.ParentId ?? ghostEntity.Id] = DateTimeOffset.Now;
     }
 
     public IEnumerator BuildModule(PlaceModule placeModule)
     {
-        Transform parent = GetParentOrGlobalRoot(placeModule.ParentId);
-        yield return NitroxBuild.RestoreModule(parent, placeModule.SavedModule);
-        BasesCooldown[placeModule.ParentId ?? placeModule.SavedModule.NitroxId] = DateTimeOffset.Now;
+        ModuleEntity moduleEntity = placeModule.ModuleEntity;
+        Transform parent = GetParentOrGlobalRoot(moduleEntity.ParentId);
+        yield return NitroxBuild.RestoreModule(parent, moduleEntity);
+        BasesCooldown[moduleEntity.ParentId ?? moduleEntity.Id] = DateTimeOffset.Now;
     }
 
     public IEnumerator ProgressConstruction(ModifyConstructedAmount modifyConstructedAmount)
@@ -309,7 +308,7 @@ public class BuildingTester : MonoBehaviour
         keysToRemove.ForEach(key => BasesCooldown.Remove(key));
     }
 
-    // TODO: Remove Legacy singleplayer testing code
+    // TODO: Transform legacy singleplayer loading/saving into a map converting monobehaviour
 
     public void CycleTargetBase()
     {
@@ -368,7 +367,7 @@ public class BuildingTester : MonoBehaviour
     public IEnumerator LoadGlobalRootAsync(SavedGlobalRoot savedGlobalRoot)
     {
         DateTimeOffset beginTime = DateTimeOffset.Now;
-        foreach (SavedBuild build in savedGlobalRoot.Builds)
+        foreach (BuildEntity build in savedGlobalRoot.Builds)
         {
             yield return LoadBaseAsync(build);
         }
@@ -398,17 +397,17 @@ public class BuildingTester : MonoBehaviour
         }
         else
         {
-            SavedBuild saved = NitroxBuild.From(TargetBase);
-            Log.Debug($"Saved base: {TargetBase.name}\n{saved}");
-            SaveBase(saved);
+            BuildEntity buildEntity = NitroxBuild.From(TargetBase);
+            Log.Debug($"Saved base: {TargetBase.name}\n{buildEntity}");
+            SaveBase(buildEntity);
         }
     }
 
-    private void SaveBase(SavedBuild savedBuild)
+    private void SaveBase(BuildEntity buildEntity)
     {
         using (StreamWriter writer = File.CreateText(string.Format("{0}\\save{1}.json", SavePath, Slot)))
         {
-            serializer.Serialize(writer, savedBuild);
+            serializer.Serialize(writer, buildEntity);
         }
     }
 
@@ -417,17 +416,17 @@ public class BuildingTester : MonoBehaviour
         DateTimeOffset beginTime = DateTimeOffset.Now;
         using (StreamReader reader = File.OpenText(string.Format("{0}\\save{1}.json", SavePath, Slot)))
         {
-            SavedBuild savedBuild = (SavedBuild)serializer.Deserialize(reader, typeof(SavedBuild));
+            BuildEntity savedBuild = (BuildEntity)serializer.Deserialize(reader, typeof(BuildEntity));
             DateTimeOffset endTime = DateTimeOffset.Now;
             Log.Debug(string.Format("Took {0}ms to deserialize the SavedBuild\n:{1}", (endTime - beginTime).TotalMilliseconds, savedBuild));
             StartCoroutine(LoadBaseAsync(savedBuild));
         }
     }
 
-    public IEnumerator LoadBaseAsync(SavedBuild savedBuild, TaskResult<Optional<GameObject>> result = null)
+    public IEnumerator LoadBaseAsync(BuildEntity buildEntity, TaskResult<Optional<GameObject>> result = null)
     {
         DateTimeOffset beginTime = DateTimeOffset.Now;
-        yield return NitroxBuild.CreateBuild(savedBuild, result);
+        yield return NitroxBuild.CreateBuild(buildEntity, result);
         DateTimeOffset endTime = DateTimeOffset.Now;
         Log.Debug(string.Format("Took {0}ms to create the Base", (endTime - beginTime).TotalMilliseconds));
     }

@@ -1,5 +1,4 @@
 using System.Runtime.Serialization;
-using NitroxModel.DataStructures.GameLogic.Buildings.New;
 using NitroxServer.GameLogic.Bases;
 using NitroxServer.GameLogic.Entities;
 using NitroxServer.GameLogic.Players;
@@ -22,9 +21,6 @@ namespace NitroxServer.Serialization.World
         public EntityData EntityData { get; set; }
 
         [DataMember(Order = 5)]
-        public SavedGlobalRoot _GlobalRootData { get; set; }
-
-        [DataMember(Order = 6)]
         public GlobalRootData GlobalRootData { get; set; }
 
         public static PersistedWorldData From(World world)
@@ -40,7 +36,6 @@ namespace NitroxServer.Serialization.World
                     GameData = GameData.From(world.GameData.PDAState, world.GameData.StoryGoals, world.ScheduleKeeper, world.StoryManager, world.TimeKeeper),
                     Seed = world.Seed
                 },
-                _GlobalRootData = world.BuildingManager.GlobalRoot,
                 GlobalRootData = GlobalRootData.From(world.WorldEntityManager.GetGlobalRootEntities(true))
             };
         }
@@ -51,8 +46,7 @@ namespace NitroxServer.Serialization.World
                    BaseData != null &&
                    PlayerData != null &&
                    EntityData != null &&
-                   GlobalRootData != null &&
-                   _GlobalRootData != null;
+                   GlobalRootData != null;
         }
     }
 }
