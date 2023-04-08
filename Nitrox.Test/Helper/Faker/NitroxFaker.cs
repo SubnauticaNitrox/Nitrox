@@ -18,8 +18,7 @@ public interface INitroxFaker
 
 public abstract class NitroxFaker
 {
-    public Type OutputType { get; init; }
-    public bool ShouldSkip = false;
+    public Type OutputType { get; protected init; }
     protected static readonly Bogus.Faker Faker;
 
     static NitroxFaker()
@@ -50,7 +49,7 @@ public abstract class NitroxFaker
         { typeof(NitroxId), new NitroxActionFaker(typeof(NitroxId), f => new NitroxId(f.Random.Guid())) },
     };
 
-    protected static INitroxFaker GetOrCreateFaker(Type t)
+    public static INitroxFaker GetOrCreateFaker(Type t)
     {
         return FakerByType.TryGetValue(t, out INitroxFaker nitroxFaker) ? nitroxFaker : CreateFaker(t);
     }
@@ -106,11 +105,13 @@ public abstract class NitroxFaker
     {
         return FakerByType.ContainsKey(type) ||
                type.GetCustomAttributes(typeof(DataContractAttribute), false).Length >= 1 ||
-               (NitroxCollectionFaker.TryGetCollectionTypes(type, out Type[] collectionTypes) && collectionTypes.All(IsValidType) ||
-                type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>));
+               type.GetCustomAttributes(typeof(SerializableAttribute), false).Length >= 1 ||
+               (NitroxCollectionFaker.TryGetCollectionTypes(type, out Type[] collectionTypes) && collectionTypes.All(IsValidType)) ||
+               type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
     }
 
     protected static readonly MethodInfo CastMethodBase = typeof(NitroxFaker).GetMethod("Cast", BindingFlags.NonPublic | BindingFlags.Static);
+
     // ReSharper disable once UnusedMember.Global
     protected static T Cast<T>(object o)
     {

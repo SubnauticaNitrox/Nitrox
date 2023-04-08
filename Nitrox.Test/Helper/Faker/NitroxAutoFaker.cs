@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
+using BinaryPack.Attributes;
+using NitroxModel.Logger;
 
 namespace Nitrox.Test.Helper.Faker;
 
@@ -16,6 +18,7 @@ public class NitroxAutoFaker<T> : NitroxFaker, INitroxFaker
     public NitroxAutoFaker()
     {
         Type type = typeof(T);
+        Log.Info(type.ToString());
         if (!IsValidType(type))
         {
             throw new InvalidOperationException($"{type.Name} is not a valid type for {nameof(NitroxAutoFaker<T>)}");
@@ -24,10 +27,24 @@ public class NitroxAutoFaker<T> : NitroxFaker, INitroxFaker
         OutputType = type;
         FakerByType.Add(type, this);
 
-        memberInfos = type.GetMembers(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
-                          .Where(member => member.GetCustomAttributes<DataMemberAttribute>().Any()).ToArray();
+        if (type.GetCustomAttributes(typeof(DataContractAttribute), false).Length > 0)
+        {
+            memberInfos = type.GetMembers(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+                              .Where(member => member.GetCustomAttributes<DataMemberAttribute>().Any()).ToArray();
+        }
+        else
+        {
+            memberInfos = type.GetMembers(BindingFlags.Public | BindingFlags.Instance)
+                              .Where(member => member.MemberType is MemberTypes.Field or MemberTypes.Property &&
+                                               !member.GetCustomAttributes<IgnoredMemberAttribute>().Any())
+                              .ToArray();
+        }
 
-        constructor = GetConstructorForType(type, memberInfos);
+        if (!TryGetConstructorForType(type, memberInfos, out constructor) &&
+            !TryGetConstructorForType(type, Array.Empty<MemberInfo>(), out constructor))
+        {
+            throw new NullReferenceException($"Could not find a constructor with no parameters for {type}");
+        }
 
         parameterFakers = new INitroxFaker[memberInfos.Length];
 
@@ -62,8 +79,11 @@ public class NitroxAutoFaker<T> : NitroxFaker, INitroxFaker
 
             if (nitroxFaker is NitroxAbstractFaker abstractFaker)
             {
-                NitroxCollectionFaker collectionFaker = (NitroxCollectionFaker)fakerTree.Last(f => f.GetType() == typeof(NitroxCollectionFaker));
-                collectionFaker.GenerateSize = Math.Max(collectionFaker.GenerateSize, abstractFaker.AssignableTypesCount);
+                NitroxCollectionFaker collectionFaker = (NitroxCollectionFaker)fakerTree.LastOrDefault(f => f.GetType() == typeof(NitroxCollectionFaker));
+                if (collectionFaker != null)
+                {
+                    collectionFaker.GenerateSize = Math.Max(collectionFaker.GenerateSize, abstractFaker.AssignableTypesCount);
+                }
             }
 
             foreach (INitroxFaker subFaker in nitroxFaker.GetSubFakers())
@@ -174,12 +194,9 @@ public class NitroxAutoFaker<T> : NitroxFaker, INitroxFaker
         return obj;
     }
 
-    private static ConstructorInfo GetConstructorForType(Type type, MemberInfo[] dataMembers)
+    private static bool TryGetConstructorForType(Type type, MemberInfo[] dataMembers, out ConstructorInfo constructorInfo)
     {
-        ConstructorInfo constructorToUse = null;
-        ConstructorInfo[] constructors = type.GetConstructors();
-
-        foreach (ConstructorInfo constructor in constructors)
+        foreach (ConstructorInfo constructor in type.GetConstructors())
         {
             if (constructor.GetParameters().Length != dataMembers.Length)
             {
@@ -192,21 +209,12 @@ public class NitroxAutoFaker<T> : NitroxFaker, INitroxFaker
 
             if (parameterValid)
             {
-                constructorToUse = constructor;
-                break;
+                constructorInfo = constructor;
+                return true;
             }
         }
 
-        if (constructorToUse == null)
-        {
-            constructorToUse = type.GetConstructor(Array.Empty<Type>());
-
-            if (constructorToUse == null)
-            {
-                throw new NullReferenceException($"Could not find a constructor with no parameters for {type}");
-            }
-        }
-
-        return constructorToUse;
+        constructorInfo = null;
+        return false;
     }
 }
