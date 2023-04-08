@@ -50,7 +50,7 @@ internal class BreakableResource_SpawnResourceFromPrefab_Patch : NitroxPatch, ID
     {
         NitroxId newId = new();
         NitroxEntity.SetNewId(__instance, newId);
-        Resolve<Items>().Dropped(__instance, CraftData.GetTechType(__instance));
+        Resolve<Items>().Dropped(__instance);
     }
 
     public override void Patch(Harmony harmony)
