@@ -19,31 +19,30 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// <summary>
 /// Synchronizes entities that can be broken and that will drop material, such as limestones...
 /// </summary>
-internal class BreakableResource_SpawnResourceFromPrefab_Patch : NitroxPatch, IDynamicPatch
+public class BreakableResource_SpawnResourceFromPrefab_Patch : NitroxPatch, IDynamicPatch
 {
-    public static readonly MethodInfo TARGET_METHOD_ORIGINAL = Reflect.Method((BreakableResource t) => t.SpawnResourceFromPrefab(default));
+    public static readonly MethodInfo TARGET_METHOD_ORIGINAL = Reflect.Method(() => BreakableResource.SpawnResourceFromPrefab(default, default, default));
     public static readonly MethodInfo TARGET_METHOD = AccessTools.EnumeratorMoveNext(TARGET_METHOD_ORIGINAL);
 
-    private static readonly InstructionsPattern injectionPattern = new()
+    private static readonly InstructionsPattern SpawnResFromPrefPattern = new()
     {
-        Reflect.Method((Rigidbody r) => r.AddForce(default(Vector3))),
-        { Ldloc_1, "Callback" },
+        { Reflect.Method((Rigidbody t) => t.AddForce(default(Vector3))), "DropItemInstance" },
         Ldc_I4_0
     };
 
-    public IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
+    public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
     {
         static IEnumerable<CodeInstruction> InsertCallback(string label, CodeInstruction _)
         {
             switch(label)
             {
-                case "Callback":
+                case "DropItemInstance":
                     yield return new(Ldloc_1);
                     yield return new(Call, Reflect.Method(() => Callback(default)));
                     break;
             }
         }
-        return instructions.Transform(injectionPattern, InsertCallback);
+        return instructions.Transform(SpawnResFromPrefPattern, InsertCallback);
     }
 
     private static void Callback(GameObject __instance)
