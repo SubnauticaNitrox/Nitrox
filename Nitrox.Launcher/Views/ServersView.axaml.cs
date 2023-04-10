@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using Avalonia.Input;
 using Nitrox.Launcher.ViewModels;
 using Nitrox.Launcher.Views.Abstract;
@@ -11,10 +10,6 @@ public partial class ServersView : RoutableViewBase<ServersViewModel>
     public ServersView()
     {
         InitializeComponent();
-    }
-
-    protected override void RegisterDispose(Action<IDisposable> disposables)
-    {
     }
 
     private void NitroxWikiTextBlock_OnPointerPressed(object sender, PointerPressedEventArgs e)
