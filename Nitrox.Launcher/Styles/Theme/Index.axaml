@@ -49,9 +49,6 @@
         </Setter>
     </Style>
 
-    <Style Selector=":is(Panel).form">
-        <Setter Property="Margin" Value="24" />
-    </Style>
     <Style Selector=".form > :is(Layoutable)">
         <Setter Property="Margin" Value="0 0 0 26" />
     </Style>

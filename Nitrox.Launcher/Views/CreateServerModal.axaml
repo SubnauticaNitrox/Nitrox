@@ -15,7 +15,7 @@
         CanResize="False"
         Title="Create a server">
     <StackPanel>
-        <StackPanel Classes="form">
+        <StackPanel Classes="form" Margin="24">
             <TextBlock Text="Create a server" Classes="modalHeader" />
             <StackPanel>
                 <TextBlock Text="SERVER NAME" />
