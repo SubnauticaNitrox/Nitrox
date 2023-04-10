@@ -6,7 +6,6 @@ using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
 using NitroxPatcher.PatternMatching;
-using Oculus.Platform;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;

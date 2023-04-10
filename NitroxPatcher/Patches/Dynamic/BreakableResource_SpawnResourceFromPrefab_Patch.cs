@@ -1,16 +1,10 @@
 using HarmonyLib;
-using Mono.Cecil.Cil;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using NitroxPatcher.PatternMatching;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using static System.Reflection.Emit.OpCodes;
 
@@ -26,7 +20,7 @@ public class BreakableResource_SpawnResourceFromPrefab_Patch : NitroxPatch, IDyn
 
     private static readonly InstructionsPattern SpawnResFromPrefPattern = new()
     {
-        { Reflect.Method((Rigidbody t) => t.AddForce(default(Vector3))), "DropItemInstance" },
+        { Reflect.Method((Rigidbody b) => b.AddForce(default(Vector3))), "DropItemInstance" },
         Ldc_I4_0
     };
 
@@ -47,8 +41,7 @@ public class BreakableResource_SpawnResourceFromPrefab_Patch : NitroxPatch, IDyn
 
     private static void Callback(GameObject __instance)
     {
-        NitroxId newId = new();
-        NitroxEntity.SetNewId(__instance, newId);
+        NitroxEntity.SetNewId(__instance, new());
         Resolve<Items>().Dropped(__instance);
     }
 

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using FluentAssertions;
@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NitroxTest.Patcher;
 using static NitroxPatcher.Patches.Dynamic.SpawnOnKill_OnKill_Patch;
 
-namespace Nitrox.Test.Patcher.Patches.Dynamic;
+namespace NitroxPatcher.Patches.Dynamic;
 
 [TestClass]
 public class SpawnOnKill_OnKill_PatchTest
