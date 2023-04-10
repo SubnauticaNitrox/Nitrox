@@ -73,7 +73,6 @@ namespace NitroxServer
              - World gamemode: {serverConfig.GameMode}
              - Story goals unlocked: {world.GameData.StoryGoals.GoalUnlocks.Count}
              - Encyclopedia entries: {world.GameData.PDAState.EncyclopediaEntries.Count}
-             - Storage slot items: {world.InventoryManager.GetAllStorageSlotItems().Count}
              - Known tech: {world.GameData.PDAState.KnownTechTypes.Count}
             """);
                 

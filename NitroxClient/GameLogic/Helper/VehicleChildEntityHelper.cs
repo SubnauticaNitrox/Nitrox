@@ -24,7 +24,6 @@ public class VehicleChildEntityHelper
         typeof(DockingBayDoor),
         typeof(CyclopsDecoyLoadingTube),
         typeof(BatterySource),
-        typeof(EnergyMixin),
         typeof(SubNameInput),
         typeof(WeldablePoint),
         typeof(CyclopsVehicleStorageTerminalManager),
@@ -37,17 +36,30 @@ public class VehicleChildEntityHelper
         string relativePathName = currentPath.Replace(vehiclePath, "")
                                              .TrimStart('/');
 
-        if (relativePathName.Length > 0) // no need to execute for the main vehicle.
+        if (relativePathName.Length > 0) 
         {
+            // generate PathBasedChildEntities for gameObjects under the main vehicle.
             foreach (MonoBehaviour mono in current.GetComponents<MonoBehaviour>())
             {
                 if (interactiveChildTypes.Contains(mono.GetType()))
                 {
                     // We don't to accidentally tag this game object unless we know it has an applicable mono
                     NitroxId id = NitroxEntity.GetId(mono.gameObject);
-                    toPopulate.Add(new PathBasedChildEntity(relativePathName, id, null, null, vehicleId, new()));
+
+                    PathBasedChildEntity pathBasedChildEntity = new(relativePathName, id, null, null, vehicleId, new());
+                    toPopulate.Add(pathBasedChildEntity);
+
+                    if (mono is BatterySource batterySource) // cyclops has a battery source as a deeply-nested child
+                    {
+                        BatteryChildEntityHelper.PopulateInstalledBattery(batterySource, pathBasedChildEntity.ChildEntities, id);
+                    }
                 }
             }
+        }
+        else
+        {
+            // both seamoth and exosuit have energymixin as a direct component. populate the battery if it exists
+            BatteryChildEntityHelper.TryPopulateInstalledBattery(current, toPopulate, vehicleId);
         }
 
         foreach (Transform child in current.transform)

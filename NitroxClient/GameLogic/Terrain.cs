@@ -1,8 +1,8 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Map;
-using NitroxClient.Unity.Helper;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
@@ -16,36 +16,35 @@ namespace NitroxClient.GameLogic
         private readonly IMultiplayerSession multiplayerSession;
         private readonly IPacketSender packetSender;
         private readonly VisibleCells visibleCells;
+        private readonly VisibleBatches visibleBatches;
 
         private bool cellsPendingSync;
-        private float timeWhenCellsBecameOutOfSync;
+        private bool batchesPendingSync;
+        private float bufferedTime = 0f;
+        private float timeBuffer = 0.05f;
 
-        private List<AbsoluteEntityCell> added = new List<AbsoluteEntityCell>();
-        private List<AbsoluteEntityCell> removed = new List<AbsoluteEntityCell>();
+        private List<AbsoluteEntityCell> addedCells = new List<AbsoluteEntityCell>();
+        private List<AbsoluteEntityCell> removedCells = new List<AbsoluteEntityCell>();
+        private List<NitroxInt3> addedBatches = new List<NitroxInt3>();
+        private List<NitroxInt3> removedBatches = new List<NitroxInt3>();
 
-        public Terrain(IMultiplayerSession multiplayerSession, IPacketSender packetSender, VisibleCells visibleCells)
+        public Terrain(IMultiplayerSession multiplayerSession, IPacketSender packetSender, VisibleCells visibleCells, VisibleBatches visibleBatches)
         {
             this.multiplayerSession = multiplayerSession;
             this.packetSender = packetSender;
             this.visibleCells = visibleCells;
+            this.visibleBatches = visibleBatches;
         }
 
         public void CellLoaded(Int3 batchId, Int3 cellId, int level)
         {
-            LargeWorldStreamer.main.StartCoroutine(WaitAndAddCell(batchId, cellId, level));
-            MarkCellsReadyForSync(0.5f);
-        }
-
-        private IEnumerator WaitAndAddCell(Int3 batchId, Int3 cellId, int level)
-        {
-            yield return Yielders.WaitForHalfSecond;
-
             AbsoluteEntityCell cell = new AbsoluteEntityCell(batchId.ToDto(), cellId.ToDto(), level);
 
             if (!visibleCells.Contains(cell))
             {
                 visibleCells.Add(cell);
-                added.Add(cell);
+                addedCells.Add(cell);
+                cellsPendingSync = true;
             }
         }
 
@@ -56,44 +55,61 @@ namespace NitroxClient.GameLogic
             if (visibleCells.Contains(cell))
             {
                 visibleCells.Remove(cell);
-                removed.Add(cell);
-                MarkCellsReadyForSync(0);
-            }
-        }
-
-        private void MarkCellsReadyForSync(float delay)
-        {
-            if (cellsPendingSync == false)
-            {
-                timeWhenCellsBecameOutOfSync = Time.time;
-                LargeWorldStreamer.main.StartCoroutine(WaitAndSyncCells(delay));
+                removedCells.Add(cell);
                 cellsPendingSync = true;
             }
         }
-
-        private IEnumerator WaitAndSyncCells(float delay)
+        public void BatchLoaded(Int3 batchId)
         {
-            yield return new WaitForSeconds(delay);
-
-            while (cellsPendingSync)
+            NitroxInt3 nitroxBatchId = batchId.ToDto();
+            if (!visibleBatches.Contains(nitroxBatchId))
             {
-                float currentTime = Time.time;
-                float elapsed = currentTime - timeWhenCellsBecameOutOfSync;
+                visibleBatches.Add(nitroxBatchId);
+                addedBatches.Add(nitroxBatchId);
+                batchesPendingSync = true;
+            }
+        }
 
-                if (elapsed >= 0.1)
+        public void BatchUnloaded(Int3 batchId)
+        {
+            NitroxInt3 nitroxBatchId = batchId.ToDto();
+            if (visibleBatches.Contains(nitroxBatchId))
+            {
+                visibleBatches.Remove(nitroxBatchId);
+                removedBatches.Add(nitroxBatchId);
+                batchesPendingSync = true;
+            }
+        }
+
+        public void UpdateVisibility()
+        {
+            bufferedTime += Time.deltaTime;
+            if (bufferedTime > timeBuffer)
+            {
+                if (cellsPendingSync)
                 {
-                    CellVisibilityChanged cellsChanged = new CellVisibilityChanged(multiplayerSession.Reservation.PlayerId, added.ToArray(), removed.ToArray());
+                    CellVisibilityChanged cellsChanged = new CellVisibilityChanged(multiplayerSession.Reservation.PlayerId, addedCells.ToArray(), removedCells.ToArray());
                     packetSender.Send(cellsChanged);
 
-                    added.Clear();
-                    removed.Clear();
+                    addedCells.Clear();
+                    removedCells.Clear();
 
                     cellsPendingSync = false;
-                    yield break;
                 }
 
-                yield return null;
+                if (batchesPendingSync)
+                {
+                    BatchVisibilityChanged batchesChanged = new BatchVisibilityChanged(multiplayerSession.Reservation.PlayerId, addedBatches.ToArray(), removedBatches.ToArray());
+                    packetSender.Send(batchesChanged);
+
+                    addedBatches.Clear();
+                    removedBatches.Clear();
+
+                    batchesPendingSync = false;
+                }
+                bufferedTime = 0f;
             }
+
         }
 
         /// <summary>

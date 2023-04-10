@@ -11,17 +11,18 @@ public class ExtensionsTest
     [TestMethod]
     public void RemoveAllFast_ShouldDoNothingWhenEmptyList()
     {
-        List<string> list = new() { "one", "two", "three", "four" };
-        list.RemoveAllFast((object)null, static (_, _) => false);
-        list.Should().BeEquivalentTo("one", "two", "three", "four");
+        object[] list = Array.Empty<object>();
+        list.Should().BeEmpty();
+        list.RemoveAllFast((object)null, static (_, _) => true);
+        list.Should().BeEmpty();
     }
 
     [TestMethod]
     public void RemoveAllFast_ShouldDoNothingWhenAlwaysFalsePredicate()
     {
-        object[] list = new object[0];
-        list.RemoveAllFast((object)null, static (_, _) => true);
-        list.Should().BeEmpty();
+        List<string> list = new() { "one", "two", "three", "four" };
+        list.RemoveAllFast((object)null, static (_, _) => false);
+        list.Should().BeEquivalentTo("one", "two", "three", "four");
     }
 
     [TestMethod]

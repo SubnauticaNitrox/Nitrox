@@ -29,7 +29,7 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities
             {
                 LargeWorldEntity.Register(gameObject); // This calls SetActive on the GameObject
             }
-            else if (gameObject.GetComponent<LargeWorldEntity>() && !gameObject.transform.parent && cellRoot.IsAwake())
+            else if (gameObject.GetComponent<LargeWorldEntity>() && !gameObject.transform.parent && cellRoot.liveRoot)
             {
                 gameObject.transform.SetParent(cellRoot.liveRoot.transform, true);
                 LargeWorldEntity.Register(gameObject);

@@ -5,19 +5,19 @@ using NitroxModel.DataStructures.GameLogic;
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class CellEntities : Packet
+    public class SpawnEntities : Packet
     {
         public List<Entity> Entities { get; }
 
         public bool ForceRespawn { get; }
 
-        public CellEntities(List<Entity> entities)
+        public SpawnEntities(List<Entity> entities)
         {
             Entities = entities;
             ForceRespawn = false;
         }
 
-        public CellEntities(Entity entity)
+        public SpawnEntities(Entity entity)
         {
             Entities = new List<Entity>
             {
@@ -27,7 +27,7 @@ namespace NitroxModel.Packets
             ForceRespawn = false;
         }
 
-        public CellEntities(Entity entity, bool forceRespawn)
+        public SpawnEntities(Entity entity, bool forceRespawn)
         {
             Entities = new List<Entity>
             {
@@ -38,7 +38,7 @@ namespace NitroxModel.Packets
         }
 
         // Constructor for serialization. 
-        public CellEntities(List<Entity> entities, bool forceRespawn)
+        public SpawnEntities(List<Entity> entities, bool forceRespawn)
         {
             Entities = entities;
             ForceRespawn = forceRespawn;

@@ -56,7 +56,7 @@ public class PlayerModelManager
         GameObject go = signalHandle.GetResult();
         go.name = "RemotePlayerSignalPrototype";
         go.transform.localScale = new Vector3(.5f, .5f, .5f);
-        go.transform.localPosition += new Vector3(0, 0.8f, 0);
+        go.transform.localPosition = new Vector3(0, 0.8f, 0);
         go.SetActive(false);
 
         result.Set(go);
@@ -77,6 +77,10 @@ public class PlayerModelManager
         ping.pingType = PingType.Signal;
         // ping will be moved to the player list tab
         ping.displayPingInManager = false;
+
+        // SignalPing is not required for player as we don't need to display text or anchor to a specific world position
+        // we also take a dependency on the lack of signalping later to differentiate remote player pings from others.
+        Object.DestroyImmediate(signalBase.GetComponent<SignalPing>());
 
         SetInGamePingColor(player, ping);
     }

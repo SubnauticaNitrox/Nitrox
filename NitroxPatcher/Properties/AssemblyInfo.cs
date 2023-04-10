@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 
@@ -28,5 +27,3 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 // COMMON: [assembly: AssemblyVersion("X.X.X.X")]
 // COMMON: [assembly: AssemblyFileVersion("X.X.X.X")]
-
-[assembly: InternalsVisibleTo("Nitrox.Test")]
