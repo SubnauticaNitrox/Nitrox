@@ -74,9 +74,8 @@ public static class BuildManager
                     return true;
                 }
                 break;
-            case BaseAddMapRoomGhost mapRoomGhost:
-                // TODO: Fix MapRoom case
-                face = new(mapRoomGhost.targetOffset, Base.Direction.East);
+            case BaseAddMapRoomGhost:
+                face = new(GetMapRoomFunctionalityCell(baseGhost), 0);
                 return true;
         }
 
@@ -89,10 +88,11 @@ public static class BuildManager
         Log.Debug($"TryTransferIdFromGhostToModule({baseGhost},{id})");
         Base.Face? face = null;
         bool isWaterPark = baseGhost is BaseAddWaterPark;
+        bool isMapRoomGhost = baseGhost is BaseAddMapRoomGhost;
         // Only three types of ghost which spawn a module
         if ((baseGhost is BaseAddFaceGhost faceGhost && faceGhost.modulePrefab) ||
             (baseGhost is BaseAddModuleGhost moduleGhost && moduleGhost.modulePrefab) ||
-            baseGhost is BaseAddMapRoomGhost mapRoomGhost ||
+            isMapRoomGhost ||
             isWaterPark)
         {
             if (TryGetGhostFace(baseGhost, out Base.Face ghostFace))
@@ -110,29 +110,61 @@ public static class BuildManager
         {
             face = new(constructableBase.moduleFace.Value.cell + baseGhost.targetBase.GetAnchor(), constructableBase.moduleFace.Value.direction);
         }
-        // Edge case that happens when a Deconstructed WaterPark is built onto another deconstructed WaterPark that has its module
-        // A new module will be created by the current Deconstructed WaterPark which is the one we'll be aiming at
-        else if (constructableBase.techType.Equals(TechType.BaseWaterPark) && !isWaterPark)
-        {
-            IBaseModuleGeometry baseModuleGeometry = constructableBase.GetComponentInChildren<IBaseModuleGeometry>(true);
-            if (baseModuleGeometry != null)
-            {
-                face = baseModuleGeometry.geometryFace;
-            }
-        }
-        // Moonpools are a very specific case, we tweak them to work as modules (while they're not)
-        else if (constructableBase.techType.Equals(TechType.BaseMoonpool))
-        {
-            baseGhost.targetBase.gameObject.EnsureComponent<MoonpoolManager>().RegisterMoonpool(constructableBase.transform, id);
-            return true;
-        }
         else
         {
-            return false;
+            switch (constructableBase.techType)
+            {
+                case TechType.BaseWaterPark:
+                    // Edge case that happens when a Deconstructed WaterPark is built onto another deconstructed WaterPark that has its module
+                    // A new module will be created by the current Deconstructed WaterPark which is the one we'll be aiming at
+                    if (!isWaterPark)
+                    {
+                        IBaseModuleGeometry baseModuleGeometry = constructableBase.GetComponentInChildren<IBaseModuleGeometry>(true);
+                        if (baseModuleGeometry != null)
+                        {
+                            face = baseModuleGeometry.geometryFace;
+                        }
+                    }
+                    break;
+
+                case TechType.BaseMoonpool:
+                    // Moonpools are a very specific case, we tweak them to work as modules (while they're not)
+                    baseGhost.targetBase.gameObject.EnsureComponent<MoonpoolManager>().RegisterMoonpool(constructableBase.transform, id);
+                    return true;
+
+                case TechType.BaseMapRoom:
+                    // In the case the ghost is under a BaseDeconstructable, this is a good way to identify a MapRoom
+                    face = new(GetMapRoomFunctionalityCell(baseGhost), 0);
+                    isMapRoomGhost = true;
+                    break;
+
+                default:
+                    return false;
+            }
         }
 
         if (face.HasValue)
         {
+            if (isMapRoomGhost)
+            {
+                MapRoomFunctionality mapRoomFunctionality = baseGhost.targetBase.GetMapRoomFunctionalityForCell(face.Value.cell);
+                if (mapRoomFunctionality)
+                {
+                    // As MapRooms can be built as the first piece of a base, we need to make sure that they receive a new id if they're not in a base
+                    if (constructableBase.GetComponentInParent<Base>(true))
+                    {
+                        NitroxEntity.SetNewId(mapRoomFunctionality.gameObject, id);
+                    }
+                    else
+                    {
+                        NitroxEntity.SetNewId(mapRoomFunctionality.gameObject, id.Increment());
+                    }
+                    return true;
+                }
+                Log.Error($"Couldn't find MapRoomFunctionality of built MapRoom (cell: {face.Value.cell})");
+                return false;
+            }
+
             IBaseModule module = baseGhost.targetBase.GetModule(face.Value);
             if (module != null)
             {
@@ -182,6 +214,12 @@ public static class BuildManager
     {
         return baseGhost.TryGetComponentInParent(out ConstructableBase constructableBase) &&
             (IsBaseDeconstructable(constructableBase) || faceNotLinked);
+    }
+
+    public static Int3 GetMapRoomFunctionalityCell(BaseGhost baseGhost)
+    {
+        // Code found from Base.GetMapRoomFunctionalityForCell
+        return baseGhost.targetBase.NormalizeCell(baseGhost.targetBase.WorldToGrid(baseGhost.ghostBase.occupiedBounds.center));
     }
 }
 
@@ -260,6 +298,7 @@ public static class NitroxBuild
                 childEntities.Add(moonpoolEntity);
             }
         }
+        // TODO: Add MapRoomFunctionality as children
         foreach (Entity childEntity in childEntities)
         {
             childEntity.ParentId = baseId;
@@ -323,7 +362,7 @@ public static class NitroxBuild
         List<GhostEntity> ghostEntities = new();
         foreach (Transform transform in parent)
         {
-            if (transform.TryGetComponent(out Constructable constructable) && constructable is ConstructableBase constructableBase)
+            if (transform.TryGetComponent(out Constructable constructable) && constructable is ConstructableBase constructableBase && constructable.techType != TechType.BaseMapRoom)
             {
                 Log.Debug($"BaseConstructable found: {constructableBase.name}");
                 ghostEntities.Add(NitroxGhost.From(constructableBase));
@@ -748,7 +787,7 @@ public static class NitroxGhost
         {
             ghost.BaseFace = constructableBase.moduleFace.Value.ToDto();
         }
-        
+
         ghost.SavedBase = NitroxBase.From(constructableBase.model.GetComponent<Base>());
         if (constructableBase.name.Equals("BaseDeconstructable(Clone)"))
         {

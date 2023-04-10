@@ -202,7 +202,7 @@ namespace NitroxServer.Serialization.World
             {
                 Log.Debug($"Adding GlobalRootEntity: {entity.Id} of type: {entity.GetType()}");
             }
-            entityRegistry.AddEntitiesIgnoringDuplicate(pWorldData.GlobalRootData.Entities.Cast<Entity>());
+            entityRegistry.AddEntitiesIgnoringDuplicate(pWorldData.GlobalRootData.Entities.OfType<Entity>().ToList());
 
             World world = new()
             {

@@ -250,7 +250,7 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
         Base parentBase = null;
         if (constructableBase.tr.parent)
         {
-            parentBase = constructableBase.GetComponentInParent<Base>();
+            parentBase = constructableBase.GetComponentInParent<Base>(true);
         }
 
         // If a module was spawned we need to transfer the ghost id to it for further recognition
@@ -353,6 +353,19 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
         else if (constructableBase.techType.Equals(TechType.BaseMoonpool) && @base.TryGetComponent(out MoonpoolManager moonpoolManager))
         {
             pieceId = moonpoolManager.DeregisterMoonpool(constructableBase.transform); // pieceId can still be null
+        }
+        else if (constructableBase.techType.Equals(TechType.BaseMapRoom))
+        {
+            Int3 mapRoomFunctionalityCell = BuildManager.GetMapRoomFunctionalityCell(constructableBase.model.GetComponent<BaseGhost>());
+            MapRoomFunctionality mapRoomFunctionality = @base.GetMapRoomFunctionalityForCell(mapRoomFunctionalityCell);
+            if (mapRoomFunctionality && NitroxEntity.TryGetEntityFrom(mapRoomFunctionality.gameObject, out NitroxEntity mapRoomEntity))
+            {
+                pieceId = mapRoomEntity.Id;
+            }
+            else
+            {
+                Log.Error("Either couldn't find a MapRoomFunctionality associated with destroyed piece or couldn't find a NitroxEntity onto it.");
+            }
         }
         // When a BaseWaterPark doesn't have a moduleFace, it means that there's still another WaterPark so we don't need to destroy its id and it won't be an error
         else if (!constructableBase.techType.Equals(TechType.BaseWaterPark))
