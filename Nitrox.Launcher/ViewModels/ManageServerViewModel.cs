@@ -1,4 +1,5 @@
-﻿using Nitrox.Launcher.Models;
+﻿using System.Reactive;
+using Nitrox.Launcher.Models;
 using Nitrox.Launcher.ViewModels.Abstract;
 using Nitrox.Launcher.Views;
 using ReactiveUI;
@@ -18,9 +19,12 @@ public class ManageServerViewModel : RoutableViewModelBase
         set => this.RaiseAndSetIfChanged(ref serverName, value);
     }
 
+    public ReactiveCommand<Unit, IRoutableViewModel> BackCommand { get; init; }
+
     public ManageServerViewModel(IScreen hostScreen) : base(hostScreen)
     {
         this.BindValidation();
+        BackCommand = Router.NavigateBack;
     }
 
     public void LoadFrom(ServerEntry server)

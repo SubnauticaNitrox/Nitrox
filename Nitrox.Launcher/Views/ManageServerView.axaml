@@ -7,6 +7,9 @@
              mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="600" d:DataContext="{x:Static launcher:DesignData.ManageServerViewModel}"
              x:Class="Nitrox.Launcher.Views.ManageServerView">
     <StackPanel VerticalAlignment="Stretch" Classes="form">
+        <Button Background="Transparent" Command="{Binding BackCommand}">
+            <Image HorizontalAlignment="Left" Source="/Assets/Images/world-manager/back-2x.png" Width="24" Height="24" />
+        </Button>
         <TextBlock Classes="header" Text="{Binding ServerName}" />
         <StackPanel>
             <TextBlock Text="SERVER NAME" />
