@@ -9,6 +9,9 @@
         <UseWPF>true</UseWPF>
         <ApplicationIcon>icon.ico</ApplicationIcon>
         <DisableFastUpToDateCheck>True</DisableFastUpToDateCheck>
+        <Authors>Nitrox</Authors>
+        <Company>Nitrox</Company>
+        <PackageProjectUrl>https://github.com/SubnauticaNitrox/Nitrox</PackageProjectUrl>
     </PropertyGroup>
 
     <ItemGroup>
