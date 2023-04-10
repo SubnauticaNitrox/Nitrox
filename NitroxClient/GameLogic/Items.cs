@@ -62,17 +62,9 @@ namespace NitroxClient.GameLogic
         /// <summary>
         /// Tracks the object (as dropped) and notifies the server to spawn the item for other players.
         /// </summary>
-        public void Dropped(GameObject gameObject, TechType techType = default)
+        public void Dropped(GameObject gameObject, TechType? techType = null)
         {
-            if (techType == default)
-            {
-                techType = CraftData.GetTechType(gameObject);
-                if (techType == TechType.None)
-                {
-                    Log.Error($"Could not find {nameof(TechType)} for {gameObject.name}");
-                    return;
-                }
-            }
+            techType ??= CraftData.GetTechType(gameObject);
 
             // there is a theoretical possibility of a stray remote tracking packet that re-adds the monobehavior, this is purely a safety call.
             RemoveAnyRemoteControl(gameObject);
@@ -80,9 +72,9 @@ namespace NitroxClient.GameLogic
             Optional<NitroxId> waterparkId = GetCurrentWaterParkId();
             NitroxId id = NitroxEntity.GetId(gameObject);
             Optional<EntityMetadata> metadata = EntityMetadataExtractor.Extract(gameObject);
-            bool inGlobalRoot = map.GlobalRootTechTypes.Contains(techType.ToDto());
+            bool inGlobalRoot = map.GlobalRootTechTypes.Contains(techType.Value.ToDto());
             string classId = gameObject.GetComponent<PrefabIdentifier>().ClassId;
-            WorldEntity droppedItem = new(gameObject.transform.ToWorldDto(), 0, classId, inGlobalRoot, waterparkId.OrNull(), false, id, techType.ToDto(), metadata.OrNull(), null, new List<Entity>())
+            WorldEntity droppedItem = new(gameObject.transform.ToWorldDto(), 0, classId, inGlobalRoot, waterparkId.OrNull(), false, id, techType.Value.ToDto(), metadata.OrNull(), null, new List<Entity>())
             {
                 ChildEntities = GetPrefabChildren(gameObject, id).ToList()
             };
