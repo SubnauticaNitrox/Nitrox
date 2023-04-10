@@ -186,9 +186,8 @@ public class BuildingManager
             Log.Error($"Trying to replace a non-registered build (BaseId: {baseDeconstructed.FormerBaseId})");
             return false;
         }
-        // TODO: Reparent the base's players children to not delete them.
-        worldEntityManager.RemoveGlobalRootEntity(baseDeconstructed.FormerBaseId);
 
+        worldEntityManager.RemoveGlobalRootEntity(baseDeconstructed.FormerBaseId);
         worldEntityManager.AddGlobalRootEntity(baseDeconstructed.ReplacerGhost);
         return true;
     }
