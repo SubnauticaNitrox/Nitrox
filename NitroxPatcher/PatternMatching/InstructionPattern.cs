@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
@@ -38,7 +39,7 @@ public readonly struct InstructionPattern
         Type methodDeclaringType = method.DeclaringType;
         Validate.NotNull(methodDeclaringType);
 
-        return new() { OpCode = OpCodes.Call, Operand = new(methodDeclaringType.Name, method.Name) };
+        return new() { OpCode = OpCodes.Call, Operand = new(methodDeclaringType.FullName, method.Name, method.GetParameters().Select(p => p.ParameterType).ToArray()) };
     }
 
     public static bool operator ==(InstructionPattern pattern, CodeInstruction instruction)
