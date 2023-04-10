@@ -39,7 +39,15 @@ public readonly struct InstructionPattern
         Type methodDeclaringType = method.DeclaringType;
         Validate.NotNull(methodDeclaringType);
 
-        return new() { OpCode = OpCodes.Call, Operand = new(methodDeclaringType.FullName, method.Name, method.GetParameters().Select(p => p.ParameterType).ToArray()) };
+        return new()
+        {
+            OpCode = new OpCodePattern
+            {
+                OpCode = OpCodes.Call,
+                WeakMatch = true
+            },
+            Operand = new(methodDeclaringType.FullName, method.Name, method.GetParameters().Select(p => p.ParameterType).ToArray())
+        };
     }
 
     public static bool operator ==(InstructionPattern pattern, CodeInstruction instruction)
