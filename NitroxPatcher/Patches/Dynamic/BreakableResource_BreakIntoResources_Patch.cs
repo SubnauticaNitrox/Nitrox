@@ -20,8 +20,12 @@ public class BreakableResource_BreakIntoResources_Patch : NitroxPatch, IDynamicP
 
     public static void Prefix(BreakableResource __instance)
     {
-        // Gets the entity ID
-        NitroxId id = NitroxEntity.GetId(__instance.gameObject);
+        // Don't ask me what it does...
+        if (!NitroxEntity.TryGetEntityFrom(__instance.gameObject, out NitroxEntity destroyedEntity))
+        {
+            Log.Warn($"[{nameof(BreakableResource_BreakIntoResources_Patch)}] Could not find {nameof(NitroxEntity)} for breakable entity {__instance.gameObject.GetFullHierarchyPath()}.");
+            return;
+        }
         // Send packet to destroy the entity
         Resolve<IPacketSender>().Send(new EntityDestroyed(id));
     }
