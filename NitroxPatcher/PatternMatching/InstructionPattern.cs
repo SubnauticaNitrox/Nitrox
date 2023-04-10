@@ -30,11 +30,13 @@ public readonly struct InstructionPattern
 
     public static implicit operator InstructionPattern(OpCode opCode) => new() { OpCode = opCode };
     public static implicit operator InstructionPattern(OperandPattern operand) => new() { Operand = operand };
-    public static implicit operator InstructionPattern(MethodInfo method) => Call(method);
+    public static implicit operator InstructionPattern(MethodInfo method) => Call(method, true);
 
     public static InstructionPattern Call(string className, string methodName) => new() { OpCode = OpCodes.Call, Operand = new(className, methodName) };
 
-    public static InstructionPattern Call(MethodInfo method)
+    public static InstructionPattern Call(MethodInfo method) => Call(method, false);
+
+    private static InstructionPattern Call(MethodInfo method, bool matchAnyCallOpcode)
     {
         Type methodDeclaringType = method.DeclaringType;
         Validate.NotNull(methodDeclaringType);
@@ -44,7 +46,7 @@ public readonly struct InstructionPattern
             OpCode = new OpCodePattern
             {
                 OpCode = OpCodes.Call,
-                WeakMatch = true
+                WeakMatch = matchAnyCallOpcode
             },
             Operand = new(methodDeclaringType.FullName, method.Name, method.GetParameters().Select(p => p.ParameterType).ToArray())
         };
