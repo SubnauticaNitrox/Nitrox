@@ -237,7 +237,7 @@ namespace NitroxServer.GameLogic.Entities
                 cellRoot.ChildEntities = new List<Entity>();
             }
 
-            entityRegistry.AddEntitiesIgnoringDuplicate(nonCellRootEntities.Cast<Entity>().ToList());
+            entityRegistry.AddEntitiesIgnoringDuplicate(nonCellRootEntities.OfType<Entity>().ToList());
 
             foreach (WorldEntity entity in nonCellRootEntities)
             {

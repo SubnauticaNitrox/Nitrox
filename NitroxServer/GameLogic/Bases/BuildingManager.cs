@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.Linq;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.GameLogic.Entities.Bases;
@@ -153,6 +155,18 @@ public class BuildingManager
         }
         worldEntityManager.RemoveGlobalRootEntity(updateBase.FormerGhostId);
         buildEntity.SavedBase = updateBase.SavedBase;
+
+        // We need to clean the waterparks that were potentially removed when merging
+        List<NitroxId> removedChildIds = buildEntity.ChildEntities.Select(childEntity => childEntity.Id)
+            .Except(updateBase.ChildEntities.Select(childEntity => childEntity.Id)).ToList();
+        foreach (NitroxId removedChildId in removedChildIds)
+        {
+            if (entityRegistry.TryGetEntityById(removedChildId, out Entity removedEntity) && removedEntity is InteriorPieceEntity)
+            {
+                worldEntityManager.RemoveGlobalRootEntity(removedChildId);
+            }
+        }
+
         foreach (Entity childEntity in updateBase.ChildEntities)
         {
             if (childEntity is GlobalRootEntity globalRootChildEntity)
