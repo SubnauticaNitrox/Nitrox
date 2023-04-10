@@ -24,6 +24,7 @@ public abstract class RoutableViewModelBase : ViewModelBase, IRoutableViewModel
 
     public IScreen HostScreen { get; }
     protected MainWindowViewModel MainViewModel => (MainWindowViewModel)HostScreen;
+    protected RoutingState Router => MainViewModel.Router;
 
     protected RoutableViewModelBase(IScreen hostScreen)
     {
