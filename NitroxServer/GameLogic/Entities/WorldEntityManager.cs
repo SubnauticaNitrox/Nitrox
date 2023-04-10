@@ -142,11 +142,27 @@ namespace NitroxServer.GameLogic.Entities
         {
             lock (globalRootEntitiesById)
             {
-                globalRootEntitiesById.Remove(entityId);
                 if (removeFromRegistry)
                 {
+                    Optional<Entity> entity = entityRegistry.GetEntityById(entityId);
+                    // In case there were player entities under the removed entity, we need to reparent them to the GlobalRoot
+                    // to make sure that they won't be removed
+                    if (entity.HasValue && entity.Value is GlobalRootEntity globalRootEntity)
+                    {
+                        foreach (PlayerWorldEntity childPlayerEntity in FindPlayerEntitiesInChildrenRecursively(globalRootEntity))
+                        {
+                            // Reparent the entity on top of GlobalRoot
+                            entity.Value.ChildEntities.Remove(childPlayerEntity);
+                            childPlayerEntity.ParentId = null;
+
+                            // Make sure the PlayerEntity is correctly registered
+                            globalRootEntitiesById[childPlayerEntity.Id] = childPlayerEntity;
+                            entityRegistry.AddOrUpdate(childPlayerEntity);
+                        }
+                    }
                     entityRegistry.RemoveEntity(entityId);
                 }
+                globalRootEntitiesById.Remove(entityId);
             }
         }
 
@@ -333,6 +349,21 @@ namespace NitroxServer.GameLogic.Entities
                 entityRegistry.AddOrUpdate(entity);
                 globalRootEntitiesById[entity.Id] = entity;
             }
+        }
+
+        private List<PlayerWorldEntity> FindPlayerEntitiesInChildrenRecursively(Entity parentEntity)
+        {
+            List<PlayerWorldEntity> playerEntities = new();
+            foreach (Entity childEntity in parentEntity.ChildEntities)
+            {
+                if (childEntity is PlayerWorldEntity playerWorldEntity)
+                {
+                    playerEntities.Add(playerWorldEntity);
+                    continue;
+                }
+                playerEntities.AddRange(FindPlayerEntitiesInChildrenRecursively(parentEntity));
+            }
+            return playerEntities;
         }
     }
 }
