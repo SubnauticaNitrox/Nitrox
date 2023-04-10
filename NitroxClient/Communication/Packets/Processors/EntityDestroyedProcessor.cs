@@ -1,4 +1,3 @@
-using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.PlayerLogic;
@@ -13,12 +12,10 @@ public class EntityDestroyedProcessor : ClientPacketProcessor<EntityDestroyed>
     public const DamageType DAMAGE_TYPE_RUN_ORIGINAL = (DamageType)100;
 
     private readonly Entities entities;
-    private readonly IPacketSender packetSender;
 
-    public EntityDestroyedProcessor(Entities entities, IPacketSender packetSender)
+    public EntityDestroyedProcessor(Entities entities)
     {
         this.entities = entities;
-        this.packetSender = packetSender;
     }
 
     public override void Process(EntityDestroyed packet)
@@ -83,17 +80,17 @@ public class EntityDestroyedProcessor : ClientPacketProcessor<EntityDestroyed>
         {
             if (vehicle.destructionEffect)
             {
-                GameObject gameObject = UnityEngine.Object.Instantiate<GameObject>(vehicle.destructionEffect);
+                GameObject gameObject = Object.Instantiate(vehicle.destructionEffect);
                 gameObject.transform.position = vehicle.transform.position;
                 gameObject.transform.rotation = vehicle.transform.rotation;
             }
 
-            UnityEngine.Object.Destroy(vehicle.gameObject);
+            Object.Destroy(vehicle.gameObject);
         }
     }
 
     private void DefaultDestroyAction(GameObject gameObject)
     {
-        UnityEngine.Object.Destroy(gameObject);
+        Object.Destroy(gameObject);
     }
 }
