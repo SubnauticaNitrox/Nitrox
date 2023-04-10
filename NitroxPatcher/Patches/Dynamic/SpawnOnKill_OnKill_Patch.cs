@@ -48,10 +48,12 @@ public class SpawnOnKill_OnKill_Patch : NitroxPatch, IDynamicPatch
     {
         if (!NitroxEntity.TryGetEntityFrom(spawnOnKill.gameObject, out NitroxEntity destroyedEntity))
         {
-            Log.Warn($"[{nameof(BreakableResource_BreakIntoResources_Patch)}] Could not find {nameof(NitroxEntity)} for breakable entity {__instance.gameObject.GetFullHierarchyPath()}.");
+            Log.Warn($"[{nameof(BreakableResource_BreakIntoResources_Patch)}] Could not find {nameof(NitroxEntity)} for breakable entity {spawnOnKill.gameObject.GetFullHierarchyPath()}.");
+        } else
+        {
+            Resolve<IPacketSender>().Send(new EntityDestroyed(destroyedEntity.Id));
         }
-        Resolve<IPacketSender>().Send(new EntityDestroyed(destroyedEntity.Id));
-        NitroxEntity.SetNewId(spawningItem, new())
+        NitroxEntity.SetNewId(spawningItem, new());
         Resolve<Items>().Dropped(spawningItem);
     }
 
