@@ -27,7 +27,7 @@ public class BreakableResource_BreakIntoResources_Patch : NitroxPatch, IDynamicP
             return;
         }
         // Send packet to destroy the entity
-        Resolve<IPacketSender>().Send(new EntityDestroyed(id));
+        Resolve<IPacketSender>().Send(new EntityDestroyed(destroyedEntity.Id));
     }
 
     public override void Patch(Harmony harmony)
