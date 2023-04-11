@@ -17,7 +17,6 @@ public class BatchEntitySpawner : IEntitySpawner
     private readonly BatchCellsParser batchCellsParser;
 
     private readonly Dictionary<NitroxTechType, IEntityBootstrapper> customBootstrappersByTechType;
-    private readonly HashSet<NitroxInt3> emptyBatches = new();
     private readonly Dictionary<string, PrefabPlaceholdersGroupAsset> prefabPlaceholderGroupsByClassId;
     private readonly UwePrefabFactory prefabFactory;
 
@@ -26,27 +25,16 @@ public class BatchEntitySpawner : IEntitySpawner
     private readonly UweWorldEntityFactory worldEntityFactory;
 
     private readonly object parsedBatchesLock = new object();
-    private readonly object emptyBatchesLock = new object();
     private HashSet<NitroxInt3> parsedBatches;
 
     public List<NitroxInt3> SerializableParsedBatches
     {
         get
         {
-            List<NitroxInt3> parsed;
-            List<NitroxInt3> empty;
-
             lock (parsedBatchesLock)
             {
-                parsed = new List<NitroxInt3>(parsedBatches);
+                return new List<NitroxInt3>(parsedBatches);
             }
-
-            lock (emptyBatchesLock)
-            {
-                empty = new List<NitroxInt3>(emptyBatches);
-            }
-
-            return parsed.Except(empty).ToList();
         }
         set
         {
@@ -77,7 +65,7 @@ public class BatchEntitySpawner : IEntitySpawner
         }
     }
 
-    public List<Entity> LoadUnspawnedEntities(NitroxInt3 batchId, bool fullCacheCreation = false)
+    public virtual List<Entity> LoadUnspawnedEntities(NitroxInt3 batchId, bool fullCacheCreation = false)
     {
         lock (parsedBatches)
         {
@@ -93,14 +81,7 @@ public class BatchEntitySpawner : IEntitySpawner
         List<EntitySpawnPoint> spawnPoints = batchCellsParser.ParseBatchData(batchId);
         List<Entity> entities = SpawnEntities(spawnPoints, deterministicBatchGenerator);
 
-        if (entities.Count == 0)
-        {
-            lock (emptyBatchesLock)
-            {
-                emptyBatches.Add(batchId);
-            }
-        }
-        else if (!fullCacheCreation)
+        if (!fullCacheCreation)
         {
             Log.Info($"Spawning {entities.Count} entities from {spawnPoints.Count} spawn points in batch {batchId}");
         }

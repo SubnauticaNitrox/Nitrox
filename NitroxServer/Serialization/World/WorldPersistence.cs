@@ -237,16 +237,24 @@ namespace NitroxServer.Serialization.World
             world.StoryManager = new(world.PlayerManager, pWorldData.WorldData.GameData.PDAState, pWorldData.WorldData.GameData.StoryGoals, world.TimeKeeper, seed, pWorldData.WorldData.GameData.StoryTiming.AuroraCountdownTime, pWorldData.WorldData.GameData.StoryTiming.AuroraWarningTime);
             world.ScheduleKeeper = new ScheduleKeeper(pWorldData.WorldData.GameData.PDAState, pWorldData.WorldData.GameData.StoryGoals, world.TimeKeeper, world.PlayerManager);
 
-            world.BatchEntitySpawner = new BatchEntitySpawner(
-                NitroxServiceLocator.LocateService<EntitySpawnPointFactory>(),
-                NitroxServiceLocator.LocateService<UweWorldEntityFactory>(),
-                NitroxServiceLocator.LocateService<UwePrefabFactory>(),
-                pWorldData.WorldData.ParsedBatchCells,
-                protoBufSerializer,
-                NitroxServiceLocator.LocateService<Dictionary<NitroxTechType, IEntityBootstrapper>>(),
-                NitroxServiceLocator.LocateService<Dictionary<string, PrefabPlaceholdersGroupAsset>>(),
-                world.Seed
-            );
+            if (config.SpawnMode == SpawnMode.BAKED)
+            {
+                // The server should not do any spawning in baked mode. Throw if we get any batchs that are unspawned.
+                world.BatchEntitySpawner = new NoOpBakedBatchEntitySpawner(pWorldData.WorldData.ParsedBatchCells);
+            }
+            else
+            {
+                world.BatchEntitySpawner = new BatchEntitySpawner(
+                    NitroxServiceLocator.LocateService<EntitySpawnPointFactory>(),
+                    NitroxServiceLocator.LocateService<UweWorldEntityFactory>(),
+                    NitroxServiceLocator.LocateService<UwePrefabFactory>(),
+                    pWorldData.WorldData.ParsedBatchCells,
+                    protoBufSerializer,
+                    NitroxServiceLocator.LocateService<Dictionary<NitroxTechType, IEntityBootstrapper>>(),
+                    NitroxServiceLocator.LocateService<Dictionary<string, PrefabPlaceholdersGroupAsset>>(),
+                    world.Seed
+                );
+            }
 
             world.WorldEntityManager = new WorldEntityManager(world.EntityRegistry, world.BatchEntitySpawner);
 

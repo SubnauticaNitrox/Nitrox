@@ -1,5 +1,6 @@
-﻿using System.IO;
+using System.IO;
 using NitroxModel.Helper;
+using NitroxServer.GameLogic.Entities.Spawning;
 using NitroxServer_Subnautica.Resources.Parsers;
 
 namespace NitroxServer_Subnautica.Resources;
@@ -8,12 +9,23 @@ public static class ResourceAssetsParser
 {
     private static ResourceAssets resourceAssets;
 
-    public static ResourceAssets Parse()
+    public static ResourceAssets Parse(SpawnMode spawnMode)
     {
-        if (resourceAssets != null)
+        if (resourceAssets == null)
         {
-            return resourceAssets;
+            // when we are in baked mode, we already have all of the entities spawned. there is no need
+            // to do expensive parsing of spawning related resources. 
+            resourceAssets = (spawnMode == SpawnMode.BAKED) ? ParseWithoutSpawnData() : ParseAllData();
+
+            AssetParser.Dispose();
         }
+
+        return resourceAssets;
+    }
+
+    private static ResourceAssets ParseAllData()
+    {
+        ResourceAssets resourceAssets;
 
         using (PrefabPlaceholderGroupsParser prefabPlaceholderGroupsParser = new())
         {
@@ -25,9 +37,23 @@ public static class ResourceAssetsParser
                 NitroxRandom = new RandomStartParser().ParseFile()
             };
         }
-        AssetParser.Dispose();
-        
+
         ResourceAssets.ValidateMembers(resourceAssets);
+
+        return resourceAssets;
+    }
+
+    private static ResourceAssets ParseWithoutSpawnData()
+    {
+        ResourceAssets resourceAssets;
+
+        resourceAssets = new ResourceAssets
+        {
+            NitroxRandom = new RandomStartParser().ParseFile()
+        };
+
+        Validate.NotNull(resourceAssets.NitroxRandom);
+
         return resourceAssets;
     }
 

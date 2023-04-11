@@ -38,16 +38,13 @@ namespace NitroxServer_Subnautica
 
             containerBuilder.RegisterType<SubnauticaEntitySpawnPointFactory>().As<EntitySpawnPointFactory>().SingleInstance();
 
-            ResourceAssets resourceAssets = ResourceAssetsParser.Parse();
-
-            containerBuilder.Register(c => resourceAssets).SingleInstance();
-            containerBuilder.Register(c => resourceAssets.WorldEntitiesByClassId).SingleInstance();
-            containerBuilder.Register(c => resourceAssets.PrefabPlaceholderGroupsByGroupClassId).SingleInstance();
-            containerBuilder.Register(c => resourceAssets.NitroxRandom).SingleInstance();
+            containerBuilder.Register(c => ResourceAssetsParser.Parse(c.Resolve<ServerConfig>().SpawnMode)).SingleInstance();
+            containerBuilder.Register(c => c.Resolve<ResourceAssets>().WorldEntitiesByClassId).SingleInstance();
+            containerBuilder.Register(c => c.Resolve<ResourceAssets>().PrefabPlaceholderGroupsByGroupClassId).SingleInstance();
+            containerBuilder.Register(c => c.Resolve<ResourceAssets>().NitroxRandom).SingleInstance();
             containerBuilder.RegisterType<SubnauticaUweWorldEntityFactory>().As<UweWorldEntityFactory>().SingleInstance();
 
-            SubnauticaUwePrefabFactory prefabFactory = new SubnauticaUwePrefabFactory(resourceAssets.LootDistributionsJson);
-            containerBuilder.Register(c => prefabFactory).As<UwePrefabFactory>().SingleInstance();
+            containerBuilder.Register(c => new SubnauticaUwePrefabFactory(c.Resolve<ResourceAssets>().LootDistributionsJson)).As<UwePrefabFactory>().SingleInstance();
             containerBuilder.Register(c => new Dictionary<NitroxTechType, IEntityBootstrapper>
             {
                 [TechType.CrashHome.ToDto()] = new CrashFishBootstrapper(),
