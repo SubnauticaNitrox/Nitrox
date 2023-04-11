@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
 using NitroxServer.GameLogic.Entities;
+using NitroxServer.GameLogic.Entities.Spawning;
 using NitroxServer.Serialization;
 using NitroxServer.Serialization.World;
 using Timer = System.Timers.Timer;
@@ -167,7 +168,7 @@ namespace NitroxServer
 
             try
             {
-                if (serverConfig.CreateFullEntityCache)
+                if (serverConfig.SpawnMode == SpawnMode.UPFRONT)
                 {
                     Log.Info("Starting to load all batches up front.");
                     Log.Info("This can take up to several minutes and you can't join until it's completed.");

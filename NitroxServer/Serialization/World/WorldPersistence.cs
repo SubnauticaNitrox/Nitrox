@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
+using System.Net;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
@@ -89,14 +91,12 @@ namespace NitroxServer.Serialization.World
         {
             if (!Directory.Exists(saveDir) || !File.Exists(Path.Combine(saveDir, $"Version{FileEnding}")))
             {
-                Log.Warn("No previous save file found, creating a new one");
                 return Optional.Empty;
             }
 
             try
             {
                 PersistedWorldData persistedData = new();
-
 
                 UpgradeSave(saveDir);
 
@@ -116,8 +116,8 @@ namespace NitroxServer.Serialization.World
             }
             catch (Exception ex)
             {
-                // Check if the world was newly created using the world manager
-                if (new FileInfo(Path.Combine(saveDir, $"Version{FileEnding}")).Length > 0)
+                // Check if the world was newly created (will only have config and version files)
+                if (Directory.GetFiles(saveDir, "*", SearchOption.AllDirectories).Length > 2)
                 {
                     Log.Error($"Could not load world, creating a new one : {ex.GetType()} {ex.Message}");
 
@@ -133,12 +133,21 @@ namespace NitroxServer.Serialization.World
         
         public World Load()
         {
-            Optional<World> fileLoadedWorld = LoadFromFile(Path.Combine(WorldManager.SavesFolderDir, config.SaveName));
+            string savePath = Path.Combine(WorldManager.SavesFolderDir, config.SaveName);
+            Optional<World> fileLoadedWorld = LoadFromFile(savePath);
+
             if (fileLoadedWorld.HasValue)
             {
                 return fileLoadedWorld.Value;
             }
 
+            Log.Warn("No previous save file found, creating a new one");
+
+            if (config.SpawnMode == SpawnMode.BAKED)
+            {
+                return UsePrebakedWorld(savePath);
+            }
+                
             return CreateFreshWorld();
         }
 
@@ -163,6 +172,32 @@ namespace NitroxServer.Serialization.World
             };
 
             return CreateWorld(pWorldData, config.GameMode);
+        }
+
+        private World UsePrebakedWorld(string savePath)
+        {
+            // The prebaked save file can change version to version.  Redownload it if we don't already have it on disk.
+            string prebakedPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox", config.prebakedSave);
+
+            if (!File.Exists(prebakedPath))
+            {
+                // Hardcoding url and escaping input config string for extra protection against malicious config files.
+                string url = $"https://github.com/SubnauticaNitrox/Saves/raw/master/{Uri.EscapeDataString(config.prebakedSave)}";
+                Log.Info($"Downloading prebaked save from {url} to {prebakedPath}");
+                using WebClient client = new();
+                client.DownloadFile(url, prebakedPath);
+            }
+
+            using ZipArchive zip = new(File.OpenRead(prebakedPath), ZipArchiveMode.Read);
+            zip.ExtractToDirectory(savePath);
+
+            Log.Info($"Extracting prebaked save into {savePath}");
+
+            Optional<World> fileLoadedWorld = LoadFromFile(savePath);
+
+            Validate.IsTrue(fileLoadedWorld.HasValue, $"Unable to load save that was sourced from a prebaked world {config.prebakedSave} {prebakedPath}");
+
+            return fileLoadedWorld.Value;
         }
 
         public World CreateWorld(PersistedWorldData pWorldData, ServerGameMode gameMode)

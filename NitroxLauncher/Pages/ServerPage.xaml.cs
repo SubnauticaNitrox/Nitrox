@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -14,6 +14,7 @@ using NitroxModel.Server;
 using NitroxServer.Serialization;
 using NitroxServer.Serialization.World;
 using Microsoft.VisualBasic.FileIO;
+using NitroxServer.GameLogic.Entities.Spawning;
 
 namespace NitroxLauncher.Pages
 {
@@ -85,7 +86,13 @@ namespace NitroxLauncher.Pages
                     2 => Perms.ADMIN,
                     _ => Config.DefaultPlayerPerm
                 };
-                Config.CreateFullEntityCache = CBCreateFullEntityCache.IsChecked ?? Config.CreateFullEntityCache;
+                Config.SpawnMode = CBBSpawnMode.SelectedIndex switch
+                {
+                    0 => SpawnMode.BAKED,
+                    1 => SpawnMode.STREAMING,
+                    2 => SpawnMode.UPFRONT,
+                    _ => Config.SpawnMode
+                };
                 Config.DisableAutoSave = !CBAutoSave.IsChecked ?? Config.DisableAutoSave;
                 Config.AutoPortForward = CBAutoPortForward.IsChecked ?? Config.AutoPortForward;
                 Config.SaveInterval = Convert.ToInt32(TBSaveInterval.Text)*1000;  // Convert seconds to milliseconds
@@ -131,7 +138,13 @@ namespace NitroxLauncher.Pages
                 Perms.ADMIN => 2,
                 _ => CBBDefaultPerms.SelectedIndex
             };
-            CBCreateFullEntityCache.IsChecked = Config.CreateFullEntityCache;
+            CBBSpawnMode.SelectedIndex = Config.SpawnMode switch
+            {
+                SpawnMode.BAKED => 0,
+                SpawnMode.STREAMING => 1,
+                SpawnMode.UPFRONT => 2,
+                _ => CBBDefaultPerms.SelectedIndex
+            };
             CBAutoSave.IsChecked = !Config.DisableAutoSave;
             CBEnableJoinPassword.IsChecked = Config.IsPasswordRequired;
             CBAutoPortForward.IsChecked = Config.AutoPortForward;
@@ -160,7 +173,7 @@ namespace NitroxLauncher.Pages
             ImportSaveBtnBorder.Opacity = 1;
             ImportSaveBtn.IsEnabled = true;
 
-            SelectedWorldDirectory = WorldManager.CreateEmptySave("My World");
+            SelectedWorldDirectory = WorldManager.CreateNewSave("My World");
             UpdateVisualWorldSettings();
 
             Storyboard worldSelectedAnimationStoryboard = (Storyboard)FindResource("WorldSelectedAnimation");

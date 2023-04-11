@@ -681,7 +681,7 @@
                                                 <Grid Margin="5">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="151*"/>
-                                                        <ColumnDefinition Width="60*"/>
+                                                        <ColumnDefinition Width="83*"/>
                                                         <ColumnDefinition Width="2"/>
                                                         <ColumnDefinition Width="151*"/>
                                                         <ColumnDefinition Width="60*"/>
@@ -701,9 +701,13 @@
                                                     <Border Grid.Column="5" Grid.RowSpan="3" Background="Black"/>
 
                                                     <!-- Row 1 -->
-                                                    <TextBlock Grid.Column="0" Text="Load Full World" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
-                                                    <CheckBox Style="{StaticResource OptionSwitch}" Grid.Column="1" x:Name="CBCreateFullEntityCache" IsChecked="False" ToolTip="Click to enable the server to fully load the world's entity cache at startup (NOTE: Can reduce lag, but the server will take longer to start up)"/>
-
+                                                    <TextBlock Grid.Column="0" Text="Spawn Mode" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10,0,0,0" Width="98"/>
+                                                    <ComboBox Grid.Column="1" Width="70" Grid.ColumnSpan="2" x:Name="CBBSpawnMode" BorderThickness="1" Height="24" ToolTip="Controls how nitrox spawns entities. Only change if you know what you are doing." HorizontalAlignment="Right" Margin="0 0 5.7 0">
+                                                        <ComboBoxItem Content="Baked" IsSelected="True"/>
+                                                        <ComboBoxItem Content="Streaming"/>
+                                                        <ComboBoxItem Content="Upfront"/>
+                                                    </ComboBox>
+                                                    
                                                     <TextBlock Grid.Column="3" Text="Autosave" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontSize="15" Margin="10 0 0 0"/>
                                                     <CheckBox Style="{StaticResource OptionSwitch}" Grid.Column="4" x:Name="CBAutoSave" IsChecked="True" ToolTip="Click to enable the server to automatically save the world in specified time intervals."/>
 

@@ -1,7 +1,8 @@
-﻿using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
 using NitroxModel.Serialization;
 using NitroxModel.Server;
+using NitroxServer.GameLogic.Entities.Spawning;
 
 namespace NitroxServer.Serialization
 {
@@ -11,9 +12,6 @@ namespace NitroxServer.Serialization
         private int maxConnectionsSetting = 100;
 
         private int initialSyncTimeoutSetting = 300000;
-
-        [PropertyDescription("Set to true to Cache entities for the whole map on next run. \nWARNING! Will make server load take longer on the cache run but players will gain a performance boost when entering new areas.")]
-        public bool CreateFullEntityCache = false;
 
         private int saveIntervalSetting = 120000;
 
@@ -114,5 +112,16 @@ namespace NitroxServer.Serialization
         public bool AutoPortForward { get; set; } = true;
         [PropertyDescription("Determines whether the server will listen for and reply to LAN discovery requests.")]
         public bool LANDiscoveryEnabled { get; set; } = true;
+
+        [PropertyDescription("Determines how the server spawns entities in the world.", typeof(SpawnMode))]
+        public SpawnMode SpawnMode =
+#if DEBUG
+            SpawnMode.STREAMING; // For development, baked and upfront can be hard on the SSD/HDD when creating many worlds over and over.
+#else
+            SpawnMode.BAKED; // For the release build, we want users to generally use baked so they have instant loading.
+#endif
+
+        [PropertyDescription("Name of the save to fetch the prebaked nitrox repo (only applicable when SpawnMode = BAKED)", typeof(SpawnMode))]
+        public string prebakedSave = "Prebaked-v1.zip";
     }
 }

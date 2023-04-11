@@ -1,8 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
+using System.Net;
 using NitroxModel.Helper;
 using NitroxModel.Server;
+using NitroxServer.GameLogic.Entities.Spawning;
 
 namespace NitroxServer.Serialization.World;
 
@@ -107,7 +110,7 @@ public static class WorldManager
         GetSaves();
     }
 
-    public static string CreateEmptySave(string name)
+    public static string CreateNewSave(string name)
     {
         string saveDir = Path.Combine(SavesFolderDir, name);
 
@@ -130,12 +133,14 @@ public static class WorldManager
 
         ServerConfig serverConfig = ServerConfig.Load(saveDir);
 
-        string fileEnding = "json";
         if (serverConfig.SerializerMode == ServerSerializerMode.PROTOBUF)
         {
-            fileEnding = "nitrox";
+            new ServerProtoBufSerializer().Serialize(Path.Combine(saveDir, $"Version.nitrox"), new SaveFileVersion());
         }
-        File.Create(Path.Combine(saveDir, $"Version.{fileEnding}")).Close();
+        else
+        {
+            new ServerJsonSerializer().Serialize(Path.Combine(saveDir, $"Version.json"), new SaveFileVersion());
+        }
 
         serverConfig.SaveName = name;
 
