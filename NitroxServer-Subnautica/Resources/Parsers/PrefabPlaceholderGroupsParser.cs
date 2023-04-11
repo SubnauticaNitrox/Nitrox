@@ -1,9 +1,7 @@
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using AddressablesTools;
 using AddressablesTools.Catalog;
 using AssetsTools.NET;
@@ -38,9 +36,9 @@ public class PrefabPlaceholderGroupsParser : IDisposable
         am.SetMonoTempGenerator(monoGen = new(managedPath));
     }
 
-    private readonly ConcurrentDictionary<string, string[]> addressableCatalog = new();
-    private readonly ConcurrentDictionary<string, PrefabPlaceholderAsset> prefabPlaceholderByClassId = new();
-    private readonly ConcurrentDictionary<string, PrefabPlaceholdersGroupAsset> prefabPlaceholdersByGroupClassId = new();
+    private readonly Dictionary<string, string[]> addressableCatalog = new();
+    private readonly Dictionary<string, PrefabPlaceholderAsset> prefabPlaceholderByClassId = new();
+    private readonly Dictionary<string, PrefabPlaceholdersGroupAsset> prefabPlaceholdersByGroupClassId = new();
 
     public Dictionary<string, PrefabPlaceholdersGroupAsset> ParseFile()
     {
@@ -51,12 +49,13 @@ public class PrefabPlaceholderGroupsParser : IDisposable
         LoadAddressableCatalog(prefabDatabase);
 
         // Select only prefabs with a PrefabPlaceholdersGroups component in the root ans link them with their dependencyPaths
-        ConcurrentDictionary<string, string[]> prefabPlaceholdersGroupPaths = GetAllPrefabPlaceholdersGroupsFast();
+        Dictionary<string, string[]> prefabPlaceholdersGroupPaths = GetAllPrefabPlaceholdersGroupsFast();
+
         // Do not remove: the internal cache list is slowing down the process more than loading a few assets again. There maybe is a better way in the new AssetToolsNetVersion but we need a byte to texture library bc ATNs sub-package is only for netstandard.
         am.UnloadAll();
 
         // Get all needed data for the filtered PrefabPlaceholdersGroups to construct PrefabPlaceholdersGroupAssets and add them to the dictionary by classId
-        ConcurrentDictionary<string, PrefabPlaceholdersGroupAsset> prefabPlaceholderGroupsByGroupClassId = GetPrefabPlaceholderGroupAssetsByGroupClassId(prefabPlaceholdersGroupPaths);
+        Dictionary<string, PrefabPlaceholdersGroupAsset> prefabPlaceholderGroupsByGroupClassId = GetPrefabPlaceholderGroupAssetsByGroupClassId(prefabPlaceholdersGroupPaths);
 
         return new Dictionary<string, PrefabPlaceholdersGroupAsset>(prefabPlaceholderGroupsByGroupClassId);
     }
@@ -98,19 +97,16 @@ public class PrefabPlaceholderGroupsParser : IDisposable
 
                 List<ResourceLocation> resourceLocations = ccd.Resources[resourceLocation.Dependency];
 
-                if (!addressableCatalog.TryAdd(prefabAddressable.Key, resourceLocations.Select(x => x.InternalId).ToArray()))
-                {
-                    throw new InvalidOperationException($"Couldn't add item to {nameof(addressableCatalog)}");
-                }
+                addressableCatalog.Add(prefabAddressable.Key, resourceLocations.Select(x => x.InternalId).ToArray());
 
                 break;
             }
         }
     }
 
-    private ConcurrentDictionary<string, string[]> GetAllPrefabPlaceholdersGroupsFast()
+    private Dictionary<string, string[]> GetAllPrefabPlaceholdersGroupsFast()
     {
-        ConcurrentDictionary<string, string[]> prefabPlaceholdersGroupPaths = new();
+        Dictionary<string, string[]> prefabPlaceholdersGroupPaths = new();
         byte[] prefabPlaceholdersGroupHash = Array.Empty<byte>();
 
         int aaIndex;
@@ -144,7 +140,7 @@ public class PrefabPlaceholderGroupsParser : IDisposable
             }
         }
 
-        Parallel.ForEach(addressableCatalog.Skip(aaIndex), (keyValuePair) =>
+        addressableCatalog.Skip(aaIndex).ForEach(keyValuePair =>
         {
             AssetsBundleManager bundleManagerInst = am.Clone();
             BundleFileInstance bundleFile = bundleManagerInst.LoadBundleFile(bundleManagerInst.CleanBundlePath(keyValuePair.Value[0]));
@@ -152,7 +148,7 @@ public class PrefabPlaceholderGroupsParser : IDisposable
 
             if (assetFileInstance.file.Metadata.TypeTreeTypes.Any(typeTree => typeTree.TypeId == (int)AssetClassID.MonoBehaviour && typeTree.TypeHash.data.SequenceEqual(prefabPlaceholdersGroupHash)))
             {
-                prefabPlaceholdersGroupPaths.TryAdd(keyValuePair.Key, keyValuePair.Value);
+                prefabPlaceholdersGroupPaths.Add(keyValuePair.Key, keyValuePair.Value);
             }
 
             bundleManagerInst.UnloadAll();
@@ -161,11 +157,11 @@ public class PrefabPlaceholderGroupsParser : IDisposable
         return prefabPlaceholdersGroupPaths;
     }
 
-    private ConcurrentDictionary<string, PrefabPlaceholdersGroupAsset> GetPrefabPlaceholderGroupAssetsByGroupClassId(ConcurrentDictionary<string, string[]> prefabPlaceholdersGroupPaths)
+    private Dictionary<string, PrefabPlaceholdersGroupAsset> GetPrefabPlaceholderGroupAssetsByGroupClassId(Dictionary<string, string[]> prefabPlaceholdersGroupPaths)
     {
-        ConcurrentDictionary<string, PrefabPlaceholdersGroupAsset> prefabPlaceholderGroupsByGroupClassId = new();
+        Dictionary<string, PrefabPlaceholdersGroupAsset> prefabPlaceholderGroupsByGroupClassId = new();
 
-        Parallel.ForEach(prefabPlaceholdersGroupPaths, (keyValuePair) =>
+        prefabPlaceholdersGroupPaths.ForEach(keyValuePair =>
         {
             AssetsBundleManager bundleManagerInst = am.Clone();
             AssetsFileInstance assetFileInst = bundleManagerInst.LoadBundleWithDependencies(keyValuePair.Value);
@@ -173,11 +169,9 @@ public class PrefabPlaceholderGroupsParser : IDisposable
             PrefabPlaceholdersGroupAsset prefabPlaceholderGroup = GetAndCachePrefabPlaceholdersGroupOfBundle(bundleManagerInst, assetFileInst, keyValuePair.Key);
             bundleManagerInst.UnloadAll();
 
-            if (!prefabPlaceholderGroupsByGroupClassId.TryAdd(keyValuePair.Key, prefabPlaceholderGroup))
-            {
-                throw new InvalidOperationException($"Couldn't add item to {nameof(prefabPlaceholderGroupsByGroupClassId)}");
-            }
+            prefabPlaceholderGroupsByGroupClassId.Add(keyValuePair.Key, prefabPlaceholderGroup);
         });
+
         return prefabPlaceholderGroupsByGroupClassId;
     }
 
@@ -234,7 +228,7 @@ public class PrefabPlaceholderGroupsParser : IDisposable
 
         PrefabPlaceholdersGroupAsset prefabPlaceholdersGroup = new(prefabPlaceholders, nitroxTechType);
 
-        prefabPlaceholdersByGroupClassId.TryAdd(classId, prefabPlaceholdersGroup);
+        prefabPlaceholdersByGroupClassId.Add(classId, prefabPlaceholdersGroup);
         return prefabPlaceholdersGroup;
     }
 

@@ -122,6 +122,6 @@ namespace NitroxServer.Serialization
 #endif
 
         [PropertyDescription("Name of the save to fetch the prebaked nitrox repo (only applicable when SpawnMode = BAKED)", typeof(SpawnMode))]
-        public string prebakedSave = "Prebaked-v1.zip";
+        public string prebakedSave = "Prebaked-v1.zip"; // Developers can use Dev-NoSpawningRequired.zip and enable SpawnMode.BAKED when testing features that don't require spawning.
     }
 }
