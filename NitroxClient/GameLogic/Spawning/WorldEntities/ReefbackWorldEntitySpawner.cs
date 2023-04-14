@@ -25,15 +25,15 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities
                 result.Set(Optional.Empty);
                 yield break;
             }
-            ReefbackLife life = reefback.Value.GetComponent<ReefbackLife>();
-            if (life == null)
+
+            if (!reefback.Value.TryGetComponent(out ReefbackLife life))
             {
                 result.Set(Optional.Empty);
                 yield break;
             }
 
             life.initialized = true;
-            life.SpawnPlants();
+            yield return life.SpawnPlants();
             foreach (Entity childEntity in entity.ChildEntities)
             {
                 if (childEntity is WorldEntity worldChild)

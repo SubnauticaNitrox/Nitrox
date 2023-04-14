@@ -66,14 +66,7 @@ namespace NitroxClient.MonoBehaviours
             {
                 BuildEvent currentEvent = buildEvents.Dequeue();
 
-                try
-                {
-                    ActionBuildEvent(currentEvent);
-                }
-                catch (Exception ex)
-                {
-                    Log.Error($"Error processing buildEvent in ThrottledBuilder{ex}");
-                }
+                yield return IEnumeratorHelper.YieldWithTryCatch(ActionBuildEvent(currentEvent), "Error processing buildEvent in ThrottledBuilder");
 
                 if (currentEvent.RequiresFreshFrame() || buildEvents.NextEventRequiresFreshFrame())
                 {
