@@ -18,7 +18,11 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastTorpedoLaunch(TechType techType, int slotID, SeaMoth instance)
         {
-            NitroxId id = NitroxEntity.RequireIdFrom(instance.gameObject);
+            if (!NitroxEntity.TryGetIdOrWarn(instance, out NitroxId id))
+            {
+                return;
+            }
+
             TorpedoType torpedoType = null;
             ItemsContainer storageInSlot = instance.GetStorageInSlot(slotID, TechType.SeamothTorpedoModule);
 
@@ -41,7 +45,11 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastElectricalDefense(TechType techType, int slotID, SeaMoth instance)
         {
-            NitroxId id = NitroxEntity.RequireIdFrom(instance.gameObject);
+            if (!NitroxEntity.TryGetIdOrWarn(instance, out NitroxId id))
+            {
+                return;
+            }
+
             if (techType == TechType.SeamothElectricalDefense)
             {
                 Transform aimingTransform = Player.main.camRoot.GetAimingTransform();

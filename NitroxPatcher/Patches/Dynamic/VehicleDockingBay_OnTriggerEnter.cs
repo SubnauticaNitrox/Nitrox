@@ -18,7 +18,7 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             Vehicle vehicle = other.GetComponentInParent<Vehicle>();
             prevInterpolatingVehicle = __instance.interpolatingVehicle;
-            Optional<NitroxId> opVehicleId = NitroxEntity.GetOptionalIdFrom(vehicle.gameObject);
+            Optional<NitroxId> opVehicleId = NitroxEntity.GetOptionalIdFrom(vehicle);
             return !vehicle || (opVehicleId.HasValue && Resolve<SimulationOwnership>().HasAnyLockType(opVehicleId.Value));
         }
 

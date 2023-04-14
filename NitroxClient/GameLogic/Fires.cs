@@ -42,9 +42,17 @@ namespace NitroxClient.GameLogic
         /// </summary>
         public void OnCreate(Fire fire, SubFire.RoomFire room, int nodeIndex)
         {
-            NitroxId subRootId = NitroxEntity.RequireIdFrom(fire.fireSubRoot.gameObject);
+            if (!NitroxEntity.TryGetIdOrWarn(fire, out NitroxId fireId))
+            {
+                return;
+            }
 
-            CyclopsFireCreated packet = new CyclopsFireCreated(NitroxEntity.RequireIdFrom(fire.gameObject), subRootId, room.roomLinks.room, nodeIndex);
+            if (!NitroxEntity.TryGetIdOrWarn(fire.fireSubRoot, out NitroxId subRootId))
+            {
+                return;
+            }
+
+            CyclopsFireCreated packet = new CyclopsFireCreated(fireId, subRootId, room.roomLinks.room, nodeIndex);
             packetSender.Send(packet);
         }
 
@@ -53,7 +61,10 @@ namespace NitroxClient.GameLogic
         /// </summary>
         public void OnDouse(Fire fire, float douseAmount)
         {
-            NitroxId fireId = NitroxEntity.RequireIdFrom(fire.gameObject);
+            if (!NitroxEntity.TryGetIdOrWarn(fire, out NitroxId fireId))
+            {
+                return;
+            }
 
             // Temporary packet limiter
             if (!fireDouseAmount.ContainsKey(fireId))
@@ -109,6 +120,7 @@ namespace NitroxClient.GameLogic
                     availableNodes.Add(transform);
                 }
             }
+
             roomFiresDict[fireData.Room].fireValue++;
             PrefabSpawn component = transform2.GetComponent<PrefabSpawn>();
             if (!component)
@@ -117,9 +129,11 @@ namespace NitroxClient.GameLogic
             }
             else
             {
-                Log.Error($"[{nameof(CyclopsFireCreatedProcessor)} Cannot create new Cyclops fire! PrefabSpawn component could not be found in fire node! Fire Id: {fireData.FireId} SubRoot Id: {fireData.CyclopsId} Room: {fireData.Room} NodeIndex: {fireData.NodeIndex}]");
+                Log.Error(
+                    $"[{nameof(CyclopsFireCreatedProcessor)} Cannot create new Cyclops fire! PrefabSpawn component could not be found in fire node! Fire Id: {fireData.FireId} SubRoot Id: {fireData.CyclopsId} Room: {fireData.Room} NodeIndex: {fireData.NodeIndex}]");
             }
-            component.SpawnManual(delegate (GameObject fireGO)
+
+            component.SpawnManual(delegate(GameObject fireGO)
             {
                 Fire componentInChildren = fireGO.GetComponentInChildren<Fire>();
                 if (componentInChildren)

@@ -22,7 +22,11 @@ namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
 
         protected override void SpawnPostProcess(Base latestBase, Int3 latestCell, GameObject finishedPiece)
         {
-            NitroxId reactorId = NitroxEntity.RequireIdFrom(finishedPiece);
+            if (!NitroxEntity.TryGetIdOrWarn(finishedPiece, out NitroxId reactorId))
+            {
+                return;
+            }
+
             BaseBioReactorGeometry bioReactor = finishedPiece.RequireComponent<BaseBioReactorGeometry>();
             BaseBioReactor bioReactorModule = bioReactor.GetModule();
             // When reruning the spawn processor, the module will not be found at first so we need to delay its detection

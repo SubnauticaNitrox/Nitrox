@@ -22,7 +22,10 @@ namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
 
         protected override void SpawnPostProcess(Base latestBase, Int3 latestCell, GameObject finishedPiece)
         {
-            NitroxId pieceId = NitroxEntity.RequireIdFrom(finishedPiece);
+            if (!NitroxEntity.TryGetIdOrWarn(finishedPiece, out NitroxId pieceId))
+            {
+                return;
+            }
 
             WaterParkGeometry waterParkPiece = finishedPiece.GetComponent<WaterParkGeometry>();
             if (!waterParkPiece)

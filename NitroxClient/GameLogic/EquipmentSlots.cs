@@ -4,54 +4,64 @@ using NitroxModel.DataStructures;
 using NitroxModel.Packets;
 using UnityEngine;
 
-namespace NitroxClient.GameLogic
+namespace NitroxClient.GameLogic;
+
+public class EquipmentSlots
 {
-    public class EquipmentSlots
+    private readonly IPacketSender packetSender;
+    private readonly Entities entities;
+
+    public EquipmentSlots(IPacketSender packetSender, Entities entities)
     {
-        private readonly IPacketSender packetSender;
-        private readonly Entities entities;
+        this.packetSender = packetSender;
+        this.entities = entities;
+    }
 
-        public EquipmentSlots(IPacketSender packetSender, Entities entities)
+    public void BroadcastEquip(Pickupable pickupable, GameObject owner, string slot)
+    {
+        if (!NitroxEntity.TryGetIdOrWarn(owner, out NitroxId ownerId))
         {
-            this.packetSender = packetSender;
-            this.entities = entities;
+            return;
         }
 
-        public void BroadcastEquip(Pickupable pickupable, GameObject owner, string slot)
+        if (!NitroxEntity.TryGetIdOrWarn(pickupable, out NitroxId itemId))
         {
-            NitroxId ownerId = NitroxEntity.RequireIdFrom(owner);
-            NitroxId itemId = NitroxEntity.RequireIdFrom(pickupable.gameObject);
-
-            Player player = owner.GetComponent<Player>();
-
-            if (player != null)
-            {
-                entities.EntityMetadataChanged(player, ownerId);
-            }
-            else
-            {
-                // UWE also sends module events here as they are technically equipment of the vehicles.
-                ModuleAdded moduleAdded = new(itemId, ownerId, slot);
-                packetSender.Send(moduleAdded);
-            }
+            return;
         }
 
-        public void BroadcastUnequip(Pickupable pickupable, GameObject owner, string slot)
+        if (owner.TryGetComponent(out Player player))
         {
-            NitroxId ownerId = NitroxEntity.RequireIdFrom(owner);
-            NitroxId itemId = NitroxEntity.RequireIdFrom(pickupable.gameObject);
-            Player player = owner.GetComponent<Player>();
+            entities.EntityMetadataChanged(player, ownerId);
+        }
+        else
+        {
+            // UWE also sends module events here as they are technically equipment of the vehicles.
+            ModuleAdded moduleAdded = new(itemId, ownerId, slot);
+            packetSender.Send(moduleAdded);
+        }
+    }
 
-            if (player != null)
-            {
-                entities.EntityMetadataChanged(player, ownerId);
-            }
-            else
-            {
-                // UWE also sends module events here as they are technically equipment of the vehicles.
-                ModuleRemoved moduleRemoved = new(itemId, ownerId);
-                packetSender.Send(moduleRemoved);
-            }
+    public void BroadcastUnequip(Pickupable pickupable, GameObject owner, string slot)
+    {
+        if (!NitroxEntity.TryGetIdOrWarn(owner, out NitroxId ownerId))
+        {
+            return;
+        }
+
+        if (!NitroxEntity.TryGetIdOrWarn(pickupable, out NitroxId itemId))
+        {
+            return;
+        }
+
+        if (owner.TryGetComponent(out Player player))
+        {
+            entities.EntityMetadataChanged(player, ownerId);
+        }
+        else
+        {
+            // UWE also sends module events here as they are technically equipment of the vehicles.
+            ModuleRemoved moduleRemoved = new(itemId, ownerId);
+            packetSender.Send(moduleRemoved);
         }
     }
 }

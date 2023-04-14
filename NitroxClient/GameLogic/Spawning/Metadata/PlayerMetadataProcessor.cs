@@ -6,6 +6,7 @@ using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel_Subnautica.DataStructures;
+using NitroxModel.DataStructures.Util;
 using UnityEngine;
 using static NitroxModel.DataStructures.GameLogic.Entities.Metadata.PlayerMetadata;
 
@@ -13,10 +14,20 @@ namespace NitroxClient.GameLogic.Spawning.Metadata;
 
 public class PlayerMetadataProcessor : GenericEntityMetadataProcessor<PlayerMetadata>
 {
+    private NitroxId localPlayerId = null;
     public override void ProcessMetadata(GameObject gameObject, PlayerMetadata metadata)
     {
-        NitroxId id = NitroxEntity.RequireIdFrom(gameObject);
-        NitroxId localPlayerId = NitroxEntity.RequireIdFrom(Player.main.gameObject);
+        if (!NitroxEntity.TryGetIdOrWarn(gameObject, out NitroxId id))
+        {
+            return;
+        }
+
+        // The local player id should be static, therefor we can cache the id for performance
+        if (localPlayerId == null && !NitroxEntity.TryGetIdOrWarn(Player.main.gameObject, out localPlayerId))
+        {
+            return;
+        }
+
 
         if (id == localPlayerId)
         {

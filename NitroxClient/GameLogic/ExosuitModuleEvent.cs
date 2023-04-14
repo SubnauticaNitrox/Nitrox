@@ -33,6 +33,7 @@ namespace NitroxClient.GameLogic
                 Log.Error("Cooldown time does not match pickup or punch time");
                 return;
             }
+
             BroadcastArmAction(TechType.ExosuitClawArmModule, clawArm, action, null, null);
         }
 
@@ -69,16 +70,20 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastArmAction(TechType techType, IExosuitArm exosuitArm, ExosuitArmAction armAction, Vector3? opVector, Quaternion? opRotation)
         {
-            NitroxId id = NitroxEntity.RequireIdFrom(exosuitArm.GetGameObject());
-            ExosuitArmActionPacket packet = new ExosuitArmActionPacket(techType, id, armAction, opVector, opRotation);
-            packetSender.Send(packet);
+            if (NitroxEntity.TryGetIdOrWarn(exosuitArm.GetGameObject(), out NitroxId id))
+            {
+                ExosuitArmActionPacket packet = new(techType, id, armAction, opVector, opRotation);
+                packetSender.Send(packet);
+            }
         }
 
         public void BroadcastArmAction(TechType techType, IExosuitArm exosuitArm, ExosuitArmAction armAction)
         {
-            NitroxId id = NitroxEntity.RequireIdFrom(exosuitArm.GetGameObject());
-            ExosuitArmActionPacket packet = new ExosuitArmActionPacket(techType, id, armAction, null, null);
-            packetSender.Send(packet);
+            if (NitroxEntity.TryGetIdOrWarn(exosuitArm.GetGameObject(), out NitroxId id))
+            {
+                ExosuitArmActionPacket packet = new(techType, id, armAction, null, null);
+                packetSender.Send(packet);
+            }
         }
 
         public void UseGrappling(ExosuitGrapplingArm grapplingArm, ExosuitArmAction armAction, Vector3? opHitVector)
@@ -102,7 +107,6 @@ namespace NitroxClient.GameLogic
                 hook.transform.position = grapplingArm.front.transform.position;
                 hook.SetFlying(true);
                 Exosuit componentInParent = grapplingArm.GetComponentInParent<Exosuit>();
-
 
                 if (!opHitVector.HasValue)
                 {
@@ -129,6 +133,7 @@ namespace NitroxClient.GameLogic
                     Log.Error("Torpedo arm action shoot: no vector or rotation present");
                     return;
                 }
+
                 Vector3 forward = opVector.Value;
                 Quaternion rotation = opRotation.Value;
                 Transform silo;
@@ -140,6 +145,7 @@ namespace NitroxClient.GameLogic
                 {
                     silo = torpedoArm.siloSecond;
                 }
+
                 ItemsContainer container = torpedoArm.container;
                 Exosuit exosuit = torpedoArm.GetComponentInParent<Exosuit>();
                 TorpedoType[] torpedoTypes = exosuit.torpedoTypes;
@@ -167,7 +173,6 @@ namespace NitroxClient.GameLogic
                 {
                     Utils.PlayFMODAsset(torpedoArm.torpedoDisarmed, torpedoArm.transform, 1f);
                 }
-
             }
             else if (armAction == ExosuitArmAction.END_USE_TOOL)
             {
@@ -178,6 +183,5 @@ namespace NitroxClient.GameLogic
                 Log.Error($"Torpedo arm got an arm action he should not get: {armAction}");
             }
         }
-
     }
 }

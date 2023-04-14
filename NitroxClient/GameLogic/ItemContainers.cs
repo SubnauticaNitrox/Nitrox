@@ -32,7 +32,10 @@ namespace NitroxClient.GameLogic
                 return;
             }
 
-            NitroxId itemId = NitroxEntity.RequireIdFrom(pickupable.gameObject);
+            if (!NitroxEntity.TryGetIdOrWarn(pickupable.gameObject, out NitroxId itemId))
+            {
+                return;
+            }
 
             EntityReparented reparented = new EntityReparented(itemId, InventoryContainerHelper.GetOwnerId(containerTransform));
 
@@ -69,8 +72,16 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastBatteryAdd(GameObject gameObject, GameObject parent, TechType techType)
         {
-            NitroxId id = NitroxEntity.RequireIdFrom(gameObject);
-            NitroxId parentId = NitroxEntity.RequireIdFrom(parent);
+            if (!NitroxEntity.TryGetIdOrWarn(gameObject, out NitroxId id))
+            {
+                return;
+            }
+
+            if (!NitroxEntity.TryGetIdOrWarn(parent, out NitroxId parentId))
+            {
+                return;
+            }
+
             Optional<EntityMetadata> metadata = EntityMetadataExtractor.Extract(gameObject);
 
             InstalledBatteryEntity installedBattery = new(id, techType.ToDto(), metadata.OrNull(), parentId, new());

@@ -1,3 +1,4 @@
+using System;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
@@ -44,8 +45,7 @@ namespace NitroxClient.GameLogic
             if (!NitroxEntity.TryGetIdFrom(gameObject, out NitroxId id))
             {
                 Log.Debug($"Found item with ({gameObject.name}) with no id, assigning a new one");
-                id = new NitroxId();
-                NitroxEntity.SetNewId(gameObject, id);
+                id = NitroxEntity.GenerateNewId(gameObject);
             }
 
             EntityPositionBroadcaster.StopWatchingEntity(id);
@@ -70,7 +70,7 @@ namespace NitroxClient.GameLogic
             RemoveAnyRemoteControl(gameObject);
 
             Optional<NitroxId> waterparkId = GetCurrentWaterParkId();
-            NitroxId id = NitroxEntity.RequireIdFrom(gameObject);
+            NitroxId id = NitroxEntity.GetIdOrGenerateNew(gameObject);
             Optional<EntityMetadata> metadata = EntityMetadataExtractor.Extract(gameObject);
 
             bool inGlobalRoot = map.GlobalRootTechTypes.Contains(techType.ToDto());
@@ -113,7 +113,7 @@ namespace NitroxClient.GameLogic
 
                     if (metadata.HasValue)
                     {
-                        NitroxId id = NitroxEntity.RequireIdFrom(prefab.gameObject);
+                        NitroxId id = NitroxEntity.GetIdOrGenerateNew(prefab.gameObject);
                         TechTag techTag = prefab.gameObject.GetComponent<TechTag>();
                         TechType techType = (techTag) ? techTag.type : TechType.None;
 
@@ -134,7 +134,10 @@ namespace NitroxClient.GameLogic
             List<Entity> children = GetPrefabChildren(gameObject, itemId).ToList();
 
             // Newly created objects are always placed into the player's inventory.
-            NitroxId ownerId = NitroxEntity.RequireIdFrom(Player.main.gameObject);
+            if (!NitroxEntity.TryGetIdFrom(Player.main.gameObject, out NitroxId ownerId))
+            {
+                throw new InvalidOperationException("[Items] Player has no id! Couldn't parent InventoryItem.");
+            }
 
             InventoryItemEntity inventoryItemEntity = new(itemId, classId, techType.ToDto(), metadata.OrNull(), ownerId, children);
             BatteryChildEntityHelper.TryPopulateInstalledBattery(gameObject, inventoryItemEntity.ChildEntities, itemId);
@@ -147,7 +150,7 @@ namespace NitroxClient.GameLogic
             // Some items might be remotely simulated if they were dropped by other players.  We'll want to remove
             // any remote tracking when we actively handle the item.
             RemotelyControlled remotelyControlled = gameObject.GetComponent<RemotelyControlled>();
-            Object.Destroy(remotelyControlled);
+            UnityEngine.Object.Destroy(remotelyControlled);
         }
 
         private Optional<NitroxId> GetCurrentWaterParkId()

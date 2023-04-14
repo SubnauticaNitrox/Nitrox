@@ -20,7 +20,11 @@ namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
 
         protected override void SpawnPostProcess(Base latestBase, Int3 latestCell, GameObject finishedPiece)
         {
-            NitroxId mapRoomGeometryPieceId = NitroxEntity.RequireIdFrom(finishedPiece);
+            if (!NitroxEntity.TryGetIdOrWarn(finishedPiece, out NitroxId mapRoomGeometryPieceId))
+            {
+                return;
+            }
+
             GameObject mapRoomFunctionality = FindMapRoomFunctionality(latestBase, finishedPiece);
 
             NitroxId mapRoomFunctionalityId = mapRoomGeometryPieceId.Increment();

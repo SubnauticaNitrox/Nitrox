@@ -119,6 +119,20 @@ namespace NitroxClient.MonoBehaviours
             return false;
         }
 
+        public static bool TryGetIdOrWarn(Component component, out NitroxId nitroxId,
+                                          [CallerMemberName] string methodName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
+        {
+            if (component && component.TryGetComponent(out NitroxEntity nitroxEntity))
+            {
+                nitroxId = nitroxEntity.Id;
+                return true;
+            }
+
+            Log.Warn($"[{filePath[(filePath.LastIndexOf("\\", StringComparison.Ordinal) + 1)..^2] + methodName}():L{lineNumber}] Couldn't find an id on {component.GetFullHierarchyPath()}");
+            nitroxId = null;
+            return false;
+        }
+
         public static Optional<NitroxId> GetOptionalIdFrom(GameObject gameObject)
         {
             if (gameObject && gameObject.TryGetComponent(out NitroxEntity nitroxEntity))
@@ -130,19 +144,6 @@ namespace NitroxClient.MonoBehaviours
         }
 
         public static Optional<NitroxId> GetOptionalIdFrom(Component component) => component ? GetOptionalIdFrom(component.gameObject) : Optional.Empty;
-
-        public static NitroxEntity RequireEntityFrom(GameObject gameObject)
-        {
-            NitroxEntity nitroxEntity = gameObject.AliveOrNull()?.GetComponent<NitroxEntity>();
-            Validate.IsTrue(nitroxEntity);
-            return nitroxEntity;
-        }
-
-        public static NitroxEntity RequireEntityFrom(Component component) => RequireEntityFrom(component.gameObject);
-
-        public static NitroxId RequireIdFrom(GameObject gameObject) => RequireEntityFrom(gameObject).Id;
-
-        public static NitroxId RequireIdFrom(Component component) => RequireEntityFrom(component).Id;
 
         public static void SetNewId(GameObject gameObject, NitroxId id)
         {
@@ -160,6 +161,15 @@ namespace NitroxClient.MonoBehaviours
 
             entity.Id = id;
             gameObjectsById[id] = gameObject;
+        }
+
+        public static NitroxId GenerateNewId(GameObject gameObject)
+        {
+            Validate.IsTrue(gameObject);
+
+            NitroxId id = new();
+            SetNewId(gameObject, id);
+            return id;
         }
 
         public static NitroxId GetIdOrGenerateNew(GameObject gameObject)

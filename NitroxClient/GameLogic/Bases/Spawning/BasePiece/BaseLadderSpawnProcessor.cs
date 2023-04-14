@@ -37,9 +37,13 @@ public class BaseLadderSpawnProcessor : BasePieceSpawnProcessor
 
         if (otherLadderPiece.HasValue)
         {
+            if (!NitroxEntity.TryGetIdOrWarn(finishedPiece, out NitroxId id))
+            {
+                return;
+            }
+
             // Ladders are one of the rare instances where we want to assign the same id to two different objects.
             // This happens because the ladder can be deconstructed from two locations (the top and bottom).
-            NitroxId id = NitroxEntity.RequireIdFrom(finishedPiece);
             NitroxEntity.SetNewId(otherLadderPiece.Value, id);
             Log.Debug($"Successfully set new id to other piece: {otherLadderPiece.Value.name}, id={id}");
         }

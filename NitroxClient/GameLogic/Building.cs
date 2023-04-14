@@ -53,9 +53,9 @@ namespace NitroxClient.GameLogic
             if (parentBaseId == null)
             {
                 Base aBase = constructableBase.gameObject.GetComponentInParent<Base>();
-                if (aBase != null)
+                if (!NitroxEntity.TryGetIdOrWarn(aBase, out parentBaseId))
                 {
-                    parentBaseId = NitroxEntity.RequireIdFrom(aBase);
+                   return;
                 }
             }
 
@@ -64,8 +64,7 @@ namespace NitroxClient.GameLogic
             Optional<BuilderMetadata> rotationMetadata = rotationMetadataFactory.From(baseGhost);
 
             BasePiece basePiece = new BasePiece(id, placedPosition.ToDto(), quaternion.ToDto(), camera.position.ToDto(), camera.rotation.ToDto(), techType.ToDto(), Optional.OfNullable(parentBaseId), false, rotationMetadata);
-            PlaceBasePiece placedBasePiece = new PlaceBasePiece(basePiece);
-            packetSender.Send(placedBasePiece);
+            packetSender.Send(new PlaceBasePiece(basePiece));
         }
 
         public void PlaceFurniture(GameObject gameObject, TechType techType, Vector3 itemPosition, Quaternion quaternion)
@@ -112,22 +111,27 @@ namespace NitroxClient.GameLogic
                 return;
             }
 
-            NitroxId id = NitroxEntity.RequireIdFrom(gameObject);
-            ConstructionAmountChanged amountChanged = new ConstructionAmountChanged(id, amount);
-            packetSender.Send(amountChanged);
+            if (NitroxEntity.TryGetIdOrWarn(gameObject, out NitroxId id))
+            {
+                ConstructionAmountChanged amountChanged = new ConstructionAmountChanged(id, amount);
+                packetSender.Send(amountChanged);
+            }
         }
 
         public void ConstructionComplete(GameObject ghost, Optional<Base> lastTargetBase, Int3 lastTargetBaseOffset, Base.Face lastTargetFace = default(Base.Face))
         {
-            NitroxId baseId = null;
+            Optional<NitroxId> baseId = Optional.Empty;
             Optional<object> opConstructedBase = TransientLocalObjectManager.Get(TransientObjectType.BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT);
 
-            NitroxId id = NitroxEntity.RequireIdFrom(ghost);
+            if (!NitroxEntity.TryGetIdOrWarn(ghost, out NitroxId id))
+            {
+                return;
+            }
 
             if (opConstructedBase.HasValue)
             {
                 GameObject constructedBase = (GameObject)opConstructedBase.Value;
-                baseId = NitroxEntity.RequireIdFrom(constructedBase);
+                baseId = NitroxEntity.GetOptionalIdFrom(constructedBase);
             }
 
             // For base pieces, we must switch the id from the ghost to the newly constructed piece.
@@ -136,7 +140,7 @@ namespace NitroxClient.GameLogic
             {
                 Int3 latestCell = lastTargetBaseOffset;
                 Base latestBase = lastTargetBase.HasValue ? lastTargetBase.Value : ((GameObject)opConstructedBase.Value).GetComponent<Base>();
-                baseId = NitroxEntity.RequireIdFrom(latestBase.gameObject);
+                baseId = NitroxEntity.GetOptionalIdFrom(latestBase.gameObject);
 
                 Transform cellTransform;
                 GameObject placedPiece = null;
@@ -189,8 +193,16 @@ namespace NitroxClient.GameLogic
                 Log.Error($"Found ghost which is neither base piece nor a constructable: {ghost.name}");
             }
 
-            ConstructionCompleted constructionCompleted = new ConstructionCompleted(id, baseId);
-            packetSender.Send(constructionCompleted);
+            if (baseId.HasValue)
+            {
+                packetSender.Send(new ConstructionCompleted(id, baseId.Value));
+            }
+            else
+            {
+                Log.Error($"[Building] BaseId couldn't be retrieved for {ghost.GetFullHierarchyPath()}");
+            }
+
+
         }
 
         public void DeconstructionBegin(NitroxId id)
@@ -214,10 +226,10 @@ namespace NitroxClient.GameLogic
 
         public void DeconstructionComplete(GameObject gameObject)
         {
-            NitroxId id = NitroxEntity.RequireIdFrom(gameObject);
-
-            DeconstructionCompleted deconstructionCompleted = new DeconstructionCompleted(id);
-            packetSender.Send(deconstructionCompleted);
+            if (NitroxEntity.TryGetIdOrWarn(gameObject, out NitroxId id))
+            {
+                packetSender.Send(new DeconstructionCompleted(id));
+            }
 
             // When deconstructed, some objects are simply hidden and potentially re-used later (such as windows).
             // We want to detach the nitrox entity so a new one can potentially be attached layer

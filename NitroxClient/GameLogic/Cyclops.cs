@@ -106,7 +106,10 @@ namespace NitroxClient.GameLogic
         /// </summary>
         public void OnDamagePointRepaired(SubRoot subRoot, CyclopsDamagePoint damagePoint, float repairAmount)
         {
-            NitroxId subId = NitroxEntity.RequireIdFrom(subRoot.gameObject);
+            if (!NitroxEntity.TryGetIdOrWarn(subRoot, out NitroxId subId))
+            {
+                return;
+            }
 
             for (int i = 0; i < subRoot.damageManager.damagePoints.Length; i++)
             {
@@ -125,7 +128,11 @@ namespace NitroxClient.GameLogic
         /// </summary>
         private void BroadcastDamageState(SubRoot subRoot, Optional<DamageInfo> info)
         {
-            NitroxId subId = NitroxEntity.RequireIdFrom(subRoot.gameObject);
+            if (!NitroxEntity.TryGetIdOrWarn(subRoot, out NitroxId subId))
+            {
+                return;
+            }
+
             LiveMixin subHealth = subRoot.gameObject.RequireComponent<LiveMixin>();
             if (subHealth.health <= 0)
             {
@@ -135,14 +142,10 @@ namespace NitroxClient.GameLogic
             if (info.HasValue)
             {
                 DamageInfo damage = info.Value;
+                Optional<NitroxId> dealerId = NitroxEntity.GetOptionalIdFrom(damage.dealer);
                 // Source of the damage. Used if the damage done to the Cyclops was not calculated on other clients. Currently it's just used to figure out what sounds and
                 // visual effects should be used.
-                damageInfo = new CyclopsDamageInfoData(subId,
-                                                       damage.dealer != null ? NitroxEntity.RequireIdFrom(damage.dealer) : null,
-                                                       damage.originalDamage,
-                                                       damage.damage,
-                                                       damage.position,
-                                                       damage.type);
+                damageInfo = new CyclopsDamageInfoData(subId, dealerId, damage.originalDamage, damage.damage, damage.position, damage.type);
             }
 
             int[] damagePointIndexes = GetActiveDamagePoints(subRoot).ToArray();
@@ -172,17 +175,23 @@ namespace NitroxClient.GameLogic
         /// </summary>
         private IEnumerable<CyclopsFireData> GetActiveRoomFires(SubFire subFire)
         {
-            NitroxId subRootId = NitroxEntity.RequireIdFrom(subFire.subRoot.gameObject);
+            if (!NitroxEntity.TryGetIdOrWarn(subFire.subRoot, out NitroxId subRootId))
+            {
+                yield break;
+            }
+
             foreach (KeyValuePair<CyclopsRooms, SubFire.RoomFire> roomFire in subFire.roomFires)
             {
                 for (int i = 0; i < roomFire.Value.spawnNodes.Length; i++)
                 {
                     if (roomFire.Value.spawnNodes[i].childCount > 0)
                     {
-                        yield return new CyclopsFireData(NitroxEntity.RequireIdFrom(roomFire.Value.spawnNodes[i].GetComponentInChildren<Fire>().gameObject),
-                            subRootId,
-                            roomFire.Key,
-                            i);
+                        if (!NitroxEntity.TryGetIdOrWarn(roomFire.Value.spawnNodes[i].GetComponentInChildren<Fire>().gameObject, out NitroxId fireId))
+                        {
+                            yield break;
+                        }
+
+                        yield return new CyclopsFireData(fireId, subRootId, roomFire.Key, i);
                     }
                 }
             }

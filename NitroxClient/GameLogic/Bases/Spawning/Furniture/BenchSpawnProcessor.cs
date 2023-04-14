@@ -4,66 +4,68 @@ using NitroxClient.MonoBehaviours.Overrides;
 using NitroxModel.DataStructures;
 using UnityEngine;
 
-namespace NitroxClient.GameLogic.Bases.Spawning.Furniture
+namespace NitroxClient.GameLogic.Bases.Spawning.Furniture;
+
+// For better immersion we split the Bench in three parts (left/center/right). One player can sit on each part.
+public class BenchSpawnProcessor : FurnitureSpawnProcessor
 {
-    // For better immersion we split the Bench in three parts (left/center/right). One player can sit on each part.
-    public class BenchSpawnProcessor : FurnitureSpawnProcessor
+    private const int LAYER_USEABLE = 13;
+
+    protected override TechType[] ApplicableTechTypes { get; } =
     {
-        private const int LAYER_USEABLE = 13;
+        TechType.Bench
+    };
 
-        protected override TechType[] ApplicableTechTypes { get; } =
+    protected override void SpawnPostProcess(GameObject finishedFurniture)
+    {
+        GameObject CreateBenchTile(string name, Vector3 offset)
         {
-            TechType.Bench
-        };
+            GameObject benchTile = new GameObject(name) { layer = LAYER_USEABLE };
+            benchTile.transform.SetParent(finishedFurniture.transform, false);
+            benchTile.transform.localPosition += offset;
+            BoxCollider benchTileCollider = benchTile.AddComponent<BoxCollider>();
+            benchTileCollider.center = new Vector3(0, 0.25f, 0);
+            benchTileCollider.size = new Vector3(0.85f, 0.5f, 0.65f);
+            benchTileCollider.isTrigger = true;
+            return benchTile;
+        }
 
-        protected override void SpawnPostProcess(GameObject finishedFurniture)
+        if (!finishedFurniture.TryGetComponent(out Bench bench))
         {
-            GameObject CreateBenchTile(string name, Vector3 offset)
+            return;
+        }
+
+        try
+        {
+            if (!NitroxEntity.TryGetIdOrWarn(finishedFurniture, out NitroxId benchId))
             {
-                GameObject benchTile = new GameObject(name) { layer = LAYER_USEABLE };
-                benchTile.transform.SetParent(finishedFurniture.transform, false);
-                benchTile.transform.localPosition += offset;
-                BoxCollider benchTileCollider = benchTile.AddComponent<BoxCollider>();
-                benchTileCollider.center = new Vector3(0, 0.25f, 0);
-                benchTileCollider.size = new Vector3(0.85f, 0.5f, 0.65f);
-                benchTileCollider.isTrigger = true;
-                return benchTile;
+                throw new InvalidOperationException("Couldn't retrieve id from Bench");
             }
 
-            if (!finishedFurniture.TryGetComponent(out Bench bench))
-            {
-                return;
-            }
+            GameObject benchTileLeft = CreateBenchTile("BenchPlaceLeft", new Vector3(-0.75f, 0, 0));
+            GameObject benchTileCenter = CreateBenchTile("BenchPlaceCenter", Vector3.zero);
+            GameObject benchTileRight = CreateBenchTile("BenchPlaceRight", new Vector3(0.75f, 0, 0));
 
-            try
-            {
-                NitroxId benchId = NitroxEntity.RequireIdFrom(finishedFurniture);
+            GameObject animationRoot = finishedFurniture.FindChild("bench_animation");
 
-                GameObject benchTileLeft = CreateBenchTile("BenchPlaceLeft", new Vector3(-0.75f, 0, 0));
-                GameObject benchTileCenter = CreateBenchTile("BenchPlaceCenter", Vector3.zero);
-                GameObject benchTileRight = CreateBenchTile("BenchPlaceRight", new Vector3(0.75f, 0, 0));
+            MultiplayerBench.FromBench(bench, benchTileLeft, MultiplayerBench.Side.LEFT, animationRoot);
+            MultiplayerBench.FromBench(bench, benchTileCenter, MultiplayerBench.Side.CENTER, animationRoot);
+            MultiplayerBench.FromBench(bench, benchTileRight, MultiplayerBench.Side.RIGHT, animationRoot);
 
-                GameObject animationRoot = finishedFurniture.FindChild("bench_animation");
+            NitroxId benchLeftId = benchId.Increment();
+            NitroxId benchCenterId = benchLeftId.Increment();
+            NitroxId benchRightId = benchCenterId.Increment();
 
-                MultiplayerBench.FromBench(bench, benchTileLeft, MultiplayerBench.Side.LEFT, animationRoot);
-                MultiplayerBench.FromBench(bench, benchTileCenter, MultiplayerBench.Side.CENTER, animationRoot);
-                MultiplayerBench.FromBench(bench, benchTileRight, MultiplayerBench.Side.RIGHT, animationRoot);
+            NitroxEntity.SetNewId(benchTileLeft, benchLeftId);
+            NitroxEntity.SetNewId(benchTileCenter, benchCenterId);
+            NitroxEntity.SetNewId(benchTileRight, benchRightId);
 
-                NitroxId benchLeftId = benchId.Increment();
-                NitroxId benchCenterId = benchLeftId.Increment();
-                NitroxId benchRightId = benchCenterId.Increment();
-
-                NitroxEntity.SetNewId(benchTileLeft, benchLeftId);
-                NitroxEntity.SetNewId(benchTileCenter, benchCenterId);
-                NitroxEntity.SetNewId(benchTileRight, benchRightId);
-
-                UnityEngine.Object.Destroy(bench);
-                UnityEngine.Object.Destroy(finishedFurniture.FindChild("Builder Trigger"));
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex);
-            }
+            UnityEngine.Object.Destroy(bench);
+            UnityEngine.Object.Destroy(finishedFurniture.FindChild("Builder Trigger"));
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex);
         }
     }
 }

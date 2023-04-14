@@ -25,10 +25,9 @@ public class PlayerMetadataExtractor : GenericEntityMetadataExtractor<Player, Pl
             InventoryItem item = slotWithItem.Value;
 
             // not every slot will always contain an item.
-            if(item != null)
+            if(item != null && NitroxEntity.TryGetIdOrWarn(item.item.gameObject, out NitroxId itemId))
             {
-                NitroxId nitroxId = NitroxEntity.RequireIdFrom(item.item.gameObject);
-                equipped.Add(new EquippedItem(nitroxId, slotWithItem.Key, item.techType.ToDto()));
+                equipped.Add(new EquippedItem(itemId, slotWithItem.Key, item.techType.ToDto()));
             }
         }
 

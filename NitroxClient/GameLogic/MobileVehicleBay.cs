@@ -38,9 +38,12 @@ public class MobileVehicleBay
             return;
         }
 
-        NitroxId constructedObjectId = new();
-        NitroxEntity.SetNewId(constructedObject, constructedObjectId);
-        NitroxId constructorId = NitroxEntity.RequireIdFrom(constructor.constructor.gameObject);
+        if (!NitroxEntity.TryGetIdOrWarn(constructor.constructor.gameObject, out NitroxId constructorId))
+        {
+            constructorId = null;
+        }
+
+        NitroxId constructedObjectId = NitroxEntity.GenerateNewId(constructedObject);
 
         VehicleWorldEntity vehicleEntity = new(constructorId, DayNightCycle.main.timePassedAsFloat, constructedObject.transform.ToLocalDto(), string.Empty, false, constructedObjectId, techType.ToDto(), null);
         VehicleChildEntityHelper.PopulateChildren(constructedObjectId, constructedObject.GetFullHierarchyPath(), vehicleEntity.ChildEntities, constructedObject);
