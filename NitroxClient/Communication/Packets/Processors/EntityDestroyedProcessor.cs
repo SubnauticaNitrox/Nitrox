@@ -1,4 +1,3 @@
-using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.PlayerLogic;
@@ -13,38 +12,35 @@ public class EntityDestroyedProcessor : ClientPacketProcessor<EntityDestroyed>
     public const DamageType DAMAGE_TYPE_RUN_ORIGINAL = (DamageType)100;
 
     private readonly Entities entities;
-    private readonly IPacketSender packetSender;
 
-    public EntityDestroyedProcessor(Entities entities, IPacketSender packetSender)
+    public EntityDestroyedProcessor(Entities entities)
     {
         this.entities = entities;
-        this.packetSender = packetSender;
     }
 
     public override void Process(EntityDestroyed packet)
     {
         entities.RemoveEntity(packet.Id);
+        if (!NitroxEntity.TryGetObjectFrom(packet.Id, out GameObject gameObject))
+        {
+            Log.Warn($"[{nameof(EntityDestroyedProcessor)}] Could not find entity with id: {packet.Id} to destroy.");
+            return;
+        }
 
         using (PacketSuppressor<EntityDestroyed>.Suppress())
         {
-            if (NitroxEntity.TryGetObjectFrom(packet.Id, out GameObject gameObject))
+            // This type of check could get out of control if there are many types with custom destroy logic.  If we get a few more, move to separate processors.
+            if (gameObject.TryGetComponent(out Vehicle vehicle))
             {
-                // This type of check could get out of control if there are many types with custom destroy logic.  If we get a few more, move to separate processors.
-                Vehicle vehicle = gameObject.GetComponent<Vehicle>();
-                SubRoot subRoot = gameObject.GetComponent<SubRoot>();
-
-                if (vehicle)
-                {
-                    DestroyVehicle(vehicle);
-                }
-                else if(subRoot)
-                {
-                    DestroySubroot(subRoot);
-                }
-                else
-                {
-                    DefaultDestroyAction(gameObject);
-                }
+                DestroyVehicle(vehicle);
+            }
+            else if (gameObject.TryGetComponent(out SubRoot subRoot))
+            {
+                DestroySubroot(subRoot);
+            }
+            else
+            {
+                DefaultDestroyAction(gameObject);
             }
         }
     }
@@ -85,17 +81,17 @@ public class EntityDestroyedProcessor : ClientPacketProcessor<EntityDestroyed>
         {
             if (vehicle.destructionEffect)
             {
-                GameObject gameObject = UnityEngine.Object.Instantiate<GameObject>(vehicle.destructionEffect);
+                GameObject gameObject = Object.Instantiate(vehicle.destructionEffect);
                 gameObject.transform.position = vehicle.transform.position;
                 gameObject.transform.rotation = vehicle.transform.rotation;
             }
 
-            UnityEngine.Object.Destroy(vehicle.gameObject);
+            Object.Destroy(vehicle.gameObject);
         }
     }
 
     private void DefaultDestroyAction(GameObject gameObject)
     {
-        UnityEngine.Object.Destroy(gameObject);
+        Object.Destroy(gameObject);
     }
 }

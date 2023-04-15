@@ -43,7 +43,7 @@ namespace NitroxClient.Communication
         public void NonActionPacket()
         {
             TestNonActionPacket packet = new TestNonActionPacket(PLAYER_ID);
-            packetReceiver.PacketReceived(packet);
+            packetReceiver.PacketReceived(packet, 0);
 
             Queue<Packet> packets = packetReceiver.GetReceivedPackets();
 
