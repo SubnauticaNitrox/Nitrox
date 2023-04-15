@@ -37,7 +37,7 @@ public class BenchSpawnProcessor : FurnitureSpawnProcessor
 
         try
         {
-            if (!NitroxEntity.TryGetIdOrWarn(finishedFurniture, out NitroxId benchId))
+            if (!finishedFurniture.TryGetIdOrWarn(out NitroxId benchId))
             {
                 throw new InvalidOperationException("Couldn't retrieve id from Bench");
             }

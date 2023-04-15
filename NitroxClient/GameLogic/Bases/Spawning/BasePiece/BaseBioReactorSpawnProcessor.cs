@@ -22,7 +22,7 @@ namespace NitroxClient.GameLogic.Bases.Spawning.BasePiece
 
         protected override void SpawnPostProcess(Base latestBase, Int3 latestCell, GameObject finishedPiece)
         {
-            if (!NitroxEntity.TryGetIdOrWarn(finishedPiece, out NitroxId reactorId))
+            if (!finishedPiece.TryGetIdOrWarn(out NitroxId reactorId))
             {
                 return;
             }

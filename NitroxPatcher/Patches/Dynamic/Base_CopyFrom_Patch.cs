@@ -25,7 +25,7 @@ public class Base_CopyFrom_Patch : NitroxPatch, IDynamicPatch
         // a face piece, such as a window, this will clone a ghost base to stage the change which is later
         // integrated into the real base.  For now, prevent guid copies to these staging ghost bases; however,
         // there is still a pending edge case when a base converts to a BaseGhost for deconstruction.
-        if (__instance.gameObject.name != "BaseGhost" && NitroxEntity.TryGetIdFrom(sourceBase, out NitroxId sourceId))
+        if (__instance.gameObject.name != "BaseGhost" && sourceBase.TryGetNitroxId(out NitroxId sourceId))
         {
             Log.Debug($"Transferring base id : {sourceId} from {sourceBase.name} to {__instance.name}");
             NitroxEntity.SetNewId(__instance.gameObject, sourceId);

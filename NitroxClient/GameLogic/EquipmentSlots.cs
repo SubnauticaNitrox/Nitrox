@@ -1,5 +1,4 @@
 using NitroxClient.Communication.Abstract;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Packets;
 using UnityEngine;
@@ -19,12 +18,11 @@ public class EquipmentSlots
 
     public void BroadcastEquip(Pickupable pickupable, GameObject owner, string slot)
     {
-        if (!NitroxEntity.TryGetIdOrWarn(owner, out NitroxId ownerId))
+        if (!owner.TryGetIdOrWarn(out NitroxId ownerId))
         {
             return;
         }
-
-        if (!NitroxEntity.TryGetIdOrWarn(pickupable, out NitroxId itemId))
+        if (!pickupable.TryGetIdOrWarn(out NitroxId itemId))
         {
             return;
         }
@@ -43,12 +41,12 @@ public class EquipmentSlots
 
     public void BroadcastUnequip(Pickupable pickupable, GameObject owner, string slot)
     {
-        if (!NitroxEntity.TryGetIdOrWarn(owner, out NitroxId ownerId))
+        if (!owner.TryGetIdOrWarn(out NitroxId ownerId))
         {
             return;
         }
 
-        if (!NitroxEntity.TryGetIdOrWarn(pickupable, out NitroxId itemId))
+        if (!pickupable.TryGetIdOrWarn(out NitroxId itemId))
         {
             return;
         }

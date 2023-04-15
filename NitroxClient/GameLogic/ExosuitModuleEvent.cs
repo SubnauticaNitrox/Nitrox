@@ -1,5 +1,4 @@
 using NitroxClient.Communication.Abstract;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel_Subnautica.Packets;
 using UnityEngine;
@@ -70,7 +69,7 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastArmAction(TechType techType, IExosuitArm exosuitArm, ExosuitArmAction armAction, Vector3? opVector, Quaternion? opRotation)
         {
-            if (NitroxEntity.TryGetIdOrWarn(exosuitArm.GetGameObject(), out NitroxId id))
+            if (exosuitArm.GetGameObject().TryGetIdOrWarn(out NitroxId id))
             {
                 ExosuitArmActionPacket packet = new(techType, id, armAction, opVector, opRotation);
                 packetSender.Send(packet);
@@ -79,7 +78,7 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastArmAction(TechType techType, IExosuitArm exosuitArm, ExosuitArmAction armAction)
         {
-            if (NitroxEntity.TryGetIdOrWarn(exosuitArm.GetGameObject(), out NitroxId id))
+            if (exosuitArm.GetGameObject().TryGetIdOrWarn(out NitroxId id))
             {
                 ExosuitArmActionPacket packet = new(techType, id, armAction, null, null);
                 packetSender.Send(packet);

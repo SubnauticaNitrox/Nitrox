@@ -32,7 +32,7 @@ namespace NitroxClient.GameLogic
                 return;
             }
 
-            if (!NitroxEntity.TryGetIdOrWarn(pickupable.gameObject, out NitroxId itemId))
+            if (!pickupable.TryGetIdOrWarn(out NitroxId itemId))
             {
                 return;
             }
@@ -72,12 +72,11 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastBatteryAdd(GameObject gameObject, GameObject parent, TechType techType)
         {
-            if (!NitroxEntity.TryGetIdOrWarn(gameObject, out NitroxId id))
+            if (!gameObject.TryGetIdOrWarn(out NitroxId id))
             {
                 return;
             }
-
-            if (!NitroxEntity.TryGetIdOrWarn(parent, out NitroxId parentId))
+            if (!parent.TryGetIdOrWarn(out NitroxId parentId))
             {
                 return;
             }

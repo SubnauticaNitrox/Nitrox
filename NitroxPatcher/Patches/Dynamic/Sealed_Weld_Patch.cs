@@ -1,7 +1,6 @@
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 
@@ -13,7 +12,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(Sealed __instance)
         {
-            if (NitroxEntity.TryGetIdOrWarn(__instance.gameObject, out NitroxId id))
+            if (__instance.TryGetIdOrWarn(out NitroxId id))
             {
                 Resolve<Entities>().EntityMetadataChanged(__instance, id);
             }

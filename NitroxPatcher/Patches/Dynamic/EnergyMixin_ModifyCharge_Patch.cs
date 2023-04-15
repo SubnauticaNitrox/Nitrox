@@ -2,7 +2,6 @@ using System;
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using UnityEngine;
@@ -19,7 +18,7 @@ public class EnergyMixin_ModifyCharge_Patch : NitroxPatch, IDynamicPatch
 
         if (batteryGo && batteryGo.TryGetComponent(out Battery battery) &&
             Math.Abs(Math.Floor(__instance.charge) - Math.Floor(__instance.charge - __result)) > 0.0 && //Send package if power changed to next natural number
-            NitroxEntity.TryGetIdOrWarn(batteryGo, out NitroxId id))
+            batteryGo.TryGetIdOrWarn(out NitroxId id))
         {
             Resolve<Entities>().EntityMetadataChanged(battery, id);
         }

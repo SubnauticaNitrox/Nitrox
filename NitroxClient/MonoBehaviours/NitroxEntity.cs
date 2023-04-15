@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
-using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
@@ -17,7 +15,7 @@ namespace NitroxClient.MonoBehaviours
     [ProtoContract] // REQUIRED as the game serializes/deserializes phasing entities in batches when moving around the map.
     public class NitroxEntity : MonoBehaviour, IProtoTreeEventListener
     {
-        private static Dictionary<NitroxId, GameObject> gameObjectsById = new Dictionary<NitroxId, GameObject>();
+        private static readonly Dictionary<NitroxId, GameObject> gameObjectsById = new();
 
         [DataMember(Order = 1)]
         [ProtoMember(1)]
@@ -74,76 +72,6 @@ namespace NitroxClient.MonoBehaviours
             return id != null && gameObjectsById.TryGetValue(id, out GameObject gameObject) &&
                    gameObject.TryGetComponent(out component);
         }
-
-        public static bool TryGetEntityFrom(GameObject gameObject, out NitroxEntity nitroxEntity)
-        {
-            nitroxEntity = null;
-            return gameObject && gameObject.TryGetComponent(out nitroxEntity);
-        }
-
-        public static bool TryGetIdFrom(GameObject gameObject, out NitroxId nitroxId)
-        {
-            if (gameObject && gameObject.TryGetComponent(out NitroxEntity nitroxEntity))
-            {
-                nitroxId = nitroxEntity.Id;
-                return true;
-            }
-
-            nitroxId = null;
-            return false;
-        }
-
-        public static bool TryGetIdFrom(Component component, out NitroxId nitroxId)
-        {
-            if (component && component.gameObject.TryGetComponent(out NitroxEntity nitroxEntity))
-            {
-                nitroxId = nitroxEntity.Id;
-                return true;
-            }
-
-            nitroxId = null;
-            return false;
-        }
-
-        public static bool TryGetIdOrWarn(GameObject gameObject, out NitroxId nitroxId,
-                                          [CallerMemberName] string methodName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
-        {
-            if (gameObject && gameObject.TryGetComponent(out NitroxEntity nitroxEntity))
-            {
-                nitroxId = nitroxEntity.Id;
-                return true;
-            }
-
-            Log.Warn($"[{filePath[(filePath.LastIndexOf("\\", StringComparison.Ordinal) + 1)..^2] + methodName}():L{lineNumber}] Couldn't find an id on {gameObject.GetFullHierarchyPath()}");
-            nitroxId = null;
-            return false;
-        }
-
-        public static bool TryGetIdOrWarn(Component component, out NitroxId nitroxId,
-                                          [CallerMemberName] string methodName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
-        {
-            if (component && component.TryGetComponent(out NitroxEntity nitroxEntity))
-            {
-                nitroxId = nitroxEntity.Id;
-                return true;
-            }
-
-            Log.Warn($"[{filePath[(filePath.LastIndexOf("\\", StringComparison.Ordinal) + 1)..^2] + methodName}():L{lineNumber}] Couldn't find an id on {component.GetFullHierarchyPath()}");
-            nitroxId = null;
-            return false;
-        }
-
-        public static Optional<NitroxId> GetOptionalIdFrom(GameObject gameObject)
-        {
-            if (gameObject && gameObject.TryGetComponent(out NitroxEntity nitroxEntity))
-            {
-                return Optional.Of(nitroxEntity.Id);
-            }
-
-            return Optional.Empty;
-        }
-
-        public static Optional<NitroxId> GetOptionalIdFrom(Component component) => component ? GetOptionalIdFrom(component.gameObject) : Optional.Empty;
 
         public static void SetNewId(GameObject gameObject, NitroxId id)
         {

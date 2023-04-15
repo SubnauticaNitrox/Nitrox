@@ -42,12 +42,11 @@ namespace NitroxClient.GameLogic
         /// </summary>
         public void OnCreate(Fire fire, SubFire.RoomFire room, int nodeIndex)
         {
-            if (!NitroxEntity.TryGetIdOrWarn(fire, out NitroxId fireId))
+            if (!fire.TryGetIdOrWarn(out NitroxId fireId))
             {
                 return;
             }
-
-            if (!NitroxEntity.TryGetIdOrWarn(fire.fireSubRoot, out NitroxId subRootId))
+            if (!fire.fireSubRoot.TryGetIdOrWarn(out NitroxId subRootId))
             {
                 return;
             }
@@ -61,7 +60,7 @@ namespace NitroxClient.GameLogic
         /// </summary>
         public void OnDouse(Fire fire, float douseAmount)
         {
-            if (!NitroxEntity.TryGetIdOrWarn(fire, out NitroxId fireId))
+            if (!fire.TryGetIdOrWarn(out NitroxId fireId))
             {
                 return;
             }
@@ -101,7 +100,7 @@ namespace NitroxClient.GameLogic
             {
                 Fire existingFire = transform2.GetComponentInChildren<Fire>();
 
-                if (NitroxEntity.TryGetIdFrom(existingFire.gameObject, out NitroxId existingFireId) && existingFireId != fireData.CyclopsId)
+                if (existingFire.TryGetNitroxId(out NitroxId existingFireId) && existingFireId != fireData.CyclopsId)
                 {
                     Log.Error($"[Fires.Create Fire already exists at node index {fireData.NodeIndex}! Replacing existing Fire Id {existingFireId} with Id {fireData.CyclopsId}]");
 

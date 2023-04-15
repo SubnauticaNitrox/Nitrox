@@ -1,7 +1,6 @@
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
@@ -16,7 +15,7 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             Rocket rocket = __instance.gameObject.RequireComponentInParent<Rocket>();
 
-            if (NitroxEntity.TryGetIdOrWarn(rocket.gameObject, out NitroxId id))
+            if (rocket.TryGetIdOrWarn(out NitroxId id))
             {
                 Resolve<Entities>().EntityMetadataChanged(rocket, id);
             }

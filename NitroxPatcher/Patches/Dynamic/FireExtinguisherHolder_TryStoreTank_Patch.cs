@@ -4,7 +4,6 @@ using System.Reflection.Emit;
 using HarmonyLib;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
@@ -44,12 +43,12 @@ public class FireExtinguisherHolder_TryStoreTank_Patch : NitroxPatch, IDynamicPa
 
     public static void Callback(FireExtinguisherHolder holder, Pickupable pickupable)
     {
-        if (NitroxEntity.TryGetIdOrWarn(holder.gameObject, out NitroxId holderId))
+        if (holder.TryGetIdOrWarn(out NitroxId holderId))
         {
             Resolve<Entities>().EntityMetadataChanged(holder, holderId);
         }
 
-        if (NitroxEntity.TryGetIdOrWarn(pickupable.gameObject, out NitroxId pickupableId))
+        if (pickupable.TryGetIdOrWarn(out NitroxId pickupableId))
         {
             Resolve<IPacketSender>().Send(new EntityDestroyed(pickupableId));
         }

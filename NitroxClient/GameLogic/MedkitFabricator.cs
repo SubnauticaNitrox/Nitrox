@@ -1,5 +1,4 @@
 ﻿using NitroxClient.Communication.Abstract;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Packets;
 
@@ -16,7 +15,7 @@ namespace NitroxClient.GameLogic
 
         public void Clicked(MedicalCabinet medicalCabinet)
         {
-            if (!NitroxEntity.TryGetIdOrWarn(medicalCabinet.gameObject, out NitroxId id))
+            if (!medicalCabinet.TryGetIdOrWarn(out NitroxId id))
             {
                 return;
             }

@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
@@ -31,7 +30,7 @@ public class QuickSlots_SelectInternal_Patch : NitroxPatch, IDynamicPatch
             return;
         }
         Pickupable pickupable = ____heldItem.item;
-        if (NitroxEntity.TryGetIdOrWarn(pickupable.gameObject, out NitroxId itemId))
+        if (pickupable.TryGetIdOrWarn(out NitroxId itemId))
         {
             PlayerTool component = pickupable.GetComponent<PlayerTool>();
             PlayerHeldItemChanged.ChangeType type = component ? PlayerHeldItemChanged.ChangeType.DRAW_AS_TOOL : PlayerHeldItemChanged.ChangeType.DRAW_AS_ITEM;

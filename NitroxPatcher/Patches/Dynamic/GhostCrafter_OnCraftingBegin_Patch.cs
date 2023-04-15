@@ -1,7 +1,6 @@
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.Helper;
@@ -15,7 +14,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(GhostCrafter __instance, TechType techType, float duration)
         {
-            if (NitroxEntity.TryGetIdOrWarn(__instance.gameObject, out NitroxId crafterId))
+            if (__instance.TryGetIdOrWarn(out NitroxId crafterId))
             {
                 Resolve<Entities>().BroadcastMetadataUpdate(crafterId, new CrafterMetadata(techType.ToDto(), DayNightCycle.main.timePassedAsFloat, duration));
 

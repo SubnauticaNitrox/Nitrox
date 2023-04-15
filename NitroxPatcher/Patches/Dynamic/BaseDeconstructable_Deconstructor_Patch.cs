@@ -1,7 +1,5 @@
 ﻿using System.Reflection;
 using HarmonyLib;
-using NitroxClient.MonoBehaviours;
-using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using static NitroxClient.GameLogic.Helper.TransientLocalObjectManager;
@@ -19,7 +17,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Prefix(BaseDeconstructable __instance)
         {
-            if (NitroxEntity.TryGetIdOrWarn(__instance.gameObject, out NitroxId id))
+            if (__instance.TryGetIdOrWarn(out NitroxId id))
             {
                 Add(TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE_GUID, id);
             }

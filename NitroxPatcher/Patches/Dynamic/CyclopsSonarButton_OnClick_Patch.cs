@@ -1,7 +1,6 @@
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 
@@ -13,7 +12,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(CyclopsSonarButton __instance)
         {
-            if (NitroxEntity.TryGetIdOrWarn(__instance.subRoot.gameObject, out NitroxId id))
+            if (__instance.subRoot.TryGetIdOrWarn(out NitroxId id))
             {
                 Resolve<Cyclops>().BroadcastMetadataChange(id);
             }

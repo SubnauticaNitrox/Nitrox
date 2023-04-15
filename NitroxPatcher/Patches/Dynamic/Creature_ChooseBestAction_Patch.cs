@@ -1,7 +1,6 @@
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
@@ -16,7 +15,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static bool Prefix(Creature __instance, ref CreatureAction __result)
         {
-            if (!NitroxEntity.TryGetIdOrWarn(__instance, out NitroxId id))
+            if (!__instance.TryGetIdOrWarn(out NitroxId id))
             {
                 return true;
             }
@@ -34,7 +33,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(Creature __instance, ref CreatureAction __result)
         {
-            if (!NitroxEntity.TryGetIdOrWarn(__instance, out NitroxId id))
+            if (!__instance.TryGetIdOrWarn(out NitroxId id))
             {
                 return;
             }

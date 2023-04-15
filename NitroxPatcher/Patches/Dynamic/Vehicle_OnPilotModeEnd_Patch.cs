@@ -20,7 +20,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 mvc.Exit();
             }
 
-            if (NitroxEntity.TryGetIdOrWarn(__instance.gameObject, out NitroxId id))
+            if (__instance.TryGetIdOrWarn(out NitroxId id))
             {
                 Resolve<SimulationOwnership>().RequestSimulationLock(id, SimulationLockType.TRANSIENT);
             }

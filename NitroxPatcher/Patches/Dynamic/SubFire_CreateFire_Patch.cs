@@ -2,7 +2,6 @@
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using UnityEngine;
@@ -20,7 +19,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static bool Prefix(SubFire __instance, SubFire.RoomFire startInRoom, out bool __state)
         {
-            __state = NitroxEntity.TryGetIdOrWarn(__instance.subRoot.gameObject, out NitroxId id) &&
+            __state = __instance.subRoot.TryGetIdOrWarn(out NitroxId id) &&
                       Resolve<SimulationOwnership>().HasAnyLockType(id);
 
             // Block any new fires if this player is not the owner

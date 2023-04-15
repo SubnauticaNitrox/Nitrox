@@ -1,7 +1,6 @@
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 
@@ -14,7 +13,7 @@ public class Planter_IsAllowedToAdd_Patch : NitroxPatch, IDynamicPatch
     public static void Postfix(Pickupable pickupable, bool __result)
     {
         // When the planter accepts the new incoming seed, we want to send out metadata about what time the seed was planted.
-        if (__result && NitroxEntity.TryGetIdOrWarn(pickupable.gameObject, out NitroxId id))
+        if (__result && pickupable.TryGetIdOrWarn(out NitroxId id))
         {
             Plantable plantable = pickupable.GetComponent<Plantable>();
             Resolve<Entities>().EntityMetadataChanged(plantable, id);

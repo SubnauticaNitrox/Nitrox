@@ -1,7 +1,6 @@
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic;
@@ -12,7 +11,7 @@ public class Player_SetCurrentEscapePod_Patch : NitroxPatch, IDynamicPatch
 
     public static void Prefix(EscapePod value)
     {
-        Resolve<LocalPlayer>().BroadcastEscapePodChange(NitroxEntity.GetOptionalIdFrom(value));
+        Resolve<LocalPlayer>().BroadcastEscapePodChange(value.GetOptionalId());
     }
 
     public override void Patch(Harmony harmony)

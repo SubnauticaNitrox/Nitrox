@@ -1,10 +1,8 @@
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
-using UnityEngine;
 using static Rocket;
 
 namespace NitroxPatcher.Patches.Dynamic
@@ -20,7 +18,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(Rocket __instance, RocketElevatorStates __state)
         {
-            if (__state != __instance.elevatorState && NitroxEntity.TryGetIdOrWarn(__instance.gameObject, out NitroxId id))
+            if (__state != __instance.elevatorState && __instance.TryGetIdOrWarn(out NitroxId id))
             {
                 Resolve<Entities>().EntityMetadataChanged(__instance, id);
             }

@@ -2,7 +2,6 @@
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
@@ -36,7 +35,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 else
                 {
                     // furniture, just use the same object to get the id
-                    if (!NitroxEntity.TryGetIdOrWarn(__instance.gameObject, out id))
+                    if (!__instance.TryGetIdOrWarn(out id))
                     {
                         return;
                     }

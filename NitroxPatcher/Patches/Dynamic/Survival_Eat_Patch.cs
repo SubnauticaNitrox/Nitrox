@@ -1,7 +1,6 @@
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
@@ -18,7 +17,7 @@ public class Survival_Eat_Patch : NitroxPatch, IDynamicPatch
 
     public static void Postfix(bool __result, GameObject useObj)
     {
-        if (__result && useObj && NitroxEntity.TryGetIdOrWarn(useObj, out NitroxId id))
+        if (__result && useObj.TryGetIdOrWarn(out NitroxId id))
         {
             Resolve<IPacketSender>().Send(new EntityDestroyed(id));
         }

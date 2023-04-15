@@ -3,7 +3,6 @@ using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
@@ -46,7 +45,7 @@ public class CrafterLogic_TryPickupSingleAsync_Patch : NitroxPatch, IDynamicPatc
 
     public static void Callback(GameObject crafter, GameObject item)
     {
-        if (NitroxEntity.TryGetIdOrWarn(crafter.gameObject, out NitroxId crafterId))
+        if (crafter.TryGetIdOrWarn(out NitroxId crafterId))
         {
             // Tell the other players to consider this crafter to no longer contain a tech type.
             Resolve<Entities>().BroadcastMetadataUpdate(crafterId, new CrafterMetadata(null, DayNightCycle.main.timePassedAsFloat, 0));

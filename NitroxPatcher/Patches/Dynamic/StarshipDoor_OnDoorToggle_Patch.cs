@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.Helper;
@@ -14,7 +13,7 @@ public class StarshipDoor_OnDoorToggle_Patch : NitroxPatch, IDynamicPatch
 
     public static void Postfix(StarshipDoor __instance)
     {
-        if (NitroxEntity.TryGetIdOrWarn(__instance.gameObject, out NitroxId id))
+        if (__instance.TryGetIdOrWarn(out NitroxId id))
         {
             StarshipDoorMetadata starshipDoorMetadata = new(__instance.doorLocked, __instance.doorOpen);
             Resolve<Entities>().BroadcastMetadataUpdate(id, starshipDoorMetadata);

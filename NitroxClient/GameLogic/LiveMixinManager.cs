@@ -27,7 +27,7 @@ public class LiveMixinManager
 
     public bool ShouldApplyNextHealthUpdate(LiveMixin receiver, GameObject dealer = null)
     {
-        if (!NitroxEntity.TryGetIdFrom(receiver, out NitroxId id))
+        if (!receiver.TryGetNitroxId(out NitroxId id))
         {
             return false;
         }

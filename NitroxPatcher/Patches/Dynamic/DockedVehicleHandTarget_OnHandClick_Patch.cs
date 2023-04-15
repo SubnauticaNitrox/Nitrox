@@ -2,7 +2,6 @@
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Simulation;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
@@ -19,8 +18,7 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             Vehicle vehicle = __instance.dockingBay.GetDockedVehicle();
 
-            if (skipPrefix || vehicle == null ||
-                !NitroxEntity.TryGetIdOrWarn(vehicle.gameObject, out NitroxId id))
+            if (skipPrefix || !vehicle.TryGetIdOrWarn(out NitroxId id))
             {
                 return true;
             }

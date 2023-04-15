@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.Helper;
@@ -21,7 +20,7 @@ public class IncubatorActivationTerminal_OnHandClick_Patch : NitroxPatch, IDynam
         GameObject platform = __instance.transform.parent.gameObject;
 
         if (!__instance.incubator.powered && Inventory.main.container.Contains(TechType.PrecursorIonCrystal) &&
-            NitroxEntity.TryGetIdOrWarn(platform, out NitroxId id))
+            platform.TryGetIdOrWarn(out NitroxId id))
         {
             IncubatorMetadata metadata = new(true, false);
             Resolve<Entities>().BroadcastMetadataUpdate(id, metadata);

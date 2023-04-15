@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 
@@ -16,7 +15,7 @@ public class PilotingChair_ReleaseBy_Patch : NitroxPatch, IDynamicPatch
         SubRoot subRoot = __instance.GetComponentInParent<SubRoot>();
         Validate.NotNull(subRoot, "PilotingChair cannot find it's corresponding SubRoot!");
 
-        if (NitroxEntity.TryGetIdOrWarn(subRoot.gameObject, out NitroxId id))
+        if (subRoot.TryGetIdOrWarn(out NitroxId id))
         {
             // Request to be downgraded to a transient lock so we can still simulate the positioning.
             Resolve<SimulationOwnership>().RequestSimulationLock(id, SimulationLockType.TRANSIENT);

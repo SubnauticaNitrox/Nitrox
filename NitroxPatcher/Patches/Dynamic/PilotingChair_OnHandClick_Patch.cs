@@ -3,7 +3,6 @@ using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.HUD.Components;
 using NitroxClient.GameLogic.Simulation;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 
@@ -25,7 +24,7 @@ public class PilotingChair_OnHandClick_Patch : NitroxPatch, IDynamicPatch
         SubRoot subRoot = __instance.GetComponentInParent<SubRoot>();
         Validate.NotNull(subRoot, "PilotingChair cannot find it's corresponding SubRoot!");
 
-        if (!NitroxEntity.TryGetIdOrWarn(subRoot.gameObject, out NitroxId id))
+        if (!subRoot.TryGetIdOrWarn(out NitroxId id))
         {
             return true;
         }

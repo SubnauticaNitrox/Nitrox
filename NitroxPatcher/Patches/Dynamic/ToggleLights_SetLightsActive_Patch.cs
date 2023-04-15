@@ -4,7 +4,6 @@ using System.Reflection;
 using HarmonyLib;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
@@ -59,7 +58,7 @@ public class ToggleLights_SetLightsActive_Patch : NitroxPatch, IDynamicPatch
                 DebugUtils.PrintHierarchy(__instance.gameObject);
             }
 
-            if (!NitroxEntity.TryGetIdOrWarn(gameObject, out NitroxId id))
+            if (!gameObject.TryGetIdOrWarn(out NitroxId id))
             {
                 return;
             }

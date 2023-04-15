@@ -1,7 +1,6 @@
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
@@ -14,7 +13,7 @@ public class SubNameInput_OnNameChange_Patch : NitroxPatch, IDynamicPatch
 
     public static void Postfix(SubNameInput __instance)
     {
-        if (!NitroxEntity.TryGetIdFrom(__instance, out NitroxId subNameInputId))
+        if (!__instance.TryGetNitroxId(out NitroxId subNameInputId))
         {
             // prevent this patch from firing when the initial template cyclops loads (happens on game load with living large update).
             return;

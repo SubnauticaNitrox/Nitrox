@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using UnityEngine;
@@ -20,7 +19,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 return false;
             }
 
-            if (NitroxEntity.TryGetIdOrWarn(grabbed, out NitroxId id))
+            if (grabbed.TryGetIdOrWarn(out NitroxId id))
             {
                 // Request to be downgraded to a transient lock so we can still simulate the positioning.
                 Resolve<SimulationOwnership>().RequestSimulationLock(id, SimulationLockType.TRANSIENT);

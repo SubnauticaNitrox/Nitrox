@@ -1,7 +1,6 @@
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
@@ -17,7 +16,7 @@ public class IncubatorActivationTerminal_OnPlayerCinematicModeEnd_Patch : Nitrox
 
     public static void Prefix(IncubatorActivationTerminal __instance)
     {
-        if (__instance.crystalObject && NitroxEntity.TryGetIdOrWarn(__instance.crystalObject, out NitroxId id))
+        if (__instance.crystalObject.TryGetIdOrWarn(out NitroxId id))
         {
             Resolve<IPacketSender>().Send(new EntityDestroyed(id));
         }

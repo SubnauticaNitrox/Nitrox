@@ -59,7 +59,7 @@ namespace NitroxClient.GameLogic.InitialSync
         {
             if (firstTimeConnecting)
             {
-                if (!NitroxEntity.TryGetIdOrWarn(Player.main.gameObject, out NitroxId localPlayerId))
+                if (!Player.main.TryGetIdOrWarn(out NitroxId localPlayerId))
                 {
                     yield break;
                 }

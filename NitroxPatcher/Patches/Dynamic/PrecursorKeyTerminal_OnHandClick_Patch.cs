@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.Helper;
@@ -14,7 +13,7 @@ public class PrecursorKeyTerminal_OnHandClick_Patch : NitroxPatch, IDynamicPatch
 
     public static void Postfix(PrecursorKeyTerminal __instance)
     {
-        if (__instance.slotted && NitroxEntity.TryGetIdOrWarn(__instance.gameObject, out NitroxId id))
+        if (__instance.slotted && __instance.TryGetIdOrWarn(out NitroxId id))
         {
             PrecursorKeyTerminalMetadata precursorKeyTerminalMetadata = new(__instance.slotted);
             Resolve<Entities>().BroadcastMetadataUpdate(id, precursorKeyTerminalMetadata);

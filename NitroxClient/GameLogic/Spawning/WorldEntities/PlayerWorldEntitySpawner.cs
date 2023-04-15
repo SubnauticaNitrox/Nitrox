@@ -22,7 +22,7 @@ public class PlayerWorldEntitySpawner : IWorldEntitySpawner
 
     public IEnumerator SpawnAsync(WorldEntity entity, Optional<GameObject> parent, EntityCell cellRoot, TaskResult<Optional<GameObject>> result)
     {
-        if (NitroxEntity.TryGetIdFrom(Player.main.gameObject, out NitroxId localPlayerId) && localPlayerId == entity.Id)
+        if (Player.main.TryGetNitroxId(out NitroxId localPlayerId) && localPlayerId == entity.Id)
         {
             // No special setup for the local player.  Simply return saying it is spawned.
             result.Set(Player.main.gameObject);
@@ -38,7 +38,7 @@ public class PlayerWorldEntitySpawner : IWorldEntitySpawner
             GameObject remotePlayerBody = CloneLocalPlayerBodyPrototype();
 
             remotePlayer.Value.InitializeGameObject(remotePlayerBody);
-            
+
             if (!IsSwimming(entity.Transform.Position.ToUnity(), parent))
             {
                 remotePlayer.Value.UpdateAnimationAndCollider(AnimChangeType.UNDERWATER, AnimChangeState.OFF);

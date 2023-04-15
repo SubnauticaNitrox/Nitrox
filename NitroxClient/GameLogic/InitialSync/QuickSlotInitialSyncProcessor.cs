@@ -52,7 +52,7 @@ public class QuickSlotInitialSyncProcessor : InitialSyncProcessor
 
         foreach (InventoryItem inventoryItem in Inventory.main.container)
         {
-            if (inventoryItem.item && NitroxEntity.TryGetIdOrWarn(inventoryItem.item.gameObject, out NitroxId itemId))
+            if (inventoryItem.item.TryGetIdOrWarn(out NitroxId itemId))
             {
                 itemsById.Add(itemId, inventoryItem);
             }

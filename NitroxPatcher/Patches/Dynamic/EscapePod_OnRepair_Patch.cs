@@ -1,7 +1,6 @@
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
@@ -15,7 +14,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Prefix(EscapePod __instance)
         {
-            if (NitroxEntity.TryGetIdOrWarn(__instance.gameObject, out NitroxId id))
+            if (__instance.TryGetIdOrWarn(out NitroxId id))
             {
                 Resolve<Entities>().BroadcastMetadataUpdate(id, new RepairedComponentMetadata(TechType.EscapePod.ToDto()));
             }

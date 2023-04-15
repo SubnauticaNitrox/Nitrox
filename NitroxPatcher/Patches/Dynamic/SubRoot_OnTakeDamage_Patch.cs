@@ -2,7 +2,6 @@ using System.Reflection;
 using HarmonyLib;
 using NitroxClient.Communication.Packets.Processors;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 
@@ -24,7 +23,7 @@ public class SubRoot_OnTakeDamage_Patch : NitroxPatch, IDynamicPatch
             return true;
         }
 
-        if (!NitroxEntity.TryGetIdFrom(__instance.gameObject, out NitroxId id))
+        if (!__instance.TryGetNitroxId(out NitroxId id))
         {
             Log.Error($"[SubRoot_OnTakeDamage_Patch.Prefix()] Couldn't find an id on {__instance.gameObject.GetFullHierarchyPath()}");
             return true;
@@ -38,7 +37,7 @@ public class SubRoot_OnTakeDamage_Patch : NitroxPatch, IDynamicPatch
         // If we have lock on it, we'll notify the server that this cyclops must be destroyed
         if (__runOriginal && __instance.live.health <= 0f &&
             damageInfo.type != EntityDestroyedProcessor.DAMAGE_TYPE_RUN_ORIGINAL &&
-            NitroxEntity.TryGetIdOrWarn(__instance.gameObject, out NitroxId id))
+            __instance.TryGetIdOrWarn(out NitroxId id))
         {
             Resolve<Vehicles>().BroadcastDestroyedVehicle(id);
         }

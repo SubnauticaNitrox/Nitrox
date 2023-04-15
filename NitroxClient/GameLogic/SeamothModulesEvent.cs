@@ -1,5 +1,4 @@
 ﻿using NitroxClient.Communication.Abstract;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
@@ -18,7 +17,7 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastTorpedoLaunch(TechType techType, int slotID, SeaMoth instance)
         {
-            if (!NitroxEntity.TryGetIdOrWarn(instance, out NitroxId id))
+            if (!instance.TryGetIdOrWarn(out NitroxId id))
             {
                 return;
             }
@@ -45,7 +44,7 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastElectricalDefense(TechType techType, int slotID, SeaMoth instance)
         {
-            if (!NitroxEntity.TryGetIdOrWarn(instance, out NitroxId id))
+            if (!instance.TryGetIdOrWarn(out NitroxId id))
             {
                 return;
             }

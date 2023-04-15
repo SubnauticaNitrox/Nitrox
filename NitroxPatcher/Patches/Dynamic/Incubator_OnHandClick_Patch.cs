@@ -3,7 +3,6 @@ using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.HUD.Components;
 using NitroxClient.GameLogic.Simulation;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
@@ -32,7 +31,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
             // Request a simulation lock on the incubator so that we can authoritatively spawn the resulting creatures
             if (__instance.powered && !__instance.hatched && Inventory.main.container.Contains(TechType.HatchingEnzymes) &&
-                NitroxEntity.TryGetIdOrWarn(platform, out NitroxId id))
+                platform.TryGetIdOrWarn(out NitroxId id))
             {
                 HandInteraction<Incubator> context = new(__instance, hand);
                 LockRequest<HandInteraction<Incubator>> lockRequest = new(id, SimulationLockType.EXCLUSIVE, ReceivedSimulationLockResponse, context);

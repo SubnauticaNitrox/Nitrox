@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 
@@ -13,7 +12,7 @@ public class Openable_PlayOpenAnimation_Patch : NitroxPatch, IDynamicPatch
 
     public static bool Prefix(Openable __instance, bool openState, float duration)
     {
-        if (__instance.isOpen != openState && NitroxEntity.TryGetIdOrWarn(__instance.gameObject, out NitroxId id))
+        if (__instance.isOpen != openState && __instance.TryGetIdOrWarn(out NitroxId id))
         {
             Resolve<Interior>().OpenableStateChanged(id, openState, duration);
         }

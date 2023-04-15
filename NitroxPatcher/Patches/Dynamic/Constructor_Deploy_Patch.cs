@@ -1,7 +1,6 @@
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 
@@ -16,7 +15,7 @@ public class Constructor_Deploy_Patch : NitroxPatch, IDynamicPatch
         // only trigger updates when there is a valid state change.
         if (value != __instance.deployed)
         {
-            if (NitroxEntity.TryGetIdOrWarn(__instance.gameObject, out NitroxId id))
+            if (__instance.TryGetIdOrWarn(out NitroxId id))
             {
                 Resolve<Entities>().EntityMetadataChanged(__instance, id);
             }

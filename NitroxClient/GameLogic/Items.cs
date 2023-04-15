@@ -42,7 +42,7 @@ namespace NitroxClient.GameLogic
             // We want to remove any remote tracking immediately on pickup as it can cause weird behavior like holding a ghost item still in the world.
             RemoveAnyRemoteControl(gameObject);
 
-            if (!NitroxEntity.TryGetIdFrom(gameObject, out NitroxId id))
+            if (!gameObject.TryGetNitroxId(out NitroxId id))
             {
                 Log.Debug($"Found item with ({gameObject.name}) with no id, assigning a new one");
                 id = NitroxEntity.GenerateNewId(gameObject);
@@ -134,7 +134,7 @@ namespace NitroxClient.GameLogic
             List<Entity> children = GetPrefabChildren(gameObject, itemId).ToList();
 
             // Newly created objects are always placed into the player's inventory.
-            if (!NitroxEntity.TryGetIdFrom(Player.main.gameObject, out NitroxId ownerId))
+            if (!Player.main.TryGetNitroxId(out NitroxId ownerId))
             {
                 throw new InvalidOperationException("[Items] Player has no id! Couldn't parent InventoryItem.");
             }
@@ -156,18 +156,17 @@ namespace NitroxClient.GameLogic
         private Optional<NitroxId> GetCurrentWaterParkId()
         {
             Player player = Utils.GetLocalPlayer().GetComponent<Player>();
-
-            if (player != null)
+            if (player == null)
             {
-                WaterPark currentWaterPark = player.currentWaterPark;
-
-                if (currentWaterPark != null)
-                {
-                    return NitroxEntity.GetOptionalIdFrom(currentWaterPark.gameObject);
-                }
+                return Optional.Empty;
+            }
+            WaterPark currentWaterPark = player.currentWaterPark;
+            if (currentWaterPark == null)
+            {
+                return Optional.Empty;
             }
 
-            return Optional.Empty;
+            return currentWaterPark.GetOptionalId();
         }
     }
 }

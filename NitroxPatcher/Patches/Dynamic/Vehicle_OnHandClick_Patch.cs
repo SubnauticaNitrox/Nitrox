@@ -3,7 +3,6 @@ using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.HUD.Components;
 using NitroxClient.GameLogic.Simulation;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 
@@ -22,7 +21,7 @@ public class Vehicle_OnHandClick_Patch : NitroxPatch, IDynamicPatch
             return true;
         }
 
-        if (!NitroxEntity.TryGetIdOrWarn(__instance.gameObject, out NitroxId id))
+        if (!__instance.TryGetIdOrWarn(out NitroxId id))
         {
             return true;
         }

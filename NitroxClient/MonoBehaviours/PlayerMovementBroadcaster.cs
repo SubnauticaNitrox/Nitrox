@@ -93,7 +93,7 @@ public class PlayerMovementBroadcaster : MonoBehaviour
         if (vehicle)
         {
             //TODO: We should cache this (and other MBs) somehow because the method is called very frequently
-            if (!NitroxEntity.TryGetIdOrWarn(vehicle, out id))
+            if (!vehicle.TryGetIdOrWarn(out id))
             {
                 return Optional.Empty;
             }
@@ -144,7 +144,7 @@ public class PlayerMovementBroadcaster : MonoBehaviour
         }
         else if (sub && Player.main.isPiloting)
         {
-            if (!NitroxEntity.TryGetIdOrWarn(sub, out id))
+            if (!sub.TryGetIdOrWarn(out id))
             {
                 return Optional.Empty;
             }

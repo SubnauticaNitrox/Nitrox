@@ -1,6 +1,5 @@
 using System.Reflection;
 using HarmonyLib;
-using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Helper;
 using NitroxClient.GameLogic;
@@ -14,7 +13,7 @@ public class SubNameInput_OnColorChange_Patch : NitroxPatch, IDynamicPatch
 
     public static void Postfix(SubNameInput __instance)
     {
-        if (!NitroxEntity.TryGetIdFrom(__instance, out NitroxId subNameId))
+        if (!__instance.TryGetNitroxId(out NitroxId subNameId))
         {
             // prevent this patch from firing when the initial template cyclops loads (happens on game load with living large update).
             return;

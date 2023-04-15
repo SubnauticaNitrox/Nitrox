@@ -38,7 +38,7 @@ public class MobileVehicleBay
             return;
         }
 
-        if (!NitroxEntity.TryGetIdOrWarn(constructor.constructor.gameObject, out NitroxId constructorId))
+        if (!constructor.constructor.TryGetIdOrWarn(out NitroxId constructorId))
         {
             constructorId = null;
         }

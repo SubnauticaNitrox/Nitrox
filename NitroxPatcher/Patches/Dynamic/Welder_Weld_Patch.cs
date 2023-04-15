@@ -4,7 +4,6 @@ using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
@@ -68,7 +67,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 // For now, we only control the LiveMixin for vehicles (not even repair nodes at a cyclops)
                 // If we change that, this if should be removed!
                 Vehicle vehicle = live.GetComponent<Vehicle>();
-                if (vehicle && NitroxEntity.TryGetIdOrWarn(live.gameObject, out NitroxId id))
+                if (vehicle && live.TryGetIdOrWarn(out NitroxId id))
                 {
                     if (Resolve<SimulationOwnership>().HasAnyLockType(id))
                     {

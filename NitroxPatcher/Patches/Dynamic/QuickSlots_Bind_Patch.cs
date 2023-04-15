@@ -1,7 +1,6 @@
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
@@ -22,7 +21,7 @@ public class QuickSlots_Bind_Patch : NitroxPatch, IDynamicPatch
 
             if (inventoryItem != null && inventoryItem.item)
             {
-                slotItemIds[i] = NitroxEntity.GetOptionalIdFrom(inventoryItem.item.gameObject);
+                slotItemIds[i] = inventoryItem.item.GetOptionalId();
             }
             else
             {

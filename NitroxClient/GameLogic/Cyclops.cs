@@ -106,7 +106,7 @@ namespace NitroxClient.GameLogic
         /// </summary>
         public void OnDamagePointRepaired(SubRoot subRoot, CyclopsDamagePoint damagePoint, float repairAmount)
         {
-            if (!NitroxEntity.TryGetIdOrWarn(subRoot, out NitroxId subId))
+            if (!subRoot.TryGetIdOrWarn(out NitroxId subId))
             {
                 return;
             }
@@ -128,7 +128,7 @@ namespace NitroxClient.GameLogic
         /// </summary>
         private void BroadcastDamageState(SubRoot subRoot, Optional<DamageInfo> info)
         {
-            if (!NitroxEntity.TryGetIdOrWarn(subRoot, out NitroxId subId))
+            if (!subRoot.TryGetIdOrWarn(out NitroxId subId))
             {
                 return;
             }
@@ -142,7 +142,7 @@ namespace NitroxClient.GameLogic
             if (info.HasValue)
             {
                 DamageInfo damage = info.Value;
-                Optional<NitroxId> dealerId = NitroxEntity.GetOptionalIdFrom(damage.dealer);
+                Optional<NitroxId> dealerId = damage.dealer.GetOptionalId();
                 // Source of the damage. Used if the damage done to the Cyclops was not calculated on other clients. Currently it's just used to figure out what sounds and
                 // visual effects should be used.
                 damageInfo = new CyclopsDamageInfoData(subId, dealerId, damage.originalDamage, damage.damage, damage.position, damage.type);
@@ -175,7 +175,7 @@ namespace NitroxClient.GameLogic
         /// </summary>
         private IEnumerable<CyclopsFireData> GetActiveRoomFires(SubFire subFire)
         {
-            if (!NitroxEntity.TryGetIdOrWarn(subFire.subRoot, out NitroxId subRootId))
+            if (!subFire.subRoot.TryGetIdOrWarn(out NitroxId subRootId))
             {
                 yield break;
             }
@@ -186,7 +186,7 @@ namespace NitroxClient.GameLogic
                 {
                     if (roomFire.Value.spawnNodes[i].childCount > 0)
                     {
-                        if (!NitroxEntity.TryGetIdOrWarn(roomFire.Value.spawnNodes[i].GetComponentInChildren<Fire>().gameObject, out NitroxId fireId))
+                        if (!roomFire.Value.spawnNodes[i].GetComponentInChildren<Fire>().TryGetIdOrWarn(out NitroxId fireId))
                         {
                             yield break;
                         }

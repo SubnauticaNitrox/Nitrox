@@ -37,7 +37,7 @@ public class BaseLadderSpawnProcessor : BasePieceSpawnProcessor
 
         if (otherLadderPiece.HasValue)
         {
-            if (!NitroxEntity.TryGetIdOrWarn(finishedPiece, out NitroxId id))
+            if (!finishedPiece.TryGetIdOrWarn(out NitroxId id))
             {
                 return;
             }

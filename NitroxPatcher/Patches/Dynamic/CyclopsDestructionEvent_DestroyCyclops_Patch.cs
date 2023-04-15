@@ -2,7 +2,6 @@
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.PlayerLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 
@@ -15,7 +14,7 @@ public class CyclopsDestructionEvent_DestroyCyclops_Patch : NitroxPatch, IDynami
     public static void Prefix(CyclopsDestructionEvent __instance)
     {
         __instance.subLiveMixin.Kill();
-        if (NitroxEntity.TryGetIdFrom(__instance.gameObject, out NitroxId nitroxId))
+        if (__instance.TryGetNitroxId(out NitroxId nitroxId))
         {
             Resolve<SimulationOwnership>().StopSimulatingEntity(nitroxId);
         }

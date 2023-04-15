@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
@@ -18,7 +17,7 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             Vehicle vehicle = other.GetComponentInParent<Vehicle>();
             prevInterpolatingVehicle = __instance.interpolatingVehicle;
-            Optional<NitroxId> opVehicleId = NitroxEntity.GetOptionalIdFrom(vehicle);
+            Optional<NitroxId> opVehicleId = vehicle.GetOptionalId();
             return !vehicle || (opVehicleId.HasValue && Resolve<SimulationOwnership>().HasAnyLockType(opVehicleId.Value));
         }
 
@@ -31,7 +30,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 return;
             }
 
-            if (NitroxEntity.TryGetIdOrWarn(interpolatingVehicle.gameObject, out NitroxId id) && Resolve<SimulationOwnership>().HasAnyLockType(id))
+            if (interpolatingVehicle.TryGetIdOrWarn(out NitroxId id) && Resolve<SimulationOwnership>().HasAnyLockType(id))
             {
                 Log.Debug($"Will send vehicle docking for {id}");
                 Resolve<Vehicles>().BroadcastVehicleDocking(__instance, interpolatingVehicle);

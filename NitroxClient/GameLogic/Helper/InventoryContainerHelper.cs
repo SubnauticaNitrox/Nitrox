@@ -60,7 +60,7 @@ namespace NitroxClient.GameLogic.Helper
                     throw new Exception($"Could not find {nameof(StorageContainer)} From Object: submarine_locker_01_0{lockerId}");
                 }
 
-                if (!NitroxEntity.TryGetIdOrWarn(storageContainer, out NitroxId storageContainerId))
+                if (!storageContainer.TryGetIdOrWarn(out NitroxId storageContainerId))
                 {
                     throw new Exception($"Could not find NitroxId on: submarine_locker_01_0{lockerId}");
                 }
@@ -72,7 +72,7 @@ namespace NitroxClient.GameLogic.Helper
             {
                 StorageContainer storageContainer = ownerTransform.parent.gameObject.RequireComponentInChildren<StorageContainer>();
 
-                if (!NitroxEntity.TryGetIdOrWarn(storageContainer, out NitroxId storageContainerId))
+                if (!storageContainer.TryGetIdOrWarn(out NitroxId storageContainerId))
                 {
                     throw new Exception("Could not find NitroxId on EscapePod StorageContainer");
                 }
@@ -80,7 +80,7 @@ namespace NitroxClient.GameLogic.Helper
                 return storageContainerId;
             }
 
-            if (!NitroxEntity.TryGetIdOrWarn(ownerTransform.parent.gameObject, out NitroxId ownerId))
+            if (!ownerTransform.parent.TryGetIdOrWarn(out NitroxId ownerId))
             {
                 throw new Exception("Could not find NitroxId on parent of owner transform");
             }

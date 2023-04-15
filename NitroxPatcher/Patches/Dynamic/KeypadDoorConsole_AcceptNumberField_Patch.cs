@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.Helper;
@@ -14,7 +13,7 @@ public class KeypadDoorConsole_AcceptNumberField_Patch : NitroxPatch, IDynamicPa
 
     public static void Postfix(KeypadDoorConsole __instance)
     {
-        if (NitroxEntity.TryGetIdOrWarn(__instance.gameObject, out NitroxId id))
+        if (__instance.TryGetIdOrWarn(out NitroxId id))
         {
             KeypadMetadata keypadMetadata = new(__instance.unlocked);
             Resolve<Entities>().BroadcastMetadataUpdate(id, keypadMetadata);

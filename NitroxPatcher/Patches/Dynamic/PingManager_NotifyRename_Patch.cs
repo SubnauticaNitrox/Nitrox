@@ -2,7 +2,6 @@ using System.Reflection;
 using HarmonyLib;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
@@ -21,7 +20,7 @@ public class PingManager_NotifyRename_Patch : NitroxPatch, IDynamicPatch
             return;
         }
 
-        if (NitroxEntity.TryGetIdOrWarn(instance.gameObject, out NitroxId id))
+        if (instance.TryGetIdOrWarn(out NitroxId id))
         {
             PingRenamed packet = new(id, instance.GetLabel(), SerializationHelper.GetBytes(instance.gameObject));
             Resolve<IPacketSender>().Send(packet);

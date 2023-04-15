@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.Helper;
@@ -14,7 +13,7 @@ public class WeldableWallPanelGeneric_UnlockDoor_Patch : NitroxPatch, IDynamicPa
 
     public static void Postfix(WeldableWallPanelGeneric __instance)
     {
-        if (__instance.liveMixin && NitroxEntity.TryGetIdOrWarn(__instance.gameObject, out NitroxId id))
+        if (__instance.liveMixin && __instance.TryGetIdOrWarn(out NitroxId id))
         {
             WeldableWallPanelGenericMetadata weldableWallPanelGenericMetadata = new(__instance.liveMixin.health);
             Resolve<Entities>().BroadcastMetadataUpdate(id, weldableWallPanelGenericMetadata);

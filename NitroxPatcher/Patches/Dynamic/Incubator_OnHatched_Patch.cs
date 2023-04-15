@@ -1,7 +1,6 @@
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
@@ -18,7 +17,7 @@ public class Incubator_OnHatched_Patch : NitroxPatch, IDynamicPatch
 
     public static void Prefix(Incubator __instance)
     {
-        if (__instance.enzymesObject && NitroxEntity.TryGetIdOrWarn(__instance.enzymesObject, out NitroxId id))
+        if (__instance.enzymesObject.TryGetIdOrWarn(out NitroxId id))
         {
             Resolve<IPacketSender>().Send(new EntityDestroyed(id));
         }

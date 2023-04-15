@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 
@@ -14,7 +13,7 @@ public class CyclopsExternalDamageManager_CreatePoint_Patch : NitroxPatch, IDyna
     public static bool Prefix(CyclopsExternalDamageManager __instance, out bool __state)
     {
         // Block from creating points if they aren't the owner of the sub
-        __state = NitroxEntity.TryGetIdFrom(__instance.subRoot.gameObject, out NitroxId id) && Resolve<SimulationOwnership>().HasAnyLockType(id);
+        __state = __instance.subRoot.TryGetNitroxId(out NitroxId id) && Resolve<SimulationOwnership>().HasAnyLockType(id);
 
         return __state;
     }

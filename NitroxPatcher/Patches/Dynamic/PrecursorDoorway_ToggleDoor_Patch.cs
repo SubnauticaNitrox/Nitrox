@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.Helper;
@@ -14,7 +13,7 @@ public class PrecursorDoorway_ToggleDoor_Patch : NitroxPatch, IDynamicPatch
 
     public static void Postfix(PrecursorDoorway __instance)
     {
-        if (NitroxEntity.TryGetIdOrWarn(__instance.gameObject, out NitroxId id))
+        if (__instance.TryGetIdOrWarn(out NitroxId id))
         {
             PrecursorDoorwayMetadata precursorDoorwayMetadata = new(__instance.isOpen);
             Resolve<Entities>().BroadcastMetadataUpdate(id, precursorDoorwayMetadata);

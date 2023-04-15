@@ -40,11 +40,11 @@ namespace NitroxClient.GameLogic
 
             if (baseGhost != null)
             {
-                if (baseGhost.TargetBase && !NitroxEntity.TryGetIdFrom(baseGhost.TargetBase, out parentBaseId))
+                if (!baseGhost.TargetBase.TryGetNitroxId(out parentBaseId))
                 {
                     Log.Error("Could not find NitroxId on \"baseGhost.TargetBase\"");
                 }
-                else if (baseGhost.GhostBase && !NitroxEntity.TryGetIdFrom(baseGhost.GhostBase, out parentBaseId))
+                else if (!baseGhost.GhostBase.TryGetNitroxId(out parentBaseId))
                 {
                     Log.Error("Could not find NitroxId on \"baseGhost.GhostBase\"");
                 }
@@ -53,7 +53,7 @@ namespace NitroxClient.GameLogic
             if (parentBaseId == null)
             {
                 Base aBase = constructableBase.gameObject.GetComponentInParent<Base>();
-                if (!NitroxEntity.TryGetIdOrWarn(aBase, out parentBaseId))
+                if (!aBase.TryGetIdOrWarn(out parentBaseId))
                 {
                    return;
                 }
@@ -81,15 +81,14 @@ namespace NitroxClient.GameLogic
 
             if (sub != null)
             {
-                parentId = NitroxEntity.GetOptionalIdFrom(sub.gameObject);
+                parentId = sub.GetOptionalId();
             }
             else
             {
                 Base playerBase = gameObject.GetComponentInParent<Base>();
-
                 if (playerBase != null)
                 {
-                    parentId = NitroxEntity.GetOptionalIdFrom(playerBase.gameObject);
+                    parentId = playerBase.GetOptionalId();
                 }
             }
 
@@ -111,7 +110,7 @@ namespace NitroxClient.GameLogic
                 return;
             }
 
-            if (NitroxEntity.TryGetIdOrWarn(gameObject, out NitroxId id))
+            if (gameObject.TryGetIdOrWarn(out NitroxId id))
             {
                 ConstructionAmountChanged amountChanged = new ConstructionAmountChanged(id, amount);
                 packetSender.Send(amountChanged);
@@ -123,7 +122,7 @@ namespace NitroxClient.GameLogic
             Optional<NitroxId> baseId = Optional.Empty;
             Optional<object> opConstructedBase = TransientLocalObjectManager.Get(TransientObjectType.BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT);
 
-            if (!NitroxEntity.TryGetIdOrWarn(ghost, out NitroxId id))
+            if (!ghost.TryGetIdOrWarn(out NitroxId id))
             {
                 return;
             }
@@ -131,7 +130,7 @@ namespace NitroxClient.GameLogic
             if (opConstructedBase.HasValue)
             {
                 GameObject constructedBase = (GameObject)opConstructedBase.Value;
-                baseId = NitroxEntity.GetOptionalIdFrom(constructedBase);
+                baseId = constructedBase.GetOptionalId();
             }
 
             // For base pieces, we must switch the id from the ghost to the newly constructed piece.
@@ -140,7 +139,7 @@ namespace NitroxClient.GameLogic
             {
                 Int3 latestCell = lastTargetBaseOffset;
                 Base latestBase = lastTargetBase.HasValue ? lastTargetBase.Value : ((GameObject)opConstructedBase.Value).GetComponent<Base>();
-                baseId = NitroxEntity.GetOptionalIdFrom(latestBase.gameObject);
+                baseId = latestBase.GetOptionalId();
 
                 Transform cellTransform;
                 GameObject placedPiece = null;
@@ -213,7 +212,7 @@ namespace NitroxClient.GameLogic
 
         public void DeconstructionBegin(GameObject gameObject)
         {
-            if (NitroxEntity.TryGetIdFrom(gameObject, out NitroxId id))
+            if (gameObject.TryGetNitroxId(out NitroxId id))
             {
                 DeconstructionBegin deconstructionBegin = new DeconstructionBegin(id);
                 packetSender.Send(deconstructionBegin);
@@ -226,7 +225,7 @@ namespace NitroxClient.GameLogic
 
         public void DeconstructionComplete(GameObject gameObject)
         {
-            if (NitroxEntity.TryGetIdOrWarn(gameObject, out NitroxId id))
+            if (gameObject.TryGetIdOrWarn(out NitroxId id))
             {
                 packetSender.Send(new DeconstructionCompleted(id));
             }

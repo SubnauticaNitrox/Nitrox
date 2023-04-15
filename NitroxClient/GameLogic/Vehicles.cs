@@ -114,12 +114,11 @@ public class Vehicles
 
     public void BroadcastVehicleDocking(VehicleDockingBay dockingBay, Vehicle vehicle)
     {
-        if (!NitroxEntity.TryGetIdOrWarn(dockingBay.gameObject, out NitroxId dockId))
+        if (!dockingBay.gameObject.TryGetIdOrWarn(out NitroxId dockId))
         {
             return;
         }
-
-        if (!NitroxEntity.TryGetIdOrWarn(vehicle.gameObject, out NitroxId vehicleId))
+        if (!vehicle.gameObject.TryGetIdOrWarn(out NitroxId vehicleId))
         {
             return;
         }
@@ -134,12 +133,11 @@ public class Vehicles
 
     public void BroadcastVehicleUndocking(VehicleDockingBay dockingBay, Vehicle vehicle, bool undockingStart)
     {
-        if (!NitroxEntity.TryGetIdOrWarn(dockingBay.gameObject, out NitroxId dockId))
+        if (!dockingBay.TryGetIdOrWarn(out NitroxId dockId))
         {
             return;
         }
-
-        if (!NitroxEntity.TryGetIdOrWarn(vehicle.gameObject, out NitroxId vehicleId))
+        if (!vehicle.TryGetIdOrWarn(out NitroxId vehicleId))
         {
             return;
         }
@@ -188,7 +186,7 @@ public class Vehicles
 
     public void BroadcastOnPilotModeChanged(Vehicle vehicle, bool isPiloting)
     {
-        if (!NitroxEntity.TryGetIdOrWarn(vehicle.gameObject, out NitroxId vehicleId))
+        if (!vehicle.TryGetIdOrWarn(out NitroxId vehicleId))
         {
             return;
         }

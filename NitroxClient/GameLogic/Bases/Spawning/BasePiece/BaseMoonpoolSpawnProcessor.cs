@@ -16,7 +16,7 @@ public class BaseMoonpoolSpawnProcessor : BasePieceSpawnProcessor
 
     protected override void SpawnPostProcess(Base latestBase, Int3 latestCell, GameObject finishedPiece)
     {
-        if (!NitroxEntity.TryGetIdOrWarn(finishedPiece, out NitroxId moonpoolId))
+        if (!finishedPiece.TryGetIdOrWarn(out NitroxId moonpoolId))
         {
             return;
         }

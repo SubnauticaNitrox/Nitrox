@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.Helper;
 
@@ -17,7 +16,7 @@ namespace NitroxPatcher.Patches.Dynamic
             // while the sub is not changed. This will prevent that
             if (__instance.GetCurrentSub() != sub)
             {
-                NitroxServiceLocator.LocateService<LocalPlayer>().BroadcastSubrootChange(NitroxEntity.GetOptionalIdFrom(sub));
+                NitroxServiceLocator.LocateService<LocalPlayer>().BroadcastSubrootChange(sub.GetOptionalId());
             }
         }
 
