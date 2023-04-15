@@ -34,6 +34,7 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
                 UnhandledExceptionHandler(args.Exception);
             }
         };
+
         RxApp.DefaultExceptionHandler = Observer.Create<Exception>(UnhandledExceptionHandler);
 
         RegisterModal<ErrorModal, ErrorViewModel>(() => ViewModel!.ErrorDialog);

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
@@ -45,12 +45,12 @@ public class NitroxAttached : AvaloniaObject
 
     public static string GetSubtext(AvaloniaObject element) => element.GetValue(SubtextProperty);
 
-    public static object GetFocus(IAvaloniaObject obj) => obj.GetValue(FocusProperty);
+    public static object GetFocus(AvaloniaObject obj) => obj.GetValue(FocusProperty);
 
     /// <summary>
     ///     Sets the focus to this control when view is loaded.
     /// </summary>
-    public static void SetFocus(IAvaloniaObject obj, object value)
+    public static void SetFocus(AvaloniaObject obj, object value)
     {
         static async void TryFocusButton(Button btn)
         {
@@ -79,12 +79,12 @@ public class NitroxAttached : AvaloniaObject
 
     public static bool GetSelected(AvaloniaObject element) => element.GetValue(SelectedProperty);
 
-    public static void SetSelected(IAvaloniaObject obj, bool value) => obj.SetValue(SelectedProperty, value);
+    public static void SetSelected(AvaloniaObject obj, bool value) => obj.SetValue(SelectedProperty, value);
 
-    public static ThemeOption GetTheme(IAvaloniaObject avaloniaObject) => (ThemeOption)(avaloniaObject.GetValue(ThemeProperty) ?? ThemeOption.DARK);
+    public static ThemeOption GetTheme(AvaloniaObject avaloniaObject) => avaloniaObject.GetValue(ThemeProperty);
 
     /// <summary>
     ///     Sets the theme of the current visual and its children to the given theme.
     /// </summary>
-    public static void SetTheme(IAvaloniaObject avaloniaObject, ThemeOption value) => avaloniaObject.SetValue(ThemeProperty, value);
+    public static void SetTheme(AvaloniaObject avaloniaObject, ThemeOption value) => avaloniaObject.SetValue(ThemeProperty, value);
 }

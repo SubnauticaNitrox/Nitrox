@@ -1,19 +1,22 @@
-﻿using System.Windows.Input;
+using System.Windows.Input;
 using ReactiveUI;
 
 namespace Nitrox.Launcher.Models.Design;
 
-internal class NavigationItem : INavigationItem
+public class NavigationItem : INavigationItem
 {
     private readonly string icon;
+
     public ICommand ClickCommand { get; init; }
+
     public string ToolTipText { get; init; }
+
     public string Text { get; }
 
     public string Icon
     {
         get => icon;
-        init => icon = value ?? "";
+        init => icon = value ?? string.Empty;
     }
 
     public NavigationItem(string text)

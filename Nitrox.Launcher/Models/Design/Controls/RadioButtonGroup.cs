@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reactive;
 using Avalonia;
 using Avalonia.Controls;
@@ -12,8 +12,7 @@ public class RadioButtonGroup : ItemsControl, IStyleable
     public static readonly DirectProperty<RadioButtonGroup, Type> EnumProperty = AvaloniaProperty.RegisterDirect<RadioButtonGroup, Type>(nameof(Enum), o => o.Enum, (o, v) => o.Enum = v);
     public static readonly StyledProperty<object> SelectedItemProperty = AvaloniaProperty.Register<RadioButtonGroup, object>(nameof(SelectedItem));
 
-    public static readonly DirectProperty<RadioButtonGroup, ReactiveCommand<Button, Unit>> ItemClickCommandProperty =
-        AvaloniaProperty.RegisterDirect<RadioButtonGroup, ReactiveCommand<Button, Unit>>(nameof(ItemClickCommand), o => o.ItemClickCommand, (o, v) => o.ItemClickCommand = v);
+    public static readonly DirectProperty<RadioButtonGroup, ReactiveCommand<Button, Unit>> ItemClickCommandProperty = AvaloniaProperty.RegisterDirect<RadioButtonGroup, ReactiveCommand<Button, Unit>>(nameof(ItemClickCommand), o => o.ItemClickCommand, (o, v) => o.ItemClickCommand = v);
 
     private Type @enum;
     private ReactiveCommand<Button, Unit> itemClickCommand;
@@ -28,7 +27,8 @@ public class RadioButtonGroup : ItemsControl, IStyleable
             {
                 return;
             }
-            Items = System.Enum.GetValues(value);
+
+            ItemsSource = System.Enum.GetValues(value);
             SetAndRaise(EnumProperty, ref @enum, value);
         }
     }
