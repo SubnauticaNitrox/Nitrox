@@ -1,4 +1,4 @@
-﻿namespace Nitrox.Launcher.Models.Design;
+namespace Nitrox.Launcher.Models.Design;
 
 public class NavigationHeader : INavigationItem
 {
