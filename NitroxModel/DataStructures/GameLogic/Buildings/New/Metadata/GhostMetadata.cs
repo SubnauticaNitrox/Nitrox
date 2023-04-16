@@ -6,10 +6,10 @@ using System.Runtime.Serialization;
 
 namespace NitroxModel.DataStructures.GameLogic.Buildings.New.Metadata;
 
-[ProtoInclude(271, typeof(BasicGhostMetadata))]
-[ProtoInclude(272, typeof(BaseDeconstructableGhostMetadata))]
-[ProtoInclude(273, typeof(BaseAnchoredFaceGhostMetadata))]
-[ProtoInclude(274, typeof(BaseAnchoredCellGhostMetadata))]
+[ProtoInclude(281, typeof(BasicGhostMetadata))]
+[ProtoInclude(282, typeof(BaseDeconstructableGhostMetadata))]
+[ProtoInclude(283, typeof(BaseAnchoredFaceGhostMetadata))]
+[ProtoInclude(284, typeof(BaseAnchoredCellGhostMetadata))]
 [Serializable, DataContract]
 public abstract class GhostMetadata : EntityMetadata
 {

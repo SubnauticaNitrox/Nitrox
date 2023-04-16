@@ -49,8 +49,9 @@ namespace NitroxClient.GameLogic
             entitySpawnersByType[typeof(PlayerWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
             entitySpawnersByType[typeof(VehicleWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
             entitySpawnersByType[typeof(BuildEntity)] = new BuildEntitySpawner(this);
-            entitySpawnersByType[typeof(ModuleEntity)] = new ModuleEntitySpawner();
+            entitySpawnersByType[typeof(ModuleEntity)] = new ModuleEntitySpawner(this);
             entitySpawnersByType[typeof(GhostEntity)] = new GhostEntitySpawner();
+            entitySpawnersByType[typeof(InteriorPieceEntity)] = new InteriorPieceEntitySpawner(this);
         }
 
         public void EntityMetadataChanged(object o, NitroxId id)

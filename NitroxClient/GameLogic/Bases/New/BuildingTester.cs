@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 using NitroxClient.Communication;
+using NitroxClient.GameLogic.Spawning.Bases.PostSpawners;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
@@ -145,6 +146,7 @@ public class BuildingTester : MonoBehaviour
             else if (modifyConstructedAmount.ConstructedAmount == 1f)
             {
                 constructable.SetState(true, true);
+                yield return EntityPostSpawner.ApplyPostSpawner(gameObject, modifyConstructedAmount.GhostId);
                 yield break;
             }
             constructable.SetState(false, false);
@@ -183,7 +185,10 @@ public class BuildingTester : MonoBehaviour
             constructableBase.SetState(true, true);
             BasesCooldown[updateBase.BaseId] = DateTimeOffset.Now;
             // In the case the built piece was an interior piece, we'll want to transfer the id to it.
-            BuildManager.TryTransferIdFromGhostToModule(baseGhost, updateBase.FormerGhostId, constructableBase);
+            if (BuildManager.TryTransferIdFromGhostToModule(baseGhost, updateBase.FormerGhostId, constructableBase, out GameObject moduleObject))
+            {
+                yield return EntityPostSpawner.ApplyPostSpawner(moduleObject, updateBase.FormerGhostId);
+            }
             yield break;
         }
         // TODO: Ask for resync
@@ -281,18 +286,16 @@ public class BuildingTester : MonoBehaviour
         }
     }
 
-    private Transform GetParentOrGlobalRoot(NitroxId id)
+    public static Transform GetParentOrGlobalRoot(NitroxId id)
     {
-        Transform transform;
         if (id != null && NitroxEntity.TryGetObjectFrom(id, out GameObject parentObject))
         {
-            transform = parentObject.transform;
+            return parentObject.transform;
         }
         else
         {
-            transform = LargeWorldStreamer.main.globalRoot.transform;
+            return LargeWorldStreamer.main.globalRoot.transform;
         }
-        return transform;
     }
 
     public IEnumerator IsAvailable()
@@ -371,7 +374,7 @@ public class BuildingTester : MonoBehaviour
         {
             yield return LoadBaseAsync(build);
         }
-        yield return NitroxBuild.RestoreModules(LargeWorldStreamer.main.globalRoot.transform, savedGlobalRoot.Modules);
+        yield return NitroxBuild.RestoreModules(savedGlobalRoot.Modules);
         yield return NitroxBuild.RestoreGhosts(LargeWorldStreamer.main.globalRoot.transform, savedGlobalRoot.Ghosts);
         DateTimeOffset endTime = DateTimeOffset.Now;
         Log.Debug($"Took {(endTime - beginTime).TotalMilliseconds}ms to fully load the SavedGlobalRoot");

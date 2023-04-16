@@ -73,20 +73,27 @@ public class Items
 
         // there is a theoretical possibility of a stray remote tracking packet that re-adds the monobehavior, this is purely a safety call.
         RemoveAnyRemoteControl(gameObject);
+        Optional<NitroxId> waterparkId = GetCurrentWaterParkId();
+        NitroxId id = NitroxEntity.GetIdOrGenerateNew(gameObject);
+        Optional<EntityMetadata> metadata = EntityMetadataExtractor.Extract(gameObject);
+        bool inGlobalRoot = map.GlobalRootTechTypes.Contains(techType.Value.ToDto());
+        string classId = gameObject.GetComponent<PrefabIdentifier>().ClassId;
 
-            Optional<NitroxId> waterparkId = GetCurrentWaterParkId();
-            NitroxId id = NitroxEntity.GetIdOrGenerateNew(gameObject);
-            Optional<EntityMetadata> metadata = EntityMetadataExtractor.Extract(gameObject);
-            bool inGlobalRoot = map.GlobalRootTechTypes.Contains(techType.Value.ToDto());
-            string classId = gameObject.GetComponent<PrefabIdentifier>().ClassId;
-
-            // TODO: Manage Waterpark entity from waterparkId
-            WorldEntity droppedItem = new(gameObject.transform.ToWorldDto(), 0, classId, inGlobalRoot, id, techType.Value.ToDto(), metadata.OrNull(), null, new List<Entity>())
-            {
-                ChildEntities = GetPrefabChildren(gameObject, id).ToList()
-            };
+        // TODO: Manage Waterpark entity from waterparkId
+        WorldEntity droppedItem = new(gameObject.transform.ToWorldDto(), 0, classId, inGlobalRoot, id, techType.Value.ToDto(), metadata.OrNull(), null, new List<Entity>())
+        {
+            ChildEntities = GetPrefabChildren(gameObject, id).ToList()
+        };
 
         Log.Debug($"Dropping item: {droppedItem}");
+        // You can't drop items in bases but you can place small objects like figures and posters which are put right under the base object
+        // NB: They are recognizable by their PlaceTool from which the Place() function executes the current code
+        SubRoot currentSub = Player.main.GetCurrentSub();
+        if (currentSub && NitroxEntity.TryGetIdFrom(currentSub.gameObject, out NitroxId parentId))
+        {
+            droppedItem.ParentId = parentId;
+        }
+
         packetSender.Send(new EntitySpawnedByClient(droppedItem));
     }
 

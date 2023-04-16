@@ -143,12 +143,12 @@ public class BuildingManager
 
     public bool UpdateBase(UpdateBase updateBase)
     {
-        if (!entityRegistry.TryGetEntityById(updateBase.FormerGhostId, out Entity entity) || entity is not GhostEntity)
+        if (!entityRegistry.TryGetEntityById<GhostEntity>(updateBase.FormerGhostId, out _))
         {
             Log.Error($"Tring to place a base from a non-registered ghost (GhostId: {updateBase.FormerGhostId})");
             return false;
         }
-        if (!entityRegistry.TryGetEntityById(updateBase.BaseId, out entity) || entity is not BuildEntity buildEntity)
+        if (!entityRegistry.TryGetEntityById(updateBase.BaseId, out BuildEntity buildEntity))
         {
             Log.Error($"Trying to update a non-registered build (BaseId: {updateBase.BaseId})");
             return false;
@@ -157,31 +157,44 @@ public class BuildingManager
         buildEntity.SavedBase = updateBase.SavedBase;
 
         // We need to clean the waterparks that were potentially removed when merging
-        List<NitroxId> removedChildIds = buildEntity.ChildEntities.Select(childEntity => childEntity.Id)
-            .Except(updateBase.ChildEntities.Select(childEntity => childEntity.Id)).ToList();
+        NitroxTechType waterParkType = new("BaseWaterPark");
+        List<NitroxId> removedChildIds = buildEntity.ChildEntities.Where(entity => waterParkType.Equals(entity.TechType))
+            .Select(childEntity => childEntity.Id).Except(updateBase.UpdatedChildren.Keys).ToList();
         foreach (NitroxId removedChildId in removedChildIds)
         {
-            if (entityRegistry.TryGetEntityById(removedChildId, out Entity removedEntity) && removedEntity is InteriorPieceEntity)
+            if (entityRegistry.TryGetEntityById(removedChildId, out Entity removedEntity))
             {
                 worldEntityManager.RemoveGlobalRootEntity(removedChildId);
             }
         }
 
-        foreach (Entity childEntity in updateBase.ChildEntities)
+        // TODO: Maybe also update the metadata
+
+        foreach (KeyValuePair<NitroxId, NitroxBaseFace> updatedChild in updateBase.UpdatedChildren)
         {
-            if (childEntity is GlobalRootEntity globalRootChildEntity)
+            if (entityRegistry.TryGetEntityById(updatedChild.Key, out InteriorPieceEntity childEntity))
             {
-                worldEntityManager.UpdateGlobalRootEntity(globalRootChildEntity);
-                continue;
+                childEntity.BaseFace = updatedChild.Value;
             }
-            entityRegistry.AddOrUpdate(childEntity);
         }
+        foreach (KeyValuePair<NitroxId, NitroxInt3> updatedMoonpool in updateBase.UpdatedMoonpools)
+        {
+            if (entityRegistry.TryGetEntityById(updatedMoonpool.Key, out MoonpoolEntity childEntity))
+            {
+                childEntity.Cell = updatedMoonpool.Value;
+            }
+        }
+        if (updateBase.BuiltPieceEntity != null)
+        {
+            worldEntityManager.AddGlobalRootEntity(updateBase.BuiltPieceEntity);
+        }
+
         return true;
     }
 
     public bool ReplaceBaseByGhost(BaseDeconstructed baseDeconstructed)
     {
-        if (!entityRegistry.TryGetEntityById(baseDeconstructed.FormerBaseId, out Entity entity) || entity is not BuildEntity)
+        if (!entityRegistry.TryGetEntityById(baseDeconstructed.FormerBaseId, out BuildEntity _))
         {
             Log.Error($"Trying to replace a non-registered build (BaseId: {baseDeconstructed.FormerBaseId})");
             return false;

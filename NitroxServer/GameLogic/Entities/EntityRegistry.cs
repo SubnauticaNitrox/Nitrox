@@ -13,23 +13,27 @@ namespace NitroxServer.GameLogic.Entities
     {
         private readonly ConcurrentDictionary<NitroxId, Entity> entitiesById = new();
 
-        public Optional<Entity> GetEntityById(NitroxId id)
+        public Optional<T> GetEntityById<T>(NitroxId id) where T : Entity
         {
-            entitiesById.TryGetValue(id, out Entity entity);
-
+            TryGetEntityById(id, out T entity);
+            
             return Optional.OfNullable(entity);
         }
 
-        public Optional<T> GetEntityById<T>(NitroxId id) where T : Entity
+        public Optional<Entity> GetEntityById(NitroxId id)
         {
-            entitiesById.TryGetValue(id, out Entity entity);
-            
-            return Optional.OfNullable((T)entity);
+            return GetEntityById<Entity>(id);
         }
 
-        public bool TryGetEntityById(NitroxId id, out Entity entity)
+        public bool TryGetEntityById<T>(NitroxId id, out T entity) where T : Entity
         {
-            return entitiesById.TryGetValue(id, out entity);
+            if (entitiesById.TryGetValue(id, out Entity _entity) && _entity is T typedEntity)
+            {
+                entity = typedEntity;
+                return true;
+            }
+            entity = null;
+            return false;
         }
 
         public List<Entity> GetAllEntities(bool exceptGlobalRoot = false)
@@ -72,7 +76,7 @@ namespace NitroxServer.GameLogic.Entities
 
                 RemoveFromParent(current);
 
-                entitiesById.TryUpdate(entity.Id, entity, current);
+                entitiesById.TryUpdate(entity.Id, entity, current);     
             }
 
             AddToParent(entity);
@@ -131,15 +135,11 @@ namespace NitroxServer.GameLogic.Entities
 
         public void RemoveFromParent(Entity entity)
         {
-            if (entity.ParentId != null)
+            if (entity.ParentId != null && TryGetEntityById(entity.ParentId, out Entity parentEntity))
             {
-                Optional<Entity> parent = GetEntityById(entity.ParentId);
-
-                if (parent.HasValue)
-                {
-                    parent.Value.ChildEntities.Remove(entity);
-                }
-
+                // TODO: Either use this solution (to remove duplicated entities also) to avoid wrongly-referenced children
+                // Or try fixing wrongly-referenced children (when entities are overwritten by AddOrUpdate)
+                parentEntity.ChildEntities.RemoveAll(childEntity => childEntity.Id.Equals(entity.Id));
                 entity.ParentId = null;
             }
         }
