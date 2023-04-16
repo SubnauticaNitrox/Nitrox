@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text;
 using NitroxModel.Helper;
 using UnityEngine;
@@ -16,7 +16,7 @@ namespace NitroxClient.Unity.Helper
 
         public static bool TryGetComponentInParent<T>(this GameObject go, out T component) where T : Component
         {
-            component = go.GetComponentInParent<T>();
+            component = go.GetComponentInParent<T>(true);
             return component;
         }
 

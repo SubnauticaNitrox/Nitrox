@@ -1,13 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Bases.New;
+using NitroxClient.GameLogic.Spawning.Bases.PostSpawners;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Buildings.New;
+using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
@@ -228,10 +231,14 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
          *   - if it's already in a base, simply update the current base
          *   - else, create a new base
          */
-        if (amount == 1f && constructable is ConstructableBase constructableBase)
+        if (amount == 1f)
         {
-            CoroutineHost.StartCoroutine(BroadcastObjectBuilt(constructableBase, entity));
-            return;
+            if (constructable is ConstructableBase constructableBase)
+            {
+                CoroutineHost.StartCoroutine(BroadcastObjectBuilt(constructableBase, entity));
+                return;
+            }
+            CoroutineHost.StartCoroutine(EntityPostSpawner.ApplyPostSpawner(constructable.gameObject, entity.Id));
         }
         // update as a normal module
         Resolve<IPacketSender>().Send(new ModifyConstructedAmount(entity.Id, amount));
@@ -254,7 +261,7 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
         }
 
         // If a module was spawned we need to transfer the ghost id to it for further recognition
-        BuildManager.TryTransferIdFromGhostToModule(baseGhost, entity.Id, constructableBase);
+        BuildManager.TryTransferIdFromGhostToModule(baseGhost, entity.Id, constructableBase, out GameObject moduleObject);
 
         // Have a delay for baseGhost to be actually destroyed
         yield return null;
@@ -268,7 +275,26 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
                 Log.Error("Parent base doesn't have a NitroxEntity, which is not normal");
                 yield break;
             }
-            UpdateBase updateBase = new(parentEntity.Id, entity.Id, NitroxBase.From(parentBase), NitroxBuild.GetChildEntities(parentBase, parentEntity.Id));
+            MoonpoolManager moonpoolManager = parentBase.gameObject.EnsureComponent<MoonpoolManager>();
+
+            GlobalRootEntity builtPiece = null;
+            if (moduleObject)
+            {
+                if (moduleObject.TryGetComponent(out IBaseModule builtModule))
+                {
+                    builtPiece = NitroxInteriorPiece.From(builtModule);
+                }
+                else if (moduleObject.GetComponent<VehicleDockingBay>())
+                {
+                    builtPiece = moonpoolManager.LatestRegisteredMoonpool;
+                }
+            }
+
+            // We get InteriorPieceEntity children from the base and make up a dictionary with their updated data (their BaseFace)
+            Dictionary<NitroxId, NitroxBaseFace> updatedChildren = NitroxBuild.GetChildEntities(parentBase, parentEntity.Id)
+                .OfType<InteriorPieceEntity>().ToDictionary(entity => entity.Id, entity => entity.BaseFace);
+            
+            UpdateBase updateBase = new(parentEntity.Id, entity.Id, NitroxBase.From(parentBase), builtPiece, updatedChildren, moonpoolManager.GetMoonpoolsUpdate());
 
             // TODO: (for server-side) Find a way to optimize this (maybe by copying BaseGhost.Finish() => Base.CopyFrom)
             Resolve<IPacketSender>().Send(updateBase);
@@ -285,6 +311,11 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
             NitroxEntity.SetNewId(baseGhost.targetBase.gameObject, entity.Id);
 
             Resolve<IPacketSender>().Send(new PlaceBase(entity.Id, NitroxBuild.From(targetBase)));
+        }
+
+        if (moduleObject)
+        {
+            yield return EntityPostSpawner.ApplyPostSpawner(moduleObject, entity.Id);
         }
     }
 

@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Reflection;
 using HarmonyLib;
-using NitroxModel.Core;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches;
@@ -38,17 +37,14 @@ public abstract class NitroxPatch : INitroxPatch
         }
     }
 
-    /// <summary>
-    ///     Resolves a type using <see cref="NitroxServiceLocator.LocateService{T}" />. If the result is not null it will cache and return the same type on future calls.
-    /// </summary>
-    /// <typeparam name="T">Type to get and cache from <see cref="NitroxServiceLocator" /></typeparam>
+    protected void PatchFinalizer(Harmony harmony, MethodBase targetMethod, MethodInfo finalizerMethod)
     /// <returns>The requested type or null if not available.</returns>
     protected static T Resolve<T>(bool prelifeTime = false) where T : class
     {
         return prelifeTime ? NitroxServiceLocator.Cache<T>.ValuePreLifetime : NitroxServiceLocator.Cache<T>.Value;
     }
 
-    protected void PatchFinalizer(Harmony harmony, MethodBase targetMethod, MethodInfo finalizerMethod)
+    protected void PatchFinalizer(Harmony harmony, MethodBase targetMethod, string finalizerMethod = "Finalizer")
     {
         PatchMultiple(harmony, targetMethod, null, null, null, finalizerMethod);
     }

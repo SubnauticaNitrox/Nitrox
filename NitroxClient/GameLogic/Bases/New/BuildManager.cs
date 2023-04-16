@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using NitroxClient.GameLogic.Spawning.Bases.PostSpawners;
+using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
@@ -83,7 +85,7 @@ public static class BuildManager
         return false;
     }
 
-    public static bool TryTransferIdFromGhostToModule(BaseGhost baseGhost, NitroxId id, ConstructableBase constructableBase)
+    public static bool TryTransferIdFromGhostToModule(BaseGhost baseGhost, NitroxId id, ConstructableBase constructableBase, out GameObject moduleObject)
     {
         Log.Debug($"TryTransferIdFromGhostToModule({baseGhost},{id})");
         Base.Face? face = null;
@@ -102,6 +104,7 @@ public static class BuildManager
             else
             {
                 Log.Error($"Couldn't find the module spawned by {baseGhost}");
+                moduleObject = null;
                 return false;
             }
         }
@@ -129,8 +132,13 @@ public static class BuildManager
 
                 case TechType.BaseMoonpool:
                     // Moonpools are a very specific case, we tweak them to work as modules (while they're not)
-                    baseGhost.targetBase.gameObject.EnsureComponent<MoonpoolManager>().RegisterMoonpool(constructableBase.transform, id);
-                    return true;
+                    Optional<GameObject> objectOptional = baseGhost.targetBase.gameObject.EnsureComponent<MoonpoolManager>().RegisterMoonpool(constructableBase.transform, id);
+                    moduleObject = objectOptional.Value;
+                    if (objectOptional.HasValue)
+                    {
+                        return true;
+                    }
+                    return false;
 
                 case TechType.BaseMapRoom:
                     // In the case the ghost is under a BaseDeconstructable, this is a good way to identify a MapRoom
@@ -139,6 +147,7 @@ public static class BuildManager
                     break;
 
                 default:
+                    moduleObject = null;
                     return false;
             }
         }
@@ -159,15 +168,18 @@ public static class BuildManager
                     {
                         NitroxEntity.SetNewId(mapRoomFunctionality.gameObject, id.Increment());
                     }
+                    moduleObject = mapRoomFunctionality.gameObject;
                     return true;
                 }
                 Log.Error($"Couldn't find MapRoomFunctionality of built MapRoom (cell: {face.Value.cell})");
+                moduleObject = null;
                 return false;
             }
 
             IBaseModule module = baseGhost.targetBase.GetModule(face.Value);
             if (module != null)
             {
+                moduleObject = (module as Component).gameObject;
                 // If the WaterPark is higher than one, it means that the newly built WaterPark will be merged with one that already has a NitroxEntity
                 if (module is WaterPark waterPark && waterPark.height > 1)
                 {
@@ -176,7 +188,7 @@ public static class BuildManager
                 }
 
                 Log.Debug($"Successfully transferred NitroxEntity to {module} [{id}]");
-                NitroxEntity.SetNewId((module as Component).gameObject, id);
+                NitroxEntity.SetNewId(moduleObject, id);
                 return true;
             }
             else
@@ -184,6 +196,7 @@ public static class BuildManager
                 // When a WaterPark is merged with another one, we won't find its module but we don't care about that
                 if (isWaterPark)
                 {
+                    moduleObject = null;
                     return false;
                 }
                 Log.Error("Couldn't find the module's GameObject of built interior piece when transfering its NitroxEntity to the module.");
@@ -194,6 +207,7 @@ public static class BuildManager
             Log.Error($"No face could be found for ghost {baseGhost}");
         }
 
+        moduleObject = null;
         return false;
     }
 
@@ -380,28 +394,36 @@ public static class NitroxBuild
     public static IEnumerator ApplyToAsync(this BuildEntity buildEntity, Base @base)
     {
         buildEntity.ApplyTo(@base);
-        yield return buildEntity.RestoreInteriorPieces(@base);
-        yield return buildEntity.RestoreModules(@base);
+        yield return buildEntity.RestoreInteriorPieces();
+        yield return buildEntity.RestoreModules();
     }
 
-    public static IEnumerator RestoreInteriorPieces(this BuildEntity buildEntity, Base @base)
+    public static IEnumerator RestoreInteriorPiece(InteriorPieceEntity interiorPiece, Base @base, TaskResult<Optional<GameObject>> result = null)
+    {
+        IPrefabRequest request = PrefabDatabase.GetPrefabAsync(interiorPiece.ClassId);
+        yield return request;
+        if (!request.TryGetPrefab(out GameObject prefab))
+        {
+            Log.Debug($"Couldn't find a prefab for interior piece of ClassId {interiorPiece.ClassId}");
+            yield break;
+        }
+        Base.Face face = interiorPiece.BaseFace.ToUnity();
+        face.cell += @base.GetAnchor();
+        GameObject moduleObject = @base.SpawnModule(prefab, face);
+        if (moduleObject)
+        {
+            NitroxEntity.SetNewId(moduleObject, interiorPiece.Id);
+            yield return EntityPostSpawner.ApplyPostSpawner(moduleObject, interiorPiece.Id);
+            EntityMetadataProcessor.ApplyMetadata(moduleObject, interiorPiece.Metadata);
+            result.Set(moduleObject);
+        }
+    }
+
+    public static IEnumerator RestoreInteriorPieces(this BuildEntity buildEntity)
     {
         foreach (InteriorPieceEntity interiorPiece in buildEntity.ChildEntities.OfType<InteriorPieceEntity>())
         {
-            IPrefabRequest request = PrefabDatabase.GetPrefabAsync(interiorPiece.ClassId);
-            yield return request;
-            if (!request.TryGetPrefab(out GameObject prefab))
-            {
-                Log.Debug($"Couldn't find a prefab for interior piece of ClassId {interiorPiece.ClassId}");
-                continue;
-            }
-            Base.Face face = interiorPiece.BaseFace.ToUnity();
-            face.cell += @base.GetAnchor();
-            GameObject moduleObject = @base.SpawnModule(prefab, face);
-            if (moduleObject)
-            {
-                NitroxEntity.SetNewId(moduleObject, interiorPiece.Id);
-            }
+            yield return Resolve<Entities>().SpawnAsync(interiorPiece);
         }
     }
 
@@ -430,20 +452,23 @@ public static class NitroxBuild
         constructable.SetState(moduleEntity.ConstructedAmount >= 1f, false);
         constructable.UpdateMaterial();
         NitroxEntity.SetNewId(moduleObject, moduleEntity.Id);
+        yield return EntityPostSpawner.ApplyPostSpawner(moduleObject, moduleEntity.Id);
+        EntityMetadataProcessor.ApplyMetadata(moduleObject, moduleEntity.Metadata);
         result?.Set(moduleObject);
     }
 
-    public static IEnumerator RestoreModules(Transform parent, IEnumerable<ModuleEntity> modules)
+    public static IEnumerator RestoreModules(IEnumerable<ModuleEntity> modules)
     {
         foreach (ModuleEntity moduleEntity in modules)
         {
-            yield return RestoreModule(parent, moduleEntity);
+            // TODO: Should probably be optimized to avoid getting over and over the parent base object
+            yield return Resolve<Entities>().SpawnAsync(moduleEntity);
         }
     }
 
-    public static IEnumerator RestoreModules(this BuildEntity buildEntity, Base @base)
+    public static IEnumerator RestoreModules(this BuildEntity buildEntity)
     {
-        yield return RestoreModules(@base.transform, buildEntity.ChildEntities.OfType<ModuleEntity>());
+        yield return RestoreModules(buildEntity.ChildEntities.OfType<ModuleEntity>());
     }
 
     public static IEnumerator RestoreGhost(Transform parent, GhostEntity ghostEntity, TaskResult<Optional<GameObject>> result = null)
@@ -682,6 +707,7 @@ public static class NitroxInteriorPiece
         if (gameObject && gameObject.TryGetComponent(out PrefabIdentifier identifier))
         {
             interiorPiece.ClassId = identifier.ClassId;
+            interiorPiece.TechType = CraftData.entClassTechTable.GetOrDefault(identifier.ClassId, TechType.None).ToDto();
         }
         else
         {
@@ -752,6 +778,7 @@ public static class NitroxModule
         moduleEntity.Position = constructable.transform.localPosition.ToDto();
         moduleEntity.Rotation = constructable.transform.localRotation.ToDto();
         moduleEntity.LocalScale = constructable.transform.localScale.ToDto();
+        moduleEntity.TechType = constructable.techType.ToDto();
         moduleEntity.ConstructedAmount = constructable.constructedAmount;
         moduleEntity.IsInside = constructable.isInside;
     }
@@ -794,7 +821,7 @@ public static class NitroxGhost
             ghost.TechType = constructableBase.techType.ToDto();
         }
 
-        if (constructableBase.TryGetComponentInChildren(out BaseGhost baseGhost))
+        if (constructableBase.TryGetComponentInChildren(out BaseGhost baseGhost, true))
         {
             ghost.Metadata = NitroxGhostMetadata.GetMetadataForGhost(baseGhost);
         }

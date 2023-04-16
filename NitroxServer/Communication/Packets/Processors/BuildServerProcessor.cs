@@ -85,7 +85,9 @@ public class UpdateBaseProcessor : BuildingProcessor<UpdateBase>
         if (buildingManager.UpdateBase(packet))
         {
             packet.SavedBase = null;
-            packet.ChildEntities = null;
+            packet.BuiltPieceEntity = null;
+            packet.UpdatedChildren = null;
+            packet.UpdatedMoonpools = null;
             base.Process(packet, player);
         }
     }

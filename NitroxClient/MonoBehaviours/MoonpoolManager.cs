@@ -8,6 +8,7 @@ using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.GameLogic.Entities.Bases;
+using NitroxModel.DataStructures.Util;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 
@@ -27,6 +28,7 @@ public class MoonpoolManager : MonoBehaviour
     private NitroxId baseId;
     private Dictionary<Int3, MoonpoolEntity> moonpoolsByCell;
     private Dictionary<Int3, MoonpoolEntity> shiftedMoonpools;
+    public MoonpoolEntity LatestRegisteredMoonpool { get; private set; }
 
     public void Awake()
     {
@@ -76,7 +78,7 @@ public class MoonpoolManager : MonoBehaviour
         }
     }
 
-    private void AssignNitroxEntityToMoonpool(Int3 absoluteCell, NitroxId moonpoolId)
+    private void AssignNitroxEntityToMoonpool(Int3 absoluteCell, NitroxId moonpoolId, TaskResult<Optional<GameObject>> result = null)
     {
         Int3 relativeCell = Relative(absoluteCell);
         Transform baseCellTransform = @base.GetCellObject(relativeCell);
@@ -85,17 +87,21 @@ public class MoonpoolManager : MonoBehaviour
             Log.Warn($"[{nameof(MoonpoolManager.AssignNitroxEntityToMoonpool)}] CellObject not found for RelativeCell: {relativeCell}, AbsoluteCell: {absoluteCell}");
             return;
         }
-        if (baseCellTransform.TryGetComponentInChildren(out VehicleDockingBay vehicleDockingBay))
+        if (baseCellTransform.TryGetComponentInChildren(out VehicleDockingBay vehicleDockingBay, true))
         {
+            result?.Set(vehicleDockingBay.gameObject);
             NitroxEntity.SetNewId(vehicleDockingBay.gameObject, moonpoolId);
         }
     }
 
-    public void RegisterMoonpool(Transform constructableTransform, NitroxId moonpoolId)
+    public Optional<GameObject> RegisterMoonpool(Transform constructableTransform, NitroxId moonpoolId)
     {
         Int3 absoluteCell = Absolute(constructableTransform.position);
         moonpoolsByCell[absoluteCell] = new(moonpoolId, baseId, absoluteCell.ToDto());
-        AssignNitroxEntityToMoonpool(absoluteCell, moonpoolId);
+        TaskResult<Optional<GameObject>> resultObject = new();
+        AssignNitroxEntityToMoonpool(absoluteCell, moonpoolId, resultObject);
+        LatestRegisteredMoonpool = moonpoolsByCell[absoluteCell];
+        return resultObject.Get();
     }
 
     public NitroxId DeregisterMoonpool(Transform constructableTransform)
@@ -148,6 +154,11 @@ public class MoonpoolManager : MonoBehaviour
     public List<MoonpoolEntity> GetSavedMoonpools()
     {
         return moonpoolsByCell.Values.ToList();
+    }
+
+    public Dictionary<NitroxId, NitroxInt3> GetMoonpoolsUpdate()
+    {
+        return moonpoolsByCell.ToDictionary(entry => entry.Value.Id, entry => entry.Key.ToDto());
     }
 
     public void PrintDebug()

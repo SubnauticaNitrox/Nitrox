@@ -1,6 +1,6 @@
 using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Buildings.New;
+using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using System.Collections.Generic;
 
@@ -75,19 +75,23 @@ public sealed class UpdateBase : Packet
     public NitroxId BaseId;
     public NitroxId FormerGhostId;
     public SavedBase SavedBase;
-    public List<Entity> ChildEntities;
+    public GlobalRootEntity BuiltPieceEntity;
+    public Dictionary<NitroxId, NitroxBaseFace> UpdatedChildren;
+    public Dictionary<NitroxId, NitroxInt3> UpdatedMoonpools;
 
-    public UpdateBase(NitroxId baseId, NitroxId formerGhostId, SavedBase savedBase, List<Entity> childEntities)
+    public UpdateBase(NitroxId baseId, NitroxId formerGhostId, SavedBase savedBase, GlobalRootEntity builtPieceEntity, Dictionary<NitroxId, NitroxBaseFace> updatedChildren, Dictionary<NitroxId, NitroxInt3> updatedMoonpools)
     {
         BaseId = baseId;
         FormerGhostId = formerGhostId;
         SavedBase = savedBase;
-        ChildEntities = childEntities;
+        BuiltPieceEntity = builtPieceEntity;
+        UpdatedChildren = updatedChildren;
+        UpdatedMoonpools = updatedMoonpools;
     }
 
     public override string ToString()
     {
-        return $"UpdateBase [BaseId: {BaseId}, FormerGhostId: {FormerGhostId}, SavedBase: {SavedBase}]";
+        return $"UpdateBase [BaseId: {BaseId}, FormerGhostId: {FormerGhostId}, SavedBase: {SavedBase}, UpdatedChildren: {UpdatedChildren.Count}, UpdatedMoonpools: {UpdatedMoonpools.Count}]";
     }
 }
 
