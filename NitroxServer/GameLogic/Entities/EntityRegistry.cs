@@ -16,7 +16,7 @@ namespace NitroxServer.GameLogic.Entities
         public Optional<T> GetEntityById<T>(NitroxId id) where T : Entity
         {
             TryGetEntityById(id, out T entity);
-            
+
             return Optional.OfNullable(entity);
         }
 
@@ -76,7 +76,7 @@ namespace NitroxServer.GameLogic.Entities
 
                 RemoveFromParent(current);
 
-                entitiesById.TryUpdate(entity.Id, entity, current);     
+                entitiesById.TryUpdate(entity.Id, entity, current);
             }
 
             AddToParent(entity);

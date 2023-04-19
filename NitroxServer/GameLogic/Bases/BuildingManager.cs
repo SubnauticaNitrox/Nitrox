@@ -160,6 +160,7 @@ public class BuildingManager
         NitroxTechType waterParkType = new("BaseWaterPark");
         List<NitroxId> removedChildIds = buildEntity.ChildEntities.Where(entity => waterParkType.Equals(entity.TechType))
             .Select(childEntity => childEntity.Id).Except(updateBase.UpdatedChildren.Keys).ToList();
+
         foreach (NitroxId removedChildId in removedChildIds)
         {
             if (entityRegistry.TryGetEntityById(removedChildId, out Entity removedEntity))
@@ -184,9 +185,11 @@ public class BuildingManager
                 childEntity.Cell = updatedMoonpool.Value;
             }
         }
-        if (updateBase.BuiltPieceEntity != null)
+
+        if (updateBase.BuiltPieceEntity != null && updateBase.BuiltPieceEntity is GlobalRootEntity builtPieceEntity)
         {
-            worldEntityManager.AddGlobalRootEntity(updateBase.BuiltPieceEntity);
+            worldEntityManager.AddGlobalRootEntity(builtPieceEntity);
+            buildEntity.ChildEntities.Add(builtPieceEntity);
         }
 
         return true;
@@ -207,22 +210,23 @@ public class BuildingManager
 
     public bool ReplacePieceByGhost(PieceDeconstructed pieceDeconstructed)
     {
-        if (!entityRegistry.TryGetEntityById(pieceDeconstructed.BaseId, out Entity entity) || entity is not BuildEntity buildEntity)
+        if (!entityRegistry.TryGetEntityById(pieceDeconstructed.BaseId, out BuildEntity buildEntity))
         {
             Log.Error($"Trying to replace a non-registered build (BaseId: {pieceDeconstructed.BaseId})");
             return false;
         }
-        if (entity.ChildEntities.Any(childEntity => childEntity.Id.Equals(pieceDeconstructed.PieceId) && childEntity is GhostEntity))
+        if (entityRegistry.TryGetEntityById(pieceDeconstructed.PieceId, out GhostEntity _))
         {
             Log.Error($"Trying to add a ghost to a building but another ghost child with the same id already exists (GhostId: {pieceDeconstructed.PieceId})");
             return false;
         }
+
         worldEntityManager.RemoveGlobalRootEntity(pieceDeconstructed.PieceId);
         GhostEntity ghostEntity = pieceDeconstructed.ReplacerGhost;
         
+        worldEntityManager.AddGlobalRootEntity(ghostEntity);
         buildEntity.ChildEntities.Add(ghostEntity);
         buildEntity.SavedBase = pieceDeconstructed.SavedBase;
-        worldEntityManager.AddGlobalRootEntity(ghostEntity);
         return true;
     }
 

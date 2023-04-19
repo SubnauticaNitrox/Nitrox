@@ -144,15 +144,14 @@ namespace NitroxServer.GameLogic.Entities
             {
                 if (removeFromRegistry)
                 {
-                    Optional<Entity> entity = entityRegistry.GetEntityById(entityId);
                     // In case there were player entities under the removed entity, we need to reparent them to the GlobalRoot
                     // to make sure that they won't be removed
-                    if (entity.HasValue && entity.Value is GlobalRootEntity globalRootEntity)
+                    if (entityRegistry.TryGetEntityById(entityId, out GlobalRootEntity globalRootEntity))
                     {
                         foreach (PlayerWorldEntity childPlayerEntity in FindPlayerEntitiesInChildrenRecursively(globalRootEntity))
                         {
                             // Reparent the entity on top of GlobalRoot
-                            entity.Value.ChildEntities.Remove(childPlayerEntity);
+                            globalRootEntity.ChildEntities.Remove(childPlayerEntity);
                             childPlayerEntity.ParentId = null;
 
                             // Make sure the PlayerEntity is correctly registered
@@ -361,7 +360,7 @@ namespace NitroxServer.GameLogic.Entities
                     playerEntities.Add(playerWorldEntity);
                     continue;
                 }
-                playerEntities.AddRange(FindPlayerEntitiesInChildrenRecursively(parentEntity));
+                playerEntities.AddRange(FindPlayerEntitiesInChildrenRecursively(childEntity));
             }
             return playerEntities;
         }

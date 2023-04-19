@@ -57,6 +57,6 @@ public class InteriorPieceEntity : GlobalRootEntity
 
     public override string ToString()
     {
-        return $"[InteriorPieceEntity BaseFace: {BaseFace}, Constructed: {Constructed}]";
+        return $"[InteriorPieceEntity Id: {Id}, ParentId: {ParentId}, BaseFace: {BaseFace}, Constructed: {Constructed}]";
     }
 }
