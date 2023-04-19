@@ -6,6 +6,7 @@ using HarmonyLib;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Bases.New;
 using NitroxClient.GameLogic.Spawning.Bases.PostSpawners;
+using NitroxClient.Helpers;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
@@ -241,7 +242,11 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
             CoroutineHost.StartCoroutine(EntityPostSpawner.ApplyPostSpawner(constructable.gameObject, entity.Id));
         }
         // update as a normal module
-        Resolve<IPacketSender>().Send(new ModifyConstructedAmount(entity.Id, amount));
+
+        // TODO: A latest packet is always sent even after the base is fully built, we don't want that
+        // When #2021 is merged, just use ThrottledPacketSender.RemovePendingPackets
+        Resolve<ThrottledPacketSender>().SendThrottled(new ModifyConstructedAmount(entity.Id, amount),
+            (packet) => { return packet.GhostId; }, 0.1f);
     }
 
     public static IEnumerator BroadcastObjectBuilt(ConstructableBase constructableBase, NitroxEntity entity)
@@ -295,6 +300,7 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
                 .OfType<InteriorPieceEntity>().ToDictionary(entity => entity.Id, entity => entity.BaseFace);
             
             UpdateBase updateBase = new(parentEntity.Id, entity.Id, NitroxBase.From(parentBase), builtPiece, updatedChildren, moonpoolManager.GetMoonpoolsUpdate());
+            Log.Debug($"Sending UpdateBase packet: {updateBase}");
 
             // TODO: (for server-side) Find a way to optimize this (maybe by copying BaseGhost.Finish() => Base.CopyFrom)
             Resolve<IPacketSender>().Send(updateBase);
@@ -381,27 +387,38 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
                 Log.Debug($"Successfully transferred NitroxEntity from module geometry {moduleEntity.Id}");
             }
         }
-        else if (constructableBase.techType.Equals(TechType.BaseMoonpool) && @base.TryGetComponent(out MoonpoolManager moonpoolManager))
+        else
         {
-            pieceId = moonpoolManager.DeregisterMoonpool(constructableBase.transform); // pieceId can still be null
-        }
-        else if (constructableBase.techType.Equals(TechType.BaseMapRoom))
-        {
-            Int3 mapRoomFunctionalityCell = BuildManager.GetMapRoomFunctionalityCell(constructableBase.model.GetComponent<BaseGhost>());
-            MapRoomFunctionality mapRoomFunctionality = @base.GetMapRoomFunctionalityForCell(mapRoomFunctionalityCell);
-            if (mapRoomFunctionality && NitroxEntity.TryGetEntityFrom(mapRoomFunctionality.gameObject, out NitroxEntity mapRoomEntity))
+            switch (constructableBase.techType)
             {
-                pieceId = mapRoomEntity.Id;
+                case TechType.BaseMoonpool:
+                    if (@base.TryGetComponent(out MoonpoolManager moonpoolManager))
+                    {
+                        pieceId = moonpoolManager.DeregisterMoonpool(constructableBase.transform); // pieceId can still be null
+                    }
+                    break;
+                case TechType.BaseMapRoom:
+                    Int3 mapRoomFunctionalityCell = BuildManager.GetMapRoomFunctionalityCell(constructableBase.model.GetComponent<BaseGhost>());
+                    MapRoomFunctionality mapRoomFunctionality = @base.GetMapRoomFunctionalityForCell(mapRoomFunctionalityCell);
+                    if (mapRoomFunctionality && NitroxEntity.TryGetEntityFrom(mapRoomFunctionality.gameObject, out NitroxEntity mapRoomEntity))
+                    {
+                        pieceId = mapRoomEntity.Id;
+                    }
+                    else
+                    {
+                        Log.Error("Either couldn't find a MapRoomFunctionality associated with destroyed piece or couldn't find a NitroxEntity onto it.");
+                    }
+                    break;
+                case TechType.BaseWaterPark:
+                    // When a BaseWaterPark doesn't have a moduleFace, it means that there's still another WaterPark so we don't need to destroy its id and it won't be an error
+                    break;
+                default:
+                    if (baseDeconstructable.GetComponent<IBaseModuleGeometry>() != null)
+                    {
+                        Log.Error("Couldn't find the module's GameObject of IBaseModuleGeometry when transfering the NitroxEntity");
+                    }
+                    break;
             }
-            else
-            {
-                Log.Error("Either couldn't find a MapRoomFunctionality associated with destroyed piece or couldn't find a NitroxEntity onto it.");
-            }
-        }
-        // When a BaseWaterPark doesn't have a moduleFace, it means that there's still another WaterPark so we don't need to destroy its id and it won't be an error
-        else if (!constructableBase.techType.Equals(TechType.BaseWaterPark))
-        {
-            Log.Error("Couldn't find the module's GameObject of IBaseModuleGeometry when transfering the NitroxEntity");
         }
 
         // Else, if it's a local client deconstruction, we generate a new one
