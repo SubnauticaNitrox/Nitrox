@@ -32,6 +32,7 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
         if (result.value.HasValue && result.value.Value.TryGetComponent(out Base @base))
         {
             yield return NitroxBuild.RestoreMoonpools(entity.ChildEntities.OfType<MoonpoolEntity>(), @base);
+            yield return NitroxBuild.RestoreMapRooms(entity.ChildEntities.OfType<MapRoomEntity>(), @base);
         }
     }
 

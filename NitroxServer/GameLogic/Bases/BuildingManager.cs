@@ -157,6 +157,7 @@ public class BuildingManager
         buildEntity.SavedBase = updateBase.SavedBase;
 
         // We need to clean the waterparks that were potentially removed when merging
+        // TODO: Fix this, it'll never work either because TechType is always None, or because WaterPark and WaterParkLarge are different 
         NitroxTechType waterParkType = new("BaseWaterPark");
         List<NitroxId> removedChildIds = buildEntity.ChildEntities.Where(entity => waterParkType.Equals(entity.TechType))
             .Select(childEntity => childEntity.Id).Except(updateBase.UpdatedChildren.Keys).ToList();
@@ -183,6 +184,13 @@ public class BuildingManager
             if (entityRegistry.TryGetEntityById(updatedMoonpool.Key, out MoonpoolEntity childEntity))
             {
                 childEntity.Cell = updatedMoonpool.Value;
+            }
+        }
+        foreach (KeyValuePair<NitroxId, NitroxInt3> updatedMapRoom in updateBase.UpdatedMapRooms)
+        {
+            if (entityRegistry.TryGetEntityById(updatedMapRoom.Key, out MapRoomEntity childEntity))
+            {
+                childEntity.Cell = updatedMapRoom.Value;
             }
         }
 

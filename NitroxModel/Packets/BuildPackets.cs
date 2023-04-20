@@ -78,8 +78,9 @@ public sealed class UpdateBase : Packet
     public Entity BuiltPieceEntity;
     public Dictionary<NitroxId, NitroxBaseFace> UpdatedChildren;
     public Dictionary<NitroxId, NitroxInt3> UpdatedMoonpools;
+    public Dictionary<NitroxId, NitroxInt3> UpdatedMapRooms;
 
-    public UpdateBase(NitroxId baseId, NitroxId formerGhostId, SavedBase savedBase, Entity builtPieceEntity, Dictionary<NitroxId, NitroxBaseFace> updatedChildren, Dictionary<NitroxId, NitroxInt3> updatedMoonpools)
+    public UpdateBase(NitroxId baseId, NitroxId formerGhostId, SavedBase savedBase, Entity builtPieceEntity, Dictionary<NitroxId, NitroxBaseFace> updatedChildren, Dictionary<NitroxId, NitroxInt3> updatedMoonpools, Dictionary<NitroxId, NitroxInt3> updatedMapRooms)
     {
         BaseId = baseId;
         FormerGhostId = formerGhostId;
@@ -87,11 +88,12 @@ public sealed class UpdateBase : Packet
         BuiltPieceEntity = builtPieceEntity;
         UpdatedChildren = updatedChildren;
         UpdatedMoonpools = updatedMoonpools;
+        UpdatedMapRooms = updatedMapRooms;
     }
 
     public override string ToString()
     {
-        return $"UpdateBase [BaseId: {BaseId}, FormerGhostId: {FormerGhostId}, SavedBase: {SavedBase}, BuiltPieceEntity: {BuiltPieceEntity}, UpdatedChildren: {UpdatedChildren.Count}, UpdatedMoonpools: {UpdatedMoonpools.Count}]";
+        return $"UpdateBase [BaseId: {BaseId}, FormerGhostId: {FormerGhostId}, SavedBase: {SavedBase}, BuiltPieceEntity: {BuiltPieceEntity}, UpdatedChildren: {UpdatedChildren.Count}, UpdatedMoonpools: {UpdatedMoonpools.Count}, UpdatedMapRooms: {UpdatedMapRooms.Count}]";
     }
 }
 
