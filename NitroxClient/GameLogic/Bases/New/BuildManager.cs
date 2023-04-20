@@ -483,7 +483,7 @@ public static class NitroxBuild
 
     public static IEnumerator RestoreModules(this BuildEntity buildEntity)
     {
-        yield return RestoreModules(buildEntity.ChildEntities.OfType<ModuleEntity>());
+        yield return RestoreModules(buildEntity.ChildEntities.OfType<ModuleEntity>().Where(entity => entity is not GhostEntity));
     }
 
     public static IEnumerator RestoreGhost(Transform parent, GhostEntity ghostEntity, TaskResult<Optional<GameObject>> result = null)
@@ -516,7 +516,7 @@ public static class NitroxBuild
         baseGhost.SetupGhost();
 
         yield return NitroxGhostMetadata.ApplyMetadataToGhost(baseGhost, ghostEntity.Metadata, @base);
-
+        
         // TODO: Fix hatch ghosts showing the wrong model
         // TODO: Fix ghost visual glitch (probably a duplicate model) (black ghost)
         // Necessary to wait for BaseGhost.Start()
@@ -534,7 +534,7 @@ public static class NitroxBuild
             Array.Clear(ghostBase.cellObjects, 0, ghostBase.cellObjects.Length);
         }
         ghostBase.FinishDeserialization();
-        
+
         if (isInBase)
         {
             @base.SetPlacementGhost(baseGhost);
@@ -545,6 +545,7 @@ public static class NitroxBuild
         {
             ghostTransform.parent = parent;
         }
+        constructableBase.SetGhostVisible(false);
 
         Log.Debug(NitroxBase.ToString(NitroxBase.From(ghostBase)));
         if (!isBaseDeconstructable)
