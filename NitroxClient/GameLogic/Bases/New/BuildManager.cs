@@ -293,26 +293,16 @@ public static class NitroxBuild
     public static List<Entity> GetChildEntities(Base targetBase, NitroxId baseId)
     {
         List<Entity> childEntities = new();
-        foreach (InteriorPieceEntity interiorPieceEntity in SaveInteriorPieces(targetBase))
-        {
-            childEntities.Add(interiorPieceEntity);
-        }
-        foreach (ModuleEntity moduleEntity in SaveModules(targetBase.transform))
-        {
-            childEntities.Add(moduleEntity);
-        }
-        foreach (GhostEntity ghostEntity in SaveGhosts(targetBase.transform))
-        {
-            childEntities.Add(ghostEntity);
-        }
+        childEntities.AddRange(SaveInteriorPieces(targetBase));
+        childEntities.AddRange(SaveModules(targetBase.transform));
+        childEntities.AddRange(SaveGhosts(targetBase.transform));
         if (targetBase.TryGetComponent(out MoonpoolManager nitroxMoonpool))
         {
-            foreach (MoonpoolEntity moonpoolEntity in nitroxMoonpool.GetSavedMoonpools())
-            {
-                childEntities.Add(moonpoolEntity);
-            }
+            childEntities.AddRange(nitroxMoonpool.GetSavedMoonpools());
         }
-        // TODO: Add MapRoomFunctionality as children
+        childEntities.AddRange(SaveMapRooms(targetBase));
+
+        // Making sure that childEntities are correctly parented
         foreach (Entity childEntity in childEntities)
         {
             childEntity.ParentId = baseId;
@@ -383,6 +373,31 @@ public static class NitroxBuild
             }
         }
         return ghostEntities;
+    }
+
+    private static List<MapRoomEntity> SaveMapRooms(Base targetBase)
+    {
+        if (!NitroxEntity.TryGetIdFrom(targetBase.gameObject, out NitroxId parentId))
+        {
+            return new();
+        }
+        List<MapRoomEntity> mapRooms = new();
+        foreach (MapRoomFunctionality mapRoomFunctionality in targetBase.GetComponentsInChildren<MapRoomFunctionality>(true))
+        {
+            if (!NitroxEntity.TryGetIdFrom(mapRoomFunctionality.gameObject, out NitroxId mapRoomId))
+            {
+                continue;
+            }
+            Log.Debug($"MapRoom found {mapRoomId}");
+            mapRooms.Add(GetMapRoomEntityFrom(mapRoomFunctionality, targetBase, mapRoomId, parentId));
+        }
+        return mapRooms;
+    }
+
+    public static MapRoomEntity GetMapRoomEntityFrom(MapRoomFunctionality mapRoomFunctionality, Base @base, NitroxId id, NitroxId parentId)
+    {
+        Int3 mapRoomCell = @base.NormalizeCell(@base.WorldToGrid(mapRoomFunctionality.transform.position));
+        return new (id, parentId, mapRoomCell.ToDto());
     }
 
     public static void ApplyTo(this BuildEntity buildEntity, Base @base)
@@ -473,7 +488,7 @@ public static class NitroxBuild
 
     public static IEnumerator RestoreGhost(Transform parent, GhostEntity ghostEntity, TaskResult<Optional<GameObject>> result = null)
     {
-        Log.Debug($"Restoring ghost {NitroxGhost.ToString(ghostEntity)}");
+        Log.Debug($"Restoring ghost {ghostEntity}");
         IPrefabRequest request = PrefabDatabase.GetPrefabAsync(ghostEntity.ClassId);
         yield return request;
         if (!request.TryGetPrefab(out GameObject prefab))
@@ -572,6 +587,26 @@ public static class NitroxBuild
         yield return moonpoolManager.SpawnVehicles();
         moonpoolManager.OnPostRebuildGeometry(@base);
         Log.Debug($"Restored moonpools: {moonpoolManager.GetSavedMoonpools().Count}");
+    }
+
+    public static IEnumerator RestoreMapRoom(Base @base, MapRoomEntity mapRoomEntity)
+    {
+        Log.Debug($"Restoring MapRoom {mapRoomEntity}");
+        MapRoomFunctionality mapRoomFunctionality = @base.GetMapRoomFunctionalityForCell(mapRoomEntity.Cell.ToUnity());
+        if (!mapRoomFunctionality)
+        {
+            Log.Error($"Couldn't find MapRoomFunctionality in base for cell {mapRoomEntity.Cell}");
+            yield break;
+        }
+        NitroxEntity.SetNewId(mapRoomFunctionality.gameObject, mapRoomEntity.Id);
+    }
+
+    public static IEnumerator RestoreMapRooms(IEnumerable<MapRoomEntity> mapRooms, Base @base)
+    {
+        foreach (MapRoomEntity mapRoomEntity in mapRooms)
+        {
+            yield return RestoreMapRoom(@base, mapRoomEntity);
+        }
     }
 
     public static string ToString(this SavedBuild savedBuild)
@@ -707,6 +742,7 @@ public static class NitroxInteriorPiece
         if (gameObject && gameObject.TryGetComponent(out PrefabIdentifier identifier))
         {
             interiorPiece.ClassId = identifier.ClassId;
+            // TODO: Fix techtype not being found out
             interiorPiece.TechType = CraftData.entClassTechTable.GetOrDefault(identifier.ClassId, TechType.None).ToDto();
         }
         else

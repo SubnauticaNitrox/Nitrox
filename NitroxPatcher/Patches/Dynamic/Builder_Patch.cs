@@ -10,6 +10,7 @@ using NitroxClient.Helpers;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Buildings.New;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.GameLogic.Entities.Bases;
@@ -293,13 +294,22 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
                 {
                     builtPiece = moonpoolManager.LatestRegisteredMoonpool;
                 }
+                else if (moduleObject.TryGetComponent(out MapRoomFunctionality mapRoomFunctionality))
+                {
+                    builtPiece = NitroxBuild.GetMapRoomEntityFrom(mapRoomFunctionality, parentBase, entity.Id, parentEntity.Id);
+                }
             }
 
-            // We get InteriorPieceEntity children from the base and make up a dictionary with their updated data (their BaseFace)
-            Dictionary<NitroxId, NitroxBaseFace> updatedChildren = NitroxBuild.GetChildEntities(parentBase, parentEntity.Id)
-                .OfType<InteriorPieceEntity>().ToDictionary(entity => entity.Id, entity => entity.BaseFace);
+            List<Entity> childEntities = NitroxBuild.GetChildEntities(parentBase, parentEntity.Id);
             
-            UpdateBase updateBase = new(parentEntity.Id, entity.Id, NitroxBase.From(parentBase), builtPiece, updatedChildren, moonpoolManager.GetMoonpoolsUpdate());
+            // We get InteriorPieceEntity children from the base and make up a dictionary with their updated data (their BaseFace)
+            Dictionary<NitroxId, NitroxBaseFace> updatedChildren = childEntities.OfType<InteriorPieceEntity>()
+                .ToDictionary(entity => entity.Id, entity => entity.BaseFace);
+            // Same for MapRooms
+            Dictionary<NitroxId, NitroxInt3> updatedMapRooms = childEntities.OfType<MapRoomEntity>()
+                .ToDictionary(entity => entity.Id, entity => entity.Cell);
+
+            UpdateBase updateBase = new(parentEntity.Id, entity.Id, NitroxBase.From(parentBase), builtPiece, updatedChildren, moonpoolManager.GetMoonpoolsUpdate(), updatedMapRooms);
             Log.Debug($"Sending UpdateBase packet: {updateBase}");
 
             // TODO: (for server-side) Find a way to optimize this (maybe by copying BaseGhost.Finish() => Base.CopyFrom)
