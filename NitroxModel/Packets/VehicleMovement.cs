@@ -1,4 +1,5 @@
 ﻿using System;
+using BinaryPack.Attributes;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Unity;
 using NitroxModel.Networking;
@@ -10,9 +11,14 @@ namespace NitroxModel.Packets
     {
         public override ushort PlayerId { get; }
         public VehicleMovementData VehicleMovementData { get; }
+
+        [IgnoredMember]
         public override NitroxVector3 Position => VehicleMovementData.Position;
+        [IgnoredMember]
         public override NitroxVector3 Velocity => VehicleMovementData.Velocity;
+        [IgnoredMember]
         public override NitroxQuaternion BodyRotation => VehicleMovementData.Rotation;
+        [IgnoredMember]
         public override NitroxQuaternion AimingRotation => VehicleMovementData.Rotation;
 
         public VehicleMovement(ushort playerId, VehicleMovementData vehicleMovementData)
