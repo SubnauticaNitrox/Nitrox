@@ -89,7 +89,7 @@ public class LiteNetLibClient : IClient
     private void OnPacketReceived(WrapperPacket wrapperPacket, NetPeer peer)
     {
         Packet packet = Packet.Deserialize(wrapperPacket.PacketData);
-        packetReceiver.PacketReceived(packet, 0);
+        packetReceiver.PacketReceived(packet);
         networkDebugger?.PacketReceived(packet, wrapperPacket.PacketData.Length);
     }
 

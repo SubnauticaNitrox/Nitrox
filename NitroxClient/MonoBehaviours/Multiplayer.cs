@@ -13,8 +13,6 @@ using NitroxClient.Helpers;
 using NitroxClient.MonoBehaviours.Discord;
 using NitroxClient.MonoBehaviours.Gui.MainMenu;
 using NitroxModel.Core;
-using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
 using UnityEngine;
