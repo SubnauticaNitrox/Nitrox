@@ -1,4 +1,4 @@
-﻿using System.Threading;
+using System.Threading;
 using System.Threading.Tasks;
 using LiteNetLib;
 using LiteNetLib.Utils;
@@ -9,46 +9,46 @@ using NitroxClient.MonoBehaviours.Gui.InGame;
 using NitroxModel.Networking;
 using NitroxModel.Packets;
 
-namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
+namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib;
+
+public class LiteNetLibClient : IClient
 {
-    public class LiteNetLibClient : IClient
+    public bool IsConnected { get; private set; }
+
+    private readonly NetPacketProcessor netPacketProcessor = new NetPacketProcessor();
+    private readonly AutoResetEvent connectedEvent = new AutoResetEvent(false);
+    private readonly PacketReceiver packetReceiver;
+    private readonly INetworkDebugger networkDebugger;
+
+    private NetManager client;
+
+    public LiteNetLibClient(PacketReceiver packetReceiver, INetworkDebugger networkDebugger = null)
     {
-        public bool IsConnected { get; private set; }
-
-        private readonly NetPacketProcessor netPacketProcessor = new NetPacketProcessor();
-        private readonly AutoResetEvent connectedEvent = new AutoResetEvent(false);
-        private readonly PacketReceiver packetReceiver;
-        private readonly INetworkDebugger networkDebugger;
-
-        private NetManager client;
-
-        public LiteNetLibClient(PacketReceiver packetReceiver, INetworkDebugger networkDebugger = null)
-        {
-            this.packetReceiver = packetReceiver;
-            this.networkDebugger = networkDebugger;
-        }
+        this.packetReceiver = packetReceiver;
+        this.networkDebugger = networkDebugger;
+    }
 
         public async Task StartAsync(string ipAddress, int serverPort)
         {
             Log.Info("Initializing LiteNetLibClient...");
 
-            SynchronizationContext.SetSynchronizationContext(new SynchronizationContext());
+        SynchronizationContext.SetSynchronizationContext(new SynchronizationContext());
 
-            netPacketProcessor.SubscribeReusable<WrapperPacket, NetPeer>(OnPacketReceived);
+        netPacketProcessor.SubscribeReusable<WrapperPacket, NetPeer>(OnPacketReceived);
 
-            EventBasedNetListener listener = new EventBasedNetListener();
-            listener.PeerConnectedEvent += Connected;
-            listener.PeerDisconnectedEvent += Disconnected;
-            listener.NetworkReceiveEvent += ReceivedNetworkData;
+        EventBasedNetListener listener = new EventBasedNetListener();
+        listener.PeerConnectedEvent += Connected;
+        listener.PeerDisconnectedEvent += Disconnected;
+        listener.NetworkReceiveEvent += ReceivedNetworkData;
 
-            client = new NetManager(listener)
-            {
-                UpdateTime = 15,
-                UnsyncedEvents = true,  //experimental feature, may need to replace with calls to client.PollEvents();
+        client = new NetManager(listener)
+        {
+            UpdateTime = 15,
+            UnsyncedEvents = true, //experimental feature, may need to replace with calls to client.PollEvents();
 #if DEBUG
-                DisconnectTimeout = 300000  //Disables Timeout (for 5 min) for debug purpose (like if you jump though the server code)
+            DisconnectTimeout = 300000 //Disables Timeout (for 5 min) for debug purpose (like if you jump though the server code)
 #endif
-            };
+        };
 
             await Task.Run(() =>
             {
@@ -56,9 +56,9 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
                 client.Connect(ipAddress, serverPort, "nitrox");
             });
 
-            connectedEvent.WaitOne(2000);
-            connectedEvent.Reset();
-        }
+        connectedEvent.WaitOne(2000);
+        connectedEvent.Reset();
+    }
 
         public void Send(Packet packet)
         {
@@ -69,16 +69,16 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
             client.Flush();
         }
 
-        public void Stop()
-        {
-            IsConnected = false;
-            client.Stop();
-        }
+    public void Stop()
+    {
+        IsConnected = false;
+        client.Stop();
+    }
 
-        private void ReceivedNetworkData(NetPeer peer, NetDataReader reader, DeliveryMethod deliveryMethod)
-        {
-            netPacketProcessor.ReadAllPackets(reader, peer);
-        }
+    private void ReceivedNetworkData(NetPeer peer, NetDataReader reader, DeliveryMethod deliveryMethod)
+    {
+        netPacketProcessor.ReadAllPackets(reader, peer);
+    }
 
         private void OnPacketReceived(WrapperPacket wrapperPacket, NetPeer peer)
         {
@@ -86,23 +86,23 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
             packetReceiver.PacketReceived(packet, wrapperPacket.packetData.Length);
         }
 
-        private void Connected(NetPeer peer)
+    private void Connected(NetPeer peer)
+    {
+        // IsConnected must happen before Set() so that its state is noticed WHEN we unblock the thread (cf. connectedEvent.WaitOne(...))
+        IsConnected = true;
+        connectedEvent.Set();
+        Log.Info("Connected to server");
+    }
+
+    private void Disconnected(NetPeer peer, DisconnectInfo disconnectInfo)
+    {
+        // Check must happen before IsConnected is set to false, so that it doesn't send an exception when we aren't even ingame
+        if (Multiplayer.Active)
         {
-            // IsConnected must happen before Set() so that its state is noticed WHEN we unblock the thread (cf. connectedEvent.WaitOne(...))
-            IsConnected = true;
-            connectedEvent.Set();
-            Log.Info("Connected to server");
+            Modal.Get<LostConnectionModal>()?.Show();
         }
 
-        private void Disconnected(NetPeer peer, DisconnectInfo disconnectInfo)
-        {
-            // Check must happen before IsConnected is set to false, so that it doesn't send an exception when we aren't even ingame
-            if (Multiplayer.Active)
-            {
-                Modal.Get<LostConnectionModal>()?.Show();
-            }
-            IsConnected = false;
-            Log.Info("Disconnected from server");
-        }
+        IsConnected = false;
+        Log.Info("Disconnected from server");
     }
 }

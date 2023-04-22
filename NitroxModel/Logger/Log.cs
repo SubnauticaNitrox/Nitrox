@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
+using LiteNetLib;
 using NitroxModel.Helper;
 using Serilog;
 using Serilog.Context;
@@ -37,7 +38,8 @@ namespace NitroxModel.Logger
                 return;
             }
             isSetup = true;
-            
+            NetDebug.Logger = new LiteNetLibLogger();
+
             PlayerName = "";
             logger = new LoggerConfiguration()
                      .MinimumLevel.Debug()
