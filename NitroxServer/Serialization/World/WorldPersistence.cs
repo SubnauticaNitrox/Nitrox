@@ -235,7 +235,17 @@ namespace NitroxServer.Serialization.World
 
         private void UpgradeSave(string saveDir)
         {
-            SaveFileVersion saveFileVersion = Serializer.Deserialize<SaveFileVersion>(Path.Combine(saveDir, $"Version{FileEnding}"));
+            SaveFileVersion saveFileVersion;
+
+            try
+            {
+                saveFileVersion = Serializer.Deserialize<SaveFileVersion>(Path.Combine(saveDir, $"Version{FileEnding}"));
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, $"Error while upgrading save file. \"Version{FileEnding}\" couldn't be read.");
+                return;
+            }
 
             if (saveFileVersion.Version == NitroxEnvironment.Version)
             {

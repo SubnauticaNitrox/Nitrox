@@ -15,7 +15,8 @@ public class NitroxAbstractFaker : NitroxFaker, INitroxFaker
 {
     private static readonly Dictionary<Type, Type[]> subtypesByBaseType;
 
-    static NitroxAbstractFaker() {
+    static NitroxAbstractFaker()
+    {
         Assembly[] assemblies = { typeof(Packet).Assembly, typeof(SubnauticaInGameLogger).Assembly, typeof(ServerAutoFacRegistrar).Assembly, typeof(SubnauticaServerAutoFacRegistrar).Assembly };
         HashSet<Type> blacklistedTypes = new() { typeof(Packet), typeof(CorrelatedPacket), typeof(Command), typeof(PacketProcessor) };
 
@@ -57,6 +58,9 @@ public class NitroxAbstractFaker : NitroxFaker, INitroxFaker
 
     public INitroxFaker[] GetSubFakers() => assignableFakers.ToArray();
 
+    /// <summary>
+    ///     Selects an implementing type in a round-robin fashion of the abstract type of this faker. Then creates an instance of it.
+    /// </summary>
     public object GenerateUnsafe(HashSet<Type> typeTree)
     {
         INitroxFaker assignableFaker = assignableFakers.Dequeue();

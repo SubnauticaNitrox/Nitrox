@@ -110,9 +110,8 @@ public abstract class NitroxFaker
                type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
     }
 
-    protected static readonly MethodInfo CastMethodBase = typeof(NitroxFaker).GetMethod("Cast", BindingFlags.NonPublic | BindingFlags.Static);
+    protected static readonly MethodInfo CastMethodBase = typeof(NitroxFaker).GetMethod(nameof(Cast), BindingFlags.NonPublic | BindingFlags.Static);
 
-    // ReSharper disable once UnusedMember.Global
     protected static T Cast<T>(object o)
     {
         return (T)o;

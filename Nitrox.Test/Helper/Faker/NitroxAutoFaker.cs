@@ -5,7 +5,6 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 using BinaryPack.Attributes;
-using NitroxModel.Logger;
 
 namespace Nitrox.Test.Helper.Faker;
 
@@ -18,7 +17,6 @@ public class NitroxAutoFaker<T> : NitroxFaker, INitroxFaker
     public NitroxAutoFaker()
     {
         Type type = typeof(T);
-        Log.Info(type.ToString());
         if (!IsValidType(type))
         {
             throw new InvalidOperationException($"{type.Name} is not a valid type for {nameof(NitroxAutoFaker<T>)}");

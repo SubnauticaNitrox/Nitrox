@@ -28,7 +28,7 @@ public class PacketsSerializableTest
         config.SkipInvalidIndexers = true;
         config.AttributesToIgnore.Add(typeof(IgnoredMemberAttribute));
         config.CustomComparers.Add(new CustomComparer<NitroxId, NitroxId>((id1, id2) => id1.Equals(id2)));
-        CompareLogic compareLogic = new CompareLogic(config);
+        CompareLogic comparer = new(config);
 
         IEnumerable<Type> types = typeof(Packet).Assembly.GetTypes().Concat(typeof(SubnauticaInGameLogger).Assembly.GetTypes());
         Type[] packetTypes = types.Where(p => typeof(Packet).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract).ToArray();
@@ -40,7 +40,7 @@ public class PacketsSerializableTest
                                          .ToArray();
 
         // We generate two different versions of each packet to verify comparison is actually working
-        List<Tuple<Packet, Packet>> generatedPackets = new();
+        List<(Packet, Packet)> generatedPackets = new();
 
         foreach (Type type in packetTypes)
         {
@@ -55,16 +55,16 @@ public class PacketsSerializableTest
                 do
                 {
                     packet2 = faker.Generate();
-                    result = compareLogic.Compare(packet, packet2);
+                    result = comparer.Compare(packet, packet2);
                 } while (result == null || result.AreEqual);
             }
 
-            generatedPackets.Add(new Tuple<Packet, Packet>(packet, packet2));
+            generatedPackets.Add(new ValueTuple<Packet, Packet>(packet, packet2));
         }
 
         Packet.InitSerializer();
 
-        foreach (Tuple<Packet, Packet> packet in generatedPackets)
+        foreach (ValueTuple<Packet, Packet> packet in generatedPackets)
         {
             Packet deserialized = Packet.Deserialize(packet.Item1.Serialize());
 
