@@ -15,8 +15,9 @@ public class LiteNetLibClient : IClient
 {
     public bool IsConnected { get; private set; }
 
-    private readonly NetPacketProcessor netPacketProcessor = new NetPacketProcessor();
-    private readonly AutoResetEvent connectedEvent = new AutoResetEvent(false);
+    private readonly NetPacketProcessor netPacketProcessor = new();
+    private readonly AutoResetEvent connectedEvent = new(false);
+    private readonly NetDataWriter dataWriter = new();
     private readonly PacketReceiver packetReceiver;
     private readonly INetworkDebugger networkDebugger;
 
@@ -28,13 +29,13 @@ public class LiteNetLibClient : IClient
         this.networkDebugger = networkDebugger;
     }
 
-        public async Task StartAsync(string ipAddress, int serverPort)
-        {
-            Log.Info("Initializing LiteNetLibClient...");
+    public async Task StartAsync(string ipAddress, int serverPort)
+    {
+        Log.Info("Initializing LiteNetLibClient...");
 
         SynchronizationContext.SetSynchronizationContext(new SynchronizationContext());
 
-        netPacketProcessor.SubscribeReusable<WrapperPacket, NetPeer>(OnPacketReceived);
+        netPacketProcessor.SubscribeNetSerializable<WrapperPacket, NetPeer>(OnPacketReceived);
 
         EventBasedNetListener listener = new EventBasedNetListener();
         listener.PeerConnectedEvent += Connected;
@@ -44,30 +45,30 @@ public class LiteNetLibClient : IClient
         client = new NetManager(listener)
         {
             UpdateTime = 15,
-            UnsyncedEvents = true, //experimental feature, may need to replace with calls to client.PollEvents();
 #if DEBUG
             DisconnectTimeout = 300000 //Disables Timeout (for 5 min) for debug purpose (like if you jump though the server code)
 #endif
         };
 
-            await Task.Run(() =>
-            {
-                client.Start();
-                client.Connect(ipAddress, serverPort, "nitrox");
-            });
+        await Task.Run(() =>
+        {
+            client.Start();
+            client.Connect(ipAddress, serverPort, "nitrox");
+        });
 
         connectedEvent.WaitOne(2000);
         connectedEvent.Reset();
     }
 
-        public void Send(Packet packet)
-        {
-            byte[] bytes = netPacketProcessor.Write(packet.ToWrapperPacket());
+    public void Send(Packet packet)
+    {
+        WrapperPacket wrapperPacket = packet.ToWrapperPacket();
+        dataWriter.Reset();
+        netPacketProcessor.WriteNetSerializable(dataWriter, ref wrapperPacket);
 
-            networkDebugger?.PacketSent(packet, bytes.Length);
-            client.SendToAll(bytes, NitroxDeliveryMethod.ToLiteNetLib(packet.DeliveryMethod));
-            client.Flush();
-        }
+        networkDebugger?.PacketSent(packet, dataWriter.Length);
+        client.SendToAll(dataWriter, NitroxDeliveryMethod.ToLiteNetLib(packet.DeliveryMethod));
+    }
 
     public void Stop()
     {
@@ -75,16 +76,22 @@ public class LiteNetLibClient : IClient
         client.Stop();
     }
 
-    private void ReceivedNetworkData(NetPeer peer, NetDataReader reader, DeliveryMethod deliveryMethod)
+    /// <summary>
+    /// This should be called <b>once</b> each game tick
+    /// </summary>
+    public void PollEvents() => client.PollEvents();
+
+    private void ReceivedNetworkData(NetPeer peer, NetDataReader reader, byte channel, DeliveryMethod deliveryMethod)
     {
         netPacketProcessor.ReadAllPackets(reader, peer);
     }
 
-        private void OnPacketReceived(WrapperPacket wrapperPacket, NetPeer peer)
-        {
-            Packet packet = Packet.Deserialize(wrapperPacket.packetData);
-            packetReceiver.PacketReceived(packet, wrapperPacket.packetData.Length);
-        }
+    private void OnPacketReceived(WrapperPacket wrapperPacket, NetPeer peer)
+    {
+        Packet packet = Packet.Deserialize(wrapperPacket.PacketData);
+        packetReceiver.PacketReceived(packet, 0);
+        networkDebugger?.PacketReceived(packet, wrapperPacket.PacketData.Length);
+    }
 
     private void Connected(NetPeer peer)
     {

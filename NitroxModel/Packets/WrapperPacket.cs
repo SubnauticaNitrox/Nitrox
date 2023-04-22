@@ -1,4 +1,6 @@
-﻿namespace NitroxModel.Packets
+﻿using LiteNetLib.Utils;
+
+namespace NitroxModel.Packets
 {
     /**
      * WrapperPacket for LiteNetLib implementation
@@ -7,9 +9,9 @@
      * and the LiteNetLib serializer. In the LiteNetLib implementation, every packet is wrapped
      * and then uses Nitrox serializer with the packetData.
      */
-    public class WrapperPacket
+    public class WrapperPacket : INetSerializable
     {
-        public byte[] packetData { get; set; }
+        public byte[] PacketData { get; set; }
 
         public WrapperPacket()
         {
@@ -17,7 +19,20 @@
 
         public WrapperPacket(byte[] packetData)
         {
-            this.packetData = packetData;
+            PacketData = packetData;
+        }
+
+        public void Serialize(NetDataWriter writer)
+        {
+            writer.Put(PacketData.Length);
+            writer.Put(PacketData);
+        }
+
+        public void Deserialize(NetDataReader reader)
+        {
+            int packetDataLength = reader.GetInt();
+            PacketData = new byte[packetDataLength];
+            reader.GetBytes(PacketData, packetDataLength);
         }
     }
 }

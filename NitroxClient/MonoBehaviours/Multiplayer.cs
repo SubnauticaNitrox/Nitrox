@@ -13,6 +13,8 @@ using NitroxClient.Helpers;
 using NitroxClient.MonoBehaviours.Discord;
 using NitroxClient.MonoBehaviours.Gui.MainMenu;
 using NitroxModel.Core;
+using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
 using UnityEngine;
@@ -25,6 +27,7 @@ namespace NitroxClient.MonoBehaviours
     {
         public static Multiplayer Main;
         private readonly Dictionary<Type, PacketProcessor> packetProcessorCache = new();
+        private IClient client;
         private IMultiplayerSession multiplayerSession;
         private PacketReceiver packetReceiver;
         private ThrottledPacketSender throttledPacketSender;
@@ -40,6 +43,7 @@ namespace NitroxClient.MonoBehaviours
         public void Awake()
         {
             NitroxServiceLocator.LifetimeScopeEnded += (_, _) => packetProcessorCache.Clear();
+            client = NitroxServiceLocator.LocateService<IClient>();
             multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
             packetReceiver = NitroxServiceLocator.LocateService<PacketReceiver>();
             throttledPacketSender = NitroxServiceLocator.LocateService<ThrottledPacketSender>();
@@ -53,6 +57,8 @@ namespace NitroxClient.MonoBehaviours
 
         public void Update()
         {
+            client.PollEvents();
+
             if (multiplayerSession.CurrentState.CurrentStage != MultiplayerSessionConnectionStage.DISCONNECTED)
             {
                 ProcessPackets();

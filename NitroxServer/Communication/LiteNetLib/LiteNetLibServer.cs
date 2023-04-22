@@ -20,7 +20,7 @@ public class LiteNetLibServer : NitroxServer
 
     public LiteNetLibServer(PacketHandler packetHandler, PlayerManager playerManager, EntitySimulation entitySimulation, ServerConfig serverConfig) : base(packetHandler, playerManager, entitySimulation, serverConfig)
     {
-        netPacketProcessor.SubscribeReusable<WrapperPacket, NetPeer>(OnPacketReceived);
+        netPacketProcessor.SubscribeNetSerializable<WrapperPacket, NetPeer>(OnPacketReceived);
         listener = new EventBasedNetListener();
         server = new NetManager(listener);
     }
@@ -120,7 +120,7 @@ public class LiteNetLibServer : NitroxServer
         ClientDisconnected(GetConnection(peer.Id));
     }
 
-    private void NetworkDataReceived(NetPeer peer, NetDataReader reader, DeliveryMethod deliveryMethod)
+    private void NetworkDataReceived(NetPeer peer, NetDataReader reader, byte channel, DeliveryMethod deliveryMethod)
     {
         netPacketProcessor.ReadAllPackets(reader, peer);
     }
@@ -128,7 +128,7 @@ public class LiteNetLibServer : NitroxServer
     private void OnPacketReceived(WrapperPacket wrapperPacket, NetPeer peer)
     {
         NitroxConnection connection = GetConnection(peer.Id);
-        Packet packet = Packet.Deserialize(wrapperPacket.packetData);
+        Packet packet = Packet.Deserialize(wrapperPacket.PacketData);
         ProcessIncomingData(connection, packet);
     }
 
