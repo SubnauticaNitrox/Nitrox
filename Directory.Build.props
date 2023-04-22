@@ -17,7 +17,7 @@
         <PathMap>$(MSBuildProjectDirectory)=$(MSBuildProjectName)</PathMap>
         <EnableNETAnalyzers>true</EnableNETAnalyzers>
     </PropertyGroup>
-    
+
     <PropertyGroup Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(MSBuildProjectName), '^Nitrox.*$'))">
         <NitroxProject>true</NitroxProject>
     </PropertyGroup>
@@ -45,7 +45,7 @@
             </ItemGroup>
         </When>
     </Choose>
-    
+
     <!-- Include our analyzer and code gen library to all Nitrox projects -->
     <Choose>
         <When Condition="'$(NitroxLibrary)' == 'true'">
@@ -54,7 +54,7 @@
             </ItemGroup>
         </When>
     </Choose>
-    
+
     <!-- Include default project references to all other "Nitrox*" projects -->
     <Choose>
         <When Condition="'$(UnityModLibrary)' == 'true'">
@@ -70,8 +70,19 @@
             </ItemGroup>
         </When>
     </Choose>
-    
-    <!-- Tell developer that it needs to build the Nitrox.BuildTool to fetch the game assemblies. 
+
+    <!-- Set internals visible for all projects for Nitrox.Test (excluding Nitrox.Test itself) -->
+    <Choose>
+        <When Condition="'$(NitroxLibrary)' == 'true' and '$(TestLibrary)' != 'true'">
+            <ItemGroup>
+                <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+                    <_Parameter1>Nitrox.Test</_Parameter1>
+                </AssemblyAttribute>
+            </ItemGroup>
+        </When>
+    </Choose>
+
+    <!-- Tell developer that it needs to build the Nitrox.BuildTool to fetch the game assemblies.
     "dotnet restore" should still be allowed to run to fetch NuGet packages -->
     <Target Name="PrepareForModding" AfterTargets="Restore;BeforeResolveReferences" Condition="'$(UnityModLibrary)' == 'true' and !Exists('$(BuildGenDir)publicized_assemblies')">
         <Error Text="Run the Nitrox.BuildTool project to fetch the assemblies, before building other Nitrox projects." />
