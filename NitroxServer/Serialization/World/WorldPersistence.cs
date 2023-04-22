@@ -247,7 +247,7 @@ namespace NitroxServer.Serialization.World
                 return;
             }
 
-            if (saveFileVersion.Version == NitroxEnvironment.Version)
+            if (saveFileVersion == null || saveFileVersion.Version == NitroxEnvironment.Version)
             {
                 return;
             }
