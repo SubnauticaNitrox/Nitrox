@@ -11,22 +11,20 @@ public enum NitroxConnectionState
     InGame
 }
 
-public static class NitroxConnectionStateExtension
+public static class NitroxConnectionStateExtensions
 {
     public static NitroxConnectionState ToNitrox(this ConnectionState connectionState)
     {
-        NitroxConnectionState state = NitroxConnectionState.Unknown;
-
-        if (connectionState.HasFlag(ConnectionState.Connected))
+        if ((connectionState & ConnectionState.Connected) == ConnectionState.Connected)
         {
-            state = NitroxConnectionState.Connected;
+            return NitroxConnectionState.Connected;
         }
 
-        if (connectionState.HasFlag(ConnectionState.Disconnected))
+        if ((connectionState & ConnectionState.Disconnected) == ConnectionState.Disconnected)
         {
-            state = NitroxConnectionState.Disconnected;
+            return NitroxConnectionState.Disconnected;
         }
 
-        return state;
+        return NitroxConnectionState.Unknown;
     }
 }
