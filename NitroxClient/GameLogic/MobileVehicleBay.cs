@@ -38,10 +38,7 @@ public class MobileVehicleBay
             return;
         }
 
-        if (!constructor.constructor.TryGetIdOrWarn(out NitroxId constructorId))
-        {
-            constructorId = null;
-        }
+        constructor.constructor.TryGetIdOrWarn(out NitroxId constructorId);
 
         NitroxId constructedObjectId = NitroxEntity.GenerateNewId(constructedObject);
 
