@@ -9,7 +9,6 @@ namespace NitroxServer.Communication.LiteNetLib;
 
 public class LiteNetLibConnection : NitroxConnection, IEquatable<LiteNetLibConnection>
 {
-    private readonly NetPacketProcessor netPacketProcessor = new();
     private readonly NetDataWriter dataWriter = new();
     private readonly NetPeer peer;
 
@@ -25,9 +24,10 @@ public class LiteNetLibConnection : NitroxConnection, IEquatable<LiteNetLibConne
     {
         if (peer.ConnectionState == ConnectionState.Connected)
         {
-            WrapperPacket wrapperPacket = packet.ToWrapperPacket();
+            byte[] packetData = packet.Serialize();
             dataWriter.Reset();
-            netPacketProcessor.WriteNetSerializable(dataWriter, ref wrapperPacket);
+            dataWriter.Put(packetData.Length);
+            dataWriter.Put(packetData);
 
             peer.Send(dataWriter, NitroxDeliveryMethod.ToLiteNetLib(packet.DeliveryMethod));
         }

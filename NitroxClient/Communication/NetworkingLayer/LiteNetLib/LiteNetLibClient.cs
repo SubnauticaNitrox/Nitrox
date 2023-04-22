@@ -15,7 +15,6 @@ public class LiteNetLibClient : IClient
 {
     public bool IsConnected { get; private set; }
 
-    private readonly NetPacketProcessor netPacketProcessor = new();
     private readonly AutoResetEvent connectedEvent = new(false);
     private readonly NetDataWriter dataWriter = new();
     private readonly PacketReceiver packetReceiver;
@@ -34,8 +33,6 @@ public class LiteNetLibClient : IClient
         Log.Info("Initializing LiteNetLibClient...");
 
         SynchronizationContext.SetSynchronizationContext(new SynchronizationContext());
-
-        netPacketProcessor.SubscribeNetSerializable<WrapperPacket, NetPeer>(OnPacketReceived);
 
         EventBasedNetListener listener = new EventBasedNetListener();
         listener.PeerConnectedEvent += Connected;
@@ -62,9 +59,10 @@ public class LiteNetLibClient : IClient
 
     public void Send(Packet packet)
     {
-        WrapperPacket wrapperPacket = packet.ToWrapperPacket();
+        byte[] packetData = packet.Serialize();
         dataWriter.Reset();
-        netPacketProcessor.WriteNetSerializable(dataWriter, ref wrapperPacket);
+        dataWriter.Put(packetData.Length);
+        dataWriter.Put(packetData);
 
         networkDebugger?.PacketSent(packet, dataWriter.Length);
         client.SendToAll(dataWriter, NitroxDeliveryMethod.ToLiteNetLib(packet.DeliveryMethod));
@@ -83,14 +81,13 @@ public class LiteNetLibClient : IClient
 
     private void ReceivedNetworkData(NetPeer peer, NetDataReader reader, byte channel, DeliveryMethod deliveryMethod)
     {
-        netPacketProcessor.ReadAllPackets(reader, peer);
-    }
+        int packetDataLength = reader.GetInt();
+        byte[] packetData = new byte[packetDataLength];
+        reader.GetBytes(packetData, packetDataLength);
 
-    private void OnPacketReceived(WrapperPacket wrapperPacket, NetPeer peer)
-    {
-        Packet packet = Packet.Deserialize(wrapperPacket.PacketData);
+        Packet packet = Packet.Deserialize(packetData);
         packetReceiver.PacketReceived(packet);
-        networkDebugger?.PacketReceived(packet, wrapperPacket.PacketData.Length);
+        networkDebugger?.PacketReceived(packet, packetDataLength);
     }
 
     private void Connected(NetPeer peer)
