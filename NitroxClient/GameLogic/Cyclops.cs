@@ -142,7 +142,7 @@ namespace NitroxClient.GameLogic
             if (info.HasValue)
             {
                 DamageInfo damage = info.Value;
-                Optional<NitroxId> dealerId = damage.dealer.GetOptionalId();
+                Optional<NitroxId> dealerId = damage.dealer.GetId();
                 // Source of the damage. Used if the damage done to the Cyclops was not calculated on other clients. Currently it's just used to figure out what sounds and
                 // visual effects should be used.
                 damageInfo = new CyclopsDamageInfoData(subId, dealerId, damage.originalDamage, damage.damage, damage.position, damage.type);

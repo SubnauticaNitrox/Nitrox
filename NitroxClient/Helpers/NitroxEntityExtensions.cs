@@ -94,7 +94,7 @@ public static class NitroxEntityExtensions
         return true;
     }
 
-    public static Optional<NitroxId> GetOptionalId(this GameObject gameObject)
+    public static Optional<NitroxId> GetId(this GameObject gameObject)
     {
         if (gameObject && gameObject.TryGetComponent(out NitroxEntity nitroxEntity))
         {
@@ -104,7 +104,7 @@ public static class NitroxEntityExtensions
         return Optional.Empty;
     }
 
-    public static Optional<NitroxId> GetOptionalId(this Component component)
+    public static Optional<NitroxId> GetId(this Component component)
     {
         if (component && component.TryGetComponent(out NitroxEntity nitroxEntity))
         {

@@ -21,7 +21,7 @@ public class QuickSlots_Bind_Patch : NitroxPatch, IDynamicPatch
 
             if (inventoryItem != null && inventoryItem.item)
             {
-                slotItemIds[i] = inventoryItem.item.GetOptionalId();
+                slotItemIds[i] = inventoryItem.item.GetId();
             }
             else
             {

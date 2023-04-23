@@ -81,14 +81,14 @@ namespace NitroxClient.GameLogic
 
             if (sub != null)
             {
-                parentId = sub.GetOptionalId();
+                parentId = sub.GetId();
             }
             else
             {
                 Base playerBase = gameObject.GetComponentInParent<Base>();
                 if (playerBase != null)
                 {
-                    parentId = playerBase.GetOptionalId();
+                    parentId = playerBase.GetId();
                 }
             }
 
@@ -130,7 +130,7 @@ namespace NitroxClient.GameLogic
             if (opConstructedBase.HasValue)
             {
                 GameObject constructedBase = (GameObject)opConstructedBase.Value;
-                baseId = constructedBase.GetOptionalId();
+                baseId = constructedBase.GetId();
             }
 
             // For base pieces, we must switch the id from the ghost to the newly constructed piece.
@@ -139,7 +139,7 @@ namespace NitroxClient.GameLogic
             {
                 Int3 latestCell = lastTargetBaseOffset;
                 Base latestBase = lastTargetBase.HasValue ? lastTargetBase.Value : ((GameObject)opConstructedBase.Value).GetComponent<Base>();
-                baseId = latestBase.GetOptionalId();
+                baseId = latestBase.GetId();
 
                 Transform cellTransform;
                 GameObject placedPiece = null;

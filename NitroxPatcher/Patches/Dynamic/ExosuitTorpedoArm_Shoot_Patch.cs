@@ -23,7 +23,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 }
                 if (siloTransform != __instance.siloFirst && siloTransform != __instance.siloSecond)
                 {
-                    Log.Error($"Exosuit torpedo arm siloTransform is not first or second silo {__instance.GetOptionalId()}");
+                    Log.Error($"Exosuit torpedo arm siloTransform is not first or second silo {__instance.GetId()}");
                 }
                 NitroxServiceLocator.LocateService<ExosuitModuleEvent>().BroadcastArmAction(TechType.ExosuitTorpedoArmModule,
                     __instance,

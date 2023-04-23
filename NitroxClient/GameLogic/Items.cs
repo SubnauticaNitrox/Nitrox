@@ -170,7 +170,7 @@ namespace NitroxClient.GameLogic
                 return Optional.Empty;
             }
 
-            return currentWaterPark.GetOptionalId();
+            return currentWaterPark.GetId();
         }
     }
 }

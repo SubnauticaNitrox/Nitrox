@@ -11,7 +11,7 @@ public class Player_SetCurrentEscapePod_Patch : NitroxPatch, IDynamicPatch
 
     public static void Prefix(EscapePod value)
     {
-        Resolve<LocalPlayer>().BroadcastEscapePodChange(value.GetOptionalId());
+        Resolve<LocalPlayer>().BroadcastEscapePodChange(value.GetId());
     }
 
     public override void Patch(Harmony harmony)
