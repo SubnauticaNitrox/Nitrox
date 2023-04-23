@@ -125,10 +125,12 @@ namespace NitroxModel.DataStructures.Util
             info.AddValue("value", Value);
         }
 
+#pragma warning disable CS0618 // OptionalEmpty is only allowed to be used internally
         public static implicit operator Optional<T>(OptionalEmpty none)
         {
             return new Optional<T>();
         }
+#pragma warning restore CS0618
 
         public static implicit operator Optional<T>?(T obj)
         {
@@ -151,9 +153,9 @@ namespace NitroxModel.DataStructures.Util
     }
 
 
+    [Obsolete("Use Optional.Empty instead. This struct is required to trick the compiler for the lack of reverse type inference.")]
     public struct OptionalEmpty
     {
-        [Obsolete("Use Optional.Empty instead")]
         public OptionalEmpty()
         {
         }
@@ -162,7 +164,7 @@ namespace NitroxModel.DataStructures.Util
     public static class Optional
     {
         internal static readonly Dictionary<Type, Func<object, bool>> ValueConditions = new();
-#pragma warning disable CS0618
+#pragma warning disable CS0618 // OptionalEmpty is only allowed to be used internally
         public static OptionalEmpty Empty { get; } = new();
 #pragma warning restore CS0618
 
