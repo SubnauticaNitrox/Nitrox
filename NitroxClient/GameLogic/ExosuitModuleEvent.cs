@@ -1,4 +1,5 @@
 using NitroxClient.Communication.Abstract;
+using NitroxModel_Subnautica.DataStructures;
 using NitroxModel.DataStructures;
 using NitroxModel_Subnautica.Packets;
 using UnityEngine;
@@ -71,7 +72,7 @@ namespace NitroxClient.GameLogic
         {
             if (exosuitArm.GetGameObject().TryGetIdOrWarn(out NitroxId id))
             {
-                ExosuitArmActionPacket packet = new(techType, id, armAction, opVector, opRotation);
+                ExosuitArmActionPacket packet = new(techType, id, armAction, opVector?.ToDto(), opRotation?.ToDto());
                 packetSender.Send(packet);
             }
         }
