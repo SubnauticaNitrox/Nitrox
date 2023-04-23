@@ -116,12 +116,10 @@ namespace NitroxClient.MonoBehaviours
 
         public static void RemoveFrom(GameObject gameObject)
         {
-            NitroxEntity entity = gameObject.GetComponent<NitroxEntity>();
-
-            if (entity)
+            if (gameObject.TryGetComponent(out NitroxEntity entity) && entity.Id != null)
             {
                 gameObjectsById.Remove(entity.Id);
-                Destroy(entity);
+                DestroyImmediate(entity);
             }
         }
 
