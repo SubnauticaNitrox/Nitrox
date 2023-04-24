@@ -25,6 +25,7 @@ namespace NitroxClient.MonoBehaviours
     {
         public static Multiplayer Main;
         private readonly Dictionary<Type, PacketProcessor> packetProcessorCache = new();
+        private IClient client;
         private IMultiplayerSession multiplayerSession;
         private PacketReceiver packetReceiver;
         private ThrottledPacketSender throttledPacketSender;
@@ -40,6 +41,7 @@ namespace NitroxClient.MonoBehaviours
         public void Awake()
         {
             NitroxServiceLocator.LifetimeScopeEnded += (_, _) => packetProcessorCache.Clear();
+            client = NitroxServiceLocator.LocateService<IClient>();
             multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
             packetReceiver = NitroxServiceLocator.LocateService<PacketReceiver>();
             throttledPacketSender = NitroxServiceLocator.LocateService<ThrottledPacketSender>();
@@ -53,6 +55,8 @@ namespace NitroxClient.MonoBehaviours
 
         public void Update()
         {
+            client.PollEvents();
+
             if (multiplayerSession.CurrentState.CurrentStage != MultiplayerSessionConnectionStage.DISCONNECTED)
             {
                 ProcessPackets();

@@ -168,9 +168,9 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 CreateServerButton(MakeButtonText("LAN Server", serverEndPoint.Address, serverEndPoint.Port), $"{serverEndPoint.Address}", $"{serverEndPoint.Port}", true);
             }
 
-            LANDiscoveryClient.ServerFound += AddButton;
-            await LANDiscoveryClient.SearchAsync();
-            LANDiscoveryClient.ServerFound -= AddButton;
+            LANBroadcastClient.ServerFound += AddButton;
+            await LANBroadcastClient.SearchAsync();
+            LANBroadcastClient.ServerFound -= AddButton;
         }
 
         private string MakeButtonText(string serverName, object address, object port)
