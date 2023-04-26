@@ -48,21 +48,6 @@ namespace NitroxClient.GameLogic
             entitySpawnersByType[typeof(VehicleWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
         }
 
-        public void BroadcastTransforms(Dictionary<NitroxId, GameObject> gameObjectsById)
-        {
-            EntityTransformUpdates update = new EntityTransformUpdates();
-
-            foreach (KeyValuePair<NitroxId, GameObject> gameObjectWithId in gameObjectsById)
-            {
-                if (gameObjectWithId.Value)
-                {
-                    update.AddUpdate(gameObjectWithId.Key, gameObjectWithId.Value.transform.position.ToDto(), gameObjectWithId.Value.transform.rotation.ToDto());
-                }
-            }
-
-            packetSender.Send(update);
-        }
-
         public void EntityMetadataChanged(object o, NitroxId id)
         {
             Optional<EntityMetadata> metadata = EntityMetadataExtractor.Extract(o);

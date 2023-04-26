@@ -13,6 +13,7 @@ namespace NitroxClient.Communication.Abstract
         bool IsConnected { get; }
         Task StartAsync(string ipAddress, int serverPort);
         void Stop();
+        void PollEvents();
         void Send(Packet packet);
     }
 }

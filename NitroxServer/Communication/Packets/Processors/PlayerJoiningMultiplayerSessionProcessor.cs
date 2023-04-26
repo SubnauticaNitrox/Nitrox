@@ -40,7 +40,7 @@ namespace NitroxServer.Communication.Packets.Processors
 
             if (newlyCreatedEscapePod.HasValue)
             {
-                CellEntities spawnNewEscapePod = new(newlyCreatedEscapePod.Value);
+                SpawnEntities spawnNewEscapePod = new(newlyCreatedEscapePod.Value);
                 playerManager.SendPacketToOtherPlayers(spawnNewEscapePod, player);
             }
 
@@ -105,7 +105,7 @@ namespace NitroxServer.Communication.Packets.Processors
             PlayerWorldEntity playerEntity = new PlayerWorldEntity(transform, 0, null, false, null, true, player.GameObjectId, NitroxTechType.None, null, null, new List<Entity>());
             entityRegistry.AddEntity(playerEntity);
             world.WorldEntityManager.TrackEntityInTheWorld(playerEntity);
-            playerManager.SendPacketToOtherPlayers(new CellEntities(playerEntity), player);
+            playerManager.SendPacketToOtherPlayers(new SpawnEntities(playerEntity), player);
         }
 
         private void RespawnExistingEntity(Player player)
@@ -114,7 +114,7 @@ namespace NitroxServer.Communication.Packets.Processors
 
             if (playerEntity.HasValue)
             {
-                playerManager.SendPacketToOtherPlayers(new CellEntities(playerEntity.Value, true), player);
+                playerManager.SendPacketToOtherPlayers(new SpawnEntities(playerEntity.Value, true), player);
             }
             else
             {

@@ -21,7 +21,7 @@ public class PlayerMetadata : EntityMetadata
     public PlayerMetadata(List<EquippedItem> equippedItems)
     {
         EquippedItems = equippedItems;
-    }   
+    }
 
     public override string ToString()
     {
@@ -40,6 +40,12 @@ public class PlayerMetadata : EntityMetadata
 
         [DataMember(Order = 3)]
         public NitroxTechType TechType { get; }
+
+        [IgnoreConstructor]
+        protected EquippedItem()
+        {
+            // Constructor for serialization. Has to be "protected" for json serialization.
+        }
 
         public EquippedItem(NitroxId id, string slot, NitroxTechType techType)
         {

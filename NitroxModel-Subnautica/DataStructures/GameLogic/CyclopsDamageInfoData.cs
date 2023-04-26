@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.Unity;
 using UnityEngine;
 
 namespace NitroxModel_Subnautica.DataStructures.GameLogic
@@ -22,7 +23,7 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
         public float Damage { get; set; }
 
         [DataMember(Order = 5)]
-        public Vector3 Position { get; set; }
+        public NitroxVector3 Position { get; set; }
 
         [DataMember(Order = 6)]
         public DamageType Type { get; set; }
@@ -32,7 +33,7 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
             // Constructor for serialization. Has to be "protected" for json serialization.
         }
 
-        public CyclopsDamageInfoData(NitroxId receiverId, NitroxId dealerId, float originalDamage, float damage, Vector3 position, DamageType type)
+        public CyclopsDamageInfoData(NitroxId receiverId, NitroxId dealerId, float originalDamage, float damage, NitroxVector3 position, DamageType type)
         {
             ReceiverId = receiverId;
             DealerId = dealerId;

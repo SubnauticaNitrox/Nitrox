@@ -1,43 +1,34 @@
 ﻿using System.Collections.Generic;
-using NitroxClient.Debuggers;
 using NitroxModel.Packets;
 
-namespace NitroxClient.Communication
+namespace NitroxClient.Communication;
+
+// TODO: Spinlocks don't seem to be necessary here, but I don't know for certain.
+public class PacketReceiver
 {
-    // TODO: Spinlocks don't seem to be necessary here, but I don't know for certain.
-    public class PacketReceiver
+    private readonly object receivedPacketsLock = new();
+    private readonly Queue<Packet> receivedPackets = new();
+
+    public void PacketReceived(Packet packet)
     {
-        private readonly INetworkDebugger networkDebugger;
-        private readonly Queue<Packet> receivedPackets;
-
-        public PacketReceiver(INetworkDebugger networkDebugger = null)
+        lock (receivedPacketsLock)
         {
-            receivedPackets = new Queue<Packet>();
-            this.networkDebugger = networkDebugger;
+            receivedPackets.Enqueue(packet);
         }
+    }
 
-        public void PacketReceived(Packet packet)
+    public Queue<Packet> GetReceivedPackets()
+    {
+        Queue<Packet> packets = new();
+
+        lock (receivedPacketsLock)
         {
-            lock (receivedPackets)
+            while (receivedPackets.Count > 0)
             {
-                networkDebugger?.PacketReceived(packet);
-                receivedPackets.Enqueue(packet);
+                packets.Enqueue(receivedPackets.Dequeue());
             }
         }
 
-        public Queue<Packet> GetReceivedPackets()
-        {
-            Queue<Packet> packets = new Queue<Packet>();
-
-            lock (receivedPackets)
-            {
-                while (receivedPackets.Count > 0)
-                {
-                    packets.Enqueue(receivedPackets.Dequeue());
-                }
-            }
-
-            return packets;
-        }
+        return packets;
     }
 }

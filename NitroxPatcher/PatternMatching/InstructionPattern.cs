@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
@@ -29,16 +30,26 @@ public readonly struct InstructionPattern
 
     public static implicit operator InstructionPattern(OpCode opCode) => new() { OpCode = opCode };
     public static implicit operator InstructionPattern(OperandPattern operand) => new() { Operand = operand };
-    public static implicit operator InstructionPattern(MethodInfo method) => Call(method);
+    public static implicit operator InstructionPattern(MethodInfo method) => Call(method, true);
 
     public static InstructionPattern Call(string className, string methodName) => new() { OpCode = OpCodes.Call, Operand = new(className, methodName) };
 
-    public static InstructionPattern Call(MethodInfo method)
+    public static InstructionPattern Call(MethodInfo method) => Call(method, false);
+
+    private static InstructionPattern Call(MethodInfo method, bool matchAnyCallOpcode)
     {
         Type methodDeclaringType = method.DeclaringType;
         Validate.NotNull(methodDeclaringType);
 
-        return new() { OpCode = OpCodes.Call, Operand = new(methodDeclaringType.Name, method.Name) };
+        return new()
+        {
+            OpCode = new OpCodePattern
+            {
+                OpCode = OpCodes.Call,
+                WeakMatch = matchAnyCallOpcode
+            },
+            Operand = new(methodDeclaringType.FullName, method.Name, method.GetParameters().Select(p => p.ParameterType).ToArray())
+        };
     }
 
     public static bool operator ==(InstructionPattern pattern, CodeInstruction instruction)
