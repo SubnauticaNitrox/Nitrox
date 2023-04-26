@@ -104,17 +104,17 @@ namespace NitroxModel.Packets
             }
 
             toStringBuilder.Clear();
-            toStringBuilder.Append($"[{packetType.Name}: ");
+            toStringBuilder.Append('[').Append(packetType.Name).Append(": ");
             foreach (PropertyInfo property in properties)
             {
                 object propertyValue = property.GetValue(this);
                 if (propertyValue is IList propertyList)
                 {
-                    toStringBuilder.Append($"{property.Name}: {propertyList.Count}, ");
+                    toStringBuilder.Append(property.Name).Append(": ").Append(propertyList.Count).Append(", ");
                 }
                 else
                 {
-                    toStringBuilder.Append($"{property.Name}: {propertyValue}, ");
+                    toStringBuilder.Append(property.Name).Append(": ").Append(propertyValue).Append(", ");
                 }
             }
 
