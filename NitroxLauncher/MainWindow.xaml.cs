@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.IO;
 using System.Net.NetworkInformation;
@@ -7,11 +7,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Interop;
 using NitroxLauncher.Models.Events;
 using NitroxLauncher.Models.Properties;
 using NitroxLauncher.Pages;
 using NitroxModel.Discovery;
 using NitroxModel.Helper;
+using NitroxModel.Platforms.OS.Windows;
 
 namespace NitroxLauncher
 {
@@ -41,7 +43,7 @@ namespace NitroxLauncher
         {
             Log.Setup();
             LauncherNotifier.Setup();
-            
+
             logic = new LauncherLogic();
 
             MaxHeight = SystemParameters.VirtualScreenHeight;
@@ -66,7 +68,7 @@ namespace NitroxLauncher
                                     MessageBoxImage.Error);
                     Environment.Exit(1);
                 }
-                
+
                 // This pirate detection subscriber is immediately invoked if pirate has been detected right now.
                 PirateDetection.PirateDetected += (o, eventArgs) =>
                 {
@@ -78,7 +80,7 @@ namespace NitroxLauncher
                         HorizontalAlignment = HorizontalAlignment.Stretch,
                         VerticalAlignment = VerticalAlignment.Stretch,
                         Margin = new Thickness(0),
-                        
+
                         Height = MinHeight * 0.7,
                         Width = MinWidth * 0.7
                     };
@@ -215,6 +217,11 @@ namespace NitroxLauncher
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            WindowsApi.EnableDefaultWindowAnimations(new WindowInteropHelper(this).Handle);
         }
     }
 }
