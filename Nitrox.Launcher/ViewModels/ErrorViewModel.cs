@@ -3,6 +3,7 @@ using System.Reactive;
 using System.Reflection;
 using Avalonia;
 using Avalonia.Input;
+using Avalonia.Input.Platform;
 using Nitrox.Launcher.ViewModels.Abstract;
 using ReactiveUI;
 
@@ -25,7 +26,11 @@ public class ErrorViewModel : ModalViewModelBase
         {
             if (!string.IsNullOrWhiteSpace(ErrorText))
             {
-                await Application.Current?.Clipboard?.SetTextAsync(ErrorText)!;
+                IClipboard clipboard = AvaloniaLocator.Current.GetService<IClipboard>();
+                if (clipboard != null)
+                {
+                    await clipboard.SetTextAsync(ErrorText);
+                }
             }
         });
     }

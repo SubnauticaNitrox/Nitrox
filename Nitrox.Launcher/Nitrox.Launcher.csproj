@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  
+
     <PropertyGroup>
         <LangVersion>$(LangVersion)</LangVersion>
         <OutputType>WinExe</OutputType>
@@ -8,7 +8,7 @@
         <AvaloniaNameGeneratorIsEnabled>true</AvaloniaNameGeneratorIsEnabled>
         <ApplicationManifest>app.manifest</ApplicationManifest>
     </PropertyGroup>
-  
+
     <ItemGroup>
         <AvaloniaResource Include="Assets\**" />
     </ItemGroup>
@@ -18,13 +18,13 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="11.0.0-preview6" />
-        <PackageReference Include="Avalonia.Desktop" Version="11.0.0-preview6" />
-        <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.0-preview6" />
-        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.0-preview6" />
+        <PackageReference Include="Avalonia" Version="11.0.0-preview7" />
+        <PackageReference Include="Avalonia.Desktop" Version="11.0.0-preview7" />
+        <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.0-preview7" />
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.0-preview7" />
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.0-preview6" />
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.0-preview7" />
         <PackageReference Include="ReactiveUI.Validation" Version="3.0.22" />
     </ItemGroup>
-  
+
 </Project>
