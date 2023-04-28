@@ -92,11 +92,6 @@ namespace NitroxModel.Packets
             return BinaryConverter.Deserialize<Wrapper>(data).Packet;
         }
 
-        public WrapperPacket ToWrapperPacket()
-        {
-            return new WrapperPacket(Serialize());
-        }
-
         public override string ToString()
         {
             Type packetType = GetType();
@@ -124,7 +119,7 @@ namespace NitroxModel.Packets
             }
 
             toStringBuilder.Remove(toStringBuilder.Length - 2, 2);
-            toStringBuilder.Append("]");
+            toStringBuilder.Append(']');
 
             return toStringBuilder.ToString();
         }

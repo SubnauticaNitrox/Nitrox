@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
+using LiteNetLib;
 using NitroxModel.Helper;
 using Serilog;
 using Serilog.Configuration;
@@ -38,9 +39,10 @@ namespace NitroxModel.Logger
                 return;
             }
             isSetup = true;
- 
+            NetDebug.Logger = new LiteNetLibLogger();
+
             PlayerName = "";
- 
+
             // Configure logger and create an instance of it.
             LoggerConfiguration loggerConfig = new LoggerConfiguration().MinimumLevel.Debug();
             if (useConsoleLogging)
@@ -101,7 +103,7 @@ namespace NitroxModel.Logger
                 cnf.WriteTo.ColoredConsole(outputTemplate: consoleTemplate);
             }
         });
-        
+
         [Conditional("DEBUG")]
         public static void Debug(string message)
         {
@@ -159,7 +161,7 @@ namespace NitroxModel.Logger
             {
                 return;
             }
-            
+
             Warn(message);
             logOnceCache.Add(hash);
         }
