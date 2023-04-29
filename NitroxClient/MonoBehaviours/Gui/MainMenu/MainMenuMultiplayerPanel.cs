@@ -21,6 +21,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         private GameObject savedGamesRef;
         private GameObject deleteButtonRef;
         private GameObject multiplayerButton;
+        private GameObject addServerButtonInst;
         private Transform savedGameAreaContent;
         public JoinServer JoinServer { get; private set; }
 
@@ -31,6 +32,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         private bool shouldFocus;
         private bool showingAddServer;
         private bool isJoining;
+        private bool isAddServerEnabled;
 
         public void Setup(GameObject loadedMultiplayer, GameObject savedGames)
         {
@@ -48,14 +50,15 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             deleteButtonRef = savedGamesRef.GetComponent<MainMenuLoadPanel>().saveInstance.GetComponent<MainMenuLoadButton>().deleteButton;
 
             CreateButton(translationKey: "Nitrox_AddServer", clickEvent: ShowAddServerWindow, disableTranslation: false);
+            isAddServerEnabled = true;
             LoadSavedServers();
             _ = FindLANServersAsync();
         }
 
         private void CreateButton(string translationKey, UnityAction clickEvent, bool disableTranslation)
         {
-            GameObject multiplayerButtonInst = Instantiate(multiplayerButton, savedGameAreaContent, false);
-            Transform txt = multiplayerButtonInst.RequireTransform("NewGameButton/Text");
+            addServerButtonInst = Instantiate(multiplayerButton, savedGameAreaContent, false);
+            Transform txt = addServerButtonInst.RequireTransform("NewGameButton/Text");
             txt.GetComponent<TextMeshProUGUI>().text = translationKey;
 
             if (disableTranslation)
@@ -63,7 +66,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 Destroy(txt.GetComponent<TranslationLiveUpdate>());
             }
 
-            Button multiplayerButtonButton = multiplayerButtonInst.RequireTransform("NewGameButton").GetComponent<Button>();
+            Button multiplayerButtonButton = addServerButtonInst.RequireTransform("NewGameButton").GetComponent<Button>();
             multiplayerButtonButton.onClick = new Button.ButtonClickedEvent();
             multiplayerButtonButton.onClick.AddListener(clickEvent);
         }
@@ -146,7 +149,19 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         {
             if (showingAddServer)
             {
+                if (isAddServerEnabled)
+                {
+                    Button multiplayerButtonButton = addServerButtonInst.RequireTransform("NewGameButton").GetComponent<Button>();
+                    multiplayerButtonButton.enabled = false;
+                    isAddServerEnabled = false;
+                }
                 addServerWindowRect = GUILayout.Window(GUIUtility.GetControlID(FocusType.Keyboard), addServerWindowRect, DoAddServerWindow, Language.main.Get("Nitrox_AddServer"));
+            }
+            else if (!isAddServerEnabled)
+            {
+                Button multiplayerButtonButton = addServerButtonInst.RequireTransform("NewGameButton").GetComponent<Button>();
+                multiplayerButtonButton.enabled = true;
+                isAddServerEnabled = true;
             }
         }
 
