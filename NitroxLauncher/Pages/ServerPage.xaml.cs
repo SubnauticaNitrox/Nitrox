@@ -261,13 +261,7 @@ namespace NitroxLauncher.Pages
             {
                 try
                 {
-                    ProcessStartInfo startExplorerProcessInfo = new()
-                    {
-                        Arguments = selectedWorld.WorldSaveDir,
-                        FileName = "explorer.exe"
-                    };
-
-                    Process.Start(startExplorerProcessInfo);
+                    Process.Start($"file://{selectedWorld.WorldSaveDir}");
                 }
                 catch (Exception ex)
                 {
