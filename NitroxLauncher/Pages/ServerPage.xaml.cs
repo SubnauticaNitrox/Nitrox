@@ -259,13 +259,21 @@ namespace NitroxLauncher.Pages
             WorldManager.Listing selectedWorld = GetWorldListingFromSenderControl(sender);
             if (Directory.Exists(selectedWorld.WorldSaveDir))
             {
-                ProcessStartInfo startExplorerProcessInfo = new()
+                try
                 {
-                    Arguments = selectedWorld.WorldSaveDir,
-                    FileName = "explorer.exe"
-                };
+                    ProcessStartInfo startExplorerProcessInfo = new()
+                    {
+                        Arguments = selectedWorld.WorldSaveDir,
+                        FileName = "explorer.exe"
+                    };
 
-                Process.Start(startExplorerProcessInfo);
+                    Process.Start(startExplorerProcessInfo);
+                }
+                catch (Exception ex)
+                {
+                    LauncherNotifier.Error("Unable to start explorer process at save location. This has been logged.");
+                    Log.Error($"Exception on trying to start explorer process at save file location. : {ex.GetType()} {ex.Message}");
+                }
             }
             else
             {
