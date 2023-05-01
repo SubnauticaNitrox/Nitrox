@@ -130,17 +130,12 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         private void ShowAddServerWindow()
         {
-            IEnumerator SetWindowComponents()
-            {
-                serverNameInput = "local";
-                serverHostInput = "127.0.0.1";
-                serverPortInput = ServerList.DEFAULT_PORT.ToString();
-                showingAddServer = true;
-                shouldFocus = true;
-                yield return null;
-                uGUI_MainMenu.main.canvasGroup.interactable = false;
-            }
-            CoroutineHost.StartCoroutine(SetWindowComponents());
+            serverNameInput = "local";
+            serverHostInput = "127.0.0.1";
+            serverPortInput = ServerList.DEFAULT_PORT.ToString();
+            showingAddServer = true;
+            shouldFocus = true;
+            uGUI_MainMenu.main.canvasGroup.interactable = false;
         }
 
         private void HideAddServerWindow()
