@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading.Tasks;
 using NitroxClient.Communication;
 using NitroxClient.GameLogic.Settings;
 using NitroxClient.Unity.Helper;
@@ -10,6 +10,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using UWE;
 
 namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 {
@@ -21,7 +22,6 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         private GameObject savedGamesRef;
         private GameObject deleteButtonRef;
         private GameObject multiplayerButton;
-        private GameObject addServerButtonInst;
         private Transform savedGameAreaContent;
         public JoinServer JoinServer { get; private set; }
 
@@ -32,7 +32,6 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         private bool shouldFocus;
         private bool showingAddServer;
         private bool isJoining;
-        private bool isAddServerEnabled;
 
         public void Setup(GameObject loadedMultiplayer, GameObject savedGames)
         {
@@ -50,15 +49,14 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             deleteButtonRef = savedGamesRef.GetComponent<MainMenuLoadPanel>().saveInstance.GetComponent<MainMenuLoadButton>().deleteButton;
 
             CreateButton(translationKey: "Nitrox_AddServer", clickEvent: ShowAddServerWindow, disableTranslation: false);
-            isAddServerEnabled = true;
             LoadSavedServers();
             _ = FindLANServersAsync();
         }
 
         private void CreateButton(string translationKey, UnityAction clickEvent, bool disableTranslation)
         {
-            addServerButtonInst = Instantiate(multiplayerButton, savedGameAreaContent, false);
-            Transform txt = addServerButtonInst.RequireTransform("NewGameButton/Text");
+            GameObject multiplayerButtonInst = Instantiate(multiplayerButton, savedGameAreaContent, false);
+            Transform txt = multiplayerButtonInst.RequireTransform("NewGameButton/Text");
             txt.GetComponent<TextMeshProUGUI>().text = translationKey;
 
             if (disableTranslation)
@@ -66,7 +64,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 Destroy(txt.GetComponent<TranslationLiveUpdate>());
             }
 
-            Button multiplayerButtonButton = addServerButtonInst.RequireTransform("NewGameButton").GetComponent<Button>();
+            Button multiplayerButtonButton = multiplayerButtonInst.RequireTransform("NewGameButton").GetComponent<Button>();
             multiplayerButtonButton.onClick = new Button.ButtonClickedEvent();
             multiplayerButtonButton.onClick.AddListener(clickEvent);
         }
@@ -113,7 +111,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             }
         }
 
-        public static async Task OpenJoinServerMenuAsync(string serverIp, string serverPort)
+        public static async System.Threading.Tasks.Task OpenJoinServerMenuAsync(string serverIp, string serverPort)
         {
             if (Main == null)
             {
@@ -132,36 +130,36 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         private void ShowAddServerWindow()
         {
-            serverNameInput = "local";
-            serverHostInput = "127.0.0.1";
-            serverPortInput = ServerList.DEFAULT_PORT.ToString();
-            showingAddServer = true;
-            shouldFocus = true;
+            IEnumerator SetWindowComponents()
+            {
+                serverNameInput = "local";
+                serverHostInput = "127.0.0.1";
+                serverPortInput = ServerList.DEFAULT_PORT.ToString();
+                showingAddServer = true;
+                shouldFocus = true;
+                yield return null;
+                uGUI_MainMenu.main.canvasGroup.interactable = false;
+            }
+            CoroutineHost.StartCoroutine(SetWindowComponents());
         }
 
         private void HideAddServerWindow()
         {
-            showingAddServer = false;
-            shouldFocus = true;
+            IEnumerator SetWindowComponents()
+            {
+                showingAddServer = false;
+                shouldFocus = true;
+                yield return null;
+                uGUI_MainMenu.main.canvasGroup.interactable = true;
+            }
+            CoroutineHost.StartCoroutine(SetWindowComponents());
         }
 
         private void OnGUI()
         {
             if (showingAddServer)
             {
-                if (isAddServerEnabled)
-                {
-                    Button multiplayerButtonButton = addServerButtonInst.RequireTransform("NewGameButton").GetComponent<Button>();
-                    multiplayerButtonButton.enabled = false;
-                    isAddServerEnabled = false;
-                }
                 addServerWindowRect = GUILayout.Window(GUIUtility.GetControlID(FocusType.Keyboard), addServerWindowRect, DoAddServerWindow, Language.main.Get("Nitrox_AddServer"));
-            }
-            else if (!isAddServerEnabled)
-            {
-                Button multiplayerButtonButton = addServerButtonInst.RequireTransform("NewGameButton").GetComponent<Button>();
-                multiplayerButtonButton.enabled = true;
-                isAddServerEnabled = true;
             }
         }
 
@@ -174,7 +172,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             }
         }
 
-        private async Task FindLANServersAsync()
+        private async System.Threading.Tasks.Task FindLANServersAsync()
         {
             void AddButton(IPEndPoint serverEndPoint)
             {
