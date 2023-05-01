@@ -20,6 +20,7 @@
         <BitmapImage x:Key="AddServerButton" UriSource="pack://application:,,,/Assets/Images/world-manager/plus-2x.png"/>
         <BitmapImage x:Key="RefreshButton" UriSource="pack://application:,,,/Assets/Images/world-manager/reload-2x.png"/>
         <BitmapImage x:Key="GoBackButton" UriSource="pack://application:,,,/Assets/Images/world-manager/back-2x.png"/>
+        <BitmapImage x:Key="SaveLocationButton" UriSource="pack://application:,,,/Assets/Images/world-manager/cog-2x.png" />
 
         <Storyboard x:Key="WorldSelectedAnimation">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="WorldSelectionPane" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
@@ -292,7 +293,7 @@
                                         <!-- Template for World Listing Buttons -->
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <Border x:Name="WorldListingBorder" Height="83" Width="Auto" Background="#FF151516" CornerRadius="7" Margin="0 3">
+                                                <Border x:Name="WorldListingBorder" Height="125" Width="Auto" Background="#FF151516" CornerRadius="7" Margin="0 3">
                                                     <Grid Width="Auto" MaxWidth="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Border}}">
                                                         <Grid.ColumnDefinitions>
                                                             <ColumnDefinition Width="*"/>
@@ -332,6 +333,8 @@
                                                         <!-- World Options Pop-up -->
                                                         <Grid x:Name="WorldOptionsBox" Grid.Column="2" Height="{Binding Height, RelativeSource={RelativeSource AncestorType=Border}}" Width="0">
                                                             <Grid.RowDefinitions>
+                                                                <RowDefinition />
+                                                                <RowDefinition Height="2" />
                                                                 <RowDefinition/>
                                                                 <RowDefinition Height="2"/>
                                                                 <RowDefinition/>
@@ -345,10 +348,22 @@
                                                             <!-- Separator -->
                                                             <Border Grid.Row="1" Background="Black"/>
 
+                                                            <!--Save File Location Button -->
+                                                            <Button Grid.Row="2" ToolTip="Open Save File Location" Click="OpenSaveFileLocation_Click"
+                                                                    Height="{Binding Height, RelativeSource={RelativeSource AncestorType=Grid}}"
+                                                                    Width="{Binding Width, RelativeSource={RelativeSource AncestorType=Grid}}">
+                                                                <Image Source="{StaticResource SaveLocationButton}" Width="20" Height="20" />
+                                                            </Button>
+
+                                                            <Border Grid.Row="3" Background="Black" />
+                                                            
                                                             <!-- Delete World Button -->
-                                                            <Button Grid.Row="2" ToolTip="Delete this world" Click="DeleteWorld_Click" Height="{Binding Height, RelativeSource={RelativeSource AncestorType=Grid}}" Width="{Binding Width, RelativeSource={RelativeSource AncestorType=Grid}}">
+                                                            <Button Grid.Row="4" ToolTip="Delete this world" Click="DeleteWorld_Click"
+                                                                    Height="{Binding Height, RelativeSource={RelativeSource AncestorType=Grid}}"
+                                                                    Width="{Binding Width, RelativeSource={RelativeSource AncestorType=Grid}}">
                                                                 <Image Source="{StaticResource TrashcanButton}" Width="20" Height="20"/>
                                                             </Button>
+
                                                         </Grid>
                                                     </Grid>
                                                 </Border>
@@ -766,7 +781,7 @@
 
         </Grid>
 
-        <Grid x:Name="ConfirmationBox" Opacity="0" IsHitTestVisible="False" Grid.RowSpan="2">
+        <Grid x:Name="ConfirmationBox" Opacity="0" IsHitTestVisible="False" Grid.RowSpan="4">
 
             <!-- Have all of the background act like the "No" button when clicked -->
             <Button Click="NoConfirmBtn_Click" Background="Black" Opacity=".5" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Grid}}" Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Grid}}" Cursor="Arrow"/>

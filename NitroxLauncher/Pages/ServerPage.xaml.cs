@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -7,13 +8,13 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
+using Microsoft.VisualBasic.FileIO;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using NitroxLauncher.Models;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Server;
 using NitroxServer.Serialization;
 using NitroxServer.Serialization.World;
-using Microsoft.VisualBasic.FileIO;
 
 namespace NitroxLauncher.Pages
 {
@@ -253,6 +254,25 @@ namespace NitroxLauncher.Pages
             throw new NotImplementedException();
         }
 
+        private void OpenSaveFileLocation_Click(object sender, RoutedEventArgs e)
+        {
+            WorldManager.Listing selectedWorld = GetWorldListingFromSenderControl(sender);
+            if (Directory.Exists(selectedWorld.WorldSaveDir))
+            {
+                ProcessStartInfo startExplorerProcessInfo = new()
+                {
+                    Arguments = selectedWorld.WorldSaveDir,
+                    FileName = "explorer.exe"
+                };
+
+                Process.Start(startExplorerProcessInfo);
+            }
+            else
+            {
+                LauncherNotifier.Error($"No save file available at location: {SelectedWorldDirectory}...");
+            }
+        }
+
         private void DeleteWorld_Click(object sender, RoutedEventArgs e)
         {
             WorldManager.Listing selectedWorld = GetWorldListingFromSenderControl(sender);
@@ -405,7 +425,7 @@ namespace NitroxLauncher.Pages
             Config.Seed = TBWorldSeed.Text;
         }
 
-        private void TBMaxPlayerCap_Input(object sender, System.Windows.Input.KeyboardFocusChangedEventArgs e)
+        private void TBMaxPlayerCap_Input(object sender, KeyboardFocusChangedEventArgs e)
         {
             string originalMaxPlayerCap = Convert.ToString(Config.MaxConnections);
 
@@ -459,7 +479,7 @@ namespace NitroxLauncher.Pages
             }
         }
         
-        private void TBSaveInterval_Input(object sender, System.Windows.Input.KeyboardFocusChangedEventArgs e)
+        private void TBSaveInterval_Input(object sender, KeyboardFocusChangedEventArgs e)
         {
             string originalSaveInterval = Convert.ToString(Config.SaveInterval/1000);
 
@@ -496,7 +516,7 @@ namespace NitroxLauncher.Pages
             Config.SaveInterval = saveIntervalNum;
         }
 
-        private void TBJoinPassword_Input(object sender, System.Windows.Input.KeyboardFocusChangedEventArgs e)
+        private void TBJoinPassword_Input(object sender, KeyboardFocusChangedEventArgs e)
         {
             TBJoinPassword.Text = TBJoinPassword.Text.TrimStart();
             TBJoinPassword.Text = TBJoinPassword.Text.TrimEnd();
@@ -509,7 +529,7 @@ namespace NitroxLauncher.Pages
             }
         }
 
-        private void TBWorldServerPort_Input(object sender, System.Windows.Input.KeyboardFocusChangedEventArgs e)
+        private void TBWorldServerPort_Input(object sender, KeyboardFocusChangedEventArgs e)
         {
             string originalServerPort = Convert.ToString(Config.ServerPort);
 
@@ -629,7 +649,7 @@ namespace NitroxLauncher.Pages
             using (CommonOpenFileDialog dialog = new()
             {
                 Multiselect = false,
-                InitialDirectory = System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location),
+                InitialDirectory = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location),
                 EnsurePathExists = true,
                 IsFolderPicker = true,
                 Title = "Select the save file to import"
