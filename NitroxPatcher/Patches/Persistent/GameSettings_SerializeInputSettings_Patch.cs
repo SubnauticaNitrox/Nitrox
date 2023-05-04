@@ -5,9 +5,9 @@ using NitroxClient.MonoBehaviours.Gui.Input;
 using NitroxClient.MonoBehaviours.Gui.Input.KeyBindings;
 using NitroxModel.Helper;
 
-namespace NitroxPatcher.Patches.Dynamic
+namespace NitroxPatcher.Patches.Persistent
 {
-    public class GameSettings_SerializeInputSettings_Patch : NitroxPatch, IDynamicPatch
+    public class GameSettings_SerializeInputSettings_Patch : NitroxPatch, IPersistentPatch
     {
         private static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => GameSettings.SerializeInputSettings(default(GameSettings.ISerializer)));
 
