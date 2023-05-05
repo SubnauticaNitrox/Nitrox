@@ -6,17 +6,19 @@ namespace NitroxClient.MonoBehaviours.Gui.Input.KeyBindings
     {
         public GameInput.Button Button { get; }
         public GameInput.Device Device { get; }
+        public bool HasSecondary { get; }
         public string Label { get; }
         public DefaultKeyBinding DefaultKeyBinding { get; }
         public KeyBindingAction Action { get; }
 
-        public KeyBinding(int keyBindingValue, string buttonLabel, GameInput.Device buttonDevice, DefaultKeyBinding buttonDefaults, KeyBindingAction buttonAction)
+        public KeyBinding(int keyBindingValue, string buttonLabel, GameInput.Device buttonDevice, DefaultKeyBinding buttonDefaults, KeyBindingAction buttonAction, bool hasSecondary = false)
         {
             Button = (GameInput.Button)keyBindingValue;
             Device = buttonDevice;
             Label = buttonLabel;
             Action = buttonAction;
             DefaultKeyBinding = buttonDefaults;
+            HasSecondary = hasSecondary;
         }
     }
 }
