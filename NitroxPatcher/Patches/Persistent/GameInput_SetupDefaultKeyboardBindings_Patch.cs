@@ -13,17 +13,19 @@ public class GameInput_SetupDefaultKeyboardBindings_Patch : NitroxPatch, IPersis
 
     public static void Postfix()
     {
-        ClientConfig cfg = ClientConfig.InitClientConfig();
+        ClientConfig cfg = ClientConfig.Init();
         KeyBindingManager keyBindingManager = new();
         foreach (KeyBinding keyBinding in keyBindingManager.KeyboardKeyBindings)
         {
-            GameInput.SetBindingInternal(keyBinding.Device, keyBinding.Button, keyBinding.DefaultKeyBinding.BindingSet, keyBinding.DefaultKeyBinding.Binding);
-            switch (keyBinding.HasSecondary) // if for some reason the options.bin gets deleted, such when loading sp, and the client.cfg has secondary keybinds, we need to repopulate them, this handles that.
+            GameInput.SetBindingInternal(keyBinding.Device, keyBinding.Button, GameInput.BindingSet.Primary, keyBinding.PrimaryKey);
+
+            // if the options.bin gets deleted (when loading SP) and the client.cfg has secondary keybinds, repopulate them.
+            switch ((KeyBindingValues)keyBinding.Button) 
             {
-                case true when keyBinding.Button == (GameInput.Button)KeyBindingValues.CHAT:
+                case KeyBindingValues.CHAT:
                     GameInput.SetBindingInternal(keyBinding.Device, keyBinding.Button, GameInput.BindingSet.Secondary, cfg.OpenChatKeybindSecondary);
                     break;
-                case true when keyBinding.Button == (GameInput.Button)KeyBindingValues.FOCUS_DISCORD:
+                case KeyBindingValues.FOCUS_DISCORD:
                     GameInput.SetBindingInternal(keyBinding.Device, keyBinding.Button, GameInput.BindingSet.Secondary, cfg.FocusDiscordKeybindSecondary);
                     break;
             }

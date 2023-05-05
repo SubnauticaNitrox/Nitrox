@@ -14,7 +14,7 @@ namespace NitroxPatcher.Patches.Persistent
 
         public static void Postfix(GameSettings.ISerializer serializer)
         {
-            ClientConfig cfg = ClientConfig.Load(ClientConfigSettings.NitroxRoamingDir);
+            ClientConfig cfg = ClientConfig.Load(NitroxUser.AppDataPath);
             KeyBindingManager keyBindingManager = new();
             string serializerFormat = "Input/Binding/{0}/{1}/{2}";
 
@@ -26,18 +26,18 @@ namespace NitroxPatcher.Patches.Persistent
                     string binding = GameInput.GetBinding(keyBinding.Device, keyBinding.Button, bindingSet);
 
                     // We need to assign the correct binding for primary and secondary binding sets to the relevant area of the config.
-                    switch (keyBinding.Button)
+                    switch ((KeyBindingValues)keyBinding.Button)
                     {
-                        case (GameInput.Button)KeyBindingValues.CHAT when bindingSet == GameInput.BindingSet.Primary:
+                        case KeyBindingValues.CHAT when bindingSet == GameInput.BindingSet.Primary:
                             cfg.OpenChatKeybindPrimary = binding;
                             break;
-                        case (GameInput.Button)KeyBindingValues.FOCUS_DISCORD when bindingSet == GameInput.BindingSet.Primary:
+                        case KeyBindingValues.FOCUS_DISCORD when bindingSet == GameInput.BindingSet.Primary:
                             cfg.FocusDiscordKeybindPrimary = binding;
                             break;
-                        case (GameInput.Button)KeyBindingValues.CHAT when bindingSet == GameInput.BindingSet.Secondary:
+                        case KeyBindingValues.CHAT when bindingSet == GameInput.BindingSet.Secondary:
                             cfg.OpenChatKeybindSecondary = binding;
                             break;
-                        case (GameInput.Button)KeyBindingValues.FOCUS_DISCORD when bindingSet == GameInput.BindingSet.Secondary:
+                        case KeyBindingValues.FOCUS_DISCORD when bindingSet == GameInput.BindingSet.Secondary:
                             cfg.FocusDiscordKeybindSecondary = binding;
                             break;
                     }
@@ -46,7 +46,7 @@ namespace NitroxPatcher.Patches.Persistent
                 }
             }
 
-            cfg.Serialize(ClientConfigSettings.NitroxRoamingDir);
+            cfg.Serialize(NitroxUser.AppDataPath);
         }
 
         public override void Patch(Harmony harmony)

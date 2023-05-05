@@ -1,13 +1,9 @@
 ﻿using System;
 using System.IO;
+using NitroxModel.Helper;
 using NitroxModel.Serialization;
 
 namespace NitroxClient.Serialization;
-
-public class ClientConfigSettings
-{
-    public static readonly string NitroxRoamingDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox");
-}
 
 /// <summary>
 ///     This is the client config for Nitrox
@@ -34,32 +30,28 @@ public class ClientConfig : NitroxConfig<ClientConfig>
     ///     This is ran once on game startup. Use <see cref="ClientConfig.Load" /> to retrieve instance
     /// </summary>
     /// <returns>Instance of ClientConfig</returns>
-    public static ClientConfig InitClientConfig()
+    public static ClientConfig Init()
     {
-        if (!Directory.Exists(ClientConfigSettings.NitroxRoamingDir))
-        {
-            Directory.CreateDirectory(ClientConfigSettings.NitroxRoamingDir);
-        }
+        string appDataPath = NitroxUser.AppDataPath;
+        Directory.CreateDirectory(appDataPath);
 
         ClientConfig cfg = null;
         try
         {
-            if (File.Exists(Path.Combine(ClientConfigSettings.NitroxRoamingDir, "client.cfg")))
+            if (File.Exists(Path.Combine(appDataPath, "client.cfg")))
             {
-                cfg = Load(ClientConfigSettings.NitroxRoamingDir);
+                cfg = Load(appDataPath);
             }
             else
             {
                 cfg = new ClientConfig();
-                cfg.Serialize(ClientConfigSettings.NitroxRoamingDir);
+                cfg.Serialize(appDataPath);
             }
         }
         catch (Exception ex)
         {
             Log.Error($"Unable to load client config: {ex.Message}");
         }
-
-        Log.Info("Client Config Registered.");
 
         return cfg;
     }

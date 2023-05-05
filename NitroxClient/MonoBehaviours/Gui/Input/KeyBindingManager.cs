@@ -3,6 +3,7 @@ using System.Linq;
 using NitroxClient.MonoBehaviours.Gui.Input.KeyBindings;
 using NitroxClient.MonoBehaviours.Gui.Input.KeyBindings.Actions;
 using NitroxClient.Serialization;
+using NitroxModel.Helper;
 
 namespace NitroxClient.MonoBehaviours.Gui.Input
 {
@@ -12,13 +13,12 @@ namespace NitroxClient.MonoBehaviours.Gui.Input
 
         public KeyBindingManager()
         {
-            ClientConfig cfg = ClientConfig.Load(ClientConfigSettings.NitroxRoamingDir);
+            ClientConfig cfg = ClientConfig.Load(NitroxUser.AppDataPath);
             KeyboardKeyBindings = new List<KeyBinding>
             {
                 // new bindings should not be set to a value equivalent to a pre-existing GameInput.Button enum or another custom binding
-                new((int)KeyBindingValues.CHAT, "Chat", GameInput.Device.Keyboard, new DefaultKeyBinding(cfg.OpenChatKeybindPrimary, GameInput.BindingSet.Primary), new ChatKeyBindingAction(), !string.IsNullOrEmpty(cfg.OpenChatKeybindSecondary)),
-                new((int)KeyBindingValues.FOCUS_DISCORD, "Focus Discord (Alt +)", GameInput.Device.Keyboard, new DefaultKeyBinding(cfg.FocusDiscordKeybindPrimary, GameInput.BindingSet.Primary), new DiscordFocusBindingAction(),
-                    !string.IsNullOrEmpty(cfg.FocusDiscordKeybindSecondary)),
+                new((int)KeyBindingValues.CHAT, "Chat", GameInput.Device.Keyboard, new ChatKeyBindingAction(), cfg.OpenChatKeybindPrimary, cfg.OpenChatKeybindSecondary),
+                new((int)KeyBindingValues.FOCUS_DISCORD, "Focus Discord (Alt +)", GameInput.Device.Keyboard, new DiscordFocusBindingAction(), cfg.FocusDiscordKeybindPrimary, cfg.FocusDiscordKeybindSecondary),
             };
         }
 
