@@ -14,7 +14,6 @@ public class GameInput_SetupDefaultKeyboardBindings_Patch : NitroxPatch, IPersis
     public static void Postfix()
     {
         ClientConfig cfg = ClientConfig.InitClientConfig();
-        //ClientConfig cfg = ClientConfig.Load(ClientConfigSettings.NitroxRoamingDir);
         KeyBindingManager keyBindingManager = new();
         foreach (KeyBinding keyBinding in keyBindingManager.KeyboardKeyBindings)
         {
