@@ -41,8 +41,6 @@ namespace NitroxPatcher.Patches.Persistent
                             cfg.FocusDiscordKeybindSecondary = binding;
                             break;
                     }
-
-                    GameInput.SetBindingInternal(keyBinding.Device, keyBinding.Button, bindingSet, binding);
                 }
             }
 
