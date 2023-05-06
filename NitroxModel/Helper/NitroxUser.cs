@@ -13,6 +13,7 @@ namespace NitroxModel.Helper
     {
         public const string LAUNCHER_PATH_ENV_KEY = "NITROX_LAUNCHER_PATH";
         private const string PREFERRED_GAMEPATH_REGKEY = @"SOFTWARE\Nitrox\PreferredGamePath";
+        private static string appDataPath;
         private static string launcherPath;
         private static string gamePath;
 
@@ -29,6 +30,8 @@ namespace NitroxModel.Helper
                 return null;
             }
         };
+
+        public static string AppDataPath { get; } = appDataPath ??= Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox");
 
         /// <summary>
         ///     Tries to get the launcher path that was previously saved by other Nitrox code.
