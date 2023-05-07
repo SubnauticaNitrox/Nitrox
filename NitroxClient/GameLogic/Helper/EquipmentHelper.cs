@@ -13,7 +13,9 @@ namespace NitroxClient.GameLogic.Helper
             o => o.GetComponent<BaseNuclearReactor>().AliveOrNull()?.equipment,
             o => o.GetComponent<CyclopsDecoyLoadingTube>().AliveOrNull()?.decoySlots,
             o => o.GetComponent<Exosuit>().AliveOrNull()?.modules,
+#if SUBNAUTICA
             o => o.GetComponent<SeaMoth>().AliveOrNull()?.modules,
+#endif
             o => o.GetComponent<UpgradeConsole>().AliveOrNull()?.modules,
             o => o.GetComponent<Vehicle>().AliveOrNull()?.modules,
             o => o.GetComponent<VehicleUpgradeConsoleInput>().AliveOrNull()?.equipment,

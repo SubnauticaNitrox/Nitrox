@@ -10,7 +10,11 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class StoryGoal_Execute_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => StoryGoal.Execute(default, default));
+#if SUBNAUTICA
+    public static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => StoryGoal.Execute(default(string), default(Story.GoalType)));
+#elif BELOWZERO
+    public static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => StoryGoal.Execute(default(string), default(Story.GoalType), default(bool), default(bool)));
+#endif
 
     /// <summary>
     /// Notifies the server of the execution of StoryGoals (except of PDA type)

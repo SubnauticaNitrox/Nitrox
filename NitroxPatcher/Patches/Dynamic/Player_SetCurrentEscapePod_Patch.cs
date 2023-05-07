@@ -1,3 +1,4 @@
+#if SUBNAUTICA
 using System.Reflection;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
@@ -20,3 +21,4 @@ public sealed partial class Player_SetCurrentEscapePod_Patch : NitroxPatch, IDyn
         Resolve<LocalPlayer>().BroadcastEscapePodChange(value.GetId());
     }
 }
+#endif

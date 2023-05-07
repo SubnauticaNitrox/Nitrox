@@ -12,7 +12,11 @@ namespace NitroxPatcher.Patches.Dynamic;
 /// </summary>
 public sealed partial class Survival_Use_Patch : NitroxPatch, IDynamicPatch
 {
+#if SUBNAUTICA
     private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Survival t) => t.Use(default(GameObject)));
+#elif BELOWZERO
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Survival t) => t.Use(default(GameObject), default(Inventory)));
+#endif
 
     public static void Postfix(bool __result, GameObject useObj)
     {

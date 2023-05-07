@@ -63,7 +63,11 @@ public sealed class PdaInitialSyncProcessor : InitialSyncProcessor
             // We don't do as in PDAEncyclopedia.Deserialize because we don't persist the entry's fields which are useless
             foreach (string entry in entries)
             {
-                PDAEncyclopedia.Add(entry, false);
+#if SUBNAUTICA
+                    PDAEncyclopedia.Add(entry, false);
+#elif BELOWZERO
+                PDAEncyclopedia.Add(entry, false, false);
+#endif
             }
         }
         yield break;

@@ -1,6 +1,8 @@
 using System.Collections;
+#if SUBNAUTICA
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
+#endif
 using NitroxClient.GameLogic.InitialSync.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
@@ -28,7 +30,9 @@ public sealed class PlayerPositionInitialSyncProcessor : InitialSyncProcessor
         // Is disabled manually or in Terrain.WaitForWorldLoad()
         Player.main.cinematicModeActive = true;
 
+#if SUBNAUTICA
         AttachPlayerToEscapePod(packet.AssignedEscapePodId);
+#endif
 
         Vector3 position = packet.PlayerSpawnData.ToUnity();
         Quaternion rotation = packet.PlayerSpawnRotation.ToUnity();
@@ -39,10 +43,13 @@ public sealed class PlayerPositionInitialSyncProcessor : InitialSyncProcessor
         Player.main.SetPosition(position, rotation);
 
         // Player.ValidateEscapePod is setting currentEscapePod to null if player is not inside EscapePod
+#if SUBNAUTICA
+        // Player.ValidateEscapePod is setting currentEscapePod to null if player is not inside EscapePod
         using (PacketSuppressor<EscapePodChanged>.Suppress())
         {
             Player.main.ValidateEscapePod();
         }
+#endif
 
         Optional<NitroxId> subRootId = packet.PlayerSubRootId;
         if (!subRootId.HasValue)
@@ -61,16 +68,22 @@ public sealed class PlayerPositionInitialSyncProcessor : InitialSyncProcessor
 
         if (sub.Value.TryGetComponent(out SubRoot subRoot))
         {
+#if SUBNAUTICA
             Player.main.SetCurrentSub(subRoot, true);
+#elif BELOWZERO
+            Player.main.SetCurrentSub(subRoot);
+#endif
             if (subRoot.TryGetComponent(out Base @base))
             {
                 SetupPlayerIfInWaterPark(@base);
             }
         }
+#if SUBNAUTICA
         else if (sub.Value.GetComponent<EscapePod>())
         {
             Player.main.escapePod.Update(true);
         }
+#endif
         else
         {
             Log.Error("SubRootId-GameObject has no SubRoot or EscapePod component");
@@ -81,6 +94,7 @@ public sealed class PlayerPositionInitialSyncProcessor : InitialSyncProcessor
         Player.main.cinematicModeActive = false;
     }
 
+#if SUBNAUTICA
     private static void AttachPlayerToEscapePod(NitroxId escapePodId)
     {
         GameObject escapePod = NitroxEntity.RequireObjectFrom(escapePodId);
@@ -93,6 +107,7 @@ public sealed class PlayerPositionInitialSyncProcessor : InitialSyncProcessor
 
         Player.main.currentEscapePod = escapePod.GetComponent<EscapePod>();
     }
+#endif
 
     private static void SetupPlayerIfInWaterPark(Base @base)
     {

@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using NitroxClient.Communication.Abstract;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;

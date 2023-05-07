@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using AssetsTools.NET.Extra;
 using NitroxModel.Helper;
 using NitroxServer_Subnautica.Resources.Parsers.Helper;

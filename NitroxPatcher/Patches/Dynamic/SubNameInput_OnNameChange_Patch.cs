@@ -20,13 +20,21 @@ public sealed partial class SubNameInput_OnNameChange_Patch : NitroxPatch, IDyna
 
     public static bool TryGetTargetId(SubNameInput subNameInput, out object target, out NitroxId targetId)
     {
+#if SUBNAUTICA
         SubName subName = subNameInput.target;
         if (!subName)
+#elif BELOWZERO
+        ICustomizeable subName = subNameInput.target;
+        if (subName == null)
+#endif
         {
             target = null;
             targetId = null;
             return false;
         }
+        Log.Debug($"SubName is {subName.GetName()} {subName.GetType()}");
+        //TODO: work out how to get the vehicle object from the ICustomizeable
+#if SUBNAUTICA
         if (subName.TryGetComponent(out Vehicle vehicle))
         {
             target = vehicle;
@@ -42,6 +50,7 @@ public sealed partial class SubNameInput_OnNameChange_Patch : NitroxPatch, IDyna
                 return false;
             }
         }
+#endif
         // Cyclops and Rocket has their SubNameInput and SubName in the same GameObject, marked with a NitroxEntity
         target = subNameInput;
         return subNameInput.TryGetNitroxId(out targetId);

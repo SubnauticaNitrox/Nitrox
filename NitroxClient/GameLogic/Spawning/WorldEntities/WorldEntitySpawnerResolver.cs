@@ -24,7 +24,9 @@ public class WorldEntitySpawnerResolver
     public WorldEntitySpawnerResolver(EntityMetadataManager entityMetadataManager, PlayerManager playerManager, LocalPlayer localPlayer, Entities entities, SimulationOwnership simulationOwnership)
     {
         customSpawnersByTechType[TechType.Crash] = new CrashEntitySpawner();
+#if SUBNAUTICA
         customSpawnersByTechType[TechType.EscapePod] = new EscapePodWorldEntitySpawner(localPlayer);
+#endif
         customSpawnersByTechType[TechType.Creepvine] = new CreepvineEntitySpawner(defaultEntitySpawner);
 
         vehicleWorldEntitySpawner = new VehicleWorldEntitySpawner(entities);

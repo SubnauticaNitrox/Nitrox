@@ -12,9 +12,13 @@ public class PlayerStats : Packet
     public float Health { get; }
     public float Food { get; }
     public float Water { get; }
+#if SUBNAUTICA
     public float InfectionAmount { get; }
 
     public PlayerStats(ushort playerId, float oxygen, float maxOxygen, float health, float food, float water, float infectionAmount)
+#elif BELOWZERO
+    public PlayerStats(ushort playerId, float oxygen, float maxOxygen, float health, float food, float water)
+#endif
     {
         PlayerId = playerId;
         Oxygen = oxygen;
@@ -22,8 +26,9 @@ public class PlayerStats : Packet
         Health = health;
         Food = food;
         Water = water;
+#if SUBNAUTICA
         InfectionAmount = infectionAmount;
-
+#endif
         DeliveryMethod = NitroxDeliveryMethod.DeliveryMethod.RELIABLE_ORDERED_LAST;
     }
 }

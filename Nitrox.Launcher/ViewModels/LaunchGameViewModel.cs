@@ -124,7 +124,7 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
                     LauncherNotifier.Error("Aarrr! Nitrox has walked the plank :(");
                     return false;
                 }
-                if (GameInspect.WarnIfGameProcessExists(GameInfo.Subnautica))
+                if (GameInspect.WarnIfGameProcessExists(GameInfo.Subnautica) || GameInspect.WarnIfGameProcessExists(GameInfo.SubnauticaBelowZero))
                 {
                     return false;
                 }
@@ -144,12 +144,19 @@ public partial class LaunchGameViewModel : RoutableViewModelBase
                         LauncherNotifier.Error("Launcher files seems corrupted, please contact us");
                         return false;
                     }
-
+#if SUBNAUTICA
                     File.Copy(
                         patcherDllPath,
                         Path.Combine(NitroxUser.GamePath, GameInfo.Subnautica.DataFolder, "Managed", PATCHER_DLL_NAME),
                         true
                     );
+#elif BELOWZERO
+                    File.Copy(
+                        patcherDllPath,
+                        Path.Combine(NitroxUser.GamePath, GameInfo.SubnauticaBelowZero.DataFolder, "Managed", PATCHER_DLL_NAME),
+                        true
+                    );
+#endif
                 }
                 catch (IOException ex)
                 {

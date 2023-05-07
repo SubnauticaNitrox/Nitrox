@@ -1,3 +1,5 @@
+//TODO: Rework the naming
+#if SUBNAUTICA
 using System.Linq;
 using NitroxClient.GameLogic.Spawning.Metadata.Extractor.Abstract;
 using NitroxClient.Unity.Helper;
@@ -25,3 +27,4 @@ public class SubNameInputMetadataExtractor : EntityMetadataExtractor<SubNameInpu
         return subName.AliveOrNull()?.GetColors().Select(color => color.ToDto()).ToArray();
     }
 }
+#endif

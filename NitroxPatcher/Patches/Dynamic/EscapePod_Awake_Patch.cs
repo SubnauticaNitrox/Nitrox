@@ -1,3 +1,4 @@
+#if SUBNAUTICA
 using System.Reflection;
 using NitroxClient.GameLogic.Spawning.WorldEntities;
 using NitroxModel.Helper;
@@ -13,3 +14,4 @@ public sealed partial class EscapePod_Awake_Patch : NitroxPatch, IDynamicPatch
         return !EscapePodWorldEntitySpawner.SuppressEscapePodAwakeMethod;
     }
 }
+#endif

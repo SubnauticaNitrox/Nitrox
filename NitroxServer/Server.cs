@@ -74,6 +74,7 @@ public class Server
         {
             builder.AppendLine($" - Save location: {Path.Combine(KeyValueStore.Instance.GetSavesFolderDir(), Name)}");
         }
+#if SUBNAUTICA
         builder.AppendLine($"""
          - Aurora's state: {world.StoryManager.GetAuroraStateSummary()}
          - Current time: day {world.TimeKeeper.Day} ({Math.Floor(world.TimeKeeper.ElapsedSeconds)}s)
@@ -84,6 +85,17 @@ public class Server
          - Encyclopedia entries: {world.GameData.PDAState.EncyclopediaEntries.Count}
          - Known tech: {world.GameData.PDAState.KnownTechTypes.Count}
         """);
+#elif BELOWZERO
+        builder.AppendLine($"""
+         - Current time: day {world.TimeKeeper.Day} ({Math.Floor(world.TimeKeeper.ElapsedSeconds)}s)
+         - Scheduled goals stored: {world.GameData.StoryGoals.ScheduledGoals.Count}
+         - Story goals completed: {world.GameData.StoryGoals.CompletedGoals.Count}
+         - Radio messages stored: {world.GameData.StoryGoals.RadioQueue.Count}
+         - World gamemode: {serverConfig.GameMode}
+         - Encyclopedia entries: {world.GameData.PDAState.EncyclopediaEntries.Count}
+         - Known tech: {world.GameData.PDAState.KnownTechTypes.Count}
+        """);
+#endif
 
         return builder.ToString();
     }

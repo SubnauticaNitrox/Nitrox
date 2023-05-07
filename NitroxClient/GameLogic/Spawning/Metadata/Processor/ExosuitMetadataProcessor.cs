@@ -17,16 +17,28 @@ public class ExosuitMetadataProcessor : VehicleMetadataProcessor<ExosuitMetadata
             Log.ErrorOnce($"[{nameof(ExosuitMetadataProcessor)}] Could not find {nameof(Exosuit)} on {gameObject}");
             return;
         }
+#if SUBNAUTICA
         if (!gameObject.TryGetComponent(out SubName subName))
         {
             Log.ErrorOnce($"[{nameof(ExosuitMetadataProcessor)}] Could not find {nameof(SubName)} on {gameObject}");
             return;
         }
+#elif BELOWZERO
+        if (!gameObject.TryGetComponent(out SubNameInput subNameInput))
+        {
+            Log.ErrorOnce($"[{nameof(ExosuitMetadataProcessor)}] Could not find {nameof(SubName)} on {gameObject}");
+            return;
+        }
+#endif
 
         using (PacketSuppressor<EntityMetadataUpdate>.Suppress())
         {
             SetHealth(gameObject, metadata.Health);
+#if SUBNAUTICA
             SetNameAndColors(subName, metadata.Name, metadata.Colors);
+#elif BELOWZERO
+            SetNameAndColors(subNameInput, subNameInput.target, metadata.Name, metadata.Colors);
+#endif
         }
     }
 }

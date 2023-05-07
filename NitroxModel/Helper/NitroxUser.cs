@@ -157,8 +157,11 @@ public static class NitroxUser
             {
                 return gamePath;
             }
-
+#if SUBNAUTICA
             List<GameFinderResult> finderResults = GameInstallationFinder.Instance.FindGame(GameInfo.Subnautica).TakeUntilInclusive(r => r is { IsOk: false }).ToList();
+#elif BELOWZERO
+            List<GameFinderResult> finderResults = GameInstallationFinder.Instance.FindGame(GameInfo.SubnauticaBelowZero).TakeUntilInclusive(r => r is { IsOk: false }).ToList();
+#endif
             GameFinderResult potentiallyValidResult = finderResults.LastOrDefault();
             if (potentiallyValidResult?.IsOk == true)
             {
@@ -167,8 +170,11 @@ public static class NitroxUser
                 GamePlatform = GamePlatforms.GetPlatformByGameDir(gamePath);
                 return gamePath;
             }
-
+#if SUBNAUTICA
             Log.Error($"Could not locate Subnautica installation directory: {Environment.NewLine}{string.Join(Environment.NewLine, finderResults.Select(i => $"{i.FinderName}: {i.ErrorMessage}"))}");
+#elif BELOWZERO
+            Log.Error($"Could not locate Subnautica Below Zero installation directory: {Environment.NewLine}{string.Join(Environment.NewLine, finderResults.Select(i => $"{i.FinderName}: {i.ErrorMessage}"))}");
+#endif
             return string.Empty;
         }
         set

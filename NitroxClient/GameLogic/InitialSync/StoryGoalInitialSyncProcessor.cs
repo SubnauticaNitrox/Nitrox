@@ -20,7 +20,9 @@ public sealed class StoryGoalInitialSyncProcessor : InitialSyncProcessor
         AddStep(SetTimeData);
         AddStep(SetupStoryGoalManager);
         AddStep(SetupTrackers);
+#if SUBNAUTICA
         AddStep(SetupAuroraAndSunbeam);
+#endif
         AddStep(SetScheduledGoals);
     }
 
@@ -119,6 +121,7 @@ public sealed class StoryGoalInitialSyncProcessor : InitialSyncProcessor
         prefabSignalPing.vo = pdaNotification;
     }
 
+#if SUBNAUTICA
     // Must happen after CompletedGoals
     private static void SetupAuroraAndSunbeam(InitialPlayerSync packet)
     {
@@ -143,6 +146,7 @@ public sealed class StoryGoalInitialSyncProcessor : InitialSyncProcessor
             // See StoryGoalCustomEventHandler.endTime for calculation (endTime - 30 seconds)
         }
     }
+#endif
 
     // Must happen after CompletedGoals
     private static void SetScheduledGoals(InitialPlayerSync packet)
@@ -192,6 +196,8 @@ public sealed class StoryGoalInitialSyncProcessor : InitialSyncProcessor
     {
         timeManager.ProcessUpdate(packet.TimeData.TimePacket);
         timeManager.InitRealTimeElapsed(packet.TimeData.TimePacket.RealTimeElapsed, packet.TimeData.TimePacket.UpdateTime, packet.IsFirstPlayer);
+#if SUBNAUTICA
         timeManager.AuroraRealExplosionTime = packet.TimeData.AuroraEventData.AuroraRealExplosionTime;
+#endif
     }
 }

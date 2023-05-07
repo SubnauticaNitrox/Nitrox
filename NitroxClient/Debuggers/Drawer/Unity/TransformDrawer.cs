@@ -94,7 +94,11 @@ public class TransformDrawer : IDrawer<Transform>
                 if (GUILayout.Button("Goto", GUILayout.MaxWidth(75)) && Player.main)
                 {
                     SubRoot subRoot = transform.GetComponentInParent<SubRoot>(true);
+#if SUBNAUTICA
                     Player.main.SetCurrentSub(subRoot, true);
+#elif BELOWZERO
+                    Player.main.SetCurrentSub(subRoot);
+#endif
                     Player.main.SetPosition(transform.position);
                 }
                 if (GUILayout.Button($"Set {(transform.gameObject.activeSelf ? "inactive" : "active")}", GUILayout.MaxWidth(125)))

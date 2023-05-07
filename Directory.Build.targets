@@ -2,13 +2,13 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     
     <Target Name="FindGameAndIncludeReferences" BeforeTargets="ResolveAssemblyReferences" Condition="'$(_NitroxDiscovery_TaskAssembly)' != '' and ('$(UnityModLibrary)' == 'true' or '$(TestLibrary)' == 'true')">
-        <DiscoverGame GameName="Subnautica" IntermediateOutputPath="$(IntermediateOutputPath)">
+        <DiscoverGame GameName="SubnauticaZero" IntermediateOutputPath="$(IntermediateOutputPath)">
             <Output TaskParameter="GamePath" PropertyName="GameDir" />
         </DiscoverGame>
-        <Error Condition="'$(GameDir)' == ''" Text="Failed to find the game 'Subnautica' on your machine" />
+        <Error Condition="'$(GameDir)' == ''" Text="Failed to find the game 'SubnauticaZero' on your machine" />
         <PropertyGroup>
             <GameDir>$(GameDir)\</GameDir>
-            <GameDataFolder>Subnautica_Data</GameDataFolder>
+            <GameDataFolder>SubnauticaZero_Data</GameDataFolder>
         </PropertyGroup>
         <PropertyGroup Condition="$(_IsMacOS)">
             <GameDataFolder>Resources\Data</GameDataFolder>
@@ -16,12 +16,12 @@
         <PropertyGroup>
             <GameManagedDir>$(GameDir)$(GameDataFolder)\Managed\</GameManagedDir>
             <GameVersionFile>$(GameDir)$(GameDataFolder)\StreamingAssets\SNUnmanagedData\plastic_status.ignore</GameVersionFile>
-            <GameLegacyVersion>68598</GameLegacyVersion>
+            <GameLegacyVersion>0</GameLegacyVersion>
         </PropertyGroup>
         <ReadLinesFromFile File="$(GameVersionFile)">
             <Output TaskParameter="Lines" ItemName="GameVersion" />
         </ReadLinesFromFile>
-        <Error Condition="@(GameVersion) &lt;= $(GameLegacyVersion)" Text="Subnautica must not be on legacy branch. Expected version &gt;$(GameLegacyVersion) but was @(GameVersion)" />
+        <Error Condition="@(GameVersion) &lt;= $(GameLegacyVersion)" Text="SubnauticaZero must not be on legacy branch. Expected version &gt;$(GameLegacyVersion) but was @(GameVersion)" />
         <Message Importance="high" Text="Game found at: '$(GameDir)' with version @(GameVersion)" />
 
         <ItemGroup>

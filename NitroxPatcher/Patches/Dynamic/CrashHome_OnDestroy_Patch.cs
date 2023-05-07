@@ -1,3 +1,5 @@
+//TODO: Verify if this change is still required in a different form
+#if SUBNAUTICA
 using System.Reflection;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
@@ -23,3 +25,4 @@ public sealed partial class CrashHome_OnDestroy_Patch : NitroxPatch, IDynamicPat
         Resolve<IPacketSender>().Send(new EntityDestroyed(crashId));
     }
 }
+#endif

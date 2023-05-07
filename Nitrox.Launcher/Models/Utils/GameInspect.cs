@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using HanumanInstitute.MvvmDialogs;
@@ -19,16 +19,24 @@ internal static class GameInspect
         try
         {
             ArgumentException.ThrowIfNullOrWhiteSpace(gameInstallDir);
-            
+#if SUBNAUTICA
             string gameVersionFile = Path.Combine(gameInstallDir, GameInfo.Subnautica.DataFolder, "StreamingAssets", "SNUnmanagedData", "plastic_status.ignore");
             if (int.TryParse(await File.ReadAllTextAsync(gameVersionFile), out int gameVersion) && gameVersion <= 68598)
+#elif BELOWZERO
+            string gameVersionFile = Path.Combine(gameInstallDir, GameInfo.SubnauticaBelowZero.DataFolder, "StreamingAssets", "SNUnmanagedData", "plastic_status.ignore");
+            if (int.TryParse(await File.ReadAllTextAsync(gameVersionFile), out int gameVersion) && gameVersion <= 68598)
+#endif
             {
                 if (dialogService != null)
                 {
                     await dialogService.ShowAsync<DialogBoxViewModel>(model =>
                     {
                         model.Title = "Legacy Game Detected";
+#if SUBNAUTICA
                         model.Description = $"Nitrox does not support the legacy version of {GameInfo.Subnautica.FullName}. Please update your game to the latest version to run {GameInfo.Subnautica.FullName} with Nitrox.{Environment.NewLine}{Environment.NewLine}Version file location:{Environment.NewLine}{gameVersionFile}";
+#elif BELOWZERO
+                        model.Description = $"Nitrox does not support the legacy version of {GameInfo.SubnauticaBelowZero.FullName}. Please update your game to the latest version to run {GameInfo.SubnauticaBelowZero.FullName} with Nitrox.{Environment.NewLine}{Environment.NewLine}Version file location:{Environment.NewLine}{gameVersionFile}";
+#endif
                         model.ButtonOptions = ButtonOptions.Ok;
                     });
                 }

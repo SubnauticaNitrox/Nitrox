@@ -64,9 +64,15 @@ public class LiveMixinManager
 
         if (vehicleDockingBay && dealerVehicle)
         {
-            if (vehicleDockingBay.GetDockedVehicle() == dealerVehicle ||
+#if SUBNAUTICA
+            if (vehicleDockingBay.GetDockedObject().vehicle == dealerVehicle ||
                 vehicleDockingBay.interpolatingVehicle == dealerVehicle ||
                 vehicleDockingBay.nearbyVehicle == dealerVehicle)
+#elif BELOWZERO
+            if (vehicleDockingBay.GetDockedObject() == dealerVehicle ||
+                vehicleDockingBay.interpolatingDockable == dealerVehicle ||
+                vehicleDockingBay.nearbyDockable.vehicle == dealerVehicle)
+#endif
             {
                 Log.Debug($"Dealer {dealer} is vehicle and currently docked or nearby {receiver}, do not harm it!");
                 return false;

@@ -559,7 +559,11 @@ public class Program
                     }
                     else
                     {
+#if SUBNAUTICA
                         dllPath = Path.Combine(gameInstallDir.Value, "Subnautica_Data", "Managed", dllNameStr);
+#elif BELOWZERO
+                        dllPath = Path.Combine(gameInstallDir.Value, "SubnauticaZero_Data", "Managed", dllNameStr);
+#endif
                     }
                 }
 

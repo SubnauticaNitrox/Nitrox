@@ -39,14 +39,18 @@ public class StoryManager : IDisposable
     private double ElapsedMilliseconds => timeKeeper.ElapsedMilliseconds;
     private double ElapsedSeconds => timeKeeper.ElapsedSeconds;
 
+#if SUBNAUTICA
     public StoryManager(PlayerManager playerManager, PDAStateData pdaStateData, StoryGoalData storyGoalData, TimeKeeper timeKeeper, string seed, double? auroraExplosionTime, double? auroraWarningTime, double? auroraRealExplosionTime)
+#elif BELOWZERO
+    public StoryManager(PlayerManager playerManager, PDAStateData pdaStateData, StoryGoalData storyGoalData, TimeKeeper timeKeeper, string seed)
+#endif
     {
         this.playerManager = playerManager;
         this.pdaStateData = pdaStateData;
         this.storyGoalData = storyGoalData;
         this.timeKeeper = timeKeeper;
         this.seed = seed;
-        
+#if SUBNAUTICA
         AuroraCountdownTimeMs = auroraExplosionTime ?? GenerateDeterministicAuroraTime(seed);
         AuroraWarningTimeMs = auroraWarningTime ?? ElapsedMilliseconds;
         // +27 is from CrashedShipExploder.IsExploded, -480 is from the default time (see TimeKeeper)
@@ -70,8 +74,9 @@ public class StoryManager : IDisposable
                 AuroraRealExplosionTime -= skipAmount;
             }
         }
+#endif
     }
-
+#if SUBNAUTICA
     /// <param name="instantaneous">Whether we should make Aurora explode instantly or after a short countdown</param>
     public void BroadcastExplodeAurora(bool instantaneous)
     {
@@ -191,15 +196,21 @@ public class StoryManager : IDisposable
     {
         return new((float)AuroraCountdownTimeMs * 0.001f, (float)AuroraWarningTimeMs * 0.001f, (float)AuroraRealExplosionTime);
     }
-
+#endif
     public TimeData GetTimeData()
     {
+#if SUBNAUTICA
         return new(timeKeeper.MakeTimePacket(), MakeAuroraData());
+#elif BELOWZERO
+        return new(timeKeeper.MakeTimePacket());
+#endif
     }
 
     public void Dispose()
     {
+#if SUBNAUTICA
         timeKeeper.TimeSkipped -= ReadjustAuroraRealExplosionTime;
+#endif
         GC.SuppressFinalize(this);
     }
 

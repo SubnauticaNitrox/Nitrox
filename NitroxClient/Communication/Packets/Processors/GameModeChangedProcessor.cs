@@ -19,7 +19,11 @@ public class GameModeChangedProcessor : ClientPacketProcessor<GameModeChanged>
     {
         if (packet.AllPlayers || packet.PlayerId == localPlayer.PlayerId)
         {
+#if SUBNAUTICA
             GameModeUtils.SetGameMode((GameModeOption)(int)packet.GameMode, GameModeOption.None);
+#elif BELOWZERO
+            GameModeManager.SetGameOptions((GameModePresetId)(int)packet.GameMode);
+#endif
         }
         if (packet.AllPlayers)
         {

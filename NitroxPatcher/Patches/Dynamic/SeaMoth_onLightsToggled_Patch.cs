@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+#if SUBNAUTICA
+using System.Reflection;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Spawning.Metadata.Extractor;
 using NitroxModel.DataStructures;
@@ -20,3 +21,4 @@ public sealed partial class SeaMoth_onLightsToggled_Patch : NitroxPatch, IDynami
         }
     }
 }
+#endif

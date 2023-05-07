@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -11,7 +11,11 @@ public sealed partial class Player_OnKill_Patch : NitroxPatch, IDynamicPatch
 {
     private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Player t) => t.OnKill(default(DamageType)));
 
+#if SUBNAUTICA
     private static readonly MethodInfo SKIP_METHOD = Reflect.Method(() => GameModeUtils.IsPermadeath());
+#elif BELOWZERO
+    private static readonly MethodInfo SKIP_METHOD = Reflect.Method(() => GameModeManager.GetOption<bool>(GameOption.PermanentDeath));
+#endif
     public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
     {
         List<CodeInstruction> instructionList = instructions.ToList();

@@ -1,3 +1,4 @@
+#if SUBNAUTICA
 using NitroxClient.GameLogic.Spawning.Metadata.Extractor.Abstract;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 
@@ -14,3 +15,4 @@ public class SeamothMetadataExtractor : EntityMetadataExtractor<SeaMoth, Seamoth
         return new(lightsOn, liveMixin.health, SubNameInputMetadataExtractor.GetName(subName), SubNameInputMetadataExtractor.GetColors(subName));
     }
 }
+#endif

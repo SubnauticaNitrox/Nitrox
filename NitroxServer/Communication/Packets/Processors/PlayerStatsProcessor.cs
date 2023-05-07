@@ -21,7 +21,11 @@ public class PlayerStatsProcessor : AuthenticatedPacketProcessor<PlayerStats>
             Log.WarnOnce($"[{nameof(PlayerStatsProcessor)}] Player ID mismatch (received: {packet.PlayerId}, real: {player.Id})");
             packet.PlayerId = player.Id;
         }
+#if SUBNAUTICA
         player.Stats = new PlayerStatsData(packet.Oxygen, packet.MaxOxygen, packet.Health, packet.Food, packet.Water, packet.InfectionAmount);
+#elif BELOWZERO
+        player.Stats = new PlayerStatsData(packet.Oxygen, packet.MaxOxygen, packet.Health, packet.Food, packet.Water);
+#endif
         playerManager.SendPacketToOtherPlayers(packet, player);
     }
 }

@@ -189,9 +189,14 @@ namespace NitroxClient.MonoBehaviours
 
         private static void SetLoadingComplete()
         {
+#if SUBNAUTICA
             WaitScreen.main.isWaiting = false;
             WaitScreen.main.stageProgress.Clear();
             FreezeTime.End(FreezeTime.Id.WaitScreen);
+#elif BELOWZERO
+            WaitScreen.main.Hide();
+#endif
+            
             WaitScreen.main.items.Clear();
 
             PlayerManager remotePlayerManager = NitroxServiceLocator.LocateService<PlayerManager>();

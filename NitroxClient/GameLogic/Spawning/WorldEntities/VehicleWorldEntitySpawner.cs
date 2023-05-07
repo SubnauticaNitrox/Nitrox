@@ -180,7 +180,11 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
 
     private void DockVehicle(GameObject gameObject, GameObject parent)
     {
+#if SUBNAUTICA
         Vehicle vehicle = gameObject.GetComponent<Vehicle>();
+#elif BELOWZERO
+        Dockable vehicle = gameObject.GetComponent<Dockable>();
+#endif
 
         if (!vehicle)
         {
@@ -195,8 +199,11 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
             Log.Info($"Could not find VehicleDockingBay component on dock object {parent.name}");
             return;
         }
-
-        dockingBay.DockVehicle(vehicle);        
+#if SUBNAUTICA
+        dockingBay.DockVehicle(vehicle);
+#elif BELOWZERO
+        dockingBay.Dock(vehicle);
+#endif
     }
 
     public bool SpawnsOwnChildren()

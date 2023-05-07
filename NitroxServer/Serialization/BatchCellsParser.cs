@@ -55,7 +55,11 @@ namespace NitroxServer.Serialization
                 return;
             }
 
+#if SUBNAUTICA
             string path = Path.Combine(subnauticaPath, GameInfo.Subnautica.DataFolder, "StreamingAssets", "SNUnmanagedData", "Build18");
+#elif BELOWZERO
+            string path = Path.Combine(subnauticaPath, GameInfo.SubnauticaBelowZero.DataFolder, "StreamingAssets", "SNUnmanagedData", "Expansion");
+#endif
             string fileName = Path.Combine(path, pathPrefix, $"{prefix}batch-cells-{batchId.X}-{batchId.Y}-{batchId.Z}{suffix}.bin");
 
             if (!File.Exists(fileName))

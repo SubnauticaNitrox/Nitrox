@@ -36,6 +36,8 @@ public static class ResourceAssetsParser
     public static string FindDirectoryContainingResourceAssets()
     {
         string subnauticaPath = NitroxUser.GamePath;
+        //subnauticaPath = "E:\\Program Files\\Steam\\steamapps\\common\\Subnautica";
+#if SUBNAUTICA
         if (string.IsNullOrEmpty(subnauticaPath))
         {
             throw new DirectoryNotFoundException("Could not locate Subnautica installation directory for resource parsing.");
@@ -58,5 +60,29 @@ public static class ResourceAssetsParser
             return Directory.GetCurrentDirectory();
         }
         throw new FileNotFoundException("Make sure resources.assets is in current or parent directory and readable.");
+#elif BELOWZERO
+        if (string.IsNullOrEmpty(subnauticaPath))
+        {
+            throw new DirectoryNotFoundException("Could not locate Subnautica Below Zero installation directory for resource parsing.");
+        }
+
+        if (File.Exists(Path.Combine(subnauticaPath, "SubnauticaZero_Data", "resources.assets")))
+        {
+            return Path.Combine(subnauticaPath, "SubnauticaZero_Data");
+        }
+        if (File.Exists(Path.Combine("..", "resources.assets"))) //  SubServer => SubnauticaZero/SubnauticaZero_Data/SubServer
+        {
+            return Path.GetFullPath(Path.Combine(".."));
+        }
+        if (File.Exists(Path.Combine("..", "SubnauticaZero_Data", "resources.assets"))) //  SubServer => SubnauticaZero/SubServer
+        {
+            return Path.GetFullPath(Path.Combine("..", "SubnauticaZero_Data"));
+        }
+        if (File.Exists("resources.assets")) //  SubServer/* => SubnauticaZero/SubnauticaZero_Data/
+        {
+            return Directory.GetCurrentDirectory();
+        }
+        throw new FileNotFoundException("Make sure resources.assets is in current or parent directory and readable.");
+#endif
     }
 }

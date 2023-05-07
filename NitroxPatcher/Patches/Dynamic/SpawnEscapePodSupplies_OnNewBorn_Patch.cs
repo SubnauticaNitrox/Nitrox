@@ -1,3 +1,4 @@
+#if SUBNAUTICA
 using System.Reflection;
 using NitroxModel.Helper;
 
@@ -15,3 +16,4 @@ public sealed partial class SpawnEscapePodSupplies_OnNewBorn_Patch : NitroxPatch
         return false;
     }
 }
+#endif

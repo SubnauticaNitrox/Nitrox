@@ -1,3 +1,4 @@
+#if SUBNAUTICA
 using NitroxClient.Communication;
 using NitroxClient.GameLogic.FMOD;
 using NitroxClient.GameLogic.Spawning.Metadata.Processor.Abstract;
@@ -42,3 +43,4 @@ public class SeamothMetadataProcessor : VehicleMetadataProcessor<SeamothMetadata
         }
     }
 }
+#endif

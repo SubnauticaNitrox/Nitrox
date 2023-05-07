@@ -1,3 +1,4 @@
+#if SUBNAUTICA
 using System.Collections;
 using NitroxClient.Communication;
 using NitroxClient.GameLogic.FMOD;
@@ -114,3 +115,4 @@ public class EscapePodWorldEntitySpawner : IWorldEntitySpawner
 
     public bool SpawnsOwnChildren() => false;
 }
+#endif

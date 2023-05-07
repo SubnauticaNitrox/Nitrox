@@ -5,6 +5,7 @@ using NitroxClient.GameLogic.Simulation;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
+using static VFXParticlesPool;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -41,7 +42,7 @@ public sealed partial class DockedVehicleHandTarget_OnHandClick_Patch : NitroxPa
         if (lockAcquired)
         {
             VehicleDockingBay dockingBay = context.Target.dockingBay;
-            Vehicle vehicle = dockingBay.GetDockedVehicle();
+            Vehicle vehicle =  dockingBay.GetDockedVehicle();
 
             if (!dockingBay.TryGetIdOrWarn(out NitroxId dockId))
             {

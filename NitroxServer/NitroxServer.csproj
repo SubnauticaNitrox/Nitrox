@@ -2,6 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>net9.0</TargetFramework>
+        <Configurations>Debug;Release;BelowZero;Subnautica</Configurations>
     </PropertyGroup>
 
     <ItemGroup>

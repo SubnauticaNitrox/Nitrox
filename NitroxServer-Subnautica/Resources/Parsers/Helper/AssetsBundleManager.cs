@@ -105,7 +105,13 @@ public class AssetsBundleManager : AssetsManager
     /// </summary>
     public AssetsBundleManager Clone()
     {
+#if SUBNAUTICA
         AssetsBundleManager bundleManagerInst = new(aaRootPath) { classDatabase = classDatabase, classPackage = classPackage };
+#elif BELOWZERO
+        AssetsBundleManager bundleManagerInst = new(aaRootPath);
+        bundleManagerInst.LoadClassPackage("classdata.tpk");
+        bundleManagerInst.LoadClassDatabaseFromPackage("2019.4.36f1");
+#endif
         bundleManagerInst.SetMonoTempGenerator(monoTempGenerator);
         return bundleManagerInst;
     }

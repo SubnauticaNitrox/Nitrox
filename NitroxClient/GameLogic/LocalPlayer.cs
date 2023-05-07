@@ -75,6 +75,7 @@ public class LocalPlayer : ILocalNitroxPlayer
         }
     }
 
+#if SUBNAUTICA
     public void BroadcastStats(float oxygen, float maxOxygen, float health, float food, float water, float infectionAmount)
     {
         if (PlayerId.HasValue)
@@ -82,6 +83,15 @@ public class LocalPlayer : ILocalNitroxPlayer
             packetSender.Send(new PlayerStats(PlayerId.Value, oxygen, maxOxygen, health, food, water, infectionAmount));
         }
     }
+#elif BELOWZERO
+    public void BroadcastStats(float oxygen, float maxOxygen, float health, float food, float water)
+    {
+        if (PlayerId.HasValue)
+        {
+            packetSender.Send(new PlayerStats(PlayerId.Value, oxygen, maxOxygen, health, food, water));
+        }
+    }
+#endif
 
     public void BroadcastDeath(Vector3 deathPosition)
     {
@@ -122,11 +132,16 @@ public class LocalPlayer : ILocalNitroxPlayer
     private GameObject CreateBodyPrototype()
     {
         GameObject prototype = Body;
-
         // Cheap fix for showing head, much easier since male_geo contains many different heads
+#if SUBNAUTICA
         prototype.GetComponentInParent<Player>().head.shadowCastingMode = ShadowCastingMode.On;
         GameObject clone = Object.Instantiate(prototype, Multiplayer.Main.transform, false);
         prototype.GetComponentInParent<Player>().head.shadowCastingMode = ShadowCastingMode.ShadowsOnly;
+#elif BELOWZERO
+        prototype.GetComponentInParent<Player>().staticHead.shadowCastingMode = ShadowCastingMode.On;
+        GameObject clone = Object.Instantiate(prototype);
+        prototype.GetComponentInParent<Player>().staticHead.shadowCastingMode = ShadowCastingMode.ShadowsOnly;
+#endif
 
         clone.SetActive(false);
         clone.name = "RemotePlayerPrototype";

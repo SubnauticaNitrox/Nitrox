@@ -7,7 +7,12 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public sealed partial class Player_SetCurrentSub_Patch : NitroxPatch, IDynamicPatch
 {
+
+#if SUBNAUTICA
     private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Player t) => t.SetCurrentSub(default, default));
+#elif BELOWZERO
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Player t) => t.SetCurrentSub(default));
+#endif
 
     public static void Prefix(Player __instance, SubRoot sub)
     {

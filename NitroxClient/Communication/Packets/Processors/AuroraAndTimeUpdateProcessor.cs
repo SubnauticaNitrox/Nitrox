@@ -16,11 +16,13 @@ public class AuroraAndTimeUpdateProcessor : ClientPacketProcessor<AuroraAndTimeU
     public override void Process(AuroraAndTimeUpdate packet)
     {
         timeManager.ProcessUpdate(packet.TimeData.TimePacket);
+#if SUBNAUTICA
         StoryManager.UpdateAuroraData(packet.TimeData.AuroraEventData);
         timeManager.AuroraRealExplosionTime = packet.TimeData.AuroraEventData.AuroraRealExplosionTime;
         if (packet.Restore)
         {
             StoryManager.RestoreAurora();
         }
+#endif
     }
 }

@@ -1,3 +1,4 @@
+#if SUBNAUTICA
 using System;
 using System.Reflection;
 using HarmonyLib;
@@ -35,3 +36,4 @@ public sealed class GameModeConsoleCommands_OnConsoleCommand_Patch : NitroxPatch
         PatchPrefix(harmony, TARGET_METHOD_HARDCORE, ((Func<bool>)PrefixHardcore).Method);
     }
 }
+#endif

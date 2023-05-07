@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+#if SUBNAUTICA
+using System.Reflection;
 using NitroxClient.Communication.Abstract;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
@@ -17,3 +18,4 @@ public sealed partial class Seaglide_onLightsToggled_Patch : NitroxPatch, IDynam
         }
     }
 }
+#endif

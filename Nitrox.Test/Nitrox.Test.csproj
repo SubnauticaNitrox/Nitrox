@@ -7,6 +7,7 @@
         <IsPackable>false</IsPackable>
         <!-- TODO: Do not use DI in tests, create objects in-line or use mocks for externalities -->
         <NoWarn>$(NoWarn);DIMA001</NoWarn>
+        <Configurations>Debug;Release;BelowZero;Subnautica</Configurations>
     </PropertyGroup>
 
     <ItemGroup>

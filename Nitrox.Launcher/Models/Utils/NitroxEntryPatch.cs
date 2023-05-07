@@ -32,8 +32,11 @@ public static class NitroxEntryPatch
         ArgumentException.ThrowIfNullOrEmpty(subnauticaBasePath, nameof(subnauticaBasePath));
 
         Log.Debug("Adding Nitrox entry point to Subnautica");
-
+#if SUBNAUTICA
         string subnauticaManagedPath = Path.Combine(subnauticaBasePath, GameInfo.Subnautica.DataFolder, "Managed");
+#elif BELOWZERO
+        string subnauticaManagedPath = Path.Combine(subnauticaBasePath, GameInfo.SubnauticaBelowZero.DataFolder, "Managed");
+#endif
         string assemblyCSharp = Path.Combine(subnauticaManagedPath, GAME_ASSEMBLY_NAME);
         string nitroxPatcherPath = Path.Combine(subnauticaManagedPath, NITROX_ASSEMBLY_NAME);
         string modifiedAssemblyCSharp = Path.Combine(subnauticaManagedPath, GAME_ASSEMBLY_MODIFIED_NAME);
@@ -122,8 +125,11 @@ public static class NitroxEntryPatch
         ArgumentException.ThrowIfNullOrEmpty(subnauticaBasePath, nameof(subnauticaBasePath));
 
         Log.Debug("Removing Nitrox entry point from Subnautica");
-
+#if SUBNAUTICA
         string subnauticaManagedPath = Path.Combine(subnauticaBasePath, GameInfo.Subnautica.DataFolder, "Managed");
+#elif BELOWZERO
+        string subnauticaManagedPath = Path.Combine(subnauticaBasePath, GameInfo.SubnauticaBelowZero.DataFolder, "Managed");
+#endif
         string assemblyCSharp = Path.Combine(subnauticaManagedPath, GAME_ASSEMBLY_NAME);
         string modifiedAssemblyCSharp = Path.Combine(subnauticaManagedPath, GAME_ASSEMBLY_MODIFIED_NAME);
 
@@ -188,7 +194,11 @@ public static class NitroxEntryPatch
 
     public static bool IsPatchApplied(string subnauticaBasePath)
     {
+#if SUBNAUTICA
         string subnauticaManagedPath = Path.Combine(subnauticaBasePath, GameInfo.Subnautica.DataFolder, "Managed");
+#elif BELOWZERO
+        string subnauticaManagedPath = Path.Combine(subnauticaBasePath, GameInfo.SubnauticaBelowZero.DataFolder, "Managed");
+#endif
         string gameInputPath = Path.Combine(subnauticaManagedPath, GAME_ASSEMBLY_NAME);
 
         using (ModuleDefMD module = ModuleDefMD.Load(gameInputPath))

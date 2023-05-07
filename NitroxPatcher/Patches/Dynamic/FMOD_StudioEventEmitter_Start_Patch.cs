@@ -1,3 +1,4 @@
+#if SUBNAUTICA
 using System.Reflection;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
@@ -32,3 +33,4 @@ public sealed partial class FMOD_StudioEventEmitter_Start_Patch : NitroxPatch, I
         fmodController.AddEmitter(__instance.asset.path, __instance, radius);
     }
 }
+#endif

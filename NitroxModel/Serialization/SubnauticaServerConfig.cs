@@ -108,11 +108,16 @@ namespace NitroxModel.Serialization
         public float DefaultHealthValue { get; set; } = 80;
         public float DefaultHungerValue { get; set; } = 50.5f;
         public float DefaultThirstValue { get; set; } = 90.5f;
-
+#if SUBNAUTICA
         [PropertyDescription("Recommended to keep at 0.1f which is the default starting value. If set to 0 then new players are cured by default.")]
         public float DefaultInfectionValue { get; set; } = 0.1f;
+#endif
 
+#if SUBNAUTICA
         public PlayerStatsData DefaultPlayerStats => new(DefaultOxygenValue, DefaultMaxOxygenValue, DefaultHealthValue, DefaultHungerValue, DefaultThirstValue, DefaultInfectionValue);
+#elif BELOWZERO
+        public PlayerStatsData DefaultPlayerStats => new(DefaultOxygenValue, DefaultMaxOxygenValue, DefaultHealthValue, DefaultHungerValue, DefaultThirstValue);
+#endif
         [PropertyDescription("If set to true, the server will try to open port on your router via UPnP")]
         public bool AutoPortForward { get; set; } = true;
         [PropertyDescription("Determines whether the server will listen for and reply to LAN discovery requests.")]
