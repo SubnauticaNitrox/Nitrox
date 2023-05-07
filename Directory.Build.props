@@ -30,6 +30,11 @@
     <PropertyGroup Condition="'$(MSBuildProjectName)' == 'Nitrox.Test'">
         <TestLibrary>true</TestLibrary>
     </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'BelowZero' ">
+        <DefineConstants>DEBUG;BELOWZERO</DefineConstants>
+        <OutputPath>bin\BelowZero\</OutputPath>
+    </PropertyGroup>
+
 
     <!-- Shared dependencies for all Nitrox.* projects -->
     <Choose>

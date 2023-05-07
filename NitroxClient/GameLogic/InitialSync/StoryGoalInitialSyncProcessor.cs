@@ -20,7 +20,9 @@ public class StoryGoalInitialSyncProcessor : InitialSyncProcessor
             SetTimeData(packet),
             SetupStoryGoalManager(packet),
             SetupTrackers(packet),
+#if SUBNAUTICA
             SetupAuroraAndSunbeam(packet),
+#endif
             SetScheduledGoals(packet),
             RefreshWithLatestData()
         };
@@ -100,7 +102,7 @@ public class StoryGoalInitialSyncProcessor : InitialSyncProcessor
         techTypesToRemove.ForEach(techType => storyGoalManager.itemGoalTracker.goals.Remove(techType));
         yield break;
     }
-
+#if SUBNAUTICA
     // Must happen after CompletedGoals
     private IEnumerator SetupAuroraAndSunbeam(InitialPlayerSync packet)
     {
@@ -126,6 +128,7 @@ public class StoryGoalInitialSyncProcessor : InitialSyncProcessor
 
         yield break;
     }
+#endif
 
     // Must happen after CompletedGoals
     private IEnumerator SetScheduledGoals(InitialPlayerSync packet)

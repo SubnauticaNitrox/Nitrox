@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -51,9 +51,14 @@ namespace NitroxModel.Discovery
             {
                 return false;
             }
-
+#if SUBNAUTICA
             return Directory.EnumerateFiles(directory, "*.exe")
                 .Any(file => Path.GetFileName(file)?.Equals("subnautica.exe", StringComparison.OrdinalIgnoreCase) ?? false);
+#endif
+#if BELOWZERO
+            return Directory.EnumerateFiles(directory, "*.exe")
+                .Any(file => Path.GetFileName(file)?.Equals("subnauticazero.exe", StringComparison.OrdinalIgnoreCase) ?? false);
+#endif
         }
     }
 }

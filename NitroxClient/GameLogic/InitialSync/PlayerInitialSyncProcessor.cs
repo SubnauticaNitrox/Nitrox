@@ -81,6 +81,7 @@ namespace NitroxClient.GameLogic.InitialSync
                 Player.main.liveMixin.health = statsData.Health;
                 Player.main.GetComponent<Survival>().food = statsData.Food;
                 Player.main.GetComponent<Survival>().water = statsData.Water;
+#if SUBNAUTICA
                 Player.main.infectedMixin.SetInfectedAmount(statsData.InfectionAmount);
 
                 //If InfectionAmount is at least 1f then the infection reveal should have happened already.
@@ -89,7 +90,7 @@ namespace NitroxClient.GameLogic.InitialSync
                 {
                     Player.main.infectionRevealed = true;
                 }
-
+#endif
                 // We need to make the player invincible before he finishes loading because in some cases he will eventually die before loading
                 Player.main.liveMixin.invincible = true;
                 Player.main.FreezeStats();
@@ -102,7 +103,11 @@ namespace NitroxClient.GameLogic.InitialSync
         private void SetPlayerGameMode(ServerGameMode gameMode)
         {
             Log.Info($"Received initial sync packet with gamemode {gameMode}");
+#if SUBNAUTICA
             GameModeUtils.SetGameMode((GameModeOption)(int)gameMode, GameModeOption.None);
+#elif BELOWZERO
+            GameModeManager.SetGameOptions((GameModePresetId)(int)gameMode);
+#endif
         }
     }
 }

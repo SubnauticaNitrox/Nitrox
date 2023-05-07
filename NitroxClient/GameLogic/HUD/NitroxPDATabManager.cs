@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace NitroxClient.GameLogic.HUD;
 
@@ -6,7 +7,7 @@ public class NitroxPDATabManager
 {
     public readonly Dictionary<PDATab, NitroxPDATab> CustomTabs = new();
     
-    private readonly Dictionary<string, Atlas.Sprite> tabSpritesByName = new();
+    private readonly Dictionary<string, Sprite> tabSpritesByName = new();
     private readonly Dictionary<string, TabSpriteLoadedEvent> spriteLoadedCallbackByName = new();
 
     public NitroxPDATabManager()
@@ -19,7 +20,7 @@ public class NitroxPDATabManager
         RegisterTab(new PlayerListTab());
     }
 
-    public void AddTabSprite(string spriteName, Atlas.Sprite sprite)
+    public void AddTabSprite(string spriteName, Sprite sprite)
     {
         tabSpritesByName.Add(spriteName, sprite);
         if (spriteLoadedCallbackByName.TryGetValue(spriteName, out TabSpriteLoadedEvent spriteLoadedEvent))
@@ -29,9 +30,9 @@ public class NitroxPDATabManager
         }
     }
     
-    public bool TryGetTabSprite(string spriteName, out Atlas.Sprite sprite) => tabSpritesByName.TryGetValue(spriteName, out sprite);
+    public bool TryGetTabSprite(string spriteName, out Sprite sprite) => tabSpritesByName.TryGetValue(spriteName, out sprite);
 
-    public delegate void TabSpriteLoadedEvent(Atlas.Sprite sprite);
+    public delegate void TabSpriteLoadedEvent(Sprite sprite);
     
     public void SetSpriteLoadedCallback(string tabName, TabSpriteLoadedEvent callback)
     {

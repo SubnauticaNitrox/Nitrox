@@ -6,6 +6,7 @@
         <RootNamespace>NitroxServer_Subnautica</RootNamespace>
         <Nullable>disable</Nullable>
         <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+        <Configurations>Debug;Release;BelowZero;Subnautica</Configurations>
     </PropertyGroup>
 
     <ItemGroup>
@@ -14,7 +15,9 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="AssetsTools.NET" Version="3.0.0-preview1" />
+        <PackageReference Include="AssetsTools.NET" Version="3.0.0-preview2" />
+        <PackageReference Include="AssetsTools.NET.Texture" Version="1.0.0-preview1" />
+        <PackageReference Include="Mono.Cecil" Version="0.11.4" />
     </ItemGroup>
 
     <ItemGroup>

@@ -122,8 +122,10 @@ public class WorldPersistenceTest
     private static void StoryTimingTest(StoryTimingData storyTiming, StoryTimingData storyTimingAfter)
     {
         Assert.AreEqual(storyTiming.ElapsedSeconds, storyTimingAfter.ElapsedSeconds);
+#if SUBNAUTICA
         Assert.AreEqual(storyTiming.AuroraCountdownTime, storyTimingAfter.AuroraCountdownTime);
         Assert.AreEqual(storyTiming.AuroraWarningTime, storyTimingAfter.AuroraWarningTime);
+#endif
     }
 
     [DataTestMethod, DynamicWorldDataAfter]
@@ -216,7 +218,9 @@ public class WorldPersistenceTest
             Assert.AreEqual(playerData.CurrentStats.Health, playerDataAfter.CurrentStats.Health);
             Assert.AreEqual(playerData.CurrentStats.Food, playerDataAfter.CurrentStats.Food);
             Assert.AreEqual(playerData.CurrentStats.Water, playerDataAfter.CurrentStats.Water);
+#if SUBNAUTICA
             Assert.AreEqual(playerData.CurrentStats.InfectionAmount, playerDataAfter.CurrentStats.InfectionAmount);
+#endif
 
             Assert.AreEqual(playerData.SubRootId, playerDataAfter.SubRootId);
             Assert.AreEqual(playerData.Permissions, playerDataAfter.Permissions);

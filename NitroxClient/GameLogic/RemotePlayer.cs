@@ -35,7 +35,9 @@ namespace NitroxClient.GameLogic
 
         public Vehicle Vehicle { get; private set; }
         public SubRoot SubRoot { get; private set; }
+#if SUBNAUTICA
         public EscapePod EscapePod { get; private set; }
+#endif
         public PilotingChair PilotingChair { get; private set; }
 
         public readonly Event<RemotePlayer> PlayerDeathEvent = new();
@@ -182,7 +184,7 @@ namespace NitroxClient.GameLogic
                 SubRoot = newSubRoot;
             }
         }
-
+#if SUBNAUTICA
         public void SetEscapePod(EscapePod newEscapePod)
         {
             if (EscapePod != newEscapePod)
@@ -199,6 +201,7 @@ namespace NitroxClient.GameLogic
                 EscapePod = newEscapePod;
             }
         }
+#endif
 
         public void SetVehicle(Vehicle newVehicle)
         {

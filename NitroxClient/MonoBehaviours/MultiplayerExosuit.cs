@@ -1,4 +1,4 @@
-﻿using NitroxClient.Unity.Smoothing;
+using NitroxClient.Unity.Smoothing;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours
@@ -31,7 +31,12 @@ namespace NitroxClient.MonoBehaviours
         {
             GetComponent<Rigidbody>().freezeRotation = true;
             exosuit.SetIKEnabled(false);
+#if SUBNAUTICA
             exosuit.loopingJetSound.Stop();
+#elif BELOWZERO
+            exosuit.jumpJetsSound.Stop();
+            exosuit.boostSound.Stop();
+#endif
             exosuit.fxcontrol.Stop(0);
             exosuit.ambienceSound.Stop();
             base.Exit();
@@ -45,12 +50,20 @@ namespace NitroxClient.MonoBehaviours
                 lastThrottle = isOn;
                 if (isOn)
                 {
+#if SUBNAUTICA
                     exosuit.loopingJetSound.Play();
+#elif BELOWZERO
+                    exosuit.boostSound.Play();
+#endif
                     exosuit.fxcontrol.Play(0);
                 }
                 else
                 {
+#if SUBNAUTICA
                     exosuit.loopingJetSound.Stop();
+#elif BELOWZERO
+                    exosuit.boostSound.Stop();
+#endif
                     exosuit.fxcontrol.Stop(0);
                 }
             }

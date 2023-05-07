@@ -1,3 +1,4 @@
+#if SUBNAUTICA
 using NitroxModel.DataStructures.GameLogic;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
@@ -40,3 +41,4 @@ public class AuroraCommand : Command
         }
     }
 }
+#endif

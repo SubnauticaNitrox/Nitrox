@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using NitroxClient.GameLogic;
 using UnityEngine;
 using static PlayerCinematicController;
@@ -171,7 +171,11 @@ public class RemotePlayerCinematicController : MonoBehaviour, IManagedUpdateBeha
     private void SetVrActiveParam()
     {
         string paramaterName = "vr_active";
+#if SUBNAUTICA
         bool vrAnimationMode = GameOptions.GetVrAnimationMode();
+#elif BELOWZERO
+        bool vrAnimationMode = VRGameOptions.GetVrAnimationMode();
+#endif
         if (animator != null)
         {
             animator.SetBool(paramaterName, vrAnimationMode);
@@ -192,7 +196,11 @@ public class RemotePlayerCinematicController : MonoBehaviour, IManagedUpdateBeha
 
         if (onlyUseEndTransformInVr)
         {
+#if SUBNAUTICA
             return GameOptions.GetVrAnimationMode();
+#elif BELOWZERO
+            return VRGameOptions.GetVrAnimationMode();
+#endif
         }
 
         return true;
@@ -227,7 +235,11 @@ public class RemotePlayerCinematicController : MonoBehaviour, IManagedUpdateBeha
         if (!cinematicModeActive)
         {
             player = null;
+#if SUBNAUTICA
             if (!playInVr && GameOptions.GetVrAnimationMode())
+#elif BELOWZERO
+            if (!playInVr && VRGameOptions.GetVrAnimationMode())
+#endif
             {
                 if (debug)
                 {
@@ -366,8 +378,11 @@ public class RemotePlayerCinematicController : MonoBehaviour, IManagedUpdateBeha
         {
             transform = player.Body.GetComponent<Transform>();
         }
-
+#if SUBNAUTICA
         bool isVrAnimationMode = !GameOptions.GetVrAnimationMode();
+#elif BELOWZERO
+        bool isVrAnimationMode = !VRGameOptions.GetVrAnimationMode();
+#endif
         switch (state)
         {
             case State.In:

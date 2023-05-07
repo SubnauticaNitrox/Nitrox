@@ -46,8 +46,13 @@ namespace NitroxClient.GameLogic
 
                 if (vehicleDockingBay && dealerVehicle)
                 {
+#if SUBNAUTICA
                     if (vehicleDockingBay.GetDockedVehicle() == dealerVehicle || vehicleDockingBay.interpolatingVehicle == dealerVehicle
                         || vehicleDockingBay.nearbyVehicle == dealerVehicle)
+#elif BELOWZERO
+                    if (vehicleDockingBay.GetDockedObject().vehicle == dealerVehicle || vehicleDockingBay.interpolatingDockable.vehicle == dealerVehicle
+                                                                                     || vehicleDockingBay.nearbyDockable.vehicle == dealerVehicle)
+#endif
                     {
                         Log.Debug($"Dealer {dealer} is vehicle and currently docked or nearby {reciever}, do not harm it!");
                         return false;

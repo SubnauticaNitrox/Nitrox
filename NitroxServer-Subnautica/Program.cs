@@ -1,4 +1,4 @@
-﻿global using NitroxModel.Logger;
+global using NitroxModel.Logger;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -222,7 +222,11 @@ public class Program
         if (dllPath.IndexOf("Newtonsoft.Json.dll", StringComparison.OrdinalIgnoreCase) >= 0 || !File.Exists(dllPath))
         {
             // Try find game managed libraries
+#if SUBNAUTICA
             dllPath = Path.Combine(gameInstallDir.Value, "Subnautica_Data", "Managed", dllFileName);
+#elif BELOWZERO
+            dllPath = Path.Combine(gameInstallDir.Value, "SubnauticaZero_Data", "Managed", dllFileName);
+#endif
         }
 
         // Read assemblies as bytes as to not lock the file so that Nitrox can patch assemblies while server is running.

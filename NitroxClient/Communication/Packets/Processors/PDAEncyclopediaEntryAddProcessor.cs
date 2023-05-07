@@ -17,7 +17,11 @@ public class PDAEncyclopediaEntryAddProcessor : ClientPacketProcessor<PDAEncyclo
     {
         using (PacketSuppressor<PDAEncyclopediaEntryAdd>.Suppress())
         {
+#if SUBNAUTICA
             PDAEncyclopedia.Add(packet.Key, packet.Verbose);
+#elif BELOWZERO
+            PDAEncyclopedia.Add(packet.Key, packet.Verbose, packet.PostNotification);
+#endif
         }
     }
 }

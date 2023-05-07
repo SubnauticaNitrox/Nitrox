@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
@@ -65,9 +65,11 @@ namespace NitroxClient.GameLogic
         }
 
         public void AnimationChange(AnimChangeType type, AnimChangeState state) => packetSender.Send(new AnimationChangeEvent(multiplayerSession.Reservation.PlayerId, (int)type, (int)state));
-
+#if SUBNAUTICA
         public void BroadcastStats(float oxygen, float maxOxygen, float health, float food, float water, float infectionAmount) => packetSender.Send(new PlayerStats(multiplayerSession.Reservation.PlayerId, oxygen, maxOxygen, health, food, water, infectionAmount));
-
+#elif BELOWZERO
+        public void BroadcastStats(float oxygen, float maxOxygen, float health, float food, float water) => packetSender.Send(new PlayerStats(multiplayerSession.Reservation.PlayerId, oxygen, maxOxygen, health, food, water));
+#endif
         public void BroadcastDeath(Vector3 deathPosition) => packetSender.Send(new PlayerDeathEvent(multiplayerSession.Reservation.PlayerId, deathPosition.ToDto()));
 
         public void BroadcastSubrootChange(Optional<NitroxId> subrootId) => packetSender.Send(new SubRootChanged(multiplayerSession.Reservation.PlayerId, subrootId));
@@ -85,9 +87,15 @@ namespace NitroxClient.GameLogic
             GameObject prototype = Body;
 
             // Cheap fix for showing head, much easier since male_geo contains many different heads
+#if SUBNAUTICA
             prototype.GetComponentInParent<Player>().head.shadowCastingMode = ShadowCastingMode.On;
             GameObject clone = Object.Instantiate(prototype, Multiplayer.Main.transform, false);
             prototype.GetComponentInParent<Player>().head.shadowCastingMode = ShadowCastingMode.ShadowsOnly;
+#elif BELOWZERO
+            prototype.GetComponentInParent<Player>().staticHead.shadowCastingMode = ShadowCastingMode.On;
+            GameObject clone = Object.Instantiate(prototype);
+            prototype.GetComponentInParent<Player>().staticHead.shadowCastingMode = ShadowCastingMode.ShadowsOnly;
+#endif
 
             clone.SetActive(false);
             clone.name = "RemotePlayerPrototype";

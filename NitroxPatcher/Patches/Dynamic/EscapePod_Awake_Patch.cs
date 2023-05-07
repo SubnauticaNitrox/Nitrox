@@ -1,3 +1,4 @@
+#if SUBNAUTICA
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic.Spawning.WorldEntities;
@@ -20,3 +21,4 @@ namespace NitroxPatcher.Patches.Dynamic
         }
     }
 }
+#endif

@@ -18,8 +18,10 @@ public class WorldEntitySpawnerResolver
     public WorldEntitySpawnerResolver(PlayerManager playerManager, ILocalNitroxPlayer localPlayer)
     {
         customSpawnersByTechType[TechType.Crash] = new CrashEntitySpawner();
+#if SUBNAUTICA
         customSpawnersByTechType[TechType.Reefback] = new ReefbackWorldEntitySpawner(defaultEntitySpawner);
         customSpawnersByTechType[TechType.EscapePod] = new EscapePodWorldEntitySpawner();
+#endif
         prefabWorldEntitySpawner = new PlaceholderGroupWorldEntitySpawner(this, defaultEntitySpawner);
         playerWorldEntitySpawner = new PlayerWorldEntitySpawner(playerManager, localPlayer);
     }

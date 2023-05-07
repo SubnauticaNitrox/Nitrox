@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
@@ -212,7 +212,11 @@ public class JoinServer : MonoBehaviour
 
 #pragma warning disable CS0618 // God Damn it UWE...
                 Multiplayer.SubnauticaLoadingStarted();
+#if SUBNAUTICA
                 IEnumerator startNewGame = uGUI_MainMenu.main.StartNewGame(GameMode.Survival);
+#elif BELOWZERO
+                IEnumerator startNewGame = uGUI_MainMenu.main.StartNewGame(GameModePresetId.Survival);
+#endif
 #pragma warning restore CS0618 // God damn it UWE...
                 StartCoroutine(startNewGame);
                 LoadingScreenVersionText.Initialize();

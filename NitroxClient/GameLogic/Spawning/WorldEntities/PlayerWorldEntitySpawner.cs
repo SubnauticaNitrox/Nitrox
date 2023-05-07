@@ -77,6 +77,7 @@ public class PlayerWorldEntitySpawner : IWorldEntitySpawner
             Log.Debug($"Found sub root for {remotePlayer.PlayerName}. Will add him and update animation.");
             remotePlayer.SetSubRoot(subRoot);
         }
+#if SUBNAUTICA
         else if (parent.TryGetComponent(out EscapePod escapePod))
         {
             Log.Debug($"Found EscapePod for {remotePlayer.PlayerName}.");
@@ -85,7 +86,13 @@ public class PlayerWorldEntitySpawner : IWorldEntitySpawner
         else
         {
             Log.Error($"Found neither SubRoot component nor EscapePod on {parent.name} for {remotePlayer.PlayerName}.");
-        }        
+        }  
+#elif BELOWZERO
+        else
+        {
+            Log.Error($"Could not find SubRoot component on {parent.name} for {remotePlayer.PlayerName}.");
+        }
+#endif
     }
 
     private bool IsSwimming(Vector3 playerPosition, Optional<GameObject> parent)
@@ -122,7 +129,7 @@ public class PlayerWorldEntitySpawner : IWorldEntitySpawner
                     return false;
                 }
             }
-
+#if SUBNAUTICA
             Log.Debug($"Trying to find escape pod for {parent}.");
             parent.Value.TryGetComponent<EscapePod>(out EscapePod escapePod);
             if (escapePod)
@@ -130,6 +137,7 @@ public class PlayerWorldEntitySpawner : IWorldEntitySpawner
                 Log.Debug("Found escape pod for player. Will add him and update animation.");
                 return false;
             }
+#endif
         }
 
         // Player can be above ocean level.

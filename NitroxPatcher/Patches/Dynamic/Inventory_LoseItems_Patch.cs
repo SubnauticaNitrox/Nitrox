@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
@@ -11,7 +11,11 @@ public class Inventory_LoseItems_Patch : NitroxPatch, IDynamicPatch
     internal static readonly MethodInfo TARGET_METHOD = Reflect.Method((Inventory t) => t.LoseItems());
 
     internal static readonly OpCode INJECTION_OPCODE = OpCodes.Call;
-    internal static readonly object INJECTION_OPERAND = Reflect.Method((Inventory t) => t.InternalDropItem(default, default));
+#if SUBNAUTICA
+    internal static readonly object INJECTION_OPERAND = Reflect.Method((Inventory t) => t.InternalDropItem(default(Pickupable), default(bool)));
+#elif BELOWZERO
+    internal static readonly object INJECTION_OPERAND = Reflect.Method((Inventory t) => t.InternalDropItem(default(Pickupable), default(bool), default(bool)));
+#endif
 
     public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
     {
