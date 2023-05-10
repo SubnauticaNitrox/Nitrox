@@ -17,12 +17,12 @@ namespace NitroxClient.GameLogic.Helper
             {
                 return Optional.Of(seamothStorageContainer.container);
             }
-            StorageContainer storageContainer = owner.GetComponentInChildren<StorageContainer>();
+            StorageContainer storageContainer = owner.GetComponentInChildren<StorageContainer>(true);
             if (storageContainer)
             {
                 return Optional.Of(storageContainer.container);
             }
-            BaseBioReactor baseBioReactor = owner.GetComponentInChildren<BaseBioReactor>();
+            BaseBioReactor baseBioReactor = owner.GetComponentInChildren<BaseBioReactor>(true);
             if (baseBioReactor)
             {
                 return Optional.Of(baseBioReactor.container);
@@ -54,9 +54,15 @@ namespace NitroxClient.GameLogic.Helper
                 ownerId = null;
                 return false;
             }
+
             if (parent.GetComponent<Constructable>() || parent.GetComponent<IBaseModule>() != null)
             {
                 return parent.TryGetIdOrWarn(out ownerId);
+            }
+            else if (parent.TryGetComponentInParent(out LargeRoomWaterPark largeRoomWaterPark) &&
+                NitroxEntity.TryGetIdFrom(largeRoomWaterPark.gameObject, out ownerId))
+            {
+                return true;
             }
             else if (Regex.IsMatch(ownerTransform.gameObject.name, @"Locker0([0-9])StorageRoot$", RegexOptions.IgnoreCase))
             {

@@ -1,7 +1,10 @@
 using System.Reflection;
 using HarmonyLib;
+using NitroxClient.GameLogic.Bases.New;
 using NitroxClient.MonoBehaviours;
+using NitroxModel.DataStructures;
 using NitroxModel.Helper;
+using static NitroxClient.GameLogic.Bases.New.BuildingTester;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -11,13 +14,41 @@ namespace NitroxPatcher.Patches.Dynamic;
 public class WaterPark_TransferValue_Patch : NitroxPatch, IDynamicPatch
 {
     private static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => WaterPark.TransferValue(default, default));
+    private static TemporaryBuildData Temp => BuildingTester.Main.Temp;
 
     public static void Prefix(WaterPark srcWaterPark, WaterPark dstWaterPark)
     {
-        if (NitroxEntity.TryGetEntityFrom(srcWaterPark.gameObject, out NitroxEntity topEntity))
+        if (!NitroxEntity.TryGetIdFrom(srcWaterPark.gameObject, out NitroxId sourceId))
         {
-            NitroxEntity.SetNewId(dstWaterPark.gameObject, topEntity.Id);
+            return;
         }
+
+        // Happens when you regroup a bottom waterpark and an upper waterpark by a middle waterpark
+        // The waterpark pieces are merged into the bottom one
+        if (NitroxEntity.TryGetIdFrom(dstWaterPark.gameObject, out NitroxId destinationId))
+        {
+            Log.Debug($"Changed id when transferring value, from {sourceId} to {destinationId}");
+            Temp.ChildrenTransfer = (sourceId, destinationId);
+            return;
+        }
+
+        // Happens when you destroy the bottom piece of a waterpark higher than 1
+        if (dstWaterPark.height == 0)
+        {
+            NitroxId newId = Temp.NewWaterPark?.Id ?? new();
+            Log.Debug($"Changed id when transferring value, from nothing to {newId} [source: {sourceId}]");
+            NitroxEntity.SetNewId(dstWaterPark.gameObject, newId);
+            if (Temp.NewWaterPark == null)
+            {
+                Temp.NewWaterPark = NitroxInteriorPiece.From(dstWaterPark);
+                Temp.Transfer = true;
+            }
+            return;
+        }
+        // Happens when you place a piece at the bottom of a waterpark
+        // We simply take the existing water park entity to avoid unnecessary actions
+        // its BaseFace will be updated with updatedChildren field in UpdateBase packet
+        NitroxEntity.SetNewId(dstWaterPark.gameObject, sourceId);
     }
 
     public override void Patch(Harmony harmony)

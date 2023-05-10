@@ -10,7 +10,7 @@ namespace NitroxClient.GameLogic.Spawning.Bases.PostSpawners;
 /// <summary>
 /// For better immersion we split the Bench in three parts (left/center/right). On each can sit one player.
 /// </summary>
-public class BenchPostSpawner : IEntityPostSpawner
+public class BenchPostSpawner : IConstructablePostSpawner
 {
     public TechType TechType => TechType.Bench;
     private const int LAYER_USEABLE = 13;

@@ -1,3 +1,4 @@
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
@@ -88,6 +89,7 @@ public class UpdateBaseProcessor : BuildingProcessor<UpdateBase>
             packet.BuiltPieceEntity = null;
             packet.UpdatedChildren = null;
             packet.UpdatedMoonpools = null;
+            packet.UpdatedMapRooms = null;
             base.Process(packet, player);
         }
     }
@@ -112,7 +114,7 @@ public class PieceDeconstructedProcessor : BuildingProcessor<PieceDeconstructed>
 
     public override void Process(PieceDeconstructed packet, Player player)
     {
-        if (buildingManager.ReplacePieceByGhost(packet))
+        if (buildingManager.ReplacePieceByGhost(packet, out _))
         {
             packet.SavedBase = null;
             base.Process(packet, player);
@@ -126,7 +128,8 @@ public class WaterParkDeconstructedProcessor : BuildingProcessor<WaterParkDecons
 
     public override void Process(WaterParkDeconstructed packet, Player player)
     {
-        if (buildingManager.ReplacePieceByGhost(packet) && buildingManager.CreateWaterParkPiece(packet))
+        if (buildingManager.ReplacePieceByGhost(packet, out Entity removedEntity) &&
+            buildingManager.CreateWaterParkPiece(packet, removedEntity))
         {
             packet.SavedBase = null;
             base.Process(packet, player);

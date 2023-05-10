@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.Communication.Abstract;
+using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Bases.New;
 using NitroxClient.GameLogic.Spawning.Bases.PostSpawners;
 using NitroxClient.Helpers;
@@ -20,6 +21,7 @@ using NitroxPatcher.PatternMatching;
 using UnityEngine;
 using UWE;
 using static System.Reflection.Emit.OpCodes;
+using static NitroxClient.GameLogic.Bases.New.BuildingTester;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -35,6 +37,7 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
     internal static MethodInfo TARGET_METHOD_TOOL_CONSTRUCT = Reflect.Method((BuilderTool t) => t.Construct(default, default, default));
 
     private static BuildPieceIdentifier cachedPieceIdentifier;
+    private static TemporaryBuildData Temp => BuildingTester.Main.Temp;
 
     // Place ghost
     public static readonly InstructionsPattern AddInstructionPattern1 = new()
@@ -163,7 +166,7 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
         yield return new(Ldloc_2);
         yield return new(Ldloc_0);
         yield return new(destroyed ? Ldc_I4_1 : Ldc_I4_0);
-        yield return new(Call, Reflect.Method(() => BaseDeconstructed(default, default, default, default)));
+        yield return new(Call, Reflect.Method(() => PieceDeconstructed(default, default, default, default)));
     }
 
     public static IEnumerable<CodeInstruction> TranspilerBaseDeconstruct(MethodBase original, IEnumerable<CodeInstruction> instructions) =>
@@ -309,7 +312,7 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
             Dictionary<NitroxId, NitroxInt3> updatedMapRooms = childEntities.OfType<MapRoomEntity>()
                 .ToDictionary(entity => entity.Id, entity => entity.Cell);
 
-            UpdateBase updateBase = new(parentEntity.Id, entity.Id, NitroxBase.From(parentBase), builtPiece, updatedChildren, moonpoolManager.GetMoonpoolsUpdate(), updatedMapRooms);
+            UpdateBase updateBase = new(parentEntity.Id, entity.Id, NitroxBase.From(parentBase), builtPiece, updatedChildren, moonpoolManager.GetMoonpoolsUpdate(), updatedMapRooms, Temp.ChildrenTransfer);
             Log.Debug($"Sending UpdateBase packet: {updateBase}");
 
             // TODO: (for server-side) Find a way to optimize this (maybe by copying BaseGhost.Finish() => Base.CopyFrom)
@@ -335,10 +338,9 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
         }
     }
 
-    // TODO: Should maybe rename to PieceDeconstructed
-    public static void BaseDeconstructed(BaseDeconstructable baseDeconstructable, ConstructableBase constructableBase, Base @base, bool destroyed)
+    public static void PieceDeconstructed(BaseDeconstructable baseDeconstructable, ConstructableBase constructableBase, Base @base, bool destroyed)
     {
-        Log.Debug("BaseDeconstructed");
+        Log.Debug("PieceDeconstructed");
         if (!NitroxEntity.TryGetEntityFrom(@base.gameObject, out NitroxEntity baseEntity))
         {
             Log.Error("Couldn't find NitroxEntity on a deconstructed base, which is really problematic");
@@ -364,10 +366,10 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
         }
 
         // If deconstruction was ordered by BuildingTester, then we simply take the provided id
-        if (BuildingTester.Main.TempId != null)
+        if (Temp.Id != null)
         {
             // If it had an attached module, we'll also delete the NitroxEntity from the said module similarly to the code below
-            if (NitroxEntity.TryGetObjectFrom(BuildingTester.Main.TempId, out GameObject moduleObject) &&
+            if (NitroxEntity.TryGetObjectFrom(Temp.Id, out GameObject moduleObject) &&
                 moduleObject.TryGetComponent(out IBaseModule baseModule) &&
                 constructableBase.moduleFace.HasValue && constructableBase.moduleFace.Value.Equals(baseModule.moduleFace))
             {
@@ -378,7 +380,7 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
                 moonpoolManager.DeregisterMoonpool(constructableBase.transform);
             }
 
-            NitroxEntity.SetNewId(constructableBase.gameObject, BuildingTester.Main.TempId);
+            NitroxEntity.SetNewId(constructableBase.gameObject, Temp.Id);
             // We don't need to go any further
             return;
         }
@@ -437,13 +439,13 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
         ghostEntity.Id = pieceId;
         ghostEntity.ParentId = baseEntity.Id;
 
-        PieceDeconstructed pieceDeconstructed = BuildingTester.Main.NewWaterPark == null ?
+        PieceDeconstructed pieceDeconstructed = Temp.NewWaterPark == null ?
             new PieceDeconstructed(baseEntity.Id, pieceId, cachedPieceIdentifier, ghostEntity, NitroxBase.From(@base)) :
-            new WaterParkDeconstructed(baseEntity.Id, pieceId, cachedPieceIdentifier, ghostEntity, NitroxBase.From(@base), BuildingTester.Main.NewWaterPark);
+            new WaterParkDeconstructed(baseEntity.Id, pieceId, cachedPieceIdentifier, ghostEntity, NitroxBase.From(@base), Temp.NewWaterPark, Temp.MovedChildrenIds, Temp.Transfer);
         Log.Debug($"Base is not empty, sending packet {pieceDeconstructed}");
 
         Resolve<IPacketSender>().Send(pieceDeconstructed);
-        BuildingTester.Main.NewWaterPark = null;
+        BuildingTester.Main.Temp.Reset();
     }
 
     public static void PostfixDeconstructionAllowed(BaseDeconstructable __instance, ref bool __result, ref string reason)

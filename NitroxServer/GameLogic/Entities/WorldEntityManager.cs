@@ -138,8 +138,9 @@ namespace NitroxServer.GameLogic.Entities
             }
         }
 
-        public void RemoveGlobalRootEntity(NitroxId entityId, bool removeFromRegistry = true)
+        public Optional<Entity> RemoveGlobalRootEntity(NitroxId entityId, bool removeFromRegistry = true)
         {
+            Optional<Entity> removedEntity = Optional.Empty;
             lock (globalRootEntitiesById)
             {
                 if (removeFromRegistry)
@@ -159,10 +160,11 @@ namespace NitroxServer.GameLogic.Entities
                             entityRegistry.AddOrUpdate(childPlayerEntity);
                         }
                     }
-                    entityRegistry.RemoveEntity(entityId);
+                    removedEntity = entityRegistry.RemoveEntity(entityId);
                 }
                 globalRootEntitiesById.Remove(entityId);
             }
+            return removedEntity;
         }
 
         public void TrackEntityInTheWorld(WorldEntity entity)

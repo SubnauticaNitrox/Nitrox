@@ -57,6 +57,11 @@ public class BaseDeconstructableGhostMetadata : GhostMetadata
         ModuleFace = moduleFace;
         ClassId = classId;
     }
+
+    public override string ToString()
+    {
+        return $"[BaseDeconstructableGhostMetadata TargetOffset: {TargetOffset}, ModuleFace: {ModuleFace}, ClassId: {ClassId}]";
+    }
 }
 
 [Serializable, DataContract]

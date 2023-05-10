@@ -3,8 +3,8 @@ using HarmonyLib;
 using NitroxClient.GameLogic.Bases.New;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel.Helper;
+using static NitroxClient.GameLogic.Bases.New.BuildingTester;
 
 namespace NitroxPatcher.Patches.Dynamic;
 
@@ -14,27 +14,53 @@ namespace NitroxPatcher.Patches.Dynamic;
 public class WaterPark_Split_Patch : NitroxPatch, IDynamicPatch
 {
     private static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => WaterPark.Split(default, default));
-    private static InteriorPieceEntity NewWaterPark => BuildingTester.Main.NewWaterPark;
+    private static TemporaryBuildData Temp => BuildingTester.Main.Temp;
 
-    public static void Prefix(WaterPark bottomWaterPark, WaterPark topWaterPark)
+    public static bool Prefix(WaterPark bottomWaterPark, WaterPark topWaterPark)
+    {
+        if (Temp.MovedChildrenIds == null)
+        {
+            return true;
+        }
+
+        // MovedChildrenIds is not null when this is called by a WaterParkDeconstructed packet
+        // in which case we manually move the items to ensure they're in sync with the server
+        foreach (NitroxId childId in Temp.MovedChildrenIds)
+        {
+            if (NitroxEntity.TryGetComponentFrom(childId, out WaterParkItem childItem))
+            {
+                bottomWaterPark.MoveItemTo(childItem, topWaterPark);
+            }
+        }
+        return false;
+    }
+
+    public static void Postfix(WaterPark bottomWaterPark, WaterPark topWaterPark)
     {
         WaterPark newWaterPark = null;
         if (bottomWaterPark.TryGetComponent(out NitroxEntity originalEntity))
         {
             newWaterPark = topWaterPark;
-        } else if (topWaterPark.TryGetComponent(out originalEntity))
+        }
+        else if (topWaterPark.TryGetComponent(out originalEntity))
         {
             newWaterPark = bottomWaterPark;
         }
+
         if (newWaterPark)
         {
-            NitroxId newId = NewWaterPark?.Id ?? new();
+            NitroxId newId = Temp.NewWaterPark?.Id ?? new();
             NitroxEntity.SetNewId(newWaterPark.gameObject, newId);
             // If it was null beforehand, it means that the local player is responsible for destructing the WaterPark
             // If it was already set, it means that the local player is remotely destructing the WaterPark
-            if (NewWaterPark == null)
+            if (Temp.NewWaterPark == null)
             {
-                BuildingTester.Main.NewWaterPark = NitroxInteriorPiece.From(newWaterPark);
+                Temp.NewWaterPark = NitroxInteriorPiece.From(newWaterPark);
+                Temp.MovedChildrenIds = new();
+                foreach (NitroxEntity childEntity in newWaterPark.itemsRoot.GetComponentsInChildren<NitroxEntity>(true))
+                {
+                    Temp.MovedChildrenIds.Add(childEntity.Id);
+                }
             }
             Log.Debug($"Splitting two WaterParks, original WaterPark NitroxEntity: {originalEntity.Id}, new WaterPark NitroxEntity: {newId}");
         }
@@ -46,6 +72,6 @@ public class WaterPark_Split_Patch : NitroxPatch, IDynamicPatch
 
     public override void Patch(Harmony harmony)
     {
-        PatchPrefix(harmony, TARGET_METHOD);
+        PatchMultiple(harmony, TARGET_METHOD, prefix: true, postfix: true);
     }
 }

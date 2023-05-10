@@ -31,9 +31,8 @@ public class BuildingTester : MonoBehaviour
     public int Slot = 0;
     private JsonSerializer serializer;
     public string SavePath = Path.Combine(NitroxUser.LauncherPath, "SavedBases");
-    
-    public NitroxId TempId;
-    public InteriorPieceEntity NewWaterPark;
+
+    public TemporaryBuildData Temp;
     public Dictionary<NitroxId, DateTimeOffset> BasesCooldown;
     /// <summary>
     /// Time in milliseconds before local player can build on a base that was modified by another player
@@ -44,6 +43,7 @@ public class BuildingTester : MonoBehaviour
     {
         Main = this;
         BuildQueue = new();
+        Temp = new();
         BasesCooldown = new();
         serializer = new();
         serializer.NullValueHandling = NullValueHandling.Ignore;
@@ -173,7 +173,7 @@ public class BuildingTester : MonoBehaviour
     public IEnumerator UpdatePlacedBase(UpdateBase updateBase)
     {
         // Is probably useless check but can probably be useful for desync detection
-        if (!NitroxEntity.TryGetComponentFrom(updateBase.BaseId, out Base parentBase))
+        if (!NitroxEntity.TryGetComponentFrom<Base>(updateBase.BaseId, out _))
         {
             Log.Debug("Couldn't find the parentBase");
             // TODO: Ask for resync
@@ -181,6 +181,8 @@ public class BuildingTester : MonoBehaviour
         }
         if (NitroxEntity.TryGetComponentFrom(updateBase.FormerGhostId, out ConstructableBase constructableBase))
         {
+            Temp.ChildrenTransfer = updateBase.ChildrenTransfer;
+
             BaseGhost baseGhost = constructableBase.model.GetComponent<BaseGhost>();
             constructableBase.SetState(true, true);
             BasesCooldown[updateBase.BaseId] = DateTimeOffset.Now;
@@ -251,18 +253,13 @@ public class BuildingTester : MonoBehaviour
                 continue;
             }
             Log.Debug($"Found a BaseDeconstructable {baseDeconstructable.name}, will now deconstruct it manually");
-            using (new PacketSuppressor<BaseDeconstructed>())
-            using (new PacketSuppressor<PieceDeconstructed>())
-            using (new PacketSuppressor<WaterParkDeconstructed>())
+            using (PacketSuppressor<BaseDeconstructed>.Suppress())
+            using (PacketSuppressor<PieceDeconstructed>.Suppress())
+            using (PacketSuppressor<WaterParkDeconstructed>.Suppress())
             {
-                TempId = pieceDeconstructed.PieceId;
-                if (pieceDeconstructed is WaterParkDeconstructed waterParkDeconstructed)
-                {
-                    NewWaterPark = waterParkDeconstructed.NewWaterPark;
-                }
+                Temp.Fill(pieceDeconstructed);
                 baseDeconstructable.Deconstruct();
-                TempId = null;
-                NewWaterPark = null;
+                Temp.Reset();
             }
             BasesCooldown[pieceDeconstructed.BaseId] = DateTimeOffset.Now;
             yield break;
@@ -442,4 +439,32 @@ public class BuildingTester : MonoBehaviour
         }
     }
 
+    public class TemporaryBuildData
+    {
+        public NitroxId Id;
+        public InteriorPieceEntity NewWaterPark;
+        public List<NitroxId> MovedChildrenIds;
+        public (NitroxId, NitroxId) ChildrenTransfer;
+        public bool Transfer;
+        
+        public void Fill(PieceDeconstructed pieceDeconstructed)
+        {
+            Id = pieceDeconstructed.PieceId;
+            if (pieceDeconstructed is WaterParkDeconstructed waterParkDeconstructed)
+            {
+                NewWaterPark = waterParkDeconstructed.NewWaterPark;
+                MovedChildrenIds = waterParkDeconstructed.MovedChildrenIds;
+                Transfer = waterParkDeconstructed.Transfer;
+            }
+        }
+
+        public void Reset()
+        {
+            Id = null;
+            NewWaterPark = null;
+            MovedChildrenIds = null;
+            ChildrenTransfer = (null, null);
+            Transfer = false;
+        }
+    }
 }

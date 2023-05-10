@@ -146,21 +146,68 @@ namespace NitroxServer.GameLogic.Entities
 
         public void ReparentEntity(NitroxId entityId, NitroxId newParentId)
         {
-            Optional<Entity> opEntity = GetEntityById(entityId);
-
-            if (!opEntity.HasValue)
+            if (entityId == null || !TryGetEntityById(entityId, out Entity entity))
             {
                 Log.Error($"Could not find entity to reparent: {entityId}");
                 return;
             }
+            ReparentEntity(entity, newParentId);
+        }
 
-            Entity entity = opEntity.Value;
+        public void ReparentEntity(NitroxId entityId, Entity newParent)
+        {
+            if (entityId == null || !TryGetEntityById(entityId, out Entity entity))
+            {
+                Log.Error($"Could not find entity to reparent: {entityId}");
+                return;
+            }
+            ReparentEntity(entity, newParent);
+        }
 
+        public void ReparentEntity(Entity entity, NitroxId newParentId)
+        {
+            Entity parentEntity = newParentId != null ? GetEntityById(newParentId).Value : null;
+            ReparentEntity(entity, parentEntity);
+        }
+
+        public void ReparentEntity(Entity entity, Entity newParent)
+        {
             RemoveFromParent(entity);
+            if (newParent == null)
+            {
+                return;
+            }
+            entity.ParentId = newParent.Id;
+            newParent.ChildEntities.Add(entity);
+        }
 
-            entity.ParentId = newParentId;
+        public void TransferChildren(NitroxId parentId, NitroxId newParentId, Func<Entity, bool> filter = null)
+        {
+            if (!TryGetEntityById(parentId, out Entity parentEntity))
+            {
+                Log.Error($"[{nameof(EntityRegistry.TransferChildren)}] Couldn't find origin parent entity for {parentId}");
+                return;
+            }
+            if (!TryGetEntityById(newParentId, out Entity newParentEntity))
+            {
+                Log.Error($"[{nameof(EntityRegistry.TransferChildren)}] Couldn't find new parent entity for {newParentId}");
+                return;
+            }
+            TransferChildren(parentEntity, newParentEntity, filter);
+        }
 
-            AddToParent(entity);
+        public void TransferChildren(Entity parent, Entity newParent, Func<Entity, bool> filter = null)
+        {
+            Log.Debug($"Moving {parent.ChildEntities.Count} children from {parent.Id} to {newParent.Id}");
+            IEnumerable<Entity> childrenToMove = filter != null ?
+                parent.ChildEntities.Where(filter) : parent.ChildEntities;
+
+            foreach (Entity childEntity in childrenToMove)
+            {
+                childEntity.ParentId = newParent.Id;
+                newParent.ChildEntities.Add(childEntity);
+            }
+            parent.ChildEntities.RemoveAll(entity => filter(entity));
         }
     }
 }

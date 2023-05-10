@@ -1,28 +1,34 @@
-﻿using System.Reflection;
+using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.Helper;
 
-namespace NitroxPatcher.Patches.Dynamic
+namespace NitroxPatcher.Patches.Dynamic;
+
+public class Player_SetCurrentSub_Patch : NitroxPatch, IDynamicPatch
 {
-    public class Player_SetCurrentSub_Patch : NitroxPatch, IDynamicPatch
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Player t) => t.SetCurrentSub(default, default));
+
+    public static void Prefix(Player __instance, SubRoot sub)
     {
-        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Player t) => t.SetCurrentSub(default(SubRoot), default(bool)));
-
-        public static void Prefix(Player __instance, SubRoot sub)
+        // We really want to avoid unnecessary packets giving false information
+        if (!Multiplayer.Main || !Multiplayer.Main.InitialSyncCompleted)
         {
-            // When in the water of the moonpool, it can happen that you hammer change requests
-            // while the sub is not changed. This will prevent that
-            if (__instance.GetCurrentSub() != sub)
-            {
-                NitroxServiceLocator.LocateService<LocalPlayer>().BroadcastSubrootChange(sub.GetId());
-            }
+            return;
         }
 
-        public override void Patch(Harmony harmony)
+        // When in the water of the moonpool, it can happen that you hammer change requests
+        // while the sub is not changed. This will prevent that
+        if (__instance.GetCurrentSub() != sub)
         {
-            PatchPrefix(harmony, TARGET_METHOD);
+            NitroxServiceLocator.LocateService<LocalPlayer>().BroadcastSubrootChange(sub.GetId());
         }
+    }
+
+    public override void Patch(Harmony harmony)
+    {
+        PatchPrefix(harmony, TARGET_METHOD);
     }
 }

@@ -18,6 +18,7 @@ namespace NitroxModel.DataStructures.GameLogic
     [ProtoInclude(110, typeof(InstalledBatteryEntity))]
     [ProtoInclude(120, typeof(InstalledModuleEntity))]
     [ProtoInclude(130, typeof(WorldEntity))]
+    [ProtoInclude(140, typeof(PlanterEntity))]
     public abstract class Entity
     {
         [DataMember(Order = 1)]

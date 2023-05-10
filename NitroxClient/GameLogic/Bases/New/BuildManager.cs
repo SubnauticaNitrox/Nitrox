@@ -10,6 +10,7 @@ using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Buildings.New;
+using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel.DataStructures.Util;
 using NitroxModel_Subnautica.DataStructures;
@@ -85,13 +86,21 @@ public static class BuildManager
         return false;
     }
 
+    /// <remarks>
+    /// Even if the corresponding module was found, in some cases (with WaterParks notably) we don't want to transfer the id
+    /// we then return false because the gameobject may have already been marked.
+    /// </remarks>
+    /// <returns>
+    /// Whether or not the id was successfully transferred
+    /// </returns>
     public static bool TryTransferIdFromGhostToModule(BaseGhost baseGhost, NitroxId id, ConstructableBase constructableBase, out GameObject moduleObject)
     {
         Log.Debug($"TryTransferIdFromGhostToModule({baseGhost},{id})");
+        // 1. Find the face of the target piece
         Base.Face? face = null;
         bool isWaterPark = baseGhost is BaseAddWaterPark;
         bool isMapRoomGhost = baseGhost is BaseAddMapRoomGhost;
-        // Only three types of ghost which spawn a module
+        // Only four types of ghost which spawn a module
         if ((baseGhost is BaseAddFaceGhost faceGhost && faceGhost.modulePrefab) ||
             (baseGhost is BaseAddModuleGhost moduleGhost && moduleGhost.modulePrefab) ||
             isMapRoomGhost ||
@@ -131,14 +140,10 @@ public static class BuildManager
                     break;
 
                 case TechType.BaseMoonpool:
-                    // Moonpools are a very specific case, we tweak them to work as modules (while they're not)
+                    // Moonpools are a very specific case, we tweak them to work as interior pieces (while they're not)
                     Optional<GameObject> objectOptional = baseGhost.targetBase.gameObject.EnsureComponent<MoonpoolManager>().RegisterMoonpool(constructableBase.transform, id);
                     moduleObject = objectOptional.Value;
-                    if (objectOptional.HasValue)
-                    {
-                        return true;
-                    }
-                    return false;
+                    return moduleObject;
 
                 case TechType.BaseMapRoom:
                     // In the case the ghost is under a BaseDeconstructable, this is a good way to identify a MapRoom
@@ -152,59 +157,60 @@ public static class BuildManager
             }
         }
 
-        if (face.HasValue)
+        if (!face.HasValue)
         {
-            if (isMapRoomGhost)
+            if (constructableBase.techType != TechType.BaseWaterPark)
             {
-                MapRoomFunctionality mapRoomFunctionality = baseGhost.targetBase.GetMapRoomFunctionalityForCell(face.Value.cell);
-                if (mapRoomFunctionality)
+                Log.Error($"No face could be found for ghost {baseGhost}");
+            }
+            moduleObject = null;
+            return false;
+        }
+
+        // 2. Use that face to find the newly created piece and set its id to the desired one
+        if (isMapRoomGhost)
+        {
+            MapRoomFunctionality mapRoomFunctionality = baseGhost.targetBase.GetMapRoomFunctionalityForCell(face.Value.cell);
+            if (mapRoomFunctionality)
+            {
+                // As MapRooms can be built as the first piece of a base, we need to make sure that they receive a new id if they're not in a base
+                if (constructableBase.GetComponentInParent<Base>(true))
                 {
-                    // As MapRooms can be built as the first piece of a base, we need to make sure that they receive a new id if they're not in a base
-                    if (constructableBase.GetComponentInParent<Base>(true))
-                    {
-                        NitroxEntity.SetNewId(mapRoomFunctionality.gameObject, id);
-                    }
-                    else
-                    {
-                        NitroxEntity.SetNewId(mapRoomFunctionality.gameObject, id.Increment());
-                    }
-                    moduleObject = mapRoomFunctionality.gameObject;
-                    return true;
+                    NitroxEntity.SetNewId(mapRoomFunctionality.gameObject, id);
                 }
-                Log.Error($"Couldn't find MapRoomFunctionality of built MapRoom (cell: {face.Value.cell})");
+                else
+                {
+                    NitroxEntity.SetNewId(mapRoomFunctionality.gameObject, id.Increment());
+                }
+                moduleObject = mapRoomFunctionality.gameObject;
+                return true;
+            }
+            Log.Error($"Couldn't find MapRoomFunctionality of built MapRoom (cell: {face.Value.cell})");
+            moduleObject = null;
+            return false;
+        }
+
+        IBaseModule module = baseGhost.targetBase.GetModule(face.Value);
+        if (module != null)
+        {
+            // If the WaterPark is higher than one, it means that the newly built WaterPark will be merged with one that already has a NitroxEntity
+            if (module is WaterPark waterPark && waterPark.height > 1)
+            {
+                Log.Debug($"Found WaterPark higher than 1 [{waterPark.height}], not transferring NitroxEntity to it");
+                // as the WaterPark is necessarily merged, we won't need to do anything about it
                 moduleObject = null;
                 return false;
             }
 
-            IBaseModule module = baseGhost.targetBase.GetModule(face.Value);
-            if (module != null)
-            {
-                moduleObject = (module as Component).gameObject;
-                // If the WaterPark is higher than one, it means that the newly built WaterPark will be merged with one that already has a NitroxEntity
-                if (module is WaterPark waterPark && waterPark.height > 1)
-                {
-                    Log.Debug($"Found WaterPark higher than 1 {waterPark.height}, not transferring NitroxEntity to it");
-                    return true;
-                }
-
-                Log.Debug($"Successfully transferred NitroxEntity to {module} [{id}]");
-                NitroxEntity.SetNewId(moduleObject, id);
-                return true;
-            }
-            else
-            {
-                // When a WaterPark is merged with another one, we won't find its module but we don't care about that
-                if (isWaterPark)
-                {
-                    moduleObject = null;
-                    return false;
-                }
-                Log.Error("Couldn't find the module's GameObject of built interior piece when transfering its NitroxEntity to the module.");
-            }
+            Log.Debug($"Successfully transferred NitroxEntity to {module} [{id}]");
+            moduleObject = (module as Component).gameObject;
+            NitroxEntity.SetNewId(moduleObject, id);
+            return true;
         }
-        else
+        // When a WaterPark is merged with another one, we won't find its module but we don't care about that
+        else if (!isWaterPark)
         {
-            Log.Error($"No face could be found for ghost {baseGhost}");
+            Log.Error("Couldn't find the module's GameObject of built interior piece when transfering its NitroxEntity to the module.");
         }
 
         moduleObject = null;
@@ -236,9 +242,6 @@ public static class BuildManager
         return baseGhost.targetBase.NormalizeCell(baseGhost.targetBase.WorldToGrid(baseGhost.ghostBase.occupiedBounds.center));
     }
 }
-
-
-// TODO: Add further metadata in modules and interior pieces
 
 public static class NitroxGlobalRoot
 {
@@ -461,7 +464,6 @@ public static class NitroxBuild
 
         Constructable constructable = moduleObject.GetComponent<Constructable>();
         constructable.SetIsInside(moduleEntity.IsInside);
-        // TODO: If IsInside is false, maybe set a null environment
         SkyEnvironmentChanged.Send(moduleObject, moduleObject.GetComponentInParent<SubRoot>(true));
         constructable.constructedAmount = moduleEntity.ConstructedAmount;
         constructable.SetState(moduleEntity.ConstructedAmount >= 1f, false);
@@ -517,8 +519,6 @@ public static class NitroxBuild
 
         yield return NitroxGhostMetadata.ApplyMetadataToGhost(baseGhost, ghostEntity.Metadata, @base);
         
-        // TODO: Fix hatch ghosts showing the wrong model
-        // TODO: Fix ghost visual glitch (probably a duplicate model) (black ghost)
         // Necessary to wait for BaseGhost.Start()
         yield return null;
         // Verify that the metadata didn't destroy the GameObject
@@ -766,9 +766,17 @@ public static class NitroxInteriorPiece
         }
 
         // TODO: Verify if this is necessary or not
-        // EDIT: This is most likely not
+        // EDIT: This is most likely not, apart from the PlanterEntity which is important
         switch (module)
         {
+            case LargeRoomWaterPark largeRoomWaterPark:
+                PlanterEntity leftPlanter = new(interiorPiece.Id.Increment(), interiorPiece.Id);
+                PlanterEntity rightPlanter = new(leftPlanter.Id.Increment(), interiorPiece.Id);
+                interiorPiece.ChildEntities.Add(leftPlanter);
+                interiorPiece.ChildEntities.Add(rightPlanter);
+                // TODO: Eventually add the children items as entities
+                interiorPiece.Constructed = largeRoomWaterPark.constructed;
+                break;
             case WaterPark waterPark:
                 interiorPiece.Constructed = waterPark.constructed;
                 break;

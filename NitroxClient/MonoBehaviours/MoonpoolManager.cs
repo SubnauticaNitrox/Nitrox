@@ -129,6 +129,7 @@ public class MoonpoolManager : MonoBehaviour
         foreach (MoonpoolEntity moonpoolEntity in moonpoolsByCell.Values)
         {
             VehicleWorldEntity moonpoolVehicleEntity = moonpoolEntity.ChildEntities.OfType<VehicleWorldEntity>().FirstOrFallback(null);
+            // TODO: Fix vehicles not spawning inside of the moonpool and then being duplicate on server-side
             if (moonpoolVehicleEntity != null)
             {
                 yield return entities.SpawnAsync(moonpoolVehicleEntity);

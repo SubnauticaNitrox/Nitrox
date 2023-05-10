@@ -1,4 +1,5 @@
 using System.Collections;
+using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
@@ -25,23 +26,39 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities
             NitroxEntity.SetNewId(gameObject, entity.Id);
             CrafterLogic.NotifyCraftEnd(gameObject, techType);
 
-            if (parent.HasValue && !parent.Value.GetComponent<LargeWorldEntityCell>())
+            WaterPark parentWaterPark = parent.HasValue ? parent.Value.GetComponent<WaterPark>() : null;
+            if (!parentWaterPark)
             {
-                LargeWorldEntity.Register(gameObject); // This calls SetActive on the GameObject
-            }
-            else if (gameObject.GetComponent<LargeWorldEntity>() && !gameObject.transform.parent && cellRoot.liveRoot)
-            {
-                gameObject.transform.SetParent(cellRoot.liveRoot.transform, true);
-                LargeWorldEntity.Register(gameObject);
-            }
-            else
-            {
-                gameObject.SetActive(true);
+                if (parent.HasValue && !parent.Value.GetComponent<LargeWorldEntityCell>())
+                {
+                    LargeWorldEntity.Register(gameObject); // This calls SetActive on the GameObject
+                }
+                else if (gameObject.GetComponent<LargeWorldEntity>() && !gameObject.transform.parent && cellRoot.liveRoot)
+                {
+                    gameObject.transform.SetParent(cellRoot.liveRoot.transform, true);
+                    LargeWorldEntity.Register(gameObject);
+                }
+                else
+                {
+                    gameObject.SetActive(true);
+                }
             }
 
             if (parent.HasValue)
             {
-                gameObject.transform.SetParent(parent.Value.transform, true);
+                if (parentWaterPark && gameObject.TryGetComponent(out Pickupable pickupable))
+                {
+                    Log.Debug($"Spawning : {gameObject.name} under parent: {parent.Value.name}");
+                    pickupable.SetVisible(false);
+                    pickupable.Activate(false);
+                    parentWaterPark.AddItem(pickupable);
+                    Log.Debug($"Parent is now: {gameObject.transform.parent.name}, position : {gameObject.transform.position}, localPosition : {gameObject.transform.localPosition}");
+                    Log.Debug($"Entity should be position : {entity.Transform.Position}, localPosition : {entity.Transform.LocalPosition}");
+                }
+                else
+                {
+                    gameObject.transform.SetParent(parent.Value.transform, true);
+                }
             }
 
             result.Set(Optional.Of(gameObject));
