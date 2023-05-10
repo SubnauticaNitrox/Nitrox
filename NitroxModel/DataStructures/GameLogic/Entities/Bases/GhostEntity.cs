@@ -28,11 +28,11 @@ public class GhostEntity : ModuleEntity
         return new();
     }
 
-    public GhostEntity(NitroxId id, NitroxVector3 position, NitroxQuaternion rotation, NitroxVector3 localScale, float constructedAmount, bool isInside, NitroxBaseFace baseFace, SavedBase savedBase, NitroxId parentId = null)
+    public GhostEntity(NitroxId id, NitroxVector3 localPosition, NitroxQuaternion localRotation, NitroxVector3 localScale, float constructedAmount, bool isInside, NitroxBaseFace baseFace, SavedBase savedBase, NitroxId parentId = null)
     {
         Id = id;
-        Position = position;
-        Rotation = rotation;
+        LocalPosition = localPosition;
+        LocalRotation = localRotation;
         LocalScale = localScale;
         ConstructedAmount = constructedAmount;
         IsInside = isInside;
@@ -44,10 +44,10 @@ public class GhostEntity : ModuleEntity
     }
 
     /// <remarks>Used for deserialization</remarks>
-    public GhostEntity(NitroxVector3 position, NitroxQuaternion rotation, NitroxVector3 localScale, float constructedAmount, bool isInside, NitroxBaseFace baseFace, SavedBase savedBase, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
+    public GhostEntity(NitroxVector3 localPosition, NitroxQuaternion localRotation, NitroxVector3 localScale, float constructedAmount, bool isInside, NitroxBaseFace baseFace, SavedBase savedBase, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
     {
-        Position = position;
-        Rotation = rotation;
+        LocalPosition = localPosition;
+        LocalRotation = localRotation;
         LocalScale = localScale;
         ConstructedAmount = constructedAmount;
         IsInside = isInside;
@@ -67,6 +67,6 @@ public class GhostEntity : ModuleEntity
 
     public override string ToString()
     {
-        return $"[GhostEntity Id: {Id}, ParentId: {ParentId}, ClassId: {ClassId}, Position: {Position}, Rotation: {Rotation}, LocalScale: {LocalScale}, ConstructedAmount: {ConstructedAmount}, IsInside: {IsInside}, BaseFace: [{BaseFace}], SavedBase: {SavedBase}";
+        return $"[GhostEntity Id: {Id}, ParentId: {ParentId}, ClassId: {ClassId}, LocalPosition: {LocalPosition}, LocalRotation: {LocalRotation}, LocalScale: {LocalScale}, ConstructedAmount: {ConstructedAmount}, IsInside: {IsInside}, BaseFace: [{BaseFace}], SavedBase: {SavedBase}";
     }
 }

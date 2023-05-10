@@ -11,10 +11,10 @@ namespace NitroxModel.DataStructures.GameLogic.Entities.Bases;
 public class ModuleEntity : GlobalRootEntity
 {
     [DataMember(Order = 1)]
-    public NitroxVector3 Position;
+    public NitroxVector3 LocalPosition;
 
     [DataMember(Order = 2)]
-    public NitroxQuaternion Rotation;
+    public NitroxQuaternion LocalRotation;
 
     [DataMember(Order = 3)]
     public NitroxVector3 LocalScale;
@@ -36,11 +36,11 @@ public class ModuleEntity : GlobalRootEntity
         return new();
     }
 
-    public ModuleEntity(NitroxId id, NitroxVector3 position, NitroxQuaternion rotation, NitroxVector3 localScale, float constructedAmount, bool isInside, NitroxId parentId = null)
+    public ModuleEntity(NitroxId id, NitroxVector3 localPosition, NitroxQuaternion localRotation, NitroxVector3 localScale, float constructedAmount, bool isInside, NitroxId parentId = null)
     {
         Id = id;
-        Position = position;
-        Rotation = rotation;
+        LocalPosition = localPosition;
+        LocalRotation = localRotation;
         LocalScale = localScale;
         ConstructedAmount = constructedAmount;
         IsInside = isInside;
@@ -50,10 +50,10 @@ public class ModuleEntity : GlobalRootEntity
     }
 
     /// <remarks>Used for deserialization</remarks>
-    public ModuleEntity(NitroxVector3 position, NitroxQuaternion rotation, NitroxVector3 localScale, float constructedAmount, bool isInside, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
+    public ModuleEntity(NitroxVector3 localPosition, NitroxQuaternion localRotation, NitroxVector3 localScale, float constructedAmount, bool isInside, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
     {
-        Position = position;
-        Rotation = rotation;
+        LocalPosition = localPosition;
+        LocalRotation = localRotation;
         LocalScale = localScale;
         ConstructedAmount = constructedAmount;
         IsInside = isInside;
