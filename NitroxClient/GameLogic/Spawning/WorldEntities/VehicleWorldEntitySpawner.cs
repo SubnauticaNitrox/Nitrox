@@ -19,7 +19,7 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
     private const float ALLOWED_CONSTRUCTOR_DISTANCE = 100.0f;
 
     public IEnumerator SpawnAsync(WorldEntity entity, Optional<GameObject> parent, EntityCell cellRoot, TaskResult<Optional<GameObject>> result)
-    { 
+    {
         VehicleWorldEntity vehicleEntity = (VehicleWorldEntity)entity;
 
         bool withinConstructorSpawnWindow = (DayNightCycle.main.timePassedAsFloat - vehicleEntity.ConstructionTime) < GetCraftDuration(vehicleEntity.TechType.ToUnity());
@@ -134,7 +134,7 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
             return;
         }
 
-        PlayerCinematicController[] controllers = gameObject.GetComponentsInChildren<PlayerCinematicController>();
+        PlayerCinematicController[] controllers = gameObject.GetComponentsInChildren<PlayerCinematicController>(true);
 
         if (controllers.Length == 0)
         {
@@ -172,7 +172,7 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
             return;
         }
 
-        VehicleDockingBay dockingBay = parent.GetComponentInChildren<VehicleDockingBay>();
+        VehicleDockingBay dockingBay = parent.GetComponentInChildren<VehicleDockingBay>(true);
 
         if (!dockingBay)
         {
