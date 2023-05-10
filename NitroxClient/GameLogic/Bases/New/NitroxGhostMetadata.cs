@@ -12,8 +12,10 @@ public static class NitroxGhostMetadata
 {
     public static T From<T>(BaseGhost baseGhost) where T : GhostMetadata, new()
     {
-        T metadata = new();
-        metadata.TargetOffset = baseGhost.targetOffset.ToDto();
+        T metadata = new()
+        {
+            TargetOffset = baseGhost.targetOffset.ToDto()
+        };
         return metadata;
     }
 
@@ -91,8 +93,10 @@ public static class NitroxBaseDeconstructableGhostMetadata
         BaseDeconstructableGhostMetadata metadata = NitroxGhostMetadata.From<BaseDeconstructableGhostMetadata>(baseGhost);
         if (baseGhost.TryGetComponentInParent(out ConstructableBase constructableBase) && constructableBase.moduleFace.HasValue)
         {
-            metadata.ModuleFace = constructableBase.moduleFace.Value.ToDto();
-            IBaseModule baseModule = baseGhost.targetBase.GetModule(constructableBase.moduleFace.Value);
+            Base.Face moduleFace = constructableBase.moduleFace.Value;
+            metadata.ModuleFace = moduleFace.ToDto();
+            moduleFace.cell += baseGhost.targetBase.GetAnchor();
+            IBaseModule baseModule = baseGhost.targetBase.GetModule(moduleFace);
             if (baseModule != null && (baseModule as MonoBehaviour).TryGetComponent(out PrefabIdentifier identifier))
             {
                 metadata.ClassId = identifier.ClassId;

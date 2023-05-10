@@ -15,7 +15,22 @@ namespace NitroxModel.DataStructures.GameLogic.Entities;
 [ProtoInclude(146, typeof(GhostEntity))]
 [ProtoInclude(147, typeof(InteriorPieceEntity))]
 [ProtoInclude(148, typeof(MoonpoolEntity))]
+[ProtoInclude(149, typeof(WaterParkCreatureEntity))]
 public class GlobalRootEntity : WorldEntity
 {
-
+    public static GlobalRootEntity From(WorldEntity worldEntity)
+    {
+        return new()
+        {
+            Transform = worldEntity.Transform,
+            Level = worldEntity.Level,
+            ClassId = worldEntity.ClassId,
+            SpawnedByServer = worldEntity.SpawnedByServer,
+            Id = worldEntity.Id,
+            TechType = worldEntity.TechType,
+            Metadata = worldEntity.Metadata,
+            ParentId = worldEntity.ParentId,
+            ChildEntities = worldEntity.ChildEntities
+        };
+    }
 }

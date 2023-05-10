@@ -121,8 +121,14 @@ namespace NitroxClient
                             .SingleInstance();
 
             containerBuilder.RegisterAssemblyTypes(currentAssembly)
-                            .AssignableTo<IEntityPostSpawner>()
-                            .As<IEntityPostSpawner>()
+                            .AssignableTo<IConstructablePostSpawner>()
+                            .As<IConstructablePostSpawner>()
+                            .AsSelf()
+                            .SingleInstance();
+
+            containerBuilder.RegisterAssemblyTypes(currentAssembly)
+                            .AssignableTo<IBaseModulePostSpawner>()
+                            .As<IBaseModulePostSpawner>()
                             .AsSelf()
                             .SingleInstance();
 

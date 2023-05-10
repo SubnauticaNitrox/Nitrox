@@ -48,6 +48,7 @@ namespace NitroxClient.GameLogic
             entitySpawnersByType[typeof(EscapePodWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
             entitySpawnersByType[typeof(PlayerWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
             entitySpawnersByType[typeof(VehicleWorldEntity)] = entitySpawnersByType[typeof(WorldEntity)];
+            entitySpawnersByType[typeof(GlobalRootEntity)] = entitySpawnersByType[typeof(WorldEntity)];
             entitySpawnersByType[typeof(BuildEntity)] = new BuildEntitySpawner(this);
             entitySpawnersByType[typeof(ModuleEntity)] = new ModuleEntitySpawner(this);
             entitySpawnersByType[typeof(GhostEntity)] = new GhostEntitySpawner();
@@ -100,7 +101,7 @@ namespace NitroxClient.GameLogic
                         UpdatePosition(worldEntity);
                     }
                 }
-                else if (entity.ParentId != null && !WasParentSpawned(entity.ParentId))
+                else if (entity.ParentId != null && !IsParentReady(entity.ParentId))
                 {
                     AddPendingParentEntity(entity);
                 }
@@ -212,6 +213,11 @@ namespace NitroxClient.GameLogic
             }
 
             throw new InvalidOperationException($"Did not have a type for {id}");
+        }
+
+        public bool IsParentReady(NitroxId id)
+        {
+            return WasParentSpawned(id) || (NitroxEntity.TryGetObjectFrom(id, out GameObject o) && o);
         }
 
         public bool WasParentSpawned(NitroxId id)

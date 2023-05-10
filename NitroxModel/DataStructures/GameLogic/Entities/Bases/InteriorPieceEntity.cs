@@ -16,6 +16,9 @@ public class InteriorPieceEntity : GlobalRootEntity
     [DataMember(Order = 2)]
     public float Constructed;
 
+    [IgnoreDataMember()]
+    public bool IsWaterPark => waterparkClassIds.Contains(ClassId);
+
     [IgnoreConstructor]
     protected InteriorPieceEntity()
     {
@@ -33,7 +36,6 @@ public class InteriorPieceEntity : GlobalRootEntity
         ParentId = parentId;
         BaseFace = baseFace;
         Constructed = constructed;
-        //Metadata = savedInteriorPiece.Metadata;
 
         Transform = new();
     }
@@ -59,4 +61,10 @@ public class InteriorPieceEntity : GlobalRootEntity
     {
         return $"[InteriorPieceEntity Id: {Id}, ParentId: {ParentId}, BaseFace: {BaseFace}, Constructed: {Constructed}]";
     }
+
+    /// <summary>
+    /// classIds for WaterPark.prefab and WaterParkLarge.prefab
+    /// </summary>
+    [IgnoreDataMember()]
+    private readonly List<string> waterparkClassIds = new() { "31662630-7cba-4583-8456-2fa1c4cc31aa", "c2a91864-0f0f-4d8a-99b8-9867571763dd" };
 }

@@ -156,20 +156,6 @@ public class BuildingManager
         worldEntityManager.RemoveGlobalRootEntity(updateBase.FormerGhostId);
         buildEntity.SavedBase = updateBase.SavedBase;
 
-        // We need to clean the waterparks that were potentially removed when merging
-        // TODO: Fix this, it'll never work either because TechType is always None, or because WaterPark and WaterParkLarge are different 
-        NitroxTechType waterParkType = new("BaseWaterPark");
-        List<NitroxId> removedChildIds = buildEntity.ChildEntities.Where(entity => waterParkType.Equals(entity.TechType))
-            .Select(childEntity => childEntity.Id).Except(updateBase.UpdatedChildren.Keys).ToList();
-
-        foreach (NitroxId removedChildId in removedChildIds)
-        {
-            if (entityRegistry.TryGetEntityById(removedChildId, out Entity removedEntity))
-            {
-                worldEntityManager.RemoveGlobalRootEntity(removedChildId);
-            }
-        }
-
         // TODO: Maybe also update the metadata
 
         foreach (KeyValuePair<NitroxId, NitroxBaseFace> updatedChild in updateBase.UpdatedChildren)
@@ -200,6 +186,26 @@ public class BuildingManager
             buildEntity.ChildEntities.Add(builtPieceEntity);
         }
 
+        if (updateBase.ChildrenTransfer.Item1 != null && updateBase.ChildrenTransfer.Item2 != null)
+        {
+            Log.Debug($"Transferring children from {updateBase.ChildrenTransfer.Item1} to {updateBase.ChildrenTransfer.Item2}");
+            // NB: we don't want certain entities to be transferred (e.g. planters)
+            entityRegistry.TransferChildren(updateBase.ChildrenTransfer.Item1, updateBase.ChildrenTransfer.Item2, entity => entity is not PlanterEntity);
+        }
+
+        // After transferring required children, we need to clean the waterparks that were potentially removed when being merged
+        List<NitroxId> removedChildIds = buildEntity.ChildEntities.OfType<InteriorPieceEntity>()
+            .Where(entity => entity.IsWaterPark).Select(childEntity => childEntity.Id)
+            .Except(updateBase.UpdatedChildren.Keys).ToList();
+
+        foreach (NitroxId removedChildId in removedChildIds)
+        {
+            if (entityRegistry.TryGetEntityById(removedChildId, out Entity removedEntity))
+            {
+                worldEntityManager.RemoveGlobalRootEntity(removedChildId);
+            }
+        }
+
         return true;
     }
 
@@ -216,20 +222,22 @@ public class BuildingManager
         return true;
     }
 
-    public bool ReplacePieceByGhost(PieceDeconstructed pieceDeconstructed)
+    public bool ReplacePieceByGhost(PieceDeconstructed pieceDeconstructed, out Entity removedEntity)
     {
         if (!entityRegistry.TryGetEntityById(pieceDeconstructed.BaseId, out BuildEntity buildEntity))
         {
             Log.Error($"Trying to replace a non-registered build (BaseId: {pieceDeconstructed.BaseId})");
+            removedEntity = null;
             return false;
         }
         if (entityRegistry.TryGetEntityById(pieceDeconstructed.PieceId, out GhostEntity _))
         {
             Log.Error($"Trying to add a ghost to a building but another ghost child with the same id already exists (GhostId: {pieceDeconstructed.PieceId})");
+            removedEntity = null;
             return false;
         }
 
-        worldEntityManager.RemoveGlobalRootEntity(pieceDeconstructed.PieceId);
+        removedEntity = worldEntityManager.RemoveGlobalRootEntity(pieceDeconstructed.PieceId).Value;
         GhostEntity ghostEntity = pieceDeconstructed.ReplacerGhost;
         
         worldEntityManager.AddGlobalRootEntity(ghostEntity);
@@ -238,7 +246,7 @@ public class BuildingManager
         return true;
     }
 
-    public bool CreateWaterParkPiece(WaterParkDeconstructed waterParkDeconstructed)
+    public bool CreateWaterParkPiece(WaterParkDeconstructed waterParkDeconstructed, Entity removedEntity)
     {
         if (!entityRegistry.TryGetEntityById(waterParkDeconstructed.BaseId, out Entity entity) || entity is not BuildEntity buildEntity)
         {
@@ -250,9 +258,20 @@ public class BuildingManager
             Log.Error($"Trying to create a WaterPark piece with an already registered id ({waterParkDeconstructed.NewWaterPark.Id})");
             return false;
         }
-        worldEntityManager.AddGlobalRootEntity(waterParkDeconstructed.NewWaterPark);
+        InteriorPieceEntity newPiece = waterParkDeconstructed.NewWaterPark;
+        worldEntityManager.AddGlobalRootEntity(newPiece);
+        buildEntity.ChildEntities.Add(newPiece);
 
-        buildEntity.ChildEntities.Add(waterParkDeconstructed.NewWaterPark);
+        foreach (NitroxId childId in waterParkDeconstructed.MovedChildrenIds)
+        {
+            entityRegistry.ReparentEntity(childId, newPiece);
+        }
+
+        if (removedEntity != null && waterParkDeconstructed.Transfer)
+        {
+            entityRegistry.TransferChildren(removedEntity, newPiece, entity => entity is not PlanterEntity);
+        }
+
         return true;
     }
 }

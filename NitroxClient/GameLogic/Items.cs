@@ -69,30 +69,39 @@ public class Items
     /// </summary>
     public void Dropped(GameObject gameObject, TechType? techType = null)
     {
-        techType ??= CraftData.GetTechType(gameObject);
-
-        // there is a theoretical possibility of a stray remote tracking packet that re-adds the monobehavior, this is purely a safety call.
+        techType ??= CraftData.GetTechType(gameObject);// there is a theoretical possibility of a stray remote tracking packet that re-adds the monobehavior, this is purely a safety call.
         RemoveAnyRemoteControl(gameObject);
-        Optional<NitroxId> waterparkId = GetCurrentWaterParkId();
+
         NitroxId id = NitroxEntity.GetIdOrGenerateNew(gameObject);
         Optional<EntityMetadata> metadata = EntityMetadataExtractor.Extract(gameObject);
         bool inGlobalRoot = map.GlobalRootTechTypes.Contains(techType.Value.ToDto());
         string classId = gameObject.GetComponent<PrefabIdentifier>().ClassId;
 
-        // TODO: Manage Waterpark entity from waterparkId
         WorldEntity droppedItem = new(gameObject.transform.ToWorldDto(), 0, classId, inGlobalRoot, id, techType.Value.ToDto(), metadata.OrNull(), null, new List<Entity>())
         {
             ChildEntities = GetPrefabChildren(gameObject, id).ToList()
         };
 
-        Log.Debug($"Dropping item: {droppedItem}");
-        // You can't drop items in bases but you can place small objects like figures and posters which are put right under the base object
-        // NB: They are recognizable by their PlaceTool from which the Place() function executes the current code
-        SubRoot currentSub = Player.main.GetCurrentSub();
-        if (currentSub && NitroxEntity.TryGetIdFrom(currentSub.gameObject, out NitroxId parentId))
+        // There are two specific cases which we need to notice:
+        // 1. If the item is dropped in a WaterPark
+        if (gameObject.GetComponent<Pickupable>() && TryGetCurrentWaterParkId(out NitroxId waterParkId))
         {
-            droppedItem.ParentId = parentId;
+            droppedItem.ParentId = waterParkId;
+            // We cast it to an entity type that is always seeable by clients
+            // therefore, the packet will be redirected to everyone
+            droppedItem = GlobalRootEntity.From(droppedItem);
         }
+        else
+        {
+            // 2. You can't drop items in bases but you can place small objects like figures and posters which are put right under the base object
+            // NB: They are recognizable by their PlaceTool from which the Place() function executes the current code
+            SubRoot currentSub = Player.main.GetCurrentSub();
+            if (currentSub && NitroxEntity.TryGetIdFrom(currentSub.gameObject, out NitroxId parentId))
+            {
+                droppedItem.ParentId = parentId;
+            }
+        }
+        Log.Debug($"Dropping item: {droppedItem}");
 
         packetSender.Send(new EntitySpawnedByClient(droppedItem));
     }
@@ -166,20 +175,14 @@ public class Items
         UnityEngine.Object.Destroy(gameObject.GetComponent<RemotelyControlled>());
     }
 
-    private Optional<NitroxId> GetCurrentWaterParkId()
+    private bool TryGetCurrentWaterParkId(out NitroxId waterParkId)
     {
-        Player player = Utils.GetLocalPlayer().GetComponent<Player>();
-        if (player == null)
+        if (Player.main && Player.main.currentWaterPark &&
+            NitroxEntity.TryGetIdFrom(Player.main.currentWaterPark.gameObject, out waterParkId))
         {
-            return Optional.Empty;
+            return true;
         }
-
-        WaterPark currentWaterPark = player.currentWaterPark;
-        if (currentWaterPark == null)
-        {
-            return Optional.Empty;
-        }
-
-        return currentWaterPark.GetId();
+        waterParkId = null;
+        return false;
     }
 }

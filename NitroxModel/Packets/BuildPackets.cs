@@ -38,6 +38,7 @@ public sealed class PlaceModule : Packet
 
 public sealed class ModifyConstructedAmount : Packet
 {
+    // TODO: Add resourcemap sync
     public NitroxId GhostId;
     public float ConstructedAmount;
 
@@ -79,8 +80,9 @@ public sealed class UpdateBase : Packet
     public Dictionary<NitroxId, NitroxBaseFace> UpdatedChildren;
     public Dictionary<NitroxId, NitroxInt3> UpdatedMoonpools;
     public Dictionary<NitroxId, NitroxInt3> UpdatedMapRooms;
+    public (NitroxId, NitroxId) ChildrenTransfer;
 
-    public UpdateBase(NitroxId baseId, NitroxId formerGhostId, SavedBase savedBase, Entity builtPieceEntity, Dictionary<NitroxId, NitroxBaseFace> updatedChildren, Dictionary<NitroxId, NitroxInt3> updatedMoonpools, Dictionary<NitroxId, NitroxInt3> updatedMapRooms)
+    public UpdateBase(NitroxId baseId, NitroxId formerGhostId, SavedBase savedBase, Entity builtPieceEntity, Dictionary<NitroxId, NitroxBaseFace> updatedChildren, Dictionary<NitroxId, NitroxInt3> updatedMoonpools, Dictionary<NitroxId, NitroxInt3> updatedMapRooms, (NitroxId, NitroxId) childrenTransfer)
     {
         BaseId = baseId;
         FormerGhostId = formerGhostId;
@@ -89,11 +91,12 @@ public sealed class UpdateBase : Packet
         UpdatedChildren = updatedChildren;
         UpdatedMoonpools = updatedMoonpools;
         UpdatedMapRooms = updatedMapRooms;
+        ChildrenTransfer = childrenTransfer;
     }
 
     public override string ToString()
     {
-        return $"UpdateBase [BaseId: {BaseId}, FormerGhostId: {FormerGhostId}, SavedBase: {SavedBase}, BuiltPieceEntity: {BuiltPieceEntity}, UpdatedChildren: {UpdatedChildren.Count}, UpdatedMoonpools: {UpdatedMoonpools.Count}, UpdatedMapRooms: {UpdatedMapRooms.Count}]";
+        return $"UpdateBase [BaseId: {BaseId}, FormerGhostId: {FormerGhostId}, SavedBase: {SavedBase}, BuiltPieceEntity: {BuiltPieceEntity}, UpdatedChildren: {UpdatedChildren.Count}, UpdatedMoonpools: {UpdatedMoonpools.Count}, UpdatedMapRooms: {UpdatedMapRooms.Count}, ChildrenTransfer: {ChildrenTransfer}]";
     }
 }
 
@@ -140,14 +143,18 @@ public class PieceDeconstructed : Packet
 public sealed class WaterParkDeconstructed : PieceDeconstructed
 {
     public InteriorPieceEntity NewWaterPark;
+    public List<NitroxId> MovedChildrenIds;
+    public bool Transfer;
 
-    public WaterParkDeconstructed(NitroxId baseId, NitroxId pieceId, BuildPieceIdentifier buildPieceIdentifier, GhostEntity replacerGhost, SavedBase savedBase, InteriorPieceEntity newWaterPark) : base(baseId, pieceId, buildPieceIdentifier, replacerGhost, savedBase)
+    public WaterParkDeconstructed(NitroxId baseId, NitroxId pieceId, BuildPieceIdentifier buildPieceIdentifier, GhostEntity replacerGhost, SavedBase savedBase, InteriorPieceEntity newWaterPark, List<NitroxId> movedChildrenIds, bool transfer) : base(baseId, pieceId, buildPieceIdentifier, replacerGhost, savedBase)
     {
         NewWaterPark = newWaterPark;
+        MovedChildrenIds = movedChildrenIds ?? new();
+        Transfer = transfer;
     }
 
     public override string ToString()
     {
-        return $"WaterParkDeconstructed [{base.ToString()}, NewWaterPark: {NewWaterPark}]";
+        return $"WaterParkDeconstructed [{base.ToString()}, NewWaterPark: {NewWaterPark}, MovedChildrenIds: {MovedChildrenIds?.Count}, Transfer: {Transfer}]";
     }
 }

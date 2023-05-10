@@ -1,5 +1,6 @@
 using NitroxClient.GameLogic.Bases.New;
 using NitroxClient.MonoBehaviours;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel.DataStructures.Util;
@@ -26,15 +27,45 @@ public class InteriorPieceEntitySpawner : EntitySpawner<InteriorPieceEntity>
             yield break;
         }
         yield return NitroxBuild.RestoreInteriorPiece(entity, @base, result);
-        foreach (InventoryItemEntity childItemEntity in entity.ChildEntities.OfType<InventoryItemEntity>())
+        if (!result.Get().HasValue)
         {
-            Log.Debug($"Spawning child item entity: {childItemEntity}");
-            yield return entities.SpawnAsync(childItemEntity);
+            Log.Error($"Restoring interior piece failed: {entity}");
+            yield break;
         }
-        foreach (InstalledModuleEntity childModuleEntity in entity.ChildEntities.OfType<InstalledModuleEntity>())
+        bool isWaterPark = entity.IsWaterPark;
+        
+        foreach (Entity childEntity in entity.ChildEntities)
         {
-            Log.Debug($"Spawning child module entity: {childModuleEntity}");
-            yield return entities.SpawnAsync(childModuleEntity);
+            switch(childEntity)
+            {
+                case InventoryItemEntity:
+                case InstalledModuleEntity:
+                    Log.Debug($"Spawning child entity: {childEntity}");
+                    yield return entities.SpawnAsync(childEntity);
+                    break;
+
+                case PlanterEntity:
+                    foreach (InventoryItemEntity childItemEntity in childEntity.ChildEntities.OfType<InventoryItemEntity>())
+                    {
+                        Log.Debug($"Spawning planter child item entity: {childItemEntity}");
+                        yield return entities.SpawnAsync(childItemEntity);
+                    }
+                    break;
+
+                case WorldEntity:
+                    if (isWaterPark)
+                    {
+                        yield return entities.SpawnAsync(childEntity);
+                    }
+                    break;
+            }
+        }
+        if (isWaterPark)
+        {
+            foreach (Planter planter in result.Get().Value.GetComponentsInChildren<Planter>(true))
+            {
+                yield return planter.DeserializeAsync();
+            }
         }
     }
 

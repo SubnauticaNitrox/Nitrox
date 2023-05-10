@@ -14,7 +14,7 @@ public static class CoroutineHelper
     {
         if (enumerator == null)
         {
-
+            yield break;
         }
         for (; ; )
         {
