@@ -12,10 +12,10 @@ namespace NitroxModel.DataStructures.GameLogic.Entities.Bases;
 public class BuildEntity : GlobalRootEntity
 {
     [DataMember(Order = 1)]
-    public NitroxVector3 Position;
+    public NitroxVector3 LocalPosition;
 
     [DataMember(Order = 2)]
-    public NitroxQuaternion Rotation;
+    public NitroxQuaternion LocalRotation;
 
     [DataMember(Order = 3)]
     public NitroxVector3 LocalScale;
@@ -36,11 +36,11 @@ public class BuildEntity : GlobalRootEntity
         return new();
     }
 
-    public BuildEntity(NitroxId id, NitroxVector3 position, NitroxQuaternion rotation, NitroxVector3 localScale, SavedBase savedBase)
+    public BuildEntity(NitroxId id, NitroxVector3 localPosition, NitroxQuaternion localRotation, NitroxVector3 localScale, SavedBase savedBase)
     {
         Id = id;
-        Position = position;
-        Rotation = rotation;
+        LocalPosition = localPosition;
+        LocalRotation = localRotation;
         LocalScale = localScale;
         SavedBase = savedBase;
 
@@ -48,11 +48,11 @@ public class BuildEntity : GlobalRootEntity
     }
 
     /// <remarks>Used for deserialization</remarks>
-    public BuildEntity(SavedBase savedBase, NitroxVector3 position, NitroxQuaternion rotation, NitroxVector3 localScale, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
+    public BuildEntity(SavedBase savedBase, NitroxVector3 localPosition, NitroxQuaternion localRotation, NitroxVector3 localScale, NitroxTransform transform, int level, string classId, bool spawnedByServer, NitroxId id, NitroxTechType techType, EntityMetadata metadata, NitroxId parentId, List<Entity> childEntities)
     {
         SavedBase = savedBase;
-        Position = position;
-        Rotation = rotation;
+        LocalPosition = localPosition;
+        LocalRotation = localRotation;
         LocalScale = localScale;
 
         Id = id;

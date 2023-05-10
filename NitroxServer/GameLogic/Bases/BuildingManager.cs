@@ -67,9 +67,9 @@ public class BuildingManager
         {
             if (entityRegistry.TryGetEntityById(moduleEntity.ParentId, out Entity parentEntity))
             {
-                if (parentEntity is not BuildEntity)
+                if (parentEntity is not BuildEntity && parentEntity is not VehicleWorldEntity)
                 {
-                    Log.Error($"Trying to add a ghost to an entity that is not a building (ParentId: {moduleEntity.ParentId})");
+                    Log.Error($"Trying to add a module to an entity that is not a building/vehicle (ParentId: {moduleEntity.ParentId})");
                     return false;
                 }
                 if (parentEntity.ChildEntities.Any(childEntity => childEntity.Id.Equals(moduleEntity.Id)))

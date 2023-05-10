@@ -1,9 +1,11 @@
 using System.Collections;
+using System.Linq;
 using NitroxClient.Helpers;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.Overrides;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic.Entities;
+using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel_Subnautica.DataStructures;
@@ -13,6 +15,13 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities;
 
 public class VehicleWorldEntitySpawner : IWorldEntitySpawner
 {
+    private readonly Entities entities;
+
+    public VehicleWorldEntitySpawner(Entities entities)
+    {
+        this.entities = entities;
+    }
+
     // The constructor has mixed results when the remote player is a long distance away.  UWE even has a built in distance tracker to ensure
     // that they are within allowed range.  However, this range is a bit restrictive. We will allow constructor spawning up to a specified 
     // distance - anything more will simply use world spawning (no need to play the animation anyways).
@@ -33,6 +42,7 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
 
             if (constructor && withinDistance)
             {
+                Log.Debug("SpawnViaConstructor");
                 MobileVehicleBay.TransmitLocalSpawns = false;
                 yield return SpawnViaConstructor(vehicleEntity, constructor, result);
                 MobileVehicleBay.TransmitLocalSpawns = true;
@@ -45,10 +55,12 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
 
     private IEnumerator SpawnInWorld(VehicleWorldEntity vehicleEntity, TaskResult<Optional<GameObject>> result, Optional<GameObject> parent)
     {
+        Log.Debug("SpawnInWorld");
         TechType techType = vehicleEntity.TechType.ToUnity();
         GameObject gameObject = null;
 
-        if (techType == TechType.Cyclops)
+        bool isCyclops = techType == TechType.Cyclops;
+        if (isCyclops)
         {
             GameObject prefab = null;
             LightmappedPrefabs.main.RequestScenePrefab("cyclops", (go) => prefab = go);
@@ -95,6 +107,11 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
         if (parent.HasValue)
         {
             DockVehicle(gameObject, parent.Value);
+        }
+
+        if (isCyclops)
+        {
+            yield return SpawnCyclopsChildren(vehicleEntity);
         }
 
         result.Set(gameObject);
@@ -181,6 +198,14 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
         }
 
         dockingBay.DockVehicle(vehicle);        
+    }
+
+    private IEnumerator SpawnCyclopsChildren(VehicleWorldEntity vehicleEntity)
+    {
+        foreach (ModuleEntity moduleEntity in vehicleEntity.ChildEntities.OfType<ModuleEntity>())
+        {
+            yield return entities.SpawnAsync(moduleEntity);
+        }
     }
 
     public bool SpawnsOwnChildren()

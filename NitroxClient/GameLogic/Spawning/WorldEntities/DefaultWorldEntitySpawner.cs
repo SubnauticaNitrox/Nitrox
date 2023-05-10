@@ -1,5 +1,4 @@
 using System.Collections;
-using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
@@ -48,12 +47,9 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities
             {
                 if (parentWaterPark && gameObject.TryGetComponent(out Pickupable pickupable))
                 {
-                    Log.Debug($"Spawning : {gameObject.name} under parent: {parent.Value.name}");
                     pickupable.SetVisible(false);
                     pickupable.Activate(false);
                     parentWaterPark.AddItem(pickupable);
-                    Log.Debug($"Parent is now: {gameObject.transform.parent.name}, position : {gameObject.transform.position}, localPosition : {gameObject.transform.localPosition}");
-                    Log.Debug($"Entity should be position : {entity.Transform.Position}, localPosition : {entity.Transform.LocalPosition}");
                 }
                 else
                 {

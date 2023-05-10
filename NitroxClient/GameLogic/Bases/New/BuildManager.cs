@@ -283,8 +283,8 @@ public static class NitroxBuild
             buildEntity.Id = entity.Id;
         }
 
-        buildEntity.Position = targetBase.transform.position.ToDto();
-        buildEntity.Rotation = targetBase.transform.rotation.ToDto();
+        buildEntity.LocalPosition = targetBase.transform.localPosition.ToDto();
+        buildEntity.LocalRotation = targetBase.transform.localRotation.ToDto();
         buildEntity.LocalScale = targetBase.transform.localScale.ToDto();
 
         buildEntity.SavedBase = NitroxBase.From(targetBase);
@@ -315,7 +315,7 @@ public static class NitroxBuild
     
     public static IEnumerator CreateBuild(BuildEntity buildEntity, TaskResult<Optional<GameObject>> result = null)
     {
-        GameObject newBase = UnityEngine.Object.Instantiate(BaseGhost._basePrefab, LargeWorldStreamer.main.globalRoot.transform, buildEntity.Position.ToUnity(), buildEntity.Rotation.ToUnity(), buildEntity.LocalScale.ToUnity(), false);
+        GameObject newBase = UnityEngine.Object.Instantiate(BaseGhost._basePrefab, LargeWorldStreamer.main.globalRoot.transform, buildEntity.LocalPosition.ToUnity(), buildEntity.LocalRotation.ToUnity(), buildEntity.LocalScale.ToUnity(), false);
         if (LargeWorld.main)
         {
             LargeWorld.main.streamer.cellManager.RegisterEntity(newBase);
@@ -458,8 +458,8 @@ public static class NitroxBuild
         GameObject moduleObject = GameObject.Instantiate(prefab);
         Transform moduleTransform = moduleObject.transform;
         moduleTransform.parent = parent;
-        moduleTransform.localPosition = moduleEntity.Position.ToUnity();
-        moduleTransform.localRotation = moduleEntity.Rotation.ToUnity();
+        moduleTransform.localPosition = moduleEntity.LocalPosition.ToUnity();
+        moduleTransform.localRotation = moduleEntity.LocalRotation.ToUnity();
         moduleTransform.localScale = moduleEntity.LocalScale.ToUnity();
 
         Constructable constructable = moduleObject.GetComponent<Constructable>();
@@ -827,8 +827,8 @@ public static class NitroxModule
         {
             moduleEntity.ParentId = parentEntity.Id;
         }
-        moduleEntity.Position = constructable.transform.localPosition.ToDto();
-        moduleEntity.Rotation = constructable.transform.localRotation.ToDto();
+        moduleEntity.LocalPosition = constructable.transform.localPosition.ToDto();
+        moduleEntity.LocalRotation = constructable.transform.localRotation.ToDto();
         moduleEntity.LocalScale = constructable.transform.localScale.ToDto();
         moduleEntity.TechType = constructable.techType.ToDto();
         moduleEntity.ConstructedAmount = constructable.constructedAmount;
@@ -837,8 +837,8 @@ public static class NitroxModule
 
     public static void MoveTransform(this ModuleEntity moduleEntity, Transform transform)
     {
-        transform.localPosition = moduleEntity.Position.ToUnity();
-        transform.localRotation = moduleEntity.Rotation.ToUnity();
+        transform.localPosition = moduleEntity.LocalPosition.ToUnity();
+        transform.localRotation = moduleEntity.LocalRotation.ToUnity();
         transform.localScale = moduleEntity.LocalScale.ToUnity();
     }
 
@@ -883,6 +883,6 @@ public static class NitroxGhost
 
     public static string ToString(this GhostEntity ghostEntity)
     {
-        return $"SavedGhost [ClassId: {ghostEntity.ClassId}, NitroxId: {ghostEntity.Id}, ParentId: {ghostEntity.ParentId}, Position: {ghostEntity.Position}, Rotation: {ghostEntity.Rotation}, LocalScale: {ghostEntity.LocalScale}, ConstructedAmount: {ghostEntity.ConstructedAmount}, IsInside: {ghostEntity.IsInside}, ModuleFace: [{ghostEntity.BaseFace}]]";
+        return $"SavedGhost [ClassId: {ghostEntity.ClassId}, NitroxId: {ghostEntity.Id}, ParentId: {ghostEntity.ParentId}, LocalPosition: {ghostEntity.LocalPosition}, LocalRotation: {ghostEntity.LocalRotation}, LocalScale: {ghostEntity.LocalScale}, ConstructedAmount: {ghostEntity.ConstructedAmount}, IsInside: {ghostEntity.IsInside}, ModuleFace: [{ghostEntity.BaseFace}]]";
     }
 }

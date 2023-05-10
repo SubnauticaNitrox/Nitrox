@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Bases.New;
 using NitroxClient.GameLogic.Spawning.Bases.PostSpawners;
 using NitroxClient.Helpers;
@@ -194,8 +193,8 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
         Log.Debug($"GhostCreated: {ghostObject.name} under: {(ghostObject.transform.parent ? ghostObject.transform.parent.name : "nowhere")}");
 
         NitroxId parentId = null;
-        if (ghostObject.TryGetComponentInParent(out Base @base) &&
-            NitroxEntity.TryGetEntityFrom(@base.gameObject, out NitroxEntity entity))
+        if (ghostObject.TryGetComponentInParent(out SubRoot subRoot) && (subRoot.isBase || subRoot.isCyclops) &&
+            NitroxEntity.TryGetEntityFrom(subRoot.gameObject, out NitroxEntity entity))
         {
             parentId = entity.Id;
         }

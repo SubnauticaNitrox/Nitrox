@@ -16,9 +16,9 @@ namespace NitroxClient.GameLogic.Spawning
         private readonly WorldEntitySpawnerResolver worldEntitySpawnResolver;
         private readonly Dictionary<Int3, BatchCells> batchCellsById;
 
-        public WorldEntitySpawner(PlayerManager playerManager, ILocalNitroxPlayer localPlayer)
+        public WorldEntitySpawner(PlayerManager playerManager, ILocalNitroxPlayer localPlayer, Entities entities)
         {
-            worldEntitySpawnResolver = new WorldEntitySpawnerResolver(playerManager, localPlayer);
+            worldEntitySpawnResolver = new WorldEntitySpawnerResolver(playerManager, localPlayer, entities);
 
             if (NitroxEnvironment.IsNormal)
             {
