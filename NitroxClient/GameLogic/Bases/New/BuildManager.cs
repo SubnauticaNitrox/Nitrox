@@ -464,7 +464,14 @@ public static class NitroxBuild
 
         Constructable constructable = moduleObject.GetComponent<Constructable>();
         constructable.SetIsInside(moduleEntity.IsInside);
-        SkyEnvironmentChanged.Send(moduleObject, moduleObject.GetComponentInParent<SubRoot>(true));
+        if (moduleEntity.IsInside)
+        {
+            SkyEnvironmentChanged.Send(moduleObject, moduleObject.GetComponentInParent<SubRoot>(true));
+        }
+        else
+        {
+            SkyEnvironmentChanged.Send(moduleObject, (Component)null);
+        }
         constructable.constructedAmount = moduleEntity.ConstructedAmount;
         constructable.SetState(moduleEntity.ConstructedAmount >= 1f, false);
         constructable.UpdateMaterial();
@@ -585,8 +592,8 @@ public static class NitroxBuild
     {
         MoonpoolManager moonpoolManager = @base.gameObject.EnsureComponent<MoonpoolManager>();
         moonpoolManager.LoadMoonpools(moonpoolEntities);
-        yield return moonpoolManager.SpawnVehicles();
         moonpoolManager.OnPostRebuildGeometry(@base);
+        yield return moonpoolManager.SpawnVehicles();
         Log.Debug($"Restored moonpools: {moonpoolManager.GetSavedMoonpools().Count}");
     }
 
