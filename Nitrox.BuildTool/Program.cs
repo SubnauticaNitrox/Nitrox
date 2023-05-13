@@ -22,20 +22,21 @@ namespace Nitrox.BuildTool
 
         public static string GeneratedOutputDir => Path.Combine(ProcessDir, "generated_files");
 
+        private const int LEGACY_BRANCH_SUBNAUTICA_VERSION = 68598;
+
         public static async Task Main(string[] args)
         {
+
             AppDomain.CurrentDomain.UnhandledException += (sender, eventArgs) =>
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(eventArgs.ExceptionObject);
-                Console.ResetColor();
-
+                LogError(eventArgs.ExceptionObject.ToString());
                 Exit((eventArgs.ExceptionObject as Exception)?.HResult ?? 1);
             };
 
-            GameInstallData game = await Task.Factory.StartNew(EnsureGame).ConfigureAwait(false);
+            GameInstallData game = await Task.Run(EnsureGame);
             Console.WriteLine($"Found game at {game.InstallDir}");
-            await EnsurePublicizedAssembliesAsync(game).ConfigureAwait(false);
+            AbortIfInvalidGameVersion(game);
+            await EnsurePublicizedAssembliesAsync(game);
 
             Exit();
         }
@@ -46,6 +47,40 @@ namespace Nitrox.BuildTool
             Console.WriteLine("Press any key to continue . . .");
             Console.ReadKey(true);
             Environment.Exit(exitCode);
+        }
+
+        private static void LogError(string message)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(message);
+            Console.ResetColor();
+        }
+
+        private static void AbortIfInvalidGameVersion(GameInstallData game)
+        {
+            string gameVersionFile = Path.Combine(game.InstallDir, "Subnautica_Data", "StreamingAssets", "SNUnmanagedData", "plastic_status.ignore");
+            if (!File.Exists(gameVersionFile))
+            {
+                return;
+            }
+            if (!int.TryParse(File.ReadAllText(gameVersionFile), out int version))
+            {
+                return;
+            }
+            if (version == -1)
+            {
+                return;
+            }
+            if (version > LEGACY_BRANCH_SUBNAUTICA_VERSION)
+            {
+                return;
+            }
+
+            LogError($"""
+                        Game version is {version}, which is not supported by Nitrox.
+                        Please update your game to the latest version.
+                        """);
+            Exit(2);
         }
 
         private static GameInstallData EnsureGame()
