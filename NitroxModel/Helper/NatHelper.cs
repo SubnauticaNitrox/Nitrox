@@ -11,46 +11,42 @@ namespace NitroxModel.Helper;
 
 public static class NatHelper
 {
-    public static async Task<IPAddress> GetExternalIpAsync()
-    {
-        return await MonoNatHelper.GetFirstAsync(async d => await d.GetExternalIPAsync().ConfigureAwait(false)).ConfigureAwait(false);
-    }
+    public static async Task<IPAddress> GetExternalIpAsync() => await MonoNatHelper.GetFirstAsync(static async device => await device.GetExternalIPAsync().ConfigureAwait(false)).ConfigureAwait(false);
 
     public static async Task<bool> DeletePortMappingAsync(ushort port, Protocol protocol)
     {
-        Mapping mapping = new(protocol, port, port);
-        return await MonoNatHelper.GetFirstAsync(async d =>
+        return await MonoNatHelper.GetFirstAsync(static async (device, mapping) =>
         {
             try
             {
-                return await d.DeletePortMapAsync(mapping).ConfigureAwait(false) != null;
+                return await device.DeletePortMapAsync(mapping).ConfigureAwait(false) != null;
             }
             catch (MappingException)
             {
                 return false;
             }
-        }).ConfigureAwait(false);
+        }, new Mapping(protocol, port, port)).ConfigureAwait(false);
     }
 
     public static async Task<Mapping> GetPortMappingAsync(ushort port, Protocol protocol)
     {
-        return await MonoNatHelper.GetFirstAsync(async d =>
+        return await MonoNatHelper.GetFirstAsync(static async (device, protocolAndPort) =>
         {
             try
             {
-                return await d.GetSpecificMappingAsync(protocol, port).ConfigureAwait(false);
+                return await device.GetSpecificMappingAsync(protocolAndPort.protocol, protocolAndPort.port).ConfigureAwait(false);
             }
             catch (Exception)
             {
                 return null;
             }
-        }).ConfigureAwait(false);
+        }, (port, protocol)).ConfigureAwait(false);
     }
 
     public static async Task<bool> AddPortMappingAsync(ushort port, Protocol protocol)
     {
         Mapping mapping = new(protocol, port, port);
-        return await MonoNatHelper.GetFirstAsync(async d => await d.CreatePortMapAsync(mapping).ConfigureAwait(false) != null).ConfigureAwait(false);
+        return await MonoNatHelper.GetFirstAsync(static async (device, mapping) => await device.CreatePortMapAsync(mapping).ConfigureAwait(false) != null, mapping).ConfigureAwait(false);
     }
 
     private static class MonoNatHelper
@@ -116,7 +112,9 @@ public static class NatHelper
             return discoveredDevices.Values;
         }
 
-        public static async Task<TResult> GetFirstAsync<TResult>(Func<INatDevice, Task<TResult>> predicate)
+        public static async Task<TResult> GetFirstAsync<TResult>(Func<INatDevice, Task<TResult>> predicate) => await GetFirstAsync(static (device, p) => p(device), predicate);
+
+        public static async Task<TResult> GetFirstAsync<TResult, TExtraParam>(Func<INatDevice, TExtraParam, Task<TResult>> predicate, TExtraParam parameter)
         {
             // Start NAT discovery (if it hasn't started yet).
             Task<IEnumerable<INatDevice>> discoverTask = DiscoverAsync();
@@ -124,7 +122,7 @@ public static class NatHelper
             {
                 return default;
             }
-                
+
             // Progressively handle devices until first not-null/false result or when discovery times out.
             ConcurrentDictionary<EndPoint, INatDevice> handledDevices = new();
             do
@@ -135,12 +133,12 @@ public static class NatHelper
                     await Task.Delay(10).ConfigureAwait(false);
                     continue;
                 }
-                                
+
                 foreach (KeyValuePair<EndPoint, INatDevice> pair in unhandledDevices)
                 {
                     if (handledDevices.TryAdd(pair.Key, pair.Value))
                     {
-                        TResult result = await predicate(pair.Value);
+                        TResult result = await predicate(pair.Value, parameter);
                         if (result is true or not null)
                         {
                             return result;
@@ -148,7 +146,7 @@ public static class NatHelper
                     }
                 }
             } while (!discoverTask.IsCompleted);
-            
+
             return default;
         }
     }
