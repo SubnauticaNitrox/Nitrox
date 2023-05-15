@@ -11,7 +11,17 @@ namespace NitroxModel.Helper;
 
 public static class NatHelper
 {
-    public static async Task<IPAddress> GetExternalIpAsync() => await MonoNatHelper.GetFirstAsync(static async device => await device.GetExternalIPAsync().ConfigureAwait(false)).ConfigureAwait(false);
+    public static async Task<IPAddress> GetExternalIpAsync() => await MonoNatHelper.GetFirstAsync(static async device =>
+    {
+        try
+        {
+            return await device.GetExternalIPAsync().ConfigureAwait(false);
+        }
+        catch (Exception)
+        {
+            return null;
+        }
+    }).ConfigureAwait(false);
 
     public static async Task<bool> DeletePortMappingAsync(ushort port, Protocol protocol)
     {
@@ -43,11 +53,34 @@ public static class NatHelper
         }, (port, protocol)).ConfigureAwait(false);
     }
 
-    public static async Task<bool> AddPortMappingAsync(ushort port, Protocol protocol)
+    public static async Task<ResultCodes> AddPortMappingAsync(ushort port, Protocol protocol)
     {
         Mapping mapping = new(protocol, port, port);
-        return await MonoNatHelper.GetFirstAsync(static async (device, mapping) => await device.CreatePortMapAsync(mapping).ConfigureAwait(false) != null, mapping).ConfigureAwait(false);
+        return await MonoNatHelper.GetFirstAsync(static async (device, mapping) =>
+        {
+            try
+            {
+                return await device.CreatePortMapAsync(mapping).ConfigureAwait(false) != null ? ResultCodes.SUCCESS : ResultCodes.UNKNOWN_ERROR;
+            }
+            catch (MappingException ex)
+            {
+                return ExceptionToCode(ex);
+            }
+        }, mapping).ConfigureAwait(false);
     }
+
+    public enum ResultCodes
+    {
+        SUCCESS,
+        CONFLICT_IN_MAPPING_ENTRY,
+        UNKNOWN_ERROR
+    }
+
+    private static ResultCodes ExceptionToCode(MappingException exception) => exception.ErrorCode switch
+    {
+        ErrorCode.ConflictInMappingEntry => ResultCodes.CONFLICT_IN_MAPPING_ENTRY,
+        _ => ResultCodes.UNKNOWN_ERROR
+    };
 
     private static class MonoNatHelper
     {

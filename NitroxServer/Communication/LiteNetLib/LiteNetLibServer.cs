@@ -65,14 +65,18 @@ public class LiteNetLibServer : NitroxServer
             return;
         }
 
-        bool isMapped = await NatHelper.AddPortMappingAsync(port, Protocol.Udp);
-        if (isMapped)
+        NatHelper.ResultCodes mappingResult = await NatHelper.AddPortMappingAsync(port, Protocol.Udp);
+        switch (mappingResult)
         {
-            Log.Info($"Server port {port} UDP has been automatically opened on your router (port is closed when server closes)");
-        }
-        else
-        {
-            Log.Warn($"Failed to automatically port forward {port} UDP through UPnP. If using Hamachi or manually port-forwarding, please disregard this warning. To disable this feature you can go into the server settings.");
+            case NatHelper.ResultCodes.SUCCESS:
+                Log.Info($"Server port {port} UDP has been automatically opened on your router (port is closed when server closes)");
+                break;
+            case NatHelper.ResultCodes.CONFLICT_IN_MAPPING_ENTRY:
+                Log.Warn($"Port forward for {port} UDP failed. It appears to already be port forwarded or it conflicts with another port forward rule.");
+                break;
+            case NatHelper.ResultCodes.UNKNOWN_ERROR:
+                Log.Warn($"Failed to port forward {port} UDP through UPnP. If using Hamachi or you've manually port-forwarded, please disregard this warning. To disable this feature you can go into the server settings.");
+                break;
         }
     }
 
