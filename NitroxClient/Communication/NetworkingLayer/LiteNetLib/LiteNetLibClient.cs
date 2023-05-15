@@ -1,3 +1,4 @@
+using System.Buffers;
 using System.Threading;
 using System.Threading.Tasks;
 using LiteNetLib;
@@ -82,12 +83,18 @@ public class LiteNetLibClient : IClient
     private void ReceivedNetworkData(NetPeer peer, NetDataReader reader, byte channel, DeliveryMethod deliveryMethod)
     {
         int packetDataLength = reader.GetInt();
-        byte[] packetData = new byte[packetDataLength];
-        reader.GetBytes(packetData, packetDataLength);
-
-        Packet packet = Packet.Deserialize(packetData);
-        packetReceiver.PacketReceived(packet);
-        networkDebugger?.PacketReceived(packet, packetDataLength);
+        byte[] packetData = ArrayPool<byte>.Shared.Rent(packetDataLength);
+        try
+        {
+            reader.GetBytes(packetData, packetDataLength);
+            Packet packet = Packet.Deserialize(packetData);
+            packetReceiver.PacketReceived(packet);
+            networkDebugger?.PacketReceived(packet, packetDataLength);
+        }
+        finally
+        {
+            ArrayPool<byte>.Shared.Return(packetData, true);
+        }
     }
 
     private void Connected(NetPeer peer)

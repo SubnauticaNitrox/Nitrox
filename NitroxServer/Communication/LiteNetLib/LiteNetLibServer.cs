@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Buffers;
+using System.Threading;
 using System.Threading.Tasks;
 using LiteNetLib;
 using LiteNetLib.Utils;
@@ -121,12 +122,18 @@ public class LiteNetLibServer : NitroxServer
     private void NetworkDataReceived(NetPeer peer, NetDataReader reader, byte channel, DeliveryMethod deliveryMethod)
     {
         int packetDataLength = reader.GetInt();
-        byte[] packetData = new byte[packetDataLength];
-        reader.GetBytes(packetData, packetDataLength);
-
-        Packet packet = Packet.Deserialize(packetData);
-        NitroxConnection connection = GetConnection(peer.Id);
-        ProcessIncomingData(connection, packet);
+        byte[] packetData = ArrayPool<byte>.Shared.Rent(packetDataLength);
+        try
+        {
+            reader.GetBytes(packetData, packetDataLength);
+            Packet packet = Packet.Deserialize(packetData);
+            NitroxConnection connection = GetConnection(peer.Id);
+            ProcessIncomingData(connection, packet);
+        }
+        finally
+        {
+            ArrayPool<byte>.Shared.Return(packetData, true);
+        }
     }
 
     private NitroxConnection GetConnection(int remoteIdentifier)
