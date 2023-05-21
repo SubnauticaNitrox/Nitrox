@@ -17,16 +17,16 @@ public class PlayerManager
     public OnCreate onCreate;
     public OnRemove onRemove;
 
-        public PlayerManager(PlayerModelManager playerModelManager)
-        {
-            this.playerModelManager = playerModelManager;
-        }
+    public PlayerManager(PlayerModelManager playerModelManager)
+    {
+        this.playerModelManager = playerModelManager;
+    }
 
-        public Optional<RemotePlayer> Find(ushort playerId)
-        {
-            playersById.TryGetValue(playerId, out RemotePlayer player);
-            return Optional.OfNullable(player);
-        }
+    public Optional<RemotePlayer> Find(ushort playerId)
+    {
+        playersById.TryGetValue(playerId, out RemotePlayer player);
+        return Optional.OfNullable(player);
+    }
 
     public Optional<RemotePlayer> Find(NitroxId playerNitroxId)
     {
@@ -36,43 +36,44 @@ public class PlayerManager
         return Optional.OfNullable(remotePlayer);
     }
 
-        internal IEnumerable<RemotePlayer> GetAll()
+    internal IEnumerable<RemotePlayer> GetAll()
+    {
+        return playersById.Values;
+    }
+
+    public RemotePlayer Create(PlayerContext playerContext)
+    {
+        Validate.NotNull(playerContext);
+        Validate.IsFalse(playersById.ContainsKey(playerContext.PlayerId));
+
+        RemotePlayer remotePlayer = new(playerContext, playerModelManager);
+
+        playersById.Add(remotePlayer.PlayerId, remotePlayer);
+        onCreate(remotePlayer.PlayerId.ToString(), remotePlayer);
+
+        DiscordClient.UpdatePartySize(GetTotalPlayerCount());
+
+        return remotePlayer;
+    }
+
+    public void RemovePlayer(ushort playerId)
+    {
+        Optional<RemotePlayer> opPlayer = Find(playerId);
+        if (opPlayer.HasValue)
         {
-            return playersById.Values;
-        }
-
-        public RemotePlayer Create(PlayerContext playerContext)
-        {
-            Validate.NotNull(playerContext);
-            Validate.IsFalse(playersById.ContainsKey(playerContext.PlayerId));
-
-            RemotePlayer remotePlayer = new(playerContext, playerModelManager);
-            
-            playersById.Add(remotePlayer.PlayerId, remotePlayer);
-            onCreate(remotePlayer.PlayerId.ToString(), remotePlayer);
-
+            opPlayer.Value.Destroy();
+            playersById.Remove(playerId);
+            onRemove(playerId.ToString(), opPlayer.Value);
             DiscordClient.UpdatePartySize(GetTotalPlayerCount());
-            
-            return remotePlayer;
         }
+    }
 
-        public void RemovePlayer(ushort playerId)
-        {
-            Optional<RemotePlayer> opPlayer = Find(playerId);
-            if (opPlayer.HasValue)
-            {
-                opPlayer.Value.Destroy();                
-                playersById.Remove(playerId);
-                onRemove(playerId.ToString(), opPlayer.Value);
-                DiscordClient.UpdatePartySize(GetTotalPlayerCount());
-            }
-        }
+    /// <returns>You + Remote players => 1 + X</returns>
+    public int GetTotalPlayerCount() => playersById.Count + 1;
 
-        public int GetTotalPlayerCount()
-        {
-            return playersById.Count + 1; //Multiplayer-player(s) + you
-        }
+    public IEnumerable<RemotePlayer> GetAllRemotePlayers() => playersById.Values;
 
-        public delegate void OnCreate(string playerId, RemotePlayer remotePlayer);
-        public delegate void OnRemove(string playerId, RemotePlayer remotePlayer);
+    public delegate void OnCreate(string playerId, RemotePlayer remotePlayer);
+
+    public delegate void OnRemove(string playerId, RemotePlayer remotePlayer);
 }

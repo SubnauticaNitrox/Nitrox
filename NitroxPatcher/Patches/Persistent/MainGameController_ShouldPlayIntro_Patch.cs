@@ -10,7 +10,7 @@ public class MainGameController_ShouldPlayIntro_Patch : NitroxPatch, IPersistent
 
     public static void Postfix(ref bool __result)
     {
-        __result = false;
+        //__result = true;
     }
 
     public override void Patch(Harmony harmony)
