@@ -16,7 +16,6 @@ namespace NitroxPatcher.Patches.Persistent
         {
             ClientConfig cfg = ClientConfig.Load(NitroxUser.AppDataPath);
             KeyBindingManager keyBindingManager = new();
-            string serializerFormat = "Input/Binding/{0}/{1}/{2}";
 
             foreach (GameInput.BindingSet bindingSet in Enum.GetValues(typeof(GameInput.BindingSet)))
             {
