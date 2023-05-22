@@ -7,15 +7,15 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
 
-namespace NitroxClient.GameLogic
-{
-    public class PlayerManager
-    {
-        private readonly PlayerModelManager playerModelManager;
-        private readonly Dictionary<ushort, RemotePlayer> playersById = new Dictionary<ushort, RemotePlayer>();
+namespace NitroxClient.GameLogic;
 
-        public OnCreate onCreate;
-        public OnRemove onRemove;
+public class PlayerManager
+{
+    private readonly PlayerModelManager playerModelManager;
+    private readonly Dictionary<ushort, RemotePlayer> playersById = new();
+
+    public OnCreate onCreate;
+    public OnRemove onRemove;
 
         public PlayerManager(PlayerModelManager playerModelManager)
         {
@@ -28,14 +28,13 @@ namespace NitroxClient.GameLogic
             return Optional.OfNullable(player);
         }
 
-        public Optional<RemotePlayer> Find(NitroxId playerNitroxId)
-        {
-            RemotePlayer remotePlayer = playersById.Select(idToPlayer => idToPlayer.Value)
-                                                   .Where(player => player.PlayerContext.PlayerNitroxId == playerNitroxId)
-                                                   .FirstOrDefault();
+    public Optional<RemotePlayer> Find(NitroxId playerNitroxId)
+    {
+        RemotePlayer remotePlayer = playersById.Select(idToPlayer => idToPlayer.Value)
+                                               .FirstOrDefault(player => player.PlayerContext.PlayerNitroxId == playerNitroxId);
 
-            return Optional.OfNullable(remotePlayer);
-        }
+        return Optional.OfNullable(remotePlayer);
+    }
 
         internal IEnumerable<RemotePlayer> GetAll()
         {
@@ -76,5 +75,4 @@ namespace NitroxClient.GameLogic
 
         public delegate void OnCreate(string playerId, RemotePlayer remotePlayer);
         public delegate void OnRemove(string playerId, RemotePlayer remotePlayer);
-    }
 }

@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using NitroxModel.DataStructures;
 
-namespace NitroxModel.MultiplayerSession
-{
+namespace NitroxModel.MultiplayerSession;
+
     [Serializable]
     public class PlayerContext
     {
@@ -26,6 +26,5 @@ namespace NitroxModel.MultiplayerSession
         public override string ToString()
         {
             return $"[PlayerContext - PlayerName: {PlayerName}, PlayerId: {PlayerId}, PlayerNitroxId: {PlayerNitroxId}, WasBrandNewPlayer: {WasBrandNewPlayer}, PlayerSettings: {PlayerSettings}]";
-        }
     }
 }
