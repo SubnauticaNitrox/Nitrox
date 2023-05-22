@@ -97,14 +97,14 @@ public class uGUI_PlayerListTab : uGUI_PingTab
     public new void OnEnable()
     {
         // Enter events for player join and disconnect
-        playerManager.onCreate += OnAdd;
-        playerManager.onRemove += OnRemove;
+        playerManager.OnCreate += OnAdd;
+        playerManager.OnRemove += OnRemove;
     }
 
     public new void OnDestroy()
     {
-        playerManager.onCreate -= OnAdd;
-        playerManager.onRemove -= OnRemove;
+        playerManager.OnCreate -= OnAdd;
+        playerManager.OnRemove -= OnRemove;
     }
 
     public override void OnLanguageChanged()
