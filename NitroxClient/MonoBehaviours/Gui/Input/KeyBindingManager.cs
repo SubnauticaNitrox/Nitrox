@@ -2,6 +2,8 @@
 using System.Linq;
 using NitroxClient.MonoBehaviours.Gui.Input.KeyBindings;
 using NitroxClient.MonoBehaviours.Gui.Input.KeyBindings.Actions;
+using NitroxClient.Serialization;
+using NitroxModel.Helper;
 
 namespace NitroxClient.MonoBehaviours.Gui.Input
 {
@@ -11,11 +13,12 @@ namespace NitroxClient.MonoBehaviours.Gui.Input
 
         public KeyBindingManager()
         {
+            ClientConfig cfg = ClientConfig.Load(NitroxUser.AppDataPath);
             KeyboardKeyBindings = new List<KeyBinding>
             {
                 // new bindings should not be set to a value equivalent to a pre-existing GameInput.Button enum or another custom binding
-                new(45, "Chat", GameInput.Device.Keyboard, new DefaultKeyBinding("Y", GameInput.BindingSet.Primary), new ChatKeyBindingAction()),
-                new(46, "Focus Discord (Alt +)", GameInput.Device.Keyboard, new DefaultKeyBinding("F", GameInput.BindingSet.Primary), new DiscordFocusBindingAction())
+                new((int)KeyBindingValues.CHAT, "Chat", GameInput.Device.Keyboard, new ChatKeyBindingAction(), cfg.OpenChatKeybindPrimary, cfg.OpenChatKeybindSecondary),
+                new((int)KeyBindingValues.FOCUS_DISCORD, "Focus Discord (Alt +)", GameInput.Device.Keyboard, new DiscordFocusBindingAction(), cfg.FocusDiscordKeybindPrimary, cfg.FocusDiscordKeybindSecondary),
             };
         }
 
@@ -24,5 +27,14 @@ namespace NitroxClient.MonoBehaviours.Gui.Input
         {
             return KeyboardKeyBindings.Select(keyBinding => (int)keyBinding.Button).DefaultIfEmpty(0).Max();
         }
+    }
+
+    /// <summary>
+    ///     Refers the keybinding values used for button creation in the options menu, to a more clear form
+    /// </summary>
+    public enum KeyBindingValues
+    {
+        CHAT = 45,
+        FOCUS_DISCORD = 46
     }
 }
