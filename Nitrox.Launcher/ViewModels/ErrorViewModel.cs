@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reactive;
 using System.Reflection;
-using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Input.Platform;
 using Nitrox.Launcher.ViewModels.Abstract;
@@ -26,7 +26,7 @@ public class ErrorViewModel : ModalViewModelBase
         {
             if (!string.IsNullOrWhiteSpace(ErrorText))
             {
-                IClipboard clipboard = AvaloniaLocator.Current.GetService<IClipboard>();
+                IClipboard clipboard = TopLevel.GetTopLevel(Locator.MainWindow)?.Clipboard;
                 if (clipboard != null)
                 {
                     await clipboard.SetTextAsync(ErrorText);

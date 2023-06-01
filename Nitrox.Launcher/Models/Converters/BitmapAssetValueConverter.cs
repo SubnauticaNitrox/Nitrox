@@ -40,15 +40,9 @@ public class BitmapAssetValueConverter : Converter<BitmapAssetValueConverter>, I
             uri = new Uri($"avares://{assemblyName}{rawUri}");
         }
 
-        IAssetLoader assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
-        if (assets != null)
-        {
-            bitmap = new Bitmap(assets.Open(uri));
-            assetCache.Add(rawUri, bitmap);
-            return bitmap;
-        }
-
-        return null;
+        bitmap = new Bitmap(AssetLoader.Open(uri));
+        assetCache.Add(rawUri, bitmap);
+        return bitmap;
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

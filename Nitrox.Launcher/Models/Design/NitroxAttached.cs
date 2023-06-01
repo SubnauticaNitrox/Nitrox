@@ -68,7 +68,7 @@ public class NitroxAttached : AvaloniaObject
         }
         else if (obj is IInputElement input)
         {
-            Dispatcher.UIThread.Post(() => FocusManager.Instance?.Focus(input, NavigationMethod.Directional));
+            Dispatcher.UIThread.Post(() => input.Focus());
         }
         else
         {

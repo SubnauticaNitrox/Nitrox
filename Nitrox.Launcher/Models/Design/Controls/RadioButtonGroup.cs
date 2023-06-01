@@ -2,12 +2,11 @@ using System;
 using System.Reactive;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Styling;
 using ReactiveUI;
 
 namespace Nitrox.Launcher.Models.Design.Controls;
 
-public class RadioButtonGroup : ItemsControl, IStyleable
+public class RadioButtonGroup : ItemsControl
 {
     public static readonly DirectProperty<RadioButtonGroup, Type> EnumProperty = AvaloniaProperty.RegisterDirect<RadioButtonGroup, Type>(nameof(Enum), o => o.Enum, (o, v) => o.Enum = v);
     public static readonly StyledProperty<object> SelectedItemProperty = AvaloniaProperty.Register<RadioButtonGroup, object>(nameof(SelectedItem));
@@ -16,7 +15,6 @@ public class RadioButtonGroup : ItemsControl, IStyleable
 
     private Type @enum;
     private ReactiveCommand<Button, Unit> itemClickCommand;
-    Type IStyleable.StyleKey => typeof(ItemsControl);
 
     public Type Enum
     {
@@ -49,4 +47,6 @@ public class RadioButtonGroup : ItemsControl, IStyleable
     {
         itemClickCommand = ReactiveCommand.Create<Button>(param => SelectedItem = param.Tag);
     }
+
+    protected override Type StyleKeyOverride { get; } = typeof(ItemsControl);
 }
