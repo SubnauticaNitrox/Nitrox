@@ -32,4 +32,36 @@ internal static class ILExtensions
             return null;
         });
     }
+
+    /// <summary>
+    ///     Inserts the new instructions on every occurence of the marker, as defined by the pattern.
+    /// </summary>
+    /// <returns>Code with the additions.</returns>
+    public static IEnumerable<CodeInstruction> InsertAfterMarker(this IEnumerable<CodeInstruction> instructions, InstructionsPattern pattern, string marker, CodeInstruction[] newInstructions)
+    {
+        return pattern.ApplyTransform(instructions, (m, _) =>
+        {
+            if (m.Equals(marker, StringComparison.Ordinal))
+            {
+                return newInstructions;
+            }
+            return null;
+        });
+    }
+
+    /// <summary>
+    ///     Calls the <paramref name="instructionChange" /> action on each instruction matching the given marker, as defined by the
+    ///     pattern.
+    /// </summary>
+    public static IEnumerable<CodeInstruction> ChangeAtMarker(this IEnumerable<CodeInstruction> instructions, InstructionsPattern pattern, string marker, Action<CodeInstruction> instructionChange)
+    {
+        return pattern.ApplyTransform(instructions, (m, instruction) =>
+        {
+            if (m.Equals(marker, StringComparison.Ordinal))
+            {
+                instructionChange(instruction);
+            }
+            return null;
+        });
+    }
 }

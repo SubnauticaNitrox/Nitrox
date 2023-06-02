@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Linq;
 using FluentAssertions;
 using HarmonyLib;
@@ -16,7 +15,8 @@ public class DevConsole_Update_PatchTest
     public void Sanity()
     {
         ReadOnlyCollection<CodeInstruction> originalIl = PatchTestHelper.GetInstructionsFromMethod(TARGET_METHOD);
-        IEnumerable<CodeInstruction> transformedIl = Transpiler(TARGET_METHOD, originalIl);
-        originalIl.Count.Should().Be(transformedIl.Count());
+        CodeInstruction[] transformedIl = Transpiler(TARGET_METHOD, originalIl.Clone()).ToArray();
+        originalIl.Count.Should().Be(transformedIl.Length, "the modified code shouldn't have a difference in size");
+        transformedIl.Should().NotBeEquivalentTo(originalIl, "the patch should have changed the IL");
     }
 }
