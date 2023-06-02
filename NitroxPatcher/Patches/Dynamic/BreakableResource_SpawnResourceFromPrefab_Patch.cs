@@ -26,17 +26,11 @@ public class BreakableResource_SpawnResourceFromPrefab_Patch : NitroxPatch, IDyn
 
     public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
     {
-        static IEnumerable<CodeInstruction> InsertCallback(string label, CodeInstruction _)
+        return instructions.InsertAfterMarker(SpawnResFromPrefPattern, "DropItemInstance", new CodeInstruction[]
         {
-            switch(label)
-            {
-                case "DropItemInstance":
-                    yield return new(Ldloc_1);
-                    yield return new(Call, Reflect.Method(() => Callback(default)));
-                    break;
-            }
-        }
-        return instructions.Transform(SpawnResFromPrefPattern, InsertCallback);
+            new(Ldloc_1),
+            new(Call, Reflect.Method(() => Callback(default)))
+        });
     }
 
     private static void Callback(GameObject __instance)

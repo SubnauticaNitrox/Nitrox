@@ -30,17 +30,12 @@ public class ItemsContainer_DestroyItem_Patch : NitroxPatch, IDynamicPatch
 
     public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
     {
-        static IEnumerable<CodeInstruction> InsertNotifyServerCall(string label, CodeInstruction instruction)
+        // After the call to RemoveItem (and storing the return value) we want to call our callback method
+        return instructions.InsertAfterMarker(removeItemPattern, "NotifyServer", new CodeInstruction[]
         {
-            // After the call to RemoveItem (and storing the return value) we want to call our callback method
-            if (label.Equals("NotifyServer"))
-            {
-                yield return new(Ldloc_0);
-                yield return new(Call, Reflect.Method(() => Callback(default)));
-            }
-        }
-
-        return instructions.Transform(removeItemPattern, InsertNotifyServerCall);
+            new(Ldloc_0),
+            new(Call, Reflect.Method(() => Callback(default)))
+        });
     }
 
     private static void Callback(Pickupable pickupable)
