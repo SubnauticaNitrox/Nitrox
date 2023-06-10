@@ -1,10 +1,10 @@
-﻿namespace AddressablesTools.Catalog
+namespace AddressablesTools.Catalog
 {
-    internal class ClassJsonObject
+    public class ClassJsonObject
     {
-        public string AssemblyName { get; }
-        public string ClassName { get; }
-        public string JsonText { get; }
+        public string AssemblyName { get; set; }
+        public string ClassName { get; set; }
+        public string JsonText { get; set; }
 
         public ClassJsonObject(string assemblyName, string className, string jsonText)
         {

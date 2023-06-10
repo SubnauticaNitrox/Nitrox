@@ -63,11 +63,16 @@ public class Program
             Stopwatch watch = Stopwatch.StartNew();
 
             // Allow game path to be given as command argument
+#if SUBNAUTICA
             if (args.Length > 0 && Directory.Exists(args[0]) && File.Exists(Path.Combine(args[0], "Subnautica.exe")))
+#elif BELOWZERO
+            if (args.Length > 0 && Directory.Exists(args[0]) && File.Exists(Path.Combine(args[0], "SubnauticaZero.exe")))
+#endif
             {
                 string gameDir = Path.GetFullPath(args[0]);
                 Log.Info($"Using game files from: {gameDir}");
                 gameInstallDir = new Lazy<string>(() => gameDir);
+                NitroxUser.GamePath = gameDir;
             }
             else
             {

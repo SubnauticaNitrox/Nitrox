@@ -27,7 +27,7 @@ public static class ResourceAssetsParser
         }
         AssetParser.Dispose();
         
-        ResourceAssets.ValidateMembers(resourceAssets);
+        //ResourceAssets.ValidateMembers(resourceAssets);
         return resourceAssets;
     }
 

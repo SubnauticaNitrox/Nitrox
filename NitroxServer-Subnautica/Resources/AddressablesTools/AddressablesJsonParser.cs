@@ -1,4 +1,4 @@
-﻿using AddressablesTools.Catalog;
+using AddressablesTools.Catalog;
 using AddressablesTools.JSON;
 using Newtonsoft.Json;
 
@@ -19,6 +19,16 @@ namespace AddressablesTools
             catalogData.Read(ccdJson);
 
             return catalogData;
+        }
+
+        public static string ToJson(ContentCatalogData ccd)
+        {
+            ContentCatalogDataJson ccdJson = new ContentCatalogDataJson();
+
+            ccd.Write(ccdJson);
+
+
+            return JsonConvert.SerializeObject(ccdJson);
         }
     }
 }

@@ -3,9 +3,11 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
 using AddressablesTools;
 using AddressablesTools.Catalog;
+using AddressablesTools.JSON;
 using AssetsTools.NET;
 using AssetsTools.NET.Extra;
 using NitroxModel.DataStructures.GameLogic;
@@ -51,7 +53,11 @@ public class PrefabPlaceholderGroupsParser : IDisposable
         LoadAddressableCatalog(prefabDatabase);
 
         // Select only prefabs with a PrefabPlaceholdersGroups component in the root ans link them with their dependencyPaths
+#if SUBNAUTICA
         ConcurrentDictionary<string, string[]> prefabPlaceholdersGroupPaths = GetAllPrefabPlaceholdersGroupsFast();
+#elif BELOWZERO
+        Dictionary<string, string[]> prefabPlaceholdersGroupPaths = GetAllPrefabPlaceholdersGroupsFast();
+#endif
         // Do not remove: the internal cache list is slowing down the process more than loading a few assets again. There maybe is a better way in the new AssetToolsNetVersion but we need a byte to texture library bc ATNs sub-package is only for netstandard.
         am.UnloadAll();
 
@@ -85,7 +91,11 @@ public class PrefabPlaceholderGroupsParser : IDisposable
 
     private void LoadAddressableCatalog(Dictionary<string, string> prefabDatabase)
     {
+#if SUBNAUTICA
         ContentCatalogData ccd = AddressablesJsonParser.FromString(File.ReadAllText(Path.Combine(aaRootPath, "catalog.json")));
+#elif BELOWZERO
+        ContentCatalogData ccd = AddressablesBinaryParser.FromPath(Path.Combine(aaRootPath, "catalog.json"));
+#endif
 
         foreach (KeyValuePair<string, string> prefabAddressable in prefabDatabase)
         {
@@ -108,9 +118,15 @@ public class PrefabPlaceholderGroupsParser : IDisposable
         }
     }
 
+#if SUBNAUTICA
     private ConcurrentDictionary<string, string[]> GetAllPrefabPlaceholdersGroupsFast()
     {
         ConcurrentDictionary<string, string[]> prefabPlaceholdersGroupPaths = new();
+#elif BELOWZERO
+    private Dictionary<string, string[]> GetAllPrefabPlaceholdersGroupsFast()
+    {
+        Dictionary<string, string[]> prefabPlaceholdersGroupPaths = new();
+#endif
         byte[] prefabPlaceholdersGroupHash = Array.Empty<byte>();
 
         int aaIndex;
@@ -144,24 +160,42 @@ public class PrefabPlaceholderGroupsParser : IDisposable
             }
         }
 
+#if SUBNAUTICA
         Parallel.ForEach(addressableCatalog.Skip(aaIndex), (keyValuePair) =>
         {
+#endif
             AssetsBundleManager bundleManagerInst = am.Clone();
+#if BELOWZERO
+        foreach (KeyValuePair<string, string[]> keyValuePair in addressableCatalog.Skip(aaIndex))
+        {
+#endif
             BundleFileInstance bundleFile = bundleManagerInst.LoadBundleFile(bundleManagerInst.CleanBundlePath(keyValuePair.Value[0]));
             AssetsFileInstance assetFileInstance = bundleManagerInst.LoadAssetsFileFromBundle(bundleFile, 0);
 
             if (assetFileInstance.file.Metadata.TypeTreeTypes.Any(typeTree => typeTree.TypeId == (int)AssetClassID.MonoBehaviour && typeTree.TypeHash.data.SequenceEqual(prefabPlaceholdersGroupHash)))
             {
+#if SUBNAUTICA
                 prefabPlaceholdersGroupPaths.TryAdd(keyValuePair.Key, keyValuePair.Value);
+#elif BELOWZERO
+                prefabPlaceholdersGroupPaths.Add(keyValuePair.Key, keyValuePair.Value);
+#endif
             }
 
-            bundleManagerInst.UnloadAll();
+        bundleManagerInst.UnloadAll();
+#if SUBNAUTICA
         });
+#elif BELOWZERO
+        }
+#endif
 
         return prefabPlaceholdersGroupPaths;
     }
 
+#if SUBNAUTICA
     private ConcurrentDictionary<string, PrefabPlaceholdersGroupAsset> GetPrefabPlaceholderGroupAssetsByGroupClassId(ConcurrentDictionary<string, string[]> prefabPlaceholdersGroupPaths)
+#elif BELOWZERO
+    private ConcurrentDictionary<string, PrefabPlaceholdersGroupAsset> GetPrefabPlaceholderGroupAssetsByGroupClassId(Dictionary<string, string[]> prefabPlaceholdersGroupPaths)
+#endif
     {
         ConcurrentDictionary<string, PrefabPlaceholdersGroupAsset> prefabPlaceholderGroupsByGroupClassId = new();
 
@@ -170,6 +204,12 @@ public class PrefabPlaceholderGroupsParser : IDisposable
             AssetsBundleManager bundleManagerInst = am.Clone();
             AssetsFileInstance assetFileInst = bundleManagerInst.LoadBundleWithDependencies(keyValuePair.Value);
 
+#if BELOWZERO
+            if (string.IsNullOrEmpty(keyValuePair.Key))
+            {
+                throw new InvalidDataException("classId was empty for a placeholder");
+            }
+#endif
             PrefabPlaceholdersGroupAsset prefabPlaceholderGroup = GetAndCachePrefabPlaceholdersGroupOfBundle(bundleManagerInst, assetFileInst, keyValuePair.Key);
             bundleManagerInst.UnloadAll();
 
