@@ -21,10 +21,10 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
     public override IEnumerator SpawnAsync(BuildEntity entity, TaskResult<Optional<GameObject>> result)
     {
         Log.Debug($"Spawning a BuildEntity: {entity.Id}");
-        if (NitroxEntity.TryGetObjectFrom(entity.Id, out GameObject gameObject))
+        if (NitroxEntity.TryGetObjectFrom(entity.Id, out GameObject gameObject) && gameObject)
         {
-            Log.Debug($"Resynced BuildEntity {entity.Id}");
-            GameObject.DestroyImmediate(gameObject);
+            Log.Error("Trying to respawn an already spawned Base without a proper resync process.");
+            yield break;
         }
 
         yield return BuildingTester.Main.LoadBaseAsync(entity, result);

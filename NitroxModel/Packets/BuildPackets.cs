@@ -6,6 +6,16 @@ using System.Collections.Generic;
 
 namespace NitroxModel.Packets;
 
+public abstract class BuildPacket : Packet
+{
+    public int OperationId;
+
+    public BuildPacket(int operationId)
+    {
+        OperationId = operationId;
+    }
+}
+
 public sealed class PlaceGhost : Packet
 {
     public GhostEntity GhostEntity;
@@ -71,7 +81,7 @@ public sealed class PlaceBase : Packet
     }
 }
 
-public sealed class UpdateBase : Packet
+public sealed class UpdateBase : BuildPacket
 {
     public NitroxId BaseId;
     public NitroxId FormerGhostId;
@@ -82,7 +92,7 @@ public sealed class UpdateBase : Packet
     public Dictionary<NitroxId, NitroxInt3> UpdatedMapRooms;
     public (NitroxId, NitroxId) ChildrenTransfer;
 
-    public UpdateBase(NitroxId baseId, NitroxId formerGhostId, SavedBase savedBase, Entity builtPieceEntity, Dictionary<NitroxId, NitroxBaseFace> updatedChildren, Dictionary<NitroxId, NitroxInt3> updatedMoonpools, Dictionary<NitroxId, NitroxInt3> updatedMapRooms, (NitroxId, NitroxId) childrenTransfer)
+    public UpdateBase(NitroxId baseId, NitroxId formerGhostId, SavedBase savedBase, Entity builtPieceEntity, Dictionary<NitroxId, NitroxBaseFace> updatedChildren, Dictionary<NitroxId, NitroxInt3> updatedMoonpools, Dictionary<NitroxId, NitroxInt3> updatedMapRooms, (NitroxId, NitroxId) childrenTransfer, int operationId) : base(operationId)
     {
         BaseId = baseId;
         FormerGhostId = formerGhostId;
@@ -117,7 +127,7 @@ public sealed class BaseDeconstructed : Packet
     }
 }
 
-public class PieceDeconstructed : Packet
+public class PieceDeconstructed : BuildPacket
 {
     public NitroxId BaseId;
     public NitroxId PieceId;
@@ -125,7 +135,7 @@ public class PieceDeconstructed : Packet
     public GhostEntity ReplacerGhost;
     public SavedBase SavedBase;
 
-    public PieceDeconstructed(NitroxId baseId, NitroxId pieceId, BuildPieceIdentifier buildPieceIdentifier, GhostEntity replacerGhost, SavedBase savedBase)
+    public PieceDeconstructed(NitroxId baseId, NitroxId pieceId, BuildPieceIdentifier buildPieceIdentifier, GhostEntity replacerGhost, SavedBase savedBase, int operationId) : base(operationId)
     {
         BaseId = baseId;
         PieceId = pieceId;
@@ -146,7 +156,7 @@ public sealed class WaterParkDeconstructed : PieceDeconstructed
     public List<NitroxId> MovedChildrenIds;
     public bool Transfer;
 
-    public WaterParkDeconstructed(NitroxId baseId, NitroxId pieceId, BuildPieceIdentifier buildPieceIdentifier, GhostEntity replacerGhost, SavedBase savedBase, InteriorPieceEntity newWaterPark, List<NitroxId> movedChildrenIds, bool transfer) : base(baseId, pieceId, buildPieceIdentifier, replacerGhost, savedBase)
+    public WaterParkDeconstructed(NitroxId baseId, NitroxId pieceId, BuildPieceIdentifier buildPieceIdentifier, GhostEntity replacerGhost, SavedBase savedBase, InteriorPieceEntity newWaterPark, List<NitroxId> movedChildrenIds, bool transfer, int operationId) : base(baseId, pieceId, buildPieceIdentifier, replacerGhost, savedBase, operationId)
     {
         NewWaterPark = newWaterPark;
         MovedChildrenIds = movedChildrenIds ?? new();

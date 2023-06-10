@@ -10,6 +10,7 @@ using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
+using NitroxServer.GameLogic.Bases;
 using NitroxServer.GameLogic.Entities;
 using NitroxServer.Serialization.World;
 
@@ -22,14 +23,16 @@ namespace NitroxServer.Communication.Packets.Processors
         private readonly StoryManager storyManager;
         private readonly World world;
         private readonly EntityRegistry entityRegistry;
+        private readonly BuildingManager buildingManager;
 
-        public PlayerJoiningMultiplayerSessionProcessor(ScheduleKeeper scheduleKeeper, StoryManager storyManager, PlayerManager playerManager, World world, EntityRegistry entityRegistry)
+        public PlayerJoiningMultiplayerSessionProcessor(ScheduleKeeper scheduleKeeper, StoryManager storyManager, PlayerManager playerManager, World world, EntityRegistry entityRegistry, BuildingManager buildingManager)
         {
             this.scheduleKeeper = scheduleKeeper;
             this.storyManager = storyManager;
             this.playerManager = playerManager;
             this.world = world;
             this.entityRegistry = entityRegistry;
+            this.buildingManager = buildingManager;
         }
 
         public override void Process(PlayerJoiningMultiplayerSession packet, NitroxConnection connection)
@@ -66,6 +69,7 @@ namespace NitroxServer.Communication.Packets.Processors
             {
                 RespawnExistingEntity(player);
             }
+            List<GlobalRootEntity> globalRootEntities = world.WorldEntityManager.GetGlobalRootEntities(true);
 
             InitialPlayerSync initialPlayerSync = new(player.GameObjectId,
                 wasBrandNewPlayer,
@@ -81,12 +85,13 @@ namespace NitroxServer.Communication.Packets.Processors
                 player.SubRootId,
                 player.Stats,
                 GetOtherPlayers(player),
-                world.WorldEntityManager.GetGlobalRootEntities(true),
+                globalRootEntities,
                 simulations,
                 world.GameMode,
                 player.Permissions,
                 new(new(player.PingInstancePreferences), player.PinnedRecipePreferences.ToList()),
-                storyManager.GetTimeData()
+                storyManager.GetTimeData(),
+                buildingManager.GetEntitiesOperations(globalRootEntities)
             );
 
             player.SendPacket(initialPlayerSync);

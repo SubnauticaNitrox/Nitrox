@@ -55,7 +55,6 @@ public class VehicleWorldEntitySpawner : IWorldEntitySpawner
 
     private IEnumerator SpawnInWorld(VehicleWorldEntity vehicleEntity, TaskResult<Optional<GameObject>> result, Optional<GameObject> parent)
     {
-        Log.Debug("SpawnInWorld");
         TechType techType = vehicleEntity.TechType.ToUnity();
         GameObject gameObject = null;
 

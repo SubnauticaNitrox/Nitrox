@@ -22,6 +22,15 @@ public abstract class BuildingProcessor<T> : AuthenticatedPacketProcessor<T> whe
     {
         playerManager.SendPacketToOtherPlayers(packet, player);
     }
+
+    public void ProcessWithOperationId(T packet, Player player, int operationId)
+    {
+        if (packet is BuildPacket buildPacket)
+        {
+            buildPacket.OperationId = operationId;
+        }
+        playerManager.SendPacketToOtherPlayers(packet, player);
+    }
 }
 
 public class PlaceGhostProcessor : BuildingProcessor<PlaceGhost>
@@ -83,14 +92,14 @@ public class UpdateBaseProcessor : BuildingProcessor<UpdateBase>
 
     public override void Process(UpdateBase packet, Player player)
     {
-        if (buildingManager.UpdateBase(packet))
+        if (buildingManager.UpdateBase(packet, out int operationId))
         {
             packet.SavedBase = null;
             packet.BuiltPieceEntity = null;
             packet.UpdatedChildren = null;
             packet.UpdatedMoonpools = null;
             packet.UpdatedMapRooms = null;
-            base.Process(packet, player);
+            ProcessWithOperationId(packet, player, operationId);
         }
     }
 }
@@ -114,10 +123,10 @@ public class PieceDeconstructedProcessor : BuildingProcessor<PieceDeconstructed>
 
     public override void Process(PieceDeconstructed packet, Player player)
     {
-        if (buildingManager.ReplacePieceByGhost(packet, out _))
+        if (buildingManager.ReplacePieceByGhost(packet, out _, out int operationId))
         {
             packet.SavedBase = null;
-            base.Process(packet, player);
+            ProcessWithOperationId(packet, player, operationId);
         }
     }
 }
@@ -128,11 +137,11 @@ public class WaterParkDeconstructedProcessor : BuildingProcessor<WaterParkDecons
 
     public override void Process(WaterParkDeconstructed packet, Player player)
     {
-        if (buildingManager.ReplacePieceByGhost(packet, out Entity removedEntity) &&
+        if (buildingManager.ReplacePieceByGhost(packet, out Entity removedEntity, out int operationId) &&
             buildingManager.CreateWaterParkPiece(packet, removedEntity))
         {
             packet.SavedBase = null;
-            base.Process(packet, player);
+            ProcessWithOperationId(packet, player, operationId);
         }
     }
 }

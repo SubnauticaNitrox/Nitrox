@@ -5,10 +5,12 @@ using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 using NitroxClient.Communication;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Spawning.Bases.PostSpawners;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Buildings.New;
 using NitroxModel.DataStructures.GameLogic.Entities.Bases;
 using NitroxModel.DataStructures.Util;
@@ -32,19 +34,30 @@ public class BuildingTester : MonoBehaviour
     private JsonSerializer serializer;
     public string SavePath = Path.Combine(NitroxUser.LauncherPath, "SavedBases");
 
-    public TemporaryBuildData Temp;
     public Dictionary<NitroxId, DateTimeOffset> BasesCooldown;
+    public DateTimeOffset LatestResyncRequestTimeOffset;
+
+    public TemporaryBuildData Temp;
+    public Dictionary<NitroxId, OperationTracker> Operations;
+    public int FailedOperations;
+
+    public bool Resyncing;
+
     /// <summary>
     /// Time in milliseconds before local player can build on a base that was modified by another player
     /// </summary>
     private const int MULTIPLAYER_BUILD_COOLDOWN = 2000;
+    private const int RESYNC_REQUEST_COOLDOWN = 10000;
 
     public void Start()
     {
         Main = this;
         BuildQueue = new();
-        Temp = new();
+        LatestResyncRequestTimeOffset = DateTimeOffset.Now;
         BasesCooldown = new();
+        Temp = new();
+        Operations = new();
+
         serializer = new();
         serializer.NullValueHandling = NullValueHandling.Ignore;
         serializer.TypeNameHandling = TypeNameHandling.Auto;
@@ -54,7 +67,7 @@ public class BuildingTester : MonoBehaviour
     public void Update()
     {
         CleanCooldowns();
-        if (BuildQueue.Count > 0 && !working)
+        if (BuildQueue.Count > 0 && !working && !Resyncing)
         {
             working = true;            
             StartCoroutine(SafelyTreatNextBuildCommand());
@@ -117,6 +130,7 @@ public class BuildingTester : MonoBehaviour
     public IEnumerator BuildGhost(PlaceGhost placeGhost)
     {
         GhostEntity ghostEntity = placeGhost.GhostEntity;
+
         Transform parent = GetParentOrGlobalRoot(ghostEntity.ParentId);
         yield return NitroxBuild.RestoreGhost(parent, ghostEntity);
         BasesCooldown[ghostEntity.ParentId ?? ghostEntity.Id] = DateTimeOffset.Now;
@@ -166,8 +180,7 @@ public class BuildingTester : MonoBehaviour
             BasesCooldown[placeBase.FormerGhostId] = DateTimeOffset.Now;
             yield break;
         }
-        // yield return NitroxBuild.CreateBuild(placeBase.SavedBuild);
-        // TODO: Ask for resync
+        FailedOperations++;
     }
 
     public IEnumerator UpdatePlacedBase(UpdateBase updateBase)
@@ -176,9 +189,13 @@ public class BuildingTester : MonoBehaviour
         if (!NitroxEntity.TryGetComponentFrom<Base>(updateBase.BaseId, out _))
         {
             Log.Debug("Couldn't find the parentBase");
-            // TODO: Ask for resync
+            FailedOperations++;
             yield break;
         }
+
+        OperationTracker tracker = EnsureTracker(updateBase.BaseId);
+        tracker.RegisterOperation(updateBase.OperationId);
+
         if (NitroxEntity.TryGetComponentFrom(updateBase.FormerGhostId, out ConstructableBase constructableBase))
         {
             Temp.ChildrenTransfer = updateBase.ChildrenTransfer;
@@ -193,20 +210,14 @@ public class BuildingTester : MonoBehaviour
             }
             yield break;
         }
-        // TODO: Ask for resync
-        /* Log.Debug("Not ok, rebuilding the whole base");
-        parentBase.ghosts.ForEach(Destroy);
-        yield return null;
-        yield return updateBase.SavedBuild.ApplyToAsync(parentBase);
-        yield return updateBase.SavedBuild.RestoreGhosts(parentBase);
-        RefreshBase(parentBase);*/
+        tracker.FailedOperations++;
     }
 
     public IEnumerator DeconstructBase(BaseDeconstructed baseDeconstructed)
     {
         if (!NitroxEntity.TryGetObjectFrom(baseDeconstructed.FormerBaseId, out GameObject baseObject))
         {
-            // TODO: Ask for resync
+            FailedOperations++;
             Log.Debug("Couldn't find the parentBase");
             yield break;
         }
@@ -224,19 +235,21 @@ public class BuildingTester : MonoBehaviour
             BasesCooldown[baseDeconstructed.FormerBaseId] = DateTimeOffset.Now;
             yield break;
         }
-        // TODO: Ask for resync
-        /*UnityEngine.Object.Destroy(baseObject);
-        yield return null;
-        yield return NitroxBuild.RestoreGhost(LargeWorldStreamer.main.globalRoot.transform, baseDeconstructed.ReplacerGhost);*/
+        EnsureTracker(baseDeconstructed.FormerBaseId).FailedOperations++;
     }
 
     public IEnumerator DeconstructPiece(PieceDeconstructed pieceDeconstructed)
     {
         if (!NitroxEntity.TryGetComponentFrom(pieceDeconstructed.BaseId, out Base @base))
         {
+            FailedOperations++;
             Log.Debug("Couldn't find the parentBase");
             yield break;
         }
+
+        OperationTracker tracker = EnsureTracker(pieceDeconstructed.BaseId);
+        tracker.RegisterOperation(pieceDeconstructed.OperationId);
+
         BuildPieceIdentifier pieceIdentifier = pieceDeconstructed.BuildPieceIdentifier;
         Transform cellObject = @base.GetCellObject(pieceIdentifier.BaseCell.ToUnity());
         if (!cellObject)
@@ -265,7 +278,43 @@ public class BuildingTester : MonoBehaviour
             yield break;
         }
         Log.Error("Couldn't find BaseDeconstructable to be destructed");
-        // TODO: Ask for resync
+        tracker.FailedOperations++;
+    }
+
+    public void AskForResync()
+    {
+        if (!Multiplayer.Main || !Multiplayer.Main.InitialSyncCompleted)
+        {
+            return;
+        }
+        TimeSpan deltaTime = DateTimeOffset.Now - LatestResyncRequestTimeOffset;
+        if (deltaTime.TotalMilliseconds < RESYNC_REQUEST_COOLDOWN)
+        {
+            double timeLeft = RESYNC_REQUEST_COOLDOWN * 0.001 - deltaTime.TotalSeconds;
+            ErrorMessage.AddMessage($"On cooldown for resync request for {timeLeft} more seconds");
+            return;
+        }
+        LatestResyncRequestTimeOffset = DateTimeOffset.Now;
+        
+        Resolve<IPacketSender>().Send(new BuildingResyncRequest());
+        ErrorMessage.AddMessage("Issued a resync request for bases");
+        // TODO: Localize
+    }
+
+    public void StartResync(Dictionary<Entity, int> entities)
+    {
+        Resyncing = true;
+        FailedOperations = 0;
+        BuildQueue.Clear();
+        InitializeOperations(entities.ToDictionary(pair => pair.Key.Id, pair => pair.Value));
+    }
+
+    public void InitializeOperations(Dictionary<NitroxId, int> operations)
+    {
+        foreach (KeyValuePair<NitroxId, int> pair in operations)
+        {
+            EnsureTracker(pair.Key).ResetToId(pair.Value);
+        }
     }
 
     private void RefreshBase(Base @base)
@@ -306,6 +355,24 @@ public class BuildingTester : MonoBehaviour
         DateTimeOffset now = DateTimeOffset.Now;
         List<NitroxId> keysToRemove = BasesCooldown.Where(entry => (now - entry.Value).TotalMilliseconds >= MULTIPLAYER_BUILD_COOLDOWN).Select(e => e.Key).ToList();
         keysToRemove.ForEach(key => BasesCooldown.Remove(key));
+    }
+
+    public OperationTracker EnsureTracker(NitroxId baseId)
+    {
+        if (!Operations.TryGetValue(baseId, out OperationTracker tracker))
+        {
+            Operations[baseId] = tracker = new(baseId);
+        }
+        return tracker;
+    }
+
+    public int GetCurrentOperationIdOrDefault(NitroxId baseId)
+    {
+        if (baseId != null && Operations.TryGetValue(baseId, out OperationTracker tracker))
+        {
+            return tracker.LastOperationId + tracker.LocalOperations;
+        }
+        return -1;
     }
 
     // TODO: Transform legacy singleplayer loading/saving into a map converting monobehaviour
@@ -465,6 +532,52 @@ public class BuildingTester : MonoBehaviour
             MovedChildrenIds = null;
             ChildrenTransfer = (null, null);
             Transfer = false;
+        }
+    }
+
+    public class OperationTracker
+    {
+        public NitroxId BuildId;
+        public int LastOperationId = -1;
+        /// <summary>
+        /// Accounts for locally-issued build actions
+        /// </summary>
+        public int LocalOperations;
+        /// <summary>
+        /// Calculated number of missed build actions
+        /// </summary>
+        public int MissedOperations;
+        /// <summary>
+        /// Number of detected issues when trying to apply actions remotely
+        /// </summary>
+        public int FailedOperations;
+
+        public OperationTracker(NitroxId buildId)
+        {
+            BuildId = buildId;
+        }
+
+        public void RegisterOperation(int newOperationId)
+        {
+            // If the progress was never registered, we don't need to account for missed operations
+            if (LastOperationId != -1)
+            {
+                MissedOperations += Math.Min(newOperationId - (LastOperationId + LocalOperations) - 1, 0);
+            }
+            LastOperationId = newOperationId;
+        }
+
+        public void ResetToId(int operationId = 0)
+        {
+            LastOperationId = operationId;
+            LocalOperations = 0;
+            MissedOperations = 0;
+            FailedOperations = 0;
+        }
+
+        public void AskForResync()
+        {
+            Resolve<IPacketSender>().Send(new BuildingResyncRequest(BuildId));
         }
     }
 }

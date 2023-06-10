@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Reflection;
 using NitroxClient.GameLogic.Settings;
 using NitroxModel.Helper;
@@ -30,6 +30,9 @@ namespace NitroxPatcher.Patches.Persistent
                             break;
                         case NitroxSettingsManager.SettingType.LIST:
                             __instance.AddChoiceOption(tabIndex, setting.Label, setting.ListItems, setting.GetValue<int>(), (UnityAction<int>)setting.Callback);
+                            break;
+                        case NitroxSettingsManager.SettingType.BUTTON:
+                            __instance.AddButton(tabIndex, setting.Label, (UnityAction)setting.Callback);
                             break;
                     }
                 }
