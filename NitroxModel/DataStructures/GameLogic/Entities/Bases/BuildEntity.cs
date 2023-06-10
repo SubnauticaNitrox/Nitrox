@@ -23,7 +23,8 @@ public class BuildEntity : GlobalRootEntity
     [DataMember(Order = 4)]
     public SavedBase SavedBase;
 
-    // TODO: Add an operationId to easily detect desyncs
+    [IgnoredMember]
+    public int OperationId;
 
     [IgnoreConstructor]
     protected BuildEntity()

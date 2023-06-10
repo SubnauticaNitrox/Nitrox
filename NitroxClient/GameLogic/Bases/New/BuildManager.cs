@@ -312,7 +312,45 @@ public static class NitroxBuild
         }
         return childEntities;
     }
+
+    public static IEnumerator ApplyBaseData(BuildEntity buildEntity, Base @base, TaskResult<Optional<GameObject>> result = null)
+    {
+        GameObject baseObject = @base.gameObject;
+        yield return buildEntity.ApplyToAsync(@base);
+        baseObject.SetActive(true);
+        yield return buildEntity.RestoreGhosts(@base);
+        @base.OnProtoDeserialize(null);
+        @base.deserializationFinished = false;
+        @base.FinishDeserialization();
+        result?.Set(baseObject);
+    }
     
+    /// <summary>
+    /// Destroys manually ghosts, modules, interior pieces and vehicles of a base
+    /// </summary>
+    /// <remarks>
+    /// This is the destructive way of clearing the base, if the base isn't modified consequently, IBaseModuleGeometry under the base cells may start spamming errors.
+    /// </remarks>
+    public static void ClearBaseChildren(Base @base)
+    {
+        for (int i = @base.transform.childCount - 1; i >= 0; i--)
+        {
+            Transform child = @base.transform.GetChild(i);
+            if (child.GetComponent<IBaseModule>() != null || child.GetComponent<Constructable>())
+            {
+                GameObject.Destroy(child.gameObject);
+            }
+        }
+        foreach (VehicleDockingBay vehicleDockingBay in @base.GetComponentsInChildren<VehicleDockingBay>(true))
+        {
+            if (vehicleDockingBay.dockedVehicle)
+            {
+                GameObject.Destroy(vehicleDockingBay.dockedVehicle.gameObject);
+                vehicleDockingBay.SetVehicleUndocked();
+            }
+        }
+    }
+
     public static IEnumerator CreateBuild(BuildEntity buildEntity, TaskResult<Optional<GameObject>> result = null)
     {
         GameObject newBase = UnityEngine.Object.Instantiate(BaseGhost._basePrefab, LargeWorldStreamer.main.globalRoot.transform, buildEntity.LocalPosition.ToUnity(), buildEntity.LocalRotation.ToUnity(), buildEntity.LocalScale.ToUnity(), false);
@@ -326,12 +364,7 @@ public static class NitroxBuild
             Log.Debug("No Base component found");
             yield break;
         }
-        yield return buildEntity.ApplyToAsync(@base);
-        newBase.SetActive(true);
-        yield return buildEntity.RestoreGhosts(@base);
-        @base.OnProtoDeserialize(null);
-        @base.FinishDeserialization();
-        result?.Set(newBase);
+        yield return ApplyBaseData(buildEntity, @base, result);
     }
 
     private static List<InteriorPieceEntity> SaveInteriorPieces(Base targetBase)
@@ -461,7 +494,12 @@ public static class NitroxBuild
         moduleTransform.localPosition = moduleEntity.LocalPosition.ToUnity();
         moduleTransform.localRotation = moduleEntity.LocalRotation.ToUnity();
         moduleTransform.localScale = moduleEntity.LocalScale.ToUnity();
+        ApplyModuleData(moduleEntity, moduleObject, result);
+        yield return EntityPostSpawner.ApplyPostSpawner(moduleObject, moduleEntity.Id);
+    }
 
+    public static void ApplyModuleData(ModuleEntity moduleEntity, GameObject moduleObject, TaskResult<Optional<GameObject>> result = null)
+    {
         Constructable constructable = moduleObject.GetComponent<Constructable>();
         constructable.SetIsInside(moduleEntity.IsInside);
         if (moduleEntity.IsInside)
@@ -476,7 +514,6 @@ public static class NitroxBuild
         constructable.SetState(moduleEntity.ConstructedAmount >= 1f, false);
         constructable.UpdateMaterial();
         NitroxEntity.SetNewId(moduleObject, moduleEntity.Id);
-        yield return EntityPostSpawner.ApplyPostSpawner(moduleObject, moduleEntity.Id);
         EntityMetadataProcessor.ApplyMetadata(moduleObject, moduleEntity.Metadata);
         result?.Set(moduleObject);
     }
@@ -670,7 +707,8 @@ public static class NitroxBase
     {
         if (savedBase.BaseShape != null)
         {
-            @base.baseShape = new(savedBase.BaseShape.ToUnity());
+            @base.baseShape = new(); // Reset it so that the following instruction is understood as a change
+            @base.SetSize(savedBase.BaseShape.ToUnity());
         }
         if (savedBase.Faces != null)
         {

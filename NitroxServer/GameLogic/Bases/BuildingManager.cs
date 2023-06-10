@@ -16,12 +16,9 @@ public class BuildingManager
 
     public BuildingManager(EntityRegistry entityRegistry, WorldEntityManager worldEntityManager)
     {
-        // TODO: Make a queue to treat requests one by one depending on the ParentId
         this.entityRegistry = entityRegistry;
         this.worldEntityManager = worldEntityManager;
     }
-
-    // TODO: When one of these functions return false, we should notify the client that he is desynced and resync him accordingly
 
     public bool AddGhost(PlaceGhost placeGhost)
     {
@@ -141,18 +138,30 @@ public class BuildingManager
         return false;
     }
 
-    public bool UpdateBase(UpdateBase updateBase)
+    public bool UpdateBase(UpdateBase updateBase, out int operationId)
     {
         if (!entityRegistry.TryGetEntityById<GhostEntity>(updateBase.FormerGhostId, out _))
         {
             Log.Error($"Tring to place a base from a non-registered ghost (GhostId: {updateBase.FormerGhostId})");
+            operationId = -1;
             return false;
         }
         if (!entityRegistry.TryGetEntityById(updateBase.BaseId, out BuildEntity buildEntity))
         {
             Log.Error($"Trying to update a non-registered build (BaseId: {updateBase.BaseId})");
+            operationId = -1;
             return false;
         }
+        int deltaOperations = buildEntity.OperationId + 1 - updateBase.OperationId;
+        if (deltaOperations > 0)
+        {
+            Log.Warn($"[RISKY] Registering an {nameof(UpdateBase)} packet which is {deltaOperations} operations ahead");
+        }
+        else if (deltaOperations < 0)
+        {
+            Log.Warn($"[RISKY] Registering an {nameof(UpdateBase)} packet which is {-deltaOperations} operations late");
+        }
+
         worldEntityManager.RemoveGlobalRootEntity(updateBase.FormerGhostId);
         buildEntity.SavedBase = updateBase.SavedBase;
 
@@ -205,7 +214,8 @@ public class BuildingManager
                 worldEntityManager.RemoveGlobalRootEntity(removedChildId);
             }
         }
-
+        buildEntity.OperationId++;
+        operationId = buildEntity.OperationId;
         return true;
     }
 
@@ -222,18 +232,20 @@ public class BuildingManager
         return true;
     }
 
-    public bool ReplacePieceByGhost(PieceDeconstructed pieceDeconstructed, out Entity removedEntity)
+    public bool ReplacePieceByGhost(PieceDeconstructed pieceDeconstructed, out Entity removedEntity, out int operationId)
     {
         if (!entityRegistry.TryGetEntityById(pieceDeconstructed.BaseId, out BuildEntity buildEntity))
         {
             Log.Error($"Trying to replace a non-registered build (BaseId: {pieceDeconstructed.BaseId})");
             removedEntity = null;
+            operationId = -1;
             return false;
         }
         if (entityRegistry.TryGetEntityById(pieceDeconstructed.PieceId, out GhostEntity _))
         {
             Log.Error($"Trying to add a ghost to a building but another ghost child with the same id already exists (GhostId: {pieceDeconstructed.PieceId})");
             removedEntity = null;
+            operationId = -1;
             return false;
         }
 
@@ -243,6 +255,8 @@ public class BuildingManager
         worldEntityManager.AddGlobalRootEntity(ghostEntity);
         buildEntity.ChildEntities.Add(ghostEntity);
         buildEntity.SavedBase = pieceDeconstructed.SavedBase;
+        buildEntity.OperationId++;
+        operationId = buildEntity.OperationId;
         return true;
     }
 
@@ -271,7 +285,11 @@ public class BuildingManager
         {
             entityRegistry.TransferChildren(removedEntity, newPiece, entity => entity is not PlanterEntity);
         }
-
         return true;
+    }
+
+    public Dictionary<NitroxId, int> GetEntitiesOperations(List<GlobalRootEntity> entities)
+    {
+        return entities.OfType<BuildEntity>().ToDictionary(entity => entity.Id, entity => entity.OperationId);
     }
 }

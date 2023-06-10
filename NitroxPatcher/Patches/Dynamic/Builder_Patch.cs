@@ -310,8 +310,10 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
             // Same for MapRooms
             Dictionary<NitroxId, NitroxInt3> updatedMapRooms = childEntities.OfType<MapRoomEntity>()
                 .ToDictionary(entity => entity.Id, entity => entity.Cell);
-
-            UpdateBase updateBase = new(parentEntity.Id, entity.Id, NitroxBase.From(parentBase), builtPiece, updatedChildren, moonpoolManager.GetMoonpoolsUpdate(), updatedMapRooms, Temp.ChildrenTransfer);
+            
+            BuildingTester.Main.EnsureTracker(parentEntity.Id).LocalOperations++;
+            int operationId = BuildingTester.Main.GetCurrentOperationIdOrDefault(parentEntity.Id);
+            UpdateBase updateBase = new(parentEntity.Id, entity.Id, NitroxBase.From(parentBase), builtPiece, updatedChildren, moonpoolManager.GetMoonpoolsUpdate(), updatedMapRooms, Temp.ChildrenTransfer, operationId);
             Log.Debug($"Sending UpdateBase packet: {updateBase}");
 
             // TODO: (for server-side) Find a way to optimize this (maybe by copying BaseGhost.Finish() => Base.CopyFrom)
@@ -438,9 +440,11 @@ internal sealed class Builder_Patch : NitroxPatch, IDynamicPatch
         ghostEntity.Id = pieceId;
         ghostEntity.ParentId = baseEntity.Id;
 
+        int operationId = BuildingTester.Main.GetCurrentOperationIdOrDefault(baseEntity.Id);
+
         PieceDeconstructed pieceDeconstructed = Temp.NewWaterPark == null ?
-            new PieceDeconstructed(baseEntity.Id, pieceId, cachedPieceIdentifier, ghostEntity, NitroxBase.From(@base)) :
-            new WaterParkDeconstructed(baseEntity.Id, pieceId, cachedPieceIdentifier, ghostEntity, NitroxBase.From(@base), Temp.NewWaterPark, Temp.MovedChildrenIds, Temp.Transfer);
+            new PieceDeconstructed(baseEntity.Id, pieceId, cachedPieceIdentifier, ghostEntity, NitroxBase.From(@base), operationId) :
+            new WaterParkDeconstructed(baseEntity.Id, pieceId, cachedPieceIdentifier, ghostEntity, NitroxBase.From(@base), Temp.NewWaterPark, Temp.MovedChildrenIds, Temp.Transfer, operationId);
         Log.Debug($"Base is not empty, sending packet {pieceDeconstructed}");
 
         Resolve<IPacketSender>().Send(pieceDeconstructed);

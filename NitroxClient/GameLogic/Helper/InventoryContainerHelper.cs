@@ -37,8 +37,6 @@ namespace NitroxClient.GameLogic.Helper
                 return Optional.Of(remotePlayerId.RemotePlayer.Inventory);
             }
 
-            Log.Debug($"Couldn't resolve container from gameObject: {owner.name}");
-
             return Optional.Empty;
         }
 
@@ -46,7 +44,6 @@ namespace NitroxClient.GameLogic.Helper
         public static bool TryGetOwnerId(Transform ownerTransform, out NitroxId ownerId)
         {
 
-            // TODO: Fix this not working for WaterParks
             Transform parent = ownerTransform.parent;
             if (!parent)
             {
