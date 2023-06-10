@@ -26,7 +26,7 @@ public class ExosuitMetadataProcessor : VehicleMetadataProcessor<ExosuitMetadata
 #elif BELOWZERO
         if (!gameObject.TryGetComponent(out SubNameInput subNameInput))
         {
-            Log.ErrorOnce($"[{nameof(ExosuitMetadataProcessor)}] Could not find {nameof(SubName)} on {gameObject}");
+            Log.ErrorOnce($"[{nameof(ExosuitMetadataProcessor)}] Could not find {nameof(SubNameInput)} on {gameObject}");
             return;
         }
 #endif

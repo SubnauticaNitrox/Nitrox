@@ -15,7 +15,12 @@ public sealed partial class PDAEncyclopedia_Add_Patch : NitroxPatch, IDynamicPat
 #elif BELOWZERO
     private static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => PDAEncyclopedia.Add(default(string), default(PDAEncyclopedia.Entry), default(bool), default(bool)));
 
-    public static void Postfix(string key, bool verbose, bool postNotification, PDAEncyclopedia.EntryData __result)
+    public static void Prefix(string key, out bool __state)
+    {
+        __state = PDAEncyclopedia.ContainsEntry(key);
+    }
+
+    public static void Postfix(string key, bool verbose, bool postNotification, bool __state)
 #endif
     {
         if (!Multiplayer.Main || !Multiplayer.Main.InitialSyncCompleted)
@@ -23,12 +28,14 @@ public sealed partial class PDAEncyclopedia_Add_Patch : NitroxPatch, IDynamicPat
             return;
         }
 
+#if SUBNAUTICA
         // Is null when it's a duplicate call
         if (__result != null)
         {
-#if SUBNAUTICA
             Resolve<IPacketSender>().Send(new PDAEncyclopediaEntryAdd(key, verbose));
 #elif BELOWZERO
+        if (!__state)
+        {
             Resolve<IPacketSender>().Send(new PDAEncyclopediaEntryAdd(key, verbose, postNotification));
 #endif
         }

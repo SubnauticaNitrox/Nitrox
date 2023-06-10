@@ -11,7 +11,9 @@ namespace NitroxModel.DataStructures.GameLogic.Entities;
 
 [Serializable, DataContract]
 [ProtoInclude(50, typeof(BuildEntity))]
+#if SUBNAUTICA
 [ProtoInclude(51, typeof(EscapePodWorldEntity))]
+#endif
 [ProtoInclude(52, typeof(InteriorPieceEntity))]
 [ProtoInclude(53, typeof(MapRoomEntity))]
 [ProtoInclude(54, typeof(ModuleEntity))]

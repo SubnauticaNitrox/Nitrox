@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+#if SUBNAUTICA
+using System.Reflection;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Simulation;
 using NitroxClient.MonoBehaviours.Gui.HUD;
@@ -60,3 +61,4 @@ public sealed partial class Incubator_OnHandClick_Patch : NitroxPatch, IDynamicP
         }
     }
 }
+#endif

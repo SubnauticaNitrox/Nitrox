@@ -1,3 +1,4 @@
+#if SUBNAUTICA
 using System;
 using System.Collections.Generic;
 using NitroxModel.DataStructures;
@@ -153,3 +154,4 @@ public class EscapePodManager
         return pod.Players.Count >= PLAYERS_PER_ESCAPEPOD;
     }
 }
+#endif

@@ -3,9 +3,11 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
 using AddressablesTools;
 using AddressablesTools.Catalog;
+using AddressablesTools.JSON;
 using AssetsTools.NET;
 using AssetsTools.NET.Extra;
 using Newtonsoft.Json;
@@ -94,7 +96,11 @@ public class PrefabPlaceholderGroupsParser : IDisposable
 
     private Dictionary<string, PrefabPlaceholdersGroupAsset> MakeAndSerializeCache(string filePath)
     {
+#if SUBNAUTICA
         ConcurrentDictionary<string, string[]> prefabPlaceholdersGroupPaths = GetAllPrefabPlaceholdersGroupsFast();
+#elif BELOWZERO
+        Dictionary<string, string[]> prefabPlaceholdersGroupPaths = GetAllPrefabPlaceholdersGroupsFast();
+#endif
         Dictionary<string, PrefabPlaceholdersGroupAsset> prefabPlaceholdersGroupAssets = new(GetPrefabPlaceholderGroupAssetsByGroupClassId(prefabPlaceholdersGroupPaths));
         using StreamWriter stream = File.CreateText(filePath);
         serializer.Serialize(stream, new Cache(prefabPlaceholdersGroupAssets, RandomPossibilitiesByClassId));
@@ -141,7 +147,11 @@ public class PrefabPlaceholderGroupsParser : IDisposable
 
     private void LoadAddressableCatalog(Dictionary<string, string> prefabDatabase)
     {
+#if SUBNAUTICA
         ContentCatalogData ccd = AddressablesJsonParser.FromString(File.ReadAllText(Path.Combine(aaRootPath, "catalog.json")));
+#elif BELOWZERO
+        ContentCatalogData ccd = AddressablesBinaryParser.FromPath(Path.Combine(aaRootPath, "catalog.json"));
+#endif
         Dictionary<string, string> classIdByPath = prefabDatabase.ToDictionary(m => m.Value, m => m.Key);
 
         foreach (KeyValuePair<object, List<ResourceLocation>> entry in ccd.Resources)
@@ -177,9 +187,15 @@ public class PrefabPlaceholderGroupsParser : IDisposable
     /// Gathers bundle paths by class id for prefab placeholder groups.
     /// Also fills <see cref="RandomPossibilitiesByClassId"/>
     /// </summary>
+#if SUBNAUTICA
     private ConcurrentDictionary<string, string[]> GetAllPrefabPlaceholdersGroupsFast()
     {
         ConcurrentDictionary<string, string[]> prefabPlaceholdersGroupPaths = new();
+#elif BELOWZERO
+    private Dictionary<string, string[]> GetAllPrefabPlaceholdersGroupsFast()
+    {
+        Dictionary<string, string[]> prefabPlaceholdersGroupPaths = new();
+#endif
 
         // First step is to find out about the hash of the types PrefabPlaceholdersGroup and SpawnRandom
         // to be able to recognize them easily later on
@@ -268,7 +284,11 @@ public class PrefabPlaceholderGroupsParser : IDisposable
         return prefabPlaceholdersGroupPaths;
     }
 
+#if SUBNAUTICA
     private ConcurrentDictionary<string, PrefabPlaceholdersGroupAsset> GetPrefabPlaceholderGroupAssetsByGroupClassId(ConcurrentDictionary<string, string[]> prefabPlaceholdersGroupPaths)
+#elif BELOWZERO
+    private ConcurrentDictionary<string, PrefabPlaceholdersGroupAsset> GetPrefabPlaceholderGroupAssetsByGroupClassId(Dictionary<string, string[]> prefabPlaceholdersGroupPaths)
+#endif
     {
         ConcurrentDictionary<string, PrefabPlaceholdersGroupAsset> prefabPlaceholderGroupsByGroupClassId = new();
 
@@ -277,6 +297,12 @@ public class PrefabPlaceholderGroupsParser : IDisposable
             AssetsBundleManager bundleManagerInst = am.Clone();
             AssetsFileInstance assetFileInst = bundleManagerInst.LoadBundleWithDependencies(keyValuePair.Value);
 
+#if BELOWZERO
+            if (string.IsNullOrEmpty(keyValuePair.Key))
+            {
+                throw new InvalidDataException("classId was empty for a placeholder");
+            }
+#endif
             PrefabPlaceholdersGroupAsset prefabPlaceholderGroup = GetAndCachePrefabPlaceholdersGroupOfBundle(bundleManagerInst, assetFileInst, keyValuePair.Key);
             bundleManagerInst.UnloadAll();
 

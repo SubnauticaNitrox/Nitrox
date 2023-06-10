@@ -1,3 +1,4 @@
+#if SUBNAUTICA
 using System.Reflection;
 using NitroxClient.Communication.Abstract;
 using NitroxModel.DataStructures;
@@ -21,3 +22,4 @@ public sealed partial class PrecursorKeyTerminal_DestroyKey_Patch : NitroxPatch,
         }
     }
 }
+#endif

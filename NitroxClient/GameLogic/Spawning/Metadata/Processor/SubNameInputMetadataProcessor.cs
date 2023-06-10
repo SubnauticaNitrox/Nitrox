@@ -7,6 +7,7 @@ using NitroxModel.DataStructures.Unity;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
+using static GameInput;
 
 namespace NitroxClient.GameLogic.Spawning.Metadata.Processor;
 

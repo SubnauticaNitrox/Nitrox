@@ -400,9 +400,11 @@ public class WorldPersistenceTest
                                     case BuildEntity buildEntity when globalRootEntityAfter is BuildEntity buildEntityAfter:
                                         Assert.AreEqual(buildEntity.BaseData, buildEntityAfter.BaseData);
                                         break;
+#if SUBNAUTICA
                                     case EscapePodWorldEntity escapePodWorldEntity when globalRootEntityAfter is EscapePodWorldEntity escapePodWorldEntityAfter:
                                         Assert.IsTrue(escapePodWorldEntity.Players.SequenceEqual(escapePodWorldEntityAfter.Players));
                                         break;
+#endif
                                     case InteriorPieceEntity interiorPieceEntity when globalRootEntityAfter is InteriorPieceEntity interiorPieceEntityAfter:
                                         Assert.AreEqual(interiorPieceEntity.BaseFace, interiorPieceEntityAfter.BaseFace);
                                         break;

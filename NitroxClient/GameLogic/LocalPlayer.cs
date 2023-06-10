@@ -48,7 +48,11 @@ public class LocalPlayer : ILocalNitroxPlayer
         this.packetSender = packetSender;
         this.throttledPacketSender = throttledPacketSender;
         body = new Lazy<GameObject>(() => Player.main.RequireGameObject("body"));
+#if SUBNAUTICA
         playerModel = new Lazy<GameObject>(() => Body.RequireGameObject("player_view"));
+#elif BELOWZERO
+        playerModel = new Lazy<GameObject>(() => Body.RequireGameObject("player_view_female"));
+#endif
         bodyPrototype = new Lazy<GameObject>(CreateBodyPrototype);
         Permissions = Perms.PLAYER;
         IntroCinematicMode = IntroCinematicMode.NONE;
@@ -108,7 +112,7 @@ public class LocalPlayer : ILocalNitroxPlayer
             packetSender.Send(new SubRootChanged(PlayerId.Value, subrootId));
         }
     }
-
+#if SUBNAUTICA
     public void BroadcastEscapePodChange(Optional<NitroxId> escapePodId)
     {
         if (PlayerId.HasValue)
@@ -116,6 +120,7 @@ public class LocalPlayer : ILocalNitroxPlayer
             packetSender.Send(new EscapePodChanged(PlayerId.Value, escapePodId));
         }
     }
+#endif
 
     public void BroadcastWeld(NitroxId id, float healthAdded) => packetSender.Send(new WeldAction(id, healthAdded));
 
@@ -147,7 +152,11 @@ public class LocalPlayer : ILocalNitroxPlayer
         clone.name = "RemotePlayerPrototype";
 
         // Removing items that are held in hand
+#if SUBNAUTICA
         foreach (Transform child in clone.transform.Find($"player_view/{PlayerEquipmentConstants.ITEM_ATTACH_POINT_GAME_OBJECT_NAME}"))
+#elif BELOWZERO
+        foreach (Transform child in clone.transform.Find($"player_view_female/{PlayerEquipmentConstants.ITEM_ATTACH_POINT_GAME_OBJECT_NAME}"))
+#endif
         {
             if (!child.gameObject.name.Contains("attach1_"))
             {

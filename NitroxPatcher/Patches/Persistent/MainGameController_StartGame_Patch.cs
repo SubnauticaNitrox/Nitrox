@@ -28,8 +28,11 @@ public partial class MainGameController_StartGame_Patch : NitroxPatch, IPersiste
             if (instruction.opcode.Equals(INJECTION_OPCODE) && instruction.operand.Equals(INJECTION_OPERAND))
             {
                 injectSeenCounter++;
-
+#if SUBNAUTICA
                 if (injectSeenCounter == 3)
+#elif BELOWZERO
+                if (injectSeenCounter == 2)
+#endif
                 {
                     yield return new CodeInstruction(OpCodes.Call, Reflect.Method(() => Multiplayer.SubnauticaLoadingCompleted()));
                 }

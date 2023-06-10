@@ -1,4 +1,4 @@
-﻿using System.Collections.ObjectModel;
+using System.Collections.ObjectModel;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment.Abstract;
 using UnityEngine;
 
@@ -19,11 +19,19 @@ namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel.Equipment
 
         public void UpdateEquipmentVisibility(ReadOnlyCollection<TechType> currentEquipment)
         {
+#if SUBNAUTICA
             bool headVisible = !currentEquipment.Contains(TechType.RadiationHelmet) && !currentEquipment.Contains(TechType.Rebreather);
             bool bodyVisible = !currentEquipment.Contains(TechType.RadiationSuit) &&
                                !currentEquipment.Contains(TechType.WaterFiltrationSuit) &&
                                !currentEquipment.Contains(TechType.ReinforcedDiveSuit);
             bool handsVisible = !currentEquipment.Contains(TechType.RadiationGloves) && !currentEquipment.Contains(TechType.ReinforcedGloves);
+#elif BELOWZERO
+            bool headVisible = !currentEquipment.Contains(TechType.ColdSuitHelmet) && !currentEquipment.Contains(TechType.Rebreather);
+            bool bodyVisible = !currentEquipment.Contains(TechType.ColdSuit) &&
+                               !currentEquipment.Contains(TechType.WaterFiltrationSuit) &&
+                               !currentEquipment.Contains(TechType.ReinforcedDiveSuit);
+            bool handsVisible = !currentEquipment.Contains(TechType.ColdSuitGloves) && !currentEquipment.Contains(TechType.ReinforcedGloves);
+#endif
 
             head.SetActive(headVisible);
             body.gameObject.SetActive(bodyVisible);

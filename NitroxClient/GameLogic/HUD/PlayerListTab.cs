@@ -14,8 +14,11 @@ public class PlayerListTab : NitroxPDATab
     public override PDATab FallbackTabIcon => PDATab.Inventory;
 
     public override uGUI_PDATab uGUI_PDATab => tab;
-
+#if SUBNAUTICA
     public override PDATab PDATabId => (PDATab)8;
+#elif BELOWZERO
+    public override PDATab PDATabId => (PDATab)9;
+#endif
 
     public override void OnInitializePDA(uGUI_PDA uGUI_PDA)
     {

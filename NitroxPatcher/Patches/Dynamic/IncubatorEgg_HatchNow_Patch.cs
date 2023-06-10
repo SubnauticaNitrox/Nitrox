@@ -1,3 +1,4 @@
+#if SUBNAUTICA
 using System.Reflection;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
@@ -52,3 +53,4 @@ public sealed partial class IncubatorEgg_HatchNow_Patch : NitroxPatch, IDynamicP
         }
     }
 }
+#endif

@@ -34,9 +34,13 @@ public sealed partial class Player_OnKill_Patch : NitroxPatch, IDynamicPatch
 
             if (instr.opcode == OpCodes.Call && instr.operand.Equals(SKIP_METHOD))
             {
+#if SUBNAUTICA
                 CodeInstruction newInstr = new(OpCodes.Ldc_I4_0);
                 newInstr.labels = instr.labels;
                 yield return newInstr;
+#elif BELOWZERO
+                continue;
+#endif
             }
             else
             {

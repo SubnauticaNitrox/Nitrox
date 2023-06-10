@@ -65,8 +65,11 @@ public class Program
         {
             Console.TreatControlCAsInput = true;
         }
-
+#if SUBNAUTICA
         Log.Info($"Starting NitroxServer {NitroxEnvironment.ReleasePhase} v{NitroxEnvironment.Version} for {GameInfo.Subnautica.FullName}");
+#elif BELOWZERO
+        Log.Info($"Starting NitroxServer {NitroxEnvironment.ReleasePhase} v{NitroxEnvironment.Version} for {GameInfo.SubnauticaBelowZero.FullName}");
+#endif
         Log.Debug($@"Process start args: ""{string.Join(@""", """, Environment.GetCommandLineArgs())}""");
 
         Task handleConsoleInputTask;
@@ -80,7 +83,11 @@ public class Program
 
             // Allow game path to be given as command argument
             string gameDir;
+#if SUBNAUTICA
             if (args.Length > 0 && Directory.Exists(args[0]) && File.Exists(Path.Combine(args[0], GameInfo.Subnautica.ExeName)))
+#elif BELOWZERO
+            if (args.Length > 0 && Directory.Exists(args[0]) && File.Exists(Path.Combine(args[0], GameInfo.SubnauticaBelowZero.ExeName)))
+#endif
             {
                 gameDir = Path.GetFullPath(args[0]);
                 gameInstallDir = new Lazy<string>(() => gameDir);

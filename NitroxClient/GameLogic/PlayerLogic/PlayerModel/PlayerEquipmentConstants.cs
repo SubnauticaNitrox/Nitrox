@@ -1,7 +1,8 @@
-﻿namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel
+namespace NitroxClient.GameLogic.PlayerLogic.PlayerModel
 {
     public static class PlayerEquipmentConstants
     {
+#if SUBNAUTICA
         public const string NORMAL_HEAD_GAME_OBJECT_NAME = "male_geo/diveSuit/diveSuit_head_geo";
         public const string NORMAL_HANDS_GAME_OBJECT_NAME = "male_geo/diveSuit/diveSuit_hands_geo";
         public const string DIVE_SUIT_GAME_OBJECT_NAME = "male_geo/diveSuit/diveSuit_body_geo";
@@ -26,6 +27,25 @@
         public const string RADIATION_SUIT_NECK_CLASP_GAME_OBJECT_NAME = "male_geo/radiationSuit/radiationSuit_vest_reducedNeck_geo/radiationSuit_vest_neckExtension_geo";
         public const string RADIATION_TANK_GAME_OBJECT_NAME = "male_geo/radiationSuit/radiationSuit_vest_reducedNeck_geo/radiationSuit_tank_geo 1";
         public const string RADIATION_TANK_TUBES_GAME_OBJECT_NAME = "male_geo/radiationSuit/radiationSuit_vest_reducedNeck_geo/radiationSuit_tank_geo 1/radiationSuit_tubes_geo 1";
+#elif BELOWZERO
+        public const string NORMAL_HEAD_GAME_OBJECT_NAME = "female_geo/base/female_base_head_geo";
+        public const string NORMAL_HANDS_GAME_OBJECT_NAME = "female_geo/base/female_base_hand_geo";
+        public const string DIVE_SUIT_GAME_OBJECT_NAME = "female_geo/base/female_base_body_geo";
+        public const string FINS_ROOT_GAME_OBJECT_NAME = "female_geo/base";
+        public const string FINS_GAME_OBJECT_NAME = "female_geo/base/female_base_flipper_geo";
+        public const string STILL_SUIT_GAME_OBJECT_NAME = "female_geo/stillSuit/female_stillSuit_body_geo";
+        public const string COLD_PROTECTIVE_HEAD_GAME_OBJECT_NAME = "female_geo/coldProtective/female_coldProtectiveSuit_head_geo";
+        public const string COLD_PROTECTIVE_MASK_GAME_OBJECT_NAME = "female_geo/coldProtective/female_coldProtectiveSuit_mask_geo";
+        public const string COLD_PROTECTIVE_BODY_GAME_OBJECT_NAME = "female_geo/coldProtective/female_coldProtectiveSuit_body_geo";
+        public const string COLD_PROTECTIVE_HANDS_GAME_OBJECT_NAME = "female_geo/coldProtective/female_coldProtectiveSuit_hands_geo";
+        public const string REINFORCED_SUIT_GAME_OBJECT_NAME = "female_geo/reinforced/female_reinforced_body_geo";
+        public const string REINFORCED_GLOVES_GAME_OBJECT_NAME = "female_geo/reinforced/female_reinforced_hands_geo";
+        public const string BASE_GLOVES_GAME_OBJECT_NAME = "female_geo/base/female_base_gloves_geo";
+        public const string BASE_MASK_GAME_OBJECT_NAME = "female_geo/base/female_base_mask_geo";
+        public const string BASE_HANDS_GAME_OBJECT_NAME = "female_geo/base/female_base_hand_geo";
+        public const string BASE_HEAD_GAME_OBJECT_NAME = "female_geo/base/female_base_head_geo";
+        public const string BASE_BODY_GAME_OBJECT_NAME = "female_geo/base/female_base_body_geo";
+#endif
         public const string ITEM_ATTACH_POINT_GAME_OBJECT_NAME = "export_skeleton/head_rig/neck/chest/clav_R/clav_R_aim/shoulder_R/elbow_R/hand_R/attach1";
 
 
@@ -35,6 +55,11 @@
         public const string STILL_SUIT_ARMS_INDEX_KEY = "still-suit-arms";
         public const string REBREATHER_INDEX_KEY = "rebreather";
         public const string SCUBA_TANK_INDEX_KEY = "scuba-tank";
+        public const string COLD_PROTECTIVE_HEAD_INDEX_KEY = "cold-protective-suit-head";
+        public const string COLD_PROTECTIVE_MASK_INDEX_KEY = "cold-protective-suit-mask";
+        public const string COLD_PROTECTIVE_BODY_INDEX_KEY = "cold-protective-suit-body";
+        public const string COLD_PROTECTIVE_ARMS_INDEX_KEY = "cold-protective-suit-arms";
+        public const string COLD_PROTECTIVE_HANDS_INDEX_KEY = "cold-protective-suit-hands";
         public const string REINFORCED_SUIT_INDEX_KEY = "reinforced-suit";
         public const string REINFORCED_SUIT_ARMS_INDEX_KEY = "reinforced-suit-arms";
         public const string REINFORCED_GLOVES_INDEX_KEY = "reinforced-gloves";

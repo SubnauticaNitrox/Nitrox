@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+#if SUBNAUTICA
+using System.Reflection;
 using NitroxClient.GameLogic;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
@@ -19,3 +20,4 @@ public sealed partial class PrecursorKeyTerminal_OnHandClick_Patch : NitroxPatch
         }
     }
 }
+#endif
