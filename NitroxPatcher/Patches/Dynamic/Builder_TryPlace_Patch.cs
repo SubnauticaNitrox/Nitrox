@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
@@ -33,9 +33,15 @@ namespace NitroxPatcher.Patches.Dynamic
                      *  Multiplayer.Logic.Building.PlaceBasePiece(componentInParent, component.TargetBase, CraftData.GetTechType(Builder.prefab), Builder.placeRotation);
                      */
                     yield return TranspilerHelper.LocateService<Building>();
+#if SUBNAUTICA
                     yield return new CodeInstruction(OpCodes.Ldloc_1);
                     yield return new CodeInstruction(OpCodes.Ldloc_0);
                     yield return new CodeInstruction(OpCodes.Ldloc_1);
+#elif BELOWZERO
+                    yield return new CodeInstruction(OpCodes.Ldloc_2);
+                    yield return new CodeInstruction(OpCodes.Ldloc_0);
+                    yield return new CodeInstruction(OpCodes.Ldloc_2);
+#endif
                     yield return new CodeInstruction(OpCodes.Callvirt, Reflect.Property((BaseGhost t) => t.TargetBase).GetMethod);
                     yield return new CodeInstruction(OpCodes.Ldsfld, Reflect.Field(() => Builder.prefab));
                     yield return new CodeInstruction(OpCodes.Call, Reflect.Method(() => CraftData.GetTechType(default(GameObject))));
@@ -49,7 +55,11 @@ namespace NitroxPatcher.Patches.Dynamic
                      *  Multiplayer.Logic.Building.PlaceFurniture(gameObject, CraftData.GetTechType(Builder.prefab), Builder.ghostModel.transform.position, Builder.placeRotation);
                      */
                     yield return TranspilerHelper.LocateService<Building>();
+#if SUBNAUTICA
                     yield return new CodeInstruction(OpCodes.Ldloc_2);
+#elif BELOWZERO
+                    yield return new CodeInstruction(OpCodes.Ldloc_3);
+#endif
                     yield return new CodeInstruction(OpCodes.Ldsfld, Reflect.Field(() => Builder.prefab));
                     yield return new CodeInstruction(OpCodes.Call, Reflect.Method(() => CraftData.GetTechType(default(GameObject))));
                     yield return new CodeInstruction(OpCodes.Ldsfld, Reflect.Field(() => Builder.ghostModel));

@@ -24,20 +24,24 @@ namespace NitroxPatcher.Patches.Dynamic
             * if (GameModeUtils.IsPermadeath())
             * {
             *      SaveLoadManager.main.ClearSlotAsync(SaveLoadManager.main.GetCurrentSlot());
-            *      this.EndGame();
-            *      return;
             * }
             */
             for (int i = 0; i < instructionList.Count; i++)
             {
                 CodeInstruction instr = instructionList[i];
-
+#if SUBNAUTICA
                 if (instr.opcode == OpCodes.Call && instr.operand.Equals(SKIP_METHOD))
                 {
                     CodeInstruction newInstr = new(OpCodes.Ldc_I4_0);
                     newInstr.labels = instr.labels;
                     yield return newInstr;
                 }
+#elif BELOWZERO
+                if (instr.opcode == OpCodes.Call && instr.operand.Equals(SKIP_METHOD))
+                {
+                    continue;
+                }
+#endif
                 else
                 {
                     yield return instr;

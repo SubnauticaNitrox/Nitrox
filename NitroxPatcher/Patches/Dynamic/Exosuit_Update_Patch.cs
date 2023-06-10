@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -11,8 +11,13 @@ namespace NitroxPatcher.Patches.Dynamic
     {
         public static readonly MethodInfo TARGET_METHOD = Reflect.Method((Exosuit t) => t.Update());
 
+#if SUBNAUTICA
         public static readonly OpCode INJECTION_OPCODE = OpCodes.Call;
         public static readonly object INJECTION_OPERAND = Reflect.Method((Exosuit t) => t.UpdateSounds());
+#elif BELOWZERO
+        public static readonly OpCode INJECTION_OPCODE = OpCodes.Stfld;
+        public static readonly object INJECTION_OPERAND = Reflect.Field((Exosuit t) => t.timeLastSlideEffect);
+#endif
 
         public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
         {
@@ -37,6 +42,7 @@ namespace NitroxPatcher.Patches.Dynamic
                  */
                 if (instruction.opcode == INJECTION_OPCODE && instruction.operand == INJECTION_OPERAND)
                 {
+#if SUBNAUTICA
                     i++; //increment to ldloc.2 (loading flag2 on evaluation stack)
                     CodeInstruction ldFlag2 = instructionList[i];
 
@@ -44,6 +50,15 @@ namespace NitroxPatcher.Patches.Dynamic
                     ldFlag2.opcode = OpCodes.Ldc_I4_1;
 
                     yield return ldFlag2;
+#elif BELOWZERO
+                    i++; //increment to ldloc.0 (loading flag2 on evaluation stack)
+                    CodeInstruction ldFlag0 = instructionList[i];
+
+                    // Transform to if(!true)
+                    ldFlag0.opcode = OpCodes.Ldc_I4_1;
+
+                    yield return ldFlag0;
+#endif
                 }
             }
         }
