@@ -1,8 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using NitroxModel.Discovery;
+using NitroxModel.Discovery.Models;
 using NitroxModel.Platforms.OS.Windows.Internal;
 using NitroxModel.Platforms.Store;
 using NitroxModel.Platforms.Store.Interfaces;
@@ -60,6 +62,7 @@ namespace NitroxModel.Helper
 
         public static string AssetsPath => Path.Combine(LauncherPath, "AssetBundles");
 
+        // TODO: Rework to allow flexibility for BZ
         public static string PreferredGamePath
         {
             get => RegistryEx.Read<string>(PREFERRED_GAMEPATH_REGKEY);
@@ -68,6 +71,7 @@ namespace NitroxModel.Helper
 
         public static IGamePlatform GamePlatform { get; private set; }
 
+        // TODO: Rework to allow flexibility for BZ
         public static string GamePath
         {
             get
@@ -78,7 +82,9 @@ namespace NitroxModel.Helper
                 }
 
                 List<string> errors = new();
-                string path = GameInstallationFinder.Instance.FindGame(errors);
+                GameInstallation installation = GameInstallationFinder.Instance.FindGame(GameInfo.Subnautica, GameLibraries.ALL, errors).First();
+                string path = installation.Path;
+
                 if (!string.IsNullOrWhiteSpace(path) && Directory.Exists(path))
                 {
                     return gamePath = path;

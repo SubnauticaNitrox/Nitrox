@@ -11,6 +11,7 @@ using System.Windows.Interop;
 using NitroxLauncher.Models.Events;
 using NitroxLauncher.Models.Properties;
 using NitroxLauncher.Pages;
+using NitroxModel;
 using NitroxModel.Discovery;
 using NitroxModel.Helper;
 using NitroxModel.Platforms.OS.Windows;
@@ -115,7 +116,8 @@ namespace NitroxLauncher
             logic.SetTargetedSubnauticaPath(NitroxUser.GamePath)
                  .ContinueWith(task =>
                  {
-                     if (GameInstallationFinder.IsSubnauticaDirectory(task.Result))
+                     // TODO: Rework to allow flexibility for BZ
+                     if (GameInstallationFinder.IsSubnauticaDirectory(task.Result, GameInfo.Subnautica))
                      {
                          LauncherLogic.Instance.NavigateTo<LaunchGamePage>();
                      }

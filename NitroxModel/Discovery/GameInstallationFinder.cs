@@ -1,59 +1,71 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NitroxModel.Discovery.InstallationFinders;
+using NitroxModel.Discovery.Models;
 
-namespace NitroxModel.Discovery
+namespace NitroxModel.Discovery;
+
+/// <summary>
+///     Main game installation finder that will use all available methods of detection to find the Subnautica installation
+///     directory.
+/// </summary>
+public class GameInstallationFinder
 {
+    private static readonly Lazy<GameInstallationFinder> instance = new(() => new GameInstallationFinder());
+    public static GameInstallationFinder Instance => instance.Value;
+
     /// <summary>
-    ///     Main game installation finder that will use all available methods of detection to find the Subnautica installation
-    ///     directory.
+    ///     The order of these finders is VERY important. Only change if you know what you're doing.
     /// </summary>
-    public class GameInstallationFinder : IFindGameInstallation
+    private Dictionary<GameLibraries, IGameFinder> finders = new()
     {
-        private static readonly Lazy<GameInstallationFinder> instance = new(() => new GameInstallationFinder());
-        public static GameInstallationFinder Instance => instance.Value;
+        { GameLibraries.CURRENT_DIRECTORY, new GameInCurrentDirectoryFinder() },
+        { GameLibraries.CONFIG, new ConfigGameFinder() },
+        { GameLibraries.STEAM, new SteamGameRegistryFinder() },
+        { GameLibraries.EPIC, new EpicGamesInstallationFinder() },
+        { GameLibraries.DISCORD, new DiscordGameFinder() },
+        { GameLibraries.MICROSOFT, null },
+        { GameLibraries.ENVIRONMENT, new EnvironmentGameFinder() },
+    };
 
-        /// <summary>
-        ///     The order of these finders is VERY important. Only change if you know what you're doing.
-        /// </summary>
-        private readonly IFindGameInstallation[] finders = {
-            new GameInCurrentDirectoryFinder(),
-            new ConfigGameFinder(),
-            new SteamGameRegistryFinder(),
-            new EpicGamesInstallationFinder(),
-            new DiscordGameFinder(),
-            new EnvironmentGameFinder()
-        };
+    public IEnumerable<GameInstallation> FindGame(GameInfo gameInfo, GameLibraries gameLibraries, IList<string> errors)
+    { 
+        errors ??= new List<string>();
 
-        public string FindGame(IList<string> errors = null)
+        if (gameInfo == null || gameLibraries == GameLibraries.UNKNOWN)
         {
-            errors ??= new List<string>();
-            foreach (IFindGameInstallation finder in finders)
-            {
-                string path = finder.FindGame(errors);
-                if (path == null)
-                {
-                    continue;
-                }
-
-                errors.Clear();
-                return Path.GetFullPath(path);
-            }
-
-            return null;
+            yield break;
         }
 
-        public static bool IsSubnauticaDirectory(string directory)
+        foreach (GameLibraries wantedFinder in GetFlags(gameLibraries))
         {
-            if (string.IsNullOrWhiteSpace(directory))
+            if (!finders.TryGetValue(wantedFinder, out IGameFinder finder))
             {
-                return false;
+                errors.Add($"Could not find game finder for configuration : '{wantedFinder}'");
+                continue;
             }
 
-            return Directory.EnumerateFiles(directory, "*.exe")
-                .Any(file => Path.GetFileName(file)?.Equals("subnautica.exe", StringComparison.OrdinalIgnoreCase) ?? false);
+            GameInstallation? finderResult = finder.FindGame(gameInfo, errors);
+            if (finderResult.HasValue)
+            {
+                yield return finderResult.Value;
+            }
         }
+    }
+
+    public static T[] GetFlags<T>(T flagsEnumValue) where T : Enum
+    {
+        return Enum
+            .GetValues(typeof(T))
+            .Cast<T>()
+            .Where(e => flagsEnumValue.HasFlag(e))
+            .ToArray();
+    }
+
+    public static bool IsSubnauticaDirectory(string path, GameInfo gameInfo)
+    {
+        return File.Exists(Path.Combine(path, gameInfo.ExeName));
     }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
@@ -26,13 +26,13 @@ namespace Nitrox.BuildTool
 
         public static async Task Main(string[] args)
         {
-
             AppDomain.CurrentDomain.UnhandledException += (sender, eventArgs) =>
             {
                 LogError(eventArgs.ExceptionObject.ToString());
                 Exit((eventArgs.ExceptionObject as Exception)?.HResult ?? 1);
             };
 
+            // TODO: Rework to allow flexibility for BZ
             GameInstallData game = await Task.Run(EnsureGame);
             Console.WriteLine($"Found game at {game.InstallDir}");
             AbortIfInvalidGameVersion(game);
