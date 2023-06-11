@@ -63,6 +63,17 @@ namespace NitroxTest.Patcher
             shouldHappen.Should().BeTrue();
         }
 
+        /// <summary>
+        ///     Clones the instructions so that the returned instructions are not the same reference.
+        /// </summary>
+        /// <remarks>
+        ///     Useful for testing code differences before and after a Harmony transpiler.
+        /// </remarks>
+        public static List<CodeInstruction> Clone(this IEnumerable<CodeInstruction> instructions)
+        {
+            return new List<CodeInstruction>(instructions.Select(il => new CodeInstruction(il)));
+        }
+
         private static ReadOnlyCollection<CodeInstruction> GetInstructionsFromIL(IEnumerable<KeyValuePair<OpCode, object>> il)
         {
             List<CodeInstruction> result = new List<CodeInstruction>();
