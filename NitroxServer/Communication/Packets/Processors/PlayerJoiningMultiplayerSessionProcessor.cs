@@ -36,6 +36,7 @@ namespace NitroxServer.Communication.Packets.Processors
         public override void Process(PlayerJoiningMultiplayerSession packet, NitroxConnection connection)
         {
             Player player = playerManager.PlayerConnected(connection, packet.ReservationKey, out bool wasBrandNewPlayer);
+#if SUBNAUTUICA
             NitroxId assignedEscapePodId = world.EscapePodManager.AssignPlayerToEscapePod(player.Id, out Optional<EscapePodWorldEntity> newlyCreatedEscapePod);
 
             if (newlyCreatedEscapePod.HasValue)
@@ -43,6 +44,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 SpawnEntities spawnNewEscapePod = new(newlyCreatedEscapePod.Value);
                 playerManager.SendPacketToOtherPlayers(spawnNewEscapePod, player);
             }
+#endif
 
             List<EquippedItemData> equippedItems = player.GetEquipment();
             List<NitroxTechType> techTypes = equippedItems.Select(equippedItem => equippedItem.TechType).ToList();
@@ -69,7 +71,9 @@ namespace NitroxServer.Communication.Packets.Processors
 
             InitialPlayerSync initialPlayerSync = new(player.GameObjectId,
                 wasBrandNewPlayer,
+#if SUBNAUTICA
                 assignedEscapePodId,
+#endif
                 equippedItems,
                 world.BaseManager.GetBasePiecesForNewlyConnectedPlayer(),
                 player.UsedItems,

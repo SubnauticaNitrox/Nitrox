@@ -200,8 +200,9 @@ namespace NitroxServer.Serialization.World
                 PlayerManager = new PlayerManager(pWorldData.PlayerData.GetPlayers(), config),
 
                 BaseManager = new BaseManager(pWorldData.BaseData.PartiallyConstructedPieces, pWorldData.BaseData.CompletedBasePieceHistory),
-
+#if SUBNAUTICA
                 EscapePodManager = new EscapePodManager(entityRegistry, randomStart, seed),
+#endif
 
                 EntityRegistry = entityRegistry,
 

@@ -1,3 +1,4 @@
+#if SUBNAUTICA
 using System;
 using System.Collections.Generic;
 using NitroxModel.DataStructures;
@@ -155,3 +156,4 @@ namespace NitroxServer.GameLogic
         }
     }
 }
+#endif

@@ -15,7 +15,9 @@ namespace NitroxModel.DataStructures.GameLogic.Entities
     [Serializable]
     [DataContract]
     [ProtoInclude(51, typeof(PlaceholderGroupWorldEntity))]
+#if SUBNAUTICA
     [ProtoInclude(52, typeof(EscapePodWorldEntity))]
+#endif
     [ProtoInclude(53, typeof(PlayerWorldEntity))]
     [ProtoInclude(54, typeof(VehicleWorldEntity))]
     [ProtoInclude(55, typeof(CellRootEntity))]

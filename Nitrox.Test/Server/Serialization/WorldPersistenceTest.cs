@@ -376,10 +376,12 @@ public class WorldPersistenceTest
                     {
                         case PlaceholderGroupWorldEntity _ when worldEntityAfter is PlaceholderGroupWorldEntity _:
                             break;
+#if SUBNAUTICA
                         case EscapePodWorldEntity escapePodWorldEntity when worldEntityAfter is EscapePodWorldEntity escapePodWorldEntityAfter:
                             Assert.AreEqual(escapePodWorldEntity.Damaged, escapePodWorldEntityAfter.Damaged);
                             Assert.IsTrue(escapePodWorldEntity.Players.SequenceEqual(escapePodWorldEntityAfter.Players));
                             break;
+#endif
                         case PlayerWorldEntity _ when worldEntityAfter is PlayerWorldEntity _:
                             break;
                         case VehicleWorldEntity vehicleWorldEntity when worldEntityAfter is VehicleWorldEntity vehicleWorldEntityAfter:

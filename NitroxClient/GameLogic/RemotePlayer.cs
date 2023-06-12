@@ -233,9 +233,11 @@ namespace NitroxClient.GameLogic
                     // Therefore we need to make sure that the MultiplayerVehicleControl component exists before using it
                     switch (newVehicle)
                     {
+#if SUBNAUTICA
                         case SeaMoth:
                             newVehicle.gameObject.EnsureComponent<MultiplayerSeaMoth>().Enter();
                             break;
+#endif
                         case Exosuit:
                             newVehicle.gameObject.EnsureComponent<MultiplayerExosuit>().Enter();
                             break;
@@ -245,8 +247,9 @@ namespace NitroxClient.GameLogic
                 RigidBody.isKinematic = newVehicle;
 
                 Vehicle = newVehicle;
-
+#if SUBNAUTICA
                 AnimationController["in_seamoth"] = newVehicle is SeaMoth;
+#endif
                 AnimationController["in_exosuit"] = AnimationController["using_mechsuit"] = newVehicle is Exosuit;
             }
         }

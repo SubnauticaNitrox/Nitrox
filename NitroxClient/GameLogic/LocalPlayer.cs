@@ -77,8 +77,9 @@ namespace NitroxClient.GameLogic
         public void BroadcastDeath(Vector3 deathPosition) => packetSender.Send(new PlayerDeathEvent(multiplayerSession.Reservation.PlayerId, deathPosition.ToDto()));
 
         public void BroadcastSubrootChange(Optional<NitroxId> subrootId) => packetSender.Send(new SubRootChanged(multiplayerSession.Reservation.PlayerId, subrootId));
-
+#if SUBNAUTICA
         public void BroadcastEscapePodChange(Optional<NitroxId> escapePodId) => packetSender.Send(new EscapePodChanged(multiplayerSession.Reservation.PlayerId, escapePodId));
+#endif
 
         public void BroadcastWeld(NitroxId id, float healthAdded) => packetSender.Send(new WeldAction(id, healthAdded));
 

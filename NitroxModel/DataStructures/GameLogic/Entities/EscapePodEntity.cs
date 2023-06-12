@@ -1,3 +1,4 @@
+#if SUBNAUTICA
 using System;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures.Unity;
@@ -65,3 +66,4 @@ namespace NitroxModel.DataStructures.GameLogic.Entities
 
     }
 }
+#endif
