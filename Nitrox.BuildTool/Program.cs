@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
@@ -22,7 +22,11 @@ namespace Nitrox.BuildTool
 
         public static string GeneratedOutputDir => Path.Combine(ProcessDir, "generated_files");
 
+#if BELOWZERO
+        private const int LEGACY_BRANCH_SUBNAUTICA_VERSION = 49370;
+#elif SUBNAUTICA
         private const int LEGACY_BRANCH_SUBNAUTICA_VERSION = 68598;
+#endif
 
         public static async Task Main(string[] args)
         {
@@ -58,7 +62,11 @@ namespace Nitrox.BuildTool
 
         private static void AbortIfInvalidGameVersion(GameInstallData game)
         {
+#if BELOWZERO
+            string gameVersionFile = Path.Combine(game.InstallDir, "SubnauticaZero_Data", "StreamingAssets", "SNUnmanagedData", "plastic_status.ignore");
+#elif SUBNAUTICA
             string gameVersionFile = Path.Combine(game.InstallDir, "Subnautica_Data", "StreamingAssets", "SNUnmanagedData", "plastic_status.ignore");
+#endif
             if (!File.Exists(gameVersionFile))
             {
                 return;
