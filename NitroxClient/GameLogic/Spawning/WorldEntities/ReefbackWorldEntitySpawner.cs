@@ -33,7 +33,7 @@ namespace NitroxClient.GameLogic.Spawning.WorldEntities
             }
 
             life.initialized = true;
-            yield return life.SpawnPlants();
+            life.SpawnPlants();
             foreach (Entity childEntity in entity.ChildEntities)
             {
                 if (childEntity is WorldEntity worldChild)
