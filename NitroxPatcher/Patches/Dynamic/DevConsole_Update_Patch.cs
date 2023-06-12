@@ -29,17 +29,7 @@ internal class DevConsole_Update_Patch : NitroxPatch, IDynamicPatch
 
     public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
     {
-        static void PreventDevConsoleTrue(string label, CodeInstruction instruction)
-        {
-            switch (label)
-            {
-                case "ConsoleEnableFlag":
-                    instruction.opcode = Ldc_I4_0;
-                    break;
-            }
-        }
-
-        return instructions.Transform(devConsoleSetStateTruePattern, PreventDevConsoleTrue);
+        return instructions.ChangeAtMarker(devConsoleSetStateTruePattern, "ConsoleEnableFlag", i => i.opcode = Ldc_I4_0);
     }
 
     public override void Patch(Harmony harmony)

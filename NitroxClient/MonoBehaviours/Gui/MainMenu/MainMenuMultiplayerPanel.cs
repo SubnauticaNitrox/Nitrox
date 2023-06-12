@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading.Tasks;
 using NitroxClient.Communication;
 using NitroxClient.GameLogic.Settings;
 using NitroxClient.Unity.Helper;
@@ -10,6 +10,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using UWE;
 
 namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 {
@@ -110,7 +111,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             }
         }
 
-        public static async Task OpenJoinServerMenuAsync(string serverIp, string serverPort)
+        public static async System.Threading.Tasks.Task OpenJoinServerMenuAsync(string serverIp, string serverPort)
         {
             if (Main == null)
             {
@@ -134,12 +135,19 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             serverPortInput = ServerList.DEFAULT_PORT.ToString();
             showingAddServer = true;
             shouldFocus = true;
+            uGUI_MainMenu.main.canvasGroup.interactable = false;
         }
 
         private void HideAddServerWindow()
         {
-            showingAddServer = false;
-            shouldFocus = true;
+            IEnumerator SetWindowComponents()
+            {
+                showingAddServer = false;
+                shouldFocus = true;
+                yield return null;
+                uGUI_MainMenu.main.canvasGroup.interactable = true;
+            }
+            CoroutineHost.StartCoroutine(SetWindowComponents());
         }
 
         private void OnGUI()
@@ -159,7 +167,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             }
         }
 
-        private async Task FindLANServersAsync()
+        private async System.Threading.Tasks.Task FindLANServersAsync()
         {
             void AddButton(IPEndPoint serverEndPoint)
             {
@@ -168,9 +176,9 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 CreateServerButton(MakeButtonText("LAN Server", serverEndPoint.Address, serverEndPoint.Port), $"{serverEndPoint.Address}", $"{serverEndPoint.Port}", true);
             }
 
-            LANDiscoveryClient.ServerFound += AddButton;
-            await LANDiscoveryClient.SearchAsync();
-            LANDiscoveryClient.ServerFound -= AddButton;
+            LANBroadcastClient.ServerFound += AddButton;
+            await LANBroadcastClient.SearchAsync();
+            LANBroadcastClient.ServerFound -= AddButton;
         }
 
         private string MakeButtonText(string serverName, object address, object port)

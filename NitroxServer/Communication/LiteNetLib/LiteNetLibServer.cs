@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Buffers;
+using System.Threading;
 using System.Threading.Tasks;
 using LiteNetLib;
 using LiteNetLib.Utils;
@@ -10,136 +11,143 @@ using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Entities;
 using NitroxServer.Serialization;
 
-namespace NitroxServer.Communication.LiteNetLib
+namespace NitroxServer.Communication.LiteNetLib;
+
+public class LiteNetLibServer : NitroxServer
 {
-    public class LiteNetLibServer : NitroxServer
+    private readonly EventBasedNetListener listener;
+    private readonly NetManager server;
+
+    public LiteNetLibServer(PacketHandler packetHandler, PlayerManager playerManager, EntitySimulation entitySimulation, ServerConfig serverConfig) : base(packetHandler, playerManager, entitySimulation, serverConfig)
     {
-        private readonly EventBasedNetListener listener;
-        private readonly NetPacketProcessor netPacketProcessor = new();
-        private readonly NetManager server;
+        listener = new EventBasedNetListener();
+        server = new NetManager(listener);
+    }
 
-        public LiteNetLibServer(PacketHandler packetHandler, PlayerManager playerManager, EntitySimulation entitySimulation, ServerConfig serverConfig) : base(packetHandler, playerManager, entitySimulation, serverConfig)
-        {
-            netPacketProcessor.SubscribeReusable<WrapperPacket, NetPeer>(OnPacketReceived);
-            listener = new EventBasedNetListener();
-            server = new NetManager(listener);
-        }
+    public override bool Start()
+    {
+        listener.PeerConnectedEvent += PeerConnected;
+        listener.PeerDisconnectedEvent += PeerDisconnected;
+        listener.NetworkReceiveEvent += NetworkDataReceived;
+        listener.ConnectionRequestEvent += OnConnectionRequest;
 
-        public override bool Start()
-        {
-            listener.PeerConnectedEvent += PeerConnected;
-            listener.PeerDisconnectedEvent += PeerDisconnected;
-            listener.NetworkReceiveEvent += NetworkDataReceived;
-            listener.ConnectionRequestEvent += OnConnectionRequest;
-
-            server.DiscoveryEnabled = true;
-            server.UnconnectedMessagesEnabled = true;
-            server.UpdateTime = 15;
-            server.UnsyncedEvents = true;
+        server.BroadcastReceiveEnabled = true;
+        server.UnconnectedMessagesEnabled = true;
+        server.UpdateTime = 15;
+        server.UnsyncedEvents = true;
 #if DEBUG
-            server.DisconnectTimeout = 300000; //Disables Timeout (for 5 min) for debug purpose (like if you jump though the server code)
+        server.DisconnectTimeout = 300000; //Disables Timeout (for 5 min) for debug purpose (like if you jump though the server code)
 #endif
 
-            if (!server.Start(portNumber))
-            {
-                return false;
-            }
-            
-            if (useUpnpPortForwarding)
-            {
-                PortForwardAsync((ushort)portNumber).ConfigureAwait(false);
-            }
-
-            if (useLANDiscovery)
-            {
-                LANDiscoveryServer.Start();
-            }
-
-            return true;
+        if (!server.Start(portNumber))
+        {
+            return false;
         }
 
-        private async Task PortForwardAsync(ushort port)
+        if (useUpnpPortForwarding)
         {
-            if (await NatHelper.GetPortMappingAsync(port, Protocol.Udp) != null)
-            {
-                Log.Info($"Port {port} UDP is already port forwarded");
-                return;
-            }
+            PortForwardAsync((ushort)portNumber).ConfigureAwait(false);
+        }
 
-            bool isMapped = await NatHelper.AddPortMappingAsync(port, Protocol.Udp);
-            if (isMapped)
-            {
+        if (useLANBroadcast)
+        {
+            LANBroadcastServer.Start();
+        }
+
+        return true;
+    }
+
+    private async Task PortForwardAsync(ushort port)
+    {
+        if (await NatHelper.GetPortMappingAsync(port, Protocol.Udp) != null)
+        {
+            Log.Info($"Port {port} UDP is already port forwarded");
+            return;
+        }
+
+        NatHelper.ResultCodes mappingResult = await NatHelper.AddPortMappingAsync(port, Protocol.Udp);
+        switch (mappingResult)
+        {
+            case NatHelper.ResultCodes.SUCCESS:
                 Log.Info($"Server port {port} UDP has been automatically opened on your router (port is closed when server closes)");
-            }
-            else
-            {
-                Log.Warn($"Failed to automatically port forward {port} UDP through UPnP. If using Hamachi or manually port-forwarding, please disregard this warning. To disable this feature you can go into the server settings.");
-            }
+                break;
+            case NatHelper.ResultCodes.CONFLICT_IN_MAPPING_ENTRY:
+                Log.Warn($"Port forward for {port} UDP failed. It appears to already be port forwarded or it conflicts with another port forward rule.");
+                break;
+            case NatHelper.ResultCodes.UNKNOWN_ERROR:
+                Log.Warn($"Failed to port forward {port} UDP through UPnP. If using Hamachi or you've manually port-forwarded, please disregard this warning. To disable this feature you can go into the server settings.");
+                break;
+        }
+    }
+
+    public override void Stop()
+    {
+        playerManager.SendPacketToAllPlayers(new ServerStopped());
+        // We want every player to receive this packet
+        Thread.Sleep(500);
+        server.Stop();
+        if (useUpnpPortForwarding)
+        {
+            NatHelper.DeletePortMappingAsync((ushort)portNumber, Protocol.Udp).ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
-        public override void Stop()
+        if (useLANBroadcast)
         {
-            playerManager.SendPacketToAllPlayers(new ServerStopped());
-            // We want every player to receive this packet
-            Thread.Sleep(500);
-            server.Stop();
-            if (useUpnpPortForwarding)
-            {
-                NatHelper.DeletePortMappingAsync((ushort)portNumber, Protocol.Udp).ConfigureAwait(false).GetAwaiter().GetResult();
-            }
-
-            if (useLANDiscovery)
-            {
-                LANDiscoveryServer.Stop();
-            }
+            LANBroadcastServer.Stop();
         }
+    }
 
-        public void OnConnectionRequest(ConnectionRequest request)
+    public void OnConnectionRequest(ConnectionRequest request)
+    {
+        if (server.ConnectedPeersCount < maxConnections)
         {
-            if (server.PeersCount < maxConnections)
-            {
-                request.AcceptIfKey("nitrox");
-            }
-            else
-            {
-                request.Reject();
-            }
+            request.AcceptIfKey("nitrox");
         }
-
-        private void PeerConnected(NetPeer peer)
+        else
         {
-            LiteNetLibConnection connection = new(peer);
-            lock (connectionsByRemoteIdentifier)
-            {
-                connectionsByRemoteIdentifier[peer.Id] = connection;
-            }
+            request.Reject();
         }
+    }
 
-        private void PeerDisconnected(NetPeer peer, DisconnectInfo disconnectInfo)
+    private void PeerConnected(NetPeer peer)
+    {
+        LiteNetLibConnection connection = new(peer);
+        lock (connectionsByRemoteIdentifier)
         {
-            ClientDisconnected(GetConnection(peer.Id));
+            connectionsByRemoteIdentifier[peer.Id] = connection;
         }
+    }
 
-        private void NetworkDataReceived(NetPeer peer, NetDataReader reader, DeliveryMethod deliveryMethod)
-        {
-            netPacketProcessor.ReadAllPackets(reader, peer);
-        }
+    private void PeerDisconnected(NetPeer peer, DisconnectInfo disconnectInfo)
+    {
+        ClientDisconnected(GetConnection(peer.Id));
+    }
 
-        private void OnPacketReceived(WrapperPacket wrapperPacket, NetPeer peer)
+    private void NetworkDataReceived(NetPeer peer, NetDataReader reader, byte channel, DeliveryMethod deliveryMethod)
+    {
+        int packetDataLength = reader.GetInt();
+        byte[] packetData = ArrayPool<byte>.Shared.Rent(packetDataLength);
+        try
         {
+            reader.GetBytes(packetData, packetDataLength);
+            Packet packet = Packet.Deserialize(packetData);
             NitroxConnection connection = GetConnection(peer.Id);
-            Packet packet = Packet.Deserialize(wrapperPacket.packetData);
             ProcessIncomingData(connection, packet);
         }
-
-        private NitroxConnection GetConnection(int remoteIdentifier)
+        finally
         {
-            NitroxConnection connection;
-            lock (connectionsByRemoteIdentifier)
-            {
-                connectionsByRemoteIdentifier.TryGetValue(remoteIdentifier, out connection);
-            }
-            return connection;
+            ArrayPool<byte>.Shared.Return(packetData, true);
         }
+    }
+
+    private NitroxConnection GetConnection(int remoteIdentifier)
+    {
+        NitroxConnection connection;
+        lock (connectionsByRemoteIdentifier)
+        {
+            connectionsByRemoteIdentifier.TryGetValue(remoteIdentifier, out connection);
+        }
+
+        return connection;
     }
 }

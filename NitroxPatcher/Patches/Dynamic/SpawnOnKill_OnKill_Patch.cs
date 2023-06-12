@@ -29,19 +29,12 @@ public class SpawnOnKill_OnKill_Patch : NitroxPatch, IDynamicPatch
 
     public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
     {
-        static IEnumerable<CodeInstruction> InsertCallbackCall(string label, CodeInstruction _)
+        return instructions.InsertAfterMarker(spawnInstanceOnKillPattern, "DropOnKillInstance", new CodeInstruction[]
         {
-            switch (label)
-            {
-                case "DropOnKillInstance":
-                    yield return new(Ldarg_0);
-                    yield return new(Ldloc_0);
-                    yield return new(Call, Reflect.Method(() => Callback(default, default)));
-                    break;
-            }
-        }
-
-        return instructions.Transform(spawnInstanceOnKillPattern, InsertCallbackCall);
+            new(Ldarg_0),
+            new(Ldloc_0),
+            new(Call, Reflect.Method(() => Callback(default, default)))
+        });
     }
 
     private static void Callback(SpawnOnKill spawnOnKill, GameObject spawningItem)
