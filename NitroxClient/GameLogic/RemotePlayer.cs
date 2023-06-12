@@ -62,7 +62,11 @@ namespace NitroxClient.GameLogic
             NitroxEntity.SetNewId(Body, PlayerContext.PlayerNitroxId);
 
             // Get player
+#if SUBNAUTICA
             PlayerModel = Body.RequireGameObject("player_view");
+#elif BELOWZERO
+            PlayerModel = Body.RequireGameObject("player_view_female");
+#endif
             // Move variables to keep player animations from mirroring and for identification
             ArmsController = PlayerModel.GetComponent<ArmsController>();
             ArmsController.smoothSpeedUnderWater = 0;

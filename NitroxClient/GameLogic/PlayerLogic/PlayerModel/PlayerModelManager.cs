@@ -32,11 +32,16 @@ public class PlayerModelManager
         equipmentVisibilityHandlers = new List<IEquipmentVisibilityHandler>
         {
             new DiveSuitVisibilityHandler(playerModel),
-            new ScubaSuitVisibilityHandler(playerModel),
             new FinsVisibilityHandler(playerModel),
-            new RadiationSuitVisibilityHandler(playerModel),
+            new StillSuitVisibilityHandler(playerModel),
             new ReinforcedSuitVisibilityHandler(playerModel),
-            new StillSuitVisibilityHandler(playerModel)
+#if SUBNAUTICA
+            new RadiationSuitVisibilityHandler(playerModel),
+            new ScubaSuitVisibilityHandler(playerModel)
+#elif BELOWZERO
+            new ColdProtectiveSuitVisibilityHandler(playerModel),
+            new BaseVisibilityHandler(playerModel)
+#endif
         };
     }
 
