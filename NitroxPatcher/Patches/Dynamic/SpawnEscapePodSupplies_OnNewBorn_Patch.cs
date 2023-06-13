@@ -1,3 +1,4 @@
+#if SUBNAUTICA
 namespace NitroxPatcher.Patches.Dynamic;
 
 using System.Reflection;
@@ -22,3 +23,4 @@ public class SpawnEscapePodSupplies_OnNewBorn_Patch : NitroxPatch, IDynamicPatch
 
     }
 }
+#endif

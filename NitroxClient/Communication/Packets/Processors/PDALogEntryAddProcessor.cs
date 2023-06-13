@@ -1,4 +1,4 @@
-﻿using NitroxClient.Communication.Abstract;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxModel.Packets;
 
@@ -17,7 +17,11 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             using (PacketSuppressor<PDALogEntryAdd>.Suppress())
             {
+#if SUBNAUTICA
                 PDALog.Add(packet.Key);
+#elif BELOWZERO
+                PDALog.Add(packet.Key, true);
+#endif
             }
         }
     }

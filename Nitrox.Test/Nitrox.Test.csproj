@@ -4,6 +4,7 @@
         <TargetFramework>net472</TargetFramework>
         <Nullable>disable</Nullable>
         <IsPackable>false</IsPackable>
+        <Configurations>Debug;Release;BelowZero;Subnautica</Configurations>
     </PropertyGroup>
 
     <ItemGroup>

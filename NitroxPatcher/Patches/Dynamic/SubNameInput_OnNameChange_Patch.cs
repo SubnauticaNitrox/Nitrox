@@ -20,7 +20,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 // prevent this patch from firing when the initial template cyclops loads (happens on game load with living large update).
                 return;
             }
-
+#if SUBNAUTICA
             SubName subname = __instance.target;
             if (subname)
             {
@@ -54,7 +54,11 @@ namespace NitroxPatcher.Patches.Dynamic
                     Log.Error($"[SubNameInput_OnNameChange_Patch] The GameObject {subname.gameObject.name} doesn't have a Vehicle/SubRoot/Rocket component.");
                     return;
                 }
-
+#elif BELOWZERO
+            ICustomizeable subname = __instance.target;
+            if (subname != null)
+            {
+#endif
                 NitroxId subNameInputId = NitroxEntity.GetId(__instance.gameObject);
                 Resolve<Entities>().EntityMetadataChanged(__instance, subNameInputId);
             }

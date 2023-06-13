@@ -64,6 +64,7 @@ namespace NitroxServer
             {
                 builder.AppendLine($" - Save location: {Path.Combine(WorldManager.SavesFolderDir, serverConfig.SaveName)}");
             }
+#if SUBNAUTICA
             builder.AppendLine($"""
              - Aurora's state: {world.StoryManager.GetAuroraStateSummary()}
              - Current time: day {world.TimeKeeper.Day} ({Math.Floor(world.TimeKeeper.ElapsedSeconds)}s)
@@ -75,7 +76,18 @@ namespace NitroxServer
              - Encyclopedia entries: {world.GameData.PDAState.EncyclopediaEntries.Count}
              - Known tech: {world.GameData.PDAState.KnownTechTypes.Count}
             """);
-                
+#elif BELOWZERO
+            builder.AppendLine($"""
+             - Current time: day {world.TimeKeeper.Day} ({Math.Floor(world.TimeKeeper.ElapsedSeconds)}s)
+             - Scheduled goals stored: {world.GameData.StoryGoals.ScheduledGoals.Count}
+             - Story goals completed: {world.GameData.StoryGoals.CompletedGoals.Count}
+             - Radio messages stored: {world.GameData.StoryGoals.RadioQueue.Count}
+             - World gamemode: {serverConfig.GameMode}
+             - Story goals unlocked: {world.GameData.StoryGoals.GoalUnlocks.Count}
+             - Encyclopedia entries: {world.GameData.PDAState.EncyclopediaEntries.Count}
+             - Known tech: {world.GameData.PDAState.KnownTechTypes.Count}
+            """);
+#endif
             return builder.ToString();
         }
 

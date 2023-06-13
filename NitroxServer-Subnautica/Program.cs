@@ -1,4 +1,4 @@
-﻿global using NitroxModel.Logger;
+global using NitroxModel.Logger;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -63,11 +63,16 @@ public class Program
             Stopwatch watch = Stopwatch.StartNew();
 
             // Allow game path to be given as command argument
+#if SUBNAUTICA
             if (args.Length > 0 && Directory.Exists(args[0]) && File.Exists(Path.Combine(args[0], "Subnautica.exe")))
+#elif BELOWZERO
+            if (args.Length > 0 && Directory.Exists(args[0]) && File.Exists(Path.Combine(args[0], "SubnauticaZero.exe")))
+#endif
             {
                 string gameDir = Path.GetFullPath(args[0]);
                 Log.Info($"Using game files from: {gameDir}");
                 gameInstallDir = new Lazy<string>(() => gameDir);
+                NitroxUser.GamePath = gameDir;
             }
             else
             {
@@ -222,7 +227,11 @@ public class Program
         if (dllPath.IndexOf("Newtonsoft.Json.dll", StringComparison.OrdinalIgnoreCase) >= 0 || !File.Exists(dllPath))
         {
             // Try find game managed libraries
+#if SUBNAUTICA
             dllPath = Path.Combine(gameInstallDir.Value, "Subnautica_Data", "Managed", dllFileName);
+#elif BELOWZERO
+            dllPath = Path.Combine(gameInstallDir.Value, "SubnauticaZero_Data", "Managed", dllFileName);
+#endif
         }
 
         // Read assemblies as bytes as to not lock the file so that Nitrox can patch assemblies while server is running.

@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using FMODUnity;
 using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
@@ -76,7 +76,11 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 }
 
                 renderers = MaterialExtensions.AssignMaterial(ghostModel, ghostStructureMaterial, true);
+#if SUBNAUTICA
                 string poweredPrefabName = CraftData.GetPoweredPrefabName(constructableTechType);
+#elif BELOWZERO
+                string poweredPrefabName = TechData.GetPoweredPrefabName(constructableTechType);
+#endif
                 if (!string.IsNullOrEmpty(poweredPrefabName))
                 {
                     CoroutineHost.StartCoroutine(CreatePowerPreviewAsync(ghostModel, poweredPrefabName));

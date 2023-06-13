@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
@@ -11,7 +11,11 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class Player_SetCurrentSub_Patch : NitroxPatch, IDynamicPatch
     {
+#if SUBNAUTICA
         private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Player t) => t.SetCurrentSub(default(SubRoot), default(bool)));
+#elif BELOWZERO
+        private static readonly MethodInfo TARGET_METHOD = Reflect.Method((Player t) => t.SetCurrentSub(default(SubRoot)));
+#endif
 
         public static void Prefix(Player __instance, SubRoot sub)
         {

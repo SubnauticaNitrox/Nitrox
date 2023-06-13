@@ -6,14 +6,15 @@
         <Nullable>disable</Nullable>
         <OutputPath>bin\</OutputPath>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <Configurations>Debug;Release;BelowZero;Subnautica</Configurations>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Mono.Cecil" Version="0.11.4"/>
+        <PackageReference Include="Mono.Cecil" Version="0.11.4" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\NitroxModel\NitroxModel.csproj"/>
+        <ProjectReference Include="..\NitroxModel\NitroxModel.csproj" />
     </ItemGroup>
 
 </Project>

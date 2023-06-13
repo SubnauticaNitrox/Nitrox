@@ -35,7 +35,9 @@ namespace NitroxClient.GameLogic
 
         public Vehicle Vehicle { get; private set; }
         public SubRoot SubRoot { get; private set; }
+#if SUBNAUTICA
         public EscapePod EscapePod { get; private set; }
+#endif
         public PilotingChair PilotingChair { get; private set; }
 
         public readonly Event<RemotePlayer> PlayerDeathEvent = new();
@@ -60,7 +62,11 @@ namespace NitroxClient.GameLogic
             NitroxEntity.SetNewId(Body, PlayerContext.PlayerNitroxId);
 
             // Get player
+#if SUBNAUTICA
             PlayerModel = Body.RequireGameObject("player_view");
+#elif BELOWZERO
+            PlayerModel = Body.RequireGameObject("player_view_female");
+#endif
             // Move variables to keep player animations from mirroring and for identification
             ArmsController = PlayerModel.GetComponent<ArmsController>();
             ArmsController.smoothSpeedUnderWater = 0;
@@ -182,7 +188,7 @@ namespace NitroxClient.GameLogic
                 SubRoot = newSubRoot;
             }
         }
-
+#if SUBNAUTICA
         public void SetEscapePod(EscapePod newEscapePod)
         {
             if (EscapePod != newEscapePod)
@@ -199,6 +205,7 @@ namespace NitroxClient.GameLogic
                 EscapePod = newEscapePod;
             }
         }
+#endif
 
         public void SetVehicle(Vehicle newVehicle)
         {
@@ -226,9 +233,11 @@ namespace NitroxClient.GameLogic
                     // Therefore we need to make sure that the MultiplayerVehicleControl component exists before using it
                     switch (newVehicle)
                     {
+#if SUBNAUTICA
                         case SeaMoth:
                             newVehicle.gameObject.EnsureComponent<MultiplayerSeaMoth>().Enter();
                             break;
+#endif
                         case Exosuit:
                             newVehicle.gameObject.EnsureComponent<MultiplayerExosuit>().Enter();
                             break;
@@ -238,8 +247,9 @@ namespace NitroxClient.GameLogic
                 RigidBody.isKinematic = newVehicle;
 
                 Vehicle = newVehicle;
-
+#if SUBNAUTICA
                 AnimationController["in_seamoth"] = newVehicle is SeaMoth;
+#endif
                 AnimationController["in_exosuit"] = AnimationController["using_mechsuit"] = newVehicle is Exosuit;
             }
         }

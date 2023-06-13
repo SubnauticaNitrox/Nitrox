@@ -1,4 +1,4 @@
-﻿using NitroxClient.GameLogic;
+using NitroxClient.GameLogic;
 using NitroxModel.Core;
 using UnityEngine;
 
@@ -32,8 +32,12 @@ namespace NitroxClient.MonoBehaviours
                     float health = Player.main.liveMixin.health;
                     float food = survival.food;
                     float water = survival.water;
+#if SUBNAUTICA
                     float infectionAmount = Player.main.infectedMixin.GetInfectedAmount();
                     localPlayer.BroadcastStats(oxygen, maxOxygen, health, food, water, infectionAmount);
+#elif BELOWZERO
+                    localPlayer.BroadcastStats(oxygen, maxOxygen, health, food, water);
+#endif
                 }
             }
         }

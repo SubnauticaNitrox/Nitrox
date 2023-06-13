@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using NitroxModel.Platforms.OS.Shared;
 
@@ -42,7 +42,11 @@ namespace NitroxModel.Helper
 
         private static bool IsPirateByDirectory(string subnauticaRoot)
         {
+#if SUBNAUTICA
             string subdirDll = Path.Combine(subnauticaRoot, "Subnautica_Data", "Plugins", "x86_64", "steam_api64.dll");
+#elif BELOWZERO
+            string subdirDll = Path.Combine(subnauticaRoot, "SubnauticaZero_Data", "Plugins", "x86_64", "steam_api64.dll");
+#endif
             if (File.Exists(subdirDll) && !FileSystem.Instance.IsTrustedFile(subdirDll))
             {
                 return true;

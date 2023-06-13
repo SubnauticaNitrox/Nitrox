@@ -1,3 +1,4 @@
+#if SUBNAUTICA
 using System.Reflection;
 using HarmonyLib;
 using NitroxClient.GameLogic;
@@ -31,3 +32,4 @@ namespace NitroxPatcher.Patches.Dynamic
         }
     }
 }
+#endif

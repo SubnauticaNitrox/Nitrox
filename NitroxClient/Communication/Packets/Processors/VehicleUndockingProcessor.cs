@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
@@ -58,7 +58,9 @@ namespace NitroxClient.Communication.Packets.Processors
                 // It can happen that the player turns in circles around himself in the vehicle. This stops it.
                 playerInstance.RigidBody.angularVelocity = Vector3.zero;
                 playerInstance.ArmsController.SetWorldIKTarget(vehicle.leftHandPlug, vehicle.rightHandPlug);
+#if SUBNAUTICA
                 playerInstance.AnimationController["in_seamoth"] = vehicle is SeaMoth;
+#endif
                 playerInstance.AnimationController["in_exosuit"] = playerInstance.AnimationController["using_mechsuit"] = vehicle is Exosuit;
                 vehicles.SetOnPilotMode(packet.VehicleId, packet.PlayerId, true);
                 playerInstance.AnimationController.UpdatePlayerAnimations = false;
@@ -69,7 +71,11 @@ namespace NitroxClient.Communication.Packets.Processors
         public IEnumerator StartUndockingAnimation(VehicleDockingBay vehicleDockingBay)
         {
             yield return Yielders.WaitFor2Seconds;
+#if SUBNAUTICA
             vehicleDockingBay.vehicle_docked_param = false;
+#elif BELOWZERO
+            vehicleDockingBay.docked_param = false;
+#endif
         }
 
         private void FinishVehicleUndocking(VehicleUndocking packet, Vehicle vehicle, VehicleDockingBay vehicleDockingBay)
@@ -78,7 +84,11 @@ namespace NitroxClient.Communication.Packets.Processors
             {
                 vehicleDockingBay.SetVehicleUndocked();
             }
+#if SUBNAUTICA
             vehicleDockingBay.dockedVehicle = null;
+#elif BELOWZERO
+            vehicleDockingBay.dockedObject = null;
+#endif
             vehicleDockingBay.CancelInvoke("RepairVehicle");
             vehicle.docked = false;
             Optional<RemotePlayer> player = remotePlayerManager.Find(packet.PlayerId);

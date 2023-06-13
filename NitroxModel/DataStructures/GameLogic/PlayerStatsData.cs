@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.Serialization;
 using BinaryPack.Attributes;
 
@@ -22,28 +22,39 @@ namespace NitroxModel.DataStructures.GameLogic
 
         [DataMember(Order = 5)]
         public float Water { get; }
+#if SUBNAUTICA
         [DataMember(Order = 6)]
         public float InfectionAmount { get; }
+#endif
 
         [IgnoreConstructor]
         protected PlayerStatsData()
         {
             // Constructor for serialization. Has to be "protected" for json serialization.
         }
-
+#if SUBNAUTICA
         public PlayerStatsData(float oxygen, float maxOxygen, float health, float food, float water, float infectionAmount)
+#elif BELOWZERO
+        public PlayerStatsData(float oxygen, float maxOxygen, float health, float food, float water)
+#endif
         {
             Oxygen = oxygen;
             MaxOxygen = maxOxygen;
             Health = health;
             Food = food;
             Water = water;
+#if SUBNAUTICA
             InfectionAmount = infectionAmount;
+#endif
         }
 
         public override string ToString()
         {
+#if SUBNAUTICA
             return $"[Oxygen: {Oxygen} MaxOxygen: {MaxOxygen} Health: {Health} Food: {Food} Water: {Water} InfectionAmount: {InfectionAmount} ]";
+#elif BELOWZERO
+            return $"[Oxygen: {Oxygen} MaxOxygen: {MaxOxygen} Health: {Health} Food: {Food} Water: {Water} ]";
+#endif
         }
     }
 }

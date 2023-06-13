@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using AssetsTools.NET;
 using AssetsTools.NET.Extra;
 using NitroxServer_Subnautica.Resources.Parsers.Abstract;
@@ -18,6 +18,16 @@ public class WorldEntityInfoParser : ResourceFileParser<Dictionary<string, World
 
         foreach (AssetTypeValueField info in assetValue["infos"])
         {
+            var a = info["classId"];
+            var aa = info["classId"].AsString;
+            var b = info["techType"];
+            var bb = info["techType"].AsInt;
+            var c = info["slotType"];
+            var cc = info["slotType"].AsInt;
+            var d = info["prefabZUp"];
+            var dd = info["prefabZUp"].AsBool;
+            var e = info["localScale"];
+            var ee = info["localScale"].AsVector3();
             WorldEntityInfo entityData = new()
             {
                 classId = info["classId"].AsString,

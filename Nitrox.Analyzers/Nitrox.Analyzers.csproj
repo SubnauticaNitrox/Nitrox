@@ -3,6 +3,7 @@
   <PropertyGroup>
     <!-- Analyzers MUST target netstandard2.0, do not update unless Microsoft (MSDN) says it's possible. -->
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Configurations>Debug;Release;BelowZero;Subnautica</Configurations>
   </PropertyGroup>
 
   <ItemGroup>

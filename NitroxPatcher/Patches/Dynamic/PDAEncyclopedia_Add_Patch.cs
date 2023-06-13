@@ -9,24 +9,45 @@ namespace NitroxPatcher.Patches.Dynamic;
 
 public class PDAEncyclopedia_Add_Patch : NitroxPatch, IDynamicPatch
 {
-    private static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => PDAEncyclopedia.Add(default, default, default));
+#if SUBNAUTICA
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => PDAEncyclopedia.Add(default(string), default(PDAEncyclopedia.Entry), default(bool)));
 
     public static void Postfix(string key, bool verbose, PDAEncyclopedia.EntryData __result)
+#elif BELOWZERO
+    private static readonly MethodInfo TARGET_METHOD = Reflect.Method(() => PDAEncyclopedia.Add(default(string), default(PDAEncyclopedia.Entry), default(bool), default(bool)));
+
+    public static void Prefix(string key, out bool __state)
+    {
+        __state = PDAEncyclopedia.ContainsEntry(key);
+    }
+
+    public static void Postfix(string key, bool verbose, bool postNotification, bool __state)
+#endif
     {
         if (!Multiplayer.Main || !Multiplayer.Main.InitialSyncCompleted)
         {
             return;
         }
 
+#if SUBNAUTICA
         // Is null when it's a duplicate call
         if (__result != null)
         {
             Resolve<IPacketSender>().Send(new PDAEncyclopediaEntryAdd(key, verbose));
+#elif BELOWZERO
+        if (!__state)
+        {
+            Resolve<IPacketSender>().Send(new PDAEncyclopediaEntryAdd(key, verbose, postNotification));
+#endif
         }
     }
 
     public override void Patch(Harmony harmony)
     {
+#if SUBNAUTICA
         PatchPostfix(harmony, TARGET_METHOD);
+#elif BELOWZERO
+        PatchMultiple(harmony, TARGET_METHOD, prefix: true, postfix: true);
+#endif
     }
 }

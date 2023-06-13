@@ -7,6 +7,7 @@ namespace NitroxModel.DataStructures.GameLogic;
 public class TimeData
 {
     public TimeChange TimePacket;
+#if SUBNAUTICA
     public AuroraEventData AuroraEventData;
 
     public TimeData(TimeChange timePacket, AuroraEventData auroraEventData)
@@ -14,4 +15,10 @@ public class TimeData
         TimePacket = timePacket;
         AuroraEventData = auroraEventData;
     }
+#elif BELOWZERO
+    public TimeData(TimeChange timePacket)
+    {
+        TimePacket = timePacket;
+    }
+#endif
 }

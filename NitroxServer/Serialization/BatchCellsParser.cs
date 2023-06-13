@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -57,7 +57,11 @@ namespace NitroxServer.Serialization
                 return;
             }
 
+#if SUBNAUTICA
             string path = Path.Combine(subnauticaPath, "Subnautica_Data", "StreamingAssets", "SNUnmanagedData", "Build18");
+#elif BELOWZERO
+            string path = Path.Combine(subnauticaPath, "SubnauticaZero_Data", "StreamingAssets", "SNUnmanagedData", "Expansion");
+#endif
             string fileName = Path.Combine(path, pathPrefix, $"{prefix}batch-cells-{batchId.X}-{batchId.Y}-{batchId.Z}{suffix}.bin");
 
             if (!File.Exists(fileName))

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -36,6 +36,7 @@ namespace NitroxModel.Discovery.InstallationFinders
                 return null;
             }
             string appsPath = Path.Combine(steamPath, "steamapps");
+#if SUBNAUTICA
             if (File.Exists(Path.Combine(appsPath, $"appmanifest_{GameInfo.Subnautica.SteamAppId}.acf")))
             {
                 return Path.Combine(appsPath, "common", GameInfo.Subnautica.Name);
@@ -49,6 +50,21 @@ namespace NitroxModel.Discovery.InstallationFinders
             {
                 return path;
             }
+#elif BELOWZERO
+            if(File.Exists(Path.Combine(appsPath, $"appmanifest_{GameInfo.SubnauticaBelowZero.SteamAppId}.acf")))
+            {
+                return Path.Combine(appsPath, "common", GameInfo.SubnauticaBelowZero.Name);
+            }
+            string path = SearchAllInstallations(Path.Combine(appsPath, "libraryfolders.vdf"), GameInfo.SubnauticaBelowZero.SteamAppId, GameInfo.SubnauticaBelowZero.Name);
+            if(string.IsNullOrEmpty(path))
+            {
+                errors?.Add($"It appears you don't have {GameInfo.SubnauticaBelowZero.Name} installed anywhere. The game files are needed to run the server");
+            }
+            else
+            {
+                return path;
+            }
+#endif
 
             return null;
         }

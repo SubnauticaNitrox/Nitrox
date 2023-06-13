@@ -12,6 +12,7 @@
         <Authors>Nitrox</Authors>
         <Company>Nitrox</Company>
         <PackageProjectUrl>https://github.com/SubnauticaNitrox/Nitrox</PackageProjectUrl>
+        <Configurations>Debug;Release;BelowZero;Subnautica</Configurations>
     </PropertyGroup>
 
     <ItemGroup>

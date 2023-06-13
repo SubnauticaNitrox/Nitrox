@@ -1,8 +1,9 @@
-﻿using System.Drawing;
+using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using AssetsTools.NET;
 using AssetsTools.NET.Extra;
+using AssetsTools.NET.Texture;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxServer_Subnautica.Resources.Parsers.Abstract;
 using NitroxServer_Subnautica.Resources.Parsers.Helper;

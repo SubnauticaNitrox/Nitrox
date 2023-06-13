@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.IO;
 using System.Reflection;
@@ -212,7 +212,11 @@ namespace NitroxLauncher
             {
                 File.Copy(
                     Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? "", "lib", initDllName),
+#if SUBNAUTICA
                     Path.Combine(Config.SubnauticaPath, "Subnautica_Data", "Managed", initDllName),
+#elif BELOWZERO
+                    Path.Combine(Config.SubnauticaPath, "SubnauticaZero_Data", "Managed", initDllName),
+#endif
                     true
                 );
             }
@@ -241,7 +245,28 @@ namespace NitroxLauncher
 
             gameProcess = await StartSubnauticaAsync();
         }
+#if BELOWZERO
+        private async Task<ProcessEx> StartSubnauticaAsync()
+        {
+            string subnauticaPath = Config.SubnauticaPath;
+            string subnauticaLaunchArguments = Config.SubnauticaLaunchArguments;
+            string subnauticaExe = Path.Combine(subnauticaPath, GameInfo.SubnauticaBelowZero.ExeName);
+            IGamePlatform platform = GamePlatforms.GetPlatformByGameDir(subnauticaPath);
+            
+            // Start game & gaming platform if needed.
+            using ProcessEx game = platform switch
+            {
+                Steam s => await s.StartGameAsync(subnauticaExe, GameInfo.SubnauticaBelowZero.SteamAppId, subnauticaLaunchArguments),
+                EpicGames e => await e.StartGameAsync(subnauticaExe, subnauticaLaunchArguments),
+                MSStore m => await m.StartGameAsync(subnauticaExe),
+                DiscordStore d => await d.StartGameAsync(subnauticaExe, subnauticaLaunchArguments),
+                _ => throw new Exception($"Directory '{subnauticaPath}' is not a valid {GameInfo.SubnauticaBelowZero.Name} game installation or the game's platform is unsupported by Nitrox.")
+            };
 
+            return game ?? throw new Exception($"Unable to start game through {platform.Name}");
+        }
+#endif
+#if SUBNAUTICA
         private async Task<ProcessEx> StartSubnauticaAsync()
         {
             string subnauticaPath = Config.SubnauticaPath;
@@ -261,6 +286,7 @@ namespace NitroxLauncher
 
             return game ?? throw new Exception($"Unable to start game through {platform.Name}");
         }
+#endif
 
         private void OnSubnauticaExited(object sender, EventArgs e)
         {

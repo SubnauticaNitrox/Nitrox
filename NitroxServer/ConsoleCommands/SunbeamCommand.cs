@@ -1,3 +1,4 @@
+#if SUBNAUTICA
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
 using NitroxServer.ConsoleCommands.Abstract;
@@ -46,3 +47,4 @@ public class SunbeamCommand : Command
         }
     }
 }
+#endif
