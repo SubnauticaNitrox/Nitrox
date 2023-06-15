@@ -92,7 +92,7 @@ public class UpdateBaseProcessor : BuildingProcessor<UpdateBase>
 
     public override void Process(UpdateBase packet, Player player)
     {
-        if (buildingManager.UpdateBase(packet, out int operationId))
+        if (buildingManager.UpdateBase(player, packet, out int operationId))
         {
             packet.SavedBase = null;
             packet.BuiltPieceEntity = null;
@@ -123,7 +123,7 @@ public class PieceDeconstructedProcessor : BuildingProcessor<PieceDeconstructed>
 
     public override void Process(PieceDeconstructed packet, Player player)
     {
-        if (buildingManager.ReplacePieceByGhost(packet, out _, out int operationId))
+        if (buildingManager.ReplacePieceByGhost(player, packet, out _, out int operationId))
         {
             packet.SavedBase = null;
             ProcessWithOperationId(packet, player, operationId);
@@ -137,7 +137,7 @@ public class WaterParkDeconstructedProcessor : BuildingProcessor<WaterParkDecons
 
     public override void Process(WaterParkDeconstructed packet, Player player)
     {
-        if (buildingManager.ReplacePieceByGhost(packet, out Entity removedEntity, out int operationId) &&
+        if (buildingManager.ReplacePieceByGhost(player, packet, out Entity removedEntity, out int operationId) &&
             buildingManager.CreateWaterParkPiece(packet, removedEntity))
         {
             packet.SavedBase = null;

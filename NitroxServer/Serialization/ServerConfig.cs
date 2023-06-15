@@ -1,4 +1,4 @@
-﻿using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
 using NitroxModel.Serialization;
 using NitroxModel.Server;
@@ -114,5 +114,8 @@ namespace NitroxServer.Serialization
         public bool AutoPortForward { get; set; } = true;
         [PropertyDescription("Determines whether the server will listen for and reply to LAN discovery requests.")]
         public bool LANDiscoveryEnabled { get; set; } = true;
+
+        [PropertyDescription("When true, will reject any build actions detected as desynced")]
+        public bool SafeBuilding { get; set; } = true;
     }
 }

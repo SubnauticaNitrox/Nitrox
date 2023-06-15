@@ -106,7 +106,7 @@ public sealed class UpdateBase : BuildPacket
 
     public override string ToString()
     {
-        return $"UpdateBase [BaseId: {BaseId}, FormerGhostId: {FormerGhostId}, SavedBase: {SavedBase}, BuiltPieceEntity: {BuiltPieceEntity}, UpdatedChildren: {UpdatedChildren.Count}, UpdatedMoonpools: {UpdatedMoonpools.Count}, UpdatedMapRooms: {UpdatedMapRooms.Count}, ChildrenTransfer: {ChildrenTransfer}]";
+        return $"UpdateBase [{OperationId}] [BaseId: {BaseId}, FormerGhostId: {FormerGhostId}, SavedBase: {SavedBase}, BuiltPieceEntity: {BuiltPieceEntity}, UpdatedChildren: {UpdatedChildren.Count}, UpdatedMoonpools: {UpdatedMoonpools.Count}, UpdatedMapRooms: {UpdatedMapRooms.Count}, ChildrenTransfer: {ChildrenTransfer}]";
     }
 }
 
@@ -146,7 +146,7 @@ public class PieceDeconstructed : BuildPacket
 
     public override string ToString()
     {
-        return $"PieceDeconstructed [BaseId: {BaseId}, PieceId: {PieceId}, PieceIdentifier: {BuildPieceIdentifier}, ReplacerGhost: {ReplacerGhost}]";
+        return $"PieceDeconstructed [{OperationId}] [BaseId: {BaseId}, PieceId: {PieceId}, PieceIdentifier: {BuildPieceIdentifier}, ReplacerGhost: {ReplacerGhost}]";
     }
 }
 
