@@ -4,16 +4,44 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:launcher="clr-namespace:Nitrox.Launcher"
              xmlns:design="clr-namespace:Nitrox.Launcher.Models.Design"
+             xmlns:models="clr-namespace:Nitrox.Launcher.Models"
+             xmlns:controls="clr-namespace:Nitrox.Launcher.Models.Design.Controls"
              mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="600" d:DataContext="{x:Static launcher:DesignData.ManageServerViewModel}"
              x:Class="Nitrox.Launcher.Views.ManageServerView">
     <StackPanel VerticalAlignment="Stretch" Classes="form">
+        
         <Button Background="Transparent" Command="{Binding BackCommand}">
             <Image HorizontalAlignment="Left" Source="/Assets/Images/world-manager/back-2x.png" Width="24" Height="24" />
         </Button>
         <TextBlock Classes="header" Text="{Binding ServerName}" />
-        <StackPanel>
-            <TextBlock Text="SERVER NAME" />
-            <TextBox design:NitroxAttached.Focus="" Watermark="My server" Text="{Binding ServerName}" />
-        </StackPanel>
+
+        <ScrollViewer VerticalScrollBarVisibility="Auto"> <!-- Scroll bar functionality doesn't work yet -->
+            <StackPanel VerticalAlignment="Stretch" Classes="form">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="30" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel>
+                        <TextBlock Text="SERVER NAME" FontSize="10" FontWeight="700" Opacity=".5" Margin="0 0 0 11" />
+                        <TextBox design:NitroxAttached.Focus="" Watermark="My server" Text="{Binding ServerName}" />
+                    </StackPanel>
+            
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="PASSWORD" FontSize="10" FontWeight="700" Opacity=".5" Margin="0 0 0 11" />
+                        <TextBox Watermark="Server password" Text="{Binding ServerPassword}" PasswordChar="●"/>
+                    </StackPanel>
+                </Grid>
+        
+                <StackPanel>
+                    <TextBlock Text="GAMEMODE" FontSize="10" FontWeight="700" Margin="0 0 0 11" />
+                    <controls:RadioButtonGroup Classes="radioGroup" Enum="{x:Type models:GameMode}" SelectedItem="{Binding ServerGameMode, Mode=TwoWay}" />
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+        
+        
     </StackPanel>
 </UserControl>
